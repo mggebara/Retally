@@ -1,0 +1,191 @@
+[
+  {
+    "id": "breast-cancer-logistic",
+    "paper": {
+      "title": "Nuclear Feature Extraction for Breast Tumor Diagnosis",
+      "authors": ["W.N. Street", "W.H. Wolberg", "O.L. Mangasarian"],
+      "abstract": "We present a system for the diagnosis of breast cancer based on fine needle aspirate (FNA) of a breast mass. The system extracts nuclear features from digitized images and applies a logistic regression classifier. We evaluate on the Breast Cancer Wisconsin (Diagnostic) dataset.",
+      "source_url": "https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic",
+      "methodology_summary": "• Logistic regression classifier (L2, C=1.0)\n• 30 numeric features from FNA images (mean, SE, worst of radius, texture, perimeter, area, smoothness, compactness, concavity, concave points, symmetry, fractal dimension)\n• StandardScaler normalisation\n• 80/20 stratified train/test split, random_state=42\n• Evaluation: accuracy and F1 score on held-out test set"
+    },
+    "dataset": {
+      "name": "Breast Cancer Wisconsin (Diagnostic)",
+      "source_url": "ucimlrepo://17",
+      "local_path": ".cache/datasets/breast_cancer_wisconsin",
+      "file_format": "csv",
+      "metadata": {
+        "columns": ["mean_radius","mean_texture","mean_perimeter","mean_area","mean_smoothness","mean_compactness","mean_concavity","mean_concave_points","mean_symmetry","mean_fractal_dimension","radius_se","texture_se","perimeter_se","area_se","smoothness_se","compactness_se","concavity_se","concave_points_se","symmetry_se","fractal_dimension_se","worst_radius","worst_texture","worst_perimeter","worst_area","worst_smoothness","worst_compactness","worst_concavity","worst_concave_points","worst_symmetry","worst_fractal_dimension","diagnosis"],
+        "target_column": "diagnosis",
+        "n_rows": 569,
+        "n_cols": 31,
+        "task_type": "classification"
+      }
+    },
+    "execution_result": {
+      "generated_code": "import pandas as pd\nimport numpy as np\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler, LabelEncoder\nfrom sklearn.metrics import accuracy_score, f1_score\n\n# Load dataset\ndf = pd.read_csv('.cache/datasets/breast_cancer_wisconsin/data.csv')\nX = df.drop(columns=['diagnosis'])\ny = df['diagnosis']\n\n# Encode target (M=1, B=0)\nle = LabelEncoder()\ny_enc = le.fit_transform(y)\n\n# Stratified train/test split\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y_enc, test_size=0.2, random_state=42, stratify=y_enc\n)\n\n# Standardise features\nscaler = StandardScaler()\nX_train_s = scaler.fit_transform(X_train)\nX_test_s  = scaler.transform(X_test)\n\n# Train logistic regression\nclf = LogisticRegression(C=1.0, random_state=42, max_iter=1000)\nclf.fit(X_train_s, y_train)\n\n# Evaluate\ny_pred = clf.predict(X_test_s)\nacc = accuracy_score(y_test, y_pred)\nf1  = f1_score(y_test, y_pred, average='weighted')\n\nprint(f'RESULT:accuracy={acc:.4f}')\nprint(f'RESULT:f1_score={f1:.4f}')",
+      "stdout": "RESULT:accuracy=0.9737\nRESULT:f1_score=0.9732\n",
+      "stderr": "",
+      "exit_code": 0,
+      "outputs": { "accuracy": 0.9737, "f1_score": 0.9732 },
+      "timed_out": false
+    },
+    "claim_results": [
+      {
+        "claim": { "description": "test accuracy", "value": 97.4, "unit": "%", "claim_type": "accuracy", "context": "Our logistic regression achieves a test accuracy of 97.4%", "table_ref": "Table 1", "figure_ref": null },
+        "reproduced_value": 0.9737,
+        "tolerance": 0.01,
+        "passed": true,
+        "notes": "Unit mismatch detected: paper value in percentage (97.4%) while reproduced value is decimal (0.9737). Claim validated after unit normalisation."
+      },
+      {
+        "claim": { "description": "F1 score", "value": 0.973, "unit": null, "claim_type": "f1_score", "context": "achieving an F1 score of 0.973 on the held-out test set", "table_ref": "Table 1", "figure_ref": null },
+        "reproduced_value": 0.9732,
+        "tolerance": 0.01,
+        "passed": true,
+        "notes": ""
+      }
+    ],
+    "overall_passed": true,
+    "summary": "2 of 2 claims validated."
+  },
+  {
+    "id": "iris-naive-bayes",
+    "paper": {
+      "title": "Pattern Classification Using Gaussian Naive Bayes on the Iris Dataset",
+      "authors": ["R.A. Fisher"],
+      "abstract": "The Iris dataset consists of 150 instances across three classes of iris plants, with four numeric features. We apply Gaussian Naive Bayes classification and report accuracy on a stratified hold-out test set, demonstrating the viability of probabilistic classifiers on this benchmark.",
+      "source_url": "https://archive.ics.uci.edu/dataset/53/iris",
+      "methodology_summary": "• Gaussian Naive Bayes classifier\n• 4 features: sepal length, sepal width, petal length, petal width\n• No feature scaling (Naive Bayes is scale-invariant)\n• 70/30 stratified train/test split, random_state=42\n• 3-class accuracy reported on held-out test set"
+    },
+    "dataset": {
+      "name": "Iris",
+      "source_url": "ucimlrepo://53",
+      "local_path": ".cache/datasets/iris",
+      "file_format": "csv",
+      "metadata": {
+        "columns": ["sepal_length","sepal_width","petal_length","petal_width","class"],
+        "target_column": "class",
+        "n_rows": 150,
+        "n_cols": 5,
+        "task_type": "classification"
+      }
+    },
+    "execution_result": {
+      "generated_code": "import pandas as pd\nfrom sklearn.naive_bayes import GaussianNB\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import accuracy_score\n\n# Load dataset\ndf = pd.read_csv('.cache/datasets/iris/data.csv')\nX = df.drop(columns=['class'])\ny = df['class']\n\n# Stratified split\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.3, random_state=42, stratify=y\n)\n\n# Train Gaussian Naive Bayes\nclf = GaussianNB()\nclf.fit(X_train, y_train)\n\n# Evaluate\nacc = accuracy_score(y_test, clf.predict(X_test))\nprint(f'RESULT:accuracy={acc:.4f}')",
+      "stdout": "RESULT:accuracy=0.9556\n",
+      "stderr": "",
+      "exit_code": 0,
+      "outputs": { "accuracy": 0.9556 },
+      "timed_out": false
+    },
+    "claim_results": [
+      {
+        "claim": { "description": "classification accuracy", "value": 0.96, "unit": null, "claim_type": "accuracy", "context": "Gaussian Naive Bayes achieves 96% accuracy on the Iris test set", "table_ref": null, "figure_ref": "Figure 3" },
+        "reproduced_value": 0.9556,
+        "tolerance": 0.01,
+        "passed": true,
+        "notes": ""
+      }
+    ],
+    "overall_passed": true,
+    "summary": "1 of 1 claims validated."
+  },
+  {
+    "id": "adult-svm",
+    "paper": {
+      "title": "Support Vector Machines for Income Classification on the Adult Census Dataset",
+      "authors": ["C. Cortes", "V. Vapnik"],
+      "abstract": "We apply Support Vector Machines with an RBF kernel to the Adult Census Income dataset, a standard benchmark for binary classification. The dataset contains 48,842 instances with 14 features. We report classification accuracy and AUC-ROC score.",
+      "source_url": "https://archive.ics.uci.edu/dataset/2/adult",
+      "methodology_summary": "• SVM with RBF kernel, C=1.0, gamma='scale'\n• Mixed features: numeric standardised, categorical one-hot encoded\n• 80/20 stratified train/test split, random_state=42\n• Metrics: accuracy and AUC-ROC on test set"
+    },
+    "dataset": {
+      "name": "Adult Income",
+      "source_url": "ucimlrepo://2",
+      "local_path": ".cache/datasets/adult_income",
+      "file_format": "csv",
+      "metadata": {
+        "columns": ["age","workclass","fnlwgt","education","education-num","marital-status","occupation","relationship","race","sex","capital-gain","capital-loss","hours-per-week","native-country","income"],
+        "target_column": "income",
+        "n_rows": 48842,
+        "n_cols": 15,
+        "task_type": "classification"
+      }
+    },
+    "execution_result": {
+      "generated_code": "import pandas as pd\nimport numpy as np\nfrom sklearn.svm import SVC\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler, LabelEncoder\nfrom sklearn.metrics import accuracy_score, roc_auc_score\n\n# Load dataset\ndf = pd.read_csv('.cache/datasets/adult_income/data.csv').dropna()\nX = df.drop(columns=['income'])\ny = LabelEncoder().fit_transform(df['income'].str.strip())\n\n# One-hot encode categoricals, scale numerics\nX = pd.get_dummies(X, drop_first=True)\nnumeric_cols = X.select_dtypes(include='number').columns\n\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42, stratify=y\n)\n\nscaler = StandardScaler()\nX_train[numeric_cols] = scaler.fit_transform(X_train[numeric_cols])\nX_test[numeric_cols]  = scaler.transform(X_test[numeric_cols])\n\n# Train SVM (subsample for speed — full dataset is slow with RBF kernel)\nidx = np.random.RandomState(42).choice(len(X_train), 8000, replace=False)\nclf = SVC(C=1.0, kernel='rbf', gamma='scale', probability=True, random_state=42)\nclf.fit(X_train.iloc[idx], y_train[idx])\n\n# Evaluate\ny_pred  = clf.predict(X_test)\ny_proba = clf.predict_proba(X_test)[:, 1]\nacc = accuracy_score(y_test, y_pred)\nauc = roc_auc_score(y_test, y_proba)\n\nprint(f'RESULT:accuracy={acc:.4f}')\nprint(f'RESULT:auc_roc={auc:.4f}')",
+      "stdout": "RESULT:accuracy=0.8312\nRESULT:auc_roc=0.8901\n",
+      "stderr": "",
+      "exit_code": 0,
+      "outputs": { "accuracy": 0.8312, "auc_roc": 0.8901 },
+      "timed_out": false
+    },
+    "claim_results": [
+      {
+        "claim": { "description": "test accuracy", "value": 84.5, "unit": "%", "claim_type": "accuracy", "context": "The SVM achieves 84.5% accuracy on the held-out test set", "table_ref": "Table 2", "figure_ref": null },
+        "reproduced_value": 0.8312,
+        "tolerance": 0.01,
+        "passed": false,
+        "notes": "Unit mismatch detected: paper value 84.5% → 0.845. Relative error: |0.8312 - 0.845| / 0.845 = 0.0161 > tolerance 0.01. The gap is likely due to subsampling required for RBF-SVM on 48k rows."
+      },
+      {
+        "claim": { "description": "AUC-ROC", "value": 0.89, "unit": null, "claim_type": "auc_roc", "context": "achieving an AUC-ROC of 0.89", "table_ref": "Table 2", "figure_ref": null },
+        "reproduced_value": 0.8901,
+        "tolerance": 0.01,
+        "passed": true,
+        "notes": ""
+      }
+    ],
+    "overall_passed": false,
+    "summary": "1 of 2 claims validated. Failed: test accuracy."
+  },
+  {
+    "id": "wine-random-forest",
+    "paper": {
+      "title": "Ensemble Methods for Wine Quality Classification",
+      "authors": ["L. Breiman"],
+      "abstract": "Random Forests are applied to the UCI Wine dataset, a 3-class problem with 13 chemical features. We report cross-validated accuracy and demonstrate the superiority of ensemble methods over single decision trees on this benchmark.",
+      "source_url": "https://archive.ics.uci.edu/dataset/109/wine",
+      "methodology_summary": "• Random Forest, 100 trees, max_depth=None, random_state=42\n• 13 numeric features (chemical analysis: alcohol, malic acid, ash, etc.)\n• StandardScaler normalisation\n• 5-fold stratified cross-validation; final accuracy on 20% hold-out\n• 3-class weighted F1 reported"
+    },
+    "dataset": {
+      "name": "Wine",
+      "source_url": "ucimlrepo://109",
+      "local_path": ".cache/datasets/wine",
+      "file_format": "csv",
+      "metadata": {
+        "columns": ["alcohol","malic_acid","ash","alcalinity_of_ash","magnesium","total_phenols","flavanoids","nonflavanoid_phenols","proanthocyanins","color_intensity","hue","od280_od315_of_diluted_wines","proline","class"],
+        "target_column": "class",
+        "n_rows": 178,
+        "n_cols": 14,
+        "task_type": "classification"
+      }
+    },
+    "execution_result": {
+      "generated_code": "import pandas as pd\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn.model_selection import train_test_split, cross_val_score\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.metrics import accuracy_score, f1_score\n\n# Load dataset\ndf = pd.read_csv('.cache/datasets/wine/data.csv')\nX = df.drop(columns=['class'])\ny = df['class']\n\n# Scale features\nscaler = StandardScaler()\nX_scaled = scaler.fit_transform(X)\n\n# Train/test split\nX_train, X_test, y_train, y_test = train_test_split(\n    X_scaled, y, test_size=0.2, random_state=42, stratify=y\n)\n\n# Train Random Forest\nrf = RandomForestClassifier(n_estimators=100, random_state=42)\nrf.fit(X_train, y_train)\n\n# Evaluate\ny_pred = rf.predict(X_test)\nacc = accuracy_score(y_test, y_pred)\nf1  = f1_score(y_test, y_pred, average='weighted')\n\n# 5-fold CV accuracy\ncv_acc = cross_val_score(rf, X_scaled, y, cv=5, scoring='accuracy').mean()\n\nprint(f'RESULT:accuracy={acc:.4f}')\nprint(f'RESULT:f1_score={f1:.4f}')\nprint(f'RESULT:cv_accuracy={cv_acc:.4f}')",
+      "stdout": "RESULT:accuracy=1.0000\nRESULT:f1_score=1.0000\nRESULT:cv_accuracy=0.9831\n",
+      "stderr": "",
+      "exit_code": 0,
+      "outputs": { "accuracy": 1.0, "f1_score": 1.0, "cv_accuracy": 0.9831 },
+      "timed_out": false
+    },
+    "claim_results": [
+      {
+        "claim": { "description": "cross-validated accuracy", "value": 0.983, "unit": null, "claim_type": "accuracy", "context": "Random Forest achieves 98.3% mean 5-fold cross-validated accuracy", "table_ref": "Table 3", "figure_ref": null },
+        "reproduced_value": 0.9831,
+        "tolerance": 0.01,
+        "passed": true,
+        "notes": ""
+      },
+      {
+        "claim": { "description": "F1 score", "value": 0.98, "unit": null, "claim_type": "f1_score", "context": "achieving a weighted F1 score of 0.98 on the test set", "table_ref": "Table 3", "figure_ref": null },
+        "reproduced_value": 1.0,
+        "tolerance": 0.01,
+        "passed": false,
+        "notes": "Reproduced F1 (1.000) exceeds paper claim (0.98). The small test set (36 samples) for this 178-instance dataset can yield perfect accuracy by chance with a strong ensemble."
+      }
+    ],
+    "overall_passed": false,
+    "summary": "1 of 2 claims validated. Failed: F1 score."
+  }
+]
