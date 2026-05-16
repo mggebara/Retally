@@ -24,16 +24,16 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from paper_validator.codegen.docker_executor import DockerExecutor
-from paper_validator.codegen.executor import CodeExecutor
-from paper_validator.codegen.generator import CodeGenerator
-from paper_validator.dataset.downloader import DatasetDownloader
-from paper_validator.dataset.registry import DatasetRegistry
-from paper_validator.models import DatasetReference, ExecutionResult, ValidationReport
-from paper_validator.paper.extractor import ClaimExtractor
-from paper_validator.paper.parser import PaperParser
-from paper_validator.validation.comparator import ResultComparator
-from paper_validator.validation.reporter import ValidationReporter
+from openra.codegen.docker_executor import DockerExecutor
+from openra.codegen.executor import CodeExecutor
+from openra.codegen.generator import CodeGenerator
+from openra.dataset.downloader import DatasetDownloader
+from openra.dataset.registry import DatasetRegistry
+from openra.models import DatasetReference, ExecutionResult, ValidationReport
+from openra.paper.extractor import ClaimExtractor
+from openra.paper.parser import PaperParser
+from openra.validation.comparator import ResultComparator
+from openra.validation.reporter import ValidationReporter
 
 
 class ValidationPipeline:
@@ -245,7 +245,7 @@ class ValidationPipeline:
         cls,
         anthropic_api_key: str | None = None,
         use_docker: bool = False,
-        docker_image: str = "paper-validator-sandbox:latest",
+        docker_image: str = "openra-sandbox:latest",
         docker_memory: str = "4g",
         docker_cpus: float = 1.0,
     ) -> "ValidationPipeline":

@@ -3,8 +3,8 @@
 import pytest
 from pathlib import Path
 
-from paper_validator.paper.parser import PaperParser
-from paper_validator.models import Paper
+from openra.paper.parser import PaperParser
+from openra.models import Paper
 
 FIXTURES = Path(__file__).parent / "fixtures"
 

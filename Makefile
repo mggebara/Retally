@@ -1,6 +1,6 @@
 .PHONY: build-sandbox rebuild-sandbox test lint install
 
-SANDBOX_IMAGE := paper-validator-sandbox:latest
+SANDBOX_IMAGE := openra-sandbox:latest
 DOCKERFILE    := docker/Dockerfile.sandbox
 
 ## Build the offline sandbox Docker image (required before using DockerExecutor).

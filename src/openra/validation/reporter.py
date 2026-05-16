@@ -16,7 +16,7 @@ import math
 from enum import Enum
 from pathlib import Path
 
-from paper_validator.models import (
+from openra.models import (
     ClaimValidationResult,
     Dataset,
     ExecutionResult,

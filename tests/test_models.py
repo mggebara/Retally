@@ -1,6 +1,6 @@
 """Tests for the shared dataclass models."""
 
-from paper_validator.models import (
+from openra.models import (
     Claim,
     ClaimType,
     ClaimValidationResult,

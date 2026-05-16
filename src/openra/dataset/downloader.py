@@ -29,7 +29,7 @@ import pandas as pd
 import requests
 from tqdm import tqdm
 
-from paper_validator.models import Dataset, DatasetReference, DatasetSource
+from openra.models import Dataset, DatasetReference, DatasetSource
 
 
 class DatasetDownloader:

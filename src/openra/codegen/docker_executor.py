@@ -33,14 +33,14 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-from paper_validator.codegen.executor import parse_outputs, preflight_check
-from paper_validator.models import Dataset, ExecutionResult
+from openra.codegen.executor import parse_outputs, preflight_check
+from openra.models import Dataset, ExecutionResult
 
 # Default image tag — build with ``make build-sandbox``
-DEFAULT_IMAGE = "paper-validator-sandbox:latest"
+DEFAULT_IMAGE = "openra-sandbox:latest"
 
 # Location of the Dockerfile relative to this file:
-#   src/paper_validator/codegen/docker_executor.py  →  docker/Dockerfile.sandbox
+#   src/openra/codegen/docker_executor.py  →  docker/Dockerfile.sandbox
 _DOCKERFILE = Path(__file__).parents[3] / "docker" / "Dockerfile.sandbox"
 _DOCKER_CONTEXT = _DOCKERFILE.parent
 
@@ -101,7 +101,7 @@ class DockerExecutor:
 
         self._require_docker()
 
-        work_dir = Path(tempfile.mkdtemp(prefix="paper_validator_docker_"))
+        work_dir = Path(tempfile.mkdtemp(prefix="openra_docker_"))
         try:
             # Step 2: write script
             script_path = work_dir / "script.py"
@@ -273,7 +273,7 @@ class DockerExecutor:
                 "Build it first:\n"
                 "  make build-sandbox\n"
                 "or:\n"
-                "  from paper_validator.codegen.docker_executor import DockerExecutor\n"
+                "  from openra.codegen.docker_executor import DockerExecutor\n"
                 "  DockerExecutor.build_image()"
             )
 

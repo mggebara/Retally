@@ -7,8 +7,8 @@ import json
 import pytest
 from unittest.mock import MagicMock
 
-from paper_validator.paper.extractor import ClaimExtractor
-from paper_validator.models import Claim, ClaimType, DatasetSource, Paper
+from openra.paper.extractor import ClaimExtractor
+from openra.models import Claim, ClaimType, DatasetSource, Paper
 
 
 def _make_mock_client(response_text: str):

@@ -1,6 +1,6 @@
-"""paper_validator — automated reproduction and validation of academic paper results."""
+"""OpenRA — Open Source Research Assistant for automated validation of academic paper results."""
 
-from paper_validator.models import (
+from openra.models import (
     Claim,
     ClaimType,
     ClaimValidationResult,
@@ -11,7 +11,7 @@ from paper_validator.models import (
     Paper,
     ValidationReport,
 )
-from paper_validator.pipeline import ValidationPipeline
+from openra.pipeline import ValidationPipeline
 
 __all__ = [
     "Claim",

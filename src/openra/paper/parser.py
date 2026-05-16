@@ -19,7 +19,7 @@ from pathlib import Path
 import fitz  # PyMuPDF
 import requests
 
-from paper_validator.models import Paper
+from openra.models import Paper
 
 
 class PaperParser:
