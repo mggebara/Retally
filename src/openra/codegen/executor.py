@@ -30,7 +30,7 @@ import warnings
 from pathlib import Path
 from typing import Any
 
-from paper_validator.models import Dataset, ExecutionResult
+from openra.models import Dataset, ExecutionResult
 
 
 # Names that generated code must not import or call.
@@ -218,4 +218,4 @@ class CodeExecutor:
         Use ``tempfile.mkdtemp`` with a descriptive prefix.  The caller is
         responsible for cleanup after the ExecutionResult has been captured.
         """
-        return Path(tempfile.mkdtemp(prefix="paper_validator_"))
+        return Path(tempfile.mkdtemp(prefix="openra_"))

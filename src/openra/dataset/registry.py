@@ -18,7 +18,7 @@ import json
 from dataclasses import asdict
 from pathlib import Path
 
-from paper_validator.models import DatasetReference, DatasetSource
+from openra.models import DatasetReference, DatasetSource
 
 
 class DatasetRegistry:

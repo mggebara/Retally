@@ -4,8 +4,8 @@ import pytest
 from pathlib import Path
 from unittest.mock import MagicMock
 
-from paper_validator.codegen.executor import CodeExecutor
-from paper_validator.models import Dataset, ExecutionResult
+from openra.codegen.executor import CodeExecutor
+from openra.models import Dataset, ExecutionResult
 
 
 @pytest.fixture

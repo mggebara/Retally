@@ -11,7 +11,7 @@ from __future__ import annotations
 import json
 import re
 
-from paper_validator.models import Claim, ClaimType, DatasetReference, DatasetSource, Paper
+from openra.models import Claim, ClaimType, DatasetReference, DatasetSource, Paper
 
 
 class ClaimExtractor:

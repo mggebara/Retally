@@ -4,8 +4,8 @@ import pytest
 from pathlib import Path
 from unittest.mock import MagicMock, call
 
-from paper_validator.pipeline import ValidationPipeline
-from paper_validator.models import (
+from openra.pipeline import ValidationPipeline
+from openra.models import (
     Claim,
     ClaimType,
     ClaimValidationResult,

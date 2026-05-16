@@ -13,8 +13,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from paper_validator.codegen.docker_executor import DEFAULT_IMAGE, DockerExecutor
-from paper_validator.models import Dataset, ExecutionResult
+from openra.codegen.docker_executor import DEFAULT_IMAGE, DockerExecutor
+from openra.models import Dataset, ExecutionResult
 
 
 # ---------------------------------------------------------------------------

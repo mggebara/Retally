@@ -5,9 +5,9 @@ import pytest
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-from paper_validator.dataset.downloader import DatasetDownloader
-from paper_validator.dataset.registry import DatasetRegistry
-from paper_validator.models import DatasetReference, DatasetSource
+from openra.dataset.downloader import DatasetDownloader
+from openra.dataset.registry import DatasetRegistry
+from openra.models import DatasetReference, DatasetSource
 
 
 @pytest.fixture

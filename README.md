@@ -1,6 +1,6 @@
-# open-pi-testing — Automated Paper Validation
+# OpenRA — Open Source Research Assistant
 
-A framework that reads an academic paper, downloads the relevant dataset, generates scikit-learn reproduction code via the Claude API, executes it in an isolated environment, and compares the reproduced numbers against the paper's stated results.
+OpenRA automates the validation of academic papers: it reads a paper, downloads the relevant dataset, generates scikit-learn reproduction code via the Claude API, executes it in an isolated environment, and compares the reproduced numbers against the paper's stated results.
 
 ---
 
@@ -71,8 +71,8 @@ Each step is a standalone class that can be swapped out or called independently.
 ## Installation
 
 ```bash
-git clone https://github.com/mggebara/open-pi-testing.git
-cd open-pi-testing
+git clone https://github.com/mggebara/openra.git
+cd openra
 pip install -e ".[dev]"
 ```
 
@@ -87,7 +87,7 @@ export ANTHROPIC_API_KEY="sk-ant-..."
 ## Quick start — one command
 
 ```python
-from paper_validator import ValidationPipeline
+from openra import ValidationPipeline
 
 pipeline = ValidationPipeline.default()
 
@@ -95,7 +95,7 @@ pipeline = ValidationPipeline.default()
 report = pipeline.validate("your-paper-source-here")
 
 # Print a coloured summary to the terminal
-from paper_validator.validation.reporter import ValidationReporter
+from openra.validation.reporter import ValidationReporter
 reporter = ValidationReporter()
 print(reporter.to_console(report))
 
@@ -125,8 +125,8 @@ arXiv ID instead.
 """
 
 import os
-from paper_validator import ValidationPipeline
-from paper_validator.validation.reporter import ValidationReporter
+from openra import ValidationPipeline
+from openra.validation.reporter import ValidationReporter
 
 # Minimal paper description — in a real run this comes from a PDF or arXiv.
 PAPER_TEXT = """
@@ -209,7 +209,7 @@ the full stdout/stderr from execution.
 The pipeline accepts multiple input formats.  Pass whichever is most convenient:
 
 ```python
-from paper_validator import ValidationPipeline
+from openra import ValidationPipeline
 
 pipeline = ValidationPipeline.default()
 
@@ -235,8 +235,8 @@ If the extractor cannot find the dataset, or you want to pin a specific
 version, pass it explicitly:
 
 ```python
-from paper_validator import ValidationPipeline
-from paper_validator.models import DatasetReference, DatasetSource
+from openra import ValidationPipeline
+from openra.models import DatasetReference, DatasetSource
 
 pipeline = ValidationPipeline.default()
 
@@ -262,7 +262,7 @@ preflight check.
 ```bash
 make build-sandbox
 # or equivalently:
-# docker build -f docker/Dockerfile.sandbox -t paper-validator-sandbox:latest docker/
+# docker build -f docker/Dockerfile.sandbox -t openra-sandbox:latest docker/
 ```
 
 The image contains: `scikit-learn`, `xgboost`, `lightgbm`, `pandas`, `numpy`,
@@ -272,7 +272,7 @@ internet access is needed once the image is built.
 ### Use the Docker executor
 
 ```python
-from paper_validator import ValidationPipeline
+from openra import ValidationPipeline
 
 pipeline = ValidationPipeline.default(
     use_docker=True,          # enable DockerExecutor
@@ -332,7 +332,7 @@ with a note in the `notes` field.
 ### Saving reports
 
 ```python
-from paper_validator.validation.reporter import ValidationReporter
+from openra.validation.reporter import ValidationReporter
 
 reporter = ValidationReporter()
 
@@ -390,8 +390,8 @@ needed for papers that use them.
 ### Adding a custom dataset
 
 ```python
-from paper_validator.models import DatasetReference, DatasetSource
-from paper_validator.dataset.registry import DatasetRegistry
+from openra.models import DatasetReference, DatasetSource
+from openra.dataset.registry import DatasetRegistry
 
 registry = DatasetRegistry()
 registry.load()
@@ -408,7 +408,7 @@ registry.register(DatasetReference(
 ## Architecture
 
 ```
-src/paper_validator/
+src/openra/
 ├── models.py                  Shared dataclasses
 ├── pipeline.py                ValidationPipeline orchestrator
 ├── paper/
@@ -443,7 +443,7 @@ Makefile                       build-sandbox / test / lint / install
 |---|---|---|
 | `anthropic_api_key` | `None` (reads `ANTHROPIC_API_KEY`) | Anthropic API key |
 | `use_docker` | `False` | Use `DockerExecutor` instead of subprocess |
-| `docker_image` | `"paper-validator-sandbox:latest"` | Docker image tag |
+| `docker_image` | `"openra-sandbox:latest"` | Docker image tag |
 | `docker_memory` | `"4g"` | Container memory limit |
 | `docker_cpus` | `1.0` | Container CPU limit |
 
@@ -458,7 +458,7 @@ Makefile                       build-sandbox / test / lint / install
 
 | Parameter | Default | Description |
 |---|---|---|
-| `image` | `"paper-validator-sandbox:latest"` | Docker image tag |
+| `image` | `"openra-sandbox:latest"` | Docker image tag |
 | `timeout` | `300` | Seconds before the container is killed |
 | `memory_limit` | `"4g"` | Docker `--memory` value |
 | `cpu_count` | `1.0` | Docker `--cpus` value |

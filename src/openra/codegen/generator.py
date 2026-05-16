@@ -25,7 +25,7 @@ from __future__ import annotations
 
 import re
 
-from paper_validator.models import ClaimType, Dataset, Paper
+from openra.models import ClaimType, Dataset, Paper
 
 
 class CodeGenerator:
