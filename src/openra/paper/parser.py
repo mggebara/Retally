@@ -11,6 +11,7 @@ Supported input formats:
 
 from __future__ import annotations
 
+import logging
 import re
 import tempfile
 import xml.etree.ElementTree as ET
@@ -20,6 +21,8 @@ import fitz  # PyMuPDF
 import requests
 
 from openra.models import Paper
+
+logger = logging.getLogger(__name__)
 
 
 class PaperParser:
@@ -123,7 +126,10 @@ class PaperParser:
                 tmp.write(chunk)
             tmp_path = Path(tmp.name)
 
-        paper = self.parse_pdf(tmp_path)
+        try:
+            paper = self.parse_pdf(tmp_path)
+        finally:
+            tmp_path.unlink(missing_ok=True)
 
         # Overwrite with API metadata (more reliable than PDF extraction)
         paper.title = title
@@ -172,6 +178,7 @@ class PaperParser:
                 break
 
         if pdf_url:
+            tmp_path: Path | None = None
             try:
                 pdf_response = requests.get(pdf_url, stream=True, timeout=60)
                 pdf_response.raise_for_status()
@@ -185,9 +192,18 @@ class PaperParser:
                 paper.abstract = abstract or paper.abstract
                 paper.source_url = doi_url
                 return paper
-            except Exception:
-                # Fall through to returning metadata-only paper
-                pass
+            except (requests.RequestException, OSError, ValueError) as exc:
+                # PDF fetch / parse failed; log and fall through to the
+                # metadata-only paper.  Downstream callers can still see the
+                # abstract.
+                logger.warning(
+                    "DOI %s: failed to fetch or parse linked PDF (%s); returning metadata-only paper.",
+                    doi,
+                    exc,
+                )
+            finally:
+                if tmp_path is not None:
+                    tmp_path.unlink(missing_ok=True)
 
         # No PDF available — return what we have, using abstract as full_text
         return Paper(
@@ -215,7 +231,10 @@ class PaperParser:
                 for chunk in response.iter_content(chunk_size=8192):
                     tmp.write(chunk)
                 tmp_path = Path(tmp.name)
-            paper = self.parse_pdf(tmp_path)
+            try:
+                paper = self.parse_pdf(tmp_path)
+            finally:
+                tmp_path.unlink(missing_ok=True)
             paper.source_url = url
             return paper
 
