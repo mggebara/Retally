@@ -9,11 +9,10 @@ The comparator must figure out which reproduced value corresponds to each Claim.
 This is non-trivial because the paper may use names like "classification accuracy"
 while the code emits "test_accuracy".
 
-Recommended approach:
+Approach:
   1. Exact key match (normalise both sides: lowercase, strip spaces/underscores).
   2. Substring match (claim description contains the key or vice versa).
-  3. As a fallback, use Claude to match claims to output keys by semantic
-     similarity (optional, add a ``use_llm_matching`` flag to __init__).
+  3. Match on claim_type name vs normalised output keys.
 
 Tolerance
 ---------
@@ -37,22 +36,13 @@ class ResultComparator:
     default_tolerance:
         Default relative tolerance (fraction, not percentage).  A claim
         passes if ``|reproduced - claimed| / |claimed| <= tolerance``.
-    use_llm_matching:
-        If True, fall back to an LLM call to match ambiguous metric names.
-        Requires ``anthropic_client`` to be provided.
-    anthropic_client:
-        Required only when ``use_llm_matching=True``.
     """
 
     def __init__(
         self,
         default_tolerance: float = 0.01,
-        use_llm_matching: bool = False,
-        anthropic_client=None,
     ) -> None:
         self.default_tolerance = default_tolerance
-        self.use_llm_matching = use_llm_matching
-        self._client = anthropic_client
 
     def compare_all(
         self,
@@ -165,7 +155,6 @@ class ResultComparator:
           2. Substring match (normalised claim key is substring of normalised output
              key, or vice versa).
           3. Check claim.claim_type name against normalised output keys.
-          4. LLM match (if ``use_llm_matching`` is True) — not implemented.
         """
         if not outputs:
             return None, None

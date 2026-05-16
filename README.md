@@ -73,7 +73,28 @@ Each step is a standalone class that can be swapped out or called independently.
 ```bash
 git clone https://github.com/mggebara/openra.git
 cd openra
-pip install -e ".[dev]"
+pip install -e .
+```
+
+The base install pulls only what the host actually needs: the Claude API
+client, PyMuPDF for paper parsing, and pandas/requests for the dataset
+downloader.  Heavy ML libraries (scikit-learn, numpy, scipy) live in the
+Docker sandbox image; they are NOT installed on the host by default.
+
+Optional extras:
+
+| Extra | Adds | When to use it |
+|---|---|---|
+| `[host-exec]` | scikit-learn, numpy, scipy | You want to run generated code via the subprocess executor instead of Docker. |
+| `[kaggle]` | kaggle | You will download datasets from Kaggle. |
+| `[uci]` | ucimlrepo | You will download datasets from the UCI ML Repository. |
+| `[openml]` | openml | You will download datasets from OpenML. |
+| `[dev]` | pytest, ruff, mypy, plus every dataset backend | Working on OpenRA itself. |
+
+For example, to install with UCI + Kaggle support and dev tooling:
+
+```bash
+pip install -e ".[uci,kaggle,dev]"
 ```
 
 Set your API key:
@@ -251,11 +272,13 @@ report = pipeline.validate_with_known_dataset("path/to/paper.pdf", ref)
 
 ---
 
-## Docker sandbox (recommended)
+## Docker sandbox (default)
 
 The Docker executor runs generated code with **zero network access** and a
 read-only filesystem, providing OS-level isolation independent of the AST
-preflight check.
+preflight check.  This is the default execution mode: a call to
+`ValidationPipeline.default()` will raise if Docker is unavailable, rather
+than silently degrading to running Claude-generated code on the host.
 
 ### Build the sandbox image (one-time)
 
@@ -269,22 +292,24 @@ The image contains: `scikit-learn`, `xgboost`, `lightgbm`, `pandas`, `numpy`,
 `scipy`, `statsmodels`, `matplotlib`.  It is built offline-capable — no
 internet access is needed once the image is built.
 
-### Use the Docker executor
+### Tune resource limits
 
 ```python
 from openra import ValidationPipeline
 
 pipeline = ValidationPipeline.default(
-    use_docker=True,          # enable DockerExecutor
-    docker_memory="4g",       # RAM cap per run
-    docker_cpus=1.0,          # CPU cap per run
+    docker_memory="4g",       # RAM cap per run (default 4g)
+    docker_cpus=1.0,          # CPU cap per run (default 1.0)
 )
 
 report = pipeline.validate("path/to/paper.pdf")
 ```
 
-If Docker is unavailable or the image is not built, the pipeline falls back to
-the subprocess executor with a warning.
+If Docker is unavailable or the image is not built, `default()` raises a
+`RuntimeError` explaining how to build the sandbox.  In throwaway / CI
+environments where you have other isolation already, you can pass
+`allow_unsafe_subprocess=True` to fall back to the subprocess executor
+with a warning.
 
 ### Isolation guarantees
 
@@ -442,7 +467,8 @@ Makefile                       build-sandbox / test / lint / install
 | Parameter | Default | Description |
 |---|---|---|
 | `anthropic_api_key` | `None` (reads `ANTHROPIC_API_KEY`) | Anthropic API key |
-| `use_docker` | `False` | Use `DockerExecutor` instead of subprocess |
+| `use_docker` | `True` | Use `DockerExecutor` for OS-level isolation. Set to `False` to opt into the subprocess `CodeExecutor` with no isolation. |
+| `allow_unsafe_subprocess` | `False` | When `use_docker=True` but Docker is unavailable, fall back to the subprocess executor instead of raising. |
 | `docker_image` | `"openra-sandbox:latest"` | Docker image tag |
 | `docker_memory` | `"4g"` | Container memory limit |
 | `docker_cpus` | `1.0` | Container CPU limit |

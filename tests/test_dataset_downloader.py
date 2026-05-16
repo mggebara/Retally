@@ -37,13 +37,31 @@ def test_local_path_uses_cache_dir(downloader, tmp_path):
     assert str(tmp_path / "datasets") in str(path)
 
 
-def test_download_returns_cached_if_exists(downloader, tmp_path):
+def test_download_returns_cached_if_complete_sentinel_present(downloader, tmp_path):
     ref = DatasetReference(name="test-ds", source=DatasetSource.DIRECT_URL, url="http://example.com/ds.csv")
     local = downloader._local_path(ref)
     local.mkdir(parents=True, exist_ok=True)
     (local / "data.csv").write_text("a,b\n1,2\n")
+    # The sentinel file is the cache-validity signal; without it the
+    # downloader treats the directory as a partial / interrupted download
+    # and re-fetches.
+    (local / ".openra-download-complete").touch()
     dataset = downloader.download(ref)
     assert dataset.local_path == local
+
+
+def test_download_ignores_cache_without_sentinel(downloader, tmp_path):
+    # A directory with data files but no .openra-download-complete sentinel
+    # represents a partial download.  It must NOT be returned as cached;
+    # the download is retried (and here fails because the URL is fake).
+    ref = DatasetReference(
+        name="partial-ds", source=DatasetSource.DIRECT_URL, url="http://example.com/ds.csv"
+    )
+    local = downloader._local_path(ref)
+    local.mkdir(parents=True, exist_ok=True)
+    (local / "data.csv").write_text("a,b\n1,2\n")  # partial
+    with pytest.raises(RuntimeError, match="Failed to download"):
+        downloader.download(ref)
 
 
 def test_download_loads_metadata_from_sidecar(downloader, tmp_path):
@@ -61,6 +79,7 @@ def test_download_loads_metadata_from_sidecar(downloader, tmp_path):
         "source_url": "",
     }
     (local / "metadata.json").write_text(json.dumps(meta))
+    (local / ".openra-download-complete").touch()
     dataset = downloader.download(ref)
     assert dataset.metadata["target_column"] == "b"
 

@@ -49,7 +49,9 @@ class ValidationPipeline:
         pipeline wired with sensible defaults.
     max_refinements:
         How many times the pipeline will ask the CodeGenerator to fix
-        broken code before giving up and recording a failed execution.
+        broken code (i.e. ``refine()`` calls) after the initial
+        ``generate()``.  Total executions is therefore up to
+        ``max_refinements + 1``.
     """
 
     def __init__(
@@ -244,7 +246,8 @@ class ValidationPipeline:
     def default(
         cls,
         anthropic_api_key: str | None = None,
-        use_docker: bool = False,
+        use_docker: bool = True,
+        allow_unsafe_subprocess: bool = False,
         docker_image: str = "openra-sandbox:latest",
         docker_memory: str = "4g",
         docker_cpus: float = 1.0,
@@ -257,10 +260,18 @@ class ValidationPipeline:
             API key for the Anthropic client.  If None, reads
             ``ANTHROPIC_API_KEY`` from the environment.
         use_docker:
-            If True, use ``DockerExecutor`` for OS-level sandboxing with
-            ``--network none``.  Requires the sandbox image to be built first
-            (``make build-sandbox``).  Falls back to ``CodeExecutor`` with a
-            warning if Docker is unavailable.
+            If True (the default), run generated code inside the Docker
+            sandbox.  Requires the sandbox image to be built first
+            (``make build-sandbox``).  If Docker is unavailable, raises a
+            ``RuntimeError`` unless ``allow_unsafe_subprocess=True``.
+        allow_unsafe_subprocess:
+            Opt-in fallback to the subprocess ``CodeExecutor`` when Docker
+            is unavailable.  The subprocess executor runs Claude-generated
+            code in a plain Python process on the host with only an AST
+            preflight guard, which is trivially bypassable — set this to
+            True only when you have other isolation (e.g. ephemeral VM,
+            container around the pipeline itself) or you are running known
+            test code.  Has no effect when ``use_docker=False``.
         docker_image:
             Docker image tag used by ``DockerExecutor``.
         docker_memory:
@@ -284,17 +295,26 @@ class ValidationPipeline:
             )
             if docker_exec.is_available() and docker_exec.is_image_built():
                 executor = docker_exec
-            else:
+            elif allow_unsafe_subprocess:
                 import warnings
 
                 warnings.warn(
                     "Docker is not available or sandbox image not built; "
-                    "falling back to CodeExecutor (subprocess mode). "
-                    "Run 'make build-sandbox' to enable Docker isolation.",
+                    "falling back to CodeExecutor (subprocess mode) because "
+                    "allow_unsafe_subprocess=True.  Generated code will run on "
+                    "the host with no OS-level isolation.",
                     RuntimeWarning,
                     stacklevel=2,
                 )
                 executor = CodeExecutor()
+            else:
+                raise RuntimeError(
+                    "Docker is not available or sandbox image not built.  "
+                    "Run 'make build-sandbox' to enable the Docker sandbox, or "
+                    "pass ValidationPipeline.default(allow_unsafe_subprocess=True) "
+                    "to opt into running Claude-generated code on the host without "
+                    "OS-level isolation."
+                )
         else:
             executor = CodeExecutor()
 

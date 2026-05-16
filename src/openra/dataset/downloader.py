@@ -19,6 +19,7 @@ Supported sources:
 from __future__ import annotations
 
 import json
+import logging
 import re
 import tarfile
 import zipfile
@@ -30,6 +31,33 @@ import requests
 from tqdm import tqdm
 
 from openra.models import Dataset, DatasetReference, DatasetSource
+
+logger = logging.getLogger(__name__)
+
+# Sentinel file written at the end of a successful download.  Its presence
+# is the cache-validity signal; a partial/interrupted download leaves the
+# directory without it and will be re-downloaded next time.
+_COMPLETE_SENTINEL = ".openra-download-complete"
+
+_ARCHIVE_SUFFIXES = (".zip", ".tar.gz", ".tgz", ".tar")
+
+
+def _infer_task_type(target: Any) -> str:
+    """Return ``"classification"`` if the target has <=20 unique values, else ``"regression"``.
+
+    Falls back to ``"classification"`` if ``nunique`` is unavailable on the
+    given object (e.g. a non-DataFrame target).
+    """
+    try:
+        nunique = target.nunique()
+        # pandas DataFrames return a Series here; take the max so a multi-
+        # column target counts as classification only when EVERY column is
+        # low-cardinality.
+        if hasattr(nunique, "max"):
+            nunique = nunique.max()
+        return "classification" if int(nunique) <= 20 else "regression"
+    except (AttributeError, TypeError, ValueError):
+        return "classification"
 
 
 class DatasetDownloader:
@@ -53,9 +81,11 @@ class DatasetDownloader:
         """Download the dataset described by ``reference`` and return a Dataset.
 
         Dispatches to the appropriate private method based on
-        ``reference.source``.  If the dataset is already present in the
-        cache (local_path exists and contains at least one .csv file),
-        skip the download and return the cached Dataset immediately.
+        ``reference.source``.  A successful download is marked with a
+        ``.openra-download-complete`` sentinel file in the destination
+        directory; if that sentinel is present the cached result is
+        returned without touching the network.  A partial / interrupted
+        download leaves the sentinel absent and will be retried.
 
         Raises
         ------
@@ -63,26 +93,18 @@ class DatasetDownloader:
             If ``reference.source`` is ``DatasetSource.UNKNOWN`` and no
             ``reference.url`` is provided.
         RuntimeError
-            If the download fails after retries.
+            If the download fails.
         """
         dest = self._local_path(reference)
 
-        # Return cached result if a CSV is already present
-        if dest.exists() and any(dest.glob("*.csv")):
-            metadata: dict[str, Any] = {}
-            meta_file = dest / "metadata.json"
-            if meta_file.exists():
-                try:
-                    with open(meta_file, "r", encoding="utf-8") as fh:
-                        metadata = json.load(fh)
-                except (json.JSONDecodeError, OSError):
-                    pass
+        # Return cached result only if the sentinel file is present.
+        if (dest / _COMPLETE_SENTINEL).exists():
             return Dataset(
                 name=reference.name,
                 source_url=reference.url or "",
                 local_path=dest,
                 file_format="csv",
-                metadata=metadata,
+                metadata=self._read_metadata(dest),
             )
 
         dest.mkdir(parents=True, exist_ok=True)
@@ -121,22 +143,29 @@ class DatasetDownloader:
         except Exception as exc:
             raise RuntimeError(f"Failed to download dataset '{reference.name}': {exc}") from exc
 
-        metadata = {}
-        meta_file = dest / "metadata.json"
-        if meta_file.exists():
-            try:
-                with open(meta_file, "r", encoding="utf-8") as fh:
-                    metadata = json.load(fh)
-            except (json.JSONDecodeError, OSError):
-                pass
+        # Mark the cache as complete only after the dispatch returns
+        # without raising.
+        (dest / _COMPLETE_SENTINEL).touch()
 
         return Dataset(
             name=reference.name,
             source_url=url,
             local_path=dest,
             file_format="csv",
-            metadata=metadata,
+            metadata=self._read_metadata(dest),
         )
+
+    def _read_metadata(self, dest: Path) -> dict[str, Any]:
+        """Read ``metadata.json`` from ``dest`` if present, else return ``{}``."""
+        meta_file = dest / "metadata.json"
+        if not meta_file.exists():
+            return {}
+        try:
+            with open(meta_file, "r", encoding="utf-8") as fh:
+                return json.load(fh)
+        except (json.JSONDecodeError, OSError) as exc:
+            logger.warning("Could not parse metadata.json in %s: %s", dest, exc)
+            return {}
 
     def _local_path(self, reference: DatasetReference) -> Path:
         """Return the local cache directory for this reference.
@@ -180,77 +209,90 @@ class DatasetDownloader:
         csv_path = dest / "data.csv"
         df.to_csv(csv_path, index=False)
 
-        # Determine task type heuristically
-        try:
-            max_unique = y.nunique().max()
-            task_type = "classification" if max_unique <= 20 else "regression"
-        except Exception:
-            task_type = "classification"
-
         source_url = f"https://archive.ics.uci.edu/dataset/{dataset_id}"
-        self._write_metadata(dest, df, source_url=source_url, task_type=task_type)
+        self._write_metadata(dest, df, source_url=source_url, task_type=_infer_task_type(y))
         return dest
 
-    def _download_direct_url(self, url: str, dest: Path) -> Path:
-        """Download a file from a direct HTTP/HTTPS URL.
+    def _stream_to_file(
+        self,
+        url: str,
+        dest: Path,
+        filename: str,
+        timeout: int = 120,
+        extract_archives: bool = True,
+    ) -> Path:
+        """Stream ``url`` to ``dest/filename`` with a tqdm progress bar.
 
-        Uses ``requests.get`` with ``stream=True`` and writes in 8192-byte chunks.
-        Shows a tqdm progress bar.  If the downloaded file is a zip or tar archive
-        it will be extracted into ``dest``.
+        If ``extract_archives`` is True and the file is a recognised archive
+        (zip/tar/tar.gz/tgz), extract it into ``dest`` and delete the archive.
 
-        Parameters
-        ----------
-        url:
-            Remote URL to fetch.
-        dest:
-            Destination directory.
+        Returns the path to the downloaded file (or to ``dest`` if extracted).
+        Raises ``requests.RequestException`` on HTTP failure.
         """
-        dest.mkdir(parents=True, exist_ok=True)
-
-        try:
-            response = requests.get(url, stream=True, timeout=60, allow_redirects=True)
-            response.raise_for_status()
-        except requests.RequestException as exc:
-            raise RuntimeError(f"HTTP request failed for {url}: {exc}") from exc
-
-        # Determine filename from URL or Content-Disposition header
-        content_disposition = response.headers.get("Content-Disposition", "")
-        if "filename=" in content_disposition:
-            filename = content_disposition.split("filename=")[-1].strip().strip('"')
-        else:
-            filename = url.split("?")[0].rstrip("/").split("/")[-1] or "download"
-
-        content_length = response.headers.get("Content-Length")
-        total = int(content_length) if content_length and content_length.isdigit() else None
-
         file_path = dest / filename
-        chunk_size = 8192
+        response = requests.get(url, stream=True, timeout=timeout, allow_redirects=True)
+        response.raise_for_status()
 
+        total = int(response.headers.get("Content-Length", 0)) or None
         with (
             open(file_path, "wb") as fh,
-            tqdm(
-                desc=filename,
-                total=total,
-                unit="B",
-                unit_scale=True,
-                unit_divisor=1024,
-            ) as pbar,
+            tqdm(desc=filename, total=total, unit="B", unit_scale=True, unit_divisor=1024) as pbar,
         ):
-            for chunk in response.iter_content(chunk_size=chunk_size):
+            for chunk in response.iter_content(chunk_size=8192):
                 if chunk:
                     fh.write(chunk)
                     pbar.update(len(chunk))
 
-        # Extract archive if needed
-        name_lower = filename.lower()
-        if (
-            name_lower.endswith(".zip")
-            or name_lower.endswith(".tar.gz")
-            or name_lower.endswith(".tgz")
-            or name_lower.endswith(".tar")
-        ):
+        if extract_archives and filename.lower().endswith(_ARCHIVE_SUFFIXES):
             self._extract_archive(file_path, dest)
+            return dest
+        return file_path
 
+    def _stream_many(self, file_specs: list[tuple[str, str]], dest: Path, source_label: str) -> int:
+        """Stream each ``(url, filename)`` in ``file_specs`` into ``dest``.
+
+        Per-file failures are logged and counted but do not abort the loop.
+        Returns the number of files that failed; callers can record it in
+        the dataset's metadata so partial completion is observable.
+        """
+        failures = 0
+        for url, filename in file_specs:
+            try:
+                self._stream_to_file(url, dest, filename)
+            except (requests.RequestException, OSError) as exc:
+                failures += 1
+                logger.warning("%s: failed to download %s (%s)", source_label, filename, exc)
+        return failures
+
+    def _download_direct_url(self, url: str, dest: Path) -> Path:
+        """Download a single file from a direct HTTP/HTTPS URL.
+
+        If the downloaded file is a zip/tar archive it is extracted into
+        ``dest`` and the archive deleted.
+        """
+        dest.mkdir(parents=True, exist_ok=True)
+
+        try:
+            # HEAD the URL with redirects so we can extract the filename from
+            # the Content-Disposition header without buffering the body.
+            response = requests.head(url, allow_redirects=True, timeout=30)
+            response.raise_for_status()
+            content_disposition = response.headers.get("Content-Disposition", "")
+            final_url = response.url
+        except requests.RequestException:
+            # HEAD failed; fall back to the URL itself for filename inference.
+            content_disposition = ""
+            final_url = url
+
+        if "filename=" in content_disposition:
+            filename = content_disposition.split("filename=")[-1].strip().strip('"')
+        else:
+            filename = final_url.split("?")[0].rstrip("/").split("/")[-1] or "download"
+
+        try:
+            self._stream_to_file(url, dest, filename)
+        except requests.RequestException as exc:
+            raise RuntimeError(f"HTTP request failed for {url}: {exc}") from exc
         return dest
 
     def _download_kaggle(self, slug: str, dest: Path) -> Path:
@@ -320,42 +362,17 @@ class DatasetDownloader:
 
         dest.mkdir(parents=True, exist_ok=True)
 
+        file_specs: list[tuple[str, str]] = []
         for file_info in files:
             file_url = file_info.get("links", {}).get("self") or file_info.get("download_url")
             if not file_url:
                 continue
             filename = file_info.get("filename") or file_info.get("key") or file_url.split("/")[-1]
-            file_path = dest / filename
-            try:
-                r = requests.get(file_url, stream=True, timeout=120)
-                r.raise_for_status()
-                total = int(r.headers.get("Content-Length", 0)) or None
-                with (
-                    open(file_path, "wb") as fh,
-                    tqdm(
-                        desc=filename,
-                        total=total,
-                        unit="B",
-                        unit_scale=True,
-                        unit_divisor=1024,
-                    ) as pbar,
-                ):
-                    for chunk in r.iter_content(chunk_size=8192):
-                        if chunk:
-                            fh.write(chunk)
-                            pbar.update(len(chunk))
-                # Extract if archive
-                name_lower = filename.lower()
-                if (
-                    name_lower.endswith(".zip")
-                    or name_lower.endswith(".tar.gz")
-                    or name_lower.endswith(".tgz")
-                    or name_lower.endswith(".tar")
-                ):
-                    self._extract_archive(file_path, dest)
-            except Exception as exc:
-                print(f"[DatasetDownloader] Warning: could not download {file_url}: {exc}")
+            file_specs.append((file_url, filename))
 
+        failures = self._stream_many(file_specs, dest, source_label=f"Zenodo {record_id}")
+        if failures and failures == len(file_specs):
+            raise RuntimeError(f"All {failures} files from Zenodo record {record_id} failed to download.")
         return dest
 
     def _download_openml(self, dataset_id: str, dest: Path) -> Path:
@@ -398,16 +415,8 @@ class DatasetDownloader:
         csv_path = dest / "data.csv"
         df.to_csv(csv_path, index=False)
 
-        # Determine task type
-        try:
-            target_series = df.iloc[:, -1]
-            max_unique = target_series.nunique()
-            task_type = "classification" if max_unique <= 20 else "regression"
-        except Exception:
-            task_type = "classification"
-
         source_url = f"https://www.openml.org/d/{dataset_id}"
-        self._write_metadata(dest, df, source_url=source_url, task_type=task_type)
+        self._write_metadata(dest, df, source_url=source_url, task_type=_infer_task_type(df.iloc[:, -1]))
         return dest
 
     def _download_harvard_dataverse(self, doi: str, dest: Path) -> Path:
@@ -437,32 +446,20 @@ class DatasetDownloader:
 
         dest.mkdir(parents=True, exist_ok=True)
 
+        file_specs: list[tuple[str, str]] = []
         for file_info in files:
             try:
                 file_id = file_info["dataFile"]["id"]
                 filename = file_info["dataFile"]["filename"]
-                file_url = f"https://dataverse.harvard.edu/api/access/datafile/{file_id}"
-                file_path = dest / filename
-                r = requests.get(file_url, stream=True, timeout=120)
-                r.raise_for_status()
-                total = int(r.headers.get("Content-Length", 0)) or None
-                with (
-                    open(file_path, "wb") as fh,
-                    tqdm(
-                        desc=filename,
-                        total=total,
-                        unit="B",
-                        unit_scale=True,
-                        unit_divisor=1024,
-                    ) as pbar,
-                ):
-                    for chunk in r.iter_content(chunk_size=8192):
-                        if chunk:
-                            fh.write(chunk)
-                            pbar.update(len(chunk))
-            except Exception as exc:
-                print(f"[DatasetDownloader] Warning: could not download file from Harvard Dataverse: {exc}")
+            except (KeyError, TypeError):
+                logger.warning("Harvard Dataverse %s: skipping file with malformed metadata", doi)
+                continue
+            file_url = f"https://dataverse.harvard.edu/api/access/datafile/{file_id}"
+            file_specs.append((file_url, filename))
 
+        failures = self._stream_many(file_specs, dest, source_label=f"Harvard Dataverse {doi}")
+        if failures and failures == len(file_specs):
+            raise RuntimeError(f"All {failures} files from Harvard Dataverse {doi} failed to download.")
         return dest
 
     def _download_figshare(self, article_id: str, dest: Path) -> Path:
@@ -490,77 +487,41 @@ class DatasetDownloader:
 
         dest.mkdir(parents=True, exist_ok=True)
 
+        file_specs: list[tuple[str, str]] = []
         for file_info in files:
-            try:
-                file_url = file_info["download_url"]
-                filename = file_info.get("name") or file_url.split("/")[-1]
-                file_path = dest / filename
-                r = requests.get(file_url, stream=True, timeout=120)
-                r.raise_for_status()
-                total = int(r.headers.get("Content-Length", 0)) or None
-                with (
-                    open(file_path, "wb") as fh,
-                    tqdm(
-                        desc=filename,
-                        total=total,
-                        unit="B",
-                        unit_scale=True,
-                        unit_divisor=1024,
-                    ) as pbar,
-                ):
-                    for chunk in r.iter_content(chunk_size=8192):
-                        if chunk:
-                            fh.write(chunk)
-                            pbar.update(len(chunk))
-                # Extract if archive
-                name_lower = filename.lower()
-                if (
-                    name_lower.endswith(".zip")
-                    or name_lower.endswith(".tar.gz")
-                    or name_lower.endswith(".tgz")
-                    or name_lower.endswith(".tar")
-                ):
-                    self._extract_archive(file_path, dest)
-            except Exception as exc:
-                print(
-                    f"[DatasetDownloader] Warning: could not download FigShare file "
-                    f"{file_info.get('name', '?')}: {exc}"
-                )
+            file_url = file_info.get("download_url")
+            if not file_url:
+                logger.warning("FigShare %s: skipping file without download_url", article_id)
+                continue
+            filename = file_info.get("name") or file_url.split("/")[-1]
+            file_specs.append((file_url, filename))
 
+        failures = self._stream_many(file_specs, dest, source_label=f"FigShare {article_id}")
+        if failures and failures == len(file_specs):
+            raise RuntimeError(f"All {failures} files from FigShare article {article_id} failed to download.")
         return dest
 
     def _extract_archive(self, archive_path: Path, dest: Path) -> Path:
-        """Extract a zip or tar archive into ``dest`` and delete the archive.
-
-        Parameters
-        ----------
-        archive_path:
-            Path to the archive file on disk.
-        dest:
-            Directory into which the archive contents will be extracted.
-        """
+        """Extract a zip or tar archive into ``dest`` and delete the archive."""
         name_lower = archive_path.name.lower()
         try:
             if name_lower.endswith(".zip"):
                 with zipfile.ZipFile(archive_path, "r") as zf:
                     zf.extractall(dest)
-            elif name_lower.endswith(".tar.gz") or name_lower.endswith(".tgz") or name_lower.endswith(".tar"):
+            elif name_lower.endswith((".tar.gz", ".tgz", ".tar")):
                 with tarfile.open(archive_path, "r:*") as tf:
                     tf.extractall(dest)
             else:
-                print(
-                    f"[DatasetDownloader] Warning: unrecognised archive format for "
-                    f"{archive_path.name}, leaving as-is."
-                )
+                logger.warning("Unrecognised archive format for %s, leaving as-is.", archive_path.name)
                 return dest
-        except Exception as exc:
-            print(f"[DatasetDownloader] Warning: could not extract {archive_path.name}: {exc}")
+        except (zipfile.BadZipFile, tarfile.TarError, OSError) as exc:
+            logger.warning("Could not extract %s: %s", archive_path.name, exc)
             return dest
 
         try:
             archive_path.unlink()
         except OSError as exc:
-            print(f"[DatasetDownloader] Warning: could not delete archive {archive_path}: {exc}")
+            logger.warning("Could not delete archive %s: %s", archive_path, exc)
 
         return dest
 

@@ -15,10 +15,13 @@ is serialised as a DatasetReference dict.
 from __future__ import annotations
 
 import json
+import logging
 from dataclasses import asdict
 from pathlib import Path
 
 from openra.models import DatasetReference, DatasetSource
+
+logger = logging.getLogger(__name__)
 
 
 class DatasetRegistry:
@@ -61,7 +64,7 @@ class DatasetRegistry:
                         access_instructions=entry.get("access_instructions"),
                     )
             except (json.JSONDecodeError, KeyError, TypeError) as exc:
-                print(f"[DatasetRegistry] Warning: could not parse registry file: {exc}")
+                logger.warning("Could not parse registry file %s: %s", self.registry_path, exc)
                 self._entries = {}
 
         self._load_builtins()
