@@ -73,7 +73,28 @@ Each step is a standalone class that can be swapped out or called independently.
 ```bash
 git clone https://github.com/mggebara/openra.git
 cd openra
-pip install -e ".[dev]"
+pip install -e .
+```
+
+The base install pulls only what the host actually needs: the Claude API
+client, PyMuPDF for paper parsing, and pandas/requests for the dataset
+downloader.  Heavy ML libraries (scikit-learn, numpy, scipy) live in the
+Docker sandbox image; they are NOT installed on the host by default.
+
+Optional extras:
+
+| Extra | Adds | When to use it |
+|---|---|---|
+| `[host-exec]` | scikit-learn, numpy, scipy | You want to run generated code via the subprocess executor instead of Docker. |
+| `[kaggle]` | kaggle | You will download datasets from Kaggle. |
+| `[uci]` | ucimlrepo | You will download datasets from the UCI ML Repository. |
+| `[openml]` | openml | You will download datasets from OpenML. |
+| `[dev]` | pytest, ruff, mypy, plus every dataset backend | Working on OpenRA itself. |
+
+For example, to install with UCI + Kaggle support and dev tooling:
+
+```bash
+pip install -e ".[uci,kaggle,dev]"
 ```
 
 Set your API key:
