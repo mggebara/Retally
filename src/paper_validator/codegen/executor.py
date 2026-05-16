@@ -41,6 +41,72 @@ _FORBIDDEN_MODULES = frozenset(
 _RESULT_PREFIX = "RESULT:"
 
 
+# ---------------------------------------------------------------------------
+# Module-level helpers — shared by CodeExecutor and DockerExecutor
+# ---------------------------------------------------------------------------
+
+def preflight_check(code: str) -> None:
+    """Raise ValueError if ``code`` imports a forbidden module or calls os.system.
+
+    This is a best-effort AST scan, not a security boundary.  Use OS-level
+    sandboxing (Docker, seccomp, etc.) for real isolation.
+    """
+    try:
+        tree = ast.parse(code)
+    except SyntaxError as exc:
+        raise ValueError(f"Syntax error in code: {exc}") from exc
+
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                module_root = alias.name.split(".")[0]
+                if module_root in _FORBIDDEN_MODULES:
+                    raise ValueError(f"Forbidden import: {alias.name}")
+
+        elif isinstance(node, ast.ImportFrom):
+            if node.module is not None:
+                module_root = node.module.split(".")[0]
+                if module_root in _FORBIDDEN_MODULES:
+                    raise ValueError(f"Forbidden import: {node.module}")
+
+        elif isinstance(node, ast.Call):
+            func = node.func
+            if (
+                isinstance(func, ast.Attribute)
+                and func.attr == "system"
+                and isinstance(func.value, ast.Name)
+                and func.value.id == "os"
+            ):
+                raise ValueError("Forbidden import: os.system")
+
+
+def parse_outputs(stdout: str) -> dict[str, float]:
+    """Extract ``RESULT:<name>=<value>`` lines from stdout.
+
+    Skips malformed lines with a warning rather than raising.
+    """
+    outputs: dict[str, float] = {}
+    for line in stdout.splitlines():
+        line = line.strip()
+        if not line.startswith(_RESULT_PREFIX):
+            continue
+        rest = line[len(_RESULT_PREFIX):]
+        if "=" not in rest:
+            warnings.warn(f"Malformed RESULT line (no '='): {line!r}", stacklevel=2)
+            continue
+        name, _, value_str = rest.partition("=")
+        name = name.strip()
+        value_str = value_str.strip()
+        if not name:
+            warnings.warn(f"Malformed RESULT line (empty name): {line!r}", stacklevel=2)
+            continue
+        try:
+            outputs[name] = float(value_str)
+        except ValueError:
+            warnings.warn(f"Could not parse float from RESULT line: {line!r}", stacklevel=2)
+    return outputs
+
+
 class CodeExecutor:
     """Executes generated code in a subprocess and parses its outputs.
 
@@ -141,88 +207,10 @@ class CodeExecutor:
                 shutil.rmtree(temp_dir_created, ignore_errors=True)
 
     def _preflight_check(self, code: str) -> None:
-        """Parse the code as an AST and raise ValueError if it uses forbidden imports.
-
-        Walk the AST looking for ``Import`` and ``ImportFrom`` nodes.
-        Raise ``ValueError(f"Forbidden import: {name}")`` for any module in
-        ``_FORBIDDEN_MODULES``.
-
-        Also checks for ``os.system`` calls via Call nodes.
-
-        This is a best-effort check, not a security guarantee.  For stronger
-        isolation, combine with OS-level sandboxing.
-        """
-        try:
-            tree = ast.parse(code)
-        except SyntaxError as exc:
-            raise ValueError(f"Syntax error in code: {exc}") from exc
-
-        for node in ast.walk(tree):
-            # Check Import nodes (e.g. import subprocess)
-            if isinstance(node, ast.Import):
-                for alias in node.names:
-                    module_root = alias.name.split(".")[0]
-                    if module_root in _FORBIDDEN_MODULES:
-                        raise ValueError(f"Forbidden import: {alias.name}")
-
-            # Check ImportFrom nodes (e.g. from subprocess import run)
-            elif isinstance(node, ast.ImportFrom):
-                if node.module is not None:
-                    module_root = node.module.split(".")[0]
-                    if module_root in _FORBIDDEN_MODULES:
-                        raise ValueError(f"Forbidden import: {node.module}")
-
-            # Check for os.system calls via Call nodes
-            elif isinstance(node, ast.Call):
-                func = node.func
-                if (
-                    isinstance(func, ast.Attribute)
-                    and func.attr == "system"
-                    and isinstance(func.value, ast.Name)
-                    and func.value.id == "os"
-                ):
-                    raise ValueError("Forbidden import: os.system")
+        preflight_check(code)
 
     def _parse_outputs(self, stdout: str) -> dict[str, float]:
-        """Extract RESULT:<name>=<value> lines from stdout.
-
-        Parse each line that starts with ``RESULT:``.  Split on ``=`` to get
-        the metric name and value.  Convert the value to float.  Skip lines
-        that do not match or whose value cannot be parsed as a float (log a
-        warning instead of raising).
-
-        Returns a dict of {metric_name: float_value}.
-        """
-        outputs: dict[str, float] = {}
-        for line in stdout.splitlines():
-            line = line.strip()
-            if not line.startswith(_RESULT_PREFIX):
-                continue
-            rest = line[len(_RESULT_PREFIX):]
-            # Expect format: <name>=<value>
-            if "=" not in rest:
-                warnings.warn(
-                    f"Malformed RESULT line (no '='): {line!r}",
-                    stacklevel=2,
-                )
-                continue
-            name, _, value_str = rest.partition("=")
-            name = name.strip()
-            value_str = value_str.strip()
-            if not name:
-                warnings.warn(
-                    f"Malformed RESULT line (empty name): {line!r}",
-                    stacklevel=2,
-                )
-                continue
-            try:
-                outputs[name] = float(value_str)
-            except ValueError:
-                warnings.warn(
-                    f"Could not parse float from RESULT line: {line!r}",
-                    stacklevel=2,
-                )
-        return outputs
+        return parse_outputs(stdout)
 
     def _make_work_dir(self) -> Path:
         """Create and return a temporary working directory for this execution.

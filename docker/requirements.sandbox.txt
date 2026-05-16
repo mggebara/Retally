@@ -1,0 +1,19 @@
+# Packages available inside the paper-validator sandbox container.
+# These cover the full range of algorithms used in classic ML papers (1990-2015).
+# Pin major versions for reproducibility; minor bumps are allowed.
+
+# Core ML
+scikit-learn>=1.3,<2
+xgboost>=2.0,<3
+lightgbm>=4.0,<5
+
+# Data
+pandas>=2.0,<3
+numpy>=1.24,<3
+scipy>=1.11,<2
+
+# Stats helpers common in older papers
+statsmodels>=0.14,<1
+
+# Plotting (some reproduction code generates figures; we let it run silently)
+matplotlib>=3.7,<4

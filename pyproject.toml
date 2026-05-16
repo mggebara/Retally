@@ -30,6 +30,9 @@ dev = [
     "ruff>=0.4.0",
 ]
 
+[tool.pytest.ini_options.markers]
+requires_docker = "mark test as requiring a running Docker daemon and the sandbox image"
+
 [tool.setuptools.packages.find]
 where = ["src"]
 
