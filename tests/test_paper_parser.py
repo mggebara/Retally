@@ -1,18 +1,37 @@
 """Tests for PaperParser."""
 
-from pathlib import Path
-
+import fitz
 import pytest
 
 from openra.models import Paper
 from openra.paper.parser import PaperParser
 
-FIXTURES = Path(__file__).parent / "fixtures"
-
 
 @pytest.fixture
 def parser():
     return PaperParser()
+
+
+@pytest.fixture
+def sample_pdf(tmp_path):
+    """Build a one-page PDF programmatically with fitz.
+
+    Keeps the test fully hermetic — no committed binary fixture, no
+    network — while still exercising the PyMuPDF code path that the
+    plain-text tests skip.
+    """
+    pdf_path = tmp_path / "sample.pdf"
+    doc = fitz.open()
+    page = doc.new_page()
+    page.insert_text((72, 72), "Sample Paper Title")
+    page.insert_text((72, 100), "Jane Doe, John Smith")
+    page.insert_text((72, 140), "Abstract")
+    page.insert_text((72, 160), "This is a one-sentence abstract for testing PDF parsing.")
+    page.insert_text((72, 200), "1 Introduction")
+    page.insert_text((72, 220), "Body content follows here.")
+    doc.save(str(pdf_path))
+    doc.close()
+    return pdf_path
 
 
 def test_parse_text_extracts_title(parser):
@@ -41,12 +60,22 @@ def test_parse_text_with_source_path(parser, tmp_path):
     assert paper.source_path == txt
 
 
-@pytest.mark.skip(reason="requires fixtures/sample_paper.pdf")
-def test_parse_pdf_returns_paper(parser):
-    pdf_path = FIXTURES / "sample_paper.pdf"
-    paper = parser.parse_pdf(pdf_path)
+def test_parse_pdf_returns_paper(parser, sample_pdf):
+    paper = parser.parse_pdf(sample_pdf)
     assert isinstance(paper, Paper)
     assert paper.full_text != ""
+    assert "Sample Paper Title" in paper.full_text
+    assert paper.source_path == sample_pdf
+
+
+def test_parse_pdf_extracts_title_from_first_line(parser, sample_pdf):
+    paper = parser.parse_pdf(sample_pdf)
+    assert "Sample Paper Title" in paper.title
+
+
+def test_parse_pdf_extracts_abstract(parser, sample_pdf):
+    paper = parser.parse_pdf(sample_pdf)
+    assert "one-sentence abstract" in paper.abstract
 
 
 @pytest.mark.skip(reason="requires network")
