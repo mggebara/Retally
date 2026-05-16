@@ -108,9 +108,7 @@ class ValidationReporter:
                 reproduced_str = "N/A"
             tolerance_str = f"{r.tolerance:.4g}"
             status = "✓ PASSED" if r.passed else "✗ FAILED"
-            lines.append(
-                f"| {claim_desc} | {paper_val} | {reproduced_str} | {tolerance_str} | {status} |"
-            )
+            lines.append(f"| {claim_desc} | {paper_val} | {reproduced_str} | {tolerance_str} | {status} |")
 
         lines.append("")
 
@@ -207,10 +205,7 @@ class ValidationReporter:
             else:
                 repro_str = "N/A"
 
-            lines.append(
-                f"  [{status}] {r.claim.description}: "
-                f"paper={r.claim.value}, reproduced={repro_str}"
-            )
+            lines.append(f"  [{status}] {r.claim.description}: paper={r.claim.value}, reproduced={repro_str}")
 
         return "\n".join(lines)
 

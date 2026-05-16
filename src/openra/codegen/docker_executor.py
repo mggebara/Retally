@@ -124,12 +124,10 @@ class DockerExecutor:
                 exit_code = proc.returncode
             except subprocess.TimeoutExpired as exc:
                 timed_out = True
-                stdout = (exc.stdout or b"")
-                stderr = (exc.stderr or b"")
-                if isinstance(stdout, bytes):
-                    stdout = stdout.decode("utf-8", errors="replace")
-                if isinstance(stderr, bytes):
-                    stderr = stderr.decode("utf-8", errors="replace")
+                raw_out = exc.stdout or b""
+                raw_err = exc.stderr or b""
+                stdout = raw_out.decode("utf-8", errors="replace") if isinstance(raw_out, bytes) else raw_out
+                stderr = raw_err.decode("utf-8", errors="replace") if isinstance(raw_err, bytes) else raw_err
                 exit_code = -1
                 # Kill any lingering container by name if we set one
                 self._kill_timeout_container(script_path)
@@ -235,28 +233,40 @@ class DockerExecutor:
         dataset_path = dataset.local_path.resolve()
 
         cmd = [
-            "docker", "run",
+            "docker",
+            "run",
             "--rm",
             # Network isolation — the key requirement
-            "--network", "none",
+            "--network",
+            "none",
             # Resource limits
-            "--memory", self.memory_limit,
-            "--cpus", str(self.cpu_count),
+            "--memory",
+            self.memory_limit,
+            "--cpus",
+            str(self.cpu_count),
             # Filesystem isolation
             "--read-only",
-            "--tmpfs", "/tmp:size=256m",
+            "--tmpfs",
+            "/tmp:size=256m",
             # Drop all Linux capabilities
-            "--cap-drop", "ALL",
-            "--security-opt", "no-new-privileges",
+            "--cap-drop",
+            "ALL",
+            "--security-opt",
+            "no-new-privileges",
             # Mount generated script (read-only)
-            "-v", f"{script_path}:/workspace/script.py:ro",
+            "-v",
+            f"{script_path}:/workspace/script.py:ro",
             # Mount dataset at its exact host path (read-only)
-            "-v", f"{dataset_path}:{dataset_path}:ro",
+            "-v",
+            f"{dataset_path}:{dataset_path}:ro",
             # Working directory
-            "--workdir", "/workspace",
+            "--workdir",
+            "/workspace",
             # Image and entrypoint
             self.image,
-            "python", "-u", "/workspace/script.py",
+            "python",
+            "-u",
+            "/workspace/script.py",
         ]
         return cmd
 
@@ -286,14 +296,16 @@ class DockerExecutor:
         """
         try:
             ps = subprocess.run(
-                ["docker", "ps", "--filter", f"ancestor={self.image}",
-                 "--format", "{{.ID}}"],
-                capture_output=True, text=True, timeout=5,
+                ["docker", "ps", "--filter", f"ancestor={self.image}", "--format", "{{.ID}}"],
+                capture_output=True,
+                text=True,
+                timeout=5,
             )
             for container_id in ps.stdout.strip().splitlines():
                 subprocess.run(
                     ["docker", "kill", container_id],
-                    capture_output=True, timeout=5,
+                    capture_output=True,
+                    timeout=5,
                 )
         except Exception:
             pass

@@ -1,11 +1,9 @@
 """Tests for CodeExecutor."""
 
 import pytest
-from pathlib import Path
-from unittest.mock import MagicMock
 
 from openra.codegen.executor import CodeExecutor
-from openra.models import Dataset, ExecutionResult
+from openra.models import Dataset
 
 
 @pytest.fixture

@@ -230,9 +230,7 @@ class PaperParser:
             paper.source_url = url
             return paper
 
-    def _extract_metadata_heuristic(
-        self, text: str
-    ) -> tuple[str, list[str], str]:
+    def _extract_metadata_heuristic(self, text: str) -> tuple[str, list[str], str]:
         """Extract title, authors, and abstract from raw text using heuristics.
 
         Returns
@@ -273,7 +271,7 @@ class PaperParser:
         abstract = ""
         abstract_match = re.search(r"(?i)\babstract\b", text)
         if abstract_match:
-            after_abstract = text[abstract_match.end():]
+            after_abstract = text[abstract_match.end() :]
             # Strip leading colon / dash / whitespace
             after_abstract = re.sub(r"^[\s:\-—]+", "", after_abstract)
             # Find the next section heading

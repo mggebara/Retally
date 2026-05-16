@@ -1,8 +1,9 @@
 """Tests for ResultComparator."""
 
 import pytest
-from openra.validation.comparator import ResultComparator
+
 from openra.models import Claim, ClaimType
+from openra.validation.comparator import ResultComparator
 
 
 @pytest.fixture

@@ -1,10 +1,11 @@
 """Tests for PaperParser."""
 
-import pytest
 from pathlib import Path
 
-from openra.paper.parser import PaperParser
+import pytest
+
 from openra.models import Paper
+from openra.paper.parser import PaperParser
 
 FIXTURES = Path(__file__).parent / "fixtures"
 

@@ -1,4 +1,4 @@
-.PHONY: build-sandbox rebuild-sandbox test lint install
+.PHONY: build-sandbox rebuild-sandbox test lint typecheck install
 
 SANDBOX_IMAGE := openra-sandbox:latest
 DOCKERFILE    := docker/Dockerfile.sandbox
@@ -18,6 +18,10 @@ test:
 ## Lint with ruff.
 lint:
 	ruff check src/ tests/
+
+## Type-check with mypy.
+typecheck:
+	mypy src/openra
 
 ## Install the package and dev dependencies in editable mode.
 install:
