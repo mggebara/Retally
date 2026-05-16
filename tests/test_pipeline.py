@@ -110,8 +110,10 @@ def test_refinement_stops_at_max_refinements():
     always_fail = ExecutionResult(generated_code="bad", exit_code=1, stderr="error", outputs={})
     pipeline.executor.execute.return_value = always_fail
     pipeline.validate("some text content")
-    # Should have tried generate once + refine max_refinements times
-    assert pipeline.generator.refine.call_count <= pipeline.max_refinements
+    # Initial generate() + exactly max_refinements refine() calls when every
+    # attempt fails.  Total executions = max_refinements + 1.
+    assert pipeline.generator.refine.call_count == pipeline.max_refinements
+    assert pipeline.executor.execute.call_count == pipeline.max_refinements + 1
 
 
 def test_parse_paper_dispatches_arxiv_id():

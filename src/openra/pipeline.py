@@ -49,7 +49,9 @@ class ValidationPipeline:
         pipeline wired with sensible defaults.
     max_refinements:
         How many times the pipeline will ask the CodeGenerator to fix
-        broken code before giving up and recording a failed execution.
+        broken code (i.e. ``refine()`` calls) after the initial
+        ``generate()``.  Total executions is therefore up to
+        ``max_refinements + 1``.
     """
 
     def __init__(

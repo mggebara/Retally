@@ -48,14 +48,18 @@ class ValidationReporter:
         """
         n_total = len(claim_results)
         n_passed = sum(1 for r in claim_results if r.passed)
-        overall_passed = n_passed == n_total
+        # A paper with zero extracted claims has not been validated against
+        # anything, so we do not call it PASSED.
+        overall_passed = n_total > 0 and n_passed == n_total
 
-        summary_parts = [f"{n_passed} of {n_total} claims validated."]
-
-        failed = [r for r in claim_results if not r.passed]
-        if failed:
-            failed_names = ", ".join(r.claim.description for r in failed)
-            summary_parts.append(f"Failed: {failed_names}.")
+        if n_total == 0:
+            summary_parts = ["No claims were extracted from the paper; nothing to validate."]
+        else:
+            summary_parts = [f"{n_passed} of {n_total} claims validated."]
+            failed = [r for r in claim_results if not r.passed]
+            if failed:
+                failed_names = ", ".join(r.claim.description for r in failed)
+                summary_parts.append(f"Failed: {failed_names}.")
 
         summary = " ".join(summary_parts)
 
