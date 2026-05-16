@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paper Validation Dashboard</title>
+  <style>
+    /* ── Reset & base ─────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:        #f0f2f5;
+      --surface:   #ffffff;
+      --border:    #e2e6ea;
+      --text:      #1a202c;
+      --muted:     #6b7280;
+      --accent:    #3b82f6;
+      --accent-dk: #2563eb;
+      --pass:      #059669;
+      --pass-bg:   #d1fae5;
+      --fail:      #dc2626;
+      --fail-bg:   #fee2e2;
+      --code-bg:   #1e1e2e;
+      --code-text: #cdd6f4;
+      --radius:    10px;
+      --shadow:    0 1px 3px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.06);
+      --shadow-lg: 0 8px 30px rgba(0,0,0,.15);
+      font-size: 15px;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ── Header ──────────────────────────────────────────────────────── */
+    header {
+      background: linear-gradient(135deg, #1e3a5f 0%, #1a56db 100%);
+      color: #fff;
+      padding: 2.5rem 2rem 2rem;
+      text-align: center;
+    }
+    header h1 { font-size: 1.9rem; font-weight: 700; letter-spacing: -.5px; }
+    header p  { margin-top: .4rem; opacity: .85; font-size: .95rem; }
+    .header-link {
+      display: inline-flex; align-items: center; gap: .4rem;
+      margin-top: 1rem; color: #fff; opacity: .8; font-size: .85rem;
+      text-decoration: none; border: 1px solid rgba(255,255,255,.35);
+      padding: .3rem .75rem; border-radius: 20px; transition: opacity .2s;
+    }
+    .header-link:hover { opacity: 1; }
+
+    /* ── Stats bar ───────────────────────────────────────────────────── */
+    .stats-bar {
+      display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: .9rem 2rem;
+    }
+    .stat { text-align: center; }
+    .stat-value { font-size: 1.4rem; font-weight: 700; color: var(--accent); }
+    .stat-label { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+
+    /* ── Controls ────────────────────────────────────────────────────── */
+    .controls {
+      max-width: 900px; margin: 1.5rem auto .5rem; padding: 0 1.5rem;
+      display: flex; gap: .75rem; flex-wrap: wrap; align-items: center;
+    }
+    .search-wrap { position: relative; flex: 1; min-width: 200px; }
+    .search-wrap svg {
+      position: absolute; left: .75rem; top: 50%; transform: translateY(-50%);
+      color: var(--muted); pointer-events: none;
+    }
+    #search {
+      width: 100%; padding: .55rem .75rem .55rem 2.25rem;
+      border: 1px solid var(--border); border-radius: var(--radius);
+      background: var(--surface); color: var(--text); font-size: .9rem;
+      outline: none; transition: border-color .2s, box-shadow .2s;
+    }
+    #search:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59,130,246,.15); }
+    .filter-btns { display: flex; gap: .4rem; }
+    .filter-btn {
+      padding: .5rem 1rem; border-radius: 20px; border: 1px solid var(--border);
+      background: var(--surface); color: var(--muted); font-size: .82rem;
+      cursor: pointer; transition: all .2s; font-weight: 500;
+    }
+    .filter-btn:hover, .filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .filter-btn.pass.active { background: var(--pass); border-color: var(--pass); }
+    .filter-btn.fail.active { background: var(--fail); border-color: var(--fail); }
+
+    /* ── Grid ────────────────────────────────────────────────────────── */
+    .grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 1.25rem; max-width: 900px; margin: 0 auto 3rem; padding: 0 1.5rem;
+    }
+
+    /* ── Card ────────────────────────────────────────────────────────── */
+    .card {
+      background: var(--surface); border-radius: var(--radius);
+      box-shadow: var(--shadow); border: 1px solid var(--border);
+      display: flex; flex-direction: column; overflow: hidden;
+      cursor: pointer; transition: transform .18s, box-shadow .18s;
+    }
+    .card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+    .card-accent { height: 4px; }
+    .card-accent.pass { background: var(--pass); }
+    .card-accent.fail { background: var(--fail); }
+    .card-body { padding: 1.25rem 1.4rem; flex: 1; }
+    .card-status {
+      display: inline-flex; align-items: center; gap: .35rem;
+      font-size: .75rem; font-weight: 700; letter-spacing: .4px;
+      text-transform: uppercase; padding: .25rem .65rem;
+      border-radius: 20px; margin-bottom: .75rem;
+    }
+    .card-status.pass { background: var(--pass-bg); color: var(--pass); }
+    .card-status.fail { background: var(--fail-bg); color: var(--fail); }
+    .card-title { font-size: 1rem; font-weight: 700; line-height: 1.4; margin-bottom: .3rem; }
+    .card-authors { font-size: .8rem; color: var(--muted); margin-bottom: .75rem; }
+    .card-meta { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: .85rem; }
+    .chip {
+      font-size: .75rem; padding: .2rem .6rem; border-radius: 20px;
+      background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe;
+    }
+    .claim-mini { margin-top: .75rem; display: flex; flex-direction: column; gap: .35rem; }
+    .claim-row {
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: .82rem; padding: .3rem .5rem; border-radius: 6px;
+      background: #f9fafb; border: 1px solid var(--border);
+    }
+    .claim-row .desc { color: var(--muted); }
+    .claim-row .vals { display: flex; align-items: center; gap: .5rem; font-variant-numeric: tabular-nums; }
+    .claim-row .repro { font-weight: 600; }
+    .claim-row .badge { font-size: .7rem; font-weight: 700; padding: .1rem .4rem; border-radius: 4px; }
+    .claim-row .badge.pass { background: var(--pass-bg); color: var(--pass); }
+    .claim-row .badge.fail { background: var(--fail-bg); color: var(--fail); }
+    .card-footer {
+      padding: .75rem 1.4rem; border-top: 1px solid var(--border);
+      background: #f9fafb; font-size: .8rem; color: var(--muted);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .view-link { color: var(--accent); font-weight: 600; text-decoration: none; }
+
+    /* ── Empty state ─────────────────────────────────────────────────── */
+    .empty { text-align: center; padding: 4rem 2rem; color: var(--muted); grid-column: 1/-1; }
+    .empty svg { opacity: .3; margin-bottom: 1rem; }
+
+    /* ── Modal overlay ───────────────────────────────────────────────── */
+    .overlay {
+      display: none; position: fixed; inset: 0; z-index: 100;
+      background: rgba(0,0,0,.55); backdrop-filter: blur(2px);
+      overflow-y: auto; padding: 2rem 1rem;
+    }
+    .overlay.open { display: flex; align-items: flex-start; justify-content: center; }
+    .modal {
+      background: var(--surface); border-radius: 14px; box-shadow: var(--shadow-lg);
+      width: 100%; max-width: 820px; overflow: hidden; animation: slide-up .2s ease;
+    }
+    @keyframes slide-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .modal-header {
+      padding: 1.4rem 1.6rem 1rem; display: flex;
+      justify-content: space-between; align-items: flex-start; gap: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-header-left { flex: 1; }
+    .modal-header h2 { font-size: 1.1rem; font-weight: 700; line-height: 1.4; }
+    .modal-header .meta { font-size: .82rem; color: var(--muted); margin-top: .25rem; }
+    .close-btn {
+      background: none; border: none; cursor: pointer; color: var(--muted);
+      padding: .25rem; border-radius: 6px; transition: background .15s;
+      flex-shrink: 0;
+    }
+    .close-btn:hover { background: var(--border); color: var(--text); }
+
+    /* ── Modal tabs ──────────────────────────────────────────────────── */
+    .tabs {
+      display: flex; gap: 0; border-bottom: 1px solid var(--border);
+      padding: 0 1.6rem; overflow-x: auto;
+    }
+    .tab {
+      padding: .75rem 1rem; font-size: .88rem; font-weight: 500;
+      border: none; background: none; cursor: pointer; color: var(--muted);
+      border-bottom: 2px solid transparent; margin-bottom: -1px;
+      white-space: nowrap; transition: color .15s, border-color .15s;
+    }
+    .tab:hover { color: var(--text); }
+    .tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+
+    /* ── Modal content ───────────────────────────────────────────────── */
+    .tab-panel { display: none; padding: 1.5rem 1.6rem; }
+    .tab-panel.active { display: block; }
+
+    /* Summary panel */
+    .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem; }
+    .info-block { background: #f9fafb; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
+    .info-block h4 { font-size: .75rem; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); margin-bottom: .5rem; }
+    .info-block p  { font-size: .88rem; }
+    .methodology { background: #f9fafb; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
+    .methodology h4 { font-size: .75rem; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); margin-bottom: .5rem; }
+    .methodology pre { font-size: .82rem; white-space: pre-wrap; font-family: inherit; color: var(--text); }
+
+    /* Claims panel */
+    .claims-table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+    .claims-table th {
+      text-align: left; font-size: .75rem; text-transform: uppercase; letter-spacing: .4px;
+      color: var(--muted); font-weight: 600; padding: .5rem .75rem;
+      border-bottom: 2px solid var(--border); background: #f9fafb;
+    }
+    .claims-table td { padding: .75rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .claims-table tr:last-child td { border-bottom: none; }
+    .claims-table .num { font-variant-numeric: tabular-nums; font-weight: 600; }
+    .note-text { font-size: .78rem; color: var(--muted); margin-top: .25rem; font-style: italic; }
+
+    /* Code panel */
+    .code-wrap {
+      background: var(--code-bg); border-radius: 8px; overflow: hidden;
+      border: 1px solid #313244;
+    }
+    .code-header {
+      background: #313244; padding: .5rem 1rem; font-size: .75rem;
+      color: #89dceb; font-family: monospace; display: flex; justify-content: space-between;
+    }
+    .copy-btn {
+      background: none; border: 1px solid #585b70; color: #cdd6f4;
+      padding: .15rem .5rem; border-radius: 4px; font-size: .72rem;
+      cursor: pointer; transition: background .15s;
+    }
+    .copy-btn:hover { background: #45475a; }
+    pre.code {
+      margin: 0; padding: 1.25rem; overflow-x: auto;
+      color: var(--code-text); font-size: .82rem; line-height: 1.65;
+      font-family: "Fira Code", "Cascadia Code", "JetBrains Mono", "Menlo", monospace;
+    }
+    .stdout-block {
+      margin-top: 1.25rem; background: #1e1e2e; border-radius: 8px;
+      border: 1px solid #313244; padding: 1rem;
+    }
+    .stdout-block h4 { font-size: .75rem; color: #89dceb; margin-bottom: .5rem; font-family: monospace; }
+    .stdout-block pre { color: #a6e3a1; font-size: .82rem; font-family: monospace; }
+    .exit-badge {
+      display: inline-block; font-size: .75rem; padding: .15rem .5rem;
+      border-radius: 4px; font-family: monospace; margin-left: .5rem;
+    }
+    .exit-badge.ok   { background: #1a3a2a; color: #a6e3a1; }
+    .exit-badge.fail { background: #3a1a1a; color: #f38ba8; }
+
+    /* ── Footer ──────────────────────────────────────────────────────── */
+    footer {
+      text-align: center; padding: 2rem 1rem; font-size: .8rem; color: var(--muted);
+      border-top: 1px solid var(--border); background: var(--surface);
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 600px) {
+      .grid { grid-template-columns: 1fr; }
+      .summary-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Header ──────────────────────────────────────────────────────────── -->
+<header>
+  <h1>Paper Validation Dashboard</h1>
+  <p>Automated reproduction of quantitative claims from academic ML papers</p>
+  <a class="header-link" href="https://github.com/mggebara/open-pi-testing" target="_blank">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.38.6.11.82-.26.82-.58v-2.03c-3.34.72-4.04-1.61-4.04-1.61-.54-1.38-1.33-1.75-1.33-1.75-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49 1 .1-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02 0 2.04.13 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.56 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+    mggebara/open-pi-testing
+  </a>
+</header>
+
+<!-- ── Stats bar ────────────────────────────────────────────────────────── -->
+<div class="stats-bar" id="stats-bar">
+  <div class="stat"><div class="stat-value" id="stat-total">—</div><div class="stat-label">Papers</div></div>
+  <div class="stat"><div class="stat-value" id="stat-pass">—</div><div class="stat-label">Passed</div></div>
+  <div class="stat"><div class="stat-value" id="stat-claims">—</div><div class="stat-label">Claims Checked</div></div>
+  <div class="stat"><div class="stat-value" id="stat-rate">—</div><div class="stat-label">Pass Rate</div></div>
+</div>
+
+<!-- ── Controls ─────────────────────────────────────────────────────────── -->
+<div class="controls">
+  <div class="search-wrap">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input id="search" type="text" placeholder="Search papers, datasets, authors…" autocomplete="off" />
+  </div>
+  <div class="filter-btns">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn pass" data-filter="pass">Passed</button>
+    <button class="filter-btn fail" data-filter="fail">Failed</button>
+  </div>
+</div>
+
+<!-- ── Grid ─────────────────────────────────────────────────────────────── -->
+<div class="grid" id="grid"></div>
+
+<!-- ── Modal ────────────────────────────────────────────────────────────── -->
+<div class="overlay" id="overlay" role="dialog" aria-modal="true">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div id="modal-status"></div>
+        <h2 id="modal-title"></h2>
+        <div class="meta" id="modal-meta"></div>
+      </div>
+      <button class="close-btn" id="close-btn" aria-label="Close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="tabs" id="modal-tabs">
+      <button class="tab active" data-tab="summary">Summary</button>
+      <button class="tab" data-tab="claims">Claims</button>
+      <button class="tab" data-tab="code">Generated Code</button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<!-- ── Footer ───────────────────────────────────────────────────────────── -->
+<footer>
+  Built with <a href="https://github.com/mggebara/open-pi-testing">open-pi-testing</a> &middot;
+  Reports generated by <a href="https://www.anthropic.com/claude">Claude</a> + scikit-learn &middot;
+  Hosted on <a href="https://pages.github.com">GitHub Pages</a>
+</footer>
+
+<script>
+// ── Data loading ─────────────────────────────────────────────────────────
+let allReports = [];
+let activeFilter = 'all';
+
+async function loadReports() {
+  try {
+    const res = await fetch('data/reports.json');
+    allReports = await res.json();
+  } catch {
+    // fallback: empty state
+    allReports = [];
+  }
+  renderStats(allReports);
+  render(allReports);
+}
+
+// ── Stats ────────────────────────────────────────────────────────────────
+function renderStats(reports) {
+  const passed   = reports.filter(r => r.overall_passed).length;
+  const claims   = reports.reduce((s, r) => s + r.claim_results.length, 0);
+  const claimsPassed = reports.reduce((s, r) => s + r.claim_results.filter(c => c.passed).length, 0);
+  const rate     = claims > 0 ? Math.round(claimsPassed / claims * 100) : 0;
+  document.getElementById('stat-total').textContent  = reports.length;
+  document.getElementById('stat-pass').textContent   = passed;
+  document.getElementById('stat-claims').textContent = claims;
+  document.getElementById('stat-rate').textContent   = rate + '%';
+}
+
+// ── Filtering & search ────────────────────────────────────────────────────
+function getFiltered() {
+  const q = document.getElementById('search').value.toLowerCase().trim();
+  return allReports.filter(r => {
+    const matchStatus = activeFilter === 'all'
+      || (activeFilter === 'pass' && r.overall_passed)
+      || (activeFilter === 'fail' && !r.overall_passed);
+    if (!matchStatus) return false;
+    if (!q) return true;
+    const hay = [
+      r.paper.title, ...(r.paper.authors || []),
+      r.dataset.name, r.summary,
+      ...(r.claim_results.map(c => c.claim.description))
+    ].join(' ').toLowerCase();
+    return hay.includes(q);
+  });
+}
+
+// ── Render grid ───────────────────────────────────────────────────────────
+function render(reports) {
+  const grid = document.getElementById('grid');
+  if (reports.length === 0) {
+    grid.innerHTML = `
+      <div class="empty">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <p>No papers match your search.</p>
+      </div>`;
+    return;
+  }
+  grid.innerHTML = reports.map(r => cardHTML(r)).join('');
+  grid.querySelectorAll('.card').forEach(el => {
+    el.addEventListener('click', () => openModal(el.dataset.id));
+  });
+}
+
+function cardHTML(r) {
+  const st  = r.overall_passed ? 'pass' : 'fail';
+  const lbl = r.overall_passed ? '✓ Passed' : '✗ Failed';
+  const authors = (r.paper.authors || []).slice(0, 3).join(', ')
+    + (r.paper.authors.length > 3 ? ' et al.' : '');
+  const passed  = r.claim_results.filter(c => c.passed).length;
+  const total   = r.claim_results.length;
+
+  const claimsHtml = r.claim_results.map(c => {
+    const repro = c.reproduced_value !== null
+      ? formatNum(c.reproduced_value) : 'N/A';
+    const paperVal = c.claim.unit === '%'
+      ? c.claim.value + '%' : formatNum(c.claim.value);
+    return `<div class="claim-row">
+      <span class="desc">${esc(c.claim.description)}</span>
+      <div class="vals">
+        <span style="color:var(--muted);font-size:.75rem">${paperVal}</span>
+        <span>→</span>
+        <span class="repro">${repro}</span>
+        <span class="badge ${c.passed ? 'pass' : 'fail'}">${c.passed ? '✓' : '✗'}</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  return `<div class="card" data-id="${r.id}" tabindex="0" role="button" aria-label="View ${esc(r.paper.title)}">
+    <div class="card-accent ${st}"></div>
+    <div class="card-body">
+      <div class="card-status ${st}">${lbl}</div>
+      <div class="card-title">${esc(r.paper.title)}</div>
+      <div class="card-authors">${esc(authors)}</div>
+      <div class="card-meta">
+        <span class="chip">📊 ${esc(r.dataset.name)}</span>
+        <span class="chip">${passed}/${total} claims</span>
+      </div>
+      <div class="claim-mini">${claimsHtml}</div>
+    </div>
+    <div class="card-footer">
+      <span>${r.dataset.metadata.n_rows.toLocaleString()} rows · ${r.dataset.metadata.task_type}</span>
+      <span class="view-link">View details →</span>
+    </div>
+  </div>`;
+}
+
+// ── Modal ─────────────────────────────────────────────────────────────────
+function openModal(id) {
+  const r = allReports.find(x => x.id === id);
+  if (!r) return;
+
+  const st  = r.overall_passed ? 'pass' : 'fail';
+  const lbl = r.overall_passed ? '✓ Passed' : '✗ Failed';
+  const authors = (r.paper.authors || []).join(', ');
+  const passed  = r.claim_results.filter(c => c.passed).length;
+  const total   = r.claim_results.length;
+
+  document.getElementById('modal-status').innerHTML =
+    `<div class="card-status ${st}" style="margin-bottom:.5rem">${lbl} · ${passed}/${total} claims</div>`;
+  document.getElementById('modal-title').textContent = r.paper.title;
+  document.getElementById('modal-meta').textContent  =
+    `${authors}   |   ${r.dataset.name}   |   ${r.dataset.metadata.n_rows.toLocaleString()} rows`;
+
+  // Build tab panels
+  const body = document.getElementById('modal-body');
+  body.innerHTML = `
+    ${summaryPanel(r)}
+    ${claimsPanel(r)}
+    ${codePanel(r)}
+  `;
+
+  // Activate first tab
+  activateTab('summary');
+  document.getElementById('overlay').classList.add('open');
+  document.getElementById('modal').focus();
+}
+
+function closeModal() {
+  document.getElementById('overlay').classList.remove('open');
+}
+
+function activateTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.dataset.panel === name));
+}
+
+// ── Panel builders ────────────────────────────────────────────────────────
+function summaryPanel(r) {
+  const exec = r.execution_result;
+  return `<div class="tab-panel active" data-panel="summary">
+    <div class="summary-grid">
+      <div class="info-block">
+        <h4>Dataset</h4>
+        <p><strong>${esc(r.dataset.name)}</strong><br>
+        ${r.dataset.metadata.n_rows.toLocaleString()} rows ·
+        ${r.dataset.metadata.n_cols} columns ·
+        ${r.dataset.metadata.task_type}<br>
+        <span style="color:var(--muted);font-size:.8rem">Target: <code>${r.dataset.metadata.target_column}</code></span>
+        </p>
+      </div>
+      <div class="info-block">
+        <h4>Execution</h4>
+        <p>Exit code <span class="exit-badge ${exec.exit_code === 0 ? 'ok' : 'fail'}">${exec.exit_code}</span><br>
+        ${exec.timed_out ? '<span style="color:var(--fail)">Timed out</span>' : 'Completed normally'}<br>
+        <span style="color:var(--muted);font-size:.8rem">${Object.keys(exec.outputs).length} metric(s) captured</span>
+        </p>
+      </div>
+    </div>
+    <div class="methodology">
+      <h4>Methodology</h4>
+      <pre>${esc(r.paper.methodology_summary || 'Not extracted.')}</pre>
+    </div>
+    ${r.paper.abstract ? `
+    <div class="methodology" style="margin-top:1rem">
+      <h4>Abstract</h4>
+      <pre style="color:var(--muted)">${esc(r.paper.abstract)}</pre>
+    </div>` : ''}
+  </div>`;
+}
+
+function claimsPanel(r) {
+  const rows = r.claim_results.map(c => {
+    const claimed = c.claim.unit === '%' ? c.claim.value + '%' : formatNum(c.claim.value);
+    const repro   = c.reproduced_value !== null ? formatNum(c.reproduced_value) : 'N/A';
+    const tolPct  = (c.tolerance * 100).toFixed(1) + '%';
+    return `<tr>
+      <td>
+        <strong>${esc(c.claim.description)}</strong>
+        ${c.claim.table_ref ? `<div style="font-size:.75rem;color:var(--muted)">${esc(c.claim.table_ref)}</div>` : ''}
+        ${c.claim.context   ? `<div class="note-text">"${esc(truncate(c.claim.context,100))}"</div>` : ''}
+      </td>
+      <td class="num">${claimed}</td>
+      <td class="num">${repro}</td>
+      <td class="num">${tolPct}</td>
+      <td>
+        <span class="badge ${c.passed ? 'pass' : 'fail'}">${c.passed ? '✓ Pass' : '✗ Fail'}</span>
+        ${c.notes ? `<div class="note-text">${esc(c.notes)}</div>` : ''}
+      </td>
+    </tr>`;
+  }).join('');
+
+  return `<div class="tab-panel" data-panel="claims">
+    <table class="claims-table">
+      <thead>
+        <tr>
+          <th>Claim</th><th>Paper value</th><th>Reproduced</th><th>Tolerance</th><th>Status</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  </div>`;
+}
+
+function codePanel(r) {
+  const exec   = r.execution_result;
+  const codeId = 'code-' + Math.random().toString(36).slice(2);
+  return `<div class="tab-panel" data-panel="code">
+    <div class="code-wrap">
+      <div class="code-header">
+        <span>reproduction.py</span>
+        <button class="copy-btn" onclick="copyCode('${codeId}')">Copy</button>
+      </div>
+      <pre class="code" id="${codeId}">${esc(exec.generated_code)}</pre>
+    </div>
+    ${exec.stdout ? `
+    <div class="stdout-block">
+      <h4>stdout</h4>
+      <pre>${esc(exec.stdout.trim())}</pre>
+    </div>` : ''}
+    ${exec.stderr ? `
+    <div class="stdout-block" style="margin-top:.75rem">
+      <h4 style="color:#f38ba8">stderr</h4>
+      <pre style="color:#f38ba8">${esc(exec.stderr.trim())}</pre>
+    </div>` : ''}
+  </div>`;
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s || '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+function formatNum(n) {
+  if (n === null || n === undefined) return 'N/A';
+  return Math.abs(n) < 10 ? n.toFixed(4) : n.toFixed(2);
+}
+function truncate(s, len) { return s.length > len ? s.slice(0, len) + '…' : s; }
+function copyCode(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  navigator.clipboard.writeText(el.textContent).then(() => {
+    const btn = el.closest('.code-wrap').querySelector('.copy-btn');
+    const old = btn.textContent; btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = old; }, 1500);
+  });
+}
+
+// ── Event wiring ──────────────────────────────────────────────────────────
+document.getElementById('close-btn').addEventListener('click', closeModal);
+document.getElementById('overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('overlay')) closeModal();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+document.getElementById('modal-tabs').addEventListener('click', e => {
+  if (e.target.classList.contains('tab')) activateTab(e.target.dataset.tab);
+});
+document.getElementById('search').addEventListener('input', () => render(getFiltered()));
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = btn.dataset.filter;
+    render(getFiltered());
+  });
+});
+
+// ── Bootstrap ─────────────────────────────────────────────────────────────
+loadReports();
+</script>
+</body>
+</html>
