@@ -35,6 +35,8 @@ from openra.paper.parser import PaperParser
 from openra.validation.comparator import ResultComparator
 from openra.validation.reporter import ValidationReporter
 
+AnyExecutor = CodeExecutor | DockerExecutor
+
 
 class ValidationPipeline:
     """Orchestrates the full paper-validation workflow.
@@ -57,7 +59,7 @@ class ValidationPipeline:
         downloader: DatasetDownloader,
         registry: DatasetRegistry,
         generator: CodeGenerator,
-        executor: CodeExecutor,
+        executor: AnyExecutor,
         comparator: ResultComparator,
         reporter: ValidationReporter,
         max_refinements: int = 3,
@@ -205,9 +207,7 @@ class ValidationPipeline:
             if ref.url:
                 return ref
 
-        raise ValueError(
-            f"Could not resolve dataset from references: {[r.name for r in references]}"
-        )
+        raise ValueError(f"Could not resolve dataset from references: {[r.name for r in references]}")
 
     def _run_with_refinement(self, paper, dataset) -> tuple[str, ExecutionResult]:
         """Generate code and execute it, refining on failure.
@@ -275,6 +275,7 @@ class ValidationPipeline:
         registry = DatasetRegistry()
         registry.load()
 
+        executor: AnyExecutor
         if use_docker:
             docker_exec = DockerExecutor(
                 image=docker_image,
@@ -285,6 +286,7 @@ class ValidationPipeline:
                 executor = docker_exec
             else:
                 import warnings
+
                 warnings.warn(
                     "Docker is not available or sandbox image not built; "
                     "falling back to CodeExecutor (subprocess mode). "

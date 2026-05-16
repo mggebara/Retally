@@ -1,9 +1,8 @@
 """Tests for DatasetDownloader and DatasetRegistry."""
 
 import json
+
 import pytest
-from pathlib import Path
-from unittest.mock import MagicMock, patch
 
 from openra.dataset.downloader import DatasetDownloader
 from openra.dataset.registry import DatasetRegistry
@@ -23,6 +22,7 @@ def registry(tmp_path):
 
 
 # --- DatasetDownloader tests ---
+
 
 def test_local_path_slugifies_name(downloader):
     ref = DatasetReference(name="UCI Adult Income", source=DatasetSource.UCI)
@@ -51,14 +51,22 @@ def test_download_loads_metadata_from_sidecar(downloader, tmp_path):
     local = downloader._local_path(ref)
     local.mkdir(parents=True, exist_ok=True)
     (local / "data.csv").write_text("a,b\n1,2\n")
-    meta = {"columns": ["a", "b"], "target_column": "b", "n_rows": 1,
-            "n_cols": 2, "task_type": "classification", "file_format": "csv", "source_url": ""}
+    meta = {
+        "columns": ["a", "b"],
+        "target_column": "b",
+        "n_rows": 1,
+        "n_cols": 2,
+        "task_type": "classification",
+        "file_format": "csv",
+        "source_url": "",
+    }
     (local / "metadata.json").write_text(json.dumps(meta))
     dataset = downloader.download(ref)
     assert dataset.metadata["target_column"] == "b"
 
 
 # --- DatasetRegistry tests ---
+
 
 def test_registry_loads_builtins(registry):
     # At least the UCI classics should be pre-populated
@@ -77,7 +85,9 @@ def test_registry_lookup_returns_none_for_unknown(registry):
 
 
 def test_registry_register_and_lookup(registry):
-    ref = DatasetReference(name="My Custom Dataset", source=DatasetSource.DIRECT_URL, url="http://example.com/data.csv")
+    ref = DatasetReference(
+        name="My Custom Dataset", source=DatasetSource.DIRECT_URL, url="http://example.com/data.csv"
+    )
     registry.register(ref)
     result = registry.lookup("my custom dataset")
     assert result is not None

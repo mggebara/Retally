@@ -141,8 +141,7 @@ class CodeGenerator:
             for i, claim in enumerate(paper.claims, 1):
                 unit_str = f" ({claim.unit})" if claim.unit else ""
                 lines.append(
-                    f"{i}. {claim.description}: {claim.value}{unit_str}"
-                    f" [type: {claim.claim_type.value}]"
+                    f"{i}. {claim.description}: {claim.value}{unit_str} [type: {claim.claim_type.value}]"
                 )
         else:
             lines.append("No specific claims listed — reproduce the main reported metrics.")
@@ -166,13 +165,9 @@ class CodeGenerator:
 
         # 5. Required output convention
         lines.append("## Required Output Convention")
-        lines.append(
-            "Print each metric using EXACTLY this format: RESULT:<metric_name>=<numeric_value>"
-        )
+        lines.append("Print each metric using EXACTLY this format: RESULT:<metric_name>=<numeric_value>")
         lines.append("For example: RESULT:accuracy=0.9342")
-        lines.append(
-            "Use snake_case metric names matching the claim descriptions."
-        )
+        lines.append("Use snake_case metric names matching the claim descriptions.")
         lines.append("")
 
         # 6. Code requirements
@@ -199,15 +194,12 @@ class CodeGenerator:
             lines.append("")
 
         lines.append(
-            "Now write the complete Python script. "
-            "Output ONLY the code — no explanation, no markdown fences."
+            "Now write the complete Python script. Output ONLY the code — no explanation, no markdown fences."
         )
 
         return "\n".join(lines)
 
-    def _build_refinement_prompt(
-        self, code: str, error: str, paper: Paper, dataset: Dataset
-    ) -> str:
+    def _build_refinement_prompt(self, code: str, error: str, paper: Paper, dataset: Dataset) -> str:
         """Construct the refinement prompt.
 
         Include:
@@ -312,12 +304,9 @@ class CodeGenerator:
             )
         if ClaimType.CORRELATION in claim_types:
             hints.append(
-                "Correlation is reported — consider scipy.stats.pearsonr or spearmanr, "
-                "or numpy.corrcoef."
+                "Correlation is reported — consider scipy.stats.pearsonr or spearmanr, or numpy.corrcoef."
             )
         if ClaimType.P_VALUE in claim_types:
-            hints.append(
-                "p-values are reported — use scipy.stats for statistical tests."
-            )
+            hints.append("p-values are reported — use scipy.stats for statistical tests.")
 
         return "\n".join(hints)

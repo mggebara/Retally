@@ -106,8 +106,7 @@ class DatasetDownloader:
             elif source == DatasetSource.DIRECT_URL:
                 if not url:
                     raise ValueError(
-                        f"DatasetReference '{reference.name}' has source=DIRECT_URL "
-                        "but no url was provided."
+                        f"DatasetReference '{reference.name}' has source=DIRECT_URL but no url was provided."
                     )
                 self._download_direct_url(url, dest)
             elif source == DatasetSource.UNKNOWN:
@@ -115,15 +114,12 @@ class DatasetDownloader:
                     self._download_direct_url(url, dest)
                 else:
                     raise ValueError(
-                        f"DatasetReference '{reference.name}' has source=UNKNOWN "
-                        "and no url. Cannot download."
+                        f"DatasetReference '{reference.name}' has source=UNKNOWN and no url. Cannot download."
                     )
             else:
                 raise ValueError(f"Unsupported DatasetSource: {source}")
         except Exception as exc:
-            raise RuntimeError(
-                f"Failed to download dataset '{reference.name}': {exc}"
-            ) from exc
+            raise RuntimeError(f"Failed to download dataset '{reference.name}': {exc}") from exc
 
         metadata = {}
         meta_file = dest / "metadata.json"
@@ -169,8 +165,7 @@ class DatasetDownloader:
             from ucimlrepo import fetch_ucirepo  # type: ignore[import]
         except ImportError as exc:
             raise RuntimeError(
-                "ucimlrepo is required to download UCI datasets. "
-                "Install it with: pip install ucimlrepo"
+                "ucimlrepo is required to download UCI datasets. Install it with: pip install ucimlrepo"
             ) from exc
 
         try:
@@ -179,9 +174,7 @@ class DatasetDownloader:
             y: pd.DataFrame = ds.data.targets
             df = pd.concat([X, y], axis=1)
         except Exception as exc:
-            raise RuntimeError(
-                f"Failed to fetch UCI dataset id={dataset_id}: {exc}"
-            ) from exc
+            raise RuntimeError(f"Failed to fetch UCI dataset id={dataset_id}: {exc}") from exc
 
         dest.mkdir(parents=True, exist_ok=True)
         csv_path = dest / "data.csv"
@@ -233,13 +226,16 @@ class DatasetDownloader:
         file_path = dest / filename
         chunk_size = 8192
 
-        with open(file_path, "wb") as fh, tqdm(
-            desc=filename,
-            total=total,
-            unit="B",
-            unit_scale=True,
-            unit_divisor=1024,
-        ) as pbar:
+        with (
+            open(file_path, "wb") as fh,
+            tqdm(
+                desc=filename,
+                total=total,
+                unit="B",
+                unit_scale=True,
+                unit_divisor=1024,
+            ) as pbar,
+        ):
             for chunk in response.iter_content(chunk_size=chunk_size):
                 if chunk:
                     fh.write(chunk)
@@ -247,8 +243,12 @@ class DatasetDownloader:
 
         # Extract archive if needed
         name_lower = filename.lower()
-        if name_lower.endswith(".zip") or name_lower.endswith(".tar.gz") or \
-                name_lower.endswith(".tgz") or name_lower.endswith(".tar"):
+        if (
+            name_lower.endswith(".zip")
+            or name_lower.endswith(".tar.gz")
+            or name_lower.endswith(".tgz")
+            or name_lower.endswith(".tar")
+        ):
             self._extract_archive(file_path, dest)
 
         return dest
@@ -269,9 +269,7 @@ class DatasetDownloader:
         try:
             import kaggle  # type: ignore[import]
         except ImportError as exc:
-            raise RuntimeError(
-                "The kaggle package is required. Install it with: pip install kaggle"
-            ) from exc
+            raise RuntimeError("The kaggle package is required. Install it with: pip install kaggle") from exc
 
         dest.mkdir(parents=True, exist_ok=True)
 
@@ -287,9 +285,7 @@ class DatasetDownloader:
         try:
             kaggle.api.dataset_download_files(slug, path=str(dest), unzip=True)
         except Exception as exc:
-            raise RuntimeError(
-                f"Failed to download Kaggle dataset '{slug}': {exc}"
-            ) from exc
+            raise RuntimeError(f"Failed to download Kaggle dataset '{slug}': {exc}") from exc
 
         return dest
 
@@ -316,15 +312,11 @@ class DatasetDownloader:
             response.raise_for_status()
             record = response.json()
         except requests.RequestException as exc:
-            raise RuntimeError(
-                f"Failed to fetch Zenodo record metadata for id={record_id}: {exc}"
-            ) from exc
+            raise RuntimeError(f"Failed to fetch Zenodo record metadata for id={record_id}: {exc}") from exc
 
         files = record.get("files", [])
         if not files:
-            raise RuntimeError(
-                f"Zenodo record {record_id} has no files listed in the API response."
-            )
+            raise RuntimeError(f"Zenodo record {record_id} has no files listed in the API response.")
 
         dest.mkdir(parents=True, exist_ok=True)
 
@@ -338,21 +330,28 @@ class DatasetDownloader:
                 r = requests.get(file_url, stream=True, timeout=120)
                 r.raise_for_status()
                 total = int(r.headers.get("Content-Length", 0)) or None
-                with open(file_path, "wb") as fh, tqdm(
-                    desc=filename,
-                    total=total,
-                    unit="B",
-                    unit_scale=True,
-                    unit_divisor=1024,
-                ) as pbar:
+                with (
+                    open(file_path, "wb") as fh,
+                    tqdm(
+                        desc=filename,
+                        total=total,
+                        unit="B",
+                        unit_scale=True,
+                        unit_divisor=1024,
+                    ) as pbar,
+                ):
                     for chunk in r.iter_content(chunk_size=8192):
                         if chunk:
                             fh.write(chunk)
                             pbar.update(len(chunk))
                 # Extract if archive
                 name_lower = filename.lower()
-                if name_lower.endswith(".zip") or name_lower.endswith(".tar.gz") or \
-                        name_lower.endswith(".tgz") or name_lower.endswith(".tar"):
+                if (
+                    name_lower.endswith(".zip")
+                    or name_lower.endswith(".tar.gz")
+                    or name_lower.endswith(".tgz")
+                    or name_lower.endswith(".tar")
+                ):
                     self._extract_archive(file_path, dest)
             except Exception as exc:
                 print(f"[DatasetDownloader] Warning: could not download {file_url}: {exc}")
@@ -376,17 +375,14 @@ class DatasetDownloader:
             import openml  # type: ignore[import]
         except ImportError as exc:
             raise RuntimeError(
-                "openml is required to download OpenML datasets. "
-                "Install it with: pip install openml"
+                "openml is required to download OpenML datasets. Install it with: pip install openml"
             ) from exc
 
         try:
             ds = openml.datasets.get_dataset(int(dataset_id))
             X, y, _, _ = ds.get_data(target=ds.default_target_attribute)
         except Exception as exc:
-            raise RuntimeError(
-                f"Failed to fetch OpenML dataset id={dataset_id}: {exc}"
-            ) from exc
+            raise RuntimeError(f"Failed to fetch OpenML dataset id={dataset_id}: {exc}") from exc
 
         # Build a combined DataFrame
         if isinstance(X, pd.DataFrame):
@@ -426,27 +422,18 @@ class DatasetDownloader:
         dest:
             Destination directory.
         """
-        api_url = (
-            "https://dataverse.harvard.edu/api/datasets/:persistentId/"
-            f"?persistentId={doi}"
-        )
+        api_url = f"https://dataverse.harvard.edu/api/datasets/:persistentId/?persistentId={doi}"
         try:
             response = requests.get(api_url, timeout=30)
             response.raise_for_status()
             data = response.json()
         except requests.RequestException as exc:
-            raise RuntimeError(
-                f"Failed to fetch Harvard Dataverse metadata for doi={doi}: {exc}"
-            ) from exc
+            raise RuntimeError(f"Failed to fetch Harvard Dataverse metadata for doi={doi}: {exc}") from exc
 
         try:
-            files = (
-                data["data"]["latestVersion"]["files"]
-            )
+            files = data["data"]["latestVersion"]["files"]
         except (KeyError, TypeError) as exc:
-            raise RuntimeError(
-                f"Unexpected Harvard Dataverse API response structure: {exc}"
-            ) from exc
+            raise RuntimeError(f"Unexpected Harvard Dataverse API response structure: {exc}") from exc
 
         dest.mkdir(parents=True, exist_ok=True)
 
@@ -454,29 +441,27 @@ class DatasetDownloader:
             try:
                 file_id = file_info["dataFile"]["id"]
                 filename = file_info["dataFile"]["filename"]
-                file_url = (
-                    f"https://dataverse.harvard.edu/api/access/datafile/{file_id}"
-                )
+                file_url = f"https://dataverse.harvard.edu/api/access/datafile/{file_id}"
                 file_path = dest / filename
                 r = requests.get(file_url, stream=True, timeout=120)
                 r.raise_for_status()
                 total = int(r.headers.get("Content-Length", 0)) or None
-                with open(file_path, "wb") as fh, tqdm(
-                    desc=filename,
-                    total=total,
-                    unit="B",
-                    unit_scale=True,
-                    unit_divisor=1024,
-                ) as pbar:
+                with (
+                    open(file_path, "wb") as fh,
+                    tqdm(
+                        desc=filename,
+                        total=total,
+                        unit="B",
+                        unit_scale=True,
+                        unit_divisor=1024,
+                    ) as pbar,
+                ):
                     for chunk in r.iter_content(chunk_size=8192):
                         if chunk:
                             fh.write(chunk)
                             pbar.update(len(chunk))
             except Exception as exc:
-                print(
-                    f"[DatasetDownloader] Warning: could not download file from "
-                    f"Harvard Dataverse: {exc}"
-                )
+                print(f"[DatasetDownloader] Warning: could not download file from Harvard Dataverse: {exc}")
 
         return dest
 
@@ -498,14 +483,10 @@ class DatasetDownloader:
             response.raise_for_status()
             files = response.json()
         except requests.RequestException as exc:
-            raise RuntimeError(
-                f"Failed to fetch FigShare article files for id={article_id}: {exc}"
-            ) from exc
+            raise RuntimeError(f"Failed to fetch FigShare article files for id={article_id}: {exc}") from exc
 
         if not isinstance(files, list) or not files:
-            raise RuntimeError(
-                f"FigShare article {article_id} has no downloadable files."
-            )
+            raise RuntimeError(f"FigShare article {article_id} has no downloadable files.")
 
         dest.mkdir(parents=True, exist_ok=True)
 
@@ -517,21 +498,28 @@ class DatasetDownloader:
                 r = requests.get(file_url, stream=True, timeout=120)
                 r.raise_for_status()
                 total = int(r.headers.get("Content-Length", 0)) or None
-                with open(file_path, "wb") as fh, tqdm(
-                    desc=filename,
-                    total=total,
-                    unit="B",
-                    unit_scale=True,
-                    unit_divisor=1024,
-                ) as pbar:
+                with (
+                    open(file_path, "wb") as fh,
+                    tqdm(
+                        desc=filename,
+                        total=total,
+                        unit="B",
+                        unit_scale=True,
+                        unit_divisor=1024,
+                    ) as pbar,
+                ):
                     for chunk in r.iter_content(chunk_size=8192):
                         if chunk:
                             fh.write(chunk)
                             pbar.update(len(chunk))
                 # Extract if archive
                 name_lower = filename.lower()
-                if name_lower.endswith(".zip") or name_lower.endswith(".tar.gz") or \
-                        name_lower.endswith(".tgz") or name_lower.endswith(".tar"):
+                if (
+                    name_lower.endswith(".zip")
+                    or name_lower.endswith(".tar.gz")
+                    or name_lower.endswith(".tgz")
+                    or name_lower.endswith(".tar")
+                ):
                     self._extract_archive(file_path, dest)
             except Exception as exc:
                 print(
@@ -556,8 +544,7 @@ class DatasetDownloader:
             if name_lower.endswith(".zip"):
                 with zipfile.ZipFile(archive_path, "r") as zf:
                     zf.extractall(dest)
-            elif name_lower.endswith(".tar.gz") or name_lower.endswith(".tgz") or \
-                    name_lower.endswith(".tar"):
+            elif name_lower.endswith(".tar.gz") or name_lower.endswith(".tgz") or name_lower.endswith(".tar"):
                 with tarfile.open(archive_path, "r:*") as tf:
                     tf.extractall(dest)
             else:
@@ -567,18 +554,13 @@ class DatasetDownloader:
                 )
                 return dest
         except Exception as exc:
-            print(
-                f"[DatasetDownloader] Warning: could not extract {archive_path.name}: {exc}"
-            )
+            print(f"[DatasetDownloader] Warning: could not extract {archive_path.name}: {exc}")
             return dest
 
         try:
             archive_path.unlink()
         except OSError as exc:
-            print(
-                f"[DatasetDownloader] Warning: could not delete archive "
-                f"{archive_path}: {exc}"
-            )
+            print(f"[DatasetDownloader] Warning: could not delete archive {archive_path}: {exc}")
 
         return dest
 

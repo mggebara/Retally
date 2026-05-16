@@ -155,9 +155,7 @@ class ResultComparator:
     # Internal helpers
     # ------------------------------------------------------------------
 
-    def _match_output(
-        self, claim: Claim, outputs: dict[str, float]
-    ) -> tuple[str | None, float | None]:
+    def _match_output(self, claim: Claim, outputs: dict[str, float]) -> tuple[str | None, float | None]:
         """Find the best matching key in ``outputs`` for this claim.
 
         Returns ``(key, value)`` or ``(None, None)`` if no match found.

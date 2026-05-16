@@ -1,10 +1,8 @@
 """Integration-level tests for ValidationPipeline."""
 
-import pytest
 from pathlib import Path
-from unittest.mock import MagicMock, call
+from unittest.mock import MagicMock
 
-from openra.pipeline import ValidationPipeline
 from openra.models import (
     Claim,
     ClaimType,
@@ -16,6 +14,7 @@ from openra.models import (
     Paper,
     ValidationReport,
 )
+from openra.pipeline import ValidationPipeline
 
 
 def _make_pipeline():
@@ -23,7 +22,9 @@ def _make_pipeline():
     paper = Paper(
         title="Test Paper",
         claims=[Claim(description="accuracy", value=0.95, claim_type=ClaimType.ACCURACY)],
-        dataset_references=[DatasetReference(name="dummy", source=DatasetSource.DIRECT_URL, url="http://example.com/ds.csv")],
+        dataset_references=[
+            DatasetReference(name="dummy", source=DatasetSource.DIRECT_URL, url="http://example.com/ds.csv")
+        ],
         methodology_summary="Train a logistic regression and report accuracy.",
     )
     dataset = Dataset(name="dummy", source_url="http://example.com/ds.csv", local_path=Path("/tmp/dummy"))
@@ -33,9 +34,7 @@ def _make_pipeline():
         exit_code=0,
         outputs={"accuracy": 0.95},
     )
-    claim_result = ClaimValidationResult(
-        claim=paper.claims[0], reproduced_value=0.95, passed=True
-    )
+    claim_result = ClaimValidationResult(claim=paper.claims[0], reproduced_value=0.95, passed=True)
     report = ValidationReport(
         paper=paper,
         dataset=dataset,
@@ -45,17 +44,24 @@ def _make_pipeline():
         summary="1 of 1 claims validated.",
     )
 
-    parser = MagicMock(); parser.parse_text.return_value = paper
+    parser = MagicMock()
+    parser.parse_text.return_value = paper
     extractor = MagicMock()
     extractor.extract_claims.return_value = paper.claims
     extractor.extract_dataset_references.return_value = paper.dataset_references
     extractor.extract_methodology.return_value = paper.methodology_summary
-    registry = MagicMock(); registry.lookup.return_value = paper.dataset_references[0]
-    downloader = MagicMock(); downloader.download.return_value = dataset
-    generator = MagicMock(); generator.generate.return_value = exec_result.generated_code
-    executor = MagicMock(); executor.execute.return_value = exec_result
-    comparator = MagicMock(); comparator.compare_all.return_value = [claim_result]
-    reporter = MagicMock(); reporter.build.return_value = report
+    registry = MagicMock()
+    registry.lookup.return_value = paper.dataset_references[0]
+    downloader = MagicMock()
+    downloader.download.return_value = dataset
+    generator = MagicMock()
+    generator.generate.return_value = exec_result.generated_code
+    executor = MagicMock()
+    executor.execute.return_value = exec_result
+    comparator = MagicMock()
+    comparator.compare_all.return_value = [claim_result]
+    reporter = MagicMock()
+    reporter.build.return_value = report
 
     pipeline = ValidationPipeline(
         parser=parser,

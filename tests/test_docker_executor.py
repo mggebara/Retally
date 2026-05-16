@@ -9,24 +9,24 @@ from __future__ import annotations
 
 import subprocess
 from pathlib import Path
-from unittest.mock import MagicMock, patch
 
 import pytest
 
 from openra.codegen.docker_executor import DEFAULT_IMAGE, DockerExecutor
-from openra.models import Dataset, ExecutionResult
-
+from openra.models import Dataset
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _docker_and_image_available() -> bool:
     """Return True if Docker daemon is up AND sandbox image exists."""
     try:
         result = subprocess.run(
             ["docker", "image", "inspect", DEFAULT_IMAGE],
-            capture_output=True, timeout=10,
+            capture_output=True,
+            timeout=10,
         )
         return result.returncode == 0
     except (FileNotFoundError, subprocess.TimeoutExpired):
@@ -53,6 +53,7 @@ def dummy_dataset(tmp_path):
 # ---------------------------------------------------------------------------
 # Tests that don't need Docker running
 # ---------------------------------------------------------------------------
+
 
 def test_build_run_cmd_contains_network_none(executor, dummy_dataset):
     cmd = executor._build_run_cmd(Path("/tmp/script.py"), dummy_dataset)
@@ -121,6 +122,7 @@ def test_is_image_built_returns_bool(executor):
 # ---------------------------------------------------------------------------
 # Tests that require Docker + sandbox image
 # ---------------------------------------------------------------------------
+
 
 @requires_docker
 def test_execute_simple_code(executor, dummy_dataset):
@@ -193,11 +195,7 @@ def test_execute_dataset_readable(executor, tmp_path):
     csv_path.write_text("x,y\n1,2\n3,4\n5,6\n")
     dataset = Dataset(name="test", source_url="", local_path=tmp_path)
 
-    code = (
-        "import pandas as pd\n"
-        f"df = pd.read_csv('{csv_path}')\n"
-        "print(f'RESULT:n_rows={len(df)}')\n"
-    )
+    code = f"import pandas as pd\ndf = pd.read_csv('{csv_path}')\nprint(f'RESULT:n_rows={{len(df)}}')\n"
     result = executor.execute(code, dataset)
     assert result.exit_code == 0
     assert result.outputs.get("n_rows") == pytest.approx(3.0)

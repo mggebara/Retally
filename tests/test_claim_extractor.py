@@ -4,11 +4,12 @@ These tests use a mock Anthropic client so they do not require API access.
 """
 
 import json
-import pytest
 from unittest.mock import MagicMock
 
+import pytest
+
+from openra.models import ClaimType, DatasetSource, Paper
 from openra.paper.extractor import ClaimExtractor
-from openra.models import Claim, ClaimType, DatasetSource, Paper
 
 
 def _make_mock_client(response_text: str):
@@ -33,17 +34,19 @@ def paper_with_text():
 
 
 def test_extract_claims_returns_list(paper_with_text):
-    response = json.dumps([
-        {
-            "description": "test accuracy",
-            "value": 87.3,
-            "unit": "%",
-            "claim_type": "accuracy",
-            "context": "Our method achieves a test accuracy of 87.3%",
-            "table_ref": "Table 1",
-            "figure_ref": None,
-        }
-    ])
+    response = json.dumps(
+        [
+            {
+                "description": "test accuracy",
+                "value": 87.3,
+                "unit": "%",
+                "claim_type": "accuracy",
+                "context": "Our method achieves a test accuracy of 87.3%",
+                "table_ref": "Table 1",
+                "figure_ref": None,
+            }
+        ]
+    )
     client = _make_mock_client(response)
     extractor = ClaimExtractor(client)
     claims = extractor.extract_claims(paper_with_text)
@@ -52,10 +55,19 @@ def test_extract_claims_returns_list(paper_with_text):
 
 
 def test_extract_claims_maps_claim_type(paper_with_text):
-    response = json.dumps([
-        {"description": "AUC", "value": 0.91, "unit": None,
-         "claim_type": "auc_roc", "context": "", "table_ref": None, "figure_ref": None}
-    ])
+    response = json.dumps(
+        [
+            {
+                "description": "AUC",
+                "value": 0.91,
+                "unit": None,
+                "claim_type": "auc_roc",
+                "context": "",
+                "table_ref": None,
+                "figure_ref": None,
+            }
+        ]
+    )
     client = _make_mock_client(response)
     extractor = ClaimExtractor(client)
     claims = extractor.extract_claims(paper_with_text)
@@ -63,10 +75,19 @@ def test_extract_claims_maps_claim_type(paper_with_text):
 
 
 def test_extract_claims_unknown_type_falls_back_to_other(paper_with_text):
-    response = json.dumps([
-        {"description": "something weird", "value": 42.0, "unit": None,
-         "claim_type": "totally_unknown_metric", "context": "", "table_ref": None, "figure_ref": None}
-    ])
+    response = json.dumps(
+        [
+            {
+                "description": "something weird",
+                "value": 42.0,
+                "unit": None,
+                "claim_type": "totally_unknown_metric",
+                "context": "",
+                "table_ref": None,
+                "figure_ref": None,
+            }
+        ]
+    )
     client = _make_mock_client(response)
     extractor = ClaimExtractor(client)
     claims = extractor.extract_claims(paper_with_text)
@@ -74,15 +95,17 @@ def test_extract_claims_unknown_type_falls_back_to_other(paper_with_text):
 
 
 def test_extract_dataset_references(paper_with_text):
-    response = json.dumps([
-        {
-            "name": "UCI Adult",
-            "source": "uci",
-            "url": None,
-            "description": "UCI Adult Income dataset",
-            "access_instructions": None,
-        }
-    ])
+    response = json.dumps(
+        [
+            {
+                "name": "UCI Adult",
+                "source": "uci",
+                "url": None,
+                "description": "UCI Adult Income dataset",
+                "access_instructions": None,
+            }
+        ]
+    )
     client = _make_mock_client(response)
     extractor = ClaimExtractor(client)
     refs = extractor.extract_dataset_references(paper_with_text)
@@ -93,7 +116,7 @@ def test_extract_dataset_references(paper_with_text):
 def test_parse_json_strips_markdown_fences():
     client = MagicMock()
     extractor = ClaimExtractor(client)
-    raw = "```json\n[{\"a\": 1}]\n```"
+    raw = '```json\n[{"a": 1}]\n```'
     result = extractor._parse_json_response(raw)
     assert result == [{"a": 1}]
 
@@ -101,7 +124,7 @@ def test_parse_json_strips_markdown_fences():
 def test_parse_json_strips_plain_fences():
     client = MagicMock()
     extractor = ClaimExtractor(client)
-    raw = "```\n[{\"x\": 2}]\n```"
+    raw = '```\n[{"x": 2}]\n```'
     result = extractor._parse_json_response(raw)
     assert result == [{"x": 2}]
 

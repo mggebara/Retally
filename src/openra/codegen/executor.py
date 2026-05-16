@@ -21,22 +21,17 @@ These are collected into ``ExecutionResult.outputs`` as {name: float}.
 from __future__ import annotations
 
 import ast
-import re
 import shutil
 import subprocess
 import sys
 import tempfile
 import warnings
 from pathlib import Path
-from typing import Any
 
 from openra.models import Dataset, ExecutionResult
 
-
 # Names that generated code must not import or call.
-_FORBIDDEN_MODULES = frozenset(
-    ["subprocess", "socket", "multiprocessing", "ctypes", "pty", "fcntl"]
-)
+_FORBIDDEN_MODULES = frozenset(["subprocess", "socket", "multiprocessing", "ctypes", "pty", "fcntl"])
 
 _RESULT_PREFIX = "RESULT:"
 
@@ -44,6 +39,7 @@ _RESULT_PREFIX = "RESULT:"
 # ---------------------------------------------------------------------------
 # Module-level helpers — shared by CodeExecutor and DockerExecutor
 # ---------------------------------------------------------------------------
+
 
 def preflight_check(code: str) -> None:
     """Raise ValueError if ``code`` imports a forbidden module or calls os.system.
@@ -90,7 +86,7 @@ def parse_outputs(stdout: str) -> dict[str, float]:
         line = line.strip()
         if not line.startswith(_RESULT_PREFIX):
             continue
-        rest = line[len(_RESULT_PREFIX):]
+        rest = line[len(_RESULT_PREFIX) :]
         if "=" not in rest:
             warnings.warn(f"Malformed RESULT line (no '='): {line!r}", stacklevel=2)
             continue
@@ -181,12 +177,10 @@ class CodeExecutor:
                 exit_code = result.returncode
             except subprocess.TimeoutExpired as exc:
                 timed_out = True
-                stdout = exc.stdout or ""
-                stderr = exc.stderr or ""
-                if isinstance(stdout, bytes):
-                    stdout = stdout.decode("utf-8", errors="replace")
-                if isinstance(stderr, bytes):
-                    stderr = stderr.decode("utf-8", errors="replace")
+                raw_out = exc.stdout or b""
+                raw_err = exc.stderr or b""
+                stdout = raw_out.decode("utf-8", errors="replace") if isinstance(raw_out, bytes) else raw_out
+                stderr = raw_err.decode("utf-8", errors="replace") if isinstance(raw_err, bytes) else raw_err
                 exit_code = -1
 
             # Step 5: parse outputs

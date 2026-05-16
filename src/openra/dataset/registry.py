@@ -305,9 +305,7 @@ class DatasetRegistry:
                 source=DatasetSource.KAGGLE,
                 url="heptapod/titanic",
                 description="Binary survival classification for Titanic passengers.",
-                access_instructions=(
-                    "Requires a Kaggle account and ~/.kaggle/kaggle.json credentials."
-                ),
+                access_instructions=("Requires a Kaggle account and ~/.kaggle/kaggle.json credentials."),
             ),
         ]
 
