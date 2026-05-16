@@ -21,6 +21,12 @@ These are collected into ``ExecutionResult.outputs`` as {name: float}.
 from __future__ import annotations
 
 import ast
+import re
+import shutil
+import subprocess
+import sys
+import tempfile
+import warnings
 from pathlib import Path
 from typing import Any
 
@@ -67,7 +73,72 @@ class CodeExecutor:
         If the subprocess times out, set ``ExecutionResult.timed_out = True``
         and ``exit_code = -1``.
         """
-        raise NotImplementedError
+        # Step 1: preflight check
+        try:
+            self._preflight_check(code)
+        except ValueError as exc:
+            return ExecutionResult(
+                generated_code=code,
+                stdout="",
+                stderr=str(exc),
+                exit_code=1,
+                outputs={},
+                timed_out=False,
+            )
+
+        # Determine working directory; track whether we created a temp dir.
+        temp_dir_created: Path | None = None
+        if self.work_dir is not None:
+            work_dir = self.work_dir
+            work_dir.mkdir(parents=True, exist_ok=True)
+        else:
+            work_dir = self._make_work_dir()
+            temp_dir_created = work_dir
+
+        try:
+            # Step 2: write code to a temp .py file
+            script_path = work_dir / "generated_script.py"
+            script_path.write_text(code, encoding="utf-8")
+
+            # Step 3 & 4: run the script as a subprocess
+            timed_out = False
+            try:
+                result = subprocess.run(
+                    [sys.executable, str(script_path)],
+                    capture_output=True,
+                    text=True,
+                    timeout=self.timeout,
+                    cwd=str(work_dir),
+                )
+                stdout = result.stdout
+                stderr = result.stderr
+                exit_code = result.returncode
+            except subprocess.TimeoutExpired as exc:
+                timed_out = True
+                stdout = exc.stdout or ""
+                stderr = exc.stderr or ""
+                if isinstance(stdout, bytes):
+                    stdout = stdout.decode("utf-8", errors="replace")
+                if isinstance(stderr, bytes):
+                    stderr = stderr.decode("utf-8", errors="replace")
+                exit_code = -1
+
+            # Step 5: parse outputs
+            outputs = self._parse_outputs(stdout)
+
+            # Step 6: return result
+            return ExecutionResult(
+                generated_code=code,
+                stdout=stdout,
+                stderr=stderr,
+                exit_code=exit_code,
+                outputs=outputs,
+                timed_out=timed_out,
+            )
+        finally:
+            # Clean up only temp dirs we created ourselves
+            if temp_dir_created is not None:
+                shutil.rmtree(temp_dir_created, ignore_errors=True)
 
     def _preflight_check(self, code: str) -> None:
         """Parse the code as an AST and raise ValueError if it uses forbidden imports.
@@ -76,10 +147,41 @@ class CodeExecutor:
         Raise ``ValueError(f"Forbidden import: {name}")`` for any module in
         ``_FORBIDDEN_MODULES``.
 
+        Also checks for ``os.system`` calls via Call nodes.
+
         This is a best-effort check, not a security guarantee.  For stronger
         isolation, combine with OS-level sandboxing.
         """
-        raise NotImplementedError
+        try:
+            tree = ast.parse(code)
+        except SyntaxError as exc:
+            raise ValueError(f"Syntax error in code: {exc}") from exc
+
+        for node in ast.walk(tree):
+            # Check Import nodes (e.g. import subprocess)
+            if isinstance(node, ast.Import):
+                for alias in node.names:
+                    module_root = alias.name.split(".")[0]
+                    if module_root in _FORBIDDEN_MODULES:
+                        raise ValueError(f"Forbidden import: {alias.name}")
+
+            # Check ImportFrom nodes (e.g. from subprocess import run)
+            elif isinstance(node, ast.ImportFrom):
+                if node.module is not None:
+                    module_root = node.module.split(".")[0]
+                    if module_root in _FORBIDDEN_MODULES:
+                        raise ValueError(f"Forbidden import: {node.module}")
+
+            # Check for os.system calls via Call nodes
+            elif isinstance(node, ast.Call):
+                func = node.func
+                if (
+                    isinstance(func, ast.Attribute)
+                    and func.attr == "system"
+                    and isinstance(func.value, ast.Name)
+                    and func.value.id == "os"
+                ):
+                    raise ValueError("Forbidden import: os.system")
 
     def _parse_outputs(self, stdout: str) -> dict[str, float]:
         """Extract RESULT:<name>=<value> lines from stdout.
@@ -91,7 +193,36 @@ class CodeExecutor:
 
         Returns a dict of {metric_name: float_value}.
         """
-        raise NotImplementedError
+        outputs: dict[str, float] = {}
+        for line in stdout.splitlines():
+            line = line.strip()
+            if not line.startswith(_RESULT_PREFIX):
+                continue
+            rest = line[len(_RESULT_PREFIX):]
+            # Expect format: <name>=<value>
+            if "=" not in rest:
+                warnings.warn(
+                    f"Malformed RESULT line (no '='): {line!r}",
+                    stacklevel=2,
+                )
+                continue
+            name, _, value_str = rest.partition("=")
+            name = name.strip()
+            value_str = value_str.strip()
+            if not name:
+                warnings.warn(
+                    f"Malformed RESULT line (empty name): {line!r}",
+                    stacklevel=2,
+                )
+                continue
+            try:
+                outputs[name] = float(value_str)
+            except ValueError:
+                warnings.warn(
+                    f"Could not parse float from RESULT line: {line!r}",
+                    stacklevel=2,
+                )
+        return outputs
 
     def _make_work_dir(self) -> Path:
         """Create and return a temporary working directory for this execution.
@@ -99,4 +230,4 @@ class CodeExecutor:
         Use ``tempfile.mkdtemp`` with a descriptive prefix.  The caller is
         responsible for cleanup after the ExecutionResult has been captured.
         """
-        raise NotImplementedError
+        return Path(tempfile.mkdtemp(prefix="paper_validator_"))

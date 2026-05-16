@@ -21,13 +21,14 @@ or use a process pool.
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 from paper_validator.codegen.executor import CodeExecutor
 from paper_validator.codegen.generator import CodeGenerator
 from paper_validator.dataset.downloader import DatasetDownloader
 from paper_validator.dataset.registry import DatasetRegistry
-from paper_validator.models import DatasetReference, ValidationReport
+from paper_validator.models import DatasetReference, ExecutionResult, ValidationReport
 from paper_validator.paper.extractor import ClaimExtractor
 from paper_validator.paper.parser import PaperParser
 from paper_validator.validation.comparator import ResultComparator
@@ -87,7 +88,32 @@ class ValidationPipeline:
               - Starts with '10.' → DOI
               - Starts with 'http' → URL
         """
-        raise NotImplementedError
+        # Step 1: parse the paper
+        paper = self._parse_paper(paper_source)
+
+        # Step 2: extract claims
+        paper.claims = self.extractor.extract_claims(paper)
+
+        # Step 3: extract dataset references
+        paper.dataset_references = self.extractor.extract_dataset_references(paper)
+
+        # Step 4: extract methodology summary
+        paper.methodology_summary = self.extractor.extract_methodology(paper)
+
+        # Step 5: resolve dataset reference
+        ref = self._resolve_dataset(paper.dataset_references)
+
+        # Step 6: download dataset
+        dataset = self.downloader.download(ref)
+
+        # Step 7: generate and execute code (with refinement)
+        code, exec_result = self._run_with_refinement(paper, dataset)
+
+        # Step 8: compare results
+        claim_results = self.comparator.compare_all(paper.claims, exec_result.outputs)
+
+        # Step 9: build report
+        return self.reporter.build(paper, dataset, exec_result, claim_results)
 
     def validate_with_known_dataset(
         self,
@@ -100,7 +126,26 @@ class ValidationPipeline:
         Useful when the automatic extractor cannot find the dataset or
         when you want to test with a specific dataset version.
         """
-        raise NotImplementedError
+        # Step 1: parse the paper
+        paper = self._parse_paper(paper_source)
+
+        # Step 2: extract claims
+        paper.claims = self.extractor.extract_claims(paper)
+
+        # Step 3: extract methodology summary (skip dataset ref extraction)
+        paper.methodology_summary = self.extractor.extract_methodology(paper)
+
+        # Step 4: download dataset using the provided reference directly
+        dataset = self.downloader.download(dataset_reference)
+
+        # Step 5: generate and execute code (with refinement)
+        code, exec_result = self._run_with_refinement(paper, dataset)
+
+        # Step 6: compare results
+        claim_results = self.comparator.compare_all(paper.claims, exec_result.outputs)
+
+        # Step 7: build report
+        return self.reporter.build(paper, dataset, exec_result, claim_results)
 
     # ------------------------------------------------------------------
     # Internal steps
@@ -111,7 +156,30 @@ class ValidationPipeline:
 
         See ``validate`` for the dispatch logic.
         """
-        raise NotImplementedError
+        source_str = str(source)
+
+        # URLs must be checked first — parse_url handles PDF/HTML detection internally
+        if source_str.startswith("http://") or source_str.startswith("https://"):
+            return self.parser.parse_url(source_str)
+
+        # Local PDF file
+        if isinstance(source, Path) or source_str.endswith(".pdf"):
+            return self.parser.parse_pdf(Path(source))
+
+        # Local plain text file
+        if source_str.endswith(".txt"):
+            return self.parser.parse_text(Path(source).read_text())
+
+        # arXiv ID, e.g. "2301.00001" or "2301.00001v2"
+        if re.match(r"^\d{4}\.\d{4,5}(v\d+)?$", source_str):
+            return self.parser.parse_arxiv(source_str)
+
+        # DOI, e.g. "10.1145/1234567.1234568"
+        if source_str.startswith("10."):
+            return self.parser.parse_doi(source_str)
+
+        # Fall back to treating the string as raw paper text
+        return self.parser.parse_text(source_str)
 
     def _resolve_dataset(self, references: list[DatasetReference]) -> DatasetReference:
         """Choose the best dataset reference to use.
@@ -125,9 +193,22 @@ class ValidationPipeline:
           4. If still nothing, raise ``ValueError`` with a helpful message
              listing what was found.
         """
-        raise NotImplementedError
+        # Pass 1: registry lookup
+        for ref in references:
+            hit = self.registry.lookup(ref.name)
+            if hit:
+                return hit
 
-    def _run_with_refinement(self, paper, dataset) -> tuple[str, object]:
+        # Pass 2: first reference with a URL
+        for ref in references:
+            if ref.url:
+                return ref
+
+        raise ValueError(
+            f"Could not resolve dataset from references: {[r.name for r in references]}"
+        )
+
+    def _run_with_refinement(self, paper, dataset) -> tuple[str, ExecutionResult]:
         """Generate code and execute it, refining on failure.
 
         Returns ``(final_code, ExecutionResult)``.
@@ -140,7 +221,19 @@ class ValidationPipeline:
              and repeat from step 2.
           4. Return the last (code, result) pair regardless of success.
         """
-        raise NotImplementedError
+        code = self.generator.generate(paper, dataset)
+        result = self.executor.execute(code, dataset)
+
+        for _attempt in range(self.max_refinements):
+            if result.exit_code == 0 and result.outputs:
+                break
+            error = result.stderr or "No RESULT: lines found in output"
+            code = self.generator.refine(code, error, paper, dataset)
+            result = self.executor.execute(code, dataset)
+
+        # Update the result with the final generated code
+        result.generated_code = code
+        return code, result
 
     # ------------------------------------------------------------------
     # Factory
@@ -162,4 +255,20 @@ class ValidationPipeline:
           3. Call ``registry.load()`` to populate the dataset registry.
           4. Return a ValidationPipeline instance.
         """
-        raise NotImplementedError
+        import anthropic
+
+        client = anthropic.Anthropic(api_key=anthropic_api_key)
+
+        registry = DatasetRegistry()
+        registry.load()
+
+        return cls(
+            parser=PaperParser(),
+            extractor=ClaimExtractor(client),
+            downloader=DatasetDownloader(),
+            registry=registry,
+            generator=CodeGenerator(client),
+            executor=CodeExecutor(),
+            comparator=ResultComparator(),
+            reporter=ValidationReporter(),
+        )

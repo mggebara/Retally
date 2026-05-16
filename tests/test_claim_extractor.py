@@ -32,7 +32,6 @@ def paper_with_text():
     )
 
 
-@pytest.mark.skip(reason="not implemented")
 def test_extract_claims_returns_list(paper_with_text):
     response = json.dumps([
         {
@@ -52,7 +51,28 @@ def test_extract_claims_returns_list(paper_with_text):
     assert any(abs(c.value - 87.3) < 0.01 for c in claims)
 
 
-@pytest.mark.skip(reason="not implemented")
+def test_extract_claims_maps_claim_type(paper_with_text):
+    response = json.dumps([
+        {"description": "AUC", "value": 0.91, "unit": None,
+         "claim_type": "auc_roc", "context": "", "table_ref": None, "figure_ref": None}
+    ])
+    client = _make_mock_client(response)
+    extractor = ClaimExtractor(client)
+    claims = extractor.extract_claims(paper_with_text)
+    assert claims[0].claim_type == ClaimType.AUC_ROC
+
+
+def test_extract_claims_unknown_type_falls_back_to_other(paper_with_text):
+    response = json.dumps([
+        {"description": "something weird", "value": 42.0, "unit": None,
+         "claim_type": "totally_unknown_metric", "context": "", "table_ref": None, "figure_ref": None}
+    ])
+    client = _make_mock_client(response)
+    extractor = ClaimExtractor(client)
+    claims = extractor.extract_claims(paper_with_text)
+    assert claims[0].claim_type == ClaimType.OTHER
+
+
 def test_extract_dataset_references(paper_with_text):
     response = json.dumps([
         {
@@ -70,10 +90,24 @@ def test_extract_dataset_references(paper_with_text):
     assert refs[0].source == DatasetSource.UCI
 
 
-@pytest.mark.skip(reason="not implemented")
 def test_parse_json_strips_markdown_fences():
     client = MagicMock()
     extractor = ClaimExtractor(client)
     raw = "```json\n[{\"a\": 1}]\n```"
     result = extractor._parse_json_response(raw)
     assert result == [{"a": 1}]
+
+
+def test_parse_json_strips_plain_fences():
+    client = MagicMock()
+    extractor = ClaimExtractor(client)
+    raw = "```\n[{\"x\": 2}]\n```"
+    result = extractor._parse_json_response(raw)
+    assert result == [{"x": 2}]
+
+
+def test_parse_json_raises_on_invalid():
+    client = MagicMock()
+    extractor = ClaimExtractor(client)
+    with pytest.raises(ValueError):
+        extractor._parse_json_response("not json at all")

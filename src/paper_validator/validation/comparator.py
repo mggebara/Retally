@@ -24,6 +24,8 @@ have tighter conventions (p-values should be exact) while others are looser
 
 from __future__ import annotations
 
+import re
+
 from paper_validator.models import Claim, ClaimType, ClaimValidationResult
 
 
@@ -65,7 +67,17 @@ class ResultComparator:
         Claims that cannot be matched get ``reproduced_value=None`` and
         ``passed=False`` with an explanatory note.
         """
-        raise NotImplementedError
+        results: list[ClaimValidationResult] = []
+        for claim in claims:
+            matched_key, matched_value = self._match_output(claim, outputs)
+            result = self.compare(claim, matched_value)
+            if matched_key is None and not result.notes:
+                result.notes = (
+                    f"No matching output found for claim: {claim.description!r}. "
+                    f"Available outputs: {list(outputs.keys())}"
+                )
+            results.append(result)
+        return results
 
     def compare(
         self,
@@ -88,8 +100,56 @@ class ResultComparator:
         A claim passes when:
             reproduced_value is not None
             AND |reproduced_value - claim.value| / max(|claim.value|, 1e-9) <= tolerance
+
+        Special case: if claimed > 1.0 and reproduced <= 1.0, also try comparing
+        claimed/100 vs reproduced (handles % vs decimal mismatch). Use whichever
+        comparison gives the smaller error; note the unit mismatch if it passes.
         """
-        raise NotImplementedError
+        if tolerance is None:
+            tolerance = self._default_tolerance(claim)
+
+        if reproduced_value is None:
+            return ClaimValidationResult(
+                claim=claim,
+                reproduced_value=None,
+                tolerance=tolerance,
+                passed=False,
+                notes="No reproduced value available.",
+            )
+
+        claimed = claim.value
+        reproduced = reproduced_value
+
+        # Primary comparison
+        rel_err = abs(reproduced - claimed) / max(abs(claimed), 1e-9)
+        passed = rel_err <= tolerance
+        notes = ""
+
+        # Special case: % vs decimal mismatch
+        # If claimed > 1.0 and reproduced <= 1.0, also try claimed/100 vs reproduced
+        if claimed > 1.0 and reproduced <= 1.0:
+            scaled_claimed = claimed / 100.0
+            scaled_rel_err = abs(reproduced - scaled_claimed) / max(abs(scaled_claimed), 1e-9)
+            if scaled_rel_err < rel_err:
+                # The scaled comparison gives a better match
+                if scaled_rel_err <= tolerance:
+                    passed = True
+                    notes = (
+                        "Unit mismatch detected: paper value appears to be in percentage "
+                        f"({claimed}%) while reproduced value is in decimal ({reproduced}). "
+                        "Claim validated after unit normalisation."
+                    )
+                else:
+                    # Neither comparison passes; use the primary result
+                    passed = False
+
+        return ClaimValidationResult(
+            claim=claim,
+            reproduced_value=reproduced_value,
+            tolerance=tolerance,
+            passed=passed,
+            notes=notes,
+        )
 
     # ------------------------------------------------------------------
     # Internal helpers
@@ -103,28 +163,68 @@ class ResultComparator:
         Returns ``(key, value)`` or ``(None, None)`` if no match found.
 
         Strategy (in order):
-          1. Normalise both claim description and all output keys
-             (lowercase, replace spaces/hyphens/underscores with a single
-             underscore, strip trailing 's').
-          2. Exact match on normalised strings.
-          3. Substring match.
-          4. LLM match (if ``use_llm_matching`` is True).
+          1. Exact match on normalised claim description vs normalised output keys.
+          2. Substring match (normalised claim key is substring of normalised output
+             key, or vice versa).
+          3. Check claim.claim_type name against normalised output keys.
+          4. LLM match (if ``use_llm_matching`` is True) — not implemented.
         """
-        raise NotImplementedError
+        if not outputs:
+            return None, None
+
+        norm_claim = self._normalise_key(claim.description)
+        norm_outputs: dict[str, str] = {k: self._normalise_key(k) for k in outputs}
+
+        # Strategy 1: exact normalised match
+        for raw_key, norm_key in norm_outputs.items():
+            if norm_key == norm_claim:
+                return raw_key, outputs[raw_key]
+
+        # Strategy 2: substring match
+        for raw_key, norm_key in norm_outputs.items():
+            if norm_claim in norm_key or norm_key in norm_claim:
+                return raw_key, outputs[raw_key]
+
+        # Strategy 3: match claim_type name against normalised output keys
+        norm_type = self._normalise_key(claim.claim_type.name)
+        for raw_key, norm_key in norm_outputs.items():
+            if norm_type in norm_key or norm_key in norm_type:
+                return raw_key, outputs[raw_key]
+
+        return None, None
 
     def _default_tolerance(self, claim: Claim) -> float:
         """Return an appropriate tolerance for this claim's type.
 
-        Suggested values:
-          - ACCURACY, F1, AUC_ROC, PRECISION, RECALL → 0.01 (1 %)
+        Values:
+          - ACCURACY, F1_SCORE, AUC_ROC, PRECISION, RECALL → 0.01 (1 %)
           - RMSE, MAE → 0.05 (5 %)
           - CORRELATION → 0.02
-          - P_VALUE → 0.001 (absolute, not relative — handle specially)
+          - P_VALUE → 0.001
           - EFFECT_SIZE → 0.05
           - OTHER → ``self.default_tolerance``
         """
-        raise NotImplementedError
+        mapping = {
+            ClaimType.ACCURACY: 0.01,
+            ClaimType.F1_SCORE: 0.01,
+            ClaimType.AUC_ROC: 0.01,
+            ClaimType.PRECISION: 0.01,
+            ClaimType.RECALL: 0.01,
+            ClaimType.RMSE: 0.05,
+            ClaimType.MAE: 0.05,
+            ClaimType.CORRELATION: 0.02,
+            ClaimType.P_VALUE: 0.001,
+            ClaimType.EFFECT_SIZE: 0.05,
+            ClaimType.OTHER: self.default_tolerance,
+        }
+        return mapping.get(claim.claim_type, self.default_tolerance)
 
     def _normalise_key(self, s: str) -> str:
-        """Lowercase, replace non-alphanumeric runs with '_', strip trailing 's'."""
-        raise NotImplementedError
+        """Lowercase, replace non-alphanumeric runs with '_', strip leading/trailing underscores.
+
+        Note: does NOT strip trailing 's' to avoid false matches (e.g. "class" → "clas").
+        """
+        s = s.lower()
+        s = re.sub(r"[^a-z0-9]+", "_", s)
+        s = s.strip("_")
+        return s

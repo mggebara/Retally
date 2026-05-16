@@ -1,13 +1,8 @@
-"""Integration-level tests for ValidationPipeline.
-
-These tests use mocked components so no real API calls or downloads occur.
-They verify that the pipeline wires components together correctly and
-handles the refinement loop.
-"""
+"""Integration-level tests for ValidationPipeline."""
 
 import pytest
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, call
 
 from paper_validator.pipeline import ValidationPipeline
 from paper_validator.models import (
@@ -75,7 +70,6 @@ def _make_pipeline():
     return pipeline, report
 
 
-@pytest.mark.skip(reason="not implemented")
 def test_validate_returns_report():
     pipeline, expected_report = _make_pipeline()
     report = pipeline.validate("some text content")
@@ -83,7 +77,6 @@ def test_validate_returns_report():
     assert report.overall_passed
 
 
-@pytest.mark.skip(reason="not implemented")
 def test_pipeline_calls_components_in_order():
     pipeline, _ = _make_pipeline()
     pipeline.validate("some text content")
@@ -96,12 +89,46 @@ def test_pipeline_calls_components_in_order():
     pipeline.reporter.build.assert_called_once()
 
 
-@pytest.mark.skip(reason="not implemented")
 def test_refinement_loop_retries_on_failure():
     pipeline, _ = _make_pipeline()
-    # First execution fails, second succeeds
     fail_result = ExecutionResult(generated_code="bad code", exit_code=1, stderr="SyntaxError")
     ok_result = ExecutionResult(generated_code="good code", exit_code=0, outputs={"accuracy": 0.95})
     pipeline.executor.execute.side_effect = [fail_result, ok_result]
     pipeline.validate("some text content")
     assert pipeline.generator.refine.call_count == 1
+
+
+def test_refinement_stops_at_max_refinements():
+    pipeline, _ = _make_pipeline()
+    pipeline.max_refinements = 2
+    always_fail = ExecutionResult(generated_code="bad", exit_code=1, stderr="error", outputs={})
+    pipeline.executor.execute.return_value = always_fail
+    pipeline.validate("some text content")
+    # Should have tried generate once + refine max_refinements times
+    assert pipeline.generator.refine.call_count <= pipeline.max_refinements
+
+
+def test_parse_paper_dispatches_arxiv_id():
+    pipeline, _ = _make_pipeline()
+    pipeline.validate("2301.00001")
+    pipeline.parser.parse_arxiv.assert_called_once_with("2301.00001")
+
+
+def test_parse_paper_dispatches_url():
+    pipeline, _ = _make_pipeline()
+    pipeline.validate("https://example.com/paper.pdf")
+    pipeline.parser.parse_url.assert_called_once_with("https://example.com/paper.pdf")
+
+
+def test_parse_paper_dispatches_doi():
+    pipeline, _ = _make_pipeline()
+    pipeline.validate("10.1145/1234567.1234568")
+    pipeline.parser.parse_doi.assert_called_once_with("10.1145/1234567.1234568")
+
+
+def test_validate_with_known_dataset_skips_ref_extraction():
+    pipeline, _ = _make_pipeline()
+    ref = DatasetReference(name="iris", source=DatasetSource.UCI, url="53")
+    pipeline.validate_with_known_dataset("some text", ref)
+    pipeline.extractor.extract_dataset_references.assert_not_called()
+    pipeline.downloader.download.assert_called_once_with(ref)
