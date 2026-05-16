@@ -29,10 +29,8 @@ dev = [
     "pytest-cov>=5.0.0",
     "ruff>=0.4.0",
     "mypy>=1.10.0",
+    "types-requests>=2.31.0",
 ]
-
-[tool.pytest.ini_options.markers]
-requires_docker = "mark test as requiring a running Docker daemon and the sandbox image"
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -40,6 +38,9 @@ where = ["src"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-v"
+markers = [
+    "requires_docker: mark test as requiring a running Docker daemon and the sandbox image",
+]
 
 [tool.ruff]
 line-length = 110

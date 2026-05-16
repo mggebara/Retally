@@ -12,8 +12,10 @@ rebuild-sandbox:
 	docker build --no-cache -f $(DOCKERFILE) -t $(SANDBOX_IMAGE) docker/
 
 ## Run the test suite.
+## Uses ``python -m pytest`` so a globally-installed pytest in its own venv
+## (e.g. via uv) doesn't run against an environment that lacks ``openra``.
 test:
-	pytest tests/ -v
+	python -m pytest tests/ -v
 
 ## Lint with ruff.
 lint:
@@ -21,7 +23,7 @@ lint:
 
 ## Type-check with mypy.
 typecheck:
-	mypy src/openra
+	python -m mypy src/openra
 
 ## Install the package and dev dependencies in editable mode.
 install:
