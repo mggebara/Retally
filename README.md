@@ -2,6 +2,8 @@
 
 OpenRA automates the validation of academic papers: it reads a paper, downloads the relevant dataset, generates scikit-learn reproduction code via the Claude API, executes it in an isolated environment, and compares the reproduced numbers against the paper's stated results.
 
+See [`LEADERBOARD.md`](LEADERBOARD.md) for an at-a-glance view of which authors' papers have been reproducibly validated so far, plus a [browsable dashboard of every report](docs/index.html).
+
 ---
 
 ## Table of contents
