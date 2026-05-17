@@ -4,6 +4,7 @@ from pathlib import Path
 from unittest.mock import MagicMock
 
 from openra.models import (
+    AuditStatus,
     Claim,
     ClaimType,
     ClaimValidationResult,
@@ -11,6 +12,7 @@ from openra.models import (
     DatasetReference,
     DatasetSource,
     ExecutionResult,
+    HyperparameterSpec,
     Paper,
     ValidationReport,
 )
@@ -50,6 +52,7 @@ def _make_pipeline():
     extractor.extract_claims.return_value = paper.claims
     extractor.extract_dataset_references.return_value = paper.dataset_references
     extractor.extract_methodology.return_value = paper.methodology_summary
+    extractor.extract_hyperparameters.return_value = []
     registry = MagicMock()
     registry.lookup.return_value = paper.dataset_references[0]
     downloader = MagicMock()
@@ -292,3 +295,76 @@ def test_claim_refinement_annotates_notes_when_gap_not_closed():
     assert not final_claims[0].passed
     # The annotation tells the reader refinement was attempted.
     assert "claim-targeted refinement" in final_claims[0].notes
+
+
+# ── Hyperparameter audit integration ───────────────────────────────────
+
+
+def test_pipeline_calls_extract_hyperparameters():
+    pipeline, _ = _make_pipeline()
+    pipeline.validate("some text")
+    pipeline.extractor.extract_hyperparameters.assert_called_once()
+
+
+def test_pipeline_runs_audit_after_refinement():
+    pipeline, _ = _make_pipeline()
+    # Generated code uses C=1.0, but the spec demands C=0.5 — audit must
+    # see the MISMATCH and store it on the ExecutionResult that goes to
+    # the reporter.
+    code = "LogisticRegression(C=1.0)"
+    pipeline.generator.generate.return_value = code
+    pipeline.executor.execute.return_value = ExecutionResult(
+        generated_code=code,
+        stdout="RESULT:accuracy=0.95\n",
+        exit_code=0,
+        outputs={"accuracy": 0.95},
+    )
+    pipeline.extractor.extract_hyperparameters.return_value = [
+        HyperparameterSpec(name="C", value=0.5, context="paper says C=0.5"),
+    ]
+
+    pipeline.validate("some text")
+    exec_result = pipeline.reporter.build.call_args[0][2]
+    assert len(exec_result.hyperparameter_audits) == 1
+    assert exec_result.hyperparameter_audits[0].status is AuditStatus.MISMATCH
+
+
+def test_pipeline_audit_runs_on_final_code_not_initial():
+    """If refinement changes the code, the audit must see the FINAL version."""
+    pipeline, _ = _make_pipeline()
+    pipeline.generator.generate.return_value = "LogisticRegression(C=0.1)"
+    pipeline.generator.refine_for_claims.return_value = "LogisticRegression(C=1.0)"
+    pipeline.executor.execute.side_effect = [
+        ExecutionResult(
+            generated_code="LogisticRegression(C=0.1)",
+            stdout="RESULT:accuracy=0.50\n",
+            exit_code=0,
+            outputs={"accuracy": 0.50},
+        ),
+        ExecutionResult(
+            generated_code="LogisticRegression(C=1.0)",
+            stdout="RESULT:accuracy=0.95\n",
+            exit_code=0,
+            outputs={"accuracy": 0.95},
+        ),
+    ]
+    pipeline.comparator.compare_all.side_effect = [
+        [_failing_claim_result(0.95, 0.50)],
+        [_passing_claim_result(0.95, 0.95)],
+    ]
+    pipeline.extractor.extract_hyperparameters.return_value = [HyperparameterSpec(name="C", value=1.0)]
+
+    pipeline.validate("some text")
+    exec_result = pipeline.reporter.build.call_args[0][2]
+    [audit] = exec_result.hyperparameter_audits
+    # The audit was run on the refined code (C=1.0), not the initial (C=0.1).
+    assert audit.status is AuditStatus.MATCH
+
+
+def test_pipeline_audit_empty_when_no_specs():
+    """Audit must be a no-op when the extractor found no hyperparameters."""
+    pipeline, _ = _make_pipeline()
+    pipeline.extractor.extract_hyperparameters.return_value = []
+    pipeline.validate("some text")
+    exec_result = pipeline.reporter.build.call_args[0][2]
+    assert exec_result.hyperparameter_audits == []

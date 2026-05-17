@@ -5,7 +5,8 @@ components and executes the full validation workflow.
 Workflow
 --------
   1. Parse the paper (PaperParser)
-  2. Extract claims and dataset references (ClaimExtractor)
+  2. Extract claims, dataset references, methodology summary, and
+     paper-stated hyperparameters (ClaimExtractor)
   3. Resolve the dataset: registry lookup → manual reference → raise
   4. Download the dataset (DatasetDownloader)
   5. Generate reproduction code (CodeGenerator)
@@ -18,9 +19,13 @@ Workflow
         on no-progress, identical-code, or refinement-broke-the-code.
   7. Compare results (ResultComparator); per-attempt comparisons happen
      inside step 6 so the loop can decide when to stop.
-  8. Build and return a ValidationReport (ValidationReporter), which
-     surfaces any ``DEVIATION:`` methodology changes the generator
-     declared while closing the gap.
+  8. Audit the final generated code against the paper's stated
+     hyperparameters (``validation.hyperparam_audit``).  Independent
+     of claim validation: passing claims with mismatched hyperparameters
+     is a real signal that the reproduction deviated from the paper.
+  9. Build and return a ValidationReport (ValidationReporter), which
+     surfaces ``DEVIATION:`` methodology changes the generator declared
+     while closing the gap and any non-MATCH hyperparameter audits.
 
 The pipeline is intentionally linear and stateless — each call to
 ``validate`` is independent.  For batch validation, call it in a loop
@@ -41,6 +46,7 @@ from openra.models import ClaimValidationResult, DatasetReference, ExecutionResu
 from openra.paper.extractor import ClaimExtractor
 from openra.paper.parser import PaperParser
 from openra.validation.comparator import ResultComparator
+from openra.validation.hyperparam_audit import audit_hyperparameters
 from openra.validation.reporter import ValidationReporter
 
 AnyExecutor = CodeExecutor | DockerExecutor
@@ -122,18 +128,25 @@ class ValidationPipeline:
         # Step 4: extract methodology summary
         paper.methodology_summary = self.extractor.extract_methodology(paper)
 
-        # Step 5: resolve dataset reference
+        # Step 5: extract paper-stated hyperparameters (consumed post-execution
+        # by the AST hyperparameter auditor)
+        paper.hyperparameters = self.extractor.extract_hyperparameters(paper)
+
+        # Step 6: resolve dataset reference
         ref = self._resolve_dataset(paper.dataset_references)
 
-        # Step 6: download dataset
+        # Step 7: download dataset
         dataset = self.downloader.download(ref)
 
-        # Step 7: generate, execute, and refine until claims pass or we give up.
+        # Step 8: generate, execute, and refine until claims pass or we give up.
         # Comparison happens inside the refinement loop so it can decide when
         # to stop; the returned claim_results reflect the final attempt.
-        _code, exec_result, claim_results = self._run_with_refinement(paper, dataset)
+        code, exec_result, claim_results = self._run_with_refinement(paper, dataset)
 
-        # Step 8: build report
+        # Step 9: audit hyperparameters in the final code against the spec
+        exec_result.hyperparameter_audits = audit_hyperparameters(code, paper.hyperparameters)
+
+        # Step 10: build report
         return self.reporter.build(paper, dataset, exec_result, claim_results)
 
     def validate_with_known_dataset(
@@ -156,13 +169,19 @@ class ValidationPipeline:
         # Step 3: extract methodology summary (skip dataset ref extraction)
         paper.methodology_summary = self.extractor.extract_methodology(paper)
 
-        # Step 4: download dataset using the provided reference directly
+        # Step 4: extract paper-stated hyperparameters for the AST audit
+        paper.hyperparameters = self.extractor.extract_hyperparameters(paper)
+
+        # Step 5: download dataset using the provided reference directly
         dataset = self.downloader.download(dataset_reference)
 
-        # Step 5: generate, execute, and refine until claims pass or we give up.
-        _code, exec_result, claim_results = self._run_with_refinement(paper, dataset)
+        # Step 6: generate, execute, and refine until claims pass or we give up.
+        code, exec_result, claim_results = self._run_with_refinement(paper, dataset)
 
-        # Step 6: build report
+        # Step 7: audit hyperparameters in the final code against the spec
+        exec_result.hyperparameter_audits = audit_hyperparameters(code, paper.hyperparameters)
+
+        # Step 8: build report
         return self.reporter.build(paper, dataset, exec_result, claim_results)
 
     # ------------------------------------------------------------------

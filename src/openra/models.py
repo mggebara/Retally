@@ -46,6 +46,66 @@ class DatasetSource(Enum):
     UNKNOWN = "unknown"
 
 
+class AuditStatus(Enum):
+    """Outcome of auditing one paper-stated hyperparameter against the generated code."""
+
+    MATCH = "match"
+    """Code used the paper's stated value (literal equality, with float tolerance)."""
+
+    MISMATCH = "mismatch"
+    """Code used a different literal value for this hyperparameter."""
+
+    NOT_FOUND = "not_found"
+    """The hyperparameter's keyword argument never appeared in the code.
+
+    The code may still be using the value via the library's default, but
+    we cannot prove conformance from the AST alone.
+    """
+
+    UNRESOLVED = "unresolved"
+    """The kwarg is present but bound to a variable / expression we cannot
+    evaluate without executing the code.  A separate signal from
+    MISMATCH because we don't know whether the actual runtime value
+    matches or not."""
+
+
+@dataclass
+class HyperparameterSpec:
+    """A hyperparameter the paper explicitly specifies.
+
+    The extractor populates this from the paper's methodology section.
+    ``name`` is expected to be the canonical sklearn keyword argument
+    where one applies (``C``, ``n_estimators``, ``random_state``,
+    ``test_size``, ``hidden_layer_sizes``, ``cv``, …); this lets the
+    AST auditor match by kwarg name without further normalisation.
+
+    ``value`` is whatever the paper states.  Lists / tuples are stored
+    as lists.
+    """
+
+    name: str
+    value: Any
+    context: str = ""
+    """Surrounding sentence(s) from the paper for disambiguation."""
+
+    source_ref: str | None = None
+    """Section / table / figure reference where this hyperparameter is stated,
+    if available (e.g. '§3.2', 'Table 1')."""
+
+
+@dataclass
+class HyperparameterAudit:
+    """Result of checking one HyperparameterSpec against the generated code."""
+
+    spec: HyperparameterSpec
+    status: AuditStatus
+    observed_value: Any = None
+    """The literal value the code used, when status is MATCH or MISMATCH;
+    None for NOT_FOUND; the raw AST source string for UNRESOLVED."""
+
+    notes: str = ""
+
+
 @dataclass
 class Claim:
     """A single quantitative result asserted in a paper."""
@@ -110,6 +170,10 @@ class Paper:
     methodology_summary: str = ""
     """LLM-summarised methodology section, used as context for code generation."""
 
+    hyperparameters: list[HyperparameterSpec] = field(default_factory=list)
+    """Hyperparameters the paper explicitly specifies, extracted by an LLM
+    pass.  Consumed downstream by the AST hyperparameter auditor."""
+
     source_path: Path | None = None
     """Local path of the original file this paper was parsed from."""
 
@@ -165,6 +229,12 @@ class ExecutionResult:
     """Number of claim-targeted refinement passes the pipeline ran after the
     initial code first executed cleanly.  Distinct from the exec-error
     refinement count, which is implicit in the code's history."""
+
+    hyperparameter_audits: list[HyperparameterAudit] = field(default_factory=list)
+    """Per-spec audit results from comparing the final generated code's
+    literal kwargs against ``Paper.hyperparameters``.  Independent of
+    claim validation: a paper can be claim-validated while still
+    failing the hyperparameter audit (and vice versa)."""
 
     timed_out: bool = False
 

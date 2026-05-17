@@ -134,3 +134,72 @@ def test_parse_json_raises_on_invalid():
     extractor = ClaimExtractor(client)
     with pytest.raises(ValueError):
         extractor._parse_json_response("not json at all")
+
+
+# ── extract_hyperparameters ─────────────────────────────────────────────
+
+
+def test_extract_hyperparameters_returns_specs(paper_with_text):
+    response = json.dumps(
+        [
+            {
+                "name": "C",
+                "value": 1.0,
+                "context": "We use logistic regression with C=1.0.",
+                "source_ref": "§3.2",
+            },
+            {
+                "name": "test_size",
+                "value": 0.2,
+                "context": "80/20 stratified train/test split.",
+                "source_ref": None,
+            },
+            {
+                "name": "hidden_layer_sizes",
+                "value": [32],
+                "context": "One hidden layer of 32 units.",
+                "source_ref": "Table 1",
+            },
+        ]
+    )
+    client = _make_mock_client(response)
+    extractor = ClaimExtractor(client)
+    specs = extractor.extract_hyperparameters(paper_with_text)
+
+    assert [s.name for s in specs] == ["C", "test_size", "hidden_layer_sizes"]
+    assert specs[0].value == 1.0
+    assert specs[1].value == 0.2
+    assert specs[2].value == [32]
+    assert specs[0].source_ref == "§3.2"
+    assert specs[1].source_ref is None
+
+
+def test_extract_hyperparameters_empty_list(paper_with_text):
+    # Many papers genuinely don't state any hyperparameters; the
+    # extractor must not crash and must return [].
+    client = _make_mock_client("[]")
+    extractor = ClaimExtractor(client)
+    assert extractor.extract_hyperparameters(paper_with_text) == []
+
+
+def test_extract_hyperparameters_skips_malformed_entries(paper_with_text):
+    # An entry with no name is unusable downstream and must be dropped.
+    response = json.dumps(
+        [
+            {"name": "", "value": 1.0, "context": ""},  # empty name → skip
+            {"name": "C", "value": 1.0, "context": "C=1.0"},
+        ]
+    )
+    client = _make_mock_client(response)
+    extractor = ClaimExtractor(client)
+    specs = extractor.extract_hyperparameters(paper_with_text)
+    assert [s.name for s in specs] == ["C"]
+
+
+def test_extract_hyperparameters_handles_markdown_fenced_response(paper_with_text):
+    raw = '```json\n[{"name": "C", "value": 1.0, "context": "C=1.0"}]\n```'
+    client = _make_mock_client(raw)
+    extractor = ClaimExtractor(client)
+    specs = extractor.extract_hyperparameters(paper_with_text)
+    assert len(specs) == 1
+    assert specs[0].name == "C"
