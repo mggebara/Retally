@@ -44,6 +44,10 @@ dev = [
     "types-requests>=2.31.0",
     "kaggle>=1.6.0",
     "ucimlrepo>=0.0.3",
+    # Benchmark catalog uses YAML for the per-paper entries; the runner
+    # lives in benchmark/ at the repo root and is dev-only tooling.
+    "pyyaml>=6.0",
+    "types-pyyaml>=6.0",
 ]
 
 [tool.setuptools.packages.find]

@@ -1,4 +1,4 @@
-.PHONY: build-sandbox rebuild-sandbox test lint format typecheck check sync lock clean leaderboard check-leaderboard-fresh
+.PHONY: build-sandbox rebuild-sandbox test lint format typecheck check sync lock clean leaderboard check-leaderboard-fresh benchmark benchmark-report
 
 SANDBOX_IMAGE := openra-sandbox:latest
 DOCKERFILE    := docker/Dockerfile.sandbox
@@ -18,11 +18,11 @@ test:
 
 ## Lint with ruff.
 lint:
-	uv run ruff check src/ tests/ scripts/
+	uv run ruff check src/ tests/ scripts/ benchmark/
 
 ## Auto-format with ruff.
 format:
-	uv run ruff format src/ tests/ scripts/
+	uv run ruff format src/ tests/ scripts/ benchmark/
 
 ## Type-check with mypy.
 typecheck:
@@ -30,7 +30,7 @@ typecheck:
 
 ## Run every CI check locally in one go.
 check: lint typecheck test
-	uv run ruff format --check src/ tests/ scripts/
+	uv run ruff format --check src/ tests/ scripts/ benchmark/
 	$(MAKE) check-leaderboard-fresh
 
 ## Fail if LEADERBOARD.md or docs/data/leaderboard.json is out of sync with
@@ -48,6 +48,20 @@ clean:
 ## Regenerate LEADERBOARD.md and docs/data/leaderboard.json from reports.json.
 leaderboard:
 	uv run python scripts/generate_leaderboard.py
+
+## Run the I4R benchmark suite end-to-end.
+## Requires ANTHROPIC_API_KEY for any benchmark/papers/*.yaml with
+## language: python.  Other entries skip with a recorded reason.
+## Writes results.json + REPORT.md + report.html under benchmark/results/.
+benchmark:
+	uv run python -m benchmark.runner
+	$(MAKE) benchmark-report
+
+## Re-render the benchmark report from the existing results.json.
+## Useful when you've tweaked the renderer and don't want to re-run
+## the (expensive) pipeline against the catalog.
+benchmark-report:
+	uv run python -m benchmark.report
 
 ## Build the offline sandbox Docker image (required before using DockerExecutor).
 build-sandbox:

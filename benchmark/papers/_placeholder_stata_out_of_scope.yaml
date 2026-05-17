@@ -1,0 +1,30 @@
+# PLACEHOLDER — replace with a real Stata-based I4R paper.
+#
+# Demonstrates an entry that's recorded in the catalog but explicitly
+# out of scope.  out_of_scope_reason is non-null, so the runner
+# categorises it under "out of scope" rather than "language not yet
+# supported".
+
+id: _placeholder_stata_out_of_scope
+i4r_report_url: https://example.org/i4r-report-stata-placeholder
+language: stata
+outcome_label: not_robust
+out_of_scope_reason: "Original code is Stata; sandbox image cannot run proprietary Stata."
+
+paper:
+  source: "Title\n\nAbstract\nWe study things using Stata.\n"
+  title: "Placeholder: Stata paper (always skipped)"
+  authors:
+    - "D. Replicator"
+
+original_claims:
+  - description: "treatment effect"
+    value: 1.23
+    standard_error: 0.45
+    claim_type: coefficient
+    location: "Table 1"
+
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: 1.30
+    outcome: matches
