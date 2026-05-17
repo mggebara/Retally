@@ -1,6 +1,7 @@
 """OpenRA — Open Source Research Assistant for automated validation of academic paper results."""
 
 from openra.models import (
+    AuditStatus,
     Claim,
     ClaimType,
     ClaimValidationResult,
@@ -8,12 +9,15 @@ from openra.models import (
     DatasetReference,
     DatasetSource,
     ExecutionResult,
+    HyperparameterAudit,
+    HyperparameterSpec,
     Paper,
     ValidationReport,
 )
 from openra.pipeline import ValidationPipeline
 
 __all__ = [
+    "AuditStatus",
     "Claim",
     "ClaimType",
     "ClaimValidationResult",
@@ -21,6 +25,8 @@ __all__ = [
     "DatasetReference",
     "DatasetSource",
     "ExecutionResult",
+    "HyperparameterAudit",
+    "HyperparameterSpec",
     "Paper",
     "ValidationPipeline",
     "ValidationReport",
