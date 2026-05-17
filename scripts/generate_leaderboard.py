@@ -62,9 +62,7 @@ def build_leaderboard(reports: list[dict]) -> list[AuthorStats]:
         claim_results = r.get("claim_results", [])
         n_claims = len(claim_results)
         n_passed = sum(1 for c in claim_results if c.get("passed"))
-        n_unvalidatable = sum(
-            1 for c in claim_results if c.get("reproduced_value") is None
-        )
+        n_unvalidatable = sum(1 for c in claim_results if c.get("reproduced_value") is None)
         overall_passed = bool(r.get("overall_passed"))
 
         for author in authors:
@@ -103,7 +101,7 @@ def write_markdown(stats: list[AuthorStats], n_reports: int) -> None:
     lines = [
         "# OpenRA Reproducibility Leaderboard",
         "",
-        f"Tracks how each author's papers fare when OpenRA tries to reproduce ",
+        "Tracks how each author's papers fare when OpenRA tries to reproduce ",
         "their published quantitative claims.  Every named co-author is credited, ",
         "so a 3-author paper contributes one row to each of those three authors.",
         "",
