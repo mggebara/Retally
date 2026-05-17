@@ -11,7 +11,14 @@ from __future__ import annotations
 import json
 import re
 
-from openra.models import Claim, ClaimType, DatasetReference, DatasetSource, Paper
+from openra.models import (
+    Claim,
+    ClaimType,
+    DatasetReference,
+    DatasetSource,
+    HyperparameterSpec,
+    Paper,
+)
 
 
 class ClaimExtractor:
@@ -186,6 +193,81 @@ Paper:
 {context}"""
 
         return self._call_claude(prompt)
+
+    def extract_hyperparameters(self, paper: Paper) -> list[HyperparameterSpec]:
+        """Pull paper-stated hyperparameters into structured specs.
+
+        The downstream AST auditor matches by keyword-argument name, so the
+        prompt explicitly instructs Claude to use canonical scikit-learn
+        kwarg names (e.g. ``C``, ``n_estimators``, ``random_state``,
+        ``test_size``, ``hidden_layer_sizes``, ``cv``).  If the paper
+        describes a value that does not map to a known sklearn kwarg, the
+        model is told to skip it rather than invent a name we cannot audit.
+
+        Returns
+        -------
+        List of HyperparameterSpec.  Empty when the paper does not
+        explicitly specify any hyperparameters (which is common — many
+        older papers say "we used logistic regression" with no numbers).
+        """
+        context = f"Title: {paper.title}\n\n{paper.full_text[:6000]}"
+
+        prompt = f"""You are extracting hyperparameter settings from a machine learning paper for automated reproducibility checking.
+
+Find EVERY hyperparameter the paper EXPLICITLY specifies (with a numeric value, a categorical choice, or a list / tuple).  Examples of what counts:
+- "logistic regression with C=1.0" → C
+- "Random Forest with 100 trees" → n_estimators
+- "5-fold cross-validation" → cv
+- "80/20 train/test split" → test_size
+- "k-NN with k=5" → n_neighbors
+- "MLP with one hidden layer of 32 units, ReLU activation" → hidden_layer_sizes and activation
+- "SGD with learning rate 0.01 and momentum 0.9" → learning_rate_init, momentum
+- "random seed 42" or "random_state=42" → random_state
+- "max_iter=1000" → max_iter
+- "L2 penalty" → penalty
+
+Use the CANONICAL scikit-learn keyword argument NAME (e.g. ``C``, ``n_estimators``, ``random_state``, ``test_size``, ``hidden_layer_sizes``, ``cv``, ``n_neighbors``, ``learning_rate_init``, ``momentum``, ``max_iter``, ``penalty``, ``activation``, ``solver``, ``kernel``, ``gamma``, ``max_depth``).  Use the exact name that ``sklearn`` expects — that is what the auditor will look for in the generated code.
+
+If the paper describes a setting that does NOT map cleanly to a known sklearn kwarg, OMIT it entirely.  Do not invent names.
+
+Paper:
+{context}
+
+Return ONLY a JSON array (no prose, no markdown).  Each item has these keys:
+- name (string): the canonical sklearn kwarg name
+- value (number / string / list / boolean / null): the value the paper specifies, in its natural type.  Hidden layer sizes should be a JSON array (e.g. [32] for "one hidden layer of 32 units", [100, 50] for two layers).  Train-test split ratios should be the TEST fraction as a float (e.g. 0.2 for an 80/20 split).
+- context (string): the surrounding sentence from the paper
+- source_ref (string or null): section / table / figure reference if applicable
+
+Example:
+[
+  {{"name": "C", "value": 1.0, "context": "We use logistic regression with C=1.0.", "source_ref": "§3.2"}},
+  {{"name": "test_size", "value": 0.2, "context": "80/20 stratified train/test split.", "source_ref": null}}
+]
+
+Return ONLY the JSON array."""
+
+        raw = self._call_claude(prompt)
+        items = self._parse_json_response(raw)
+
+        specs: list[HyperparameterSpec] = []
+        for item in items:
+            try:
+                name = str(item.get("name", "")).strip()
+                if not name:
+                    continue
+                specs.append(
+                    HyperparameterSpec(
+                        name=name,
+                        value=item.get("value"),
+                        context=str(item.get("context", "")),
+                        source_ref=item.get("source_ref") or None,
+                    )
+                )
+            except (KeyError, TypeError, ValueError):
+                continue
+
+        return specs
 
     # ------------------------------------------------------------------
     # Internal helpers
