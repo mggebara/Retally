@@ -3,11 +3,14 @@
 from pathlib import Path
 
 from openra.models import (
+    AuditStatus,
     Claim,
     ClaimType,
     ClaimValidationResult,
     Dataset,
     ExecutionResult,
+    HyperparameterAudit,
+    HyperparameterSpec,
     Paper,
 )
 from openra.validation.reporter import ValidationReporter
@@ -103,3 +106,103 @@ def test_console_output_mentions_refinement_and_deviations():
     console = reporter.to_console(report)
     assert "ran 3 claim-targeted refinement passes" in console
     assert "Deviation: Swapped solver from 'liblinear' to 'lbfgs'" in console
+
+
+# ── Hyperparameter audit rendering ─────────────────────────────────────
+
+
+def _report_with_audits(audits):
+    reporter = ValidationReporter()
+    claim = Claim(description="accuracy", value=0.95, claim_type=ClaimType.ACCURACY)
+    cr = ClaimValidationResult(claim=claim, reproduced_value=0.95, passed=True)
+    exec_result = ExecutionResult(
+        generated_code="print('hi')",
+        exit_code=0,
+        hyperparameter_audits=audits,
+    )
+    return reporter, reporter.build(_paper(), _dataset(), exec_result, claim_results=[cr])
+
+
+def _audit(name, value, status, observed=None, notes=""):
+    return HyperparameterAudit(
+        spec=HyperparameterSpec(name=name, value=value),
+        status=status,
+        observed_value=observed,
+        notes=notes,
+    )
+
+
+def test_markdown_omits_audit_section_when_no_audits():
+    reporter, report = _report_with_audits([])
+    md = reporter.to_markdown(report)
+    assert "## Hyperparameter audit" not in md
+
+
+def test_markdown_audit_all_match_says_so():
+    audits = [
+        _audit("C", 1.0, AuditStatus.MATCH, observed=1.0),
+        _audit("random_state", 42, AuditStatus.MATCH, observed=42),
+    ]
+    reporter, report = _report_with_audits(audits)
+    md = reporter.to_markdown(report)
+    assert "## Hyperparameter audit" in md
+    assert "All **2** paper-stated hyperparameters matched" in md
+    assert "| `C` |" in md
+    assert "✓ match" in md
+
+
+def test_markdown_audit_mismatch_renders_status_and_notes():
+    audits = [
+        _audit("C", 1.0, AuditStatus.MATCH, observed=1.0),
+        _audit(
+            "n_estimators",
+            100,
+            AuditStatus.MISMATCH,
+            observed=50,
+            notes="Paper specifies n_estimators=100, code uses n_estimators=50.",
+        ),
+    ]
+    reporter, report = _report_with_audits(audits)
+    md = reporter.to_markdown(report)
+    assert "**1 of 2** paper-stated hyperparameters matched" in md
+    assert "✗ mismatch" in md
+    assert "Paper specifies n_estimators=100" in md
+
+
+def test_markdown_audit_not_found_and_unresolved_render():
+    audits = [
+        _audit("C", 1.0, AuditStatus.NOT_FOUND),
+        _audit("max_iter", 1000, AuditStatus.UNRESOLVED, observed="some_var"),
+    ]
+    reporter, report = _report_with_audits(audits)
+    md = reporter.to_markdown(report)
+    assert "○ not_found" in md
+    assert "? unresolved" in md
+
+
+def test_console_output_summarises_audit():
+    audits = [
+        _audit("C", 1.0, AuditStatus.MATCH, observed=1.0),
+        _audit(
+            "n_estimators",
+            100,
+            AuditStatus.MISMATCH,
+            observed=50,
+            notes="Paper specifies n_estimators=100, code uses n_estimators=50.",
+        ),
+    ]
+    reporter, report = _report_with_audits(audits)
+    console = reporter.to_console(report)
+    assert "Hyperparameter audit: " in console
+    assert "1/2 matched" in console
+    # Non-matches show up individually for the human.
+    assert "n_estimators: mismatch" in console
+    # Matches do NOT appear in the per-line summary — the headline already
+    # captures them and we don't want to clutter the terminal output.
+    assert "C: match" not in console
+
+
+def test_console_output_omits_audit_when_empty():
+    reporter, report = _report_with_audits([])
+    console = reporter.to_console(report)
+    assert "Hyperparameter audit" not in console

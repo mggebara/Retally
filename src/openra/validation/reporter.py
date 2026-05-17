@@ -17,6 +17,7 @@ from enum import Enum
 from pathlib import Path
 
 from openra.models import (
+    AuditStatus,
     ClaimValidationResult,
     Dataset,
     ExecutionResult,
@@ -146,6 +147,11 @@ class ValidationReporter:
                     lines.append(f"- {note}")
                 lines.append("")
 
+        # Hyperparameter audit — only render when the paper specified
+        # hyperparameters that we actually checked against.
+        if exec_result.hyperparameter_audits:
+            lines.extend(self._hyperparameter_audit_section(exec_result))
+
         # Generated Code
         lines.append("## Generated Code")
         lines.append("")
@@ -172,6 +178,46 @@ class ValidationReporter:
             lines.append("")
 
         return "\n".join(lines)
+
+    def _hyperparameter_audit_section(self, exec_result: ExecutionResult) -> list[str]:
+        """Render the hyperparameter-audit block as markdown lines.
+
+        Headline summarises matched / total; the table lists every audit
+        with its observed value and any note.  When every audit is MATCH
+        the section still renders, on purpose — readers benefit from
+        confirmation that the paper's hyperparameters made it through.
+        """
+        audits = exec_result.hyperparameter_audits
+        n_total = len(audits)
+        n_match = sum(1 for a in audits if a.status is AuditStatus.MATCH)
+
+        lines = ["## Hyperparameter audit", ""]
+        if n_match == n_total:
+            lines.append(
+                f"All **{n_total}** paper-stated hyperparameter"
+                f"{'s' if n_total != 1 else ''} matched the generated code."
+            )
+        else:
+            lines.append(
+                f"**{n_match} of {n_total}** paper-stated hyperparameters "
+                "matched the generated code.  Non-matches do not affect "
+                "claim validation but flag a reproduction-fidelity concern."
+            )
+        lines.append("")
+        lines.append("| Parameter | Paper value | Observed | Status | Notes |")
+        lines.append("|---|---|---|---|---|")
+        for a in audits:
+            observed = "—" if a.observed_value is None else repr(a.observed_value)
+            status_icon = {
+                AuditStatus.MATCH: "✓ match",
+                AuditStatus.MISMATCH: "✗ mismatch",
+                AuditStatus.NOT_FOUND: "○ not_found",
+                AuditStatus.UNRESOLVED: "? unresolved",
+            }[a.status]
+            notes = a.notes.replace("|", "\\|") if a.notes else ""
+            lines.append(f"| `{a.spec.name}` | {a.spec.value!r} | {observed} | {status_icon} | {notes} |")
+        lines.append("")
+        return lines
 
     def to_json(self, report: ValidationReport) -> str:
         """Serialise the report to a JSON string.
@@ -242,6 +288,21 @@ class ValidationReporter:
                 )
             for note in exec_result.deviation_notes:
                 lines.append(f"  ! Deviation: {note}")
+
+        if exec_result.hyperparameter_audits:
+            audits = exec_result.hyperparameter_audits
+            n_total = len(audits)
+            n_match = sum(1 for a in audits if a.status is AuditStatus.MATCH)
+            colour = _GREEN if n_match == n_total else _RED
+            lines.append("")
+            lines.append(f"  Hyperparameter audit: {colour}{n_match}/{n_total} matched{_RESET}")
+            for audit in audits:
+                if audit.status is AuditStatus.MATCH:
+                    continue
+                lines.append(
+                    f"    ! {audit.spec.name}: {audit.status.value}"
+                    + (f" — {audit.notes}" if audit.notes else "")
+                )
 
         return "\n".join(lines)
 
