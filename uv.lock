@@ -1026,15 +1026,6 @@ dependencies = [
 ]
 
 [package.optional-dependencies]
-dev = [
-    { name = "kaggle" },
-    { name = "mypy" },
-    { name = "pytest" },
-    { name = "pytest-cov" },
-    { name = "ruff" },
-    { name = "types-requests" },
-    { name = "ucimlrepo" },
-]
 host-exec = [
     { name = "numpy" },
     { name = "scikit-learn" },
@@ -1064,25 +1055,18 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "anthropic", specifier = ">=0.25.0" },
-    { name = "kaggle", marker = "extra == 'dev'", specifier = ">=1.6.0" },
     { name = "kaggle", marker = "extra == 'kaggle'", specifier = ">=1.6.0" },
-    { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.10.0" },
     { name = "numpy", marker = "extra == 'host-exec'", specifier = ">=1.24.0" },
     { name = "openml", marker = "extra == 'openml'", specifier = ">=0.14.0" },
     { name = "pandas", specifier = ">=2.0.0" },
     { name = "pymupdf", specifier = ">=1.24.0" },
-    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.0.0" },
-    { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=5.0.0" },
     { name = "requests", specifier = ">=2.31.0" },
-    { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.4.0" },
     { name = "scikit-learn", marker = "extra == 'host-exec'", specifier = ">=1.3.0" },
     { name = "scipy", marker = "extra == 'host-exec'", specifier = ">=1.11.0" },
     { name = "tqdm", specifier = ">=4.66.0" },
-    { name = "types-requests", marker = "extra == 'dev'", specifier = ">=2.31.0" },
-    { name = "ucimlrepo", marker = "extra == 'dev'", specifier = ">=0.0.3" },
     { name = "ucimlrepo", marker = "extra == 'uci'", specifier = ">=0.0.3" },
 ]
-provides-extras = ["host-exec", "kaggle", "uci", "openml", "dev"]
+provides-extras = ["host-exec", "kaggle", "uci", "openml"]
 
 [package.metadata.requires-dev]
 dev = [

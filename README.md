@@ -49,11 +49,21 @@ Paper (PDF / arXiv ID / URL / text)
                                                   --read-only, etc.)
         │
         ▼
+ Refinement loop      Phase 1 — on Python error or empty output, ask
+ (up to N retries)              CodeGenerator.refine and re-execute.
+                      Phase 2 — if the code ran but any claim is outside
+                                tolerance, ask CodeGenerator.refine_for_claims
+                                to close the gap; the generator may emit
+                                DEVIATION: notes if it has to change anything
+                                the paper did not specify.
+        │
+        ▼
  ResultComparator     match reproduced metrics to paper claims,
                       apply per-metric tolerances (1 % default)
         │
         ▼
  ValidationReport     Markdown / JSON / console output
+                      (includes any DEVIATION notes from Phase 2)
 ```
 
 Each step is a standalone class that can be swapped out or called independently.
@@ -119,11 +129,16 @@ uv sync --extra uci --extra kaggle
 ### Pip-only install
 
 If you do not want to use uv, the project is still a standard PEP 621
-package:
+package.  Dev tooling lives in a PEP 735 dependency group, so pip ≥25.1
+installs it via:
 
 ```bash
-pip install -e ".[dev]"
+pip install -e .
+pip install --group dev
 ```
+
+(Older pips can still ``pip install -e .`` for the runtime deps; they
+just need to install pytest / ruff / mypy / types-requests manually.)
 
 ### API key
 
@@ -500,6 +515,24 @@ Makefile                       build-sandbox / test / lint / install
 | `docker_image` | `"openra-sandbox:latest"` | Docker image tag |
 | `docker_memory` | `"4g"` | Container memory limit |
 | `docker_cpus` | `1.0` | Container CPU limit |
+
+### `ValidationPipeline.__init__` refinement parameters
+
+These control the two refinement phases described in the
+[how-it-works diagram](#how-it-works).  They are not surfaced through
+`.default()` — pass them when constructing the pipeline directly.
+
+| Parameter | Default | Description |
+|---|---|---|
+| `max_refinements` | `3` | Phase 1: number of `CodeGenerator.refine()` calls after the initial `generate()` when the code errors out or produces no `RESULT:` lines. Total executions in Phase 1 ≤ `max_refinements + 1`. |
+| `max_claim_refinements` | `3` | Phase 2: number of `CodeGenerator.refine_for_claims()` calls after the code runs cleanly but at least one claim is outside tolerance. Stops early on no-progress, identical-code, or broken-refinement signals. Set to `0` to disable Phase 2. |
+
+When Phase 2 has to deviate from the paper's stated methodology to
+close a gap (e.g. swap an unspecified hyperparameter), it emits a
+`DEVIATION:<text>` stdout line.  These are parsed into
+`ExecutionResult.deviation_notes` and surfaced in the markdown report's
+`## Refinement` section, in `to_console()` output, and on the
+dashboard.
 
 ### `CodeExecutor` parameters
 
