@@ -54,7 +54,7 @@ def _selected(rel: str, contents: str) -> SelectedFile:
 
 def test_prompt_omits_reference_section_when_no_files():
     gen = _generator()
-    prompt = gen._build_generation_prompt(_paper(), _dataset(), reference_files=[])
+    prompt = gen._build_generation_prompt_python(_paper(), _dataset(), reference_files=[])
     assert "## Reference Implementation" not in prompt
     assert "PREFER ADAPTING" not in prompt
 
@@ -77,7 +77,7 @@ def test_generate_passes_default_empty_reference_files():
 def test_prompt_includes_reference_section_when_files_present():
     gen = _generator()
     files = [_selected("train.py", "# real training script\nx = 1\n")]
-    prompt = gen._build_generation_prompt(_paper(), _dataset(), reference_files=files)
+    prompt = gen._build_generation_prompt_python(_paper(), _dataset(), reference_files=files)
     assert "## Reference Implementation" in prompt
     assert "PREFER ADAPTING" in prompt
     assert "### `train.py`" in prompt
@@ -91,7 +91,7 @@ def test_prompt_renders_multiple_files_in_order():
         _selected("model.py", "MODEL_FILE"),
         _selected("src/utils.py", "UTILS_FILE"),
     ]
-    prompt = gen._build_generation_prompt(_paper(), _dataset(), reference_files=files)
+    prompt = gen._build_generation_prompt_python(_paper(), _dataset(), reference_files=files)
     train_pos = prompt.index("TRAIN_FILE")
     model_pos = prompt.index("MODEL_FILE")
     utils_pos = prompt.index("UTILS_FILE")
@@ -102,7 +102,7 @@ def test_prompt_renders_multiple_files_in_order():
 def test_prompt_tells_model_to_swap_dataset_path():
     gen = _generator()
     files = [_selected("train.py", "df = pd.read_csv('data/iris.csv')")]
-    prompt = gen._build_generation_prompt(_paper(), _dataset(), reference_files=files)
+    prompt = gen._build_generation_prompt_python(_paper(), _dataset(), reference_files=files)
     # The dataset's actual local_path should appear in the override
     # instruction so the model knows where to point read_csv calls.
     assert "/tmp/iris/data.csv" in prompt
@@ -123,19 +123,6 @@ def test_generate_forwards_reference_files_to_prompt():
 
 
 # ── Language guard ────────────────────────────────────────────────────
-
-
-def test_generate_rejects_r_paper():
-    """Setting language=R must fail loudly, not silently produce Python.
-
-    The pipeline catches this and converts to a skip; what we're testing
-    here is that the generator NEVER quietly produces nonsense code for
-    a non-Python paper.
-    """
-    gen = _generator()
-    paper = _paper(language=Language.R)
-    with pytest.raises(UnsupportedLanguageError, match="generate.*language=r"):
-        gen.generate(paper, _dataset())
 
 
 def test_generate_rejects_stata_paper():
@@ -162,16 +149,148 @@ def test_generate_accepts_python_explicitly():
     assert "ok" in code
 
 
-def test_refine_rejects_non_python():
+def test_refine_rejects_stata():
     gen = _generator()
-    paper = _paper(language=Language.R)
-    with pytest.raises(UnsupportedLanguageError, match="refine.*language=r"):
+    paper = _paper(language=Language.STATA)
+    with pytest.raises(UnsupportedLanguageError, match="refine.*language=stata"):
         gen.refine("code", "error", paper, _dataset())
 
 
-def test_refine_for_claims_rejects_non_python():
+def test_refine_for_claims_rejects_stata():
+    gen = _generator()
+    paper = _paper(language=Language.STATA)
+    exec_result = ExecutionResult(generated_code="x")
+    with pytest.raises(UnsupportedLanguageError, match="refine_for_claims.*language=stata"):
+        gen.refine_for_claims("code", [], exec_result, paper, _dataset(), [])
+
+
+# ── R prompt construction ─────────────────────────────────────────────
+
+
+def test_generate_routes_to_r_prompt_when_language_r():
+    gen = _generator()
+    msg = MagicMock()
+    msg.content = [MagicMock(text="```r\ncat('RESULT:beta=0.1\\n')\n```")]
+    gen._client.messages.create.return_value = msg
+
+    paper = _paper(language=Language.R)
+    code = gen.generate(paper, _dataset())
+    assert "RESULT:beta=0.1" in code
+
+    # The prompt sent to the LLM is R-flavoured.
+    [call] = gen._client.messages.create.call_args_list
+    sent_prompt = call.kwargs["messages"][0]["content"]
+    assert "Write R code" in sent_prompt
+    assert "fixest" in sent_prompt  # algorithm hint or code requirements
+    assert "cat('RESULT:" in sent_prompt  # R output convention example
+
+
+def test_r_prompt_omits_python_specific_libraries():
+    """The R prompt must NOT instruct the model to use sklearn / pandas."""
     gen = _generator()
     paper = _paper(language=Language.R)
-    exec_result = ExecutionResult(generated_code="x")
-    with pytest.raises(UnsupportedLanguageError, match="refine_for_claims.*language=r"):
-        gen.refine_for_claims("code", [], exec_result, paper, _dataset(), [])
+    prompt = gen._build_generation_prompt_r(paper, _dataset(), reference_files=[])
+    assert "scikit-learn" not in prompt
+    assert "pandas" not in prompt
+    assert "random_state=42" not in prompt  # python idiom
+    assert "set.seed(42)" in prompt  # R equivalent
+
+
+def test_r_prompt_references_econometrics_packages():
+    gen = _generator()
+    paper = _paper(language=Language.R)
+    prompt = gen._build_generation_prompt_r(paper, _dataset(), reference_files=[])
+    # Each of the headline packages should appear somewhere in the prompt
+    # so the model knows what's available.
+    for pkg in ["fixest", "AER", "plm", "lmtest", "sandwich"]:
+        assert pkg in prompt, f"R prompt should mention {pkg}"
+
+
+def test_r_prompt_uses_r_code_fence_for_reference_files():
+    gen = _generator()
+    paper = _paper(language=Language.R)
+    files = [_selected("train.R", "library(fixest)\n# real reference\n")]
+    prompt = gen._build_generation_prompt_r(paper, _dataset(), reference_files=files)
+    assert "```r" in prompt
+    assert "```python" not in prompt
+    assert "library(fixest)" in prompt
+
+
+def test_python_prompt_uses_python_code_fence_for_reference_files():
+    """Regression: the Python builder must still emit ```python fences."""
+    gen = _generator()
+    paper = _paper(language=Language.PYTHON)
+    files = [_selected("train.py", "import sklearn\n")]
+    prompt = gen._build_generation_prompt_python(paper, _dataset(), reference_files=files)
+    assert "```python" in prompt
+    assert "```r" not in prompt
+
+
+def test_refine_routes_to_r_prompt():
+    gen = _generator()
+    msg = MagicMock()
+    msg.content = [MagicMock(text="```r\ncat('RESULT:x=1\\n')\n```")]
+    gen._client.messages.create.return_value = msg
+
+    paper = _paper(language=Language.R)
+    gen.refine("old R code", "Error: object 'x' not found", paper, _dataset())
+
+    [call] = gen._client.messages.create.call_args_list
+    sent_prompt = call.kwargs["messages"][0]["content"]
+    assert "R code" in sent_prompt
+    assert "Rscript" not in sent_prompt or "library(" in sent_prompt or "cat(" in sent_prompt
+    # The "old R code" body must appear so the model can edit it.
+    assert "old R code" in sent_prompt
+
+
+def test_refine_for_claims_routes_to_r_prompt():
+    gen = _generator()
+    msg = MagicMock()
+    msg.content = [MagicMock(text="```r\ncat('RESULT:x=1\\n')\n```")]
+    gen._client.messages.create.return_value = msg
+
+    paper = _paper(language=Language.R)
+    exec_result = ExecutionResult(generated_code="code", outputs={"beta": 0.3})
+    from openra.models import Claim, ClaimType, ClaimValidationResult
+
+    failed = ClaimValidationResult(
+        claim=Claim(description="treatment", value=0.5, claim_type=ClaimType.OTHER),
+        reproduced_value=0.3,
+        tolerance=0.01,
+        passed=False,
+    )
+    gen.refine_for_claims("v1", [failed], exec_result, paper, _dataset(), [{"beta": 0.3}])
+
+    [call] = gen._client.messages.create.call_args_list
+    sent_prompt = call.kwargs["messages"][0]["content"]
+    assert "R code" in sent_prompt
+    assert "cat('DEVIATION:" in sent_prompt  # R-syntax deviation example
+    assert "treatment" in sent_prompt  # failed claim surfaces
+
+
+# ── Algorithm hints, per language ─────────────────────────────────────
+
+
+def test_algorithm_hint_python_mentions_sklearn():
+    from openra.codegen.generator import CodeGenerator
+    from openra.models import ClaimType
+
+    hint = CodeGenerator._algorithm_hint_python({ClaimType.ACCURACY})
+    assert "scikit-learn" in hint.lower() or "sklearn" in hint.lower() or "Support Vector" in hint
+
+
+def test_algorithm_hint_r_mentions_fixest():
+    from openra.codegen.generator import CodeGenerator
+    from openra.models import ClaimType
+
+    hint = CodeGenerator._algorithm_hint_r({ClaimType.OTHER})
+    assert "fixest" in hint
+
+
+def test_algorithm_hint_r_does_not_mention_sklearn():
+    from openra.codegen.generator import CodeGenerator
+    from openra.models import ClaimType
+
+    hint = CodeGenerator._algorithm_hint_r({ClaimType.RMSE})
+    assert "sklearn" not in hint.lower()
+    assert "scikit" not in hint.lower()
