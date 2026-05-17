@@ -1,29 +1,45 @@
 """
-DockerExecutor — runs generated code inside an isolated Docker container.
+Docker-sandboxed code execution for generated reproduction scripts.
 
-Isolation guarantees (vs. CodeExecutor)
-----------------------------------------
-- **Network**: ``--network none`` — the container has zero outbound connectivity.
-  All data must be downloaded *before* execution (DatasetDownloader handles this).
-- **Filesystem**: ``--read-only`` — the container root FS is immutable.
+Isolation guarantees (vs. the host-subprocess ``CodeExecutor``)
+---------------------------------------------------------------
+- **Network**: ``--network none`` — zero outbound connectivity.  Data must
+  be downloaded *before* execution (DatasetDownloader handles that).
+- **Filesystem**: ``--read-only`` — immutable container root.
   ``--tmpfs /tmp`` gives writable scratch space in memory only.
 - **Privileges**: ``--cap-drop ALL --security-opt no-new-privileges`` —
   no Linux capabilities, no setuid escalation.
-- **Resources**: ``--memory`` and ``--cpus`` prevent runaway processes from
-  consuming the host.
-- **User**: the sandbox image runs as a non-root ``sandbox`` user.
+- **Resources**: ``--memory`` and ``--cpus`` cap host consumption.
+- **User**: the sandbox images run as a non-root ``sandbox`` user.
+
+Per-language subclasses
+-----------------------
+The shared logic lives in ``_DockerExecutorBase``.  Subclasses pin the
+language-specific bits:
+
+  * ``DockerExecutor`` — Python; uses ``openra-sandbox:latest`` and runs
+    ``python -u /workspace/script.py``.  Also runs the Python AST
+    preflight check before spinning up Docker.
+  * ``RDockerExecutor`` — R; uses ``openra-sandbox-r:latest`` and runs
+    ``Rscript /workspace/script.R``.  No preflight (R has no equivalent
+    quick static check in the stdlib).
+
+Adding a third language should be a ~20-line subclass: pick image tag,
+script filename, interpreter command, optional preflight.
 
 Dataset mounting
 ----------------
-The dataset is mounted at its exact absolute host path (read-only).  Generated
-code that references that path therefore works without any path rewriting.
+The dataset is mounted at its exact absolute host path (read-only).
+Generated code that references that path therefore works without any
+path rewriting.
 
-The generated script is mounted at ``/workspace/script.py`` (read-only).
+The generated script is mounted at ``/workspace/script.<ext>`` (read-only).
 
-Building the image
-------------------
-Call ``DockerExecutor.build_image()`` or run ``make build-sandbox``.
-The image must be built before calling ``execute()``.
+Building images
+---------------
+Call ``<Executor>.build_image()`` or run the matching make target
+(``make build-sandbox`` / ``make build-r-sandbox``).  The image must
+be built before calling ``execute()``.
 """
 
 from __future__ import annotations
@@ -36,39 +52,44 @@ from pathlib import Path
 from openra.codegen.executor import parse_deviation_notes, parse_outputs, preflight_check
 from openra.models import Dataset, ExecutionResult
 
-# Default image tag — build with ``make build-sandbox``
+# Repo root, two levels up from src/openra/codegen/
+_REPO_ROOT = Path(__file__).parents[3]
+_DOCKERFILE_PYTHON = _REPO_ROOT / "docker" / "Dockerfile.sandbox"
+_DOCKERFILE_R = _REPO_ROOT / "docker" / "Dockerfile.sandbox.r"
+
+# Default image tags — build with ``make build-sandbox`` / ``make build-r-sandbox``.
 DEFAULT_IMAGE = "openra-sandbox:latest"
-
-# Location of the Dockerfile relative to this file:
-#   src/openra/codegen/docker_executor.py  →  docker/Dockerfile.sandbox
-_DOCKERFILE = Path(__file__).parents[3] / "docker" / "Dockerfile.sandbox"
-_DOCKER_CONTEXT = _DOCKERFILE.parent
+DEFAULT_R_IMAGE = "openra-sandbox-r:latest"
 
 
-class DockerExecutor:
-    """Runs generated reproduction code inside a Docker sandbox.
+class _DockerExecutorBase:
+    """Shared logic for Docker-sandboxed script execution.
 
-    Parameters
-    ----------
-    image:
-        Docker image tag to use.  Build it with ``DockerExecutor.build_image()``
-        or ``make build-sandbox``.
-    timeout:
-        Wall-clock seconds before the container is killed.
-    memory_limit:
-        Docker memory limit string, e.g. ``"4g"``, ``"512m"``.
-    cpu_count:
-        Number of CPUs available to the container (float, e.g. ``1.0``).
+    Subclasses override the four ``_*`` class attributes plus
+    optionally ``preflight`` to plug in language-specific bits.
     """
+
+    # Image / Dockerfile to use by default.
+    _DEFAULT_IMAGE: str = ""
+    _DOCKERFILE: Path = Path()
+
+    # Filename the generated script is mounted at inside the container.
+    # Must include the language's conventional extension so the interpreter
+    # can dispatch correctly (e.g. ``script.py``, ``script.R``).
+    _SCRIPT_FILENAME: str = ""
+
+    # The command that runs the script inside the container.  Includes the
+    # in-container script path so subclasses don't have to compute it.
+    _INTERPRETER_CMD: list[str] = []
 
     def __init__(
         self,
-        image: str = DEFAULT_IMAGE,
+        image: str | None = None,
         timeout: int = 300,
         memory_limit: str = "4g",
         cpu_count: float = 1.0,
     ) -> None:
-        self.image = image
+        self.image = image if image is not None else self._DEFAULT_IMAGE
         self.timeout = timeout
         self.memory_limit = memory_limit
         self.cpu_count = cpu_count
@@ -78,20 +99,9 @@ class DockerExecutor:
     # ------------------------------------------------------------------
 
     def execute(self, code: str, dataset: Dataset) -> ExecutionResult:
-        """Run ``code`` inside the Docker sandbox and return an ExecutionResult.
-
-        Steps
-        -----
-        1. AST preflight check (catches obvious issues before spinning up Docker).
-        2. Write code to a temp file.
-        3. Build the ``docker run`` command with all isolation flags.
-        4. Run the container; capture stdout/stderr.
-        5. Parse ``RESULT:`` lines from stdout.
-        6. Clean up the temp file; return ExecutionResult.
-        """
-        # Step 1: fast preflight before touching Docker
+        """Run ``code`` inside the Docker sandbox and return an ExecutionResult."""
         try:
-            preflight_check(code)
+            self.preflight(code)
         except ValueError as exc:
             return ExecutionResult(
                 generated_code=code,
@@ -103,14 +113,11 @@ class DockerExecutor:
 
         work_dir = Path(tempfile.mkdtemp(prefix="openra_docker_"))
         try:
-            # Step 2: write script
-            script_path = work_dir / "script.py"
+            script_path = work_dir / self._SCRIPT_FILENAME
             script_path.write_text(code, encoding="utf-8")
 
-            # Step 3: build command
             cmd = self._build_run_cmd(script_path, dataset)
 
-            # Step 4: run container
             timed_out = False
             try:
                 proc = subprocess.run(
@@ -129,10 +136,8 @@ class DockerExecutor:
                 stdout = raw_out.decode("utf-8", errors="replace") if isinstance(raw_out, bytes) else raw_out
                 stderr = raw_err.decode("utf-8", errors="replace") if isinstance(raw_err, bytes) else raw_err
                 exit_code = -1
-                # Kill any lingering container by name if we set one
                 self._kill_timeout_container(script_path)
 
-            # Step 5: parse outputs and any DEVIATION notes
             outputs = parse_outputs(stdout)
             deviation_notes = parse_deviation_notes(stdout)
 
@@ -175,23 +180,13 @@ class DockerExecutor:
     @classmethod
     def build_image(
         cls,
-        image: str = DEFAULT_IMAGE,
+        image: str | None = None,
         dockerfile: Path | None = None,
         no_cache: bool = False,
     ) -> None:
-        """Build the sandbox Docker image.
-
-        Parameters
-        ----------
-        image:
-            Tag for the built image.
-        dockerfile:
-            Path to the Dockerfile.  Defaults to ``docker/Dockerfile.sandbox``
-            in the project root.
-        no_cache:
-            Pass ``--no-cache`` to force a full rebuild.
-        """
-        dockerfile = dockerfile or _DOCKERFILE
+        """Build the sandbox Docker image for this executor's language."""
+        dockerfile = dockerfile or cls._DOCKERFILE
+        image = image if image is not None else cls._DEFAULT_IMAGE
         context = dockerfile.parent
 
         cmd = ["docker", "build", "-f", str(dockerfile), "-t", image]
@@ -204,9 +199,27 @@ class DockerExecutor:
         if result.returncode != 0:
             raise RuntimeError(
                 f"docker build failed (exit {result.returncode}).\n"
-                "Run 'make build-sandbox' to see the full output."
+                "Re-run with verbose output to inspect."
             )
         print(f"Image {image!r} built successfully.")
+
+    # ------------------------------------------------------------------
+    # Hooks subclasses can override
+    # ------------------------------------------------------------------
+
+    def preflight(self, code: str) -> None:
+        """Per-language static check run before the container starts.
+
+        Default is a no-op.  ``DockerExecutor`` overrides this to run
+        the Python AST forbidden-imports scan; ``RDockerExecutor`` does
+        not override (R has no comparable stdlib parser, and the
+        Docker sandbox is the real boundary anyway).
+
+        Override implementations should raise ``ValueError`` with a
+        user-facing message; ``execute()`` translates that into an
+        ExecutionResult with exit_code=1 rather than running Docker at all.
+        """
+        return None
 
     # ------------------------------------------------------------------
     # Internal helpers
@@ -215,26 +228,12 @@ class DockerExecutor:
     def _build_run_cmd(self, script_path: Path, dataset: Dataset) -> list[str]:
         """Assemble the full ``docker run`` command.
 
-        Volume mounts
-        -------------
-        - Script: ``<host_script>:/workspace/script.py:ro``
-        - Dataset: ``<host_dataset_dir>:<host_dataset_dir>:ro``
-          (mounted at the exact host path so absolute paths in generated code
-          work without rewriting)
-
-        Security flags
-        --------------
-        ``--network none``            no outbound connectivity
-        ``--read-only``               immutable container FS
-        ``--tmpfs /tmp:size=256m``    writable scratch in RAM
-        ``--cap-drop ALL``            no Linux capabilities
-        ``--security-opt no-new-privileges``
-        ``--memory``                  RAM cap
-        ``--cpus``                    CPU cap
+        See the module docstring for the isolation flags applied.
         """
         dataset_path = dataset.local_path.resolve()
+        script_mount = f"/workspace/{self._SCRIPT_FILENAME}"
 
-        cmd = [
+        return [
             "docker",
             "run",
             "--rm",
@@ -257,7 +256,7 @@ class DockerExecutor:
             "no-new-privileges",
             # Mount generated script (read-only)
             "-v",
-            f"{script_path}:/workspace/script.py:ro",
+            f"{script_path}:{script_mount}:ro",
             # Mount dataset at its exact host path (read-only)
             "-v",
             f"{dataset_path}:{dataset_path}:ro",
@@ -266,11 +265,8 @@ class DockerExecutor:
             "/workspace",
             # Image and entrypoint
             self.image,
-            "python",
-            "-u",
-            "/workspace/script.py",
+            *self._INTERPRETER_CMD,
         ]
-        return cmd
 
     def _require_docker(self) -> None:
         """Raise RuntimeError if Docker is not available or image not built."""
@@ -282,19 +278,15 @@ class DockerExecutor:
         if not self.is_image_built():
             raise RuntimeError(
                 f"Sandbox image {self.image!r} not found.\n"
-                "Build it first:\n"
-                "  make build-sandbox\n"
-                "or:\n"
-                "  from openra.codegen.docker_executor import DockerExecutor\n"
-                "  DockerExecutor.build_image()"
+                "Build it first via the matching ``make`` target, or call\n"
+                f"  {type(self).__name__}.build_image()"
             )
 
     def _kill_timeout_container(self, script_path: Path) -> None:
         """Best-effort: kill any container still running our script after timeout.
 
-        Uses ``docker ps`` to find containers running the sandbox image and
-        kills them.  Failures are silently ignored — the container will be
-        cleaned up by Docker's own timeout mechanisms.
+        Failures are silently ignored — Docker will eventually clean up via
+        its own mechanisms; this just makes resource release prompter.
         """
         try:
             ps = subprocess.run(
@@ -311,3 +303,34 @@ class DockerExecutor:
                 )
         except Exception:
             pass
+
+
+class DockerExecutor(_DockerExecutorBase):
+    """Docker-sandboxed execution of generated Python reproduction code.
+
+    Parameters
+    ----------
+    image:
+        Docker image tag.  Defaults to ``openra-sandbox:latest``; build
+        with ``DockerExecutor.build_image()`` or ``make build-sandbox``.
+    timeout:
+        Wall-clock seconds before the container is killed.
+    memory_limit:
+        Docker memory limit string, e.g. ``"4g"``, ``"512m"``.
+    cpu_count:
+        Number of CPUs available to the container (float, e.g. ``1.0``).
+    """
+
+    _DEFAULT_IMAGE = DEFAULT_IMAGE
+    _DOCKERFILE = _DOCKERFILE_PYTHON
+    _SCRIPT_FILENAME = "script.py"
+    _INTERPRETER_CMD = ["python", "-u", "/workspace/script.py"]
+
+    def preflight(self, code: str) -> None:
+        """Python AST scan for obviously-forbidden imports.
+
+        Cheap static check that catches the easiest mistakes before
+        spinning up Docker.  Not a security boundary — that's what
+        the container is.
+        """
+        preflight_check(code)
