@@ -472,6 +472,10 @@ function activateTab(name) {
 // ── Panel builders ────────────────────────────────────────────────────────
 function summaryPanel(r) {
   const exec = r.execution_result;
+  // Refinement metadata (added by PR #8).  Older reports won't have these
+  // fields — fall back to safe defaults so the dashboard keeps rendering.
+  const attempts = exec.claim_refinement_attempts || 0;
+  const deviations = exec.deviation_notes || [];
   return `<div class="tab-panel active" data-panel="summary">
     <div class="summary-grid">
       <div class="info-block">
@@ -488,10 +492,18 @@ function summaryPanel(r) {
         <p>Exit code <span class="exit-badge ${exec.exit_code === 0 ? 'ok' : 'fail'}">${exec.exit_code}</span><br>
         ${exec.timed_out ? '<span style="color:var(--fail)">Timed out</span>' : 'Completed normally'}<br>
         <span style="color:var(--muted);font-size:.8rem">${Object.keys(exec.outputs).length} metric(s) captured</span>
+        ${attempts > 0 ? `<br><span style="color:var(--muted);font-size:.8rem">${attempts} claim-targeted refinement ${attempts === 1 ? 'pass' : 'passes'}</span>` : ''}
         </p>
       </div>
     </div>
-    <div class="methodology">
+    ${deviations.length > 0 ? `
+    <div class="methodology" style="margin-top:1rem; border-left: 3px solid var(--accent);">
+      <h4>Methodology deviations</h4>
+      <ul style="margin: 0.25rem 0 0 1.25rem; padding: 0; font-size: .85rem;">
+        ${deviations.map(d => `<li style="margin-bottom: .25rem;">${esc(d)}</li>`).join('')}
+      </ul>
+    </div>` : ''}
+    <div class="methodology" style="margin-top:1rem">
       <h4>Methodology</h4>
       <pre>${esc(r.paper.methodology_summary || 'Not extracted.')}</pre>
     </div>
