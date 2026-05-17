@@ -326,7 +326,7 @@ ref = DatasetReference(
     url="17",           # UCI dataset ID
 )
 
-report = pipeline.validate_with_known_dataset("path/to/paper.pdf", ref)
+report = pipeline.validate("path/to/paper.pdf", dataset_reference=ref)
 ```
 
 ---

@@ -142,12 +142,19 @@ def test_parse_paper_dispatches_doi():
     pipeline.parser.parse_doi.assert_called_once_with("10.1145/1234567.1234568")
 
 
-def test_validate_with_known_dataset_skips_ref_extraction():
+def test_validate_with_dataset_reference_skips_ref_extraction():
     pipeline, _ = _make_pipeline()
     ref = DatasetReference(name="iris", source=DatasetSource.UCI, url="53")
-    pipeline.validate_with_known_dataset("some text", ref)
+    pipeline.validate("some text", dataset_reference=ref)
     pipeline.extractor.extract_dataset_references.assert_not_called()
     pipeline.downloader.download.assert_called_once_with(ref)
+
+
+def test_validate_without_dataset_reference_runs_extraction():
+    """Sanity: the default code path still calls extract_dataset_references."""
+    pipeline, _ = _make_pipeline()
+    pipeline.validate("some text")
+    pipeline.extractor.extract_dataset_references.assert_called_once()
 
 
 # ── Claim-refinement loop ──────────────────────────────────────────────

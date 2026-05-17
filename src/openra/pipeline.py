@@ -132,7 +132,12 @@ class ValidationPipeline:
     # Public API
     # ------------------------------------------------------------------
 
-    def validate(self, paper_source: str | Path) -> ValidationReport:
+    def validate(
+        self,
+        paper_source: str | Path,
+        *,
+        dataset_reference: DatasetReference | None = None,
+    ) -> ValidationReport:
         """Run the full pipeline on a paper.
 
         Parameters
@@ -144,6 +149,13 @@ class ValidationPipeline:
               - Matches r'^\\d{4}\\.\\d{4,5}(v\\d+)?$' → arXiv ID
               - Starts with '10.' → DOI
               - Starts with 'http' → URL
+        dataset_reference:
+            When provided, the pipeline skips the dataset-extraction LLM
+            call and the registry / URL resolution step, and downloads
+            this reference directly.  Useful when the extractor cannot
+            find the dataset, when you want to pin a specific version,
+            or when running without an LLM-detectable dataset mention
+            in the paper text.
         """
         # Step 1: parse the paper
         paper = self._parse_paper(paper_source)
@@ -151,8 +163,10 @@ class ValidationPipeline:
         # Step 2: extract claims
         paper.claims = self.extractor.extract_claims(paper)
 
-        # Step 3: extract dataset references
-        paper.dataset_references = self.extractor.extract_dataset_references(paper)
+        # Step 3: extract dataset references (skipped when the caller
+        # supplied one — we have nothing to resolve in that case)
+        if dataset_reference is None:
+            paper.dataset_references = self.extractor.extract_dataset_references(paper)
 
         # Step 4: extract methodology summary
         paper.methodology_summary = self.extractor.extract_methodology(paper)
@@ -166,8 +180,8 @@ class ValidationPipeline:
         # repo URLs are found in the paper).
         reference_files = self._fetch_reference_code(paper)
 
-        # Step 7: resolve dataset reference
-        ref = self._resolve_dataset(paper.dataset_references)
+        # Step 7: resolve dataset reference (or use the supplied one verbatim)
+        ref = dataset_reference or self._resolve_dataset(paper.dataset_references)
 
         # Step 8: download dataset
         dataset = self.downloader.download(ref)
@@ -181,44 +195,6 @@ class ValidationPipeline:
         exec_result.hyperparameter_audits = audit_hyperparameters(code, paper.hyperparameters)
 
         # Step 11: build report
-        return self.reporter.build(paper, dataset, exec_result, claim_results)
-
-    def validate_with_known_dataset(
-        self,
-        paper_source: str | Path,
-        dataset_reference: DatasetReference,
-    ) -> ValidationReport:
-        """Like ``validate``, but skip dataset auto-detection and use the
-        provided reference instead.
-
-        Useful when the automatic extractor cannot find the dataset or
-        when you want to test with a specific dataset version.
-        """
-        # Step 1: parse the paper
-        paper = self._parse_paper(paper_source)
-
-        # Step 2: extract claims
-        paper.claims = self.extractor.extract_claims(paper)
-
-        # Step 3: extract methodology summary (skip dataset ref extraction)
-        paper.methodology_summary = self.extractor.extract_methodology(paper)
-
-        # Step 4: extract paper-stated hyperparameters for the AST audit
-        paper.hyperparameters = self.extractor.extract_hyperparameters(paper)
-
-        # Step 5: extract & download paper-linked reference code (opt-in)
-        reference_files = self._fetch_reference_code(paper)
-
-        # Step 6: download dataset using the provided reference directly
-        dataset = self.downloader.download(dataset_reference)
-
-        # Step 7: generate, execute, and refine until claims pass or we give up.
-        code, exec_result, claim_results = self._run_with_refinement(paper, dataset, reference_files)
-
-        # Step 8: audit hyperparameters in the final code against the spec
-        exec_result.hyperparameter_audits = audit_hyperparameters(code, paper.hyperparameters)
-
-        # Step 9: build report
         return self.reporter.build(paper, dataset, exec_result, claim_results)
 
     # ------------------------------------------------------------------
