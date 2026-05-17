@@ -281,3 +281,51 @@ def test_console_omits_reference_code_when_none():
     reporter, report = _report_with_code_refs([])
     console = reporter.to_console(report)
     assert "Reference code" not in console
+
+
+# ── Code fence language ────────────────────────────────────────────────
+
+
+def _report_with_language(language):
+    """Build a minimal valid report whose execution_result has the given language."""
+    from openra.models import Language
+
+    reporter = ValidationReporter()
+    claim = Claim(description="accuracy", value=0.95, claim_type=ClaimType.ACCURACY)
+    cr = ClaimValidationResult(claim=claim, reproduced_value=0.95, passed=True)
+    exec_result = ExecutionResult(
+        generated_code="x = 1",
+        exit_code=0,
+        language=Language(language) if isinstance(language, str) else language,
+    )
+    return reporter, reporter.build(_paper(), _dataset(), exec_result, claim_results=[cr])
+
+
+def test_markdown_code_fence_defaults_to_python():
+    """Existing reports without a language field rendered as python — keep that."""
+    from openra.models import Language
+
+    reporter, report = _report_with_language(Language.PYTHON)
+    md = reporter.to_markdown(report)
+    assert "```python" in md
+    assert "```r" not in md
+
+
+def test_markdown_code_fence_matches_r_language():
+    from openra.models import Language
+
+    reporter, report = _report_with_language(Language.R)
+    md = reporter.to_markdown(report)
+    assert "```r" in md
+    # And we are NOT also emitting a python fence (the only fence in the
+    # Generated Code section).  The Execution Output and Stderr sections
+    # use plain ``` so search for the language-tagged form specifically.
+    assert "```python" not in md
+
+
+def test_markdown_code_fence_matches_stata_language():
+    from openra.models import Language
+
+    reporter, report = _report_with_language(Language.STATA)
+    md = reporter.to_markdown(report)
+    assert "```stata" in md

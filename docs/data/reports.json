@@ -11,7 +11,8 @@
       "abstract": "We present a system for the diagnosis of breast cancer based on fine needle aspirate (FNA) of a breast mass. The system extracts nuclear features from digitized images and applies a logistic regression classifier. We evaluate on the Breast Cancer Wisconsin (Diagnostic) dataset.",
       "source_url": "https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic",
       "methodology_summary": "\u2022 Logistic regression classifier (L2, C=1.0)\n\u2022 30 numeric features from FNA images (mean, SE, worst of radius, texture, perimeter, area, smoothness, compactness, concavity, concave points, symmetry, fractal dimension)\n\u2022 StandardScaler normalisation\n\u2022 80/20 stratified train/test split, random_state=42\n\u2022 Evaluation: accuracy and F1 score on held-out test set",
-      "code_references": []
+      "code_references": [],
+      "language": "python"
     },
     "dataset": {
       "name": "Breast Cancer Wisconsin (Diagnostic)",
@@ -70,7 +71,8 @@
       "deviation_notes": [],
       "claim_refinement_attempts": 0,
       "hyperparameter_audits": [],
-      "timed_out": false
+      "timed_out": false,
+      "language": "python"
     },
     "claim_results": [
       {
@@ -117,7 +119,8 @@
       "abstract": "The Iris dataset consists of 150 instances across three classes of iris plants, with four numeric features. We apply Gaussian Naive Bayes classification and report accuracy on a stratified hold-out test set, demonstrating the viability of probabilistic classifiers on this benchmark.",
       "source_url": "https://archive.ics.uci.edu/dataset/53/iris",
       "methodology_summary": "\u2022 Gaussian Naive Bayes classifier\n\u2022 4 features: sepal length, sepal width, petal length, petal width\n\u2022 No feature scaling (Naive Bayes is scale-invariant)\n\u2022 70/30 stratified train/test split, random_state=42\n\u2022 3-class accuracy reported on held-out test set",
-      "code_references": []
+      "code_references": [],
+      "language": "python"
     },
     "dataset": {
       "name": "Iris",
@@ -149,7 +152,8 @@
       "deviation_notes": [],
       "claim_refinement_attempts": 0,
       "hyperparameter_audits": [],
-      "timed_out": false
+      "timed_out": false,
+      "language": "python"
     },
     "claim_results": [
       {
@@ -182,7 +186,8 @@
       "abstract": "We apply Support Vector Machines with an RBF kernel to the Adult Census Income dataset, a standard benchmark for binary classification. The dataset contains 48,842 instances with 14 features. We report classification accuracy and AUC-ROC score.",
       "source_url": "https://archive.ics.uci.edu/dataset/2/adult",
       "methodology_summary": "\u2022 SVM with RBF kernel, C=1.0, gamma='scale'\n\u2022 Mixed features: numeric standardised, categorical one-hot encoded\n\u2022 80/20 stratified train/test split, random_state=42\n\u2022 Metrics: accuracy and AUC-ROC on test set",
-      "code_references": []
+      "code_references": [],
+      "language": "python"
     },
     "dataset": {
       "name": "Adult Income",
@@ -225,7 +230,8 @@
       "deviation_notes": [],
       "claim_refinement_attempts": 0,
       "hyperparameter_audits": [],
-      "timed_out": false
+      "timed_out": false,
+      "language": "python"
     },
     "claim_results": [
       {
@@ -272,7 +278,8 @@
       "abstract": "Random Forests are applied to the UCI Wine dataset, a 3-class problem with 13 chemical features. We report cross-validated accuracy and demonstrate the superiority of ensemble methods over single decision trees on this benchmark.",
       "source_url": "https://archive.ics.uci.edu/dataset/109/wine",
       "methodology_summary": "\u2022 Random Forest, 100 trees, max_depth=None, random_state=42\n\u2022 13 numeric features (chemical analysis: alcohol, malic acid, ash, etc.)\n\u2022 StandardScaler normalisation\n\u2022 5-fold stratified cross-validation; final accuracy on 20% hold-out\n\u2022 3-class weighted F1 reported",
-      "code_references": []
+      "code_references": [],
+      "language": "python"
     },
     "dataset": {
       "name": "Wine",
@@ -315,7 +322,8 @@
       "deviation_notes": [],
       "claim_refinement_attempts": 0,
       "hyperparameter_audits": [],
-      "timed_out": false
+      "timed_out": false,
+      "language": "python"
     },
     "claim_results": [
       {
@@ -363,7 +371,8 @@
       "abstract": "We apply a k-nearest neighbour classifier to the UCI Letter Recognition dataset, a 26-class problem with 16 numeric features extracted from rasterised letter images. The dataset contains 20,000 instances. We report classification accuracy on a stratified held-out test set and compare against earlier adaptive classifier systems.",
       "source_url": "https://archive.ics.uci.edu/dataset/59/letter+recognition",
       "methodology_summary": "\u2022 k-Nearest Neighbours (k=5) with Euclidean distance\n\u2022 16 numeric features describing the letter image (statistical moments, edge counts)\n\u2022 StandardScaler normalisation\n\u2022 75/25 stratified train/test split, random_state=42\n\u2022 Accuracy reported on 5,000 held-out test samples",
-      "code_references": []
+      "code_references": [],
+      "language": "python"
     },
     "dataset": {
       "name": "Letter Recognition",
@@ -407,7 +416,8 @@
       "deviation_notes": [],
       "claim_refinement_attempts": 0,
       "hyperparameter_audits": [],
-      "timed_out": false
+      "timed_out": false,
+      "language": "python"
     },
     "claim_results": [
       {
@@ -440,7 +450,8 @@
       "abstract": "We train a backpropagation neural network with one hidden layer on the UCI Sonar dataset, distinguishing returns from metal cylinders (mines) from rocks. The dataset contains 208 instances with 60 frequency-band features. We report classification accuracy and F1 score on a held-out test set.",
       "source_url": "https://archive.ics.uci.edu/dataset/151/connectionist+bench+sonar+mines+vs+rocks",
       "methodology_summary": "\u2022 MLP, 1 hidden layer (12 units, sigmoid activation)\n\u2022 60 numeric frequency-band features\n\u2022 StandardScaler normalisation\n\u2022 80/20 stratified train/test split, random_state=42\n\u2022 Trained for 500 epochs with momentum=0.9, learning_rate=0.01\n\u2022 Metrics: accuracy and weighted F1 on the test set",
-      "code_references": []
+      "code_references": [],
+      "language": "python"
     },
     "dataset": {
       "name": "Sonar",
@@ -529,7 +540,8 @@
       "deviation_notes": [],
       "claim_refinement_attempts": 0,
       "hyperparameter_audits": [],
-      "timed_out": false
+      "timed_out": false,
+      "language": "python"
     },
     "claim_results": [
       {
@@ -579,7 +591,8 @@
       "abstract": "We apply L2-penalised logistic regression to the Cleveland Heart Disease dataset to predict the presence of angiographic disease.  The dataset contains 303 instances with 13 clinical features.  We report classification accuracy and AUC on a held-out test set.",
       "source_url": "https://archive.ics.uci.edu/dataset/45/heart+disease",
       "methodology_summary": "\u2022 Logistic regression, L2 penalty, C=1.0\n\u2022 13 features: age, sex, chest-pain type, resting BP, cholesterol, fasting blood sugar, resting ECG, max heart rate, exercise-induced angina, ST depression, ST slope, fluoroscopy vessels, thalassemia\n\u2022 Categorical features one-hot encoded; numeric features standardised\n\u2022 Target binarised (0 vs >=1)\n\u2022 80/20 stratified split, random_state=42\n\u2022 Metrics: accuracy and AUC-ROC on the held-out test set",
-      "code_references": []
+      "code_references": [],
+      "language": "python"
     },
     "dataset": {
       "name": "Heart Disease",
@@ -621,7 +634,8 @@
       "deviation_notes": [],
       "claim_refinement_attempts": 0,
       "hyperparameter_audits": [],
-      "timed_out": false
+      "timed_out": false,
+      "language": "python"
     },
     "claim_results": [
       {
@@ -670,7 +684,8 @@
       "abstract": "We propose a multi-layer perceptron for diabetes prediction on the Pima Indians dataset.  A novel composite feature, glucose_to_age_ratio, is shown to dominate the predictive signal.  The network achieves 78% accuracy on a stratified held-out test set.",
       "source_url": "https://archive.ics.uci.edu/dataset/34/diabetes",
       "methodology_summary": "\u2022 Multi-Layer Perceptron, 1 hidden layer (32 units, ReLU)\n\u2022 Custom feature 'glucose_to_age_ratio' described informally in \u00a73.2 (exact formula not disclosed)\n\u2022 80/20 stratified split, random_state=42\n\u2022 Accuracy reported on the held-out test set",
-      "code_references": []
+      "code_references": [],
+      "language": "python"
     },
     "dataset": {
       "name": "Pima Indians Diabetes",
@@ -704,7 +719,8 @@
       "deviation_notes": [],
       "claim_refinement_attempts": 0,
       "hyperparameter_audits": [],
-      "timed_out": false
+      "timed_out": false,
+      "language": "python"
     },
     "claim_results": [
       {

@@ -160,10 +160,13 @@ class ValidationReporter:
         if exec_result.hyperparameter_audits:
             lines.extend(self._hyperparameter_audit_section(exec_result))
 
-        # Generated Code
+        # Generated Code — fence tag matches the execution result's language
+        # so a reader's markdown renderer highlights it correctly.  Defaults
+        # to ``python`` because ExecutionResult.language defaults to PYTHON
+        # for byte-identical rendering of existing reports.
         lines.append("## Generated Code")
         lines.append("")
-        lines.append("```python")
+        lines.append(f"```{report.execution_result.language.value}")
         lines.append(report.execution_result.generated_code)
         lines.append("```")
         lines.append("")
