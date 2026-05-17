@@ -125,6 +125,27 @@ class ValidationReporter:
                 lines.append(f"- **{r.claim.description}**: {r.notes}")
             lines.append("")
 
+        # Refinement summary + methodology deviations
+        exec_result = report.execution_result
+        if exec_result.claim_refinement_attempts > 0 or exec_result.deviation_notes:
+            lines.append("## Refinement")
+            lines.append("")
+            if exec_result.claim_refinement_attempts > 0:
+                attempts = exec_result.claim_refinement_attempts
+                lines.append(
+                    f"The pipeline ran **{attempts} claim-targeted refinement "
+                    f"pass{'es' if attempts != 1 else ''}** after the initial "
+                    "execution succeeded, attempting to close the gap between "
+                    "reproduced values and paper claims."
+                )
+                lines.append("")
+            if exec_result.deviation_notes:
+                lines.append("Methodology deviations declared during refinement:")
+                lines.append("")
+                for note in exec_result.deviation_notes:
+                    lines.append(f"- {note}")
+                lines.append("")
+
         # Generated Code
         lines.append("## Generated Code")
         lines.append("")
@@ -210,6 +231,17 @@ class ValidationReporter:
                 repro_str = "N/A"
 
             lines.append(f"  [{status}] {r.claim.description}: paper={r.claim.value}, reproduced={repro_str}")
+
+        exec_result = report.execution_result
+        if exec_result.claim_refinement_attempts > 0 or exec_result.deviation_notes:
+            lines.append("")
+            if exec_result.claim_refinement_attempts > 0:
+                attempts = exec_result.claim_refinement_attempts
+                lines.append(
+                    f"  (ran {attempts} claim-targeted refinement pass{'es' if attempts != 1 else ''})"
+                )
+            for note in exec_result.deviation_notes:
+                lines.append(f"  ! Deviation: {note}")
 
         return "\n".join(lines)
 
