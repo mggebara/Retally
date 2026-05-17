@@ -206,3 +206,78 @@ def test_console_output_omits_audit_when_empty():
     reporter, report = _report_with_audits([])
     console = reporter.to_console(report)
     assert "Hyperparameter audit" not in console
+
+
+# ── Reference-code rendering ───────────────────────────────────────────
+
+
+def _report_with_code_refs(refs):
+    from openra.models import CodeReference, CodeReferenceSource  # noqa: F401
+
+    reporter = ValidationReporter()
+    claim = Claim(description="accuracy", value=0.95, claim_type=ClaimType.ACCURACY)
+    cr = ClaimValidationResult(claim=claim, reproduced_value=0.95, passed=True)
+    paper = Paper(title="Test Paper", code_references=refs)
+    exec_result = ExecutionResult(generated_code="print('hi')", exit_code=0)
+    return reporter, reporter.build(paper, _dataset(), exec_result, claim_results=[cr])
+
+
+def test_markdown_omits_reference_code_section_when_none():
+    reporter, report = _report_with_code_refs([])
+    md = reporter.to_markdown(report)
+    assert "Reference code" not in md
+
+
+def test_markdown_lists_reference_code_with_cloned_status():
+    from pathlib import Path
+
+    from openra.models import CodeReference, CodeReferenceSource
+
+    refs = [
+        CodeReference(
+            url="https://github.com/owner/repo1",
+            source=CodeReferenceSource.GITHUB,
+            local_path=Path("/tmp/clone1"),
+        ),
+        CodeReference(
+            url="https://gitlab.com/owner/repo2",
+            source=CodeReferenceSource.GITLAB,
+            local_path=None,  # not cloned (gitlab not supported)
+        ),
+    ]
+    reporter, report = _report_with_code_refs(refs)
+    md = reporter.to_markdown(report)
+    assert "**Reference code**:" in md
+    # Cloned repo gets a "cloned" marker.
+    assert "https://github.com/owner/repo1" in md
+    assert "cloned" in md
+    # Unfetched repo gets a "found but not fetched" marker.
+    assert "https://gitlab.com/owner/repo2" in md
+    assert "found but not fetched" in md
+
+
+def test_console_summarises_reference_code_when_present():
+    from pathlib import Path
+
+    from openra.models import CodeReference, CodeReferenceSource
+
+    refs = [
+        CodeReference(
+            url="https://github.com/a/b",
+            source=CodeReferenceSource.GITHUB,
+            local_path=Path("/tmp/clone"),
+        ),
+        CodeReference(
+            url="https://gitlab.com/c/d",
+            source=CodeReferenceSource.GITLAB,
+        ),
+    ]
+    reporter, report = _report_with_code_refs(refs)
+    console = reporter.to_console(report)
+    assert "Reference code: 1/2 cloned" in console
+
+
+def test_console_omits_reference_code_when_none():
+    reporter, report = _report_with_code_refs([])
+    console = reporter.to_console(report)
+    assert "Reference code" not in console

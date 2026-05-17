@@ -5,11 +5,18 @@ components and executes the full validation workflow.
 Workflow
 --------
   1. Parse the paper (PaperParser)
-  2. Extract claims, dataset references, methodology summary, and
-     paper-stated hyperparameters (ClaimExtractor)
-  3. Resolve the dataset: registry lookup → manual reference → raise
-  4. Download the dataset (DatasetDownloader)
-  5. Generate reproduction code (CodeGenerator)
+  2. Extract claims, dataset references, methodology summary,
+     paper-stated hyperparameters, AND any reference-code URLs the
+     paper links to (ClaimExtractor)
+  3. Resolve and download the dataset (DatasetRegistry +
+     DatasetDownloader)
+  4. Optionally fetch reference code from any linked GitHub repos
+     and select a prompt-friendly subset of source files
+     (CodeDownloader + select_relevant_files).  Best-effort: paper
+     doesn't link code / git missing / clone fails → no baseline,
+     pipeline continues normally.
+  5. Generate reproduction code (CodeGenerator), seeded with the
+     selected reference files when available
   6. Execute the code (CodeExecutor / DockerExecutor)
       - Phase 1: on Python error or empty output, call
         ``CodeGenerator.refine`` up to ``max_refinements`` times.
@@ -37,12 +44,20 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+from openra.code.downloader import CodeDownloader
+from openra.code.selector import select_relevant_files
 from openra.codegen.docker_executor import DockerExecutor
 from openra.codegen.executor import CodeExecutor
 from openra.codegen.generator import CodeGenerator
 from openra.dataset.downloader import DatasetDownloader
 from openra.dataset.registry import DatasetRegistry
-from openra.models import ClaimValidationResult, DatasetReference, ExecutionResult, ValidationReport
+from openra.models import (
+    ClaimValidationResult,
+    CodeReference,
+    DatasetReference,
+    ExecutionResult,
+    ValidationReport,
+)
 from openra.paper.extractor import ClaimExtractor
 from openra.paper.parser import PaperParser
 from openra.validation.comparator import ResultComparator
@@ -73,6 +88,16 @@ class ValidationPipeline:
         failure), the pipeline asks the generator to close the gap up
         to this many times.  Setting it to 0 disables claim-targeted
         refinement entirely.
+    include_code_references:
+        When True (default) the pipeline runs an additional LLM pass
+        to extract repository URLs from the paper, shallow-clones the
+        GitHub ones, and seeds the generator with a selection of files
+        from each repo.  Set to False to skip the extra LLM call and
+        the clone — useful when running offline, when minimising
+        per-paper cost, or when you know the paper doesn't link code.
+    code_downloader:
+        ``CodeDownloader`` instance.  A default one is constructed if
+        omitted.  Injectable mainly for tests.
     """
 
     def __init__(
@@ -87,6 +112,8 @@ class ValidationPipeline:
         reporter: ValidationReporter,
         max_refinements: int = 3,
         max_claim_refinements: int = 3,
+        include_code_references: bool = True,
+        code_downloader: CodeDownloader | None = None,
     ) -> None:
         self.parser = parser
         self.extractor = extractor
@@ -98,6 +125,8 @@ class ValidationPipeline:
         self.reporter = reporter
         self.max_refinements = max_refinements
         self.max_claim_refinements = max_claim_refinements
+        self.include_code_references = include_code_references
+        self.code_downloader = code_downloader or CodeDownloader()
 
     # ------------------------------------------------------------------
     # Public API
@@ -132,21 +161,26 @@ class ValidationPipeline:
         # by the AST hyperparameter auditor)
         paper.hyperparameters = self.extractor.extract_hyperparameters(paper)
 
-        # Step 6: resolve dataset reference
+        # Step 6: extract & download paper-linked reference code (opt-in;
+        # silently skipped when include_code_references is False or no
+        # repo URLs are found in the paper).
+        reference_files = self._fetch_reference_code(paper)
+
+        # Step 7: resolve dataset reference
         ref = self._resolve_dataset(paper.dataset_references)
 
-        # Step 7: download dataset
+        # Step 8: download dataset
         dataset = self.downloader.download(ref)
 
-        # Step 8: generate, execute, and refine until claims pass or we give up.
+        # Step 9: generate, execute, and refine until claims pass or we give up.
         # Comparison happens inside the refinement loop so it can decide when
         # to stop; the returned claim_results reflect the final attempt.
-        code, exec_result, claim_results = self._run_with_refinement(paper, dataset)
+        code, exec_result, claim_results = self._run_with_refinement(paper, dataset, reference_files)
 
-        # Step 9: audit hyperparameters in the final code against the spec
+        # Step 10: audit hyperparameters in the final code against the spec
         exec_result.hyperparameter_audits = audit_hyperparameters(code, paper.hyperparameters)
 
-        # Step 10: build report
+        # Step 11: build report
         return self.reporter.build(paper, dataset, exec_result, claim_results)
 
     def validate_with_known_dataset(
@@ -172,16 +206,19 @@ class ValidationPipeline:
         # Step 4: extract paper-stated hyperparameters for the AST audit
         paper.hyperparameters = self.extractor.extract_hyperparameters(paper)
 
-        # Step 5: download dataset using the provided reference directly
+        # Step 5: extract & download paper-linked reference code (opt-in)
+        reference_files = self._fetch_reference_code(paper)
+
+        # Step 6: download dataset using the provided reference directly
         dataset = self.downloader.download(dataset_reference)
 
-        # Step 6: generate, execute, and refine until claims pass or we give up.
-        code, exec_result, claim_results = self._run_with_refinement(paper, dataset)
+        # Step 7: generate, execute, and refine until claims pass or we give up.
+        code, exec_result, claim_results = self._run_with_refinement(paper, dataset, reference_files)
 
-        # Step 7: audit hyperparameters in the final code against the spec
+        # Step 8: audit hyperparameters in the final code against the spec
         exec_result.hyperparameter_audits = audit_hyperparameters(code, paper.hyperparameters)
 
-        # Step 8: build report
+        # Step 9: build report
         return self.reporter.build(paper, dataset, exec_result, claim_results)
 
     # ------------------------------------------------------------------
@@ -243,8 +280,48 @@ class ValidationPipeline:
 
         raise ValueError(f"Could not resolve dataset from references: {[r.name for r in references]}")
 
+    def _fetch_reference_code(self, paper) -> list:
+        """Extract code references, download GitHub ones, select files.
+
+        Three layers of opt-out, in priority order:
+
+        1. ``include_code_references=False`` on the pipeline → no LLM
+           call, no clone, empty list returned.
+        2. The extractor returns no URLs (the common case for older
+           papers) → no clones attempted, empty list.
+        3. ``CodeDownloader.download`` fails or returns
+           ``local_path=None`` (non-GitHub source, git missing, clone
+           failed) → that reference contributes nothing to the file
+           list; we move on.
+
+        Files from all successfully-cloned repos are concatenated; the
+        selector's MAX_FILES / MAX_TOTAL_BYTES caps apply per repo, not
+        across the whole list.  In practice a paper rarely links more
+        than one repo.
+
+        Also updates ``paper.code_references`` so the report can show
+        the references regardless of whether they cloned successfully.
+        """
+        if not self.include_code_references:
+            return []
+
+        references: list[CodeReference] = self.extractor.extract_code_references(paper)
+        if not references:
+            paper.code_references = []
+            return []
+
+        resolved = self.code_downloader.download_all(references)
+        paper.code_references = resolved
+
+        files = []
+        for ref in resolved:
+            if ref.local_path is None:
+                continue
+            files.extend(select_relevant_files(ref.local_path))
+        return files
+
     def _run_with_refinement(
-        self, paper, dataset
+        self, paper, dataset, reference_files: list | None = None
     ) -> tuple[str, ExecutionResult, list[ClaimValidationResult]]:
         """Generate code, execute it, and refine until the claims pass or we give up.
 
@@ -252,6 +329,12 @@ class ValidationPipeline:
         ``ExecutionResult.claim_refinement_attempts`` field reports how
         many claim-targeted refinement passes ran; ``deviation_notes``
         captures any methodology changes the generator declared.
+
+        ``reference_files`` (optional) is forwarded only to the initial
+        ``generate()`` call.  Refinement prompts deliberately do not
+        repaste the reference repo on every call — they have the
+        previous code and the specific error/gap to focus on, and the
+        reference is already baked into the original generation.
 
         Two phases:
 
@@ -271,7 +354,7 @@ class ValidationPipeline:
         * Refinement broke the code (revert and stop).
         """
         # ── Phase 1: get a clean execution ────────────────────────────
-        code = self.generator.generate(paper, dataset)
+        code = self.generator.generate(paper, dataset, reference_files=reference_files or None)
         result = self.executor.execute(code, dataset)
 
         for _attempt in range(self.max_refinements):

@@ -14,6 +14,8 @@ import re
 from openra.models import (
     Claim,
     ClaimType,
+    CodeReference,
+    CodeReferenceSource,
     DatasetReference,
     DatasetSource,
     HyperparameterSpec,
@@ -268,6 +270,86 @@ Return ONLY the JSON array."""
                 continue
 
         return specs
+
+    def extract_code_references(self, paper: Paper) -> list[CodeReference]:
+        """Find every reference-implementation URL the paper links to.
+
+        Most commonly a GitHub repo ("Code available at
+        github.com/foo/bar"), occasionally a GitLab / Bitbucket / Zenodo
+        link or a direct URL to a downloadable archive.  The LLM is
+        asked to classify each into a ``CodeReferenceSource`` so the
+        downloader can decide whether it can fetch it.
+
+        Returns
+        -------
+        Empty list when no code link is found (the common case for
+        older papers).  Never raises on extraction failure — code
+        ingestion is opt-in convenience, not a load-bearing pipeline
+        step.
+        """
+        context = f"Title: {paper.title}\n\n{paper.full_text[:6000]}"
+
+        prompt = f"""You are extracting reference-code links from a machine learning paper.
+
+Find EVERY URL the paper provides for a reference implementation, a code repository, or a downloadable code archive.  Typical patterns:
+- "Our code is available at https://github.com/<owner>/<repo>"
+- "Implementation: github.com/x/y"
+- "https://gitlab.com/..." or "https://bitbucket.org/..."
+- A Zenodo DOI / URL when the paper deposited code there
+- A direct https URL to a .zip / .tar.gz of the code
+
+DO NOT include URLs that go to:
+- A paper PDF (arXiv, journal, doi.org)
+- A dataset (UCI, Kaggle, OpenML, HuggingFace dataset page)
+- A homepage / personal page that doesn't itself host code
+
+Classify each URL into one of these ``source`` values: github, gitlab, bitbucket, zenodo, direct_url, unknown.  ``github`` means the URL starts with https://github.com/<owner>/<repo>; other code-hosting sites get their respective enum values; ``direct_url`` means a direct download link; ``unknown`` is the safe default when in doubt.
+
+Paper:
+{context}
+
+Return ONLY a JSON array (no prose, no markdown).  Each item has these keys:
+- url (string): the canonical URL
+- source (string): one of the values above
+- description (string): the surrounding sentence so a human can verify the match
+
+Example:
+[
+  {{"url": "https://github.com/openai/baselines", "source": "github", "description": "Our reference implementation is available at https://github.com/openai/baselines."}}
+]
+
+Return ONLY the JSON array — empty (``[]``) if the paper does not link any code."""
+
+        try:
+            raw = self._call_claude(prompt)
+            items = self._parse_json_response(raw)
+        except ValueError:
+            # Parse failure (rare, but bounded recovery is the right
+            # behaviour for an opt-in feature) → no code references.
+            return []
+
+        refs: list[CodeReference] = []
+        for item in items:
+            try:
+                url = str(item.get("url", "")).strip()
+                if not url:
+                    continue
+                source_str = str(item.get("source", "unknown")).lower().strip()
+                try:
+                    source = CodeReferenceSource(source_str)
+                except ValueError:
+                    source = CodeReferenceSource.UNKNOWN
+                refs.append(
+                    CodeReference(
+                        url=url,
+                        source=source,
+                        description=str(item.get("description", "")),
+                    )
+                )
+            except (KeyError, TypeError, ValueError):
+                continue
+
+        return refs
 
     # ------------------------------------------------------------------
     # Internal helpers

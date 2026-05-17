@@ -24,8 +24,12 @@ refinement call includes the error message and the previous code.
 from __future__ import annotations
 
 import re
+from typing import TYPE_CHECKING
 
 from openra.models import ClaimType, ClaimValidationResult, Dataset, ExecutionResult, Paper
+
+if TYPE_CHECKING:
+    from openra.code.selector import SelectedFile
 
 
 class CodeGenerator:
@@ -53,7 +57,12 @@ class CodeGenerator:
         self._model = model
         self.max_refinements = max_refinements
 
-    def generate(self, paper: Paper, dataset: Dataset) -> str:
+    def generate(
+        self,
+        paper: Paper,
+        dataset: Dataset,
+        reference_files: list[SelectedFile] | None = None,
+    ) -> str:
         """Generate Python code to reproduce the paper's results.
 
         The code must:
@@ -71,10 +80,14 @@ class CodeGenerator:
           - List of claims to reproduce (metric names and target values)
           - Dataset path and file format
           - The output convention requirement
+          - Optionally: a "Reference implementation" section showing
+            ``reference_files`` selected from the paper's linked code
+            repo.  When present the prompt instructs the model to
+            adapt that code rather than start from scratch.
 
         Returns the generated Python source code as a string.
         """
-        prompt = self._build_generation_prompt(paper, dataset)
+        prompt = self._build_generation_prompt(paper, dataset, reference_files or [])
         response = self._call_claude(prompt)
         return self._extract_code_block(response)
 
@@ -154,7 +167,12 @@ class CodeGenerator:
     # Internal helpers
     # ------------------------------------------------------------------
 
-    def _build_generation_prompt(self, paper: Paper, dataset: Dataset) -> str:
+    def _build_generation_prompt(
+        self,
+        paper: Paper,
+        dataset: Dataset,
+        reference_files: list[SelectedFile],
+    ) -> str:
         """Construct the full generation prompt.
 
         Structure:
@@ -164,6 +182,11 @@ class CodeGenerator:
           4. Dataset details (local path, format, any metadata like column names)
           5. Output convention specification
           6. Code style requirements (self-contained, no network, reproducible seed)
+          7. Algorithm hints derived from the claim types
+          8. Reference implementation (only when ``reference_files`` is non-empty):
+             a small selection of source files from the paper's linked
+             code repo, with an instruction to adapt them rather than
+             write from scratch.
         """
         # 1. Role/context preamble
         lines = [
@@ -238,6 +261,34 @@ class CodeGenerator:
             lines.append("## Algorithm Hints")
             lines.append(hint)
             lines.append("")
+
+        # 8. Reference implementation, when the paper linked code and we
+        # were able to clone it.  This dramatically changes the prompt
+        # shape: rather than reconstruct from the methodology summary
+        # alone, the model is told to adapt real source files — typically
+        # closes the gap on hyperparameter choices and dataset-loading
+        # quirks the methodology summary glosses over.
+        if reference_files:
+            lines.append("## Reference Implementation")
+            lines.append(
+                "The paper links a public code repository.  The most relevant "
+                "Python source files from that repository are reproduced below.  "
+                "PREFER ADAPTING these files over writing from scratch: keep the "
+                "model architecture, hyperparameters, preprocessing, and "
+                "train/test split conventions as close to the reference as "
+                "possible.  You may need to change file paths (load the dataset "
+                f"from {dataset.local_path}/data.csv instead of whatever the "
+                "reference uses) and you may need to omit code unrelated to the "
+                "specific claims being reproduced.  Where the reference deviates "
+                "from the paper's text, prefer the reference."
+            )
+            lines.append("")
+            for ref_file in reference_files:
+                lines.append(f"### `{ref_file.relative_path}`")
+                lines.append("```python")
+                lines.append(ref_file.contents)
+                lines.append("```")
+                lines.append("")
 
         lines.append(
             "Now write the complete Python script. Output ONLY the code — no explanation, no markdown fences."

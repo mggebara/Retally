@@ -53,6 +53,7 @@ def _make_pipeline():
     extractor.extract_dataset_references.return_value = paper.dataset_references
     extractor.extract_methodology.return_value = paper.methodology_summary
     extractor.extract_hyperparameters.return_value = []
+    extractor.extract_code_references.return_value = []
     registry = MagicMock()
     registry.lookup.return_value = paper.dataset_references[0]
     downloader = MagicMock()
@@ -66,6 +67,9 @@ def _make_pipeline():
     reporter = MagicMock()
     reporter.build.return_value = report
 
+    code_downloader = MagicMock()
+    code_downloader.download_all.return_value = []
+
     pipeline = ValidationPipeline(
         parser=parser,
         extractor=extractor,
@@ -75,6 +79,7 @@ def _make_pipeline():
         executor=executor,
         comparator=comparator,
         reporter=reporter,
+        code_downloader=code_downloader,
     )
     return pipeline, report
 
@@ -368,3 +373,84 @@ def test_pipeline_audit_empty_when_no_specs():
     pipeline.validate("some text")
     exec_result = pipeline.reporter.build.call_args[0][2]
     assert exec_result.hyperparameter_audits == []
+
+
+# ── Paper-linked code baseline integration ─────────────────────────────
+
+
+def test_pipeline_calls_extract_code_references_by_default():
+    pipeline, _ = _make_pipeline()
+    pipeline.validate("some text")
+    pipeline.extractor.extract_code_references.assert_called_once()
+
+
+def test_pipeline_skips_code_extraction_when_disabled():
+    pipeline, _ = _make_pipeline()
+    pipeline.include_code_references = False
+    pipeline.validate("some text")
+    pipeline.extractor.extract_code_references.assert_not_called()
+    pipeline.code_downloader.download_all.assert_not_called()
+
+
+def test_pipeline_forwards_reference_files_to_generator(tmp_path):
+    """When code is found, cloned, and selectable, generate() must receive it."""
+    from openra.models import CodeReference, CodeReferenceSource
+
+    pipeline, _ = _make_pipeline()
+    # Extractor finds a GitHub repo.
+    ref = CodeReference(
+        url="https://github.com/openai/baselines",
+        source=CodeReferenceSource.GITHUB,
+    )
+    pipeline.extractor.extract_code_references.return_value = [ref]
+
+    # Stand up a tiny fake "clone" on disk so the selector has something
+    # to pick up.  This is realistic: the downloader's job ends at the
+    # filesystem boundary.
+    clone_dir = tmp_path / "openai__baselines"
+    clone_dir.mkdir()
+    (clone_dir / "train.py").write_text("# real reference code\n")
+    pipeline.code_downloader.download_all.return_value = [
+        CodeReference(
+            url=ref.url,
+            source=ref.source,
+            description=ref.description,
+            local_path=clone_dir,
+        )
+    ]
+
+    pipeline.validate("some text")
+
+    # generate() received a non-empty reference_files kwarg.
+    [call] = pipeline.generator.generate.call_args_list
+    files = call.kwargs.get("reference_files") or (call.args[2] if len(call.args) > 2 else None)
+    assert files is not None
+    assert len(files) == 1
+    assert files[0].relative_path == "train.py"
+
+
+def test_pipeline_records_resolved_references_on_paper():
+    """paper.code_references must be updated even when downloads fail."""
+    from openra.models import CodeReference, CodeReferenceSource
+
+    pipeline, _ = _make_pipeline()
+    ref = CodeReference(
+        url="https://gitlab.com/x/y",
+        source=CodeReferenceSource.GITLAB,
+    )
+    pipeline.extractor.extract_code_references.return_value = [ref]
+    # GitLab is recognised but not supported → downloader returns the
+    # reference with local_path=None.
+    pipeline.code_downloader.download_all.return_value = [ref]
+
+    pipeline.validate("some text")
+
+    paper_arg = pipeline.reporter.build.call_args[0][0]
+    assert paper_arg.code_references == [ref]
+
+
+def test_pipeline_no_clone_when_no_references_found():
+    pipeline, _ = _make_pipeline()
+    pipeline.extractor.extract_code_references.return_value = []
+    pipeline.validate("some text")
+    pipeline.code_downloader.download_all.assert_not_called()

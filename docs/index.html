@@ -540,6 +540,20 @@ function summaryPanel(r) {
       <h4>Methodology</h4>
       <pre>${esc(r.paper.methodology_summary || 'Not extracted.')}</pre>
     </div>
+    ${(r.paper.code_references || []).length > 0 ? `
+    <div class="methodology" style="margin-top:1rem">
+      <h4>Reference code</h4>
+      <ul style="margin: 0.25rem 0 0 1.25rem; padding: 0; font-size: .85rem;">
+        ${(r.paper.code_references || []).map(ref => {
+          const status = ref.local_path ? 'cloned' : 'found but not fetched';
+          const color = ref.local_path ? 'var(--pass)' : 'var(--muted)';
+          return `<li style="margin-bottom: .25rem;">
+            <a href="${esc(ref.url)}" target="_blank" style="color: var(--accent);">${esc(ref.url)}</a>
+            <span style="color: ${color}; font-size: .75rem;">(${status})</span>
+          </li>`;
+        }).join('')}
+      </ul>
+    </div>` : ''}
     ${r.paper.abstract ? `
     <div class="methodology" style="margin-top:1rem">
       <h4>Abstract</h4>

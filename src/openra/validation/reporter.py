@@ -96,6 +96,14 @@ class ValidationReporter:
         lines.append(f"**Dataset**: {report.dataset.name} ({report.dataset.source_url})")
         lines.append("")
 
+        # Reference code lifted from the paper, when any
+        if report.paper.code_references:
+            lines.append("**Reference code**:")
+            for ref in report.paper.code_references:
+                status = "cloned" if ref.local_path else "found but not fetched"
+                lines.append(f"- [{ref.url}]({ref.url}) ({status})")
+            lines.append("")
+
         # Claims table
         lines.append("## Claims")
         lines.append("")
@@ -263,6 +271,10 @@ class ValidationReporter:
         lines.append(f"Validation Report: {report.paper.title}")
         lines.append(f"Overall: {overall_str}")
         lines.append(f"Summary: {report.summary}")
+        if report.paper.code_references:
+            n_cloned = sum(1 for r in report.paper.code_references if r.local_path)
+            n_total = len(report.paper.code_references)
+            lines.append(f"Reference code: {n_cloned}/{n_total} cloned")
         lines.append("")
 
         for r in report.claim_results:
