@@ -1,7 +1,10 @@
-.PHONY: build-sandbox rebuild-sandbox test lint format typecheck check sync lock clean leaderboard check-leaderboard-fresh benchmark benchmark-report
+.PHONY: build-sandbox rebuild-sandbox build-r-sandbox rebuild-r-sandbox test lint format typecheck check sync lock clean leaderboard check-leaderboard-fresh benchmark benchmark-report
 
 SANDBOX_IMAGE := openra-sandbox:latest
 DOCKERFILE    := docker/Dockerfile.sandbox
+
+R_SANDBOX_IMAGE := openra-sandbox-r:latest
+R_DOCKERFILE    := docker/Dockerfile.sandbox.r
 
 ## Sync the project venv from uv.lock (creates .venv if missing, installs
 ## the project + dev dependency group).  Run this once after cloning.
@@ -70,3 +73,11 @@ build-sandbox:
 ## Force a full rebuild with no layer cache (e.g. after changing requirements).
 rebuild-sandbox:
 	docker build --no-cache -f $(DOCKERFILE) -t $(SANDBOX_IMAGE) docker/
+
+## Build the R-flavoured sandbox image (required before using RDockerExecutor).
+build-r-sandbox:
+	docker build -f $(R_DOCKERFILE) -t $(R_SANDBOX_IMAGE) docker/
+
+## Force a full rebuild of the R sandbox image.
+rebuild-r-sandbox:
+	docker build --no-cache -f $(R_DOCKERFILE) -t $(R_SANDBOX_IMAGE) docker/
