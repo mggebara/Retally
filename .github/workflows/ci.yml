@@ -11,28 +11,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: astral-sh/setup-uv@v3
         with:
-          python-version: "3.11"
-      - name: Install dev dependencies
-        run: pip install -e ".[dev]"
+          enable-cache: true
+      - name: Sync dependencies
+        run: uv sync --frozen
       - name: Ruff lint
-        run: ruff check src/ tests/
+        run: uv run ruff check src/ tests/
       - name: Ruff format check
-        run: ruff format --check src/ tests/
+        run: uv run ruff format --check src/ tests/
 
   typecheck:
     name: Type check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: astral-sh/setup-uv@v3
         with:
-          python-version: "3.11"
-      - name: Install dev dependencies
-        run: pip install -e ".[dev]"
+          enable-cache: true
+      - name: Sync dependencies
+        run: uv sync --frozen
       - name: mypy
-        run: mypy src/openra
+        run: uv run mypy src/openra
 
   test:
     name: Tests (Python ${{ matrix.python-version }})
@@ -43,10 +43,13 @@ jobs:
         python-version: ["3.11", "3.12"]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: astral-sh/setup-uv@v3
         with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install dev dependencies
-        run: pip install -e ".[dev]"
+          enable-cache: true
+      - name: Sync dependencies
+        # --python pins this run to the matrix Python; uv installs the
+        # interpreter if missing.  --frozen makes CI fail loudly if
+        # uv.lock and pyproject.toml have drifted.
+        run: uv sync --frozen --python ${{ matrix.python-version }}
       - name: Run tests
-        run: pytest tests/ -v --tb=short
+        run: uv run pytest tests/ -v --tb=short

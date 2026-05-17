@@ -70,34 +70,60 @@ Each step is a standalone class that can be swapped out or called independently.
 
 ## Installation
 
+OpenRA uses [uv](https://docs.astral.sh/uv/) for environment and
+dependency management.  Install it once
+([install instructions](https://docs.astral.sh/uv/getting-started/installation/)),
+then:
+
 ```bash
 git clone https://github.com/mggebara/openra.git
 cd openra
-pip install -e .
+uv sync
 ```
 
-The base install pulls only what the host actually needs: the Claude API
-client, PyMuPDF for paper parsing, and pandas/requests for the dataset
-downloader.  Heavy ML libraries (scikit-learn, numpy, scipy) live in the
-Docker sandbox image; they are NOT installed on the host by default.
+`uv sync` creates `.venv/` from `uv.lock`, installs the project in
+editable mode, and pulls the `dev` dependency group (pytest, ruff,
+mypy, plus every dataset backend used by the test suite).  No manual
+venv activation is needed — prefix commands with `uv run` and the
+project venv is used automatically:
 
-Optional extras:
+```bash
+uv run pytest        # tests
+uv run ruff check .  # lint
+make check           # runs the full CI suite locally
+```
+
+### Optional extras
+
+The base install pulls only what the host actually needs: the Claude
+API client, PyMuPDF for paper parsing, and pandas/requests for the
+dataset downloader.  Heavy ML libraries (scikit-learn, numpy, scipy)
+live in the Docker sandbox image and are NOT installed on the host by
+default.
 
 | Extra | Adds | When to use it |
 |---|---|---|
-| `[host-exec]` | scikit-learn, numpy, scipy | You want to run generated code via the subprocess executor instead of Docker. |
-| `[kaggle]` | kaggle | You will download datasets from Kaggle. |
-| `[uci]` | ucimlrepo | You will download datasets from the UCI ML Repository. |
-| `[openml]` | openml | You will download datasets from OpenML. |
-| `[dev]` | pytest, ruff, mypy, plus every dataset backend | Working on OpenRA itself. |
+| `host-exec` | scikit-learn, numpy, scipy | You want to run generated code via the subprocess executor instead of Docker. |
+| `kaggle` | kaggle | You will download datasets from Kaggle. |
+| `uci` | ucimlrepo | You will download datasets from the UCI ML Repository. |
+| `openml` | openml | You will download datasets from OpenML. |
 
-For example, to install with UCI + Kaggle support and dev tooling:
+Compose extras at sync time:
 
 ```bash
-pip install -e ".[uci,kaggle,dev]"
+uv sync --extra uci --extra kaggle
 ```
 
-Set your API key:
+### Pip-only install
+
+If you do not want to use uv, the project is still a standard PEP 621
+package:
+
+```bash
+pip install -e ".[dev]"
+```
+
+### API key
 
 ```bash
 export ANTHROPIC_API_KEY="sk-ant-..."
@@ -504,21 +530,22 @@ Per-type tolerances (not overridable without subclassing):
 ## Development
 
 ```bash
-# Install dev dependencies
-make install
+make sync            # uv sync — create/refresh .venv from uv.lock
+make test            # uv run pytest tests/ -v
+make lint            # uv run ruff check src/ tests/
+make format          # uv run ruff format src/ tests/
+make typecheck       # uv run mypy src/openra
+make check           # lint + typecheck + tests + format check (mirrors CI)
+make lock            # uv lock — re-resolve and update uv.lock
+make clean           # remove .venv and tool caches
 
-# Run tests
-make test
-
-# Lint
-make lint
-
-# Build Docker sandbox image
-make build-sandbox
-
-# Force full image rebuild (e.g. after changing requirements)
-make rebuild-sandbox
+make build-sandbox   # build the Docker sandbox image
+make rebuild-sandbox # rebuild with no layer cache
 ```
 
-Tests that require network access or a running Docker daemon are automatically
-skipped when those resources are unavailable.
+Tests that require network access or a running Docker daemon are
+automatically skipped when those resources are unavailable.
+
+`uv.lock` is committed.  CI runs `uv sync --frozen` so any drift between
+`uv.lock` and `pyproject.toml` fails the build — run `make lock` after
+changing dependencies.
