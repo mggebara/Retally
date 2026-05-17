@@ -46,6 +46,39 @@ class DatasetSource(Enum):
     UNKNOWN = "unknown"
 
 
+class CodeReferenceSource(Enum):
+    """Where a paper's reference code lives.
+
+    GitHub is the only fully-supported source today; the enum has more
+    members so the extractor can record what it saw without forcing the
+    downloader to handle every flavour.  Sources we don't download yet
+    are surfaced in the report as 'we found this code but couldn't
+    fetch it' rather than dropped silently.
+    """
+
+    GITHUB = "github"
+    GITLAB = "gitlab"
+    BITBUCKET = "bitbucket"
+    ZENODO = "zenodo"
+    DIRECT_URL = "direct_url"
+    UNKNOWN = "unknown"
+
+
+@dataclass
+class CodeReference:
+    """A reference implementation linked from a paper.
+
+    Populated by ``ClaimExtractor.extract_code_references`` from URLs
+    found in the paper text.  ``local_path`` is filled in by
+    ``CodeDownloader.download``; until then it is None.
+    """
+
+    url: str
+    source: CodeReferenceSource = CodeReferenceSource.UNKNOWN
+    description: str = ""
+    local_path: Path | None = None
+
+
 class AuditStatus(Enum):
     """Outcome of auditing one paper-stated hyperparameter against the generated code."""
 
@@ -173,6 +206,12 @@ class Paper:
     hyperparameters: list[HyperparameterSpec] = field(default_factory=list)
     """Hyperparameters the paper explicitly specifies, extracted by an LLM
     pass.  Consumed downstream by the AST hyperparameter auditor."""
+
+    code_references: list[CodeReference] = field(default_factory=list)
+    """Reference implementations linked from the paper (typically GitHub).
+    When non-empty and successfully downloaded, the code generator uses
+    a selection of files as a baseline rather than reconstructing the
+    implementation from the methodology summary alone."""
 
     source_path: Path | None = None
     """Local path of the original file this paper was parsed from."""
