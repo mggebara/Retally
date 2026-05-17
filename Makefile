@@ -1,4 +1,4 @@
-.PHONY: build-sandbox rebuild-sandbox test lint format typecheck check sync lock clean leaderboard
+.PHONY: build-sandbox rebuild-sandbox test lint format typecheck check sync lock clean leaderboard check-leaderboard-fresh
 
 SANDBOX_IMAGE := openra-sandbox:latest
 DOCKERFILE    := docker/Dockerfile.sandbox
@@ -18,11 +18,11 @@ test:
 
 ## Lint with ruff.
 lint:
-	uv run ruff check src/ tests/
+	uv run ruff check src/ tests/ scripts/
 
 ## Auto-format with ruff.
 format:
-	uv run ruff format src/ tests/
+	uv run ruff format src/ tests/ scripts/
 
 ## Type-check with mypy.
 typecheck:
@@ -30,7 +30,16 @@ typecheck:
 
 ## Run every CI check locally in one go.
 check: lint typecheck test
-	uv run ruff format --check src/ tests/
+	uv run ruff format --check src/ tests/ scripts/
+	$(MAKE) check-leaderboard-fresh
+
+## Fail if LEADERBOARD.md or docs/data/leaderboard.json is out of sync with
+## docs/data/reports.json — catches contributors who add a report but forget
+## to run ``make leaderboard``.
+check-leaderboard-fresh:
+	uv run python scripts/generate_leaderboard.py >/dev/null
+	@git diff --exit-code -- LEADERBOARD.md docs/data/leaderboard.json \
+	  || (echo "ERROR: leaderboard artefacts are stale. Run 'make leaderboard' and commit." && exit 1)
 
 ## Remove the local venv and caches.
 clean:

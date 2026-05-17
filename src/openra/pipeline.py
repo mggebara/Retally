@@ -289,6 +289,16 @@ class ValidationPipeline:
         script and at least one claim is soft-failed (ran but outside
         tolerance).  A claim with ``reproduced_value is None`` is a hard
         failure and is not targeted here — refining wouldn't help.
+
+        Internally we keep a ``history`` list of every attempt's
+        ``outputs`` dict (oldest first).  It serves two purposes:
+
+        * It's passed to ``refine_for_claims`` so the generator can see
+          what has already been tried and avoid repeating itself.
+        * The no-progress check compares each new attempt against the
+          most recent history entry; if the outputs are identical we
+          adopt the new code (so any new ``DEVIATION:`` lines surface)
+          but stop the loop.
         """
         history: list[dict[str, float]] = [dict(exec_result.outputs)]
         attempts = 0

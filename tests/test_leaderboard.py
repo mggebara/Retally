@@ -137,3 +137,66 @@ def test_real_reports_json_aggregates_cleanly():
     # Ranking is sorted.
     pass_rates = [s.claim_pass_rate for s in stats]
     assert pass_rates == sorted(pass_rates, reverse=True)
+
+
+# ── Write / main round-trip ────────────────────────────────────────────
+
+
+def test_write_json_round_trip(tmp_path, monkeypatch):
+    import json
+
+    monkeypatch.setattr(leaderboard_mod, "LEADERBOARD_JSON", tmp_path / "out.json")
+    stats = build_leaderboard([_report(["Alice", "Bob"], [_claim(True), _claim(False)], False)])
+    leaderboard_mod.write_json(stats)
+    rows = json.loads((tmp_path / "out.json").read_text(encoding="utf-8"))
+    assert len(rows) == 2
+    by_author = {r["author"]: r for r in rows}
+    assert set(by_author) == {"Alice", "Bob"}
+    for r in by_author.values():
+        assert r["papers"] == 1
+        assert r["claims"] == 2
+        assert r["claims_validated"] == 1
+        assert r["claim_pass_rate"] == 0.5
+
+
+def test_write_markdown_round_trip(tmp_path, monkeypatch):
+    monkeypatch.setattr(leaderboard_mod, "LEADERBOARD_MD", tmp_path / "out.md")
+    stats = build_leaderboard([_report(["Alice"], [_claim(True)], True)])
+    leaderboard_mod.write_markdown(stats, n_reports=1)
+    content = (tmp_path / "out.md").read_text(encoding="utf-8")
+    assert "# OpenRA Reproducibility Leaderboard" in content
+    assert "| 1 | Alice | 1 | 1 | 1 | 1 | 0 | 100.0% |" in content
+    assert "1 reports" in content  # n_reports surfaced
+
+
+def test_main_is_idempotent_on_unchanged_input(tmp_path, monkeypatch, capsys):
+    """Running main() twice in a row must produce byte-identical files."""
+    import json
+
+    # Stage a small synthetic reports.json so we don't depend on the real one.
+    reports_path = tmp_path / "reports.json"
+    reports_path.write_text(
+        json.dumps(
+            [
+                {
+                    "paper": {"authors": ["Alice"]},
+                    "claim_results": [{"passed": True, "reproduced_value": 0.95}],
+                    "overall_passed": True,
+                }
+            ]
+        )
+    )
+    monkeypatch.setattr(leaderboard_mod, "REPORTS_FILE", reports_path)
+    monkeypatch.setattr(leaderboard_mod, "LEADERBOARD_JSON", tmp_path / "lb.json")
+    monkeypatch.setattr(leaderboard_mod, "LEADERBOARD_MD", tmp_path / "lb.md")
+    # main() prints relative paths; make REPO_ROOT a parent of the temp files
+    # so .relative_to() doesn't blow up.
+    monkeypatch.setattr(leaderboard_mod, "REPO_ROOT", tmp_path)
+
+    leaderboard_mod.main()
+    first_json = (tmp_path / "lb.json").read_bytes()
+    first_md = (tmp_path / "lb.md").read_bytes()
+
+    leaderboard_mod.main()
+    assert (tmp_path / "lb.json").read_bytes() == first_json
+    assert (tmp_path / "lb.md").read_bytes() == first_md
