@@ -42,8 +42,14 @@ Paper (PDF / arXiv ID / URL / text)
  DatasetDownloader    fetch from UCI / Kaggle / Zenodo / OpenML / URL
         │
         ▼
+ CodeDownloader       shallow-clone any GitHub repo the paper linked,
+ + selector           cherry-pick the most relevant Python files
+                      (skipped when no code reference is found)
+        │
+        ▼
  CodeGenerator        Claude writes scikit-learn reproduction code
- (Claude API)         guided by methodology + claims + dataset schema
+ (Claude API)         guided by methodology + claims + dataset schema,
+                      seeded with reference code files when available
         │
         ▼
  CodeExecutor         run in subprocess  ──or──  DockerExecutor
@@ -536,6 +542,7 @@ These control the two refinement phases described in the
 |---|---|---|
 | `max_refinements` | `3` | Phase 1: number of `CodeGenerator.refine()` calls after the initial `generate()` when the code errors out or produces no `RESULT:` lines. Total executions in Phase 1 ≤ `max_refinements + 1`. |
 | `max_claim_refinements` | `3` | Phase 2: number of `CodeGenerator.refine_for_claims()` calls after the code runs cleanly but at least one claim is outside tolerance. Stops early on no-progress, identical-code, or broken-refinement signals. Set to `0` to disable Phase 2. |
+| `include_code_references` | `True` | When True, the pipeline runs an extra LLM pass to find repository URLs in the paper, shallow-clones GitHub ones, and seeds the generator with a selection of source files. Set to `False` to skip the extra LLM call and the clone (e.g. for offline runs or papers known to ship no code). |
 
 When Phase 2 has to deviate from the paper's stated methodology to
 close a gap (e.g. swap an unspecified hyperparameter), it emits a
@@ -578,6 +585,55 @@ deviated from the stated hyperparameters and happened to hit the
 number anyway — and vice versa.  These are different reproducibility
 questions, intentionally tracked separately.  `overall_passed`
 reflects only claim validation; the audit is informational.
+
+### Reference-code baseline
+
+Many ML papers ship the implementation that produced their numbers,
+usually as a GitHub repository linked from the abstract or a "Code"
+section.  When `include_code_references=True` (the default), OpenRA:
+
+1. **Extracts URLs.**  `ClaimExtractor.extract_code_references` runs an
+   LLM pass that finds repo links in the paper text and classifies
+   each as `github` / `gitlab` / `bitbucket` / `zenodo` / `direct_url`
+   / `unknown`.  Non-code URLs (PDFs, dataset pages, personal homepages)
+   are filtered out.
+2. **Clones.**  `CodeDownloader` shallow-clones GitHub repos
+   (`--depth 1 --filter=blob:none`) into `.cache/code_repos/`.  A
+   `.openra-clone-complete` sentinel marks finished clones for
+   subsequent cache hits.  Other sources are recognised but not
+   fetched yet — they surface in the report as "found but not
+   fetched" so a reviewer knows the link exists.
+3. **Selects relevant files.**  `select_relevant_files` picks up to
+   20 files / 200 KB of source from each cloned repo, preferring
+   top-level Python scripts with names like `train.py`, `main.py`,
+   `model.py`, `run.py`, `reproduce.py`, `experiment.py`.  Skips
+   `__init__.py`, tests, vendored deps, notebooks, examples, and
+   anything larger than 20 KB per file.
+4. **Seeds the generator.**  The selected files appear in a
+   `## Reference Implementation` section of the generation prompt,
+   with the instruction to adapt the real code rather than
+   reconstruct from the methodology summary.  The model is told to
+   swap dataset paths to `dataset.local_path/data.csv` and to omit
+   experiments unrelated to the specific claims being reproduced.
+
+Refinement prompts (Phase 1 and Phase 2) deliberately do NOT
+re-paste the reference repo — they already have the previous code
+and the specific error/gap to focus on, and re-sending would burn
+tokens for no behavioural gain.  The reference is baked into the
+original generation only.
+
+Best-effort throughout: paper doesn't link code → no extraction
+call.  Extractor finds no URLs → no clone attempts.  Repo is on a
+non-GitHub host → reference is recorded but skipped.  Git is missing
+on the host → clone is skipped with a clear log line.  Clone fails →
+that reference contributes nothing.  In every case the pipeline
+continues normally; you get a report without a reference baseline
+rather than a crash.
+
+References (cloned or not) appear in the markdown report as a
+**Reference code** bullet list under the dataset, in console output
+as a `Reference code: N/M cloned` summary line, and on the dashboard
+modal as a list with per-link status.
 
 ### `CodeExecutor` parameters
 
