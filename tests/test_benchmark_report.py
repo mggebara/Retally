@@ -1,0 +1,218 @@
+"""Tests for the benchmark report renderer."""
+
+from __future__ import annotations
+
+import importlib.util
+import sys
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+def _load_report_module():
+    if "benchmark" not in sys.modules:
+        parent = importlib.util.module_from_spec(importlib.util.spec_from_loader("benchmark", loader=None))
+        sys.modules["benchmark"] = parent
+    full = "benchmark.report"
+    if full not in sys.modules:
+        spec = importlib.util.spec_from_file_location(full, REPO_ROOT / "benchmark" / "report.py")
+        assert spec and spec.loader
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[full] = module
+        spec.loader.exec_module(module)
+    return sys.modules[full]
+
+
+report = _load_report_module()
+
+
+def _result(**overrides):
+    """Build a result dict in the shape runner.write_results emits."""
+    base = {
+        "entry_id": "test",
+        "skipped": False,
+        "skip_reason": None,
+        "error": None,
+        "openra_ran": True,
+        "agrees_with_paper": True,
+        "agrees_with_i4r": True,
+        "n_claims_in_catalog": 1,
+        "n_claims_with_paper_match": 1,
+        "n_claims_with_i4r_match": 1,
+        "components": {
+            "parsed": True,
+            "claims_extracted": True,
+            "dataset_extracted": True,
+            "dataset_downloaded": True,
+            "code_generated": True,
+            "code_executed": True,
+        },
+        "cached": False,
+    }
+    base.update(overrides)
+    return base
+
+
+# ── Empty / placeholder rendering ───────────────────────────────────────
+
+
+def test_empty_results_markdown_is_clear():
+    md = report.render_markdown([])
+    assert "catalog is empty" in md.lower() or "empty" in md.lower()
+
+
+def test_empty_results_html_is_valid():
+    html = report.render_html([])
+    assert "<html" in html
+    assert "No benchmark results" in html
+
+
+# ── Headline counts ────────────────────────────────────────────────────
+
+
+def test_headline_counts_categorise_skips():
+    results = [
+        _result(entry_id="a", skipped=True, skip_reason="out_of_scope"),
+        _result(entry_id="b", skipped=True, skip_reason="language_unsupported"),
+        _result(entry_id="c", skipped=True, skip_reason="no_api_key"),
+        _result(entry_id="d"),  # executed
+    ]
+    md = report.render_markdown(results)
+    assert "Catalog size: **4**" in md
+    assert "Executed: **1**" in md
+    assert "out_of_scope=1" in md
+    assert "language_unsupported=1" in md
+    assert "no_api_key=1" in md
+
+
+def test_verdict_summary_counts_executed_only():
+    """The verdict summary's denominator is executed papers, not the whole catalog."""
+    results = [
+        _result(entry_id="skipped1", skipped=True, skip_reason="out_of_scope"),
+        _result(entry_id="exec1", openra_ran=True, agrees_with_paper=True),
+        _result(entry_id="exec2", openra_ran=True, agrees_with_paper=False),
+    ]
+    md = report.render_markdown(results)
+    assert "Pipeline completed without crashing: **2 / 2**" in md
+    assert "Agrees with the paper's stated values: **1 / 2**" in md
+
+
+def test_verdict_summary_omits_i4r_papers_without_findings():
+    """agrees_with_i4r=None means no I4R value to compare against."""
+    results = [
+        _result(entry_id="x", agrees_with_i4r=None),  # nothing to compare
+        _result(entry_id="y", agrees_with_i4r=True),
+        _result(entry_id="z", agrees_with_i4r=False),
+    ]
+    md = report.render_markdown(results)
+    # Denominator counts only papers where i4r is True or False (not None).
+    assert "Agrees with the I4R replicator: **1 / 2**" in md
+
+
+def test_verdict_summary_when_no_executed():
+    md = report.render_markdown([_result(entry_id="x", skipped=True, skip_reason="out_of_scope")])
+    assert "No papers were executed" in md
+
+
+# ── Per-component breakdown ────────────────────────────────────────────
+
+
+def test_component_breakdown_rates():
+    components_full = {
+        "parsed": True,
+        "claims_extracted": True,
+        "dataset_extracted": True,
+        "dataset_downloaded": True,
+        "code_generated": True,
+        "code_executed": True,
+    }
+    components_partial = {**components_full, "code_executed": False}
+    results = [
+        _result(entry_id="a", components=components_full),
+        _result(entry_id="b", components=components_partial),
+    ]
+    md = report.render_markdown(results)
+    # 2/2 parsed, but 1/2 code_executed.
+    assert "| parsed | 2 | 2 | 100% |" in md
+    assert "| code_executed | 1 | 2 | 50% |" in md
+
+
+# ── Per-row rendering ──────────────────────────────────────────────────
+
+
+def test_per_paper_row_contains_id_and_glyphs():
+    md = report.render_markdown([_result(entry_id="foo-2023")])
+    assert "`foo-2023`" in md
+    # All three verdicts True → three checkmarks in the row.
+    assert "| ✓ | ✓ | ✓ |" in md
+
+
+def test_skipped_paper_row_shows_skip_reason():
+    md = report.render_markdown(
+        [
+            _result(
+                entry_id="x",
+                skipped=True,
+                skip_reason="out_of_scope",
+                # Skipped entries have None verdicts; the default helper
+                # sets them to True so override explicitly.
+                openra_ran=None,
+                agrees_with_paper=None,
+                agrees_with_i4r=None,
+            )
+        ]
+    )
+    assert "skipped: out_of_scope" in md
+    assert "| — | — | — |" in md  # None verdicts rendered as em dash
+
+
+def test_cached_paper_row_marked():
+    md = report.render_markdown([_result(entry_id="cached1", cached=True)])
+    # Cached column shows a checkmark.  Entry id is rendered in backticks
+    # for markdown formatting.
+    assert "| `cached1` |" in md
+    # The cached glyph appears at end of the row, after the claims column.
+    [row] = [line for line in md.splitlines() if "cached1" in line]
+    assert row.rstrip().endswith("| ✓ |")
+
+
+def test_error_row_truncates_long_messages():
+    long_err = "RuntimeError: " + "x" * 500
+    md = report.render_markdown([_result(entry_id="err1", openra_ran=False, error=long_err)])
+    [row] = [line for line in md.splitlines() if "err1" in line]
+    # Truncated to ~60 chars per _status_label.
+    assert len(row) < 200
+
+
+# ── HTML rendering ─────────────────────────────────────────────────────
+
+
+def test_html_includes_table_and_row():
+    html = report.render_html([_result(entry_id="r1")])
+    assert "<table>" in html
+    assert "r1" in html
+    assert "<thead>" in html
+
+
+def test_html_escapes_html_in_entry_id():
+    html = report.render_html([_result(entry_id="<script>alert(1)</script>")])
+    assert "<script>" not in html
+    assert "&lt;script&gt;" in html
+
+
+# ── Write-to-disk ──────────────────────────────────────────────────────
+
+
+def test_write_report_emits_both_files(tmp_path):
+    report.write_report([_result(entry_id="x")], out_dir=tmp_path)
+    md = (tmp_path / "REPORT.md").read_text(encoding="utf-8")
+    html = (tmp_path / "report.html").read_text(encoding="utf-8")
+    assert "OpenRA benchmark report" in md
+    assert "<title>OpenRA benchmark report</title>" in html
+
+
+def test_write_report_creates_dir(tmp_path):
+    nested = tmp_path / "deep" / "nest"
+    report.write_report([], out_dir=nested)
+    assert (nested / "REPORT.md").exists()
+    assert (nested / "report.html").exists()

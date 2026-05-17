@@ -316,9 +316,7 @@ def _original_claim(d: Any) -> OriginalClaim:
 
 def _finding(d: Any) -> ReplicatorFinding:
     if not isinstance(d, dict):
-        raise TypeError(
-            f"i4r_replicator_findings[] entry must be a mapping, got {type(d).__name__}"
-        )
+        raise TypeError(f"i4r_replicator_findings[] entry must be a mapping, got {type(d).__name__}")
     return ReplicatorFinding(
         claim_id=int(d["claim_id"]),
         reproduced_value=_optional_float(d.get("reproduced_value")),

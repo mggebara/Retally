@@ -235,9 +235,7 @@ def _check_skip(entry: bschema.BenchmarkEntry) -> SkipReason | None:
     return None
 
 
-def _execute_with_pipeline(
-    entry: bschema.BenchmarkEntry, pipeline: Any
-) -> BenchmarkResult:
+def _execute_with_pipeline(entry: bschema.BenchmarkEntry, pipeline: Any) -> BenchmarkResult:
     """Drive ``pipeline.validate`` and translate the report into a BenchmarkResult.
 
     Wrapped in a broad try/except because the goal here is to score
@@ -258,14 +256,10 @@ def _execute_with_pipeline(
     result.components = _components_from_report(report, entry)
     result.n_claims_in_catalog = len(entry.original_claims)
     result.agrees_with_paper = bool(getattr(report, "overall_passed", False))
-    result.n_claims_with_paper_match = sum(
-        1 for cr in getattr(report, "claim_results", []) if cr.passed
-    )
+    result.n_claims_with_paper_match = sum(1 for cr in getattr(report, "claim_results", []) if cr.passed)
 
     # Per-claim agreement with the I4R replicator's value.
-    result.n_claims_with_i4r_match, result.agrees_with_i4r = _score_against_i4r(
-        report, entry
-    )
+    result.n_claims_with_i4r_match, result.agrees_with_i4r = _score_against_i4r(report, entry)
     return result
 
 
@@ -284,15 +278,11 @@ def _components_from_report(report: Any, entry: bschema.BenchmarkEntry) -> Compo
         dataset_extracted=bool(getattr(paper, "dataset_references", []) if paper else False),
         dataset_downloaded=getattr(report, "dataset", None) is not None,
         code_generated=bool(getattr(exec_result, "generated_code", "") if exec_result else False),
-        code_executed=(
-            getattr(exec_result, "exit_code", -1) == 0 if exec_result else False
-        ),
+        code_executed=(getattr(exec_result, "exit_code", -1) == 0 if exec_result else False),
     )
 
 
-def _score_against_i4r(
-    report: Any, entry: bschema.BenchmarkEntry
-) -> tuple[int, bool | None]:
+def _score_against_i4r(report: Any, entry: bschema.BenchmarkEntry) -> tuple[int, bool | None]:
     """Compare OpenRA's reproduced values to the I4R replicator's findings.
 
     Returns ``(n_matching, all_attempted_match)``.  ``all_attempted_match``
