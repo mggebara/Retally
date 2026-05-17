@@ -32,8 +32,10 @@ Paper (PDF / arXiv ID / URL / text)
  PaperParser          extract raw text, title, abstract
         │
         ▼
- ClaimExtractor       Claude identifies quantitative claims
- (Claude API)         and dataset references
+ ClaimExtractor       Claude identifies quantitative claims,
+ (Claude API)         dataset references, methodology summary, AND
+                      paper-stated hyperparameters (canonical sklearn
+                      kwarg names: C, n_estimators, random_state, …)
         │
         ▼
  DatasetRegistry      look up download details for the dataset
@@ -62,8 +64,16 @@ Paper (PDF / arXiv ID / URL / text)
                       apply per-metric tolerances (1 % default)
         │
         ▼
+ HyperparameterAudit  AST-walk the FINAL generated code and check every
+ (deterministic)      paper-stated hyperparameter against the literal
+                      kwargs in the script.  Independent of claim
+                      validation: 'all claims passed' does NOT imply
+                      'reproduction used the paper's hyperparameters'.
+        │
+        ▼
  ValidationReport     Markdown / JSON / console output
-                      (includes any DEVIATION notes from Phase 2)
+                      (includes DEVIATION notes from Phase 2 and the
+                       full hyperparameter audit table)
 ```
 
 Each step is a standalone class that can be swapped out or called independently.
@@ -533,6 +543,41 @@ close a gap (e.g. swap an unspecified hyperparameter), it emits a
 `ExecutionResult.deviation_notes` and surfaced in the markdown report's
 `## Refinement` section, in `to_console()` output, and on the
 dashboard.
+
+### Hyperparameter audit
+
+The pipeline checks whether the generated code actually used the
+hyperparameters the paper specifies.  `ClaimExtractor.extract_hyperparameters`
+pulls every paper-stated hyperparameter into a structured
+`HyperparameterSpec` (using the canonical scikit-learn keyword
+argument name — `C`, `n_estimators`, `random_state`, `test_size`,
+`hidden_layer_sizes`, `cv`, …), and after Phase 1 + Phase 2 settle,
+`validation.hyperparam_audit.audit_hyperparameters` walks the AST of
+the final generated script and assigns each spec one of four
+statuses:
+
+| Status | Meaning |
+|---|---|
+| `match` | Code used the paper's value (numeric comparison uses a small float tolerance; tuple/list containers are interchangeable). |
+| `mismatch` | Code used a different literal value for this kwarg. |
+| `not_found` | The kwarg never appears in any call.  The code may still be using the library default at runtime, but we cannot prove conformance from the AST. |
+| `unresolved` | The kwarg is present but bound to a variable / expression we cannot evaluate without executing the code. |
+
+Results land on `ExecutionResult.hyperparameter_audits` and render in
+all three output formats:
+
+- **Markdown:** a `## Hyperparameter audit` section with a table of
+  every spec / observed / status / note.
+- **Console:** one summary line (`Hyperparameter audit: 3/4 matched`)
+  plus a bullet per non-match.
+- **Dashboard:** a table inside the report modal's Summary tab.
+
+Caveat: this audit is **independent of claim validation**.  A paper
+can have every claim pass while still failing the audit — the model
+deviated from the stated hyperparameters and happened to hit the
+number anyway — and vice versa.  These are different reproducibility
+questions, intentionally tracked separately.  `overall_passed`
+reflects only claim validation; the audit is informational.
 
 ### `CodeExecutor` parameters
 
