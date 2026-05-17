@@ -2,7 +2,7 @@
 
 import pytest
 
-from openra.codegen.executor import CodeExecutor
+from openra.codegen.executor import CodeExecutor, parse_deviation_notes
 from openra.models import Dataset
 
 
@@ -70,3 +70,43 @@ def test_execute_nonzero_exit_on_error(executor, dummy_dataset):
 def test_preflight_allows_numpy_import(executor):
     code = "import numpy as np\nprint('ok')"
     executor._preflight_check(code)  # should not raise
+
+
+def test_parse_deviation_notes_extracts_lines():
+    stdout = (
+        "training...\n"
+        "DEVIATION: Used 10-fold CV instead of paper's 5-fold to stabilise variance\n"
+        "RESULT:accuracy=0.87\n"
+        "DEVIATION: Increased max_iter from default 100 to 1000\n"
+    )
+    notes = parse_deviation_notes(stdout)
+    assert notes == [
+        "Used 10-fold CV instead of paper's 5-fold to stabilise variance",
+        "Increased max_iter from default 100 to 1000",
+    ]
+
+
+def test_parse_deviation_notes_skips_empty_payload():
+    # A DEVIATION: line with no text after the colon is meaningless and
+    # should not pollute the report.
+    assert parse_deviation_notes("DEVIATION:\nDEVIATION:   \n") == []
+
+
+def test_parse_deviation_notes_returns_empty_when_no_lines():
+    assert parse_deviation_notes("RESULT:accuracy=0.5\njust normal output") == []
+
+
+def test_execute_populates_deviation_notes(executor, dummy_dataset):
+    code = (
+        "print('DEVIATION: Switched to RBF kernel because linear did not converge')\n"
+        "print('RESULT:accuracy=0.91')"
+    )
+    result = executor.execute(code, dummy_dataset)
+    assert result.deviation_notes == ["Switched to RBF kernel because linear did not converge"]
+    assert result.outputs == {"accuracy": pytest.approx(0.91)}
+
+
+def test_execute_default_deviation_notes_is_empty(executor, dummy_dataset):
+    result = executor.execute("print('RESULT:accuracy=0.5')", dummy_dataset)
+    assert result.deviation_notes == []
+    assert result.claim_refinement_attempts == 0

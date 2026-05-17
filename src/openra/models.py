@@ -150,6 +150,22 @@ class ExecutionResult:
     so the executor can parse them into this dict.
     """
 
+    deviation_notes: list[str] = field(default_factory=list)
+    """Free-text deviations the generator declared while refining toward a
+    failed claim.  Populated from ``DEVIATION:<text>`` lines in stdout.
+
+    These exist because the claim-refinement loop asks the model to flag
+    any change it had to make that was not in the paper's stated
+    methodology (e.g. switching from 5-fold CV to 10-fold to stabilise
+    variance).  They surface in the final report so a reader can tell
+    whether a claim was reproduced as-stated or with caveats.
+    """
+
+    claim_refinement_attempts: int = 0
+    """Number of claim-targeted refinement passes the pipeline ran after the
+    initial code first executed cleanly.  Distinct from the exec-error
+    refinement count, which is implicit in the code's history."""
+
     timed_out: bool = False
 
 

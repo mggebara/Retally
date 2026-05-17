@@ -33,7 +33,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-from openra.codegen.executor import parse_outputs, preflight_check
+from openra.codegen.executor import parse_deviation_notes, parse_outputs, preflight_check
 from openra.models import Dataset, ExecutionResult
 
 # Default image tag — build with ``make build-sandbox``
@@ -132,8 +132,9 @@ class DockerExecutor:
                 # Kill any lingering container by name if we set one
                 self._kill_timeout_container(script_path)
 
-            # Step 5: parse outputs
+            # Step 5: parse outputs and any DEVIATION notes
             outputs = parse_outputs(stdout)
+            deviation_notes = parse_deviation_notes(stdout)
 
             return ExecutionResult(
                 generated_code=code,
@@ -141,6 +142,7 @@ class DockerExecutor:
                 stderr=stderr,
                 exit_code=exit_code,
                 outputs=outputs,
+                deviation_notes=deviation_notes,
                 timed_out=timed_out,
             )
         finally:

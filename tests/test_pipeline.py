@@ -140,3 +140,168 @@ def test_validate_with_known_dataset_skips_ref_extraction():
     pipeline.validate_with_known_dataset("some text", ref)
     pipeline.extractor.extract_dataset_references.assert_not_called()
     pipeline.downloader.download.assert_called_once_with(ref)
+
+
+# ── Claim-refinement loop ──────────────────────────────────────────────
+
+
+def _failing_claim_result(value: float, reproduced: float):
+    """Helper: a single soft-failed ClaimValidationResult."""
+    claim = Claim(description="accuracy", value=value, claim_type=ClaimType.ACCURACY)
+    return ClaimValidationResult(
+        claim=claim, reproduced_value=reproduced, tolerance=0.01, passed=False, notes=""
+    )
+
+
+def _passing_claim_result(value: float, reproduced: float):
+    claim = Claim(description="accuracy", value=value, claim_type=ClaimType.ACCURACY)
+    return ClaimValidationResult(
+        claim=claim, reproduced_value=reproduced, tolerance=0.01, passed=True, notes=""
+    )
+
+
+def _setup_soft_failure_then_pass(pipeline):
+    """Configure mocks so the first run soft-fails and refinement passes."""
+    fail_exec = ExecutionResult(
+        generated_code="v1", stdout="RESULT:accuracy=0.80\n", exit_code=0, outputs={"accuracy": 0.80}
+    )
+    pass_exec = ExecutionResult(
+        generated_code="v2", stdout="RESULT:accuracy=0.95\n", exit_code=0, outputs={"accuracy": 0.95}
+    )
+    pipeline.executor.execute.side_effect = [fail_exec, pass_exec]
+    pipeline.comparator.compare_all.side_effect = [
+        [_failing_claim_result(0.95, 0.80)],
+        [_passing_claim_result(0.95, 0.95)],
+    ]
+    pipeline.generator.refine_for_claims.return_value = "v2"
+    return fail_exec, pass_exec
+
+
+def test_claim_refinement_runs_when_soft_failure(_pipeline=None):
+    pipeline, _ = _make_pipeline()
+    _setup_soft_failure_then_pass(pipeline)
+    pipeline.validate("some text")
+    pipeline.generator.refine_for_claims.assert_called_once()
+    # Two executions: initial + one refinement.
+    assert pipeline.executor.execute.call_count == 2
+
+
+def test_claim_refinement_records_attempt_count():
+    pipeline, _ = _make_pipeline()
+    _, pass_exec = _setup_soft_failure_then_pass(pipeline)
+    pipeline.validate("some text")
+    assert pass_exec.claim_refinement_attempts == 1
+
+
+def test_claim_refinement_stops_when_model_returns_identical_code():
+    """If the generator returns the same script, treat it as 'gap is unreproducible'."""
+    pipeline, _ = _make_pipeline()
+    pipeline.generator.generate.return_value = "v1"
+    fail_exec = ExecutionResult(
+        generated_code="v1", stdout="RESULT:accuracy=0.80\n", exit_code=0, outputs={"accuracy": 0.80}
+    )
+    pipeline.executor.execute.return_value = fail_exec
+    pipeline.comparator.compare_all.return_value = [_failing_claim_result(0.95, 0.80)]
+    # Generator returns the SAME code — pipeline must stop, not re-execute.
+    pipeline.generator.refine_for_claims.return_value = "v1"
+
+    pipeline.validate("some text")
+    # Exactly one refine call (the one that returned identical code).
+    assert pipeline.generator.refine_for_claims.call_count == 1
+    # Only one execution: the original.  The identical-code refinement
+    # must NOT be re-executed.
+    assert pipeline.executor.execute.call_count == 1
+
+
+def test_claim_refinement_stops_when_outputs_unchanged():
+    """No-progress detector: if reproduced values are identical to last attempt, stop."""
+    pipeline, _ = _make_pipeline()
+    fail_exec_v1 = ExecutionResult(
+        generated_code="v1", stdout="RESULT:accuracy=0.80\n", exit_code=0, outputs={"accuracy": 0.80}
+    )
+    fail_exec_v2 = ExecutionResult(
+        generated_code="v2", stdout="RESULT:accuracy=0.80\n", exit_code=0, outputs={"accuracy": 0.80}
+    )
+    pipeline.executor.execute.side_effect = [fail_exec_v1, fail_exec_v2]
+    pipeline.comparator.compare_all.return_value = [_failing_claim_result(0.95, 0.80)]
+    # Different code, same numbers.
+    pipeline.generator.refine_for_claims.return_value = "v2"
+
+    pipeline.validate("some text")
+    # First refinement happened; second was suppressed by no-progress.
+    assert pipeline.generator.refine_for_claims.call_count == 1
+    assert pipeline.executor.execute.call_count == 2
+
+
+def test_claim_refinement_reverts_when_refinement_breaks_code():
+    """A refinement that produces a crashing script must roll back, not stick."""
+    pipeline, _ = _make_pipeline()
+    ok_exec = ExecutionResult(
+        generated_code="ok", stdout="RESULT:accuracy=0.80\n", exit_code=0, outputs={"accuracy": 0.80}
+    )
+    broken_exec = ExecutionResult(
+        generated_code="broken", stdout="", stderr="SyntaxError", exit_code=1, outputs={}
+    )
+    pipeline.executor.execute.side_effect = [ok_exec, broken_exec]
+    pipeline.comparator.compare_all.return_value = [_failing_claim_result(0.95, 0.80)]
+    pipeline.generator.refine_for_claims.return_value = "broken"
+
+    pipeline.validate("some text")
+    # The report should be built from the last WORKING exec_result.
+    built_with = pipeline.reporter.build.call_args[0][2]
+    assert built_with is ok_exec
+
+
+def test_claim_refinement_skips_hard_failures():
+    """A claim with reproduced_value=None is not a soft failure; do not refine."""
+    pipeline, _ = _make_pipeline()
+    ok_exec = ExecutionResult(
+        generated_code="ok", stdout="RESULT:other=0.80\n", exit_code=0, outputs={"other": 0.80}
+    )
+    pipeline.executor.execute.return_value = ok_exec
+    hard_fail = ClaimValidationResult(
+        claim=Claim(description="accuracy", value=0.95, claim_type=ClaimType.ACCURACY),
+        reproduced_value=None,
+        passed=False,
+    )
+    pipeline.comparator.compare_all.return_value = [hard_fail]
+
+    pipeline.validate("some text")
+    pipeline.generator.refine_for_claims.assert_not_called()
+
+
+def test_claim_refinement_disabled_when_max_set_to_zero():
+    pipeline, _ = _make_pipeline()
+    pipeline.max_claim_refinements = 0
+    fail_exec = ExecutionResult(
+        generated_code="v1", stdout="RESULT:accuracy=0.80\n", exit_code=0, outputs={"accuracy": 0.80}
+    )
+    pipeline.executor.execute.return_value = fail_exec
+    pipeline.comparator.compare_all.return_value = [_failing_claim_result(0.95, 0.80)]
+
+    pipeline.validate("some text")
+    pipeline.generator.refine_for_claims.assert_not_called()
+
+
+def test_claim_refinement_annotates_notes_when_gap_not_closed():
+    """If refinement ran but the claim still fails, the note should say so."""
+    pipeline, _ = _make_pipeline()
+    fail_exec_v1 = ExecutionResult(
+        generated_code="v1", stdout="RESULT:accuracy=0.80\n", exit_code=0, outputs={"accuracy": 0.80}
+    )
+    fail_exec_v2 = ExecutionResult(
+        generated_code="v2", stdout="RESULT:accuracy=0.82\n", exit_code=0, outputs={"accuracy": 0.82}
+    )
+    pipeline.executor.execute.side_effect = [fail_exec_v1, fail_exec_v2, fail_exec_v2]
+    cr_v1 = _failing_claim_result(0.95, 0.80)
+    cr_v2 = _failing_claim_result(0.95, 0.82)
+    # Pre-refinement, then post each refinement attempt.
+    pipeline.comparator.compare_all.side_effect = [[cr_v1], [cr_v2], [cr_v2]]
+    pipeline.generator.refine_for_claims.side_effect = ["v2", "v2"]  # second returns identical
+    pipeline.max_claim_refinements = 3
+
+    pipeline.validate("some text")
+    final_claims = pipeline.reporter.build.call_args[0][3]
+    assert not final_claims[0].passed
+    # The annotation tells the reader refinement was attempted.
+    assert "claim-targeted refinement" in final_claims[0].notes

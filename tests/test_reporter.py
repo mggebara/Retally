@@ -53,3 +53,53 @@ def test_build_with_one_failing_claim():
     assert report.overall_passed is False
     assert "1 of 2" in report.summary
     assert "f1" in report.summary
+
+
+def _report_with_refinement(deviations: list[str], attempts: int):
+    reporter = ValidationReporter()
+    claim = Claim(description="accuracy", value=0.95, claim_type=ClaimType.ACCURACY)
+    cr = ClaimValidationResult(claim=claim, reproduced_value=0.95, passed=True)
+    exec_result = ExecutionResult(
+        generated_code="print('hi')",
+        exit_code=0,
+        deviation_notes=deviations,
+        claim_refinement_attempts=attempts,
+    )
+    return reporter, reporter.build(_paper(), _dataset(), exec_result, claim_results=[cr])
+
+
+def test_markdown_includes_refinement_section_when_attempts_made():
+    reporter, report = _report_with_refinement(deviations=[], attempts=2)
+    md = reporter.to_markdown(report)
+    assert "## Refinement" in md
+    assert "2 claim-targeted refinement passes" in md
+
+
+def test_markdown_omits_refinement_section_when_no_activity():
+    reporter, report = _report_with_refinement(deviations=[], attempts=0)
+    md = reporter.to_markdown(report)
+    assert "## Refinement" not in md
+
+
+def test_markdown_lists_deviation_notes():
+    reporter, report = _report_with_refinement(
+        deviations=[
+            "Used 10-fold CV instead of 5-fold to stabilise variance",
+            "Increased max_iter from default 100 to 1000",
+        ],
+        attempts=1,
+    )
+    md = reporter.to_markdown(report)
+    assert "Methodology deviations declared during refinement" in md
+    assert "- Used 10-fold CV instead of 5-fold to stabilise variance" in md
+    assert "- Increased max_iter from default 100 to 1000" in md
+
+
+def test_console_output_mentions_refinement_and_deviations():
+    reporter, report = _report_with_refinement(
+        deviations=["Swapped solver from 'liblinear' to 'lbfgs'"],
+        attempts=3,
+    )
+    console = reporter.to_console(report)
+    assert "ran 3 claim-targeted refinement passes" in console
+    assert "Deviation: Swapped solver from 'liblinear' to 'lbfgs'" in console

@@ -9,10 +9,18 @@ Workflow
   3. Resolve the dataset: registry lookup → manual reference → raise
   4. Download the dataset (DatasetDownloader)
   5. Generate reproduction code (CodeGenerator)
-  6. Execute the code (CodeExecutor)
-      - On failure, call CodeGenerator.refine and retry up to N times
-  7. Compare results (ResultComparator)
-  8. Build and return a ValidationReport (ValidationReporter)
+  6. Execute the code (CodeExecutor / DockerExecutor)
+      - Phase 1: on Python error or empty output, call
+        ``CodeGenerator.refine`` up to ``max_refinements`` times.
+      - Phase 2: if the code runs cleanly but any claim is outside
+        tolerance, call ``CodeGenerator.refine_for_claims`` up to
+        ``max_claim_refinements`` times to close the gap.  Stops early
+        on no-progress, identical-code, or refinement-broke-the-code.
+  7. Compare results (ResultComparator); per-attempt comparisons happen
+     inside step 6 so the loop can decide when to stop.
+  8. Build and return a ValidationReport (ValidationReporter), which
+     surfaces any ``DEVIATION:`` methodology changes the generator
+     declared while closing the gap.
 
 The pipeline is intentionally linear and stateless — each call to
 ``validate`` is independent.  For batch validation, call it in a loop
@@ -29,7 +37,7 @@ from openra.codegen.executor import CodeExecutor
 from openra.codegen.generator import CodeGenerator
 from openra.dataset.downloader import DatasetDownloader
 from openra.dataset.registry import DatasetRegistry
-from openra.models import DatasetReference, ExecutionResult, ValidationReport
+from openra.models import ClaimValidationResult, DatasetReference, ExecutionResult, ValidationReport
 from openra.paper.extractor import ClaimExtractor
 from openra.paper.parser import PaperParser
 from openra.validation.comparator import ResultComparator
@@ -52,6 +60,13 @@ class ValidationPipeline:
         broken code (i.e. ``refine()`` calls) after the initial
         ``generate()``.  Total executions is therefore up to
         ``max_refinements + 1``.
+    max_claim_refinements:
+        After the initial refinement phase produces a working script,
+        OpenRA compares the reproduced values against the paper's
+        claims.  If any claim ran but is outside tolerance (a "soft"
+        failure), the pipeline asks the generator to close the gap up
+        to this many times.  Setting it to 0 disables claim-targeted
+        refinement entirely.
     """
 
     def __init__(
@@ -65,6 +80,7 @@ class ValidationPipeline:
         comparator: ResultComparator,
         reporter: ValidationReporter,
         max_refinements: int = 3,
+        max_claim_refinements: int = 3,
     ) -> None:
         self.parser = parser
         self.extractor = extractor
@@ -75,6 +91,7 @@ class ValidationPipeline:
         self.comparator = comparator
         self.reporter = reporter
         self.max_refinements = max_refinements
+        self.max_claim_refinements = max_claim_refinements
 
     # ------------------------------------------------------------------
     # Public API
@@ -111,13 +128,12 @@ class ValidationPipeline:
         # Step 6: download dataset
         dataset = self.downloader.download(ref)
 
-        # Step 7: generate and execute code (with refinement)
-        code, exec_result = self._run_with_refinement(paper, dataset)
+        # Step 7: generate, execute, and refine until claims pass or we give up.
+        # Comparison happens inside the refinement loop so it can decide when
+        # to stop; the returned claim_results reflect the final attempt.
+        _code, exec_result, claim_results = self._run_with_refinement(paper, dataset)
 
-        # Step 8: compare results
-        claim_results = self.comparator.compare_all(paper.claims, exec_result.outputs)
-
-        # Step 9: build report
+        # Step 8: build report
         return self.reporter.build(paper, dataset, exec_result, claim_results)
 
     def validate_with_known_dataset(
@@ -143,13 +159,10 @@ class ValidationPipeline:
         # Step 4: download dataset using the provided reference directly
         dataset = self.downloader.download(dataset_reference)
 
-        # Step 5: generate and execute code (with refinement)
-        code, exec_result = self._run_with_refinement(paper, dataset)
+        # Step 5: generate, execute, and refine until claims pass or we give up.
+        _code, exec_result, claim_results = self._run_with_refinement(paper, dataset)
 
-        # Step 6: compare results
-        claim_results = self.comparator.compare_all(paper.claims, exec_result.outputs)
-
-        # Step 7: build report
+        # Step 6: build report
         return self.reporter.build(paper, dataset, exec_result, claim_results)
 
     # ------------------------------------------------------------------
@@ -211,19 +224,34 @@ class ValidationPipeline:
 
         raise ValueError(f"Could not resolve dataset from references: {[r.name for r in references]}")
 
-    def _run_with_refinement(self, paper, dataset) -> tuple[str, ExecutionResult]:
-        """Generate code and execute it, refining on failure.
+    def _run_with_refinement(
+        self, paper, dataset
+    ) -> tuple[str, ExecutionResult, list[ClaimValidationResult]]:
+        """Generate code, execute it, and refine until the claims pass or we give up.
 
-        Returns ``(final_code, ExecutionResult)``.
+        Returns ``(final_code, ExecutionResult, claim_results)``.  The
+        ``ExecutionResult.claim_refinement_attempts`` field reports how
+        many claim-targeted refinement passes ran; ``deviation_notes``
+        captures any methodology changes the generator declared.
 
-        Algorithm:
-          1. Call ``generator.generate(paper, dataset)`` to get initial code.
-          2. Call ``executor.execute(code, dataset)``.
-          3. If ``exit_code != 0`` or ``outputs`` is empty and refinements
-             remain, call ``generator.refine(code, error, paper, dataset)``
-             and repeat from step 2.
-          4. Return the last (code, result) pair regardless of success.
+        Two phases:
+
+        **Phase 1 — execution refinement.**  Up to ``max_refinements``
+        retries on Python errors or empty output.  Existing behaviour,
+        unchanged.
+
+        **Phase 2 — claim-value refinement.**  Once the code runs and
+        captures values, compare against claims.  For any claim that
+        produced a value but is outside tolerance, ask the generator to
+        close the gap.  Stops on any of:
+
+        * All soft-failed claims now pass.
+        * ``max_claim_refinements`` attempts reached.
+        * Two consecutive runs produced identical outputs (no progress).
+        * Generator returned byte-identical code (model giving up).
+        * Refinement broke the code (revert and stop).
         """
+        # ── Phase 1: get a clean execution ────────────────────────────
         code = self.generator.generate(paper, dataset)
         result = self.executor.execute(code, dataset)
 
@@ -234,9 +262,89 @@ class ValidationPipeline:
             code = self.generator.refine(code, error, paper, dataset)
             result = self.executor.execute(code, dataset)
 
-        # Update the result with the final generated code
+        # Compare once so we know what (if anything) needs Phase 2.
+        claim_results = self.comparator.compare_all(paper.claims, result.outputs)
+
+        # ── Phase 2: close the gap on soft-failed claims ──────────────
+        if result.exit_code == 0 and result.outputs and self.max_claim_refinements > 0:
+            code, result, claim_results = self._refine_for_failed_claims(
+                code, result, claim_results, paper, dataset
+            )
+
         result.generated_code = code
-        return code, result
+        return code, result, claim_results
+
+    def _refine_for_failed_claims(
+        self,
+        code: str,
+        exec_result: ExecutionResult,
+        claim_results: list[ClaimValidationResult],
+        paper,
+        dataset,
+    ) -> tuple[str, ExecutionResult, list[ClaimValidationResult]]:
+        """Iteratively narrow the gap between reproduced values and paper claims.
+
+        See :meth:`_run_with_refinement` for the contract and termination
+        rules.  This method only runs when Phase 1 produced a working
+        script and at least one claim is soft-failed (ran but outside
+        tolerance).  A claim with ``reproduced_value is None`` is a hard
+        failure and is not targeted here — refining wouldn't help.
+        """
+        history: list[dict[str, float]] = [dict(exec_result.outputs)]
+        attempts = 0
+
+        for _ in range(self.max_claim_refinements):
+            soft_failed = [c for c in claim_results if not c.passed and c.reproduced_value is not None]
+            if not soft_failed:
+                break
+
+            new_code = self.generator.refine_for_claims(
+                code, soft_failed, exec_result, paper, dataset, history
+            )
+
+            # Model returned the same code → it's signalling that the gap
+            # is unreproducible.  Honour the signal and stop.
+            if new_code.strip() == code.strip():
+                break
+
+            new_result = self.executor.execute(new_code, dataset)
+
+            # Refinement broke the code.  Revert to the last working
+            # state and stop — partial progress beats no progress.
+            if new_result.exit_code != 0 or not new_result.outputs:
+                break
+
+            attempts += 1
+
+            # No progress: outputs identical to the previous attempt.
+            if new_result.outputs == history[-1]:
+                # Still adopt the new code (so deviation notes from this
+                # attempt are surfaced) but stop looping.
+                code, exec_result = new_code, new_result
+                claim_results = self.comparator.compare_all(paper.claims, exec_result.outputs)
+                break
+
+            code, exec_result = new_code, new_result
+            history.append(dict(exec_result.outputs))
+            claim_results = self.comparator.compare_all(paper.claims, exec_result.outputs)
+
+        # Surface the attempt count on the result so reports can show it.
+        exec_result.claim_refinement_attempts = attempts
+
+        # Any claim that is still failing should record what we tried so
+        # a reader of the final report doesn't wonder whether we just
+        # gave up immediately.
+        if attempts > 0:
+            for cr in claim_results:
+                if cr.passed:
+                    continue
+                suffix = (
+                    f" (claim-targeted refinement ran {attempts} time"
+                    f"{'s' if attempts != 1 else ''} without closing the gap)"
+                )
+                cr.notes = (cr.notes + suffix) if cr.notes else suffix.lstrip()
+
+        return code, exec_result, claim_results
 
     # ------------------------------------------------------------------
     # Factory

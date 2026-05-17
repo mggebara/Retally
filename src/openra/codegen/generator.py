@@ -25,7 +25,7 @@ from __future__ import annotations
 
 import re
 
-from openra.models import ClaimType, Dataset, Paper
+from openra.models import ClaimType, ClaimValidationResult, Dataset, ExecutionResult, Paper
 
 
 class CodeGenerator:
@@ -101,6 +101,52 @@ class CodeGenerator:
         output convention requirement.
         """
         prompt = self._build_refinement_prompt(code, error, paper, dataset)
+        response = self._call_claude(prompt)
+        return self._extract_code_block(response)
+
+    def refine_for_claims(
+        self,
+        code: str,
+        failed_claims: list[ClaimValidationResult],
+        exec_result: ExecutionResult,
+        paper: Paper,
+        dataset: Dataset,
+        history: list[dict[str, float]],
+    ) -> str:
+        """Refine working code whose reproduced numbers are outside tolerance.
+
+        Distinct from :meth:`refine` (which handles execution errors): here
+        the code runs cleanly, captures values, but those values disagree
+        with the paper's claims.  The prompt asks Claude to identify the
+        cause of the gap and adjust the code minimally to close it.
+
+        Parameters
+        ----------
+        code:
+            The script that produced the unsatisfactory values.
+        failed_claims:
+            ``ClaimValidationResult`` objects where ``passed`` is False but
+            ``reproduced_value`` is not None.  Hard failures (None values)
+            belong in :meth:`refine`.
+        exec_result:
+            The :class:`ExecutionResult` that produced the failed claims —
+            included so the prompt can show the reproduced values in
+            context (e.g. alongside other metrics that DID pass).
+        paper, dataset:
+            Same as passed to :meth:`generate`.
+        history:
+            Past attempts' ``outputs`` dicts, oldest first.  Lets the model
+            see what it has already tried so it doesn't loop.
+
+        Returns
+        -------
+        New code.  If the model returns *exactly the same code unchanged*
+        the pipeline interprets that as the model declaring the gap
+        unreasonable and halts the refinement loop.
+        """
+        prompt = self._build_claim_refinement_prompt(
+            code, failed_claims, exec_result, paper, dataset, history
+        )
         response = self._call_claude(prompt)
         return self._extract_code_block(response)
 
@@ -239,6 +285,132 @@ class CodeGenerator:
             "- Print all RESULT: lines at the end.",
             "",
             "Output ONLY the corrected Python code — no explanation, no markdown fences.",
+        ]
+
+        return "\n".join(lines)
+
+    def _build_claim_refinement_prompt(
+        self,
+        code: str,
+        failed_claims: list[ClaimValidationResult],
+        exec_result: ExecutionResult,
+        paper: Paper,
+        dataset: Dataset,
+        history: list[dict[str, float]],
+    ) -> str:
+        """Construct a prompt that asks Claude to close the gap on soft-failed claims.
+
+        The structure differs from :meth:`_build_refinement_prompt`:
+
+        * No Python traceback — the code ran cleanly.  Instead we show the
+          numeric gap between paper claim and reproduced value.
+        * The history of previous attempts' outputs is included so the
+          model can see it isn't on a productive trajectory.
+        * The model is explicitly told to return the SAME code unchanged
+          if it judges the gap unreproducible.  The pipeline reads that
+          as a halt signal.
+        * The model is told to emit ``DEVIATION:<text>`` stdout lines if
+          it has to change anything the paper didn't specify.  These are
+          surfaced in the final report.
+        """
+        # Failed-claim summary
+        claim_lines = []
+        for i, cr in enumerate(failed_claims, 1):
+            claim = cr.claim
+            unit = f" {claim.unit}" if claim.unit else ""
+            reproduced = "N/A" if cr.reproduced_value is None else f"{cr.reproduced_value:.6g}"
+            gap = ""
+            if cr.reproduced_value is not None:
+                rel = abs(cr.reproduced_value - claim.value) / max(abs(claim.value), 1e-9)
+                gap = f", gap {rel * 100:.2f}% relative"
+            claim_lines.append(
+                f"{i}. {claim.description}: paper claims {claim.value}{unit} "
+                f"({claim.claim_type.value}), your code produced {reproduced}, "
+                f"tolerance {cr.tolerance:.4g}{gap}"
+            )
+
+        # All captured outputs so the model sees what passed too
+        outputs_block = "\n".join(f"  {k} = {v}" for k, v in exec_result.outputs.items()) or "  (none)"
+
+        # History of prior attempts (oldest first)
+        history_block = ""
+        if history:
+            history_lines = []
+            for i, h in enumerate(history, 1):
+                rendered = ", ".join(f"{k}={v}" for k, v in h.items()) or "(empty)"
+                history_lines.append(f"  Attempt {i}: {rendered}")
+            history_block = "\n".join(history_lines)
+
+        lines = [
+            "You are refining Python code that reproduces results from an older ML paper.",
+            "The code RAN SUCCESSFULLY but the reproduced values do not match the",
+            "paper's claims within the allowed tolerance.  Your job is to identify",
+            "what is causing the gap and adjust the code to close it.",
+            "",
+            "## Paper",
+            f"Title: {paper.title}",
+        ]
+        if paper.methodology_summary:
+            lines.append(f"Methodology: {paper.methodology_summary}")
+        lines.append("")
+
+        lines += [
+            "## Current Code",
+            "```python",
+            code,
+            "```",
+            "",
+            "## What the code produced",
+            outputs_block,
+            "",
+            "## Claims still failing",
+            *claim_lines,
+            "",
+        ]
+
+        if history_block:
+            lines += [
+                "## Previous attempts (oldest first)",
+                history_block,
+                "",
+                "These attempts have already been tried.  Do not repeat a strategy",
+                "that has already produced the same values.",
+                "",
+            ]
+
+        lines += [
+            "## Task",
+            "Adjust the code minimally to close the gap on the failing claims.",
+            "Prefer changes that align more closely with the paper's stated",
+            "methodology: re-read the methodology summary above and check the",
+            "hyperparameters, preprocessing, train/test split, cross-validation",
+            "strategy, and random seed against what the paper actually specifies.",
+            "",
+            "## Deviation reporting",
+            "If you must change something the paper did NOT specify in order to",
+            "close the gap (e.g. a different number of CV folds, a different",
+            "subsampling strategy, an added preprocessing step, a different",
+            "scoring function), emit a ``DEVIATION:`` line in the script's",
+            "stdout describing the change.  Example:",
+            "",
+            "    print('DEVIATION: Increased max_iter from default 100 to 1000 because the paper does not specify but the default did not converge')",
+            "",
+            "Multiple DEVIATION lines are allowed and encouraged when several",
+            "changes are made.",
+            "",
+            "## When to give up",
+            "If after re-reading the methodology and the previous attempts you",
+            "judge that the gap cannot be closed without unreasonable deviation",
+            "from the paper, return the SAME CODE you were given, BYTE-FOR-BYTE",
+            "unchanged.  The pipeline will treat that as a signal to stop",
+            "refining and record the claim as unreproducible.",
+            "",
+            "## Output convention (unchanged)",
+            "Every metric MUST still be printed as ``RESULT:<name>=<value>``.",
+            f"Load the dataset from {dataset.local_path}/data.csv using pandas.",
+            "Use scikit-learn.  No network, no subprocess.  random_state=42.",
+            "",
+            "Output ONLY the Python code — no explanation, no markdown fences.",
         ]
 
         return "\n".join(lines)

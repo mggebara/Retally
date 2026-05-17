@@ -34,6 +34,7 @@ from openra.models import Dataset, ExecutionResult
 _FORBIDDEN_MODULES = frozenset(["subprocess", "socket", "multiprocessing", "ctypes", "pty", "fcntl"])
 
 _RESULT_PREFIX = "RESULT:"
+_DEVIATION_PREFIX = "DEVIATION:"
 
 
 # ---------------------------------------------------------------------------
@@ -101,6 +102,24 @@ def parse_outputs(stdout: str) -> dict[str, float]:
         except ValueError:
             warnings.warn(f"Could not parse float from RESULT line: {line!r}", stacklevel=2)
     return outputs
+
+
+def parse_deviation_notes(stdout: str) -> list[str]:
+    """Extract free-text ``DEVIATION:<note>`` lines from stdout.
+
+    Emitted by the claim-refinement loop when the generator changes
+    something the paper didn't specify (e.g. swapping a hyperparameter
+    or preprocessing step to close a gap).  Empty notes are skipped.
+    """
+    notes: list[str] = []
+    for line in stdout.splitlines():
+        line = line.strip()
+        if not line.startswith(_DEVIATION_PREFIX):
+            continue
+        note = line[len(_DEVIATION_PREFIX) :].strip()
+        if note:
+            notes.append(note)
+    return notes
 
 
 class CodeExecutor:
@@ -183,8 +202,9 @@ class CodeExecutor:
                 stderr = raw_err.decode("utf-8", errors="replace") if isinstance(raw_err, bytes) else raw_err
                 exit_code = -1
 
-            # Step 5: parse outputs
+            # Step 5: parse outputs and any DEVIATION notes
             outputs = self._parse_outputs(stdout)
+            deviation_notes = parse_deviation_notes(stdout)
 
             # Step 6: return result
             return ExecutionResult(
@@ -193,6 +213,7 @@ class CodeExecutor:
                 stderr=stderr,
                 exit_code=exit_code,
                 outputs=outputs,
+                deviation_notes=deviation_notes,
                 timed_out=timed_out,
             )
         finally:
