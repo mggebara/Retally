@@ -1,0 +1,60 @@
+# PLACEHOLDER — replace with a real I4R-replicated paper before the
+# first real benchmark run.  Leaving placeholders in the catalog is
+# safe (the runner records them like any other entry); shipping the
+# benchmark with only placeholders is honest about what's been
+# curated.
+#
+# The example below uses fields that are valid against schema.py so
+# the runner exercises every code path.  Numbers and URLs are
+# fabricated.
+
+id: _placeholder_python_example
+i4r_report_url: https://example.org/i4r-report-placeholder
+i4r_report_doi: null
+language: python
+outcome_label: not_robust
+
+paper:
+  source: "Title\n\nAbstract\nWe study things on a public dataset.\n"
+  # ^ The source field supports the same dispatch as
+  # ValidationPipeline.validate: arXiv ID, DOI, URL, file path, or raw
+  # text.  Raw text here keeps the placeholder fully offline.
+  title: "Placeholder: Python paper with a publicly available dataset"
+  authors:
+    - "A. Replicator"
+    - "B. Author"
+
+dataset:
+  source: "iris"
+  registry_key: "iris"
+  access_notes: ""
+
+code_repo:
+  url: "https://github.com/example/replication-package"
+  commit: null
+
+original_claims:
+  - description: "treatment effect on outcome Y"
+    value: 0.32
+    unit: null
+    claim_type: coefficient
+    standard_error: 0.08
+    sample_size: 1500
+    context: "Our preferred specification gives a coefficient of 0.32 (SE 0.08, n=1500)."
+    location: "Table 3, col 4"
+
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: 0.34
+    outcome: matches
+    notes: |
+      Replicators got 0.34 with the same spec; 0.32 vs 0.34 is well
+      within the standard error.  Coefficient reproduces; robustness
+      to alternative controls does not (see I4R report §3.2).
+
+out_of_scope_reason: null
+
+notes: |
+  Placeholder for catalog scaffolding only.  Replace this file with a
+  real I4R-replicated paper before running 'make benchmark' for the
+  first time.

@@ -1,0 +1,37 @@
+# PLACEHOLDER — replace with a real I4R paper.
+#
+# Demonstrates an entry whose `language: r` causes the runner to
+# record but not execute the paper (the R executor lands in a later
+# PR).  The benchmark report will categorise these under
+# "language not yet supported".
+
+id: _placeholder_r_example
+i4r_report_url: https://example.org/i4r-report-r-placeholder
+language: r
+outcome_label: reproducible
+
+paper:
+  source: "Title\n\nAbstract\nWe study things using R.\n"
+  title: "Placeholder: R paper (will be skipped until R support lands)"
+  authors:
+    - "C. Replicator"
+
+dataset:
+  source: "wine"
+  registry_key: "wine"
+
+original_claims:
+  - description: "regression coefficient on treatment"
+    value: -0.15
+    standard_error: 0.04
+    claim_type: coefficient
+    sample_size: 800
+    location: "Table 2"
+
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: -0.15
+    outcome: matches
+
+notes: |
+  Placeholder.  Tests the language-skip path in benchmark/runner.py.
