@@ -8,7 +8,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from openra.models import ClaimType, DatasetSource, Paper
+from openra.models import ClaimType, CodeReferenceSource, DatasetSource, Paper
 from openra.paper.extractor import ClaimExtractor
 
 
@@ -203,3 +203,83 @@ def test_extract_hyperparameters_handles_markdown_fenced_response(paper_with_tex
     specs = extractor.extract_hyperparameters(paper_with_text)
     assert len(specs) == 1
     assert specs[0].name == "C"
+
+
+# ── extract_code_references ─────────────────────────────────────────────
+
+
+def test_extract_code_references_returns_refs(paper_with_text):
+    response = json.dumps(
+        [
+            {
+                "url": "https://github.com/openai/baselines",
+                "source": "github",
+                "description": "Reference implementation at github.com/openai/baselines.",
+            },
+            {
+                "url": "https://gitlab.com/research/repo",
+                "source": "gitlab",
+                "description": "Companion code at gitlab.com/research/repo.",
+            },
+        ]
+    )
+    client = _make_mock_client(response)
+    extractor = ClaimExtractor(client)
+    refs = extractor.extract_code_references(paper_with_text)
+
+    assert [r.url for r in refs] == [
+        "https://github.com/openai/baselines",
+        "https://gitlab.com/research/repo",
+    ]
+    assert refs[0].source is CodeReferenceSource.GITHUB
+    assert refs[1].source is CodeReferenceSource.GITLAB
+
+
+def test_extract_code_references_empty_list(paper_with_text):
+    # Most older papers don't link code; the extractor must not crash
+    # and must return [].
+    client = _make_mock_client("[]")
+    extractor = ClaimExtractor(client)
+    assert extractor.extract_code_references(paper_with_text) == []
+
+
+def test_extract_code_references_unknown_source_defaults_to_unknown(paper_with_text):
+    # If the LLM emits a source value we don't recognise, fall back to
+    # UNKNOWN rather than dropping the reference.  The downloader will
+    # then skip it, but the reporter still surfaces it.
+    response = json.dumps(
+        [
+            {
+                "url": "https://example.com/code.zip",
+                "source": "sourceforge",  # not in the enum
+                "description": "Older paper hosted code on sourceforge.",
+            }
+        ]
+    )
+    client = _make_mock_client(response)
+    extractor = ClaimExtractor(client)
+    refs = extractor.extract_code_references(paper_with_text)
+    assert len(refs) == 1
+    assert refs[0].source is CodeReferenceSource.UNKNOWN
+
+
+def test_extract_code_references_skips_empty_url(paper_with_text):
+    response = json.dumps(
+        [
+            {"url": "", "source": "github", "description": "empty"},
+            {"url": "https://github.com/x/y", "source": "github", "description": "ok"},
+        ]
+    )
+    client = _make_mock_client(response)
+    extractor = ClaimExtractor(client)
+    refs = extractor.extract_code_references(paper_with_text)
+    assert [r.url for r in refs] == ["https://github.com/x/y"]
+
+
+def test_extract_code_references_swallows_parse_errors(paper_with_text):
+    # If Claude returns prose instead of JSON, the method must return []
+    # rather than letting ValueError propagate — code ingestion is
+    # opt-in convenience, not load-bearing.
+    client = _make_mock_client("Sorry, I cannot answer that.")
+    extractor = ClaimExtractor(client)
+    assert extractor.extract_code_references(paper_with_text) == []
