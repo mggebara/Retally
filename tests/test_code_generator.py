@@ -11,9 +11,11 @@ from __future__ import annotations
 from pathlib import Path
 from unittest.mock import MagicMock
 
+import pytest
+
 from openra.code.selector import SelectedFile
-from openra.codegen.generator import CodeGenerator
-from openra.models import Claim, ClaimType, Dataset, Paper
+from openra.codegen.generator import CodeGenerator, UnsupportedLanguageError
+from openra.models import Claim, ClaimType, Dataset, ExecutionResult, Language, Paper
 
 
 def _paper(**overrides):
@@ -118,3 +120,58 @@ def test_generate_forwards_reference_files_to_prompt():
     [call] = gen._client.messages.create.call_args_list
     sent_prompt = call.kwargs["messages"][0]["content"]
     assert "ADAPT_ME" in sent_prompt
+
+
+# ── Language guard ────────────────────────────────────────────────────
+
+
+def test_generate_rejects_r_paper():
+    """Setting language=R must fail loudly, not silently produce Python.
+
+    The pipeline catches this and converts to a skip; what we're testing
+    here is that the generator NEVER quietly produces nonsense code for
+    a non-Python paper.
+    """
+    gen = _generator()
+    paper = _paper(language=Language.R)
+    with pytest.raises(UnsupportedLanguageError, match="generate.*language=r"):
+        gen.generate(paper, _dataset())
+
+
+def test_generate_rejects_stata_paper():
+    gen = _generator()
+    paper = _paper(language=Language.STATA)
+    with pytest.raises(UnsupportedLanguageError, match="language=stata"):
+        gen.generate(paper, _dataset())
+
+
+def test_generate_rejects_unknown_language():
+    gen = _generator()
+    paper = _paper(language=Language.UNKNOWN)
+    with pytest.raises(UnsupportedLanguageError, match="language=unknown"):
+        gen.generate(paper, _dataset())
+
+
+def test_generate_accepts_python_explicitly():
+    """The default and the explicit PYTHON setting should behave identically."""
+    gen = _generator()
+    msg = MagicMock()
+    msg.content = [MagicMock(text="```python\nprint('ok')\n```")]
+    gen._client.messages.create.return_value = msg
+    code = gen.generate(_paper(language=Language.PYTHON), _dataset())
+    assert "ok" in code
+
+
+def test_refine_rejects_non_python():
+    gen = _generator()
+    paper = _paper(language=Language.R)
+    with pytest.raises(UnsupportedLanguageError, match="refine.*language=r"):
+        gen.refine("code", "error", paper, _dataset())
+
+
+def test_refine_for_claims_rejects_non_python():
+    gen = _generator()
+    paper = _paper(language=Language.R)
+    exec_result = ExecutionResult(generated_code="x")
+    with pytest.raises(UnsupportedLanguageError, match="refine_for_claims.*language=r"):
+        gen.refine_for_claims("code", [], exec_result, paper, _dataset(), [])

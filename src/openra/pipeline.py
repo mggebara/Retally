@@ -194,6 +194,9 @@ class ValidationPipeline:
         # Step 10: audit hyperparameters in the final code against the spec
         exec_result.hyperparameter_audits = audit_hyperparameters(code, paper.hyperparameters)
 
+        # Propagate language for the reporter (markdown code-fence tag etc.)
+        exec_result.language = paper.language
+
         # Step 11: build report
         return self.reporter.build(paper, dataset, exec_result, claim_results)
 

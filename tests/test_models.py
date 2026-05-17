@@ -7,6 +7,7 @@ from openra.models import (
     DatasetReference,
     DatasetSource,
     ExecutionResult,
+    Language,
     Paper,
 )
 
@@ -41,3 +42,25 @@ def test_claim_validation_result_failed_by_default():
     claim = Claim(description="accuracy", value=0.9)
     result = ClaimValidationResult(claim=claim, reproduced_value=None)
     assert not result.passed
+
+
+def test_paper_default_language_is_python():
+    """Existing callers that don't set language must get PYTHON.
+
+    This is the contract that makes the seam introduction
+    byte-identical for the existing demo reports and tests.
+    """
+    assert Paper(title="x").language is Language.PYTHON
+
+
+def test_execution_result_default_language_is_python():
+    assert ExecutionResult(generated_code="x").language is Language.PYTHON
+
+
+def test_language_enum_round_trips_to_string_values():
+    # Used by benchmark catalog YAML and the markdown code fence —
+    # check the values are stable and lowercase.
+    assert Language.PYTHON.value == "python"
+    assert Language.R.value == "r"
+    assert Language.STATA.value == "stata"
+    assert Language.UNKNOWN.value == "unknown"

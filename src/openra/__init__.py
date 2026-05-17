@@ -13,6 +13,7 @@ from openra.models import (
     ExecutionResult,
     HyperparameterAudit,
     HyperparameterSpec,
+    Language,
     Paper,
     ValidationReport,
 )
@@ -31,6 +32,7 @@ __all__ = [
     "ExecutionResult",
     "HyperparameterAudit",
     "HyperparameterSpec",
+    "Language",
     "Paper",
     "ValidationPipeline",
     "ValidationReport",

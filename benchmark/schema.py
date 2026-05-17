@@ -20,19 +20,13 @@ from typing import Any
 
 import yaml
 
+# Language is defined in the library so the pipeline / generator /
+# reporter can share the same enum.  Re-export it here so existing
+# `benchmark.schema.Language` imports keep working (the loader uses
+# Language(value) so all the test paper YAMLs are unaffected).
+from openra.models import Language
 
-class Language(Enum):
-    """The language the original paper's code (and the I4R replicators') used.
-
-    Drives runner behaviour: the executor and code generator have to
-    match.  ``stata`` papers are catalogued for completeness but the
-    runner skips them today — the Stata extension is an open decision.
-    """
-
-    PYTHON = "python"
-    R = "r"
-    STATA = "stata"
-    UNKNOWN = "unknown"
+__all__ = ["Language"]  # re-export for backwards compat with the previous local definition
 
 
 class OutcomeLabel(Enum):

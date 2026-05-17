@@ -26,10 +26,27 @@ from __future__ import annotations
 import re
 from typing import TYPE_CHECKING
 
-from openra.models import ClaimType, ClaimValidationResult, Dataset, ExecutionResult, Paper
+from openra.models import (
+    ClaimType,
+    ClaimValidationResult,
+    Dataset,
+    ExecutionResult,
+    Language,
+    Paper,
+)
 
 if TYPE_CHECKING:
     from openra.code.selector import SelectedFile
+
+
+class UnsupportedLanguageError(NotImplementedError):
+    """Raised when code generation is requested for a language we don't yet target.
+
+    Today only ``Language.PYTHON`` is implemented.  ``R`` lands in a
+    later PR; ``STATA`` is a deferred decision.  The pipeline catches
+    this and converts it to a benchmark skip so a single R paper in
+    the catalog doesn't crash the whole run.
+    """
 
 
 class CodeGenerator:
@@ -85,8 +102,13 @@ class CodeGenerator:
             repo.  When present the prompt instructs the model to
             adapt that code rather than start from scratch.
 
+        Raises ``UnsupportedLanguageError`` when ``paper.language`` is
+        anything other than ``Language.PYTHON`` — R and Stata code
+        generation are deferred to later PRs.
+
         Returns the generated Python source code as a string.
         """
+        _require_python(paper, "generate")
         prompt = self._build_generation_prompt(paper, dataset, reference_files or [])
         response = self._call_claude(prompt)
         return self._extract_code_block(response)
@@ -113,6 +135,7 @@ class CodeGenerator:
         error, and asks Claude to fix the specific problem.  Preserve the
         output convention requirement.
         """
+        _require_python(paper, "refine")
         prompt = self._build_refinement_prompt(code, error, paper, dataset)
         response = self._call_claude(prompt)
         return self._extract_code_block(response)
@@ -157,6 +180,7 @@ class CodeGenerator:
         the pipeline interprets that as the model declaring the gap
         unreasonable and halts the refinement loop.
         """
+        _require_python(paper, "refine_for_claims")
         prompt = self._build_claim_refinement_prompt(
             code, failed_claims, exec_result, paper, dataset, history
         )
@@ -533,3 +557,24 @@ class CodeGenerator:
             hints.append("p-values are reported — use scipy.stats for statistical tests.")
 
         return "\n".join(hints)
+
+
+# ---------------------------------------------------------------------------
+# Module helpers
+# ---------------------------------------------------------------------------
+
+
+def _require_python(paper: Paper, op: str) -> None:
+    """Raise UnsupportedLanguageError when paper.language is not PYTHON.
+
+    Centralised so every public generator method enforces the same rule.
+    The caller catches the error and converts it to a benchmark skip or
+    pipeline-level error — never silently downgrades to a Python attempt
+    on an R / Stata paper, which would produce nonsense code with no
+    feedback to the user.
+    """
+    if paper.language is not Language.PYTHON:
+        raise UnsupportedLanguageError(
+            f"CodeGenerator.{op}() does not yet support language={paper.language.value}; "
+            "only Python is implemented today."
+        )

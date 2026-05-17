@@ -64,6 +64,24 @@ class CodeReferenceSource(Enum):
     UNKNOWN = "unknown"
 
 
+class Language(Enum):
+    """The programming language a paper's reference code and reproduction use.
+
+    Python is the only fully-supported language today.  ``R`` papers
+    are catalogued (and skipped) until the R executor lands in a later
+    PR; ``STATA`` is a deferred decision because Stata is proprietary
+    and can't legally live in the project's sandbox image.
+
+    Default for every Paper / ExecutionResult is PYTHON so this
+    addition is byte-identical to prior behaviour for existing callers.
+    """
+
+    PYTHON = "python"
+    R = "r"
+    STATA = "stata"
+    UNKNOWN = "unknown"
+
+
 @dataclass
 class CodeReference:
     """A reference implementation linked from a paper.
@@ -213,6 +231,12 @@ class Paper:
     a selection of files as a baseline rather than reconstructing the
     implementation from the methodology summary alone."""
 
+    language: Language = Language.PYTHON
+    """Programming language for the reproduction.  Defaults to Python so
+    existing callers continue to work unchanged.  Set to R / STATA on
+    benchmark entries the runner uses to decide whether the paper is
+    in scope for the current pipeline configuration."""
+
     source_path: Path | None = None
     """Local path of the original file this paper was parsed from."""
 
@@ -274,6 +298,13 @@ class ExecutionResult:
     literal kwargs against ``Paper.hyperparameters``.  Independent of
     claim validation: a paper can be claim-validated while still
     failing the hyperparameter audit (and vice versa)."""
+
+    language: Language = Language.PYTHON
+    """The language the generated code is written in.  Used by the
+    reporter to pick the correct markdown code-fence tag (``python``,
+    ``r``, ``stata``) and by future executors to dispatch the right
+    runtime.  Defaults to PYTHON; the pipeline copies ``paper.language``
+    here after execution so reports stay consistent."""
 
     timed_out: bool = False
 
