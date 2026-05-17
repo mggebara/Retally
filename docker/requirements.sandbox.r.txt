@@ -1,0 +1,26 @@
+# R packages installed in openra-sandbox-r.
+#
+# Versions are not pinned because r2u resolves these against the
+# Debian / Ubuntu binary package repository at build time, which gives
+# us deterministic builds without per-package version juggling.
+#
+# This file is informational — the Dockerfile is the source of truth.
+# Adding a package here requires also adding it to Dockerfile.sandbox.r.
+
+# RESULT: / DEVIATION: line emission (toJSON for structured output too)
+jsonlite
+
+# Core econometrics
+fixest         # Fast fixed-effects estimation (HDFE, FE-IV, GLM)
+AER            # "Applied Econometrics with R" — IV / Tobit / etc.
+plm            # Panel data econometrics
+lmtest         # Coefficient hypothesis tests
+sandwich       # Robust / clustered covariance estimators
+
+# Reporting
+modelsummary   # Regression tables matching journal conventions
+
+# Data manipulation
+data.table     # Fast data manipulation, used heavily in econ papers
+readr          # CSV reading with sensible defaults
+dplyr          # Grammar-of-data-manipulation pipelines
