@@ -187,5 +187,187 @@
     ],
     "overall_passed": false,
     "summary": "1 of 2 claims validated. Failed: F1 score."
+  },
+  {
+    "id": "letter-recognition-knn",
+    "paper": {
+      "title": "Letter Recognition Using Holland-Style Adaptive Classifiers",
+      "authors": ["P.W. Frey", "D.J. Slate"],
+      "abstract": "We apply a k-nearest neighbour classifier to the UCI Letter Recognition dataset, a 26-class problem with 16 numeric features extracted from rasterised letter images. The dataset contains 20,000 instances. We report classification accuracy on a stratified held-out test set and compare against earlier adaptive classifier systems.",
+      "source_url": "https://archive.ics.uci.edu/dataset/59/letter+recognition",
+      "methodology_summary": "• k-Nearest Neighbours (k=5) with Euclidean distance\n• 16 numeric features describing the letter image (statistical moments, edge counts)\n• StandardScaler normalisation\n• 75/25 stratified train/test split, random_state=42\n• Accuracy reported on 5,000 held-out test samples"
+    },
+    "dataset": {
+      "name": "Letter Recognition",
+      "source_url": "ucimlrepo://59",
+      "local_path": ".cache/datasets/letter_recognition",
+      "file_format": "csv",
+      "metadata": {
+        "columns": ["x_box","y_box","width","high","onpix","x_bar","y_bar","x2bar","y2bar","xybar","x2ybr","xy2br","x_ege","xegvy","y_ege","yegvx","lettr"],
+        "target_column": "lettr",
+        "n_rows": 20000,
+        "n_cols": 17,
+        "task_type": "classification"
+      }
+    },
+    "execution_result": {
+      "generated_code": "import pandas as pd\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.metrics import accuracy_score\n\ndf = pd.read_csv('.cache/datasets/letter_recognition/data.csv')\nX = df.drop(columns=['lettr'])\ny = df['lettr']\n\nscaler = StandardScaler()\nX_s = scaler.fit_transform(X)\n\nX_train, X_test, y_train, y_test = train_test_split(\n    X_s, y, test_size=0.25, random_state=42, stratify=y\n)\n\nclf = KNeighborsClassifier(n_neighbors=5, weights='uniform', metric='minkowski', p=2)\nclf.fit(X_train, y_train)\n\nacc = accuracy_score(y_test, clf.predict(X_test))\nprint(f'RESULT:accuracy={acc:.4f}')",
+      "stdout": "RESULT:accuracy=0.9522\n",
+      "stderr": "",
+      "exit_code": 0,
+      "outputs": { "accuracy": 0.9522 },
+      "timed_out": false
+    },
+    "claim_results": [
+      {
+        "claim": { "description": "test accuracy", "value": 95.0, "unit": "%", "claim_type": "accuracy", "context": "The 5-NN classifier achieves 95.0% accuracy on the 26-class letter recognition task.", "table_ref": "Table 1", "figure_ref": null },
+        "reproduced_value": 0.9522,
+        "tolerance": 0.01,
+        "passed": true,
+        "notes": "Unit mismatch detected: paper value in percentage (95.0%) while reproduced value is decimal (0.9522). Claim validated after unit normalisation."
+      }
+    ],
+    "overall_passed": true,
+    "summary": "1 of 1 claims validated."
+  },
+  {
+    "id": "sonar-backprop-mlp",
+    "paper": {
+      "title": "Backpropagation Networks for Sonar Target Classification",
+      "authors": ["R.P. Gorman", "T.J. Sejnowski"],
+      "abstract": "We train a backpropagation neural network with one hidden layer on the UCI Sonar dataset, distinguishing returns from metal cylinders (mines) from rocks. The dataset contains 208 instances with 60 frequency-band features. We report classification accuracy and F1 score on a held-out test set.",
+      "source_url": "https://archive.ics.uci.edu/dataset/151/connectionist+bench+sonar+mines+vs+rocks",
+      "methodology_summary": "• MLP, 1 hidden layer (12 units, sigmoid activation)\n• 60 numeric frequency-band features\n• StandardScaler normalisation\n• 80/20 stratified train/test split, random_state=42\n• Trained for 500 epochs with momentum=0.9, learning_rate=0.01\n• Metrics: accuracy and weighted F1 on the test set"
+    },
+    "dataset": {
+      "name": "Sonar",
+      "source_url": "ucimlrepo://151",
+      "local_path": ".cache/datasets/sonar",
+      "file_format": "csv",
+      "metadata": {
+        "columns": ["band_01","band_02","band_03","band_04","band_05","band_06","band_07","band_08","band_09","band_10","band_11","band_12","band_13","band_14","band_15","band_16","band_17","band_18","band_19","band_20","band_21","band_22","band_23","band_24","band_25","band_26","band_27","band_28","band_29","band_30","band_31","band_32","band_33","band_34","band_35","band_36","band_37","band_38","band_39","band_40","band_41","band_42","band_43","band_44","band_45","band_46","band_47","band_48","band_49","band_50","band_51","band_52","band_53","band_54","band_55","band_56","band_57","band_58","band_59","band_60","class"],
+        "target_column": "class",
+        "n_rows": 208,
+        "n_cols": 61,
+        "task_type": "classification"
+      }
+    },
+    "execution_result": {
+      "generated_code": "import pandas as pd\nfrom sklearn.neural_network import MLPClassifier\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler, LabelEncoder\nfrom sklearn.metrics import accuracy_score, f1_score\n\ndf = pd.read_csv('.cache/datasets/sonar/data.csv')\nX = df.drop(columns=['class'])\ny = LabelEncoder().fit_transform(df['class'])\n\nscaler = StandardScaler()\nX_s = scaler.fit_transform(X)\n\nX_train, X_test, y_train, y_test = train_test_split(\n    X_s, y, test_size=0.2, random_state=42, stratify=y\n)\n\nclf = MLPClassifier(\n    hidden_layer_sizes=(12,), activation='logistic', solver='sgd',\n    learning_rate_init=0.01, momentum=0.9, max_iter=500, random_state=42\n)\nclf.fit(X_train, y_train)\n\ny_pred = clf.predict(X_test)\nacc = accuracy_score(y_test, y_pred)\nf1  = f1_score(y_test, y_pred, average='weighted')\n\nprint(f'RESULT:accuracy={acc:.4f}')\nprint(f'RESULT:f1_score={f1:.4f}')",
+      "stdout": "RESULT:accuracy=0.8333\nRESULT:f1_score=0.8331\n",
+      "stderr": "",
+      "exit_code": 0,
+      "outputs": { "accuracy": 0.8333, "f1_score": 0.8331 },
+      "timed_out": false
+    },
+    "claim_results": [
+      {
+        "claim": { "description": "test accuracy", "value": 90.0, "unit": "%", "claim_type": "accuracy", "context": "The 12-unit hidden-layer network achieves 90.0% accuracy on the sonar test set.", "table_ref": "Table 2", "figure_ref": null },
+        "reproduced_value": 0.8333,
+        "tolerance": 0.01,
+        "passed": false,
+        "notes": "Unit-normalised paper value: 0.900. Relative error: |0.8333 - 0.900| / 0.900 = 0.074 > tolerance 0.01. The gap is consistent with the small dataset (208 rows) being highly sensitive to weight initialisation; the original paper averaged over multiple random seeds, the reproduction uses a single seed."
+      },
+      {
+        "claim": { "description": "F1 score", "value": 0.90, "unit": null, "claim_type": "f1_score", "context": "Weighted F1 of 0.90 is reported on the test set.", "table_ref": "Table 2", "figure_ref": null },
+        "reproduced_value": 0.8331,
+        "tolerance": 0.01,
+        "passed": false,
+        "notes": "Relative error 0.074 > tolerance 0.01.  Same cause as the accuracy gap."
+      }
+    ],
+    "overall_passed": false,
+    "summary": "0 of 2 claims validated. Failed: test accuracy, F1 score."
+  },
+  {
+    "id": "heart-disease-logreg",
+    "paper": {
+      "title": "Predicting Heart Disease with Penalised Logistic Regression",
+      "authors": ["R. Detrano", "A. Janosi", "W. Steinbrunn", "M. Pfisterer"],
+      "abstract": "We apply L2-penalised logistic regression to the Cleveland Heart Disease dataset to predict the presence of angiographic disease.  The dataset contains 303 instances with 13 clinical features.  We report classification accuracy and AUC on a held-out test set.",
+      "source_url": "https://archive.ics.uci.edu/dataset/45/heart+disease",
+      "methodology_summary": "• Logistic regression, L2 penalty, C=1.0\n• 13 features: age, sex, chest-pain type, resting BP, cholesterol, fasting blood sugar, resting ECG, max heart rate, exercise-induced angina, ST depression, ST slope, fluoroscopy vessels, thalassemia\n• Categorical features one-hot encoded; numeric features standardised\n• Target binarised (0 vs >=1)\n• 80/20 stratified split, random_state=42\n• Metrics: accuracy and AUC-ROC on the held-out test set"
+    },
+    "dataset": {
+      "name": "Heart Disease",
+      "source_url": "ucimlrepo://45",
+      "local_path": ".cache/datasets/heart_disease",
+      "file_format": "csv",
+      "metadata": {
+        "columns": ["age","sex","cp","trestbps","chol","fbs","restecg","thalach","exang","oldpeak","slope","ca","thal","num"],
+        "target_column": "num",
+        "n_rows": 303,
+        "n_cols": 14,
+        "task_type": "classification"
+      }
+    },
+    "execution_result": {
+      "generated_code": "import pandas as pd\nimport numpy as np\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.metrics import accuracy_score, roc_auc_score\n\ndf = pd.read_csv('.cache/datasets/heart_disease/data.csv').dropna()\n\n# Binarise target: 0 vs any presence of disease\ndf['target'] = (df['num'] > 0).astype(int)\nX = df.drop(columns=['num', 'target'])\ny = df['target']\n\n# One-hot encode categorical, scale numeric\ncategorical = ['cp', 'restecg', 'slope', 'thal']\nX = pd.get_dummies(X, columns=categorical, drop_first=True)\n\nnumeric_cols = ['age', 'trestbps', 'chol', 'thalach', 'oldpeak', 'ca']\nscaler = StandardScaler()\nX[numeric_cols] = scaler.fit_transform(X[numeric_cols])\n\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42, stratify=y\n)\n\nclf = LogisticRegression(C=1.0, max_iter=1000, random_state=42)\nclf.fit(X_train, y_train)\n\ny_pred  = clf.predict(X_test)\ny_proba = clf.predict_proba(X_test)[:, 1]\nacc = accuracy_score(y_test, y_pred)\nauc = roc_auc_score(y_test, y_proba)\n\nprint(f'RESULT:accuracy={acc:.4f}')\nprint(f'RESULT:auc_roc={auc:.4f}')",
+      "stdout": "RESULT:accuracy=0.8500\nRESULT:auc_roc=0.9112\n",
+      "stderr": "",
+      "exit_code": 0,
+      "outputs": { "accuracy": 0.85, "auc_roc": 0.9112 },
+      "timed_out": false
+    },
+    "claim_results": [
+      {
+        "claim": { "description": "test accuracy", "value": 85.0, "unit": "%", "claim_type": "accuracy", "context": "The penalised logistic-regression model attains 85% accuracy on the held-out test set.", "table_ref": "Table 1", "figure_ref": null },
+        "reproduced_value": 0.85,
+        "tolerance": 0.01,
+        "passed": true,
+        "notes": "Unit mismatch detected: paper value in percentage (85.0%) while reproduced value is decimal (0.85). Claim validated after unit normalisation."
+      },
+      {
+        "claim": { "description": "AUC-ROC", "value": 0.91, "unit": null, "claim_type": "auc_roc", "context": "The model achieves an AUC-ROC of 0.91 on the test set.", "table_ref": "Table 1", "figure_ref": null },
+        "reproduced_value": 0.9112,
+        "tolerance": 0.01,
+        "passed": true,
+        "notes": ""
+      }
+    ],
+    "overall_passed": true,
+    "summary": "2 of 2 claims validated."
+  },
+  {
+    "id": "pima-custom-feature-mlp",
+    "paper": {
+      "title": "Early Detection of Diabetes via a Glucose-to-Age Composite Feature",
+      "authors": ["J.W. Smith", "J.E. Everhart", "W.C. Dickson"],
+      "abstract": "We propose a multi-layer perceptron for diabetes prediction on the Pima Indians dataset.  A novel composite feature, glucose_to_age_ratio, is shown to dominate the predictive signal.  The network achieves 78% accuracy on a stratified held-out test set.",
+      "source_url": "https://archive.ics.uci.edu/dataset/34/diabetes",
+      "methodology_summary": "• Multi-Layer Perceptron, 1 hidden layer (32 units, ReLU)\n• Custom feature 'glucose_to_age_ratio' described informally in §3.2 (exact formula not disclosed)\n• 80/20 stratified split, random_state=42\n• Accuracy reported on the held-out test set"
+    },
+    "dataset": {
+      "name": "Pima Indians Diabetes",
+      "source_url": "ucimlrepo://34",
+      "local_path": ".cache/datasets/pima_indians_diabetes",
+      "file_format": "csv",
+      "metadata": {
+        "columns": ["pregnancies","glucose","blood_pressure","skin_thickness","insulin","bmi","diabetes_pedigree","age","outcome"],
+        "target_column": "outcome",
+        "n_rows": 768,
+        "n_cols": 9,
+        "task_type": "classification"
+      }
+    },
+    "execution_result": {
+      "generated_code": "import pandas as pd\nfrom sklearn.neural_network import MLPClassifier\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.metrics import accuracy_score\n\ndf = pd.read_csv('.cache/datasets/pima_indians_diabetes/data.csv')\n\n# Reconstruct the paper's custom feature.  The methodology calls it\n# 'glucose_to_age_ratio' but does not give an exact formula; the most\n# natural reading is Glucose / Age.\ndf['glucose_to_age_ratio'] = df['Glucose'] / df['Age']\n\nX = df.drop(columns=['outcome'])\ny = df['outcome']\n\nscaler = StandardScaler()\nX_s = scaler.fit_transform(X)\n\nX_train, X_test, y_train, y_test = train_test_split(\n    X_s, y, test_size=0.2, random_state=42, stratify=y\n)\n\nclf = MLPClassifier(hidden_layer_sizes=(32,), activation='relu', random_state=42, max_iter=500)\nclf.fit(X_train, y_train)\n\nacc = accuracy_score(y_test, clf.predict(X_test))\nprint(f'RESULT:accuracy={acc:.4f}')",
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/workspace/script.py\", line 11, in <module>\n    df['glucose_to_age_ratio'] = df['Glucose'] / df['Age']\n                                 ~~^^^^^^^^^^^\n  File \"/usr/local/lib/python3.11/site-packages/pandas/core/frame.py\", line 4090, in __getitem__\n    indexer = self.columns.get_loc(key)\n  File \"/usr/local/lib/python3.11/site-packages/pandas/core/indexes/base.py\", line 3812, in get_loc\n    raise KeyError(key) from err\nKeyError: 'Glucose'\n",
+      "exit_code": 1,
+      "outputs": {},
+      "timed_out": false
+    },
+    "claim_results": [
+      {
+        "claim": { "description": "test accuracy", "value": 78.0, "unit": "%", "claim_type": "accuracy", "context": "The MLP with the glucose_to_age_ratio composite feature achieves 78% test accuracy.", "table_ref": "Table 4", "figure_ref": null },
+        "reproduced_value": null,
+        "tolerance": 0.01,
+        "passed": false,
+        "notes": "Cannot validate.  The methodology references a custom 'glucose_to_age_ratio' feature but does not specify its construction.  Three generated reproductions each crashed: the first two with KeyError on column name casing (the paper uses 'Glucose' / 'Age' while the cached CSV uses snake_case), the third reverted to the same names after the refinement prompt and crashed identically.  The claim is unreproducible from the published methodology alone."
+      }
+    ],
+    "overall_passed": false,
+    "summary": "0 of 1 claims validated. Failed: test accuracy."
   }
 ]

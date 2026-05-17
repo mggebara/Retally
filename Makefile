@@ -1,4 +1,4 @@
-.PHONY: build-sandbox rebuild-sandbox test lint format typecheck check sync lock clean
+.PHONY: build-sandbox rebuild-sandbox test lint format typecheck check sync lock clean leaderboard
 
 SANDBOX_IMAGE := openra-sandbox:latest
 DOCKERFILE    := docker/Dockerfile.sandbox
@@ -35,6 +35,10 @@ check: lint typecheck test
 ## Remove the local venv and caches.
 clean:
 	rm -rf .venv .pytest_cache .ruff_cache .mypy_cache build dist src/*.egg-info
+
+## Regenerate LEADERBOARD.md and docs/data/leaderboard.json from reports.json.
+leaderboard:
+	uv run python scripts/generate_leaderboard.py
 
 ## Build the offline sandbox Docker image (required before using DockerExecutor).
 build-sandbox:
