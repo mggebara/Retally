@@ -351,6 +351,32 @@ The image contains: `scikit-learn`, `xgboost`, `lightgbm`, `pandas`, `numpy`,
 `scipy`, `statsmodels`, `matplotlib`.  It is built offline-capable — no
 internet access is needed once the image is built.
 
+### Optional R sandbox
+
+For papers whose reference implementation is in R (common across the
+I4R benchmark catalog), a second image houses the R runtime and a
+curated set of econometrics packages — `fixest`, `AER`, `plm`,
+`lmtest`, `sandwich`, `modelsummary`, plus `jsonlite`, `data.table`,
+`readr`, and `dplyr`.
+
+```bash
+make build-r-sandbox
+# or equivalently:
+# docker build -f docker/Dockerfile.sandbox.r -t openra-sandbox-r:latest docker/
+```
+
+The `RDockerExecutor` class in `openra.codegen.docker_executor`
+applies exactly the same isolation flags as the Python executor
+(`--network none --read-only --cap-drop ALL --security-opt
+no-new-privileges`), so the security boundary is consistent across
+languages.  Generated R scripts emit the same `RESULT:<name>=<value>`
+and `DEVIATION:<text>` lines on stdout — the executor's output parser
+is language-agnostic.
+
+Note: the pipeline cannot yet *generate* R code; that lands in a
+follow-up PR.  Until then `RDockerExecutor` is reachable only by
+hand-constructing scripts.
+
 ### Tune resource limits
 
 ```python
@@ -675,8 +701,10 @@ make check           # lint + typecheck + tests + format check (mirrors CI)
 make lock            # uv lock — re-resolve and update uv.lock
 make clean           # remove .venv and tool caches
 
-make build-sandbox   # build the Docker sandbox image
-make rebuild-sandbox # rebuild with no layer cache
+make build-sandbox     # build the Python Docker sandbox image
+make rebuild-sandbox   # rebuild with no layer cache
+make build-r-sandbox   # build the R Docker sandbox image
+make rebuild-r-sandbox # rebuild the R image with no layer cache
 ```
 
 Tests that require network access or a running Docker daemon are

@@ -198,8 +198,7 @@ class _DockerExecutorBase:
         result = subprocess.run(cmd, text=True)
         if result.returncode != 0:
             raise RuntimeError(
-                f"docker build failed (exit {result.returncode}).\n"
-                "Re-run with verbose output to inspect."
+                f"docker build failed (exit {result.returncode}).\nRe-run with verbose output to inspect."
             )
         print(f"Image {image!r} built successfully.")
 
@@ -334,3 +333,38 @@ class DockerExecutor(_DockerExecutorBase):
         the container is.
         """
         preflight_check(code)
+
+
+class RDockerExecutor(_DockerExecutorBase):
+    """Docker-sandboxed execution of generated R reproduction code.
+
+    Parameters
+    ----------
+    image:
+        Docker image tag.  Defaults to ``openra-sandbox-r:latest``;
+        build with ``RDockerExecutor.build_image()`` or
+        ``make build-r-sandbox``.
+    timeout, memory_limit, cpu_count:
+        Same semantics as ``DockerExecutor``.
+
+    Notes
+    -----
+    No preflight check.  R has no equivalent of Python's ``ast`` module
+    in the standard library, so adding a cheap static guard would mean
+    importing rpy2 or shelling out to ``lintr`` — both expensive and
+    neither contributing to the actual sandbox boundary, which is the
+    container itself.  Keeping ``preflight`` as a no-op is the honest
+    answer: Docker is the security guarantee here, not a fallible
+    text scan.
+
+    The R script must follow the same output convention as Python:
+    print ``RESULT:<name>=<value>`` lines for metrics and optional
+    ``DEVIATION:<text>`` lines for methodology changes the model had
+    to make.  ``cat()`` or ``message()`` are both fine emitters as long
+    as the lines reach stdout.
+    """
+
+    _DEFAULT_IMAGE = DEFAULT_R_IMAGE
+    _DOCKERFILE = _DOCKERFILE_R
+    _SCRIPT_FILENAME = "script.R"
+    _INTERPRETER_CMD = ["Rscript", "/workspace/script.R"]
