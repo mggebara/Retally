@@ -1,8 +1,8 @@
 # OpenRA — Open Source Research Assistant
 
-OpenRA automates the validation of academic papers: it reads a paper, downloads the relevant dataset, generates scikit-learn reproduction code via the Claude API, executes it in an isolated environment, and compares the reproduced numbers against the paper's stated results.
+OpenRA automates the validation of academic papers: it reads a paper, downloads the relevant dataset, generates reproduction code via the Claude API (scikit-learn for ML papers, R + fixest/AER/plm for econometrics), executes it in an isolated environment, and compares the reproduced numbers against the paper's stated results.
 
-See [`LEADERBOARD.md`](LEADERBOARD.md) for an at-a-glance view of which authors' papers have been reproducibly validated so far, plus a [browsable dashboard of every report](docs/index.html).
+See [`LEADERBOARD.md`](LEADERBOARD.md) for an at-a-glance view of which authors' papers have been reproducibly validated so far, plus a [browsable dashboard of every report](docs/index.html).  For systematic evaluation against an external ground truth — the [Institute for Replication](https://i4replication.org) catalog of hand-replicated papers — see [`benchmark/README.md`](benchmark/README.md).
 
 ---
 
@@ -14,12 +14,13 @@ See [`LEADERBOARD.md`](LEADERBOARD.md) for an at-a-glance view of which authors'
 4. [Quick start — one command](#quick-start--one-command)
 5. [Worked example: Breast Cancer Wisconsin paper](#worked-example-breast-cancer-wisconsin-paper)
 6. [Running with a PDF or arXiv paper](#running-with-a-pdf-or-arxiv-paper)
-7. [Docker sandbox (recommended)](#docker-sandbox-recommended)
+7. [Docker sandbox (default)](#docker-sandbox-default)
 8. [Understanding the output](#understanding-the-output)
 9. [Supported datasets](#supported-datasets)
 10. [Architecture](#architecture)
 11. [Configuration reference](#configuration-reference)
-12. [Development](#development)
+12. [Benchmark harness](#benchmark-harness)
+13. [Development](#development)
 
 ---
 
@@ -47,8 +48,9 @@ Paper (PDF / arXiv ID / URL / text)
                       (skipped when no code reference is found)
         │
         ▼
- CodeGenerator        Claude writes scikit-learn reproduction code
- (Claude API)         guided by methodology + claims + dataset schema,
+ CodeGenerator        Claude writes reproduction code in the paper's
+ (Claude API)         language (Python/sklearn or R/fixest+AER+plm),
+                      guided by methodology + claims + dataset schema,
                       seeded with reference code files when available
         │
         ▼
@@ -373,9 +375,12 @@ languages.  Generated R scripts emit the same `RESULT:<name>=<value>`
 and `DEVIATION:<text>` lines on stdout — the executor's output parser
 is language-agnostic.
 
-Note: the pipeline cannot yet *generate* R code; that lands in a
-follow-up PR.  Until then `RDockerExecutor` is reachable only by
-hand-constructing scripts.
+`CodeGenerator` routes by the paper's declared language: Python papers
+get sklearn-flavoured prompts, R papers get econometrics-flavoured
+prompts that favour `feols` (fixest), `ivreg` (AER), `plm`, and
+robust/clustered standard errors.  Stata papers are out of scope today
+and skipped by the benchmark runner with a recorded `out_of_scope`
+reason.
 
 ### Tune resource limits
 
@@ -519,28 +524,49 @@ registry.register(DatasetReference(
 
 ```
 src/openra/
-├── models.py                  Shared dataclasses
+├── models.py                  Shared dataclasses + enums (Language, ClaimType, …)
 ├── pipeline.py                ValidationPipeline orchestrator
 ├── paper/
 │   ├── parser.py              PaperParser   (PDF, arXiv, DOI, URL, text)
-│   └── extractor.py           ClaimExtractor  (Claude-backed)
+│   └── extractor.py           ClaimExtractor  (Claude-backed; claims,
+│                              hyperparameters, code references)
 ├── dataset/
 │   ├── registry.py            DatasetRegistry (JSON-backed, 28 builtins)
 │   └── downloader.py          DatasetDownloader (UCI/Kaggle/Zenodo/OpenML/URL)
+├── code/
+│   ├── downloader.py          CodeDownloader  (shallow git clone of paper repos)
+│   └── selector.py            select_relevant_files (cherry-pick Python files
+│                              from a cloned repo to seed CodeGenerator)
 ├── codegen/
-│   ├── generator.py           CodeGenerator  (Claude-backed, scikit-learn focus)
-│   ├── executor.py            CodeExecutor   (subprocess sandbox)
-│   └── docker_executor.py     DockerExecutor (OS-level isolation)
+│   ├── generator.py           CodeGenerator (Claude-backed; Python + R prompts)
+│   ├── executor.py            CodeExecutor (subprocess; Python-only fallback)
+│   └── docker_executor.py     DockerExecutor + RDockerExecutor (OS-level
+│                              isolation; shared --network none / --read-only)
 └── validation/
-    ├── comparator.py          ResultComparator (tolerance + % handling)
+    ├── comparator.py          ResultComparator (per-type tolerances)
+    ├── hyperparam_audit.py    AST audit of generated code vs. paper-stated kwargs
     └── reporter.py            ValidationReporter (Markdown / JSON / console)
 
 docker/
-├── Dockerfile.sandbox         Offline ML sandbox image
-└── requirements.sandbox.txt   Pinned ML packages for the image
+├── Dockerfile.sandbox         Offline Python ML sandbox image
+├── Dockerfile.sandbox.r       Offline R econometrics sandbox image
+├── requirements.sandbox.txt   Pinned Python packages
+└── packages.sandbox.r.txt     Pinned R packages
 
-tests/                         58 passing, 10 skipped (network/Docker)
-Makefile                       build-sandbox / test / lint / install
+benchmark/                     I4R replication benchmark harness
+├── papers/                    Per-paper YAML catalog (one entry per I4R report)
+├── schema.py                  BenchmarkEntry loader (validates catalog YAML)
+├── runner.py                  Drives ValidationPipeline across the catalog
+├── report.py                  Renders REPORT.md + report.html
+└── results/REPORT.md          Committed run summary
+
+scripts/
+└── generate_leaderboard.py    Aggregates docs/data/reports.json into LEADERBOARD.md
+
+tests/                         266 passing, 16 skipped (network/Docker/no-API-key)
+Makefile                       sync / test / lint / typecheck / check /
+                               benchmark / leaderboard / build-sandbox /
+                               build-r-sandbox
 ```
 
 ---
@@ -699,6 +725,35 @@ Known limitation: `COEFFICIENT` tolerance is a flat relative percentage,
 which gets too tight for coefficients close to zero.
 Standard-error-aware comparison (within `±k·SE` of the reported value)
 is a future improvement.
+
+---
+
+## Benchmark harness
+
+The repo ships a harness that runs OpenRA against the
+[Institute for Replication](https://i4replication.org) catalog —
+papers that human replicators have already worked through by hand.
+For each entry it records three independent verdicts:
+
+| Verdict | Meaning |
+|---|---|
+| `openra_ran` | Pipeline completed without crashing. |
+| `agrees_with_paper` | Reproduced values match the paper's stated values. |
+| `agrees_with_i4r` | Reproduced values match the *I4R replicator's* values (may differ from the paper's). |
+
+The three can disagree intentionally: `ran ✓ / agrees_with_paper ✓ /
+agrees_with_i4r ✗` is the "non-robust paper" signal we want surfaced
+rather than collapsed.  Catalog entries that the pipeline cannot run
+(Stata, restricted data, missing API key) are recorded as typed skips
+instead of failures.
+
+```bash
+make benchmark           # run the catalog and emit benchmark/results/REPORT.md
+make benchmark-report    # re-render the report from cached results.json
+```
+
+See [`benchmark/README.md`](benchmark/README.md) for the catalog YAML
+schema and the cache semantics.
 
 ---
 

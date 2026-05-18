@@ -43,7 +43,7 @@ A catalog entry can be cleanly skipped:
 | Reason | When |
 |---|---|
 | `out_of_scope` | `out_of_scope_reason` is set on the entry (e.g. "Stata required") |
-| `language_unsupported` | `language != python` (R will be supported in a later PR; Stata is deferred) |
+| `language_unsupported` | `language` is neither `python` nor `r` (Stata is deferred — code is proprietary; we don't ship a sandbox image). |
 | `no_api_key` | Pipeline construction failed (typically `ANTHROPIC_API_KEY` not in env) |
 
 ## Running it
@@ -73,8 +73,10 @@ $EDITOR benchmark/papers/<author>-<year>-<slug>.yaml
 ```
 
 Required fields: `id`, `i4r_report_url`, `language`, `outcome_label`,
-`paper.source`.  See `schema.py` for the full surface; the three
-shipped placeholder files exercise every code path.
+`paper.source`.  See `schema.py` for the full surface.  Worked examples
+covering Python, R, and an out-of-scope Stata entry live under
+`tests/fixtures/benchmark_placeholders/` — they're test fixtures, not
+catalog entries, so the real `papers/` directory stays uncluttered.
 
 ## Caveats
 
