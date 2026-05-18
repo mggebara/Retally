@@ -796,11 +796,6 @@ class CodeGenerator:
     # ------------------------------------------------------------------
 
     @staticmethod
-    def _algorithm_hint(claim_types: set) -> str:
-        """Compatibility shim — old name for ``_algorithm_hint_python``."""
-        return CodeGenerator._algorithm_hint_python(claim_types)
-
-    @staticmethod
     def _algorithm_hint_python(claim_types: set) -> str:
         """Python-flavoured algorithm hints for the claim types seen."""
         hints = []

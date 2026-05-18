@@ -2,36 +2,13 @@
 
 from __future__ import annotations
 
-import importlib.util
-import sys
 from pathlib import Path
 
 import pytest
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
+from tests._loaders import REPO_ROOT, load_module_from_path
 
-
-def _load_schema():
-    """Load benchmark.schema without putting benchmark/ on sys.path.
-
-    The benchmark package lives at the repo root, not under src/openra/,
-    so test imports go through importlib like the leaderboard generator
-    test does.  Keeps the benchmark tooling cleanly separable from the
-    library.
-    """
-    spec = importlib.util.spec_from_file_location("benchmark.schema", REPO_ROOT / "benchmark" / "schema.py")
-    assert spec and spec.loader
-    module = importlib.util.module_from_spec(spec)
-    # Register a parent package stub so dataclass __module__ resolution works.
-    if "benchmark" not in sys.modules:
-        parent = importlib.util.module_from_spec(importlib.util.spec_from_loader("benchmark", loader=None))
-        sys.modules["benchmark"] = parent
-    sys.modules["benchmark.schema"] = module
-    spec.loader.exec_module(module)
-    return module
-
-
-schema = _load_schema()
+schema = load_module_from_path("benchmark.schema", REPO_ROOT / "benchmark" / "schema.py")
 load_entry = schema.load_entry
 load_catalog = schema.load_catalog
 SchemaError = schema.SchemaError
@@ -291,16 +268,32 @@ def test_load_catalog_returns_empty_when_dir_missing(tmp_path):
     assert load_catalog(tmp_path / "does-not-exist") == []
 
 
-# ── Real placeholder YAML files load ────────────────────────────────────
+# ── Placeholder fixtures still load via the schema ─────────────────────
 
 
-def test_repo_placeholder_yaml_files_validate():
-    """The placeholder files shipped in benchmark/papers/ must validate.
+def test_placeholder_fixture_yaml_files_validate():
+    """The placeholder fixtures must keep validating against the loader.
 
     Catches schema drift between the docs / examples and the loader.
+    Lives under tests/fixtures/ so the real ``benchmark/papers/`` catalog
+    isn't polluted by placeholder noise — adding a real I4R entry to the
+    benchmark doesn't need to know anything about test fixtures.
     """
-    catalog = load_catalog(REPO_ROOT / "benchmark" / "papers")
+    fixtures = REPO_ROOT / "tests" / "fixtures" / "benchmark_placeholders"
+    catalog = load_catalog(fixtures)
     ids = {e.id for e in catalog}
     assert "_placeholder_python_example" in ids
     assert "_placeholder_r_example" in ids
     assert "_placeholder_stata_out_of_scope" in ids
+
+
+def test_real_benchmark_papers_dir_has_no_placeholders():
+    """Regression: nobody should be re-adding placeholders to the real catalog."""
+    real_dir = REPO_ROOT / "benchmark" / "papers"
+    if not real_dir.is_dir():
+        return
+    placeholder_yamls = list(real_dir.glob("_placeholder*.yaml"))
+    assert placeholder_yamls == [], (
+        f"Unexpected placeholder YAMLs in {real_dir}: {placeholder_yamls}. "
+        "Placeholders belong under tests/fixtures/benchmark_placeholders/."
+    )

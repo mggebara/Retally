@@ -2,28 +2,9 @@
 
 from __future__ import annotations
 
-import importlib.util
-import sys
-from pathlib import Path
+from tests._loaders import REPO_ROOT, load_module_from_path
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
-
-
-def _load_report_module():
-    if "benchmark" not in sys.modules:
-        parent = importlib.util.module_from_spec(importlib.util.spec_from_loader("benchmark", loader=None))
-        sys.modules["benchmark"] = parent
-    full = "benchmark.report"
-    if full not in sys.modules:
-        spec = importlib.util.spec_from_file_location(full, REPO_ROOT / "benchmark" / "report.py")
-        assert spec and spec.loader
-        module = importlib.util.module_from_spec(spec)
-        sys.modules[full] = module
-        spec.loader.exec_module(module)
-    return sys.modules[full]
-
-
-report = _load_report_module()
+report = load_module_from_path("benchmark.report", REPO_ROOT / "benchmark" / "report.py")
 
 
 def _result(**overrides):

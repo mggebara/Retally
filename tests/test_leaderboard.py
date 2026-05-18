@@ -2,29 +2,11 @@
 
 from __future__ import annotations
 
-import importlib.util
-import sys
-from pathlib import Path
+from tests._loaders import REPO_ROOT, load_module_from_path
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
-SCRIPT = REPO_ROOT / "scripts" / "generate_leaderboard.py"
-
-
-def _load_module():
-    """Load the generator script as a module without putting `scripts/` on sys.path.
-
-    The script is a one-off CLI, not a package, so the test imports it
-    via importlib rather than dropping ``scripts/`` into ``sys.path``.
-    """
-    spec = importlib.util.spec_from_file_location("generate_leaderboard", SCRIPT)
-    assert spec and spec.loader
-    module = importlib.util.module_from_spec(spec)
-    sys.modules["generate_leaderboard"] = module
-    spec.loader.exec_module(module)
-    return module
-
-
-leaderboard_mod = _load_module()
+leaderboard_mod = load_module_from_path(
+    "generate_leaderboard", REPO_ROOT / "scripts" / "generate_leaderboard.py"
+)
 build_leaderboard = leaderboard_mod.build_leaderboard
 
 
