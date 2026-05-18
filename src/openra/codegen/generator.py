@@ -813,6 +813,7 @@ class CodeGenerator:
             ClaimType.AUC_ROC,
         }
         regression_types = {ClaimType.RMSE, ClaimType.MAE}
+        econometric_types = {ClaimType.COEFFICIENT, ClaimType.STANDARD_ERROR, ClaimType.R_SQUARED}
 
         if claim_types & classification_types:
             hints.append(
@@ -826,6 +827,17 @@ class CodeGenerator:
                 "This paper reports regression metrics (RMSE/MAE). "
                 "Common algorithms: Linear Regression, Ridge, Lasso, SVR, "
                 "Decision Tree Regressor, Random Forest Regressor."
+            )
+        if claim_types & econometric_types:
+            hints.append(
+                "This paper reports econometric quantities (coefficients / standard errors / R²). "
+                "In Python that means statsmodels: ``statsmodels.api.OLS`` or ``statsmodels.formula.api.ols`` "
+                "for OLS with HC-robust SE via ``.get_robustcov_results('HC1')``, "
+                "``statsmodels.discrete.discrete_model.Logit`` for binary outcomes, and "
+                "``statsmodels.regression.linear_model.WLS`` for weighted models.  "
+                "For instrumental variables and panel data use ``linearmodels`` if available; "
+                "otherwise stick to statsmodels.  Emit each coefficient and SE as a separate "
+                "RESULT: line with the variable name in the metric name."
             )
         if ClaimType.AUC_ROC in claim_types:
             hints.append(
@@ -850,22 +862,29 @@ class CodeGenerator:
         plm for panel data, lmtest + sandwich for robust SEs.
         """
         hints = []
-
-        # Econometric coefficient-style claims travel under
-        # ClaimType.OTHER today (the enum doesn't yet have COEFFICIENT —
-        # that lands in PR 5).  Continuous metrics (RMSE / MAE) point at
-        # regression models; p-values at hypothesis tests.
         regression_types = {ClaimType.RMSE, ClaimType.MAE}
+        econometric_types = {ClaimType.COEFFICIENT, ClaimType.STANDARD_ERROR, ClaimType.R_SQUARED}
 
-        # Default hint: most I4R-style papers are regression-based.
-        hints.append(
-            "This paper most likely reports regression coefficients with standard errors. "
-            "Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() "
-            "for instrumental variables and plm::plm() for panel data.  Use the cluster "
-            "argument or cluster_var argument in feols() / vcovCL() from sandwich for "
-            "cluster-robust standard errors."
-        )
-
+        # Default-but-conditional: emit the coefficient/SE guidance only
+        # when the paper actually reports those.  Previously this hint
+        # fired for every R paper unconditionally, which crowded out
+        # the metric-specific hints below.
+        if claim_types & econometric_types or not claim_types:
+            hints.append(
+                "This paper reports regression coefficients with standard errors. "
+                "Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() "
+                "for instrumental variables and plm::plm() for panel data.  Use the cluster "
+                "argument or cluster_var argument in feols() / vcovCL() from sandwich for "
+                "cluster-robust standard errors.  Extract each coefficient via "
+                "``coef(model)['varname']`` and each SE via "
+                "``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate "
+                "RESULT: lines."
+            )
+        if ClaimType.R_SQUARED in claim_types:
+            hints.append(
+                "R-squared is reported — fixest provides ``r2(model)``; base R via "
+                "``summary(model)$r.squared`` (and ``adj.r.squared`` for adjusted)."
+            )
         if claim_types & regression_types:
             hints.append(
                 "RMSE / MAE are reported — predict() the model on the held-out sample and "

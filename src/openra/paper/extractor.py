@@ -66,11 +66,17 @@ IMPORTANT NOTES FOR OLDER ML PAPERS:
 - Look in tables, figures, and inline text for reported numbers.
 - Include results for all datasets, all methods, and all experimental conditions reported.
 
+IMPORTANT NOTES FOR ECONOMETRICS PAPERS:
+- A regression coefficient (often labelled "β", "Estimate", or just bracketed in a column heading) is claim_type="coefficient". Include it whenever the paper attaches a specific numeric value to a covariate's effect.
+- The standard error reported next to or below a coefficient (often in parentheses) is a separate claim with claim_type="standard_error". Emit it as its own claim when the paper reports it explicitly.
+- R-squared / adjusted R² / pseudo R² → claim_type="r_squared".
+- Sample size N, F-statistics, t-statistics are quantitative claims worth emitting as claim_type="other" when the paper highlights them.
+
 Return ONLY a JSON array (no prose, no markdown explanation). Each item in the array must have exactly these keys:
-- description (string): human-readable description of what is being measured, e.g. "test accuracy on MNIST"
+- description (string): human-readable description of what is being measured, e.g. "test accuracy on MNIST" or "coefficient on log(price), Table 2 col 3"
 - value (number): the numeric value as stated in the paper
 - unit (string or null): e.g. "%" or null
-- claim_type (string): one of: accuracy, f1_score, auc_roc, rmse, mae, precision, recall, correlation, p_value, effect_size, other
+- claim_type (string): one of: accuracy, f1_score, auc_roc, rmse, mae, precision, recall, correlation, p_value, effect_size, coefficient, standard_error, r_squared, other
 - context (string): the surrounding sentence from the paper
 - table_ref (string or null): table number or label if applicable, e.g. "Table 1" or null
 - figure_ref (string or null): figure number or label if applicable, e.g. "Figure 2" or null

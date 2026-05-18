@@ -18,7 +18,18 @@ from typing import Any
 
 
 class ClaimType(Enum):
-    """Broad category for a quantitative claim found in a paper."""
+    """Broad category for a quantitative claim found in a paper.
+
+    ML-side categories are the ones extractors and the comparator have
+    used since the project started.  Econometric categories
+    (``COEFFICIENT``, ``STANDARD_ERROR``, ``R_SQUARED``) were added to
+    accommodate I4R-style replication papers, which mostly report
+    regression coefficients with standard errors and sample R-squareds.
+    The comparator's per-type tolerance table treats them appropriately
+    (looser than accuracy because econ papers round coefficients more
+    aggressively, but not so loose that meaningful disagreements are
+    smoothed over).
+    """
 
     ACCURACY = "accuracy"
     F1_SCORE = "f1_score"
@@ -30,6 +41,16 @@ class ClaimType(Enum):
     CORRELATION = "correlation"
     P_VALUE = "p_value"
     EFFECT_SIZE = "effect_size"
+    COEFFICIENT = "coefficient"
+    """A regression coefficient (β).  Most common econometric claim type."""
+
+    STANDARD_ERROR = "standard_error"
+    """The standard error of a regression coefficient.  Papers report
+    these alongside coefficients; both are first-class claims."""
+
+    R_SQUARED = "r_squared"
+    """Goodness-of-fit R-squared for a regression model."""
+
     OTHER = "other"
 
 
