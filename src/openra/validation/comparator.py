@@ -183,13 +183,25 @@ class ResultComparator:
     def _default_tolerance(self, claim: Claim) -> float:
         """Return an appropriate tolerance for this claim's type.
 
-        Values:
+        ML-side values:
           - ACCURACY, F1_SCORE, AUC_ROC, PRECISION, RECALL → 0.01 (1 %)
           - RMSE, MAE → 0.05 (5 %)
           - CORRELATION → 0.02
           - P_VALUE → 0.001
           - EFFECT_SIZE → 0.05
-          - OTHER → ``self.default_tolerance``
+
+        Econometric values (PR 5):
+          - COEFFICIENT → 0.02 (2 %).  Econ papers round coefficients
+            more aggressively than ML metrics, so the looser tolerance
+            soaks up reporting precision differences.  Coefficients
+            close to zero can still trip this — that's a known
+            limitation; standard-error-aware comparison is future work.
+          - STANDARD_ERROR → 0.05 (5 %).  Heavily rounded in practice;
+            replicators often see SE differences of 5-10 % from re-runs.
+          - R_SQUARED → 0.01 (1 %).  Usually reported to 3 decimal
+            places; 1 % matches typical precision.
+
+        - OTHER → ``self.default_tolerance``
         """
         mapping = {
             ClaimType.ACCURACY: 0.01,
@@ -202,6 +214,9 @@ class ResultComparator:
             ClaimType.CORRELATION: 0.02,
             ClaimType.P_VALUE: 0.001,
             ClaimType.EFFECT_SIZE: 0.05,
+            ClaimType.COEFFICIENT: 0.02,
+            ClaimType.STANDARD_ERROR: 0.05,
+            ClaimType.R_SQUARED: 0.01,
             ClaimType.OTHER: self.default_tolerance,
         }
         return mapping.get(claim.claim_type, self.default_tolerance)

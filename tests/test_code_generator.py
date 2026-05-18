@@ -283,7 +283,9 @@ def test_algorithm_hint_r_mentions_fixest():
     from openra.codegen.generator import CodeGenerator
     from openra.models import ClaimType
 
-    hint = CodeGenerator._algorithm_hint_r({ClaimType.OTHER})
+    # COEFFICIENT is the trigger for the default fixest guidance post-PR 5;
+    # an empty claim set also fires it (no claims → assume regression).
+    hint = CodeGenerator._algorithm_hint_r({ClaimType.COEFFICIENT})
     assert "fixest" in hint
 
 
@@ -294,3 +296,55 @@ def test_algorithm_hint_r_does_not_mention_sklearn():
     hint = CodeGenerator._algorithm_hint_r({ClaimType.RMSE})
     assert "sklearn" not in hint.lower()
     assert "scikit" not in hint.lower()
+
+
+# ── Econometric claim type hints (PR 5) ────────────────────────────────
+
+
+def test_algorithm_hint_python_reacts_to_coefficient_claims():
+    """COEFFICIENT in the claim set should trigger statsmodels guidance."""
+    from openra.codegen.generator import CodeGenerator
+    from openra.models import ClaimType as CT
+
+    hint = CodeGenerator._algorithm_hint_python({CT.COEFFICIENT})
+    assert "statsmodels" in hint
+    assert "OLS" in hint or "ols" in hint.lower()
+
+
+def test_algorithm_hint_python_reacts_to_r_squared_claims():
+    from openra.codegen.generator import CodeGenerator
+    from openra.models import ClaimType as CT
+
+    hint = CodeGenerator._algorithm_hint_python({CT.R_SQUARED})
+    assert "statsmodels" in hint
+
+
+def test_algorithm_hint_python_does_not_emit_econ_block_for_pure_accuracy():
+    """Pure ACCURACY claim shouldn't pull in the statsmodels guidance."""
+    from openra.codegen.generator import CodeGenerator
+    from openra.models import ClaimType as CT
+
+    hint = CodeGenerator._algorithm_hint_python({CT.ACCURACY})
+    assert "statsmodels" not in hint
+
+
+def test_algorithm_hint_r_emits_r_squared_specific_guidance():
+    from openra.codegen.generator import CodeGenerator
+    from openra.models import ClaimType as CT
+
+    hint = CodeGenerator._algorithm_hint_r({CT.R_SQUARED})
+    assert "r2(model)" in hint or "r.squared" in hint
+
+
+def test_algorithm_hint_r_no_longer_fires_for_pure_accuracy():
+    """The R hint used to emit the default coefficient guidance for every
+    paper.  Post-PR 5 it only fires for econometric / empty claim sets.
+    """
+    from openra.codegen.generator import CodeGenerator
+    from openra.models import ClaimType as CT
+
+    hint = CodeGenerator._algorithm_hint_r({CT.ACCURACY})
+    # The default fixest guidance shouldn't dominate when the paper's
+    # claims are pure ACCURACY (which is unusual for R papers but still
+    # well-defined).
+    assert "fixest::feols" not in hint

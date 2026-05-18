@@ -63,3 +63,58 @@ def test_compare_percent_vs_decimal(comparator):
     claim.unit = "%"
     result = comparator.compare(claim, reproduced_value=0.95)
     assert result.passed
+
+
+# ── Econometric claim types (PR 5) ─────────────────────────────────────
+
+
+def test_coefficient_tolerance_is_2_percent(comparator):
+    """COEFFICIENT claims get a slightly looser tolerance than ACCURACY.
+
+    Econ papers round coefficients more aggressively, so 2% relative is
+    the calibrated default.  A 0.32 vs 0.325 disagreement (1.5% rel)
+    must pass.
+    """
+    claim = Claim(
+        description="treatment effect on log earnings",
+        value=0.32,
+        claim_type=ClaimType.COEFFICIENT,
+    )
+    result = comparator.compare(claim, reproduced_value=0.325)
+    assert result.passed
+    assert result.tolerance == 0.02
+
+
+def test_coefficient_outside_tolerance_fails(comparator):
+    claim = Claim(description="β", value=0.32, claim_type=ClaimType.COEFFICIENT)
+    # 2.5% relative — outside 2% tolerance.
+    result = comparator.compare(claim, reproduced_value=0.328)
+    assert not result.passed
+
+
+def test_standard_error_tolerance_is_5_percent(comparator):
+    """STANDARD_ERROR is looser still — SEs are heavily rounded."""
+    claim = Claim(
+        description="SE on β",
+        value=0.080,
+        claim_type=ClaimType.STANDARD_ERROR,
+    )
+    result = comparator.compare(claim, reproduced_value=0.083)  # 3.75% rel
+    assert result.passed
+    assert result.tolerance == 0.05
+
+
+def test_r_squared_tolerance_is_1_percent(comparator):
+    """R² is usually 3 decimal places; 1% matches typical precision."""
+    claim = Claim(description="R²", value=0.413, claim_type=ClaimType.R_SQUARED)
+    # 0.5% relative — inside 1%.
+    result = comparator.compare(claim, reproduced_value=0.415)
+    assert result.passed
+    assert result.tolerance == 0.01
+
+
+def test_new_claim_types_serialize_to_lowercase_strings():
+    """Confirm the enum values match the JSON strings the extractor will emit."""
+    assert ClaimType.COEFFICIENT.value == "coefficient"
+    assert ClaimType.STANDARD_ERROR.value == "standard_error"
+    assert ClaimType.R_SQUARED.value == "r_squared"

@@ -684,8 +684,21 @@ modal as a list with per-link status.
 | `default_tolerance` | `0.01` | Relative tolerance for `OTHER`-type claims |
 
 Per-type tolerances (not overridable without subclassing):
+
+ML metrics:
 `ACCURACY` / `F1` / `AUC` / `PRECISION` / `RECALL` → 1 %,
-`RMSE` / `MAE` → 5 %, `CORRELATION` → 2 %, `P_VALUE` → 0.1 %.
+`RMSE` / `MAE` → 5 %, `CORRELATION` → 2 %, `P_VALUE` → 0.1 %,
+`EFFECT_SIZE` → 5 %.
+
+Econometric quantities:
+`COEFFICIENT` → 2 % (econ papers round coefficients more aggressively than ML metrics),
+`STANDARD_ERROR` → 5 % (heavily rounded in practice),
+`R_SQUARED` → 1 % (typical journal precision).
+
+Known limitation: `COEFFICIENT` tolerance is a flat relative percentage,
+which gets too tight for coefficients close to zero.
+Standard-error-aware comparison (within `±k·SE` of the reported value)
+is a future improvement.
 
 ---
 
