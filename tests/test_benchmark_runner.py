@@ -7,40 +7,15 @@ no API key / Docker / network is needed.
 
 from __future__ import annotations
 
-import importlib.util
-import sys
 from pathlib import Path
 from unittest.mock import MagicMock
 
 import pytest
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
+from tests._loaders import REPO_ROOT, load_module_from_path
 
-
-def _load_benchmark_modules():
-    """Load benchmark.schema + benchmark.runner via importlib.
-
-    benchmark/ lives at the repo root, not under src/openra/, so we
-    bring it in the same way test_leaderboard.py / test_benchmark_schema.py do.
-    """
-    if "benchmark" not in sys.modules:
-        parent_spec = importlib.util.spec_from_loader("benchmark", loader=None)
-        parent = importlib.util.module_from_spec(parent_spec)
-        sys.modules["benchmark"] = parent
-
-    for name in ("schema", "runner"):
-        full = f"benchmark.{name}"
-        if full not in sys.modules:
-            spec = importlib.util.spec_from_file_location(full, REPO_ROOT / "benchmark" / f"{name}.py")
-            assert spec and spec.loader
-            module = importlib.util.module_from_spec(spec)
-            sys.modules[full] = module
-            spec.loader.exec_module(module)
-
-    return sys.modules["benchmark.schema"], sys.modules["benchmark.runner"]
-
-
-bschema, runner = _load_benchmark_modules()
+bschema = load_module_from_path("benchmark.schema", REPO_ROOT / "benchmark" / "schema.py")
+runner = load_module_from_path("benchmark.runner", REPO_ROOT / "benchmark" / "runner.py")
 
 
 # ── Helpers ─────────────────────────────────────────────────────────────
@@ -347,20 +322,22 @@ def test_results_dir_created_on_write(tmp_path):
     assert nested.exists()
 
 
-# ── End-to-end via real catalog dir ────────────────────────────────────
+# ── End-to-end via placeholder fixtures ───────────────────────────────
 
 
-def test_runner_on_shipped_placeholder_catalog(tmp_path):
-    """The three shipped placeholder YAMLs walk through the runner cleanly.
+def test_runner_on_placeholder_fixture_catalog(tmp_path):
+    """The three placeholder fixtures walk through the runner cleanly.
 
-    With no pipeline factory injected and ANTHROPIC_API_KEY unset (or
-    the default factory raising), every entry should produce a sensible
-    result without exceptions reaching the test.
+    With no pipeline factory injected and ANTHROPIC_API_KEY unset, every
+    entry should produce a sensible skip result without exceptions
+    reaching the test.  Fixtures live under tests/fixtures/ so the real
+    ``benchmark/papers/`` catalog isn't polluted by placeholder noise.
     """
     monkeypatch = pytest.MonkeyPatch()
+    fixtures = REPO_ROOT / "tests" / "fixtures" / "benchmark_placeholders"
     try:
         monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
-        catalog = bschema.load_catalog(REPO_ROOT / "benchmark" / "papers")
+        catalog = bschema.load_catalog(fixtures)
         results = runner.run_benchmark(catalog, cache_dir=tmp_path)
     finally:
         monkeypatch.undo()
@@ -368,7 +345,8 @@ def test_runner_on_shipped_placeholder_catalog(tmp_path):
     by_id = {r.entry_id: r for r in results}
     # Out-of-scope entry → OUT_OF_SCOPE skip.
     assert by_id["_placeholder_stata_out_of_scope"].skip_reason is runner.SkipReason.OUT_OF_SCOPE
-    # R entry → LANGUAGE_UNSUPPORTED skip (R support hasn't landed).
+    # R entry → LANGUAGE_UNSUPPORTED skip (R prompts exist but the runner
+    # routing still treats non-Python as unsupported until PR 6).
     assert by_id["_placeholder_r_example"].skip_reason is runner.SkipReason.LANGUAGE_UNSUPPORTED
     # Python entry → NO_API_KEY skip (no key in env in test sandbox).
     assert by_id["_placeholder_python_example"].skip_reason is runner.SkipReason.NO_API_KEY

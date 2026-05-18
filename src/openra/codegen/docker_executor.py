@@ -136,7 +136,7 @@ class _DockerExecutorBase:
                 stdout = raw_out.decode("utf-8", errors="replace") if isinstance(raw_out, bytes) else raw_out
                 stderr = raw_err.decode("utf-8", errors="replace") if isinstance(raw_err, bytes) else raw_err
                 exit_code = -1
-                self._kill_timeout_container(script_path)
+                self._kill_timeout_container()
 
             outputs = parse_outputs(stdout)
             deviation_notes = parse_deviation_notes(stdout)
@@ -281,8 +281,11 @@ class _DockerExecutorBase:
                 f"  {type(self).__name__}.build_image()"
             )
 
-    def _kill_timeout_container(self, script_path: Path) -> None:
-        """Best-effort: kill any container still running our script after timeout.
+    def _kill_timeout_container(self) -> None:
+        """Best-effort: kill any container still running the sandbox image after timeout.
+
+        Filters by ``ancestor={self.image}`` — the script path is not needed
+        because all containers spawned by this executor share the same image.
 
         Failures are silently ignored — Docker will eventually clean up via
         its own mechanisms; this just makes resource release prompter.
