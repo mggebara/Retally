@@ -120,18 +120,23 @@ class ResultComparator:
         if claimed > 1.0 and reproduced <= 1.0:
             scaled_claimed = claimed / 100.0
             scaled_rel_err = abs(reproduced - scaled_claimed) / max(abs(scaled_claimed), 1e-9)
-            if scaled_rel_err < rel_err:
-                # The scaled comparison gives a better match
-                if scaled_rel_err <= tolerance:
-                    passed = True
-                    notes = (
-                        "Unit mismatch detected: paper value appears to be in percentage "
-                        f"({claimed}%) while reproduced value is in decimal ({reproduced}). "
-                        "Claim validated after unit normalisation."
-                    )
-                else:
-                    # Neither comparison passes; use the primary result
-                    passed = False
+            if scaled_rel_err < rel_err and scaled_rel_err <= tolerance:
+                passed = True
+                notes = (
+                    "Unit mismatch detected: paper value appears to be in percentage "
+                    f"({claimed}%) while reproduced value is in decimal ({reproduced}). "
+                    "Claim validated after unit normalisation."
+                )
+
+        # If the claim failed and we don't already have an explanation
+        # (unit-mismatch path can pass-with-a-note; this branch only fires
+        # when we're going to record a failure), explain the gap so the
+        # report doesn't just say "FAIL" with no context.
+        if not passed and not notes:
+            notes = (
+                f"Outside tolerance: reproduced={reproduced} vs claimed={claimed} "
+                f"(relative error {rel_err:.2%}, tolerance {tolerance:.2%})."
+            )
 
         return ClaimValidationResult(
             claim=claim,

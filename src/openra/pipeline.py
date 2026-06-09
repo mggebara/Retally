@@ -41,6 +41,7 @@ or use a process pool.
 
 from __future__ import annotations
 
+import math
 import re
 from pathlib import Path
 
@@ -65,6 +66,25 @@ from openra.validation.hyperparam_audit import audit_hyperparameters
 from openra.validation.reporter import ValidationReporter
 
 AnyExecutor = CodeExecutor | DockerExecutor
+
+
+def _outputs_close(
+    a: dict[str, float],
+    b: dict[str, float],
+    *,
+    rel_tol: float = 1e-9,
+    abs_tol: float = 1e-9,
+) -> bool:
+    """Return True if two output dicts agree on every key within numeric tolerance.
+
+    Used by the claim-refinement loop to detect "no progress" without
+    treating ordinary float jitter as meaningful change.  Different key
+    sets always count as different — a refinement that adds or drops a
+    metric is real progress.
+    """
+    if a.keys() != b.keys():
+        return False
+    return all(math.isclose(a[k], b[k], rel_tol=rel_tol, abs_tol=abs_tol) for k in a)
 
 
 class ValidationPipeline:
@@ -407,8 +427,11 @@ class ValidationPipeline:
 
             attempts += 1
 
-            # No progress: outputs identical to the previous attempt.
-            if new_result.outputs == history[-1]:
+            # No progress: outputs match the previous attempt to within
+            # numeric noise.  Plain ``==`` on float dicts is too strict —
+            # 0.95000000001 vs 0.95 is the same model run; calling that
+            # "progress" wastes a refinement slot on no real change.
+            if _outputs_close(new_result.outputs, history[-1]):
                 # Still adopt the new code (so deviation notes from this
                 # attempt are surfaced) but stop looping.
                 code, exec_result = new_code, new_result

@@ -118,3 +118,27 @@ def test_new_claim_types_serialize_to_lowercase_strings():
     assert ClaimType.COEFFICIENT.value == "coefficient"
     assert ClaimType.STANDARD_ERROR.value == "standard_error"
     assert ClaimType.R_SQUARED.value == "r_squared"
+
+
+def test_failed_claim_records_relative_error_in_notes(comparator):
+    """A failure used to land with empty notes, leaving readers of the
+    report to dig through stdout to understand why.  We now explain the
+    gap inline so a glance at the report is enough.
+    """
+    claim = Claim(description="accuracy", value=0.95, claim_type=ClaimType.ACCURACY)
+    result = comparator.compare(claim, reproduced_value=0.80)  # ~15.8% off
+    assert not result.passed
+    assert "reproduced=0.8" in result.notes
+    assert "claimed=0.95" in result.notes
+    assert "tolerance" in result.notes
+
+
+def test_passing_claim_has_no_failure_notes(comparator):
+    """The new diagnostic note must only fire on failures — passing claims
+    keep their existing empty-notes contract (the dashboard treats any
+    non-empty note as a yellow flag, so silence on a pass matters).
+    """
+    claim = Claim(description="accuracy", value=0.95, claim_type=ClaimType.ACCURACY)
+    result = comparator.compare(claim, reproduced_value=0.951)
+    assert result.passed
+    assert result.notes == ""

@@ -378,9 +378,15 @@ is language-agnostic.
 `CodeGenerator` routes by the paper's declared language: Python papers
 get sklearn-flavoured prompts, R papers get econometrics-flavoured
 prompts that favour `feols` (fixest), `ivreg` (AER), `plm`, and
-robust/clustered standard errors.  Stata papers are out of scope today
-and skipped by the benchmark runner with a recorded `out_of_scope`
-reason.
+robust/clustered standard errors.  Stata papers are out of scope and
+skipped by the benchmark runner with a recorded `out_of_scope` reason.
+
+End-to-end R support is still partway done: the prompt builders, the
+R sandbox image, and the `RDockerExecutor` class all exist, but
+`ValidationPipeline.default()` only wires the Python `DockerExecutor`,
+so the benchmark runner currently skips R entries as
+`language_unsupported`.  Per-language executor selection at the
+pipeline layer is the next infrastructure step.
 
 ### Tune resource limits
 

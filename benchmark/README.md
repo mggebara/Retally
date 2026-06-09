@@ -43,7 +43,7 @@ A catalog entry can be cleanly skipped:
 | Reason | When |
 |---|---|
 | `out_of_scope` | `out_of_scope_reason` is set on the entry (e.g. "Stata required") |
-| `language_unsupported` | `language` is neither `python` nor `r` (Stata is deferred — code is proprietary; we don't ship a sandbox image). |
+| `language_unsupported` | `language != python` today.  R prompts and the R sandbox executor exist, but the pipeline's executor selection isn't yet language-aware — wiring that up is the next infrastructure step.  Stata is deferred — code is proprietary; we don't ship a sandbox image. |
 | `no_api_key` | Pipeline construction failed (typically `ANTHROPIC_API_KEY` not in env) |
 
 ## Running it

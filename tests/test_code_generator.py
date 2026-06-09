@@ -348,3 +348,29 @@ def test_algorithm_hint_r_no_longer_fires_for_pure_accuracy():
     # claims are pure ACCURACY (which is unusual for R papers but still
     # well-defined).
     assert "fixest::feols" not in hint
+
+
+# ── Code-block extraction (markdown fence stripping) ─────────────────
+
+
+@pytest.mark.parametrize(
+    "fence_tag",
+    ["python", "py", "r", "R", ""],
+)
+def test_extract_code_block_strips_language_fence(fence_tag):
+    """All four language tags plus a bare fence must extract cleanly.
+
+    Regression: the original regex only matched ``python`` or bare ``,
+    so an R-fenced response was returned verbatim — markdown prose and
+    all — and shipped to the executor as code.  Every R paper would have
+    failed at the generation step.
+    """
+    gen = _generator()
+    body = "library(fixest)\nfeols(y ~ x, data = df)\n"
+    response = f"Sure, here's the script:\n\n```{fence_tag}\n{body}```\nLet me know.\n"
+    assert gen._extract_code_block(response) == body.strip()
+
+
+def test_extract_code_block_returns_raw_when_no_fence():
+    gen = _generator()
+    assert gen._extract_code_block("  print(1)\n") == "print(1)"

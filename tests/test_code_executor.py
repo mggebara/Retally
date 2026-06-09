@@ -55,7 +55,8 @@ def test_parse_outputs_handles_multiple_results(executor):
 
 def test_parse_outputs_skips_malformed_lines(executor):
     stdout = "RESULT:bad_line\nRESULT:ok=0.5"
-    outputs = executor._parse_outputs(stdout)
+    with pytest.warns(UserWarning, match="Malformed RESULT line"):
+        outputs = executor._parse_outputs(stdout)
     assert "ok" in outputs
     assert "bad_line" not in outputs
 

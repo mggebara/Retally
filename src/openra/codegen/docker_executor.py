@@ -44,13 +44,23 @@ be built before calling ``execute()``.
 
 from __future__ import annotations
 
+import logging
 import shutil
 import subprocess
 import tempfile
+import uuid
 from pathlib import Path
 
 from openra.codegen.executor import parse_deviation_notes, parse_outputs, preflight_check
 from openra.models import Dataset, ExecutionResult
+
+logger = logging.getLogger(__name__)
+
+# Label key attached to every container we spawn.  Lets ``_kill_timeout_container``
+# target only this executor's own run instead of every container sharing the
+# sandbox image — a real concern under a concurrent benchmark, where multiple
+# pipelines spin up containers from the same image at the same time.
+_RUN_LABEL_KEY = "openra.run"
 
 # Repo root, two levels up from src/openra/codegen/
 _REPO_ROOT = Path(__file__).parents[3]
@@ -112,11 +122,15 @@ class _DockerExecutorBase:
         self._require_docker()
 
         work_dir = Path(tempfile.mkdtemp(prefix="openra_docker_"))
+        # Per-run UUID stamps the container with a unique label so the
+        # timeout-kill path can target this run specifically — see
+        # ``_kill_timeout_container``.
+        run_id = uuid.uuid4().hex
         try:
             script_path = work_dir / self._SCRIPT_FILENAME
             script_path.write_text(code, encoding="utf-8")
 
-            cmd = self._build_run_cmd(script_path, dataset)
+            cmd = self._build_run_cmd(script_path, dataset, run_id=run_id)
 
             timed_out = False
             try:
@@ -136,7 +150,7 @@ class _DockerExecutorBase:
                 stdout = raw_out.decode("utf-8", errors="replace") if isinstance(raw_out, bytes) else raw_out
                 stderr = raw_err.decode("utf-8", errors="replace") if isinstance(raw_err, bytes) else raw_err
                 exit_code = -1
-                self._kill_timeout_container()
+                self._kill_timeout_container(run_id)
 
             outputs = parse_outputs(stdout)
             deviation_notes = parse_deviation_notes(stdout)
@@ -224,10 +238,18 @@ class _DockerExecutorBase:
     # Internal helpers
     # ------------------------------------------------------------------
 
-    def _build_run_cmd(self, script_path: Path, dataset: Dataset) -> list[str]:
+    def _build_run_cmd(
+        self,
+        script_path: Path,
+        dataset: Dataset,
+        run_id: str,
+    ) -> list[str]:
         """Assemble the full ``docker run`` command.
 
-        See the module docstring for the isolation flags applied.
+        See the module docstring for the isolation flags applied.  The
+        ``run_id`` is attached as a Docker label so the timeout-kill
+        path can target this specific run rather than every container
+        sharing the sandbox image.
         """
         dataset_path = dataset.local_path.resolve()
         script_mount = f"/workspace/{self._SCRIPT_FILENAME}"
@@ -236,6 +258,9 @@ class _DockerExecutorBase:
             "docker",
             "run",
             "--rm",
+            # Per-run label — used by ``_kill_timeout_container``
+            "--label",
+            f"{_RUN_LABEL_KEY}={run_id}",
             # Network isolation — the key requirement
             "--network",
             "none",
@@ -281,30 +306,39 @@ class _DockerExecutorBase:
                 f"  {type(self).__name__}.build_image()"
             )
 
-    def _kill_timeout_container(self) -> None:
-        """Best-effort: kill any container still running the sandbox image after timeout.
+    def _kill_timeout_container(self, run_id: str) -> None:
+        """Best-effort: kill the container we started, after a host-side timeout.
 
-        Filters by ``ancestor={self.image}`` — the script path is not needed
-        because all containers spawned by this executor share the same image.
+        Filters by ``label=openra.run=<run_id>`` so a parallel run sharing the
+        same sandbox image is never collateral damage.  This matters under the
+        benchmark harness, where multiple pipelines can be in flight at once.
 
-        Failures are silently ignored — Docker will eventually clean up via
-        its own mechanisms; this just makes resource release prompter.
+        Cleanup is best-effort: Docker daemon missing or a transient ``docker``
+        failure is logged at warning level rather than raised — the host-side
+        timeout has already produced the user-facing ExecutionResult, and
+        Docker will eventually reap the container on its own.
         """
+        label_filter = f"label={_RUN_LABEL_KEY}={run_id}"
         try:
             ps = subprocess.run(
-                ["docker", "ps", "--filter", f"ancestor={self.image}", "--format", "{{.ID}}"],
+                ["docker", "ps", "--filter", label_filter, "--format", "{{.ID}}"],
                 capture_output=True,
                 text=True,
                 timeout=5,
             )
-            for container_id in ps.stdout.strip().splitlines():
+        except (FileNotFoundError, subprocess.TimeoutExpired) as exc:
+            logger.warning("docker ps failed during timeout cleanup: %s", exc)
+            return
+
+        for container_id in ps.stdout.strip().splitlines():
+            try:
                 subprocess.run(
                     ["docker", "kill", container_id],
                     capture_output=True,
                     timeout=5,
                 )
-        except Exception:
-            pass
+            except subprocess.TimeoutExpired:
+                logger.warning("docker kill %s timed out", container_id)
 
 
 class DockerExecutor(_DockerExecutorBase):
