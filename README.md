@@ -381,12 +381,11 @@ prompts that favour `feols` (fixest), `ivreg` (AER), `plm`, and
 robust/clustered standard errors.  Stata papers are out of scope and
 skipped by the benchmark runner with a recorded `out_of_scope` reason.
 
-End-to-end R support is still partway done: the prompt builders, the
-R sandbox image, and the `RDockerExecutor` class all exist, but
-`ValidationPipeline.default()` only wires the Python `DockerExecutor`,
-so the benchmark runner currently skips R entries as
-`language_unsupported`.  Per-language executor selection at the
-pipeline layer is the next infrastructure step.
+`ValidationPipeline.default()` constructs both executors and routes by
+`paper.language`: Python papers go to `DockerExecutor`, R papers to
+`RDockerExecutor`.  The R sandbox image isn't required at import time —
+only when an R paper actually arrives — so Python-only users don't
+need to `make build-r-sandbox`.
 
 ### Tune resource limits
 
