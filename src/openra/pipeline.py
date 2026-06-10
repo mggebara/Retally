@@ -47,7 +47,7 @@ from pathlib import Path
 
 from openra.code.downloader import CodeDownloader
 from openra.code.selector import select_relevant_files
-from openra.codegen.docker_executor import DockerExecutor
+from openra.codegen.docker_executor import DEFAULT_R_IMAGE, DockerExecutor, RDockerExecutor
 from openra.codegen.executor import CodeExecutor
 from openra.codegen.generator import CodeGenerator
 from openra.dataset.downloader import DatasetDownloader
@@ -57,6 +57,7 @@ from openra.models import (
     CodeReference,
     DatasetReference,
     ExecutionResult,
+    Language,
     ValidationReport,
 )
 from openra.paper.extractor import ClaimExtractor
@@ -65,7 +66,7 @@ from openra.validation.comparator import ResultComparator
 from openra.validation.hyperparam_audit import audit_hyperparameters
 from openra.validation.reporter import ValidationReporter
 
-AnyExecutor = CodeExecutor | DockerExecutor
+AnyExecutor = CodeExecutor | DockerExecutor | RDockerExecutor
 
 
 def _outputs_close(
@@ -130,6 +131,7 @@ class ValidationPipeline:
         executor: AnyExecutor,
         comparator: ResultComparator,
         reporter: ValidationReporter,
+        r_executor: AnyExecutor | None = None,
         max_refinements: int = 3,
         max_claim_refinements: int = 3,
         include_code_references: bool = True,
@@ -140,13 +142,34 @@ class ValidationPipeline:
         self.downloader = downloader
         self.registry = registry
         self.generator = generator
+        # ``executor`` is the Python executor (the historical positional name
+        # — kept for backwards-compat with tests).  ``r_executor`` is the
+        # R-language executor; left None for Python-only pipelines.
         self.executor = executor
+        self.r_executor = r_executor
         self.comparator = comparator
         self.reporter = reporter
         self.max_refinements = max_refinements
         self.max_claim_refinements = max_claim_refinements
         self.include_code_references = include_code_references
         self.code_downloader = code_downloader or CodeDownloader()
+
+    def _executor_for(self, language: Language) -> AnyExecutor:
+        """Return the executor for ``language``, raising if not configured.
+
+        R papers need ``r_executor`` to be set at construction time.  Python
+        papers use ``executor``.  Stata never reaches this method — the
+        generator raises ``UnsupportedLanguageError`` first.
+        """
+        if language is Language.R:
+            if self.r_executor is None:
+                raise RuntimeError(
+                    "This pipeline has no R executor configured.  Construct it via "
+                    "ValidationPipeline.default() (which builds an RDockerExecutor "
+                    "automatically) or pass r_executor= explicitly."
+                )
+            return self.r_executor
+        return self.executor
 
     # ------------------------------------------------------------------
     # Public API
@@ -352,16 +375,18 @@ class ValidationPipeline:
         * Generator returned byte-identical code (model giving up).
         * Refinement broke the code (revert and stop).
         """
+        executor = self._executor_for(paper.language)
+
         # ── Phase 1: get a clean execution ────────────────────────────
         code = self.generator.generate(paper, dataset, reference_files=reference_files or None)
-        result = self.executor.execute(code, dataset)
+        result = executor.execute(code, dataset)
 
         for _attempt in range(self.max_refinements):
             if result.exit_code == 0 and result.outputs:
                 break
             error = result.stderr or "No RESULT: lines found in output"
             code = self.generator.refine(code, error, paper, dataset)
-            result = self.executor.execute(code, dataset)
+            result = executor.execute(code, dataset)
 
         # Compare once so we know what (if anything) needs Phase 2.
         claim_results = self.comparator.compare_all(paper.claims, result.outputs)
@@ -401,6 +426,7 @@ class ValidationPipeline:
           adopt the new code (so any new ``DEVIATION:`` lines surface)
           but stop the loop.
         """
+        executor = self._executor_for(paper.language)
         history: list[dict[str, float]] = [dict(exec_result.outputs)]
         attempts = 0
 
@@ -418,7 +444,7 @@ class ValidationPipeline:
             if new_code.strip() == code.strip():
                 break
 
-            new_result = self.executor.execute(new_code, dataset)
+            new_result = executor.execute(new_code, dataset)
 
             # Refinement broke the code.  Revert to the last working
             # state and stop — partial progress beats no progress.
@@ -471,6 +497,7 @@ class ValidationPipeline:
         use_docker: bool = True,
         allow_unsafe_subprocess: bool = False,
         docker_image: str = "openra-sandbox:latest",
+        docker_r_image: str = DEFAULT_R_IMAGE,
         docker_memory: str = "4g",
         docker_cpus: float = 1.0,
     ) -> "ValidationPipeline":
@@ -483,7 +510,7 @@ class ValidationPipeline:
             ``ANTHROPIC_API_KEY`` from the environment.
         use_docker:
             If True (the default), run generated code inside the Docker
-            sandbox.  Requires the sandbox image to be built first
+            sandbox.  Requires the Python sandbox image to be built first
             (``make build-sandbox``).  If Docker is unavailable, raises a
             ``RuntimeError`` unless ``allow_unsafe_subprocess=True``.
         allow_unsafe_subprocess:
@@ -493,13 +520,21 @@ class ValidationPipeline:
             preflight guard, which is trivially bypassable — set this to
             True only when you have other isolation (e.g. ephemeral VM,
             container around the pipeline itself) or you are running known
-            test code.  Has no effect when ``use_docker=False``.
+            test code.  Has no effect when ``use_docker=False`` and does
+            not apply to R papers (no host R fallback ships).
         docker_image:
-            Docker image tag used by ``DockerExecutor``.
+            Docker image tag used by the Python ``DockerExecutor``.
+        docker_r_image:
+            Docker image tag used by ``RDockerExecutor`` for R papers.
+            Build with ``make build-r-sandbox``.  Construction is
+            unconditional — the image is only required when an R paper
+            actually arrives, and the missing-image check happens at
+            ``execute()`` time, so Python-only users don't have to build
+            the R image.
         docker_memory:
-            Memory limit for the Docker container (e.g. ``"4g"``).
+            Memory limit for Docker containers (e.g. ``"4g"``).
         docker_cpus:
-            CPU limit for the Docker container.
+            CPU limit for Docker containers.
         """
         import anthropic
 
@@ -540,6 +575,21 @@ class ValidationPipeline:
         else:
             executor = CodeExecutor()
 
+        # R executor is always constructed when use_docker=True — the
+        # availability + image-built checks happen lazily at execute() time
+        # via RDockerExecutor's own _require_docker.  This keeps Python-only
+        # callers from having to build the R image just to import the
+        # pipeline.  When use_docker=False there is no R path at all (no
+        # subprocess R executor ships); r_executor stays None and an R
+        # paper raises a clear error from _executor_for.
+        r_executor: AnyExecutor | None = None
+        if use_docker:
+            r_executor = RDockerExecutor(
+                image=docker_r_image,
+                memory_limit=docker_memory,
+                cpu_count=docker_cpus,
+            )
+
         return cls(
             parser=PaperParser(),
             extractor=ClaimExtractor(client),
@@ -547,6 +597,7 @@ class ValidationPipeline:
             registry=registry,
             generator=CodeGenerator(client),
             executor=executor,
+            r_executor=r_executor,
             comparator=ResultComparator(),
             reporter=ValidationReporter(),
         )

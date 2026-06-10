@@ -1,0 +1,63 @@
+# First real entry in the I4R benchmark catalog.
+#
+# Original paper: Dincecco, M., Fenske, J., Menon, A., & Mukherjee, S. (2022).
+#   "Pre-Colonial Warfare and Long-Run Development in India."
+#   Economic Journal, 132(643), 981-1010. doi:10.1093/ej/ueab089
+#
+# I4R replication report: DP35 (Forshaw, Ölkers, Sethi, Sovani, June 2023),
+# later published as Forshaw et al. 2025, Canadian Journal of Economics.
+# Verdict: "All estimates are computationally reproducible using both the
+# provided replication package in Stata and code written by the present
+# authors in R."
+#
+# Why this paper first:
+#   1. I4R wrote an R routine to verify the Stata original — gives us a
+#      same-language ground-truth comparison point for OpenRA's R generation.
+#   2. The I4R verdict was a clean "reproducible," so we're not also
+#      debugging "is this paper even right" while debugging the pipeline.
+#   3. Replication package is on Zenodo (5583263) — public access.
+#
+# original_claims and i4r_replicator_findings are deliberately left empty
+# for the first pass.  The pipeline extracts claims from the paper text
+# itself via ClaimExtractor; we'll seed these fields with the actual
+# numbers after we see what the extractor produces.  That avoids guessing
+# at indices that may or may not align with the LLM's claim order.
+
+id: dincecco-2022-india-warfare
+i4r_report_url: https://www.rwi-essen.de/fileadmin/user_upload/RWI/Publikationen/I4R_Discussion_Paper_Series/035_I4R_Forshaw_Oelkers_Sethi_Sovani.pdf
+i4r_report_doi: 10.1111/caje.12693  # Later CJE publication of DP35
+language: r
+outcome_label: reproducible
+
+paper:
+  source: https://warwick.ac.uk/fac/soc/economics/research/centres/cage/publications/workingpapers/2019/pre_colonial_warfare_and_long_run_development_in_india/
+  title: "Pre-Colonial Warfare and Long-Run Development in India"
+  authors:
+    - Mark Dincecco
+    - James Fenske
+    - Anil Menon
+    - Shivaji Mukherjee
+
+dataset:
+  source: https://zenodo.org/records/5583263
+  access_notes: >
+    Replication package on Zenodo (open access).  Contains the
+    pre-colonial conflict geocoded database and Indian district
+    luminosity panel.  No registry entry yet; the runner will need
+    a `dataset_reference` override or the extractor will resolve it
+    from the paper text.
+
+code_repo:
+  url: https://zenodo.org/records/5583263
+
+original_claims: []
+i4r_replicator_findings: []
+
+notes: >
+  Headline finding from the abstract: pre-colonial conflict exposure
+  (land battles within 250km of district centroid, 1000-1757) is
+  positively associated with contemporary district luminosity (1992-2010).
+  Specific coefficients live in Tables 2-3 of the published paper; we'll
+  populate `original_claims` after the first run shows what
+  ClaimExtractor pulls out — that way the per-claim indices line up
+  with what OpenRA actually compares against, rather than us guessing.

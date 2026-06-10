@@ -491,3 +491,59 @@ def test_outputs_close_different_keys_are_not_close():
     from openra.pipeline import _outputs_close
 
     assert not _outputs_close({"accuracy": 0.95}, {"accuracy": 0.95, "f1": 0.92})
+
+
+# ── Language-aware executor dispatch ─────────────────────────────────
+
+
+def _make_pipeline_with_r_executor():
+    """Variant of _make_pipeline that also wires an R executor.
+
+    The two executors record their calls separately so the language-
+    routing tests can assert which one ran without touching the rest of
+    the mock setup.
+    """
+    pipeline, report = _make_pipeline()
+    pipeline.r_executor = MagicMock()
+    pipeline.r_executor.execute.return_value = report.execution_result
+    return pipeline, report
+
+
+def test_python_paper_routes_to_python_executor():
+    """A Python paper must invoke executor.execute, not r_executor.execute."""
+    from openra.models import Language
+
+    pipeline, _ = _make_pipeline_with_r_executor()
+    pipeline.parser.parse_text.return_value.language = Language.PYTHON
+
+    pipeline.validate("some text")
+    assert pipeline.executor.execute.called
+    assert not pipeline.r_executor.execute.called
+
+
+def test_r_paper_routes_to_r_executor():
+    """An R paper must invoke r_executor.execute, not executor.execute."""
+    from openra.models import Language
+
+    pipeline, _ = _make_pipeline_with_r_executor()
+    pipeline.parser.parse_text.return_value.language = Language.R
+
+    pipeline.validate("some text")
+    assert pipeline.r_executor.execute.called
+    assert not pipeline.executor.execute.called
+
+
+def test_r_paper_without_r_executor_raises_clearly():
+    """When r_executor is None and an R paper arrives, the error must
+    explain how to fix it — not surface as a generic AttributeError.
+    """
+    import pytest
+
+    from openra.models import Language
+
+    pipeline, _ = _make_pipeline()
+    assert pipeline.r_executor is None
+    pipeline.parser.parse_text.return_value.language = Language.R
+
+    with pytest.raises(RuntimeError, match="no R executor configured"):
+        pipeline.validate("some text")

@@ -84,8 +84,12 @@ def test_skip_out_of_scope(tmp_path):
     assert result.openra_ran is None
 
 
-def test_skip_language_not_yet_supported(tmp_path):
-    entry = _entry(language=bschema.Language.R)
+def test_skip_language_not_supported(tmp_path):
+    """Stata is the canonical unsupported language: the generator doesn't
+    target it and we don't ship a Stata sandbox.  R used to be in this
+    bucket too; it's now first-class.
+    """
+    entry = _entry(language=bschema.Language.STATA)
     [result] = runner.run_benchmark([entry], cache_dir=tmp_path)
     assert result.skipped is True
     assert result.skip_reason is runner.SkipReason.LANGUAGE_UNSUPPORTED
@@ -94,7 +98,7 @@ def test_skip_language_not_yet_supported(tmp_path):
 def test_out_of_scope_reason_beats_language_check(tmp_path):
     """If both apply, OUT_OF_SCOPE wins — explicit beats categorical."""
     entry = _entry(
-        language=bschema.Language.R,
+        language=bschema.Language.STATA,
         out_of_scope_reason="explicitly skipped",
     )
     [result] = runner.run_benchmark([entry], cache_dir=tmp_path)
@@ -345,8 +349,8 @@ def test_runner_on_placeholder_fixture_catalog(tmp_path):
     by_id = {r.entry_id: r for r in results}
     # Out-of-scope entry → OUT_OF_SCOPE skip.
     assert by_id["_placeholder_stata_out_of_scope"].skip_reason is runner.SkipReason.OUT_OF_SCOPE
-    # R entry → LANGUAGE_UNSUPPORTED skip (R prompts exist but the runner
-    # routing still treats non-Python as unsupported until PR 6).
-    assert by_id["_placeholder_r_example"].skip_reason is runner.SkipReason.LANGUAGE_UNSUPPORTED
-    # Python entry → NO_API_KEY skip (no key in env in test sandbox).
+    # Python and R both reach pipeline construction now (R is wired
+    # end-to-end as of this PR) and skip on missing API key in the test
+    # sandbox.  Stata stays out-of-scope.
     assert by_id["_placeholder_python_example"].skip_reason is runner.SkipReason.NO_API_KEY
+    assert by_id["_placeholder_r_example"].skip_reason is runner.SkipReason.NO_API_KEY

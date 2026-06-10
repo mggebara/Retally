@@ -232,11 +232,17 @@ def _run_one(
     return result
 
 
+_SUPPORTED_LANGUAGES = {bschema.Language.PYTHON, bschema.Language.R}
+
+
 def _check_skip(entry: bschema.BenchmarkEntry) -> SkipReason | None:
     """Return the skip reason for ``entry``, or None if we should run it."""
     if entry.out_of_scope_reason:
         return SkipReason.OUT_OF_SCOPE
-    if entry.language is not bschema.Language.PYTHON:
+    if entry.language not in _SUPPORTED_LANGUAGES:
+        # Stata is the main case — generator + sandbox don't ship.  Anything
+        # else (UNKNOWN, or a future enum addition the runner doesn't yet
+        # know about) is also a clean skip rather than a crash.
         return SkipReason.LANGUAGE_UNSUPPORTED
     return None
 
