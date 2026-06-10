@@ -169,11 +169,17 @@ def main() -> int:
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     catalog = bschema.load_catalog(CATALOG_DIR)
     if not catalog:
+        # Empty catalog is a legitimate state — the placeholders moved to
+        # tests/fixtures/ in PR #18 and the real I4R entries haven't landed
+        # yet.  Write an empty results.json (so the report renderer can
+        # produce an honest "catalog is empty" REPORT.md) and exit 0,
+        # rather than bail and leave a stale REPORT.md in place.
         print(
-            f"No benchmark entries found at {CATALOG_DIR.relative_to(REPO_ROOT)}.",
+            f"No benchmark entries at {CATALOG_DIR.relative_to(REPO_ROOT)} — writing empty results.",
             file=sys.stderr,
         )
-        return 1
+        write_results([], RESULTS_DIR / "results.json")
+        return 0
 
     results = run_benchmark(catalog)
     out = RESULTS_DIR / "results.json"

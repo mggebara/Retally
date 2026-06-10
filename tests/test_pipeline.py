@@ -461,3 +461,33 @@ def test_pipeline_no_clone_when_no_references_found():
     pipeline.extractor.extract_code_references.return_value = []
     pipeline.validate("some text")
     pipeline.code_downloader.download_all.assert_not_called()
+
+
+# ── _outputs_close (refinement no-progress detector) ─────────────────
+
+
+def test_outputs_close_treats_float_jitter_as_no_progress():
+    """The refinement loop used to compare output dicts with ``==``, so
+    0.95000000001 vs 0.95 looked like progress and burned a slot.
+    """
+    from openra.pipeline import _outputs_close
+
+    a = {"accuracy": 0.95}
+    b = {"accuracy": 0.9500000001}
+    assert _outputs_close(a, b)
+
+
+def test_outputs_close_real_change_is_not_close():
+    from openra.pipeline import _outputs_close
+
+    assert not _outputs_close({"accuracy": 0.90}, {"accuracy": 0.95})
+
+
+def test_outputs_close_different_keys_are_not_close():
+    """Adding or removing a metric counts as real progress even when the
+    overlap matches.  A refinement that produces a new RESULT line is
+    new information; don't collapse it.
+    """
+    from openra.pipeline import _outputs_close
+
+    assert not _outputs_close({"accuracy": 0.95}, {"accuracy": 0.95, "f1": 0.92})

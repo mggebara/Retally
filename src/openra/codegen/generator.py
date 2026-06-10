@@ -778,14 +778,14 @@ class CodeGenerator:
         return response.content[0].text
 
     def _extract_code_block(self, response: str) -> str:
-        """Extract the Python code block from a Claude response.
+        """Strip a markdown code fence (```python / ```r / bare ```) if present.
 
-        Strip markdown fences (```python ... ```) if present.
-        If no fence is found, return the raw response stripped of leading/
-        trailing whitespace.
+        Falls back to the raw response when no fence is found.  The fence
+        language tag is permissive: ``python``, ``py``, ``r``, ``R``, or
+        absent all match — the calling generator already knows which
+        language it asked for, so the tag here is just decoration.
         """
-        # Try to match ```python ... ``` first, then ``` ... ```
-        pattern = re.compile(r"```(?:python)?\s*\n(.*?)```", re.DOTALL)
+        pattern = re.compile(r"```(?:python|py|r|R)?\s*\n(.*?)```", re.DOTALL)
         match = pattern.search(response)
         if match:
             return match.group(1).strip()

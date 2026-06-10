@@ -62,7 +62,7 @@ def test_default_image_is_r_sandbox(executor):
 
 def test_script_is_mounted_as_R_extension(executor, dummy_dataset):
     """The script must be mounted as script.R so Rscript can dispatch it."""
-    cmd = executor._build_run_cmd(Path("/tmp/some_script.R"), dummy_dataset)
+    cmd = executor._build_run_cmd(Path("/tmp/some_script.R"), dummy_dataset, run_id="test-run")
     mounts = [cmd[i + 1] for i, v in enumerate(cmd) if v == "-v"]
     script_mounts = [m for m in mounts if "/workspace/script.R" in m]
     assert script_mounts, f"Script not mounted at /workspace/script.R: {mounts}"
@@ -70,7 +70,7 @@ def test_script_is_mounted_as_R_extension(executor, dummy_dataset):
 
 
 def test_interpreter_is_Rscript(executor, dummy_dataset):
-    cmd = executor._build_run_cmd(Path("/tmp/script.R"), dummy_dataset)
+    cmd = executor._build_run_cmd(Path("/tmp/script.R"), dummy_dataset, run_id="test-run")
     # Rscript is the last meaningful token before the in-container script path.
     assert "Rscript" in cmd
     rscript_idx = cmd.index("Rscript")
@@ -85,7 +85,7 @@ def test_build_run_cmd_inherits_isolation_flags(executor, dummy_dataset):
     are present.  The shared logic lives in the base class so this is
     primarily a regression guard against accidentally dropping a flag.
     """
-    cmd = executor._build_run_cmd(Path("/tmp/script.R"), dummy_dataset)
+    cmd = executor._build_run_cmd(Path("/tmp/script.R"), dummy_dataset, run_id="test-run")
     assert "--network" in cmd and cmd[cmd.index("--network") + 1] == "none"
     assert "--read-only" in cmd
     assert "--cap-drop" in cmd and cmd[cmd.index("--cap-drop") + 1] == "ALL"

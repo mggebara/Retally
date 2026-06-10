@@ -11,8 +11,11 @@ build/
 # uv-managed project venv — recreated by ``uv sync``.
 .venv/
 
-# Benchmark build artefacts.  The catalog (benchmark/papers/*.yaml) and
-# the generated REPORT.md are committed; everything else is build output.
+# Benchmark build artefacts.  Catalog YAMLs under benchmark/papers/ are
+# committed when they exist (the directory is empty until real I4R entries
+# land — placeholders live under tests/fixtures/benchmark_placeholders/).
+# REPORT.md is committed; results.json, report.html, and the cache are
+# rebuildable from the catalog.
 benchmark/.cache/
 benchmark/results/results.json
 benchmark/results/report.html

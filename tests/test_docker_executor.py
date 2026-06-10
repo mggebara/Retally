@@ -56,19 +56,19 @@ def dummy_dataset(tmp_path):
 
 
 def test_build_run_cmd_contains_network_none(executor, dummy_dataset):
-    cmd = executor._build_run_cmd(Path("/tmp/script.py"), dummy_dataset)
+    cmd = executor._build_run_cmd(Path("/tmp/script.py"), dummy_dataset, run_id="test-run")
     assert "--network" in cmd
     idx = cmd.index("--network")
     assert cmd[idx + 1] == "none"
 
 
 def test_build_run_cmd_contains_read_only(executor, dummy_dataset):
-    cmd = executor._build_run_cmd(Path("/tmp/script.py"), dummy_dataset)
+    cmd = executor._build_run_cmd(Path("/tmp/script.py"), dummy_dataset, run_id="test-run")
     assert "--read-only" in cmd
 
 
 def test_build_run_cmd_contains_cap_drop_all(executor, dummy_dataset):
-    cmd = executor._build_run_cmd(Path("/tmp/script.py"), dummy_dataset)
+    cmd = executor._build_run_cmd(Path("/tmp/script.py"), dummy_dataset, run_id="test-run")
     assert "--cap-drop" in cmd
     idx = cmd.index("--cap-drop")
     assert cmd[idx + 1] == "ALL"
@@ -76,15 +76,25 @@ def test_build_run_cmd_contains_cap_drop_all(executor, dummy_dataset):
 
 def test_build_run_cmd_mounts_script(executor, dummy_dataset):
     script = Path("/tmp/myscript.py")
-    cmd = executor._build_run_cmd(script, dummy_dataset)
+    cmd = executor._build_run_cmd(script, dummy_dataset, run_id="test-run")
     mounts = [cmd[i + 1] for i, v in enumerate(cmd) if v == "-v"]
     script_mounts = [m for m in mounts if "myscript.py" in m]
     assert script_mounts, "Script not mounted"
     assert ":ro" in script_mounts[0]
 
 
+def test_build_run_cmd_tags_container_with_run_label(executor, dummy_dataset):
+    """Containers must carry a per-run label so the timeout-kill path can
+    target this run instead of every container sharing the sandbox image.
+    """
+    cmd = executor._build_run_cmd(Path("/tmp/script.py"), dummy_dataset, run_id="abc123")
+    assert "--label" in cmd
+    label_value = cmd[cmd.index("--label") + 1]
+    assert label_value == "openra.run=abc123"
+
+
 def test_build_run_cmd_mounts_dataset_readonly(executor, dummy_dataset):
-    cmd = executor._build_run_cmd(Path("/tmp/script.py"), dummy_dataset)
+    cmd = executor._build_run_cmd(Path("/tmp/script.py"), dummy_dataset, run_id="test-run")
     mounts = [cmd[i + 1] for i, v in enumerate(cmd) if v == "-v"]
     dataset_path = str(dummy_dataset.local_path.resolve())
     dataset_mounts = [m for m in mounts if dataset_path in m]
@@ -95,7 +105,7 @@ def test_build_run_cmd_mounts_dataset_readonly(executor, dummy_dataset):
 def test_build_run_cmd_memory_and_cpu(executor, dummy_dataset):
     executor.memory_limit = "2g"
     executor.cpu_count = 0.5
-    cmd = executor._build_run_cmd(Path("/tmp/script.py"), dummy_dataset)
+    cmd = executor._build_run_cmd(Path("/tmp/script.py"), dummy_dataset, run_id="test-run")
     assert "2g" in cmd
     assert "0.5" in cmd
 
