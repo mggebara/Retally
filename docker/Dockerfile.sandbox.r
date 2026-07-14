@@ -16,10 +16,13 @@
 FROM rocker/r2u:jammy
 
 # ── R packages ──────────────────────────────────────────────────────────────
-# install.r is a Rocker convenience wrapper that surfaces install errors
-# as non-zero exit codes (good for builds).  r2u resolves these as Debian
+# install2.r is the docopt-based Rocker wrapper that understands the
+# ``--error`` flag (surfacing install failures as non-zero exit codes,
+# good for builds).  The simpler ``install.r`` littler script that ships
+# in current r2u:jammy has no flag parsing, so it would treat ``--error``
+# as a package name and fail.  r2u resolves the named packages as Debian
 # binary packages so installation is fast and deterministic.
-RUN install.r --error \
+RUN install2.r --error \
     jsonlite \
     fixest \
     AER \

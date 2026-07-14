@@ -163,9 +163,13 @@ def test_execute_picks_up_deviation_lines(executor, dummy_dataset):
 @requires_r_docker
 def test_execute_has_no_network(executor, dummy_dataset):
     """Code that tries to open a connection should fail inside the container."""
+    # url() only constructs a connection object; it does not touch the
+    # network until the connection is actually read.  readLines() forces the
+    # open, so --network none surfaces as an error/warning (connected=0).
     code = (
         "r <- tryCatch(\n"
-        '  { url("http://example.com"); cat("RESULT:connected=1\\n") },\n'
+        '  { con <- url("http://example.com"); on.exit(close(con)); '
+        'readLines(con, n = 1); cat("RESULT:connected=1\\n") },\n'
         '  error = function(e) cat("RESULT:connected=0\\n"),\n'
         '  warning = function(w) cat("RESULT:connected=0\\n")\n'
         ")\n"
@@ -199,7 +203,10 @@ def test_execute_fixest_available(executor, dummy_dataset):
         "n <- 100\n"
         "x <- rnorm(n)\n"
         "y <- 2 * x + rnorm(n)\n"
-        "m <- feols(y ~ x)\n"
+        # fixest's feols() requires an explicit data= argument; unlike base
+        # lm() it does not resolve model variables from the global env.
+        "d <- data.frame(x = x, y = y)\n"
+        "m <- feols(y ~ x, data = d)\n"
         'beta <- coef(m)["x"]\n'
         'cat(sprintf("RESULT:beta=%f\\n", beta))\n'
     )

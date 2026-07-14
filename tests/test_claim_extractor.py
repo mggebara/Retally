@@ -136,6 +136,33 @@ def test_parse_json_raises_on_invalid():
         extractor._parse_json_response("not json at all")
 
 
+def test_parse_json_salvages_truncated_array():
+    """A response truncated mid-array (e.g. at max_tokens) should still
+    yield every complete object rather than raising."""
+    client = MagicMock()
+    extractor = ClaimExtractor(client)
+    # Well-formed first two objects, third cut off mid-value.
+    raw = (
+        '[\n{"description": "c1", "value": 3.7},\n'
+        '{"description": "c2", "value": 1.2},\n'
+        '{"description": "c3", "val'
+    )
+    result = extractor._parse_json_response(raw)
+    assert result == [
+        {"description": "c1", "value": 3.7},
+        {"description": "c2", "value": 1.2},
+    ]
+
+
+def test_parse_json_salvages_truncated_fenced_array():
+    """Truncation inside a markdown-fenced array (no closing fence) still salvages."""
+    client = MagicMock()
+    extractor = ClaimExtractor(client)
+    raw = '```json\n[{"a": 1}, {"b": 2}, {"c":'
+    result = extractor._parse_json_response(raw)
+    assert result == [{"a": 1}, {"b": 2}]
+
+
 # ── extract_hyperparameters ─────────────────────────────────────────────
 
 

@@ -257,7 +257,22 @@ def _execute_with_pipeline(entry: bschema.BenchmarkEntry, pipeline: Any) -> Benc
     """
     result = BenchmarkResult(entry_id=entry.id)
     try:
-        report = pipeline.validate(entry.paper.source)
+        # The parser never infers language from the paper text, so the
+        # catalog's declared language must be propagated explicitly —
+        # otherwise every R entry would silently run through the Python
+        # generator + executor.
+        #
+        # Likewise, papers frequently don't mention a downloadable dataset
+        # URL in their body (the replication package is deposited
+        # separately), so the extractor's dataset resolution comes up
+        # empty.  When the catalog names a dataset source we pass it as an
+        # explicit override, skipping the extractor's guesswork entirely.
+        dataset_reference = _dataset_reference_for(entry)
+        report = pipeline.validate(
+            entry.paper.source,
+            language=entry.language,
+            dataset_reference=dataset_reference,
+        )
     except Exception as exc:
         result.openra_ran = False
         result.error = f"{type(exc).__name__}: {exc}"
@@ -273,6 +288,50 @@ def _execute_with_pipeline(entry: bschema.BenchmarkEntry, pipeline: Any) -> Benc
     # Per-claim agreement with the I4R replicator's value.
     result.n_claims_with_i4r_match, result.agrees_with_i4r = _score_against_i4r(report, entry)
     return result
+
+
+# Host substrings mapped to the downloader's DatasetSource.  Anything
+# not matched here that still looks like an http(s) URL falls back to
+# DIRECT_URL; a non-URL identifier falls back to UNKNOWN.
+_DATASET_HOST_SOURCES = {
+    "zenodo.org": "zenodo",
+    "dataverse.harvard.edu": "harvard_dataverse",
+    "figshare.com": "figshare",
+    "kaggle.com": "kaggle",
+    "openml.org": "openml",
+    "archive.ics.uci.edu": "uci",
+}
+
+
+def _dataset_reference_for(entry: bschema.BenchmarkEntry):
+    """Build a ``DatasetReference`` override from the catalog's dataset block.
+
+    Returns ``None`` when the entry names no dataset source, in which case
+    the pipeline falls back to extracting the dataset from the paper text.
+    Imported lazily so the runner module stays importable without openra
+    installed (the test harness relies on this).
+    """
+    dataset = getattr(entry, "dataset", None)
+    if dataset is None or not dataset.source:
+        return None
+
+    from openra.models import DatasetReference, DatasetSource
+
+    source_val = "unknown"
+    for host, mapped in _DATASET_HOST_SOURCES.items():
+        if host in dataset.source:
+            source_val = mapped
+            break
+    else:
+        if dataset.source.startswith("http://") or dataset.source.startswith("https://"):
+            source_val = "direct_url"
+
+    return DatasetReference(
+        name=dataset.registry_key or entry.id,
+        source=DatasetSource(source_val),
+        url=dataset.source,
+        description=dataset.access_notes,
+    )
 
 
 def _components_from_report(report: Any, entry: bschema.BenchmarkEntry) -> ComponentMetrics:

@@ -180,6 +180,7 @@ class ValidationPipeline:
         paper_source: str | Path,
         *,
         dataset_reference: DatasetReference | None = None,
+        language: Language | None = None,
     ) -> ValidationReport:
         """Run the full pipeline on a paper.
 
@@ -199,9 +200,18 @@ class ValidationPipeline:
             find the dataset, when you want to pin a specific version,
             or when running without an LLM-detectable dataset mention
             in the paper text.
+        language:
+            When provided, overrides ``paper.language`` after parsing so
+            the generator and executor dispatch to the right runtime
+            (Python vs R).  The parser does not infer language from the
+            paper text — it always yields ``Language.PYTHON`` — so any
+            caller reproducing a non-Python paper (e.g. the benchmark
+            runner driving an R catalog entry) must pass this explicitly.
         """
         # Step 1: parse the paper
         paper = self._parse_paper(paper_source)
+        if language is not None:
+            paper.language = language
 
         # Step 2: extract claims
         paper.claims = self.extractor.extract_claims(paper)
