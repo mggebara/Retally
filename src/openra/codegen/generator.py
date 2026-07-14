@@ -24,6 +24,7 @@ refinement call includes the error message and the previous code.
 from __future__ import annotations
 
 import re
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from openra.models import (
@@ -244,7 +245,7 @@ class CodeGenerator:
                 "## Code Requirements",
                 (
                     f"Write complete, self-contained Python code using scikit-learn. "
-                    f"Load the dataset from {dataset.local_path}/data.csv using pandas. "
+                    f"{self._load_instruction(dataset, Language.PYTHON)} "
                     f"Use the target column from the metadata. "
                     f"Apply appropriate preprocessing (StandardScaler for numeric features, "
                     f"handle categorical with LabelEncoder or pd.get_dummies). "
@@ -302,7 +303,7 @@ class CodeGenerator:
             "Use snake_case metric names.",
             "",
             "## Reminder: Constraints",
-            f"- Load the dataset from {dataset.local_path}/data.csv using pandas.",
+            f"- {self._load_instruction(dataset, Language.PYTHON)}",
             "- Use scikit-learn for modelling.",
             "- Do NOT access the internet.",
             "- Do NOT use subprocess.",
@@ -432,7 +433,7 @@ class CodeGenerator:
             "",
             "## Output convention (unchanged)",
             "Every metric MUST still be printed as ``RESULT:<name>=<value>``.",
-            f"Load the dataset from {dataset.local_path}/data.csv using pandas.",
+            self._load_instruction(dataset, Language.PYTHON),
             "Use scikit-learn.  No network, no subprocess.  random_state=42.",
             "",
             "Output ONLY the Python code — no explanation, no markdown fences.",
@@ -493,7 +494,7 @@ class CodeGenerator:
             [
                 "## Code Requirements",
                 "Write a complete, self-contained R script that runs under Rscript.",
-                f"Load the dataset from '{dataset.local_path}/data.csv' using read.csv() or readr::read_csv().",
+                self._load_instruction(dataset, Language.R),
                 "Prefer the following packages, all pre-installed in the openra-sandbox-r image:",
                 "  - fixest         fast fixed-effects regression (feols, feglm, fepois, …)",
                 "  - AER            instrumental variables (ivreg), Tobit, count data",
@@ -503,6 +504,7 @@ class CodeGenerator:
                 "  - modelsummary   regression tables",
                 "  - data.table     fast data manipulation",
                 "  - dplyr / readr  tidyverse data manipulation + CSV reading",
+                "  - haven          read Stata .dta / SPSS / SAS files (read_dta)",
                 "Set a deterministic seed with ``set.seed(42)`` for any randomness.",
                 "Do NOT access the internet; the container runs with --network none.",
                 "Do NOT shell out via system() / system2().",
@@ -557,7 +559,7 @@ class CodeGenerator:
             "Use snake_case metric names.",
             "",
             "## Reminder: Constraints",
-            f"- Load the dataset from '{dataset.local_path}/data.csv'.",
+            f"- {self._load_instruction(dataset, Language.R)}",
             "- Use the econometrics packages in the openra-sandbox-r image "
             "(fixest, AER, plm, lmtest, sandwich, modelsummary, data.table, readr, dplyr).",
             "- Do NOT access the internet.",
@@ -673,7 +675,7 @@ class CodeGenerator:
             "",
             "## Output convention (unchanged)",
             "Emit every metric as ``cat('RESULT:<name>=<value>\\n')``.",
-            f"Load the dataset from '{dataset.local_path}/data.csv'.",
+            self._load_instruction(dataset, Language.R),
             "Use the econometrics packages in the openra-sandbox-r image.",
             "No network, no system().  set.seed(42).",
             "",
@@ -729,8 +731,42 @@ class CodeGenerator:
                 lines.append(f"Number of rows: {dataset.metadata['n_rows']}")
             if "task_type" in dataset.metadata:
                 lines.append(f"Task type: {dataset.metadata['task_type']}")
+        tree = _describe_dataset_files(dataset.local_path)
+        if tree:
+            lines.append("Files in the dataset directory (paths relative to the local path above):")
+            lines.extend(tree)
         lines.append("")
         return lines
+
+    @staticmethod
+    def _load_instruction(dataset: Dataset, language: Language) -> str:
+        """One-sentence instruction for where and how to load the data.
+
+        Registry datasets are normalised by the downloader to a single
+        ``data.csv`` at the dataset root; replication packages (e.g. an
+        unpacked Zenodo archive) are arbitrary directory trees.  Point the
+        model at whichever shape actually exists so it doesn't hardcode a
+        ``data.csv`` path that isn't there — which is exactly what sank
+        the first benchmark run.
+        """
+        single_csv = dataset.local_path / "data.csv"
+        if single_csv.is_file():
+            if language is Language.R:
+                return f"Load the dataset from '{single_csv}' using read.csv() or readr::read_csv()."
+            return f"Load the dataset from {single_csv} using pandas."
+        if language is Language.R:
+            return (
+                f"The dataset is a directory tree at '{dataset.local_path}' — see the file "
+                "listing under Dataset Information.  Load the actual data file(s) by the "
+                "exact paths listed there (readr::read_csv() for .csv, haven::read_dta() "
+                "for Stata .dta)."
+            )
+        return (
+            f"The dataset is a directory tree at {dataset.local_path} — see the file "
+            "listing under Dataset Information.  Load the actual data file(s) by the "
+            "exact paths listed there (pandas.read_csv for .csv, pandas.read_stata "
+            "for Stata .dta)."
+        )
 
     def _reference_implementation_section(
         self, reference_files: list[SelectedFile], dataset: Dataset, code_fence_tag: str
@@ -753,7 +789,8 @@ class CodeGenerator:
                 "model specification, hyperparameters, preprocessing, and "
                 "sample-construction conventions as close to the reference as "
                 "possible.  You may need to change file paths (load the dataset "
-                f"from {dataset.local_path}/data.csv instead of whatever the "
+                f"from the files under {dataset.local_path} — see the listing in "
+                "Dataset Information — instead of whatever paths the "
                 "reference uses) and you may need to omit code unrelated to the "
                 "specific claims being reproduced.  Where the reference deviates "
                 "from the paper's text, prefer the reference."
@@ -904,6 +941,71 @@ class CodeGenerator:
 
 
 _SUPPORTED_LANGUAGES = frozenset({Language.PYTHON, Language.R})
+
+# Caps for the dataset file listing embedded in generation prompts.  A
+# replication package can contain hundreds of files; the listing exists to
+# orient the model toward the real data files, not to inventory everything,
+# so it truncates with an explicit marker beyond these bounds.
+_TREE_MAX_FILES = 80
+_TREE_MAX_CSV_HEADERS = 10
+_TREE_HEADER_CHARS = 240
+
+
+def _describe_dataset_files(root: Path) -> list[str]:
+    """One prompt line per file under ``root``: relative path, size, CSV headers.
+
+    Registry datasets are a single ``data.csv`` and get a one-line listing;
+    replication packages (e.g. an unpacked Zenodo archive) are arbitrary
+    trees of ``.dta`` / ``.csv`` / ``.R`` / shapefile pieces, and without
+    this listing the model has no way to know which files exist or what
+    they're called — it would guess ``data.csv`` and fail.
+
+    Sorted for prompt determinism.  Hidden files/directories are skipped.
+    Returns ``[]`` when ``root`` isn't a directory or contains no files.
+    """
+    if not root.is_dir():
+        return []
+    files = sorted(
+        p
+        for p in root.rglob("*")
+        if p.is_file() and not any(part.startswith(".") for part in p.relative_to(root).parts)
+    )
+    lines: list[str] = []
+    csv_headers_shown = 0
+    for p in files[:_TREE_MAX_FILES]:
+        line = f"- {p.relative_to(root)} ({_human_size(p.stat().st_size)})"
+        if p.suffix.lower() == ".csv" and csv_headers_shown < _TREE_MAX_CSV_HEADERS:
+            header = _csv_header(p)
+            if header:
+                line += f" — columns: {header}"
+                csv_headers_shown += 1
+        lines.append(line)
+    overflow = len(files) - _TREE_MAX_FILES
+    if overflow > 0:
+        lines.append(f"- … and {overflow} more files (listing truncated)")
+    return lines
+
+
+def _human_size(n_bytes: int) -> str:
+    """Format a byte count for prompt display, e.g. ``12.3 KB``."""
+    size = float(n_bytes)
+    for unit in ("B", "KB", "MB", "GB"):
+        if size < 1024 or unit == "GB":
+            return f"{size:.0f} {unit}" if unit == "B" else f"{size:.1f} {unit}"
+        size /= 1024
+    return f"{size:.1f} GB"  # pragma: no cover — loop always returns
+
+
+def _csv_header(path: Path) -> str:
+    """First line of a CSV, truncated for prompt use.  '' on any read error."""
+    try:
+        with path.open("r", encoding="utf-8", errors="replace") as f:
+            header = f.readline().strip()
+    except OSError:
+        return ""
+    if len(header) > _TREE_HEADER_CHARS:
+        header = header[:_TREE_HEADER_CHARS] + "…"
+    return header
 
 
 def _require_supported_language(paper: Paper, op: str) -> None:
