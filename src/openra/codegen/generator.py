@@ -716,10 +716,11 @@ class CodeGenerator:
         return lines
 
     def _dataset_section(self, dataset: Dataset) -> list[str]:
+        root = _prompt_dataset_root(dataset)
         lines = [
             "## Dataset Information",
             f"Name: {dataset.name}",
-            f"Local path: {dataset.local_path}",
+            f"Local path: {root}",
             f"File format: {dataset.file_format}",
         ]
         if dataset.metadata:
@@ -731,7 +732,7 @@ class CodeGenerator:
                 lines.append(f"Number of rows: {dataset.metadata['n_rows']}")
             if "task_type" in dataset.metadata:
                 lines.append(f"Task type: {dataset.metadata['task_type']}")
-        tree = _describe_dataset_files(dataset.local_path)
+        tree = _describe_dataset_files(root)
         if tree:
             lines.append("Files in the dataset directory (paths relative to the local path above):")
             lines.extend(tree)
@@ -749,20 +750,21 @@ class CodeGenerator:
         ``data.csv`` path that isn't there — which is exactly what sank
         the first benchmark run.
         """
-        single_csv = dataset.local_path / "data.csv"
+        root = _prompt_dataset_root(dataset)
+        single_csv = root / "data.csv"
         if single_csv.is_file():
             if language is Language.R:
                 return f"Load the dataset from '{single_csv}' using read.csv() or readr::read_csv()."
             return f"Load the dataset from {single_csv} using pandas."
         if language is Language.R:
             return (
-                f"The dataset is a directory tree at '{dataset.local_path}' — see the file "
+                f"The dataset is a directory tree at '{root}' — see the file "
                 "listing under Dataset Information.  Load the actual data file(s) by the "
                 "exact paths listed there (readr::read_csv() for .csv, haven::read_dta() "
                 "for Stata .dta)."
             )
         return (
-            f"The dataset is a directory tree at {dataset.local_path} — see the file "
+            f"The dataset is a directory tree at {root} — see the file "
             "listing under Dataset Information.  Load the actual data file(s) by the "
             "exact paths listed there (pandas.read_csv for .csv, pandas.read_stata "
             "for Stata .dta)."
@@ -789,7 +791,7 @@ class CodeGenerator:
                 "model specification, hyperparameters, preprocessing, and "
                 "sample-construction conventions as close to the reference as "
                 "possible.  You may need to change file paths (load the dataset "
-                f"from the files under {dataset.local_path} — see the listing in "
+                f"from the files under {_prompt_dataset_root(dataset)} — see the listing in "
                 "Dataset Information — instead of whatever paths the "
                 "reference uses) and you may need to omit code unrelated to the "
                 "specific claims being reproduced.  Where the reference deviates "
@@ -949,6 +951,24 @@ _SUPPORTED_LANGUAGES = frozenset({Language.PYTHON, Language.R})
 _TREE_MAX_FILES = 80
 _TREE_MAX_CSV_HEADERS = 10
 _TREE_HEADER_CHARS = 240
+
+
+def _prompt_dataset_root(dataset: Dataset) -> Path:
+    """Absolute path the generated code must read the dataset from.
+
+    The Docker executors mount the dataset with
+    ``-v {dataset.local_path.resolve()}:{same}:ro`` and run with
+    ``--workdir /workspace``.  ``dataset.local_path`` itself is *relative*
+    (the downloader caches under ``.cache/datasets``), so a prompt that
+    embeds it verbatim makes the model emit ``list.files(".cache/...")`` /
+    ``read.csv(".cache/...")`` — paths that resolve against ``/workspace``
+    inside the container and don't exist, which is what made the generated
+    R stop with "No .dta or .csv files found".  Every dataset path we put
+    in the prompt must be this resolved absolute path so it matches the
+    mount.  ``.resolve()`` here and in the executor run in the same process
+    (same CWD), so they produce the identical string.
+    """
+    return dataset.local_path.resolve()
 
 
 def _describe_dataset_files(root: Path) -> list[str]:
