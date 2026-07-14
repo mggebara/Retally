@@ -466,3 +466,71 @@ def test_no_dump_dir_no_dump(tmp_path):
     pipeline = _pipeline_factory_returning(_fake_report())()
     results = runner.run_benchmark([_entry()], pipeline_factory=lambda: pipeline, cache_dir=tmp_path)
     assert results[0].openra_ran is True  # ran fine, just no side output
+
+
+# ── Claim details + split stamping (tuning metrics) ─────────────────────
+
+
+def test_claim_details_recorded_per_claim(tmp_path):
+    """Every compared claim lands in claim_details with its rel_err — the
+    smooth signal that makes 0-passed runs still comparable."""
+    report = _fake_report(
+        overall_passed=False,
+        claim_results=[
+            _claim(2.0, 3.0, passed=False),  # rel_err 0.5
+            _claim(1.0, None, passed=False),  # unmatched
+        ],
+    )
+    [result] = runner.run_benchmark(
+        [_entry()], pipeline_factory=_pipeline_factory_returning(report), cache_dir=tmp_path
+    )
+    assert len(result.claim_details) == 2
+    matched, unmatched = result.claim_details
+    assert matched.claimed == 2.0
+    assert matched.reproduced == 3.0
+    assert matched.rel_err == pytest.approx(0.5)
+    assert unmatched.reproduced is None
+    assert unmatched.rel_err is None
+
+
+def test_claim_details_round_trip_through_json(tmp_path):
+    report = _fake_report(claim_results=[_claim(1.0, 1.0, passed=True)])
+    [result] = runner.run_benchmark(
+        [_entry()], pipeline_factory=_pipeline_factory_returning(report), cache_dir=tmp_path
+    )
+    d = runner._result_to_jsonable(result)
+    restored = runner._result_from_jsonable(d)
+    assert restored.claim_details == result.claim_details
+    assert restored.split == result.split
+
+
+def test_old_cache_without_claim_details_still_loads():
+    """Cache entries written before claim_details existed must not crash."""
+    restored = runner._result_from_jsonable({"entry_id": "old"})
+    assert restored.claim_details == []
+    assert restored.split == "dev"
+
+
+def test_split_stamped_on_executed_and_skipped_results(tmp_path):
+    executed = _entry(split="holdout")
+    skipped = _entry(id="skipme", language=bschema.Language.STATA, split="holdout")
+    report = _fake_report()
+    results = runner.run_benchmark(
+        [executed, skipped],
+        pipeline_factory=_pipeline_factory_returning(report),
+        cache_dir=tmp_path,
+    )
+    assert [r.split for r in results] == ["holdout", "holdout"]
+
+
+def test_split_reassignment_survives_the_cache(tmp_path):
+    """Moving a paper between splits must not force an expensive re-run:
+    split is excluded from the cache key, and the cached result is
+    re-stamped with the entry's *current* split on load."""
+    report = _fake_report()
+    factory = _pipeline_factory_returning(report)
+    runner.run_benchmark([_entry(split="dev")], pipeline_factory=factory, cache_dir=tmp_path)
+
+    [moved] = runner.run_benchmark([_entry(split="holdout")], pipeline_factory=factory, cache_dir=tmp_path)
+    assert moved.cached is True  # no re-execution
+    assert moved.split == "holdout"  # but the new split label sticks

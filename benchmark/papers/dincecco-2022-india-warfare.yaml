@@ -28,6 +28,9 @@ i4r_report_url: https://www.rwi-essen.de/fileadmin/user_upload/RWI/Publikationen
 i4r_report_doi: 10.1111/caje.12693  # Later CJE publication of DP35
 language: r
 outcome_label: reproducible
+# Prompt-tuning iterates against dev entries; holdout entries are only
+# run to confirm a dev-set improvement generalises.
+split: dev
 
 paper:
   # Direct PDF of the CAGE working paper (No. 426).  The human-facing

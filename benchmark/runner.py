@@ -89,6 +89,32 @@ class ComponentMetrics:
 
 
 @dataclass
+class ClaimDetail:
+    """Per-claim comparison record — the tuning signal.
+
+    Binary pass counts are too coarse for prompt iteration: at 0/102 a
+    change that drags half the claims from 300% error to 5% error reads
+    as "still zero".  Storing the actual (claimed, reproduced) pair per
+    claim lets reports and run comparisons compute distance metrics
+    (median relative error, fraction within k× tolerance) that move
+    smoothly as prompts improve.
+    """
+
+    description: str
+    claim_type: str
+    claimed: float
+    reproduced: float | None
+    """None when no output could be matched to this claim at all."""
+
+    tolerance: float
+    rel_err: float | None
+    """``|reproduced - claimed| / max(|claimed|, 1e-9)`` — same formula
+    the comparator uses for the pass decision.  None when unmatched."""
+
+    passed: bool
+
+
+@dataclass
 class BenchmarkResult:
     """Outcome of running one BenchmarkEntry through the pipeline.
 
@@ -110,6 +136,14 @@ class BenchmarkResult:
     n_claims_in_catalog: int = 0
     n_claims_with_paper_match: int = 0
     n_claims_with_i4r_match: int = 0
+
+    claim_details: list[ClaimDetail] = field(default_factory=list)
+    """One record per compared claim.  Empty on skips/crashes and on
+    results deserialised from pre-claim-detail cache files."""
+
+    split: str = "dev"
+    """Evaluation split, stamped from the catalog entry at run time (so
+    a cached result reflects the entry's *current* split assignment)."""
 
     components: ComponentMetrics = field(default_factory=ComponentMetrics)
 
@@ -216,12 +250,16 @@ def _run_one(
     # Skip paths come first — no pipeline build, no cache check.
     skip = _check_skip(entry)
     if skip is not None:
-        return BenchmarkResult(entry_id=entry.id, skipped=True, skip_reason=skip)
+        return BenchmarkResult(entry_id=entry.id, skipped=True, skip_reason=skip, split=entry.split)
 
     cache_key = _cache_key(entry)
     cached = _load_cache(cache_dir, cache_key) if use_cache else None
     if cached is not None:
         cached.cached = True
+        # Split is a catalog property, not a run outcome — stamp the
+        # entry's *current* assignment so moving a paper between splits
+        # doesn't require invalidating its cached result.
+        cached.split = entry.split
         return cached
 
     pipeline_factory = pipeline_factory or _default_pipeline_factory
@@ -237,6 +275,7 @@ def _run_one(
         )
 
     result = _execute_with_pipeline(entry, pipeline, extracted_claims_dir=extracted_claims_dir)
+    result.split = entry.split
 
     if use_cache and not result.skipped:
         _save_cache(cache_dir, cache_key, result)
@@ -315,10 +354,29 @@ def _execute_with_pipeline(
     result.n_claims_in_catalog = len(entry.original_claims)
     result.agrees_with_paper = bool(getattr(report, "overall_passed", False))
     result.n_claims_with_paper_match = sum(1 for cr in getattr(report, "claim_results", []) if cr.passed)
+    result.claim_details = [_claim_detail(cr) for cr in getattr(report, "claim_results", [])]
 
     # Per-claim agreement with the I4R replicator's value.
     result.n_claims_with_i4r_match, result.agrees_with_i4r = _score_against_i4r(report, entry)
     return result
+
+
+def _claim_detail(cr: Any) -> ClaimDetail:
+    """Flatten one ClaimValidationResult into a serialisable ClaimDetail."""
+    claimed = float(cr.claim.value)
+    reproduced = cr.reproduced_value
+    rel_err = None
+    if reproduced is not None:
+        rel_err = abs(float(reproduced) - claimed) / max(abs(claimed), 1e-9)
+    return ClaimDetail(
+        description=str(cr.claim.description),
+        claim_type=getattr(cr.claim.claim_type, "value", str(cr.claim.claim_type)),
+        claimed=claimed,
+        reproduced=None if reproduced is None else float(reproduced),
+        tolerance=float(cr.tolerance or 0.0),
+        rel_err=rel_err,
+        passed=bool(cr.passed),
+    )
 
 
 # Host substrings mapped to the downloader's DatasetSource.  Anything
@@ -502,10 +560,18 @@ def _cache_key(entry: bschema.BenchmarkEntry) -> str:
     Pipeline configuration is NOT in this hash today because the
     runner uses a single default pipeline; if we add knobs we'll
     include them.
+
+    ``split`` is deliberately excluded: it labels how a result is
+    *grouped* in reports, not what gets executed, so reassigning a
+    paper between dev and holdout must not invalidate its (expensive)
+    cached result — ``_run_one`` re-stamps the current split on cache
+    hits instead.
     """
     openra_version = _openra_version()
+    entry_payload = _entry_to_jsonable(entry)
+    entry_payload.pop("split", None)
     payload = json.dumps(
-        {"entry": _entry_to_jsonable(entry), "openra_version": openra_version},
+        {"entry": entry_payload, "openra_version": openra_version},
         sort_keys=True,
         default=str,
     )
@@ -557,6 +623,11 @@ def _result_from_jsonable(d: dict[str, Any]) -> BenchmarkResult:
         n_claims_in_catalog=int(d.get("n_claims_in_catalog", 0)),
         n_claims_with_paper_match=int(d.get("n_claims_with_paper_match", 0)),
         n_claims_with_i4r_match=int(d.get("n_claims_with_i4r_match", 0)),
+        # Tolerant of pre-claim-detail cache files / results.json: absent
+        # field → empty list, and any malformed record drops rather than
+        # poisoning the whole load.
+        claim_details=[ClaimDetail(**cd) for cd in d.get("claim_details", []) if isinstance(cd, dict)],
+        split=str(d.get("split", "dev")),
         components=ComponentMetrics(**d.get("components", {})),
         cached=bool(d.get("cached", False)),
     )
