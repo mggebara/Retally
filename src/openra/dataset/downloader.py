@@ -345,8 +345,16 @@ class DatasetDownloader:
         dest:
             Destination directory.
         """
-        # Strip DOI prefix if present
-        record_id = re.sub(r"^10\.5281/zenodo\.", "", record_id_or_doi.strip())
+        # Accept a bare record id, a DOI (``10.5281/zenodo.<id>``), or a
+        # full record URL (``https://zenodo.org/records/<id>`` — the form the
+        # LLM extractor and the benchmark catalog use).  Reduce all three to
+        # the numeric record id.
+        raw = record_id_or_doi.strip()
+        url_match = re.search(r"zenodo\.org/(?:records?|api/records)/(\d+)", raw)
+        if url_match:
+            record_id = url_match.group(1)
+        else:
+            record_id = re.sub(r"^10\.5281/zenodo\.", "", raw)
 
         api_url = f"https://zenodo.org/api/records/{record_id}"
         try:

@@ -22,6 +22,15 @@ from openra.models import (
     Paper,
 )
 
+# How much of the paper body to send when extracting quantitative claims.
+# The headline metric of a short ML paper sits in its abstract/intro, but an
+# econometrics paper's regression tables live deep in the body — e.g. the main
+# results of the first benchmark catalog entry (Dincecco et al. 2022) start
+# ~32k chars in and run past 90k.  A small window structurally cannot see
+# them, so this is sized to capture main + most appendix tables while bounding
+# per-call token cost.  ``min(len, cap)`` means short papers are unaffected.
+_CLAIMS_CONTEXT_CHARS = 120_000
+
 
 class ClaimExtractor:
     """LLM-powered extractor for quantitative claims and dataset references.
@@ -52,7 +61,7 @@ class ClaimExtractor:
         -------
         List of Claim objects (does not mutate the paper).
         """
-        context = f"Title: {paper.title}\n\n{paper.full_text[:6000]}"
+        context = f"Title: {paper.title}\n\n{paper.full_text[:_CLAIMS_CONTEXT_CHARS]}"
 
         prompt = f"""You are an expert at reading machine learning research papers and extracting quantitative results.
 
@@ -365,7 +374,11 @@ Return ONLY the JSON array — empty (``[]``) if the paper does not link any cod
         """Send a prompt to the Claude API and return the text response."""
         response = self._client.messages.create(
             model=self._model,
-            max_tokens=4096,
+            # Headroom for the larger claim arrays an econometrics paper's
+            # many regression tables can produce.  A response that still
+            # overflows this is recovered object-by-object by
+            # _parse_json_response's salvage path rather than discarded.
+            max_tokens=16384,
             messages=[{"role": "user", "content": prompt}],
         )
         return response.content[0].text
@@ -374,30 +387,70 @@ Return ONLY the JSON array — empty (``[]``) if the paper does not link any cod
         """Extract a JSON array from a Claude response that may contain prose.
 
         Strips markdown code fences, then finds the first '[' and last ']'
-        to isolate the JSON array.
+        to isolate the JSON array.  When the strict parse fails — most
+        commonly because a long response (e.g. an econometrics paper's many
+        regression coefficients) was truncated at ``max_tokens`` mid-array —
+        falls back to salvaging every complete object from the array prefix
+        and dropping the incomplete trailing one, rather than discarding the
+        whole response.
 
         Raises
         ------
         ValueError
-            If no valid JSON array can be extracted.
+            If no valid JSON array can be extracted and no objects can be
+            salvaged.
         """
         # Strip ```json ... ``` or ``` ... ``` fences
         cleaned = re.sub(r"```(?:json)?\s*", "", raw)
         cleaned = re.sub(r"```\s*", "", cleaned)
 
-        # Find the first '[' and last ']'
         start = cleaned.find("[")
-        end = cleaned.rfind("]")
-
-        if start == -1 or end == -1 or end <= start:
+        if start == -1:
             raise ValueError(f"Cannot parse JSON from: {raw[:200]}")
 
-        json_str = cleaned[start : end + 1]
+        # Fast path: a well-formed array bounded by the first '[' and last ']'.
+        end = cleaned.rfind("]")
+        if end > start:
+            try:
+                result = json.loads(cleaned[start : end + 1])
+                if not isinstance(result, list):
+                    raise ValueError(f"Expected a JSON array but got: {type(result)}")
+                return result
+            except json.JSONDecodeError:
+                pass  # fall through to object-by-object salvage
 
-        try:
-            result = json.loads(json_str)
-            if not isinstance(result, list):
-                raise ValueError(f"Expected a JSON array but got: {type(result)}")
-            return result
-        except json.JSONDecodeError as exc:
-            raise ValueError(f"Cannot parse JSON from: {raw[:200]}") from exc
+        # Salvage path: pull complete objects off the front of the array,
+        # tolerating a truncated final element.
+        salvaged = self._salvage_objects(cleaned[start + 1 :])
+        if salvaged:
+            return salvaged
+        raise ValueError(f"Cannot parse JSON from: {raw[:200]}")
+
+    @staticmethod
+    def _salvage_objects(body: str) -> list[dict]:
+        """Decode as many consecutive JSON objects as possible from ``body``.
+
+        ``body`` is the interior of a JSON array (after the opening ``[``).
+        Uses ``raw_decode`` to consume one object at a time, skipping the
+        commas/whitespace between them, and stops at the first point it can
+        no longer decode — which is exactly where a truncated response cuts
+        off.  Only ``dict`` elements are kept.
+        """
+        decoder = json.JSONDecoder()
+        objects: list[dict] = []
+        idx = 0
+        n = len(body)
+        while idx < n:
+            # Advance to the next value, skipping separators/whitespace.
+            while idx < n and body[idx] in ", \t\r\n":
+                idx += 1
+            if idx >= n or body[idx] == "]":
+                break
+            try:
+                obj, offset = decoder.raw_decode(body, idx)
+            except json.JSONDecodeError:
+                break
+            if isinstance(obj, dict):
+                objects.append(obj)
+            idx = offset
+        return objects

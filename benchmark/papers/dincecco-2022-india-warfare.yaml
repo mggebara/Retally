@@ -30,7 +30,13 @@ language: r
 outcome_label: reproducible
 
 paper:
-  source: https://warwick.ac.uk/fac/soc/economics/research/centres/cage/publications/workingpapers/2019/pre_colonial_warfare_and_long_run_development_in_india/
+  # Direct PDF of the CAGE working paper (No. 426).  The human-facing
+  # landing page for this paper is
+  #   .../publications/workingpapers/2019/pre_colonial_warfare_and_long_run_development_in_india/
+  # but parse_url would strip that page's HTML chrome and feed the
+  # extractor navigation text rather than the paper body, so we point
+  # source at the PDF the page links to.
+  source: https://warwick.ac.uk/fac/soc/economics/research/centres/cage/manage/publications/426-2019_fenske.pdf
   title: "Pre-Colonial Warfare and Long-Run Development in India"
   authors:
     - Mark Dincecco
@@ -41,11 +47,13 @@ paper:
 dataset:
   source: https://zenodo.org/records/5583263
   access_notes: >
-    Replication package on Zenodo (open access).  Contains the
+    Replication package on Zenodo (open access, record 5583263) — a
+    single ~32 MB zip the downloader fetches and unpacks.  Contains the
     pre-colonial conflict geocoded database and Indian district
-    luminosity panel.  No registry entry yet; the runner will need
-    a `dataset_reference` override or the extractor will resolve it
-    from the paper text.
+    luminosity panel.  The paper body does not name a downloadable
+    dataset URL, so the extractor resolves nothing from the text; the
+    runner instead builds a `dataset_reference` override from this
+    `source` field.
 
 code_repo:
   url: https://zenodo.org/records/5583263
@@ -54,10 +62,24 @@ original_claims: []
 i4r_replicator_findings: []
 
 notes: >
-  Headline finding from the abstract: pre-colonial conflict exposure
-  (land battles within 250km of district centroid, 1000-1757) is
-  positively associated with contemporary district luminosity (1992-2010).
-  Specific coefficients live in Tables 2-3 of the published paper; we'll
-  populate `original_claims` after the first run shows what
-  ClaimExtractor pulls out — that way the per-claim indices line up
-  with what OpenRA actually compares against, rather than us guessing.
+  Headline finding: pre-colonial conflict exposure (land battles within
+  250km of a district centroid, 1000-1757) is positively associated with
+  contemporary district luminosity.  The Table 1 headline coefficient is
+  3.713 (SE 0.305) bivariate, attenuating to ~1.47 with state fixed
+  effects and controls; N=660.
+
+  First real run (2026-07): the pipeline executes end-to-end for this R
+  entry — parse, 102 quantitative claims extracted (37 coefficients, 29
+  standard errors, 16 R-squared, ...), Zenodo package downloaded and
+  unpacked, R reproduction code generated and run cleanly in the sandbox
+  — but 0/102 claims reproduced to tolerance (`agrees_with_paper: false`).
+  The gap is codegen navigating a raw replication package blind: the
+  generator is told only the dataset directory path, not the file layout
+  or the exact regression specification, so it cannot yet locate the
+  right data files and rebuild the estimating equation.  That, plus the
+  still-truncated methodology-summary window, is the actionable next step.
+
+  `original_claims` is deliberately still empty: the 102 extracted claims
+  are the *paper's* stated values (what OpenRA already compares against),
+  whereas this field is for hand-curated I4R-aligned values, which we'll
+  seed once the reproduction actually lands numbers to align against.
