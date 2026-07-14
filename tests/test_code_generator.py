@@ -450,3 +450,25 @@ def test_r_generation_prompt_embeds_file_tree_not_data_csv(tmp_path):
     prompt = gen._build_generation_prompt_r(paper, _tree_dataset(tmp_path), reference_files=[])
     assert "data/conflicts.dta" in prompt
     assert "data.csv" not in prompt
+
+
+def test_prompt_dataset_path_is_absolute_matching_the_mount():
+    """The prompt must name the path the sandbox actually mounts the data
+    at.  ``dataset.local_path`` is relative (the downloader caches under
+    ``.cache/datasets``) but RDockerExecutor mounts at
+    ``local_path.resolve()`` with workdir /workspace, so a relative path in
+    the prompt makes the generated code look in the wrong place and stop
+    with "No .dta or .csv files found".  Every embedded dataset path must be
+    the resolved absolute path."""
+    rel = Path(".cache/datasets/some_pkg")
+    ds = Dataset(name="pkg", source_url="", local_path=rel)
+    mount = rel.resolve()  # what the executor mounts and cds workdir alongside
+
+    for lang in (Language.R, Language.PYTHON):
+        instr = CodeGenerator._load_instruction(ds, lang)
+        assert str(mount) in instr
+        # The bare relative path must not be handed to the model as the base.
+        assert f"at '{rel}'" not in instr and f"at {rel} " not in instr
+
+    section = "\n".join(CodeGenerator._dataset_section(CodeGenerator.__new__(CodeGenerator), ds))
+    assert f"Local path: {mount}" in section
