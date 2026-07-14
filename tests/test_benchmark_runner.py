@@ -354,3 +354,115 @@ def test_runner_on_placeholder_fixture_catalog(tmp_path):
     # sandbox.  Stata stays out-of-scope.
     assert by_id["_placeholder_python_example"].skip_reason is runner.SkipReason.NO_API_KEY
     assert by_id["_placeholder_r_example"].skip_reason is runner.SkipReason.NO_API_KEY
+
+
+# ── Pinned claims (original_claims → pipeline claims override) ─────────
+
+
+def _pinned_entry(**overrides):
+    """An entry with two curated original_claims."""
+    claims = [
+        bschema.OriginalClaim(
+            description="coefficient on conflict exposure",
+            value=3.713,
+            claim_type="coefficient",
+            standard_error=0.305,
+            location="Table 1, col 1",
+        ),
+        bschema.OriginalClaim(
+            description="something exotic",
+            value=42.0,
+            claim_type="not_a_real_type",  # must fall back to OTHER
+        ),
+    ]
+    return _entry(original_claims=claims, **overrides)
+
+
+def test_pinned_claims_are_passed_to_validate(tmp_path):
+    """When the catalog has curated claims, validate() must receive them
+    (skipping the expensive extraction call) with fields mapped over."""
+    from openra.models import ClaimType
+
+    report = _fake_report()
+    factory = _pipeline_factory_returning(report)
+    pipeline = factory()
+
+    runner.run_benchmark([_pinned_entry()], pipeline_factory=lambda: pipeline, cache_dir=tmp_path)
+
+    claims = pipeline.validate.call_args.kwargs["claims"]
+    assert [c.value for c in claims] == [3.713, 42.0]
+    assert claims[0].claim_type is ClaimType.COEFFICIENT
+    assert claims[0].table_ref == "Table 1, col 1"
+    # Unknown claim-type strings degrade to OTHER, never crash.
+    assert claims[1].claim_type is ClaimType.OTHER
+
+
+def test_unpinned_entry_passes_claims_none(tmp_path):
+    """No curated claims → claims=None → pipeline extracts live."""
+    pipeline = _pipeline_factory_returning(_fake_report())()
+    runner.run_benchmark([_entry()], pipeline_factory=lambda: pipeline, cache_dir=tmp_path)
+    assert pipeline.validate.call_args.kwargs["claims"] is None
+
+
+# ── Extracted-claims dump (the pinning workflow's staging output) ──────
+
+
+def test_extracted_claims_dumped_for_unpinned_entry(tmp_path):
+    """An unpinned entry's extracted claims land as catalog-ready JSON."""
+    import json as _json
+
+    from openra.models import Claim, ClaimType
+
+    report = _fake_report()
+    report.paper.claims = [
+        Claim(
+            description="beta",
+            value=3.713,
+            unit=None,
+            claim_type=ClaimType.COEFFICIENT,
+            context="Table 1",
+            table_ref="Table 1, col 1",
+        )
+    ]
+    pipeline = _pipeline_factory_returning(report)()
+    dump_dir = tmp_path / "extracted"
+
+    runner.run_benchmark(
+        [_entry()],
+        pipeline_factory=lambda: pipeline,
+        cache_dir=tmp_path / "cache",
+        extracted_claims_dir=dump_dir,
+    )
+
+    payload = _json.loads((dump_dir / "test.json").read_text(encoding="utf-8"))
+    assert payload == [
+        {
+            "description": "beta",
+            "value": 3.713,
+            "unit": None,
+            "claim_type": "coefficient",
+            "context": "Table 1",
+            "location": "Table 1, col 1",
+        }
+    ]
+
+
+def test_extracted_claims_not_dumped_when_pinned(tmp_path):
+    """Pinned entries skip the dump — it would only echo the catalog."""
+    pipeline = _pipeline_factory_returning(_fake_report())()
+    dump_dir = tmp_path / "extracted"
+    runner.run_benchmark(
+        [_pinned_entry()],
+        pipeline_factory=lambda: pipeline,
+        cache_dir=tmp_path / "cache",
+        extracted_claims_dir=dump_dir,
+    )
+    assert not dump_dir.exists()
+
+
+def test_no_dump_dir_no_dump(tmp_path):
+    """Default (None) writes nothing anywhere — library callers and the
+    test suite must not sprinkle files into the repo."""
+    pipeline = _pipeline_factory_returning(_fake_report())()
+    results = runner.run_benchmark([_entry()], pipeline_factory=lambda: pipeline, cache_dir=tmp_path)
+    assert results[0].openra_ran is True  # ran fine, just no side output

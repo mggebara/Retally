@@ -66,6 +66,35 @@ make benchmark                       # cached re-run
 make benchmark-report                # just re-render from results.json
 ```
 
+## Keeping iteration cheap
+
+A single live run against a real paper is expensive — five extraction
+calls (claims alone sends ~120k chars of paper text), generation, and
+up to six refinement rounds, all on the most capable model.  Two
+mechanisms keep repeat runs from re-paying all of that:
+
+**LLM call cache** (`benchmark/.cache/llm/`, on by default).  Every
+Claude call is cached on disk keyed by its full request content, so a
+re-run only pays for calls whose prompts actually changed — iterate on
+the codegen prompt and the five extraction calls replay for free.
+Invalidation is automatic (any prompt/model change is a new key).
+
+```bash
+OPENRA_LLM_CACHE=0 make benchmark    # fully live run (measure variance)
+rm -rf benchmark/.cache/llm          # cold-start the call cache
+```
+
+**Pinned claims.**  When an entry's `original_claims` is populated, the
+runner passes them straight to the pipeline and the claims-extraction
+call is skipped entirely.  Just as important: every run then scores
+against the *same frozen claim set* — a live extractor can return a
+slightly different set each call, silently moving the yardstick between
+iterations.  To curate a pin, run once live: the runner dumps what the
+extractor found to `benchmark/results/extracted_claims/<id>.json` in a
+shape directly pasteable into the YAML's `original_claims`; review it
+(drop junk claims, fix descriptions), paste, and every later run is
+extraction-free and deterministic.
+
 ## Adding a new paper
 
 ```bash

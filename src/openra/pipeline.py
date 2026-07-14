@@ -44,6 +44,7 @@ from __future__ import annotations
 import math
 import re
 from pathlib import Path
+from typing import Any
 
 from openra.code.downloader import CodeDownloader
 from openra.code.selector import select_relevant_files
@@ -53,6 +54,7 @@ from openra.codegen.generator import CodeGenerator
 from openra.dataset.downloader import DatasetDownloader
 from openra.dataset.registry import DatasetRegistry
 from openra.models import (
+    Claim,
     ClaimValidationResult,
     CodeReference,
     DatasetReference,
@@ -181,6 +183,7 @@ class ValidationPipeline:
         *,
         dataset_reference: DatasetReference | None = None,
         language: Language | None = None,
+        claims: list[Claim] | None = None,
     ) -> ValidationReport:
         """Run the full pipeline on a paper.
 
@@ -207,14 +210,23 @@ class ValidationPipeline:
             paper text — it always yields ``Language.PYTHON`` — so any
             caller reproducing a non-Python paper (e.g. the benchmark
             runner driving an R catalog entry) must pass this explicitly.
+        claims:
+            When provided, these claims are used verbatim and the
+            claims-extraction LLM call — the single most expensive call
+            in the pipeline — is skipped entirely.  Beyond the cost
+            saving, pinned claims make repeat runs comparable: the
+            extractor can return a slightly different claim set each
+            live call, which silently moves the yardstick between runs.
+            The benchmark runner passes the catalog's ``original_claims``
+            here when an entry has them curated.
         """
         # Step 1: parse the paper
         paper = self._parse_paper(paper_source)
         if language is not None:
             paper.language = language
 
-        # Step 2: extract claims
-        paper.claims = self.extractor.extract_claims(paper)
+        # Step 2: extract claims (skipped when the caller pinned them)
+        paper.claims = claims if claims is not None else self.extractor.extract_claims(paper)
 
         # Step 3: extract dataset references (skipped when the caller
         # supplied one — we have nothing to resolve in that case)
@@ -510,6 +522,7 @@ class ValidationPipeline:
         docker_r_image: str = DEFAULT_R_IMAGE,
         docker_memory: str = "4g",
         docker_cpus: float = 1.0,
+        llm_cache_dir: Path | None = None,
     ) -> "ValidationPipeline":
         """Create a pipeline with default components.
 
@@ -545,10 +558,25 @@ class ValidationPipeline:
             Memory limit for Docker containers (e.g. ``"4g"``).
         docker_cpus:
             CPU limit for Docker containers.
+        llm_cache_dir:
+            When set, every Claude call made by the pipeline (extraction,
+            generation, refinement) is cached on disk under this
+            directory, keyed by the full request content.  Identical
+            calls replay from disk instead of hitting the API — which is
+            what makes iterating on one pipeline stage affordable: only
+            the calls whose prompts actually changed re-run.  Leave None
+            (the default) for fully live behaviour.
         """
         import anthropic
 
-        client = anthropic.Anthropic(api_key=anthropic_api_key)
+        # Duck-typed: every component only calls ``client.messages.create``
+        # and reads ``response.content[0].text``, which the caching wrapper
+        # preserves exactly.
+        client: Any = anthropic.Anthropic(api_key=anthropic_api_key)
+        if llm_cache_dir is not None:
+            from openra.llm_cache import CachingLLMClient
+
+            client = CachingLLMClient(client, llm_cache_dir)
 
         registry = DatasetRegistry()
         registry.load()

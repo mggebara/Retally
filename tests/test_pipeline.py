@@ -547,3 +547,25 @@ def test_r_paper_without_r_executor_raises_clearly():
 
     with pytest.raises(RuntimeError, match="no R executor configured"):
         pipeline.validate("some text")
+
+
+# ── Pinned-claims override ────────────────────────────────────────────
+
+
+def test_validate_with_claims_skips_extraction():
+    """Pinned claims must bypass the extraction call — it's the single
+    most expensive LLM call in the pipeline, and skipping it also makes
+    repeat runs score against a stable claim set."""
+    pipeline, _ = _make_pipeline()
+    pinned = [Claim(description="beta", value=3.713, claim_type=ClaimType.COEFFICIENT)]
+    pipeline.validate("some text", claims=pinned)
+    pipeline.extractor.extract_claims.assert_not_called()
+    # The comparator is scored against exactly the pinned set.
+    (claims_arg, _), _ = pipeline.comparator.compare_all.call_args
+    assert claims_arg == pinned
+
+
+def test_validate_without_claims_still_extracts():
+    pipeline, _ = _make_pipeline()
+    pipeline.validate("some text")
+    pipeline.extractor.extract_claims.assert_called_once()
