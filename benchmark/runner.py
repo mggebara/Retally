@@ -130,6 +130,7 @@ def run_benchmark(
     pipeline_factory=None,
     cache_dir: Path = CACHE_DIR,
     use_cache: bool = True,
+    extracted_claims_dir: Path | None = None,
 ) -> list[BenchmarkResult]:
     """Run every catalog entry and return one BenchmarkResult per paper.
 
@@ -139,6 +140,15 @@ def run_benchmark(
     without an API key and lets benchmark consumers swap in alternate
     pipeline configurations.  Defaults to a lambda that builds the
     standard pipeline, which requires ANTHROPIC_API_KEY to be set.
+
+    ``extracted_claims_dir``, when set, receives one JSON file per
+    executed entry containing the claims the extractor pulled from the
+    paper — in a shape directly pasteable into the catalog YAML's
+    ``original_claims``.  That's the pinning workflow: run once live,
+    review the dump, curate it into the catalog, and every later run
+    skips the extraction call and scores against a frozen claim set.
+    Entries that already have pinned claims are not dumped (the file
+    would just echo the catalog).  None (the default) disables dumping.
     """
     if catalog is None:
         catalog = bschema.load_catalog(CATALOG_DIR)
@@ -150,6 +160,7 @@ def run_benchmark(
             pipeline_factory=pipeline_factory,
             cache_dir=cache_dir,
             use_cache=use_cache,
+            extracted_claims_dir=extracted_claims_dir,
         )
         results.append(result)
     return results
@@ -181,7 +192,7 @@ def main() -> int:
         write_results([], RESULTS_DIR / "results.json")
         return 0
 
-    results = run_benchmark(catalog)
+    results = run_benchmark(catalog, extracted_claims_dir=RESULTS_DIR / "extracted_claims")
     out = RESULTS_DIR / "results.json"
     write_results(results, out)
     print(f"Wrote {out.relative_to(REPO_ROOT)} ({len(results)} entries).")
@@ -199,6 +210,7 @@ def _run_one(
     pipeline_factory,
     cache_dir: Path,
     use_cache: bool,
+    extracted_claims_dir: Path | None = None,
 ) -> BenchmarkResult:
     """Execute (or skip) a single catalog entry and return its result."""
     # Skip paths come first — no pipeline build, no cache check.
@@ -224,7 +236,7 @@ def _run_one(
             error=str(exc),
         )
 
-    result = _execute_with_pipeline(entry, pipeline)
+    result = _execute_with_pipeline(entry, pipeline, extracted_claims_dir=extracted_claims_dir)
 
     if use_cache and not result.skipped:
         _save_cache(cache_dir, cache_key, result)
@@ -247,7 +259,12 @@ def _check_skip(entry: bschema.BenchmarkEntry) -> SkipReason | None:
     return None
 
 
-def _execute_with_pipeline(entry: bschema.BenchmarkEntry, pipeline: Any) -> BenchmarkResult:
+def _execute_with_pipeline(
+    entry: bschema.BenchmarkEntry,
+    pipeline: Any,
+    *,
+    extracted_claims_dir: Path | None = None,
+) -> BenchmarkResult:
     """Drive ``pipeline.validate`` and translate the report into a BenchmarkResult.
 
     Wrapped in a broad try/except because the goal here is to score
@@ -267,17 +284,31 @@ def _execute_with_pipeline(entry: bschema.BenchmarkEntry, pipeline: Any) -> Benc
         # separately), so the extractor's dataset resolution comes up
         # empty.  When the catalog names a dataset source we pass it as an
         # explicit override, skipping the extractor's guesswork entirely.
+        #
+        # Finally, when the catalog has curated ``original_claims`` we pin
+        # them: the claims-extraction call (the pipeline's most expensive)
+        # is skipped, and — just as important — every run scores against
+        # the same frozen claim set instead of whatever the extractor
+        # happened to return this time.
         dataset_reference = _dataset_reference_for(entry)
+        claims_override = _claims_override_for(entry)
         report = pipeline.validate(
             entry.paper.source,
             language=entry.language,
             dataset_reference=dataset_reference,
+            claims=claims_override,
         )
     except Exception as exc:
         result.openra_ran = False
         result.error = f"{type(exc).__name__}: {exc}"
         logger.warning("Pipeline raised on %s: %s", entry.id, exc)
         return result
+
+    # Dump what the extractor found so a human can curate it into the
+    # catalog's original_claims (the pinning workflow).  Skipped when the
+    # claims were already pinned — the dump would just echo the catalog.
+    if extracted_claims_dir is not None and claims_override is None:
+        _dump_extracted_claims(extracted_claims_dir, entry.id, report)
 
     result.openra_ran = True
     result.components = _components_from_report(report, entry)
@@ -301,6 +332,74 @@ _DATASET_HOST_SOURCES = {
     "openml.org": "openml",
     "archive.ics.uci.edu": "uci",
 }
+
+
+def _claims_override_for(entry: bschema.BenchmarkEntry):
+    """Convert the catalog's curated ``original_claims`` into pipeline Claims.
+
+    Returns ``None`` when the entry has no curated claims, in which case
+    the pipeline extracts claims from the paper text (a live LLM call).
+    Imported lazily so the runner module stays importable without openra
+    installed.
+
+    Field mapping: the catalog's free-form ``claim_type`` string maps to
+    the library enum, falling back to OTHER for labels the enum doesn't
+    know; ``location`` ("Table 3, col 4") maps to ``table_ref``.  The
+    catalog-only fields (``standard_error``, ``sample_size``) have no
+    Claim counterpart yet and are dropped here — they still participate
+    in I4R scoring via the entry itself.
+    """
+    if not entry.original_claims:
+        return None
+
+    from openra.models import Claim, ClaimType
+
+    claims = []
+    for oc in entry.original_claims:
+        try:
+            claim_type = ClaimType(oc.claim_type)
+        except ValueError:
+            claim_type = ClaimType.OTHER
+        claims.append(
+            Claim(
+                description=oc.description,
+                value=oc.value,
+                unit=oc.unit,
+                claim_type=claim_type,
+                context=oc.context,
+                table_ref=oc.location,
+            )
+        )
+    return claims
+
+
+def _dump_extracted_claims(out_dir: Path, entry_id: str, report: Any) -> None:
+    """Write the extractor's claims for one entry as catalog-ready JSON.
+
+    Best-effort: the dump is a curation convenience, so any failure is
+    logged and swallowed rather than allowed to fail the benchmark run.
+    The output shape mirrors the YAML ``original_claims`` schema so a
+    reviewed entry can be pasted across with minimal editing.
+    """
+    try:
+        claims = list(getattr(getattr(report, "paper", None), "claims", []) or [])
+        payload = [
+            {
+                "description": c.description,
+                "value": c.value,
+                "unit": c.unit,
+                "claim_type": getattr(c.claim_type, "value", str(c.claim_type)),
+                "context": c.context,
+                "location": c.table_ref,
+            }
+            for c in claims
+        ]
+        out_dir.mkdir(parents=True, exist_ok=True)
+        out_path = out_dir / f"{entry_id}.json"
+        out_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        logger.info("Dumped %d extracted claims to %s", len(payload), out_path)
+    except Exception as exc:
+        logger.warning("Failed to dump extracted claims for %s: %s", entry_id, exc)
 
 
 def _dataset_reference_for(entry: bschema.BenchmarkEntry):
@@ -501,12 +600,21 @@ def _default_pipeline_factory():
 
     Imported lazily so the runner module can be imported (and tested)
     in environments without anthropic / ANTHROPIC_API_KEY.
+
+    The LLM call cache is ON by default for benchmark runs — iterating
+    on one pipeline stage shouldn't re-pay every extraction call when
+    the paper and prompts haven't changed.  Set ``OPENRA_LLM_CACHE=0``
+    for a fully live run (e.g. to measure sampling variance), or
+    ``rm -rf benchmark/.cache/llm`` to start the cache cold.
     """
     if not os.environ.get("ANTHROPIC_API_KEY"):
         raise RuntimeError("ANTHROPIC_API_KEY is not set")
     from openra.pipeline import ValidationPipeline
 
-    return ValidationPipeline.default()
+    llm_cache_dir: Path | None = CACHE_DIR / "llm"
+    if os.environ.get("OPENRA_LLM_CACHE", "1") == "0":
+        llm_cache_dir = None
+    return ValidationPipeline.default(llm_cache_dir=llm_cache_dir)
 
 
 if __name__ == "__main__":
