@@ -32,7 +32,8 @@ RUN install2.r --error \
     modelsummary \
     data.table \
     readr \
-    dplyr
+    dplyr \
+    haven
 
 # ── sandbox user (non-root) ────────────────────────────────────────────────
 RUN groupadd -r sandbox && useradd -r -g sandbox -d /workspace -s /bin/false sandbox

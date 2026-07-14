@@ -105,7 +105,10 @@ def test_prompt_tells_model_to_swap_dataset_path():
     prompt = gen._build_generation_prompt_python(_paper(), _dataset(), reference_files=files)
     # The dataset's actual local_path should appear in the override
     # instruction so the model knows where to point read_csv calls.
-    assert "/tmp/iris/data.csv" in prompt
+    # (Wording changed when the prompt became dataset-tree-aware: it now
+    # points at the file listing rather than hardcoding data.csv.)
+    assert "/tmp/iris" in prompt
+    assert "instead of whatever paths the" in prompt
 
 
 def test_generate_forwards_reference_files_to_prompt():
@@ -374,3 +377,76 @@ def test_extract_code_block_strips_language_fence(fence_tag):
 def test_extract_code_block_returns_raw_when_no_fence():
     gen = _generator()
     assert gen._extract_code_block("  print(1)\n") == "print(1)"
+
+
+# ── Dataset file listing / load instruction ────────────────────────────
+
+
+def _tree_dataset(tmp_path: Path) -> Dataset:
+    """A replication-package-style dataset: nested tree, no data.csv."""
+    (tmp_path / "code").mkdir()
+    (tmp_path / "data").mkdir()
+    (tmp_path / "data" / "conflicts.dta").write_bytes(b"\x00" * 2048)
+    (tmp_path / "data" / "districts.csv").write_text("district_id,luminosity,battles_250km\n1,0.5,3\n")
+    (tmp_path / "code" / "main_analysis.R").write_text("# analysis\n")
+    (tmp_path / ".hidden_state").write_text("skip me")
+    return Dataset(name="pkg", source_url="", local_path=tmp_path)
+
+
+def test_dataset_section_lists_files_in_tree(tmp_path):
+    gen = _generator()
+    section = "\n".join(gen._dataset_section(_tree_dataset(tmp_path)))
+    assert "data/conflicts.dta" in section
+    assert "code/main_analysis.R" in section
+    # CSV headers surface so the model knows the real column names.
+    assert "district_id,luminosity,battles_250km" in section
+    # Hidden files stay out of the prompt.
+    assert ".hidden_state" not in section
+
+
+def test_dataset_file_listing_truncates_past_cap(tmp_path):
+    from openra.codegen.generator import _TREE_MAX_FILES, _describe_dataset_files
+
+    for i in range(_TREE_MAX_FILES + 5):
+        (tmp_path / f"file_{i:03d}.txt").write_text("x")
+    lines = _describe_dataset_files(tmp_path)
+    assert len(lines) == _TREE_MAX_FILES + 1  # entries + truncation marker
+    assert "5 more files" in lines[-1]
+
+
+def test_dataset_file_listing_empty_for_missing_dir(tmp_path):
+    from openra.codegen.generator import _describe_dataset_files
+
+    assert _describe_dataset_files(tmp_path / "nope") == []
+
+
+def test_load_instruction_keeps_data_csv_for_registry_datasets(tmp_path):
+    """Single-data.csv datasets (the registry-download shape) keep the
+    original explicit path so nothing changes for the Python/ML flow."""
+    (tmp_path / "data.csv").write_text("a,b\n1,2\n")
+    ds = Dataset(name="iris", source_url="", local_path=tmp_path)
+    py = CodeGenerator._load_instruction(ds, Language.PYTHON)
+    r = CodeGenerator._load_instruction(ds, Language.R)
+    assert f"{tmp_path}/data.csv" in py and "pandas" in py
+    assert f"{tmp_path}/data.csv" in r and "read.csv" in r
+
+
+def test_load_instruction_points_at_tree_when_no_data_csv(tmp_path):
+    """Replication packages have no data.csv — the instruction must not
+    invent one (that's what sank the first benchmark run) and should
+    name the format-appropriate readers."""
+    ds = _tree_dataset(tmp_path)
+    py = CodeGenerator._load_instruction(ds, Language.PYTHON)
+    r = CodeGenerator._load_instruction(ds, Language.R)
+    assert "data.csv" not in py and "read_stata" in py
+    assert "data.csv" not in r and "haven::read_dta" in r
+
+
+def test_r_generation_prompt_embeds_file_tree_not_data_csv(tmp_path):
+    """End-to-end at the prompt level: an R generation prompt for a tree
+    dataset must contain the real file paths and no data.csv fiction."""
+    gen = _generator()
+    paper = _paper(language=Language.R)
+    prompt = gen._build_generation_prompt_r(paper, _tree_dataset(tmp_path), reference_files=[])
+    assert "data/conflicts.dta" in prompt
+    assert "data.csv" not in prompt

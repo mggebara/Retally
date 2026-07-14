@@ -31,6 +31,14 @@ from openra.models import (
 # per-call token cost.  ``min(len, cap)`` means short papers are unaffected.
 _CLAIMS_CONTEXT_CHARS = 120_000
 
+# How much of the paper body to send when summarising methodology.  The
+# estimating equation / empirical-strategy section of an econometrics paper
+# sits mid-body (Dincecco et al.: ~20-40k chars in) — the old 6k window saw
+# only the cover page and abstract, so the generated code had no regression
+# specification to work from.  Smaller than the claims window because
+# methodology doesn't need the appendix tables.
+_METHODOLOGY_CONTEXT_CHARS = 60_000
+
 
 class ClaimExtractor:
     """LLM-powered extractor for quantitative claims and dataset references.
@@ -194,17 +202,23 @@ Return ONLY the JSON array."""
         -------
         A concise structured summary of the experimental setup.
         """
-        context = f"Title: {paper.title}\n\n{paper.full_text[:6000]}"
+        context = f"Title: {paper.title}\n\n{paper.full_text[:_METHODOLOGY_CONTEXT_CHARS]}"
 
-        prompt = f"""Summarize the experimental methodology in this ML paper in 3-5 bullet points. Focus on:
-- The algorithm(s) used
+        prompt = f"""Summarize the experimental methodology in this research paper in 3-8 bullet points. Focus on:
+- The algorithm(s) / estimation method(s) used
 - Preprocessing steps applied to the data
 - Train/test split strategy (e.g. holdout, k-fold cross-validation, leave-one-out)
 - Cross-validation approach and number of folds if applicable
 - Key hyperparameter settings mentioned
 - Evaluation protocol and metrics used
 
-Be specific and concise. Use exact numbers and names from the paper where available.
+For econometrics / regression-based papers, additionally capture:
+- The estimating equation / regression specification: dependent variable, key regressor(s), functional form (e.g. log-log, standardised)
+- Fixed effects and the full control set of the preferred specification
+- How standard errors are computed (robust / clustered, and clustered on what)
+- Sample restrictions defining the estimation sample (which observations are dropped and why)
+
+Be specific and concise. Use exact numbers, variable names, and table/column references from the paper where available.
 
 Paper:
 {context}"""

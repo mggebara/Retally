@@ -310,3 +310,32 @@ def test_extract_code_references_swallows_parse_errors(paper_with_text):
     client = _make_mock_client("Sorry, I cannot answer that.")
     extractor = ClaimExtractor(client)
     assert extractor.extract_code_references(paper_with_text) == []
+
+
+# ── extract_methodology context window ──────────────────────────────────
+
+
+def test_extract_methodology_sees_deep_body_text():
+    """The estimating equation of an econometrics paper sits mid-body
+    (~20-40k chars in for the first benchmark entry).  The old 6k window
+    structurally could not see it — the summary described the cover page.
+    """
+    marker = "OUR_ESTIMATING_EQUATION_LIVES_HERE"
+    full_text = ("filler " * 4000) + marker  # marker lands ~28k chars in
+    paper = Paper(title="Deep Methods", full_text=full_text)
+    client = _make_mock_client("summary")
+    ClaimExtractor(client).extract_methodology(paper)
+    sent_prompt = client.messages.create.call_args.kwargs["messages"][0]["content"]
+    assert marker in sent_prompt
+
+
+def test_extract_methodology_prompt_asks_for_regression_spec():
+    """Econometrics papers need the estimating equation, SE clustering,
+    and sample restrictions in the summary — codegen works from it."""
+    paper = Paper(title="T", full_text="body")
+    client = _make_mock_client("summary")
+    ClaimExtractor(client).extract_methodology(paper)
+    sent_prompt = client.messages.create.call_args.kwargs["messages"][0]["content"]
+    assert "estimating equation" in sent_prompt
+    assert "clustered" in sent_prompt
+    assert "Sample restrictions" in sent_prompt
