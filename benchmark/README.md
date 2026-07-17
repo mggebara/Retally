@@ -125,10 +125,34 @@ The output shows per-split metric movement, per-entry deltas, and the
 specific claims that flipped (newly passing / newly failing, matched by
 description across runs).
 
-## Adding a new paper
+## Building the corpus (candidate intake)
+
+The catalog grows by hand, but the sourcing is scripted.  `benchmark/corpus/`
+holds the I4R "First Meta Database" (110 replication reports over 109 papers;
+provenance and column layout in `benchmark/corpus/SOURCE.md`).  The intake
+script reads it, keeps the reports OpenRA has a code path for (R original,
+Python original, or a Stata/other original with an I4R-written R routine), and
+emits one prefilled candidate YAML per report:
 
 ```bash
-$EDITOR benchmark/papers/<author>-<year>-<slug>.yaml
+uv run python scripts/import_i4r_candidates.py           # -> benchmark/candidates/
+uv run python scripts/import_i4r_candidates.py --limit 5 # just the first few
+```
+
+Candidates land in `benchmark/candidates/` (gitignored — rebuildable), **not**
+in `papers/`.  Each is prefilled with what the database records (id, language,
+outcome label, title, authors, and — for the ~20 reports that carry one — the
+I4R report URL) and carries `TODO` sentinels for the three things the database
+never gives: the paper URL, the dataset URL, and (for most reports) the report
+URL.  Promotion is the human step below.
+
+## Adding a new paper
+
+Either hand-write the YAML or promote a candidate:
+
+```bash
+$EDITOR benchmark/papers/<author>-<year>-<slug>.yaml   # or:
+mv benchmark/candidates/<id>.yaml benchmark/papers/     # then fill its TODOs
 ```
 
 Required fields: `id`, `i4r_report_url`, `language`, `outcome_label`,

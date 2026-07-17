@@ -1,0 +1,55 @@
+# Original paper: Arias, S. B., & Blair, C. W. (2022). "Changing Tides:
+#   Public Attitudes on Climate Migration." The Journal of Politics, 84(1),
+#   560-567. doi:10.1086/715163
+#
+# Reproduction report: this paper was reproduced on the Social Science
+#   Reproduction Platform (SSRP/BITSS), reproduction #791, NOT as a numbered
+#   I4R Discussion Paper — but it is recorded in the I4R First Meta Database
+#   (replication report team 12), so i4r_report_url points at the SSRP record.
+#   Verdict: successfully reproduced (the original authors are on record as
+#   "very pleased" the results replicated); no material caveats.
+#
+# Why this paper:
+#   1. Original analysis code is a single R script (Migration_Analysis_Final.R)
+#      — OpenRA's native target language.
+#   2. Data is on Harvard Dataverse under CC0, fully open (every file
+#      unrestricted), so the pipeline fetches it unattended.
+#   3. Open-access author PDF text-extracts cleanly; the JOP journal version
+#      is paywalled.
+
+id: arias-2022-changing-tides-climate-migration
+i4r_report_url: https://www.socialsciencereproduction.org/reproductions/791/published/index
+language: r
+outcome_label: reproducible
+split: holdout
+
+paper:
+  # Open-access author copy on Sabrina Arias's site; the JOP version
+  # (doi:10.1086/715163) is paywalled.
+  source: https://sabrinabarias.com/wp-content/uploads/2020/09/Climate_Migration_Main_Text__JOP_.pdf
+  title: "Changing Tides: Public Attitudes on Climate Migration"
+  authors:
+    - Sabrina B. Arias
+    - Christopher W. Blair
+
+dataset:
+  source: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/FDML2N
+  access_notes: >
+    Harvard Dataverse (doi:10.7910/DVN/FDML2N), CC0, fully open — every file
+    unrestricted.  Analysis code is a single R script; conjoint data ships as
+    .tab (tab-separated) with .dat design files.
+
+original_claims: []
+i4r_replicator_findings: []
+
+notes: >
+  Headline finding: climate migrants occupy an intermediate position in public
+  preferences — more supported than economic migrants, less than refugees.  In
+  the US conjoint, migrants displaced by droughts, floods, and wildfires are
+  respectively ~3.5, 3.7, and 4.0 percentage points more likely to be
+  preferred than economic migrants (AMCE; nationally representative US and
+  German samples, N~2,160).
+
+  Promoted from the I4R First Meta Database (replication report team 12) via
+  scripts/import_i4r_candidates.py.  On holdout: touched only to confirm that
+  a dev-set prompt improvement generalises.

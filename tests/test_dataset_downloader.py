@@ -123,6 +123,23 @@ def test_registry_builtin_iris_has_uci_source(registry):
     assert ref.source == DatasetSource.UCI
 
 
+@pytest.mark.parametrize(
+    "value,expected",
+    [
+        ("doi:10.7910/DVN/S5YMS7", "doi:10.7910/DVN/S5YMS7"),
+        (
+            "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/FDML2N",
+            "doi:10.7910/DVN/FDML2N",
+        ),
+        ("https://doi.org/10.7910/DVN/NGFLRO", "doi:10.7910/DVN/NGFLRO"),
+        ("10.7910/DVN/NGFLRO", "doi:10.7910/DVN/NGFLRO"),
+        ("hdl:1902.1/12345", "hdl:1902.1/12345"),
+    ],
+)
+def test_dataverse_persistent_id_normalisation(value, expected):
+    assert DatasetDownloader._dataverse_persistent_id(value) == expected
+
+
 @pytest.mark.skip(reason="requires network")
 def test_download_zenodo_record():
     downloader = DatasetDownloader()

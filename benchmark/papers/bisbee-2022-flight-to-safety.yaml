@@ -1,0 +1,62 @@
+# Original paper: Bisbee, J., & Honig, D. (2022). "Flight to Safety:
+#   COVID-Induced Changes in the Intensity of Status Quo Preference and
+#   Voting Behavior." American Political Science Review, 116(1), 70-86.
+#   doi:10.1017/S0003055421000691
+#
+# I4R replication report: Discussion Paper 36 (Malmberg & Scates, UC Davis,
+#   June 2023).  Verdict: the paper's results reproduce by re-running the
+#   original R code; robustness is largely supportive, with one caveat that
+#   the headline diff-in-diff effect loses statistical significance under the
+#   de Chaisemartin & D'Haultfoeuille estimator (small-sample-limited), while
+#   an expanded dataset corroborates the original findings.
+#
+# Why this paper:
+#   1. Original analysis code is R (a MASTER.R driver + per-exhibit scripts),
+#      so OpenRA regenerates in the paper's native language.
+#   2. Data is on Harvard Dataverse, openly downloadable (no restricted-access
+#      request), so the pipeline can fetch it unattended.
+#   3. The open-access author PDF text-extracts cleanly (the Cambridge journal
+#      version is paywalled — see the note on paper.source).
+#
+# original_claims / i4r_replicator_findings are left empty for the first pass
+# (as with dincecco-2022): the pipeline extracts claims from the paper text,
+# and we seed curated I4R-aligned values once a reproduction lands numbers to
+# align against.
+
+id: bisbee-2022-flight-to-safety
+i4r_report_url: https://www.econstor.eu/bitstream/10419/271676/1/I4R-DP036.pdf
+language: r
+outcome_label: reproducible
+split: dev
+
+paper:
+  # Open-access author copy (manuscript + SI) hosted on Dan Honig's site.
+  # The journal version (doi:10.1017/S0003055421000691) is paywalled on
+  # Cambridge Core, so we point source at the author PDF the extractor can
+  # actually read rather than a paywalled landing page.
+  source: https://img1.wsimg.com/blobby/go/79440b61-e70b-4220-b67f-e5edb0157a24/downloads/Bisbee%20Honig%20APSR%202022%20MS%20and%20SI%20Authors%20Final.pdf
+  title: "Flight to Safety: COVID-Induced Changes in the Intensity of Status Quo Preference and Voting Behavior"
+  authors:
+    - James Bisbee
+    - Dan Honig
+
+dataset:
+  source: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/S5YMS7
+  access_notes: >
+    Harvard Dataverse (doi:10.7910/DVN/S5YMS7), open access — every file is
+    unrestricted (no access-request approval needed).  Analysis code is R
+    (MASTER.R + per-figure/table scripts); primary data ships as .RData plus
+    a .tab file.
+
+original_claims: []
+i4r_replicator_findings: []
+
+notes: >
+  Headline finding: using the 2020 Democratic primaries and a
+  difference-in-differences design, the COVID-19 outbreak caused a "flight to
+  safety" toward the establishment candidate — Biden gained roughly 7-15
+  percentage points at Sanders's expense — corroborated by a survey experiment
+  showing anxiety increases preference for the less-disruptive candidate.
+
+  Promoted from the I4R First Meta Database (replication report team 31) via
+  scripts/import_i4r_candidates.py.
