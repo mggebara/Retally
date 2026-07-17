@@ -297,3 +297,56 @@ def test_real_benchmark_papers_dir_has_no_placeholders():
         f"Unexpected placeholder YAMLs in {real_dir}: {placeholder_yamls}. "
         "Placeholders belong under tests/fixtures/benchmark_placeholders/."
     )
+
+
+# ── Evaluation split ────────────────────────────────────────────────────
+
+
+def test_split_defaults_to_dev(tmp_path):
+    p = tmp_path / "x.yaml"
+    _write_yaml(
+        p,
+        """
+id: x
+i4r_report_url: https://example.org/x
+language: python
+outcome_label: reproducible
+paper: {source: "raw"}
+""",
+    )
+    assert load_entry(p).split == "dev"
+
+
+def test_split_holdout_parses(tmp_path):
+    p = tmp_path / "x.yaml"
+    _write_yaml(
+        p,
+        """
+id: x
+i4r_report_url: https://example.org/x
+language: python
+outcome_label: reproducible
+split: holdout
+paper: {source: "raw"}
+""",
+    )
+    assert load_entry(p).split == "holdout"
+
+
+def test_unknown_split_raises(tmp_path):
+    """A typo'd split silently landing in dev would contaminate tuning —
+    fail loud instead."""
+    p = tmp_path / "x.yaml"
+    _write_yaml(
+        p,
+        """
+id: x
+i4r_report_url: https://example.org/x
+language: python
+outcome_label: reproducible
+split: holdut
+paper: {source: "raw"}
+""",
+    )
+    with pytest.raises(SchemaError, match="split"):
+        load_entry(p)

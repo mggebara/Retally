@@ -170,6 +170,13 @@ class BenchmarkEntry:
     The runner records why each skip happened so the benchmark report
     can show the catalog-vs-runnable breakdown."""
 
+    split: str = "dev"
+    """Which evaluation split this entry belongs to: ``"dev"`` (default)
+    or ``"holdout"``.  Prompt tuning iterates against dev entries; the
+    holdout set is touched rarely, only to confirm that a dev-set win
+    generalises rather than overfits.  The runner stamps the split onto
+    each result so reports and run comparisons can group by it."""
+
     notes: str = ""
 
 
@@ -250,8 +257,24 @@ def _entry_from_dict(d: dict[str, Any]) -> BenchmarkEntry:
         original_claims=[_original_claim(c) for c in d.get("original_claims", [])],
         i4r_replicator_findings=[_finding(f) for f in d.get("i4r_replicator_findings", [])],
         out_of_scope_reason=_optional_str(d.get("out_of_scope_reason")),
+        split=_split(d.get("split", "dev")),
         notes=str(d.get("notes", "")),
     )
+
+
+_VALID_SPLITS = frozenset({"dev", "holdout"})
+
+
+def _split(value: Any) -> str:
+    """Validate the evaluation-split label.
+
+    A typo like ``split: holdut`` silently landing in the dev set would
+    quietly contaminate tuning, so unknown labels are a hard error.
+    """
+    s = str(value)
+    if s not in _VALID_SPLITS:
+        raise ValueError(f"split must be one of {sorted(_VALID_SPLITS)}, got {s!r}")
+    return s
 
 
 def _paper_ref(d: Any) -> PaperRef:

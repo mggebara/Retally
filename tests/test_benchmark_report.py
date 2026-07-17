@@ -4,6 +4,9 @@ from __future__ import annotations
 
 from tests._loaders import REPO_ROOT, load_module_from_path
 
+# report.py does ``from benchmark import metrics`` — pre-load it so the
+# from-import resolves via sys.modules under the file-based test loader.
+load_module_from_path("benchmark.metrics", REPO_ROOT / "benchmark" / "metrics.py")
 report = load_module_from_path("benchmark.report", REPO_ROOT / "benchmark" / "report.py")
 
 
@@ -197,3 +200,36 @@ def test_write_report_creates_dir(tmp_path):
     report.write_report([], out_dir=nested)
     assert (nested / "REPORT.md").exists()
     assert (nested / "report.html").exists()
+
+
+# ── Closeness section (tuning metrics) ─────────────────────────────────
+
+
+def test_closeness_section_renders_per_split():
+    results = [
+        _result(
+            entry_id="d1",
+            claim_details=[
+                {
+                    "description": "beta",
+                    "claim_type": "coefficient",
+                    "claimed": 1.0,
+                    "reproduced": 1.5,
+                    "tolerance": 0.02,
+                    "rel_err": 0.5,
+                    "passed": False,
+                }
+            ],
+        ),
+    ]
+    results[0]["split"] = "dev"
+    md = report.render_markdown(results)
+    assert "## Closeness (per split)" in md
+    assert "**dev**" in md
+    assert "median rel err 50.0%" in md
+
+
+def test_closeness_section_absent_without_claim_details():
+    """Old results.json (no claim_details) renders exactly as before."""
+    md = report.render_markdown([_result(entry_id="x")])
+    assert "Closeness" not in md

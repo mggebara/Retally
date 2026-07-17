@@ -18,6 +18,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from benchmark import metrics
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 RESULTS_DIR = REPO_ROOT / "benchmark" / "results"
 
@@ -44,6 +46,8 @@ def render_markdown(results: list[dict[str, Any]]) -> str:
         f"no_api_key={headline['no_api_key']}).",
         "",
         _verdict_summary_markdown(results),
+        "",
+        _closeness_markdown(results),
         "",
         _component_breakdown_markdown(results),
         "",
@@ -157,6 +161,21 @@ def _verdict_summary_markdown(results: list[dict[str, Any]]) -> str:
         f"- Agrees with the I4R replicator: **{agree_i4r} / {i4r_attempted}** "
         f"(of papers where I4R published a value to compare against)"
     )
+
+
+def _closeness_markdown(results: list[dict[str, Any]]) -> str:
+    """Per-split closeness metrics — the smooth signal prompt tuning reads.
+
+    Empty string when no executed entry carries claim_details (older
+    results.json, or nothing executed), so pre-existing reports render
+    unchanged.
+    """
+    if not any(r.get("claim_details") for r in results if not r.get("skipped")):
+        return ""
+    lines = ["## Closeness (per split)", ""]
+    for split, m in metrics.by_split(results).items():
+        lines.append(f"- **{split}**: {metrics.format_metrics_line(m)}")
+    return "\n".join(lines)
 
 
 def _component_breakdown_markdown(results: list[dict[str, Any]]) -> str:

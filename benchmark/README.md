@@ -95,6 +95,36 @@ shape directly pasteable into the YAML's `original_claims`; review it
 (drop junk claims, fix descriptions), paste, and every later run is
 extraction-free and deterministic.
 
+## Prompt tuning: splits, closeness metrics, run comparison
+
+Binary pass counts saturate — at 0/102 every prompt change reads as
+"still zero", even one that halved every error.  Three mechanisms turn
+benchmark runs into a tuning signal:
+
+**Closeness metrics.**  Each executed entry's `results.json` row now
+carries `claim_details` (claimed vs reproduced value, relative error,
+tolerance, per claim).  `REPORT.md` aggregates them per split: median
+relative error, match rate, and the fraction of claims within 1x / 2x /
+5x of their tolerance — the widening bands are the gradient; a fix
+often shows up at 5x before it registers at 1x.
+
+**Dev / holdout splits.**  Catalog entries carry `split: dev` (default)
+or `split: holdout`.  Tune prompts against dev; run holdout rarely,
+only to confirm a dev-set win generalises.  Reassigning a paper doesn't
+invalidate its cached result — split labels grouping, not execution.
+
+**Run comparison.**  Keep-or-revert should be one command:
+
+```bash
+cp benchmark/results/results.json /tmp/baseline.json
+# ... edit a prompt, re-run the benchmark ...
+uv run python -m benchmark.compare /tmp/baseline.json benchmark/results/results.json
+```
+
+The output shows per-split metric movement, per-entry deltas, and the
+specific claims that flipped (newly passing / newly failing, matched by
+description across runs).
+
 ## Adding a new paper
 
 ```bash
