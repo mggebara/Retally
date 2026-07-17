@@ -427,6 +427,30 @@ class DatasetDownloader:
         self._write_metadata(dest, df, source_url=source_url, task_type=_infer_task_type(df.iloc[:, -1]))
         return dest
 
+    @staticmethod
+    def _dataverse_persistent_id(value: str) -> str:
+        """Normalise a Dataverse reference to the ``doi:...`` persistentId form.
+
+        Catalog entries name the dataset by its human-facing landing URL
+        (``https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/XXXX``),
+        but the API wants the bare persistent identifier.  Accept the landing
+        URL, a ``https://doi.org/...`` link, a bare ``10.7910/...`` DOI, or an
+        already-normalised ``doi:``/``hdl:`` id, and return the API form.
+        """
+        raw = value.strip()
+        # Landing URL carrying an explicit ?persistentId=... parameter.
+        param = re.search(r"[?&]persistentId=([^&]+)", raw)
+        if param:
+            return param.group(1)
+        # Already a persistent id.
+        if raw.startswith(("doi:", "hdl:")):
+            return raw
+        # doi.org URL or bare DOI -> doi: form.
+        doi = re.search(r"(10\.\d{4,}/[^\s?&]+)", raw)
+        if doi:
+            return f"doi:{doi.group(1)}"
+        return raw
+
     def _download_harvard_dataverse(self, doi: str, dest: Path) -> Path:
         """Download a dataset from Harvard Dataverse.
 
@@ -435,10 +459,12 @@ class DatasetDownloader:
         Parameters
         ----------
         doi:
-            Persistent identifier (DOI) for the Dataverse dataset.
+            Persistent identifier (DOI) for the Dataverse dataset, or a
+            landing-page URL / ``doi.org`` link that carries one.
         dest:
             Destination directory.
         """
+        doi = self._dataverse_persistent_id(doi)
         api_url = f"https://dataverse.harvard.edu/api/datasets/:persistentId/?persistentId={doi}"
         try:
             response = requests.get(api_url, timeout=30)

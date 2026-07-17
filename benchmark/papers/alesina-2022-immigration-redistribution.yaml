@@ -1,0 +1,58 @@
+# Original paper: Alesina, A., Miano, A., & Stantcheva, S. (2023).
+#   "Immigration and Redistribution." The Review of Economic Studies, 90(1),
+#   1-39. doi:10.1093/restud/rdac011 (advance access 2022).
+#
+# I4R replication report: Discussion Paper 40 (Albrecht, Collins, Gauriot,
+#   Wu, June 2023).  Verdict: computationally reproducible and robust — the
+#   replicators reproduced Figure 2 and Tables 4-6 with identical point
+#   estimates from the authors' package, and every robustness check held.
+#   (Minor: a typo in the paper's stated sample size — text says 22,506 /
+#   4,500 US, the data has 22,006 / 4,000 US — and no code for Appendix output.)
+#
+# Why this paper (the Dincecco pattern):
+#   1. Replication package is on Zenodo (record 5997521, CC-BY-4.0), openly
+#      downloadable with no login — the downloader fetches and unpacks it.
+#   2. The estimating code is primarily Stata (.do), with some figure scripts
+#      in R Markdown; the I4R replicators re-verified in R.  As with
+#      dincecco-2022, OpenRA targets R (language: r) against an R-verified
+#      Stata original rather than shipping a Stata sandbox.
+#   3. Open-access author PDF (Stantcheva's site) text-extracts cleanly; the
+#      OUP journal version is paywalled.
+
+id: alesina-2022-immigration-redistribution
+i4r_report_url: https://www.econstor.eu/bitstream/10419/272841/1/I4R-DP040.pdf
+language: r
+outcome_label: reproducible
+split: dev
+
+paper:
+  # Open-access published-version PDF on Stantcheva's Harvard site.  The OUP
+  # version (doi:10.1093/restud/rdac011) is paywalled; NBER w24733 is an older
+  # working-paper alternative.
+  source: https://scholar.harvard.edu/files/stantcheva/files/0alesina_miano_stantcheva_immigration_restud.pdf
+  title: "Immigration and Redistribution"
+  authors:
+    - Alberto Alesina
+    - Armando Miano
+    - Stefanie Stantcheva
+
+dataset:
+  source: https://zenodo.org/records/5997521
+  access_notes: >
+    Replication package on Zenodo (record 5997521, CC-BY-4.0, open access) —
+    a single ~4 MB zip.  Estimating code is Stata (.do) with some R Markdown
+    figure scripts; survey data ships as .dta plus supporting .csv/.xlsx.
+    The I4R replicators independently re-implemented the analysis in R.
+
+original_claims: []
+i4r_replicator_findings: []
+
+notes: >
+  Headline finding: across surveys of ~22,000 native respondents in six
+  countries (US, UK, France, Germany, Italy, Sweden), people vastly
+  overestimate the number and welfare-dependence of immigrants, and
+  respondents primed to think about immigration before redistribution
+  questions subsequently support less redistribution.
+
+  Promoted from the I4R First Meta Database (replication report team 41) via
+  scripts/import_i4r_candidates.py.

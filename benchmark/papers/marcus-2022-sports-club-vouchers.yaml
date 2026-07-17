@@ -1,0 +1,54 @@
+# Original paper: Marcus, J., Siedler, T., & Ziebarth, N. R. (2022).
+#   "The Long-Run Effects of Sports Club Vouchers for Primary School
+#   Children." American Economic Journal: Economic Policy, 14(3), 128-165.
+#   doi:10.1257/pol.20200431
+#
+# I4R replication report: Discussion Paper 46 (Bacon, Bello, Brown, Morris,
+#   Renee).  Verdict: successful replication — main results reproduced exactly
+#   and robustness confirmed.  Original code is Stata; the replicators wrote R.
+#
+# Cataloged but OUT OF SCOPE for automated execution: the replication data is
+# on openICPSR (the AEA Data & Code Repository), which requires a free account
+# and a terms-of-use click-through before download (anonymous fetch returns
+# HTTP 403).  OpenRA's dataset downloader has no openICPSR/authenticated path,
+# so the pipeline cannot fetch the data unattended.  The open-access paper PDF
+# (IZA DP 14246) and the R-verified reproducibility make this a strong
+# candidate to promote to a runnable entry once openICPSR access is wired up.
+
+id: marcus-2022-sports-club-vouchers
+i4r_report_url: https://www.econstor.eu/bitstream/10419/273431/1/I4R-DP046.pdf
+language: r
+outcome_label: reproducible
+split: dev
+out_of_scope_reason: "data is openICPSR-gated (free login + terms agreement required); no unauthenticated download path"
+
+paper:
+  # Open-access working-paper PDF (IZA DP 14246); the AEA journal version
+  # (doi:10.1257/pol.20200431) is paywalled.
+  source: https://docs.iza.org/dp14246.pdf
+  title: "The Long-Run Effects of Sports Club Vouchers for Primary School Children"
+  authors:
+    - Jan Marcus
+    - Thomas Siedler
+    - Nicolas R. Ziebarth
+
+dataset:
+  source: https://www.openicpsr.org/openicpsr/project/138922/version/V1/view
+  access_notes: >
+    AEA Data & Code Repository on openICPSR (project 138922,
+    doi:10.3886/E138922V1).  Requires a free openICPSR/ICPSR login and a
+    terms-of-use agreement to download — not anonymously fetchable.  Original
+    code is Stata (.do) on .dta data; the I4R replicators re-wrote it in R.
+
+original_claims: []
+i4r_replicator_findings: []
+
+notes: >
+  Headline finding: Saxony distributed sports-club membership vouchers to all
+  ~33,000 third-graders in 2009; despite high awareness and redemption, the
+  authors find no significant short- or long-run effects on club membership,
+  physical activity, overweight/BMI, or motor skills.
+
+  Promoted from the I4R First Meta Database (replication report team 92) via
+  scripts/import_i4r_candidates.py.  Kept in the catalog (not just candidates)
+  to document the openICPSR data-access gap in the catalog-vs-runnable funnel.

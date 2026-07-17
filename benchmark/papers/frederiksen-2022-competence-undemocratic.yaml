@@ -1,0 +1,53 @@
+# Original paper: Frederiksen, K. V. S. (2022). "Does Competence Make
+#   Citizens Tolerate Undemocratic Behavior?" American Political Science
+#   Review, 116(3), 1147-1153. doi:10.1017/S0003055422000119
+#
+# I4R replication report: Discussion Paper 28 (Brailey, Hepplewhite, Moser,
+#   Nottingham Replication Games, 2023).  Verdict: computationally
+#   reproducible — main exhibits replicate both by running the original Stata
+#   package and by rebuilding the analysis in R; robustness checks reinforce
+#   the conclusions.
+#
+# Cataloged but OUT OF SCOPE for automated execution: no open-access full text
+# of the paper could be found (the Cambridge Core version is paywalled; the
+# Aarhus institutional copy was unreachable).  OpenRA's claim extractor needs
+# the paper body, so the pipeline cannot run this end-to-end even though the
+# DATA is open (Harvard Dataverse) and the report is R-verified.  Promotable to
+# a runnable entry if an open-access author copy surfaces.
+
+id: frederiksen-2022-competence-undemocratic
+i4r_report_url: https://www.econstor.eu/bitstream/10419/270858/1/I4R-DP028.pdf
+language: r
+outcome_label: reproducible
+split: dev
+out_of_scope_reason: "no open-access full text of the paper (Cambridge Core paywall); the claim extractor cannot obtain the paper body"
+
+paper:
+  # No verified open-access copy; the Cambridge Core PDF is paywalled.  Left
+  # as the journal DOI so a human can swap in an author copy if one appears.
+  source: https://doi.org/10.1017/S0003055422000119
+  title: "Does Competence Make Citizens Tolerate Undemocratic Behavior?"
+  authors:
+    - Kristian Vrede Skaaning Frederiksen
+
+dataset:
+  source: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/NGFLRO
+  access_notes: >
+    Harvard Dataverse (doi:10.7910/DVN/NGFLRO), open access — files
+    unrestricted.  Analysis code is Stata (.do) on .dta data (only an
+    ancillary power calculation is in R); the I4R replicators re-built the
+    analysis in R.
+
+original_claims: []
+i4r_replicator_findings: []
+
+notes: >
+  Headline finding: across well-powered conjoint experiments in five countries
+  (US, UK, Czech Republic, Mexico, South Korea), voters penalize candidates
+  for violating democratic principles, but support for undemocratic candidates
+  nonetheless rises with their perceived competence — the two act largely as
+  independent effects.
+
+  Promoted from the I4R First Meta Database (replication report team 22) via
+  scripts/import_i4r_candidates.py.  Kept in the catalog to document the
+  paper-access (paywall) gap in the catalog-vs-runnable funnel.
