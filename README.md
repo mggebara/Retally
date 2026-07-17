@@ -2,7 +2,7 @@
 
 OpenRA automates the validation of academic papers: it reads a paper, downloads the relevant dataset, generates reproduction code via the Claude API (scikit-learn for ML papers, R + fixest/AER/plm for econometrics), executes it in an isolated environment, and compares the reproduced numbers against the paper's stated results.
 
-See [`LEADERBOARD.md`](LEADERBOARD.md) for an at-a-glance view of which authors' papers have been reproducibly validated so far, plus a [browsable dashboard of every report](docs/index.html).  For systematic evaluation against an external ground truth — the [Institute for Replication](https://i4replication.org) catalog of hand-replicated papers — see [`benchmark/README.md`](benchmark/README.md).
+For systematic evaluation against an external ground truth — the [Institute for Replication](https://i4replication.org) catalog of hand-replicated papers — see [`benchmark/README.md`](benchmark/README.md).  A [browsable dashboard](docs/index.html) shows demo runs of the pipeline on synthetic paper text (smoke tests of the tooling, not real reproducibility verdicts).  The development plan lives in [`ROADMAP.md`](ROADMAP.md).
 
 ---
 
@@ -566,12 +566,11 @@ benchmark/                     I4R replication benchmark harness
 └── results/REPORT.md          Committed run summary
 
 scripts/
-└── generate_leaderboard.py    Aggregates docs/data/reports.json into LEADERBOARD.md
+└── import_i4r_candidates.py   Emits prefilled candidate YAMLs from the I4R corpus
 
-tests/                         266 passing, 16 skipped (network/Docker/no-API-key)
+tests/                         pytest suite (network/Docker/no-API-key tests auto-skip)
 Makefile                       sync / test / lint / typecheck / check /
-                               benchmark / leaderboard / build-sandbox /
-                               build-r-sandbox
+                               benchmark / build-sandbox / build-r-sandbox
 ```
 
 ---

@@ -1,7 +1,7 @@
 """Shared importlib helpers for loading scripts that live outside ``src/``.
 
-The ``benchmark/`` package and the standalone ``scripts/generate_leaderboard.py``
-both live at the repo root, not under ``src/openra/``, so the test suite
+The ``benchmark/`` package and the standalone scripts under ``scripts/``
+live at the repo root, not under ``src/openra/``, so the test suite
 brings them in via :mod:`importlib` rather than relying on ``sys.path``
 gymnastics.  Four test modules used to roll their own
 ``importlib.util.spec_from_file_location`` boilerplate; this helper

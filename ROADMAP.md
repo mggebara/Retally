@@ -36,7 +36,7 @@ one paper ever run end-to-end (Dincecco et al. 2022).
 
 ## Phase 0 — Stop the bleeding (small, immediate, no API cost)
 
-### 0.1 Remove the author leaderboard
+### 0.1 Remove the author leaderboard — ✅ done
 
 `LEADERBOARD.md` ranks real, named authors by "reproducibility pass rate"
 computed from synthetic demo runs against UCI dataset donation citations —
@@ -44,11 +44,15 @@ not real papers. At the pipeline's current precision, a failed claim means
 the *tool* failed, not the author. Publicly attaching pass/fail verdicts to
 named people is the least defensible artifact in the repo.
 
-- Delete `LEADERBOARD.md`, `scripts/generate_leaderboard.py`, the
-  `make leaderboard` target, and the README links to them.
-- Relabel `docs/index.html` + `docs/data/reports.json` explicitly as
-  **demo output of the pipeline on synthetic inputs** (or delete them too —
-  they date from the sklearn-toy era and no longer represent the project).
+- ~~Delete `LEADERBOARD.md`, `scripts/generate_leaderboard.py`, the
+  `make leaderboard` target, and the README links to them.~~ Done, plus
+  `tests/test_leaderboard.py`, `docs/data/leaderboard.json`, the
+  `check-leaderboard-fresh` gate, and the CI freshness step.
+- ~~Relabel `docs/index.html` + `docs/data/reports.json` explicitly as
+  **demo output of the pipeline on synthetic inputs**.~~ Done — the
+  dashboard header and README now say demo/smoke-test explicitly.
+  Deleting them outright remains an option once the benchmark dashboard
+  replaces them.
 - Decision to make later, not now: if an author-facing artifact ever
   returns, it requires far higher precision than exists today and should be
   paper-level, not person-level.
