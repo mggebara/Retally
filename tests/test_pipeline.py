@@ -569,3 +569,34 @@ def test_validate_without_claims_still_extracts():
     pipeline, _ = _make_pipeline()
     pipeline.validate("some text")
     pipeline.extractor.extract_claims.assert_called_once()
+
+
+def test_pipeline_forwards_package_scripts_to_generator(tmp_path):
+    """Analysis scripts inside the downloaded dataset must reach generate()."""
+    pipeline, _ = _make_pipeline()
+
+    # A replication-package-shaped dataset: data + the authors' scripts.
+    package = tmp_path / "zenodo_pkg"
+    package.mkdir()
+    (package / "districts.csv").write_text("id,lum\n1,2.0\n")
+    (package / "main_tables.R").write_text("feols(lum ~ conflict | state, data)\n")
+    pipeline.downloader.download.return_value = Dataset(
+        name="replication package",
+        source_url="https://zenodo.org/records/1",
+        local_path=package,
+    )
+
+    pipeline.validate("some text")
+
+    [call] = pipeline.generator.generate.call_args_list
+    scripts = call.kwargs.get("package_scripts")
+    assert scripts is not None
+    assert [s.relative_path for s in scripts] == ["main_tables.R"]
+
+
+def test_pipeline_passes_no_package_scripts_for_registry_datasets():
+    """The classic single-CSV flow must see package_scripts=None, not []."""
+    pipeline, _ = _make_pipeline()
+    pipeline.validate("some text")
+    [call] = pipeline.generator.generate.call_args_list
+    assert call.kwargs.get("package_scripts") is None

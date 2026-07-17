@@ -17,11 +17,14 @@
 #      debugging "is this paper even right" while debugging the pipeline.
 #   3. Replication package is on Zenodo (5583263) — public access.
 #
-# original_claims and i4r_replicator_findings are deliberately left empty
-# for the first pass.  The pipeline extracts claims from the paper text
-# itself via ClaimExtractor; we'll seed these fields with the actual
-# numbers after we see what the extractor produces.  That avoids guessing
-# at indices that may or may not align with the LLM's claim order.
+# original_claims pins the headline Table 1 estimates (curated per the
+# rubric in benchmark/README.md).  Values are cross-checked against the
+# I4R First Meta Database's o_coeff_dbl / o_std_err_dbl columns
+# (benchmark/corpus/) — the same numbers the human replicators scored
+# against.  Descriptions are deliberately snake_case tokens: the
+# comparator matches claims to RESULT:<name> outputs by normalised
+# exact/substring match, and the generation prompt tells the model to
+# use metric names matching the claim descriptions.
 
 id: dincecco-2022-india-warfare
 i4r_report_url: https://www.rwi-essen.de/fileadmin/user_upload/RWI/Publikationen/I4R_Discussion_Paper_Series/035_I4R_Forshaw_Oelkers_Sethi_Sovani.pdf
@@ -61,8 +64,69 @@ dataset:
 code_repo:
   url: https://zenodo.org/records/5583263
 
-original_claims: []
-i4r_replicator_findings: []
+original_claims:
+  - description: warfare_coefficient_bivariate
+    value: 3.713
+    claim_type: coefficient
+    standard_error: 0.305
+    sample_size: 660
+    location: "Table 1"
+    context: >
+      OLS coefficient on pre-colonial conflict exposure — log of one plus
+      land battles within 250 km of the district centroid, 1000-1757 —
+      in a bivariate regression of log district luminosity on conflict
+      exposure, no controls and no fixed effects.  N=660 districts.
+  - description: warfare_se_bivariate
+    value: 0.305
+    claim_type: standard_error
+    location: "Table 1"
+    context: Standard error of warfare_coefficient_bivariate.
+  - description: warfare_coefficient_full_controls
+    value: 1.465
+    claim_type: coefficient
+    standard_error: 0.370
+    sample_size: 660
+    location: "Table 1"
+    context: >
+      Coefficient on pre-colonial conflict exposure in the most saturated
+      Table 1 specification: state fixed effects plus the paper's
+      geographic and historical control set.  The paper's abstract-level
+      finding attenuates from 3.713 (bivariate) to this value.
+  - description: warfare_se_full_controls
+    value: 0.370
+    claim_type: standard_error
+    location: "Table 1"
+    context: Standard error of warfare_coefficient_full_controls.
+  - description: sample_size_districts
+    value: 660
+    claim_type: other
+    unit: districts
+    location: "Table 1"
+    context: Number of district observations in the Table 1 regressions.
+
+# DP35's verdict is blanket: "All estimates are computationally
+# reproducible" (in Stata AND in the replicators' own R routine).  For
+# the direct rerun the I4R values therefore equal the paper's stated
+# values.  The meta-database's per-row r_coeff_dbl values cover
+# robustness VARIANTS (sample cuts, recodings), not the direct
+# reproduction, so they are deliberately not transcribed here.
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: 3.713
+    outcome: matches
+    notes: DP35 blanket verdict — all estimates computationally reproducible.
+  - claim_id: 1
+    reproduced_value: 0.305
+    outcome: matches
+  - claim_id: 2
+    reproduced_value: 1.465
+    outcome: matches
+  - claim_id: 3
+    reproduced_value: 0.370
+    outcome: matches
+  - claim_id: 4
+    reproduced_value: 660
+    outcome: matches
 
 notes: >
   Headline finding: pre-colonial conflict exposure (land battles within
@@ -82,7 +146,14 @@ notes: >
   right data files and rebuild the estimating equation.  That, plus the
   still-truncated methodology-summary window, is the actionable next step.
 
-  `original_claims` is deliberately still empty: the 102 extracted claims
-  are the *paper's* stated values (what OpenRA already compares against),
-  whereas this field is for hand-curated I4R-aligned values, which we'll
-  seed once the reproduction actually lands numbers to align against.
+  Claims pinned (2026-07): five headline Table 1 claims replace the 102
+  auto-extracted ones — bivariate and full-specification coefficients
+  with their SEs, plus N.  Values cross-checked against the I4R meta
+  database (which records six distinct Table 1 estimates for this
+  paper: 3.713/0.305, 1.601/0.380, 1.465/0.370, 3.482/1.389,
+  4.626/1.291, 4.930/0.609).  The four estimates not pinned here need
+  paper access to map to specific columns — 1.601 is most likely the
+  state-FE-without-controls column, and the 3.482/4.626/4.930 trio
+  also appears under Table 2 rows, suggesting alternative outcome or
+  exposure measures.  Curate them from the PDF (which the runner
+  downloads anyway) when tightening this entry beyond the headline.

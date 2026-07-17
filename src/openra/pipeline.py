@@ -47,7 +47,7 @@ from pathlib import Path
 from typing import Any
 
 from openra.code.downloader import CodeDownloader
-from openra.code.selector import select_relevant_files
+from openra.code.selector import select_package_scripts, select_relevant_files
 from openra.codegen.docker_executor import DEFAULT_R_IMAGE, DockerExecutor, RDockerExecutor
 from openra.codegen.executor import CodeExecutor
 from openra.codegen.generator import CodeGenerator
@@ -251,10 +251,19 @@ class ValidationPipeline:
         # Step 8: download dataset
         dataset = self.downloader.download(ref)
 
+        # Step 8.5: pick up the authors' own analysis scripts when the
+        # dataset is a replication package (Zenodo/Dataverse archives ship
+        # the .do/.R scripts that produced the paper's tables alongside the
+        # data).  Registry datasets contain no scripts, so this is a no-op
+        # for the classic ML flow.
+        package_scripts = select_package_scripts(dataset.local_path)
+
         # Step 9: generate, execute, and refine until claims pass or we give up.
         # Comparison happens inside the refinement loop so it can decide when
         # to stop; the returned claim_results reflect the final attempt.
-        code, exec_result, claim_results = self._run_with_refinement(paper, dataset, reference_files)
+        code, exec_result, claim_results = self._run_with_refinement(
+            paper, dataset, reference_files, package_scripts
+        )
 
         # Step 10: audit hyperparameters in the final code against the spec
         exec_result.hyperparameter_audits = audit_hyperparameters(code, paper.hyperparameters)
@@ -365,7 +374,11 @@ class ValidationPipeline:
         return files
 
     def _run_with_refinement(
-        self, paper, dataset, reference_files: list | None = None
+        self,
+        paper,
+        dataset,
+        reference_files: list | None = None,
+        package_scripts: list | None = None,
     ) -> tuple[str, ExecutionResult, list[ClaimValidationResult]]:
         """Generate code, execute it, and refine until the claims pass or we give up.
 
@@ -374,11 +387,11 @@ class ValidationPipeline:
         many claim-targeted refinement passes ran; ``deviation_notes``
         captures any methodology changes the generator declared.
 
-        ``reference_files`` (optional) is forwarded only to the initial
-        ``generate()`` call.  Refinement prompts deliberately do not
-        repaste the reference repo on every call — they have the
-        previous code and the specific error/gap to focus on, and the
-        reference is already baked into the original generation.
+        ``reference_files`` and ``package_scripts`` (optional) are
+        forwarded only to the initial ``generate()`` call.  Refinement
+        prompts deliberately do not repaste them on every call — they
+        have the previous code and the specific error/gap to focus on,
+        and both are already baked into the original generation.
 
         Two phases:
 
@@ -400,7 +413,12 @@ class ValidationPipeline:
         executor = self._executor_for(paper.language)
 
         # ── Phase 1: get a clean execution ────────────────────────────
-        code = self.generator.generate(paper, dataset, reference_files=reference_files or None)
+        code = self.generator.generate(
+            paper,
+            dataset,
+            reference_files=reference_files or None,
+            package_scripts=package_scripts or None,
+        )
         result = executor.execute(code, dataset)
 
         for _attempt in range(self.max_refinements):

@@ -52,6 +52,10 @@ Paper (PDF / arXiv ID / URL / text)
  (Claude API)         language (Python/sklearn or R/fixest+AER+plm),
                       guided by methodology + claims + dataset schema,
                       seeded with reference code files when available
+                      AND with the replication package's own analysis
+                      scripts (.R/.do/.Rmd found inside the dataset) —
+                      the authoritative statement of the estimating
+                      equation, translated rather than transliterated
         │
         ▼
  CodeExecutor         run in subprocess  ──or──  DockerExecutor
@@ -541,7 +545,9 @@ src/openra/
 ├── code/
 │   ├── downloader.py          CodeDownloader  (shallow git clone of paper repos)
 │   └── selector.py            select_relevant_files (cherry-pick Python files
-│                              from a cloned repo to seed CodeGenerator)
+│                              from a cloned repo) + select_package_scripts
+│                              (authors' .R/.do/.Rmd inside the replication
+│                              package) — both seed CodeGenerator
 ├── codegen/
 │   ├── generator.py           CodeGenerator (Claude-backed; Python + R prompts)
 │   ├── executor.py            CodeExecutor (subprocess; Python-only fallback)
@@ -690,6 +696,23 @@ References (cloned or not) appear in the markdown report as a
 **Reference code** bullet list under the dataset, in console output
 as a `Reference code: N/M cloned` summary line, and on the dashboard
 modal as a list with per-link status.
+
+### Replication-package scripts
+
+Econ replication packages (Zenodo/Dataverse archives) ship the
+authors' own analysis scripts *inside the dataset* — the single most
+authoritative description of the estimating equation, variable names,
+sample restrictions, and clustering.  After the dataset downloads,
+`select_package_scripts` walks `dataset.local_path` for `.R` / `.do` /
+`.Rmd` files (preferring `master` / `main` / `tables` / `analysis` /
+`regression` names, demoting figure scripts) and the generation prompt
+gains an **Original Replication Scripts** section with the instruction
+to implement the same specification — translating a Stata `.do`
+regression into the equivalent `fixest::feols()` call rather than
+transliterating syntax.  Registry datasets contain no scripts, so the
+classic ML flow is untouched.  Like reference repos, the scripts are
+baked into the initial generation only, not re-pasted into
+refinement prompts.
 
 ### `CodeExecutor` parameters
 

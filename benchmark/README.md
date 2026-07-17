@@ -84,6 +84,24 @@ OPENRA_LLM_CACHE=0 make benchmark    # fully live run (measure variance)
 rm -rf benchmark/.cache/llm          # cold-start the call cache
 ```
 
+**Curating headline claims (the rubric).**  Pinned claims are scored
+against, so what gets pinned defines what "reproduced" means.  A claim
+qualifies as *headline* when it is (a) stated in the paper's abstract
+or main results table, (b) an estimate the paper's conclusions rest on,
+and (c) numerically stated (a coefficient, SE, R², or sample size —
+not "significant at 5%").  Target 8–12 per paper; exclude summary
+statistics, appendix robustness coefficients, and anything the text
+calls "suggestive".  Write descriptions as compact snake_case tokens
+(`warfare_coefficient_bivariate`) — the comparator matches claims to
+`RESULT:<name>` outputs by normalised exact/substring match, and the
+generation prompt instructs the model to name its outputs after the
+claim descriptions, so a prose description that normalises to a
+40-token string will simply never match.  Put the human-readable
+specification (what the estimate is, which controls, which sample) in
+`context`, and the table/column in `location`.  Cross-check every
+value against the I4R meta-database's `o_coeff_dbl` / `o_std_err_dbl`
+columns (`benchmark/corpus/`) where the paper has rows there.
+
 **Pinned claims.**  When an entry's `original_claims` is populated, the
 runner passes them straight to the pipeline and the claims-extraction
 call is skipped entirely.  Just as important: every run then scores

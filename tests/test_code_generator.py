@@ -472,3 +472,52 @@ def test_prompt_dataset_path_is_absolute_matching_the_mount():
 
     section = "\n".join(CodeGenerator._dataset_section(CodeGenerator.__new__(CodeGenerator), ds))
     assert f"Local path: {mount}" in section
+
+
+# ── Original replication scripts (package_scripts) ──────────────────────
+
+
+def test_prompt_omits_package_scripts_section_when_none():
+    gen = _generator()
+    prompt = gen._build_generation_prompt_r(_paper(language=Language.R), _dataset(), reference_files=[])
+    assert "Original Replication Scripts" not in prompt
+
+
+def test_r_prompt_includes_package_scripts_with_per_file_fences():
+    gen = _generator()
+    scripts = [
+        _selected("code/wii_replication.do", "reghdfe lum conflict, absorb(state)"),
+        _selected("code/main_tables.R", "feols(lum ~ conflict | state, data)"),
+    ]
+    prompt = gen._build_generation_prompt_r(
+        _paper(language=Language.R), _dataset(), reference_files=[], package_scripts=scripts
+    )
+    assert "## Original Replication Scripts" in prompt
+    assert "### `code/wii_replication.do`" in prompt
+    assert "```stata\nreghdfe lum conflict, absorb(state)" in prompt
+    assert "### `code/main_tables.R`" in prompt
+    assert "```r\nfeols(lum ~ conflict | state, data)" in prompt
+    # The instruction must ask for translation, not transliteration.
+    assert "do not transliterate" in prompt
+    assert "GROUND TRUTH" in prompt
+
+
+def test_python_prompt_includes_package_scripts_section():
+    gen = _generator()
+    scripts = [_selected("analysis.py", "df = pd.read_stata('x.dta')")]
+    prompt = gen._build_generation_prompt_python(
+        _paper(), _dataset(), reference_files=[], package_scripts=scripts
+    )
+    assert "## Original Replication Scripts" in prompt
+    assert "```python\ndf = pd.read_stata('x.dta')" in prompt
+
+
+def test_generate_forwards_package_scripts_to_prompt():
+    client = MagicMock()
+    client.messages.create.return_value = MagicMock(content=[MagicMock(text="cat('RESULT:beta=1.0\\n')")])
+    gen = CodeGenerator(client)
+    scripts = [_selected("master.do", "reg y x")]
+    gen.generate(_paper(language=Language.R), _dataset(), package_scripts=scripts)
+    prompt = client.messages.create.call_args.kwargs["messages"][0]["content"]
+    assert "### `master.do`" in prompt
+    assert "reg y x" in prompt

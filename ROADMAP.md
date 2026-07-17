@@ -84,8 +84,9 @@ majority of *headline* claims matched. No new general infrastructure until
 this lands. Both PR #24 and PR #25 already named these as the next step;
 this phase is that step.
 
-### 1.1 Seed the replication package's own scripts into codegen
-*(highest leverage — do first)*
+### 1.1 Seed the replication package's own scripts into codegen — ✅ built
+*(highest leverage — do first; implemented 2026-07, awaits live verification
+under 1.3)*
 
 The Zenodo package the pipeline already downloads contains the authors'
 own `.do`/`.R` scripts — the ground truth of the estimating equation. They
@@ -110,7 +111,11 @@ emits all-`NA` coefficients.
   prompt contains the script text for R papers; Python/registry-dataset
   flow is byte-identical (zero churn to the demo path).
 
-### 1.2 Pin curated headline claims
+### 1.2 Pin curated headline claims — ✅ built
+*(rubric written into `benchmark/README.md`; five headline Table 1 claims
+pinned for Dincecco with I4R findings.  Four more Table 1 estimates are
+identified in the entry's notes but need paper access to map to columns —
+finish that mapping during 1.3, where the runner downloads the PDF anyway.)*
 
 Scoring against 102 auto-extracted claims (every coefficient, SE, and R²
 in the paper) is the wrong yardstick — I4R replicators verify headline
