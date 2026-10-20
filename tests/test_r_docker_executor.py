@@ -13,8 +13,8 @@ from pathlib import Path
 
 import pytest
 
-from openra.codegen.docker_executor import DEFAULT_R_IMAGE, RDockerExecutor
-from openra.models import Dataset
+from retally.codegen.docker_executor import DEFAULT_R_IMAGE, RDockerExecutor
+from retally.models import Dataset
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -57,7 +57,7 @@ def dummy_dataset(tmp_path):
 
 
 def test_default_image_is_r_sandbox(executor):
-    assert executor.image == "openra-sandbox-r:latest"
+    assert executor.image == "retally-sandbox-r:latest"
 
 
 def test_script_is_mounted_as_R_extension(executor, dummy_dataset):

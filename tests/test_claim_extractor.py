@@ -8,8 +8,8 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from openra.models import ClaimType, CodeReferenceSource, DatasetSource, Paper
-from openra.paper.extractor import ClaimExtractor
+from retally.models import ClaimType, CodeReferenceSource, DatasetSource, Paper
+from retally.paper.extractor import ClaimExtractor
 
 
 def _make_mock_client(response_text: str):

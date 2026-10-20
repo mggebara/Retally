@@ -46,14 +46,14 @@ import re
 from pathlib import Path
 from typing import Any
 
-from openra.code.downloader import CodeDownloader
-from openra.code.selector import select_package_scripts, select_relevant_files
-from openra.codegen.docker_executor import DEFAULT_R_IMAGE, DockerExecutor, RDockerExecutor
-from openra.codegen.executor import CodeExecutor
-from openra.codegen.generator import CodeGenerator
-from openra.dataset.downloader import DatasetDownloader
-from openra.dataset.registry import DatasetRegistry
-from openra.models import (
+from retally.code.downloader import CodeDownloader
+from retally.code.selector import select_package_scripts, select_relevant_files
+from retally.codegen.docker_executor import DEFAULT_R_IMAGE, DockerExecutor, RDockerExecutor
+from retally.codegen.executor import CodeExecutor
+from retally.codegen.generator import CodeGenerator
+from retally.dataset.downloader import DatasetDownloader
+from retally.dataset.registry import DatasetRegistry
+from retally.models import (
     Claim,
     ClaimValidationResult,
     CodeReference,
@@ -62,11 +62,11 @@ from openra.models import (
     Language,
     ValidationReport,
 )
-from openra.paper.extractor import ClaimExtractor
-from openra.paper.parser import PaperParser
-from openra.validation.comparator import ResultComparator
-from openra.validation.hyperparam_audit import audit_hyperparameters
-from openra.validation.reporter import ValidationReporter
+from retally.paper.extractor import ClaimExtractor
+from retally.paper.parser import PaperParser
+from retally.validation.comparator import ResultComparator
+from retally.validation.hyperparam_audit import audit_hyperparameters
+from retally.validation.reporter import ValidationReporter
 
 AnyExecutor = CodeExecutor | DockerExecutor | RDockerExecutor
 
@@ -106,7 +106,7 @@ class ValidationPipeline:
         ``max_refinements + 1``.
     max_claim_refinements:
         After the initial refinement phase produces a working script,
-        OpenRA compares the reproduced values against the paper's
+        Retally compares the reproduced values against the paper's
         claims.  If any claim ran but is outside tolerance (a "soft"
         failure), the pipeline asks the generator to close the gap up
         to this many times.  Setting it to 0 disables claim-targeted
@@ -536,7 +536,7 @@ class ValidationPipeline:
         anthropic_api_key: str | None = None,
         use_docker: bool = True,
         allow_unsafe_subprocess: bool = False,
-        docker_image: str = "openra-sandbox:latest",
+        docker_image: str = "retally-sandbox:latest",
         docker_r_image: str = DEFAULT_R_IMAGE,
         docker_memory: str = "4g",
         docker_cpus: float = 1.0,
@@ -592,7 +592,7 @@ class ValidationPipeline:
         # preserves exactly.
         client: Any = anthropic.Anthropic(api_key=anthropic_api_key)
         if llm_cache_dir is not None:
-            from openra.llm_cache import CachingLLMClient
+            from retally.llm_cache import CachingLLMClient
 
             client = CachingLLMClient(client, llm_cache_dir)
 

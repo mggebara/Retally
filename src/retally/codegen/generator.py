@@ -27,7 +27,7 @@ import re
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from openra.models import (
+from retally.models import (
     ClaimType,
     ClaimValidationResult,
     Dataset,
@@ -37,7 +37,7 @@ from openra.models import (
 )
 
 if TYPE_CHECKING:
-    from openra.code.selector import SelectedFile
+    from retally.code.selector import SelectedFile
 
 
 class UnsupportedLanguageError(NotImplementedError):
@@ -477,7 +477,7 @@ class CodeGenerator:
         """Construct the R-flavoured generation prompt.
 
         Same structure as the Python version but targets R + the
-        econometrics package set baked into openra-sandbox-r:
+        econometrics package set baked into retally-sandbox-r:
         ``fixest`` for fixed-effects regressions, ``AER`` for IV /
         Tobit, ``plm`` for panel data, ``lmtest`` + ``sandwich`` for
         robust SEs, ``modelsummary`` for tables, ``data.table`` /
@@ -510,7 +510,7 @@ class CodeGenerator:
                 "## Code Requirements",
                 "Write a complete, self-contained R script that runs under Rscript.",
                 self._load_instruction(dataset, Language.R),
-                "Prefer the following packages, all pre-installed in the openra-sandbox-r image:",
+                "Prefer the following packages, all pre-installed in the retally-sandbox-r image:",
                 "  - fixest         fast fixed-effects regression (feols, feglm, fepois, …)",
                 "  - AER            instrumental variables (ivreg), Tobit, count data",
                 "  - plm            panel data econometrics",
@@ -576,7 +576,7 @@ class CodeGenerator:
             "",
             "## Reminder: Constraints",
             f"- {self._load_instruction(dataset, Language.R)}",
-            "- Use the econometrics packages in the openra-sandbox-r image "
+            "- Use the econometrics packages in the retally-sandbox-r image "
             "(fixest, AER, plm, lmtest, sandwich, modelsummary, data.table, readr, dplyr).",
             "- Do NOT access the internet.",
             "- Do NOT call system() / system2().",
@@ -692,7 +692,7 @@ class CodeGenerator:
             "## Output convention (unchanged)",
             "Emit every metric as ``cat('RESULT:<name>=<value>\\n')``.",
             self._load_instruction(dataset, Language.R),
-            "Use the econometrics packages in the openra-sandbox-r image.",
+            "Use the econometrics packages in the retally-sandbox-r image.",
             "No network, no system().  set.seed(42).",
             "",
             "Output ONLY the R code — no explanation, no markdown fences.",
@@ -953,7 +953,7 @@ class CodeGenerator:
     def _algorithm_hint_r(claim_types: set) -> str:
         """R-flavoured algorithm hints for the claim types seen.
 
-        Targets the econometrics packages in the openra-sandbox-r image:
+        Targets the econometrics packages in the retally-sandbox-r image:
         fixest for fixed-effects / IV, AER for instrumental variables,
         plm for panel data, lmtest + sandwich for robust SEs.
         """

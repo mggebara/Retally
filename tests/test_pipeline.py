@@ -3,7 +3,7 @@
 from pathlib import Path
 from unittest.mock import MagicMock
 
-from openra.models import (
+from retally.models import (
     AuditStatus,
     Claim,
     ClaimType,
@@ -16,7 +16,7 @@ from openra.models import (
     Paper,
     ValidationReport,
 )
-from openra.pipeline import ValidationPipeline
+from retally.pipeline import ValidationPipeline
 
 
 def _make_pipeline():
@@ -401,7 +401,7 @@ def test_pipeline_skips_code_extraction_when_disabled():
 
 def test_pipeline_forwards_reference_files_to_generator(tmp_path):
     """When code is found, cloned, and selectable, generate() must receive it."""
-    from openra.models import CodeReference, CodeReferenceSource
+    from retally.models import CodeReference, CodeReferenceSource
 
     pipeline, _ = _make_pipeline()
     # Extractor finds a GitHub repo.
@@ -438,7 +438,7 @@ def test_pipeline_forwards_reference_files_to_generator(tmp_path):
 
 def test_pipeline_records_resolved_references_on_paper():
     """paper.code_references must be updated even when downloads fail."""
-    from openra.models import CodeReference, CodeReferenceSource
+    from retally.models import CodeReference, CodeReferenceSource
 
     pipeline, _ = _make_pipeline()
     ref = CodeReference(
@@ -470,7 +470,7 @@ def test_outputs_close_treats_float_jitter_as_no_progress():
     """The refinement loop used to compare output dicts with ``==``, so
     0.95000000001 vs 0.95 looked like progress and burned a slot.
     """
-    from openra.pipeline import _outputs_close
+    from retally.pipeline import _outputs_close
 
     a = {"accuracy": 0.95}
     b = {"accuracy": 0.9500000001}
@@ -478,7 +478,7 @@ def test_outputs_close_treats_float_jitter_as_no_progress():
 
 
 def test_outputs_close_real_change_is_not_close():
-    from openra.pipeline import _outputs_close
+    from retally.pipeline import _outputs_close
 
     assert not _outputs_close({"accuracy": 0.90}, {"accuracy": 0.95})
 
@@ -488,7 +488,7 @@ def test_outputs_close_different_keys_are_not_close():
     overlap matches.  A refinement that produces a new RESULT line is
     new information; don't collapse it.
     """
-    from openra.pipeline import _outputs_close
+    from retally.pipeline import _outputs_close
 
     assert not _outputs_close({"accuracy": 0.95}, {"accuracy": 0.95, "f1": 0.92})
 
@@ -511,7 +511,7 @@ def _make_pipeline_with_r_executor():
 
 def test_python_paper_routes_to_python_executor():
     """A Python paper must invoke executor.execute, not r_executor.execute."""
-    from openra.models import Language
+    from retally.models import Language
 
     pipeline, _ = _make_pipeline_with_r_executor()
     pipeline.parser.parse_text.return_value.language = Language.PYTHON
@@ -523,7 +523,7 @@ def test_python_paper_routes_to_python_executor():
 
 def test_r_paper_routes_to_r_executor():
     """An R paper must invoke r_executor.execute, not executor.execute."""
-    from openra.models import Language
+    from retally.models import Language
 
     pipeline, _ = _make_pipeline_with_r_executor()
     pipeline.parser.parse_text.return_value.language = Language.R
@@ -539,7 +539,7 @@ def test_r_paper_without_r_executor_raises_clearly():
     """
     import pytest
 
-    from openra.models import Language
+    from retally.models import Language
 
     pipeline, _ = _make_pipeline()
     assert pipeline.r_executor is None

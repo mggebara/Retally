@@ -30,14 +30,14 @@ import pandas as pd
 import requests
 from tqdm import tqdm
 
-from openra.models import Dataset, DatasetReference, DatasetSource
+from retally.models import Dataset, DatasetReference, DatasetSource
 
 logger = logging.getLogger(__name__)
 
 # Sentinel file written at the end of a successful download.  Its presence
 # is the cache-validity signal; a partial/interrupted download leaves the
 # directory without it and will be re-downloaded next time.
-_COMPLETE_SENTINEL = ".openra-download-complete"
+_COMPLETE_SENTINEL = ".retally-download-complete"
 
 _ARCHIVE_SUFFIXES = (".zip", ".tar.gz", ".tgz", ".tar")
 
@@ -82,7 +82,7 @@ class DatasetDownloader:
 
         Dispatches to the appropriate private method based on
         ``reference.source``.  A successful download is marked with a
-        ``.openra-download-complete`` sentinel file in the destination
+        ``.retally-download-complete`` sentinel file in the destination
         directory; if that sentinel is present the cached result is
         returned without touching the network.  A partial / interrupted
         download leaves the sentinel absent and will be retried.

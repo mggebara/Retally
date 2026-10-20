@@ -25,7 +25,7 @@ from __future__ import annotations
 
 import re
 
-from openra.models import Claim, ClaimType, ClaimValidationResult
+from retally.models import Claim, ClaimType, ClaimValidationResult
 
 
 class ResultComparator:

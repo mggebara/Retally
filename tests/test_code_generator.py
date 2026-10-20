@@ -13,9 +13,9 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from openra.code.selector import SelectedFile
-from openra.codegen.generator import CodeGenerator, UnsupportedLanguageError
-from openra.models import Claim, ClaimType, Dataset, ExecutionResult, Language, Paper
+from retally.code.selector import SelectedFile
+from retally.codegen.generator import CodeGenerator, UnsupportedLanguageError
+from retally.models import Claim, ClaimType, Dataset, ExecutionResult, Language, Paper
 
 
 def _paper(**overrides):
@@ -254,7 +254,7 @@ def test_refine_for_claims_routes_to_r_prompt():
 
     paper = _paper(language=Language.R)
     exec_result = ExecutionResult(generated_code="code", outputs={"beta": 0.3})
-    from openra.models import Claim, ClaimType, ClaimValidationResult
+    from retally.models import Claim, ClaimType, ClaimValidationResult
 
     failed = ClaimValidationResult(
         claim=Claim(description="treatment", value=0.5, claim_type=ClaimType.OTHER),
@@ -275,16 +275,16 @@ def test_refine_for_claims_routes_to_r_prompt():
 
 
 def test_algorithm_hint_python_mentions_sklearn():
-    from openra.codegen.generator import CodeGenerator
-    from openra.models import ClaimType
+    from retally.codegen.generator import CodeGenerator
+    from retally.models import ClaimType
 
     hint = CodeGenerator._algorithm_hint_python({ClaimType.ACCURACY})
     assert "scikit-learn" in hint.lower() or "sklearn" in hint.lower() or "Support Vector" in hint
 
 
 def test_algorithm_hint_r_mentions_fixest():
-    from openra.codegen.generator import CodeGenerator
-    from openra.models import ClaimType
+    from retally.codegen.generator import CodeGenerator
+    from retally.models import ClaimType
 
     # COEFFICIENT is the trigger for the default fixest guidance post-PR 5;
     # an empty claim set also fires it (no claims → assume regression).
@@ -293,8 +293,8 @@ def test_algorithm_hint_r_mentions_fixest():
 
 
 def test_algorithm_hint_r_does_not_mention_sklearn():
-    from openra.codegen.generator import CodeGenerator
-    from openra.models import ClaimType
+    from retally.codegen.generator import CodeGenerator
+    from retally.models import ClaimType
 
     hint = CodeGenerator._algorithm_hint_r({ClaimType.RMSE})
     assert "sklearn" not in hint.lower()
@@ -306,8 +306,8 @@ def test_algorithm_hint_r_does_not_mention_sklearn():
 
 def test_algorithm_hint_python_reacts_to_coefficient_claims():
     """COEFFICIENT in the claim set should trigger statsmodels guidance."""
-    from openra.codegen.generator import CodeGenerator
-    from openra.models import ClaimType as CT
+    from retally.codegen.generator import CodeGenerator
+    from retally.models import ClaimType as CT
 
     hint = CodeGenerator._algorithm_hint_python({CT.COEFFICIENT})
     assert "statsmodels" in hint
@@ -315,8 +315,8 @@ def test_algorithm_hint_python_reacts_to_coefficient_claims():
 
 
 def test_algorithm_hint_python_reacts_to_r_squared_claims():
-    from openra.codegen.generator import CodeGenerator
-    from openra.models import ClaimType as CT
+    from retally.codegen.generator import CodeGenerator
+    from retally.models import ClaimType as CT
 
     hint = CodeGenerator._algorithm_hint_python({CT.R_SQUARED})
     assert "statsmodels" in hint
@@ -324,16 +324,16 @@ def test_algorithm_hint_python_reacts_to_r_squared_claims():
 
 def test_algorithm_hint_python_does_not_emit_econ_block_for_pure_accuracy():
     """Pure ACCURACY claim shouldn't pull in the statsmodels guidance."""
-    from openra.codegen.generator import CodeGenerator
-    from openra.models import ClaimType as CT
+    from retally.codegen.generator import CodeGenerator
+    from retally.models import ClaimType as CT
 
     hint = CodeGenerator._algorithm_hint_python({CT.ACCURACY})
     assert "statsmodels" not in hint
 
 
 def test_algorithm_hint_r_emits_r_squared_specific_guidance():
-    from openra.codegen.generator import CodeGenerator
-    from openra.models import ClaimType as CT
+    from retally.codegen.generator import CodeGenerator
+    from retally.models import ClaimType as CT
 
     hint = CodeGenerator._algorithm_hint_r({CT.R_SQUARED})
     assert "r2(model)" in hint or "r.squared" in hint
@@ -343,8 +343,8 @@ def test_algorithm_hint_r_no_longer_fires_for_pure_accuracy():
     """The R hint used to emit the default coefficient guidance for every
     paper.  Post-PR 5 it only fires for econometric / empty claim sets.
     """
-    from openra.codegen.generator import CodeGenerator
-    from openra.models import ClaimType as CT
+    from retally.codegen.generator import CodeGenerator
+    from retally.models import ClaimType as CT
 
     hint = CodeGenerator._algorithm_hint_r({CT.ACCURACY})
     # The default fixest guidance shouldn't dominate when the paper's
@@ -405,7 +405,7 @@ def test_dataset_section_lists_files_in_tree(tmp_path):
 
 
 def test_dataset_file_listing_truncates_past_cap(tmp_path):
-    from openra.codegen.generator import _TREE_MAX_FILES, _describe_dataset_files
+    from retally.codegen.generator import _TREE_MAX_FILES, _describe_dataset_files
 
     for i in range(_TREE_MAX_FILES + 5):
         (tmp_path / f"file_{i:03d}.txt").write_text("x")
@@ -415,7 +415,7 @@ def test_dataset_file_listing_truncates_past_cap(tmp_path):
 
 
 def test_dataset_file_listing_empty_for_missing_dir(tmp_path):
-    from openra.codegen.generator import _describe_dataset_files
+    from retally.codegen.generator import _describe_dataset_files
 
     assert _describe_dataset_files(tmp_path / "nope") == []
 

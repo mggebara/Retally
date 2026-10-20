@@ -36,7 +36,7 @@ import ast
 import math
 from typing import Any
 
-from openra.models import AuditStatus, HyperparameterAudit, HyperparameterSpec
+from retally.models import AuditStatus, HyperparameterAudit, HyperparameterSpec
 
 
 def audit_hyperparameters(code: str, specs: list[HyperparameterSpec]) -> list[HyperparameterAudit]:

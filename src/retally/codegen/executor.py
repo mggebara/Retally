@@ -28,7 +28,7 @@ import tempfile
 import warnings
 from pathlib import Path
 
-from openra.models import Dataset, ExecutionResult
+from retally.models import Dataset, ExecutionResult
 
 # Names that generated code must not import or call.
 _FORBIDDEN_MODULES = frozenset(["subprocess", "socket", "multiprocessing", "ctypes", "pty", "fcntl"])
@@ -233,4 +233,4 @@ class CodeExecutor:
         Use ``tempfile.mkdtemp`` with a descriptive prefix.  The caller is
         responsible for cleanup after the ExecutionResult has been captured.
         """
-        return Path(tempfile.mkdtemp(prefix="openra_"))
+        return Path(tempfile.mkdtemp(prefix="retally_"))

@@ -13,7 +13,7 @@ Concretely, the end state is:
   corpus, each with pinned headline claims and transcribed human-replicator
   ground truth;
 - a frozen harness run over that catalog producing the **three-way verdict
-  matrix** (`openra_ran` / `agrees_with_paper` / `agrees_with_i4r`),
+  matrix** (`retally_ran` / `agrees_with_paper` / `agrees_with_i4r`),
   per-stage success rates, closeness distributions, and a failure
   taxonomy;
 - a **technical report** presenting those numbers honestly, positioned
@@ -57,20 +57,24 @@ named people is the least defensible artifact in the repo.
   returns, it requires far higher precision than exists today and should be
   paper-level, not person-level.
 
-### 0.2 Prepare the rename (execute when a name is chosen)
+### 0.2 Rename to Retally — ✅ done (2026-10)
 
-"OpenRA" collides with the widely known open-source RTS engine
-(openra.net). Rename before there is anything to promote. The name choice
-is pending; keep the mechanical work staged so the rename is one PR:
+The old name, "OpenRA", collided with the widely known open-source RTS
+engine (openra.net), and its expansion ("Open Source Research Assistant")
+described assistance rather than replication. "Retally" — re-tally the
+numbers — carries the project's actual job. The code-side rename covered:
 
-- `src/openra/` package path, `pyproject.toml` name, all imports;
-- Docker image tags `openra-sandbox` / `openra-sandbox-r`, the
-  `openra.run=` container label, `OPENRA_LLM_CACHE` env var,
-  `.openra-clone-complete` sentinel;
+- `src/retally/` package path, `pyproject.toml` name, all imports;
+- Docker image tags `retally-sandbox` / `retally-sandbox-r`, the
+  `retally.run=` container label, `RETALLY_LLM_CACHE` env var,
+  `.retally-clone-complete` sentinel;
 - README/docs/Makefile text, the GitHub repo name (GitHub redirects old
   URLs automatically).
 - Keep a shim-free clean break — the project has no external users yet;
   this gets strictly more expensive with every week of visibility.
+- Still manual (repository-settings writes are blocked from cloud
+  sessions): the GitHub repo rename to ``retally`` and the repository
+  description, both under Settings on github.com.
 
 **Exit criteria:** leaderboard gone from `main`; rename checklist exists
 (this section) and executes within a day of a name decision.
@@ -91,7 +95,7 @@ under 1.3)*
 The Zenodo package the pipeline already downloads contains the authors'
 own `.do`/`.R` scripts — the ground truth of the estimating equation. They
 never reach the prompt: `select_relevant_files`
-(`src/openra/code/selector.py`) only walks cloned GitHub repos and only
+(`src/retally/code/selector.py`) only walks cloned GitHub repos and only
 globs `*.py`, so the generator reconstructs the specification blind and
 emits all-`NA` coefficients.
 
@@ -220,7 +224,7 @@ researched → promoted → runnable, with rejection reasons) committed.
 Goal: turn the benchmark into the deliverable.
 
 - **Freeze:** tag a harness version; full live run (cache cold,
-  `OPENRA_LLM_CACHE=0`) over dev + holdout; run the holdout set 3× to
+  `RETALLY_LLM_CACHE=0`) over dev + holdout; run the holdout set 3× to
   measure sampling variance and report it — a reproducibility benchmark
   that doesn't report its own variance would be an irony too far.
 - **Contamination analysis (must-have for credibility):** the model may
@@ -272,4 +276,4 @@ release.
 | Training-data contamination inflates scores | Phase 4 pre/post-cutoff split; post-cutoff sub-sample |
 | Corpus curation stalls (manual research per paper) | Manual-placement escape hatch for gated data; batch sprints; accept 20 papers as sufficient N |
 | General-purpose agents make the bespoke pipeline obsolete | The moat is the *benchmark* (catalog + pinned claims + I4R ground truth + metrics), which any agent can be scored on — keep the harness agent-agnostic |
-| Name collision with the OpenRA game engine | Rename (Phase 0.2) before any publicity |
+| ~~Name collision with the OpenRA game engine~~ | Renamed to Retally (Phase 0.2, done) |

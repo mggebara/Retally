@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from openra.models import (
+from retally.models import (
     AuditStatus,
     Claim,
     ClaimType,
@@ -13,7 +13,7 @@ from openra.models import (
     HyperparameterSpec,
     Paper,
 )
-from openra.validation.reporter import ValidationReporter
+from retally.validation.reporter import ValidationReporter
 
 
 def _paper() -> Paper:
@@ -212,7 +212,7 @@ def test_console_output_omits_audit_when_empty():
 
 
 def _report_with_code_refs(refs):
-    from openra.models import CodeReference, CodeReferenceSource  # noqa: F401
+    from retally.models import CodeReference, CodeReferenceSource  # noqa: F401
 
     reporter = ValidationReporter()
     claim = Claim(description="accuracy", value=0.95, claim_type=ClaimType.ACCURACY)
@@ -231,7 +231,7 @@ def test_markdown_omits_reference_code_section_when_none():
 def test_markdown_lists_reference_code_with_cloned_status():
     from pathlib import Path
 
-    from openra.models import CodeReference, CodeReferenceSource
+    from retally.models import CodeReference, CodeReferenceSource
 
     refs = [
         CodeReference(
@@ -259,7 +259,7 @@ def test_markdown_lists_reference_code_with_cloned_status():
 def test_console_summarises_reference_code_when_present():
     from pathlib import Path
 
-    from openra.models import CodeReference, CodeReferenceSource
+    from retally.models import CodeReference, CodeReferenceSource
 
     refs = [
         CodeReference(
@@ -288,7 +288,7 @@ def test_console_omits_reference_code_when_none():
 
 def _report_with_language(language):
     """Build a minimal valid report whose execution_result has the given language."""
-    from openra.models import Language
+    from retally.models import Language
 
     reporter = ValidationReporter()
     claim = Claim(description="accuracy", value=0.95, claim_type=ClaimType.ACCURACY)
@@ -303,7 +303,7 @@ def _report_with_language(language):
 
 def test_markdown_code_fence_defaults_to_python():
     """Existing reports without a language field rendered as python — keep that."""
-    from openra.models import Language
+    from retally.models import Language
 
     reporter, report = _report_with_language(Language.PYTHON)
     md = reporter.to_markdown(report)
@@ -312,7 +312,7 @@ def test_markdown_code_fence_defaults_to_python():
 
 
 def test_markdown_code_fence_matches_r_language():
-    from openra.models import Language
+    from retally.models import Language
 
     reporter, report = _report_with_language(Language.R)
     md = reporter.to_markdown(report)
@@ -324,7 +324,7 @@ def test_markdown_code_fence_matches_r_language():
 
 
 def test_markdown_code_fence_matches_stata_language():
-    from openra.models import Language
+    from retally.models import Language
 
     reporter, report = _report_with_language(Language.STATA)
     md = reporter.to_markdown(report)

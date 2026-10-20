@@ -32,7 +32,7 @@ jobs:
       - name: Sync dependencies
         run: uv sync --frozen
       - name: mypy
-        run: uv run mypy src/openra
+        run: uv run mypy src/retally
 
   test:
     name: Tests (Python ${{ matrix.python-version }})

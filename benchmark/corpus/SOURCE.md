@@ -75,7 +75,7 @@ script docstring for why claim seeding is left to human promotion).
 ## Data-quality caveats (these shaped the intake filter)
 
 - **Report URLs are mostly missing.** Only **20 / 110** reports carry a
-  `replication_link`; among the 59 OpenRA-runnable (R or R-verified) reports,
+  `replication_link`; among the 59 Retally-runnable (R or R-verified) reports,
   only **9** do. `replicator_team` is an *internal* ID and does **not** equal
   the public I4R Discussion-Paper number (team 3 → DP47, team 5 → DP19, …),
   so a canonical report URL cannot be synthesised from it. Candidates without
@@ -88,7 +88,7 @@ script docstring for why claim seeding is left to human promotion).
   the filter treats a missing R/Python flag as "not runnable" rather than
   guessing.
 
-The gap between what's *catalogued* (110 reports) and what OpenRA can
+The gap between what's *catalogued* (110 reports) and what Retally can
 actually *run end-to-end* (needs R/Python **and** open data **and** an
 accessible paper) is itself a finding — the intake script reports the funnel.
 
@@ -96,7 +96,7 @@ accessible paper) is itself a finding — the intake script reports the funnel.
 
 `https://github.com/I4Replication/AI-Games` (MIT) holds the data behind
 Brodeur et al. (2026, PNAS) — an AI agent reproducing social-science
-results, the same task OpenRA performs. Its `data/AI games.dta` is
+results, the same task Retally performs. Its `data/AI games.dta` is
 attempt-level (137 rows) and keyed by anonymised paper IDs, so it is not
 directly importable into the paper catalog, but it is the closest external
-benchmark to OpenRA's own and worth revisiting.
+benchmark to Retally's own and worth revisiting.

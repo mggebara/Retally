@@ -1,11 +1,11 @@
-# openra-sandbox-r
+# retally-sandbox-r
 #
 # Offline execution environment for ML / econometrics reproduction
 # code written in R.  Built on Rocker's r2u image, which provides
 # fast binary package installation from CRAN via apt.
 #
 # Build:
-#   docker build -f docker/Dockerfile.sandbox.r -t openra-sandbox-r:latest docker/
+#   docker build -f docker/Dockerfile.sandbox.r -t retally-sandbox-r:latest docker/
 # (or: make build-r-sandbox)
 #
 # The container is always started with --network none so generated

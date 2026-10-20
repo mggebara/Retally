@@ -1,4 +1,4 @@
-# OpenRA benchmark report
+# Retally benchmark report
 
 Catalog size: **1** papers.  
 Executed: **1**.  

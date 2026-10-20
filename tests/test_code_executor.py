@@ -2,8 +2,8 @@
 
 import pytest
 
-from openra.codegen.executor import CodeExecutor, parse_deviation_notes
-from openra.models import Dataset
+from retally.codegen.executor import CodeExecutor, parse_deviation_notes
+from retally.models import Dataset
 
 
 @pytest.fixture

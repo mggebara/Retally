@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from unittest.mock import MagicMock
 
-from openra.llm_cache import CachingLLMClient
+from retally.llm_cache import CachingLLMClient
 
 
 def _mock_inner(text: str = "live response"):

@@ -3,8 +3,8 @@
 import fitz
 import pytest
 
-from openra.models import Paper
-from openra.paper.parser import PaperParser
+from retally.models import Paper
+from retally.paper.parser import PaperParser
 
 
 @pytest.fixture

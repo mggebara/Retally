@@ -14,12 +14,12 @@ from unittest.mock import patch
 
 import pytest
 
-from openra.code.downloader import (
+from retally.code.downloader import (
     CodeDownloader,
     _git_available,
     _parse_github_owner_repo,
 )
-from openra.models import CodeReference, CodeReferenceSource
+from retally.models import CodeReference, CodeReferenceSource
 
 
 def _ref(url: str, source: CodeReferenceSource = CodeReferenceSource.GITHUB) -> CodeReference:
@@ -78,7 +78,7 @@ def test_download_returns_cached_when_sentinel_present(tmp_path):
     local = dl._local_path(ref)
     local.mkdir(parents=True, exist_ok=True)
     (local / "README.md").write_text("cached")
-    (local / ".openra-clone-complete").touch()
+    (local / ".retally-clone-complete").touch()
 
     resolved = dl.download(ref)
     assert resolved.local_path == local
@@ -121,7 +121,7 @@ def test_download_skips_non_github_sources(tmp_path):
 def test_download_skips_when_git_unavailable(tmp_path):
     dl = CodeDownloader(cache_dir=tmp_path / "code")
     ref = _ref("https://github.com/x/y")
-    with patch("openra.code.downloader._git_available", return_value=False):
+    with patch("retally.code.downloader._git_available", return_value=False):
         resolved = dl.download(ref)
     assert resolved.local_path is None
 

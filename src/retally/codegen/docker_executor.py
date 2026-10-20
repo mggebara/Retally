@@ -17,10 +17,10 @@ Per-language subclasses
 The shared logic lives in ``_DockerExecutorBase``.  Subclasses pin the
 language-specific bits:
 
-  * ``DockerExecutor`` — Python; uses ``openra-sandbox:latest`` and runs
+  * ``DockerExecutor`` — Python; uses ``retally-sandbox:latest`` and runs
     ``python -u /workspace/script.py``.  Also runs the Python AST
     preflight check before spinning up Docker.
-  * ``RDockerExecutor`` — R; uses ``openra-sandbox-r:latest`` and runs
+  * ``RDockerExecutor`` — R; uses ``retally-sandbox-r:latest`` and runs
     ``Rscript /workspace/script.R``.  No preflight (R has no equivalent
     quick static check in the stdlib).
 
@@ -51,8 +51,8 @@ import tempfile
 import uuid
 from pathlib import Path
 
-from openra.codegen.executor import parse_deviation_notes, parse_outputs, preflight_check
-from openra.models import Dataset, ExecutionResult
+from retally.codegen.executor import parse_deviation_notes, parse_outputs, preflight_check
+from retally.models import Dataset, ExecutionResult
 
 logger = logging.getLogger(__name__)
 
@@ -60,16 +60,16 @@ logger = logging.getLogger(__name__)
 # target only this executor's own run instead of every container sharing the
 # sandbox image — a real concern under a concurrent benchmark, where multiple
 # pipelines spin up containers from the same image at the same time.
-_RUN_LABEL_KEY = "openra.run"
+_RUN_LABEL_KEY = "retally.run"
 
-# Repo root, two levels up from src/openra/codegen/
+# Repo root, two levels up from src/retally/codegen/
 _REPO_ROOT = Path(__file__).parents[3]
 _DOCKERFILE_PYTHON = _REPO_ROOT / "docker" / "Dockerfile.sandbox"
 _DOCKERFILE_R = _REPO_ROOT / "docker" / "Dockerfile.sandbox.r"
 
 # Default image tags — build with ``make build-sandbox`` / ``make build-r-sandbox``.
-DEFAULT_IMAGE = "openra-sandbox:latest"
-DEFAULT_R_IMAGE = "openra-sandbox-r:latest"
+DEFAULT_IMAGE = "retally-sandbox:latest"
+DEFAULT_R_IMAGE = "retally-sandbox-r:latest"
 
 
 class _DockerExecutorBase:
@@ -121,7 +121,7 @@ class _DockerExecutorBase:
 
         self._require_docker()
 
-        work_dir = Path(tempfile.mkdtemp(prefix="openra_docker_"))
+        work_dir = Path(tempfile.mkdtemp(prefix="retally_docker_"))
         # Per-run UUID stamps the container with a unique label so the
         # timeout-kill path can target this run specifically — see
         # ``_kill_timeout_container``.
@@ -309,7 +309,7 @@ class _DockerExecutorBase:
     def _kill_timeout_container(self, run_id: str) -> None:
         """Best-effort: kill the container we started, after a host-side timeout.
 
-        Filters by ``label=openra.run=<run_id>`` so a parallel run sharing the
+        Filters by ``label=retally.run=<run_id>`` so a parallel run sharing the
         same sandbox image is never collateral damage.  This matters under the
         benchmark harness, where multiple pipelines can be in flight at once.
 
@@ -347,7 +347,7 @@ class DockerExecutor(_DockerExecutorBase):
     Parameters
     ----------
     image:
-        Docker image tag.  Defaults to ``openra-sandbox:latest``; build
+        Docker image tag.  Defaults to ``retally-sandbox:latest``; build
         with ``DockerExecutor.build_image()`` or ``make build-sandbox``.
     timeout:
         Wall-clock seconds before the container is killed.
@@ -378,7 +378,7 @@ class RDockerExecutor(_DockerExecutorBase):
     Parameters
     ----------
     image:
-        Docker image tag.  Defaults to ``openra-sandbox-r:latest``;
+        Docker image tag.  Defaults to ``retally-sandbox-r:latest``;
         build with ``RDockerExecutor.build_image()`` or
         ``make build-r-sandbox``.
     timeout, memory_limit, cpu_count:
