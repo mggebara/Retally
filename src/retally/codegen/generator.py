@@ -151,6 +151,7 @@ class CodeGenerator:
         error: str,
         paper: Paper,
         dataset: Dataset,
+        stdout: str = "",
     ) -> str:
         """Refine previously generated code that produced an error.
 
@@ -162,6 +163,10 @@ class CodeGenerator:
             The error message or unexpected output from execution.
         paper, dataset:
             Same as passed to ``generate``.
+        stdout:
+            Standard output of the failed run.  A head/tail excerpt is shown
+            in the prompt (when non-empty) so the model can see what its own
+            diagnostic prints produced before the failure.
 
         Build a follow-up prompt that includes the original code and the
         error, and asks Claude to fix the specific problem.  Preserve the
@@ -169,9 +174,9 @@ class CodeGenerator:
         """
         _require_supported_language(paper, "refine")
         if paper.language is Language.R:
-            prompt = self._build_refinement_prompt_r(code, error, paper, dataset)
+            prompt = self._build_refinement_prompt_r(code, error, paper, dataset, stdout)
         else:
-            prompt = self._build_refinement_prompt_python(code, error, paper, dataset)
+            prompt = self._build_refinement_prompt_python(code, error, paper, dataset, stdout)
         response = self._call_claude(prompt)
         return self._extract_code_block(response)
 
@@ -304,7 +309,9 @@ class CodeGenerator:
 
         return "\n".join(lines)
 
-    def _build_refinement_prompt_python(self, code: str, error: str, paper: Paper, dataset: Dataset) -> str:
+    def _build_refinement_prompt_python(
+        self, code: str, error: str, paper: Paper, dataset: Dataset, stdout: str = ""
+    ) -> str:
         """Construct the refinement prompt.
 
         Include:
@@ -326,6 +333,7 @@ class CodeGenerator:
             error,
             "```",
             "",
+            *_execution_log_section(stdout, ""),
             "## Task",
             "Fix specifically the identified problem above. Do not rewrite the entire approach unless necessary.",
             "",
@@ -422,6 +430,7 @@ class CodeGenerator:
             "## What the code produced",
             outputs_block,
             "",
+            *_execution_log_section(exec_result.stdout, exec_result.stderr),
             "## Claims still failing",
             *claim_lines,
             "",
@@ -566,7 +575,9 @@ class CodeGenerator:
         )
         return "\n".join(lines)
 
-    def _build_refinement_prompt_r(self, code: str, error: str, paper: Paper, dataset: Dataset) -> str:
+    def _build_refinement_prompt_r(
+        self, code: str, error: str, paper: Paper, dataset: Dataset, stdout: str = ""
+    ) -> str:
         """R counterpart to _build_refinement_prompt_python.
 
         Re-shows the previous (failing) R code and the captured error,
@@ -586,6 +597,7 @@ class CodeGenerator:
             error,
             "```",
             "",
+            *_execution_log_section(stdout, ""),
             "## Task",
             "Fix specifically the identified problem above. Do not rewrite the entire approach unless necessary.",
             "",
@@ -671,6 +683,7 @@ class CodeGenerator:
             "## What the code produced",
             outputs_block,
             "",
+            *_execution_log_section(exec_result.stdout, exec_result.stderr),
             "## Claims still failing",
             *claim_lines,
             "",
@@ -1165,6 +1178,45 @@ def _describe_dataset_files(root: Path) -> list[str]:
     overflow = len(files) - _TREE_MAX_FILES
     if overflow > 0:
         lines.append(f"- … and {overflow} more files (listing truncated)")
+    return lines
+
+
+# Bounds for the execution-log excerpt fed back into refinement prompts:
+# the first and last N characters of each stream.  The head keeps the
+# model's early diagnostics (e.g. ``print(names(df))``), the tail keeps
+# the results and any final error; a long middle is elided with a marker.
+_LOG_HEAD_CHARS = 3000
+_LOG_TAIL_CHARS = 3000
+
+
+def _head_tail(text: str, head: int = _LOG_HEAD_CHARS, tail: int = _LOG_TAIL_CHARS) -> str:
+    """``text`` if short, else its first ``head`` and last ``tail`` chars with an elision marker."""
+    text = text.strip()
+    if len(text) <= head + tail:
+        return text
+    omitted = len(text) - head - tail
+    return f"{text[:head]}\n[... {omitted} characters omitted ...]\n{text[-tail:]}"
+
+
+def _execution_log_section(stdout: str, stderr: str) -> list[str]:
+    """Prompt lines showing a bounded excerpt of the last run's stdout/stderr.
+
+    Refinement prompts used to show only the parsed ``RESULT:`` values (or
+    stderr), so whatever the generated code printed to find its way around
+    the data -- column names, row counts, regex hits -- was discarded.
+    Returns ``[]`` when both streams are empty, leaving the prompt as it was.
+    """
+    lines: list[str] = []
+    for label, text in (("stdout", stdout), ("stderr", stderr)):
+        excerpt = _head_tail(text or "")
+        if excerpt:
+            lines += [
+                f"## Last run's {label} (excerpt: first/last {_LOG_HEAD_CHARS} characters)",
+                "```",
+                excerpt,
+                "```",
+                "",
+            ]
     return lines
 
 

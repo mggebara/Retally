@@ -452,7 +452,7 @@ class ValidationPipeline:
             if result.exit_code == 0 and result.outputs:
                 break
             error = result.stderr or "No RESULT: lines found in output"
-            code = self.generator.refine(code, error, paper, dataset)
+            code = self.generator.refine(code, error, paper, dataset, stdout=result.stdout or "")
             result = executor.execute(code, dataset)
 
         # Compare once so we know what (if anything) needs Phase 2.

@@ -644,3 +644,68 @@ def test_unreadable_dta_is_listed_without_columns(tmp_path):
     (tmp_path / "broken.dta").write_bytes(b"\x00" * 2048)
     [line] = _describe_dataset_files(tmp_path)
     assert line.startswith("- broken.dta (") and "columns" not in line
+
+
+# ── Execution log fed back into refinement (Phase 1.6) ────────────────
+
+
+def _sent_prompt(gen) -> str:
+    [call] = gen._client.messages.create.call_args_list
+    return call.kwargs["messages"][0]["content"]
+
+
+@pytest.mark.parametrize("language", [Language.R, Language.PYTHON])
+def test_claim_refinement_prompt_contains_stdout_excerpt(language):
+    """Dincecco: the model printed names(df) to find its variables, but the
+    claim-refinement prompt showed only parsed RESULT values, so it never
+    saw them ("I don't see the output").  The stdout must be in the prompt."""
+    from retally.models import ClaimValidationResult
+
+    gen = _generator()
+    gen._client.messages.create.return_value = MagicMock(content=[MagicMock(text="x <- 1")])
+    stdout = "Columns in conflictexposure: state_gadm, lnlights_001, Land_250_1757\nRESULT:beta=0.3\n"
+    exec_result = ExecutionResult(
+        generated_code="v1", outputs={"beta": 0.3}, stdout=stdout, stderr="Warning: 3 NAs dropped"
+    )
+    failed = ClaimValidationResult(
+        claim=Claim(description="beta", value=0.5, claim_type=ClaimType.COEFFICIENT),
+        reproduced_value=0.3,
+        tolerance=0.02,
+        passed=False,
+    )
+    gen.refine_for_claims("v1", [failed], exec_result, _paper(language=language), _dataset(), [{"beta": 0.3}])
+    prompt = _sent_prompt(gen)
+    assert "Columns in conflictexposure: state_gadm, lnlights_001, Land_250_1757" in prompt
+    assert "Warning: 3 NAs dropped" in prompt
+    assert "Last run's stdout" in prompt and "Last run's stderr" in prompt
+
+
+def test_execution_log_excerpt_keeps_head_and_tail_and_bounds_size():
+    from retally.codegen.generator import _LOG_HEAD_CHARS, _LOG_TAIL_CHARS, _execution_log_section
+
+    stdout = "HEAD-MARKER " + "x" * 50_000 + " TAIL-MARKER"
+    section = "\n".join(_execution_log_section(stdout, ""))
+    assert "HEAD-MARKER" in section and "TAIL-MARKER" in section
+    assert "characters omitted" in section
+    assert len(section) < _LOG_HEAD_CHARS + _LOG_TAIL_CHARS + 300
+    assert "stderr" not in section  # empty streams add nothing
+    assert _execution_log_section("", "") == []
+
+
+@pytest.mark.parametrize("language", [Language.R, Language.PYTHON])
+def test_error_refinement_prompt_contains_stdout_excerpt(language):
+    gen = _generator()
+    gen._client.messages.create.return_value = MagicMock(content=[MagicMock(text="x <- 1")])
+    gen.refine(
+        "old",
+        "Error: object 'lnlights' not found",
+        _paper(language=language),
+        _dataset(),
+        stdout="N rows: 640",
+    )
+    prompt = _sent_prompt(gen)
+    assert "N rows: 640" in prompt
+    # Without stdout the prompt has no log section (unchanged behaviour).
+    gen._client.messages.create.reset_mock()
+    gen.refine("old", "Error", _paper(language=language), _dataset())
+    assert "Last run's" not in _sent_prompt(gen)
