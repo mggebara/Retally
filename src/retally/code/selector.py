@@ -209,7 +209,8 @@ def select_package_scripts(package_root: Path | None) -> list[SelectedFile]:
 
     Caps mirror the repo selector's, with a larger per-file allowance
     (``MAX_SCRIPT_FILE_BYTES``) because a single master do-file routinely
-    exceeds 20 KB.  Returns ``[]`` when ``package_root`` is ``None``,
+    exceeds 20 KB; scripts beyond even that are truncated (head kept,
+    with a marker) rather than dropped.  Returns ``[]`` when ``package_root`` is ``None``,
     missing, or contains no scripts.  Never raises on unreadable files.
     """
     if package_root is None or not package_root.is_dir():
@@ -226,7 +227,7 @@ def select_package_scripts(package_root: Path | None) -> list[SelectedFile]:
             size = path.stat().st_size
         except OSError:
             continue
-        if size > MAX_SCRIPT_FILE_BYTES or size == 0:
+        if size == 0:
             continue
         depth = len(relative.parts) - 1
         candidates.append((_script_priority(path, depth), depth, path))
@@ -242,6 +243,7 @@ def select_package_scripts(package_root: Path | None) -> list[SelectedFile]:
             contents = path.read_text(encoding="utf-8", errors="replace")
         except OSError:
             continue
+        contents = _truncate_script(contents)
         size = len(contents.encode("utf-8"))
         if total_bytes + size > MAX_TOTAL_BYTES:
             continue
@@ -253,6 +255,29 @@ def select_package_scripts(package_root: Path | None) -> list[SelectedFile]:
             )
         )
     return selected
+
+
+def _truncate_script(contents: str) -> str:
+    """Cap one script at ``MAX_SCRIPT_FILE_BYTES``, cutting at a line boundary.
+
+    Oversized scripts are truncated rather than skipped: replication
+    packages often ship a single monolithic master do-file (Dincecco et
+    al. 2022's ``wii_replication.do`` is 185 KB) that runs the main
+    tables first and the appendix after, so its head is exactly the
+    part the generator needs.  Skipping it left the prompt with no
+    scripts at all.  An explicit marker tells the model the file
+    continues.
+    """
+    encoded = contents.encode("utf-8")
+    if len(encoded) <= MAX_SCRIPT_FILE_BYTES:
+        return contents
+    head = encoded[:MAX_SCRIPT_FILE_BYTES].decode("utf-8", errors="ignore")
+    cut = head.rfind("\n")
+    if cut > 0:
+        head = head[: cut + 1]
+    omitted = len(encoded) - len(head.encode("utf-8"))
+    marker = f"\n... [truncated: {omitted:,} more bytes of this script omitted] ...\n"
+    return head + marker
 
 
 def _should_skip(path: Path, repo_root: Path) -> bool:

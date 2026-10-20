@@ -13,13 +13,13 @@
 # read-only at its host path and the generated script is mounted at
 # /workspace/script.R.
 
-FROM rocker/r2u:jammy
+FROM rocker/r2u:noble
 
 # ── R packages ──────────────────────────────────────────────────────────────
 # install2.r is the docopt-based Rocker wrapper that understands the
 # ``--error`` flag (surfacing install failures as non-zero exit codes,
 # good for builds).  The simpler ``install.r`` littler script that ships
-# in current r2u:jammy has no flag parsing, so it would treat ``--error``
+# in current r2u images has no flag parsing, so it would treat ``--error``
 # as a package name and fail.  r2u resolves the named packages as Debian
 # binary packages so installation is fast and deterministic.
 RUN install2.r --error \

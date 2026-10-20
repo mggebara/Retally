@@ -861,6 +861,23 @@ class CodeGenerator:
             ),
             "",
         ]
+        if target_language is Language.R and any(
+            s.relative_path.lower().endswith(".do") for s in package_scripts
+        ):
+            lines.extend(
+                [
+                    (
+                        "Stata-to-fixest sample matching: feols() drops fixed-effect "
+                        "singletons by default, but Stata's `reg y x i.fe` / `xi:` "
+                        'dummies keep them.  Pass `fixef.rm = "none"` to every '
+                        "feols() call that has fixed effects, otherwise the "
+                        "observation count and the robust SEs drift from the "
+                        "paper's.  Stata's `, r` / `vce(robust)` is "
+                        '`vcov = "hetero"`.'
+                    ),
+                    "",
+                ]
+            )
         for script in package_scripts:
             lines.append(f"### `{script.relative_path}`")
             lines.append(f"```{_fence_tag_for(script.relative_path)}")

@@ -502,6 +502,28 @@ def test_r_prompt_includes_package_scripts_with_per_file_fences():
     assert "GROUND TRUTH" in prompt
 
 
+def test_r_prompt_warns_about_fixest_singletons_only_for_stata_scripts():
+    gen = _generator()
+    do_prompt = gen._build_generation_prompt_r(
+        _paper(language=Language.R),
+        _dataset(),
+        reference_files=[],
+        package_scripts=[_selected("master.do", "reg y x i.state, r")],
+    )
+    assert 'fixef.rm = "none"' in do_prompt
+    r_prompt = gen._build_generation_prompt_r(
+        _paper(language=Language.R),
+        _dataset(),
+        reference_files=[],
+        package_scripts=[_selected("main.R", "feols(y ~ x | state, d)")],
+    )
+    assert "fixef.rm" not in r_prompt
+    py_prompt = gen._build_generation_prompt_python(
+        _paper(), _dataset(), reference_files=[], package_scripts=[_selected("master.do", "reg y x")]
+    )
+    assert "fixef.rm" not in py_prompt
+
+
 def test_python_prompt_includes_package_scripts_section():
     gen = _generator()
     scripts = [_selected("analysis.py", "df = pd.read_stata('x.dta')")]

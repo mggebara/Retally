@@ -217,12 +217,25 @@ def test_package_scripts_figures_rank_below_tables(tmp_path):
     assert selected[0].relative_path == "code/tables.do"
 
 
-def test_package_scripts_skip_oversized_and_empty_files(tmp_path):
-    _write(tmp_path, "master.do", "x" * (MAX_SCRIPT_FILE_BYTES + 1))
+def test_package_scripts_skip_empty_files(tmp_path):
     _write(tmp_path, "empty.R", "")
     _write(tmp_path, "analysis.R", "lm(y ~ x)\n")
     paths = {f.relative_path for f in select_package_scripts(tmp_path)}
     assert paths == {"analysis.R"}
+
+
+def test_package_scripts_truncate_oversized_files(tmp_path):
+    # A monolithic master do-file larger than the per-file cap is kept,
+    # truncated at a line boundary with a marker, not silently dropped.
+    line = "reg y x controls, r\n"
+    _write(tmp_path, "master.do", line * (MAX_SCRIPT_FILE_BYTES // len(line) + 50))
+    (selected,) = select_package_scripts(tmp_path)
+    assert selected.relative_path == "master.do"
+    assert len(selected.contents.encode("utf-8")) <= MAX_SCRIPT_FILE_BYTES + 200
+    assert selected.contents.startswith(line)
+    assert "[truncated:" in selected.contents
+    body = selected.contents.split("\n... [truncated")[0]
+    assert all(row == line.strip() for row in body.splitlines())
 
 
 def test_package_scripts_respect_skip_dirs(tmp_path):
