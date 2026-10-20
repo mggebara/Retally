@@ -167,6 +167,54 @@ def test_committed_seeded_baseline_rescores_identically():
     assert scored.n_claims_in_catalog == recorded["n_claims_in_catalog"]
 
 
+BOTH_BASELINE = REPO_ROOT / "benchmark" / "results" / "baseline-both-2026-10-19.json"
+
+# Raw RESULT outputs of the independent row of ``baseline-both-2026-10-19.json``,
+# recovered by replaying that run's generation from the LLM cache (no live
+# calls; the replay re-scored to the identical verdicts).  The three IV
+# coefficient claims and three IV SE claims have no RESULT line (the code
+# printed ``=NA``); ``results.json`` stores only the per-claim values, in
+# which the old claim-type fallback had put the OLS -0.181 on the IV
+# coefficients.
+BOTH_BASELINE_INDEPENDENT_OUTPUTS = {
+    "warfare_coefficient_bivariate": -0.181,
+    "warfare_se_bivariate": 0.0507,
+    "warfare_coefficient_state_fe": -0.181,
+    "warfare_se_state_fe": 0.0507,
+    "warfare_coefficient_full_controls": -0.2957,
+    "warfare_se_full_controls": 0.1045,
+    "sample_size_districts": 631.0,
+}
+
+
+def test_both_mode_baseline_rescores_without_borrowed_values():
+    """Seeded row of the both-mode baseline still re-scores 13/13; the
+    independent row's IV coefficients become unmatched (10 -> 7 matched),
+    still 0/13 passed."""
+    seeded, independent = json.loads(BOTH_BASELINE.read_text(encoding="utf-8"))
+    entry = {e.id: e for e in bschema.load_catalog(runner.CATALOG_DIR)}[seeded["entry_id"]]
+
+    outputs = {cd["description"]: cd["reproduced"] for cd in seeded["claim_details"]}
+    scored = runner.score_reproduction(entry, Reproduction(outputs=outputs), mode="seeded")
+    assert scored.n_claims_with_paper_match == 13
+    assert [cd.passed for cd in scored.claim_details] == [cd["passed"] for cd in seeded["claim_details"]]
+
+    recorded_matched = sum(cd["reproduced"] is not None for cd in independent["claim_details"])
+    assert recorded_matched == 10
+    scored = runner.score_reproduction(
+        entry, Reproduction(outputs=BOTH_BASELINE_INDEPENDENT_OUTPUTS), mode="independent"
+    )
+    by_name = {cd.description: cd for cd in scored.claim_details}
+    assert sum(cd.reproduced is not None for cd in scored.claim_details) == 7
+    for name in ("bivariate", "state_fe", "full_controls"):
+        assert by_name[f"warfare_iv_coefficient_{name}"].reproduced is None
+    assert scored.n_claims_with_paper_match == 0
+    # Every claim that did have a RESULT line keeps its recorded value.
+    for cd in independent["claim_details"]:
+        if cd["description"] in BOTH_BASELINE_INDEPENDENT_OUTPUTS:
+            assert by_name[cd["description"]].reproduced == cd["reproduced"]
+
+
 def test_harness_rescoring_matches_the_pipelines_own_comparison():
     """For any outputs, the harness's verdict equals what the pipeline's
     default comparator computes internally — same claims, same outputs,

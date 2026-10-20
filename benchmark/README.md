@@ -198,7 +198,7 @@ A `Reproduction` is the report contract — raw numbers and artefacts,
 
 | Field | What to put there |
 |---|---|
-| `outputs` | `{name: value}` from the final run, **keyed by claim description** (the snake_case token). The harness tries an exact normalised match first, then substring / claim-type fallbacks — keying by description is the only way to guarantee a value lands on its claim. For a code-running agent: the parsed `RESULT:<name>=<value>` lines. |
+| `outputs` | `{name: value}` from the final run, **keyed by claim description** (the snake_case token). The harness tries an exact normalised match first, then a substring match; a claim no output name matches is scored as missing (there is no claim-type fallback). Keying by description is the only way to guarantee a value lands on its claim. For a code-running agent: the parsed `RESULT:<name>=<value>` lines. |
 | `claims` | The claims the agent targeted. Ignored for scoring when the entry pins claims; used for unpinned entries and the extracted-claims dump. |
 | `generated_code`, `stdout`, `stderr`, `exit_code` | The final attempt's artefacts. |
 | `deviations` | Methodology changes the agent declared (`DEVIATION:` lines). |

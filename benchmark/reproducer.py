@@ -69,9 +69,10 @@ class Reproduction:
     ``outputs`` is the whole scoring input.  Key each value by the claim's
     ``description`` (the catalog's snake_case token, e.g.
     ``warfare_coefficient_bivariate``) — the harness's matcher tries an
-    exact normalised match first, then falls back to substring and
-    claim-type matching (``ResultComparator._match_output``), so keying by
-    description is the only way to guarantee a value lands on its claim.
+    exact normalised match first, then a substring match, and nothing
+    else (``ResultComparator._match_output``); a claim with no matching
+    output is scored as missing.  Keying by description is the only way to
+    guarantee a value lands on its claim.
     For a code-running agent this is simply the parsed
     ``RESULT:<name>=<value>`` lines of its final run.
     """

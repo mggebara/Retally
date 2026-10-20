@@ -12,7 +12,13 @@ while the code emits "test_accuracy".
 Approach:
   1. Exact key match (normalise both sides: lowercase, strip spaces/underscores).
   2. Substring match (claim description contains the key or vice versa).
-  3. Match on claim_type name vs normalised output keys.
+
+A claim that matches no output by name is *unmatched* (scored as missing).
+There is deliberately no fallback on claim type: matching a coefficient
+claim to "the first output whose name contains 'coefficient'" made a claim
+with no RESULT line borrow another claim's value (Phase 1.6: three NA IV
+coefficients were scored against the OLS coefficient), which inflates the
+matched rate and could produce a false pass.
 
 Tolerance
 ---------
@@ -223,7 +229,9 @@ class ResultComparator:
           1. Exact match on normalised claim description vs normalised output keys.
           2. Substring match (normalised claim key is substring of normalised output
              key, or vice versa).
-          3. Check claim.claim_type name against normalised output keys.
+
+        No claim-type fallback: an output is only ever matched by name, so a
+        claim never borrows another claim's value.
         """
         if not outputs:
             return None, None
@@ -239,12 +247,6 @@ class ResultComparator:
         # Strategy 2: substring match
         for raw_key, norm_key in norm_outputs.items():
             if norm_claim in norm_key or norm_key in norm_claim:
-                return raw_key, outputs[raw_key]
-
-        # Strategy 3: match claim_type name against normalised output keys
-        norm_type = self._normalise_key(claim.claim_type.name)
-        for raw_key, norm_key in norm_outputs.items():
-            if norm_type in norm_key or norm_key in norm_type:
                 return raw_key, outputs[raw_key]
 
         return None, None
