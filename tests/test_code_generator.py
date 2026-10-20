@@ -591,3 +591,121 @@ def test_independent_mode_refuses_authors_code(kwargs):
             **kwargs,
         )
     client.messages.create.assert_not_called()
+
+
+# ── .dta column names in the listing (Phase 1.6) ──────────────────────
+
+
+def _write_dta(path: Path, columns: list[str]) -> None:
+    import pandas as pd
+
+    pd.DataFrame({c: [1.0, 2.0] for c in columns}).to_stata(path, write_index=False)
+
+
+@pytest.mark.parametrize("mode", [ReproductionMode.SEEDED, ReproductionMode.INDEPENDENT])
+def test_generation_prompt_lists_dta_column_names(tmp_path, mode):
+    """Dincecco: the paper never names its data file, and without .dta
+    column names every independent generation loaded the wrong file.  The
+    variable names must reach the prompt in both modes."""
+    (tmp_path / "Data").mkdir()
+    _write_dta(tmp_path / "Data" / "conflictexposure.dta", ["district_gadm", "Land_250_1757", "lnlights_001"])
+    client = MagicMock()
+    client.messages.create.return_value = MagicMock(content=[MagicMock(text="x <- 1")])
+    CodeGenerator(client).generate(
+        _paper(language=Language.R),
+        Dataset(name="pkg", source_url="", local_path=tmp_path),
+        reproduction_mode=mode,
+    )
+    prompt = client.messages.create.call_args.kwargs["messages"][0]["content"]
+    assert "Data/conflictexposure.dta" in prompt
+    assert "3 columns: district_gadm, Land_250_1757, lnlights_001" in prompt
+
+
+def test_dta_columns_are_truncated_and_capped(tmp_path):
+    from retally.codegen.generator import _TREE_HEADER_CHARS, _TREE_MAX_DTA_HEADERS, _describe_dataset_files
+
+    wide = [f"variable_{i:04d}" for i in range(500)]
+    _write_dta(tmp_path / "a_wide.dta", wide)
+    for i in range(_TREE_MAX_DTA_HEADERS + 2):
+        _write_dta(tmp_path / f"b_{i:02d}.dta", ["x", "y"])
+    lines = _describe_dataset_files(tmp_path)
+    first = lines[0]
+    assert "a_wide.dta" in first and "500 columns: variable_0000, variable_0001" in first
+    assert first.endswith("…")
+    assert len(first.split("columns: ", 1)[1]) == _TREE_HEADER_CHARS + 1
+    with_columns = [line for line in lines if "columns:" in line]
+    assert len(with_columns) == _TREE_MAX_DTA_HEADERS
+    assert "columns:" not in lines[-1]
+
+
+def test_unreadable_dta_is_listed_without_columns(tmp_path):
+    from retally.codegen.generator import _describe_dataset_files
+
+    (tmp_path / "broken.dta").write_bytes(b"\x00" * 2048)
+    [line] = _describe_dataset_files(tmp_path)
+    assert line.startswith("- broken.dta (") and "columns" not in line
+
+
+# ── Execution log fed back into refinement (Phase 1.6) ────────────────
+
+
+def _sent_prompt(gen) -> str:
+    [call] = gen._client.messages.create.call_args_list
+    return call.kwargs["messages"][0]["content"]
+
+
+@pytest.mark.parametrize("language", [Language.R, Language.PYTHON])
+def test_claim_refinement_prompt_contains_stdout_excerpt(language):
+    """Dincecco: the model printed names(df) to find its variables, but the
+    claim-refinement prompt showed only parsed RESULT values, so it never
+    saw them ("I don't see the output").  The stdout must be in the prompt."""
+    from retally.models import ClaimValidationResult
+
+    gen = _generator()
+    gen._client.messages.create.return_value = MagicMock(content=[MagicMock(text="x <- 1")])
+    stdout = "Columns in conflictexposure: state_gadm, lnlights_001, Land_250_1757\nRESULT:beta=0.3\n"
+    exec_result = ExecutionResult(
+        generated_code="v1", outputs={"beta": 0.3}, stdout=stdout, stderr="Warning: 3 NAs dropped"
+    )
+    failed = ClaimValidationResult(
+        claim=Claim(description="beta", value=0.5, claim_type=ClaimType.COEFFICIENT),
+        reproduced_value=0.3,
+        tolerance=0.02,
+        passed=False,
+    )
+    gen.refine_for_claims("v1", [failed], exec_result, _paper(language=language), _dataset(), [{"beta": 0.3}])
+    prompt = _sent_prompt(gen)
+    assert "Columns in conflictexposure: state_gadm, lnlights_001, Land_250_1757" in prompt
+    assert "Warning: 3 NAs dropped" in prompt
+    assert "Last run's stdout" in prompt and "Last run's stderr" in prompt
+
+
+def test_execution_log_excerpt_keeps_head_and_tail_and_bounds_size():
+    from retally.codegen.generator import _LOG_HEAD_CHARS, _LOG_TAIL_CHARS, _execution_log_section
+
+    stdout = "HEAD-MARKER " + "x" * 50_000 + " TAIL-MARKER"
+    section = "\n".join(_execution_log_section(stdout, ""))
+    assert "HEAD-MARKER" in section and "TAIL-MARKER" in section
+    assert "characters omitted" in section
+    assert len(section) < _LOG_HEAD_CHARS + _LOG_TAIL_CHARS + 300
+    assert "stderr" not in section  # empty streams add nothing
+    assert _execution_log_section("", "") == []
+
+
+@pytest.mark.parametrize("language", [Language.R, Language.PYTHON])
+def test_error_refinement_prompt_contains_stdout_excerpt(language):
+    gen = _generator()
+    gen._client.messages.create.return_value = MagicMock(content=[MagicMock(text="x <- 1")])
+    gen.refine(
+        "old",
+        "Error: object 'lnlights' not found",
+        _paper(language=language),
+        _dataset(),
+        stdout="N rows: 640",
+    )
+    prompt = _sent_prompt(gen)
+    assert "N rows: 640" in prompt
+    # Without stdout the prompt has no log section (unchanged behaviour).
+    gen._client.messages.create.reset_mock()
+    gen.refine("old", "Error", _paper(language=language), _dataset())
+    assert "Last run's" not in _sent_prompt(gen)

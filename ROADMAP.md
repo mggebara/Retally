@@ -88,7 +88,11 @@ result: **seeded 13 / 13 pinned headline claims** on Dincecco et al. 2022
 (2026-10-19, `benchmark/results/baseline-2026-10-19.json`; was 0 / 102
 auto-extracted claims in July) — one paper, one sampled generation, so not
 yet a rate. **Independent: 0 / 13** (script-free mount, 3 runs: 0, 0, 0;
-prompt-only withholding, 3 runs: 0, 0, 1) — Phase 1.5, below.
+prompt-only withholding, 3 runs: 0, 0, 1) — Phase 1.5, below; still 0 / 13
+after the Phase 1.6 plumbing fixes (measured through step 3; step 4 and the
+variance runs blocked by API credit), with an offline counterfactual
+showing the model's own specification hits 7 / 13 once the data file is
+right.
 
 ---
 
@@ -243,6 +247,24 @@ are in the entry's `notes`; `benchmark/results/baseline-both-2026-10-19.json`.)*
 - Read the independent-mode generated code for any attempt to open the
   package scripts at run time (they are still on disk — see Risks).
 - Record Dincecco's `publication_date` and `package_release_date`.
+
+### 1.6 Independent-mode plumbing fixes — ⚠ partly measured (2026-10-20)
+*(Four fixes, one commit each: the comparator no longer scores a claim
+with no RESULT line against another claim's value (independent "matched"
+10 → 7 of 13, no verdict change); `.dta` column names in the dataset
+listing; head/tail stdout/stderr in refinement prompts; the methodology
+prompt no longer primes "standardised".  Seeded 13/13 after every step;
+independent 0/13 after steps 1–3.  Step 2 fixed variable resolution
+(right names) but the model chose `biclean.dta` (N=271) because
+`conflictexposure.dta`'s 1288 columns are truncated before the outcome
+and instrument.  Step 4's independent run, the three cache-off variance
+runs, and a 2026-10-20 baseline were not run: the API account ran out of
+credit.  Offline counterfactual (step-3 script, file swapped, no
+`scale()`): 3/13, and 7/13 (every OLS claim, to 3–4 dp) once population
+density is added to columns 1–2, which the claim token "bivariate"
+misleads the model into dropping.  The IV claims were never attempted
+(instrument not found).  Classification in the entry's `notes`;
+`benchmark/results/phase16-step3-both-2026-10-20.json`.)*
 
 **Exit criteria:** (a) seeded: ≥50% of Dincecco's pinned headline claims
 within tolerance — **met (13/13)**; (b) independent: a committed

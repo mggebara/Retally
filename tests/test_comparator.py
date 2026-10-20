@@ -218,3 +218,42 @@ def test_compare_all_threads_mode():
         [_coef(3.713, se=0.305)], {"beta": 3.9}, mode=ReproductionMode.INDEPENDENT
     )
     assert result.passed
+
+
+# ── No claim-type fallback (Phase 1.6) ─────────────────────────────────
+
+
+def test_claim_without_result_line_is_unmatched_not_borrowed():
+    """Regression for the Dincecco script-free run: the generated code
+    printed ``RESULT:warfare_iv_coefficient_bivariate=NA`` (unparseable, so
+    absent from outputs), and the old claim-type fallback scored the IV
+    claim against the first output whose name contained "coefficient" —
+    the OLS coefficient's -0.181.  The claim must be unmatched instead."""
+    comparator = ResultComparator()
+    claims = [
+        Claim(description="warfare_coefficient_bivariate", value=3.713, claim_type=ClaimType.COEFFICIENT),
+        Claim(description="warfare_iv_coefficient_bivariate", value=4.930, claim_type=ClaimType.COEFFICIENT),
+        Claim(description="warfare_iv_se_bivariate", value=0.609, claim_type=ClaimType.STANDARD_ERROR),
+    ]
+    outputs = {"warfare_coefficient_bivariate": -0.181, "standard_error": 0.609}
+    ols, iv, iv_se = comparator.compare_all(claims, outputs, mode=ReproductionMode.INDEPENDENT)
+    assert ols.reproduced_value == -0.181
+    assert iv.reproduced_value is None
+    assert not iv.passed
+    assert "No matching output" in iv.notes or "No reproduced value" in iv.notes
+    # A generically named output matching only the claim *type* is not a
+    # match either — that would have been a false pass.
+    assert iv_se.reproduced_value is None
+    assert not iv_se.passed
+
+
+def test_exact_and_substring_matching_still_work():
+    comparator = ResultComparator()
+    claims = [
+        Claim(description="warfare_coefficient_state_fe", value=1.601, claim_type=ClaimType.COEFFICIENT),
+        Claim(description="sample size", value=660, claim_type=ClaimType.OTHER),
+    ]
+    outputs = {"Warfare-Coefficient State FE": 1.601, "sample_size_districts": 660.0}
+    exact, substring = comparator.compare_all(claims, outputs)
+    assert exact.passed and exact.reproduced_value == 1.601
+    assert substring.passed and substring.reproduced_value == 660.0
