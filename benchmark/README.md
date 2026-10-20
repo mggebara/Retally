@@ -1,9 +1,11 @@
 # Retally benchmark harness
 
-Runs `ValidationPipeline` against an external ground-truth catalog —
-initially papers replicated by the
-[Institute for Replication](https://i4replication.org) — and produces
-per-paper + aggregate metrics.
+Scores a *reproducer* — by default Retally's own `ValidationPipeline` —
+against an external ground-truth catalog (initially papers replicated by
+the [Institute for Replication](https://i4replication.org)) and produces
+per-paper + aggregate metrics.  The harness owns the scoring: any agent
+that implements the `Reproducer` protocol is held to exactly the same
+yardstick (see [Plugging in another agent](#plugging-in-another-agent)).
 
 ## Workflow
 
@@ -11,8 +13,10 @@ per-paper + aggregate metrics.
 benchmark/
 ├── papers/                 catalog: one YAML file per paper (committed)
 ├── schema.py               BenchmarkEntry / dataclass model + loader
-├── runner.py               walks the catalog, drives ValidationPipeline,
-│                           emits results.json
+├── reproducer.py           the agent protocol (Reproducer / Reproduction),
+│                           the pipeline adapter, script-free dataset copies
+├── runner.py               walks the catalog, drives a Reproducer, scores
+│                           its raw outputs, emits results.json
 ├── report.py               renders REPORT.md + report.html from results.json
 ├── .cache/                 content-addressable cache (gitignored)
 └── results/
@@ -27,14 +31,27 @@ The runner records three independent flags:
 
 | Verdict | Meaning |
 |---|---|
-| `retally_ran` | The pipeline completed without raising. Distinct from "all claims passed" — we want to know whether the infrastructure works even when the science doesn't. |
-| `agrees_with_paper` | Retally's reproduced values pass against the paper's stated values (the existing `overall_passed` signal). |
+| `retally_ran` | The reproducer completed without raising. Distinct from "all claims passed" — we want to know whether the infrastructure works even when the science doesn't. |
+| `agrees_with_paper` | The reproduced values pass against the paper's stated values — every claim, at least one claim (the same rule as the pipeline's `overall_passed`, but computed by the harness). |
 | `agrees_with_i4r` | Retally's reproduced values pass against the *I4R replicator's* reproduced values (not the paper's). `None` when no I4R finding has a value to compare to. |
 
 The three can disagree.  In particular, `ran ✓ / agrees_with_paper ✓ /
 agrees_with_i4r ✗` means Retally faithfully reproduced what the paper
 said, but the careful human replicators found a different number — the
 "non-robust" signal we want to surface, not collapse.
+
+**Who scores.**  Both agreement verdicts are computed by the harness
+(`runner.score_reproduction`), never by the reproducer.  The reproducer
+returns raw `{name: value}` outputs; the harness matches them to the
+claims (the entry's pinned `original_claims`, or the reproducer's own
+claims for an unpinned entry) with `ResultComparator` and applies the
+mode's `TolerancePolicy`.  The pipeline still compares internally — its
+claim-refinement loop needs to know which claims are off — but that
+result is discarded at the adapter boundary.  For the pipeline the two
+computations are identical (same comparator, same claims, same final
+outputs); `tests/test_benchmark_reproducer.py` re-scores the committed
+`results/baseline-2026-10-19.json` through the harness path and gets
+every recorded verdict back.
 
 ## Two reproduction modes: seeded and independent
 
@@ -45,7 +62,7 @@ Every result row records the `mode` it ran in, and rows are identified by
 | Mode | The generator sees | A pass measures | Tolerance |
 |---|---|---|---|
 | `seeded` (default) | paper text, claims, dataset listing, **and the authors' replication-package scripts** (plus any linked repo), presented as ground truth | *computational* reproduction — can the model translate the authors' Stata/R into fixest and run it | strict: per-type relative tolerance (COEFFICIENT 2 %, SE 5 %, …) |
-| `independent` | paper text, claims, and the dataset directory listing **only** — scripts withheld, linked code not fetched, and the prompt forbids opening script files seen in the listing | *independent* reproduction — can the model regenerate the analysis from the paper's description | SE-aware: within ±k·SE of the reported value when the claim pins a `standard_error` (k = 1, never narrower than the relative tolerance); relative tolerance otherwise |
+| `independent` | paper text, claims, and a **script-free copy** of the dataset only — scripts withheld from the prompt *and* removed from the directory that is listed and mounted, linked code not fetched, and the prompt forbids opening any script files | *independent* reproduction — can the model regenerate the analysis from the paper's description | SE-aware: within ±k·SE of the reported value when the claim pins a `standard_error` (k = 1, never narrower than the relative tolerance); relative tolerance otherwise |
 
 Both are worth having; **the gap between them is the headline number** —
 how much of a seeded pass survives without the authors' code.  A
@@ -72,7 +89,7 @@ A catalog entry can be cleanly skipped:
 |---|---|
 | `out_of_scope` | `out_of_scope_reason` is set on the entry (e.g. "Stata required") |
 | `language_unsupported` | `language` is neither `python` nor `r`.  Stata is the canonical case — code is proprietary, we don't ship a sandbox image. |
-| `no_api_key` | Pipeline construction failed (typically `ANTHROPIC_API_KEY` not in env) |
+| `no_api_key` | Reproducer construction failed (typically `ANTHROPIC_API_KEY` not in env) |
 
 ## Running it
 
@@ -84,18 +101,22 @@ uv run python -m benchmark.runner --mode both     # one row per entry per mode
 uv run python -m benchmark.runner --only dincecco-2022-india-warfare --mode both
 ```
 
-`--mode {seeded,independent,both}` and `--only ENTRY_ID` (repeatable)
-combine.  For each catalog entry and mode the runner emits one row in
-`results.json`, carrying a `"mode"` field (rows from files that predate
-the field are read as `seeded`).
+`--mode {seeded,independent,both}`, `--only ENTRY_ID` (repeatable), and
+`--reproducer NAME` (default `pipeline`; see below) combine.  For each
+catalog entry and mode the runner emits one row in `results.json`,
+carrying `"mode"` and `"reproducer"` fields (rows from files that
+predate them are read as `seeded` / `pipeline`).
 The renderer then produces a Markdown table and a self-contained HTML
 page from that JSON.  The report file is committed; `results.json` is
 not (it's a rebuildable artefact).
 
 Re-running with no catalog or pipeline changes hits the cache and
 finishes in seconds.  The result cache (`benchmark/.cache/<hash>.json`)
-is keyed on the catalog entry, the retally version, **and the mode**, so
-a seeded result is never served for an independent run; `split`,
+is keyed on the catalog entry, the retally version, **the mode**, and —
+for anything other than the default pipeline — the reproducer, so a
+seeded result is never served for an independent run nor one agent's
+result for another's (independent-mode keys also carry the script-free
+dataset contract, so results from before it are not reused); `split`,
 `publication_date`, and `package_release_date` are excluded from the key
 because they never reach the pipeline.  The LLM cache keys on full
 prompt content, so the two modes' generation calls are distinct entries
@@ -143,7 +164,8 @@ value against the I4R meta-database's `o_coeff_dbl` / `o_std_err_dbl`
 columns (`benchmark/corpus/`) where the paper has rows there.
 
 **Pinned claims.**  When an entry's `original_claims` is populated, the
-runner passes them straight to the pipeline and the claims-extraction
+runner passes them straight to the reproducer (and scores against them
+whatever the reproducer reports) and the pipeline's claims-extraction
 call is skipped entirely.  Just as important: every run then scores
 against the *same frozen claim set* — a live extractor can return a
 slightly different set each call, silently moving the yardstick between
@@ -152,6 +174,65 @@ extractor found to `benchmark/results/extracted_claims/<id>.json` in a
 shape directly pasteable into the YAML's `original_claims`; review it
 (drop junk claims, fix descriptions), paste, and every later run is
 extraction-free and deterministic.
+
+## Plugging in another agent
+
+The harness talks to an agent only through the protocol in
+`benchmark/reproducer.py`:
+
+```python
+class Reproducer(Protocol):
+    def reproduce(
+        self,
+        paper_source: str,            # entry.paper.source: URL, path, DOI, arXiv id, or text
+        *,
+        language: Language,           # python | r — the language the agent's code must be in
+        dataset_reference: DatasetReference | None,  # built from the entry's dataset block
+        claims: list[Claim] | None,   # pinned original_claims (with SEs), or None
+        reproduction_mode: ReproductionMode,         # SEEDED | INDEPENDENT
+    ) -> Reproduction: ...
+```
+
+A `Reproduction` is the report contract — raw numbers and artefacts,
+**no verdicts**:
+
+| Field | What to put there |
+|---|---|
+| `outputs` | `{name: value}` from the final run, **keyed by claim description** (the snake_case token). The harness tries an exact normalised match first, then substring / claim-type fallbacks — keying by description is the only way to guarantee a value lands on its claim. For a code-running agent: the parsed `RESULT:<name>=<value>` lines. |
+| `claims` | The claims the agent targeted. Ignored for scoring when the entry pins claims; used for unpinned entries and the extracted-claims dump. |
+| `generated_code`, `stdout`, `stderr`, `exit_code` | The final attempt's artefacts. |
+| `deviations` | Methodology changes the agent declared (`DEVIATION:` lines). |
+| `stages` | `ComponentMetrics` per-stage flags; leave a stage `None` if the agent has no such stage. |
+
+Obligations an adapter must meet:
+
+- **Honour the mode by what is on disk.**  In `INDEPENDENT` mode give
+  the agent `script_free_dataset(...)` / `script_free_copy(...)` of the
+  downloaded data, not the original package (`PipelineReproducer` does
+  this by wrapping the pipeline's downloader).  An instruction alone is
+  not enough.
+- **Run the agent's code in the same network-less sandbox** (the
+  `retally-sandbox` / `retally-sandbox-r` images) so results are
+  comparable.
+- **Raise rather than return junk** when the agent cannot produce
+  anything; the harness records `retally_ran = false` with the message.
+- **Don't score yourself.**  Anything the agent decides about pass/fail
+  is ignored.
+
+Registering it — either:
+
+1. **In this repo:** add a zero-arg factory to `REPRODUCERS` in
+   `benchmark/runner.py`, then `python -m benchmark.runner --reproducer NAME`.
+2. **Without editing the repo:** expose a zero-arg factory (or a class
+   with a no-argument constructor) in an importable module and pass its
+   spec: `python -m benchmark.runner --reproducer my_pkg.agents:make_reproducer`.
+
+Programmatically, `run_benchmark(catalog, reproducer="name",
+reproducer_factory=...)` does the same.  The factory is only called on a
+cache miss, and a factory that raises (e.g. no API key) is recorded as a
+`no_api_key` skip.  `pipeline` is the only built-in reproducer today; a
+general-purpose agent adapter (e.g. on the Claude Agent SDK) is planned
+in `ROADMAP.md` Phase 2, not built.
 
 ## Prompt tuning: splits, closeness metrics, run comparison
 
@@ -242,8 +323,12 @@ catalog entries, so the real `papers/` directory stays uncluttered.
   tolerance, or in independent mode the ±k·SE band when that is
   wider.  Easy to tighten later if the data shows we systematically
   under/over-match.
-- Independent mode withholds the scripts' *contents*, but the dataset
-  directory is mounted as-is, so the scripts' names appear in the
-  listing and the files are readable at run time.  The prompt forbids
-  opening them; generated code is not policed for it.  Review
-  independent-mode code before trusting a surprising pass.
+- Independent mode now removes the analysis scripts (`.do`, `.ado`,
+  `.R`, `.Rmd`, `.py`, `.ipynb`, `.sas`, `.sps`, `.m`) and Stata
+  transcripts (`.log`, `.smcl`) from the directory the pipeline lists
+  and mounts — a `<name>.script-free` sibling of the downloaded package.
+  Other files that can carry the answers — `.tex` / `.csv` result tables
+  the package ships, the README — stay, as do the claimed values in the
+  prompt: independent means independent of the authors' *code*, not
+  blind to the answer.  Review independent-mode code before trusting a
+  surprising pass.
