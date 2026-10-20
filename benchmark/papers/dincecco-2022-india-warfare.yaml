@@ -34,6 +34,12 @@ outcome_label: reproducible
 # Prompt-tuning iterates against dev entries; holdout entries are only
 # run to confirm a dev-set improvement generalises.
 split: dev
+# Contamination bookkeeping (see ROADMAP "Contamination, honestly").
+# First public version: CAGE Working Paper No. 426 (2019), the PDF
+# `paper.source` points at.  Package: Zenodo record 5583263, published
+# 2021-10-20 (from the Zenodo API's publication_date).
+publication_date: "2019"
+package_release_date: "2021-10-20"
 
 paper:
   # Direct PDF of the CAGE working paper (No. 426).  The human-facing
@@ -277,3 +283,62 @@ notes: >
   `ivreg2, r` applies no small-sample correction (HC0); everything
   else matches to 3 dp.  Single sampled generation per configuration
   (LLM cache), so run-to-run variance is not yet measured.
+
+  Phase 1.5 first independent run (2026-10-19/20).  Seeded 13/13 (now
+  re-scored by the harness after PR #34; identical values).  Independent,
+  scored with the SE-aware band (coefficient claims widen to +/-1 SE,
+  e.g. 3.713 +/- 0.305 = 8.2% relative; SE claims stay at 5%, N at 1%):
+  0/13 in every run.  Two configurations, three generations each:
+  prompt-only withholding (pre-#34: scripts withheld from the prompt but
+  on disk and in the listing) 0/13, 0/13, 1/13; script-free mount
+  (post-#34, the like-for-like number) 0/13, 0/13, 0/13.  The single
+  pass (warfare_se_state_fe 0.3954 vs 0.380, run 3 prompt-only) is a
+  coincidence: its coefficient was 5.83 vs 1.601 and N was 613.  Gap:
+  13 claims lost, 0 gained.
+
+  Lost claims, one diagnosis covers all thirteen: wrong data file /
+  variable discovery, before any specification question is reached.
+  Every inspected generation (5 prompt-only, 4 script-free, replayed in
+  the sandbox from the LLM cache) loaded devcensuswgis.dta (640 census
+  districts, no lnlights_001 outcome, no Khyber `instrument`) instead of
+  conflictexposure.dta, then searched for variable names by regex.  It
+  found Land_250_1757_collapsed, never the outcome, so it either exited
+  early printing only N (prompt-only: N=640) or regressed on a fallback
+  variable (script-free: coef -0.181, N=631, IV NA).  Why the model could
+  not recover: (1) the dataset listing shows CSV headers but not .dta
+  column names, and the paper text never names the file or variables
+  (the only hints are figure filenames such as map_lnlights_001.png);
+  (2) the claim-refinement prompt feeds back only the parsed RESULT
+  values, never stdout, so the model's own print(names(df)) diagnostics
+  are discarded -- one script-free refinement says so explicitly ("the
+  code already prints variables but I don't see the output").  Per claim:
+  warfare_coefficient_{bivariate,state_fe,full_controls} and their SEs:
+  wrong file, outcome never found; warfare_iv_* (6 claims): wrong file,
+  instrument never found; sample_size_districts: wrong file (640/631 vs
+  660).  A second, latent error would have hit even with the right file:
+  the extracted methodology summary says the key regressor is "reported
+  with standardized beta", so every generation scale()d the exposure
+  variable; on conflictexposure.dta that gives 0.357 instead of 3.713.
+  The paper itself says "(unstandardised) coefficient estimate ... is
+  3.713" and reports standardized betas only as a separate table row, so
+  this is a methodology-extraction error, not an under-specified methods
+  section.  Not one of the losses is a RESULT-name mismatch or a
+  tolerance artifact; all were real misses.
+
+  Script-access check: no generation (9 inspected, both configurations)
+  opened a .do/.ado/.R file -- no source(), readLines(), or script paths;
+  the only filesystem calls are list.files() on the Data directory and
+  read_dta() of .dta files.  So prompt-only withholding was not leaky in
+  practice on this paper.  The script-free copy still contains the
+  paper's LaTeX (1 paper/MS_20210009_main.tex, table1.tex ...); those
+  carry values already in the prompt, not code, and were not read.  The
+  four variance generations ran with the LLM cache off, so their code
+  was not retained; only their scores are.
+
+  Harness note found along the way: when a claim has no RESULT line, the
+  comparator's third matching strategy (claim_type name vs output keys)
+  scores it against the first output whose key contains "coefficient",
+  so in the script-free run all three IV coefficient claims were scored
+  against warfare_coefficient_bivariate's -0.181.  No pass came from it
+  here, but it can inflate "matched" (77% in REPORT.md) and could produce
+  a false pass.

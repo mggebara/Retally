@@ -87,7 +87,8 @@ reproduction number, not the machinery.** Current state of the core
 result: **seeded 13 / 13 pinned headline claims** on Dincecco et al. 2022
 (2026-10-19, `benchmark/results/baseline-2026-10-19.json`; was 0 / 102
 auto-extracted claims in July) — one paper, one sampled generation, so not
-yet a rate. **Independent: not yet run.**
+yet a rate. **Independent: 0 / 13** (script-free mount, 3 runs: 0, 0, 0;
+prompt-only withholding, 3 runs: 0, 0, 1) — Phase 1.5, below.
 
 ---
 
@@ -221,7 +222,15 @@ baseline.)*
   1.3 had deferred, keyed to the mode where it belongs.
 - Catalog schema gains `publication_date` and `package_release_date`.
 
-### 1.5 First independent run on Dincecco — next
+### 1.5 First independent run on Dincecco — ✅ done (2026-10-20) — gap 13 / 13
+*(Seeded 13/13; independent 0/13 with the script-free mount (three runs:
+0, 0, 0) and 0/13 with prompt-only withholding (three runs: 0, 0, 1, the
+one pass a coincidental SE match).  Every loss has one cause: the model
+loaded the wrong `.dta` and never found the outcome or instrument,
+because `.dta` column names are not in the listing and the
+claim-refinement prompt never shows stdout; per-claim notes, the
+script-access check (clean), and a latent methodology-extraction error
+are in the entry's `notes`; `benchmark/results/baseline-both-2026-10-19.json`.)*
 
 - `python -m benchmark.runner --only dincecco-2022-india-warfare --mode both`;
   commit `REPORT.md` showing both modes and the gap.
