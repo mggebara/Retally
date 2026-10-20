@@ -162,3 +162,57 @@ def test_compare_cli_usage_error(capsys):
     rc = compare.main(["only-one.json"])
     assert rc == 2
     assert "usage" in capsys.readouterr().err
+
+
+# ── Reproduction modes ──────────────────────────────────────────────────
+
+
+def _moded(mode, claim_details, entry_id="e1"):
+    return {**_result(entry_id=entry_id, claim_details=claim_details), "mode": mode}
+
+
+def test_rows_without_mode_count_as_seeded():
+    assert metrics.mode_of({"entry_id": "old"}) == "seeded"
+    assert metrics.modes_present([{"entry_id": "a"}, {"entry_id": "b", "mode": "independent"}]) == [
+        "seeded",
+        "independent",
+    ]
+
+
+def test_mode_gaps_join_claims_by_description():
+    results = [
+        _moded("seeded", [_cd(description="beta", passed=True), _cd(description="se", passed=True)]),
+        _moded("independent", [_cd(description="beta", passed=True), _cd(description="se", passed=False)]),
+        _moded("seeded", [_cd(description="x", passed=True)], entry_id="seeded-only"),
+    ]
+    [gap] = metrics.mode_gaps(results)  # seeded-only entry has no pair → excluded
+    assert (gap.entry_id, gap.seeded_passed, gap.independent_passed) == ("e1", 2, 1)
+    assert gap.lost == ["se"]
+    assert gap.gained == []
+
+
+def test_compare_keys_rows_by_entry_and_mode():
+    """A seeded and an independent row of the same paper must never be
+    diffed against each other — only like-for-like across runs."""
+    baseline = [
+        _moded("seeded", [_cd(description="beta", passed=True)]),
+        _moded("independent", [_cd(description="beta", passed=False)]),
+    ]
+    candidate = [
+        _moded("seeded", [_cd(description="beta", passed=True)]),
+        _moded("independent", [_cd(description="beta", passed=True)]),
+    ]
+    out = compare.compare_runs(baseline, candidate)
+    assert "Newly passing: 1" in out
+    assert "`e1` (independent): beta" in out
+    assert "Newly failing: 0" in out
+    assert "### dev · seeded" in out and "### dev · independent" in out
+    assert "| `e1` | seeded |" in out and "| `e1` | independent |" in out
+
+
+def test_compare_old_results_without_mode_match_seeded_rows():
+    baseline = [_result(claim_details=[_cd(description="beta", passed=False)])]  # pre-mode file
+    candidate = [_moded("seeded", [_cd(description="beta", passed=True)])]
+    out = compare.compare_runs(baseline, candidate)
+    assert "Newly passing: 1" in out
+    assert "`e1` (seeded): beta" in out

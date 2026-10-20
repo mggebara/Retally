@@ -233,3 +233,46 @@ def test_closeness_section_absent_without_claim_details():
     """Old results.json (no claim_details) renders exactly as before."""
     md = report.render_markdown([_result(entry_id="x")])
     assert "Closeness" not in md
+
+
+# ── Reproduction modes ──────────────────────────────────────────────────
+
+
+def _cd(description, passed):
+    return {
+        "description": description,
+        "claim_type": "coefficient",
+        "claimed": 1.0,
+        "reproduced": 1.0 if passed else 2.0,
+        "tolerance": 0.02,
+        "rel_err": 0.0 if passed else 1.0,
+        "passed": passed,
+    }
+
+
+def test_single_mode_report_states_the_mode_and_has_no_mode_column():
+    md = report.render_markdown([_result(entry_id="x")])  # pre-mode row → seeded
+    assert "Reproduction mode: **seeded**" in md
+    assert "| ID | Status |" in md
+    assert "Seeded vs independent" not in md
+
+
+def test_both_mode_report_presents_modes_side_by_side():
+    results = [
+        _result(entry_id="p", mode="seeded", claim_details=[_cd("beta", True), _cd("se", True)]),
+        _result(entry_id="p", mode="independent", claim_details=[_cd("beta", True), _cd("se", False)]),
+    ]
+    md = report.render_markdown(results)
+    # Papers are counted once, runs once per mode.
+    assert "Catalog size: **1** papers, each run in 2 reproduction modes" in md
+    assert "Runs (paper × mode): **2**" in md
+    assert "## Verdicts — seeded" in md and "## Verdicts — independent" in md
+    assert "## Seeded vs independent" in md
+    assert "- Seeded: **2 / 2** claims passed" in md
+    assert "- Independent: **1 / 2** claims passed" in md
+    assert "| `p` | dev | 2/2 | 1/2 | `se` |" in md
+    assert "**dev · seeded**" in md and "**dev · independent**" in md
+    assert "| ID | Mode | Status |" in md
+    assert "| `p` | independent | ran |" in md
+    html = report.render_html(results)
+    assert "<th>Mode</th>" in html

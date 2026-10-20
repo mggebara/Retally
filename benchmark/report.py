@@ -34,30 +34,47 @@ def render_markdown(results: list[dict[str, Any]]) -> str:
     if not results:
         return _empty_report_markdown()
 
-    headline = _headline_counts(results)
-    lines = [
-        "# Retally benchmark report",
-        "",
-        f"Catalog size: **{headline['total']}** papers.  ",
-        f"Executed: **{headline['executed']}**.  ",
-        f"Skipped: **{headline['skipped']}** "
-        f"(out_of_scope={headline['out_of_scope']}, "
-        f"language_unsupported={headline['language_unsupported']}, "
-        f"no_api_key={headline['no_api_key']}).",
-        "",
-        _verdict_summary_markdown(results),
-        "",
-        _closeness_markdown(results),
-        "",
-        _component_breakdown_markdown(results),
-        "",
-        "## Per-paper results",
-        "",
-        "| ID | Status | Ran | Agrees w/ paper | Agrees w/ I4R | Claims (paper / I4R) | Cached |",
-        "|---|---|---|---|---|---|---|",
-    ]
+    grouped = metrics.by_mode(results)
+    modes = list(grouped)
+    multi = len(modes) > 1
+    if multi:
+        lines = _multi_mode_header(results, modes)
+        for mode, rows in grouped.items():
+            lines.extend([_verdict_summary_markdown(rows, mode=mode), ""])
+        lines.extend([_mode_gap_markdown(results), ""])
+        lines.extend([_closeness_markdown(results), ""])
+        for mode, rows in grouped.items():
+            lines.extend([_component_breakdown_markdown(rows, mode=mode), ""])
+    else:
+        headline = _headline_counts(results)
+        lines = [
+            "# Retally benchmark report",
+            "",
+            f"Catalog size: **{headline['total']}** papers.  ",
+            f"Executed: **{headline['executed']}**.  ",
+            f"Skipped: **{headline['skipped']}** "
+            f"(out_of_scope={headline['out_of_scope']}, "
+            f"language_unsupported={headline['language_unsupported']}, "
+            f"no_api_key={headline['no_api_key']}).  ",
+            f"Reproduction mode: **{modes[0]}** ({_MODE_BLURB.get(modes[0], 'unrecognised mode')}).",
+            "",
+            _verdict_summary_markdown(results),
+            "",
+            _closeness_markdown(results),
+            "",
+            _component_breakdown_markdown(results),
+            "",
+        ]
+    lines.extend(
+        [
+            "## Per-paper results",
+            "",
+            _table_header_markdown(multi),
+            _table_rule_markdown(multi),
+        ]
+    )
     for r in results:
-        lines.append(_row_markdown(r))
+        lines.append(_row_markdown(r, show_mode=multi))
     lines.append("")
     return "\n".join(lines)
 
@@ -70,7 +87,9 @@ def render_html(results: list[dict[str, Any]]) -> str:
     dashboard.
     """
     headline = _headline_counts(results) if results else None
-    rows_html = "".join(_row_html(r) for r in results) if results else ""
+    multi = len(metrics.modes_present(results)) > 1 if results else False
+    rows_html = "".join(_row_html(r, show_mode=multi) for r in results) if results else ""
+    mode_th = "<th>Mode</th>" if multi else ""
 
     body = ""
     if headline is None:
@@ -89,7 +108,7 @@ def render_html(results: list[dict[str, Any]]) -> str:
         <table>
           <thead>
             <tr>
-              <th>ID</th><th>Status</th><th>Ran</th>
+              <th>ID</th>{mode_th}<th>Status</th><th>Ran</th>
               <th>Agrees w/ paper</th><th>Agrees w/ I4R</th>
               <th>Claims (paper / I4R)</th><th>Cached</th>
             </tr>
@@ -144,10 +163,88 @@ def _headline_counts(results: list[dict[str, Any]]) -> dict[str, int]:
     }
 
 
-def _verdict_summary_markdown(results: list[dict[str, Any]]) -> str:
+_MODE_BLURB = {
+    "seeded": (
+        "the authors' replication-package scripts were in the generation prompt — computational reproduction"
+    ),
+    "independent": (
+        "the authors' scripts were withheld; reproduced from the paper text — independent reproduction"
+    ),
+}
+
+
+def _multi_mode_header(results: list[dict[str, Any]], modes: list[str]) -> list[str]:
+    """Headline for a run covering several reproduction modes.
+
+    Counts papers once (not once per mode), then counts runs — one
+    (paper, mode) row each — so the denominators stay honest.
+    """
+    headline = _headline_counts(results)
+    n_papers = len({r["entry_id"] for r in results})
+    lines = [
+        "# Retally benchmark report",
+        "",
+        f"Catalog size: **{n_papers}** papers, each run in {len(modes)} reproduction modes.  ",
+        f"Runs (paper × mode): **{headline['total']}**.  ",
+        f"Executed runs: **{headline['executed']}**.  ",
+        f"Skipped runs: **{headline['skipped']}** "
+        f"(out_of_scope={headline['out_of_scope']}, "
+        f"language_unsupported={headline['language_unsupported']}, "
+        f"no_api_key={headline['no_api_key']}).",
+        "",
+        "Reproduction modes:",
+        "",
+    ]
+    for mode in modes:
+        lines.append(f"- **{mode}**: {_MODE_BLURB.get(mode, 'unrecognised mode')}.")
+    lines.append("")
+    return lines
+
+
+def _mode_gap_markdown(results: list[dict[str, Any]]) -> str:
+    """The seeded-vs-independent gap — the headline finding of a both-mode run."""
+    gaps = metrics.mode_gaps(results)
+    lines = [
+        "## Seeded vs independent",
+        "",
+        "Claims passing with the authors' scripts in the prompt (seeded) versus "
+        "without them (independent), per paper executed in both modes.  "
+        "*Lost* claims pass seeded but not independent — what the scripts were carrying.",
+        "",
+    ]
+    if not gaps:
+        lines.append("_No paper was executed in both modes._")
+        return "\n".join(lines)
+    s_pass = sum(g.seeded_passed for g in gaps)
+    s_total = sum(g.seeded_total for g in gaps)
+    i_pass = sum(g.independent_passed for g in gaps)
+    i_total = sum(g.independent_total for g in gaps)
+    lost = sum(len(g.lost) for g in gaps)
+    gained = sum(len(g.gained) for g in gaps)
+    lines.extend(
+        [
+            f"- Seeded: **{s_pass} / {s_total}** claims passed",
+            f"- Independent: **{i_pass} / {i_total}** claims passed",
+            f"- Lost without the scripts: **{lost}**; gained: **{gained}**",
+            "",
+            "| Entry | Split | Seeded | Independent | Lost without scripts |",
+            "|---|---|---|---|---|",
+        ]
+    )
+    for g in gaps:
+        lost_str = ", ".join(f"`{d}`" for d in g.lost) if g.lost else "—"
+        lines.append(
+            f"| `{g.entry_id}` | {g.split} | {g.seeded_passed}/{g.seeded_total} "
+            f"| {g.independent_passed}/{g.independent_total} | {lost_str} |"
+        )
+    return "\n".join(lines)
+
+
+def _verdict_summary_markdown(results: list[dict[str, Any]], mode: str | None = None) -> str:
+    suffix = f" — {mode}" if mode else ""
     executed = [r for r in results if not r.get("skipped")]
     if not executed:
-        return "## Verdicts\n\n_No papers were executed in this run._"
+        return f"## Verdicts{suffix}\n\n_No papers were executed in this run._"
 
     ran = sum(1 for r in executed if r.get("retally_ran"))
     agree_paper = sum(1 for r in executed if r.get("agrees_with_paper"))
@@ -155,7 +252,7 @@ def _verdict_summary_markdown(results: list[dict[str, Any]]) -> str:
     i4r_attempted = sum(1 for r in executed if r.get("agrees_with_i4r") is not None)
 
     return (
-        "## Verdicts (among executed papers)\n\n"
+        f"## Verdicts{suffix} (among executed papers)\n\n"
         f"- Pipeline completed without crashing: **{ran} / {len(executed)}**\n"
         f"- Agrees with the paper's stated values: **{agree_paper} / {len(executed)}**\n"
         f"- Agrees with the I4R replicator: **{agree_i4r} / {i4r_attempted}** "
@@ -172,16 +269,24 @@ def _closeness_markdown(results: list[dict[str, Any]]) -> str:
     """
     if not any(r.get("claim_details") for r in results if not r.get("skipped")):
         return ""
-    lines = ["## Closeness (per split)", ""]
-    for split, m in metrics.by_split(results).items():
-        lines.append(f"- **{split}**: {metrics.format_metrics_line(m)}")
+    grouped = metrics.by_mode(results)
+    if len(grouped) == 1:
+        lines = ["## Closeness (per split)", ""]
+        for split, m in metrics.by_split(results).items():
+            lines.append(f"- **{split}**: {metrics.format_metrics_line(m)}")
+        return "\n".join(lines)
+    lines = ["## Closeness (per split and mode)", ""]
+    for mode, rows in grouped.items():
+        for split, m in metrics.by_split(rows).items():
+            lines.append(f"- **{split} · {mode}**: {metrics.format_metrics_line(m)}")
     return "\n".join(lines)
 
 
-def _component_breakdown_markdown(results: list[dict[str, Any]]) -> str:
+def _component_breakdown_markdown(results: list[dict[str, Any]], mode: str | None = None) -> str:
     executed = [r for r in results if not r.get("skipped")]
     if not executed:
         return ""
+    suffix = f" — {mode}" if mode else ""
 
     components = [
         "parsed",
@@ -192,7 +297,7 @@ def _component_breakdown_markdown(results: list[dict[str, Any]]) -> str:
         "code_executed",
     ]
     lines = [
-        "## Per-component success (executed papers only)",
+        f"## Per-component success{suffix} (executed papers only)",
         "",
         "| Component | Succeeded | Total | Rate |",
         "|---|---:|---:|---:|",
@@ -209,8 +314,20 @@ def _component_breakdown_markdown(results: list[dict[str, Any]]) -> str:
 # ---------------------------------------------------------------------------
 
 
-def _row_markdown(r: dict[str, Any]) -> str:
+def _table_header_markdown(show_mode: bool) -> str:
+    mode_col = " Mode |" if show_mode else ""
+    return (
+        f"| ID |{mode_col} Status | Ran | Agrees w/ paper | Agrees w/ I4R | Claims (paper / I4R) | Cached |"
+    )
+
+
+def _table_rule_markdown(show_mode: bool) -> str:
+    return "|---|---|---|---|---|---|---|" + ("---|" if show_mode else "")
+
+
+def _row_markdown(r: dict[str, Any], show_mode: bool = False) -> str:
     eid = r["entry_id"]
+    mode_cell = f" {metrics.mode_of(r)} |" if show_mode else ""
     status = _status_label(r)
     ran = _bool_glyph(r.get("retally_ran"))
     paper = _bool_glyph(r.get("agrees_with_paper"))
@@ -220,13 +337,15 @@ def _row_markdown(r: dict[str, Any]) -> str:
     n_i4r = r.get("n_claims_with_i4r_match", 0)
     claims = f"{n_paper} / {n_i4r} of {n_total}"
     cached = "✓" if r.get("cached") else ""
-    return f"| `{eid}` | {status} | {ran} | {paper} | {i4r} | {claims} | {cached} |"
+    return f"| `{eid}` |{mode_cell} {status} | {ran} | {paper} | {i4r} | {claims} | {cached} |"
 
 
-def _row_html(r: dict[str, Any]) -> str:
+def _row_html(r: dict[str, Any], show_mode: bool = False) -> str:
+    mode_td = f"<td>{_escape(metrics.mode_of(r))}</td>" if show_mode else ""
     return (
         f"<tr>"
         f"<td><code>{_escape(r['entry_id'])}</code></td>"
+        f"{mode_td}"
         f"<td>{_escape(_status_label(r))}</td>"
         f"<td>{_escape(_bool_glyph(r.get('retally_ran')))}</td>"
         f"<td>{_escape(_bool_glyph(r.get('agrees_with_paper')))}</td>"

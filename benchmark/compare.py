@@ -7,7 +7,12 @@ be one command, not an eyeball-diff of two JSON files.  This prints:
 * per-split closeness metrics for both runs, side by side
 * per-entry deltas (passed counts, median rel err)
 * which specific claims flipped — newly passing and newly failing —
-  matched across runs by (entry_id, claim description)
+  matched across runs by (entry_id, mode, claim description)
+
+Rows are identified by ``(entry_id, mode)``: a seeded and an independent
+result for the same paper are different measurements and are only ever
+compared like-for-like (baseline seeded vs candidate seeded, etc.).
+Rows from results files that predate the ``mode`` field count as seeded.
 
 Exit code is always 0; this is a report, not a gate.  Wire it into CI
 as a gate later if the numbers prove stable enough to enforce.
@@ -65,13 +70,13 @@ def main(argv: list[str] | None = None) -> int:
 
 
 def _split_section(baseline: list[dict], candidate: list[dict]) -> list[str]:
-    lines = ["## Closeness by split", ""]
-    base_by_split = metrics.by_split(baseline)
-    cand_by_split = metrics.by_split(candidate)
-    for split in sorted(set(base_by_split) | set(cand_by_split)):
-        lines.append(f"### {split}")
-        b = base_by_split.get(split)
-        c = cand_by_split.get(split)
+    lines = ["## Closeness by split and mode", ""]
+    base_by_group = _by_split_and_mode(baseline)
+    cand_by_group = _by_split_and_mode(candidate)
+    for split, mode in sorted(set(base_by_group) | set(cand_by_group)):
+        lines.append(f"### {split} · {mode}")
+        b = base_by_group.get((split, mode))
+        c = cand_by_group.get((split, mode))
         lines.append(f"- baseline:  {metrics.format_metrics_line(b) if b else '(absent)'}")
         lines.append(f"- candidate: {metrics.format_metrics_line(c) if c else '(absent)'}")
         if b and c and b.median_rel_err is not None and c.median_rel_err is not None:
@@ -83,19 +88,20 @@ def _split_section(baseline: list[dict], candidate: list[dict]) -> list[str]:
 
 
 def _per_entry_section(baseline: list[dict], candidate: list[dict]) -> list[str]:
-    base_by_id = {r["entry_id"]: r for r in baseline}
-    cand_by_id = {r["entry_id"]: r for r in candidate}
+    base_by_key = {_row_key(r): r for r in baseline}
+    cand_by_key = {_row_key(r): r for r in candidate}
     lines = [
         "## Per-entry deltas",
         "",
-        "| Entry | Split | Passed (base → cand) | Median rel err (base → cand) |",
-        "|---|---|---|---|",
+        "| Entry | Mode | Split | Passed (base → cand) | Median rel err (base → cand) |",
+        "|---|---|---|---|---|",
     ]
-    for entry_id in sorted(set(base_by_id) | set(cand_by_id)):
-        b, c = base_by_id.get(entry_id), cand_by_id.get(entry_id)
+    for key in sorted(set(base_by_key) | set(cand_by_key)):
+        entry_id, mode = key
+        b, c = base_by_key.get(key), cand_by_key.get(key)
         split = (c or b or {}).get("split", "dev")
         lines.append(
-            f"| `{entry_id}` | {split} "
+            f"| `{entry_id}` | {mode} | {split} "
             f"| {_passed_str(b)} → {_passed_str(c)} "
             f"| {_median_str(b)} → {_median_str(c)} |"
         )
@@ -115,10 +121,10 @@ def _flips_section(baseline: list[dict], candidate: list[dict]) -> list[str]:
     return lines
 
 
-def _flip_block(title: str, flips: list[tuple[str, str]]) -> list[str]:
+def _flip_block(title: str, flips: list[tuple[str, str, str]]) -> list[str]:
     lines = [f"### {title}: {len(flips)}"]
-    for entry_id, description in flips[:_MAX_FLIPS_SHOWN]:
-        lines.append(f"- `{entry_id}`: {description}")
+    for entry_id, mode, description in flips[:_MAX_FLIPS_SHOWN]:
+        lines.append(f"- `{entry_id}` ({mode}): {description}")
     if len(flips) > _MAX_FLIPS_SHOWN:
         lines.append(f"- … and {len(flips) - _MAX_FLIPS_SHOWN} more")
     lines.append("")
@@ -130,14 +136,27 @@ def _flip_block(title: str, flips: list[tuple[str, str]]) -> list[str]:
 # ---------------------------------------------------------------------------
 
 
-def _passed_claims(results: list[dict]) -> set[tuple[str, str]]:
-    """(entry_id, claim description) pairs that passed.
+def _row_key(r: dict) -> tuple[str, str]:
+    """A results row's identity across runs: (entry_id, reproduction mode)."""
+    return (r["entry_id"], metrics.mode_of(r))
+
+
+def _by_split_and_mode(results: list[dict]) -> dict[tuple[str, str], metrics.ClosenessMetrics]:
+    return {
+        (split, mode): m
+        for mode, rows in metrics.by_mode(results).items()
+        for split, m in metrics.by_split(rows).items()
+    }
+
+
+def _passed_claims(results: list[dict]) -> set[tuple[str, str, str]]:
+    """(entry_id, mode, claim description) triples that passed.
 
     Description is the join key across runs: claim order can shift when
     extraction re-runs, but a pinned/curated claim keeps its description.
     """
     return {
-        (r["entry_id"], cd["description"])
+        (*_row_key(r), cd["description"])
         for r in results
         for cd in r.get("claim_details", [])
         if cd.get("passed")

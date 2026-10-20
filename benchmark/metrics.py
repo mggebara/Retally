@@ -110,3 +110,87 @@ def format_metrics_line(m: ClosenessMetrics) -> str:
 
 def _pct(v: float | None) -> str:
     return "—" if v is None else f"{v:.0%}"
+
+
+# ---------------------------------------------------------------------------
+# Reproduction modes (seeded vs independent)
+# ---------------------------------------------------------------------------
+
+_MODE_ORDER = ("seeded", "independent")
+
+
+def mode_of(result: dict[str, Any]) -> str:
+    """A result row's reproduction mode; rows predating the field were seeded."""
+    return str(result.get("mode") or "seeded")
+
+
+def modes_present(results: list[dict[str, Any]]) -> list[str]:
+    """Modes appearing in ``results``: seeded, then independent, then any others sorted."""
+    present = {mode_of(r) for r in results}
+    return [m for m in _MODE_ORDER if m in present] + sorted(present - set(_MODE_ORDER))
+
+
+def by_mode(results: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
+    """Group result rows by reproduction mode, in ``modes_present`` order.
+
+    Every aggregate (verdicts, closeness, components) must be computed
+    within one mode: pooling a seeded and an independent row of the same
+    paper would double-count it and blend two different measurements.
+    """
+    return {m: [r for r in results if mode_of(r) == m] for m in modes_present(results)}
+
+
+@dataclass
+class ModeGap:
+    """Seeded-vs-independent comparison for one paper run in both modes.
+
+    The gap is the project's primary finding: how much of a computational
+    reproduction (authors' scripts in the prompt) survives when the model
+    must work from the paper text alone.
+    """
+
+    entry_id: str
+    split: str
+    seeded_passed: int
+    seeded_total: int
+    independent_passed: int
+    independent_total: int
+    lost: list[str]
+    """Claim descriptions that pass seeded but not independent — what the
+    authors' scripts were carrying."""
+
+    gained: list[str]
+    """Claim descriptions that pass independent but not seeded (rare; under
+    the wider SE-aware independent band it is often a tolerance effect)."""
+
+
+def mode_gaps(results: list[dict[str, Any]]) -> list[ModeGap]:
+    """One ModeGap per entry *executed* in both seeded and independent mode.
+
+    Claims are joined across modes by description, the same key
+    ``benchmark.compare`` uses across runs.  Sorted by entry id.
+    """
+    rows: dict[tuple[str, str], dict[str, Any]] = {
+        (r["entry_id"], mode_of(r)): r for r in results if not r.get("skipped")
+    }
+    gaps: list[ModeGap] = []
+    for entry_id in sorted({eid for eid, _ in rows}):
+        seeded = rows.get((entry_id, "seeded"))
+        independent = rows.get((entry_id, "independent"))
+        if seeded is None or independent is None:
+            continue
+        s_pass = {cd["description"] for cd in seeded.get("claim_details", []) if cd.get("passed")}
+        i_pass = {cd["description"] for cd in independent.get("claim_details", []) if cd.get("passed")}
+        gaps.append(
+            ModeGap(
+                entry_id=entry_id,
+                split=str(seeded.get("split", "dev")),
+                seeded_passed=len(s_pass),
+                seeded_total=len(seeded.get("claim_details", [])),
+                independent_passed=len(i_pass),
+                independent_total=len(independent.get("claim_details", [])),
+                lost=sorted(s_pass - i_pass),
+                gained=sorted(i_pass - s_pass),
+            )
+        )
+    return gaps
