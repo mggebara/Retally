@@ -30,6 +30,7 @@ their agent is given.
 from __future__ import annotations
 
 import os
+import re
 import shutil
 from dataclasses import dataclass, field, replace
 from pathlib import Path
@@ -138,15 +139,32 @@ class Reproducer(Protocol):
 # the do-file ran — a transcript of the script.  Matches the file types the
 # independent-mode prompt already tells the model not to open.
 SCRIPT_SUFFIXES = frozenset(
-    {".do", ".ado", ".r", ".rmd", ".py", ".ipynb", ".sas", ".sps", ".m", ".log", ".smcl"}
+    {".do", ".ado", ".r", ".rmd", ".py", ".ipynb", ".sas", ".sps", ".m", ".log", ".smcl", ".rout"}
 )
+
+# Transcripts that carry the code without a script suffix.  ``.Rhistory``
+# has no suffix in pathlib's sense (it is a dotfile) and holds every R
+# command typed; ``log_*.txt`` is a common name for a saved R console
+# session (the Bisbee 2022 package ships several).  Result tables
+# (``.tex``/``.csv``) are deliberately kept: they hold the paper's numbers,
+# which the independent-mode prompt already states as the claims.
+SCRIPT_NAMES = frozenset({".rhistory", ".rapp.history"})
+SCRIPT_NAME_PATTERNS = (re.compile(r"^log[_-].*\.txt$", re.IGNORECASE),)
 
 SCRIPT_FREE_SUFFIX = ".script-free"
 
 
 def is_script(path: Path) -> bool:
-    """True when ``path`` is an analysis-script file (case-insensitive suffix)."""
-    return path.suffix.lower() in SCRIPT_SUFFIXES
+    """True when ``path`` is an analysis script or a transcript of one.
+
+    Matches by case-insensitive suffix (``SCRIPT_SUFFIXES``), by exact
+    dotfile name (``SCRIPT_NAMES``), or by console-log name pattern
+    (``SCRIPT_NAME_PATTERNS``).
+    """
+    name = path.name.lower()
+    if path.suffix.lower() in SCRIPT_SUFFIXES or name in SCRIPT_NAMES:
+        return True
+    return any(pat.match(name) for pat in SCRIPT_NAME_PATTERNS)
 
 
 def script_free_copy(source: Path, dest: Path) -> Path:

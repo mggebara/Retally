@@ -393,6 +393,19 @@ def test_script_free_copy_drops_scripts_and_keeps_data(tmp_path):
     assert "master.do" in _files(src)
 
 
+def test_script_free_copy_drops_transcripts_without_a_script_suffix(tmp_path):
+    """.Rhistory, .Rout and log_*.txt console sessions carry the code too."""
+    src = _package(tmp_path / "pkg")
+    for rel in (".Rhistory", "code/.Rhistory", "code/run.Rout", "log_analysis.txt", "Log-session2.TXT"):
+        (src / rel).parent.mkdir(parents=True, exist_ok=True)
+        (src / rel).write_text("lm(y ~ x)\n", encoding="utf-8")
+    # Plain text that is not a console log stays, as do result tables.
+    (src / "notes.txt").write_text("codebook\n", encoding="utf-8")
+    (src / "table1.tex").write_text("3.713\n", encoding="utf-8")
+    dest = reproducer_mod.script_free_copy(src, tmp_path / "out")
+    assert _files(dest) == {"data/panel.dta", "data/panel.csv", "README.pdf", "notes.txt", "table1.tex"}
+
+
 def test_script_free_copy_rebuilds_the_destination(tmp_path):
     src = _package(tmp_path / "pkg")
     dest = tmp_path / "out"
