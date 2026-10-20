@@ -29,8 +29,9 @@ paper's stated values and the human replicators' values. `agrees_with_paper
 Everything below is ordered by a single rule: **the next PR moves the
 reproduction number, not the machinery.** The infrastructure (caching,
 splits, closeness metrics, compare tooling) is already ahead of the result
-it measures. Current state of the core result: **0 / 102 claims** on the
-one paper ever run end-to-end (Dincecco et al. 2022).
+it measures. Current state of the core result: **13 / 13 pinned headline
+claims** on Dincecco et al. 2022 (2026-10-19; was 0 / 102 auto-extracted
+claims in July) — one paper, one sampled generation, so not yet a rate.
 
 ---
 
@@ -138,7 +139,13 @@ estimates. The pinned-claims workflow (PR #26) exists and
 - Populate `i4r_replicator_findings` from I4R DP35 where it publishes
   values, activating `agrees_with_i4r` for the first time.
 
-### 1.3 Iterate to green, with discipline
+### 1.3 Iterate to green, with discipline — ✅ done (2026-10-19)
+*(13/13 pinned claims within tolerance.  The fix that mattered: the
+185 KB master do-file was being dropped by the per-file script cap, so
+1.1 had been a silent no-op; truncating instead of skipping took the
+run from 0/5 to 5/5.  A Stata-to-fixest singleton note then made N
+exact.  SE-aware tolerance was not needed.  Per-iteration log in the
+PR and commit messages; remaining near-misses in the entry's notes.)*
 
 - Live run → `benchmark.compare` against the saved baseline → keep or
   revert. The LLM cache keeps each iteration cheap; pinned claims keep the
