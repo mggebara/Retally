@@ -87,3 +87,21 @@ def test_explicit_seeded_mode_matches_golden(language):
     golden = FIXTURE_DIR / f"generation_prompt_{language.value}.txt"
     prompt = _captured_prompt(language, reproduction_mode=ReproductionMode.SEEDED)
     assert prompt == golden.read_text(encoding="utf-8")
+
+
+def test_independent_prompt_on_the_same_package_withholds_seeded_material():
+    """Same fixture package, independent mode: the scripts are still named in
+    the dataset listing (it is a directory listing), but their contents, the
+    seeded Stata-to-fixest singleton hint, and the reference block are gone."""
+    client = MagicMock()
+    client.messages.create.return_value = MagicMock(content=[MagicMock(text="x <- 1")])
+    CodeGenerator(client).generate(
+        _paper(Language.R), _dataset(), reproduction_mode=ReproductionMode.INDEPENDENT
+    )
+    prompt = client.messages.create.call_args.kwargs["messages"][0]["content"]
+    assert "- code/master.do" in prompt
+    assert "reghdfe" not in prompt
+    assert "fixef.rm" not in prompt
+    assert "## Original Replication Scripts" not in prompt
+    assert "## Reference Implementation" not in prompt
+    assert "## Independent Reproduction" in prompt
