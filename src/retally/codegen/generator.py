@@ -869,11 +869,11 @@ class CodeGenerator:
                     (
                         "Stata-to-fixest sample matching: feols() drops fixed-effect "
                         "singletons by default, but Stata's `reg y x i.fe` / `xi:` "
-                        "dummies keep them.  Pass `fixef.rm = \"none\"` to every "
+                        'dummies keep them.  Pass `fixef.rm = "none"` to every '
                         "feols() call that has fixed effects, otherwise the "
                         "observation count and the robust SEs drift from the "
                         "paper's.  Stata's `, r` / `vce(robust)` is "
-                        "`vcov = \"hetero\"`."
+                        '`vcov = "hetero"`.'
                     ),
                     "",
                 ]
