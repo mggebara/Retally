@@ -346,6 +346,7 @@ dev/holdout machinery exists precisely for this.
   during the same pass — the corpus already carries the exact
   `agrees_with_i4r` ground truth (flagged in PR #28 as a "latent
   goldmine"; this is where it gets mined). Record both dates.
+  *Status (2026-10-20): claims, I4R findings and dates pinned for `alesina-2022` and `bisbee-2022`; `arias-2022` still open.*
 - Run the three dev entries live with `--mode both`; commit `REPORT.md`.
   Arias (holdout) runs once, only to confirm the harness handles it — its
   numbers are not for tuning.
