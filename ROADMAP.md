@@ -93,6 +93,7 @@ cached run: 12), up from a flat **0 / 13** in Phase 1.5 (script-free mount,
 3 runs: 0, 0, 0; prompt-only withholding, 3 runs: 0, 0, 1) and after Phase
 1.6 steps 1–3. Run-to-run variance now dominates the signal, so every
 further change is measured as a distribution of runs (Phase 1.6, below).
+The Phase 1.7 file-selection fixes are built but not yet measured.
 
 ---
 
@@ -307,6 +308,43 @@ Step 4 measured on `main` at 9b4bbb9:
   keep their generated scripts (PR #42), so classification need no longer
   be inferred.  Spend was not recorded (cost accounting landed in PR #41,
   after these runs); roughly 4–6 Opus 4.7 calls per independent run.
+
+### 1.7 File-selection round — 🚧 built, not measured (2026-10-20)
+*(Three fixes, one commit each, unit-tested, none yet measured live: when
+they were built the API account returned HTTP 400 "credit balance is too
+low" on the first uncached call, retried once.  The 1.6 step-4
+measurement has since run (above); every 1.7 before/after compare is
+outstanding, to be measured as a distribution of runs like step 4.  (4) each claim's
+`location` and `context` are rendered under it in the generation prompt;
+(5) the `.dta` listing gives row counts, puts columns named in the paper
+text first (exact name, or a Stata label that is a phrase of the text),
+and lists the most relevant `.dta` files first — offline, Dincecco's
+`conflictexposure.dta` now leads with 666 rows, `lnlights_001`,
+`lnpdgpd1990`, `instrument`, `state_gadm` visible; (6) NA claims go to
+claim refinement, and "no progress" counts NA lines and is waived once
+on a data-file switch.)*
+
+*Context leak.  Rendering contexts (4) exposed that the curated contexts
+had been written from the replication package: Dincecco's named
+`Land_250_1757`, `lnpdgpd1990`, `instrument` and `ivreg2, r`; Alesina's
+and Bisbee's (PR #36) named package variables (`tax_top1`, `immigfirst`,
+`pcttw_sanders`, `treatBin`, ...), R/Stata calls (`lfe::felm`,
+`WeightIt::weightit`, `reg, robust`) and code-only facts (Bisbee's
+150-second attentive cutoff, classical SEs).  Independent mode is
+independent of the authors' code, so these were leaks.  Decision: rewrite
+every context in the paper's own words, checked against the paper text
+(no `curation_source` field; the `warfare_coefficient_bivariate` token is
+kept for run-to-run comparability, and its context quotes the paper's
+"bivariate correlation after controlling for log population density").
+The rewrite is the branch's first commit, so (4) is measured with clean
+contexts; package-only facts moved to the entries' `notes`, which the
+model never sees.  The rule for curators is now in
+`benchmark/papers/README.md`.  Consequence for (5): the listing's hints
+lose the leaked names; offline, with title and claim fields as hints
+(no methodology summary), `conflictexposure.dta` still leads, with
+`lnlights_001` (its label matches "ln(0.01+Luminosity)") and
+`instrument` (the paper's "Khyber proximity instrument") in view, but
+`Land_250_1757` and `lnpdgpd1990` fall past the listing cap.*
 
 **Exit criteria:** (a) seeded: ≥50% of Dincecco's pinned headline claims
 within tolerance — **met (13/13)**; (b) independent: a committed

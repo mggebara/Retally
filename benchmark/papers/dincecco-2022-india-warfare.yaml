@@ -417,3 +417,28 @@ notes: >
   claims with no value (NA) are hard failures that the claim-refinement
   loop never targets, and the loop stops when an attempt reproduces the
   same numbers.
+
+  Phase 1.7 file selection (2026-10-20): NOT MEASURED.  The deferred
+  Phase 1.6 measurement was attempted first (seeded served 13/13 from the
+  LLM cache), but the first uncached call, the independent generation,
+  returned HTTP 400 "credit balance is too low" again, and so did the one
+  retry (the 1.6 measurement later ran on main; see step 4 above).  The three 1.7 fixes were built and unit-tested without live
+  runs, one commit each: claim location/context rendered in the prompt;
+  a .dta listing with row counts, paper-matched columns first (by exact
+  name or by Stata label phrase), and the most relevant .dta files first;
+  NA claims sent to claim refinement, with "no progress" counting NA
+  lines and waived once on a data-file switch.  Offline, the new listing
+  puts conflictexposure.dta first: "666 rows, 1288 columns", with
+  Land_250_1757, lnlights_001, lnpdgpd1990, instrument and state_gadm in
+  view (measured with the claim contexts as they then stood).
+
+  Context rewrite (2026-10-20, Phase 1.7).  This entry's claim contexts
+  had named package variables (Land_250_1757, lnpdgpd1990, instrument),
+  the Stata command (ivreg2, r) and the Andaman/Nicobar and Lakshadweep
+  exclusion, none of which the paper states; once rendered they would
+  have handed independent mode code-derived hints.  They were rewritten
+  from the paper text alone (Table 1 and Table 2 notes and the text around them),
+  ahead of the prompt change, so no measured run saw the old wording.
+  With the new contexts as hints (title and claim fields only),
+  conflictexposure.dta still leads the listing with lnlights_001 and
+  instrument in view; Land_250_1757 and lnpdgpd1990 fall past the cap.
