@@ -5,7 +5,10 @@ single byte of the prompt that the default (seeded) path sends — the
 benchmark's existing LLM cache, its baselines, and every comparison
 against earlier runs depend on that.  The golden files under
 ``tests/fixtures/seeded_prompt/`` were captured from the generator
-*before* the mode switch existed, using exactly the builder below.
+*before* the mode switch existed, using exactly the builder below, and
+regenerated deliberately once since (Phase 1.6): the fixture package
+gained a ``.dta`` file and the dataset listing now shows Stata column
+names, which moves the seeded prompt's listing by one line.
 
 The fixture package is a miniature replication archive (a CSV, a Stata
 ``master.do``, an R script), so the prompt exercises every section that
