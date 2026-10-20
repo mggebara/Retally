@@ -1,15 +1,23 @@
-"""Benchmark runner: walk the catalog, validate each paper, score it.
+"""Benchmark runner: walk the catalog, reproduce each paper, score it.
+
+The runner is the *harness*: it hands each catalog entry to a
+``Reproducer`` (``benchmark.reproducer``; ``ValidationPipeline`` via
+``PipelineReproducer`` is the reference one and the default), takes back
+the raw ``{name: value}`` outputs, and scores them itself with
+``ResultComparator`` under the mode's ``TolerancePolicy``.  A reproducer's
+own pass/fail judgement is never read, so every agent is held to the
+identical yardstick.
 
 Three verdicts are recorded per paper:
 
-* ``retally_ran`` — the pipeline completed without crashing.  Distinct
+* ``retally_ran`` — the reproducer completed without crashing.  Distinct
   from "all claims passed" — we want to know whether the infrastructure
   works even when the science doesn't.
 * ``agrees_with_paper`` — every claim with a paper-stated value
-  validates within the comparator's tolerance against Retally's
-  reproduced value.  This is the existing ``overall_passed`` rebrand.
+  validates within the comparator's tolerance against the reproduced
+  value.  Computed by the harness, from the reproducer's raw outputs.
 * ``agrees_with_i4r`` — for every claim where the I4R replicator
-  recorded a reproduced value, Retally's reproduced value is within the
+  recorded a reproduced value, the reproduced value is within the
   comparator's tolerance of THAT value (not the paper's claim).
 
 The three can disagree in meaningful ways — e.g. *ran ✓, agrees with
@@ -25,19 +33,22 @@ run one mode or both; a result row is identified by ``(entry_id,
 mode)``, never by ``entry_id`` alone, so the two are never conflated.
 
 Caching: a content-addressable cache under ``benchmark/.cache/`` keyed
-on ``(catalog_entry_hash, retally_version, mode)`` lets us re-run the
-benchmark cheaply when only the report renderer or non-pipeline
-components changed.  Any benchmark entry edit, retally version bump, or
-mode change selects a different cache entry.
+on ``(catalog_entry_hash, retally_version, mode, reproducer)`` lets us
+re-run the benchmark cheaply when only the report renderer or
+non-pipeline components changed.  Any benchmark entry edit, retally
+version bump, mode change, or reproducer change selects a different
+cache entry.
 """
 
 from __future__ import annotations
 
 import hashlib
+import importlib
 import json
 import logging
 import os
 import sys
+from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
 from enum import Enum
 from pathlib import Path
@@ -46,6 +57,19 @@ from typing import Any
 # benchmark.* is at the repo root, not under src/retally/, so the test
 # helper and this module both reach into the sibling schema module.
 from benchmark import schema as bschema
+from benchmark.reproducer import ComponentMetrics, PipelineReproducer, Reproducer, Reproduction
+
+__all__ = [
+    "BenchmarkResult",
+    "ClaimDetail",
+    "ComponentMetrics",
+    "DEFAULT_REPRODUCER",
+    "REPRODUCERS",
+    "resolve_reproducer",
+    "run_benchmark",
+    "score_reproduction",
+    "write_results",
+]
 
 logger = logging.getLogger(__name__)
 
@@ -60,6 +84,8 @@ RESULTS_DIR = REPO_ROOT / "benchmark" / "results"
 SEEDED = "seeded"
 INDEPENDENT = "independent"
 MODES = (SEEDED, INDEPENDENT)
+
+DEFAULT_REPRODUCER = "pipeline"
 
 
 # ---------------------------------------------------------------------------
@@ -81,24 +107,6 @@ class SkipReason(Enum):
     OUT_OF_SCOPE = "out_of_scope"
     LANGUAGE_UNSUPPORTED = "language_unsupported"
     NO_API_KEY = "no_api_key"
-
-
-@dataclass
-class ComponentMetrics:
-    """Per-component success flags for one paper.
-
-    Each flag is True only when the corresponding pipeline stage
-    completed without an exception AND produced output the next stage
-    could consume.  ``None`` means we never got far enough to attempt
-    that stage.
-    """
-
-    parsed: bool | None = None
-    claims_extracted: bool | None = None
-    dataset_extracted: bool | None = None
-    dataset_downloaded: bool | None = None
-    code_generated: bool | None = None
-    code_executed: bool | None = None
 
 
 @dataclass
@@ -143,6 +151,11 @@ class BenchmarkResult:
     deserialised from files that predate the field default to seeded,
     which is what every earlier run was."""
 
+    reproducer: str = DEFAULT_REPRODUCER
+    """Which reproducer produced this row (a ``REPRODUCERS`` name or a
+    ``module:attr`` spec).  Files that predate the field were all
+    produced by the pipeline."""
+
     skipped: bool = False
     skip_reason: SkipReason | None = None
     error: str | None = None
@@ -180,7 +193,9 @@ class BenchmarkResult:
 def run_benchmark(
     catalog: list[bschema.BenchmarkEntry] | None = None,
     *,
-    pipeline_factory=None,
+    reproducer: str = DEFAULT_REPRODUCER,
+    reproducer_factory: Callable[[], Reproducer] | None = None,
+    pipeline_factory: Callable[[], Any] | None = None,
     cache_dir: Path = CACHE_DIR,
     use_cache: bool = True,
     extracted_claims_dir: Path | None = None,
@@ -188,12 +203,23 @@ def run_benchmark(
 ) -> list[BenchmarkResult]:
     """Run every catalog entry in each of ``modes``; one BenchmarkResult per (paper, mode).
 
-    ``pipeline_factory`` is a zero-arg callable that returns a
-    ValidationPipeline.  Injecting it (rather than always calling
-    ``ValidationPipeline.default()``) keeps the runner testable
-    without an API key and lets benchmark consumers swap in alternate
-    pipeline configurations.  Defaults to a lambda that builds the
-    standard pipeline, which requires ANTHROPIC_API_KEY to be set.
+    ``reproducer`` names the agent being scored — a ``REPRODUCERS`` key
+    (``"pipeline"``, the default) or a ``module:attr`` spec, see
+    :func:`resolve_reproducer`.  It is recorded on every result and is part
+    of the cache key.  ``reproducer_factory`` is a zero-arg callable
+    returning a :class:`~benchmark.reproducer.Reproducer`; when omitted it
+    is resolved from ``reproducer``.  Injecting it keeps the runner
+    testable without an API key.  It is only called on a cache miss, and a
+    factory that raises (typically: ``ANTHROPIC_API_KEY`` unset) is
+    recorded as a ``no_api_key`` skip.
+
+    ``pipeline_factory`` is the older convenience form: a zero-arg callable
+    returning a ``ValidationPipeline`` (or anything with a compatible
+    ``validate(...)``), wrapped in ``PipelineReproducer``.  Mutually
+    exclusive with ``reproducer_factory``.
+
+    Whatever the reproducer, scoring is done here, by
+    :func:`score_reproduction`, from its raw outputs.
 
     ``extracted_claims_dir``, when set, receives one JSON file per
     executed entry containing the claims the extractor pulled from the
@@ -215,13 +241,22 @@ def run_benchmark(
     unknown = [m for m in modes if m not in MODES]
     if unknown:
         raise ValueError(f"unknown reproduction mode(s) {unknown}; expected a subset of {list(MODES)}")
+    if pipeline_factory is not None:
+        if reproducer_factory is not None:
+            raise ValueError("pass reproducer_factory or pipeline_factory, not both")
+        reproducer_factory = _pipeline_reproducer_factory(pipeline_factory)
+    elif reproducer_factory is None:
+        # Resolve eagerly so a typo fails before any paper runs; the factory
+        # itself is only called on a cache miss.
+        reproducer_factory = resolve_reproducer(reproducer)
 
     results: list[BenchmarkResult] = []
     for entry in catalog:
         for mode in modes:
             result = _run_one(
                 entry,
-                pipeline_factory=pipeline_factory,
+                reproducer_factory=reproducer_factory,
+                reproducer=reproducer,
                 cache_dir=cache_dir,
                 use_cache=use_cache,
                 extracted_claims_dir=extracted_claims_dir,
@@ -263,8 +298,23 @@ def main(argv: list[str] | None = None) -> int:
             "'independent' (scripts withheld), or 'both' (one results.json row per entry per mode)."
         ),
     )
+    parser.add_argument(
+        "--reproducer",
+        default=DEFAULT_REPRODUCER,
+        metavar="NAME",
+        help=(
+            f"Agent to score: a built-in name ({', '.join(sorted(REPRODUCERS))}; the default) "
+            "or a 'package.module:factory' spec naming a zero-arg callable that returns a "
+            "benchmark.reproducer.Reproducer."
+        ),
+    )
     args = parser.parse_args(argv)
     modes = MODES if args.mode == "both" else (args.mode,)
+    try:
+        resolve_reproducer(args.reproducer)
+    except ValueError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
 
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     catalog = bschema.load_catalog(CATALOG_DIR)
@@ -288,7 +338,12 @@ def main(argv: list[str] | None = None) -> int:
         write_results([], RESULTS_DIR / "results.json")
         return 0
 
-    results = run_benchmark(catalog, extracted_claims_dir=RESULTS_DIR / "extracted_claims", modes=modes)
+    results = run_benchmark(
+        catalog,
+        reproducer=args.reproducer,
+        extracted_claims_dir=RESULTS_DIR / "extracted_claims",
+        modes=modes,
+    )
     out = RESULTS_DIR / "results.json"
     write_results(results, out)
     print(f"Wrote {out.relative_to(REPO_ROOT)} ({len(results)} entries).")
@@ -303,21 +358,27 @@ def main(argv: list[str] | None = None) -> int:
 def _run_one(
     entry: bschema.BenchmarkEntry,
     *,
-    pipeline_factory,
+    reproducer_factory: Callable[[], Reproducer],
+    reproducer: str = DEFAULT_REPRODUCER,
     cache_dir: Path,
     use_cache: bool,
     extracted_claims_dir: Path | None = None,
     mode: str = SEEDED,
 ) -> BenchmarkResult:
     """Execute (or skip) a single catalog entry in ``mode`` and return its result."""
-    # Skip paths come first — no pipeline build, no cache check.
+    # Skip paths come first — no reproducer build, no cache check.
     skip = _check_skip(entry)
     if skip is not None:
         return BenchmarkResult(
-            entry_id=entry.id, mode=mode, skipped=True, skip_reason=skip, split=entry.split
+            entry_id=entry.id,
+            mode=mode,
+            reproducer=reproducer,
+            skipped=True,
+            skip_reason=skip,
+            split=entry.split,
         )
 
-    cache_key = _cache_key(entry, mode)
+    cache_key = _cache_key(entry, mode, reproducer)
     cached = _load_cache(cache_dir, cache_key) if use_cache else None
     if cached is not None:
         cached.cached = True
@@ -326,23 +387,25 @@ def _run_one(
         # doesn't require invalidating its cached result.
         cached.split = entry.split
         cached.mode = mode
+        cached.reproducer = reproducer
         return cached
 
-    pipeline_factory = pipeline_factory or _default_pipeline_factory
     try:
-        pipeline = pipeline_factory()
+        agent = reproducer_factory()
     except Exception as exc:
-        logger.warning("Pipeline construction failed for %s: %s", entry.id, exc)
+        logger.warning("Reproducer construction failed for %s: %s", entry.id, exc)
         return BenchmarkResult(
             entry_id=entry.id,
             mode=mode,
+            reproducer=reproducer,
             skipped=True,
             skip_reason=SkipReason.NO_API_KEY,
             error=str(exc),
         )
 
-    result = _execute_with_pipeline(entry, pipeline, extracted_claims_dir=extracted_claims_dir, mode=mode)
+    result = _execute_with_reproducer(entry, agent, extracted_claims_dir=extracted_claims_dir, mode=mode)
     result.split = entry.split
+    result.reproducer = reproducer
 
     if use_cache and not result.skipped:
         _save_cache(cache_dir, cache_key, result)
@@ -365,21 +428,23 @@ def _check_skip(entry: bschema.BenchmarkEntry) -> SkipReason | None:
     return None
 
 
-def _execute_with_pipeline(
+def _execute_with_reproducer(
     entry: bschema.BenchmarkEntry,
-    pipeline: Any,
+    agent: Reproducer,
     *,
     extracted_claims_dir: Path | None = None,
     mode: str = SEEDED,
 ) -> BenchmarkResult:
-    """Drive ``pipeline.validate`` and translate the report into a BenchmarkResult.
+    """Drive ``agent.reproduce`` and score what it returns.
 
     Wrapped in a broad try/except because the goal here is to score
     every paper in the catalog — a crash on one entry must not bring
     down the whole benchmark run.  The exception text is captured on
     the result so it shows up in the report.
     """
-    result = BenchmarkResult(entry_id=entry.id, mode=mode)
+    from retally.models import ReproductionMode
+
+    claims_override = _claims_override_for(entry)
     try:
         # The parser never infers language from the paper text, so the
         # catalog's declared language must be propagated explicitly —
@@ -399,41 +464,85 @@ def _execute_with_pipeline(
         # happened to return this time.
         #
         # The reproduction mode is always passed explicitly — it is part of
-        # the contract an injected pipeline must honour, and it decides
-        # whether the authors' package scripts reach the prompt.
-        from retally.models import ReproductionMode
-
-        dataset_reference = _dataset_reference_for(entry)
-        claims_override = _claims_override_for(entry)
-        report = pipeline.validate(
+        # the contract a reproducer must honour, and it decides whether the
+        # authors' package scripts may be used.
+        reproduction = agent.reproduce(
             entry.paper.source,
             language=entry.language,
-            dataset_reference=dataset_reference,
+            dataset_reference=_dataset_reference_for(entry),
             claims=claims_override,
             reproduction_mode=ReproductionMode(mode),
         )
     except Exception as exc:
-        result.retally_ran = False
-        result.error = f"{type(exc).__name__}: {exc}"
-        logger.warning("Pipeline raised on %s: %s", entry.id, exc)
-        return result
+        logger.warning("Reproducer raised on %s: %s", entry.id, exc)
+        return BenchmarkResult(
+            entry_id=entry.id,
+            mode=mode,
+            retally_ran=False,
+            error=f"{type(exc).__name__}: {exc}",
+        )
 
     # Dump what the extractor found so a human can curate it into the
     # catalog's original_claims (the pinning workflow).  Skipped when the
     # claims were already pinned — the dump would just echo the catalog.
     if extracted_claims_dir is not None and claims_override is None:
-        _dump_extracted_claims(extracted_claims_dir, entry.id, report)
+        _dump_extracted_claims(extracted_claims_dir, entry.id, reproduction.claims)
 
-    result.retally_ran = True
-    result.components = _components_from_report(report, entry)
-    result.n_claims_in_catalog = len(entry.original_claims)
-    result.agrees_with_paper = bool(getattr(report, "overall_passed", False))
-    result.n_claims_with_paper_match = sum(1 for cr in getattr(report, "claim_results", []) if cr.passed)
-    result.claim_details = [_claim_detail(cr) for cr in getattr(report, "claim_results", [])]
+    return score_reproduction(entry, reproduction, mode=mode)
 
-    # Per-claim agreement with the I4R replicator's value.
-    result.n_claims_with_i4r_match, result.agrees_with_i4r = _score_against_i4r(report, entry)
-    return result
+
+def score_reproduction(
+    entry: bschema.BenchmarkEntry,
+    reproduction: Reproduction,
+    *,
+    mode: str = SEEDED,
+    comparator: Any = None,
+) -> BenchmarkResult:
+    """Score one reproduction against the paper and the I4R replicators.
+
+    This is the single scoring code path for every reproducer.  It reads
+    only ``reproduction.outputs`` (raw ``{name: value}``), the stage
+    flags, and — for unpinned entries only — ``reproduction.claims``.  Any
+    verdict the agent computed for itself is never consulted.
+
+    * Claims scored: the entry's pinned ``original_claims`` when it has
+      any (whatever the agent says it targeted), else
+      ``reproduction.claims`` (an unpinned entry is scored against what
+      the agent extracted — a weaker yardstick, which is why entries get
+      pinned).
+    * Matching and tolerance: ``ResultComparator.compare_all(...,
+      mode=...)`` — per-type relative tolerance in seeded mode, the ±k·SE
+      band in independent mode where an SE is pinned.  ``comparator``
+      overrides the default ``ResultComparator()`` (e.g. a different k).
+    * ``agrees_with_paper``: at least one claim, and every claim passes
+      (the same rule as the pipeline's ``overall_passed``).
+      ``agrees_with_i4r``: each claim's effective tolerance, applied
+      against the replicator's value.
+    """
+    from retally.models import ReproductionMode
+    from retally.validation.comparator import ResultComparator
+
+    claims = _claims_override_for(entry)
+    if claims is None:
+        claims = list(reproduction.claims)
+    comparator = comparator or ResultComparator()
+    claim_results = comparator.compare_all(claims, dict(reproduction.outputs), mode=ReproductionMode(mode))
+    n_passed = sum(1 for cr in claim_results if cr.passed)
+    n_i4r_match, agrees_with_i4r = _score_against_i4r(claim_results, entry)
+
+    return BenchmarkResult(
+        entry_id=entry.id,
+        mode=mode,
+        split=entry.split,
+        retally_ran=True,
+        agrees_with_paper=bool(claim_results) and n_passed == len(claim_results),
+        agrees_with_i4r=agrees_with_i4r,
+        n_claims_in_catalog=len(entry.original_claims),
+        n_claims_with_paper_match=n_passed,
+        n_claims_with_i4r_match=n_i4r_match,
+        claim_details=[_claim_detail(cr) for cr in claim_results],
+        components=reproduction.stages,
+    )
 
 
 def _claim_detail(cr: Any) -> ClaimDetail:
@@ -507,7 +616,7 @@ def _claims_override_for(entry: bschema.BenchmarkEntry):
     return claims
 
 
-def _dump_extracted_claims(out_dir: Path, entry_id: str, report: Any) -> None:
+def _dump_extracted_claims(out_dir: Path, entry_id: str, claims: list) -> None:
     """Write the extractor's claims for one entry as catalog-ready JSON.
 
     Best-effort: the dump is a curation convenience, so any failure is
@@ -516,7 +625,6 @@ def _dump_extracted_claims(out_dir: Path, entry_id: str, report: Any) -> None:
     reviewed entry can be pasted across with minimal editing.
     """
     try:
-        claims = list(getattr(getattr(report, "paper", None), "claims", []) or [])
         payload = [
             {
                 "description": c.description,
@@ -567,27 +675,11 @@ def _dataset_reference_for(entry: bschema.BenchmarkEntry):
     )
 
 
-def _components_from_report(report: Any, entry: bschema.BenchmarkEntry) -> ComponentMetrics:
-    """Best-effort extraction of per-component flags from a ValidationReport.
+def _score_against_i4r(claim_results: list, entry: bschema.BenchmarkEntry) -> tuple[int, bool | None]:
+    """Compare the reproduced values to the I4R replicator's findings.
 
-    Uses ``getattr`` throughout so the runner survives even if the
-    library renames a field.  We're scoring Retally, not married to its
-    current internal shape.
-    """
-    paper = getattr(report, "paper", None)
-    exec_result = getattr(report, "execution_result", None)
-    return ComponentMetrics(
-        parsed=paper is not None,
-        claims_extracted=bool(getattr(paper, "claims", []) if paper else False),
-        dataset_extracted=bool(getattr(paper, "dataset_references", []) if paper else False),
-        dataset_downloaded=getattr(report, "dataset", None) is not None,
-        code_generated=bool(getattr(exec_result, "generated_code", "") if exec_result else False),
-        code_executed=(getattr(exec_result, "exit_code", -1) == 0 if exec_result else False),
-    )
-
-
-def _score_against_i4r(report: Any, entry: bschema.BenchmarkEntry) -> tuple[int, bool | None]:
-    """Compare Retally's reproduced values to the I4R replicator's findings.
+    ``claim_results`` are the harness's own comparisons, in claim order —
+    a finding's ``claim_id`` indexes into them.
 
     Returns ``(n_matching, all_attempted_match)``.  ``all_attempted_match``
     is None when no I4R finding has a reproduced value (nothing to
@@ -599,7 +691,6 @@ def _score_against_i4r(report: Any, entry: bschema.BenchmarkEntry) -> tuple[int,
     if not findings_by_claim_id:
         return 0, None
 
-    claim_results = list(getattr(report, "claim_results", []))
     n_match = 0
     n_attempted = 0
     for i, finding in findings_by_claim_id.items():
@@ -609,7 +700,7 @@ def _score_against_i4r(report: Any, entry: bschema.BenchmarkEntry) -> tuple[int,
         if retally_value is None:
             continue
         n_attempted += 1
-        # Same tolerance Retally used for the paper-claim comparison —
+        # Same tolerance the harness used for the paper-claim comparison —
         # which, in independent mode, is the SE-aware band when the claim
         # pins a standard error.  Can tighten later if the data shows it
         # should be.
@@ -630,8 +721,10 @@ def _within_tolerance(a: float, b: float, tol: float) -> bool:
 # ---------------------------------------------------------------------------
 
 
-def _cache_key(entry: bschema.BenchmarkEntry, mode: str = SEEDED) -> str:
-    """Content-addressable hash for a (catalog entry, reproduction mode) pair.
+def _cache_key(
+    entry: bschema.BenchmarkEntry, mode: str = SEEDED, reproducer: str = DEFAULT_REPRODUCER
+) -> str:
+    """Content-addressable hash for a (catalog entry, reproduction mode, reproducer) triple.
 
     Includes the entry's full serialised form, the retally version, and
     the reproduction mode, so cache entries are scoped to a (paper,
@@ -647,16 +740,20 @@ def _cache_key(entry: bschema.BenchmarkEntry, mode: str = SEEDED) -> str:
     hits instead.  ``publication_date`` / ``package_release_date`` are
     excluded for the same reason: they are curation metadata for the
     contamination discussion and never reach the pipeline.
+
+    The reproducer name joins the payload only when it is not the default
+    pipeline, so pipeline keys — i.e. a plain ``make benchmark`` — are
+    byte-identical to the keys from before the Reproducer protocol, and
+    existing caches stay valid.
     """
     retally_version = _retally_version()
     entry_payload = _entry_to_jsonable(entry)
     for metadata_only in ("split", "publication_date", "package_release_date"):
         entry_payload.pop(metadata_only, None)
-    payload = json.dumps(
-        {"entry": entry_payload, "retally_version": retally_version, "mode": mode},
-        sort_keys=True,
-        default=str,
-    )
+    key_payload: dict[str, Any] = {"entry": entry_payload, "retally_version": retally_version, "mode": mode}
+    if reproducer != DEFAULT_REPRODUCER:
+        key_payload["reproducer"] = reproducer
+    payload = json.dumps(key_payload, sort_keys=True, default=str)
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]
 
 
@@ -697,6 +794,7 @@ def _result_from_jsonable(d: dict[str, Any]) -> BenchmarkResult:
     return BenchmarkResult(
         entry_id=d["entry_id"],
         mode=str(d.get("mode", SEEDED)),
+        reproducer=str(d.get("reproducer", DEFAULT_REPRODUCER)),
         skipped=bool(d.get("skipped", False)),
         skip_reason=SkipReason(skip_reason) if skip_reason else None,
         error=d.get("error"),
@@ -769,6 +867,57 @@ def _default_pipeline_factory():
     if os.environ.get("RETALLY_LLM_CACHE", "1") == "0":
         llm_cache_dir = None
     return ValidationPipeline.default(llm_cache_dir=llm_cache_dir)
+
+
+def _pipeline_reproducer_factory(pipeline_factory: Callable[[], Any]) -> Callable[[], Reproducer]:
+    """Wrap a zero-arg pipeline factory so it yields a ``PipelineReproducer``."""
+    return lambda: PipelineReproducer(pipeline_factory())
+
+
+def _default_pipeline_reproducer() -> Reproducer:
+    """The reference reproducer: ``ValidationPipeline.default()`` behind ``PipelineReproducer``."""
+    return PipelineReproducer(_default_pipeline_factory())
+
+
+# ---------------------------------------------------------------------------
+# Reproducer registry — the extension point
+# ---------------------------------------------------------------------------
+
+REPRODUCERS: dict[str, Callable[[], Reproducer]] = {
+    DEFAULT_REPRODUCER: _default_pipeline_reproducer,
+}
+"""Built-in reproducers selectable by ``--reproducer NAME``: name → zero-arg
+factory.  To add an agent, either register it here (one line, in this
+repo) or, without editing the repo, pass ``--reproducer
+package.module:factory`` — see :func:`resolve_reproducer` and "Plugging in
+another agent" in ``benchmark/README.md``."""
+
+
+def resolve_reproducer(spec: str) -> Callable[[], Reproducer]:
+    """Turn a ``--reproducer`` value into a zero-arg reproducer factory.
+
+    ``spec`` is a ``REPRODUCERS`` name, or ``package.module:attr`` naming
+    a zero-arg callable (a factory function, or a ``Reproducer`` class
+    with a no-argument constructor) importable from the current
+    environment.  Raises ``ValueError`` for anything else.  The factory is
+    returned uncalled: constructing an agent may need an API key, and the
+    runner only does that on a cache miss.
+    """
+    if spec in REPRODUCERS:
+        return REPRODUCERS[spec]
+    module_name, sep, attr = spec.partition(":")
+    if not sep or not module_name or not attr:
+        raise ValueError(
+            f"unknown reproducer {spec!r}: expected one of {sorted(REPRODUCERS)} "
+            "or a 'package.module:factory' spec"
+        )
+    try:
+        factory = getattr(importlib.import_module(module_name), attr)
+    except (ImportError, AttributeError) as exc:
+        raise ValueError(f"cannot load reproducer {spec!r}: {exc}") from exc
+    if not callable(factory):
+        raise ValueError(f"reproducer {spec!r} is not callable")
+    return factory
 
 
 if __name__ == "__main__":
