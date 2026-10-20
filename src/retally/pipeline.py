@@ -16,7 +16,10 @@ Workflow
      doesn't link code / git missing / clone fails → no baseline,
      pipeline continues normally.
   5. Generate reproduction code (CodeGenerator), seeded with the
-     selected reference files when available
+     selected reference files and the replication package's own
+     scripts when available.  ``reproduction_mode=INDEPENDENT``
+     withholds both (and skips step 4), so the generator works from
+     the paper text alone — see ``ReproductionMode``.
   6. Execute the code (CodeExecutor / DockerExecutor)
       - Phase 1: on Python error or empty output, call
         ``CodeGenerator.refine`` up to ``max_refinements`` times.
@@ -60,6 +63,7 @@ from retally.models import (
     DatasetReference,
     ExecutionResult,
     Language,
+    ReproductionMode,
     ValidationReport,
 )
 from retally.paper.extractor import ClaimExtractor
@@ -184,6 +188,7 @@ class ValidationPipeline:
         dataset_reference: DatasetReference | None = None,
         language: Language | None = None,
         claims: list[Claim] | None = None,
+        reproduction_mode: ReproductionMode = ReproductionMode.SEEDED,
     ) -> ValidationReport:
         """Run the full pipeline on a paper.
 
@@ -219,7 +224,19 @@ class ValidationPipeline:
             live call, which silently moves the yardstick between runs.
             The benchmark runner passes the catalog's ``original_claims``
             here when an entry has them curated.
+        reproduction_mode:
+            ``SEEDED`` (the default, and the historical behaviour) feeds
+            the authors' own replication-package scripts and any linked
+            code repository into the generation prompt — a *computational*
+            reproduction.  ``INDEPENDENT`` withholds both (no package-script
+            selection, no code-reference extraction or clone), so the
+            generator works from the paper text, the claims, and the
+            dataset directory listing only.  The mode also selects the
+            comparator's tolerance policy and is stamped on the returned
+            report's ``reproduction_mode``.
         """
+        independent = reproduction_mode is ReproductionMode.INDEPENDENT
+
         # Step 1: parse the paper
         paper = self._parse_paper(paper_source)
         if language is not None:
@@ -242,8 +259,9 @@ class ValidationPipeline:
 
         # Step 6: extract & download paper-linked reference code (opt-in;
         # silently skipped when include_code_references is False or no
-        # repo URLs are found in the paper).
-        reference_files = self._fetch_reference_code(paper)
+        # repo URLs are found in the paper).  Independent reproduction
+        # withholds the authors' code, so the step is skipped outright.
+        reference_files = [] if independent else self._fetch_reference_code(paper)
 
         # Step 7: resolve dataset reference (or use the supplied one verbatim)
         ref = dataset_reference or self._resolve_dataset(paper.dataset_references)
@@ -255,14 +273,15 @@ class ValidationPipeline:
         # dataset is a replication package (Zenodo/Dataverse archives ship
         # the .do/.R scripts that produced the paper's tables alongside the
         # data).  Registry datasets contain no scripts, so this is a no-op
-        # for the classic ML flow.
-        package_scripts = select_package_scripts(dataset.local_path)
+        # for the classic ML flow.  Independent reproduction withholds them
+        # — that is the whole difference between the two modes.
+        package_scripts = [] if independent else select_package_scripts(dataset.local_path)
 
         # Step 9: generate, execute, and refine until claims pass or we give up.
         # Comparison happens inside the refinement loop so it can decide when
         # to stop; the returned claim_results reflect the final attempt.
         code, exec_result, claim_results = self._run_with_refinement(
-            paper, dataset, reference_files, package_scripts
+            paper, dataset, reference_files, package_scripts, reproduction_mode
         )
 
         # Step 10: audit hyperparameters in the final code against the spec
@@ -272,7 +291,9 @@ class ValidationPipeline:
         exec_result.language = paper.language
 
         # Step 11: build report
-        return self.reporter.build(paper, dataset, exec_result, claim_results)
+        report = self.reporter.build(paper, dataset, exec_result, claim_results)
+        report.reproduction_mode = reproduction_mode
+        return report
 
     # ------------------------------------------------------------------
     # Internal steps
@@ -379,6 +400,7 @@ class ValidationPipeline:
         dataset,
         reference_files: list | None = None,
         package_scripts: list | None = None,
+        reproduction_mode: ReproductionMode = ReproductionMode.SEEDED,
     ) -> tuple[str, ExecutionResult, list[ClaimValidationResult]]:
         """Generate code, execute it, and refine until the claims pass or we give up.
 
@@ -392,6 +414,10 @@ class ValidationPipeline:
         prompts deliberately do not repaste them on every call — they
         have the previous code and the specific error/gap to focus on,
         and both are already baked into the original generation.
+
+        ``reproduction_mode`` is forwarded to ``generate()`` and to every
+        comparison, so the claim-refinement loop chases the same
+        tolerance band the final verdict is scored against.
 
         Two phases:
 
@@ -418,6 +444,7 @@ class ValidationPipeline:
             dataset,
             reference_files=reference_files or None,
             package_scripts=package_scripts or None,
+            reproduction_mode=reproduction_mode,
         )
         result = executor.execute(code, dataset)
 
@@ -429,12 +456,12 @@ class ValidationPipeline:
             result = executor.execute(code, dataset)
 
         # Compare once so we know what (if anything) needs Phase 2.
-        claim_results = self.comparator.compare_all(paper.claims, result.outputs)
+        claim_results = self.comparator.compare_all(paper.claims, result.outputs, mode=reproduction_mode)
 
         # ── Phase 2: close the gap on soft-failed claims ──────────────
         if result.exit_code == 0 and result.outputs and self.max_claim_refinements > 0:
             code, result, claim_results = self._refine_for_failed_claims(
-                code, result, claim_results, paper, dataset
+                code, result, claim_results, paper, dataset, reproduction_mode
             )
 
         result.generated_code = code
@@ -447,6 +474,7 @@ class ValidationPipeline:
         claim_results: list[ClaimValidationResult],
         paper,
         dataset,
+        reproduction_mode: ReproductionMode = ReproductionMode.SEEDED,
     ) -> tuple[str, ExecutionResult, list[ClaimValidationResult]]:
         """Iteratively narrow the gap between reproduced values and paper claims.
 
@@ -501,12 +529,16 @@ class ValidationPipeline:
                 # Still adopt the new code (so deviation notes from this
                 # attempt are surfaced) but stop looping.
                 code, exec_result = new_code, new_result
-                claim_results = self.comparator.compare_all(paper.claims, exec_result.outputs)
+                claim_results = self.comparator.compare_all(
+                    paper.claims, exec_result.outputs, mode=reproduction_mode
+                )
                 break
 
             code, exec_result = new_code, new_result
             history.append(dict(exec_result.outputs))
-            claim_results = self.comparator.compare_all(paper.claims, exec_result.outputs)
+            claim_results = self.comparator.compare_all(
+                paper.claims, exec_result.outputs, mode=reproduction_mode
+            )
 
         # Surface the attempt count on the result so reports can show it.
         exec_result.claim_refinement_attempts = attempts

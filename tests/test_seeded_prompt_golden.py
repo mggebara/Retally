@@ -28,7 +28,7 @@ import pytest
 
 from retally.code.selector import SelectedFile, select_package_scripts
 from retally.codegen.generator import CodeGenerator
-from retally.models import Claim, ClaimType, Dataset, Language, Paper
+from retally.models import Claim, ClaimType, Dataset, Language, Paper, ReproductionMode
 
 FIXTURE_DIR = Path(__file__).parent / "fixtures" / "seeded_prompt"
 PACKAGE_DIR = FIXTURE_DIR / "package"
@@ -78,4 +78,12 @@ def test_default_generation_prompt_matches_pre_mode_golden(language):
     prompt = _captured_prompt(language)
     if os.environ.get("RETALLY_REGEN_GOLDEN") == "1":
         golden.write_text(prompt, encoding="utf-8")
+    assert prompt == golden.read_text(encoding="utf-8")
+
+
+@pytest.mark.parametrize("language", [Language.R, Language.PYTHON], ids=["r", "python"])
+def test_explicit_seeded_mode_matches_golden(language):
+    """Passing ``reproduction_mode=SEEDED`` explicitly is the same as the default."""
+    golden = FIXTURE_DIR / f"generation_prompt_{language.value}.txt"
+    prompt = _captured_prompt(language, reproduction_mode=ReproductionMode.SEEDED)
     assert prompt == golden.read_text(encoding="utf-8")

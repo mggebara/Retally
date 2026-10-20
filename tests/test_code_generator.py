@@ -15,7 +15,7 @@ import pytest
 
 from retally.code.selector import SelectedFile
 from retally.codegen.generator import CodeGenerator, UnsupportedLanguageError
-from retally.models import Claim, ClaimType, Dataset, ExecutionResult, Language, Paper
+from retally.models import Claim, ClaimType, Dataset, ExecutionResult, Language, Paper, ReproductionMode
 
 
 def _paper(**overrides):
@@ -543,3 +543,51 @@ def test_generate_forwards_package_scripts_to_prompt():
     prompt = client.messages.create.call_args.kwargs["messages"][0]["content"]
     assert "### `master.do`" in prompt
     assert "reg y x" in prompt
+
+
+# ── Reproduction mode (seeded vs independent) ───────────────────────────
+
+
+@pytest.mark.parametrize("language", [Language.R, Language.PYTHON], ids=["r", "python"])
+def test_independent_prompt_withholds_code_and_forbids_reading_scripts(language):
+    client = MagicMock()
+    client.messages.create.return_value = MagicMock(content=[MagicMock(text="x <- 1")])
+    gen = CodeGenerator(client)
+    gen.generate(_paper(language=language), _dataset(), reproduction_mode=ReproductionMode.INDEPENDENT)
+    prompt = client.messages.create.call_args.kwargs["messages"][0]["content"]
+    assert "## Independent Reproduction" in prompt
+    assert "Do NOT open, read, source, or execute any script files" in prompt
+    assert "## Original Replication Scripts" not in prompt
+    assert "## Reference Implementation" not in prompt
+
+
+def test_seeded_prompt_has_no_independent_section():
+    gen = _generator()
+    scripts = [_selected("master.do", "reg y x")]
+    prompt = gen._build_generation_prompt_r(
+        _paper(language=Language.R), _dataset(), reference_files=[], package_scripts=scripts
+    )
+    assert "Independent Reproduction" not in prompt
+
+
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        {"package_scripts": [SelectedFile(relative_path="master.do", contents="reg y x")]},
+        {"reference_files": [SelectedFile(relative_path="model.R", contents="lm(y ~ x)")]},
+    ],
+    ids=["package_scripts", "reference_files"],
+)
+def test_independent_mode_refuses_authors_code(kwargs):
+    """Leaking the authors' code into an independent run would silently
+    turn it into a seeded one — fail loudly instead."""
+    client = MagicMock()
+    gen = CodeGenerator(client)
+    with pytest.raises(ValueError, match="withholds the authors' code"):
+        gen.generate(
+            _paper(language=Language.R),
+            _dataset(),
+            reproduction_mode=ReproductionMode.INDEPENDENT,
+            **kwargs,
+        )
+    client.messages.create.assert_not_called()
