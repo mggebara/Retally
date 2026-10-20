@@ -204,9 +204,9 @@ class CodeGenerator:
         code:
             The script that produced the unsatisfactory values.
         failed_claims:
-            ``ClaimValidationResult`` objects where ``passed`` is False but
-            ``reproduced_value`` is not None.  Hard failures (None values)
-            belong in :meth:`refine`.
+            ``ClaimValidationResult`` objects where ``passed`` is False,
+            including ones with no value (``reproduced_value`` None: the
+            script printed NA or no RESULT line), shown as ``N/A``.
         exec_result:
             The :class:`ExecutionResult` that produced the failed claims —
             included so the prompt can show the reproduced values in
