@@ -2,8 +2,8 @@
 
 import pytest
 
-from retally.models import Claim, ClaimType
-from retally.validation.comparator import ResultComparator
+from retally.models import Claim, ClaimType, ReproductionMode
+from retally.validation.comparator import ResultComparator, TolerancePolicy
 
 
 @pytest.fixture
@@ -142,3 +142,79 @@ def test_passing_claim_has_no_failure_notes(comparator):
     result = comparator.compare(claim, reproduced_value=0.951)
     assert result.passed
     assert result.notes == ""
+
+
+# ── Per-mode tolerance policy ─────────────────────────────────────────
+
+
+def _coef(value, se=None):
+    return Claim(description="beta", value=value, claim_type=ClaimType.COEFFICIENT, standard_error=se)
+
+
+def test_seeded_mode_ignores_standard_error(comparator):
+    """Seeded (computational) reproduction is judged on the strict per-type
+    tolerance only — a pinned SE must not widen it."""
+    result = comparator.compare(_coef(3.713, se=0.305), 3.9, mode=ReproductionMode.SEEDED)
+    assert not result.passed
+    assert result.tolerance == pytest.approx(0.02)
+
+
+def test_default_mode_is_seeded(comparator):
+    result = comparator.compare(_coef(3.713, se=0.305), 3.9)
+    assert not result.passed
+    assert result.tolerance == pytest.approx(0.02)
+    assert "SE band" not in result.notes
+
+
+def test_independent_mode_passes_within_one_se(comparator):
+    # |3.9 - 3.713| = 0.187 < 1 * 0.305
+    result = comparator.compare(_coef(3.713, se=0.305), 3.9, mode=ReproductionMode.INDEPENDENT)
+    assert result.passed
+    assert result.tolerance == pytest.approx(0.305 / 3.713)
+
+
+def test_independent_mode_fails_outside_k_se_and_explains_band(comparator):
+    # |4.1 - 3.713| = 0.387 > 0.305
+    result = comparator.compare(_coef(3.713, se=0.305), 4.1, mode=ReproductionMode.INDEPENDENT)
+    assert not result.passed
+    assert "±1·SE band" in result.notes
+
+
+def test_independent_mode_falls_back_to_relative_without_se(comparator):
+    result = comparator.compare(_coef(3.713), 3.9, mode=ReproductionMode.INDEPENDENT)
+    assert not result.passed
+    assert result.tolerance == pytest.approx(0.02)
+
+
+def test_independent_mode_never_narrower_than_relative(comparator):
+    """A tightly-estimated coefficient (tiny SE) keeps its rounding-level
+    relative tolerance rather than an impossibly narrow SE band."""
+    result = comparator.compare(_coef(0.50, se=0.001), 0.505, mode=ReproductionMode.INDEPENDENT)
+    assert result.passed
+    assert result.tolerance == pytest.approx(0.02)
+
+
+def test_independent_band_rescues_near_zero_coefficient(comparator):
+    """The near-zero COEFFICIENT problem: 2% of 0.01 is 0.0002, but ±1·SE
+    is a meaningful band."""
+    result = comparator.compare(_coef(0.010, se=0.004), 0.013, mode=ReproductionMode.INDEPENDENT)
+    assert result.passed
+
+
+def test_se_multiplier_is_configurable():
+    comparator = ResultComparator(
+        tolerance_policies={ReproductionMode.INDEPENDENT: TolerancePolicy(se_multiplier=2.0)}
+    )
+    # 0.387 > 1·SE but < 2·SE
+    result = comparator.compare(_coef(3.713, se=0.305), 4.1, mode=ReproductionMode.INDEPENDENT)
+    assert result.passed
+    # The seeded policy is untouched by the override.
+    assert comparator.tolerance_policies[ReproductionMode.SEEDED].se_multiplier is None
+
+
+def test_compare_all_threads_mode():
+    comparator = ResultComparator()
+    [result] = comparator.compare_all(
+        [_coef(3.713, se=0.305)], {"beta": 3.9}, mode=ReproductionMode.INDEPENDENT
+    )
+    assert result.passed

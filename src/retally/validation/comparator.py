@@ -19,13 +19,52 @@ Tolerance
 The default tolerance is 1 % relative error for most metrics.  Some metrics
 have tighter conventions (p-values should be exact) while others are looser
 (wall-clock times, memory usage).  Override per-metric via ``_default_tolerance``.
+
+Per-mode tolerance policy
+-------------------------
+How close is "reproduced" depends on what was reproduced (see
+``ReproductionMode``):
+
+* ``SEEDED`` (computational reproduction — the authors' scripts were in
+  the prompt) is judged strictly: the per-type relative tolerance above,
+  nothing more.  Re-running the same specification on the same data
+  should land on the reported number up to rounding.
+* ``INDEPENDENT`` (regenerated from the paper text) is SE-aware: when the
+  claim carries a pinned ``standard_error``, it passes if the reproduced
+  value is within ±k·SE of the reported value (k defaults to 1).  The SE
+  band is expressed as a relative tolerance, ``k·SE / |claimed|``, and
+  the claim gets the *wider* of that and its per-type relative tolerance,
+  so a tightly-estimated coefficient is never held to a band narrower
+  than the paper's own rounding.  With no SE pinned it falls back to the
+  per-type relative tolerance.
+
+Because the effective band is recorded as an ordinary relative tolerance
+on each ``ClaimValidationResult``, downstream consumers (benchmark
+closeness bands, I4R scoring) need no special-casing.
 """
 
 from __future__ import annotations
 
 import re
+from collections.abc import Mapping
+from dataclasses import dataclass
 
-from retally.models import Claim, ClaimType, ClaimValidationResult
+from retally.models import Claim, ClaimType, ClaimValidationResult, ReproductionMode
+
+
+@dataclass(frozen=True)
+class TolerancePolicy:
+    """How claims are judged in one reproduction mode."""
+
+    se_multiplier: float | None = None
+    """k in the ±k·SE pass band.  None disables the SE-aware band, leaving
+    only the per-type relative tolerance."""
+
+
+DEFAULT_TOLERANCE_POLICIES: Mapping[ReproductionMode, TolerancePolicy] = {
+    ReproductionMode.SEEDED: TolerancePolicy(se_multiplier=None),
+    ReproductionMode.INDEPENDENT: TolerancePolicy(se_multiplier=1.0),
+}
 
 
 class ResultComparator:
@@ -36,18 +75,29 @@ class ResultComparator:
     default_tolerance:
         Default relative tolerance (fraction, not percentage).  A claim
         passes if ``|reproduced - claimed| / |claimed| <= tolerance``.
+    tolerance_policies:
+        Per-mode ``TolerancePolicy`` overrides, merged over
+        ``DEFAULT_TOLERANCE_POLICIES`` — e.g.
+        ``{ReproductionMode.INDEPENDENT: TolerancePolicy(se_multiplier=2.0)}``
+        widens the independent band to ±2·SE.
     """
 
     def __init__(
         self,
         default_tolerance: float = 0.01,
+        tolerance_policies: Mapping[ReproductionMode, TolerancePolicy] | None = None,
     ) -> None:
         self.default_tolerance = default_tolerance
+        self.tolerance_policies: dict[ReproductionMode, TolerancePolicy] = {
+            **DEFAULT_TOLERANCE_POLICIES,
+            **(tolerance_policies or {}),
+        }
 
     def compare_all(
         self,
         claims: list[Claim],
         outputs: dict[str, float],
+        mode: ReproductionMode = ReproductionMode.SEEDED,
     ) -> list[ClaimValidationResult]:
         """Match every claim to an output value and evaluate each.
 
@@ -56,11 +106,13 @@ class ResultComparator:
 
         Claims that cannot be matched get ``reproduced_value=None`` and
         ``passed=False`` with an explanatory note.
+
+        ``mode`` selects the tolerance policy (see module docstring).
         """
         results: list[ClaimValidationResult] = []
         for claim in claims:
             matched_key, matched_value = self._match_output(claim, outputs)
-            result = self.compare(claim, matched_value)
+            result = self.compare(claim, matched_value, mode=mode)
             if matched_key is None and not result.notes:
                 result.notes = (
                     f"No matching output found for claim: {claim.description!r}. "
@@ -74,6 +126,7 @@ class ResultComparator:
         claim: Claim,
         reproduced_value: float | None,
         tolerance: float | None = None,
+        mode: ReproductionMode = ReproductionMode.SEEDED,
     ) -> ClaimValidationResult:
         """Evaluate a single claim against a reproduced value.
 
@@ -85,7 +138,12 @@ class ResultComparator:
             The metric value produced by the generated code, or None if no
             matching output was found.
         tolerance:
-            Relative tolerance override.  If None, use ``_default_tolerance(claim)``.
+            Relative tolerance override.  If None, use the mode's policy:
+            ``_default_tolerance(claim)``, widened to the ±k·SE band when
+            the policy is SE-aware and the claim pins a standard error.
+        mode:
+            Reproduction mode whose ``TolerancePolicy`` applies.  Ignored
+            when ``tolerance`` is given explicitly.
 
         A claim passes when:
             reproduced_value is not None
@@ -95,8 +153,14 @@ class ResultComparator:
         claimed/100 vs reproduced (handles % vs decimal mismatch). Use whichever
         comparison gives the smaller error; note the unit mismatch if it passes.
         """
+        se_band_note = ""
         if tolerance is None:
             tolerance = self._default_tolerance(claim)
+            se_band = self._se_band(claim, mode)
+            if se_band is not None and se_band > tolerance:
+                tolerance = se_band
+                k = self.tolerance_policies[mode].se_multiplier
+                se_band_note = f", the ±{k:g}·SE band with SE={claim.standard_error:g}"
 
         if reproduced_value is None:
             return ClaimValidationResult(
@@ -135,7 +199,7 @@ class ResultComparator:
         if not passed and not notes:
             notes = (
                 f"Outside tolerance: reproduced={reproduced} vs claimed={claimed} "
-                f"(relative error {rel_err:.2%}, tolerance {tolerance:.2%})."
+                f"(relative error {rel_err:.2%}, tolerance {tolerance:.2%}{se_band_note})."
             )
 
         return ClaimValidationResult(
@@ -185,6 +249,18 @@ class ResultComparator:
 
         return None, None
 
+    def _se_band(self, claim: Claim, mode: ReproductionMode) -> float | None:
+        """The ±k·SE band as a relative tolerance, or None when it doesn't apply.
+
+        Applies only when ``mode``'s policy sets ``se_multiplier`` and the
+        claim pins a positive ``standard_error``.
+        """
+        policy = self.tolerance_policies.get(mode, TolerancePolicy())
+        se = claim.standard_error
+        if policy.se_multiplier is None or se is None or se <= 0:
+            return None
+        return policy.se_multiplier * se / max(abs(claim.value), 1e-9)
+
     def _default_tolerance(self, claim: Claim) -> float:
         """Return an appropriate tolerance for this claim's type.
 
@@ -199,8 +275,9 @@ class ResultComparator:
           - COEFFICIENT → 0.02 (2 %).  Econ papers round coefficients
             more aggressively than ML metrics, so the looser tolerance
             soaks up reporting precision differences.  Coefficients
-            close to zero can still trip this — that's a known
-            limitation; standard-error-aware comparison is future work.
+            close to zero can still trip this under the strict (seeded)
+            policy; the independent policy's ±k·SE band addresses it
+            when the claim pins a standard error.
           - STANDARD_ERROR → 0.05 (5 %).  Heavily rounded in practice;
             replicators often see SE differences of 5-10 % from re-runs.
           - R_SQUARED → 0.01 (1 %).  Usually reported to 3 decimal
