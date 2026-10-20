@@ -243,49 +243,86 @@ target for independent mode** — whatever it is, it is the finding.
 
 ---
 
-## Phase 2 — Agent protocol (plan only; build after Phase 1 exits)
+## Phase 2 — Agent protocol — ✅ protocol built (2026-10); general-agent adapter TODO
 
 Goal: make the benchmark scorable for *any* reproducer, not just this
 pipeline — the moat is the benchmark (catalog, pinned claims, I4R ground
 truth, two-mode scoring), and a general-purpose agent should be able to
 sit the same exam.
 
-The seam already exists: the runner never constructs the pipeline, it
-calls an injected `pipeline_factory` (see `run_benchmark` /
-`_execute_with_pipeline` in `benchmark/runner.py`), and it touches the
-result only through `getattr` on a handful of report fields. Anything with
-a compatible `validate(...)` is already scorable. The plan formalises that:
+*(Built ahead of the Phase 1.5 exit, as a refactor: no pipeline
+behaviour changed in seeded mode, and the committed seeded baseline
+re-scores to identical verdicts.  Standing rule 2's before/after compare
+is replaced by that re-scoring test, since no live run was made.)*
 
-- **Protocol.** A `typing.Protocol` (working name `Reproducer`) in
-  `benchmark/`: `validate(paper_source, *, language, dataset_reference,
-  claims, reproduction_mode) -> report`, plus a minimal report contract —
-  the per-claim reproduced values, the generated code, the exit code, and
-  the claims used. Document it next to the catalog schema.
-- **Scoring belongs to the harness.** Today the runner trusts the
-  pipeline's own `claim_results` (its comparator, its tolerance). Under the
-  protocol the harness re-scores raw `{name: value}` outputs itself with
-  the per-mode `ResultComparator`, so every reproducer is held to the
-  identical yardstick and cannot grade its own exam.
-- **Reference implementation.** `ValidationPipeline` is the reference
-  reproducer; a conformance test runs it (with a fake LLM) and a minimal
-  fake through the same harness path, and its benchmark numbers must not
-  move when the protocol lands.
-- **General-purpose agent adapter (future).** An adapter that hands an
-  agent (e.g. one built on the Claude Agent SDK) the paper text, the
-  pinned claims, and the dataset inside the same network-less sandbox,
-  and asks for `RESULT:<name>=<value>` lines. Mode is enforced by what is
-  *on disk*, not by instruction: seeded mounts the full package;
-  independent mounts a filtered copy with the analysis scripts removed —
-  stricter than the current pipeline's prompt-only withholding, and a
-  candidate to back-port.
+The seam already existed: the runner never constructed the pipeline, it
+called an injected `pipeline_factory`, and touched the result only
+through `getattr` on a handful of report fields.  Phase 2 formalised it:
+
+- **Protocol — ✅ done.**  `Reproducer` (`typing.Protocol`) in
+  `benchmark/reproducer.py`: `reproduce(paper_source, *, language,
+  dataset_reference, claims, reproduction_mode) -> Reproduction`.  (Named
+  `reproduce`, not `validate`: the agent no longer validates anything.)
+  The report contract, `Reproduction`, is the raw `{name: value}`
+  outputs keyed by claim description, the claims targeted, the generated
+  code, stdout/stderr, exit code, declared deviations, and per-stage
+  flags — **no verdicts**.  Documented in `benchmark/README.md`
+  ("Plugging in another agent").  The runner takes any reproducer:
+  `--reproducer NAME` (built-in: `pipeline` only) or `--reproducer
+  package.module:factory`; the reproducer is recorded on every result
+  row and keys the result cache (default-pipeline seeded keys are
+  unchanged, so existing caches stay valid).
+- **Scoring belongs to the harness — ✅ done.**  The harness
+  (`runner.score_reproduction`) re-scores the raw outputs itself with
+  `ResultComparator` and the per-mode `TolerancePolicy` — claim
+  matching, tolerance, closeness, `agrees_with_paper`,
+  `agrees_with_i4r`.  The pipeline's own `claim_results` /
+  `overall_passed` are no longer read.  Pinned claims are scored
+  whatever claim set the agent reports, so no reproducer can grade its
+  own exam or shrink it.
+- **Reference implementation — ✅ done.**  `PipelineReproducer` adapts
+  an unmodified `ValidationPipeline` (its public `validate(...)` and the
+  README quick start are untouched).  Conformance tests run the real
+  pipeline (real parser/extractor/generator/executor/comparator, fake
+  LLM) and a minimal fake reproducer through the same harness path and
+  assert identical verdicts; a report that claims success with
+  off-target outputs is scored a failure.  Its numbers did not move:
+  `tests/test_benchmark_reproducer.py` re-scores the committed
+  `baseline-2026-10-19.json` through the harness and reproduces every
+  recorded per-claim and per-paper verdict (13/13, I4R 13/13).
+- **Mode enforced by what is on disk — ✅ done (back-ported to the
+  pipeline adapter).**  In independent mode the harness hands the agent a
+  script-free copy of the dataset (`script_free_copy` /
+  `script_free_dataset`: `.do .ado .R .Rmd .py .ipynb .sas .sps .m` and
+  Stata `.log`/`.smcl` transcripts removed, data hard-linked, a
+  deterministic `<name>.script-free` sibling so prompts stay
+  cache-stable).  `PipelineReproducer` applies it by wrapping the
+  pipeline's downloader for independent calls, so the prompt's listing
+  and the sandbox mount see data files only.  Independent-mode result
+  cache keys changed once as a consequence.  ⚠ Independent-mode numbers
+  produced before this (the first Dincecco independent run, Phase 1.5)
+  saw the scripts *on disk*; re-run before comparing like for like.
+- **General-purpose agent adapter — TODO (design only, not built).**  An
+  adapter that hands an agent (e.g. one built on the Claude Agent SDK, or
+  Claude Code driven headless) the paper text, the pinned claims, and a
+  `script_free_dataset` copy (independent) or the full package (seeded)
+  inside the same network-less sandbox images, and asks for
+  `RESULT:<name>=<value>` lines keyed by claim description; it returns a
+  `Reproduction` and registers in `REPRODUCERS` (or via a
+  `module:attr` spec).  Open design questions: how the agent's tool
+  loop is confined to the sandbox (no host shell), a per-paper budget
+  (turns / tokens / wall clock) recorded on the result, and whether its
+  intermediate attempts are logged as artefacts.  The contract and
+  obligations it must meet are in `benchmark/README.md`.
 - **Out of scope for this phase:** a leaderboard. Scores for third-party
   agents are reported in the technical report under the same honesty
   rules as our own.
 
-**Exit criteria:** protocol + report contract documented; harness-side
-re-scoring in place with the reference pipeline's committed numbers
-unchanged; conformance test passing for the reference and a fake; adapter
-design written up (not necessarily built).
+**Exit criteria:** protocol + report contract documented — **met**;
+harness-side re-scoring in place with the reference pipeline's committed
+numbers unchanged — **met**; conformance test passing for the reference
+and a fake — **met**; adapter design written up (not necessarily built)
+— **met** (above; building it is the open TODO).
 
 ---
 
@@ -391,8 +428,8 @@ Goal: turn the benchmark into the deliverable.
   independent gap as the headline, the three-way verdict matrix per mode,
   closeness distributions, the tolerance policy per mode and why,
   funnel statistics, cost per paper, variance, limitations
-  (contamination, both modes see target values, independent-mode scripts
-  on disk, tolerance choices, R-only scope). Venue options:
+  (contamination, both modes see target values, independent-mode result
+  tables on disk, tolerance choices, R-only scope). Venue options:
   arXiv/SocArXiv preprint, I4R discussion-paper series (engage them —
   they have run AI replication games and this is directly adjacent), or a
   methods journal.
@@ -429,7 +466,7 @@ release.
 | Seeded passes get read as independent replication | Mode recorded on every result and cache key; report presents modes side by side; this roadmap's north star says which is which |
 | Independent reproduction is just hard; scores stay near zero | The gap and the failure taxonomy make "why" the finding — "the methods section does not pin down the specification" is a result about the literature; a well-measured negative result over 20+ papers is still publishable |
 | Training-data contamination inflates scores | Cannot be controlled with this corpus (all 2022–23, all pre-cutoff); stated up front, dates recorded per entry, memorisation probed where cheap, gap framed as conditional on whatever the model knows |
-| Independent mode leaks: package scripts are still on disk and named in the dataset listing | Prompt forbids opening them; review independent-mode code; Phase 2 adapter mounts a script-free copy, a candidate to back-port to the pipeline |
+| Independent mode leaks: package scripts on disk and named in the dataset listing | Fixed in the benchmark (Phase 2): independent runs see a script-free copy, so scripts are neither listed nor mounted. Still open: result tables (`.tex`/`.csv`) and READMEs shipped in the package, and direct `validate()` callers outside the harness (prompt-only withholding) |
 | Wider independent tolerance flatters independent mode | Tolerance policy reported per mode; claims lost/gained listed individually; SE band never narrower than the relative tolerance, and only applies where an SE is pinned |
 | Corpus curation stalls (manual research per paper) | Manual-placement escape hatch for gated data; batch sprints; accept 20 papers as sufficient N |
 | General-purpose agents make the bespoke pipeline obsolete | The moat is the *benchmark*; Phase 2 formalises the agent protocol so any agent can be scored on it |
