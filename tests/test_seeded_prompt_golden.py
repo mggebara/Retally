@@ -105,3 +105,18 @@ def test_independent_prompt_on_the_same_package_withholds_seeded_material():
     assert "## Original Replication Scripts" not in prompt
     assert "## Reference Implementation" not in prompt
     assert "## Independent Reproduction" in prompt
+
+
+def test_llm_cache_keeps_the_two_modes_apart(tmp_path):
+    """The LLM cache keys on full request content, so a seeded and an
+    independent generation for the same paper are distinct cache entries —
+    an independent run can never replay a seeded response."""
+    from retally.llm_cache import CachingLLMClient
+
+    inner = MagicMock()
+    inner.messages.create.return_value = MagicMock(content=[MagicMock(text="x <- 1")])
+    gen = CodeGenerator(CachingLLMClient(inner, tmp_path))
+    gen.generate(_paper(Language.R), _dataset(), package_scripts=select_package_scripts(PACKAGE_DIR))
+    gen.generate(_paper(Language.R), _dataset(), reproduction_mode=ReproductionMode.INDEPENDENT)
+    assert inner.messages.create.call_count == 2
+    assert len(list(tmp_path.glob("*.json"))) == 2
