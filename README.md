@@ -2,7 +2,7 @@
 
 Retally re-tallies the numbers in academic papers: it reads a paper, downloads the relevant dataset, generates reproduction code via the Claude API (scikit-learn for ML papers, R + fixest/AER/plm for econometrics), executes it in an isolated environment, and compares the reproduced numbers against the paper's stated results.
 
-- **The real evaluation:** [`benchmark/README.md`](benchmark/README.md) — a harness that scores the pipeline against the [Institute for Replication](https://i4replication.org) catalog of hand-replicated papers.
+- **The real evaluation:** [`benchmark/README.md`](benchmark/README.md) — a harness that scores the pipeline (or any agent implementing its `Reproducer` protocol) against the [Institute for Replication](https://i4replication.org) catalog of hand-replicated papers.
 - **Demo dashboard:** [`docs/index.html`](docs/index.html) — demo runs of the pipeline on synthetic paper text. These are smoke tests of the tooling, *not* real reproducibility verdicts.
 - **Plan:** [`ROADMAP.md`](ROADMAP.md). **Full reference:** [`docs/reference.md`](docs/reference.md).
 
@@ -100,15 +100,21 @@ limits and other options: [Configuration](docs/reference.md#configuration).
 
 The harness runs Retally against the I4R catalog and records three independent
 verdicts per paper — `retally_ran`, `agrees_with_paper`, `agrees_with_i4r` —
-with typed skips for entries it cannot run.
+with typed skips for entries it cannot run. The harness, not the pipeline,
+computes the verdicts: the pipeline is plugged in as one *reproducer* that
+returns raw values, so another agent can sit the same exam by implementing the
+`Reproducer` protocol in `benchmark/reproducer.py`.
 
 ```bash
 make benchmark           # run the catalog, write benchmark/results/REPORT.md
 make benchmark-report    # re-render from cached results.json
+uv run python -m benchmark.runner --mode both                   # seeded + independent
+uv run python -m benchmark.runner --reproducer my_pkg.mod:make  # score another agent
 ```
 
 Catalog schema, claim-pinning rubric, LLM-call cache (`RETALLY_LLM_CACHE=0` for a
-fully live run), and the prompt-tuning workflow: [`benchmark/README.md`](benchmark/README.md).
+fully live run), the prompt-tuning workflow, and how to plug in another agent:
+[`benchmark/README.md`](benchmark/README.md).
 
 ## Development
 

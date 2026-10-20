@@ -72,11 +72,19 @@ can make:
 | `INDEPENDENT` | Paper text (title, abstract, methodology summary), claims, and the dataset directory listing **only** — package-script selection and the code-reference extraction/clone are skipped, and the prompt tells the model not to open any script files it sees in the listing | *Independent* reproduction: the model regenerated the analysis from the paper's description | SE-aware: ±k·SE when the claim pins a standard error (k = 1), else the relative tolerance |
 
 The gap between the two on the same papers is the benchmark's primary
-finding. Caveat: the dataset directory is still mounted into the sandbox
-in independent mode, so the scripts are on disk and their *names* appear
-in the listing; the prompt forbids reading them, but generated code is not
-policed for it. The generator raises `ValueError` if handed
-`package_scripts` or `reference_files` in independent mode.
+finding. The generator raises `ValueError` if handed `package_scripts` or
+`reference_files` in independent mode.
+
+Caveat when calling `validate()` directly: the pipeline itself withholds
+the scripts from the prompt only — the dataset directory is mounted
+as-is, so the scripts are on disk and their *names* appear in the
+listing (the prompt forbids reading them). The benchmark runner closes
+that gap at its adapter boundary: `benchmark.reproducer.PipelineReproducer`
+hands the pipeline a `<name>.script-free` copy of the dataset in
+independent mode, so the listing and the sandbox mount contain data
+files only. To get the same from library code, wrap the pipeline the
+same way (`PipelineReproducer(pipeline).reproduce(...)`) or point it at a
+`script_free_copy(...)` of the package.
 
 ### Refinement parameters
 
@@ -137,6 +145,12 @@ security boundary):
 
 The effective band is recorded as `ClaimValidationResult.tolerance`, so
 benchmark closeness bands and I4R scoring use it unchanged.
+
+The benchmark does not trust these per-report verdicts: its harness
+(`benchmark.runner.score_reproduction`) re-runs `compare_all` itself on
+the reproducer's raw outputs, so the pipeline and any other agent
+plugged in through the `Reproducer` protocol are scored by the same
+code. See [`benchmark/README.md`](../benchmark/README.md#plugging-in-another-agent).
 
 Per-type relative tolerances (not overridable without subclassing):
 
@@ -433,7 +447,8 @@ benchmark/                     I4R replication benchmark harness (see its README
 ├── papers/                    Per-paper YAML catalog (one entry per I4R report)
 ├── corpus/                    I4R meta-database used for candidate intake
 ├── schema.py                  BenchmarkEntry loader (validates catalog YAML)
-├── runner.py                  Drives ValidationPipeline across the catalog
+├── reproducer.py              Reproducer protocol, pipeline adapter, script-free copies
+├── runner.py                  Drives a Reproducer across the catalog and scores it
 ├── metrics.py                 Closeness metrics (relative error, tolerance bands)
 ├── compare.py                 Keep-or-revert diff between two results.json runs
 ├── report.py                  Renders REPORT.md + report.html

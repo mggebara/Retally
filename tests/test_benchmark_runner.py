@@ -1,8 +1,10 @@
 """Tests for the benchmark runner.
 
-The runner walks a catalog, calls ValidationPipeline.validate on each
-paper, and scores the result.  These tests inject a fake pipeline so
-no API key / Docker / network is needed.
+The runner walks a catalog, hands each paper to a Reproducer (by
+default ``PipelineReproducer`` around ValidationPipeline.validate), and
+scores the raw outputs itself.  These tests inject a fake pipeline so
+no API key / Docker / network is needed.  The fake reports carry claims
+and raw outputs only; the harness computes every verdict from those.
 """
 
 from __future__ import annotations
@@ -15,6 +17,7 @@ import pytest
 from tests._loaders import REPO_ROOT, load_module_from_path
 
 bschema = load_module_from_path("benchmark.schema", REPO_ROOT / "benchmark" / "schema.py")
+load_module_from_path("benchmark.reproducer", REPO_ROOT / "benchmark" / "reproducer.py")
 runner = load_module_from_path("benchmark.runner", REPO_ROOT / "benchmark" / "runner.py")
 
 
@@ -34,34 +37,33 @@ def _entry(**overrides):
     return bschema.BenchmarkEntry(**base)
 
 
-def _claim(value: float, repro: float | None, *, passed: bool):
-    """Build a ClaimValidationResult-shaped mock."""
-    from retally.models import Claim, ClaimType, ClaimValidationResult
+def _fake_report(*rows, overall_passed=True, exit_code=0):
+    """Build a ValidationReport the runner can score.
 
-    return ClaimValidationResult(
-        claim=Claim(description="x", value=value, claim_type=ClaimType.OTHER),
-        reproduced_value=repro,
-        tolerance=0.01,
-        passed=passed,
-    )
+    Each row is ``(description, claimed, reproduced)``: a claim of type
+    OTHER (1 % tolerance) on the paper, plus — unless ``reproduced`` is
+    None — a matching raw output.  No rows means one claim ``x`` = 1.0
+    reproduced exactly.  ``claim_results`` is left empty and
+    ``overall_passed`` is whatever the caller says: the harness must not
+    read either.
+    """
+    from retally.models import Claim, ClaimType, Dataset, ExecutionResult, Paper, ValidationReport
 
-
-def _fake_report(*, overall_passed=True, claim_results=None, exit_code=0):
-    """Build a ValidationReport-shaped mock the runner can score."""
-    from retally.models import Dataset, ExecutionResult, Paper, ValidationReport
-
-    paper = Paper(title="t", claims=[MagicMock()], dataset_references=[MagicMock()])
+    rows = rows or (("x", 1.0, 1.0),)
+    claims = [Claim(description=d, value=v, claim_type=ClaimType.OTHER) for d, v, _ in rows]
+    outputs = {d: r for d, _, r in rows if r is not None}
+    paper = Paper(title="t", claims=claims, dataset_references=[MagicMock()])
     dataset = Dataset(name="d", source_url="", local_path=Path("/tmp/d"))
     exec_result = ExecutionResult(
         generated_code="print('hi')",
         exit_code=exit_code,
-        outputs={"x": 1.0},
+        outputs=outputs,
     )
     return ValidationReport(
         paper=paper,
         dataset=dataset,
         execution_result=exec_result,
-        claim_results=claim_results or [],
+        claim_results=[],
         overall_passed=overall_passed,
     )
 
@@ -123,10 +125,7 @@ def test_skip_when_pipeline_construction_fails(tmp_path):
 
 def test_pipeline_runs_and_passes_paper_claim(tmp_path):
     entry = _entry()
-    report = _fake_report(
-        overall_passed=True,
-        claim_results=[_claim(0.95, 0.95, passed=True)],
-    )
+    report = _fake_report(("x", 0.95, 0.95))
     [result] = runner.run_benchmark(
         [entry],
         pipeline_factory=_pipeline_factory_returning(report),
@@ -159,10 +158,7 @@ def test_agrees_with_i4r_when_value_matches(tmp_path):
         ],
     )
     # Retally produced 0.501 too — exactly the I4R value.
-    report = _fake_report(
-        overall_passed=False,  # may not match paper, but the I4R agreement is what we're testing
-        claim_results=[_claim(0.5, 0.501, passed=False)],
-    )
+    report = _fake_report(("x", 0.5, 0.501), overall_passed=False)
     [result] = runner.run_benchmark(
         [entry],
         pipeline_factory=_pipeline_factory_returning(report),
@@ -183,10 +179,7 @@ def test_disagrees_with_i4r_when_value_differs(tmp_path):
             )
         ],
     )
-    report = _fake_report(
-        overall_passed=True,  # Retally matched the paper value at 0.5
-        claim_results=[_claim(0.5, 0.5, passed=True)],
-    )
+    report = _fake_report(("x", 0.5, 0.5))  # Retally matched the paper value at 0.5
     [result] = runner.run_benchmark(
         [entry],
         pipeline_factory=_pipeline_factory_returning(report),
@@ -209,9 +202,7 @@ def test_agrees_with_i4r_none_when_no_finding_has_a_value(tmp_path):
             )
         ],
     )
-    report = _fake_report(
-        claim_results=[_claim(0.5, 0.5, passed=True)],
-    )
+    report = _fake_report(("x", 0.5, 0.5))
     [result] = runner.run_benchmark(
         [entry],
         pipeline_factory=_pipeline_factory_returning(report),
@@ -475,11 +466,9 @@ def test_claim_details_recorded_per_claim(tmp_path):
     """Every compared claim lands in claim_details with its rel_err — the
     smooth signal that makes 0-passed runs still comparable."""
     report = _fake_report(
+        ("alpha", 2.0, 3.0),  # rel_err 0.5
+        ("beta", 1.0, None),  # unmatched
         overall_passed=False,
-        claim_results=[
-            _claim(2.0, 3.0, passed=False),  # rel_err 0.5
-            _claim(1.0, None, passed=False),  # unmatched
-        ],
     )
     [result] = runner.run_benchmark(
         [_entry()], pipeline_factory=_pipeline_factory_returning(report), cache_dir=tmp_path
@@ -494,7 +483,7 @@ def test_claim_details_recorded_per_claim(tmp_path):
 
 
 def test_claim_details_round_trip_through_json(tmp_path):
-    report = _fake_report(claim_results=[_claim(1.0, 1.0, passed=True)])
+    report = _fake_report(("x", 1.0, 1.0))
     [result] = runner.run_benchmark(
         [_entry()], pipeline_factory=_pipeline_factory_returning(report), cache_dir=tmp_path
     )
