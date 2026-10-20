@@ -709,3 +709,38 @@ def test_error_refinement_prompt_contains_stdout_excerpt(language):
     gen._client.messages.create.reset_mock()
     gen.refine("old", "Error", _paper(language=language), _dataset())
     assert "Last run's" not in _sent_prompt(gen)
+
+
+# ── Claim location / context in the generation prompt (Phase 1.7) ─────
+
+
+@pytest.mark.parametrize("language", [Language.R, Language.PYTHON], ids=["r", "python"])
+@pytest.mark.parametrize("mode", list(ReproductionMode), ids=lambda m: m.value)
+def test_generation_prompt_renders_claim_location_and_context(language, mode):
+    claim = Claim(
+        description="warfare_coefficient_bivariate",
+        value=3.713,
+        claim_type=ClaimType.COEFFICIENT,
+        table_ref="Table 1",
+        context="Table 1 column 1.\n  Controls for   population density.",
+    )
+    client = MagicMock()
+    client.messages.create.return_value = MagicMock(content=[MagicMock(text="x <- 1")])
+    CodeGenerator(client).generate(
+        _paper(claims=[claim], language=language), _dataset(), reproduction_mode=mode
+    )
+    prompt = client.messages.create.call_args.kwargs["messages"][0]["content"]
+    assert (
+        "1. warfare_coefficient_bivariate: 3.713 [type: coefficient]\n"
+        "   Location: Table 1\n"
+        "   Context: Table 1 column 1. Controls for population density.\n"
+    ) in prompt
+
+
+def test_claim_context_is_capped_and_absent_fields_add_no_lines():
+    from retally.codegen.generator import _CLAIM_CONTEXT_CHARS, _claim_detail_lines
+
+    assert _claim_detail_lines(Claim(description="n", value=1.0)) == []
+    long = Claim(description="n", value=1.0, context="x" * (_CLAIM_CONTEXT_CHARS + 50))
+    (line,) = _claim_detail_lines(long)
+    assert line == "   Context: " + "x" * _CLAIM_CONTEXT_CHARS + "…"

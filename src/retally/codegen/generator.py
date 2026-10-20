@@ -763,6 +763,7 @@ class CodeGenerator:
                 lines.append(
                     f"{i}. {claim.description}: {claim.value}{unit_str} [type: {claim.claim_type.value}]"
                 )
+                lines.extend(_claim_detail_lines(claim))
         else:
             lines.append("No specific claims listed — reproduce the main reported metrics.")
         lines.append("")
@@ -1099,6 +1100,35 @@ _TREE_MAX_FILES = 80
 _TREE_MAX_CSV_HEADERS = 10
 _TREE_MAX_DTA_HEADERS = 10
 _TREE_HEADER_CHARS = 240
+
+
+# Per-claim cap on the ``context`` text rendered under each claim in the
+# generation prompt.  Curated catalog contexts run to a few hundred
+# characters (column, controls, estimator); extracted claims carry the
+# surrounding paper sentence(s).  Anything longer is cut with a marker.
+_CLAIM_CONTEXT_CHARS = 600
+
+
+def _claim_detail_lines(claim) -> list[str]:
+    """Indented ``Location:`` / ``Context:`` lines for one claim, or ``[]``.
+
+    The claim description is often a terse snake_case token (it doubles as
+    the ``RESULT:`` name), which can mislead on its own -- Dincecco's
+    ``warfare_coefficient_bivariate`` is a column that controls for
+    population density.  The claim's location and context say what the
+    number actually is, so they are rendered under it.  Whitespace is
+    collapsed so a folded YAML block stays on one line.
+    """
+    lines: list[str] = []
+    location = " ".join((claim.table_ref or "").split())
+    if location:
+        lines.append(f"   Location: {location}")
+    context = " ".join((claim.context or "").split())
+    if context:
+        if len(context) > _CLAIM_CONTEXT_CHARS:
+            context = context[:_CLAIM_CONTEXT_CHARS] + "…"
+        lines.append(f"   Context: {context}")
+    return lines
 
 
 def _fence_tag_for(relative_path: str) -> str:
