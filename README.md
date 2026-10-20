@@ -1,5 +1,7 @@
 # Retally
 
+*Implemented with [Claude Code](https://claude.com/claude-code).*
+
 Retally re-tallies the numbers in academic papers: it reads a paper, downloads the relevant dataset, generates reproduction code via the Claude API (scikit-learn for ML papers, R + fixest/AER/plm for econometrics), executes it in an isolated environment, and compares the reproduced numbers against the paper's stated results.
 
 - **The real evaluation:** [`benchmark/README.md`](benchmark/README.md) — a harness that scores the pipeline (or any agent implementing its `Reproducer` protocol) against the [Institute for Replication](https://i4replication.org) catalog of hand-replicated papers.
