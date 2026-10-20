@@ -7,8 +7,12 @@ Skipped: **0** (out_of_scope=0, language_unsupported=0, no_api_key=0).
 ## Verdicts (among executed papers)
 
 - Pipeline completed without crashing: **1 / 1**
-- Agrees with the paper's stated values: **0 / 1**
-- Agrees with the I4R replicator: **0 / 0** (of papers where I4R published a value to compare against)
+- Agrees with the paper's stated values: **1 / 1**
+- Agrees with the I4R replicator: **1 / 1** (of papers where I4R published a value to compare against)
+
+## Closeness (per split)
+
+- **dev**: 1 entries, 13 claims, matched 100%, passed 13/13, median rel err 0.0%, within tol/2x/5x: 100%/100%/100%
 
 ## Per-component success (executed papers only)
 
@@ -25,4 +29,4 @@ Skipped: **0** (out_of_scope=0, language_unsupported=0, no_api_key=0).
 
 | ID | Status | Ran | Agrees w/ paper | Agrees w/ I4R | Claims (paper / I4R) | Cached |
 |---|---|---|---|---|---|---|
-| `dincecco-2022-india-warfare` | ran | ✓ | ✗ | — | 0 / 0 of 0 |  |
+| `dincecco-2022-india-warfare` | ran | ✓ | ✓ | ✓ | 13 / 13 of 13 |  |

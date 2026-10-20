@@ -72,10 +72,13 @@ original_claims:
     sample_size: 660
     location: "Table 1"
     context: >
-      OLS coefficient on pre-colonial conflict exposure — log of one plus
-      land battles within 250 km of the district centroid, 1000-1757 —
-      in a bivariate regression of log district luminosity on conflict
-      exposure, no controls and no fixed effects.  N=660 districts.
+      Table 1 column 1.  OLS coefficient on pre-colonial conflict exposure
+      (Land_250_1757: land battles within 250 km of the district
+      centroid, 1000-1757) in a regression of ln(0.01 + luminosity) on
+      conflict exposure plus ln population density 1990 (lnpdgpd1990);
+      no state FE, no geographic controls; robust SEs.  "Bivariate" in
+      the token is a misnomer kept for run-to-run comparability: the
+      column DOES control for population density.  N=660 districts.
   - description: warfare_se_bivariate
     value: 0.305
     claim_type: standard_error
@@ -88,10 +91,12 @@ original_claims:
     sample_size: 660
     location: "Table 1"
     context: >
-      Coefficient on pre-colonial conflict exposure in the most saturated
-      Table 1 specification: state fixed effects plus the paper's
-      geographic and historical control set.  The paper's abstract-level
-      finding attenuates from 3.713 (bivariate) to this value.
+      Table 1 column 3.  Coefficient on pre-colonial conflict exposure in
+      the most saturated specification: population density, state fixed
+      effects, and the ten geographic controls (latitude, longitude,
+      altitude, ruggedness, precipitation, land quality, dry rice, wet
+      rice, wheat, malaria); robust SEs.  Attenuates from 3.713
+      (column 1) to this value.
   - description: warfare_se_full_controls
     value: 0.370
     claim_type: standard_error
@@ -102,7 +107,76 @@ original_claims:
     claim_type: other
     unit: districts
     location: "Table 1"
-    context: Number of district observations in the Table 1 regressions.
+    context: >
+      Number of district observations in the Table 1 regressions (660 in
+      every column, after dropping the Andaman/Nicobar and Lakshadweep
+      island districts).
+  # Curated during Phase 1.3 from the replication package's own
+  # 1 paper/table1.tex and table2b.tex (esttab output of
+  # wii_replication.do).  Appended (not interleaved) so the claim_id
+  # indices of the five claims above, and of their I4R findings, are
+  # unchanged.
+  - description: warfare_coefficient_state_fe
+    value: 1.601
+    claim_type: coefficient
+    standard_error: 0.380
+    sample_size: 660
+    location: "Table 1, column 2"
+    context: >
+      Table 1 column 2.  OLS coefficient on pre-colonial conflict
+      exposure with population density and state fixed effects, no
+      geographic controls; robust SEs.
+  - description: warfare_se_state_fe
+    value: 0.380
+    claim_type: standard_error
+    location: "Table 1, column 2"
+    context: Standard error of warfare_coefficient_state_fe.
+  - description: warfare_iv_coefficient_bivariate
+    value: 4.930
+    claim_type: coefficient
+    standard_error: 0.609
+    sample_size: 660
+    location: "Table 2, Panel B (second stage), column 1"
+    context: >
+      Table 2 Panel B column 1.  IV (2SLS) second-stage coefficient on
+      pre-colonial conflict exposure, instrumented by proximity to the
+      Khyber Pass (`instrument`), controlling for population density;
+      no state FE, no geographic controls; robust SEs (ivreg2, r).
+  - description: warfare_iv_se_bivariate
+    value: 0.609
+    claim_type: standard_error
+    location: "Table 2, Panel B (second stage), column 1"
+    context: Standard error of warfare_iv_coefficient_bivariate.
+  - description: warfare_iv_coefficient_state_fe
+    value: 4.626
+    claim_type: coefficient
+    standard_error: 1.291
+    sample_size: 660
+    location: "Table 2, Panel B (second stage), column 2"
+    context: >
+      Table 2 Panel B column 2.  IV second-stage coefficient (Khyber Pass
+      instrument) with population density and state fixed effects; robust
+      SEs.
+  - description: warfare_iv_se_state_fe
+    value: 1.291
+    claim_type: standard_error
+    location: "Table 2, Panel B (second stage), column 2"
+    context: Standard error of warfare_iv_coefficient_state_fe.
+  - description: warfare_iv_coefficient_full_controls
+    value: 3.482
+    claim_type: coefficient
+    standard_error: 1.389
+    sample_size: 660
+    location: "Table 2, Panel B (second stage), column 3"
+    context: >
+      Table 2 Panel B column 3.  IV second-stage coefficient (Khyber Pass
+      instrument) with population density, state fixed effects, and the
+      ten geographic controls; robust SEs.
+  - description: warfare_iv_se_full_controls
+    value: 1.389
+    claim_type: standard_error
+    location: "Table 2, Panel B (second stage), column 3"
+    context: Standard error of warfare_iv_coefficient_full_controls.
 
 # DP35's verdict is blanket: "All estimates are computationally
 # reproducible" (in Stata AND in the replicators' own R routine).  For
@@ -126,6 +200,30 @@ i4r_replicator_findings:
     outcome: matches
   - claim_id: 4
     reproduced_value: 660
+    outcome: matches
+  - claim_id: 5
+    reproduced_value: 1.601
+    outcome: matches
+  - claim_id: 6
+    reproduced_value: 0.380
+    outcome: matches
+  - claim_id: 7
+    reproduced_value: 4.930
+    outcome: matches
+  - claim_id: 8
+    reproduced_value: 0.609
+    outcome: matches
+  - claim_id: 9
+    reproduced_value: 4.626
+    outcome: matches
+  - claim_id: 10
+    reproduced_value: 1.291
+    outcome: matches
+  - claim_id: 11
+    reproduced_value: 3.482
+    outcome: matches
+  - claim_id: 12
+    reproduced_value: 1.389
     outcome: matches
 
 notes: >
@@ -157,3 +255,25 @@ notes: >
   also appears under Table 2 rows, suggesting alternative outcome or
   exposure measures.  Curate them from the PDF (which the runner
   downloads anyway) when tightening this entry beyond the headline.
+
+  Phase 1.3 (2026-10-19): curated from the replication package's own
+  esttab fragments (1 paper/table1.tex, table2b.tex).  Table 1 has only
+  three columns, all with population density as a control: col 1
+  3.713 (0.305), col 2 +state FE 1.601 (0.380), col 3 +geographic
+  controls 1.465 (0.370); N=660 throughout.  The 4.930/4.626/3.482
+  trio is NOT Table 1 — it is Table 2 Panel B (IV second stage, Khyber
+  Pass instrument), same three column specifications, SEs 0.609 /
+  1.291 / 1.389.  The meta-database groups them under one table.
+  Thirteen claims pinned in total (one over the rubric's 8-12 target,
+  to keep every coefficient paired with its SE).
+
+  First green run (2026-10-19): 13/13 claims within tolerance,
+  agrees_with_paper and agrees_with_i4r both true.  The unlock was
+  seeding the 185 KB wii_replication.do into codegen (it had been
+  dropped by the per-file size cap, so the July-style blind guessing
+  continued until the cap became a truncation).  Remaining gaps, all
+  inside tolerance: the IV SEs come out 2.8% (col 2) and 3.7% (col 3)
+  high because the generated code used HC1 while Stata's
+  `ivreg2, r` applies no small-sample correction (HC0); everything
+  else matches to 3 dp.  Single sampled generation per configuration
+  (LLM cache), so run-to-run variance is not yet measured.
