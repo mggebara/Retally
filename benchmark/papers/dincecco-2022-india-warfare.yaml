@@ -342,3 +342,63 @@ notes: >
   against warfare_coefficient_bivariate's -0.181.  No pass came from it
   here, but it can inflate "matched" (77% in REPORT.md) and could produce
   a false pass.
+
+  Phase 1.6 plumbing fixes and re-measurement (2026-10-20).  Four fixes,
+  one commit each, each followed by a --mode both run (LLM cache on, so a
+  step re-runs only the calls whose prompts it changed).  Pass counts
+  (seeded / independent): Phase 1.5 baseline 13/13 / 0/13.  Step 1,
+  comparator no longer borrows a value by claim type (re-score, no live
+  call): 13/13 / 0/13, independent "matched" 10 -> 7 of 13 (the three NA
+  IV coefficients had been scored against the OLS -0.181).  Step 2, .dta
+  column names in the dataset listing: 13/13 / 0/13; the model now uses
+  the right variable names (lnlights_001, Land_250_1757, lnpdgpd1990, the
+  ten geographic controls) but loads biclean.dta (British-India
+  districts, N=271, same variable names) rather than conflictexposure.dta,
+  whose 1288 columns are cut at the listing's 240-character cap before
+  the outcome and the `instrument`.  Step 3, head/tail stdout/stderr in
+  refinement prompts: 13/13 / 0/13; the refinement saw "Total rows in
+  biclean: 271", added a DEVIATION (NA exposure -> 0) but stayed on the
+  same file, produced identical numbers, and the no-progress rule stopped
+  the loop after one attempt.  Step 4, methodology prompt no longer
+  primes "standardised": the new summary says headline coefficients are
+  unstandardised; seeded 13/13; independent NOT MEASURED -- the API
+  account ran out of credit (HTTP 400 "credit balance is too low") on the
+  independent generation call, after 6 live calls on this branch.  Step 5
+  (three cache-off independent runs) and the final both-mode baseline
+  were therefore not run; REPORT.md is regenerated from the step-3 run
+  (benchmark/results/phase16-step3-both-2026-10-20.json).
+
+  Step-6 classification of the 13 independent losses (step-3 run, code
+  and stdout read), plus an offline counterfactual: the step-3 generated
+  R script re-run in the sandbox with only the data file swapped to
+  conflictexposure.dta, the scale() removed (the step-4 extraction fix)
+  and `state` renamed to `state_gadm` (the FE variable in that file),
+  zero API calls.  It gives 3/13 under the independent band:
+  full_controls 1.4646 (0.3685) vs 1.465 (0.370) and N=660, exact.  Adding
+  lnpdgpd1990 to columns 1-2, which the model had left out, gives all
+  seven OLS claims to 3-4 dp (3.7131/0.3053, 1.6005/0.3784,
+  1.4646/0.3685, 660).
+  - warfare_coefficient_full_controls, warfare_se_full_controls,
+    sample_size_districts: data-file resolution (+ extraction error,
+    standardisation).  The model's own specification is exact once
+    pointed at the right file.
+  - warfare_coefficient_bivariate, warfare_se_bivariate,
+    warfare_coefficient_state_fe, warfare_se_state_fe: data-file
+    resolution + extraction error, then specification (controls): the
+    model omitted population density from columns 1-2.  Very likely
+    induced by the catalog token itself: the prompt shows only
+    "warfare_coefficient_bivariate" (the claim `context`, which says the
+    column controls for population density, never reaches the prompt),
+    and the methodology summary's equation includes PopDensity.  A
+    harness/catalog artifact more than a methods-section gap.
+  - warfare_iv_* (6 claims): data-file resolution.  `instrument` exists
+    only in conflictexposure.dta and tehsildata.dta, both beyond what the
+    truncated listing shows; the model printed RESULT:...=NA and never
+    wrote an IV.  Its ability to reconstruct the IV specification from
+    the text is untested.
+  None of the 13 is a RESULT-name mismatch or tolerance artifact, and
+  none is (yet) evidence that the paper's text cannot pin down its
+  specification.  Two pipeline properties keep file resolution stuck:
+  claims with no value (NA) are hard failures that the claim-refinement
+  loop never targets, and the loop stops when an attempt reproduces the
+  same numbers.

@@ -37,7 +37,7 @@ Claims passing with the authors' scripts in the prompt (seeded) versus without t
 ## Closeness (per split and mode)
 
 - **dev · seeded**: 1 entries, 13 claims, matched 100%, passed 13/13, median rel err 0.0%, within tol/2x/5x: 100%/100%/100%
-- **dev · independent**: 1 entries, 13 claims, matched 77%, passed 0/13, median rel err 103.8%, within tol/2x/5x: 0%/0%/50%
+- **dev · independent**: 1 entries, 13 claims, matched 54%, passed 0/13, median rel err 83.9%, within tol/2x/5x: 0%/0%/29%
 
 ## Per-component success — seeded (executed papers only)
 
@@ -66,4 +66,4 @@ Claims passing with the authors' scripts in the prompt (seeded) versus without t
 | ID | Mode | Status | Ran | Agrees w/ paper | Agrees w/ I4R | Claims (paper / I4R) | Cached |
 |---|---|---|---|---|---|---|---|
 | `dincecco-2022-india-warfare` | seeded | ran | ✓ | ✓ | ✓ | 13 / 13 of 13 |  |
-| `dincecco-2022-india-warfare` | independent | ran | ✓ | ✗ | ✗ | 0 / 0 of 13 | ✓ |
+| `dincecco-2022-india-warfare` | independent | ran | ✓ | ✗ | ✗ | 0 / 0 of 13 |  |
