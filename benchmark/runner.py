@@ -209,10 +209,31 @@ def write_results(results: list[BenchmarkResult], out_path: Path) -> None:
     )
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
     """CLI entrypoint — ``python -m benchmark.runner`` or ``make benchmark``."""
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        prog="python -m benchmark.runner",
+        description="Run the benchmark catalog and write benchmark/results/results.json.",
+    )
+    parser.add_argument(
+        "--only",
+        action="append",
+        metavar="ENTRY_ID",
+        help="Run only this catalog entry (repeatable).  Other entries are omitted from results.json.",
+    )
+    args = parser.parse_args(argv)
+
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     catalog = bschema.load_catalog(CATALOG_DIR)
+    if args.only:
+        known = {e.id for e in catalog}
+        unknown = sorted(set(args.only) - known)
+        if unknown:
+            print(f"Unknown catalog entry id(s): {', '.join(unknown)}", file=sys.stderr)
+            return 2
+        catalog = [e for e in catalog if e.id in set(args.only)]
     if not catalog:
         # Empty catalog is a legitimate state — the placeholders moved to
         # tests/fixtures/ in PR #18 and the real I4R entries haven't landed
