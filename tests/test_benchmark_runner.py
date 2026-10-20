@@ -534,3 +534,122 @@ def test_split_reassignment_survives_the_cache(tmp_path):
     [moved] = runner.run_benchmark([_entry(split="holdout")], pipeline_factory=factory, cache_dir=tmp_path)
     assert moved.cached is True  # no re-execution
     assert moved.split == "holdout"  # but the new split label sticks
+
+
+# ── Reproduction mode (seeded vs independent) ──────────────────────────
+
+
+def test_default_run_is_seeded_and_says_so(tmp_path):
+    from retally.models import ReproductionMode
+
+    pipeline = MagicMock()
+    pipeline.validate.return_value = _fake_report()
+    [result] = runner.run_benchmark([_entry()], pipeline_factory=lambda: pipeline, cache_dir=tmp_path)
+    assert result.mode == "seeded"
+    assert pipeline.validate.call_args.kwargs["reproduction_mode"] is ReproductionMode.SEEDED
+
+
+def test_both_modes_yield_one_row_per_entry_per_mode(tmp_path):
+    from retally.models import ReproductionMode
+
+    pipeline = MagicMock()
+    pipeline.validate.return_value = _fake_report()
+    results = runner.run_benchmark(
+        [_entry(id="a"), _entry(id="b")],
+        pipeline_factory=lambda: pipeline,
+        cache_dir=tmp_path,
+        modes=runner.MODES,
+    )
+    assert [(r.entry_id, r.mode) for r in results] == [
+        ("a", "seeded"),
+        ("a", "independent"),
+        ("b", "seeded"),
+        ("b", "independent"),
+    ]
+    passed_modes = [c.kwargs["reproduction_mode"] for c in pipeline.validate.call_args_list]
+    assert passed_modes == [ReproductionMode.SEEDED, ReproductionMode.INDEPENDENT] * 2
+
+
+def test_skipped_rows_carry_their_mode(tmp_path):
+    entry = _entry(language=bschema.Language.STATA)
+    results = runner.run_benchmark([entry], cache_dir=tmp_path, modes=runner.MODES)
+    assert [(r.mode, r.skipped) for r in results] == [("seeded", True), ("independent", True)]
+
+
+def test_unknown_mode_is_rejected(tmp_path):
+    with pytest.raises(ValueError, match="unknown reproduction mode"):
+        runner.run_benchmark([_entry()], cache_dir=tmp_path, modes=("computational",))
+
+
+def test_cache_key_includes_mode():
+    entry = _entry()
+    assert runner._cache_key(entry, "seeded") != runner._cache_key(entry, "independent")
+
+
+def test_seeded_cache_never_serves_an_independent_run(tmp_path):
+    report = _fake_report()
+    factory = _pipeline_factory_returning(report)
+    runner.run_benchmark([_entry()], pipeline_factory=factory, cache_dir=tmp_path, modes=("seeded",))
+    [independent] = runner.run_benchmark(
+        [_entry()], pipeline_factory=factory, cache_dir=tmp_path, modes=("independent",)
+    )
+    assert independent.cached is False
+    assert independent.mode == "independent"
+    [seeded_again] = runner.run_benchmark(
+        [_entry()], pipeline_factory=factory, cache_dir=tmp_path, modes=("seeded",)
+    )
+    assert seeded_again.cached is True
+    assert seeded_again.mode == "seeded"
+
+
+def test_mode_round_trips_and_defaults_to_seeded_for_old_files(tmp_path):
+    result = runner.BenchmarkResult(entry_id="x", mode="independent")
+    out = tmp_path / "results.json"
+    runner.write_results([result], out)
+    import json
+
+    [raw] = json.loads(out.read_text())
+    assert raw["mode"] == "independent"
+    assert runner._result_from_jsonable(raw).mode == "independent"
+    assert runner._result_from_jsonable({"entry_id": "old"}).mode == "seeded"
+
+
+def test_date_metadata_does_not_invalidate_the_cache():
+    """Curating publication / package dates must not force a costly re-run."""
+    assert runner._cache_key(_entry()) == runner._cache_key(
+        _entry(publication_date="2022-05", package_release_date="2022-06-01")
+    )
+
+
+def test_pinned_standard_error_reaches_the_pipeline_claim(tmp_path):
+    pipeline = MagicMock()
+    pipeline.validate.return_value = _fake_report()
+    entry = _entry(
+        original_claims=[
+            bschema.OriginalClaim(
+                description="beta", value=3.713, claim_type="coefficient", standard_error=0.305
+            )
+        ]
+    )
+    runner.run_benchmark([entry], pipeline_factory=lambda: pipeline, cache_dir=tmp_path)
+    [claim] = pipeline.validate.call_args.kwargs["claims"]
+    assert claim.standard_error == 0.305
+
+
+@pytest.mark.parametrize(
+    ("argv", "expected"),
+    [([], ("seeded",)), (["--mode", "independent"], ("independent",)), (["--mode", "both"], runner.MODES)],
+)
+def test_main_mode_flag(tmp_path, monkeypatch, argv, expected):
+    seen = {}
+
+    def fake_run_benchmark(catalog, **kwargs):
+        seen["modes"] = kwargs["modes"]
+        return []
+
+    monkeypatch.setattr(runner, "CATALOG_DIR", REPO_ROOT / "tests" / "fixtures" / "benchmark_placeholders")
+    monkeypatch.setattr(runner, "RESULTS_DIR", tmp_path)
+    monkeypatch.setattr(runner, "REPO_ROOT", tmp_path.parent)
+    monkeypatch.setattr(runner, "run_benchmark", fake_run_benchmark)
+    assert runner.main(argv) == 0
+    assert tuple(seen["modes"]) == tuple(expected)

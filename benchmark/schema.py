@@ -13,6 +13,8 @@ benchmark-only metadata stays out of the library's public surface.
 
 from __future__ import annotations
 
+import datetime
+import re
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
@@ -177,6 +179,18 @@ class BenchmarkEntry:
     generalises rather than overfits.  The runner stamps the split onto
     each result so reports and run comparisons can group by it."""
 
+    publication_date: str | None = None
+    """When the paper was first publicly available (working paper or
+    journal, whichever came first), as an ISO date — ``YYYY``,
+    ``YYYY-MM``, or ``YYYY-MM-DD``.  Recorded so contamination can be
+    discussed per entry against each model's training cutoff."""
+
+    package_release_date: str | None = None
+    """When the replication package (the dataset source) was first
+    published, same ISO format.  Often later than the paper; the
+    package's own scripts are what seeded mode puts in the prompt, so
+    this is the date that matters for script contamination."""
+
     notes: str = ""
 
 
@@ -258,8 +272,31 @@ def _entry_from_dict(d: dict[str, Any]) -> BenchmarkEntry:
         i4r_replicator_findings=[_finding(f) for f in d.get("i4r_replicator_findings", [])],
         out_of_scope_reason=_optional_str(d.get("out_of_scope_reason")),
         split=_split(d.get("split", "dev")),
+        publication_date=_iso_date(d.get("publication_date"), "publication_date"),
+        package_release_date=_iso_date(d.get("package_release_date"), "package_release_date"),
         notes=str(d.get("notes", "")),
     )
+
+
+_ISO_DATE = re.compile(r"^\d{4}(-(0[1-9]|1[0-2])(-(0[1-9]|[12]\d|3[01]))?)?$")
+
+
+def _iso_date(value: Any, field_name: str) -> str | None:
+    """Normalise an optional ISO date (``YYYY``, ``YYYY-MM``, ``YYYY-MM-DD``).
+
+    YAML parses an unquoted ``2022-05-01`` into a ``datetime.date`` and an
+    unquoted ``2022`` into an int; both are accepted and stringified.  A
+    malformed value raises rather than silently recording a date nobody
+    can sort or compare against a training cutoff.
+    """
+    if value is None or value == "":
+        return None
+    if isinstance(value, datetime.date):
+        return value.isoformat()[:10]
+    s = str(value).strip()
+    if not _ISO_DATE.match(s):
+        raise ValueError(f"{field_name} must be an ISO date (YYYY, YYYY-MM, or YYYY-MM-DD), got {value!r}")
+    return s
 
 
 _VALID_SPLITS = frozenset({"dev", "holdout"})

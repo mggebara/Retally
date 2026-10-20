@@ -17,12 +17,18 @@ paper ✓, agrees with I4R ✗* means Retally faithfully reproduced what
 the paper said, but the careful human replicators found a different
 number.  See README for how each combination is interpreted.
 
+Reproduction modes: every result is stamped with the ``mode`` it ran
+in — ``seeded`` (the authors' replication-package scripts are in the
+generation prompt: computational reproduction) or ``independent``
+(they are withheld: reproduction from the paper text).  The runner can
+run one mode or both; a result row is identified by ``(entry_id,
+mode)``, never by ``entry_id`` alone, so the two are never conflated.
+
 Caching: a content-addressable cache under ``benchmark/.cache/`` keyed
-on ``(catalog_entry_hash, retally_version, pipeline_config_hash)`` lets
-us re-run the benchmark cheaply when only the report renderer or
-non-pipeline components changed.  Any benchmark entry edit, retally
-version bump, or pipeline config change invalidates the corresponding
-cache entry.
+on ``(catalog_entry_hash, retally_version, mode)`` lets us re-run the
+benchmark cheaply when only the report renderer or non-pipeline
+components changed.  Any benchmark entry edit, retally version bump, or
+mode change selects a different cache entry.
 """
 
 from __future__ import annotations
@@ -47,6 +53,13 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 CATALOG_DIR = REPO_ROOT / "benchmark" / "papers"
 CACHE_DIR = REPO_ROOT / "benchmark" / ".cache"
 RESULTS_DIR = REPO_ROOT / "benchmark" / "results"
+
+# Reproduction modes, as the plain strings recorded in results.json.  They
+# mirror ``retally.models.ReproductionMode`` values; kept as strings here so
+# this module stays importable without retally installed.
+SEEDED = "seeded"
+INDEPENDENT = "independent"
+MODES = (SEEDED, INDEPENDENT)
 
 
 # ---------------------------------------------------------------------------
@@ -124,6 +137,12 @@ class BenchmarkResult:
     """
 
     entry_id: str
+    mode: str = SEEDED
+    """Reproduction mode this row was produced in (``seeded`` /
+    ``independent``).  ``(entry_id, mode)`` identifies a row; results
+    deserialised from files that predate the field default to seeded,
+    which is what every earlier run was."""
+
     skipped: bool = False
     skip_reason: SkipReason | None = None
     error: str | None = None
@@ -165,8 +184,9 @@ def run_benchmark(
     cache_dir: Path = CACHE_DIR,
     use_cache: bool = True,
     extracted_claims_dir: Path | None = None,
+    modes: tuple[str, ...] = (SEEDED,),
 ) -> list[BenchmarkResult]:
-    """Run every catalog entry and return one BenchmarkResult per paper.
+    """Run every catalog entry in each of ``modes``; one BenchmarkResult per (paper, mode).
 
     ``pipeline_factory`` is a zero-arg callable that returns a
     ValidationPipeline.  Injecting it (rather than always calling
@@ -183,20 +203,31 @@ def run_benchmark(
     skips the extraction call and scores against a frozen claim set.
     Entries that already have pinned claims are not dumped (the file
     would just echo the catalog).  None (the default) disables dumping.
+
+    ``modes`` selects the reproduction modes to run (``"seeded"``,
+    ``"independent"``, or both).  The default, seeded only, is the
+    historical behaviour.  Results are ordered by entry, then by mode in
+    the order given, so a both-mode run puts each paper's two rows next
+    to each other.
     """
     if catalog is None:
         catalog = bschema.load_catalog(CATALOG_DIR)
+    unknown = [m for m in modes if m not in MODES]
+    if unknown:
+        raise ValueError(f"unknown reproduction mode(s) {unknown}; expected a subset of {list(MODES)}")
 
     results: list[BenchmarkResult] = []
     for entry in catalog:
-        result = _run_one(
-            entry,
-            pipeline_factory=pipeline_factory,
-            cache_dir=cache_dir,
-            use_cache=use_cache,
-            extracted_claims_dir=extracted_claims_dir,
-        )
-        results.append(result)
+        for mode in modes:
+            result = _run_one(
+                entry,
+                pipeline_factory=pipeline_factory,
+                cache_dir=cache_dir,
+                use_cache=use_cache,
+                extracted_claims_dir=extracted_claims_dir,
+                mode=mode,
+            )
+            results.append(result)
     return results
 
 
@@ -223,7 +254,17 @@ def main(argv: list[str] | None = None) -> int:
         metavar="ENTRY_ID",
         help="Run only this catalog entry (repeatable).  Other entries are omitted from results.json.",
     )
+    parser.add_argument(
+        "--mode",
+        choices=[SEEDED, INDEPENDENT, "both"],
+        default=SEEDED,
+        help=(
+            "Reproduction mode: 'seeded' (authors' package scripts in the prompt; the default), "
+            "'independent' (scripts withheld), or 'both' (one results.json row per entry per mode)."
+        ),
+    )
     args = parser.parse_args(argv)
+    modes = MODES if args.mode == "both" else (args.mode,)
 
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     catalog = bschema.load_catalog(CATALOG_DIR)
@@ -247,7 +288,7 @@ def main(argv: list[str] | None = None) -> int:
         write_results([], RESULTS_DIR / "results.json")
         return 0
 
-    results = run_benchmark(catalog, extracted_claims_dir=RESULTS_DIR / "extracted_claims")
+    results = run_benchmark(catalog, extracted_claims_dir=RESULTS_DIR / "extracted_claims", modes=modes)
     out = RESULTS_DIR / "results.json"
     write_results(results, out)
     print(f"Wrote {out.relative_to(REPO_ROOT)} ({len(results)} entries).")
@@ -266,14 +307,17 @@ def _run_one(
     cache_dir: Path,
     use_cache: bool,
     extracted_claims_dir: Path | None = None,
+    mode: str = SEEDED,
 ) -> BenchmarkResult:
-    """Execute (or skip) a single catalog entry and return its result."""
+    """Execute (or skip) a single catalog entry in ``mode`` and return its result."""
     # Skip paths come first — no pipeline build, no cache check.
     skip = _check_skip(entry)
     if skip is not None:
-        return BenchmarkResult(entry_id=entry.id, skipped=True, skip_reason=skip, split=entry.split)
+        return BenchmarkResult(
+            entry_id=entry.id, mode=mode, skipped=True, skip_reason=skip, split=entry.split
+        )
 
-    cache_key = _cache_key(entry)
+    cache_key = _cache_key(entry, mode)
     cached = _load_cache(cache_dir, cache_key) if use_cache else None
     if cached is not None:
         cached.cached = True
@@ -281,6 +325,7 @@ def _run_one(
         # entry's *current* assignment so moving a paper between splits
         # doesn't require invalidating its cached result.
         cached.split = entry.split
+        cached.mode = mode
         return cached
 
     pipeline_factory = pipeline_factory or _default_pipeline_factory
@@ -290,12 +335,13 @@ def _run_one(
         logger.warning("Pipeline construction failed for %s: %s", entry.id, exc)
         return BenchmarkResult(
             entry_id=entry.id,
+            mode=mode,
             skipped=True,
             skip_reason=SkipReason.NO_API_KEY,
             error=str(exc),
         )
 
-    result = _execute_with_pipeline(entry, pipeline, extracted_claims_dir=extracted_claims_dir)
+    result = _execute_with_pipeline(entry, pipeline, extracted_claims_dir=extracted_claims_dir, mode=mode)
     result.split = entry.split
 
     if use_cache and not result.skipped:
@@ -324,6 +370,7 @@ def _execute_with_pipeline(
     pipeline: Any,
     *,
     extracted_claims_dir: Path | None = None,
+    mode: str = SEEDED,
 ) -> BenchmarkResult:
     """Drive ``pipeline.validate`` and translate the report into a BenchmarkResult.
 
@@ -332,7 +379,7 @@ def _execute_with_pipeline(
     down the whole benchmark run.  The exception text is captured on
     the result so it shows up in the report.
     """
-    result = BenchmarkResult(entry_id=entry.id)
+    result = BenchmarkResult(entry_id=entry.id, mode=mode)
     try:
         # The parser never infers language from the paper text, so the
         # catalog's declared language must be propagated explicitly —
@@ -350,6 +397,12 @@ def _execute_with_pipeline(
         # is skipped, and — just as important — every run scores against
         # the same frozen claim set instead of whatever the extractor
         # happened to return this time.
+        #
+        # The reproduction mode is always passed explicitly — it is part of
+        # the contract an injected pipeline must honour, and it decides
+        # whether the authors' package scripts reach the prompt.
+        from retally.models import ReproductionMode
+
         dataset_reference = _dataset_reference_for(entry)
         claims_override = _claims_override_for(entry)
         report = pipeline.validate(
@@ -357,6 +410,7 @@ def _execute_with_pipeline(
             language=entry.language,
             dataset_reference=dataset_reference,
             claims=claims_override,
+            reproduction_mode=ReproductionMode(mode),
         )
     except Exception as exc:
         result.retally_ran = False
@@ -423,10 +477,10 @@ def _claims_override_for(entry: bschema.BenchmarkEntry):
 
     Field mapping: the catalog's free-form ``claim_type`` string maps to
     the library enum, falling back to OTHER for labels the enum doesn't
-    know; ``location`` ("Table 3, col 4") maps to ``table_ref``.  The
-    catalog-only fields (``standard_error``, ``sample_size``) have no
-    Claim counterpart yet and are dropped here — they still participate
-    in I4R scoring via the entry itself.
+    know; ``location`` ("Table 3, col 4") maps to ``table_ref``;
+    ``standard_error`` is carried across so the comparator's SE-aware
+    (independent-mode) tolerance can use it.  ``sample_size`` has no
+    Claim counterpart and is dropped here.
     """
     if not entry.original_claims:
         return None
@@ -447,6 +501,7 @@ def _claims_override_for(entry: bschema.BenchmarkEntry):
                 claim_type=claim_type,
                 context=oc.context,
                 table_ref=oc.location,
+                standard_error=oc.standard_error,
             )
         )
     return claims
@@ -554,8 +609,10 @@ def _score_against_i4r(report: Any, entry: bschema.BenchmarkEntry) -> tuple[int,
         if retally_value is None:
             continue
         n_attempted += 1
-        # Same tolerance Retally uses for paper-claim comparison; can
-        # tighten later if the data shows it should be.
+        # Same tolerance Retally used for the paper-claim comparison —
+        # which, in independent mode, is the SE-aware band when the claim
+        # pins a standard error.  Can tighten later if the data shows it
+        # should be.
         tolerance = claim_results[i].tolerance or 0.01
         if _within_tolerance(retally_value, finding.reproduced_value, tolerance):
             n_match += 1
@@ -573,26 +630,30 @@ def _within_tolerance(a: float, b: float, tol: float) -> bool:
 # ---------------------------------------------------------------------------
 
 
-def _cache_key(entry: bschema.BenchmarkEntry) -> str:
-    """Content-addressable hash for a catalog entry.
+def _cache_key(entry: bschema.BenchmarkEntry, mode: str = SEEDED) -> str:
+    """Content-addressable hash for a (catalog entry, reproduction mode) pair.
 
-    Includes the entry's full serialised form plus the retally version
-    so cache entries are scoped to a (paper, library version) pair.
-    Pipeline configuration is NOT in this hash today because the
-    runner uses a single default pipeline; if we add knobs we'll
-    include them.
+    Includes the entry's full serialised form, the retally version, and
+    the reproduction mode, so cache entries are scoped to a (paper,
+    library version, mode) triple — a seeded result can never be served
+    for an independent run or vice versa.  Other pipeline configuration
+    is NOT in this hash because the runner uses a single default
+    pipeline; if we add knobs we'll include them.
 
     ``split`` is deliberately excluded: it labels how a result is
     *grouped* in reports, not what gets executed, so reassigning a
     paper between dev and holdout must not invalidate its (expensive)
     cached result — ``_run_one`` re-stamps the current split on cache
-    hits instead.
+    hits instead.  ``publication_date`` / ``package_release_date`` are
+    excluded for the same reason: they are curation metadata for the
+    contamination discussion and never reach the pipeline.
     """
     retally_version = _retally_version()
     entry_payload = _entry_to_jsonable(entry)
-    entry_payload.pop("split", None)
+    for metadata_only in ("split", "publication_date", "package_release_date"):
+        entry_payload.pop(metadata_only, None)
     payload = json.dumps(
-        {"entry": entry_payload, "retally_version": retally_version},
+        {"entry": entry_payload, "retally_version": retally_version, "mode": mode},
         sort_keys=True,
         default=str,
     )
@@ -635,6 +696,7 @@ def _result_from_jsonable(d: dict[str, Any]) -> BenchmarkResult:
     skip_reason = d.get("skip_reason")
     return BenchmarkResult(
         entry_id=d["entry_id"],
+        mode=str(d.get("mode", SEEDED)),
         skipped=bool(d.get("skipped", False)),
         skip_reason=SkipReason(skip_reason) if skip_reason else None,
         error=d.get("error"),
