@@ -1,6 +1,6 @@
 """Tests for the agent protocol (benchmark/reproducer.py) and harness-side scoring.
 
-Three concerns:
+Four concerns:
 
 * **Unchanged verdicts.**  Re-scoring the committed seeded baseline's raw
   values through the harness reproduces every recorded verdict — moving
@@ -8,6 +8,8 @@ Three concerns:
 * **Conformance.**  The reference pipeline (real components, fake LLM)
   and a minimal fake reproducer go through the same harness path and
   are scored identically; a reproducer's own verdicts are never read.
+* **Independent-mode integrity.**  In independent mode the pipeline's
+  sandbox and prompt see a script-free copy of the dataset.
 * **Extension point.**  ``--reproducer`` resolves built-in names and
   ``module:attr`` specs; the result cache keys on the reproducer without
   disturbing the default pipeline's seeded keys.
@@ -29,6 +31,8 @@ from retally.models import (
     ClaimType,
     ClaimValidationResult,
     Dataset,
+    DatasetReference,
+    DatasetSource,
     ExecutionResult,
     Language,
     Paper,
@@ -361,6 +365,112 @@ def test_reproduction_from_report_carries_the_artefacts():
     assert rep.stages.code_generated is True and rep.stages.code_executed is True
 
 
+# ── Independent-mode integrity: a script-free dataset ──────────────────
+
+
+def _package(root: Path) -> Path:
+    """A miniature replication package: data plus every kind of script."""
+    (root / "code" / "sub").mkdir(parents=True)
+    (root / "data").mkdir()
+    (root / "data" / "panel.dta").write_bytes(b"\x00data")
+    (root / "data" / "panel.csv").write_text("a,b\n1,2\n", encoding="utf-8")
+    (root / "README.pdf").write_bytes(b"%PDF")
+    for rel in ("master.do", "code/helper.ado", "code/Analysis.R", "code/sub/tables.Rmd", "code/run.log"):
+        (root / rel).write_text("reg y x\n", encoding="utf-8")
+    return root
+
+
+def _files(root: Path) -> set[str]:
+    return {str(p.relative_to(root)) for p in root.rglob("*") if p.is_file()}
+
+
+def test_script_free_copy_drops_scripts_and_keeps_data(tmp_path):
+    src = _package(tmp_path / "pkg")
+    dest = reproducer_mod.script_free_copy(src, tmp_path / "out")
+    assert _files(dest) == {"data/panel.dta", "data/panel.csv", "README.pdf"}
+    assert (dest / "data" / "panel.csv").read_text(encoding="utf-8") == "a,b\n1,2\n"
+    # The original is untouched.
+    assert "master.do" in _files(src)
+
+
+def test_script_free_copy_rebuilds_the_destination(tmp_path):
+    src = _package(tmp_path / "pkg")
+    dest = tmp_path / "out"
+    reproducer_mod.script_free_copy(src, dest)
+    (dest / "stale.do").write_text("leftover", encoding="utf-8")
+    reproducer_mod.script_free_copy(src, dest)
+    assert "stale.do" not in _files(dest)
+
+
+def test_script_free_dataset_is_a_no_op_without_scripts(tmp_path):
+    (tmp_path / "data.csv").write_text("a\n1\n", encoding="utf-8")
+    ds = Dataset(name="d", source_url="", local_path=tmp_path)
+    assert reproducer_mod.script_free_dataset(ds) is ds
+
+
+def test_script_free_dataset_uses_a_deterministic_sibling(tmp_path):
+    src = _package(tmp_path / "pkg")
+    ds = Dataset(name="d", source_url="u", local_path=src, metadata={"k": 1})
+    first = reproducer_mod.script_free_dataset(ds)
+    second = reproducer_mod.script_free_dataset(ds)
+    assert first.local_path == second.local_path == tmp_path / "pkg.script-free"
+    assert (first.name, first.source_url, first.metadata) == ("d", "u", {"k": 1})
+    assert not any(reproducer_mod.is_script(Path(f)) for f in _files(first.local_path))
+
+
+class _RecordingExecutor(CodeExecutor):
+    """Records which files the sandbox would have been able to read."""
+
+    def __init__(self) -> None:
+        super().__init__(timeout=60)
+        self.visible: list[set[str]] = []
+
+    def execute(self, code, dataset):
+        self.visible.append(_files(dataset.local_path))
+        return super().execute(code, dataset)
+
+
+@pytest.mark.parametrize(
+    ("mode", "scripts_visible"),
+    [("seeded", True), ("independent", False)],
+)
+def test_pipeline_reproducer_mounts_script_free_data_in_independent_mode(tmp_path, mode, scripts_visible):
+    pkg = _package(tmp_path / "pkg")
+    executor = _RecordingExecutor()
+    pipeline, llm = _real_pipeline("print('RESULT:beta=0.5')\n", pkg, executor=executor)
+    original_downloader = pipeline.downloader
+
+    PipelineReproducer(pipeline).reproduce(
+        "raw paper text",
+        language=Language.PYTHON,
+        dataset_reference=DatasetReference(name="d", source=DatasetSource.DIRECT_URL, url="https://x"),
+        claims=[Claim(description="beta", value=0.5)],
+        reproduction_mode=ReproductionMode(mode),
+    )
+
+    [visible] = executor.visible
+    assert ("master.do" in visible) is scripts_visible
+    assert "data/panel.csv" in visible
+    generation_prompt = next(p for p in llm.prompts if "Now write the complete Python script" in p)
+    assert ("Analysis.R" in generation_prompt) is scripts_visible
+    # The pipeline is handed back exactly as it was.
+    assert pipeline.downloader is original_downloader
+
+
+def test_isolation_can_be_switched_off(tmp_path):
+    pkg = _package(tmp_path / "pkg")
+    executor = _RecordingExecutor()
+    pipeline, _ = _real_pipeline("print('RESULT:beta=0.5')\n", pkg, executor=executor)
+    PipelineReproducer(pipeline, isolate_independent_scripts=False).reproduce(
+        "raw paper text",
+        language=Language.PYTHON,
+        dataset_reference=DatasetReference(name="d", source=DatasetSource.DIRECT_URL, url="https://x"),
+        claims=[Claim(description="beta", value=0.5)],
+        reproduction_mode=ReproductionMode.INDEPENDENT,
+    )
+    assert "master.do" in executor.visible[0]
+
+
 # ── Extension point: --reproducer and the registry ─────────────────────
 
 
@@ -426,12 +536,16 @@ def _pre_protocol_cache_key(entry, mode):
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]
 
 
-def test_pipeline_cache_keys_are_unchanged():
+def test_seeded_pipeline_cache_keys_are_unchanged():
     """A plain ``make benchmark`` keeps hitting the caches it wrote before this change."""
     entry = _entry()
-    for mode in ("seeded", "independent"):
-        assert runner._cache_key(entry, mode) == _pre_protocol_cache_key(entry, mode)
-        assert runner._cache_key(entry, mode, "pipeline") == _pre_protocol_cache_key(entry, mode)
+    assert runner._cache_key(entry, "seeded") == _pre_protocol_cache_key(entry, "seeded")
+    assert runner._cache_key(entry, "seeded", "pipeline") == _pre_protocol_cache_key(entry, "seeded")
+
+
+def test_independent_cache_keys_move_to_the_script_free_contract():
+    entry = _entry()
+    assert runner._cache_key(entry, "independent") != _pre_protocol_cache_key(entry, "independent")
 
 
 def test_cache_key_includes_reproducer():

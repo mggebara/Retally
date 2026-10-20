@@ -742,9 +742,13 @@ def _cache_key(
     contamination discussion and never reach the pipeline.
 
     The reproducer name joins the payload only when it is not the default
-    pipeline, so pipeline keys — i.e. a plain ``make benchmark`` — are
-    byte-identical to the keys from before the Reproducer protocol, and
-    existing caches stay valid.
+    pipeline, and the independent-mode dataset contract (a script-free
+    copy, see ``benchmark.reproducer.script_free_copy``) only in
+    independent mode — so seeded pipeline keys, i.e. a plain
+    ``make benchmark``, are byte-identical to the keys from before the
+    Reproducer protocol, and existing seeded caches stay valid.
+    Independent pipeline keys change once, deliberately: a result produced
+    with the scripts on disk must not be served as a script-free one.
     """
     retally_version = _retally_version()
     entry_payload = _entry_to_jsonable(entry)
@@ -753,6 +757,8 @@ def _cache_key(
     key_payload: dict[str, Any] = {"entry": entry_payload, "retally_version": retally_version, "mode": mode}
     if reproducer != DEFAULT_REPRODUCER:
         key_payload["reproducer"] = reproducer
+    if mode == INDEPENDENT:
+        key_payload["independent_dataset"] = "script-free"
     payload = json.dumps(key_payload, sort_keys=True, default=str)
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]
 

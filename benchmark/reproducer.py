@@ -18,14 +18,24 @@ the two so any agent can be scored by the same code path:
   ``ResultComparator``, so no reproducer grades its own exam.
 * :class:`PipelineReproducer` — the reference implementation: a thin
   adapter around an unmodified ``ValidationPipeline``.
+
+Independent-mode integrity: :func:`script_free_copy` builds a copy of a
+dataset directory with the authors' analysis scripts removed.
+``PipelineReproducer`` uses it in independent mode so the sandbox mounts
+data files only — the model cannot open the ``.do``/``.R`` files even if
+it tries.  An adapter author should do the same with whatever directory
+their agent is given.
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+import os
+import shutil
+from dataclasses import dataclass, field, replace
+from pathlib import Path
 from typing import Any, Protocol, runtime_checkable
 
-from retally.models import Claim, DatasetReference, Language, ReproductionMode
+from retally.models import Claim, Dataset, DatasetReference, Language, ReproductionMode
 
 # ---------------------------------------------------------------------------
 # Report contract
@@ -101,7 +111,8 @@ class Reproducer(Protocol):
       or None when the entry has none pinned and the agent must extract
       its own.
     * ``reproduction_mode`` — ``SEEDED`` (the authors' package scripts
-      may be used) or ``INDEPENDENT`` (they must not be).
+      may be used) or ``INDEPENDENT`` (they must not be: hand the agent
+      a :func:`script_free_copy` of the dataset, not the original).
 
     It returns a :class:`Reproduction`.  Raising is allowed: the harness
     records ``retally_ran = False`` with the exception text and moves on.
@@ -119,8 +130,92 @@ class Reproducer(Protocol):
 
 
 # ---------------------------------------------------------------------------
+# Independent-mode integrity: a script-free copy of the dataset
+# ---------------------------------------------------------------------------
+
+# The authors' analysis code, in every form a replication package ships it.
+# Stata logs (.log / .smcl) are included because they echo every command
+# the do-file ran — a transcript of the script.  Matches the file types the
+# independent-mode prompt already tells the model not to open.
+SCRIPT_SUFFIXES = frozenset(
+    {".do", ".ado", ".r", ".rmd", ".py", ".ipynb", ".sas", ".sps", ".m", ".log", ".smcl"}
+)
+
+SCRIPT_FREE_SUFFIX = ".script-free"
+
+
+def is_script(path: Path) -> bool:
+    """True when ``path`` is an analysis-script file (case-insensitive suffix)."""
+    return path.suffix.lower() in SCRIPT_SUFFIXES
+
+
+def script_free_copy(source: Path, dest: Path) -> Path:
+    """Copy ``source`` to ``dest`` without the analysis scripts; return ``dest``.
+
+    ``dest`` is rebuilt from scratch on every call, so it always mirrors the
+    current ``source``.  Data files are hard-linked when possible (cheap for
+    multi-GB packages; the sandboxes mount the dataset read-only, so the
+    originals cannot be modified through the links) and copied otherwise.
+    Hidden files and directories are copied like any other file.
+    """
+    source = Path(source)
+    dest = Path(dest)
+    if not source.is_dir():
+        raise NotADirectoryError(f"script_free_copy expects a directory, got {source}")
+    if dest.exists():
+        shutil.rmtree(dest)
+
+    def _link_or_copy(src: str, dst: str) -> object:
+        try:
+            os.link(src, dst)
+            return dst
+        except OSError:
+            return shutil.copy2(src, dst)
+
+    shutil.copytree(
+        source,
+        dest,
+        ignore=lambda d, names: {n for n in names if is_script(Path(d) / n) and (Path(d) / n).is_file()},
+        copy_function=_link_or_copy,
+    )
+    return dest
+
+
+def script_free_dataset(dataset: Dataset) -> Dataset:
+    """Return ``dataset`` re-pointed at a script-free copy, or unchanged.
+
+    Unchanged when the dataset directory contains no scripts (registry
+    datasets, plain data deposits) — so the copy, and its new path in the
+    prompt, only appear when there is something to withhold.  The copy
+    sits next to the original as ``<name>.script-free``: a deterministic
+    path, because the dataset path is embedded in generation prompts and a
+    random temp path would defeat the LLM cache on every run.
+    """
+    root = getattr(dataset, "local_path", None)
+    if not isinstance(root, Path) or not root.is_dir():
+        return dataset
+    if not any(p.is_file() and is_script(p) for p in root.rglob("*")):
+        return dataset
+    dest = root.parent / f"{root.name}{SCRIPT_FREE_SUFFIX}"
+    return replace(dataset, local_path=script_free_copy(root, dest))
+
+
+# ---------------------------------------------------------------------------
 # Reference implementation: ValidationPipeline
 # ---------------------------------------------------------------------------
+
+
+class _ScriptFreeDownloader:
+    """Wraps a pipeline's downloader so downloads come back script-free."""
+
+    def __init__(self, inner: Any) -> None:
+        self._inner = inner
+
+    def download(self, ref: DatasetReference) -> Dataset:
+        return script_free_dataset(self._inner.download(ref))
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(self._inner, name)
 
 
 class PipelineReproducer:
@@ -132,12 +227,19 @@ class PipelineReproducer:
     loop needs to know which claims are off), but those verdicts are
     dropped here; the harness re-scores ``outputs`` itself.
 
+    In ``INDEPENDENT`` mode the pipeline's downloader is wrapped for the
+    duration of the call so the dataset it sees — in the prompt's file
+    listing and in the sandbox mount — is a :func:`script_free_dataset`.
+    The pipeline already withholds the scripts from the prompt; this makes
+    the withholding physical.  ``isolate_independent_scripts=False``
+    restores the prompt-only behaviour.
     """
 
     name = "pipeline"
 
-    def __init__(self, pipeline: Any) -> None:
+    def __init__(self, pipeline: Any, *, isolate_independent_scripts: bool = True) -> None:
         self.pipeline = pipeline
+        self.isolate_independent_scripts = isolate_independent_scripts
 
     def reproduce(
         self,
@@ -148,13 +250,21 @@ class PipelineReproducer:
         claims: list[Claim] | None,
         reproduction_mode: ReproductionMode,
     ) -> Reproduction:
-        report = self.pipeline.validate(
-            paper_source,
-            language=language,
-            dataset_reference=dataset_reference,
-            claims=claims,
-            reproduction_mode=reproduction_mode,
-        )
+        isolate = self.isolate_independent_scripts and reproduction_mode is ReproductionMode.INDEPENDENT
+        original_downloader = getattr(self.pipeline, "downloader", None)
+        if isolate and original_downloader is not None:
+            self.pipeline.downloader = _ScriptFreeDownloader(original_downloader)
+        try:
+            report = self.pipeline.validate(
+                paper_source,
+                language=language,
+                dataset_reference=dataset_reference,
+                claims=claims,
+                reproduction_mode=reproduction_mode,
+            )
+        finally:
+            if isolate and original_downloader is not None:
+                self.pipeline.downloader = original_downloader
         return reproduction_from_report(report)
 
 
