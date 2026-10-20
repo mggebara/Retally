@@ -18,22 +18,36 @@
 #   3. The open-access author PDF text-extracts cleanly (the Cambridge journal
 #      version is paywalled — see the note on paper.source).
 #
-# original_claims / i4r_replicator_findings are left empty for the first pass
-# (as with dincecco-2022): the pipeline extracts claims from the paper text,
-# and we seed curated I4R-aligned values once a reproduction lands numbers to
-# align against.
+# original_claims pins the deterministic Table 1 exposure estimates, the
+# survey-experiment anxiety-prime effects (Table 2) and the House-primary
+# interactions (Table 3), curated per the rubric in benchmark/README.md.
+# Values were checked against the paper text, the package's own
+# table1.tex / table2.tex / table3.tex on Dataverse, DP36's recreated
+# Tables 1 and 3, and the meta-database's o_coeff_dbl / o_std_err_dbl.
+# The nearest-neighbour matching columns (Table 1 cols 2 and 5) are
+# deliberately NOT pinned — see notes.
 
 id: bisbee-2022-flight-to-safety
 i4r_report_url: https://www.econstor.eu/bitstream/10419/271676/1/I4R-DP036.pdf
 language: r
 outcome_label: reproducible
 split: dev
+# Contamination bookkeeping.  First public version: April 2020 — an early
+# version of the Democratic-primary analysis circulated then (Johns Hopkins
+# Hub interview of 2020-04-16 describing it as forthcoming in CEPR's Covid
+# Economics); month-level precision only.  Package: Harvard Dataverse
+# doi:10.7910/DVN/S5YMS7 version 1.0, released 2021-07-28 (Dataverse API
+# publicationDate / releaseTime; files created 2021-06-17).
+publication_date: "2020-04"
+package_release_date: "2021-07-28"
 
 paper:
   # Open-access author copy (manuscript + SI) hosted on Dan Honig's site.
   # The journal version (doi:10.1017/S0003055421000691) is paywalled on
   # Cambridge Core, so we point source at the author PDF the extractor can
-  # actually read rather than a paywalled landing page.
+  # actually read rather than a paywalled landing page.  This is the
+  # "Authors' Final Version, June 17, 2021" (re-checked 2026-10-20: 200
+  # application/pdf to a python-requests user agent).
   source: https://img1.wsimg.com/blobby/go/79440b61-e70b-4220-b67f-e5edb0157a24/downloads/Bisbee%20Honig%20APSR%202022%20MS%20and%20SI%20Authors%20Final.pdf
   title: "Flight to Safety: COVID-Induced Changes in the Intensity of Status Quo Preference and Voting Behavior"
   authors:
@@ -44,12 +58,202 @@ dataset:
   source: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/S5YMS7
   access_notes: >
     Harvard Dataverse (doi:10.7910/DVN/S5YMS7), open access — every file is
-    unrestricted (no access-request approval needed).  Analysis code is R
-    (MASTER.R + per-figure/table scripts); primary data ships as .RData plus
-    a .tab file.
+    unrestricted (no access-request approval needed; all 76 files report
+    restricted=false in the Dataverse API, re-checked 2026-10-20).  Analysis
+    code is R (MASTER.R + per-figure/table scripts); primary data ships as
+    .RData (replication_data.RData for Table 1, survey_experiment_data.RData
+    for Table 2, primary_data.RData for Table 3; nationscape_data.RData is
+    the largest file at ~27 MB) plus a .tab file.  The package also ships
+    its outputs (table1.tex, table2.tex, table3.tex) and full R console
+    logs (log_*.txt); the .txt logs are not on the independent mode's
+    script-strip list (.log/.smcl are), so they and the .tex tables carry
+    the answers into an independent run.
 
-original_claims: []
-i4r_replicator_findings: []
+original_claims:
+  - description: exposure_coefficient_full_basic
+    value: -1.321
+    claim_type: coefficient
+    standard_error: 0.552
+    sample_size: 1882
+    unit: SD of Sanders two-way vote share
+    location: "Table 1, column 1"
+    context: >
+      Table 1 column 1 ("Full Sample, Basic").  lfe::felm of
+      scale(pcttw_sanders) (Sanders / (Sanders + Biden) 2020 county vote
+      share, standardized; 1 SD = 14.9 pp) on treatBin (1 if the county's
+      DMA had more than one confirmed Covid-19 case, DMA_cases > 1, on its
+      election date) plus county controls (sc_CTY_LTHS, sc_CTY_CollUp,
+      sc_CTY_LT30yo, sc_CTY_60Up, poverty 18-64, female-headed households,
+      unemployment, labour-force participation, manufacturing, median
+      household income, % rural, English-only, % white, % Black, log
+      population, 2020 turnout, caucus_switch, caucus) and Sanders 2016
+      two-way share; DMA fixed effects; SEs clustered by DMA.  Full
+      February-April primary calendar.  N = 1,882 counties.
+  - description: exposure_coefficient_full_cbps
+    value: -1.348
+    claim_type: coefficient
+    standard_error: 0.380
+    sample_size: 1882
+    unit: SD of Sanders two-way vote share
+    location: "Table 1, column 3"
+    context: >
+      Table 1 column 3 ("Full Sample, Weight").  Same regression as
+      exposure_coefficient_full_basic, estimated on complete cases and
+      weighted by covariate-balancing propensity score weights
+      (WeightIt::weightit, method "cbps", treatBin on the county controls).
+      DMA FE, DMA-clustered SEs.
+  - description: exposure_coefficient_march_basic
+    value: -0.885
+    claim_type: coefficient
+    standard_error: 0.382
+    sample_size: 1710
+    unit: SD of Sanders two-way vote share
+    location: "Table 1, column 4"
+    context: >
+      Table 1 column 4 ("March & April 7th, Basic").  As
+      exposure_coefficient_full_basic but restricted to elections on or
+      after 2020-03-01 (the window before Sanders dropped out) and without
+      the caucus dummy (no variation in this subset).  N = 1,710.
+  - description: exposure_coefficient_march_cbps
+    value: -0.885
+    claim_type: coefficient
+    standard_error: 0.325
+    sample_size: 1710
+    unit: SD of Sanders two-way vote share
+    location: "Table 1, column 6"
+    context: >
+      Table 1 column 6 ("March & April 7th, Weight").  March-April subset
+      with CBPS weights; DMA FE, DMA-clustered SEs.  The point estimate
+      coincides with column 4 to 3 dp; the SE differs.
+  - description: sample_size_full
+    value: 1882
+    claim_type: other
+    unit: counties
+    location: "Table 1, columns 1 and 3"
+    context: Number of county observations in the full-sample Table 1 regressions.
+  - description: sample_size_march
+    value: 1710
+    claim_type: other
+    unit: counties
+    location: "Table 1, columns 4 and 6"
+    context: Number of county observations in the March 1 - April 7 Table 1 regressions.
+  - description: anxiety_prime_effect_bivariate
+    value: -0.074
+    claim_type: coefficient
+    standard_error: 0.039
+    sample_size: 654
+    location: "Table 2, column 1"
+    context: >
+      Table 2 column 1.  Survey experiment (MTurk, May 2020): OLS of an
+      indicator for favouring the anti-establishment hypothetical candidate
+      (yBin) on the anxiety-prime treatment indicator (z), no controls,
+      respondents with duration > 0.  The table note says robust SEs, but
+      the package's Table 2.R uses plain lm() and stargazer's default
+      (classical) SEs, which are the printed ones.  N = 654.
+  - description: anxiety_prime_effect_full_controls
+    value: -0.082
+    claim_type: coefficient
+    standard_error: 0.038
+    sample_size: 654
+    location: "Table 2, column 3"
+    context: >
+      Table 2 column 3 ("Politician Controls").  As
+      anxiety_prime_effect_bivariate plus respondent demographics
+      (factor(age), factor(sex), factor(hisp), white, black, asian,
+      factor(pid) seven-point party ID) and the randomized hypothetical-
+      candidate attributes (factor(polAge), factor(polOcc),
+      factor(polPlat)).  Classical lm() SEs.
+  - description: anxiety_prime_effect_attentive
+    value: -0.182
+    claim_type: coefficient
+    standard_error: 0.061
+    sample_size: 269
+    location: "Table 2, column 4"
+    context: >
+      Table 2 column 4 ("Attentive Subset").  Same specification as
+      anxiety_prime_effect_full_controls on respondents with survey
+      duration > 150 seconds (the table note says "more than 3 minutes";
+      the code's cutoff is 150 s).  N = 269.  Classical lm() SEs.
+  - description: anti_estab_x_cases_interaction
+    value: -0.016
+    claim_type: coefficient
+    standard_error: 0.006
+    sample_size: 2019
+    location: "Table 3, column 1"
+    context: >
+      Table 3 column 1, row "Anti-Estab. X Cases (ln)".  2020 US House
+      primaries: lfe::felm of candidate vote share (voteSh) on
+      extreme * log(casesSum + 1), where extreme = endorsed by Justice
+      Democrats or the Tea Party (70 candidates) and casesSum is the
+      congressional district's cumulative Covid-19 cases at the primary;
+      congressional-district (stcd) fixed effects, SEs clustered by
+      district.  N = 2,019 candidates.
+  - description: tea_party_x_cases_interaction
+    value: -0.020
+    claim_type: coefficient
+    standard_error: 0.006
+    sample_size: 2019
+    location: "Table 3, column 3"
+    context: >
+      Table 3 column 3, row "Anti-Estab. X Cases (ln)".  As
+      anti_estab_x_cases_interaction with the anti-establishment indicator
+      restricted to Tea Party endorsees (tea; 62 candidates).  District FE,
+      district-clustered SEs.  N = 2,019.
+
+# DP36 re-ran the authors' R code and states the presidential-primary
+# results "replicate perfectly" and the House-primary results "replicate
+# perfectly"; it prints recreations of Table 1 (DP36 Table 1) and Table 3
+# (DP36 Table 3).  The pinned Table 1 columns 1/3/4/6 and Table 3 columns
+# 1/3 appear there with values identical to the paper.  For Table 2 (survey
+# experiment) DP36 prints no recreation; its finding is the blanket "We
+# re-run the code for all tests in this paper, successfully reproducing its
+# results" and "all code clearly reproduces the paper's results".  The
+# meta-database's 13 rows for this paper (team 31) are all ROBUSTNESS
+# variants (dCDH estimator, party subsets, expanded/Trump-endorsed
+# candidate sets), so their r_coeff_dbl values are not transcribed.
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: -1.321
+    outcome: matches
+    notes: DP36 Table 1 col 1 prints -1.321 (0.552).
+  - claim_id: 1
+    reproduced_value: -1.348
+    outcome: matches
+    notes: DP36 Table 1 col 3 prints -1.348 (0.380).
+  - claim_id: 2
+    reproduced_value: -0.885
+    outcome: matches
+    notes: DP36 Table 1 col 4 prints -0.885 (0.382).
+  - claim_id: 3
+    reproduced_value: -0.885
+    outcome: matches
+    notes: DP36 Table 1 col 6 prints -0.885 (0.325).
+  - claim_id: 4
+    reproduced_value: 1882
+    outcome: matches
+  - claim_id: 5
+    reproduced_value: 1710
+    outcome: matches
+  - claim_id: 6
+    reproduced_value: -0.074
+    outcome: matches
+    notes: DP36 blanket verdict (no Table 2 recreation printed); value is the paper's.
+  - claim_id: 7
+    reproduced_value: -0.082
+    outcome: matches
+    notes: DP36 blanket verdict (no Table 2 recreation printed); value is the paper's.
+  - claim_id: 8
+    reproduced_value: -0.182
+    outcome: matches
+    notes: DP36 blanket verdict (no Table 2 recreation printed); value is the paper's.
+  - claim_id: 9
+    reproduced_value: -0.016
+    outcome: matches
+    notes: DP36 Table 3 col 1 prints -0.016 (0.006).
+  - claim_id: 10
+    reproduced_value: -0.020
+    outcome: matches
+    notes: DP36 Table 3 col 3 prints -0.020 (0.006).
 
 notes: >
   Headline finding: using the 2020 Democratic primaries and a
@@ -60,3 +264,57 @@ notes: >
 
   Promoted from the I4R First Meta Database (replication report team 31) via
   scripts/import_i4r_candidates.py.
+
+  Curation pass (2026-10-20, ROADMAP Phase 3).  Pinned 11 claims: the four
+  deterministic Table 1 exposure coefficients (full sample and March-April
+  subset, basic and CBPS-weighted) with both Ns, the three survey-
+  experiment anxiety-prime effects (Table 2 cols 1, 3, 4), and the
+  anti-establishment x log-cases interactions for all anti-establishment
+  and Tea Party candidates (Table 3 cols 1 and 3).  Every coefficient
+  carries its SE in standard_error; SEs are not separate claims.
+
+  Cross-checks.  Every pinned value matches the author PDF, the package's
+  table1.tex / table2.tex / table3.tex, and (where printed) DP36's
+  recreations.  The meta-database has rows for two of the pinned
+  estimates and its o_coeff_dbl / o_std_err_dbl agree: "table 1" -1.321
+  (0.552) and the House-primary interactions -0.016 (0.006), -0.020
+  (0.006), 0.014 (0.012).  Label discrepancy: the meta-database files the
+  House-primary rows under "table 2", but they are the paper's Table 3
+  (Table 2 is the survey experiment); DP36's prose makes the same slip.
+
+  Discrepancy, and why Table 1 columns 2 and 5 are not pinned.  The
+  nearest-neighbour matching columns are not reproducible from the
+  package: the paper prints -1.291 (0.632) and -0.810 (0.417), the
+  package's own table1.tex (generated 2021-06-17) has -1.064 (0.477) and
+  -0.569 (0.200), and DP36's recreation has -1.066 (0.478) and -0.574
+  (0.204).  N (666) is the same in all three, and set.seed(123) is called,
+  so the drift is MatchIt version / tie-breaking sensitivity.  DP36 calls
+  the reproduction "perfect" without remarking on it.  A pinned value that
+  even the authors' code cannot regenerate measures nothing, so these
+  are left out.  (If they are ever pinned, the I4R finding should record
+  DP36's -1.066 / -0.574 with outcome does_not_match.)
+
+  Also left out.  The diff-in-diff interaction quoted in the text
+  ("estimate = -6.75 percentage points; SE = 2.14", Figure 4) — the
+  package's log_Figure 4.txt gives -6.971 (2.147) from an lmer model with
+  a DMA random intercept and post = date > 2020-03-10, which is neither
+  the printed number nor the OLS form of equation (2), so the text value
+  cannot be mapped to code output.  The "7 to 15 percentage points" range
+  in the abstract (a rescaling of Table 1 coefficients by the 14.9 pp SD,
+  not a separate estimate).  Table 1 control coefficients, Table 2 party
+  ID rows and column 2, Table 3 column 2 (Justice Democrats; 8 candidates,
+  insignificant and footnoted as fragile) and the Anti-Estab./Cases main
+  effects, the French municipal results (Supporting Information only),
+  and all SI robustness tables.
+
+  Runnability caveats.  Native R; the pinned exhibits come from three
+  separate .RData files.  The Table 1 outcome is standardized
+  (scale(pcttw_sanders)), and treatment is DMA_cases > 1, not >= 1 as the
+  text's "one or more confirmed cases" suggests.  Table 2's printed SEs are
+  classical despite the "robust" note; only the coefficients are scored
+  (SEs ride along in standard_error for the independent-mode band), so
+  an HC-SE reproduction does not fail on that alone.  Leak warning for
+  independent mode: the package's .tex outputs and log_*.txt console
+  logs survive the script-free copy and contain every pinned number, and
+  the package's .Rhistory (no file suffix, so not on SCRIPT_SUFFIXES)
+  holds raw R commands that also survive it.
