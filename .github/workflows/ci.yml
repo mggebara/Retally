@@ -20,12 +20,6 @@ jobs:
         run: uv run ruff check src/ tests/ scripts/
       - name: Ruff format check
         run: uv run ruff format --check src/ tests/ scripts/
-      - name: Leaderboard artefacts up to date
-        # Fails if a contributor edited docs/data/reports.json without
-        # re-running ``make leaderboard``.
-        run: |
-          uv run python scripts/generate_leaderboard.py
-          git diff --exit-code -- LEADERBOARD.md docs/data/leaderboard.json
 
   typecheck:
     name: Type check

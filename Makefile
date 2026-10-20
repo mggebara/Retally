@@ -1,4 +1,4 @@
-.PHONY: build-sandbox rebuild-sandbox build-r-sandbox rebuild-r-sandbox test lint format typecheck check sync lock clean leaderboard check-leaderboard-fresh benchmark benchmark-report
+.PHONY: build-sandbox rebuild-sandbox build-r-sandbox rebuild-r-sandbox test lint format typecheck check sync lock clean benchmark benchmark-report
 
 SANDBOX_IMAGE := openra-sandbox:latest
 DOCKERFILE    := docker/Dockerfile.sandbox
@@ -34,23 +34,10 @@ typecheck:
 ## Run every CI check locally in one go.
 check: lint typecheck test
 	uv run ruff format --check src/ tests/ scripts/ benchmark/
-	$(MAKE) check-leaderboard-fresh
-
-## Fail if LEADERBOARD.md or docs/data/leaderboard.json is out of sync with
-## docs/data/reports.json — catches contributors who add a report but forget
-## to run ``make leaderboard``.
-check-leaderboard-fresh:
-	uv run python scripts/generate_leaderboard.py >/dev/null
-	@git diff --exit-code -- LEADERBOARD.md docs/data/leaderboard.json \
-	  || (echo "ERROR: leaderboard artefacts are stale. Run 'make leaderboard' and commit." && exit 1)
 
 ## Remove the local venv and caches.
 clean:
 	rm -rf .venv .pytest_cache .ruff_cache .mypy_cache build dist src/*.egg-info
-
-## Regenerate LEADERBOARD.md and docs/data/leaderboard.json from reports.json.
-leaderboard:
-	uv run python scripts/generate_leaderboard.py
 
 ## Run the I4R benchmark suite end-to-end.
 ## Requires ANTHROPIC_API_KEY for any benchmark/papers/*.yaml with

@@ -80,6 +80,7 @@ class CodeGenerator:
         paper: Paper,
         dataset: Dataset,
         reference_files: list[SelectedFile] | None = None,
+        package_scripts: list[SelectedFile] | None = None,
     ) -> str:
         """Generate Python code to reproduce the paper's results.
 
@@ -102,6 +103,12 @@ class CodeGenerator:
             ``reference_files`` selected from the paper's linked code
             repo.  When present the prompt instructs the model to
             adapt that code rather than start from scratch.
+          - Optionally: an "Original replication scripts" section showing
+            ``package_scripts`` — the authors' own analysis scripts found
+            inside the replication package (the dataset directory).
+            These are the ground truth for the estimating equation, so
+            the prompt instructs the model to translate their
+            specification exactly (not transliterate their syntax).
 
         Raises ``UnsupportedLanguageError`` when ``paper.language`` is
         not in ``{PYTHON, R}``.  Stata is deferred (proprietary
@@ -112,9 +119,13 @@ class CodeGenerator:
         """
         _require_supported_language(paper, "generate")
         if paper.language is Language.R:
-            prompt = self._build_generation_prompt_r(paper, dataset, reference_files or [])
+            prompt = self._build_generation_prompt_r(
+                paper, dataset, reference_files or [], package_scripts or []
+            )
         else:
-            prompt = self._build_generation_prompt_python(paper, dataset, reference_files or [])
+            prompt = self._build_generation_prompt_python(
+                paper, dataset, reference_files or [], package_scripts or []
+            )
         response = self._call_claude(prompt)
         return self._extract_code_block(response)
 
@@ -209,6 +220,7 @@ class CodeGenerator:
         paper: Paper,
         dataset: Dataset,
         reference_files: list[SelectedFile],
+        package_scripts: list[SelectedFile] | None = None,
     ) -> str:
         """Construct the full Python generation prompt.
 
@@ -221,6 +233,7 @@ class CodeGenerator:
           6. Code requirements (sklearn, pandas, …)
           7. Algorithm hints (Python-flavoured)
           8. Reference implementation (shared helper)
+          9. Original replication scripts (shared helper)
         """
         lines = [
             "You are reproducing results from an older machine learning paper for validation purposes.",
@@ -264,6 +277,7 @@ class CodeGenerator:
             lines.extend(["## Algorithm Hints", hint, ""])
 
         lines.extend(self._reference_implementation_section(reference_files, dataset, "python"))
+        lines.extend(self._package_scripts_section(package_scripts or [], Language.PYTHON))
 
         lines.append(
             "Now write the complete Python script. Output ONLY the code — no explanation, no markdown fences."
@@ -458,6 +472,7 @@ class CodeGenerator:
         paper: Paper,
         dataset: Dataset,
         reference_files: list[SelectedFile],
+        package_scripts: list[SelectedFile] | None = None,
     ) -> str:
         """Construct the R-flavoured generation prompt.
 
@@ -523,6 +538,7 @@ class CodeGenerator:
         # but the code fence tag is ``r`` so a reader's markdown
         # renderer highlights it correctly.
         lines.extend(self._reference_implementation_section(reference_files, dataset, "r"))
+        lines.extend(self._package_scripts_section(package_scripts or [], Language.R))
 
         lines.append(
             "Now write the complete R script. Output ONLY the code — no explanation, no markdown fences."
@@ -807,6 +823,52 @@ class CodeGenerator:
             lines.append("")
         return lines
 
+    def _package_scripts_section(
+        self, package_scripts: list[SelectedFile], target_language: Language
+    ) -> list[str]:
+        """Render the authors' own replication-package scripts.
+
+        These come from inside the dataset directory (an unpacked
+        replication archive), not from a linked repo — they are the
+        single most authoritative description of the estimating
+        equation, variable names, sample restrictions, and clustering
+        the paper actually used.  Returns empty list when no scripts
+        were found so callers can extend() unconditionally.
+        """
+        if not package_scripts:
+            return []
+        target = "R" if target_language is Language.R else "Python"
+        lines = [
+            "## Original Replication Scripts",
+            (
+                "The replication package (the dataset directory) ships the "
+                "authors' own analysis scripts, reproduced below.  These are "
+                "the GROUND TRUTH for the exact estimating equation, variable "
+                "names, sample restrictions, fixed effects, and standard-error "
+                "clustering — follow them over anything reconstructed from the "
+                "methodology summary, and prefer them over the paper's text "
+                f"where the two disagree.  Your job is to write {target} code "
+                "that implements the SAME SPECIFICATION: translate what the "
+                "scripts estimate, do not transliterate their syntax line by "
+                "line (a Stata .do file's regression, e.g. "
+                "`reghdfe y x controls, absorb(fe) cluster(cl)`, becomes the "
+                "equivalent fixest::feols() call in R).  Keep only the parts "
+                "that produce the specific claims being reproduced; skip "
+                "figure construction and unrelated robustness checks.  The "
+                "scripts' data-file paths refer to the package's internal "
+                "layout — resolve them against the dataset directory listed "
+                "under Dataset Information."
+            ),
+            "",
+        ]
+        for script in package_scripts:
+            lines.append(f"### `{script.relative_path}`")
+            lines.append(f"```{_fence_tag_for(script.relative_path)}")
+            lines.append(script.contents)
+            lines.append("```")
+            lines.append("")
+        return lines
+
     def _call_claude(self, prompt: str) -> str:
         """Send a prompt to the Claude API and return the response text."""
         response = self._client.messages.create(
@@ -951,6 +1013,21 @@ _SUPPORTED_LANGUAGES = frozenset({Language.PYTHON, Language.R})
 _TREE_MAX_FILES = 80
 _TREE_MAX_CSV_HEADERS = 10
 _TREE_HEADER_CHARS = 240
+
+
+def _fence_tag_for(relative_path: str) -> str:
+    """Markdown code-fence language tag for a replication-package script.
+
+    Purely cosmetic — the model reads the content either way — but a
+    correct tag helps any human reading a logged prompt.
+    """
+    suffix = Path(relative_path).suffix.lower()
+    return {
+        ".do": "stata",
+        ".r": "r",
+        ".rmd": "r",
+        ".py": "python",
+    }.get(suffix, "text")
 
 
 def _prompt_dataset_root(dataset: Dataset) -> Path:

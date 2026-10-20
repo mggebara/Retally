@@ -7,7 +7,9 @@ from pathlib import Path
 from openra.code.selector import (
     MAX_FILE_BYTES,
     MAX_FILES,
+    MAX_SCRIPT_FILE_BYTES,
     MAX_TOTAL_BYTES,
+    select_package_scripts,
     select_relevant_files,
 )
 
@@ -168,3 +170,83 @@ def test_non_utf8_file_is_skipped(tmp_path):
     selected = select_relevant_files(tmp_path)
     paths = {f.relative_path for f in selected}
     assert paths == {"good.py"}
+
+
+# ── Replication-package script selection ────────────────────────────────
+
+
+def test_package_scripts_empty_for_none_and_missing(tmp_path):
+    assert select_package_scripts(None) == []
+    assert select_package_scripts(tmp_path / "does-not-exist") == []
+
+
+def test_package_scripts_empty_when_only_data(tmp_path):
+    _write(tmp_path, "data/districts.csv", "id,lum\n1,2.0")
+    _write(tmp_path, "README.txt", "replication package")
+    assert select_package_scripts(tmp_path) == []
+
+
+def test_package_scripts_picks_r_do_and_rmd(tmp_path):
+    _write(tmp_path, "analysis.R", "library(fixest)\n")
+    _write(tmp_path, "tables.do", "reghdfe y x, absorb(fe)\n")
+    _write(tmp_path, "report.Rmd", "```{r}\nsummary(m)\n```\n")
+    _write(tmp_path, "data.csv", "a,b\n1,2")
+    paths = {f.relative_path for f in select_package_scripts(tmp_path)}
+    assert paths == {"analysis.R", "tables.do", "report.Rmd"}
+
+
+def test_package_scripts_suffix_match_is_case_insensitive(tmp_path):
+    _write(tmp_path, "wii_replication.DO", "reg y x\n")
+    paths = {f.relative_path for f in select_package_scripts(tmp_path)}
+    assert paths == {"wii_replication.DO"}
+
+
+def test_package_scripts_preferred_substrings_rank_first(tmp_path):
+    _write(tmp_path, "code/utils.R", "# helpers\n")
+    _write(tmp_path, "code/main_tables.R", "feols(y ~ x | fe, data)\n")
+    selected = select_package_scripts(tmp_path)
+    assert selected[0].relative_path == "code/main_tables.R"
+
+
+def test_package_scripts_figures_rank_below_tables(tmp_path):
+    # The figure penalty must outweigh the depth bonus: a root-level
+    # figures script still ranks below a nested tables script.
+    _write(tmp_path, "figures.do", "graph twoway ...\n")
+    _write(tmp_path, "code/tables.do", "reghdfe y x, absorb(fe)\n")
+    selected = select_package_scripts(tmp_path)
+    assert selected[0].relative_path == "code/tables.do"
+
+
+def test_package_scripts_skip_oversized_and_empty_files(tmp_path):
+    _write(tmp_path, "master.do", "x" * (MAX_SCRIPT_FILE_BYTES + 1))
+    _write(tmp_path, "empty.R", "")
+    _write(tmp_path, "analysis.R", "lm(y ~ x)\n")
+    paths = {f.relative_path for f in select_package_scripts(tmp_path)}
+    assert paths == {"analysis.R"}
+
+
+def test_package_scripts_respect_skip_dirs(tmp_path):
+    _write(tmp_path, "docs/examples.R", "# doc example\n")
+    _write(tmp_path, "analysis.R", "lm(y ~ x)\n")
+    paths = {f.relative_path for f in select_package_scripts(tmp_path)}
+    assert paths == {"analysis.R"}
+
+
+def test_package_scripts_tolerate_non_utf8_bytes(tmp_path):
+    # Old Stata do-files are frequently Latin-1; selection must not crash.
+    p = tmp_path / "master.do"
+    p.write_bytes(b"* Autor: Jos\xe9\nreg y x\n")
+    selected = select_package_scripts(tmp_path)
+    assert len(selected) == 1
+    assert "reg y x" in selected[0].contents
+
+
+def test_package_scripts_respect_total_byte_budget(tmp_path):
+    # Four files that each clear the per-file cap but together exceed
+    # the shared total: only three fit inside MAX_TOTAL_BYTES.
+    chunk = "y" * (MAX_SCRIPT_FILE_BYTES - 1_000)
+    n_fit = MAX_TOTAL_BYTES // len(chunk)
+    for i in range(n_fit + 1):
+        _write(tmp_path, f"analysis_{i}.R", chunk)
+    selected = select_package_scripts(tmp_path)
+    assert len(selected) == n_fit
