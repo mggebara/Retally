@@ -10,7 +10,8 @@ regenerated deliberately once since (Phase 1.6): the fixture package
 gained a ``.dta`` file and the dataset listing now shows Stata column
 names, which moves the seeded prompt's listing by one line; and (Phase 1.7)
 each claim's location and context are rendered under it, so the fixture
-claim gained both.
+claim gained both; and the .dta listing now gives row counts, puts
+paper-matched columns first, and lists ranked .dta files first.
 
 The fixture package is a miniature replication archive (a CSV, a Stata
 ``master.do``, an R script), so the prompt exercises every section that

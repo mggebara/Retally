@@ -267,7 +267,7 @@ class CodeGenerator:
         ]
         lines.extend(self._paper_section(paper))
         lines.extend(self._claims_section(paper.claims))
-        lines.extend(self._dataset_section(dataset))
+        lines.extend(self._dataset_section(dataset, paper))
 
         lines.extend(
             [
@@ -522,7 +522,7 @@ class CodeGenerator:
         ]
         lines.extend(self._paper_section(paper))
         lines.extend(self._claims_section(paper.claims))
-        lines.extend(self._dataset_section(dataset))
+        lines.extend(self._dataset_section(dataset, paper))
 
         # Output convention — note R uses cat() to write to stdout.
         lines.extend(
@@ -769,7 +769,7 @@ class CodeGenerator:
         lines.append("")
         return lines
 
-    def _dataset_section(self, dataset: Dataset) -> list[str]:
+    def _dataset_section(self, dataset: Dataset, paper: Paper | None = None) -> list[str]:
         root = _prompt_dataset_root(dataset)
         lines = [
             "## Dataset Information",
@@ -786,7 +786,7 @@ class CodeGenerator:
                 lines.append(f"Number of rows: {dataset.metadata['n_rows']}")
             if "task_type" in dataset.metadata:
                 lines.append(f"Task type: {dataset.metadata['task_type']}")
-        tree = _describe_dataset_files(root)
+        tree = _describe_dataset_files(root, _listing_hint_texts(paper))
         if tree:
             lines.append("Files in the dataset directory (paths relative to the local path above):")
             lines.extend(tree)
@@ -1100,6 +1100,19 @@ _TREE_MAX_FILES = 80
 _TREE_MAX_CSV_HEADERS = 10
 _TREE_MAX_DTA_HEADERS = 10
 _TREE_HEADER_CHARS = 240
+# The few .dta files ranked most relevant (see ``_describe_dataset_files``)
+# get a larger column budget: they are the likeliest analysis files and
+# are usually the widest.
+_TREE_TOP_DTA_FILES = 3
+_TREE_TOP_HEADER_CHARS = 480
+# Words too generic to steer column selection.  Hint words are >= 4 chars.
+_HINT_STOPWORDS = frozenset(
+    "also and are been both each from have into more most only other over same such than that "
+    "their them then there these they this those under using were what when where which while "
+    "with within without column columns table panel coefficient coefficients standard error errors "
+    "claim claims estimate estimates estimated regression specification type value values paper "
+    "reported robust model data variable variables".split()
+)
 
 
 # Per-claim cap on the ``context`` text rendered under each claim in the
@@ -1164,17 +1177,112 @@ def _prompt_dataset_root(dataset: Dataset) -> Path:
     return dataset.local_path.resolve()
 
 
-def _describe_dataset_files(root: Path) -> list[str]:
+def _listing_hint_texts(paper: Paper | None) -> list[str]:
+    """Paper text whose terms steer which ``.dta`` columns the listing shows.
+
+    Title, abstract, methodology summary, and each claim's description,
+    location and context -- everything the generation prompt already shows.
+    """
+    if paper is None:
+        return []
+    texts = [paper.title or "", paper.abstract or "", paper.methodology_summary or ""]
+    for claim in paper.claims or []:
+        texts += [claim.description or "", claim.table_ref or "", claim.context or ""]
+    return texts
+
+
+def _normalise_words(text: str) -> str:
+    """Lower-case alphanumeric runs joined by single spaces (``ln(0.01+X)`` -> ``ln 0 01 x``)."""
+    return " ".join(re.findall(r"[a-z0-9]+", text.lower()))
+
+
+class _Hints:
+    """Terms from the paper text that steer which ``.dta`` columns are listed."""
+
+    def __init__(self, texts: list[str]) -> None:
+        words: set[str] = set()
+        for text in texts:
+            for token in re.findall(r"[A-Za-z][A-Za-z0-9_]*", text):
+                token = token.lower()
+                for word in (token, *re.split(r"[_0-9]+", token)):
+                    if len(word) >= 4 and word not in _HINT_STOPWORDS:
+                        words.add(word)
+        self.words = frozenset(words)
+        # Each text normalised and fenced by spaces, for whole-phrase search.
+        self.phrase_text = " " + " | ".join(_normalise_words(t) for t in texts if t) + " "
+
+    def label_is_phrase(self, label: str) -> bool:
+        """Whether a variable label (e.g. ``ln(Population density), 1990``) is a phrase of the text."""
+        norm = _normalise_words(label)
+        return any(len(w) >= 4 for w in norm.split()) and f" {norm} " in self.phrase_text
+
+
+def _name_parts(column: str) -> list[str]:
+    return [part for part in re.split(r"[_0-9]+", column.lower()) if len(part) >= 4]
+
+
+def _part_matches(part: str, word: str) -> bool:
+    """Fuzzy match of a column-name part against a hint word (e.g. ``altit`` ~ ``altitude``)."""
+    return part == word or (len(word) >= 5 and word in part) or (len(part) >= 5 and part in word)
+
+
+def _prioritised_columns(names: list[str], labels: dict[str, str], hints: _Hints) -> tuple[list[str], int]:
+    """``names`` reordered for the prompt, and how many are strong matches.
+
+    Order, each tier in file order unless stated:
+
+    1. strong matches: the column name is a hint word (``Land_250_1757``,
+       ``instrument``), or its Stata variable label is a phrase of the
+       paper text (``lnlights_001`` is labelled ``ln(0.01+Luminosity)``,
+       the claim context says "ln(0.01 + luminosity)");
+    2. a name part fuzzily matches a hint word, rarest word first (a word
+       matching hundreds of columns in this file, like ``conflict``, says
+       little about any one of them);
+    3. everything else.
+
+    Deterministic.
+    """
+    strong = [n for n in names if n.lower() in hints.words or hints.label_is_phrase(labels.get(n, ""))]
+    strong_set = set(strong)
+    matched: dict[str, set[str]] = {}
+    for n in names:
+        if n in strong_set:
+            continue
+        hits = {w for part in _name_parts(n) for w in hints.words if _part_matches(part, w)}
+        if hits:
+            matched[n] = hits
+    df: dict[str, int] = {}
+    for hits in matched.values():
+        for w in hits:
+            df[w] = df.get(w, 0) + 1
+    position = {n: i for i, n in enumerate(names)}
+    fuzzy = sorted(matched, key=lambda n: (min(df[w] for w in matched[n]), position[n]))
+    rest = [n for n in names if n not in strong_set and n not in matched]
+    return strong + fuzzy + rest, len(strong)
+
+
+def _describe_dataset_files(root: Path, hint_texts: list[str] | None = None) -> list[str]:
     """One prompt line per file under ``root``: relative path, size, column names.
 
-    Column names are shown for ``.csv`` (the header line) and Stata
-    ``.dta`` files (the variable names, read from the file header only —
-    no data rows are loaded), each under the same caps: at most
-    ``_TREE_MAX_CSV_HEADERS`` / ``_TREE_MAX_DTA_HEADERS`` files per format,
-    each truncated to ``_TREE_HEADER_CHARS`` with a marker.  ``.dta``
-    lines also give the column count, since wide Stata files are usually
-    truncated.  ``.rds`` / ``.RData`` / ``.sav`` get no columns: no reader
-    for them is a dependency.
+    Column names are shown for ``.csv`` (the header line, path order, at
+    most ``_TREE_MAX_CSV_HEADERS`` files) and Stata ``.dta`` files (read
+    from the file header only -- no data rows are loaded).  ``.rds`` /
+    ``.RData`` / ``.sav`` get no columns: no reader for them is a
+    dependency.
+
+    ``.dta`` files (Phase 1.7): every line gives the row and column count.
+    Which columns fit in the per-file budget is chosen, not just the first
+    ones: columns matching terms from ``hint_texts`` (the paper's title,
+    abstract, methodology and claims) come first, then the rest in file
+    order (see ``_prioritised_columns``) -- Dincecco's analysis file has
+    1288 columns and the outcome and instrument sat far past the cap.
+    Files are ranked by their number of strong matches, then by column
+    count; the top
+    ``_TREE_MAX_DTA_HEADERS`` get columns, the top ``_TREE_TOP_DTA_FILES``
+    a ``_TREE_TOP_HEADER_CHARS`` budget (others ``_TREE_HEADER_CHARS``),
+    and the annotated ``.dta`` lines are listed first in rank order so the
+    likeliest analysis file is not buried among shapefile pieces.  All
+    other files follow in path order.
 
     Registry datasets are a single ``data.csv`` and get a one-line listing;
     replication packages (e.g. an unpacked Zenodo archive) are arbitrary
@@ -1182,8 +1290,9 @@ def _describe_dataset_files(root: Path) -> list[str]:
     this listing the model has no way to know which files exist or what
     they're called — it would guess ``data.csv`` and fail.
 
-    Sorted for prompt determinism.  Hidden files/directories are skipped.
-    Returns ``[]`` when ``root`` isn't a directory or contains no files.
+    Deterministic for a given tree and hint text (prompt-cache stable).
+    Hidden files/directories are skipped.  Returns ``[]`` when ``root``
+    isn't a directory or contains no files.
     """
     if not root.is_dir():
         return []
@@ -1192,24 +1301,40 @@ def _describe_dataset_files(root: Path) -> list[str]:
         for p in root.rglob("*")
         if p.is_file() and not any(part.startswith(".") for part in p.relative_to(root).parts)
     )
+    hints = _Hints(hint_texts or [])
+
+    ranked: list[tuple[int, int, Path, list[str], int | None]] = []
+    for p in files:
+        if p.suffix.lower() != ".dta":
+            continue
+        labels, nobs = _dta_shape(p)
+        if labels:
+            ordered, n_strong = _prioritised_columns(list(labels), labels, hints)
+            ranked.append((-n_strong, -len(labels), p, ordered, nobs))
+    ranked.sort(key=lambda r: (r[0], r[1], str(r[2])))
+    annotated = ranked[:_TREE_MAX_DTA_HEADERS]
+
+    def base(p: Path) -> str:
+        return f"- {p.relative_to(root)} ({_human_size(p.stat().st_size)})"
+
     lines: list[str] = []
+    for rank, (_neg_strong, neg_cols, p, ordered, nobs) in enumerate(annotated):
+        budget = _TREE_TOP_HEADER_CHARS if rank < _TREE_TOP_DTA_FILES else _TREE_HEADER_CHARS
+        rows = f"{nobs} rows, " if nobs is not None else ""
+        lines.append(f"{base(p)} — {rows}{-neg_cols} columns: {_truncate_header(', '.join(ordered), budget)}")
+    shown = {r[2] for r in annotated}
+
     csv_headers_shown = 0
-    dta_headers_shown = 0
-    for p in files[:_TREE_MAX_FILES]:
-        line = f"- {p.relative_to(root)} ({_human_size(p.stat().st_size)})"
-        suffix = p.suffix.lower()
-        if suffix == ".csv" and csv_headers_shown < _TREE_MAX_CSV_HEADERS:
+    rest = [p for p in files if p not in shown]
+    for p in rest[: max(_TREE_MAX_FILES - len(lines), 0)]:
+        line = base(p)
+        if p.suffix.lower() == ".csv" and csv_headers_shown < _TREE_MAX_CSV_HEADERS:
             header = _csv_header(p)
             if header:
                 line += f" — columns: {header}"
                 csv_headers_shown += 1
-        elif suffix == ".dta" and dta_headers_shown < _TREE_MAX_DTA_HEADERS:
-            names = _dta_columns(p)
-            if names:
-                line += f" — {len(names)} columns: {_truncate_header(', '.join(names))}"
-                dta_headers_shown += 1
         lines.append(line)
-    overflow = len(files) - _TREE_MAX_FILES
+    overflow = len(files) - len(lines)
     if overflow > 0:
         lines.append(f"- … and {overflow} more files (listing truncated)")
     return lines
@@ -1274,26 +1399,29 @@ def _csv_header(path: Path) -> str:
     return _truncate_header(header)
 
 
-def _truncate_header(header: str) -> str:
-    if len(header) > _TREE_HEADER_CHARS:
-        header = header[:_TREE_HEADER_CHARS] + "…"
+def _truncate_header(header: str, limit: int = _TREE_HEADER_CHARS) -> str:
+    if len(header) > limit:
+        header = header[:limit] + "…"
     return header
 
 
-def _dta_columns(path: Path) -> list[str]:
-    """Variable names of a Stata ``.dta`` file, in file order.  [] on any error.
+def _dta_shape(path: Path) -> tuple[dict[str, str], int | None]:
+    """``{variable name: label}`` (file order) and row count of a Stata ``.dta``.
 
     ``pandas.read_stata(..., iterator=True)`` parses the header lazily;
     ``variable_labels()`` reads only the header (variable names, labels),
-    never the data rows, so this stays cheap on multi-GB files.
+    never the data rows, so this stays cheap on multi-GB files.  The row
+    count comes from the same header.  ``({}, None)`` on any error.
     """
     try:
         import pandas as pd
 
         with pd.read_stata(path, iterator=True) as reader:
-            return [str(name) for name in reader.variable_labels()]
+            labels = {str(name): str(label or "") for name, label in reader.variable_labels().items()}
+            nobs = getattr(reader, "_nobs", None)
+            return labels, int(nobs) if isinstance(nobs, int) else None
     except Exception:
-        return []
+        return {}, None
 
 
 def _require_supported_language(paper: Paper, op: str) -> None:
