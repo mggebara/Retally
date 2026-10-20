@@ -10,6 +10,7 @@ Benchmark-specific documentation lives in
 1. [Configuration](#configuration)
    - [`ValidationPipeline.default()`](#validationpipelinedefault)
    - [`ValidationPipeline.validate()`](#validationpipelinevalidate)
+   - [Reproduction modes: seeded vs independent](#reproduction-modes-seeded-vs-independent)
    - [Refinement parameters](#refinement-parameters)
    - [Executors](#executors)
    - [`ResultComparator` tolerances](#resultcomparator-tolerances)
@@ -45,7 +46,7 @@ pipeline = ValidationPipeline.default(docker_memory="8g", docker_cpus=2.0)
 
 ### `ValidationPipeline.validate()`
 
-`validate(paper_source, *, dataset_reference=None, language=None, claims=None)`
+`validate(paper_source, *, dataset_reference=None, language=None, claims=None, reproduction_mode=ReproductionMode.SEEDED)`
 
 - `paper_source` — local PDF/`.txt` path, arXiv ID, DOI, URL, or raw text.
 - `dataset_reference` — pin the dataset and skip dataset auto-detection
@@ -54,6 +55,28 @@ pipeline = ValidationPipeline.default(docker_memory="8g", docker_cpus=2.0)
   extracted language.
 - `claims` — pre-pinned claims; skips the claims-extraction call (this is
   what the benchmark's pinned-claims workflow uses).
+- `reproduction_mode` — what the code generator may see (see
+  [Reproduction modes](#reproduction-modes-seeded-vs-independent)).
+  `SEEDED` (default, the historical behaviour) puts the authors' own code in
+  the prompt; `INDEPENDENT` withholds it. Recorded on the returned
+  `ValidationReport.reproduction_mode`.
+
+### Reproduction modes: seeded vs independent
+
+`retally.models.ReproductionMode` names the two measurements the pipeline
+can make:
+
+| Mode | What reaches the generation prompt | What a pass means | Tolerance policy |
+|---|---|---|---|
+| `SEEDED` (default) | Paper text, claims, dataset listing, **plus** the replication package's own `.do`/`.R`/`.Rmd` scripts and any linked repo's code, presented as ground truth | *Computational* reproduction: the model translated the authors' code and ran it | Strict: the per-type relative tolerances below |
+| `INDEPENDENT` | Paper text (title, abstract, methodology summary), claims, and the dataset directory listing **only** — package-script selection and the code-reference extraction/clone are skipped, and the prompt tells the model not to open any script files it sees in the listing | *Independent* reproduction: the model regenerated the analysis from the paper's description | SE-aware: ±k·SE when the claim pins a standard error (k = 1), else the relative tolerance |
+
+The gap between the two on the same papers is the benchmark's primary
+finding. Caveat: the dataset directory is still mounted into the sandbox
+in independent mode, so the scripts are on disk and their *names* appear
+in the listing; the prompt forbids reading them, but generated code is not
+policed for it. The generator raises `ValueError` if handed
+`package_scripts` or `reference_files` in independent mode.
 
 ### Refinement parameters
 
@@ -64,7 +87,7 @@ These control the two refinement phases. They are not surfaced through
 |---|---|---|
 | `max_refinements` | `3` | Phase 1: number of `CodeGenerator.refine()` calls after the initial `generate()` when the code errors out or produces no `RESULT:` lines. Total Phase 1 executions ≤ `max_refinements + 1`. |
 | `max_claim_refinements` | `3` | Phase 2: number of `CodeGenerator.refine_for_claims()` calls after the code runs cleanly but at least one claim is outside tolerance. Stops early on no-progress, identical-code, or broken-refinement signals. `0` disables Phase 2. |
-| `include_code_references` | `True` | Run an extra LLM pass to find repository URLs in the paper, shallow-clone GitHub ones, and seed the generator with selected source files. `False` skips the extra call and the clone (offline runs, papers known to ship no code). |
+| `include_code_references` | `True` | Run an extra LLM pass to find repository URLs in the paper, shallow-clone GitHub ones, and seed the generator with selected source files. `False` skips the extra call and the clone (offline runs, papers known to ship no code). Independent-mode runs skip this step regardless. |
 
 When Phase 2 has to deviate from the paper's stated methodology to close a
 gap (e.g. swap an unspecified hyperparameter), the generated code emits a
@@ -96,9 +119,26 @@ security boundary):
 | Parameter | Default | Description |
 |---|---|---|
 | `default_tolerance` | `0.01` | Relative tolerance for `OTHER`-type claims. |
+| `tolerance_policies` | `None` | Per-mode `TolerancePolicy` overrides merged over `DEFAULT_TOLERANCE_POLICIES`, e.g. `{ReproductionMode.INDEPENDENT: TolerancePolicy(se_multiplier=2.0)}` for a ±2·SE band. |
 
-A claim passes when `|reproduced − claimed| / |claimed| ≤ tolerance`.
-Per-type tolerances (not overridable without subclassing):
+`compare_all(claims, outputs, mode=ReproductionMode.SEEDED)` and
+`compare(claim, value, mode=...)` select the policy. A claim passes when
+`|reproduced − claimed| / |claimed| ≤ tolerance`, where the tolerance is:
+
+- **`SEEDED`** — the per-type relative tolerance below, nothing else.
+  Computational reproduction re-runs the same specification on the same
+  data, so it should land on the reported number up to rounding.
+- **`INDEPENDENT`** — when the claim pins a `standard_error`, the wider of
+  the per-type tolerance and the ±k·SE band expressed relatively
+  (`k · SE / |claimed|`, k = `se_multiplier`, default 1). Taking the wider
+  means a tightly-estimated coefficient is never held to a band narrower
+  than the paper's own rounding. With no SE pinned it falls back to the
+  per-type tolerance.
+
+The effective band is recorded as `ClaimValidationResult.tolerance`, so
+benchmark closeness bands and I4R scoring use it unchanged.
+
+Per-type relative tolerances (not overridable without subclassing):
 
 - **ML metrics:** `ACCURACY` / `F1_SCORE` / `AUC_ROC` / `PRECISION` /
   `RECALL` → 1 %; `RMSE` / `MAE` → 5 %; `CORRELATION` → 2 %;
@@ -110,10 +150,10 @@ Per-type tolerances (not overridable without subclassing):
 The comparator also handles **percentage vs. decimal mismatches**: if a paper
 states "97.4%" and the code produces `0.974`, the claim passes with a note.
 
-**Known limitation:** the `COEFFICIENT` tolerance is a flat relative
-percentage, which becomes too tight for coefficients close to zero.
-Standard-error-aware comparison (pass if within `±k·SE` of the reported
-value) is a planned improvement — see [ROADMAP.md](../ROADMAP.md) §1.3.
+**Known limitation:** under the strict (seeded) policy the `COEFFICIENT`
+tolerance is a flat relative percentage, which becomes too tight for
+coefficients close to zero. The independent policy's ±k·SE band addresses
+this whenever the claim pins a standard error.
 
 ---
 
@@ -206,6 +246,12 @@ transliterating syntax. Registry datasets contain no scripts, so the classic
 ML flow is untouched. Like reference repos, the scripts go into the initial
 generation only, not into refinement prompts.
 
+All of this is **seeded mode** only. With
+`reproduction_mode=ReproductionMode.INDEPENDENT` the scripts are never
+selected (nor truncated), the section and its Stata-to-fixest hints are
+absent, and the prompt instead carries an **Independent Reproduction**
+section — see [Reproduction modes](#reproduction-modes-seeded-vs-independent).
+
 ---
 
 ## Docker sandbox details
@@ -253,6 +299,7 @@ Stata is not executed; the benchmark records Stata-only entries as typed skips
 | `claim_results` | `list[ClaimValidationResult]` | Per-claim comparison. |
 | `overall_passed` | `bool` | True only when every claim passes. |
 | `summary` | `str` | One-line human summary. |
+| `reproduction_mode` | `ReproductionMode` | `SEEDED` or `INDEPENDENT` — which measurement produced this report. |
 
 ### `ClaimValidationResult`
 
@@ -260,7 +307,7 @@ Stata is not executed; the benchmark records Stata-only entries as typed skips
 |---|---|
 | `claim.value` | Number stated in the paper. |
 | `reproduced_value` | Number produced by the generated code (`None` if unmatched). |
-| `tolerance` | Allowed relative error (default 1 %). |
+| `tolerance` | Allowed relative error actually applied — the per-type tolerance, or in independent mode the ±k·SE band when that is wider. |
 | `passed` | True if within tolerance. |
 | `notes` | Explanation of failures or unit-mismatch adjustments. |
 

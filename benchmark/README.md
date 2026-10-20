@@ -36,6 +36,34 @@ agrees_with_i4r ✗` means Retally faithfully reproduced what the paper
 said, but the careful human replicators found a different number — the
 "non-robust" signal we want to surface, not collapse.
 
+## Two reproduction modes: seeded and independent
+
+Every result row records the `mode` it ran in, and rows are identified by
+`(entry_id, mode)` everywhere (results.json, the result cache, the report,
+`benchmark.compare`):
+
+| Mode | The generator sees | A pass measures | Tolerance |
+|---|---|---|---|
+| `seeded` (default) | paper text, claims, dataset listing, **and the authors' replication-package scripts** (plus any linked repo), presented as ground truth | *computational* reproduction — can the model translate the authors' Stata/R into fixest and run it | strict: per-type relative tolerance (COEFFICIENT 2 %, SE 5 %, …) |
+| `independent` | paper text, claims, and the dataset directory listing **only** — scripts withheld, linked code not fetched, and the prompt forbids opening script files seen in the listing | *independent* reproduction — can the model regenerate the analysis from the paper's description | SE-aware: within ±k·SE of the reported value when the claim pins a `standard_error` (k = 1, never narrower than the relative tolerance); relative tolerance otherwise |
+
+Both are worth having; **the gap between them is the headline number** —
+how much of a seeded pass survives without the authors' code.  A
+both-mode report leads with a *Seeded vs independent* section listing,
+per paper, the claims lost without the scripts.
+
+The SE band only bites when the pinned claim carries `standard_error` in
+the catalog YAML, so pin SEs alongside coefficients.  The independent
+band is deliberately looser than the seeded one: compare the two modes'
+*pass sets*, and read the closeness bands (which use each claim's own
+effective tolerance) with that in mind.
+
+Contamination caveat: every paper in the corpus is 2022–2023 and every
+current model's training data extends past that, so *both* modes are
+pre-cutoff.  Record `publication_date` and `package_release_date` on each
+entry (see below) so this can be discussed per paper; do not read the
+seeded/independent gap as a contamination control.
+
 ## Skip categories (recorded, not failed)
 
 A catalog entry can be cleanly skipped:
@@ -50,16 +78,28 @@ A catalog entry can be cleanly skipped:
 
 ```bash
 export ANTHROPIC_API_KEY="sk-ant-..."   # or skip; the runner will record NO_API_KEY skips
-make benchmark
+make benchmark                                    # seeded mode (the default)
+uv run python -m benchmark.runner --mode independent
+uv run python -m benchmark.runner --mode both     # one row per entry per mode
+uv run python -m benchmark.runner --only dincecco-2022-india-warfare --mode both
 ```
 
-For each catalog entry the runner emits one row in `results.json`.
+`--mode {seeded,independent,both}` and `--only ENTRY_ID` (repeatable)
+combine.  For each catalog entry and mode the runner emits one row in
+`results.json`, carrying a `"mode"` field (rows from files that predate
+the field are read as `seeded`).
 The renderer then produces a Markdown table and a self-contained HTML
 page from that JSON.  The report file is committed; `results.json` is
 not (it's a rebuildable artefact).
 
 Re-running with no catalog or pipeline changes hits the cache and
-finishes in seconds:
+finishes in seconds.  The result cache (`benchmark/.cache/<hash>.json`)
+is keyed on the catalog entry, the retally version, **and the mode**, so
+a seeded result is never served for an independent run; `split`,
+`publication_date`, and `package_release_date` are excluded from the key
+because they never reach the pipeline.  The LLM cache keys on full
+prompt content, so the two modes' generation calls are distinct entries
+while the shared extraction calls replay across modes.
 
 ```bash
 make benchmark                       # cached re-run
@@ -141,7 +181,11 @@ uv run python -m benchmark.compare /tmp/baseline.json benchmark/results/results.
 
 The output shows per-split metric movement, per-entry deltas, and the
 specific claims that flipped (newly passing / newly failing, matched by
-description across runs).
+description across runs).  Everything is keyed by `(entry_id, mode)`:
+a seeded row is only ever compared with a seeded row, an independent
+row with an independent row.  To see the seeded-vs-independent gap
+itself, run `--mode both` and read the report's *Seeded vs independent*
+section rather than diffing two single-mode runs.
 
 ## Building the corpus (candidate intake)
 
@@ -174,7 +218,12 @@ mv benchmark/candidates/<id>.yaml benchmark/papers/     # then fill its TODOs
 ```
 
 Required fields: `id`, `i4r_report_url`, `language`, `outcome_label`,
-`paper.source`.  See `schema.py` for the full surface.  Worked examples
+`paper.source`.  See `schema.py` for the full surface.  Two optional
+fields support the contamination discussion and should be filled in at
+promotion time: `publication_date` (first public version of the paper,
+working paper or journal, whichever came first) and
+`package_release_date` (first publication of the replication package),
+each an ISO date — `YYYY`, `YYYY-MM`, or `YYYY-MM-DD`.  Worked examples
 covering Python, R, and an out-of-scope Stata entry live under
 `tests/fixtures/benchmark_placeholders/` — they're test fixtures, not
 catalog entries, so the real `papers/` directory stays uncluttered.
@@ -189,5 +238,12 @@ catalog entries, so the real `papers/` directory stays uncluttered.
   its denominator, with the catalog-vs-executed gap surfaced
   separately in the report.
 - "Agrees with I4R" uses the same tolerance as the comparator's
-  paper-claim check today (default 1%).  Easy to tighten later if
-  the data shows we systematically under/over-match.
+  paper-claim check for that claim and mode — the per-type relative
+  tolerance, or in independent mode the ±k·SE band when that is
+  wider.  Easy to tighten later if the data shows we systematically
+  under/over-match.
+- Independent mode withholds the scripts' *contents*, but the dataset
+  directory is mounted as-is, so the scripts' names appear in the
+  listing and the files are readable at run time.  The prompt forbids
+  opening them; generated code is not policed for it.  Review
+  independent-mode code before trusting a surprising pass.

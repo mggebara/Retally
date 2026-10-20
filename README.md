@@ -11,10 +11,10 @@ Retally re-tallies the numbers in academic papers: it reads a paper, downloads t
 1. **Parse** the paper (PDF, arXiv ID, DOI, URL, or raw text) — `PaperParser`.
 2. **Extract** quantitative claims, dataset references, methodology, paper-stated hyperparameters, and code links with Claude — `ClaimExtractor`.
 3. **Fetch** the dataset (built-in registry; UCI / Kaggle / Zenodo / OpenML / URL) and shallow-clone any linked GitHub repo — `DatasetDownloader`, `CodeDownloader`.
-4. **Generate** reproduction code in the paper's language (Python/sklearn or R/fixest+AER+plm), seeded with the linked repo's code and the replication package's own `.R`/`.do`/`.Rmd` scripts when present — `CodeGenerator`.
+4. **Generate** reproduction code in the paper's language (Python/sklearn or R/fixest+AER+plm), seeded with the linked repo's code and the replication package's own `.R`/`.do`/`.Rmd` scripts when present (the default `seeded` mode — a computational reproduction), or from the paper text alone with those withheld (`independent` mode); see [reproduction modes](docs/reference.md#reproduction-modes-seeded-vs-independent) — `CodeGenerator`.
 5. **Execute** in a network-less Docker sandbox — `DockerExecutor` / `RDockerExecutor`.
 6. **Refine** (bounded retries): fix errors or empty output, then try to close gaps on claims outside tolerance, recording any `DEVIATION:` from the paper's method.
-7. **Compare** reproduced values against the claims with per-metric tolerances — `ResultComparator`.
+7. **Compare** reproduced values against the claims with per-metric tolerances (widened to ±1·SE in independent mode when a standard error is pinned) — `ResultComparator`.
 8. **Audit** the final code's literal hyperparameters against the paper's, and **report** as Markdown / JSON / console — `ValidationReporter`.
 
 The hyperparameter audit is independent of claim validation: "all claims passed" does not imply the paper's hyperparameters were used, and `overall_passed` reflects claims only. Each stage is a standalone class that can be swapped or called on its own; see the [architecture tree](docs/reference.md#architecture).
