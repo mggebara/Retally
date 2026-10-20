@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from openra.models import AuditStatus, HyperparameterSpec
-from openra.validation.hyperparam_audit import audit_hyperparameters
+from retally.models import AuditStatus, HyperparameterSpec
+from retally.validation.hyperparam_audit import audit_hyperparameters
 
 
 def _spec(name: str, value):

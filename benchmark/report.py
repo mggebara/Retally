@@ -36,7 +36,7 @@ def render_markdown(results: list[dict[str, Any]]) -> str:
 
     headline = _headline_counts(results)
     lines = [
-        "# OpenRA benchmark report",
+        "# Retally benchmark report",
         "",
         f"Catalog size: **{headline['total']}** papers.  ",
         f"Executed: **{headline['executed']}**.  ",
@@ -77,7 +77,7 @@ def render_html(results: list[dict[str, Any]]) -> str:
         body = "<p>No benchmark results.</p>"
     else:
         body = f"""
-        <h1>OpenRA benchmark report</h1>
+        <h1>Retally benchmark report</h1>
         <p>
           Catalog size: <strong>{headline["total"]}</strong> papers.
           Executed: <strong>{headline["executed"]}</strong>.
@@ -149,7 +149,7 @@ def _verdict_summary_markdown(results: list[dict[str, Any]]) -> str:
     if not executed:
         return "## Verdicts\n\n_No papers were executed in this run._"
 
-    ran = sum(1 for r in executed if r.get("openra_ran"))
+    ran = sum(1 for r in executed if r.get("retally_ran"))
     agree_paper = sum(1 for r in executed if r.get("agrees_with_paper"))
     agree_i4r = sum(1 for r in executed if r.get("agrees_with_i4r"))
     i4r_attempted = sum(1 for r in executed if r.get("agrees_with_i4r") is not None)
@@ -212,7 +212,7 @@ def _component_breakdown_markdown(results: list[dict[str, Any]]) -> str:
 def _row_markdown(r: dict[str, Any]) -> str:
     eid = r["entry_id"]
     status = _status_label(r)
-    ran = _bool_glyph(r.get("openra_ran"))
+    ran = _bool_glyph(r.get("retally_ran"))
     paper = _bool_glyph(r.get("agrees_with_paper"))
     i4r = _bool_glyph(r.get("agrees_with_i4r"))
     n_total = r.get("n_claims_in_catalog", 0)
@@ -228,7 +228,7 @@ def _row_html(r: dict[str, Any]) -> str:
         f"<tr>"
         f"<td><code>{_escape(r['entry_id'])}</code></td>"
         f"<td>{_escape(_status_label(r))}</td>"
-        f"<td>{_escape(_bool_glyph(r.get('openra_ran')))}</td>"
+        f"<td>{_escape(_bool_glyph(r.get('retally_ran')))}</td>"
         f"<td>{_escape(_bool_glyph(r.get('agrees_with_paper')))}</td>"
         f"<td>{_escape(_bool_glyph(r.get('agrees_with_i4r')))}</td>"
         f"<td>{r.get('n_claims_with_paper_match', 0)} / {r.get('n_claims_with_i4r_match', 0)} "
@@ -260,7 +260,7 @@ def _escape(s: str) -> str:
 
 def _empty_report_markdown() -> str:
     return (
-        "# OpenRA benchmark report\n\n"
+        "# Retally benchmark report\n\n"
         "_The catalog is empty.  Add YAML files under benchmark/papers/ and re-run._\n"
     )
 
@@ -269,7 +269,7 @@ _HTML_TEMPLATE = """<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>OpenRA benchmark report</title>
+<title>Retally benchmark report</title>
 <style>
   body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
           max-width: 1100px; margin: 2rem auto; padding: 0 1.5rem; color: #1a202c; }}

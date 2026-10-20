@@ -2,7 +2,7 @@
 
 Reads the Institute for Replication "First Meta Database" (committed under
 ``benchmark/corpus/`` — see ``benchmark/corpus/SOURCE.md`` for provenance)
-and emits one candidate YAML per replication report that OpenRA could
+and emits one candidate YAML per replication report that Retally could
 plausibly run, into ``benchmark/candidates/``.
 
 Candidates are **not** catalog entries.  They land in ``benchmark/candidates/``
@@ -13,7 +13,7 @@ database never records: the paper URL, the dataset URL, and (for most reports)
 the I4R report URL.  A human promotes a candidate by filling those TODOs from
 the actual I4R report PDF and moving the file into ``benchmark/papers/``.
 
-Scope filter — a report becomes a candidate only when OpenRA has a code path
+Scope filter — a report becomes a candidate only when Retally has a code path
 for it, i.e. the target language resolves to R or Python (see
 ``resolve_language``).  Stata / MATLAB / Julia originals with no R replication
 routine are dropped; the run summary reports the funnel so the
@@ -131,13 +131,13 @@ def _selected(value: str | None, language: str) -> bool:
 
 
 def resolve_language(row: dict[str, str]) -> str | None:
-    """Which language OpenRA should target for this report, or ``None`` to skip.
+    """Which language Retally should target for this report, or ``None`` to skip.
 
     * Original authors used R  -> ``"r"``      (regenerate R directly)
     * Original authors used Python -> ``"python"``
     * Original in Stata/MATLAB/Julia but the I4R replicator wrote an R routine
       -> ``"r"``  (the Dincecco case: R ground truth to validate against)
-    * Otherwise -> ``None`` (out of OpenRA's scope; dropped)
+    * Otherwise -> ``None`` (out of Retally's scope; dropped)
 
     R is preferred over Python when the originals used both, matching the
     R-leaning bias of the current sandbox tooling.

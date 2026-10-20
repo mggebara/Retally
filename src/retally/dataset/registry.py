@@ -19,7 +19,7 @@ import logging
 from dataclasses import asdict
 from pathlib import Path
 
-from openra.models import DatasetReference, DatasetSource
+from retally.models import DatasetReference, DatasetSource
 
 logger = logging.getLogger(__name__)
 

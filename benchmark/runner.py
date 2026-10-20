@@ -2,25 +2,25 @@
 
 Three verdicts are recorded per paper:
 
-* ``openra_ran`` — the pipeline completed without crashing.  Distinct
+* ``retally_ran`` — the pipeline completed without crashing.  Distinct
   from "all claims passed" — we want to know whether the infrastructure
   works even when the science doesn't.
 * ``agrees_with_paper`` — every claim with a paper-stated value
-  validates within the comparator's tolerance against OpenRA's
+  validates within the comparator's tolerance against Retally's
   reproduced value.  This is the existing ``overall_passed`` rebrand.
 * ``agrees_with_i4r`` — for every claim where the I4R replicator
-  recorded a reproduced value, OpenRA's reproduced value is within the
+  recorded a reproduced value, Retally's reproduced value is within the
   comparator's tolerance of THAT value (not the paper's claim).
 
 The three can disagree in meaningful ways — e.g. *ran ✓, agrees with
-paper ✓, agrees with I4R ✗* means OpenRA faithfully reproduced what
+paper ✓, agrees with I4R ✗* means Retally faithfully reproduced what
 the paper said, but the careful human replicators found a different
 number.  See README for how each combination is interpreted.
 
 Caching: a content-addressable cache under ``benchmark/.cache/`` keyed
-on ``(catalog_entry_hash, openra_version, pipeline_config_hash)`` lets
+on ``(catalog_entry_hash, retally_version, pipeline_config_hash)`` lets
 us re-run the benchmark cheaply when only the report renderer or
-non-pipeline components changed.  Any benchmark entry edit, openra
+non-pipeline components changed.  Any benchmark entry edit, retally
 version bump, or pipeline config change invalidates the corresponding
 cache entry.
 """
@@ -37,7 +37,7 @@ from enum import Enum
 from pathlib import Path
 from typing import Any
 
-# benchmark.* is at the repo root, not under src/openra/, so the test
+# benchmark.* is at the repo root, not under src/retally/, so the test
 # helper and this module both reach into the sibling schema module.
 from benchmark import schema as bschema
 
@@ -129,7 +129,7 @@ class BenchmarkResult:
     error: str | None = None
     """Set when the pipeline raised — None on success or skip."""
 
-    openra_ran: bool | None = None
+    retally_ran: bool | None = None
     agrees_with_paper: bool | None = None
     agrees_with_i4r: bool | None = None
 
@@ -338,7 +338,7 @@ def _execute_with_pipeline(
             claims=claims_override,
         )
     except Exception as exc:
-        result.openra_ran = False
+        result.retally_ran = False
         result.error = f"{type(exc).__name__}: {exc}"
         logger.warning("Pipeline raised on %s: %s", entry.id, exc)
         return result
@@ -349,7 +349,7 @@ def _execute_with_pipeline(
     if extracted_claims_dir is not None and claims_override is None:
         _dump_extracted_claims(extracted_claims_dir, entry.id, report)
 
-    result.openra_ran = True
+    result.retally_ran = True
     result.components = _components_from_report(report, entry)
     result.n_claims_in_catalog = len(entry.original_claims)
     result.agrees_with_paper = bool(getattr(report, "overall_passed", False))
@@ -397,7 +397,7 @@ def _claims_override_for(entry: bschema.BenchmarkEntry):
 
     Returns ``None`` when the entry has no curated claims, in which case
     the pipeline extracts claims from the paper text (a live LLM call).
-    Imported lazily so the runner module stays importable without openra
+    Imported lazily so the runner module stays importable without retally
     installed.
 
     Field mapping: the catalog's free-form ``claim_type`` string maps to
@@ -410,7 +410,7 @@ def _claims_override_for(entry: bschema.BenchmarkEntry):
     if not entry.original_claims:
         return None
 
-    from openra.models import Claim, ClaimType
+    from retally.models import Claim, ClaimType
 
     claims = []
     for oc in entry.original_claims:
@@ -465,14 +465,14 @@ def _dataset_reference_for(entry: bschema.BenchmarkEntry):
 
     Returns ``None`` when the entry names no dataset source, in which case
     the pipeline falls back to extracting the dataset from the paper text.
-    Imported lazily so the runner module stays importable without openra
+    Imported lazily so the runner module stays importable without retally
     installed (the test harness relies on this).
     """
     dataset = getattr(entry, "dataset", None)
     if dataset is None or not dataset.source:
         return None
 
-    from openra.models import DatasetReference, DatasetSource
+    from retally.models import DatasetReference, DatasetSource
 
     source_val = "unknown"
     for host, mapped in _DATASET_HOST_SOURCES.items():
@@ -495,7 +495,7 @@ def _components_from_report(report: Any, entry: bschema.BenchmarkEntry) -> Compo
     """Best-effort extraction of per-component flags from a ValidationReport.
 
     Uses ``getattr`` throughout so the runner survives even if the
-    library renames a field.  We're scoring OpenRA, not married to its
+    library renames a field.  We're scoring Retally, not married to its
     current internal shape.
     """
     paper = getattr(report, "paper", None)
@@ -511,7 +511,7 @@ def _components_from_report(report: Any, entry: bschema.BenchmarkEntry) -> Compo
 
 
 def _score_against_i4r(report: Any, entry: bschema.BenchmarkEntry) -> tuple[int, bool | None]:
-    """Compare OpenRA's reproduced values to the I4R replicator's findings.
+    """Compare Retally's reproduced values to the I4R replicator's findings.
 
     Returns ``(n_matching, all_attempted_match)``.  ``all_attempted_match``
     is None when no I4R finding has a reproduced value (nothing to
@@ -529,14 +529,14 @@ def _score_against_i4r(report: Any, entry: bschema.BenchmarkEntry) -> tuple[int,
     for i, finding in findings_by_claim_id.items():
         if i >= len(claim_results):
             continue
-        openra_value = claim_results[i].reproduced_value
-        if openra_value is None:
+        retally_value = claim_results[i].reproduced_value
+        if retally_value is None:
             continue
         n_attempted += 1
-        # Same tolerance OpenRA uses for paper-claim comparison; can
+        # Same tolerance Retally uses for paper-claim comparison; can
         # tighten later if the data shows it should be.
         tolerance = claim_results[i].tolerance or 0.01
-        if _within_tolerance(openra_value, finding.reproduced_value, tolerance):
+        if _within_tolerance(retally_value, finding.reproduced_value, tolerance):
             n_match += 1
 
     return n_match, (n_attempted > 0 and n_match == n_attempted)
@@ -555,7 +555,7 @@ def _within_tolerance(a: float, b: float, tol: float) -> bool:
 def _cache_key(entry: bschema.BenchmarkEntry) -> str:
     """Content-addressable hash for a catalog entry.
 
-    Includes the entry's full serialised form plus the openra version
+    Includes the entry's full serialised form plus the retally version
     so cache entries are scoped to a (paper, library version) pair.
     Pipeline configuration is NOT in this hash today because the
     runner uses a single default pipeline; if we add knobs we'll
@@ -567,11 +567,11 @@ def _cache_key(entry: bschema.BenchmarkEntry) -> str:
     cached result — ``_run_one`` re-stamps the current split on cache
     hits instead.
     """
-    openra_version = _openra_version()
+    retally_version = _retally_version()
     entry_payload = _entry_to_jsonable(entry)
     entry_payload.pop("split", None)
     payload = json.dumps(
-        {"entry": entry_payload, "openra_version": openra_version},
+        {"entry": entry_payload, "retally_version": retally_version},
         sort_keys=True,
         default=str,
     )
@@ -617,7 +617,7 @@ def _result_from_jsonable(d: dict[str, Any]) -> BenchmarkResult:
         skipped=bool(d.get("skipped", False)),
         skip_reason=SkipReason(skip_reason) if skip_reason else None,
         error=d.get("error"),
-        openra_ran=d.get("openra_ran"),
+        retally_ran=d.get("retally_ran"),
         agrees_with_paper=d.get("agrees_with_paper"),
         agrees_with_i4r=d.get("agrees_with_i4r"),
         n_claims_in_catalog=int(d.get("n_claims_in_catalog", 0)),
@@ -656,12 +656,12 @@ def _stringify_enums(obj: Any) -> Any:
     return obj
 
 
-def _openra_version() -> str:
-    """Return the installed openra version string."""
+def _retally_version() -> str:
+    """Return the installed retally version string."""
     try:
         from importlib.metadata import version
 
-        return version("openra")
+        return version("retally")
     except Exception:
         return "unknown"
 
@@ -674,16 +674,16 @@ def _default_pipeline_factory():
 
     The LLM call cache is ON by default for benchmark runs — iterating
     on one pipeline stage shouldn't re-pay every extraction call when
-    the paper and prompts haven't changed.  Set ``OPENRA_LLM_CACHE=0``
+    the paper and prompts haven't changed.  Set ``RETALLY_LLM_CACHE=0``
     for a fully live run (e.g. to measure sampling variance), or
     ``rm -rf benchmark/.cache/llm`` to start the cache cold.
     """
     if not os.environ.get("ANTHROPIC_API_KEY"):
         raise RuntimeError("ANTHROPIC_API_KEY is not set")
-    from openra.pipeline import ValidationPipeline
+    from retally.pipeline import ValidationPipeline
 
     llm_cache_dir: Path | None = CACHE_DIR / "llm"
-    if os.environ.get("OPENRA_LLM_CACHE", "1") == "0":
+    if os.environ.get("RETALLY_LLM_CACHE", "1") == "0":
         llm_cache_dir = None
     return ValidationPipeline.default(llm_cache_dir=llm_cache_dir)
 

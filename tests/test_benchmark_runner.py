@@ -36,7 +36,7 @@ def _entry(**overrides):
 
 def _claim(value: float, repro: float | None, *, passed: bool):
     """Build a ClaimValidationResult-shaped mock."""
-    from openra.models import Claim, ClaimType, ClaimValidationResult
+    from retally.models import Claim, ClaimType, ClaimValidationResult
 
     return ClaimValidationResult(
         claim=Claim(description="x", value=value, claim_type=ClaimType.OTHER),
@@ -48,7 +48,7 @@ def _claim(value: float, repro: float | None, *, passed: bool):
 
 def _fake_report(*, overall_passed=True, claim_results=None, exit_code=0):
     """Build a ValidationReport-shaped mock the runner can score."""
-    from openra.models import Dataset, ExecutionResult, Paper, ValidationReport
+    from retally.models import Dataset, ExecutionResult, Paper, ValidationReport
 
     paper = Paper(title="t", claims=[MagicMock()], dataset_references=[MagicMock()])
     dataset = Dataset(name="d", source_url="", local_path=Path("/tmp/d"))
@@ -81,7 +81,7 @@ def test_skip_out_of_scope(tmp_path):
     [result] = runner.run_benchmark([entry], cache_dir=tmp_path)
     assert result.skipped is True
     assert result.skip_reason is runner.SkipReason.OUT_OF_SCOPE
-    assert result.openra_ran is None
+    assert result.retally_ran is None
 
 
 def test_skip_language_not_supported(tmp_path):
@@ -133,7 +133,7 @@ def test_pipeline_runs_and_passes_paper_claim(tmp_path):
         cache_dir=tmp_path,
     )
     assert result.skipped is False
-    assert result.openra_ran is True
+    assert result.retally_ran is True
     assert result.agrees_with_paper is True
     assert result.n_claims_with_paper_match == 1
 
@@ -142,7 +142,7 @@ def test_pipeline_raises_records_error_not_crash(tmp_path):
     pipeline = MagicMock()
     pipeline.validate.side_effect = RuntimeError("boom")
     [result] = runner.run_benchmark([_entry()], pipeline_factory=lambda: pipeline, cache_dir=tmp_path)
-    assert result.openra_ran is False
+    assert result.retally_ran is False
     assert "boom" in (result.error or "")
 
 
@@ -158,7 +158,7 @@ def test_agrees_with_i4r_when_value_matches(tmp_path):
             )
         ],
     )
-    # OpenRA produced 0.501 too — exactly the I4R value.
+    # Retally produced 0.501 too — exactly the I4R value.
     report = _fake_report(
         overall_passed=False,  # may not match paper, but the I4R agreement is what we're testing
         claim_results=[_claim(0.5, 0.501, passed=False)],
@@ -184,7 +184,7 @@ def test_disagrees_with_i4r_when_value_differs(tmp_path):
         ],
     )
     report = _fake_report(
-        overall_passed=True,  # OpenRA matched the paper value at 0.5
+        overall_passed=True,  # Retally matched the paper value at 0.5
         claim_results=[_claim(0.5, 0.5, passed=True)],
     )
     [result] = runner.run_benchmark(
@@ -192,7 +192,7 @@ def test_disagrees_with_i4r_when_value_differs(tmp_path):
         pipeline_factory=_pipeline_factory_returning(report),
         cache_dir=tmp_path,
     )
-    # OpenRA agrees with the paper but disagrees with the I4R replicator —
+    # Retally agrees with the paper but disagrees with the I4R replicator —
     # the meaningful "reproduced a non-robust finding" signal.
     assert result.agrees_with_paper is True
     assert result.agrees_with_i4r is False
@@ -302,7 +302,7 @@ def test_write_results_round_trips(tmp_path):
         ),
         runner.BenchmarkResult(
             entry_id="r2",
-            openra_ran=True,
+            retally_ran=True,
             agrees_with_paper=True,
             agrees_with_i4r=None,
             n_claims_in_catalog=1,
@@ -317,7 +317,7 @@ def test_write_results_round_trips(tmp_path):
     decoded = json.loads(out.read_text(encoding="utf-8"))
     assert len(decoded) == 2
     assert decoded[0]["skip_reason"] == "out_of_scope"
-    assert decoded[1]["openra_ran"] is True
+    assert decoded[1]["retally_ran"] is True
 
 
 def test_results_dir_created_on_write(tmp_path):
@@ -381,7 +381,7 @@ def _pinned_entry(**overrides):
 def test_pinned_claims_are_passed_to_validate(tmp_path):
     """When the catalog has curated claims, validate() must receive them
     (skipping the expensive extraction call) with fields mapped over."""
-    from openra.models import ClaimType
+    from retally.models import ClaimType
 
     report = _fake_report()
     factory = _pipeline_factory_returning(report)
@@ -411,7 +411,7 @@ def test_extracted_claims_dumped_for_unpinned_entry(tmp_path):
     """An unpinned entry's extracted claims land as catalog-ready JSON."""
     import json as _json
 
-    from openra.models import Claim, ClaimType
+    from retally.models import Claim, ClaimType
 
     report = _fake_report()
     report.paper.claims = [
@@ -465,7 +465,7 @@ def test_no_dump_dir_no_dump(tmp_path):
     test suite must not sprinkle files into the repo."""
     pipeline = _pipeline_factory_returning(_fake_report())()
     results = runner.run_benchmark([_entry()], pipeline_factory=lambda: pipeline, cache_dir=tmp_path)
-    assert results[0].openra_ran is True  # ran fine, just no side output
+    assert results[0].retally_ran is True  # ran fine, just no side output
 
 
 # ── Claim details + split stamping (tuning metrics) ─────────────────────

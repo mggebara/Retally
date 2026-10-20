@@ -1,4 +1,4 @@
-# OpenRA benchmark harness
+# Retally benchmark harness
 
 Runs `ValidationPipeline` against an external ground-truth catalog —
 initially papers replicated by the
@@ -27,12 +27,12 @@ The runner records three independent flags:
 
 | Verdict | Meaning |
 |---|---|
-| `openra_ran` | The pipeline completed without raising. Distinct from "all claims passed" — we want to know whether the infrastructure works even when the science doesn't. |
-| `agrees_with_paper` | OpenRA's reproduced values pass against the paper's stated values (the existing `overall_passed` signal). |
-| `agrees_with_i4r` | OpenRA's reproduced values pass against the *I4R replicator's* reproduced values (not the paper's). `None` when no I4R finding has a value to compare to. |
+| `retally_ran` | The pipeline completed without raising. Distinct from "all claims passed" — we want to know whether the infrastructure works even when the science doesn't. |
+| `agrees_with_paper` | Retally's reproduced values pass against the paper's stated values (the existing `overall_passed` signal). |
+| `agrees_with_i4r` | Retally's reproduced values pass against the *I4R replicator's* reproduced values (not the paper's). `None` when no I4R finding has a value to compare to. |
 
 The three can disagree.  In particular, `ran ✓ / agrees_with_paper ✓ /
-agrees_with_i4r ✗` means OpenRA faithfully reproduced what the paper
+agrees_with_i4r ✗` means Retally faithfully reproduced what the paper
 said, but the careful human replicators found a different number — the
 "non-robust" signal we want to surface, not collapse.
 
@@ -80,7 +80,7 @@ the codegen prompt and the five extraction calls replay for free.
 Invalidation is automatic (any prompt/model change is a new key).
 
 ```bash
-OPENRA_LLM_CACHE=0 make benchmark    # fully live run (measure variance)
+RETALLY_LLM_CACHE=0 make benchmark    # fully live run (measure variance)
 rm -rf benchmark/.cache/llm          # cold-start the call cache
 ```
 
@@ -148,7 +148,7 @@ description across runs).
 The catalog grows by hand, but the sourcing is scripted.  `benchmark/corpus/`
 holds the I4R "First Meta Database" (110 replication reports over 109 papers;
 provenance and column layout in `benchmark/corpus/SOURCE.md`).  The intake
-script reads it, keeps the reports OpenRA has a code path for (R original,
+script reads it, keeps the reports Retally has a code path for (R original,
 Python original, or a Stata/other original with an I4R-written R routine), and
 emits one prefilled candidate YAML per report:
 
@@ -183,9 +183,9 @@ catalog entries, so the real `papers/` directory stays uncluttered.
 
 - The catalog is hand-curated.  We do NOT scrape I4R — entries are
   added by hand from the published reports.
-- Many I4R papers are out of OpenRA's domain (Stata, R, restricted
+- Many I4R papers are out of Retally's domain (Stata, R, restricted
   data).  The catalog is honest about which ones we can't run; the
-  aggregate "OpenRA performance" metric uses the executed subset as
+  aggregate "Retally performance" metric uses the executed subset as
   its denominator, with the catalog-vs-executed gap surfaced
   separately in the report.
 - "Agrees with I4R" uses the same tolerance as the comparator's

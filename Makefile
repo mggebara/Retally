@@ -1,9 +1,9 @@
 .PHONY: build-sandbox rebuild-sandbox build-r-sandbox rebuild-r-sandbox test lint format typecheck check sync lock clean benchmark benchmark-report
 
-SANDBOX_IMAGE := openra-sandbox:latest
+SANDBOX_IMAGE := retally-sandbox:latest
 DOCKERFILE    := docker/Dockerfile.sandbox
 
-R_SANDBOX_IMAGE := openra-sandbox-r:latest
+R_SANDBOX_IMAGE := retally-sandbox-r:latest
 R_DOCKERFILE    := docker/Dockerfile.sandbox.r
 
 ## Sync the project venv from uv.lock (creates .venv if missing, installs
@@ -29,7 +29,7 @@ format:
 
 ## Type-check with mypy.
 typecheck:
-	uv run mypy src/openra
+	uv run mypy src/retally
 
 ## Run every CI check locally in one go.
 check: lint typecheck test

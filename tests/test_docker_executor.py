@@ -12,8 +12,8 @@ from pathlib import Path
 
 import pytest
 
-from openra.codegen.docker_executor import DEFAULT_IMAGE, DockerExecutor
-from openra.models import Dataset
+from retally.codegen.docker_executor import DEFAULT_IMAGE, DockerExecutor
+from retally.models import Dataset
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -90,7 +90,7 @@ def test_build_run_cmd_tags_container_with_run_label(executor, dummy_dataset):
     cmd = executor._build_run_cmd(Path("/tmp/script.py"), dummy_dataset, run_id="abc123")
     assert "--label" in cmd
     label_value = cmd[cmd.index("--label") + 1]
-    assert label_value == "openra.run=abc123"
+    assert label_value == "retally.run=abc123"
 
 
 def test_build_run_cmd_mounts_dataset_readonly(executor, dummy_dataset):

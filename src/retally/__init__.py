@@ -1,6 +1,6 @@
-"""OpenRA — Open Source Research Assistant for automated validation of academic paper results."""
+"""Retally — Open Source Research Assistant for automated validation of academic paper results."""
 
-from openra.models import (
+from retally.models import (
     AuditStatus,
     Claim,
     ClaimType,
@@ -17,7 +17,7 @@ from openra.models import (
     Paper,
     ValidationReport,
 )
-from openra.pipeline import ValidationPipeline
+from retally.pipeline import ValidationPipeline
 
 __all__ = [
     "AuditStatus",

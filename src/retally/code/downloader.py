@@ -1,7 +1,7 @@
 """Fetch the source of a paper's reference implementation onto local disk.
 
 The current backend is ``git clone --depth 1`` against GitHub URLs.
-Other sources in :class:`~openra.models.CodeReferenceSource` are
+Other sources in :class:`~retally.models.CodeReferenceSource` are
 recorded by the extractor but skipped here — the downloader returns
 the unchanged ``CodeReference`` (with ``local_path=None``) so the
 caller can see we declined.  Adding GitLab / Zenodo / arbitrary zip
@@ -10,7 +10,7 @@ support is a follow-up that slots in next to ``_clone_github``.
 Cache layout
 ------------
 Repos land under ``cache_dir / <user>__<repo>``.  A
-``.openra-clone-complete`` sentinel file marks a finished clone; a
+``.retally-clone-complete`` sentinel file marks a finished clone; a
 directory without the sentinel is treated as a stale / partial
 checkout and re-cloned (same pattern as the dataset cache).
 
@@ -29,11 +29,11 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from openra.models import CodeReference, CodeReferenceSource
+from retally.models import CodeReference, CodeReferenceSource
 
 logger = logging.getLogger(__name__)
 
-_COMPLETE_SENTINEL = ".openra-clone-complete"
+_COMPLETE_SENTINEL = ".retally-clone-complete"
 
 
 class CodeDownloader:

@@ -4,7 +4,7 @@ Each paper in the catalog is a ``BenchmarkEntry`` stored as a YAML file
 under ``benchmark/papers/``.  The runner loads every YAML file, drops
 the ones that don't validate, and walks the rest.
 
-This module is deliberately separate from ``openra.models`` so the
+This module is deliberately separate from ``retally.models`` so the
 benchmark schema can evolve independently of the pipeline's runtime
 types.  When a benchmark field starts to make sense as a first-class
 ``ValidationReport`` field it can be promoted later; until then,
@@ -24,7 +24,7 @@ import yaml
 # reporter can share the same enum.  Re-export it here so existing
 # `benchmark.schema.Language` imports keep working (the loader uses
 # Language(value) so all the test paper YAMLs are unaffected).
-from openra.models import Language
+from retally.models import Language
 
 __all__ = ["Language"]  # re-export for backwards compat with the previous local definition
 
@@ -32,7 +32,7 @@ __all__ = ["Language"]  # re-export for backwards compat with the previous local
 class OutcomeLabel(Enum):
     """I4R's classification of the replication outcome.
 
-    Distinct from anything OpenRA produces — this is what the human
+    Distinct from anything Retally produces — this is what the human
     replicators concluded.  The runner uses it for stratification, not
     as ground truth for individual numbers.
     """
@@ -68,12 +68,12 @@ class FindingOutcome(Enum):
 
 @dataclass
 class OriginalClaim:
-    """A quantitative claim from the original paper that we want OpenRA to reproduce.
+    """A quantitative claim from the original paper that we want Retally to reproduce.
 
-    Mirrors the shape of ``openra.models.Claim`` but adds econometrics-
+    Mirrors the shape of ``retally.models.Claim`` but adds econometrics-
     flavoured fields (``standard_error``, ``sample_size``) that the
     library's ``Claim`` doesn't carry today.  Those fields are accepted
-    and stored; whether OpenRA can USE them is a separate question for
+    and stored; whether Retally can USE them is a separate question for
     the comparator + reporter extensions in later PRs.
     """
 
@@ -81,7 +81,7 @@ class OriginalClaim:
     value: float
     unit: str | None = None
     claim_type: str = "other"
-    """Free-form string, NOT openra.models.ClaimType — the benchmark
+    """Free-form string, NOT retally.models.ClaimType — the benchmark
     catalog should accept claim labels that don't (yet) exist in the
     library's enum (``coefficient``, ``standard_error``, …)."""
 

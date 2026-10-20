@@ -20,7 +20,7 @@ from pathlib import Path
 import fitz  # PyMuPDF
 import requests
 
-from openra.models import Paper
+from retally.models import Paper
 
 logger = logging.getLogger(__name__)
 

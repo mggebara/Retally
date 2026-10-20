@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from openra.code.selector import (
+from retally.code.selector import (
     MAX_FILE_BYTES,
     MAX_FILES,
     MAX_SCRIPT_FILE_BYTES,

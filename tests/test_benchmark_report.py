@@ -17,7 +17,7 @@ def _result(**overrides):
         "skipped": False,
         "skip_reason": None,
         "error": None,
-        "openra_ran": True,
+        "retally_ran": True,
         "agrees_with_paper": True,
         "agrees_with_i4r": True,
         "n_claims_in_catalog": 1,
@@ -73,8 +73,8 @@ def test_verdict_summary_counts_executed_only():
     """The verdict summary's denominator is executed papers, not the whole catalog."""
     results = [
         _result(entry_id="skipped1", skipped=True, skip_reason="out_of_scope"),
-        _result(entry_id="exec1", openra_ran=True, agrees_with_paper=True),
-        _result(entry_id="exec2", openra_ran=True, agrees_with_paper=False),
+        _result(entry_id="exec1", retally_ran=True, agrees_with_paper=True),
+        _result(entry_id="exec2", retally_ran=True, agrees_with_paper=False),
     ]
     md = report.render_markdown(results)
     assert "Pipeline completed without crashing: **2 / 2**" in md
@@ -140,7 +140,7 @@ def test_skipped_paper_row_shows_skip_reason():
                 skip_reason="out_of_scope",
                 # Skipped entries have None verdicts; the default helper
                 # sets them to True so override explicitly.
-                openra_ran=None,
+                retally_ran=None,
                 agrees_with_paper=None,
                 agrees_with_i4r=None,
             )
@@ -162,7 +162,7 @@ def test_cached_paper_row_marked():
 
 def test_error_row_truncates_long_messages():
     long_err = "RuntimeError: " + "x" * 500
-    md = report.render_markdown([_result(entry_id="err1", openra_ran=False, error=long_err)])
+    md = report.render_markdown([_result(entry_id="err1", retally_ran=False, error=long_err)])
     [row] = [line for line in md.splitlines() if "err1" in line]
     # Truncated to ~60 chars per _status_label.
     assert len(row) < 200
@@ -191,8 +191,8 @@ def test_write_report_emits_both_files(tmp_path):
     report.write_report([_result(entry_id="x")], out_dir=tmp_path)
     md = (tmp_path / "REPORT.md").read_text(encoding="utf-8")
     html = (tmp_path / "report.html").read_text(encoding="utf-8")
-    assert "OpenRA benchmark report" in md
-    assert "<title>OpenRA benchmark report</title>" in html
+    assert "Retally benchmark report" in md
+    assert "<title>Retally benchmark report</title>" in html
 
 
 def test_write_report_creates_dir(tmp_path):

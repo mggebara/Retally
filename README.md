@@ -1,8 +1,12 @@
-# OpenRA — Open Source Research Assistant
+# Retally
 
-OpenRA automates the validation of academic papers: it reads a paper, downloads the relevant dataset, generates reproduction code via the Claude API (scikit-learn for ML papers, R + fixest/AER/plm for econometrics), executes it in an isolated environment, and compares the reproduced numbers against the paper's stated results.
+Retally re-tallies the numbers in academic papers: it reads a paper, downloads the relevant dataset, generates reproduction code via the Claude API (scikit-learn for ML papers, R + fixest/AER/plm for econometrics), executes it in an isolated environment, and compares the reproduced numbers against the paper's stated results.
 
 For systematic evaluation against an external ground truth — the [Institute for Replication](https://i4replication.org) catalog of hand-replicated papers — see [`benchmark/README.md`](benchmark/README.md).  A [browsable dashboard](docs/index.html) shows demo runs of the pipeline on synthetic paper text (smoke tests of the tooling, not real reproducibility verdicts).  The development plan lives in [`ROADMAP.md`](ROADMAP.md).
+
+> **Formerly “OpenRA”** (Open Source Research Assistant) — renamed to avoid the
+> collision with the [OpenRA game engine](https://www.openra.net/) and to put
+> the project's actual job, replication, in its name.
 
 ---
 
@@ -104,14 +108,14 @@ Each step is a standalone class that can be swapped out or called independently.
 
 ## Installation
 
-OpenRA uses [uv](https://docs.astral.sh/uv/) for environment and
+Retally uses [uv](https://docs.astral.sh/uv/) for environment and
 dependency management.  Install it once
 ([install instructions](https://docs.astral.sh/uv/getting-started/installation/)),
 then:
 
 ```bash
-git clone https://github.com/mggebara/openra.git
-cd openra
+git clone https://github.com/mggebara/retally.git
+cd retally
 uv sync
 ```
 
@@ -173,7 +177,7 @@ export ANTHROPIC_API_KEY="sk-ant-..."
 ## Quick start — one command
 
 ```python
-from openra import ValidationPipeline
+from retally import ValidationPipeline
 
 pipeline = ValidationPipeline.default()
 
@@ -181,7 +185,7 @@ pipeline = ValidationPipeline.default()
 report = pipeline.validate("your-paper-source-here")
 
 # Print a coloured summary to the terminal
-from openra.validation.reporter import ValidationReporter
+from retally.validation.reporter import ValidationReporter
 reporter = ValidationReporter()
 print(reporter.to_console(report))
 
@@ -211,8 +215,8 @@ arXiv ID instead.
 """
 
 import os
-from openra import ValidationPipeline
-from openra.validation.reporter import ValidationReporter
+from retally import ValidationPipeline
+from retally.validation.reporter import ValidationReporter
 
 # Minimal paper description — in a real run this comes from a PDF or arXiv.
 PAPER_TEXT = """
@@ -295,7 +299,7 @@ the full stdout/stderr from execution.
 The pipeline accepts multiple input formats.  Pass whichever is most convenient:
 
 ```python
-from openra import ValidationPipeline
+from retally import ValidationPipeline
 
 pipeline = ValidationPipeline.default()
 
@@ -321,8 +325,8 @@ If the extractor cannot find the dataset, or you want to pin a specific
 version, pass it explicitly:
 
 ```python
-from openra import ValidationPipeline
-from openra.models import DatasetReference, DatasetSource
+from retally import ValidationPipeline
+from retally.models import DatasetReference, DatasetSource
 
 pipeline = ValidationPipeline.default()
 
@@ -350,7 +354,7 @@ than silently degrading to running Claude-generated code on the host.
 ```bash
 make build-sandbox
 # or equivalently:
-# docker build -f docker/Dockerfile.sandbox -t openra-sandbox:latest docker/
+# docker build -f docker/Dockerfile.sandbox -t retally-sandbox:latest docker/
 ```
 
 The image contains: `scikit-learn`, `xgboost`, `lightgbm`, `pandas`, `numpy`,
@@ -368,10 +372,10 @@ curated set of econometrics packages — `fixest`, `AER`, `plm`,
 ```bash
 make build-r-sandbox
 # or equivalently:
-# docker build -f docker/Dockerfile.sandbox.r -t openra-sandbox-r:latest docker/
+# docker build -f docker/Dockerfile.sandbox.r -t retally-sandbox-r:latest docker/
 ```
 
-The `RDockerExecutor` class in `openra.codegen.docker_executor`
+The `RDockerExecutor` class in `retally.codegen.docker_executor`
 applies exactly the same isolation flags as the Python executor
 (`--network none --read-only --cap-drop ALL --security-opt
 no-new-privileges`), so the security boundary is consistent across
@@ -394,7 +398,7 @@ need to `make build-r-sandbox`.
 ### Tune resource limits
 
 ```python
-from openra import ValidationPipeline
+from retally import ValidationPipeline
 
 pipeline = ValidationPipeline.default(
     docker_memory="4g",       # RAM cap per run (default 4g)
@@ -456,7 +460,7 @@ with a note in the `notes` field.
 ### Saving reports
 
 ```python
-from openra.validation.reporter import ValidationReporter
+from retally.validation.reporter import ValidationReporter
 
 reporter = ValidationReporter()
 
@@ -514,8 +518,8 @@ needed for papers that use them.
 ### Adding a custom dataset
 
 ```python
-from openra.models import DatasetReference, DatasetSource
-from openra.dataset.registry import DatasetRegistry
+from retally.models import DatasetReference, DatasetSource
+from retally.dataset.registry import DatasetRegistry
 
 registry = DatasetRegistry()
 registry.load()
@@ -532,7 +536,7 @@ registry.register(DatasetReference(
 ## Architecture
 
 ```
-src/openra/
+src/retally/
 ├── models.py                  Shared dataclasses + enums (Language, ClaimType, …)
 ├── pipeline.py                ValidationPipeline orchestrator
 ├── paper/
@@ -590,7 +594,7 @@ Makefile                       sync / test / lint / typecheck / check /
 | `anthropic_api_key` | `None` (reads `ANTHROPIC_API_KEY`) | Anthropic API key |
 | `use_docker` | `True` | Use `DockerExecutor` for OS-level isolation. Set to `False` to opt into the subprocess `CodeExecutor` with no isolation. |
 | `allow_unsafe_subprocess` | `False` | When `use_docker=True` but Docker is unavailable, fall back to the subprocess executor instead of raising. |
-| `docker_image` | `"openra-sandbox:latest"` | Docker image tag |
+| `docker_image` | `"retally-sandbox:latest"` | Docker image tag |
 | `docker_memory` | `"4g"` | Container memory limit |
 | `docker_cpus` | `1.0` | Container CPU limit |
 
@@ -652,7 +656,7 @@ reflects only claim validation; the audit is informational.
 
 Many ML papers ship the implementation that produced their numbers,
 usually as a GitHub repository linked from the abstract or a "Code"
-section.  When `include_code_references=True` (the default), OpenRA:
+section.  When `include_code_references=True` (the default), Retally:
 
 1. **Extracts URLs.**  `ClaimExtractor.extract_code_references` runs an
    LLM pass that finds repo links in the paper text and classifies
@@ -661,7 +665,7 @@ section.  When `include_code_references=True` (the default), OpenRA:
    are filtered out.
 2. **Clones.**  `CodeDownloader` shallow-clones GitHub repos
    (`--depth 1 --filter=blob:none`) into `.cache/code_repos/`.  A
-   `.openra-clone-complete` sentinel marks finished clones for
+   `.retally-clone-complete` sentinel marks finished clones for
    subsequent cache hits.  Other sources are recognised but not
    fetched yet — they surface in the report as "found but not
    fetched" so a reviewer knows the link exists.
@@ -725,7 +729,7 @@ refinement prompts.
 
 | Parameter | Default | Description |
 |---|---|---|
-| `image` | `"openra-sandbox:latest"` | Docker image tag |
+| `image` | `"retally-sandbox:latest"` | Docker image tag |
 | `timeout` | `300` | Seconds before the container is killed |
 | `memory_limit` | `"4g"` | Docker `--memory` value |
 | `cpu_count` | `1.0` | Docker `--cpus` value |
@@ -757,14 +761,14 @@ is a future improvement.
 
 ## Benchmark harness
 
-The repo ships a harness that runs OpenRA against the
+The repo ships a harness that runs Retally against the
 [Institute for Replication](https://i4replication.org) catalog —
 papers that human replicators have already worked through by hand.
 For each entry it records three independent verdicts:
 
 | Verdict | Meaning |
 |---|---|
-| `openra_ran` | Pipeline completed without crashing. |
+| `retally_ran` | Pipeline completed without crashing. |
 | `agrees_with_paper` | Reproduced values match the paper's stated values. |
 | `agrees_with_i4r` | Reproduced values match the *I4R replicator's* values (may differ from the paper's). |
 
@@ -791,7 +795,7 @@ make sync            # uv sync — create/refresh .venv from uv.lock
 make test            # uv run pytest tests/ -v
 make lint            # uv run ruff check src/ tests/
 make format          # uv run ruff format src/ tests/
-make typecheck       # uv run mypy src/openra
+make typecheck       # uv run mypy src/retally
 make check           # lint + typecheck + tests + format check (mirrors CI)
 make lock            # uv lock — re-resolve and update uv.lock
 make clean           # remove .venv and tool caches

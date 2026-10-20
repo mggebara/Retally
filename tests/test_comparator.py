@@ -2,8 +2,8 @@
 
 import pytest
 
-from openra.models import Claim, ClaimType
-from openra.validation.comparator import ResultComparator
+from retally.models import Claim, ClaimType
+from retally.validation.comparator import ResultComparator
 
 
 @pytest.fixture

@@ -16,7 +16,7 @@ import math
 from enum import Enum
 from pathlib import Path
 
-from openra.models import (
+from retally.models import (
     AuditStatus,
     ClaimValidationResult,
     Dataset,

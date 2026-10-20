@@ -1,6 +1,6 @@
 """Tests for the shared dataclass models."""
 
-from openra.models import (
+from retally.models import (
     Claim,
     ClaimType,
     ClaimValidationResult,

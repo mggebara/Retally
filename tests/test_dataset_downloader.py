@@ -4,9 +4,9 @@ import json
 
 import pytest
 
-from openra.dataset.downloader import DatasetDownloader
-from openra.dataset.registry import DatasetRegistry
-from openra.models import DatasetReference, DatasetSource
+from retally.dataset.downloader import DatasetDownloader
+from retally.dataset.registry import DatasetRegistry
+from retally.models import DatasetReference, DatasetSource
 
 
 @pytest.fixture
@@ -45,13 +45,13 @@ def test_download_returns_cached_if_complete_sentinel_present(downloader, tmp_pa
     # The sentinel file is the cache-validity signal; without it the
     # downloader treats the directory as a partial / interrupted download
     # and re-fetches.
-    (local / ".openra-download-complete").touch()
+    (local / ".retally-download-complete").touch()
     dataset = downloader.download(ref)
     assert dataset.local_path == local
 
 
 def test_download_ignores_cache_without_sentinel(downloader, tmp_path):
-    # A directory with data files but no .openra-download-complete sentinel
+    # A directory with data files but no .retally-download-complete sentinel
     # represents a partial download.  It must NOT be returned as cached;
     # the download is retried (and here fails because the URL is fake).
     ref = DatasetReference(
@@ -79,7 +79,7 @@ def test_download_loads_metadata_from_sidecar(downloader, tmp_path):
         "source_url": "",
     }
     (local / "metadata.json").write_text(json.dumps(meta))
-    (local / ".openra-download-complete").touch()
+    (local / ".retally-download-complete").touch()
     dataset = downloader.download(ref)
     assert dataset.metadata["target_column"] == "b"
 
