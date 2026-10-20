@@ -213,7 +213,8 @@ Return ONLY the JSON array."""
 - Evaluation protocol and metrics used
 
 For econometrics / regression-based papers, additionally capture:
-- The estimating equation / regression specification: dependent variable, key regressor(s), functional form (e.g. log-log, standardised)
+- The estimating equation / regression specification: dependent variable, key regressor(s), functional form (e.g. log-log)
+- Units of the headline coefficients: describe a variable or coefficient as standardised only if the paper explicitly says the headline estimates are standardised.  Papers often report a standardised (beta) coefficient as an extra row or column next to the unstandardised estimate; that does not make the headline estimate standardised.
 - Fixed effects and the full control set of the preferred specification
 - How standard errors are computed (robust / clustered, and clustered on what)
 - Sample restrictions defining the estimation sample (which observations are dropped and why)

@@ -339,3 +339,20 @@ def test_extract_methodology_prompt_asks_for_regression_spec():
     assert "estimating equation" in sent_prompt
     assert "clustered" in sent_prompt
     assert "Sample restrictions" in sent_prompt
+
+
+def test_extract_methodology_prompt_does_not_prime_standardisation():
+    """Dincecco: the prompt's functional-form example read "(e.g. log-log,
+    standardised)", and the summary called the 3.713 headline coefficient a
+    "standardized beta" (the paper says "(unstandardised) coefficient
+    estimate ... is 3.713" and reports betas as a separate row).  Every
+    generation then scale()d the regressor (0.357 instead of 3.713).  The
+    prompt must not offer standardisation as an example form, and must
+    say to assert it only when the paper says so explicitly."""
+    paper = Paper(title="T", full_text="body")
+    client = _make_mock_client("summary")
+    ClaimExtractor(client).extract_methodology(paper)
+    sent_prompt = client.messages.create.call_args.kwargs["messages"][0]["content"]
+    assert "log-log, standardised" not in sent_prompt
+    assert "standardised only if the paper explicitly says" in sent_prompt
+    assert "does not make the headline estimate standardised" in sent_prompt
