@@ -1,0 +1,76 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: Warfare and Development in India
+Abstract (first 500 chars): We study the long-run effect of precolonial warfare on development.
+Methodology Summary: OLS of night lights on conflict counts with state fixed effects.
+
+## Claims to Reproduce
+1. warfare_coefficient_bivariate: 3.713 [type: coefficient]
+2. n_districts: 660 [type: other]
+
+## Dataset Information
+Name: wii-package
+Local path: <DATASET_ROOT>
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- code/main_tables.R (76 B)
+- code/master.do (84 B)
+- data/analysis.csv (37 B) — columns: district,warfare,lum
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<DATASET_ROOT>' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta).
+Prefer the following packages, all pre-installed in the retally-sandbox-r image:
+  - fixest         fast fixed-effects regression (feols, feglm, fepois, …)
+  - AER            instrumental variables (ivreg), Tobit, count data
+  - plm            panel data econometrics
+  - lmtest         coefficient tests (coeftest)
+  - sandwich       robust / clustered covariance estimators (vcovHC, vcovCL)
+  - modelsummary   regression tables
+  - data.table     fast data manipulation
+  - dplyr / readr  tidyverse data manipulation + CSV reading
+  - haven          read Stata .dta / SPSS / SAS files (read_dta)
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Reference Implementation
+The paper links a public code repository.  The most relevant r source files from that repository are reproduced below.  PREFER ADAPTING these files over writing from scratch: keep the model specification, hyperparameters, preprocessing, and sample-construction conventions as close to the reference as possible.  You may need to change file paths (load the dataset from the files under <DATASET_ROOT> — see the listing in Dataset Information — instead of whatever paths the reference uses) and you may need to omit code unrelated to the specific claims being reproduced.  Where the reference deviates from the paper's text, prefer the reference.
+
+### `src/model.R`
+```r
+lm(y ~ x)
+```
+
+## Original Replication Scripts
+The replication package (the dataset directory) ships the authors' own analysis scripts, reproduced below.  These are the GROUND TRUTH for the exact estimating equation, variable names, sample restrictions, fixed effects, and standard-error clustering — follow them over anything reconstructed from the methodology summary, and prefer them over the paper's text where the two disagree.  Your job is to write R code that implements the SAME SPECIFICATION: translate what the scripts estimate, do not transliterate their syntax line by line (a Stata .do file's regression, e.g. `reghdfe y x controls, absorb(fe) cluster(cl)`, becomes the equivalent fixest::feols() call in R).  Keep only the parts that produce the specific claims being reproduced; skip figure construction and unrelated robustness checks.  The scripts' data-file paths refer to the package's internal layout — resolve them against the dataset directory listed under Dataset Information.
+
+Stata-to-fixest sample matching: feols() drops fixed-effect singletons by default, but Stata's `reg y x i.fe` / `xi:` dummies keep them.  Pass `fixef.rm = "none"` to every feols() call that has fixed effects, otherwise the observation count and the robust SEs drift from the paper's.  Stata's `, r` / `vce(robust)` is `vcov = "hetero"`.
+
+### `code/main_tables.R`
+```r
+library(fixest)
+feols(lum ~ warfare | state, data = d, cluster = ~district)
+
+```
+
+### `code/master.do`
+```stata
+use "data/analysis.dta", clear
+reghdfe lum warfare, absorb(state) cluster(district)
+
+```
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

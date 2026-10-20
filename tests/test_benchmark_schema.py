@@ -350,3 +350,47 @@ paper: {source: "raw"}
     )
     with pytest.raises(SchemaError, match="split"):
         load_entry(p)
+
+
+# ── Contamination metadata: publication / package-release dates ─────────
+
+
+_DATED_ENTRY = """
+id: x
+i4r_report_url: https://example.org/x
+language: r
+outcome_label: reproducible
+paper: {{source: "raw"}}
+{extra}
+"""
+
+
+def test_dates_default_to_none(tmp_path):
+    p = tmp_path / "x.yaml"
+    _write_yaml(p, _DATED_ENTRY.format(extra=""))
+    entry = load_entry(p)
+    assert entry.publication_date is None
+    assert entry.package_release_date is None
+
+
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [
+        ("2022-05-01", "2022-05-01"),  # YAML parses this into datetime.date
+        ('"2022-05"', "2022-05"),
+        ("2022", "2022"),  # YAML parses this into an int
+    ],
+)
+def test_dates_accept_partial_iso(tmp_path, raw, expected):
+    p = tmp_path / "x.yaml"
+    _write_yaml(p, _DATED_ENTRY.format(extra=f"publication_date: {raw}\npackage_release_date: {raw}"))
+    entry = load_entry(p)
+    assert entry.publication_date == expected
+    assert entry.package_release_date == expected
+
+
+def test_malformed_date_fails_loudly(tmp_path):
+    p = tmp_path / "x.yaml"
+    _write_yaml(p, _DATED_ENTRY.format(extra='publication_date: "May 2022"'))
+    with pytest.raises(SchemaError, match="publication_date"):
+        load_entry(p)

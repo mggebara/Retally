@@ -34,6 +34,7 @@ from retally.models import (
     ExecutionResult,
     Language,
     Paper,
+    ReproductionMode,
 )
 
 if TYPE_CHECKING:
@@ -81,6 +82,7 @@ class CodeGenerator:
         dataset: Dataset,
         reference_files: list[SelectedFile] | None = None,
         package_scripts: list[SelectedFile] | None = None,
+        reproduction_mode: ReproductionMode = ReproductionMode.SEEDED,
     ) -> str:
         """Generate Python code to reproduce the paper's results.
 
@@ -110,6 +112,15 @@ class CodeGenerator:
             the prompt instructs the model to translate their
             specification exactly (not transliterate their syntax).
 
+        ``reproduction_mode`` (default ``SEEDED``) records what the model
+        may see.  ``SEEDED`` renders both optional sections above and is
+        byte-identical to the prompt before the switch existed.
+        ``INDEPENDENT`` withholds the authors' code: passing
+        ``reference_files`` or ``package_scripts`` raises ``ValueError``
+        (a silent leak would invalidate the measurement), and the prompt
+        gains an "Independent Reproduction" section telling the model not
+        to read any script files that appear in the dataset listing.
+
         Raises ``UnsupportedLanguageError`` when ``paper.language`` is
         not in ``{PYTHON, R}``.  Stata is deferred (proprietary
         runtime); UNKNOWN means classification failed and we won't guess.
@@ -118,13 +129,18 @@ class CodeGenerator:
         the returned code matches ``paper.language``.
         """
         _require_supported_language(paper, "generate")
+        if reproduction_mode is ReproductionMode.INDEPENDENT and (reference_files or package_scripts):
+            raise ValueError(
+                "Independent reproduction withholds the authors' code; "
+                "reference_files and package_scripts must be empty."
+            )
         if paper.language is Language.R:
             prompt = self._build_generation_prompt_r(
-                paper, dataset, reference_files or [], package_scripts or []
+                paper, dataset, reference_files or [], package_scripts or [], reproduction_mode
             )
         else:
             prompt = self._build_generation_prompt_python(
-                paper, dataset, reference_files or [], package_scripts or []
+                paper, dataset, reference_files or [], package_scripts or [], reproduction_mode
             )
         response = self._call_claude(prompt)
         return self._extract_code_block(response)
@@ -221,6 +237,7 @@ class CodeGenerator:
         dataset: Dataset,
         reference_files: list[SelectedFile],
         package_scripts: list[SelectedFile] | None = None,
+        reproduction_mode: ReproductionMode = ReproductionMode.SEEDED,
     ) -> str:
         """Construct the full Python generation prompt.
 
@@ -234,6 +251,7 @@ class CodeGenerator:
           7. Algorithm hints (Python-flavoured)
           8. Reference implementation (shared helper)
           9. Original replication scripts (shared helper)
+         10. Independent-reproduction instruction (independent mode only)
         """
         lines = [
             "You are reproducing results from an older machine learning paper for validation purposes.",
@@ -278,6 +296,7 @@ class CodeGenerator:
 
         lines.extend(self._reference_implementation_section(reference_files, dataset, "python"))
         lines.extend(self._package_scripts_section(package_scripts or [], Language.PYTHON))
+        lines.extend(self._independent_mode_section(reproduction_mode))
 
         lines.append(
             "Now write the complete Python script. Output ONLY the code — no explanation, no markdown fences."
@@ -473,6 +492,7 @@ class CodeGenerator:
         dataset: Dataset,
         reference_files: list[SelectedFile],
         package_scripts: list[SelectedFile] | None = None,
+        reproduction_mode: ReproductionMode = ReproductionMode.SEEDED,
     ) -> str:
         """Construct the R-flavoured generation prompt.
 
@@ -539,6 +559,7 @@ class CodeGenerator:
         # renderer highlights it correctly.
         lines.extend(self._reference_implementation_section(reference_files, dataset, "r"))
         lines.extend(self._package_scripts_section(package_scripts or [], Language.R))
+        lines.extend(self._independent_mode_section(reproduction_mode))
 
         lines.append(
             "Now write the complete R script. Output ONLY the code — no explanation, no markdown fences."
@@ -885,6 +906,36 @@ class CodeGenerator:
             lines.append("```")
             lines.append("")
         return lines
+
+    @staticmethod
+    def _independent_mode_section(reproduction_mode: ReproductionMode) -> list[str]:
+        """Instruction block for independent reproduction; empty when seeded.
+
+        The dataset directory is mounted into the sandbox as-is, so a
+        replication package's own ``.do`` / ``.R`` scripts are still on
+        disk (and named in the listing) even when their contents are
+        withheld from the prompt.  Without an explicit instruction the
+        model could read them at run time and quietly turn an independent
+        reproduction back into a seeded one.  Returns ``[]`` for
+        ``SEEDED`` so the seeded prompt stays byte-identical.
+        """
+        if reproduction_mode is not ReproductionMode.INDEPENDENT:
+            return []
+        return [
+            "## Independent Reproduction",
+            (
+                "This is an INDEPENDENT reproduction: reconstruct the analysis "
+                "from the paper's description alone.  The authors' own analysis "
+                "code is deliberately withheld.  Do NOT open, read, source, or "
+                "execute any script files that may appear in the dataset "
+                "directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, "
+                "and similar) — load data files only.  Derive the estimating "
+                "equation, sample restrictions, fixed effects, and "
+                "standard-error clustering from the paper information and "
+                "claims above."
+            ),
+            "",
+        ]
 
     def _call_claude(self, prompt: str) -> str:
         """Send a prompt to the Claude API and return the response text."""

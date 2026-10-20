@@ -1,0 +1,57 @@
+You are reproducing results from an older machine learning paper for validation purposes.
+
+## Paper Information
+Title: Warfare and Development in India
+Abstract (first 500 chars): We study the long-run effect of precolonial warfare on development.
+Methodology Summary: OLS of night lights on conflict counts with state fixed effects.
+
+## Claims to Reproduce
+1. warfare_coefficient_bivariate: 3.713 [type: coefficient]
+2. n_districts: 660 [type: other]
+
+## Dataset Information
+Name: wii-package
+Local path: <DATASET_ROOT>
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- code/main_tables.R (76 B)
+- code/master.do (84 B)
+- data/analysis.csv (37 B) — columns: district,warfare,lum
+
+## Required Output Convention
+Print each metric using EXACTLY this format: RESULT:<metric_name>=<numeric_value>
+For example: RESULT:accuracy=0.9342
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write complete, self-contained Python code using scikit-learn. The dataset is a directory tree at <DATASET_ROOT> — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (pandas.read_csv for .csv, pandas.read_stata for Stata .dta). Use the target column from the metadata. Apply appropriate preprocessing (StandardScaler for numeric features, handle categorical with LabelEncoder or pd.get_dummies). Use a fixed random_state=42 for reproducibility. Do NOT access the internet. Do NOT use subprocess. Print all RESULT: lines at the end.
+
+## Algorithm Hints
+This paper reports econometric quantities (coefficients / standard errors / R²). In Python that means statsmodels: ``statsmodels.api.OLS`` or ``statsmodels.formula.api.ols`` for OLS with HC-robust SE via ``.get_robustcov_results('HC1')``, ``statsmodels.discrete.discrete_model.Logit`` for binary outcomes, and ``statsmodels.regression.linear_model.WLS`` for weighted models.  For instrumental variables and panel data use ``linearmodels`` if available; otherwise stick to statsmodels.  Emit each coefficient and SE as a separate RESULT: line with the variable name in the metric name.
+
+## Reference Implementation
+The paper links a public code repository.  The most relevant python source files from that repository are reproduced below.  PREFER ADAPTING these files over writing from scratch: keep the model specification, hyperparameters, preprocessing, and sample-construction conventions as close to the reference as possible.  You may need to change file paths (load the dataset from the files under <DATASET_ROOT> — see the listing in Dataset Information — instead of whatever paths the reference uses) and you may need to omit code unrelated to the specific claims being reproduced.  Where the reference deviates from the paper's text, prefer the reference.
+
+### `src/model.R`
+```python
+lm(y ~ x)
+```
+
+## Original Replication Scripts
+The replication package (the dataset directory) ships the authors' own analysis scripts, reproduced below.  These are the GROUND TRUTH for the exact estimating equation, variable names, sample restrictions, fixed effects, and standard-error clustering — follow them over anything reconstructed from the methodology summary, and prefer them over the paper's text where the two disagree.  Your job is to write Python code that implements the SAME SPECIFICATION: translate what the scripts estimate, do not transliterate their syntax line by line (a Stata .do file's regression, e.g. `reghdfe y x controls, absorb(fe) cluster(cl)`, becomes the equivalent fixest::feols() call in R).  Keep only the parts that produce the specific claims being reproduced; skip figure construction and unrelated robustness checks.  The scripts' data-file paths refer to the package's internal layout — resolve them against the dataset directory listed under Dataset Information.
+
+### `code/main_tables.R`
+```r
+library(fixest)
+feols(lum ~ warfare | state, data = d, cluster = ~district)
+
+```
+
+### `code/master.do`
+```stata
+use "data/analysis.dta", clear
+reghdfe lum warfare, absorb(state) cluster(district)
+
+```
+
+Now write the complete Python script. Output ONLY the code — no explanation, no markdown fences.

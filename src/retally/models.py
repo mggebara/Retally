@@ -103,6 +103,31 @@ class Language(Enum):
     UNKNOWN = "unknown"
 
 
+class ReproductionMode(Enum):
+    """What the code generator is allowed to see when reproducing a paper.
+
+    The two modes measure different things, and the gap between them is
+    itself the finding:
+
+    * ``SEEDED`` — *computational* reproduction.  The authors' own
+      analysis scripts from the replication package (``.do`` / ``.R`` /
+      ``.Rmd``) and any code repository the paper links are put in the
+      generation prompt as ground truth.  A pass means "the model could
+      translate the authors' code and run it".  This is the historical
+      behaviour and the default.
+    * ``INDEPENDENT`` — *independent* reproduction.  Package scripts and
+      linked code are withheld; the generator works from the paper text,
+      the claims, and the dataset directory listing only.  A pass means
+      "the model regenerated the analysis from the paper's description".
+
+    The mode is recorded on every report and benchmark result so results
+    from the two modes are never conflated.
+    """
+
+    SEEDED = "seeded"
+    INDEPENDENT = "independent"
+
+
 @dataclass
 class CodeReference:
     """A reference implementation linked from a paper.
@@ -202,6 +227,13 @@ class Claim:
 
     figure_ref: str | None = None
     """Figure number or label where this claim appears, if applicable."""
+
+    standard_error: float | None = None
+    """The paper's reported standard error for this estimate, when one is
+    pinned (benchmark catalogs carry it on curated coefficient claims).
+    Only consulted by the comparator in modes whose tolerance policy is
+    SE-aware (see ``ResultComparator``); None means "no SE available" and
+    the comparator falls back to its relative tolerance."""
 
 
 @dataclass
@@ -355,3 +387,5 @@ class ValidationReport:
     claim_results: list[ClaimValidationResult]
     overall_passed: bool
     summary: str = ""
+    reproduction_mode: ReproductionMode = ReproductionMode.SEEDED
+    """Which reproduction mode produced this report — see ``ReproductionMode``."""

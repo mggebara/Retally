@@ -14,6 +14,7 @@ from retally.models import (
     ExecutionResult,
     HyperparameterSpec,
     Paper,
+    ReproductionMode,
     ValidationReport,
 )
 from retally.pipeline import ValidationPipeline
@@ -600,3 +601,59 @@ def test_pipeline_passes_no_package_scripts_for_registry_datasets():
     pipeline.validate("some text")
     [call] = pipeline.generator.generate.call_args_list
     assert call.kwargs.get("package_scripts") is None
+
+
+# ── Reproduction mode (seeded vs independent) ─────────────────────────
+
+
+def _package_dataset(tmp_path):
+    package = tmp_path / "zenodo_pkg"
+    package.mkdir()
+    (package / "districts.csv").write_text("id,lum\n1,2.0\n")
+    (package / "main_tables.R").write_text("feols(lum ~ conflict | state, data)\n")
+    return Dataset(name="replication package", source_url="https://zenodo.org/records/1", local_path=package)
+
+
+def test_default_mode_is_seeded_end_to_end(tmp_path):
+    pipeline, _ = _make_pipeline()
+    pipeline.downloader.download.return_value = _package_dataset(tmp_path)
+    report = pipeline.validate("some text")
+
+    [call] = pipeline.generator.generate.call_args_list
+    assert call.kwargs["reproduction_mode"] is ReproductionMode.SEEDED
+    assert call.kwargs["package_scripts"] is not None
+    pipeline.extractor.extract_code_references.assert_called_once()
+    assert pipeline.comparator.compare_all.call_args.kwargs["mode"] is ReproductionMode.SEEDED
+    assert report.reproduction_mode is ReproductionMode.SEEDED
+
+
+def test_independent_mode_withholds_package_scripts_and_linked_code(tmp_path):
+    pipeline, _ = _make_pipeline()
+    pipeline.downloader.download.return_value = _package_dataset(tmp_path)
+    report = pipeline.validate("some text", reproduction_mode=ReproductionMode.INDEPENDENT)
+
+    [call] = pipeline.generator.generate.call_args_list
+    assert call.kwargs["reproduction_mode"] is ReproductionMode.INDEPENDENT
+    assert call.kwargs["package_scripts"] is None
+    assert call.kwargs["reference_files"] is None
+    # No code-reference extraction call and no clone in independent mode.
+    pipeline.extractor.extract_code_references.assert_not_called()
+    pipeline.code_downloader.download_all.assert_not_called()
+    assert pipeline.comparator.compare_all.call_args.kwargs["mode"] is ReproductionMode.INDEPENDENT
+    assert report.reproduction_mode is ReproductionMode.INDEPENDENT
+
+
+def test_independent_mode_threads_mode_through_claim_refinement():
+    pipeline, _ = _make_pipeline()
+    pipeline.comparator.compare_all.return_value = [_failing_claim_result(0.95, 0.80)]
+    pipeline.generator.refine_for_claims.return_value = "new code"
+    pipeline.executor.execute.side_effect = [
+        ExecutionResult(generated_code="c", exit_code=0, outputs={"accuracy": 0.80}),
+        ExecutionResult(generated_code="c2", exit_code=0, outputs={"accuracy": 0.85}),
+        ExecutionResult(generated_code="c3", exit_code=0, outputs={"accuracy": 0.90}),
+        ExecutionResult(generated_code="c4", exit_code=0, outputs={"accuracy": 0.91}),
+    ]
+    pipeline.validate("some text", reproduction_mode=ReproductionMode.INDEPENDENT)
+    calls = pipeline.comparator.compare_all.call_args_list
+    assert len(calls) > 1
+    assert {c.kwargs["mode"] for c in calls} == {ReproductionMode.INDEPENDENT}
