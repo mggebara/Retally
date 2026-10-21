@@ -24,6 +24,7 @@ here; every other occurrence is.
 from __future__ import annotations
 
 import os
+import re
 from pathlib import Path
 from unittest.mock import MagicMock
 
@@ -73,9 +74,19 @@ def _blind_prompt(paper: Paper, language: Language = Language.R) -> str:
     return client.messages.create.call_args.kwargs["messages"][0]["content"]
 
 
+def _occurs(form: str, text: str) -> bool:
+    """``form`` occurs in ``text`` as a whole number, not as the prefix or
+    suffix of a longer one ("0.3" inside the template's "0.342" is not a leak
+    of 0.3)."""
+    return re.search(rf"(?<![\d.]){re.escape(form)}(?!\d)", text) is not None
+
+
 def _leaks(prompt: str, curated: str, numbers: list[float]) -> list[str]:
     return sorted(
-        form for v in numbers for form in _value_strings(v) if form in prompt and form not in curated
+        form
+        for v in numbers
+        for form in _value_strings(v)
+        if _occurs(form, prompt) and not _occurs(form, curated)
     )
 
 
