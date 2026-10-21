@@ -361,12 +361,23 @@ notes: >
   same file, produced identical numbers, and the no-progress rule stopped
   the loop after one attempt.  Step 4, methodology prompt no longer
   primes "standardised": the new summary says headline coefficients are
-  unstandardised; seeded 13/13; independent NOT MEASURED -- the API
-  account ran out of credit (HTTP 400 "credit balance is too low") on the
-  independent generation call, after 6 live calls on this branch.  Step 5
-  (three cache-off independent runs) and the final both-mode baseline
-  were therefore not run; REPORT.md is regenerated from the step-3 run
-  (benchmark/results/phase16-step3-both-2026-10-20.json).
+  unstandardised; seeded 13/13 (first attempt blocked by API credit,
+  measured later the same day on main at 9b4bbb9).  Independent after
+  step 4: 12/13 with the LLM cache on (baseline-both-2026-10-20.json,
+  fails only warfare_iv_se_full_controls, 6.7% vs the 5% cap), and
+  4/13, 10/13, 1/13 in three cache-off runs
+  (variance-independent-postfix-run{1,2,3}-2026-10-20.json; median 4,
+  mean 5).  The 12/13 script found conflictexposure.dta by keeping the
+  .dta whose row count is closest to the target N=660, not by reading
+  the listing; its values are close, not exact (N=664: the four island
+  districts the authors drop are not mentioned in the paper; col 1
+  3.723; IV col 3 3.713 vs 3.482, inside the 1-SE band only).  Failure
+  modes of the cache-off runs, inferred from the numbers (no script was
+  retained): runs 1 and 2 both give 7.1688 (0.5159) for col 1 with col 3
+  exact (1.4646) -- population density omitted from col 1, as the
+  "bivariate" token invites; run 2 also gets IV cols 2-3 (4.6339,
+  3.4823) and N=664; run 1 gets the IV half wrong with sign flips; run 3
+  loaded a wrong file (N=374).  Spend not recorded (pre-PR #41).
 
   Step-6 classification of the 13 independent losses (step-3 run, code
   and stdout read), plus an offline counterfactual: the step-3 generated
