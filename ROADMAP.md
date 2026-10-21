@@ -99,24 +99,29 @@ runs per paper — distributions, not yet rates).
   independent losses are reconstructions of the specification (outcome
   composition, sample trimming, index direction), plus one run that
   printed results under its own names (Phase 3, below).
-- **Bisbee 2022: seeded 10 / 11, independent 8 / 11 cached and 7, 8, 7
-  cache-off** on the 47-package sandbox image built in Phase 1.8 (first
-  scored 9 seeded; 4 cached and 4, 1, 0 cache-off independent).  The
-  two March-sample coefficients fail in every independent run (the March
-  N in three of four) for a paper-vs-code reason: the paper describes the sample as March 1 – April 7, the
-  package uses every election from March 1 on (Phase 3, below).
+- **Bisbee 2022: seeded 10 / 11; independent 5 / 11 cached and 7, 8, 8
+  cache-off** after the `.RData` contents were listed (Phase 1.9), with
+  first scored equal to final in every independent run (first scored 9
+  seeded).  No first script crashes any more, and claim refinement adds
+  nothing.  The two March-sample coefficients and the March N fail in
+  every independent run for a paper-vs-code reason: the paper describes
+  the sample as March 1 – April 7, the package uses every election from
+  March 1 on (Phase 3, below).
 
 Read against the thesis: Dincecco's independent failures were all
 package navigation (wrong file, then wrong column), now fixed
 generically, so its 13 / 13 says the paper's text is enough to recover
 its specification; Alesina's are the specification gap the thesis is
 about.  The first-scored metric (Phase 1.8) separates derivation from
-target-guided search, and Bisbee shows why it matters: 0–4 of 11 first
-scored against 7–8 final in the new-image independent runs.
+target-guided search, and Bisbee showed why it matters: 0–4 of 11 first
+scored against 7–8 final in the Phase 3 new-image independent runs,
+because every first script crashed on guessed `.RData` variable names.
+With the objects and columns listed (Phase 1.9) first scored is 5–8 and
+equals final, so Bisbee's independent numbers are now derivation.
 
 The committed `REPORT.md` is built from one row per paper and mode
-(listed under Phase 3, below).  Spend recorded for Phases 1.8 and 3:
-about $18.43.
+(listed under Phase 3, below).  Spend recorded for Phases 1.8, 1.9 and
+3: about $21.10.
 
 ---
 
@@ -510,6 +515,52 @@ both-mode `REPORT.md` for Dincecco with the gap stated and every lost
 claim explained in the entry's `notes`. There is deliberately **no pass
 target for independent mode** — whatever it is, it is the finding.
 
+### 1.9 R data files in the dataset listing — ✅ measured (2026-10-21)
+*(PR #52.  Bisbee measured on `main` a972e04 (after #52, before #53):
+one cache-on and three `RETALLY_LLM_CACHE=0 --mode independent` runs,
+result-cache rows deleted before every run, Opus 4.7, 47-package Docker
+R sandbox, prompt otherwise as in Phase 3.  Files:
+`benchmark/results/phase19-bisbee-independent-2026-10-20.json` and
+`phase19-bisbee-variance-independent-run{1,2,3}-2026-10-20.json`.)*
+
+- **PR #52 — `.RData` / `.rds` contents in the dataset listing.**  A
+  small reader for R's save format (XDR serialization, vector contents
+  skipped) lists each file's objects, every data frame's row count and
+  columns, because pyreadr cannot open Bisbee's main file
+  (`replication_data.RData`) and gives no row counts; pyreadr is the
+  fallback.  Columns are ordered by the same paper-vocabulary matching
+  as `.dta` columns (R has no labels, so two generic name rules stand in),
+  and Dincecco's listing is byte-identical.
+
+Bisbee independent after #52:
+
+| Run | Final | First attempt | First scored | Error / claim refinements | March N | Spend |
+|---|---|---|---|---|---|---|
+| cache on | 5 / 11 | 5 / 11 | 5 / 11 | 0 / 3 | 1,461 | $0.57 |
+| cache-off run 1 | 7 / 11 | 7 / 11 | 7 / 11 | 0 / 1 | 626 | $0.48 |
+| cache-off run 2 | 8 / 11 | 8 / 11 | 8 / 11 | 0 / 3 | 703 | $0.85 |
+| cache-off run 3 | 8 / 11 | 8 / 11 | 8 / 11 | 0 / 3 | 1,591 | $0.77 |
+
+Before #52 (Phase 3, same image and prompt otherwise): final 8, 7, 8, 7;
+first attempt 0, 0, 0, 0 (every first script crashed on guessed variable
+names); first scored 4, 4, 1, 0; 1 error + 3 claim refinements each.
+
+- **The crash cause is fixed.**  With the objects and columns listed, no
+  first script crashed (0 error refinements in all four runs) and the
+  first script already scored 5–8 of 11.
+- **Claim refinement added nothing** in any run (first scored equals
+  final everywhere), so Bisbee's independent numbers are now derivation,
+  not target-guided search.
+- **Final pass counts are unchanged in distribution** (5–8 vs 7–8).  The
+  persistent failures are the two March coefficients (the paper-vs-code
+  sample definition, Phase 3) and `sample_size_march` (N 626–1,591 vs
+  1,710); `sample_size_full` (1,723 and 724 vs 1,882) fails in two runs
+  and both interaction claims in the cached run.
+- **What it means.**  Bisbee's independent first-scored distribution moved
+  from 0–4 to 5–8 for a non-paper reason — the listing, not anything
+  about this paper's variables — which is the fair kind of fix.
+- **Spend:** $2.67 over the four runs.
+
 ---
 
 ## Phase 2 — Agent protocol — ✅ protocol built (2026-10); general-agent adapter TODO
@@ -705,6 +756,9 @@ refinement, not from the first script that ran.
   after printing only `NA` results.  The error repair, which sees the
   printed column names, then produced the first scored script.  Listing
   `.RData` contents like `.dta` columns is the obvious generic fix.
+  **That fix is PR #52 (Phase 1.9): the crash cause is gone — no first
+  independent script crashed after it, and first scored (5–8 / 11)
+  equals final.**
 - **Most independent passes came after claim refinement** — target-guided
   search, e.g. run 1 went 2 → 8; one run grid-searched start and end
   dates for the March window against the target N.  First scored (0–4)
@@ -731,9 +785,10 @@ refinement, not from the first script that ran.
 **`REPORT.md`** is built from a combined `results.json` (gitignored) of
 six rows: Dincecco both rows from `phase18-dincecco-both-2026-10-20.json`,
 Alesina both rows from `phase3-alesina-both-2026-10-20.json`, Bisbee
-seeded from `phase3b-bisbee-both-2026-10-20.json` and Bisbee independent
-from `phase3b-bisbee-independent-2026-10-20.json` (both new image, cache
-on; the old-image rows are not in it).
+seeded from `phase3b-bisbee-both-2026-10-20.json` (new image, cache on)
+and Bisbee independent from `phase19-bisbee-independent-2026-10-20.json`
+(new image, after #52, cache on: 5 / 11, first scored 5; the old-image
+and pre-#52 rows are not in it).
 First-scored fields for rows written before #45/#47 were filled from the
 run artifacts with the `--rescore` scoring path.  It is a cross-run
 composite, not one run, so its "Seeded vs independent" table is a
