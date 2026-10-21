@@ -36,6 +36,7 @@ from retally.models import (
     ExecutionResult,
     Language,
     Paper,
+    RefinementAttempt,
     ReproductionMode,
     ValidationReport,
 )
@@ -635,3 +636,124 @@ def test_reproducer_round_trips_and_defaults_to_pipeline():
     assert d["reproducer"] == "fake"
     assert runner._result_from_jsonable(d).reproducer == "fake"
     assert runner._result_from_jsonable({"entry_id": "old"}).reproducer == "pipeline"
+
+
+# ── First-attempt scoring ──────────────────────────────────────────────
+
+
+class TwoAttemptReproducer:
+    """An agent whose first script passed one claim and whose refined final script passed both."""
+
+    name = "two-attempt"
+
+    def reproduce(self, paper_source, *, language, dataset_reference, claims, reproduction_mode):
+        first = "RESULT:beta=0.9\nRESULT:n_obs=660\n"
+        final = "RESULT:beta=0.5\nRESULT:n_obs=660\n"
+        return Reproduction(
+            outputs={"beta": 0.5, "n_obs": 660.0},
+            claims=list(claims or []),
+            stdout=final,
+            exit_code=0,
+            attempt_outputs=[first, final],
+            n_refinements=1,
+            n_executions=2,
+        )
+
+
+def test_first_attempt_is_scored_with_the_same_comparator(tmp_path):
+    [row] = runner.run_benchmark(
+        [_entry()], reproducer="two", reproducer_factory=TwoAttemptReproducer, cache_dir=tmp_path
+    )
+    assert row.n_claims_with_paper_match == 2
+    assert row.n_claims_with_paper_match_first_attempt == 1
+    assert row.n_refinements == 1 and row.n_executions == 2
+    assert [(cd.description, cd.passed, cd.passed_first_attempt) for cd in row.claim_details] == [
+        ("beta", True, False),
+        ("n_obs", True, True),
+    ]
+    # Round-trips through results JSON, and through the result cache.
+    out = tmp_path / "results.json"
+    runner.write_results([row], out)
+    [loaded] = [runner._result_from_jsonable(d) for d in json.loads(out.read_text())["results"]]
+    assert loaded.n_claims_with_paper_match_first_attempt == 1
+    assert loaded.claim_details[0].passed_first_attempt is False
+    [cached] = runner.run_benchmark(
+        [_entry()], reproducer="two", reproducer_factory=TwoAttemptReproducer, cache_dir=tmp_path
+    )
+    assert cached.cached and cached.n_claims_with_paper_match_first_attempt == 1
+
+
+def test_first_attempt_uses_the_modes_tolerance():
+    """0.57 vs 0.5 fails seeded but sits inside ±1·SE independently, first attempt included."""
+    rep = Reproduction(
+        outputs={"beta": 0.5, "n_obs": 660.0},
+        attempt_outputs=["RESULT:beta=0.57\nRESULT:n_obs=NA\n", "RESULT:beta=0.5\nRESULT:n_obs=660\n"],
+    )
+    seeded = runner.score_reproduction(_entry(), rep, mode="seeded")
+    independent = runner.score_reproduction(_entry(), rep, mode="independent")
+    assert seeded.n_claims_with_paper_match_first_attempt == 0
+    assert independent.n_claims_with_paper_match_first_attempt == 1
+    # n_executions falls back to the attempt count; refinements stay unreported.
+    assert seeded.n_executions == 2 and seeded.n_refinements is None
+
+
+def test_no_attempt_data_leaves_first_attempt_fields_unset():
+    scored = runner.score_reproduction(_entry(), Reproduction(outputs={"beta": 0.5, "n_obs": 660.0}))
+    assert scored.n_claims_with_paper_match == 2
+    assert scored.n_claims_with_paper_match_first_attempt is None
+    assert scored.n_refinements is None and scored.n_executions is None
+    assert all(cd.passed_first_attempt is None for cd in scored.claim_details)
+
+
+def test_old_results_rows_load_without_first_attempt_fields():
+    for d in json.loads(BOTH_BASELINE.read_text(encoding="utf-8")):
+        row = runner._result_from_jsonable(d)
+        assert row.n_claims_with_paper_match_first_attempt is None
+        assert row.n_refinements is None and row.n_executions is None
+        assert all(cd.passed_first_attempt is None for cd in row.claim_details)
+
+
+def test_pipeline_reproduction_lists_attempt_outputs_in_run_order():
+    """A reverted refinement: the final run came first, the broken one after it."""
+    beta = Claim(description="beta", value=0.5)
+    final = ExecutionResult(
+        generated_code="ok",
+        stdout="RESULT:beta=0.5\n",
+        exit_code=0,
+        outputs={"beta": 0.5},
+        attempts=[RefinementAttempt(code="broken", stdout="partial", exit_code=1)],
+        final_execution_index=0,
+        refinement_calls=1,
+    )
+    report = ValidationReport(
+        paper=Paper(title="t", claims=[beta]),
+        dataset=Dataset(name="d", source_url="", local_path=Path("/tmp/d")),
+        execution_result=final,
+        claim_results=[],
+        overall_passed=False,
+    )
+    rep = reproducer_mod.reproduction_from_report(report)
+    assert rep.attempt_outputs == ["RESULT:beta=0.5\n", "partial"]
+    assert (rep.n_refinements, rep.n_executions) == (1, 2)
+
+    # Without an index the final run is taken to be last; refinements are at
+    # least one per execution after the first.
+    final.final_execution_index = None
+    final.refinement_calls = 0
+    rep = reproducer_mod.reproduction_from_report(report)
+    assert rep.attempt_outputs == ["partial", "RESULT:beta=0.5\n"]
+    assert rep.n_refinements == 1
+
+
+def test_reference_pipeline_records_first_attempt(tmp_path):
+    """Real components, fake LLM: a first script that passes is recorded as such."""
+    data = tmp_path / "data"
+    data.mkdir()
+    (data / "data.csv").write_text("y,x\n1,2\n", encoding="utf-8")
+    pipeline, _ = _real_pipeline("print('RESULT:beta=0.5')\nprint('RESULT:n_obs=660')\n", data)
+    [row] = runner.run_benchmark(
+        [_dataset_entry()], pipeline_factory=lambda: pipeline, cache_dir=tmp_path / "c"
+    )
+    assert row.error is None
+    assert row.n_claims_with_paper_match == row.n_claims_with_paper_match_first_attempt == 2
+    assert (row.n_refinements, row.n_executions) == (0, 1)

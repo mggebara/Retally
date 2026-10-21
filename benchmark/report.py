@@ -238,23 +238,65 @@ def _mode_gap_markdown(results: list[dict[str, Any]]) -> str:
     i_total = sum(g.independent_total for g in gaps)
     lost = sum(len(g.lost) for g in gaps)
     gained = sum(len(g.gained) for g in gaps)
+    # First-attempt numbers only when some row recorded them (older files: omitted).
+    show_first = any(
+        g.seeded_passed_first_attempt is not None or g.independent_passed_first_attempt is not None
+        for g in gaps
+    )
+    s_first = _summed_first_attempt([g.seeded_passed_first_attempt for g in gaps])
+    i_first = _summed_first_attempt([g.independent_passed_first_attempt for g in gaps])
     lines.extend(
         [
-            f"- Seeded: **{s_pass} / {s_total}** claims passed",
-            f"- Independent: **{i_pass} / {i_total}** claims passed",
+            f"- Seeded: **{s_pass} / {s_total}** claims passed"
+            + (f" (first attempt {s_first} / {s_total})" if s_first is not None else ""),
+            f"- Independent: **{i_pass} / {i_total}** claims passed"
+            + (f" (first attempt {i_first} / {i_total})" if i_first is not None else ""),
             f"- Lost without the scripts: **{lost}**; gained: **{gained}**",
             "",
-            "| Entry | Split | Reproducer | Seeded | Independent | Lost without scripts |",
-            "|---|---|---|---|---|---|",
         ]
     )
+    if show_first:
+        lines.extend(
+            [
+                "*First attempt* is what each mode's first script passed, before the refinement "
+                "loop showed the model which claims were off target.",
+                "",
+                "| Entry | Split | Reproducer | Seeded | Independent "
+                "| First attempt (seeded / independent) | Lost without scripts |",
+                "|---|---|---|---|---|---|---|",
+            ]
+        )
+    else:
+        lines.extend(
+            [
+                "| Entry | Split | Reproducer | Seeded | Independent | Lost without scripts |",
+                "|---|---|---|---|---|---|",
+            ]
+        )
     for g in gaps:
         lost_str = ", ".join(f"`{d}`" for d in g.lost) if g.lost else "—"
+        first_cell = ""
+        if show_first:
+            first_cell = (
+                f" {_count_or_dash(g.seeded_passed_first_attempt)}/{g.seeded_total}"
+                f" / {_count_or_dash(g.independent_passed_first_attempt)}/{g.independent_total} |"
+            )
         lines.append(
             f"| `{g.entry_id}` | {g.split} | {g.reproducer} | {g.seeded_passed}/{g.seeded_total} "
-            f"| {g.independent_passed}/{g.independent_total} | {lost_str} |"
+            f"| {g.independent_passed}/{g.independent_total} |{first_cell} {lost_str} |"
         )
     return "\n".join(lines)
+
+
+def _summed_first_attempt(values: list[int | None]) -> int | None:
+    """Sum of first-attempt counts, or None unless every row recorded one."""
+    if not values or any(v is None for v in values):
+        return None
+    return sum(v for v in values if v is not None)
+
+
+def _count_or_dash(v: int | None) -> str:
+    return "—" if v is None else str(v)
 
 
 def _verdict_summary_markdown(results: list[dict[str, Any]], mode: str | None = None) -> str:
@@ -418,6 +460,9 @@ def _row_markdown(r: dict[str, Any], show_mode: bool = False) -> str:
     n_paper = r.get("n_claims_with_paper_match", 0)
     n_i4r = r.get("n_claims_with_i4r_match", 0)
     claims = f"{n_paper} / {n_i4r} of {n_total}"
+    note = metrics.first_attempt_note(r)
+    if note:
+        claims += f" ({note})"
     cached = "✓" if r.get("cached") else ""
     return f"| `{eid}` |{mode_cell} {status} | {ran} | {paper} | {i4r} | {claims} | {cached} |"
 
@@ -437,10 +482,15 @@ def _row_html(r: dict[str, Any], show_mode: bool = False) -> str:
         f"<td>{_escape(_bool_glyph(r.get('agrees_with_paper')))}</td>"
         f"<td>{_escape(_bool_glyph(r.get('agrees_with_i4r')))}</td>"
         f"<td>{r.get('n_claims_with_paper_match', 0)} / {r.get('n_claims_with_i4r_match', 0)} "
-        f"of {r.get('n_claims_in_catalog', 0)}</td>"
+        f"of {r.get('n_claims_in_catalog', 0)}{_html_first_attempt(r)}</td>"
         f"<td>{'✓' if r.get('cached') else ''}</td>"
         f"</tr>"
     )
+
+
+def _html_first_attempt(r: dict[str, Any]) -> str:
+    note = metrics.first_attempt_note(r)
+    return f" ({_escape(note)})" if note else ""
 
 
 def _status_label(r: dict[str, Any]) -> str:

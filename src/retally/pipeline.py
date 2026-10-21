@@ -521,11 +521,13 @@ class ValidationPipeline:
         # final result (``ExecutionResult.attempts``) for later inspection.
         log = [_Execution(code, result)]
 
+        exec_refinements = 0
         for _attempt in range(self.max_refinements):
             if result.exit_code == 0 and result.outputs:
                 break
             error = result.stderr or "No RESULT: lines found in output"
             log[-1].feedback = error
+            exec_refinements += 1
             code = self.generator.refine(code, error, paper, dataset, stdout=result.stdout or "")
             result = executor.execute(code, dataset)
             log.append(_Execution(code, result))
@@ -534,13 +536,23 @@ class ValidationPipeline:
         claim_results = self.comparator.compare_all(paper.claims, result.outputs, mode=reproduction_mode)
 
         # ── Phase 2: close the gap on soft-failed claims ──────────────
+        claim_refinements = [0]
         if result.exit_code == 0 and result.outputs and self.max_claim_refinements > 0:
             code, result, claim_results = self._refine_for_failed_claims(
-                code, result, claim_results, paper, dataset, reproduction_mode, log=log
+                code,
+                result,
+                claim_results,
+                paper,
+                dataset,
+                reproduction_mode,
+                log=log,
+                calls=claim_refinements,
             )
 
         result.generated_code = code
         result.attempts = _superseded_attempts(log, result)
+        result.final_execution_index = next(i for i, e in enumerate(log) if e.result is result)
+        result.refinement_calls = exec_refinements + claim_refinements[0]
         return code, result, claim_results
 
     def _refine_for_failed_claims(
@@ -552,6 +564,7 @@ class ValidationPipeline:
         dataset,
         reproduction_mode: ReproductionMode = ReproductionMode.SEEDED,
         log: list[_Execution] | None = None,
+        calls: list[int] | None = None,
     ) -> tuple[str, ExecutionResult, list[ClaimValidationResult]]:
         """Iteratively narrow the gap between reproduced values and paper claims.
 
@@ -575,7 +588,9 @@ class ValidationPipeline:
 
         ``log`` (optional) is the caller's execution log: each new run is
         appended to it, and the claim-gap feedback is recorded on the run
-        it was computed from.
+        it was computed from.  ``calls`` (optional) is a one-element
+        counter incremented on every ``refine_for_claims`` call, including
+        one that returns identical code and so never runs.
         """
         executor = self._executor_for(paper.language)
         if log is None:
@@ -592,6 +607,8 @@ class ValidationPipeline:
             for e in log:
                 if e.result is exec_result:
                     e.feedback = _claim_gap_feedback(failed)
+            if calls is not None:
+                calls[0] += 1
             new_code = self.generator.refine_for_claims(code, failed, exec_result, paper, dataset, history)
 
             # Model returned the same code → it's signalling that the gap

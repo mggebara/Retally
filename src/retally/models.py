@@ -384,6 +384,20 @@ class ExecutionResult:
     """Earlier executions superseded by this one, oldest first (see
     :class:`RefinementAttempt`).  Empty when the first script was final."""
 
+    final_execution_index: int | None = None
+    """0-based position of this (final) execution among all the executions
+    the refinement loop ran, in the order they ran.  Usually
+    ``len(attempts)`` (the last run is final), but smaller when a
+    refinement broke the script and the pipeline reverted to an earlier
+    run.  None when unknown (results built outside the pipeline), which
+    readers treat as "last"."""
+
+    refinement_calls: int = 0
+    """Number of refinement calls made to the generator (execution-error
+    ``refine`` plus claim-targeted ``refine_for_claims``), including a call
+    whose code was byte-identical and so never ran.  0 means the first
+    script was the only one generated."""
+
 
 @dataclass
 class ClaimValidationResult:

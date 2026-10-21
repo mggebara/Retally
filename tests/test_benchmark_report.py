@@ -351,3 +351,68 @@ def test_cost_section_per_paper_per_mode_and_total():
 def test_cost_section_flags_unpriced_models():
     md = report.render_markdown([_result(entry_id="p", usage=_usage(model="claude-unknown-9"))])
     assert "Not priced (absent from the table): `claude-unknown-9`." in md
+
+
+# ── First-attempt vs final pass counts ─────────────────────────────────
+
+
+def _cd_first(description, passed, first):
+    return {**_cd(description, passed), "passed_first_attempt": first}
+
+
+def test_per_paper_row_shows_first_attempt_and_refinements():
+    row = _result(
+        entry_id="p",
+        n_claims_in_catalog=2,
+        n_claims_with_paper_match=2,
+        n_claims_with_paper_match_first_attempt=1,
+        n_refinements=1,
+        n_executions=2,
+        claim_details=[_cd_first("beta", True, False), _cd_first("se", True, True)],
+    )
+    md = report.render_markdown([row])
+    assert "| 2 / 1 of 2 (first attempt 1/2, 1 refinement) |" in md
+    html = report.render_html([row])
+    assert "2 / 1 of 2 (first attempt 1/2, 1 refinement)</td>" in html
+
+
+def test_rows_without_attempt_data_render_as_before():
+    md = report.render_markdown([_result(entry_id="p")])
+    assert "| 1 / 1 of 1 |" in md
+    assert "first attempt" not in md
+    assert "first attempt" not in report.render_html([_result(entry_id="p")])
+
+
+def test_mode_gap_table_adds_a_first_attempt_pair():
+    results = [
+        _result(
+            entry_id="p",
+            mode="seeded",
+            n_claims_with_paper_match_first_attempt=2,
+            n_refinements=0,
+            claim_details=[_cd_first("beta", True, True), _cd_first("se", True, True)],
+        ),
+        _result(
+            entry_id="p",
+            mode="independent",
+            n_claims_with_paper_match_first_attempt=0,
+            n_refinements=3,
+            claim_details=[_cd_first("beta", True, False), _cd_first("se", False, False)],
+        ),
+    ]
+    md = report.render_markdown(results)
+    assert "- Seeded: **2 / 2** claims passed (first attempt 2 / 2)" in md
+    assert "- Independent: **1 / 2** claims passed (first attempt 0 / 2)" in md
+    assert "| First attempt (seeded / independent) |" in md
+    assert "| `p` | dev | pipeline | 2/2 | 1/2 | 2/2 / 0/2 | `se` |" in md
+    assert "(first attempt 0/2, 3 refinements)" in md
+
+
+def test_mode_gap_table_without_attempt_data_is_unchanged():
+    results = [
+        _result(entry_id="p", mode="seeded", claim_details=[_cd("beta", True)]),
+        _result(entry_id="p", mode="independent", claim_details=[_cd("beta", False)]),
+    ]
+    md = report.render_markdown(results)
+    assert "| Entry | Split | Reproducer | Seeded | Independent | Lost without scripts |" in md
+    assert "First attempt" not in md and "first attempt" not in md

@@ -221,3 +221,40 @@ def test_cli_prints_dir_data_files_results_and_claims(tmp_path, capsys):
     assert "earlier attempts: 1" in out
     assert artifacts_cli.main([str(results), "--mode", "independent"]) == 1
     json.loads(results.read_text(encoding="utf-8"))
+
+
+class RefinedArtifactReproducer(ArtifactReproducer):
+    """Like ArtifactReproducer, but its first script missed and one refinement fixed it."""
+
+    def reproduce(self, paper_source, *, language, dataset_reference, claims, reproduction_mode):
+        rep = super().reproduce(
+            paper_source,
+            language=language,
+            dataset_reference=dataset_reference,
+            claims=claims,
+            reproduction_mode=reproduction_mode,
+        )
+        rep.attempt_outputs = ["RESULT:beta=0.9\n", "RESULT:beta=0.5\n"]
+        rep.n_refinements = 1
+        rep.n_executions = 2
+        return rep
+
+
+def test_cli_prints_refinements_and_first_attempt_when_recorded(tmp_path, capsys):
+    [row] = _run(tmp_path, RefinedArtifactReproducer(ARTS))
+    results = tmp_path / "results.json"
+    runner.write_results([row], results)
+    assert artifacts_cli.main([str(results)]) == 0
+    out = capsys.readouterr().out
+    assert "refinements: 1 (2 executions)" in out
+    assert "claims: 1/1 pass (first attempt 0/1)" in out
+    assert "[PASS] beta" in out and "[first attempt FAIL]" in out
+
+
+def test_cli_omits_first_attempt_for_rows_without_it(tmp_path, capsys):
+    [row] = _run(tmp_path, ArtifactReproducer(ARTS))
+    results = tmp_path / "results.json"
+    runner.write_results([row], results)
+    assert artifacts_cli.main([str(results)]) == 0
+    out = capsys.readouterr().out
+    assert "refinements:" not in out and "first attempt" not in out
