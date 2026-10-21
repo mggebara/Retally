@@ -269,14 +269,62 @@ def test_claim_refinement_reverts_when_refinement_breaks_code():
     assert built_with is ok_exec
 
 
-def test_claim_refinement_skips_hard_failures():
-    """A claim with reproduced_value=None is not a soft failure; do not refine."""
+def test_claim_refinement_targets_claims_with_no_value():
+    """Phase 1.7: a claim printed as NA (or with no RESULT line) is a failing
+    claim the refinement loop targets -- on Dincecco the IV claims were NA
+    because the script had loaded the wrong data file."""
     pipeline, _ = _make_pipeline()
     pipeline.executor.execute.return_value = _exec_ok("ok", other=0.80)
     pipeline.comparator.compare_all.return_value = [_claim_result(0.95, reproduced=None, passed=False)]
+    pipeline.generator.refine_for_claims.return_value = "ok"  # unchanged code: model gives up
 
     pipeline.validate("some text")
-    pipeline.generator.refine_for_claims.assert_not_called()
+    pipeline.generator.refine_for_claims.assert_called_once()
+    failed = pipeline.generator.refine_for_claims.call_args.args[1]
+    assert [cr.reproduced_value for cr in failed] == [None]
+
+
+def test_no_progress_check_counts_na_result_lines():
+    """Same numbers, but a claim that had no RESULT line now prints NA: the
+    output set changed, so the loop does not stop on 'no progress'."""
+    pipeline, _ = _make_pipeline()
+    v1 = _exec_ok("v1", accuracy=0.80)
+    v2 = _exec_ok("v2", accuracy=0.80)
+    v2.stdout += "RESULT:iv=NA\n"
+    v3 = _exec_ok("v3", accuracy=0.80)
+    v3.stdout += "RESULT:iv=NA\n"
+    pipeline.executor.execute.side_effect = [v1, v2, v3]
+    pipeline.comparator.compare_all.return_value = [_failing_claim_result(0.95, 0.80)]
+    pipeline.generator.refine_for_claims.side_effect = ["v2", "v3"]
+
+    pipeline.validate("some text")
+    # v1 -> v2 changed the RESULT set (progress); v2 -> v3 did not (stop).
+    assert pipeline.generator.refine_for_claims.call_count == 2
+
+
+def test_no_progress_is_waived_once_when_the_data_file_changes():
+    pipeline, _ = _make_pipeline()
+    pipeline.max_claim_refinements = 5
+    codes = [
+        f'df <- read_dta("Data/{name}.dta")' for name in ("biclean", "conflictexposure", "cells", "other")
+    ]
+    pipeline.generator.generate.return_value = codes[0]
+    pipeline.executor.execute.return_value = _exec_ok("x", accuracy=0.80)
+    pipeline.comparator.compare_all.return_value = [_failing_claim_result(0.95, 0.80)]
+    pipeline.generator.refine_for_claims.side_effect = codes[1:]
+
+    pipeline.validate("some text")
+    # Same numbers every time: the first file switch earns one more attempt,
+    # the second switch does not.
+    assert pipeline.generator.refine_for_claims.call_count == 2
+
+
+def test_loaded_data_files_and_result_names_helpers():
+    from retally.pipeline import _loaded_data_files, _result_names
+
+    code = "a <- read_dta(file.path(root, \"Data/conflictexposure.dta\")); b <- read.csv('x/Y.CSV')"
+    assert _loaded_data_files(code) == {"conflictexposure.dta", "y.csv"}
+    assert _result_names("RESULT:a=1\nnoise\nRESULT: b = NA\n") == {"a", "b"}
 
 
 def test_claim_refinement_disabled_when_max_set_to_zero():

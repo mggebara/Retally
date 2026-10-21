@@ -103,12 +103,16 @@ def _superseded_attempts(log: list[_Execution], final: ExecutionResult) -> list[
     ]
 
 
-def _claim_gap_feedback(soft_failed: list[ClaimValidationResult]) -> str:
-    """Plain-text summary of the off-target claims sent to ``refine_for_claims``."""
+def _claim_gap_feedback(failed: list[ClaimValidationResult]) -> str:
+    """Plain-text summary of the failing claims sent to ``refine_for_claims``.
+
+    A claim with no value (printed NA, or no RESULT line) is shown as ``N/A``.
+    """
     return "\n".join(
-        f"{cr.claim.description}: reproduced {cr.reproduced_value}, claimed {cr.claim.value} "
-        f"(tolerance {cr.tolerance})"
-        for cr in soft_failed
+        f"{cr.claim.description}: reproduced "
+        f"{'N/A' if cr.reproduced_value is None else cr.reproduced_value}, "
+        f"claimed {cr.claim.value} (tolerance {cr.tolerance})"
+        for cr in failed
     )
 
 
@@ -129,6 +133,27 @@ def _outputs_close(
     if a.keys() != b.keys():
         return False
     return all(math.isclose(a[k], b[k], rel_tol=rel_tol, abs_tol=abs_tol) for k in a)
+
+
+_RESULT_NAME_RE = re.compile(r"^\s*RESULT:\s*([^=]+?)\s*=", re.MULTILINE)
+_DATA_FILE_RE = re.compile(
+    r"""["']([^"'\n]*?\.(?:dta|csv|tsv|rds|rdata|sav|parquet|feather|xlsx?))["']""", re.IGNORECASE
+)
+
+
+def _result_names(stdout: str) -> frozenset[str]:
+    """Names of every ``RESULT:`` line in ``stdout``, including ones whose value
+    is ``NA`` / non-numeric (which ``parse_outputs`` drops)."""
+    return frozenset(m.group(1) for m in _RESULT_NAME_RE.finditer(stdout or ""))
+
+
+def _loaded_data_files(code: str) -> frozenset[str]:
+    """Base names of the data files a script names in string literals.
+
+    A deliberately simple proxy for "which file does this script load",
+    used only to notice that a refinement switched data file.
+    """
+    return frozenset(Path(m.group(1)).name.lower() for m in _DATA_FILE_RE.finditer(code or ""))
 
 
 class ValidationPipeline:
@@ -469,12 +494,15 @@ class ValidationPipeline:
 
         **Phase 2 — claim-value refinement.**  Once the code runs and
         captures values, compare against claims.  For any claim that
-        produced a value but is outside tolerance, ask the generator to
-        close the gap.  Stops on any of:
+        failed -- outside tolerance, or no value (NA / no RESULT line) --
+        ask the generator to close the gap.  Stops on any of:
 
-        * All soft-failed claims now pass.
+        * All claims now pass.
         * ``max_claim_refinements`` attempts reached.
-        * Two consecutive runs produced identical outputs (no progress).
+        * Two consecutive runs produced identical outputs (no progress):
+          the same numeric values and the same set of ``RESULT:`` names,
+          NA lines included.  Waived once if the refinement switched
+          data file (the set of data-file names in the code changed).
         * Generator returned byte-identical code (model giving up).
         * Refinement broke the code (revert and stop).
         """
@@ -529,9 +557,11 @@ class ValidationPipeline:
 
         See :meth:`_run_with_refinement` for the contract and termination
         rules.  This method only runs when Phase 1 produced a working
-        script and at least one claim is soft-failed (ran but outside
-        tolerance).  A claim with ``reproduced_value is None`` is a hard
-        failure and is not targeted here — refining wouldn't help.
+        script and at least one claim failed.  Since Phase 1.7 that
+        includes claims with ``reproduced_value is None`` (printed as NA,
+        or no RESULT line): on Dincecco the IV claims were NA because the
+        script had loaded the wrong file, which only a claim-targeted
+        refinement can fix.
 
         Internally we keep a ``history`` list of every attempt's
         ``outputs`` dict (oldest first).  It serves two purposes:
@@ -552,18 +582,17 @@ class ValidationPipeline:
             log = [_Execution(code, exec_result)]
         history: list[dict[str, float]] = [dict(exec_result.outputs)]
         attempts = 0
+        file_switch_waiver_used = False
 
         for _ in range(self.max_claim_refinements):
-            soft_failed = [c for c in claim_results if not c.passed and c.reproduced_value is not None]
-            if not soft_failed:
+            failed = [c for c in claim_results if not c.passed]
+            if not failed:
                 break
 
             for e in log:
                 if e.result is exec_result:
-                    e.feedback = _claim_gap_feedback(soft_failed)
-            new_code = self.generator.refine_for_claims(
-                code, soft_failed, exec_result, paper, dataset, history
-            )
+                    e.feedback = _claim_gap_feedback(failed)
+            new_code = self.generator.refine_for_claims(code, failed, exec_result, paper, dataset, history)
 
             # Model returned the same code → it's signalling that the gap
             # is unreproducible.  Honour the signal and stop.
@@ -584,7 +613,18 @@ class ValidationPipeline:
             # numeric noise.  Plain ``==`` on float dicts is too strict —
             # 0.95000000001 vs 0.95 is the same model run; calling that
             # "progress" wastes a refinement slot on no real change.
-            if _outputs_close(new_result.outputs, history[-1]):
+            # NA lines count: a refinement that turns a NA into a number (or
+            # back) changed the output set even if the numbers did not.
+            no_progress = _outputs_close(new_result.outputs, history[-1]) and _result_names(
+                new_result.stdout
+            ) == _result_names(exec_result.stdout)
+            switched_file = _loaded_data_files(new_code) != _loaded_data_files(code)
+            if no_progress and switched_file and not file_switch_waiver_used:
+                # Same numbers from a different data file: give the new file
+                # one more attempt (within the cap) before calling it stuck.
+                file_switch_waiver_used = True
+                no_progress = False
+            if no_progress:
                 # Still adopt the new code (so deviation notes from this
                 # attempt are surfaced) but stop looping.
                 code, exec_result = new_code, new_result

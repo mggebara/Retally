@@ -8,7 +8,10 @@ against earlier runs depend on that.  The golden files under
 *before* the mode switch existed, using exactly the builder below, and
 regenerated deliberately once since (Phase 1.6): the fixture package
 gained a ``.dta`` file and the dataset listing now shows Stata column
-names, which moves the seeded prompt's listing by one line.
+names, which moves the seeded prompt's listing by one line; and (Phase 1.7)
+each claim's location and context are rendered under it, so the fixture
+claim gained both; and the .dta listing now gives row counts, puts
+paper-matched columns first, and lists ranked .dta files first.
 
 The fixture package is a miniature replication archive (a CSV, a Stata
 ``master.do``, an R script), so the prompt exercises every section that
@@ -47,6 +50,8 @@ def _paper(language: Language) -> Paper:
                 description="warfare_coefficient_bivariate",
                 value=3.713,
                 claim_type=ClaimType.COEFFICIENT,
+                table_ref="Table 1",
+                context="Table 1 column 1.  OLS with population density as a control.",
             ),
             Claim(description="n_districts", value=660, claim_type=ClaimType.OTHER),
         ],

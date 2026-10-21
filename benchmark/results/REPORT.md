@@ -21,25 +21,25 @@ Reproducer: **pipeline**.
 ## Verdicts — independent (among executed papers)
 
 - Pipeline completed without crashing: **1 / 1**
-- Agrees with the paper's stated values: **0 / 1**
-- Agrees with the I4R replicator: **0 / 1** (of papers where I4R published a value to compare against)
+- Agrees with the paper's stated values: **1 / 1**
+- Agrees with the I4R replicator: **1 / 1** (of papers where I4R published a value to compare against)
 
 ## Seeded vs independent
 
 Claims passing with the authors' scripts in the prompt (seeded) versus without them (independent), per paper executed in both modes.  *Lost* claims pass seeded but not independent — what the scripts were carrying.
 
 - Seeded: **13 / 13** claims passed
-- Independent: **12 / 13** claims passed
-- Lost without the scripts: **1**; gained: **0**
+- Independent: **13 / 13** claims passed
+- Lost without the scripts: **0**; gained: **0**
 
 | Entry | Split | Reproducer | Seeded | Independent | Lost without scripts |
 |---|---|---|---|---|---|
-| `dincecco-2022-india-warfare` | dev | pipeline | 13/13 | 12/13 | `warfare_iv_se_full_controls` |
+| `dincecco-2022-india-warfare` | dev | pipeline | 13/13 | 13/13 | — |
 
 ## Closeness (per split and mode)
 
 - **dev · seeded**: 1 entries, 13 claims, matched 100%, passed 13/13, median rel err 0.0%, within tol/2x/5x: 100%/100%/100%
-- **dev · independent**: 1 entries, 13 claims, matched 100%, passed 12/13, median rel err 0.6%, within tol/2x/5x: 92%/100%/100%
+- **dev · independent**: 1 entries, 13 claims, matched 100%, passed 13/13, median rel err 0.0%, within tol/2x/5x: 100%/100%/100%
 
 ## Per-component success — seeded (executed papers only)
 
@@ -63,9 +63,18 @@ Claims passing with the authors' scripts in the prompt (seeded) versus without t
 | code_generated | 1 | 1 | 100% |
 | code_executed | 1 | 1 | 100% |
 
+## Estimated API cost
+
+Total estimated spend this run: **$0.00** across 0 API calls (8 further calls served free by the LLM cache).  Estimates from the price table in `benchmark/pricing.py`.
+
+| ID | Mode | Reproducer | API calls | LLM-cache hits | Input tok | Output tok | Cache write tok | Cache read tok | Est. cost |
+|---|---|---|---:|---:|---:|---:|---:|---:|---:|
+| `dincecco-2022-india-warfare` | seeded | pipeline | 0 | 4 | 0 | 0 | 0 | 0 | $0.00 |
+| `dincecco-2022-india-warfare` | independent | pipeline | 0 | 4 | 0 | 0 | 0 | 0 | $0.00 |
+
 ## Per-paper results
 
 | ID | Mode | Reproducer | Status | Ran | Agrees w/ paper | Agrees w/ I4R | Claims (paper / I4R) | Cached |
 |---|---|---|---|---|---|---|---|---|
 | `dincecco-2022-india-warfare` | seeded | pipeline | ran | ✓ | ✓ | ✓ | 13 / 13 of 13 |  |
-| `dincecco-2022-india-warfare` | independent | pipeline | ran | ✓ | ✗ | ✗ | 12 / 12 of 13 |  |
+| `dincecco-2022-india-warfare` | independent | pipeline | ran | ✓ | ✓ | ✓ | 13 / 13 of 13 |  |

@@ -622,20 +622,74 @@ def test_generation_prompt_lists_dta_column_names(tmp_path, mode):
 
 
 def test_dta_columns_are_truncated_and_capped(tmp_path):
-    from retally.codegen.generator import _TREE_HEADER_CHARS, _TREE_MAX_DTA_HEADERS, _describe_dataset_files
+    from retally.codegen.generator import (
+        _TREE_HEADER_CHARS,
+        _TREE_MAX_DTA_HEADERS,
+        _TREE_TOP_DTA_FILES,
+        _TREE_TOP_HEADER_CHARS,
+        _describe_dataset_files,
+    )
 
     wide = [f"variable_{i:04d}" for i in range(500)]
-    _write_dta(tmp_path / "a_wide.dta", wide)
+    _write_dta(tmp_path / "z_wide.dta", wide)
+    _write_dta(tmp_path / "y_wide.dta", wide)
     for i in range(_TREE_MAX_DTA_HEADERS + 2):
         _write_dta(tmp_path / f"b_{i:02d}.dta", ["x", "y"])
     lines = _describe_dataset_files(tmp_path)
+    # The widest files are listed first (path order breaks the tie), with
+    # rows, columns, and the larger budget for the top-ranked files.
     first = lines[0]
-    assert "a_wide.dta" in first and "500 columns: variable_0000, variable_0001" in first
+    assert first.startswith("- y_wide.dta (") and lines[1].startswith("- z_wide.dta (")
+    assert "2 rows, 500 columns: variable_0000, variable_0001" in first
     assert first.endswith("…")
-    assert len(first.split("columns: ", 1)[1]) == _TREE_HEADER_CHARS + 1
+    assert len(first.split("columns: ", 1)[1]) == _TREE_TOP_HEADER_CHARS + 1
+    beyond_top = lines[_TREE_TOP_DTA_FILES]
+    assert len(beyond_top.split("columns: ", 1)[1]) <= _TREE_HEADER_CHARS + 1
     with_columns = [line for line in lines if "columns:" in line]
     assert len(with_columns) == _TREE_MAX_DTA_HEADERS
     assert "columns:" not in lines[-1]
+
+
+def _write_labelled_dta(path: Path, columns: dict[str, str], n_rows: int = 2) -> None:
+    import pandas as pd
+
+    pd.DataFrame({c: [1.0] * n_rows for c in columns}).to_stata(
+        path, write_index=False, variable_labels=columns
+    )
+
+
+def test_dta_listing_puts_paper_matched_columns_and_files_first(tmp_path):
+    """Dincecco (Phase 1.7): the analysis file's outcome and instrument sat
+    hundreds of columns past the listing cap, and the model picked a smaller
+    file that showed similar names.  Columns named in the paper text (exact
+    name, or a Stata label that is a phrase of the text) go first, and the
+    file with the most such columns is listed first."""
+    from retally.codegen.generator import _describe_dataset_files
+
+    filler = {f"Conflict_{i}": f"Conflict exposure {i} km" for i in range(300)}
+    _write_labelled_dta(tmp_path / "a_small.dta", {"state": "State", "Land_250_1757": "Exposure"}, n_rows=3)
+    _write_labelled_dta(
+        tmp_path / "b_analysis.dta",
+        {
+            **filler,
+            "lnlights_001": "ln(0.01+Luminosity)",
+            "instrument": "Khyber Proximity",
+            "Land_250_1757": "Exposure",
+            "zz_other": "Something else",
+        },
+        n_rows=5,
+    )
+    hints = [
+        "Coefficient on Land_250_1757 in a regression of ln(0.01 + luminosity), "
+        "instrumented by proximity to the Khyber Pass (`instrument`)."
+    ]
+    lines = _describe_dataset_files(tmp_path, hints)
+    first = lines[0]
+    assert first.startswith("- b_analysis.dta (")
+    assert "5 rows, 304 columns: lnlights_001, instrument, Land_250_1757, Conflict_0" in first
+    assert lines[1].startswith("- a_small.dta (") and "3 rows, 2 columns: Land_250_1757, state" in lines[1]
+    # No hints: plain file order within each file.
+    assert "304 columns: Conflict_0, Conflict_1," in _describe_dataset_files(tmp_path)[0]
 
 
 def test_unreadable_dta_is_listed_without_columns(tmp_path):
@@ -709,3 +763,38 @@ def test_error_refinement_prompt_contains_stdout_excerpt(language):
     gen._client.messages.create.reset_mock()
     gen.refine("old", "Error", _paper(language=language), _dataset())
     assert "Last run's" not in _sent_prompt(gen)
+
+
+# ── Claim location / context in the generation prompt (Phase 1.7) ─────
+
+
+@pytest.mark.parametrize("language", [Language.R, Language.PYTHON], ids=["r", "python"])
+@pytest.mark.parametrize("mode", list(ReproductionMode), ids=lambda m: m.value)
+def test_generation_prompt_renders_claim_location_and_context(language, mode):
+    claim = Claim(
+        description="warfare_coefficient_bivariate",
+        value=3.713,
+        claim_type=ClaimType.COEFFICIENT,
+        table_ref="Table 1",
+        context="Table 1 column 1.\n  Controls for   population density.",
+    )
+    client = MagicMock()
+    client.messages.create.return_value = MagicMock(content=[MagicMock(text="x <- 1")])
+    CodeGenerator(client).generate(
+        _paper(claims=[claim], language=language), _dataset(), reproduction_mode=mode
+    )
+    prompt = client.messages.create.call_args.kwargs["messages"][0]["content"]
+    assert (
+        "1. warfare_coefficient_bivariate: 3.713 [type: coefficient]\n"
+        "   Location: Table 1\n"
+        "   Context: Table 1 column 1. Controls for population density.\n"
+    ) in prompt
+
+
+def test_claim_context_is_capped_and_absent_fields_add_no_lines():
+    from retally.codegen.generator import _CLAIM_CONTEXT_CHARS, _claim_detail_lines
+
+    assert _claim_detail_lines(Claim(description="n", value=1.0)) == []
+    long = Claim(description="n", value=1.0, context="x" * (_CLAIM_CONTEXT_CHARS + 50))
+    (line,) = _claim_detail_lines(long)
+    assert line == "   Context: " + "x" * _CLAIM_CONTEXT_CHARS + "…"

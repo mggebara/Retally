@@ -78,17 +78,16 @@ original_claims:
     unit: SD of Sanders two-way vote share
     location: "Table 1, column 1"
     context: >
-      Table 1 column 1 ("Full Sample, Basic").  lfe::felm of
-      scale(pcttw_sanders) (Sanders / (Sanders + Biden) 2020 county vote
-      share, standardized; 1 SD = 14.9 pp) on treatBin (1 if the county's
-      DMA had more than one confirmed Covid-19 case, DMA_cases > 1, on its
-      election date) plus county controls (sc_CTY_LTHS, sc_CTY_CollUp,
-      sc_CTY_LT30yo, sc_CTY_60Up, poverty 18-64, female-headed households,
-      unemployment, labour-force participation, manufacturing, median
-      household income, % rural, English-only, % white, % Black, log
-      population, 2020 turnout, caucus_switch, caucus) and Sanders 2016
-      two-way share; DMA fixed effects; SEs clustered by DMA.  Full
-      February-April primary calendar.  N = 1,882 counties.
+      Table 1 column 1 ("Full Sample, Basic").  OLS of Sanders' 2020
+      two-way vote share by county, in SDs (1 SD = 14.9 pp), on the
+      Exposure Dummy (county's DMA had one or more confirmed Covid-19
+      cases at its election date), 2020 turnout, Sanders 2016 support,
+      caucus switch, caucus dummy and county controls (% less than high
+      school, % college+, % under 30, % over 60, % 18-64 in poverty,
+      female-headed households, unemployment, labor force participation,
+      % manufacturing, median household income, % rural, % English only,
+      % white, % black, log population); DMA FE; DMA-clustered SEs.  N =
+      1,882.
   - description: exposure_coefficient_full_cbps
     value: -1.348
     claim_type: coefficient
@@ -98,10 +97,10 @@ original_claims:
     location: "Table 1, column 3"
     context: >
       Table 1 column 3 ("Full Sample, Weight").  Same regression as
-      exposure_coefficient_full_basic, estimated on complete cases and
-      weighted by covariate-balancing propensity score weights
-      (WeightIt::weightit, method "cbps", treatBin on the county controls).
-      DMA FE, DMA-clustered SEs.
+      exposure_coefficient_full_basic, weighted by covariate balanced
+      propensity score (CBPS, Imai and Ratkovic 2014) weights that
+      balance exposed and insulated counties on the pre-treatment
+      covariates.  DMA fixed effects, DMA-clustered standard errors.
   - description: exposure_coefficient_march_basic
     value: -0.885
     claim_type: coefficient
@@ -111,9 +110,10 @@ original_claims:
     location: "Table 1, column 4"
     context: >
       Table 1 column 4 ("March & April 7th, Basic").  As
-      exposure_coefficient_full_basic but restricted to elections on or
-      after 2020-03-01 (the window before Sanders dropped out) and without
-      the caucus dummy (no variation in this subset).  N = 1,710.
+      exposure_coefficient_full_basic but restricted to elections
+      between March 1st and April 7th (after the pandemic started and
+      before Sanders dropped out), without the caucus dummy
+      (insufficient variation in this subset).  N = 1,710.
   - description: exposure_coefficient_march_cbps
     value: -0.885
     claim_type: coefficient
@@ -122,9 +122,10 @@ original_claims:
     unit: SD of Sanders two-way vote share
     location: "Table 1, column 6"
     context: >
-      Table 1 column 6 ("March & April 7th, Weight").  March-April subset
-      with CBPS weights; DMA FE, DMA-clustered SEs.  The point estimate
-      coincides with column 4 to 3 dp; the SE differs.
+      Table 1 column 6 ("March & April 7th, Weight").  March-April
+      subset with CBPS weights; DMA fixed effects, DMA-clustered
+      standard errors.  The point estimate coincides with column 4 to 3
+      dp; the SE differs.
   - description: sample_size_full
     value: 1882
     claim_type: other
@@ -144,12 +145,12 @@ original_claims:
     sample_size: 654
     location: "Table 2, column 1"
     context: >
-      Table 2 column 1.  Survey experiment (MTurk, May 2020): OLS of an
-      indicator for favouring the anti-establishment hypothetical candidate
-      (yBin) on the anxiety-prime treatment indicator (z), no controls,
-      respondents with duration > 0.  The table note says robust SEs, but
-      the package's Table 2.R uses plain lm() and stargazer's default
-      (classical) SEs, which are the printed ones.  N = 654.
+      Table 2 column 1 ("Bivariate").  Survey experiment (Amazon
+      Mechanical Turk, May 2020): OLS of an indicator for favouring the
+      anti-establishment hypothetical candidate on the anxiety-prime
+      indicator (respondent read the pessimistic assessment of the
+      pandemic), no controls.  The table note says robust standard
+      errors.  N = 654.
   - description: anxiety_prime_effect_full_controls
     value: -0.082
     claim_type: coefficient
@@ -157,12 +158,12 @@ original_claims:
     sample_size: 654
     location: "Table 2, column 3"
     context: >
-      Table 2 column 3 ("Politician Controls").  As
-      anxiety_prime_effect_bivariate plus respondent demographics
-      (factor(age), factor(sex), factor(hisp), white, black, asian,
-      factor(pid) seven-point party ID) and the randomized hypothetical-
-      candidate attributes (factor(polAge), factor(polOcc),
-      factor(polPlat)).  Classical lm() SEs.
+      Table 2 column 3.  As anxiety_prime_effect_bivariate plus
+      demographic controls (the table reports party identification among
+      them: Democrat, Lean Dem, Independent, Lean GOP, Republican,
+      Strong GOP) and politician controls (the randomized attributes of
+      the hypothetical candidates: age, occupation, education, policy
+      platform).  N = 654.
   - description: anxiety_prime_effect_attentive
     value: -0.182
     claim_type: coefficient
@@ -171,9 +172,9 @@ original_claims:
     location: "Table 2, column 4"
     context: >
       Table 2 column 4 ("Attentive Subset").  Same specification as
-      anxiety_prime_effect_full_controls on respondents with survey
-      duration > 150 seconds (the table note says "more than 3 minutes";
-      the code's cutoff is 150 s).  N = 269.  Classical lm() SEs.
+      anxiety_prime_effect_full_controls on the attentive subset, which
+      the table note defines as respondents who spent more than 3
+      minutes completing the survey.  N = 269.
   - description: anti_estab_x_cases_interaction
     value: -0.016
     claim_type: coefficient
@@ -182,12 +183,11 @@ original_claims:
     location: "Table 3, column 1"
     context: >
       Table 3 column 1, row "Anti-Estab. X Cases (ln)".  2020 US House
-      primaries: lfe::felm of candidate vote share (voteSh) on
-      extreme * log(casesSum + 1), where extreme = endorsed by Justice
-      Democrats or the Tea Party (70 candidates) and casesSum is the
-      congressional district's cumulative Covid-19 cases at the primary;
-      congressional-district (stcd) fixed effects, SEs clustered by
-      district.  N = 2,019 candidates.
+      primaries: OLS of candidate vote share on an anti-establishment
+      indicator (endorsed by Justice Democrats or the Tea Party; 70
+      candidates), logged Covid-19 cases in the congressional district,
+      and their interaction; congressional-district fixed effects,
+      district-clustered standard errors.  N = 2,019 candidates.
   - description: tea_party_x_cases_interaction
     value: -0.020
     claim_type: coefficient
@@ -196,9 +196,10 @@ original_claims:
     location: "Table 3, column 3"
     context: >
       Table 3 column 3, row "Anti-Estab. X Cases (ln)".  As
-      anti_estab_x_cases_interaction with the anti-establishment indicator
-      restricted to Tea Party endorsees (tea; 62 candidates).  District FE,
-      district-clustered SEs.  N = 2,019.
+      anti_estab_x_cases_interaction with the anti-establishment
+      indicator restricted to Tea Party endorsees (62 candidates).
+      District fixed effects, district-clustered standard errors.  N =
+      2,019.
 
 # DP36 re-ran the authors' R code and states the presidential-primary
 # results "replicate perfectly" and the House-primary results "replicate
@@ -318,3 +319,16 @@ notes: >
   logs survive the script-free copy and contain every pinned number, and
   the package's .Rhistory (no file suffix, so not on SCRIPT_SUFFIXES)
   holds raw R commands that also survive it.
+
+  Context rewrite (2026-10-20, Phase 1.7).  Claim contexts are rendered
+  into the generation prompt in both modes, so they now use the paper's
+  words only.  Package-only details moved out of them and kept here:
+  lfe::felm with outcome scale(pcttw_sanders), treatment treatBin
+  (DMA_cases > 1), CBPS via WeightIt::weightit(method = "cbps") on
+  complete cases; survey outcome yBin, treatment z, sample duration > 0,
+  and the "Attentive" cutoff is duration > 150 seconds in the code
+  against the note's "more than 3 minutes"; Table 2 controls factor(age),
+  factor(sex), factor(hisp), white, black, asian, factor(pid),
+  factor(polAge), factor(polOcc), factor(polPlat); House outcome voteSh on
+  extreme * log(casesSum + 1) with stcd fixed effects, Tea Party
+  indicator tea.

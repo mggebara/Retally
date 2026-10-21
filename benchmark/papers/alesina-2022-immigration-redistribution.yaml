@@ -77,18 +77,15 @@ original_claims:
     unit: percentage points
     location: "Table 4, column 1"
     context: >
-      Table 4 column 1, row "Order/Salience T".  OLS (Stata reg, robust)
-      of the preferred top-1% income tax rate (tax_top1) on the Order
-      treatment indicator (immigfirst: immigration block shown before the
-      redistribution block), the three video treatments (Share of
-      Immigrants, Origin of Immigrants, Hard Work) and their interactions
-      with the Order treatment, plus controls: indicators for right, left,
-      male, age < 45, having children, top income quartile, college
-      degree, an immigrant parent, working in a high-immigration sector,
-      and country fixed effects.  Robust (HC1) SEs.  Sample excludes the
-      fastest/slowest 2% of respondents by survey duration and the top 2%
-      by video-watching time.  The interactions mean the Order effect is
-      identified among respondents who saw no video.  Control mean 37.12.
+      Table 4 column 1, row "Order/Salience T".  OLS of the preferred
+      tax rate on the top 1% on the Order treatment (immigration block
+      shown before the redistribution block), the three video treatments
+      and their interactions with Order, plus indicators for gender, age
+      < 45, children, top income quartile, college degree, political
+      affiliation, a parent born abroad, working in a high immigration
+      sector, and country fixed effects.  Robust SEs.  Sample drops the
+      top and bottom 2% of survey time and the top 2% of video-watching
+      time.  Control mean 37.12.
   - description: order_effect_tax_bottom50
     value: 0.914
     claim_type: coefficient
@@ -98,8 +95,8 @@ original_claims:
     location: "Table 4, column 2"
     context: >
       Table 4 column 2, Order/Salience T.  Same specification as
-      order_effect_tax_top1 with the preferred tax rate on the bottom 50%
-      (tax_bottom50) as outcome.  Control mean 10.94.
+      order_effect_tax_top1 with the preferred tax rate on the bottom
+      50% of the income distribution as outcome.  Control mean 10.94.
   - description: order_effect_social_budget
     value: -0.543
     claim_type: coefficient
@@ -108,11 +105,12 @@ original_claims:
     unit: percentage points
     location: "Table 4, column 3"
     context: >
-      Table 4 column 3, Order/Salience T.  Outcome: share of the budget
-      allocated to income support plus health (budget_social_w = winsorized
-      budget_safetynet + winsorized budget_health, each winsorized at the
-      5th/95th percentile within country).  Same regressors and controls as
-      order_effect_tax_top1.  Control mean 29.53.
+      Table 4 column 3, Order/Salience T.  Outcome: Social Budget, the
+      share of the government budget the respondent would allocate to
+      health and the social safety net (social insurance and income
+      support programs), winsorized at the 5th and 95th percentile by
+      country.  Same regressors and controls as order_effect_tax_top1.
+      Control mean 29.53.
   - description: order_effect_education_budget
     value: 0.439
     claim_type: coefficient
@@ -121,9 +119,10 @@ original_claims:
     unit: percentage points
     location: "Table 4, column 4"
     context: >
-      Table 4 column 4, Order/Salience T.  Outcome: share of the budget
-      allocated to education (budget_education_w, winsorized 5/95 within
-      country).  Same specification as order_effect_tax_top1.  Control
+      Table 4 column 4, Order/Salience T.  Outcome: the share of the
+      government budget the respondent would allocate to schooling and
+      higher education, winsorized at the 5th and 95th percentile by
+      country.  Same specification as order_effect_tax_top1.  Control
       mean 16.00.
   - description: order_effect_inequality_serious_problem
     value: -0.0280
@@ -132,10 +131,10 @@ original_claims:
     sample_size: 19763
     location: "Table 4, column 5"
     context: >
-      Table 4 column 5, Order/Salience T.  Outcome: indicator that
-      inequality is a serious problem (ineq_problem_ser).  Same
-      specification as order_effect_tax_top1; N = 19,763.  Control mean
-      0.59.
+      Table 4 column 5, Order/Salience T.  Outcome: dummy equal to 1 if
+      the respondent thinks income inequality is a serious or very
+      serious problem.  Same specification as order_effect_tax_top1; N =
+      19,763.  Control mean 0.59.
   - description: order_effect_donation_above_median
     value: -0.0479
     claim_type: coefficient
@@ -143,9 +142,10 @@ original_claims:
     sample_size: 19765
     location: "Table 4, column 6"
     context: >
-      Table 4 column 6, Order/Salience T.  Outcome: indicator for donating
-      above the median to charity in the incentivized donation question
-      (total_donation_d).  Same specification as order_effect_tax_top1.
+      Table 4 column 6, Order/Salience T.  Outcome: dummy equal to 1 if
+      the respondent's donation to charities (the amount the respondent
+      wishes to donate out of a potential prize) is above the median in
+      his or her country.  Same specification as order_effect_tax_top1.
       The abstract's "including actual donations to charities".  Control
       mean 0.47.
   - description: sample_size_table4
@@ -164,12 +164,13 @@ original_claims:
     unit: percentage points
     location: "Table 5, column 1"
     context: >
-      Table 5 column 1, row "T: Share of Immigrants".  First stage: OLS
-      (robust SEs) of the misperception of the share of immigrants
-      (mis_share_foreign = perceived minus actual share; for the US the
-      actual share is set to 13.5, legal plus undocumented) on the three
+      Table 5 column 1, row "T: Share of Immigrants".  First-stage OLS
+      of the misperception of the share of immigrants (perceived minus
+      actual share; for the US the main tables use the total-immigrant
+      version of the Share treatment, 13.5% legal plus undocumented,
+      while the documented-only version is in the appendix) on the three
       video-treatment indicators plus the Table 4 controls and country
-      fixed effects (no Order interactions).  Control mean 17.02.
+      fixed effects.  Robust standard errors.  Control mean 17.02.
   - description: hard_work_effect_immigration_support_index
     value: 0.0708
     claim_type: coefficient
@@ -177,13 +178,15 @@ original_claims:
     sample_size: 19765
     location: "Table 6, column 6"
     context: >
-      Table 6 column 6, row "T: Hard Work".  OLS (robust SEs) of the
-      Immigration Support Index (Kling et al. 2007 style: mean of the
-      control-group-standardized components imm_not_problem,
-      imm_benefits_soon, imm_citizenship_soon, trully_american_cit and
-      q_govt_imm, with missing components imputed at the treatment-arm
-      mean, then re-standardized on the control group) on the three video
-      treatments plus the Table 4 controls and country fixed effects.
+      Table 6 column 6, row "T: Hard Work".  OLS of the Immigration
+      Support Index on the three video treatments plus the Table 4
+      controls and country fixed effects; robust standard errors.  The
+      index follows Kling, Liebman and Katz (2007): an equally weighted
+      average of the z-scores (standardized by the control-group mean
+      and standard deviation, missing components set to 0) of Imm. Not a
+      Problem, Imm. Benefits Soon, Imm. Citizenship Soon, American Upon
+      Citizenship/Before and Govt. Should Care about Everyone, then re-
+      standardized on the control group.
   - description: misperception_share_immigrants_us
     value: 26.082
     claim_type: other
@@ -192,14 +195,14 @@ original_claims:
     unit: percentage points
     location: "Figure 2, left panel (US); text section 3.1"
     context: >
-      Mean misperception of the share of immigrants in the US: mean
-      perceived share (36.1%) minus the actual share used in Figure 2
-      (10%), among US control-group respondents (no video treatment,
-      inattentive respondents dropped).  The paper states the two levels
-      in the text ("36.1% ... when the actual share of immigrants is
-      10%"); the difference to 3 dp, its SE and N are from DP40 Table 1
-      column 1 and the meta-database.  Note Figure 2 uses 10% for the US,
-      whereas Tables 4-6 use 13.5% (legal plus undocumented).
+      Mean misperception of the share of immigrants in the US (perceived
+      minus actual share): the paper states respondents believe there
+      are 36.1% immigrants when the actual share is 10% (Figure 2 and
+      Section 3.1).  The difference to 3 dp, its SE and N are from the
+      I4R replication report (DP40 Table 1 column 1) and the meta-
+      database.  Note Figure 2 uses the documented share (10%) for the
+      US, whereas the treatment tables use 13.5% (legal plus
+      undocumented).
   - description: misperception_share_immigrants_sweden
     value: 9.402
     claim_type: other
@@ -208,11 +211,11 @@ original_claims:
     unit: percentage points
     location: "Figure 2, left panel (Sweden); text section 3.1"
     context: >
-      Mean misperception of the share of immigrants in Sweden: mean
-      perceived share (27.0%) minus actual (17.6%) among Swedish
-      control-group respondents.  The smallest misperception of the six
-      countries ("with the exception of Sweden" in the text).  Value, SE
-      and N from DP40 Table 1 column 1 and the meta-database.
+      Mean misperception of the share of immigrants in Sweden: average
+      perception 27% minus actual 17.6% (Figure 2 and Section 3.1).  The
+      smallest misperception of the six countries ("With the exception
+      of Sweden" in the text).  Value to 3 dp, SE and N from the I4R
+      replication report (DP40 Table 1 column 1) and the meta-database.
 
 # DP40's verdict for the direct rerun is blanket: "We find that the point
 # estimates are identical" for Figure 2 and Tables 4, 5 and 6 using the
@@ -320,3 +323,15 @@ notes: >
   value off disk; Do/Figures/.Rhistory (no file suffix, so not on
   SCRIPT_SUFFIXES) also survives it with raw R commands.  Review
   independent passes accordingly.
+
+  Context rewrite (2026-10-20, Phase 1.7).  Claim contexts are rendered
+  into the generation prompt in both modes, so they now use the paper's
+  words only.  Package-only details moved out of them and kept here:
+  outcome variables tax_top1, tax_bottom50, budget_social_w
+  (budget_safetynet + budget_health, each winsorized), budget_education_w,
+  ineq_problem_ser, total_donation_d; Order indicator immigfirst;
+  misperception mis_share_foreign; index components imm_not_problem,
+  imm_benefits_soon, imm_citizenship_soon, trully_american_cit,
+  q_govt_imm; Stata `reg, robust` (HC1).  The curator also recorded the
+  index's missing components as imputed at the treatment-arm mean, while
+  the paper's appendix says missing z-scores are set to 0.
