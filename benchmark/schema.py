@@ -16,6 +16,7 @@ from __future__ import annotations
 import datetime
 import re
 from dataclasses import dataclass, field
+from decimal import Decimal, InvalidOperation
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -92,6 +93,93 @@ class OriginalClaim:
     context: str = ""
     location: str | None = None
     """Table / figure / column reference, e.g. ``"Table 3, col 4"``."""
+
+    decimals: int | None = None
+    """Decimal places of ``value`` as printed in the paper.  Curators may
+    set it in the YAML; when absent the loader infers it from how
+    ``value`` is *written* there (``-0.0006`` -> 4, ``3.710`` -> 3,
+    ``660`` -> 0, ``1.5e-3`` -> 4 via its decimal expansion ``0.0015``).
+    Negative means rounded to the left of the point (``-2`` = "printed
+    to the nearest hundred").  None when unknown (a claim built in code
+    rather than loaded from YAML), which disables the printed-precision
+    tolerance floor for that claim."""
+
+    @property
+    def half_unit(self) -> float | None:
+        """Half a unit in the last printed place, ``0.5 * 10**-decimals``.
+
+        Any true value within this distance of ``value`` prints as
+        ``value``, so the comparator never holds a reproduction to a
+        tighter absolute band than this.  None when ``decimals`` is.
+        """
+        return half_unit_for(self.decimals)
+
+
+def half_unit_for(decimals: int | None) -> float | None:
+    """``0.5 * 10**-decimals``, or None when ``decimals`` is None."""
+    if decimals is None:
+        return None
+    return 0.5 * 10.0 ** (-decimals)
+
+
+def infer_decimals(literal: str) -> int | None:
+    """Decimal places of a numeric literal as written (its printed precision).
+
+    ``"-0.0006"`` -> 4, ``"3.710"`` -> 3 (trailing zeros are printed
+    digits), ``"660"`` -> 0, ``"1.5e-3"`` -> 4 (scientific notation is
+    read as its decimal expansion, ``0.0015``; ``"1.5e3"`` is ``1500``
+    -> 0).  Written integers are taken as exact (0); a curator marks a
+    rounded integer with an explicit negative ``decimals``.  Returns None
+    for anything that is not a finite decimal literal (``.inf``, hex,
+    an empty string).
+    """
+    text = literal.strip().replace("_", "")
+    if not text or text.lower().startswith(("0x", "+0x", "-0x", "0o", "+0o", "-0o")):
+        return None
+    try:
+        dec = Decimal(text)
+    except InvalidOperation:
+        return None
+    if not dec.is_finite():
+        return None
+    exponent = dec.as_tuple().exponent
+    if not isinstance(exponent, int):  # unreachable for finite Decimals; narrows the type
+        return None
+    return max(0, -exponent)
+
+
+def _raw_claim_value_literals(text: str) -> list[str | None]:
+    """The source text of each ``original_claims[i].value`` scalar, by index.
+
+    Composes the YAML into its node graph (same SafeLoader the loader
+    uses, so it accepts exactly the same documents) and reads each value
+    node's original scalar string, before YAML resolves it to a float and
+    the printed precision is lost (``0.0280`` and ``0.028`` are the same
+    float).  Entries that are not a mapping, have no scalar ``value``, or
+    a document that does not have the expected shape yield None; the
+    regular loader reports the actual error.
+    """
+    try:
+        root = yaml.compose(text, Loader=yaml.SafeLoader)
+    except yaml.YAMLError:
+        return []
+    claims_node = _mapping_get(root, "original_claims")
+    if not isinstance(claims_node, yaml.SequenceNode):
+        return []
+    literals: list[str | None] = []
+    for item in claims_node.value:
+        value_node = _mapping_get(item, "value")
+        literals.append(str(value_node.value) if isinstance(value_node, yaml.ScalarNode) else None)
+    return literals
+
+
+def _mapping_get(node: Any, key: str) -> Any:
+    if not isinstance(node, yaml.MappingNode):
+        return None
+    for key_node, value_node in node.value:
+        if isinstance(key_node, yaml.ScalarNode) and key_node.value == key:
+            return value_node
+    return None
 
 
 @dataclass
@@ -205,8 +293,9 @@ class SchemaError(ValueError):
 
 def load_entry(path: Path) -> BenchmarkEntry:
     """Load and validate a single benchmark YAML file."""
+    text = path.read_text(encoding="utf-8")
     try:
-        raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+        raw = yaml.safe_load(text)
     except yaml.YAMLError as exc:
         raise SchemaError(f"{path}: YAML parse failed: {exc}") from exc
 
@@ -214,7 +303,7 @@ def load_entry(path: Path) -> BenchmarkEntry:
         raise SchemaError(f"{path}: top-level YAML must be a mapping, got {type(raw).__name__}")
 
     try:
-        return _entry_from_dict(raw)
+        return _entry_from_dict(raw, value_literals=_raw_claim_value_literals(text))
     except (KeyError, TypeError, ValueError) as exc:
         raise SchemaError(f"{path}: {exc}") from exc
 
@@ -254,7 +343,15 @@ def load_catalog(papers_dir: Path) -> list[BenchmarkEntry]:
 # ---------------------------------------------------------------------------
 
 
-def _entry_from_dict(d: dict[str, Any]) -> BenchmarkEntry:
+def _entry_from_dict(d: dict[str, Any], value_literals: list[str | None] | None = None) -> BenchmarkEntry:
+    """Build an entry from parsed YAML.
+
+    ``value_literals`` holds the source text of each claim's ``value``
+    (see ``_raw_claim_value_literals``), used to infer ``decimals`` when
+    the curator did not set it.  Without it (a dict built in code), a
+    claim's ``decimals`` comes from the explicit field only.
+    """
+    literals = value_literals or []
     for required in ("id", "i4r_report_url", "language", "outcome_label", "paper"):
         if required not in d:
             raise KeyError(f"missing required field: {required}")
@@ -268,7 +365,10 @@ def _entry_from_dict(d: dict[str, Any]) -> BenchmarkEntry:
         paper=_paper_ref(d["paper"]),
         dataset=_dataset_ref(d.get("dataset")),
         code_repo=_code_repo_ref(d.get("code_repo")),
-        original_claims=[_original_claim(c) for c in d.get("original_claims", [])],
+        original_claims=[
+            _original_claim(c, literals[i] if i < len(literals) else None)
+            for i, c in enumerate(d.get("original_claims", []))
+        ],
         i4r_replicator_findings=[_finding(f) for f in d.get("i4r_replicator_findings", [])],
         out_of_scope_reason=_optional_str(d.get("out_of_scope_reason")),
         split=_split(d.get("split", "dev")),
@@ -353,9 +453,12 @@ def _code_repo_ref(d: Any) -> CodeRepoRef | None:
     )
 
 
-def _original_claim(d: Any) -> OriginalClaim:
+def _original_claim(d: Any, value_literal: str | None = None) -> OriginalClaim:
     if not isinstance(d, dict):
         raise TypeError(f"original_claims[] entry must be a mapping, got {type(d).__name__}")
+    decimals = _decimals(d.get("decimals"))
+    if decimals is None and value_literal is not None:
+        decimals = infer_decimals(value_literal)
     return OriginalClaim(
         description=str(d.get("description", "")),
         value=float(d["value"]),
@@ -365,7 +468,17 @@ def _original_claim(d: Any) -> OriginalClaim:
         sample_size=_optional_int(d.get("sample_size")),
         context=str(d.get("context", "")),
         location=_optional_str(d.get("location")),
+        decimals=decimals,
     )
+
+
+def _decimals(x: Any) -> int | None:
+    """Validate an explicit ``decimals``: an integer (negative allowed) or absent."""
+    if x is None:
+        return None
+    if isinstance(x, bool) or not isinstance(x, int):
+        raise ValueError(f"decimals must be an integer (decimal places as printed), got {x!r}")
+    return x
 
 
 def _finding(d: Any) -> ReplicatorFinding:

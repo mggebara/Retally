@@ -62,8 +62,8 @@ Every result row records the `mode` it ran in, and rows are identified by
 
 | Mode | The generator sees | A pass measures | Tolerance |
 |---|---|---|---|
-| `seeded` (default) | paper text, claims, dataset listing, **and the authors' replication-package scripts** (plus any linked repo), presented as ground truth | *computational* reproduction — can the model translate the authors' Stata/R into fixest and run it | strict: per-type relative tolerance (COEFFICIENT 2 %, SE 5 %, …) |
-| `independent` | paper text, claims, and a **script-free copy** of the dataset only — scripts withheld from the prompt *and* removed from the directory that is listed and mounted, linked code not fetched, and the prompt forbids opening any script files | *independent* reproduction — can the model regenerate the analysis from the paper's description | SE-aware: within ±k·SE of the reported value when the claim pins a `standard_error` (k = 1, never narrower than the relative tolerance); relative tolerance otherwise |
+| `seeded` (default) | paper text, claims, dataset listing, **and the authors' replication-package scripts** (plus any linked repo), presented as ground truth | *computational* reproduction — can the model translate the authors' Stata/R into fixest and run it | strict: per-type relative tolerance (COEFFICIENT 2 %, SE 5 %, …); never narrower than the printed precision (below) |
+| `independent` | paper text, claims, and a **script-free copy** of the dataset only — scripts withheld from the prompt *and* removed from the directory that is listed and mounted, linked code not fetched, and the prompt forbids opening any script files | *independent* reproduction — can the model regenerate the analysis from the paper's description | SE-aware: within ±k·SE of the reported value when the claim pins a `standard_error` (k = 1, never narrower than the relative tolerance); relative tolerance otherwise; never narrower than the printed precision (below) |
 | `blind` | everything `independent` withholds, **and every target**: each claim is listed by its token, type, unit label, location and context, but never its value, standard error or sample size; the methodology summary is asked to leave reported results out; the claim-targeted refinement loop is off (crash / no-RESULT repairs still run), so no "reproduced X, claimed Y" feedback is ever built | *derivation* — can the model compute the paper's numbers without ever being shown them | same as `independent` (the same policy object) |
 
 In seeded and independent mode the model sees each pinned claim's value
@@ -136,6 +136,45 @@ the catalog YAML, so pin SEs alongside coefficients.  The independent
 band is deliberately looser than the seeded one: compare the two modes'
 *pass sets*, and read the closeness bands (which use each claim's own
 effective tolerance) with that in mind.
+
+### Printed-precision floor (every mode)
+
+Published tables round.  A coefficient printed as `-0.0006` is
+consistent with any true value in [-0.00065, -0.00055], ±8 % of the
+printed value, so a perfect reproduction could fail a 2 % relative band.
+On top of whichever band the mode gives (per-type relative, or ±k·SE),
+the comparator therefore never accepts an absolute band narrower than
+half a unit in the pinned value's last printed place:
+
+    effective band = max(tolerance × |claimed|, 0.5 × 10^-decimals)
+
+The rule is the same in seeded, independent and blind mode and does not
+depend on the model: a reproduction that rounds to the printed value
+always passes.  It only ever widens a band.  `decimals` is inferred from
+how `value` is written in the catalog YAML (`-0.0006` → 4, `3.710` → 3,
+`660` → 0, `1.5e-3` → 4) unless the curator sets it (see
+`papers/README.md`); written integers are exact (±0.5) unless `decimals`
+is negative.  Each claim detail records which bound was binding in
+`tolerance_source` (`relative`, `se_band` or `printed_precision`);
+`tolerance` stays a relative number (`band / |claimed|`), except for a
+claim of exactly 0, where the floor's absolute band is recorded as is.
+Rows from files written before the floor carry no `tolerance_source`.
+
+Committed results can be re-scored under the current rule without
+re-running anything, since each claim detail stores `claimed` and
+`reproduced`:
+
+```bash
+uv run python -m benchmark.rescore benchmark/results/<file>.json [--catalog DIR] [--write OUT.json]
+```
+
+It prints per-row before/after pass counts and every flipped claim;
+the input file is never modified (`--write` writes a re-scored copy;
+first-attempt / first-scored fields are left as recorded).  Introduced
+2026-10-21: re-scoring `phase18-dincecco-both`, `phase3-alesina-both`,
+`phase3b-bisbee-both` and `phase19-bisbee-independent` flipped no claim
+(the floor binds on two Bisbee seeded interaction coefficients, printed
+as `-0.016` and `-0.020`, without changing their verdicts).
 
 ### First-attempt vs final pass
 
