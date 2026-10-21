@@ -48,6 +48,10 @@ class _CachedTextBlock:
 class _CachedResponse:
     """Minimal stand-in for an anthropic Message: ``.content[0].text``."""
 
+    from_llm_cache = True
+    """Marks a replay: no API call was made, so it carries no ``usage`` and
+    costs nothing (``retally.usage`` counts it as a cache hit)."""
+
     def __init__(self, text: str) -> None:
         self.content = [_CachedTextBlock(text)]
 

@@ -56,7 +56,7 @@ def main(argv: list[str] | None = None) -> int:
     for arg in argv:
         path = Path(arg)
         try:
-            payloads.append(json.loads(path.read_text(encoding="utf-8")))
+            payloads.append(metrics.result_rows(json.loads(path.read_text(encoding="utf-8"))))
         except (OSError, json.JSONDecodeError) as exc:
             print(f"cannot read {path}: {exc}", file=sys.stderr)
             return 2

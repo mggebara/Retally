@@ -111,6 +111,17 @@ The renderer then produces a Markdown table and a self-contained HTML
 page from that JSON.  The report file is committed; `results.json` is
 not (it's a rebuildable artefact).
 
+**Spend.**  `results.json` is `{"usage": {...}, "results": [...]}`
+(older files are a bare list of rows; `benchmark.metrics.result_rows`
+reads both).  Each row's `usage` holds the Claude API tokens its run
+spent, by model (`input_tokens`, `output_tokens`,
+`cache_creation_input_tokens`, `cache_read_input_tokens`, `api_calls`),
+the number of calls the LLM cache answered for free (`llm_cache_hits`,
+`llm_cache_served`), and `estimated_usd`; the top-level `usage` totals
+the rows that were actually re-run (result-cache rows are excluded).
+Prices live in one table, `benchmark/pricing.py`.  REPORT.md shows an
+"Estimated API cost" section per paper per mode with the run total.
+
 Re-running with no catalog or pipeline changes hits the cache and
 finishes in seconds.  The result cache (`benchmark/.cache/<hash>.json`)
 is keyed on the catalog entry, the retally version, **the mode**, and —

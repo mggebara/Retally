@@ -56,6 +56,7 @@ from typing import Any
 
 # benchmark.* is at the repo root, not under src/retally/, so the test
 # helper and this module both reach into the sibling schema module.
+from benchmark import pricing
 from benchmark import schema as bschema
 from benchmark.reproducer import (
     ComponentMetrics,
@@ -194,6 +195,14 @@ class BenchmarkResult:
     re-ran the pipeline.  Useful in reports so a reader knows what was
     actually exercised in this run."""
 
+    usage: dict[str, Any] | None = None
+    """Claude API spend of the run that produced this row: the
+    reproducer's ``Reproduction.usage`` (tokens by model, API calls, LLM-cache
+    hits) plus ``estimated_usd`` from ``benchmark.pricing``.  None for skips,
+    for reproducers that do not track usage, and for rows from files that
+    predate the field.  On a result-cache hit (``cached``) it describes the
+    original run, not this one, and run totals exclude it."""
+
 
 # ---------------------------------------------------------------------------
 # Public API
@@ -278,10 +287,17 @@ def run_benchmark(
 
 
 def write_results(results: list[BenchmarkResult], out_path: Path) -> None:
-    """Serialise a results list to JSON for the report renderer to consume."""
+    """Serialise results to JSON for the report renderer to consume.
+
+    Shape: ``{"usage": <run-level spend>, "results": [<row>, ...]}`` —
+    ``usage`` is :func:`benchmark.pricing.aggregate` over the rows.  Files
+    written before the spend accounting are a bare list of rows; readers go
+    through :func:`benchmark.metrics.result_rows`, which accepts both.
+    """
+    rows = [_result_to_jsonable(r) for r in results]
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(
-        json.dumps([_result_to_jsonable(r) for r in results], indent=2) + "\n",
+        json.dumps({"usage": pricing.aggregate(rows), "results": rows}, indent=2) + "\n",
         encoding="utf-8",
     )
 
@@ -358,6 +374,11 @@ def main(argv: list[str] | None = None) -> int:
     out = RESULTS_DIR / "results.json"
     write_results(results, out)
     print(f"Wrote {out.relative_to(REPO_ROOT)} ({len(results)} entries).")
+    spend = pricing.aggregate([_result_to_jsonable(r) for r in results])
+    print(
+        f"Estimated API spend: {pricing.format_usd(spend['estimated_usd'])} "
+        f"({spend['api_calls']} API calls; {spend['llm_cache_hits']} served free by the LLM cache)."
+    )
     return 0
 
 
@@ -496,11 +517,13 @@ def _execute_with_reproducer(
         )
     except Exception as exc:
         logger.warning("Reproducer raised on %s: %s", entry.id, exc)
+        # A failed run still spent tokens; a reproducer may expose them.
         return BenchmarkResult(
             entry_id=entry.id,
             mode=mode,
             retally_ran=False,
             error=f"{type(exc).__name__}: {exc}",
+            usage=_priced_usage(getattr(agent, "last_usage", None)),
         )
 
     # Dump what the extractor found so a human can curate it into the
@@ -509,7 +532,14 @@ def _execute_with_reproducer(
     if extracted_claims_dir is not None and claims_override is None:
         _dump_extracted_claims(extracted_claims_dir, entry.id, reproduction.claims)
 
-    return score_reproduction(entry, reproduction, mode=mode)
+    result = score_reproduction(entry, reproduction, mode=mode)
+    result.usage = _priced_usage(getattr(reproduction, "usage", None))
+    return result
+
+
+def _priced_usage(usage: Any) -> dict[str, Any] | None:
+    """A reproducer's usage dict with ``estimated_usd`` added; None when absent or malformed."""
+    return pricing.priced(usage) if isinstance(usage, dict) else None
 
 
 def score_reproduction(
@@ -838,6 +868,8 @@ def _result_from_jsonable(d: dict[str, Any]) -> BenchmarkResult:
         split=str(d.get("split", "dev")),
         components=ComponentMetrics(**d.get("components", {})),
         cached=bool(d.get("cached", False)),
+        # Absent in files that predate cost accounting.
+        usage=d.get("usage") if isinstance(d.get("usage"), dict) else None,
     )
 
 

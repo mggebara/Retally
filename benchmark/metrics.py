@@ -124,6 +124,17 @@ def mode_of(result: dict[str, Any]) -> str:
     return str(result.get("mode") or "seeded")
 
 
+def result_rows(payload: Any) -> list[dict[str, Any]]:
+    """The result rows of a loaded results JSON file.
+
+    Current files are ``{"usage": {...}, "results": [...]}``; files written
+    before run-level cost accounting are a bare list of rows.
+    """
+    if isinstance(payload, dict):
+        return list(payload.get("results") or [])
+    return list(payload or [])
+
+
 def reproducer_of(result: dict[str, Any]) -> str:
     """The reproducer that produced a row; rows predating the field came from the pipeline."""
     return str(result.get("reproducer") or "pipeline")

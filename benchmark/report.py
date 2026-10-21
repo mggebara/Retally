@@ -18,7 +18,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from benchmark import metrics
+from benchmark import metrics, pricing
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 RESULTS_DIR = REPO_ROOT / "benchmark" / "results"
@@ -66,6 +66,9 @@ def render_markdown(results: list[dict[str, Any]]) -> str:
             _component_breakdown_markdown(results),
             "",
         ]
+    cost = _cost_markdown(results)
+    if cost:
+        lines.extend([cost, ""])
     lines.extend(
         [
             "## Per-paper results",
@@ -139,7 +142,7 @@ def main() -> int:
         )
         return 1
 
-    results = json.loads(src.read_text(encoding="utf-8"))
+    results = metrics.result_rows(json.loads(src.read_text(encoding="utf-8")))
     write_report(results)
     print(f"Wrote {(RESULTS_DIR / 'REPORT.md').relative_to(REPO_ROOT)}")
     print(f"Wrote {(RESULTS_DIR / 'report.html').relative_to(REPO_ROOT)}")
@@ -294,6 +297,71 @@ def _closeness_markdown(results: list[dict[str, Any]]) -> str:
         for split, m in metrics.by_split(rows).items():
             lines.append(f"- **{split} · {mode}**: {metrics.format_metrics_line(m)}")
     return "\n".join(lines)
+
+
+def _cost_markdown(results: list[dict[str, Any]]) -> str:
+    """Estimated API spend per paper per mode, and the run total.
+
+    Empty string when no row carries ``usage`` (results files that predate
+    cost accounting, or reproducers that do not track it), so older reports
+    render unchanged.  Prices come from ``benchmark/pricing.py``.  Calls the
+    LLM cache answered cost nothing; rows served from the benchmark result
+    cache made no calls in this run and are left out of the total.
+    """
+    if not any(r.get("usage") for r in results):
+        return ""
+    total = pricing.aggregate(results)
+    lines = [
+        "## Estimated API cost",
+        "",
+        f"Total estimated spend this run: **{pricing.format_usd(total['estimated_usd'])}** "
+        f"across {total['api_calls']} API calls "
+        f"({total['llm_cache_hits']} further calls served free by the LLM cache"
+        + (
+            f"; {total['rows_from_result_cache']} rows from the result cache, not re-run"
+            if total["rows_from_result_cache"]
+            else ""
+        )
+        + ").  Estimates from the price table in `benchmark/pricing.py`.",
+    ]
+    if total.get("unpriced_models"):
+        unpriced = ", ".join(f"`{m}`" for m in total["unpriced_models"])
+        lines[-1] += f"  Not priced (absent from the table): {unpriced}."
+    lines.extend(
+        [
+            "",
+            "| ID | Mode | Reproducer | API calls | LLM-cache hits | Input tok | Output tok "
+            "| Cache write tok | Cache read tok | Est. cost |",
+            "|---|---|---|---:|---:|---:|---:|---:|---:|---:|",
+        ]
+    )
+    for r in results:
+        if r.get("skipped") and not r.get("usage"):
+            continue
+        lines.append(_cost_row_markdown(r))
+    return "\n".join(lines)
+
+
+def _cost_row_markdown(r: dict[str, Any]) -> str:
+    head = f"| `{r['entry_id']}` | {metrics.mode_of(r)} | {metrics.reproducer_of(r)} |"
+    usage = r.get("usage")
+    if not usage:
+        return head + " — | — | — | — | — | — | — |"
+    tokens = dict.fromkeys(
+        ("input_tokens", "output_tokens", "cache_creation_input_tokens", "cache_read_input_tokens"), 0
+    )
+    for model_tokens in (usage.get("by_model") or {}).values():
+        for k in tokens:
+            tokens[k] += int((model_tokens or {}).get(k) or 0)
+    usd, _ = pricing.estimate(usage)
+    cost = pricing.format_usd(usd)
+    if r.get("cached"):
+        cost = f"result cache (was {cost})"
+    return (
+        f"{head} {usage.get('api_calls', 0)} | {usage.get('llm_cache_hits', 0)} "
+        f"| {tokens['input_tokens']:,} | {tokens['output_tokens']:,} "
+        f"| {tokens['cache_creation_input_tokens']:,} | {tokens['cache_read_input_tokens']:,} | {cost} |"
+    )
 
 
 def _component_breakdown_markdown(results: list[dict[str, Any]], mode: str | None = None) -> str:

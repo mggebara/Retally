@@ -7,6 +7,7 @@ from tests._loaders import REPO_ROOT, load_module_from_path
 # report.py does ``from benchmark import metrics`` — pre-load it so the
 # from-import resolves via sys.modules under the file-based test loader.
 load_module_from_path("benchmark.metrics", REPO_ROOT / "benchmark" / "metrics.py")
+load_module_from_path("benchmark.pricing", REPO_ROOT / "benchmark" / "pricing.py")
 report = load_module_from_path("benchmark.report", REPO_ROOT / "benchmark" / "report.py")
 
 
@@ -301,3 +302,52 @@ def test_reproducer_shown_alongside_mode_for_a_plugged_in_agent():
     assert "Reproducer: **myagent:make**." in md
     assert "| `p` | dev | myagent:make | 1/1 | 0/1 | `b` |" in md
     assert "| `p` | seeded | myagent:make | ran |" in md
+
+
+# ── Estimated API cost ─────────────────────────────────────────────────
+
+
+def _usage(inp=1_000_000, out=100_000, calls=3, hits=2, model="claude-opus-4-7"):
+    return {
+        "api_calls": calls,
+        "llm_cache_hits": hits,
+        "llm_cache_served": hits > 0,
+        "by_model": {
+            model: {
+                "input_tokens": inp,
+                "output_tokens": out,
+                "cache_creation_input_tokens": 0,
+                "cache_read_input_tokens": 0,
+                "api_calls": calls,
+            }
+        },
+    }
+
+
+def test_cost_section_absent_for_results_without_usage():
+    md = report.render_markdown([_result(entry_id="x")])
+    assert "Estimated API cost" not in md
+
+
+def test_cost_section_per_paper_per_mode_and_total():
+    results = [
+        _result(entry_id="p", mode="seeded", usage=_usage()),
+        _result(entry_id="p", mode="independent", usage=_usage(inp=2_000_000, out=0, hits=0)),
+        _result(entry_id="q", mode="seeded", cached=True, usage=_usage()),
+        _result(entry_id="r", mode="seeded", skipped=True, skip_reason="out_of_scope"),
+    ]
+    md = report.render_markdown(results)
+    assert "## Estimated API cost" in md
+    # 7.50 (seeded p) + 10.00 (independent p); q came from the result cache.
+    assert "Total estimated spend this run: **$17.50** across 6 API calls" in md
+    assert "2 further calls served free by the LLM cache" in md
+    assert "1 rows from the result cache" in md
+    assert "| `p` | seeded | pipeline | 3 | 2 | 1,000,000 | 100,000 | 0 | 0 | $7.50 |" in md
+    assert "| `p` | independent | pipeline | 3 | 0 | 2,000,000 | 0 | 0 | 0 | $10.00 |" in md
+    assert "result cache (was $7.50)" in md
+    assert "| `r` |" not in md.split("## Estimated API cost")[1].split("## Per-paper")[0]
+
+
+def test_cost_section_flags_unpriced_models():
+    md = report.render_markdown([_result(entry_id="p", usage=_usage(model="claude-unknown-9"))])
+    assert "Not priced (absent from the table): `claude-unknown-9`." in md

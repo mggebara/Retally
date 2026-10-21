@@ -47,6 +47,7 @@ from retally.validation.reporter import ValidationReporter
 from tests._loaders import REPO_ROOT, load_module_from_path
 
 bschema = load_module_from_path("benchmark.schema", REPO_ROOT / "benchmark" / "schema.py")
+load_module_from_path("benchmark.pricing", REPO_ROOT / "benchmark" / "pricing.py")
 reproducer_mod = load_module_from_path("benchmark.reproducer", REPO_ROOT / "benchmark" / "reproducer.py")
 runner = load_module_from_path("benchmark.runner", REPO_ROOT / "benchmark" / "runner.py")
 

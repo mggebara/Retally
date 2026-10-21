@@ -37,6 +37,7 @@ from pathlib import Path
 from typing import Any, Protocol, runtime_checkable
 
 from retally.models import Claim, Dataset, DatasetReference, Language, ReproductionMode
+from retally.usage import UsageTracker
 
 # ---------------------------------------------------------------------------
 # Report contract
@@ -104,6 +105,18 @@ class Reproduction:
     """Methodology changes the agent declared (``DEVIATION:`` lines)."""
 
     stages: ComponentMetrics = field(default_factory=ComponentMetrics)
+
+    usage: dict[str, Any] | None = None
+    """Optional token accounting for this reproduction, in the shape of
+    ``retally.usage.UsageTracker.since()``: ``api_calls``,
+    ``llm_cache_hits``, ``llm_cache_served`` and ``by_model`` (per model id:
+    ``input_tokens``, ``output_tokens``, ``cache_creation_input_tokens``,
+    ``cache_read_input_tokens``, ``api_calls``).  Only live API calls carry
+    tokens; LLM-cache replays are free.  The harness prices it with
+    ``benchmark.pricing``.  None when the reproducer does not track usage.
+    A reproducer that wants spend recorded on a *failed* run too can also
+    expose it as a ``last_usage`` attribute, which the harness reads when
+    ``reproduce`` raises."""
 
 
 @runtime_checkable
@@ -269,6 +282,8 @@ class PipelineReproducer:
     def __init__(self, pipeline: Any, *, isolate_independent_scripts: bool = True) -> None:
         self.pipeline = pipeline
         self.isolate_independent_scripts = isolate_independent_scripts
+        self.last_usage: dict[str, Any] | None = None
+        """Usage of the most recent ``reproduce`` call (set even when it raised)."""
 
     def reproduce(
         self,
@@ -283,6 +298,11 @@ class PipelineReproducer:
         original_downloader = getattr(self.pipeline, "downloader", None)
         if isolate and original_downloader is not None:
             self.pipeline.downloader = _ScriptFreeDownloader(original_downloader)
+        tracker = getattr(self.pipeline, "usage_tracker", None)
+        if not isinstance(tracker, UsageTracker):
+            tracker = None
+        before = tracker.snapshot() if tracker is not None else None
+        self.last_usage = None
         try:
             report = self.pipeline.validate(
                 paper_source,
@@ -294,7 +314,11 @@ class PipelineReproducer:
         finally:
             if isolate and original_downloader is not None:
                 self.pipeline.downloader = original_downloader
-        return reproduction_from_report(report)
+            if tracker is not None:
+                self.last_usage = tracker.since(before)
+        reproduction = reproduction_from_report(report)
+        reproduction.usage = self.last_usage
+        return reproduction
 
 
 def reproduction_from_report(report: Any) -> Reproduction:
