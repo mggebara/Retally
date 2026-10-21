@@ -45,7 +45,11 @@ def load_module_from_path(name: str, path: Path) -> ModuleType:
         if parent_name not in sys.modules:
             parent_spec = importlib.util.spec_from_loader(parent_name, loader=None)
             assert parent_spec is not None
-            sys.modules[parent_name] = importlib.util.module_from_spec(parent_spec)
+            parent = importlib.util.module_from_spec(parent_spec)
+            # A package path, so the loaded module's own sibling imports
+            # (``from benchmark.strip_rule import ...``) resolve too.
+            parent.__path__ = [str(path.parent)]
+            sys.modules[parent_name] = parent
 
     spec = importlib.util.spec_from_file_location(name, path)
     assert spec is not None and spec.loader is not None
