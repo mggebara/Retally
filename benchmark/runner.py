@@ -51,6 +51,7 @@ them back.
 from __future__ import annotations
 
 import hashlib
+import http.client
 import importlib
 import json
 import logging
@@ -63,6 +64,9 @@ from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
 from typing import Any
+
+import requests
+import urllib3.exceptions
 
 # benchmark.* is at the repo root, not under src/retally/, so the test
 # helper and this module both reach into the sibling schema module.
@@ -189,6 +193,12 @@ class BenchmarkResult:
     skip_reason: SkipReason | None = None
     error: str | None = None
     """Set when the pipeline raised — None on success or skip."""
+
+    transient: bool = False
+    """True when ``error`` came from a download / network / HTTP failure
+    (see :func:`_is_transient_error`).  Such rows are reported but never
+    written to the result cache, so the next run retries the paper instead
+    of replaying the failure."""
 
     retally_ran: bool | None = None
     agrees_with_paper: bool | None = None
@@ -519,7 +529,12 @@ def _run_one(
             result.artifacts_dir = _display_path(out_dir)
 
     if use_cache and not result.skipped:
-        _save_cache(cache_dir, cache_key, result)
+        if result.transient:
+            logger.warning(
+                "Not caching %s (%s): transient download/network error: %s", entry.id, mode, result.error
+            )
+        else:
+            _save_cache(cache_dir, cache_key, result)
 
     return result
 
@@ -595,6 +610,7 @@ def _execute_with_reproducer(
             mode=mode,
             retally_ran=False,
             error=f"{type(exc).__name__}: {exc}",
+            transient=_is_transient_error(exc),
             usage=_priced_usage(getattr(agent, "last_usage", None)),
         )
         return failed, {}
@@ -608,6 +624,42 @@ def _execute_with_reproducer(
     result = score_reproduction(entry, reproduction, mode=mode)
     result.usage = _priced_usage(getattr(reproduction, "usage", None))
     return result, dict(getattr(reproduction, "artifacts", None) or {})
+
+
+_NETWORK_EXCEPTIONS: tuple[type[BaseException], ...] = (
+    requests.exceptions.RequestException,  # HTTPError (4xx/5xx), ConnectionError, Timeout, ...
+    urllib3.exceptions.HTTPError,  # ProtocolError, ReadTimeoutError, ...
+    http.client.HTTPException,  # IncompleteRead, RemoteDisconnected, ...
+    ConnectionError,  # builtin: resets, refused, broken pipe
+    TimeoutError,  # builtin; socket.timeout is an alias
+)
+
+_DOWNLOAD_FAILURE_PREFIX = "Failed to download dataset "
+"""Prefix of the ``RuntimeError`` ``DatasetDownloader.download`` wraps every
+dataset-fetch failure in."""
+
+
+def _is_transient_error(exc: BaseException) -> bool:
+    """True when ``exc`` is a download / network / HTTP failure, not a pipeline outcome.
+
+    Deliberately narrow: transient iff the exception, or anything on its
+    ``__cause__`` / ``__context__`` chain, is a ``requests`` / ``urllib3`` /
+    ``http.client`` / socket-level network error, or it is the downloader's
+    ``RuntimeError("Failed to download dataset ...")``.  Everything else —
+    a parse failure, a generation error, a sandbox problem — is a genuine
+    outcome and stays cacheable.  (A script that crashes *inside* the
+    sandbox never raises here at all; it comes back as a scored reproduction.)
+    """
+    seen: set[int] = set()
+    cur: BaseException | None = exc
+    while cur is not None and id(cur) not in seen:
+        seen.add(id(cur))
+        if isinstance(cur, _NETWORK_EXCEPTIONS):
+            return True
+        if isinstance(cur, RuntimeError) and str(cur).startswith(_DOWNLOAD_FAILURE_PREFIX):
+            return True
+        cur = cur.__cause__ or cur.__context__
+    return False
 
 
 def new_run_id() -> str:
@@ -1002,6 +1054,7 @@ def _result_from_jsonable(d: dict[str, Any]) -> BenchmarkResult:
         skipped=bool(d.get("skipped", False)),
         skip_reason=SkipReason(skip_reason) if skip_reason else None,
         error=d.get("error"),
+        transient=bool(d.get("transient", False)),
         retally_ran=d.get("retally_ran"),
         agrees_with_paper=d.get("agrees_with_paper"),
         agrees_with_i4r=d.get("agrees_with_i4r"),

@@ -762,3 +762,98 @@ def test_results_json_has_top_level_spend_excluding_result_cache_rows(tmp_path):
 def test_old_results_without_usage_still_load():
     old = runner._result_from_jsonable({"entry_id": "old", "retally_ran": True})
     assert old.usage is None
+
+
+# ── Transient errors are not cached ─────────────────────────────────────
+
+
+class _RaisingReproducer:
+    """A reproducer whose ``reproduce`` raises ``exc``."""
+
+    last_usage = None
+
+    def __init__(self, exc):
+        self.exc = exc
+
+    def reproduce(self, *args, **kwargs):
+        raise self.exc
+
+
+def _download_error():
+    """The shape DatasetDownloader.download raises on a Dataverse 403."""
+    import requests
+
+    try:
+        try:
+            raise requests.exceptions.HTTPError("403 Client Error: Forbidden")
+        except requests.RequestException as http_exc:
+            raise RuntimeError("Failed to fetch Harvard Dataverse metadata for doi=x: 403") from http_exc
+    except RuntimeError as inner:
+        return RuntimeError(f"Failed to download dataset 'bisbee': {inner}")
+
+
+def test_download_error_is_reported_but_not_cached(tmp_path, caplog):
+    exc = _download_error()
+    [result] = runner.run_benchmark(
+        [_entry()], reproducer_factory=lambda: _RaisingReproducer(exc), cache_dir=tmp_path
+    )
+    assert result.retally_ran is False
+    assert result.error.startswith("RuntimeError: Failed to download dataset 'bisbee'")
+    assert result.transient is True
+    assert not list(tmp_path.glob("*.json")), "transient errors must not be cached"
+    assert "Not caching test" in caplog.text
+
+
+@pytest.mark.parametrize(
+    "make_exc",
+    [
+        lambda: __import__("requests").exceptions.ChunkedEncodingError("broken"),
+        lambda: __import__("requests").exceptions.ReadTimeout("slow"),
+        lambda: TimeoutError("timed out"),
+    ],
+)
+def test_network_exceptions_are_transient(make_exc):
+    assert runner._is_transient_error(make_exc()) is True
+
+
+def test_wrapped_network_cause_is_transient():
+    import requests
+
+    try:
+        try:
+            raise requests.exceptions.ConnectionError("reset")
+        except requests.RequestException as e:
+            raise ValueError("could not parse paper") from e
+    except ValueError as outer:
+        assert runner._is_transient_error(outer) is True
+
+
+@pytest.mark.parametrize("exc", [RuntimeError("boom"), ValueError("no claims"), KeyError("x")])
+def test_pipeline_errors_are_not_transient(exc):
+    assert runner._is_transient_error(exc) is False
+
+
+def test_non_transient_reproducer_error_is_still_cached(tmp_path):
+    [result] = runner.run_benchmark(
+        [_entry()], reproducer_factory=lambda: _RaisingReproducer(RuntimeError("boom")), cache_dir=tmp_path
+    )
+    assert result.transient is False
+    assert len(list(tmp_path.glob("*.json"))) == 1
+
+
+def test_normal_reproduction_is_cached_and_not_transient(tmp_path):
+    report = _fake_report(("x", 0.95, 0.95))
+    [result] = runner.run_benchmark(
+        [_entry()], pipeline_factory=_pipeline_factory_returning(report), cache_dir=tmp_path
+    )
+    assert result.transient is False
+    [cache_file] = tmp_path.glob("*.json")
+    [again] = runner.run_benchmark([_entry()], pipeline_factory=lambda: None, cache_dir=tmp_path)
+    assert again.cached is True
+    assert again.agrees_with_paper is True
+
+
+def test_transient_flag_round_trips_and_defaults_false():
+    r = runner.BenchmarkResult(entry_id="e", error="x", transient=True)
+    assert runner._result_from_jsonable(runner._result_to_jsonable(r)).transient is True
+    assert runner._result_from_jsonable({"entry_id": "e"}).transient is False
