@@ -11,7 +11,10 @@ gained a ``.dta`` file and the dataset listing now shows Stata column
 names, which moves the seeded prompt's listing by one line; and (Phase 1.7)
 each claim's location and context are rendered under it, so the fixture
 claim gained both; and the .dta listing now gives row counts, puts
-paper-matched columns first, and lists ranked .dta files first.
+paper-matched columns first, and lists ranked .dta files first; and
+(Phase 3) the code requirements name every package installed in the
+sandbox image (``retally.codegen.sandbox_packages``) on one line, replacing
+the R prompt's nine-package bullet list.
 
 The fixture package is a miniature replication archive (a CSV, a Stata
 ``master.do``, an R script), so the prompt exercises every section that

@@ -28,6 +28,7 @@ Use snake_case metric names matching the claim descriptions.
 
 ## Code Requirements
 Write complete, self-contained Python code using scikit-learn. The dataset is a directory tree at <DATASET_ROOT> — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (pandas.read_csv for .csv, pandas.read_stata for Stata .dta). Use the target column from the metadata. Apply appropriate preprocessing (StandardScaler for numeric features, handle categorical with LabelEncoder or pd.get_dummies). Use a fixed random_state=42 for reproducibility. Do NOT access the internet. Do NOT use subprocess. Print all RESULT: lines at the end.
+Installed packages (no network; nothing else can be installed): scikit-learn (sklearn), xgboost, lightgbm, pandas, numpy, scipy, statsmodels, matplotlib, plus the standard library.
 
 ## Algorithm Hints
 This paper reports econometric quantities (coefficients / standard errors / R²). In Python that means statsmodels: ``statsmodels.api.OLS`` or ``statsmodels.formula.api.ols`` for OLS with HC-robust SE via ``.get_robustcov_results('HC1')``, ``statsmodels.discrete.discrete_model.Logit`` for binary outcomes, and ``statsmodels.regression.linear_model.WLS`` for weighted models.  For instrumental variables and panel data use ``linearmodels`` if available; otherwise stick to statsmodels.  Emit each coefficient and SE as a separate RESULT: line with the variable name in the metric name.
