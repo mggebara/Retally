@@ -18,7 +18,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from benchmark import metrics
+from benchmark import metrics, pricing
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 RESULTS_DIR = REPO_ROOT / "benchmark" / "results"
@@ -55,8 +55,9 @@ def render_markdown(results: list[dict[str, Any]]) -> str:
             f"Skipped: **{headline['skipped']}** "
             f"(out_of_scope={headline['out_of_scope']}, "
             f"language_unsupported={headline['language_unsupported']}, "
-            f"no_api_key={headline['no_api_key']}).  ",
-            f"Reproduction mode: **{modes[0]}** ({_MODE_BLURB.get(modes[0], 'unrecognised mode')}).",
+            f"no_api_key={headline['no_api_key']}{_init_failed_suffix(headline)}).  ",
+            f"Reproduction mode: **{modes[0]}** ({_MODE_BLURB.get(modes[0], 'unrecognised mode')}).  ",
+            _reproducer_line(results),
             "",
             _verdict_summary_markdown(results),
             "",
@@ -65,6 +66,9 @@ def render_markdown(results: list[dict[str, Any]]) -> str:
             _component_breakdown_markdown(results),
             "",
         ]
+    cost = _cost_markdown(results)
+    if cost:
+        lines.extend([cost, ""])
     lines.extend(
         [
             "## Per-paper results",
@@ -89,7 +93,7 @@ def render_html(results: list[dict[str, Any]]) -> str:
     headline = _headline_counts(results) if results else None
     multi = len(metrics.modes_present(results)) > 1 if results else False
     rows_html = "".join(_row_html(r, show_mode=multi) for r in results) if results else ""
-    mode_th = "<th>Mode</th>" if multi else ""
+    mode_th = "<th>Mode</th><th>Reproducer</th>" if multi else ""
 
     body = ""
     if headline is None:
@@ -103,7 +107,7 @@ def render_html(results: list[dict[str, Any]]) -> str:
           Skipped: <strong>{headline["skipped"]}</strong>
           (out_of_scope={headline["out_of_scope"]},
           language_unsupported={headline["language_unsupported"]},
-          no_api_key={headline["no_api_key"]}).
+          no_api_key={headline["no_api_key"]}{_init_failed_suffix(headline)}).
         </p>
         <table>
           <thead>
@@ -138,7 +142,7 @@ def main() -> int:
         )
         return 1
 
-    results = json.loads(src.read_text(encoding="utf-8"))
+    results = metrics.result_rows(json.loads(src.read_text(encoding="utf-8")))
     write_report(results)
     print(f"Wrote {(RESULTS_DIR / 'REPORT.md').relative_to(REPO_ROOT)}")
     print(f"Wrote {(RESULTS_DIR / 'report.html').relative_to(REPO_ROOT)}")
@@ -160,7 +164,14 @@ def _headline_counts(results: list[dict[str, Any]]) -> dict[str, int]:
         "out_of_scope": sum(1 for s in skip_reasons if s == "out_of_scope"),
         "language_unsupported": sum(1 for s in skip_reasons if s == "language_unsupported"),
         "no_api_key": sum(1 for s in skip_reasons if s == "no_api_key"),
+        "reproducer_init_failed": sum(1 for s in skip_reasons if s == "reproducer_init_failed"),
     }
+
+
+def _init_failed_suffix(headline: dict[str, int]) -> str:
+    """``, reproducer_init_failed=N`` when any run hit it; empty otherwise (keeps old reports stable)."""
+    n = headline["reproducer_init_failed"]
+    return f", reproducer_init_failed={n}" if n else ""
 
 
 _MODE_BLURB = {
@@ -190,15 +201,21 @@ def _multi_mode_header(results: list[dict[str, Any]], modes: list[str]) -> list[
         f"Skipped runs: **{headline['skipped']}** "
         f"(out_of_scope={headline['out_of_scope']}, "
         f"language_unsupported={headline['language_unsupported']}, "
-        f"no_api_key={headline['no_api_key']}).",
+        f"no_api_key={headline['no_api_key']}{_init_failed_suffix(headline)}).",
         "",
         "Reproduction modes:",
         "",
     ]
     for mode in modes:
         lines.append(f"- **{mode}**: {_MODE_BLURB.get(mode, 'unrecognised mode')}.")
-    lines.append("")
+    lines.extend(["", _reproducer_line(results), ""])
     return lines
+
+
+def _reproducer_line(results: list[dict[str, Any]]) -> str:
+    """Which agent(s) produced the rows — shown wherever the mode is."""
+    names = ", ".join(f"**{n}**" for n in metrics.reproducers_present(results))
+    return f"Reproducer: {names}."
 
 
 def _mode_gap_markdown(results: list[dict[str, Any]]) -> str:
@@ -227,14 +244,14 @@ def _mode_gap_markdown(results: list[dict[str, Any]]) -> str:
             f"- Independent: **{i_pass} / {i_total}** claims passed",
             f"- Lost without the scripts: **{lost}**; gained: **{gained}**",
             "",
-            "| Entry | Split | Seeded | Independent | Lost without scripts |",
-            "|---|---|---|---|---|",
+            "| Entry | Split | Reproducer | Seeded | Independent | Lost without scripts |",
+            "|---|---|---|---|---|---|",
         ]
     )
     for g in gaps:
         lost_str = ", ".join(f"`{d}`" for d in g.lost) if g.lost else "—"
         lines.append(
-            f"| `{g.entry_id}` | {g.split} | {g.seeded_passed}/{g.seeded_total} "
+            f"| `{g.entry_id}` | {g.split} | {g.reproducer} | {g.seeded_passed}/{g.seeded_total} "
             f"| {g.independent_passed}/{g.independent_total} | {lost_str} |"
         )
     return "\n".join(lines)
@@ -282,6 +299,71 @@ def _closeness_markdown(results: list[dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
+def _cost_markdown(results: list[dict[str, Any]]) -> str:
+    """Estimated API spend per paper per mode, and the run total.
+
+    Empty string when no row carries ``usage`` (results files that predate
+    cost accounting, or reproducers that do not track it), so older reports
+    render unchanged.  Prices come from ``benchmark/pricing.py``.  Calls the
+    LLM cache answered cost nothing; rows served from the benchmark result
+    cache made no calls in this run and are left out of the total.
+    """
+    if not any(r.get("usage") for r in results):
+        return ""
+    total = pricing.aggregate(results)
+    lines = [
+        "## Estimated API cost",
+        "",
+        f"Total estimated spend this run: **{pricing.format_usd(total['estimated_usd'])}** "
+        f"across {total['api_calls']} API calls "
+        f"({total['llm_cache_hits']} further calls served free by the LLM cache"
+        + (
+            f"; {total['rows_from_result_cache']} rows from the result cache, not re-run"
+            if total["rows_from_result_cache"]
+            else ""
+        )
+        + ").  Estimates from the price table in `benchmark/pricing.py`.",
+    ]
+    if total.get("unpriced_models"):
+        unpriced = ", ".join(f"`{m}`" for m in total["unpriced_models"])
+        lines[-1] += f"  Not priced (absent from the table): {unpriced}."
+    lines.extend(
+        [
+            "",
+            "| ID | Mode | Reproducer | API calls | LLM-cache hits | Input tok | Output tok "
+            "| Cache write tok | Cache read tok | Est. cost |",
+            "|---|---|---|---:|---:|---:|---:|---:|---:|---:|",
+        ]
+    )
+    for r in results:
+        if r.get("skipped") and not r.get("usage"):
+            continue
+        lines.append(_cost_row_markdown(r))
+    return "\n".join(lines)
+
+
+def _cost_row_markdown(r: dict[str, Any]) -> str:
+    head = f"| `{r['entry_id']}` | {metrics.mode_of(r)} | {metrics.reproducer_of(r)} |"
+    usage = r.get("usage")
+    if not usage:
+        return head + " — | — | — | — | — | — | — |"
+    tokens = dict.fromkeys(
+        ("input_tokens", "output_tokens", "cache_creation_input_tokens", "cache_read_input_tokens"), 0
+    )
+    for model_tokens in (usage.get("by_model") or {}).values():
+        for k in tokens:
+            tokens[k] += int((model_tokens or {}).get(k) or 0)
+    usd, _ = pricing.estimate(usage)
+    cost = pricing.format_usd(usd)
+    if r.get("cached"):
+        cost = f"result cache (was {cost})"
+    return (
+        f"{head} {usage.get('api_calls', 0)} | {usage.get('llm_cache_hits', 0)} "
+        f"| {tokens['input_tokens']:,} | {tokens['output_tokens']:,} "
+        f"| {tokens['cache_creation_input_tokens']:,} | {tokens['cache_read_input_tokens']:,} | {cost} |"
+    )
+
+
 def _component_breakdown_markdown(results: list[dict[str, Any]], mode: str | None = None) -> str:
     executed = [r for r in results if not r.get("skipped")]
     if not executed:
@@ -315,19 +397,19 @@ def _component_breakdown_markdown(results: list[dict[str, Any]], mode: str | Non
 
 
 def _table_header_markdown(show_mode: bool) -> str:
-    mode_col = " Mode |" if show_mode else ""
+    mode_col = " Mode | Reproducer |" if show_mode else ""
     return (
         f"| ID |{mode_col} Status | Ran | Agrees w/ paper | Agrees w/ I4R | Claims (paper / I4R) | Cached |"
     )
 
 
 def _table_rule_markdown(show_mode: bool) -> str:
-    return "|---|---|---|---|---|---|---|" + ("---|" if show_mode else "")
+    return "|---|---|---|---|---|---|---|" + ("---|---|" if show_mode else "")
 
 
 def _row_markdown(r: dict[str, Any], show_mode: bool = False) -> str:
     eid = r["entry_id"]
-    mode_cell = f" {metrics.mode_of(r)} |" if show_mode else ""
+    mode_cell = f" {metrics.mode_of(r)} | {metrics.reproducer_of(r)} |" if show_mode else ""
     status = _status_label(r)
     ran = _bool_glyph(r.get("retally_ran"))
     paper = _bool_glyph(r.get("agrees_with_paper"))
@@ -341,7 +423,11 @@ def _row_markdown(r: dict[str, Any], show_mode: bool = False) -> str:
 
 
 def _row_html(r: dict[str, Any], show_mode: bool = False) -> str:
-    mode_td = f"<td>{_escape(metrics.mode_of(r))}</td>" if show_mode else ""
+    mode_td = (
+        f"<td>{_escape(metrics.mode_of(r))}</td><td>{_escape(metrics.reproducer_of(r))}</td>"
+        if show_mode
+        else ""
+    )
     return (
         f"<tr>"
         f"<td><code>{_escape(r['entry_id'])}</code></td>"

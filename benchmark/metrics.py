@@ -124,6 +124,27 @@ def mode_of(result: dict[str, Any]) -> str:
     return str(result.get("mode") or "seeded")
 
 
+def result_rows(payload: Any) -> list[dict[str, Any]]:
+    """The result rows of a loaded results JSON file.
+
+    Current files are ``{"usage": {...}, "results": [...]}``; files written
+    before run-level cost accounting are a bare list of rows.
+    """
+    if isinstance(payload, dict):
+        return list(payload.get("results") or [])
+    return list(payload or [])
+
+
+def reproducer_of(result: dict[str, Any]) -> str:
+    """The reproducer that produced a row; rows predating the field came from the pipeline."""
+    return str(result.get("reproducer") or "pipeline")
+
+
+def reproducers_present(results: list[dict[str, Any]]) -> list[str]:
+    """Distinct reproducers in ``results``, sorted."""
+    return sorted({reproducer_of(r) for r in results})
+
+
 def modes_present(results: list[dict[str, Any]]) -> list[str]:
     """Modes appearing in ``results``: seeded, then independent, then any others sorted."""
     present = {mode_of(r) for r in results}
@@ -163,6 +184,9 @@ class ModeGap:
     """Claim descriptions that pass independent but not seeded (rare; under
     the wider SE-aware independent band it is often a tolerance effect)."""
 
+    reproducer: str = "pipeline"
+    """The reproducer behind both rows (``seeded / independent`` if they differ)."""
+
 
 def mode_gaps(results: list[dict[str, Any]]) -> list[ModeGap]:
     """One ModeGap per entry *executed* in both seeded and independent mode.
@@ -191,6 +215,12 @@ def mode_gaps(results: list[dict[str, Any]]) -> list[ModeGap]:
                 independent_total=len(independent.get("claim_details", [])),
                 lost=sorted(s_pass - i_pass),
                 gained=sorted(i_pass - s_pass),
+                reproducer=_joined_reproducer(seeded, independent),
             )
         )
     return gaps
+
+
+def _joined_reproducer(seeded: dict[str, Any], independent: dict[str, Any]) -> str:
+    s, i = reproducer_of(seeded), reproducer_of(independent)
+    return s if s == i else f"{s} / {i}"

@@ -89,7 +89,8 @@ A catalog entry can be cleanly skipped:
 |---|---|
 | `out_of_scope` | `out_of_scope_reason` is set on the entry (e.g. "Stata required") |
 | `language_unsupported` | `language` is neither `python` nor `r`.  Stata is the canonical case — code is proprietary, we don't ship a sandbox image. |
-| `no_api_key` | Reproducer construction failed (typically `ANTHROPIC_API_KEY` not in env) |
+| `no_api_key` | `ANTHROPIC_API_KEY` not in env (the reproducer factory raised `MissingAPIKeyError`) |
+| `reproducer_init_failed` | The reproducer factory raised anything else (e.g. Docker not running, sandbox image not built); the message is in `error` |
 
 ## Running it
 
@@ -109,6 +110,17 @@ predate them are read as `seeded` / `pipeline`).
 The renderer then produces a Markdown table and a self-contained HTML
 page from that JSON.  The report file is committed; `results.json` is
 not (it's a rebuildable artefact).
+
+**Spend.**  `results.json` is `{"usage": {...}, "results": [...]}`
+(older files are a bare list of rows; `benchmark.metrics.result_rows`
+reads both).  Each row's `usage` holds the Claude API tokens its run
+spent, by model (`input_tokens`, `output_tokens`,
+`cache_creation_input_tokens`, `cache_read_input_tokens`, `api_calls`),
+the number of calls the LLM cache answered for free (`llm_cache_hits`,
+`llm_cache_served`), and `estimated_usd`; the top-level `usage` totals
+the rows that were actually re-run (result-cache rows are excluded).
+Prices live in one table, `benchmark/pricing.py`.  REPORT.md shows an
+"Estimated API cost" section per paper per mode with the run total.
 
 Re-running with no catalog or pipeline changes hits the cache and
 finishes in seconds.  The result cache (`benchmark/.cache/<hash>.json`)
@@ -229,8 +241,9 @@ Registering it — either:
 
 Programmatically, `run_benchmark(catalog, reproducer="name",
 reproducer_factory=...)` does the same.  The factory is only called on a
-cache miss, and a factory that raises (e.g. no API key) is recorded as a
-`no_api_key` skip.  `pipeline` is the only built-in reproducer today; a
+cache miss.  A factory that raises `benchmark.reproducer.MissingAPIKeyError`
+is recorded as a `no_api_key` skip; any other exception as a
+`reproducer_init_failed` skip with the message in `error`.  `pipeline` is the only built-in reproducer today; a
 general-purpose agent adapter (e.g. on the Claude Agent SDK) is planned
 in `ROADMAP.md` Phase 2, not built.
 

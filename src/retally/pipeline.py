@@ -68,6 +68,7 @@ from retally.models import (
 )
 from retally.paper.extractor import ClaimExtractor
 from retally.paper.parser import PaperParser
+from retally.usage import UsageTracker, UsageTrackingClient
 from retally.validation.comparator import ResultComparator
 from retally.validation.hyperparam_audit import audit_hyperparameters
 from retally.validation.reporter import ValidationReporter
@@ -126,6 +127,11 @@ class ValidationPipeline:
         ``CodeDownloader`` instance.  A default one is constructed if
         omitted.  Injectable mainly for tests.
     """
+
+    usage_tracker: UsageTracker | None = None
+    """Token accounting for every Claude call this pipeline makes, when its
+    client is wrapped in ``UsageTrackingClient`` (``default()`` does this).
+    None for hand-assembled pipelines."""
 
     def __init__(
         self,
@@ -627,6 +633,10 @@ class ValidationPipeline:
             from retally.llm_cache import CachingLLMClient
 
             client = CachingLLMClient(client, llm_cache_dir)
+        # Outermost, so it sees every call: live ones add response.usage
+        # tokens; LLM-cache replays are counted as free hits.
+        client = UsageTrackingClient(client)
+        usage_tracker = client.tracker
 
         registry = DatasetRegistry()
         registry.load()
@@ -678,7 +688,7 @@ class ValidationPipeline:
                 cpu_count=docker_cpus,
             )
 
-        return cls(
+        pipeline = cls(
             parser=PaperParser(),
             extractor=ClaimExtractor(client),
             downloader=DatasetDownloader(),
@@ -689,3 +699,5 @@ class ValidationPipeline:
             comparator=ResultComparator(),
             reporter=ValidationReporter(),
         )
+        pipeline.usage_tracker = usage_tracker
+        return pipeline

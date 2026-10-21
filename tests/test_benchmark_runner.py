@@ -17,6 +17,7 @@ import pytest
 from tests._loaders import REPO_ROOT, load_module_from_path
 
 bschema = load_module_from_path("benchmark.schema", REPO_ROOT / "benchmark" / "schema.py")
+load_module_from_path("benchmark.pricing", REPO_ROOT / "benchmark" / "pricing.py")
 load_module_from_path("benchmark.reproducer", REPO_ROOT / "benchmark" / "reproducer.py")
 runner = load_module_from_path("benchmark.runner", REPO_ROOT / "benchmark" / "runner.py")
 
@@ -111,13 +112,37 @@ def test_skip_when_pipeline_construction_fails(tmp_path):
     """No API key on the host → record a NO_API_KEY skip, don't crash."""
 
     def factory():
-        raise RuntimeError("ANTHROPIC_API_KEY is not set")
+        raise runner.MissingAPIKeyError("ANTHROPIC_API_KEY is not set")
 
     entry = _entry()
     [result] = runner.run_benchmark([entry], pipeline_factory=factory, cache_dir=tmp_path)
     assert result.skipped is True
     assert result.skip_reason is runner.SkipReason.NO_API_KEY
     assert "ANTHROPIC_API_KEY" in (result.error or "")
+
+
+def test_other_construction_failures_are_not_recorded_as_no_api_key(tmp_path, monkeypatch):
+    """A reproducer that fails to build for another reason (Docker down, bad
+    import) is ``reproducer_init_failed`` with the message — even with a key set."""
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-test-not-used")
+
+    def factory():
+        raise RuntimeError("Docker is not available or sandbox image not built.")
+
+    [result] = runner.run_benchmark([_entry()], reproducer_factory=factory, cache_dir=tmp_path)
+    assert result.skipped is True
+    assert result.skip_reason is runner.SkipReason.REPRODUCER_INIT_FAILED
+    assert result.error == "RuntimeError: Docker is not available or sandbox image not built."
+    assert not list(tmp_path.glob("*.json")), "init failures must not be cached"
+    raw = runner._result_to_jsonable(result)
+    assert raw["skip_reason"] == "reproducer_init_failed"
+    assert runner._result_from_jsonable(raw).skip_reason is runner.SkipReason.REPRODUCER_INIT_FAILED
+
+
+def test_default_factory_raises_missing_key_error_without_a_key(monkeypatch):
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    with pytest.raises(runner.MissingAPIKeyError):
+        runner._default_pipeline_factory()
 
 
 # ── Happy path ──────────────────────────────────────────────────────────
@@ -305,10 +330,13 @@ def test_write_results_round_trips(tmp_path):
     assert out.exists()
     import json
 
-    decoded = json.loads(out.read_text(encoding="utf-8"))
+    payload = json.loads(out.read_text(encoding="utf-8"))
+    decoded = payload["results"]
     assert len(decoded) == 2
     assert decoded[0]["skip_reason"] == "out_of_scope"
     assert decoded[1]["retally_ran"] is True
+    assert payload["usage"]["api_calls"] == 0
+    assert payload["usage"]["estimated_usd"] == 0
 
 
 def test_results_dir_created_on_write(tmp_path):
@@ -597,7 +625,7 @@ def test_mode_round_trips_and_defaults_to_seeded_for_old_files(tmp_path):
     runner.write_results([result], out)
     import json
 
-    [raw] = json.loads(out.read_text())
+    [raw] = json.loads(out.read_text())["results"]
     assert raw["mode"] == "independent"
     assert runner._result_from_jsonable(raw).mode == "independent"
     assert runner._result_from_jsonable({"entry_id": "old"}).mode == "seeded"
@@ -642,3 +670,95 @@ def test_main_mode_flag(tmp_path, monkeypatch, argv, expected):
     monkeypatch.setattr(runner, "run_benchmark", fake_run_benchmark)
     assert runner.main(argv) == 0
     assert tuple(seen["modes"]) == tuple(expected)
+
+
+# ── Cost accounting ────────────────────────────────────────────────────
+
+
+def _usage(model="claude-opus-4-7", inp=1_000_000, out=100_000, calls=3, hits=2):
+    return {
+        "api_calls": calls,
+        "llm_cache_hits": hits,
+        "llm_cache_served": hits > 0,
+        "by_model": {
+            model: {
+                "input_tokens": inp,
+                "output_tokens": out,
+                "cache_creation_input_tokens": 0,
+                "cache_read_input_tokens": 0,
+                "api_calls": calls,
+            }
+        },
+    }
+
+
+class _TrackedPipeline:
+    """A fake pipeline whose validate() spends tokens through a real UsageTracker."""
+
+    def __init__(self, report, *, raise_after_spend=False):
+        from retally.usage import UsageTracker
+
+        self.usage_tracker = UsageTracker()
+        self._report = report
+        self._raise = raise_after_spend
+
+    def validate(self, *args, **kwargs):
+        usage = MagicMock(
+            input_tokens=1_000_000,
+            output_tokens=100_000,
+            cache_creation_input_tokens=0,
+            cache_read_input_tokens=None,
+        )
+        self.usage_tracker.record("claude-opus-4-7", usage)
+        self.usage_tracker.record_cache_hit()
+        if self._raise:
+            raise RuntimeError("generation failed")
+        return self._report
+
+
+def test_result_row_records_pipeline_usage_and_estimated_cost(tmp_path):
+    pipeline = _TrackedPipeline(_fake_report())
+    [result] = runner.run_benchmark([_entry()], pipeline_factory=lambda: pipeline, cache_dir=tmp_path)
+    usage = result.usage
+    assert usage["api_calls"] == 1
+    assert usage["llm_cache_hits"] == 1
+    assert usage["llm_cache_served"] is True
+    assert usage["by_model"]["claude-opus-4-7"]["input_tokens"] == 1_000_000
+    # 1M input at $5/MTok + 100k output at $25/MTok; the cache hit is free.
+    assert usage["estimated_usd"] == pytest.approx(7.50)
+
+
+def test_failed_run_still_records_spend(tmp_path):
+    pipeline = _TrackedPipeline(_fake_report(), raise_after_spend=True)
+    [result] = runner.run_benchmark([_entry()], pipeline_factory=lambda: pipeline, cache_dir=tmp_path)
+    assert result.retally_ran is False
+    assert result.usage["estimated_usd"] == pytest.approx(7.50)
+
+
+def test_rows_without_usage_tracking_have_none(tmp_path):
+    [result] = runner.run_benchmark(
+        [_entry()], pipeline_factory=_pipeline_factory_returning(_fake_report()), cache_dir=tmp_path
+    )
+    assert result.usage is None
+
+
+def test_results_json_has_top_level_spend_excluding_result_cache_rows(tmp_path):
+    import json
+
+    fresh = runner.BenchmarkResult(entry_id="a", retally_ran=True, usage=_usage())
+    from_cache = runner.BenchmarkResult(entry_id="b", retally_ran=True, cached=True, usage=_usage())
+    out = tmp_path / "results.json"
+    runner.write_results([fresh, from_cache], out)
+    payload = json.loads(out.read_text())
+    total = payload["usage"]
+    assert total["api_calls"] == 3
+    assert total["llm_cache_hits"] == 2
+    assert total["rows_from_result_cache"] == 1
+    assert total["estimated_usd"] == pytest.approx(7.50)
+    # Round-trips through the cache/results loader.
+    assert runner._result_from_jsonable(payload["results"][0]).usage["by_model"]
+
+
+def test_old_results_without_usage_still_load():
+    old = runner._result_from_jsonable({"entry_id": "old", "retally_ran": True})
+    assert old.usage is None
