@@ -114,6 +114,20 @@ A catalog entry can be cleanly skipped:
 | `no_api_key` | `ANTHROPIC_API_KEY` not in env (the reproducer factory raised `MissingAPIKeyError`) |
 | `reproducer_init_failed` | The reproducer factory raised anything else (e.g. Docker not running, sandbox image not built); the message is in `error` |
 
+Skips are never written to the result cache.  Neither are **transient
+errors**: a reproducer that raises because of a download / network / HTTP
+failure gets a row with `retally_ran = false`, the message in `error`, and
+`"transient": true`, and the runner logs `Not caching <id> (<mode>):
+transient download/network error: ...` instead of saving it, so the next
+run retries the paper rather than replaying the failure.  The
+classification (`_is_transient_error` in `runner.py`) is narrow: the
+exception or anything on its cause chain is a `requests` exception
+(including wrapped HTTP 4xx/5xx), a `urllib3` / `http.client` error, a
+builtin `ConnectionError` / `TimeoutError`, or it is the downloader's
+`RuntimeError("Failed to download dataset ...")`.  Every other outcome —
+including a generated script that crashed inside the sandbox — is cached
+as before.
+
 ## Running it
 
 ```bash
@@ -152,7 +166,8 @@ seeded result is never served for an independent run nor one agent's
 result for another's (independent-mode keys also carry the script-free
 dataset contract, so results from before it are not reused); `split`,
 `publication_date`, and `package_release_date` are excluded from the key
-because they never reach the pipeline.  The LLM cache keys on full
+because they never reach the pipeline.  Skips and transient download/network
+errors are not cached (see "Skip categories" above).  The LLM cache keys on full
 prompt content, so the two modes' generation calls are distinct entries
 while the shared extraction calls replay across modes.
 

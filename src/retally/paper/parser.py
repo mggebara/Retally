@@ -20,7 +20,7 @@ from pathlib import Path
 import fitz  # PyMuPDF
 import requests
 
-from retally.http_retry import get_with_retries, with_retries
+from retally.http_retry import get_with_retries, http_get, with_retries
 from retally.models import Paper
 
 logger = logging.getLogger(__name__)
@@ -213,7 +213,7 @@ class PaperParser:
         def _fetch() -> tuple[Path | None, str]:
             # The body read happens inside the retry: a mid-stream
             # ChunkedEncodingError is the failure this guards against.
-            response = requests.get(url, stream=True, timeout=60)
+            response = http_get(url, stream=True, timeout=60)
             response.raise_for_status()
             content_type = response.headers.get("Content-Type", "").lower()
             if "application/pdf" in content_type:
@@ -322,7 +322,7 @@ def _download_pdf(url: str) -> Path:
     """
 
     def _fetch() -> Path:
-        response = requests.get(url, stream=True, timeout=60)
+        response = http_get(url, stream=True, timeout=60)
         response.raise_for_status()
         return _stream_to_temp_pdf(response)
 
