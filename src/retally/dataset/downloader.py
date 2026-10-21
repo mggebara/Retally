@@ -30,7 +30,7 @@ import pandas as pd
 import requests
 from tqdm import tqdm
 
-from retally.http_retry import get_with_retries, with_retries
+from retally.http_retry import get_with_retries, http_get, http_head, with_retries
 from retally.models import Dataset, DatasetReference, DatasetSource
 
 logger = logging.getLogger(__name__)
@@ -238,7 +238,7 @@ class DatasetDownloader:
             # GET and body read retry together: a dropped connection
             # mid-zip surfaces as ChunkedEncodingError while iterating.
             # Each attempt rewrites the file from scratch ("wb").
-            response = requests.get(url, stream=True, timeout=timeout, allow_redirects=True)
+            response = http_get(url, stream=True, timeout=timeout, allow_redirects=True)
             response.raise_for_status()
             total = int(response.headers.get("Content-Length", 0)) or None
             with (
@@ -284,7 +284,7 @@ class DatasetDownloader:
         try:
             # HEAD the URL with redirects so we can extract the filename from
             # the Content-Disposition header without buffering the body.
-            response = requests.head(url, allow_redirects=True, timeout=30)
+            response = http_head(url, allow_redirects=True, timeout=30)
             response.raise_for_status()
             content_disposition = response.headers.get("Content-Disposition", "")
             final_url = response.url
