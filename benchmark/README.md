@@ -15,6 +15,7 @@ benchmark/
 ├── schema.py               BenchmarkEntry / dataclass model + loader
 ├── reproducer.py           the agent protocol (Reproducer / Reproduction),
 │                           the pipeline adapter, script-free dataset copies
+├── strip_rule.py           what a script-free copy withholds (by name and content)
 ├── runner.py               walks the catalog, drives a Reproducer, scores
 │                           its raw outputs, emits results.json
 ├── report.py               renders REPORT.md + report.html from results.json
@@ -78,9 +79,50 @@ after the first scored script — except when a script printed some
 strings are rendered verbatim and may mention an N or a control mean;
 keeping them free of the target is the curator's job
 (`papers/README.md`).  Dataset mounting is the independent one (the
-script-free copy), so result tables the package ships (`.tex` / `.csv`)
-remain on disk; the blind prompt tells the model not to read result
-tables, logs or output files.
+script-free copy), which also withholds the regression tables the
+package ships (see [The script-free copy](#the-script-free-copy)); the
+blind prompt still tells the model not to read result tables, logs or
+output files, for anything the content test keeps.
+
+### The script-free copy
+
+In `independent` and `blind` mode the dataset directory the pipeline
+lists and the sandbox mounts is a `<name>.script-free` sibling of the
+downloaded package (`benchmark/strip_rule.py`, applied by
+`script_free_copy` / `script_free_dataset`).  It leaves out:
+
+- **By name:** `.do .ado .R .Rmd .py .ipynb .sas .sps .m` scripts,
+  `.log .smcl .Rout` transcripts, `.Rhistory` and `log_*.txt` consoles.
+- **By content**, for every other text file up to 50 MB (the first
+  64 KB is read; 2 MB for `.tex`/`.html`), whatever its extension:
+  Stata logs (`log type:` header, `Stata/MP` banner, `. reg`-style
+  echoes, estimation output) and SMCL markup; R transcripts (`> lm(`
+  prompts, `Call:` + `Coefficients:`, `Signif. codes`) and Python/
+  statsmodels output; analysis *code* saved under another name (a
+  do-file as `.txt` — Leeson 2022 ships three — or R/Python source in a
+  `.md`): most non-comment lines are commands; regression tables —
+  `.tex` (esttab fragments, stargazer, any tabular with `Observations` /
+  R² / standard-error rows), `.html`, plain-text esttab/outreg2 output,
+  `.csv` only with `Observations`/`R-squared` row labels plus `(1)`/
+  coefficient/`(se)` columns, `.xlsx` whose strings read the same way.
+- **Byte copies** of a file stripped by name.
+
+Evidence must be strong (several independent markers) or the file
+stays.  Data formats (`.dta .RData .rds .sav .parquet`, shapefiles, …)
+are never stripped and never content-tested, binary files are not
+content-tested, a plain `.csv` (figure data included) is kept, and a
+`.tex` manuscript (`\documentclass`) stays unless one of its own
+tabulars is a regression table.  Directory names (`output/`, `tables/`)
+play no part.  Summary-statistics tables without regression markers
+stay.
+
+Every copy writes a manifest **beside** it, never inside the mounted
+tree: `<name>.script-free.retally-stripped.json`, listing each withheld
+path with its reason (`script-suffix`, `transcript-name`, `stata-log`,
+`smcl`, `r-transcript`, `python-output`, `script-content:stata|r|python`,
+`regression-table`, `duplicate-of-script`).  The benchmark row records
+the count as `n_files_stripped` (None in seeded mode).  No prompt names
+the withheld files.
 
 Seeded and independent are both worth having; **the gap between them is the headline number** —
 how much of a seeded pass survives without the authors' code.  A
@@ -541,15 +583,15 @@ repository quirks so the files match the names the authors' scripts use:
   tolerance, or in independent mode the ±k·SE band when that is
   wider.  Easy to tighten later if the data shows we systematically
   under/over-match.
-- Independent mode now removes the analysis scripts (`.do`, `.ado`,
-  `.R`, `.Rmd`, `.py`, `.ipynb`, `.sas`, `.sps`, `.m`) and Stata
-  transcripts (`.log`, `.smcl`) from the directory the pipeline lists
-  and mounts — a `<name>.script-free` sibling of the downloaded package.
-  Other files that can carry the answers — `.tex` / `.csv` result tables
-  the package ships, the README — stay, as do the claimed values in the
+- Independent mode removes the analysis scripts, their logs and
+  transcripts (by name and by content) and the generated regression
+  tables from the directory the pipeline lists and mounts — see [The
+  script-free copy](#the-script-free-copy).  What the content test keeps
+  — summary-statistics tables, figure-data `.csv`, the README, a log too
+  weak in markers to call — stays, as do the claimed values in the
   prompt: independent means independent of the authors' *code*, not
-  blind to the answer (blind mode withholds the values; the files stay,
-  and the blind prompt only forbids reading them).  Review independent-
+  blind to the answer (blind mode withholds the values; the blind prompt
+  forbids reading whatever result files remain).  Review independent-
   and blind-mode code before trusting a surprising pass.
 - Blind mode still shows the paper's abstract (its first 500 characters)
   and the LLM-written methodology summary; the summariser is told to

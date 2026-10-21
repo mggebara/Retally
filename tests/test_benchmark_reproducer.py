@@ -528,7 +528,7 @@ def test_pipeline_reproducer_mounts_script_free_data_in_independent_mode(tmp_pat
     pipeline, llm = _real_pipeline("print('RESULT:beta=0.5')\n", pkg, executor=executor)
     original_downloader = pipeline.downloader
 
-    PipelineReproducer(pipeline).reproduce(
+    rep = PipelineReproducer(pipeline).reproduce(
         "raw paper text",
         language=Language.PYTHON,
         dataset_reference=DatasetReference(name="d", source=DatasetSource.DIRECT_URL, url="https://x"),
@@ -541,6 +541,8 @@ def test_pipeline_reproducer_mounts_script_free_data_in_independent_mode(tmp_pat
     assert "data/panel.csv" in visible
     generation_prompt = next(p for p in llm.prompts if "Now write the complete Python script" in p)
     assert ("Analysis.R" in generation_prompt) is scripts_visible
+    # The row records how many files were withheld (five scripts); seeded runs report none.
+    assert rep.n_files_stripped == (None if scripts_visible else 5)
     # The pipeline is handed back exactly as it was.
     assert pipeline.downloader is original_downloader
 
@@ -654,6 +656,16 @@ def test_cache_never_serves_one_reproducers_result_to_another(tmp_path):
         [_entry()], reproducer="a", reproducer_factory=make_fake_reproducer, cache_dir=tmp_path
     )
     assert again.cached is True and again.reproducer == "a"
+
+
+def test_n_files_stripped_is_scored_and_round_trips():
+    rep = Reproduction(outputs={"beta": 0.5}, n_files_stripped=7)
+    result = runner.score_reproduction(_entry(), rep, mode="independent")
+    assert result.n_files_stripped == 7
+    d = runner._result_to_jsonable(result)
+    assert d["n_files_stripped"] == 7
+    assert runner._result_from_jsonable(d).n_files_stripped == 7
+    assert runner._result_from_jsonable({"entry_id": "old"}).n_files_stripped is None
 
 
 def test_reproducer_round_trips_and_defaults_to_pipeline():

@@ -634,6 +634,22 @@ through `getattr` on a handful of report fields.  Phase 2 formalised it:
   cache keys changed once as a consequence.  ⚠ Independent-mode numbers
   produced before this (the first Dincecco independent run, Phase 1.5)
   saw the scripts *on disk*; re-run before comparing like for like.
+  *Content-aware strip rule (`benchmark/strip_rule.py`).*  Name-based
+  stripping leaked: Leeson 2022 ships its three do-files again as
+  `code/*.txt`, and packages ship the esttab/stargazer tables that hold
+  the answers.  The copy now also strips, by content and whatever the
+  extension (text files up to 50 MB), Stata logs and SMCL, R/Python
+  transcripts, analysis code under another name, byte copies of
+  scripts, and regression tables (`.tex`, `.html`, plain text,
+  regression-shaped `.csv`/`.xlsx`); data formats are never touched and
+  plain `.csv` stays.  Each copy writes a
+  `<name>.script-free.retally-stripped.json` manifest beside (not in)
+  the mounted tree, and rows carry `n_files_stripped`.  On the cached
+  packages: Dincecco +10 (`table*.tex`), Alesina +5 (`Out/Tables`
+  regressions; summary stats kept), Bisbee +7 (stargazer `.tex`), Leeson
+  +3 (`code/*.txt`); no data file stripped.  Independent result-cache
+  keys were *not* bumped for this, so a cached independent row from
+  before it may have seen those files.
 - **General-purpose agent adapter — TODO (design only, not built).**  An
   adapter that hands an agent (e.g. one built on the Claude Agent SDK, or
   Claude Code driven headless) the paper text, the pinned claims, and a
@@ -973,7 +989,7 @@ release.
 | Seeded passes get read as independent replication | Mode recorded on every result and cache key; report presents modes side by side; this roadmap's north star says which is which |
 | Independent reproduction is just hard; scores stay near zero | The gap and the failure taxonomy make "why" the finding — "the methods section does not pin down the specification" is a result about the literature; a well-measured negative result over 20+ papers is still publishable |
 | Training-data contamination inflates scores | Cannot be controlled with this corpus (all 2022–23, all pre-cutoff); stated up front, dates recorded per entry, memorisation probed where cheap, gap framed as conditional on whatever the model knows |
-| Independent mode leaks: package scripts on disk and named in the dataset listing | Fixed in the benchmark (Phase 2): independent runs see a script-free copy, so scripts are neither listed nor mounted. Still open: result tables (`.tex`/`.csv`) and READMEs shipped in the package, and direct `validate()` callers outside the harness (prompt-only withholding) |
+| Independent mode leaks: package scripts on disk and named in the dataset listing | Fixed in the benchmark (Phase 2): independent runs see a script-free copy, so scripts are neither listed nor mounted. Result tables, logs and code under other names are stripped by content since the strip-rule change (manifest beside the copy). Still open: READMEs and summary-statistics tables shipped in the package, and direct `validate()` callers outside the harness (prompt-only withholding) |
 | Wider independent tolerance flatters independent mode | Tolerance policy reported per mode; claims lost/gained listed individually; SE band never narrower than the relative tolerance, and only applies where an SE is pinned |
 | Corpus curation stalls (manual research per paper) | Manual-placement escape hatch for gated data; batch sprints; accept 20 papers as sufficient N |
 | General-purpose agents make the bespoke pipeline obsolete | The moat is the *benchmark*; Phase 2 formalises the agent protocol so any agent can be scored on it |

@@ -1,0 +1,345 @@
+# Original paper: Leeson, P. T., Hardy, R. A., & Suarez, P. A. (2022).
+#   "Hobo Economicus." The Economic Journal, 132(646), 2325-2338.
+#   doi:10.1093/ej/ueab103
+#
+# Reproduction report: Braga de Melo, L., Cantone, G. G., Gabani, J., &
+#   Gao, X. (2023). "Replication Report: A Comment on Peter T. Leeson,
+#   R. August Hardy and Paola A. Suarez (2022)." I4R Discussion Paper
+#   No. 55 (I4R First Meta Database replication team 36).  Verdict:
+#   computationally reproducible with minor discrepancies — every table
+#   and figure reproduces from the package in Stata ("their contents are
+#   the same as in the paper") and again from the .csv data in R, but
+#   (1) Table 4 swaps its row labels (the "Within Metro stations" sums of
+#   squares are the between-station ones and vice versa) and (2) the
+#   robustness checks the paper describes in footnotes 16 and 17 are not
+#   produced by the package.  The meta-database records
+#   perfect_reproduction = No, computational_reproduction = 1.  The
+#   schema has no "minor discrepancies" label, so outcome_label is
+#   reproducible (the printed numbers all reproduce; the discrepancies
+#   are a label swap and missing robustness code) — see notes.
+#
+# Why this paper:
+#   1. Tiny package (0.4 MB): six small .csv files and two short do-files.
+#   2. One regression table (Table 2, OLS with date fixed effects and
+#      station-clustered SEs) plus three equality tests (Tables 3-5).
+#   3. Published version available as an open PDF on the first author's
+#      site; package on Zenodo under CC BY 4.0.
+
+id: leeson-2022-hobo-economicus
+i4r_report_url: https://www.econstor.eu/bitstream/10419/274554/1/I4R-DP055.pdf
+language: r
+outcome_label: reproducible
+split: holdout
+# Contamination bookkeeping.  No working-paper version was found (web
+# search 2026-10-21); the paper was received by the EJ 2021-02-11,
+# accepted 2021-12-20, and published Advance Access 2022-01-03 (stated on
+# its first page), which is taken as the first public version.  Print:
+# EJ 132(646), August 2022.  Package: Zenodo record 5719541, created and
+# published 2021-11-23 (Zenodo API created / publication_date).
+publication_date: "2022-01-03"
+package_release_date: "2021-11-23"
+
+paper:
+  # The published EJ PDF (OUP typeset version, "Downloaded from
+  # academic.oup.com ... on 17 July 2022" footer) hosted on Peter
+  # Leeson's site; re-checked 2026-10-21: 200 application/pdf, %PDF
+  # magic, to a Retally-curation user agent.
+  source: https://www.peterleeson.com/Hobo_Economicus.pdf
+  title: "Hobo Economicus"
+  authors:
+    - Peter T. Leeson
+    - R. August Hardy
+    - Paola A. Suarez
+
+dataset:
+  source: https://zenodo.org/records/5719541
+  access_notes: >
+    Zenodo record 5719541, open access, CC BY 4.0: ONE file, "3
+    replication package.zip" (433,578 bytes; the filename has spaces).
+    It is a NESTED zip: the outer zip holds a folder "3 replication
+    package/" with IRB_Approval.pdf and a second zip, replicate.zip
+    (~232 kB), which holds the actual package (replicate/ReadMe.pdf,
+    Codebook.xlsx, code/, data/).  Data are six plain .csv files.  The code/ folder
+    ships each do-file twice, as .do and as an identical .txt copy
+    (0_setup, 1_dataprep, 2_analysis): the independent-mode script-free
+    copy removes the .do files but not the .txt copies, so the authors'
+    code stays readable there.  No logs or table output ship (the code
+    writes them to an output/ folder that is not included).
+
+code_repo:
+  url: https://zenodo.org/records/5719541
+
+original_claims:
+  - description: passersby_full_sample
+    value: 0.005
+    claim_type: coefficient
+    standard_error: 0.001
+    sample_size: 242
+    unit: panhandlers per passerby (Table 1 units)
+    location: "Table 2, column (1) Full sample, Number of passersby"
+    context: >
+      Table 2 ("Determinants of the Number of Panhandlers Across Metro
+      Stations"), column (1) Full sample, row Number of passersby.  OLS
+      regression of the number of panhandlers counted at a Metro station
+      on a visit (one square-block area around the station exits) on the
+      number of passersby at the station in the month of the visit (WMATA
+      monthly count of riders exiting the station, on the scale of Table
+      1: mean 348.954, i.e. thousands of exits per month; Georgetown is
+      assigned Foggy Bottom-GWU's count), passerby friendliness (the
+      station average of passersby's friendliest response, 1-5, to a
+      request for directions), a homeless shuttle stop indicator (within
+      a ten-minute walk) and a homeless service indicator (within a
+      ten-minute walk), with date fixed effects.  Observations are Metro
+      station-visits: 242 visits to 26 stations (25 Metrorail stations
+      plus the Georgetown intersection) in 2016-2017.  Robust standard
+      errors clustered by Metro station.
+  - description: passersby_five_station_subsample
+    value: 0.006
+    claim_type: coefficient
+    standard_error: 0.002
+    sample_size: 102
+    unit: panhandlers per passerby (Table 1 units)
+    location: "Table 2, column (2) Five-station subsample, Number of passersby"
+    context: >
+      Table 2, column (2) Five-station subsample, row Number of passersby.
+      Same OLS specification as passersby_full_sample (friendliness,
+      shuttle-stop and homeless-service controls, date fixed effects,
+      SEs clustered by Metro station), on the visits to the five
+      neighbouring downtown stations Farragut North, Farragut West,
+      Gallery Place-Chinatown, McPherson Square and Metro Center (102
+      station-visits).
+  - description: friendliness_full_sample
+    value: 1.595
+    claim_type: coefficient
+    standard_error: 0.851
+    sample_size: 242
+    unit: panhandlers per friendliness point
+    location: "Table 2, column (1) Full sample, Passerby friendliness"
+    context: >
+      Table 2, column (1) Full sample, row Passerby friendliness.  Same
+      regression as passersby_full_sample.
+  - description: shuttle_stop_full_sample
+    value: 0.781
+    claim_type: coefficient
+    standard_error: 0.182
+    sample_size: 242
+    unit: panhandlers
+    location: "Table 2, column (1) Full sample, Homeless shuttle stop"
+    context: >
+      Table 2, column (1) Full sample, row Homeless shuttle stop (station
+      within a ten-minute walk of a stop of the homeless shuttle).  Same
+      regression as passersby_full_sample.
+  - description: shuttle_stop_five_station_subsample
+    value: 0.890
+    claim_type: coefficient
+    standard_error: 0.227
+    sample_size: 102
+    unit: panhandlers
+    location: "Table 2, column (2) Five-station subsample, Homeless shuttle stop"
+    context: >
+      Table 2, column (2) Five-station subsample, row Homeless shuttle
+      stop.  Same regression as passersby_five_station_subsample.
+  - description: brown_forsythe_donations_per_hour
+    value: 0.541
+    claim_type: other
+    sample_size: 80
+    unit: Brown-Forsythe W statistic
+    location: "Table 3, Panel A: donations per hour, Brown-Forsythe W-statistic"
+    context: >
+      Table 3 ("Test of Equality of Variance in Panhandling Receipts
+      Across Metro Stations"), Panel A, Brown-Forsythe W-statistic
+      (p-value 0.706).  Brown-Forsythe test of equal variance of the
+      number of donations each panhandler received per hour (donations
+      divided by minutes observed working, times 60) across the five
+      subsample stations.  Observations are panhandlers observed in
+      2019: 80 observations (76 unique panhandlers).
+  - description: brown_forsythe_dollars_per_hour
+    value: 0.276
+    claim_type: other
+    sample_size: 67
+    unit: Brown-Forsythe W statistic
+    location: "Table 3, Panel B: dollars per hour, Brown-Forsythe W-statistic"
+    context: >
+      Table 3, Panel B, Brown-Forsythe W-statistic (p-value 0.893).  Same
+      test for dollars received per hour (cash plus the market value of
+      in-kind donations, divided by minutes observed working, times 60);
+      67 observations, the panhandlers whose dollar receipts were counted.
+  - description: anova_f_donations_per_hour
+    value: 0.40
+    claim_type: other
+    sample_size: 80
+    unit: one-way ANOVA F statistic
+    location: "Table 4, Panel A: donations per hour, ANOVA F-statistic"
+    context: >
+      Table 4 ("Test of Equality of Mean Panhandling Receipts Across Metro
+      Stations"), Panel A, ANOVA F-statistic (p-value 0.809).  One-way
+      analysis of variance of donations per hour across the five
+      subsample stations (4 and 75 degrees of freedom), 80 observations.
+  - description: anova_f_dollars_per_hour
+    value: 0.15
+    claim_type: other
+    sample_size: 67
+    unit: one-way ANOVA F statistic
+    location: "Table 4, Panel B: dollars per hour, ANOVA F-statistic"
+    context: >
+      Table 4, Panel B, ANOVA F-statistic (p-value 0.962).  One-way
+      analysis of variance of dollars per hour across the five subsample
+      stations (4 and 62 degrees of freedom), 67 observations.
+  - description: station_visits_full_sample
+    value: 242
+    claim_type: other
+    unit: station-visits
+    location: "Table 2, column (1), Observations"
+    context: >
+      Observations in the full-sample Table 2 regression: Metro
+      station-visits (242 visits to 26 stations).
+  - description: station_visits_five_station_subsample
+    value: 102
+    claim_type: other
+    unit: station-visits
+    location: "Table 2, column (2), Observations"
+    context: >
+      Observations in the five-station-subsample Table 2 regression.
+
+# The meta-database's 16 rows for this paper (team 36, DP 55) are all
+# ROBUSTNESS variants: twelve against Table 2 column 1 (o_coeff 0.005 /
+# o_std_err 0.001; r_coeff 0.004-0.008 under monthly aggregation, season
+# or station fixed effects, dropped controls, negative binomial, added
+# square-root and interaction terms; station fixed effects give -0.002
+# (0.006)), three against Table 4 panel A (weighted ANOVAs and pair-wise
+# Wald tests), and one blank row.  None is a plain reproduction, so no
+# r_coeff is transcribed.  The reproduced values below come from DP 55:
+# its Table 2 column 1 ("Original LHS", from the package) prints 0.005
+# (0.001), 1.595 (0.851), 0.781 (0.182); its Table 6 panel A reprints
+# the Table 4 panel A ANOVA (F 0.400, p 0.809); and section 2.1 states
+# all tables reproduce with "contents ... the same as in the paper"
+# (blanket verdict for the remaining claims, recorded as the paper's own
+# value, as in bisbee-2022 / arias-2022).
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: 0.005
+    outcome: matches
+    notes: DP 55 Table 2 col 1, 0.005 (0.001).
+  - claim_id: 1
+    reproduced_value: 0.006
+    outcome: matches
+    notes: DP 55 blanket verdict (all tables reproduce in Stata and R); value is the paper's.
+  - claim_id: 2
+    reproduced_value: 1.595
+    outcome: matches
+    notes: DP 55 Table 2 col 1, 1.595 (0.851).
+  - claim_id: 3
+    reproduced_value: 0.781
+    outcome: matches
+    notes: DP 55 Table 2 col 1, 0.781 (0.182).
+  - claim_id: 4
+    reproduced_value: 0.890
+    outcome: matches
+    notes: DP 55 blanket verdict; value is the paper's.
+  - claim_id: 5
+    reproduced_value: 0.541
+    outcome: matches
+    notes: DP 55 blanket verdict; value is the paper's.
+  - claim_id: 6
+    reproduced_value: 0.276
+    outcome: matches
+    notes: DP 55 blanket verdict; value is the paper's.
+  - claim_id: 7
+    reproduced_value: 0.40
+    outcome: matches
+    notes: DP 55 Table 6 panel A, F 0.400 (p 0.809); DP 55 notes Table 4's within/between row labels are swapped (F unaffected).
+  - claim_id: 8
+    reproduced_value: 0.15
+    outcome: matches
+    notes: DP 55 blanket verdict; value is the paper's.
+  - claim_id: 9
+    reproduced_value: 242
+    outcome: matches
+    notes: DP 55 blanket verdict; value is the paper's.
+  - claim_id: 10
+    reproduced_value: 102
+    outcome: matches
+    notes: DP 55 blanket verdict; value is the paper's.
+
+notes: >
+  Headline finding: panhandlers at Washington, DC Metrorail stations
+  behave as maximisers — stations with more passersby attract more
+  panhandlers (Table 2: 0.005 panhandlers per passerby unit, SE 0.001,
+  full sample), and hourly panhandling receipts do not differ
+  significantly across five neighbouring downtown stations (Tables 3-5:
+  Brown-Forsythe, ANOVA and Kruskal-Wallis tests, all p > 0.5).
+
+  Outcome label.  The I4R verdict is "minor discrepancies"
+  (perfect_reproduction = No, computational_reproduction = 1;
+  why_not_perfect_repro: Table 4 swaps the within/between labels, and the
+  footnote 16-17 robustness checks are not created by the package).  The
+  schema's OutcomeLabel has no such value (reproducible / robust /
+  not_robust / not_reproducible / inconclusive); scripts/
+  import_i4r_candidates.py maps it to inconclusive pending human review.
+  On review: every pinned number reproduces from the package (DP 55 and
+  the cross-check below), so reproducible is used; the discrepancies are
+  recorded here.  (Package detail: the analysis do-file runs Stata's
+  robvar, whose W0 output is Levene's test, so the footnote 16 Levene
+  variant is in the log output even though DP 55 counts it as missing;
+  the footnote 17 bounded-minutes variants are genuinely absent.)
+
+  Curation pass (2026-10-21).  Pinned 11 claims: five Table 2
+  coefficients with their clustered SEs in standard_error (passersby in
+  both columns, friendliness in column 1 — the one the text calls
+  significant only in the full sample — and the shuttle-stop indicator in
+  both columns), the two Brown-Forsythe W and two ANOVA F statistics
+  (sample_size = number of panhandler observations), and the two Table 2
+  observation counts.  The passersby coefficients are printed to three
+  decimals (0.005, 0.006), i.e. one significant digit.  Left out: the
+  homeless-service coefficients (0.450 / 0.815) and column 2
+  friendliness (1.462, SE 2.793), the adjusted R2s (0.39 / 0.06), Table 1
+  summary statistics, Table 3 and 5 per-station rows, the Table 4 sums
+  of squares (mislabelled in the paper), the Kruskal-Wallis statistics
+  (2.506 / 3.170), the in-text standardized effects (0.53 / 0.40 SD) and
+  the power calculations.
+
+  What was read.  The published EJ PDF (Tables 1-5, text, footnotes);
+  the Zenodo API metadata; the whole package (downloaded to a scratch
+  directory, never committed): both zips, ReadMe.pdf, the three do-files
+  and the six .csv files; I4R DP 55 (EconStor PDF); the meta-database's
+  16 rows.
+
+  Independent cross-check (not the package code: pandas / scipy /
+  statsmodels on the .csv files).  Reproduces every pinned value at the
+  printed precision: Table 2 col 1 passersby 0.005 (0.001), friendliness
+  1.595 (0.851), shuttle 0.781 (0.182), service 0.450 (0.278), adj. R2
+  0.39, N 242; col 2 0.006 (0.002), 1.462 (2.793), 0.890 (0.227), 0.815
+  (0.525), 0.06, N 102; Brown-Forsythe W 0.541 (p 0.706) / 0.276 (0.893);
+  ANOVA F 0.398 (0.809) / 0.151 (0.962); Kruskal-Wallis 2.506 / 3.170;
+  80 receipts rows, 76 unique panhandlers, 67.6 hours observed, 242
+  visits to 26 stations, 258 panhandlers counted.
+
+  Package structure (package-only facts; never in contexts).  Inside
+  replicate.zip: code/0_setup.do (hard-coded Windows `cd
+  "C:\Documents\Projects\replicate"`; `ssc install` stripplot, outreg,
+  labutil — needs network), code/1_dataprep.do (imports the csvs with
+  Windows backslash paths such as "data\metrovisitslog", builds
+  stationvisit.dta and receipts.dta), code/2_analysis.do (Table 1 sum,
+  Table 2 `reg panhandlers passersby friendly shuttle service i.day,
+  vce(cluster metroid)` written with outreg to output\table2.doc, Table 3
+  robvar, Table 4 oneway, Table 5 kwallis, Figure 1 stripplot, power
+  oneway), each with an identical .txt copy.  Data: metrovisitslog.csv
+  (metro, date, panhandlers; 242 rows), passersby.csv (metro, month,
+  year, passersby in thousands), friendliness.csv (701 passersby,
+  passresp1-5), service.csv and shuttle.csv (walking minutes to the
+  nearest provider / stop; the indicators are minutes <= 10),
+  receipts.csv (observationid, panhandlerid, date, metro, donations,
+  minutes, cash, inkind, declinedoffer).  The five-station subsample is
+  hard-coded as metroid 9/10/14/17/18 after `encode metro` (alphabetical
+  ids; "Gallery Place" in the data); friendliness is the station mean of
+  each passerby's highest response category.  Also Codebook.xlsx,
+  ReadMe.pdf, and IRB_Approval.pdf in the outer zip.
+
+  What could not be verified.  The package ships no logs or output and
+  the do-files were not run; the cross-check above is an independent
+  re-estimate.  No working paper was found, so publication_date is the
+  EJ Advance Access date.
+
+  Original analysis in Stata (three do-files); language is r, the
+  reproduction target (the pipeline translates Stata originals to R, as
+  for alesina-2022).
