@@ -27,6 +27,7 @@ import re
 from pathlib import Path
 from typing import TYPE_CHECKING, NamedTuple
 
+from retally.codegen.sandbox_packages import PYTHON_PACKAGES, R_PACKAGES
 from retally.models import (
     ClaimType,
     ClaimValidationResult,
@@ -49,6 +50,23 @@ class UnsupportedLanguageError(NotImplementedError):
     this and converts it to a benchmark skip so a single R paper in
     the catalog doesn't crash the whole run.
     """
+
+
+# One line per language naming every package the sandbox image has, from
+# the same lists the images are built from (see sandbox_packages and its
+# drift test).  The sandboxes run with --network none, so a script that
+# loads anything else crashes; shown in generation and refinement prompts.
+_INSTALLED_PREFIX = "Installed packages (no network; nothing else can be installed): "
+_INSTALLED_R_LINE = _INSTALLED_PREFIX + ", ".join(R_PACKAGES) + "."
+_INSTALLED_PYTHON_LINE = (
+    _INSTALLED_PREFIX
+    + ", ".join("scikit-learn (sklearn)" if p == "scikit-learn" else p for p in PYTHON_PACKAGES)
+    + ", plus the standard library."
+)
+_PREFER_FIXEST_LINE = (
+    "Prefer fixest for fixed effects, IV and clustered SEs; use the other installed "
+    "packages where the paper's method calls for them."
+)
 
 
 class CodeGenerator:
@@ -293,6 +311,7 @@ class CodeGenerator:
                     f"Do NOT use subprocess. "
                     f"Print all RESULT: lines at the end."
                 ),
+                _INSTALLED_PYTHON_LINE,
                 "",
             ]
         )
@@ -349,6 +368,7 @@ class CodeGenerator:
             "## Reminder: Constraints",
             f"- {self._load_instruction(dataset, Language.PYTHON)}",
             "- Use scikit-learn for modelling.",
+            f"- {_INSTALLED_PYTHON_LINE}",
             "- Do NOT access the internet.",
             "- Do NOT use subprocess.",
             "- Use random_state=42 for reproducibility.",
@@ -480,6 +500,7 @@ class CodeGenerator:
             "Every metric MUST still be printed as ``RESULT:<name>=<value>``.",
             self._load_instruction(dataset, Language.PYTHON),
             "Use scikit-learn.  No network, no subprocess.  random_state=42.",
+            _INSTALLED_PYTHON_LINE,
             "",
             "Output ONLY the Python code — no explanation, no markdown fences.",
         ]
@@ -509,11 +530,9 @@ class CodeGenerator:
         """Construct the R-flavoured generation prompt.
 
         Same structure as the Python version but targets R + the
-        econometrics package set baked into retally-sandbox-r:
-        ``fixest`` for fixed-effects regressions, ``AER`` for IV /
-        Tobit, ``plm`` for panel data, ``lmtest`` + ``sandwich`` for
-        robust SEs, ``modelsummary`` for tables, ``data.table`` /
-        ``readr`` / ``dplyr`` for data manipulation.
+        package set baked into retally-sandbox-r, listed verbatim from
+        :data:`~retally.codegen.sandbox_packages.R_PACKAGES` (``fixest``
+        preferred for fixed effects, IV and clustered SEs).
         """
         lines = [
             "You are reproducing results from an econometrics paper for validation purposes.",
@@ -542,16 +561,8 @@ class CodeGenerator:
                 "## Code Requirements",
                 "Write a complete, self-contained R script that runs under Rscript.",
                 self._load_instruction(dataset, Language.R),
-                "Prefer the following packages, all pre-installed in the retally-sandbox-r image:",
-                "  - fixest         fast fixed-effects regression (feols, feglm, fepois, …)",
-                "  - AER            instrumental variables (ivreg), Tobit, count data",
-                "  - plm            panel data econometrics",
-                "  - lmtest         coefficient tests (coeftest)",
-                "  - sandwich       robust / clustered covariance estimators (vcovHC, vcovCL)",
-                "  - modelsummary   regression tables",
-                "  - data.table     fast data manipulation",
-                "  - dplyr / readr  tidyverse data manipulation + CSV reading",
-                "  - haven          read Stata .dta / SPSS / SAS files (read_dta)",
+                _INSTALLED_R_LINE,
+                _PREFER_FIXEST_LINE,
                 "Set a deterministic seed with ``set.seed(42)`` for any randomness.",
                 "Do NOT access the internet; the container runs with --network none.",
                 "Do NOT shell out via system() / system2().",
@@ -612,8 +623,8 @@ class CodeGenerator:
             "",
             "## Reminder: Constraints",
             f"- {self._load_instruction(dataset, Language.R)}",
-            "- Use the econometrics packages in the retally-sandbox-r image "
-            "(fixest, AER, plm, lmtest, sandwich, modelsummary, data.table, readr, dplyr).",
+            f"- {_INSTALLED_R_LINE}",
+            f"- {_PREFER_FIXEST_LINE}",
             "- Do NOT access the internet.",
             "- Do NOT call system() / system2().",
             "- Use set.seed(42) for reproducibility.",
@@ -729,7 +740,8 @@ class CodeGenerator:
             "## Output convention (unchanged)",
             "Emit every metric as ``cat('RESULT:<name>=<value>\\n')``.",
             self._load_instruction(dataset, Language.R),
-            "Use the econometrics packages in the retally-sandbox-r image.",
+            _INSTALLED_R_LINE,
+            _PREFER_FIXEST_LINE,
             "No network, no system().  set.seed(42).",
             "",
             "Output ONLY the R code — no explanation, no markdown fences.",

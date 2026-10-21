@@ -209,6 +209,49 @@ def test_r_prompt_references_econometrics_packages():
         assert pkg in prompt, f"R prompt should mention {pkg}"
 
 
+@pytest.mark.parametrize("language", [Language.R, Language.PYTHON])
+def test_every_prompt_lists_all_installed_sandbox_packages(language):
+    """Generation and both refinement prompts name every package in the image.
+
+    The sandbox has no network, so a script loading anything unlisted
+    crashes (bisbee-2022: ``library(MatchIt)`` before MatchIt was added).
+    """
+    from retally.codegen.sandbox_packages import PYTHON_PACKAGES, R_PACKAGES
+    from retally.models import ClaimValidationResult
+
+    gen = _generator()
+    paper = _paper(language=language)
+    failed = ClaimValidationResult(
+        claim=Claim(description="beta", value=0.5, claim_type=ClaimType.COEFFICIENT),
+        reproduced_value=0.3,
+        tolerance=0.01,
+        passed=False,
+    )
+    exec_result = ExecutionResult(generated_code="code", outputs={"beta": 0.3})
+    if language is Language.R:
+        packages = R_PACKAGES
+        prompts = [
+            gen._build_generation_prompt_r(paper, _dataset(), reference_files=[]),
+            gen._build_refinement_prompt_r("code", "err", paper, _dataset()),
+            gen._build_claim_refinement_prompt_r("code", [failed], exec_result, paper, _dataset(), []),
+        ]
+    else:
+        packages = PYTHON_PACKAGES
+        prompts = [
+            gen._build_generation_prompt_python(paper, _dataset(), reference_files=[]),
+            gen._build_refinement_prompt_python("code", "err", paper, _dataset()),
+            gen._build_claim_refinement_prompt_python("code", [failed], exec_result, paper, _dataset(), []),
+        ]
+    for prompt in prompts:
+        [line] = [
+            ln
+            for ln in prompt.splitlines()
+            if "Installed packages (no network; nothing else can be installed): " in ln
+        ]
+        for pkg in packages:
+            assert pkg in line, f"{pkg} missing from installed-packages line"
+
+
 def test_r_prompt_uses_r_code_fence_for_reference_files():
     gen = _generator()
     paper = _paper(language=Language.R)
