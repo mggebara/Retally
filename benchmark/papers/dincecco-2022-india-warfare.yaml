@@ -79,12 +79,14 @@ original_claims:
     location: "Table 1"
     context: >
       Table 1 column 1.  OLS coefficient on pre-colonial conflict exposure
-      (Land_250_1757: land battles within 250 km of the district
-      centroid, 1000-1757) in a regression of ln(0.01 + luminosity) on
-      conflict exposure plus ln population density 1990 (lnpdgpd1990);
-      no state FE, no geographic controls; robust SEs.  "Bivariate" in
-      the token is a misnomer kept for run-to-run comparability: the
-      column DOES control for population density.  N=660 districts.
+      to land battles between 1000 and 1757 (within a radius of 250
+      kilometres of the district centroid) in a regression of
+      ln(0.01+Luminosity), averaged between 1992 and 2010, on conflict
+      exposure and log population density in 1990; no state fixed
+      effects, no geographic controls; robust standard errors.  The paper
+      calls this column "the bivariate correlation after controlling for
+      log population density": despite "bivariate" in the token, the
+      column DOES control for population density.  N = 660 districts.
   - description: warfare_se_bivariate
     value: 0.305
     claim_type: standard_error
@@ -97,12 +99,12 @@ original_claims:
     sample_size: 660
     location: "Table 1"
     context: >
-      Table 1 column 3.  Coefficient on pre-colonial conflict exposure in
-      the most saturated specification: population density, state fixed
-      effects, and the ten geographic controls (latitude, longitude,
-      altitude, ruggedness, precipitation, land quality, dry rice, wet
-      rice, wheat, malaria); robust SEs.  Attenuates from 3.713
-      (column 1) to this value.
+      Table 1 column 3.  OLS coefficient on pre-colonial conflict exposure
+      with log population density in 1990, state fixed effects, and the
+      ten geographic controls (latitude, longitude, altitude, ruggedness,
+      precipitation, land quality, dry rice suitability, wet rice
+      suitability, wheat suitability, malaria risk); robust standard
+      errors.  Attenuates from 3.713 (column 1) to this value.
   - description: warfare_se_full_controls
     value: 0.370
     claim_type: standard_error
@@ -115,8 +117,7 @@ original_claims:
     location: "Table 1"
     context: >
       Number of district observations in the Table 1 regressions (660 in
-      every column, after dropping the Andaman/Nicobar and Lakshadweep
-      island districts).
+      every column).
   # Curated during Phase 1.3 from the replication package's own
   # 1 paper/table1.tex and table2b.tex (esttab output of
   # wii_replication.do).  Appended (not interleaved) so the claim_id
@@ -130,8 +131,8 @@ original_claims:
     location: "Table 1, column 2"
     context: >
       Table 1 column 2.  OLS coefficient on pre-colonial conflict
-      exposure with population density and state fixed effects, no
-      geographic controls; robust SEs.
+      exposure with log population density in 1990 and state fixed
+      effects, no geographic controls; robust standard errors.
   - description: warfare_se_state_fe
     value: 0.380
     claim_type: standard_error
@@ -144,10 +145,12 @@ original_claims:
     sample_size: 660
     location: "Table 2, Panel B (second stage), column 1"
     context: >
-      Table 2 Panel B column 1.  IV (2SLS) second-stage coefficient on
-      pre-colonial conflict exposure, instrumented by proximity to the
-      Khyber Pass (`instrument`), controlling for population density;
-      no state FE, no geographic controls; robust SEs (ivreg2, r).
+      Table 2 Panel B column 1.  2SLS second-stage coefficient on
+      pre-colonial conflict exposure, instrumented by the Khyber
+      proximity instrument (a dummy for the 50 districts closest to the
+      Khyber Pass in cost distance), with log population density in 1990
+      as a control; no state fixed effects, no geographic controls;
+      robust standard errors.  Same specification as Table 1 column 1.
   - description: warfare_iv_se_bivariate
     value: 0.609
     claim_type: standard_error
@@ -160,9 +163,9 @@ original_claims:
     sample_size: 660
     location: "Table 2, Panel B (second stage), column 2"
     context: >
-      Table 2 Panel B column 2.  IV second-stage coefficient (Khyber Pass
-      instrument) with population density and state fixed effects; robust
-      SEs.
+      Table 2 Panel B column 2.  2SLS second-stage coefficient (Khyber
+      proximity instrument) with log population density in 1990 and
+      state fixed effects; robust standard errors.
   - description: warfare_iv_se_state_fe
     value: 1.291
     claim_type: standard_error
@@ -175,9 +178,10 @@ original_claims:
     sample_size: 660
     location: "Table 2, Panel B (second stage), column 3"
     context: >
-      Table 2 Panel B column 3.  IV second-stage coefficient (Khyber Pass
-      instrument) with population density, state fixed effects, and the
-      ten geographic controls; robust SEs.
+      Table 2 Panel B column 3.  2SLS second-stage coefficient (Khyber
+      proximity instrument) with log population density in 1990, state
+      fixed effects, and the ten geographic controls (in both stages);
+      robust standard errors.
   - description: warfare_iv_se_full_controls
     value: 1.389
     claim_type: standard_error
