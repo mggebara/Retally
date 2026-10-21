@@ -1,0 +1,347 @@
+# Original paper: Adams, J., Bracken, D., Gidron, N., Horne, W.,
+#   O'Brien, D. Z., & Senk, K. (2023). "Can't We All Just Get Along? How
+#   Women MPs Can Ameliorate Affective Polarization in Western Publics."
+#   American Political Science Review, 117(1), 318-324.
+#   doi:10.1017/S0003055422000491
+#
+# Reproduction report: no standalone I4R Discussion Paper or SSRP record
+#   was found (I4R DP series and a web search, 2026-10-21).  The paper is
+#   recorded in the I4R First Meta Database (replication report team 10,
+#   6 rows), so i4r_report_url points at that database's source repository
+#   (see benchmark/corpus/SOURCE.md).  Verdict: reproducible — the
+#   database's survey answers are computational_reproduction = 1,
+#   perfect_reproduction = Yes, "Analysis and cleaning code produce the
+#   same output as presented in the paper", ten_point_scale 10, with the
+#   only caveat "One file pathway needed to be adjusted, but otherwise
+#   everything ran."
+#
+# Why this paper:
+#   1. R original (a single replication_code.R) on R data files (.Rdata /
+#      .rds) — Retally's native target language, no format conversion.
+#   2. Data on Harvard Dataverse under CC0, all 8 files unrestricted.
+#   3. Open-access published APSR PDF (CC BY 4.0) that text-extracts
+#      cleanly; one short headline table.
+#
+# original_claims pins Table 1: the focal coefficient (out-party's
+# proportion of women MPs) in all four columns, the three control
+# coefficients of the full model (column 2), each with its SE in
+# standard_error, plus the per-column observation counts and the number
+# of election studies.  Values are as printed in the published APSR
+# version.  Every coefficient was cross-checked by an independent
+# re-estimation on the package's data (see notes; the package's own code
+# was not run).
+
+id: adams-2023-women-mps-affective-polarization
+i4r_report_url: https://github.com/I4Replication/I4R-First-Meta-Paper
+language: r
+outcome_label: reproducible
+# Pipeline tuning is frozen; this is an evaluation paper.
+split: holdout
+# Contamination bookkeeping.  First public version: the APSR article,
+# first published online 2022-06-14 (the PDF's own header; received
+# 2021-08-10, accepted 2022-04-06).  Earlier drafts were presented at
+# the University of Liverpool and APSA 2021 (acknowledgments) but no
+# public preprint was found.  Package: Harvard Dataverse
+# doi:10.7910/DVN/AHQRVR version 1.0, deposited 2022-03-22, released
+# 2022-06-14 (Dataverse API publicationDate / releaseTime) — the same
+# day as the article.
+publication_date: "2022-06-14"
+package_release_date: "2022-06-14"
+
+paper:
+  # Open-access published version (Cambridge Core, CC BY 4.0); checked
+  # 2026-10-21: 200 application/pdf, %PDF magic, to both a
+  # Retally-curation and a python-requests user agent.  7 pages; Table 1
+  # is on p. 322.
+  source: https://www.cambridge.org/core/services/aop-cambridge-core/content/view/D9F115F8EA9677F6AFC9E6D76392B8D5/S0003055422000491a.pdf/div-class-title-can-t-we-all-just-get-along-how-women-mps-can-ameliorate-affective-polarization-in-western-publics-div.pdf
+  title: "Can't We All Just Get Along? How Women MPs Can Ameliorate Affective Polarization in Western Publics"
+  authors:
+    - James Adams
+    - David Bracken
+    - Noam Gidron
+    - Will Horne
+    - Diana Z. O'Brien
+    - Kaitlin Senk
+
+dataset:
+  source: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/AHQRVR
+  access_notes: >
+    Harvard Dataverse (doi:10.7910/DVN/AHQRVR) version 1.0, CC0, fully
+    open — all 8 files unrestricted (Dataverse API, checked 2026-10-21;
+    ~10.8 MB in total, 10.2 MB of it the individual-level
+    multilevel_1-5-22.Rdata, needed only for supplementary Tables
+    S11-S12).  No Dataverse ingest and no archives: every file is served
+    as deposited under its listed name.  Analysis code is one R script
+    (replication_code.R, 716 lines); data are two R files used by Table 1
+    (dyadic_data_1-4-22.Rdata, one object; gender_disagregated_8-8-21.rds)
+    plus the multilevel .Rdata; three .docx codebooks and a readme.rtf.
+    No table output, logs or .tex ship with the package.
+
+code_repo:
+  url: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/AHQRVR
+
+original_claims:
+  - description: women_mps_coef_bivariate
+    value: 1.89
+    claim_type: coefficient
+    standard_error: 0.43
+    sample_size: 1842
+    unit: thermometer points (0-10) per unit proportion of women MPs
+    location: "Table 1, column 1 (Bivariate model), [out-party j's proportion of women MPs (t - 1)]"
+    context: >
+      Table 1 ("Predictors of Out-Party Thermometer Evaluations"), column 1,
+      the reduced-form model without controls.  Ordinary least squares on
+      directed party dyads: the dependent variable is the mean 0-10
+      feeling-thermometer rating that party i's partisans (respondents who
+      feel close, or a little closer, to party i) assign to out-party j in
+      the Comparative Study of Electoral Systems (CSES) election survey of
+      year t; the regressor is out-party j's proportion of women MPs,
+      lagged one year before the survey and scaled 0 (all men) to 1 (all
+      women).  Sample: every directed pair of parties with at least four
+      MPs each in the year before the survey, in 20 Western democracies
+      and 81 CSES election studies, 1996-2017 (each pair enters twice, once
+      in each direction).  Country-year fixed effects (the table row reads
+      "Country and year fixed effects"); standard errors clustered by
+      election.
+  - description: women_mps_coef_full
+    value: 1.73
+    claim_type: coefficient
+    standard_error: 0.52
+    sample_size: 1842
+    unit: thermometer points (0-10) per unit proportion of women MPs
+    location: "Table 1, column 2 (Full model), [out-party j's proportion of women MPs (t - 1)]"
+    context: >
+      Table 1, column 2, the full model and the paper's headline estimate
+      (moving from zero to all women MPs raises predicted out-party
+      evaluations by 1.73 thermometer units).  Same dependent variable,
+      regressor, sample, country-year fixed effects and election-clustered
+      standard errors as column 1, adding three controls: the absolute
+      left-right distance between parties i and j in the current election
+      from the Comparative Manifesto Project left-right scale,
+      standardized; a dummy for i and j being governing coalition partners
+      at the time of the survey; and a dummy for i and j both being in
+      opposition (baseline: one governing and one opposition party).
+  - description: women_mps_coef_women_partisans
+    value: 2.10
+    claim_type: coefficient
+    standard_error: 0.53
+    sample_size: 1836
+    unit: thermometer points (0-10) per unit proportion of women MPs
+    location: "Table 1, column 3 (Women partisans), [out-party j's proportion of women MPs (t - 1)]"
+    context: >
+      Table 1, column 3: the full model of column 2 (same regressor,
+      controls, country-year fixed effects, election-clustered standard
+      errors, parties with at least four MPs) re-estimated with the
+      dependent variable computed only from self-identified women
+      partisans' thermometer ratings of the out-party.
+  - description: women_mps_coef_men_partisans
+    value: 1.13
+    claim_type: coefficient
+    standard_error: 0.50
+    sample_size: 1833
+    unit: thermometer points (0-10) per unit proportion of women MPs
+    location: "Table 1, column 4 (Men partisans), [out-party j's proportion of women MPs (t - 1)]"
+    context: >
+      Table 1, column 4: the full model of column 2 re-estimated with the
+      dependent variable computed only from men partisans' thermometer
+      ratings of the out-party (same regressor, controls, fixed effects,
+      clustering and sample restriction).
+  - description: right_left_distance_coef_full
+    value: -0.60
+    claim_type: coefficient
+    standard_error: 0.09
+    sample_size: 1842
+    unit: thermometer points (0-10) per SD of left-right distance
+    location: "Table 1, column 2 (Full model), [elite right-left distance i, j (t)]"
+    context: >
+      Table 1, column 2, the coefficient on the standardized absolute
+      left-right distance between parties i and j in the current election
+      (Comparative Manifesto Project coding of the manifestos' left-right
+      tone; mean 22.4, SD 17.6 on the -100 to +100 scale before
+      standardizing), from the full model described for
+      women_mps_coef_full.
+  - description: coalition_partners_coef_full
+    value: 0.94
+    claim_type: coefficient
+    standard_error: 0.25
+    sample_size: 1842
+    unit: thermometer points (0-10)
+    location: "Table 1, column 2 (Full model), [i, j are coalition partners (t)]"
+    context: >
+      Table 1, column 2, the coefficient on the dummy for parties i and j
+      being governing coalition partners at the time of the election
+      survey (baseline: one governing and one opposition party), from the
+      full model described for women_mps_coef_full.
+  - description: opposition_partners_coef_full
+    value: 0.37
+    claim_type: coefficient
+    standard_error: 0.11
+    sample_size: 1842
+    unit: thermometer points (0-10)
+    location: "Table 1, column 2 (Full model), [i, j are opposition partners (t)]"
+    context: >
+      Table 1, column 2, the coefficient on the dummy for parties i and j
+      both being opposition parties at the time of the election survey
+      (baseline: one governing and one opposition party), from the full
+      model described for women_mps_coef_full.
+  - description: n_directed_dyads
+    value: 1842
+    claim_type: other
+    unit: directed party dyads (observations)
+    location: "Table 1, Observations, columns 1-2; Results (text)"
+    context: >
+      Number of directed party-dyad observations in the main models (Table
+      1 columns 1 and 2; "the 1,842 directed party dyads in our dataset"):
+      every ordered pair of parties with at least four MPs each, across the
+      20 Western party systems and 81 CSES election studies.
+  - description: n_obs_women_partisans
+    value: 1836
+    claim_type: other
+    unit: directed party dyads (observations)
+    location: "Table 1, Observations, column 3"
+    context: >
+      Number of directed party-dyad observations in the women-partisans
+      model (Table 1 column 3).
+  - description: n_obs_men_partisans
+    value: 1833
+    claim_type: other
+    unit: directed party dyads (observations)
+    location: "Table 1, Observations, column 4"
+    context: >
+      Number of directed party-dyad observations in the men-partisans
+      model (Table 1 column 4).
+  - description: n_election_studies
+    value: 81
+    claim_type: other
+    unit: CSES election studies (country-years)
+    location: "Data and Analysis; Results (text)"
+    context: >
+      Number of CSES election studies (country election-years, 1996-2017,
+      20 Western democracies) the directed dyads are drawn from — the
+      units by which the paper clusters its standard errors.
+
+# No per-claim I4R numbers exist for the pinned estimates as printed.  All
+# 5 non-blank meta-database rows for this paper (replicator team 10) are
+# ONE robustness variant — "Impute missing data for 56 observations"
+# (category "Increase sample (impute missing)") — against Table 1:
+# column 1 women MPs 1.887 (0.429) -> 1.890 (0.443); column 2 women MPs
+# 1.726 (0.519) -> 1.741 (0.527), right-left distance -0.596 (0.092) ->
+# -0.605 (0.088), coalition partners 0.943 (0.245) -> 0.907 (0.245),
+# opposition partners 0.371 (0.108) -> 0.366 (0.104); plus one blank row.
+# Their r_coeff values are therefore not transcribed.  The verdict is
+# blanket (perfect reproduction; see the header), so, as in arias-2022,
+# each finding records the paper's own value with outcome matches.  The
+# rows' o_coeff values (three decimals) agree with the printed Table 1
+# and with the independent re-estimation in notes.
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: 1.89
+    outcome: matches
+    notes: Blanket I4R verdict (perfect reproduction, team 10); the only per-row entry is an imputation robustness variant (1.890).
+  - claim_id: 1
+    reproduced_value: 1.73
+    outcome: matches
+    notes: Blanket I4R verdict; the only per-row entry is an imputation robustness variant (1.741).
+  - claim_id: 2
+    reproduced_value: 2.10
+    outcome: matches
+    notes: Blanket I4R verdict; no per-row entry for column 3.
+  - claim_id: 3
+    reproduced_value: 1.13
+    outcome: matches
+    notes: Blanket I4R verdict; no per-row entry for column 4.
+  - claim_id: 4
+    reproduced_value: -0.60
+    outcome: matches
+    notes: Blanket I4R verdict; the only per-row entry is an imputation robustness variant (-0.605).
+  - claim_id: 5
+    reproduced_value: 0.94
+    outcome: matches
+    notes: Blanket I4R verdict; the only per-row entry is an imputation robustness variant (0.907).
+  - claim_id: 6
+    reproduced_value: 0.37
+    outcome: matches
+    notes: Blanket I4R verdict; the only per-row entry is an imputation robustness variant (0.366).
+  - claim_id: 7
+    reproduced_value: 1842
+    outcome: matches
+    notes: Blanket I4R verdict; value is the paper's.
+  - claim_id: 8
+    reproduced_value: 1836
+    outcome: matches
+    notes: Blanket I4R verdict; value is the paper's.
+  - claim_id: 9
+    reproduced_value: 1833
+    outcome: matches
+    notes: Blanket I4R verdict; value is the paper's.
+  - claim_id: 10
+    reproduced_value: 81
+    outcome: matches
+    notes: Blanket I4R verdict; value is the paper's.
+
+notes: >
+  Headline finding: partisans rate out-parties with more women MPs more
+  warmly.  Moving an out-party's parliamentary delegation from no women to
+  all women raises its mean 0-10 thermometer rating among other parties'
+  partisans by 1.73 units (Table 1 col 2, p < 0.01; 1,842 directed party
+  dyads, 125 parties, 20 Western democracies, 81 CSES surveys 1996-2017),
+  and both women (2.10) and men (1.13) partisans show the bonus.
+
+  Original analysis in R (replication_code.R); language: r is the
+  reproduction target.
+
+  Curation pass (2026-10-21).  Pinned 11 claims: the women-MPs coefficient
+  in all four Table 1 columns, the three column-2 controls (each with its
+  SE in standard_error; SEs are not separate claims, as in arias-2022),
+  the three Observations counts (1,842 serves columns 1 and 2), and the
+  81 election studies.  Coefficients and SEs are printed to two decimals.
+
+  What was read.  The published APSR PDF (all 7 pages; the supplementary
+  appendix was not read); the Dataverse API metadata; the whole package,
+  downloaded to a scratch directory (never committed): readme.rtf and
+  replication_code.R; the meta-database's 6 rows.
+
+  Independent cross-check (not the package code).  Table 1 was
+  re-estimated in Python (statsmodels OLS, election fixed effects as
+  dummies) on the package's data, following the script's sample steps:
+  N = 1,842 dyads in 81 elections and 20 countries (columns 1-2), 1,836
+  (women) and 1,833 (men).  Every point estimate reproduces the printed
+  value to the second decimal (1.887, 1.726, 2.097, 1.131; -0.596 / 0.943
+  / 0.371 in column 2; adj. R2 0.154 / 0.308).  SEs: with clustering by
+  COUNTRY (20 clusters) the women-MPs SEs are 0.431 / 0.514 / 0.527 /
+  0.487 (CR1), i.e. the printed 0.43 / 0.52 / 0.53 / 0.50 up to the
+  small-sample correction (the script uses estimatr::starprep, default
+  CR2).  With clustering by ELECTION (country-year, 81 clusters), which
+  is what the paper's text and table note say, they are 0.365 / 0.428 /
+  0.432 / 0.401, and the column-2 controls 0.073 / 0.175 / 0.129.  So the
+  printed SEs are country-clustered and the paper misdescribes the
+  clustering: a reproducer following the paper's words gets the point
+  estimates but SEs ~15-20% smaller.  Contexts keep the paper's wording
+  ("clustered by election"); do not "fix" them.
+
+  Package structure (package-only facts; never in contexts).  One script,
+  replication_code.R (libraries tidyverse, stargazer, haven, estimatr,
+  dplyr, fixest, modelsummary; no setwd, relative paths).  Table 1
+  columns 1-2 (lines ~40-70): load("dyadic_data_1-4-22.Rdata") creates
+  object updated_data (2,266 rows, 85 columns); cntryyr = paste(country,
+  year); keep to_prior_seats >= 4; keep rile_distance_s, prior_coalition,
+  prior_opposition, econ_distance_s, society_distance_s, year, country,
+  party_dislike, party_like, cntryyr, to_pfeml, to_prior_seats,
+  to_mp_number and na.omit (listwise, over columns the model does not
+  use); lm(party_like ~ to_pfeml [+
+  rile_distance_s + prior_coalition + prior_opposition] +
+  as.factor(cntryyr)), SEs from starprep(clusters = dta$country) into
+  stargazer (labelled "Country-Level Clustered SEs?").  Columns 3-4
+  (lines ~73-117): readRDS("gender_disagregated_8-8-21.rds"), like = 10 -
+  dislike, gender == 2 (women) / 1 (men), same model on countryyear.  The
+  one path bug I4R fixed is at line ~671, load("Data/multilevel_1-5-22.Rdata")
+  (a Data/ subfolder the package does not have) — supplementary Tables
+  S11-S12 only.  Figure 1 needs only the dyadic file.  The independent-
+  mode script-free copy carries no answers (no .tex/.log/.RData output).
+
+  Left out.  Table 1 control coefficients in columns 3-4 (-0.62 / 0.94 /
+  0.36 and -0.66 / 0.96 / 0.35, same pattern as column 2), adjusted R2
+  (0.15 / 0.31 / 0.31 / 0.30), the 0.55-unit +/-1 SD effect and the
+  0.29 / 0.16 mean / SD of the women-MPs share (derived from Table 1 and
+  Figure 1), the 125-party count, and all supplementary-appendix models
+  (S2-S12).
