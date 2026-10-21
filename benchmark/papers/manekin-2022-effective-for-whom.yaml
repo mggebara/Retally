@@ -1,0 +1,368 @@
+# Original paper: Manekin, D., & Mitts, T. (2022). "Effective for Whom?
+#   Ethnic Identity and Nonviolent Resistance." American Political Science
+#   Review, 116(1), 161-180. doi:10.1017/S0003055421000940
+#
+# I4R replication report: Discussion Paper 86 (Dollbaum, Borbath &
+#   Dollbaum, November 2023; replicator team 25 in the I4R First Meta
+#   Database).  Verdict: computationally reproducible with minor
+#   discrepancies.  The survey-experiment tables reproduce exactly ("Tables
+#   1 and Tables A13 through A15 ... reproduce exactly like in the paper";
+#   "The results in Table 2 replicate perfectly"); the discrepancy is in
+#   the observational part: the Figure 1 code omits two controls that
+#   Table A5 includes, so Figure 1's confidence intervals come out wider
+#   (Table A5 point estimates "close" but not exact; Table A3 exact).  The
+#   meta-database records perfect_reproduction = No, "Needed to change code
+#   to include correct controls to reproduce original images/tables".
+#   Robustness: the main claim holds but is "more patchy" (re-weighting
+#   cuts the share of significant survey effects; aggregating the
+#   observational data removes the interaction).
+#
+# Why this paper:
+#   1. Original analysis code is R (a master script sourcing one script per
+#      exhibit) — Retally's native target language.
+#   2. Data is on Harvard Dataverse under CC0, one unrestricted 2.7 MB
+#      .tgz the downloader fetches and extracts.
+#   3. The published APSR article is open access (CC-BY) and its PDF
+#      text-extracts cleanly.
+#
+# original_claims pins the protester-identity effects the abstract states
+# (Study 1: minority protesters perceived as more violent and requiring
+# more police action, U.S. and Israel; Study 2: Black vs white protesters
+# in the U.S.), each with its SE in standard_error, plus the four survey
+# sample sizes.  Values transcribed from the published PDF and checked
+# against the package's own Tables/table_1_panel_*.tex and
+# table_4_panel_*.tex (the latter is the paper's Table 2) and the
+# meta-database's o_coeff / o_std_err.
+
+id: manekin-2022-effective-for-whom
+i4r_report_url: https://www.econstor.eu/bitstream/10419/279959/1/I4R-DP086.pdf
+language: r
+outcome_label: reproducible
+split: holdout
+# Contamination bookkeeping.  First public version: APSR FirstView,
+# 2021-09-14 (OpenAlex publication_date; the PDF carries "(c) The
+# Author(s), 2021"); no earlier working paper was found (web search,
+# 2026-10-21).  Print issue February 2022.  Package: Harvard Dataverse
+# doi:10.7910/DVN/SHHVCA version 1.0, released 2021-09-14 (Dataverse API
+# publicationDate / releaseTime; the archive's files are dated July 2021).
+publication_date: "2021-09-14"
+package_release_date: "2021-09-14"
+
+paper:
+  # Open-access published version from Cambridge Core (CC-BY 4.0).
+  # Checked 2026-10-21: 200 application/pdf, %PDF magic, 20 pages.
+  source: https://www.cambridge.org/core/services/aop-cambridge-core/content/view/D78EE1F9EE3B41D6F1500311F17B8EA6/S0003055421000940a.pdf/div-class-title-effective-for-whom-ethnic-identity-and-nonviolent-resistance-div.pdf
+  title: "Effective for Whom? Ethnic Identity and Nonviolent Resistance"
+  authors:
+    - Devorah Manekin
+    - Tamar Mitts
+
+dataset:
+  source: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/SHHVCA
+  access_notes: >
+    Harvard Dataverse (doi:10.7910/DVN/SHHVCA), CC0, version 1.0, one
+    unrestricted file: Replication.tgz (2.7 MB, contentType
+    application/x-gzip, datafile id 4917244; Dataverse API checked
+    2026-10-21).  Not tabular, so Dataverse does not ingest it and no
+    ?format=original request is needed.  The downloader's archive
+    handling covers .tgz (_ARCHIVE_SUFFIXES includes ".tgz"; extraction
+    via tarfile "r:*"), so it unpacks into a top-level Replication/
+    folder (Code/, Data/, Tables/, Figures/, plus macOS .DS_Store files).
+    Data are ten R .rdata files (survey waves for the U.S. and Israel,
+    text-analysis corpora, and the NAVCO/EPR cross-national data).  The
+    package ships every table's LaTeX output (Tables/*.tex) and every
+    figure (Figures/*.pdf), so the paper's numbers are present in the
+    unpacked directory.
+
+code_repo:
+  url: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/SHHVCA
+
+original_claims:
+  - description: study1_us_black_perceived_violence
+    value: 0.235
+    claim_type: coefficient
+    standard_error: 0.117
+    sample_size: 2269
+    unit: points on a 0-10 scale
+    location: "Table 1, Panel (A) US Sample, Black protesters, Perceived degree of violence"
+    context: >
+      Table 1 ("Group Identity and Protest Tactic"), Panel (A) U.S.
+      sample, row Black protesters, column Perceived degree of violence.
+      Study 1 online survey experiment (U.S., three waves, November
+      2018-January 2019): respondents read a simulated news article about
+      a protest with the protesters' identity randomized (white vs Black,
+      signaled by names and a photo) and the tactic randomized (marching
+      in streets, shutting down traffic, destroying police cars), a 2 x 3
+      factorial design.  Outcome: how violent the respondent would say
+      the protest was, 0 (completely nonviolent) to 10 (extremely
+      violent).  OLS of the outcome on an indicator for Black protesters
+      and indicators for the two more intense tactics; base category
+      white protesters marching in the streets.  The paper's supplementary
+      information (Section 3) states that Study 1 oversampled Black
+      Americans and Arab Israelis and that sample weights correct for
+      this; the Study 1 estimates are weighted.
+  - description: study1_us_black_police_action
+    value: 0.268
+    claim_type: coefficient
+    standard_error: 0.127
+    sample_size: 2269
+    unit: points on a 0-10 scale
+    location: "Table 1, Panel (A) US Sample, Black protesters, Police action required"
+    context: >
+      Table 1, Panel (A) U.S. sample, row Black protesters, column Police
+      action required.  Same Study 1 U.S. design and OLS specification as
+      study1_us_black_perceived_violence (Black protester indicator plus
+      tactic indicators; base white protesters marching in the streets;
+      weighted), with the outcome the respondent's view, 0-10, of the
+      extent to which police action is required to address the protest.
+  - description: study1_israel_ethiopian_perceived_violence
+    value: 0.425
+    claim_type: coefficient
+    standard_error: 0.107
+    sample_size: 3063
+    unit: points on a 0-10 scale
+    location: "Table 1, Panel (B) Israel Sample, Ethiopian protesters, Perceived degree of violence"
+    context: >
+      Table 1, Panel (B) Israel sample, row Ethiopian protesters, column
+      Perceived degree of violence.  Study 1 Israeli survey (two waves,
+      February-March 2019): protester identity randomized among white
+      Jews (majority), Ethiopian Jews and Israeli Arabs (minorities),
+      noted in the article title, and tactic among marching in streets,
+      shutting down traffic and destroying garbage cans (3 x 3 design).
+      Outcome: perceived violence of the protest, 0-10.  OLS on
+      indicators for Ethiopian and Arab protesters and the two more
+      intense tactics; base white protesters marching in the streets;
+      weighted (see study1_us_black_perceived_violence).
+  - description: study1_israel_ethiopian_police_action
+    value: 0.181
+    claim_type: coefficient
+    standard_error: 0.118
+    sample_size: 3063
+    unit: points on a 0-10 scale
+    location: "Table 1, Panel (B) Israel Sample, Ethiopian protesters, Police action required"
+    context: >
+      Table 1, Panel (B) Israel sample, row Ethiopian protesters, column
+      Police action required (0-10).  Same Study 1 Israeli specification
+      as study1_israel_ethiopian_perceived_violence.
+  - description: study1_israel_arab_perceived_violence
+    value: 0.623
+    claim_type: coefficient
+    standard_error: 0.108
+    sample_size: 3063
+    unit: points on a 0-10 scale
+    location: "Table 1, Panel (B) Israel Sample, Arab protesters, Perceived degree of violence"
+    context: >
+      Table 1, Panel (B) Israel sample, row Arab protesters, column
+      Perceived degree of violence (0-10).  Same Study 1 Israeli
+      specification as study1_israel_ethiopian_perceived_violence; this
+      is the coefficient on the Arab protester indicator.
+  - description: study1_israel_arab_police_action
+    value: 0.964
+    claim_type: coefficient
+    standard_error: 0.119
+    sample_size: 3063
+    unit: points on a 0-10 scale
+    location: "Table 1, Panel (B) Israel Sample, Arab protesters, Police action required"
+    context: >
+      Table 1, Panel (B) Israel sample, row Arab protesters, column Police
+      action required (0-10).  Same Study 1 Israeli specification as
+      study1_israel_ethiopian_perceived_violence.
+  - description: study2_us_black_perceived_violence
+    value: 0.347
+    claim_type: coefficient
+    standard_error: 0.115
+    sample_size: 3013
+    unit: points on a 0-10 scale
+    location: "Table 2, Panel (A) US Sample, Black protesters, Perceived degree of violence"
+    context: >
+      Table 2 ("Group Identity, Protest Goal, and Commitment to
+      Nonviolence"), Panel (A) U.S. sample, row Black protesters, column
+      Perceived degree of violence.  Study 2 online survey experiment
+      (U.S., June 2020): a 2 x 2 x 2 factorial vignette design randomizing
+      protester identity (white vs Black), protest goal (general:
+      protesting layoffs; group-based: protesting racial prejudice and
+      police brutality) and whether protesters explicitly stated a
+      commitment to nonviolence.  Outcome: perceived violence, 0-10.  OLS
+      of the outcome on indicators for Black protesters, minority group
+      goal and commitment to nonviolence; base white protesters, generic
+      goal, no commitment.  The paper does not describe weights for
+      Study 2.
+  - description: study2_us_black_police_action
+    value: 0.429
+    claim_type: coefficient
+    standard_error: 0.114
+    sample_size: 3008
+    unit: points on a 0-10 scale
+    location: "Table 2, Panel (A) US Sample, Black protesters, Police action required"
+    context: >
+      Table 2, Panel (A) U.S. sample, row Black protesters, column Police
+      action required (0-10).  Same Study 2 U.S. specification as
+      study2_us_black_perceived_violence; Table 2 reports slightly fewer
+      observations for this column than for the other two (respondents
+      missing this outcome are dropped).
+  - description: respondents_study1_us
+    value: 2269
+    claim_type: other
+    unit: respondents
+    location: "Research Design (text); Table 1, Panel (A), Observations"
+    context: >
+      Study 1 U.S. sample size: respondents to the U.S. survey experiment,
+      the observations in each Table 1 Panel (A) regression.
+  - description: respondents_study1_israel
+    value: 3063
+    claim_type: other
+    unit: respondents
+    location: "Research Design (text); Table 1, Panel (B), Observations"
+    context: >
+      Study 1 Israeli sample size: respondents to the Israeli survey
+      experiment, the observations in each Table 1 Panel (B) regression.
+  - description: respondents_study2_us
+    value: 3013
+    claim_type: other
+    unit: respondents
+    location: "Research Design (text); Table 2, Panel (A), Observations"
+    context: >
+      Study 2 U.S. sample size: respondents to the June 2020 U.S. survey
+      experiment, the observations in the Table 2 Panel (A) perceived
+      violence and recall regressions.
+  - description: respondents_study2_israel
+    value: 3465
+    claim_type: other
+    unit: respondents
+    location: "Research Design (text); Table 2, Panel (B), Observations"
+    context: >
+      Study 2 Israeli sample size: respondents to the June 2020 Israeli
+      survey experiment, the observations in each Table 2 Panel (B)
+      regression.
+
+# The meta-database's 43 rows for this paper (team 25) are robustness
+# variants, not reproductions: 27 rows against Tables 1-2 (Table 1: 9
+# "Remove weights" + 9 "New weights"; Table 2: 9 "New weights"; o_coeff
+# equal to the printed values, r_coeff the re-weighted estimate, e.g.
+# U.S. Black perceived violence 0.235 -> 0.137 unweighted / 0.199
+# re-weighted) and 16 rows against appendix Tables A3 / A5 (recodes,
+# logit, aggregation; one A5 row blank).
+# Their r_coeff values are therefore not transcribed.  The computational
+# verdict for the pinned tables comes from DP86 itself (section 3.2:
+# Table 1 reproduces exactly; section 4.1: Table 2 replicates
+# perfectly), so each finding records the paper's own value with
+# outcome matches.
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: 0.235
+    outcome: matches
+    notes: DP86 s.3.2, Table 1 reproduces exactly; meta-database rows for this cell are re-weighting variants (0.137 unweighted, 0.199 new weights).
+  - claim_id: 1
+    reproduced_value: 0.268
+    outcome: matches
+    notes: DP86 s.3.2, Table 1 reproduces exactly; re-weighting rows 0.171 / 0.212 not transcribed.
+  - claim_id: 2
+    reproduced_value: 0.425
+    outcome: matches
+    notes: DP86 s.3.2, Table 1 reproduces exactly; re-weighting rows 0.426 / 0.332 not transcribed.
+  - claim_id: 3
+    reproduced_value: 0.181
+    outcome: matches
+    notes: DP86 s.3.2, Table 1 reproduces exactly; re-weighting rows 0.165 / 0.095 not transcribed.
+  - claim_id: 4
+    reproduced_value: 0.623
+    outcome: matches
+    notes: DP86 s.3.2, Table 1 reproduces exactly; re-weighting rows 0.584 / 0.496 not transcribed.
+  - claim_id: 5
+    reproduced_value: 0.964
+    outcome: matches
+    notes: DP86 s.3.2, Table 1 reproduces exactly; re-weighting rows 0.890 / 0.887 not transcribed.
+  - claim_id: 6
+    reproduced_value: 0.347
+    outcome: matches
+    notes: DP86 s.4.1, Table 2 replicates perfectly; new-weights row 0.247 not transcribed.
+  - claim_id: 7
+    reproduced_value: 0.429
+    outcome: matches
+    notes: DP86 s.4.1, Table 2 replicates perfectly; new-weights row 0.440 not transcribed.
+  - claim_id: 8
+    reproduced_value: 2269
+    outcome: matches
+    notes: DP86 s.3.2 (Table 1 exact); value is the paper's.
+  - claim_id: 9
+    reproduced_value: 3063
+    outcome: matches
+    notes: DP86 s.3.2 (Table 1 exact); value is the paper's.
+  - claim_id: 10
+    reproduced_value: 3013
+    outcome: matches
+    notes: DP86 s.4.1 (Table 2 exact); value is the paper's.
+  - claim_id: 11
+    reproduced_value: 3465
+    outcome: matches
+    notes: DP86 s.4.1 (Table 2 exact); value is the paper's.
+
+notes: >
+  Headline finding: nonviolent protest by ethnic minorities is perceived as
+  more violent and as requiring more police action than identical protest
+  by majorities (Study 1: U.S. Black protesters +0.235 / +0.268 on 0-10
+  scales; Israel Arab protesters +0.623 / +0.964, Ethiopian +0.425 /
+  +0.181 n.s.), and Study 2 replicates it in June 2020 (U.S. Black
+  protesters +0.347 / +0.429).
+
+  outcome_label.  The I4R verdict is "minor discrepancies"; the schema
+  has no such label.  The discrepancy is confined to the observational
+  Figure 1 / Table A5 (none pinned) and every pinned table reproduces
+  exactly, so the entry is labelled reproducible (stratification only).
+  DP86's robustness findings (weights, aggregation) would argue for
+  not_robust on the observational claim, which is not pinned.
+
+  Curation pass (2026-10-21).  Pinned 12 claims: the eight protester-
+  identity coefficients for the two outcomes the abstract names
+  (perceived violence, police action required) — Study 1 U.S. (Black),
+  Study 1 Israel (Ethiopian, Arab) and Study 2 U.S. (Black) — each with
+  its SE in standard_error, and the four survey sample sizes stated in
+  the Research Design section and the tables' Observations rows.
+
+  What was read.  The published PDF (abstract, design sections, Tables
+  1-2), the supplementary information PDF (static.cambridge.org, sample
+  and weighting description), DP86 in full (EconStor), the Dataverse API
+  metadata, the whole package (downloaded to a scratch directory, never
+  committed): the master script and replicate_table_1.R /
+  replicate_table_4.R, and the shipped Tables/*.tex; the meta-database's
+  43 rows.  No code was run.
+
+  Weights (matters for independent mode).  The main text never mentions
+  weights; the SI says Study 1 oversampled Black Americans and Arab
+  Israelis and uses sample weights.  The package's Table 1 regressions are
+  weighted lm() fits (weights = weight) and the Table 2 regressions are
+  unweighted; the contexts state this from the SI.  A reproducer that
+  ignores the weights gets the meta-database's "Remove weights" values
+  for Study 1 (e.g. U.S. Black perceived violence 0.137 (0.118), police
+  0.171 (0.127); Israel Arab 0.584 / 0.890, Ethiopian 0.426 / 0.165),
+  which would fail the U.S. claims.  DP86 also reports that the shipped
+  Study 1 weights adjust for ethnicity only (Arabs vs Jews), not age,
+  gender or education.  Standard errors are the default lm() (classical
+  OLS) ones; the paper says only "OLS regressions".
+
+  Package structure (package-only facts; never in contexts).  Replication/
+  Code/Manekin_Mitts_Effective_for_Whom_Replication.R is the master: it
+  loads libraries (lemon, stargazer, xtable, fastDummies, tidyr,
+  gridExtra, stm, quanteda, ggplot2, dotwhisker, ggeffects, estimatr,
+  corrplot), setwd()s to an absolute Dropbox path, load()s ten
+  Data/*.rdata files, then source()s one script per exhibit.  Table 1 is
+  Code/replicate_table_1.R: lm(degree_violence / police_action_required
+  / recall_violence2 ~ identity_protesters + tactic, data =
+  us_survey_wave1 / isr_survey_wave1, weights = weight), written by
+  stargazer to Tables/table_1_panel_A.tex / _B.tex.  The paper's Table 2
+  is produced by Code/replicate_table_4.R (misnamed, as DP86 notes):
+  lm(... ~ black + group_goal + commitment, data = us_survey_wave2) and
+  lm(... ~ identity_protesters + group_goal + commitment, data =
+  isr_survey_wave2), unweighted, written to Tables/table_4_panel_A.tex /
+  _B.tex.  Every pinned value and SE equals the shipped .tex.  Selecting
+  files by name (table_2) will not find the Table 2 script.
+
+  Left out.  Recall-violence columns (binary recall measure; the U.S.
+  Study 2 Black effect is insignificant), tactic and goal/commitment
+  coefficients, intercepts and R-squared, Study 2 Israel identity effects
+  (Ethiopian 0.950 (0.139) / 0.732 (0.144), Arab 0.587 (0.139) / 0.802
+  (0.144); not named in the abstract, kept to the 12-claim target), the
+  observational NAVCO/EPR estimates (Figure 1, appendix Tables A3 / A5,
+  the abstract's first finding: not tabulated in the main text, and the
+  part DP86 found discrepant and fragile), Figure 3-4 conditional effects
+  and the structural topic models.
