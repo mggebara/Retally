@@ -686,10 +686,99 @@ def test_dta_listing_puts_paper_matched_columns_and_files_first(tmp_path):
     lines = _describe_dataset_files(tmp_path, hints)
     first = lines[0]
     assert first.startswith("- b_analysis.dta (")
-    assert "5 rows, 304 columns: lnlights_001, instrument, Land_250_1757, Conflict_0" in first
+    # Columns named in the text first, then labels matching the text.
+    assert "5 rows, 304 columns: instrument, Land_250_1757, lnlights_001, Conflict_0" in first
     assert lines[1].startswith("- a_small.dta (") and "3 rows, 2 columns: Land_250_1757, state" in lines[1]
     # No hints: plain file order within each file.
     assert "304 columns: Conflict_0, Conflict_1," in _describe_dataset_files(tmp_path)[0]
+
+
+def test_label_match_folds_log_spellings_word_order_and_punctuation():
+    """Phase 1.8: Dincecco's population-density control is labelled
+    ``ln(Population density), 1990`` and the paper says "log population
+    density in 1990"; the literal-phrase rule missed it."""
+    from retally.codegen.generator import _Hints
+
+    hints = _Hints(["Controls for log population density in 1990 and the share of land irrigated."])
+    assert hints.label_match("ln(Population density), 1990") is not None
+    assert hints.label_match("Logged population density (1990)") is not None
+    assert hints.label_match("Density of population, log") is not None  # word order
+    assert hints.label_match("Irrigated land: share") is not None  # punctuation, order
+    # ``log`` alone does not make a label strong.
+    assert hints.label_match("ln Population 1990") is None
+
+
+def test_label_match_needs_more_than_one_shared_word():
+    from retally.codegen.generator import _Hints
+
+    hints = _Hints(["Controls for log population density in 1990, distance to the coast."])
+    assert hints.label_match("Population 1990") is None  # one content word
+    assert hints.label_match("Urban population share") is None  # shares only "population"
+    assert hints.label_match("Coast guard stations") is None
+    assert hints.label_match("") is None
+
+
+def test_label_match_contiguous_run_is_strong_despite_extra_words():
+    from retally.codegen.generator import _Hints
+
+    hints = _Hints(["Pre-colonial conflict exposure to land battles."])
+    # "post" is not in the text, but three words match in order.
+    assert hints.label_match("Post-colonial conflict exposure (1947-2010)") is not None
+    assert hints.label_match("Post-colonial conflict") is None
+
+
+def test_label_match_ranks_more_words_and_shared_years_first():
+    from retally.codegen.generator import _Hints, _prioritised_columns
+
+    hints = _Hints(["Luminosity on conflict exposure, controlling for log population density in 1990."])
+    labels = {
+        "other": "Something else",
+        "popd2000": "Population density 2000",
+        "conf1990": "Conflict exposure 1990",
+        "lnpopd1990": "ln(Population density), 1990",
+    }
+    order, n_strong = _prioritised_columns(list(labels), labels, hints)
+    assert n_strong == 3
+    # More shared words first; among equals, a year in the text beats one that is not.
+    assert order[:3] == ["lnpopd1990", "conf1990", "popd2000"]
+
+
+def test_label_family_differing_only_in_numbers_keeps_its_best_member():
+    """Eighty "Conflict Exposure: N km A to B" labels must not fill the strong tier."""
+    from retally.codegen.generator import _Hints, _prioritised_columns
+
+    hints = _Hints(["Conflict exposure within 250 km up to 1757."])
+    labels = {f"c_{r}_{y}": f"Conflict Exposure: {r} km to {y}" for r in (100, 250) for y in (1757, 1858)}
+    labels["lat"] = "Latitude"
+    order, n_strong = _prioritised_columns(list(labels), labels, hints)
+    assert order[:n_strong] == ["c_250_1757"]
+    assert set(order) == set(labels)
+
+
+def test_every_strong_match_is_shown_past_the_budget_up_to_a_cap(tmp_path):
+    from retally.codegen.generator import (
+        _TREE_MAX_STRONG_SHOWN,
+        _TREE_TOP_HEADER_CHARS,
+        _describe_dataset_files,
+    )
+
+    words = [f"concept{chr(97 + i)}{chr(97 + j)}" for i in range(8) for j in range(8)]
+    # 32 strong columns (labels of two text words each), long names, then filler.
+    strong = {f"strong_long_column_name_{i:02d}": f"{words[2 * i]} {words[2 * i + 1]}" for i in range(32)}
+    filler = {f"filler_{i:03d}": "Unrelated" for i in range(100)}
+    _write_labelled_dta(tmp_path / "a.dta", {**filler, **strong})
+    [line] = _describe_dataset_files(tmp_path, [" ".join(words)])
+    shown = line.split("columns: ", 1)[1]
+    assert len(", ".join(strong)) > _TREE_TOP_HEADER_CHARS
+    assert all(name in shown for name in strong)
+    assert "filler_000" not in shown and shown.endswith("…")
+
+    many = {f"strong_long_column_name_{i:02d}": f"{words[i]} {words[i + 1]}" for i in range(60)}
+    (tmp_path / "a.dta").unlink()
+    _write_labelled_dta(tmp_path / "a.dta", many)
+    [line] = _describe_dataset_files(tmp_path, [" ".join(words)])
+    shown = line.split("columns: ", 1)[1].rstrip("…").split(", ")
+    assert _TREE_MAX_STRONG_SHOWN <= len(shown) < len(many)
 
 
 def test_unreadable_dta_is_listed_without_columns(tmp_path):

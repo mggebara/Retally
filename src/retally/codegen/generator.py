@@ -25,7 +25,7 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, NamedTuple
 
 from retally.models import (
     ClaimType,
@@ -1113,6 +1113,24 @@ _HINT_STOPWORDS = frozenset(
     "claim claims estimate estimates estimated regression specification type value values paper "
     "reported robust model data variable variables".split()
 )
+# Stata-label matching (Phase 1.8).  Labels and the paper word their
+# concepts differently ("ln(Population density), 1990" vs "log population
+# density in 1990"), so a label is compared to the text as content words,
+# not as a literal phrase: lower-cased letter and digit runs, the log
+# spellings folded into one token, stopwords and tokens under three
+# characters dropped, and digit runs (years, radii) kept aside as numbers.
+_LOG_TOKENS = frozenset({"ln", "log", "logs", "logged", "logarithm", "logarithmic"})
+_LABEL_STOPWORDS = _HINT_STOPWORDS | frozenset(
+    "the and for per not but its was all any can has had via are our who how why".split()
+)
+# A label sharing this many content words, contiguous and in order, with
+# the text is strong even if it has other words ("Post-colonial conflict
+# exposure" vs "pre-colonial conflict exposure").
+_LABEL_RUN_STRONG = 3
+_LABEL_MAX_NGRAM = 8
+# Strong matches in a top-ranked ``.dta`` file are all shown, past the
+# character budget if need be, up to this many columns.
+_TREE_MAX_STRONG_SHOWN = 40
 
 
 # Per-claim cap on the ``context`` text rendered under each claim in the
@@ -1196,6 +1214,32 @@ def _normalise_words(text: str) -> str:
     return " ".join(re.findall(r"[a-z0-9]+", text.lower()))
 
 
+def _label_tokens(text: str) -> tuple[list[str], list[str]]:
+    """Content words (in order) and numbers of ``text``, for label matching.
+
+    ``ln(0.01+Luminosity)`` -> ``(["log", "luminosity"], ["0", "01"])``;
+    ``Population density, 1990`` -> ``(["population", "density"], ["1990"])``.
+    """
+    words: list[str] = []
+    numbers: list[str] = []
+    for token in re.findall(r"[a-z]+|[0-9]+", text.lower()):
+        if token.isdigit():
+            numbers.append(token)
+        elif token in _LOG_TOKENS:
+            words.append("log")
+        elif len(token) >= 3 and token not in _LABEL_STOPWORDS:
+            words.append(token)
+    return words, numbers
+
+
+class _LabelMatch(NamedTuple):
+    """Quality of a strong label match; larger sorts first."""
+
+    words: int  # label content words found in the text
+    run: int  # longest run of them contiguous and in order in one text
+    numbers: int  # label numbers in the text minus label numbers not in it
+
+
 class _Hints:
     """Terms from the paper text that steer which ``.dta`` columns are listed."""
 
@@ -1210,11 +1254,61 @@ class _Hints:
         self.words = frozenset(words)
         # Each text normalised and fenced by spaces, for whole-phrase search.
         self.phrase_text = " " + " | ".join(_normalise_words(t) for t in texts if t) + " "
+        content: set[str] = set()
+        numbers: set[str] = set()
+        ngrams: set[tuple[str, ...]] = set()
+        for text in texts:
+            seq, nums = _label_tokens(text)
+            content.update(seq)
+            numbers.update(nums)
+            for n in range(2, _LABEL_MAX_NGRAM + 1):
+                ngrams.update(tuple(seq[i : i + n]) for i in range(len(seq) - n + 1))
+        self.content_words = frozenset(content)
+        self.numbers = frozenset(numbers)
+        self._ngrams = frozenset(ngrams)
 
     def label_is_phrase(self, label: str) -> bool:
-        """Whether a variable label (e.g. ``ln(Population density), 1990``) is a phrase of the text."""
+        """Whether a variable label (e.g. ``ln(0.01+Luminosity)``) is literally a phrase of the text."""
         norm = _normalise_words(label)
         return any(len(w) >= 4 for w in norm.split()) and f" {norm} " in self.phrase_text
+
+    def label_match(self, label: str) -> _LabelMatch | None:
+        """How well a Stata variable label matches the text, or ``None`` if not strongly.
+
+        A label is a strong match when any of these holds:
+
+        - it is literally a phrase of the text (``label_is_phrase``);
+        - every content word is in the text and at least two of them are
+          not ``log`` (``ln(Population density), 1990`` vs "log population
+          density in 1990": word order, punctuation and ``ln``/``log``
+          do not matter; ``ln Luminosity 1992`` alone is not enough);
+        - ``_LABEL_RUN_STRONG`` content words appear contiguous and in
+          the same order in one text.
+
+        Numbers never decide strength (a year is shared by too many
+        columns) but rank matches: see ``_LabelMatch``.
+        """
+        words, numbers = _label_tokens(label)
+        if not words:
+            return None
+        found = sum(w in self.content_words for w in words)
+        run = 0
+        for i in range(len(words)):
+            for n in range(min(len(words) - i, _LABEL_MAX_NGRAM), max(run, 1), -1):
+                if tuple(words[i : i + n]) in self._ngrams:
+                    run = n
+                    break
+        run = max(run, 1 if found else 0)
+        concepts = {w for w in words if w != "log"}
+        strong = (
+            self.label_is_phrase(label)
+            or (found == len(words) and len(concepts) >= 2)
+            or run >= _LABEL_RUN_STRONG
+        )
+        if not strong:
+            return None
+        shared = sum(n in self.numbers for n in numbers)
+        return _LabelMatch(found, run, shared - (len(numbers) - shared))
 
 
 def _name_parts(column: str) -> list[str]:
@@ -1232,9 +1326,14 @@ def _prioritised_columns(names: list[str], labels: dict[str, str], hints: _Hints
     Order, each tier in file order unless stated:
 
     1. strong matches: the column name is a hint word (``Land_250_1757``,
-       ``instrument``), or its Stata variable label is a phrase of the
-       paper text (``lnlights_001`` is labelled ``ln(0.01+Luminosity)``,
-       the claim context says "ln(0.01 + luminosity)");
+       ``instrument``), or its Stata variable label matches the paper
+       text (``_Hints.label_match``: ``lnpdgpd1990`` is labelled
+       ``ln(Population density), 1990``, the claim context says "log
+       population density in 1990").  Name matches first, then labels by
+       match quality (more shared content words, a longer in-order run,
+       shared rather than foreign numbers), so the best-labelled columns
+       survive the budget.  Of labels with the same words differing only
+       in numbers, only the best-matching stay strong;
     2. a name part fuzzily matches a hint word, rarest word first (a word
        matching hundreds of columns in this file, like ``conflict``, says
        little about any one of them);
@@ -1242,7 +1341,28 @@ def _prioritised_columns(names: list[str], labels: dict[str, str], hints: _Hints
 
     Deterministic.
     """
-    strong = [n for n in names if n.lower() in hints.words or hints.label_is_phrase(labels.get(n, ""))]
+    position = {n: i for i, n in enumerate(names)}
+    quality: dict[str, tuple[int, ...]] = {}
+    families: dict[tuple[str, ...], list[str]] = {}
+    for n in names:
+        if n.lower() in hints.words:
+            quality[n] = (1,)
+            continue
+        label = labels.get(n, "")
+        match = hints.label_match(label)
+        if match is not None:
+            quality[n] = (0, *match)
+            families.setdefault(tuple(_label_tokens(label)[0]), []).append(n)
+    # A family of labels with the same words, differing only in numbers
+    # ("Conflict Exposure: 100 km to 1757", "... 250 km 1858 to 1947", ...)
+    # keeps only its best-matching members in the strong tier; the rest
+    # are ranked like any other column, so one family cannot fill the budget.
+    for members in families.values():
+        best = max(quality[n] for n in members)
+        for n in members:
+            if quality[n] < best:
+                del quality[n]
+    strong = sorted(quality, key=lambda n: (tuple(-q for q in quality[n]), position[n]))
     strong_set = set(strong)
     matched: dict[str, set[str]] = {}
     for n in names:
@@ -1255,7 +1375,6 @@ def _prioritised_columns(names: list[str], labels: dict[str, str], hints: _Hints
     for hits in matched.values():
         for w in hits:
             df[w] = df.get(w, 0) + 1
-    position = {n: i for i, n in enumerate(names)}
     fuzzy = sorted(matched, key=lambda n: (min(df[w] for w in matched[n]), position[n]))
     rest = [n for n in names if n not in strong_set and n not in matched]
     return strong + fuzzy + rest, len(strong)
@@ -1280,6 +1399,8 @@ def _describe_dataset_files(root: Path, hint_texts: list[str] | None = None) -> 
     count; the top
     ``_TREE_MAX_DTA_HEADERS`` get columns, the top ``_TREE_TOP_DTA_FILES``
     a ``_TREE_TOP_HEADER_CHARS`` budget (others ``_TREE_HEADER_CHARS``),
+    stretched in the top files to show every strong match up to
+    ``_TREE_MAX_STRONG_SHOWN`` columns,
     and the annotated ``.dta`` lines are listed first in rank order so the
     likeliest analysis file is not buried among shapefile pieces.  All
     other files follow in path order.
@@ -1318,8 +1439,11 @@ def _describe_dataset_files(root: Path, hint_texts: list[str] | None = None) -> 
         return f"- {p.relative_to(root)} ({_human_size(p.stat().st_size)})"
 
     lines: list[str] = []
-    for rank, (_neg_strong, neg_cols, p, ordered, nobs) in enumerate(annotated):
-        budget = _TREE_TOP_HEADER_CHARS if rank < _TREE_TOP_DTA_FILES else _TREE_HEADER_CHARS
+    for rank, (neg_strong, neg_cols, p, ordered, nobs) in enumerate(annotated):
+        budget = _TREE_HEADER_CHARS
+        if rank < _TREE_TOP_DTA_FILES:
+            strong_shown = ", ".join(ordered[: min(-neg_strong, _TREE_MAX_STRONG_SHOWN)])
+            budget = max(_TREE_TOP_HEADER_CHARS, len(strong_shown))
         rows = f"{nobs} rows, " if nobs is not None else ""
         lines.append(f"{base(p)} — {rows}{-neg_cols} columns: {_truncate_header(', '.join(ordered), budget)}")
     shown = {r[2] for r in annotated}
