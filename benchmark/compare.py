@@ -34,6 +34,7 @@ _MAX_FLIPS_SHOWN = 15
 def compare_runs(baseline: list[dict[str, Any]], candidate: list[dict[str, Any]]) -> str:
     """Render a markdown comparison of two results.json payloads."""
     lines = ["# Benchmark run comparison", ""]
+    lines.extend(_header_section(baseline, candidate))
 
     lines.extend(_split_section(baseline, candidate))
     lines.extend(_per_entry_section(baseline, candidate))
@@ -69,6 +70,19 @@ def main(argv: list[str] | None = None) -> int:
 # ---------------------------------------------------------------------------
 
 
+def _header_section(baseline: list[dict], candidate: list[dict]) -> list[str]:
+    """Which reproducer(s) and mode(s) each run covers — the context for every delta below."""
+
+    def _describe(rows: list[dict]) -> str:
+        if not rows:
+            return "(empty)"
+        reproducers = ", ".join(metrics.reproducers_present(rows))
+        modes = ", ".join(metrics.modes_present(rows))
+        return f"reproducer {reproducers}; mode {modes}"
+
+    return [f"- baseline:  {_describe(baseline)}", f"- candidate: {_describe(candidate)}", ""]
+
+
 def _split_section(baseline: list[dict], candidate: list[dict]) -> list[str]:
     lines = ["## Closeness by split and mode", ""]
     base_by_group = _by_split_and_mode(baseline)
@@ -93,15 +107,15 @@ def _per_entry_section(baseline: list[dict], candidate: list[dict]) -> list[str]
     lines = [
         "## Per-entry deltas",
         "",
-        "| Entry | Mode | Split | Passed (base → cand) | Median rel err (base → cand) |",
-        "|---|---|---|---|---|",
+        "| Entry | Mode | Reproducer | Split | Passed (base → cand) | Median rel err (base → cand) |",
+        "|---|---|---|---|---|---|",
     ]
     for key in sorted(set(base_by_key) | set(cand_by_key)):
         entry_id, mode = key
         b, c = base_by_key.get(key), cand_by_key.get(key)
         split = (c or b or {}).get("split", "dev")
         lines.append(
-            f"| `{entry_id}` | {mode} | {split} "
+            f"| `{entry_id}` | {mode} | {_reproducer_str(b, c)} | {split} "
             f"| {_passed_str(b)} → {_passed_str(c)} "
             f"| {_median_str(b)} → {_median_str(c)} |"
         )
@@ -161,6 +175,11 @@ def _passed_claims(results: list[dict]) -> set[tuple[str, str, str]]:
         for cd in r.get("claim_details", [])
         if cd.get("passed")
     }
+
+
+def _reproducer_str(b: dict | None, c: dict | None) -> str:
+    names = [metrics.reproducer_of(r) for r in (b, c) if r is not None]
+    return names[0] if len(set(names)) == 1 else " → ".join(names)
 
 
 def _passed_str(r: dict | None) -> str:

@@ -253,6 +253,7 @@ def _cd(description, passed):
 def test_single_mode_report_states_the_mode_and_has_no_mode_column():
     md = report.render_markdown([_result(entry_id="x")])  # pre-mode row → seeded
     assert "Reproduction mode: **seeded**" in md
+    assert "Reproducer: **pipeline**." in md  # rows predating the field: the pipeline
     assert "| ID | Status |" in md
     assert "Seeded vs independent" not in md
 
@@ -270,9 +271,22 @@ def test_both_mode_report_presents_modes_side_by_side():
     assert "## Seeded vs independent" in md
     assert "- Seeded: **2 / 2** claims passed" in md
     assert "- Independent: **1 / 2** claims passed" in md
-    assert "| `p` | dev | 2/2 | 1/2 | `se` |" in md
+    assert "| `p` | dev | pipeline | 2/2 | 1/2 | `se` |" in md
     assert "**dev · seeded**" in md and "**dev · independent**" in md
-    assert "| ID | Mode | Status |" in md
-    assert "| `p` | independent | ran |" in md
+    assert "| ID | Mode | Reproducer | Status |" in md
+    assert "| `p` | independent | pipeline | ran |" in md
+    assert "Reproducer: **pipeline**." in md
     html = report.render_html(results)
-    assert "<th>Mode</th>" in html
+    assert "<th>Mode</th><th>Reproducer</th>" in html
+    assert "<td>independent</td><td>pipeline</td>" in html
+
+
+def test_reproducer_shown_alongside_mode_for_a_plugged_in_agent():
+    results = [
+        _result(entry_id="p", mode="seeded", reproducer="myagent:make", claim_details=[_cd("b", True)]),
+        _result(entry_id="p", mode="independent", reproducer="myagent:make", claim_details=[_cd("b", False)]),
+    ]
+    md = report.render_markdown(results)
+    assert "Reproducer: **myagent:make**." in md
+    assert "| `p` | dev | myagent:make | 1/1 | 0/1 | `b` |" in md
+    assert "| `p` | seeded | myagent:make | ran |" in md

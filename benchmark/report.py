@@ -56,7 +56,8 @@ def render_markdown(results: list[dict[str, Any]]) -> str:
             f"(out_of_scope={headline['out_of_scope']}, "
             f"language_unsupported={headline['language_unsupported']}, "
             f"no_api_key={headline['no_api_key']}).  ",
-            f"Reproduction mode: **{modes[0]}** ({_MODE_BLURB.get(modes[0], 'unrecognised mode')}).",
+            f"Reproduction mode: **{modes[0]}** ({_MODE_BLURB.get(modes[0], 'unrecognised mode')}).  ",
+            _reproducer_line(results),
             "",
             _verdict_summary_markdown(results),
             "",
@@ -89,7 +90,7 @@ def render_html(results: list[dict[str, Any]]) -> str:
     headline = _headline_counts(results) if results else None
     multi = len(metrics.modes_present(results)) > 1 if results else False
     rows_html = "".join(_row_html(r, show_mode=multi) for r in results) if results else ""
-    mode_th = "<th>Mode</th>" if multi else ""
+    mode_th = "<th>Mode</th><th>Reproducer</th>" if multi else ""
 
     body = ""
     if headline is None:
@@ -197,8 +198,14 @@ def _multi_mode_header(results: list[dict[str, Any]], modes: list[str]) -> list[
     ]
     for mode in modes:
         lines.append(f"- **{mode}**: {_MODE_BLURB.get(mode, 'unrecognised mode')}.")
-    lines.append("")
+    lines.extend(["", _reproducer_line(results), ""])
     return lines
+
+
+def _reproducer_line(results: list[dict[str, Any]]) -> str:
+    """Which agent(s) produced the rows — shown wherever the mode is."""
+    names = ", ".join(f"**{n}**" for n in metrics.reproducers_present(results))
+    return f"Reproducer: {names}."
 
 
 def _mode_gap_markdown(results: list[dict[str, Any]]) -> str:
@@ -227,14 +234,14 @@ def _mode_gap_markdown(results: list[dict[str, Any]]) -> str:
             f"- Independent: **{i_pass} / {i_total}** claims passed",
             f"- Lost without the scripts: **{lost}**; gained: **{gained}**",
             "",
-            "| Entry | Split | Seeded | Independent | Lost without scripts |",
-            "|---|---|---|---|---|",
+            "| Entry | Split | Reproducer | Seeded | Independent | Lost without scripts |",
+            "|---|---|---|---|---|---|",
         ]
     )
     for g in gaps:
         lost_str = ", ".join(f"`{d}`" for d in g.lost) if g.lost else "—"
         lines.append(
-            f"| `{g.entry_id}` | {g.split} | {g.seeded_passed}/{g.seeded_total} "
+            f"| `{g.entry_id}` | {g.split} | {g.reproducer} | {g.seeded_passed}/{g.seeded_total} "
             f"| {g.independent_passed}/{g.independent_total} | {lost_str} |"
         )
     return "\n".join(lines)
@@ -315,19 +322,19 @@ def _component_breakdown_markdown(results: list[dict[str, Any]], mode: str | Non
 
 
 def _table_header_markdown(show_mode: bool) -> str:
-    mode_col = " Mode |" if show_mode else ""
+    mode_col = " Mode | Reproducer |" if show_mode else ""
     return (
         f"| ID |{mode_col} Status | Ran | Agrees w/ paper | Agrees w/ I4R | Claims (paper / I4R) | Cached |"
     )
 
 
 def _table_rule_markdown(show_mode: bool) -> str:
-    return "|---|---|---|---|---|---|---|" + ("---|" if show_mode else "")
+    return "|---|---|---|---|---|---|---|" + ("---|---|" if show_mode else "")
 
 
 def _row_markdown(r: dict[str, Any], show_mode: bool = False) -> str:
     eid = r["entry_id"]
-    mode_cell = f" {metrics.mode_of(r)} |" if show_mode else ""
+    mode_cell = f" {metrics.mode_of(r)} | {metrics.reproducer_of(r)} |" if show_mode else ""
     status = _status_label(r)
     ran = _bool_glyph(r.get("retally_ran"))
     paper = _bool_glyph(r.get("agrees_with_paper"))
@@ -341,7 +348,11 @@ def _row_markdown(r: dict[str, Any], show_mode: bool = False) -> str:
 
 
 def _row_html(r: dict[str, Any], show_mode: bool = False) -> str:
-    mode_td = f"<td>{_escape(metrics.mode_of(r))}</td>" if show_mode else ""
+    mode_td = (
+        f"<td>{_escape(metrics.mode_of(r))}</td><td>{_escape(metrics.reproducer_of(r))}</td>"
+        if show_mode
+        else ""
+    )
     return (
         f"<tr>"
         f"<td><code>{_escape(r['entry_id'])}</code></td>"
