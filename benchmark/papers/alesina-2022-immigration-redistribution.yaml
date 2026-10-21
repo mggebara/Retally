@@ -335,3 +335,38 @@ notes: >
   q_govt_imm; Stata `reg, robust` (HC1).  The curator also recorded the
   index's missing components as imputed at the treatment-arm mean, while
   the paper's appendix says missing z-scores are set to 0.
+
+  Phase 3 first baseline (2026-10-20, Opus 4.7, Docker R sandbox, main
+  1101e88).  Seeded 7/11 (first scored 7/11, 0 error + 3 claim
+  refinements); independent cache-on 7/11 (first scored 1/11, 0 / 3);
+  three cache-off independent runs 0, 6, 5 of 11 (first scored 0, 5, 1;
+  1 / 1, 1 / 3, 1 / 3).  The very first run (before PR #44) gave seeded
+  6/11, independent 9/11.  Both modes read Data/survey_analysis.dta.
+  Classification, read from the saved scripts:
+  - Seeded's four failures are 3-5% off and fail only the strict 1%
+    seeded tolerance (order_effect_tax_bottom50 0.8686 vs 0.914,
+    education 0.4521 vs 0.439, inequality -0.0272 vs -0.028, Hard Work
+    0.0736 vs 0.0708; N 19,694 vs 19,765, inside tolerance): sample-
+    trimming details (duration trimming, inattentive respondents).
+  - Independent failures are specification reconstruction.  (a) The
+    Social Budget outcome is composed wrongly (budget_socialsecurity
+    alone instead of health + social safety net, winsorised, although
+    the claim context states the composition): order_effect_social_budget
+    is near zero or wrong-signed in every independent run (0.003, 0.038,
+    -0.134 vs -0.543), and the education-budget effect in all but one
+    (0.096, 0.084 vs 0.439).  (b) Sample: control-arm-only (N 5,532) in
+    the very first run (before PR #44); untrimmed N 20,730-20,933 or
+    16,950 in the later runs (vs 19,765).  (c) The Hard Work effect on the immigration
+    support index has the wrong sign in every run that printed it
+    (-0.021, -0.039, -0.051 vs 0.0708): index direction.  (d) Cache-off
+    run 1 printed RESULT lines under its own names (per-arm treatment
+    effects instead of the Order effect), so nothing matched: a name-
+    mismatch / extraction failure, not a specification finding.
+  This is the first paper where "seeded pass / independent fail" appears
+  for specification reasons.  Tolerance caveat: in the first run
+  independent (9/11) beat seeded (6/11) only because the independent
+  +-1 SE band passes values 5-10% off while seeded's 1% band rejects
+  3-5% deviations; median relative error tells the modes apart (first
+  run: seeded 1.2%, independent 4.8%; baseline run: 0.9% vs 6.4%; cache-
+  off runs 10.0% and 14.2%).  Spend recorded on this entry: about $5.89.
+  Files: benchmark/results/phase3-alesina-*-2026-10-20.json.

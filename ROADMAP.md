@@ -83,20 +83,39 @@ A target-blind variant (claims named but values withheld) is a possible
 later mode, not part of this plan.
 
 Everything below is ordered by a single rule: **the next PR moves the
-reproduction number, not the machinery.** Current state of the core
-result: **seeded 13 / 13 pinned headline claims** on Dincecco et al. 2022
-(2026-10-19, `benchmark/results/baseline-2026-10-19.json`; was 0 / 102
-auto-extracted claims in July) — one paper, one sampled generation, so not
-yet a rate. **Independent: 1–12 / 13 across runs** after the Phase 1.6
-plumbing fixes (three cache-off runs: 4, 10, 1 — median 4, mean 5; one
-cached run: 12), up from a flat **0 / 13** in Phase 1.5 (script-free mount,
-3 runs: 0, 0, 0; prompt-only withholding, 3 runs: 0, 0, 1) and after Phase
-1.6 steps 1–3. Run-to-run variance now dominates the signal, so every
-further change is measured as a distribution of runs (Phase 1.6, below).
-After the Phase 1.7 file-selection fixes, **independent is 13 / 13 in
-4 of the 7 fresh runs at steps 5–6** (the rest 2/13, all for one reason:
-the population-density column), up from 1 of 4 at step 4 and a 1–12
-spread on `main`; seeded 13 / 13 throughout (Phase 1.7, below).
+reproduction number, not the machinery.** Current state (2026-10-21):
+**three dev papers measured in both modes** (Opus 4.7, Docker R sandbox;
+one seeded run and, for independent, one cached plus three cache-off
+runs per paper — distributions, not yet rates).
+
+- **Dincecco 2022 is closed.**  Seeded 13 / 13; independent 13 / 13 in
+  all three cache-off runs, each exact on its *first* script with no
+  refinement (Phase 1.8, after generic Stata-label matching in the `.dta`
+  listing).  The road there: independent 0 / 13 in Phase 1.5, 1–12 in
+  1.6, 13 / 13 in 4 of 7 runs in 1.7.
+- **Alesina 2022 is the first specification-level gap.**  Seeded 7 / 11;
+  independent 7 / 11 cached and 0, 6, 5 of 11 cache-off (first scored 1
+  cached; 0, 5, 1 cache-off).  Both modes read the right file; the independent losses are
+  reconstructions of the specification (outcome composition, sample
+  trimming, index direction), plus one run that printed results under
+  its own names (Phase 3, below).
+- **Bisbee 2022 is partly measured.**  Seeded 10 / 11 on the 47-package
+  sandbox image built in Phase 1.8.  Independent was measured only on the old
+  image, where every first script crashed on a missing package (0 / 11
+  cached; 8, 8, 5 cache-off, first scored 2, 4, 0); the new-image
+  independent runs hit an exhausted API credit balance.
+
+Read against the thesis: Dincecco's independent failures were all
+package navigation (wrong file, then wrong column), now fixed
+generically, so its 13 / 13 says the paper's text is enough to recover
+its specification; Alesina's are the specification gap the thesis is
+about.  The first-scored metric (Phase 1.8) separates derivation from
+target-guided search, and Bisbee shows why it matters: 0–4 of 11 first
+scored against 5–8 final in the cache-off independent runs.
+
+The committed `REPORT.md` is built from one row per paper and mode
+(listed under Phase 3, below).  Spend recorded for Phases 1.8 and 3:
+about $14.27.
 
 ---
 
@@ -413,6 +432,77 @@ lose the leaked names; offline, with title and claim fields as hints
 `instrument` (the paper's "Khyber proximity instrument") in view, but
 `Land_250_1757` and `lnpdgpd1990` fall past the listing cap.*
 
+### 1.8 Label matching, first-scored metric, sandbox packages — ✅ measured (2026-10-21)
+*(Five PRs.  The label fix closes Dincecco: independent 13 / 13 on the
+first script in all three cache-off runs.  The first-scored metric and
+the sandbox packages were built for Phase 3 and are measured there.
+Dincecco measured on `main` 1101e88 (after #44, before #46–#49) like 1.7:
+one `--mode both` run (LLM cache on) and three `RETALLY_LLM_CACHE=0
+--mode independent` runs, result-cache rows deleted before every run,
+Opus 4.7, Docker R sandbox.  Files:
+`benchmark/results/phase18-dincecco-both-2026-10-20.json` and
+`phase18-dincecco-variance-independent-run{1,2,3}-2026-10-20.json`.)*
+
+- **PR #44 — generic Stata-label matching in the `.dta` listing.**  A
+  column is put in view when its Stata label matches the paper's
+  vocabulary: `ln`/`log` treated as equivalent, all of a phrase's content
+  words or an in-order run of three words; numbers only rank, never
+  match; columns whose labels have the same words collapse into one
+  family; every strong match is shown, up to 40.  Offline, with the
+  claim fields as hints: `lnpdgpd1990`, `lnlights_001`, `Land_250_1757`,
+  `instrument` and the ten geography controls are all in view for
+  Dincecco (in 1.7 the first and third fell past the cap).  Nothing in it
+  names a Dincecco variable.
+- **PRs #45 and #47 — first-attempt and first-scored pass counts** on
+  every row, with the error / claim refinement split, in `REPORT.md`,
+  `benchmark.compare` and `benchmark.artifacts`, plus `--rescore` to
+  recover them from run artifacts for older results files.  *First
+  scored* is the first execution that printed a parsable `RESULT:` line:
+  after crash repairs, before any claim-targeted (target-guided)
+  feedback.  It separates "derived the specification" from "searched
+  until the number matched" (`benchmark/README.md`, "First-attempt vs
+  final pass").
+- **PR #46 — Retally `User-Agent` on every request.**  Harvard Dataverse
+  returns 403 to `python-requests`, which made Bisbee's first Phase 3
+  run fail before generation; transient download errors are never
+  written to the result cache.
+- **PR #48 — R sandbox packages.**  The image grows from 11 to 47
+  packages (plus base), including MatchIt, CBPS, WeightIt, cobalt, lfe,
+  optmatch, lme4, estimatr, did and rdrobust; the bspm D-Bus warning is
+  silenced; image 1.09 → 1.61 GB; `make check-r-sandbox` verifies it.
+- **PR #49 — the prompts list the installed packages.**  Generation and
+  refinement prompts list the image's packages, read from the image's
+  own list, with a test that fails when the two drift.
+
+Dincecco after #44:
+
+| Run | Final | First scored | Error / claim refinements |
+|---|---|---|---|
+| seeded, cache on | 13 / 13 | 13 / 13 | 0 / 0 |
+| independent, cache on | 11 / 13 | 11 / 13 \* | 1 / 3 |
+| independent cache-off run 1 | 13 / 13 | 13 / 13 | 0 / 0 |
+| independent cache-off run 2 | 13 / 13 | 13 / 13 | 0 / 0 |
+| independent cache-off run 3 | 13 / 13 | 13 / 13 | 0 / 0 |
+
+\* First attempt 0 / 13: the first script crashed in a dplyr
+`if_all(all_of(...))` filter and printed nothing; after one error repair
+it scored 11 / 13, and three claim refinements did not move the two
+misses (`warfare_se_full_controls` 0.3456 vs 0.370 and
+`warfare_iv_se_full_controls` 1.0719 vs 1.389, both outside the 5% SE
+cap).  First-scored numbers from `benchmark.artifacts --rescore`.
+
+- **Headline.**  The population-density failure that held the 1.7 runs at
+  2 / 13 (13, 2, 13 at step 6) did not recur: all three cache-off runs
+  used `lnpdgpd1990` and were exact on the first script with no
+  refinement.  Seeded stays 13 / 13 exact.
+- **What it means.**  Every Dincecco independent loss since Phase 1.5 was
+  package navigation — the wrong file (1.5–1.7 step 4), then the wrong
+  column (1.7 steps 5–6) — and both are now fixed by generic listing
+  changes, not by anything that names this paper's variables.  None was
+  evidence that the paper's text cannot pin down its specification.
+- **Spend:** $1.48 over the four runs (a cache-off independent run
+  $0.25, 3 Opus 4.7 calls).
+
 **Exit criteria:** (a) seeded: ≥50% of Dincecco's pinned headline claims
 within tolerance — **met (13/13)**; (b) independent: a committed
 both-mode `REPORT.md` for Dincecco with the gap stated and every lost
@@ -504,33 +594,149 @@ and a fake — **met**; adapter design written up (not necessarily built)
 
 ---
 
-## Phase 3 — A real baseline (all four runnable entries, both modes)
+## Phase 3 — dev-set baseline over three papers — ⚠ partly measured (2026-10-21)
 
 Goal: prevent overfitting to one paper before any prompt tuning. The
 dev/holdout machinery exists precisely for this.
 
-- Pin headline claims (rubric from 1.2, **with SEs**) for `alesina-2022`,
-  `bisbee-2022`, and holdout `arias-2022`; transcribe the meta-database's
-  `o_coeff_dbl` / `r_coeff_dbl` values into `i4r_replicator_findings`
-  during the same pass — the corpus already carries the exact
-  `agrees_with_i4r` ground truth (flagged in PR #28 as a "latent
-  goldmine"; this is where it gets mined). Record both dates.
-  *Status (2026-10-20): claims, I4R findings and dates pinned for `alesina-2022` and `bisbee-2022`; `arias-2022` still open.*
-- Run the three dev entries live with `--mode both`; commit `REPORT.md`.
-  Arias (holdout) runs once, only to confirm the harness handles it — its
-  numbers are not for tuning.
-- Only after this baseline exists: prompt tuning sweeps on dev, holdout
-  confirmation runs rarely, `benchmark.compare` as the keep-or-revert
-  gate, always like-for-like per mode. Tuning should target the
-  **independent** number — tuning the seeded prompt mostly improves
-  translation — and every kept change reports its effect on *both* modes,
-  because a change that helps seeded and hurts independent widens the gap
-  for the wrong reason.
+*(Measured: Dincecco (Phase 1.8, above), Alesina, and Bisbee seeded on
+the new sandbox image.  **Not measured: Bisbee independent on the new
+image** — the API credit ran out on its first generation call.  Next:
+re-run `measure` for bisbee independent ×3 cache-off, then the first
+three-paper both-mode baseline.  Same protocol as 1.7–1.8: one
+`--mode both` run (LLM cache on) and three `RETALLY_LLM_CACHE=0 --mode
+independent` runs per paper, result-cache rows deleted before every
+run, Opus 4.7, Docker R sandbox.  First-scored counts from
+`benchmark.artifacts --rescore`.)*
+
+**Alesina 2022** (`main` 1101e88, after #44/#45, before #46–#49).
+Files: `benchmark/results/phase3-alesina-both-2026-10-20.json` and
+`phase3-alesina-variance-independent-run{1,2,3}-2026-10-20.json`.  The
+earlier `phase3-alesina-2022-immigration-redistribution-both-2026-10-20.json`
+is the very first run, on `main` before #44 (seeded 6 / 11, independent
+9 / 11), kept for the record.
+
+| Run | Final | First scored | Error / claim refinements | Median rel. error |
+|---|---|---|---|---|
+| seeded, cache on | 7 / 11 | 7 / 11 | 0 / 3 | 0.9% |
+| independent, cache on | 7 / 11 | 1 / 11 | 0 / 3 | 6.4% |
+| independent cache-off run 1 | 0 / 11 | 0 / 11 | 1 / 1 | — (all NA) |
+| independent cache-off run 2 | 6 / 11 | 5 / 11 | 1 / 3 | 10.0% |
+| independent cache-off run 3 | 5 / 11 | 1 / 11 | 1 / 3 | 14.2% |
+
+Classification, read from the saved scripts.  Both modes read the right
+file, `Data/survey_analysis.dta`.
+
+- **Seeded's four failures are 3–5% off** (e.g. `order_effect_tax_bottom50`
+  0.8686 vs 0.914; N 19,694 vs 19,765, inside tolerance) and fail only
+  the strict 1% seeded tolerance: sample-trimming details (survey-duration
+  trimming, inattentive respondents).
+- **Independent failures are genuine specification reconstruction.**
+  (a) Outcome composition: the Social Budget outcome is built from
+  `budget_socialsecurity` alone instead of health plus the social safety
+  net, winsorised — although the claim context states the composition,
+  so this is a model miss as much as a methods-section gap; the Social
+  Budget order effect is near zero or wrong-signed in every independent
+  run (0.003, 0.038, −0.134 vs −0.543), the Education Budget one in all
+  but one.  (b) Sample: control-arm only (N 5,532) in the very first
+  run; untrimmed N 20,730–20,933, or 16,950, in the others.  (c) The
+  Hard Work effect on the immigration-support index has the wrong sign
+  in every run that printed it (index direction).  (d) Cache-off run 1
+  printed `RESULT` lines under its own names (per-arm treatment effects
+  instead of the Order effect), so nothing matched: a name-mismatch /
+  extraction failure, not a finding about the paper.
+- **Alesina is the first paper where "seeded ✓ / independent ✗" appears
+  for specification reasons.**  Per-claim detail in the entry's `notes`.
+- **Tolerance caveat.**  In the very first run independent (9 / 11) beat
+  seeded (6 / 11) only because the independent ±1·SE band passes values
+  5–10% off while seeded's 1% band rejects 3–5% deviations (median
+  relative error 4.8% vs 1.2%).  Pass counts are not comparable across
+  modes on closeness; report median relative error alongside them.
+
+**Bisbee 2022.**  The first run, on `main` before #46, failed outright:
+Harvard Dataverse returned 403 to the `python-requests` user agent
+(`phase3-bisbee-2022-flight-to-safety-both-2026-10-20.json`, both rows
+errors).  After #46, on the old 11-package image (`phase3-bisbee-*`):
+
+| Run | Final | First attempt | First scored | Error / claim refinements |
+|---|---|---|---|---|
+| seeded, cache on | 7 / 11 | 0 / 11 | 8 / 11 | 1 / 2 |
+| independent, cache on | 0 / 11 | 0 / 11 | 0 / 11 | 2 / 1 |
+| independent cache-off run 1 | 8 / 11 | 0 / 11 | 2 / 11 | 2 / 3 |
+| independent cache-off run 2 | 8 / 11 | 0 / 11 | 4 / 11 | 2 / 3 |
+| independent cache-off run 3 | 5 / 11 | 0 / 11 | 0 / 11 | 2 / 3 |
+
+After #48/#49 (`main` b93e049: 47-package image, packages listed in the
+prompt; `phase3b-bisbee-both-2026-10-20.json`): **seeded 10 / 11**
+(first attempt 0, first scored 9 / 11, 1 error + 2 claim refinements).
+Independent: **not measured** (the `phase3b-bisbee-both` independent row
+and the three `phase3b-bisbee-variance-*` files are "credit balance too
+low" error rows with no claims scored; kept because they are honest
+records of what ran).
+
+- **Every first script crashed** on `library(MatchIt)` / `library(CBPS)`,
+  not installed in the old image — which is what #48/#49 fix.
+- **Most independent passes came after claim refinement** — target-guided
+  search, e.g. run 1 went 2 → 8; one run grid-searched start and end
+  dates for the March window against the target N.  First scored (0–4)
+  against final (5–8) is the clearest case yet for headlining first
+  scored.
+- **The March sample, a paper-vs-code discrepancy.**  On the old image
+  `exposure_coefficient_march_basic`, `exposure_coefficient_march_cbps`
+  and `sample_size_march` failed in both modes (N 1,591 vs 1,710).  The
+  paper says columns 4–6 cover "the elections that occurred between
+  March 1st and April 7th" (header "March & April 7th"); the package's
+  Table 1 script (`Table 1, SI3, SI4, SI5, Figure SI13, SI14.R`, lines
+  ~124–149) filters `date >= as.Date('2020-03-01')` with no upper bound.
+  The seeded script and two cache-off independent runs implemented the
+  paper's window and got N = 1,591 (the others printed NA or 628).  On the new image seeded follows the package's filter
+  and the three March claims pass; only `anti_estab_x_cases_interaction`
+  fails (0.0138 vs −0.016).  Curation: the three contexts now quote the
+  paper's own words for the sample (they paraphrased the same window
+  before); values unchanged; the package filter and the N discrepancy are
+  in the entry's `notes`.  A reproducer that follows the text is
+  expected to fail these three claims: a "seeded ✓ / independent ✗"
+  that is about the paper, not the model.
+
+**`REPORT.md`** is built from a combined `results.json` (gitignored) of
+six rows: Dincecco both rows from `phase18-dincecco-both-2026-10-20.json`,
+Alesina both rows from `phase3-alesina-both-2026-10-20.json`, Bisbee
+seeded from `phase3b-bisbee-both-2026-10-20.json` (new image) and Bisbee
+independent from `phase3-bisbee-both-2026-10-20.json` (the old-image
+cache-on 0 / 11 run; the new-image independent row is unmeasured).
+First-scored fields for rows written before #45/#47 were filled from the
+run artifacts with the `--rescore` scoring path.  It is a cross-run
+composite, not one run, so its "Seeded vs independent" table is a
+snapshot of the latest measurement per cell.
+
+**Spend** (sum of row `usage.estimated_usd`): Dincecco $1.48 (Phase
+1.8), Alesina $5.89, Bisbee $6.90 (including $0.41 billed on the
+credit-error row before the balance ran out, and $0.17 on the 403 run);
+total **$14.27**.  A cache-off independent run cost $0.25 (Dincecco),
+$0.33–0.91 (Alesina), $1.35–1.47 (Bisbee, 8 calls each).
+
+Still open from the original Phase 3 plan:
+
+- Pin `arias-2022` (holdout): claims, I4R findings, dates.  *Claims, I4R
+  findings and dates are pinned for `alesina-2022` and `bisbee-2022`.*
+  Arias runs once, only to confirm the harness handles it — its numbers
+  are not for tuning.
+- Only after the three-paper baseline exists: prompt tuning sweeps on
+  dev, holdout confirmation runs rarely, `benchmark.compare` as the
+  keep-or-revert gate, always like-for-like per mode.  Tuning should
+  target the **independent** number — tuning the seeded prompt mostly
+  improves translation — and every kept change reports its effect on
+  *both* modes, because a change that helps seeded and hurts independent
+  widens the gap for the wrong reason.  Headline first scored, not final:
+  final mixes derivation with target-guided search.
 
 **Exit criteria:** committed both-mode baseline over ≥3 dev papers with
-pinned claims (with SEs) and I4R findings; documented per-paper failure
-notes for every independent-mode loss; tuning loop demonstrably running
-(≥1 kept improvement with before/after compare output in the PR).
+pinned claims (with SEs) and I4R findings — *two of three fully
+measured; Bisbee independent on the current image outstanding*;
+documented per-paper failure notes for every independent-mode loss —
+*done for Dincecco and Alesina; Bisbee's old-image losses noted*; tuning
+loop demonstrably running (≥1 kept improvement with before/after compare
+output in the PR) — *not started*.
 
 ---
 

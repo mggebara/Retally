@@ -1,0 +1,332 @@
+{
+  "usage": {
+    "api_calls": 8,
+    "llm_cache_hits": 5,
+    "llm_cache_served": true,
+    "by_model": {
+      "claude-opus-4-7": {
+        "input_tokens": 108357,
+        "output_tokens": 36067,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "api_calls": 8
+      }
+    },
+    "rows_from_result_cache": 0,
+    "estimated_usd": 1.44346
+  },
+  "results": [
+    {
+      "entry_id": "bisbee-2022-flight-to-safety",
+      "mode": "seeded",
+      "reproducer": "pipeline",
+      "skipped": false,
+      "skip_reason": null,
+      "error": null,
+      "transient": false,
+      "retally_ran": true,
+      "agrees_with_paper": false,
+      "agrees_with_i4r": false,
+      "n_claims_in_catalog": 11,
+      "n_claims_with_paper_match": 7,
+      "n_claims_with_i4r_match": 7,
+      "n_claims_with_paper_match_first_attempt": 0,
+      "n_refinements": 3,
+      "n_executions": 4,
+      "claim_details": [
+        {
+          "description": "exposure_coefficient_full_basic",
+          "claim_type": "coefficient",
+          "claimed": -1.321,
+          "reproduced": -1.3209,
+          "tolerance": 0.02,
+          "rel_err": 7.570022710067297e-05,
+          "passed": true,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "exposure_coefficient_full_cbps",
+          "claim_type": "coefficient",
+          "claimed": -1.348,
+          "reproduced": null,
+          "tolerance": 0.02,
+          "rel_err": null,
+          "passed": false,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "exposure_coefficient_march_basic",
+          "claim_type": "coefficient",
+          "claimed": -0.885,
+          "reproduced": -0.3493,
+          "tolerance": 0.02,
+          "rel_err": 0.6053107344632769,
+          "passed": false,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "exposure_coefficient_march_cbps",
+          "claim_type": "coefficient",
+          "claimed": -0.885,
+          "reproduced": null,
+          "tolerance": 0.02,
+          "rel_err": null,
+          "passed": false,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "sample_size_full",
+          "claim_type": "other",
+          "claimed": 1882.0,
+          "reproduced": 1874.0,
+          "tolerance": 0.01,
+          "rel_err": 0.004250797024442083,
+          "passed": true,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "sample_size_march",
+          "claim_type": "other",
+          "claimed": 1710.0,
+          "reproduced": 1591.0,
+          "tolerance": 0.01,
+          "rel_err": 0.0695906432748538,
+          "passed": false,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "anxiety_prime_effect_bivariate",
+          "claim_type": "coefficient",
+          "claimed": -0.074,
+          "reproduced": -0.0739,
+          "tolerance": 0.02,
+          "rel_err": 0.00135135135135139,
+          "passed": true,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "anxiety_prime_effect_full_controls",
+          "claim_type": "coefficient",
+          "claimed": -0.082,
+          "reproduced": -0.0824,
+          "tolerance": 0.02,
+          "rel_err": 0.004878048780487775,
+          "passed": true,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "anxiety_prime_effect_attentive",
+          "claim_type": "coefficient",
+          "claimed": -0.182,
+          "reproduced": -0.1816,
+          "tolerance": 0.02,
+          "rel_err": 0.0021978021978021085,
+          "passed": true,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "anti_estab_x_cases_interaction",
+          "claim_type": "coefficient",
+          "claimed": -0.016,
+          "reproduced": -0.016,
+          "tolerance": 0.02,
+          "rel_err": 0.0,
+          "passed": true,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "tea_party_x_cases_interaction",
+          "claim_type": "coefficient",
+          "claimed": -0.02,
+          "reproduced": -0.0199,
+          "tolerance": 0.02,
+          "rel_err": 0.00499999999999997,
+          "passed": true,
+          "passed_first_attempt": false
+        }
+      ],
+      "split": "dev",
+      "components": {
+        "parsed": true,
+        "claims_extracted": true,
+        "dataset_extracted": false,
+        "dataset_downloaded": true,
+        "code_generated": true,
+        "code_executed": true
+      },
+      "cached": false,
+      "usage": {
+        "api_calls": 4,
+        "llm_cache_hits": 3,
+        "llm_cache_served": true,
+        "by_model": {
+          "claude-opus-4-7": {
+            "input_tokens": 76589,
+            "output_tokens": 13653,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "api_calls": 4
+          }
+        },
+        "estimated_usd": 0.72427
+      },
+      "artifacts_dir": "benchmark/results/artifacts/bisbee-2022-flight-to-safety/seeded/pipeline/20261021T034053Z"
+    },
+    {
+      "entry_id": "bisbee-2022-flight-to-safety",
+      "mode": "independent",
+      "reproducer": "pipeline",
+      "skipped": false,
+      "skip_reason": null,
+      "error": null,
+      "transient": false,
+      "retally_ran": true,
+      "agrees_with_paper": false,
+      "agrees_with_i4r": false,
+      "n_claims_in_catalog": 11,
+      "n_claims_with_paper_match": 0,
+      "n_claims_with_i4r_match": 0,
+      "n_claims_with_paper_match_first_attempt": 0,
+      "n_refinements": 3,
+      "n_executions": 4,
+      "claim_details": [
+        {
+          "description": "exposure_coefficient_full_basic",
+          "claim_type": "coefficient",
+          "claimed": -1.321,
+          "reproduced": null,
+          "tolerance": 0.4178652535957608,
+          "rel_err": null,
+          "passed": false,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "exposure_coefficient_full_cbps",
+          "claim_type": "coefficient",
+          "claimed": -1.348,
+          "reproduced": null,
+          "tolerance": 0.28189910979228483,
+          "rel_err": null,
+          "passed": false,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "exposure_coefficient_march_basic",
+          "claim_type": "coefficient",
+          "claimed": -0.885,
+          "reproduced": null,
+          "tolerance": 0.43163841807909603,
+          "rel_err": null,
+          "passed": false,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "exposure_coefficient_march_cbps",
+          "claim_type": "coefficient",
+          "claimed": -0.885,
+          "reproduced": null,
+          "tolerance": 0.3672316384180791,
+          "rel_err": null,
+          "passed": false,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "sample_size_full",
+          "claim_type": "other",
+          "claimed": 1882.0,
+          "reproduced": null,
+          "tolerance": 0.01,
+          "rel_err": null,
+          "passed": false,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "sample_size_march",
+          "claim_type": "other",
+          "claimed": 1710.0,
+          "reproduced": null,
+          "tolerance": 0.01,
+          "rel_err": null,
+          "passed": false,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "anxiety_prime_effect_bivariate",
+          "claim_type": "coefficient",
+          "claimed": -0.074,
+          "reproduced": 0.015956,
+          "tolerance": 0.5270270270270271,
+          "rel_err": 1.2156216216216216,
+          "passed": false,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "anxiety_prime_effect_full_controls",
+          "claim_type": "coefficient",
+          "claimed": -0.082,
+          "reproduced": null,
+          "tolerance": 0.46341463414634143,
+          "rel_err": null,
+          "passed": false,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "anxiety_prime_effect_attentive",
+          "claim_type": "coefficient",
+          "claimed": -0.182,
+          "reproduced": null,
+          "tolerance": 0.33516483516483514,
+          "rel_err": null,
+          "passed": false,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "anti_estab_x_cases_interaction",
+          "claim_type": "coefficient",
+          "claimed": -0.016,
+          "reproduced": null,
+          "tolerance": 0.375,
+          "rel_err": null,
+          "passed": false,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "tea_party_x_cases_interaction",
+          "claim_type": "coefficient",
+          "claimed": -0.02,
+          "reproduced": null,
+          "tolerance": 0.3,
+          "rel_err": null,
+          "passed": false,
+          "passed_first_attempt": false
+        }
+      ],
+      "split": "dev",
+      "components": {
+        "parsed": true,
+        "claims_extracted": true,
+        "dataset_extracted": false,
+        "dataset_downloaded": true,
+        "code_generated": true,
+        "code_executed": true
+      },
+      "cached": false,
+      "usage": {
+        "api_calls": 4,
+        "llm_cache_hits": 2,
+        "llm_cache_served": true,
+        "by_model": {
+          "claude-opus-4-7": {
+            "input_tokens": 31768,
+            "output_tokens": 22414,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "api_calls": 4
+          }
+        },
+        "estimated_usd": 0.71919
+      },
+      "artifacts_dir": "benchmark/results/artifacts/bisbee-2022-flight-to-safety/independent/pipeline/20261021T034053Z"
+    }
+  ]
+}

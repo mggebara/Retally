@@ -1,0 +1,240 @@
+{
+  "usage": {
+    "api_calls": 6,
+    "llm_cache_hits": 5,
+    "llm_cache_served": true,
+    "by_model": {
+      "claude-opus-4-7": {
+        "input_tokens": 92845,
+        "output_tokens": 25111,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "api_calls": 6
+      }
+    },
+    "rows_from_result_cache": 0,
+    "estimated_usd": 1.092
+  },
+  "results": [
+    {
+      "entry_id": "bisbee-2022-flight-to-safety",
+      "mode": "seeded",
+      "reproducer": "pipeline",
+      "skipped": false,
+      "skip_reason": null,
+      "error": null,
+      "transient": false,
+      "retally_ran": true,
+      "agrees_with_paper": false,
+      "agrees_with_i4r": false,
+      "n_claims_in_catalog": 11,
+      "n_claims_with_paper_match": 10,
+      "n_claims_with_i4r_match": 10,
+      "n_claims_with_paper_match_first_attempt": 0,
+      "n_refinements": 3,
+      "n_executions": 4,
+      "n_claims_with_paper_match_first_scored": 9,
+      "first_scored_attempt_index": 1,
+      "n_error_refinements": 1,
+      "n_claim_refinements": 2,
+      "claim_details": [
+        {
+          "description": "exposure_coefficient_full_basic",
+          "claim_type": "coefficient",
+          "claimed": -1.321,
+          "reproduced": -1.3209,
+          "tolerance": 0.02,
+          "rel_err": 7.570022710067297e-05,
+          "passed": true,
+          "passed_first_attempt": false,
+          "passed_first_scored": true
+        },
+        {
+          "description": "exposure_coefficient_full_cbps",
+          "claim_type": "coefficient",
+          "claimed": -1.348,
+          "reproduced": -1.324,
+          "tolerance": 0.02,
+          "rel_err": 0.017804154302670638,
+          "passed": true,
+          "passed_first_attempt": false,
+          "passed_first_scored": false
+        },
+        {
+          "description": "exposure_coefficient_march_basic",
+          "claim_type": "coefficient",
+          "claimed": -0.885,
+          "reproduced": -0.8848,
+          "tolerance": 0.02,
+          "rel_err": 0.00022598870056494687,
+          "passed": true,
+          "passed_first_attempt": false,
+          "passed_first_scored": true
+        },
+        {
+          "description": "exposure_coefficient_march_cbps",
+          "claim_type": "coefficient",
+          "claimed": -0.885,
+          "reproduced": -0.8712,
+          "tolerance": 0.02,
+          "rel_err": 0.01559322033898309,
+          "passed": true,
+          "passed_first_attempt": false,
+          "passed_first_scored": true
+        },
+        {
+          "description": "sample_size_full",
+          "claim_type": "other",
+          "claimed": 1882.0,
+          "reproduced": 1882.0,
+          "tolerance": 0.01,
+          "rel_err": 0.0,
+          "passed": true,
+          "passed_first_attempt": false,
+          "passed_first_scored": true
+        },
+        {
+          "description": "sample_size_march",
+          "claim_type": "other",
+          "claimed": 1710.0,
+          "reproduced": 1710.0,
+          "tolerance": 0.01,
+          "rel_err": 0.0,
+          "passed": true,
+          "passed_first_attempt": false,
+          "passed_first_scored": true
+        },
+        {
+          "description": "anxiety_prime_effect_bivariate",
+          "claim_type": "coefficient",
+          "claimed": -0.074,
+          "reproduced": -0.0739,
+          "tolerance": 0.02,
+          "rel_err": 0.00135135135135139,
+          "passed": true,
+          "passed_first_attempt": false,
+          "passed_first_scored": true
+        },
+        {
+          "description": "anxiety_prime_effect_full_controls",
+          "claim_type": "coefficient",
+          "claimed": -0.082,
+          "reproduced": -0.0824,
+          "tolerance": 0.02,
+          "rel_err": 0.004878048780487775,
+          "passed": true,
+          "passed_first_attempt": false,
+          "passed_first_scored": true
+        },
+        {
+          "description": "anxiety_prime_effect_attentive",
+          "claim_type": "coefficient",
+          "claimed": -0.182,
+          "reproduced": -0.1816,
+          "tolerance": 0.02,
+          "rel_err": 0.0021978021978021085,
+          "passed": true,
+          "passed_first_attempt": false,
+          "passed_first_scored": true
+        },
+        {
+          "description": "anti_estab_x_cases_interaction",
+          "claim_type": "coefficient",
+          "claimed": -0.016,
+          "reproduced": 0.0138,
+          "tolerance": 0.02,
+          "rel_err": 1.8625,
+          "passed": false,
+          "passed_first_attempt": false,
+          "passed_first_scored": false
+        },
+        {
+          "description": "tea_party_x_cases_interaction",
+          "claim_type": "coefficient",
+          "claimed": -0.02,
+          "reproduced": -0.0199,
+          "tolerance": 0.02,
+          "rel_err": 0.00499999999999997,
+          "passed": true,
+          "passed_first_attempt": false,
+          "passed_first_scored": true
+        }
+      ],
+      "split": "dev",
+      "components": {
+        "parsed": true,
+        "claims_extracted": true,
+        "dataset_extracted": false,
+        "dataset_downloaded": true,
+        "code_generated": true,
+        "code_executed": true
+      },
+      "cached": false,
+      "usage": {
+        "api_calls": 4,
+        "llm_cache_hits": 3,
+        "llm_cache_served": true,
+        "by_model": {
+          "claude-opus-4-7": {
+            "input_tokens": 75442,
+            "output_tokens": 12209,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "api_calls": 4
+          }
+        },
+        "estimated_usd": 0.682435
+      },
+      "artifacts_dir": "benchmark/results/artifacts/bisbee-2022-flight-to-safety/seeded/pipeline/20261021T043300Z"
+    },
+    {
+      "entry_id": "bisbee-2022-flight-to-safety",
+      "mode": "independent",
+      "reproducer": "pipeline",
+      "skipped": false,
+      "skip_reason": null,
+      "error": "BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CgEmJ65ayWjAzebiuk9La'}",
+      "transient": false,
+      "retally_ran": false,
+      "agrees_with_paper": null,
+      "agrees_with_i4r": null,
+      "n_claims_in_catalog": 0,
+      "n_claims_with_paper_match": 0,
+      "n_claims_with_i4r_match": 0,
+      "n_claims_with_paper_match_first_attempt": null,
+      "n_refinements": null,
+      "n_executions": null,
+      "n_claims_with_paper_match_first_scored": null,
+      "first_scored_attempt_index": null,
+      "n_error_refinements": null,
+      "n_claim_refinements": null,
+      "claim_details": [],
+      "split": "dev",
+      "components": {
+        "parsed": null,
+        "claims_extracted": null,
+        "dataset_extracted": null,
+        "dataset_downloaded": null,
+        "code_generated": null,
+        "code_executed": null
+      },
+      "cached": false,
+      "usage": {
+        "api_calls": 2,
+        "llm_cache_hits": 2,
+        "llm_cache_served": true,
+        "by_model": {
+          "claude-opus-4-7": {
+            "input_tokens": 17403,
+            "output_tokens": 12902,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "api_calls": 2
+          }
+        },
+        "estimated_usd": 0.409565
+      },
+      "artifacts_dir": null
+    }
+  ]
+}

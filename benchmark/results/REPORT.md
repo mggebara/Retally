@@ -1,8 +1,8 @@
 # Retally benchmark report
 
-Catalog size: **1** papers, each run in 2 reproduction modes.  
-Runs (paper × mode): **2**.  
-Executed runs: **2**.  
+Catalog size: **3** papers, each run in 2 reproduction modes.  
+Runs (paper × mode): **6**.  
+Executed runs: **6**.  
 Skipped runs: **0** (out_of_scope=0, language_unsupported=0, no_api_key=0).
 
 Reproduction modes:
@@ -14,67 +14,79 @@ Reproducer: **pipeline**.
 
 ## Verdicts — seeded (among executed papers)
 
-- Pipeline completed without crashing: **1 / 1**
-- Agrees with the paper's stated values: **1 / 1**
-- Agrees with the I4R replicator: **1 / 1** (of papers where I4R published a value to compare against)
+- Pipeline completed without crashing: **3 / 3**
+- Agrees with the paper's stated values: **1 / 3**
+- Agrees with the I4R replicator: **1 / 3** (of papers where I4R published a value to compare against)
 
 ## Verdicts — independent (among executed papers)
 
-- Pipeline completed without crashing: **1 / 1**
-- Agrees with the paper's stated values: **1 / 1**
-- Agrees with the I4R replicator: **1 / 1** (of papers where I4R published a value to compare against)
+- Pipeline completed without crashing: **3 / 3**
+- Agrees with the paper's stated values: **0 / 3**
+- Agrees with the I4R replicator: **0 / 3** (of papers where I4R published a value to compare against)
 
 ## Seeded vs independent
 
 Claims passing with the authors' scripts in the prompt (seeded) versus without them (independent), per paper executed in both modes.  *Lost* claims pass seeded but not independent — what the scripts were carrying.
 
-- Seeded: **13 / 13** claims passed
-- Independent: **13 / 13** claims passed
-- Lost without the scripts: **0**; gained: **0**
+- Seeded: **30 / 35** claims passed (first scored 29 / 35)
+- Independent: **18 / 35** claims passed (first scored 12 / 35)
+- Lost without the scripts: **14**; gained: **2**
 
-| Entry | Split | Reproducer | Seeded | Independent | Lost without scripts |
-|---|---|---|---|---|---|
-| `dincecco-2022-india-warfare` | dev | pipeline | 13/13 | 13/13 | — |
+*First scored* is what each mode's first script that printed results passed: after any crash repairs, before the refinement loop showed the model which claims were off target.
+
+| Entry | Split | Reproducer | Seeded | Independent | First scored (seeded / independent) | Lost without scripts |
+|---|---|---|---|---|---|---|
+| `alesina-2022-immigration-redistribution` | dev | pipeline | 7/11 | 7/11 | 7/11 / 1/11 | `order_effect_social_budget`, `sample_size_table4` |
+| `bisbee-2022-flight-to-safety` | dev | pipeline | 10/11 | 0/11 | 9/11 / 0/11 | `anxiety_prime_effect_attentive`, `anxiety_prime_effect_bivariate`, `anxiety_prime_effect_full_controls`, `exposure_coefficient_full_basic`, `exposure_coefficient_full_cbps`, `exposure_coefficient_march_basic`, `exposure_coefficient_march_cbps`, `sample_size_full`, `sample_size_march`, `tea_party_x_cases_interaction` |
+| `dincecco-2022-india-warfare` | dev | pipeline | 13/13 | 11/13 | 13/13 / 11/13 | `warfare_iv_se_full_controls`, `warfare_se_full_controls` |
 
 ## Closeness (per split and mode)
 
-- **dev · seeded**: 1 entries, 13 claims, matched 100%, passed 13/13, median rel err 0.0%, within tol/2x/5x: 100%/100%/100%
-- **dev · independent**: 1 entries, 13 claims, matched 100%, passed 13/13, median rel err 0.0%, within tol/2x/5x: 100%/100%/100%
+- **dev · seeded**: 3 entries, 35 claims, matched 100%, passed 30/35, median rel err 0.2%, within tol/2x/5x: 86%/94%/97%
+- **dev · independent**: 3 entries, 35 claims, matched 71%, passed 18/35, median rel err 3.9%, within tol/2x/5x: 72%/76%/88%
 
 ## Per-component success — seeded (executed papers only)
 
 | Component | Succeeded | Total | Rate |
 |---|---:|---:|---:|
-| parsed | 1 | 1 | 100% |
-| claims_extracted | 1 | 1 | 100% |
-| dataset_extracted | 0 | 1 | 0% |
-| dataset_downloaded | 1 | 1 | 100% |
-| code_generated | 1 | 1 | 100% |
-| code_executed | 1 | 1 | 100% |
+| parsed | 3 | 3 | 100% |
+| claims_extracted | 3 | 3 | 100% |
+| dataset_extracted | 0 | 3 | 0% |
+| dataset_downloaded | 3 | 3 | 100% |
+| code_generated | 3 | 3 | 100% |
+| code_executed | 3 | 3 | 100% |
 
 ## Per-component success — independent (executed papers only)
 
 | Component | Succeeded | Total | Rate |
 |---|---:|---:|---:|
-| parsed | 1 | 1 | 100% |
-| claims_extracted | 1 | 1 | 100% |
-| dataset_extracted | 0 | 1 | 0% |
-| dataset_downloaded | 1 | 1 | 100% |
-| code_generated | 1 | 1 | 100% |
-| code_executed | 1 | 1 | 100% |
+| parsed | 3 | 3 | 100% |
+| claims_extracted | 3 | 3 | 100% |
+| dataset_extracted | 0 | 3 | 0% |
+| dataset_downloaded | 3 | 3 | 100% |
+| code_generated | 3 | 3 | 100% |
+| code_executed | 3 | 3 | 100% |
 
 ## Estimated API cost
 
-Total estimated spend this run: **$0.00** across 0 API calls (8 further calls served free by the LLM cache).  Estimates from the price table in `benchmark/pricing.py`.
+Total estimated spend this run: **$4.01** across 22 API calls (15 further calls served free by the LLM cache).  Estimates from the price table in `benchmark/pricing.py`.
 
 | ID | Mode | Reproducer | API calls | LLM-cache hits | Input tok | Output tok | Cache write tok | Cache read tok | Est. cost |
 |---|---|---|---:|---:|---:|---:|---:|---:|---:|
-| `dincecco-2022-india-warfare` | seeded | pipeline | 0 | 4 | 0 | 0 | 0 | 0 | $0.00 |
-| `dincecco-2022-india-warfare` | independent | pipeline | 0 | 4 | 0 | 0 | 0 | 0 | $0.00 |
+| `dincecco-2022-india-warfare` | seeded | pipeline | 1 | 3 | 36,013 | 1,813 | 0 | 0 | $0.23 |
+| `dincecco-2022-india-warfare` | independent | pipeline | 5 | 2 | 33,260 | 13,398 | 0 | 0 | $0.50 |
+| `alesina-2022-immigration-redistribution` | seeded | pipeline | 4 | 3 | 120,666 | 23,942 | 0 | 0 | $1.20 |
+| `alesina-2022-immigration-redistribution` | independent | pipeline | 4 | 2 | 35,777 | 19,890 | 0 | 0 | $0.68 |
+| `bisbee-2022-flight-to-safety` | seeded | pipeline | 4 | 3 | 75,442 | 12,209 | 0 | 0 | $0.68 |
+| `bisbee-2022-flight-to-safety` | independent | pipeline | 4 | 2 | 31,768 | 22,414 | 0 | 0 | $0.72 |
 
 ## Per-paper results
 
 | ID | Mode | Reproducer | Status | Ran | Agrees w/ paper | Agrees w/ I4R | Claims (paper / I4R) | Cached |
 |---|---|---|---|---|---|---|---|---|
-| `dincecco-2022-india-warfare` | seeded | pipeline | ran | ✓ | ✓ | ✓ | 13 / 13 of 13 |  |
-| `dincecco-2022-india-warfare` | independent | pipeline | ran | ✓ | ✓ | ✓ | 13 / 13 of 13 |  |
+| `dincecco-2022-india-warfare` | seeded | pipeline | ran | ✓ | ✓ | ✓ | 13 / 13 of 13 (first scored 13/13, 0 error + 0 claim refinements) |  |
+| `dincecco-2022-india-warfare` | independent | pipeline | ran | ✓ | ✗ | ✗ | 11 / 11 of 13 (first scored 11/13, 1 error + 3 claim refinements) |  |
+| `alesina-2022-immigration-redistribution` | seeded | pipeline | ran | ✓ | ✗ | ✗ | 7 / 7 of 11 (first scored 7/11, 0 error + 3 claim refinements) |  |
+| `alesina-2022-immigration-redistribution` | independent | pipeline | ran | ✓ | ✗ | ✗ | 7 / 7 of 11 (first scored 1/11, 0 error + 3 claim refinements) |  |
+| `bisbee-2022-flight-to-safety` | seeded | pipeline | ran | ✓ | ✗ | ✗ | 10 / 10 of 11 (first scored 9/11, 1 error + 2 claim refinements) |  |
+| `bisbee-2022-flight-to-safety` | independent | pipeline | ran | ✓ | ✗ | ✗ | 0 / 0 of 11 (first scored 0/11, 2 error + 1 claim refinements) |  |

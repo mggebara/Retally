@@ -109,11 +109,13 @@ original_claims:
     unit: SD of Sanders two-way vote share
     location: "Table 1, column 4"
     context: >
-      Table 1 column 4 ("March & April 7th, Basic").  As
-      exposure_coefficient_full_basic but restricted to elections
-      between March 1st and April 7th (after the pandemic started and
-      before Sanders dropped out), without the caucus dummy
-      (insufficient variation in this subset).  N = 1,710.
+      Table 1 column 4, "Basic" under the column header "March & April
+      7th".  As exposure_coefficient_full_basic on the subset the text
+      describes as "the elections that occurred between March 1st and
+      April 7th – the dates after which the pandemic started and before
+      Sanders dropped out of the race", without the caucus dummy (the
+      table note: not enough variation in the March and April subset).
+      Table 1 reports N = 1,710 for this column.
   - description: exposure_coefficient_march_cbps
     value: -0.885
     claim_type: coefficient
@@ -122,10 +124,12 @@ original_claims:
     unit: SD of Sanders two-way vote share
     location: "Table 1, column 6"
     context: >
-      Table 1 column 6 ("March & April 7th, Weight").  March-April
-      subset with CBPS weights; DMA fixed effects, DMA-clustered
-      standard errors.  The point estimate coincides with column 4 to 3
-      dp; the SE differs.
+      Table 1 column 6, "Weight" under the column header "March & April
+      7th".  The same subset as exposure_coefficient_march_basic (the
+      text: elections "between March 1st and April 7th"), with CBPS
+      weights; DMA fixed effects, DMA-clustered standard errors.  The
+      point estimate coincides with column 4 to 3 dp; the SE differs.
+      Table 1 reports N = 1,710.
   - description: sample_size_full
     value: 1882
     claim_type: other
@@ -137,7 +141,10 @@ original_claims:
     claim_type: other
     unit: counties
     location: "Table 1, columns 4 and 6"
-    context: Number of county observations in the March 1 - April 7 Table 1 regressions.
+    context: >
+      Number of county observations ("Observations") reported in Table 1
+      for the "March & April 7th" columns 4 and 6, the subset the text
+      describes as elections "between March 1st and April 7th".
   - description: anxiety_prime_effect_bivariate
     value: -0.074
     claim_type: coefficient
@@ -332,3 +339,45 @@ notes: >
   factor(polAge), factor(polOcc), factor(polPlat); House outcome voteSh on
   extreme * log(casesSum + 1) with stcd fixed effects, Tea Party
   indicator tea.
+
+  March sample: the paper's description vs the package (2026-10-21).  The
+  paper's text describes Table 1 columns 4-6 as "the elections that
+  occurred between March 1st and April 7th" and heads them "March & April
+  7th"; the package's Table 1 script (`Table 1, SI3, SI4, SI5, Figure
+  SI13, SI14.R`, "March + April Regressions", lines ~124-149) filters
+  only `date >= as.Date('2020-03-01')` with no upper bound (column 4 on
+  `finalDat`; columns 5-6 on complete cases, caucus dropped from the
+  covariates).  Applying the paper's March 1 - April 7 window gives N =
+  1,591, not the table's 1,710, and shrinks the column 4 coefficient to
+  about -0.23 to -0.35 (vs -0.885) in the runs that used it; the 1,710
+  needs the elections after April 7 as well.  The contexts were rewritten to
+  quote the paper's own words for this sample (they previously
+  paraphrased the same window); the claim values are unchanged.  This is a
+  paper-vs-code discrepancy, i.e. a case where the paper's description
+  does not recover its own specification: exposure_coefficient_march_basic,
+  exposure_coefficient_march_cbps and sample_size_march are expected to
+  fail for a reproducer that follows the text, and to pass only by
+  following the package (seeded) or by searching for the target N.
+
+  Phase 3 first baseline (2026-10-20, Opus 4.7, Docker R sandbox).  The
+  first run (before PR #46) never started: Harvard Dataverse returned 403
+  to the python-requests user agent (both rows errors).  After #46, on the
+  old 11-package image: seeded 7/11 (first attempt 0, first scored 8/11,
+  1 error + 2 claim refinements); independent cache-on 0/11 (2 / 1);
+  three cache-off independent runs 8, 8, 5 of 11 (first scored 2, 4, 0;
+  2 error + 3 claim refinements each).  Every first script crashed on
+  library(MatchIt) / library(CBPS), which were not installed in the
+  image; most independent passes came after claim refinement
+  (target-guided search; one run grid-searched start and end dates for
+  the March window against N = 1,710).  The three March claims failed in
+  both modes (N 1,591 vs 1,710; even the seeded script added the April 7
+  bound).  After PRs #48/#49 (47-package image, installed packages listed
+  in the prompt): seeded 10/11 (first scored 9/11, 1 error + 2 claim
+  refinements), the March claims pass on the package's filter, only
+  anti_estab_x_cases_interaction fails (0.0138 vs -0.016; the old-image
+  seeded run and two cache-off independent runs had it exact).  Independent on the new image:
+  NOT MEASURED, the API credit ran out on its first generation call (the
+  phase3b independent row and the three phase3b variance files are
+  credit-error rows with 0 claims).  Spend recorded on this entry: about
+  $6.90.  Files: benchmark/results/phase3-bisbee-*-2026-10-20.json and
+  phase3b-bisbee-*-2026-10-20.json.

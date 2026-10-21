@@ -1,0 +1,330 @@
+{
+  "usage": {
+    "api_calls": 8,
+    "llm_cache_hits": 5,
+    "llm_cache_served": true,
+    "by_model": {
+      "claude-opus-4-7": {
+        "input_tokens": 156443,
+        "output_tokens": 43832,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "api_calls": 8
+      }
+    },
+    "rows_from_result_cache": 0,
+    "estimated_usd": 1.878015
+  },
+  "results": [
+    {
+      "entry_id": "alesina-2022-immigration-redistribution",
+      "mode": "seeded",
+      "reproducer": "pipeline",
+      "skipped": false,
+      "skip_reason": null,
+      "error": null,
+      "retally_ran": true,
+      "agrees_with_paper": false,
+      "agrees_with_i4r": false,
+      "n_claims_in_catalog": 11,
+      "n_claims_with_paper_match": 7,
+      "n_claims_with_i4r_match": 7,
+      "n_claims_with_paper_match_first_attempt": 7,
+      "n_refinements": 3,
+      "n_executions": 4,
+      "claim_details": [
+        {
+          "description": "order_effect_tax_top1",
+          "claim_type": "coefficient",
+          "claimed": -1.948,
+          "reproduced": -1.9308,
+          "tolerance": 0.02,
+          "rel_err": 0.008829568788500967,
+          "passed": true,
+          "passed_first_attempt": true
+        },
+        {
+          "description": "order_effect_tax_bottom50",
+          "claim_type": "coefficient",
+          "claimed": 0.914,
+          "reproduced": 0.8686,
+          "tolerance": 0.02,
+          "rel_err": 0.04967177242888402,
+          "passed": false,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "order_effect_social_budget",
+          "claim_type": "coefficient",
+          "claimed": -0.543,
+          "reproduced": -0.5518,
+          "tolerance": 0.02,
+          "rel_err": 0.01620626151012876,
+          "passed": true,
+          "passed_first_attempt": true
+        },
+        {
+          "description": "order_effect_education_budget",
+          "claim_type": "coefficient",
+          "claimed": 0.439,
+          "reproduced": 0.4521,
+          "tolerance": 0.02,
+          "rel_err": 0.029840546697038724,
+          "passed": false,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "order_effect_inequality_serious_problem",
+          "claim_type": "coefficient",
+          "claimed": -0.028,
+          "reproduced": -0.0272,
+          "tolerance": 0.02,
+          "rel_err": 0.028571428571428647,
+          "passed": false,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "order_effect_donation_above_median",
+          "claim_type": "coefficient",
+          "claimed": -0.0479,
+          "reproduced": -0.0476,
+          "tolerance": 0.02,
+          "rel_err": 0.0062630480167013515,
+          "passed": true,
+          "passed_first_attempt": true
+        },
+        {
+          "description": "sample_size_table4",
+          "claim_type": "other",
+          "claimed": 19765.0,
+          "reproduced": 19694.0,
+          "tolerance": 0.01,
+          "rel_err": 0.0035922084492790284,
+          "passed": true,
+          "passed_first_attempt": true
+        },
+        {
+          "description": "share_treatment_effect_misperception_share",
+          "claim_type": "coefficient",
+          "claimed": -4.864,
+          "reproduced": -4.8547,
+          "tolerance": 0.02,
+          "rel_err": 0.0019120065789472948,
+          "passed": true,
+          "passed_first_attempt": true
+        },
+        {
+          "description": "hard_work_effect_immigration_support_index",
+          "claim_type": "coefficient",
+          "claimed": 0.0708,
+          "reproduced": 0.0736,
+          "tolerance": 0.02,
+          "rel_err": 0.03954802259887001,
+          "passed": false,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "misperception_share_immigrants_us",
+          "claim_type": "other",
+          "claimed": 26.082,
+          "reproduced": 26.0522,
+          "tolerance": 0.01,
+          "rel_err": 0.001142550417912798,
+          "passed": true,
+          "passed_first_attempt": true
+        },
+        {
+          "description": "misperception_share_immigrants_sweden",
+          "claim_type": "other",
+          "claimed": 9.402,
+          "reproduced": 9.4021,
+          "tolerance": 0.01,
+          "rel_err": 1.0636034886358574e-05,
+          "passed": true,
+          "passed_first_attempt": true
+        }
+      ],
+      "split": "dev",
+      "components": {
+        "parsed": true,
+        "claims_extracted": true,
+        "dataset_extracted": false,
+        "dataset_downloaded": true,
+        "code_generated": true,
+        "code_executed": true
+      },
+      "cached": false,
+      "usage": {
+        "api_calls": 4,
+        "llm_cache_hits": 3,
+        "llm_cache_served": true,
+        "by_model": {
+          "claude-opus-4-7": {
+            "input_tokens": 120666,
+            "output_tokens": 23942,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "api_calls": 4
+          }
+        },
+        "estimated_usd": 1.20188
+      },
+      "artifacts_dir": "benchmark/results/artifacts/alesina-2022-immigration-redistribution/seeded/pipeline/20261021T032339Z"
+    },
+    {
+      "entry_id": "alesina-2022-immigration-redistribution",
+      "mode": "independent",
+      "reproducer": "pipeline",
+      "skipped": false,
+      "skip_reason": null,
+      "error": null,
+      "retally_ran": true,
+      "agrees_with_paper": false,
+      "agrees_with_i4r": false,
+      "n_claims_in_catalog": 11,
+      "n_claims_with_paper_match": 7,
+      "n_claims_with_i4r_match": 7,
+      "n_claims_with_paper_match_first_attempt": 1,
+      "n_refinements": 3,
+      "n_executions": 4,
+      "claim_details": [
+        {
+          "description": "order_effect_tax_top1",
+          "claim_type": "coefficient",
+          "claimed": -1.948,
+          "reproduced": -1.8231,
+          "tolerance": 0.2135523613963039,
+          "rel_err": 0.06411704312114991,
+          "passed": true,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "order_effect_tax_bottom50",
+          "claim_type": "coefficient",
+          "claimed": 0.914,
+          "reproduced": 0.9768,
+          "tolerance": 0.30196936542669583,
+          "rel_err": 0.06870897155361047,
+          "passed": true,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "order_effect_social_budget",
+          "claim_type": "coefficient",
+          "claimed": -0.543,
+          "reproduced": 0.0026,
+          "tolerance": 0.438305709023941,
+          "rel_err": 1.0047882136279926,
+          "passed": false,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "order_effect_education_budget",
+          "claim_type": "coefficient",
+          "claimed": 0.439,
+          "reproduced": 0.0963,
+          "tolerance": 0.39863325740318906,
+          "rel_err": 0.7806378132118451,
+          "passed": false,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "order_effect_inequality_serious_problem",
+          "claim_type": "coefficient",
+          "claimed": -0.028,
+          "reproduced": -0.0338,
+          "tolerance": 0.4714285714285714,
+          "rel_err": 0.207142857142857,
+          "passed": true,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "order_effect_donation_above_median",
+          "claim_type": "coefficient",
+          "claimed": -0.0479,
+          "reproduced": -0.0453,
+          "tolerance": 0.28810020876826725,
+          "rel_err": 0.054279749478079294,
+          "passed": true,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "sample_size_table4",
+          "claim_type": "other",
+          "claimed": 19765.0,
+          "reproduced": 20933.0,
+          "tolerance": 0.01,
+          "rel_err": 0.059094358714900076,
+          "passed": false,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "share_treatment_effect_misperception_share",
+          "claim_type": "coefficient",
+          "claimed": -4.864,
+          "reproduced": -4.6734,
+          "tolerance": 0.0844983552631579,
+          "rel_err": 0.03918585526315787,
+          "passed": true,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "hard_work_effect_immigration_support_index",
+          "claim_type": "coefficient",
+          "claimed": 0.0708,
+          "reproduced": -0.0209,
+          "tolerance": 0.2556497175141243,
+          "rel_err": 1.2951977401129944,
+          "passed": false,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "misperception_share_immigrants_us",
+          "claim_type": "other",
+          "claimed": 26.082,
+          "reproduced": 25.98,
+          "tolerance": 0.027911969940955447,
+          "rel_err": 0.003910743041177836,
+          "passed": true,
+          "passed_first_attempt": false
+        },
+        {
+          "description": "misperception_share_immigrants_sweden",
+          "claim_type": "other",
+          "claimed": 9.402,
+          "reproduced": 9.326,
+          "tolerance": 0.08657732397362264,
+          "rel_err": 0.00808338651350763,
+          "passed": true,
+          "passed_first_attempt": true
+        }
+      ],
+      "split": "dev",
+      "components": {
+        "parsed": true,
+        "claims_extracted": true,
+        "dataset_extracted": false,
+        "dataset_downloaded": true,
+        "code_generated": true,
+        "code_executed": true
+      },
+      "cached": false,
+      "usage": {
+        "api_calls": 4,
+        "llm_cache_hits": 2,
+        "llm_cache_served": true,
+        "by_model": {
+          "claude-opus-4-7": {
+            "input_tokens": 35777,
+            "output_tokens": 19890,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "api_calls": 4
+          }
+        },
+        "estimated_usd": 0.676135
+      },
+      "artifacts_dir": "benchmark/results/artifacts/alesina-2022-immigration-redistribution/independent/pipeline/20261021T032339Z"
+    }
+  ]
+}
