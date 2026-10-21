@@ -188,8 +188,11 @@ class Reproducer(Protocol):
       or None when the entry has none pinned and the agent must extract
       its own.
     * ``reproduction_mode`` — ``SEEDED`` (the authors' package scripts
-      may be used) or ``INDEPENDENT`` (they must not be: hand the agent
-      a :func:`script_free_copy` of the dataset, not the original).
+      may be used), ``INDEPENDENT`` (they must not be: hand the agent
+      a :func:`script_free_copy` of the dataset, not the original) or
+      ``BLIND`` (as independent, and the claims' values and standard
+      errors must not reach the agent either: use them only to know what
+      to compute, never as a number to hit or to steer refinement).
 
     It returns a :class:`Reproduction`.  Raising is allowed: the harness
     records ``retally_ran = False`` with the exception text and moves on.
@@ -321,7 +324,7 @@ class PipelineReproducer:
     loop needs to know which claims are off), but those verdicts are
     dropped here; the harness re-scores ``outputs`` itself.
 
-    In ``INDEPENDENT`` mode the pipeline's downloader is wrapped for the
+    In ``INDEPENDENT`` and ``BLIND`` mode the pipeline's downloader is wrapped for the
     duration of the call so the dataset it sees — in the prompt's file
     listing and in the sandbox mount — is a :func:`script_free_dataset`.
     The pipeline already withholds the scripts from the prompt; this makes
@@ -346,7 +349,7 @@ class PipelineReproducer:
         claims: list[Claim] | None,
         reproduction_mode: ReproductionMode,
     ) -> Reproduction:
-        isolate = self.isolate_independent_scripts and reproduction_mode is ReproductionMode.INDEPENDENT
+        isolate = self.isolate_independent_scripts and reproduction_mode.withholds_code
         original_downloader = getattr(self.pipeline, "downloader", None)
         if isolate and original_downloader is not None:
             self.pipeline.downloader = _ScriptFreeDownloader(original_downloader)

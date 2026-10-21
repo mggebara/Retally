@@ -211,6 +211,10 @@ _MODE_BLURB = {
     "independent": (
         "the authors' scripts were withheld; reproduced from the paper text — independent reproduction"
     ),
+    "blind": (
+        "the authors' scripts and the claimed values were withheld, with no claim-targeted "
+        "refinement — blind reproduction, free of target-guided search"
+    ),
 }
 
 
@@ -250,16 +254,28 @@ def _reproducer_line(results: list[dict[str, Any]]) -> str:
 
 
 def _mode_gap_markdown(results: list[dict[str, Any]]) -> str:
-    """The seeded-vs-independent gap — the headline finding of a both-mode run."""
+    """The seeded-vs-independent gap — the headline finding of a both-mode run.
+
+    When any of those papers also has a blind row (``--mode all``) the
+    table gains a Blind column and the before-feedback cell becomes
+    ``seeded / independent / blind``; a run without blind rows renders
+    exactly as before blind existed.
+    """
     gaps = metrics.mode_gaps(results)
+    with_blind = any(g.has_blind for g in gaps)
     lines = [
-        "## Seeded vs independent",
+        "## Seeded vs independent" + (" vs blind" if with_blind else ""),
         "",
         "Claims passing with the authors' scripts in the prompt (seeded) versus "
         "without them (independent), per paper executed in both modes.  "
         "*Lost* claims pass seeded but not independent — what the scripts were carrying.",
         "",
     ]
+    if with_blind:
+        lines[-1:-1] = [
+            "*Blind* withholds the claim values too and runs no claim-targeted refinement: "
+            "its pass counts are the only ones free of target-guided search.",
+        ]
     if not gaps:
         lines.append("_No paper was executed in both modes._")
         return "\n".join(lines)
@@ -274,13 +290,14 @@ def _mode_gap_markdown(results: list[dict[str, Any]]) -> str:
     # omitted (older files still).
     seeded_first = [g.seeded_passed_first_scored for g in gaps]
     independent_first = [g.independent_passed_first_scored for g in gaps]
+    blind_first = [g.blind_passed_first_scored for g in gaps]
     label = "first scored"
     explanation = (
         "*First scored* is what each mode's first script that printed results passed: "
         "after any crash repairs, before the refinement loop showed the model which claims "
         "were off target."
     )
-    if all(v is None for v in (*seeded_first, *independent_first)):
+    if all(v is None for v in (*seeded_first, *independent_first, *blind_first)):
         seeded_first = [g.seeded_passed_first_attempt for g in gaps]
         independent_first = [g.independent_passed_first_attempt for g in gaps]
         label = "first attempt"
@@ -288,7 +305,7 @@ def _mode_gap_markdown(results: list[dict[str, Any]]) -> str:
             "*First attempt* is what each mode's first script passed, before the refinement "
             "loop showed the model which claims were off target."
         )
-    show_first = any(v is not None for v in (*seeded_first, *independent_first))
+    show_first = any(v is not None for v in (*seeded_first, *independent_first, *blind_first))
     s_first = _summed_first_attempt(seeded_first)
     i_first = _summed_first_attempt(independent_first)
     lines.extend(
@@ -297,37 +314,55 @@ def _mode_gap_markdown(results: list[dict[str, Any]]) -> str:
             + (f" ({label} {s_first} / {s_total})" if s_first is not None else ""),
             f"- Independent: **{i_pass} / {i_total}** claims passed"
             + (f" ({label} {i_first} / {i_total})" if i_first is not None else ""),
-            f"- Lost without the scripts: **{lost}**; gained: **{gained}**",
-            "",
         ]
     )
+    if with_blind:
+        blind_gaps = [g for g in gaps if g.has_blind]
+        b_pass = sum(g.blind_passed or 0 for g in blind_gaps)
+        b_total = sum(g.blind_total or 0 for g in blind_gaps)
+        b_first = _summed_first_attempt([g.blind_passed_first_scored for g in blind_gaps])
+        papers = "" if len(blind_gaps) == len(gaps) else f" (on {len(blind_gaps)} of {len(gaps)} papers)"
+        lines.append(
+            f"- Blind: **{b_pass} / {b_total}** claims passed{papers}"
+            + (f" (first scored {b_first} / {b_total})" if b_first is not None else "")
+        )
+    lines.extend([f"- Lost without the scripts: **{lost}**; gained: **{gained}**", ""])
+    blind_head = " Blind |" if with_blind else ""
+    blind_rule = "---|" if with_blind else ""
+    first_modes = "seeded / independent / blind" if with_blind else "seeded / independent"
     if show_first:
         lines.extend(
             [
                 explanation,
                 "",
-                "| Entry | Split | Reproducer | Seeded | Independent "
-                f"| {label.capitalize()} (seeded / independent) | Lost without scripts |",
-                "|---|---|---|---|---|---|---|",
+                f"| Entry | Split | Reproducer | Seeded | Independent |{blind_head}"
+                f" {label.capitalize()} ({first_modes}) | Lost without scripts |",
+                "|---|---|---|---|---|" + blind_rule + "---|---|",
             ]
         )
     else:
         lines.extend(
             [
-                "| Entry | Split | Reproducer | Seeded | Independent | Lost without scripts |",
-                "|---|---|---|---|---|---|",
+                f"| Entry | Split | Reproducer | Seeded | Independent |{blind_head} Lost without scripts |",
+                "|---|---|---|---|---|" + blind_rule + "---|",
             ]
         )
-    for g, s_one, i_one in zip(gaps, seeded_first, independent_first, strict=True):
+    for g, s_one, i_one, b_one in zip(gaps, seeded_first, independent_first, blind_first, strict=True):
         lost_str = ", ".join(f"`{d}`" for d in g.lost) if g.lost else "—"
+        blind_cell = ""
+        if with_blind:
+            blind_cell = f" {g.blind_passed}/{g.blind_total} |" if g.has_blind else " — |"
         first_cell = ""
         if show_first:
             first_cell = (
-                f" {_count_or_dash(s_one)}/{g.seeded_total} / {_count_or_dash(i_one)}/{g.independent_total} |"
+                f" {_count_or_dash(s_one)}/{g.seeded_total} / {_count_or_dash(i_one)}/{g.independent_total}"
             )
+            if with_blind:
+                first_cell += f" / {_count_or_dash(b_one)}/{g.blind_total if g.has_blind else '—'}"
+            first_cell += " |"
         lines.append(
             f"| `{g.entry_id}` | {g.split} | {g.reproducer} | {g.seeded_passed}/{g.seeded_total} "
-            f"| {g.independent_passed}/{g.independent_total} |{first_cell} {lost_str} |"
+            f"| {g.independent_passed}/{g.independent_total} |{blind_cell}{first_cell} {lost_str} |"
         )
     return "\n".join(lines)
 

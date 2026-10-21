@@ -257,3 +257,19 @@ def test_exact_and_substring_matching_still_work():
     exact, substring = comparator.compare_all(claims, outputs)
     assert exact.passed and exact.reproduced_value == 1.601
     assert substring.passed and substring.reproduced_value == 660.0
+
+
+def test_blind_is_scored_exactly_like_independent():
+    from retally.validation.comparator import DEFAULT_TOLERANCE_POLICIES
+
+    assert (
+        DEFAULT_TOLERANCE_POLICIES[ReproductionMode.BLIND]
+        is DEFAULT_TOLERANCE_POLICIES[ReproductionMode.INDEPENDENT]
+    )
+    comparator = ResultComparator()
+    for reproduced in (3.9, 4.1):
+        blind = comparator.compare(_coef(3.713, se=0.305), reproduced, mode=ReproductionMode.BLIND)
+        independent = comparator.compare(
+            _coef(3.713, se=0.305), reproduced, mode=ReproductionMode.INDEPENDENT
+        )
+        assert (blind.passed, blind.tolerance) == (independent.passed, independent.tolerance)

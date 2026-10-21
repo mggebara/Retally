@@ -43,6 +43,10 @@ How close is "reproduced" depends on what was reproduced (see
   so a tightly-estimated coefficient is never held to a band narrower
   than the paper's own rounding.  With no SE pinned it falls back to the
   per-type relative tolerance.
+* ``BLIND`` (independent, with the targets withheld from the model) is
+  judged exactly like ``INDEPENDENT``: the default policy map gives both
+  the same ``TolerancePolicy`` object.  An override passed for one mode
+  does not change the other.
 
 Because the effective band is recorded as an ordinary relative tolerance
 on each ``ClaimValidationResult``, downstream consumers (benchmark
@@ -67,9 +71,14 @@ class TolerancePolicy:
     only the per-type relative tolerance."""
 
 
+_INDEPENDENT_POLICY = TolerancePolicy(se_multiplier=1.0)
+
 DEFAULT_TOLERANCE_POLICIES: Mapping[ReproductionMode, TolerancePolicy] = {
     ReproductionMode.SEEDED: TolerancePolicy(se_multiplier=None),
-    ReproductionMode.INDEPENDENT: TolerancePolicy(se_multiplier=1.0),
+    ReproductionMode.INDEPENDENT: _INDEPENDENT_POLICY,
+    # Blind differs from independent only in what the model is shown, not
+    # in how its numbers are judged: the same policy object.
+    ReproductionMode.BLIND: _INDEPENDENT_POLICY,
 }
 
 

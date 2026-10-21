@@ -604,6 +604,44 @@ def test_independent_prompt_withholds_code_and_forbids_reading_scripts(language)
     assert "## Reference Implementation" not in prompt
 
 
+@pytest.mark.parametrize("language", [Language.R, Language.PYTHON], ids=["r", "python"])
+def test_blind_prompt_has_independent_and_blind_sections(language):
+    client = MagicMock()
+    client.messages.create.return_value = MagicMock(content=[MagicMock(text="x <- 1")])
+    CodeGenerator(client).generate(
+        _paper(language=language), _dataset(), reproduction_mode=ReproductionMode.BLIND
+    )
+    prompt = client.messages.create.call_args.kwargs["messages"][0]["content"]
+    assert "## Independent Reproduction" in prompt
+    assert "## Blind Reproduction" in prompt
+    assert "## Quantities to Compute" in prompt
+    assert "## Claims to Reproduce" not in prompt
+
+
+@pytest.mark.parametrize("mode", [ReproductionMode.SEEDED, ReproductionMode.INDEPENDENT])
+def test_non_blind_prompts_have_no_blind_section(mode):
+    client = MagicMock()
+    client.messages.create.return_value = MagicMock(content=[MagicMock(text="x <- 1")])
+    CodeGenerator(client).generate(_paper(language=Language.R), _dataset(), reproduction_mode=mode)
+    prompt = client.messages.create.call_args.kwargs["messages"][0]["content"]
+    assert "Blind Reproduction" not in prompt
+    assert "## Claims to Reproduce" in prompt
+
+
+def test_blind_claim_unit_is_a_label_without_the_value():
+    claim = Claim(
+        description="effect_pp", value=4.25, unit="percentage points", claim_type=ClaimType.EFFECT_SIZE
+    )
+    client = MagicMock()
+    client.messages.create.return_value = MagicMock(content=[MagicMock(text="x <- 1")])
+    CodeGenerator(client).generate(
+        _paper(claims=[claim], language=Language.R), _dataset(), reproduction_mode=ReproductionMode.BLIND
+    )
+    prompt = client.messages.create.call_args.kwargs["messages"][0]["content"]
+    assert "1. effect_pp [type: effect_size; unit: percentage points]" in prompt
+    assert "4.25" not in prompt
+
+
 def test_seeded_prompt_has_no_independent_section():
     gen = _generator()
     scripts = [_selected("master.do", "reg y x")]
@@ -621,16 +659,19 @@ def test_seeded_prompt_has_no_independent_section():
     ],
     ids=["package_scripts", "reference_files"],
 )
-def test_independent_mode_refuses_authors_code(kwargs):
-    """Leaking the authors' code into an independent run would silently
-    turn it into a seeded one — fail loudly instead."""
+@pytest.mark.parametrize(
+    "mode", [ReproductionMode.INDEPENDENT, ReproductionMode.BLIND], ids=lambda m: m.value
+)
+def test_independent_mode_refuses_authors_code(kwargs, mode):
+    """Leaking the authors' code into an independent (or blind) run would
+    silently turn it into a seeded one — fail loudly instead."""
     client = MagicMock()
     gen = CodeGenerator(client)
     with pytest.raises(ValueError, match="withholds the authors' code"):
         gen.generate(
             _paper(language=Language.R),
             _dataset(),
-            reproduction_mode=ReproductionMode.INDEPENDENT,
+            reproduction_mode=mode,
             **kwargs,
         )
     client.messages.create.assert_not_called()
@@ -916,10 +957,13 @@ def test_generation_prompt_renders_claim_location_and_context(language, mode):
         _paper(claims=[claim], language=language), _dataset(), reproduction_mode=mode
     )
     prompt = client.messages.create.call_args.kwargs["messages"][0]["content"]
+    head = (
+        "1. warfare_coefficient_bivariate [type: coefficient]\n"
+        if mode is ReproductionMode.BLIND
+        else "1. warfare_coefficient_bivariate: 3.713 [type: coefficient]\n"
+    )
     assert (
-        "1. warfare_coefficient_bivariate: 3.713 [type: coefficient]\n"
-        "   Location: Table 1\n"
-        "   Context: Table 1 column 1. Controls for population density.\n"
+        head + "   Location: Table 1\n   Context: Table 1 column 1. Controls for population density.\n"
     ) in prompt
 
 

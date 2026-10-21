@@ -191,6 +191,38 @@ def test_mode_gaps_join_claims_by_description():
     assert gap.gained == []
 
 
+def test_modes_present_orders_blind_after_independent():
+    rows = [{"entry_id": "a", "mode": m} for m in ("blind", "zzz", "independent", "seeded")]
+    assert metrics.modes_present(rows) == ["seeded", "independent", "blind", "zzz"]
+
+
+def test_mode_gaps_carry_an_optional_blind_row():
+    results = [
+        _moded("seeded", [_cd(description="beta", passed=True), _cd(description="se", passed=True)]),
+        _moded("independent", [_cd(description="beta", passed=True), _cd(description="se", passed=False)]),
+        {
+            **_moded("blind", [_cd(description="beta", passed=True), _cd(description="se", passed=False)]),
+            "n_claims_with_paper_match_first_scored": 1,
+        },
+        _moded("seeded", [_cd(description="x", passed=True)], entry_id="e2"),
+        _moded("independent", [_cd(description="x", passed=True)], entry_id="e2"),
+    ]
+    with_blind, without = metrics.mode_gaps(results)
+    assert with_blind.has_blind
+    assert (with_blind.blind_passed, with_blind.blind_total, with_blind.blind_passed_first_scored) == (
+        1,
+        2,
+        1,
+    )
+    assert with_blind.lost == ["se"]  # lost / gained stay seeded-vs-independent
+    assert not without.has_blind
+    assert (without.blind_passed, without.blind_total, without.blind_passed_first_scored) == (
+        None,
+        None,
+        None,
+    )
+
+
 def test_compare_keys_rows_by_entry_and_mode():
     """A seeded and an independent row of the same paper must never be
     diffed against each other — only like-for-like across runs."""

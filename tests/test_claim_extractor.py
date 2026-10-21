@@ -356,3 +356,22 @@ def test_extract_methodology_prompt_does_not_prime_standardisation():
     assert "log-log, standardised" not in sent_prompt
     assert "standardised only if the paper explicitly says" in sent_prompt
     assert "does not make the headline estimate standardised" in sent_prompt
+
+
+def test_extract_methodology_withhold_results_is_additive():
+    """Blind reproduction pastes the summary into a prompt that must not show
+    the targets: ``withhold_results`` adds an instruction to leave reported
+    results out, and the default prompt (seeded / independent, and their
+    LLM-cache keys) is unchanged."""
+    paper = Paper(title="T", full_text="body")
+    plain_client = _make_mock_client("summary")
+    ClaimExtractor(plain_client).extract_methodology(paper)
+    plain = plain_client.messages.create.call_args.kwargs["messages"][0]["content"]
+    blind_client = _make_mock_client("summary")
+    ClaimExtractor(blind_client).extract_methodology(paper, withhold_results=True)
+    blind = blind_client.messages.create.call_args.kwargs["messages"][0]["content"]
+
+    assert "Do NOT report any of the paper's results" not in plain
+    assert "where available.\n\nPaper:\n" in plain
+    assert "Do NOT report any of the paper's results" in blind
+    assert blind.replace(blind[blind.index("\nDo NOT report") : blind.index("\nPaper:")], "") == plain

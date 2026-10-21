@@ -39,6 +39,15 @@ _CLAIMS_CONTEXT_CHARS = 120_000
 # methodology doesn't need the appendix tables.
 _METHODOLOGY_CONTEXT_CHARS = 60_000
 
+# Appended to the methodology prompt in blind reproduction, where the
+# summary must describe how to compute the results without stating them.
+_WITHHOLD_RESULTS_INSTRUCTION = (
+    "\nDo NOT report any of the paper's results: no estimated coefficients, standard errors, "
+    "confidence intervals, test statistics, p-values, means or differences of the outcome, "
+    "or fitted metrics.  Numbers that define the method (sample restrictions, cut-offs, "
+    "bandwidths, numbers of folds, years) are fine; numbers the method produces are not.\n"
+)
+
 
 class ClaimExtractor:
     """LLM-powered extractor for quantitative claims and dataset references.
@@ -195,8 +204,14 @@ Return ONLY the JSON array."""
 
         return dataset_refs
 
-    def extract_methodology(self, paper: Paper) -> str:
+    def extract_methodology(self, paper: Paper, *, withhold_results: bool = False) -> str:
         """Summarise the paper's methodology in enough detail for code generation.
+
+        ``withhold_results`` (blind reproduction) appends an instruction
+        to leave out every reported result -- estimates, standard errors,
+        test statistics, p-values, fitted metrics -- since the summary is
+        pasted into a generation prompt that must not show the targets.
+        The prompt is unchanged when it is False (the default).
 
         Returns
         -------
@@ -220,7 +235,7 @@ For econometrics / regression-based papers, additionally capture:
 - Sample restrictions defining the estimation sample (which observations are dropped and why)
 
 Be specific and concise. Use exact numbers, variable names, and table/column references from the paper where available.
-
+{_WITHHOLD_RESULTS_INSTRUCTION if withhold_results else ""}
 Paper:
 {context}"""
 

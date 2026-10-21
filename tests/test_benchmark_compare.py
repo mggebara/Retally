@@ -79,3 +79,24 @@ def test_per_entry_table_prefers_first_scored_counts():
     assert "| Passed (base → cand) | First scored (base → cand) | Median rel err" in out
     assert "| `p` | seeded | pipeline | dev | 1/1 → 1/1 | — → 1/1 |" in out
     assert "First attempt" not in out
+
+
+def test_three_mode_runs_compare_like_for_like():
+    base = [_row(mode="seeded"), _row(mode="independent"), _row(mode="blind", passed=False)]
+    cand = [_row(mode="seeded"), _row(mode="independent"), _row(mode="blind")]
+    out = compare.compare_runs(base, cand)
+    assert "mode seeded, independent, blind" in out
+    assert "### dev · blind" in out
+    assert "| `p` | blind | pipeline | dev | 0/1 → 1/1 |" in out
+    assert "| `p` | seeded | pipeline | dev | 1/1 → 1/1 |" in out
+    assert "Newly passing: 1" in out and "`p` (blind): beta" in out
+
+
+def test_two_mode_baseline_against_three_mode_candidate():
+    base = [_row(mode="seeded"), _row(mode="independent")]
+    cand = [*base, _row(mode="blind", n_claims_with_paper_match_first_scored=1)]
+    out = compare.compare_runs(base, cand)
+    assert "- baseline:  reproducer pipeline; mode seeded, independent" in out
+    assert "- candidate: reproducer pipeline; mode seeded, independent, blind" in out
+    assert "| `p` | blind | pipeline | dev | — → 1/1 | — → 1/1 |" in out
+    assert "Newly passing: 1" in out

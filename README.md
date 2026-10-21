@@ -111,6 +111,7 @@ returns raw values, so another agent can sit the same exam by implementing the
 make benchmark           # run the catalog, write benchmark/results/REPORT.md
 make benchmark-report    # re-render from cached results.json
 uv run python -m benchmark.runner --mode both                   # seeded + independent
+uv run python -m benchmark.runner --mode all                    # + blind (targets withheld)
 uv run python -m benchmark.runner --reproducer my_pkg.mod:make  # score another agent
 ```
 

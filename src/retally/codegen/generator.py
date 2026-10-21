@@ -142,6 +142,10 @@ class CodeGenerator:
         (a silent leak would invalidate the measurement), and the prompt
         gains an "Independent Reproduction" section telling the model not
         to read any script files that appear in the dataset listing.
+        ``BLIND`` is ``INDEPENDENT`` plus withheld targets: the claims
+        section names each claim (description, type, unit, location,
+        context) without its value, and a "Blind Reproduction" section
+        says the numbers are deliberately not given.
 
         Raises ``UnsupportedLanguageError`` when ``paper.language`` is
         not in ``{PYTHON, R}``.  Stata is deferred (proprietary
@@ -151,9 +155,9 @@ class CodeGenerator:
         the returned code matches ``paper.language``.
         """
         _require_supported_language(paper, "generate")
-        if reproduction_mode is ReproductionMode.INDEPENDENT and (reference_files or package_scripts):
+        if reproduction_mode.withholds_code and (reference_files or package_scripts):
             raise ValueError(
-                "Independent reproduction withholds the authors' code; "
+                f"{reproduction_mode.value.capitalize()} reproduction withholds the authors' code; "
                 "reference_files and package_scripts must be empty."
             )
         if paper.language is Language.R:
@@ -285,7 +289,7 @@ class CodeGenerator:
             "",
         ]
         lines.extend(self._paper_section(paper))
-        lines.extend(self._claims_section(paper.claims))
+        lines.extend(self._claims_section(paper.claims, reproduction_mode))
         lines.extend(self._dataset_section(dataset, paper))
 
         lines.extend(
@@ -541,7 +545,7 @@ class CodeGenerator:
             "",
         ]
         lines.extend(self._paper_section(paper))
-        lines.extend(self._claims_section(paper.claims))
+        lines.extend(self._claims_section(paper.claims, reproduction_mode))
         lines.extend(self._dataset_section(dataset, paper))
 
         # Output convention — note R uses cat() to write to stdout.
@@ -768,7 +772,19 @@ class CodeGenerator:
         lines.append("")
         return lines
 
-    def _claims_section(self, claims) -> list[str]:
+    def _claims_section(
+        self, claims, reproduction_mode: ReproductionMode = ReproductionMode.SEEDED
+    ) -> list[str]:
+        """The claims list.  In ``BLIND`` mode it names what to compute, never the value.
+
+        A blind line carries the claim's description (the ``RESULT:``
+        name), its type and its unit as a label only (``unit: percentage
+        points``), then the usual curated location/context lines.  The
+        claim's ``value`` and ``standard_error`` are not rendered in any
+        form.  Seeded and independent lines are unchanged.
+        """
+        if reproduction_mode.withholds_targets:
+            return self._blind_claims_section(claims)
         lines = ["## Claims to Reproduce"]
         if claims:
             for i, claim in enumerate(claims, 1):
@@ -776,6 +792,23 @@ class CodeGenerator:
                 lines.append(
                     f"{i}. {claim.description}: {claim.value}{unit_str} [type: {claim.claim_type.value}]"
                 )
+                lines.extend(_claim_detail_lines(claim))
+        else:
+            lines.append("No specific claims listed — reproduce the main reported metrics.")
+        lines.append("")
+        return lines
+
+    @staticmethod
+    def _blind_claims_section(claims) -> list[str]:
+        lines = ["## Quantities to Compute"]
+        if claims:
+            lines.append(
+                "Compute each quantity below and print it under the given name.  "
+                "The paper's reported values are deliberately not shown."
+            )
+            for i, claim in enumerate(claims, 1):
+                unit_str = f"; unit: {claim.unit}" if claim.unit else ""
+                lines.append(f"{i}. {claim.description} [type: {claim.claim_type.value}{unit_str}]")
                 lines.extend(_claim_detail_lines(claim))
         else:
             lines.append("No specific claims listed — reproduce the main reported metrics.")
@@ -950,10 +983,15 @@ class CodeGenerator:
         model could read them at run time and quietly turn an independent
         reproduction back into a seeded one.  Returns ``[]`` for
         ``SEEDED`` so the seeded prompt stays byte-identical.
+
+        ``BLIND`` gets the same block plus a "Blind Reproduction" one: the
+        targets are withheld, there will be no feedback on closeness, and
+        result tables / logs in the package must not be read either (they
+        hold the paper's numbers).
         """
-        if reproduction_mode is not ReproductionMode.INDEPENDENT:
+        if not reproduction_mode.withholds_code:
             return []
-        return [
+        lines = [
             "## Independent Reproduction",
             (
                 "This is an INDEPENDENT reproduction: reconstruct the analysis "
@@ -968,6 +1006,26 @@ class CodeGenerator:
             ),
             "",
         ]
+        if reproduction_mode.withholds_targets:
+            lines.extend(
+                [
+                    "## Blind Reproduction",
+                    (
+                        "This reproduction is also BLIND: the paper's reported values "
+                        "for the quantities above are deliberately withheld, and you "
+                        "will not be told how close your numbers are.  Compute each "
+                        "quantity as the paper's method defines it; do not tune the "
+                        "specification toward any number you expect.  Do NOT read "
+                        "result tables, logs, or output files that may appear in the "
+                        "dataset directory (.tex, .log, .pdf, .html, and "
+                        "similar) to recover the paper's numbers — compute everything "
+                        "from the data files.  Print a RESULT: line for every quantity "
+                        "listed, using its name exactly."
+                    ),
+                    "",
+                ]
+            )
+        return lines
 
     def _call_claude(self, prompt: str) -> str:
         """Send a prompt to the Claude API and return the response text."""

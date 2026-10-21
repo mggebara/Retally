@@ -303,9 +303,13 @@ class ValidationPipeline:
             generator works from the paper text, the claims, and the
             dataset directory listing only.  The mode also selects the
             comparator's tolerance policy and is stamped on the returned
-            report's ``reproduction_mode``.
+            report's ``reproduction_mode``.  ``BLIND`` is ``INDEPENDENT``
+            with the targets withheld too: claim values are left out of
+            the generation prompt, the methodology summary is asked to
+            leave out reported results, and the claim-targeted refinement
+            loop does not run (crash / no-RESULT repairs still do).
         """
-        independent = reproduction_mode is ReproductionMode.INDEPENDENT
+        independent = reproduction_mode.withholds_code
 
         # Step 1: parse the paper
         paper = self._parse_paper(paper_source)
@@ -321,7 +325,12 @@ class ValidationPipeline:
             paper.dataset_references = self.extractor.extract_dataset_references(paper)
 
         # Step 4: extract methodology summary
-        paper.methodology_summary = self.extractor.extract_methodology(paper)
+        # (Blind mode asks the summariser to leave the paper's reported
+        # results out: the summary is pasted into the generation prompt.)
+        if reproduction_mode.withholds_targets:
+            paper.methodology_summary = self.extractor.extract_methodology(paper, withhold_results=True)
+        else:
+            paper.methodology_summary = self.extractor.extract_methodology(paper)
 
         # Step 5: extract paper-stated hyperparameters (consumed post-execution
         # by the AST hyperparameter auditor)
@@ -495,7 +504,8 @@ class ValidationPipeline:
         retries on Python errors or empty output.  Existing behaviour,
         unchanged.
 
-        **Phase 2 — claim-value refinement.**  Once the code runs and
+        **Phase 2 — claim-value refinement** (skipped in ``BLIND`` mode,
+        where ``n_claim_refinements`` is always 0).  Once the code runs and
         captures values, compare against claims.  For any claim that
         failed -- outside tolerance, or no value (NA / no RESULT line) --
         ask the generator to close the gap.  Stops on any of:
@@ -540,8 +550,15 @@ class ValidationPipeline:
         claim_results = self.comparator.compare_all(paper.claims, result.outputs, mode=reproduction_mode)
 
         # ── Phase 2: close the gap on soft-failed claims ──────────────
+        # Never in blind mode: its feedback ("paper claims X, your code
+        # produced Y") is exactly the target the mode withholds.
         claim_refinements = [0]
-        if result.exit_code == 0 and result.outputs and self.max_claim_refinements > 0:
+        if (
+            result.exit_code == 0
+            and result.outputs
+            and self.max_claim_refinements > 0
+            and not reproduction_mode.withholds_targets
+        ):
             code, result, claim_results = self._refine_for_failed_claims(
                 code,
                 result,
