@@ -351,6 +351,31 @@ def test_reference_pipeline_and_fake_are_scored_identically(tmp_path, mode):
     assert call["dataset_reference"].url == "https://example.org/data.zip"
 
 
+@pytest.mark.parametrize(("mode", "claim_refined"), [("independent", True), ("blind", False)])
+def test_blind_run_end_to_end_never_shows_a_target(tmp_path, mode, claim_refined):
+    """Real pipeline, off-target script: independent mode feeds the gap back
+    ("paper claims 0.5"), blind mode never does, and blind's first-scored
+    count equals its final count (no claim refinement ran after it)."""
+    data = tmp_path / "data"
+    data.mkdir()
+    (data / "data.csv").write_text("y,x\n1,2\n", encoding="utf-8")
+    pipeline, llm = _real_pipeline("print('RESULT:beta=0.75')\nprint('RESULT:n_obs=701')\n", data)
+
+    [row] = runner.run_benchmark(
+        [_dataset_entry()], pipeline_factory=lambda: pipeline, cache_dir=tmp_path / "c", modes=(mode,)
+    )
+
+    assert row.mode == mode
+    assert row.agrees_with_paper is False
+    claim_prompts = [p for p in llm.prompts if "paper claims" in p]
+    assert bool(claim_prompts) is claim_refined
+    if mode == "blind":
+        generation = [p for p in llm.prompts if "Now write the complete Python script" in p]
+        assert len(generation) == 1
+        assert all("beta: 0.5" not in p and "660" not in p for p in llm.prompts)
+        assert row.n_claims_with_paper_match_first_scored == row.n_claims_with_paper_match
+
+
 def test_reproducers_own_verdict_is_never_read(tmp_path):
     """A pipeline report claiming success with off-target outputs is scored a failure."""
     beta = Claim(description="beta", value=0.5, claim_type=ClaimType.COEFFICIENT)
@@ -495,7 +520,7 @@ class _RecordingExecutor(CodeExecutor):
 
 @pytest.mark.parametrize(
     ("mode", "scripts_visible"),
-    [("seeded", True), ("independent", False)],
+    [("seeded", True), ("independent", False), ("blind", False)],
 )
 def test_pipeline_reproducer_mounts_script_free_data_in_independent_mode(tmp_path, mode, scripts_visible):
     pkg = _package(tmp_path / "pkg")
@@ -613,7 +638,7 @@ def test_independent_cache_keys_move_to_the_script_free_contract():
 
 def test_cache_key_includes_reproducer():
     entry = _entry()
-    for mode in ("seeded", "independent"):
+    for mode in ("seeded", "independent", "blind"):
         assert runner._cache_key(entry, mode, "pipeline") != runner._cache_key(entry, mode, "fake")
 
 

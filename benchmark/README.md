@@ -53,7 +53,7 @@ outputs); `tests/test_benchmark_reproducer.py` re-scores the committed
 `results/baseline-2026-10-19.json` through the harness path and gets
 every recorded verdict back.
 
-## Two reproduction modes: seeded and independent
+## Reproduction modes: seeded, independent, blind
 
 Every result row records the `mode` it ran in, and rows are identified by
 `(entry_id, mode)` everywhere (results.json, the result cache, the report,
@@ -63,11 +63,31 @@ Every result row records the `mode` it ran in, and rows are identified by
 |---|---|---|---|
 | `seeded` (default) | paper text, claims, dataset listing, **and the authors' replication-package scripts** (plus any linked repo), presented as ground truth | *computational* reproduction — can the model translate the authors' Stata/R into fixest and run it | strict: per-type relative tolerance (COEFFICIENT 2 %, SE 5 %, …) |
 | `independent` | paper text, claims, and a **script-free copy** of the dataset only — scripts withheld from the prompt *and* removed from the directory that is listed and mounted, linked code not fetched, and the prompt forbids opening any script files | *independent* reproduction — can the model regenerate the analysis from the paper's description | SE-aware: within ±k·SE of the reported value when the claim pins a `standard_error` (k = 1, never narrower than the relative tolerance); relative tolerance otherwise |
+| `blind` | everything `independent` withholds, **and every target**: each claim is listed by its token, type, unit label, location and context, but never its value, standard error or sample size; the methodology summary is asked to leave reported results out; the claim-targeted refinement loop is off (crash / no-RESULT repairs still run), so no "reproduced X, claimed Y" feedback is ever built | *derivation* — can the model compute the paper's numbers without ever being shown them | same as `independent` (the same policy object) |
 
-Both are worth having; **the gap between them is the headline number** —
+In seeded and independent mode the model sees each pinned claim's value
+(and the claim-refinement loop tells it which claims are off and by how
+much), so independent means independent of the authors' *code*, not of
+the answers.  **Blind pass counts are the only ones free of
+target-guided search.**  Scoring is unchanged: the harness compares the
+blind run's `RESULT:` lines with the catalog values under the
+independent tolerance, and records first scored like every row.  It
+equals the final count by construction — only crash repairs can run
+after the first scored script — except when a script printed some
+`RESULT:` lines and then crashed, so a repair produced the final one.  Curated claim `context`
+strings are rendered verbatim and may mention an N or a control mean;
+keeping them free of the target is the curator's job
+(`papers/README.md`).  Dataset mounting is the independent one (the
+script-free copy), so result tables the package ships (`.tex` / `.csv`)
+remain on disk; the blind prompt tells the model not to read result
+tables, logs or output files.
+
+Seeded and independent are both worth having; **the gap between them is the headline number** —
 how much of a seeded pass survives without the authors' code.  A
 both-mode report leads with a *Seeded vs independent* section listing,
-per paper, the claims lost without the scripts.
+per paper, the claims lost without the scripts; when the run also has
+blind rows (`--mode all`) the table gains a Blind column (pass count and
+first scored).
 
 The SE band only bites when the pinned claim carries `standard_error` in
 the catalog YAML, so pin SEs alongside coefficients.  The independent
@@ -181,11 +201,14 @@ cannot be mistaken for a measurement.
 export ANTHROPIC_API_KEY="sk-ant-..."   # or skip; the runner will record NO_API_KEY skips
 make benchmark                                    # seeded mode (the default)
 uv run python -m benchmark.runner --mode independent
-uv run python -m benchmark.runner --mode both     # one row per entry per mode
+uv run python -m benchmark.runner --mode both     # seeded + independent, one row per entry per mode
+uv run python -m benchmark.runner --mode blind    # targets withheld, no claim-targeted refinement
+uv run python -m benchmark.runner --mode all      # seeded + independent + blind
 uv run python -m benchmark.runner --only dincecco-2022-india-warfare --mode both
 ```
 
-`--mode {seeded,independent,both}`, `--only ENTRY_ID` (repeatable), and
+`--mode {seeded,independent,blind,both,all}` (`both` is seeded and
+independent, as before blind existed; `all` adds blind), `--only ENTRY_ID` (repeatable), and
 `--reproducer NAME` (default `pipeline`; see below) combine.  For each
 catalog entry and mode the runner emits one row in `results.json`,
 carrying `"mode"` and `"reproducer"` fields (rows from files that
@@ -210,7 +233,7 @@ finishes in seconds.  The result cache (`benchmark/.cache/<hash>.json`)
 is keyed on the catalog entry, the retally version, **the mode**, and —
 for anything other than the default pipeline — the reproducer, so a
 seeded result is never served for an independent run nor one agent's
-result for another's (independent-mode keys also carry the script-free
+result for another's (independent- and blind-mode keys also carry the script-free
 dataset contract, so results from before it are not reused); `split`,
 `publication_date`, and `package_release_date` are excluded from the key
 because they never reach the pipeline.  Skips and transient download/network
@@ -295,7 +318,7 @@ Any reproducer can contribute files by filling `Reproduction.artifacts`
 
 ```bash
 uv run python -m benchmark.artifacts benchmark/results/results.json \
-    [--entry ID] [--mode seeded|independent]
+    [--entry ID] [--mode seeded|independent|blind]
 ```
 
 prints, per row: the artifacts directory, the data files the final
@@ -463,5 +486,10 @@ catalog entries, so the real `papers/` directory stays uncluttered.
   Other files that can carry the answers — `.tex` / `.csv` result tables
   the package ships, the README — stay, as do the claimed values in the
   prompt: independent means independent of the authors' *code*, not
-  blind to the answer.  Review independent-mode code before trusting a
-  surprising pass.
+  blind to the answer (blind mode withholds the values; the files stay,
+  and the blind prompt only forbids reading them).  Review independent-
+  and blind-mode code before trusting a surprising pass.
+- Blind mode still shows the paper's abstract (its first 500 characters)
+  and the LLM-written methodology summary; the summariser is told to
+  leave results out, but an abstract that states a headline estimate
+  reaches the prompt as written.

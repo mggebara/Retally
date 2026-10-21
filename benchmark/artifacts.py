@@ -299,7 +299,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("results", type=Path, help="a results.json written by benchmark.runner")
     parser.add_argument("--entry", action="append", metavar="ID", help="only this entry id (repeatable)")
-    parser.add_argument("--mode", help="only rows in this mode (seeded / independent)")
+    parser.add_argument("--mode", help="only rows in this mode (seeded / independent / blind)")
     parser.add_argument(
         "--rescore",
         action="store_true",

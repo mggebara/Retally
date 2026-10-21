@@ -471,6 +471,72 @@ def test_mode_gap_table_uses_first_scored_when_recorded():
     assert "First attempt" not in md
 
 
+def _three_mode_results(blind_entries=("p",)):
+    rows = []
+    for entry_id in ("p", "q"):
+        rows += [
+            _result(
+                entry_id=entry_id,
+                mode="seeded",
+                n_claims_with_paper_match_first_scored=2,
+                claim_details=[_cd("beta", True), _cd("se", True)],
+            ),
+            _result(
+                entry_id=entry_id,
+                mode="independent",
+                n_claims_with_paper_match_first_scored=1,
+                claim_details=[_cd("beta", True), _cd("se", False)],
+            ),
+        ]
+        if entry_id in blind_entries:
+            rows.append(
+                _result(
+                    entry_id=entry_id,
+                    mode="blind",
+                    n_claims_with_paper_match=0,
+                    n_claims_with_paper_match_first_scored=0,
+                    n_claim_refinements=0,
+                    claim_details=[_cd("beta", False), _cd("se", False)],
+                )
+            )
+    return rows
+
+
+def test_three_mode_report_adds_a_blind_column():
+    md = report.render_markdown(_three_mode_results(blind_entries=("p", "q")))
+    assert "each run in 3 reproduction modes" in md
+    assert "- **blind**: the authors' scripts and the claimed values were withheld" in md
+    assert "## Verdicts — seeded" in md and "## Verdicts — blind" in md
+    assert md.index("## Verdicts — independent") < md.index("## Verdicts — blind")
+    assert "## Seeded vs independent vs blind" in md
+    assert "only ones free of target-guided search" in md
+    assert "- Blind: **0 / 4** claims passed (first scored 0 / 4)" in md
+    assert (
+        "| Entry | Split | Reproducer | Seeded | Independent | Blind "
+        "| First scored (seeded / independent / blind) |" in md
+    )
+    assert "| `p` | dev | pipeline | 2/2 | 1/2 | 0/2 | 2/2 / 1/2 / 0/2 | `se` |" in md
+    assert "| `p` | blind | pipeline |" in md
+
+
+def test_blind_column_marks_papers_without_a_blind_row():
+    md = report.render_markdown(_three_mode_results(blind_entries=("p",)))
+    assert "- Blind: **0 / 2** claims passed (on 1 of 2 papers) (first scored 0 / 2)" in md
+    assert "| `q` | dev | pipeline | 2/2 | 1/2 | — | 2/2 / 1/2 / —/— | `se` |" in md
+
+
+def test_two_mode_report_has_no_blind_column():
+    md = report.render_markdown(_three_mode_results(blind_entries=()))
+    assert "## Seeded vs independent\n" in md
+    assert "Blind" not in md and "blind" not in md
+    assert "| `p` | dev | pipeline | 2/2 | 1/2 | 2/2 / 1/2 | `se` |" in md
+
+
+def test_single_blind_mode_report_states_the_mode():
+    md = report.render_markdown([_result(entry_id="x", mode="blind")])
+    assert "Reproduction mode: **blind** (the authors' scripts and the claimed values were withheld" in md
+
+
 def _transient(entry_id, kind):
     return _result(entry_id=entry_id, retally_ran=False, error="APIError: x", transient=True, error_kind=kind)
 

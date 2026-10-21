@@ -79,8 +79,8 @@ A second honesty note: both modes see the claimed values (they are the
 targets in the prompt, and the claim-refinement loop chases them). "Independent"
 means independent of the authors' *code*, not blind to the *answer*; any
 methodology change made to close a gap is surfaced as a `DEVIATION:` line.
-A target-blind variant (claims named but values withheld) is a possible
-later mode, not part of this plan.
+A target-blind variant (claims named but values withheld) is now built
+as `--mode blind` (Phase 3.1) but not yet measured.
 
 Everything below is ordered by a single rule: **the next PR moves the
 reproduction number, not the machinery.** Current state (2026-10-21):
@@ -768,6 +768,30 @@ committed `REPORT.md` is a cross-run composite)*; documented per-paper
 failure notes for every independent-mode loss — *done*; tuning
 loop demonstrably running (≥1 kept improvement with before/after compare
 output in the PR) — *not started*.
+
+### 3.1 Blind mode — built, not measured
+
+`--mode blind` (and `--mode all` = seeded + independent + blind; `both`
+still means seeded + independent) adds `ReproductionMode.BLIND`: the
+independent setup (scripts withheld, script-free dataset copy, linked
+code not fetched) with every target withheld as well.  The generation
+prompt lists each claim's token, type, unit label, location and curated
+context, never its value, standard error or sample size; the
+methodology summariser is told to leave reported results out; the
+claim-targeted refinement loop does not run (crash / no-RESULT repairs
+keep their budget), so no "reproduced X, claimed Y" feedback is built.
+Scoring is unchanged — the harness compares the `RESULT:` lines with
+the catalog values under the independent ±1·SE policy — and first scored
+equals final by construction (unless a script printed results and then
+crashed, and a crash repair produced the final run).  Blind pass counts are the only ones free
+of target-guided search, which is the North star's open tension.
+
+Not yet run on any paper.  Measuring it costs about the same as an
+independent run per paper (a cache-off independent run was $0.25–1.47
+in Phase 3; blind skips the claim-refinement calls, so it should not
+cost more).  Known residue: the abstract's first 500 characters are
+still shown, and result tables the package ships stay on the mounted
+disk (the prompt forbids reading them).
 
 ---
 

@@ -113,10 +113,10 @@ def _pct(v: float | None) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Reproduction modes (seeded vs independent)
+# Reproduction modes (seeded vs independent vs blind)
 # ---------------------------------------------------------------------------
 
-_MODE_ORDER = ("seeded", "independent")
+_MODE_ORDER = ("seeded", "independent", "blind")
 
 
 def mode_of(result: dict[str, Any]) -> str:
@@ -146,7 +146,7 @@ def reproducers_present(results: list[dict[str, Any]]) -> list[str]:
 
 
 def modes_present(results: list[dict[str, Any]]) -> list[str]:
-    """Modes appearing in ``results``: seeded, then independent, then any others sorted."""
+    """Modes appearing in ``results``: seeded, independent, blind, then any others sorted."""
     present = {mode_of(r) for r in results}
     return [m for m in _MODE_ORDER if m in present] + sorted(present - set(_MODE_ORDER))
 
@@ -201,12 +201,25 @@ class ModeGap:
     claim-targeted feedback (``n_claims_with_paper_match_first_scored``).
     None on rows that predate the field."""
 
+    blind_passed: int | None = None
+    blind_total: int | None = None
+    blind_passed_first_scored: int | None = None
+    """The paper's blind row (targets withheld, no claim-targeted refinement),
+    when the run executed one; all None otherwise.  First scored equals the
+    final count by construction, but is read from the row like the others."""
+
+    @property
+    def has_blind(self) -> bool:
+        return self.blind_passed is not None
+
 
 def mode_gaps(results: list[dict[str, Any]]) -> list[ModeGap]:
     """One ModeGap per entry *executed* in both seeded and independent mode.
 
     Claims are joined across modes by description, the same key
-    ``benchmark.compare`` uses across runs.  Sorted by entry id.
+    ``benchmark.compare`` uses across runs.  Sorted by entry id.  When the
+    entry also has an executed blind row its counts fill the optional
+    ``blind_*`` fields; ``lost`` / ``gained`` stay seeded-vs-independent.
     """
     rows: dict[tuple[str, str], dict[str, Any]] = {
         (r["entry_id"], mode_of(r)): r for r in results if not r.get("skipped")
@@ -219,6 +232,7 @@ def mode_gaps(results: list[dict[str, Any]]) -> list[ModeGap]:
             continue
         s_pass = {cd["description"] for cd in seeded.get("claim_details", []) if cd.get("passed")}
         i_pass = {cd["description"] for cd in independent.get("claim_details", []) if cd.get("passed")}
+        blind = rows.get((entry_id, "blind"))
         gaps.append(
             ModeGap(
                 entry_id=entry_id,
@@ -234,6 +248,13 @@ def mode_gaps(results: list[dict[str, Any]]) -> list[ModeGap]:
                 independent_passed_first_attempt=first_attempt_passed(independent),
                 seeded_passed_first_scored=first_scored_passed(seeded),
                 independent_passed_first_scored=first_scored_passed(independent),
+                blind_passed=(
+                    None
+                    if blind is None
+                    else sum(1 for cd in blind.get("claim_details", []) if cd.get("passed"))
+                ),
+                blind_total=None if blind is None else len(blind.get("claim_details", [])),
+                blind_passed_first_scored=None if blind is None else first_scored_passed(blind),
             )
         )
     return gaps

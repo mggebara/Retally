@@ -106,7 +106,13 @@ ARTIFACTS_DIR = RESULTS_DIR / "artifacts"
 # this module stays importable without retally installed.
 SEEDED = "seeded"
 INDEPENDENT = "independent"
-MODES = (SEEDED, INDEPENDENT)
+BLIND = "blind"
+MODES = (SEEDED, INDEPENDENT, BLIND)
+BOTH_MODES = (SEEDED, INDEPENDENT)
+"""What ``--mode both`` runs: seeded and independent, as before blind existed.
+``--mode all`` runs every mode in ``MODES``."""
+SCRIPT_FREE_MODES = frozenset({INDEPENDENT, BLIND})
+"""Modes whose dataset is the script-free copy (see ``benchmark.reproducer``)."""
 
 DEFAULT_REPRODUCER = "pipeline"
 
@@ -335,8 +341,8 @@ def run_benchmark(
     Entries that already have pinned claims are not dumped (the file
     would just echo the catalog).  None (the default) disables dumping.
 
-    ``modes`` selects the reproduction modes to run (``"seeded"``,
-    ``"independent"``, or both).  The default, seeded only, is the
+    ``modes`` selects the reproduction modes to run (any of ``"seeded"``,
+    ``"independent"`` and ``"blind"``).  The default, seeded only, is the
     historical behaviour.  Results are ordered by entry, then by mode in
     the order given, so a both-mode run puts each paper's two rows next
     to each other.
@@ -415,11 +421,13 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument(
         "--mode",
-        choices=[SEEDED, INDEPENDENT, "both"],
+        choices=[SEEDED, INDEPENDENT, BLIND, "both", "all"],
         default=SEEDED,
         help=(
             "Reproduction mode: 'seeded' (authors' package scripts in the prompt; the default), "
-            "'independent' (scripts withheld), or 'both' (one results.json row per entry per mode)."
+            "'independent' (scripts withheld), 'blind' (scripts and claim values withheld, no "
+            "claim-targeted refinement), 'both' (seeded and independent) or 'all' (all three); "
+            "one results.json row per entry per mode."
         ),
     )
     parser.add_argument(
@@ -433,7 +441,7 @@ def main(argv: list[str] | None = None) -> int:
         ),
     )
     args = parser.parse_args(argv)
-    modes = MODES if args.mode == "both" else (args.mode,)
+    modes = {"both": BOTH_MODES, "all": MODES}.get(args.mode, (args.mode,))
     try:
         resolve_reproducer(args.reproducer)
     except ValueError as exc:
@@ -1145,7 +1153,7 @@ def _cache_key(
     The reproducer name joins the payload only when it is not the default
     pipeline, and the independent-mode dataset contract (a script-free
     copy, see ``benchmark.reproducer.script_free_copy``) only in
-    independent mode — so seeded pipeline keys, i.e. a plain
+    independent and blind mode — so seeded pipeline keys, i.e. a plain
     ``make benchmark``, are byte-identical to the keys from before the
     Reproducer protocol, and existing seeded caches stay valid.
     Independent pipeline keys change once, deliberately: a result produced
@@ -1158,7 +1166,7 @@ def _cache_key(
     key_payload: dict[str, Any] = {"entry": entry_payload, "retally_version": retally_version, "mode": mode}
     if reproducer != DEFAULT_REPRODUCER:
         key_payload["reproducer"] = reproducer
-    if mode == INDEPENDENT:
+    if mode in SCRIPT_FREE_MODES:
         key_payload["independent_dataset"] = "script-free"
     payload = json.dumps(key_payload, sort_keys=True, default=str)
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]

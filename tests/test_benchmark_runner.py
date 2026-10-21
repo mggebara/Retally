@@ -575,7 +575,7 @@ def test_both_modes_yield_one_row_per_entry_per_mode(tmp_path):
         [_entry(id="a"), _entry(id="b")],
         pipeline_factory=lambda: pipeline,
         cache_dir=tmp_path,
-        modes=runner.MODES,
+        modes=runner.BOTH_MODES,
     )
     assert [(r.entry_id, r.mode) for r in results] == [
         ("a", "seeded"),
@@ -587,10 +587,27 @@ def test_both_modes_yield_one_row_per_entry_per_mode(tmp_path):
     assert passed_modes == [ReproductionMode.SEEDED, ReproductionMode.INDEPENDENT] * 2
 
 
+def test_all_modes_yield_three_rows_per_entry(tmp_path):
+    from retally.models import ReproductionMode
+
+    pipeline = MagicMock()
+    pipeline.validate.return_value = _fake_report()
+    results = runner.run_benchmark(
+        [_entry(id="a")], pipeline_factory=lambda: pipeline, cache_dir=tmp_path, modes=runner.MODES
+    )
+    assert [r.mode for r in results] == ["seeded", "independent", "blind"]
+    passed_modes = [c.kwargs["reproduction_mode"] for c in pipeline.validate.call_args_list]
+    assert passed_modes == [ReproductionMode.SEEDED, ReproductionMode.INDEPENDENT, ReproductionMode.BLIND]
+
+
 def test_skipped_rows_carry_their_mode(tmp_path):
     entry = _entry(language=bschema.Language.STATA)
     results = runner.run_benchmark([entry], cache_dir=tmp_path, modes=runner.MODES)
-    assert [(r.mode, r.skipped) for r in results] == [("seeded", True), ("independent", True)]
+    assert [(r.mode, r.skipped) for r in results] == [
+        ("seeded", True),
+        ("independent", True),
+        ("blind", True),
+    ]
 
 
 def test_unknown_mode_is_rejected(tmp_path):
@@ -600,7 +617,22 @@ def test_unknown_mode_is_rejected(tmp_path):
 
 def test_cache_key_includes_mode():
     entry = _entry()
-    assert runner._cache_key(entry, "seeded") != runner._cache_key(entry, "independent")
+    keys = {runner._cache_key(entry, mode) for mode in runner.MODES}
+    assert len(keys) == len(runner.MODES)
+
+
+def test_blind_cache_never_serves_an_independent_run(tmp_path):
+    report = _fake_report()
+    factory = _pipeline_factory_returning(report)
+    runner.run_benchmark([_entry()], pipeline_factory=factory, cache_dir=tmp_path, modes=("independent",))
+    [blind] = runner.run_benchmark([_entry()], pipeline_factory=factory, cache_dir=tmp_path, modes=("blind",))
+    assert blind.cached is False
+    assert blind.mode == "blind"
+    [blind_again] = runner.run_benchmark(
+        [_entry()], pipeline_factory=factory, cache_dir=tmp_path, modes=("blind",)
+    )
+    assert blind_again.cached is True
+    assert blind_again.mode == "blind"
 
 
 def test_seeded_cache_never_serves_an_independent_run(tmp_path):
@@ -619,15 +651,16 @@ def test_seeded_cache_never_serves_an_independent_run(tmp_path):
     assert seeded_again.mode == "seeded"
 
 
-def test_mode_round_trips_and_defaults_to_seeded_for_old_files(tmp_path):
-    result = runner.BenchmarkResult(entry_id="x", mode="independent")
+@pytest.mark.parametrize("mode", ["independent", "blind"])
+def test_mode_round_trips_and_defaults_to_seeded_for_old_files(tmp_path, mode):
+    result = runner.BenchmarkResult(entry_id="x", mode=mode)
     out = tmp_path / "results.json"
     runner.write_results([result], out)
     import json
 
     [raw] = json.loads(out.read_text())["results"]
-    assert raw["mode"] == "independent"
-    assert runner._result_from_jsonable(raw).mode == "independent"
+    assert raw["mode"] == mode
+    assert runner._result_from_jsonable(raw).mode == mode
     assert runner._result_from_jsonable({"entry_id": "old"}).mode == "seeded"
 
 
@@ -655,7 +688,13 @@ def test_pinned_standard_error_reaches_the_pipeline_claim(tmp_path):
 
 @pytest.mark.parametrize(
     ("argv", "expected"),
-    [([], ("seeded",)), (["--mode", "independent"], ("independent",)), (["--mode", "both"], runner.MODES)],
+    [
+        ([], ("seeded",)),
+        (["--mode", "independent"], ("independent",)),
+        (["--mode", "blind"], ("blind",)),
+        (["--mode", "both"], ("seeded", "independent")),
+        (["--mode", "all"], ("seeded", "independent", "blind")),
+    ],
 )
 def test_main_mode_flag(tmp_path, monkeypatch, argv, expected):
     seen = {}

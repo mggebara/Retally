@@ -3,6 +3,8 @@
 from pathlib import Path
 from unittest.mock import MagicMock
 
+import pytest
+
 from retally.models import (
     AuditStatus,
     Claim,
@@ -705,6 +707,67 @@ def test_independent_mode_threads_mode_through_claim_refinement():
     calls = pipeline.comparator.compare_all.call_args_list
     assert len(calls) > 1
     assert {c.kwargs["mode"] for c in calls} == {ReproductionMode.INDEPENDENT}
+
+
+def test_blind_mode_withholds_code_like_independent(tmp_path):
+    pipeline, _ = _make_pipeline()
+    pipeline.downloader.download.return_value = _package_dataset(tmp_path)
+    report = pipeline.validate("some text", reproduction_mode=ReproductionMode.BLIND)
+
+    [call] = pipeline.generator.generate.call_args_list
+    assert call.kwargs["reproduction_mode"] is ReproductionMode.BLIND
+    assert call.kwargs["package_scripts"] is None
+    assert call.kwargs["reference_files"] is None
+    pipeline.extractor.extract_code_references.assert_not_called()
+    pipeline.code_downloader.download_all.assert_not_called()
+    assert pipeline.comparator.compare_all.call_args.kwargs["mode"] is ReproductionMode.BLIND
+    assert report.reproduction_mode is ReproductionMode.BLIND
+
+
+@pytest.mark.parametrize(
+    ("mode", "kwargs"),
+    [
+        (ReproductionMode.SEEDED, {}),
+        (ReproductionMode.INDEPENDENT, {}),
+        (ReproductionMode.BLIND, {"withhold_results": True}),
+    ],
+)
+def test_only_blind_asks_the_methodology_summary_to_withhold_results(mode, kwargs):
+    pipeline, _ = _make_pipeline()
+    pipeline.validate("some text", reproduction_mode=mode)
+    assert pipeline.extractor.extract_methodology.call_args.kwargs == kwargs
+
+
+def test_blind_mode_skips_claim_refinement_but_keeps_error_repairs():
+    """Crash → error repair → off-target run: blind stops there, scored as is."""
+    pipeline, _ = _make_pipeline()
+    crash = ExecutionResult(generated_code="v0", stdout="", stderr="Error: object 'x' not found", exit_code=1)
+    off_target = _exec_ok("v1", accuracy=0.80)
+    pipeline.executor.execute.side_effect = [crash, off_target]
+    pipeline.generator.refine.return_value = "v1"
+    pipeline.comparator.compare_all.return_value = [_failing_claim_result(0.95, 0.80)]
+    pipeline.validate("some text", reproduction_mode=ReproductionMode.BLIND)
+
+    pipeline.generator.refine.assert_called_once()
+    pipeline.generator.refine_for_claims.assert_not_called()
+    assert (off_target.n_error_refinements, off_target.n_claim_refinements) == (1, 0)
+    assert off_target.refinement_calls == 1
+    assert off_target.claim_refinement_attempts == 0
+    assert off_target.final_execution_index == 1
+    # The only feedback recorded is the crash; no "claimed vs reproduced" text is built.
+    assert [a.kind for a in off_target.attempts] == ["error"]
+    assert all("claimed" not in (a.feedback or "") for a in off_target.attempts)
+
+
+def test_blind_mode_keeps_the_full_error_repair_budget():
+    pipeline, _ = _make_pipeline()
+    pipeline.max_refinements = 2
+    pipeline.executor.execute.return_value = ExecutionResult(
+        generated_code="bad", exit_code=1, stderr="error", outputs={}
+    )
+    pipeline.validate("some text", reproduction_mode=ReproductionMode.BLIND)
+    assert pipeline.generator.refine.call_count == 2
+    pipeline.generator.refine_for_claims.assert_not_called()
 
 
 # ── Attempt bookkeeping for first-attempt scoring ──────────────────────

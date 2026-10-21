@@ -119,13 +119,33 @@ class ReproductionMode(Enum):
       linked code are withheld; the generator works from the paper text,
       the claims, and the dataset directory listing only.  A pass means
       "the model regenerated the analysis from the paper's description".
+    * ``BLIND`` — independent reproduction without the answers.  Everything
+      ``INDEPENDENT`` withholds, and also every target: the generation
+      prompt names each claim (token, location, context) but never its
+      value, unit-with-value or standard error, and the claim-targeted
+      refinement loop ("reproduced X, claimed Y") is disabled; only
+      crash / no-RESULT repairs run.  Scoring is unchanged (the
+      independent ±k·SE policy).  A pass means "the model derived the
+      number without ever being shown it" — the only pass count free of
+      target-guided search.
 
     The mode is recorded on every report and benchmark result so results
-    from the two modes are never conflated.
+    from different modes are never conflated.
     """
 
     SEEDED = "seeded"
     INDEPENDENT = "independent"
+    BLIND = "blind"
+
+    @property
+    def withholds_code(self) -> bool:
+        """True when the authors' scripts and linked code are withheld (independent, blind)."""
+        return self is not ReproductionMode.SEEDED
+
+    @property
+    def withholds_targets(self) -> bool:
+        """True when claim values never reach the model (blind)."""
+        return self is ReproductionMode.BLIND
 
 
 @dataclass
