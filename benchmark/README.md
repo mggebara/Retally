@@ -77,25 +77,61 @@ effective tolerance) with that in mind.
 
 ### First-attempt vs final pass
 
-The pipeline refines: after the first script runs it is told which claims
-are off target ("reproduced X, claimed Y") and asked to fix the script, up
-to `max_claim_refinements` times (plus error repairs before that).  That
-is target-guided search, so the final pass count mixes "derived the
-specification from the paper" with "searched until the number matched".
-Each row therefore also records the **first-attempt** pass count
-(`n_claims_with_paper_match_first_attempt`, and `passed_first_attempt`
-per claim): the first execution's `RESULT:` lines scored by the same
-comparator, mode and tolerance, before any feedback.  `n_refinements`
-(refinement calls) and `n_executions` (sandbox runs) sit alongside.  The
-report, `benchmark.compare` and `benchmark.artifacts` show both, e.g.
-`13 / 13 of 13 (first attempt 13/13, 0 refinements)`.  Read the
-first-attempt number as the cleaner measure of what the paper (plus, in
-seeded mode, the scripts) specifies, and the final number as what a
-reproducer can reach with the targets in view.  A first script that
-crashed scores 0 on first attempt even if the fix was a plain error
-repair.  Reproducers that do not report their attempts
-(`Reproduction.attempt_outputs` unset), and rows from older results
-files, have no first-attempt numbers; the reports then omit them.
+The pipeline refines in two phases.  *Error refinements* repair a script
+that crashed or printed no `RESULT:` lines: the model gets the stderr and
+nothing about the targets.  *Claim refinements* follow once the script
+runs: the model is told which claims are off target ("reproduced X,
+claimed Y") and asked to fix the script, up to `max_claim_refinements`
+times.  Only the second phase is target-guided search, so the final pass
+count mixes "derived the specification from the paper" with "searched
+until the number matched".
+
+Each row therefore also records the **first-scored** pass count
+(`n_claims_with_paper_match_first_scored`, and `passed_first_scored` per
+claim): the first execution whose stdout has at least one parsable
+`RESULT:` line (the final scorer's parser, so an all-`NA` output does not
+count; the first execution when none has one), scored by the same
+comparator, mode and tolerance.  It sits after any crash repairs and
+before any claim-targeted feedback: the "before target feedback" number.
+`first_scored_attempt_index` is its 0-based position among the
+executions.  The split of refinements is recorded as
+`n_error_refinements` and `n_claim_refinements` (`n_refinements` is their
+sum); `n_executions` counts sandbox runs.
+
+The raw **first-attempt** count (`n_claims_with_paper_match_first_attempt`,
+`passed_first_attempt`) is kept: the very first execution, crash or not.
+It conflates the two phases: on bisbee-2022 every run scored 0/11 on
+first attempt because the first script crashed, and the final 7–8/11 came
+after error repairs *and* claim refinements.
+
+The report, `benchmark.compare` and `benchmark.artifacts` headline first
+scored, e.g. `8 / 6 of 11 (first scored 3/11, 2 error + 3 claim
+refinements)`; the seeded-vs-independent table compares the modes'
+first-scored counts.  `benchmark.artifacts` also prints the raw
+first-attempt count per row and claim.  Rows written before first-scored
+scoring fall back to the first-attempt count (labelled as such);
+reproducers that do not report their attempts (`Reproduction.attempt_outputs`
+unset), and rows from older results files, have neither, and the reports
+omit them.
+
+To get first-scored numbers for a results file written before this
+existed, rescore it from its run artifacts:
+
+```bash
+uv run python -m benchmark.artifacts benchmark/results/results.json --rescore
+```
+
+For each row whose `artifacts_dir` is on disk it orders the executions
+`attempt-1`, `attempt-2`, …, then the final `stdout.txt`.  It assumes the
+final run was last, except when the last attempt has no `feedback.txt`:
+that is a broken claim refinement the pipeline reverted, so the final run
+is placed just before it (marked † in the table).  It classifies each
+attempt's `feedback.txt` as
+error or claim feedback, re-scores with the catalog's pinned claims and
+the row's mode tolerance, and prints entry, mode, data file(s), final,
+first attempt, first scored and the error / claim refinement counts
+(lower bounds: an unchanged-code refinement leaves no attempt directory).
+It reads the results file and never writes it.
 
 Contamination caveat: every paper in the corpus is 2022–2023 and every
 current model's training data extends past that, so *both* modes are

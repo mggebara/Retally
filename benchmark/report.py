@@ -238,19 +238,34 @@ def _mode_gap_markdown(results: list[dict[str, Any]]) -> str:
     i_total = sum(g.independent_total for g in gaps)
     lost = sum(len(g.lost) for g in gaps)
     gained = sum(len(g.gained) for g in gaps)
-    # First-attempt numbers only when some row recorded them (older files: omitted).
-    show_first = any(
-        g.seeded_passed_first_attempt is not None or g.independent_passed_first_attempt is not None
-        for g in gaps
+    # The "before target feedback" column: first scored when any row recorded
+    # it, else first attempt (files from before first-scored scoring), else
+    # omitted (older files still).
+    seeded_first = [g.seeded_passed_first_scored for g in gaps]
+    independent_first = [g.independent_passed_first_scored for g in gaps]
+    label = "first scored"
+    explanation = (
+        "*First scored* is what each mode's first script that printed results passed: "
+        "after any crash repairs, before the refinement loop showed the model which claims "
+        "were off target."
     )
-    s_first = _summed_first_attempt([g.seeded_passed_first_attempt for g in gaps])
-    i_first = _summed_first_attempt([g.independent_passed_first_attempt for g in gaps])
+    if all(v is None for v in (*seeded_first, *independent_first)):
+        seeded_first = [g.seeded_passed_first_attempt for g in gaps]
+        independent_first = [g.independent_passed_first_attempt for g in gaps]
+        label = "first attempt"
+        explanation = (
+            "*First attempt* is what each mode's first script passed, before the refinement "
+            "loop showed the model which claims were off target."
+        )
+    show_first = any(v is not None for v in (*seeded_first, *independent_first))
+    s_first = _summed_first_attempt(seeded_first)
+    i_first = _summed_first_attempt(independent_first)
     lines.extend(
         [
             f"- Seeded: **{s_pass} / {s_total}** claims passed"
-            + (f" (first attempt {s_first} / {s_total})" if s_first is not None else ""),
+            + (f" ({label} {s_first} / {s_total})" if s_first is not None else ""),
             f"- Independent: **{i_pass} / {i_total}** claims passed"
-            + (f" (first attempt {i_first} / {i_total})" if i_first is not None else ""),
+            + (f" ({label} {i_first} / {i_total})" if i_first is not None else ""),
             f"- Lost without the scripts: **{lost}**; gained: **{gained}**",
             "",
         ]
@@ -258,11 +273,10 @@ def _mode_gap_markdown(results: list[dict[str, Any]]) -> str:
     if show_first:
         lines.extend(
             [
-                "*First attempt* is what each mode's first script passed, before the refinement "
-                "loop showed the model which claims were off target.",
+                explanation,
                 "",
                 "| Entry | Split | Reproducer | Seeded | Independent "
-                "| First attempt (seeded / independent) | Lost without scripts |",
+                f"| {label.capitalize()} (seeded / independent) | Lost without scripts |",
                 "|---|---|---|---|---|---|---|",
             ]
         )
@@ -273,13 +287,12 @@ def _mode_gap_markdown(results: list[dict[str, Any]]) -> str:
                 "|---|---|---|---|---|---|",
             ]
         )
-    for g in gaps:
+    for g, s_one, i_one in zip(gaps, seeded_first, independent_first, strict=True):
         lost_str = ", ".join(f"`{d}`" for d in g.lost) if g.lost else "—"
         first_cell = ""
         if show_first:
             first_cell = (
-                f" {_count_or_dash(g.seeded_passed_first_attempt)}/{g.seeded_total}"
-                f" / {_count_or_dash(g.independent_passed_first_attempt)}/{g.independent_total} |"
+                f" {_count_or_dash(s_one)}/{g.seeded_total} / {_count_or_dash(i_one)}/{g.independent_total} |"
             )
         lines.append(
             f"| `{g.entry_id}` | {g.split} | {g.reproducer} | {g.seeded_passed}/{g.seeded_total} "
@@ -289,7 +302,7 @@ def _mode_gap_markdown(results: list[dict[str, Any]]) -> str:
 
 
 def _summed_first_attempt(values: list[int | None]) -> int | None:
-    """Sum of first-attempt counts, or None unless every row recorded one."""
+    """Sum of first-attempt / first-scored counts, or None unless every row recorded one."""
     if not values or any(v is None for v in values):
         return None
     return sum(v for v in values if v is not None)

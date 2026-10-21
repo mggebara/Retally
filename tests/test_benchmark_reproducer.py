@@ -757,3 +757,188 @@ def test_reference_pipeline_records_first_attempt(tmp_path):
     assert row.error is None
     assert row.n_claims_with_paper_match == row.n_claims_with_paper_match_first_attempt == 2
     assert (row.n_refinements, row.n_executions) == (0, 1)
+
+
+# ── First-scored scoring (crash repairs excluded) ──────────────────────
+
+_CRASH = "Error in read_dta(path): file not found\n"
+_OFF_TARGET = "RESULT:beta=0.9\nRESULT:n_obs=660\n"
+_ON_TARGET = "RESULT:beta=0.5\nRESULT:n_obs=660\n"
+
+
+class CrashScoreRefineReproducer:
+    """First script crashed, the error repair printed results, a claim refinement fixed beta."""
+
+    name = "crash-score-refine"
+
+    def reproduce(self, paper_source, *, language, dataset_reference, claims, reproduction_mode):
+        return Reproduction(
+            outputs={"beta": 0.5, "n_obs": 660.0},
+            claims=list(claims or []),
+            stdout=_ON_TARGET,
+            exit_code=0,
+            attempt_outputs=[_CRASH, _OFF_TARGET, _ON_TARGET],
+            attempt_kinds=["error", "claim", ""],
+            n_refinements=2,
+            n_error_refinements=1,
+            n_claim_refinements=1,
+            n_executions=3,
+        )
+
+
+def test_first_scored_skips_crash_repairs(tmp_path):
+    [row] = runner.run_benchmark(
+        [_entry()], reproducer="csr", reproducer_factory=CrashScoreRefineReproducer, cache_dir=tmp_path
+    )
+    assert row.n_claims_with_paper_match == 2
+    assert row.n_claims_with_paper_match_first_attempt == 0
+    assert row.n_claims_with_paper_match_first_scored == 1
+    assert row.first_scored_attempt_index == 1
+    assert (row.n_error_refinements, row.n_claim_refinements, row.n_refinements) == (1, 1, 2)
+    assert [
+        (cd.description, cd.passed, cd.passed_first_attempt, cd.passed_first_scored)
+        for cd in row.claim_details
+    ] == [("beta", True, False, False), ("n_obs", True, False, True)]
+    out = tmp_path / "results.json"
+    runner.write_results([row], out)
+    [loaded] = [runner._result_from_jsonable(d) for d in json.loads(out.read_text())["results"]]
+    assert loaded.n_claims_with_paper_match_first_scored == 1
+    assert loaded.first_scored_attempt_index == 1
+    assert (loaded.n_error_refinements, loaded.n_claim_refinements) == (1, 1)
+    assert loaded.claim_details[1].passed_first_scored is True
+    [cached] = runner.run_benchmark(
+        [_entry()], reproducer="csr", reproducer_factory=CrashScoreRefineReproducer, cache_dir=tmp_path
+    )
+    assert cached.cached and cached.n_claims_with_paper_match_first_scored == 1
+
+
+def test_first_scored_is_the_first_attempt_when_the_first_script_printed_results():
+    rep = Reproduction(outputs={"beta": 0.5, "n_obs": 660.0}, attempt_outputs=[_OFF_TARGET, _ON_TARGET])
+    scored = runner.score_reproduction(_entry(), rep)
+    assert scored.first_scored_attempt_index == 0
+    assert scored.n_claims_with_paper_match_first_scored == 1
+    assert scored.n_claims_with_paper_match_first_attempt == 1
+    assert scored.n_error_refinements is None and scored.n_claim_refinements is None
+
+
+def test_first_scored_ignores_na_only_output_and_falls_back_to_the_first_execution():
+    na_only = "RESULT:beta=NA\nRESULT:n_obs=NA\n"
+    rep = Reproduction(outputs={"beta": 0.5}, attempt_outputs=[_CRASH, na_only, _ON_TARGET])
+    assert runner.score_reproduction(_entry(), rep).first_scored_attempt_index == 2
+    none_scored = Reproduction(outputs={}, attempt_outputs=[_CRASH, na_only])
+    scored = runner.score_reproduction(_entry(), none_scored)
+    assert scored.first_scored_attempt_index == 0
+    assert scored.n_claims_with_paper_match_first_scored == 0
+
+
+def test_first_scored_uses_the_modes_tolerance():
+    """0.57 vs 0.5 fails seeded but sits inside ±1·SE independently."""
+    rep = Reproduction(
+        outputs={"beta": 0.5, "n_obs": 660.0},
+        attempt_outputs=[_CRASH, "RESULT:beta=0.57\n", _ON_TARGET],
+    )
+    assert runner.score_reproduction(_entry(), rep, mode="seeded").n_claims_with_paper_match_first_scored == 0
+    assert (
+        runner.score_reproduction(_entry(), rep, mode="independent").n_claims_with_paper_match_first_scored
+        == 1
+    )
+
+
+def test_no_attempt_data_leaves_first_scored_fields_unset():
+    scored = runner.score_reproduction(_entry(), Reproduction(outputs={"beta": 0.5, "n_obs": 660.0}))
+    assert scored.n_claims_with_paper_match_first_scored is None
+    assert scored.first_scored_attempt_index is None
+    assert scored.n_error_refinements is None and scored.n_claim_refinements is None
+    assert all(cd.passed_first_scored is None for cd in scored.claim_details)
+
+
+def test_older_results_rows_load_without_first_scored_fields():
+    # Before first-attempt scoring (PR #45) ...
+    for d in json.loads(BOTH_BASELINE.read_text(encoding="utf-8")):
+        row = runner._result_from_jsonable(d)
+        assert row.n_claims_with_paper_match_first_scored is None
+        assert row.first_scored_attempt_index is None
+        assert row.n_error_refinements is None and row.n_claim_refinements is None
+        assert all(cd.passed_first_scored is None for cd in row.claim_details)
+    # ... and a PR-45-era row: first-attempt data, no first-scored keys.
+    d = runner._result_to_jsonable(
+        runner.BenchmarkResult(
+            entry_id="x",
+            n_claims_with_paper_match_first_attempt=0,
+            n_refinements=3,
+            claim_details=[runner.ClaimDetail("beta", "other", 0.5, 0.5, 0.01, 0.0, True, False)],
+        )
+    )
+    for key in (
+        "n_claims_with_paper_match_first_scored",
+        "first_scored_attempt_index",
+        "n_error_refinements",
+        "n_claim_refinements",
+    ):
+        d.pop(key)
+    d["claim_details"][0].pop("passed_first_scored")
+    row = runner._result_from_jsonable(d)
+    assert row.n_claims_with_paper_match_first_attempt == 0 and row.n_refinements == 3
+    assert row.n_claims_with_paper_match_first_scored is None
+    assert row.claim_details[0].passed_first_attempt is False
+    assert row.claim_details[0].passed_first_scored is None
+
+
+def test_pipeline_reproduction_carries_attempt_kinds_and_refinement_split():
+    beta = Claim(description="beta", value=0.5)
+    final = ExecutionResult(
+        generated_code="v2",
+        stdout=_ON_TARGET,
+        exit_code=0,
+        outputs={"beta": 0.5, "n_obs": 660.0},
+        attempts=[
+            RefinementAttempt(code="v0", stderr="boom", exit_code=1, feedback="boom", kind="error"),
+            RefinementAttempt(
+                code="v1",
+                stdout=_OFF_TARGET,
+                exit_code=0,
+                feedback="beta: reproduced 0.9, claimed 0.5 (tolerance 0.01)",
+                kind="claim",
+            ),
+        ],
+        final_execution_index=2,
+        refinement_calls=2,
+        n_error_refinements=1,
+        n_claim_refinements=1,
+    )
+    report = ValidationReport(
+        paper=Paper(title="t", claims=[beta]),
+        dataset=Dataset(name="d", source_url="", local_path=Path("/tmp/d")),
+        execution_result=final,
+        claim_results=[],
+        overall_passed=True,
+    )
+    rep = reproducer_mod.reproduction_from_report(report)
+    assert rep.attempt_outputs == ["", _OFF_TARGET, _ON_TARGET]
+    assert rep.attempt_kinds == ["error", "claim", ""]
+    assert (rep.n_error_refinements, rep.n_claim_refinements, rep.n_refinements) == (1, 1, 2)
+    assert runner.score_reproduction(_entry(), rep).first_scored_attempt_index == 1
+
+
+def test_pipeline_reproduction_places_the_final_kind_at_its_index():
+    """A reverted refinement: the final run came first, the broken one after it."""
+    final = ExecutionResult(
+        generated_code="ok",
+        stdout=_ON_TARGET,
+        exit_code=0,
+        attempts=[RefinementAttempt(code="broken", exit_code=1)],
+        final_execution_index=0,
+        refinement_calls=1,
+        n_claim_refinements=1,
+    )
+    report = ValidationReport(
+        paper=Paper(title="t", claims=[]),
+        dataset=Dataset(name="d", source_url="", local_path=Path("/tmp/d")),
+        execution_result=final,
+        claim_results=[],
+        overall_passed=False,
+    )
+    rep = reproducer_mod.reproduction_from_report(report)
+    assert rep.attempt_outputs == [_ON_TARGET, ""]
+    assert rep.attempt_kinds == ["", ""]
+    assert (rep.n_error_refinements, rep.n_claim_refinements) == (0, 1)

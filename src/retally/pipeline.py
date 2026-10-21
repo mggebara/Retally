@@ -80,12 +80,14 @@ AnyExecutor = CodeExecutor | DockerExecutor | RDockerExecutor
 class _Execution:
     """One sandbox run inside the refinement loop, plus the feedback sent after it."""
 
-    __slots__ = ("code", "feedback", "result")
+    __slots__ = ("code", "feedback", "kind", "result")
 
     def __init__(self, code: str, result: ExecutionResult) -> None:
         self.code = code
         self.result = result
         self.feedback = ""
+        # "error" / "claim": the refinement that followed this run ("" for none).
+        self.kind = ""
 
 
 def _superseded_attempts(log: list[_Execution], final: ExecutionResult) -> list[RefinementAttempt]:
@@ -97,6 +99,7 @@ def _superseded_attempts(log: list[_Execution], final: ExecutionResult) -> list[
             stderr=e.result.stderr or "",
             exit_code=e.result.exit_code,
             feedback=e.feedback,
+            kind=e.kind,
         )
         for e in log
         if e.result is not final
@@ -527,6 +530,7 @@ class ValidationPipeline:
                 break
             error = result.stderr or "No RESULT: lines found in output"
             log[-1].feedback = error
+            log[-1].kind = "error"
             exec_refinements += 1
             code = self.generator.refine(code, error, paper, dataset, stdout=result.stdout or "")
             result = executor.execute(code, dataset)
@@ -552,6 +556,8 @@ class ValidationPipeline:
         result.generated_code = code
         result.attempts = _superseded_attempts(log, result)
         result.final_execution_index = next(i for i, e in enumerate(log) if e.result is result)
+        result.n_error_refinements = exec_refinements
+        result.n_claim_refinements = claim_refinements[0]
         result.refinement_calls = exec_refinements + claim_refinements[0]
         return code, result, claim_results
 
@@ -607,6 +613,7 @@ class ValidationPipeline:
             for e in log:
                 if e.result is exec_result:
                     e.feedback = _claim_gap_feedback(failed)
+                    e.kind = "claim"
             if calls is not None:
                 calls[0] += 1
             new_code = self.generator.refine_for_claims(code, failed, exec_result, paper, dataset, history)

@@ -194,6 +194,13 @@ class ModeGap:
     None when that row carries no attempt data (older files, or a
     reproducer that does not report attempts)."""
 
+    seeded_passed_first_scored: int | None = None
+    independent_passed_first_scored: int | None = None
+    """Claims each row's *first scored* execution passed — the first one that
+    printed a parsable ``RESULT:`` line, after crash repairs but before any
+    claim-targeted feedback (``n_claims_with_paper_match_first_scored``).
+    None on rows that predate the field."""
+
 
 def mode_gaps(results: list[dict[str, Any]]) -> list[ModeGap]:
     """One ModeGap per entry *executed* in both seeded and independent mode.
@@ -225,37 +232,76 @@ def mode_gaps(results: list[dict[str, Any]]) -> list[ModeGap]:
                 reproducer=_joined_reproducer(seeded, independent),
                 seeded_passed_first_attempt=first_attempt_passed(seeded),
                 independent_passed_first_attempt=first_attempt_passed(independent),
+                seeded_passed_first_scored=first_scored_passed(seeded),
+                independent_passed_first_scored=first_scored_passed(independent),
             )
         )
     return gaps
 
 
+def _int_field(result: dict[str, Any], key: str) -> int | None:
+    v = result.get(key)
+    return v if isinstance(v, int) and not isinstance(v, bool) else None
+
+
 def first_attempt_passed(result: dict[str, Any]) -> int | None:
     """Claims a row's first execution passed; None when the row has no attempt data."""
-    v = result.get("n_claims_with_paper_match_first_attempt")
-    return v if isinstance(v, int) and not isinstance(v, bool) else None
+    return _int_field(result, "n_claims_with_paper_match_first_attempt")
+
+
+def first_scored_passed(result: dict[str, Any]) -> int | None:
+    """Claims a row's first *scored* execution passed; None when not recorded."""
+    return _int_field(result, "n_claims_with_paper_match_first_scored")
+
+
+def before_feedback_passed(result: dict[str, Any]) -> tuple[str, int] | None:
+    """The headline "before target feedback" count, as ``("first scored", n)``.
+
+    Rows that predate first-scored scoring fall back to
+    ``("first attempt", n)``; None when the row has neither.
+    """
+    scored = first_scored_passed(result)
+    if scored is not None:
+        return "first scored", scored
+    first = first_attempt_passed(result)
+    if first is not None:
+        return "first attempt", first
+    return None
 
 
 def refinements_of(result: dict[str, Any]) -> int | None:
     """Refinement calls behind a row; None when not recorded."""
-    v = result.get("n_refinements")
-    return v if isinstance(v, int) and not isinstance(v, bool) else None
+    return _int_field(result, "n_refinements")
+
+
+def refinements_note(result: dict[str, Any]) -> str:
+    """``2 error + 3 claim refinements`` when the split is recorded, else ``5 refinements``; "" if neither."""
+    n_err = _int_field(result, "n_error_refinements")
+    n_claim = _int_field(result, "n_claim_refinements")
+    if n_err is not None and n_claim is not None:
+        return f"{n_err} error + {n_claim} claim refinement{'' if n_err + n_claim == 1 else 's'}"
+    n_ref = refinements_of(result)
+    if n_ref is not None:
+        return f"{n_ref} refinement{'' if n_ref == 1 else 's'}"
+    return ""
 
 
 def first_attempt_note(result: dict[str, Any]) -> str:
-    """``first attempt 12/13, 2 refinements`` for a row with attempt data; empty otherwise.
+    """``first scored 3/11, 2 error + 3 claim refinements`` for a row with attempt data; "" otherwise.
 
-    The denominator is the row's compared claims (``claim_details``),
-    falling back to the catalog claim count.
+    The count is :func:`before_feedback_passed`: first scored, or first
+    attempt on rows that predate it (``first attempt 12/13, 2
+    refinements``).  The denominator is the row's compared claims
+    (``claim_details``), falling back to the catalog claim count.
     """
-    first = first_attempt_passed(result)
-    n_ref = refinements_of(result)
+    before = before_feedback_passed(result)
     parts = []
-    if first is not None:
+    if before is not None:
         total = len(result.get("claim_details") or []) or int(result.get("n_claims_in_catalog") or 0)
-        parts.append(f"first attempt {first}/{total}")
-    if n_ref is not None:
-        parts.append(f"{n_ref} refinement{'' if n_ref == 1 else 's'}")
+        parts.append(f"{before[0]} {before[1]}/{total}")
+    refinements = refinements_note(result)
+    if refinements:
+        parts.append(refinements)
     return ", ".join(parts)
 
 

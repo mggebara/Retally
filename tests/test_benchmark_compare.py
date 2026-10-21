@@ -70,3 +70,12 @@ def test_per_entry_table_omits_first_attempt_column_for_older_files():
     out = compare.compare_runs([_row()], [_row(passed=False)])
     assert "First attempt" not in out
     assert "| `p` | seeded | pipeline | dev | 1/1 → 0/1 | 0.0% → 100.0% |" in out
+
+
+def test_per_entry_table_prefers_first_scored_counts():
+    base = _row(n_claims_with_paper_match_first_attempt=0)  # a PR-45-era row: no first scored
+    cand = _row(n_claims_with_paper_match_first_attempt=0, n_claims_with_paper_match_first_scored=1)
+    out = compare.compare_runs([base], [cand])
+    assert "| Passed (base → cand) | First scored (base → cand) | Median rel err" in out
+    assert "| `p` | seeded | pipeline | dev | 1/1 → 1/1 | — → 1/1 |" in out
+    assert "First attempt" not in out

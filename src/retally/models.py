@@ -330,6 +330,11 @@ class RefinementAttempt:
     stderr: str = ""
     exit_code: int = -1
     feedback: str = ""
+    kind: str = ""
+    """Which refinement followed this execution: ``"error"`` (it crashed or
+    printed no ``RESULT:`` lines and the model was sent the error),
+    ``"claim"`` (it ran and the model was told which claims were off
+    target), or ``""`` when no feedback followed."""
 
 
 @dataclass
@@ -396,7 +401,19 @@ class ExecutionResult:
     """Number of refinement calls made to the generator (execution-error
     ``refine`` plus claim-targeted ``refine_for_claims``), including a call
     whose code was byte-identical and so never ran.  0 means the first
-    script was the only one generated."""
+    script was the only one generated.  Always
+    ``n_error_refinements + n_claim_refinements`` when set by the pipeline."""
+
+    n_error_refinements: int = 0
+    """Execution-error refinement calls (``refine``): the script crashed or
+    printed no ``RESULT:`` lines and the model was sent the error.  Crash
+    repairs, not target-guided search."""
+
+    n_claim_refinements: int = 0
+    """Claim-targeted refinement calls (``refine_for_claims``): the model was
+    told which claims were off target.  Counts a call whose code came back
+    unchanged; ``claim_refinement_attempts`` counts only the runs that were
+    adopted."""
 
 
 @dataclass
