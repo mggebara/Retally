@@ -17,7 +17,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from benchmark.metrics import result_rows
+from benchmark.metrics import first_attempt_passed, refinements_of, result_rows
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
@@ -83,17 +83,30 @@ def describe_row(row: dict[str, Any], *, repo_root: Path = REPO_ROOT) -> str:
             results = _RESULT_LINE.findall(stdout.read_text(encoding="utf-8", errors="replace"))
             lines.append(f"  RESULT lines ({len(results)}):")
             lines.extend(f"    {r.strip()}" for r in results)
+    n_ref = refinements_of(row)
+    if n_ref is not None:
+        n_exec = row.get("n_executions")
+        lines.append(
+            f"  refinements: {n_ref}" + (f" ({n_exec} executions)" if isinstance(n_exec, int) else "")
+        )
     details = row.get("claim_details") or []
     if details:
         n_pass = sum(1 for d in details if d.get("passed"))
-        lines.append(f"  claims: {n_pass}/{len(details)} pass")
+        first = first_attempt_passed(row)
+        lines.append(
+            f"  claims: {n_pass}/{len(details)} pass"
+            + (f" (first attempt {first}/{len(details)})" if first is not None else "")
+        )
         for d in details:
             reproduced = d.get("reproduced")
             rel_err = d.get("rel_err")
             err = f"rel_err {rel_err:.3g}" if isinstance(rel_err, (int, float)) else "unmatched"
+            first_tag = ""
+            if isinstance(d.get("passed_first_attempt"), bool):
+                first_tag = f" [first attempt {'PASS' if d['passed_first_attempt'] else 'FAIL'}]"
             lines.append(
                 f"    [{'PASS' if d.get('passed') else 'FAIL'}] {d.get('description')}: "
-                f"claimed {d.get('claimed')}, reproduced {reproduced} ({err})"
+                f"claimed {d.get('claimed')}, reproduced {reproduced} ({err}){first_tag}"
             )
     return "\n".join(lines)
 

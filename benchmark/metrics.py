@@ -187,6 +187,13 @@ class ModeGap:
     reproducer: str = "pipeline"
     """The reproducer behind both rows (``seeded / independent`` if they differ)."""
 
+    seeded_passed_first_attempt: int | None = None
+    independent_passed_first_attempt: int | None = None
+    """Claims each row's *first* execution already passed, before any
+    refinement feedback (``n_claims_with_paper_match_first_attempt``).
+    None when that row carries no attempt data (older files, or a
+    reproducer that does not report attempts)."""
+
 
 def mode_gaps(results: list[dict[str, Any]]) -> list[ModeGap]:
     """One ModeGap per entry *executed* in both seeded and independent mode.
@@ -216,9 +223,40 @@ def mode_gaps(results: list[dict[str, Any]]) -> list[ModeGap]:
                 lost=sorted(s_pass - i_pass),
                 gained=sorted(i_pass - s_pass),
                 reproducer=_joined_reproducer(seeded, independent),
+                seeded_passed_first_attempt=first_attempt_passed(seeded),
+                independent_passed_first_attempt=first_attempt_passed(independent),
             )
         )
     return gaps
+
+
+def first_attempt_passed(result: dict[str, Any]) -> int | None:
+    """Claims a row's first execution passed; None when the row has no attempt data."""
+    v = result.get("n_claims_with_paper_match_first_attempt")
+    return v if isinstance(v, int) and not isinstance(v, bool) else None
+
+
+def refinements_of(result: dict[str, Any]) -> int | None:
+    """Refinement calls behind a row; None when not recorded."""
+    v = result.get("n_refinements")
+    return v if isinstance(v, int) and not isinstance(v, bool) else None
+
+
+def first_attempt_note(result: dict[str, Any]) -> str:
+    """``first attempt 12/13, 2 refinements`` for a row with attempt data; empty otherwise.
+
+    The denominator is the row's compared claims (``claim_details``),
+    falling back to the catalog claim count.
+    """
+    first = first_attempt_passed(result)
+    n_ref = refinements_of(result)
+    parts = []
+    if first is not None:
+        total = len(result.get("claim_details") or []) or int(result.get("n_claims_in_catalog") or 0)
+        parts.append(f"first attempt {first}/{total}")
+    if n_ref is not None:
+        parts.append(f"{n_ref} refinement{'' if n_ref == 1 else 's'}")
+    return ", ".join(parts)
 
 
 def _joined_reproducer(seeded: dict[str, Any], independent: dict[str, Any]) -> str:

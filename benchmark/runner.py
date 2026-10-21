@@ -157,6 +157,12 @@ class ClaimDetail:
 
     passed: bool
 
+    passed_first_attempt: bool | None = None
+    """Whether the reproducer's *first* execution already passed this claim
+    (same comparator, mode and tolerance as ``passed``), before any
+    refinement feedback.  None when the reproducer reported no attempts,
+    and on rows from files that predate the field."""
+
 
 @dataclass
 class BenchmarkResult:
@@ -191,6 +197,20 @@ class BenchmarkResult:
     n_claims_in_catalog: int = 0
     n_claims_with_paper_match: int = 0
     n_claims_with_i4r_match: int = 0
+
+    n_claims_with_paper_match_first_attempt: int | None = None
+    """Claims the reproducer's first execution already passed against the
+    paper — before the refinement loop showed it which claims were off
+    target.  ``n_claims_with_paper_match`` is the final pass, after that
+    target-guided search.  None when the reproducer reported no attempt
+    data (and on rows from older files)."""
+
+    n_refinements: int | None = None
+    """Refinement calls the reproducer made after its first script (0: the
+    first script was final).  None when not reported."""
+
+    n_executions: int | None = None
+    """Sandbox executions the reproducer ran.  None when not reported."""
 
     claim_details: list[ClaimDetail] = field(default_factory=list)
     """One record per compared claim.  Empty on skips/crashes and on
@@ -674,6 +694,21 @@ def score_reproduction(
     claim_results = comparator.compare_all(claims, dict(reproduction.outputs), mode=ReproductionMode(mode))
     n_passed = sum(1 for cr in claim_results if cr.passed)
     n_i4r_match, agrees_with_i4r = _score_against_i4r(claim_results, entry)
+    details = [_claim_detail(cr) for cr in claim_results]
+
+    # First attempt: the first execution's RESULT lines, scored identically.
+    attempt_outputs = getattr(reproduction, "attempt_outputs", None)
+    n_first: int | None = None
+    if attempt_outputs:
+        first = comparator.compare_all(
+            claims, _parse_result_lines(str(attempt_outputs[0] or "")), mode=ReproductionMode(mode)
+        )
+        for detail, cr in zip(details, first, strict=True):
+            detail.passed_first_attempt = bool(cr.passed)
+        n_first = sum(1 for cr in first if cr.passed)
+    n_executions = getattr(reproduction, "n_executions", None)
+    if n_executions is None and attempt_outputs is not None:
+        n_executions = len(attempt_outputs)
 
     return BenchmarkResult(
         entry_id=entry.id,
@@ -685,9 +720,27 @@ def score_reproduction(
         n_claims_in_catalog=len(entry.original_claims),
         n_claims_with_paper_match=n_passed,
         n_claims_with_i4r_match=n_i4r_match,
-        claim_details=[_claim_detail(cr) for cr in claim_results],
+        n_claims_with_paper_match_first_attempt=n_first,
+        n_refinements=getattr(reproduction, "n_refinements", None),
+        n_executions=n_executions,
+        claim_details=details,
         components=reproduction.stages,
     )
+
+
+def _parse_result_lines(stdout: str) -> dict[str, float]:
+    """``RESULT:<name>=<value>`` lines of ``stdout``, as the executors parse them.
+
+    Malformed and ``=NA`` lines are dropped silently (the executor warns
+    about them when the run happens; re-warning while scoring is noise).
+    """
+    import warnings
+
+    from retally.codegen.executor import parse_outputs
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        return parse_outputs(stdout)
 
 
 def _claim_detail(cr: Any) -> ClaimDetail:
@@ -955,6 +1008,12 @@ def _result_from_jsonable(d: dict[str, Any]) -> BenchmarkResult:
         n_claims_in_catalog=int(d.get("n_claims_in_catalog", 0)),
         n_claims_with_paper_match=int(d.get("n_claims_with_paper_match", 0)),
         n_claims_with_i4r_match=int(d.get("n_claims_with_i4r_match", 0)),
+        # Absent in files that predate first-attempt scoring.
+        n_claims_with_paper_match_first_attempt=_optional_int(
+            d.get("n_claims_with_paper_match_first_attempt")
+        ),
+        n_refinements=_optional_int(d.get("n_refinements")),
+        n_executions=_optional_int(d.get("n_executions")),
         # Tolerant of pre-claim-detail cache files / results.json: absent
         # field → empty list, and any malformed record drops rather than
         # poisoning the whole load.
@@ -966,6 +1025,10 @@ def _result_from_jsonable(d: dict[str, Any]) -> BenchmarkResult:
         usage=d.get("usage") if isinstance(d.get("usage"), dict) else None,
         artifacts_dir=d.get("artifacts_dir") if isinstance(d.get("artifacts_dir"), str) else None,
     )
+
+
+def _optional_int(x: Any) -> int | None:
+    return x if isinstance(x, int) and not isinstance(x, bool) else None
 
 
 def _entry_to_jsonable(entry: bschema.BenchmarkEntry) -> dict[str, Any]:

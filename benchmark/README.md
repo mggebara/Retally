@@ -75,6 +75,28 @@ band is deliberately looser than the seeded one: compare the two modes'
 *pass sets*, and read the closeness bands (which use each claim's own
 effective tolerance) with that in mind.
 
+### First-attempt vs final pass
+
+The pipeline refines: after the first script runs it is told which claims
+are off target ("reproduced X, claimed Y") and asked to fix the script, up
+to `max_claim_refinements` times (plus error repairs before that).  That
+is target-guided search, so the final pass count mixes "derived the
+specification from the paper" with "searched until the number matched".
+Each row therefore also records the **first-attempt** pass count
+(`n_claims_with_paper_match_first_attempt`, and `passed_first_attempt`
+per claim): the first execution's `RESULT:` lines scored by the same
+comparator, mode and tolerance, before any feedback.  `n_refinements`
+(refinement calls) and `n_executions` (sandbox runs) sit alongside.  The
+report, `benchmark.compare` and `benchmark.artifacts` show both, e.g.
+`13 / 13 of 13 (first attempt 13/13, 0 refinements)`.  Read the
+first-attempt number as the cleaner measure of what the paper (plus, in
+seeded mode, the scripts) specifies, and the final number as what a
+reproducer can reach with the targets in view.  A first script that
+crashed scores 0 on first attempt even if the fix was a plain error
+repair.  Reproducers that do not report their attempts
+(`Reproduction.attempt_outputs` unset), and rows from older results
+files, have no first-attempt numbers; the reports then omit them.
+
 Contamination caveat: every paper in the corpus is 2022–2023 and every
 current model's training data extends past that, so *both* modes are
 pre-cutoff.  Record `publication_date` and `package_release_date` on each

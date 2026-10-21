@@ -131,6 +131,26 @@ class Reproduction:
     :func:`pipeline_artifacts`).  Paths must be relative and must not
     contain ``..``.  Empty means nothing is written."""
 
+    attempt_outputs: list[str] | None = None
+    """Optional stdout of every execution the reproducer ran, in the order
+    they ran (the first script's output first).  The harness parses the
+    ``RESULT:`` lines of ``attempt_outputs[0]`` and scores them with the
+    same comparator, mode and tolerance as ``outputs``: the *first-attempt*
+    pass count, i.e. what the agent produced before any feedback on which
+    claims were off target.  The final run is ``stdout``; it is usually the
+    last entry, but not when the agent reverted to an earlier run.  None
+    when the reproducer does not report its attempts (then no
+    first-attempt numbers are recorded)."""
+
+    n_refinements: int | None = None
+    """Optional number of refinement calls the agent made after its first
+    script (error repairs and claim-targeted fixes).  0 means the first
+    script was final.  None when not reported."""
+
+    n_executions: int | None = None
+    """Optional number of sandbox executions.  None when not reported; the
+    harness then falls back to ``len(attempt_outputs)`` when that is set."""
+
 
 @runtime_checkable
 class Reproducer(Protocol):
@@ -390,7 +410,11 @@ def reproduction_from_report(report: Any) -> Reproduction:
         code_generated=bool(generated_code),
         code_executed=(exit_code == 0) if exec_result else False,
     )
+    attempt_outputs, n_refinements = _attempt_record(exec_result)
     return Reproduction(
+        attempt_outputs=attempt_outputs,
+        n_refinements=n_refinements,
+        n_executions=None if attempt_outputs is None else len(attempt_outputs),
         outputs=dict(getattr(exec_result, "outputs", {}) or {}) if exec_result else {},
         claims=list(getattr(paper, "claims", []) or []) if paper else [],
         generated_code=generated_code,
@@ -400,3 +424,28 @@ def reproduction_from_report(report: Any) -> Reproduction:
         deviations=list(getattr(exec_result, "deviation_notes", []) or []) if exec_result else [],
         stages=stages,
     )
+
+
+def _attempt_record(exec_result: Any) -> tuple[list[str] | None, int | None]:
+    """``(stdout of every execution in run order, refinement calls)`` from an ``ExecutionResult``.
+
+    The final run sits at ``final_execution_index`` among the superseded
+    ``attempts`` (oldest first); when the index is unknown it is taken to be
+    last.  ``(None, None)`` when there was no execution or the result does
+    not carry an attempt list.
+    """
+    if exec_result is None:
+        return None, None
+    attempts = getattr(exec_result, "attempts", None)
+    if not isinstance(attempts, list):
+        return None, None
+    outputs = [str(getattr(a, "stdout", "") or "") for a in attempts]
+    index = getattr(exec_result, "final_execution_index", None)
+    if not isinstance(index, int) or not 0 <= index <= len(outputs):
+        index = len(outputs)
+    outputs.insert(index, str(getattr(exec_result, "stdout", "") or ""))
+    # Every execution after the first needed a refinement call; a call whose
+    # code came back unchanged adds one without an execution.
+    calls = getattr(exec_result, "refinement_calls", None)
+    calls = calls if isinstance(calls, int) else 0
+    return outputs, max(calls, len(outputs) - 1)

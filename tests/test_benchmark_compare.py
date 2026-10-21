@@ -56,3 +56,17 @@ def test_per_entry_table_shows_reproducer_and_changes():
     assert "| `p` | seeded | pipeline | dev | 1/1 → 0/1 |" in out
     swapped = compare.compare_runs([_row()], [_row(reproducer="other")])
     assert "| `p` | seeded | pipeline → other | dev |" in swapped
+
+
+def test_per_entry_table_adds_first_attempt_counts_when_recorded():
+    base = _row()  # an older row: no first-attempt data
+    cand = _row(n_claims_with_paper_match_first_attempt=0, n_refinements=2)
+    out = compare.compare_runs([base], [cand])
+    assert "| Passed (base → cand) | First attempt (base → cand) | Median rel err" in out
+    assert "| `p` | seeded | pipeline | dev | 1/1 → 1/1 | — → 0/1 |" in out
+
+
+def test_per_entry_table_omits_first_attempt_column_for_older_files():
+    out = compare.compare_runs([_row()], [_row(passed=False)])
+    assert "First attempt" not in out
+    assert "| `p` | seeded | pipeline | dev | 1/1 → 0/1 | 0.0% → 100.0% |" in out

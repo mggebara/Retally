@@ -705,3 +705,42 @@ def test_independent_mode_threads_mode_through_claim_refinement():
     calls = pipeline.comparator.compare_all.call_args_list
     assert len(calls) > 1
     assert {c.kwargs["mode"] for c in calls} == {ReproductionMode.INDEPENDENT}
+
+
+# ── Attempt bookkeeping for first-attempt scoring ──────────────────────
+
+
+def test_refinement_bookkeeping_when_a_claim_refinement_is_adopted():
+    pipeline, _ = _make_pipeline()
+    fail_exec, pass_exec = _setup_soft_failure_then_pass(pipeline)
+    pipeline.validate("some text")
+    assert pass_exec.refinement_calls == 1
+    assert pass_exec.final_execution_index == 1
+    assert [a.stdout for a in pass_exec.attempts] == [fail_exec.stdout]
+
+
+def test_refinement_bookkeeping_when_a_broken_refinement_is_reverted():
+    """The final run is the first one; the broken one ran after it."""
+    pipeline, _ = _make_pipeline()
+    ok_exec = _exec_ok("ok", accuracy=0.80)
+    broken_exec = ExecutionResult(generated_code="broken", stdout="", stderr="SyntaxError", exit_code=1)
+    pipeline.executor.execute.side_effect = [ok_exec, broken_exec]
+    pipeline.comparator.compare_all.return_value = [_failing_claim_result(0.95, 0.80)]
+    pipeline.generator.refine_for_claims.return_value = "broken"
+    pipeline.validate("some text")
+    assert ok_exec.final_execution_index == 0
+    assert ok_exec.refinement_calls == 1
+    assert [a.stderr for a in ok_exec.attempts] == ["SyntaxError"]
+
+
+def test_refinement_bookkeeping_counts_a_call_that_returned_identical_code():
+    pipeline, _ = _make_pipeline()
+    pipeline.generator.generate.return_value = "v1"
+    only = _exec_ok("v1", accuracy=0.80)
+    pipeline.executor.execute.return_value = only
+    pipeline.comparator.compare_all.return_value = [_failing_claim_result(0.95, 0.80)]
+    pipeline.generator.refine_for_claims.return_value = "v1"
+    pipeline.validate("some text")
+    assert only.refinement_calls == 1
+    assert only.final_execution_index == 0
+    assert only.attempts == []

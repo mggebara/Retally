@@ -5,7 +5,8 @@ keep-or-revert.  That decision needs "did candidate beat baseline?" to
 be one command, not an eyeball-diff of two JSON files.  This prints:
 
 * per-split closeness metrics for both runs, side by side
-* per-entry deltas (passed counts, median rel err)
+* per-entry deltas (passed counts, median rel err, and first-attempt
+  passed counts when either run recorded them)
 * which specific claims flipped — newly passing and newly failing —
   matched across runs by (entry_id, mode, claim description)
 
@@ -104,20 +105,26 @@ def _split_section(baseline: list[dict], candidate: list[dict]) -> list[str]:
 def _per_entry_section(baseline: list[dict], candidate: list[dict]) -> list[str]:
     base_by_key = {_row_key(r): r for r in baseline}
     cand_by_key = {_row_key(r): r for r in candidate}
+    # The first-attempt column appears only when some row recorded it, so
+    # comparisons of older results files render as before.
+    show_first = any(metrics.first_attempt_passed(r) is not None for r in (*baseline, *candidate))
+    first_head = " First attempt (base → cand) |" if show_first else ""
     lines = [
         "## Per-entry deltas",
         "",
-        "| Entry | Mode | Reproducer | Split | Passed (base → cand) | Median rel err (base → cand) |",
-        "|---|---|---|---|---|---|",
+        "| Entry | Mode | Reproducer | Split | Passed (base → cand) |"
+        f"{first_head} Median rel err (base → cand) |",
+        "|---|---|---|---|---|---|" + ("---|" if show_first else ""),
     ]
     for key in sorted(set(base_by_key) | set(cand_by_key)):
         entry_id, mode = key
         b, c = base_by_key.get(key), cand_by_key.get(key)
         split = (c or b or {}).get("split", "dev")
+        first_cell = f" {_first_attempt_str(b)} → {_first_attempt_str(c)} |" if show_first else ""
         lines.append(
             f"| `{entry_id}` | {mode} | {_reproducer_str(b, c)} | {split} "
-            f"| {_passed_str(b)} → {_passed_str(c)} "
-            f"| {_median_str(b)} → {_median_str(c)} |"
+            f"| {_passed_str(b)} → {_passed_str(c)} |{first_cell} "
+            f"{_median_str(b)} → {_median_str(c)} |"
         )
     lines.append("")
     return lines
@@ -189,6 +196,15 @@ def _passed_str(r: dict | None) -> str:
     if not details:
         return f"{r.get('n_claims_with_paper_match', 0)}/?"
     return f"{sum(1 for cd in details if cd.get('passed'))}/{len(details)}"
+
+
+def _first_attempt_str(r: dict | None) -> str:
+    """First-attempt passed/total for a row; ``—`` when absent or not recorded."""
+    first = metrics.first_attempt_passed(r) if r is not None else None
+    if r is None or first is None:
+        return "—"
+    details = r.get("claim_details", [])
+    return f"{first}/{len(details)}" if details else f"{first}/?"
 
 
 def _median_str(r: dict | None) -> str:
