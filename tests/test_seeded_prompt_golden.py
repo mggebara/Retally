@@ -14,7 +14,8 @@ claim gained both; and the .dta listing now gives row counts, puts
 paper-matched columns first, and lists ranked .dta files first; and
 (Phase 3) the code requirements name every package installed in the
 sandbox image (``retally.codegen.sandbox_packages``) on one line, replacing
-the R prompt's nine-package bullet list.
+the R prompt's nine-package bullet list; and (Phase 1.9) the R load
+instruction names load() / readRDS() for R data files.
 
 The fixture package is a miniature replication archive (a CSV, a Stata
 ``master.do``, an R script), so the prompt exercises every section that

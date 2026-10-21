@@ -667,8 +667,8 @@ def test_generation_prompt_lists_dta_column_names(tmp_path, mode):
 def test_dta_columns_are_truncated_and_capped(tmp_path):
     from retally.codegen.generator import (
         _TREE_HEADER_CHARS,
-        _TREE_MAX_DTA_HEADERS,
-        _TREE_TOP_DTA_FILES,
+        _TREE_MAX_DATA_HEADERS,
+        _TREE_TOP_DATA_FILES,
         _TREE_TOP_HEADER_CHARS,
         _describe_dataset_files,
     )
@@ -676,7 +676,7 @@ def test_dta_columns_are_truncated_and_capped(tmp_path):
     wide = [f"variable_{i:04d}" for i in range(500)]
     _write_dta(tmp_path / "z_wide.dta", wide)
     _write_dta(tmp_path / "y_wide.dta", wide)
-    for i in range(_TREE_MAX_DTA_HEADERS + 2):
+    for i in range(_TREE_MAX_DATA_HEADERS + 2):
         _write_dta(tmp_path / f"b_{i:02d}.dta", ["x", "y"])
     lines = _describe_dataset_files(tmp_path)
     # The widest files are listed first (path order breaks the tie), with
@@ -686,10 +686,10 @@ def test_dta_columns_are_truncated_and_capped(tmp_path):
     assert "2 rows, 500 columns: variable_0000, variable_0001" in first
     assert first.endswith("…")
     assert len(first.split("columns: ", 1)[1]) == _TREE_TOP_HEADER_CHARS + 1
-    beyond_top = lines[_TREE_TOP_DTA_FILES]
+    beyond_top = lines[_TREE_TOP_DATA_FILES]
     assert len(beyond_top.split("columns: ", 1)[1]) <= _TREE_HEADER_CHARS + 1
     with_columns = [line for line in lines if "columns:" in line]
-    assert len(with_columns) == _TREE_MAX_DTA_HEADERS
+    assert len(with_columns) == _TREE_MAX_DATA_HEADERS
     assert "columns:" not in lines[-1]
 
 

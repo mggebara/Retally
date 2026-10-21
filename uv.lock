@@ -897,6 +897,15 @@ wheels = [
 ]
 
 [[package]]
+name = "narwhals"
+version = "2.27.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/bf/21/f64d6b2dbea7bf3f8c38cdc786dcc6ef012ca3d173ad208c782c9a7bedf6/narwhals-2.27.1.tar.gz", hash = "sha256:aed93076a3ea42d9c32c88e4eb5ea422a21937011cbe1f480f9572a523c82094", size = 735013, upload-time = "2026-10-10T06:52:18.113Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d1/89/5d4c86da1130d9059681e5b6cd7645df5c10279a6a079c5c37dcb2cc6f3f/narwhals-2.27.1-py3-none-any.whl", hash = "sha256:d057df13f5852b8e157596e82eb5e955fad267425df5e420e0ee9863da483b31", size = 483211, upload-time = "2026-10-10T06:52:16.32Z" },
+]
+
+[[package]]
 name = "nbformat"
 version = "5.10.4"
 source = { registry = "https://pypi.org/simple" }
@@ -1011,76 +1020,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/88/9b/729dc6377bbfdbf0828d5567a335670d4e7c2866065ca4593ab525a5809c/openml-0.15.1.tar.gz", hash = "sha256:58ae3840b6ea736bb6c69bcbb30d587b817f64db070dc691adb9e09b99018816", size = 146141, upload-time = "2025-01-25T10:56:28.351Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/4a/f3/462c16d9e80177d22a036abd3df0f114bf311e566ff906adbb3d82790c20/openml-0.15.1-py3-none-any.whl", hash = "sha256:14d25afb7a3007a70da26b0d1f46cf93df6f5784c31dd76d6a415066c6051961", size = 160384, upload-time = "2025-01-25T10:56:24.84Z" },
-]
-
-[[package]]
-name = "retally"
-version = "0.1.0"
-source = { editable = "." }
-dependencies = [
-    { name = "anthropic" },
-    { name = "pandas" },
-    { name = "pymupdf" },
-    { name = "requests" },
-    { name = "tqdm" },
-]
-
-[package.optional-dependencies]
-host-exec = [
-    { name = "numpy" },
-    { name = "scikit-learn" },
-    { name = "scipy" },
-]
-kaggle = [
-    { name = "kaggle" },
-]
-openml = [
-    { name = "openml" },
-]
-uci = [
-    { name = "ucimlrepo" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "kaggle" },
-    { name = "mypy" },
-    { name = "pytest" },
-    { name = "pytest-cov" },
-    { name = "pyyaml" },
-    { name = "ruff" },
-    { name = "types-pyyaml" },
-    { name = "types-requests" },
-    { name = "ucimlrepo" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "anthropic", specifier = ">=0.25.0" },
-    { name = "kaggle", marker = "extra == 'kaggle'", specifier = ">=1.6.0" },
-    { name = "numpy", marker = "extra == 'host-exec'", specifier = ">=1.24.0" },
-    { name = "openml", marker = "extra == 'openml'", specifier = ">=0.14.0" },
-    { name = "pandas", specifier = ">=2.0.0" },
-    { name = "pymupdf", specifier = ">=1.24.0" },
-    { name = "requests", specifier = ">=2.31.0" },
-    { name = "scikit-learn", marker = "extra == 'host-exec'", specifier = ">=1.3.0" },
-    { name = "scipy", marker = "extra == 'host-exec'", specifier = ">=1.11.0" },
-    { name = "tqdm", specifier = ">=4.66.0" },
-    { name = "ucimlrepo", marker = "extra == 'uci'", specifier = ">=0.0.3" },
-]
-provides-extras = ["host-exec", "kaggle", "uci", "openml"]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "kaggle", specifier = ">=1.6.0" },
-    { name = "mypy", specifier = ">=1.10.0" },
-    { name = "pytest", specifier = ">=8.0.0" },
-    { name = "pytest-cov", specifier = ">=5.0.0" },
-    { name = "pyyaml", specifier = ">=6.0" },
-    { name = "ruff", specifier = ">=0.4.0" },
-    { name = "types-pyyaml", specifier = ">=6.0" },
-    { name = "types-requests", specifier = ">=2.31.0" },
-    { name = "ucimlrepo", specifier = ">=0.0.3" },
 ]
 
 [[package]]
@@ -1426,6 +1365,37 @@ wheels = [
 ]
 
 [[package]]
+name = "pyreadr"
+version = "0.5.7"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "narwhals" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/84/63/0987e525556c86e5e8dc499f8266fd387ab520d9fe81e2e51b1f464553ca/pyreadr-0.5.7.tar.gz", hash = "sha256:3243f0f7107c47a193508f79f39f22310f66352f5f5ee18bb0208ceebfd84fb6", size = 1307039, upload-time = "2026-09-28T15:39:01.668Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/cb/cb/f47f6f6e30017463ba09a4a70923be426af8910ab68eb0676417dff88ae5/pyreadr-0.5.7-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:becbb9e14eddc9f1172813036acb75c39d78259cf0e20367a4086d9ad630a8c4", size = 333613, upload-time = "2026-09-28T15:38:29.506Z" },
+    { url = "https://files.pythonhosted.org/packages/00/6e/fb1238766237e732b24dea162faa6479bcd1c0e4c17e4a65f13107857f3e/pyreadr-0.5.7-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:e206767ce9eda21b6373beed67d0e4206ff2072ad40e6ea7cb333f739b527abe", size = 334839, upload-time = "2026-09-28T15:38:30.923Z" },
+    { url = "https://files.pythonhosted.org/packages/ec/4a/cb341a8da78db3ce1534af1beae26cbf0b8817d1f8bfa5d8f17e01264838/pyreadr-0.5.7-cp311-cp311-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:e04c6e3f4d019f2475e4d77f01c7a439c175bc069be5f4a57c1ef2925ca091d2", size = 849073, upload-time = "2026-09-28T15:38:32.729Z" },
+    { url = "https://files.pythonhosted.org/packages/bb/15/14cd2738fbe12f6ae195e2280beac88861f1bbc0550f19a23fadc813b118/pyreadr-0.5.7-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:cf7a5e704d1e2e1dc0fa2f5a0a7e1f51a0e3ca870d1c838f516e7853b97910b6", size = 848605, upload-time = "2026-09-28T15:38:34.461Z" },
+    { url = "https://files.pythonhosted.org/packages/75/ad/5f223128408930763aebfcdd247ce2a46cc4b59dfb7a0ec34a1803090ad3/pyreadr-0.5.7-cp311-cp311-win_amd64.whl", hash = "sha256:1dd30aa90c18507bf7e3dc6a2f57e48bc9dc98e6cff4efd56c495fde146ae1a3", size = 2378122, upload-time = "2026-09-28T15:38:36.475Z" },
+    { url = "https://files.pythonhosted.org/packages/eb/a7/081a7eb96cc66f079518e7c2df284669403a86971de8ab4509ef3a9aa35f/pyreadr-0.5.7-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:b387eba8f57200e90897dee3ed8a6dbc78d6594512ee3c6a0cf77075aecf6089", size = 338818, upload-time = "2026-09-28T15:38:37.798Z" },
+    { url = "https://files.pythonhosted.org/packages/90/59/6821a5582de86217ad1b74fc50fe853cdb84ddde5a7f3f1cb94731a7beb6/pyreadr-0.5.7-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:691d89a0ceaa9511c1dca8630209fd24432b8a2994079677655d18e44bcbd8ce", size = 339273, upload-time = "2026-09-28T15:38:38.925Z" },
+    { url = "https://files.pythonhosted.org/packages/c8/ee/dc95d7e85645013be7f34ea2fe0277db8920260d5049c4daf990c073734d/pyreadr-0.5.7-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:6bce679101598cd2f770c6b8d0a2e3d8a77513befc72e17956ccbf0b28228f44", size = 829288, upload-time = "2026-09-28T15:38:40.316Z" },
+    { url = "https://files.pythonhosted.org/packages/b8/27/ba37dcaa0eb9f976c73e229d73a8e9017e4f5cf78bc714eac70f6e66add7/pyreadr-0.5.7-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:b588f15c118a0310d17bcf642047ac88f0bcbd499963b042ef828b9137161719", size = 829261, upload-time = "2026-09-28T15:38:41.946Z" },
+    { url = "https://files.pythonhosted.org/packages/8c/7b/71456e6a8135a37bc21767c23d951862071d227e219ddc617fc2e40f9313/pyreadr-0.5.7-cp312-cp312-win_amd64.whl", hash = "sha256:2aec7ca7fa3ce7e499521c2448e0c5d713c27ff00caa8309e7d48751a31d47fd", size = 2380169, upload-time = "2026-09-28T15:38:44.15Z" },
+    { url = "https://files.pythonhosted.org/packages/75/9a/7d958de979c627fe6f047c905b600b24be0fca104aabc067b4c0aa3ecaf3/pyreadr-0.5.7-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:601467da8b59e5b64c3b0142d25ca072fdcef453f1c06e352eb9972295076a27", size = 338682, upload-time = "2026-09-28T15:38:47.264Z" },
+    { url = "https://files.pythonhosted.org/packages/97/de/ed16854b23eae8dbbe591da684e7252011b7796919b7ab1780c5656dd9e5/pyreadr-0.5.7-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:7214285056ba09cb6b3c9263384f706bc363552241f81f841d09cacb55ee7677", size = 339082, upload-time = "2026-09-28T15:38:48.343Z" },
+    { url = "https://files.pythonhosted.org/packages/fd/75/b6b8ad597eaeef1ef70df08d3d1aa78665bc16d0adecb050ee5086f663dd/pyreadr-0.5.7-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:a0cb280ba65bbd9bdb8c535311b4461de4e4843d4d68e35b100c172913f4d84a", size = 828755, upload-time = "2026-09-28T15:38:49.564Z" },
+    { url = "https://files.pythonhosted.org/packages/85/5f/d26707effc96b23dee3b16c71dd729e48a1ce17461e766ffb266f71d3ee5/pyreadr-0.5.7-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:6b25f8134a18f940778568eeefaf08c0bcd8a94184ece4b7fa4a1a73dd6596a3", size = 829408, upload-time = "2026-09-28T15:38:51.115Z" },
+    { url = "https://files.pythonhosted.org/packages/c1/b2/5f3926992560a61558d0dbafd66a1b18e085ace2fe177620451714fb8121/pyreadr-0.5.7-cp313-cp313-win_amd64.whl", hash = "sha256:44b119090f97f5dec9cbc530b843143ac0e55ae8249639b99a4c27f3a74039b5", size = 2380124, upload-time = "2026-09-28T15:38:52.879Z" },
+    { url = "https://files.pythonhosted.org/packages/e7/c0/3ee2b4585f298ec7698edf1f15dd73a68640a1a6fe9a90fd56b55128d29d/pyreadr-0.5.7-cp314-cp314-macosx_10_15_x86_64.whl", hash = "sha256:b8ac9d345ad18df61931d58aad4d7effcd660e28f6b809492441662b816605bb", size = 338591, upload-time = "2026-09-28T15:38:54.193Z" },
+    { url = "https://files.pythonhosted.org/packages/d2/a8/4f954dc2e5a97c0977617a7051185e7dc9b953d42fc3fe7045c54a51041e/pyreadr-0.5.7-cp314-cp314-macosx_11_0_arm64.whl", hash = "sha256:8016ea8196d8d6ba6f4e86736db8927517ee4889302a3e0d762cd116194f3d2e", size = 338723, upload-time = "2026-09-28T15:38:55.498Z" },
+    { url = "https://files.pythonhosted.org/packages/2c/d9/fc0d9c73829457d2e4fb9764167a60e7a23f790e331204dde47d7d6f5c87/pyreadr-0.5.7-cp314-cp314-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:1adb191c083d9e54522fc95dd676e130984a182711a6d2aee871b8dd2f5f30e8", size = 827591, upload-time = "2026-09-28T15:38:56.867Z" },
+    { url = "https://files.pythonhosted.org/packages/39/3a/2794dfc76ae7be820a6004ac421b38d83d1d327e433cc74a6a3229fd03f5/pyreadr-0.5.7-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:5e5a3350b361f0c092d8cccba9f27db6a50e5cb2ccd4ad7a5d9274636e8f437a", size = 823305, upload-time = "2026-09-28T15:38:58.024Z" },
+    { url = "https://files.pythonhosted.org/packages/31/f5/8624d96ebed47187db23e7e54c6fb2f3c059766dac6004ff8b7aaeeae964/pyreadr-0.5.7-cp314-cp314-win_amd64.whl", hash = "sha256:f009a5239e54b4698815b18b93921fbc4981f4c007a71fd2bfe5ccaa3e3e421d", size = 2412502, upload-time = "2026-09-28T15:39:00.281Z" },
+]
+
+[[package]]
 name = "pytest"
 version = "9.0.3"
 source = { registry = "https://pypi.org/simple" }
@@ -1561,6 +1531,78 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/ac/c3/e2a2b89f2d3e2179abd6d00ebd70bff6273f37fb3e0cc209f48b39d00cbf/requests-2.34.2.tar.gz", hash = "sha256:f288924cae4e29463698d6d60bc6a4da69c89185ad1e0bcc4104f584e960b9ed", size = 142856, upload-time = "2026-05-14T19:25:27.735Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a0/f4/c67b0b3f1b9245e8d266f0f112c500d50e5b4e83cb6f3b71b6528104182a/requests-2.34.2-py3-none-any.whl", hash = "sha256:2a0d60c172f83ac6ab31e4554906c0f3b3588d37b5cb939b1c061f4907e278e0", size = 73075, upload-time = "2026-05-14T19:25:26.443Z" },
+]
+
+[[package]]
+name = "retally"
+version = "0.1.0"
+source = { editable = "." }
+dependencies = [
+    { name = "anthropic" },
+    { name = "pandas" },
+    { name = "pymupdf" },
+    { name = "pyreadr" },
+    { name = "requests" },
+    { name = "tqdm" },
+]
+
+[package.optional-dependencies]
+host-exec = [
+    { name = "numpy" },
+    { name = "scikit-learn" },
+    { name = "scipy" },
+]
+kaggle = [
+    { name = "kaggle" },
+]
+openml = [
+    { name = "openml" },
+]
+uci = [
+    { name = "ucimlrepo" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "kaggle" },
+    { name = "mypy" },
+    { name = "pytest" },
+    { name = "pytest-cov" },
+    { name = "pyyaml" },
+    { name = "ruff" },
+    { name = "types-pyyaml" },
+    { name = "types-requests" },
+    { name = "ucimlrepo" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "anthropic", specifier = ">=0.25.0" },
+    { name = "kaggle", marker = "extra == 'kaggle'", specifier = ">=1.6.0" },
+    { name = "numpy", marker = "extra == 'host-exec'", specifier = ">=1.24.0" },
+    { name = "openml", marker = "extra == 'openml'", specifier = ">=0.14.0" },
+    { name = "pandas", specifier = ">=2.0.0" },
+    { name = "pymupdf", specifier = ">=1.24.0" },
+    { name = "pyreadr", specifier = ">=0.5.7" },
+    { name = "requests", specifier = ">=2.31.0" },
+    { name = "scikit-learn", marker = "extra == 'host-exec'", specifier = ">=1.3.0" },
+    { name = "scipy", marker = "extra == 'host-exec'", specifier = ">=1.11.0" },
+    { name = "tqdm", specifier = ">=4.66.0" },
+    { name = "ucimlrepo", marker = "extra == 'uci'", specifier = ">=0.0.3" },
+]
+provides-extras = ["host-exec", "kaggle", "uci", "openml"]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "kaggle", specifier = ">=1.6.0" },
+    { name = "mypy", specifier = ">=1.10.0" },
+    { name = "pytest", specifier = ">=8.0.0" },
+    { name = "pytest-cov", specifier = ">=5.0.0" },
+    { name = "pyyaml", specifier = ">=6.0" },
+    { name = "ruff", specifier = ">=0.4.0" },
+    { name = "types-pyyaml", specifier = ">=6.0" },
+    { name = "types-requests", specifier = ">=2.31.0" },
+    { name = "ucimlrepo", specifier = ">=0.0.3" },
 ]
 
 [[package]]

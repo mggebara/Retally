@@ -27,6 +27,7 @@ import re
 from pathlib import Path
 from typing import TYPE_CHECKING, NamedTuple
 
+from retally.codegen.rdata import R_DATA_SUFFIXES, read_r_objects
 from retally.codegen.sandbox_packages import PYTHON_PACKAGES, R_PACKAGES
 from retally.models import (
     ClaimType,
@@ -827,7 +828,9 @@ class CodeGenerator:
                 f"The dataset is a directory tree at '{root}' — see the file "
                 "listing under Dataset Information.  Load the actual data file(s) by the "
                 "exact paths listed there (readr::read_csv() for .csv, haven::read_dta() "
-                "for Stata .dta)."
+                "for Stata .dta, load() for .RData/.rda, which creates the objects listed for "
+                "the file under exactly those names: use them, do not guess others; "
+                "readRDS() for .rds)."
             )
         return (
             f"The dataset is a directory tree at {root} — see the file "
@@ -1110,13 +1113,29 @@ _SUPPORTED_LANGUAGES = frozenset({Language.PYTHON, Language.R})
 # so it truncates with an explicit marker beyond these bounds.
 _TREE_MAX_FILES = 80
 _TREE_MAX_CSV_HEADERS = 10
-_TREE_MAX_DTA_HEADERS = 10
+# Data files (Stata .dta and R .RData/.rda/.rds) whose columns are shown.
+_TREE_MAX_DATA_HEADERS = 10
 _TREE_HEADER_CHARS = 240
-# The few .dta files ranked most relevant (see ``_describe_dataset_files``)
+# The few data files ranked most relevant (see ``_describe_dataset_files``)
 # get a larger column budget: they are the likeliest analysis files and
 # are usually the widest.
-_TREE_TOP_DTA_FILES = 3
+_TREE_TOP_DATA_FILES = 3
 _TREE_TOP_HEADER_CHARS = 480
+# An R data file can hold many objects.  Its first (best-ranked) data
+# frame gets the file's column budget, the next ones ``_TREE_HEADER_CHARS``
+# each, up to this many data frames with columns; further data frames are
+# listed by name, class and shape, other objects by name and class, up to
+# ``_TREE_MAX_R_OBJECTS`` objects in all.
+_TREE_MAX_R_TABLES_WITH_COLUMNS = 3
+_TREE_MAX_R_OBJECTS = 20
+# R data frames have no variable labels, so name matching is all the
+# paper text can do -- and a paper rarely spells its outcome, fixed
+# effect or cluster variables the way the columns are named
+# (``pcttw_sanders``, ``DMA_CODE``, ``stab`` in Bisbee & Honig).  The
+# author's column order is the other signal: analysis data frames are
+# built identifiers and outcome first, derived controls after.  So right
+# after the strong matches come this many leading columns in file order.
+_R_LEAD_COLUMNS = 25
 # Words too generic to steer column selection.  Hint words are >= 4 chars.
 _HINT_STOPWORDS = frozenset(
     "also and are been both each from have into more most only other over same such than that "
@@ -1140,7 +1159,7 @@ _LABEL_STOPWORDS = _HINT_STOPWORDS | frozenset(
 # exposure" vs "pre-colonial conflict exposure").
 _LABEL_RUN_STRONG = 3
 _LABEL_MAX_NGRAM = 8
-# Strong matches in a top-ranked ``.dta`` file are all shown, past the
+# Strong matches in a top-ranked data file's first table are all shown, past the
 # character budget if need be, up to this many columns.
 _TREE_MAX_STRONG_SHOWN = 40
 
@@ -1264,6 +1283,11 @@ class _Hints:
                     if len(word) >= 4 and word not in _HINT_STOPWORDS:
                         words.add(word)
         self.words = frozenset(words)
+        # Short all-caps tokens ("DMA", "GDP"): too short to be hint words,
+        # but they name things and columns are named after them (``DMA_cases``).
+        self.acronyms = frozenset(
+            token.lower() for text in texts for token in re.findall(r"\b[A-Z]{2,3}\b", text)
+        )
         # Each text normalised and fenced by spaces, for whole-phrase search.
         self.phrase_text = " " + " | ".join(_normalise_words(t) for t in texts if t) + " "
         content: set[str] = set()
@@ -1278,6 +1302,16 @@ class _Hints:
         self.content_words = frozenset(content)
         self.numbers = frozenset(numbers)
         self._ngrams = frozenset(ngrams)
+
+    def name_is_compound(self, column: str) -> bool:
+        """Whether every word of a multi-word column name is a hint word or acronym.
+
+        ``DMA_cases`` with "DMA" and "cases" in the text, ``caucus_switch``
+        with "caucus switch"; digits separate words and are ignored
+        (``turnout_20``).  Single-word names are left to the exact match.
+        """
+        parts = [part for part in re.split(r"[_.0-9]+", column.lower()) if part]
+        return len(parts) >= 2 and all(part in self.words or part in self.acronyms for part in parts)
 
     def label_is_phrase(self, label: str) -> bool:
         """Whether a variable label (e.g. ``ln(0.01+Luminosity)``) is literally a phrase of the text."""
@@ -1332,7 +1366,9 @@ def _part_matches(part: str, word: str) -> bool:
     return part == word or (len(word) >= 5 and word in part) or (len(part) >= 5 and part in word)
 
 
-def _prioritised_columns(names: list[str], labels: dict[str, str], hints: _Hints) -> tuple[list[str], int]:
+def _prioritised_columns(
+    names: list[str], labels: dict[str, str], hints: _Hints, lead: int = 0
+) -> tuple[list[str], int]:
     """``names`` reordered for the prompt, and how many are strong matches.
 
     Order, each tier in file order unless stated:
@@ -1346,10 +1382,12 @@ def _prioritised_columns(names: list[str], labels: dict[str, str], hints: _Hints
        shared rather than foreign numbers), so the best-labelled columns
        survive the budget.  Of labels with the same words differing only
        in numbers, only the best-matching stay strong;
-    2. a name part fuzzily matches a hint word, rarest word first (a word
+    2. the first ``lead`` other columns in file order (``0`` for ``.dta``,
+       whose labels say what a column is; see ``_R_LEAD_COLUMNS``);
+    3. a name part fuzzily matches a hint word, rarest word first (a word
        matching hundreds of columns in this file, like ``conflict``, says
        little about any one of them);
-    3. everything else.
+    4. everything else.
 
     Deterministic.
     """
@@ -1357,7 +1395,7 @@ def _prioritised_columns(names: list[str], labels: dict[str, str], hints: _Hints
     quality: dict[str, tuple[int, ...]] = {}
     families: dict[tuple[str, ...], list[str]] = {}
     for n in names:
-        if n.lower() in hints.words:
+        if n.lower() in hints.words or hints.name_is_compound(n):
             quality[n] = (1,)
             continue
         label = labels.get(n, "")
@@ -1376,6 +1414,8 @@ def _prioritised_columns(names: list[str], labels: dict[str, str], hints: _Hints
                 del quality[n]
     strong = sorted(quality, key=lambda n: (tuple(-q for q in quality[n]), position[n]))
     strong_set = set(strong)
+    leading = [n for n in names if n not in strong_set][:lead]
+    strong_set.update(leading)
     matched: dict[str, set[str]] = {}
     for n in names:
         if n in strong_set:
@@ -1389,33 +1429,136 @@ def _prioritised_columns(names: list[str], labels: dict[str, str], hints: _Hints
             df[w] = df.get(w, 0) + 1
     fuzzy = sorted(matched, key=lambda n: (min(df[w] for w in matched[n]), position[n]))
     rest = [n for n in names if n not in strong_set and n not in matched]
-    return strong + fuzzy + rest, len(strong)
+    return strong + leading + fuzzy + rest, len(strong)
+
+
+class _Table(NamedTuple):
+    """One object of a data file, as the listing shows it."""
+
+    name: str  # R object name; "" for a .dta file and for an .rds object
+    r_class: str  # R class ("data.frame", "tbl_df", "list", ...); "" for .dta
+    is_table: bool  # a data frame or .dta table, with rows and columns
+    rows: int | None
+    columns: list[str]  # in prompt order (``_prioritised_columns``)
+    n_strong: int
+
+
+class _DataFile(NamedTuple):
+    """A data file whose contents the listing shows: tables first, best-ranked first."""
+
+    path: Path
+    kind: str  # "dta", "rds" or "rdata"
+    tables: list[_Table]
+
+    def rank_key(self) -> tuple[int, int, str]:
+        """Most strong matches first, then most columns, then path."""
+        n_strong = sum(t.n_strong for t in self.tables)
+        n_columns = sum(len(t.columns) for t in self.tables)
+        return -n_strong, -n_columns, str(self.path)
+
+
+def _read_data_file(path: Path, hints: _Hints) -> _DataFile | str | None:
+    """A ``.dta`` / R data file's tables, columns in prompt order.
+
+    ``None`` for a file that is not a data file or has nothing to show
+    (an unreadable ``.dta`` is listed bare, as before); a short note
+    (``"unreadable: …"``, ``"too large to inspect"``) for an R data file
+    that could not be read.
+    """
+    suffix = path.suffix.lower()
+    if suffix == ".dta":
+        labels, nobs = _dta_shape(path)
+        if not labels:
+            return None
+        ordered, n_strong = _prioritised_columns(list(labels), labels, hints)
+        return _DataFile(path, "dta", [_Table("", "", True, nobs, ordered, n_strong)])
+    if suffix not in R_DATA_SUFFIXES:
+        return None
+    contents = read_r_objects(path)
+    if contents.note:
+        return contents.note
+    if not contents.objects:
+        return None
+    frames: list[tuple[int, _Table]] = []
+    others: list[_Table] = []
+    for index, obj in enumerate(contents.objects):
+        if obj.is_data_frame:
+            # R data frames carry no variable labels: names are matched only.
+            ordered, n_strong = _prioritised_columns(list(obj.columns), {}, hints, _R_LEAD_COLUMNS)
+            frames.append((index, _Table(obj.name, obj.r_class, True, obj.rows, ordered, n_strong)))
+        else:
+            others.append(_Table(obj.name, obj.r_class, False, None, [], 0))
+    frames.sort(key=lambda f: (-f[1].n_strong, -len(f[1].columns), f[0]))
+    kind = "rdata" if any(o.name for o in contents.objects) else "rds"
+    return _DataFile(path, kind, [t for _, t in frames] + others)
+
+
+def _format_table(table: _Table, budget: int | None) -> str:
+    """``"1882 rows, 143 columns: a, b, …"``; just the shape when ``budget`` is ``None``."""
+    rows = f"{table.rows} rows, " if table.rows is not None else ""
+    shape = f"{rows}{len(table.columns)} columns"
+    if budget is None:
+        return shape
+    return f"{shape}: {_truncate_header(', '.join(table.columns), budget)}"
+
+
+def _format_data_file(entry: _DataFile, first_budget: int) -> str:
+    """The listing text after a data file's path and size.
+
+    ``.dta``: ``"666 rows, 1288 columns: …"``.  ``.rds``: the object's
+    class first (``"data.frame, 10 rows, 3 columns: …"``, or just
+    ``"list"``).  ``.RData``: ``"objects: finalDat (data.frame, 2001 rows,
+    278 columns: …), maps (list)"``.  The first table gets
+    ``first_budget``, later ones ``_TREE_HEADER_CHARS``.
+    """
+    parts: list[str] = []
+    n_tables = 0
+    for table in entry.tables[:_TREE_MAX_R_OBJECTS]:
+        if not table.is_table:
+            parts.append(table.r_class)
+            continue
+        budget: int | None = None
+        if n_tables < _TREE_MAX_R_TABLES_WITH_COLUMNS:
+            budget = first_budget if n_tables == 0 else _TREE_HEADER_CHARS
+        n_tables += 1
+        text = _format_table(table, budget)
+        parts.append(f"{table.r_class}, {text}" if table.r_class else text)
+    if entry.kind != "rdata":
+        return parts[0]
+    named = [f"{table.name} ({part})" for table, part in zip(entry.tables, parts, strict=False)]
+    more = len(entry.tables) - len(named)
+    if more > 0:
+        named.append(f"… and {more} more objects")
+    return "objects: " + ", ".join(named)
 
 
 def _describe_dataset_files(root: Path, hint_texts: list[str] | None = None) -> list[str]:
     """One prompt line per file under ``root``: relative path, size, column names.
 
     Column names are shown for ``.csv`` (the header line, path order, at
-    most ``_TREE_MAX_CSV_HEADERS`` files) and Stata ``.dta`` files (read
-    from the file header only -- no data rows are loaded).  ``.rds`` /
-    ``.RData`` / ``.sav`` get no columns: no reader for them is a
-    dependency.
+    most ``_TREE_MAX_CSV_HEADERS`` files), Stata ``.dta`` files (read from
+    the file header only -- no data rows are loaded) and R data files
+    (``.RData`` / ``.rda`` / ``.rds``, Phase 1.9: the objects each defines
+    and every data frame's rows and columns, see ``retally.codegen.rdata``).
+    ``.sav`` gets no columns: no reader for it is a dependency.  An R data
+    file that cannot be read is listed with ``(unreadable: <reason>)`` or
+    ``(too large to inspect)``.
 
-    ``.dta`` files (Phase 1.7): every line gives the row and column count.
-    Which columns fit in the per-file budget is chosen, not just the first
-    ones: columns matching terms from ``hint_texts`` (the paper's title,
-    abstract, methodology and claims) come first, then the rest in file
-    order (see ``_prioritised_columns``) -- Dincecco's analysis file has
-    1288 columns and the outcome and instrument sat far past the cap.
-    Files are ranked by their number of strong matches, then by column
-    count; the top
-    ``_TREE_MAX_DTA_HEADERS`` get columns, the top ``_TREE_TOP_DTA_FILES``
+    ``.dta`` and R data files share one path (Phase 1.7): every table
+    gives its row and column count.  Which columns fit in the budget is
+    chosen, not just the first ones: columns matching terms from
+    ``hint_texts`` (the paper's title, abstract, methodology and claims)
+    come first, then the rest in file order (see ``_prioritised_columns``;
+    R data frames have no variable labels, so only names match) --
+    Dincecco's analysis file has 1288 columns and the outcome and
+    instrument sat far past the cap.  Files are ranked by their number of
+    strong matches, then by column count; the top
+    ``_TREE_MAX_DATA_HEADERS`` get columns, the top ``_TREE_TOP_DATA_FILES``
     a ``_TREE_TOP_HEADER_CHARS`` budget (others ``_TREE_HEADER_CHARS``),
-    stretched in the top files to show every strong match up to
-    ``_TREE_MAX_STRONG_SHOWN`` columns,
-    and the annotated ``.dta`` lines are listed first in rank order so the
-    likeliest analysis file is not buried among shapefile pieces.  All
-    other files follow in path order.
+    stretched to show every strong match of their first table up to
+    ``_TREE_MAX_STRONG_SHOWN`` columns, and the annotated lines are listed
+    first in rank order so the likeliest analysis file is not buried among
+    shapefile pieces.  All other files follow in path order.
 
     Registry datasets are a single ``data.csv`` and get a one-line listing;
     replication packages (e.g. an unpacked Zenodo archive) are arbitrary
@@ -1436,35 +1579,37 @@ def _describe_dataset_files(root: Path, hint_texts: list[str] | None = None) -> 
     )
     hints = _Hints(hint_texts or [])
 
-    ranked: list[tuple[int, int, Path, list[str], int | None]] = []
+    ranked: list[_DataFile] = []
+    notes: dict[Path, str] = {}
     for p in files:
-        if p.suffix.lower() != ".dta":
-            continue
-        labels, nobs = _dta_shape(p)
-        if labels:
-            ordered, n_strong = _prioritised_columns(list(labels), labels, hints)
-            ranked.append((-n_strong, -len(labels), p, ordered, nobs))
-    ranked.sort(key=lambda r: (r[0], r[1], str(r[2])))
-    annotated = ranked[:_TREE_MAX_DTA_HEADERS]
+        entry = _read_data_file(p, hints)
+        if isinstance(entry, str):
+            notes[p] = entry
+        elif entry is not None:
+            ranked.append(entry)
+    ranked.sort(key=_DataFile.rank_key)
+    annotated = ranked[:_TREE_MAX_DATA_HEADERS]
 
     def base(p: Path) -> str:
         return f"- {p.relative_to(root)} ({_human_size(p.stat().st_size)})"
 
     lines: list[str] = []
-    for rank, (neg_strong, neg_cols, p, ordered, nobs) in enumerate(annotated):
+    for rank, entry in enumerate(annotated):
         budget = _TREE_HEADER_CHARS
-        if rank < _TREE_TOP_DTA_FILES:
-            strong_shown = ", ".join(ordered[: min(-neg_strong, _TREE_MAX_STRONG_SHOWN)])
+        if rank < _TREE_TOP_DATA_FILES:
+            first = entry.tables[0]
+            strong_shown = ", ".join(first.columns[: min(first.n_strong, _TREE_MAX_STRONG_SHOWN)])
             budget = max(_TREE_TOP_HEADER_CHARS, len(strong_shown))
-        rows = f"{nobs} rows, " if nobs is not None else ""
-        lines.append(f"{base(p)} — {rows}{-neg_cols} columns: {_truncate_header(', '.join(ordered), budget)}")
-    shown = {r[2] for r in annotated}
+        lines.append(f"{base(entry.path)} — {_format_data_file(entry, budget)}")
+    shown = {entry.path for entry in annotated}
 
     csv_headers_shown = 0
     rest = [p for p in files if p not in shown]
     for p in rest[: max(_TREE_MAX_FILES - len(lines), 0)]:
         line = base(p)
-        if p.suffix.lower() == ".csv" and csv_headers_shown < _TREE_MAX_CSV_HEADERS:
+        if p in notes:
+            line += f" ({notes[p]})"
+        elif p.suffix.lower() == ".csv" and csv_headers_shown < _TREE_MAX_CSV_HEADERS:
             header = _csv_header(p)
             if header:
                 line += f" — columns: {header}"
