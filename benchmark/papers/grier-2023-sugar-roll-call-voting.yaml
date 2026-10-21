@@ -1,0 +1,348 @@
+# Original paper: Grier, K., Grier, R., & Mkrtchian, G. (2023). "Campaign
+#   Contributions and Roll-Call Voting in the U.S. House of
+#   Representatives: The Case of the Sugar Industry." American Political
+#   Science Review, 117(1), 340-346. doi:10.1017/S0003055422000466
+#
+# Reproduction report: He, H., & Petrovičová, T. (2023). "A Comment on
+#   Campaign Contributions and Roll-Call Voting by Grier, Grier and
+#   Mkrtchian (2023)." I4R Discussion Paper No. 57 (I4R First Meta
+#   Database replication team 7).  Verdict: reproducible — "we managed
+#   to successfully reproduce the author's main models and figures"; the
+#   only issue found is inconsistent spelling of some members' last names
+#   in the data, which does not affect any result.  The meta-database
+#   records perfect_reproduction = Yes, computational_reproduction = 1,
+#   why_not_perfect_repro = "Perfect Reproduction".
+#
+# Why this paper:
+#   1. Smallest package in the 2026-10-21 shortlist: one do-file and three
+#      Stata datasets (0.5 MB), CC0 on Harvard Dataverse, all unrestricted.
+#   2. One headline table (Table 1: two fixed-effects logits) plus a
+#      two-row robustness table (Table 3), every number reproducible from
+#      the shipped data.
+#   3. Open-access published APSR PDF (CC BY 4.0).
+#
+# original_claims pins the sugar-contributions coefficient in all six
+# models the paper reports (Table 1 columns 1-2; Table 3, two alternative
+# contribution windows x two fixed-effects specifications), the ideology
+# and tenure coefficients of Table 1 (the other two variables the text
+# calls significant in the headline model), and the two observation
+# counts.  The paper prints coefficients with p-values in parentheses,
+# NOT standard errors, so standard_error is left empty on every claim
+# (see notes for the robust SEs an independent re-estimate gives).
+
+id: grier-2023-sugar-roll-call-voting
+i4r_report_url: https://www.econstor.eu/bitstream/10419/275682/1/I4R-DP057.pdf
+language: stata
+outcome_label: reproducible
+split: holdout
+# Contamination bookkeeping.  No working-paper version was found (web
+# search 2026-10-21; the APSR letter was received 2021-07-19 and first
+# published online 2022-05-02, so the online-first date is the first
+# public version).  Print issue: APSR 117(1), February 2023.  Package:
+# Harvard Dataverse doi:10.7910/DVN/2IFZR9 version 1.0, published /
+# released 2022-05-02 (Dataverse API publicationDate / releaseTime).
+publication_date: "2022-05-02"
+package_release_date: "2022-05-02"
+
+paper:
+  # Published version, open access on Cambridge Core (CC BY 4.0);
+  # re-checked 2026-10-21: 200 application/pdf, %PDF magic, to a
+  # Retally-curation user agent.
+  source: https://www.cambridge.org/core/services/aop-cambridge-core/content/view/DBB341572A3FC0A1D06705B5DDE5C497/S0003055422000466a.pdf/div-class-title-campaign-contributions-and-roll-call-voting-in-the-u-s-house-of-representatives-the-case-of-the-sugar-industry-div.pdf
+  title: "Campaign Contributions and Roll-Call Voting in the U.S. House of Representatives: The Case of the Sugar Industry"
+  authors:
+    - Kevin Grier
+    - Robin Grier
+    - Gor Mkrtchian
+
+dataset:
+  source: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/2IFZR9
+  access_notes: >
+    Harvard Dataverse (doi:10.7910/DVN/2IFZR9) version 1.0, CC0, fully
+    open — 5 files, none restricted, ~0.45 MB (Dataverse API, checked
+    2026-10-21).  The three Stata datasets were ingested by Dataverse and
+    are served by default as tab-separated .tab files
+    (SugarReplicate.tab, SugarReplicate_iter1.tab,
+    SugarReplicate_iter2.tab); the originals are Stata 14+ .dta files
+    (format 118) and need /api/access/datafile/<id>?format=original.  The
+    do-file opens them by their .dta names, so a package fetched without
+    format=original has no file the script can `use`.  The ingested .tab
+    files carry the same rows (862 each) but lose Stata value labels and
+    storage types.  The readme is a Word .docx.  No logs or table output
+    ship with the package.
+
+code_repo:
+  url: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/2IFZR9
+
+original_claims:
+  - description: sugar_contributions_district_fe
+    value: -0.0006
+    claim_type: coefficient
+    sample_size: 186
+    unit: logit coefficient per real dollar of sugar-industry contributions
+    location: "Table 1, District fixed effects, Inflation-adjusted sugar contributions"
+    context: >
+      Table 1 ("The Determinants of Voting in Favor of Sugar Reform"),
+      column District fixed effects, row Inflation-adjusted sugar
+      contributions.  Logit; the dependent variable equals 1 for "aye"
+      votes on the two reform amendments to the U.S. sugar program (the
+      2013 Pitts amendment, H. Amdt. 227 to H.R. 1947, and the 2018 Foxx
+      amendment, H. Amdt. 605 to H.R. 2; aye = a vote against sugar
+      interests) and 0 otherwise.  One observation per House district and
+      vote; the two votes are treated as repeated votes on the same issue.
+      Regressor: inflation-adjusted sugar-industry contributions (all
+      sugar-industry PACs plus individual contributions over $200 from
+      people working in the sugar industry, Center for Responsive
+      Politics) to the incumbent, aggregated from one year before the vote
+      through the end of the calendar year of the vote.  Controls: the
+      American Conservative Union ideology score (ACU, 1-100, higher = more
+      conservative), tenure, the district poverty rate, % with a
+      bachelor's degree, median income, % population over 65, and a
+      dummy for membership on the House agriculture committee.  District
+      fixed effects, so only the 93 districts whose vote outcome changed
+      between the two amendments identify the coefficients (186
+      observations).  Probability values from robust standard errors; the
+      table prints coefficient (p), p = 0.001, significant at 1%.
+  - description: sugar_contributions_incumbent_fe
+    value: -0.0004
+    claim_type: coefficient
+    sample_size: 106
+    unit: logit coefficient per real dollar of sugar-industry contributions
+    location: "Table 1, Incumbent fixed effects, Inflation-adjusted sugar contributions"
+    context: >
+      Table 1, column Incumbent fixed effects, row Inflation-adjusted sugar
+      contributions.  Same logit, outcome, regressor and controls as
+      sugar_contributions_district_fe, with the sample restricted to
+      incumbents who voted on both amendments (the same member in the
+      district for both votes), so the fixed effects are incumbent fixed
+      effects and only the 53 incumbents who changed their vote identify
+      the coefficients (106 observations).  Robust standard errors; the
+      table prints p = 0.001, significant at 1%.
+  - description: acu_ideology_district_fe
+    value: 0.20
+    claim_type: coefficient
+    sample_size: 186
+    unit: logit coefficient per ACU point
+    location: "Table 1, District fixed effects, ACU"
+    context: >
+      Table 1, column District fixed effects, row ACU: the American
+      Conservative Union ideology score of the district's representative
+      (1-100, higher = more conservative).  Same district fixed-effects
+      logit as sugar_contributions_district_fe; p = 0.001.
+  - description: tenure_district_fe
+    value: -0.30
+    claim_type: coefficient
+    sample_size: 186
+    unit: logit coefficient per unit of tenure
+    location: "Table 1, District fixed effects, Tenure"
+    context: >
+      Table 1, column District fixed effects, row Tenure: the seniority
+      of the district's representative (from the American Conservative
+      Union).  Same district fixed-effects logit as
+      sugar_contributions_district_fe; p = 0.001.
+  - description: tenure_incumbent_fe
+    value: -1.43
+    claim_type: coefficient
+    sample_size: 106
+    unit: logit coefficient per unit of tenure
+    location: "Table 1, Incumbent fixed effects, Tenure"
+    context: >
+      Table 1, column Incumbent fixed effects, row Tenure.  Same incumbent
+      fixed-effects logit as sugar_contributions_incumbent_fe; p = 0.001.
+  - description: sugar_contributions_calendar_year_district_fe
+    value: -0.0006
+    claim_type: coefficient
+    sample_size: 186
+    unit: logit coefficient per real dollar of sugar-industry contributions
+    location: "Table 3, 1/1/13-12/31/13 and 1/1/18-12/31/18, District fixed effects"
+    context: >
+      Table 3 ("Coefficients of Inflation-Adjusted Sugar Contributions for
+      Different Time Windows around the Votes"), row 1/1/13-12/31/13 and
+      1/1/18-12/31/18, column District fixed effects.  The Table 1 column 1
+      district fixed-effects logit (same outcome, controls and sample)
+      with sugar contributions measured over the calendar year of each
+      vote (2013 and 2018) instead of the baseline window.  Robust
+      standard errors; p = 0.001.
+  - description: sugar_contributions_calendar_year_incumbent_fe
+    value: -0.0005
+    claim_type: coefficient
+    sample_size: 106
+    unit: logit coefficient per real dollar of sugar-industry contributions
+    location: "Table 3, 1/1/13-12/31/13 and 1/1/18-12/31/18, Incumbent fixed effects"
+    context: >
+      Table 3, row 1/1/13-12/31/13 and 1/1/18-12/31/18, column Incumbent
+      fixed effects.  The Table 1 column 2 incumbent fixed-effects logit
+      (same-incumbent sample) with sugar contributions measured over the
+      calendar year of each vote.  Robust standard errors; p = 0.001.
+  - description: sugar_contributions_12_months_district_fe
+    value: -0.0006
+    claim_type: coefficient
+    sample_size: 186
+    unit: logit coefficient per real dollar of sugar-industry contributions
+    location: "Table 3, 6/20/12-6/20/13 and 5/17/17-5/17/18, District fixed effects"
+    context: >
+      Table 3, row 6/20/12-6/20/13 and 5/17/17-5/17/18, column District
+      fixed effects.  The Table 1 column 1 district fixed-effects logit
+      with sugar contributions measured over the 12 months before each
+      vote up to the date of the vote.  Robust standard errors; p = 0.001.
+  - description: sugar_contributions_12_months_incumbent_fe
+    value: -0.0003
+    claim_type: coefficient
+    sample_size: 106
+    unit: logit coefficient per real dollar of sugar-industry contributions
+    location: "Table 3, 6/20/12-6/20/13 and 5/17/17-5/17/18, Incumbent fixed effects"
+    context: >
+      Table 3, row 6/20/12-6/20/13 and 5/17/17-5/17/18, column Incumbent
+      fixed effects.  The Table 1 column 2 incumbent fixed-effects logit
+      with sugar contributions measured over the 12 months before each
+      vote up to the date of the vote.  Robust standard errors; p = 0.003.
+  - description: observations_district_fe
+    value: 186
+    claim_type: other
+    unit: observations (district-votes)
+    location: "Table 1, District fixed effects, Observations"
+    context: >
+      Observations in the district fixed-effects logit (Table 1 column 1;
+      also Table 3 column 1): the 93 vote-switching districts times the
+      two votes.
+  - description: observations_incumbent_fe
+    value: 106
+    claim_type: other
+    unit: observations (incumbent-votes)
+    location: "Table 1, Incumbent fixed effects, Observations"
+    context: >
+      Observations in the incumbent fixed-effects logit (Table 1 column 2;
+      also Table 3 column 2): the 53 incumbents who voted on both
+      amendments and changed their vote, times the two votes.
+
+# The meta-database's 8 rows for this paper (team 7, DP 57) are all
+# ROBUSTNESS variants of Table 1 and Figure 1, coded in R: clustered SEs
+# (col 1 o_coeff -.0006 / r_coeff -.0006; col 2 o_coeff -.0004 / r_coeff
+# "-.004", evidently a transcription slip — DP 57's own Table 1 prints
+# -0.0004), OLS instead of logit (r_coeff -0.00001 / -0.000004), and the
+# vote-change outcomes with state fixed effects (0.0002 / -0.00003); plus
+# a Figure 1 clustered-CI row and a blank row.  None is a plain
+# reproduction, so no r_coeff is transcribed.  The reproduced values
+# below come from DP 57's Table 1 columns 1-2 (the "Robust SEs"
+# reproduction of the paper's Table 1, R glm with district / incumbent
+# dummies): sugar contributions -0.0006 / -0.0004, ACU 0.202 / 0.060,
+# tenure -0.297 / -1.433; DP 57 also states the effective N as 186 and
+# 106.  DP 57 does not tabulate the paper's Table 3 (alternative
+# windows), so those four claims are not_attempted.
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: -0.0006
+    outcome: matches
+    notes: DP 57 Table 1 col 1 (robust SEs reproduction), -0.0006, p < 0.001.
+  - claim_id: 1
+    reproduced_value: -0.0004
+    outcome: matches
+    notes: DP 57 Table 1 col 2, -0.0004, p < 0.001 (the meta-database row's r_coeff "-.004" is a slip).
+  - claim_id: 2
+    reproduced_value: 0.202
+    outcome: matches
+    notes: DP 57 Table 1 col 1, ACU 0.202 (paper prints 0.20).
+  - claim_id: 3
+    reproduced_value: -0.297
+    outcome: matches
+    notes: DP 57 Table 1 col 1, tenure -0.297 (paper prints -0.30).
+  - claim_id: 4
+    reproduced_value: -1.433
+    outcome: matches
+    notes: DP 57 Table 1 col 2, tenure -1.433 (paper prints -1.43).
+  - claim_id: 5
+    reproduced_value: null
+    outcome: not_attempted
+    notes: DP 57 does not report the paper's Table 3; the blanket verdict (perfect reproduction) covers the package, which produces it.
+  - claim_id: 6
+    reproduced_value: null
+    outcome: not_attempted
+    notes: DP 57 does not report the paper's Table 3.
+  - claim_id: 7
+    reproduced_value: null
+    outcome: not_attempted
+    notes: DP 57 does not report the paper's Table 3.
+  - claim_id: 8
+    reproduced_value: null
+    outcome: not_attempted
+    notes: DP 57 does not report the paper's Table 3.
+  - claim_id: 9
+    reproduced_value: 186
+    outcome: matches
+    notes: DP 57 text, "effective number of observations for model 1 and 3 is 186".
+  - claim_id: 10
+    reproduced_value: 106
+    outcome: matches
+    notes: DP 57 text, "that for model 2 and 4 is 106".
+
+notes: >
+  Headline finding: rising sugar-industry contributions between the 2013
+  and 2018 House votes on near-identical sugar-program reform amendments
+  significantly lowered the probability that a district's representative
+  voted for reform, in district fixed-effects logits (93 vote-switching
+  districts) and incumbent fixed-effects logits (53 vote-switching
+  members), and across alternative contribution windows.
+
+  Curation pass (2026-10-21).  Pinned 11 claims: the sugar-contributions
+  coefficient in all six reported models (Table 1 cols 1-2, Table 3's
+  four cells), the Table 1 col 1 ACU and tenure coefficients and the col
+  2 tenure coefficient, and the two observation counts.  The paper prints
+  coefficient (p-value) with robust-SE p-values, never SEs, so
+  standard_error is empty throughout; the p-values are mostly printed as
+  0.001 (a floor, not an exact value) and are not pinned.  The
+  contributions coefficients are printed to ONE significant digit
+  (-0.0006, -0.0004, ...), so a relative-tolerance comparison against
+  them is coarse: e.g. -0.00063 and -0.00055 both "round" near -0.0006.
+  Left out: the poverty, education, income, age and agriculture-committee
+  rows (the agriculture-committee coefficients, -36.3 / -39.3, and the
+  constants, -20.9 / -63.1, are artefacts of near-separation and of the
+  dummy base category, not estimable targets), the pseudo R2s (0.745 /
+  0.721), Table 2 (vote-changer contribution changes), the Figure 1-3
+  marginal effects, and the appendix tables.
+
+  What was read.  The published APSR PDF (Table 1, Table 2, Table 3,
+  text); the Dataverse API metadata; the whole package (downloaded to a
+  scratch directory, never committed): the do-file, the .docx readme and
+  the three .dta originals; I4R DP 57 (EconStor PDF); the meta-database's
+  8 rows.
+
+  Independent cross-check (not the package code: a statsmodels logit
+  with id dummies on the .dta originals, dropping ids whose outcome does
+  not vary, as Stata's logit does).  Reproduces Table 1 exactly at the
+  printed precision: contributions -0.000631 (robust SE 0.000087) / -0.000392
+  (0.000110); ACU 0.2023 / 0.0599 (p 0.52, paper 0.53); tenure -0.2969 /
+  -1.4327; N 186 / 106.  Table 3: calendar-year window -0.000575 (SE
+  0.000116) / -0.000565 (0.000159); 12-month window -0.000597 (0.000105) /
+  -0.000318 (0.000106, p 0.0026, paper 0.003).  One printed value does not
+  round from the estimate: the calendar-year incumbent cell (claim 6) is
+  printed -0.0005 while the estimate is -0.000565 (rounds to -0.0006);
+  either the paper truncated or Stata's fit differs in the fourth decimal.
+  A reproducer that gets -0.0006 there is right.  SEs above are HC0;
+  Stata's logit robust SEs differ only by the n/(n-1) factor.
+
+  Package structure (package-only facts; never in contexts).  Files:
+  "APSR Replication Codes.do" (one script, Stata 15, ~70 lines),
+  "Replication Read Me.docx", SugarReplicate.dta (main, Table 1 /
+  Figures 1-3), SugarReplicate_iter1.dta (calendar-year window, Table 3
+  row 1), SugarReplicate_iter2.dta (12-month window, Table 3 row 2); each
+  862 rows (434 rows for the 113th Congress, 428 for the 115th) and 27
+  columns (cong, id, vote, totalcont, ncu, tenure, poverty, bach,
+  medincome, over65, agcom, both, party, dwn, ...).  The script builds
+  yesvote = (vote == "Aye") — so "Not Voting" / "No Vote" rows count as
+  0 — deflates totalcont by 1.103 for the 115th Congress (the paper says
+  only "inflation-adjusted"), and runs `logit yesvote rsugcont ncu tenure
+  poverty bach medincome over65 agcom i.id, robust`, then `keep if both
+  == 1` and the same logit for the incumbent column; Stata drops the ids
+  whose outcome does not vary, giving 186 / 106.  The deflator, the
+  coding of non-votes, and the "both" filter are not in the paper's text.
+  It calls `ssc install marhis` (network access) for the figures and has
+  no cd/setwd (expects the .dta files in the working directory).
+
+  What could not be verified.  The package ships no logs or table
+  output, and the do-file was not run; the cross-check above is an
+  independent re-estimate in Python.  No working paper was found, so
+  publication_date is the APSR online-first date.
+
+  language is stata (the original code), which benchmark/runner.py
+  currently skips as LANGUAGE_UNSUPPORTED (_SUPPORTED_LANGUAGES = python,
+  r) until Stata-paper support lands.
