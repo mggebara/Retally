@@ -442,3 +442,18 @@ notes: >
   With the new contexts as hints (title and claim fields only),
   conflictexposure.dta still leads the listing with lnlights_001 and
   instrument in view; Land_250_1757 and lnpdgpd1990 fall past the cap.
+
+  Phase 1.8 (2026-10-20, after PR #44's generic Stata-label matching,
+  main 1101e88): lnpdgpd1990, lnlights_001, Land_250_1757, instrument and
+  the ten geography controls are all in the listing.  Seeded 13/13 (first
+  scored 13/13, no refinement); independent cache-on 11/13 (first attempt
+  crashed on a dplyr if_all(all_of()) error; first scored 11/13 after one
+  error repair; three claim refinements did not move the two misses,
+  warfare_se_full_controls 0.3456 vs 0.370 and warfare_iv_se_full_controls
+  1.0719 vs 1.389); three cache-off independent runs 13, 13, 13, each
+  exact on the first script with no refinement (was 13, 2, 13 at Phase
+  1.7 step 6).  The population-density failure is gone.  Every Dincecco
+  independent loss recorded so far was package navigation (file, then
+  column), now fixed generically; none was a methods-section gap.  Spend
+  about $1.48 over the four runs.  Files:
+  benchmark/results/phase18-dincecco-*-2026-10-20.json.
