@@ -380,3 +380,30 @@ notes: >
   6+ (credit, migration, canton outcomes), Figure 6 quantile estimates
   (figure only), and DP20's Table 2 alternative-threshold estimates
   (+182.20 / -28.35 / +157.08 / -3.53).
+
+  First run 2026-10-21 (Phase 3.2 evaluation pass; main 0492c17, after
+  the content-aware strip rule and the printed-precision floor; Opus
+  4.7, 47-package image, LLM cache on, --mode all, one run per mode;
+  eval-7papers-all-modes-2026-10-21.json).  Seeded 10 / 10 (first scored
+  0; 1 claim refinement); independent 3 / 10 (first scored 2; 2 error +
+  3 claim refinements); blind 0 / 10 (first scored 0).  agrees_with_i4r
+  is false in all three modes; the 'agrees with I4R, not with the paper'
+  cell did not occur.  The only public package is the I4R comment's
+  (original data plus code that re-runs the original Table 5 and then
+  the duplicate-corrected version); the I4R corrected values are pinned
+  as reproduced_value.  Seeded: the first script produced NEITHER the
+  paper's numbers nor the replicators' (79.19 / 71.31 / -51.37 / -61.81;
+  N 3,982 / 1,513 / 275 / 99).  One claim-refinement round, told the
+  gaps to the paper's printed values, then reproduced the paper's
+  numbers exactly (60.49 / 52.79 / -42.97 / -51.79; N 4,770 / 1,583 /
+  327 / 118): target-guided search converged on numbers the human
+  replicators showed to be wrong.  This is the first case of
+  target-guided refinement reproducing a wrong published number, and the
+  reason a seeded 10 / 10 here is a target match, not a reproduction.
+  Independent 3 / 10: one coefficient inside the +-1 SE band (74.15 vs
+  60.49, SE 31.03) and two N (4,781 vs 4,770, 1,583).  Blind applied the
+  paper's stated five-member rule (filter(n_workers >= 5)), which the
+  original code never applied, and got 215.7 / 221.2 for the earnings
+  levels and NA for the IQR columns, N 1,038 / 407 / 40 / 16: following
+  the paper's text reproduces neither the paper nor the replicators, as
+  the 'Benchmark implications' above predicted.

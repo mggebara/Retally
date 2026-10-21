@@ -345,3 +345,17 @@ notes: >
   0.29 / 0.16 mean / SD of the women-MPs share (derived from Table 1 and
   Figure 1), the 125-party count, and all supplementary-appendix models
   (S2-S12).
+
+  First run 2026-10-21 (Phase 3.2 evaluation pass; main 0492c17, after
+  the content-aware strip rule and the printed-precision floor; Opus
+  4.7, 47-package image, LLM cache on, --mode all, one run per mode;
+  eval-7papers-all-modes-2026-10-21.json).  Seeded 11 / 11 (first scored
+  11, exact on the first script); independent 7 / 11 (first scored 0; 1
+  error + 3 claim refinements); blind 1 / 11 (first scored 1; 1 error
+  repair).  Independent's first script crashed and the passes came after
+  claim refinement; the three N claims failed (1,535 / 1,535 / 1,529 vs
+  1,842 / 1,836 / 1,833) and the men-partisans coefficient (1.87 vs
+  1.13).  Blind's first script also crashed; after the repair only
+  n_election_studies (81) matched: all seven coefficients came out with
+  the opposite sign at similar magnitudes (e.g. -1.95 vs 1.89) and N was
+  2,019 vs 1,842.

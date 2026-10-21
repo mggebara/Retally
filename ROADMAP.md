@@ -79,14 +79,39 @@ A second honesty note: both modes see the claimed values (they are the
 targets in the prompt, and the claim-refinement loop chases them). "Independent"
 means independent of the authors' *code*, not blind to the *answer*; any
 methodology change made to close a gap is surfaced as a `DEVIATION:` line.
-A target-blind variant (claims named but values withheld) is now built
-as `--mode blind` (Phase 3.1) but not yet measured.
+A target-blind variant (claims named but values withheld, no claim
+refinement) is built as `--mode blind` (Phase 3.1) and was measured on
+the seven evaluation papers in Phase 3.2: it is the honest headline.
 
 Everything below is ordered by a single rule: **the next PR moves the
 reproduction number, not the machinery.** Current state (2026-10-21):
-**three dev papers measured in both modes** (Opus 4.7, Docker R sandbox;
-one seeded run and, for independent, one cached plus three cache-off
-runs per paper — distributions, not yet rates).
+**ten curated papers** — three dev papers measured in seeded and
+independent mode (Opus 4.7, Docker R sandbox; one seeded run and, for
+independent, one cached plus three cache-off runs per paper), and seven
+holdout evaluation papers measured once each in all three modes with
+pipeline tuning frozen (Phase 3.2).
+
+- **Evaluation pass, 7 papers × 3 modes (Phase 3.2): seeded 55 / 79,
+  independent 41 / 79, blind 24 / 79 claims.**  Blind — claim values
+  withheld, no claim refinement — is the only count free of
+  target-guided search, so **24 / 79 is the honest headline**; the
+  17-claim drop from independent to blind is what seeing the targets
+  (and chasing them) was worth on these papers.  One run per cell:
+  counts, not rates.
+- **Montero 2022 is the first case of target-guided refinement
+  reproducing a wrong published number.**  The paper's Table 5 earnings
+  results were withdrawn after I4R found duplicated rows.  Seeded, the
+  first script matched neither the paper nor the replicators (0 / 10);
+  one claim-refinement round, told the gaps to the printed values,
+  reproduced the paper's numbers exactly (10 / 10) — numbers the human
+  replicators showed to be wrong.  Blind, following the paper's stated
+  five-member rule, reproduced neither (0 / 10).  `agrees_with_i4r` is
+  false in all three modes.
+- **Seeded is not a ceiling.**  Grier (0 / 11 seeded: conditional logit
+  instead of the paper's fixed-effect logit, estimates ~1/7 of the
+  printed values) and Arias (4 / 12: AMCEs re-estimated with `feols`
+  instead of `cjoint::amce`) failed with the authors' code in the prompt,
+  so their seeded-vs-independent gap is undefined.
 
 - **Dincecco 2022 is closed.**  Seeded 13 / 13; independent 13 / 13 in
   all three cache-off runs, each exact on its *first* script with no
@@ -120,8 +145,9 @@ With the objects and columns listed (Phase 1.9) first scored is 5–8 and
 equals final, so Bisbee's independent numbers are now derivation.
 
 The committed `REPORT.md` is built from one row per paper and mode
-(listed under Phase 3, below).  Spend recorded for Phases 1.8, 1.9 and
-3: about $21.10.
+(listed under Phase 3.2, below): 27 rows over ten papers.  Spend
+recorded for Phases 1.8, 1.9 and 3: about $21.10; the evaluation pass
+(3.2) $8.11; running total recorded for the day about $32.
 
 ---
 
@@ -277,6 +303,10 @@ claim-refinement prompt never shows stdout; per-claim notes, the
 script-access check (clean), and a latent methodology-extraction error
 are in the entry's `notes`; `benchmark/results/baseline-both-2026-10-19.json`.)*
 
+*Exposure note (2026-10-21): this phase's independent mounts predate the
+content-aware strip rule (PR #61) and still carried the package's generated
+`.tex` result tables; see Phase 3.2.*
+
 - `python -m benchmark.runner --only dincecco-2022-india-warfare --mode both`;
   commit `REPORT.md` showing both modes and the gap.
 - For every claim lost without the scripts, write a one-line note in the
@@ -363,6 +393,10 @@ three `RETALLY_LLM_CACHE=0 --mode independent` runs, result-cache rows
 deleted before every run, Opus 4.7, Docker R sandbox.  Files:
 `benchmark/results/phase17-step{4,5,6}-both-2026-10-20.json` and
 `phase17-step{4,5,6}-variance-independent-run{1,2,3}-2026-10-20.json`.)*
+
+*Exposure note (2026-10-21): this phase's independent mounts predate the
+content-aware strip rule (PR #61) and still carried the package's generated
+`.tex` result tables; see Phase 3.2.*
 
 | Pipeline state | Seeded (cache on) | Independent (cache on) | Independent, 3 cache-off runs |
 |---|---|---|---|
@@ -460,6 +494,10 @@ one `--mode both` run (LLM cache on) and three `RETALLY_LLM_CACHE=0
 Opus 4.7, Docker R sandbox.  Files:
 `benchmark/results/phase18-dincecco-both-2026-10-20.json` and
 `phase18-dincecco-variance-independent-run{1,2,3}-2026-10-20.json`.)*
+
+*Exposure note (2026-10-21): this phase's independent mounts predate the
+content-aware strip rule (PR #61) and still carried the package's generated
+`.tex` result tables; see Phase 3.2.*
 
 - **PR #44 — generic Stata-label matching in the `.dta` listing.**  A
   column is put in view when its Stata label matches the paper's
@@ -810,8 +848,10 @@ refinement, not from the first script that ran.
   expected to fail these three claims: a "seeded ✓ / independent ✗"
   that is about the paper, not the model.
 
-**`REPORT.md`** is built from a combined `results.json` (gitignored) of
-six rows: Dincecco both rows from `phase18-dincecco-both-2026-10-20.json`,
+**`REPORT.md`** is built from a combined `results.json` (gitignored);
+its dev rows (kept unchanged since this phase; the 21 evaluation rows
+were added in Phase 3.2, which lists all 27) are these
+six: Dincecco both rows from `phase18-dincecco-both-2026-10-20.json`,
 Alesina both rows from `phase3-alesina-both-2026-10-20.json`, Bisbee
 seeded from `phase3b-bisbee-both-2026-10-20.json` (new image, cache on)
 and Bisbee independent from `phase19-bisbee-independent-2026-10-20.json`
@@ -852,7 +892,7 @@ failure notes for every independent-mode loss — *done*; tuning
 loop demonstrably running (≥1 kept improvement with before/after compare
 output in the PR) — *not started*.
 
-### 3.1 Blind mode — built, not measured
+### 3.1 Blind mode — built; measured, see 3.2
 
 `--mode blind` (and `--mode all` = seeded + independent + blind; `both`
 still means seeded + independent) adds `ReproductionMode.BLIND`: the
@@ -869,12 +909,159 @@ equals final by construction (unless a script printed results and then
 crashed, and a crash repair produced the final run).  Blind pass counts are the only ones free
 of target-guided search, which is the North star's open tension.
 
-Not yet run on any paper.  Measuring it costs about the same as an
+First measured in Phase 3.2 (blind 24 / 79 on seven papers, $0.20–0.48
+per paper).  Before that run the estimate was: measuring it costs about the same as an
 independent run per paper (a cache-off independent run was $0.25–1.47
 in Phase 3; blind skips the claim-refinement calls, so it should not
 cost more).  Known residue: the abstract's first 500 characters are
-still shown, and result tables the package ships stay on the mounted
-disk (the prompt forbids reading them).
+still shown; result tables the package ships were left on the mounted
+disk under the name-based strip rule (the prompt forbids reading them)
+and are stripped by content since PR #61.
+
+### 3.2 Evaluation set, first pass — ✅ measured (2026-10-21): 7 papers × 3 modes, one run each
+
+*(Run on `main` 0492c17 — after the content-aware strip rule (PR #61)
+and the printed-precision tolerance floor (PR #62) — 47-package R image,
+Opus 4.7, LLM call cache on, `--mode all`, one run per paper per mode.
+Pipeline tuning is frozen and none of these papers was used to tune
+anything (`split: holdout`).  File:
+`benchmark/results/eval-7papers-all-modes-2026-10-21.json`.  Spend
+**$8.11** for all 21 rows (84 API calls; $0.19–1.17 per row, $0.78
+(Grier) to $2.44 (Arias) per paper for all three modes).)*
+
+| Paper (orig. language, I4R verdict) | Seeded final (first scored) | Independent final (first scored; err/claim refinements) | Blind final (first scored; err ref) |
+|---|---|---|---|
+| adams-2023 (R, reproducible) | 11/11 (11) | 7/11 (0; 1/3) | 1/11 (1; 1) |
+| arias-2022 (R, reproducible; holdout) | 4/12 (4) | 0/12 (0; 3/3) | 1/12 (1; 1) |
+| grier-2023 (Stata, reproducible) | 0/11 (0) | 0/11 (0; 3/0) | 0/11 (0; 2) |
+| hanlon-2022 (Stata, reproducible) | 12/12 (12) | 10/12 (10; 0/1) | 12/12 (12; 1) |
+| leeson-2022 (Stata, reproducible w/ minor discrepancies) | 11/11 (11) | 9/11 (9; 0/1) | 4/11 (4; 0) |
+| manekin-2022 (R, reproducible w/ minor discrepancies) | 7/12 (8*) | 12/12 (6; 1/1) | 6/12 (6; 0) |
+| montero-2022 (Stata, NOT reproducible per I4R) | 10/10 (0) | 3/10 (2; 2/3) | 0/10 (0; 0) |
+| **Total** | **55/79** (first scored 46) | **41/79** (first scored 27) | **24/79** (24) |
+
+\* Manekin seeded first scored (8) is *above* final (7): a claim
+refinement made the score worse and was kept because it fixed a
+different claim (it fixed the Ethiopian perceived-violence coefficient
+but dropped the Study 1 weights, losing both U.S. coefficients).
+
+**Modes read against the thesis.**  Blind (targets withheld, no claim
+refinement) is the only count free of target-guided search: **24 / 79
+blind vs 41 / 79 independent vs 55 / 79 seeded**.  Independent first
+scored (27) against final (41) is the target-guided search inside
+independent mode; blind sits at about independent's first-scored level.
+Seeded is not a ceiling: two packages (Grier, Stata original; Arias, R
+original) failed seeded for translation reasons, so "seeded ✓ /
+independent ✗" needs seeded to pass first — for Grier and Arias the gap
+is undefined.  Pass counts are not comparable across modes on closeness
+alone (seeded 1% vs independent / blind ±1·SE band; Manekin's
+independent 12 / 12 passes the unweighted Study 1 coefficients inside
+the SE band, the same numbers that fail seeded's 1% band); `REPORT.md`
+gives median relative error per mode (holdout: seeded 0.3%, independent
+4.9%, blind 22.3%).
+
+Per-paper classification, read from the saved scripts:
+
+- **Grier (0 in every mode, even seeded).**  The model estimated a
+  conditional logit (`survival::clogit` with `strata(id)`) instead of
+  the paper's logit with district / incumbent fixed-effect dummies, so
+  every coefficient is ~1/7 of the printed value (−0.00009 vs −0.0006)
+  and N is 860 / 612 instead of 186 / 106 (it reported all rows rather
+  than the estimation sample).  The do-file was in the seeded prompt and
+  still got mistranslated.  Grier prints coefficients to one
+  significant digit and no SEs, so the printed-precision floor (PR #62)
+  was the binding tolerance on most claims (`tolerance_source:
+  printed_precision`); it rescued nothing because the estimates are an
+  order of magnitude off.  The independent run printed no value at all
+  (three error repairs).
+- **Arias (seeded 4 / 12: only the four counts).**  The model reshaped
+  the Qualtrics exports and estimated the AMCEs with `feols` clustered
+  by respondent rather than the package's `cjoint::amce` with the
+  design's randomisation constraints; the AMCEs come out ~1.5–2× too
+  large (0.069 vs 0.035) and one German attribute level failed a label
+  regex (NA).  The 3,700-line package script with hard-coded Windows
+  paths was in the prompt; the model rewrote rather than translated.
+  Independent 0 / 12 (3 error + 3 claim refinements; AMCEs near zero,
+  respondents 1,033 / 1,029 vs 1,086 / 1,074); blind 1 / 12 (AMCEs again
+  ~2× too large, one German level inside its SE band).
+- **Montero (the headline case).**  The only public package is the I4R
+  comment's (original data plus code that re-runs the original Table 5
+  and then the duplicate-corrected version; `outcome_label:
+  not_reproducible`; the I4R corrected values are pinned as
+  `reproduced_value`).  *Seeded:* the first script produced neither the
+  paper's numbers nor the replicators' (79.19 / 71.31 / −51.37 / −61.81;
+  N 3,982 / 1,513 / 275 / 99).  One claim-refinement round, told the
+  gaps to the paper's printed values, then reproduced the paper's
+  numbers exactly (60.49 / 52.79 / −42.97 / −51.79; N 4,770 / 1,583 /
+  327 / 118): target-guided search converged on numbers the human
+  replicators showed to be wrong.  *Independent* 3 / 10 (one coefficient
+  inside its ±1·SE band, two N).  *Blind* applied the paper's stated
+  five-member rule (`filter(n_workers >= 5)`), which the original code
+  never applied, and got 215.7 / 221.2 for the levels and NA for the IQR
+  columns, N 1,038 / 407 / 40 / 16: following the paper's text
+  reproduces neither the paper nor the replicators.  `agrees_with_i4r`
+  is false in all three modes; the "agrees with I4R, not with the paper"
+  cell did not occur.  This is the first measured case of the failure
+  the first-scored metric and blind mode exist to expose: a seeded 10 /
+  10 that is a target match, not a reproduction.
+- **Hanlon.**  Seeded and blind both 12 / 12 exact on the first script;
+  independent 10 / 12 (the two Table 4 US max-speed trend claims off).
+  Blind > independent here is single-run noise, not a finding.
+- **Leeson.**  Seeded 11 / 11 and independent 9 / 11 on the first
+  script (independent: the friendliness statistic NA, the five-station
+  visit count 87 vs 102).  Blind 4 / 11: without targets the model chose
+  different test statistics / sample for the friendliness, Brown–Forsythe
+  and ANOVA rows; the two passerby and two shuttle-stop rows pass, the
+  two station-visit counts do not (239 vs 242, 87 vs 102).
+- **Manekin.**  Independent 12 / 12 only after refinement (first scored
+  6); blind 6 / 12 on the first script; seeded 7 / 12 (the Study 1
+  weighting that only the supplement states; see the entry's `notes`).
+  The two 6 / 12 first-script counts are the same six claims: the two
+  Study 2 U.S. Black-protester coefficients (0.347, 0.429) and the four
+  sample sizes; every Study 1 coefficient fails (blind prints NA for
+  all six).
+- **Adams.**  Seeded 11 / 11 on the first script; independent 7 / 11
+  after 1 error + 3 claim refinements from a crashed first script
+  (first scored 0); blind 1 / 11 (crashed first script, repaired, then
+  only the count of election studies matched; all seven coefficients
+  came out with the opposite sign and N 2,019 vs 1,842).
+
+**Exposure note.**  PR #61 found that the old name-based strip rule had
+left Dincecco's esttab table fragments (`1 paper/table1.tex`,
+`table2a.tex`, …, i.e. the answers) and Alesina's and Bisbee's generated
+`.tex` tables on the independent mount for every independent run before
+2026-10-21 (Phases 1.5–1.9 and the Phase 3 dev baseline).  The saved
+scripts of those runs read only `.dta` / `.RData` files and computed
+their numbers, and the prompt forbade reading tables, but the exposure
+existed.  The content-aware rule strips them (manifest per package:
+Dincecco 12 files, Alesina 24, Bisbee 37, Leeson 6).  Today's
+seven-paper run is the first with the content-aware rule (rows'
+`n_files_stripped`: Manekin 96, Hanlon 11, Leeson 6, the rest 1).
+
+**`REPORT.md`** is now built from a combined `results.json` (gitignored)
+of 27 rows: the six dev rows listed under Phase 3 (Dincecco both rows
+from `phase18-dincecco-both-2026-10-20.json`, Alesina both rows from
+`phase3-alesina-both-2026-10-20.json`, Bisbee seeded from
+`phase3b-bisbee-both-2026-10-20.json`, Bisbee independent from
+`phase19-bisbee-independent-2026-10-20.json`; first-scored fields of the
+Dincecco and Alesina rows filled from their artifacts with the
+`--rescore` scoring path, final counts not re-scored) plus all 21 rows
+of `eval-7papers-all-modes-2026-10-21.json`; `usage` is the sum ($11.97,
+106 API calls).  It is a cross-run composite: the dev papers have no
+blind row, so the report's blind totals cover the seven evaluation
+papers only.
+
+**Next.**
+
+- (a) Variance only where it changes a conclusion: Montero seeded
+  (does the first script ever land on the paper's or the replicators'
+  numbers without refinement?) and Manekin independent (12 / 12 final
+  from 6 first scored).
+- (b) The next six shortlisted papers — altmann, lopez-moctezuma,
+  dertwinkel-kalt, holman (pin Dataverse v1.0), acemoglu, gagliarducci —
+  at ≈$1–2.50 per paper for all three modes.
+- (c) The first technical-report draft once ≥10 evaluation papers
+  exist.
 
 ---
 

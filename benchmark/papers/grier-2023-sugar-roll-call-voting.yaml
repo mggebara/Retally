@@ -342,3 +342,21 @@ notes: >
   Original analysis in Stata (one do-file, Stata 15); language is r, the
   reproduction target (the pipeline translates Stata originals to R, as
   for alesina-2022).
+
+  First run 2026-10-21 (Phase 3.2 evaluation pass; main 0492c17, after
+  the content-aware strip rule and the printed-precision floor; Opus
+  4.7, 47-package image, LLM cache on, --mode all, one run per mode;
+  eval-7papers-all-modes-2026-10-21.json).  0 / 11 in every mode, even
+  seeded (first scored 0 in all three; seeded 1 claim refinement,
+  independent 3 error repairs and no printed value, blind 2 error
+  repairs).  The model estimated a conditional logit (survival::clogit
+  with strata(id)) instead of the paper's logit with district /
+  incumbent fixed-effect dummies, so every coefficient is ~1/7 of the
+  printed value (-0.00009 vs -0.0006) and N is 860 / 612 instead of 186
+  / 106 (it reported all rows rather than the estimation sample).  The
+  do-file was in the seeded prompt and still got mistranslated, so the
+  seeded vs independent gap is undefined.  Grier prints coefficients to
+  one significant digit and no SEs, so the printed-precision floor (PR
+  #62) was the binding tolerance on most claims (tolerance_source:
+  printed_precision); it rescued nothing because the estimates are an
+  order of magnitude off.
