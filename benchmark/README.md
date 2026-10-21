@@ -152,17 +152,28 @@ A catalog entry can be cleanly skipped:
 
 Skips are never written to the result cache.  Neither are **transient
 errors**: a reproducer that raises because of a download / network / HTTP
-failure gets a row with `retally_ran = false`, the message in `error`, and
-`"transient": true`, and the runner logs `Not caching <id> (<mode>):
-transient download/network error: ...` instead of saving it, so the next
-run retries the paper rather than replaying the failure.  The
-classification (`_is_transient_error` in `runner.py`) is narrow: the
-exception or anything on its cause chain is a `requests` exception
-(including wrapped HTTP 4xx/5xx), a `urllib3` / `http.client` error, a
-builtin `ConnectionError` / `TimeoutError`, or it is the downloader's
-`RuntimeError("Failed to download dataset ...")`.  Every other outcome —
-including a generated script that crashed inside the sandbox — is cached
-as before.
+failure, or an Anthropic API problem with the account or the service, gets
+a row with `retally_ran = false`, the message in `error`,
+`"transient": true` and an `error_kind`, and the runner logs `Not caching
+<id> (<mode>): transient <kind> error: ...` instead of saving it, so the
+next run retries the paper rather than replaying the failure.  The
+classification (`_transient_error_kind` in `runner.py`) is narrow; the
+exception or anything on its cause chain must be one of:
+
+| `error_kind` | Matches |
+|---|---|
+| `network` | a `requests` exception (including wrapped HTTP 4xx/5xx), a `urllib3` / `http.client` error, a builtin `ConnectionError` / `TimeoutError`, or the downloader's `RuntimeError("Failed to download dataset ...")` |
+| `api_billing` | `anthropic.BadRequestError` whose message mentions "credit balance" or "Plans & Billing", or any exception whose text contains "credit balance is too low" |
+| `api_unavailable` | `anthropic.RateLimitError` (429), `APIConnectionError` / `APITimeoutError`, `InternalServerError` or any `APIStatusError` with status >= 500 |
+| `api_auth` | `anthropic.AuthenticationError` (401) / `PermissionDeniedError` (403) |
+
+Every other outcome — an ordinary 400 for a malformed request, a parse
+failure, a generated script that crashed inside the sandbox — gets
+`error_kind = "pipeline"` and is cached as before.  When any row was
+transient the CLI ends with `WARNING: N row(s) failed on transient errors
+(<kinds>) and were not cached; re-run after fixing the cause.` and
+REPORT.md's headline carries the same warning, so a credit-exhausted run
+cannot be mistaken for a measurement.
 
 ## Running it
 

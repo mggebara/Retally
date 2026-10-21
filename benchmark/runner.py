@@ -201,10 +201,16 @@ class BenchmarkResult:
     """Set when the pipeline raised — None on success or skip."""
 
     transient: bool = False
-    """True when ``error`` came from a download / network / HTTP failure
-    (see :func:`_is_transient_error`).  Such rows are reported but never
-    written to the result cache, so the next run retries the paper instead
-    of replaying the failure."""
+    """True when ``error`` came from a download / network / HTTP failure or
+    an Anthropic API account / service error (see :func:`_is_transient_error`).
+    Such rows are reported but never written to the result cache, so the
+    next run retries the paper instead of replaying the failure."""
+
+    error_kind: str | None = None
+    """Classification of ``error``: one of :data:`TRANSIENT_ERROR_KINDS`
+    (``network``, ``api_billing``, ``api_unavailable``, ``api_auth``) when
+    ``transient``, ``pipeline`` for a genuine pipeline error, None when the
+    reproducer did not raise (and on rows from older files)."""
 
     retally_ran: bool | None = None
     agrees_with_paper: bool | None = None
@@ -478,6 +484,9 @@ def main(argv: list[str] | None = None) -> int:
         f"Estimated API spend: {pricing.format_usd(spend['estimated_usd'])} "
         f"({spend['api_calls']} API calls; {spend['llm_cache_hits']} served free by the LLM cache)."
     )
+    notice = transient_notice(results)
+    if notice:
+        print(notice)
     return 0
 
 
@@ -559,7 +568,7 @@ def _run_one(
     if use_cache and not result.skipped:
         if result.transient:
             logger.warning(
-                "Not caching %s (%s): transient download/network error: %s", entry.id, mode, result.error
+                "Not caching %s (%s): transient %s error: %s", entry.id, mode, result.error_kind, result.error
             )
         else:
             _save_cache(cache_dir, cache_key, result)
@@ -632,13 +641,15 @@ def _execute_with_reproducer(
         )
     except Exception as exc:
         logger.warning("Reproducer raised on %s: %s", entry.id, exc)
+        kind = _transient_error_kind(exc)
         # A failed run still spent tokens; a reproducer may expose them.
         failed = BenchmarkResult(
             entry_id=entry.id,
             mode=mode,
             retally_ran=False,
             error=f"{type(exc).__name__}: {exc}",
-            transient=_is_transient_error(exc),
+            transient=kind is not None,
+            error_kind=kind or PIPELINE_ERROR,
             usage=_priced_usage(getattr(agent, "last_usage", None)),
         )
         return failed, {}
@@ -667,27 +678,110 @@ _DOWNLOAD_FAILURE_PREFIX = "Failed to download dataset "
 dataset-fetch failure in."""
 
 
-def _is_transient_error(exc: BaseException) -> bool:
-    """True when ``exc`` is a download / network / HTTP failure, not a pipeline outcome.
+# ``error_kind`` values.  The first four are transient (never cached).
+NETWORK_ERROR = "network"
+API_BILLING_ERROR = "api_billing"
+API_UNAVAILABLE_ERROR = "api_unavailable"
+API_AUTH_ERROR = "api_auth"
+PIPELINE_ERROR = "pipeline"
+TRANSIENT_ERROR_KINDS = (NETWORK_ERROR, API_BILLING_ERROR, API_UNAVAILABLE_ERROR, API_AUTH_ERROR)
+
+_CREDIT_EXHAUSTED_TEXT = "credit balance is too low"
+"""Anthropic's 400 message when the account is out of credit.  Matched on
+any exception's text, so a ``RuntimeError`` / string that wraps it still
+classifies as billing."""
+
+_BILLING_MARKERS = ("credit balance", "plans & billing")
+"""Narrow, lower-case markers that make an Anthropic ``BadRequestError`` a
+billing problem rather than a malformed request."""
+
+
+def _anthropic_error_kind(exc: BaseException) -> str | None:
+    """Classify one exception as an Anthropic account / service error, or None.
+
+    ``anthropic`` is imported lazily and guarded, so the runner stays
+    importable (and this simply returns None) without the SDK.
+    """
+    try:
+        import anthropic
+    except ImportError:  # pragma: no cover - the SDK is a project dependency
+        return None
+    if isinstance(exc, anthropic.APIConnectionError):  # includes APITimeoutError
+        return API_UNAVAILABLE_ERROR
+    if isinstance(exc, anthropic.RateLimitError):
+        return API_UNAVAILABLE_ERROR
+    if isinstance(exc, (anthropic.AuthenticationError, anthropic.PermissionDeniedError)):
+        return API_AUTH_ERROR
+    if isinstance(exc, anthropic.BadRequestError):
+        text = str(exc).lower()
+        return API_BILLING_ERROR if any(m in text for m in _BILLING_MARKERS) else None
+    if isinstance(exc, anthropic.APIStatusError) and exc.status_code >= 500:
+        return API_UNAVAILABLE_ERROR  # InternalServerError, overloaded (529), ...
+    return None
+
+
+def _transient_error_kind(exc: BaseException) -> str | None:
+    """The transient ``error_kind`` of ``exc``, or None for a genuine pipeline error.
 
     Deliberately narrow: transient iff the exception, or anything on its
-    ``__cause__`` / ``__context__`` chain, is a ``requests`` / ``urllib3`` /
-    ``http.client`` / socket-level network error, or it is the downloader's
-    ``RuntimeError("Failed to download dataset ...")``.  Everything else —
-    a parse failure, a generation error, a sandbox problem — is a genuine
-    outcome and stays cacheable.  (A script that crashes *inside* the
-    sandbox never raises here at all; it comes back as a scored reproduction.)
+    ``__cause__`` / ``__context__`` chain, is
+
+    * ``network``: a ``requests`` / ``urllib3`` / ``http.client`` /
+      socket-level network error, or the downloader's
+      ``RuntimeError("Failed to download dataset ...")``;
+    * ``api_billing``: an Anthropic ``BadRequestError`` whose message
+      mentions the credit balance or Plans & Billing, or any exception whose
+      text contains "credit balance is too low" (string-wrapped errors);
+    * ``api_unavailable``: an Anthropic rate limit (429), connection error
+      or timeout, or any ``APIStatusError`` with status >= 500;
+    * ``api_auth``: an Anthropic ``AuthenticationError`` (401) or
+      ``PermissionDeniedError`` (403).
+
+    These are about the account, the service or the network, not the paper.
+    Everything else — a parse failure, a generation error, a sandbox
+    problem, an ordinary 400 for a malformed request — is a genuine outcome
+    and stays cacheable.  (A script that crashes *inside* the sandbox never
+    raises here at all; it comes back as a scored reproduction.)
     """
     seen: set[int] = set()
     cur: BaseException | None = exc
     while cur is not None and id(cur) not in seen:
         seen.add(id(cur))
+        kind = _anthropic_error_kind(cur)
+        if kind is not None:
+            return kind
+        if _CREDIT_EXHAUSTED_TEXT in str(cur).lower():
+            return API_BILLING_ERROR
         if isinstance(cur, _NETWORK_EXCEPTIONS):
-            return True
+            return NETWORK_ERROR
         if isinstance(cur, RuntimeError) and str(cur).startswith(_DOWNLOAD_FAILURE_PREFIX):
-            return True
+            return NETWORK_ERROR
         cur = cur.__cause__ or cur.__context__
-    return False
+    return None
+
+
+def _is_transient_error(exc: BaseException) -> bool:
+    """True when ``exc`` is a network or Anthropic account / service failure.
+
+    See :func:`_transient_error_kind` for the classification.
+    """
+    return _transient_error_kind(exc) is not None
+
+
+def transient_notice(results: list[BenchmarkResult]) -> str | None:
+    """A loud one-line warning when any row failed on a transient error, else None.
+
+    A credit-exhausted or rate-limited run must not be mistaken for a
+    measurement, so the CLI prints this at the end of its summary.
+    """
+    transient = [r for r in results if r.transient]
+    if not transient:
+        return None
+    kinds = sorted({r.error_kind or "unknown" for r in transient})
+    return (
+        f"WARNING: {len(transient)} row(s) failed on transient errors ({', '.join(kinds)}) "
+        "and were not cached; re-run after fixing the cause."
+    )
 
 
 def new_run_id() -> str:
@@ -1112,6 +1206,7 @@ def _result_from_jsonable(d: dict[str, Any]) -> BenchmarkResult:
         skip_reason=SkipReason(skip_reason) if skip_reason else None,
         error=d.get("error"),
         transient=bool(d.get("transient", False)),
+        error_kind=d.get("error_kind") if isinstance(d.get("error_kind"), str) else None,
         retally_ran=d.get("retally_ran"),
         agrees_with_paper=d.get("agrees_with_paper"),
         agrees_with_i4r=d.get("agrees_with_i4r"),

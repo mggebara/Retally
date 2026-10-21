@@ -857,3 +857,183 @@ def test_transient_flag_round_trips_and_defaults_false():
     r = runner.BenchmarkResult(entry_id="e", error="x", transient=True)
     assert runner._result_from_jsonable(runner._result_to_jsonable(r)).transient is True
     assert runner._result_from_jsonable({"entry_id": "e"}).transient is False
+
+
+# ── Anthropic account / service errors are transient ────────────────────
+
+
+def _api_request():
+    import httpx
+
+    return httpx.Request("POST", "https://api.anthropic.com/v1/messages")
+
+
+def _api_status_error(cls, status, message):
+    """A real SDK status error, built the way the SDK builds one from a response."""
+    import httpx
+
+    response = httpx.Response(status, request=_api_request())
+    return cls(message, response=response, body={"type": "error", "error": {"message": message}})
+
+
+_CREDIT_MESSAGE = (
+    "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': "
+    "'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing "
+    "to upgrade or purchase credits.'}}"
+)
+
+
+def _anthropic_cases():
+    import anthropic
+
+    return [
+        (
+            "rate_limit",
+            lambda: _api_status_error(anthropic.RateLimitError, 429, "rate limited"),
+            "api_unavailable",
+        ),
+        ("connection", lambda: anthropic.APIConnectionError(request=_api_request()), "api_unavailable"),
+        ("timeout", lambda: anthropic.APITimeoutError(request=_api_request()), "api_unavailable"),
+        (
+            "internal",
+            lambda: _api_status_error(anthropic.InternalServerError, 500, "boom"),
+            "api_unavailable",
+        ),
+        (
+            "overloaded",
+            lambda: _api_status_error(anthropic.APIStatusError, 529, "Overloaded"),
+            "api_unavailable",
+        ),
+        (
+            "auth",
+            lambda: _api_status_error(anthropic.AuthenticationError, 401, "invalid x-api-key"),
+            "api_auth",
+        ),
+        (
+            "permission",
+            lambda: _api_status_error(anthropic.PermissionDeniedError, 403, "forbidden"),
+            "api_auth",
+        ),
+        ("credit", lambda: _api_status_error(anthropic.BadRequestError, 400, _CREDIT_MESSAGE), "api_billing"),
+        (
+            "billing_page",
+            lambda: _api_status_error(anthropic.BadRequestError, 400, "See Plans & Billing"),
+            "api_billing",
+        ),
+    ]
+
+
+_ANTHROPIC_IDS = [c[0] for c in _anthropic_cases()]
+
+
+@pytest.mark.parametrize(("name", "make_exc", "kind"), _anthropic_cases(), ids=_ANTHROPIC_IDS)
+def test_anthropic_account_and_service_errors_are_transient(name, make_exc, kind):
+    exc = make_exc()
+    assert runner._transient_error_kind(exc) == kind
+    assert runner._is_transient_error(exc) is True
+
+
+def test_plain_bad_request_is_not_transient():
+    import anthropic
+
+    exc = _api_status_error(anthropic.BadRequestError, 400, "messages: field required")
+    assert runner._transient_error_kind(exc) is None
+    assert runner._is_transient_error(exc) is False
+
+
+@pytest.mark.parametrize("status", [404, 409, 422])
+def test_other_4xx_status_errors_are_not_transient(status):
+    import anthropic
+
+    assert runner._is_transient_error(_api_status_error(anthropic.APIStatusError, status, "nope")) is False
+
+
+def test_string_wrapped_credit_error_is_transient():
+    exc = RuntimeError(f"Code generation failed: {_CREDIT_MESSAGE}")
+    assert runner._transient_error_kind(exc) == "api_billing"
+
+
+def test_credit_error_on_cause_chain_is_transient():
+    import anthropic
+
+    try:
+        try:
+            raise _api_status_error(anthropic.BadRequestError, 400, _CREDIT_MESSAGE)
+        except anthropic.BadRequestError as api_exc:
+            raise ValueError("claim extraction failed") from api_exc
+    except ValueError as outer:
+        assert runner._transient_error_kind(outer) == "api_billing"
+
+
+def test_network_error_kind():
+    import requests
+
+    assert runner._transient_error_kind(requests.exceptions.ReadTimeout("slow")) == "network"
+    assert runner._transient_error_kind(_download_error()) == "network"
+
+
+@pytest.mark.parametrize(("name", "make_exc", "kind"), _anthropic_cases(), ids=_ANTHROPIC_IDS)
+def test_anthropic_transient_rows_are_reported_but_not_cached(tmp_path, caplog, name, make_exc, kind):
+    [result] = runner.run_benchmark(
+        [_entry()], reproducer_factory=lambda: _RaisingReproducer(make_exc()), cache_dir=tmp_path
+    )
+    assert result.retally_ran is False
+    assert result.transient is True
+    assert result.error_kind == kind
+    assert not list(tmp_path.glob("*.json")), "transient errors must not be cached"
+    assert f"transient {kind} error" in caplog.text
+    # The next run retries rather than replaying the failure for free.
+    calls = []
+
+    class _Recording(_RaisingReproducer):
+        def reproduce(self, *args, **kwargs):
+            calls.append(1)
+            return super().reproduce(*args, **kwargs)
+
+    [again] = runner.run_benchmark(
+        [_entry()], reproducer_factory=lambda: _Recording(make_exc()), cache_dir=tmp_path
+    )
+    assert again.cached is False
+    assert calls == [1]
+
+
+def test_plain_bad_request_row_is_a_cached_pipeline_error(tmp_path):
+    import anthropic
+
+    exc = _api_status_error(anthropic.BadRequestError, 400, "messages: field required")
+    [result] = runner.run_benchmark(
+        [_entry()], reproducer_factory=lambda: _RaisingReproducer(exc), cache_dir=tmp_path
+    )
+    assert result.transient is False
+    assert result.error_kind == "pipeline"
+    assert len(list(tmp_path.glob("*.json"))) == 1
+
+
+def test_error_kind_round_trips_and_defaults_none():
+    r = runner.BenchmarkResult(entry_id="e", error="x", transient=True, error_kind="api_billing")
+    assert runner._result_from_jsonable(runner._result_to_jsonable(r)).error_kind == "api_billing"
+    assert runner._result_from_jsonable({"entry_id": "e"}).error_kind is None
+
+
+def test_transient_notice():
+    ok = runner.BenchmarkResult(entry_id="ok")
+    billing = [
+        runner.BenchmarkResult(entry_id=f"b{i}", error="x", transient=True, error_kind="api_billing")
+        for i in range(3)
+    ]
+    assert runner.transient_notice([ok]) is None
+    assert runner.transient_notice([ok, *billing]) == (
+        "WARNING: 3 row(s) failed on transient errors (api_billing) and were not cached; "
+        "re-run after fixing the cause."
+    )
+
+
+def test_main_prints_transient_notice(tmp_path, monkeypatch, capsys):
+    rows = [runner.BenchmarkResult(entry_id="b", error="x", transient=True, error_kind="api_billing")]
+    monkeypatch.setattr(runner, "CATALOG_DIR", REPO_ROOT / "tests" / "fixtures" / "benchmark_placeholders")
+    monkeypatch.setattr(runner, "RESULTS_DIR", tmp_path)
+    monkeypatch.setattr(runner, "ARTIFACTS_DIR", tmp_path / "artifacts")
+    monkeypatch.setattr(runner, "REPO_ROOT", tmp_path.parent)
+    monkeypatch.setattr(runner, "run_benchmark", lambda catalog, **kwargs: rows)
+    assert runner.main([]) == 0
+    assert "WARNING: 1 row(s) failed on transient errors (api_billing)" in capsys.readouterr().out

@@ -56,6 +56,7 @@ def render_markdown(results: list[dict[str, Any]]) -> str:
             f"(out_of_scope={headline['out_of_scope']}, "
             f"language_unsupported={headline['language_unsupported']}, "
             f"no_api_key={headline['no_api_key']}{_init_failed_suffix(headline)}).  ",
+            *_transient_lines(results),
             f"Reproduction mode: **{modes[0]}** ({_MODE_BLURB.get(modes[0], 'unrecognised mode')}).  ",
             _reproducer_line(results),
             "",
@@ -108,6 +109,7 @@ def render_html(results: list[dict[str, Any]]) -> str:
           (out_of_scope={headline["out_of_scope"]},
           language_unsupported={headline["language_unsupported"]},
           no_api_key={headline["no_api_key"]}{_init_failed_suffix(headline)}).
+          {_escape(_transient_summary(results) or "")}
         </p>
         <table>
           <thead>
@@ -168,6 +170,34 @@ def _headline_counts(results: list[dict[str, Any]]) -> dict[str, int]:
     }
 
 
+def _transient_summary(results: list[dict[str, Any]]) -> str | None:
+    """Headline note for rows that failed on transient errors, or None when there are none.
+
+    Transient rows (network, Anthropic billing / auth / rate-limit / outage;
+    see ``runner._transient_error_kind``) are not measurements and were not
+    cached, so the report says so loudly instead of letting them read as
+    pipeline failures.
+    """
+    transient = [r for r in results if r.get("transient")]
+    if not transient:
+        return None
+    counts: dict[str, int] = {}
+    for r in transient:
+        kind = str(r.get("error_kind") or "unknown")
+        counts[kind] = counts.get(kind, 0) + 1
+    kinds = ", ".join(f"{k}={n}" for k, n in sorted(counts.items()))
+    return (
+        f"WARNING: {len(transient)} run(s) failed on transient errors ({kinds}) and were not cached; "
+        "they are not measurements — re-run after fixing the cause."
+    )
+
+
+def _transient_lines(results: list[dict[str, Any]]) -> list[str]:
+    """``[**WARNING ...**]`` for the Markdown headline when any row was transient; ``[]`` otherwise."""
+    note = _transient_summary(results)
+    return [f"**{note}**  "] if note else []
+
+
 def _init_failed_suffix(headline: dict[str, int]) -> str:
     """``, reproducer_init_failed=N`` when any run hit it; empty otherwise (keeps old reports stable)."""
     n = headline["reproducer_init_failed"]
@@ -201,7 +231,8 @@ def _multi_mode_header(results: list[dict[str, Any]], modes: list[str]) -> list[
         f"Skipped runs: **{headline['skipped']}** "
         f"(out_of_scope={headline['out_of_scope']}, "
         f"language_unsupported={headline['language_unsupported']}, "
-        f"no_api_key={headline['no_api_key']}{_init_failed_suffix(headline)}).",
+        f"no_api_key={headline['no_api_key']}{_init_failed_suffix(headline)}).  ",
+        *_transient_lines(results),
         "",
         "Reproduction modes:",
         "",
@@ -510,6 +541,8 @@ def _status_label(r: dict[str, Any]) -> str:
     if r.get("skipped"):
         return f"skipped: {r.get('skip_reason', 'unknown')}"
     if r.get("error"):
+        if r.get("transient"):
+            return f"transient error ({r.get('error_kind') or 'unknown'}): {r['error'][:60]}"
         return f"error: {r['error'][:60]}"
     return "ran"
 
