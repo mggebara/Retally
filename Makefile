@@ -1,4 +1,4 @@
-.PHONY: build-sandbox rebuild-sandbox build-r-sandbox rebuild-r-sandbox test lint format typecheck check sync lock clean benchmark benchmark-report
+.PHONY: build-sandbox rebuild-sandbox build-r-sandbox rebuild-r-sandbox check-r-sandbox test lint format typecheck check sync lock clean benchmark benchmark-report
 
 SANDBOX_IMAGE := retally-sandbox:latest
 DOCKERFILE    := docker/Dockerfile.sandbox
@@ -61,10 +61,20 @@ build-sandbox:
 rebuild-sandbox:
 	docker build --no-cache -f $(DOCKERFILE) -t $(SANDBOX_IMAGE) docker/
 
-## Build the R-flavoured sandbox image (required before using RDockerExecutor).
+## Build the R-flavoured sandbox image (required before using RDockerExecutor),
+## then load-test every package it promises.
 build-r-sandbox:
 	docker build -f $(R_DOCKERFILE) -t $(R_SANDBOX_IMAGE) docker/
+	$(MAKE) check-r-sandbox
 
 ## Force a full rebuild of the R sandbox image.
 rebuild-r-sandbox:
 	docker build --no-cache -f $(R_DOCKERFILE) -t $(R_SANDBOX_IMAGE) docker/
+	$(MAKE) check-r-sandbox
+
+## Load every package in docker/requirements.sandbox.r.txt (plus base/recommended
+## packages) inside the R sandbox image, offline and as the sandbox user.
+## Fails if any package is missing.
+check-r-sandbox:
+	docker run --rm --network none -v "$(CURDIR)/docker:/check:ro" $(R_SANDBOX_IMAGE) \
+		Rscript /check/check-r-packages.R /check/requirements.sandbox.r.txt

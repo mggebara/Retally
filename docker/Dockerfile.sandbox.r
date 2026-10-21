@@ -16,24 +16,28 @@
 FROM rocker/r2u:noble
 
 # ── R packages ──────────────────────────────────────────────────────────────
-# install2.r is the docopt-based Rocker wrapper that understands the
-# ``--error`` flag (surfacing install failures as non-zero exit codes,
-# good for builds).  The simpler ``install.r`` littler script that ships
-# in current r2u images has no flag parsing, so it would treat ``--error``
-# as a package name and fail.  r2u resolves the named packages as Debian
-# binary packages so installation is fast and deterministic.
-RUN install2.r --error \
-    jsonlite \
-    fixest \
-    AER \
-    plm \
-    lmtest \
-    sandwich \
-    modelsummary \
-    data.table \
-    readr \
-    dplyr \
-    haven
+# requirements.sandbox.r.txt is the single source of truth for the package
+# list (comments stripped below).  install2.r is the docopt-based Rocker
+# wrapper that understands ``--error`` (install failures become non-zero
+# exit codes).  The simpler ``install.r`` littler script that ships in
+# current r2u images has no flag parsing, so it would treat ``--error`` as
+# a package name and fail.  r2u resolves every name to an Ubuntu binary
+# (r-cran-<name>) via bspm, so nothing is compiled.  The apt lists are
+# removed afterwards to keep the layer small.
+COPY requirements.sandbox.r.txt check-r-packages.R /opt/retally/
+RUN install2.r --error $(sed -e 's/#.*//' /opt/retally/requirements.sandbox.r.txt | xargs) \
+    && rm -rf /var/lib/apt/lists/* /tmp/downloaded_packages
+
+# ── disable bspm at runtime ────────────────────────────────────────────────
+# r2u's Rprofile.site calls bspm::enable() at every R startup.  As the
+# non-root sandbox user with no D-Bus, bspm prints a multi-line
+# "D-Bus service not found!" warning on every Rscript run, and that stderr
+# is fed back to the model during refinement.  The container runs with
+# --network none, so runtime installs are impossible anyway: drop the
+# enable call once all packages are installed.
+RUN sed -i 's/^suppressMessages(bspm::enable())/# bspm disabled at runtime (retally sandbox has no network)/' \
+        /etc/R/Rprofile.site \
+    && ! grep -q 'bspm::enable' /etc/R/Rprofile.site
 
 # ── sandbox user (non-root) ────────────────────────────────────────────────
 RUN groupadd -r sandbox && useradd -r -g sandbox -d /workspace -s /bin/false sandbox
