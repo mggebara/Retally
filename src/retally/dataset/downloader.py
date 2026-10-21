@@ -14,6 +14,24 @@ Supported sources:
   - Harvard Dataverse   (REST API)
   - FigShare            (REST API)
   - OpenML              (openml Python package)
+
+Harvard Dataverse originals: Dataverse ingests tabular uploads (``.csv``,
+``.dta``, ``.sav``, ...) and serves them as ``.tab`` by default, which breaks
+replication scripts that read the files by their uploaded names.  For a file
+whose metadata lists an ``originalFileFormat`` / ``originalFileName`` the
+downloader requests ``/api/access/datafile/<id>?format=original`` and saves it
+under the label stem with the original extension (``data.tab`` ->
+``data.csv``); if the original request fails it falls back to the converted
+``.tab`` and logs a warning.  Non-ingested files (``.tgz``, ``.R``, ``.dat``,
+...) have no original format and are fetched as-is.
+
+Archives: a downloaded ``.zip`` / ``.tar`` / ``.tar.gz`` / ``.tgz`` is
+extracted into the destination and deleted.  Archives found inside it are
+extracted too (up to ``_MAX_NESTED_DEPTH`` = 2 levels), each into a directory
+named after the inner archive (``inner.zip`` -> ``inner/``), and then deleted.
+Extraction refuses any archive with a member that would land outside its
+destination (zip-slip) and caps the total uncompressed size of one top-level
+archive's tree at ``_MAX_EXTRACTED_BYTES``; a refused archive stays as-is.
 """
 
 from __future__ import annotations
@@ -41,6 +59,50 @@ logger = logging.getLogger(__name__)
 _COMPLETE_SENTINEL = ".retally-download-complete"
 
 _ARCHIVE_SUFFIXES = (".zip", ".tar.gz", ".tgz", ".tar")
+_TAR_SUFFIXES = (".tar.gz", ".tgz", ".tar")
+
+# Nested archives (an archive inside a downloaded archive) are extracted up
+# to this many levels below the top-level archive, and everything extracted
+# from one top-level archive, nested levels included, shares a size budget
+# (uncompressed bytes) as a guard against archive bombs.
+_MAX_NESTED_DEPTH = 2
+_MAX_EXTRACTED_BYTES = 20 * 1024**3
+
+
+def _strip_archive_suffix(name: str) -> str:
+    """``data.tar.gz`` -> ``data``; ``code.zip`` -> ``code``."""
+    lower = name.lower()
+    for suffix in sorted(_ARCHIVE_SUFFIXES, key=len, reverse=True):
+        if lower.endswith(suffix) and len(name) > len(suffix):
+            return name[: -len(suffix)]
+    return name
+
+
+def _is_nested_archive_candidate(path: Path) -> bool:
+    """True for an archive file, excluding macOS ``__MACOSX`` / ``._`` resource-fork stubs."""
+    return (
+        path.name.lower().endswith(_ARCHIVE_SUFFIXES)
+        and not path.name.startswith("._")
+        and "__MACOSX" not in path.parts
+    )
+
+
+# MIME type -> extension for Dataverse ingested files whose metadata gives an
+# ``originalFileFormat`` but no ``originalFileName``.
+_ORIGINAL_FORMAT_EXTENSIONS = {
+    "text/csv": ".csv",
+    "text/comma-separated-values": ".csv",
+    "text/tsv": ".tsv",
+    "text/tab-separated-values": ".tsv",
+    "application/x-stata": ".dta",
+    "application/x-stata-13": ".dta",
+    "application/x-stata-14": ".dta",
+    "application/x-stata-15": ".dta",
+    "application/x-spss-sav": ".sav",
+    "application/x-spss-por": ".por",
+    "application/x-rlang-transport": ".RData",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": ".xlsx",
+}
 
 
 def _infer_task_type(target: Any) -> str:
@@ -459,10 +521,50 @@ class DatasetDownloader:
             return f"doi:{doi.group(1)}"
         return raw
 
+    @staticmethod
+    def _dataverse_original_name(data_file: dict[str, Any]) -> str | None:
+        """Return the filename to save an ingested Dataverse file's original under.
+
+        Dataverse ingests tabular uploads (``.csv``, ``.dta``, ``.sav``, ...)
+        and serves them as ``<label>.tab`` by default; the upload itself is
+        only served with ``?format=original``.  A file that was not ingested
+        (no ``originalFileFormat`` / ``originalFileName``) returns ``None``
+        and is fetched as-is.
+
+        The name is the file's current label with the original extension
+        (``data.tab`` + ``data.csv`` -> ``data.csv``): the label is what the
+        dataset page shows and what replication scripts are written
+        against, whereas ``originalFileName`` can carry an upload-time
+        artefact (arias-2022 lists ``usclimate_exp1.tab`` with original name
+        ``usclimate_exp1-1.csv``, and the script reads ``usclimate_exp1.csv``).
+        ``originalFileName`` is used as-is when the label is not a ``.tab``
+        or the original name has no extension.
+        """
+        original_name = data_file.get("originalFileName")
+        if not data_file.get("originalFileFormat") and not original_name:
+            return None
+        label = str(data_file.get("filename") or "")
+        if original_name:
+            suffix = Path(str(original_name)).suffix
+            if suffix and label.lower().endswith(".tab"):
+                return Path(label).stem + suffix
+            return Path(str(original_name)).name
+        # Ingested but the original name is missing: infer the extension.
+        ext = _ORIGINAL_FORMAT_EXTENSIONS.get(str(data_file.get("originalFileFormat")))
+        if ext and label.lower().endswith(".tab"):
+            return Path(label).stem + ext
+        return None
+
     def _download_harvard_dataverse(self, doi: str, dest: Path) -> Path:
         """Download a dataset from Harvard Dataverse.
 
-        Uses the Dataverse REST API to list files, then downloads each one.
+        Uses the Dataverse REST API to list files, then downloads each one
+        in a deterministic (name-sorted) order.  Ingested tabular files are
+        fetched in their original upload format (``?format=original``, see
+        ``_dataverse_original_name``); if that request fails the converted
+        ``.tab`` is downloaded instead and the fallback is logged.  Files
+        that were not ingested (archives such as ``.tgz``, scripts, ``.dat``)
+        are fetched as-is, and archives are extracted as usual.
 
         Parameters
         ----------
@@ -487,19 +589,46 @@ class DatasetDownloader:
 
         dest.mkdir(parents=True, exist_ok=True)
 
-        file_specs: list[tuple[str, str]] = []
+        # (converted_url, converted_name, original_url | None, original_name | None)
+        specs: list[tuple[str, str, str | None, str | None]] = []
         for file_info in files:
             try:
-                file_id = file_info["dataFile"]["id"]
-                filename = file_info["dataFile"]["filename"]
+                data_file = file_info["dataFile"]
+                file_id = data_file["id"]
+                filename = data_file["filename"]
             except (KeyError, TypeError):
                 logger.warning("Harvard Dataverse %s: skipping file with malformed metadata", doi)
                 continue
             file_url = f"https://dataverse.harvard.edu/api/access/datafile/{file_id}"
-            file_specs.append((file_url, filename))
+            original_name = self._dataverse_original_name(data_file)
+            original_url = f"{file_url}?format=original" if original_name else None
+            specs.append((file_url, filename, original_url, original_name))
+        # Deterministic order regardless of how the API lists the files.
+        specs.sort(key=lambda spec: (spec[3] or spec[1], spec[1]))
 
-        failures = self._stream_many(file_specs, dest, source_label=f"Harvard Dataverse {doi}")
-        if failures and failures == len(file_specs):
+        label = f"Harvard Dataverse {doi}"
+        failures = 0
+        for file_url, filename, original_url, original_name in specs:
+            if original_url and original_name:
+                try:
+                    self._stream_to_file(original_url, dest, original_name)
+                    continue
+                except (requests.RequestException, OSError) as exc:
+                    (dest / original_name).unlink(missing_ok=True)
+                    logger.warning(
+                        "%s: original-format download of %s failed (%s); falling back to the converted %s",
+                        label,
+                        original_name,
+                        exc,
+                        filename,
+                    )
+            try:
+                self._stream_to_file(file_url, dest, filename)
+            except (requests.RequestException, OSError) as exc:
+                failures += 1
+                logger.warning("%s: failed to download %s (%s)", label, filename, exc)
+
+        if failures and failures == len(specs):
             raise RuntimeError(f"All {failures} files from Harvard Dataverse {doi} failed to download.")
         return dest
 
@@ -542,28 +671,107 @@ class DatasetDownloader:
         return dest
 
     def _extract_archive(self, archive_path: Path, dest: Path) -> Path:
-        """Extract a zip or tar archive into ``dest`` and delete the archive."""
+        """Extract a zip or tar archive into ``dest`` and delete the archive.
+
+        Archives found inside it (zip-in-zip, tgz-in-zip, ...) are extracted
+        too, up to ``_MAX_NESTED_DEPTH`` levels below the top-level archive:
+        each into a directory named after the inner archive (``data.zip`` ->
+        ``data/``, next to where the archive sat), after which the inner
+        archive is deleted.  An archive with a member that would land
+        outside its destination (zip-slip: ``../`` or absolute paths, tar
+        links pointing outside) is refused and left in place, as is one
+        whose uncompressed size would exceed what remains of the
+        ``_MAX_EXTRACTED_BYTES`` budget shared by the whole tree.  Failures
+        are logged, never raised: the archive simply stays as-is.
+        """
+        budget = [_MAX_EXTRACTED_BYTES]
+        self._extract_one(archive_path, dest, depth=0, budget=budget)
+        return dest
+
+    def _extract_one(self, archive_path: Path, dest: Path, depth: int, budget: list[int]) -> bool:
+        """Extract one archive (and, below the depth cap, the archives inside it)."""
         name_lower = archive_path.name.lower()
+        dest_root = dest.resolve()
+
+        def _inside(path: Path) -> bool:
+            return path.resolve().is_relative_to(dest_root)
+
         try:
             if name_lower.endswith(".zip"):
                 with zipfile.ZipFile(archive_path, "r") as zf:
+                    infos = zf.infolist()
+                    names = [i.filename for i in infos]
+                    if not all(_inside(dest / n) for n in names):
+                        logger.warning("Refusing to extract %s: a member escapes %s", archive_path.name, dest)
+                        return False
+                    total = sum(i.file_size for i in infos)
+                    if total > budget[0]:
+                        logger.warning(
+                            "Not extracting %s: %d bytes exceeds the size cap", archive_path.name, total
+                        )
+                        return False
                     zf.extractall(dest)
-            elif name_lower.endswith((".tar.gz", ".tgz", ".tar")):
+                    file_names = [i.filename for i in infos if not i.is_dir()]
+            elif name_lower.endswith(_TAR_SUFFIXES):
                 with tarfile.open(archive_path, "r:*") as tf:
-                    tf.extractall(dest)
+                    members = tf.getmembers()
+                    for m in members:
+                        target = dest / m.name
+                        if m.issym():
+                            link_ok = _inside(target.parent / m.linkname)
+                        elif m.islnk():
+                            link_ok = _inside(dest / m.linkname)
+                        else:
+                            link_ok = True
+                        if not (_inside(target) and link_ok):
+                            logger.warning(
+                                "Refusing to extract %s: member %s escapes %s",
+                                archive_path.name,
+                                m.name,
+                                dest,
+                            )
+                            return False
+                    total = sum(m.size for m in members if m.isfile())
+                    if total > budget[0]:
+                        logger.warning(
+                            "Not extracting %s: %d bytes exceeds the size cap", archive_path.name, total
+                        )
+                        return False
+                    if hasattr(tarfile, "data_filter"):
+                        tf.extractall(dest, filter="data")
+                    else:  # pragma: no cover - Python < 3.11.4
+                        tf.extractall(dest)
+                    file_names = [m.name for m in members if m.isfile()]
             else:
                 logger.warning("Unrecognised archive format for %s, leaving as-is.", archive_path.name)
-                return dest
-        except (zipfile.BadZipFile, tarfile.TarError, OSError) as exc:
+                return False
+        except (zipfile.BadZipFile, tarfile.TarError, OSError, EOFError) as exc:
             logger.warning("Could not extract %s: %s", archive_path.name, exc)
-            return dest
+            return False
 
+        budget[0] -= total
         try:
             archive_path.unlink()
         except OSError as exc:
             logger.warning("Could not delete archive %s: %s", archive_path, exc)
 
-        return dest
+        if depth >= _MAX_NESTED_DEPTH:
+            return True
+        for member in sorted(file_names):
+            inner = dest / member
+            if not _is_nested_archive_candidate(inner) or not inner.is_file():
+                continue
+            inner_dest = inner.parent / _strip_archive_suffix(inner.name)
+            if inner_dest.exists() and not inner_dest.is_dir():
+                logger.warning("Not extracting nested %s: %s exists and is a file", member, inner_dest.name)
+                continue
+            created = not inner_dest.exists()
+            inner_dest.mkdir(parents=True, exist_ok=True)
+            if self._extract_one(inner, inner_dest, depth + 1, budget):
+                logger.info("Extracted nested archive %s into %s", member, inner_dest)
+            elif created and not any(inner_dest.iterdir()):
+                inner_dest.rmdir()  # refused/failed: don't leave an empty directory behind
+        return True
 
     # ------------------------------------------------------------------
     # Metadata helper
