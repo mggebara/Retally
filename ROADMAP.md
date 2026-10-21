@@ -87,12 +87,12 @@ reproduction number, not the machinery.** Current state of the core
 result: **seeded 13 / 13 pinned headline claims** on Dincecco et al. 2022
 (2026-10-19, `benchmark/results/baseline-2026-10-19.json`; was 0 / 102
 auto-extracted claims in July) — one paper, one sampled generation, so not
-yet a rate. **Independent: 0 / 13** (script-free mount, 3 runs: 0, 0, 0;
-prompt-only withholding, 3 runs: 0, 0, 1) — Phase 1.5, below; still 0 / 13
-after the Phase 1.6 plumbing fixes (measured through step 3; step 4 and the
-variance runs blocked by API credit), with an offline counterfactual
-showing the model's own specification hits 7 / 13 once the data file is
-right.
+yet a rate. **Independent: 1–12 / 13 across runs** after the Phase 1.6
+plumbing fixes (three cache-off runs: 4, 10, 1 — median 4, mean 5; one
+cached run: 12), up from a flat **0 / 13** in Phase 1.5 (script-free mount,
+3 runs: 0, 0, 0; prompt-only withholding, 3 runs: 0, 0, 1) and after Phase
+1.6 steps 1–3. Run-to-run variance now dominates the signal, so every
+further change is measured as a distribution of runs (Phase 1.6, below).
 
 ---
 
@@ -248,7 +248,7 @@ are in the entry's `notes`; `benchmark/results/baseline-both-2026-10-19.json`.)*
   package scripts at run time (they are still on disk — see Risks).
 - Record Dincecco's `publication_date` and `package_release_date`.
 
-### 1.6 Independent-mode plumbing fixes — ⚠ partly measured (2026-10-20)
+### 1.6 Independent-mode plumbing fixes — ✅ measured (2026-10-20) — independent 1–12 / 13 across runs
 *(Four fixes, one commit each: the comparator no longer scores a claim
 with no RESULT line against another claim's value (independent "matched"
 10 → 7 of 13, no verdict change); `.dta` column names in the dataset
@@ -257,14 +257,56 @@ prompt no longer primes "standardised".  Seeded 13/13 after every step;
 independent 0/13 after steps 1–3.  Step 2 fixed variable resolution
 (right names) but the model chose `biclean.dta` (N=271) because
 `conflictexposure.dta`'s 1288 columns are truncated before the outcome
-and instrument.  Step 4's independent run, the three cache-off variance
-runs, and a 2026-10-20 baseline were not run: the API account ran out of
-credit.  Offline counterfactual (step-3 script, file swapped, no
-`scale()`): 3/13, and 7/13 (every OLS claim, to 3–4 dp) once population
-density is added to columns 1–2, which the claim token "bivariate"
-misleads the model into dropping.  The IV claims were never attempted
-(instrument not found).  Classification in the entry's `notes`;
-`benchmark/results/phase16-step3-both-2026-10-20.json`.)*
+and instrument.  Offline counterfactual after step 3 (step-3 script, file
+swapped, no `scale()`): 3/13, and 7/13 (every OLS claim, to 3–4 dp) once
+population density is added to columns 1–2, which the claim token
+"bivariate" misleads the model into dropping.  After step 4 (commit
+1d30611, the only pipeline change since step 3) independent is no longer
+a flat zero but swings from 1 to 12 of 13 between samples.  Classification
+in the entry's `notes`; `benchmark/results/phase16-step3-both-2026-10-20.json`
+(steps 1–3), `baseline-both-2026-10-20.json` and
+`variance-independent-postfix-run{1,2,3}-2026-10-20.json` (step 4).)*
+
+Step 4 measured on `main` at 9b4bbb9:
+
+| Result file | Mode | LLM cache | Passed |
+|---|---|---|---|
+| `baseline-both-2026-10-20.json` | seeded | on | 13 / 13 |
+| `baseline-both-2026-10-20.json` | independent | on | 12 / 13 |
+| `variance-independent-postfix-run1-2026-10-20.json` | independent | off | 4 / 13 |
+| `variance-independent-postfix-run2-2026-10-20.json` | independent | off | 10 / 13 |
+| `variance-independent-postfix-run3-2026-10-20.json` | independent | off | 1 / 13 |
+
+- **Headline.** Independent moved from a flat 0/13 (step 3, and three
+  earlier cache-off runs, all 0) to 1–12/13; the three cache-off runs give
+  a median of 4/13 and a mean of 5/13.  Seeded matches every value exactly.
+- **The 12/13 run finds the file by searching on the target N.**  One
+  generation plus three refinements; it fails only
+  `warfare_iv_se_full_controls` (6.7% off against the 5% cap).  The final
+  script lists every `.dta` in the package recursively and keeps the one
+  whose row count is closest to 660, the N given in the claims — so it
+  reached `conflictexposure.dta` through the target, not the listing.
+  Variable names came from the `.dta` column listing (data, not code; the
+  script-free copy was checked: 58 files, no scripts or logs).  Close but
+  not exact: N=664 vs 660 (the authors drop four island districts the
+  paper does not mention), Table 1 col 1 3.723 vs 3.713, IV col 3 3.713
+  vs 3.482 (inside only the ±1·SE band).
+- **Cache-off failure modes (inferred from the numbers — these runs kept
+  no script).**  Runs 1 and 2 (4/13, 10/13) both report 7.1688 (SE 0.5159)
+  for Table 1 col 1 and get col 3 essentially exact (1.4646): consistent
+  with omitting log population density from col 1, which the misnamed
+  token `warfare_coefficient_bivariate` invites (the column does control
+  for it, as the claim `context` says; the context reaches the prompt only
+  from PR #40).  Run 2 also gets IV cols 2–3 essentially exact (4.6339,
+  3.4823) and N=664; run 1 gets the IV half wrong, with sign flips.
+  Run 3 (1/13) picked a wrong file (N=374) and misses everything else.
+- **Consequence for measurement.**  With one pipeline state spanning
+  1–12/13, a single run per change can no longer tell changes apart.  From
+  here each step is measured with one seeded run plus three cache-off
+  independent runs and compared as a distribution; cache-off runs now
+  keep their generated scripts (PR #42), so classification need no longer
+  be inferred.  Spend was not recorded (cost accounting landed in PR #41,
+  after these runs); roughly 4–6 Opus 4.7 calls per independent run.
 
 **Exit criteria:** (a) seeded: ≥50% of Dincecco's pinned headline claims
 within tolerance — **met (13/13)**; (b) independent: a committed
