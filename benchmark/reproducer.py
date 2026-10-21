@@ -22,7 +22,8 @@ the two so any agent can be scored by the same code path:
   ``Reproduction.artifacts``, which the harness writes to disk.
 
 Independent-mode integrity: :func:`script_free_copy` builds a copy of a
-dataset directory with the authors' analysis scripts removed.
+dataset directory with the authors' analysis scripts, logs and generated
+result tables removed (``benchmark.strip_rule`` decides what goes).
 ``PipelineReproducer`` uses it in independent mode so the sandbox mounts
 data files only — the model cannot open the ``.do``/``.R`` files even if
 it tries.  An adapter author should do the same with whatever directory
@@ -31,13 +32,23 @@ their agent is given.
 
 from __future__ import annotations
 
+import json
 import os
-import re
 import shutil
 from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Any, Protocol, runtime_checkable
 
+from benchmark.strip_rule import (  # SCRIPT_* re-exported for existing callers
+    SCRIPT_NAME_PATTERNS,  # noqa: F401
+    SCRIPT_NAMES,  # noqa: F401
+    SCRIPT_SUFFIXES,  # noqa: F401
+    SIZE_CAP_BYTES,
+    StrippedFile,
+    classify_tree,
+    manifest_path,
+    name_reason,
+)
 from retally.models import Claim, Dataset, DatasetReference, Language, ReproductionMode
 from retally.usage import UsageTracker
 
@@ -170,6 +181,11 @@ class Reproduction:
     """Optional number of claim-targeted refinements (the agent was shown
     which claims were off target).  None when not reported."""
 
+    n_files_stripped: int | None = None
+    """Optional number of package files withheld from the agent by the
+    script-free copy (independent / blind mode).  0 when nothing was
+    withheld; None when not reported (seeded mode, or no isolation)."""
+
 
 @runtime_checkable
 class Reproducer(Protocol):
@@ -213,41 +229,33 @@ class Reproducer(Protocol):
 # Independent-mode integrity: a script-free copy of the dataset
 # ---------------------------------------------------------------------------
 
-# The authors' analysis code, in every form a replication package ships it.
-# Stata logs (.log / .smcl) are included because they echo every command
-# the do-file ran — a transcript of the script.  Matches the file types the
-# independent-mode prompt already tells the model not to open.
-SCRIPT_SUFFIXES = frozenset(
-    {".do", ".ado", ".r", ".rmd", ".py", ".ipynb", ".sas", ".sps", ".m", ".log", ".smcl", ".rout"}
-)
-
-# Transcripts that carry the code without a script suffix.  ``.Rhistory``
-# has no suffix in pathlib's sense (it is a dotfile) and holds every R
-# command typed; ``log_*.txt`` is a common name for a saved R console
-# session (the Bisbee 2022 package ships several).  Result tables
-# (``.tex``/``.csv``) are deliberately kept: they hold the paper's numbers,
-# which the independent-mode prompt already states as the claims.
-SCRIPT_NAMES = frozenset({".rhistory", ".rapp.history"})
-SCRIPT_NAME_PATTERNS = (re.compile(r"^log[_-].*\.txt$", re.IGNORECASE),)
+# What the copy leaves out — scripts and transcripts by name, logs, script
+# content and generated regression tables by content — is decided in
+# ``benchmark.strip_rule``; the names below are re-exported for callers.
 
 SCRIPT_FREE_SUFFIX = ".script-free"
 
 
 def is_script(path: Path) -> bool:
-    """True when ``path`` is an analysis script or a transcript of one.
+    """True when ``path`` is an analysis script or a transcript of one, by name alone.
 
     Matches by case-insensitive suffix (``SCRIPT_SUFFIXES``), by exact
     dotfile name (``SCRIPT_NAMES``), or by console-log name pattern
-    (``SCRIPT_NAME_PATTERNS``).
+    (``SCRIPT_NAME_PATTERNS``).  The script-free copy also strips by
+    content (:func:`benchmark.strip_rule.strip_reason`).
     """
-    name = path.name.lower()
-    if path.suffix.lower() in SCRIPT_SUFFIXES or name in SCRIPT_NAMES:
-        return True
-    return any(pat.match(name) for pat in SCRIPT_NAME_PATTERNS)
+    return name_reason(path) is not None
 
 
-def script_free_copy(source: Path, dest: Path) -> Path:
-    """Copy ``source`` to ``dest`` without the analysis scripts; return ``dest``.
+def script_free_copy(source: Path, dest: Path, *, size_cap: int = SIZE_CAP_BYTES) -> Path:
+    """Copy ``source`` to ``dest`` without scripts, logs or result tables; return ``dest``.
+
+    What is left out is :func:`benchmark.strip_rule.classify_tree`: files
+    stripped by name, by content (logs, transcripts and code under any
+    extension, generated regression tables) and byte-copies of scripts.
+    The list, with a reason per file, is written as a JSON manifest
+    *beside* ``dest`` (:func:`benchmark.strip_rule.manifest_path`), never
+    inside it, so the agent cannot read which files were withheld.
 
     ``dest`` is rebuilt from scratch on every call, so it always mirrors the
     current ``source``.  Data files are hard-linked when possible (cheap for
@@ -255,12 +263,18 @@ def script_free_copy(source: Path, dest: Path) -> Path:
     originals cannot be modified through the links) and copied otherwise.
     Hidden files and directories are copied like any other file.
     """
-    source = Path(source)
-    dest = Path(dest)
+    copy, _ = _script_free_copy(Path(source), Path(dest), classify_tree(Path(source), size_cap=size_cap))
+    return copy
+
+
+def _script_free_copy(
+    source: Path, dest: Path, stripped: list[StrippedFile]
+) -> tuple[Path, list[StrippedFile]]:
     if not source.is_dir():
         raise NotADirectoryError(f"script_free_copy expects a directory, got {source}")
     if dest.exists():
         shutil.rmtree(dest)
+    withheld = {source / s.path for s in stripped}
 
     def _link_or_copy(src: str, dst: str) -> object:
         try:
@@ -272,29 +286,43 @@ def script_free_copy(source: Path, dest: Path) -> Path:
     shutil.copytree(
         source,
         dest,
-        ignore=lambda d, names: {n for n in names if is_script(Path(d) / n) and (Path(d) / n).is_file()},
+        ignore=lambda d, names: {n for n in names if Path(d) / n in withheld},
         copy_function=_link_or_copy,
     )
-    return dest
+    manifest = {
+        "source": source.name,
+        "n_stripped": len(stripped),
+        "stripped": [{"path": s.path, "reason": s.reason} for s in stripped],
+    }
+    manifest_path(dest).write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    return dest, stripped
+
+
+def script_free_dataset_with_manifest(dataset: Dataset) -> tuple[Dataset, list[StrippedFile]]:
+    """:func:`script_free_dataset` plus the list of files it left out (empty when unchanged)."""
+    root = getattr(dataset, "local_path", None)
+    if not isinstance(root, Path) or not root.is_dir():
+        return dataset, []
+    stripped = classify_tree(root)
+    if not stripped:
+        return dataset, []
+    dest = root.parent / f"{root.name}{SCRIPT_FREE_SUFFIX}"
+    copy, stripped = _script_free_copy(root, dest, stripped)
+    return replace(dataset, local_path=copy), stripped
 
 
 def script_free_dataset(dataset: Dataset) -> Dataset:
     """Return ``dataset`` re-pointed at a script-free copy, or unchanged.
 
-    Unchanged when the dataset directory contains no scripts (registry
+    Unchanged when nothing in the dataset directory is withheld (registry
     datasets, plain data deposits) — so the copy, and its new path in the
     prompt, only appear when there is something to withhold.  The copy
     sits next to the original as ``<name>.script-free``: a deterministic
     path, because the dataset path is embedded in generation prompts and a
-    random temp path would defeat the LLM cache on every run.
+    random temp path would defeat the LLM cache on every run.  Its
+    manifest is ``<name>.script-free.retally-stripped.json``, beside it.
     """
-    root = getattr(dataset, "local_path", None)
-    if not isinstance(root, Path) or not root.is_dir():
-        return dataset
-    if not any(p.is_file() and is_script(p) for p in root.rglob("*")):
-        return dataset
-    dest = root.parent / f"{root.name}{SCRIPT_FREE_SUFFIX}"
-    return replace(dataset, local_path=script_free_copy(root, dest))
+    return script_free_dataset_with_manifest(dataset)[0]
 
 
 # ---------------------------------------------------------------------------
@@ -307,9 +335,13 @@ class _ScriptFreeDownloader:
 
     def __init__(self, inner: Any) -> None:
         self._inner = inner
+        self.n_stripped = 0
+        """Files withheld across this wrapper's downloads (for the benchmark row)."""
 
     def download(self, ref: DatasetReference) -> Dataset:
-        return script_free_dataset(self._inner.download(ref))
+        dataset, stripped = script_free_dataset_with_manifest(self._inner.download(ref))
+        self.n_stripped += len(stripped)
+        return dataset
 
     def __getattr__(self, name: str) -> Any:
         return getattr(self._inner, name)
@@ -351,8 +383,10 @@ class PipelineReproducer:
     ) -> Reproduction:
         isolate = self.isolate_independent_scripts and reproduction_mode.withholds_code
         original_downloader = getattr(self.pipeline, "downloader", None)
+        wrapper: _ScriptFreeDownloader | None = None
         if isolate and original_downloader is not None:
-            self.pipeline.downloader = _ScriptFreeDownloader(original_downloader)
+            wrapper = _ScriptFreeDownloader(original_downloader)
+            self.pipeline.downloader = wrapper
         prompt_log = getattr(getattr(self.pipeline, "generator", None), "prompt_log", None)
         prompts_before = len(prompt_log) if isinstance(prompt_log, list) else 0
         tracker = getattr(self.pipeline, "usage_tracker", None)
@@ -375,6 +409,8 @@ class PipelineReproducer:
                 self.last_usage = tracker.since(before)
         reproduction = reproduction_from_report(report)
         reproduction.usage = self.last_usage
+        if wrapper is not None:
+            reproduction.n_files_stripped = wrapper.n_stripped
         prompts = prompt_log[prompts_before:] if isinstance(prompt_log, list) else []
         reproduction.artifacts = pipeline_artifacts(report, prompts=prompts)
         return reproduction

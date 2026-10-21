@@ -262,6 +262,13 @@ class BenchmarkResult:
     """Claim-targeted refinements (the model was shown which claims were off
     target).  None when not reported."""
 
+    n_files_stripped: int | None = None
+    """Package files the script-free copy withheld (independent / blind
+    mode): scripts, logs, script content and generated result tables.  The
+    per-file list and reasons are in the manifest beside the copy
+    (``<name>.script-free.retally-stripped.json``).  None for seeded rows,
+    reproducers that do not report it, and rows that predate the field."""
+
     claim_details: list[ClaimDetail] = field(default_factory=list)
     """One record per compared claim.  Empty on skips/crashes and on
     results deserialised from pre-claim-detail cache files."""
@@ -922,6 +929,7 @@ def score_reproduction(
         first_scored_attempt_index=first_scored_index,
         n_error_refinements=_optional_int(getattr(reproduction, "n_error_refinements", None)),
         n_claim_refinements=_optional_int(getattr(reproduction, "n_claim_refinements", None)),
+        n_files_stripped=_optional_int(getattr(reproduction, "n_files_stripped", None)),
         claim_details=details,
         components=reproduction.stages,
     )
@@ -1231,6 +1239,7 @@ def _result_from_jsonable(d: dict[str, Any]) -> BenchmarkResult:
         first_scored_attempt_index=_optional_int(d.get("first_scored_attempt_index")),
         n_error_refinements=_optional_int(d.get("n_error_refinements")),
         n_claim_refinements=_optional_int(d.get("n_claim_refinements")),
+        n_files_stripped=_optional_int(d.get("n_files_stripped")),
         # Tolerant of pre-claim-detail cache files / results.json: absent
         # field → empty list, and any malformed record drops rather than
         # poisoning the whole load.
