@@ -1,8 +1,10 @@
 """Tests for DatasetDownloader and DatasetRegistry."""
 
 import json
+from unittest.mock import MagicMock, patch
 
 import pytest
+import requests
 
 from retally.dataset.downloader import DatasetDownloader
 from retally.dataset.registry import DatasetRegistry
@@ -150,3 +152,101 @@ def test_download_zenodo_record():
     )
     dataset = downloader.download(ref)
     assert dataset.local_path.exists()
+
+
+# --- Harvard Dataverse: ingested files are fetched in their original format ---
+
+
+_DV_BASE = "https://dataverse.harvard.edu/api/access/datafile/"
+
+
+def _dv_response(url, body=b"", status=200, json_body=None):
+    resp = MagicMock()
+    resp.status_code = status
+    resp.url = url
+    resp.headers = {}
+    if status >= 400:
+        resp.raise_for_status.side_effect = requests.HTTPError(f"{status} for {url}", response=resp)
+    else:
+        resp.raise_for_status.return_value = None
+    resp.json.return_value = json_body
+    resp.iter_content.side_effect = lambda chunk_size=8192: iter([body])
+    return resp
+
+
+def _dv_files():
+    return [
+        # Listed out of name order so the test also checks the sort.
+        {
+            "dataFile": {
+                "id": 1,
+                "filename": "survey.tab",
+                "contentType": "text/tab-separated-values",
+                "originalFileFormat": "text/csv",
+                "originalFileName": "survey-1.csv",
+            }
+        },
+        {"dataFile": {"id": 2, "filename": "conjoint_design.dat", "contentType": "text/x-fixed-field"}},
+    ]
+
+
+def _run_dataverse(tmp_path, routes):
+    """Run the Dataverse download with ``requests.get`` routed by URL; return dest and URLs requested."""
+    requested: list[str] = []
+
+    def fake_get(url, **kwargs):
+        requested.append(url)
+        if "/api/datasets/" in url:
+            metadata = {"status": "OK", "data": {"latestVersion": {"files": _dv_files()}}}
+            return _dv_response(url, json_body=metadata)
+        status, body = routes[url]
+        return _dv_response(url, body=body, status=status)
+
+    dest = tmp_path / "pkg"
+    with patch("requests.get", side_effect=fake_get), patch("retally.http_retry.time.sleep"):
+        DatasetDownloader(cache_dir=tmp_path)._download_harvard_dataverse("doi:10.7910/DVN/TEST01", dest)
+    return dest, requested
+
+
+def test_dataverse_fetches_ingested_file_in_original_format(tmp_path):
+    routes = {
+        f"{_DV_BASE}1?format=original": (200, b"a,b\n1,2\n"),
+        f"{_DV_BASE}2": (200, b"fixed field"),
+    }
+    dest, requested = _run_dataverse(tmp_path, routes)
+
+    # Label stem + original extension; the converted .tab is never requested.
+    assert (dest / "survey.csv").read_bytes() == b"a,b\n1,2\n"
+    assert not (dest / "survey.tab").exists()
+    assert (dest / "conjoint_design.dat").read_bytes() == b"fixed field"
+    # Plain file fetched as-is (no ?format=original); deterministic name order.
+    assert requested[1:] == [f"{_DV_BASE}2", f"{_DV_BASE}1?format=original"]
+
+
+def test_dataverse_falls_back_to_converted_file_when_original_fails(tmp_path, caplog):
+    routes = {
+        f"{_DV_BASE}1?format=original": (404, b""),
+        f"{_DV_BASE}1": (200, b"a\tb\n1\t2\n"),
+        f"{_DV_BASE}2": (200, b"fixed field"),
+    }
+    with caplog.at_level("WARNING"):
+        dest, _ = _run_dataverse(tmp_path, routes)
+
+    assert (dest / "survey.tab").read_bytes() == b"a\tb\n1\t2\n"
+    assert not (dest / "survey.csv").exists()
+    assert "falling back to the converted survey.tab" in caplog.text
+
+
+@pytest.mark.parametrize(
+    "data_file, expected",
+    [
+        ({"filename": "x.R"}, None),
+        ({"filename": "Replication.tgz", "contentType": "application/x-gzip"}, None),
+        ({"filename": "a.tab", "originalFileFormat": "text/csv", "originalFileName": "a.csv"}, "a.csv"),
+        ({"filename": "a.tab", "originalFileFormat": "text/csv", "originalFileName": "a-1.csv"}, "a.csv"),
+        ({"filename": "d.tab", "originalFileFormat": "application/x-stata-14"}, "d.dta"),
+        ({"filename": "renamed.txt", "originalFileName": "orig.sav"}, "orig.sav"),
+    ],
+)
+def test_dataverse_original_name(data_file, expected):
+    assert DatasetDownloader._dataverse_original_name(data_file) == expected
