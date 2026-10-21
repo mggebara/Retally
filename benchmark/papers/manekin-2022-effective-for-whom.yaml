@@ -64,9 +64,8 @@ dataset:
     unrestricted file: Replication.tgz (2.7 MB, contentType
     application/x-gzip, datafile id 4917244; Dataverse API checked
     2026-10-21).  Not tabular, so Dataverse does not ingest it and no
-    ?format=original request is needed.  The downloader's archive
-    handling covers .tgz (_ARCHIVE_SUFFIXES includes ".tgz"; extraction
-    via tarfile "r:*"), so it unpacks into a top-level Replication/
+    ?format=original request is needed.  The downloader extracts the
+    .tgz (tarfile "r:*") into a top-level Replication/
     folder (Code/, Data/, Tables/, Figures/, plus macOS .DS_Store files).
     Data are ten R .rdata files (survey waves for the U.S. and Israel,
     text-analysis corpora, and the NAVCO/EPR cross-national data).  The
@@ -304,6 +303,9 @@ notes: >
   scales; Israel Arab protesters +0.623 / +0.964, Ethiopian +0.425 /
   +0.181 n.s.), and Study 2 replicates it in June 2020 (U.S. Black
   protesters +0.347 / +0.429).
+
+  Original analysis in R (base lm() with stargazer output); language: r
+  is the reproduction target and matches the original.
 
   outcome_label.  The I4R verdict is "minor discrepancies"; the schema
   has no such label.  The discrepancy is confined to the observational
