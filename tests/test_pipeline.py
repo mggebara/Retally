@@ -744,3 +744,36 @@ def test_refinement_bookkeeping_counts_a_call_that_returned_identical_code():
     assert only.refinement_calls == 1
     assert only.final_execution_index == 0
     assert only.attempts == []
+
+
+def test_refinement_bookkeeping_splits_error_and_claim_refinements():
+    """Crash → error repair → off-target run → claim refinement → pass."""
+    pipeline, _ = _make_pipeline()
+    crash = ExecutionResult(generated_code="v0", stdout="", stderr="Error: object 'x' not found", exit_code=1)
+    off_target = _exec_ok("v1", accuracy=0.80)
+    on_target = _exec_ok("v2", accuracy=0.95)
+    pipeline.executor.execute.side_effect = [crash, off_target, on_target]
+    pipeline.generator.refine.return_value = "v1"
+    pipeline.generator.refine_for_claims.return_value = "v2"
+    pipeline.comparator.compare_all.side_effect = [
+        [_failing_claim_result(0.95, 0.80)],
+        [_passing_claim_result(0.95, 0.95)],
+    ]
+    pipeline.validate("some text")
+    assert (on_target.n_error_refinements, on_target.n_claim_refinements) == (1, 1)
+    assert on_target.refinement_calls == 2
+    assert on_target.final_execution_index == 2
+    assert [a.kind for a in on_target.attempts] == ["error", "claim"]
+    assert "object 'x' not found" in on_target.attempts[0].feedback
+    assert "reproduced" in on_target.attempts[1].feedback and "claimed" in on_target.attempts[1].feedback
+
+
+def test_refinement_bookkeeping_counts_an_unchanged_claim_refinement_as_a_claim_call():
+    pipeline, _ = _make_pipeline()
+    pipeline.generator.generate.return_value = "v1"
+    only = _exec_ok("v1", accuracy=0.80)
+    pipeline.executor.execute.return_value = only
+    pipeline.comparator.compare_all.return_value = [_failing_claim_result(0.95, 0.80)]
+    pipeline.generator.refine_for_claims.return_value = "v1"
+    pipeline.validate("some text")
+    assert (only.n_error_refinements, only.n_claim_refinements, only.refinement_calls) == (0, 1, 1)

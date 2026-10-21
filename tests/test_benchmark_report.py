@@ -416,3 +416,56 @@ def test_mode_gap_table_without_attempt_data_is_unchanged():
     md = report.render_markdown(results)
     assert "| Entry | Split | Reproducer | Seeded | Independent | Lost without scripts |" in md
     assert "First attempt" not in md and "first attempt" not in md
+
+
+# ── First scored (after crash repairs, before claim feedback) ──────────
+
+
+def test_per_paper_row_headlines_first_scored_with_the_refinement_split():
+    row = _result(
+        entry_id="p",
+        n_claims_in_catalog=2,
+        n_claims_with_paper_match=2,
+        n_claims_with_paper_match_first_attempt=0,
+        n_claims_with_paper_match_first_scored=1,
+        first_scored_attempt_index=2,
+        n_refinements=5,
+        n_error_refinements=2,
+        n_claim_refinements=3,
+        claim_details=[_cd_first("beta", True, False), _cd_first("se", True, False)],
+    )
+    md = report.render_markdown([row])
+    assert "| 2 / 1 of 2 (first scored 1/2, 2 error + 3 claim refinements) |" in md
+    assert "first attempt" not in md
+    html = report.render_html([row])
+    assert "2 / 1 of 2 (first scored 1/2, 2 error + 3 claim refinements)</td>" in html
+
+
+def test_mode_gap_table_uses_first_scored_when_recorded():
+    results = [
+        _result(
+            entry_id="p",
+            mode="seeded",
+            n_claims_with_paper_match_first_attempt=0,
+            n_claims_with_paper_match_first_scored=2,
+            n_error_refinements=1,
+            n_claim_refinements=0,
+            claim_details=[_cd("beta", True), _cd("se", True)],
+        ),
+        _result(
+            entry_id="p",
+            mode="independent",
+            n_claims_with_paper_match_first_attempt=0,
+            n_claims_with_paper_match_first_scored=1,
+            n_error_refinements=2,
+            n_claim_refinements=3,
+            claim_details=[_cd("beta", True), _cd("se", False)],
+        ),
+    ]
+    md = report.render_markdown(results)
+    assert "- Seeded: **2 / 2** claims passed (first scored 2 / 2)" in md
+    assert "- Independent: **1 / 2** claims passed (first scored 1 / 2)" in md
+    assert "*First scored* is" in md
+    assert "| First scored (seeded / independent) |" in md
+    assert "| `p` | dev | pipeline | 2/2 | 1/2 | 2/2 / 1/2 | `se` |" in md
+    assert "First attempt" not in md

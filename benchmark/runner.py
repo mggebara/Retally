@@ -167,6 +167,12 @@ class ClaimDetail:
     refinement feedback.  None when the reproducer reported no attempts,
     and on rows from files that predate the field."""
 
+    passed_first_scored: bool | None = None
+    """Whether the *first scored* execution (the first whose stdout had a
+    parsable ``RESULT:`` line — crash repairs skipped) passed this claim,
+    before any claim-targeted feedback.  None when the reproducer reported
+    no attempts, and on rows from files that predate the field."""
+
 
 @dataclass
 class BenchmarkResult:
@@ -221,6 +227,28 @@ class BenchmarkResult:
 
     n_executions: int | None = None
     """Sandbox executions the reproducer ran.  None when not reported."""
+
+    n_claims_with_paper_match_first_scored: int | None = None
+    """Claims passed by the *first scored* execution: the first one whose
+    stdout had at least one parsable ``RESULT:`` line (falling back to the
+    first execution when none had any).  Execution-error repairs (a crash,
+    no output) come before it, claim-targeted feedback after it, so this is
+    the "before target feedback" number; the raw first-attempt count is 0
+    whenever the first script crashed.  None when the reproducer reported
+    no attempt data (and on rows from older files)."""
+
+    first_scored_attempt_index: int | None = None
+    """0-based position of the first scored execution among all executions
+    (0 when the first script already produced output).  None when not
+    recorded."""
+
+    n_error_refinements: int | None = None
+    """Execution-error refinements (crash / no-output repairs).  None when
+    not reported."""
+
+    n_claim_refinements: int | None = None
+    """Claim-targeted refinements (the model was shown which claims were off
+    target).  None when not reported."""
 
     claim_details: list[ClaimDetail] = field(default_factory=list)
     """One record per compared claim.  Empty on skips/crashes and on
@@ -749,8 +777,12 @@ def score_reproduction(
     details = [_claim_detail(cr) for cr in claim_results]
 
     # First attempt: the first execution's RESULT lines, scored identically.
+    # First scored: the first execution that printed any parsable RESULT
+    # line, i.e. after crash repairs but before claim-targeted feedback.
     attempt_outputs = getattr(reproduction, "attempt_outputs", None)
     n_first: int | None = None
+    n_first_scored: int | None = None
+    first_scored_index: int | None = None
     if attempt_outputs:
         first = comparator.compare_all(
             claims, _parse_result_lines(str(attempt_outputs[0] or "")), mode=ReproductionMode(mode)
@@ -758,6 +790,15 @@ def score_reproduction(
         for detail, cr in zip(details, first, strict=True):
             detail.passed_first_attempt = bool(cr.passed)
         n_first = sum(1 for cr in first if cr.passed)
+        first_scored_index = first_scored_attempt(attempt_outputs)
+        scored = comparator.compare_all(
+            claims,
+            _parse_result_lines(str(attempt_outputs[first_scored_index] or "")),
+            mode=ReproductionMode(mode),
+        )
+        for detail, cr in zip(details, scored, strict=True):
+            detail.passed_first_scored = bool(cr.passed)
+        n_first_scored = sum(1 for cr in scored if cr.passed)
     n_executions = getattr(reproduction, "n_executions", None)
     if n_executions is None and attempt_outputs is not None:
         n_executions = len(attempt_outputs)
@@ -775,9 +816,25 @@ def score_reproduction(
         n_claims_with_paper_match_first_attempt=n_first,
         n_refinements=getattr(reproduction, "n_refinements", None),
         n_executions=n_executions,
+        n_claims_with_paper_match_first_scored=n_first_scored,
+        first_scored_attempt_index=first_scored_index,
+        n_error_refinements=_optional_int(getattr(reproduction, "n_error_refinements", None)),
+        n_claim_refinements=_optional_int(getattr(reproduction, "n_claim_refinements", None)),
         claim_details=details,
         components=reproduction.stages,
     )
+
+
+def first_scored_attempt(attempt_outputs: list[str]) -> int:
+    """Index of the first stdout with at least one parsable ``RESULT:`` line; 0 when none has one.
+
+    Uses the same parser as final scoring, so an all-``NA`` or malformed
+    output does not count as scored.
+    """
+    for i, stdout in enumerate(attempt_outputs):
+        if _parse_result_lines(str(stdout or "")):
+            return i
+    return 0
 
 
 def _parse_result_lines(stdout: str) -> dict[str, float]:
@@ -1067,6 +1124,10 @@ def _result_from_jsonable(d: dict[str, Any]) -> BenchmarkResult:
         ),
         n_refinements=_optional_int(d.get("n_refinements")),
         n_executions=_optional_int(d.get("n_executions")),
+        n_claims_with_paper_match_first_scored=_optional_int(d.get("n_claims_with_paper_match_first_scored")),
+        first_scored_attempt_index=_optional_int(d.get("first_scored_attempt_index")),
+        n_error_refinements=_optional_int(d.get("n_error_refinements")),
+        n_claim_refinements=_optional_int(d.get("n_claim_refinements")),
         # Tolerant of pre-claim-detail cache files / results.json: absent
         # field → empty list, and any malformed record drops rather than
         # poisoning the whole load.

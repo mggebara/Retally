@@ -136,8 +136,10 @@ class Reproduction:
     they ran (the first script's output first).  The harness parses the
     ``RESULT:`` lines of ``attempt_outputs[0]`` and scores them with the
     same comparator, mode and tolerance as ``outputs``: the *first-attempt*
-    pass count, i.e. what the agent produced before any feedback on which
-    claims were off target.  The final run is ``stdout``; it is usually the
+    pass count.  It also scores the first entry with a parsable ``RESULT:``
+    line the same way: the *first-scored* pass count, i.e. what the agent
+    produced after any crash repairs but before feedback on which claims
+    were off target.  The final run is ``stdout``; it is usually the
     last entry, but not when the agent reverted to an earlier run.  None
     when the reproducer does not report its attempts (then no
     first-attempt numbers are recorded)."""
@@ -150,6 +152,23 @@ class Reproduction:
     n_executions: int | None = None
     """Optional number of sandbox executions.  None when not reported; the
     harness then falls back to ``len(attempt_outputs)`` when that is set."""
+
+    attempt_kinds: list[str] | None = None
+    """Optional, parallel to ``attempt_outputs``: the kind of refinement
+    that followed each execution — ``"error"`` (it crashed or printed no
+    ``RESULT:`` lines and the agent was sent the error), ``"claim"`` (the
+    agent was told which claims were off target), ``""`` for none and for
+    the final run.  Informational: the harness finds the *first scored*
+    attempt from the outputs themselves (the first execution with a
+    parsable ``RESULT:`` line), not from these labels."""
+
+    n_error_refinements: int | None = None
+    """Optional number of execution-error refinements (crash / no-output
+    repairs).  None when not reported."""
+
+    n_claim_refinements: int | None = None
+    """Optional number of claim-targeted refinements (the agent was shown
+    which claims were off target).  None when not reported."""
 
 
 @runtime_checkable
@@ -411,9 +430,15 @@ def reproduction_from_report(report: Any) -> Reproduction:
         code_executed=(exit_code == 0) if exec_result else False,
     )
     attempt_outputs, n_refinements = _attempt_record(exec_result)
+    attempt_kinds = _attempt_kinds(exec_result) if attempt_outputs is not None else None
+    n_error = getattr(exec_result, "n_error_refinements", None) if attempt_outputs is not None else None
+    n_claim = getattr(exec_result, "n_claim_refinements", None) if attempt_outputs is not None else None
     return Reproduction(
         attempt_outputs=attempt_outputs,
+        attempt_kinds=attempt_kinds,
         n_refinements=n_refinements,
+        n_error_refinements=n_error if isinstance(n_error, int) else None,
+        n_claim_refinements=n_claim if isinstance(n_claim, int) else None,
         n_executions=None if attempt_outputs is None else len(attempt_outputs),
         outputs=dict(getattr(exec_result, "outputs", {}) or {}) if exec_result else {},
         claims=list(getattr(paper, "claims", []) or []) if paper else [],
@@ -424,6 +449,26 @@ def reproduction_from_report(report: Any) -> Reproduction:
         deviations=list(getattr(exec_result, "deviation_notes", []) or []) if exec_result else [],
         stages=stages,
     )
+
+
+def _final_index(exec_result: Any, n_attempts: int) -> int:
+    """Position of the final run among all executions (last when unknown)."""
+    index = getattr(exec_result, "final_execution_index", None)
+    if not isinstance(index, int) or not 0 <= index <= n_attempts:
+        return n_attempts
+    return index
+
+
+def _attempt_kinds(exec_result: Any) -> list[str]:
+    """Refinement kind that followed each execution, in run order; ``""`` for the final run.
+
+    Parallel to the outputs of :func:`_attempt_record` (callers check that
+    returned a list first).
+    """
+    attempts = getattr(exec_result, "attempts", None) or []
+    kinds = [str(getattr(a, "kind", "") or "") for a in attempts]
+    kinds.insert(_final_index(exec_result, len(kinds)), "")
+    return kinds
 
 
 def _attempt_record(exec_result: Any) -> tuple[list[str] | None, int | None]:
@@ -440,10 +485,7 @@ def _attempt_record(exec_result: Any) -> tuple[list[str] | None, int | None]:
     if not isinstance(attempts, list):
         return None, None
     outputs = [str(getattr(a, "stdout", "") or "") for a in attempts]
-    index = getattr(exec_result, "final_execution_index", None)
-    if not isinstance(index, int) or not 0 <= index <= len(outputs):
-        index = len(outputs)
-    outputs.insert(index, str(getattr(exec_result, "stdout", "") or ""))
+    outputs.insert(_final_index(exec_result, len(outputs)), str(getattr(exec_result, "stdout", "") or ""))
     # Every execution after the first needed a refinement call; a call whose
     # code came back unchanged adds one without an execution.
     calls = getattr(exec_result, "refinement_calls", None)

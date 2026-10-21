@@ -247,8 +247,8 @@ def test_cli_prints_refinements_and_first_attempt_when_recorded(tmp_path, capsys
     assert artifacts_cli.main([str(results)]) == 0
     out = capsys.readouterr().out
     assert "refinements: 1 (2 executions)" in out
-    assert "claims: 1/1 pass (first attempt 0/1)" in out
-    assert "[PASS] beta" in out and "[first attempt FAIL]" in out
+    assert "claims: 1/1 pass (first scored 0/1 at execution 1, first attempt 0/1)" in out
+    assert "[PASS] beta" in out and "[first scored FAIL] [first attempt FAIL]" in out
 
 
 def test_cli_omits_first_attempt_for_rows_without_it(tmp_path, capsys):
@@ -258,3 +258,141 @@ def test_cli_omits_first_attempt_for_rows_without_it(tmp_path, capsys):
     assert artifacts_cli.main([str(results)]) == 0
     out = capsys.readouterr().out
     assert "refinements:" not in out and "first attempt" not in out
+
+
+# ── --rescore: first-scored numbers from artifacts on disk ─────────────
+
+_CATALOG_YAML = """\
+id: paper1
+i4r_report_url: https://example.org/r
+language: r
+outcome_label: reproducible
+paper:
+  source: raw paper text
+original_claims:
+  - description: beta
+    value: 0.5
+    claim_type: other
+    standard_error: 0.1
+  - description: n_obs
+    value: 660
+    claim_type: other
+"""
+
+
+def _write(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+
+
+def _artifacts_tree(root: Path) -> Path:
+    """Crash → (error feedback) → off-target → (claim feedback) → ... → final, with 10+ attempts."""
+    art = root / "arts"
+    _write(art / "script.R", SAMPLE_R)
+    _write(art / "stdout.txt", "RESULT:beta=0.5\nRESULT:n_obs=660\n")
+    _write(art / "attempt-1" / "stdout.txt", "")
+    _write(art / "attempt-1" / "stderr.txt", "Error: object 'df' not found")
+    _write(art / "attempt-1" / "feedback.txt", "Error: object 'df' not found")
+    _write(art / "attempt-2" / "stdout.txt", "loading...\n")
+    _write(art / "attempt-2" / "feedback.txt", "No RESULT: lines found in output")
+    _write(art / "attempt-3" / "stdout.txt", "RESULT:beta=0.57\nRESULT:n_obs=660\n")
+    _write(
+        art / "attempt-3" / "feedback.txt",
+        "beta: reproduced 0.57, claimed 0.5 (tolerance 0.01)",
+    )
+    # attempt-4 … attempt-10: claim refinements that kept missing; numeric
+    # order matters (attempt-10 runs after attempt-9, not after attempt-1).
+    for n in range(4, 11):
+        _write(art / f"attempt-{n}" / "stdout.txt", "RESULT:beta=0.9\nRESULT:n_obs=1\n")
+        _write(art / f"attempt-{n}" / "feedback.txt", "beta: reproduced 0.9, claimed 0.5 (tolerance 0.01)")
+    return art
+
+
+def test_classify_feedback():
+    assert artifacts_cli.classify_feedback("") == ""
+    assert artifacts_cli.classify_feedback("No RESULT: lines found in output") == "error"
+    assert artifacts_cli.classify_feedback("Traceback ...\nKeyError: 'x'") == "error"
+    assert artifacts_cli.classify_feedback("beta: reproduced N/A, claimed 0.5 (tolerance 0.01)") == "claim"
+
+
+def test_attempts_from_artifacts_orders_attempts_numerically_with_final_last(tmp_path):
+    outputs, kinds, final_index = artifacts_cli.attempts_from_artifacts(_artifacts_tree(tmp_path))
+    assert len(outputs) == 11 and final_index == 10
+    assert outputs[0] == "" and outputs[2].startswith("RESULT:beta=0.57")
+    assert outputs[-1] == "RESULT:beta=0.5\nRESULT:n_obs=660\n"
+    assert kinds == ["error", "error"] + ["claim"] * 8 + [""]
+
+
+def test_attempts_from_artifacts_places_a_reverted_final_before_the_broken_attempt(tmp_path):
+    """The pipeline writes no feedback after a broken claim refinement it reverted."""
+    art = tmp_path / "arts"
+    _write(art / "stdout.txt", "RESULT:beta=0.5\n")
+    _write(art / "attempt-1" / "stdout.txt", "")
+    _write(art / "attempt-1" / "feedback.txt", "Error in eval: boom")
+    _write(art / "attempt-2" / "stdout.txt", "")  # the broken refinement: no feedback.txt
+    outputs, kinds, final_index = artifacts_cli.attempts_from_artifacts(art)
+    assert outputs == ["", "RESULT:beta=0.5\n", ""]
+    assert kinds == ["error", "claim", ""]
+    assert final_index == 1
+
+
+def test_rescore_cli_prints_first_scored_without_touching_the_results_file(tmp_path, capsys):
+    art = _artifacts_tree(tmp_path)
+    catalog = tmp_path / "papers"
+    _write(catalog / "paper1.yaml", _CATALOG_YAML)
+    rows = [
+        {"entry_id": "paper1", "mode": "seeded", "artifacts_dir": str(art), "claim_details": []},
+        {"entry_id": "paper1", "mode": "independent", "artifacts_dir": str(art), "claim_details": []},
+        {"entry_id": "paper1", "mode": "seeded", "reproducer": "other", "claim_details": []},
+        {"entry_id": "ghost", "mode": "seeded", "artifacts_dir": str(art), "claim_details": []},
+    ]
+    results = tmp_path / "results.json"
+    results.write_text(json.dumps(rows), encoding="utf-8")
+    before = results.read_bytes()
+
+    assert artifacts_cli.main([str(results), "--rescore", "--catalog", str(catalog)]) == 0
+    out = capsys.readouterr().out
+    assert "| Entry | Mode | File | Final | First attempt | First scored | Error / claim refinements |" in out
+    # Seeded: 0.57 misses beta's 1% band, so first scored passes n_obs only.
+    assert (
+        "| `paper1` | seeded | main_panel.dta, crosswalk.csv, rds_path | 2/2 | 0/2 "
+        "| 1/2 (execution 3 of 11) | 2 / 8 |" in out
+    )
+    # Independent: 0.57 sits inside beta's ±1·SE band.
+    assert (
+        "| `paper1` | independent | main_panel.dta, crosswalk.csv, rds_path | 2/2 | 0/2 "
+        "| 2/2 (execution 3 of 11)" in out
+    )
+    assert "- paper1 [seeded]: no artifacts on disk" in out
+    assert "- ghost [seeded]: not in the catalog" in out
+    assert "the final run, assumed last" in out
+    assert "†" not in out.split("\n\n")[0]  # every attempt here had feedback: final is last
+    assert results.read_bytes() == before
+
+
+def test_describe_row_shows_the_refinement_split_and_first_scored_execution():
+    row = {
+        "entry_id": "paper1",
+        "n_refinements": 5,
+        "n_error_refinements": 2,
+        "n_claim_refinements": 3,
+        "n_executions": 6,
+        "n_claims_with_paper_match_first_attempt": 0,
+        "n_claims_with_paper_match_first_scored": 1,
+        "first_scored_attempt_index": 2,
+        "claim_details": [
+            {
+                "description": "beta",
+                "claimed": 0.5,
+                "reproduced": 0.5,
+                "rel_err": 0.0,
+                "passed": True,
+                "passed_first_attempt": False,
+                "passed_first_scored": True,
+            }
+        ],
+    }
+    out = artifacts_cli.describe_row(row)
+    assert "refinements: 5 (2 error + 3 claim) (6 executions)" in out
+    assert "claims: 1/1 pass (first scored 1/1 at execution 3, first attempt 0/1)" in out
+    assert "[first scored PASS] [first attempt FAIL]" in out
