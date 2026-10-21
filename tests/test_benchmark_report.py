@@ -469,3 +469,28 @@ def test_mode_gap_table_uses_first_scored_when_recorded():
     assert "| First scored (seeded / independent) |" in md
     assert "| `p` | dev | pipeline | 2/2 | 1/2 | 2/2 / 1/2 | `se` |" in md
     assert "First attempt" not in md
+
+
+def _transient(entry_id, kind):
+    return _result(entry_id=entry_id, retally_ran=False, error="APIError: x", transient=True, error_kind=kind)
+
+
+def test_headline_flags_transient_failures():
+    results = [
+        _transient("a", "api_billing"),
+        _transient("b", "api_unavailable"),
+        _transient("c", "api_billing"),
+        _result(entry_id="d"),
+    ]
+    md = report.render_markdown(results)
+    expected = "**WARNING: 3 run(s) failed on transient errors (api_billing=2, api_unavailable=1)"
+    assert f"{expected} and were not cached" in md
+    assert "transient error (api_billing)" in md
+    assert "WARNING: 3 run(s) failed on transient errors" in report.render_html(results)
+
+
+def test_headline_has_no_transient_note_without_transient_rows():
+    results = [_result(entry_id="a", retally_ran=False, error="RuntimeError: boom", error_kind="pipeline")]
+    md = report.render_markdown(results)
+    assert "transient" not in md
+    assert "transient" not in report.render_html(results)
