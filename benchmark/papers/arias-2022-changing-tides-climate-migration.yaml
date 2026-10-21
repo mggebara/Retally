@@ -6,7 +6,9 @@
 #   Reproduction Platform (SSRP/BITSS), reproduction #791, NOT as a numbered
 #   I4R Discussion Paper — but it is recorded in the I4R First Meta Database
 #   (replication report team 12), so i4r_report_url points at the SSRP record.
-#   Verdict: successfully reproduced (the original authors are on record as
+#   Verdict: successfully reproduced (the replicator's survey answer:
+#   "Analysis and cleaning code produce the same output as presented in the
+#   paper", 10 on the ten-point scale; the original authors are on record as
 #   "very pleased" the results replicated); no material caveats.
 #
 # Why this paper:
@@ -16,16 +18,43 @@
 #      unrestricted), so the pipeline fetches it unattended.
 #   3. Open-access author PDF text-extracts cleanly; the JOP journal version
 #      is paywalled.
+#
+# original_claims pins the paper's focal estimates: the eight Table 2
+# AMCEs for the reason-for-migration attribute (drought, flooding,
+# wildfires, persecution vs economic opportunity; U.S. and German samples),
+# each with its SE in standard_error, plus the per-country respondent and
+# choice-task counts the design section states.  Values were transcribed
+# from the author PDF (the conditionally-accepted text of 2020-09-29); the
+# respondent / choice-task counts were cross-checked against the package's
+# raw survey exports and the script's sample filters (see notes).  The
+# package ships no table output or logs, so the AMCEs themselves could not
+# be cross-checked without running the code (not done).
 
 id: arias-2022-changing-tides-climate-migration
 i4r_report_url: https://www.socialsciencereproduction.org/reproductions/791/published/index
 language: r
 outcome_label: reproducible
 split: holdout
+# Contamination bookkeeping.  First public version: the Kleinman Center
+# for Energy Policy digest "Changing Tides: Public Attitudes on Climate
+# Change and Climate Migration", dated December 2019 (PDF created
+# 2019-12-18); it reports the same conjoint design and the German 18,862
+# tasks / 1,074 respondents, but an earlier U.S. count (1,176 respondents,
+# 20,573 tasks) and no Table 2.  The author PDF used here is dated
+# 2020-09-29; JOP online 2021-05-06 (OpenAlex), print January 2022.
+# Package: Harvard Dataverse doi:10.7910/DVN/FDML2N version 1.0, deposited
+# 2020-10-01, released 2020-12-10 (Dataverse API publicationDate /
+# releaseTime).
+publication_date: "2019-12"
+package_release_date: "2020-12-10"
 
 paper:
-  # Open-access author copy on Sabrina Arias's site; the JOP version
-  # (doi:10.1086/715163) is paywalled.
+  # Open-access author copy on Sabrina Arias's site ("Conditionally
+  # Accepted at the Journal of Politics", September 29, 2020); re-checked
+  # 2026-10-21: 200 application/pdf to both a Retally-curation and a
+  # python-requests user agent.  The JOP version (doi:10.1086/715163) is
+  # paywalled (403 to curl); OpenAlex's other green copy (SSRN 3790674)
+  # also answers 403 to curl.
   source: https://sabrinabarias.com/wp-content/uploads/2020/09/Climate_Migration_Main_Text__JOP_.pdf
   title: "Changing Tides: Public Attitudes on Climate Migration"
   authors:
@@ -35,12 +64,218 @@ paper:
 dataset:
   source: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/FDML2N
   access_notes: >
-    Harvard Dataverse (doi:10.7910/DVN/FDML2N), CC0, fully open — every file
-    unrestricted.  Analysis code is a single R script; conjoint data ships as
-    .tab (tab-separated) with .dat design files.
+    Harvard Dataverse (doi:10.7910/DVN/FDML2N), CC0, fully open — all 11
+    files unrestricted (Dataverse API, checked 2026-10-21; ~12.6 MB in
+    total).  Analysis code is a single R script (Migration_Analysis_Final.R,
+    ~3,700 lines); the Qualtrics survey exports ship as Dataverse-ingested
+    .tab (tab-separated) files whose originals were .csv, alongside four
+    cjoint design files (.dat) and a German state key.  No table output,
+    logs or .RData ship with the package.
 
-original_claims: []
-i4r_replicator_findings: []
+original_claims:
+  - description: amce_drought_us
+    value: 0.035
+    claim_type: coefficient
+    standard_error: 0.012
+    sample_size: 18966
+    unit: change in probability profile is preferred
+    location: "Table 2, U.S. Sample, Reason for Migration: Drought"
+    context: >
+      Table 2 ("Main Average Marginal Component Effects (Compared to
+      Baseline Levels)"), U.S. sample, row Reason for Migration: Drought.
+      Choice-based conjoint experiment fielded with Dynata on a nationally
+      representative online U.S. sample; respondents saw nine pairs of
+      randomized migrant profiles varying on seven attributes (reason for
+      migration, language fluency, gender, occupation, religion, origin,
+      vulnerability; Table 1) and indicated their preference for admitting
+      one of the two migrants for settlement in their state.  Estimand:
+      the average marginal component effect (AMCE), the average change in
+      the probability that a migrant profile is preferred when it features
+      the level rather than the baseline (economic opportunity), from the
+      full model with all seven attributes on all profile pairs (the left
+      panel of Figure 1).  Robust standard errors clustered by respondent.
+  - description: amce_flooding_us
+    value: 0.037
+    claim_type: coefficient
+    standard_error: 0.012
+    sample_size: 18966
+    unit: change in probability profile is preferred
+    location: "Table 2, U.S. Sample, Reason for Migration: Flooding"
+    context: >
+      Table 2, U.S. sample, row Reason for Migration: Flooding.  Same
+      full-model AMCE as amce_drought_us (all seven attributes, all
+      profile pairs, baseline economic opportunity, respondent-clustered
+      robust standard errors).
+  - description: amce_wildfires_us
+    value: 0.040
+    claim_type: coefficient
+    standard_error: 0.011
+    sample_size: 18966
+    unit: change in probability profile is preferred
+    location: "Table 2, U.S. Sample, Reason for Migration: Wildfires"
+    context: >
+      Table 2, U.S. sample, row Reason for Migration: Wildfires.  Same
+      full-model AMCE as amce_drought_us (baseline economic opportunity,
+      respondent-clustered robust standard errors).
+  - description: amce_persecution_us
+    value: 0.076
+    claim_type: coefficient
+    standard_error: 0.012
+    sample_size: 18966
+    unit: change in probability profile is preferred
+    location: "Table 2, U.S. Sample, Reason for Migration: Political/religious/ethnic persecution"
+    context: >
+      Table 2, U.S. sample, row Reason for Migration: Political/religious/
+      ethnic persecution.  Same full-model AMCE as amce_drought_us
+      (baseline economic opportunity, respondent-clustered robust standard
+      errors).
+  - description: amce_drought_germany
+    value: 0.081
+    claim_type: coefficient
+    standard_error: 0.012
+    sample_size: 18862
+    unit: change in probability profile is preferred
+    location: "Table 2, German Sample, Reason for Migration: Drought"
+    context: >
+      Table 2, German sample, row Reason for Migration: Drought.  The same
+      conjoint design fielded with Dynata on a nationally representative
+      online German sample (factors and levels identical to the U.S.
+      survey except that agnostic was replaced with atheist in Germany);
+      full-model AMCE with all seven attributes on all profile pairs,
+      baseline economic opportunity, robust standard errors clustered by
+      respondent.
+  - description: amce_flooding_germany
+    value: 0.086
+    claim_type: coefficient
+    standard_error: 0.012
+    sample_size: 18862
+    unit: change in probability profile is preferred
+    location: "Table 2, German Sample, Reason for Migration: Flooding"
+    context: >
+      Table 2, German sample, row Reason for Migration: Flooding.  Same
+      full-model AMCE as amce_drought_germany.
+  - description: amce_wildfires_germany
+    value: 0.060
+    claim_type: coefficient
+    standard_error: 0.012
+    sample_size: 18862
+    unit: change in probability profile is preferred
+    location: "Table 2, German Sample, Reason for Migration: Wildfires"
+    context: >
+      Table 2, German sample, row Reason for Migration: Wildfires.  Same
+      full-model AMCE as amce_drought_germany.
+  - description: amce_persecution_germany
+    value: 0.162
+    claim_type: coefficient
+    standard_error: 0.013
+    sample_size: 18862
+    unit: change in probability profile is preferred
+    location: "Table 2, German Sample, Reason for Migration: Political/religious/ethnic persecution"
+    context: >
+      Table 2, German sample, row Reason for Migration: Political/
+      religious/ethnic persecution.  Same full-model AMCE as
+      amce_drought_germany.
+  - description: respondents_us
+    value: 1086
+    claim_type: other
+    unit: respondents
+    location: "Study 1: Empirical Design (text)"
+    context: >
+      Number of U.S. respondents in the conjoint experiment (the
+      nationally representative online sample fielded with Dynata), as
+      stated in the Study 1 design section.
+  - description: respondents_germany
+    value: 1074
+    claim_type: other
+    unit: respondents
+    location: "Study 1: Empirical Design (text)"
+    context: >
+      Number of German respondents in the conjoint experiment, as stated
+      in the Study 1 design section.
+  - description: choice_tasks_us
+    value: 18966
+    claim_type: other
+    unit: choice tasks (profiles)
+    location: "Study 1: Empirical Design (text)"
+    context: >
+      Number of "unique choice tasks" the design section reports for the
+      U.S. sample: the observations entering the U.S. AMCE estimation (one
+      per migrant profile, two profiles per pairing).
+  - description: choice_tasks_germany
+    value: 18862
+    claim_type: other
+    unit: choice tasks (profiles)
+    location: "Study 1: Empirical Design (text)"
+    context: >
+      Number of "unique choice tasks" the design section reports for the
+      German sample: the observations entering the German AMCE estimation
+      (one per migrant profile, two profiles per pairing).
+
+# No per-claim I4R numbers exist for the pinned estimates.  The meta-
+# database's 8 rows for this paper (replicator team 12, SSRP) are all
+# ROBUSTNESS variants: six rows against the paper's appendix "table 18"
+# (study 2 factorial-experiment effects, recoded with a revised
+# issue-importance index on new data; o_coeff .04/-.08/.18/.17/.07/-.10
+# vs r_coeff .05/-.11/.17/.20/.07/-.14), one "table 2" row that pools the
+# German and U.S. samples and all three environmental reasons (no
+# coefficients recorded), and one blank row.  Their r_coeff_dbl values
+# are therefore not transcribed.  The reproducibility verdict is blanket:
+# the replicator's survey answer "Analysis and cleaning code produce the
+# same output as presented in the paper" (ten_point_scale 10; every
+# non-blank row's repro_not_sign_5 = "Original Authors Result
+# Reproduced").  As with bisbee-2022's Table 2, each finding records the
+# paper's own value with outcome matches.  The SSRP record could not be
+# opened to confirm (DNS for socialsciencereproduction.org did not
+# resolve, 2026-10-21).
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: 0.035
+    outcome: matches
+    notes: SSRP #791 blanket verdict (code reproduces the paper's output); no per-row recreation in the meta-database.
+  - claim_id: 1
+    reproduced_value: 0.037
+    outcome: matches
+    notes: SSRP #791 blanket verdict; value is the paper's.
+  - claim_id: 2
+    reproduced_value: 0.040
+    outcome: matches
+    notes: SSRP #791 blanket verdict; value is the paper's.
+  - claim_id: 3
+    reproduced_value: 0.076
+    outcome: matches
+    notes: SSRP #791 blanket verdict; value is the paper's.
+  - claim_id: 4
+    reproduced_value: 0.081
+    outcome: matches
+    notes: SSRP #791 blanket verdict; value is the paper's.
+  - claim_id: 5
+    reproduced_value: 0.086
+    outcome: matches
+    notes: SSRP #791 blanket verdict; value is the paper's.
+  - claim_id: 6
+    reproduced_value: 0.060
+    outcome: matches
+    notes: SSRP #791 blanket verdict; value is the paper's.
+  - claim_id: 7
+    reproduced_value: 0.162
+    outcome: matches
+    notes: SSRP #791 blanket verdict; value is the paper's.
+  - claim_id: 8
+    reproduced_value: 1086
+    outcome: matches
+    notes: SSRP #791 blanket verdict; value is the paper's.
+  - claim_id: 9
+    reproduced_value: 1074
+    outcome: matches
+    notes: SSRP #791 blanket verdict; value is the paper's.
+  - claim_id: 10
+    reproduced_value: 18966
+    outcome: matches
+    notes: SSRP #791 blanket verdict; value is the paper's.
+  - claim_id: 11
+    reproduced_value: 18862
+    outcome: matches
+    notes: SSRP #791 blanket verdict; value is the paper's.
 
 notes: >
   Headline finding: climate migrants occupy an intermediate position in public
@@ -53,3 +288,76 @@ notes: >
   Promoted from the I4R First Meta Database (replication report team 12) via
   scripts/import_i4r_candidates.py.  On holdout: touched only to confirm that
   a dev-set prompt improvement generalises.
+
+  Curation pass (2026-10-21).  Pinned 12 claims: the eight Table 2 AMCEs
+  of the focal attribute (drought, flooding, wildfires, persecution vs
+  economic opportunity, U.S. and German samples), each with its SE in
+  standard_error (SEs are not separate claims, as in bisbee-2022 and
+  alesina-2022; separate SE claims would push the entry past 12), and the
+  four design-section counts (1,086 / 1,074 respondents; 18,966 / 18,862
+  choice tasks).  Every AMCE and SE is printed to three decimal places.
+  The abstract's 2,160 respondents is the sum of the two respondent
+  claims and is not pinned separately.
+
+  What was read.  The author PDF (conditionally accepted, 2020-09-29;
+  Table 1 design, Table 2 AMCEs, text); the Kleinman Center digest of
+  December 2019 (for the first-public date); the Dataverse API metadata;
+  the whole package, downloaded to a scratch directory (never committed);
+  the R script's Study 1 sections; the meta-database's 8 rows.
+
+  What could not be verified.  (1) The published JOP Table 2: the journal
+  PDF is paywalled and the SSRN copy is blocked, so the pinned values are
+  the conditionally-accepted author text's; the package was deposited two
+  days later (2020-10-01), so the numbers are very likely final, but this
+  is unconfirmed.  (2) The AMCEs against package output: the package
+  ships no tables or logs, and the code was not run.  (3) The SSRP #791
+  report itself (host unreachable); the verdict comes from the
+  meta-database's survey fields.
+
+  Counts cross-check.  A raw count over the package's .tab exports
+  (respondents with at least one answered forced-choice item; two
+  profiles per answered task) gives 1,074 respondents / 18,862 profiles
+  for Germany, exactly the paper's, and 1,086 respondents / 18,970
+  profiles for the U.S.  The script reshapes to one row per profile with
+  cjoint::read.qualtrics and then keeps rows 5 onward for the U.S.
+  (cjt_us_data[5:nrow(cjt_us_data), ], line ~172), dropping four profile
+  rows (18,970 - 4 = 18,966, the paper's figure) without dropping a
+  respondent; Germany drops rows with a missing choice (line ~784).  So
+  the paper's "unique choice tasks" counts profile rows (two per pairing),
+  and the U.S. 18,966 depends on an undocumented four-row drop a
+  reproducer following the paper cannot know about: choice_tasks_us
+  (and, marginally, the U.S. AMCEs) may come out on 18,970.
+
+  Package structure (package-only facts; never in contexts).  One script,
+  Migration_Analysis_Final.R, with a hard-coded Windows setwd() and a
+  memory.limit() call, set.seed(8675309), and libraries tidyverse,
+  xtable, ggplot2, ggpubr, corrplot, car, splines, readxl, stargazer,
+  psych, lemon, boot, cjoint, cregg, margins, FindIt.  Table 2 comes from
+  cjoint::amce(selected ~ Gender + Language.Fluency + Occupation + Origin
+  + Reason.for.migration + Religion + Vulnerability, cluster = TRUE,
+  respondent.id = 'Response.ID', design = <design file>, baselines = ...)
+  printed through xtable(digits = 3): U.S. at lines ~243-261
+  (cjt_us_results, design conjoint_design.dat, baseline 'Economic
+  opportunity'), Germany at lines ~897-920 (cjt_ger_results, design
+  conjoint_design_german2.dat, German level labels, baseline
+  'Wirtschaftliche Perspektive', columns renamed by position).  The data
+  are read with cjoint::read.qualtrics(new.format = TRUE, respondentID =
+  "ResponseId", responses = force_choice, Q184 ... Q198) from the original
+  Qualtrics .csv names ("Climate Migration 2_ Conjoint- USA_September 10,
+  2019_08.56.csv", "... Germany_September 11, 2019_02.58.csv"), but
+  Dataverse serves ingested .tab by default (the .csv originals need
+  ?format=original); each export keeps Qualtrics' two metadata rows under
+  the header.  The design files encode the randomization restrictions
+  (the internal-migrant .dat variants constrain origin), which the paper
+  does not describe; a reproducer that ignores them estimates unweighted
+  AMCEs, which can differ slightly.  Other files: Study 2 factorial data
+  (usclimate_exp1.tab, "Climate Migration 1_ Article- Germany ... .tab"),
+  the 2020 follow-up survey ("Migration Follow-Up_August 1, 2020 ...
+  .tab"), and germany_state_key.tab.  No .tex, .log or .RData outputs:
+  the independent-mode script-free copy carries no answers.
+
+  Left out.  The other Table 2 rows (language, gender, occupation,
+  religion, origin, vulnerability), the marginal-means ranges in the text
+  (0.45-0.48 / 0.48-0.53 / 0.53-0.60, from a figure, not tabulated),
+  internal/international subset AMCEs (Figure 1 middle/right, appendix),
+  and all of study 2 (null priming effects, appendix tables only).
