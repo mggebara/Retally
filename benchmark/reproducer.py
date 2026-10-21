@@ -43,6 +43,16 @@ from retally.models import Claim, Dataset, DatasetReference, Language, Reproduct
 # ---------------------------------------------------------------------------
 
 
+class MissingAPIKeyError(RuntimeError):
+    """Raised by a reproducer factory when the API key it needs is not set.
+
+    The runner records this as a ``no_api_key`` skip; any other exception
+    from a factory is recorded as ``reproducer_init_failed`` with its
+    message, so a Docker or import failure is not misreported as a
+    missing key.  Third-party factories should raise it for the same case.
+    """
+
+
 @dataclass
 class ComponentMetrics:
     """Per-stage success flags for one reproduction attempt.

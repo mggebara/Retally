@@ -57,7 +57,13 @@ from typing import Any
 # benchmark.* is at the repo root, not under src/retally/, so the test
 # helper and this module both reach into the sibling schema module.
 from benchmark import schema as bschema
-from benchmark.reproducer import ComponentMetrics, PipelineReproducer, Reproducer, Reproduction
+from benchmark.reproducer import (
+    ComponentMetrics,
+    MissingAPIKeyError,
+    PipelineReproducer,
+    Reproducer,
+    Reproduction,
+)
 
 __all__ = [
     "BenchmarkResult",
@@ -100,13 +106,17 @@ class SkipReason(Enum):
     ``out_of_scope_reason`` set in the YAML.  ``LANGUAGE_UNSUPPORTED``
     covers entries the runner can't handle yet (R until that lands,
     Stata permanently).  ``NO_API_KEY`` covers running the harness
-    without ``ANTHROPIC_API_KEY`` — the pipeline can't be invoked, so
-    we record the skip rather than crashing.
+    without ``ANTHROPIC_API_KEY`` — the reproducer factory raised
+    ``MissingAPIKeyError``, so we record the skip rather than crashing.
+    ``REPRODUCER_INIT_FAILED`` covers a factory that raised anything else
+    (Docker unavailable, sandbox image not built, a bad plugin import);
+    the exception text goes in ``error``.
     """
 
     OUT_OF_SCOPE = "out_of_scope"
     LANGUAGE_UNSUPPORTED = "language_unsupported"
     NO_API_KEY = "no_api_key"
+    REPRODUCER_INIT_FAILED = "reproducer_init_failed"
 
 
 @dataclass
@@ -209,9 +219,10 @@ def run_benchmark(
     of the cache key.  ``reproducer_factory`` is a zero-arg callable
     returning a :class:`~benchmark.reproducer.Reproducer`; when omitted it
     is resolved from ``reproducer``.  Injecting it keeps the runner
-    testable without an API key.  It is only called on a cache miss, and a
-    factory that raises (typically: ``ANTHROPIC_API_KEY`` unset) is
-    recorded as a ``no_api_key`` skip.
+    testable without an API key.  It is only called on a cache miss.  A
+    factory that raises ``MissingAPIKeyError`` is recorded as a
+    ``no_api_key`` skip; one that raises anything else as a
+    ``reproducer_init_failed`` skip carrying the exception message.
 
     ``pipeline_factory`` is the older convenience form: a zero-arg callable
     returning a ``ValidationPipeline`` (or anything with a compatible
@@ -392,8 +403,8 @@ def _run_one(
 
     try:
         agent = reproducer_factory()
-    except Exception as exc:
-        logger.warning("Reproducer construction failed for %s: %s", entry.id, exc)
+    except MissingAPIKeyError as exc:
+        logger.warning("No API key for %s: %s", entry.id, exc)
         return BenchmarkResult(
             entry_id=entry.id,
             mode=mode,
@@ -401,6 +412,16 @@ def _run_one(
             skipped=True,
             skip_reason=SkipReason.NO_API_KEY,
             error=str(exc),
+        )
+    except Exception as exc:
+        logger.warning("Reproducer construction failed for %s: %s", entry.id, exc)
+        return BenchmarkResult(
+            entry_id=entry.id,
+            mode=mode,
+            reproducer=reproducer,
+            skipped=True,
+            skip_reason=SkipReason.REPRODUCER_INIT_FAILED,
+            error=f"{type(exc).__name__}: {exc}",
         )
 
     result = _execute_with_reproducer(entry, agent, extracted_claims_dir=extracted_claims_dir, mode=mode)
@@ -866,7 +887,7 @@ def _default_pipeline_factory():
     ``rm -rf benchmark/.cache/llm`` to start the cache cold.
     """
     if not os.environ.get("ANTHROPIC_API_KEY"):
-        raise RuntimeError("ANTHROPIC_API_KEY is not set")
+        raise MissingAPIKeyError("ANTHROPIC_API_KEY is not set")
     from retally.pipeline import ValidationPipeline
 
     llm_cache_dir: Path | None = CACHE_DIR / "llm"

@@ -111,13 +111,37 @@ def test_skip_when_pipeline_construction_fails(tmp_path):
     """No API key on the host → record a NO_API_KEY skip, don't crash."""
 
     def factory():
-        raise RuntimeError("ANTHROPIC_API_KEY is not set")
+        raise runner.MissingAPIKeyError("ANTHROPIC_API_KEY is not set")
 
     entry = _entry()
     [result] = runner.run_benchmark([entry], pipeline_factory=factory, cache_dir=tmp_path)
     assert result.skipped is True
     assert result.skip_reason is runner.SkipReason.NO_API_KEY
     assert "ANTHROPIC_API_KEY" in (result.error or "")
+
+
+def test_other_construction_failures_are_not_recorded_as_no_api_key(tmp_path, monkeypatch):
+    """A reproducer that fails to build for another reason (Docker down, bad
+    import) is ``reproducer_init_failed`` with the message — even with a key set."""
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-test-not-used")
+
+    def factory():
+        raise RuntimeError("Docker is not available or sandbox image not built.")
+
+    [result] = runner.run_benchmark([_entry()], reproducer_factory=factory, cache_dir=tmp_path)
+    assert result.skipped is True
+    assert result.skip_reason is runner.SkipReason.REPRODUCER_INIT_FAILED
+    assert result.error == "RuntimeError: Docker is not available or sandbox image not built."
+    assert not list(tmp_path.glob("*.json")), "init failures must not be cached"
+    raw = runner._result_to_jsonable(result)
+    assert raw["skip_reason"] == "reproducer_init_failed"
+    assert runner._result_from_jsonable(raw).skip_reason is runner.SkipReason.REPRODUCER_INIT_FAILED
+
+
+def test_default_factory_raises_missing_key_error_without_a_key(monkeypatch):
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    with pytest.raises(runner.MissingAPIKeyError):
+        runner._default_pipeline_factory()
 
 
 # ── Happy path ──────────────────────────────────────────────────────────

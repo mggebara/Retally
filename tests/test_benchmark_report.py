@@ -67,6 +67,17 @@ def test_headline_counts_categorise_skips():
     assert "out_of_scope=1" in md
     assert "language_unsupported=1" in md
     assert "no_api_key=1" in md
+    assert "reproducer_init_failed" not in md  # absent kinds don't change the headline
+
+
+def test_headline_counts_reproducer_init_failures():
+    results = [
+        _result(entry_id="a", skipped=True, skip_reason="reproducer_init_failed", error="RuntimeError: x"),
+        _result(entry_id="b"),
+    ]
+    md = report.render_markdown(results)
+    assert "no_api_key=0, reproducer_init_failed=1)" in md
+    assert "reproducer_init_failed=1" in report.render_html(results)
 
 
 def test_verdict_summary_counts_executed_only():

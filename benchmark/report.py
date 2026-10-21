@@ -55,7 +55,7 @@ def render_markdown(results: list[dict[str, Any]]) -> str:
             f"Skipped: **{headline['skipped']}** "
             f"(out_of_scope={headline['out_of_scope']}, "
             f"language_unsupported={headline['language_unsupported']}, "
-            f"no_api_key={headline['no_api_key']}).  ",
+            f"no_api_key={headline['no_api_key']}{_init_failed_suffix(headline)}).  ",
             f"Reproduction mode: **{modes[0]}** ({_MODE_BLURB.get(modes[0], 'unrecognised mode')}).  ",
             _reproducer_line(results),
             "",
@@ -104,7 +104,7 @@ def render_html(results: list[dict[str, Any]]) -> str:
           Skipped: <strong>{headline["skipped"]}</strong>
           (out_of_scope={headline["out_of_scope"]},
           language_unsupported={headline["language_unsupported"]},
-          no_api_key={headline["no_api_key"]}).
+          no_api_key={headline["no_api_key"]}{_init_failed_suffix(headline)}).
         </p>
         <table>
           <thead>
@@ -161,7 +161,14 @@ def _headline_counts(results: list[dict[str, Any]]) -> dict[str, int]:
         "out_of_scope": sum(1 for s in skip_reasons if s == "out_of_scope"),
         "language_unsupported": sum(1 for s in skip_reasons if s == "language_unsupported"),
         "no_api_key": sum(1 for s in skip_reasons if s == "no_api_key"),
+        "reproducer_init_failed": sum(1 for s in skip_reasons if s == "reproducer_init_failed"),
     }
+
+
+def _init_failed_suffix(headline: dict[str, int]) -> str:
+    """``, reproducer_init_failed=N`` when any run hit it; empty otherwise (keeps old reports stable)."""
+    n = headline["reproducer_init_failed"]
+    return f", reproducer_init_failed={n}" if n else ""
 
 
 _MODE_BLURB = {
@@ -191,7 +198,7 @@ def _multi_mode_header(results: list[dict[str, Any]], modes: list[str]) -> list[
         f"Skipped runs: **{headline['skipped']}** "
         f"(out_of_scope={headline['out_of_scope']}, "
         f"language_unsupported={headline['language_unsupported']}, "
-        f"no_api_key={headline['no_api_key']}).",
+        f"no_api_key={headline['no_api_key']}{_init_failed_suffix(headline)}).",
         "",
         "Reproduction modes:",
         "",
