@@ -1,0 +1,582 @@
+{
+  "generated": "2026-10-21",
+  "source": "I4R First Meta Database (benchmark/corpus/i4r_first_meta_database.csv.gz)",
+  "verdict_mapping": {
+    "reproducible": "perfect_reproduction=Yes",
+    "minor discrepancies": "perfect_reproduction=No and computational_reproduction=1",
+    "not reproducible": "computational_reproduction=0"
+  },
+  "papers": [
+    {
+      "rank": 1,
+      "id": "grier-2023-sugar-roll-call-voting",
+      "i4r_team": 7,
+      "title": "Campaign Contributions and Roll-Call Voting in the U.S. House of Representatives: The Case of the Sugar Industry",
+      "authors": [
+        "Kevin B. Grier",
+        "Robin Grier",
+        "Gor Mkrtchian"
+      ],
+      "journal": "American Political Science Review",
+      "year": 2023,
+      "doi": "10.1017/S0003055422000466",
+      "paper_pdf_url": "https://www.cambridge.org/core/services/aop-cambridge-core/content/view/DBB341572A3FC0A1D06705B5DDE5C497/S0003055422000466a.pdf/div-class-title-campaign-contributions-and-roll-call-voting-in-the-u-s-house-of-representatives-the-case-of-the-sugar-industry-div.pdf",
+      "paper_pdf_check": "206 application/pdf, %PDF magic (open-access published version)",
+      "package_source_url": "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/2IFZR9",
+      "package_api_check": {
+        "status": 200,
+        "size_mb": 0.5,
+        "files": 5,
+        "restricted": 0,
+        "license": "CC0 1.0",
+        "version": "1.0 (2022-05-02)",
+        "file_fetch": "206 on /api/access/datafile"
+      },
+      "software": "Stata",
+      "data_formats": [
+        ".dta"
+      ],
+      "i4r_verdict": "reproducible (perfect_reproduction=Yes, computational_reproduction=1)",
+      "i4r_report_ref": "I4R DP 57",
+      "i4r_rows": {
+        "total": 8,
+        "r_coeff": 6,
+        "main_tables": "Table 1 cols 1-2"
+      },
+      "method_summary": "Panel / difference-in-differences regressions of House members' votes on sugar-program bills on sugar-industry contributions (DB method flag: DiD); headline Table 1.",
+      "reasons": [
+        "Smallest package in the pool: one .do file and three .dta files, 0.5 MB",
+        "Single headline table that I4R reproduced exactly",
+        "APSR open-access PDF",
+        "2023 publication"
+      ],
+      "risks": [
+        "Only 6 estimate-level I4R rows (Table 1 only)",
+        "Readme is .docx"
+      ]
+    },
+    {
+      "rank": 2,
+      "id": "leeson-2022-hobo-economicus",
+      "i4r_team": 36,
+      "title": "Hobo Economicus",
+      "authors": [
+        "Peter T. Leeson",
+        "R. August Hardy",
+        "Paola A. Suarez"
+      ],
+      "journal": "The Economic Journal",
+      "year": 2022,
+      "doi": "10.1093/ej/ueab103",
+      "paper_pdf_url": "https://www.peterleeson.com/Hobo_Economicus.pdf",
+      "paper_pdf_check": "206 application/pdf, %PDF magic (author site)",
+      "package_source_url": "https://zenodo.org/records/5719541",
+      "package_api_check": {
+        "status": 200,
+        "size_mb": 0.4,
+        "files": 1,
+        "access": "open",
+        "license": "cc-by-4.0",
+        "file_fetch": "206 on Zenodo file link"
+      },
+      "software": "Stata",
+      "data_formats": [
+        "unverified: nested replicate.zip (232 kB) inside the Zenodo zip; Zenodo preview does not list nested contents"
+      ],
+      "i4r_verdict": "minor discrepancies (perfect_reproduction=No, computational_reproduction=1)",
+      "i4r_report_ref": "I4R DP 55",
+      "i4r_rows": {
+        "total": 16,
+        "r_coeff": 12,
+        "main_tables": "Table 2"
+      },
+      "method_summary": "Difference-in-differences on panhandlers' behaviour across Washington DC metro stations as a test of rational choice; headline Table 2.",
+      "reasons": [
+        "Tiny package (0.4 MB)",
+        "Plain DiD with one headline table",
+        "Imperfect-but-computational verdict: I4R found Table 4 mislabels within/across stations and that footnote robustness checks are not produced by the package"
+      ],
+      "risks": [
+        "Data format inside the nested zip not verified before download",
+        "Package also contains IRB approval PDF (harmless)"
+      ]
+    },
+    {
+      "rank": 3,
+      "id": "hanlon-2022-aircraft-ip-spillovers",
+      "i4r_team": 78,
+      "title": "Spillover Effects of Intellectual Property Protection in the Interwar Aircraft Industry",
+      "authors": [
+        "Walker Hanlon",
+        "Taylor Jaworski"
+      ],
+      "journal": "The Economic Journal",
+      "year": 2022,
+      "doi": "10.1093/ej/ueab091",
+      "paper_pdf_url": "https://www.nber.org/system/files/working_papers/w26490/w26490.pdf",
+      "paper_pdf_check": "200 application/pdf, %PDF magic (NBER WP 26490, same title)",
+      "package_source_url": "https://zenodo.org/records/5627298",
+      "package_api_check": {
+        "status": 200,
+        "size_mb": 7.7,
+        "files": 1,
+        "access": "open",
+        "license": "cc-by-4.0",
+        "file_fetch": "206 on Zenodo file link"
+      },
+      "software": "Stata",
+      "data_formats": [
+        ".dta",
+        ".csv"
+      ],
+      "i4r_verdict": "reproducible (perfect_reproduction=Yes, computational_reproduction=1)",
+      "i4r_report_ref": "none found in the I4R DP series (IDEAS listing); an OSF 'Reproduction and response' preprint exists",
+      "i4r_rows": {
+        "total": 23,
+        "r_coeff": 12,
+        "main_tables": "Table 1 cols 1-6"
+      },
+      "method_summary": "Difference-in-differences on interwar aircraft/engine models around a change in US IP protection for aircraft designs (spillovers to other producers); headline Table 1.",
+      "reasons": [
+        "Small, clean Stata package: four .dta + raw .csv, 1-data-*.do then 2-results-main.do",
+        "Zenodo zip also ships the accepted manuscript PDF",
+        "I4R replicators re-coded it in R and matched exactly"
+      ],
+      "risks": [
+        "Zip bundles LaTeX/figures alongside code (more noise for file selection)",
+        "NBER WP version may differ in table numbering from the EJ version"
+      ]
+    },
+    {
+      "rank": 4,
+      "id": "manekin-2022-effective-for-whom",
+      "i4r_team": 25,
+      "title": "Effective for Whom? Ethnic Identity and Nonviolent Resistance",
+      "authors": [
+        "Devorah Manekin",
+        "Tamar Mitts"
+      ],
+      "journal": "American Political Science Review",
+      "year": 2022,
+      "doi": "10.1017/S0003055421000940",
+      "paper_pdf_url": "https://www.cambridge.org/core/services/aop-cambridge-core/content/view/D78EE1F9EE3B41D6F1500311F17B8EA6/S0003055421000940a.pdf/div-class-title-effective-for-whom-ethnic-identity-and-nonviolent-resistance-div.pdf",
+      "paper_pdf_check": "206 application/pdf, %PDF magic (open-access published version)",
+      "package_source_url": "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/SHHVCA",
+      "package_api_check": {
+        "status": 200,
+        "size_mb": 2.7,
+        "files": 1,
+        "restricted": 0,
+        "license": "CC0 1.0",
+        "version": "1.0 (2021-09-14)",
+        "file_fetch": "206 on /api/access/datafile"
+      },
+      "software": "R",
+      "data_formats": [
+        "unverified: single Replication.tgz (2.7 MB); Dataverse API does not list archive contents"
+      ],
+      "i4r_verdict": "minor discrepancies (perfect_reproduction=No, computational_reproduction=1)",
+      "i4r_report_ref": "I4R DP 86",
+      "i4r_rows": {
+        "total": 43,
+        "r_coeff": 42,
+        "main_tables": "Table 1 (18), Table 2 (9), appendix A3/A5"
+      },
+      "method_summary": "Survey experiments (Israel/US) randomising protester ethnicity and tactics; OLS treatment effects; headline Tables 1-2.",
+      "reasons": [
+        "R original",
+        "42 paired estimate rows across two main tables",
+        "I4R had to fix controls to reproduce tables: a good non-perfect yardstick"
+      ],
+      "risks": [
+        "The pipeline must unpack a .tgz (confirm the downloader handles tar.gz from Dataverse)",
+        "Survey-experiment tables may include many interaction terms"
+      ]
+    },
+    {
+      "rank": 5,
+      "id": "adams-2023-women-mps-affective-polarization",
+      "i4r_team": 10,
+      "title": "Can't We All Just Get Along? How Women MPs Can Ameliorate Affective Polarization in Western Publics",
+      "authors": [
+        "James Adams",
+        "David Bracken",
+        "Noam Gidron",
+        "Will Horne",
+        "Diana Z. O'Brien",
+        "Kaitlin Senk"
+      ],
+      "journal": "American Political Science Review",
+      "year": 2023,
+      "doi": "10.1017/S0003055422000491",
+      "paper_pdf_url": "https://www.cambridge.org/core/services/aop-cambridge-core/content/view/D9F115F8EA9677F6AFC9E6D76392B8D5/S0003055422000491a.pdf/div-class-title-can-t-we-all-just-get-along-how-women-mps-can-ameliorate-affective-polarization-in-western-publics-div.pdf",
+      "paper_pdf_check": "206 application/pdf, %PDF magic (open-access published version)",
+      "package_source_url": "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/AHQRVR",
+      "package_api_check": {
+        "status": 200,
+        "size_mb": 10.8,
+        "files": 8,
+        "restricted": 0,
+        "license": "CC0 1.0",
+        "version": "1.0 (2022-06-14)",
+        "file_fetch": "206 on /api/access/datafile"
+      },
+      "software": "R",
+      "data_formats": [
+        ".Rdata",
+        ".rds"
+      ],
+      "i4r_verdict": "reproducible (perfect_reproduction=Yes, computational_reproduction=1)",
+      "i4r_report_ref": "none found in the I4R DP series",
+      "i4r_rows": {
+        "total": 6,
+        "r_coeff": 5,
+        "main_tables": "Table 1"
+      },
+      "method_summary": "Cross-national time-series (dyadic party) regressions of out-party affect on women's share of party MPs; headline Table 1.",
+      "reasons": [
+        "R original with a single replication_code.R and three data files",
+        "One headline table, reproduced (only a file path needed changing)",
+        "2023 publication"
+      ],
+      "risks": [
+        "Only 5 estimate rows",
+        "Multilevel / dyadic specifications may need lme4-style models"
+      ]
+    },
+    {
+      "rank": 6,
+      "id": "altmann-2022-cognitive-spillovers",
+      "i4r_team": 45,
+      "title": "Interventions and Cognitive Spillovers",
+      "authors": [
+        "Steffen Altmann",
+        "Andreas Grunewald",
+        "Jonas Radbruch"
+      ],
+      "journal": "The Review of Economic Studies",
+      "year": 2022,
+      "doi": "10.1093/restud/rdab087",
+      "paper_pdf_url": "https://docs.iza.org/dp12337.pdf",
+      "paper_pdf_check": "206 application/pdf, %PDF magic (IZA DP 12337, earlier title 'Passive Choices and Cognitive Spillovers')",
+      "package_source_url": "https://zenodo.org/records/5652808",
+      "package_api_check": {
+        "status": 200,
+        "size_mb": 8.2,
+        "files": 1,
+        "access": "open",
+        "license": "cc-by-4.0",
+        "file_fetch": "206 on Zenodo file link"
+      },
+      "software": "Stata",
+      "data_formats": [
+        ".dta"
+      ],
+      "i4r_verdict": "minor discrepancies (perfect_reproduction=No, computational_reproduction=1)",
+      "i4r_report_ref": "I4R DP 43",
+      "i4r_rows": {
+        "total": 75,
+        "r_coeff": 71,
+        "main_tables": "Tables 2-4, appendix B.1"
+      },
+      "method_summary": "Online (MTurk) experiment randomising defaults/reminders; OLS treatment effects on targeted and non-targeted decisions; Tables 2-4.",
+      "reasons": [
+        "Two .dta files plus master.do",
+        "71 paired rows; I4R discrepancy is only 0.001-level rounding: a precise yardstick",
+        "REStud adds journal variety"
+      ],
+      "risks": [
+        "Package also contains the oTree experiment (Python) and bundled ado files: file-selection noise",
+        "Working-paper title and numbering differ from the published version"
+      ]
+    },
+    {
+      "rank": 7,
+      "id": "montero-2022-cooperative-property-rights",
+      "i4r_team": 16,
+      "title": "Cooperative Property Rights and Development: Evidence from Land Reform in El Salvador",
+      "authors": [
+        "Eduardo Montero"
+      ],
+      "journal": "Journal of Political Economy",
+      "year": 2022,
+      "doi": "10.1086/717042",
+      "paper_pdf_url": "https://www.economics.utoronto.ca/index.php/index/research/downloadSeminarFile/15597",
+      "paper_pdf_check": "200 application/pdf, %PDF magic (Jan 2018 working-paper draft, not the JPE version)",
+      "package_source_url": "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/AMD3NO",
+      "package_api_check": {
+        "status": 200,
+        "size_mb": 3.1,
+        "files": 3,
+        "restricted": 0,
+        "license": "CC0 1.0",
+        "version": "1.0 (2023-03-31)",
+        "file_fetch": "206 on /api/access/datafile"
+      },
+      "software": "Stata",
+      "data_formats": [
+        ".dta"
+      ],
+      "i4r_verdict": "not reproducible (perfect_reproduction=No, computational_reproduction=0)",
+      "i4r_report_ref": "I4R DP 20 (published as a JPE comment, doi 10.1086/725235)",
+      "i4r_rows": {
+        "total": 204,
+        "r_coeff": 203,
+        "main_tables": "Tables 2-3"
+      },
+      "method_summary": "Regression discontinuity at the 500-hectare land-reform threshold (cooperatives vs. haciendas) using household survey data; Tables 2-3.",
+      "reasons": [
+        "One .dta and one .do, 3.1 MB",
+        "Most I4R rows of any shortlisted paper (203)",
+        "A documented coding error (duplicate observations) gives a real failure case on the human yardstick"
+      ],
+      "risks": [
+        "Dataverse release is dated 2023-03-31, after the I4R comment; it may be a corrected package, so reproducing it may match the erratum rather than the published tables. Check before seeding claims",
+        "Only open PDF found is the 2018 draft; table numbers and values may differ from the JPE article"
+      ]
+    },
+    {
+      "rank": 8,
+      "id": "lopez-moctezuma-2022-policy-deliberation-philippines",
+      "i4r_team": 66,
+      "title": "Policy Deliberation and Voter Persuasion: Experimental Evidence from an Election in the Philippines",
+      "authors": [
+        "Gabriel López-Moctezuma",
+        "Leonard Wantchekon",
+        "Daniel Rubenson",
+        "Thomas Fujiwara",
+        "Cecilia Pe Lero"
+      ],
+      "journal": "American Journal of Political Science",
+      "year": 2022,
+      "doi": "10.1111/ajps.12566",
+      "paper_pdf_url": "https://authors.library.caltech.edu/api/records/qce9v-wvk72/files/American_J_Political_Sci_-_2020_-_L_pez_u2010Moctezuma_-_Policy_Deliberation_and_Voter_Persuasion_Experimental_Evidence_from_an.pdf/content",
+      "paper_pdf_check": "206 (S3 redirect) application/octet-stream, %PDF magic (published version on CaltechAUTHORS)",
+      "package_source_url": "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/S3HACJ",
+      "package_api_check": {
+        "status": 200,
+        "size_mb": 24.2,
+        "files": 28,
+        "restricted": 0,
+        "license": "none stated (terms of use text)",
+        "version": "1.1 (2022-04-27)",
+        "file_fetch": "206 on /api/access/datafile"
+      },
+      "software": "R",
+      "data_formats": [
+        ".RData",
+        ".csv",
+        "shapefiles"
+      ],
+      "i4r_verdict": "minor discrepancies (perfect_reproduction=No, computational_reproduction=1)",
+      "i4r_report_ref": "none found in the I4R DP series",
+      "i4r_rows": {
+        "total": 10,
+        "r_coeff": 8,
+        "main_tables": "appendix tables C.3-C.4, F.1-F.4"
+      },
+      "method_summary": "Cluster-randomised field experiment (town-hall policy deliberation) in the 2016 Philippine election; treatment effects on vote shares.",
+      "reasons": [
+        "Third R-original paper with an open PDF",
+        "Field RCT adds a method",
+        "I4R verdict is non-perfect because archived CRAN packages were needed: tests the pipeline's dependency handling"
+      ],
+      "risks": [
+        "I4R rows come from appendix tables, not the headline table",
+        "16 R scripts and helper files: harder file selection",
+        "PDF URL redirects to a short-lived signed S3 link; keep the CaltechAUTHORS URL as canonical",
+        "Content-type is application/octet-stream, not application/pdf"
+      ]
+    },
+    {
+      "rank": 9,
+      "id": "dertwinkel-kalt-2022-concentration-bias",
+      "i4r_team": 15,
+      "title": "Concentration Bias in Intertemporal Choice",
+      "authors": [
+        "Markus Dertwinkel-Kalt",
+        "Holger Gerhardt",
+        "Gerhard Riener",
+        "Frederik Schwerter",
+        "Louis Strang"
+      ],
+      "journal": "The Review of Economic Studies",
+      "year": 2022,
+      "doi": "10.1093/restud/rdab043",
+      "paper_pdf_url": "https://www.econtribute.de/RePEc/ajk/ajkdps/ECONtribute_076_2021.pdf",
+      "paper_pdf_check": "206 application/pdf, %PDF magic (ECONtribute DP 076)",
+      "package_source_url": "https://zenodo.org/records/5091975",
+      "package_api_check": {
+        "status": 200,
+        "size_mb": 11.2,
+        "files": 1,
+        "access": "open",
+        "license": "cc-by-nc-4.0",
+        "file_fetch": "206 on Zenodo file link"
+      },
+      "software": "Stata (analysis) + R (calibration exercise only)",
+      "data_formats": [
+        ".csv"
+      ],
+      "i4r_verdict": "reproducible (perfect_reproduction=Yes, computational_reproduction=1)",
+      "i4r_report_ref": "I4R DP 42",
+      "i4r_rows": {
+        "total": 32,
+        "r_coeff": 31,
+        "main_tables": "Table 2 (8), Table 3 (16), appendix D.1"
+      },
+      "method_summary": "Lab/field experiments on intertemporal choice (consumption and money tasks); regression-based treatment comparisons; Tables 2-3.",
+      "reasons": [
+        "Data are plain .csv: no .dta translation needed",
+        "31 paired rows over two main tables",
+        "Exact reproduction"
+      ],
+      "risks": [
+        "Package also contains the oTree/Django experiment code (Python, fonts, HTML): file-selection noise",
+        "CC-BY-NC licence"
+      ]
+    },
+    {
+      "rank": 10,
+      "id": "holman-2022-theresa-may-rally",
+      "i4r_team": 86,
+      "title": "The Curious Case of Theresa May and the Public That Did Not Rally: Gendered Reactions to Terrorist Attacks Can Cause Slumps Not Bumps",
+      "authors": [
+        "Mirya R. Holman",
+        "Jennifer L. Merolla",
+        "Elizabeth J. Zechmeister"
+      ],
+      "journal": "American Political Science Review",
+      "year": 2022,
+      "doi": "10.1017/S0003055421000861",
+      "paper_pdf_url": "https://www.cambridge.org/core/services/aop-cambridge-core/content/view/CCB0F99CE10065BAECA662C140F966EC/S0003055421000861a.pdf/div-class-title-the-curious-case-of-theresa-may-and-the-public-that-did-not-rally-gendered-reactions-to-terrorist-attacks-can-cause-slumps-not-bumps-div.pdf",
+      "paper_pdf_check": "206 application/pdf, %PDF magic (open-access published version)",
+      "package_source_url": "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/VHNPUO&version=1.0",
+      "package_api_check": {
+        "status": 200,
+        "size_mb": 236.0,
+        "files": 10,
+        "restricted": 0,
+        "license": "none stated (terms of use text)",
+        "version": "1.0 (2021-08-26); latest is 2.0 (2024-08-06, 237.5 MB, post-corrigendum)",
+        "file_fetch": "206 on /api/access/datafile"
+      },
+      "software": "Stata",
+      "data_formats": [
+        ".dta",
+        ".csv"
+      ],
+      "i4r_verdict": "not reproducible (perfect_reproduction=No, computational_reproduction=0)",
+      "i4r_report_ref": "I4R DP 41 (also Canadian Journal of Economics 2023 comment; APSR corrigendum 2024)",
+      "i4r_rows": {
+        "total": 18,
+        "r_coeff": 11,
+        "main_tables": "Table 4"
+      },
+      "method_summary": "Difference-in-differences on May's approval around the Manchester attack (BES panel) plus a cross-national approval panel; Stata xtreg; Tables 2 and 4.",
+      "reasons": [
+        "Documented coding errors (mis-coded dependent variable, xtreg reported as logit, election-quarter coding), so a strong not-reproducible case",
+        "Open APSR PDF",
+        "Under 500 MB"
+      ],
+      "risks": [
+        "Must pin Dataverse version 1.0. The latest 2.0 is the corrected package and would not reproduce the published numbers",
+        "236 MB, mostly BES panel data",
+        "Only 11 I4R rows (Table 4)"
+      ]
+    },
+    {
+      "rank": 11,
+      "id": "acemoglu-2022-war-socialism-fascism",
+      "i4r_team": 104,
+      "title": "War, Socialism, and the Rise of Fascism: an Empirical Exploration",
+      "authors": [
+        "Daron Acemoglu",
+        "Giuseppe De Feo",
+        "Giacomo Davide De Luca",
+        "Gianluca Russo"
+      ],
+      "journal": "Quarterly Journal of Economics",
+      "year": 2022,
+      "doi": "10.1093/qje/qjac001",
+      "paper_pdf_url": "https://www.nber.org/system/files/working_papers/w27854/w27854.pdf",
+      "paper_pdf_check": "200 application/pdf, %PDF magic (NBER WP 27854)",
+      "package_source_url": "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/CLJTSC",
+      "package_api_check": {
+        "status": 200,
+        "size_mb": 410.9,
+        "files": 28,
+        "restricted": 0,
+        "license": "CC0 1.0",
+        "version": "1.1 (2022-04-08)",
+        "file_fetch": "206 on /api/access/datafile"
+      },
+      "software": "Stata (two R scripts for appendix FWER tables)",
+      "data_formats": [
+        ".dta"
+      ],
+      "i4r_verdict": "reproducible (perfect_reproduction=Yes, computational_reproduction=1)",
+      "i4r_report_ref": "none found in the I4R DP series (SSRP reproduction doi 10.48152/ssrp-3s2g-m694)",
+      "i4r_rows": {
+        "total": 64,
+        "r_coeff": 59,
+        "main_tables": "Tables 1-3"
+      },
+      "method_summary": "IV / reduced-form regressions across Italian municipalities: WWI casualties, socialist gains and fascist support; Tables 1-3.",
+      "reasons": [
+        "Only QJE paper with open data and an open PDF in the pool",
+        "IV adds a method",
+        "59 paired rows over three main tables; exact reproduction"
+      ],
+      "risks": [
+        "411 MB, close to the size ceiling",
+        "Map figures (fig1_maps.do) may need geodata"
+      ]
+    },
+    {
+      "rank": 12,
+      "id": "gagliarducci-2022-gender-cooperation-congress",
+      "i4r_team": 32,
+      "title": "Gender Differences in Cooperative Environments? Evidence from the U.S. Congress",
+      "authors": [
+        "Stefano Gagliarducci",
+        "M. Daniele Paserman"
+      ],
+      "journal": "The Economic Journal",
+      "year": 2022,
+      "doi": "10.1093/ej/ueab069",
+      "paper_pdf_url": "https://www.nber.org/system/files/working_papers/w22488/w22488.pdf",
+      "paper_pdf_check": "200 application/pdf, %PDF magic (NBER WP 22488, same title)",
+      "package_source_url": "https://zenodo.org/records/5111360",
+      "package_api_check": {
+        "status": 200,
+        "size_mb": 402.8,
+        "files": 1,
+        "access": "open",
+        "license": "cc-by-4.0",
+        "file_fetch": "206 on Zenodo file link"
+      },
+      "software": "Stata",
+      "data_formats": [
+        "unverified: Zenodo preview refuses (zip too large); Stata per the I4R database"
+      ],
+      "i4r_verdict": "reproducible (perfect_reproduction=Yes, computational_reproduction=1)",
+      "i4r_report_ref": "I4R DP 75 (extension)",
+      "i4r_rows": {
+        "total": 123,
+        "r_coeff": 120,
+        "main_tables": "Table 5"
+      },
+      "method_summary": "Close-election regression discontinuity plus matching on cooperation outcomes of female vs. male members of Congress (DB method flags: RDD, matching); Table 5.",
+      "reasons": [
+        "RDD on an EJ paper with 120 paired rows",
+        "Exact reproduction (I4R only noted proportional vs. absolute figures)"
+      ],
+      "risks": [
+        "403 MB, and the contents could not be listed before download",
+        "NBER WP (2016) predates the EJ version; table numbers likely differ",
+        "All I4R rows are from one table (Table 5)"
+      ]
+    }
+  ]
+}
