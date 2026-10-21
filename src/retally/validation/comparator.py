@@ -48,9 +48,31 @@ How close is "reproduced" depends on what was reproduced (see
   the same ``TolerancePolicy`` object.  An override passed for one mode
   does not change the other.
 
+Printed-precision floor (every mode)
+------------------------------------
+Published tables round: a coefficient printed as ``-0.0006`` is
+consistent with any true value in [-0.00065, -0.00055], ±8 % of the
+printed value, so a perfect reproduction could fail a 1 % relative
+tolerance.  When a claim records its printed precision
+(``Claim.decimals``), the effective absolute band is
+
+    max(tolerance × |claimed|, 0.5 × 10**-decimals)
+
+where ``tolerance`` is whatever the mode's policy gave (per-type
+relative, or the SE band).  The floor never narrows a band; it applies
+identically in seeded, independent and blind modes, so a reproduction
+that rounds to the printed value always passes.  Written integers are
+exact (``decimals=0``: ±0.5, i.e. an exact match for a count) unless the
+catalog says otherwise with a negative ``decimals``.  Each result records
+which bound was binding in ``tolerance_source`` (``"relative"``,
+``"se_band"`` or ``"printed_precision"``).
+
 Because the effective band is recorded as an ordinary relative tolerance
-on each ``ClaimValidationResult``, downstream consumers (benchmark
-closeness bands, I4R scoring) need no special-casing.
+on each ``ClaimValidationResult`` (``band / |claimed|``), downstream
+consumers (benchmark closeness bands, I4R scoring) need no
+special-casing.  The one exception is a claim of exactly 0, which has no
+relative scale: when the floor binds there, ``tolerance`` holds the
+absolute half-unit band.
 """
 
 from __future__ import annotations
@@ -80,6 +102,22 @@ DEFAULT_TOLERANCE_POLICIES: Mapping[ReproductionMode, TolerancePolicy] = {
     # in how its numbers are judged: the same policy object.
     ReproductionMode.BLIND: _INDEPENDENT_POLICY,
 }
+
+
+TOLERANCE_RELATIVE = "relative"
+TOLERANCE_SE_BAND = "se_band"
+TOLERANCE_PRINTED_PRECISION = "printed_precision"
+
+
+def printed_half_unit(claim: Claim) -> float | None:
+    """Half a unit in the claim's last printed place, or None when unknown.
+
+    ``decimals=4`` (``-0.0006``) -> 0.00005; ``decimals=0`` -> 0.5;
+    ``decimals=-2`` (printed to the nearest hundred) -> 50.
+    """
+    if claim.decimals is None:
+        return None
+    return 0.5 * 10.0 ** (-claim.decimals)
 
 
 class ResultComparator:
@@ -156,6 +194,8 @@ class ResultComparator:
             Relative tolerance override.  If None, use the mode's policy:
             ``_default_tolerance(claim)``, widened to the ±k·SE band when
             the policy is SE-aware and the claim pins a standard error.
+            Either way the printed-precision floor still applies on top
+            (it only widens).
         mode:
             Reproduction mode whose ``TolerancePolicy`` applies.  Ignored
             when ``tolerance`` is given explicitly.
@@ -163,19 +203,39 @@ class ResultComparator:
         A claim passes when:
             reproduced_value is not None
             AND |reproduced_value - claim.value| / max(|claim.value|, 1e-9) <= tolerance
+        or, when the printed-precision floor is binding,
+            |reproduced_value - claim.value| <= 0.5 * 10**-claim.decimals
 
         Special case: if claimed > 1.0 and reproduced <= 1.0, also try comparing
         claimed/100 vs reproduced (handles % vs decimal mismatch). Use whichever
         comparison gives the smaller error; note the unit mismatch if it passes.
         """
-        se_band_note = ""
+        source = TOLERANCE_RELATIVE
+        band_note = ""
         if tolerance is None:
             tolerance = self._default_tolerance(claim)
             se_band = self._se_band(claim, mode)
             if se_band is not None and se_band > tolerance:
                 tolerance = se_band
+                source = TOLERANCE_SE_BAND
                 k = self.tolerance_policies[mode].se_multiplier
-                se_band_note = f", the ±{k:g}·SE band with SE={claim.standard_error:g}"
+                band_note = f", the ±{k:g}·SE band with SE={claim.standard_error:g}"
+
+        # Printed-precision floor, every mode: the absolute band is never
+        # narrower than half a unit in the claim's last printed place.  It
+        # only ever widens: it binds when the half unit exceeds the band
+        # computed above.
+        claimed = claim.value
+        abs_band = tolerance * abs(claimed)
+        half = printed_half_unit(claim)
+        if half is not None and half > abs_band:
+            abs_band = half
+            source = TOLERANCE_PRINTED_PRECISION
+            # Recorded as a relative tolerance like every other band; a
+            # claim of exactly 0 has no relative scale, so it records the
+            # absolute half-unit band itself.
+            tolerance = half / abs(claimed) if claimed != 0 else half
+            band_note = f", half a unit in the printed place ({claim.decimals} decimals: ±{half:g})"
 
         if reproduced_value is None:
             return ClaimValidationResult(
@@ -184,18 +244,25 @@ class ResultComparator:
                 tolerance=tolerance,
                 passed=False,
                 notes="No reproduced value available.",
+                tolerance_source=source,
             )
 
-        claimed = claim.value
         reproduced = reproduced_value
 
         # Primary comparison
         rel_err = abs(reproduced - claimed) / max(abs(claimed), 1e-9)
-        passed = rel_err <= tolerance
+        if source == TOLERANCE_PRINTED_PRECISION:
+            # Absolute comparison against the half unit, with a few ulps of
+            # slack so a value exactly on the rounding boundary (e.g.
+            # -0.00065 for a printed -0.0006) is not lost to float error.
+            passed = abs(reproduced - claimed) <= abs_band * (1 + 1e-9)
+        else:
+            passed = rel_err <= tolerance
         notes = ""
 
         # Special case: % vs decimal mismatch
         # If claimed > 1.0 and reproduced <= 1.0, also try claimed/100 vs reproduced
+        # (the effective band is relative here, so it scales with the claim).
         if claimed > 1.0 and reproduced <= 1.0:
             scaled_claimed = claimed / 100.0
             scaled_rel_err = abs(reproduced - scaled_claimed) / max(abs(scaled_claimed), 1e-9)
@@ -214,7 +281,7 @@ class ResultComparator:
         if not passed and not notes:
             notes = (
                 f"Outside tolerance: reproduced={reproduced} vs claimed={claimed} "
-                f"(relative error {rel_err:.2%}, tolerance {tolerance:.2%}{se_band_note})."
+                f"(relative error {rel_err:.2%}, tolerance {tolerance:.2%}{band_note})."
             )
 
         return ClaimValidationResult(
@@ -223,6 +290,7 @@ class ResultComparator:
             tolerance=tolerance,
             passed=passed,
             notes=notes,
+            tolerance_source=source,
         )
 
     # ------------------------------------------------------------------

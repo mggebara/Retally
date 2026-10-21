@@ -179,6 +179,12 @@ class ClaimDetail:
     before any claim-targeted feedback.  None when the reproducer reported
     no attempts, and on rows from files that predate the field."""
 
+    tolerance_source: str | None = None
+    """Which bound set ``tolerance``: ``"relative"`` (per-type relative
+    tolerance), ``"se_band"`` (±k·SE, SE-aware modes) or
+    ``"printed_precision"`` (half a unit in the pinned value's last
+    printed place).  None on rows from files that predate the field."""
+
 
 @dataclass
 class BenchmarkResult:
@@ -969,6 +975,7 @@ def _claim_detail(cr: Any) -> ClaimDetail:
         tolerance=float(cr.tolerance or 0.0),
         rel_err=rel_err,
         passed=bool(cr.passed),
+        tolerance_source=str(getattr(cr, "tolerance_source", "relative")),
     )
 
 
@@ -997,7 +1004,9 @@ def _claims_override_for(entry: bschema.BenchmarkEntry):
     the library enum, falling back to OTHER for labels the enum doesn't
     know; ``location`` ("Table 3, col 4") maps to ``table_ref``;
     ``standard_error`` is carried across so the comparator's SE-aware
-    (independent-mode) tolerance can use it.  ``sample_size`` has no
+    (independent-mode) tolerance can use it, and ``decimals`` (explicit or
+    inferred from the YAML literal) for its printed-precision floor
+    (every mode).  ``sample_size`` has no
     Claim counterpart and is dropped here.
     """
     if not entry.original_claims:
@@ -1020,6 +1029,7 @@ def _claims_override_for(entry: bschema.BenchmarkEntry):
                 context=oc.context,
                 table_ref=oc.location,
                 standard_error=oc.standard_error,
+                decimals=oc.decimals,
             )
         )
     return claims

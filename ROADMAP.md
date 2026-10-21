@@ -255,6 +255,18 @@ baseline.)*
   1.3 had deferred, keyed to the mode where it belongs.
 - Catalog schema gains `publication_date` and `package_release_date`.
 
+**Printed-precision floor (2026-10-21).**  Every mode now has a
+tolerance floor at the pinned value's printed precision: the effective
+absolute band is max(mode tolerance × |claimed|, half a unit in the last
+printed decimal place), so a reproduction that rounds to the printed
+value always passes, and no existing band is narrowed.  Printed decimals
+are inferred from the YAML literal (`-0.0006` → 4) or set via a claim's
+`decimals` (negative for rounded integers); each claim detail records
+the binding bound (`relative` / `se_band` / `printed_precision`).  It
+matters for papers that print coefficients to one significant digit
+(grier-2023, leeson-2022); `python -m benchmark.rescore` re-scoring the
+committed Dincecco, Alesina and Bisbee result files flipped no claim.
+
 ### 1.5 First independent run on Dincecco — ✅ done (2026-10-20) — gap 13 / 13
 *(Seeded 13/13; independent 0/13 with the script-free mount (three runs:
 0, 0, 0) and 0/13 with prompt-only withholding (three runs: 0, 0, 1, the

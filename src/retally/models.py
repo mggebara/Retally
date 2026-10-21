@@ -255,6 +255,13 @@ class Claim:
     SE-aware (see ``ResultComparator``); None means "no SE available" and
     the comparator falls back to its relative tolerance."""
 
+    decimals: int | None = None
+    """Decimal places of ``value`` as printed in the paper (negative for
+    rounding left of the point, e.g. -2 = nearest hundred).  When set, the
+    comparator never holds the claim to an absolute band narrower than
+    half a unit in that place, in any mode — a reproduction that rounds to
+    the printed value passes.  None means "precision unknown": no floor."""
+
 
 @dataclass
 class DatasetReference:
@@ -445,10 +452,19 @@ class ClaimValidationResult:
     """The value produced by the generated code, or None if it could not be matched."""
 
     tolerance: float = 0.01
-    """Acceptable relative difference (default 1 %)."""
+    """Acceptable relative difference (default 1 %): the effective band
+    divided by ``|claim.value|``.  For a claim whose value is exactly 0
+    a relative band is meaningless; when the printed-precision floor
+    applies there, this holds the absolute half-unit band instead."""
 
     passed: bool = False
     notes: str = ""
+
+    tolerance_source: str = "relative"
+    """Which bound set ``tolerance``: ``"relative"`` (the per-type
+    relative tolerance, or an explicit override), ``"se_band"`` (the
+    ±k·SE band of an SE-aware mode) or ``"printed_precision"`` (half a
+    unit in the claim's last printed decimal place)."""
 
 
 @dataclass
