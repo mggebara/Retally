@@ -75,6 +75,9 @@ class CodeGenerator:
         self._client = anthropic_client
         self._model = model
         self.max_refinements = max_refinements
+        self.prompt_log: list[str] = []
+        """Every prompt sent by this generator, in call order.  Callers that
+        want the prompts of one run read the slice added during it."""
 
     def generate(
         self,
@@ -952,6 +955,7 @@ class CodeGenerator:
 
     def _call_claude(self, prompt: str) -> str:
         """Send a prompt to the Claude API and return the response text."""
+        self.prompt_log.append(prompt)
         response = self._client.messages.create(
             model=self._model,
             max_tokens=8192,

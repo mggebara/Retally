@@ -187,6 +187,42 @@ shape directly pasteable into the YAML's `original_claims`; review it
 (drop junk claims, fix descriptions), paste, and every later run is
 extraction-free and deterministic.
 
+## Run artifacts: what the model actually wrote
+
+`results.json` keeps verdicts and per-claim numbers, not the code that
+produced them.  Every executed row's artifacts are written to
+
+```
+benchmark/results/artifacts/<entry_id>/<mode>/<reproducer>/<run_id>/
+  script.R | script.py        # the final generated script
+  stdout.txt  stderr.txt      # its sandbox output
+  attempt-<n>/                # each superseded refinement attempt, oldest first:
+    script.*  stdout.txt  stderr.txt  feedback.txt   # feedback = what was sent back to the model
+  prompt-<n>.txt              # every code-generation/refinement prompt, in order
+```
+
+`run_id` is the run's UTC start time (`20261020T183012Z`), so cache-off
+variance runs (`RETALLY_LLM_CACHE=0`) never overwrite each other.  The
+row's `artifacts_dir` points at the directory (repo-relative); a row
+served from the result cache keeps the directory of the run that
+produced it.  The runner prints where artifacts went at the end of a run.
+Any reproducer can contribute files by filling `Reproduction.artifacts`
+(relative path → text).
+
+```bash
+uv run python -m benchmark.artifacts benchmark/results/results.json \
+    [--entry ID] [--mode seeded|independent]
+```
+
+prints, per row: the artifacts directory, the data files the final
+script reads (a grep for `read_dta`/`read.csv`/`readRDS`/`pd.read_*`/…
+calls and `.dta`/`.csv`/`.rds` literals), the `RESULT:` lines of its
+stdout, and each claim's pass/fail.  That is usually enough to tell a
+wrong-data-file failure from a wrong-specification one.
+
+`benchmark/results/artifacts/` is gitignored: it is per-run, can be
+large, and may contain excerpts of the replication data.
+
 ## Plugging in another agent
 
 The harness talks to an agent only through the protocol in

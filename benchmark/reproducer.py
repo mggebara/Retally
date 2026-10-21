@@ -17,7 +17,9 @@ the two so any agent can be scored by the same code path:
   claims and applies the per-mode tolerance itself, with
   ``ResultComparator``, so no reproducer grades its own exam.
 * :class:`PipelineReproducer` — the reference implementation: a thin
-  adapter around an unmodified ``ValidationPipeline``.
+  adapter around an unmodified ``ValidationPipeline``.  It also returns
+  the run's script, sandbox output, refinement attempts and prompts as
+  ``Reproduction.artifacts``, which the harness writes to disk.
 
 Independent-mode integrity: :func:`script_free_copy` builds a copy of a
 dataset directory with the authors' analysis scripts removed.
@@ -117,6 +119,17 @@ class Reproduction:
     A reproducer that wants spend recorded on a *failed* run too can also
     expose it as a ``last_usage`` attribute, which the harness reads when
     ``reproduce`` raises."""
+
+    artifacts: dict[str, str] = field(default_factory=dict)
+    """Optional files to keep for inspecting this run, as relative path →
+    text.  The harness writes them under
+    ``benchmark/results/artifacts/<entry>/<mode>/<reproducer>/<run_id>/``
+    and points the result row at that directory.  ``PipelineReproducer``
+    fills ``script.R``/``script.py``, ``stdout.txt``, ``stderr.txt``, one
+    ``attempt-<n>/`` directory per superseded refinement attempt and
+    ``prompt-<n>.txt`` per generation prompt (see
+    :func:`pipeline_artifacts`).  Paths must be relative and must not
+    contain ``..``.  Empty means nothing is written."""
 
 
 @runtime_checkable
@@ -298,6 +311,8 @@ class PipelineReproducer:
         original_downloader = getattr(self.pipeline, "downloader", None)
         if isolate and original_downloader is not None:
             self.pipeline.downloader = _ScriptFreeDownloader(original_downloader)
+        prompt_log = getattr(getattr(self.pipeline, "generator", None), "prompt_log", None)
+        prompts_before = len(prompt_log) if isinstance(prompt_log, list) else 0
         tracker = getattr(self.pipeline, "usage_tracker", None)
         if not isinstance(tracker, UsageTracker):
             tracker = None
@@ -318,7 +333,42 @@ class PipelineReproducer:
                 self.last_usage = tracker.since(before)
         reproduction = reproduction_from_report(report)
         reproduction.usage = self.last_usage
+        prompts = prompt_log[prompts_before:] if isinstance(prompt_log, list) else []
+        reproduction.artifacts = pipeline_artifacts(report, prompts=prompts)
         return reproduction
+
+
+def pipeline_artifacts(report: Any, *, prompts: list[str] | None = None) -> dict[str, str]:
+    """The inspectable files of one pipeline run: final script and output, earlier attempts, prompts.
+
+    * ``script.R`` / ``script.py`` (by the execution's language), ``stdout.txt``,
+      ``stderr.txt`` — the final execution.
+    * ``attempt-<n>/script.*``, ``attempt-<n>/stdout.txt``,
+      ``attempt-<n>/stderr.txt`` and, when feedback was sent to the model
+      after it, ``attempt-<n>/feedback.txt`` — each superseded execution
+      from ``ExecutionResult.attempts``, oldest first, numbered from 1.
+    * ``prompt-<n>.txt`` — the generator's prompts in call order
+      (generation, then refinements), numbered from 1.
+    """
+    exec_result = getattr(report, "execution_result", None)
+    artifacts: dict[str, str] = {}
+    if exec_result is not None:
+        language = getattr(exec_result, "language", None)
+        script = "script.R" if getattr(language, "value", language) == "r" else "script.py"
+        artifacts[script] = str(getattr(exec_result, "generated_code", "") or "")
+        artifacts["stdout.txt"] = str(getattr(exec_result, "stdout", "") or "")
+        artifacts["stderr.txt"] = str(getattr(exec_result, "stderr", "") or "")
+        for n, attempt in enumerate(getattr(exec_result, "attempts", None) or [], start=1):
+            prefix = f"attempt-{n}/"
+            artifacts[prefix + script] = str(getattr(attempt, "code", "") or "")
+            artifacts[prefix + "stdout.txt"] = str(getattr(attempt, "stdout", "") or "")
+            artifacts[prefix + "stderr.txt"] = str(getattr(attempt, "stderr", "") or "")
+            feedback = str(getattr(attempt, "feedback", "") or "")
+            if feedback:
+                artifacts[prefix + "feedback.txt"] = feedback
+    for n, prompt in enumerate(prompts or [], start=1):
+        artifacts[f"prompt-{n}.txt"] = prompt
+    return artifacts
 
 
 def reproduction_from_report(report: Any) -> Reproduction:
