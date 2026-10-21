@@ -38,6 +38,14 @@ re-run the benchmark cheaply when only the report renderer or
 non-pipeline components changed.  Any benchmark entry edit, retally
 version bump, mode change, or reproducer change selects a different
 cache entry.
+
+Artifacts: when ``run_benchmark`` is given an ``artifacts_root`` (the CLI
+passes ``benchmark/results/artifacts/``), each executed row's
+``Reproduction.artifacts`` — the generated script, sandbox stdout/stderr,
+refinement attempts, prompts — are written to
+``<artifacts_root>/<entry_id>/<mode>/<reproducer>/<run_id>/`` and the row's
+``artifacts_dir`` points there.  ``python -m benchmark.artifacts`` reads
+them back.
 """
 
 from __future__ import annotations
@@ -47,9 +55,11 @@ import importlib
 import json
 import logging
 import os
+import re
 import sys
 from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
+from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -72,6 +82,7 @@ __all__ = [
     "ComponentMetrics",
     "DEFAULT_REPRODUCER",
     "REPRODUCERS",
+    "new_run_id",
     "resolve_reproducer",
     "run_benchmark",
     "score_reproduction",
@@ -84,6 +95,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 CATALOG_DIR = REPO_ROOT / "benchmark" / "papers"
 CACHE_DIR = REPO_ROOT / "benchmark" / ".cache"
 RESULTS_DIR = REPO_ROOT / "benchmark" / "results"
+ARTIFACTS_DIR = RESULTS_DIR / "artifacts"
 
 # Reproduction modes, as the plain strings recorded in results.json.  They
 # mirror ``retally.models.ReproductionMode`` values; kept as strings here so
@@ -203,6 +215,13 @@ class BenchmarkResult:
     predate the field.  On a result-cache hit (``cached``) it describes the
     original run, not this one, and run totals exclude it."""
 
+    artifacts_dir: str | None = None
+    """Where this row's run artifacts (generated script, sandbox output,
+    refinement attempts, prompts) were written, relative to the repo root
+    when under it.  None when artifacts were not written (skips, crashes,
+    a reproducer that returns none, or a run without an artifacts root).
+    A result-cache hit keeps the directory of the run that produced it."""
+
 
 # ---------------------------------------------------------------------------
 # Public API
@@ -219,6 +238,8 @@ def run_benchmark(
     use_cache: bool = True,
     extracted_claims_dir: Path | None = None,
     modes: tuple[str, ...] = (SEEDED,),
+    artifacts_root: Path | None = None,
+    run_id: str | None = None,
 ) -> list[BenchmarkResult]:
     """Run every catalog entry in each of ``modes``; one BenchmarkResult per (paper, mode).
 
@@ -255,7 +276,17 @@ def run_benchmark(
     historical behaviour.  Results are ordered by entry, then by mode in
     the order given, so a both-mode run puts each paper's two rows next
     to each other.
+
+    ``artifacts_root``, when set, receives each executed row's
+    ``Reproduction.artifacts`` under
+    ``<artifacts_root>/<entry_id>/<mode>/<reproducer>/<run_id>/``
+    (``run_id`` defaults to :func:`new_run_id`, one per call) and the row's
+    ``artifacts_dir`` records it.  None (the default) writes nothing.
+    Cached rows are returned as cached, with their original
+    ``artifacts_dir``.
     """
+    if run_id is None:
+        run_id = new_run_id()
     if catalog is None:
         catalog = bschema.load_catalog(CATALOG_DIR)
     unknown = [m for m in modes if m not in MODES]
@@ -281,6 +312,8 @@ def run_benchmark(
                 use_cache=use_cache,
                 extracted_claims_dir=extracted_claims_dir,
                 mode=mode,
+                artifacts_root=artifacts_root,
+                run_id=run_id,
             )
             results.append(result)
     return results
@@ -365,15 +398,23 @@ def main(argv: list[str] | None = None) -> int:
         write_results([], RESULTS_DIR / "results.json")
         return 0
 
+    run_id = new_run_id()
     results = run_benchmark(
         catalog,
         reproducer=args.reproducer,
         extracted_claims_dir=RESULTS_DIR / "extracted_claims",
         modes=modes,
+        artifacts_root=ARTIFACTS_DIR,
+        run_id=run_id,
     )
     out = RESULTS_DIR / "results.json"
     write_results(results, out)
     print(f"Wrote {out.relative_to(REPO_ROOT)} ({len(results)} entries).")
+    n_fresh = sum(1 for r in results if r.artifacts_dir and not r.cached)
+    print(
+        f"Artifacts: {n_fresh} row(s) written under {_display_path(ARTIFACTS_DIR)}/<entry>/<mode>/"
+        f"<reproducer>/{run_id}/ (inspect with: uv run python -m benchmark.artifacts {_display_path(out)})."
+    )
     spend = pricing.aggregate([_result_to_jsonable(r) for r in results])
     print(
         f"Estimated API spend: {pricing.format_usd(spend['estimated_usd'])} "
@@ -396,6 +437,8 @@ def _run_one(
     use_cache: bool,
     extracted_claims_dir: Path | None = None,
     mode: str = SEEDED,
+    artifacts_root: Path | None = None,
+    run_id: str = "",
 ) -> BenchmarkResult:
     """Execute (or skip) a single catalog entry in ``mode`` and return its result."""
     # Skip paths come first — no reproducer build, no cache check.
@@ -445,9 +488,15 @@ def _run_one(
             error=f"{type(exc).__name__}: {exc}",
         )
 
-    result = _execute_with_reproducer(entry, agent, extracted_claims_dir=extracted_claims_dir, mode=mode)
+    result, artifacts = _execute_with_reproducer(
+        entry, agent, extracted_claims_dir=extracted_claims_dir, mode=mode
+    )
     result.split = entry.split
     result.reproducer = reproducer
+    if artifacts_root is not None and artifacts:
+        out_dir = artifacts_root / entry.id / mode / _path_component(reproducer) / (run_id or new_run_id())
+        if _write_artifacts(out_dir, artifacts):
+            result.artifacts_dir = _display_path(out_dir)
 
     if use_cache and not result.skipped:
         _save_cache(cache_dir, cache_key, result)
@@ -476,8 +525,11 @@ def _execute_with_reproducer(
     *,
     extracted_claims_dir: Path | None = None,
     mode: str = SEEDED,
-) -> BenchmarkResult:
+) -> tuple[BenchmarkResult, dict[str, str]]:
     """Drive ``agent.reproduce`` and score what it returns.
+
+    Returns the scored row and the reproduction's ``artifacts`` (empty when
+    the reproducer raised or returned none) for :func:`_run_one` to write.
 
     Wrapped in a broad try/except because the goal here is to score
     every paper in the catalog — a crash on one entry must not bring
@@ -518,13 +570,14 @@ def _execute_with_reproducer(
     except Exception as exc:
         logger.warning("Reproducer raised on %s: %s", entry.id, exc)
         # A failed run still spent tokens; a reproducer may expose them.
-        return BenchmarkResult(
+        failed = BenchmarkResult(
             entry_id=entry.id,
             mode=mode,
             retally_ran=False,
             error=f"{type(exc).__name__}: {exc}",
             usage=_priced_usage(getattr(agent, "last_usage", None)),
         )
+        return failed, {}
 
     # Dump what the extractor found so a human can curate it into the
     # catalog's original_claims (the pinning workflow).  Skipped when the
@@ -534,7 +587,48 @@ def _execute_with_reproducer(
 
     result = score_reproduction(entry, reproduction, mode=mode)
     result.usage = _priced_usage(getattr(reproduction, "usage", None))
-    return result
+    return result, dict(getattr(reproduction, "artifacts", None) or {})
+
+
+def new_run_id() -> str:
+    """A UTC timestamp naming one benchmark run's artifact directories, e.g. ``20261020T183012Z``."""
+    return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+
+
+def _path_component(name: str) -> str:
+    """``name`` made safe as one path segment (a ``module:attr`` reproducer spec has a colon)."""
+    return re.sub(r"[^A-Za-z0-9._-]+", "_", name).strip(".") or "_"
+
+
+def _display_path(path: Path) -> str:
+    """``path`` relative to the repo root when it is under it, else absolute."""
+    try:
+        return str(path.resolve().relative_to(REPO_ROOT))
+    except ValueError:
+        return str(path.resolve())
+
+
+def _write_artifacts(out_dir: Path, artifacts: dict[str, str]) -> bool:
+    """Write ``artifacts`` (relative path → text) under ``out_dir``; True on success.
+
+    Best-effort, like the extracted-claims dump: a failure is logged and the
+    row simply carries no ``artifacts_dir``.  Paths that are absolute or
+    climb out with ``..`` are skipped.
+    """
+    try:
+        out_dir.mkdir(parents=True, exist_ok=True)
+        for rel, text in artifacts.items():
+            rel_path = Path(rel)
+            if rel_path.is_absolute() or ".." in rel_path.parts:
+                logger.warning("Skipping unsafe artifact path %r", rel)
+                continue
+            target = out_dir / rel_path
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(str(text), encoding="utf-8")
+        return True
+    except OSError as exc:
+        logger.warning("Failed to write artifacts to %s: %s", out_dir, exc)
+        return False
 
 
 def _priced_usage(usage: Any) -> dict[str, Any] | None:
@@ -870,6 +964,7 @@ def _result_from_jsonable(d: dict[str, Any]) -> BenchmarkResult:
         cached=bool(d.get("cached", False)),
         # Absent in files that predate cost accounting.
         usage=d.get("usage") if isinstance(d.get("usage"), dict) else None,
+        artifacts_dir=d.get("artifacts_dir") if isinstance(d.get("artifacts_dir"), str) else None,
     )
 
 

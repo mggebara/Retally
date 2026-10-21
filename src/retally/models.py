@@ -314,6 +314,25 @@ class Dataset:
 
 
 @dataclass
+class RefinementAttempt:
+    """One superseded execution from the refinement loop.
+
+    The pipeline records every script it ran that was *not* the final one,
+    with the sandbox output it produced and the feedback that was sent
+    back to the model afterwards (the error text for an execution-error
+    refinement, the off-target claims for a claim refinement; empty when
+    no feedback followed).  Kept so a benchmark run can be inspected after
+    the fact.
+    """
+
+    code: str
+    stdout: str = ""
+    stderr: str = ""
+    exit_code: int = -1
+    feedback: str = ""
+
+
+@dataclass
 class ExecutionResult:
     """Outcome of running the generated reproduction code."""
 
@@ -360,6 +379,10 @@ class ExecutionResult:
     here after execution so reports stay consistent."""
 
     timed_out: bool = False
+
+    attempts: list[RefinementAttempt] = field(default_factory=list)
+    """Earlier executions superseded by this one, oldest first (see
+    :class:`RefinementAttempt`).  Empty when the first script was final."""
 
 
 @dataclass

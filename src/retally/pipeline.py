@@ -63,6 +63,7 @@ from retally.models import (
     DatasetReference,
     ExecutionResult,
     Language,
+    RefinementAttempt,
     ReproductionMode,
     ValidationReport,
 )
@@ -74,6 +75,41 @@ from retally.validation.hyperparam_audit import audit_hyperparameters
 from retally.validation.reporter import ValidationReporter
 
 AnyExecutor = CodeExecutor | DockerExecutor | RDockerExecutor
+
+
+class _Execution:
+    """One sandbox run inside the refinement loop, plus the feedback sent after it."""
+
+    __slots__ = ("code", "feedback", "result")
+
+    def __init__(self, code: str, result: ExecutionResult) -> None:
+        self.code = code
+        self.result = result
+        self.feedback = ""
+
+
+def _superseded_attempts(log: list[_Execution], final: ExecutionResult) -> list[RefinementAttempt]:
+    """Every logged execution except ``final``, as ``RefinementAttempt`` records."""
+    return [
+        RefinementAttempt(
+            code=e.code,
+            stdout=e.result.stdout or "",
+            stderr=e.result.stderr or "",
+            exit_code=e.result.exit_code,
+            feedback=e.feedback,
+        )
+        for e in log
+        if e.result is not final
+    ]
+
+
+def _claim_gap_feedback(soft_failed: list[ClaimValidationResult]) -> str:
+    """Plain-text summary of the off-target claims sent to ``refine_for_claims``."""
+    return "\n".join(
+        f"{cr.claim.description}: reproduced {cr.reproduced_value}, claimed {cr.claim.value} "
+        f"(tolerance {cr.tolerance})"
+        for cr in soft_failed
+    )
 
 
 def _outputs_close(
@@ -453,13 +489,18 @@ class ValidationPipeline:
             reproduction_mode=reproduction_mode,
         )
         result = executor.execute(code, dataset)
+        # Every execution, so the superseded ones can be surfaced on the
+        # final result (``ExecutionResult.attempts``) for later inspection.
+        log = [_Execution(code, result)]
 
         for _attempt in range(self.max_refinements):
             if result.exit_code == 0 and result.outputs:
                 break
             error = result.stderr or "No RESULT: lines found in output"
+            log[-1].feedback = error
             code = self.generator.refine(code, error, paper, dataset, stdout=result.stdout or "")
             result = executor.execute(code, dataset)
+            log.append(_Execution(code, result))
 
         # Compare once so we know what (if anything) needs Phase 2.
         claim_results = self.comparator.compare_all(paper.claims, result.outputs, mode=reproduction_mode)
@@ -467,10 +508,11 @@ class ValidationPipeline:
         # ── Phase 2: close the gap on soft-failed claims ──────────────
         if result.exit_code == 0 and result.outputs and self.max_claim_refinements > 0:
             code, result, claim_results = self._refine_for_failed_claims(
-                code, result, claim_results, paper, dataset, reproduction_mode
+                code, result, claim_results, paper, dataset, reproduction_mode, log=log
             )
 
         result.generated_code = code
+        result.attempts = _superseded_attempts(log, result)
         return code, result, claim_results
 
     def _refine_for_failed_claims(
@@ -481,6 +523,7 @@ class ValidationPipeline:
         paper,
         dataset,
         reproduction_mode: ReproductionMode = ReproductionMode.SEEDED,
+        log: list[_Execution] | None = None,
     ) -> tuple[str, ExecutionResult, list[ClaimValidationResult]]:
         """Iteratively narrow the gap between reproduced values and paper claims.
 
@@ -499,8 +542,14 @@ class ValidationPipeline:
           most recent history entry; if the outputs are identical we
           adopt the new code (so any new ``DEVIATION:`` lines surface)
           but stop the loop.
+
+        ``log`` (optional) is the caller's execution log: each new run is
+        appended to it, and the claim-gap feedback is recorded on the run
+        it was computed from.
         """
         executor = self._executor_for(paper.language)
+        if log is None:
+            log = [_Execution(code, exec_result)]
         history: list[dict[str, float]] = [dict(exec_result.outputs)]
         attempts = 0
 
@@ -509,6 +558,9 @@ class ValidationPipeline:
             if not soft_failed:
                 break
 
+            for e in log:
+                if e.result is exec_result:
+                    e.feedback = _claim_gap_feedback(soft_failed)
             new_code = self.generator.refine_for_claims(
                 code, soft_failed, exec_result, paper, dataset, history
             )
@@ -519,6 +571,7 @@ class ValidationPipeline:
                 break
 
             new_result = executor.execute(new_code, dataset)
+            log.append(_Execution(new_code, new_result))
 
             # Refinement broke the code.  Revert to the last working
             # state and stop — partial progress beats no progress.
