@@ -30,6 +30,7 @@ import pandas as pd
 import requests
 from tqdm import tqdm
 
+from retally.http_retry import get_with_retries, with_retries
 from retally.models import Dataset, DatasetReference, DatasetSource
 
 logger = logging.getLogger(__name__)
@@ -227,21 +228,29 @@ class DatasetDownloader:
         (zip/tar/tar.gz/tgz), extract it into ``dest`` and delete the archive.
 
         Returns the path to the downloaded file (or to ``dest`` if extracted).
-        Raises ``requests.RequestException`` on HTTP failure.
+        Transient failures (connection drops, 5xx) are retried via
+        ``retally.http_retry``; raises ``requests.RequestException`` once
+        retries are exhausted or on a 4xx.
         """
         file_path = dest / filename
-        response = requests.get(url, stream=True, timeout=timeout, allow_redirects=True)
-        response.raise_for_status()
 
-        total = int(response.headers.get("Content-Length", 0)) or None
-        with (
-            open(file_path, "wb") as fh,
-            tqdm(desc=filename, total=total, unit="B", unit_scale=True, unit_divisor=1024) as pbar,
-        ):
-            for chunk in response.iter_content(chunk_size=8192):
-                if chunk:
-                    fh.write(chunk)
-                    pbar.update(len(chunk))
+        def _fetch() -> None:
+            # GET and body read retry together: a dropped connection
+            # mid-zip surfaces as ChunkedEncodingError while iterating.
+            # Each attempt rewrites the file from scratch ("wb").
+            response = requests.get(url, stream=True, timeout=timeout, allow_redirects=True)
+            response.raise_for_status()
+            total = int(response.headers.get("Content-Length", 0)) or None
+            with (
+                open(file_path, "wb") as fh,
+                tqdm(desc=filename, total=total, unit="B", unit_scale=True, unit_divisor=1024) as pbar,
+            ):
+                for chunk in response.iter_content(chunk_size=8192):
+                    if chunk:
+                        fh.write(chunk)
+                        pbar.update(len(chunk))
+
+        with_retries(_fetch, what=f"GET {url}")
 
         if extract_archives and filename.lower().endswith(_ARCHIVE_SUFFIXES):
             self._extract_archive(file_path, dest)
@@ -358,8 +367,7 @@ class DatasetDownloader:
 
         api_url = f"https://zenodo.org/api/records/{record_id}"
         try:
-            response = requests.get(api_url, timeout=30)
-            response.raise_for_status()
+            response = get_with_retries(api_url, timeout=30)
             record = response.json()
         except requests.RequestException as exc:
             raise RuntimeError(f"Failed to fetch Zenodo record metadata for id={record_id}: {exc}") from exc
@@ -467,8 +475,7 @@ class DatasetDownloader:
         doi = self._dataverse_persistent_id(doi)
         api_url = f"https://dataverse.harvard.edu/api/datasets/:persistentId/?persistentId={doi}"
         try:
-            response = requests.get(api_url, timeout=30)
-            response.raise_for_status()
+            response = get_with_retries(api_url, timeout=30)
             data = response.json()
         except requests.RequestException as exc:
             raise RuntimeError(f"Failed to fetch Harvard Dataverse metadata for doi={doi}: {exc}") from exc
@@ -510,8 +517,7 @@ class DatasetDownloader:
         """
         api_url = f"https://api.figshare.com/v2/articles/{article_id}/files"
         try:
-            response = requests.get(api_url, timeout=30)
-            response.raise_for_status()
+            response = get_with_retries(api_url, timeout=30)
             files = response.json()
         except requests.RequestException as exc:
             raise RuntimeError(f"Failed to fetch FigShare article files for id={article_id}: {exc}") from exc

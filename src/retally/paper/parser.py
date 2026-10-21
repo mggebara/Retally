@@ -20,6 +20,7 @@ from pathlib import Path
 import fitz  # PyMuPDF
 import requests
 
+from retally.http_retry import get_with_retries, with_retries
 from retally.models import Paper
 
 logger = logging.getLogger(__name__)
@@ -94,8 +95,7 @@ class PaperParser:
         """
         # Fetch metadata from arXiv Atom API
         api_url = f"https://export.arxiv.org/api/query?id_list={arxiv_id}"
-        response = requests.get(api_url, timeout=30)
-        response.raise_for_status()
+        response = get_with_retries(api_url, timeout=30)
 
         atom_ns = "http://www.w3.org/2005/Atom"
         root = ET.fromstring(response.text)
@@ -118,13 +118,7 @@ class PaperParser:
 
         # Download PDF
         pdf_url = f"https://arxiv.org/pdf/{arxiv_id}"
-        pdf_response = requests.get(pdf_url, stream=True, timeout=60)
-        pdf_response.raise_for_status()
-
-        with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as tmp:
-            for chunk in pdf_response.iter_content(chunk_size=8192):
-                tmp.write(chunk)
-            tmp_path = Path(tmp.name)
+        tmp_path = _download_pdf(pdf_url)
 
         try:
             paper = self.parse_pdf(tmp_path)
@@ -147,8 +141,7 @@ class PaperParser:
         """
         doi_url = f"https://doi.org/{doi}"
         headers = {"Accept": "application/vnd.citationstyles.csl+json"}
-        response = requests.get(doi_url, headers=headers, timeout=30)
-        response.raise_for_status()
+        response = get_with_retries(doi_url, headers=headers, timeout=30)
 
         data = response.json()
 
@@ -180,12 +173,7 @@ class PaperParser:
         if pdf_url:
             tmp_path: Path | None = None
             try:
-                pdf_response = requests.get(pdf_url, stream=True, timeout=60)
-                pdf_response.raise_for_status()
-                with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as tmp:
-                    for chunk in pdf_response.iter_content(chunk_size=8192):
-                        tmp.write(chunk)
-                    tmp_path = Path(tmp.name)
+                tmp_path = _download_pdf(pdf_url)
                 paper = self.parse_pdf(tmp_path)
                 paper.title = title or paper.title
                 paper.authors = authors or paper.authors
@@ -221,16 +209,20 @@ class PaperParser:
           - ``application/pdf`` → save to a temp file and call parse_pdf.
           - ``text/html``       → extract visible text, then call parse_text.
         """
-        response = requests.get(url, stream=True, timeout=60)
-        response.raise_for_status()
 
-        content_type = response.headers.get("Content-Type", "").lower()
+        def _fetch() -> tuple[Path | None, str]:
+            # The body read happens inside the retry: a mid-stream
+            # ChunkedEncodingError is the failure this guards against.
+            response = requests.get(url, stream=True, timeout=60)
+            response.raise_for_status()
+            content_type = response.headers.get("Content-Type", "").lower()
+            if "application/pdf" in content_type:
+                return _stream_to_temp_pdf(response), ""
+            return None, response.text
 
-        if "application/pdf" in content_type:
-            with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as tmp:
-                for chunk in response.iter_content(chunk_size=8192):
-                    tmp.write(chunk)
-                tmp_path = Path(tmp.name)
+        tmp_path, html = with_retries(_fetch, what=f"GET {url}")
+
+        if tmp_path is not None:
             try:
                 paper = self.parse_pdf(tmp_path)
             finally:
@@ -239,9 +231,7 @@ class PaperParser:
             return paper
 
         else:
-            # Treat as HTML — download full content and strip tags
-            html = response.text
-            # Strip HTML tags
+            # Treat as HTML — strip tags
             text = re.sub(r"<[^>]+>", " ", html)
             # Normalize whitespace
             text = re.sub(r"\s+", " ", text).strip()
@@ -309,3 +299,31 @@ class PaperParser:
             abstract = " ".join(lines[2:8])
 
         return title, authors, abstract
+
+
+def _stream_to_temp_pdf(response: requests.Response) -> Path:
+    """Write a streamed response body to a temp ``.pdf``; delete it if the read fails."""
+    with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as tmp:
+        tmp_path = Path(tmp.name)
+        try:
+            for chunk in response.iter_content(chunk_size=8192):
+                tmp.write(chunk)
+        except BaseException:
+            tmp.close()
+            tmp_path.unlink(missing_ok=True)
+            raise
+    return tmp_path
+
+
+def _download_pdf(url: str) -> Path:
+    """Download ``url`` to a temp ``.pdf`` file, retrying transient failures.
+
+    The caller owns (and must delete) the returned file.
+    """
+
+    def _fetch() -> Path:
+        response = requests.get(url, stream=True, timeout=60)
+        response.raise_for_status()
+        return _stream_to_temp_pdf(response)
+
+    return with_retries(_fetch, what=f"GET {url}")
