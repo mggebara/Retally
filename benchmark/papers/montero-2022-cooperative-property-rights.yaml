@@ -1,0 +1,382 @@
+# Original paper: Montero, E. (2022). "Cooperative Property Rights and
+#   Development: Evidence from Land Reform in El Salvador." Journal of
+#   Political Economy, 130(1), 48-93.  doi:10.1086/717042
+#
+# I4R replication report: Discussion Paper 20 (Kjelsrud, Kotsadam &
+#   Rogeberg, "... A Comment", March 2023, updated version of March 10),
+#   from the Oslo Replication Games; accepted and published as a JPE
+#   comment (JPE 131, 2023, doi:10.1086/725235).  Verdict: NOT
+#   reproducible as a finding — the worker-income results (Table 5 and
+#   Figure 6) rest on two mistakes: three-quarters of the household-survey
+#   observations are duplicates (a module-merge error), and the stated
+#   "at least five members" restriction for the inequality measure was
+#   never implemented.  Corrected, "the data sources and research design
+#   provide no credible evidence regarding the causal effects of ownership
+#   structure on income levels and inequality".  The productivity results
+#   (Tables 2-4) are not challenged.  Montero's own note (2023-03-01,
+#   on his website) accepts the error: "Once the data merging error is
+#   corrected, these results are no longer valid."
+#
+# Why this paper: the benchmark's "paper says X, humans got Y" case.  The
+#   pinned values are the published Table 5; the I4R findings carry the
+#   replicators' corrected values, so a run can show whether Retally
+#   reproduces the printed (erroneous) number, the corrected one, or
+#   neither.
+#
+# IMPORTANT — what the package is.  dataset.source (Dataverse AMD3NO) is
+#   NOT Montero's original JPE package: it is the replication package of
+#   the I4R comment (its Dataverse description says so, deposited
+#   2023-02-27 in the JPE dataverse, released 2023-03-31).  It holds
+#   (a) Montero's ORIGINAL household-survey analysis file,
+#   ehpm_incomemodule_wreform.dta — byte-identical (md5 063c3aaf...) to
+#   the copy in the comment authors' own zip, where it is dated
+#   2021-06-10, i.e. the uncorrected data WITH the duplicates — and (b)
+#   the comment authors' Replication_file.do, which first re-runs the
+#   original Table 5 specifications and then drops the duplicates and
+#   re-estimates.  So the data are not corrected; the script contains
+#   both the original and the corrected analysis.  Only Table 5 (and
+#   Figure 6) can be computed from this package: the agricultural-census
+#   data behind Tables 2-4 are not in it (Montero's original JPE
+#   supplement is on journals.uchicago.edu, 403 to curl), which is why no
+#   Table 2-4 claims are pinned.
+
+id: montero-2022-cooperative-property-rights
+i4r_report_url: https://www.econstor.eu/bitstream/10419/268943/1/I4R-DP020.pdf
+i4r_report_doi: 10.1086/725235  # The comment as published in the JPE
+# Target language for regeneration (the original and the package are
+# Stata; Retally generates R and reads the .dta with haven).
+language: r
+outcome_label: not_reproducible
+# Pipeline tuning is frozen; this is an evaluation paper.
+split: holdout
+# Contamination bookkeeping.  First public version: the job-market-paper
+# era working paper — Montero's World Bank Development Impact blog post
+# on it is dated December 2017 (cited in DP20); the earliest PDF found is
+# the 12 January 2018 draft (University of Toronto seminar file), whose
+# income table (then Table 12) has different numbers (55.06 / 53.73 /
+# -37.06 / -53.06, N = 6,314).  JPE: electronically published
+# 2021-12-09, print January 2022.  Package: Harvard Dataverse
+# doi:10.7910/DVN/AMD3NO version 1.0, deposited 2023-02-27, released
+# 2023-03-31 (Dataverse API) — AFTER the I4R DP (March 2023) and
+# Montero's note (2023-03-01); the .dta inside dates from 2021-06-10.
+publication_date: "2017-12"
+package_release_date: "2023-03-31"
+
+paper:
+  # The JPE typeset version as posted on the author's site ("Electronically
+  # published December 9, 2021 / JPE vol. 130 no. 1, January 2022",
+  # pp. 48-93, 46 pages); checked 2026-10-21: 200 application/pdf, %PDF
+  # magic, to both a Retally-curation and a python-requests user agent.
+  # The publisher PDF (journals.uchicago.edu) answers 403.  The
+  # candidate list's Jan 2018 Toronto draft was NOT used: its numbers
+  # differ from the published table.  Text-extraction caveat: in this PDF
+  # the minus sign extracts as "2" (Table 5 reads "242.97**" for
+  # -42.97, Table 2 "2.594***" for -.594).
+  source: https://emontero23.github.io/emwebsite/montero_cooperatives_jpe.pdf
+  title: "Cooperative Property Rights and Development: Evidence from Land Reform in El Salvador"
+  authors:
+    - Eduardo Montero
+
+dataset:
+  source: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/AMD3NO
+  access_notes: >
+    Harvard Dataverse (doi:10.7910/DVN/AMD3NO) version 1.0, CC0, fully
+    open — 3 files, all unrestricted (Dataverse API, checked 2026-10-21):
+    ehpm_incomemodule_wreform (Stata 14 .dta, 4.56 MB original; 5,060
+    rows x 119 columns; some strings are latin-1, not UTF-8),
+    Replication_file.do (the I4R comment's script) and README.pdf.  The
+    .dta was ingested by Dataverse (listed as
+    ehpm_incomemodule_wreform.tab, 2.99 MB); the downloader requests
+    ?format=original, so it arrives as ehpm_incomemodule_wreform.dta
+    (checked by hand: 4,562,298 bytes, Stata release 118).  No archives.
+    This is the comment's package, not Montero's
+    original: it covers Table 5 / Figure 6 only, with Montero's
+    uncorrected (duplicated) data — see the header comment.
+
+code_repo:
+  url: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/AMD3NO
+
+original_claims:
+  - description: earnings_level_above500_bw300
+    value: 60.49
+    claim_type: coefficient
+    standard_error: 31.03
+    sample_size: 4770
+    unit: dollars per month (household earnings per capita)
+    location: "Table 5, column 1 (Household Earnings per Capita, Levels, bandwidth 300)"
+    context: >
+      Table 5 ("Impact of Ownership Type on Earnings and Earnings
+      Distributions"), column 1.  Regression discontinuity at the 1980
+      land reform's 500 ha cumulative-landholding threshold: properties of
+      former owners above 500 ha became worker cooperatives, those below
+      stayed outside-owned haciendas.  Outcome: household earnings per
+      capita in the previous month, in dollars per month, of agricultural
+      workers in the El Salvador household surveys (Encuesta de Hogares
+      de Propositos Multiples, 2002-2013), matched to cooperatives and
+      haciendas through the survey's questions on working as a
+      cooperative member or hacienda laborer (matching limited to cantons
+      with only one cooperative/large hacienda).  Regressor: Above500, an
+      indicator for the property's former owner having over 500 ha in
+      cumulative landholdings in 1980.  Linear control in the former
+      owner's total landholdings estimated separately on each side of the
+      cutoff (equation 1), sample limited to properties within 300 ha of
+      the threshold, survey-round fixed effects, standard errors
+      clustered at the former-owner level.  Observations are workers
+      (4,770; 327 properties; 98 clusters; mean of the dependent
+      variable 73.59).
+  - description: earnings_level_above500_bw150
+    value: 52.79
+    claim_type: coefficient
+    standard_error: 40.61
+    sample_size: 1583
+    unit: dollars per month (household earnings per capita)
+    location: "Table 5, column 2 (Household Earnings per Capita, Levels, bandwidth 150)"
+    context: >
+      Table 5, column 2: the same specification as column 1 (household
+      earnings per capita in the previous month on Above500, local linear
+      control in the former owner's landholdings on each side of the
+      500 ha cutoff, survey-round fixed effects, standard errors clustered
+      by former owner) with the sample limited to properties within 150 ha
+      of the threshold (1,583 workers; 118 properties; 36 clusters; mean
+      of the dependent variable 74.81).  Not statistically significant.
+  - description: earnings_iqr_above500_bw300
+    value: -42.97
+    claim_type: coefficient
+    standard_error: 17.82
+    sample_size: 327
+    unit: dollars per month (interquartile range of household earnings per capita)
+    location: "Table 5, column 3 (Household Earnings per Capita, Interquartile Range, bandwidth 300)"
+    context: >
+      Table 5, column 3, the paper's inequality result ("the interquartile
+      range of cooperatives is approximately $43 per month lower").
+      Outcome: the interquartile range (75th minus 25th percentile) of
+      household earnings per capita in the previous month across the
+      surveyed workers of each property, with the sample limited to
+      cooperatives and haciendas for which there are at least five
+      members represented in the household surveys.  Regressor Above500;
+      linear control in the former owner's landholdings on each side of
+      the 500 ha cutoff; properties within 300 ha of the threshold;
+      survey-round fixed effects; standard errors clustered at the
+      former-owner level (327 observations and properties; 98 clusters;
+      mean of the dependent variable 38.63).
+  - description: earnings_iqr_above500_bw150
+    value: -51.79
+    claim_type: coefficient
+    standard_error: 24.79
+    sample_size: 118
+    unit: dollars per month (interquartile range of household earnings per capita)
+    location: "Table 5, column 4 (Household Earnings per Capita, Interquartile Range, bandwidth 150)"
+    context: >
+      Table 5, column 4: the interquartile-range specification of column 3
+      (properties with at least five members represented in the surveys,
+      Above500, local linear control on each side of the cutoff,
+      survey-round fixed effects, former-owner clustering) with properties
+      within 150 ha of the threshold (118 observations and properties; 36
+      clusters; mean of the dependent variable 37.52).
+  - description: n_obs_earnings_level_bw300
+    value: 4770
+    claim_type: other
+    unit: observations (workers)
+    location: "Table 5, Observations, column 1"
+    context: >
+      Number of observations (surveyed workers) in the 300 ha earnings-level
+      regression, Table 5 column 1.
+  - description: n_obs_earnings_level_bw150
+    value: 1583
+    claim_type: other
+    unit: observations (workers)
+    location: "Table 5, Observations, column 2"
+    context: >
+      Number of observations (surveyed workers) in the 150 ha earnings-level
+      regression, Table 5 column 2.
+  - description: n_obs_earnings_iqr_bw300
+    value: 327
+    claim_type: other
+    unit: observations (properties)
+    location: "Table 5, Observations, column 3"
+    context: >
+      Number of observations in the 300 ha interquartile-range regression,
+      Table 5 column 3 (the table also reports 327 properties).
+  - description: n_obs_earnings_iqr_bw150
+    value: 118
+    claim_type: other
+    unit: observations (properties)
+    location: "Table 5, Observations, column 4"
+    context: >
+      Number of observations in the 150 ha interquartile-range regression,
+      Table 5 column 4 (the table also reports 118 properties).
+  - description: n_clusters_bw300
+    value: 98
+    claim_type: other
+    unit: clusters (former owners)
+    location: "Table 5, Clusters, columns 1 and 3"
+    context: >
+      Number of former-owner clusters in the 300 ha samples of Table 5
+      (columns 1 and 3).
+  - description: n_clusters_bw150
+    value: 36
+    claim_type: other
+    unit: clusters (former owners)
+    location: "Table 5, Clusters, columns 2 and 4"
+    context: >
+      Number of former-owner clusters in the 150 ha samples of Table 5
+      (columns 2 and 4).
+
+# Paper says X, humans got Y.  Each reproduced_value is the replicators'
+# value after FIXING THE CODING ERROR (removing the duplicated survey
+# observations), from DP20 Table 3 cols 3-4 (levels) and Table 1 cols
+# 3-4 (IQR) — the meta-database rows "Fixing coding error which removes
+# three-quarters of the observations which are duplicates" (IQR) and the
+# Table 5 col 1/2 coding-correction rows (levels).  DP20 first reproduced
+# the printed numbers exactly from the original data and code (its Table
+# 1 cols 1-2, Table 3 cols 1-2), so the discrepancy is the data error,
+# not a failure to run.  For the IQR columns the paper's own stated
+# five-member restriction matters as much as the duplicates; those
+# variants are in the per-claim notes and in the entry notes.
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: 13.21
+    outcome: does_not_match
+    notes: >
+      DP20 Table 3 col 3 (corrected data, duplicates removed): 13.21 (SE
+      32.35), N = 1,146 workers, p = 0.684 — the point estimate drops by
+      ~three-quarters and loses significance.  Meta-database row labels
+      this "duplicates AND sample restriction", but DP20's table is the
+      duplicates-only correction (the five-member rule does not apply to
+      the worker-level regression).
+  - claim_id: 1
+    reproduced_value: -24.24
+    outcome: does_not_match
+    notes: >
+      DP20 Table 3 col 4 (corrected data): -24.24 (SE 41.90), N = 420
+      workers, p = 0.566 — the sign flips.
+  - claim_id: 2
+    reproduced_value: -72.24
+    outcome: does_not_match
+    notes: >
+      DP20 Table 1 col 3 (corrected data, duplicates removed, no
+      five-member restriction, as in the original code): -72.24 (SE
+      17.37), N = 324.  Imposing the paper's stated five-member
+      restriction instead: on the original data -50.91 (43.09), N = 128
+      with 3 treated property-years, p = 0.243 (col 5); on the corrected
+      data -65.81 (45.36), N = 70 with 1 treated property-year (col 7) —
+      DP20 concludes the data cannot support the analysis.
+  - claim_id: 3
+    reproduced_value: -79.78
+    outcome: does_not_match
+    notes: >
+      DP20 Table 1 col 4 (corrected data, no five-member restriction):
+      -79.78 (SE 22.67), N = 116.  With the five-member restriction: on
+      the original data -90.86 (84.53), N = 45, 2 treated, p = 0.295 (col
+      6); on the corrected data inestimable — 26 property-years, none
+      above the threshold (col 8).
+  - claim_id: 4
+    reproduced_value: 1146
+    outcome: does_not_match
+    notes: DP20 Table 3 col 3 — removing duplicates cuts the 300 ha worker sample from 4,770 to 1,146.
+  - claim_id: 5
+    reproduced_value: 420
+    outcome: does_not_match
+    notes: DP20 Table 3 col 4 — 1,583 -> 420 workers.
+  - claim_id: 6
+    reproduced_value: 324
+    outcome: does_not_match
+    notes: >
+      DP20 Table 1 col 3 — 327 -> 324 property-years (the six workers
+      assigned to two properties are dropped).  With the five-member
+      restriction: 128 (original data) / 70 (corrected).
+  - claim_id: 7
+    reproduced_value: 116
+    outcome: does_not_match
+    notes: DP20 Table 1 col 4 — 118 -> 116 property-years; with the five-member restriction 45 / 26.
+  - claim_id: 8
+    reproduced_value: 98
+    outcome: matches
+    notes: DP20 Tables 1 and 3, col 3 — 98 clusters before and after removing duplicates.
+  - claim_id: 9
+    reproduced_value: 36
+    outcome: matches
+    notes: DP20 Tables 1 and 3, col 4 — 36 clusters before and after removing duplicates.
+
+notes: >
+  Headline finding (as published): an RD at El Salvador's 1980 500 ha
+  land-reform threshold shows cooperatives grow fewer cash crops and more
+  staple crops, are less productive in cash crops and more in staples
+  (Tables 2-4), and that cooperative workers have higher earnings ($60 per
+  month, Table 5 col 1) and a ~$43 lower within-property interquartile
+  range of earnings (col 3).  The I4R comment (DP20 / JPE 2023) and the
+  author's own note withdraw the Table 5 / Figure 6 earnings results; the
+  productivity results stand (the meta-database's 20 "recoding in a
+  different software" rows reproduce Tables 2-3 exactly, e.g. -.594
+  (.152), -.234 (.104), .439 (.194), 17.34 (7.236)).
+
+  Original analysis in Stata (Montero's code and the comment's
+  Replication_file.do); language: r is the reproduction target.
+
+  Curation pass (2026-10-21).  Pinned 10 claims, all from Table 5 — the
+  only exhibit the package can produce: the four Above500 coefficients
+  (each with its SE in standard_error) and six counts (observations per
+  column; clusters per bandwidth).  Values exactly as printed in the
+  published JPE version (author-site copy of the typeset article), and
+  identical to the meta-database's o_coeff / o_std_err and DP20's
+  reproductions.  Mean dependent variables are in the contexts, not
+  pinned.
+
+  What was read.  The published JPE PDF (Tables 2, 3, 5, the data and
+  empirical-strategy sections); the 12 January 2018 draft (for dates
+  only); DP20 (all of it, EconStor, 16 pp.); Montero's 2023-03-01 note;
+  the Dataverse API metadata; the whole package and the comment
+  authors' own zip (andreaskotsadam.files.wordpress.com, same .dta, same
+  .do up to paths), downloaded to a scratch directory (never committed);
+  the meta-database's 204 rows (team 16).
+
+  Independent cross-check (not the package code; Python/statsmodels on
+  the package's .dta, mimicking the original specification): columns
+  1-2 reproduce exactly — 60.495 (31.03), N = 4,770, 98 clusters; 52.791
+  (40.64), N = 1,583, 36 clusters.  Columns 3-4 reproduce only with
+  Stata's percentile definition (collapse (iqr)): -42.967 (17.84),
+  N = 327 and -51.785 (24.92), N = 118; numpy's default linear
+  interpolation gives -36.27 / -43.06 instead.  In the original data,
+  199 of the 327 (73 of 118) property-years have fewer than five
+  workers and 94 (33) have exactly one — the five-member rule the paper
+  states was not applied.  Of the 5,060 rows only 1,260 are unique on
+  the comment's identifying variables (1,195 of 4,770 within 300 ha).
+
+  How the printed numbers were produced (package-only; never in
+  contexts).  From the comment's re-run of the original code: earnings
+  levels are reg hh_inc_pc_real Above500 norm_dist
+  c.norm_dist#Above500 i_year* sex age age2 if abs(norm_dist) < 300
+  (or 150), cluster(Expropretario_ISTA) — note the sex / age / age2
+  controls, which Table 5's note does not mention (the paper mentions
+  them only for the Figure 6 quantile regressions).  The IQR columns
+  collapse (iqr) hh_inc_pc_real by match_id Expropretario_ISTA i_year*
+  and regress on the same RD terms with year dummies only.  The outcome
+  is CPI-deflated (hh_inc_pc_real = hh_income_pc x a year-specific
+  index / 100) although the paper says "dollars"; the index omits 2010,
+  so all 798 rows from 2010 get real earnings 0 (DP20 fn. 5; their
+  correction, hh_inc_pc_realC, barely moves the estimates).  The data
+  also cover 2000-2001, not just the paper's 2002-2013 (survey years
+  2000, 2001, 2004-2013).  Key variables: Above500, norm_dist (own_amt, the
+  former owner's cumulative landholdings, minus 500), norm_dist_Above, i_year1-i_year12,
+  Expropretario_ISTA (former owner), match_id (property), hh_income_pc,
+  sex, age, age2.  The do-file's corrected section (duplicates drop on
+  dept munic canton year hh_income hh_income_pc Landholding_Type
+  Total_Workers age norm_dist, then 43 hand-coded drop-if lines checked
+  against the raw survey, then dropping 6 workers assigned to two
+  properties) produces DP20 Tables 1-3.  It also runs net install
+  gr0002_3 / ssc install grqreg (network) for Figure 6.
+
+  Benchmark implications.  Seeded mode shows the model a script that
+  computes BOTH the original and the corrected estimates; independent
+  mode sees only the .dta and the paper, whose description
+  (five-member rule, no demographic controls, nominal dollars, 2002-2013)
+  does not match the code that produced the printed numbers.  A faithful
+  independent reproduction is therefore expected to MISS the printed IQR
+  values; reproducing them requires replicating the paper's mistakes.
+  Retally agreeing with I4R requires removing the duplicates, which the
+  paper gives no hint of.
+
+  Left out.  Tables 2-4 (productivity; data not in this package), Table
+  6+ (credit, migration, canton outcomes), Figure 6 quantile estimates
+  (figure only), and DP20's Table 2 alternative-threshold estimates
+  (+182.20 / -28.35 / +157.08 / -3.53).
