@@ -375,9 +375,24 @@ notes: >
   in the prompt): seeded 10/11 (first scored 9/11, 1 error + 2 claim
   refinements), the March claims pass on the package's filter, only
   anti_estab_x_cases_interaction fails (0.0138 vs -0.016; the old-image
-  seeded run and two cache-off independent runs had it exact).  Independent on the new image:
-  NOT MEASURED, the API credit ran out on its first generation call (the
-  phase3b independent row and the three phase3b variance files are
-  credit-error rows with 0 claims).  Spend recorded on this entry: about
-  $6.90.  Files: benchmark/results/phase3-bisbee-*-2026-10-20.json and
-  phase3b-bisbee-*-2026-10-20.json.
+  seeded run and two cache-off independent runs had it exact).
+  Independent on the new image (the both-mode run's independent row hit
+  an exhausted API credit balance; measured once credit was restored):
+  8/11 cached (first scored 4/11, 1 error + 3 claim refinements; March N
+  1,599), cache-off 7, 8, 7 of 11 (first scored 4, 1, 0; 1 / 3 each; March
+  N 1,698, 619, 1,591).  Both March coefficients fail in every run
+  (column 4 reproduced between -0.41 and +0.41 vs -0.885), and
+  sample_size_march in three of four, for the paper-vs-code reason above;
+  cache-off runs 1 and 3 also miss anxiety_prime_effect_attentive and run
+  1 exposure_coefficient_full_cbps.  First scored 0-4 vs final 7-8: most
+  independent passes still come from claim refinement.  Every
+  independent first script failed once, not on packages: the listing
+  shows .RData files without their object or column names, so the
+  scripts guessed variable names by pattern; in two runs the guesses came
+  back NA and the script printed no RESULT line, one built a formula
+  from an empty variable name (str2lang "unexpected end of input"), and
+  one died on an R parse error ("unexpected end of input").  The error
+  repair, which sees the printed column names, gave the first scored
+  script.  Spend recorded on this entry: about $11.06 ($5.81 old image,
+  $5.25 new).  Files: benchmark/results/phase3-bisbee-*-2026-10-20.json
+  and phase3b-bisbee-*-2026-10-20.json.

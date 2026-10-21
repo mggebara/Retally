@@ -1,11 +1,19 @@
 {
   "usage": {
-    "api_calls": 0,
+    "api_calls": 7,
     "llm_cache_hits": 0,
     "llm_cache_served": false,
-    "by_model": {},
+    "by_model": {
+      "claude-opus-4-7": {
+        "input_tokens": 76020,
+        "output_tokens": 31619,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "api_calls": 7
+      }
+    },
     "rows_from_result_cache": 0,
-    "estimated_usd": 0.0
+    "estimated_usd": 1.170575
   },
   "results": [
     {
@@ -14,40 +22,170 @@
       "reproducer": "pipeline",
       "skipped": false,
       "skip_reason": null,
-      "error": "BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CgEmK9XjL9p2gAV2r8TFu'}",
+      "error": null,
       "transient": false,
-      "retally_ran": false,
-      "agrees_with_paper": null,
-      "agrees_with_i4r": null,
-      "n_claims_in_catalog": 0,
-      "n_claims_with_paper_match": 0,
-      "n_claims_with_i4r_match": 0,
-      "n_claims_with_paper_match_first_attempt": null,
-      "n_refinements": null,
-      "n_executions": null,
-      "n_claims_with_paper_match_first_scored": null,
-      "first_scored_attempt_index": null,
-      "n_error_refinements": null,
-      "n_claim_refinements": null,
-      "claim_details": [],
+      "retally_ran": true,
+      "agrees_with_paper": false,
+      "agrees_with_i4r": false,
+      "n_claims_in_catalog": 11,
+      "n_claims_with_paper_match": 7,
+      "n_claims_with_i4r_match": 7,
+      "n_claims_with_paper_match_first_attempt": 0,
+      "n_refinements": 4,
+      "n_executions": 5,
+      "n_claims_with_paper_match_first_scored": 4,
+      "first_scored_attempt_index": 1,
+      "n_error_refinements": 1,
+      "n_claim_refinements": 3,
+      "claim_details": [
+        {
+          "description": "exposure_coefficient_full_basic",
+          "claim_type": "coefficient",
+          "claimed": -1.321,
+          "reproduced": -1.356053,
+          "tolerance": 0.4178652535957608,
+          "rel_err": 0.026535200605601817,
+          "passed": true,
+          "passed_first_attempt": false,
+          "passed_first_scored": false
+        },
+        {
+          "description": "exposure_coefficient_full_cbps",
+          "claim_type": "coefficient",
+          "claimed": -1.348,
+          "reproduced": -2.054018,
+          "tolerance": 0.28189910979228483,
+          "rel_err": 0.5237522255192878,
+          "passed": false,
+          "passed_first_attempt": false,
+          "passed_first_scored": false
+        },
+        {
+          "description": "exposure_coefficient_march_basic",
+          "claim_type": "coefficient",
+          "claimed": -0.885,
+          "reproduced": -0.284001,
+          "tolerance": 0.43163841807909603,
+          "rel_err": 0.6790949152542374,
+          "passed": false,
+          "passed_first_attempt": false,
+          "passed_first_scored": false
+        },
+        {
+          "description": "exposure_coefficient_march_cbps",
+          "claim_type": "coefficient",
+          "claimed": -0.885,
+          "reproduced": -0.540462,
+          "tolerance": 0.3672316384180791,
+          "rel_err": 0.3893084745762712,
+          "passed": false,
+          "passed_first_attempt": false,
+          "passed_first_scored": false
+        },
+        {
+          "description": "sample_size_full",
+          "claim_type": "other",
+          "claimed": 1882.0,
+          "reproduced": 1871.0,
+          "tolerance": 0.01,
+          "rel_err": 0.005844845908607864,
+          "passed": true,
+          "passed_first_attempt": false,
+          "passed_first_scored": false
+        },
+        {
+          "description": "sample_size_march",
+          "claim_type": "other",
+          "claimed": 1710.0,
+          "reproduced": 1698.0,
+          "tolerance": 0.01,
+          "rel_err": 0.007017543859649123,
+          "passed": true,
+          "passed_first_attempt": false,
+          "passed_first_scored": false
+        },
+        {
+          "description": "anxiety_prime_effect_bivariate",
+          "claim_type": "coefficient",
+          "claimed": -0.074,
+          "reproduced": -0.101482,
+          "tolerance": 0.5270270270270271,
+          "rel_err": 0.3713783783783785,
+          "passed": true,
+          "passed_first_attempt": false,
+          "passed_first_scored": true
+        },
+        {
+          "description": "anxiety_prime_effect_full_controls",
+          "claim_type": "coefficient",
+          "claimed": -0.082,
+          "reproduced": -0.102522,
+          "tolerance": 0.46341463414634143,
+          "rel_err": 0.2502682926829268,
+          "passed": true,
+          "passed_first_attempt": false,
+          "passed_first_scored": true
+        },
+        {
+          "description": "anxiety_prime_effect_attentive",
+          "claim_type": "coefficient",
+          "claimed": -0.182,
+          "reproduced": -0.397928,
+          "tolerance": 0.33516483516483514,
+          "rel_err": 1.1864175824175824,
+          "passed": false,
+          "passed_first_attempt": false,
+          "passed_first_scored": false
+        },
+        {
+          "description": "anti_estab_x_cases_interaction",
+          "claim_type": "coefficient",
+          "claimed": -0.016,
+          "reproduced": -0.016041,
+          "tolerance": 0.375,
+          "rel_err": 0.0025624999999999606,
+          "passed": true,
+          "passed_first_attempt": false,
+          "passed_first_scored": true
+        },
+        {
+          "description": "tea_party_x_cases_interaction",
+          "claim_type": "coefficient",
+          "claimed": -0.02,
+          "reproduced": -0.019925,
+          "tolerance": 0.3,
+          "rel_err": 0.0037500000000001074,
+          "passed": true,
+          "passed_first_attempt": false,
+          "passed_first_scored": true
+        }
+      ],
       "split": "dev",
       "components": {
-        "parsed": null,
-        "claims_extracted": null,
-        "dataset_extracted": null,
-        "dataset_downloaded": null,
-        "code_generated": null,
-        "code_executed": null
+        "parsed": true,
+        "claims_extracted": true,
+        "dataset_extracted": false,
+        "dataset_downloaded": true,
+        "code_generated": true,
+        "code_executed": true
       },
       "cached": false,
       "usage": {
-        "api_calls": 0,
+        "api_calls": 7,
         "llm_cache_hits": 0,
         "llm_cache_served": false,
-        "by_model": {},
-        "estimated_usd": 0.0
+        "by_model": {
+          "claude-opus-4-7": {
+            "input_tokens": 76020,
+            "output_tokens": 31619,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "api_calls": 7
+          }
+        },
+        "estimated_usd": 1.170575
       },
-      "artifacts_dir": null
+      "artifacts_dir": "benchmark/results/artifacts/bisbee-2022-flight-to-safety/independent/pipeline/20261021T044621Z"
     }
   ]
 }

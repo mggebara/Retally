@@ -95,15 +95,16 @@ runs per paper — distributions, not yet rates).
   1.6, 13 / 13 in 4 of 7 runs in 1.7.
 - **Alesina 2022 is the first specification-level gap.**  Seeded 7 / 11;
   independent 7 / 11 cached and 0, 6, 5 of 11 cache-off (first scored 1
-  cached; 0, 5, 1 cache-off).  Both modes read the right file; the independent losses are
-  reconstructions of the specification (outcome composition, sample
-  trimming, index direction), plus one run that printed results under
-  its own names (Phase 3, below).
-- **Bisbee 2022 is partly measured.**  Seeded 10 / 11 on the 47-package
-  sandbox image built in Phase 1.8.  Independent was measured only on the old
-  image, where every first script crashed on a missing package (0 / 11
-  cached; 8, 8, 5 cache-off, first scored 2, 4, 0); the new-image
-  independent runs hit an exhausted API credit balance.
+  cached; 0, 5, 1 cache-off).  Both modes read the right file; the
+  independent losses are reconstructions of the specification (outcome
+  composition, sample trimming, index direction), plus one run that
+  printed results under its own names (Phase 3, below).
+- **Bisbee 2022: seeded 10 / 11, independent 8 / 11 cached and 7, 8, 7
+  cache-off** on the 47-package sandbox image built in Phase 1.8 (first
+  scored 9 seeded; 4 cached and 4, 1, 0 cache-off independent).  The
+  two March-sample coefficients fail in every independent run (the March
+  N in three of four) for a paper-vs-code reason: the paper describes the sample as March 1 – April 7, the
+  package uses every election from March 1 on (Phase 3, below).
 
 Read against the thesis: Dincecco's independent failures were all
 package navigation (wrong file, then wrong column), now fixed
@@ -111,11 +112,11 @@ generically, so its 13 / 13 says the paper's text is enough to recover
 its specification; Alesina's are the specification gap the thesis is
 about.  The first-scored metric (Phase 1.8) separates derivation from
 target-guided search, and Bisbee shows why it matters: 0–4 of 11 first
-scored against 5–8 final in the cache-off independent runs.
+scored against 7–8 final in the new-image independent runs.
 
 The committed `REPORT.md` is built from one row per paper and mode
 (listed under Phase 3, below).  Spend recorded for Phases 1.8 and 3:
-about $14.27.
+about $18.43.
 
 ---
 
@@ -594,16 +595,14 @@ and a fake — **met**; adapter design written up (not necessarily built)
 
 ---
 
-## Phase 3 — dev-set baseline over three papers — ⚠ partly measured (2026-10-21)
+## Phase 3 — dev-set baseline over three papers — ⚠ baseline measured, tuning not started (2026-10-21)
 
 Goal: prevent overfitting to one paper before any prompt tuning. The
 dev/holdout machinery exists precisely for this.
 
-*(Measured: Dincecco (Phase 1.8, above), Alesina, and Bisbee seeded on
-the new sandbox image.  **Not measured: Bisbee independent on the new
-image** — the API credit ran out on its first generation call.  Next:
-re-run `measure` for bisbee independent ×3 cache-off, then the first
-three-paper both-mode baseline.  Same protocol as 1.7–1.8: one
+*(Measured in both modes: Dincecco (Phase 1.8, above), Alesina, and
+Bisbee on the new sandbox image.  Next: the tuning loop on dev (below).
+Same protocol as 1.7–1.8: one
 `--mode both` run (LLM cache on) and three `RETALLY_LLM_CACHE=0 --mode
 independent` runs per paper, result-cache rows deleted before every
 run, Opus 4.7, Docker R sandbox.  First-scored counts from
@@ -669,13 +668,43 @@ errors).  After #46, on the old 11-package image (`phase3-bisbee-*`):
 After #48/#49 (`main` b93e049: 47-package image, packages listed in the
 prompt; `phase3b-bisbee-both-2026-10-20.json`): **seeded 10 / 11**
 (first attempt 0, first scored 9 / 11, 1 error + 2 claim refinements).
-Independent: **not measured** (the `phase3b-bisbee-both` independent row
-and the three `phase3b-bisbee-variance-*` files are "credit balance too
-low" error rows with no claims scored; kept because they are honest
-records of what ran).
+The independent row of that `--mode both` run is a "credit balance too
+low" error row with no claims scored (kept as an honest record); once
+credit was restored, independent was measured on the same commit as a
+separate cache-on run (`phase3b-bisbee-independent-2026-10-20.json`)
+plus three cache-off runs (`phase3b-bisbee-variance-independent-run{1,2,3}-2026-10-20.json`,
+which replace that afternoon's credit-error files):
 
-- **Every first script crashed** on `library(MatchIt)` / `library(CBPS)`,
-  not installed in the old image — which is what #48/#49 fix.
+| Run (new image) | Final | First attempt | First scored | Error / claim refinements | March N | Fails |
+|---|---|---|---|---|---|---|
+| independent, cache on | 8 / 11 | 0 / 11 | 4 / 11 | 1 / 3 | 1,599 | both March coefficients, `sample_size_march` |
+| independent cache-off run 1 | 7 / 11 | 0 / 11 | 4 / 11 | 1 / 3 | 1,698 | `full_cbps`, both March coefficients, `anxiety_prime_effect_attentive` |
+| independent cache-off run 2 | 8 / 11 | 0 / 11 | 1 / 11 | 1 / 3 | 619 | both March coefficients, `sample_size_march` |
+| independent cache-off run 3 | 7 / 11 | 0 / 11 | 0 / 11 | 1 / 3 | 1,591 | both March coefficients, `sample_size_march`, `anxiety_prime_effect_attentive` |
+
+Reading: the March coefficients fail in every independent run, for the
+paper-vs-code reason below (the reproduced column 4 coefficient ranges
+from −0.41 to +0.41 against −0.885); and first scored (0–4) against final
+(7–8) shows that most independent passes still come from claim
+refinement, not from the first script that ran.
+
+- **Old image: every first script crashed** on `library(MatchIt)` /
+  `library(CBPS)`, not installed — which is what #48/#49 fix.
+- **New image: every independent first script still failed once (one
+  error repair each), but not on packages.**  From each run's
+  `attempt-1/stderr.txt` and `stdout.txt`: the listing shows the
+  `.RData` files without their object or column names (only `.dta`
+  columns are listed), so each first script guessed variable names by
+  pattern matching.  In the cache-on run and cache-off run 1 the guesses
+  came back NA (e.g. the House-primary vote share and endorsement
+  indicators were not found), and the
+  script, which printed only non-NA values, emitted no `RESULT:` line at
+  all.  Run 3 built a formula from an empty variable name
+  (`y_sd_units ~  + caucus_switch + ...`, `str2lang` "unexpected end of
+  input").  Run 2 died on an R parse error ("unexpected end of input")
+  after printing only `NA` results.  The error repair, which sees the
+  printed column names, then produced the first scored script.  Listing
+  `.RData` contents like `.dta` columns is the obvious generic fix.
 - **Most independent passes came after claim refinement** — target-guided
   search, e.g. run 1 went 2 → 8; one run grid-searched start and end
   dates for the March window against the target N.  First scored (0–4)
@@ -688,9 +717,10 @@ records of what ran).
   March 1st and April 7th" (header "March & April 7th"); the package's
   Table 1 script (`Table 1, SI3, SI4, SI5, Figure SI13, SI14.R`, lines
   ~124–149) filters `date >= as.Date('2020-03-01')` with no upper bound.
-  The seeded script and two cache-off independent runs implemented the
-  paper's window and got N = 1,591 (the others printed NA or 628).  On the new image seeded follows the package's filter
-  and the three March claims pass; only `anti_estab_x_cases_interaction`
+  On the old image the seeded script and two cache-off independent runs
+  implemented the paper's window and got N = 1,591 (the others printed
+  NA or 628).  On the new image seeded follows the package's filter and
+  the three March claims pass; only `anti_estab_x_cases_interaction`
   fails (0.0138 vs −0.016).  Curation: the three contexts now quote the
   paper's own words for the sample (they paraphrased the same window
   before); values unchanged; the package filter and the N discrepancy are
@@ -701,19 +731,20 @@ records of what ran).
 **`REPORT.md`** is built from a combined `results.json` (gitignored) of
 six rows: Dincecco both rows from `phase18-dincecco-both-2026-10-20.json`,
 Alesina both rows from `phase3-alesina-both-2026-10-20.json`, Bisbee
-seeded from `phase3b-bisbee-both-2026-10-20.json` (new image) and Bisbee
-independent from `phase3-bisbee-both-2026-10-20.json` (the old-image
-cache-on 0 / 11 run; the new-image independent row is unmeasured).
+seeded from `phase3b-bisbee-both-2026-10-20.json` and Bisbee independent
+from `phase3b-bisbee-independent-2026-10-20.json` (both new image, cache
+on; the old-image rows are not in it).
 First-scored fields for rows written before #45/#47 were filled from the
 run artifacts with the `--rescore` scoring path.  It is a cross-run
 composite, not one run, so its "Seeded vs independent" table is a
 snapshot of the latest measurement per cell.
 
 **Spend** (sum of row `usage.estimated_usd`): Dincecco $1.48 (Phase
-1.8), Alesina $5.89, Bisbee $6.90 (including $0.41 billed on the
-credit-error row before the balance ran out, and $0.17 on the 403 run);
-total **$14.27**.  A cache-off independent run cost $0.25 (Dincecco),
-$0.33–0.91 (Alesina), $1.35–1.47 (Bisbee, 8 calls each).
+1.8), Alesina $5.89, Bisbee $11.06 (old image $5.81 including $0.17 on
+the 403 run; new image $5.25 including $0.41 billed on the credit-error
+row before the balance ran out); total **$18.43**.  A cache-off
+independent run cost $0.25 (Dincecco), $0.33–0.91 (Alesina), $1.35–1.47
+on the old image and $1.16–1.28 on the new one (Bisbee).
 
 Still open from the original Phase 3 plan:
 
@@ -721,7 +752,7 @@ Still open from the original Phase 3 plan:
   findings and dates are pinned for `alesina-2022` and `bisbee-2022`.*
   Arias runs once, only to confirm the harness handles it — its numbers
   are not for tuning.
-- Only after the three-paper baseline exists: prompt tuning sweeps on
+- Now that the three-paper baseline exists: prompt tuning sweeps on
   dev, holdout confirmation runs rarely, `benchmark.compare` as the
   keep-or-revert gate, always like-for-like per mode.  Tuning should
   target the **independent** number — tuning the seeded prompt mostly
@@ -731,10 +762,10 @@ Still open from the original Phase 3 plan:
   final mixes derivation with target-guided search.
 
 **Exit criteria:** committed both-mode baseline over ≥3 dev papers with
-pinned claims (with SEs) and I4R findings — *two of three fully
-measured; Bisbee independent on the current image outstanding*;
-documented per-paper failure notes for every independent-mode loss —
-*done for Dincecco and Alesina; Bisbee's old-image losses noted*; tuning
+pinned claims (with SEs) and I4R findings — *measured (one seeded,
+one cached and three cache-off independent runs per paper; the
+committed `REPORT.md` is a cross-run composite)*; documented per-paper
+failure notes for every independent-mode loss — *done*; tuning
 loop demonstrably running (≥1 kept improvement with before/after compare
 output in the PR) — *not started*.
 

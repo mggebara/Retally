@@ -29,21 +29,21 @@ Reproducer: **pipeline**.
 Claims passing with the authors' scripts in the prompt (seeded) versus without them (independent), per paper executed in both modes.  *Lost* claims pass seeded but not independent — what the scripts were carrying.
 
 - Seeded: **30 / 35** claims passed (first scored 29 / 35)
-- Independent: **18 / 35** claims passed (first scored 12 / 35)
-- Lost without the scripts: **14**; gained: **2**
+- Independent: **26 / 35** claims passed (first scored 16 / 35)
+- Lost without the scripts: **7**; gained: **3**
 
 *First scored* is what each mode's first script that printed results passed: after any crash repairs, before the refinement loop showed the model which claims were off target.
 
 | Entry | Split | Reproducer | Seeded | Independent | First scored (seeded / independent) | Lost without scripts |
 |---|---|---|---|---|---|---|
 | `alesina-2022-immigration-redistribution` | dev | pipeline | 7/11 | 7/11 | 7/11 / 1/11 | `order_effect_social_budget`, `sample_size_table4` |
-| `bisbee-2022-flight-to-safety` | dev | pipeline | 10/11 | 0/11 | 9/11 / 0/11 | `anxiety_prime_effect_attentive`, `anxiety_prime_effect_bivariate`, `anxiety_prime_effect_full_controls`, `exposure_coefficient_full_basic`, `exposure_coefficient_full_cbps`, `exposure_coefficient_march_basic`, `exposure_coefficient_march_cbps`, `sample_size_full`, `sample_size_march`, `tea_party_x_cases_interaction` |
+| `bisbee-2022-flight-to-safety` | dev | pipeline | 10/11 | 8/11 | 9/11 / 4/11 | `exposure_coefficient_march_basic`, `exposure_coefficient_march_cbps`, `sample_size_march` |
 | `dincecco-2022-india-warfare` | dev | pipeline | 13/13 | 11/13 | 13/13 / 11/13 | `warfare_iv_se_full_controls`, `warfare_se_full_controls` |
 
 ## Closeness (per split and mode)
 
 - **dev · seeded**: 3 entries, 35 claims, matched 100%, passed 30/35, median rel err 0.2%, within tol/2x/5x: 86%/94%/97%
-- **dev · independent**: 3 entries, 35 claims, matched 71%, passed 18/35, median rel err 3.9%, within tol/2x/5x: 72%/76%/88%
+- **dev · independent**: 3 entries, 35 claims, matched 100%, passed 26/35, median rel err 3.9%, within tol/2x/5x: 74%/80%/89%
 
 ## Per-component success — seeded (executed papers only)
 
@@ -69,7 +69,7 @@ Claims passing with the authors' scripts in the prompt (seeded) versus without t
 
 ## Estimated API cost
 
-Total estimated spend this run: **$4.01** across 22 API calls (15 further calls served free by the LLM cache).  Estimates from the price table in `benchmark/pricing.py`.
+Total estimated spend this run: **$3.84** across 21 API calls (17 further calls served free by the LLM cache).  Estimates from the price table in `benchmark/pricing.py`.
 
 | ID | Mode | Reproducer | API calls | LLM-cache hits | Input tok | Output tok | Cache write tok | Cache read tok | Est. cost |
 |---|---|---|---:|---:|---:|---:|---:|---:|---:|
@@ -78,7 +78,7 @@ Total estimated spend this run: **$4.01** across 22 API calls (15 further calls 
 | `alesina-2022-immigration-redistribution` | seeded | pipeline | 4 | 3 | 120,666 | 23,942 | 0 | 0 | $1.20 |
 | `alesina-2022-immigration-redistribution` | independent | pipeline | 4 | 2 | 35,777 | 19,890 | 0 | 0 | $0.68 |
 | `bisbee-2022-flight-to-safety` | seeded | pipeline | 4 | 3 | 75,442 | 12,209 | 0 | 0 | $0.68 |
-| `bisbee-2022-flight-to-safety` | independent | pipeline | 4 | 2 | 31,768 | 22,414 | 0 | 0 | $0.72 |
+| `bisbee-2022-flight-to-safety` | independent | pipeline | 3 | 4 | 31,498 | 15,762 | 0 | 0 | $0.55 |
 
 ## Per-paper results
 
@@ -89,4 +89,4 @@ Total estimated spend this run: **$4.01** across 22 API calls (15 further calls 
 | `alesina-2022-immigration-redistribution` | seeded | pipeline | ran | ✓ | ✗ | ✗ | 7 / 7 of 11 (first scored 7/11, 0 error + 3 claim refinements) |  |
 | `alesina-2022-immigration-redistribution` | independent | pipeline | ran | ✓ | ✗ | ✗ | 7 / 7 of 11 (first scored 1/11, 0 error + 3 claim refinements) |  |
 | `bisbee-2022-flight-to-safety` | seeded | pipeline | ran | ✓ | ✗ | ✗ | 10 / 10 of 11 (first scored 9/11, 1 error + 2 claim refinements) |  |
-| `bisbee-2022-flight-to-safety` | independent | pipeline | ran | ✓ | ✗ | ✗ | 0 / 0 of 11 (first scored 0/11, 2 error + 1 claim refinements) |  |
+| `bisbee-2022-flight-to-safety` | independent | pipeline | ran | ✓ | ✗ | ✗ | 8 / 8 of 11 (first scored 4/11, 1 error + 3 claim refinements) |  |
