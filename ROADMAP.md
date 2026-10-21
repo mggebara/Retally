@@ -93,7 +93,10 @@ cached run: 12), up from a flat **0 / 13** in Phase 1.5 (script-free mount,
 3 runs: 0, 0, 0; prompt-only withholding, 3 runs: 0, 0, 1) and after Phase
 1.6 steps 1–3. Run-to-run variance now dominates the signal, so every
 further change is measured as a distribution of runs (Phase 1.6, below).
-The Phase 1.7 file-selection fixes are built but not yet measured.
+After the Phase 1.7 file-selection fixes, **independent is 13 / 13 in
+4 of the 7 fresh runs at steps 5–6** (the rest 2/13, all for one reason:
+the population-density column), up from 1 of 4 at step 4 and a 1–12
+spread on `main`; seeded 13 / 13 throughout (Phase 1.7, below).
 
 ---
 
@@ -309,20 +312,84 @@ Step 4 measured on `main` at 9b4bbb9:
   be inferred.  Spend was not recorded (cost accounting landed in PR #41,
   after these runs); roughly 4–6 Opus 4.7 calls per independent run.
 
-### 1.7 File-selection round — 🚧 built, not measured (2026-10-20)
-*(Three fixes, one commit each, unit-tested, none yet measured live: when
-they were built the API account returned HTTP 400 "credit balance is too
-low" on the first uncached call, retried once.  The 1.6 step-4
-measurement has since run (above); every 1.7 before/after compare is
-outstanding, to be measured as a distribution of runs like step 4.  (4) each claim's
-`location` and `context` are rendered under it in the generation prompt;
-(5) the `.dta` listing gives row counts, puts columns named in the paper
-text first (exact name, or a Stata label that is a phrase of the text),
-and lists the most relevant `.dta` files first — offline, Dincecco's
-`conflictexposure.dta` now leads with 666 rows, `lnlights_001`,
-`lnpdgpd1990`, `instrument`, `state_gadm` visible; (6) NA claims go to
-claim refinement, and "no progress" counts NA lines and is waived once
-on a data-file switch.)*
+### 1.7 File-selection round — ✅ measured (2026-10-20) — independent 13 / 13 in 4 of 7 fresh runs after step 5
+*(Three fixes, one commit each, after a first commit that rewrote the
+curated claim contexts in paper language (see "Context leak" below):
+(4) each claim's `location` and `context` are rendered under it in the
+generation prompt; (5) the `.dta` listing gives row counts, puts columns
+named in the paper text first (exact name, or a Stata label that is a
+phrase of the text), and lists the most relevant `.dta` files first;
+(6) NA claims go to claim refinement, and "no progress" counts NA lines
+and is waived once on a data-file switch.  Each step was measured on the
+rebased commit like 1.6 step 4: one `--mode both` run (LLM cache on) and
+three `RETALLY_LLM_CACHE=0 --mode independent` runs, result-cache rows
+deleted before every run, Opus 4.7, Docker R sandbox.  Files:
+`benchmark/results/phase17-step{4,5,6}-both-2026-10-20.json` and
+`phase17-step{4,5,6}-variance-independent-run{1,2,3}-2026-10-20.json`.)*
+
+| Pipeline state | Seeded (cache on) | Independent (cache on) | Independent, 3 cache-off runs |
+|---|---|---|---|
+| `main` 9b4bbb9 = 1.6 step 4 | 13 / 13 | 12 / 13 | 4, 10, 1 |
+| step 4 (8bc07dd) contexts rendered, paper-language contexts | 13 / 13 | 0 / 13 | 0, 0, 13 |
+| step 5 (09e6fe3) paper-vocabulary-ordered `.dta` listing | 13 / 13 | 13 / 13 | 2, 13, 2 |
+| step 6 (dbbd696) NA claims to refinement | 13 / 13 | 13 / 13 \* | 13, 2, 13 |
+
+\* Not an independent sample.  The step-6 cache-on run made **0 API
+calls**: all 8 LLM calls (both modes) were served by the LLM cache,
+because step 6 changes only refinement-loop behaviour and the step-5 run
+needed no refinement, so its prompts were identical.  It is a replay of
+the step-5 run.  The committed `REPORT.md` is generated from it.
+
+- **Headline.**  Independent reaches 13 / 13 — every value to 3–4 dp —
+  in 4 of the 7 fresh runs at steps 5–6, up from 1 of 4 at step 4 and a
+  1–12 spread on `main`.  Seeded is 13 / 13 exact at every step, so no
+  commit is reverted.  The distribution is bimodal: a run is either exact
+  or wrong for one structural reason.  Classification is read from the
+  saved scripts (`python -m benchmark.artifacts`, PR #42), not inferred.
+- **Step 4: data-file selection.**  All three 0/13 runs (cache-on, run 1,
+  run 2) loaded `bgdpak.dta` (N=93) and produced identical numbers (col 1
+  = 12.4861, N=93); one or two refinement attempts did not switch files.
+  Run 3 (13/13) loaded `conflictexposure.dta`.  With contexts rendered
+  but the old listing, the model picks the wrong file deterministically
+  most of the time.
+- **Steps 5–6: variable selection, the population-density control.**  All
+  three 2/13 runs (step 5 runs 1 and 3, step 6 run 2) read
+  `conflictexposure.dta` with N=656–660 and used `Land_250_1757`,
+  `lnlights_001`, `state_gadm`, the ten geography columns and
+  `instrument` correctly, but for "log population density in 1990" chose
+  `lnpop1990` (log population, not density), `pdgpd1990` (unlogged
+  density) or a hand-built `log(pop1990/area)` instead of `lnpdgpd1990`.
+  Every coefficient is then off in the same direction (col 1 ≈ 6.2–6.8 vs
+  3.713); the two passes are N and one IV value inside the ±1·SE band.
+  The package has ~90 `pop*`/`lnpop*` columns; the right one is
+  distinguishable only by its Stata label, and after the context rewrite
+  `lnpdgpd1990` falls past the listing cap (below).
+- **The 13/13 runs** (step 4 run 3; step 5 cache-on and run 2; step 6
+  runs 1 and 3) all use the right file, `lnpdgpd1990`, `instrument` and
+  `feols(..., vcov="hetero")`; coefficients exact to 3–4 dp; N reported
+  656–664 (inside the 1% tolerance); IV SEs 2.5–3.4% off (HC1 vs Stata's
+  HC0), inside the 5% cap.
+- **The 1.6 failure mode is gone.**  Population density omitted from
+  column 1 because of the `bivariate` token did not recur in any step-4+
+  run: once the context is rendered, every script includes the density
+  control.  OLS and IV halves move together: every 13/13 run passes both,
+  every failing run fails both for the same reason, and no run passes OLS
+  while failing IV.
+- **Spend** (cost accounting from PR #41): about $4.0 recorded across
+  the 12 runs; a cache-off independent run costs $0.25–0.53 (3–6 Opus 4.7
+  calls); a both-mode run with the cache on about $0.41 (the step-6 one
+  $0).
+- **Honest framing.**  n = 4 independent samples per step, one of them (step
+  6 cache-on) a replay.  The step-to-step movement of the cache-off runs
+  (median 0 → 2 → 13; mean 4.3 → 5.7 → 9.3) is suggestive, not
+  significant.  The context-rewrite commit was not measured alone,
+  because contexts are not rendered until step 4; its effect is folded
+  into step 4.
+
+**Next.**  Surface the population-density column: match Stata labels for
+"population density" when ordering columns, and/or revisit the listing cap
+so `lnpdgpd1990` is in view.  Then alesina-2022 and bisbee-2022 in both
+modes (Phase 3).
 
 *Context leak.  Rendering contexts (4) exposed that the curated contexts
 had been written from the replication package: Dincecco's named

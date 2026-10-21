@@ -418,19 +418,19 @@ notes: >
   loop never targets, and the loop stops when an attempt reproduces the
   same numbers.
 
-  Phase 1.7 file selection (2026-10-20): NOT MEASURED.  The deferred
-  Phase 1.6 measurement was attempted first (seeded served 13/13 from the
-  LLM cache), but the first uncached call, the independent generation,
-  returned HTTP 400 "credit balance is too low" again, and so did the one
-  retry (the 1.6 measurement later ran on main; see step 4 above).  The three 1.7 fixes were built and unit-tested without live
-  runs, one commit each: claim location/context rendered in the prompt;
-  a .dta listing with row counts, paper-matched columns first (by exact
-  name or by Stata label phrase), and the most relevant .dta files first;
-  NA claims sent to claim refinement, with "no progress" counting NA
-  lines and waived once on a data-file switch.  Offline, the new listing
-  puts conflictexposure.dta first: "666 rows, 1288 columns", with
-  Land_250_1757, lnlights_001, lnpdgpd1990, instrument and state_gadm in
-  view (measured with the claim contexts as they then stood).
+  Phase 1.7 file selection (2026-10-20): MEASURED.  Per step, one both-mode
+  run (cache on) plus three cache-off independent runs; seeded 13/13 exact
+  at every step.  Independent: step 4 (contexts rendered) 0/13 cached,
+  0, 0, 13 cache-off; step 5 (paper-ordered .dta listing) 13/13 cached,
+  2, 13, 2; step 6 (NA refinement) 13/13 cached (a 0-call replay of the
+  step-5 run), 13, 2, 13.  Two failure modes, read from the saved scripts:
+  step 4's 0/13 runs loaded bgdpak.dta (N=93) and never switched; every
+  2/13 run at steps 5-6 used the right file and variables except the
+  population-density control (lnpop1990, pdgpd1990 or log(pop1990/area)
+  instead of lnpdgpd1990; col 1 ~6.2-6.8 vs 3.713).  lnpdgpd1990 is
+  distinguishable only by its Stata label and falls past the listing cap.
+  13/13 runs: coefficients exact to 3-4 dp, N 656-664, IV SEs 2.5-3.4% off
+  (HC1 vs Stata HC0).  The 1.6 "bivariate drops density" mode did not recur.
 
   Context rewrite (2026-10-20, Phase 1.7).  This entry's claim contexts
   had named package variables (Land_250_1757, lnpdgpd1990, instrument),

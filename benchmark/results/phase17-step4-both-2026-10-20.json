@@ -1,0 +1,338 @@
+{
+  "usage": {
+    "api_calls": 3,
+    "llm_cache_hits": 5,
+    "llm_cache_served": true,
+    "by_model": {
+      "claude-opus-4-7": {
+        "input_tokens": 48922,
+        "output_tokens": 7046,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "api_calls": 3
+      }
+    },
+    "rows_from_result_cache": 0,
+    "estimated_usd": 0.42076
+  },
+  "results": [
+    {
+      "entry_id": "dincecco-2022-india-warfare",
+      "mode": "seeded",
+      "reproducer": "pipeline",
+      "skipped": false,
+      "skip_reason": null,
+      "error": null,
+      "retally_ran": true,
+      "agrees_with_paper": true,
+      "agrees_with_i4r": true,
+      "n_claims_in_catalog": 13,
+      "n_claims_with_paper_match": 13,
+      "n_claims_with_i4r_match": 13,
+      "claim_details": [
+        {
+          "description": "warfare_coefficient_bivariate",
+          "claim_type": "coefficient",
+          "claimed": 3.713,
+          "reproduced": 3.7131,
+          "tolerance": 0.02,
+          "rel_err": 2.6932399676748436e-05,
+          "passed": true
+        },
+        {
+          "description": "warfare_se_bivariate",
+          "claim_type": "standard_error",
+          "claimed": 0.305,
+          "reproduced": 0.3053,
+          "tolerance": 0.05,
+          "rel_err": 0.000983606557377123,
+          "passed": true
+        },
+        {
+          "description": "warfare_coefficient_full_controls",
+          "claim_type": "coefficient",
+          "claimed": 1.465,
+          "reproduced": 1.4646,
+          "tolerance": 0.02,
+          "rel_err": 0.00027303754266223753,
+          "passed": true
+        },
+        {
+          "description": "warfare_se_full_controls",
+          "claim_type": "standard_error",
+          "claimed": 0.37,
+          "reproduced": 0.3697,
+          "tolerance": 0.05,
+          "rel_err": 0.0008108108108108716,
+          "passed": true
+        },
+        {
+          "description": "sample_size_districts",
+          "claim_type": "other",
+          "claimed": 660.0,
+          "reproduced": 660.0,
+          "tolerance": 0.01,
+          "rel_err": 0.0,
+          "passed": true
+        },
+        {
+          "description": "warfare_coefficient_state_fe",
+          "claim_type": "coefficient",
+          "claimed": 1.601,
+          "reproduced": 1.6005,
+          "tolerance": 0.02,
+          "rel_err": 0.0003123048094940318,
+          "passed": true
+        },
+        {
+          "description": "warfare_se_state_fe",
+          "claim_type": "standard_error",
+          "claimed": 0.38,
+          "reproduced": 0.3796,
+          "tolerance": 0.05,
+          "rel_err": 0.0010526315789473985,
+          "passed": true
+        },
+        {
+          "description": "warfare_iv_coefficient_bivariate",
+          "claim_type": "coefficient",
+          "claimed": 4.93,
+          "reproduced": 4.9303,
+          "tolerance": 0.02,
+          "rel_err": 6.085192697772597e-05,
+          "passed": true
+        },
+        {
+          "description": "warfare_iv_se_bivariate",
+          "claim_type": "standard_error",
+          "claimed": 0.609,
+          "reproduced": 0.6107,
+          "tolerance": 0.05,
+          "rel_err": 0.0027914614121511247,
+          "passed": true
+        },
+        {
+          "description": "warfare_iv_coefficient_state_fe",
+          "claim_type": "coefficient",
+          "claimed": 4.626,
+          "reproduced": 4.6257,
+          "tolerance": 0.02,
+          "rel_err": 6.485084306100064e-05,
+          "passed": true
+        },
+        {
+          "description": "warfare_iv_se_state_fe",
+          "claim_type": "standard_error",
+          "claimed": 1.291,
+          "reproduced": 1.3278,
+          "tolerance": 0.05,
+          "rel_err": 0.028505034856700362,
+          "passed": true
+        },
+        {
+          "description": "warfare_iv_coefficient_full_controls",
+          "claim_type": "coefficient",
+          "claimed": 3.482,
+          "reproduced": 3.4823,
+          "tolerance": 0.02,
+          "rel_err": 8.615738081554995e-05,
+          "passed": true
+        },
+        {
+          "description": "warfare_iv_se_full_controls",
+          "claim_type": "standard_error",
+          "claimed": 1.389,
+          "reproduced": 1.4405,
+          "tolerance": 0.05,
+          "rel_err": 0.03707703383729293,
+          "passed": true
+        }
+      ],
+      "split": "dev",
+      "components": {
+        "parsed": true,
+        "claims_extracted": true,
+        "dataset_extracted": false,
+        "dataset_downloaded": true,
+        "code_generated": true,
+        "code_executed": true
+      },
+      "cached": false,
+      "usage": {
+        "api_calls": 1,
+        "llm_cache_hits": 3,
+        "llm_cache_served": true,
+        "by_model": {
+          "claude-opus-4-7": {
+            "input_tokens": 35384,
+            "output_tokens": 2102,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "api_calls": 1
+          }
+        },
+        "estimated_usd": 0.22947
+      },
+      "artifacts_dir": "benchmark/results/artifacts/dincecco-2022-india-warfare/seeded/pipeline/20261021T015104Z"
+    },
+    {
+      "entry_id": "dincecco-2022-india-warfare",
+      "mode": "independent",
+      "reproducer": "pipeline",
+      "skipped": false,
+      "skip_reason": null,
+      "error": null,
+      "retally_ran": true,
+      "agrees_with_paper": false,
+      "agrees_with_i4r": false,
+      "n_claims_in_catalog": 13,
+      "n_claims_with_paper_match": 0,
+      "n_claims_with_i4r_match": 0,
+      "claim_details": [
+        {
+          "description": "warfare_coefficient_bivariate",
+          "claim_type": "coefficient",
+          "claimed": 3.713,
+          "reproduced": 12.4861,
+          "tolerance": 0.08214381901427417,
+          "rel_err": 2.3628063560463235,
+          "passed": false
+        },
+        {
+          "description": "warfare_se_bivariate",
+          "claim_type": "standard_error",
+          "claimed": 0.305,
+          "reproduced": 3.309,
+          "tolerance": 0.05,
+          "rel_err": 9.849180327868853,
+          "passed": false
+        },
+        {
+          "description": "warfare_coefficient_full_controls",
+          "claim_type": "coefficient",
+          "claimed": 1.465,
+          "reproduced": -0.3679,
+          "tolerance": 0.2525597269624573,
+          "rel_err": 1.2511262798634812,
+          "passed": false
+        },
+        {
+          "description": "warfare_se_full_controls",
+          "claim_type": "standard_error",
+          "claimed": 0.37,
+          "reproduced": 3.7136,
+          "tolerance": 0.05,
+          "rel_err": 9.036756756756757,
+          "passed": false
+        },
+        {
+          "description": "sample_size_districts",
+          "claim_type": "other",
+          "claimed": 660.0,
+          "reproduced": 93.0,
+          "tolerance": 0.01,
+          "rel_err": 0.8590909090909091,
+          "passed": false
+        },
+        {
+          "description": "warfare_coefficient_state_fe",
+          "claim_type": "coefficient",
+          "claimed": 1.601,
+          "reproduced": 5.1255,
+          "tolerance": 0.23735165521549031,
+          "rel_err": 2.2014366021236724,
+          "passed": false
+        },
+        {
+          "description": "warfare_se_state_fe",
+          "claim_type": "standard_error",
+          "claimed": 0.38,
+          "reproduced": 3.4387,
+          "tolerance": 0.05,
+          "rel_err": 8.04921052631579,
+          "passed": false
+        },
+        {
+          "description": "warfare_iv_coefficient_bivariate",
+          "claim_type": "coefficient",
+          "claimed": 4.93,
+          "reproduced": -32.2131,
+          "tolerance": 0.12352941176470589,
+          "rel_err": 7.5340973630831645,
+          "passed": false
+        },
+        {
+          "description": "warfare_iv_se_bivariate",
+          "claim_type": "standard_error",
+          "claimed": 0.609,
+          "reproduced": 65.9281,
+          "tolerance": 0.05,
+          "rel_err": 107.25632183908047,
+          "passed": false
+        },
+        {
+          "description": "warfare_iv_coefficient_state_fe",
+          "claim_type": "coefficient",
+          "claimed": 4.626,
+          "reproduced": 9.5375,
+          "tolerance": 0.2790747946389969,
+          "rel_err": 1.0617163856463465,
+          "passed": false
+        },
+        {
+          "description": "warfare_iv_se_state_fe",
+          "claim_type": "standard_error",
+          "claimed": 1.291,
+          "reproduced": 21.5229,
+          "tolerance": 0.05,
+          "rel_err": 15.6714949651433,
+          "passed": false
+        },
+        {
+          "description": "warfare_iv_coefficient_full_controls",
+          "claim_type": "coefficient",
+          "claimed": 3.482,
+          "reproduced": 8.1639,
+          "tolerance": 0.39890867317633544,
+          "rel_err": 1.3446008041355542,
+          "passed": false
+        },
+        {
+          "description": "warfare_iv_se_full_controls",
+          "claim_type": "standard_error",
+          "claimed": 1.389,
+          "reproduced": 21.5458,
+          "tolerance": 0.05,
+          "rel_err": 14.511735061195104,
+          "passed": false
+        }
+      ],
+      "split": "dev",
+      "components": {
+        "parsed": true,
+        "claims_extracted": true,
+        "dataset_extracted": false,
+        "dataset_downloaded": true,
+        "code_generated": true,
+        "code_executed": true
+      },
+      "cached": false,
+      "usage": {
+        "api_calls": 2,
+        "llm_cache_hits": 2,
+        "llm_cache_served": true,
+        "by_model": {
+          "claude-opus-4-7": {
+            "input_tokens": 13538,
+            "output_tokens": 4944,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "api_calls": 2
+          }
+        },
+        "estimated_usd": 0.19129
+      },
+      "artifacts_dir": "benchmark/results/artifacts/dincecco-2022-india-warfare/independent/pipeline/20261021T015104Z"
+    }
+  ]
+}
