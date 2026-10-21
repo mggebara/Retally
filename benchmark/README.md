@@ -480,6 +480,13 @@ repository quirks so the files match the names the authors' scripts use:
   `usclimate_exp1-1.csv`).  If the original request fails it falls back to
   the `.tab` and logs a warning.  Non-ingested files (`.tgz`, `.R`, `.dat`)
   are fetched as-is.  Files are downloaded in name order.
+- **Nested archives.**  A downloaded `.zip` / `.tar` / `.tar.gz` / `.tgz` is
+  extracted and deleted; archives inside it are extracted too (up to two
+  levels down), each into a directory named after the inner archive
+  (`3 replication package/replicate.zip` -> `3 replication package/replicate/`)
+  and then deleted.  An archive with a member that would land outside its
+  destination (zip-slip, escaping tar links) is refused and left in place, as
+  is one that would push the tree past a 20 GiB uncompressed-size cap.
 
 ## Caveats
 
