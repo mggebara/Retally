@@ -343,3 +343,18 @@ notes: >
   Original analysis in Stata (three do-files); language is r, the
   reproduction target (the pipeline translates Stata originals to R, as
   for alesina-2022).
+
+  First run 2026-10-21 (Phase 3.2 evaluation pass; main 0492c17, after
+  the content-aware strip rule and the printed-precision floor; Opus
+  4.7, 47-package image, LLM cache on, --mode all, one run per mode;
+  eval-7papers-all-modes-2026-10-21.json).  Seeded 11 / 11 and
+  independent 9 / 11, both on the first script (first scored 11 and 9;
+  independent 1 claim refinement that moved nothing): independent missed
+  friendliness_full_sample (NA) and
+  station_visits_five_station_subsample (87 vs 102).  Blind 4 / 11
+  (first scored 4): without targets the model chose different test
+  statistics / sample for the friendliness, Brown-Forsythe and ANOVA
+  rows; the two passerby and two shuttle-stop rows pass, the two
+  station-visit counts do not (239 vs 242, 87 vs 102).  First run with
+  the content-aware strip rule (6 files stripped; the old name-based
+  rule had left the do-files on the mount).

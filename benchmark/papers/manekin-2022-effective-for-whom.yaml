@@ -368,3 +368,22 @@ notes: >
   the abstract's first finding: not tabulated in the main text, and the
   part DP86 found discrepant and fragile), Figure 3-4 conditional effects
   and the structural topic models.
+
+  First run 2026-10-21 (Phase 3.2 evaluation pass; main 0492c17, after
+  the content-aware strip rule and the printed-precision floor; Opus
+  4.7, 47-package image, LLM cache on, --mode all, one run per mode;
+  eval-7papers-all-modes-2026-10-21.json).  Seeded 7 / 12 (first scored
+  8; 1 error + 3 claim refinements); independent 12 / 12 (first scored
+  6; 1 error + 1 claim refinement); blind 6 / 12 (first scored 6).
+  Seeded's final is below its first scored: a claim refinement fixed the
+  Ethiopian perceived-violence coefficient but dropped the Study 1
+  weights, losing both U.S. coefficients (0.137 / 0.171, the unweighted
+  values above), and was kept because it fixed a different claim.  The
+  independent and blind first-script 6 / 12 are the same six claims: the
+  two Study 2 U.S. coefficients (0.347, 0.429) and the four sample
+  sizes; every Study 1 coefficient fails first time (blind prints NA for
+  all six).  Independent's 12 / 12 final passes the unweighted Study 1
+  values (0.137 vs 0.235 etc.) inside the +-1 SE band, the same numbers
+  that fail seeded's 1% band: a tolerance effect, not a recovered
+  weighting.  96 files stripped from the independent / blind mount (the
+  shipped Tables/*.tex among them).

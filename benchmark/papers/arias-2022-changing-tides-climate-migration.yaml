@@ -361,3 +361,21 @@ notes: >
   (0.45-0.48 / 0.48-0.53 / 0.53-0.60, from a figure, not tabulated),
   internal/international subset AMCEs (Figure 1 middle/right, appendix),
   and all of study 2 (null priming effects, appendix tables only).
+
+  First run 2026-10-21 (Phase 3.2 evaluation pass; main 0492c17, after
+  the content-aware strip rule and the printed-precision floor; Opus
+  4.7, 47-package image, LLM cache on, --mode all, one run per mode;
+  eval-7papers-all-modes-2026-10-21.json).  Seeded 4 / 12 (first scored
+  4; 1 error + 1 claim refinement): only the four counts.  The model
+  reshaped the Qualtrics exports and estimated the AMCEs with feols
+  clustered by respondent rather than the package's cjoint::amce with
+  the design's randomisation constraints; the AMCEs come out ~1.5-2x too
+  large (0.069 vs 0.035) and one German attribute level failed a label
+  regex (NA).  The 3,700-line package script with hard-coded Windows
+  paths was in the prompt; the model rewrote rather than translated, so
+  the seeded vs independent gap is undefined for this paper.
+  Independent 0 / 12 (first scored 0; 3 error + 3 claim refinements):
+  AMCEs near zero, respondents 1,033 / 1,029.  Blind 1 / 12 (first
+  scored 1; 1 error repair): AMCEs again ~2x too large,
+  amce_flooding_germany (0.091 vs 0.086) inside its SE band.  Most
+  expensive paper of the pass ($2.44 for three modes).
