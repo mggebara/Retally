@@ -32,7 +32,7 @@
 
 id: grier-2023-sugar-roll-call-voting
 i4r_report_url: https://www.econstor.eu/bitstream/10419/275682/1/I4R-DP057.pdf
-language: stata
+language: r
 outcome_label: reproducible
 split: holdout
 # Contamination bookkeeping.  No working-paper version was found (web
@@ -60,16 +60,12 @@ dataset:
   access_notes: >
     Harvard Dataverse (doi:10.7910/DVN/2IFZR9) version 1.0, CC0, fully
     open — 5 files, none restricted, ~0.45 MB (Dataverse API, checked
-    2026-10-21).  The three Stata datasets were ingested by Dataverse and
-    are served by default as tab-separated .tab files
-    (SugarReplicate.tab, SugarReplicate_iter1.tab,
-    SugarReplicate_iter2.tab); the originals are Stata 14+ .dta files
-    (format 118) and need /api/access/datafile/<id>?format=original.  The
-    do-file opens them by their .dta names, so a package fetched without
-    format=original has no file the script can `use`.  The ingested .tab
-    files carry the same rows (862 each) but lose Stata value labels and
-    storage types.  The readme is a Word .docx.  No logs or table output
-    ship with the package.
+    2026-10-21).  An ingested Dataverse upload: the three Stata datasets
+    (SugarReplicate, SugarReplicate_iter1, SugarReplicate_iter2) were
+    ingested and are listed as .tab files; the originals are Stata 14+
+    .dta files (format 118), which are the names the do-file opens.
+    The readme is a Word .docx.  No logs or table output ship with the
+    package.
 
 code_repo:
   url: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/2IFZR9
@@ -343,6 +339,6 @@ notes: >
   independent re-estimate in Python.  No working paper was found, so
   publication_date is the APSR online-first date.
 
-  language is stata (the original code), which benchmark/runner.py
-  currently skips as LANGUAGE_UNSUPPORTED (_SUPPORTED_LANGUAGES = python,
-  r) until Stata-paper support lands.
+  Original analysis in Stata (one do-file, Stata 15); language is r, the
+  reproduction target (the pipeline translates Stata originals to R, as
+  for alesina-2022).

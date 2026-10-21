@@ -27,7 +27,7 @@
 
 id: leeson-2022-hobo-economicus
 i4r_report_url: https://www.econstor.eu/bitstream/10419/274554/1/I4R-DP055.pdf
-language: stata
+language: r
 outcome_label: reproducible
 split: holdout
 # Contamination bookkeeping.  No working-paper version was found (web
@@ -59,9 +59,7 @@ dataset:
     It is a NESTED zip: the outer zip holds a folder "3 replication
     package/" with IRB_Approval.pdf and a second zip, replicate.zip
     (~232 kB), which holds the actual package (replicate/ReadMe.pdf,
-    Codebook.xlsx, code/, data/).  The downloader extracts the outer zip
-    only, so replicate.zip must be extracted as well before the code or
-    data are visible.  Data are six plain .csv files.  The code/ folder
+    Codebook.xlsx, code/, data/).  Data are six plain .csv files.  The code/ folder
     ships each do-file twice, as .do and as an identical .txt copy
     (0_setup, 1_dataprep, 2_analysis): the independent-mode script-free
     copy removes the .do files but not the .txt copies, so the authors'
@@ -342,6 +340,6 @@ notes: >
   re-estimate.  No working paper was found, so publication_date is the
   EJ Advance Access date.
 
-  language is stata (the original code), which benchmark/runner.py
-  currently skips as LANGUAGE_UNSUPPORTED (_SUPPORTED_LANGUAGES = python,
-  r) until Stata-paper support lands.
+  Original analysis in Stata (three do-files); language is r, the
+  reproduction target (the pipeline translates Stata originals to R, as
+  for alesina-2022).
