@@ -1,26 +1,81 @@
 # R packages installed in retally-sandbox-r.
 #
-# Versions are not pinned because r2u resolves these against the
-# Debian / Ubuntu binary package repository at build time, which gives
-# us deterministic builds without per-package version juggling.
+# This file is the source of truth: Dockerfile.sandbox.r copies it in
+# and installs every listed package with install2.r, which r2u resolves
+# to Ubuntu binary packages (r-cran-<name>) via bspm, so builds are fast
+# and need no compilation.  Versions are not pinned; r2u tracks CRAN.
 #
-# This file is informational — the Dockerfile is the source of truth.
-# Adding a package here requires also adding it to Dockerfile.sandbox.r.
+# Format: one CRAN package name per line; ``#`` starts a comment.
+#
+# docker/check-r-packages.R loads every package listed here (plus the
+# base / recommended packages it names itself) and exits non-zero if any
+# fails, so a missing package fails ``make build-r-sandbox`` and the
+# ``requires_r_docker`` smoke test in tests/test_r_docker_executor.py.
+#
+# Not installable: tjbal (used by bisbee-2022) is GitHub-only, not on
+# CRAN / r2u, and the sandbox deliberately has no GitHub installs.
 
 # RESULT: / DEVIATION: line emission (toJSON for structured output too)
 jsonlite
 
-# Core econometrics
-fixest         # Fast fixed-effects estimation (HDFE, FE-IV, GLM)
-AER            # "Applied Econometrics with R" — IV / Tobit / etc.
-plm            # Panel data econometrics
-lmtest         # Coefficient hypothesis tests
-sandwich       # Robust / clustered covariance estimators
+# Regression, fixed effects, IV, panel
+fixest           # fast fixed-effects estimation (HDFE, FE-IV, GLM)
+lfe              # felm(): older HDFE / FE-IV workhorse in replication code
+AER              # "Applied Econometrics with R": ivreg, tobit, etc.
+ivreg            # standalone 2SLS with diagnostics
+plm              # panel data econometrics
+estimatr         # lm_robust / iv_robust with design-based SEs
+lme4             # mixed / multilevel models
+quantreg         # quantile regression
+car              # linearHypothesis, Anova, vif
 
-# Reporting
-modelsummary   # Regression tables matching journal conventions
+# Standard errors and inference
+sandwich         # robust / clustered covariance estimators
+lmtest           # coeftest, waldtest
+clubSandwich     # small-sample cluster-robust (CR2) inference
+multiwayvcov     # cluster.vcov multi-way clustering
+marginaleffects  # marginal effects / predictions / contrasts
 
-# Data manipulation
-data.table     # Fast data manipulation, used heavily in econ papers
-readr          # CSV reading with sensible defaults
-dplyr          # Grammar-of-data-manipulation pipelines
+# Matching, weighting, balance
+MatchIt          # matching (nearest, optimal, full, CEM)
+optmatch         # optimal / full matching backend used by MatchIt
+CBPS             # covariate balancing propensity score
+WeightIt         # weighting for covariate balance
+cobalt           # balance tables and love plots
+
+# Causal designs
+did              # Callaway & Sant'Anna staggered DiD
+rdrobust         # regression discontinuity estimation
+rddensity        # RD manipulation (density) tests
+Synth            # synthetic control
+
+# Tables and tidying
+modelsummary     # regression tables
+stargazer        # regression tables (very common in older packages)
+texreg           # regression tables (LaTeX / text)
+broom            # tidy model output
+
+# Data manipulation and I/O
+tidyverse        # meta-package: dplyr, tidyr, readr, stringr, ggplot2, ...
+dplyr
+tidyr
+readr
+stringr
+lubridate
+data.table       # fast data manipulation, used heavily in econ papers
+haven            # read Stata .dta / SPSS / SAS
+readxl           # read Excel
+janitor          # clean_names, tabyl
+zoo              # time series / rolling windows
+
+# Plotting (replication scripts load these even when we only want numbers)
+ggplot2
+ggridges
+ggrepel
+gridExtra
+cowplot
+gtable
+extrafont
+
+# Spatial (binary install pulls GDAL/GEOS/PROJ shared libraries)
+sf

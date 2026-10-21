@@ -229,3 +229,56 @@ def test_execute_dataset_readable(executor, tmp_path):
     result = executor.execute(code, dataset)
     assert result.exit_code == 0
     assert result.outputs.get("n_rows") == pytest.approx(3.0)
+
+
+# ---------------------------------------------------------------------------
+# Package smoke test: every package the image promises must load
+# ---------------------------------------------------------------------------
+
+_DOCKER_DIR = Path(__file__).resolve().parent.parent / "docker"
+
+
+def test_requirements_file_lists_core_packages():
+    """The requirements file drives the image build; guard against accidental removals."""
+    text = (_DOCKER_DIR / "requirements.sandbox.r.txt").read_text()
+    names = {line.split("#", 1)[0].strip() for line in text.splitlines()} - {""}
+    for pkg in ("fixest", "MatchIt", "CBPS", "WeightIt", "lfe", "haven", "stargazer"):
+        assert pkg in names
+
+
+@requires_r_docker
+def test_all_listed_r_packages_load():
+    """Load every package in docker/requirements.sandbox.r.txt inside the image.
+
+    Uses the repo's copy of the list (mounted read-only), so a package added
+    to the file but not yet built into the local image fails here.
+    """
+    result = subprocess.run(
+        [
+            "docker",
+            "run",
+            "--rm",
+            "--network",
+            "none",
+            "-v",
+            f"{_DOCKER_DIR}:/check:ro",
+            DEFAULT_R_IMAGE,
+            "Rscript",
+            "/check/check-r-packages.R",
+            "/check/requirements.sandbox.r.txt",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=300,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "OK: loaded all" in result.stdout
+
+
+@requires_r_docker
+def test_no_bspm_dbus_warning(executor, dummy_dataset):
+    """r2u's bspm must not put a D-Bus warning into every run's stderr."""
+    result = executor.execute('library(fixest)\ncat("RESULT:ok=1\\n")\n', dummy_dataset)
+    assert result.exit_code == 0
+    assert "D-Bus" not in result.stderr
+    assert "bspm" not in result.stderr
