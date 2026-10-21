@@ -14,6 +14,16 @@ Supported sources:
   - Harvard Dataverse   (REST API)
   - FigShare            (REST API)
   - OpenML              (openml Python package)
+
+Harvard Dataverse originals: Dataverse ingests tabular uploads (``.csv``,
+``.dta``, ``.sav``, ...) and serves them as ``.tab`` by default, which breaks
+replication scripts that read the files by their uploaded names.  For a file
+whose metadata lists an ``originalFileFormat`` / ``originalFileName`` the
+downloader requests ``/api/access/datafile/<id>?format=original`` and saves it
+under the label stem with the original extension (``data.tab`` ->
+``data.csv``); if the original request fails it falls back to the converted
+``.tab`` and logs a warning.  Non-ingested files (``.tgz``, ``.R``, ``.dat``,
+...) have no original format and are fetched as-is.
 """
 
 from __future__ import annotations
@@ -41,6 +51,23 @@ logger = logging.getLogger(__name__)
 _COMPLETE_SENTINEL = ".retally-download-complete"
 
 _ARCHIVE_SUFFIXES = (".zip", ".tar.gz", ".tgz", ".tar")
+
+# MIME type -> extension for Dataverse ingested files whose metadata gives an
+# ``originalFileFormat`` but no ``originalFileName``.
+_ORIGINAL_FORMAT_EXTENSIONS = {
+    "text/csv": ".csv",
+    "text/comma-separated-values": ".csv",
+    "text/tsv": ".tsv",
+    "text/tab-separated-values": ".tsv",
+    "application/x-stata": ".dta",
+    "application/x-stata-13": ".dta",
+    "application/x-stata-14": ".dta",
+    "application/x-stata-15": ".dta",
+    "application/x-spss-sav": ".sav",
+    "application/x-spss-por": ".por",
+    "application/x-rlang-transport": ".RData",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": ".xlsx",
+}
 
 
 def _infer_task_type(target: Any) -> str:
@@ -459,10 +486,50 @@ class DatasetDownloader:
             return f"doi:{doi.group(1)}"
         return raw
 
+    @staticmethod
+    def _dataverse_original_name(data_file: dict[str, Any]) -> str | None:
+        """Return the filename to save an ingested Dataverse file's original under.
+
+        Dataverse ingests tabular uploads (``.csv``, ``.dta``, ``.sav``, ...)
+        and serves them as ``<label>.tab`` by default; the upload itself is
+        only served with ``?format=original``.  A file that was not ingested
+        (no ``originalFileFormat`` / ``originalFileName``) returns ``None``
+        and is fetched as-is.
+
+        The name is the file's current label with the original extension
+        (``data.tab`` + ``data.csv`` -> ``data.csv``): the label is what the
+        dataset page shows and what replication scripts are written
+        against, whereas ``originalFileName`` can carry an upload-time
+        artefact (arias-2022 lists ``usclimate_exp1.tab`` with original name
+        ``usclimate_exp1-1.csv``, and the script reads ``usclimate_exp1.csv``).
+        ``originalFileName`` is used as-is when the label is not a ``.tab``
+        or the original name has no extension.
+        """
+        original_name = data_file.get("originalFileName")
+        if not data_file.get("originalFileFormat") and not original_name:
+            return None
+        label = str(data_file.get("filename") or "")
+        if original_name:
+            suffix = Path(str(original_name)).suffix
+            if suffix and label.lower().endswith(".tab"):
+                return Path(label).stem + suffix
+            return Path(str(original_name)).name
+        # Ingested but the original name is missing: infer the extension.
+        ext = _ORIGINAL_FORMAT_EXTENSIONS.get(str(data_file.get("originalFileFormat")))
+        if ext and label.lower().endswith(".tab"):
+            return Path(label).stem + ext
+        return None
+
     def _download_harvard_dataverse(self, doi: str, dest: Path) -> Path:
         """Download a dataset from Harvard Dataverse.
 
-        Uses the Dataverse REST API to list files, then downloads each one.
+        Uses the Dataverse REST API to list files, then downloads each one
+        in a deterministic (name-sorted) order.  Ingested tabular files are
+        fetched in their original upload format (``?format=original``, see
+        ``_dataverse_original_name``); if that request fails the converted
+        ``.tab`` is downloaded instead and the fallback is logged.  Files
+        that were not ingested (archives such as ``.tgz``, scripts, ``.dat``)
+        are fetched as-is, and archives are extracted as usual.
 
         Parameters
         ----------
@@ -487,19 +554,46 @@ class DatasetDownloader:
 
         dest.mkdir(parents=True, exist_ok=True)
 
-        file_specs: list[tuple[str, str]] = []
+        # (converted_url, converted_name, original_url | None, original_name | None)
+        specs: list[tuple[str, str, str | None, str | None]] = []
         for file_info in files:
             try:
-                file_id = file_info["dataFile"]["id"]
-                filename = file_info["dataFile"]["filename"]
+                data_file = file_info["dataFile"]
+                file_id = data_file["id"]
+                filename = data_file["filename"]
             except (KeyError, TypeError):
                 logger.warning("Harvard Dataverse %s: skipping file with malformed metadata", doi)
                 continue
             file_url = f"https://dataverse.harvard.edu/api/access/datafile/{file_id}"
-            file_specs.append((file_url, filename))
+            original_name = self._dataverse_original_name(data_file)
+            original_url = f"{file_url}?format=original" if original_name else None
+            specs.append((file_url, filename, original_url, original_name))
+        # Deterministic order regardless of how the API lists the files.
+        specs.sort(key=lambda spec: (spec[3] or spec[1], spec[1]))
 
-        failures = self._stream_many(file_specs, dest, source_label=f"Harvard Dataverse {doi}")
-        if failures and failures == len(file_specs):
+        label = f"Harvard Dataverse {doi}"
+        failures = 0
+        for file_url, filename, original_url, original_name in specs:
+            if original_url and original_name:
+                try:
+                    self._stream_to_file(original_url, dest, original_name)
+                    continue
+                except (requests.RequestException, OSError) as exc:
+                    (dest / original_name).unlink(missing_ok=True)
+                    logger.warning(
+                        "%s: original-format download of %s failed (%s); falling back to the converted %s",
+                        label,
+                        original_name,
+                        exc,
+                        filename,
+                    )
+            try:
+                self._stream_to_file(file_url, dest, filename)
+            except (requests.RequestException, OSError) as exc:
+                failures += 1
+                logger.warning("%s: failed to download %s (%s)", label, filename, exc)
+
+        if failures and failures == len(specs):
             raise RuntimeError(f"All {failures} files from Harvard Dataverse {doi} failed to download.")
         return dest
 
