@@ -22,14 +22,17 @@ by file, what that copy leaves out.  Two layers:
    * Regression tables: ``.tex`` (esttab fragments, stargazer, any
      tabular with ``Observations``/``R-squared``/standard-error rows),
      ``.html``, plain-text ``esttab``/``outreg2`` output, regression-shaped
-     ``.csv`` (only with ``Observations``/``R-squared`` rows) and
-     ``.xlsx`` sheets whose strings carry the same markers.
+     ``.csv`` (only with ``Observations``/``R-squared`` rows), and
+     spreadsheets (``.xlsx`` and old binary ``.xls``) whose strings carry
+     the same markers or hold a Stata ``export excel`` results matrix
+     (``OLS_all`` / ``OLS_all_stars`` column pairs with ``***`` cells).
 
    A file byte-identical to a file stripped by name is stripped too.
 
 Evidence must be strong — several independent markers — or the file is
-kept.  Binary files are never content-tested (``.xlsx`` aside, whose
-shared strings are read), and known data formats (``.dta``, ``.RData``,
+kept.  Binary files are never content-tested (spreadsheets aside: an
+``.xlsx``'s shared strings and a BIFF ``.xls``'s printable / UTF-16LE
+runs are read), and known data formats (``.dta``, ``.RData``,
 ``.rds``, ``.sav``, ``.parquet``, shapefiles, ...) are never stripped.
 Directory names (``output/``, ``tables/``) play no part: a figure's data
 ``.csv`` in ``Out/Figures_data`` is data, a regression table anywhere is
@@ -330,8 +333,61 @@ def _csv_reason(text: str) -> str | None:
     return None
 
 
+_STARS_HEADER = re.compile(r"(\w+?)_stars\b")
+_STARS_CELL = re.compile(r"\s*\*{1,3}\s*")
+
+
+def _spreadsheet_reason(strings: list[str]) -> str | None:
+    """A sheet whose strings read like an ``outreg2``/``esttab`` table or a results matrix.
+
+    Two shapes count: the table markers (a stat row label, plus numbered
+    columns or a tool signature, two markers in all), or a coefficient
+    matrix saved with ``export excel``: three ``X`` / ``X_stars`` column
+    pairs, or two and a cell holding only significance stars (a placebo
+    table may have no stars at all).  Data sheets carry neither.
+    """
+    text = "\n".join(strings)
+    stat_labels = sum(1 for s in strings if _CSV_STAT_ROW.match(s.strip()))
+    numbered = sum(1 for s in strings if re.fullmatch(r"\s*\(\d{1,2}\)\s*", s))
+    n, signature = _table_evidence(text)
+    if stat_labels >= 1 and (numbered >= 2 or signature) and n >= 2:
+        return "regression-table"
+    names = {s.strip() for s in strings}
+    starred = {m.group(1) for s in strings for m in _STARS_HEADER.finditer(s) if m.group(1) in names}
+    if len(starred) >= 3 or (len(starred) >= 2 and any(_STARS_CELL.fullmatch(s) for s in strings)):
+        return "regression-table"
+    return None
+
+
+OLE2_MAGIC = b"\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1"
+"""The compound-file header of a binary (BIFF) ``.xls`` workbook."""
+
+_ASCII_RUN = re.compile(rb"[\x20-\x7e]{3,}")
+_UTF16_RUN = re.compile(rb"(?:[\x20-\x7e]\x00){3,}")
+
+
+def _xls_strings(data: bytes) -> list[str]:
+    """Printable strings of a BIFF workbook: UTF-16LE and Latin-1 runs of three or more characters.
+
+    BIFF8 keeps cell text in a shared-string table, each string either
+    "compressed" (one byte per character) or UTF-16LE; a byte scan finds
+    both without parsing the OLE container.
+    """
+    strings = [m.decode("utf-16-le") for m in _UTF16_RUN.findall(data)]
+    strings += [m.decode("latin-1") for m in _ASCII_RUN.findall(data)]
+    return strings
+
+
+def _xls_reason(path: Path) -> str | None:
+    """A binary ``.xls`` whose strings read like a results table (data sheets are kept)."""
+    if path.stat().st_size > TABLE_SAMPLE_BYTES:
+        return None
+    strings = _xls_strings(path.read_bytes())
+    return _spreadsheet_reason(strings) if strings else None
+
+
 def _xlsx_reason(path: Path) -> str | None:
-    """A spreadsheet whose strings read like an ``outreg2``/``esttab`` table (data sheets are kept)."""
+    """An ``.xlsx`` whose shared strings read like a results table (data sheets are kept)."""
     try:
         with zipfile.ZipFile(path) as zf:
             if "xl/sharedStrings.xml" not in zf.namelist():
@@ -343,13 +399,7 @@ def _xlsx_reason(path: Path) -> str | None:
     except (zipfile.BadZipFile, OSError, KeyError):
         return None
     strings = [re.sub(r"<[^>]+>", "", s) for s in re.findall(r"<si>(.*?)</si>", raw, re.S)]
-    text = "\n".join(strings)
-    stat_labels = sum(1 for s in strings if _CSV_STAT_ROW.match(s.strip()))
-    numbered = sum(1 for s in strings if re.fullmatch(r"\s*\(\d{1,2}\)\s*", s))
-    n, signature = _table_evidence(text)
-    if stat_labels >= 1 and (numbered >= 2 or signature) and n >= 2:
-        return "regression-table"
-    return None
+    return _spreadsheet_reason(strings)
 
 
 def _read_sample(path: Path, limit: int) -> bytes:
@@ -368,6 +418,8 @@ def content_reason(path: Path, *, size_cap: int = SIZE_CAP_BYTES) -> str | None:
             return None
         if suffix in {".xlsx", ".xlsm"}:
             return _xlsx_reason(path)
+        if suffix == ".xls" and _read_sample(path, len(OLE2_MAGIC)) == OLE2_MAGIC:
+            return _xls_reason(path)  # a text .xls (outreg2's default) takes the text path below
         limit = TABLE_SAMPLE_BYTES if suffix in {".tex", ".html", ".htm"} else SAMPLE_BYTES
         text = _decode(_read_sample(path, limit))
     except OSError:
