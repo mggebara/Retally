@@ -1063,6 +1063,216 @@ papers only.
 - (c) The first technical-report draft once ≥10 evaluation papers
   exist.
 
+### 3.3 Claude Code as a reproducer — ✅ built and measured (2026-10-21): 7 papers × 3 modes, no API spend
+
+**What it is.**  A second agent in the benchmark, scored by the same
+harness as the pipeline (PR #64, task fix #65).  `--reproducer
+claude-code` is `benchmark/reproducers/filesystem.py`: it reads a run
+directory `benchmark/reproductions/<entry>/<mode>/<run_id>/` that a
+Claude Code session wrote — `script.R` / `stdout.txt` / `stderr.txt`
+for the final run, `attempt-<n>/` for every earlier execution with its
+`kind` (`error`, `claim`, or `""` for exploration) and `feedback.txt`,
+and a `reproduction.json` manifest — and returns a `Reproduction`.  The
+numbers come from the files (the executor's own `RESULT:` parser), never
+from the manifest.  `python -m benchmark.reproducers.render_task` prepares
+one cell: `task.md` (the pipeline generator's own claims block, dataset
+listing, output convention, code requirements, package scripts and
+independent / blind blocks, so the agent is shown what the pipeline is
+shown), `paper.txt` (the extracted paper; in blind mode every pinned
+value and SE redacted to `[withheld]`), and `mount/<package>/` — the
+full package in seeded mode, the script-free copy in independent and
+blind, its strip manifest moved outside the task directory.  The task
+gives the exact `docker run` line the pipeline executor uses (same image,
+`--network none`, read-only, the mount at its own path, 300 s / 4 GB /
+1 CPU) and the output contract.  `check_attempt` prints the pipeline's
+own claim-gap feedback (seeded / independent) or only the names of
+missing quantities (blind).  The orchestrating session spawns one Opus
+subagent per cell with the task file as its only input; the harness
+never drives the agent and never calls the API (the HANDOFF rule: no
+`claude -p` loops inside the runner).  Rows carry `reproducer:
+claude-code` and sit beside the `pipeline` rows; the result cache keys on
+the reproducer, `--no-cache` re-scores a cell with a new run id.
+
+**Isolation caveat.**  An agent with a shell is isolated only by what is
+on disk and by instruction.  The task directory holds only the mode's
+mount and the sandbox mounts nothing else, but each subagent runs in a
+full worktree of this repository: the catalog YAMLs (pinned values and
+curation notes), `.cache/datasets/` (the authors' scripts) and earlier
+results are readable.  The rules are enforced by instruction, by the
+`files_read_outside_mount` list each agent must write, and by reading
+its report.  Across the 27 runs below every agent reported an empty list
+or only its own `task.md` / `render.json` / the harness's saved copy of a
+long `cat`.  One real channel appeared: the subagents share one session
+scratchpad, and in the two-cell test two agents overwrote each other's
+scratch scripts (the Grier blind agent saw the Montero exploration
+script, and said it did not use it).  Later waves used a private
+scratch subdirectory per cell.  A second, structural leak is in the
+*catalog*, not the harness, and affects the pipeline's blind prompt
+identically: curated claim `context` fields of the count claims state
+the sample sizes (Adams "1,842 dyads", Leeson "242 visits / 102",
+Montero "4,770 workers; 327 properties; 98 clusters; mean 73.59").  Blind
+agents read them: the Montero blind agents used them to pin the sample
+("I used the property counts in the task text to pick the sample"), the
+Leeson blind agent re-ran to match them, the Adams blind agent saw 1,842
+and *declined* to tune toward it.  So a blind pass on a count claim
+whose context states the count is not blind.
+
+**Two-cell test (run `2026-10-21-a`, Montero and Grier, all three
+modes; `benchmark/results/claude-code-test-cells-2026-10-21.json`).**
+Grier 10 / 9 / 10 of 11 (pipeline 0 / 0 / 0), Montero 10 / 10 / 10 of
+10 (pipeline 10 / 3 / 0).  Two harness findings, fixed in PR #65: the
+Grier agents printed a placeholder `RESULT:explore=N` line in each
+data-inspection run, which the harness scored as the first scored
+attempt (0 / 11); and one agent labelled an inspection run `kind:
+"error"`.  The task now says exploratory runs are `kind: ""` attempts
+that print no `RESULT:` line, and `render_task` copies `task.md` into
+the output directory so the artifacts carry the task.
+
+**21-cell run (run `2026-10-21-b`, the seven evaluation papers × 3
+modes, rendered from the #65 branch, one subagent per cell in three
+waves of seven by mode; `benchmark/results/claude-code-7papers-all-modes-2026-10-21.json`).**
+Subagents ran on the desktop app's Opus model (the agents report it as
+Claude Opus 5.5), against the pipeline's `claude-opus-4-7`: **the two
+rows differ in model as well as in harness**, so the gap below is an
+upper bound on what the agentic loop adds.  No API spend; ≈1.8 M
+subagent tokens of plan usage for the 21 cells (≈0.6 M for the six test
+cells), 1.5–5.3 min wall clock per cell.
+
+| Paper | Seeded final (first scored; err/claim ref) | Independent final (first scored; err/claim ref) | Blind final (first scored; err ref) | Pipeline (3.2) seeded / independent / blind |
+|---|---|---|---|---|
+| adams-2023 | 11/11 (11; 0/0) | 11/11 (11; 0/0) | 8/11 (8; 0) | 11 / 7 / 1 |
+| arias-2022 | 12/12 (12; 0/0) | 12/12 (12; 0/0) | 12/12 (12; 0) | 4 / 0 / 1 |
+| grier-2023 | 10/11 (10; 0/0) | 10/11 (10; 0/0) | 10/11 (10; 0) | 0 / 0 / 0 |
+| hanlon-2022 | 12/12 (12; 0/0) | 12/12 (12; 0/0) | 12/12 (8; 0) | 12 / 10 / 12 |
+| leeson-2022 | 11/11 (11; 0/0) | 11/11 (10; 0/1) | 11/11 (10; 0) | 11 / 9 / 4 |
+| manekin-2022 | 12/12 (12; 1/0) | 12/12 (12; 0/0) | 12/12 (12; 1) | 7 / 12 / 6 |
+| montero-2022 | 10/10 (10; 0/0) | 10/10 (10; 0/0) | 10/10 (10; 0) | 10 / 3 / 0 |
+| **Total** | **78/79** (78; 1/0) | **78/79** (77; 0/1) | **75/79** (70; 2) | 55 / 41 / 24 |
+
+Median relative error (`benchmark.compare` against
+`eval-7papers-all-modes-2026-10-21.json`): seeded 0.1% (pipeline 0.3%),
+independent 0.2% (4.9%), blind 0.3% (22.3%).  `agrees_with_paper` per
+paper: seeded and independent 6 / 7 (Grier fails), blind 5 / 7 (Grier
+and Adams).  `agrees_with_i4r`: Montero false in every mode, as for the
+pipeline; the "agrees with I4R, not with the paper" cell did not occur.
+
+**Metric semantics for an agent.**  *First attempt* is meaningless for
+an agent (its first execution is usually a data-inspection run that
+prints nothing); *first scored* — the first execution with a `RESULT:`
+line — is the comparable number, and 70–78 of 79 per mode says the
+agents' first estimating script was essentially final.  `n_executions`
+(1–5 per cell) includes exploration.  The error / claim refinement
+counts are the agent's own bookkeeping: across 21 cells, 2 error repairs
+(Manekin seeded and blind, a crashed first script) and 1 claim
+refinement (Leeson independent).  Two more re-runs were steered by a
+number without a `claim` label, both toward counts stated in the claim
+*contexts* (Leeson blind, Montero blind) — under the task's definition a
+"claimed value" is what `check_attempt` compares against, and the
+contexts are not that.  Treat the agent's refinement counts as a lower
+bound.
+
+**Per-paper reading, with the caveats.**
+
+- **Grier (10 / 11 in every mode; pipeline 0 everywhere).**  Every agent
+  wrote the paper's logit with district / incumbent dummies on the
+  vote-switching sample (93 districts, 186 rows; 53 incumbents, 106) —
+  seeded by translating the do-file, independent and blind by working it
+  out from the data (the three `.dta` files differ only in `totalcont`;
+  which file is which window is undocumented and was inferred from
+  nesting and refunds).  The single miss is a printed-precision case: the
+  authors' own script gives −0.000565 for the calendar-year incumbent
+  coefficient, printed as −0.0005 (one significant digit; 12.9% relative,
+  tolerance 10%), so the package does not reproduce that printed digit
+  either.  The deflator base year is unstated: run a's blind agent
+  deflated to 2013 dollars, run b's to 2018, which rescales every
+  contribution coefficient by 8% and moved the blind miss to the
+  calendar-year district coefficient (−0.00053 vs −0.0006).
+- **Montero (10 / 10 in every mode, both runs; pipeline 10 / 3 / 0).**
+  *Seeded*, both runs: the first script follows the do-file's
+  "replicating original results" block (deflated income with 2010 set to
+  0, sex / age / age² controls, Stata percentiles) and lands exactly on
+  the paper's printed numbers — the ones I4R showed are wrong — with no
+  refinement at all, where the pipeline needed one claim-refinement
+  round.  *Independent and blind*, all four runs (a and b): the same
+  specification each time — nominal `hh_income_pc`, no demographic
+  controls, strict bandwidth, property-by-round cells, no five-member
+  rule (every agent tried it, found no definition that gives 327 / 118,
+  and said so) — and the same numbers, 82.25 / 71.83 / −56.42 / −63.73
+  against the printed 60.49 / 52.79 / −42.97 / −51.79 and the
+  replicators' 13.21 / −24.24 / −72.24 / −79.78.  They pass only because
+  the independent and blind tolerance is ±1·SE (relative errors 23–36%),
+  and the six counts pass because the contexts state them.  The honest
+  reading: the agents' paper-faithful specification matches neither the
+  paper nor I4R, exactly as the entry's "Benchmark implications"
+  predicted; the 10 / 10 is the SE band plus the context leak.  One
+  independent agent reported the checker's "All claims within tolerance"
+  for 82.25 vs 60.49 as a suspected fault; it is the band.
+- **Adams (11 / 11 / 8).**  Blind applied the paper's stated rule
+  literally — both parties need at least four MPs — and got 1,535 dyads
+  against the published 1,842 (the authors filtered on the evaluated
+  party only, which the agent found in an exploratory run and refused to
+  adopt because the number came from the task).  Independent used the
+  filter that gives 1,842 from the start.  The pipeline's blind row had
+  every coefficient sign-flipped; the agent's are within 5%.
+- **Arias (12 / 12 in every mode; pipeline 4 / 0 / 1).**  `cjoint` is
+  not in the sandbox; the seeded agent re-implemented `read.qualtrics`
+  and `amce` from the 3,700-line package script, the independent and
+  blind agents reshaped the Qualtrics exports themselves.  Blind counts
+  are slightly off (1,085 / 1,072 respondents, 18,952 / 18,826 profiles)
+  but inside tolerance.  Redaction gap: the paper's prose states effect
+  sizes in percentage points ("3.5 points" for a claim pinned as 0.035),
+  a unit conversion the value-form redaction does not catch; the agent
+  disclosed reading them and fixed its specification before estimating.
+- **Hanlon (12 / 12 everywhere).**  Blind first scored 8 / 12: the first
+  estimating script gave the US and the UK separate splines, so the "vs
+  UK" terms were plain US slopes; the agent fixed it against the paper's
+  definition, not against a number.
+- **Leeson (11 / 11 everywhere; pipeline blind 4 / 11).**  Independent
+  and blind first scripts both lost the two visit counts to fixest's
+  singleton-group default (240 / 98 vs 242 / 102); `fixef.rm = "none"`
+  fixed both without moving a coefficient.
+- **Manekin (12 / 12 everywhere; pipeline seeded 7 / 12).**  A
+  pipeline-side bug surfaced: the seeded task's "Original Replication
+  Scripts" block held only macOS `._*` AppleDouble resource-fork files,
+  because `select_package_scripts` ranks them like real `.R` files — so
+  the pipeline's seeded prompt for Manekin never showed the authors'
+  code.  The agent read the real scripts from the mount (allowed in
+  seeded mode).  Fix pending (pipeline tuning is frozen; this is a
+  selector bug, to be measured as its own step).
+
+**What the agent does that the pipeline cannot.**  It inspects the data
+before estimating (1–4 exploratory runs per cell: variable lists, row
+counts, which file is which), reads the whole paper rather than a
+500-character abstract plus a summary, reads package READMEs (including
+`.docx`), re-implements a missing package, and checks its own sample
+counts against the paper's text.  The pipeline's failure modes in 3.2 —
+wrong estimator (Grier), rewrite-instead-of-translate (Arias), wrong
+file (Dincecco earlier), sign flips (Adams blind) — did not occur.
+
+**`REPORT.md`** now renders both reproducers from two committed files:
+`pipeline-10papers-all-modes-2026-10-21.json` (the exact 27-row
+composite 3.2 describes, now committed, with the Dincecco / Alesina
+first-scored and refinement fields filled from the 3.2 report; it
+re-renders the previous REPORT.md byte for byte) and
+`claude-code-7papers-all-modes-2026-10-21.json`.
+
+**Next.**
+
+- (a) Curation: move sample sizes and means out of the count claims'
+  `context` fields (Adams, Leeson, Montero, and check the rest) — a
+  catalog change that re-keys the pipeline's cached rows, so it is a
+  deliberate step with a before / after.
+- (b) `select_package_scripts`: skip `._*` AppleDouble files; measure
+  Manekin seeded on the pipeline afterwards.
+- (c) Model confound: run the pipeline with the same model as the agent,
+  or the agent with Opus 4.7, on these seven papers before reading the
+  gap as "agentic loop".
+- (d) The six shortlisted papers (altmann, lopez-moctezuma,
+  dertwinkel-kalt, holman, acemoglu, gagliarducci) now cost no API credit
+  to measure with the agent; the pipeline rows remain the paid part.
+- (e) Variance where it matters: a second blind run of Adams (the
+  four-MP rule) and Grier (the deflator).
+
 ---
 
 ## Phase 4 — Corpus growth (4 → 20–30 papers)
