@@ -82,3 +82,40 @@ def test_parse_pdf_extracts_abstract(parser, sample_pdf):
 def test_parse_arxiv(parser):
     paper = parser.parse_arxiv("1706.03762")  # Attention Is All You Need
     assert "Attention" in paper.title
+
+
+class _FakeResponse:
+    """Minimal stand-in for a streamed ``requests.Response``."""
+
+    def __init__(self, body: bytes, content_type: str):
+        self.headers = {"Content-Type": content_type}
+        self.content = body
+        self.text = body.decode("utf-8", errors="replace")
+
+    def raise_for_status(self):
+        return None
+
+
+def test_parse_url_sniffs_pdf_served_as_octet_stream(parser, sample_pdf, monkeypatch):
+    # CaltechAUTHORS serves PDFs as application/octet-stream; the %PDF
+    # magic bytes, not the header, must route the body to parse_pdf.
+    body = sample_pdf.read_bytes()
+    monkeypatch.setattr(
+        "retally.paper.parser.http_get",
+        lambda url, **kw: _FakeResponse(body, "application/octet-stream"),
+    )
+    paper = parser.parse_url("https://example.org/record/files/paper.pdf/content")
+    assert paper.title == "Sample Paper Title"
+    assert "Body content follows here." in paper.full_text
+    assert "%PDF" not in paper.full_text
+    assert paper.source_url == "https://example.org/record/files/paper.pdf/content"
+
+
+def test_parse_url_octet_stream_without_pdf_magic_is_text(parser, monkeypatch):
+    html = b"<html><body><p>Hello paper</p></body></html>"
+    monkeypatch.setattr(
+        "retally.paper.parser.http_get",
+        lambda url, **kw: _FakeResponse(html, "application/octet-stream"),
+    )
+    paper = parser.parse_url("https://example.org/page")
+    assert paper.full_text == "Hello paper"

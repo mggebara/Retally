@@ -207,7 +207,10 @@ class PaperParser:
 
         Detect the content type from the response headers:
           - ``application/pdf`` → save to a temp file and call parse_pdf.
-          - ``text/html``       → extract visible text, then call parse_text.
+          - anything else whose body starts with the ``%PDF`` magic bytes
+            (repositories that serve PDFs as ``application/octet-stream``)
+            → the same PDF path.
+          - otherwise (``text/html``) → extract visible text, then call parse_text.
         """
 
         def _fetch() -> tuple[Path | None, str]:
@@ -218,6 +221,11 @@ class PaperParser:
             content_type = response.headers.get("Content-Type", "").lower()
             if "application/pdf" in content_type:
                 return _stream_to_temp_pdf(response), ""
+            body = response.content
+            if body.startswith(b"%PDF"):
+                with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as tmp:
+                    tmp.write(body)
+                return Path(tmp.name), ""
             return None, response.text
 
         tmp_path, html = with_retries(_fetch, what=f"GET {url}")
