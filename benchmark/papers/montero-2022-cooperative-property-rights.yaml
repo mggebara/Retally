@@ -121,9 +121,9 @@ original_claims:
       owner's total landholdings estimated separately on each side of the
       cutoff (equation 1), sample limited to properties within 300 ha of
       the threshold, survey-round fixed effects, standard errors
-      clustered at the former-owner level.  Observations are workers
-      (4,770; 327 properties; 98 clusters; mean of the dependent
-      variable 73.59).
+      clustered at the former-owner level.  Observations are workers;
+      the table also reports the number of properties, the number of
+      clusters and the mean of the dependent variable.
   - description: earnings_level_above500_bw150
     value: 52.79
     claim_type: coefficient
@@ -137,8 +137,8 @@ original_claims:
       control in the former owner's landholdings on each side of the
       500 ha cutoff, survey-round fixed effects, standard errors clustered
       by former owner) with the sample limited to properties within 150 ha
-      of the threshold (1,583 workers; 118 properties; 36 clusters; mean
-      of the dependent variable 74.81).  Not statistically significant.
+      of the threshold.  Observations are workers.  Not statistically
+      significant.
   - description: earnings_iqr_above500_bw300
     value: -42.97
     claim_type: coefficient
@@ -147,8 +147,8 @@ original_claims:
     unit: dollars per month (interquartile range of household earnings per capita)
     location: "Table 5, column 3 (Household Earnings per Capita, Interquartile Range, bandwidth 300)"
     context: >
-      Table 5, column 3, the paper's inequality result ("the interquartile
-      range of cooperatives is approximately $43 per month lower").
+      Table 5, column 3, the paper's inequality result (a lower
+      within-property interquartile range of earnings for cooperatives).
       Outcome: the interquartile range (75th minus 25th percentile) of
       household earnings per capita in the previous month across the
       surveyed workers of each property, with the sample limited to
@@ -157,8 +157,7 @@ original_claims:
       linear control in the former owner's landholdings on each side of
       the 500 ha cutoff; properties within 300 ha of the threshold;
       survey-round fixed effects; standard errors clustered at the
-      former-owner level (327 observations and properties; 98 clusters;
-      mean of the dependent variable 38.63).
+      former-owner level.  One observation per property.
   - description: earnings_iqr_above500_bw150
     value: -51.79
     claim_type: coefficient
@@ -171,8 +170,7 @@ original_claims:
       (properties with at least five members represented in the surveys,
       Above500, local linear control on each side of the cutoff,
       survey-round fixed effects, former-owner clustering) with properties
-      within 150 ha of the threshold (118 observations and properties; 36
-      clusters; mean of the dependent variable 37.52).
+      within 150 ha of the threshold.  One observation per property.
   - description: n_obs_earnings_level_bw300
     value: 4770
     claim_type: other
@@ -196,7 +194,7 @@ original_claims:
     location: "Table 5, Observations, column 3"
     context: >
       Number of observations in the 300 ha interquartile-range regression,
-      Table 5 column 3 (the table also reports 327 properties).
+      Table 5 column 3 (one observation per property).
   - description: n_obs_earnings_iqr_bw150
     value: 118
     claim_type: other
@@ -204,7 +202,7 @@ original_claims:
     location: "Table 5, Observations, column 4"
     context: >
       Number of observations in the 150 ha interquartile-range regression,
-      Table 5 column 4 (the table also reports 118 properties).
+      Table 5 column 4 (one observation per property).
   - description: n_clusters_bw300
     value: 98
     claim_type: other
@@ -319,8 +317,12 @@ notes: >
   column; clusters per bandwidth).  Values exactly as printed in the
   published JPE version (author-site copy of the typeset article), and
   identical to the meta-database's o_coeff / o_std_err and DP20's
-  reproductions.  Mean dependent variables are in the contexts, not
-  pinned.
+  reproductions.  Not pinned, and kept out of the claim contexts
+  because they would state pinned counts or hint at them: the table's
+  property counts (327 / 118 for the 300 / 150 ha samples; columns 3-4
+  have one observation per property, so these equal their N) and the
+  mean dependent variables (73.59 / 74.81 / 38.63 / 37.52, columns
+  1-4).
 
   What was read.  The published JPE PDF (Tables 2, 3, 5, the data and
   empirical-strategy sections); the 12 January 2018 draft (for dates

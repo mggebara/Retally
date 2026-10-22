@@ -76,9 +76,9 @@ independent tolerance, and records first scored like every row.  It
 equals the final count by construction — only crash repairs can run
 after the first scored script — except when a script printed some
 `RESULT:` lines and then crashed, so a repair produced the final one.  Curated claim `context`
-strings are rendered verbatim and may mention an N or a control mean;
-keeping them free of the target is the curator's job
-(`papers/README.md`).  Dataset mounting is the independent one (the
+strings are rendered verbatim, so no claim's context, location or unit
+may state the value of any pinned claim of its entry (`papers/README.md`);
+`tests/test_catalog_contexts.py` enforces that for every catalog entry.  Dataset mounting is the independent one (the
 script-free copy), which also withholds the regression tables the
 package ships (see [The script-free copy](#the-script-free-copy)); the
 blind prompt still tells the model not to read result tables, logs or
