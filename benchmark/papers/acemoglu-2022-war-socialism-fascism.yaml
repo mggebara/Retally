@@ -1,0 +1,432 @@
+# Original paper: Acemoglu, D., De Feo, G., De Luca, G. D., & Russo, G.
+#   (2022). "War, Socialism, and the Rise of Fascism: an Empirical
+#   Exploration." Quarterly Journal of Economics, 137(2), 1233-1296.
+#   doi:10.1093/qje/qjac001.  Earlier version: NBER Working Paper 27854
+#   (September 2020), which merged two independent working papers
+#   (Acemoglu, De Feo & De Luca; Russo, "World War One and the Rise of
+#   Fascism in Italy").
+#
+# Reproduction record: there is NO I4R discussion paper for this article.
+#   The I4R First Meta Database (replication team 104, entered
+#   2023-09-19) records perfect_reproduction = Yes,
+#   computational_reproduction = 1, why_not_perfect_repro = "Perfect
+#   Reproduction"; the reproduction itself was filed on the Social Science
+#   Reproduction Platform, doi:10.48152/ssrp-3s2g-m694 (resolves to
+#   socialsciencereproduction.org/reproductions/790/published/index; on
+#   2026-10-21 that host no longer resolves in DNS, so the SSRP record
+#   could not be read).  i4r_report_url therefore points at the SSRP DOI
+#   and every per-claim finding below is taken from the database rows.
+#   Those rows are all ROBUSTNESS variants (extra controls, a different
+#   instrument, municipality fixed effects), none a plain reproduction of
+#   a printed number — see the findings block.
+#
+# Why this paper: the only QJE paper in the 2026-10-21 shortlist with open
+#   data and an open PDF; adds instrumental variables (2SLS with clustered
+#   SEs and many fixed effects) to the method mix; the three headline
+#   tables are produced by one short do-file from one dataset, and an
+#   independent numpy cross-check (notes) reproduces every pinned number.
+#
+# What the package is: the authors' own QJE replication package on Harvard
+#   Dataverse (doi:10.7910/DVN/CLJTSC), 28 files, 411 MB, of which
+#   379 MB is one Stata file used only by Table VIII and two appendix
+#   tables.  Stata throughout; two R scripts build appendix tables only.
+
+id: acemoglu-2022-war-socialism-fascism
+i4r_report_url: https://doi.org/10.48152/ssrp-3s2g-m694
+i4r_report_doi: 10.48152/ssrp-3s2g-m694  # SSRP reproduction record (no I4R DP exists)
+# Target language for regeneration (the original analysis is Stata;
+# Retally generates R and reads the .dta with haven).
+language: r
+# Verdict mapping (candidates JSON): perfect_reproduction = Yes ->
+# reproducible.
+outcome_label: reproducible
+# Pipeline tuning is frozen; this is an evaluation paper.
+split: holdout
+# Contamination bookkeeping.  First public version of THIS paper: NBER WP
+# 27854, dated September 2020 (PDF created 2020-09-23).  Precursors:
+# Russo's "World War One and the Rise of Fascism in Italy" (a BU seminar
+# file dated 2020-05) and the Acemoglu-De Feo-De Luca paper presented at
+# the CEPR Political Economy Webinar (2020); both are different papers
+# with different tables.  QJE: Advance Access 2022-01-21, print May 2022
+# (137(2)).  Package: Harvard Dataverse doi:10.7910/DVN/CLJTSC, version
+# 1.0 released 2021-12-22, version 1.1 (the current one, the one
+# downloaded) released 2022-04-08 (Dataverse API).
+publication_date: "2020-09"
+package_release_date: "2021-12-22"
+
+paper:
+  # The typeset QJE article (64 pp., "The Quarterly Journal of Economics
+  # (2022), 1233-1296 ... Advance Access publication on January 21,
+  # 2022"), hosted on MIT Economics; checked 2026-10-21: 200
+  # application/pdf, %PDF magic.  Used instead of the candidate list's
+  # NBER WP 27854 (https://www.nber.org/system/files/working_papers/w27854/w27854.pdf)
+  # because the working paper's tables differ from the published ones in
+  # both numbering and values (see notes); the pinned values are the
+  # published ones, and they must be in the text the model reads.
+  source: "https://economics.mit.edu/sites/default/files/2023-01/War%2C%20Socialism%20and%20the%20Rise%20of%20Facism%20-%20An%20Empirical%20Exploration.pdf"
+  title: "War, Socialism, and the Rise of Fascism: an Empirical Exploration"
+  authors:
+    - Daron Acemoglu
+    - Giuseppe De Feo
+    - Giacomo Davide De Luca
+    - Gianluca Russo
+
+dataset:
+  source: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/CLJTSC
+  access_notes: >
+    Harvard Dataverse (doi:10.7910/DVN/CLJTSC) version 1.1, CC0 1.0, fully
+    open — 28 files, none restricted, 410.9 MB (Dataverse API, checked
+    2026-10-21).  data/: fascism_db (Stata 14+ .dta, release 118; ingested
+    by Dataverse and listed as fascism_db.tab, 32.0 MB; the downloader
+    requests ?format=original and saves fascism_db.dta, 31,197,445 bytes;
+    5,775 rows x 1,336 columns) and fascism_mod_elections_db.dta (378.8 MB,
+    not ingested, release 118; used only by Table8.do, Tab_A1.do and
+    Tab_A22.do).  do/tables/: _masterfile_tables.do, Tables1-7.do,
+    Table8.do, Tab_A1.do, Tab_A2.do, Tab_A3_A13-A15_A21.do, Tab_A22.do,
+    labels.do, x_gmm.ado, x_ols.ado (Conley spatial SEs), TabA13FWER.R
+    and Tab_A14.R.  do/figures/: _masterfile_figures.do, fig1_maps.do,
+    fig2-fig6.do, figA4a.do, figA4b.do, labels.do.  Four Google Drive
+    desktop.ini files.  The downloader flattens the directory labels, so
+    the two byte-identical labels.do copies and the four desktop.ini
+    files each land as one file (24 files on disk).  No logs, no table
+    output.  Figure I's maps (fig1_maps.do) need fascism_map_db.dta and
+    two coordinate files that are NOT in the package.
+
+code_repo:
+  url: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/CLJTSC
+
+original_claims:
+  - description: first_stage_casualties_table1_col1
+    value: 0.12
+    claim_type: coefficient
+    standard_error: 0.02
+    unit: standardized coefficient (standard deviations of the 1919 socialist vote share per standard deviation of casualties)
+    location: "Table I, column (1), Share of foot soldier casualties"
+    context: >
+      Table I ("The Impact of Foot Soldier Casualties in World War I on
+      the Socialist Vote Share in 1919"), column (1), the first stage.
+      OLS across Italian municipalities of the socialist vote share in the
+      1919 election on the share of foot soldier casualties (the count of
+      World War I foot soldier casualties from the municipality divided by
+      the total male population over the age of six in 1911), with
+      regiment fixed effects (dummies for any deaths from the
+      municipality in a given regiment), province fixed effects and
+      demographic controls (a quartic in log population and the share of
+      the population below the age of six in 1911).  Standardized
+      coefficients; standard errors clustered at the district
+      (circondario) level.
+  - description: first_stage_casualties_table1_col6
+    value: 0.10
+    claim_type: coefficient
+    standard_error: 0.01
+    unit: standardized coefficient
+    location: "Table I, column (6), Share of foot soldier casualties"
+    context: >
+      Table I, column (6): the first stage with the full control set —
+      column (1)'s regiment and province fixed effects and demographic
+      controls plus geographic controls (log area, elevation of the main
+      center, maximum elevation), the socialist vote share in 1913,
+      military controls (veterans from the classes 1874-95 and 1896-1900,
+      casualties among special assault troops and volunteers as a share of
+      the male population above six in 1911, a dummy for army-supplying
+      production plants, a dummy for any casualties in the
+      highest-mortality battles), agricultural controls (share of day
+      laborers, share of sharecroppers, a dummy for local agrarian
+      associations) and urban controls (industry workers and industrial
+      firms over male population in 1911, literacy rate in 1911, share of
+      entrepreneurs and rentiers, share of the bourgeoisie).
+      Standardized coefficients; district-clustered standard errors.
+  - description: first_stage_fstat_table1_col6
+    value: 50.59
+    claim_type: other
+    unit: F-statistic
+    location: "Table I, column (6), F-stat."
+    context: >
+      The F-statistic for the excluded instrument (share of foot soldier
+      casualties) reported at the bottom of Table I, column (6): the test
+      of the casualty coefficient in the full-controls first stage, with
+      district-clustered standard errors.
+  - description: iv_violence_table2_panelA_col6
+    value: 0.50
+    claim_type: coefficient
+    standard_error: 0.20
+    unit: standardized coefficient (SDs of fascist violence per SD of the 1919 socialist vote share)
+    location: "Table II, Panel A (2SLS), column (6), Socialist vote share in 1919"
+    context: >
+      Table II, Panel A, column (6).  2SLS of fascist violence in 1920-22
+      (episodes of fascist political violence per 1,000 inhabitants) on
+      the socialist vote share in 1919, instrumented by the share of foot
+      soldier casualties, with the full control set of Table I column (6)
+      (regiment and province fixed effects; demographic, geographic,
+      1913 socialist share, military, agricultural and urban controls).
+      Standardized coefficients; standard errors clustered at the district
+      level.
+  - description: iv_branches_table2_panelC_col6
+    value: 0.50
+    claim_type: coefficient
+    standard_error: 0.20
+    unit: standardized coefficient
+    location: "Table II, Panel C (2SLS), column (6), Socialist vote share in 1919"
+    context: >
+      Table II, Panel C, column (6).  2SLS of the presence of local
+      branches of the Fascist Party in fall 1921 (from prefect reports) on
+      the socialist vote share in 1919, instrumented by the share of foot
+      soldier casualties, full control set as in Table I column (6).
+      Standardized coefficients; district-clustered standard errors.
+  - description: iv_fascist_vote1921_table3_panelA_col6
+    value: 0.34
+    claim_type: coefficient
+    standard_error: 0.18
+    unit: standardized coefficient
+    location: "Table III, Panel A (2SLS), column (6), Socialist vote share in 1919"
+    context: >
+      Table III, Panel A, column (6).  2SLS of the fascist vote share in
+      the 1921 election (fascist lists plus the fascist candidates' share
+      of the National Bloc lists, imputed from district, province or
+      electoral-district candidate data where municipality data are
+      missing) on the socialist vote share in 1919, instrumented by the
+      share of foot soldier casualties, full control set as in Table I
+      column (6).  The 1921 sample is smaller than the 1919/1924 sample.
+      Standardized coefficients; district-clustered standard errors.
+  - description: iv_fascist_vote1924_table3_panelC_col1
+    value: 0.40
+    claim_type: coefficient
+    standard_error: 0.17
+    unit: standardized coefficient
+    location: "Table III, Panel C (2SLS), column (1), Socialist vote share in 1919"
+    context: >
+      Table III, Panel C, column (1).  2SLS of the fascist vote share in
+      the 1924 election on the socialist vote share in 1919, instrumented
+      by the share of foot soldier casualties, with only regiment and
+      province fixed effects and demographic controls (the most
+      parsimonious specification).  Standardized coefficients;
+      district-clustered standard errors.
+  - description: iv_fascist_vote1924_table3_panelC_col6
+    value: 0.51
+    claim_type: coefficient
+    standard_error: 0.17
+    unit: standardized coefficient
+    location: "Table III, Panel C (2SLS), column (6), Socialist vote share in 1919"
+    context: >
+      Table III, Panel C, column (6).  2SLS of the fascist vote share in
+      the 1924 election on the socialist vote share in 1919, instrumented
+      by the share of foot soldier casualties, with the full control set
+      of Table I column (6).  Standardized coefficients;
+      district-clustered standard errors.
+  - description: n_obs_main_sample
+    value: 5775
+    claim_type: other
+    unit: observations (municipalities)
+    location: "Table I, Observations (all columns); also Table II and Table III Panels C-D"
+    context: >
+      Number of municipalities in the estimation sample of the first stage
+      (Table I), the fascist violence and branch regressions (Table II)
+      and the 1924 fascist vote share regressions (Table III, Panels C
+      and D).
+  - description: n_clusters_main_sample
+    value: 181
+    claim_type: other
+    unit: clusters (districts)
+    location: "Table I, Number of clusters (all columns); also Table II and Table III Panels C-D"
+    context: >
+      Number of district (circondario) clusters in the main estimation
+      sample (Table I, Table II, Table III Panels C and D).
+  - description: n_obs_fascist_vote1921
+    value: 5358
+    claim_type: other
+    unit: observations (municipalities)
+    location: "Table III, Panels A-B, Observations"
+    context: >
+      Number of municipalities in the 1921 fascist vote share regressions
+      (Table III, Panels A and B, all columns).
+  - description: n_clusters_fascist_vote1921
+    value: 175
+    claim_type: other
+    unit: clusters (districts)
+    location: "Table III, Panels A-B, Number of clusters"
+    context: >
+      Number of district clusters in the 1921 fascist vote share
+      regressions (Table III, Panels A and B).
+
+# No plain reproduction rows exist.  The meta-database holds 64 rows for
+# this paper (team 104), 59 with an r_coeff, and every one of those 59 is a
+# robustness variant: "Direct Replication: First-Stage which includes two
+# new controls: distance to front-line and shortest distance between rail
+# tracks and the original municipality-level coordinates" (Table 1,
+# category "Add controls"), "Direct Replication: Second stage which still
+# uses casualties used as the instrument but includes distances to
+# railroad and frontline as controls" (Tables 2-3, "Add controls"),
+# "Direct Replication: Using distance to railroad as instrument for
+# socialist share" ("Other (change instrument)"), and "Robustness
+# Replication: Including municipality fixed effects ..." (Table 1, "Pool
+# subsamples").  So reproduced_value is null and the outcome
+# not_attempted for every claim (the Grier convention): the team's
+# blanket verdict is a perfect reproduction, but the database records no
+# replicator number for any printed estimate.  The o_coeff / o_std_err of
+# each row carry the published estimate to three decimals (not printed
+# in the paper; they match the numpy cross-check in notes), which is how
+# each row is matched to a column below.  Row numbers are 0-based row
+# indices of benchmark/corpus/i4r_first_meta_database.csv.gz.
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: null
+    outcome: not_attempted
+    notes: >
+      Rows matching Table I col 1 (o_coeff 0.119, o_std_err 0.018):
+      row 6195, add-controls variant, r = 0.116 (0.017); row 6162,
+      municipality fixed-effects panel variant, r = 0.095 (0.022).
+  - claim_id: 1
+    reproduced_value: null
+    outcome: not_attempted
+    notes: >
+      Table I col 6 (published 0.0979, SE 0.0138; col 5 is 0.0976, SE
+      0.0136, so the database's 0.098 rows do not separate cols 5 and 6):
+      row 6202, add-controls variant, r = 0.097 (0.014); rows 6159 / 6161
+      (o_std_err 0.013), municipality fixed-effects variants, r = 0.054
+      (0.025) / 0.057 (0.024).
+  - claim_id: 3
+    reproduced_value: null
+    outcome: not_attempted
+    notes: >
+      Table II Panel A col 6 (o_coeff 0.500, o_std_err 0.204): row 6154,
+      add-controls variant, r = 0.506 (0.206); row 6213, railroad-distance
+      instrument, r = 0.706 (0.630).  (The database labels five Panel A
+      change-instrument rows, o_coeff 0.379-0.533, "table 1".)
+  - claim_id: 4
+    reproduced_value: null
+    outcome: not_attempted
+    notes: >
+      Table II Panel C col 6 (o_coeff 0.498, o_std_err 0.203): row 6192,
+      add-controls variant, r = 0.477 (0.204); row 6158, railroad-distance
+      instrument, r = 0.795 (0.782).
+  - claim_id: 5
+    reproduced_value: null
+    outcome: not_attempted
+    notes: >
+      Table III Panel A col 6 (o_coeff 0.337, o_std_err 0.184): row 6168,
+      add-controls variant, r = 0.334 (0.182); row 6169,
+      railroad-distance instrument, r = 0.692 (0.688).
+  - claim_id: 6
+    reproduced_value: null
+    outcome: not_attempted
+    notes: >
+      Table III Panel C col 1 (o_coeff 0.396, o_std_err 0.171): row 6157,
+      add-controls variant, r = 0.414 (0.172); row 6212,
+      railroad-distance instrument, r = -0.534 (0.208).
+  - claim_id: 7
+    reproduced_value: null
+    outcome: not_attempted
+    notes: >
+      Table III Panel C col 6 (o_coeff 0.513, o_std_err 0.166): row 6164,
+      add-controls variant, r = 0.524 (0.168); row 6171,
+      railroad-distance instrument, r = -0.817 (0.652).
+
+notes: >
+  Headline finding: across 5,775 Italian municipalities, World War I foot
+  soldier casualties (relative to the 1911 male population over six)
+  raised the Socialist vote share in 1919 (first stage, Table I:
+  standardized 0.12 (0.02) with basic controls, 0.10 (0.01) with all, F
+  = 41.68 to 50.59); instrumenting the 1919 socialist share with
+  casualties, the socialist surge raised fascist violence in 1920-22 and
+  the presence of fascist branches in 1921 (Table II Panels A and C, 0.38
+  to 0.53) and the fascist vote share in 1921 (Table III Panel A, 0.30 to
+  0.37, N = 5,358, 175 clusters) and 1924 (Panel C, 0.40 to 0.54) — the
+  "red scare" mechanism.  OLS panels are near zero for the vote shares.
+  181 district clusters in the main sample.
+
+  Original analysis in Stata (ivreg2, outreg2); two appendix tables in R.
+  language: r is the reproduction target.
+
+  Curation pass (2026-10-21).  Pinned 12 claims from Tables I-III — the
+  three tables the I4R team covered: two first-stage coefficients and the
+  column (6) first-stage F, five 2SLS coefficients (each with its SE in
+  standard_error), and the observation and cluster counts of the two
+  samples.  Values exactly as printed in the published QJE article (two
+  decimals throughout, so the printed-precision floor is +-0.005 on every
+  coefficient and SE).  The paper has no separate reduced-form table for
+  these outcomes; the first stage (Table I) and 2SLS panels are the
+  headline estimates.  The intro text quotes the Table I col 1 and Table
+  III Panel A col 6 estimates, so blind-mode redaction of "0.12", "0.10",
+  "0.50", "0.34" etc. will also hit unrelated numbers in other tables
+  (harmless over-redaction).
+
+  Working paper vs published.  The candidate list named NBER WP 27854
+  (September 2020); its tables differ from the published ones in
+  numbering AND values, so the published typeset article was used as
+  paper.source.  WP Table 1 (first stage) reports UNSTANDARDIZED
+  coefficients at three decimals (2.034 (0.315) ... 1.689 (0.234)) and
+  older control sets (F 41.68 / 42.27 / 56.37 / 57.55 / 53.96 / 52.18,
+  R-squared 0.599-0.697); the published Table I reports standardized
+  coefficients at two decimals, adds an assault-troop/volunteer casualty
+  row and an army-supplier dummy to the military controls, and has F
+  41.68 / 42.29 / 56.39 / 55.24 / 51.69 / 50.59.  WP Table 2 is the
+  falsification table (published elsewhere); WP Table 3 is the 2SLS on
+  the 1924 fascist vote share only (unstandardized, 0.375-0.504; no 1921
+  panel), which became published Table III Panels C-D (with the new 1921
+  Panels A-B); WP Table 4 (violence and branches, unstandardized: violence
+  0.230-0.329, branches 0.507-0.672) became published Table II.  The
+  meta-database's o_coeff values (three decimals, e.g. 0.119, 0.098,
+  0.533, 0.513) are the published standardized estimates, not WP values.
+  A November 2021 author draft (MIT, 77 pp.) also exists; not used.
+
+  What was read.  The published QJE PDF (data section, Section IV,
+  Tables I-III with notes, footnotes 12-14); NBER WP 27854 (Tables 1-4,
+  for the comparison above); the Dataverse API metadata and version list;
+  the whole package (all do-files, both R scripts' headers, the .ado
+  headers); the meta-database's 64 rows for the paper (team 104).  The
+  SSRP record (doi:10.48152/ssrp-3s2g-m694 -> socialsciencereproduction.org
+  /reproductions/790) could not be read: the host does not resolve
+  (2026-10-21).
+
+  Independent cross-check (not the package code; numpy on the package's
+  fascism_db.dta, mimicking Tables1-7.do): every pinned number reproduces.
+  Table I: 0.1186 (0.0184), 0.1140 (0.0175), 0.1034 (0.0138), 0.1015
+  (0.0136), 0.0976 (0.0136), 0.0979 (0.0138); F = t^2 = 41.68 / 42.29 /
+  56.39 / 55.24 / 51.69 / 50.59 exactly; N 5,775, 181 clusters.  2SLS
+  (SEs without small-sample adjustment, ivreg2's default; multiplying by
+  sqrt(G/(G-1)) moves them by ~0.3 %): Table II Panel A 0.3793 (0.1854),
+  0.3945 (0.1905), 0.4191 (0.2059), 0.5334 (0.2104), 0.5019 (0.2118),
+  0.4999 (0.2044); Panel C 0.3901 (0.1746), 0.4055 (0.1780), 0.4445
+  (0.1980), 0.5006 (0.2124), 0.4983 (0.2125), 0.4984 (0.2035); Table III
+  Panel A 0.3049 (0.1658), 0.3287 (0.1620), 0.3691 (0.1830), 0.3632
+  (0.1915), 0.3565 (0.1971), 0.3369 (0.1842), N 5,358, 175 clusters;
+  Panel C 0.3956 (0.1706), 0.4531 (0.1620), 0.5024 (0.1666), 0.5424
+  (0.1663), 0.5274 (0.1746), 0.5126 (0.1661).  These equal the database's
+  o_coeff / o_std_err to three decimals.
+
+  How the printed numbers are produced (package-only; never in contexts).
+  Tables1-7.do loads fascism_db.dta and standardizes every variable in
+  the blocks fascist_violence-strike_agr_1920, lpop1911-volunteers1866_pop
+  and rain1918-rain_var with egen std (z_ prefix) over the WHOLE file, not
+  the estimation sample — this matters for the 1921 sample (5,358 of
+  5,775 rows non-missing).  Controls: spec1 z_lpop1911 z_lpop2-4
+  z_sh_pop_1911_be6 d_reg* (359 regiment dummies) province* (69 province
+  dummies); spec2 + z_larea z_centre_alt z_max_alt; spec3 + z_psu1913_vv;
+  spec4 + z_veterans74_95 z_veterans96_00 z_ard_vol_pop6m z_cruent_d
+  z_army_suppliers_d; spec5 + z_dlab z_shcrop z_landlord_ass; spec6 +
+  z_ind_workers z_ind_firms z_literacy z_elites z_bourgeoisie.  Table I:
+  reg z_psu1919_vv z_foots_pop6m spec, cl(circondario1921), F from test
+  z_foots_pop6m.  Tables II-III: ivreg2 z_fascist_violence /
+  z_fascist_branch / z_fascist1921_vv / z_fascist1924_vv (z_psu1919_vv =
+  z_foots_pop6m) spec, partial(d_reg* province*) cl(circondario1921) —
+  no small option, so the clustered SEs carry no finite-sample
+  correction (an R reproduction with fixest's default small-sample
+  adjustment will get SEs a few tenths of a percent larger, well inside
+  the printed precision).  outreg2 dec(2) writes TAB_1.tex, TAB_2A-D.tex,
+  TAB_3A-D.tex.  The master file's paths are placeholders
+  (".../replication/data").
+
+  Package facts.  fascism_db.dta (5,775 x 1,336) is all Tables I-VII
+  need; fascism_mod_elections_db.dta (379 MB) feeds only Table VIII and
+  appendix Tables A1 / A22.  x_gmm.ado / x_ols.ado implement Conley
+  spatial SEs for appendix Table A2.  The two R scripts (TabA13FWER.R,
+  Tab_A14.R) build appendix FWER / A14 tables; TabA13FWER.R reads a CSV
+  produced by a do-file and not shipped.  The candidate-list risk "map
+  figures may need geodata" is confirmed but irrelevant: fig1_maps.do
+  needs fascism_map_db.dta and coord_italy*.dta, absent.
+
+  Left out.  OLS panels (Tables II-III Panels B and D; near-zero,
+  printed as 0.00-0.11); columns (2)-(5) of each panel (stable, reported
+  above); Table I's veterans and assault-troop rows (controls, not the
+  claim); Tables IV-VIII (party vote shares, heterogeneity, deportations,
+  post-WWII votes: no I4R rows); appendix tables.
