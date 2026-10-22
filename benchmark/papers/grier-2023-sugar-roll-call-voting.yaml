@@ -360,3 +360,19 @@ notes: >
   #62) was the binding tolerance on most claims (tolerance_source:
   printed_precision); it rescued nothing because the estimates are an
   order of magnitude off.
+
+  Window-file ambiguity (2026-10-22, from the Claude Code blind runs).
+  The package never says which of SugarReplicate_iter1.dta and
+  SugarReplicate_iter2.dta holds the calendar-year window and which the
+  12-months-before-the-vote window; the three files differ only in
+  totalcont and the Read Me says just "three different time windows".
+  The do-file (seeded mode only) runs them in the order
+  SugarReplicate, _iter1, _iter2, which matches the paper's Table 3 row
+  order (calendar year, then 12 months).  Of three blind agent runs, two
+  took _iter1 = calendar year and scored 10 / 11; one took the reverse,
+  by reasoning about when election-season giving falls, and scored
+  9 / 11 (the two incumbent-window coefficients swap).  The deflator base
+  year is also unstated (the do-file divides 115th-Congress amounts by
+  1.103); agents chose 2013 or 2018 dollars, which rescales every
+  contribution coefficient by about 8%.  Both are paper-versus-package
+  gaps an independent reader cannot resolve from the text.
