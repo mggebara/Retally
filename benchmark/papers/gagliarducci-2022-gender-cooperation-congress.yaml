@@ -1,0 +1,480 @@
+# Original paper: Gagliarducci, S., & Paserman, M. D. (2022). "Gender
+#   Differences in Cooperative Environments? Evidence from the U.S.
+#   Congress." The Economic Journal, 132(641), 218-257.
+#   doi:10.1093/ej/ueab069
+#
+# I4R report: Bagues, M., Campa, P., & Etingin-Frati, G. (2023). "Gender
+#   Differences in Cooperation in the U.S. Congress? An Extension of
+#   Gagliarducci and Paserman (2022)." I4R Discussion Paper No. 75
+#   (October 2023; I4R First Meta Database replication team 32).
+#   Verdict: reproducible.  DP75 reproduces the published Table 5 with
+#   the original code and data (its Appendix Table A1, "GP Table 5") and
+#   finds no coding mistakes; it then (i) corrects two district controls
+#   (population density and median household income are inconsistent
+#   with census figures for the 108th-111th Congresses), (ii) clusters by
+#   member instead of member-Congress, and (iii) adds Congresses 112-116.
+#   "These changes have a relatively minor impact on results."  The
+#   meta-database records perfect_reproduction = Yes,
+#   computational_reproduction = 1; its 120 coefficient rows are all
+#   robustness variants of Table 5 (4 per published cell), none a plain
+#   reproduction row.
+#
+# Why this paper: a regression-discontinuity + inverse-propensity-score
+#   paper (Table 5 mixes OLS, close-election RD at a data-driven optimal
+#   bandwidth, RD reweighted by an inverse propensity score, and full-
+#   sample inverse-propensity weighting), with a complete Stata package
+#   whose shipped output matches the published table to the last digit.
+#
+# IMPORTANT — paper version.  paper.source is NBER Working Paper 22488
+#   (August 2016), the only freely downloadable PDF; the EJ article is
+#   paywalled.  The WP's Table 5 ("RD and PS Matching Estimates") is the
+#   counterpart of the published Table 5 (same number, same two panels,
+#   same five columns, same rows) and 28 of its 30 coefficients, all
+#   their SEs and all bill/sponsor counts equal the published values.
+#   The exception is column 3 (RD reweighted by the inverse propensity
+#   score) for Republicans: the WP prints 6.857 (3.912), N 1,227, 100
+#   sponsors (Panel A) and 5.038 (3.850), N 1,043, 88 sponsors (Panel
+#   B); the published table — the meta-database's o_coeff, DP75 Table
+#   A1, and the package's own Output/Table5_*.xls — prints 6.734
+#   (3.946), N 1,200, 98 and 4.428 (3.737), N 1,016, 86.  Pinned values
+#   are the PUBLISHED ones; claim 2 is one of the two cells that differ,
+#   so a run that copies the WP's number fails it.
+
+id: gagliarducci-2022-gender-cooperation-congress
+i4r_report_url: https://www.econstor.eu/bitstream/10419/278109/1/I4R-DP075.pdf
+# Target language for regeneration (the original and the package are
+# Stata 16.1; Retally generates R and reads the .dta / .csv files).
+language: r
+outcome_label: reproducible
+# Pipeline tuning is frozen; this is an evaluation paper.
+split: holdout
+# Contamination bookkeeping.  First public version: NBER WP 22488 and
+# IZA DP 10128, both August 2016 (the NBER PDF's creation date is
+# 2016-07-29).  EJ: published online 2021-09-20, print issue 2022-01-07
+# (Crossref).  Package: Zenodo record 5111360, created / published
+# 2021-07-17 (Zenodo API), described as "forthcoming on the Economic
+# Journal".
+publication_date: "2016-08"
+package_release_date: "2021-07-17"
+
+paper:
+  # NBER WP 22488 (59 pp.), checked 2026-10-21: 200 application/pdf,
+  # %PDF magic; text extracts cleanly with pymupdf (tables come out one
+  # cell per line).  A working paper, NOT the published EJ version —
+  # see the header comment for the two Table 5 cells that differ.
+  source: https://www.nber.org/system/files/working_papers/w22488/w22488.pdf
+  title: "Gender Differences in Cooperative Environments? Evidence from the U.S. Congress"
+  authors:
+    - Stefano Gagliarducci
+    - M. Daniele Paserman
+
+dataset:
+  source: https://zenodo.org/records/5111360
+  access_notes: >
+    Zenodo record 5111360 (CC BY 4.0, open), a single file "3
+    replication package.zip" of 402,805,514 bytes (Zenodo API, checked
+    2026-10-21; the Zenodo previewer refuses it as too large).  The
+    downloader extracts it to 1.26 GB in a "3 replication package/"
+    folder plus a __MACOSX/ tree of 197 AppleDouble stubs (._* files,
+    including ._*.do stubs that the seeded prompt lists as scripts).
+    Contents: README.pdf and README.docx (plus a ~$README.docx Word lock
+    file); Data/ (1.26 GB) with every dataset as both Stata .dta and
+    .csv, 17 + 17 files — RawData/ (BillCharacteristics_Clean,
+    IndividualCharacteristics_Clean, DistrictCharacteristics_Clean,
+    CentralityMeasures_all, Committee_Clean, Cosponsors_Clean (58 MB
+    .dta), PrimaryElections, votes_rollcall_analysis_102-111_clean),
+    IntermediateData/ (bills_analysis_101-111_clean,
+    sponsors_analysis_101-111_clean, cosponsors_analysis_101-111_clean,
+    cosponsors_names_101-111_clean, reached_floor_102-111_clean,
+    CosponsorsWithInfo_Clean_v2 — 375 MB .dta / 502 MB .csv, 1.06 M
+    rows) and AnalysisData/ (bills_analysis_101-111_replication — 12 MB
+    .dta, 63,895 bills x 87 columns, the Table 5 input —
+    sponsors_analysis_101-111_replication,
+    cosponsors_analysis_101-111_replication); Dofiles/ (20 .do files:
+    master.do, 002_prepare_data_full.do, 003_prepare_data_replication.do,
+    one per table/figure incl. Table5.do, AppendixC_simulations.do);
+    Adofiles/ (vendored Stata packages: rdrobust/rddensity 2021 incl.
+    rdbwselect_2014, reghdfe 2019, DCdensity 2009; .ado/.mata/.mo/.sthlp);
+    Log/ (22 Stata .log transcripts, incl. Table5.log); Output/ (23 .xls,
+    4 .xlsx, 3 .tex, 4 .dta, 6 .eps, 9 .gph — the generated tables and
+    figures, incl. Table5_TopPanel_Cosponsors.xls,
+    Table5_BottomPanel_PctCosponsorsOpposite.xls and Table5_Cosponsors.xls,
+    which hold the full published Table 5).  No nested archives.
+
+code_repo:
+  url: https://zenodo.org/records/5111360
+
+original_claims:
+  - description: female_sponsor_ncosponsors_all_ols
+    value: 1.395
+    claim_type: coefficient
+    standard_error: 0.628
+    sample_size: 60670
+    unit: cosponsors per bill
+    location: "Table 5, Panel A (Number of Cosponsors), row All, column 1 (OLS - full sample)"
+    context: >
+      Table 5 ("RD and PS Matching Estimates"), Panel A, all sponsors,
+      column 1.  Bill-level OLS regression, U.S. House public bills of
+      the 101st-111th Congresses; dependent variable: the number of
+      cosponsors on the bill; regressor of interest: a dummy for a
+      female sponsor (the table entry is its coefficient).  Controls:
+      Congress fixed effects; bill characteristics (dummies for the
+      committee of referral and for the minor topic); sponsor
+      characteristics (age, tenure in Congress, rookie, committee leader
+      — chair or ranking member — black, party dummy, occupational
+      dummies, Ivy League degree, born in the state of election, total
+      number of bills sponsored in the Congress); district
+      characteristics (macro-area dummies, percent black, over-65,
+      foreign-born and urban residents, log median income, log
+      population density).  Robust standard errors clustered at the
+      individual-Congress (sponsor-term) level.
+  - description: female_sponsor_ncosponsors_rep_ols
+    value: 3.149
+    claim_type: coefficient
+    standard_error: 1.017
+    unit: cosponsors per bill
+    location: "Table 5, Panel A (Number of Cosponsors), row Republicans, column 1 (OLS - full sample)"
+    context: >
+      Table 5, Panel A, column 1, restricted to bills with a Republican
+      sponsor: the same OLS specification as for all sponsors (number of
+      cosponsors on the female-sponsor dummy; Congress fixed effects;
+      bill, sponsor and district characteristics; standard errors
+      clustered by sponsor-Congress).  Significant at 1%.
+  - description: female_sponsor_ncosponsors_rep_rd_ipw
+    value: 6.734
+    claim_type: coefficient
+    standard_error: 3.946
+    unit: cosponsors per bill
+    location: "Table 5, Panel A (Number of Cosponsors), row Republicans, column 3 (RD - optimal bandwidth with inverse propensity score weighting)"
+    context: >
+      Table 5, Panel A, column 3, Republican sponsors.  Regression
+      discontinuity in mixed-gender House elections: the number of
+      cosponsors regressed on the female-sponsor dummy, the margin of
+      victory of the female candidate and its interaction with the
+      female dummy (slopes differing on either side of the threshold),
+      Congress fixed effects and bill characteristics, within the
+      optimal bandwidth (Calonico, Cattaneo and Titiunik 2014; computed
+      on bill-level observations; 13 percentage points for this row),
+      with observations weighted by the inverse of a propensity score
+      for electing a woman, estimated within the bandwidth from district
+      characteristics.  Standard errors clustered by sponsor-Congress.
+      Significant at 10% in the published version.
+  - description: female_sponsor_ncosponsors_rep_ipw_sponsor
+    value: 3.124
+    claim_type: coefficient
+    standard_error: 1.040
+    unit: cosponsors per bill
+    location: "Table 5, Panel A (Number of Cosponsors), row Republicans, column 5 (PS weighting - full sample, district + margin of victory + sponsor characteristics)"
+    context: >
+      Table 5, Panel A, column 5, Republican sponsors.  Full sample of
+      electoral races (not only mixed-gender ones): weighted least
+      squares of the number of cosponsors on the female-sponsor dummy,
+      Congress fixed effects and bill characteristics, with observations
+      weighted by the inverse of the estimated propensity score of
+      electing a female representative, where the propensity score is a
+      function of district characteristics, the margin of victory of the
+      elected candidate and sponsor characteristics.  Standard errors
+      clustered by sponsor-Congress.  Significant at 1%.
+  - description: female_sponsor_pct_opposite_dem_ols
+    value: -1.505
+    claim_type: coefficient
+    standard_error: 0.419
+    sample_size: 32846
+    unit: percentage points (percent of cosponsors from the opposite party)
+    location: "Table 5, Panel B (Percent Cosponsors of Opposite Party), row Democrats, column 1 (OLS - full sample)"
+    context: >
+      Table 5, Panel B, column 1, Democratic sponsors.  The paper's main
+      measure of bipartisanship: dependent variable is the percentage of
+      the bill's cosponsors who belong to the opposite party.  Same OLS
+      specification as Panel A column 1 (female-sponsor dummy; Congress
+      fixed effects; bill, sponsor and district characteristics;
+      standard errors clustered by sponsor-Congress).  Significant at 1%.
+  - description: female_sponsor_pct_opposite_dem_rd
+    value: -3.351
+    claim_type: coefficient
+    standard_error: 1.910
+    unit: percentage points (percent of cosponsors from the opposite party)
+    location: "Table 5, Panel B (Percent Cosponsors of Opposite Party), row Democrats, column 2 (RD - optimal bandwidth)"
+    context: >
+      Table 5, Panel B, column 2, Democratic sponsors.  Regression
+      discontinuity in mixed-gender House elections: percent of
+      cosponsors from the opposite party on the female-sponsor dummy,
+      the margin of victory of the female candidate and its interaction
+      with the female dummy, and Congress fixed effects, within the
+      optimal bandwidth (Calonico, Cattaneo and Titiunik 2014, computed
+      on bill-level observations; 24 percentage points for this row).
+      No other controls, no weights.  Standard errors clustered by
+      sponsor-Congress.  Significant at 10%.
+  - description: female_sponsor_pct_opposite_dem_ipw_sponsor
+    value: -1.208
+    claim_type: coefficient
+    standard_error: 0.525
+    unit: percentage points (percent of cosponsors from the opposite party)
+    location: "Table 5, Panel B (Percent Cosponsors of Opposite Party), row Democrats, column 5 (PS weighting - full sample, district + margin of victory + sponsor characteristics)"
+    context: >
+      Table 5, Panel B, column 5, Democratic sponsors: the full-sample
+      inverse-propensity-score-weighted regression (propensity score from
+      district characteristics, the margin of victory and sponsor
+      characteristics; Congress fixed effects and bill characteristics in
+      the outcome regression; standard errors clustered by
+      sponsor-Congress), with percent of cosponsors from the opposite
+      party as the outcome.  Significant at 5%.
+  - description: female_sponsor_pct_opposite_rep_ols
+    value: 3.666
+    claim_type: coefficient
+    standard_error: 0.916
+    sample_size: 27669
+    unit: percentage points (percent of cosponsors from the opposite party)
+    location: "Table 5, Panel B (Percent Cosponsors of Opposite Party), row Republicans, column 1 (OLS - full sample)"
+    context: >
+      Table 5, Panel B, column 1, Republican sponsors: percent of
+      cosponsors from the opposite party on the female-sponsor dummy,
+      OLS with Congress fixed effects and bill, sponsor and district
+      characteristics, standard errors clustered by sponsor-Congress.
+      Significant at 1%.
+  - description: female_sponsor_pct_opposite_rep_ipw_district
+    value: 2.905
+    claim_type: coefficient
+    standard_error: 0.820
+    unit: percentage points (percent of cosponsors from the opposite party)
+    location: "Table 5, Panel B (Percent Cosponsors of Opposite Party), row Republicans, column 4 (PS weighting - full sample, district + margin of victory)"
+    context: >
+      Table 5, Panel B, column 4, Republican sponsors.  Full sample of
+      electoral races: percent of cosponsors from the opposite party on
+      the female-sponsor dummy, Congress fixed effects and bill
+      characteristics, weighted by the inverse of the propensity score
+      of electing a female representative estimated from district
+      characteristics and the margin of victory of the elected candidate
+      (no sponsor characteristics).  Standard errors clustered by
+      sponsor-Congress.  Significant at 1%.
+  - description: n_bills_ncosponsors_all_ols
+    value: 60670
+    claim_type: other
+    unit: bills
+    location: "Table 5, Panel A, row All, n. bills, column 1"
+    context: >
+      Number of bills (observations) in the all-sponsor OLS regression
+      of the number of cosponsors, Table 5 Panel A column 1.
+  - description: n_sponsor_terms_ncosponsors_all_ols
+    value: 4746
+    claim_type: other
+    unit: sponsors (individual-Congress clusters)
+    location: "Table 5, Panel A, row All, n. sponsors, column 1"
+    context: >
+      Number of sponsors (individual-Congress units, the clustering
+      level) in the all-sponsor OLS regression of the number of
+      cosponsors, Table 5 Panel A column 1.
+  - description: n_bills_pct_opposite_dem_ols
+    value: 32846
+    claim_type: other
+    unit: bills
+    location: "Table 5, Panel B, row Democrats, n. bills, column 1"
+    context: >
+      Number of bills with a Democratic sponsor in the OLS regression of
+      percent of cosponsors from the opposite party, Table 5 Panel B
+      column 1.
+  - description: n_bills_pct_opposite_rep_ols
+    value: 27669
+    claim_type: other
+    unit: bills
+    location: "Table 5, Panel B, row Republicans, n. bills, column 1"
+    context: >
+      Number of bills with a Republican sponsor in the OLS regression of
+      percent of cosponsors from the opposite party, Table 5 Panel B
+      column 1.
+
+# The meta-database has no plain reproduction rows for this paper: all
+# 120 coefficient rows are robustness variants of the 30 published
+# Table 5 cells (each cell appears four times: "Change inference" =
+# clustering by member instead of member-Congress; "Coding correction;
+# decrease sample" = amended population density / median income;
+# "Increase sample (time)" = Congresses 101-116 or 112-116; and all three
+# changes together).  The "Change inference" rows re-run the original
+# data and specification with only the clustering changed, so their
+# r_coeff is the replicators' re-estimate of the printed coefficient;
+# those are the reproduced_values below (DP75 Table 3).  DP75 also
+# reproduces the whole published table exactly (its Table A1).  The SEs
+# in those rows differ by construction (member clustering) and are in
+# the notes only.  Count claims (9-12) have no I4R row and no finding.
+# Row numbers are 0-based data rows of i4r_first_meta_database.csv.gz.
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: 1.395
+    outcome: matches
+    notes: >
+      Meta-database row 1391 (Change inference; DP75 Table 3): 1.395,
+      SE 1.025 clustered by member (p = 0.174; loses significance).
+      Amended controls (row 1415, DP75 Table 2): 1.370 (0.638).  Adding
+      Congresses 112-116 (row 1435): 2.509 (0.675).
+  - claim_id: 1
+    reproduced_value: 3.149
+    outcome: matches
+    notes: >
+      Row 1345 (Change inference): 3.149, SE 1.359 by member (p = 0.021).
+      Amended controls (row 1432): 3.161 (1.019).  Extended sample (row
+      1389): 2.573 (1.186).
+  - claim_id: 2
+    reproduced_value: 6.734
+    outcome: matches
+    notes: >
+      Row 1411 (Change inference): 6.734, SE 4.083 by member (p = 0.103).
+      The meta-database's o_coeff here is 6.734 (3.946), the published
+      value; the NBER WP prints 6.857 (3.912).  Amended controls (row
+      1440): 5.111 (4.031).  Extended sample (row 1408): 10.384 (7.509).
+  - claim_id: 3
+    reproduced_value: 3.124
+    outcome: matches
+    notes: >
+      Row 1363 (Change inference): 3.124, SE 1.295 by member (p = 0.016).
+      Amended controls (row 1406): 2.899 (1.017).  Extended sample (row
+      1346): 2.561 (1.230).
+  - claim_id: 4
+    reproduced_value: -1.506
+    outcome: matches
+    notes: >
+      Row 1398 (Change inference): -1.506, SE 0.669 by member (p =
+      0.025) — 0.001 off the printed -1.505, within rounding.  Amended
+      controls (row 1336): -1.663 (0.422).  Extended sample (row 1441):
+      -2.016 (0.580).
+  - claim_id: 5
+    reproduced_value: -3.351
+    outcome: matches
+    notes: >
+      Row 1400 (Change inference): -3.351, SE 1.864 by member (p =
+      0.075).  Amended controls (row 1454): -3.913 (1.921).  Extended
+      sample (row 1438): -7.205 (3.857).
+  - claim_id: 6
+    reproduced_value: -1.208
+    outcome: matches
+    notes: >
+      Row 1404 (Change inference): -1.208, SE 0.828 by member (p =
+      0.145; loses significance).  Amended controls (row 1401): -1.361
+      (0.532).  Extended sample (row 1354): -2.312 (0.730).
+  - claim_id: 7
+    reproduced_value: 3.666
+    outcome: matches
+    notes: >
+      Row 1434 (Change inference): 3.666, SE 1.494 by member (p =
+      0.014).  Amended controls (row 1431): 3.727 (0.921).  Extended
+      sample (row 1409): 1.133 (0.868) — the Republican bipartisanship
+      gap disappears in 2011-2020.
+  - claim_id: 8
+    reproduced_value: 2.905
+    outcome: matches
+    notes: >
+      Row 1453 (Change inference): 2.905, SE 1.453 by member (p =
+      0.046).  Amended controls (row 1351): 2.939 (0.809).  Extended
+      sample (row 1450): -0.371 (0.911).
+
+notes: >
+  Headline finding: bill-level evidence from the 101st-111th U.S. House
+  that, after addressing the selection of women into districts (close-
+  election RD and inverse-propensity-score weighting), Democratic women
+  recruit no more cosponsors than Democratic men but fewer from the
+  opposite party, while Republican women recruit more cosponsors and
+  more bipartisan support (Table 5).  DP75 reproduces the table exactly
+  and finds it largely robust to amended controls and member-level
+  clustering; extending to 2011-2020 removes the Republican
+  bipartisanship gap and strengthens the overall gender gap in number
+  of cosponsors.
+
+  Original analysis in Stata 16.1 (README: reghdfe 5.7.3, rdrobust
+  8.1.0, rddensity 2.3, DCdensity 2009, all vendored in Adofiles/);
+  language: r is the reproduction target.
+
+  Curation pass (2026-10-21).  Pinned 13 claims, all from Table 5 (the
+  exhibit every I4R row refers to): nine female-sponsor coefficients
+  with their SEs — Panel A (number of cosponsors): all sponsors OLS,
+  Republicans OLS / RD+IPW / full-sample IPW with sponsor
+  characteristics; Panel B (percent cosponsors of opposite party):
+  Democrats OLS / RD / full-sample IPW with sponsor characteristics,
+  Republicans OLS / full-sample IPW without sponsor characteristics —
+  and four column-1 counts: bills in Panel A All (60,670), sponsor-
+  Congress clusters in Panel A All (4,746), bills in Panel B Democrats
+  (32,846) and Republicans (27,669).  The mix covers all three
+  estimators (OLS, RD at a data-driven bandwidth, inverse-propensity
+  weighting inside and outside the bandwidth).  Every pinned value is
+  identical in the meta-database (o_coeff / o_std_err), DP75 Table A1,
+  and the package's Output/Table5_TopPanel_Cosponsors.xls and
+  Table5_BottomPanel_PctCosponsorsOpposite.xls.  Optimal bandwidths
+  (25/30/13 in Panel A, 16/24/11 in Panel B, All/Dem/Rep) are printed
+  in the table and given in the RD contexts; they are not pinned.
+
+  PDF version vs published.  The PDF is NBER WP 22488 (August 2016).
+  Its Table 5 has the same number, title ("RD and PS Matching
+  Estimates"), panels, rows and columns as the published Table 5 (DP75
+  Table A1 reprints the published one).  Differences: (a) column 3
+  Republicans in both panels — WP 6.857* (3.912), 1,227 bills, 100
+  sponsors and 5.038 (3.850), 1,043, 88; published 6.734* (3.946),
+  1,200, 98 and 4.428 (3.737), 1,016, 86 (the package reproduces the
+  published values; the WP's column-3 Republican sample is 27 bills / 2
+  sponsors larger in each panel, consistent with the propensity-score
+  step dropping observations in the published version); (b) column
+  labels — the WP calls columns 3-5 "RD - optimal bandwidth with PS
+  matching" and "PS matching - full sample", the published table
+  "inverse PS-weighting"; the WP text (section 7.1) describes the same
+  inverse-propensity-score weighting.  All other 28 coefficients, SEs
+  and counts are identical.  No pinned value other than claim 2 is in
+  a differing cell.  Table numbering of the other exhibits was not
+  checked against the EJ article (paywalled), and none is pinned.
+
+  What was read.  The NBER WP (all of sections 6-7, Tables 2-5 and the
+  Table 5 notes); DP75 (all 28 pp., EconStor); the meta-database's 123
+  rows for the paper (team 32); the Zenodo API metadata; the package
+  README.pdf; Dofiles/Table5.do and master.do; the shipped Table 5 .xls
+  output; the column list of the analysis file.
+
+  How the printed numbers are produced (package-only; never in
+  contexts).  Dofiles/Table5.do on
+  Data/AnalysisData/bills_analysis_101-111_replication.dta (63,895
+  bills; keep if private==0 leaves 62,349; the regression samples are
+  smaller through missing controls).  Outcomes: numb_cosponsors and
+  pct_cosponsors_opposite, which the do-file RECOMPUTES as
+  100*numb_cosponsors_opposite/(numb_cosponsors+1) (set to missing above
+  100), overwriting the column of the same name in the data.  Regressor
+  sponsor_female; Congress FE i.v2; party samples sponsor_party==100
+  (Democrats) / 200 (Republicans); tag_bill==1 (one row per v2 x
+  HRnumber).  Bill characteristics i.minor house_*; sponsor
+  characteristics sponsor_democrat, sponsor_rookie (tenure==1),
+  sponsor_tenure_run, sponsor_age (set missing if >100), leader
+  (comc|comr), ivycoll, black, occ0-occ4, borninstate, tot_bills (bills
+  per sponsor-Congress); district characteristics NE MW WE, pct_black,
+  pct_urban, pct_for_born, pct_age_over65, lninc, lnpden = lnpop -
+  lnarea.  Clusters group_sponsor = group(v2 sponsor_state_abbrev
+  sponsor_district sponsor_term_served); reg ..., robust
+  cluster(group_sponsor).  Bandwidth: rdbwselect_2014 depvar MV1_female,
+  c(0) kernel(uniform), e(h_CCT) (the vendored 2014 CCT selector, on
+  bill-level rows).  Column 2: reg on sponsor_female MV1_female
+  femaleXMV1_female i.v2 within abs(MV1_female)<=h, on the e(sample) of
+  a preliminary mixed_gender_election==1 regression with all controls.
+  Column 3: probit sponsor_female on i.v2 + district characteristics
+  (one row per sponsor, within h), weights 1/p or 1/(1-p), weighted
+  regression adds i.minor house_*.  Columns 4-5: probit on i.v2 +
+  district characteristics + absMV (= abs(MV1_democrat)) (+ sponsor
+  characteristics in col 5) on the full sample, [aw=wt] regression of
+  the outcome on sponsor_female i.v2 i.minor house_*.  "n. sponsors" is
+  e(N_clust).
+
+  Benchmark implications.  The RD columns depend on reproducing
+  Stata's rdbwselect_2014 bandwidth (CCT 2014, uniform kernel) in R;
+  current rdrobust::rdbwselect implements the later selectors, so the
+  bandwidth (and hence claims 2 and 5) may not be reproducible exactly
+  without porting the 2014 routine.  The OLS and full-sample IPW claims
+  need only fixest with weights.  Script-free copy (blind render,
+  2026-10-21): 128 files withheld — 20 .do, 22 .log, 41 Adofiles
+  (.ado/.mata/.mo/.sthlp by suffix, smcl or Stata content) and 61
+  __MACOSX ._* stubs — but NONE of Output/: the legacy-Excel
+  Output/Table5_TopPanel_Cosponsors.xls,
+  Table5_BottomPanel_PctCosponsorsOpposite.xls and Table5_Cosponsors.xls
+  (every pinned value, to six decimals) stay in the independent / blind
+  mount, as do the other tables' .xls/.xlsx and the Appendix C .tex.
+  The blind prompt forbids reading result files, but nothing enforces
+  it; review independent and blind passes on this entry for reads of
+  Output/ until the strip rule handles .xls.  The paper
+  text the model sees is the WP, whose column-3 Republican numbers
+  differ from the pinned published ones.
+
+  Left out.  Table 5 cells not pinned (the remaining 21 coefficients
+  and counts, kept to 13 claims), Tables 1-4 and 6-10, Appendix D and
+  the Appendix C simulations; DP75's extended-sample estimates (new
+  data, not in the package).
