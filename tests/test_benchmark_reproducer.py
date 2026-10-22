@@ -614,20 +614,31 @@ def test_both_factories_is_an_error(tmp_path):
 
 
 def _pre_protocol_cache_key(entry, mode):
-    """The cache-key formula before the Reproducer protocol, verbatim."""
+    """The cache-key formula before the Reproducer protocol, plus the model.
+
+    The protocol left seeded pipeline keys untouched; the model joined
+    every pipeline key on 2026-10-22 (the Opus 5.5 move).  This is the
+    seeded pipeline formula as it stands now, written out so a change to
+    ``_cache_key`` that touches the pipeline's keys is a deliberate one.
+    """
     entry_payload = runner._entry_to_jsonable(entry)
     for metadata_only in ("split", "publication_date", "package_release_date"):
         entry_payload.pop(metadata_only, None)
     payload = json.dumps(
-        {"entry": entry_payload, "retally_version": runner._retally_version(), "mode": mode},
+        {
+            "entry": entry_payload,
+            "retally_version": runner._retally_version(),
+            "mode": mode,
+            "model": runner.pipeline_model(),
+        },
         sort_keys=True,
         default=str,
     )
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]
 
 
-def test_seeded_pipeline_cache_keys_are_unchanged():
-    """A plain ``make benchmark`` keeps hitting the caches it wrote before this change."""
+def test_seeded_pipeline_cache_keys_follow_the_documented_formula():
+    """A plain ``make benchmark`` keys on entry + version + mode + model, nothing else."""
     entry = _entry()
     assert runner._cache_key(entry, "seeded") == _pre_protocol_cache_key(entry, "seeded")
     assert runner._cache_key(entry, "seeded", "pipeline") == _pre_protocol_cache_key(entry, "seeded")
@@ -636,6 +647,35 @@ def test_seeded_pipeline_cache_keys_are_unchanged():
 def test_independent_cache_keys_move_to_the_script_free_contract():
     entry = _entry()
     assert runner._cache_key(entry, "independent") != _pre_protocol_cache_key(entry, "independent")
+
+
+def test_pipeline_cache_key_includes_the_model(monkeypatch):
+    """A row scored on one model is never served for a run on another."""
+    entry = _entry()
+    monkeypatch.setenv(runner.PIPELINE_MODEL_ENV, "claude-opus-4-7")
+    old = {mode: runner._cache_key(entry, mode) for mode in runner.MODES}
+    monkeypatch.setenv(runner.PIPELINE_MODEL_ENV, "claude-opus-5-5")
+    new = {mode: runner._cache_key(entry, mode) for mode in runner.MODES}
+    for mode in runner.MODES:
+        assert old[mode] != new[mode]
+
+
+def test_other_reproducers_cache_keys_ignore_the_pipeline_model(monkeypatch):
+    """The claude-code agent runs on whatever the desktop session runs on."""
+    entry = _entry()
+    monkeypatch.setenv(runner.PIPELINE_MODEL_ENV, "claude-opus-4-7")
+    old = runner._cache_key(entry, "seeded", "claude-code")
+    monkeypatch.setenv(runner.PIPELINE_MODEL_ENV, "claude-opus-5-5")
+    assert runner._cache_key(entry, "seeded", "claude-code") == old
+
+
+def test_pipeline_model_defaults_and_env_override(monkeypatch):
+    from retally.llm import DEFAULT_MODEL
+
+    monkeypatch.delenv(runner.PIPELINE_MODEL_ENV, raising=False)
+    assert runner.pipeline_model() == DEFAULT_MODEL == "claude-opus-5-5"
+    monkeypatch.setenv(runner.PIPELINE_MODEL_ENV, "claude-opus-4-7")
+    assert runner.pipeline_model() == "claude-opus-4-7"
 
 
 def test_cache_key_includes_reproducer():

@@ -80,6 +80,7 @@ from benchmark.reproducer import (
     Reproduction,
     ReproductionMissingError,
 )
+from retally.llm import DEFAULT_MODEL
 
 __all__ = [
     "BenchmarkResult",
@@ -465,10 +466,23 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help=(
             "Ignore and do not write the result cache (benchmark/.cache/<hash>.json).  The cache key is "
-            "entry + mode + reproducer, so a new claude-code run of an already-scored cell needs this."
+            "entry + mode + reproducer (+ model for the pipeline), so a new claude-code run of an "
+            "already-scored cell needs this."
+        ),
+    )
+    parser.add_argument(
+        "--model",
+        metavar="MODEL_ID",
+        default=None,
+        help=(
+            f"Claude model for the pipeline reproducer (default {DEFAULT_MODEL}, or "
+            "$RETALLY_PIPELINE_MODEL when set).  Part of the pipeline's result-cache key, so rows from "
+            "different models never collide.  Ignored by other reproducers."
         ),
     )
     args = parser.parse_args(argv)
+    if args.model:
+        os.environ[PIPELINE_MODEL_ENV] = args.model
     modes = {"both": BOTH_MODES, "all": MODES}.get(args.mode, (args.mode,))
     try:
         resolve_reproducer(args.reproducer)
@@ -1199,11 +1213,19 @@ def _cache_key(
     The reproducer name joins the payload only when it is not the default
     pipeline, and the independent-mode dataset contract (a script-free
     copy, see ``benchmark.reproducer.script_free_copy``) only in
-    independent and blind mode — so seeded pipeline keys, i.e. a plain
-    ``make benchmark``, are byte-identical to the keys from before the
-    Reproducer protocol, and existing seeded caches stay valid.
-    Independent pipeline keys change once, deliberately: a result produced
-    with the scripts on disk must not be served as a script-free one.
+    independent and blind mode.  Independent pipeline keys changed once,
+    deliberately, with the Reproducer protocol: a result produced with
+    the scripts on disk must not be served as a script-free one.
+
+    For the pipeline reproducer the key also carries the Claude model
+    (``pipeline_model()``), so a row scored on one model is never served
+    for a run on another — the model-confound comparison in ROADMAP 3.3
+    depends on exactly that.  Every pipeline key therefore changed once
+    more when the model joined the payload (2026-10-22, alongside the
+    move to Opus 5.5); the rows that predate it live in
+    ``benchmark/results/`` as composites, not in the cache.  Other
+    reproducers choose their own model (the claude-code agent runs on
+    whatever the desktop session runs on), so their keys do not carry it.
     """
     retally_version = _retally_version()
     entry_payload = _entry_to_jsonable(entry)
@@ -1212,6 +1234,8 @@ def _cache_key(
     key_payload: dict[str, Any] = {"entry": entry_payload, "retally_version": retally_version, "mode": mode}
     if reproducer != DEFAULT_REPRODUCER:
         key_payload["reproducer"] = reproducer
+    else:
+        key_payload["model"] = pipeline_model()
     if mode in SCRIPT_FREE_MODES:
         key_payload["independent_dataset"] = "script-free"
     payload = json.dumps(key_payload, sort_keys=True, default=str)
@@ -1328,6 +1352,16 @@ def _retally_version() -> str:
         return "unknown"
 
 
+PIPELINE_MODEL_ENV = "RETALLY_PIPELINE_MODEL"
+"""Environment variable naming the pipeline reproducer's Claude model.
+``--model`` sets it; unset means ``retally.llm.DEFAULT_MODEL``."""
+
+
+def pipeline_model() -> str:
+    """The Claude model the pipeline reproducer runs (and is cache-keyed) on."""
+    return os.environ.get(PIPELINE_MODEL_ENV) or DEFAULT_MODEL
+
+
 def _default_pipeline_factory():
     """Build ``ValidationPipeline.default()`` from the env-bound API key.
 
@@ -1347,7 +1381,7 @@ def _default_pipeline_factory():
     llm_cache_dir: Path | None = CACHE_DIR / "llm"
     if os.environ.get("RETALLY_LLM_CACHE", "1") == "0":
         llm_cache_dir = None
-    return ValidationPipeline.default(llm_cache_dir=llm_cache_dir)
+    return ValidationPipeline.default(llm_cache_dir=llm_cache_dir, model=pipeline_model())
 
 
 def _pipeline_reproducer_factory(pipeline_factory: Callable[[], Any]) -> Callable[[], Reproducer]:

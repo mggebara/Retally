@@ -290,8 +290,11 @@ uv run python -m benchmark.runner --only dincecco-2022-india-warfare --mode both
 ```
 
 `--mode {seeded,independent,blind,both,all}` (`both` is seeded and
-independent, as before blind existed; `all` adds blind), `--only ENTRY_ID` (repeatable), and
-`--reproducer NAME` (default `pipeline`; see below) combine.  For each
+independent, as before blind existed; `all` adds blind), `--only ENTRY_ID` (repeatable),
+`--reproducer NAME` (default `pipeline`; see below) and `--model MODEL_ID`
+(the pipeline's Claude model; default `retally.llm.DEFAULT_MODEL`, Claude
+Opus 5.5, or `$RETALLY_PIPELINE_MODEL`; ignored by other reproducers)
+combine.  For each
 catalog entry and mode the runner emits one row in `results.json`,
 carrying `"mode"` and `"reproducer"` fields (rows from files that
 predate them are read as `seeded` / `pipeline`).
@@ -315,7 +318,9 @@ finishes in seconds.  The result cache (`benchmark/.cache/<hash>.json`)
 is keyed on the catalog entry, the retally version, **the mode**, and —
 for anything other than the default pipeline — the reproducer, so a
 seeded result is never served for an independent run nor one agent's
-result for another's (independent- and blind-mode keys also carry the script-free
+result for another's; pipeline keys also carry **the model**
+(`--model` / `RETALLY_PIPELINE_MODEL`), so a row scored on Opus 4.7 is
+never served for an Opus 5.5 run (independent- and blind-mode keys also carry the script-free
 dataset contract, so results from before it are not reused); `split`,
 `publication_date`, and `package_release_date` are excluded from the key
 because they never reach the pipeline.  Skips and transient download/network

@@ -29,6 +29,7 @@ from typing import TYPE_CHECKING, NamedTuple
 
 from retally.codegen.rdata import R_DATA_SUFFIXES, read_r_objects
 from retally.codegen.sandbox_packages import PYTHON_PACKAGES, R_PACKAGES
+from retally.llm import DEFAULT_GENERATION_EFFORT, DEFAULT_MODEL, request_options, response_text
 from retally.models import (
     ClaimType,
     ClaimValidationResult,
@@ -78,9 +79,12 @@ class CodeGenerator:
     anthropic_client:
         An instantiated ``anthropic.Anthropic`` client.
     model:
-        Claude model to use.  Defaults to a capable reasoning model.
-        Recommended: ``"claude-opus-4-7"`` for generation, ``"claude-sonnet-4-6"``
-        for refinement iterations.
+        Claude model to use.  Defaults to ``retally.llm.DEFAULT_MODEL``
+        (Claude Opus 5.5), for generation and refinement alike.
+    effort:
+        ``output_config.effort`` for every call (``low`` … ``max``);
+        ``None`` sends no effort and takes the model's default.
+        Defaults to ``retally.llm.DEFAULT_GENERATION_EFFORT``.
     max_refinements:
         Maximum number of refinement attempts before giving up.
     """
@@ -88,11 +92,13 @@ class CodeGenerator:
     def __init__(
         self,
         anthropic_client,
-        model: str = "claude-opus-4-7",
+        model: str = DEFAULT_MODEL,
         max_refinements: int = 3,
+        effort: str | None = DEFAULT_GENERATION_EFFORT,
     ) -> None:
         self._client = anthropic_client
         self._model = model
+        self._effort = effort
         self.max_refinements = max_refinements
         self.prompt_log: list[str] = []
         """Every prompt sent by this generator, in call order.  Callers that
@@ -1032,10 +1038,14 @@ class CodeGenerator:
         self.prompt_log.append(prompt)
         response = self._client.messages.create(
             model=self._model,
-            max_tokens=8192,
+            # Thinking tokens count against this cap on models where
+            # thinking is always on (Opus 5.5), so it is sized for a long
+            # reproduction script *plus* a high-effort think-through.
+            max_tokens=16384,
             messages=[{"role": "user", "content": prompt}],
+            **request_options(self._effort),
         )
-        return response.content[0].text
+        return response_text(response)
 
     def _extract_code_block(self, response: str) -> str:
         """Strip a markdown code fence (```python / ```r / bare ```) if present.

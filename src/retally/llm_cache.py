@@ -35,18 +35,27 @@ import logging
 from pathlib import Path
 from typing import Any
 
+from retally.llm import response_text
+
 logger = logging.getLogger(__name__)
 
 
 class _CachedTextBlock:
     """Minimal stand-in for an anthropic text content block."""
 
+    type = "text"
+
     def __init__(self, text: str) -> None:
         self.text = text
 
 
 class _CachedResponse:
-    """Minimal stand-in for an anthropic Message: ``.content[0].text``."""
+    """Minimal stand-in for an anthropic Message: one text content block.
+
+    A replay carries only the text — the thinking block a live response
+    may have opened with is not persisted — which is all
+    ``retally.llm.response_text`` reads.
+    """
 
     from_llm_cache = True
     """Marks a replay: no API call was made, so it carries no ``usage`` and
@@ -78,9 +87,10 @@ class _CachingMessages:
         response = self._inner.messages.create(**kwargs)
 
         try:
-            text = response.content[0].text
-        except (AttributeError, IndexError):
-            # Response shape we don't understand — pass it through
+            text = response_text(response)
+        except (AttributeError, ValueError):
+            # Response shape we don't understand (no text block: a
+            # refusal, a tool-use-only reply, …) — pass it through
             # uncached rather than persist something we can't replay.
             logger.warning("llm-cache: uncacheable response shape for %s; not caching", key)
             return response
@@ -93,8 +103,9 @@ class CachingLLMClient:
     """Wraps an ``anthropic.Anthropic`` client with an on-disk call cache.
 
     Drop-in for the pipeline's usage of the client — components only
-    call ``client.messages.create(...)`` and read
-    ``response.content[0].text``, and that surface is preserved exactly.
+    call ``client.messages.create(...)`` and read the response's text
+    block (``retally.llm.response_text``), and that surface is preserved
+    exactly.
 
     Parameters
     ----------
@@ -113,11 +124,12 @@ class CachingLLMClient:
 
 
 def _request_key(kwargs: dict[str, Any]) -> str:
-    """Stable hash of the full request: model, token cap, and messages.
+    """Stable hash of the full request: model, token cap, effort, and messages.
 
     Everything that could change the response text must be in here —
     the messages list carries the entire prompt, so editing any prompt
-    template naturally produces a new key.
+    template naturally produces a new key, and so does a model or
+    ``output_config`` change.
     """
     payload = json.dumps(kwargs, sort_keys=True, default=str)
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:24]
