@@ -250,6 +250,7 @@ A catalog entry can be cleanly skipped:
 | `language_unsupported` | `language` is neither `python` nor `r`.  Stata is the canonical case — code is proprietary, we don't ship a sandbox image. |
 | `no_api_key` | `ANTHROPIC_API_KEY` not in env (the reproducer factory raised `MissingAPIKeyError`) |
 | `reproducer_init_failed` | The reproducer factory raised anything else (e.g. Docker not running, sandbox image not built); the message is in `error` |
+| `reproduction_missing` | The reproducer scores work done elsewhere and this (entry, mode) cell has not been done: `reproduce` raised `ReproductionMissingError` (e.g. `--reproducer claude-code` with no `benchmark/reproductions/<entry>/<mode>/<run_id>/reproduction.json`); where it looked is in `error` |
 
 Skips are never written to the result cache.  Neither are **transient
 errors**: a reproducer that raises because of a download / network / HTTP
@@ -467,9 +468,97 @@ Programmatically, `run_benchmark(catalog, reproducer="name",
 reproducer_factory=...)` does the same.  The factory is only called on a
 cache miss.  A factory that raises `benchmark.reproducer.MissingAPIKeyError`
 is recorded as a `no_api_key` skip; any other exception as a
-`reproducer_init_failed` skip with the message in `error`.  `pipeline` is the only built-in reproducer today; a
-general-purpose agent adapter (e.g. on the Claude Agent SDK) is planned
-in `ROADMAP.md` Phase 2, not built.
+`reproducer_init_failed` skip with the message in `error`.  Built in:
+`pipeline` (the default) and `claude-code` (below).  An adapter that drives
+a general-purpose agent itself (e.g. on the Claude Agent SDK) is planned in
+`ROADMAP.md` Phase 2, not built.
+
+### Claude Code as a reproducer
+
+`--reproducer claude-code` scores reproductions a Claude Code session did
+by hand, from the files it wrote.  The harness never drives the session
+and never calls the API; it renders the task, and later reads the result
+(`benchmark/reproducers/`).  Three steps per cell (entry, mode, run id):
+
+```bash
+# 1. Render the task: task.md, paper.txt and the mode's data mount.
+uv run python -m benchmark.reproducers.render_task \
+    --entry montero-2022-cooperative-property-rights --mode blind --run-id 2026-10-22-a
+#    prints: the task file, the mount path, the output directory
+
+# 2. In a Claude Code session: "Do the task in <task file>."  The agent writes
+#    scripts, runs them in the R sandbox and records everything under the
+#    output directory, reproduction.json last.
+
+# 3. Score it like any reproducer (--no-cache when re-scoring a cell with a new run id).
+uv run python -m benchmark.runner --reproducer claude-code --mode blind \
+    --only montero-2022-cooperative-property-rights --no-cache
+uv run python -m benchmark.report benchmark/results/pipeline.json benchmark/results/results.json
+```
+
+`render_task` gets the package from the pipeline's download cache
+(`.cache/datasets/`, or `--package-dir`) and the paper text from
+`paper.source` (cached in `benchmark/.cache/claude-code/papers/`, or
+`--paper-text`).  The task directory,
+`benchmark/.cache/claude-code/<entry>/<mode>/<run_id>/`, holds `task.md`,
+`paper.txt`, `render.json` and `mount/<package>/` — the full package in
+seeded mode, the script-free copy in independent and blind mode, whose
+strip manifest is moved *outside* the task directory
+(`<run_id>.retally-stripped.json` beside it), so nothing the agent is
+pointed at names a withheld file.  The claims, dataset listing, output
+convention, code requirements, package scripts and independent / blind
+blocks in `task.md` are the pipeline generator's own rendering, so the
+agent sees what the pipeline's prompt shows.  In blind mode every pinned
+claim value and standard error is redacted from `paper.txt` (`[withheld]`;
+the count is `paper_redactions` in `render.json`).
+
+The session writes to `benchmark/reproductions/<entry>/<mode>/<run_id>/`
+(gitignored; `RETALLY_REPRODUCTIONS_DIR` overrides the root):
+
+```
+render.json                         # from render_task
+script.R  stdout.txt  stderr.txt    # the final run: its RESULT: lines are scored
+attempt-<n>/                        # every earlier execution, in order
+  script.R  stdout.txt  stderr.txt  feedback.txt   # feedback when kind is "error" or "claim"
+reproduction.json                   # the manifest (schema in benchmark/reproducers/filesystem.py)
+```
+
+`FilesystemReproducer` picks the run named by `RETALLY_REPRODUCTION_RUN_ID`,
+else the newest one with a `reproduction.json` (directories with only
+`render.json` were rendered but not run).  The numbers come from the files,
+never from the manifest: `outputs` are the final `stdout.txt`'s `RESULT:`
+lines, the first-attempt / first-scored counts come from the attempts'
+`stdout.txt`, and the manifest's `kind` per attempt gives the
+error / claim refinement counts.  A malformed manifest, a missing file, an
+unknown kind, a blind run with a `claim` attempt, or an entry / mode / run
+id that does not match the directory fails the row (`retally_ran = false`,
+the file named in `error`); a cell with no finished run is a
+`reproduction_missing` skip.  The whole run directory is copied to
+`benchmark/results/artifacts/<entry>/<mode>/claude-code/<run_id>/`.
+
+Mode rules the task states (the pipeline's, as far as they translate):
+every mode — R only, run only in the `retally-sandbox-r` container with the
+pipeline executor's flags (`--network none`, read-only, the mount at its own
+path, the executor's memory / CPU / timeout), use only the mount and
+`paper.txt`.  Seeded — the authors' scripts may be followed.  Independent
+(and seeded) — the agent may compare its values with the claims, but each
+time it then changes the script it records a `kind: "claim"` attempt whose
+`feedback.txt` is the pipeline's own claim-gap text, produced by
+`python -m benchmark.reproducers.check_attempt`; at most 3 claim and 3
+error refinements, the pipeline's budgets.  Blind — the pipeline's blind
+block; never look up the reported values in the paper or tune toward them;
+no `claim` attempts (the check prints only the names of missing quantities);
+at most 3 error repairs.
+
+**Isolation caveat.**  An agent with a shell is isolated only by what is on
+disk and by instruction.  The task directory contains only the mode's mount,
+and the sandbox mounts nothing else, but the session itself runs in a full
+checkout: the catalog YAMLs (with the pinned values), the download cache
+(with the authors' scripts) and earlier results are all readable.  The rules
+"use only the mount and `paper.txt`" and "list anything else you read in
+`files_read_outside_mount`" are enforced by instruction and by inspecting
+that list and the session transcript, not by the filesystem.  Treat a
+`claude-code` row as trustworthy only after that inspection.
 
 ## Prompt tuning: splits, closeness metrics, run comparison
 

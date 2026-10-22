@@ -1,0 +1,6 @@
+library(haven)
+library(fixest)
+set.seed(42)
+d <- read_dta("/mount/package/data/conflictexposure.dta")
+m <- feols(lights ~ conflict_count, data = d)
+cat(sprintf("RESULT:beta=%.4f\n", coef(m)[["conflict_count"]]))

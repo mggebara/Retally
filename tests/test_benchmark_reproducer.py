@@ -570,7 +570,7 @@ def test_resolve_builtin_and_module_spec():
     assert isinstance(factory(), reproducer_mod.Reproducer)
 
 
-@pytest.mark.parametrize("spec", ["claude-code", "no.such.module:x", "tests.test_benchmark_reproducer:nope"])
+@pytest.mark.parametrize("spec", ["unknown", "no.such.module:x", "tests.test_benchmark_reproducer:nope"])
 def test_resolve_rejects_unknown(spec):
     with pytest.raises(ValueError):
         runner.resolve_reproducer(spec)
@@ -584,7 +584,7 @@ def test_run_benchmark_resolves_a_module_spec(tmp_path):
 
 
 def test_main_rejects_unknown_reproducer(capsys):
-    assert runner.main(["--reproducer", "claude-code"]) == 2
+    assert runner.main(["--reproducer", "no-such-agent"]) == 2
     assert "unknown reproducer" in capsys.readouterr().err
 
 

@@ -37,6 +37,9 @@ def render_markdown(results: list[dict[str, Any]]) -> str:
     grouped = metrics.by_mode(results)
     modes = list(grouped)
     multi = len(modes) > 1
+    # The per-paper table needs the mode / reproducer columns whenever rows
+    # could otherwise look like duplicates: several modes, or several agents.
+    show_cells = multi or len(metrics.reproducers_present(results)) > 1
     if multi:
         lines = _multi_mode_header(results, modes)
         for mode, rows in grouped.items():
@@ -74,12 +77,12 @@ def render_markdown(results: list[dict[str, Any]]) -> str:
         [
             "## Per-paper results",
             "",
-            _table_header_markdown(multi),
-            _table_rule_markdown(multi),
+            _table_header_markdown(show_cells),
+            _table_rule_markdown(show_cells),
         ]
     )
     for r in results:
-        lines.append(_row_markdown(r, show_mode=multi))
+        lines.append(_row_markdown(r, show_mode=show_cells))
     lines.append("")
     return "\n".join(lines)
 
@@ -92,7 +95,11 @@ def render_html(results: list[dict[str, Any]]) -> str:
     dashboard.
     """
     headline = _headline_counts(results) if results else None
-    multi = len(metrics.modes_present(results)) > 1 if results else False
+    multi = (
+        len(metrics.modes_present(results)) > 1 or len(metrics.reproducers_present(results)) > 1
+        if results
+        else False
+    )
     rows_html = "".join(_row_html(r, show_mode=multi) for r in results) if results else ""
     mode_th = "<th>Mode</th><th>Reproducer</th>" if multi else ""
 
@@ -132,20 +139,34 @@ def write_report(results: list[dict[str, Any]], out_dir: Path = RESULTS_DIR) -> 
     (out_dir / "report.html").write_text(render_html(results), encoding="utf-8")
 
 
-def main() -> int:
-    """CLI entrypoint — reads results.json, writes REPORT.md + report.html."""
-    src = RESULTS_DIR / "results.json"
-    if not src.exists():
-        import sys
+def main(argv: list[str] | None = None) -> int:
+    """CLI entrypoint — ``python -m benchmark.report [results.json ...]``; writes REPORT.md + report.html.
 
-        print(
-            f"No results file at {src.relative_to(REPO_ROOT)}.  Run 'make benchmark' first.",
-            file=sys.stderr,
-        )
-        return 1
+    With no paths, reads ``benchmark/results/results.json``.  With several,
+    their rows are concatenated into one report (e.g. a pipeline run and a
+    ``claude-code`` run side by side; rows carry their ``reproducer``).
+    """
+    import sys
 
-    results = metrics.result_rows(json.loads(src.read_text(encoding="utf-8")))
-    write_report(results)
+    paths = [Path(a) for a in (sys.argv[1:] if argv is None else argv)]
+    if not paths:
+        src = RESULTS_DIR / "results.json"
+        if not src.exists():
+            print(
+                f"No results file at {src.relative_to(REPO_ROOT)}.  Run 'make benchmark' first.",
+                file=sys.stderr,
+            )
+            return 1
+        paths = [src]
+
+    results: list[dict[str, Any]] = []
+    for path in paths:
+        try:
+            results.extend(metrics.result_rows(json.loads(path.read_text(encoding="utf-8"))))
+        except (OSError, json.JSONDecodeError) as exc:
+            print(f"cannot read {path}: {exc}", file=sys.stderr)
+            return 1
+    write_report(results, RESULTS_DIR)
     print(f"Wrote {(RESULTS_DIR / 'REPORT.md').relative_to(REPO_ROOT)}")
     print(f"Wrote {(RESULTS_DIR / 'report.html').relative_to(REPO_ROOT)}")
     return 0
@@ -167,6 +188,7 @@ def _headline_counts(results: list[dict[str, Any]]) -> dict[str, int]:
         "language_unsupported": sum(1 for s in skip_reasons if s == "language_unsupported"),
         "no_api_key": sum(1 for s in skip_reasons if s == "no_api_key"),
         "reproducer_init_failed": sum(1 for s in skip_reasons if s == "reproducer_init_failed"),
+        "reproduction_missing": sum(1 for s in skip_reasons if s == "reproduction_missing"),
     }
 
 
@@ -199,9 +221,14 @@ def _transient_lines(results: list[dict[str, Any]]) -> list[str]:
 
 
 def _init_failed_suffix(headline: dict[str, int]) -> str:
-    """``, reproducer_init_failed=N`` when any run hit it; empty otherwise (keeps old reports stable)."""
-    n = headline["reproducer_init_failed"]
-    return f", reproducer_init_failed={n}" if n else ""
+    """``, reproducer_init_failed=N`` / ``, reproduction_missing=N`` when any run hit them; empty otherwise.
+
+    Omitted at zero so reports of runs without them stay byte-stable.
+    """
+    parts = [
+        f", {k}={headline[k]}" for k in ("reproducer_init_failed", "reproduction_missing") if headline[k]
+    ]
+    return "".join(parts)
 
 
 _MODE_BLURB = {

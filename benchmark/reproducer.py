@@ -67,6 +67,18 @@ class MissingAPIKeyError(RuntimeError):
     """
 
 
+class ReproductionMissingError(LookupError):
+    """Raised by ``reproduce`` when there is no reproduction to report for this cell.
+
+    For reproducers that score work done elsewhere rather than running an
+    agent themselves (``benchmark.reproducers.filesystem`` reads the files
+    a Claude Code session wrote): the (entry, mode) cell has not been run
+    yet.  The runner records it as a ``reproduction_missing`` skip, with
+    the message (which should say where it looked) in ``error``, instead
+    of a ``retally_ran = False`` failure; skips are never cached.
+    """
+
+
 @dataclass
 class ComponentMetrics:
     """Per-stage success flags for one reproduction attempt.
@@ -212,6 +224,9 @@ class Reproducer(Protocol):
 
     It returns a :class:`Reproduction`.  Raising is allowed: the harness
     records ``retally_ran = False`` with the exception text and moves on.
+    The one exception is :class:`ReproductionMissingError` ("this cell has
+    not been reproduced yet"), which is recorded as a
+    ``reproduction_missing`` skip instead.
     """
 
     def reproduce(

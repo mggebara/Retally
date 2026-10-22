@@ -1,0 +1,8 @@
+library(haven)
+library(fixest)
+set.seed(42)
+d <- read_dta("/mount/package/data/conflictexposure.dta")
+m <- feols(lights ~ conflict + popdens, data = d, vcov = "hetero")
+cat(sprintf("RESULT:beta=%.4f\n", coef(m)[["conflict"]]))
+cat(sprintf("RESULT:n_obs=%d\n", nobs(m)))
+cat("DEVIATION: Dropped two districts with missing population density.\n")
