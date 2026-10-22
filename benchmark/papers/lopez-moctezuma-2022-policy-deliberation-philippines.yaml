@@ -1,0 +1,458 @@
+# Original paper: López-Moctezuma, G., Wantchekon, L., Rubenson, D.,
+#   Fujiwara, T., & Pe Lero, C. (2022). "Policy Deliberation and Voter
+#   Persuasion: Experimental Evidence from an Election in the
+#   Philippines." American Journal of Political Science, 66(1), 59-74.
+#   doi:10.1111/ajps.12566  (Wiley early view 2020, "©2020"; print
+#   January 2022.)
+#
+# I4R reproduction: I4R First Meta Database replication team 66 (one
+#   replicator), entered 2023-10-10.  No I4R Discussion Paper exists for
+#   this paper (searched the DP series; the candidate list records "none
+#   found"), so the database rows are the only per-number record and
+#   i4r_report_url points at the meta-paper repository, as for Adams and
+#   Hanlon.  Verdict: minor discrepancies — computational_reproduction =
+#   1, perfect_reproduction = No, why_not_perfect_repro "Had to download
+#   archived versions of software which had been removed from CRAN"; the
+#   team's survey answer is "Analysis and cleaning code produce the same
+#   output as presented in the paper".  Of the 10 rows, 8 carry a
+#   replicator coefficient, and all 8 are ROBUSTNESS variants of appendix
+#   tables (C.3 and C.4 without the attendance weights; Table F.1 with the
+#   three omitted cities added back), not reproductions of the printed
+#   numbers; one row (Figure G.1, "trying to reproduce the values from the
+#   appendix") records result_same = 0 with no numbers; one row is the
+#   paper-level verdict.  The schema has no "minor discrepancies" label,
+#   so outcome_label is reproducible (see notes).
+#
+# Why this paper:
+#   1. Third R-original paper in the catalog with an open published PDF
+#      (CaltechAUTHORS) and an open Dataverse package (24 MB, none
+#      restricted).
+#   2. A cluster-randomised field experiment: a design the catalog had
+#      only in survey-experiment form.  Inference is by randomization /
+#      permutation (barangay level) and clustered SEs (individual level).
+#   3. The package needs two R packages archived off CRAN (ri, dummies):
+#      exercises dependency handling, the reason for the I4R
+#      "minor discrepancies" verdict.
+#
+# What the package is: the authors' own AJPS verification package
+#   (Dataverse S3HACJ), 16 R scripts in code/{aggregate,survey,individual,
+#   maps}/, two small .RData files (barangay-level official returns,
+#   individual survey), a barangay list .csv, two codebook PDFs, and
+#   region / city shapefiles for the maps.  Dataverse's folder labels are
+#   NOT kept by the downloader: every file lands flat in one directory,
+#   while the scripts setwd() into data/aggregate/ or data/survey/ and
+#   load "../aggregate/data_agg.RData" (see notes).
+#
+# original_claims: the headline Table 1 (the only table in the main
+#   text; barangay-level ITT on official returns, all four columns plus
+#   the observation counts) AND the appendix estimates the I4R database
+#   covers — the summary-index ITTs of SI Tables C.3 / C.4 (both party
+#   lists) and two of the four ITTs of SI Table F.1 — so that six claims
+#   carry I4R findings.  Every table prints p-values, never standard
+#   errors, so standard_error is empty on every claim.
+
+id: lopez-moctezuma-2022-policy-deliberation-philippines
+i4r_report_url: https://github.com/I4Replication/I4R-First-Meta-Paper
+# Target language for regeneration; the original analysis is also R
+# (R 3.6.2).
+language: r
+outcome_label: reproducible
+# Pipeline tuning is frozen; this is an evaluation paper.
+split: holdout
+# Contamination bookkeeping.  First public version: a working paper
+# dated 21 August 2015 (J-PAL research-paper listing and the 3ie evidence
+# map cite "Wantchekon et al. 2015"; found by web search 2026-10-21, the
+# J-PAL file itself answered with an HTML page, so the date is from the
+# listings).  The earliest PDF read is the 17 March 2017 working paper
+# (CaltechAUTHORS file philippines.pdf; tables numbered 1-9, Table 4 is
+# the barangay-level effect).  AJPS early view 2020 (SI compiled
+# 2020-05-23), print vol. 66 no. 1, January 2022.  Package: Harvard
+# Dataverse doi:10.7910/DVN/S3HACJ, first published 2020-08-27 (Dataverse
+# API publicationDate); the current version 1.1 was released 2022-04-27.
+publication_date: "2015-08"
+package_release_date: "2020-08-27"
+
+paper:
+  # Published AJPS version (typeset, 16 pp., pp. 59-74) on CaltechAUTHORS.
+  # Checked 2026-10-21: 302 to a signed S3 URL, then 200 served as
+  # application/octet-stream (not application/pdf), body starts %PDF-1.6.
+  # PaperParser.parse_url sniffs the %PDF magic for this case (added in
+  # the same PR).  Keep this record URL as canonical: the S3 link expires.
+  # The SI appendix tables pinned below are NOT in this PDF: they are in
+  # the supporting-information PDF on the same record
+  # (ajps12566-sup-0001-suppmat.pdf, 30 pp.), which the pipeline does not
+  # fetch; the claims' location / context say what the appendix tables
+  # are.
+  source: https://authors.library.caltech.edu/api/records/qce9v-wvk72/files/American_J_Political_Sci_-_2020_-_L_pez_u2010Moctezuma_-_Policy_Deliberation_and_Voter_Persuasion_Experimental_Evidence_from_an.pdf/content
+  title: "Policy Deliberation and Voter Persuasion: Experimental Evidence from an Election in the Philippines"
+  authors:
+    - Gabriel López-Moctezuma
+    - Leonard Wantchekon
+    - Daniel Rubenson
+    - Thomas Fujiwara
+    - Cecilia Pe Lero
+
+dataset:
+  source: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/S3HACJ
+  access_notes: >
+    Harvard Dataverse (doi:10.7910/DVN/S3HACJ) version 1.1 (2022-04-27;
+    first published 2020-08-27), no licence stated (Dataverse terms-of-use
+    text only), 28 files, none restricted, ~24 MB (Dataverse API, checked
+    2026-10-21).  Data: data_agg.RData (3.5 KB, barangay-level official
+    returns and attendance, object data.all), survey_raw.RData (15 KB,
+    post-election survey, object survey_raw), data_barangay.csv (1.5 KB,
+    ingested by Dataverse as data_barangay.tab; the downloader fetches the
+    original .csv), and the map shapefiles MuniCities.{shp,shx,dbf}
+    (14.4 MB) and Regions.{shp,shx,dbf} (9.5 MB).  Code: 16 R scripts
+    (main_agg.R, functions_agg.R, tables_figures_agg.R, table_A1_A2.R,
+    figure_B1_table_B1.R, main_survey.R, functions_survey.R,
+    survey_clean.R, main_ind.R, functions_ind.R, tables_fig_ind.R,
+    tables_fig_ind_covs.R, tables_fig_ind_balanced.R,
+    tables_fig_ind_unweighted.R, corr_att.R, maps.R).  Docs: readme.txt,
+    Codebook_aggregate_dataset.pdf, Codebook_individual_dataset.pdf.  No
+    archives, no logs, no table output.  Dataverse directory labels
+    (code/aggregate, data/survey, ...) are dropped by the downloader, so
+    the cached copy is flat.
+
+code_repo:
+  url: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/S3HACJ
+
+original_claims:
+  - description: itt_turnout_barangay_table1_col1
+    value: -4.544
+    claim_type: coefficient
+    unit: percentage points (party-list turnout, % of registered voters)
+    location: "Table 1, column 1 (Turnout), ITT row"
+    context: >
+      Table 1 ("Intention-to-Treat Effect on Electoral Returns at the
+      Barangay Level"), column 1.  Intention-to-treat effect of random
+      assignment of a town-hall (deliberative) campaign by either party
+      list (Akbayan or Umalab Ka) on party-list turnout, as a percentage
+      of registered voters, from official COMELEC returns of the May 2013
+      party-list election, across all experimental barangays (one
+      assigned treatment and two controls per selected municipality).
+      Regression of the electoral return on the assignment dummy with
+      municipality (city) fixed effects (equation 1); inference under
+      randomization of the treatment, permutation p-value p = .404.  Not
+      significant.
+  - description: itt_vote_overall_barangay_table1_col2
+    value: 1.096
+    claim_type: coefficient
+    unit: percentage points (vote share of the treating party list)
+    location: "Table 1, column 2 (Vote (overall)), ITT row"
+    context: >
+      Table 1, column 2: intention-to-treat effect of town-hall-meeting
+      assignment on the vote share (% of total party-list votes) of the
+      party list campaigning in the barangay, Akbayan and Umalab Ka
+      pooled; all experimental barangays; same specification as column 1
+      (assignment dummy, municipality fixed effects, randomization
+      inference, permutation p = .048).  The paper's headline result.
+  - description: itt_vote_akbayan_barangay_table1_col3
+    value: 1.955
+    claim_type: coefficient
+    unit: percentage points (Akbayan vote share)
+    location: "Table 1, column 3 (Vote (Akbayan)), ITT row"
+    context: >
+      Table 1, column 3: intention-to-treat effect on Akbayan's vote share
+      (% of party-list votes), barangays of the municipalities randomly
+      assigned to Akbayan only; assignment dummy with municipality fixed
+      effects, randomization inference (permutation p = .087).
+  - description: itt_vote_umalabka_barangay_table1_col4
+    value: 0.360
+    claim_type: coefficient
+    unit: percentage points (Umalab Ka vote share)
+    location: "Table 1, column 4 (Vote (Umalab Ka)), ITT row"
+    context: >
+      Table 1, column 4: intention-to-treat effect on Umalab Ka's vote
+      share (% of party-list votes), barangays of the municipalities
+      randomly assigned to Umalab Ka only; assignment dummy with
+      municipality fixed effects, randomization inference (permutation
+      p = .141).  Not significant.
+  - description: n_obs_barangay_table1_cols1_2
+    value: 39
+    claim_type: other
+    unit: observations (barangays)
+    location: "Table 1, Observations, columns 1 and 2"
+    context: >
+      Number of barangays (all experimental barangays, both party lists)
+      in the turnout and pooled vote-share regressions of Table 1,
+      columns 1 and 2.
+  - description: n_obs_barangay_akbayan_table1_col3
+    value: 18
+    claim_type: other
+    unit: observations (barangays)
+    location: "Table 1, Observations, column 3"
+    context: >
+      Number of barangays in the Akbayan vote-share regression, Table 1
+      column 3 (barangays of the Akbayan municipalities).
+  - description: n_obs_barangay_umalabka_table1_col4
+    value: 21
+    claim_type: other
+    unit: observations (barangays)
+    location: "Table 1, Observations, column 4"
+    context: >
+      Number of barangays in the Umalab Ka vote-share regression, Table 1
+      column 4 (barangays of the Umalab Ka municipalities).
+  - description: itt_poverty_index_akbayan_tableC3
+    value: 0.496
+    claim_type: coefficient
+    unit: standard deviations (summary index, control-group s.d.)
+    location: "SI Table C.3, Akbayan Treatment panel, column 1 (Index), ITT row"
+    context: >
+      Supporting-information Table C.3 ("Intention to Treat Effect on
+      Attitudes on Poverty"), upper panel (Akbayan treatment), column 1.
+      Post-election survey respondents in the Akbayan municipalities.
+      Outcome: the summary index of poverty-related attitudes (Anderson
+      2008: the four items Poverty, Gap, CCT and Corruption, each oriented
+      so higher means more agreement, standardized with respect to the
+      control group's mean and s.d., combined as an inverse-covariance
+      weighted average).  Linear regression on treatment assignment with
+      city fixed effects (equation 3), weighted to adjust for the
+      oversampling of meeting attendees (inverse probability weights:
+      the proportion of self-reported attendees in the survey relative to
+      actual attendees from the meetings' attendance sheets, in treatment
+      barangays), standard errors clustered by barangay (p = 0.017).  The
+      surveyed municipalities exclude Imus, Pateros and Santa Maria.  The
+      main text shows this estimate in Figure 5.
+  - description: itt_poverty_index_umalabka_tableC3
+    value: 0.126
+    claim_type: coefficient
+    unit: standard deviations (summary index, control-group s.d.)
+    location: "SI Table C.3, Umalab Ka Treatment panel, column 1 (Index), ITT row"
+    context: >
+      SI Table C.3, lower panel (Umalab Ka treatment), column 1: the same
+      poverty-attitudes summary index and specification as the Akbayan
+      panel (assignment, city fixed effects, attendance weights, clustering
+      by barangay), respondents in the Umalab Ka municipalities (p =
+      0.048).  The text reports it as "a small, but significant ITT" on
+      the poverty index (Figure 5, lower panel).
+  - description: itt_gender_index_akbayan_tableC4
+    value: 0.450
+    claim_type: coefficient
+    unit: standard deviations (summary index, control-group s.d.)
+    location: "SI Table C.4, Akbayan Treatment panel, column 1 (Index), ITT row"
+    context: >
+      SI Table C.4 ("ITT Effect and CACE on Attitudes on Gender"), Akbayan
+      treatment panel, column 1.  Outcome: the summary index of attitudes
+      on gender discrimination and sexism built from the five gender
+      items (Female Rep., Female Pol., Equality, Discrimination,
+      Harassment), oriented, standardized on the control group and
+      inverse-covariance weighted as above.  Respondents in the Akbayan
+      municipalities; assignment with city fixed effects, attendance
+      weights, standard errors clustered by barangay (p = 0.032).  The
+      main text reports this as the town-hall effect on awareness of
+      gender-related issues (Figure 5, upper panel).
+  - description: itt_gender_index_umalabka_tableC4
+    value: 0.095
+    claim_type: coefficient
+    unit: standard deviations (summary index, control-group s.d.)
+    location: "SI Table C.4, Umalab Ka Treatment panel, column 1 (Index), ITT row"
+    context: >
+      SI Table C.4, Umalab Ka treatment panel, column 1: the gender-
+      attitudes summary index of the Akbayan panel, respondents in the
+      Umalab Ka municipalities, same specification (p = 0.079).
+  - description: itt_vote_overall_unweighted_tableF1_col2
+    value: 23.242
+    claim_type: coefficient
+    unit: percentage points (probability of voting for the treating party list)
+    location: "SI Table F.1, column 2 (Vote (Overall)), ITT row"
+    context: >
+      SI Table F.1 ("ITT Effect and CACE on Electoral Returns at the
+      Individual Level (Unweighted Results)"), column 2: the robustness
+      version of the individual-level vote-choice ITT WITHOUT the
+      attendance-oversampling adjustment (so self-reported attendees are
+      overrepresented).  Outcome: survey respondent reports voting for the
+      party list that campaigned in their municipality, in percent, among
+      respondents who turned out, both party lists pooled.  Linear
+      probability model on treatment assignment with city fixed effects;
+      inference for the ITT under randomization of the treatment
+      (permutation p = 0.00001).  Imus, Pateros and Santa Maria not
+      included.
+  - description: itt_vote_akbayan_unweighted_tableF1_col3
+    value: 31.729
+    claim_type: coefficient
+    unit: percentage points (probability of voting for Akbayan)
+    location: "SI Table F.1, column 3 (Vote (Akbyan)), ITT row"
+    context: >
+      SI Table F.1, column 3: unweighted individual-level ITT on reporting
+      a vote for Akbayan, in percent, respondents in the Akbayan
+      municipalities who turned out; assignment with city fixed effects,
+      permutation inference (p = 0.00000).
+
+# The meta-database's rows for this paper (team 66) are robustness
+# variants, not reproductions of the printed numbers: their o_coeff
+# equals the printed value (Table F.1 rescaled from percent to a
+# proportion) and their r_coeff is the replicator's re-estimate under a
+# changed specification — C.3 / C.4 "Remove weights" (attendance weights
+# dropped), "F.1"-"F.4" "Increase sample (individual)" (the three omitted
+# cities included).  The database's "Appendix Table F.1"-"F.4" are the
+# four columns of SI Table F.1 (there are no Tables F.2-F.4 in the SI;
+# each o_coeff and o_p_value matches one F.1 column).  No row reproduces
+# a printed number directly, so, as for Manekin, the computational
+# verdict comes from the team-level record (computational_reproduction =
+# 1; "Analysis and cleaning code produce the same output as presented in
+# the paper"; the only noted discrepancy is the archived CRAN packages)
+# and each finding records the paper's own value with outcome matches;
+# the robustness r_coeff are in the notes, not transcribed.  This is
+# weaker evidence than a DP table — flagged in the entry notes.  Table 1
+# claims have no database row and get no finding.
+i4r_replicator_findings:
+  - claim_id: 7
+    reproduced_value: 0.496
+    outcome: matches
+    notes: >
+      Team-level verdict (code reproduces the paper's output).  Database
+      row "appendix table c.3" (o_coeff 0.496, o_p 0.017) is the
+      remove-weights robustness check: r_coeff 0.138 (SE 0.160, p =
+      0.391), not transcribed.
+  - claim_id: 8
+    reproduced_value: 0.126
+    outcome: matches
+    notes: >
+      Team-level verdict.  Database row "appendix table c.3" (o_coeff
+      0.126, o_p 0.048), remove weights: r_coeff 0.182 (SE 0.183, p =
+      0.321), not transcribed.
+  - claim_id: 9
+    reproduced_value: 0.450
+    outcome: matches
+    notes: >
+      Team-level verdict.  Database row "appendix table c.4, panel 1,
+      column 1" (o_coeff 0.45, o_p 0.032), remove weights: r_coeff -0.001
+      (SE 0.036, p = 0.977) — the gender-index effect vanishes
+      unweighted; not transcribed.
+  - claim_id: 10
+    reproduced_value: 0.095
+    outcome: matches
+    notes: >
+      Team-level verdict.  Database row "appendix table c.4, panel 2,
+      column 1" (o_coeff 0.095, o_p 0.079), remove weights: r_coeff 0.088
+      (SE 0.087, p = 0.312), not transcribed.
+  - claim_id: 11
+    reproduced_value: 23.242
+    outcome: matches
+    notes: >
+      Team-level verdict.  Database row "appendix table f.2" (= Table F.1
+      column 2; o_coeff recorded as 0.234 against the printed 23.242,
+      i.e. 0.232 as a proportion — a transcription slip in the database;
+      o_p 0.000), include omitted cities: r_coeff 0.235 (SE 0.052), not
+      transcribed.
+  - claim_id: 12
+    reproduced_value: 31.729
+    outcome: matches
+    notes: >
+      Team-level verdict.  Database row "appendix table f.3" (= Table F.1
+      column 3; o_coeff 0.317, o_p 0.000), include omitted cities:
+      r_coeff 0.320 (SE 0.066), not transcribed.
+
+notes: >
+  Headline finding: in a cluster-randomised experiment in the May 2013
+  Philippine party-list election (13 municipalities, one treated and two
+  control barangays each, 39 barangays), assignment of town-hall
+  (deliberative) campaigns raised the treating party list's official
+  vote share by 1.096 percentage points over a control mean of 2.397
+  (Table 1 col 2, permutation p = .048), with no turnout effect
+  (-4.544, p = .404); in the post-election survey the effect is driven
+  by women (Akbayan) and low-income / less-educated voters (Umalab Ka),
+  and town halls moved attitudes on gender (index +0.45 s.d.) and,
+  less, poverty.
+
+  Original analysis in R 3.6.2 (base lm, AER::ivreg, ri for
+  randomization inference, stargazer / xtable output); language: r is
+  the reproduction target and matches the original.
+
+  outcome_label.  The I4R verdict is "minor discrepancies"
+  (computational_reproduction = 1, perfect_reproduction = No) and the
+  only reason recorded is having to install archived CRAN versions; the
+  replicator answered that the code produces the paper's output.  The
+  schema has no "minor discrepancies" label, so the entry is labelled
+  reproducible (stratification only).  The robustness rows (dropping
+  the attendance weights kills the Akbayan gender-index effect, 0.450 ->
+  -0.001, and the Akbayan poverty-index effect, 0.496 -> 0.138, p =
+  0.39) would argue for not_robust on the attitude claims; the
+  omitted-cities rows leave Table F.1 unchanged.
+
+  Curation pass (2026-10-21).  Pinned 13 claims: Table 1's four ITT
+  coefficients and its three observation counts (39 / 39 / 18 / 21; the
+  first two columns share one count), the summary-index ITTs of SI
+  Tables C.3 and C.4 for both party lists (0.496, 0.126, 0.450, 0.095),
+  and the pooled and Akbayan ITTs of SI Table F.1 (23.242, 31.729).
+  Why this mix: Table 1 is the paper's only main-text table and is what
+  the package's aggregate data produce, but it has no I4R row; every
+  I4R row is from SI Tables C.3, C.4 and F.1, so their estimates are
+  pinned so that six claims carry findings.  F.1 columns 1 and 4
+  (turnout 1.965, Umalab Ka 14.057) also have rows but were left out to
+  stay within 13 claims; C.3 / C.4 component columns have no rows.
+  Values exactly as printed (published AJPS PDF for Table 1; the SI
+  PDF, compiled 2020-05-23, for C.3 / C.4 / F.1), and equal to the
+  database's o_coeff except the F.2 slip noted on claim 11.  The tables
+  print p-values ("p = .048"), never SEs, so no standard_error is
+  pinned; the CACE rows, control means and R2 are not pinned.  Observation
+  counts of the SI columns are not pinned (C.3 Akbayan index 640, Umalab
+  Ka 568; C.4 644 / 542; F.1 869 / 476).
+
+  What was read.  The published AJPS PDF (all 16 pp.); the SI PDF (all
+  30 pp.: Tables A.1-A.2, B.1-B.2, C.1-C.4, D.1-D.3, E.1, F.1, Figure
+  G.1, survey questions H); the March 2017 working paper (front matter
+  and table list, for dates and numbering only: its Table 4 is the
+  barangay-level ITT, Tables 7-9 the individual ITT and attitudes);
+  the package readme, main_*.R, functions_*.R, tables_figures_agg.R,
+  tables_fig_ind.R, tables_fig_ind_unweighted.R and survey_clean.R; the
+  database's 10 rows (team 66); the Dataverse and CaltechAUTHORS API
+  metadata.  No R run of the package was made in this pass.
+
+  How the printed numbers are produced (package-only; never in
+  contexts).  Table 1: tables_figures_agg.R (run via main_agg.R) loads
+  data_agg.RData (object data.all; outcomes turnout.party,
+  share.treated, share.akbayan, share.umalabka; assignment, treatment,
+  city, barangay, partytreat in {"akbayan","umalabka"}); the ITT is
+  ri::estate(outcome, assignment, X = city dummies (dummies::dummy),
+  prob = ri::genprobexact(assignment, blockvar = city, clustvar =
+  barangay)) — an IPW regression with city dummies — and the p-value is
+  from ri::genperms (maxiter 50000, set.seed(1983)) / gendist; the CACE
+  is ri::estlate; the Control row is the intercept of a weighted lm
+  without city dummies.  Output table_agg.txt (stargazer).  Columns 3-4
+  subset partytreat; rows with missing outcome dropped.  SI Tables C.3 /
+  C.4: tables_fig_ind.R (run via main_ind.R, after main_survey.R ->
+  survey_clean.R builds survey_ind.RData / survey_agg.RData from
+  survey_raw.RData): lm(index ~ assignment + city, weights = weight.att)
+  per partytreat in {"Akbayan","Umalab Ka"}, clustered vcov by barangay
+  (varcov.cluster in functions_ind.R).  weight.att = att.prop (official
+  attendance share from data_agg) / attendance.agg (survey share of
+  self-reported attendees) in treatment barangays, 1 in controls.
+  Indices: poverty.all (Table C.3) and sexism (Table C.4) from
+  survey_clean.R — items standardized by standard(), which centres on
+  the full-sample mean and scales by the s.d. among treatment == 0
+  (implemented, not assigned, status), then combined with wmean()
+  (inverse-covariance weights).  Outputs table_pov.txt / table_sex.txt
+  (the readme says .pdf).  SI Table F.1: tables_fig_ind_unweighted.R —
+  outcomes turnout_pl, vote, vote.akbayan, vote.umalabka multiplied by
+  100, lm(y ~ assignment + city, weights = weight.assign) where
+  weight.assign is the inverse assignment probability from
+  ri::genprobexact (so "unweighted" means no attendance weights, not no
+  weights); permutation p-values; output table_itt_unweighted.txt.
+
+  Package quirks for a run.  (1) The scripts depend on ri and dummies,
+  both archived off CRAN (the I4R discrepancy), plus AER, stargazer,
+  xtable, mvtnorm, MatchIt, Amelia, doParallel, fastLink, data.table.
+  (2) main.dir is "" and the scripts setwd() to /data/aggregate/ and
+  /data/survey/ and load "../aggregate/data_agg.RData"; the downloader
+  flattens Dataverse's folders, so paths must be rewritten.  (3)
+  survey_ind.RData / survey_agg.RData are generated, not shipped.
+
+  Left out.  Table 1 CACE row (estlate) and control means; Figures 2-5
+  (figures; their point estimates are in SI Tables C.2-C.4, D.3); SI
+  Table C.2 (weighted individual ITT, no I4R row); C.3 / C.4 component
+  columns; D / E tables (covariates, multiple imputation); maps (Figure
+  A.1).
+
+  Render check (render_task, run id curation-check, 2026-10-21).  Before
+  the parser fix paper.txt was the raw PDF byte stream decoded as text
+  (483 KB of "%PDF-1.6 ... endobj"); after it, 67 KB of the published
+  article.  Blind: 16 files stripped (all 16 R scripts; readme.txt,
+  codebooks, data and shapefiles kept), 20 paper redactions.  None of
+  the 13 pinned literals appears in the blind task.md or paper.txt, but
+  the article text still says "0.13 s.d. units" twice (the rounded
+  Umalab Ka poverty-index ITT, claim 8 — outside its tolerance band),
+  and the dataset listing shows data.all with 39 rows (the Table 1
+  columns 1-2 N follows from the data).  The SI is not part of paper.txt
+  in any mode, so the six SI claims rest on their location / context.
