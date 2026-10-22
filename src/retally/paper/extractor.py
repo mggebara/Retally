@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import re
 
+from retally.llm import DEFAULT_EXTRACTION_EFFORT, DEFAULT_MODEL, request_options, response_text
 from retally.models import (
     Claim,
     ClaimType,
@@ -57,12 +58,22 @@ class ClaimExtractor:
     anthropic_client:
         An instantiated ``anthropic.Anthropic`` client.
     model:
-        Claude model to use.
+        Claude model to use.  Defaults to ``retally.llm.DEFAULT_MODEL``.
+    effort:
+        ``output_config.effort`` for every call; ``None`` sends no effort
+        and takes the model's default.  Defaults to
+        ``retally.llm.DEFAULT_EXTRACTION_EFFORT``.
     """
 
-    def __init__(self, anthropic_client, model: str = "claude-opus-4-7") -> None:
+    def __init__(
+        self,
+        anthropic_client,
+        model: str = DEFAULT_MODEL,
+        effort: str | None = DEFAULT_EXTRACTION_EFFORT,
+    ) -> None:
         self._client = anthropic_client
         self._model = model
+        self._effort = effort
 
     # ------------------------------------------------------------------
     # Public API
@@ -410,8 +421,9 @@ Return ONLY the JSON array — empty (``[]``) if the paper does not link any cod
             # _parse_json_response's salvage path rather than discarded.
             max_tokens=16384,
             messages=[{"role": "user", "content": prompt}],
+            **request_options(self._effort),
         )
-        return response.content[0].text
+        return response_text(response)
 
     def _parse_json_response(self, raw: str) -> list[dict]:
         """Extract a JSON array from a Claude response that may contain prose.

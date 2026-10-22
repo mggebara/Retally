@@ -56,6 +56,7 @@ from retally.codegen.executor import CodeExecutor
 from retally.codegen.generator import CodeGenerator
 from retally.dataset.downloader import DatasetDownloader
 from retally.dataset.registry import DatasetRegistry
+from retally.llm import DEFAULT_MODEL
 from retally.models import (
     Claim,
     ClaimValidationResult,
@@ -713,6 +714,7 @@ class ValidationPipeline:
         docker_memory: str = "4g",
         docker_cpus: float = 1.0,
         llm_cache_dir: Path | None = None,
+        model: str = DEFAULT_MODEL,
     ) -> "ValidationPipeline":
         """Create a pipeline with default components.
 
@@ -756,12 +758,16 @@ class ValidationPipeline:
             what makes iterating on one pipeline stage affordable: only
             the calls whose prompts actually changed re-run.  Leave None
             (the default) for fully live behaviour.
+        model:
+            Claude model for extraction, generation and refinement
+            (``retally.llm.DEFAULT_MODEL``, Claude Opus 5.5, by default).
+            Effort levels stay at the components' defaults.
         """
         import anthropic
 
         # Duck-typed: every component only calls ``client.messages.create``
-        # and reads ``response.content[0].text``, which the caching wrapper
-        # preserves exactly.
+        # and reads the response's text block (``retally.llm.response_text``),
+        # which the caching wrapper preserves exactly.
         client: Any = anthropic.Anthropic(api_key=anthropic_api_key)
         if llm_cache_dir is not None:
             from retally.llm_cache import CachingLLMClient
@@ -824,10 +830,10 @@ class ValidationPipeline:
 
         pipeline = cls(
             parser=PaperParser(),
-            extractor=ClaimExtractor(client),
+            extractor=ClaimExtractor(client, model=model),
             downloader=DatasetDownloader(),
             registry=registry,
-            generator=CodeGenerator(client),
+            generator=CodeGenerator(client, model=model),
             executor=executor,
             r_executor=r_executor,
             comparator=ResultComparator(),

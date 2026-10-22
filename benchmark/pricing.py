@@ -53,10 +53,10 @@ def _std(input_: float, output: float, cache_read: float | None = None) -> Model
 PRICES: dict[str, ModelPrice] = {
     "claude-fable-5-1": _std(10.00, 50.00, cache_read=0.25),
     "claude-fable-5": _std(10.00, 50.00, cache_read=1.00),
-    "claude-opus-5-5": _std(4.00, 20.00, cache_read=0.20),
+    "claude-opus-5-5": _std(4.00, 20.00, cache_read=0.20),  # the pipeline's default model since 2026-10-22
     "claude-opus-5": _std(5.00, 25.00),
     "claude-opus-4-8": _std(5.00, 25.00),
-    "claude-opus-4-7": _std(5.00, 25.00),  # the pipeline's default extraction + generation model
+    "claude-opus-4-7": _std(5.00, 25.00),  # the pipeline's default until 2026-10-22 (ROADMAP 3.2-3.4 rows)
     "claude-opus-4-6": _std(5.00, 25.00),
     "claude-sonnet-5-5": _std(2.00, 10.00, cache_read=0.20),
     "claude-sonnet-5": _std(2.00, 10.00),

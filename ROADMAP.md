@@ -1402,6 +1402,49 @@ are not in it; they would collide with the first runs' cells).
 - (d) Corpus: the two reserves (Guay & Johnston, Brouwer et al.) if
   their PDFs become reachable; otherwise a new shortlist pass.
 
+### 3.5 Pipeline model: Opus 4.7 → Opus 5.5 — ✅ code change (2026-10-22), no runs yet
+
+The pipeline's default model had been `claude-opus-4-7` since the
+generator and extractor were written, and every pipeline row in 3.2–3.4
+was produced on it, without thinking (the calls sent no `thinking`
+parameter, and on 4.7 that means none).  The agent rows in 3.3–3.4 ran
+on the desktop app's Opus 5.5.  This step moves the pipeline to the
+same model so the confound in 3.3 can be measured rather than argued
+about, and because 5.5 is 20 % cheaper per token ($4 / $20 vs $5 / $25
+per MTok; same tokenizer, so the same prompts cost the same input).
+
+What changed (one PR, no prompt text touched — the tuning freeze
+holds):
+
+- `retally.llm` holds the defaults: `DEFAULT_MODEL = "claude-opus-5-5"`,
+  generation and refinement at `output_config.effort = "high"`, claim
+  extraction at `"medium"` (the model default).  On Opus 5.5 thinking
+  cannot be disabled; effort is the only depth control, and the thinking
+  tokens are billed as output and count against `max_tokens`.
+- Responses are read with `retally.llm.response_text`, which takes the
+  first `text` block: a 5.5 response opens with a thinking block, so the
+  old `response.content[0].text` would have read the wrong block.  The
+  LLM call cache persists only the text.
+- Generation `max_tokens` 8192 → 16384 (room for the think-through plus
+  the script); extraction stays at 16384.
+- `benchmark.runner --model MODEL_ID` / `RETALLY_PIPELINE_MODEL`
+  selects the pipeline's model, and the pipeline's result-cache key now
+  carries it, so Opus 4.7 and Opus 5.5 rows never collide.  Every
+  pipeline cache key changed once with this; the 3.2–3.4 pipeline rows
+  live in `benchmark/results/pipeline-10papers-all-modes-2026-10-21.json`.
+
+Cost expectation: per token 20 % less, per run roughly the same, because
+the thinking tokens are new output.  The 3.2 pass was $8.11 for 21 rows
+on 4.7; budget $8–12 for the same 21 cells on 5.5.
+
+**Next (paid; ask first).**  (a) The seven 3.2 papers × 3 modes on 5.5
+— the model-confound row: pipeline-on-5.5 against agent-on-5.5 is the
+harness effect, pipeline-on-5.5 against pipeline-on-4.7 is the model
+effect.  (b) The six 3.4 papers × 3 modes on 5.5 (≈$1–2.50 per paper).
+Both with `RETALLY_LLM_CACHE=0` or a cold LLM cache, since no 5.5 call
+is cached anyway, and `--no-cache` is unnecessary (the new keys are
+cold).
+
 ---
 
 ## Phase 4 — Corpus growth (4 → 20–30 papers)
