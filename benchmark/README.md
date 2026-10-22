@@ -516,7 +516,7 @@ The session writes to `benchmark/reproductions/<entry>/<mode>/<run_id>/`
 (gitignored; `RETALLY_REPRODUCTIONS_DIR` overrides the root):
 
 ```
-render.json                         # from render_task
+render.json  task.md                # from render_task
 script.R  stdout.txt  stderr.txt    # the final run: its RESULT: lines are scored
 attempt-<n>/                        # every earlier execution, in order
   script.R  stdout.txt  stderr.txt  feedback.txt   # feedback when kind is "error" or "claim"

@@ -458,6 +458,9 @@ def test_render_independent_task_has_values_but_no_scripts_on_disk(tmp_path):
     assert "master.do" not in everything and "main_tables" not in everything
     # render.json is written to both places.
     out = json.loads((rendered.output_dir / "render.json").read_text(encoding="utf-8"))
+    assert (rendered.output_dir / "task.md").read_text(encoding="utf-8") == rendered.task_file.read_text(
+        encoding="utf-8"
+    )
     assert out == rendered.render
     assert out["mount_path"] == str(rendered.mount_path)
     assert out["paper_source"] == "fixture paper text"
