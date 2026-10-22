@@ -1,0 +1,461 @@
+# Original paper: Altmann, S., Grunewald, A., & Radbruch, J. (2022).
+#   "Interventions and Cognitive Spillovers." The Review of Economic
+#   Studies, 89(5), 2293-2328.  doi:10.1093/restud/rdab087 (advance
+#   access 2021-11-30, OpenAlex publication_date).
+#
+# I4R replication report: Bachler, S., Erhart, A., & Holzknecht, A.
+#   (2023). "Replication Report on Altmann et al. (2022)." I4R Discussion
+#   Paper No. 43, June 2023 (I4R First Meta Database replication team
+#   45).  Verdict: computationally reproducible with minor discrepancies
+#   — "all results described in the main text of the paper can be
+#   reproduced with the original Stata code" and re-coded in R "with
+#   only some minor deviations of test statistics and estimates at the
+#   3rd decimal place"; two robustness checks (logit instead of the
+#   linear probability models; an alternative control battery) leave the
+#   conclusions unchanged.  The meta-database records
+#   perfect_reproduction = No, computational_reproduction = 1,
+#   why_not_perfect_repro = "A minor difference in the 0.001 rounding of
+#   decimals for coefficients".  DP43 notes two documentation gaps: the
+#   control variables are not fully declared in the table notes, and the
+#   payoff subsetting is not obvious without the Stata code.
+#
+# Why this paper:
+#   1. Laboratory + online experiment with simple OLS treatment-effect
+#      regressions (subject-clustered SEs) on two small Stata datasets.
+#   2. 71 I4R rows with replicator values; the Tables 2-4 reproductions
+#      match the printed numbers to the last digit, so the I4R findings
+#      are a precise yardstick.
+#   3. REStud adds journal variety to the catalog.
+#
+# PAPER VERSION — read before using paper.txt.  The only open PDF the
+#   pipeline can fetch is the May 2019 IZA working paper (DP 12337,
+#   "Passive Choices and Cognitive Spillovers"), from the Bonn ULB
+#   deposit copy; docs.iza.org now redirects to liser.lu, and the KU
+#   accepted manuscript sits behind a Cloudflare challenge.  The draft is
+#   a substantially earlier version of the study: 564 lab subjects in a
+#   3x2 design (Baseline / Directed Attention / "Active Choice" x Scarce
+#   / Ample), no variation in the decision-task incentives, no second lab
+#   wave and no online experiment, and NO regression tables (its Table 2
+#   is a table of treatment means).  None of the pinned numbers appear in
+#   it.  The pinned values are the PUBLISHED REStud Tables 2-4, taken
+#   from the I4R meta-database o_coeff / o_std_err, DP43's "Paper"
+#   panels (its Tables 4-6 reprint the published Tables 2-4), and the
+#   package's own esttab output (out/table2-4.tex) — all three agree on
+#   every pinned digit.  The claim contexts describe the published tables
+#   from their notes as DP43 reprints them, so they carry the
+#   specification the draft lacks (Forced Choice, payoff schemes,
+#   experiment waves, online Memory task).
+
+id: altmann-2022-cognitive-spillovers
+i4r_report_url: https://www.econstor.eu/bitstream/10419/272845/1/I4R-DP043.pdf
+# Target language for regeneration (the original analysis is Stata 15;
+# Retally generates R and reads the .dta files with haven).
+language: r
+# Candidate verdict "minor discrepancies" (perfect_reproduction = No,
+# computational_reproduction = 1) -> reproducible, as for Leeson and
+# Manekin.
+outcome_label: reproducible
+# Pipeline tuning is frozen; this is an evaluation paper.
+split: holdout
+# Contamination bookkeeping.  First public version: IZA DP 12337, May
+# 2019 (the working paper's cover date; no earlier version found).
+# REStud advance access 2021-11-30, print October 2022 (89:5).  Package:
+# Zenodo record 5652808, created / published 2021-11-08 (Zenodo API), a
+# single version.
+publication_date: "2019-05"
+package_release_date: "2021-11-08"
+
+paper:
+  # IZA DP 12337 (May 2019, 47 pages), as deposited with the Bonn
+  # university library's e-Pflicht service; checked 2026-10-21: 200
+  # application/pdf, %PDF magic, to a Retally-curation user agent.  The
+  # candidate URL https://docs.iza.org/dp12337.pdf now answers 301 to
+  # https://liser.lu (an HTML page), so it cannot be used.  This is the
+  # working paper, not the published article — see the header comment.
+  source: https://epflicht.ulb.uni-bonn.de/download/pdf/501850
+  title: "Interventions and Cognitive Spillovers"
+  authors:
+    - Steffen Altmann
+    - Andreas Grunewald
+    - Jonas Radbruch
+
+dataset:
+  source: https://zenodo.org/records/5652808
+  access_notes: >
+    Zenodo record 5652808 (CC BY 4.0 on the record; the package README
+    licenses the data CC BY-NC 4.0), fully open: one file,
+    ReplicationPackage.zip (8,167,836 bytes; the downloader extracts it
+    and deletes the zip; 248 files, 17 MB unpacked).  Contents:
+    ReplicationPackage/README.md (AEA-template README with the table ->
+    do-file map); EmpiricalAnalysis/master.do; six do-files in
+    EmpiricalAnalysis/dofiles/; two Stata datasets in
+    EmpiricalAnalysis/original_data/ — formatted_data_replication.dta
+    (lab experiment, 3.8 MB, 17,840 subject-round rows x 46 columns) and
+    formatted_data_long_mturk.dta (online experiment, 222 KB, 5,472 rows
+    x 12 columns); EmpiricalAnalysis/out/ with the authors' own output
+    (six .log files, table2-4.tex, tableB_1-2.tex, tableO_1-10.tex,
+    figure PNGs); EmpiricalAnalysis/library/stata/ado_ext/plus/ (bundled
+    user-written Stata commands: estout/esttab/eststo/estadd, coefplot,
+    cdfplot, binscatter, fmm, oaxaca, grc1leg, ...); and oTree/ (the
+    oTree 3.3 / Python experiment software: 36 .py, 60 .pyc, 32 HTML
+    templates, 13 images, a db.sqlite3).  No nested archives.
+
+code_repo:
+  url: https://zenodo.org/records/5652808
+
+original_claims:
+  - description: choice_quality_intervention_t2_col1
+    value: 0.107
+    claim_type: coefficient
+    standard_error: 0.018
+    unit: change in the probability of correctly solving the decision task
+    location: "Table 2, Panel (a) Choice quality, column 1, Intervention"
+    context: >
+      Table 2 ("Behavior in the targeted choice domain"), Panel (a),
+      column 1.  Lab experiment, subjects with scarce cognitive resources
+      (the demanding background task of memorising a seven-digit number)
+      in the Baseline, Directed Attention and Forced Choice environments,
+      pooled over the decision-task payoff schemes and both experiment
+      waves; the Ample-resources condition is not part of this table.
+      OLS of an indicator equal to 1 if the subject correctly solves the
+      decision task in a given round (one observation per subject and
+      round of the main part) on Intervention, an indicator for being in
+      Directed Attention or Forced Choice rather than Baseline.  No
+      controls.  Robust standard errors clustered at the subject level.
+  - description: choice_quality_intervention_t2_col2
+    value: 0.110
+    claim_type: coefficient
+    standard_error: 0.017
+    unit: change in the probability of correctly solving the decision task
+    location: "Table 2, Panel (a) Choice quality, column 2, Intervention"
+    context: >
+      Table 2, Panel (a), column 2: the column 1 regression (decision-task
+      choice quality on the Intervention indicator, same subject-round
+      sample) with controls: subjects' age, gender, field of study, high
+      school GPA and last high-school math grade, ability in the
+      background and the decision task (measured in the practice parts),
+      perceived multitasking ability, and indicator variables for the
+      subject's assigned payoff scheme and experiment wave.  Robust
+      standard errors clustered at the subject level.
+  - description: default_adherence_intervention_t2_col5
+    value: -0.217
+    claim_type: coefficient
+    standard_error: 0.022
+    unit: change in the probability of choosing the default option
+    location: "Table 2, Panel (b) Default adherence, column 5, Intervention"
+    context: >
+      Table 2, Panel (b), column 5.  Same sample as Panel (a).  OLS of an
+      indicator equal to 1 if the subject's choice in the decision task in
+      a given round coincides with the (choice alternative corresponding
+      to the) default option, on the Intervention indicator (Directed
+      Attention or Forced Choice vs. Baseline).  No controls.  Robust
+      standard errors clustered at the subject level.
+  - description: default_adherence_intervention_t2_col6
+    value: -0.219
+    claim_type: coefficient
+    standard_error: 0.022
+    unit: change in the probability of choosing the default option
+    location: "Table 2, Panel (b) Default adherence, column 6, Intervention"
+    context: >
+      Table 2, Panel (b), column 6: the default-adherence regression of
+      column 5 with the control set of column 2 (age, gender, field of
+      study, high school GPA, last math grade, ability in both tasks,
+      perceived multitasking ability, payoff-scheme and experiment-wave
+      indicators).  Robust standard errors clustered at the subject
+      level.
+  - description: default_adherence_directed_attention_t2_col7
+    value: -0.137
+    claim_type: coefficient
+    standard_error: 0.026
+    unit: change in the probability of choosing the default option
+    location: "Table 2, Panel (b) Default adherence, column 7, Directed Attention"
+    context: >
+      Table 2, Panel (b), column 7.  Default adherence (indicator that the
+      round's choice coincides with the default option) regressed on
+      separate indicators for the Directed Attention and Forced Choice
+      environments, Baseline omitted; this is the Directed Attention
+      coefficient.  No controls; robust standard errors clustered at the
+      subject level.
+  - description: default_adherence_forced_choice_t2_col7
+    value: -0.300
+    claim_type: coefficient
+    standard_error: 0.021
+    unit: change in the probability of choosing the default option
+    location: "Table 2, Panel (b) Default adherence, column 7, Forced Choice"
+    context: >
+      Table 2, Panel (b), column 7: the Forced Choice coefficient of the
+      same regression (default adherence on Directed Attention and
+      Forced Choice indicators, Baseline omitted, no controls, robust
+      standard errors clustered by subject).  In Forced Choice the
+      decision task has no preselected option, so "default adherence"
+      means choosing the alternative that is the default in the other
+      environments.
+  - description: background_quality_intervention_lab_t3_col1
+    value: -0.028
+    claim_type: coefficient
+    standard_error: 0.017
+    unit: change in the probability of correctly solving the background task
+    location: "Table 3, Lab experiment, column 1, Intervention"
+    context: >
+      Table 3 ("Cognitive spillovers"), lab experiment, column 1: the
+      paper's spillover result.  Same lab sample as Table 2 (scarce
+      cognitive resources; Baseline, Directed Attention, Forced Choice;
+      all payoff schemes and both waves).  OLS of an indicator equal to 1
+      if the subject correctly solves the background task (recalls the
+      memorised number) in a given round, on the Intervention indicator.
+      No controls; robust standard errors clustered at the subject level.
+  - description: background_quality_intervention_lab_t3_col2
+    value: -0.038
+    claim_type: coefficient
+    standard_error: 0.014
+    unit: change in the probability of correctly solving the background task
+    location: "Table 3, Lab experiment, column 2, Intervention"
+    context: >
+      Table 3, lab experiment, column 2: the column 1 background-task
+      regression with the control set of Table 2 (age, gender, field of
+      study, high school GPA, last math grade, ability in both tasks,
+      perceived multitasking ability, payoff-scheme and experiment-wave
+      indicators).  Robust standard errors clustered at the subject
+      level.
+  - description: memory_intervention_online_t3_col5
+    value: -0.114
+    claim_type: coefficient
+    standard_error: 0.019
+    unit: change in the fraction of pairs uncovered in the Memory game
+    location: "Table 3, Online experiment, column 5, Intervention"
+    context: >
+      Table 3, online experiment, column 5.  In the online experiment the
+      background task is a Memory game played alongside the decision
+      task.  OLS of the fraction of pairs a subject uncovers in the
+      Memory game in a given round (one observation per subject and
+      round) on the Intervention indicator (intervention vs. baseline
+      condition of the online experiment).  No controls; standard errors
+      clustered at the subject level.
+  - description: payoff_share_intervention_t4_col1
+    value: 0.006
+    claim_type: coefficient
+    standard_error: 0.013
+    unit: change in the share of the maximally attainable payoff
+    location: "Table 4, Payoff share, column 1, Intervention"
+    context: >
+      Table 4 ("Effect of interventions on overall payoffs"), column 1:
+      the paper's net-zero result.  Same lab sample as Tables 2 and 3.
+      OLS of the subject's realised share of the maximally attainable
+      overall payoff (decision task plus background task) in the
+      subject's treatment, calculated at the subject-round level, on the
+      Intervention indicator.  No controls; robust standard errors
+      clustered at the subject level.  Not statistically significant.
+  - description: n_obs_lab_tables_2_to_4
+    value: 12160
+    claim_type: other
+    unit: observations (subject-rounds, lab experiment)
+    location: "Tables 2-4, N (every lab-experiment column)"
+    context: >
+      Number of observations (subject x round) in the lab-experiment
+      regressions of Tables 2, 3 (columns 1-4) and 4: subjects with
+      scarce cognitive resources in the three decision environments,
+      every round of the main part.
+  - description: n_subjects_lab_tables_2_to_4
+    value: 608
+    claim_type: other
+    unit: subjects (clusters)
+    location: "Tables 2-4, No. Subjects (lab-experiment columns)"
+    context: >
+      Number of subjects, which is also the number of clusters, in the
+      lab-experiment regressions of Tables 2, 3 (columns 1-4) and 4.
+  - description: memory_intervention_online_t3_col6
+    value: -0.113
+    claim_type: coefficient
+    standard_error: 0.017
+    unit: change in the fraction of pairs uncovered in the Memory game
+    location: "Table 3, Online experiment, column 6, Intervention"
+    context: >
+      Table 3, online experiment, column 6: the column 5 Memory-game
+      regression (fraction of pairs uncovered per subject and round on
+      the Intervention indicator) with the online experiment's controls:
+      subjects' age, gender, and screen size.  Standard errors clustered
+      at the subject level.
+
+# I4R First Meta Database, team 45 (75 rows, 71 with a replicator value).
+# Every reproduced_value below comes from a "Recode (mimic)" row
+# ("Reproduction in R, they look at stata code and mimic"), i.e. a plain
+# reproduction of the printed number, not a robustness variant; each
+# matches o_coeff and the printed SE exactly.  The rows are the "Paper"
+# vs "Reproduction" panels of DP43 Tables 4 (= published Table 2), 5 (=
+# Table 3) and 6 (= Table 4).  The meta-database has no rows for the
+# observation / subject counts (claims 10-11), so they get no finding;
+# DP43's reproduction panels print the same N (12,160) and No. Subjects
+# (608).
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: 0.107
+    outcome: matches
+    notes: Meta-database row "table 2", o 0.107 (0.018) -> r 0.107 (0.018); DP43 Table 4 col 1.
+  - claim_id: 1
+    reproduced_value: 0.110
+    outcome: matches
+    notes: >
+      Meta-database row "table 2", o 0.11 (0.017) -> r 0.11 (0.017); DP43
+      Table 4 col 2.  The logit robustness rows (average marginal effects)
+      give 0.111 (0.016) with the original controls and 0.112 (0.017)
+      with DP43's alternative controls (DP43 Table 9 cols 2a/2b).
+  - claim_id: 2
+    reproduced_value: -0.217
+    outcome: matches
+    notes: Meta-database row "table 2", o -0.217 (0.022) -> r -0.217 (0.022); DP43 Table 4 col 5.
+  - claim_id: 3
+    reproduced_value: -0.219
+    outcome: matches
+    notes: >
+      Meta-database row "table 2", o -0.219 (0.022) -> r -0.219 (0.022);
+      DP43 Table 4 col 6.  Logit AME -0.219 (0.022), alternative controls
+      -0.224 (0.022) (DP43 Table 9 cols 1a/1b).
+  - claim_id: 4
+    reproduced_value: -0.137
+    outcome: matches
+    notes: >
+      Meta-database row "table 2", o -0.137 (0.026) -> r -0.137 (0.026).
+      DP43 Table 4's reproduction panel mislabels its rows for columns
+      3-4 and 7-8 (the Directed Attention and Forced Choice estimates are
+      shifted down a row and the constants moved up), but the numbers are
+      the published ones.
+  - claim_id: 5
+    reproduced_value: -0.300
+    outcome: matches
+    notes: Meta-database row "table 2", o -0.3 (0.021) -> r -0.3 (0.021); DP43 Table 4 col 7 (row-label slip as above).
+  - claim_id: 6
+    reproduced_value: -0.028
+    outcome: matches
+    notes: Meta-database row "table 3", o -0.028 (0.017) -> r -0.028 (0.017); DP43 Table 5 col 1.
+  - claim_id: 7
+    reproduced_value: -0.038
+    outcome: matches
+    notes: >
+      Meta-database row "table 3", o -0.038 (0.014) -> r -0.038 (0.014);
+      DP43 Table 5 col 2.  Logit AME -0.037 (0.014); alternative controls
+      -0.037 (0.015) (DP43 Table 10 cols 1a/1b).
+  - claim_id: 8
+    reproduced_value: -0.114
+    outcome: matches
+    notes: Meta-database row "table 3", o -0.114 (0.019) -> r -0.114 (0.019); DP43 Table 5 col 5.
+  - claim_id: 9
+    reproduced_value: 0.006
+    outcome: matches
+    notes: Meta-database row "table 4", o 0.006 (0.013) -> r 0.006 (0.013); DP43 Table 6 col 1.
+  - claim_id: 12
+    reproduced_value: -0.113
+    outcome: matches
+    notes: Meta-database row "table 3", o -0.113 (0.017) -> r -0.113 (0.017); DP43 Table 5 col 6.
+
+notes: >
+  Headline finding (as published): policies that steer attention to a
+  decision (Directed Attention) or force an active choice (Forced
+  Choice) raise decision-task choice quality by about 11 percentage
+  points and cut default adherence (Table 2), but lower performance in
+  the simultaneous background task — a negative cognitive spillover, in
+  the lab and in an online Memory-game experiment (Table 3) — so that
+  overall payoffs do not change (Table 4).
+
+  Original analysis in Stata 15 (README: "code was last run with version
+  15"); the experiment itself ran in oTree 3.3.11 / Python 3.7.
+  language: r is the reproduction target.
+
+  Curation pass (2026-10-21).  Pinned 13 claims from the published
+  Tables 2-4: eleven coefficients, each with its SE (Table 2 cols 1, 2,
+  5, 6 and both col 7 environment coefficients; Table 3 cols 1, 2, 5
+  and 6; Table 4 col 1) and two counts — N = 12,160 subject-rounds and
+  608 subjects (= clusters) in every lab column.  The online columns'
+  N = 5,472 was deliberately NOT pinned: it is the full row count of the
+  online data file, which the task's dataset listing prints in every
+  mode (blind included), so it would be a free claim.  Values exactly as printed (three decimals; 0.110 and -0.300
+  keep their trailing zeros).  Every pinned number appears identically in
+  the meta-database (o_coeff / o_std_err), in DP43's reprint of the
+  published tables, and in the package's out/table2.tex, table3.tex and
+  table4.tex.
+
+  Published vs working-paper version.  paper.source is the May 2019 IZA
+  DP 12337 ("Passive Choices and Cognitive Spillovers"), the only open
+  PDF reachable without a bot challenge.  It does not contain Tables 2-4
+  of the published article in any form: its Table 1 is the 3x2
+  treatment overview, its Table 2 ("Decision Quality and Payoffs") is a
+  table of treatment means with between-subject SDs (e.g. 59.11 / 71.98
+  / 68.76 % correct in the decision task under scarcity), its appendix
+  Tables C.1-C.2 are descriptives and attention.  The draft reports 564
+  lab subjects, calls the third environment "Active Choice" (published:
+  "Forced Choice"), has one decision-task payoff (EUR 0.10) and no online
+  experiment; the published version adds decision-task payoff schemes of
+  10 / 20 / 40 cents (the Baseline-10/20/40 treatments), a second lab
+  wave, and the online (MTurk) Memory-game experiment.  Table numbering
+  therefore does not carry over at all: published Table 2 (regressions,
+  targeted domain) has no counterpart in the draft, and the draft's
+  Table 2 is not a regression table.  Because paper.txt describes an
+  earlier design, the claim contexts carry the published specification
+  (taken from the published table notes as reprinted in DP43 Tables
+  4-6).  Blind / independent runs therefore depend on the contexts more
+  than usual.
+
+  What was read.  The IZA draft (all 47 pp., for design and numbering);
+  DP43 (all 18 pp., EconStor); the meta-database's 75 team-45 rows; the
+  Zenodo API record; the package README, master.do, all six do-files and
+  out/table2-4.tex; the published-article metadata (OpenAlex, RePEc).
+  The published PDF itself was not obtainable (OUP paywall; KU research
+  portal accepted manuscript behind a Cloudflare challenge).
+
+  Which script produces the pinned tables (package-only; never in
+  contexts).  Per the README table: Table 2 <-
+  dofiles/4_2_Interventions_targeted_domain.do (out/table2.tex); Table 3
+  <- dofiles/4_2_Cognitive_Spillover.do (out/table3.tex); Table 4 <-
+  dofiles/4_3_Payoffs_And_Efficiency.do (out/table4.tex); master.do runs
+  them in sequence after defining the control globals.  Tables 2 and 4
+  and Table 3 cols 1-4 use original_data/formatted_data_replication.dta
+  restricted to Treatment_Incentives != 4 (4 = the Ample condition; 1-3
+  are the 10 / 20 / 40-cent payoff schemes): reg <y>
+  i.Treatment_intervention [controls], robust cluster(subject_id), with
+  y = summation_correct (decision-task choice quality),
+  default_followed (default adherence), load_correct (background task),
+  payoff_share (Table 4); the environment columns use
+  i.Treatment_Environment (1 Baseline, 2 Directed Attention, 3 Forced
+  Choice).  The controls are $Incentive_control (i.Treatment_Incentives)
+  $Wave_control (i.original_lab) $Ability_control
+  (c.(ability_task ability_load)##i.original_lab — ability interacted
+  with the wave, which the table notes do not mention; DP43 flags the
+  control declaration as insufficient) and $Controls (q_age i.q_gender
+  i.perc_multitasking_1_easy perc_multitasking_2 i.subject_cat
+  i.q_abitur_grade_cat i.q_math_grade_cat).  Table 3 cols 5-6 use
+  original_data/formatted_data_long_mturk.dta: reg memory
+  i.Treatment_intervention [window_height1 window_width1 age i.gender],
+  cluster(subject_id).  The full lab file has 17,840 rows (892 subjects
+  x 20 rounds, including the Ample condition); the restriction leaves
+  12,160 rows / 608 subjects.  The online file is 608 subjects x 9 rounds
+  = 5,472 rows (the online No. Subjects of 608 is therefore genuine, not
+  a copy of the lab count).
+
+  Independent cross-check (Python/statsmodels on the package's .dta,
+  OLS with subject-clustered SEs, no controls): decision-task
+  Intervention 0.1069 (0.0178); default adherence -0.2168 (0.0222);
+  Directed Attention -0.1370 (0.0256), Forced Choice -0.2999 (0.0211);
+  background task -0.0282 (0.0171); payoff share 0.0058 (0.0132);
+  online Memory -0.1143 (0.0188), N = 5,472, 608 subjects; lab
+  N = 12,160, 608 subjects — all round to the printed values.  The
+  with-controls columns were not re-estimated here (I4R reproduced them
+  exactly in Stata and R).
+
+  Package file-selection facts.  Seeded mode lists the two .dta files
+  with their columns and shows master.do plus all six do-files under
+  "Original Replication Scripts" (no oTree .py file was selected).  The
+  script-free copy (independent / blind) withholds the do-files, the six
+  .log files, the regression .tex tables, the bundled .ado files and the
+  oTree .py sources; the README (which names the do-file behind each
+  table) stays.  The oTree directory and the bundled ado library are
+  noise a reproducer has to ignore.
+
+  Left out.  Table 2 cols 3-4 and 8 (environment split of choice quality
+  and with-controls default adherence) and Table 3 cols 3-4 (to
+  stay within 13 claims; all reproduce exactly per I4R); the online N
+  (see above); Table 4 col 2
+  (printed -0.000, a zero target the relative tolerance cannot score
+  meaningfully) and cols 3-4; constants, R-squared and the
+  Directed = Forced p-values; Table 5 (hypothetical payoffs, assembled
+  by hand from a log); appendix Table B.1 (Baseline attention, a 203- /
+  298-subject subsample) and the supplementary O-tables; DP43's in-text
+  Spearman correlations.
