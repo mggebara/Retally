@@ -522,6 +522,18 @@ class DatasetDownloader:
         return raw
 
     @staticmethod
+    def _dataverse_version(value: str) -> str | None:
+        """Return the dataset version a Dataverse reference pins, or ``None``.
+
+        A landing URL may carry a ``version=<v>`` query parameter
+        (``...dataset.xhtml?persistentId=doi:10.7910/DVN/XXXX&version=1.0``),
+        as Dataverse's own "view this version" links do.  ``None`` (no
+        parameter) means the latest published version.
+        """
+        param = re.search(r"[?&]version=([^&#\s]+)", value.strip())
+        return param.group(1) if param else None
+
+    @staticmethod
     def _dataverse_original_name(data_file: dict[str, Any]) -> str | None:
         """Return the filename to save an ingested Dataverse file's original under.
 
@@ -566,16 +578,29 @@ class DatasetDownloader:
         that were not ingested (archives such as ``.tgz``, scripts, ``.dat``)
         are fetched as-is, and archives are extracted as usual.
 
+        By default the latest published version is downloaded.  A reference
+        carrying a ``version=<v>`` query parameter (see
+        ``_dataverse_version``) lists and downloads that version's files
+        instead (``/api/datasets/:persistentId/versions/<v>/files``) and
+        records the version in ``metadata.json``, so a package revised after
+        publication (a corrigendum) can be pinned to the files that produced
+        the published numbers.
+
         Parameters
         ----------
         doi:
             Persistent identifier (DOI) for the Dataverse dataset, or a
-            landing-page URL / ``doi.org`` link that carries one.
+            landing-page URL / ``doi.org`` link that carries one (and
+            optionally ``version=<v>``).
         dest:
             Destination directory.
         """
+        version = self._dataverse_version(doi)
         doi = self._dataverse_persistent_id(doi)
-        api_url = f"https://dataverse.harvard.edu/api/datasets/:persistentId/?persistentId={doi}"
+        if version:
+            api_url = f"https://dataverse.harvard.edu/api/datasets/:persistentId/versions/{version}/files?persistentId={doi}"
+        else:
+            api_url = f"https://dataverse.harvard.edu/api/datasets/:persistentId/?persistentId={doi}"
         try:
             response = get_with_retries(api_url, timeout=30)
             data = response.json()
@@ -583,7 +608,9 @@ class DatasetDownloader:
             raise RuntimeError(f"Failed to fetch Harvard Dataverse metadata for doi={doi}: {exc}") from exc
 
         try:
-            files = data["data"]["latestVersion"]["files"]
+            files = data["data"] if version else data["data"]["latestVersion"]["files"]
+            if not isinstance(files, list):
+                raise TypeError(f"expected a list of files, got {type(files).__name__}")
         except (KeyError, TypeError) as exc:
             raise RuntimeError(f"Unexpected Harvard Dataverse API response structure: {exc}") from exc
 
@@ -630,6 +657,17 @@ class DatasetDownloader:
 
         if failures and failures == len(specs):
             raise RuntimeError(f"All {failures} files from Harvard Dataverse {doi} failed to download.")
+        if version:
+            metadata: dict[str, Any] = {
+                "source": "harvard_dataverse",
+                "persistent_id": doi,
+                "dataset_version": version,
+                "source_url": api_url,
+                "files": sorted(spec[3] or spec[1] for spec in specs),
+                "n_failed": failures,
+            }
+            with open(dest / "metadata.json", "w", encoding="utf-8") as fh:
+                json.dump(metadata, fh, indent=2)
         return dest
 
     def _download_figshare(self, article_id: str, dest: Path) -> Path:

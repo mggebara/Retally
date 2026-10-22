@@ -1,0 +1,432 @@
+# Original paper: Holman, M. R., Merolla, J. L., & Zechmeister, E. J.
+#   (2022). "The Curious Case of Theresa May and the Public That Did Not
+#   Rally: Gendered Reactions to Terrorist Attacks Can Cause Slumps Not
+#   Bumps." American Political Science Review, 116(1), 249-264.
+#   doi:10.1017/S0003055421000861 (first published online 2021-08-26).
+#
+# I4R replication report: Jetter, M., & Stockley, K. (2023). "On the
+#   Empirical Validity of 'Gendered Reactions to Terrorist Attacks Can
+#   Cause Slumps not Bumps' (Holman et al., 2022)." I4R Discussion Paper
+#   No. 41 (June 2023; I4R First Meta Database team 86).  The authors
+#   replied in I4R DP 44 (July 2023) and published an APSR CORRIGENDUM
+#   (doi:10.1017/S0003055424000820, online 2024-08-06, APSR 118(4),
+#   2080-2081) that corrects Table 2 and Table 4.  (The candidate list
+#   also mentions a 2023 Canadian Journal of Economics comment; no such
+#   journal version was found on 2026-10-21 — DP41 appears to be the
+#   only version of the comment.)
+#
+#   Verdict: NOT reproducible in the meta-database's sense
+#   (perfect_reproduction = No, computational_reproduction = 0).  DP41
+#   re-runs the package and gets the printed numbers (Table 1 col 1 of
+#   DP41 = Table 4; Table B1 cols 1-2 = Table 2), but documents coding
+#   errors behind them: (a) Table 4's election-quarter covariates are
+#   mis-coded (no US elections, one house of Japan's Diet only, run-offs
+#   coded inconsistently, assorted errors) and correcting them moves the
+#   interaction from -4.333 (p = 0.020) to -3.452 (p = 0.058); (b) Table
+#   2's "May best PM" outcome counts 35,060 wave 7-8 responses that were
+#   about David Cameron as preferring May; (c) Table 2 col 2 is described
+#   as a logit but estimated with xtreg.  Three further data errors in
+#   the global panel (woman-executive coding, duplicated Macedonia rows,
+#   1993 GTD gap) are reported as inconsequential.  The corrigendum
+#   concedes errors "in the code" and "in one of the datasets" and
+#   replaces both tables.
+#
+# Why this paper: a second "paper says X, humans got Y" case beside
+#   Montero, here with a documented and conceded coding error in the
+#   headline global table.  Pinned values are the PUBLISHED Table 4 and
+#   Table 2; i4r_replicator_findings carry the replicators' corrected
+#   values.
+#
+# IMPORTANT — package version.  dataset.source pins Harvard Dataverse
+#   doi:10.7910/DVN/VHNPUO VERSION 1.0 (released 2021-08-26, with the
+#   article).  Version 2.0 (2024-08-06) is the post-corrigendum package:
+#   it replaces global_approval and replication_files.do with .v2 files
+#   (global_approval.v2: 1,106,891 bytes vs 829,834) and adds the
+#   corrected supplementary PDF, so it would not reproduce the published
+#   numbers.  The downloader honours the `&version=1.0` query parameter
+#   (src/retally/dataset/downloader.py, added with this entry) and records
+#   the version in the package's metadata.json.  The cached copy was
+#   checked file by file against the Dataverse API's version-1.0 file
+#   list (names, sizes, md5: all 10 match; 4 of the 2.0-only files are
+#   absent).
+
+id: holman-2022-theresa-may-rally
+i4r_report_url: https://www.econstor.eu/bitstream/10419/272842/1/I4R-DP041.pdf
+i4r_report_doi: 10.1017/S0003055424000820  # The authors' APSR corrigendum, which adopts the corrections
+# Target language for regeneration (the original is Stata 14+; Retally
+# generates R and reads the .dta files with haven).
+language: r
+outcome_label: not_reproducible
+# Pipeline tuning is frozen; this is an evaluation paper.
+split: holdout
+# Contamination bookkeeping.  No working-paper or preprint version was
+# found (web search 2026-10-21); the article was received 2020-09-30 and
+# first published online 2021-08-26 (print: APSR 116(1), February 2022).
+# Package: Harvard Dataverse doi:10.7910/DVN/VHNPUO version 1.0, created
+# 2021-07-01, released 2021-08-26 (Dataverse API releaseTime).  Version
+# 2.0 was released 2024-08-06.
+publication_date: "2021-08-26"
+package_release_date: "2021-08-26"
+
+paper:
+  # Published version, open access on Cambridge Core (CC BY-NC-ND 4.0);
+  # checked 2026-10-21: 200 application/pdf, %PDF magic, 16 pp., to a
+  # Retally-curation user agent (one 504 and a pipeline read timeout
+  # before it answered — Cambridge Core is slow, not blocked).
+  source: https://www.cambridge.org/core/services/aop-cambridge-core/content/view/CCB0F99CE10065BAECA662C140F966EC/S0003055421000861a.pdf/div-class-title-the-curious-case-of-theresa-may-and-the-public-that-did-not-rally-gendered-reactions-to-terrorist-attacks-can-cause-slumps-not-bumps-div.pdf
+  title: "The Curious Case of Theresa May and the Public That Did Not Rally: Gendered Reactions to Terrorist Attacks Can Cause Slumps Not Bumps"
+  authors:
+    - Mirya R. Holman
+    - Jennifer L. Merolla
+    - Elizabeth J. Zechmeister
+
+dataset:
+  source: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/VHNPUO&version=1.0
+  access_notes: >
+    Harvard Dataverse (doi:10.7910/DVN/VHNPUO), VERSION 1.0 (2021-08-26),
+    pinned with &version=1.0 — the latest version (2.0, 2024-08-06) is
+    the post-corrigendum package and must not be used.  No licence; the
+    terms of use ask that the data not be redistributed outside Harvard
+    Dataverse (the local cache is not redistributed).  10 files, none
+    restricted, 236 MB as stored (~244 MB as downloaded originals;
+    Dataverse API, checked 2026-10-21).  Seven Stata 14 datasets were
+    ingested (listed as .tab) and arrive as their .dta originals via
+    ?format=original: BES_data.dta (47.4 MB; British Election Study wave
+    12, individual level), BESExpertSurveyTrendFile2014-2019.dta (0.19
+    MB), CMPdata.dta (7.2 MB; Comparative Manifesto Project),
+    constituency_results_2017_election.dta (1.6 MB),
+    experimental2012.dta (0.05 MB), global_approval.dta (0.83 MB;
+    country-quarter panel, 5,469 rows x 28 columns); currency_rates.csv
+    (679 bytes, ingested CSV).  Not ingested: did_data.dta (186.7 MB;
+    BES panel in long format, 1,481,408 rows, the Table 2 data),
+    replication_files.do (one 46 KB do-file for every table and figure)
+    and "Readme for The Curious Case of Theresa May.docx".  No archives,
+    no logs, no table output.  The downloader also writes metadata.json
+    (dataset_version 1.0) beside the files.
+
+code_repo:
+  url: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/VHNPUO&version=1.0
+
+original_claims:
+  # ---- Table 4: global country-quarter analysis (the target of DP41) ----
+  - description: intl_attack_table4
+    value: 3.112
+    claim_type: coefficient
+    standard_error: 0.875
+    unit: percentage points of executive approval
+    location: "Table 4, International terrorist attack (All countries, attacks with more than 15 deaths)"
+    context: >
+      Table 4 ("Effect of Terrorist Attacks on Executive Approval
+      Ratings").  Linear regression on time-series cross-sectional data of
+      country-quarters: the percentage of the public approving of the
+      executive in the quarter following the attack, regressed on an
+      indicator for a major international terrorist attack (an attack with
+      an international component under the Global Terrorism Database's
+      definition and more than 15 deaths), the presence of a woman
+      executive, their interaction, and controls for GDP growth, logged
+      inflation, the left-center-right placement of the leader and
+      elections, with country fixed effects and panel-corrected standard
+      errors.  Sample: countries in the executive approval database that
+      also appear in the Global Terrorism Database, 1975-2017.  This
+      coefficient is the attack effect for men executives (the rally).
+  - description: intl_attack_x_woman_exec_table4
+    value: -4.333
+    claim_type: coefficient
+    standard_error: 1.859
+    unit: percentage points of executive approval
+    location: "Table 4, International terrorist attack x Woman executive"
+    context: >
+      Table 4, the paper's global test of the gender-revised rally
+      framework: the coefficient on the interaction of a major
+      international terrorist attack (more than 15 deaths) with a woman
+      executive, in the same linear country-quarter regression of
+      next-quarter executive approval (controls for woman executive, GDP,
+      logged inflation, left-center-right placement of the leader and
+      elections; country fixed effects; panel-corrected standard errors).
+      Negative and significant at the 5% level in the paper.
+  - description: n_obs_table4
+    value: 4328
+    claim_type: other
+    unit: observations (country-quarters)
+    location: "Table 4, Observations"
+    context: >
+      Number of country-quarter observations in the Table 4 regression
+      (all countries, attacks with more than 15 deaths).
+
+  # ---- Table 2: BES panel difference-in-differences ----
+  - description: did_attack_x_time_like_may_table2
+    value: -0.1274
+    claim_type: coefficient
+    standard_error: 0.0187
+    unit: points on the 0-10 like/dislike scale
+    location: "Table 2, column May likeability, Manchester attack * time"
+    context: >
+      Table 2 ("Difference-in-Difference, with Fixed Effects"), May
+      likeability column.  British Election Study internet panel, using
+      waves before and after the 22 May 2017 Manchester Arena bombing.
+      Outcome: how much the respondent likes Theresa May, 0 (strongly
+      dislike) to 10 (strongly like).  Regressors: Manchester attack (the
+      respondent was surveyed after the attack in the attack wave, wave 12),
+      time (0 for waves before the attack, 1 for waves from 12 onward),
+      their interaction (the coefficient here), wave fixed effects, and
+      controls for identifying as ethnically British, gender, Labour party
+      membership, other party membership, income and ideology.  OLS
+      according to the table note; standard errors in parentheses.
+  - description: did_attack_like_may_table2
+    value: 0.0178
+    claim_type: coefficient
+    standard_error: 0.0278
+    unit: points on the 0-10 like/dislike scale
+    location: "Table 2, column May likeability, Manchester attack"
+    context: >
+      Table 2, May likeability column: the coefficient on the Manchester
+      attack (surveyed-after-the-attack) indicator in the same
+      difference-in-differences regression (time, interaction, wave fixed
+      effects, full controls).  Not significant.
+  - description: did_time_like_may_table2
+    value: -0.5007
+    claim_type: coefficient
+    standard_error: 0.0229
+    unit: points on the 0-10 like/dislike scale
+    location: "Table 2, column May likeability, Time"
+    context: >
+      Table 2, May likeability column: the coefficient on the time
+      indicator (waves from the attack wave onward) in the same
+      difference-in-differences regression.
+  - description: did_attack_x_time_may_best_pm_table2
+    value: -0.0501
+    claim_type: coefficient
+    standard_error: 0.0044
+    unit: change in the May-best-PM outcome (0/1)
+    location: "Table 2, column May best PM, Manchester attack * time"
+    context: >
+      Table 2, May best PM column: the same difference-in-differences
+      specification (Manchester attack, time, their interaction, wave
+      fixed effects, full controls) with the outcome "Who would make the
+      best prime minister?", coded 1 for Theresa May and 0 for Jeremy
+      Corbyn.  The table note describes this column as a logistic
+      regression; standard errors in parentheses.  This is the
+      interaction coefficient.
+  - description: did_attack_may_best_pm_table2
+    value: -0.0002
+    claim_type: coefficient
+    standard_error: 0.0040
+    unit: change in the May-best-PM outcome (0/1)
+    location: "Table 2, column May best PM, Manchester attack"
+    context: >
+      Table 2, May best PM column: the coefficient on the Manchester
+      attack indicator.  Not significant.
+  - description: did_time_may_best_pm_table2
+    value: 0.2098
+    claim_type: coefficient
+    standard_error: 0.0036
+    unit: change in the May-best-PM outcome (0/1)
+    location: "Table 2, column May best PM, Time"
+    context: >
+      Table 2, May best PM column: the coefficient on the time indicator.
+  - description: n_obs_did_like_may_table2
+    value: 143499
+    claim_type: other
+    unit: observations (respondent-waves)
+    location: "Table 2, Observations, column May likeability"
+    context: >
+      Number of panel observations in the Table 2 May likeability
+      regression.
+  - description: n_obs_did_may_best_pm_table2
+    value: 97155
+    claim_type: other
+    unit: observations (respondent-waves)
+    location: "Table 2, Observations, column May best PM"
+    context: >
+      Number of panel observations in the Table 2 May best PM regression.
+
+# Paper says X, humans got Y.  DP41 first reproduces the printed numbers
+# exactly from the version-1.0 package (its Table 1 col 1 for Table 4;
+# its Table B1 cols 1-2 for Table 2), so each reproduced_value below is
+# the replicators' value AFTER FIXING A CODING ERROR, not a failure to
+# run.  Table 4: the meta-database row "Fixing election quarter coding
+# errors" (r_coeff -3.452, r_se 1.821) = DP41 Table 1 Panel A col 6.
+# Table 2 is not in the meta-database (its 18 rows are Table 4 and
+# appendix figures); its corrected values are from DP41 Table B1 col 3
+# (best-PM model without the Cameron-era waves).  The authors' own 2024
+# corrigendum values (new data, different threshold and wave windows) are
+# given in the per-claim notes for comparison but are not the
+# replicators' numbers.
+i4r_replicator_findings:
+  - claim_id: 1
+    reproduced_value: -3.452
+    outcome: does_not_match
+    notes: >
+      Coding error fixed: the election-quarter covariates (current quarter
+      and four lags).  DP41 Table 1 Panel A col 6 / meta-database row
+      "Fixing election quarter coding errors": -3.452 (SE 1.821), p =
+      0.058, N = 4,429 — no longer significant at 5%.  DP41 re-coded
+      elections from public sources (60 contemporaneous observations
+      changed; 317 amendments across the lags: US elections missing,
+      Japan's upper house missing, run-offs and multi-round elections
+      coded in one quarter only, errors for Austria 2016q4, Ecuador
+      1997q4, Iceland 2008q2/2012q2, Mexico 1991q3, Paraguay 2000q3,
+      Turkey 2014q3).  Other DP41 variants (robustness, not corrections):
+      no election controls -2.992 (1.841); no controls -2.650 (1.812);
+      excluding the May-Manchester quarter -3.279 (1.982), and with
+      corrected elections too -2.390 (1.945); country-clustered xtreg
+      -3.194 (p = 0.558).  Authors' corrigendum (updated data, 14+
+      deaths threshold): -3.910 (1.798), N = 4,612.
+  - claim_id: 2
+    reproduced_value: 4429
+    outcome: does_not_match
+    notes: >
+      DP41 Table 1 Panel A col 6 (corrected election-quarter variables):
+      the printed 4,328 becomes 4,429, because the re-coded election lags
+      fill quarters that were missing (elections before a country's
+      first observed quarter were coded by hand: 26 elections in 22
+      countries).  The corrigendum's re-built panel has 4,612.
+  - claim_id: 3
+    reproduced_value: -0.1274
+    outcome: matches
+    notes: >
+      DP41 Table B1 col 1: -0.1274 (0.0187), N = 143,499, reproduced
+      exactly; DP41 corrects nothing in the likeability model.  (The
+      authors' 2024 corrigendum later restricts it to waves 9-12:
+      -0.3273 (0.0255), N = 79,619.)
+  - claim_id: 4
+    reproduced_value: 0.0178
+    outcome: matches
+    notes: DP41 Table B1 col 1 — 0.0178 (0.0278), reproduced exactly.  Corrigendum (waves 9-12) 0.0115 (0.0281).
+  - claim_id: 5
+    reproduced_value: -0.5007
+    outcome: matches
+    notes: DP41 Table B1 col 1 — -0.5007 (0.0229), reproduced exactly.  Corrigendum (waves 9-12) 0.7820 (0.0212).
+  - claim_id: 6
+    reproduced_value: -0.0502
+    outcome: matches
+    notes: >
+      Coding error fixed: the best-PM outcome in waves 7-8 (35,060 of the
+      97,155 observations), where the question named David Cameron, is
+      coded as preferring May.  DP41 Table B1 col 3 drops waves 1-8:
+      -0.0502 (SE 0.0038), N = 62,095 — the coefficient barely moves.
+      Fixing the estimator as well (logit, as the paper states, instead
+      of the xtreg actually run) gives -0.6806 (0.0576) on all waves
+      (col 4) and -1.0181 (0.0797) without waves 1-8 (col 5), on the
+      log-odds scale.  Corrigendum (OLS, waves 10-12): -0.0502 (0.0038),
+      N = 62,095.
+  - claim_id: 7
+    reproduced_value: 0.0024
+    outcome: does_not_match
+    notes: >
+      DP41 Table B1 col 3 (waves 1-8 dropped): 0.0024 (0.0046) vs the
+      printed -0.0002 (0.0040) — sign flips, both insignificant and
+      within one SE.  Corrigendum: 0.0024 (0.0046).
+  - claim_id: 8
+    reproduced_value: 0.0287
+    outcome: does_not_match
+    notes: >
+      DP41 Table B1 col 3 (waves 1-8 dropped): 0.0287 (0.0029) vs the
+      printed 0.2098 — most of the printed "time" effect is the
+      Cameron-to-May question change.  The corrigendum prints 0.2286
+      (0.0149) under a different parameterisation (its constant is the
+      wave 10 coefficient).
+  - claim_id: 9
+    reproduced_value: 143499
+    outcome: matches
+    notes: DP41 Table B1 col 1 — 143,499, reproduced exactly.  Corrigendum (waves 9-12) 79,619.
+  - claim_id: 10
+    reproduced_value: 62095
+    outcome: does_not_match
+    notes: DP41 Table B1 col 3 — dropping the Cameron-era waves 7-8 (35,060 obs; DP41 drops waves 1-8) leaves 62,095 of 97,155.
+
+notes: >
+  Headline findings (as published): after the 22 May 2017 Manchester
+  Arena bombing, British Election Study respondents liked Theresa May less
+  and were less likely to prefer her as prime minister (Table 1, wave 12
+  before/after; Table 2, panel difference-in-differences), and in a
+  global country-quarter panel major international terrorist attacks
+  raise approval of men executives (3.1 points) but lower it for women
+  (interaction -4.3; Table 4).  DP41 (Jetter & Stockley) finds the May
+  results robust to its corrections but the global Table 4 result not:
+  correcting the election-quarter coding, dropping the May-Manchester
+  quarter or clustering by country each removes 5% significance.  The
+  authors' reply (DP44) disputes the conclusion but accepts the errors;
+  their 2024 APSR corrigendum replaces Tables 2 and 4.
+
+  Original analysis in Stata (one do-file, xtreg and xtpcse); language: r
+  is the reproduction target.
+
+  Curation pass (2026-10-21).  Pinned 11 claims: Table 4's two attack
+  coefficients and N (the table I4R examined; its constant and R2 are not
+  pinned — the constant depends on Stata's base-country dummy and R2 on
+  xtpcse's definition), and Table 2's six difference-in-differences
+  coefficients and two Ns.  Every coefficient carries its SE.  Values
+  exactly as printed in the published APSR PDF; the Table 4 values equal
+  the meta-database's o_coeff / o_std_err (-4.333 / 1.859) and DP41's
+  reproduction; Table 2 equals DP41 Table B1 cols 1-2.  Table 1 and 3
+  (wave-12 cross-sections) are producible from BES_data.dta but were left
+  out to keep the entry on the two tables the replicators corrected.
+
+  What was read.  The published APSR PDF (all 16 pp.: design, Tables
+  1-4, the global-analysis section and footnotes 15-19); DP41 (28 pp.,
+  EconStor, incl. Table 1, Table 2, Table B1 and the election-coding
+  appendix A.1); the authors' reply DP44 (July 19 update, opening
+  sections); the 2024 corrigendum (2 pp., Cambridge Core); the Dataverse
+  API metadata for versions 1.0 and 2.0; the version-1.0 package
+  (replication_files.do in the Table 2 and Table 4 sections; columns and
+  sample counts of did_data.dta and global_approval.dta); the
+  meta-database's 18 team-86 rows.
+
+  Package-only facts (never in contexts).  The do-file runs every
+  analysis from one script and expects the working directory to hold
+  the .dta files; it sets global demographics = white gender labour
+  party_other income ideology2 at the top (line 36), which the Table 2
+  code reuses, so the Table 2 section does not run on its own.  It needs
+  estout, lean2, lincomest, coefplot, grc1leg (ssc; commented-out
+  installs) and writes .rtf tables.  Table 2: use did_data.dta; xtset id
+  wave; xtreg likeMayW i.treatment1##i.time i.wave $demographics and the
+  same for bestPMW — xtreg WITHOUT fe, i.e. Stata's default
+  random-effects GLS with wave dummies, although the paper calls the
+  table "with fixed effects" and the best-PM column a logit.  Complete
+  cases give exactly 143,499 (likeMayW; waves 9-16) and 97,155 (bestPMW;
+  waves 7, 8, 10, 11, 12 — waves 7 and 8 contribute 17,965 + 17,095 =
+  35,060, DP41's Cameron-era count).  Table 4: use global_approval.dta;
+  xtpcse lag_approval c.kill_16##c.female_pres l(0/1).growth
+  l(0/1).log_inflation l(0/4).election_qtr i.execrlc i.country_code,
+  cor(psar1) i — panel-specific AR(1) Prais-Winsten with independent
+  panel-corrected SEs, lagged growth and inflation and FIVE election
+  indicators (current and four lags), which the table note summarises as
+  "election in that year".  kill_16 is the >15-deaths attack dummy;
+  lag_approval is the dependent variable (next-quarter approval, per
+  the paper and DP41's equation 1).  The do-file never xtsets
+  global_approval.dta: xtpcse and the l()/f() operators rely on the
+  panel and time settings saved in the .dta's characteristics
+  (_TSpanel / _TStvar), which an R port has to rebuild from country /
+  qtr.  global_approval.dta has 5,469 rows and
+  45 country codes; the estimation sample is 44 countries (DP41 fn. 1:
+  the paper's "66 countries" is wrong); kill_16 x female_pres = 1 in nine
+  rows (Macapagal Arroyo x3, Thatcher x5, May 2017q2).  Variables used:
+  country, qtr, country_code, lag_approval, kill_16, female_pres, growth,
+  log_inflation, election_qtr, execrlc.
+
+  Benchmark implications.  Reproducing the printed Table 4 needs Stata's
+  xtpcse with psar1 (R: panelAR or pcse on a Prais-Winsten transform; an
+  exact match is not guaranteed) and the five lagged election dummies the
+  paper never spells out.  Reproducing Table 2 needs Stata's xtreg
+  random-effects GLS (R: plm model = "random" or lme4), not the fixed
+  effects the title says and not the logit the note says.  An
+  independent run that follows the paper's text (fixed effects, logit)
+  is expected to MISS the printed Table 2 best-PM values.  No run can be
+  expected to land on the I4R Table 4 corrections: those need DP41's
+  hand-recoded election calendar, which is not in this package (it is in
+  the replicators' own package on the UWA repository / Borealis).  Table
+  2's correction (drop the Cameron waves) is derivable from the data.
+
+  Blind-mode caveat (render check 2026-10-21).  The blind paper text
+  redacts every pinned literal (20 redactions; none of the 11 values,
+  SEs or Ns survives in task.md or paper.txt), but the results section's
+  prose keeps the rounded Table 4 effects, "(3.1 points)" and "(4.3
+  points)", which the value-matching redactor does not catch.  A blind
+  run therefore sees the Table 4 coefficients to one decimal; the Table
+  2 values do not appear in the prose.
+
+  Left out.  Table 1 and Table 3 (wave-12 cross-sections with day-
+  clustered SEs; reproducible but not examined by I4R), Figures 1-4,
+  the constituency analysis (Figure 4), the appendix tables, and DP41's
+  32-specification figures.

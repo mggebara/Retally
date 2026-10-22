@@ -238,6 +238,78 @@ def test_dataverse_falls_back_to_converted_file_when_original_fails(tmp_path, ca
 
 
 @pytest.mark.parametrize(
+    "value,expected",
+    [
+        ("https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/X&version=1.0", "1.0"),
+        ("https://dataverse.harvard.edu/dataset.xhtml?version=2.1&persistentId=doi:10.7910/DVN/X", "2.1"),
+        ("https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/VHNPUO", None),
+        ("doi:10.7910/DVN/VHNPUO", None),
+    ],
+)
+def test_dataverse_version_parameter(value, expected):
+    assert DatasetDownloader._dataverse_version(value) == expected
+
+
+def test_dataverse_pinned_version_lists_that_versions_files(tmp_path):
+    """``&version=1.0`` lists the 1.0 file set, keeps ?format=original, and records the version."""
+    requested: list[str] = []
+    v1_files = [
+        {
+            "label": "global_approval.tab",
+            "dataFile": {
+                "id": 11,
+                "filename": "global_approval.tab",
+                "originalFileFormat": "application/x-stata-14",
+                "originalFileName": "global_approval.dta",
+            },
+        },
+        {"label": "replication_files.do", "dataFile": {"id": 12, "filename": "replication_files.do"}},
+    ]
+    routes = {
+        f"{_DV_BASE}11?format=original": (200, b"stata"),
+        f"{_DV_BASE}12": (200, b"* do-file v1"),
+    }
+
+    def fake_get(url, **kwargs):
+        requested.append(url)
+        if "/api/datasets/" in url:
+            # The version-files endpoint returns a bare list under "data".
+            return _dv_response(url, json_body={"status": "OK", "data": v1_files})
+        status, body = routes[url]
+        return _dv_response(url, body=body, status=status)
+
+    dest = tmp_path / "pkg"
+    source = "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/TEST01&version=1.0"
+    with patch("requests.get", side_effect=fake_get), patch("retally.http_retry.time.sleep"):
+        DatasetDownloader(cache_dir=tmp_path)._download_harvard_dataverse(source, dest)
+
+    assert requested[0] == (
+        "https://dataverse.harvard.edu/api/datasets/:persistentId/versions/1.0/files"
+        "?persistentId=doi:10.7910/DVN/TEST01"
+    )
+    assert requested[1:] == [f"{_DV_BASE}11?format=original", f"{_DV_BASE}12"]
+    assert (dest / "global_approval.dta").read_bytes() == b"stata"
+    assert (dest / "replication_files.do").read_bytes() == b"* do-file v1"
+    metadata = json.loads((dest / "metadata.json").read_text(encoding="utf-8"))
+    assert metadata["dataset_version"] == "1.0"
+    assert metadata["persistent_id"] == "doi:10.7910/DVN/TEST01"
+    assert metadata["files"] == ["global_approval.dta", "replication_files.do"]
+
+
+def test_dataverse_without_version_uses_latest_and_writes_no_metadata(tmp_path):
+    routes = {
+        f"{_DV_BASE}1?format=original": (200, b"a,b\n1,2\n"),
+        f"{_DV_BASE}2": (200, b"fixed field"),
+    }
+    dest, requested = _run_dataverse(tmp_path, routes)
+    assert (
+        requested[0]
+        == "https://dataverse.harvard.edu/api/datasets/:persistentId/?persistentId=doi:10.7910/DVN/TEST01"
+    )
+    assert not (dest / "metadata.json").exists()
+
+
+@pytest.mark.parametrize(
     "data_file, expected",
     [
         ({"filename": "x.R"}, None),
