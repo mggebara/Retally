@@ -1303,6 +1303,18 @@ other way round — the package never says which `_iter` file is which
 window, so this is an undocumented coin-flip worth two claims — and the
 two runs chose opposite deflator base years.
 
+*Second blind samples for the two weakest new cells (run
+`2026-10-22-b`; `claude-code-blind-rerun-2026-10-22-b.json`):*
+Gagliarducci 9 / 13 (first run 7 / 13): the same percent-opposite
+definition both times (the data's variable, missing for bills with no
+cosponsors), so the two Panel B counts miss both times; two Panel B
+coefficients moved inside the SE band.  Holman 5 / 11 (first run 6 /
+11): Table 2 identical to six decimals in both runs (the paper's fixed
+effects and logit, not the code's random effects and linear model),
+Table 4 slightly different (2.22 / −2.96 vs 2.32 / −3.83).  Both misses
+are stable: paper-versus-code, not run-to-run noise.  The Grier entry's
+`notes` now record the window-file mapping and deflator ambiguities.
+
 **Curation (PRs #70–#74, #76; agents, from
 `benchmark/corpus/candidates-2026-10-21.md`; 75 pinned claims).**
 Catalog 10 → 18 (16 in scope).  Caveats recorded per entry: the open PDF
