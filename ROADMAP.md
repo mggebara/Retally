@@ -1402,7 +1402,7 @@ are not in it; they would collide with the first runs' cells).
 - (d) Corpus: the two reserves (Guay & Johnston, Brouwer et al.) if
   their PDFs become reachable; otherwise a new shortlist pass.
 
-### 3.5 Pipeline model: Opus 4.7 → Opus 5.5 — ✅ code change (2026-10-22), no runs yet
+### 3.5 Pipeline model: Opus 4.7 → Opus 5.5 — ✅ measured on 4 of the 7 evaluation papers (2026-10-22), $3.54
 
 The pipeline's default model had been `claude-opus-4-7` since the
 generator and extractor were written, and every pipeline row in 3.2–3.4
@@ -1437,13 +1437,75 @@ Cost expectation: per token 20 % less, per run roughly the same, because
 the thinking tokens are new output.  The 3.2 pass was $8.11 for 21 rows
 on 4.7; budget $8–12 for the same 21 cells on 5.5.
 
-**Next (paid; ask first).**  (a) The seven 3.2 papers × 3 modes on 5.5
-— the model-confound row: pipeline-on-5.5 against agent-on-5.5 is the
-harness effect, pipeline-on-5.5 against pipeline-on-4.7 is the model
-effect.  (b) The six 3.4 papers × 3 modes on 5.5 (≈$1–2.50 per paper).
-Both with `RETALLY_LLM_CACHE=0` or a cold LLM cache, since no 5.5 call
-is cached anyway, and `--no-cache` is unnecessary (the new keys are
-cold).
+**Measured (2026-10-22, run ids `20261022T04xxxxZ`, one run per cell,
+LLM cache cold for 5.5).**  Credit allowed four of the seven papers;
+they were chosen by agent-over-pipeline gap per dollar (Grier, Montero,
+Manekin, Leeson; Arias had the largest gap but cost $2.44 alone), so
+they lean toward papers where the 4.7 pipeline did badly.  Files:
+`benchmark/results/pipeline-opus55-{grier,montero,manekin,leeson}-all-modes-2026-10-22.json`
+and the composite `pipeline-opus55-4papers-all-modes-2026-10-22.json`.
+The same 12 cells, three ways (claims within tolerance of the paper;
+first-scored and refinement counts in parentheses for the pipelines):
+
+| Paper | Mode | n | Pipeline 4.7 | Pipeline 5.5 | Agent (5.5) |
+|---|---|---|---|---|---|
+| Grier | seeded | 11 | 0 (0, 1) | 11 (10, 3) | 10 |
+| Grier | independent | 11 | 0 (0, 3) | 0 (0, 2) | 10 |
+| Grier | blind | 11 | 0 (0, 2) | 0 (0, 0) | 10 |
+| Montero | seeded | 10 | 10 (0, 1) | 10 (10, 0) | 10 |
+| Montero | independent | 10 | 3 (2, 5) | 10 (1, 3) | 10 |
+| Montero | blind | 10 | 0 (0, 0) | 0 (0, 0) | 10 |
+| Manekin | seeded | 12 | 7 (8, 4) | 12 (12, 0) | 12 |
+| Manekin | independent | 12 | 12 (6, 2) | 12 (12, 0) | 12 |
+| Manekin | blind | 12 | 6 (6, 0) | 12 (12, 0) | 12 |
+| Leeson | seeded | 11 | 11 (11, 0) | 11 (11, 0) | 11 |
+| Leeson | independent | 11 | 9 (9, 1) | 11 (8, 2) | 11 |
+| Leeson | blind | 11 | 4 (4, 0) | 8 (8, 0) | 11 |
+| **Total** | seeded | 44 | **28** | **44** | **43** |
+| | independent | 44 | **24** | **33** | **43** |
+| | blind | 44 | **10** | **20** | **43** |
+
+Reading: on these four papers the model change alone closes the seeded
+gap (44/44, first attempt in three of four) and about half of the
+independent and blind gaps; what remains in independent (33 → 43) and
+blind (20 → 43) is the harness.  The pipeline's remaining misses are
+all sample construction: Grier independent/blind land on 172 / 94
+observations instead of 186 / 106 (the undocumented `_iter1`/`_iter2`
+window files, see 3.4 — the agent resolved this by trying both; the
+pipeline gets one shot plus refinement on the error text), Montero
+blind builds the regression on 130 rows instead of 4,770 (it never finds
+the right data file without the scripts), Leeson blind gets the
+five-station subsample wrong (98 vs 102 visits) and with it the two
+dollars-per-hour tests.  Montero seeded on 5.5 still lands on the
+paper's wrong numbers from the do-file, as in 3.2.
+
+Cost: $3.54 for the 12 cells against $3.62 for the same cells on 4.7
+— output tokens up 41 % (77.7 k → 109.6 k; the thinking), input tokens
+unchanged (335 k → 337 k), per-token price down 20 %.  A wash per run,
+as predicted; `claude-opus-5-5` rows price at $4 / $20 in
+`benchmark/pricing.py`.  Total project spend ≈ $35.5.
+
+Caveats: one run per cell; four papers chosen by expected gain, not at
+random; the agent rows are from 3.3 (predate the #69 context rewording)
+and share the 3.3/3.4 caveats; Opus 5.5 effort is `high` for generation
+and `medium` for extraction while the agent runs at the desktop default.
+The report renderer groups rows by reproducer name only, so 4.7 and 5.5
+pipeline rows would collide in REPORT.md; they are kept in separate
+files and REPORT.md still shows the 4.7 rows until the renderer learns a
+model dimension.
+
+**Next.**
+
+- (a) Paid, ask first: the remaining three 3.2 papers on 5.5 (Arias
+  ≈$2.50–3.40, Adams ≈$1.10–1.50, Hanlon ≈$1.00–1.40) to complete the
+  confound row, then the six 3.4 papers (≈$1–2.50 each).
+- (b) Free: give `benchmark.report` / `benchmark.metrics` a model
+  dimension (reproducer × model) so REPORT.md can carry the 4.7 and 5.5
+  pipeline rows side by side.
+- (c) Free: the two 5.5 misses that are harness, not model — Grier's
+  window-file choice and Montero blind's data-file choice — are the
+  concrete targets if pipeline tuning is ever unfrozen (one attempt at
+  each is a documented alternative the agent tried).
 
 ---
 
