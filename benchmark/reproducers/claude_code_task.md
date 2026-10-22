@@ -109,6 +109,13 @@ ${output_dir}/
 - `feedback.txt` holds what you acted on before the next attempt: the error
   you fixed (`kind: "error"`) or the `check_attempt` comparison
   (`kind: "claim"`).
+- Exploratory runs (inspecting variables, counting rows, checking a filter;
+  no estimate of a listed quantity) are attempts with `kind: ""` and need no
+  `feedback.txt`.  They must NOT print any `RESULT:` line, not even a
+  placeholder: the first run that prints one is scored as your first scored
+  attempt.  Print `RESULT:` lines only from a script that estimates the
+  listed quantities, and `kind: "error"` only for a run that crashed or
+  that was meant to print them and did not.
 - Write `reproduction.json` last, in this schema:
 
 ```

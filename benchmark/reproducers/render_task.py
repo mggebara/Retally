@@ -19,7 +19,8 @@ Builds ``<task_root>/<entry_id>/<mode>/<run_id>/`` (default task root
   ``<task_root>/<entry_id>/<mode>/<run_id>.retally-stripped.json``, so
   nothing in the task directory names a withheld file;
 * ``render.json`` — what was rendered, also written to the run's output
-  directory ``benchmark/reproductions/<entry_id>/<mode>/<run_id>/``.
+  directory ``benchmark/reproductions/<entry_id>/<mode>/<run_id>/``, with
+  a copy of ``task.md`` beside it so the scored artifacts carry the task.
 
 It prints the task file, the mount path and the output directory, one
 per line.  No API calls; no network when ``--package-dir`` /
@@ -204,6 +205,9 @@ def render_task(
     )
     task_file = task_dir / "task.md"
     task_file.write_text(task_text, encoding="utf-8")
+    # A copy in the output directory, so the run's artifacts carry the task.
+    output_dir.mkdir(parents=True, exist_ok=True)
+    (output_dir / "task.md").write_text(task_text, encoding="utf-8")
 
     render = {
         "entry_id": entry.id,
