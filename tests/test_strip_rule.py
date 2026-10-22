@@ -189,6 +189,8 @@ def package(tmp_path: Path) -> Path:
         root, "README.txt", "Run master.do in Stata 17.\nData are in data/.\nThe codebook lists variables.\n"
     )
     _xlsx(root / "data/survey.xlsx", ["country", "year", "share_immigrants", "Observations"])
+    _xls(root / "output/Table5_TopPanel_Cosponsors.xls", XLS_MATRIX)
+    _xls(root / "data/districts.xls", XLS_DATA)
     return root
 
 
@@ -204,6 +206,7 @@ EXPECTED = {
     "code/analysis.ipynb": "script-suffix",
     "master.do": "script-suffix",
     "code/master_copy.txt": "duplicate-of-script",
+    "output/Table5_TopPanel_Cosponsors.xls": "regression-table",
 }
 
 KEPT = {
@@ -214,6 +217,7 @@ KEPT = {
     "paper/main.tex",
     "README.txt",
     "data/survey.xlsx",
+    "data/districts.xls",
 }
 
 
@@ -288,6 +292,73 @@ def test_outreg_style_xlsx_is_stripped_but_data_xlsx_is_kept(tmp_path):
     data = _xlsx(tmp_path / "data.xlsx", ["id", "year", "income", "Observations"])
     assert content_reason(table) == "regression-table"
     assert content_reason(data) is None
+
+
+def _xls(path: Path, strings: list[str], *, compressed: list[str] = ()) -> Path:
+    """A stand-in BIFF8 workbook: OLE2 header, then SST-style records, then binary noise.
+
+    Each string is written the way BIFF8's shared-string table stores it:
+    a 2-byte length, an option byte (1 = UTF-16LE, 0 = one byte per char),
+    then the characters.  ``compressed`` strings use the one-byte form.
+    """
+    body = bytearray(strip_rule.OLE2_MAGIC + bytes(range(0x20)) * 4)
+    for s, flag, enc in [(s, 1, "utf-16-le") for s in strings] + [(s, 0, "latin-1") for s in compressed]:
+        body += len(s).to_bytes(2, "little") + bytes([flag]) + s.encode(enc)
+        body += b"\x00\x01\x02\x03\xfd\x00\x0a\x00"  # a BIFF record header-ish separator
+    body += bytes(range(256)) * 8
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(bytes(body))
+    return path
+
+
+XLS_TABLE = ["", "(1)", "(2)", "(3)", "lnwage", "female", "(0.012)", "Observations", "R-squared"]
+XLS_DATA = ["state", "year", "district", "sponsor_id", "party", "Democrats", "Republicans"]
+# Stata ``export excel`` of a coefficient matrix, as the Gagliarducci 2022 package ships it.
+XLS_MATRIX = ["sampletype", "All", "Democrats", "OLS_all", "OLS_all_stars", "RD_bwidth", "RD_bwidth_stars"]
+XLS_MATRIX += ["PS_match", "PS_match_stars", "***"]
+
+
+def test_binary_xls_regression_table_is_stripped_and_data_xls_is_kept(tmp_path):
+    table = _xls(tmp_path / "t.xls", XLS_TABLE)
+    data = _xls(tmp_path / "d.xls", XLS_DATA)
+    assert strip_rule._xls_strings(table.read_bytes())  # the strings are found
+    assert content_reason(table) == "regression-table"
+    assert content_reason(data) is None
+    # One-byte ("compressed") BIFF strings are read too.
+    assert content_reason(_xls(tmp_path / "c.xls", [], compressed=XLS_TABLE)) == "regression-table"
+
+
+def test_stata_export_excel_matrix_is_stripped_as_xls_and_xlsx(tmp_path):
+    assert content_reason(_xls(tmp_path / "m.xls", XLS_MATRIX)) == "regression-table"
+    assert content_reason(_xlsx(tmp_path / "m.xlsx", XLS_MATRIX)) == "regression-table"
+    # A placebo table: no stars anywhere, but three estimate / stars column pairs.
+    placebo = [s for s in XLS_MATRIX if s != "***"]
+    assert content_reason(_xls(tmp_path / "p.xls", placebo)) == "regression-table"
+    # One pair, or a ``_stars`` column without its estimate column, is not enough.
+    assert content_reason(_xls(tmp_path / "h.xls", ["hotel", "hotel_stars", "city", "***"])) is None
+    assert content_reason(_xls(tmp_path / "r.xls", ["review_stars", "food_stars", "room_stars"])) is None
+
+
+@pytest.mark.parametrize(
+    "name", ["Table5_TopPanel_Cosponsors.xls", "Table5_BottomPanel_PctCosponsorsOpposite.xls", "data.xls"]
+)
+def test_xls_decision_is_by_content_not_name(tmp_path, name):
+    assert content_reason(_xls(tmp_path / "table" / name, XLS_TABLE)) == "regression-table"
+    assert content_reason(_xls(tmp_path / "data" / name, XLS_DATA)) is None
+
+
+def test_xls_without_strings_or_over_the_cap_is_kept(tmp_path):
+    empty = _write(tmp_path, "empty.xls", strip_rule.OLE2_MAGIC + b"\x00\x01" * 512)
+    assert content_reason(empty) is None
+    table = _xls(tmp_path / "t.xls", XLS_TABLE)
+    assert content_reason(table, size_cap=100) is None
+
+
+def test_text_xls_still_takes_the_text_path(tmp_path):
+    # outreg2's ``.xls`` is tab-separated text, not BIFF.
+    text = "\t(1)\t(2)\n\ty\ty\nx\t0.543***\t0.512***\n\t(0.012)\t(0.013)\n\t(0.1)\t(0.2)\n"
+    text += "Observations\t1000\t1000\nR-squared\t0.660\t0.661\n"
+    assert content_reason(_write(tmp_path, "table2.xls", text)) == "regression-table"
 
 
 def test_manuscript_tex_with_an_inline_regression_table_is_stripped(tmp_path):
