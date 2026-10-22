@@ -245,6 +245,24 @@ def test_package_scripts_respect_skip_dirs(tmp_path):
     assert paths == {"analysis.R"}
 
 
+def test_package_scripts_skip_macos_appledouble_files(tmp_path):
+    # Mac-zipped packages ship a ``._`` resource-fork stub beside every
+    # file and sometimes a ``__MACOSX/`` mirror; neither is code.
+    _write(tmp_path, "code/analysis.R", "lm(y ~ x)\n")
+    (tmp_path / "code/._analysis.R").write_bytes(b"\x00\x05\x16\x07Mac OS X        ")
+    _write(tmp_path, "__MACOSX/code/analysis.R", "lm(y ~ x)\n")
+    paths = {f.relative_path for f in select_package_scripts(tmp_path)}
+    assert paths == {"code/analysis.R"}
+
+
+def test_relevant_files_skip_macos_appledouble_files(tmp_path):
+    _write(tmp_path, "code/analysis.py")
+    (tmp_path / "code/._analysis.py").write_bytes(b"\x00\x05\x16\x07Mac OS X        ")
+    _write(tmp_path, "__MACOSX/code/analysis.py")
+    paths = {f.relative_path for f in select_relevant_files(tmp_path)}
+    assert paths == {"code/analysis.py"}
+
+
 def test_package_scripts_tolerate_non_utf8_bytes(tmp_path):
     # Old Stata do-files are frequently Latin-1; selection must not crash.
     p = tmp_path / "master.do"

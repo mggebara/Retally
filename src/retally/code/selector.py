@@ -221,6 +221,8 @@ def select_package_scripts(package_root: Path | None) -> list[SelectedFile]:
         if path.suffix.lower() not in _SCRIPT_SUFFIXES or not path.is_file():
             continue
         relative = path.relative_to(package_root)
+        if _is_macos_metadata(relative):
+            continue
         if any(part in _SKIP_DIRS for part in relative.parts[:-1]):
             continue
         try:
@@ -280,9 +282,24 @@ def _truncate_script(contents: str) -> str:
     return head + marker
 
 
+def _is_macos_metadata(relative: Path) -> bool:
+    """True for macOS AppleDouble resource-fork stubs (``._name``, ``__MACOSX/``).
+
+    Archives zipped on a Mac carry a ``._<name>`` sidecar for every file
+    (binary metadata, not code) and sometimes a parallel ``__MACOSX/``
+    tree.  They share the real file's suffix, so a suffix filter alone
+    lets them through: on Manekin & Mitts (2022) every selected "script"
+    was a ``._replicate_*.R`` stub and the authors' code never reached
+    the prompt.  Mirrors the downloader's nested-archive rule.
+    """
+    return relative.name.startswith("._") or "__MACOSX" in relative.parts
+
+
 def _should_skip(path: Path, repo_root: Path) -> bool:
     """Filter out files we never want, regardless of priority."""
     relative = path.relative_to(repo_root)
+    if _is_macos_metadata(relative):
+        return True
     parts = relative.parts
     if any(part in _SKIP_DIRS for part in parts[:-1]):
         return True
