@@ -560,3 +560,23 @@ def test_headline_has_no_transient_note_without_transient_rows():
     md = report.render_markdown(results)
     assert "transient" not in md
     assert "transient" not in report.render_html(results)
+
+
+# ── Byte-stable rendering of single-reproducer results ──────────────────
+
+_SNAPSHOTS = REPO_ROOT / "tests" / "fixtures" / "report_snapshots"
+
+
+def _committed_results(name):
+    import json
+
+    path = REPO_ROOT / "benchmark" / "results" / f"{name}.json"
+    return report.metrics.result_rows(json.loads(path.read_text(encoding="utf-8")))
+
+
+def test_single_reproducer_reports_match_committed_snapshots():
+    """Single-reproducer reports render byte-for-byte as they did before per-reproducer sections."""
+    for name in ("eval-7papers-all-modes-2026-10-21", "baseline-2026-10-19"):
+        results = _committed_results(name)
+        assert report.render_markdown(results) == (_SNAPSHOTS / f"{name}.md").read_text(encoding="utf-8")
+        assert report.render_html(results) == (_SNAPSHOTS / f"{name}.html").read_text(encoding="utf-8")
