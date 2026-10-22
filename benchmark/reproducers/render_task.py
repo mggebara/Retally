@@ -67,11 +67,22 @@ MAX_CLAIM_REFINEMENTS = 3
 # ---------------------------------------------------------------------------
 
 
-def value_strings(v: float) -> set[str]:
+def value_strings(v: float, *, percent: bool = True) -> set[str]:
     """Every way a claim value could plausibly be printed (as ``tests/test_blind_prompt.py`` checks).
 
     ``str`` / ``repr``, ``%g`` at a few precisions, fixed decimals, and the
     sign-less magnitude of each; integers also bare and comma-grouped.
+
+    A value with ``0 < |v| < 1`` is often a share or a difference in
+    shares, and papers print it in percent or percentage points: 0.224 as
+    "22.4%", 0.035 as "3.5 percentage points" or "3.5 points".  Such values
+    therefore also get their x100 forms (``%g``, one and two decimals).
+    These short forms ("3.5") also hit unrelated numbers in the paper; that
+    over-redaction is accepted, since a leaked target defeats blind mode
+    while a few extra ``[withheld]`` marks cost little.  ``percent=False``
+    leaves them out, for checking text that never prints percentages (the
+    rendered task, whose boilerplate says "1.0 CPU").
+
     Strings shorter than three characters would match unrelated text and
     are dropped.
     """
@@ -80,6 +91,9 @@ def value_strings(v: float) -> set[str]:
         forms |= {str(x), repr(x), f"{x:g}", f"{x:.6g}", f"{x:.4g}", f"{x:.3g}", f"{x:.4f}", f"{x:.3f}"}
         if float(x).is_integer():
             forms |= {str(int(x)), f"{int(x):,}"}
+        if percent and 0 < abs(x) < 1:
+            pct = x * 100
+            forms |= {f"{pct:g}", f"{pct:.1f}", f"{pct:.2f}"}
     return {f for f in forms if len(f) >= 3}
 
 

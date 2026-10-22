@@ -107,8 +107,8 @@ def _edit_manifest(run_dir: Path, **changes) -> None:
     path.write_text(json.dumps(data), encoding="utf-8")
 
 
-def _value_strings(v: float) -> set[str]:
-    return render_mod.value_strings(v)
+def _value_strings(v: float, *, percent: bool = True) -> set[str]:
+    return render_mod.value_strings(v, percent=percent)
 
 
 def _occurs(form: str, text: str) -> bool:
@@ -117,11 +117,16 @@ def _occurs(form: str, text: str) -> bool:
     return re.search(rf"(?<![\d.]){re.escape(form)}(?!\d)", text) is not None
 
 
-def _leaks(text: str, curated: str, numbers: list[float]) -> list[str]:
+def _leaks(text: str, curated: str, numbers: list[float], *, percent: bool = True) -> list[str]:
+    """Value forms of ``numbers`` in ``text`` not already in ``curated``.
+
+    ``percent=False`` skips the x100 forms of sub-unit values, which only
+    paper prose uses; task boilerplate ("1.0 CPU", "2.5 KB") would trip them.
+    """
     return sorted(
         form
         for v in numbers
-        for form in _value_strings(v)
+        for form in _value_strings(v, percent=percent)
         if _occurs(form, text) and not _occurs(form, curated)
     )
 
@@ -528,6 +533,19 @@ def test_redaction_ignores_left_word_boundaries():
     assert n == 3
 
 
+def test_blind_paper_redacts_percentage_forms_of_sub_unit_values(tmp_path):
+    entry = _entry(
+        original_claims=[bschema.OriginalClaim(description="share", value=0.224, claim_type="other")]
+    )
+    paper_text = "Founded in 1922. The share rose by 22.4% (22.40 percentage points) after treatment.\n"
+    rendered = _render(tmp_path, "blind", entry=entry, paper_text=paper_text)
+    paper = (rendered.task_file.parent / "paper.txt").read_text(encoding="utf-8")
+    assert "22.4" not in paper and "22.40" not in paper
+    assert "[withheld]% ([withheld] percentage points)" in paper
+    assert "1922" in paper
+    assert rendered.render["paper_redactions"] == 2
+
+
 def test_catalog_has_pinned_claims_to_check():
     assert CATALOG
 
@@ -551,7 +569,7 @@ def test_blind_task_for_every_catalog_entry_leaks_no_value(tmp_path, entry):
         + (entry.paper.title or entry.id)
     )
     with_n = numbers + [float(oc.sample_size) for oc in entry.original_claims if oc.sample_size is not None]
-    assert _leaks(task, curated, with_n) == []
+    assert _leaks(task, curated, with_n, percent=False) == []
     assert _leaks(paper, "", numbers) == []
     for oc in entry.original_claims:
         assert oc.description in task
