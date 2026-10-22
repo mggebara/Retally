@@ -11,6 +11,14 @@
 # Package-only facts a curator needs to keep go in the entry's `notes`
 # (not shown to the model).
 #
+# No claim's `context`, `location` or `unit` may state the value (or
+# standard error) of any pinned claim of the same entry: a context that
+# says "1,842 dyads", "98 clusters" or "attenuates from 3.713" hands the
+# blind model the target of another claim.  Sample sizes, cluster counts
+# and means that are pinned go in `notes`; describe what the number is
+# ("the full-sample N", "former-owner clusters"), not its value.
+# tests/test_catalog_contexts.py enforces this for every entry.
+#
 # Printed precision (`decimals`): the comparator never holds a claim to a
 # band narrower than half a unit in the last printed place of `value`
 # (every mode; see ../README.md, "Printed-precision floor").  The number

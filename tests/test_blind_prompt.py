@@ -18,7 +18,8 @@ Curated free text (description, location, context, unit) is rendered
 verbatim and may mention a number -- an N, a control mean.  That is the
 curator's responsibility (``benchmark/papers/README.md``), so a format
 string that already occurs in the curated text is not counted as a leak
-here; every other occurrence is.
+here; every other occurrence is.  ``tests/test_catalog_contexts.py``
+checks the curated text itself: it may not state any pinned value.
 """
 
 from __future__ import annotations

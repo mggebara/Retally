@@ -86,7 +86,8 @@ original_claims:
       effects, no geographic controls; robust standard errors.  The paper
       calls this column "the bivariate correlation after controlling for
       log population density": despite "bivariate" in the token, the
-      column DOES control for population density.  N = 660 districts.
+      column DOES control for population density.  Observations are
+      districts.
   - description: warfare_se_bivariate
     value: 0.305
     claim_type: standard_error
@@ -104,7 +105,7 @@ original_claims:
       ten geographic controls (latitude, longitude, altitude, ruggedness,
       precipitation, land quality, dry rice suitability, wet rice
       suitability, wheat suitability, malaria risk); robust standard
-      errors.  Attenuates from 3.713 (column 1) to this value.
+      errors.  Attenuated relative to column 1.
   - description: warfare_se_full_controls
     value: 0.370
     claim_type: standard_error
@@ -116,8 +117,8 @@ original_claims:
     unit: districts
     location: "Table 1"
     context: >
-      Number of district observations in the Table 1 regressions (660 in
-      every column).
+      Number of district observations in the Table 1 regressions (the
+      same in every column).
   # Curated during Phase 1.3 from the replication package's own
   # 1 paper/table1.tex and table2b.tex (esttab output of
   # wii_replication.do).  Appended (not interleaved) so the claim_id
