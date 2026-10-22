@@ -1273,6 +1273,123 @@ re-renders the previous REPORT.md byte for byte) and
 - (e) Variance where it matters: a second blind run of Adams (the
   four-MP rule) and Grier (the deflator).
 
+### 3.4 Corpus 10 → 18, harness fixes from 3.3, and the agent on the six new papers — ✅ measured (2026-10-22), no API spend
+
+**Harness and catalog fixes (3.3's list, all merged in order).**  #68
+`select_package_scripts` skips macOS `._*` / `__MACOSX` stubs (Manekin:
+all 20 "scripts" the pipeline's seeded prompt showed were stubs); #69 a
+catalog test (`tests/test_catalog_contexts.py`): no claim `context` /
+`location` / `unit` may state a pinned value of its entry, and seven
+entries reworded (Adams, Alesina, Bisbee, Dincecco, Grier, Leeson,
+Montero — counts and means moved to `notes`; this re-keys those entries'
+pipeline cache rows, deliberately); #75 blind paper redaction also
+withholds percentage forms of sub-unit values ("22.4%" for 0.224,
+"3.5 points" for 0.035 — found live on Dertwinkel-Kalt and Arias); #77
+the strip rule content-tests binary `.xls` workbooks (Gagliarducci's
+`Output/Table5_*.xls` held every pinned value to six decimals on the
+blind mount; 128 → 152 files stripped, the 15 other packages unchanged);
+from curation, `PaperParser.parse_url` sniffs `%PDF` when a repository
+serves a PDF as `application/octet-stream` (#73) and the Dataverse
+downloader pins `version=<v>` (#76, Holman 1.0 vs the post-corrigendum
+2.0).  Still open from 3.3: the model confound (paid).
+
+**Blind second runs (run `2026-10-22-a`;
+`benchmark/results/claude-code-blind-rerun-2026-10-22.json`).**  Adams
+8 / 11 with the same numbers to six decimals (1,535 dyads from the
+paper's stated four-MP rule, both times: a stable, principled miss).
+Arias 12 / 12 (this time every count exact, after one error repair).
+Grier 9 / 11: the agent mapped the two robustness-window files the
+other way round — the package never says which `_iter` file is which
+window, so this is an undocumented coin-flip worth two claims — and the
+two runs chose opposite deflator base years.
+
+**Curation (PRs #70–#74, #76; agents, from
+`benchmark/corpus/candidates-2026-10-21.md`; 75 pinned claims).**
+Catalog 10 → 18 (16 in scope).  Caveats recorded per entry: the open PDF
+is a working paper for Altmann (the 2019 IZA draft has no regression
+tables and no online experiment: blind and independent runs work from
+the claim contexts), Gagliarducci (NBER 2016; one pinned Table 5 cell
+differs, 6.857 in the WP vs 6.734 published) and Dertwinkel-Kalt (DP
+076, same tables); Acemoglu switched to the published QJE PDF hosted at
+MIT because the WP's tables differ in numbering and values.  I4R
+findings: Acemoglu has none usable (every database row is a robustness
+variant: `not_attempted`), López-Moctezuma's rest on the team's survey
+answer only, Gagliarducci's on the clustering-variant rows, Holman's are
+DP41's corrected values (`not_reproducible`).  Two leaks that are
+properties of the data, not the harness: the dataset listing's row
+counts equal a pinned N for Acemoglu (5,775) and López-Moctezuma (39),
+and a rounded prose value survives redaction (Holman "3.1 points" for
+3.112).  Both affect the pipeline's prompts identically.
+
+**Results (one Opus subagent per cell, run `2026-10-22-a`;
+`benchmark/results/claude-code-6papers-all-modes-2026-10-22.json`).  No
+pipeline rows yet for these six papers (API credit; ≈$1–2.50 per paper
+for the three modes).**
+
+| Paper | Seeded final (first scored; err/claim ref) | Independent final (first scored; err/claim ref) | Blind final (first scored; err ref) |
+|---|---|---|---|
+| acemoglu-2022 (Stata, reproducible) | 12/12 (12; 0/0) | 12/12 (12; 0/1) | 12/12 (10; 0) |
+| altmann-2022 (Stata, minor discrepancies) | 13/13 (13; 0/0) | 13/13 (13; 0/0) | 13/13 (13; 0) |
+| dertwinkel-kalt-2022 (Stata, reproducible) | 13/13 (13; 0/0) | 13/13 (12; 0/1) | 13/13 (13; 0) |
+| gagliarducci-2022 (Stata, reproducible) | 13/13 (11; 1/1) | 13/13 (13; 0/0) | 7/13 (7; 0) |
+| holman-2022 (Stata, NOT reproducible) | 11/11 (11; 1/0) | 10/11 (10; 0/1) | 6/11 (6; 1) |
+| lopez-moctezuma-2022 (R, minor discrepancies) | 13/13 (13; 0/0) | 9/13 (9; 0/2) | 9/13 (9; 0) |
+| **Total** | **75/75** (73) | **70/75** (69) | **60/75** (58) |
+
+Median relative error 0.0% / 0.2% / 0.3%.  `agrees_with_paper`: seeded
+6 / 6, independent 4 / 6, blind 4 / 6.  Over all 13 evaluation papers
+the agent is at seeded 153 / 154, independent 148 / 154, blind 135 /
+154.  The remaining misses are paper-versus-code gaps, not translation
+or harness failures:
+
+- **Holman (the not-reproducible case).**  Seeded 11 / 11 by following
+  the do-file: Stata's `xtreg` *without* `fe` (random effects) and a
+  linear model for "May best PM", where the paper says fixed effects and
+  a logit; and `xtpcse, cor(psar1)`, both re-implemented by hand.
+  Independent 10 / 11: Table 2 exact (the agent inferred the random
+  effects from the printed magnitudes), Table 4 at 2.32 / −3.83 vs 3.112
+  / −4.333 (inside the SE band) with N 4,486 vs 4,328 (no stated rule
+  gives 4,328).  Blind 6 / 11: the agent did what the paper says (fixed
+  effects, logit) and the two "best PM" coefficients come out on a
+  different scale.  `agrees_with_i4r` false in every mode: seeded
+  reproduces the printed numbers that DP41 corrected; blind reproduces
+  neither.
+- **López-Moctezuma.**  Table 1 exact in every mode (the agent
+  re-implemented the archived `ri` package and rebuilt two intermediate
+  files the package omits); the four attitude-index effects (SI Tables
+  C.3–C.4) fail independent and blind both: the paper does not state the
+  attendance-weight formula or the item orientations, and no variant the
+  agents tried matches.  Seeded 13 / 13 from the scripts.
+- **Gagliarducci.**  Seeded 13 / 13 after one error repair and one claim
+  refinement (the 2014 bandwidth selector re-implemented from the
+  shipped `.ado`; Stata's probit perfect-predictor handling copied);
+  the WP-vs-published cell passes at 1.8%.  Independent 13 / 13 inside
+  the SE band with the Republican OLS cells a quarter off.  Blind 7 / 13:
+  the agent used the data's percent-opposite variable (missing for
+  bills with no cosponsors) where the paper divides by cosponsors + 1,
+  so Panel B loses 19k bills and its coefficients move.
+- **Acemoglu, Altmann, Dertwinkel-Kalt.**  Every mode full marks; the
+  first scored scripts lost only singleton observations (Acemoglu blind
+  first scored 10 / 12) or the preregistered sample flag (Dertwinkel-Kalt
+  independent 12 / 13).  Altmann's blind and independent runs had no
+  usable paper tables and still matched every published value from the
+  claim contexts plus the data's variable labels.
+
+**`REPORT.md`** is rendered from three files:
+`pipeline-10papers-all-modes-2026-10-21.json`,
+`claude-code-7papers-all-modes-2026-10-21.json` and
+`claude-code-6papers-all-modes-2026-10-22.json` (the blind second runs
+are not in it; they would collide with the first runs' cells).
+
+**Next.**
+
+- (a) Pipeline rows for the six new papers (paid; ask first).
+- (b) The model confound from 3.3 (paid; ask first).
+- (c) Second blind samples for Gagliarducci and Holman, and a note in
+  the Grier entry about the undocumented window-file mapping.
+- (d) Corpus: the two reserves (Guay & Johnston, Brouwer et al.) if
+  their PDFs become reachable; otherwise a new shortlist pass.
+
 ---
 
 ## Phase 4 — Corpus growth (4 → 20–30 papers)
