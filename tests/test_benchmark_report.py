@@ -580,3 +580,94 @@ def test_single_reproducer_reports_match_committed_snapshots():
         results = _committed_results(name)
         assert report.render_markdown(results) == (_SNAPSHOTS / f"{name}.md").read_text(encoding="utf-8")
         assert report.render_html(results) == (_SNAPSHOTS / f"{name}.html").read_text(encoding="utf-8")
+
+
+# ── Several reproducers in one report ───────────────────────────────────
+
+
+def _two_reproducer_results():
+    """A pipeline run (2 claims) and a claude-code run (3 claims) of the same paper, both modes."""
+    pipeline = [
+        _result(
+            entry_id="p", mode="seeded", reproducer="pipeline", claim_details=[_cd("a", True), _cd("b", True)]
+        ),
+        _result(
+            entry_id="p",
+            mode="independent",
+            reproducer="pipeline",
+            agrees_with_paper=False,
+            claim_details=[_cd("a", True), _cd("b", False)],
+        ),
+    ]
+    claude_code = [
+        _result(
+            entry_id="p",
+            mode="seeded",
+            reproducer="claude-code",
+            retally_ran=False,
+            components={"parsed": True, "code_executed": False},
+            claim_details=[_cd("a", True), _cd("b", False), _cd("c", False)],
+        ),
+        _result(
+            entry_id="p",
+            mode="independent",
+            reproducer="claude-code",
+            claim_details=[_cd("a", False), _cd("b", False), _cd("c", False)],
+        ),
+    ]
+    return pipeline + claude_code
+
+
+def test_multi_reproducer_report_renders_pooled_sections_per_reproducer():
+    md = report.render_markdown(_two_reproducer_results())
+    assert "Reproducer: **claude-code**, **pipeline**." in md
+    # Verdicts: one section per (reproducer, mode), never one pooling both agents.
+    for rep in ("claude-code", "pipeline"):
+        for mode in ("seeded", "independent"):
+            assert f"## Verdicts — {mode} · {rep} (among executed papers)" in md
+    assert "## Verdicts — seeded (among executed papers)" not in md
+    assert "## Verdicts — independent (among executed papers)" not in md
+    seeded_cc = md.split("## Verdicts — seeded · claude-code")[1].split("##")[0]
+    assert "Pipeline completed without crashing: **0 / 1**" in seeded_cc
+    independent_pipeline = md.split("## Verdicts — independent · pipeline")[1].split("##")[0]
+    assert "Agrees with the paper's stated values: **0 / 1**" in independent_pipeline
+    # Totals lines, labelled per reproducer, in sorted order, no unlabelled pooled line.
+    assert "- claude-code · Seeded: **1 / 3** claims passed" in md
+    assert "- claude-code · Independent: **0 / 3** claims passed" in md
+    assert "- claude-code · Lost without the scripts: **1**; gained: **0**" in md
+    assert "- pipeline · Seeded: **2 / 2** claims passed" in md
+    assert "- pipeline · Independent: **1 / 2** claims passed" in md
+    assert "- pipeline · Lost without the scripts: **1**; gained: **0**" in md
+    assert md.index("- claude-code · Seeded") < md.index("- pipeline · Seeded")
+    assert "- Seeded:" not in md and "- Independent:" not in md and "- Lost without" not in md
+    assert "3 / 5" not in md  # the pooled seeded total
+    # Closeness lines and component tables per reproducer.
+    assert "- **claude-code · dev · seeded**: 1 entries, 3 claims" in md
+    assert "- **pipeline · dev · seeded**: 1 entries, 2 claims" in md
+    assert "**dev · seeded**" not in md
+    assert "## Per-component success — seeded · claude-code (executed papers only)" in md
+    assert "## Per-component success — seeded · pipeline (executed papers only)" in md
+    assert "## Per-component success — seeded (executed papers only)" not in md
+    cc_components = md.split("## Per-component success — seeded · claude-code")[1].split("##")[0]
+    assert "| code_executed | 0 | 1 | 0% |" in cc_components
+
+
+def test_multi_reproducer_single_mode_report_splits_sections():
+    results = [r for r in _two_reproducer_results() if r["mode"] == "seeded"]
+    md = report.render_markdown(results)
+    assert "Reproduction mode: **seeded**" in md
+    assert "## Verdicts — claude-code (among executed papers)" in md
+    assert "## Verdicts — pipeline (among executed papers)" in md
+    assert "## Verdicts (among executed papers)" not in md
+    assert "- **claude-code · dev**: 1 entries, 3 claims" in md
+    assert "- **pipeline · dev**: 1 entries, 2 claims" in md
+    assert "## Per-component success — claude-code (executed papers only)" in md
+    assert "## Per-component success — pipeline (executed papers only)" in md
+
+
+def test_multi_reproducer_html_headline_per_reproducer():
+    html = report.render_html(_two_reproducer_results())
+    assert "<strong>claude-code</strong> · Catalog size: <strong>2</strong> papers." in html
+    assert "<strong>pipeline</strong> · Catalog size: <strong>2</strong> papers." in html
+    assert "Catalog size: <strong>4</strong>" not in html
+    assert html.index("<strong>claude-code</strong> ·") < html.index("<strong>pipeline</strong> ·")

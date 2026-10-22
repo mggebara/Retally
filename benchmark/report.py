@@ -42,12 +42,14 @@ def render_markdown(results: list[dict[str, Any]]) -> str:
     show_cells = multi or len(metrics.reproducers_present(results)) > 1
     if multi:
         lines = _multi_mode_header(results, modes)
-        for mode, rows in grouped.items():
-            lines.extend([_verdict_summary_markdown(rows, mode=mode), ""])
+        for reproducer, rep_rows in _per_reproducer(results):
+            for mode, rows in metrics.by_mode(rep_rows).items():
+                lines.extend([_verdict_summary_markdown(rows, mode=mode, reproducer=reproducer), ""])
         lines.extend([_mode_gap_markdown(results), ""])
         lines.extend([_closeness_markdown(results), ""])
-        for mode, rows in grouped.items():
-            lines.extend([_component_breakdown_markdown(rows, mode=mode), ""])
+        for reproducer, rep_rows in _per_reproducer(results):
+            for mode, rows in metrics.by_mode(rep_rows).items():
+                lines.extend([_component_breakdown_markdown(rows, mode=mode, reproducer=reproducer), ""])
     else:
         headline = _headline_counts(results)
         lines = [
@@ -63,13 +65,12 @@ def render_markdown(results: list[dict[str, Any]]) -> str:
             f"Reproduction mode: **{modes[0]}** ({_MODE_BLURB.get(modes[0], 'unrecognised mode')}).  ",
             _reproducer_line(results),
             "",
-            _verdict_summary_markdown(results),
-            "",
-            _closeness_markdown(results),
-            "",
-            _component_breakdown_markdown(results),
-            "",
         ]
+        for reproducer, rows in _per_reproducer(results):
+            lines.extend([_verdict_summary_markdown(rows, reproducer=reproducer), ""])
+        lines.extend([_closeness_markdown(results), ""])
+        for reproducer, rows in _per_reproducer(results):
+            lines.extend([_component_breakdown_markdown(rows, reproducer=reproducer), ""])
     cost = _cost_markdown(results)
     if cost:
         lines.extend([cost, ""])
@@ -107,17 +108,11 @@ def render_html(results: list[dict[str, Any]]) -> str:
     if headline is None:
         body = "<p>No benchmark results.</p>"
     else:
+        headline_html = "".join(
+            _headline_html(rows, reproducer) for reproducer, rows in _per_reproducer(results)
+        )
         body = f"""
-        <h1>Retally benchmark report</h1>
-        <p>
-          Catalog size: <strong>{headline["total"]}</strong> papers.
-          Executed: <strong>{headline["executed"]}</strong>.
-          Skipped: <strong>{headline["skipped"]}</strong>
-          (out_of_scope={headline["out_of_scope"]},
-          language_unsupported={headline["language_unsupported"]},
-          no_api_key={headline["no_api_key"]}{_init_failed_suffix(headline)}).
-          {_escape(_transient_summary(results) or "")}
-        </p>
+        <h1>Retally benchmark report</h1>{headline_html}
         <table>
           <thead>
             <tr>
@@ -131,6 +126,22 @@ def render_html(results: list[dict[str, Any]]) -> str:
         """
 
     return _HTML_TEMPLATE.format(body=body)
+
+
+def _headline_html(results: list[dict[str, Any]], reproducer: str | None = None) -> str:
+    """The HTML headline paragraph; labelled with ``reproducer`` when several share the page."""
+    headline = _headline_counts(results)
+    label = f"<strong>{_escape(reproducer)}</strong> · " if reproducer else ""
+    return f"""
+        <p>
+          {label}Catalog size: <strong>{headline["total"]}</strong> papers.
+          Executed: <strong>{headline["executed"]}</strong>.
+          Skipped: <strong>{headline["skipped"]}</strong>
+          (out_of_scope={headline["out_of_scope"]},
+          language_unsupported={headline["language_unsupported"]},
+          no_api_key={headline["no_api_key"]}{_init_failed_suffix(headline)}).
+          {_escape(_transient_summary(results) or "")}
+        </p>"""
 
 
 def write_report(results: list[dict[str, Any]], out_dir: Path = RESULTS_DIR) -> None:
@@ -280,6 +291,26 @@ def _reproducer_line(results: list[dict[str, Any]]) -> str:
     return f"Reproducer: {names}."
 
 
+def _per_reproducer(results: list[dict[str, Any]]) -> list[tuple[str | None, list[dict[str, Any]]]]:
+    """Split rows by reproducer for the pooled sections; ``[(None, results)]`` when only one is present.
+
+    Verdicts, closeness, components and the mode-gap totals must not pool
+    two agents' rows (results files concatenated by ``python -m
+    benchmark.report a.json b.json``).  With a single reproducer the label
+    is None so headings render exactly as before.
+    """
+    names = metrics.reproducers_present(results)
+    if len(names) <= 1:
+        return [(None, results)]
+    return [(n, [r for r in results if metrics.reproducer_of(r) == n]) for n in names]
+
+
+def _section_suffix(mode: str | None, reproducer: str | None) -> str:
+    """`` — seeded · claude-code`` style heading suffix; empty when neither is given."""
+    parts = [p for p in (mode, reproducer) if p]
+    return f" — {' · '.join(parts)}" if parts else ""
+
+
 def _mode_gap_markdown(results: list[dict[str, Any]]) -> str:
     """The seeded-vs-independent gap — the headline finding of a both-mode run.
 
@@ -306,12 +337,6 @@ def _mode_gap_markdown(results: list[dict[str, Any]]) -> str:
     if not gaps:
         lines.append("_No paper was executed in both modes._")
         return "\n".join(lines)
-    s_pass = sum(g.seeded_passed for g in gaps)
-    s_total = sum(g.seeded_total for g in gaps)
-    i_pass = sum(g.independent_passed for g in gaps)
-    i_total = sum(g.independent_total for g in gaps)
-    lost = sum(len(g.lost) for g in gaps)
-    gained = sum(len(g.gained) for g in gaps)
     # The "before target feedback" column: first scored when any row recorded
     # it, else first attempt (files from before first-scored scoring), else
     # omitted (older files still).
@@ -333,27 +358,29 @@ def _mode_gap_markdown(results: list[dict[str, Any]]) -> str:
             "loop showed the model which claims were off target."
         )
     show_first = any(v is not None for v in (*seeded_first, *independent_first, *blind_first))
-    s_first = _summed_first_attempt(seeded_first)
-    i_first = _summed_first_attempt(independent_first)
-    lines.extend(
-        [
-            f"- Seeded: **{s_pass} / {s_total}** claims passed"
-            + (f" ({label} {s_first} / {s_total})" if s_first is not None else ""),
-            f"- Independent: **{i_pass} / {i_total}** claims passed"
-            + (f" ({label} {i_first} / {i_total})" if i_first is not None else ""),
+    first_of = {
+        id(g): (s_one, i_one) for g, s_one, i_one in zip(gaps, seeded_first, independent_first, strict=True)
+    }
+    # One totals block per reproducer when several are present; a gap whose
+    # seeded and independent rows came from different agents ("a / b") is its
+    # own group, so no block pools two agents' claims.
+    groups: list[tuple[str | None, list[metrics.ModeGap]]] = [(None, gaps)]
+    if len(metrics.reproducers_present(results)) > 1:
+        groups = [
+            (rep, [g for g in gaps if g.reproducer == rep]) for rep in sorted({g.reproducer for g in gaps})
         ]
-    )
-    if with_blind:
-        blind_gaps = [g for g in gaps if g.has_blind]
-        b_pass = sum(g.blind_passed or 0 for g in blind_gaps)
-        b_total = sum(g.blind_total or 0 for g in blind_gaps)
-        b_first = _summed_first_attempt([g.blind_passed_first_scored for g in blind_gaps])
-        papers = "" if len(blind_gaps) == len(gaps) else f" (on {len(blind_gaps)} of {len(gaps)} papers)"
-        lines.append(
-            f"- Blind: **{b_pass} / {b_total}** claims passed{papers}"
-            + (f" (first scored {b_first} / {b_total})" if b_first is not None else "")
+    for reproducer, group in groups:
+        lines.extend(
+            _mode_gap_totals(
+                group,
+                [first_of[id(g)][0] for g in group],
+                [first_of[id(g)][1] for g in group],
+                label,
+                with_blind,
+                prefix=f"{reproducer} · " if reproducer else "",
+            )
         )
-    lines.extend([f"- Lost without the scripts: **{lost}**; gained: **{gained}**", ""])
+    lines.append("")
     blind_head = " Blind |" if with_blind else ""
     blind_rule = "---|" if with_blind else ""
     first_modes = "seeded / independent / blind" if with_blind else "seeded / independent"
@@ -394,6 +421,43 @@ def _mode_gap_markdown(results: list[dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
+def _mode_gap_totals(
+    gaps: list[metrics.ModeGap],
+    seeded_first: list[int | None],
+    independent_first: list[int | None],
+    label: str,
+    with_blind: bool,
+    prefix: str = "",
+) -> list[str]:
+    """The Seeded / Independent / (Blind) / Lost bullet lines summed over ``gaps``."""
+    s_pass = sum(g.seeded_passed for g in gaps)
+    s_total = sum(g.seeded_total for g in gaps)
+    i_pass = sum(g.independent_passed for g in gaps)
+    i_total = sum(g.independent_total for g in gaps)
+    lost = sum(len(g.lost) for g in gaps)
+    gained = sum(len(g.gained) for g in gaps)
+    s_first = _summed_first_attempt(seeded_first)
+    i_first = _summed_first_attempt(independent_first)
+    lines = [
+        f"- {prefix}Seeded: **{s_pass} / {s_total}** claims passed"
+        + (f" ({label} {s_first} / {s_total})" if s_first is not None else ""),
+        f"- {prefix}Independent: **{i_pass} / {i_total}** claims passed"
+        + (f" ({label} {i_first} / {i_total})" if i_first is not None else ""),
+    ]
+    if with_blind:
+        blind_gaps = [g for g in gaps if g.has_blind]
+        b_pass = sum(g.blind_passed or 0 for g in blind_gaps)
+        b_total = sum(g.blind_total or 0 for g in blind_gaps)
+        b_first = _summed_first_attempt([g.blind_passed_first_scored for g in blind_gaps])
+        papers = "" if len(blind_gaps) == len(gaps) else f" (on {len(blind_gaps)} of {len(gaps)} papers)"
+        lines.append(
+            f"- {prefix}Blind: **{b_pass} / {b_total}** claims passed{papers}"
+            + (f" (first scored {b_first} / {b_total})" if b_first is not None else "")
+        )
+    lines.append(f"- {prefix}Lost without the scripts: **{lost}**; gained: **{gained}**")
+    return lines
+
+
 def _summed_first_attempt(values: list[int | None]) -> int | None:
     """Sum of first-attempt / first-scored counts, or None unless every row recorded one."""
     if not values or any(v is None for v in values):
@@ -405,8 +469,10 @@ def _count_or_dash(v: int | None) -> str:
     return "—" if v is None else str(v)
 
 
-def _verdict_summary_markdown(results: list[dict[str, Any]], mode: str | None = None) -> str:
-    suffix = f" — {mode}" if mode else ""
+def _verdict_summary_markdown(
+    results: list[dict[str, Any]], mode: str | None = None, reproducer: str | None = None
+) -> str:
+    suffix = _section_suffix(mode, reproducer)
     executed = [r for r in results if not r.get("skipped")]
     if not executed:
         return f"## Verdicts{suffix}\n\n_No papers were executed in this run._"
@@ -434,16 +500,17 @@ def _closeness_markdown(results: list[dict[str, Any]]) -> str:
     """
     if not any(r.get("claim_details") for r in results if not r.get("skipped")):
         return ""
-    grouped = metrics.by_mode(results)
-    if len(grouped) == 1:
-        lines = ["## Closeness (per split)", ""]
-        for split, m in metrics.by_split(results).items():
-            lines.append(f"- **{split}**: {metrics.format_metrics_line(m)}")
-        return "\n".join(lines)
-    lines = ["## Closeness (per split and mode)", ""]
-    for mode, rows in grouped.items():
-        for split, m in metrics.by_split(rows).items():
-            lines.append(f"- **{split} · {mode}**: {metrics.format_metrics_line(m)}")
+    single_mode = len(metrics.by_mode(results)) == 1
+    lines = ["## Closeness (per split)" if single_mode else "## Closeness (per split and mode)", ""]
+    for reproducer, rep_rows in _per_reproducer(results):
+        prefix = f"{reproducer} · " if reproducer else ""
+        if single_mode:
+            for split, m in metrics.by_split(rep_rows).items():
+                lines.append(f"- **{prefix}{split}**: {metrics.format_metrics_line(m)}")
+            continue
+        for mode, rows in metrics.by_mode(rep_rows).items():
+            for split, m in metrics.by_split(rows).items():
+                lines.append(f"- **{prefix}{split} · {mode}**: {metrics.format_metrics_line(m)}")
     return "\n".join(lines)
 
 
@@ -512,11 +579,13 @@ def _cost_row_markdown(r: dict[str, Any]) -> str:
     )
 
 
-def _component_breakdown_markdown(results: list[dict[str, Any]], mode: str | None = None) -> str:
+def _component_breakdown_markdown(
+    results: list[dict[str, Any]], mode: str | None = None, reproducer: str | None = None
+) -> str:
     executed = [r for r in results if not r.get("skipped")]
     if not executed:
         return ""
-    suffix = f" — {mode}" if mode else ""
+    suffix = _section_suffix(mode, reproducer)
 
     components = [
         "parsed",
