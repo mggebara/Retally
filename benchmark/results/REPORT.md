@@ -1,8 +1,8 @@
 # Retally benchmark report
 
-Catalog size: **10** papers, each run in 3 reproduction modes.  
-Runs (paper × mode): **48**.  
-Executed runs: **48**.  
+Catalog size: **16** papers, each run in 3 reproduction modes.  
+Runs (paper × mode): **66**.  
+Executed runs: **66**.  
 Skipped runs: **0** (out_of_scope=0, language_unsupported=0, no_api_key=0).  
 
 Reproduction modes:
@@ -15,21 +15,21 @@ Reproducer: **claude-code**, **pipeline**.
 
 ## Verdicts — seeded · claude-code (among executed papers)
 
-- Pipeline completed without crashing: **7 / 7**
-- Agrees with the paper's stated values: **6 / 7**
-- Agrees with the I4R replicator: **6 / 7** (of papers where I4R published a value to compare against)
+- Pipeline completed without crashing: **13 / 13**
+- Agrees with the paper's stated values: **12 / 13**
+- Agrees with the I4R replicator: **10 / 12** (of papers where I4R published a value to compare against)
 
 ## Verdicts — independent · claude-code (among executed papers)
 
-- Pipeline completed without crashing: **7 / 7**
-- Agrees with the paper's stated values: **6 / 7**
-- Agrees with the I4R replicator: **6 / 7** (of papers where I4R published a value to compare against)
+- Pipeline completed without crashing: **13 / 13**
+- Agrees with the paper's stated values: **10 / 13**
+- Agrees with the I4R replicator: **9 / 12** (of papers where I4R published a value to compare against)
 
 ## Verdicts — blind · claude-code (among executed papers)
 
-- Pipeline completed without crashing: **7 / 7**
-- Agrees with the paper's stated values: **5 / 7**
-- Agrees with the I4R replicator: **5 / 7** (of papers where I4R published a value to compare against)
+- Pipeline completed without crashing: **13 / 13**
+- Agrees with the paper's stated values: **8 / 13**
+- Agrees with the I4R replicator: **7 / 12** (of papers where I4R published a value to compare against)
 
 ## Verdicts — seeded · pipeline (among executed papers)
 
@@ -54,10 +54,10 @@ Reproducer: **claude-code**, **pipeline**.
 Claims passing with the authors' scripts in the prompt (seeded) versus without them (independent), per paper executed in both modes.  *Lost* claims pass seeded but not independent — what the scripts were carrying.
 *Blind* withholds the claim values too and runs no claim-targeted refinement: its pass counts are the only ones free of target-guided search.
 
-- claude-code · Seeded: **78 / 79** claims passed (first scored 78 / 79)
-- claude-code · Independent: **78 / 79** claims passed (first scored 77 / 79)
-- claude-code · Blind: **75 / 79** claims passed (first scored 70 / 79)
-- claude-code · Lost without the scripts: **0**; gained: **0**
+- claude-code · Seeded: **153 / 154** claims passed (first scored 151 / 154)
+- claude-code · Independent: **148 / 154** claims passed (first scored 146 / 154)
+- claude-code · Blind: **135 / 154** claims passed (first scored 128 / 154)
+- claude-code · Lost without the scripts: **5**; gained: **0**
 - pipeline · Seeded: **85 / 114** claims passed (first scored 75 / 114)
 - pipeline · Independent: **64 / 114** claims passed (first scored 44 / 114)
 - pipeline · Blind: **24 / 79** claims passed (on 7 of 10 papers) (first scored 24 / 79)
@@ -67,19 +67,25 @@ Claims passing with the authors' scripts in the prompt (seeded) versus without t
 
 | Entry | Split | Reproducer | Seeded | Independent | Blind | First scored (seeded / independent / blind) | Lost without scripts |
 |---|---|---|---|---|---|---|---|
+| `acemoglu-2022-war-socialism-fascism` | holdout | claude-code | 12/12 | 12/12 | 12/12 | 12/12 / 12/12 / 10/12 | — |
 | `adams-2023-women-mps-affective-polarization` | holdout | claude-code | 11/11 | 11/11 | 8/11 | 11/11 / 11/11 / 8/11 | — |
 | `adams-2023-women-mps-affective-polarization` | holdout | pipeline | 11/11 | 7/11 | 1/11 | 11/11 / 0/11 / 1/11 | `n_directed_dyads`, `n_obs_men_partisans`, `n_obs_women_partisans`, `women_mps_coef_men_partisans` |
 | `alesina-2022-immigration-redistribution` | dev | pipeline | 7/11 | 7/11 | — | 7/11 / 1/11 / —/— | `order_effect_social_budget`, `sample_size_table4` |
+| `altmann-2022-cognitive-spillovers` | holdout | claude-code | 13/13 | 13/13 | 13/13 | 13/13 / 13/13 / 13/13 | — |
 | `arias-2022-changing-tides-climate-migration` | holdout | claude-code | 12/12 | 12/12 | 12/12 | 12/12 / 12/12 / 12/12 | — |
 | `arias-2022-changing-tides-climate-migration` | holdout | pipeline | 4/12 | 0/12 | 1/12 | 4/12 / 0/12 / 1/12 | `choice_tasks_germany`, `choice_tasks_us`, `respondents_germany`, `respondents_us` |
 | `bisbee-2022-flight-to-safety` | dev | pipeline | 10/11 | 5/11 | — | 9/11 / 5/11 / —/— | `exposure_coefficient_march_basic`, `exposure_coefficient_march_cbps`, `sample_size_full`, `sample_size_march`, `tea_party_x_cases_interaction` |
+| `dertwinkel-kalt-2022-concentration-bias` | holdout | claude-code | 13/13 | 13/13 | 13/13 | 13/13 / 12/13 / 13/13 | — |
 | `dincecco-2022-india-warfare` | dev | pipeline | 13/13 | 11/13 | — | 13/13 / 11/13 / —/— | `warfare_iv_se_full_controls`, `warfare_se_full_controls` |
+| `gagliarducci-2022-gender-cooperation-congress` | holdout | claude-code | 13/13 | 13/13 | 7/13 | 11/13 / 13/13 / 7/13 | — |
 | `grier-2023-sugar-roll-call-voting` | holdout | claude-code | 10/11 | 10/11 | 10/11 | 10/11 / 10/11 / 10/11 | — |
 | `grier-2023-sugar-roll-call-voting` | holdout | pipeline | 0/11 | 0/11 | 0/11 | 0/11 / 0/11 / 0/11 | — |
 | `hanlon-2022-aircraft-ip-spillovers` | holdout | claude-code | 12/12 | 12/12 | 12/12 | 12/12 / 12/12 / 8/12 | — |
 | `hanlon-2022-aircraft-ip-spillovers` | holdout | pipeline | 12/12 | 10/12 | 12/12 | 12/12 / 10/12 / 12/12 | `airframe_maxspeed_trend_after_1926_us`, `airframe_maxspeed_trend_before_1926_us` |
+| `holman-2022-theresa-may-rally` | holdout | claude-code | 11/11 | 10/11 | 6/11 | 11/11 / 10/11 / 6/11 | `n_obs_table4` |
 | `leeson-2022-hobo-economicus` | holdout | claude-code | 11/11 | 11/11 | 11/11 | 11/11 / 10/11 / 10/11 | — |
 | `leeson-2022-hobo-economicus` | holdout | pipeline | 11/11 | 9/11 | 4/11 | 11/11 / 9/11 / 4/11 | `friendliness_full_sample`, `station_visits_five_station_subsample` |
+| `lopez-moctezuma-2022-policy-deliberation-philippines` | holdout | claude-code | 13/13 | 9/13 | 9/13 | 13/13 / 9/13 / 9/13 | `itt_gender_index_akbayan_tableC4`, `itt_gender_index_umalabka_tableC4`, `itt_poverty_index_akbayan_tableC3`, `itt_poverty_index_umalabka_tableC3` |
 | `manekin-2022-effective-for-whom` | holdout | claude-code | 12/12 | 12/12 | 12/12 | 12/12 / 12/12 / 12/12 | — |
 | `manekin-2022-effective-for-whom` | holdout | pipeline | 7/12 | 12/12 | 6/12 | 8/12 / 6/12 / 6/12 | — |
 | `montero-2022-cooperative-property-rights` | holdout | claude-code | 10/10 | 10/10 | 10/10 | 10/10 / 10/10 / 10/10 | — |
@@ -87,9 +93,9 @@ Claims passing with the authors' scripts in the prompt (seeded) versus without t
 
 ## Closeness (per split and mode)
 
-- **claude-code · holdout · seeded**: 7 entries, 79 claims, matched 100%, passed 78/79, median rel err 0.1%, within tol/2x/5x: 99%/100%/100%
-- **claude-code · holdout · independent**: 7 entries, 79 claims, matched 100%, passed 78/79, median rel err 0.2%, within tol/2x/5x: 99%/100%/100%
-- **claude-code · holdout · blind**: 7 entries, 79 claims, matched 100%, passed 75/79, median rel err 0.3%, within tol/2x/5x: 95%/96%/96%
+- **claude-code · holdout · seeded**: 13 entries, 154 claims, matched 100%, passed 153/154, median rel err 0.0%, within tol/2x/5x: 99%/100%/100%
+- **claude-code · holdout · independent**: 13 entries, 154 claims, matched 100%, passed 148/154, median rel err 0.2%, within tol/2x/5x: 96%/97%/97%
+- **claude-code · holdout · blind**: 13 entries, 154 claims, matched 100%, passed 135/154, median rel err 0.3%, within tol/2x/5x: 88%/91%/93%
 - **pipeline · dev · seeded**: 3 entries, 35 claims, matched 100%, passed 30/35, median rel err 0.2%, within tol/2x/5x: 86%/94%/97%
 - **pipeline · holdout · seeded**: 7 entries, 79 claims, matched 99%, passed 55/79, median rel err 0.3%, within tol/2x/5x: 71%/71%/74%
 - **pipeline · dev · independent**: 3 entries, 35 claims, matched 100%, passed 23/35, median rel err 6.0%, within tol/2x/5x: 66%/80%/86%
@@ -100,34 +106,34 @@ Claims passing with the authors' scripts in the prompt (seeded) versus without t
 
 | Component | Succeeded | Total | Rate |
 |---|---:|---:|---:|
-| parsed | 7 | 7 | 100% |
-| claims_extracted | 0 | 7 | 0% |
-| dataset_extracted | 0 | 7 | 0% |
-| dataset_downloaded | 7 | 7 | 100% |
-| code_generated | 7 | 7 | 100% |
-| code_executed | 7 | 7 | 100% |
+| parsed | 13 | 13 | 100% |
+| claims_extracted | 0 | 13 | 0% |
+| dataset_extracted | 0 | 13 | 0% |
+| dataset_downloaded | 13 | 13 | 100% |
+| code_generated | 13 | 13 | 100% |
+| code_executed | 13 | 13 | 100% |
 
 ## Per-component success — independent · claude-code (executed papers only)
 
 | Component | Succeeded | Total | Rate |
 |---|---:|---:|---:|
-| parsed | 7 | 7 | 100% |
-| claims_extracted | 0 | 7 | 0% |
-| dataset_extracted | 0 | 7 | 0% |
-| dataset_downloaded | 7 | 7 | 100% |
-| code_generated | 7 | 7 | 100% |
-| code_executed | 7 | 7 | 100% |
+| parsed | 13 | 13 | 100% |
+| claims_extracted | 0 | 13 | 0% |
+| dataset_extracted | 0 | 13 | 0% |
+| dataset_downloaded | 13 | 13 | 100% |
+| code_generated | 13 | 13 | 100% |
+| code_executed | 13 | 13 | 100% |
 
 ## Per-component success — blind · claude-code (executed papers only)
 
 | Component | Succeeded | Total | Rate |
 |---|---:|---:|---:|
-| parsed | 7 | 7 | 100% |
-| claims_extracted | 0 | 7 | 0% |
-| dataset_extracted | 0 | 7 | 0% |
-| dataset_downloaded | 7 | 7 | 100% |
-| code_generated | 7 | 7 | 100% |
-| code_executed | 7 | 7 | 100% |
+| parsed | 13 | 13 | 100% |
+| claims_extracted | 0 | 13 | 0% |
+| dataset_extracted | 0 | 13 | 0% |
+| dataset_downloaded | 13 | 13 | 100% |
+| code_generated | 13 | 13 | 100% |
+| code_executed | 13 | 13 | 100% |
 
 ## Per-component success — seeded · pipeline (executed papers only)
 
@@ -216,6 +222,24 @@ Total estimated spend this run: **$11.97** across 106 API calls (36 further call
 | `montero-2022-cooperative-property-rights` | seeded | claude-code | — | — | — | — | — | — | — |
 | `montero-2022-cooperative-property-rights` | independent | claude-code | — | — | — | — | — | — | — |
 | `montero-2022-cooperative-property-rights` | blind | claude-code | — | — | — | — | — | — | — |
+| `acemoglu-2022-war-socialism-fascism` | seeded | claude-code | — | — | — | — | — | — | — |
+| `acemoglu-2022-war-socialism-fascism` | independent | claude-code | — | — | — | — | — | — | — |
+| `acemoglu-2022-war-socialism-fascism` | blind | claude-code | — | — | — | — | — | — | — |
+| `altmann-2022-cognitive-spillovers` | seeded | claude-code | — | — | — | — | — | — | — |
+| `altmann-2022-cognitive-spillovers` | independent | claude-code | — | — | — | — | — | — | — |
+| `altmann-2022-cognitive-spillovers` | blind | claude-code | — | — | — | — | — | — | — |
+| `dertwinkel-kalt-2022-concentration-bias` | seeded | claude-code | — | — | — | — | — | — | — |
+| `dertwinkel-kalt-2022-concentration-bias` | independent | claude-code | — | — | — | — | — | — | — |
+| `dertwinkel-kalt-2022-concentration-bias` | blind | claude-code | — | — | — | — | — | — | — |
+| `gagliarducci-2022-gender-cooperation-congress` | seeded | claude-code | — | — | — | — | — | — | — |
+| `gagliarducci-2022-gender-cooperation-congress` | independent | claude-code | — | — | — | — | — | — | — |
+| `gagliarducci-2022-gender-cooperation-congress` | blind | claude-code | — | — | — | — | — | — | — |
+| `holman-2022-theresa-may-rally` | seeded | claude-code | — | — | — | — | — | — | — |
+| `holman-2022-theresa-may-rally` | independent | claude-code | — | — | — | — | — | — | — |
+| `holman-2022-theresa-may-rally` | blind | claude-code | — | — | — | — | — | — | — |
+| `lopez-moctezuma-2022-policy-deliberation-philippines` | seeded | claude-code | — | — | — | — | — | — | — |
+| `lopez-moctezuma-2022-policy-deliberation-philippines` | independent | claude-code | — | — | — | — | — | — | — |
+| `lopez-moctezuma-2022-policy-deliberation-philippines` | blind | claude-code | — | — | — | — | — | — | — |
 
 ## Per-paper results
 
@@ -269,3 +293,21 @@ Total estimated spend this run: **$11.97** across 106 API calls (36 further call
 | `montero-2022-cooperative-property-rights` | seeded | claude-code | ran | ✓ | ✓ | ✗ | 10 / 3 of 10 (first scored 10/10, 0 error + 0 claim refinements) |  |
 | `montero-2022-cooperative-property-rights` | independent | claude-code | ran | ✓ | ✓ | ✗ | 10 / 5 of 10 (first scored 10/10, 0 error + 0 claim refinements) |  |
 | `montero-2022-cooperative-property-rights` | blind | claude-code | ran | ✓ | ✓ | ✗ | 10 / 5 of 10 (first scored 10/10, 0 error + 0 claim refinements) |  |
+| `acemoglu-2022-war-socialism-fascism` | seeded | claude-code | ran | ✓ | ✓ | — | 12 / 0 of 12 (first scored 12/12, 0 error + 0 claim refinements) |  |
+| `acemoglu-2022-war-socialism-fascism` | independent | claude-code | ran | ✓ | ✓ | — | 12 / 0 of 12 (first scored 12/12, 0 error + 1 claim refinement) |  |
+| `acemoglu-2022-war-socialism-fascism` | blind | claude-code | ran | ✓ | ✓ | — | 12 / 0 of 12 (first scored 10/12, 0 error + 0 claim refinements) |  |
+| `altmann-2022-cognitive-spillovers` | seeded | claude-code | ran | ✓ | ✓ | ✓ | 13 / 11 of 13 (first scored 13/13, 0 error + 0 claim refinements) |  |
+| `altmann-2022-cognitive-spillovers` | independent | claude-code | ran | ✓ | ✓ | ✓ | 13 / 11 of 13 (first scored 13/13, 0 error + 0 claim refinements) |  |
+| `altmann-2022-cognitive-spillovers` | blind | claude-code | ran | ✓ | ✓ | ✓ | 13 / 11 of 13 (first scored 13/13, 0 error + 0 claim refinements) |  |
+| `dertwinkel-kalt-2022-concentration-bias` | seeded | claude-code | ran | ✓ | ✓ | ✓ | 13 / 11 of 13 (first scored 13/13, 0 error + 0 claim refinements) |  |
+| `dertwinkel-kalt-2022-concentration-bias` | independent | claude-code | ran | ✓ | ✓ | ✓ | 13 / 11 of 13 (first scored 12/13, 0 error + 1 claim refinement) |  |
+| `dertwinkel-kalt-2022-concentration-bias` | blind | claude-code | ran | ✓ | ✓ | ✓ | 13 / 11 of 13 (first scored 13/13, 0 error + 0 claim refinements) |  |
+| `gagliarducci-2022-gender-cooperation-congress` | seeded | claude-code | ran | ✓ | ✓ | ✓ | 13 / 9 of 13 (first scored 11/13, 1 error + 1 claim refinements) |  |
+| `gagliarducci-2022-gender-cooperation-congress` | independent | claude-code | ran | ✓ | ✓ | ✓ | 13 / 9 of 13 (first scored 13/13, 0 error + 0 claim refinements) |  |
+| `gagliarducci-2022-gender-cooperation-congress` | blind | claude-code | ran | ✓ | ✗ | ✗ | 7 / 5 of 13 (first scored 7/13, 0 error + 0 claim refinements) |  |
+| `holman-2022-theresa-may-rally` | seeded | claude-code | ran | ✓ | ✓ | ✗ | 11 / 5 of 11 (first scored 11/11, 1 error + 0 claim refinement) |  |
+| `holman-2022-theresa-may-rally` | independent | claude-code | ran | ✓ | ✗ | ✗ | 10 / 7 of 11 (first scored 10/11, 0 error + 1 claim refinement) |  |
+| `holman-2022-theresa-may-rally` | blind | claude-code | ran | ✓ | ✗ | ✗ | 6 / 4 of 11 (first scored 6/11, 1 error + 0 claim refinement) |  |
+| `lopez-moctezuma-2022-policy-deliberation-philippines` | seeded | claude-code | ran | ✓ | ✓ | ✓ | 13 / 6 of 13 (first scored 13/13, 0 error + 0 claim refinements) |  |
+| `lopez-moctezuma-2022-policy-deliberation-philippines` | independent | claude-code | ran | ✓ | ✗ | ✗ | 9 / 2 of 13 (first scored 9/13, 0 error + 2 claim refinements) |  |
+| `lopez-moctezuma-2022-policy-deliberation-philippines` | blind | claude-code | ran | ✓ | ✗ | ✗ | 9 / 2 of 13 (first scored 9/13, 0 error + 0 claim refinements) |  |
