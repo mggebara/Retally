@@ -220,44 +220,61 @@ def mode_gaps(results: list[dict[str, Any]]) -> list[ModeGap]:
     ``benchmark.compare`` uses across runs.  Sorted by entry id.  When the
     entry also has an executed blind row its counts fill the optional
     ``blind_*`` fields; ``lost`` / ``gained`` stay seeded-vs-independent.
+
+    When several reproducers ran the same (entry, mode) cell -- results
+    files concatenated by ``python -m benchmark.report a.json b.json`` --
+    the entry gets one gap per reproducer, each from that reproducer's own
+    rows, sorted by reproducer.  Otherwise rows are joined by entry alone,
+    so a seeded row from one agent and an independent row from another
+    still pair (``reproducer`` then reads ``a / b``).
     """
-    rows: dict[tuple[str, str], dict[str, Any]] = {
-        (r["entry_id"], mode_of(r)): r for r in results if not r.get("skipped")
-    }
+    executed = [r for r in results if not r.get("skipped")]
     gaps: list[ModeGap] = []
-    for entry_id in sorted({eid for eid, _ in rows}):
-        seeded = rows.get((entry_id, "seeded"))
-        independent = rows.get((entry_id, "independent"))
-        if seeded is None or independent is None:
-            continue
-        s_pass = {cd["description"] for cd in seeded.get("claim_details", []) if cd.get("passed")}
-        i_pass = {cd["description"] for cd in independent.get("claim_details", []) if cd.get("passed")}
-        blind = rows.get((entry_id, "blind"))
-        gaps.append(
-            ModeGap(
-                entry_id=entry_id,
-                split=str(seeded.get("split", "dev")),
-                seeded_passed=len(s_pass),
-                seeded_total=len(seeded.get("claim_details", [])),
-                independent_passed=len(i_pass),
-                independent_total=len(independent.get("claim_details", [])),
-                lost=sorted(s_pass - i_pass),
-                gained=sorted(i_pass - s_pass),
-                reproducer=_joined_reproducer(seeded, independent),
-                seeded_passed_first_attempt=first_attempt_passed(seeded),
-                independent_passed_first_attempt=first_attempt_passed(independent),
-                seeded_passed_first_scored=first_scored_passed(seeded),
-                independent_passed_first_scored=first_scored_passed(independent),
-                blind_passed=(
-                    None
-                    if blind is None
-                    else sum(1 for cd in blind.get("claim_details", []) if cd.get("passed"))
-                ),
-                blind_total=None if blind is None else len(blind.get("claim_details", [])),
-                blind_passed_first_scored=None if blind is None else first_scored_passed(blind),
-            )
+    for entry_id in sorted({r["entry_id"] for r in executed}):
+        entry_rows = [r for r in executed if r["entry_id"] == entry_id]
+        cells = [(mode_of(r), reproducer_of(r)) for r in entry_rows]
+        shared = any(sum(1 for m, _ in cells if m == mode) > 1 for mode, _ in cells)
+        groups = (
+            [[r for r in entry_rows if reproducer_of(r) == rep] for rep in sorted({rp for _, rp in cells})]
+            if shared
+            else [entry_rows]
         )
+        for group in groups:
+            gap = _mode_gap(entry_id, {mode_of(r): r for r in group})
+            if gap is not None:
+                gaps.append(gap)
     return gaps
+
+
+def _mode_gap(entry_id: str, rows: dict[str, dict[str, Any]]) -> ModeGap | None:
+    """The ModeGap of one entry's rows keyed by mode; None unless seeded and independent both ran."""
+    seeded = rows.get("seeded")
+    independent = rows.get("independent")
+    if seeded is None or independent is None:
+        return None
+    s_pass = {cd["description"] for cd in seeded.get("claim_details", []) if cd.get("passed")}
+    i_pass = {cd["description"] for cd in independent.get("claim_details", []) if cd.get("passed")}
+    blind = rows.get("blind")
+    return ModeGap(
+        entry_id=entry_id,
+        split=str(seeded.get("split", "dev")),
+        seeded_passed=len(s_pass),
+        seeded_total=len(seeded.get("claim_details", [])),
+        independent_passed=len(i_pass),
+        independent_total=len(independent.get("claim_details", [])),
+        lost=sorted(s_pass - i_pass),
+        gained=sorted(i_pass - s_pass),
+        reproducer=_joined_reproducer(seeded, independent),
+        seeded_passed_first_attempt=first_attempt_passed(seeded),
+        independent_passed_first_attempt=first_attempt_passed(independent),
+        seeded_passed_first_scored=first_scored_passed(seeded),
+        independent_passed_first_scored=first_scored_passed(independent),
+        blind_passed=(
+            None if blind is None else sum(1 for cd in blind.get("claim_details", []) if cd.get("passed"))
+        ),
+        blind_total=None if blind is None else len(blind.get("claim_details", [])),
+        blind_passed_first_scored=None if blind is None else first_scored_passed(blind),
+    )
 
 
 def _int_field(result: dict[str, Any], key: str) -> int | None:

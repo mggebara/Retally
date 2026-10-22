@@ -25,6 +25,11 @@ benchmark/results/extracted_claims/
 # Per-run artifacts (generated scripts, sandbox output, prompts): large,
 # per-run, and may contain data excerpts.  See benchmark/README.md.
 benchmark/results/artifacts/
+# Claude Code reproductions (``--reproducer claude-code``): scripts, sandbox
+# output and reproduction.json a session wrote per cell, under
+# benchmark/reproductions/<entry>/<mode>/<run_id>/.  Per-run and may contain
+# data excerpts, like the artifacts; the scored copy lands in artifacts/.
+benchmark/reproductions/
 # Auto-generated candidate YAMLs from scripts/import_i4r_candidates.py.
 # Rebuildable from benchmark/corpus/; a human promotes the good ones into
 # benchmark/papers/ (which IS committed), so the staging dir stays untracked.

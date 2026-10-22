@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "entry_id": "fixture-paper",
+  "mode": "independent",
+  "run_id": "run-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": ["Used HC1 rather than HC0 standard errors."],
+  "notes": "Fixture: first script crashed, second ran off target on beta, third is final.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T10:00:00Z",
+  "finished_at": "2026-10-22T10:40:00Z",
+  "_comment": "RESULT values here are ignored by the harness; this one is a trap: RESULT:beta=999"
+}

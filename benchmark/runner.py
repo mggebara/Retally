@@ -78,6 +78,7 @@ from benchmark.reproducer import (
     PipelineReproducer,
     Reproducer,
     Reproduction,
+    ReproductionMissingError,
 )
 
 __all__ = [
@@ -133,13 +134,18 @@ class SkipReason(Enum):
     ``MissingAPIKeyError``, so we record the skip rather than crashing.
     ``REPRODUCER_INIT_FAILED`` covers a factory that raised anything else
     (Docker unavailable, sandbox image not built, a bad plugin import);
-    the exception text goes in ``error``.
+    the exception text goes in ``error``.  ``REPRODUCTION_MISSING`` covers
+    a reproducer that scores work done elsewhere (``claude-code`` reads a
+    Claude Code session's files) when that (entry, mode) cell has not been
+    run: ``reproduce`` raised ``ReproductionMissingError``, whose message
+    (where it looked) goes in ``error``.
     """
 
     OUT_OF_SCOPE = "out_of_scope"
     LANGUAGE_UNSUPPORTED = "language_unsupported"
     NO_API_KEY = "no_api_key"
     REPRODUCER_INIT_FAILED = "reproducer_init_failed"
+    REPRODUCTION_MISSING = "reproduction_missing"
 
 
 @dataclass
@@ -448,9 +454,18 @@ def main(argv: list[str] | None = None) -> int:
         default=DEFAULT_REPRODUCER,
         metavar="NAME",
         help=(
-            f"Agent to score: a built-in name ({', '.join(sorted(REPRODUCERS))}; the default) "
+            f"Agent to score: a built-in name ({', '.join(sorted(REPRODUCERS))}; "
+            f"default {DEFAULT_REPRODUCER}) "
             "or a 'package.module:factory' spec naming a zero-arg callable that returns a "
             "benchmark.reproducer.Reproducer."
+        ),
+    )
+    parser.add_argument(
+        "--no-cache",
+        action="store_true",
+        help=(
+            "Ignore and do not write the result cache (benchmark/.cache/<hash>.json).  The cache key is "
+            "entry + mode + reproducer, so a new claude-code run of an already-scored cell needs this."
         ),
     )
     args = parser.parse_args(argv)
@@ -491,6 +506,7 @@ def main(argv: list[str] | None = None) -> int:
         modes=modes,
         artifacts_root=ARTIFACTS_DIR,
         run_id=run_id,
+        use_cache=not args.no_cache,
     )
     out = RESULTS_DIR / "results.json"
     write_results(results, out)
@@ -660,6 +676,18 @@ def _execute_with_reproducer(
             claims=claims_override,
             reproduction_mode=ReproductionMode(mode),
         )
+    except ReproductionMissingError as exc:
+        # Nothing to score yet (e.g. no Claude Code session has run this
+        # cell): a skip, not a failure, and -- like every skip -- not cached.
+        logger.warning("No reproduction for %s (%s): %s", entry.id, mode, exc)
+        missing = BenchmarkResult(
+            entry_id=entry.id,
+            mode=mode,
+            skipped=True,
+            skip_reason=SkipReason.REPRODUCTION_MISSING,
+            error=str(exc),
+        )
+        return missing, {}
     except Exception as exc:
         logger.warning("Reproducer raised on %s: %s", entry.id, exc)
         kind = _transient_error_kind(exc)
@@ -1332,12 +1360,23 @@ def _default_pipeline_reproducer() -> Reproducer:
     return PipelineReproducer(_default_pipeline_factory())
 
 
+def _claude_code_reproducer() -> Reproducer:
+    """Scores files a Claude Code session wrote (``benchmark/reproducers/filesystem.py``).
+
+    Imported lazily so the runner stays importable without the reproducers package.
+    """
+    from benchmark.reproducers.filesystem import claude_code
+
+    return claude_code()
+
+
 # ---------------------------------------------------------------------------
 # Reproducer registry — the extension point
 # ---------------------------------------------------------------------------
 
 REPRODUCERS: dict[str, Callable[[], Reproducer]] = {
     DEFAULT_REPRODUCER: _default_pipeline_reproducer,
+    "claude-code": _claude_code_reproducer,
 }
 """Built-in reproducers selectable by ``--reproducer NAME``: name → zero-arg
 factory.  To add an agent, either register it here (one line, in this
