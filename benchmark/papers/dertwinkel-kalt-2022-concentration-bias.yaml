@@ -1,0 +1,475 @@
+# Original paper: Dertwinkel-Kalt, M., Gerhardt, H., Riener, G.,
+#   Schwerter, F., & Strang, L. (2022). "Concentration Bias in
+#   Intertemporal Choice." The Review of Economic Studies, 89(3),
+#   1314-1334.  doi:10.1093/restud/rdab043
+#
+# I4R replication report: Deer, L., Ellingsrud, S., Kordt, A. H., &
+#   Heuer, F. (2023). "Replication Report: Concentration Bias in
+#   Intertemporal Choice." I4R Discussion Paper No. 42 (June 2023; the
+#   report itself is dated February 2023), I4R First Meta Database
+#   replication team 15.  Verdict: reproducible — "Our results confirm
+#   the sign, magnitude and statistical significance of the author's
+#   reported estimates across each of their five main findings."  With
+#   the authors' pre-computed outcome measures every Table 2 and Table 3
+#   estimate and SE is reproduced exactly (in R); recomputing the relative
+#   measure from the elicited indifference points moves some estimates at
+#   the third decimal.  Candidate verdict: perfect_reproduction = Yes,
+#   computational_reproduction = 1 -> reproducible.
+#
+# Why this paper:
+#   1. Plain .csv data (no .dta translation), Stata analysis in one short
+#      do-file whose Table 2/3 block is about 45 lines.
+#   2. Two headline tables built from intercept-only and one-dummy OLS
+#      regressions with robust SEs (plus one Tobit): 15 printed
+#      coefficient/SE pairs, 31 paired I4R database rows.
+#   3. Exact reproduction by the replicators, so a miss is Retally's.
+#
+# IMPORTANT — paper version.  paper.source is the ECONtribute Discussion
+#   Paper No. 076 (dated 1 April 2021), NOT the REStud typeset article
+#   (academic.oup.com answers 403; no open copy of the published PDF was
+#   found: KUPS Cologne 404, Southampton eprints 403, the Bonn deposit
+#   epflicht.ulb.uni-bonn.de/download/pdf/698670 is the same DP 076).
+#   Pinned values are the published Table 2 / Table 3 as recorded in the
+#   I4R database's o_coeff / o_std_err, checked against the DP (same
+#   table numbers, identical magnitudes for every pinned value) and the
+#   package's own Stata log.  Three database rows carry the opposite
+#   sign to the DP and to the log — see the notes; the paper's sign is
+#   pinned.  The appendices are numbered differently (see notes); no
+#   appendix value is pinned.
+#
+# What the package is.  Zenodo record 5091975 (version 1.0.1 of concept
+#   record 5005989), the authors' own REStud replication package: one zip
+#   (11.2 MB) holding the analysis data as two .csv files, the Stata
+#   do-files and their logs, an R script for the Section 4 calibration
+#   exercise, the oTree (Python/Django: .py, .pyc, HTML, web fonts) code
+#   of the consumption experiment and the z-Tree code of the money
+#   experiment.  Licence CC BY-NC 4.0 (data and code).
+
+id: dertwinkel-kalt-2022-concentration-bias
+i4r_report_url: https://www.econstor.eu/bitstream/10419/272844/1/I4R-DP042.pdf
+# Target language for regeneration (the original analysis is Stata; R is
+# used in the package only for the calibration exercise).
+language: r
+outcome_label: reproducible
+# Pipeline tuning is frozen; this is an evaluation paper.
+split: holdout
+# Contamination bookkeeping.  First public version: ECONtribute DP 076,
+# title page dated 1 April 2021 (also CESifo WP 9011 and SSRN 3830216,
+# April 2021); no earlier working paper found (web search 2026-10-21; the
+# preregistrations AEA RCT 4341 / 4446 are from 2019).  REStud: advance
+# access 2021 (OpenAlex publication_date 2021-09-21), print 89(3), May
+# 2022.  Package: Zenodo concept doi:10.5281/zenodo.5005989, first
+# version 1.0.0 (record 5005990) published 2021-06-27 (10.6 MB zip);
+# the pinned dataset.source is version 1.0.1 (record 5091975,
+# doi:10.5281/zenodo.5091975), published 2021-07-12 (Zenodo API).
+publication_date: "2021-04-01"
+package_release_date: "2021-06-27"
+
+paper:
+  # ECONtribute Discussion Paper 076 (working paper, 1 April 2021,
+  # 56 pp. including the online appendices); checked 2026-10-21: 200
+  # application/pdf, %PDF magic, to a Retally-curation user agent.
+  # Tables 2 and 3 carry the same numbers as the published version (see
+  # notes).  Text extracts cleanly with pymupdf; the tilde over d
+  # extracts as a separate "˜" and the minus sign as U+2212.
+  source: https://www.econtribute.de/RePEc/ajk/ajkdps/ECONtribute_076_2021.pdf
+  title: "Concentration Bias in Intertemporal Choice"
+  authors:
+    - Markus Dertwinkel-Kalt
+    - Holger Gerhardt
+    - Gerhard Riener
+    - Frederik Schwerter
+    - Louis Strang
+
+dataset:
+  source: https://zenodo.org/records/5091975
+  access_notes: >
+    Zenodo record 5091975 (doi:10.5281/zenodo.5091975, version 1.0.1 of
+    concept doi:10.5281/zenodo.5005989), open access, licence CC BY-NC
+    4.0 (Attribution-NonCommercial; the package README applies it to
+    both data and code) — non-commercial use only.  One file,
+    "Dertwinkel-Kalt et al. (2021), replication package.zip" (11,222,819
+    bytes, md5 fba593910af20114b81a60834c6b542b), extracted by the
+    downloader to 369 files / 16 MB.  Analysis data, plain .csv:
+    Consumption Experiment/Stata/Consumption_Experiment.csv (952,816
+    bytes; 7,254 rows x 53 columns, long format, nine decision rows per
+    subject, 806 subjects) and Money Experiment/Stata/Money_Experiment.csv
+    (154,465 bytes; 2,992 rows x 13 columns).  Code: Consumption_Experiment
+    tables and values.do (+ .log, 65 KB), Consumption_Experiment
+    figures.do, Money_Experiment tables and values.do (+ .log),
+    Consumption Experiment/R/Calibration Exercise.R; figure PDFs
+    (Figure 3, Figures A5-A7, Figures C1 i-vi), Table 1.tex (design
+    overview, not a regression table), README.md / README.pdf.  The bulk
+    of the file count is experiment software: Consumption
+    Experiment/oTree (47 .py, 174 compiled .pyc, 48 HTML templates, 40
+    .woff web fonts, images, CSS/JS, a Procfile, requirements files and
+    a tasks_today.csv) and Money Experiment/z-Tree (.ztt plus four
+    Table Loader .txt files).  No restricted files, no registration.
+
+code_repo:
+  url: https://zenodo.org/records/5091975
+
+original_claims:
+  - description: abs_concentration_bias_midpoint_table2_col2
+    value: 37.610
+    claim_type: coefficient
+    standard_error: 3.575
+    sample_size: 100
+    unit: additional real-effort tasks per workday
+    location: "Table 2, column 2 (OLS, Midpoint), row 'd~ in Main-Treatment'"
+    context: >
+      Table 2 ("Absolute and relative concentration bias in
+      Main-Treatment"), column 2.  The average absolute measure of
+      concentration bias, d~: the number of additional per-workday
+      real-effort tasks a subject is willing to complete in the
+      unbalanced trade-off beyond the indifference points elicited in the
+      eight balanced trade-offs.  Subjects with an upper corner choice in
+      the unbalanced trade-off are assigned the midpoint between the lower
+      bound (62) and their manually stated indifference point.  Estimated
+      by OLS of d~ on a constant (the sample mean); robust standard
+      errors.  Sample: all Main-Treatment subjects in the main sample,
+      i.e. excluding the preregistered exclusions (subjects with at least
+      one corner choice in the balanced trade-offs).
+  - description: abs_concentration_bias_tobit_table2_col4
+    value: 37.094
+    claim_type: coefficient
+    standard_error: 3.658
+    sample_size: 100
+    unit: additional real-effort tasks per workday
+    location: "Table 2, column 4 (Tobit), row 'd~ in Main-Treatment'"
+    context: >
+      Table 2, column 4: a Tobit regression of the absolute measure d~ on
+      a constant, based on the lower-bound measure (upper-corner subjects
+      assigned the upper end of the elicitation range) and treating the
+      ends of the elicitation range as censoring points.  Same
+      Main-Treatment main sample as column 2.
+  - description: rel_concentration_bias_lower_table2_col1
+    value: 0.190
+    claim_type: coefficient
+    standard_error: 0.016
+    sample_size: 100
+    unit: share (relative increase in per-workday willingness to work)
+    location: "Table 2, column 1 (OLS, Lower bound), row 'd~rel in Main-Treatment'"
+    context: >
+      Table 2, column 1, second row: the average relative measure of
+      concentration bias, d~rel = (1/8) sum over workdays t of
+      d~ / (e_t + x~_t), where e_t is the mandatory number of tasks on
+      workday t and x~_t the indifference point elicited in balanced
+      trade-off t; upper-corner subjects' d~ set to the lower bound.  OLS
+      on a constant, robust standard errors, Main-Treatment main sample.
+  - description: rel_concentration_bias_midpoint_table2_col2
+    value: 0.224
+    claim_type: coefficient
+    standard_error: 0.021
+    sample_size: 100
+    unit: share (relative increase in per-workday willingness to work)
+    location: "Table 2, column 2 (OLS, Midpoint), row 'd~rel in Main-Treatment'"
+    context: >
+      Table 2, column 2, second row: the paper's headline measure (Result
+      1) — the average relative measure of concentration bias d~rel, with
+      upper-corner subjects' d~ set to the midpoint between the lower
+      bound and their manually stated indifference point.  OLS on a
+      constant, robust standard errors, Main-Treatment main sample.
+  - description: rel_concentration_bias_upper_table2_col3
+    value: 0.259
+    claim_type: coefficient
+    standard_error: 0.027
+    sample_size: 100
+    unit: share (relative increase in per-workday willingness to work)
+    location: "Table 2, column 3 (OLS, Upper bound), row 'd~rel in Main-Treatment'"
+    context: >
+      Table 2, column 3, second row: the average relative measure d~rel
+      with upper-corner subjects' d~ set to their manually stated
+      indifference point (upper bound).  OLS on a constant, robust
+      standard errors, Main-Treatment main sample.
+  - description: n_obs_table2
+    value: 100
+    claim_type: other
+    unit: observations (subjects)
+    location: "Table 2, Observations (all four columns)"
+    context: >
+      Number of observations (subjects) in each column of Table 2: the
+      Main-Treatment subjects remaining after the preregistered exclusion
+      of subjects with a corner choice in any balanced trade-off.
+  - description: rel_cb_mechanism_treatment_table3_col1
+    value: 0.075
+    claim_type: coefficient
+    standard_error: 0.019
+    sample_size: 200
+    unit: share (relative measure of concentration bias)
+    location: "Table 3, column 1, row 'd~rel in Mechanism-Treatment'"
+    context: >
+      Table 3 ("Average relative measure of concentration bias (d~rel)
+      across conditions"), column 1: OLS of the midpoint-based relative
+      measure d~rel on a constant and an indicator for Main-Treatment,
+      estimated on the pooled Main-Treatment and Mechanism-Treatment main
+      samples (between-subjects); this row is the constant, i.e. average
+      d~rel in Mechanism-Treatment (raise in the voucher shown as a sum of
+      its parts).  Robust standard errors.
+  - description: diff_main_minus_mechanism_table3_col1
+    value: 0.149
+    claim_type: coefficient
+    standard_error: 0.028
+    sample_size: 200
+    unit: share (difference in relative measure of concentration bias)
+    location: "Table 3, column 1, row 'Difference: Main-Treatment - Mechanism-Treatment'"
+    context: >
+      Table 3, column 1: the coefficient on the Main-Treatment indicator
+      in the column 1 regression — the difference in average d~rel,
+      Main-Treatment minus Mechanism-Treatment (Result 2).  Robust
+      standard errors.
+  - description: rel_cb_donation_treatment_table3_col2
+    value: 0.135
+    claim_type: coefficient
+    standard_error: 0.021
+    sample_size: 200
+    unit: share (relative measure of concentration bias)
+    location: "Table 3, column 2, row 'd~rel in Donation-Treatment'"
+    context: >
+      Table 3, column 2: OLS of d~rel on a constant and a condition
+      indicator on the pooled Donation-Treatment and Donation-Control main
+      samples (the benefit of working is a donation to a charity instead of
+      a restaurant voucher); this row is average d~rel in
+      Donation-Treatment (Result 3).  Robust standard errors.
+  - description: diff_donation_treatment_minus_control_table3_col2
+    value: 0.158
+    claim_type: coefficient
+    standard_error: 0.022
+    sample_size: 200
+    unit: share (difference in relative measure of concentration bias)
+    location: "Table 3, column 2, row 'Difference: Donation-Treatment - Donation-Control'"
+    context: >
+      Table 3, column 2: the difference in average d~rel between
+      Donation-Treatment and Donation-Control, reported as
+      Donation-Treatment minus Donation-Control.  In the Control
+      conditions the final trade-off repeats a balanced trade-off
+      (j = 1, 4 or 8) with the same deviation range as the unbalanced
+      trade-off, so the "placebo" deviation should be zero.  Robust
+      standard errors.
+  - description: diff_main_treatment_minus_control_table3_col3
+    value: 0.247
+    claim_type: coefficient
+    standard_error: 0.023
+    sample_size: 200
+    unit: share (difference in relative measure of concentration bias)
+    location: "Table 3, column 3, row 'Difference: Main-Treatment - Main-Control'"
+    context: >
+      Table 3, column 3: OLS of d~rel on a constant and a Treatment
+      indicator on the pooled Main-Treatment and Main-Control main samples;
+      this row is the Treatment coefficient, the difference in average
+      d~rel, Main-Treatment minus Main-Control (the constant, reported in
+      the row above, is average d~rel in Main-Control).  Robust standard
+      errors.
+  - description: diff_mechanism_treatment_minus_control_table3_col4
+    value: 0.090
+    claim_type: coefficient
+    standard_error: 0.021
+    sample_size: 200
+    unit: share (difference in relative measure of concentration bias)
+    location: "Table 3, column 4, row 'Difference: Mechanism-Treatment - Mechanism-Control'"
+    context: >
+      Table 3, column 4: OLS of d~rel on a constant and a Treatment
+      indicator on the pooled Mechanism-Treatment and Mechanism-Control
+      main samples; this row is the Treatment coefficient, the difference
+      in average d~rel, Mechanism-Treatment minus Mechanism-Control.
+      Robust standard errors.
+  - description: n_obs_table3
+    value: 200
+    claim_type: other
+    unit: observations (subjects, two conditions pooled)
+    location: "Table 3, Observations (all four columns)"
+    context: >
+      Number of observations in each column of Table 3: the main samples
+      of the two between-subjects conditions compared in that column,
+      after the preregistered exclusions.
+
+# Every reproduced_value is the plain "Reproduction in different software
+# (R)" row of the I4R First Meta Database (team 15), using the authors'
+# pre-computed outcome measures — identical to DP42 Table 1 Panel B and
+# Table 2 Panel B.  Row numbers are 0-based data-row indices in
+# benchmark/corpus/i4r_first_meta_database.csv.gz.  The database has no
+# rows for the observation counts (claims 5 and 12), so they get no
+# finding; DP42 reports N = 100 / 200 throughout.
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: 37.610
+    outcome: matches
+    notes: Database row 646 (table 2, 37.610 / 3.575 -> 37.610 / 3.575); DP42 Table 1 Panel B col 2.
+  - claim_id: 1
+    reproduced_value: 37.094
+    outcome: matches
+    notes: Database row 649 (table 2, Tobit, 37.094 / 3.658 -> 37.094 / 3.658); DP42 Table 1 Panel B col 4.
+  - claim_id: 2
+    reproduced_value: 0.190
+    outcome: matches
+    notes: Database row 623 (table 2, 0.190 / 0.016 -> 0.190 / 0.016); DP42 Table 1 Panel B col 1.
+  - claim_id: 3
+    reproduced_value: 0.224
+    outcome: matches
+    notes: >
+      Database row 625 (table 2, 0.224 / 0.021 -> 0.224 / 0.021); DP42
+      Table 1 Panel B col 2.  Recomputing d~rel from the choice data
+      (row 636, "Computing alternative value of outcome variable AND in
+      R"; DP42 Table 1 Panel B col 5) gives 0.223 (0.021).
+  - claim_id: 4
+    reproduced_value: 0.259
+    outcome: matches
+    notes: Database row 645 (table 2, 0.259 / 0.027 -> 0.259 / 0.027); DP42 Table 1 Panel B col 3.
+  - claim_id: 6
+    reproduced_value: 0.075
+    outcome: matches
+    notes: >
+      Database row 626 (table 3, 0.075 / 0.019 -> 0.075 / 0.019); DP42
+      Table 2 Panel B col 1.  Recomputed d~rel (row 648, Panel C): 0.075.
+  - claim_id: 7
+    reproduced_value: 0.149
+    outcome: matches
+    notes: >
+      Database row 620 (table 3, 0.149 / 0.028 -> 0.149 / 0.028); DP42
+      Table 2 Panel B col 1.  Recomputed d~rel (row 644): 0.148.
+  - claim_id: 8
+    reproduced_value: 0.135
+    outcome: matches
+    notes: >
+      Database row 621 (table 3, 0.135 / 0.021 -> 0.135 / 0.021); DP42
+      Table 2 Panel B col 2.  Recomputed d~rel (row 633): 0.133.
+  - claim_id: 9
+    reproduced_value: 0.158
+    outcome: matches
+    notes: >
+      Database row 624 records o_coeff = r_coeff = -0.158 (SE 0.022): the
+      Stata/R coefficient on the Donation-Control indicator, i.e.
+      Control minus Treatment.  The paper prints the difference as
+      Donation-Treatment minus Donation-Control = 0.158, and the
+      authors' do-file says so explicitly; reproduced_value is given in
+      the paper's sign convention.  Exact match in magnitude and SE.
+      Recomputed d~rel (row 632): -0.159.
+  - claim_id: 10
+    reproduced_value: 0.247
+    outcome: matches
+    notes: >
+      Database row 635 records o_coeff = r_coeff = -0.247 (SE 0.023),
+      and DP42 Table 2 Panel A transcribes the published row as
+      "-0.247".  The authors' Stata log gives +0.2467 on the Treatment
+      indicator (Main-Control constant -0.0226; -0.023 + 0.247 = 0.224,
+      the Main-Treatment mean), and the DP prints 0.247: the database
+      sign is a transcription/convention artefact, the replicators'
+      magnitude and SE match exactly.  reproduced_value in the paper's
+      sign convention.  Recomputed d~rel (row 641): -0.249 in the same
+      reversed convention.
+  - claim_id: 11
+    reproduced_value: 0.090
+    outcome: matches
+    notes: >
+      Database row 640 (table 3, 0.090 / 0.021 -> 0.090 / 0.021); DP42
+      Table 2 Panel B col 4.  Recomputed d~rel (row 619): 0.092.
+
+notes: >
+  Headline finding: in a lab experiment where subjects trade extra
+  real-effort tasks on eight future workdays against a larger restaurant
+  voucher, the indifference point in an unbalanced trade-off (extra tasks
+  on all eight days for the summed voucher raise) exceeds what the eight
+  balanced trade-offs imply: concentration bias raises the per-workday
+  willingness to work by 22.4% (Table 2).  Table 3 shows the effect is
+  smaller when the voucher raise is framed as a sum of parts
+  (Mechanism-Treatment), present with donations, and absent in the
+  Control conditions that repeat a balanced trade-off.
+
+  Original analysis in Stata (do-files last run in Stata 17); R is used
+  in the package only for the Section 4 / Appendix C calibration
+  exercise (Calibration Exercise.R), which produces no pinned number.
+  language: r is the reproduction target.
+
+  Curation pass (2026-10-21).  Pinned 13 claims: Table 2 columns 2 and 4
+  of the absolute measure, all three columns of the relative measure,
+  Table 3's three Treatment-vs-Control / Main-vs-Mechanism differences
+  plus the Mechanism-Treatment and Donation-Treatment levels, and the two
+  observation counts (Table 2: 100 in every column; Table 3: 200 in every
+  column).  Each coefficient carries its robust SE as standard_error.
+  Left out to stay within 13: Table 2 columns 1 and 3 of the absolute
+  measure (31.640 (2.685), 43.580 (4.683); both reproduced exactly by
+  I4R, rows 629 / 643) and the two Control-condition levels in Table 3
+  (Main-Control -0.023 (0.008), Mechanism-Control -0.014 (0.010)).
+
+  Paper version and published-vs-DP check.  The PDF is ECONtribute DP 076
+  (1 April 2021); the REStud typeset version could not be obtained.  The
+  DP's Table 2 and Table 3 carry the same table numbers as the
+  published article (the I4R database labels them "table 2" / "table
+  3"; DP42 cites "Table 2/3 of DGRSS") and every pinned value equals the
+  database's o_coeff / o_std_err in magnitude.  Signs: the database (and
+  DP42's transcription of the published Table 3, Panel A) records the
+  Donation difference as -0.158, Main-Control as +0.023 and the Main
+  difference as -0.247, where the DP prints 0.158, -0.023 and 0.247.  The
+  package (the published version's REStud replication package, July
+  2021) settles it: its log gives control = -0.1576 with the comment
+  "the difference Donation-Treatment - Donation-Control that is reported
+  in the manuscript (0.158) is positive", and treatment = +0.2467 with
+  constant -0.0226 for Main; the DP's signs are internally consistent
+  (Main-Control + difference = Main-Treatment mean 0.224), the
+  database's are not.  The paper's signs are pinned.  Appendix numbering
+  differs: in the DP the money experiment is Appendix C (Table C.1
+  reports 0.063 (0.011), N = 277, 185 subjects) while the published
+  version and the package README put the calibration in Appendix C and
+  the money experiment in Appendix D (Tables D1-D4; the database's
+  "appendix table d.1" rows are 0.057 / 0.068 / 0.081 / 0.066 / 0.026 /
+  0.065 / 0.036, which the DP does not print in that form) — the money
+  appendix was revised between the DP and publication; none of it is
+  pinned.
+
+  What was read.  The DP 076 PDF (Sections 2-4, Tables 1-3, appendix
+  headings); DP42 in full (EconStor, 17 pp.; its IDEAS listing
+  zbw/i4rdps/42); the Zenodo API metadata for both package versions; the
+  package README.md, the consumption do-file in full and its log for
+  Tables 2-3, the money do-file header, the .csv headers; the 32 I4R
+  database rows for the paper (team 15; 31 with values, one empty).
+
+  How the printed numbers are produced (package-only; never in
+  contexts).  Consumption_Experiment tables and values.do, lines 70-114
+  (README: log lines 122-394), produces Tables 2 and 3; the money
+  do-file produces only Section 5 / Appendix D numbers, the figures
+  do-file only figures.  It reads Consumption_Experiment.csv with import
+  delimited.  The csv is long: nine rows per subject (decision_number
+  1-8 balanced, 9 the final trade-off) and the subject-level outcomes
+  (id_stage2, avg_id_stage2, id_stage2_upper, qe_ard, qe_ard_lower,
+  qe_ard_upper, qe_rad*) are non-missing only on the decision_number == 9
+  row (769 subjects), so the regressions run on one row per subject
+  without an explicit filter.  Main sample: pap_sample == 1.  Table 2:
+  reg id_stage2 / avg_id_stage2 / id_stage2_upper and qe_ard_lower /
+  qe_ard / qe_ard_upper on a constant, if pap_sample == 1 & dispersed ==
+  0 & treatment == 1, r (HC1); col 4 is tobit id_stage2, ll(-63) ul(63)
+  with conventional (non-robust) SEs (log: 73 uncensored, 27
+  right-censored).  Table 3: reg qe_ard main if pap_sample == 1 &
+  treatment == 1, r (col 1); reg qe_ard control if pap_sample == 1 &
+  pizza == 0, r (col 2; coefficient -0.158, sign flipped in print); reg
+  qe_ard treatment if pap_sample == 1 & pizza == 1 & dispersed == 0
+  (col 3) / dispersed == 1 (col 4), r.  dispersed is missing for the
+  Donation conditions.  Condition sizes before exclusion (subjects):
+  Main-Treatment 135, Main-Control 135, Mechanism-Treatment 123,
+  Mechanism-Control 125, Donation-Treatment 122, Donation-Control 128; 100
+  of each in pap_sample.  The relative measure is pre-computed in the
+  csv; recomputing it from indifference_point and the mandatory-task
+  vector (paper fn. 3) reproduces it only up to the third decimal (DP42
+  Figure 1: differences for negative d~rel, rounding / corner handling).
+
+  Benchmark implications.  Seeded mode is close to a transcription of
+  eight one-line regressions.  Independent/blind mode needs the model to
+  find the right csv among ~370 files (oTree/z-Tree noise; the task's
+  file listing truncates after ~80 entries, mostly oTree files, though
+  the consumption csv and its columns are listed before the cut), map the
+  paper's conditions to main / dispersed / pizza / treatment / control
+  and the exclusion to pap_sample, and pick the pre-computed outcome
+  columns (or recompute d~rel and land within the printed rounding).  A
+  sign trap: column 2's difference needs Treatment minus Control.
+  Blind caveat (curation render 2026-10-21, 153 paper redactions, 53
+  files stripped — every .do/.R/.log and the oTree .py sources): the
+  redacted paper.txt still states three pinned values as percentages —
+  "22.4%" (claim 3, abstract, intro, Section 2.4, Result 1), "7.5%"
+  (claim 6) and "13.5%" (claim 8) — because the blind redactor matches
+  decimal forms only (0.224, not 22.4).  Blind passes on claims 3, 6 and
+  8 are therefore not target-free for this entry.
+
+  Left out.  Table 1 (design), the Section 3 / 4 tests reported only in
+  the text, Appendix A (full sample, heterogeneity, alternative relative
+  measure), the money experiment (Section 5 / Appendix D; revised since
+  the DP, and its csv lacks the raw choices per DP42), and the
+  calibration exercise (Appendix C, R, 1-8 h runtime).
