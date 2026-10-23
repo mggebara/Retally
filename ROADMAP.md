@@ -1494,11 +1494,92 @@ that appears on several models with the model (`pipeline
 (claude-opus-5-5)`, from each row's `usage.by_model`) so the two never
 pool.
 
+**Oracle run (2026-10-23, zero API spend): the remaining nine papers
+through the pipeline harness with every Claude call answered by a
+desktop Opus subagent.**  Built as PR #83 (`--llm-oracle LABEL`,
+`retally.llm_oracle`, `benchmark.oracle`; README "Running the pipeline
+on plan usage"): the pipeline's requests are byte-identical to a live
+run's, each unanswered one is parked on disk, a Claude Code subagent
+(told to use no tools and read nothing but the prompt) writes the
+answer, the driver installs it, and the run resumes.  Nine papers ×
+3 modes took seven rounds (109 answered calls, 88 subagent spawns, ≈6.5 M
+plan tokens, about 40 minutes wall clock).  File:
+`benchmark/results/pipeline-oracle-desktop-opus-9papers-all-modes-2026-10-23.json`;
+REPORT.md labels the rows `pipeline (desktop-opus)`.
+
+| Paper | Mode | n | Pipeline 4.7 | Pipeline oracle (first scored, refinements) | Agent (5.5) |
+|---|---|---|---|---|---|
+| Arias | seeded | 12 | 4 | 12 (12, 0) | 12 |
+| Arias | independent | 12 | 0 | 12 (12, 0) | 12 |
+| Arias | blind | 12 | 1 | 12 (12, 0) | 12 |
+| Adams | seeded | 11 | 11 | 11 (11, 0) | 11 |
+| Adams | independent | 11 | 7 | 10 (6, 3) | 11 |
+| Adams | blind | 11 | 1 | 7 (7, 1) | 8 |
+| Hanlon | seeded | 12 | 12 | 12 (12, 0) | 12 |
+| Hanlon | independent | 12 | 10 | 12 (12, 0) | 12 |
+| Hanlon | blind | 12 | 12 | 12 (12, 0) | 12 |
+| Altmann | seeded | 13 | — | 13 (13, 0) | 13 |
+| Altmann | independent | 13 | — | 13 (4, 2) | 13 |
+| Altmann | blind | 13 | — | 4 (4, 0) | 13 |
+| Dertwinkel-Kalt | seeded | 13 | — | 13 (13, 0) | 13 |
+| Dertwinkel-Kalt | independent | 13 | — | 13 (13, 0) | 13 |
+| Dertwinkel-Kalt | blind | 13 | — | 12 (12, 0) | 13 |
+| Acemoglu | seeded | 12 | — | 12 (12, 0) | 12 |
+| Acemoglu | independent | 12 | — | 11 (4, 3) | 12 |
+| Acemoglu | blind | 12 | — | 4 (4, 0) | 12 |
+| López-Moctezuma | seeded | 13 | — | 13 (13, 0) | 13 |
+| López-Moctezuma | independent | 13 | — | 9 (9, 3) | 9 |
+| López-Moctezuma | blind | 13 | — | 9 (9, 0) | 9 |
+| Gagliarducci | seeded | 13 | — | 8 (8, 2) | 13 |
+| Gagliarducci | independent | 13 | — | 13 (7, 3) | 13 |
+| Gagliarducci | blind | 13 | — | 12 (12, 0) | 7 |
+| Holman | seeded | 11 | — | 11 (11, 0) | 11 |
+| Holman | independent | 11 | — | 3 (1, 2) | 10 |
+| Holman | blind | 11 | — | 0 (0, 0) | 6 |
+| **Total, 9 papers** | seeded | 110 | — | **105** | **110** |
+| | independent | 110 | — | **96** | **105** |
+| | blind | 110 | — | **72** | **92** |
+
+**The seven-paper confound row is now complete** (pipeline on the
+agent's model: four papers through the API, three through the oracle):
+
+| Mode | Pipeline 4.7 | Pipeline on Opus 5.5 (API + oracle) | Agent (5.5) |
+|---|---|---|---|
+| seeded | 55 / 79 | **79 / 79** | 78 / 79 |
+| independent | 41 / 79 | **67 / 79** | 78 / 79 |
+| blind | 24 / 79 | **51 / 79** | 75 / 79 |
+
+Reading: with the model held fixed, the harness gap is zero in seeded
+mode, 11 claims in independent mode and 24 in blind mode on the seven
+3.2 papers; on the six 3.4 papers it is 5 / 9 / 20 of 75.  The agentic
+loop's advantage is concentrated where the scripts are withheld and
+grows when the targets are withheld too — the pipeline gets one script
+plus feedback, the agent gets to try alternatives.  Where the oracle
+pipeline falls short it is again sample construction and model choice:
+Altmann blind runs on 17,840 observations instead of 12,160 (wrong
+treatment-arm subset), Acemoglu blind on 178 / 171 clusters instead of
+181 / 175, Adams blind on the 2,019-dyad rule the agent also tried
+first, Holman independent and blind on random-effects / linear
+probability models where the paper uses fixed effects and logit
+(the agent's miss in 3.4, worse here), Gagliarducci seeded on a
+different percent-opposite definition.  Two cells beat the agent:
+Gagliarducci blind 12 vs 7 and Hanlon blind first-scored 12 vs 8.
+
+Caveats specific to the oracle: the subagents answer at the desktop
+app's default effort, not the pipeline's `output_config`; isolation is
+by instruction (two of 88 subagents reported running a harmless shell
+command on their own answer file; none read anything outside the
+prompt); the extraction prompts truncate the paper text by design
+(several answering agents noted the cut-off); one run per cell; the
+agent rows it is compared with were produced in 3.3–3.4 and carry
+those caveats.
+
 **Next.**
 
-- (a) Paid, ask first: the remaining three 3.2 papers on 5.5 (Arias
-  ≈$2.50–3.40, Adams ≈$1.10–1.50, Hanlon ≈$1.00–1.40) to complete the
-  confound row, then the six 3.4 papers (≈$1–2.50 each).
+- (a) ~~Paid: the remaining three 3.2 papers and the six 3.4 papers~~ —
+  done through the oracle (above) at no API cost; a paid API rerun of
+  those nine on `claude-opus-5-5` would remove the effort/isolation
+  caveats (≈$10–13) if ever wanted.
 - (b) ~~Free: a model dimension in `benchmark.report`~~ — done the
   same day (`metrics.disambiguate_reproducers`); REPORT.md now renders
   from the pipeline composite, the 5.5 composite and both claude-code
