@@ -1,8 +1,8 @@
 # Retally benchmark report
 
 Catalog size: **16** papers, each run in 3 reproduction modes.  
-Runs (paper × mode): **78**.  
-Executed runs: **78**.  
+Runs (paper × mode): **105**.  
+Executed runs: **105**.  
 Skipped runs: **0** (out_of_scope=0, language_unsupported=0, no_api_key=0).  
 
 Reproduction modes:
@@ -11,7 +11,7 @@ Reproduction modes:
 - **independent**: the authors' scripts were withheld; reproduced from the paper text — independent reproduction.
 - **blind**: the authors' scripts and the claimed values were withheld, with no claim-targeted refinement — blind reproduction, free of target-guided search.
 
-Reproducer: **claude-code**, **pipeline (claude-opus-4-7)**, **pipeline (claude-opus-5-5)**.
+Reproducer: **claude-code**, **pipeline (claude-opus-4-7)**, **pipeline (claude-opus-5-5)**, **pipeline (desktop-opus)**.
 
 ## Verdicts — seeded · claude-code (among executed papers)
 
@@ -67,6 +67,24 @@ Reproducer: **claude-code**, **pipeline (claude-opus-4-7)**, **pipeline (claude-
 - Agrees with the paper's stated values: **1 / 4**
 - Agrees with the I4R replicator: **1 / 4** (of papers where I4R published a value to compare against)
 
+## Verdicts — seeded · pipeline (desktop-opus) (among executed papers)
+
+- Pipeline completed without crashing: **9 / 9**
+- Agrees with the paper's stated values: **8 / 9**
+- Agrees with the I4R replicator: **6 / 8** (of papers where I4R published a value to compare against)
+
+## Verdicts — independent · pipeline (desktop-opus) (among executed papers)
+
+- Pipeline completed without crashing: **9 / 9**
+- Agrees with the paper's stated values: **5 / 9**
+- Agrees with the I4R replicator: **5 / 8** (of papers where I4R published a value to compare against)
+
+## Verdicts — blind · pipeline (desktop-opus) (among executed papers)
+
+- Pipeline completed without crashing: **9 / 9**
+- Agrees with the paper's stated values: **2 / 9**
+- Agrees with the I4R replicator: **2 / 8** (of papers where I4R published a value to compare against)
+
 ## Seeded vs independent vs blind
 
 Claims passing with the authors' scripts in the prompt (seeded) versus without them (independent), per paper executed in both modes.  *Lost* claims pass seeded but not independent — what the scripts were carrying.
@@ -84,32 +102,45 @@ Claims passing with the authors' scripts in the prompt (seeded) versus without t
 - pipeline (claude-opus-5-5) · Independent: **33 / 44** claims passed (first scored 21 / 44)
 - pipeline (claude-opus-5-5) · Blind: **20 / 44** claims passed (first scored 20 / 44)
 - pipeline (claude-opus-5-5) · Lost without the scripts: **11**; gained: **0**
+- pipeline (desktop-opus) · Seeded: **105 / 110** claims passed (first scored 105 / 110)
+- pipeline (desktop-opus) · Independent: **96 / 110** claims passed (first scored 68 / 110)
+- pipeline (desktop-opus) · Blind: **72 / 110** claims passed (first scored 72 / 110)
+- pipeline (desktop-opus) · Lost without the scripts: **14**; gained: **5**
 
 *First scored* is what each mode's first script that printed results passed: after any crash repairs, before the refinement loop showed the model which claims were off target.
 
 | Entry | Split | Reproducer | Seeded | Independent | Blind | First scored (seeded / independent / blind) | Lost without scripts |
 |---|---|---|---|---|---|---|---|
 | `acemoglu-2022-war-socialism-fascism` | holdout | claude-code | 12/12 | 12/12 | 12/12 | 12/12 / 12/12 / 10/12 | — |
+| `acemoglu-2022-war-socialism-fascism` | holdout | pipeline (desktop-opus) | 12/12 | 11/12 | 4/12 | 12/12 / 4/12 / 4/12 | `first_stage_fstat_table1_col6` |
 | `adams-2023-women-mps-affective-polarization` | holdout | claude-code | 11/11 | 11/11 | 8/11 | 11/11 / 11/11 / 8/11 | — |
 | `adams-2023-women-mps-affective-polarization` | holdout | pipeline (claude-opus-4-7) | 11/11 | 7/11 | 1/11 | 11/11 / 0/11 / 1/11 | `n_directed_dyads`, `n_obs_men_partisans`, `n_obs_women_partisans`, `women_mps_coef_men_partisans` |
+| `adams-2023-women-mps-affective-polarization` | holdout | pipeline (desktop-opus) | 11/11 | 10/11 | 7/11 | 11/11 / 6/11 / 7/11 | `women_mps_coef_men_partisans` |
 | `alesina-2022-immigration-redistribution` | dev | pipeline (claude-opus-4-7) | 7/11 | 7/11 | — | 7/11 / 1/11 / —/— | `order_effect_social_budget`, `sample_size_table4` |
 | `altmann-2022-cognitive-spillovers` | holdout | claude-code | 13/13 | 13/13 | 13/13 | 13/13 / 13/13 / 13/13 | — |
+| `altmann-2022-cognitive-spillovers` | holdout | pipeline (desktop-opus) | 13/13 | 13/13 | 4/13 | 13/13 / 4/13 / 4/13 | — |
 | `arias-2022-changing-tides-climate-migration` | holdout | claude-code | 12/12 | 12/12 | 12/12 | 12/12 / 12/12 / 12/12 | — |
 | `arias-2022-changing-tides-climate-migration` | holdout | pipeline (claude-opus-4-7) | 4/12 | 0/12 | 1/12 | 4/12 / 0/12 / 1/12 | `choice_tasks_germany`, `choice_tasks_us`, `respondents_germany`, `respondents_us` |
+| `arias-2022-changing-tides-climate-migration` | holdout | pipeline (desktop-opus) | 12/12 | 12/12 | 12/12 | 12/12 / 12/12 / 12/12 | — |
 | `bisbee-2022-flight-to-safety` | dev | pipeline (claude-opus-4-7) | 10/11 | 5/11 | — | 9/11 / 5/11 / —/— | `exposure_coefficient_march_basic`, `exposure_coefficient_march_cbps`, `sample_size_full`, `sample_size_march`, `tea_party_x_cases_interaction` |
 | `dertwinkel-kalt-2022-concentration-bias` | holdout | claude-code | 13/13 | 13/13 | 13/13 | 13/13 / 12/13 / 13/13 | — |
+| `dertwinkel-kalt-2022-concentration-bias` | holdout | pipeline (desktop-opus) | 13/13 | 13/13 | 12/13 | 13/13 / 13/13 / 12/13 | — |
 | `dincecco-2022-india-warfare` | dev | pipeline (claude-opus-4-7) | 13/13 | 11/13 | — | 13/13 / 11/13 / —/— | `warfare_iv_se_full_controls`, `warfare_se_full_controls` |
 | `gagliarducci-2022-gender-cooperation-congress` | holdout | claude-code | 13/13 | 13/13 | 7/13 | 11/13 / 13/13 / 7/13 | — |
+| `gagliarducci-2022-gender-cooperation-congress` | holdout | pipeline (desktop-opus) | 8/13 | 13/13 | 12/13 | 8/13 / 7/13 / 12/13 | — |
 | `grier-2023-sugar-roll-call-voting` | holdout | claude-code | 10/11 | 10/11 | 10/11 | 10/11 / 10/11 / 10/11 | — |
 | `grier-2023-sugar-roll-call-voting` | holdout | pipeline (claude-opus-4-7) | 0/11 | 0/11 | 0/11 | 0/11 / 0/11 / 0/11 | — |
 | `grier-2023-sugar-roll-call-voting` | holdout | pipeline (claude-opus-5-5) | 11/11 | 0/11 | 0/11 | 10/11 / 0/11 / 0/11 | `acu_ideology_district_fe`, `observations_district_fe`, `observations_incumbent_fe`, `sugar_contributions_12_months_district_fe`, `sugar_contributions_12_months_incumbent_fe`, `sugar_contributions_calendar_year_district_fe`, `sugar_contributions_calendar_year_incumbent_fe`, `sugar_contributions_district_fe`, `sugar_contributions_incumbent_fe`, `tenure_district_fe`, `tenure_incumbent_fe` |
 | `hanlon-2022-aircraft-ip-spillovers` | holdout | claude-code | 12/12 | 12/12 | 12/12 | 12/12 / 12/12 / 8/12 | — |
 | `hanlon-2022-aircraft-ip-spillovers` | holdout | pipeline (claude-opus-4-7) | 12/12 | 10/12 | 12/12 | 12/12 / 10/12 / 12/12 | `airframe_maxspeed_trend_after_1926_us`, `airframe_maxspeed_trend_before_1926_us` |
+| `hanlon-2022-aircraft-ip-spillovers` | holdout | pipeline (desktop-opus) | 12/12 | 12/12 | 12/12 | 12/12 / 12/12 / 12/12 | — |
 | `holman-2022-theresa-may-rally` | holdout | claude-code | 11/11 | 10/11 | 6/11 | 11/11 / 10/11 / 6/11 | `n_obs_table4` |
+| `holman-2022-theresa-may-rally` | holdout | pipeline (desktop-opus) | 11/11 | 3/11 | 0/11 | 11/11 / 1/11 / 0/11 | `did_attack_like_may_table2`, `did_attack_x_time_like_may_table2`, `did_time_like_may_table2`, `did_time_may_best_pm_table2`, `intl_attack_table4`, `intl_attack_x_woman_exec_table4`, `n_obs_did_like_may_table2`, `n_obs_did_may_best_pm_table2` |
 | `leeson-2022-hobo-economicus` | holdout | claude-code | 11/11 | 11/11 | 11/11 | 11/11 / 10/11 / 10/11 | — |
 | `leeson-2022-hobo-economicus` | holdout | pipeline (claude-opus-4-7) | 11/11 | 9/11 | 4/11 | 11/11 / 9/11 / 4/11 | `friendliness_full_sample`, `station_visits_five_station_subsample` |
 | `leeson-2022-hobo-economicus` | holdout | pipeline (claude-opus-5-5) | 11/11 | 11/11 | 8/11 | 11/11 / 8/11 / 8/11 | — |
 | `lopez-moctezuma-2022-policy-deliberation-philippines` | holdout | claude-code | 13/13 | 9/13 | 9/13 | 13/13 / 9/13 / 9/13 | `itt_gender_index_akbayan_tableC4`, `itt_gender_index_umalabka_tableC4`, `itt_poverty_index_akbayan_tableC3`, `itt_poverty_index_umalabka_tableC3` |
+| `lopez-moctezuma-2022-policy-deliberation-philippines` | holdout | pipeline (desktop-opus) | 13/13 | 9/13 | 9/13 | 13/13 / 9/13 / 9/13 | `itt_gender_index_akbayan_tableC4`, `itt_gender_index_umalabka_tableC4`, `itt_poverty_index_akbayan_tableC3`, `itt_poverty_index_umalabka_tableC3` |
 | `manekin-2022-effective-for-whom` | holdout | claude-code | 12/12 | 12/12 | 12/12 | 12/12 / 12/12 / 12/12 | — |
 | `manekin-2022-effective-for-whom` | holdout | pipeline (claude-opus-4-7) | 7/12 | 12/12 | 6/12 | 8/12 / 6/12 / 6/12 | — |
 | `manekin-2022-effective-for-whom` | holdout | pipeline (claude-opus-5-5) | 12/12 | 12/12 | 12/12 | 12/12 / 12/12 / 12/12 | — |
@@ -130,6 +161,9 @@ Claims passing with the authors' scripts in the prompt (seeded) versus without t
 - **pipeline (claude-opus-5-5) · holdout · seeded**: 4 entries, 44 claims, matched 100%, passed 44/44, median rel err 0.0%, within tol/2x/5x: 100%/100%/100%
 - **pipeline (claude-opus-5-5) · holdout · independent**: 4 entries, 44 claims, matched 100%, passed 33/44, median rel err 0.1%, within tol/2x/5x: 75%/75%/82%
 - **pipeline (claude-opus-5-5) · holdout · blind**: 4 entries, 44 claims, matched 95%, passed 20/44, median rel err 5.7%, within tol/2x/5x: 48%/48%/55%
+- **pipeline (desktop-opus) · holdout · seeded**: 9 entries, 110 claims, matched 100%, passed 105/110, median rel err 0.1%, within tol/2x/5x: 95%/96%/96%
+- **pipeline (desktop-opus) · holdout · independent**: 9 entries, 110 claims, matched 100%, passed 96/110, median rel err 0.8%, within tol/2x/5x: 87%/90%/93%
+- **pipeline (desktop-opus) · holdout · blind**: 9 entries, 110 claims, matched 95%, passed 72/110, median rel err 2.0%, within tol/2x/5x: 69%/78%/85%
 
 ## Per-component success — seeded · claude-code (executed papers only)
 
@@ -230,9 +264,42 @@ Claims passing with the authors' scripts in the prompt (seeded) versus without t
 | code_generated | 4 | 4 | 100% |
 | code_executed | 4 | 4 | 100% |
 
+## Per-component success — seeded · pipeline (desktop-opus) (executed papers only)
+
+| Component | Succeeded | Total | Rate |
+|---|---:|---:|---:|
+| parsed | 9 | 9 | 100% |
+| claims_extracted | 9 | 9 | 100% |
+| dataset_extracted | 0 | 9 | 0% |
+| dataset_downloaded | 9 | 9 | 100% |
+| code_generated | 9 | 9 | 100% |
+| code_executed | 9 | 9 | 100% |
+
+## Per-component success — independent · pipeline (desktop-opus) (executed papers only)
+
+| Component | Succeeded | Total | Rate |
+|---|---:|---:|---:|
+| parsed | 9 | 9 | 100% |
+| claims_extracted | 9 | 9 | 100% |
+| dataset_extracted | 0 | 9 | 0% |
+| dataset_downloaded | 9 | 9 | 100% |
+| code_generated | 9 | 9 | 100% |
+| code_executed | 9 | 9 | 100% |
+
+## Per-component success — blind · pipeline (desktop-opus) (executed papers only)
+
+| Component | Succeeded | Total | Rate |
+|---|---:|---:|---:|
+| parsed | 9 | 9 | 100% |
+| claims_extracted | 9 | 9 | 100% |
+| dataset_extracted | 0 | 9 | 0% |
+| dataset_downloaded | 9 | 9 | 100% |
+| code_generated | 9 | 9 | 100% |
+| code_executed | 9 | 9 | 100% |
+
 ## Estimated API cost
 
-Total estimated spend this run: **$15.51** across 144 API calls (48 further calls served free by the LLM cache).  Estimates from the price table in `benchmark/pricing.py`.
+Total estimated spend this run: **$15.51** across 253 API calls (48 further calls served free by the LLM cache).  Estimates from the price table in `benchmark/pricing.py`.  Not priced (absent from the table): `desktop-opus`.
 
 | ID | Mode | Reproducer | API calls | LLM-cache hits | Input tok | Output tok | Cache write tok | Cache read tok | Est. cost |
 |---|---|---|---:|---:|---:|---:|---:|---:|---:|
@@ -275,6 +342,33 @@ Total estimated spend this run: **$15.51** across 144 API calls (48 further call
 | `leeson-2022-hobo-economicus` | seeded | pipeline (claude-opus-5-5) | 4 | 0 | 33,744 | 6,631 | 0 | 0 | $0.27 |
 | `leeson-2022-hobo-economicus` | independent | pipeline (claude-opus-5-5) | 3 | 2 | 22,593 | 15,166 | 0 | 0 | $0.39 |
 | `leeson-2022-hobo-economicus` | blind | pipeline (claude-opus-5-5) | 2 | 1 | 21,817 | 6,785 | 0 | 0 | $0.22 |
+| `acemoglu-2022-war-socialism-fascism` | seeded | pipeline (desktop-opus) | 4 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `acemoglu-2022-war-socialism-fascism` | independent | pipeline (desktop-opus) | 6 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `acemoglu-2022-war-socialism-fascism` | blind | pipeline (desktop-opus) | 3 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `adams-2023-women-mps-affective-polarization` | seeded | pipeline (desktop-opus) | 4 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `adams-2023-women-mps-affective-polarization` | independent | pipeline (desktop-opus) | 6 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `adams-2023-women-mps-affective-polarization` | blind | pipeline (desktop-opus) | 4 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `altmann-2022-cognitive-spillovers` | seeded | pipeline (desktop-opus) | 4 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `altmann-2022-cognitive-spillovers` | independent | pipeline (desktop-opus) | 5 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `altmann-2022-cognitive-spillovers` | blind | pipeline (desktop-opus) | 3 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `arias-2022-changing-tides-climate-migration` | seeded | pipeline (desktop-opus) | 4 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `arias-2022-changing-tides-climate-migration` | independent | pipeline (desktop-opus) | 3 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `arias-2022-changing-tides-climate-migration` | blind | pipeline (desktop-opus) | 3 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `dertwinkel-kalt-2022-concentration-bias` | seeded | pipeline (desktop-opus) | 4 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `dertwinkel-kalt-2022-concentration-bias` | independent | pipeline (desktop-opus) | 3 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `dertwinkel-kalt-2022-concentration-bias` | blind | pipeline (desktop-opus) | 3 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `gagliarducci-2022-gender-cooperation-congress` | seeded | pipeline (desktop-opus) | 6 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `gagliarducci-2022-gender-cooperation-congress` | independent | pipeline (desktop-opus) | 6 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `gagliarducci-2022-gender-cooperation-congress` | blind | pipeline (desktop-opus) | 3 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `hanlon-2022-aircraft-ip-spillovers` | seeded | pipeline (desktop-opus) | 4 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `hanlon-2022-aircraft-ip-spillovers` | independent | pipeline (desktop-opus) | 3 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `hanlon-2022-aircraft-ip-spillovers` | blind | pipeline (desktop-opus) | 3 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `holman-2022-theresa-may-rally` | seeded | pipeline (desktop-opus) | 4 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `holman-2022-theresa-may-rally` | independent | pipeline (desktop-opus) | 5 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `holman-2022-theresa-may-rally` | blind | pipeline (desktop-opus) | 3 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `lopez-moctezuma-2022-policy-deliberation-philippines` | seeded | pipeline (desktop-opus) | 4 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `lopez-moctezuma-2022-policy-deliberation-philippines` | independent | pipeline (desktop-opus) | 6 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `lopez-moctezuma-2022-policy-deliberation-philippines` | blind | pipeline (desktop-opus) | 3 | 0 | 0 | 0 | 0 | 0 | $0.00 |
 | `adams-2023-women-mps-affective-polarization` | seeded | claude-code | — | — | — | — | — | — | — |
 | `adams-2023-women-mps-affective-polarization` | independent | claude-code | — | — | — | — | — | — | — |
 | `adams-2023-women-mps-affective-polarization` | blind | claude-code | — | — | — | — | — | — | — |
@@ -358,6 +452,33 @@ Total estimated spend this run: **$15.51** across 144 API calls (48 further call
 | `leeson-2022-hobo-economicus` | seeded | pipeline (claude-opus-5-5) | ran | ✓ | ✓ | ✓ | 11 / 11 of 11 (first scored 11/11, 0 error + 0 claim refinements) |  |
 | `leeson-2022-hobo-economicus` | independent | pipeline (claude-opus-5-5) | ran | ✓ | ✓ | ✓ | 11 / 11 of 11 (first scored 8/11, 0 error + 2 claim refinements) |  |
 | `leeson-2022-hobo-economicus` | blind | pipeline (claude-opus-5-5) | ran | ✓ | ✗ | ✗ | 8 / 8 of 11 (first scored 8/11, 0 error + 0 claim refinements) |  |
+| `acemoglu-2022-war-socialism-fascism` | seeded | pipeline (desktop-opus) | ran | ✓ | ✓ | — | 12 / 0 of 12 (first scored 12/12, 0 error + 0 claim refinements) |  |
+| `acemoglu-2022-war-socialism-fascism` | independent | pipeline (desktop-opus) | ran | ✓ | ✗ | — | 11 / 0 of 12 (first scored 4/12, 0 error + 3 claim refinements) |  |
+| `acemoglu-2022-war-socialism-fascism` | blind | pipeline (desktop-opus) | ran | ✓ | ✗ | — | 4 / 0 of 12 (first scored 4/12, 0 error + 0 claim refinements) |  |
+| `adams-2023-women-mps-affective-polarization` | seeded | pipeline (desktop-opus) | ran | ✓ | ✓ | ✓ | 11 / 11 of 11 (first scored 11/11, 0 error + 0 claim refinements) |  |
+| `adams-2023-women-mps-affective-polarization` | independent | pipeline (desktop-opus) | ran | ✓ | ✗ | ✗ | 10 / 10 of 11 (first scored 6/11, 0 error + 3 claim refinements) |  |
+| `adams-2023-women-mps-affective-polarization` | blind | pipeline (desktop-opus) | ran | ✓ | ✗ | ✗ | 7 / 7 of 11 (first scored 7/11, 1 error + 0 claim refinement) |  |
+| `altmann-2022-cognitive-spillovers` | seeded | pipeline (desktop-opus) | ran | ✓ | ✓ | ✓ | 13 / 11 of 13 (first scored 13/13, 0 error + 0 claim refinements) |  |
+| `altmann-2022-cognitive-spillovers` | independent | pipeline (desktop-opus) | ran | ✓ | ✓ | ✓ | 13 / 11 of 13 (first scored 4/13, 0 error + 2 claim refinements) |  |
+| `altmann-2022-cognitive-spillovers` | blind | pipeline (desktop-opus) | ran | ✓ | ✗ | ✗ | 4 / 4 of 13 (first scored 4/13, 0 error + 0 claim refinements) |  |
+| `arias-2022-changing-tides-climate-migration` | seeded | pipeline (desktop-opus) | ran | ✓ | ✓ | ✓ | 12 / 12 of 12 (first scored 12/12, 0 error + 0 claim refinements) |  |
+| `arias-2022-changing-tides-climate-migration` | independent | pipeline (desktop-opus) | ran | ✓ | ✓ | ✓ | 12 / 12 of 12 (first scored 12/12, 0 error + 0 claim refinements) |  |
+| `arias-2022-changing-tides-climate-migration` | blind | pipeline (desktop-opus) | ran | ✓ | ✓ | ✓ | 12 / 12 of 12 (first scored 12/12, 0 error + 0 claim refinements) |  |
+| `dertwinkel-kalt-2022-concentration-bias` | seeded | pipeline (desktop-opus) | ran | ✓ | ✓ | ✓ | 13 / 11 of 13 (first scored 13/13, 0 error + 0 claim refinements) |  |
+| `dertwinkel-kalt-2022-concentration-bias` | independent | pipeline (desktop-opus) | ran | ✓ | ✓ | ✓ | 13 / 11 of 13 (first scored 13/13, 0 error + 0 claim refinements) |  |
+| `dertwinkel-kalt-2022-concentration-bias` | blind | pipeline (desktop-opus) | ran | ✓ | ✗ | ✗ | 12 / 10 of 13 (first scored 12/13, 0 error + 0 claim refinements) |  |
+| `gagliarducci-2022-gender-cooperation-congress` | seeded | pipeline (desktop-opus) | ran | ✓ | ✗ | ✗ | 8 / 4 of 13 (first scored 8/13, 0 error + 2 claim refinements) |  |
+| `gagliarducci-2022-gender-cooperation-congress` | independent | pipeline (desktop-opus) | ran | ✓ | ✓ | ✓ | 13 / 9 of 13 (first scored 7/13, 0 error + 3 claim refinements) |  |
+| `gagliarducci-2022-gender-cooperation-congress` | blind | pipeline (desktop-opus) | ran | ✓ | ✗ | ✗ | 12 / 8 of 13 (first scored 12/13, 0 error + 0 claim refinements) |  |
+| `hanlon-2022-aircraft-ip-spillovers` | seeded | pipeline (desktop-opus) | ran | ✓ | ✓ | ✓ | 12 / 12 of 12 (first scored 12/12, 0 error + 0 claim refinements) |  |
+| `hanlon-2022-aircraft-ip-spillovers` | independent | pipeline (desktop-opus) | ran | ✓ | ✓ | ✓ | 12 / 12 of 12 (first scored 12/12, 0 error + 0 claim refinements) |  |
+| `hanlon-2022-aircraft-ip-spillovers` | blind | pipeline (desktop-opus) | ran | ✓ | ✓ | ✓ | 12 / 12 of 12 (first scored 12/12, 0 error + 0 claim refinements) |  |
+| `holman-2022-theresa-may-rally` | seeded | pipeline (desktop-opus) | ran | ✓ | ✓ | ✗ | 11 / 5 of 11 (first scored 11/11, 0 error + 0 claim refinements) |  |
+| `holman-2022-theresa-may-rally` | independent | pipeline (desktop-opus) | ran | ✓ | ✗ | ✗ | 3 / 2 of 11 (first scored 1/11, 0 error + 2 claim refinements) |  |
+| `holman-2022-theresa-may-rally` | blind | pipeline (desktop-opus) | ran | ✓ | ✗ | ✗ | 0 / 0 of 11 (first scored 0/11, 0 error + 0 claim refinements) |  |
+| `lopez-moctezuma-2022-policy-deliberation-philippines` | seeded | pipeline (desktop-opus) | ran | ✓ | ✓ | ✓ | 13 / 6 of 13 (first scored 13/13, 0 error + 0 claim refinements) |  |
+| `lopez-moctezuma-2022-policy-deliberation-philippines` | independent | pipeline (desktop-opus) | ran | ✓ | ✗ | ✗ | 9 / 2 of 13 (first scored 9/13, 0 error + 3 claim refinements) |  |
+| `lopez-moctezuma-2022-policy-deliberation-philippines` | blind | pipeline (desktop-opus) | ran | ✓ | ✗ | ✗ | 9 / 2 of 13 (first scored 9/13, 0 error + 0 claim refinements) |  |
 | `adams-2023-women-mps-affective-polarization` | seeded | claude-code | ran | ✓ | ✓ | ✓ | 11 / 11 of 11 (first scored 11/11, 0 error + 0 claim refinements) |  |
 | `adams-2023-women-mps-affective-polarization` | independent | claude-code | ran | ✓ | ✓ | ✓ | 11 / 11 of 11 (first scored 11/11, 0 error + 0 claim refinements) |  |
 | `adams-2023-women-mps-affective-polarization` | blind | claude-code | ran | ✓ | ✗ | ✗ | 8 / 8 of 11 (first scored 8/11, 0 error + 0 claim refinements) |  |
