@@ -1574,6 +1574,38 @@ prompt); the extraction prompts truncate the paper text by design
 agent rows it is compared with were produced in 3.3–3.4 and carry
 those caveats.
 
+**Variance pass (2026-10-23, zero API spend): a second complete sample
+of the pipeline on all 13 evaluation papers through the oracle** (label
+`desktop-opus-run2`; six rounds, 157 answered calls, 157 subagent
+spawns; file
+`benchmark/results/pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`,
+not folded into REPORT.md to keep its label count down).  Sample 1 is
+the four API papers plus the nine oracle papers above; sample 2 is all
+oracle.
+
+| Mode | Pipeline sample 1 | Pipeline sample 2 | Agent (one sample) |
+|---|---|---|---|
+| seeded | 149 / 154 | 152 / 154 | 153 / 154 |
+| independent | 129 / 154 | 128 / 154 | 148 / 154 |
+| blind | 92 / 154 | 82 / 154 | 135 / 154 |
+
+Cell level: 25 of 39 cells identical across the two samples; mean
+absolute difference 0.97 claims; the largest swings are Gagliarducci
+(seeded 8 → 12, blind 12 → 7), Holman independent (3 → 8), Adams blind
+(7 → 2), Leeson independent (11 → 8), Manekin blind (12 → 9), Montero
+independent (10 → 7).  The mode totals move by 3, 1 and 10 claims; the
+harness gap against the agent is 1–4 seeded, 19–20 independent, 43–53
+blind.  So the headline is stable under resampling of the pipeline arm:
+the independent-mode gap is about 20 claims and the blind-mode gap
+about 45–55 of 154, and the seeded gap is within the run-to-run noise.
+Per-cell noise of up to five claims means no single-paper comparison in
+the tables above should be read on its own.  Caveats: the oracle
+caveats of the first run apply; four cells' sample 1 came from the API
+at the pipeline's configured effort while sample 2 came from the
+desktop default, so for those four papers the two samples differ in
+route as well as draw; the agent still has one sample per cell except
+the five blind reruns in 3.4.
+
 **Next.**
 
 - (a) ~~Paid: the remaining three 3.2 papers and the six 3.4 papers~~ —
