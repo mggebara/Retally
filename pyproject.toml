@@ -70,6 +70,8 @@ select = ["E", "F", "I"]
 [tool.ruff.lint.per-file-ignores]
 "src/retally/paper/extractor.py" = ["E501"]
 "src/retally/codegen/generator.py" = ["E501"]
+# Imports follow the sys.path insert that makes `benchmark` importable when run as a script.
+"docs/report/tables.py" = ["E402"]
 
 [tool.mypy]
 python_version = "3.11"
