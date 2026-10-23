@@ -145,6 +145,50 @@ def reproducers_present(results: list[dict[str, Any]]) -> list[str]:
     return sorted({reproducer_of(r) for r in results})
 
 
+def model_of(result: dict[str, Any]) -> str | None:
+    """The Claude model id(s) a row's usage records (``usage.by_model``), or None.
+
+    Pipeline rows record every model their run called; several (rare)
+    join as ``a + b``.  Rows without usage — the claude-code agent, files
+    predating cost accounting — give None.
+    """
+    by_model = (result.get("usage") or {}).get("by_model") or {}
+    names = sorted(str(m) for m in by_model if m and m != "unknown")
+    return " + ".join(names) if names else None
+
+
+def disambiguate_reproducers(results: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Copies of ``results`` whose ``reproducer`` names the model when one reproducer ran on several.
+
+    Results files concatenated for one report (``python -m
+    benchmark.report a.json b.json``) may hold the same reproducer on two
+    models — the pipeline on Opus 4.7 and on Opus 5.5 (ROADMAP 3.5).
+    Every grouping in the report keys on the reproducer name, so those
+    rows would pool and the per-paper table would show duplicate cells.
+    Here a reproducer that appears with more than one distinct
+    ``model_of`` gets the model appended — ``pipeline (claude-opus-5-5)``,
+    or ``pipeline (model unknown)`` for its rows without usage — and the
+    rest are returned unchanged, so a single-model report renders exactly
+    as before.  Rows are shallow-copied; the input is not mutated.
+    """
+    models: dict[str, set[str | None]] = {}
+    for r in results:
+        models.setdefault(reproducer_of(r), set()).add(model_of(r))
+    # Rows without usage (skips, files predating cost accounting, agents
+    # that do not report it) never split a reproducer on their own.
+    ambiguous = {rep for rep, seen in models.items() if len(seen - {None}) > 1}
+    if not ambiguous:
+        return list(results)
+    out: list[dict[str, Any]] = []
+    for r in results:
+        rep = reproducer_of(r)
+        if rep in ambiguous:
+            r = dict(r)
+            r["reproducer"] = f"{rep} ({model_of(r) or 'model unknown'})"
+        out.append(r)
+    return out
+
+
 def modes_present(results: list[dict[str, Any]]) -> list[str]:
     """Modes appearing in ``results``: seeded, independent, blind, then any others sorted."""
     present = {mode_of(r) for r in results}

@@ -501,6 +501,12 @@ uv run python -m benchmark.runner --reproducer claude-code --mode blind \
 uv run python -m benchmark.report benchmark/results/pipeline.json benchmark/results/results.json
 ```
 
+When the files concatenated into one report hold the same reproducer on
+more than one model (the pipeline on Opus 4.7 and on Opus 5.5, read
+from each row's `usage.by_model`), the renderer labels those rows
+`pipeline (claude-opus-5-5)` style so their sections, totals and
+per-paper cells never pool; a single-model report renders as before.
+
 `render_task` gets the package from the pipeline's download cache
 (`.cache/datasets/`, or `--package-dir`) and the paper text from
 `paper.source` (cached in `benchmark/.cache/claude-code/papers/`, or

@@ -1489,19 +1489,20 @@ Caveats: one run per cell; four papers chosen by expected gain, not at
 random; the agent rows are from 3.3 (predate the #69 context rewording)
 and share the 3.3/3.4 caveats; Opus 5.5 effort is `high` for generation
 and `medium` for extraction while the agent runs at the desktop default.
-The report renderer groups rows by reproducer name only, so 4.7 and 5.5
-pipeline rows would collide in REPORT.md; they are kept in separate
-files and REPORT.md still shows the 4.7 rows until the renderer learns a
-model dimension.
+REPORT.md carries both pipeline rows: the renderer labels a reproducer
+that appears on several models with the model (`pipeline
+(claude-opus-5-5)`, from each row's `usage.by_model`) so the two never
+pool.
 
 **Next.**
 
 - (a) Paid, ask first: the remaining three 3.2 papers on 5.5 (Arias
   ≈$2.50–3.40, Adams ≈$1.10–1.50, Hanlon ≈$1.00–1.40) to complete the
   confound row, then the six 3.4 papers (≈$1–2.50 each).
-- (b) Free: give `benchmark.report` / `benchmark.metrics` a model
-  dimension (reproducer × model) so REPORT.md can carry the 4.7 and 5.5
-  pipeline rows side by side.
+- (b) ~~Free: a model dimension in `benchmark.report`~~ — done the
+  same day (`metrics.disambiguate_reproducers`); REPORT.md now renders
+  from the pipeline composite, the 5.5 composite and both claude-code
+  files.
 - (c) Free: the two 5.5 misses that are harness, not model — Grier's
   window-file choice and Montero blind's data-file choice — are the
   concrete targets if pipeline tuning is ever unfrozen (one attempt at

@@ -33,6 +33,7 @@ def render_markdown(results: list[dict[str, Any]]) -> str:
     """Return the benchmark report as a single Markdown string."""
     if not results:
         return _empty_report_markdown()
+    results = metrics.disambiguate_reproducers(results)
 
     grouped = metrics.by_mode(results)
     modes = list(grouped)
@@ -95,6 +96,7 @@ def render_html(results: list[dict[str, Any]]) -> str:
     is a build artefact you open in a browser; it's not the user-facing
     dashboard.
     """
+    results = metrics.disambiguate_reproducers(results)
     headline = _headline_counts(results) if results else None
     multi = (
         len(metrics.modes_present(results)) > 1 or len(metrics.reproducers_present(results)) > 1
