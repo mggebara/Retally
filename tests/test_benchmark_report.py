@@ -671,3 +671,100 @@ def test_multi_reproducer_html_headline_per_reproducer():
     assert "<strong>pipeline</strong> · Catalog size: <strong>2</strong> papers." in html
     assert "Catalog size: <strong>4</strong>" not in html
     assert html.index("<strong>claude-code</strong> ·") < html.index("<strong>pipeline</strong> ·")
+
+
+# ── one reproducer on two models (ROADMAP 3.5) ───────────────────────────
+
+
+def _pipeline_row_on(model: str, entry_id: str = "paper-a", mode: str = "seeded", passed: int = 1):
+    details = [
+        {
+            "description": f"c{i}",
+            "claim_type": "coefficient",
+            "claimed": 1.0,
+            "reproduced": 1.0,
+            "tolerance": 0.02,
+            "rel_err": 0.0,
+            "passed": i < passed,
+        }
+        for i in range(2)
+    ]
+    usage = None
+    if model:
+        usage = {
+            "by_model": {model: {"input_tokens": 10, "output_tokens": 5, "api_calls": 1}},
+            "api_calls": 1,
+            "estimated_usd": 0.001,
+        }
+    return {
+        "entry_id": entry_id,
+        "mode": mode,
+        "reproducer": "pipeline",
+        "skipped": False,
+        "retally_ran": True,
+        "agrees_with_paper": passed == 2,
+        "n_claims_in_catalog": 2,
+        "n_claims_with_paper_match": passed,
+        "claim_details": details,
+        "split": "holdout",
+        "usage": usage,
+    }
+
+
+def test_model_of_reads_usage_by_model():
+    from benchmark import metrics
+
+    assert metrics.model_of(_pipeline_row_on("claude-opus-5-5")) == "claude-opus-5-5"
+    assert metrics.model_of(_pipeline_row_on("")) is None
+    assert metrics.model_of({"entry_id": "x", "mode": "seeded"}) is None
+    two = _pipeline_row_on("claude-opus-5-5")
+    two["usage"]["by_model"]["claude-sonnet-4-6"] = {"input_tokens": 1, "output_tokens": 1, "api_calls": 1}
+    assert metrics.model_of(two) == "claude-opus-5-5 + claude-sonnet-4-6"
+
+
+def test_disambiguate_reproducers_only_when_one_reproducer_spans_models():
+    from benchmark import metrics
+
+    single = [
+        _pipeline_row_on("claude-opus-4-7"),
+        _pipeline_row_on("claude-opus-4-7", mode="independent"),
+        _pipeline_row_on("", entry_id="paper-b"),  # a skip or a pre-cost-accounting row
+    ]
+    assert metrics.disambiguate_reproducers(single) == single
+    assert metrics.reproducers_present(metrics.disambiguate_reproducers(single)) == ["pipeline"]
+
+    mixed = [
+        _pipeline_row_on("claude-opus-4-7"),
+        _pipeline_row_on("claude-opus-5-5", passed=2),
+        _pipeline_row_on("", entry_id="paper-b"),
+    ]
+    out = metrics.disambiguate_reproducers(mixed)
+    assert [r["reproducer"] for r in out] == [
+        "pipeline (claude-opus-4-7)",
+        "pipeline (claude-opus-5-5)",
+        "pipeline (model unknown)",
+    ]
+    assert all(r["reproducer"] == "pipeline" for r in mixed)  # input untouched
+
+
+def test_report_keeps_the_same_reproducer_on_two_models_apart():
+    from benchmark import metrics
+
+    rows = [
+        _pipeline_row_on("claude-opus-4-7", mode="seeded", passed=1),
+        _pipeline_row_on("claude-opus-4-7", mode="independent", passed=0),
+        _pipeline_row_on("claude-opus-5-5", mode="seeded", passed=2),
+        _pipeline_row_on("claude-opus-5-5", mode="independent", passed=2),
+    ]
+    md = report.render_markdown(rows)
+    assert "Reproducer: **pipeline (claude-opus-4-7)**, **pipeline (claude-opus-5-5)**." in md
+    assert "- pipeline (claude-opus-4-7) · Seeded: **1 / 2** claims passed" in md
+    assert "- pipeline (claude-opus-5-5) · Seeded: **2 / 2** claims passed" in md
+    assert "**3 / 4**" not in md  # never pooled across the two models
+    gaps = metrics.mode_gaps(metrics.disambiguate_reproducers(rows))
+    assert [(g.reproducer, g.seeded_passed, g.independent_passed) for g in gaps] == [
+        ("pipeline (claude-opus-4-7)", 1, 0),
+        ("pipeline (claude-opus-5-5)", 2, 2),
+    ]
+    html = report.render_html(rows)
+    assert "pipeline (claude-opus-5-5)" in html
