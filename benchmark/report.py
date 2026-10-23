@@ -202,6 +202,7 @@ def _headline_counts(results: list[dict[str, Any]]) -> dict[str, int]:
         "no_api_key": sum(1 for s in skip_reasons if s == "no_api_key"),
         "reproducer_init_failed": sum(1 for s in skip_reasons if s == "reproducer_init_failed"),
         "reproduction_missing": sum(1 for s in skip_reasons if s == "reproduction_missing"),
+        "llm_answer_pending": sum(1 for s in skip_reasons if s == "llm_answer_pending"),
     }
 
 
@@ -234,12 +235,15 @@ def _transient_lines(results: list[dict[str, Any]]) -> list[str]:
 
 
 def _init_failed_suffix(headline: dict[str, int]) -> str:
-    """``, reproducer_init_failed=N`` / ``, reproduction_missing=N`` when any run hit them; empty otherwise.
+    """``, reproducer_init_failed=N`` / ``, reproduction_missing=N`` / ``, llm_answer_pending=N``
+    when any run hit them; empty otherwise.
 
     Omitted at zero so reports of runs without them stay byte-stable.
     """
     parts = [
-        f", {k}={headline[k]}" for k in ("reproducer_init_failed", "reproduction_missing") if headline[k]
+        f", {k}={headline[k]}"
+        for k in ("reproducer_init_failed", "reproduction_missing", "llm_answer_pending")
+        if headline[k]
     ]
     return "".join(parts)
 

@@ -81,6 +81,7 @@ from benchmark.reproducer import (
     ReproductionMissingError,
 )
 from retally.llm import DEFAULT_MODEL
+from retally.llm_oracle import PENDING_DIRNAME, OracleAnswerPending
 
 __all__ = [
     "BenchmarkResult",
@@ -139,7 +140,11 @@ class SkipReason(Enum):
     a reproducer that scores work done elsewhere (``claude-code`` reads a
     Claude Code session's files) when that (entry, mode) cell has not been
     run: ``reproduce`` raised ``ReproductionMissingError``, whose message
-    (where it looked) goes in ``error``.
+    (where it looked) goes in ``error``.  ``LLM_ANSWER_PENDING`` covers a
+    pipeline run in LLM-oracle mode (``--llm-oracle LABEL``) that reached a
+    Claude call with no installed answer: the client wrote the prompt under
+    ``benchmark/.cache/llm-oracle/<label>/pending/`` and raised
+    ``OracleAnswerPending``, whose message goes in ``error``.
     """
 
     OUT_OF_SCOPE = "out_of_scope"
@@ -147,6 +152,7 @@ class SkipReason(Enum):
     NO_API_KEY = "no_api_key"
     REPRODUCER_INIT_FAILED = "reproducer_init_failed"
     REPRODUCTION_MISSING = "reproduction_missing"
+    LLM_ANSWER_PENDING = "llm_answer_pending"
 
 
 @dataclass
@@ -480,7 +486,28 @@ def main(argv: list[str] | None = None) -> int:
             "different models never collide.  Ignored by other reproducers."
         ),
     )
+    parser.add_argument(
+        "--llm-oracle",
+        metavar="LABEL",
+        default=None,
+        help=(
+            "Run the pipeline with its Claude calls answered out of band instead of by the API "
+            "(sets $RETALLY_LLM_ORACLE).  Unanswered prompts are written under "
+            "benchmark/.cache/llm-oracle/<LABEL>/pending/ and the cell is skipped as llm_answer_pending; "
+            "install answers with `python -m benchmark.oracle` and re-run.  LABEL is the pipeline's model "
+            "dimension (result-cache key, report label), so it cannot be combined with --model."
+        ),
+    )
     args = parser.parse_args(argv)
+    if args.llm_oracle:
+        os.environ[LLM_ORACLE_ENV] = args.llm_oracle
+    if args.model and oracle_label():
+        print(
+            "--model cannot be combined with the LLM oracle (--llm-oracle / $RETALLY_LLM_ORACLE): "
+            "the oracle label is the pipeline's model dimension.",
+            file=sys.stderr,
+        )
+        return 2
     if args.model:
         os.environ[PIPELINE_MODEL_ENV] = args.model
     modes = {"both": BOTH_MODES, "all": MODES}.get(args.mode, (args.mode,))
@@ -538,7 +565,21 @@ def main(argv: list[str] | None = None) -> int:
     notice = transient_notice(results)
     if notice:
         print(notice)
+    label = oracle_label()
+    if label:
+        print(oracle_notice(label, results))
     return 0
+
+
+def oracle_notice(label: str, results: list[BenchmarkResult]) -> str:
+    """The end-of-run summary in LLM-oracle mode: cells waiting and prompts pending on disk."""
+    pending_dir = CACHE_DIR / "llm-oracle" / label / PENDING_DIRNAME
+    n_prompts = sum(1 for p in pending_dir.iterdir() if p.is_dir()) if pending_dir.is_dir() else 0
+    n_cells = sum(1 for r in results if r.skip_reason is SkipReason.LLM_ANSWER_PENDING)
+    return (
+        f"LLM oracle '{label}': {n_cells} cell(s) waiting on an answer; {n_prompts} prompt(s) pending "
+        f"(list with: uv run python -m benchmark.oracle pending --label {label})."
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -702,6 +743,19 @@ def _execute_with_reproducer(
             error=str(exc),
         )
         return missing, {}
+    except OracleAnswerPending as exc:
+        # LLM-oracle mode reached a Claude call nobody has answered yet: the
+        # prompt is on disk; a skip (never cached), so a re-run after the
+        # answer is installed replays it and moves on.
+        logger.warning("LLM answer pending for %s (%s): %s", entry.id, mode, exc)
+        pending = BenchmarkResult(
+            entry_id=entry.id,
+            mode=mode,
+            skipped=True,
+            skip_reason=SkipReason.LLM_ANSWER_PENDING,
+            error=str(exc),
+        )
+        return pending, {}
     except Exception as exc:
         logger.warning("Reproducer raised on %s: %s", entry.id, exc)
         kind = _transient_error_kind(exc)
@@ -1357,9 +1411,23 @@ PIPELINE_MODEL_ENV = "RETALLY_PIPELINE_MODEL"
 ``--model`` sets it; unset means ``retally.llm.DEFAULT_MODEL``."""
 
 
+LLM_ORACLE_ENV = "RETALLY_LLM_ORACLE"
+"""Environment variable that turns on LLM-oracle mode; its value is the oracle label
+(e.g. ``desktop-opus``).  ``--llm-oracle LABEL`` sets it.  See ``retally.llm_oracle``."""
+
+
+def oracle_label() -> str | None:
+    """The LLM-oracle label when oracle mode is on (``$RETALLY_LLM_ORACLE`` non-empty), else None."""
+    return os.environ.get(LLM_ORACLE_ENV) or None
+
+
 def pipeline_model() -> str:
-    """The Claude model the pipeline reproducer runs (and is cache-keyed) on."""
-    return os.environ.get(PIPELINE_MODEL_ENV) or DEFAULT_MODEL
+    """The model the pipeline reproducer runs (and is cache-keyed) on.
+
+    In LLM-oracle mode this is the oracle label, so oracle rows never share
+    a result-cache key with rows scored on a real Claude model.
+    """
+    return oracle_label() or os.environ.get(PIPELINE_MODEL_ENV) or DEFAULT_MODEL
 
 
 def _default_pipeline_factory():
@@ -1373,7 +1441,22 @@ def _default_pipeline_factory():
     the paper and prompts haven't changed.  Set ``RETALLY_LLM_CACHE=0``
     for a fully live run (e.g. to measure sampling variance), or
     ``rm -rf benchmark/.cache/llm`` to start the cache cold.
+
+    In LLM-oracle mode (``$RETALLY_LLM_ORACLE``) no API key is needed: the
+    pipeline gets an ``OracleLLMClient`` rooted at
+    ``benchmark/.cache/llm-oracle/<label>/`` and no LLM call cache at all,
+    so an oracle answer can never be written to (or served from)
+    ``benchmark/.cache/llm/``.  The requests still name
+    ``retally.llm.DEFAULT_MODEL``, so they are byte-identical to what a
+    real run sends — the answering agent sees exactly the pipeline's prompts.
     """
+    label = oracle_label()
+    if label:
+        from retally.llm_oracle import OracleLLMClient
+        from retally.pipeline import ValidationPipeline
+
+        client = OracleLLMClient(CACHE_DIR / "llm-oracle" / label, label)
+        return ValidationPipeline.default(client=client, llm_cache_dir=None, model=DEFAULT_MODEL)
     if not os.environ.get("ANTHROPIC_API_KEY"):
         raise MissingAPIKeyError("ANTHROPIC_API_KEY is not set")
     from retally.pipeline import ValidationPipeline
