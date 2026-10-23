@@ -715,6 +715,7 @@ class ValidationPipeline:
         docker_cpus: float = 1.0,
         llm_cache_dir: Path | None = None,
         model: str = DEFAULT_MODEL,
+        client: Any | None = None,
     ) -> "ValidationPipeline":
         """Create a pipeline with default components.
 
@@ -762,17 +763,27 @@ class ValidationPipeline:
             Claude model for extraction, generation and refinement
             (``retally.llm.DEFAULT_MODEL``, Claude Opus 5.5, by default).
             Effort levels stay at the components' defaults.
+        client:
+            An object with the anthropic client's ``messages.create``
+            surface to use instead of constructing ``anthropic.Anthropic``
+            (e.g. ``retally.llm_oracle.OracleLLMClient``).  An injected
+            client manages its own replay, so it is **not** wrapped in
+            ``CachingLLMClient`` even when ``llm_cache_dir`` is set — its
+            answers must never land in the real LLM cache.  It is still
+            wrapped in ``UsageTrackingClient``.  None (the default) builds
+            the anthropic client from ``anthropic_api_key``.
         """
-        import anthropic
-
         # Duck-typed: every component only calls ``client.messages.create``
         # and reads the response's text block (``retally.llm.response_text``),
         # which the caching wrapper preserves exactly.
-        client: Any = anthropic.Anthropic(api_key=anthropic_api_key)
-        if llm_cache_dir is not None:
-            from retally.llm_cache import CachingLLMClient
+        if client is None:
+            import anthropic
 
-            client = CachingLLMClient(client, llm_cache_dir)
+            client = anthropic.Anthropic(api_key=anthropic_api_key)
+            if llm_cache_dir is not None:
+                from retally.llm_cache import CachingLLMClient
+
+                client = CachingLLMClient(client, llm_cache_dir)
         # Outermost, so it sees every call: live ones add response.usage
         # tokens; LLM-cache replays are counted as free hits.
         client = UsageTrackingClient(client)

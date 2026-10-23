@@ -1507,6 +1507,15 @@ pool.
   window-file choice and Montero blind's data-file choice — are the
   concrete targets if pipeline tuning is ever unfrozen (one attempt at
   each is a documented alternative the agent tried).
+- (c′) Free: the **LLM oracle** (`--llm-oracle desktop-opus`,
+  `python -m benchmark.oracle`; benchmark/README.md "Running the
+  pipeline on plan usage") is the credit-free route for the remaining
+  pipeline rows in (a): the pipeline's own prompts and loop, each Claude
+  call answered by a desktop Opus subagent with no tools, answers kept
+  apart from the real LLM cache, rows labelled `pipeline (desktop-opus)`.
+  It measures the harness with a different answerer (desktop thinking
+  defaults, not the API's `output_config`), so its rows sit beside the
+  API rows rather than replacing them.
 
 ---
 

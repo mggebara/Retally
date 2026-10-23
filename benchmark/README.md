@@ -251,6 +251,7 @@ A catalog entry can be cleanly skipped:
 | `no_api_key` | `ANTHROPIC_API_KEY` not in env (the reproducer factory raised `MissingAPIKeyError`) |
 | `reproducer_init_failed` | The reproducer factory raised anything else (e.g. Docker not running, sandbox image not built); the message is in `error` |
 | `reproduction_missing` | The reproducer scores work done elsewhere and this (entry, mode) cell has not been done: `reproduce` raised `ReproductionMissingError` (e.g. `--reproducer claude-code` with no `benchmark/reproductions/<entry>/<mode>/<run_id>/reproduction.json`); where it looked is in `error` |
+| `llm_answer_pending` | LLM-oracle mode (`--llm-oracle LABEL`) reached a Claude call with no installed answer: the prompt was written under `benchmark/.cache/llm-oracle/<label>/pending/<key>/` and the client raised `OracleAnswerPending`; the message is in `error` (see "Running the pipeline on plan usage" below) |
 
 Skips are never written to the result cache.  Neither are **transient
 errors**: a reproducer that raises because of a download / network / HTTP
@@ -294,7 +295,8 @@ independent, as before blind existed; `all` adds blind), `--only ENTRY_ID` (repe
 `--reproducer NAME` (default `pipeline`; see below) and `--model MODEL_ID`
 (the pipeline's Claude model; default `retally.llm.DEFAULT_MODEL`, Claude
 Opus 5.5, or `$RETALLY_PIPELINE_MODEL`; ignored by other reproducers)
-combine.  For each
+combine.  `--llm-oracle LABEL` replaces the API with out-of-band answers
+(see "Running the pipeline on plan usage" below) and excludes `--model`.  For each
 catalog entry and mode the runner emits one row in `results.json`,
 carrying `"mode"` and `"reproducer"` fields (rows from files that
 predate them are read as `seeded` / `pipeline`).
@@ -380,6 +382,76 @@ extractor found to `benchmark/results/extracted_claims/<id>.json` in a
 shape directly pasteable into the YAML's `original_claims`; review it
 (drop junk claims, fix descriptions), paste, and every later run is
 extraction-free and deterministic.
+
+## Running the pipeline on plan usage (the LLM oracle)
+
+The pipeline calls the Messages API, so every pipeline row costs API
+credit.  The **LLM oracle** runs the same harness — the pipeline's exact
+prompts, its generate → execute → refine loop, the harness's scoring —
+with each Claude call answered out of band, in practice by a Claude Code
+subagent on plan usage.  The runner never calls `claude -p` or any CLI;
+the answering happens outside it, between runs.
+
+How it works: `--llm-oracle LABEL` (or `RETALLY_LLM_ORACLE=LABEL`) gives
+the pipeline a `retally.llm_oracle.OracleLLMClient` instead of the
+anthropic client.  It keys each request exactly as the LLM cache does
+(`retally.llm_cache._request_key`).  An installed answer
+(`benchmark/.cache/llm-oracle/<label>/answers/<key>.json`) replays as the
+response; a miss writes `pending/<key>/request.json`, `prompt.md` (the
+single user message, verbatim) and `meta.json` (`kind` is `extraction`
+or `generation`, a heuristic from `max_tokens` and effort, for the human
+only), and the cell is skipped as `llm_answer_pending`.  Each re-run gets
+one call further.
+
+```bash
+uv run python -m benchmark.runner --llm-oracle desktop-opus --only <entry> --mode seeded
+uv run python -m benchmark.oracle pending            # key, kind, chars, created_at, answer.md?
+uv run python -m benchmark.oracle show <key>         # path of prompt.md (and request.json)
+# A Claude Code subagent reads prompt.md and writes its reply, verbatim, to answer.md beside it.
+uv run python -m benchmark.oracle install            # installs every answer.md (or: answer <key> FILE)
+uv run python -m benchmark.oracle status             # answered / pending counts
+# ... re-run the same runner command until no cell is llm_answer_pending.
+```
+
+The answering subagent is given `prompt.md` and nothing else, and told to
+use no tools and reply with exactly what the pipeline asked for (the
+pipeline's own parsers strip code fences and read the JSON, so nothing is
+stripped on install).  `--label` on the driver defaults to
+`$RETALLY_LLM_ORACLE` or `desktop-opus`; `--by` (default
+`desktop-opus-subagent`) is recorded as `answered_by`.
+
+Guarantees:
+
+- **Separate cache.**  Oracle answers live only under
+  `benchmark/.cache/llm-oracle/<label>/`.  In oracle mode the pipeline
+  gets no `CachingLLMClient`, so nothing is read from or written to
+  `benchmark/.cache/llm/`, and a subagent's answer can never be served
+  to a real `claude-opus-5-5` run.
+- **Separate result-cache key.**  `pipeline_model()` returns the label
+  in oracle mode, so oracle rows never share a result-cache key with
+  rows scored on a real model; `--model` together with the oracle is a
+  usage error (the label *is* the model dimension).
+- **Labelled rows.**  A replayed answer is recorded as a zero-token call
+  under the label, so the row's `usage.by_model` names it; in a report
+  that also holds API pipeline rows it renders as `pipeline
+  (desktop-opus)`, never pooled with them, and its cost is $0.00 with
+  the label listed as not priced.
+- **Same requests.**  The requests still name `claude-opus-5-5` and carry
+  the API run's `max_tokens` / `output_config`, so they are byte-identical
+  to a real run's.
+
+Caveats:
+
+- The subagent thinks at the desktop session's defaults, not at the
+  `output_config.effort` the request names, and `max_tokens` is not
+  enforced.  An oracle row measures the harness with a different
+  answerer, not the API pipeline.
+- Isolation is by instruction, as for the claude-code reproducer: the
+  answering agent must be told to use no tools and read nothing but the
+  prompt.  Nothing enforces it.
+- Extraction prompts do not depend on the reproduction mode, so one
+  answer serves seeded, independent and blind; generation prompts differ
+  per mode.
 
 ## Run artifacts: what the model actually wrote
 
