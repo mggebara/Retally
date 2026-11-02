@@ -1,8 +1,8 @@
 # Retally benchmark report
 
-Catalog size: **20** papers, each run in 3 reproduction modes.  
-Runs (paper × mode): **129**.  
-Executed runs: **129**.  
+Catalog size: **26** papers, each run in 3 reproduction modes.  
+Runs (paper × mode): **165**.  
+Executed runs: **165**.  
 Skipped runs: **0** (out_of_scope=0, language_unsupported=0, no_api_key=0).  
 
 Reproduction modes:
@@ -15,21 +15,21 @@ Reproducer: **claude-code**, **pipeline (claude-opus-4-7)**, **pipeline (claude-
 
 ## Verdicts — seeded · claude-code (among executed papers)
 
-- Pipeline completed without crashing: **17 / 17**
-- Agrees with the paper's stated values: **16 / 17**
-- Agrees with the I4R replicator: **13 / 16** (of papers where I4R published a value to compare against)
+- Pipeline completed without crashing: **23 / 23**
+- Agrees with the paper's stated values: **22 / 23**
+- Agrees with the I4R replicator: **17 / 22** (of papers where I4R published a value to compare against)
 
 ## Verdicts — independent · claude-code (among executed papers)
 
-- Pipeline completed without crashing: **17 / 17**
-- Agrees with the paper's stated values: **13 / 17**
-- Agrees with the I4R replicator: **12 / 16** (of papers where I4R published a value to compare against)
+- Pipeline completed without crashing: **23 / 23**
+- Agrees with the paper's stated values: **18 / 23**
+- Agrees with the I4R replicator: **16 / 22** (of papers where I4R published a value to compare against)
 
 ## Verdicts — blind · claude-code (among executed papers)
 
-- Pipeline completed without crashing: **17 / 17**
-- Agrees with the paper's stated values: **11 / 17**
-- Agrees with the I4R replicator: **10 / 16** (of papers where I4R published a value to compare against)
+- Pipeline completed without crashing: **23 / 23**
+- Agrees with the paper's stated values: **15 / 23**
+- Agrees with the I4R replicator: **14 / 22** (of papers where I4R published a value to compare against)
 
 ## Verdicts — seeded · pipeline (claude-opus-4-7) (among executed papers)
 
@@ -69,31 +69,31 @@ Reproducer: **claude-code**, **pipeline (claude-opus-4-7)**, **pipeline (claude-
 
 ## Verdicts — seeded · pipeline (desktop-opus) (among executed papers)
 
-- Pipeline completed without crashing: **13 / 13**
-- Agrees with the paper's stated values: **11 / 13**
-- Agrees with the I4R replicator: **8 / 12** (of papers where I4R published a value to compare against)
+- Pipeline completed without crashing: **19 / 19**
+- Agrees with the paper's stated values: **16 / 19**
+- Agrees with the I4R replicator: **12 / 18** (of papers where I4R published a value to compare against)
 
 ## Verdicts — independent · pipeline (desktop-opus) (among executed papers)
 
-- Pipeline completed without crashing: **13 / 13**
-- Agrees with the paper's stated values: **7 / 13**
-- Agrees with the I4R replicator: **7 / 12** (of papers where I4R published a value to compare against)
+- Pipeline completed without crashing: **19 / 19**
+- Agrees with the paper's stated values: **11 / 19**
+- Agrees with the I4R replicator: **10 / 18** (of papers where I4R published a value to compare against)
 
 ## Verdicts — blind · pipeline (desktop-opus) (among executed papers)
 
-- Pipeline completed without crashing: **13 / 13**
-- Agrees with the paper's stated values: **3 / 13**
-- Agrees with the I4R replicator: **4 / 12** (of papers where I4R published a value to compare against)
+- Pipeline completed without crashing: **19 / 19**
+- Agrees with the paper's stated values: **4 / 19**
+- Agrees with the I4R replicator: **5 / 18** (of papers where I4R published a value to compare against)
 
 ## Seeded vs independent vs blind
 
 Claims passing with the authors' scripts in the prompt (seeded) versus without them (independent), per paper executed in both modes.  *Lost* claims pass seeded but not independent — what the scripts were carrying.
 *Blind* withholds the claim values too and runs no claim-targeted refinement: its pass counts are the only ones free of target-guided search.
 
-- claude-code · Seeded: **200 / 201** claims passed (first scored 194 / 201)
-- claude-code · Independent: **194 / 201** claims passed (first scored 192 / 201)
-- claude-code · Blind: **180 / 201** claims passed (first scored 173 / 201)
-- claude-code · Lost without the scripts: **6**; gained: **0**
+- claude-code · Seeded: **277 / 278** claims passed (first scored 267 / 278)
+- claude-code · Independent: **267 / 278** claims passed (first scored 252 / 278)
+- claude-code · Blind: **250 / 278** claims passed (first scored 243 / 278)
+- claude-code · Lost without the scripts: **10**; gained: **0**
 - pipeline (claude-opus-4-7) · Seeded: **85 / 114** claims passed (first scored 75 / 114)
 - pipeline (claude-opus-4-7) · Independent: **64 / 114** claims passed (first scored 44 / 114)
 - pipeline (claude-opus-4-7) · Blind: **24 / 79** claims passed (on 7 of 10 papers) (first scored 24 / 79)
@@ -102,10 +102,10 @@ Claims passing with the authors' scripts in the prompt (seeded) versus without t
 - pipeline (claude-opus-5-5) · Independent: **33 / 44** claims passed (first scored 21 / 44)
 - pipeline (claude-opus-5-5) · Blind: **20 / 44** claims passed (first scored 20 / 44)
 - pipeline (claude-opus-5-5) · Lost without the scripts: **11**; gained: **0**
-- pipeline (desktop-opus) · Seeded: **150 / 157** claims passed (first scored 150 / 157)
-- pipeline (desktop-opus) · Independent: **136 / 157** claims passed (first scored 100 / 157)
-- pipeline (desktop-opus) · Blind: **98 / 157** claims passed (first scored 98 / 157)
-- pipeline (desktop-opus) · Lost without the scripts: **21**; gained: **7**
+- pipeline (desktop-opus) · Seeded: **219 / 234** claims passed (first scored 219 / 234)
+- pipeline (desktop-opus) · Independent: **202 / 234** claims passed (first scored 147 / 234)
+- pipeline (desktop-opus) · Blind: **150 / 234** claims passed (first scored 150 / 234)
+- pipeline (desktop-opus) · Lost without the scripts: **32**; gained: **15**
 
 *First scored* is what each mode's first script that printed results passed: after any crash repairs, before the refinement loop showed the model which claims were off target.
 
@@ -129,9 +129,13 @@ Claims passing with the authors' scripts in the prompt (seeded) versus without t
 | `brouwer-2022-teaching-norms` | holdout | pipeline (desktop-opus) | 12/12 | 12/12 | 12/12 | 12/12 / 12/12 / 12/12 | — |
 | `carrera-2022-who-chooses-commitment` | holdout | claude-code | 11/11 | 11/11 | 11/11 | 11/11 / 11/11 / 11/11 | — |
 | `carrera-2022-who-chooses-commitment` | holdout | pipeline (desktop-opus) | 11/11 | 6/11 | 0/11 | 11/11 / 4/11 / 0/11 | `bcp_basic_info_treatment_col1`, `bcp_enhanced_info_treatment_col1`, `bcp_regression_observations`, `takeup_more_enhanced_info_treatment_col1`, `takeup_more_regression_observations` |
+| `dancygier-2022-hate-crimes-gender-imbalances` | holdout | claude-code | 13/13 | 13/13 | 13/13 | 13/13 / 13/13 / 13/13 | — |
+| `dancygier-2022-hate-crimes-gender-imbalances` | holdout | pipeline (desktop-opus) | 13/13 | 13/13 | 13/13 | 13/13 / 11/13 / 13/13 | — |
 | `dertwinkel-kalt-2022-concentration-bias` | holdout | claude-code | 13/13 | 13/13 | 13/13 | 13/13 / 12/13 / 13/13 | — |
 | `dertwinkel-kalt-2022-concentration-bias` | holdout | pipeline (desktop-opus) | 13/13 | 13/13 | 12/13 | 13/13 / 13/13 / 12/13 | — |
 | `dincecco-2022-india-warfare` | dev | pipeline (claude-opus-4-7) | 13/13 | 11/13 | — | 13/13 / 11/13 / —/— | `warfare_iv_se_full_controls`, `warfare_se_full_controls` |
+| `douenne-2022-yellow-vests-carbon-tax` | holdout | claude-code | 13/13 | 13/13 | 12/13 | 13/13 / 12/13 / 12/13 | — |
+| `douenne-2022-yellow-vests-carbon-tax` | holdout | pipeline (desktop-opus) | 5/13 | 13/13 | 12/13 | 5/13 / 12/13 / 12/13 | — |
 | `forsythe-2022-young-workers-recessions` | holdout | claude-code | 13/13 | 12/13 | 11/13 | 13/13 / 12/13 / 11/13 | `young_x_unemp_rate_nilf` |
 | `forsythe-2022-young-workers-recessions` | holdout | pipeline (desktop-opus) | 13/13 | 11/13 | 10/13 | 13/13 / 10/13 / 10/13 | `n_obs_full_sample`, `young_x_unemp_rate_nilf` |
 | `gagliarducci-2022-gender-cooperation-congress` | holdout | claude-code | 13/13 | 13/13 | 7/13 | 11/13 / 13/13 / 7/13 | — |
@@ -142,8 +146,14 @@ Claims passing with the authors' scripts in the prompt (seeded) versus without t
 | `hanlon-2022-aircraft-ip-spillovers` | holdout | claude-code | 12/12 | 12/12 | 12/12 | 12/12 / 12/12 / 8/12 | — |
 | `hanlon-2022-aircraft-ip-spillovers` | holdout | pipeline (claude-opus-4-7) | 12/12 | 10/12 | 12/12 | 12/12 / 10/12 / 12/12 | `airframe_maxspeed_trend_after_1926_us`, `airframe_maxspeed_trend_before_1926_us` |
 | `hanlon-2022-aircraft-ip-spillovers` | holdout | pipeline (desktop-opus) | 12/12 | 12/12 | 12/12 | 12/12 / 12/12 / 12/12 | — |
+| `hanushek-2022-patience-risk-human-capital` | holdout | claude-code | 13/13 | 13/13 | 13/13 | 9/13 / 2/13 / 13/13 | — |
+| `hanushek-2022-patience-risk-human-capital` | holdout | pipeline (desktop-opus) | 13/13 | 9/13 | 12/13 | 13/13 / 9/13 / 12/13 | `table2_col1_patience`, `table2_col3_patience`, `table2_col4_patience`, `table2_col4_risk_taking` |
+| `hollyer-2022-parties-as-disciplinarians` | holdout | claude-code | 13/13 | 13/13 | 13/13 | 13/13 / 13/13 / 13/13 | — |
+| `hollyer-2022-parties-as-disciplinarians` | holdout | pipeline (desktop-opus) | 13/13 | 13/13 | 10/13 | 13/13 / 11/13 / 10/13 | — |
 | `holman-2022-theresa-may-rally` | holdout | claude-code | 11/11 | 10/11 | 6/11 | 11/11 / 10/11 / 6/11 | `n_obs_table4` |
 | `holman-2022-theresa-may-rally` | holdout | pipeline (desktop-opus) | 11/11 | 3/11 | 0/11 | 11/11 / 1/11 / 0/11 | `did_attack_like_may_table2`, `did_attack_x_time_like_may_table2`, `did_time_like_may_table2`, `did_time_may_best_pm_table2`, `intl_attack_table4`, `intl_attack_x_woman_exec_table4`, `n_obs_did_like_may_table2`, `n_obs_did_may_best_pm_table2` |
+| `labandeira-2022-electricity-pricing-reform` | holdout | claude-code | 12/12 | 8/12 | 6/12 | 12/12 / 7/12 / 6/12 | `reform_consumption_iv_col2`, `reform_consumption_ols_col1`, `reform_expenditure_fe_col7`, `reform_expenditure_fe_iv_col8` |
+| `labandeira-2022-electricity-pricing-reform` | holdout | pipeline (desktop-opus) | 12/12 | 5/12 | 4/12 | 12/12 / 3/12 / 4/12 | `n_households_table2`, `n_obs_table2`, `reform_consumption_fe_iv_col4`, `reform_consumption_iv_col2`, `reform_consumption_ols_col1`, `reform_expenditure_fe_col7`, `reform_expenditure_fe_iv_col8` |
 | `leeson-2022-hobo-economicus` | holdout | claude-code | 11/11 | 11/11 | 11/11 | 11/11 / 10/11 / 10/11 | — |
 | `leeson-2022-hobo-economicus` | holdout | pipeline (claude-opus-4-7) | 11/11 | 9/11 | 4/11 | 11/11 / 9/11 / 4/11 | `friendliness_full_sample`, `station_visits_five_station_subsample` |
 | `leeson-2022-hobo-economicus` | holdout | pipeline (claude-opus-5-5) | 11/11 | 11/11 | 8/11 | 11/11 / 8/11 / 8/11 | — |
@@ -152,15 +162,17 @@ Claims passing with the authors' scripts in the prompt (seeded) versus without t
 | `manekin-2022-effective-for-whom` | holdout | claude-code | 12/12 | 12/12 | 12/12 | 12/12 / 12/12 / 12/12 | — |
 | `manekin-2022-effective-for-whom` | holdout | pipeline (claude-opus-4-7) | 7/12 | 12/12 | 6/12 | 8/12 / 6/12 / 6/12 | — |
 | `manekin-2022-effective-for-whom` | holdout | pipeline (claude-opus-5-5) | 12/12 | 12/12 | 12/12 | 12/12 / 12/12 / 12/12 | — |
+| `mokyr-2022-wheels-of-change` | holdout | claude-code | 13/13 | 13/13 | 13/13 | 13/13 / 13/13 / 13/13 | — |
+| `mokyr-2022-wheels-of-change` | holdout | pipeline (desktop-opus) | 13/13 | 13/13 | 1/13 | 13/13 / 1/13 / 1/13 | — |
 | `montero-2022-cooperative-property-rights` | holdout | claude-code | 10/10 | 10/10 | 10/10 | 10/10 / 10/10 / 10/10 | — |
 | `montero-2022-cooperative-property-rights` | holdout | pipeline (claude-opus-4-7) | 10/10 | 3/10 | 0/10 | 0/10 / 2/10 / 0/10 | `earnings_iqr_above500_bw150`, `earnings_iqr_above500_bw300`, `earnings_level_above500_bw150`, `n_clusters_bw150`, `n_clusters_bw300`, `n_obs_earnings_iqr_bw150`, `n_obs_earnings_iqr_bw300` |
 | `montero-2022-cooperative-property-rights` | holdout | pipeline (claude-opus-5-5) | 10/10 | 10/10 | 0/10 | 10/10 / 1/10 / 0/10 | — |
 
 ## Closeness (per split and mode)
 
-- **claude-code · holdout · seeded**: 17 entries, 201 claims, matched 100%, passed 200/201, median rel err 0.1%, within tol/2x/5x: 100%/100%/100%
-- **claude-code · holdout · independent**: 17 entries, 201 claims, matched 100%, passed 194/201, median rel err 0.3%, within tol/2x/5x: 97%/97%/98%
-- **claude-code · holdout · blind**: 17 entries, 201 claims, matched 100%, passed 180/201, median rel err 0.6%, within tol/2x/5x: 90%/92%/95%
+- **claude-code · holdout · seeded**: 23 entries, 278 claims, matched 100%, passed 277/278, median rel err 0.1%, within tol/2x/5x: 100%/100%/100%
+- **claude-code · holdout · independent**: 23 entries, 278 claims, matched 100%, passed 267/278, median rel err 0.5%, within tol/2x/5x: 96%/98%/99%
+- **claude-code · holdout · blind**: 23 entries, 278 claims, matched 100%, passed 250/278, median rel err 0.7%, within tol/2x/5x: 90%/94%/96%
 - **pipeline (claude-opus-4-7) · dev · seeded**: 3 entries, 35 claims, matched 100%, passed 30/35, median rel err 0.2%, within tol/2x/5x: 86%/94%/97%
 - **pipeline (claude-opus-4-7) · holdout · seeded**: 7 entries, 79 claims, matched 99%, passed 55/79, median rel err 0.3%, within tol/2x/5x: 71%/71%/74%
 - **pipeline (claude-opus-4-7) · dev · independent**: 3 entries, 35 claims, matched 100%, passed 23/35, median rel err 6.0%, within tol/2x/5x: 66%/80%/86%
@@ -169,42 +181,42 @@ Claims passing with the authors' scripts in the prompt (seeded) versus without t
 - **pipeline (claude-opus-5-5) · holdout · seeded**: 4 entries, 44 claims, matched 100%, passed 44/44, median rel err 0.0%, within tol/2x/5x: 100%/100%/100%
 - **pipeline (claude-opus-5-5) · holdout · independent**: 4 entries, 44 claims, matched 100%, passed 33/44, median rel err 0.1%, within tol/2x/5x: 75%/75%/82%
 - **pipeline (claude-opus-5-5) · holdout · blind**: 4 entries, 44 claims, matched 95%, passed 20/44, median rel err 5.7%, within tol/2x/5x: 48%/48%/55%
-- **pipeline (desktop-opus) · holdout · seeded**: 13 entries, 157 claims, matched 100%, passed 150/157, median rel err 0.2%, within tol/2x/5x: 96%/96%/97%
-- **pipeline (desktop-opus) · holdout · independent**: 13 entries, 157 claims, matched 100%, passed 136/157, median rel err 1.9%, within tol/2x/5x: 87%/90%/94%
-- **pipeline (desktop-opus) · holdout · blind**: 13 entries, 157 claims, matched 86%, passed 98/157, median rel err 3.3%, within tol/2x/5x: 73%/81%/86%
+- **pipeline (desktop-opus) · holdout · seeded**: 19 entries, 234 claims, matched 100%, passed 219/234, median rel err 0.2%, within tol/2x/5x: 94%/94%/96%
+- **pipeline (desktop-opus) · holdout · independent**: 19 entries, 234 claims, matched 100%, passed 202/234, median rel err 1.9%, within tol/2x/5x: 86%/91%/95%
+- **pipeline (desktop-opus) · holdout · blind**: 19 entries, 234 claims, matched 91%, passed 150/234, median rel err 3.6%, within tol/2x/5x: 71%/80%/84%
 
 ## Per-component success — seeded · claude-code (executed papers only)
 
 | Component | Succeeded | Total | Rate |
 |---|---:|---:|---:|
-| parsed | 17 | 17 | 100% |
-| claims_extracted | 0 | 17 | 0% |
-| dataset_extracted | 0 | 17 | 0% |
-| dataset_downloaded | 17 | 17 | 100% |
-| code_generated | 17 | 17 | 100% |
-| code_executed | 17 | 17 | 100% |
+| parsed | 23 | 23 | 100% |
+| claims_extracted | 0 | 23 | 0% |
+| dataset_extracted | 0 | 23 | 0% |
+| dataset_downloaded | 23 | 23 | 100% |
+| code_generated | 23 | 23 | 100% |
+| code_executed | 23 | 23 | 100% |
 
 ## Per-component success — independent · claude-code (executed papers only)
 
 | Component | Succeeded | Total | Rate |
 |---|---:|---:|---:|
-| parsed | 17 | 17 | 100% |
-| claims_extracted | 0 | 17 | 0% |
-| dataset_extracted | 0 | 17 | 0% |
-| dataset_downloaded | 17 | 17 | 100% |
-| code_generated | 17 | 17 | 100% |
-| code_executed | 17 | 17 | 100% |
+| parsed | 23 | 23 | 100% |
+| claims_extracted | 0 | 23 | 0% |
+| dataset_extracted | 0 | 23 | 0% |
+| dataset_downloaded | 23 | 23 | 100% |
+| code_generated | 23 | 23 | 100% |
+| code_executed | 23 | 23 | 100% |
 
 ## Per-component success — blind · claude-code (executed papers only)
 
 | Component | Succeeded | Total | Rate |
 |---|---:|---:|---:|
-| parsed | 17 | 17 | 100% |
-| claims_extracted | 0 | 17 | 0% |
-| dataset_extracted | 0 | 17 | 0% |
-| dataset_downloaded | 17 | 17 | 100% |
-| code_generated | 17 | 17 | 100% |
-| code_executed | 17 | 17 | 100% |
+| parsed | 23 | 23 | 100% |
+| claims_extracted | 0 | 23 | 0% |
+| dataset_extracted | 0 | 23 | 0% |
+| dataset_downloaded | 23 | 23 | 100% |
+| code_generated | 23 | 23 | 100% |
+| code_executed | 23 | 23 | 100% |
 
 ## Per-component success — seeded · pipeline (claude-opus-4-7) (executed papers only)
 
@@ -276,38 +288,38 @@ Claims passing with the authors' scripts in the prompt (seeded) versus without t
 
 | Component | Succeeded | Total | Rate |
 |---|---:|---:|---:|
-| parsed | 13 | 13 | 100% |
-| claims_extracted | 13 | 13 | 100% |
-| dataset_extracted | 0 | 13 | 0% |
-| dataset_downloaded | 13 | 13 | 100% |
-| code_generated | 13 | 13 | 100% |
-| code_executed | 13 | 13 | 100% |
+| parsed | 19 | 19 | 100% |
+| claims_extracted | 19 | 19 | 100% |
+| dataset_extracted | 0 | 19 | 0% |
+| dataset_downloaded | 19 | 19 | 100% |
+| code_generated | 19 | 19 | 100% |
+| code_executed | 19 | 19 | 100% |
 
 ## Per-component success — independent · pipeline (desktop-opus) (executed papers only)
 
 | Component | Succeeded | Total | Rate |
 |---|---:|---:|---:|
-| parsed | 13 | 13 | 100% |
-| claims_extracted | 13 | 13 | 100% |
-| dataset_extracted | 0 | 13 | 0% |
-| dataset_downloaded | 13 | 13 | 100% |
-| code_generated | 13 | 13 | 100% |
-| code_executed | 13 | 13 | 100% |
+| parsed | 19 | 19 | 100% |
+| claims_extracted | 19 | 19 | 100% |
+| dataset_extracted | 0 | 19 | 0% |
+| dataset_downloaded | 19 | 19 | 100% |
+| code_generated | 19 | 19 | 100% |
+| code_executed | 19 | 19 | 100% |
 
 ## Per-component success — blind · pipeline (desktop-opus) (executed papers only)
 
 | Component | Succeeded | Total | Rate |
 |---|---:|---:|---:|
-| parsed | 13 | 13 | 100% |
-| claims_extracted | 13 | 13 | 100% |
-| dataset_extracted | 0 | 13 | 0% |
-| dataset_downloaded | 13 | 13 | 100% |
-| code_generated | 13 | 13 | 100% |
-| code_executed | 13 | 13 | 100% |
+| parsed | 19 | 19 | 100% |
+| claims_extracted | 19 | 19 | 100% |
+| dataset_extracted | 0 | 19 | 0% |
+| dataset_downloaded | 19 | 19 | 100% |
+| code_generated | 19 | 19 | 100% |
+| code_executed | 19 | 19 | 100% |
 
 ## Estimated API cost
 
-Total estimated spend this run: **$15.51** across 307 API calls (48 further calls served free by the LLM cache).  Estimates from the price table in `benchmark/pricing.py`.  Not priced (absent from the table): `desktop-opus`.
+Total estimated spend this run: **$15.51** across 383 API calls (48 further calls served free by the LLM cache).  Estimates from the price table in `benchmark/pricing.py`.  Not priced (absent from the table): `desktop-opus`.
 
 | ID | Mode | Reproducer | API calls | LLM-cache hits | Input tok | Output tok | Cache write tok | Cache read tok | Est. cost |
 |---|---|---|---:|---:|---:|---:|---:|---:|---:|
@@ -389,6 +401,24 @@ Total estimated spend this run: **$15.51** across 307 API calls (48 further call
 | `forsythe-2022-young-workers-recessions` | seeded | pipeline (desktop-opus) | 5 | 0 | 0 | 0 | 0 | 0 | $0.00 |
 | `forsythe-2022-young-workers-recessions` | independent | pipeline (desktop-opus) | 6 | 0 | 0 | 0 | 0 | 0 | $0.00 |
 | `forsythe-2022-young-workers-recessions` | blind | pipeline (desktop-opus) | 5 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `dancygier-2022-hate-crimes-gender-imbalances` | seeded | pipeline (desktop-opus) | 4 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `dancygier-2022-hate-crimes-gender-imbalances` | independent | pipeline (desktop-opus) | 5 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `dancygier-2022-hate-crimes-gender-imbalances` | blind | pipeline (desktop-opus) | 3 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `douenne-2022-yellow-vests-carbon-tax` | seeded | pipeline (desktop-opus) | 8 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `douenne-2022-yellow-vests-carbon-tax` | independent | pipeline (desktop-opus) | 5 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `douenne-2022-yellow-vests-carbon-tax` | blind | pipeline (desktop-opus) | 4 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `hanushek-2022-patience-risk-human-capital` | seeded | pipeline (desktop-opus) | 4 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `hanushek-2022-patience-risk-human-capital` | independent | pipeline (desktop-opus) | 4 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `hanushek-2022-patience-risk-human-capital` | blind | pipeline (desktop-opus) | 3 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `hollyer-2022-parties-as-disciplinarians` | seeded | pipeline (desktop-opus) | 4 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `hollyer-2022-parties-as-disciplinarians` | independent | pipeline (desktop-opus) | 4 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `hollyer-2022-parties-as-disciplinarians` | blind | pipeline (desktop-opus) | 3 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `labandeira-2022-electricity-pricing-reform` | seeded | pipeline (desktop-opus) | 5 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `labandeira-2022-electricity-pricing-reform` | independent | pipeline (desktop-opus) | 6 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `labandeira-2022-electricity-pricing-reform` | blind | pipeline (desktop-opus) | 3 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `mokyr-2022-wheels-of-change` | seeded | pipeline (desktop-opus) | 4 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `mokyr-2022-wheels-of-change` | independent | pipeline (desktop-opus) | 4 | 0 | 0 | 0 | 0 | 0 | $0.00 |
+| `mokyr-2022-wheels-of-change` | blind | pipeline (desktop-opus) | 3 | 0 | 0 | 0 | 0 | 0 | $0.00 |
 | `adams-2023-women-mps-affective-polarization` | seeded | claude-code | — | — | — | — | — | — | — |
 | `adams-2023-women-mps-affective-polarization` | independent | claude-code | — | — | — | — | — | — | — |
 | `adams-2023-women-mps-affective-polarization` | blind | claude-code | — | — | — | — | — | — | — |
@@ -440,6 +470,24 @@ Total estimated spend this run: **$15.51** across 307 API calls (48 further call
 | `brouwer-2022-teaching-norms` | blind | claude-code | — | — | — | — | — | — | — |
 | `carrera-2022-who-chooses-commitment` | blind | claude-code | — | — | — | — | — | — | — |
 | `forsythe-2022-young-workers-recessions` | blind | claude-code | — | — | — | — | — | — | — |
+| `dancygier-2022-hate-crimes-gender-imbalances` | seeded | claude-code | — | — | — | — | — | — | — |
+| `douenne-2022-yellow-vests-carbon-tax` | seeded | claude-code | — | — | — | — | — | — | — |
+| `hanushek-2022-patience-risk-human-capital` | seeded | claude-code | — | — | — | — | — | — | — |
+| `hollyer-2022-parties-as-disciplinarians` | seeded | claude-code | — | — | — | — | — | — | — |
+| `labandeira-2022-electricity-pricing-reform` | seeded | claude-code | — | — | — | — | — | — | — |
+| `mokyr-2022-wheels-of-change` | seeded | claude-code | — | — | — | — | — | — | — |
+| `dancygier-2022-hate-crimes-gender-imbalances` | independent | claude-code | — | — | — | — | — | — | — |
+| `douenne-2022-yellow-vests-carbon-tax` | independent | claude-code | — | — | — | — | — | — | — |
+| `hanushek-2022-patience-risk-human-capital` | independent | claude-code | — | — | — | — | — | — | — |
+| `hollyer-2022-parties-as-disciplinarians` | independent | claude-code | — | — | — | — | — | — | — |
+| `labandeira-2022-electricity-pricing-reform` | independent | claude-code | — | — | — | — | — | — | — |
+| `mokyr-2022-wheels-of-change` | independent | claude-code | — | — | — | — | — | — | — |
+| `dancygier-2022-hate-crimes-gender-imbalances` | blind | claude-code | — | — | — | — | — | — | — |
+| `douenne-2022-yellow-vests-carbon-tax` | blind | claude-code | — | — | — | — | — | — | — |
+| `hanushek-2022-patience-risk-human-capital` | blind | claude-code | — | — | — | — | — | — | — |
+| `hollyer-2022-parties-as-disciplinarians` | blind | claude-code | — | — | — | — | — | — | — |
+| `labandeira-2022-electricity-pricing-reform` | blind | claude-code | — | — | — | — | — | — | — |
+| `mokyr-2022-wheels-of-change` | blind | claude-code | — | — | — | — | — | — | — |
 
 ## Per-paper results
 
@@ -523,6 +571,24 @@ Total estimated spend this run: **$15.51** across 307 API calls (48 further call
 | `forsythe-2022-young-workers-recessions` | seeded | pipeline (desktop-opus) | ran | ✓ | ✓ | ✗ | 13 / 2 of 13 (first scored 13/13, 1 error + 0 claim refinement) |  |
 | `forsythe-2022-young-workers-recessions` | independent | pipeline (desktop-opus) | ran | ✓ | ✗ | ✗ | 11 / 9 of 13 (first scored 10/13, 1 error + 2 claim refinements) |  |
 | `forsythe-2022-young-workers-recessions` | blind | pipeline (desktop-opus) | ran | ✓ | ✗ | ✗ | 10 / 12 of 13 (first scored 10/13, 2 error + 0 claim refinements) |  |
+| `dancygier-2022-hate-crimes-gender-imbalances` | seeded | pipeline (desktop-opus) | ran | ✓ | ✓ | ✓ | 13 / 13 of 13 (first scored 13/13, 0 error + 0 claim refinements) |  |
+| `dancygier-2022-hate-crimes-gender-imbalances` | independent | pipeline (desktop-opus) | ran | ✓ | ✓ | ✓ | 13 / 13 of 13 (first scored 11/13, 0 error + 2 claim refinements) |  |
+| `dancygier-2022-hate-crimes-gender-imbalances` | blind | pipeline (desktop-opus) | ran | ✓ | ✓ | ✓ | 13 / 13 of 13 (first scored 13/13, 0 error + 0 claim refinements) |  |
+| `douenne-2022-yellow-vests-carbon-tax` | seeded | pipeline (desktop-opus) | ran | ✓ | ✗ | ✗ | 5 / 1 of 13 (first scored 5/13, 1 error + 3 claim refinements) |  |
+| `douenne-2022-yellow-vests-carbon-tax` | independent | pipeline (desktop-opus) | ran | ✓ | ✓ | ✗ | 13 / 7 of 13 (first scored 12/13, 1 error + 1 claim refinements) |  |
+| `douenne-2022-yellow-vests-carbon-tax` | blind | pipeline (desktop-opus) | ran | ✓ | ✗ | ✗ | 12 / 7 of 13 (first scored 12/13, 1 error + 0 claim refinement) |  |
+| `hanushek-2022-patience-risk-human-capital` | seeded | pipeline (desktop-opus) | ran | ✓ | ✓ | ✓ | 13 / 13 of 13 (first scored 13/13, 0 error + 0 claim refinements) |  |
+| `hanushek-2022-patience-risk-human-capital` | independent | pipeline (desktop-opus) | ran | ✓ | ✗ | ✗ | 9 / 9 of 13 (first scored 9/13, 0 error + 1 claim refinement) |  |
+| `hanushek-2022-patience-risk-human-capital` | blind | pipeline (desktop-opus) | ran | ✓ | ✗ | ✗ | 12 / 12 of 13 (first scored 12/13, 0 error + 0 claim refinements) |  |
+| `hollyer-2022-parties-as-disciplinarians` | seeded | pipeline (desktop-opus) | ran | ✓ | ✓ | ✗ | 13 / 9 of 13 (first scored 13/13, 0 error + 0 claim refinements) |  |
+| `hollyer-2022-parties-as-disciplinarians` | independent | pipeline (desktop-opus) | ran | ✓ | ✓ | ✓ | 13 / 13 of 13 (first scored 11/13, 0 error + 1 claim refinement) |  |
+| `hollyer-2022-parties-as-disciplinarians` | blind | pipeline (desktop-opus) | ran | ✓ | ✗ | ✗ | 10 / 9 of 13 (first scored 10/13, 0 error + 0 claim refinements) |  |
+| `labandeira-2022-electricity-pricing-reform` | seeded | pipeline (desktop-opus) | ran | ✓ | ✓ | ✓ | 12 / 12 of 12 (first scored 12/12, 1 error + 0 claim refinement) |  |
+| `labandeira-2022-electricity-pricing-reform` | independent | pipeline (desktop-opus) | ran | ✓ | ✗ | ✗ | 5 / 5 of 12 (first scored 3/12, 0 error + 3 claim refinements) |  |
+| `labandeira-2022-electricity-pricing-reform` | blind | pipeline (desktop-opus) | ran | ✓ | ✗ | ✗ | 4 / 4 of 12 (first scored 4/12, 0 error + 0 claim refinements) |  |
+| `mokyr-2022-wheels-of-change` | seeded | pipeline (desktop-opus) | ran | ✓ | ✓ | ✓ | 13 / 13 of 13 (first scored 13/13, 0 error + 0 claim refinements) |  |
+| `mokyr-2022-wheels-of-change` | independent | pipeline (desktop-opus) | ran | ✓ | ✓ | ✓ | 13 / 13 of 13 (first scored 1/13, 0 error + 1 claim refinement) |  |
+| `mokyr-2022-wheels-of-change` | blind | pipeline (desktop-opus) | ran | ✓ | ✗ | ✗ | 1 / 1 of 13 (first scored 1/13, 0 error + 0 claim refinements) |  |
 | `adams-2023-women-mps-affective-polarization` | seeded | claude-code | ran | ✓ | ✓ | ✓ | 11 / 11 of 11 (first scored 11/11, 0 error + 0 claim refinements) |  |
 | `adams-2023-women-mps-affective-polarization` | independent | claude-code | ran | ✓ | ✓ | ✓ | 11 / 11 of 11 (first scored 11/11, 0 error + 0 claim refinements) |  |
 | `adams-2023-women-mps-affective-polarization` | blind | claude-code | ran | ✓ | ✗ | ✗ | 8 / 8 of 11 (first scored 8/11, 0 error + 0 claim refinements) |  |
@@ -574,3 +640,21 @@ Total estimated spend this run: **$15.51** across 307 API calls (48 further call
 | `brouwer-2022-teaching-norms` | blind | claude-code | ran | ✓ | ✓ | ✓ | 12 / 12 of 12 (first scored 12/12, 0 error + 0 claim refinements) |  |
 | `carrera-2022-who-chooses-commitment` | blind | claude-code | ran | ✓ | ✓ | ✓ | 11 / 11 of 11 (first scored 11/11, 0 error + 0 claim refinements) |  |
 | `forsythe-2022-young-workers-recessions` | blind | claude-code | ran | ✓ | ✗ | ✗ | 11 / 12 of 13 (first scored 11/13, 0 error + 0 claim refinements) |  |
+| `dancygier-2022-hate-crimes-gender-imbalances` | seeded | claude-code | ran | ✓ | ✓ | ✓ | 13 / 13 of 13 (first scored 13/13, 0 error + 0 claim refinements) |  |
+| `douenne-2022-yellow-vests-carbon-tax` | seeded | claude-code | ran | ✓ | ✓ | ✗ | 13 / 1 of 13 (first scored 13/13, 1 error + 0 claim refinement) |  |
+| `hanushek-2022-patience-risk-human-capital` | seeded | claude-code | ran | ✓ | ✓ | ✓ | 13 / 13 of 13 (first scored 9/13, 0 error + 2 claim refinements) |  |
+| `hollyer-2022-parties-as-disciplinarians` | seeded | claude-code | ran | ✓ | ✓ | ✗ | 13 / 9 of 13 (first scored 13/13, 0 error + 0 claim refinements) |  |
+| `labandeira-2022-electricity-pricing-reform` | seeded | claude-code | ran | ✓ | ✓ | ✓ | 12 / 12 of 12 (first scored 12/12, 0 error + 0 claim refinements) |  |
+| `mokyr-2022-wheels-of-change` | seeded | claude-code | ran | ✓ | ✓ | ✓ | 13 / 13 of 13 (first scored 13/13, 0 error + 0 claim refinements) |  |
+| `dancygier-2022-hate-crimes-gender-imbalances` | independent | claude-code | ran | ✓ | ✓ | ✓ | 13 / 13 of 13 (first scored 13/13, 0 error + 0 claim refinements) |  |
+| `douenne-2022-yellow-vests-carbon-tax` | independent | claude-code | ran | ✓ | ✓ | ✗ | 13 / 7 of 13 (first scored 12/13, 1 error + 1 claim refinements) |  |
+| `hanushek-2022-patience-risk-human-capital` | independent | claude-code | ran | ✓ | ✓ | ✓ | 13 / 13 of 13 (first scored 2/13, 0 error + 1 claim refinement) |  |
+| `hollyer-2022-parties-as-disciplinarians` | independent | claude-code | ran | ✓ | ✓ | ✓ | 13 / 13 of 13 (first scored 13/13, 0 error + 0 claim refinements) |  |
+| `labandeira-2022-electricity-pricing-reform` | independent | claude-code | ran | ✓ | ✗ | ✗ | 8 / 8 of 12 (first scored 7/12, 0 error + 2 claim refinements) |  |
+| `mokyr-2022-wheels-of-change` | independent | claude-code | ran | ✓ | ✓ | ✓ | 13 / 13 of 13 (first scored 13/13, 0 error + 0 claim refinements) |  |
+| `dancygier-2022-hate-crimes-gender-imbalances` | blind | claude-code | ran | ✓ | ✓ | ✓ | 13 / 13 of 13 (first scored 13/13, 1 error + 0 claim refinement) |  |
+| `douenne-2022-yellow-vests-carbon-tax` | blind | claude-code | ran | ✓ | ✗ | ✗ | 12 / 7 of 13 (first scored 12/13, 0 error + 0 claim refinements) |  |
+| `hanushek-2022-patience-risk-human-capital` | blind | claude-code | ran | ✓ | ✓ | ✓ | 13 / 13 of 13 (first scored 13/13, 1 error + 0 claim refinement) |  |
+| `hollyer-2022-parties-as-disciplinarians` | blind | claude-code | ran | ✓ | ✓ | ✓ | 13 / 13 of 13 (first scored 13/13, 1 error + 0 claim refinement) |  |
+| `labandeira-2022-electricity-pricing-reform` | blind | claude-code | ran | ✓ | ✗ | ✗ | 6 / 6 of 12 (first scored 6/12, 0 error + 0 claim refinements) |  |
+| `mokyr-2022-wheels-of-change` | blind | claude-code | ran | ✓ | ✓ | ✓ | 13 / 13 of 13 (first scored 13/13, 0 error + 0 claim refinements) |  |
