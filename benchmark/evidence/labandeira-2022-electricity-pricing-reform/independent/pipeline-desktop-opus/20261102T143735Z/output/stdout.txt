@@ -1,0 +1,68 @@
+Variable mapping:
+             id            year           month             bis              T2 
+           "id"          "year"         "month"           "BIS"            "T2" 
+              q               e              q2              e2            cpap 
+        "c_ele"         "g_ele"        "c_ele2"        "g_ele2"       "c_papas" 
+           gpap            cagu            gagu            ccar            gcar 
+      "g_papas"       "c_aguav"       "g_aguav"         "c_car"         "g_car" 
+            inc          totexp            size           rooms            surf 
+      "IMPEXAC"        "TotExp"        "NMIEMB"        "NHABIT"        "SUPERF" 
+            eld            educ             act          tenure            bage 
+"mayores_count"    "ESTUDREDSP"       "NUMACTI"        "REGTEN"       "ANNOCON" 
+           muni           urban             cap             reg 
+       "TAMAMU"         "urban"        "CAPROV"          "CCAA" 
+Rows in data: 203416 
+Rows in window: 56950 
+Panel rows: 28802  households: 14401 
+T2 mean: 0.1907274  NA share: 0.1050969 
+Panel restricted to rows with defined treatment T2 (paper panel = 25,775): 25775 
+mean T: 0.1907274 
+Share of treated-group households (D=1): 0.3814549 
+Share with both bill-level and second consumption/expenditure vars: 0.1650436 
+Instrument availability: pap 0.6768574  agu 0.9719884  car 0.6745684 
+Rows with core vars: 25613 
+Controls: size, rooms, surf, factor(elderly), factor(educ), factor(act3), factor(tenure), factor(bage), factor(muni), factor(urban), factor(cap), factor(reg) 
+Candidate estimation-sample sizes (obs / households):
+    all3 all3_hh agu_any agu_any_h   any pap_agu car_agu  none all3_bal
+cn 11888   17112   21317     23541 25029   16664   16541 25152     7600
+ch  8088    8636   11852     11904 12693   10514    9869 12721     3800
+   all3_hh_bal agu_any_bal agu_any_h_bal any_bal pap_agu_bal car_agu_bal
+cn       16952       18930         23274   24672       12300       13344
+ch        8476        9465         11637   12336        6150        6672
+   none_bal
+cn    24862
+ch    12431
+DEVIATION: Instrument-availability rule for the Table 2 sample is not fully specified; chose rule 'agu_any' (N=21317, households=11852) as the one whose obs and household counts best match 20,872 / 10,729
+Estimation sample: 21317  households: 11852 
+DEVIATION: Missing z_pap for non-buyers imputed with region x year x quarter median of buyers' unit prices in IV columns
+DEVIATION: Missing z_car for non-buyers imputed with region x year x quarter median of buyers' unit prices in IV columns
+Instruments used: z_pap_f, z_agu, z_car_f 
+DEVIATION: Pooled (non-FE) columns include the treated-group dummy D so T is a DiD interaction; absorbed by household FE in FE columns
+DEVIATION: Expenditure OLS/LSDV columns estimated without ln(price) because ln(price)=ln(exp)-ln(kWh) makes the T coefficient mechanically identical to the consumption equation
+OLS col1:
+         Estimate  Std. Error     t value     Pr(>|t|)
+lp   -1.063002520 0.024141502 -44.0321620 0.000000e+00
+Tr   -0.136668702 0.019732720  -6.9259941 4.553088e-12
+msr   0.001811195 0.006659794   0.2719596 7.856578e-01
+Dgrp  0.026042519 0.010156321   2.5641685 1.035454e-02
+FE col3:
+        Estimate  Std. Error    t value      Pr(>|t|)
+lp  -1.010333202 0.025557477 -39.531805 3.675848e-321
+Tr  -0.138583771 0.021373447  -6.483922  9.291785e-11
+msr -0.007676286 0.007403303  -1.036873  2.998161e-01
+OLS col5 Tr: -0.1330357  FE col7 Tr: -0.1377945 
+LIML col2 beta: -0.04625773  kappa: 1.000074  F: 7.379614 
+LIML col4 beta: -1.880012  kappa: 1.000003  F: 3.136648 
+LIML col6 beta: 0.9537423  col8 beta: -0.8800123 
+RESULT:reform_consumption_ols_col1=-0.136669
+RESULT:reform_consumption_iv_col2=-0.078038
+RESULT:reform_consumption_fe_col3=-0.138584
+RESULT:reform_consumption_fe_iv_col4=-0.205008
+RESULT:reform_expenditure_ols_col5=-0.133036
+RESULT:reform_expenditure_iv_col6=-0.078038
+RESULT:reform_expenditure_fe_col7=-0.137795
+RESULT:reform_expenditure_fe_iv_col8=-0.205008
+RESULT:price_elasticity_consumption_ols_col1=-1.063003
+RESULT:price_elasticity_consumption_fe_col3=-1.010333
+RESULT:n_obs_table2=21317
+RESULT:n_households_table2=11852

@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "entry_id": "forsythe-2022-young-workers-recessions",
+  "mode": "blind",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "yh_data.csv (about 2 GB) read with data.table::fread(select=) of only the needed columns, to fit the 300 s / 4 GB sandbox (also printed as a DEVIATION line).",
+    "The supplied state unemployment file v2unemp_smy.csv covers only Jan 1994 to May 2014. The 2,109,873 person-month pairs from Jun 2014 to Sep 2016 have no unemployment rate and are dropped, so every regression and n_obs_full_sample use Jan 1994 to May 2014 rather than the paper's Jan 1994 to Sep 2016.",
+    "Hiring regressions are estimated on cell means (state x month x PE<=10 x demographic cell x t-1 status, with summed weights). Every regressor is constant within a cell, so the WLS point estimates equal the individual-level ones, but the clustered SEs printed are cell-level and are not reported as results.",
+    "Years of schooling are imputed from PEEDUCA (31=0, 32=2.5, 33=5.5, 34=7.5, 35=9, 36=10, 37=11, 38=12, 39=12, 40=13, 41/42=14, 43=16, 44=18, 45=20, 46=20). Potential experience = age - schooling - 6; young means PE <= 10.",
+    "Sample: age >= 16 (from the t-1 record), valid labour-force status in both months, positive average weight. Demographics, age and education come from the t-1 record. Hire: employed (PEMLR 1-2) in t, with the t job not self-employed (PEIO1COW 6/7), and either not employed in t-1 or employed in t-1 with PUIODP1=2 (different employer). Weight is the average of the two months' PWSSWGT.",
+    "Wage regression: hires in t with PRWERNAL=0 (not allocated) and PRERNWA>0, log(PRERNWA/cpi), with averaged CPS weights. Occupation and industry are crosswalked to 2002 codes assuming code years: occupation 1990 (<=2002), 2002 (2003-2010), 2010 (2011+); industry 1990 (<=2002), 2002 (2003-2008), 2007 (2009-2013), 2012 (2014+). Eleven hires with unmatched industry codes are dropped as singleton/NA by fixest."
+  ],
+  "notes": "Independent, blind reproduction from paper.txt only. Attempt-1 was an exploratory variable/timing run that printed no RESULT lines. The final run estimates all 13 quantities with fixest (state, demographic = sex x white x Hispanic x 7 education levels, and month-year FEs, clustered by state) and exits 0 in 295 s, close to the 300 s limit because the column-subset read takes 170-270 s. ReadMe.pdf could not be read (no pdftotext). No script, output or result files were opened (Dofiles/ and Output/ are empty).",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T07:03:20Z",
+  "finished_at": "2026-11-02T09:09:00Z"
+}

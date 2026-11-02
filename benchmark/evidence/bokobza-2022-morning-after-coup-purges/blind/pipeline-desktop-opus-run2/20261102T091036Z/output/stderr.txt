@@ -1,0 +1,45 @@
+Country-level columns: COUNTRY_DATA, COUNTRY_ID, YEAR_DATA, ccode, leader_cab_id, democracy1, independent, replacement_rateadj_minister, replacement_rateadj_minister_300, replacement_rateadj_minister_200, replacement_rateadj_minister_100, leaderexperience_continuous, coupattempt_whogov, coupattempt_month_whogov, gdp_cap_pwt_ln, pop_pwt_ln, military_c, monarchy_c, party_c, elec_all, t1_e_a, oil_valuepop_2014_ln, growth_pwt, onset1, nonvio_camp_2, mid_onset, war_onset, domestic3_10, coupattempt_whogov_br, polity2, lpolity2, democracy_br, ldemocracy_br, system_category, latent_personalism, coupattempt_whogov_type_br, type_num
+Failed coup var: coupattempt_whogov
+Control GDP pc: using gdp_cap_pwt_ln (lagged here)
+Control population: using pop_pwt_ln (lagged here)
+Country-level sample rows: 4256
+NOTES: 570 observations removed because of NA values (LHS: 20, RHS: 559).
+       2/0 fixed-effect singletons were removed (2 observations).
+N = 3684; fca = 0.0792226782904438
+NOTES: 615 observations removed because of NA values (LHS: 20, RHS: 605).
+       1/0 fixed-effect singleton was removed (1 observation).
+N = 3640; fca = 0.0869769146598991
+NOTES: 570 observations removed because of NA values (LHS: 20, RHS: 559).
+       175/0 fixed-effect singletons were removed (175 observations).
+N = 3511; fca = 0.0596024179995118
+NOTES: 615 observations removed because of NA values (LHS: 20, RHS: 605).
+       165/0 fixed-effect singletons were removed (165 observations).
+N = 3476; fca = 0.0669028404520036
+Individual-level columns: year, country_isocode, country_name, position, name, title, gender, birthyear, party, party_english, leader, classification, portfolio_1, prestige_1, prestige_numeric, importance_numeric, leader_party, party_group, experience, purged_y1, purged_y2, coupattempt_presentyear, coup_presentyear, coup_lastyear, coupattempt_presentyear_br, coup_presentyear_br, coup_lastyear_br, coupattempt_whogov_type_br, leaderexperience_continuous, democracy_lag_br, n_party, democracy_lag, gdp_cap_pwt_ln, pop_pwt_ln, polity2, gdp_cap_pwt_ln_lag, pop_pwt_ln_lag, lag_polity2, importance_factor, Group, minister_type, minister_classification, age, experience_group, hired
+Column year class=integer values: 1966 | 1967 | 1968 | 1969 | 1970 | 1971 | 1972 | 1973
+Column coupattempt_presentyear class=character values: No coup attempt | Coup attempt | NA
+Column democracy_lag_br class=character values: NA | Autocracy | Democracy
+Column purged_y1 class=integer values: 0 | 1
+Column leader class=integer values: 1 | 0
+Column experience class=integer values: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
+Column prestige_1 class=character values: NA | High | Medium | Low
+Column party_group class=character values: leader_party | independent | unknown | other_party | NA
+Column experience_group class=character values: 1year | 2-3 years | 4-6 years | Over 6 years
+Column importance_numeric class=numeric values: 5 | 3 | 2 | 1 | NA | 4 | 0.5 | 0
+fca table: 
+Control GDP pc (ind): using gdp_cap_pwt_ln_lag (already lagged)
+Control population (ind): using pop_pwt_ln_lag (already lagged)
+Individual sample rows after restriction: 120368
+Leader rows excluded: 4402
+NOTE: 19,938 observations removed because of NA values (RHS: 19,938).
+The variable 'l_pop' has been removed because of collinearity (see $collin.var).
+Model eg N = 90383
+NOTE: 19,703 observations removed because of NA values (RHS: 19,703).
+The variable 'l_pop' has been removed because of collinearity (see $collin.var).
+Model pg N = 90753
+NOTE: 15,944 observations removed because of NA values (RHS: 15,944).
+The variable 'l_pop' has been removed because of collinearity (see $collin.var).
+Model port N = 83754
+NOTE: 19,900 observations removed because of NA values (RHS: 19,900).
+The variable 'l_pop' has been removed because of collinearity (see $collin.var).
+Model imp N = 89562

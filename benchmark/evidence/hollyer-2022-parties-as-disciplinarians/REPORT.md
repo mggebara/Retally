@@ -38,6 +38,7 @@
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
 | `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a) | [13/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a) |
+| `pipeline-desktop-opus` | [13/13](seeded/pipeline-desktop-opus/20261102T141403Z/CELL.md) (20261102T141403Z) | [13/13](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) (20261102T141403Z) | [10/13](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) (20261102T095147Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
 
@@ -49,16 +50,16 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 | Cell | Claim | Reproduced | Paper | Band | Error / band | Verdict |
 |---|---|---|---|---|---|---|
+| [blind/pipeline-desktop-opus/20261102T095147Z](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) | `programmaticness_volatility_difference_overall` | -0.163086 | -0.11 | ±0.05 (se_band) | 1.062 | FAIL |
+| [blind/pipeline-desktop-opus/20261102T095147Z](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) | `programmaticness_volatility_difference_nonethnic` | -0.218785 | -0.15 | ±0.06 (se_band) | 1.146 | FAIL |
+| [independent/pipeline-desktop-opus/20261102T141403Z](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) | `programmaticness_extremist_minus_moderate_high_volatility` | 0.364781 | 0.44 | ±0.09 (se_band) | 0.836 | PASS |
 | [independent/claude-code/2026-11-02-a](independent/claude-code/2026-11-02-a/CELL.md) | `programmaticness_extremist_minus_moderate_high_volatility` | 0.3713 | 0.44 | ±0.09 (se_band) | 0.763 | PASS |
 | [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) | `programmaticness_extremist_minus_moderate_high_volatility` | 0.371349 | 0.44 | ±0.09 (se_band) | 0.763 | PASS |
 | [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `personalism_ethnic_minus_nonethnic_low_volatility` | 0.305323 | 0.31 | ±0.0062 (relative) | 0.754 | PASS |
+| [seeded/pipeline-desktop-opus/20261102T141403Z](seeded/pipeline-desktop-opus/20261102T141403Z/CELL.md) | `personalism_ethnic_minus_nonethnic_low_volatility` | 0.305323 | 0.31 | ±0.0062 (relative) | 0.754 | PASS |
 | [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `programmaticness_ethnic_minus_nonethnic_high_volatility` | 0.20353 | 0.2 | ±0.005 (printed_precision) | 0.706 | PASS |
-| [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `personalism_volatility_difference_overall` | 0.296601 | 0.3 | ±0.006 (relative) | 0.566 | PASS |
-| [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `personalism_volatility_difference_nonethnic` | 0.353671 | 0.35 | ±0.007 (relative) | 0.524 | PASS |
-| [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `programmaticness_volatility_difference_nonethnic` | -0.148187 | -0.15 | ±0.005 (printed_precision) | 0.363 | PASS |
-| [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `programmaticness_volatility_difference_overall` | -0.111677 | -0.11 | ±0.005 (printed_precision) | 0.335 | PASS |
-| [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) | `n_obs_table1` | 430 | 431 | ±4.31 (relative) | 0.232 | PASS |
-| [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `programmaticness_volatility_difference_moderate` | -0.298719 | -0.3 | ±0.006 (relative) | 0.213 | PASS |
+| [seeded/pipeline-desktop-opus/20261102T141403Z](seeded/pipeline-desktop-opus/20261102T141403Z/CELL.md) | `programmaticness_ethnic_minus_nonethnic_high_volatility` | 0.20353 | 0.2 | ±0.005 (printed_precision) | 0.706 | PASS |
+| [blind/pipeline-desktop-opus/20261102T095147Z](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) | `n_obs_table1` | 428 | 431 | ±4.31 (relative) | 0.696 | PASS |
 
 ### Declared deviations
 
@@ -76,7 +77,9 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
-_None._
+- blind: `programmaticness_ethnic_minus_nonethnic_high_volatility` — pipeline 0/1, agent 1/1
+- blind: `programmaticness_volatility_difference_nonethnic` — pipeline 0/1, agent 1/1
+- blind: `programmaticness_volatility_difference_overall` — pipeline 0/1, agent 1/1
 
 ## Cells
 
@@ -84,11 +87,23 @@ _None._
 
 [`seeded/claude-code/2026-11-02-a/CELL.md`](seeded/claude-code/2026-11-02-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-02T09:47:00Z; from `claude-code-6papers-all-modes-2026-11-02.json`; evidence complete.
 
+### seeded · pipeline-desktop-opus · 20261102T141403Z
+
+[`seeded/pipeline-desktop-opus/20261102T141403Z/CELL.md`](seeded/pipeline-desktop-opus/20261102T141403Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-02T14:14:03Z; from `pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json`; evidence complete.
+
 ### independent · claude-code · 2026-11-02-a
 
 [`independent/claude-code/2026-11-02-a/CELL.md`](independent/claude-code/2026-11-02-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-02T01:50:00Z; from `claude-code-6papers-all-modes-2026-11-02.json`; evidence complete.
 
+### independent · pipeline-desktop-opus · 20261102T141403Z
+
+[`independent/pipeline-desktop-opus/20261102T141403Z/CELL.md`](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) — final 13/13, re-scored 13/13; first scored 11/13; executions 2; 2026-11-02T14:14:03Z; from `pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json`; evidence complete.
+
 ### blind · claude-code · 2026-11-02-a
 
 [`blind/claude-code/2026-11-02-a/CELL.md`](blind/claude-code/2026-11-02-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 3; 2026-11-02T01:50:00Z; from `claude-code-6papers-all-modes-2026-11-02.json`; evidence complete.
+
+### blind · pipeline-desktop-opus · 20261102T095147Z
+
+[`blind/pipeline-desktop-opus/20261102T095147Z/CELL.md`](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) — final 10/13, re-scored 10/13; first scored 10/13; executions 1; 2026-11-02T09:51:47Z; from `pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json`; evidence complete.
 

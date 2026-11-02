@@ -1,0 +1,74 @@
+flag_exclude_exog: 12  flag_low_wtp: 32  either: 44 
+N sample: 1126 
+goal gap raw mean 3.34 sd 3.64; actual gap raw mean -4.17 sd 6.61
+BCP mean 1.168; info control mean 0.658
+                           t3c1             t3c2             t3c3
+Dependent Var.:             bcp              bcp              bcp
+                                                                 
+basic_info      0.3008 (0.5605)  0.4520 (0.5675)  0.2759 (0.5580)
+enh_info        1.360* (0.5733)  1.409* (0.5815)  1.254* (0.5857)
+goal_gap                        0.7076* (0.2858)                 
+act_gap                                          0.4475* (0.2151)
+Fixed-Effects:  --------------- ---------------- ----------------
+wavenum                     Yes              Yes              Yes
+_______________ _______________ ________________ ________________
+S.E. type       Heteroske.-rob. Heterosked.-rob. Heterosked.-rob.
+Observations              1,126            1,126            1,126
+R2                      0.01015          0.01969          0.01396
+Within R2               0.00634          0.01592          0.01016
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Take-up by threshold:
+# A tibble: 3 × 3
+  thr        n     m
+  <chr>  <int> <dbl>
+1 more12  1126 0.494
+2 more16   849 0.676
+3 more8    849 0.357
+N long: 2824  clusters: 1126 
+                             t4c1              t4c2              t4c3
+Dependent Var.:            takeup            takeup            takeup
+                                                                     
+basic_info      -0.0327. (0.0190) -0.0325. (0.0190) -0.0346. (0.0190)
+enh_info          0.0125 (0.0165)   0.0135 (0.0165)   0.0121 (0.0165)
+bcp_z                              -0.0052 (0.0049)                  
+goal_gap                                             -0.0091 (0.0062)
+act_gap                                                              
+Fixed-Effects:  ----------------- ----------------- -----------------
+wavenum                       Yes               Yes               Yes
+thr                           Yes               Yes               Yes
+_______________ _________________ _________________ _________________
+S.E.: Clustered        by: id_row        by: id_row        by: id_row
+Observations                2,824             2,824             2,824
+R2                        0.06305           0.06317           0.06338
+Within R2                 0.00052           0.00064           0.00087
+
+                             t4c4
+Dependent Var.:            takeup
+                                 
+basic_info      -0.0326. (0.0190)
+enh_info          0.0128 (0.0165)
+bcp_z                            
+goal_gap                         
+act_gap          -0.0016 (0.0064)
+Fixed-Effects:  -----------------
+wavenum                       Yes
+thr                           Yes
+_______________ _________________
+S.E.: Clustered        by: id_row
+Observations                2,824
+R2                        0.06306
+Within R2                 0.00053
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RESULT:bcp_basic_info_treatment_col1=0.300805
+RESULT:bcp_enhanced_info_treatment_col1=1.359677
+RESULT:bcp_goal_minus_expected_attendance_col2=0.707612
+RESULT:bcp_actual_minus_expected_attendance_col3=0.447487
+RESULT:bcp_regression_observations=1126.000000
+RESULT:takeup_more_basic_info_treatment_col1=-0.032682
+RESULT:takeup_more_enhanced_info_treatment_col1=0.012487
+RESULT:takeup_more_behavior_change_premium_col2=-0.005224
+RESULT:takeup_more_goal_minus_expected_attendance_col3=-0.009066
+RESULT:takeup_more_actual_minus_expected_attendance_col4=-0.001562
+RESULT:takeup_more_regression_observations=2824.000000

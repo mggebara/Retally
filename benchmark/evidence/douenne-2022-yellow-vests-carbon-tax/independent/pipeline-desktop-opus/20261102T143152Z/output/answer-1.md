@@ -1,0 +1,240 @@
+suppressPackageStartupMessages({
+  library(AER)
+})
+set.seed(42)
+
+base <- '<repo>/.cache/datasets/douenne_2022_yellow_vests_carbon_tax.script-free'
+rdata <- file.path(base, 'yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/after_preparation.RData')
+env <- new.env()
+load(rdata, envir = env)
+s <- as.data.frame(env$s)
+nm <- names(s)
+n <- nrow(s)
+
+pick <- function(cands, rx = NULL) {
+  for (cc in cands) if (cc %in% nm) return(cc)
+  if (!is.null(rx)) {
+    m <- grep(rx, nm, value = TRUE, perl = TRUE, ignore.case = TRUE)
+    if (length(m)) return(m[1])
+  }
+  NA_character_
+}
+chr <- function(x) {
+  if (inherits(x, "haven_labelled")) return(as.character(haven::as_factor(x)))
+  as.character(x)
+}
+getv <- function(col) if (is.na(col)) rep(NA, n) else s[[col]]
+is01 <- function(v) { u <- unique(na.omit(as.numeric(v))); length(u) > 0 && all(u %in% c(0, 1)) }
+
+notlose <- function(x) {
+  if (is.logical(x)) return(as.numeric(x))
+  if (is.numeric(x)) { if (is01(x)) return(as.numeric(x)); return(as.numeric(x >= 0)) }
+  y <- tolower(trimws(chr(x)))
+  ifelse(is.na(y) | y == '' | y == 'na', NA, as.numeric(!grepl('perdant|los|perd', y)))
+}
+wins <- function(x) {
+  if (is.logical(x)) return(as.numeric(x))
+  if (is.numeric(x)) { if (is01(x)) return(as.numeric(x)); return(as.numeric(x > 0)) }
+  y <- tolower(trimws(chr(x)))
+  ifelse(is.na(y) | y == '' | y == 'na', NA, as.numeric(grepl('gagnant|win|gagn', y)))
+}
+yes <- function(x) {
+  if (is.logical(x)) return(as.numeric(x))
+  if (is.numeric(x)) { if (is01(x)) return(as.numeric(x)); return(as.numeric(x > 0)) }
+  y <- tolower(trimws(chr(x)))
+  ifelse(is.na(y) | y == '' | y == 'na', NA, as.numeric(grepl('^oui|^yes', y)))
+}
+accept <- function(x) {
+  if (is.logical(x)) return(as.numeric(x))
+  if (is.numeric(x)) { if (is01(x)) return(as.numeric(x)); return(as.numeric(x >= 0)) }
+  y <- tolower(trimws(chr(x)))
+  ifelse(is.na(y) | y == '' | y == 'na', NA, as.numeric(!grepl('^non$|^no$|^non |^no ', y)))
+}
+num <- function(x) suppressWarnings(as.numeric(if (is.factor(x)) as.character(x) else x))
+
+out <- list()
+emit <- function(name, val) {
+  if (length(val) == 1 && is.finite(val)) out[[name]] <<- val
+}
+
+# ---------- Key variables ----------
+w_col <- pick(c('weight', 'weights', 'poids'))
+w_all <- if (is.na(w_col)) rep(1, n) else num(s[[w_col]])
+w_all[is.na(w_all)] <- 1
+
+fb_col <- pick(c('winning_feedback_category', 'gagnant_feedback_categorie'), 'feedback.*categ')
+init_col <- pick(c('winning_category', 'gagnant_categorie'))
+gain_col <- pick(c('simule_gain', 'simulated_gain', 'estimated_gain', 'simulated_net_gain'), '^simul.*gain$')
+winner_col <- pick(c('simule_gagnant', 'simulated_winner', 'predicted_winner'))
+appr_col <- pick(c('taxe_approbation', 'tax_approval', 'approbation_taxe'))
+acc_col <- pick(c('tax_acceptance', 'taxe_acceptation', 'tax_accept'))
+gj_col <- pick(c('gilets_jaunes', 'yellow_vests'))
+rev_col <- pick(c('revenu', 'income'))
+revc_col <- pick(c('revenu_conjoint', 'spouse_income', 'income_spouse'))
+single_col <- pick(c('single', 'seul'))
+hdep_col <- pick(c('hausse_depenses_par_uc', 'hausse_depenses'))
+
+gain <- num(getv(gain_col))
+winner <- if (!is.na(winner_col)) num(s[[winner_col]]) else as.numeric(gain > 0)
+if (all(is.na(winner))) winner <- as.numeric(gain > 0)
+if (!is01(winner)) winner <- as.numeric(winner > 0)
+
+init_acc <- if (!is.na(acc_col)) accept(s[[acc_col]]) else accept(getv(appr_col))
+init_appr <- yes(getv(appr_col))
+
+fb_notlose <- notlose(getv(fb_col))
+fb_wins <- wins(getv(fb_col))
+init_notlose <- notlose(getv(init_col))
+init_cat <- chr(getv(init_col))
+
+gj <- tolower(chr(getv(gj_col)))
+gj_support <- as.numeric(grepl('soutien|soutient|dedans|support|part', gj) & !grepl('oppos', gj))
+gj_support[is.na(gj)] <- 0
+
+# ---------- Controls ----------
+demo_vars <- NULL
+for (vn in c('variables_demo', 'variables_socio_demo', 'variables_demographiques')) {
+  if (exists(vn, envir = env) && is.character(get(vn, envir = env))) {
+    demo_vars <- intersect(get(vn, envir = env), nm); break
+  }
+}
+if (is.null(demo_vars) || length(demo_vars) == 0) {
+  demo_vars <- intersect(c('sexe', 'age', 'diplome4', 'diplome', 'csp', 'taille_agglo', 'region',
+                           'statut_emploi', 'taille_menage', 'nb_14_et_plus', 'nb_adultes',
+                           'fume', 'actualite', 'chauffage', 'mode_chauffage'), nm)
+  if ('diplome4' %in% demo_vars) demo_vars <- setdiff(demo_vars, 'diplome')
+}
+excl <- c(rev_col, revc_col, gain_col, winner_col, fb_col, init_col, appr_col, acc_col, gj_col, w_col)
+demo_vars <- setdiff(demo_vars, excl)
+
+eff_col <- pick(c('taxe_efficace', 'tax_effective'))
+prog_col <- pick(c('progressivite', 'progressivity'))
+
+make_ctrl <- function(vars) {
+  L <- list()
+  for (v in vars) {
+    x <- s[[v]]
+    if (is.numeric(x) && !inherits(x, 'haven_labelled') && length(unique(na.omit(x))) > 12) {
+      x <- as.numeric(x); x[is.na(x)] <- 0; L[[make.names(v)]] <- x
+    } else {
+      x <- chr(x); x[is.na(x) | x == ''] <- 'NA'; L[[make.names(v)]] <- x
+    }
+  }
+  L
+}
+
+income_ctrl <- function() {
+  L <- list()
+  if (!is.na(rev_col)) { r <- num(s[[rev_col]]); r[is.na(r)] <- 0; L$inc <- r / 1000; L$inc2 <- (r / 1000)^2 }
+  if (!is.na(revc_col)) { r <- num(s[[revc_col]]); r[is.na(r)] <- 0; L$incc <- r / 1000; L$incc2 <- (r / 1000)^2 }
+  L
+}
+
+base_ctrl <- c(income_ctrl(), make_ctrl(demo_vars))
+if (!is.na(single_col)) { x <- num(s[[single_col]]); if (all(is.na(x))) x <- as.numeric(as.logical(s[[single_col]])); x[is.na(x)] <- 0; base_ctrl$single_ <- x }
+if (!is.na(hdep_col)) { x <- num(s[[hdep_col]]); x[is.na(x)] <- 0; base_ctrl$hdep <- x }
+motive_ctrl <- make_ctrl(na.omit(c(eff_col, prog_col)))
+
+clean_df <- function(df, keep) {
+  df <- df[keep, , drop = FALSE]
+  for (v in names(df)) {
+    if (is.character(df[[v]])) {
+      if (length(unique(df[[v]])) < 2) df[[v]] <- NULL else df[[v]] <- factor(df[[v]])
+    } else if (length(unique(na.omit(df[[v]]))) < 2) df[[v]] <- NULL
+  }
+  df
+}
+
+# ---------- Table 4 ----------
+fb_sample <- !is.na(fb_notlose) & !is.na(gain)
+run_t4 <- function(y, sample, extra = list(), rhs_core) {
+  df <- data.frame(y = y, winner = winner, acc = init_acc, g = gain / 100, g2 = (gain / 100)^2,
+                   w = w_all, stringsAsFactors = FALSE)
+  for (k in names(extra)) df[[k]] <- extra[[k]]
+  ctrl <- c(base_ctrl, motive_ctrl)
+  for (k in names(ctrl)) df[[paste0('c_', k)]] <- ctrl[[k]]
+  keep <- sample & !is.na(df$y) & !is.na(df$winner) & !is.na(df$acc) & !is.na(df$g)
+  d <- clean_df(df, keep)
+  cn <- grep('^c_', names(d), value = TRUE)
+  f <- as.formula(paste('y ~', rhs_core, if (length(cn)) paste('+', paste(cn, collapse = ' + ')) else ''))
+  lm(f, data = d, weights = w)
+}
+
+m1 <- tryCatch(run_t4(fb_notlose, fb_sample & abs(gain) < 50, rhs_core = 'winner + acc + g + g2'), error = function(e) NULL)
+if (!is.null(m1)) {
+  emit('predicted_winner_believes_not_lose_table4_col1', coef(m1)['winner'])
+  emit('initial_acceptance_believes_not_lose_table4_col1', coef(m1)['acc'])
+  emit('n_obs_table4_col1', nobs(m1))
+}
+m2 <- tryCatch(run_t4(fb_notlose, fb_sample, rhs_core = 'winner + acc + g + g2'), error = function(e) NULL)
+if (!is.null(m2)) emit('predicted_winner_believes_not_lose_full_sample_table4_col2', coef(m2)['winner'])
+
+icat <- init_cat; icat[is.na(icat)] <- 'NA'
+m3 <- tryCatch(run_t4(fb_notlose, fb_sample & abs(gain) < 50 & !is.na(init_notlose),
+                      extra = list(gjs = gj_support, G = init_notlose, icat = icat),
+                      rhs_core = 'winner + acc + gjs + G + winner:acc + winner:gjs + winner:G + g + g2 + icat'),
+               error = function(e) NULL)
+if (!is.null(m3)) {
+  cf <- coef(m3)
+  getc <- function(a, b) { k <- c(paste0(a, ':', b), paste0(b, ':', a)); k <- k[k %in% names(cf)]; if (length(k)) cf[k[1]] else NA }
+  emit('predicted_winner_heterogeneity_table4_col3', cf['winner'])
+  emit('initial_acceptance_heterogeneity_table4_col3', cf['acc'])
+  emit('yellow_vests_supporter_heterogeneity_table4_col3', cf['gjs'])
+  emit('winner_x_initial_acceptance_table4_col3', getc('winner', 'acc'))
+  emit('winner_x_yellow_vests_supporter_table4_col3', getc('winner', 'gjs'))
+  emit('winner_x_initial_win_belief_table4_col3', getc('winner', 'G'))
+}
+m4 <- tryCatch(run_t4(fb_wins, fb_sample & abs(gain) < 50, rhs_core = 'winner + acc + g + g2'), error = function(e) NULL)
+if (!is.null(m4)) emit('predicted_winner_believes_wins_table4_col4', coef(m4)['winner'])
+
+# ---------- Table 6: targeted dividend IV ----------
+try({
+  tacc_col <- pick(c('taxe_cible_approbation', 'targeted_tax_approval', 'tax_targeted_approval'), 'cible.*approb|target.*approv')
+  tbel_col <- pick(c('gagnant_cible_categorie', 'winning_targeted_category', 'targeted_winning_category'), 'cible.*categ|target.*categ')
+  cible_col <- pick(c('cible', 'percentile_cible', 'target_percentile'))
+  tr_col <- pick(c('traite_cible', 'eligible', 'treated_target'))
+  trc_col <- pick(c('traite_cible_conjoint', 'eligible_conjoint', 'treated_target_spouse'))
+  y6 <- accept(getv(tacc_col))
+  b6 <- notlose(getv(tbel_col))
+  cib <- num(getv(cible_col))
+  thr <- c(`20` = 780, `30` = 1140, `40` = 1430, `50` = 1670)[as.character(cib)]
+  tr <- if (!is.na(tr_col)) num(s[[tr_col]]) else as.numeric(num(getv(rev_col)) < thr)
+  trc <- if (!is.na(trc_col)) num(s[[trc_col]]) else as.numeric(num(getv(revc_col)) < thr)
+  if (!is01(tr)) tr <- as.numeric(as.logical(s[[tr_col]]))
+  if (!is01(trc)) trc <- as.numeric(as.logical(s[[trc_col]]))
+  tr[is.na(tr)] <- 0; trc[is.na(trc)] <- 0
+  df <- data.frame(y = y6, b = b6, z1 = tr, z2 = trc, z12 = tr * trc, acc = init_acc,
+                   cib = as.character(cib), w = w_all, stringsAsFactors = FALSE)
+  ic <- income_ctrl(); for (k in names(ic)) df[[paste0('c_', k)]] <- ic[[k]]
+  if (!is.null(base_ctrl$single_)) df$c_single <- base_ctrl$single_
+  keep <- !is.na(df$y) & !is.na(df$b) & !is.na(df$acc) & !is.na(cib)
+  d <- clean_df(df, keep)
+  cn <- grep('^c_', names(d), value = TRUE)
+  exo <- paste(c('acc', if ('cib' %in% names(d)) 'cib', cn), collapse = ' + ')
+  inst <- paste(intersect(c('z1', 'z2', 'z12'), names(d)), collapse = ' + ')
+  f <- as.formula(paste('y ~ b +', exo, '|', inst, '+', exo))
+  m6 <- AER::ivreg(f, data = d, weights = w)
+  emit('believes_not_lose_on_acceptance_iv_table6_col1', coef(m6)['b'])
+}, silent = TRUE)
+
+# ---------- Table 8: effectiveness IV ----------
+try({
+  sci_col <- pick(c('apres_modifs', 'info_efficacite', 'info_effectiveness', 'info_scientists'))
+  cc_col <- pick(c('info_CC', 'info_cc', 'info_climate'))
+  z1 <- num(getv(sci_col)); if (!is01(z1)) z1 <- as.numeric(as.logical(getv(sci_col)))
+  z2 <- num(getv(cc_col)); if (!is01(z2)) z2 <- as.numeric(as.logical(getv(cc_col)))
+  df <- data.frame(y = init_appr, e = yes(getv(eff_col)), z1 = z1, z2 = z2,
+                   g = gain / 100, g2 = (gain / 100)^2, icat = icat, w = w_all, stringsAsFactors = FALSE)
+  ctrl <- c(base_ctrl, make_ctrl(na.omit(prog_col)))
+  for (k in names(ctrl)) df[[paste0('c_', k)]] <- ctrl[[k]]
+  df$g[is.na(df$g)] <- 0; df$g2[is.na(df$g2)] <- 0
+  keep <- !is.na(df$y) & !is.na(df$e) & !is.na(df$z1) & !is.na(df$z2)
+  d <- clean_df(df, keep)
+  cn <- grep('^c_', names(d), value = TRUE)
+  exo <- paste(c(intersect(c('g', 'g2', 'icat'), names(d)), cn), collapse = ' + ')
+  f <- as.formula(paste('y ~ e +', exo, '| z1 + z2 +', exo))
+  m8 <- AER::ivreg(f, data = d, weights = w)
+  emit('believes_effective_on_approval_iv_table8_col1', coef(m8)['e'])
+}, silent = TRUE)
+
+for (k in names(out)) cat(sprintf('RESULT:%s=%.6f\n', k, as.numeric(out[[k]])))

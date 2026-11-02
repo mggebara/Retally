@@ -1,0 +1,258 @@
+suppressPackageStartupMessages({
+  library(data.table)
+  library(fixest)
+})
+set.seed(42)
+setFixest_nthreads(0)
+
+base <- "<repo>/.cache/datasets/forsythe_2022_young_workers_recessions.script-free/3 replication package/Data"
+f_main <- file.path(base, "yh_data.csv")
+f_un   <- file.path(base, "v2unemp_smy.csv")
+f_cpi  <- file.path(base, "wage_deflation_1994_2016.csv")
+f_ind  <- file.path(base, "ind_xwalk2002.csv")
+f_occ  <- file.path(base, "occ_xwalk2002.csv")
+
+res_names <- c("young_x_unemp_rate_no_controls", "experienced_x_unemp_rate_no_controls",
+               "young_x_unemp_rate_preferred", "experienced_x_unemp_rate_preferred",
+               "aggregate_unemp_rate_no_controls", "aggregate_unemp_rate_month_year_fe",
+               "young_x_unemp_rate_employed", "experienced_x_unemp_rate_employed",
+               "young_x_unemp_rate_unemployed", "young_x_unemp_rate_nilf",
+               "wage_young_x_unemp_rate_all_hires", "wage_experienced_x_unemp_rate_all_hires",
+               "n_obs_full_sample")
+out <- setNames(as.list(rep(NA_real_, length(res_names))), res_names)
+
+num <- function(x) suppressWarnings(as.numeric(x))
+getc <- function(m, v) {
+  if (is.null(m)) return(NA_real_)
+  cf <- tryCatch(coef(m), error = function(e) NULL)
+  if (!is.null(cf) && v %in% names(cf)) unname(cf[v]) else NA_real_
+}
+safe <- function(expr) tryCatch(expr, error = function(e) { message("ERR: ", conditionMessage(e)); NULL })
+pick_in <- function(nms, pats) {
+  lc <- tolower(nms)
+  for (p in pats) {
+    i <- which(grepl(p, lc))
+    if (length(i) > 0) return(nms[i[1]])
+  }
+  NA_character_
+}
+
+main <- function() {
+  hdr <- names(fread(f_main, nrows = 0))
+  pick <- function(pats) pick_in(hdr, pats)
+
+  c_month <- pick(c("^hrmonth$")); c_year <- pick(c("^hryear4$", "^hryear$"))
+  c_age   <- pick(c("^peage$", "^prtage$"))
+  c_sex   <- pick(c("^pesex$"))
+  c_educ  <- pick(c("^peeduca$"))
+  c_race  <- pick(c("^race$", "^ptdtrace$", "^perace$", "^prdtrace$"))
+  c_hisp  <- pick(c("^prhspnon$", "^pehspnon$", "^hisp"))
+  c_mlr   <- pick(c("^pemlr$"))
+  c_w1    <- pick(c("^pwsswgt$"))
+  c_m2    <- pick(c("^v2hrmonth$")); c_y2 <- pick(c("^v2hryear4$", "^v2hryear$"))
+  c_st    <- pick(c("^v2gestfips$", "^gestfips$"))
+  c_mlr2  <- pick(c("^v2pemlr$"))
+  c_iodp  <- pick(c("^v2puiodp1$"))
+  c_cow   <- pick(c("^v2peio1cow$"))
+  c_icd   <- pick(c("^v2peio1icd$"))
+  c_ocd   <- pick(c("^v2peio1ocd$"))
+  c_w2    <- pick(c("^v2pwsswgt$"))
+  c_mis1  <- pick(c("^hrmis$"))
+  c_mis2  <- pick(c("^v2hrmis$"))
+  c_earn  <- pick(c("^v2prernwa$", "^v2pternwa$", "^v2.*ernwa", "^v2peernwkp$"))
+  c_alloc <- pick(c("^v2prwernal$", "^v2.*wernal", "^v2.*ernal"))
+
+  map <- c(hrmonth = c_month, hryear = c_year, peage = c_age, pesex = c_sex, peeduca = c_educ,
+           race = c_race, hisp = c_hisp, pemlr = c_mlr, pwsswgt = c_w1,
+           v2hrmonth = c_m2, v2hryear = c_y2, v2gestfips = c_st, v2pemlr = c_mlr2,
+           v2puiodp1 = c_iodp, v2peio1cow = c_cow, v2peio1icd = c_icd, v2peio1ocd = c_ocd,
+           v2pwsswgt = c_w2, hrmis = c_mis1, v2hrmis = c_mis2, earn = c_earn, alloc = c_alloc)
+  map <- map[!is.na(map)]
+  map <- map[!duplicated(map)]
+  message("Columns: ", paste(names(map), map, sep = "=", collapse = ", "))
+
+  dt <- fread(f_main, select = unname(map), showProgress = FALSE)
+  setnames(dt, unname(map), names(map))
+  for (v in names(dt)) if (!is.numeric(dt[[v]])) set(dt, j = v, value = num(dt[[v]]))
+  for (v in c("race", "hisp", "pesex", "v2puiodp1", "v2peio1cow", "v2peio1icd", "v2peio1ocd"))
+    if (!v %in% names(dt)) dt[, (v) := NA_real_]
+
+  # ---- sample restrictions ----
+  dt <- dt[!is.na(peage) & peage >= 16]
+  dt <- dt[!is.na(peeduca) & peeduca >= 31 & peeduca <= 46]
+  dt <- dt[!is.na(pemlr) & pemlr %in% 1:7 & !is.na(v2pemlr) & v2pemlr %in% 1:7]
+  dt[, m1 := hryear * 12 + hrmonth]
+  dt[, m2 := v2hryear * 12 + v2hrmonth]
+  dt <- dt[m2 - m1 == 1]
+  if ("hrmis" %in% names(dt)) dt <- dt[!(hrmis %in% 4)]
+  dt <- dt[!((hryear == 1995 & hrmonth %in% 5:8) | (v2hryear == 1995 & v2hrmonth %in% 5:8))]
+  dt <- dt[m1 >= 1994 * 12 + 1 & m2 <= 2016 * 12 + 9]
+  message("Rows after restrictions: ", nrow(dt))
+
+  # ---- weights ----
+  if ("v2pwsswgt" %in% names(dt)) {
+    dt[, w := rowMeans(cbind(pwsswgt, v2pwsswgt), na.rm = TRUE)]
+  } else {
+    dt[, w := pwsswgt]
+  }
+  dt <- dt[!is.na(w) & w >= 0]
+
+  # ---- education, PE, demographics ----
+  edyrs <- c(`31`=0, `32`=2.5, `33`=5.5, `34`=7.5, `35`=9, `36`=10, `37`=11, `38`=12,
+             `39`=12, `40`=13, `41`=14, `42`=14, `43`=16, `44`=18, `45`=19, `46`=20)
+  dt[, educ_yrs := unname(edyrs[as.character(peeduca)])]
+  dt[, pe := peage - educ_yrs - 6]
+  dt[, young := as.integer(pe <= 10)]
+  dt[, edcat := fcase(peeduca <= 38, 1L,
+                      peeduca == 39, 2L,
+                      peeduca <= 42, 3L,
+                      peeduca == 43, 4L,
+                      peeduca == 44, 5L,
+                      peeduca == 45, 6L,
+                      default = 7L)]
+  dt[, white := as.integer(!is.na(race) & race == 1)]
+  dt[, hispd := as.integer(!is.na(hisp) & hisp == 1)]
+  dt[, demog := paste(pesex, white, hispd, edcat, sep = "_")]
+  dt[, ym := m2]
+  dt[, state := v2gestfips]
+
+  # ---- hired indicator ----
+  dt[, emp1 := pemlr %in% 1:2]
+  dt[, emp2 := v2pemlr %in% 1:2]
+  dt[, selfemp := !is.na(v2peio1cow) & v2peio1cow %in% c(6, 7)]
+  dt[, newfirm := !is.na(v2puiodp1) & v2puiodp1 == 2]
+  dt[, hired := 100 * as.numeric(emp2 & !selfemp & ((!emp1) | (emp1 & newfirm)))]
+  dt[, status1 := fifelse(pemlr %in% 1:2, "E", fifelse(pemlr %in% 3:4, "U", "N"))]
+
+  # ---- unemployment rate ----
+  un <- fread(f_un)
+  un_n <- names(un)
+  u_st <- pick_in(un_n, c("^v2gestfips$", "gestfips", "fips", "state"))
+  u_yr <- pick_in(un_n, c("^v2hryear$", "^v2hryear4$", "year"))
+  u_mo <- pick_in(un_n, c("^v2hrmonth$", "month"))
+  u_rt <- pick_in(un_n, c("^v2unemp_smy$", "unemp_smy", "unemp", "urate", "rate"))
+  message("Unemp columns: ", paste(c(u_st, u_yr, u_mo, u_rt), collapse = ", "))
+  un <- data.table(v2gestfips = num(un[[u_st]]), v2hryear = num(un[[u_yr]]),
+                   v2hrmonth = num(un[[u_mo]]), urate = num(un[[u_rt]]))
+  un <- un[!is.na(urate)]
+  un <- unique(un, by = c("v2gestfips", "v2hryear", "v2hrmonth"))
+  if (max(un$urate, na.rm = TRUE) < 1) un[, urate := urate * 100]
+  dt <- merge(dt, un, by = c("v2gestfips", "v2hryear", "v2hrmonth"), all.x = FALSE)
+  dt <- dt[!is.na(urate)]
+  dt[, yU := young * urate]
+  dt[, eU := (1 - young) * urate]
+  message("Rows after merge: ", nrow(dt))
+  gc()
+
+  # Table 1 Panel A
+  mA1 <- safe(feols(hired ~ urate, data = dt, weights = ~w, cluster = ~state, lean = TRUE))
+  out$aggregate_unemp_rate_no_controls <<- getc(mA1, "urate"); rm(mA1)
+  mA4 <- safe(feols(hired ~ urate | state + demog + ym, data = dt, weights = ~w, cluster = ~state, lean = TRUE))
+  out$aggregate_unemp_rate_month_year_fe <<- getc(mA4, "urate"); rm(mA4)
+  # Table 1 Panel B
+  mB1 <- safe(feols(hired ~ young + yU + eU, data = dt, weights = ~w, cluster = ~state, lean = TRUE))
+  out$young_x_unemp_rate_no_controls <<- getc(mB1, "yU")
+  out$experienced_x_unemp_rate_no_controls <<- getc(mB1, "eU")
+  out$n_obs_full_sample <<- if (!is.null(mB1)) nobs(mB1) else nrow(dt)
+  rm(mB1)
+  mB4 <- safe(feols(hired ~ young + yU + eU | state + demog + ym, data = dt, weights = ~w, cluster = ~state, lean = TRUE))
+  out$young_x_unemp_rate_preferred <<- getc(mB4, "yU")
+  out$experienced_x_unemp_rate_preferred <<- getc(mB4, "eU")
+  rm(mB4); gc()
+
+  # Table 2 by status
+  mE <- safe(feols(hired ~ young + yU + eU | state + demog + ym, data = dt[status1 == "E"], weights = ~w, cluster = ~state, lean = TRUE))
+  out$young_x_unemp_rate_employed <<- getc(mE, "yU")
+  out$experienced_x_unemp_rate_employed <<- getc(mE, "eU"); rm(mE); gc()
+  mU <- safe(feols(hired ~ young + yU + eU | state + demog + ym, data = dt[status1 == "U"], weights = ~w, cluster = ~state, lean = TRUE))
+  out$young_x_unemp_rate_unemployed <<- getc(mU, "yU"); rm(mU)
+  mN <- safe(feols(hired ~ young + yU + eU | state + demog + ym, data = dt[status1 == "N"], weights = ~w, cluster = ~state, lean = TRUE))
+  out$young_x_unemp_rate_nilf <<- getc(mN, "yU"); rm(mN)
+
+  # ---- Table 10 wages ----
+  hires <- dt[hired == 100]
+  rm(dt); gc()
+  if (!"earn" %in% names(hires)) return(invisible(NULL))
+  if ("v2hrmis" %in% names(hires)) hires <- hires[v2hrmis %in% c(4, 8)]
+  hires <- hires[!is.na(earn) & earn > 0]
+  if ("alloc" %in% names(hires)) hires <- hires[is.na(alloc) | alloc %in% c(0, -1)]
+
+  cpi <- fread(f_cpi)
+  cn <- names(cpi)
+  c_cy <- pick_in(cn, c("^year$", "hryear", "year"))
+  c_cm <- pick_in(cn, c("^month$", "hrmonth", "month"))
+  c_cv <- pick_in(cn, c("^cpi$", "cpi", "defl", "price", "index"))
+  if (is.na(c_cv)) {
+    oth <- setdiff(cn, c(c_cy, c_cm))
+    oth <- oth[sapply(oth, function(z) is.numeric(cpi[[z]]))]
+    c_cv <- if (length(oth)) oth[1] else NA_character_
+  }
+  message("CPI columns: ", paste(c(c_cy, c_cm, c_cv), collapse = ", "))
+  if (!is.na(c_cy) && !is.na(c_cv)) {
+    if (!is.na(c_cm)) {
+      cpi <- data.table(v2hryear = num(cpi[[c_cy]]), v2hrmonth = num(cpi[[c_cm]]), cpi = num(cpi[[c_cv]]))
+      cpi <- unique(cpi[!is.na(cpi)], by = c("v2hryear", "v2hrmonth"))
+      hires <- merge(hires, cpi, by = c("v2hryear", "v2hrmonth"), all.x = TRUE)
+    } else {
+      cpi <- data.table(v2hryear = num(cpi[[c_cy]]), cpi = num(cpi[[c_cv]]))
+      cpi <- unique(cpi[!is.na(cpi)], by = "v2hryear")
+      hires <- merge(hires, cpi, by = "v2hryear", all.x = TRUE)
+    }
+    hires <- hires[!is.na(cpi) & cpi > 0]
+    hires[, logw := log(earn / cpi)]
+  } else {
+    hires[, logw := log(earn)]
+  }
+
+  hires[, ind_era := fifelse(v2hryear < 2003, 1990, fifelse(v2hryear <= 2008, 2002, fifelse(v2hryear <= 2013, 2007, 2012)))]
+  hires[, occ_era := fifelse(v2hryear < 2003, 1990, fifelse(v2hryear <= 2010, 2000, 2010))]
+
+  map_x <- function(xw, codecol, yrcol, reccol, raw, era, eras_all) {
+    xw <- copy(xw)
+    setnames(xw, tolower(names(xw)))
+    xw <- xw[, .(code = num(get(codecol)), cy = num(get(yrcol)), rec = as.character(get(reccol)))]
+    xw <- xw[!is.na(code) & !is.na(cy)]
+    ucy <- sort(unique(xw$cy))
+    if (length(ucy) == 0) return(rep(NA_character_, length(raw)))
+    if (all(ucy > 1900)) {
+      uera <- sort(unique(era))
+      lut <- setNames(sapply(uera, function(e) ucy[which.min(abs(ucy - e))]), uera)
+      cy_obs <- lut[as.character(era)]
+    } else if (length(ucy) == length(eras_all)) {
+      lut <- setNames(ucy, eras_all)
+      cy_obs <- lut[as.character(era)]
+    } else {
+      return(rep(NA_character_, length(raw)))
+    }
+    xw <- unique(xw, by = c("code", "cy"))
+    key_x <- paste(xw$code, xw$cy)
+    key_o <- paste(raw, cy_obs)
+    xw$rec[match(key_o, key_x)]
+  }
+  ind_rec <- tryCatch(map_x(fread(f_ind), "v2peio1icd", "v2ind_codeyear", "v2censusind_2002recode",
+                            hires$v2peio1icd, hires$ind_era, c(1990, 2002, 2007, 2012)),
+                      error = function(e) rep(NA_character_, nrow(hires)))
+  occ_rec <- tryCatch(map_x(fread(f_occ), "v2peio1ocd", "v2occ_codeyear", "v2censusocc_2002recode",
+                            hires$v2peio1ocd, hires$occ_era, c(1990, 2000, 2010)),
+                      error = function(e) rep(NA_character_, nrow(hires)))
+  if (length(ind_rec) != nrow(hires)) ind_rec <- rep(NA_character_, nrow(hires))
+  if (length(occ_rec) != nrow(hires)) occ_rec <- rep(NA_character_, nrow(hires))
+  hires[, indfe := fifelse(!is.na(ind_rec) & ind_rec != "" & ind_rec != "NA", paste0("x", ind_rec),
+                           paste0("r", ind_era, "_", v2peio1icd))]
+  hires[, occfe := fifelse(!is.na(occ_rec) & occ_rec != "" & occ_rec != "NA", paste0("x", occ_rec),
+                           paste0("r", occ_era, "_", v2peio1ocd))]
+  hires <- hires[is.finite(logw)]
+  mW <- safe(feols(logw ~ young + yU + eU | state + demog + ym + occfe + indfe,
+                   data = hires, weights = ~w, cluster = ~state, lean = TRUE))
+  out$wage_young_x_unemp_rate_all_hires <<- getc(mW, "yU")
+  out$wage_experienced_x_unemp_rate_all_hires <<- getc(mW, "eU")
+  invisible(NULL)
+}
+
+tryCatch(main(), error = function(e) message("FATAL: ", conditionMessage(e)))
+
+for (nm in names(out)) {
+  v <- out[[nm]]
+  if (is.null(v) || length(v) == 0) v <- NA_real_
+  cat(sprintf("RESULT:%s=%s\n", nm, if (is.na(v)) "NA" else format(v, digits = 10, scientific = FALSE)))
+}

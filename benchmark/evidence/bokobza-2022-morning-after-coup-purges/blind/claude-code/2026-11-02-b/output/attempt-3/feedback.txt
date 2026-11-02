@@ -1,0 +1,3 @@
+Crash (exit 1), no RESULT lines:
+Error in feols(update(f_base, . ~ . | COUNTRY_DATA + YEAR_DATA), ...): Evaluation of the right-hand-side of the formula raises an error: In COUNTRY_DATA + YEAR_DATA: non-numeric argument to binary operator
+Fix: stats::update() does not support fixest's "| fixed effects" syntax; wrote the four country-level formulas out explicitly. No specification change.

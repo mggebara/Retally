@@ -1,0 +1,125 @@
+
+== m_base_c  N = 3743 
+                      Estimate Std. Error   t value    Pr(>|t|)
+coupattempt_whogov  0.10255253 0.03260875  3.144939 0.002118787
+L_gdp_cap_pwt_ln   -0.03555644 0.01838814 -1.933662 0.055634008
+L_pop_pwt_ln       -0.14573238 0.06342464 -2.297725 0.023401733
+attr(,"vcov_type")
+[1] "Clustered (COUNTRY_DATA)"
+countries: 115  failed coups: 93 
+
+== m_main_c  N = 3703 
+                      Estimate Std. Error    t value     Pr(>|t|)
+coupattempt_whogov  0.11195416 0.03236712  3.4588859 0.0007658603
+L_gdp_cap_pwt_ln   -0.03302650 0.01948923 -1.6946023 0.0929051711
+L_pop_pwt_ln       -0.14290650 0.06324477 -2.2595783 0.0257646632
+L_monarchy_c        0.01533113 0.02206483  0.6948222 0.4885929773
+L_military_c       -0.05249166 0.02671977 -1.9645249 0.0519242320
+L_party_c          -0.07919105 0.02870023 -2.7592482 0.0067602643
+attr(,"vcov_type")
+[1] "Clustered (COUNTRY_DATA)"
+countries: 114  failed coups: 92 
+
+== m_base_l  N = 3626 
+                      Estimate Std. Error    t value   Pr(>|t|)
+coupattempt_whogov  0.06153496 0.03242966  1.8974901 0.06031536
+L_gdp_cap_pwt_ln   -0.02438801 0.02513248 -0.9703784 0.33393043
+L_pop_pwt_ln       -0.13437546 0.08839241 -1.5202150 0.13125018
+attr(,"vcov_type")
+[1] "Clustered (COUNTRY_DATA)"
+countries: 114  failed coups: 88 
+
+== m_main_l  N = 3590 
+                      Estimate Std. Error    t value     Pr(>|t|)
+coupattempt_whogov  0.06381329 0.03198287  1.9952334 4.842388e-02
+L_gdp_cap_pwt_ln   -0.02591571 0.02340106 -1.1074591 2.704473e-01
+L_pop_pwt_ln       -0.14607245 0.08604884 -1.6975529 9.234465e-02
+L_monarchy_c        0.56070542 0.03763907 14.8968975 2.003783e-28
+L_military_c        0.06868186 0.07059693  0.9728731 3.326943e-01
+L_party_c           0.08147406 0.09361110  0.8703461 3.859564e-01
+attr(,"vcov_type")
+[1] "Clustered (COUNTRY_DATA)"
+countries: 114  failed coups: 87 
+pop_pwt_ln_lag identical to gdp_cap_pwt_ln_lag in provided file: TRUE 
+DEVIATION: individual-level lagged ln population rebuilt from pop_pwt_ln (provided pop_pwt_ln_lag duplicates GDP lag)
+
+Individual base sample N = 95344  years 1967 2016 
+
+== H2a experience N = 85711 
+                       Estimate  Std. Error    t value    Pr(>|t|)
+fca                 0.133581681 0.045214367  2.9544078 0.003806427
+e23                 0.005017930 0.007511944  0.6679935 0.505487877
+e46                 0.019021471 0.009306177  2.0439619 0.043261703
+e6p                -0.002102384 0.009814580 -0.2142102 0.830765785
+gdp_cap_pwt_ln_lag -0.014587716 0.018574820 -0.7853490 0.433878139
+pop_pwt_ln_lag     -0.117181505 0.060541431 -1.9355589 0.055398274
+fca:e23            -0.033404975 0.040489863 -0.8250207 0.411082861
+fca:e46            -0.074495550 0.070935731 -1.0501837 0.295854834
+fca:e6p            -0.072554708 0.053954966 -1.3447272 0.181382746
+attr(,"vcov_type")
+[1] "Clustered (country_name)"
+
+== H2b affiliation N = 85690 
+                        Estimate   Std. Error    t value    Pr(>|t|)
+fca                 1.750361e-01 5.432132e-02  3.2222355 0.001658462
+noparty             3.373012e-02 1.421112e-02  2.3735015 0.019292907
+lparty             -1.248467e-02 1.344363e-02 -0.9286685 0.355023062
+exp1                1.864704e-03 2.541820e-03  0.7336099 0.464692540
+exp2               -1.317704e-04 1.815120e-04 -0.7259596 0.469351358
+exp3                2.223819e-06 3.526143e-06  0.6306660 0.529521206
+gdp_cap_pwt_ln_lag -3.613631e-03 1.859017e-02 -0.1943839 0.846221247
+pop_pwt_ln_lag     -1.173262e-01 6.120913e-02 -1.9168093 0.057765383
+fca:noparty        -6.592990e-02 7.202874e-02 -0.9153277 0.361951744
+fca:lparty         -1.238320e-01 5.868545e-02 -2.1100972 0.037037089
+attr(,"vcov_type")
+[1] "Clustered (country_name)"
+
+== H3a responsibility N = 76204 
+                        Estimate   Std. Error    t value     Pr(>|t|)
+fca                 2.041231e-01 6.580665e-02  3.1018611 2.424311e-03
+mfa                -6.970237e-03 9.725218e-03 -0.7167178 4.750140e-01
+mfin                2.867269e-02 1.066105e-02  2.6894810 8.230758e-03
+mnr                 3.459198e-02 1.093934e-02  3.1621643 2.006954e-03
+moth                5.290398e-02 8.360774e-03  6.3276415 5.054113e-09
+exp1                3.676323e-03 2.931795e-03  1.2539494 2.124257e-01
+exp2               -2.945141e-04 2.093134e-04 -1.4070483 1.621336e-01
+exp3                7.132404e-06 3.896042e-06  1.8306795 6.976038e-02
+gdp_cap_pwt_ln_lag -1.392382e-02 1.794449e-02 -0.7759382 4.393923e-01
+pop_pwt_ln_lag     -1.312475e-01 6.076478e-02 -2.1599272 3.287246e-02
+fca:mfa            -3.928350e-02 6.954867e-02 -0.5648346 5.732961e-01
+fca:mfin           -8.584214e-02 6.639141e-02 -1.2929705 1.986354e-01
+fca:mnr            -1.823417e-01 8.270677e-02 -2.2046765 2.948493e-02
+fca:moth           -1.170288e-01 5.808518e-02 -2.0147785 4.628132e-02
+attr(,"vcov_type")
+[1] "Clustered (country_name)"
+
+== H3b importance N = 89631 
+                        Estimate   Std. Error    t value     Pr(>|t|)
+fca                 3.726316e-01 9.320734e-02  3.9978781 0.0001138037
+t3                 -1.960917e-02 1.261494e-02 -1.5544405 0.1228512389
+t2                  1.266971e-02 1.310196e-02  0.9670087 0.3355866897
+t1                  2.691773e-02 1.417948e-02  1.8983582 0.0601773879
+t05                -5.610506e-03 1.482821e-02 -0.3783669 0.7058617126
+exp1               -3.821532e-04 2.571493e-03 -0.1486114 0.8821228532
+exp2               -2.723453e-05 1.835748e-04 -0.1483565 0.8823234977
+exp3                9.319465e-07 3.591175e-06  0.2595102 0.7957096840
+gdp_cap_pwt_ln_lag -8.854333e-03 1.797795e-02 -0.4925106 0.6233056200
+pop_pwt_ln_lag     -1.193236e-01 6.114094e-02 -1.9516153 0.0534367776
+fca:t3             -2.572357e-01 9.438183e-02 -2.7254789 0.0074342951
+fca:t2             -2.861981e-01 9.483968e-02 -3.0177041 0.0031422087
+fca:t1             -2.643842e-01 1.198617e-01 -2.2057427 0.0294080673
+fca:t05            -2.603798e-01 8.694965e-02 -2.9946045 0.0033711069
+attr(,"vcov_type")
+[1] "Clustered (country_name)"
+
+RESULT:failed_coup_base_country_fe=0.102553
+RESULT:failed_coup_main_country_fe=0.111954
+RESULT:failed_coup_base_leader_fe=0.061535
+RESULT:failed_coup_main_leader_fe=0.063813
+RESULT:failed_coup_experience_model=0.133582
+RESULT:failed_coup_x_over_6_years_experience=-0.072555
+RESULT:failed_coup_affiliation_model=0.175036
+RESULT:failed_coup_x_leaders_party=-0.123832
+RESULT:failed_coup_responsibility_model=0.204123
+RESULT:failed_coup_x_natural_resources=-0.182342
+RESULT:failed_coup_importance_model=0.372632

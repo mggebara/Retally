@@ -39,6 +39,7 @@
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
 | `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a) | [13/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a) |
+| `pipeline-desktop-opus` | [13/13](seeded/pipeline-desktop-opus/20261102T142733Z/CELL.md) (20261102T142733Z) | [13/13](independent/pipeline-desktop-opus/20261102T142733Z/CELL.md) (20261102T142733Z) | [1/13](blind/pipeline-desktop-opus/20261102T141403Z/CELL.md) (20261102T141403Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
 
@@ -51,15 +52,15 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | Cell | Claim | Reproduced | Paper | Band | Error / band | Verdict |
 |---|---|---|---|---|---|---|
 | [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `watermills_table2_col1` | 0.146106 | 0.15 | ±0.005 (printed_precision) | 0.779 | PASS |
+| [seeded/pipeline-desktop-opus/20261102T142733Z](seeded/pipeline-desktop-opus/20261102T142733Z/CELL.md) | `watermills_table2_col1` | 0.146106 | 0.15 | ±0.005 (printed_precision) | 0.779 | PASS |
 | [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `watermills_table2_col2` | 0.143814 | 0.14 | ±0.005 (printed_precision) | 0.763 | PASS |
+| [seeded/pipeline-desktop-opus/20261102T142733Z](seeded/pipeline-desktop-opus/20261102T142733Z/CELL.md) | `watermills_table2_col2` | 0.143814 | 0.14 | ±0.005 (printed_precision) | 0.763 | PASS |
 | [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `watermills_ols_table3_col5` | 0.116758 | 0.12 | ±0.005 (printed_precision) | 0.648 | PASS |
+| [seeded/pipeline-desktop-opus/20261102T142733Z](seeded/pipeline-desktop-opus/20261102T142733Z/CELL.md) | `watermills_ols_table3_col5` | 0.116758 | 0.12 | ±0.005 (printed_precision) | 0.648 | PASS |
 | [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `watermills_iv_table3_col4` | 0.152249 | 0.15 | ±0.005 (printed_precision) | 0.450 | PASS |
+| [seeded/pipeline-desktop-opus/20261102T142733Z](seeded/pipeline-desktop-opus/20261102T142733Z/CELL.md) | `watermills_iv_table3_col4` | 0.152249 | 0.15 | ±0.005 (printed_precision) | 0.450 | PASS |
 | [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `first_stage_f_table3_col4` | 16.9006 | 16.96 | ±0.1696 (relative) | 0.350 | PASS |
-| [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `watermills_table2_col3` | 0.141614 | 0.14 | ±0.005 (printed_precision) | 0.323 | PASS |
-| [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `first_stage_f_table3_col2` | 19.8369 | 19.9 | ±0.199 (relative) | 0.317 | PASS |
-| [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `first_stage_f_table3_col6` | 16.1193 | 16.17 | ±0.1617 (relative) | 0.314 | PASS |
-| [independent/claude-code/2026-11-02-a](independent/claude-code/2026-11-02-a/CELL.md) | `watermills_table2_col1` | 0.146106 | 0.15 | ±0.02 (se_band) | 0.195 | PASS |
-| [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) | `watermills_table2_col1` | 0.146106 | 0.15 | ±0.02 (se_band) | 0.195 | PASS |
+| [seeded/pipeline-desktop-opus/20261102T142733Z](seeded/pipeline-desktop-opus/20261102T142733Z/CELL.md) | `first_stage_f_table3_col4` | 16.9006 | 16.96 | ±0.1696 (relative) | 0.350 | PASS |
 
 ### Declared deviations
 
@@ -72,7 +73,18 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
-_None._
+- blind: `first_stage_f_table3_col2` — pipeline 0/1, agent 1/1
+- blind: `first_stage_f_table3_col4` — pipeline 0/1, agent 1/1
+- blind: `first_stage_f_table3_col6` — pipeline 0/1, agent 1/1
+- blind: `watermills_iv_table3_col2` — pipeline 0/1, agent 1/1
+- blind: `watermills_iv_table3_col4` — pipeline 0/1, agent 1/1
+- blind: `watermills_iv_table3_col6` — pipeline 0/1, agent 1/1
+- blind: `watermills_ols_table3_col5` — pipeline 0/1, agent 1/1
+- blind: `watermills_table2_col1` — pipeline 0/1, agent 1/1
+- blind: `watermills_table2_col2` — pipeline 0/1, agent 1/1
+- blind: `watermills_table2_col3` — pipeline 0/1, agent 1/1
+- blind: `watermills_table2_col4` — pipeline 0/1, agent 1/1
+- blind: `watermills_table2_col5` — pipeline 0/1, agent 1/1
 
 ## Cells
 
@@ -80,11 +92,23 @@ _None._
 
 [`seeded/claude-code/2026-11-02-a/CELL.md`](seeded/claude-code/2026-11-02-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-02T10:06:22Z; from `claude-code-6papers-all-modes-2026-11-02.json`; evidence complete.
 
+### seeded · pipeline-desktop-opus · 20261102T142733Z
+
+[`seeded/pipeline-desktop-opus/20261102T142733Z/CELL.md`](seeded/pipeline-desktop-opus/20261102T142733Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-02T14:27:33Z; from `pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json`; evidence complete.
+
 ### independent · claude-code · 2026-11-02-a
 
 [`independent/claude-code/2026-11-02-a/CELL.md`](independent/claude-code/2026-11-02-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-02T10:06:30Z; from `claude-code-6papers-all-modes-2026-11-02.json`; evidence complete.
 
+### independent · pipeline-desktop-opus · 20261102T142733Z
+
+[`independent/pipeline-desktop-opus/20261102T142733Z/CELL.md`](independent/pipeline-desktop-opus/20261102T142733Z/CELL.md) — final 13/13, re-scored 13/13; first scored 1/13; executions 2; 2026-11-02T14:27:33Z; from `pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json`; evidence complete.
+
 ### blind · claude-code · 2026-11-02-a
 
 [`blind/claude-code/2026-11-02-a/CELL.md`](blind/claude-code/2026-11-02-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-02T00:30:00Z; from `claude-code-6papers-all-modes-2026-11-02.json`; evidence complete.
+
+### blind · pipeline-desktop-opus · 20261102T141403Z
+
+[`blind/pipeline-desktop-opus/20261102T141403Z/CELL.md`](blind/pipeline-desktop-opus/20261102T141403Z/CELL.md) — final 1/13, re-scored 1/13; first scored 1/13; executions 1; 2026-11-02T14:14:03Z; from `pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json`; evidence complete.
 

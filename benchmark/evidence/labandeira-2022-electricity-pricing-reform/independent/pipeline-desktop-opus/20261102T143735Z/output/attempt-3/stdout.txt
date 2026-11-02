@@ -1,0 +1,57 @@
+Variable mapping:
+             id            year           month             bis              T2 
+           "id"          "year"         "month"           "BIS"            "T2" 
+              q               e              q2              e2            cpap 
+        "c_ele"         "g_ele"        "c_ele2"        "g_ele2"       "c_papas" 
+           gpap            cagu            gagu            ccar            gcar 
+      "g_papas"       "c_aguav"       "g_aguav"         "c_car"         "g_car" 
+            inc          totexp            size           rooms            surf 
+      "IMPEXAC"        "TotExp"        "NMIEMB"        "NHABIT"        "SUPERF" 
+            eld            educ             act          tenure            bage 
+"mayores_count"    "ESTUDREDSP"       "NUMACTI"        "REGTEN"       "ANNOCON" 
+           muni           urban             cap             reg 
+       "TAMAMU"         "urban"        "CAPROV"          "CCAA" 
+Rows in data: 203416 
+Rows in window: 56950 
+Panel rows: 28802  households: 14401 
+T2 mean: 0.1907274  NA share: 0.1050969 
+Panel restricted to rows with defined treatment T2 (paper panel = 25,775): 25775 
+mean T: 0.1907274 
+Instrument availability: pap 0.6768574  agu 0.9719884  car 0.6745684 
+Rows with core vars: 25613 
+Controls: size, rooms, surf, factor(elderly), factor(educ), factor(act3), factor(tenure), factor(bage), factor(muni), factor(urban), factor(cap), factor(reg) 
+Candidate estimation-sample sizes:
+     all3   all3_hh   agu_any agu_any_h       any   pap_agu   car_agu      none 
+    11888     17112     21317     23541     25029     16664     16541     25152 
+DEVIATION: Instrument-availability rule for the Table 2 sample is not fully specified; chose rule 'agu_any' (N=21317) as the one whose size best matches the reported 20,872
+Estimation sample: 21317  households: 11852 
+DEVIATION: Missing z_pap for non-buyers imputed (household then cell median) in IV columns
+DEVIATION: Missing z_car for non-buyers imputed (household then cell median) in IV columns
+Instruments used: z_pap_f, z_agu, z_car_f 
+DEVIATION: Expenditure OLS/LSDV columns estimated without ln(price) because ln(price)=ln(exp)-ln(kWh) makes the T coefficient mechanically identical to the consumption equation
+OLS col1:
+         Estimate  Std. Error      t value     Pr(>|t|)
+lp  -1.0602598082 0.024134460 -43.93136621 0.000000e+00
+Tr  -0.1203184283 0.019548019  -6.15501910 7.749323e-10
+msr  0.0005381558 0.006666032   0.08073106 9.356572e-01
+FE col3:
+        Estimate  Std. Error    t value      Pr(>|t|)
+lp  -1.010333202 0.025557477 -39.531805 3.675848e-321
+Tr  -0.138583771 0.021373447  -6.483922  9.291785e-11
+msr -0.007676286 0.007403303  -1.036873  2.998161e-01
+OLS col5 Tr: -0.1176582  FE col7 Tr: -0.1377945 
+LIML col2 beta: -0.39305  kappa: 1.00005  F: 5.776284 
+LIML col4 beta: -2.179974  kappa: 1.000008  F: 2.268604 
+LIML col6 beta: 0.60695  col8 beta: -1.179974 
+RESULT:reform_consumption_ols_col1=-0.120318
+RESULT:reform_consumption_iv_col2=-0.090864
+RESULT:reform_consumption_fe_col3=-0.138584
+RESULT:reform_consumption_fe_iv_col4=-0.227918
+RESULT:reform_expenditure_ols_col5=-0.117658
+RESULT:reform_expenditure_iv_col6=-0.090864
+RESULT:reform_expenditure_fe_col7=-0.137795
+RESULT:reform_expenditure_fe_iv_col8=-0.227918
+RESULT:price_elasticity_consumption_ols_col1=-1.060260
+RESULT:price_elasticity_consumption_fe_col3=-1.010333
+RESULT:n_obs_table2=21317
+RESULT:n_households_table2=11852

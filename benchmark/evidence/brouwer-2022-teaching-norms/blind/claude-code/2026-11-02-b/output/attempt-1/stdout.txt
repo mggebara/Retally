@@ -1,0 +1,150 @@
+tibble [601 × 18] (S3: tbl_df/tbl/data.frame)
+ $ School        : dbl+lbl [1:601]  6,  6,  6,  6,  6,  6,  6,  6,  6,  1,  1,  1,  1,  1...
+   ..@ label       : chr "School ID"
+   ..@ format.stata: chr "%8.0g"
+   ..@ labels      : Named num [1:30] 1 2 3 4 5 6 7 8 9 10 ...
+   .. ..- attr(*, "names")= chr [1:30] "AF" "AH" "AL" "AR" ...
+ $ Child         : num [1:601] 0 0 1 1 1 1 0 1 1 1 ...
+  ..- attr(*, "label")= chr "Alone=0; Child=1"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ scene         : dbl+lbl [1:601] 2, 1, 2, 1, 1, 1, 1, 2, 1, 3, 3, 2, 3, 3, 3, 2, 1, 1, ...
+   ..@ label       : chr "Scene played by the actor"
+   ..@ format.stata: chr "%62.0g"
+   ..@ labels      : Named num [1:3] 1 2 3
+   .. ..- attr(*, "names")= chr [1:3] "Help" "Violation" "Violation+Help"
+ $ Condition     : dbl+lbl [1:601] 2, 4, 1, 3, 3, 3, 4, 1, 3, 5, 5, 1, 5, 6, 6, 2, 4, 4, ...
+   ..@ label       : chr "Experimental condition"
+   ..@ format.stata: chr "%9.0g"
+   ..@ labels      : Named num [1:6] 1 2 3 4 5 6
+   .. ..- attr(*, "names")= chr [1:6] "VC" "VA" "HC" "HA" ...
+ $ Violation     : num [1:601] 1 0 1 0 0 0 0 1 0 0 ...
+  ..- attr(*, "label")= chr "Violation condition=1; 0=Otherwise"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ ViolationHelp : num [1:601] 0 0 0 0 0 0 0 0 0 1 ...
+  ..- attr(*, "label")= chr "Violation+Help condition=1; 0=Otherwise"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ Help          : num [1:601] 0 1 0 1 1 1 1 0 1 0 ...
+  ..- attr(*, "label")= chr "Help condition=1; 0=Otherwise"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ Punishment    : num [1:601] 1 NA 0 NA NA NA NA 0 NA 0 ...
+  ..- attr(*, "label")= chr "1=Punishment; 0=Otherwise"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ Helping       : num [1:601] 0 0 0 0 0 0 1 0 1 0 ...
+  ..- attr(*, "label")= chr "1=Helping; 0=Otherwise"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ HelpingParents: num [1:601] 0 0 0 0 0 0 1 0 1 0 ...
+  ..- attr(*, "label")= chr "1=Helping excluding child help; 0=Otherwise"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ kidshelped    : num [1:601] NA NA NA NA NA NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "1=Child helped; missing otherwise"
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ male          : num [1:601] NA 0 0 1 0 0 0 1 0 1 ...
+  ..- attr(*, "label")= chr "Male Target"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ hugo          : num [1:601] 1 0 0 0 0 0 1 1 1 1 ...
+  ..- attr(*, "label")= chr "Male Actor"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ Morning       : num [1:601] 0 0 0 0 0 0 0 0 0 1 ...
+  ..- attr(*, "label")= chr "Afternoon=0; Morning=1"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ witness       : num [1:601] 0 0 0 1 0 0 0 0 0 0 ...
+  ..- attr(*, "label")= chr "No witness=0; Witness=1"
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ rich          : num [1:601] 0 0 0 0 0 0 0 0 0 0 ...
+  ..- attr(*, "label")= chr "Rich Area"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ Rain          : num [1:601] 0 0 0 0 0 0 0 0 0 0 ...
+  ..- attr(*, "label")= chr "No rainy=0; Rainy=1"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ Hot           : num [1:601] 0 0 0 0 0 0 0 0 0 0 ...
+  ..- attr(*, "label")= chr "No hot day=0; Hot day=1"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+scene 
+
+   1    2    3 <NA> 
+ 201  200  200    0 
+Condition 
+
+   1    2    3    4    5    6 <NA> 
+ 100  100  100  101  100  100    0 
+Violation 
+
+   0    1 <NA> 
+ 401  200    0 
+ViolationHelp 
+
+   0    1 <NA> 
+ 401  200    0 
+Help 
+
+   0    1 <NA> 
+ 400  201    0 
+Punishment 
+
+   0    1 <NA> 
+ 355   45  201 
+Helping 
+
+   0    1 <NA> 
+ 481  120    0 
+HelpingParents 
+
+   0    1 <NA> 
+ 489  112    0 
+kidshelped 
+
+   1 <NA> 
+   8  593 
+male 
+
+   0    1 <NA> 
+ 390  209    2 
+hugo 
+
+   0    1 <NA> 
+ 295  306    0 
+Morning 
+
+   0    1 <NA> 
+ 289  312    0 
+witness 
+
+   0    1 <NA> 
+ 513   88    0 
+rich 
+
+   0    1 <NA> 
+ 296  305    0 
+Rain 
+
+   0    1 <NA> 
+ 554   47    0 
+Hot 
+
+   0    1 <NA> 
+ 431  170    0 
+Child 
+
+   0    1 <NA> 
+ 301  300    0 
+   
+      1   2   3   4   5   6
+  1   0   0 100 101   0   0
+  2 100 100   0   0   0   0
+  3   0   0   0   0 100 100
+      
+         0   1 <NA>
+  0    481   0    0
+  1      8 112    0
+  <NA>   0   0    0
+   
+    FALSE
+  1   201
+  2   200
+  3   200
+   
+    FALSE TRUE
+  1     0  201
+  2   200    0
+  3   200    0
+[1] 30

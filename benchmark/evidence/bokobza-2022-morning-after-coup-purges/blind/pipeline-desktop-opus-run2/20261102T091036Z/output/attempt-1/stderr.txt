@@ -1,0 +1,29 @@
+Country-level columns: COUNTRY_DATA, COUNTRY_ID, YEAR_DATA, ccode, leader_cab_id, democracy1, independent, replacement_rateadj_minister, replacement_rateadj_minister_300, replacement_rateadj_minister_200, replacement_rateadj_minister_100, leaderexperience_continuous, coupattempt_whogov, coupattempt_month_whogov, gdp_cap_pwt_ln, pop_pwt_ln, military_c, monarchy_c, party_c, elec_all, t1_e_a, oil_valuepop_2014_ln, growth_pwt, onset1, nonvio_camp_2, mid_onset, war_onset, domestic3_10, coupattempt_whogov_br, polity2, lpolity2, democracy_br, ldemocracy_br, system_category, latent_personalism, coupattempt_whogov_type_br, type_num
+Failed coup var: coupattempt_whogov
+Control GDP pc: using gdp_cap_pwt_ln (lagged here)
+Control population: using pop_pwt_ln (lagged here)
+Country-level sample rows: 4256
+NOTES: 570 observations removed because of NA values (LHS: 20, RHS: 559).
+       2/0 fixed-effect singletons were removed (2 observations).
+N = 3684; fca = 0.0792226782904438
+NOTES: 615 observations removed because of NA values (LHS: 20, RHS: 605).
+       1/0 fixed-effect singleton was removed (1 observation).
+N = 3640; fca = 0.0869769146598991
+NOTES: 570 observations removed because of NA values (LHS: 20, RHS: 559).
+       175/0 fixed-effect singletons were removed (175 observations).
+N = 3511; fca = 0.0596024179995118
+NOTES: 615 observations removed because of NA values (LHS: 20, RHS: 605).
+       165/0 fixed-effect singletons were removed (165 observations).
+N = 3476; fca = 0.0669028404520036
+Individual-level columns: year, country_isocode, country_name, position, name, title, gender, birthyear, party, party_english, leader, classification, portfolio_1, prestige_1, prestige_numeric, importance_numeric, leader_party, party_group, experience, purged_y1, purged_y2, coupattempt_presentyear, coup_presentyear, coup_lastyear, coupattempt_presentyear_br, coup_presentyear_br, coup_lastyear_br, coupattempt_whogov_type_br, leaderexperience_continuous, democracy_lag_br, n_party, democracy_lag, gdp_cap_pwt_ln, pop_pwt_ln, polity2, gdp_cap_pwt_ln_lag, pop_pwt_ln_lag, lag_polity2, importance_factor, Group, minister_type, minister_classification, age, experience_group, hired
+Control GDP pc (ind): using gdp_cap_pwt_ln_lag (already lagged)
+Control population (ind): using pop_pwt_ln_lag (already lagged)
+Leader rows excluded: 0
+in feols(f, data = d, cluster = ~cid): 
+The data set contains 0 observation: the estimation cannot be done.
+Error in r$map[[top_e]] : 
+  attempt to select less than one element in get1index
+Calls: put
+In addition: Warning message:
+In Ops.factor(il[[cv]], 0) : ‘>’ not meaningful for factors
+Execution halted

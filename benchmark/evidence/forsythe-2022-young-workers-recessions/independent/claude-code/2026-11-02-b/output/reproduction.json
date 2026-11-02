@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "entry_id": "forsythe-2022-young-workers-recessions",
+  "mode": "independent",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "yh_data.csv (2 GB) read with data.table::fread(select=) restricted to the 20 needed columns, to fit the sandbox 4 GB memory / 300 s limits.",
+    "Hiring regressions (Tables 1-2) estimated by WLS on cell means (state x month-year x demographic cell x PE group x t-1 status, weighted by summed person weights); point estimates are identical to person-level WLS because every regressor is constant within cells, but clustered SEs are not identical to the person-level ones.",
+    "Sample restricted to age < 80 at t-1 (CPS age topcode); this restriction is not stated in the paper but reproduces N = 16,948,516 and the Table 2 subsample Ns exactly. The provided state-unemployment file and state identifiers end in May 2014, so the effective sample ends then.",
+    "Years of education from PEEDUCA: 31=0, 32=2.5, 33=5.5, 34=7.5, 35=9, 36=10, 37=11, 38=12, 39=12, 40=13, 41-42=14, 43=16, 44=18, 45-46=20 (the paper does not give its mapping).",
+    "Wage sample: hires in t with weekly earnings > 0 and allocation flag PRWERNAL == 0 (1994-early 1995 have no flag and drop out); occupation/industry crosswalk code year assigned by date (occ: 1990 codes through 2002, 2002 codes 2003-2010, 2010 codes 2011+; ind: 1990 through 2002, 2002 codes 2003-2008, 2007 codes 2009-2013, 2012 codes 2014+). N = 120,294 vs 112,858 in the paper."
+  ],
+  "notes": "Two exploratory runs (no RESULT lines) checked coding and counts. They showed that the file holds matched t-1/t pairs, and that age<80 reproduces the paper's N exactly. The single scored run (final) estimates all 13 quantities: the hire indicator (x100) covers non-employment->employment, or employed in both months with a changed employer (PUIODP1==2), with self-employment (COW 6,7) not counted; weights are the average of the two months' weights; the state unemployment rate is for month t; demographic FE are sex x white x Hispanic x 7 education groups; SEs are clustered by state. Claimed values were visible in the task, but no comparison-driven change was made after the scored run, so there are no claim attempts. Gaps that remain: experienced preferred 0.055 vs 0.0496, aggregate with month-year FE -0.0286 vs -0.0326, wage N larger than the paper's.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T07:01:23Z",
+  "finished_at": "2026-11-02T09:06:52Z"
+}

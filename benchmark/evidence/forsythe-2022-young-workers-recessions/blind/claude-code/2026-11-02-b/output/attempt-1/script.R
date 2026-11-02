@@ -1,0 +1,21 @@
+suppressPackageStartupMessages(library(data.table))
+t0 <- Sys.time()
+f <- "<repo>/benchmark/.cache/claude-code/forsythe-2022-young-workers-recessions/blind/2026-11-02-b/mount/forsythe_2022_young_workers_recessions/3 replication package/Data/yh_data.csv"
+cols <- c("hrmonth","hryear","peage","pesex","peeduca","race","prhspnon","pehspnon","pemlr","pwsswgt",
+          "v2hrmonth","v2hryear","v2gestfips","v2pemlr","v2puiodp1","v2peio1cow","v2peio1icd","v2peio1ocd",
+          "v2prernwa","v2pwsswgt","v2prwernal")
+d <- fread(f, select=cols, nThread=1, showProgress=FALSE)
+cat("read secs", as.numeric(difftime(Sys.time(),t0,units="secs")), "\n")
+cat("nrow", nrow(d), "\n"); print(sapply(d, class))
+print(table(d$hryear, useNA="ifany")); print(table(d$v2hryear, useNA="ifany"))
+print(table(d$v2hrmonth - d$hrmonth, useNA="ifany"))
+print(summary(d$peage)); print(table(d$peeduca, useNA="ifany"))
+print(table(d$pemlr, d$v2pemlr, useNA="ifany"))
+print(table(d$v2puiodp1, d$pemlr %in% 1:2, useNA="ifany"))
+print(table(d$v2peio1cow, useNA="ifany")); print(table(d$v2prwernal, useNA="ifany"))
+print(table(d$race, useNA="ifany")); print(table(d$prhspnon, d$pehspnon, useNA="ifany"))
+cat("zero/neg wt", sum(d$pwsswgt<=0, na.rm=TRUE), sum(d$v2pwsswgt<=0, na.rm=TRUE), sum(is.na(d$pwsswgt)), sum(is.na(d$v2pwsswgt)), "\n")
+print(summary(d$v2prernwa)); print(table(d$v2gestfips)[1:5]); cat("nstates", uniqueN(d$v2gestfips), "\n")
+print(table(d[v2pemlr %in% 1:2]$v2peio1ocd < 0)); print(table(d[v2pemlr %in% 1:2]$v2peio1icd < 0))
+print(d[, .N, by=.(y=v2hryear, m=v2hrmonth)][order(y,m)][, .(y,m,N)][N < 50000])
+cat("total secs", as.numeric(difftime(Sys.time(),t0,units="secs")), "\n")
