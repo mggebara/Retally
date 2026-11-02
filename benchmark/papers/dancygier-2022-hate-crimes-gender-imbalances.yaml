@@ -1,0 +1,440 @@
+# Original paper: Dancygier, R., Egami, N., Jamal, A., & Rischke, R.
+#   (2022). "Hate Crimes and Gender Imbalances: Fears over Mate
+#   Competition and Violence against Refugees." American Journal of
+#   Political Science, 66(2), 501-515.  doi:10.1111/ajps.12595 (first
+#   published online 2021-03-05; open access, CC BY-NC-ND 4.0).  The
+#   Supporting Information (SI; Appendices A-D, 35 pp.) is a separate PDF.
+#
+# Reproduction report: I4R First Meta Database replication team 34
+#   (database rows 1509-1546, entered 2023-10-05).  No I4R discussion
+#   paper was published for this report.  Verdict: reproducible — the
+#   team's survey answer is "Analysis and cleaning code produce the same
+#   output as presented in the paper" (best_describe_compreprod), the
+#   run took 3-4 hours, and the team used both R and Stata.  The
+#   database's computational_reproduction / perfect_reproduction fields
+#   are blank for this report.  All 21 rows with coefficients are
+#   ROBUSTNESS variants ("Add one control variable" against Table 1;
+#   "Add municipality FE and adding controls" against SI Tables C1, C3,
+#   C4 and C5), not plain reproductions; the other 17 rows are blank or
+#   figure rows with result_same = 0 (Figure 2).
+#
+# Why this paper:
+#   1. R original (stargazer tables from lm / glm with sandwich SEs), so
+#      a translation-free target; one Stata do-file only builds
+#      intermediate data from source files.
+#   2. Two designs in one package: an individual-level OLS on an online
+#      survey (Table 1) and a municipality-level logit with clustered SEs
+#      (SI Table C1, the full results behind main-text Figure 1).
+#   3. The package ships its own generated .tex tables (table1.tex,
+#      table_C*.tex, table_D*.tex), which makes it a test of the strip
+#      rule's regression-table detection (all 15 are stripped; see notes).
+#
+# What original_claims pins: Table 1's Mate Competition coefficient in all
+#   six columns with SEs, the Job Competition coefficient in column (2),
+#   the two Table 1 sample sizes, and the Excess Males coefficient (with
+#   SE) and N of the two full-specification models of SI Table C1
+#   (columns 5-6), which are the models plotted in main-text Figure 1.
+
+id: dancygier-2022-hate-crimes-gender-imbalances
+i4r_report_url: https://github.com/I4Replication/I4R-First-Meta-Paper
+# Target language for regeneration (the original analysis is R 4.0.2).
+language: r
+outcome_label: reproducible
+# Pipeline tuning is frozen; this is an evaluation paper.
+split: holdout
+# Contamination bookkeeping.  publication_date is Wiley's online-first
+# date (Crossref published-online 2021-03-05; print issue April 2022).  No
+# working-paper version was found (web search 2026-11-02): the only
+# earlier public item is a Boston University lecture flyer ("Hating and
+# Mating", 2019-04-05) with an abstract and no numbers.  Package: Harvard
+# Dataverse doi:10.7910/DVN/QXJDJ5 version 1.0, created 2020-10-02,
+# released 2020-12-09 (Dataverse API releaseTime); version 1.1 was
+# released 2022-11-22 with byte-identical files.
+publication_date: "2021-03-05"
+package_release_date: "2020-12-09"
+
+paper:
+  # Published AJPS PDF (Wiley typeset, "Downloaded from
+  # onlinelibrary.wiley.com ... on [06/05/2024]" footer) on co-author
+  # Naoki Egami's homepage; checked 2026-11-02: 200, %PDF magic, 15 pp.
+  # (pp. 501-515).  SI: https://naokiegami.com/paper/hatecrime_SM.pdf (35
+  # pp.).  Wiley's own PDF link answers 403 to non-browser clients.
+  source: https://naokiegami.com/paper/hatecrime.pdf
+  title: "Hate Crimes and Gender Imbalances: Fears over Mate Competition and Violence against Refugees"
+  authors:
+    - Rafaela Dancygier
+    - Naoki Egami
+    - Amaney Jamal
+    - Ramona Rischke
+
+dataset:
+  source: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/QXJDJ5&version=1.0
+  access_notes: >
+    Harvard Dataverse (doi:10.7910/DVN/QXJDJ5), VERSION 1.0 (2020-12-09),
+    pinned with &version=1.0.  Two versions exist; version 1.1
+    (2022-11-22) has the same 54 files with identical sizes and md5
+    checksums (Dataverse API, compared 2026-11-02), so it is a
+    metadata-only bump.  The meta-database does not date team 34's
+    replication (rows entered 2023-10-05, Replication Games 2022-2023),
+    so either version may be the one I4R used; 1.0, the version
+    released with the article, is pinned and is byte-for-byte what 1.1
+    serves.  No licence; terms of use ask users to contact the authors
+    (the local cache is not redistributed).  54 files, none restricted,
+    95.1 MB as stored.  Twenty-one Stata .dta datasets were ingested (listed
+    as .tab) and arrive as their .dta originals via ?format=original:
+    context.dta (7.4 MB; municipality-year panel for the hate-crime
+    analysis), context_placebo.dta (4.1 MB), survey.dta (4.7 MB;
+    four-wave Respondi panel), YouGov.dta (0.2 MB), and 17 source /
+    intermediate datasets under source_data/ (pop_gemeinde_2008_2018.dta
+    is the largest, 77 MB as original); the downloader saves the
+    source_data/ files at the top level beside the analysis data (no
+    name collisions).  Not ingested:
+    out_count_table.rdata (11 MB; stored bootstrap results for SI Table
+    C5), nine R scripts (master.R, ContextAnalysis_Main.R,
+    ContextAnalysis_Appendix.R, SurveyAnalysis_Main.R,
+    SurveyAnalysis_Appendix.R, Help.R, merge_context.R,
+    merge_context_placebo.R, number_in_texts.R), one Stata do-file (produce_context_data.do), 1-ReadMe.txt, six PDFs
+    (four codebooks, two data-source notes), and 15 stargazer .tex
+    tables (table1.tex, table_C1-C7.tex, table_C9.tex, table_D5_1.tex,
+    table_D5_2.tex, table_D6_1.tex, table_D6_3.tex, table_D8_1.tex,
+    table_D8_2.tex) carrying every pinned value.  No archives, no logs.
+    The script-free copy (independent / blind) withholds 25 files,
+    checked 2026-11-02: the ten scripts by suffix and the 15 .tex
+    tables by content (regression-table); 1-ReadMe.txt (file descriptions, no numbers),
+    the codebooks and data-source PDFs, and out_count_table.rdata (a
+    data format; Table C5 bootstrap draws, nothing pinned) stay.  None of
+    the kept text or PDF files prints a pinned value or SE (grep of the
+    extracted text, as printed and rounded); the codebooks name the
+    variables, as codebooks do.
+
+code_repo:
+  url: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/QXJDJ5&version=1.0
+
+original_claims:
+  # ---- Table 1: Mate Competition and support for hate crime (survey) ----
+  - description: mate_competition_table1_col1
+    value: 0.437
+    claim_type: coefficient
+    standard_error: 0.016
+    unit: points on the 1-4 Only Means scale per point of Mate Competition (1-4)
+    location: "Table 1, column (1), Mate competition"
+    context: >
+      Table 1 ("Mate Competition Predicts Support for Hate Crime"), column
+      (1).  OLS of support for hate crime, the Only Means item ("When it
+      comes to the refugee problem, violence is sometimes the only means
+      that citizens have to get the attention of German politicians"; 1 =
+      disagree strongly to 4 = agree strongly), on Mate Competition ("The
+      inflow of refugees makes it more difficult for native men to find
+      female partners"; same 1-4 scale), with no other regressors.
+      Respondents of Wave 4 (December 2017) of the authors' online panel
+      survey of German residents fielded by Respondi.  Conventional OLS
+      standard errors in parentheses.
+  - description: mate_competition_table1_col2
+    value: 0.263
+    claim_type: coefficient
+    standard_error: 0.020
+    unit: points on the 1-4 Only Means scale per point of Mate Competition (1-4)
+    location: "Table 1, column (2), Mate competition"
+    context: >
+      Table 1, column (2): the same OLS of Only Means on Mate Competition,
+      adding Job Competition ("the inflow of young male refugees makes it
+      more difficult for young native men to find apprenticeships and
+      jobs", 4-point scale) and Life Satisfaction (0-10).  Wave 4
+      respondents; conventional OLS standard errors.
+  - description: mate_competition_table1_col3
+    value: 0.236
+    claim_type: coefficient
+    standard_error: 0.021
+    unit: points on the 1-4 Only Means scale per point of Mate Competition (1-4)
+    location: "Table 1, column (3), Mate competition"
+    context: >
+      Table 1, column (3): column (2) plus the sociodemographic controls
+      (age, gender, education, income, main economic activity, employment
+      status, German citizenship, household size, self-assessed social
+      status, religious affiliation, state of residence).  Wave 4
+      respondents; conventional OLS standard errors.
+  - description: mate_competition_table1_col4
+    value: 0.206
+    claim_type: coefficient
+    standard_error: 0.019
+    unit: points on the 1-4 Only Means scale per point of Mate Competition (1-4)
+    location: "Table 1, column (4), Mate competition"
+    context: >
+      Table 1, column (4): column (3) plus the battery of attitudes toward
+      refugees at the national level (respondents' views of the economic,
+      cultural, political and social consequences and desirability of
+      refugees for Germany as a whole; SI Table D.7).  Wave 4 respondents;
+      conventional OLS standard errors.
+  - description: mate_competition_table1_col5
+    value: 0.185
+    claim_type: coefficient
+    standard_error: 0.019
+    unit: points on the 1-4 Only Means scale per point of Mate Competition (1-4)
+    location: "Table 1, column (5), Mate competition"
+    context: >
+      Table 1, column (5): column (4) plus the battery of attitudes toward
+      refugees in the respondent's own municipality (local consequences
+      of refugees; SI Table D.7).  The text says adding the national and
+      local batteries reduces the Mate Competition coefficient by about
+      one fifth.  Wave 4 respondents; conventional OLS standard errors.
+  - description: mate_competition_table1_col6
+    value: 0.155
+    claim_type: coefficient
+    standard_error: 0.019
+    unit: points on the 1-4 Only Means scale per point of Mate Competition (1-4)
+    location: "Table 1, column (6), Mate competition"
+    context: >
+      Table 1, column (6), the paper's fullest specification: column (5)
+      plus the additional controls (self-reported public contact with
+      refugees, estimated closeness to refugee shelters, estimated number
+      of refugees living in town, views about and closeness to the AfD,
+      left-right ideological placement, and attitudes toward Muslims).
+      Wave 4 respondents; conventional OLS standard errors.  Figure 4
+      repeats this specification for the other hate-crime items.
+  - description: job_competition_table1_col2
+    value: 0.250
+    claim_type: coefficient
+    standard_error: 0.019
+    unit: points on the 1-4 Only Means scale per point of Job Competition (1-4)
+    location: "Table 1, column (2), Job competition"
+    context: >
+      Table 1, column (2): the Job Competition coefficient in the OLS of
+      Only Means on Mate Competition, Job Competition and Life
+      Satisfaction.  Wave 4 respondents; conventional OLS standard errors.
+  - description: n_obs_table1_col1
+    value: 3019
+    claim_type: other
+    unit: survey respondents
+    location: "Table 1, columns (1)-(2), Observations"
+    context: >
+      Number of Wave 4 respondents in the Table 1 regressions without
+      sociodemographic controls (columns 1 and 2): respondents with
+      non-missing Only Means, Mate Competition, Job Competition and Life
+      Satisfaction.
+  - description: n_obs_table1_col3
+    value: 3008
+    claim_type: other
+    unit: survey respondents
+    location: "Table 1, columns (3)-(6), Observations"
+    context: >
+      Number of Wave 4 respondents in the Table 1 regressions with
+      sociodemographic controls (columns 3 to 6).
+
+  # ---- SI Table C1: Excess Males and hate crime (municipalities) ----
+  - description: excess_males_sum_tableC1_col5
+    value: 1.406
+    claim_type: coefficient
+    standard_error: 0.463
+    unit: log-odds per unit of the male-to-female ratio
+    location: "SI Table C1, column (5) Sum, Excess Males (Age 15 - 44)"
+    context: >
+      SI Appendix C.1, Table C1 ("The Effect of Excess Males on the
+      Probability of Observing at least One Hate Crime"), column (5), the
+      Sum model plotted in main-text Figure 1.  Logistic regression across
+      German municipalities of an indicator equal to one if the
+      municipality saw at least one anti-refugee hate crime (arson or
+      other attacks on refugee housing, or physical attacks on refugees,
+      from the "Mut gegen rechte Gewalt" chronicle of the Amadeu Antonio
+      Foundation and PRO ASYL) over 2015-2017, on Excess Males (the number
+      of men divided by the number of women aged 15-44 in the
+      municipality, 2015), controlling for log population, log population
+      density, log unemployment rate, population change 2011-2015, AfD
+      vote share 2013, and the county-level log refugee inflow
+      (2014-2015), log refugee stock (2014), log general violence per
+      capita, share highly educated, change in manufacturing share
+      (2011-2015) and manufacturing share, plus Male Disadvantage (male
+      over female unemployment rate), with state fixed effects.
+      Municipalities in the top and bottom 2.5 percentiles of Excess Males
+      are excluded.  Standard errors clustered by county.
+  - description: excess_males_annual_tableC1_col6
+    value: 1.537
+    claim_type: coefficient
+    standard_error: 0.412
+    unit: log-odds per unit of the male-to-female ratio
+    location: "SI Table C1, column (6) Annual, Excess Males (Age 15 - 44)"
+    context: >
+      SI Table C1, column (6), the Annual model plotted in main-text
+      Figure 1: the same logistic regression and controls as
+      excess_males_sum_tableC1_col5, on municipality-years 2015, 2016 and
+      2017, with the outcome equal to one if the municipality saw at
+      least one anti-refugee hate crime in that year, and state and year
+      fixed effects.  Same exclusion of extreme Excess Males values;
+      standard errors clustered by county.
+  - description: n_obs_sum_tableC1_col5
+    value: 9282
+    claim_type: other
+    unit: municipalities
+    location: "SI Table C1, column (5), Observations"
+    context: >
+      Number of municipalities in the SI Table C1 column (5) Sum model
+      (complete cases after excluding the extreme Excess Males values).
+  - description: n_obs_annual_tableC1_col6
+    value: 27846
+    claim_type: other
+    unit: municipality-years
+    location: "SI Table C1, column (6), Observations"
+    context: >
+      Number of municipality-year observations in the SI Table C1 column
+      (6) Annual model.
+
+# The meta-database's 21 coefficient rows for this paper (team 34) are all
+# robustness variants with added controls, so none is a reproduction of a
+# pinned number: five against Table 1 ("Add one control variable": o_coeff
+# 0.155 (0.019) -> r 0.153 (0.019) for column 6, and four rows whose
+# o_coeff 0.173 / 0.192 / 0.204 / 0.027 are the Figure 4 / SI Table D.5.1
+# effects on the other hate-crime items) and sixteen against SI Tables
+# C1, C3, C4 and C5 ("Add municipality FE and adding controls": e.g.
+# Table C1 column 6, 1.537 (0.412) -> 2.090 (3.512) and 3.821 (1.532)).
+# No DP was published.  As in leeson-2022 and adams-2023, each finding
+# below records the paper's own value under the team's blanket verdict
+# ("Analysis and cleaning code produce the same output as presented in the
+# paper").
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: 0.437
+    outcome: matches
+    notes: Blanket I4R verdict (team 34, code reproduces the paper); no per-row entry for column 1.
+  - claim_id: 1
+    reproduced_value: 0.263
+    outcome: matches
+    notes: Blanket I4R verdict; no per-row entry for column 2.
+  - claim_id: 2
+    reproduced_value: 0.236
+    outcome: matches
+    notes: Blanket I4R verdict; no per-row entry for column 3.
+  - claim_id: 3
+    reproduced_value: 0.206
+    outcome: matches
+    notes: Blanket I4R verdict; no per-row entry for column 4.
+  - claim_id: 4
+    reproduced_value: 0.185
+    outcome: matches
+    notes: Blanket I4R verdict; no per-row entry for column 5.
+  - claim_id: 5
+    reproduced_value: 0.155
+    outcome: matches
+    notes: Blanket I4R verdict; the only per-row entry (o_coeff 0.155, o_se 0.019) is an add-one-control robustness variant, 0.153 (0.019).
+  - claim_id: 6
+    reproduced_value: 0.250
+    outcome: matches
+    notes: Blanket I4R verdict; no per-row entry.
+  - claim_id: 7
+    reproduced_value: 3019
+    outcome: matches
+    notes: Blanket I4R verdict; value is the paper's.
+  - claim_id: 8
+    reproduced_value: 3008
+    outcome: matches
+    notes: Blanket I4R verdict; value is the paper's.
+  - claim_id: 9
+    reproduced_value: 1.406
+    outcome: matches
+    notes: Blanket I4R verdict; no per-row entry for Table C1 column 5.
+  - claim_id: 10
+    reproduced_value: 1.537
+    outcome: matches
+    notes: Blanket I4R verdict; the per-row entries (o_coeff 1.537, o_se 0.412) are municipality-FE-plus-controls robustness variants, 2.090 (3.512) and 3.821 (1.532).
+  - claim_id: 11
+    reproduced_value: 9282
+    outcome: matches
+    notes: Blanket I4R verdict; value is the paper's.
+  - claim_id: 12
+    reproduced_value: 27846
+    outcome: matches
+    notes: Blanket I4R verdict; value is the paper's.
+
+notes: >
+  Headline findings: German municipalities with more men than women aged
+  15-44 are more likely to see anti-refugee hate crime (Figure 1; SI Table
+  C1 full models, Excess Males 1.406 (0.463) Sum and 1.537 (0.412)
+  Annual, logit; in the text, moving from 1.0 to 1.2 raises the
+  probability of at least one hate crime by 2.60 and 1.71 points), and
+  survey respondents who agree that refugees make it harder for native
+  men to find partners are more likely to support anti-refugee violence
+  (Table 1: Mate Competition 0.437 (0.016) bivariate, 0.155 (0.019) with
+  all controls; N 3,019 / 3,008).
+
+  Curation pass (2026-11-02).  Pinned 13 claims: Table 1's Mate
+  Competition coefficient in all six columns and Job Competition in
+  column 2, each with its SE; the two Table 1 Ns; SI Table C1 columns 5-6
+  Excess Males with SEs and their Ns (9,282 municipalities; 27,846
+  municipality-years).  Values exactly as printed in the published PDF
+  and SI and identical to the package's table1.tex / table_C1.tex.
+  Cross-check against the meta-database: Table 1 col 6 0.155 (0.019) and
+  Table C1 col 6 1.537 (0.412) equal the rows' o_coeff / o_std_err; the
+  other pinned values have no row.  Table C1 columns 5-6 are pinned
+  although they sit in the SI because they are the "full results and
+  specification" of main-text Figure 1 (the paper's municipality-level
+  headline), not a robustness check; ContextAnalysis_Main.R fits exactly
+  these two models for Figure 1.  Left out: Table 1's Job Competition in
+  columns 3-6 and Life Satisfaction, R2 / adjusted R2 (0.191-0.459), Table
+  C1 columns 1-4 and its other covariates, the Figure 1 effects (2.60
+  [0.88, 4.19] and 1.71 [0.76, 2.55] points; marginal effects from a
+  custom function), Figure 2-4 quantities, the list experiment, the
+  YouGov replication, and SI Tables C2-C9 and D (robustness).
+
+  Paper vs package.  The main text (fn. 24 area) says Figure 1 includes
+  "county and year fixed effects"; the code and SI Table C1 use county
+  fixed effects in columns 1-4 only and STATE fixed effects (plus year in
+  the annual model) in the full columns 5-6 plotted in Figure 1, with SEs
+  clustered by county.  The contexts follow SI Table C1.  The paper's
+  Table 1 prints stars at p < 0.1 / 0.05 / 0.01 as dagger / * / **; the
+  package's table1.tex uses the stargazer default *** for the same
+  thresholds (values identical).
+
+  Package-only facts (never in contexts).  master.R sources the four
+  analysis scripts and number_in_texts.R; all read the .dta files from
+  the working directory with readstata13 and use Help.R's bin.summary
+  (glm logit with a cluster-robust vcov via sandwich) and star_out.
+  Table 1 (SurveyAnalysis_Main.R): dat[dat$wave == 4, ]; lm1
+  hate_violence_means ~ MateComp.cont; lm2 adds JobComp.cont +
+  LifeSatis.cont; lm3 adds factor(age_group, gender, state, citizenship,
+  marital, religion, occupation, income, household_size, self_econ) +
+  eduyrs; lm4 adds eight national refugee items factor(ref_integrating,
+  ref_citizenship, ref_reduce, ref_moredone, ref_cultgiveup, ref_economy,
+  ref_crime, ref_terror); lm5 adds eight local items factor(ref_loc_*);
+  lm6 adds factor(distance_ref) + factor(settle_ref) + lrscale + afd +
+  muslim_ind + afd_ind + contact_ind.  Classical lm SEs.  Table C1
+  (ContextAnalysis_Appendix.R): context.dta; the Sum outcome
+  Hate_all_muni_1517_bin is built on the 2015 rows by summing
+  Hate_all_muni over 2015-2017 (rows aligned by position across year
+  subsets); Excess Males is pop_15_44_muni_gendergap_2015, trimmed to its
+  2.5-97.5 % quantiles computed on the 2015 rows; full models add
+  log_unemp_all_muni_2015, d_pop1511_muni, vote_afd_2013_muni,
+  log_ref_inflow_1514, log_pop_ref_2014, log_violence_percap_2015,
+  pc_hidegree_all2011, d_manuf1115, pc_manufacturing_2015,
+  unemp_gendergap_2015, as.factor(ags_state) (+ as.factor(year) for the
+  annual Hate_all_muni_bin), clustered by ags_county.
+  produce_context_data.do (Stata 16) and merge_context*.R only rebuild
+  context.dta from source_data/ and are not needed for the pinned
+  numbers.
+
+  What was read.  The published AJPS PDF (all 15 pp.); the SI PDF
+  (Appendix C.1-C.3 and D.5.1 in full, the rest skimmed); the Dataverse
+  API metadata for versions 1.0 and 1.1; the package's 1-ReadMe.txt,
+  master.R, ContextAnalysis_Main.R, ContextAnalysis_Appendix.R (Table C1
+  section), SurveyAnalysis_Main.R (Table 1 and Figure 4 sections),
+  table1.tex and table_C1.tex; the meta-database's 38 team-34 rows.
+
+  Independent cross-check (2026-11-02; not the package code: pandas /
+  statsmodels on the downloaded .dta files).  Table 1 col 1 0.437
+  (0.016), N 3,019; col 2 Mate 0.263 (0.020), Job 0.250 (0.019), Life
+  -0.015 (0.006), N 3,019; SI Table C1 col 5 logit with county-clustered
+  SEs 1.406 (0.463), N 9,282; col 6 1.537 (0.413 vs the printed 0.412,
+  a small-sample-correction difference between statsmodels and
+  sandwich), N 27,846.  Benchmark implication: the Sum outcome sums the
+  three annual hate-crime counts per municipality; the R code does it by
+  row position across the 2015 / 2016 / 2017 subsets (the file is in a
+  consistent municipality order within year), and a first attempt here
+  that re-sorted by year with an unstable sort got 1.041 (0.365) at the
+  same N — a reproduction must align years by municipality.
+
+  What could not be verified.  The package's R code was not run (the
+  cross-check above re-estimates four pinned coefficients and the Ns;
+  Table 1 columns 3-6 were not re-estimated).  The date of team 34's
+  replication (hence the exact Dataverse version it used) is not
+  recorded; both versions are byte-identical.
+
+  Original analysis in R 4.0.2 (readstata13, MASS, sandwich, lmtest,
+  stargazer, list, pBrackets), with one Stata 16 data-construction
+  do-file; language: r is the reproduction target.
