@@ -638,3 +638,60 @@ def test_docx_markers_must_sit_within_one_window_and_broken_docx_is_kept(tmp_pat
     assert content_reason(spread) is None
     broken = _write(tmp_path, "broken.docx", b"PK\x03\x04 not really a zip")
     assert content_reason(broken) is None
+
+
+# ---------------------------------------------------------------------------
+# R workspaces: a save.image() snapshot taken after the analysis keeps the
+# stargazer output (Douenne & Fabre 2022 ship after_papier.RData)
+# ---------------------------------------------------------------------------
+
+STARGAZER_ROWS = [
+    r"\begin{table}[!htbp] \centering ",
+    r"\begin{tabular}{@{\extracolsep{5pt}}lcccc} ",
+    r"\\[-1.8ex] & (1) & (2) & (3) & (4)\\ ",
+    r" Treated & 0.112 & 0.208 & 0.146 & 0.153 \\ ",
+    r"  & (0.058) & (0.035) & (0.064) & (0.045) \\ ",
+    r"  Baseline support & 0.406 & 0.331 & 0.025 & 0.310 \\ ",
+    r"  & (0.066) & (0.038) & (0.087) & (0.051) \\ ",
+    r"Observations & 812 & 2,104 & 812 & 812 \\ ",
+    r"R$^{2}$ & 0.301 & 0.320 & 0.419 & 0.253 \\ ",
+    r"\end{tabular} ",
+]
+
+DATA_STRINGS = [
+    "names", "row.names", "data.frame", "Observations", "R2", "Bosnia & Herzegovina",
+    "Trinidad & Tobago", "(0.5)", "(1.2)", "(2.0)", "Féminin", "Masculin", "Cadre", "Ouvrier",
+]  # fmt: skip
+
+
+def _rdata(path: Path, strings: list[str], *, compress: str = "gzip") -> Path:
+    """A minimal XDR R serialization: header, then each string as a CHARSXP (flags, length, bytes)."""
+    import bz2
+    import gzip
+    import lzma
+    import struct
+
+    body = b"RDX3\nX\n" + struct.pack(">iii", 3, 0x040003, 0x030500)
+    for i, s in enumerate(strings):
+        raw = s.encode("latin-1")
+        body += struct.pack(">ii", 0x00040009, len(raw)) + raw + struct.pack(">d", i * 0.5)
+    codecs = {"gzip": gzip.compress, "bz2": bz2.compress, "xz": lzma.compress, "none": lambda b: b}
+    return _write(path.parent, path.name, codecs[compress](body))
+
+
+@pytest.mark.parametrize("compress", ["gzip", "bz2", "xz", "none"])
+def test_r_workspace_holding_a_stargazer_table_is_stripped(tmp_path, compress):
+    strings = DATA_STRINGS + STARGAZER_ROWS + DATA_STRINGS
+    path = _rdata(tmp_path / "after_analysis.RData", strings, compress=compress)
+    assert content_reason(path) == "regression-table"
+    assert {s.path: s.reason for s in classify_tree(tmp_path)} == {"after_analysis.RData": "regression-table"}
+
+
+def test_r_data_workspaces_and_rds_files_are_kept(tmp_path):
+    _rdata(tmp_path / "after_preparation.RData", DATA_STRINGS * 50)
+    _rdata(tmp_path / "survey.rda", DATA_STRINGS, compress="xz")
+    # A single serialized object (.rds) is data, not a session snapshot: not content-tested.
+    _rdata(tmp_path / "table.rds", STARGAZER_ROWS)
+    # Not an R serialization at all.
+    _write(tmp_path, "odd.rda", b"\x00\x01" + "\n".join(STARGAZER_ROWS).encode())
+    assert classify_tree(tmp_path) == []
