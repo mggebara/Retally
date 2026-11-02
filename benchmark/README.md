@@ -120,13 +120,20 @@ downloaded package (`benchmark/strip_rule.py`, applied by
   `.pdf` with a page carrying three regression-table markers (the
   accepted manuscript and online appendix EJ packages ship as
   `1 paper/*_accepted.pdf`, `2 appendix/*.pdf`; README and codebook PDFs
-  stay).
+  stay); a `.docx` with three of those markers within about a page
+  (3,000 characters) of consecutive paragraphs (the manuscript and its
+  tables as Word files: Mokyr 2022 ships `1 paper/*_main.docx`,
+  `*_tables_ocr.docx`, `*_tables_image.docx`; README docx stay).  A
+  significance legend counts whether printed as `* p < 0.1` or written
+  out in a table note (`*** denotes statistical significance at the 1%
+  level`, which is how the image-table pages of Mokyr's accepted PDF
+  reach three markers).
 - **Byte copies** of a file stripped by name.
 
 Evidence must be strong (several independent markers) or the file
 stays.  Data formats (`.dta .RData .rds .sav .parquet`, shapefiles, …)
 are never stripped and never content-tested, other binary files
-(spreadsheets and PDFs aside) are not content-tested, a plain `.csv` (figure data included) is kept, and a
+(spreadsheets, PDFs and `.docx` aside) are not content-tested, a plain `.csv` (figure data included) is kept, and a
 `.tex` manuscript (`\documentclass`) stays unless one of its own
 tabulars is a regression table.  Directory names (`output/`, `tables/`)
 play no part.  Summary-statistics tables without regression markers

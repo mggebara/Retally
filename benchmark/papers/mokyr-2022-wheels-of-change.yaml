@@ -1,0 +1,437 @@
+# Original paper: Mokyr, J., Sarid, A., & van der Beek, K. (2022). "The
+#   Wheels of Change: Technology Adoption, Millwrights and the Persistence
+#   in Britain's Industrialisation." The Economic Journal, 132(645),
+#   1894-1926.  doi:10.1093/ej/ueab102
+#
+# Reproduction report: no I4R Discussion Paper.  The I4R First Meta
+#   Database holds 17 rows for this paper (tag T100, replicator team 100,
+#   row indices 5895-5911, entered 2023-09-28).  Verdict, row 5900:
+#   computational_reproduction = 1, perfect_reproduction = Yes, "We were
+#   able to replicate the outcomes presented in the paper using data and
+#   code shared by the authors".  The other rows are robustness checks on
+#   Table 2 column 5 and Table 3 columns 5-6 (outliers, alternative
+#   dependent variables, county fixed effects, wild-bootstrap SEs for the
+#   few clusters, an area-control sensitivity note: "Only control variable
+#   with an impact is 'area'").  outcome_label: reproducible.
+#
+# Why this paper:
+#   1. Small Stata package (7.8 MB in three zips; one 0.3 MB .dta with a
+#      .csv copy), open on Zenodo under CC BY 4.0.
+#   2. Two core tables (Section 4.1): OLS (Table 2) and IV (Table 3) of
+#      eighteenth-century wright apprentices on Domesday Book watermills in
+#      a cross-section of English districts — plain linear models a
+#      reproduction can match from the paper's description.
+#   3. Published EJ PDF open on Mokyr's Northwestern site.
+#   4. First EJ-style package in the catalog whose manuscript ships as Word
+#      files, and whose accepted PDF prints its tables as images: it
+#      motivated the .docx and written-out-legend extensions of
+#      benchmark/strip_rule.py made with this entry.
+#
+# What original_claims pins: the Domesday-watermills coefficient and SE in
+#   all five Table 2 columns and in Table 3 column 5 (OLS) and columns 2, 4
+#   and 6 (IV), the three Table 3 first-stage F-statistics, and the common
+#   sample size.  13 claims; tables print two decimals and values are
+#   pinned exactly as printed (the printed-precision floor gives each a
+#   +/-0.005 band).
+
+id: mokyr-2022-wheels-of-change
+i4r_report_url: https://github.com/I4Replication/I4R-First-Meta-Paper
+# Target language for regeneration (the original is Stata: reg and ivreg2).
+language: r
+outcome_label: reproducible
+split: holdout
+# Contamination bookkeeping.  First public version: CEPR Discussion Paper
+# DP14138, November 2019 ("The Wheels of Change: Technology Adoption,
+# Millwrights, and Persistence in Britain's Industrialization"; CEPR and
+# RePEc listing, web search 2026-11-02; an SSRN version followed in
+# December 2019).  EJ: received 2020-04-29, published online 2022-02-25
+# (Crossref published-online), print EJ 132(645), 2022-06-17.  Package:
+# the files were first published as Zenodo record 5731589 on 2021-11-27
+# (Zenodo API created / publication_date); the record pinned below,
+# 5734954, holds byte-identical files and was published 2021-11-29.
+publication_date: "2019-11"
+package_release_date: "2021-11-27"
+
+paper:
+  # The published EJ PDF (OUP typeset, 33 pp.) on Joel Mokyr's
+  # Northwestern site; checked 2026-11-02: 200 application/pdf, %PDF magic,
+  # 416,241 bytes, to a Retally-curation user agent.
+  source: https://bpb-us-e1.wpmucdn.com/sites.northwestern.edu/dist/3/1222/files/2024/02/The-Wheels-of-Change-2022-2d19383637e6a5b4.pdf
+  title: "The Wheels of Change: Technology Adoption, Millwrights and the Persistence in Britain's Industrialisation"
+  authors:
+    - Joel Mokyr
+    - Assaf Sarid
+    - Karine van der Beek
+
+dataset:
+  source: https://zenodo.org/records/5734954
+  access_notes: >
+    Zenodo record 5734954 (doi:10.5281/zenodo.5734954, the package DOI the
+    paper's first-page footnote cites), open access, CC BY 4.0, published
+    2021-11-29.  Three zips, 7,751,812 bytes in all: "Nov-1-paper.zip"
+    (4,195,842), "Nov1-replication package.zip" (1,113,561),
+    "Nov-1-replication-appendix.zip" (2,442,409).  Zenodo record 5731589
+    (2021-11-27, the record the corpus shortlist named) holds the same
+    three files with identical md5 checksums (9e4e2ba2..., f661d436...,
+    d42a3ab6...); single Zenodo versions, so no version pinning applies
+    and the package I4R ran (2023) is this one.  The downloader extracts
+    the zips into: "1 paper/" (MS20200480_accepted.pdf, the accepted
+    manuscript with its tables as images; MS20200480_main.docx, the
+    manuscript; MS20200480_tables_ocr.docx, every table as OCR'd text;
+    MS20200480_tables_image.docx, the tables as images with their notes;
+    MS20200480_figures.docx), "2 appendix/"
+    (MS20200480_online_appendix_nov1.pdf), and "3 replication package/"
+    (MS20200480_README.pdf and .docx, a variable codebook; "Replication
+    files/" with Data/replication_data.dta and .csv (325 districts, 62
+    variables), Data/"replication section 5.3.xlsx" (Table 4 / Figure 2
+    Hampshire mill data), do_files/ (main.do, Tables.do, Figures.do,
+    appendix_replication.do, mypsacalc.ado), Appendix/ (two figure PNGs),
+    and .texpadtmp/ (Table_replication.log, a pdfTeX compile log;
+    Table_replication.aux, table captions only; Table_replication.synctex.gz)
+    plus __MACOSX resource forks).  No Stata log or .tex table output
+    ships.  Script-free copy (independent / blind mode): strips the five
+    do/ado files and the .log by name, and by content the accepted PDF,
+    the online appendix PDF, and main / tables_ocr / tables_image .docx
+    (regression-table; the .docx test and the written-out significance
+    legend were added to benchmark/strip_rule.py with this entry).  Kept:
+    the data, the README codebook, figures.docx (two figure captions and
+    images), the .aux / .synctex.gz, the xlsx and the figure PNGs.
+
+code_repo:
+  url: https://zenodo.org/records/5734954
+
+original_claims:
+  # ---- Table 2: OLS, wright apprentices on Domesday watermills ----
+  - description: watermills_table2_col1
+    value: 0.15
+    claim_type: coefficient
+    standard_error: 0.02
+    sample_size: 298
+    unit: wright apprentices per capita per Domesday watermill per capita
+    location: "Table 2, column (1), Watermills (per capita)"
+    context: >
+      Table 2 ("Number of Wright Apprentices per Capita and Domesday Book
+      Mills per Capita"), column (1).  Cross-section of English
+      (government area) districts covered by the Domesday Book.  OLS
+      regression of the number of apprentices to wrights in 1710-50 (from
+      the Apprentice Tax Registers) per capita on the number of watermills
+      recorded in the Domesday Book (1086) per capita, with a constant and
+      no controls; both counts are converted to per capita terms using the
+      district's mean population in 1710-50 (the text reads the
+      coefficient as wright apprentices per mill per 10,000 people).  The
+      table note says observations are clustered at the historical county
+      level and heteroscedasticity robust standard errors are reported.
+  - description: watermills_table2_col2
+    value: 0.14
+    claim_type: coefficient
+    standard_error: 0.02
+    sample_size: 298
+    unit: wright apprentices per capita per Domesday watermill per capita
+    location: "Table 2, column (2), Watermills (per capita)"
+    context: >
+      Table 2, column (2): the column (1) regression adding the main
+      geographic controls — latitude and longitude of the district's
+      centroid, mean ruggedness and mean elevation.  Same sample, SEs
+      clustered at the historical county level.
+  - description: watermills_table2_col3
+    value: 0.14
+    claim_type: coefficient
+    standard_error: 0.02
+    sample_size: 298
+    unit: wright apprentices per capita per Domesday watermill per capita
+    location: "Table 2, column (3), Watermills (per capita)"
+    context: >
+      Table 2, column (3): column (2) plus agricultural suitability, wheat
+      suitability and mean pasture suitability.  Wheat suitability is the
+      paper's high-wheat-suitability indicator (mean wheat suitability
+      category of the district lower than or equal to 5, the lower the
+      more suitable).
+  - description: watermills_table2_col4
+    value: 0.14
+    claim_type: coefficient
+    standard_error: 0.02
+    sample_size: 298
+    unit: wright apprentices per capita per Domesday watermill per capita
+    location: "Table 2, column (4), Watermills (per capita)"
+    context: >
+      Table 2, column (4): column (3) plus the climatic controls, mean
+      precipitation and mean temperature.
+  - description: watermills_table2_col5
+    value: 0.12
+    claim_type: coefficient
+    standard_error: 0.03
+    sample_size: 298
+    unit: wright apprentices per capita per Domesday watermill per capita
+    location: "Table 2, column (5), Watermills (per capita)"
+    context: >
+      Table 2, column (5), the paper's preferred OLS specification (Figure
+      1 plots its partial correlation): column (4) plus mean population in
+      1710-50, minimal distance to an important harbour, distance to
+      London, minimal distance to a Roman road, minimal distance to a
+      navigable river, and the district's area.  SEs clustered at the
+      historical county level.
+
+  # ---- Table 3: OLS and IV ----
+  - description: watermills_ols_table3_col5
+    value: 0.12
+    claim_type: coefficient
+    standard_error: 0.03
+    sample_size: 298
+    unit: wright apprentices per capita per Domesday watermill per capita
+    location: "Table 3, column (5) OLS, Watermills (per capita)"
+    context: >
+      Table 3 ("Wright Apprentices per Capita and the Number of Domesday
+      Mills per Capita"), column (5), OLS: the Table 2 column (5)
+      specification (main geographic, agricultural, climatic and other
+      geographic controls, population) with river suitability added as a
+      control, i.e. the OLS counterpart of the column (6) IV.  River
+      suitability is the length of rivers in the district running through
+      terrain of moderate ruggedness (ruggedness between 2 and 6).  The
+      Table 3 note reports heteroscedasticity robust standard errors; the
+      paper states (Section 4.2) that in all regressions observations are
+      clustered at the county level.
+  - description: watermills_iv_table3_col2
+    value: 0.16
+    claim_type: coefficient
+    standard_error: 0.04
+    sample_size: 298
+    unit: wright apprentices per capita per Domesday watermill per capita
+    location: "Table 3, column (2) IV, Watermills (per capita)"
+    context: >
+      Table 3, column (2), IV (two-stage least squares): Domesday
+      watermills per capita instrumented with the paper's geographic
+      suitability for grain-grinding watermills, the length of rivers in
+      the district with moderate ruggedness (between 2 and 6) interacted
+      with the high-wheat-suitability indicator (mean wheat suitability
+      category of 5 or lower).  The two components, river suitability and
+      wheat suitability, enter as controls; no other controls.  Dependent
+      variable: wright apprentices per capita, 1710-50.  Standard errors
+      as for column (5).
+  - description: watermills_iv_table3_col4
+    value: 0.15
+    claim_type: coefficient
+    standard_error: 0.04
+    sample_size: 298
+    unit: wright apprentices per capita per Domesday watermill per capita
+    location: "Table 3, column (4) IV, Watermills (per capita)"
+    context: >
+      Table 3, column (4), IV: the column (2) model adding the main
+      geographic controls (longitude, latitude, mean ruggedness, mean
+      elevation), the agricultural controls (agricultural and pasture
+      suitability besides wheat suitability) and the climatic controls
+      (mean precipitation and temperature).
+  - description: watermills_iv_table3_col6
+    value: 0.16
+    claim_type: coefficient
+    standard_error: 0.04
+    sample_size: 298
+    unit: wright apprentices per capita per Domesday watermill per capita
+    location: "Table 3, column (6) IV, Watermills (per capita)"
+    context: >
+      Table 3, column (6), the full IV specification: column (4) plus the
+      other geographic controls (distance to London, to the main
+      eighteenth-century harbours, to a historical Roman road and to a
+      navigable river, and the district's area) and the district's mean
+      population in 1710-50.
+  - description: first_stage_f_table3_col2
+    value: 19.90
+    claim_type: other
+    unit: first-stage F-statistic
+    location: "Table 3, column (2), First-stage F-statistic"
+    context: >
+      Table 3, column (2): the first-stage F-statistic for the excluded
+      instrument (river suitability x wheat suitability) in the IV with
+      river suitability and wheat suitability as the only controls.
+  - description: first_stage_f_table3_col4
+    value: 16.96
+    claim_type: other
+    unit: first-stage F-statistic
+    location: "Table 3, column (4), First-stage F-statistic"
+    context: >
+      Table 3, column (4): first-stage F-statistic of the IV with main
+      geographic, agricultural and climatic controls.
+  - description: first_stage_f_table3_col6
+    value: 16.17
+    claim_type: other
+    unit: first-stage F-statistic
+    location: "Table 3, column (6), First-stage F-statistic"
+    context: >
+      Table 3, column (6): first-stage F-statistic of the full IV
+      specification.
+  - description: n_districts_tables2_3
+    value: 298
+    claim_type: other
+    unit: districts
+    location: "Tables 2 and 3, Observations"
+    context: >
+      Number of district observations in the Table 2 and Table 3
+      regressions (the same in every column): districts with Domesday Book
+      watermill data.
+
+# The meta-database's 17 rows (team 100, no DP) pair an original with a
+# replicator value in 12 rows, all ROBUSTNESS variants: eight against Table
+# 2 column 5 (o_coeff 0.12 / o_std_err 0.028: inverse hyperbolic sine 0.154
+# (0.053), mills per 1086 population 0.023 (0.028), levels 0.071 (0.049),
+# log mills 0.179 (0.061), non-zero subsamples 0.113 (0.029) / 0.114
+# (0.030) / 0.108 (0.031), non-zero and 95th-percentile trimmed 0.056
+# (0.025)), two county-fixed-effects rows against Table 3 (0.117 -> 0.093
+# (0.031); 0.159 -> 0.162 (0.058)), and two bootstrap-SE rows against Table
+# 3 columns 5 and 6 that leave the point estimates at 0.117 (0.028) and
+# 0.159 (0.037).  Only those two bootstrap rows re-run the published
+# specification, so they are transcribed (claims 5 and 8); every other
+# pinned claim gets the blanket verdict of row 5900 (perfect reproduction
+# with the authors' data and code), recorded as the paper's own value, as
+# in leeson-2022 / bisbee-2022.
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: 0.15
+    outcome: matches
+    notes: Meta-database row 5900 blanket verdict (perfect reproduction); value is the paper's.
+  - claim_id: 1
+    reproduced_value: 0.14
+    outcome: matches
+    notes: Meta-database row 5900 blanket verdict; value is the paper's.
+  - claim_id: 2
+    reproduced_value: 0.14
+    outcome: matches
+    notes: Meta-database row 5900 blanket verdict; value is the paper's.
+  - claim_id: 3
+    reproduced_value: 0.14
+    outcome: matches
+    notes: Meta-database row 5900 blanket verdict; value is the paper's.
+  - claim_id: 4
+    reproduced_value: 0.12
+    outcome: matches
+    notes: >
+      Row 5900 blanket verdict; the meta-database records the original as
+      0.12 (0.028) and its eight Table 2 col 5 rows are robustness
+      variants only (0.023-0.179), none a plain re-run.
+  - claim_id: 5
+    reproduced_value: 0.117
+    outcome: matches
+    notes: Meta-database row 5905 (Table 3 col 5, bootstrap SEs for 35 clusters) — 0.117 (0.028), as the original.
+  - claim_id: 6
+    reproduced_value: 0.16
+    outcome: matches
+    notes: Meta-database row 5900 blanket verdict; value is the paper's.
+  - claim_id: 7
+    reproduced_value: 0.15
+    outcome: matches
+    notes: Meta-database row 5900 blanket verdict; value is the paper's.
+  - claim_id: 8
+    reproduced_value: 0.159
+    outcome: matches
+    notes: Meta-database row 5908 (Table 3 col 6, bootstrap SEs for 35 clusters) — 0.159 (0.037), as the original.
+  - claim_id: 9
+    reproduced_value: 19.90
+    outcome: matches
+    notes: Meta-database row 5900 blanket verdict; value is the paper's.
+  - claim_id: 10
+    reproduced_value: 16.96
+    outcome: matches
+    notes: Meta-database row 5900 blanket verdict; value is the paper's.
+  - claim_id: 11
+    reproduced_value: 16.17
+    outcome: matches
+    notes: Meta-database row 5900 blanket verdict; value is the paper's.
+  - claim_id: 12
+    reproduced_value: 298
+    outcome: matches
+    notes: Meta-database row 5900 blanket verdict; value is the paper's.
+
+notes: >
+  Headline finding: English districts with more watermills in the Domesday
+  Book (1086) had more apprentices to wrights (millwrights) in 1710-50,
+  conditional on geography, agriculture, climate and trade access (Table
+  2: 0.15 unconditional, 0.12 (SE 0.03) with all controls), and the
+  relation survives instrumenting Domesday mills with river x wheat
+  suitability (Table 3 IV 0.16 / 0.15 / 0.16, first-stage F 19.90 / 16.96
+  / 16.17).  N = 298 districts in every column.
+
+  Curation pass (2026-11-02).  Pinned 13 claims from the two core tables
+  of Section 4.1: Table 2's watermills coefficient in all five columns,
+  Table 3's column (5) OLS and the three IV columns, each with its SE in
+  standard_error; the three first-stage F-statistics; and N.  The tables
+  print two decimals; I4R records three for the three originals it
+  examines (0.120 (0.028), 0.117 (0.028), 0.159 (0.037)), all of which
+  round to the printed values.  The abstract states no numbers; the intro
+  restates Table 2 col 3-4 (0.14).  Left out: Table 2 control
+  coefficients and adjusted R2s, Table 3 columns (1) and (3) (column 1 is
+  Table 2 column 1 again; column 3 is an OLS without the river and wheat
+  controls), the river/wheat suitability coefficients, Table 1 summary
+  statistics, Table 4 (Hampshire mill counts), Table 5 (the Black Death
+  interaction; its note calls the evidence "suggestive"), Tables 6-9
+  (drapers, industrial vs other occupations, mediation, worsteds) and the
+  online appendix.  Description tokens are distinct under substring
+  matching (no col1 / col10 clash).
+
+  What was read.  The published EJ PDF (all 33 pp.; Tables 2-3 and
+  Section 4.1 in full, Tables 5-6 and the introduction); the Zenodo API
+  metadata for records 5731589 and 5734954; the whole package listing,
+  main.do and the Table 2 / Table 3 / Table 5-9 sections of Tables.do, the
+  README PDF, the .aux and the head of the .log; Crossref metadata; the
+  meta-database's 17 rows.  There is no I4R DP.
+
+  Independent cross-check (not the package code: pandas + numpy OLS and
+  2SLS with county-clustered SEs on replication_data.dta, Stata's CR1
+  adjustment).  Reproduces every pinned value at the printed precision:
+  Table 2 cols 1-5 0.1461 (0.0242), 0.1438 (0.0226), 0.1416 (0.0228),
+  0.1407 (0.0231), 0.1199 (0.0281), adjusted R2 0.568 / 0.583 / 0.590 /
+  0.590 / 0.606; Table 3 col 5 OLS 0.1168 (0.0279), adj. R2 0.616; IV col
+  2 0.1591 (0.0374), col 4 0.1522 (0.0400), col 6 0.1592 (0.0376) (IV SEs
+  with the G/(G-1) cluster factor only, ivreg2's default); first-stage F
+  = squared clustered t of the excluded instrument with the full CR1
+  adjustment: 19.90, 16.96, 16.17 exactly (without the (N-1)/(N-K) factor:
+  20.11, 17.61, 17.16).  N = 298, 35 county clusters in every column.
+
+  Package-only facts (never in contexts).  main.do: cd "your_directory";
+  county_id = encode GAZ_CNTY (ancient county; 35 clusters in the
+  estimation sample); mills_pc = mills / pcmean and wrights_pc = wrights /
+  pcmean (pcmean: HYDE mean population 1710-50, in tens of thousands);
+  wheat_suit = wheat_tmean <= 5; riv_rug26count is divided by 1000 and
+  the instrument is msuit26mean = wheat_suit * riv_rug26count.  Tables.do,
+  Table 2: reg wrights_pc mills_pc [controls], cluster(county_id); column
+  2 adds `if e(sample)==1`; column 3 adds suitmean wheat_suit
+  dist_grass_mean; column 4 precip_mean_dist temp_mean_dist; column 5
+  pcmean min_harbor DIST_London min_dist* (min_dist_to_roman_rds,
+  min_dist_2nav_rivers) area.  Table 3: column 2 ivreg2 wrights_pc
+  (mills_pc = msuit26mean) riv_rug26count wheat_suit, cluster(county_id)
+  first savefirst; column 4 adds longitude latitude dist_rug_mean
+  dist_elevation_mean suitmean dist_grass_mean precip_mean_dist
+  temp_mean_dist; columns 5 (reg) and 6 (ivreg2) add min_harbor
+  DIST_London min_dist* pcmean area, `r cluster(county_id)`.  The
+  First-stage F row is estadd scalar fstat = e(widstat), ivreg2's
+  Kleibergen-Paap rk Wald F under clustering.  So every Table 3 SE is
+  clustered by county although the Table 3 note mentions only
+  heteroscedasticity robust SEs (the contexts quote the note and the
+  Section 4.2 clustering statement).  Needs ssc estout, ivreg2, ranktest,
+  sutex, medeff (mediation, Table 8).  The 298 of 325 rows are those with
+  non-missing mills.
+
+  Zero-cost end-to-end check (2026-11-02).  `uv run python -m
+  benchmark.runner --llm-oracle curation-check --only
+  mokyr-2022-wheels-of-change`, once with --mode blind and once with
+  --mode independent: both cells stopped as llm_answer_pending on the
+  first call, the methodology summary, whose prompt embeds the full
+  paper text (Tables 2-3 included) by design and carried no package
+  script text.  Because that stops before code generation, the blind and
+  independent tasks were also rendered with benchmark.reproducers.
+  render_task (no API calls): the blind task.md states none of the 13
+  values or SEs (as printed or rounded to 1-4 significant figures, nor
+  I4R's three-decimal originals) and no script text; the blind paper.txt
+  carries 150 redactions and keeps only "(0.2)", the Table 5 column 4
+  coefficient (not pinned).  The script-free mount withholds 17 files
+  (five do/ado, the .log, the accepted and appendix PDFs, three
+  manuscript .docx, six __MACOSX stubs) and keeps the data, the README
+  codebook, figures.docx, the .aux / .synctex.gz, the xlsx and two
+  figure PNGs.  Before the strip-rule extension made with this entry the
+  accepted PDF, the appendix PDF and all four manuscript .docx were on
+  the mount (tables_ocr.docx prints every table as text).
+
+  What could not be verified.  The do-files were not run in Stata and no
+  Stata log ships; the cross-check above is an independent re-estimate.
+  The meta-database row numbers are the 0-based indices the corpus files
+  use (5895-5911).
+
+  Original analysis in Stata (main.do, Tables.do; reg and ivreg2);
+  language is r, the reproduction target.
