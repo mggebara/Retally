@@ -43,14 +43,20 @@ by file, what that copy leaves out.  Two layers:
      one page of the pymupdf text): the accepted manuscript or online
      appendix a package ships beside its data.  README / codebook PDFs
      stay.
+   * Word documents (``.docx``) the same way, with a window of about a
+     page of consecutive paragraphs standing in for the page: the
+     manuscript, its tables (OCR'd or as images with their notes) or an
+     appendix shipped as Word files (Mokyr 2022 ships four).  README /
+     codebook documents stay.
 
    A file byte-identical to a file stripped by name is stripped too.
 
 Evidence must be strong — several independent markers — or the file is
-kept.  Binary files are never content-tested (spreadsheets and PDFs
-aside: an ``.xlsx``'s shared strings, a BIFF ``.xls``'s printable /
-UTF-16LE runs and a PDF's page text are read), and known data formats (``.dta``, ``.RData``,
-``.rds``, ``.sav``, ``.parquet``, shapefiles, ...) are never stripped.
+kept.  Binary files are never content-tested (spreadsheets, PDFs and Word
+documents aside: an ``.xlsx``'s shared strings, a BIFF ``.xls``'s printable /
+UTF-16LE runs, a PDF's page text and a ``.docx``'s paragraph text are
+read), and known data formats (``.dta``, ``.RData``, ``.rds``, ``.sav``,
+``.parquet``, shapefiles, ...) are never stripped.
 Directory names (``output/``, ``tables/``) play no part: a figure's data
 ``.csv`` in ``Out/Figures_data`` is data, a regression table anywhere is
 not.
@@ -60,6 +66,7 @@ from __future__ import annotations
 
 import csv
 import hashlib
+import html
 import io
 import re
 import zipfile
@@ -282,7 +289,12 @@ _TABLE_STAT_MARKERS = (
     re.compile(
         r"[Ss]tandard errors?\b.{0,60}\bin parenthes|\bStd\.? ?[Ee]rr|[Rr]obust (?:standard )?errors", re.S
     ),
-    re.compile(r"p\s*(?:<|\$<\$|&lt;|\\textless)\s*0?\.(?:1|05|01)\b"),
+    # The significance legend: ``* p < 0.10``, or written out in a table note,
+    # ``*** denotes statistical significance at the 1% level`` (EJ style).
+    re.compile(
+        r"p\s*(?:<|\$<\$|&lt;|\\textless)\s*0?\.(?:1|05|01)\b"
+        r"|(?i:[*∗]{2,3}\s*(?:denotes?|indicates?|significan)[^.;]{0,60}?\b(?:1|5|10)\s*(?:%|per ?cent))"
+    ),
 )
 _TABLE_SIGNATURES = re.compile(
     r"\\sym\{\*|Table created by stargazer|\bstargazer\b|\besttab\b|\bestout\b|\boutreg2?\b|\btexreg\b"
@@ -558,6 +570,52 @@ def _pdf_reason(path: Path) -> str | None:
     return None
 
 
+DOCX_WINDOW_CHARS = 3000
+"""A ``.docx`` is tested in windows of consecutive paragraphs this long (about a page).
+
+Word files carry no reliable page breaks, so the PDF rule's "three markers
+on one page" becomes three markers within one window: a table and its
+note, not markers scattered through a long README.
+"""
+
+
+def _docx_paragraphs(path: Path) -> list[str] | None:
+    """The paragraph texts of a ``.docx`` body (each table cell is its own paragraph)."""
+    try:
+        with zipfile.ZipFile(path) as zf:
+            info = zf.getinfo("word/document.xml")
+            if info.file_size > SIZE_CAP_BYTES:
+                return None
+            raw = zf.read(info).decode("utf-8", errors="replace")
+    except (zipfile.BadZipFile, OSError, KeyError):
+        return None
+    paragraphs = []
+    for para in re.findall(r"<w:p[ >].*?</w:p>", raw, re.S):
+        para = re.sub(r"<w:(?:tab|br)\b[^>]*/>", " ", para)
+        text = html.unescape(re.sub(r"<[^>]+>", "", para)).strip()
+        if text:
+            paragraphs.append(text)
+    return paragraphs
+
+
+def _docx_reason(path: Path) -> str | None:
+    """A ``.docx`` with a page-sized stretch that reads as a regression table (README / codebook kept)."""
+    paragraphs = _docx_paragraphs(path)
+    if not paragraphs:
+        return None
+    for start in range(len(paragraphs)):
+        window, size = [], 0
+        for para in paragraphs[start:]:
+            window.append(para)
+            size += len(para) + 1
+            if size >= DOCX_WINDOW_CHARS:
+                break
+        n, _ = _table_evidence("\n".join(window))
+        if n >= _PDF_PAGE_MARKERS:
+            return "regression-table"
+    return None
+
+
 def _read_sample(path: Path, limit: int) -> bytes:
     with path.open("rb") as fh:
         return fh.read(limit)
@@ -576,6 +634,8 @@ def content_reason(path: Path, *, size_cap: int = SIZE_CAP_BYTES) -> str | None:
             return _xlsx_reason(path)
         if suffix == ".pdf":
             return _pdf_reason(path)
+        if suffix == ".docx":
+            return _docx_reason(path)
         if suffix == ".xls" and _read_sample(path, len(OLE2_MAGIC)) == OLE2_MAGIC:
             return _xls_reason(path)  # a text .xls (outreg2's default) takes the text path below
         limit = TABLE_SAMPLE_BYTES if suffix in {".tex", ".html", ".htm"} else SAMPLE_BYTES

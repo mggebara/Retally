@@ -563,3 +563,78 @@ def test_pdf_markers_must_sit_on_one_page_and_unreadable_pdfs_are_kept(tmp_path)
     assert content_reason(split) is None
     broken = _write(tmp_path, "broken.pdf", b"%PDF-1.4\n" + PDF_TABLE_PAGE.encode())
     assert content_reason(broken) is None
+
+
+# A manuscript page whose table is an image: only the caption and the note
+# reach the text layer, and the note writes the significance legend out
+# (EJ style; Mokyr et al. 2022 ships its accepted manuscript this way).
+PDF_IMAGE_TABLE_PAGE = "\n".join(
+    [
+        "Table 2: The no. of wrights and Domesday Book watermills - OLS estimates",
+        "Notes: All observations are clustered at the historical county level.",
+        "Heteroskedasticity robust standard error estimates are reported in parentheses;",
+        "*** denotes statistical significance at the 1% level, ** at the 5% level,",
+        "and * at the 10% level. All regressions include a constant.",
+    ]
+)
+
+
+def test_written_out_significance_legend_counts_as_a_marker(tmp_path):
+    legend = strip_rule._TABLE_STAT_MARKERS[3]
+    assert legend.search("*** denotes statistical significance at the 1% level")
+    assert legend.search("∗∗∗denotes statistical significance at the 1% level")
+    assert legend.search("** significant at 5 per cent")
+    assert not legend.search("We find a 10% increase. ** footnote")
+    manuscript = _pdf(tmp_path / "1 paper" / "MS_accepted.pdf", ["Introduction text.", PDF_IMAGE_TABLE_PAGE])
+    assert content_reason(manuscript) == "regression-table"
+
+
+def _docx(path: Path, paragraphs: list[str]) -> Path:
+    """A minimal Word file: one ``w:p`` per paragraph, in ``word/document.xml``."""
+    from xml.sax.saxutils import escape
+
+    body = "".join(f'<w:p><w:r><w:t xml:space="preserve">{escape(p)}</w:t></w:r></w:p>' for p in paragraphs)
+    xml = (
+        '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+        '<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
+        f"<w:body>{body}</w:body></w:document>"
+    )
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with zipfile.ZipFile(path, "w") as zf:
+        zf.writestr("[Content_Types].xml", "<Types/>")
+        zf.writestr("word/document.xml", xml)
+    return path
+
+
+DOCX_README = [
+    "README: replication files",
+    "replication_data.dta holds one row per district (325 observations).",
+    "Tables.do creates all the tables in the main text; results are exported to Tables/.",
+    "Variables: wrights (sum) no. of apprentices to wrights in the district in 1710-50.",
+]
+
+
+def test_manuscript_docx_is_stripped_but_readme_docx_is_kept(tmp_path):
+    tables = _docx(tmp_path / "1 paper" / "MS_tables_ocr.docx", PDF_TABLE_PAGE.splitlines())
+    notes = _docx(tmp_path / "1 paper" / "MS_tables_image.docx", PDF_IMAGE_TABLE_PAGE.splitlines())
+    readme = _docx(tmp_path / "README.docx", DOCX_README)
+    captions = ["Figure 1. Partial correlation", "Source: see text."]
+    figures = _docx(tmp_path / "1 paper" / "MS_figures.docx", captions)
+    assert content_reason(tables) == "regression-table"
+    assert content_reason(notes) == "regression-table"
+    assert content_reason(readme) is None
+    assert content_reason(figures) is None
+    stripped = {s.path: s.reason for s in classify_tree(tmp_path)}
+    assert stripped == {
+        "1 paper/MS_tables_image.docx": "regression-table",
+        "1 paper/MS_tables_ocr.docx": "regression-table",
+    }
+
+
+def test_docx_markers_must_sit_within_one_window_and_broken_docx_is_kept(tmp_path):
+    filler = "Prose paragraph without any table marker. " * 80  # longer than one window on its own
+    lines = PDF_IMAGE_TABLE_PAGE.splitlines()
+    spread = _docx(tmp_path / "spread.docx", [lines[1], filler, lines[2], filler, lines[3]])
+    assert content_reason(spread) is None
+    broken = _write(tmp_path, "broken.docx", b"PK\x03\x04 not really a zip")
+    assert content_reason(broken) is None
