@@ -2311,9 +2311,11 @@ results file nor the evidence bundle says why):
   and its Table 8 instrument set (`apres_modifs` plus an `info_CC` or
   `info_PM` indicator) are its own; the seeded agent, shown the same
   package scripts, matched all 13.  A seeded-mode specification mismatch.
-  The answering agent's own account of why (that it guessed these from
-  memory of the paper rather than from the code shown) is not in the
-  committed evidence, and the oracle caveat applies: the answerer runs
+  The oracle answering agent's hand-back message said it chose the
+  Table 8 instrument set and the win-belief coding from memory of the
+  paper rather than from the code shown.  That account comes from the
+  hand-back, not from the committed evidence, which does not contain
+  it.  The oracle caveat also applies: the answerer runs
   at the desktop default effort, not the effort the request names.
   The same paper is 13 / 13 independent (first scored 12) and 12 / 13
   blind in the pipeline, so this is the inverted case: the pipeline did
@@ -2378,15 +2380,18 @@ independent (12).
   around by sampling after their exploratory reads timed out, all
   recorded in the evidence.  Forsythe's 2.17 GB CSV is the same
   constraint (3.6).
-- *Docker daemon wedge.*  During the agent batch the Docker daemon
-  wedged once: containers stuck in `Created`, `docker run` clients hung,
-  exit 125 on start.  It was restarted.  Seven agent cells record the
-  incident in their notes (Labandeira in all three modes, Douenne
+- *Docker daemon restarts (two).*  During the first-sample agent
+  batch the Docker daemon wedged: containers stuck in `Created`,
+  `docker run` clients hung, exit 125 on start.  The coordinator
+  cleared it by quitting and reopening Docker Desktop.  Later in the
+  same batch the daemon went down again, and the Hanushek seeded cell's
+  agent restarted Docker Desktop itself (`open -a Docker`), as its
+  hand-back reported; the Douenne blind cell was running at the time,
+  and its notes record the restart.  Seven agent cells record the
+  incidents in their notes (Labandeira in all three modes, Douenne
   independent and blind, Hanushek seeded and blind).  The hung runs
   never started R; they were re-run and are not counted as attempts.
-  The Douenne blind cell's notes say Docker Desktop was restarted
-  mid-cell; by the coordinator's account that cell's agent did it on
-  its own.  Nothing in the scores depends on the wedge, but an agent
+  Nothing in the scores depends on the restarts, but an agent
   that can restart the host's Docker is outside the isolation this
   project assumes, and a long batch needs a daemon health check.
 
