@@ -120,7 +120,35 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | pipeline 5.5 | `altmann-2022` | blind | `background_quality_intervention_lab_t3_col2` | -0.038 | NA | extraction error |
 | pipeline 5.5 | `altmann-2022` | blind | `n_obs_lab_tables_2_to_4` | 12160 | 1.784e+04 | sample restriction |
 | pipeline 5.5 | `altmann-2022` | blind | `n_subjects_lab_tables_2_to_4` | 608 | 892 | sample restriction |
+| pipeline 5.5 | `bokobza-2022` | blind | `failed_coup_experience_model` | 0.14 | NA | extraction error |
+| pipeline 5.5 | `bokobza-2022` | blind | `failed_coup_x_over_6_years_experience` | -0.1 | NA | extraction error |
+| pipeline 5.5 | `bokobza-2022` | blind | `failed_coup_affiliation_model` | 0.17 | NA | extraction error |
+| pipeline 5.5 | `bokobza-2022` | blind | `failed_coup_x_leaders_party` | -0.13 | NA | extraction error |
+| pipeline 5.5 | `bokobza-2022` | blind | `failed_coup_responsibility_model` | 0.2 | NA | extraction error |
+| pipeline 5.5 | `bokobza-2022` | blind | `failed_coup_x_natural_resources` | -0.18 | NA | extraction error |
+| pipeline 5.5 | `bokobza-2022` | blind | `failed_coup_importance_model` | 0.37 | NA | extraction error |
+| pipeline 5.5 | `carrera-2022` | independent | `bcp_basic_info_treatment_col1` | 0.3 | -0.2736 | unclassified |
+| pipeline 5.5 | `carrera-2022` | independent | `bcp_enhanced_info_treatment_col1` | 1.36 | 0.219 | unclassified |
+| pipeline 5.5 | `carrera-2022` | independent | `bcp_regression_observations` | 1126 | 1248 | sample restriction |
+| pipeline 5.5 | `carrera-2022` | independent | `takeup_more_enhanced_info_treatment_col1` | -0.08 | -0.01675 | unclassified |
+| pipeline 5.5 | `carrera-2022` | independent | `takeup_more_regression_observations` | 2824 | 2946 | sample restriction |
+| pipeline 5.5 | `carrera-2022` | blind | `bcp_basic_info_treatment_col1` | 0.3 | NA | sample restriction |
+| pipeline 5.5 | `carrera-2022` | blind | `bcp_enhanced_info_treatment_col1` | 1.36 | NA | sample restriction |
+| pipeline 5.5 | `carrera-2022` | blind | `bcp_goal_minus_expected_attendance_col2` | 0.71 | NA | sample restriction |
+| pipeline 5.5 | `carrera-2022` | blind | `bcp_actual_minus_expected_attendance_col3` | 0.45 | NA | sample restriction |
+| pipeline 5.5 | `carrera-2022` | blind | `bcp_regression_observations` | 1126 | 0 | sample restriction |
+| pipeline 5.5 | `carrera-2022` | blind | `takeup_more_basic_info_treatment_col1` | -0.022 | NA | sample restriction |
+| pipeline 5.5 | `carrera-2022` | blind | `takeup_more_enhanced_info_treatment_col1` | -0.08 | NA | sample restriction |
+| pipeline 5.5 | `carrera-2022` | blind | `takeup_more_behavior_change_premium_col2` | 0.027 | NA | sample restriction |
+| pipeline 5.5 | `carrera-2022` | blind | `takeup_more_goal_minus_expected_attendance_col3` | 0.038 | NA | sample restriction |
+| pipeline 5.5 | `carrera-2022` | blind | `takeup_more_actual_minus_expected_attendance_col4` | -0.043 | NA | sample restriction |
+| pipeline 5.5 | `carrera-2022` | blind | `takeup_more_regression_observations` | 2824 | 0 | sample restriction |
 | pipeline 5.5 | `dertwinkel-kalt-2022` | blind | `rel_concentration_bias_lower_table2_col1` | 0.19 | 0.2591 | unclassified |
+| pipeline 5.5 | `forsythe-2022` | independent | `young_x_unemp_rate_nilf` | -0.49 | -0.5944 | unclassified |
+| pipeline 5.5 | `forsythe-2022` | independent | `n_obs_full_sample` | 1.69485e+07 | 1.728e+07 | sample restriction |
+| pipeline 5.5 | `forsythe-2022` | blind | `young_x_unemp_rate_unemployed` | -1.928 | -1.741 | unclassified |
+| pipeline 5.5 | `forsythe-2022` | blind | `young_x_unemp_rate_nilf` | -0.49 | -0.5478 | unclassified |
+| pipeline 5.5 | `forsythe-2022` | blind | `n_obs_full_sample` | 1.69485e+07 | 1.43e+07 | sample restriction |
 | pipeline 5.5 | `gagliarducci-2022` | blind | `female_sponsor_pct_opposite_dem_ipw_sponsor` | -1.208 | -2.733 | unclassified |
 | pipeline 5.5 | `grier-2023` | independent | `sugar_contributions_district_fe` | -0.0006 | -0.0003755 | data-file resolution |
 | pipeline 5.5 | `grier-2023` | independent | `sugar_contributions_incumbent_fe` | -0.0004 | -0.002273 | data-file resolution |
@@ -187,6 +215,9 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | agent | `adams-2023` | blind | `n_directed_dyads` | 1842 | 1535 | under-specified methods section |
 | agent | `adams-2023` | blind | `n_obs_women_partisans` | 1836 | 1535 | under-specified methods section |
 | agent | `adams-2023` | blind | `n_obs_men_partisans` | 1833 | 1529 | under-specified methods section |
+| agent | `forsythe-2022` | independent | `young_x_unemp_rate_nilf` | -0.49 | -0.5847 | unclassified |
+| agent | `forsythe-2022` | blind | `young_x_unemp_rate_nilf` | -0.49 | -0.594 | unclassified |
+| agent | `forsythe-2022` | blind | `n_obs_full_sample` | 1.69485e+07 | 1.736e+07 | sample restriction |
 | agent | `gagliarducci-2022` | blind | `female_sponsor_pct_opposite_dem_ols` | -1.505 | -2.431 | specification mismatch |
 | agent | `gagliarducci-2022` | blind | `female_sponsor_pct_opposite_dem_ipw_sponsor` | -1.208 | -2.082 | specification mismatch |
 | agent | `gagliarducci-2022` | blind | `female_sponsor_pct_opposite_rep_ols` | 3.666 | 4.777 | specification mismatch |

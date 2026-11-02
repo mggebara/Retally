@@ -13,6 +13,12 @@
 | Pipeline, desktop Opus (oracle) | 9 | seeded | 105 / 110 | 105 | 105 | +0 | 0 | 2 | 1 / 9 |
 | Pipeline, desktop Opus (oracle) | 9 | independent | 96 / 110 | 68 | 68 | +28 | 0 | 16 | 6 / 9 |
 | Pipeline, desktop Opus (oracle) | 9 | blind | 72 / 110 | 72 | 65 | +0 | 1 | 0 | 0 / 9 |
+| Pipeline, desktop Opus (oracle) | 4 (3.6) | seeded | 45 / 47 | 45 | 32 | +0 | 1 | 1 | 1 / 4 |
+| Pipeline, desktop Opus (oracle) | 4 (3.6) | independent | 40 / 47 | 32 | 12 | +8 | 3 | 6 | 3 / 4 |
+| Pipeline, desktop Opus (oracle) | 4 (3.6) | blind | 26 / 47 | 26 | 12 | +0 | 3 | 0 | 0 / 4 |
 | Agent (Claude Code, desktop Opus) | 13 | seeded | 153 / 154 | 151 | n/a | +2 | 3 | 1 | 1 / 13 |
 | Agent (Claude Code, desktop Opus) | 13 | independent | 148 / 154 | 146 | n/a | +2 | 0 | 6 | 5 / 13 |
 | Agent (Claude Code, desktop Opus) | 13 | blind | 135 / 154 | 128 | n/a | +7 | 2 | 0 | 0 / 13 |
+| Agent (Claude Code, desktop Opus) | 4 (3.6) | seeded | 47 / 47 | 43 | n/a | +4 | 1 | 0 | 0 / 4 |
+| Agent (Claude Code, desktop Opus) | 4 (3.6) | independent | 46 / 47 | 46 | n/a | +0 | 0 | 1 | 1 / 4 |
+| Agent (Claude Code, desktop Opus) | 4 (3.6) | blind | 45 / 47 | 45 | n/a | +0 | 0 | 0 | 0 / 4 |

@@ -220,3 +220,34 @@ These were not re-checked, for reasons unchanged since 2026-10-21:
 - T43 Grosjean, which has no data.
 
 **Total checked today: 34 papers** (8 picks, 2 reserves and 24 exclusions).
+
+## Curation outcomes (2026-11-02)
+
+Eight candidates were attempted on 2026-11-01: six picks from the ranked
+list and the two 2026-10-21 reserves.  Four became catalog entries and
+four were excluded.  Labandeira (#7) and Kim (#8) were not attempted and
+remain available.  Results for the four entries are in ROADMAP 3.6.
+
+| Candidate | Outcome | Reason |
+|---|---|---|
+| `carrera-2022-who-chooses-commitment` (#2) | accepted, PR #91 | 11 claims from Tables 3–4.  The open text is the NBER WP 26161 revision (August 2021), and its values equal the I4R rows.  The strip rule learned `N` / `Clusters` rows and result-macro `.tex` files. |
+| `bokobza-2022-morning-after-coup-purges` (#3) | accepted, PR #93 | 11 claims from appendix Tables A1, A2 and K1–K3, because the main text is figures only.  The open text is the accepted manuscript.  The strip rule learned rendered R Markdown pages.  The country-level do-file ships as `.txt`. |
+| `forsythe-2022-young-workers-recessions` (#5) | accepted, PR #92 | 13 claims from Tables 1, 2 and 10.  The label is `robust`, not `reproducible`: I4R DP 163 rebuilt the CPS panel from IPUMS and never ran the package.  The main `.csv` is 2.17 GB uncompressed. |
+| `brouwer-2022-teaching-norms` (2026-10-21 reserve) | accepted, PR #94 | 12 claims from Table 2.  The open HAL text is the accepted manuscript, text-identical to the package's accepted PDF.  The strip rule learned PDFs with regression-table pages. |
+| `bautista-2023-geography-repression-autocracy` (#6) | excluded | The only open text is the 2018 Harris draft, which uses a different specification; 0 of its values match the published tables. |
+| `de-haas-2023-finance-green-growth` (#1) | excluded | The open text is the 2019 ECB working paper, a different analysis from the published one.  The package also stubs five proprietary data files. |
+| `guay-2022-ideological-asymmetries-motivated-reasoning` (2026-10-21 reserve) | excluded | Figures only: the paper prints no headline values to pin.  The open text is the accepted manuscript. |
+| `bosquet-2022-peer-effects-academic-research` (#4) | excluded | The package is a `.7z` archive the downloader cannot read.  Inside are 3 GB of SAS and Stata files and 46 result tables. |
+
+What the exclusions add to the five shortlist checks:
+
+- The open PDF must print the published tables, not just exist.
+  Bautista and De Haas passed check 4 with earlier versions that do not.
+- The main text must state its headline numbers.  Guay has only figures;
+  Bokobza passed only because its appendix tables print the plotted
+  coefficients.
+- The package must be complete and in a format the downloader can
+  unpack.  De Haas stubs its proprietary inputs, and Bosquet's `.7z` is
+  unreadable.
+
+Screen for these at shortlist time on the next pass.

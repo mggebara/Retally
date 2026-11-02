@@ -8,7 +8,11 @@ Estimated API cost per paper and mode (`benchmark/pricing.py` list prices: `clau
 | `adams-2023` | $0.25 / $0.45 / $0.36 | — | 4 / 6 / 4 |
 | `altmann-2022` | — | — | 4 / 5 / 3 |
 | `arias-2022` | $0.79 / $1.17 / $0.48 | — | 4 / 3 / 3 |
+| `bokobza-2022` | — | — | 5 / 5 / 4 |
+| `brouwer-2022` | — | — | 4 / 3 / 3 |
+| `carrera-2022` | — | — | 4 / 7 / 3 |
 | `dertwinkel-kalt-2022` | — | — | 4 / 3 / 3 |
+| `forsythe-2022` | — | — | 5 / 6 / 5 |
 | `gagliarducci-2022` | — | — | 6 / 6 / 3 |
 | `grier-2023` | $0.22 / $0.19 / $0.37 | $0.57 / $0.32 / $0.18 | — |
 | `hanlon-2022` | $0.52 / $0.19 / $0.28 | — | 4 / 3 / 3 |
@@ -17,6 +21,6 @@ Estimated API cost per paper and mode (`benchmark/pricing.py` list prices: `clau
 | `lopez-moctezuma-2022` | — | — | 4 / 6 / 3 |
 | `manekin-2022` | $0.59 / $0.25 / $0.24 | $0.33 / $0.11 / $0.23 | — |
 | `montero-2022` | $0.37 / $0.50 / $0.24 | $0.27 / $0.43 / $0.22 | — |
-| **Total** | **$8.11** | **$3.54** | **109** |
+| **Total** | **$8.11** | **$3.54** | **163** |
 
 Same twelve API-route cells on `claude-opus-4-7`: $3.62 (output tokens 77,671); on `claude-opus-5-5`: $3.54 (input 336,894, output 109,612).  The three dev papers' pipeline 4.7 rows in the REPORT composite: $3.86.

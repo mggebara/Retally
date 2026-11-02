@@ -6,10 +6,11 @@ Run from the repository root::
 
 It reads only committed inputs -- the results files under
 ``benchmark/results/``, the catalog YAMLs under ``benchmark/papers/``,
-``benchmark/corpus/candidates-2026-10-21.json`` and ``ROADMAP.md`` (for the
-discrepancy check) -- and writes one Markdown file per table to
-``docs/report/tables/``.  It then copies each table into ``draft.md``
-between its ``<!-- table:NAME -->`` and ``<!-- /table:NAME -->`` markers, so
+``benchmark/corpus/candidates-2026-10-21.json`` and
+``candidates-2026-11-01.json``, and ``ROADMAP.md`` (for the discrepancy
+check) -- and writes one Markdown file per table to ``docs/report/tables/``.
+It then copies each table into ``draft.md`` between its
+``<!-- table:NAME -->`` and ``<!-- /table:NAME -->`` markers, so
 the tables in the draft are always the generated ones.  Scoring is never recomputed here: pass counts,
 first-scored counts and verdicts are read from the rows the harness wrote,
 and closeness, labelling and mode handling come from ``benchmark.metrics``.
@@ -17,7 +18,8 @@ and closeness, labelling and mode handling come from ``benchmark.metrics``.
 The only hand-written content is the failure-taxonomy classification
 (``TAXONOMY_RULES``), which records a judgement per non-matching claim and
 cites the ROADMAP section it rests on, and the original-software column for
-the four papers the corpus shortlist does not cover (``ORIGINAL_SOFTWARE``).
+the papers the corpus shortlists do not cover or describe in prose
+(``ORIGINAL_SOFTWARE``).
 """
 
 from __future__ import annotations
@@ -45,9 +47,14 @@ OUT = Path(__file__).resolve().parent / "tables"
 PIPELINE_47_FILE = "pipeline-10papers-all-modes-2026-10-21.json"
 PIPELINE_55_API_FILE = "pipeline-opus55-4papers-all-modes-2026-10-22.json"
 PIPELINE_ORACLE_FILE = "pipeline-oracle-desktop-opus-9papers-all-modes-2026-10-23.json"
+# The four papers curated on 2026-11-01 (ROADMAP 3.6): the pipeline through the
+# oracle (label ``desktop-opus``, first sample) and the agent (run ``2026-11-02-a``).
+PIPELINE_ORACLE_NEW_FILE = "pipeline-oracle-desktop-opus-4papers-all-modes-2026-11-02.json"
+AGENT_NEW_FILE = "claude-code-4papers-all-modes-2026-11-02.json"
 AGENT_FILES = [
     "claude-code-7papers-all-modes-2026-10-21.json",
     "claude-code-6papers-all-modes-2026-10-22.json",
+    AGENT_NEW_FILE,
 ]
 AGENT_RERUN_FILES = ["claude-code-blind-rerun-2026-10-22.json", "claude-code-blind-rerun-2026-10-22-b.json"]
 # Second complete pipeline sample on all 13 evaluation papers, through the
@@ -62,8 +69,10 @@ RUN2_LABEL = "desktop-opus-run2"
 # tables and the probe comparison.  Seeded was not rerun.
 AGENT_RUN2_FILE = "claude-code-run2-13papers-indep-blind-2026-11-01.json"
 AGENT_RUN2_MODES = ("independent", "blind")
-# Memorisation probe (ROADMAP 3.5, "Memorisation probe"; ``benchmark/probe.py``).
-PROBE_FILE = "probe-desktop-opus-2026-11-01.json"
+# Memorisation probe (ROADMAP 3.5, "Memorisation probe"; ``benchmark/probe.py``),
+# re-scored over all 17 evaluation papers (ROADMAP 3.6).  Its rows for the 13
+# earlier papers are identical to the 2026-11-01 file's.
+PROBE_FILE = "probe-desktop-opus-2026-11-02.json"
 # Probe hits the answering agent said it back-computed from the p-value and
 # degrees of freedom the claim context stated (ROADMAP 3.5, "Memorisation
 # probe"): derivable from the prompt, not recalled.
@@ -110,7 +119,7 @@ DISPLAY = {
     P47: "Pipeline, `claude-opus-4-7`",
     P55: "Pipeline, `claude-opus-5-5` (API)",
     ORC: "Pipeline, desktop Opus (oracle)",
-    P55_ALL: "Pipeline on Opus 5.5 (API for 4 papers, oracle for 9)",
+    P55_ALL: "Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest)",
 }
 
 # Original software of the four papers outside the 2026-10-21 shortlist
@@ -125,6 +134,10 @@ ORIGINAL_SOFTWARE = {
     "arias-2022-changing-tides-climate-migration": "R",
     "frederiksen-2022-competence-undemocratic": "—",
     "marcus-2022-sports-club-vouchers": "—",
+    # candidates-2026-11-01.json describes Bokobza's mix in prose; Brouwer was a
+    # 2026-10-21 reserve (entry header: "Small Stata package").
+    "bokobza-2022-morning-after-coup-purges": "Stata + R",
+    "brouwer-2022-teaching-norms": "Stata",
 }
 
 JOURNALS = {
@@ -194,13 +207,15 @@ def pct(v: float | None, digits: int = 1) -> str:
 CATALOG = {e.id: e for e in load_catalog(REPO / "benchmark" / "papers")}
 CANDIDATES = {
     p["id"]: p
-    for p in json.loads((REPO / "benchmark" / "corpus" / "candidates-2026-10-21.json").read_text())["papers"]
+    for name in ("candidates-2026-10-21.json", "candidates-2026-11-01.json")
+    for p in json.loads((REPO / "benchmark" / "corpus" / name).read_text())["papers"]
 }
 
 RAW = (
     load_rows(PIPELINE_47_FILE)
     + load_rows(PIPELINE_55_API_FILE)
     + load_rows(PIPELINE_ORACLE_FILE)
+    + load_rows(PIPELINE_ORACLE_NEW_FILE)
     + [r for f in AGENT_FILES for r in load_rows(f)]
 )
 ROWS = [r for r in metrics.disambiguate_reproducers(RAW) if not r.get("skipped")]
@@ -214,10 +229,16 @@ HOLDOUT = sorted(e.id for e in CATALOG.values() if e.split == "holdout" and not 
 DEV = sorted(e.id for e in CATALOG.values() if e.split == "dev" and not e.out_of_scope_reason)
 SEVEN = sorted({e for (rep, e, _m) in CELL if rep == P47 and e in HOLDOUT})
 API_FOUR = sorted({e for (rep, e, _m) in CELL if rep == P55})
-ORACLE_NINE = sorted({e for (rep, e, _m) in CELL if rep == ORC})
+# Both oracle files carry the label ``desktop-opus``; the paper sets come from the files.
+ORACLE_NINE = sorted({r["entry_id"] for r in load_rows(PIPELINE_ORACLE_FILE)})
+NEW_FOUR = sorted({r["entry_id"] for r in load_rows(PIPELINE_ORACLE_NEW_FILE)})
+assert sorted({r["entry_id"] for r in load_rows(AGENT_NEW_FILE)}) == NEW_FOUR
 ORACLE_THREE = sorted(set(SEVEN) - set(API_FOUR))
-SIX_NEW = sorted(set(HOLDOUT) - set(SEVEN))
-assert set(API_FOUR) | set(ORACLE_NINE) == set(HOLDOUT) and not set(API_FOUR) & set(ORACLE_NINE)
+# The 13 evaluation papers of ROADMAP 3.2-3.5, which have second samples of both systems.
+THIRTEEN = sorted(set(API_FOUR) | set(ORACLE_NINE))
+SIX_NEW = sorted(set(THIRTEEN) - set(SEVEN))
+assert not set(API_FOUR) & set(ORACLE_NINE) and not set(THIRTEEN) & set(NEW_FOUR)
+assert set(THIRTEEN) | set(NEW_FOUR) == set(HOLDOUT) and len(HOLDOUT) == 17
 
 
 RUN2: dict[tuple[str, str], dict[str, Any]] = {}
@@ -227,7 +248,7 @@ for _r in load_rows(PIPELINE_RUN2_FILE):
     _key = (_r["entry_id"], metrics.mode_of(_r))
     assert _key not in RUN2, f"duplicate run2 cell {_key}"
     RUN2[_key] = _r
-assert {e for e, _m in RUN2} == set(HOLDOUT) and len(RUN2) == len(HOLDOUT) * len(MODES)
+assert {e for e, _m in RUN2} == set(THIRTEEN) and len(RUN2) == len(THIRTEEN) * len(MODES)
 
 AGENT2: dict[tuple[str, str], dict[str, Any]] = {}
 for _r in load_rows(AGENT_RUN2_FILE):
@@ -235,10 +256,11 @@ for _r in load_rows(AGENT_RUN2_FILE):
     _key = (_r["entry_id"], metrics.mode_of(_r))
     assert _key[1] in AGENT_RUN2_MODES and _key not in AGENT2, f"unexpected agent run2 cell {_key}"
     AGENT2[_key] = _r
-assert {e for e, _m in AGENT2} == set(HOLDOUT) and len(AGENT2) == len(HOLDOUT) * len(AGENT_RUN2_MODES)
+assert {e for e, _m in AGENT2} == set(THIRTEEN) and len(AGENT2) == len(THIRTEEN) * len(AGENT_RUN2_MODES)
 
 PROBE_ROWS = sorted(load_rows(PROBE_FILE), key=lambda r: r["entry_id"])
 assert {r["entry_id"] for r in PROBE_ROWS} == set(HOLDOUT) and len(PROBE_ROWS) == len(HOLDOUT)
+PROBE_ROWS_13 = [r for r in PROBE_ROWS if r["entry_id"] in THIRTEEN]
 
 
 def p55_cell(entry: str, mode: str) -> dict[str, Any] | None:
@@ -353,17 +375,23 @@ def t_headline() -> str:
         (P47, SEVEN, "7 evaluation (3.2)"),
         (P55, API_FOUR, "4 evaluation (3.5, API)"),
         (ORC, ORACLE_NINE, "9 evaluation (3.5, oracle)"),
-        (P55_ALL, HOLDOUT, "all 13 evaluation"),
+        (ORC, NEW_FOUR, "4 evaluation (3.6, oracle)"),
+        (P55_ALL, THIRTEEN, "13 earlier evaluation (3.2–3.5)"),
+        (P55_ALL, HOLDOUT, "all 17 evaluation"),
         (AGENT, SEVEN, "7 evaluation (3.3)"),
         (AGENT, SIX_NEW, "6 evaluation (3.4)"),
-        (AGENT, HOLDOUT, "all 13 evaluation"),
+        (AGENT, NEW_FOUR, "4 evaluation (3.6)"),
+        (AGENT, THIRTEEN, "13 earlier evaluation (3.3–3.4)"),
+        (AGENT, HOLDOUT, "all 17 evaluation"),
         (P47, DEV, "3 dev"),
     ]
     for rep, entries, label in groups:
         out.append([DISPLAY[rep], label] + [frac(rep, entries, m) for m in MODES])
     return (
         "Claims within tolerance of the paper's printed value, summed over papers; first-scored "
-        "count in parentheses.  One run per cell.\n\n" + table(hdr, out, ["l", "l", "r", "r", "r"])
+        "count in parentheses.  One run per cell (the first sample of each system).  Rows marked 13 "
+        "cover the evaluation papers of ROADMAP 3.2–3.5; rows marked 17 add the four papers of "
+        "ROADMAP 3.6.\n\n" + table(hdr, out, ["l", "l", "r", "r", "r"])
     )
 
 
@@ -455,6 +483,33 @@ def t_nine_oracle() -> str:
     )
 
 
+def t_four_new() -> str:
+    hdr = ["Paper", "Mode", "n", "Pipeline, oracle", "Agent"]
+    out = []
+    for e in NEW_FOUR:
+        for m in MODES:
+            ro = cell(ORC, e, m)
+            out.append(
+                [f"`{short(e)}`", m, total(ro) if ro else "—", _cell_note(ro), _cell_note(cell(AGENT, e, m))]
+            )
+    for m in MODES:
+        out.append(
+            [
+                "**Total, 4 papers**",
+                m,
+                sum_passed(ORC, NEW_FOUR, m)[1],
+                f"**{frac(ORC, NEW_FOUR, m)}**",
+                f"**{frac(AGENT, NEW_FOUR, m)}**",
+            ]
+        )
+    return (
+        "The four papers added on 2026-11-02 (ROADMAP 3.6): the pipeline through the oracle "
+        f"(`{PIPELINE_ORACLE_NEW_FILE}`) and the agent (`{AGENT_NEW_FILE}`), first sample of each.  "
+        "Final count (first scored; error / claim refinements); totals show final (first scored).\n\n"
+        + table(hdr, out, ["l", "l", "r", "r", "r"])
+    )
+
+
 def t_gap() -> str:
     hdr = [
         "Papers",
@@ -475,7 +530,12 @@ def t_gap() -> str:
             p47, _, _ = sum_passed(P47, entries, m)
             p55, _, _ = sum_passed(P55_ALL, entries, m)
             out.append([label, m, n, f"{a - p47:+d}", f"{p55 - p47:+d}", f"{a - p55:+d}"])
-    for label, entries in [("6 papers (3.4 set)", SIX_NEW), ("all 13", HOLDOUT)]:
+    for label, entries in [
+        ("6 papers (3.4 set)", SIX_NEW),
+        ("4 papers (3.6 set)", NEW_FOUR),
+        ("13 earlier", THIRTEEN),
+        ("all 17", HOLDOUT),
+    ]:
         for m in MODES:
             a, n, _ = sum_passed(AGENT, entries, m)
             p55, _, _ = sum_passed(P55_ALL, entries, m)
@@ -484,7 +544,7 @@ def t_gap() -> str:
         "Differences in claims within tolerance, summed over papers.  On the 3.2 set the total "
         "agent-over-pipeline-4.7 difference splits exactly into a model effect (pipeline on Opus 5.5 "
         "minus pipeline on 4.7) and a harness effect (agent minus pipeline on Opus 5.5).  The 3.4 "
-        "papers have no 4.7 rows, so only the harness effect exists there.  One run per cell; no "
+        "and 3.6 papers have no 4.7 rows, so only the harness effect exists there.  One run per cell; no "
         "uncertainty is attached to any difference.\n\n" + table(hdr, out, ["l", "l", "r", "r", "r", "r"])
     )
 
@@ -507,7 +567,9 @@ def t_refinement() -> str:
         (P47, SEVEN, "7"),
         (P55, API_FOUR, "4"),
         (ORC, ORACLE_NINE, "9"),
-        (AGENT, HOLDOUT, "13"),
+        (ORC, NEW_FOUR, "4 (3.6)"),
+        (AGENT, THIRTEEN, "13"),
+        (AGENT, NEW_FOUR, "4 (3.6)"),
     ]:
         for m in MODES:
             rs = rows_for(rep, entries, m)
@@ -557,8 +619,10 @@ def t_closeness() -> str:
         (P47, SEVEN, "7 (3.2 set)"),
         (P55_ALL, SEVEN, "7 (3.2 set)"),
         (AGENT, SEVEN, "7 (3.2 set)"),
-        (P55_ALL, HOLDOUT, "13"),
-        (AGENT, HOLDOUT, "13"),
+        (P55_ALL, THIRTEEN, "13"),
+        (AGENT, THIRTEEN, "13"),
+        (P55_ALL, HOLDOUT, "17"),
+        (AGENT, HOLDOUT, "17"),
     ]:
         for m in MODES:
             c = metrics.closeness(rows_for(rep, entries, m))
@@ -595,6 +659,7 @@ def _verdict(row: dict[str, Any] | None) -> str:
 def t_three_way() -> str:
     hdr = [
         "Reproducer",
+        "Set",
         "Mode",
         "Papers",
         "paper ✓ I4R ✓",
@@ -604,13 +669,20 @@ def t_three_way() -> str:
         "I4R n/a",
     ]
     out = []
-    for rep, entries in [(P47, SEVEN), (P55_ALL, HOLDOUT), (AGENT, HOLDOUT)]:
+    for rep, entries, label in [
+        (P47, SEVEN, "7"),
+        (P55_ALL, THIRTEEN, "13"),
+        (P55_ALL, HOLDOUT, "17"),
+        (AGENT, THIRTEEN, "13"),
+        (AGENT, HOLDOUT, "17"),
+    ]:
         for m in MODES:
             rs = rows_for(rep, entries, m)
             k = Counter((bool(r.get("agrees_with_paper")), r.get("agrees_with_i4r")) for r in rs)
             out.append(
                 [
                     DISPLAY[rep],
+                    label,
                     m,
                     len(rs),
                     k[(True, True)],
@@ -620,7 +692,7 @@ def t_three_way() -> str:
                     k[(True, None)] + k[(False, None)],
                 ]
             )
-    summary = table(hdr, out, ["l", "l", "r", "r", "r", "r", "r", "r"])
+    summary = table(hdr, out, ["l", "r", "l", "r", "r", "r", "r", "r", "r"])
     per_paper_hdr = ["Paper", "I4R label", "I4R values", "Reproducer", "Seeded", "Independent", "Blind"]
     pp = []
     for e in HOLDOUT:
@@ -689,7 +761,7 @@ def t_variance() -> str:
 def _variance_cells(mode: str) -> list[tuple[str, int, int, int, int]]:
     """(entry, n, sample 1, sample 2, agent) for one mode over the 13 evaluation papers."""
     out = []
-    for e in HOLDOUT:
+    for e in THIRTEEN:
         s1, s2, a = p55_cell(e, mode), RUN2[(e, mode)], cell(AGENT, e, mode)
         assert s1 is not None and a is not None and total(s1) == total(s2) == total(a), (e, mode)
         out.append((e, total(s1), passed(s1), passed(s2), passed(a)))
@@ -775,7 +847,7 @@ def t_variance_pipeline() -> str:
 def t_variance_pipeline_cells() -> str:
     hdr = ["Paper", "Sample 1 route", "Mode", "n", "Sample 1", "Sample 2", "Abs. diff", "Agent"]
     out = []
-    for e in HOLDOUT:
+    for e in THIRTEEN:
         route = "API" if e in API_FOUR else "oracle"
         for m in MODES:
             s1, s2, a = p55_cell(e, m), RUN2[(e, m)], cell(AGENT, e, m)
@@ -803,7 +875,7 @@ def t_variance_pipeline_cells() -> str:
 def _agent_variance_cells(mode: str) -> list[tuple[str, int, int, int, int, int]]:
     """(entry, n, agent 1, agent 2, pipeline 1, pipeline 2) for one mode over the 13 evaluation papers."""
     out = []
-    for e in HOLDOUT:
+    for e in THIRTEEN:
         a1, a2, p1, p2 = cell(AGENT, e, mode), AGENT2[(e, mode)], p55_cell(e, mode), RUN2[(e, mode)]
         assert a1 is not None and p1 is not None and total(a1) == total(a2) == total(p1) == total(p2), (
             e,
@@ -890,10 +962,9 @@ def t_variance_agent_cells() -> str:
     )
 
 
-def _probe_hits() -> list[tuple[str, dict[str, Any]]]:
-    return [
-        (r["entry_id"], cd) for r in PROBE_ROWS for cd in r["claim_details"] if cd.get("within_tolerance")
-    ]
+def _probe_hits(rows: list[dict[str, Any]] | None = None) -> list[tuple[str, dict[str, Any]]]:
+    rows = PROBE_ROWS if rows is None else rows
+    return [(r["entry_id"], cd) for r in rows for cd in r["claim_details"] if cd.get("within_tolerance")]
 
 
 def _probe_hit_class(cd: dict[str, Any]) -> str:
@@ -904,14 +975,16 @@ def _probe_hit_class(cd: dict[str, Any]) -> str:
     return f"within {cd.get('tolerance_source')} tolerance"
 
 
-def _probe_se_bands() -> tuple[float, float, int, int]:
+def _probe_se_bands(rows: list[dict[str, Any]] | None = None) -> tuple[float, float, int, int]:
     """(narrowest, widest relative band, bands at or below 65 %, count) over the SE-band hits."""
-    bands = [cd["tolerance"] for _e, cd in _probe_hits() if _probe_hit_class(cd) == "inside ±1 SE band"]
+    bands = [cd["tolerance"] for _e, cd in _probe_hits(rows) if _probe_hit_class(cd) == "inside ±1 SE band"]
     return min(bands), max(bands), sum(1 for b in bands if b <= 0.65), len(bands)
 
 
-def _blind_total(get: Any) -> int:
-    return sum(passed(get(e)) for e in HOLDOUT)
+def _blind_total(get: Any, entries: list[str]) -> int | str:
+    """Blind claims passed over ``entries``, or "—" when a sample lacks any of them."""
+    rows = [get(e) for e in entries]
+    return "—" if any(r is None for r in rows) else sum(passed(r) for r in rows)
 
 
 def t_probe() -> str:
@@ -933,9 +1006,9 @@ def t_probe() -> str:
     ]
     getters = [
         lambda e: cell(AGENT, e, "blind"),
-        lambda e: AGENT2[(e, "blind")],
+        lambda e: AGENT2.get((e, "blind")),
         lambda e: p55_cell(e, "blind"),
-        lambda e: RUN2[(e, "blind")],
+        lambda e: RUN2.get((e, "blind")),
     ]
 
     def line(name: str, s: dict[str, Any], extra: list[Any]) -> list[Any]:
@@ -955,11 +1028,22 @@ def t_probe() -> str:
         ]
 
     out = [
-        line(f"`{short(r['entry_id'])}`", probe._summary([r]), [passed(g(r["entry_id"])) for g in getters])
+        line(
+            f"`{short(r['entry_id'])}`",
+            probe._summary([r]),
+            [_blind_total(g, [r["entry_id"]]) for g in getters],
+        )
         for r in PROBE_ROWS
     ]
     tot = probe._summary(PROBE_ROWS)
-    out.append(line("**total**", tot, [_blind_total(g) for g in getters]))
+    out.append(
+        line(
+            "**total, 13 earlier papers**",
+            probe._summary(PROBE_ROWS_13),
+            [_blind_total(g, THIRTEEN) for g in getters],
+        )
+    )
+    out.append(line("**total, 17 papers**", tot, [_blind_total(g, HOLDOUT) for g in getters]))
     k = Counter(_probe_hit_class(cd) for _e, cd in _probe_hits())
     lo, hi, n65, nb = _probe_se_bands()
     return (
@@ -968,7 +1052,8 @@ def t_probe() -> str:
         "context, asked for each number from memory, scored with the blind-mode comparator.  *Within "
         "2×* and *within 5×* count answers whose relative error is at most two or five times the "
         "claim's tolerance.  The last four columns are the blind-mode counts of the two agent and two "
-        f"pipeline samples, for comparison.  Of the {tot['tol']} hits, {k['derivable from context']} "
+        "pipeline samples, for comparison; the second samples exist for the 13 earlier papers only.  "
+        f"Over all 17 papers, of the {tot['tol']} hits, {k['derivable from context']} "
         f"are derivable from the claim context, {sum(v for c, v in k.items() if c.startswith('within '))} "
         f"passes a relative tolerance, and {k['inside ±1 SE band']} land inside a ±1 SE band whose "
         f"relative half-width is {pct(lo, 0)} to {pct(hi, 0)} ({n65} of {nb} at or below 65 %).\n\n"
@@ -1104,6 +1189,8 @@ LEESON_TESTS = {
     "anova_f_dollars_per_hour",
 }
 LEESON_VISITS = {"station_visits_full_sample", "station_visits_five_station_subsample"}
+FORSYTHE_N = {"n_obs_full_sample"}
+CARRERA_N = {"bcp_regression_observations", "takeup_more_regression_observations"}
 
 TAXONOMY_RULES: dict[tuple[str, str, str], dict[str, Any]] = {
     # --- agent (ROADMAP 3.3, 3.4) ---
@@ -1122,6 +1209,34 @@ TAXONOMY_RULES: dict[tuple[str, str, str], dict[str, Any]] = {
     # 3.4: the paper does not state the attendance-weight formula or the item orientations.
     (HARNESS_AGENT, "lopez-moctezuma-2022", "independent"): {"rest": UNDER},
     (HARNESS_AGENT, "lopez-moctezuma-2022", "blind"): {"rest": UNDER},
+    # --- the four papers of ROADMAP 3.6 (agent and oracle pipeline) ---
+    # 3.6: the Table 2 out-of-the-labour-force interaction lands near -0.59 against -0.49 in all
+    # four independent / blind cells of both reproducers, and on the printed value seeded; no cause
+    # is recorded.  The full-sample N drifts with the handling of the rows that have no state code
+    # from mid-2014 (3.6), a sample restriction.
+    (HARNESS_AGENT, "forsythe-2022", "independent"): {"rest": UNCLASSIFIED},
+    (HARNESS_AGENT, "forsythe-2022", "blind"): {
+        "claims": dict.fromkeys(FORSYTHE_N, SAMPLE),
+        "rest": UNCLASSIFIED,
+    },
+    (HARNESS_55, "forsythe-2022", "independent"): {
+        "claims": dict.fromkeys(FORSYTHE_N, SAMPLE),
+        "rest": UNCLASSIFIED,
+    },
+    (HARNESS_55, "forsythe-2022", "blind"): {
+        "claims": dict.fromkeys(FORSYTHE_N, SAMPLE),
+        "rest": UNCLASSIFIED,
+    },
+    # 3.6: N 1,248 / 2,946 against 1,126 / 2,824, i.e. the wave-3 $80 / 12-visit assignees kept (the
+    # agents dropped them); the coefficient misses have no recorded cause beyond that.
+    (HARNESS_55, "carrera-2022", "independent"): {
+        "claims": dict.fromkeys(CARRERA_N, SAMPLE),
+        "rest": UNCLASSIFIED,
+    },
+    # 3.6: the script's sample filter emptied the data (N = 0 printed), so every claim missed.
+    (HARNESS_55, "carrera-2022", "blind"): {"rest": SAMPLE},
+    # 3.6: NA for the seven individual-level coefficients; why is not recorded.
+    (HARNESS_55, "bokobza-2022", "blind"): {"na": EXTRACT, "rest": UNCLASSIFIED},
     # --- pipeline on claude-opus-4-7 (ROADMAP 3.2; counts read against 3.3 / 3.5) ---
     # Counts equal the agent's 1,535 / 1,529 from the paper's four-MP rule (3.3);
     # the coefficient's cause is not stated.
@@ -1266,9 +1381,9 @@ def t_taxonomy() -> str:
     rows.append(["claims scored"] + [n_claims[c] for c in cols] + [sum(n_claims.values())])
     main = table(hdr, rows, ["l"] + ["r"] * (len(hdr) - 1))
     papers = (
-        "Pipeline 4.7: the seven 3.2 papers.  Pipeline 5.5: all thirteen evaluation papers "
-        "(API rows for Grier, Leeson, Manekin and Montero; oracle rows for the other nine).  "
-        "Agent: all thirteen.\n\n"
+        "Pipeline 4.7: the seven 3.2 papers.  Pipeline 5.5: all seventeen evaluation papers "
+        "(API rows for Grier, Leeson, Manekin and Montero; oracle rows for the other thirteen).  "
+        "Agent: all seventeen.\n\n"
     )
     detail = table(
         ["Harness", "Paper", "Mode", "Claim", "Claimed", "Reproduced", "Category"],
@@ -1312,6 +1427,10 @@ ROADMAP_NAMES = {
     "lópez-moctezuma": "lopez-moctezuma-2022",
     "gagliarducci": "gagliarducci-2022",
     "holman": "holman-2022",
+    "carrera": "carrera-2022",
+    "forsythe": "forsythe-2022",
+    "bokobza": "bokobza-2022",
+    "brouwer": "brouwer-2022",
 }
 ENTRY_BY_SHORT = {short(e): e for e in HOLDOUT}
 
@@ -1319,7 +1438,7 @@ ENTRY_BY_SHORT = {short(e): e for e in HOLDOUT}
 def _roadmap_35_cells() -> list[tuple[str, str, str, str, str]]:
     """(section, paper, mode, quoted, recomputed) for every cell of the two ROADMAP 3.5 per-paper tables."""
     text = (REPO / "ROADMAP.md").read_text()
-    sec = text.split("### 3.5")[1].split("\n---\n")[0]
+    sec = text.split("### 3.5")[1].split("\n### 3.6")[0].split("\n---\n")[0]
     out = []
     num = r"(\d+|—)(?: \((\d+), (\d+)\))?"
     pat = re.compile(
@@ -1354,6 +1473,111 @@ def _roadmap_35_cells() -> list[tuple[str, str, str, str, str]]:
     return out
 
 
+def _roadmap_36_checks() -> list[tuple[str, str, str, str, str]]:
+    """Every cell of the ROADMAP 3.6 per-paper table, and the totals and probe figures 3.6 quotes."""
+    text = (REPO / "ROADMAP.md").read_text()
+    sec = text.split("\n### 3.6")[1].split("\n---\n")[0]
+    out: list[tuple[str, str, str, str, str]] = []
+    pat = re.compile(
+        r"^\| ([A-Za-zé-]+) \| (seeded|independent|blind) \| (\d+) \| "
+        r"(\d+) \((\d+), (\d+)\) \| (\d+) \((\d+), (\d+)\) \|$"
+    )
+    n_cells = 0
+    for line in sec.splitlines():
+        m = pat.match(line.strip())
+        if not m:
+            continue
+        n_cells += 1
+        e = ENTRY_BY_SHORT[ROADMAP_NAMES[m.group(1).lower()]]
+        mode = m.group(2)
+        ra, ro = cell(AGENT, e, mode), cell(ORC, e, mode)
+        assert ra is not None and ro is not None, (e, mode)
+        for what, q, rc in (
+            ("n", m.group(3), str(total(ro))),
+            ("agent final", m.group(4), str(passed(ra))),
+            ("agent first scored", m.group(5), str(fs(ra))),
+            ("agent refinements", m.group(6), str(sum(refs(ra)))),
+            ("pipeline oracle final", m.group(7), str(passed(ro))),
+            ("pipeline oracle first scored", m.group(8), str(fs(ro))),
+            ("pipeline oracle refinements", m.group(9), str(sum(refs(ro)))),
+        ):
+            out.append(("3.6 per-paper table", f"{short(e)} {mode}", what, q, rc))
+    assert n_cells == len(NEW_FOUR) * len(MODES), n_cells
+
+    def s(rep: str, entries: list[str], mode: str) -> str:
+        return str(sum_passed(rep, entries, mode)[0])
+
+    def f(rep: str, entries: list[str], mode: str) -> str:
+        return str(sum_passed(rep, entries, mode)[2])
+
+    def gap(entries: list[str], mode: str) -> str:
+        return str(sum_passed(AGENT, entries, mode)[0] - sum_passed(P55_ALL, entries, mode)[0])
+
+    sec_t = "3.6"
+    for mode, a4, a4f, p4, p4f, a17, a17f, p17, p17f, g4, g13, g17 in (
+        ("seeded", 47, 43, 45, 45, 200, 194, 194, 193, 2, 4, 6),
+        ("independent", 46, 46, 40, 32, 194, 192, 169, 121, 6, 19, 25),
+        ("blind", 45, 45, 26, 26, 180, 173, 118, 118, 19, 43, 62),
+    ):
+        out += [
+            (sec_t, "agent, 4 new papers", f"{mode} final", str(a4), s(AGENT, NEW_FOUR, mode)),
+            (sec_t, "agent, 4 new papers", f"{mode} first scored", str(a4f), f(AGENT, NEW_FOUR, mode)),
+            (sec_t, "pipeline oracle, 4 new papers", f"{mode} final", str(p4), s(ORC, NEW_FOUR, mode)),
+            (
+                sec_t,
+                "pipeline oracle, 4 new papers",
+                f"{mode} first scored",
+                str(p4f),
+                f(ORC, NEW_FOUR, mode),
+            ),
+            (sec_t, "agent, 17 papers", f"{mode} final", str(a17), s(AGENT, HOLDOUT, mode)),
+            (sec_t, "agent, 17 papers", f"{mode} first scored", str(a17f), f(AGENT, HOLDOUT, mode)),
+            (sec_t, "pipeline on Opus 5.5, 17 papers", f"{mode} final", str(p17), s(P55_ALL, HOLDOUT, mode)),
+            (
+                sec_t,
+                "pipeline on Opus 5.5, 17 papers",
+                f"{mode} first scored",
+                str(p17f),
+                f(P55_ALL, HOLDOUT, mode),
+            ),
+            (sec_t, "harness gap, 4 new papers", mode, str(g4), gap(NEW_FOUR, mode)),
+            (sec_t, "harness gap, 13 earlier papers", mode, str(g13), gap(THIRTEEN, mode)),
+            (sec_t, "harness gap, 17 papers", mode, str(g17), gap(HOLDOUT, mode)),
+        ]
+    from benchmark import probe
+
+    ps = probe._summary(PROBE_ROWS)
+    pk = Counter(_probe_hit_class(cd) for _e, cd in _probe_hits())
+    lo, hi, n65, nb = _probe_se_bands()
+    new_hits = _probe_hits([r for r in PROBE_ROWS if r["entry_id"] in NEW_FOUR])
+    sec_p = "3.6 memorisation probe"
+    out += [
+        (sec_p, "probe, 17 papers", "claims", "201", str(ps["n"])),
+        (sec_p, "probe, 17 papers", "answered", "104", str(ps["answered"])),
+        (sec_p, "probe, 17 papers", "within tolerance", "36", str(ps["tol"])),
+        (
+            sec_p,
+            "probe, 17 papers",
+            "recalled / inferred / none",
+            "0 / 104 / 97",
+            f"{ps['conf']['recalled']} / {ps['conf']['inferred']} / {ps['conf']['none']}",
+        ),
+        (sec_p, "probe hits", "derivable from context", "3", str(pk["derivable from context"])),
+        (sec_p, "probe hits", "inside ±1 SE band", "32", str(pk["inside ±1 SE band"])),
+        (sec_p, "probe hits", "SE band range", "6 %–225 %", f"{pct(lo, 0)}–{pct(hi, 0)}"),
+        (sec_p, "probe hits", "SE bands at or below 65 %", "29 of 32", f"{n65} of {nb}"),
+        (sec_p, "probe hits", "hits on the 4 new papers", "10", str(len(new_hits))),
+        (
+            sec_p,
+            "probe hits",
+            "new-paper hits inside a ±1 SE band",
+            "10",
+            str(sum(1 for _e, cd in new_hits if _probe_hit_class(cd) == "inside ±1 SE band")),
+        ),
+    ]
+    return out
+
+
 def _quoted_totals() -> list[tuple[str, str, str, str, str]]:
     """Totals ROADMAP states in prose or table footers, each with its section."""
 
@@ -1377,7 +1601,7 @@ def _quoted_totals() -> list[tuple[str, str, str, str, str]]:
         q.append(("3.4", "agent, 6 papers", f"{mode} final", str(val), s(AGENT, SIX_NEW, mode)))
         q.append(("3.4", "agent, 6 papers", f"{mode} first scored", str(fsv), f(AGENT, SIX_NEW, mode)))
     for mode, val in (("seeded", 153), ("independent", 148), ("blind", 135)):
-        q.append(("3.4", "agent, 13 papers", f"{mode} final", str(val), s(AGENT, HOLDOUT, mode)))
+        q.append(("3.4", "agent, 13 papers", f"{mode} final", str(val), s(AGENT, THIRTEEN, mode)))
     for mode, a, b, c in (("seeded", 28, 44, 43), ("independent", 24, 33, 43), ("blind", 10, 20, 43)):
         q.append(("3.5", "API 4 papers, pipeline 4.7", f"{mode} final", str(a), s(P47, API_FOUR, mode)))
         q.append(("3.5", "API 4 papers, pipeline 5.5", f"{mode} final", str(b), s(P55, API_FOUR, mode)))
@@ -1398,7 +1622,7 @@ def _quoted_totals() -> list[tuple[str, str, str, str, str]]:
                 "pipeline sample 1, 13 papers",
                 f"{mode} final",
                 str(a),
-                s(P55_ALL, HOLDOUT, mode),
+                s(P55_ALL, THIRTEEN, mode),
             )
         )
         q.append(
@@ -1407,7 +1631,7 @@ def _quoted_totals() -> list[tuple[str, str, str, str, str]]:
                 "pipeline sample 2, 13 papers",
                 f"{mode} final",
                 str(b),
-                str(sum(passed(RUN2[(e, mode)]) for e in HOLDOUT)),
+                str(sum(passed(RUN2[(e, mode)]) for e in THIRTEEN)),
             )
         )
     _every = [c for m in MODES for c in _variance_cells(m)]
@@ -1476,10 +1700,12 @@ def _quoted_totals() -> list[tuple[str, str, str, str, str]]:
     # Memorisation probe (ROADMAP 3.5, "Memorisation probe").
     from benchmark import probe
 
-    _ps = probe._summary(PROBE_ROWS)
-    _pk = Counter(_probe_hit_class(cd) for _e, cd in _probe_hits())
-    _lo, _hi, _n65, _nb = _probe_se_bands()
-    _gag = next(cd for _e, cd in _probe_hits() if cd["name"] == "n_sponsor_terms_ncosponsors_all_ols")
+    _ps = probe._summary(PROBE_ROWS_13)
+    _pk = Counter(_probe_hit_class(cd) for _e, cd in _probe_hits(PROBE_ROWS_13))
+    _lo, _hi, _n65, _nb = _probe_se_bands(PROBE_ROWS_13)
+    _gag = next(
+        cd for _e, cd in _probe_hits(PROBE_ROWS_13) if cd["name"] == "n_sponsor_terms_ncosponsors_all_ols"
+    )
     sec = "3.5 memorisation probe"
     q += [
         (sec, "probe", "claims", "154", str(_ps["n"])),
@@ -1594,12 +1820,12 @@ def t_consistency_claims() -> str:
 
 
 def t_discrepancies() -> str:
-    checks = _roadmap_35_cells() + _quoted_totals()
+    checks = _roadmap_35_cells() + _quoted_totals() + _roadmap_36_checks()
     bad = [c for c in checks if c[3] != c[4]]
     rows = [[f"ROADMAP {sec}", what, item, quoted, recomputed] for sec, what, item, quoted, recomputed in bad]
     return (
-        f"{len(checks)} numbers quoted in ROADMAP 3.2–3.5 (including the 3.5 variance pass, the "
-        "agent's second sample and the memorization probe) were "
+        f"{len(checks)} numbers quoted in ROADMAP 3.2–3.6 (including the 3.5 variance pass, the "
+        "agent's second sample, the memorization probe and the four papers of 3.6) were "
         "recomputed from the results files; "
         f"{len(bad)} differ.\n\n"
         + (
@@ -1616,6 +1842,7 @@ TABLES = {
     "confound": t_confound,
     "seven_per_paper": t_seven_per_paper,
     "nine_oracle": t_nine_oracle,
+    "four_new": t_four_new,
     "gap_decomposition": t_gap,
     "refinement": t_refinement,
     "closeness": t_closeness,
