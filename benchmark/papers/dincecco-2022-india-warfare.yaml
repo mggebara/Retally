@@ -340,6 +340,16 @@ notes: >
   four variance generations ran with the LLM cache off, so their code
   was not retained; only their scores are.
 
+  Strip-rule update (2026-11-01, with brouwer-2022-teaching-norms): PDFs
+  with a page that reads as a regression table are now withheld, so the
+  manuscript and online-appendix PDFs (1 paper/MS_20210009_main.pdf, 2
+  appendix/MS_20210009_online_appendix.pdf) leave the independent /
+  blind mount; the table*.tex files there are withheld as regression
+  tables, and MS_20210009_main.tex (prose, its tables \input from them)
+  stays.  Every earlier independent / blind run of this entry, up to and
+  including the 2026-11-01-a agent sample and the run2 oracle sample, had
+  both PDFs on the mount.
+
   Harness note found along the way: when a claim has no RESULT line, the
   comparator's third matching strategy (claim_type name vs output keys)
   scores it against the first output whose key contains "coefficient",

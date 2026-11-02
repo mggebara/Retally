@@ -1746,6 +1746,32 @@ contexts the blind prompt does.
   would turn the two-sample ranges above into something nearer a
   spread.
 
+**Harness changes 2026-11-01 (strip rule; no run re-done).**  Three
+content rules were added to `benchmark/strip_rule.py`, each with the
+corpus entry it was written for:
+
+- PR #91 (`carrera-2022-who-chooses-commitment`): a LaTeX row labelled
+  `N` or `Clusters` counts as the observations marker, and a non-manuscript
+  `.tex` made mostly of numeric `\newcommand` / `\def` definitions is
+  withheld as `result-macros`.
+- PR #93 (`bokobza-2022-morning-after-coup-purges`): an `.html` page with
+  five or more language-tagged code chunks (a rendered R Markdown /
+  knitr / Jupyter run) is withheld as `script-content:<lang>`.
+- PR #94 (`brouwer-2022-teaching-norms`): a `.pdf` with a page carrying
+  three regression-table markers (the accepted manuscript and online
+  appendix that EJ packages ship) is withheld as `regression-table`.
+
+The PDF rule changes two existing entries' mounts.  The manuscript and
+online-appendix PDFs of `dincecco-2022-india-warfare` (2 files) and
+`hanlon-2022-aircraft-ip-spillovers` (4 files) were on every independent
+/ blind mount up to and including the `2026-11-01-a` agent sample and the
+`desktop-opus-run2` oracle sample, and are withheld from now on.  The
+agents' own reports for the Hanlon cells say they read only the `.dta`
+files.  Hanlon's split esttab fragments (`3 replication files/tables/
+Table1_R.tex`, `Table1_N.tex`, `Table4_R.tex`, ...: coefficient, SE and
+observation rows with no tabular or `Observations` label) still print
+its pinned values and are still on the mount; no rule catches them yet.
+
 ---
 
 ## Phase 4 — Corpus growth (4 → 20–30 papers)

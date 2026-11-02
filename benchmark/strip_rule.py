@@ -33,13 +33,17 @@ by file, what that copy leaves out.  Two layers:
    * Rendered scripts: an ``.html`` export of an R Markdown / knitr /
      Jupyter run (several code chunks tagged with their language, such as
      ``<pre class="r">``) carries the script and its output.
+   * PDFs with a page that reads as a regression table (three markers on
+     one page of the pymupdf text): the accepted manuscript or online
+     appendix a package ships beside its data.  README / codebook PDFs
+     stay.
 
    A file byte-identical to a file stripped by name is stripped too.
 
 Evidence must be strong — several independent markers — or the file is
-kept.  Binary files are never content-tested (spreadsheets aside: an
-``.xlsx``'s shared strings and a BIFF ``.xls``'s printable / UTF-16LE
-runs are read), and known data formats (``.dta``, ``.RData``,
+kept.  Binary files are never content-tested (spreadsheets and PDFs
+aside: an ``.xlsx``'s shared strings, a BIFF ``.xls``'s printable /
+UTF-16LE runs and a PDF's page text are read), and known data formats (``.dta``, ``.RData``,
 ``.rds``, ``.sav``, ``.parquet``, shapefiles, ...) are never stripped.
 Directory names (``output/``, ``tables/``) play no part: a figure's data
 ``.csv`` in ``Out/Figures_data`` is data, a regression table anywhere is
@@ -459,6 +463,45 @@ def _xlsx_reason(path: Path) -> str | None:
     return _spreadsheet_reason(strings)
 
 
+PDF_MAX_PAGES = 400
+"""A ``.pdf`` is text-tested page by page up to this many pages."""
+
+_PDF_PAGE_MARKERS = 3
+"""Regression-table markers one page must show (of the five :func:`_table_evidence` counts).
+
+The text-file threshold, but on a single page and with no table-tool
+shortcut: a README that names ``esttab`` must not be dropped.  Over the 97
+package PDFs of 18 cached packages on 2026-11-01 (README, codebook, IRB, instruction and
+pre-registration PDFs among them) non-manuscripts score 0 or 1 and every
+manuscript / online appendix 3 or more.
+"""
+
+
+def _pdf_reason(path: Path) -> str | None:
+    """A ``.pdf`` with a page that reads as a regression table (a manuscript, an appendix, a results PDF).
+
+    Packages ship the accepted manuscript or online appendix as a PDF
+    beside their data (the EJ layout: ``1 paper/..._accepted.pdf``), which
+    prints every result table.  One page carrying three of the markers
+    (``Observations``, an R² row, a standard-errors note, a significance-star
+    legend, three or more parenthesised SEs) is the same evidence a ``.tex``
+    table is stripped on; a codebook or README PDF does not reach it.
+    """
+    try:
+        import fitz  # pymupdf, the pipeline's own PDF parser
+    except ImportError:  # pragma: no cover - a declared dependency
+        return None
+    try:
+        with fitz.open(path) as doc:
+            for page in doc.pages(0, min(doc.page_count, PDF_MAX_PAGES)):
+                n, _ = _table_evidence(page.get_text())
+                if n >= _PDF_PAGE_MARKERS:
+                    return "regression-table"
+    except Exception:  # noqa: BLE001 - an unreadable or encrypted PDF is kept, as any binary
+        return None
+    return None
+
+
 def _read_sample(path: Path, limit: int) -> bytes:
     with path.open("rb") as fh:
         return fh.read(limit)
@@ -475,6 +518,8 @@ def content_reason(path: Path, *, size_cap: int = SIZE_CAP_BYTES) -> str | None:
             return None
         if suffix in {".xlsx", ".xlsm"}:
             return _xlsx_reason(path)
+        if suffix == ".pdf":
+            return _pdf_reason(path)
         if suffix == ".xls" and _read_sample(path, len(OLE2_MAGIC)) == OLE2_MAGIC:
             return _xls_reason(path)  # a text .xls (outreg2's default) takes the text path below
         limit = TABLE_SAMPLE_BYTES if suffix in {".tex", ".html", ".htm"} else SAMPLE_BYTES

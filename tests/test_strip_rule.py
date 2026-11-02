@@ -459,3 +459,56 @@ def test_numeric_newcommand_file_is_stripped_as_result_macros(tmp_path):
     # A manuscript that defines its numbers in the preamble takes the manuscript path.
     doc = r"\documentclass{article}" + "\n" + RESULT_MACROS_TEX + r"\begin{document}x\end{document}"
     assert content_reason(_write(tmp_path, "paper.tex", doc)) is None
+
+
+def _pdf(path: Path, pages: list[str]) -> Path:
+    import fitz
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    doc = fitz.open()
+    for text in pages:
+        doc.new_page().insert_text((50, 60), text, fontsize=9)
+    doc.save(path)
+    doc.close()
+    return path
+
+
+# A manuscript page as pymupdf extracts it: one cell per line.
+PDF_TABLE_PAGE = "\n".join(
+    [
+        "Table 2: Determinants of Punishment Rate",
+        "(1)", "(2)", "Child", "0.31**", "0.27**", "(0.09)", "(0.08)",
+        "VH", "-0.05", "-0.06", "(0.02)", "(0.03)",
+        "Observations", "512", "511", "R2", "0.05", "0.09",
+        "Notes: Standard errors in parentheses are clustered at the school level.",
+        "* p < 0.10 ** p < 0.05 *** p < 0.01.",
+    ]
+)  # fmt: skip
+
+PDF_README_PAGE = "\n".join(
+    [
+        "ReadMe: replication package",
+        "Data/master.dta holds one row per observation (601 observations).",
+        "Run Do/analysis.do in Stata 16; tables are written with esttab.",
+        "Variables: child (0/1), punish (0/1), help (0/1), school (1-30).",
+    ]
+)
+
+
+def test_manuscript_pdf_with_a_regression_table_is_stripped_but_readme_pdf_is_kept(tmp_path):
+    manuscript = _pdf(tmp_path / "1 paper" / "MS_accepted.pdf", ["Introduction text.", PDF_TABLE_PAGE])
+    readme = _pdf(tmp_path / "ReadMe.pdf", [PDF_README_PAGE])
+    assert content_reason(manuscript) == "regression-table"
+    assert content_reason(readme) is None
+    stripped = {s.path: s.reason for s in classify_tree(tmp_path)}
+    assert stripped == {"1 paper/MS_accepted.pdf": "regression-table"}
+
+
+def test_pdf_markers_must_sit_on_one_page_and_unreadable_pdfs_are_kept(tmp_path):
+    lines = PDF_TABLE_PAGE.splitlines()
+    # Two markers on the first page (SE rows, Observations), one on each later page.
+    pages = [lines[:16], lines[16:19], lines[19:20], lines[20:]]
+    split = _pdf(tmp_path / "split.pdf", ["\n".join(p) for p in pages])
+    assert content_reason(split) is None
+    broken = _write(tmp_path, "broken.pdf", b"%PDF-1.4\n" + PDF_TABLE_PAGE.encode())
+    assert content_reason(broken) is None
