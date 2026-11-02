@@ -48,6 +48,11 @@ by file, what that copy leaves out.  Two layers:
      manuscript, its tables (OCR'd or as images with their notes) or an
      appendix shipped as Word files (Mokyr 2022 ships four).  README /
      codebook documents stay.
+   * R workspaces (``.RData`` / ``.rda``) saved after the analysis
+     (``save.image()``): the character vectors ``stargazer`` returned sit in
+     the serialization as plain strings, so a workspace whose LaTeX / HTML
+     table rows read as a regression table is stripped.  Data workspaces
+     stay.
 
    A file byte-identical to a file stripped by name is stripped too.
 
@@ -55,8 +60,9 @@ Evidence must be strong — several independent markers — or the file is
 kept.  Binary files are never content-tested (spreadsheets, PDFs and Word
 documents aside: an ``.xlsx``'s shared strings, a BIFF ``.xls``'s printable /
 UTF-16LE runs, a PDF's page text and a ``.docx``'s paragraph text are
-read), and known data formats (``.dta``, ``.RData``, ``.rds``, ``.sav``,
-``.parquet``, shapefiles, ...) are never stripped.
+read), and known data formats (``.dta``, ``.rds``, ``.sav``, ``.parquet``,
+shapefiles, ...) are never stripped; an ``.RData`` / ``.rda`` workspace only
+when it holds a rendered regression table.
 Directory names (``output/``, ``tables/``) play no part: a figure's data
 ``.csv`` in ``Out/Figures_data`` is data, a regression table anywhere is
 not.
@@ -91,7 +97,8 @@ SCRIPT_SUFFIXES = frozenset(
 SCRIPT_NAMES = frozenset({".rhistory", ".rapp.history"})
 SCRIPT_NAME_PATTERNS = (re.compile(r"^log[_-].*\.txt$", re.IGNORECASE),)
 
-# Data formats: never stripped, never content-tested.
+# Data formats: never stripped, never content-tested (R workspaces aside: see
+# :func:`_r_workspace_reason`).
 DATA_SUFFIXES = frozenset(
     {
         ".dta", ".rdata", ".rda", ".rds", ".sav", ".zsav", ".por", ".sas7bdat", ".sas7bcat", ".xpt",
@@ -616,6 +623,73 @@ def _docx_reason(path: Path) -> str | None:
     return None
 
 
+R_WORKSPACE_SUFFIXES = frozenset({".rdata", ".rda"})
+"""R workspaces (``save()`` / ``save.image()``): data, but a snapshot taken after the analysis
+also holds the tables the script printed."""
+
+R_WORKSPACE_MAX_BYTES = 1024 * 1024 * 1024
+"""How much of a workspace's decompressed serialization is scanned."""
+
+_R_TABLE_ROW = re.compile(r"&|\\begin\{tabular|\\end\{tabular|<td\b|<tr\b")
+
+
+def _r_workspace_reason(path: Path) -> str | None:
+    """An R workspace saved after the analysis, holding a rendered regression table.
+
+    ``save.image()`` at the end of an R analysis keeps every object in the
+    session, including the character vectors ``stargazer`` / ``texreg``
+    return: the paper's tables line by line (Douenne & Fabre 2022 ship
+    ``after_papier.RData`` beside ``after_preparation.RData``).  Character
+    data are stored as plain bytes in R's serialization, so the
+    decompressed stream (gzip, bzip2 or xz, as ``save()`` writes it) is
+    scanned for printable runs; the LaTeX / HTML table rows among them are
+    held to the ``.tex`` test (:func:`_is_regression_table`).  A data
+    workspace's strings are labels and values, not ``&``-separated rows
+    with an ``Observations`` / R² / standard-error structure, so it stays.
+    """
+    import bz2
+    import gzip
+    import lzma
+
+    with path.open("rb") as fh:
+        magic = fh.read(6)
+    if magic.startswith(b"\x1f\x8b"):
+        opener = gzip.open
+    elif magic.startswith(b"BZh"):
+        opener = bz2.open
+    elif magic.startswith(b"\xfd7zXZ\x00"):
+        opener = lzma.open
+    elif magic.startswith((b"RDX", b"RDA", b"RDB")):
+        opener = open
+    else:
+        return None
+    rows: list[str] = []
+    tail = b""
+    read = 0
+    try:
+        with opener(path, "rb") as fh:
+            while read < R_WORKSPACE_MAX_BYTES:
+                chunk = fh.read(8 << 20)
+                if not chunk:
+                    break
+                read += len(chunk)
+                data = tail + chunk
+                runs = _ASCII_RUN.findall(data)
+                # A run that reaches the chunk's end may continue in the next chunk.
+                if runs and data.endswith(runs[-1]):
+                    tail = runs.pop()
+                else:
+                    tail = b""
+                rows += [r.decode("latin-1") for r in runs if _R_TABLE_ROW.search(r.decode("latin-1"))]
+    except (OSError, EOFError, lzma.LZMAError, ValueError):
+        return None
+    if tail and _R_TABLE_ROW.search(tail.decode("latin-1")):
+        rows.append(tail.decode("latin-1"))
+    if len(rows) >= 3 and _is_regression_table("\n".join(rows)):
+        return "regression-table"
+    return None
+
+
 def _read_sample(path: Path, limit: int) -> bytes:
     with path.open("rb") as fh:
         return fh.read(limit)
@@ -624,12 +698,14 @@ def _read_sample(path: Path, limit: int) -> bytes:
 def content_reason(path: Path, *, size_cap: int = SIZE_CAP_BYTES) -> str | None:
     """The by-content strip reason for the file at ``path``, or None (keep)."""
     suffix = path.suffix.lower()
-    if suffix in DATA_SUFFIXES:
+    if suffix in DATA_SUFFIXES and suffix not in R_WORKSPACE_SUFFIXES:
         return None
     try:
         size = path.stat().st_size
         if size == 0 or size > size_cap:
             return None
+        if suffix in R_WORKSPACE_SUFFIXES:
+            return _r_workspace_reason(path)
         if suffix in {".xlsx", ".xlsm"}:
             return _xlsx_reason(path)
         if suffix == ".pdf":

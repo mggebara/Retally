@@ -127,12 +127,19 @@ downloaded package (`benchmark/strip_rule.py`, applied by
   significance legend counts whether printed as `* p < 0.1` or written
   out in a table note (`*** denotes statistical significance at the 1%
   level`, which is how the image-table pages of Mokyr's accepted PDF
-  reach three markers).
+  reach three markers).  An R workspace (`.RData`/`.rda`, gzip/bzip2/xz
+  or plain) saved after the analysis, whose serialized strings include
+  LaTeX/HTML table rows that read as a regression table, is stripped too
+  — `save.image()` keeps the character vectors `stargazer` returned
+  (Douenne & Fabre 2022 ship `after_papier.RData` beside the data
+  workspace `after_preparation.RData`, which stays).
 - **Byte copies** of a file stripped by name.
 
 Evidence must be strong (several independent markers) or the file
-stays.  Data formats (`.dta .RData .rds .sav .parquet`, shapefiles, …)
-are never stripped and never content-tested, other binary files
+stays.  Data formats (`.dta .rds .sav .parquet`, shapefiles, …)
+are never stripped and never content-tested (`.RData`/`.rda` only for
+the workspace case above; the 33 data workspaces cached on 2026-11-02
+all stay), other binary files
 (spreadsheets, PDFs and `.docx` aside) are not content-tested, a plain `.csv` (figure data included) is kept, and a
 `.tex` manuscript (`\documentclass`) stays unless one of its own
 tabulars is a regression table.  Directory names (`output/`, `tables/`)
