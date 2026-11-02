@@ -1,0 +1,364 @@
+You are refining R code that reproduces results from an econometrics paper.
+The code RAN SUCCESSFULLY but the reproduced values do not match the
+paper's claims within the allowed tolerance.  Identify what is causing
+the gap and adjust the code to close it.
+
+## Paper
+Title: WAR, SOCIALISM, AND THE RISE OF FASCISM:
+Methodology: - **Design and estimator:** This is a cross-sectional instrumental-variables (2SLS) study of 5,775 Italian municipalities (64 of 69 provinces, mapped to 1921 census boundaries; 181 administrative districts). The endogenous regressor is the Socialist vote share in 1919. The instrument is the *Share of foot soldier casualties*: WWI foot-soldier deaths from the military Roll of Honor (529,028 records, digitized by ISTORECO) divided by male population over age 6 in the 1911 census. The first stage is equation (1): Socialist vote share 1919_i = γ·Share of foot soldier casualties_i + X_i′β + ε_i, estimated by OLS in levels (shares, no logs). Second-stage outcomes measure fascist activity: a dummy for a local Fascist Party branch in Sept. 1921, *Fascist violence in 1920–22* (episodes per 1,000 inhabitants, from Franzinelli 2003), and the *Fascist vote share* in 1921 and 1924. Later sections also look at Jewish deportations in 1943–45 and postwar (1946–2018) vote shares.
+- **Units of the coefficients:** The paper says it reports **standardized coefficients in this and all subsequent regressions**, "computed after standardizing both left-hand-side and right-hand-side variables". So the headline estimates are standardized (beta) coefficients. In the headline first stage (Table I, col. 1) the casualty coefficient is 0.12 (SE 0.02, F = 41.68, R² = 0.60). That implies a socialist share 6.5 pp lower if casualties had been zero, against a mean of 31.6%. Across columns 2–6 the coefficient is 0.11 and then 0.10 (SE 0.01), with first-stage F between 42.29 and 56.39 and R² between 0.62 and 0.70.
+- **Fixed effects and controls (Table I, built up column by column):**
+  - Col. 1 has province FE and regiment FE (dummies for any deaths from the municipality in a given regiment), plus demographic controls: a quartic in log 1911 population and the share of population under age 6 in 1911. Province FE and demographic controls are in every specification.
+  - Col. 2 adds geographic controls: log area, elevation of the main center and maximum elevation.
+  - Col. 3 adds the Socialist vote share in 1913.
+  - Col. 4 adds military controls: veterans from classes 1874–95 and from classes 1896–1900 (both by military district, over males above 6), assault-troop and volunteer casualties as a share of males above 6, a dummy for army-supplying production plants, and a dummy for any casualties in the highest-mortality battles (days with more than 1,000 deaths).
+  - Col. 5 adds agricultural controls: share of day laborers, share of sharecroppers, and a dummy for a local landowner/agrarian association.
+  - Col. 6, the full specification, adds urban controls: industrial workers and industrial firms over male population in 1911, the 1911 literacy rate, the share of entrepreneurs and rentiers (elites), and the share of the bourgeoisie.
+- **Standard errors:** Heteroskedasticity-robust and clustered at the administrative-district level (181 clusters). Conley spatial standard errors are reported as a robustness check (Online Appendix Table A2). The authors use district clustering because it is more conservative for 2SLS and very similar for the first stage.
+- **Data construction and preprocessing:**
+  - Election returns for 1919, 1921 and 1924 were hand-collected from about 1,200 newspapers and state archives, extending the Corbetta–Piretti data, which cover only about 2,000 municipalities.
+  - The 1921 fascist share gives the Fascist Party a portion of National Bloc votes proportional to fascist candidates' share of candidate votes. A restricted, no-imputation sample of 2,188 municipalities uses municipality-level candidate votes. For the rest, the share is imputed from district, province or electoral-district data.
+  - The 1913 socialist share uses Avanti! candidate lists. For 1921 and 1924 the socialist share also includes the Communist and Unitary Socialist parties.
+  - Census class shares (day laborers, sharecroppers, elites, bourgeoisie) are measured for more than 700 agrarian zones and assigned to every municipality in the zone.
+  - The Jewish deportation ratio uses district-level 1911 Jewish population, split across non-capital municipalities by population and capped at 1.
+  - Relative rainfall for Dec 1918–May 1919 (against the 1915–79 average, from 427 weather stations) is interpolated to municipalities by inverse-distance weighting with a 30 km cutoff, then capped at 1.
+- **Sample restrictions:** The sample is the 5,775 municipalities, out of 8,355 in the 1921 census, for which 1919–24 electoral data could be recovered. Recently annexed Julian Venetia and Trentino are excluded, and parts of Calabria and Sicily are missing. Only foot-soldier casualties (over 70% of deaths) are used; navy, air force, special assault troops and volunteers are dropped because of selection. Alternative instruments use smaller samples: Spanish-flu excess mortality in 1918 is available for only 207 urban municipalities.
+- **Validation and robustness:**
+  - Balance checks show the instrument is unrelated to pre-1919 political, economic, social and demographic characteristics.
+  - Placebos: the instrument does not predict the Nationalist vote in 1919, WWI monuments by 1921, or volunteer and assault-troop casualties.
+  - Heterogeneity: there is no effect where the Socialist Party was weak; effects are larger with landowner associations and a larger share of elites.
+  - Alternative violence measures are fascist killings, all political violence, and non-fascist violence.
+  - Alternative instruments are drought (relative rainfall) and Spanish-flu excess mortality.
+  - There is no train/test split or cross-validation; inference rests on clustered standard errors and the first-stage F-statistic.
+
+
+## Current Code
+```r
+suppressPackageStartupMessages({
+  library(haven)
+  library(fixest)
+})
+set.seed(42)
+
+path <- "<repo>/.cache/datasets/acemoglu_2022_war_socialism_fascism.script-free/fascism_db.dta"
+df <- haven::read_dta(path)
+df <- haven::zap_labels(df)
+df <- as.data.frame(df)
+names(df) <- tolower(names(df))
+nm <- names(df)
+cat("N rows:", nrow(df), " N cols:", ncol(df), "\n")
+
+is_num <- function(v) is.numeric(df[[v]])
+
+find_var <- function(cands = character(0), regex = NULL, exclude = NULL, numeric = TRUE) {
+  for (c in cands) if (c %in% nm && (!numeric || is_num(c))) return(c)
+  if (!is.null(regex)) {
+    hits <- nm[grepl(regex, nm)]
+    if (!is.null(exclude)) hits <- hits[!grepl(exclude, hits)]
+    if (numeric) hits <- hits[vapply(hits, is_num, logical(1))]
+    if (length(hits) > 0) {
+      hits <- hits[order(nchar(hits))]
+      return(hits[1])
+    }
+  }
+  NA_character_
+}
+
+# ---------------- diagnostics: column-name patterns ----------------
+pat <- gsub("[0-9]+", "#", nm)
+pattab <- sort(table(pat), decreasing = TRUE)
+big <- pattab[pattab >= 10]
+cat("Patterns(>=10):", paste0(names(big), "(", as.integer(big), ")", collapse = " "), "\n")
+
+# ---------------- core variables ----------------
+y_viol   <- find_var(c("fascist_violence"))
+y_branch <- find_var(c("fascist_branch"))
+y_v21    <- find_var(c("fascist1921_vv"))
+y_v24    <- find_var(c("fascist1924_vv"))
+endo     <- find_var(c("psu1919_vv"))
+inst     <- find_var(c("foots_pop6m"))
+clus     <- find_var(c("circondario1921", "circondario"), numeric = FALSE)
+
+prov <- find_var(c("province1921", "provincia1921", "prov1921", "province", "provincia",
+                   "prov", "prov_id", "province_id", "cod_prov", "codprov", "id_prov"),
+                 regex = "^prov|provinc", exclude = "_d_|share|sh_", numeric = FALSE)
+cat("Province var:", prov, "\n")
+
+lpopv <- find_var(c("lpop1911", "ln_pop1911", "log_pop1911", "lnpop1911", "logpop1911", "lpop_1911", "lpop"),
+                  regex = "^(l|ln|log)_?pop", exclude = "pop6m|be6|sh_|_[2-4]$|sq|cub|2$|3$|4$")
+if (!is.na(lpopv)) {
+  lp <- df[[lpopv]]
+} else {
+  popv <- find_var(c("pop1911", "pop_1911", "population1911", "totpop1911", "pop"),
+                   regex = "pop.*1911|1911.*pop|^pop", exclude = "sh_|be6|pop6m|jewish|_pop$|ratio|share")
+  lp <- log(df[[popv]])
+}
+df$lp1 <- lp; df$lp2 <- lp^2; df$lp3 <- lp^3; df$lp4 <- lp^4
+shbe6 <- find_var(c("sh_pop_1911_be6"), regex = "be6")
+
+larea <- find_var(c("larea", "lnarea", "log_area"), regex = "area")
+maxalt <- find_var(c("max_alt"), regex = "max_?alt")
+alt <- find_var(c("centre_alt", "alt", "altitude", "alt_center", "elevation"),
+                regex = "alt|elev", exclude = "max|min|_d_|army|alter|salt")
+psu13 <- find_var(c("psu1913_vv"), regex = "psu1913")
+vet1 <- find_var(c("veterans74_95"), regex = "veter.*74")
+vet2 <- find_var(c("veterans96_00", "veterans96_900", "veterans96_1900", "veterans1896_1900"),
+                 regex = "veter.*9[6-9]|veter.*00", exclude = "74")
+# Paper: "assault-troop and volunteer casualties as a share of males above 6" -> one combined variable
+ardvol <- find_var(c("ard_vol_pop6m"))
+if (!is.na(ardvol)) {
+  assault <- ardvol; volunt <- NA_character_
+} else {
+  assault <- find_var(c("arditi_pop6m", "assault_pop6m"), regex = "ardit|assault|assalt")
+  volunt  <- find_var(c("volunt_pop6m", "volunteers_pop6m", "volontari_pop6m", "vol_pop6m"),
+                      regex = "volunt|volont|^vol_")
+}
+armyd <- find_var(c("army_suppliers_d"), regex = "army_?suppl|suppl")
+# Dummy for any casualties in the bloodiest battles (days with > 1,000 deaths)
+battle <- find_var(c("cruent_d", "battle_d", "big_battles_d", "highmort_d"), regex = "cruent")
+dlab <- find_var(c("dlab"), regex = "dlab|day_?lab|braccian")
+shcrop <- find_var(c("shcrop", "sharecroppers", "sharecrop", "mezzadri"),
+                   regex = "crop|mezz|sharec|shcr")
+landown <- find_var(c("landlord_ass", "landowners_d", "landowner_d", "agrarian_d"),
+                    regex = "landown|landlord")
+indw <- find_var(c("ind_workers"), regex = "ind_?work")
+indf <- find_var(c("ind_firms"), regex = "ind_?firm")
+lit  <- find_var(c("literacy"), regex = "litera")
+eli  <- find_var(c("elites"), regex = "elite")
+bou  <- find_var(c("bourgeoisie"), regex = "bourg")
+
+found <- list(prov = prov, alt = alt, vet1 = vet1, vet2 = vet2, assault = assault, volunt = volunt,
+              armyd = armyd, battle = battle, dlab = dlab, shcrop = shcrop, landown = landown,
+              indw = indw, indf = indf, lit = lit, eli = eli, bou = bou, clus = clus)
+for (k in names(found)) cat("Matched", k, "->", found[[k]], "\n")
+
+# ---------------- regiment dummies ----------------
+numcol <- vapply(nm, is_num, logical(1))
+nonneg <- vapply(nm, function(v) {
+  if (!numcol[v]) return(FALSE)
+  x <- df[[v]]; x <- x[!is.na(x)]
+  length(x) > 0 && all(x >= 0)
+}, logical(1))
+cand_pats <- names(pattab)[pattab >= 15 & grepl("#", names(pattab))]
+pat_ok <- vapply(cand_pats, function(p) {
+  cols <- nm[pat == p]
+  mean(nonneg[cols]) > 0.9
+}, logical(1))
+cand_pats <- cand_pats[pat_ok]
+reg_pref <- cand_pats[grepl("reg|rgt|rgm|regg|brig", cand_pats) & !grepl("region", cand_pats)]
+chosen <- NA_character_
+if (length(reg_pref) > 0) {
+  chosen <- reg_pref[which.max(pattab[reg_pref])]
+} else {
+  other <- cand_pats[!grepl("army|prov|circ|elec|year|distr|veter|psu|vv|pop|^lp|sh_|share|pct|rain|temp|vote", cand_pats)]
+  other <- other[pattab[other] >= 30]
+  if (length(other) > 0) chosen <- other[which.max(pattab[other])]
+}
+reg_dummies <- character(0)
+if (!is.na(chosen)) {
+  cols <- nm[pat == chosen & nonneg]
+  k <- 0
+  for (v in cols) {
+    x <- df[[v]]
+    d <- as.numeric(!is.na(x) & x > 0)
+    if (length(unique(d)) > 1) {
+      k <- k + 1
+      nmv <- paste0("regd_", k)
+      df[[nmv]] <- d
+      reg_dummies <- c(reg_dummies, nmv)
+    }
+  }
+  cat("Regiment pattern:", chosen, " count:", length(reg_dummies), "\n")
+}
+if (length(reg_dummies) == 0) cat("WARNING: no regiment dummies identified\n")
+
+# ---------------- control sets ----------------
+clean <- function(x) x[!is.na(x)]
+demo <- clean(c("lp1", "lp2", "lp3", "lp4", shbe6))
+geo  <- clean(c(larea, alt, maxalt))
+pol  <- clean(c(psu13))
+mil  <- clean(unique(c(vet1, vet2, assault, volunt, armyd, battle)))
+agr  <- clean(c(dlab, shcrop, landown))
+urb  <- clean(c(indw, indf, lit, eli, bou))
+cat("Military controls:", paste(mil, collapse = " "), "\n")
+
+ctrl_col1 <- c(demo, reg_dummies)
+ctrl_col6 <- unique(c(demo, geo, pol, mil, agr, urb, reg_dummies))
+
+sdv <- function(v) sd(df[[v]], na.rm = TRUE)
+
+bq <- function(v) paste0("`", v, "`")
+fe_part <- if (!is.na(prov)) paste0(" | ", bq(prov)) else ""
+
+run_fs <- function(ctrls) {
+  f <- as.formula(paste0(bq(endo), " ~ ", paste(c(bq(inst), bq(ctrls)), collapse = " + "), fe_part))
+  feols(f, data = df, cluster = as.formula(paste0("~", bq(clus))), fixef.rm = "none")
+}
+run_iv <- function(y, ctrls) {
+  rhs <- if (length(ctrls) > 0) paste(bq(ctrls), collapse = " + ") else "1"
+  f <- as.formula(paste0(bq(y), " ~ ", rhs, fe_part, " | ", bq(endo), " ~ ", bq(inst)))
+  feols(f, data = df, cluster = as.formula(paste0("~", bq(clus))), fixef.rm = "none")
+}
+
+res <- list()
+emit <- function(name, val) {
+  if (!is.null(val) && length(val) == 1 && is.finite(val)) cat(sprintf("RESULT:%s=%.6f\n", name, val))
+}
+
+nclus <- function(m) {
+  idx <- obs(m)
+  length(unique(df[[clus]][idx]))
+}
+
+fs1 <- tryCatch(run_fs(ctrl_col1), error = function(e) { cat("fs1 error:", conditionMessage(e), "\n"); NULL })
+if (!is.null(fs1)) {
+  b <- coef(fs1)[inst]
+  res$first_stage_casualties_table1_col1 <- b * sdv(inst) / sdv(endo)
+  res$n_obs_main_sample <- nobs(fs1)
+  res$n_clusters_main_sample <- nclus(fs1)
+}
+fs6 <- tryCatch(run_fs(ctrl_col6), error = function(e) { cat("fs6 error:", conditionMessage(e), "\n"); NULL })
+if (!is.null(fs6)) {
+  b <- coef(fs6)[inst]
+  se <- sqrt(diag(vcov(fs6)))[inst]
+  res$first_stage_casualties_table1_col6 <- b * sdv(inst) / sdv(endo)
+  res$first_stage_fstat_table1_col6 <- (b / se)^2
+  if (is.null(res$n_obs_main_sample)) {
+    res$n_obs_main_sample <- nobs(fs6)
+    res$n_clusters_main_sample <- nclus(fs6)
+  }
+}
+
+std_iv <- function(m, y) {
+  b <- coef(m)[paste0("fit_", endo)]
+  if (is.na(b)) b <- coef(m)[grep("^fit_", names(coef(m)))[1]]
+  b * sdv(endo) / sdv(y)
+}
+
+iv_v6 <- tryCatch(run_iv(y_viol, ctrl_col6), error = function(e) { cat("iv viol error:", conditionMessage(e), "\n"); NULL })
+if (!is.null(iv_v6)) res$iv_violence_table2_panelA_col6 <- std_iv(iv_v6, y_viol)
+
+iv_b6 <- tryCatch(run_iv(y_branch, ctrl_col6), error = function(e) { cat("iv branch error:", conditionMessage(e), "\n"); NULL })
+if (!is.null(iv_b6)) res$iv_branches_table2_panelC_col6 <- std_iv(iv_b6, y_branch)
+
+iv_21 <- tryCatch(run_iv(y_v21, ctrl_col6), error = function(e) { cat("iv 1921 error:", conditionMessage(e), "\n"); NULL })
+if (!is.null(iv_21)) {
+  res$iv_fascist_vote1921_table3_panelA_col6 <- std_iv(iv_21, y_v21)
+  res$n_obs_fascist_vote1921 <- nobs(iv_21)
+  res$n_clusters_fascist_vote1921 <- nclus(iv_21)
+}
+
+iv_24a <- tryCatch(run_iv(y_v24, ctrl_col1), error = function(e) { cat("iv 1924 c1 error:", conditionMessage(e), "\n"); NULL })
+if (!is.null(iv_24a)) res$iv_fascist_vote1924_table3_panelC_col1 <- std_iv(iv_24a, y_v24)
+
+iv_24f <- tryCatch(run_iv(y_v24, ctrl_col6), error = function(e) { cat("iv 1924 c6 error:", conditionMessage(e), "\n"); NULL })
+if (!is.null(iv_24f)) res$iv_fascist_vote1924_table3_panelC_col6 <- std_iv(iv_24f, y_v24)
+
+order_names <- c("first_stage_casualties_table1_col1", "first_stage_casualties_table1_col6",
+                 "first_stage_fstat_table1_col6", "iv_violence_table2_panelA_col6",
+                 "iv_branches_table2_panelC_col6", "iv_fascist_vote1921_table3_panelA_col6",
+                 "iv_fascist_vote1924_table3_panelC_col1", "iv_fascist_vote1924_table3_panelC_col6",
+                 "n_obs_main_sample", "n_clusters_main_sample",
+                 "n_obs_fascist_vote1921", "n_clusters_fascist_vote1921")
+for (n in order_names) emit(n, as.numeric(res[[n]]))
+```
+
+## What the code produced
+  first_stage_casualties_table1_col1 = 0.116946
+  first_stage_casualties_table1_col6 = 0.094157
+  first_stage_fstat_table1_col6 = 46.15213
+  iv_violence_table2_panelA_col6 = 0.425218
+  iv_branches_table2_panelC_col6 = 0.488651
+  iv_fascist_vote1921_table3_panelA_col6 = 0.385102
+  iv_fascist_vote1924_table3_panelC_col1 = 0.402645
+  iv_fascist_vote1924_table3_panelC_col6 = 0.513818
+  n_obs_main_sample = 5775.0
+  n_clusters_main_sample = 181.0
+  n_obs_fascist_vote1921 = 5358.0
+  n_clusters_fascist_vote1921 = 175.0
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+N rows: 5775  N cols: 1336 
+Patterns(>=10): d_reg#fanteria(238) province#(69) d_fr#_d_dm_aug#(64) d_fr#_d_dm_jul#(64) d_fr#_d_dm_jun#(64) d_fr#_d_dm_may#(64) d_fr#_d_dm_nov#(64) d_fr#_d_dm_oct#(64) d_fr#_d_dm_sep#(64) d_fr#_d_ds_may#(64) d_reg#art_camp(59) d_fr#_d_dm_apr#(48) d_fr#_d_dm_dec#(48) d_fr#_d_dm_feb#(48) d_fr#_d_dm_jan#(48) d_fr#_d_dm_mar#(48) d_fr#_d_ds_nov#(48) d_reg#bersaglieri(21) cl#_stn#(11) rain#(11) d_reg#art_fort(10) 
+Province var: provincia1921 
+Matched prov -> provincia1921 
+Matched alt -> centre_alt 
+Matched vet1 -> veterans74_95 
+Matched vet2 -> veterans96_00 
+Matched assault -> ard_vol_pop6m 
+Matched volunt -> NA 
+Matched armyd -> army_suppliers_d 
+Matched battle -> cruent_d 
+Matched dlab -> dlab 
+Matched shcrop -> shcrop 
+Matched landown -> landlord_ass 
+Matched indw -> ind_workers 
+Matched indf -> ind_firms 
+Matched lit -> literacy 
+Matched eli -> elites 
+Matched bou -> bourgeoisie 
+Matched clus -> circondario1921 
+Regiment pattern: d_reg#fanteria  count: 238 
+Military controls: veterans74_95 veterans96_00 ard_vol_pop6m army_suppliers_d cruent_d 
+RESULT:first_stage_casualties_table1_col1=0.116946
+RESULT:first_stage_casualties_table1_col6=0.094157
+RESULT:first_stage_fstat_table1_col6=46.152130
+RESULT:iv_violence_table2_panelA_col6=0.425218
+RESULT:iv_branches_table2_panelC_col6=0.488651
+RESULT:iv_fascist_vote1921_table3_panelA_col6=0.385102
+RESULT:iv_fascist_vote1924_table3_panelC_col1=0.402645
+RESULT:iv_fascist_vote1924_table3_panelC_col6=0.513818
+RESULT:n_obs_main_sample=5775.000000
+RESULT:n_clusters_main_sample=181.000000
+RESULT:n_obs_fascist_vote1921=5358.000000
+RESULT:n_clusters_fascist_vote1921=175.000000
+```
+
+## Last run's stderr (excerpt: first/last 3000 characters)
+```
+NOTE: 417 observations removed because of NA values (LHS: 417).
+```
+
+## Claims still failing
+1. first_stage_fstat_table1_col6: paper claims 50.59 F-statistic (other), your code produced 46.1521, tolerance 0.01, gap 8.77% relative
+
+## Previous attempts (oldest first)
+  Attempt 1: first_stage_casualties_table1_col1=0.088337, first_stage_casualties_table1_col6=0.081268, first_stage_fstat_table1_col6=41.827464, iv_violence_table2_panelA_col6=0.283828, iv_branches_table2_panelC_col6=0.206748, iv_fascist_vote1921_table3_panelA_col6=0.243817, iv_fascist_vote1924_table3_panelC_col1=0.329434, iv_fascist_vote1924_table3_panelC_col6=0.163744, n_obs_main_sample=5772.0, n_clusters_main_sample=178.0, n_obs_fascist_vote1921=5354.0, n_clusters_fascist_vote1921=171.0
+  Attempt 2: first_stage_casualties_table1_col1=0.116946, first_stage_casualties_table1_col6=0.091252, first_stage_fstat_table1_col6=45.455485, iv_violence_table2_panelA_col6=0.331504, iv_branches_table2_panelC_col6=0.477781, iv_fascist_vote1921_table3_panelA_col6=0.362386, iv_fascist_vote1924_table3_panelC_col1=0.402645, iv_fascist_vote1924_table3_panelC_col6=0.480477, n_obs_main_sample=5775.0, n_clusters_main_sample=181.0, n_obs_fascist_vote1921=5358.0, n_clusters_fascist_vote1921=175.0
+  Attempt 3: first_stage_casualties_table1_col1=0.116946, first_stage_casualties_table1_col6=0.094157, first_stage_fstat_table1_col6=46.15213, iv_violence_table2_panelA_col6=0.425218, iv_branches_table2_panelC_col6=0.488651, iv_fascist_vote1921_table3_panelA_col6=0.385102, iv_fascist_vote1924_table3_panelC_col1=0.402645, iv_fascist_vote1924_table3_panelC_col6=0.513818, n_obs_main_sample=5775.0, n_clusters_main_sample=181.0, n_obs_fascist_vote1921=5358.0, n_clusters_fascist_vote1921=175.0
+
+These attempts have already been tried.  Do not repeat a strategy
+that has already produced the same values.
+
+## Task
+Adjust the code minimally to close the gap on the failing claims.
+Prefer changes that align more closely with the paper's stated methodology:
+re-read the methodology summary above and check the model specification,
+covariate selection, fixed effects, clustering, and seed against what the
+paper actually specifies.  In econometrics papers, common gap-closers are:
+  - getting the cluster-robust SE right (vcovCL / cluster_var argument)
+  - matching the paper's exact fixed-effects structure
+  - using the same sample-restriction filters the paper applied
+  - matching the paper's weighting scheme (weights= argument)
+
+## Deviation reporting
+If you must change something the paper did NOT specify in order to close
+the gap, emit a ``DEVIATION:`` line via cat() describing the change:
+
+    cat('DEVIATION: Used HC1 robust SE because the paper does not specify but the default did not converge\n')
+
+## When to give up
+If after re-reading the methodology and the previous attempts you judge
+the gap cannot be closed without unreasonable deviation, return the SAME
+R CODE you were given, BYTE-FOR-BYTE unchanged.  The pipeline will record
+the claim as unreproducible.
+
+## Output convention (unchanged)
+Emit every metric as ``cat('RESULT:<name>=<value>\n')``.
+The dataset is a directory tree at '<repo>/.cache/datasets/acemoglu_2022_war_socialism_fascism.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+No network, no system().  set.seed(42).
+
+Output ONLY the R code — no explanation, no markdown fences.

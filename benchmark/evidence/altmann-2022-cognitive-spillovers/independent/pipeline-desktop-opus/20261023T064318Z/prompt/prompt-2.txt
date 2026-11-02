@@ -1,0 +1,398 @@
+You are refining R code that reproduces results from an econometrics paper.
+The code RAN SUCCESSFULLY but the reproduced values do not match the
+paper's claims within the allowed tolerance.  Identify what is causing
+the gap and adjust the code to close it.
+
+## Paper
+Title: DISCUSSION PAPER SERIES
+Methodology: - **Design / estimation approach:** This is a controlled lab experiment (BonnEconLab, oTree, recruited with hroot), not a predictive ML study, so there is no train/test split, no cross-validation and no hyperparameter tuning. It uses a 3x2 between-subjects design. One dimension is cognitive resources: Ample (memorize 2-digit numbers) vs Scarce (7-digit numbers) in the background task. The other is the decision environment: Baseline (a blank screen, and the subject must press and hold a key to see the decision task), Directed Attention (task shown permanently, one option randomly preselected as the default) and Active Choice (task shown permanently, no default). N = 564 subjects in 24 sessions (8 per environment), about 96 per cell (Table 1, Table C.1). Ample vs Scarce was randomized across individuals within each session, to remove session effects.
+- **Task / procedure:** There are four parts. Part 1 is 10 rounds of the background task alone, with 5 to 9 digit numbers. Part 2 is 10 rounds of the decision task alone, 30 s each. Part 3, the main part, is 20 rounds with both tasks at once. Part 4 is a questionnaire, which for a random 50% of Baseline subjects included a 10-item Raven's Progressive Matrices test. In each round a number is shown for 10 s and must be recalled after 30 s (EUR 0.40 if correct). Meanwhile the decision task asks which of three six-addend sums is largest, with every sum between 20 and 34 (EUR 0.10 if correct). The default was random, and it happened to be correct in 6 of the 20 rounds (30%). Tasks, numbers, defaults and their order were the same for all subjects. Parts 1 and 2 serve as balance checks on baseline ability (Table C.1).
+- **Outcome variables:** The passivity rate is the default adherence rate, i.e. how often the subject chose or kept the default, overall and split by whether the default was correct. Attention is measured two ways: the extensive margin (whether the subject pressed the key at least once in a round) and the attention span (total seconds the decision task was visible). Attention spans were recorded in only 50% of Baseline sessions, balanced across Ample and Scarce. Decision quality is the share of correct answers in the decision task and in the background task, plus total payoffs. The 5.35% of Active Choice cases with no option chosen count as incorrect and earn 0 for the decision task.
+- **Preprocessing / unit of analysis:** Unless stated otherwise, non-parametric tests use subject-level averages over the 20 main rounds. Parametric tests use subject-round observations and allow for clustering at the subject level. All p-values are two-sided. The results on intensive-margin decision quality and conditional attention keep only cases where the subject entered the decision task in that round.
+- **Statistical tests:**
+  - Mann-Whitney U tests compare default adherence across treatments, e.g. Baseline-Ample 31.8% vs Baseline-Scarce 60.0%. When the default was correct the rates are 84.0% vs 87.9% (p = 0.069); when it was incorrect, 9.4% vs 48.1%. Directed-Ample is at 30.2% (p = 0.243 vs Baseline-Ample).
+  - A Wilcoxon signed-rank test compares Part 2 and Part 3 decision accuracy in Baseline-Ample (86% vs 83.6%, p = 0.308).
+  - A Kolmogorov-Smirnov test at the subject-round level compares attention distributions.
+  - t-tests compare mean attention (25.76 vs 13.15 s), conditional attention (26.4 vs 17.8 s) and conditional accuracy (85.0%, versus 12.1 pp lower under Scarce).
+  - A Fisher exact test compares complete inattention (2.5% vs 32.1%, or 26.3% in the attention subsample).
+  - First-order stochastic dominance is checked with CDFs of subject mean attention (Figure 5, Figure C.1).
+- **Regression specification (heterogeneity):** This is a linear probability / OLS regression of default adherence (a 0/1 indicator per subject-round) on a Scarce treatment dummy, a dummy for an above-median Raven score, and their interaction. Coefficients are in raw percentage-point units and are not standardised. Standard errors are clustered at the subject level. The difference-in-differences of 31.4 pp vs 11.7 pp has p = 0.022. A top-quartile comparison (37.3% vs 33.6%) uses Mann-Whitney U (p = 0.866). The sample is restricted to Baseline subjects who took the Raven test. The excerpt does not report any further fixed effects or controls.
+- **Decomposition:** An Oaxaca-Blinder decomposition (Appendix C.3) splits the Baseline-Scarce vs Baseline-Ample gap in passivity. The extensive margin (complete inattention) accounts for about 70% of the gap.
+- **Later comparisons (Hypotheses 3 and 4):** The analysis compares Directed and Active Choice with Baseline within each resource condition. It covers passivity, how often the option preselected as default in Directed is chosen compared with the same option in Active Choice (about 10 pp higher), decision-task accuracy, background-task accuracy (cognitive spillovers) and total payoffs. The same subject-level non-parametric tests and subject-clustered parametric tests are used. The prompt text is cut off part-way through Section 4.3.
+
+
+## Current Code
+```r
+suppressPackageStartupMessages({
+  library(haven)
+  library(dplyr)
+  library(fixest)
+})
+set.seed(42)
+
+base <- "<repo>/.cache/datasets/altmann_2022_cognitive_spillovers.script-free"
+lab_path <- file.path(base, "ReplicationPackage/EmpiricalAnalysis/original_data/formatted_data_replication.dta")
+mt_path  <- file.path(base, "ReplicationPackage/EmpiricalAnalysis/original_data/formatted_data_long_mturk.dta")
+
+lab <- haven::read_dta(lab_path)
+mt  <- haven::read_dta(mt_path)
+
+cat("Lab columns:\n"); print(names(lab))
+cat("MTurk columns:\n"); print(names(mt))
+
+num <- function(x) as.numeric(haven::zap_labels(x))
+lab_chr <- function(x) {
+  if (haven::is.labelled(x)) as.character(haven::as_factor(x)) else as.character(x)
+}
+to01 <- function(x) {
+  v <- num(x)
+  u <- sort(unique(v[!is.na(v)]))
+  if (length(u) == 2 && !all(u %in% c(0, 1))) v <- as.numeric(v == max(u))
+  v
+}
+
+emit <- function(name, val) {
+  if (is.null(val) || length(val) == 0 || is.na(val)) {
+    cat(sprintf("RESULT:%s=NA\n", name))
+  } else {
+    cat(sprintf("RESULT:%s=%.6f\n", name, as.numeric(val)))
+  }
+}
+
+nm <- names(lab)
+find_col <- function(patterns, cols = nm, exclude = character(0)) {
+  for (p in patterns) {
+    hit <- cols[grepl(p, cols, ignore.case = TRUE)]
+    hit <- setdiff(hit, exclude)
+    if (length(hit) > 0) return(hit[1])
+  }
+  NA_character_
+}
+
+# ---------------- Lab sample: scarce resources, three environments ----------------
+lab$intervention <- to01(lab$Treatment_intervention)
+cat("Treatment_intervention table:\n"); print(table(lab$Treatment_intervention, useNA = "ifany"))
+cat("Treatment_Environment table:\n"); print(table(lab_chr(lab$Treatment_Environment), useNA = "ifany"))
+
+target_n <- 12160
+cands <- list()
+cands[["all_nonNA_intervention"]] <- !is.na(lab$intervention)
+load_cols <- nm[grepl("load|scarce|cognitive|resource|ample|digit", nm, ignore.case = TRUE)]
+load_cols <- setdiff(load_cols, c("load_correct", "ability_load"))
+for (lc in load_cols) {
+  v <- lab[[lc]]
+  vals <- unique(lab_chr(v)); vals <- vals[!is.na(vals)]
+  if (length(vals) >= 2 && length(vals) <= 6) {
+    for (vv in vals) {
+      cands[[paste0(lc, "==", vv)]] <- (lab_chr(v) == vv) & !is.na(lab$intervention) & !is.na(v)
+    }
+  }
+}
+sizes <- sapply(cands, function(s) sum(s, na.rm = TRUE))
+cat("Candidate sample sizes:\n"); print(sizes)
+exact <- which(sizes == target_n)
+if (length(exact) > 0) {
+  # prefer a candidate whose label suggests scarce/high
+  lbls <- names(sizes)[exact]
+  pref <- grep("scarce|high|7|1$", lbls, ignore.case = TRUE)
+  pick <- if (length(pref) > 0) lbls[pref[1]] else lbls[1]
+} else {
+  pick <- names(sizes)[which.min(abs(sizes - target_n))]
+}
+cat("Chosen sample restriction:", pick, "\n")
+d <- lab[which(cands[[pick]]), ]
+if (pick != "all_nonNA_intervention" && length(exact) == 0) {
+  cat("DEVIATION: could not identify a sample of exactly 12160 subject-rounds; used closest candidate.\n")
+}
+
+env <- tolower(lab_chr(d$Treatment_Environment))
+d$directed <- as.numeric(grepl("direct", env))
+d$forced   <- as.numeric(grepl("forc|active", env))
+d$cl <- num(d$subject_id)
+
+# outcomes
+d$y_dec <- num(d$summation_correct)
+d$y_bg  <- num(d$load_correct)
+d$y_pay <- num(d$payoff_share)
+
+def_col <- find_col(c("^passive_choice$", "^default_choice$", "^default_adherence$", "^choice_default$",
+                      "^chose_default$", "passive", "default_adh", "chose_default", "choice_default",
+                      "default_choice"),
+                    exclude = c("default_correct_choice"))
+if (is.na(def_col)) {
+  hits <- nm[grepl("default", nm, ignore.case = TRUE)]
+  hits <- setdiff(hits, "default_correct_choice")
+  def_col <- if (length(hits) > 0) hits[1] else NA_character_
+}
+cat("Default adherence column:", def_col, "\n")
+d$y_def <- if (!is.na(def_col)) num(d[[def_col]]) else NA_real_
+if (!is.na(def_col) && max(d$y_def, na.rm = TRUE) > 1) d$y_def <- d$y_def / 100
+
+# ---------------- Controls ----------------
+ctrl_terms <- character(0)
+add_num <- function(col, name) {
+  if (!is.na(col)) { d[[name]] <<- num(d[[col]]); ctrl_terms <<- c(ctrl_terms, name) }
+}
+add_fac <- function(col, name) {
+  if (!is.na(col)) { d[[name]] <<- factor(lab_chr(d[[col]])); ctrl_terms <<- c(ctrl_terms, name) }
+}
+age_col    <- find_col(c("^q_age$", "^age$", "age"), exclude = c("q_math_grade", "q_math_grade_cat", "page"))
+gender_col <- find_col(c("^q_gender$", "gender"))
+subj_col   <- find_col(c("^q_subject$", "field", "study"))
+abitur_col <- find_col(c("^q_abitur_grade$", "abitur", "gpa"))
+math_col   <- find_col(c("^q_math_grade$"))
+multi_col  <- find_col(c("multitask", "multi"))
+abl_load   <- find_col(c("^ability_load$"))
+abl_task   <- find_col(c("^ability_task$"))
+inc_cols   <- nm[grepl("incentive|payoff_scheme|scheme", nm, ignore.case = TRUE)]
+wave_col   <- find_col(c("wave", "experiment_part", "^experiment$", "replication", "second_exp"))
+cat("Controls found: age=", age_col, " gender=", gender_col, " subject=", subj_col,
+    " abitur=", abitur_col, " math=", math_col, " multi=", multi_col,
+    " incentives=", paste(inc_cols, collapse = ","), " wave=", wave_col, "\n")
+
+add_num(age_col, "c_age")
+add_fac(gender_col, "c_gender")
+add_fac(subj_col, "c_subject")
+add_num(abitur_col, "c_abitur")
+add_num(math_col, "c_math")
+add_num(abl_load, "c_abl_load")
+add_num(abl_task, "c_abl_task")
+add_num(multi_col, "c_multi")
+if (length(inc_cols) > 0) {
+  inc_key <- apply(sapply(inc_cols, function(cc) lab_chr(d[[cc]])), 1, paste, collapse = "_")
+  d$c_incent <- factor(inc_key)
+  if (nlevels(d$c_incent) > 1) ctrl_terms <- c(ctrl_terms, "c_incent")
+}
+add_fac(wave_col, "c_wave")
+# drop constant controls
+ctrl_terms <- ctrl_terms[sapply(ctrl_terms, function(v) length(unique(d[[v]][!is.na(d[[v]])])) > 1)]
+cat("Control terms used:", paste(ctrl_terms, collapse = ", "), "\n")
+ctrl_str <- if (length(ctrl_terms) > 0) paste("+", paste(ctrl_terms, collapse = " + ")) else ""
+
+run <- function(y, rhs, data = d, var = "intervention") {
+  f <- as.formula(paste(y, "~", rhs))
+  m <- tryCatch(feols(f, data = data, cluster = ~cl), error = function(e) { print(e); NULL })
+  if (is.null(m)) return(list(b = NA, se = NA, n = NA, m = NULL))
+  list(b = coef(m)[var], se = sqrt(diag(vcov(m)))[var], n = nobs(m), m = m)
+}
+
+t2c1 <- run("y_dec", "intervention")
+t2c2 <- run("y_dec", paste("intervention", ctrl_str))
+t2c5 <- run("y_def", "intervention")
+t2c6 <- run("y_def", paste("intervention", ctrl_str))
+t2c7d <- run("y_def", "directed + forced", var = "directed")
+t2c7f <- run("y_def", "directed + forced", var = "forced")
+t3c1 <- run("y_bg", "intervention")
+t3c2 <- run("y_bg", paste("intervention", ctrl_str))
+t4c1 <- run("y_pay", "intervention")
+
+if (!is.null(t2c1$m)) print(summary(t2c1$m))
+if (!is.null(t2c2$m)) cat("N with controls:", t2c2$n, "\n")
+
+# ---------------- Online experiment ----------------
+mt$intervention <- to01(mt$Treatment_intervention)
+mt$cl <- num(mt$subject_id)
+mt$y_mem <- num(mt$memory)
+if (max(mt$y_mem, na.rm = TRUE) > 1.0001) {
+  cat("Note: memory variable exceeds 1; values summarised:\n"); print(summary(mt$y_mem))
+}
+mt$c_age <- num(mt$age)
+mt$c_gender <- factor(lab_chr(mt$gender))
+mt$c_wh <- num(mt$window_height1)
+mt$c_ww <- num(mt$window_width1)
+o5 <- tryCatch(feols(y_mem ~ intervention, data = mt, cluster = ~cl), error = function(e) NULL)
+o6 <- tryCatch(feols(y_mem ~ intervention + c_age + c_gender + c_wh + c_ww, data = mt, cluster = ~cl),
+               error = function(e) NULL)
+
+# ---------------- Output ----------------
+emit("choice_quality_intervention_t2_col1", t2c1$b)
+emit("choice_quality_intervention_t2_col1_se", t2c1$se)
+emit("choice_quality_intervention_t2_col2", t2c2$b)
+emit("choice_quality_intervention_t2_col2_se", t2c2$se)
+emit("default_adherence_intervention_t2_col5", t2c5$b)
+emit("default_adherence_intervention_t2_col5_se", t2c5$se)
+emit("default_adherence_intervention_t2_col6", t2c6$b)
+emit("default_adherence_intervention_t2_col6_se", t2c6$se)
+emit("default_adherence_directed_attention_t2_col7", t2c7d$b)
+emit("default_adherence_directed_attention_t2_col7_se", t2c7d$se)
+emit("default_adherence_forced_choice_t2_col7", t2c7f$b)
+emit("default_adherence_forced_choice_t2_col7_se", t2c7f$se)
+emit("background_quality_intervention_lab_t3_col1", t3c1$b)
+emit("background_quality_intervention_lab_t3_col1_se", t3c1$se)
+emit("background_quality_intervention_lab_t3_col2", t3c2$b)
+emit("background_quality_intervention_lab_t3_col2_se", t3c2$se)
+emit("memory_intervention_online_t3_col5", if (!is.null(o5)) coef(o5)["intervention"] else NA)
+emit("memory_intervention_online_t3_col5_se", if (!is.null(o5)) sqrt(diag(vcov(o5)))["intervention"] else NA)
+emit("memory_intervention_online_t3_col6", if (!is.null(o6)) coef(o6)["intervention"] else NA)
+emit("memory_intervention_online_t3_col6_se", if (!is.null(o6)) sqrt(diag(vcov(o6)))["intervention"] else NA)
+emit("payoff_share_intervention_t4_col1", t4c1$b)
+emit("payoff_share_intervention_t4_col1_se", t4c1$se)
+emit("n_obs_lab_tables_2_to_4", if (!is.na(t2c1$n)) t2c1$n else nrow(d))
+emit("n_subjects_lab_tables_2_to_4", length(unique(d$cl[!is.na(d$y_dec)])))
+```
+
+## What the code produced
+  choice_quality_intervention_t2_col1 = 0.082992
+  choice_quality_intervention_t2_col1_se = 0.015077
+  choice_quality_intervention_t2_col2 = 0.085884
+  choice_quality_intervention_t2_col2_se = 0.012558
+  default_adherence_intervention_t2_col5 = -0.157625
+  default_adherence_intervention_t2_col5_se = 0.017209
+  default_adherence_intervention_t2_col6 = -0.158605
+  default_adherence_intervention_t2_col6_se = 0.015945
+  default_adherence_directed_attention_t2_col7 = -0.098736
+  default_adherence_directed_attention_t2_col7_se = 0.019723
+  default_adherence_forced_choice_t2_col7 = -0.217716
+  default_adherence_forced_choice_t2_col7_se = 0.016518
+  background_quality_intervention_lab_t3_col1 = -0.018673
+  background_quality_intervention_lab_t3_col1_se = 0.014101
+  background_quality_intervention_lab_t3_col2 = -0.01869
+  background_quality_intervention_lab_t3_col2_se = 0.010741
+  memory_intervention_online_t3_col5 = -0.114252
+  memory_intervention_online_t3_col5_se = 0.018804
+  memory_intervention_online_t3_col6 = -0.113364
+  memory_intervention_online_t3_col6_se = 0.017222
+  payoff_share_intervention_t4_col1 = 0.006465
+  payoff_share_intervention_t4_col1_se = 0.011953
+  n_obs_lab_tables_2_to_4 = 17840.0
+  n_subjects_lab_tables_2_to_4 = 892.0
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+Lab columns:
+ [1] "payoff"                           "Attention"                       
+ [3] "load_correct"                     "round"                           
+ [5] "Treatment_Environment"            "default_followed"                
+ [7] "load_correct_mean"                "summation_correct_mean"          
+ [9] "summation_correct"                "default_followed_mean"           
+[11] "attention_mean"                   "attention_positive_mean"         
+[13] "default_correct_choice"           "diff_choice_second"              
+[15] "ability_load"                     "ability_task"                    
+[17] "q_age"                            "q_gender"                        
+[19] "q_subject"                        "q_degree"                        
+[21] "q_abitur_year"                    "q_abitur_grade"                  
+[23] "q_math_grade"                     "perc_multitasking_1"             
+[25] "perc_multitasking_2"              "risk"                            
+[27] "perc_multitasking_1_easy"         "raven_score"                     
+[29] "no_attention"                     "subject_id"                      
+[31] "original_lab"                     "Treatment_intervention"          
+[33] "payoff_share_mean"                "payoff_share"                    
+[35] "default_followed_correct_mean"    "raven_score_quartiles"           
+[37] "raven_score_median"               "high_task_difficulty"            
+[39] "subject_cat"                      "q_abitur_grade_quartile"         
+[41] "q_abitur_grade_cat"               "q_math_grade_cat"                
+[43] "Treatment_Incentives"             "Treatment_Incentives_Baseline_sc"
+[45] "Treatment_Incentives_Int_sc"      "economist"                       
+MTurk columns:
+ [1] "round"                  "age"                    "window_height1"        
+ [4] "window_width1"          "math_task_correct"      "memory"                
+ [7] "math_time"              "subject_id"             "gender"                
+[10] "Treatment_intervention" "passive_choice"         "payoff_share"          
+Treatment_intervention table:
+
+    0     1 
+ 5960 11880 
+Treatment_Environment table:
+
+          \\textsc{Baseline} \\textsc{Directed Attention} 
+                        5960                         6000 
+     \\textsc{Forced Choice} 
+                        5880 
+Candidate sample sizes:
+all_nonNA_intervention 
+                 17840 
+Chosen sample restriction: all_nonNA_intervention 
+Default adherence column: default_followed 
+Controls found: age= q_age  gender= q_gender  subject= q_subject  abitur= q_abitur_grade  math= q_math_grade  multi= perc_multitasking_1  incentives= Treatment_Incentives,Treatment_Incentives_Baseline_sc,Treatment_Incentives_Int_sc  wave= NA 
+Control terms used: c_age, c_gender, c_subject, c_abitur, c_math, c_abl_load, c_abl_task, c_multi, c_incent 
+OLS estimation, Dep. Var.: y_dec
+Observations: 17,840
+Standard-errors: Clustered (cl) 
+             Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept)  0.673658   0.012874 52.32757  < 2.2e-16 ***
+intervention 0.082992   0.015077  5.50458 4.8399e-08 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.442788   Adj. R2: 0.007699
+N with controls: 17440 
+RESULT:choice_quality_intervention_t2_col1=0.082992
+RESULT:choice_quality_intervention_t2_col1_se=0.015077
+RESULT:choice_quality_intervention_t2_col2=0.085884
+RESULT:choice_quality_intervention_t2_col2_se=0.012558
+RESULT:default_adherence_intervention_t2_col5=-0.157625
+RESULT:default_adherence_intervention_t2_col5_se=0.017209
+RESULT:default_adherence_intervention_t2_col6=-0.158605
+RESULT:default_adherence_intervention_t2_col6_se=0.015945
+RESULT:default_adherence_directed_attention_t2_col7=-0.098736
+RESULT:default_adherence_directed_attention_t2_col7_se=0.019723
+RESULT:default_adherence_forced_choice_t2_col7=-0.217716
+RESULT:default_adherence_forced_choice_t2_col7_se=0.016518
+RESULT:background_quality_intervention_lab_t3_col1=-0.018673
+RESULT:background_quality_intervention_lab_t3_col1_se=0.014101
+RESULT:background_quality_intervention_lab_t3_col2=-0.018690
+RESULT:background_quality_intervention_lab_t3_col2_se=0.010741
+RESULT:memory_intervention_online_t3_col5=-0.114252
+RESULT:memory_intervention_online_t3_col5_se=0.018804
+RESULT:memory_intervention_online_t3_col6=-0.113364
+RESULT:memory_intervention_online_t3_col6_se=0.017222
+RESULT:payoff_share_intervention_t4_col1=0.006465
+RESULT:payoff_share_intervention_t4_col1_se=0.011953
+RESULT:n_obs_lab_tables_2_to_4=17840.000000
+RESULT:n_subjects_lab_tables_2_to_4=892.000000
+```
+
+## Last run's stderr (excerpt: first/last 3000 characters)
+```
+NOTE: 400 observations removed because of NA values (RHS: 400).
+NOTE: 400 observations removed because of NA values (RHS: 400).
+NOTE: 400 observations removed because of NA values (RHS: 400).
+```
+
+## Claims still failing
+1. choice_quality_intervention_t2_col1: paper claims 0.107 change in the probability of correctly solving the decision task (coefficient), your code produced 0.082992, tolerance 0.1682, gap 22.44% relative
+2. choice_quality_intervention_t2_col2: paper claims 0.11 change in the probability of correctly solving the decision task (coefficient), your code produced 0.085884, tolerance 0.1545, gap 21.92% relative
+3. default_adherence_intervention_t2_col5: paper claims -0.217 change in the probability of choosing the default option (coefficient), your code produced -0.157625, tolerance 0.1014, gap 27.36% relative
+4. default_adherence_intervention_t2_col6: paper claims -0.219 change in the probability of choosing the default option (coefficient), your code produced -0.158605, tolerance 0.1005, gap 27.58% relative
+5. default_adherence_directed_attention_t2_col7: paper claims -0.137 change in the probability of choosing the default option (coefficient), your code produced -0.098736, tolerance 0.1898, gap 27.93% relative
+6. default_adherence_forced_choice_t2_col7: paper claims -0.3 change in the probability of choosing the default option (coefficient), your code produced -0.217716, tolerance 0.07, gap 27.43% relative
+7. background_quality_intervention_lab_t3_col2: paper claims -0.038 change in the probability of correctly solving the background task (coefficient), your code produced -0.01869, tolerance 0.3684, gap 50.82% relative
+8. n_obs_lab_tables_2_to_4: paper claims 12160.0 observations (subject-rounds, lab experiment) (other), your code produced 17840, tolerance 0.01, gap 46.71% relative
+9. n_subjects_lab_tables_2_to_4: paper claims 608.0 subjects (clusters) (other), your code produced 892, tolerance 0.01, gap 46.71% relative
+
+## Previous attempts (oldest first)
+  Attempt 1: choice_quality_intervention_t2_col1=0.082992, choice_quality_intervention_t2_col1_se=0.015077, choice_quality_intervention_t2_col2=0.085884, choice_quality_intervention_t2_col2_se=0.012558, default_adherence_intervention_t2_col5=-0.157625, default_adherence_intervention_t2_col5_se=0.017209, default_adherence_intervention_t2_col6=-0.158605, default_adherence_intervention_t2_col6_se=0.015945, default_adherence_directed_attention_t2_col7=-0.098736, default_adherence_directed_attention_t2_col7_se=0.019723, default_adherence_forced_choice_t2_col7=-0.217716, default_adherence_forced_choice_t2_col7_se=0.016518, background_quality_intervention_lab_t3_col1=-0.018673, background_quality_intervention_lab_t3_col1_se=0.014101, background_quality_intervention_lab_t3_col2=-0.01869, background_quality_intervention_lab_t3_col2_se=0.010741, memory_intervention_online_t3_col5=-0.114252, memory_intervention_online_t3_col5_se=0.018804, memory_intervention_online_t3_col6=-0.113364, memory_intervention_online_t3_col6_se=0.017222, payoff_share_intervention_t4_col1=0.006465, payoff_share_intervention_t4_col1_se=0.011953, n_obs_lab_tables_2_to_4=17840.0, n_subjects_lab_tables_2_to_4=892.0
+
+These attempts have already been tried.  Do not repeat a strategy
+that has already produced the same values.
+
+## Task
+Adjust the code minimally to close the gap on the failing claims.
+Prefer changes that align more closely with the paper's stated methodology:
+re-read the methodology summary above and check the model specification,
+covariate selection, fixed effects, clustering, and seed against what the
+paper actually specifies.  In econometrics papers, common gap-closers are:
+  - getting the cluster-robust SE right (vcovCL / cluster_var argument)
+  - matching the paper's exact fixed-effects structure
+  - using the same sample-restriction filters the paper applied
+  - matching the paper's weighting scheme (weights= argument)
+
+## Deviation reporting
+If you must change something the paper did NOT specify in order to close
+the gap, emit a ``DEVIATION:`` line via cat() describing the change:
+
+    cat('DEVIATION: Used HC1 robust SE because the paper does not specify but the default did not converge\n')
+
+## When to give up
+If after re-reading the methodology and the previous attempts you judge
+the gap cannot be closed without unreasonable deviation, return the SAME
+R CODE you were given, BYTE-FOR-BYTE unchanged.  The pipeline will record
+the claim as unreproducible.
+
+## Output convention (unchanged)
+Emit every metric as ``cat('RESULT:<name>=<value>\n')``.
+The dataset is a directory tree at '<repo>/.cache/datasets/altmann_2022_cognitive_spillovers.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+No network, no system().  set.seed(42).
+
+Output ONLY the R code — no explanation, no markdown fences.

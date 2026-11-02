@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "dertwinkel-kalt-2022-concentration-bias",
+  "mode": "independent",
+  "run_id": "2026-10-22-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [
+    "Main sample: the corner-choice exclusion built from the raw balanced decisions keeps 607 subjects; 7 of them (tn 523, 526, 527, 541, 542, 544, 1239) are not flagged by the dataset's pap_sample indicator. The final run uses pap_sample==1 (a strict subset of the corner exclusion), which yields exactly 100 subjects per condition as in the paper. This change followed the claim comparison of attempt-2 (n_obs_table3 203 vs 200).",
+    "Ends of the unbalanced elicitation range are coded -63/+63 in the data (the paper text says the upper end is 62); the lower-bound measure and the Tobit censoring points use the data's -63/+63 coding."
+  ],
+  "notes": "Built d~ and d~rel from the raw per-decision rows of Consumption_Experiment.csv (decisions 1-8 = balanced trade-offs, utility_point = workday, indifference_point = x~_j; decision 9 = final trade-off). Upper-corner subjects: lower bound 63, upper bound = manually stated point, midpoint = their average. d~rel = mean over t of d/(e_t + x~_t), with e from footnote 3, in Treatment conditions; d/(e_j + x~_j) for the repeated day j in Control conditions. Table 2: OLS on a constant with HC1 robust SEs; Tobit (AER::tobit) of the lower-bound d~ censored at -63/63. Table 3: OLS of midpoint d~rel on a constant and a condition indicator on pooled condition pairs. Conditions: pizza==0 Donation, dispersed==1 Mechanism, otherwise Main; treatment==1 Treatment arm. The dataset's precomputed measure columns (qe_ard etc.) were not used for estimates. Attempt-1 was an exploratory data inspection with no RESULT lines. All 13 claims match after the sample fix; Table 2 standard errors also match the paper.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T03:07:53Z",
+  "finished_at": "2026-10-22T03:11:30Z"
+}

@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "entry_id": "brouwer-2022-teaching-norms",
+  "mode": "seeded",
+  "run_id": "2026-11-02-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [],
+  "deviations": [],
+  "notes": "Translated the Table 2 block of Data_analysis_202208.do: four OLS LPMs (Punishment on Child*ViolationHelp if Help==0; Helping on Child*ViolationHelp if Violation==0; each with/without controls male hugo Morning witness rich Rain Hot), SEs clustered by School, via fixest::feols on master.dta. Listwise deletion drops the one target with missing gender (N=399 punishment controls, 400 helping controls; 400/401 without controls). Single run; values match the claimed values at reported precision, so no script changes followed the comparison.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T05:54:32Z",
+  "finished_at": "2026-11-02T05:55:30Z"
+}

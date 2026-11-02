@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "entry_id": "gagliarducci-2022-gender-cooperation-congress",
+  "mode": "blind",
+  "run_id": "2026-10-22-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Percent of opposite-party cosponsors: used the dataset's pct_cosponsors_opposite, which equals opposite-party cosponsors / cosponsors (sponsor not in the denominator, missing for bills with zero cosponsors), multiplied by 100. The paper's text describes the denominator as cosponsors plus sponsor; the shipped variable was used as the authors' constructed outcome.",
+    "Propensity scores estimated by probit at the bill level (the paper's text does not say probit vs logit); ATE inverse-probability weights (1/p for women, 1/(1-p) for men). PS estimated separately within each party sample.",
+    "RD columns use the bandwidths stated in the task for these rows (13 for Republicans Panel A col 3; 24 for Democrats Panel B col 2), uniform kernel, linear in the margin with slope differing at the threshold. CCT mserd bandwidths recomputed on bills (17.79 and 16.45) are printed as diagnostics only.",
+    "Column 3 PS: district characteristics only (3 region dummies, % black, % over 65, % foreign born, % urban, log median income, log population density), estimated within the bandwidth; outcome regression adds Congress FE and bill characteristics.",
+    "Columns 4/5 PS: district characteristics + margin of victory of the elected candidate (|MV1_democrat|) (+ sponsor characteristics in col 5); bills with missing MV1_democrat dropped.",
+    "Macro regions built from ICPSR state codes (Northeast <20, Midwest 20-39, South 40-59, West 60+). Log population density = lnpop - ln(area in sq. miles); lnarea is stored in square meters for Congresses 108-111 (and a few earlier districts) and was converted to square miles.",
+    "Occupational dummies: occ1-occ5 (education, lawyer, professional, business, agriculture), with unknown and miscellaneous as base. Party dummy entered as factor of sponsor_party (Dem/Rep/independent) in the pooled sample. Total bills sponsored = count of bills per sponsor-Congress in the sample with a matched sponsor.",
+    "Minor topic and Congress absorbed as fixed effects (fixest); fixest drops fixed-effect singletons (1 bill in the all-sponsor OLS), as reghdfe would. Clusters: sponsor-Congress (Congress x state x district x seat order)."
+  ],
+  "notes": "Data: AnalysisData/bills_analysis_101-111_replication.dta, restricted to bills with a matched sponsor (61,334). Two exploratory runs (variable listing; checks of the pct variable, region codes, lnarea units). One estimation run, which is final. Column 1 OLS: outcome on female dummy + Congress FE + 226 minor topic FE + 33 committee-of-referral dummies + sponsor characteristics (age, tenure, rookie, committee chair/ranking member, black, party, 5 occupation dummies, Ivy League, born in state, bills sponsored in Congress) + district characteristics; SE clustered by sponsor-Congress. While reading the paper's method sections I incidentally saw some Table 3 and Table 4 numbers in the garbled text (Table 3 columns 1-4, including n. bills 61,334 for those columns; Table 5's numbers were not viewed); no specification choice was tuned toward them. No author scripts or output files in the dataset were opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T03:25:49Z",
+  "finished_at": "2026-10-22T03:29:30Z"
+}

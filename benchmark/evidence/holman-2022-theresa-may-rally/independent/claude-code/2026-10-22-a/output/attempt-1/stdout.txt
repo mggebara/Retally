@@ -1,0 +1,425 @@
+[1] 5469   28
+country : Country  class= character 
+qtr : Quarter  class= numeric 
+rally_events : Rally terrorist events  class= numeric 
+rally_kill : N deaths in rally terrorist events  class= numeric 
+female_pres : Woman head of state  class= numeric 
+execrlc : DPI Exec ideology  class= haven_labelled 
+rally_event_any : Any rally terrorist event  class= numeric 
+country_code : group(country type_office)  class= numeric 
+ccode :   class= numeric 
+election_qtr :   class= numeric 
+lag_approval : Lagged approval  class= numeric 
+rally_event_any2 : Any rally terrorist event*  class= numeric 
+growth : Growth in real GDP  class= numeric 
+log_inflation : Inflation logged  class= numeric 
+manchester : Int'l terrorist attack 20 or more dead  class= numeric 
+kill_16 : Int'l terrorist attack 16+ death  class= numeric 
+kill_18 : Int'l terrorist attack, kill 18+  class= numeric 
+kill_10 : Int'l attack 10+ death  class= numeric 
+pres_15death : Country w a 15+ death terrorist attack  class= numeric 
+pres_20death : Country w a 20+ death terrorist attack  class= numeric 
+kill_12 : Int'l terrorist attack, kill 12+  class= numeric 
+kill_14 : Int'l terrorist attack, kill 14+  class= numeric 
+kill_20 : Int'l terrorist attack, kill 20+  class= numeric 
+kill_08 : Int'l terrorist attack, kill 8+  class= numeric 
+kill_06 : Int'l terrorist attack, kill 6+  class= numeric 
+kill_under5 : Int'l terrorist attack, kill under 5  class= numeric 
+kill_1_5 :   class= numeric 
+kill_3_5 :   class= numeric 
+      country          qtr         rally_events        rally_kill      
+ Length   :5469   Min.   : 60.0   Min.   : 0.00000   Min.   :   0.000  
+ N.unique :  44   1st Qu.:134.0   1st Qu.: 0.00000   1st Qu.:   0.000  
+ N.blank  :   0   Median :169.0   Median : 0.00000   Median :   0.000  
+ Min.nchar:   4   Mean   :165.3   Mean   : 0.07314   Mean   :   1.544  
+ Max.nchar:  18   3rd Qu.:201.0   3rd Qu.: 0.00000   3rd Qu.:   0.000  
+                  Max.   :231.0   Max.   :34.00000   Max.   :3004.000  
+                                                                       
+  female_pres         execrlc      rally_event_any    country_code  
+ Min.   :0.00000   Min.   :0.000   Min.   :0.00000   Min.   : 1.00  
+ 1st Qu.:0.00000   1st Qu.:1.000   1st Qu.:0.00000   1st Qu.:13.00  
+ Median :0.00000   Median :1.000   Median :0.00000   Median :29.00  
+ Mean   :0.09817   Mean   :1.643   Mean   :0.03785   Mean   :29.82  
+ 3rd Qu.:0.00000   3rd Qu.:3.000   3rd Qu.:0.00000   3rd Qu.:41.00  
+ Max.   :1.00000   Max.   :3.000   Max.   :1.00000   Max.   :66.00  
+ NAs    :376       NAs    :60                                       
+     ccode        election_qtr      lag_approval    rally_event_any2 
+ Min.   : 1.00   Min.   :0.00000   Min.   : 2.903   Min.   :0.00000  
+ 1st Qu.:13.00   1st Qu.:0.00000   1st Qu.:35.582   1st Qu.:0.00000  
+ Median :29.00   Median :0.00000   Median :43.788   Median :0.00000  
+ Mean   :29.82   Mean   :0.08192   Mean   :44.298   Mean   :0.02519  
+ 3rd Qu.:41.00   3rd Qu.:0.00000   3rd Qu.:52.819   3rd Qu.:0.00000  
+ Max.   :66.00   Max.   :1.00000   Max.   :86.950   Max.   :1.00000  
+                                   NAs    :106      NAs    :71       
+     growth         log_inflation       manchester          kill_16       
+ Min.   :    7372   Min.   :-4.7907   Min.   :0.000000   Min.   :0.00000  
+ 1st Qu.:   81539   1st Qu.: 0.8225   1st Qu.:0.000000   1st Qu.:0.00000  
+ Median :  312652   Median : 1.4294   Median :0.000000   Median :0.00000  
+ Mean   : 1197870   Mean   : 1.5532   Mean   :0.007131   Mean   :0.01097  
+ 3rd Qu.: 1526325   3rd Qu.: 2.2026   3rd Qu.:0.000000   3rd Qu.:0.00000  
+ Max.   :19542980   Max.   : 8.9202   Max.   :1.000000   Max.   :1.00000  
+ NAs    :45         NAs    :473                                           
+    kill_18            kill_10         pres_15death     pres_20death   
+ Min.   :0.000000   Min.   :0.00000   Min.   : 0.000   Min.   :0.0000  
+ 1st Qu.:0.000000   1st Qu.:0.00000   1st Qu.: 0.000   1st Qu.:0.0000  
+ Median :0.000000   Median :0.00000   Median : 0.000   Median :0.0000  
+ Mean   :0.009325   Mean   :0.01499   Mean   : 1.326   Mean   :0.7967  
+ 3rd Qu.:0.000000   3rd Qu.:0.00000   3rd Qu.: 2.000   3rd Qu.:1.0000  
+ Max.   :1.000000   Max.   :1.00000   Max.   :14.000   Max.   :9.0000  
+                                                                       
+    kill_12           kill_14           kill_20            kill_08       
+ Min.   :0.00000   Min.   :0.00000   Min.   :0.000000   Min.   :0.00000  
+ 1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.:0.000000   1st Qu.:0.00000  
+ Median :0.00000   Median :0.00000   Median :0.000000   Median :0.00000  
+ Mean   :0.01317   Mean   :0.01152   Mean   :0.007862   Mean   :0.01774  
+ 3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:0.000000   3rd Qu.:0.00000  
+ Max.   :1.00000   Max.   :1.00000   Max.   :1.000000   Max.   :1.00000  
+                                                                         
+    kill_06         kill_under5        kill_1_5          kill_3_5      
+ Min.   :0.00000   Min.   :0.0000   Min.   :0.00000   Min.   :0.00000  
+ 1st Qu.:0.00000   1st Qu.:1.0000   1st Qu.:0.00000   1st Qu.:0.00000  
+ Median :0.00000   Median :1.0000   Median :0.00000   Median :0.00000  
+ Mean   :0.02267   Mean   :0.9773   Mean   :0.01518   Mean   :0.01518  
+ 3rd Qu.:0.00000   3rd Qu.:1.0000   3rd Qu.:0.00000   3rd Qu.:0.00000  
+ Max.   :1.00000   Max.   :1.0000   Max.   :1.00000   Max.   :1.00000  
+                                                                       
+    
+        0    1 <NA>
+  0  2908  345  193
+  1   614   23    0
+  2   660   17   58
+  3   170    0   50
+  7    64   63    0
+  9    57    0   75
+  14  120   52    0
+
+   0    1    2    3 <NA> 
+ 730 2250  649 1780   60 
+     country qtr lag_approval pres_15death female_pres   growth log_inflation
+1  Argentina  95     70.88222            2           0 486568.0            NA
+2  Argentina  96     70.82196            2           0 486568.0            NA
+3  Argentina  97     66.17466            2           0 486568.0            NA
+4  Argentina  98     62.80960            2           0 486568.0            NA
+5  Argentina  99     59.96486            2           0 452721.8            NA
+6  Argentina 100     57.72357            2           0 452721.8            NA
+7  Argentina 101     62.34926            2           0 452721.8            NA
+8  Argentina 102     61.92035            2           0 452721.8            NA
+9  Argentina 103     59.81919            2           0 485062.6            NA
+10 Argentina 104     57.78862            2           0 485062.6            NA
+11 Argentina 105     56.19816            2           0 485062.6            NA
+12 Argentina 106     52.76501            2           0 485062.6            NA
+13 Argentina 107     51.63424            2           0 497348.2            NA
+14 Argentina 108     54.59540            2           0 497348.2            NA
+15 Argentina 109     45.08371            2           0 497348.2            NA
+16 Argentina 110     42.49128            2           0 497348.2            NA
+17 Argentina 111     39.35209            2           0 487636.2            NA
+18 Argentina 112     38.82969            2           0 487636.2            NA
+19 Argentina 113     40.77642            2           0 487636.2            NA
+20 Argentina 114     37.97325            2           0 487636.2            NA
+   election_qtr execrlc
+1             1       0
+2             0       2
+3             0       2
+4             0       2
+5             0       2
+6             0       2
+7             0       2
+8             0       2
+9             1       2
+10            0       2
+11            0       2
+12            0       2
+13            0       2
+14            0       2
+15            0       2
+16            1       2
+17            0       2
+18            0       2
+19            0       2
+20            0       2
+[1] 1481408      34
+id : ID  class= numeric 
+wave :   class= numeric 
+wt_new_W12 :   class= numeric 
+starttimeW :   class= POSIXct 
+endtimeW :   class= POSIXct 
+likeMayW : 0 1 2 3 4 5 6 7 8 9 10 9999  class= haven_labelled 
+likeCorbynW : 0 1 2 3 4 5 6 7 8 9 10 9999  class= haven_labelled 
+likeSturgeonW : 0 1 2 3 4 5 6 7 8 9 10 9999  class= haven_labelled 
+gender : Gender  class= haven_labelled 
+post_bridge : Surveyed after Bridge attack  class= numeric 
+dates_to_bomb : dates_to_bomb  class= numeric 
+z_distance : Distance to Manchester  class= numeric 
+white : Ethnically British  class= numeric 
+conservative : Conservative  class= numeric 
+labour : Labour  class= numeric 
+party_other : Other Party ID  class= numeric 
+income : Income  class= numeric 
+ideology : Ideology  class= numeric 
+ideology2 : Ideology  class= numeric 
+ideo3 : Ideology  class= numeric 
+may_bestpm : Think May would be best Prime Minister  class= numeric 
+post_attack : Surveyed after Manchester attack  class= numeric 
+likeMayW12a :   class= numeric 
+likeMayW12b :   class= numeric 
+gender_roles : Endorse gender roles  class= numeric 
+female_equality : Attempts to give women equal rights  class= numeric 
+women_office : +/- women in office  class= numeric 
+women_discrimin : How much discrim against women  class= numeric 
+women_jobs : Women unfair advantage jobs  class= numeric 
+likeFarronW :   class= numeric 
+bestPMW :   class= numeric 
+time : Time  class= numeric 
+treatment1 : Manchester Attack  class= numeric 
+treatment2 :   class= numeric 
+       id             wave         wt_new_W12      
+ Min.   :    1   Min.   : 1.00   Min.   : 0.06076  
+ 1st Qu.:23153   1st Qu.: 4.75   1st Qu.: 0.48639  
+ Median :47147   Median : 8.50   Median : 0.82093  
+ Mean   :47185   Mean   : 8.50   Mean   : 0.99794  
+ 3rd Qu.:70921   3rd Qu.:12.25   3rd Qu.: 1.26053  
+ Max.   :94887   Max.   :16.00   Max.   :20.01706  
+ NAs    :16                      NAs    :931104    
+   starttimeW                     endtimeW                      likeMayW      
+ Min.   :2014-02-19 16:12:43   Min.   :1970-01-01 00:00:00   Min.   : 0.000   
+ 1st Qu.:2015-04-04 22:32:43   1st Qu.:2015-04-05 08:04:31   1st Qu.: 1.000   
+ Median :2016-06-25 13:51:09   Median :2016-06-25 14:23:39   Median : 5.000   
+ Mean   :2016-08-03 14:25:51   Mean   :2016-06-29 17:29:00   Mean   : 4.291   
+ 3rd Qu.:2017-06-11 21:42:26   3rd Qu.:2017-06-11 22:31:54   3rd Qu.: 7.000   
+ Max.   :2019-06-14 13:21:42   Max.   :2019-06-17 07:48:19   Max.   :10.000   
+ NAs    :979208                NAs    :979208                NAs    :1241489  
+  likeCorbynW      likeSturgeonW         gender       post_bridge    
+ Min.   : 0.000    Min.   : 0.000    Min.   :1.000   Min.   :0.0000  
+ 1st Qu.: 0.000    1st Qu.: 0.000    1st Qu.:1.000   1st Qu.:0.0000  
+ Median : 3.000    Median : 3.000    Median :2.000   Median :0.0000  
+ Mean   : 3.544    Mean   : 3.687    Mean   :1.548   Mean   :0.1283  
+ 3rd Qu.: 6.000    3rd Qu.: 7.000    3rd Qu.:2.000   3rd Qu.:0.0000  
+ Max.   :10.000    Max.   :10.000    Max.   :2.000   Max.   :1.0000  
+ NAs    :1179781   NAs    :1328987   NAs    :16      NAs    :945664  
+ dates_to_bomb        z_distance          white         conservative  
+ Min.   :-17.0000   Min.   :-1.8741   Min.   :0.0000   Min.   :0.000  
+ 1st Qu.: -8.0000   1st Qu.:-0.8626   1st Qu.:0.0000   1st Qu.:0.000  
+ Median :  0.0000   Median : 0.2250   Median :1.0000   Median :0.000  
+ Mean   :  0.2566   Mean   : 0.0000   Mean   :0.6933   Mean   :0.104  
+ 3rd Qu.:  9.0000   3rd Qu.: 0.7125   3rd Qu.:1.0000   3rd Qu.:0.000  
+ Max.   : 17.0000   Max.   : 5.2309   Max.   :1.0000   Max.   :1.000  
+ NAs    :931088     NAs    :891472                                    
+     labour        party_other         income          ideology      
+ Min.   :0.0000   Min.   :0.0000   Min.   : 1.000   Min.   : 0.000   
+ 1st Qu.:0.0000   1st Qu.:1.0000   1st Qu.: 5.000   1st Qu.: 3.000   
+ Median :0.0000   Median :1.0000   Median : 8.000   Median : 5.000   
+ Mean   :0.1039   Mean   :0.7921   Mean   : 7.092   Mean   : 4.995   
+ 3rd Qu.:0.0000   3rd Qu.:1.0000   3rd Qu.: 8.000   3rd Qu.: 7.000   
+ Max.   :1.0000   Max.   :1.0000   Max.   :15.000   Max.   :10.000   
+                                   NAs    :560592   NAs    :1034848  
+   ideology2          ideo3          may_bestpm      post_attack    
+ Min.   : 0.000   Min.   :1.000    Min.   :0.0000   Min.   :0.0000  
+ 1st Qu.: 3.000   1st Qu.:1.000    1st Qu.:0.0000   1st Qu.:0.0000  
+ Median : 5.000   Median :2.000    Median :0.0000   Median :0.0000  
+ Mean   : 4.996   Mean   :1.997    Mean   :0.1779   Mean   :0.1769  
+ 3rd Qu.: 6.000   3rd Qu.:2.000    3rd Qu.:0.0000   3rd Qu.:0.0000  
+ Max.   :10.000   Max.   :3.000    Max.   :1.0000   Max.   :1.0000  
+ NAs    :931104   NAs    :931104                                    
+  likeMayW12a       likeMayW12b       gender_roles     female_equality 
+ Min.   : 0.000    Min.   : 0.000    Min.   :1.000     Min.   :1.000   
+ 1st Qu.: 1.000    1st Qu.: 1.000    1st Qu.:1.000     1st Qu.:2.000   
+ Median : 5.000    Median : 5.000    Median :2.000     Median :3.000   
+ Mean   : 4.907    Mean   : 4.502    Mean   :1.977     Mean   :2.617   
+ 3rd Qu.: 8.000    3rd Qu.: 7.000    3rd Qu.:3.000     3rd Qu.:3.000   
+ Max.   :10.000    Max.   :10.000    Max.   :5.000     Max.   :5.000   
+ NAs    :1225088   NAs    :1231392   NAs    :1006624   NAs    :528832  
+  women_office     women_discrimin     women_jobs       likeFarronW     
+ Min.   :1.000     Min.   : 0.000    Min.   :1.000     Min.   : 0.000   
+ 1st Qu.:2.000     1st Qu.: 3.000    1st Qu.:2.000     1st Qu.: 1.000   
+ Median :2.000     Median : 4.000    Median :3.000     Median : 4.000   
+ Mean   :2.183     Mean   : 4.474    Mean   :2.634     Mean   : 3.603   
+ 3rd Qu.:3.000     3rd Qu.: 5.000    3rd Qu.:3.000     3rd Qu.: 5.000   
+ Max.   :5.000     Max.   :10.000    Max.   :5.000     Max.   :10.000   
+ NAs    :1373680   NAs    :1075392   NAs    :1035072   NAs    :1320734  
+    bestPMW             time          treatment1       treatment2    
+ Min.   :0.0000    Min.   :0.0000   Min.   :0.0000   Min.   :0.0000  
+ 1st Qu.:0.0000    1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000  
+ Median :0.0000    Median :0.0000   Median :0.0000   Median :0.0000  
+ Mean   :0.4541    Mean   :0.3125   Mean   :0.1769   Mean   :0.2459  
+ 3rd Qu.:1.0000    3rd Qu.:1.0000   3rd Qu.:0.0000   3rd Qu.:0.0000  
+ Max.   :1.0000    Max.   :1.0000   Max.   :1.0000   Max.   :1.0000  
+ NAs    :1335605                                                     
+
+    1     2     3     4     5     6     7     8     9    10    11    12    13 
+92588 92588 92588 92588 92588 92588 92588 92588 92588 92588 92588 92588 92588 
+   14    15    16 
+92588 92588 92588 
+    time
+wave     0     1
+  1  92588     0
+  2  92588     0
+  3  92588     0
+  4  92588     0
+  5  92588     0
+  6  92588     0
+  7  92588     0
+  8  92588     0
+  9  92588     0
+  10 92588     0
+  11 92588     0
+  12     0 92588
+  13     0 92588
+  14     0 92588
+  15     0 92588
+  16     0 92588
+    treatment1
+wave     0     1
+  1  76211 16377
+  2  76211 16377
+  3  76211 16377
+  4  76211 16377
+  5  76211 16377
+  6  76211 16377
+  7  76211 16377
+  8  76211 16377
+  9  76211 16377
+  10 76211 16377
+  11 76211 16377
+  12 76211 16377
+  13 76211 16377
+  14 76211 16377
+  15 76211 16377
+  16 76211 16377
+    treatment2
+wave     0     1
+  1  88293  4295
+  2  88293  4295
+  3  88293  4295
+  4  88293  4295
+  5  88293  4295
+  6  88293  4295
+  7  88293  4295
+  8  88293  4295
+  9  88293  4295
+  10 88293  4295
+  11 88293  4295
+  12 29189 63399
+  13 29189 63399
+  14 29189 63399
+  15 29189 63399
+  16 29189 63399
+    post_attack
+wave     0     1
+  1  76211 16377
+  2  76211 16377
+  3  76211 16377
+  4  76211 16377
+  5  76211 16377
+  6  76211 16377
+  7  76211 16377
+  8  76211 16377
+  9  76211 16377
+  10 76211 16377
+  11 76211 16377
+  12 76211 16377
+  13 76211 16377
+  14 76211 16377
+  15 76211 16377
+  16 76211 16377
+    
+wave FALSE  TRUE
+  1  92588     0
+  2  92588     0
+  3  92588     0
+  4  92588     0
+  5  92588     0
+  6  92588     0
+  7  92588     0
+  8  92588     0
+  9  67034 25554
+  10 64704 27884
+  11 63497 29091
+  12 59946 32642
+  13 62747 29841
+  14 63163 29425
+  15 63097 29491
+  16 56597 35991
+    
+wave  TRUE
+  1  92588
+  2  92588
+  3  92588
+  4  92588
+  5  92588
+  6  92588
+  7  92588
+  8  92588
+  9  92588
+  10 92588
+  11 92588
+  12 92588
+  13 92588
+  14 92588
+  15 92588
+  16 92588
+    
+wave FALSE  TRUE
+  1  92588     0
+  2  92588     0
+  3  92588     0
+  4  92588     0
+  5  92588     0
+  6  92588     0
+  7  64228 28360
+  8  61662 30926
+  9  92588     0
+  10 65494 27094
+  11 64442 28146
+  12 61311 31277
+  13 92588     0
+  14 92588     0
+  15 92588     0
+  16 92588     0
+
+      0       1    <NA> 
+  79596   66207 1335605 
+
+      0       1 
+1217792  263616 
+white 
+
+      0       1 
+ 454320 1027088 
+gender 
+
+     1      2   <NA> 
+669248 812144     16 
+labour 
+
+      0       1 
+1327520  153888 
+party_other 
+
+      0       1 
+ 307952 1173456 
+income 
+
+     1      2      3      4      5      6      7      8      9     10     11 
+ 24896  48432  72944  71712  72688  67712  59920 289984  42848  34976  44704 
+    12     13     14     15   <NA> 
+ 30480  38480  14592   6448 560592 
+ideology 
+
+      0       1       2       3       4       5       6       7       8       9 
+  18064   16144   44992   58656   43904   84160   44304   54688   48848   15328 
+     10    <NA> 
+  17472 1034848 
+ideology2 
+
+     0      1      2      3      4      5      6      7      8      9     10 
+ 18064  16144  44992  58656  43904 187904  44304  54688  48848  15328  17472 
+  <NA> 
+931104 
+ideo3 
+
+     1      2      3   <NA> 
+137856 276112 136336 931104 
+conservative 
+
+      0       1 
+1327344  154064 

@@ -1,0 +1,86 @@
+Rows: 7254  Cols: 53 
+Columns: tn, dispersed, age, study, mathgrade, disposable_income, raven_correct_answers, math_answers_correct, crt_answers_correct, session, treatment, average_ip, decision_number, utility_point, corner, chose_corner, indifference_point, pizza, control, main, id_stage2_upper, pap_sample, id_stage2, avg_id_stage2, qe_ard, qe_ard_lower, qe_ard_upper, qe_rad, qe_rad_lower, qe_rad_upper, RT_avg_stage_2, d_a0_main_tr, d_a1_main_tr, d_a2_main_tr, d_g0_main_tr, d_g1_main_tr, d_g2_main_tr, d_d1_main_tr, d_d2_main_tr, d_d3_main_tr, d_d4_main_tr, d_d5_main_tr, d_t1_main_tr, d_t2_main_tr, d_t3_main_tr, d_t4_main_tr, std_rt_2_main_tr, std_math_main_tr, std_crt_main_tr, std_raven_main_tr, std_start_row_main_tr, id_stage2_sign, cb_effect 
+Rows per subject table:
+
+  9 
+806 
+Values of dispersed :
+
+   0 <NA>    1 
+2574 2358 2322 
+Values of decision_number :
+
+  1   2   3   4   5   6   7   8   9 
+806 806 806 806 806 806 806 806 806 
+Values of corner :
+
+   0    1   -1 
+6223  901  130 
+Values of chose_corner :
+
+<NA>    0    1 
+6448  607  199 
+Values of pizza :
+
+   1    0 
+4896 2358 
+Values of control :
+
+   1    0 
+3663 3591 
+Values of main :
+
+   1 <NA>    0 
+2574 2358 2322 
+Values of treatment :
+
+   0    1 
+3663 3591 
+Values of utility_point :
+
+   8    4    1    2    3    5    6    7 
+1090 1077 1057  806  806  806  806  806 
+Final rows: 806  balanced rows: 6448 
+Index candidates:
+              col off
+1 decision_number   0
+2   utility_point   0
+Using trade-off index column: decision_number  offset 0 
+Manual IP candidates: id_stage2_upper, qe_ard_upper, qe_rad_upper 
+Summary final d:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ -63.00   -4.00    2.00   16.62   34.75  300.00 
+Using manual IP column: id_stage2_upper 
+Conditions from flags (pizza/control/main)
+Conditions (all subjects):
+
+   Donation-Control  Donation-Treatment        Main-Control      Main-Treatment 
+                134                 128                 143                 143 
+  Mechanism-Control Mechanism-Treatment 
+                130                 128 
+Main-Treatment N under exclusion rules:
+  A   B  B2   C   D 
+100 106  76 106  98 
+Chosen exclusion rule: A 
+Main sample by condition:
+
+   Donation-Control  Donation-Treatment        Main-Control      Main-Treatment 
+                101                 100                 103                 100 
+  Mechanism-Control Mechanism-Treatment 
+                101                 102 
+Upper corners in main sample: 53 
+abs mid: 37.475 3.557226  rel lb: 0.1886026 0.01586545  rel mid: 0.2238739 0.02102305  rel ub: 0.2591452 0.02755546  tobit: 36.77746 
+Table 3 N: 202 201 203 203 
+RESULT:abs_concentration_bias_midpoint_table2_col2=37.475000
+RESULT:abs_concentration_bias_tobit_table2_col4=36.777463
+RESULT:rel_concentration_bias_lower_table2_col1=0.188603
+RESULT:rel_concentration_bias_midpoint_table2_col2=0.223874
+RESULT:rel_concentration_bias_upper_table2_col3=0.259145
+RESULT:n_obs_table2=100
+RESULT:rel_cb_mechanism_treatment_table3_col1=0.073716
+RESULT:diff_main_minus_mechanism_table3_col1=0.150158
+RESULT:rel_cb_donation_treatment_table3_col2=0.134129
+RESULT:diff_donation_treatment_minus_control_table3_col2=0.162486
+RESULT:diff_main_treatment_minus_control_table3_col3=0.250652
+RESULT:diff_mechanism_treatment_minus_control_table3_col4=0.090925
+RESULT:n_obs_table3=202

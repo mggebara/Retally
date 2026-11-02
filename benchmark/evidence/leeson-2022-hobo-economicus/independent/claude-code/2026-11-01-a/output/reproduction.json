@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "entry_id": "leeson-2022-hobo-economicus",
+  "mode": "independent",
+  "run_id": "2026-11-01-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [],
+  "notes": "attempt-1: exploratory data inspection (no RESULT lines). attempt-2: full analysis. Table 2: OLS of panhandlers per station-visit on monthly passersby (WMATA exits; Georgetown matched to Foggy Bottom if absent from passersby file -- it was present in the file), station-average friendliest response (max category 1-5 per passerby), shuttle (shuttlemin<=10) and service (servicemin<=10) indicators, date FE, SEs clustered by station (fixest). Tables 3/4: donations and dollars (cash+inkind, rows with both non-missing -> 67) per hour = x/minutes*60; Brown-Forsythe = car::leveneTest center=median; one-way ANOVA F. attempt-2 matched every coefficient and statistic, but fixest dropped date-singleton observations (240/98 vs 242/102). After the check_attempt comparison (five-station N 98 vs 102 off target), the final run keeps singletons (fixef.rm='none'). Coefficients are unchanged, and SEs (0.851, 2.793, 0.182, 0.227) and adjusted R2 (0.39, 0.06) now also match the paper's Table 2. Final run: all claims within tolerance.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T04:24:46Z",
+  "finished_at": "2026-11-02T04:27:00Z"
+}

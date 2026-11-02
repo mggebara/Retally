@@ -1,0 +1,103 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: Changing Tides: Public Attitudes on Climate Migration∗
+Abstract (first 500 chars): Little existing work studies public perceptions of climate-induced migration. We redress this gap, draw-
+ing on diverse literatures in political science and social psychology. We argue that climate migrants occupy an
+intermediate position in the public view, garnering greater support than traditional economic migrants but less
+support than refugees. Evidence from a conjoint experiment embedded in nationally representative surveys
+of 2160 respondents in the U.S. and Germany provide support for th
+Methodology Summary: **Methodology Summary**
+
+- **Design — Study 1 (Conjoint Experiment):** Choice-based conjoint embedded in nationally representative online surveys (Dynata) of 1,086 U.S. and 1,074 German respondents, yielding 18,966 and 18,862 choice tasks. Each respondent evaluated 9 pairs of randomized migrant profiles varying on 7 attributes (reason for migration, language fluency, gender, occupation, religion, origin, vulnerability). Pre-test battery collected sociodemographics, ideology, partisanship, empathy, etc. Pre-registered with EGAP (Design ID: 20190905AA).
+
+- **Focal attribute & levels:** Reason for migration took 5 levels (economic opportunity [baseline], drought, flooding, wildfires, political/religious/ethnic persecution). Origin levels included one internal ("another region in your country") and four international origins (Afghanistan, Ethiopia, Myanmar, Ukraine), enabling internal vs. international subset analyses.
+
+- **Estimation — Study 1:** Average Marginal Component Effects (AMCEs) following Hainmueller, Hopkins, and Yamamoto (2014). Dependent variable: binary indicator that a profile was chosen for settlement in the respondent's state. Headline AMCEs are in percentage-point (probability) units, not standardized. Standard errors are robust and clustered by respondent. Robustness via marginal means, heterogeneous treatment effects (Leeper, Hobolt, Tilley 2020), subset analyses (internal vs. international, excluding implausible internal profiles), and interactions of origin × reason for migration.
+
+- **Headline AMCEs (Table 2, vs. economic-opportunity baseline):** U.S.: drought +3.5pp, flooding +3.7pp, wildfires +4.0pp, persecution +7.6pp. Germany: drought +8.1pp, flooding +8.6pp, wildfires +6.0pp, persecution +16.2pp.
+
+- **Design — Study 2 (Factorial Experiment):** Between-subjects factorial on representative U.S./German samples. After the pre-test, respondents saw a mock article priming migration, climate change, or climate migration (country-level or worldwide); control group received a soccer article. Outcomes were multi-item indices measuring support for policies to address migration, climate change, and climate migration.
+
+- **Evaluation — Study 2:** Tests of whether priming climate migration/climate change shifts policy support indices; subgroup analyses to test consistency of null effects; empathy examined as a correlate of mitigation and pro-migrant policy support.
+
+- **Key hyperparameter/design choices:** 9 conjoint tasks per respondent; attributes drawn from Spilker et al. (2020) and Bansak et al. (2016) plus wildfires added; "atheist" substituted for "agnostic" in Germany for cultural relevance.
+
+## Claims to Reproduce
+1. amce_drought_us: 0.035 (change in probability profile is preferred) [type: coefficient]
+   Location: Table 2, U.S. Sample, Reason for Migration: Drought
+   Context: Table 2 ("Main Average Marginal Component Effects (Compared to Baseline Levels)"), U.S. sample, row Reason for Migration: Drought. Choice-based conjoint experiment fielded with Dynata on a nationally representative online U.S. sample; respondents saw nine pairs of randomized migrant profiles varying on seven attributes (reason for migration, language fluency, gender, occupation, religion, origin, vulnerability; Table 1) and indicated their preference for admitting one of the two migrants for settlement in their state. Estimand: the average marginal component effect (AMCE), the average change i…
+2. amce_flooding_us: 0.037 (change in probability profile is preferred) [type: coefficient]
+   Location: Table 2, U.S. Sample, Reason for Migration: Flooding
+   Context: Table 2, U.S. sample, row Reason for Migration: Flooding. Same full-model AMCE as amce_drought_us (all seven attributes, all profile pairs, baseline economic opportunity, respondent-clustered robust standard errors).
+3. amce_wildfires_us: 0.04 (change in probability profile is preferred) [type: coefficient]
+   Location: Table 2, U.S. Sample, Reason for Migration: Wildfires
+   Context: Table 2, U.S. sample, row Reason for Migration: Wildfires. Same full-model AMCE as amce_drought_us (baseline economic opportunity, respondent-clustered robust standard errors).
+4. amce_persecution_us: 0.076 (change in probability profile is preferred) [type: coefficient]
+   Location: Table 2, U.S. Sample, Reason for Migration: Political/religious/ethnic persecution
+   Context: Table 2, U.S. sample, row Reason for Migration: Political/religious/ ethnic persecution. Same full-model AMCE as amce_drought_us (baseline economic opportunity, respondent-clustered robust standard errors).
+5. amce_drought_germany: 0.081 (change in probability profile is preferred) [type: coefficient]
+   Location: Table 2, German Sample, Reason for Migration: Drought
+   Context: Table 2, German sample, row Reason for Migration: Drought. The same conjoint design fielded with Dynata on a nationally representative online German sample (factors and levels identical to the U.S. survey except that agnostic was replaced with atheist in Germany); full-model AMCE with all seven attributes on all profile pairs, baseline economic opportunity, robust standard errors clustered by respondent.
+6. amce_flooding_germany: 0.086 (change in probability profile is preferred) [type: coefficient]
+   Location: Table 2, German Sample, Reason for Migration: Flooding
+   Context: Table 2, German sample, row Reason for Migration: Flooding. Same full-model AMCE as amce_drought_germany.
+7. amce_wildfires_germany: 0.06 (change in probability profile is preferred) [type: coefficient]
+   Location: Table 2, German Sample, Reason for Migration: Wildfires
+   Context: Table 2, German sample, row Reason for Migration: Wildfires. Same full-model AMCE as amce_drought_germany.
+8. amce_persecution_germany: 0.162 (change in probability profile is preferred) [type: coefficient]
+   Location: Table 2, German Sample, Reason for Migration: Political/religious/ethnic persecution
+   Context: Table 2, German sample, row Reason for Migration: Political/ religious/ethnic persecution. Same full-model AMCE as amce_drought_germany.
+9. respondents_us: 1086.0 (respondents) [type: other]
+   Location: Study 1: Empirical Design (text)
+   Context: Number of U.S. respondents in the conjoint experiment (the nationally representative online sample fielded with Dynata), as stated in the Study 1 design section.
+10. respondents_germany: 1074.0 (respondents) [type: other]
+   Location: Study 1: Empirical Design (text)
+   Context: Number of German respondents in the conjoint experiment, as stated in the Study 1 design section.
+11. choice_tasks_us: 18966.0 (choice tasks (profiles)) [type: other]
+   Location: Study 1: Empirical Design (text)
+   Context: Number of "unique choice tasks" the design section reports for the U.S. sample: the observations entering the U.S. AMCE estimation (one per migrant profile, two profiles per pairing).
+12. choice_tasks_germany: 18862.0 (choice tasks (profiles)) [type: other]
+   Location: Study 1: Empirical Design (text)
+   Context: Number of "unique choice tasks" the design section reports for the German sample: the observations entering the German AMCE estimation (one per migrant profile, two profiles per pairing).
+
+## Dataset Information
+Name: arias-2022-changing-tides-climate-migration
+Local path: <repo>/.cache/datasets/arias_2022_changing_tides_climate_migration.script-free
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- Climate Migration 1_ Article- Germany_September 7, 2019_09.31.csv (1.5 MB) — columns: StartDate,EndDate,Status,IPAddress,Progress,Duration (in seconds),Finished,RecordedDate,ResponseId,RecipientLastName,RecipientFirstName,RecipientEmail,ExternalReference,LocationLatitude,LocationLongitude,DistributionChannel,UserLanguage,GEN…
+- Climate Migration 2_ Conjoint- Germany_September 11, 2019_02.58.csv (3.6 MB) — columns: StartDate,EndDate,Status,IPAddress,Progress,Duration (in seconds),Finished,RecordedDate,ResponseId,RecipientLastName,RecipientFirstName,RecipientEmail,ExternalReference,LocationLatitude,LocationLongitude,DistributionChannel,UserLanguage,Q59…
+- Climate Migration 2_ Conjoint- USA_September 10, 2019_08.56.csv (3.2 MB) — columns: StartDate,EndDate,Status,IPAddress,Progress,Duration (in seconds),Finished,RecordedDate,ResponseId,RecipientLastName,RecipientFirstName,RecipientEmail,ExternalReference,LocationLatitude,LocationLongitude,DistributionChannel,UserLanguage,Q59…
+- Migration Follow-Up_August 1, 2020_12.19.csv (77.7 KB) — columns: StartDate,EndDate,Status,IPAddress,Progress,Duration (in seconds),Finished,RecordedDate,ResponseId,RecipientLastName,RecipientFirstName,RecipientEmail,ExternalReference,LocationLatitude,LocationLongitude,DistributionChannel,UserLanguage,gen…
+- conjoint_design.dat (827 B)
+- conjoint_design_german2.dat (890 B)
+- conjoint_design_german2_internal.dat (779 B)
+- conjoint_design_internal.dat (723 B)
+- germany_state_key.csv (712 B) — columns: ﻿qualtrics_code,state_name,region,east_indicator,east_indicator2,east_indicator3,east_indicator4,east_indicator5,east_indicator6,east_indicator7
+- usclimate_exp1.csv (1.7 MB) — columns: Obs,StartDate,EndDate,Status,IPAddress,Progress,Durationinseconds,Finished,RecordedDate,ResponseId,RecipientLastName,RecipientFirstName,RecipientEmail,ExternalReference,LocationLatitude,LocationLongitude,DistributionChannel,UserLanguage,GEN…
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/arias_2022_changing_tides_climate_migration.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Independent Reproduction
+This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's description alone.  The authors' own analysis code is deliberately withheld.  Do NOT open, read, source, or execute any script files that may appear in the dataset directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, and similar) — load data files only.  Derive the estimating equation, sample restrictions, fixed effects, and standard-error clustering from the paper information and claims above.
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

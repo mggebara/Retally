@@ -1,0 +1,20 @@
+suppressMessages({library(data.table)})
+f <- "<repo>/benchmark/.cache/claude-code/gagliarducci-2022-gender-cooperation-congress/independent/2026-11-01-a/mount/gagliarducci_2022_gender_cooperation_congress/3 replication package/Data/AnalysisData/bills_analysis_101-111_replication.csv"
+d <- fread(f)
+cat("nrow", nrow(d), "\n")
+print(table(d$private, useNA="ifany"))
+print(table(d$v2, useNA="ifany"))
+print(table(d$sponsor_party, useNA="ifany"))
+na <- sapply(d, function(x) sum(is.na(x))); print(na[na>0])
+for (v in c("sponsor_female","comc","comr","ivycoll","black","borninstate","occ0","occ1","occ2","occ3","occ4","occ5","occ6","mixed_gender_election","women_friend1","women_friend3")) {cat(v,"\n"); print(table(d[[v]],useNA="ifany"))}
+print(summary(d[,.(sponsor_age,sponsor_tenure_run,sponsor_term_served,MV1_democrat,MV1_female,femaleXMV1_female,lag_demshare1,lnpop,lnarea,lninc,pct_black,pct_urban,pct_for_born,pct_age_over65,numb_cosponsors,pct_cosponsors_opposite,minor,DSpndPct,agestart,dwnom1)]))
+print(table(d$sponsor_state_icpsr))
+hc <- grep("^house_", names(d), value=TRUE); cat(length(hc), "committee cols\n"); print(summary(rowSums(d[, ..hc])))
+cat("n minor", uniqueN(d$minor), "\n")
+d[, sid := paste(v2, sponsor_state_abbrev, sponsor_district, sponsor_name)]
+cat("sponsor-congress", uniqueN(d$sid), "\n")
+cat("by state district term", nrow(unique(d[,.(v2,sponsor_state_abbrev,sponsor_district,sponsor_term_served)])), "\n")
+print(head(d[, .(v2,HRnumber,sponsor_state_abbrev,sponsor_district,sponsor_term_served,sponsor_name,sponsor_tenure_run,MV1_democrat,MV1_female,femaleXMV1_female,mixed_gender_election)], 10))
+cat("pct_opp NA vs ncosp0:", sum(is.na(d$pct_cosponsors_opposite)), sum(d$numb_cosponsors==0,na.rm=T), "\n")
+print(table(d$sponsor_tenure_run, useNA="ifany"))
+print(table(d$sponsor_term_served, useNA="ifany"))

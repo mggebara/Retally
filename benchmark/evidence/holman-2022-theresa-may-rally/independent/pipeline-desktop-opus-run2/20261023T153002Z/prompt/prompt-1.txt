@@ -1,0 +1,127 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: American Political Science Review (2022) 116, 1, 249–264
+Abstract (first 500 chars): © The Author(s), 2021. Published by Cambridge University Press on behalf of the American Political Science Association. This is an Open Access article, distributed under the terms of the Creative Commons Attribution-NonCommercial- NoDerivatives licence (http://creativecommons.org/licenses/by-nc-nd/4.0/), which
+Methodology Summary: - **Design and data (headline):** The paper uses an Unexpected Event during Survey Design (UESD). The Manchester Arena bombing on 22 May 2017 is treated as an as-if-random treatment within British Election Study (BES) internet panel Wave 12, which YouGov fielded on a rolling daily basis from 5 May to 7 June 2017. There are about 16,377 pre-attack respondents (control) and 16,972 post-attack respondents (treatment). The treatment dummy is "Surveyed after Manchester attack" (0 = before, 1 = after). Balance checks regress treatment assignment on the same demographics later used as controls (Appendix Table B1). Only Labour Party membership is imbalanced, so every individual-level model controls for it. A placebo outcome (keeping nuclear submarines) shows no difference.
+- **Outcomes and estimation (Table 1, preferred specification):**
+  - "Like May" is an 11-point scale (0 = strongly dislike, 10 = strongly like), estimated by OLS. The coefficients are unstandardised, in scale points.
+  - "May best PM" is binary (1 = May, 0 = Corbyn), estimated by logistic regression. Coefficients are log-odds; the paper converts the logit to a predicted effect of about 5 percentage points.
+  - Each outcome has two columns: Labour control only, and full controls.
+  - Results:
+
+    | Outcome | Labour control only | Full controls |
+    |---|---|---|
+    | Like May (OLS) | −0.332 (SE 0.054), N=32,642, R² 0.143 | −0.351 (SE 0.043), N=26,506, R² 0.442 |
+    | May best PM (logit) | −0.204 (SE 0.038), N=34,394, pseudo-R² 0.090 | −0.333 (SE 0.042), N=27,844, pseudo-R² 0.329 |
+
+  - Tables 1 and 3 use survey weights.
+- **Controls, missing data and standard errors:**
+  - Full controls: identifies as ethnically British, gender, Labour Party membership, other party membership, income, and ideology.
+  - Missing ideology and income are recoded to the scale midpoint rather than dropped. The paper says results hold when those cases are dropped, with no controls, and with OLS (Appendix Table A1).
+  - Standard errors in all Wave-12-only analyses are clustered on the day of the survey.
+  - The estimation sample is BES Wave 12 respondents with non-missing outcome and controls, which explains the smaller N in the full-control columns.
+- **Panel difference-in-differences (Table 2):**
+  - Uses the BES panel across waves. Regressors: treatment group (surveyed before/after the attack within Wave 12), Time (0 = waves before the attack, 1 = Wave 12 onward), and their interaction. The interaction "Manchester attack × time" is the key term.
+  - Includes wave fixed effects and the full controls. The DV is May likeability (OLS) or May best PM (the note says logistic).
+  - Like May: interaction −0.1274 (SE 0.0187); Manchester attack 0.0178; Time −0.5007; constant 1.9443; N=143,499.
+  - May best PM: interaction −0.0501 (SE 0.0044); attack −0.0002; Time 0.2098; constant 0.1505; N=97,155.
+  - The best-PM magnitudes look like probability-scale (LPM or marginal-effect) coefficients.
+  - An average-treatment-effect version is in Appendix Table A5.
+- **Mechanism (gender attitudes, Fig. 1 / Table C1):** Five pre-attack items are each rescaled to 0–1, coded so higher means more negative views of women, and averaged into an index (alpha 0.71, mean 0.39, SD 0.2). They cover traditional gender roles, opposition to equality or more women in office, women's unfair workplace advantage, and discrimination in favour of women. The index is interacted with the post-attack dummy in an OLS model of Like May. Marginal effects are plotted across the index; at the modal value the effect is about −0.4. Robustness checks add party × attack and ideology × attack interactions, plus triple interactions with the index (Fig. C2). Separate models are run for Conservatives and Labour (Fig. 2, Table C2), and by gender and ideology (Tables C3–C4).
+- **Alternative explanations and robustness:**
+  - Same full-control OLS specification with Corbyn, Farron and Sturgeon likeability as DVs (Table 3). Effects: Corbyn +0.398, Farron +0.059 (n.s.), Sturgeon +0.115, versus May −0.351.
+  - Adds a daily GBP/EUR exchange-rate control (economy) and a Brexit "Leave" vote-intention control.
+  - Narrows the bandwidth to ±10 days and to ±4 days around 22 May (Fig. 3, Table E2).
+  - Splits the control group at its median date to check stability (Table E1).
+  - Other time specifications: time controls, attack × time, a multilevel model with survey day as level 2, and ARIMA (Tables E4–E5).
+  - London Bridge attack (3 June) as a second event (Table A6).
+  - A 2012 UK online survey experiment (N=992) with a terror-threat vs control news story, scored on a 0–100 thermometer, finds May rated about 7 points higher under threat (p=0.003).
+- **Constituency analysis (Fig. 4, Table G1):**
+  - OLS on English constituencies only. DV is the change in Conservative vote share 2015→2017; the placebo DV is the change 2010→2015.
+  - Key regressor: standardised distance from Manchester to each constituency's midpoint.
+  - Controls: constituency population, Brexit (Leave) vote share, and shares ethnically British, over 65, UK-born, Christian, and unemployed.
+  - Distance has a positive effect for 2015–17 (one-tailed p=0.079) and no effect in the placebo.
+- **Cross-national analysis (Table 4):**
+  - Time-series cross-section of quarterly executive approval (Carlin, Carreras and Love 2020) for 66 countries, 1975–2017 (4,359 country-quarters; 20 countries ever led by a woman).
+  - The attack dummy is a Global Terrorism Database (GTD) international attack with more than 15 deaths (60 country-quarters, 9 under women leaders).
+  - DV is percent approving in the quarter after the attack. The attack dummy is interacted with a woman-executive dummy.
+  - Country fixed effects. Controls: GDP growth, log inflation, the executive's left-right placement, and an election-year dummy.
+  - Effects: men about +3.1 points, women about −4.3 points.
+
+
+## Claims to Reproduce
+1. intl_attack_table4: 3.112 (percentage points of executive approval) [type: coefficient]
+   Location: Table 4, International terrorist attack (All countries, attacks with more than 15 deaths)
+   Context: Table 4 ("Effect of Terrorist Attacks on Executive Approval Ratings"). Linear regression on time-series cross-sectional data of country-quarters: the percentage of the public approving of the executive in the quarter following the attack, regressed on an indicator for a major international terrorist attack (an attack with an international component under the Global Terrorism Database's definition and more than 15 deaths), the presence of a woman executive, their interaction, and controls for GDP growth, logged inflation, the left-center-right placement of the leader and elections, with country…
+2. intl_attack_x_woman_exec_table4: -4.333 (percentage points of executive approval) [type: coefficient]
+   Location: Table 4, International terrorist attack x Woman executive
+   Context: Table 4, the paper's global test of the gender-revised rally framework: the coefficient on the interaction of a major international terrorist attack (more than 15 deaths) with a woman executive, in the same linear country-quarter regression of next-quarter executive approval (controls for woman executive, GDP, logged inflation, left-center-right placement of the leader and elections; country fixed effects; panel-corrected standard errors). Negative and significant at the 5% level in the paper.
+3. n_obs_table4: 4328.0 (observations (country-quarters)) [type: other]
+   Location: Table 4, Observations
+   Context: Number of country-quarter observations in the Table 4 regression (all countries, attacks with more than 15 deaths).
+4. did_attack_x_time_like_may_table2: -0.1274 (points on the 0-10 like/dislike scale) [type: coefficient]
+   Location: Table 2, column May likeability, Manchester attack * time
+   Context: Table 2 ("Difference-in-Difference, with Fixed Effects"), May likeability column. British Election Study internet panel, using waves before and after the 22 May 2017 Manchester Arena bombing. Outcome: how much the respondent likes Theresa May, 0 (strongly dislike) to 10 (strongly like). Regressors: Manchester attack (the respondent was surveyed after the attack in the attack wave, wave 12), time (0 for waves before the attack, 1 for waves from 12 onward), their interaction (the coefficient here), wave fixed effects, and controls for identifying as ethnically British, gender, Labour party membe…
+5. did_attack_like_may_table2: 0.0178 (points on the 0-10 like/dislike scale) [type: coefficient]
+   Location: Table 2, column May likeability, Manchester attack
+   Context: Table 2, May likeability column: the coefficient on the Manchester attack (surveyed-after-the-attack) indicator in the same difference-in-differences regression (time, interaction, wave fixed effects, full controls). Not significant.
+6. did_time_like_may_table2: -0.5007 (points on the 0-10 like/dislike scale) [type: coefficient]
+   Location: Table 2, column May likeability, Time
+   Context: Table 2, May likeability column: the coefficient on the time indicator (waves from the attack wave onward) in the same difference-in-differences regression.
+7. did_attack_x_time_may_best_pm_table2: -0.0501 (change in the May-best-PM outcome (0/1)) [type: coefficient]
+   Location: Table 2, column May best PM, Manchester attack * time
+   Context: Table 2, May best PM column: the same difference-in-differences specification (Manchester attack, time, their interaction, wave fixed effects, full controls) with the outcome "Who would make the best prime minister?", coded 1 for Theresa May and 0 for Jeremy Corbyn. The table note describes this column as a logistic regression; standard errors in parentheses. This is the interaction coefficient.
+8. did_attack_may_best_pm_table2: -0.0002 (change in the May-best-PM outcome (0/1)) [type: coefficient]
+   Location: Table 2, column May best PM, Manchester attack
+   Context: Table 2, May best PM column: the coefficient on the Manchester attack indicator. Not significant.
+9. did_time_may_best_pm_table2: 0.2098 (change in the May-best-PM outcome (0/1)) [type: coefficient]
+   Location: Table 2, column May best PM, Time
+   Context: Table 2, May best PM column: the coefficient on the time indicator.
+10. n_obs_did_like_may_table2: 143499.0 (observations (respondent-waves)) [type: other]
+   Location: Table 2, Observations, column May likeability
+   Context: Number of panel observations in the Table 2 May likeability regression.
+11. n_obs_did_may_best_pm_table2: 97155.0 (observations (respondent-waves)) [type: other]
+   Location: Table 2, Observations, column May best PM
+   Context: Number of panel observations in the Table 2 May best PM regression.
+
+## Dataset Information
+Name: holman-2022-theresa-may-rally
+Local path: <repo>/.cache/datasets/holman_2022_theresa_may_rally.script-free
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- BES_data.dta (45.2 MB) — 92588 rows, 117 columns: gender, post_bridge, conservative, labour, income, ideology, post_attack, attack_ideology, median_control, gender_roles, women_office, gender_attitudes, vote_brexit, may_bestpm, may_bestpm11, likeCorbynW7, likeCorbynW8, likeCorbynW9, likeMayW9, likeMayW10, likeCorbynW10, likeCorbynW11, likeMayW12, likeCorbynW12, likeMayW13, likeCorbynW13, likeMayW14, likeCorbynW14, likeMayW15, likeCorbynW15, likeMayW16, likeCorbynW16, bestPMW7, bestPMW8, bestPMW10, bestPMW11, bestPMW12, keepNukesW12, likeSturgeonW4, likeSturgeonW5…
+- constituency_results_2017_election.dta (1.5 MB) — 533 rows, 319 columns: Country, distance, Constituency, leave, Con1517, Con1015, Lab1517, Lab1015, Con17, Con15, Con10, z_leave, change_1517, change_1015, Lab17, Lab15, Lab10, pano, z_distance, over_65, c11Population, c11Unemployed, leaveHanretty, c11PopulationDensity, c11HouseOutright, c11HouseShared, c11EthnicityWhiteBritish, c11Christian, c11LookingAfterHome, c11LongTermSick, c11IndustryPublicAdministration, ConstituencyName, ConstituencyType, SeatChange1517, SeatChange1015, c11NSSECHigherManage…
+- did_data.dta (178.0 MB) — 1481408 rows, 34 columns: wave, gender, post_bridge, conservative, labour, income, ideology, post_attack, gender_roles, women_office, time, may_bestpm, z_distance, white, treatment1, ideology2, ideo3, likeCorbynW, likeSturgeonW, party_other, female_equality, women_discrimin, likeFarronW, treatment2, women_jobs, id, wt_new_W12, starttimeW, endtimeW, likeMayW, dates_to_bomb, likeMayW12a, likeMayW12b, bestPMW
+- global_approval.dta (810.4 KB) — 5469 rows, 28 columns: country, growth, manchester, rally_event_any, country_code, rally_event_any2, qtr, rally_events, election_qtr, lag_approval, log_inflation, rally_kill, pres_15death, pres_20death, female_pres, execrlc, ccode, kill_16, kill_18, kill_10, kill…
+- CMPdata.dta (6.8 MB) — 4656 rows, 174 columns: country, date, party, edate, pervote, per503, countryname, partyname, partyabbrev, corpusversion, datasetversion, oecdmember, eumember, parfam, coderid, manual, coderyear, testresult, testeditsim, voteest, presvote, absseat, totseats, progt…
+- BESExpertSurveyTrendFile2014-2019.dta (189.4 KB) — 303 rows, 114 columns: year, Country, leftrightLab, leftrightCon, leftrightBrexit, leftrightLibDem, leftrightUKIP, leftrightGreen, leftrightSNP, leftrightPlaid, libauthBrexit, EUIntegrationBrexit, EUindependenceBrexit, redistBrexit, econvenvirBrexit, secvlibertie…
+- experimental2012.dta (49.6 KB) — 992 rows, 10 columns: terror, gt, tt, tt_rbi, econ, ft3a, feel_may, feel_warsi, feel_harman, feel_clegg
+- Readme for The Curious Case of Theresa May.docx (17.1 KB)
+- currency_rates.csv (679 B) — columns: date,gbp_to_eug
+- metadata.json (587 B)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/holman_2022_theresa_may_rally.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Independent Reproduction
+This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's description alone.  The authors' own analysis code is deliberately withheld.  Do NOT open, read, source, or execute any script files that may appear in the dataset directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, and similar) — load data files only.  Derive the estimating equation, sample restrictions, fixed effects, and standard-error clustering from the paper information and claims above.
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

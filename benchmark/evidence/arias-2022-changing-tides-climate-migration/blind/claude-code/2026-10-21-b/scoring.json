@@ -1,0 +1,673 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "amce_drought_us",
+      "ground_truth": {
+        "value": 0.035,
+        "standard_error": 0.012,
+        "unit": "change in probability profile is preferred",
+        "claim_type": "coefficient",
+        "location": "Table 2, U.S. Sample, Reason for Migration: Drought",
+        "context": "Table 2 (\"Main Average Marginal Component Effects (Compared to Baseline Levels)\"), U.S. sample, row Reason for Migration: Drought. Choice-based conjoint experiment fielded with Dynata on a nationally representative online U.S. sample; respondents saw nine pairs of randomized migrant profiles varying on seven attributes (reason for migration, language fluency, gender, occupation, religion, origin, vulnerability; Table 1) and indicated their preference for admitting one of the two migrants for settlement in their state.  Estimand: the average marginal component effect (AMCE), the average change in the probability that a migrant profile is preferred when it features the level rather than the baseline (economic opportunity), from the full model with all seven attributes on all profile pairs (the left panel of Figure 1).  Robust standard errors clustered by respondent.\n",
+        "decimals": 3,
+        "sample_size": 18966
+      },
+      "i4r": {
+        "reproduced_value": 0.035,
+        "outcome": "matches",
+        "notes": "SSRP",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.3428571428571428,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "amce_drought_us",
+        "claim_type": "coefficient",
+        "claimed": 0.035,
+        "reproduced": 0.035353,
+        "tolerance": 0.3428571428571428,
+        "rel_err": 0.01008571428571426,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "amce_drought_us",
+        "reproduced": 0.035353,
+        "band_source": "se_band",
+        "band_relative": 0.3428571428571428,
+        "band_absolute": 0.011999999999999999,
+        "abs_err": 0.00035299999999999915,
+        "rel_err": 0.01008571428571426,
+        "margin": 0.029416666666666598,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "amce_flooding_us",
+      "ground_truth": {
+        "value": 0.037,
+        "standard_error": 0.012,
+        "unit": "change in probability profile is preferred",
+        "claim_type": "coefficient",
+        "location": "Table 2, U.S. Sample, Reason for Migration: Flooding",
+        "context": "Table 2, U.S. sample, row Reason for Migration: Flooding.  Same full-model AMCE as amce_drought_us (all seven attributes, all profile pairs, baseline economic opportunity, respondent-clustered robust standard errors).\n",
+        "decimals": 3,
+        "sample_size": 18966
+      },
+      "i4r": {
+        "reproduced_value": 0.037,
+        "outcome": "matches",
+        "notes": "SSRP",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.32432432432432434,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "amce_flooding_us",
+        "claim_type": "coefficient",
+        "claimed": 0.037,
+        "reproduced": 0.037128,
+        "tolerance": 0.32432432432432434,
+        "rel_err": 0.0034594594594595436,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "amce_flooding_us",
+        "reproduced": 0.037128,
+        "band_source": "se_band",
+        "band_relative": 0.32432432432432434,
+        "band_absolute": 0.012,
+        "abs_err": 0.0001280000000000031,
+        "rel_err": 0.0034594594594595436,
+        "margin": 0.010666666666666927,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "amce_wildfires_us",
+      "ground_truth": {
+        "value": 0.04,
+        "standard_error": 0.011,
+        "unit": "change in probability profile is preferred",
+        "claim_type": "coefficient",
+        "location": "Table 2, U.S. Sample, Reason for Migration: Wildfires",
+        "context": "Table 2, U.S. sample, row Reason for Migration: Wildfires.  Same full-model AMCE as amce_drought_us (baseline economic opportunity, respondent-clustered robust standard errors).\n",
+        "decimals": 3,
+        "sample_size": 18966
+      },
+      "i4r": {
+        "reproduced_value": 0.04,
+        "outcome": "matches",
+        "notes": "SSRP",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.27499999999999997,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "amce_wildfires_us",
+        "claim_type": "coefficient",
+        "claimed": 0.04,
+        "reproduced": 0.039882,
+        "tolerance": 0.27499999999999997,
+        "rel_err": 0.0029500000000000012,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "amce_wildfires_us",
+        "reproduced": 0.039882,
+        "band_source": "se_band",
+        "band_relative": 0.27499999999999997,
+        "band_absolute": 0.011,
+        "abs_err": 0.00011800000000000005,
+        "rel_err": 0.0029500000000000012,
+        "margin": 0.010727272727272733,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "amce_persecution_us",
+      "ground_truth": {
+        "value": 0.076,
+        "standard_error": 0.012,
+        "unit": "change in probability profile is preferred",
+        "claim_type": "coefficient",
+        "location": "Table 2, U.S. Sample, Reason for Migration: Political/religious/ethnic persecution",
+        "context": "Table 2, U.S. sample, row Reason for Migration: Political/religious/ ethnic persecution.  Same full-model AMCE as amce_drought_us (baseline economic opportunity, respondent-clustered robust standard errors).\n",
+        "decimals": 3,
+        "sample_size": 18966
+      },
+      "i4r": {
+        "reproduced_value": 0.076,
+        "outcome": "matches",
+        "notes": "SSRP",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.15789473684210528,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "amce_persecution_us",
+        "claim_type": "coefficient",
+        "claimed": 0.076,
+        "reproduced": 0.07625,
+        "tolerance": 0.15789473684210528,
+        "rel_err": 0.003289473684210529,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "amce_persecution_us",
+        "reproduced": 0.07625,
+        "band_source": "se_band",
+        "band_relative": 0.15789473684210528,
+        "band_absolute": 0.012000000000000002,
+        "abs_err": 0.0002500000000000002,
+        "rel_err": 0.003289473684210529,
+        "margin": 0.02083333333333335,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "amce_drought_germany",
+      "ground_truth": {
+        "value": 0.081,
+        "standard_error": 0.012,
+        "unit": "change in probability profile is preferred",
+        "claim_type": "coefficient",
+        "location": "Table 2, German Sample, Reason for Migration: Drought",
+        "context": "Table 2, German sample, row Reason for Migration: Drought.  The same conjoint design fielded with Dynata on a nationally representative online German sample (factors and levels identical to the U.S. survey except that agnostic was replaced with atheist in Germany); full-model AMCE with all seven attributes on all profile pairs, baseline economic opportunity, robust standard errors clustered by respondent.\n",
+        "decimals": 3,
+        "sample_size": 18862
+      },
+      "i4r": {
+        "reproduced_value": 0.081,
+        "outcome": "matches",
+        "notes": "SSRP",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.14814814814814814,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "amce_drought_germany",
+        "claim_type": "coefficient",
+        "claimed": 0.081,
+        "reproduced": 0.080497,
+        "tolerance": 0.14814814814814814,
+        "rel_err": 0.0062098765432099185,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "amce_drought_germany",
+        "reproduced": 0.080497,
+        "band_source": "se_band",
+        "band_relative": 0.14814814814814814,
+        "band_absolute": 0.012,
+        "abs_err": 0.0005030000000000034,
+        "rel_err": 0.0062098765432099185,
+        "margin": 0.041916666666666956,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "amce_flooding_germany",
+      "ground_truth": {
+        "value": 0.086,
+        "standard_error": 0.012,
+        "unit": "change in probability profile is preferred",
+        "claim_type": "coefficient",
+        "location": "Table 2, German Sample, Reason for Migration: Flooding",
+        "context": "Table 2, German sample, row Reason for Migration: Flooding.  Same full-model AMCE as amce_drought_germany.\n",
+        "decimals": 3,
+        "sample_size": 18862
+      },
+      "i4r": {
+        "reproduced_value": 0.086,
+        "outcome": "matches",
+        "notes": "SSRP",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.13953488372093026,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "amce_flooding_germany",
+        "claim_type": "coefficient",
+        "claimed": 0.086,
+        "reproduced": 0.086269,
+        "tolerance": 0.13953488372093026,
+        "rel_err": 0.0031279069767442486,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "amce_flooding_germany",
+        "reproduced": 0.086269,
+        "band_source": "se_band",
+        "band_relative": 0.13953488372093026,
+        "band_absolute": 0.012000000000000002,
+        "abs_err": 0.00026900000000000535,
+        "rel_err": 0.0031279069767442486,
+        "margin": 0.02241666666666711,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "amce_wildfires_germany",
+      "ground_truth": {
+        "value": 0.06,
+        "standard_error": 0.012,
+        "unit": "change in probability profile is preferred",
+        "claim_type": "coefficient",
+        "location": "Table 2, German Sample, Reason for Migration: Wildfires",
+        "context": "Table 2, German sample, row Reason for Migration: Wildfires.  Same full-model AMCE as amce_drought_germany.\n",
+        "decimals": 3,
+        "sample_size": 18862
+      },
+      "i4r": {
+        "reproduced_value": 0.06,
+        "outcome": "matches",
+        "notes": "SSRP",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.2,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "amce_wildfires_germany",
+        "claim_type": "coefficient",
+        "claimed": 0.06,
+        "reproduced": 0.059587,
+        "tolerance": 0.2,
+        "rel_err": 0.006883333333333279,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "amce_wildfires_germany",
+        "reproduced": 0.059587,
+        "band_source": "se_band",
+        "band_relative": 0.2,
+        "band_absolute": 0.012,
+        "abs_err": 0.0004129999999999967,
+        "rel_err": 0.006883333333333279,
+        "margin": 0.034416666666666394,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "amce_persecution_germany",
+      "ground_truth": {
+        "value": 0.162,
+        "standard_error": 0.013,
+        "unit": "change in probability profile is preferred",
+        "claim_type": "coefficient",
+        "location": "Table 2, German Sample, Reason for Migration: Political/religious/ethnic persecution",
+        "context": "Table 2, German sample, row Reason for Migration: Political/ religious/ethnic persecution.  Same full-model AMCE as amce_drought_germany.\n",
+        "decimals": 3,
+        "sample_size": 18862
+      },
+      "i4r": {
+        "reproduced_value": 0.162,
+        "outcome": "matches",
+        "notes": "SSRP",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.08024691358024691,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "amce_persecution_germany",
+        "claim_type": "coefficient",
+        "claimed": 0.162,
+        "reproduced": 0.161422,
+        "tolerance": 0.08024691358024691,
+        "rel_err": 0.0035679012345678713,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "amce_persecution_germany",
+        "reproduced": 0.161422,
+        "band_source": "se_band",
+        "band_relative": 0.08024691358024691,
+        "band_absolute": 0.013,
+        "abs_err": 0.0005779999999999952,
+        "rel_err": 0.0035679012345678713,
+        "margin": 0.044461538461538094,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "respondents_us",
+      "ground_truth": {
+        "value": 1086.0,
+        "standard_error": null,
+        "unit": "respondents",
+        "claim_type": "other",
+        "location": "Study 1: Empirical Design (text)",
+        "context": "Number of U.S. respondents in the conjoint experiment (the nationally representative online sample fielded with Dynata), as stated in the Study 1 design section.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 1086.0,
+        "outcome": "matches",
+        "notes": "SSRP",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "respondents_us",
+        "claim_type": "other",
+        "claimed": 1086.0,
+        "reproduced": 1085.0,
+        "tolerance": 0.01,
+        "rel_err": 0.0009208103130755065,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "respondents_us",
+        "reproduced": 1085.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 10.86,
+        "abs_err": 1.0,
+        "rel_err": 0.0009208103130755065,
+        "margin": 0.09208103130755065,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "respondents_germany",
+      "ground_truth": {
+        "value": 1074.0,
+        "standard_error": null,
+        "unit": "respondents",
+        "claim_type": "other",
+        "location": "Study 1: Empirical Design (text)",
+        "context": "Number of German respondents in the conjoint experiment, as stated in the Study 1 design section.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 1074.0,
+        "outcome": "matches",
+        "notes": "SSRP",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "respondents_germany",
+        "claim_type": "other",
+        "claimed": 1074.0,
+        "reproduced": 1072.0,
+        "tolerance": 0.01,
+        "rel_err": 0.00186219739292365,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "respondents_germany",
+        "reproduced": 1072.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 10.74,
+        "abs_err": 2.0,
+        "rel_err": 0.00186219739292365,
+        "margin": 0.186219739292365,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "choice_tasks_us",
+      "ground_truth": {
+        "value": 18966.0,
+        "standard_error": null,
+        "unit": "choice tasks (profiles)",
+        "claim_type": "other",
+        "location": "Study 1: Empirical Design (text)",
+        "context": "Number of \"unique choice tasks\" the design section reports for the U.S. sample: the observations entering the U.S. AMCE estimation (one per migrant profile, two profiles per pairing).\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 18966.0,
+        "outcome": "matches",
+        "notes": "SSRP",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "choice_tasks_us",
+        "claim_type": "other",
+        "claimed": 18966.0,
+        "reproduced": 18952.0,
+        "tolerance": 0.01,
+        "rel_err": 0.0007381630285774544,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "choice_tasks_us",
+        "reproduced": 18952.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 189.66,
+        "abs_err": 14.0,
+        "rel_err": 0.0007381630285774544,
+        "margin": 0.07381630285774544,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "choice_tasks_germany",
+      "ground_truth": {
+        "value": 18862.0,
+        "standard_error": null,
+        "unit": "choice tasks (profiles)",
+        "claim_type": "other",
+        "location": "Study 1: Empirical Design (text)",
+        "context": "Number of \"unique choice tasks\" the design section reports for the German sample: the observations entering the German AMCE estimation (one per migrant profile, two profiles per pairing).\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 18862.0,
+        "outcome": "matches",
+        "notes": "SSRP",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "choice_tasks_germany",
+        "claim_type": "other",
+        "claimed": 18862.0,
+        "reproduced": 18826.0,
+        "tolerance": 0.01,
+        "rel_err": 0.0019085993001802565,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "choice_tasks_germany",
+        "reproduced": 18826.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 188.62,
+        "abs_err": 36.0,
+        "rel_err": 0.0019085993001802565,
+        "margin": 0.19085993001802565,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 12,
+    "row_passed": 12,
+    "recomputed_passed": 12,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "arias-2022-changing-tides-climate-migration",
+    "mode": "blind",
+    "reproducer": "claude-code",
+    "label": "claude-code",
+    "model": null,
+    "oracle": false,
+    "run": "2026-10-21-b",
+    "results_file": "claude-code-7papers-all-modes-2026-10-21.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/arias-2022-changing-tides-climate-migration/blind/claude-code/20261022T021417Z",
+    "run_dir": "benchmark/reproductions/arias-2022-changing-tides-climate-migration/blind/2026-10-21-b",
+    "date": "2026-10-22T02:13:30Z",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 12,
+    "final": 12,
+    "first_scored": 12,
+    "first_scored_index": 1,
+    "first_attempt": 0,
+    "n_refinements": 0,
+    "n_error_refinements": 0,
+    "n_claim_refinements": 0,
+    "n_executions": 2,
+    "n_files_stripped": 1,
+    "agrees_with_i4r": true,
+    "deviations_manifest": [
+      "Language x Origin interaction included in the AMCE regression to respect the design-file restriction (Language None never paired with Origin 'Another region'); the restriction is enforced in the German data but not in the US data. An additive specification gives reason-for-migration AMCEs within 0.001 of the main-specification ones (printed in stdout as a check).",
+      "Sample: Qualtrics preview responses (DistributionChannel = 'preview') dropped; profiles whose forced-choice question was unanswered dropped; respondents are respondents with at least one answered choice task. Duplicate psid values (2 US, 8 DE) were kept as separate respondents (clustered on ResponseId)."
+    ],
+    "deviations_stdout": [],
+    "notes": "Data: the two 'Climate Migration 2_ Conjoint' Qualtrics CSVs (USA, Germany). Reshaped F-k-j (attribute name, task k, position j) and F-k-p-j (level, profile p) to one row per profile; forced-choice outcome is force_choice for task 1 and Q184, Q186, ..., Q198 for tasks 2-9 (1 = Migrant 1, 2 = Migrant 2). German levels mapped to English. AMCEs come from OLS of the chosen indicator on all seven attributes (baselines from Table 1: Economic opportunity, None, Female, Unemployed, Atheist/Agnostic, Another region, None), with standard errors clustered by respondent (HC1). choice_tasks_* is the number of profiles that enter estimation (2 per answered pair). Only one exploratory run (attempt-1, no RESULT lines) came before the scored run, and no repairs were needed. The paper text states a few Table 2 effect sizes in its prose (read while studying the method); the specification was chosen before any estimate was computed and was not changed afterwards. Combined respondent count 1085 + 1072 = 2157; the abstract reports 2160 (the gap probably comes from preview responses being counted), but the specification was not adjusted toward it.",
+    "files_read_outside_mount": [],
+    "paper_text": "paper.blind.txt",
+    "complete": true,
+    "missing": []
+  }
+}

@@ -1,0 +1,230 @@
+OLS estimation, Dep. Var.: replacement_rateadj_minister
+Observations: 4,101
+Standard-errors: Clustered (COUNTRY_ID) 
+            Estimate Std. Error t value  Pr(>|t|)    
+(Intercept) 0.277212   0.011659 23.7762 < 2.2e-16 ***
+... 1 variable was removed because of collinearity (coupattempt_whogov +
+L_gdp_cap_pwt_ln + L_pop_pwt_ln | COUNTRY_ID + YEAR_DATA)
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.289416            
+OLS estimation, Dep. Var.: replacement_rateadj_minister
+Observations: 4,101
+Standard-errors: Clustered (COUNTRY_ID) 
+            Estimate Std. Error t value  Pr(>|t|)    
+(Intercept) 0.277212   0.011659 23.7762 < 2.2e-16 ***
+... 1 variable was removed because of collinearity (coupattempt_whogov +
+L_gdp_cap_pwt_ln + L_pop_pwt_ln + L_military_c + L_monarchy_c +
+L_party_c | COUNTRY_ID + YEAR_DATA)
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.289416            
+OLS estimation, Dep. Var.: replacement_rateadj_minister
+Observations: 4,101
+Standard-errors: Clustered (COUNTRY_ID) 
+            Estimate Std. Error t value  Pr(>|t|)    
+(Intercept) 0.277212   0.011659 23.7762 < 2.2e-16 ***
+... 1 variable was removed because of collinearity (coupattempt_whogov +
+L_gdp_cap_pwt_ln + L_pop_pwt_ln | leader_cab_id + YEAR_DATA)
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.289416            
+OLS estimation, Dep. Var.: replacement_rateadj_minister
+Observations: 4,101
+Standard-errors: Clustered (COUNTRY_ID) 
+            Estimate Std. Error t value  Pr(>|t|)    
+(Intercept) 0.277212   0.011659 23.7762 < 2.2e-16 ***
+... 1 variable was removed because of collinearity (coupattempt_whogov +
+L_gdp_cap_pwt_ln + L_pop_pwt_ln + L_military_c + L_monarchy_c +
+L_party_c | leader_cab_id + YEAR_DATA)
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.289416            
+coup levels: No coup attempt Coup attempt 
+[1] "0"                                                    
+[2] "Junior minister\nor other low-\nranking post"         
+[3] "low-ranking\nminister"                                
+[4] "Medium-ranking\nminister"                             
+[5] "Vice president,\ndeputy prime minister,\ntop minister"
+[6] "Prime minister/President\n(not leader)"               
+[7] "5"                                                    
+OLS estimation, Dep. Var.: purged_y1
+Observations: 90,020
+Fixed-effects: country_isocode: 115,  year: 51
+Standard-errors: Clustered (country_isocode) 
+                                  Estimate Std. Error   t value   Pr(>|t|)    
+experience_group2-3 years         0.002805   0.007302  0.384148 0.70158438    
+experience_group4-6 years         0.012597   0.009132  1.379466 0.17045116    
+experience_groupOver 6 years     -0.009663   0.009498 -1.017368 0.31113274    
+fca                               0.142112   0.041937  3.388675 0.00096507 ***
+gdp_cap_pwt_ln                   -0.024617   0.018686 -1.317378 0.19035373    
+pop_pwt_ln                       -0.139836   0.062576 -2.234663 0.02738894 *  
+experience_group2-3 years:fca    -0.050322   0.042042 -1.196955 0.23380712    
+experience_group4-6 years:fca    -0.098205   0.062337 -1.575387 0.11793822    
+experience_groupOver 6 years:fca -0.102939   0.051801 -1.987203 0.04929792 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.413254     Adj. R2: 0.123916
+                 Within R2: 0.002694
+OLS estimation, Dep. Var.: purged_y1
+Observations: 86,057
+Fixed-effects: country_isocode: 115,  year: 51
+Standard-errors: Clustered (country_isocode) 
+                                          Estimate Std. Error   t value
+party_groupNo party affiliation         0.03493414 0.01420217  2.459775
+party_groupFrom the leader's party     -0.00850066 0.01389628 -0.611722
+fca                                     0.17417549 0.05606910  3.106444
+gdp_cap_pwt_ln                         -0.02101456 0.01888178 -1.112954
+pop_pwt_ln                             -0.14081745 0.06259585 -2.249629
+experience                              0.00181159 0.00254047  0.713092
+I(I(experience^2))                     -0.00011809 0.00018131 -0.651303
+I(I(experience^3))                      0.00000187 0.00000350  0.534453
+party_groupNo party affiliation:fca    -0.06486466 0.07341975 -0.883477
+party_groupFrom the leader's party:fca -0.12583192 0.06051910 -2.079210
+                                       Pr(>|t|)    
+party_groupNo party affiliation        0.015404 *  
+party_groupFrom the leader's party     0.541940    
+fca                                    0.002390 ** 
+gdp_cap_pwt_ln                         0.268069    
+pop_pwt_ln                             0.026392 *  
+experience                             0.477246    
+I(I(experience^2))                     0.516161    
+I(I(experience^3))                     0.594069    
+party_groupNo party affiliation:fca    0.378838    
+party_groupFrom the leader's party:fca 0.039841 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.409843     Adj. R2: 0.123345
+                 Within R2: 0.002995
+OLS estimation, Dep. Var.: purged_y1
+Observations: 76,530
+Fixed-effects: country_isocode: 115,  year: 51
+Standard-errors: Clustered (country_isocode) 
+                                                  Estimate Std. Error   t value
+minister_typeMinister of Foreign Affairs       -0.00634831 0.00976380 -0.650188
+minister_typeMinister of Finance                0.02851080 0.01060050  2.689570
+minister_typeOther type of minister             0.05377323 0.00845120  6.362793
+minister_typeMinister of Natural Resources      0.03519254 0.01104801  3.185419
+fca                                             0.20249924 0.06598984  3.068643
+gdp_cap_pwt_ln                                 -0.03062618 0.01866244 -1.641059
+pop_pwt_ln                                     -0.15334208 0.06231075 -2.460925
+experience                                      0.00372977 0.00293138  1.272358
+I(I(experience^2))                             -0.00028678 0.00020930 -1.370176
+I(I(experience^3))                              0.00000685 0.00000388  1.768255
+minister_typeMinister of Foreign Affairs:fca   -0.03919965 0.06951136 -0.563932
+minister_typeMinister of Finance:fca           -0.08485490 0.06633309 -1.279224
+minister_typeOther type of minister:fca        -0.11717025 0.05807998 -2.017395
+minister_typeMinister of Natural Resources:fca -0.18320511 0.08259176 -2.218201
+                                                 Pr(>|t|)    
+minister_typeMinister of Foreign Affairs       5.1688e-01    
+minister_typeMinister of Finance               8.2287e-03 ** 
+minister_typeOther type of minister            4.2696e-09 ***
+minister_typeMinister of Natural Resources     1.8647e-03 ** 
+fca                                            2.6873e-03 ** 
+gdp_cap_pwt_ln                                 1.0354e-01    
+pop_pwt_ln                                     1.5357e-02 *  
+experience                                     2.0584e-01    
+I(I(experience^2))                             1.7332e-01    
+I(I(experience^3))                             7.9693e-02 .  
+minister_typeMinister of Foreign Affairs:fca   5.7391e-01    
+minister_typeMinister of Finance:fca           2.0342e-01    
+minister_typeOther type of minister:fca        4.6003e-02 *  
+minister_typeMinister of Natural Resources:fca 2.8523e-02 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.41277     Adj. R2: 0.129822
+                Within R2: 0.003793
+OLS estimation, Dep. Var.: purged_y1
+Observations: 90,014
+Fixed-effects: country_isocode: 115,  year: 51
+Standard-errors: Clustered (country_isocode) 
+                                                                               Estimate
+importance_factorJunior minister\nor other low-\nranking post              -0.005096417
+importance_factorlow-ranking\nminister                                      0.027407757
+importance_factorMedium-ranking\nminister                                   0.012713312
+importance_factorVice president,\ndeputy prime minister,\ntop minister     -0.020186605
+fca                                                                         0.370184683
+gdp_cap_pwt_ln                                                             -0.025194156
+pop_pwt_ln                                                                 -0.141961213
+experience                                                                 -0.000351367
+I(I(experience^2))                                                         -0.000018290
+I(I(experience^3))                                                          0.000000656
+importance_factorJunior minister\nor other low-\nranking post:fca          -0.259235700
+importance_factorlow-ranking\nminister:fca                                 -0.264600522
+importance_factorMedium-ranking\nminister:fca                              -0.285601669
+importance_factorVice president,\ndeputy prime minister,\ntop minister:fca -0.256573364
+                                                                           Std. Error
+importance_factorJunior minister\nor other low-\nranking post              0.01476773
+importance_factorlow-ranking\nminister                                     0.01421262
+importance_factorMedium-ranking\nminister                                  0.01320866
+importance_factorVice president,\ndeputy prime minister,\ntop minister     0.01268213
+fca                                                                        0.09341618
+gdp_cap_pwt_ln                                                             0.01875319
+pop_pwt_ln                                                                 0.06274537
+experience                                                                 0.00256446
+I(I(experience^2))                                                         0.00018311
+I(I(experience^3))                                                         0.00000357
+importance_factorJunior minister\nor other low-\nranking post:fca          0.08683454
+importance_factorlow-ranking\nminister:fca                                 0.11990864
+importance_factorMedium-ranking\nminister:fca                              0.09500946
+importance_factorVice president,\ndeputy prime minister,\ntop minister:fca 0.09460314
+                                                                             t value
+importance_factorJunior minister\nor other low-\nranking post              -0.345105
+importance_factorlow-ranking\nminister                                      1.928410
+importance_factorMedium-ranking\nminister                                   0.962498
+importance_factorVice president,\ndeputy prime minister,\ntop minister     -1.591736
+fca                                                                         3.962747
+gdp_cap_pwt_ln                                                             -1.343460
+pop_pwt_ln                                                                 -2.262497
+experience                                                                 -0.137014
+I(I(experience^2))                                                         -0.099886
+I(I(experience^3))                                                          0.183933
+importance_factorJunior minister\nor other low-\nranking post:fca          -2.985399
+importance_factorlow-ranking\nminister:fca                                 -2.206684
+importance_factorMedium-ranking\nminister:fca                              -3.006034
+importance_factorVice president,\ndeputy prime minister,\ntop minister:fca -2.712102
+                                                                             Pr(>|t|)
+importance_factorJunior minister\nor other low-\nranking post              0.73065134
+importance_factorlow-ranking\nminister                                     0.05629093
+importance_factorMedium-ranking\nminister                                  0.33783670
+importance_factorVice president,\ndeputy prime minister,\ntop minister     0.11421329
+fca                                                                        0.00012956
+gdp_cap_pwt_ln                                                             0.18179131
+pop_pwt_ln                                                                 0.02556115
+experience                                                                 0.89126150
+I(I(experience^2))                                                         0.92061036
+I(I(experience^3))                                                         0.85439242
+importance_factorJunior minister\nor other low-\nranking post:fca          0.00346654
+importance_factorlow-ranking\nminister:fca                                 0.02934033
+importance_factorMedium-ranking\nminister:fca                              0.00325599
+importance_factorVice president,\ndeputy prime minister,\ntop minister:fca 0.00772171
+                                                                              
+importance_factorJunior minister\nor other low-\nranking post                 
+importance_factorlow-ranking\nminister                                     .  
+importance_factorMedium-ranking\nminister                                     
+importance_factorVice president,\ndeputy prime minister,\ntop minister        
+fca                                                                        ***
+gdp_cap_pwt_ln                                                                
+pop_pwt_ln                                                                 *  
+experience                                                                    
+I(I(experience^2))                                                            
+I(I(experience^3))                                                            
+importance_factorJunior minister\nor other low-\nranking post:fca          ** 
+importance_factorlow-ranking\nminister:fca                                 *  
+importance_factorMedium-ranking\nminister:fca                              ** 
+importance_factorVice president,\ndeputy prime minister,\ntop minister:fca ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.413095     Adj. R2: 0.124532
+                 Within R2: 0.003468
+RESULT:failed_coup_base_country_fe=NA
+RESULT:failed_coup_main_country_fe=NA
+RESULT:failed_coup_base_leader_fe=NA
+RESULT:failed_coup_main_leader_fe=NA
+RESULT:failed_coup_experience_model=0.142112
+RESULT:failed_coup_x_over_6_years_experience=-0.102939
+RESULT:failed_coup_affiliation_model=0.174175
+RESULT:failed_coup_x_leaders_party=-0.125832
+RESULT:failed_coup_responsibility_model=0.202499
+RESULT:failed_coup_x_natural_resources=-0.183205
+RESULT:failed_coup_importance_model=0.370185

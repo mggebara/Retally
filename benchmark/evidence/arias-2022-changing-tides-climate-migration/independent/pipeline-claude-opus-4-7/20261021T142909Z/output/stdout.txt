@@ -1,0 +1,88 @@
+DEVIATION: The AMCE estimates do not match the paper despite correct attribute coding. The core issue appears to be that the choice variable detection is picking up wrong columns, inverting or scrambling the chosen indicator. Switching to more careful choice detection: for conjoint tasks, the choice should be the question asked after each pair, and we need to look at the specific pattern.
+US rows after finished filter: 1033 
+DE rows after finished filter: 1029 
+US mean chosen by reason:
+   reason_std  chosen.mean     chosen.n
+1     drought    0.4964808 3694.0000000
+2    economic    0.5005328 3754.0000000
+3    flooding    0.4961549 3771.0000000
+4 persecution    0.5136854 3617.0000000
+5   wildfires    0.4935863 3742.0000000
+DE mean chosen by reason:
+   reason_std  chosen.mean     chosen.n
+1     drought    0.5151272 3735.0000000
+2    economic    0.4908553 3718.0000000
+3    flooding    0.5015983 3754.0000000
+4 persecution    0.4972527 3640.0000000
+5   wildfires    0.4949440 3659.0000000
+US choice distribution (chosen==1 per task):
+
+   1 
+9289 
+US rows after prep: 18578 
+DE rows after prep: 18506 
+OLS estimation, Dep. Var.: chosen
+Observations: 12,058
+Standard-errors: Clustered (ResponseId) 
+                        Estimate Std. Error   t value  Pr(>|t|)    
+(Intercept)             0.507442   0.020180 25.145538 < 2.2e-16 ***
+reason_stddrought      -0.003660   0.014644 -0.249959  0.802669    
+reason_stdflooding     -0.006481   0.014210 -0.456091  0.648421    
+reason_stdwildfires    -0.006366   0.014378 -0.442742  0.658045    
+reason_stdpersecution   0.016164   0.014529  1.112532  0.266169    
+vulnerabilityno_family  0.004467   0.014774  0.302353  0.762444    
+vulnerabilitynone      -0.008098   0.013502 -0.599762  0.548796    
+vulnerabilityptsd       0.002177   0.014297  0.152284  0.878993    
+languagefluent         -0.011222   0.012882 -0.871201  0.383847    
+languagenone           -0.017859   0.012435 -1.436234  0.151239    
+gendermale              0.004714   0.008906  0.529307  0.596707    
+originethiopia          0.007767   0.013900  0.558790  0.576426    
+origininternal          0.000313   0.014252  0.021971  0.982476    
+originmyanmar           0.006662   0.014118  0.471910  0.637091    
+originukraine           0.005551   0.014332  0.387316  0.698602    
+religionchristian      -0.020961   0.011239 -1.865119  0.062448 .  
+religionmuslim         -0.004955   0.011798 -0.419939  0.674618    
+occupationdoctor        0.009046   0.011066  0.817503  0.413830    
+occupationteacher       0.012046   0.010789  1.116489  0.264473    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.499688   Adj. R2: -2.517e-4
+OLS estimation, Dep. Var.: chosen
+Observations: 13,953
+Standard-errors: Clustered (ResponseId) 
+                                  Estimate Std. Error   t value  Pr(>|t|)    
+(Intercept)                       0.499452   0.019022 26.256058 < 2.2e-16 ***
+reason_stddrought                 0.019499   0.013869  1.405987  0.160030    
+reason_stdflooding                0.014158   0.013563  1.043819  0.296815    
+reason_stdwildfires              -0.003313   0.013551 -0.244511  0.806884    
+reason_stdpersecution             0.006189   0.013566  0.456224  0.648325    
+vulnerabilityno_family           -0.000183   0.014790 -0.012340  0.990157    
+vulnerabilitynone                 0.017015   0.013679  1.243888  0.213824    
+vulnerabilityphysical_disability -0.010459   0.015023 -0.696191  0.486466    
+vulnerabilityptsd                 0.014124   0.014414  0.979868  0.327382    
+languagefluent                    0.010274   0.010568  0.972231  0.331164    
+languagenone                     -0.025823   0.011500 -2.245482  0.024949 *  
+gendermale                       -0.002859   0.008495 -0.336613  0.736477    
+originethiopia                   -0.024338   0.013464 -1.807651  0.070953 .  
+origininternal                   -0.021025   0.014588 -1.441220  0.149827    
+originmyanmar                     0.011293   0.012887  0.876334  0.381053    
+originukraine                    -0.003810   0.013035 -0.292331  0.770093    
+religionchristian                 0.009872   0.010292  0.959280  0.337643    
+religionmuslim                    0.002897   0.010342  0.280131  0.779434    
+occupationdoctor                 -0.000327   0.010591 -0.030921  0.975339    
+occupationteacher                -0.011158   0.010328 -1.080377  0.280228    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.499518   Adj. R2: 5.661e-4
+RESULT:amce_drought_us=-0.0037
+RESULT:amce_flooding_us=-0.0065
+RESULT:amce_wildfires_us=-0.0064
+RESULT:amce_persecution_us=0.0162
+RESULT:amce_drought_germany=0.0195
+RESULT:amce_flooding_germany=0.0142
+RESULT:amce_wildfires_germany=-0.0033
+RESULT:amce_persecution_germany=0.0062
+RESULT:respondents_us=1033
+RESULT:respondents_germany=1029
+RESULT:choice_tasks_us=18578
+RESULT:choice_tasks_germany=18506

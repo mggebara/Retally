@@ -1,0 +1,96 @@
+N raw: 1292 
+Incentive table:
+   
+      0   1   2   3   5   7 commit
+  1 106   0 116   1   1 126      0
+  2 177   1 189   1  74  86      0
+  3 144   0   0   0   2 140    128
+flag_exclude_exog: 12  flag_low_wtp: 32 
+Excluded endogenous total: 44   remaining: 1248 
+Table 3 sample N: 1126  by wave:
+
+  1   2   3 
+340 509 277 
+                            t3c1             t3c2             t3c3
+Dependent Var.:              bcp              bcp              bcp
+                                                                  
+basic           -0.2736 (0.5530) -0.3240 (0.5573) -0.2251 (0.5496)
+enhanced         0.1563 (0.5070)  0.0775 (0.4970)  0.1334 (0.5087)
+z_goal                           0.6833* (0.2775)                 
+z_act                                             0.4978* (0.2097)
+Fixed-Effects:  ---------------- ---------------- ----------------
+wave_n                       Yes              Yes              Yes
+_______________ ________________ ________________ ________________
+S.E. type       Heterosked.-rob. Heterosked.-rob. Heterosked.-rob.
+Observations               1,126            1,126            1,126
+R2                       0.00400          0.01291          0.00875
+Within R2                0.00017          0.00911          0.00493
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Cand q169: nuniq=2 nonmiss12=1.00 nonmiss3=0.00 text=[Chose >=8 visits contract ]
+Cand q170: nuniq=2 nonmiss12=1.00 nonmiss3=0.00 text=[Chose <8 visits contract ]
+Cand q295: nuniq=2 nonmiss12=1.00 nonmiss3=0.00 text=[Chose >=16 visits contract ]
+Cand q296: nuniq=2 nonmiss12=1.00 nonmiss3=0.00 text=[Chose <16 visits contract ]
+Cand q137: nuniq=7 nonmiss12=1.00 nonmiss3=0.00 text=[Numeracy check question 1 (correct answer 100) ]
+Cand q138: nuniq=11 nonmiss12=0.47 nonmiss3=0.00 text=[Numeracy check question 2 (correct answer 400,000) ]
+     v thr  dir      rate
+1 q169   8 more 0.3568905
+2 q170   8 more 0.6584217
+3 q295  16 more 0.6760895
+4 q296  16 more 0.7255595
+More-commitment vars: 8=q169,12=chose_commit12,16=q295 
+Contract 8 (q169): take-up waves 1-2 = 0.643
+Contract 12 (chose_commit12): take-up waves 1-2 = 0.498
+Contract 16 (q295): take-up waves 1-2 = 0.324
+Table 4 N: 2824 
+   
+      8  12  16
+  1 340 340 340
+  2 509 509 509
+  3   0 277   0
+                            t4c1             t4c2              t4c3
+Dependent Var.:             take             take              take
+                                                                   
+basic            0.0088 (0.0438)  0.0097 (0.0438)   0.0059 (0.0437)
+enhanced        -0.0146 (0.0329) -0.0152 (0.0329)  -0.0188 (0.0329)
+z_bcp                            0.0242* (0.0105)                  
+z_goal                                            0.0392** (0.0129)
+z_act                                                              
+Fixed-Effects:  ---------------- ---------------- -----------------
+wave_n                       Yes              Yes               Yes
+thr                          Yes              Yes               Yes
+_______________ ________________ ________________ _________________
+S.E.: Clustered           by: id           by: id            by: id
+Observations               2,824            2,824             2,824
+R2                       0.06405          0.06657           0.07018
+Within R2                0.00016          0.00285           0.00671
+
+                               t4c4
+Dependent Var.:                take
+                                   
+basic               0.0044 (0.0437)
+enhanced           -0.0150 (0.0326)
+z_bcp                              
+z_goal                             
+z_act           -0.0451*** (0.0134)
+Fixed-Effects:  -------------------
+wave_n                          Yes
+thr                             Yes
+_______________ ___________________
+S.E.: Clustered              by: id
+Observations                  2,824
+R2                          0.07196
+Within R2                   0.00861
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RESULT:bcp_basic_info_treatment_col1=-0.273601
+RESULT:bcp_enhanced_info_treatment_col1=0.156288
+RESULT:bcp_goal_minus_expected_attendance_col2=0.683304
+RESULT:bcp_actual_minus_expected_attendance_col3=0.497777
+RESULT:bcp_regression_observations=1126.000000
+RESULT:takeup_more_basic_info_treatment_col1=0.008781
+RESULT:takeup_more_enhanced_info_treatment_col1=-0.014576
+RESULT:takeup_more_behavior_change_premium_col2=0.024204
+RESULT:takeup_more_goal_minus_expected_attendance_col3=0.039213
+RESULT:takeup_more_actual_minus_expected_attendance_col4=-0.045058
+RESULT:takeup_more_regression_observations=2824.000000

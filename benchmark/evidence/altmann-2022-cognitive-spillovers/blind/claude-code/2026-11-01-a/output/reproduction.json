@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "altmann-2022-cognitive-spillovers",
+  "mode": "blind",
+  "run_id": "2026-11-01-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 1, "kind": "error"}
+  ],
+  "deviations": [
+    "Paper text supplied is an earlier working-paper version without the regression tables or the online experiment; specifications follow the task's quantity descriptions.",
+    "Controls: age, female, field of study (subject_cat), A-level GPA quartile indicators with a missing-GPA category (q_abitur_grade_cat, keeps N constant), last math grade quartile indicators (q_math_grade_cat), background- and decision-task ability from the practice parts, perceived multitasking (5-point Likert item perc_multitasking_1), payoff-scheme (10/20/40) and wave (original_lab) indicators.",
+    "Online controls: age, gender (3-level factor), screen size as browser window height and width."
+  ],
+  "notes": "Lab sample = Scarce condition (Treatment_Incentives 10/20/40) in Baseline, Directed Attention and Forced Choice: 12160 subject-rounds, 608 subjects. OLS via fixest::feols with subject-clustered SEs. Outcomes: summation_correct (choice quality), default_followed (default adherence), load_correct (background task), payoff_share (Table 4). Online: memory on Treatment_intervention, 5472 obs, 608 subjects, clustered by subject. attempt-1 was exploratory (variable inspection, no RESULT lines); attempt-2 crashed in a print statement before RESULT lines and was fixed without changing the specification.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T04:20:50Z",
+  "finished_at": "2026-11-02T04:40:00Z"
+}

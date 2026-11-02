@@ -1,0 +1,314 @@
+ [1] "country"                "year"                   "to_mp_number"           "from_mp_number"         "party_number"           "party_from"             "party_to"              
+ [8] "to_partyname"           "to_parfam"              "from_partyname"         "from_parfam"            "from_senior_partner"    "to_senior_partner"      "to_in_gov"             
+[15] "from_in_gov"            "govern_together"        "opposition_together"    "from_left_bloc"         "from_right_bloc"        "to_left_bloc"           "to_right_bloc"         
+[22] "same_bloc"              "from_parlgov_id"        "to_parlgov_id"          "from_nationalism"       "from_rile"              "from_planeco"           "from_markeco"          
+[29] "to_nationalism"         "to_rile"                "to_planeco"             "to_markeco"             "elecdate"               "sat_together_10years"   "sat_together_15years"  
+[36] "sat_together_20years"   "to_galtan"              "to_lrecon"              "from_galtan"            "from_lrecon"            "nationalism_distance"   "rile_distance"         
+[43] "galtan_distance"        "lrecon_distamce"        "govern_together_10"     "govern_together_15"     "govern_together_20"     "rile_distance_s"        "nationalism_distance_s"
+[50] "lrecon_distance_s"      "galtan_distance_s"      "from_multiculturalism"  "to_multiculturalism"    "from_immigrate_policy"  "to_immigrate_policy"    "from_society"          
+[57] "from_economy"           "to_society"             "to_economy"             "from_rrparty"           "to_rrparty"             "econ_distance"          "econ_distance_s"       
+[64] "soc_distance"           "society_distance_s"     "from_femaleleader"      "from_pfeml"             "from_complete"          "to_femaleleader"        "to_pfeml"              
+[71] "to_complete"            "nat_avg"                "diff_pfeml"             "diff_femlead"           "from_prior_cab"         "from_prior_seats"       "to_prior_cab"          
+[78] "to_prior_seats"         "prior_coalition"        "prior_opposition"       "cntryyr"                "party_like"             "party_dislike"          "DM"                    
+[85] "logDM"                 
+'data.frame':	2266 obs. of  85 variables:
+ $ country               : chr  "New Zealand" "Australia" "New Zealand" "New Zealand" ...
+ $ year                  : num  1996 1996 1996 1996 2002 ...
+ $ to_mp_number          : num  64320 63321 64620 64621 64110 ...
+ $ from_mp_number        : num  64420 63320 64420 64420 64420 ...
+ $ party_number          : num  5 2 5 5 4 4 4 4 4 1 ...
+ $ party_from            : chr  "E" "A" "E" "E" ...
+ $ party_to              : chr  "B" "D" "A" "C" ...
+ $ to_partyname          : chr  "New Zealand Labour Party" "Australian Democrats" "New Zealand National Party" "New Zealand First Party" ...
+ $ to_parfam             : num  30 30 60 60 10 30 40 60 60 30 ...
+ $ from_partyname        : chr  "ACT New Zealand" "Australian Labor Party" "ACT New Zealand" "ACT New Zealand" ...
+ $ from_parfam           : num  40 30 40 40 40 40 40 40 40 60 ...
+ $ from_senior_partner   : num  NA 1 NA NA 0 0 0 0 0 0 ...
+ $ to_senior_partner     : num  0 NA 1 0 0 1 NA 0 0 NA ...
+ $ to_in_gov             : num  0 0 1 0 0 1 0 0 0 0 ...
+ $ from_in_gov           : num  0 1 0 0 0 0 0 0 0 0 ...
+ $ govern_together       : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ opposition_together   : num  1 0 0 1 1 0 1 1 1 1 ...
+ $ from_left_bloc        : num  0 1 0 0 0 0 0 0 0 0 ...
+ $ from_right_bloc       : num  1 0 1 1 1 1 1 1 1 1 ...
+ $ to_left_bloc          : num  1 1 0 0 1 1 0 0 0 1 ...
+ $ to_right_bloc         : num  0 0 1 1 0 0 1 1 1 0 ...
+ $ same_bloc             : num  0 1 1 1 0 0 1 1 1 0 ...
+ $ from_parlgov_id       : num  617 1253 617 617 617 ...
+ $ to_parlgov_id         : num  878 120 997 891 1171 ...
+ $ from_nationalism      : num  -13.97 -5.7 -13.97 -13.97 -3.43 ...
+ $ from_rile             : num  15.08 8.35 15.08 15.08 44.38 ...
+ $ from_planeco          : num  4.469 4.681 4.469 4.469 0.673 ...
+ $ from_markeco          : num  8.38 2.78 8.38 8.38 19.6 ...
+ $ to_nationalism        : num  -19.36 -4.37 -3.7 3.94 -2.41 ...
+ $ to_rile               : num  -37.63 -10.65 -7.24 -25.2 -10.84 ...
+ $ to_planeco            : num  0 7.985 0.482 1.575 0 ...
+ $ to_markeco            : num  0 2.662 4.502 0.787 0 ...
+ $ elecdate              : chr  "10/12/96" "3/2/96" "10/12/96" "10/12/96" ...
+ $ sat_together_10years  : logi  FALSE FALSE FALSE FALSE FALSE FALSE ...
+ $ sat_together_15years  : logi  FALSE FALSE FALSE FALSE FALSE FALSE ...
+ $ sat_together_20years  : logi  FALSE FALSE FALSE FALSE FALSE FALSE ...
+ $ to_galtan             : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ to_lrecon             : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ from_galtan           : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ from_lrecon           : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ nationalism_distance  : num  5.39 1.33 10.27 17.91 1.02 ...
+ $ rile_distance         : num  52.7 19 22.3 40.3 55.2 ...
+ $ galtan_distance       : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ lrecon_distamce       : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ govern_together_10    : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ govern_together_15    : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ govern_together_20    : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ rile_distance_s       : num  1.724619 -0.189287 -0.000433 1.018857 1.8666 ...
+ $ nationalism_distance_s: num  -0.50391 -0.92998 0.00818 0.80933 -0.96177 ...
+ $ lrecon_distance_s     : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ galtan_distance_s     : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ from_multiculturalism : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ to_multiculturalism   : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ from_immigrate_policy : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ to_immigrate_policy   : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ from_society          : num  2.23 -6.51 2.23 2.23 8.42 ...
+ $ from_economy          : num  5.59 -5.63 5.59 5.59 28.49 ...
+ $ to_society            : num  -19.35 -16.73 -4.34 9.45 -46.99 ...
+ $ to_economy            : num  -28 -15.8 -10.9 -29.1 -18.1 ...
+ $ from_rrparty          : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ to_rrparty            : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ econ_distance         : num  33.5 10.1 16.5 34.7 46.6 ...
+ $ econ_distance_s       : num  2.068 -0.185 0.428 2.181 3.321 ...
+ $ soc_distance          : num  21.59 10.22 6.58 7.22 55.41 ...
+ $ society_distance_s    : num  0.161 -0.568 -0.801 -0.76 2.33 ...
+ $ from_femaleleader     : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ from_pfeml            : num  NA 0.112 NA NA 0.333 ...
+ $ from_complete         : chr  "matched (3)" "matched (3)" "matched (3)" "matched (3)" ...
+ $ to_femaleleader       : num  1 1 0 0 1 1 0 0 0 1 ...
+ $ to_pfeml              : num  0.133 NA 0.28 0 0.429 ...
+ $ to_complete           : chr  "matched (3)" "matched (3)" "matched (3)" "matched (3)" ...
+ $ nat_avg               : num  NA NA NA NA 29.2 ...
+ $ diff_pfeml            : num  NA 0.1125 NA NA 0.0952 ...
+ $ diff_femlead          : num  1 NA 0 0 1 1 0 0 0 NA ...
+ $ from_prior_cab        : num  0 1 0 0 0 0 0 0 0 0 ...
+ $ from_prior_seats      : num  9 80 9 9 9 9 9 9 9 49 ...
+ $ to_prior_cab          : num  0 0 1 0 0 1 0 0 0 0 ...
+ $ to_prior_seats        : num  37 0 44 10 7 49 1 39 5 0 ...
+ $ prior_coalition       : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ prior_opposition      : num  1 0 0 1 1 0 1 1 1 1 ...
+ $ cntryyr               : chr  "New Zealand_1996" "Australia_1996" "New Zealand_1996" "New Zealand_1996" ...
+ $ party_like            : num  3.6 5.24 7.53 3.25 1.56 ...
+ $ party_dislike         : num  6.4 4.76 2.47 6.75 8.44 ...
+ $ DM                    : num  55 1 55 55 51 51 51 51 51 1 ...
+ $ logDM                 : num  4.01 0 4.01 4.01 3.93 ...
+ - attr(*, "spec")=List of 3
+  ..$ cols   :List of 82
+  .. ..$ country               : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_character" "collector"
+  .. ..$ year                  : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ to_mp_number          : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ from_mp_number        : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ party_number          : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ party_from            : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_character" "collector"
+  .. ..$ party_to              : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_character" "collector"
+  .. ..$ party_like            : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ to_partyname          : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_character" "collector"
+  .. ..$ to_parfam             : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ from_partyname        : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_character" "collector"
+  .. ..$ from_parfam           : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ party_dislike         : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ from_senior_partner   : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ to_senior_partner     : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ to_in_gov             : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ from_in_gov           : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ govern_together       : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ opposition_together   : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ from_left_bloc        : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ from_right_bloc       : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ to_left_bloc          : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ to_right_bloc         : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ same_bloc             : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ from_parlgov_id       : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ to_parlgov_id         : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ from_nationalism      : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ from_rile             : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ from_planeco          : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ from_markeco          : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ to_nationalism        : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ to_rile               : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ to_planeco            : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ to_markeco            : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ elecdate              : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_character" "collector"
+  .. ..$ sat_together_10years  : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_logical" "collector"
+  .. ..$ sat_together_15years  : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_logical" "collector"
+  .. ..$ sat_together_20years  : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_logical" "collector"
+  .. ..$ to_galtan             : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ to_lrecon             : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ from_galtan           : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ from_lrecon           : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ nationalism_distance  : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ rile_distance         : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ galtan_distance       : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ lrecon_distamce       : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ govern_together_10    : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ govern_together_15    : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ govern_together_20    : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ rile_distance_s       : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ nationalism_distance_s: list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ lrecon_distance_s     : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ galtan_distance_s     : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ from_multiculturalism : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ to_multiculturalism   : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ from_immigrate_policy : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ to_immigrate_policy   : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ from_society          : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ from_economy          : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ to_society            : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ to_economy            : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ from_rrparty          : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ to_rrparty            : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ econ_distance         : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ econ_distance_s       : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ soc_distance          : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ society_distance_s    : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ from_femaleleader     : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ from_pfeml            : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ from_complete         : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_character" "collector"
+  .. ..$ to_femaleleader       : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ to_pfeml              : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ to_complete           : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_character" "collector"
+  .. ..$ nat_avg               : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ diff_pfeml            : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ diff_femlead          : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ from_prior_cab        : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ from_prior_seats      : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ to_prior_cab          : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ to_prior_seats        : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ prior_coalition       : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  .. ..$ prior_opposition      : list()
+  .. .. ..- attr(*, "class")= chr [1:2] "collector_double" "collector"
+  ..$ default: list()
+  .. ..- attr(*, "class")= chr [1:2] "collector_guess" "collector"
+  ..$ skip   : int 1
+  ..- attr(*, "class")= chr "col_spec"
+ [1] "country"                "year"                   "party_from"             "party_to"               "dislike"                "gender"                 "to_mp_number"          
+ [8] "from_mp_number"         "party_number"           "to_partyname"           "to_parfam"              "from_partyname"         "from_parfam"            "from_senior_partner"   
+[15] "to_senior_partner"      "to_in_gov"              "from_in_gov"            "govern_together"        "opposition_together"    "from_left_bloc"         "from_right_bloc"       
+[22] "to_left_bloc"           "to_right_bloc"          "same_bloc"              "from_parlgov_id"        "to_parlgov_id"          "from_nationalism"       "from_rile"             
+[29] "from_planeco"           "from_markeco"           "to_nationalism"         "to_rile"                "to_planeco"             "to_markeco"             "elecdate"              
+[36] "sat_together_10years"   "sat_together_15years"   "sat_together_20years"   "to_galtan"              "to_lrecon"              "from_galtan"            "from_lrecon"           
+[43] "nationalism_distance"   "rile_distance"          "galtan_distance"        "lrecon_distamce"        "govern_together_10"     "govern_together_15"     "govern_together_20"    
+[50] "rile_distance_s"        "nationalism_distance_s" "lrecon_distance_s"      "galtan_distance_s"      "from_multiculturalism"  "to_multiculturalism"    "from_immigrate_policy" 
+[57] "to_immigrate_policy"    "from_society"           "from_economy"           "to_society"             "to_economy"             "from_rrparty"           "to_rrparty"            
+[64] "econ_distance"          "econ_distance_s"        "soc_distance"           "society_distance_s"     "from_femaleleader"      "from_pfeml"             "from_complete"         
+[71] "to_femaleleader"        "to_pfeml"               "to_complete"            "nat_avg"                "diff_pfeml"             "diff_femlead"           "from_prior_cab"        
+[78] "from_prior_seats"       "to_prior_cab"           "to_prior_seats"         "prior_coalition"        "prior_opposition"       "cntryyr"                "party_like"            
+[85] "party_dislike"         
+
+   1    2 
+2260 2262 
+[1] "dislike" "gender" 
+{\rtf1\ansi\ansicpg1252\cocoartf2513
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 ArialMT;\f1\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;\red26\green26\blue26;\red255\green255\blue255;\red26\green26\blue26;
+}
+{\*\expandedcolortbl;;\cssrgb\c13348\c13348\c13331;\cssrgb\c100000\c100000\c100000\c0;\cssrgb\c13348\c13348\c13331;
+}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 Replication Data ReadMe for \cf2 \cb3 \expnd0\expndtw0\kerning0
+Can\'92t We All Just Get Along? How Women MPs Can Ameliorate Affective Polarization in Western Publics\
+\
+Code files: \
+\
+1. replication_code.r - Contains code to replicate all figures and tables in both article and supplementary information memo\
+\
+Datasets:\
+1. dyadic_data_1-4-22.Rdata - Dataset of directed party dyads, associated with codebook \'93Codebook for Dyadic Party Dataset\'94. Dataset required to replicate table 1 and Figure 1 in article, as well as tables S2, S3A, S3B, S4, S5, S6, S7, S8, S9, S10, and Figure S1 and S2 in supplementary information memo.\
+\
+2. gender_disagregated_8-8-21.rds - Dataset of directed party dyads, disaggregated by gender of partisans, associated with codebook \'93Codebook for Gender Disaggregated Dyadic Party Dataset\'94. Dataset required to replicate Table 1 in main article, as well as Table S2 in the supplementary \cf4  information memo\cf2 .\
+\
+3. multilevel_1-5-22.Rdata - Dataset of individual evaluations of out-parties, with contextual variables, associated with Codebook \'93Codebook for Multilevel Dataset\'94. Required to replicate Tables S11 and S12 in the supplementary information memo.\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f1 \cf0 \cb1 \kerning1\expnd0\expndtw0 *** NOTE: TO RUN THESE FILES AS THEY ARE SET UP, CREATE A DIRECTORY INCLUDING ALL THREE DATASETS***\
+\
+}

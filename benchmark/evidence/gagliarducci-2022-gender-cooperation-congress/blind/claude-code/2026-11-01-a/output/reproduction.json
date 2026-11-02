@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "gagliarducci-2022-gender-cooperation-congress",
+  "mode": "blind",
+  "run_id": "2026-11-01-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "RD bandwidths: used the bandwidths stated in the task context for these rows (13 pp for Republican number of cosponsors, 24 pp for Democratic percent opposite-party) rather than my own rdbwselect (mserd, nn vce) output, which gave 17.8 and 16.5; uniform kernel (linear regression within the bandwidth, separate slopes each side).",
+    "Propensity scores estimated by logit at the race (sponsor-Congress) level, ATE inverse-probability weights (1/p treated, 1/(1-p) controls), no trimming. Full-sample PS logits include Congress dummies; the within-bandwidth RD PS logit (district characteristics only) does not, because the sample is small (107 races).",
+    "Margin of victory of the elected candidate = |MV1_democrat|. Log population density = lnpop - lnarea. Macro areas = 4 regions from ICPSR state codes (3 dummies). Occupation dummies occ1-occ5 (occ0 unknown and occ6 misc as base). Committee leader = chair or ranking member (comc|comr). Rookie = tenure 1. Total bills sponsored counted per sponsor-Congress in the bill file. Party dummy (Democrat) only in pooled regressions.",
+    "Percent opposite-party cosponsors: the dataset's pct_cosponsors_opposite x 100 (missing for bills with zero cosponsors, which therefore drop). Minor topic and Congress absorbed as fixed effects with singleton removal (mimicking reghdfe); 33 committee-of-referral dummies as regressors; listwise deletion on covariates. SEs clustered by sponsor-Congress."
+  ],
+  "notes": "Data: AnalysisData/bills_analysis_101-111_replication.dta only. Attempt-1 was an exploratory variable inventory (no RESULT lines). The final run is the first and only scored run; no repairs, no tuning. Outcome-regression controls for PS/RD-IPW columns: Congress FE + committee dummies + minor-topic FE; RD column 2 has Congress FE only. Sample: public bills of sponsors with nonmissing gender; party subsamples by sponsor_party 100/200 (independents only in pooled sample).",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T04:22:05Z",
+  "finished_at": "2026-11-02T04:24:44Z"
+}

@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "entry_id": "gagliarducci-2022-gender-cooperation-congress",
+  "mode": "seeded",
+  "run_id": "2026-10-22-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [
+    "rdbwselect_2014 (CCT 2014 bandwidth selector) is not available in the installed rdrobust 4.1.1; it was re-implemented in R from the shipped rdbwselect_2014.ado (p=1, q=2, uniform kernel, nearest-neighbour variance with 3 matches, regularisation on). Stata's compiled helper routines (.mo) could not be read, so the kernel weights and NN variance follow the CCT 2014 formulas, with ties in the matching handled as Stata's minindex() does (all observations at the 4 smallest distinct distances). The bandwidths obtained (e.g. 13.05 for Republicans/cosponsors, 24.53 for Democrats/percent opposite) agree with the paper's rounded values for most rows, and the RD samples match the paper's bill and sponsor counts (1,227/100 and 1,978/167).",
+    "Stata probit perfect-prediction handling was mimicked: a regressor x for which 'x != 0' perfectly predicts the outcome is dropped along with those observations, and their propensity scores are set to missing (Stata predict default), so those observations drop out of the weighted regressions. The base level of i.v2 is never checked. For Republicans in column 5 this drops black and occ3, which reproduces the paper's 23,818 bills and 1,953 sponsors.",
+    "Congress (v2) and minor-topic dummies are absorbed as fixed effects in fixest (fixef.rm='none'). The female-sponsor coefficient is identical to Stata reg with i.v2 i.minor; clustered SEs may differ slightly through small-sample corrections."
+  ],
+  "notes": "Translated Table5.do for both dependent variables, all 3 samples and all 5 columns, then printed the claimed cells. 12 of the 13 claims match. female_sponsor_ncosponsors_rep_rd_ipw reproduces as 6.857, which is exactly the value printed in the paper's own Table 5 (paper.txt), with the same N (1,227 bills, 100 sponsors); the claimed 6.734 could not be reached. Attempt-4 (the first scored run) predicted pscores for observations Stata excludes as perfect predictions; fixing this, after the check_attempt comparison, moved col 5 for Republicans to 3.124 (which matches) and RD-IPW to 6.857. Attempt-1 was an exploratory run that crashed on a package-listing call (recorded as kind error); attempts 2 and 3 were exploratory (data inspection, bandwidth check) and printed no RESULT lines.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T03:00:00Z",
+  "finished_at": "2026-10-22T03:08:00Z"
+}

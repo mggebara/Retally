@@ -1,0 +1,138 @@
+Range of interior final-choice d (corner==0): -63 61 
+Coded value of id_stage2 for upper-corner subjects: 63 NA 
+Coded value of id_stage2 for lower-corner subjects: -63 NA 
+Agreement of own exclusion with pap_sample:
+       pap
+own       0   1 <NA>
+  FALSE 162   0   37
+  TRUE    7 600    0
+  <NA>    0   0    0
+           
+            Control Treatment
+  Donation      101       100
+  Main          103       100
+  Mechanism     101       102
+[1] "d_low"
+
+t test of coefficients:
+
+            Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)  31.6400     2.6853  11.783 < 2.2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+[1] "d_mid"
+
+t test of coefficients:
+
+            Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)  37.6100     3.5753  10.519 < 2.2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+[1] "d_up"
+
+t test of coefficients:
+
+            Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)  43.5800     4.6835  9.3051 3.588e-15 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+[1] "rel_low"
+
+t test of coefficients:
+
+            Estimate Std. Error t value  Pr(>|t|)    
+(Intercept) 0.189748   0.016004  11.856 < 2.2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+[1] "rel_mid"
+
+t test of coefficients:
+
+            Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)  0.22416    0.02108  10.634 < 2.2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+[1] "rel_up"
+
+t test of coefficients:
+
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  0.25857    0.02750  9.4026  2.2e-15 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Call:
+tobit(formula = d_low ~ 1, left = BOT, right = TOP, data = mt)
+
+Observations:
+         Total  Left-censored     Uncensored Right-censored 
+           100              0             73             27 
+
+Coefficients:
+            Estimate Std. Error z value Pr(>|z|)    
+(Intercept) 37.09364    3.65805   10.14   <2e-16 ***
+Log(scale)   3.55009    0.08892   39.92   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Scale: 34.82 
+
+Gaussian distribution
+Number of Newton-Raphson Iterations: 5 
+Log-likelihood: -389.3 on 2 Df
+
+
+t test of coefficients:
+
+            Estimate Std. Error t value  Pr(>|t|)    
+(Intercept) 0.073757   0.018647  3.9554  0.000106 ***
+ind         0.150402   0.028143  5.3442 2.463e-07 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+              Estimate Std. Error t value  Pr(>|t|)    
+(Intercept) -0.0245965  0.0075263 -3.2681  0.001275 ** 
+ind          0.1592268  0.0220649  7.2163 1.099e-11 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+              Estimate Std. Error t value  Pr(>|t|)    
+(Intercept) -0.0225559  0.0079079 -2.8523  0.004794 ** 
+ind          0.2467147  0.0225126 10.9590 < 2.2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+              Estimate Std. Error t value  Pr(>|t|)    
+(Intercept) -0.0143602  0.0099288 -1.4463    0.1496    
+ind          0.0881173  0.0211255  4.1711 4.507e-05 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+RESULT:abs_concentration_bias_midpoint_table2_col2=37.6100
+RESULT:abs_concentration_bias_tobit_table2_col4=37.0936
+RESULT:rel_concentration_bias_lower_table2_col1=0.1897
+RESULT:rel_concentration_bias_midpoint_table2_col2=0.2242
+RESULT:rel_concentration_bias_upper_table2_col3=0.2586
+RESULT:n_obs_table2=100
+RESULT:rel_cb_mechanism_treatment_table3_col1=0.0738
+RESULT:diff_main_minus_mechanism_table3_col1=0.1504
+RESULT:rel_cb_donation_treatment_table3_col2=0.1346
+RESULT:diff_donation_treatment_minus_control_table3_col2=0.1592
+RESULT:diff_main_treatment_minus_control_table3_col3=0.2467
+RESULT:diff_mechanism_treatment_minus_control_table3_col4=0.0881
+RESULT:n_obs_table3=203

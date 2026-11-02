@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "entry_id": "manekin-2022-effective-for-whom",
+  "mode": "blind",
+  "run_id": "2026-11-01-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Israeli protester identity codes assumed 0=white Jews, 1=Ethiopian Jews, 2=Arabs (paper's listing order; the data factor has no labels).",
+    "Study 2 regressions are unweighted because the Study 2 data files contain no weight variable; Study 1 regressions use the provided weight variable."
+  ],
+  "notes": "attempt-1 was exploratory (variable inspection, no RESULT lines). Final: OLS (lm) with indicator regressors as in Tables 1-2. Study 1 US: outcome ~ Black + shut-down-traffic + destroy-police-cars, weighted, full wave-1 data (all three waves pooled, N=2269). Study 1 Israel: outcome ~ Ethiopian + Arab + traffic + garbage cans, weighted, full sample incl. Arab-respondent subsample (N=3063). Study 2 US: outcome ~ Black + group goal + commitment, unweighted; police action drops 5 missing (N=3008). Study 2 Israel N from the perceived-violence regression on the full file (3465). No author scripts or result tables were opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T04:15:00Z",
+  "finished_at": "2026-11-02T04:20:30Z"
+}

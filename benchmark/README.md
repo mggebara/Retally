@@ -629,6 +629,15 @@ benchmark/evidence/
   declared deviation (with the claims it names), the claims where the
   pipeline and the agent disagree in the same mode, and any re-score that
   differs from its row.
+* **What is committed.** `benchmark/evidence/` covers the 17 holdout
+  (evaluation) papers, every non-skipped row of the eleven all-modes /
+  blind-rerun results files (`claude-code-7papers-…`, `-6papers-…`,
+  `-run2-13papers-…`, `-blind-rerun-2026-10-22{,-b}`, `-4papers-…`,
+  `pipeline-10papers-…`, `pipeline-opus55-4papers-…` and the three
+  `pipeline-oracle-desktop-opus-…` files), built in one call with one
+  `--entry` per holdout paper and `--source-root` the main checkout; then
+  `report` regenerates every `REPORT.md` and `INDEX.md`.  Dev papers are
+  left out.
 
 ## Plugging in another agent
 

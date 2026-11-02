@@ -1,0 +1,6 @@
+Run crashed (exit 1) before printing any RESULT: line:
+  Error in coeftable(m)[1:3, , drop = FALSE] : subscript out of bounds
+(the no-control models have only 2 coefficients). Also the payoff-scheme factor kept the unused "Ample" level
+(dropped as collinear by fixest; harmless but noisy).
+Fix: print head(coeftable(m), 3) instead of [1:3, ], and droplevels() the factors after restricting to the Scarce sample.
+No specification change.

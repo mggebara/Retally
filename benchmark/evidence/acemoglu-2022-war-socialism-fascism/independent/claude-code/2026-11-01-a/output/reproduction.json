@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "acemoglu-2022-war-socialism-fascism",
+  "mode": "independent",
+  "run_id": "2026-11-01-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [
+    "Standardized coefficients computed by z-scoring the outcome, the 1919 socialist vote share and the casualty instrument over the full 5,775-municipality sample (also for the 1921 regression, whose sample is 5,358); controls are not standardized since that does not change the reported coefficient.",
+    "First-stage F-statistic computed as the squared cluster-robust t-statistic of the single excluded instrument (fixest default small-sample corrections)."
+  ],
+  "notes": "Data: fascism_db.dta only. Spec from paper text: OLS/2SLS with province fixed effects (provincia1921, absorbed), the 359 d_reg* regiment dummies as regressors, demographic controls (lpop1911, lpop2-4, sh_pop_1911_be6); full set adds geographic (larea, centre_alt, max_alt), psu1913_vv, military (veterans74_95, veterans96_00, ard_vol_pop6m, army_suppliers_d, cruent_d), agricultural (dlab, shcrop, landlord_ass) and urban (ind_workers, ind_firms, literacy, elites, bourgeoisie) controls. Instrument foots_pop6m, endogenous psu1919_vv, SEs clustered by circondario1921. attempt-1 was an exploratory variable listing. attempt-2 gave on-target coefficients but fixest dropped singleton province observations (5772/178 and 5354/171); after the check_attempt comparison flagged the cluster counts, the final run keeps singletons (fixef.rm='none', as Stata's dummy-variable regression does), giving 5775/181 and 5358/175. Final: first stage 0.119 / 0.098, F 50.59, IV violence 0.50, branches 0.50, 1921 vote 0.34, 1924 vote 0.40 (col 1) / 0.51 (col 6).",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T04:27:13Z",
+  "finished_at": "2026-11-02T04:31:00Z"
+}

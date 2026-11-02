@@ -1,0 +1,24 @@
+Error in `summarise()`:
+ℹ In argument: `radm = idm/mean(et + x)`.
+ℹ In group 1: `tn = 1`, `control = 1`, `ut = 8`, `idl = 4`, `idu = 4`, `idm =
+  4`, `qe_ard = 0.02234637`, `qe_ard_lower = 0.02234637`, `qe_ard_upper =
+  0.02234637`, `qe_rad = 0.02176921`.
+Caused by error:
+! `radm` must be size 1, not 8.
+ℹ To return more or less than 1 row per group, use `reframe()`.
+Backtrace:
+     ▆
+  1. ├─... %>% filter(!is.na(qe_ard))
+  2. ├─dplyr::filter(., !is.na(qe_ard))
+  3. ├─dplyr::summarise(...)
+  4. ├─dplyr:::summarise.grouped_df(...)
+  5. │ └─dplyr:::summarise_cols(.data, dplyr_quosures(...), by, "summarise")
+  6. │   └─base::withCallingHandlers(...)
+  7. ├─dplyr:::dplyr_internal_error(...)
+  8. │ └─rlang::abort(class = c(class, "dplyr:::internal_error"), dplyr_error_data = data)
+  9. │   └─rlang:::signal_abort(cnd, .file)
+ 10. │     └─base::signalCondition(cnd)
+ 11. └─dplyr (local) `<fn>`(`<dpl:::__>`)
+ 12.   └─dplyr (local) handler(cnd)
+ 13.     └─rlang::abort(message, class = error_class, parent = parent, call = error_call)
+Execution halted

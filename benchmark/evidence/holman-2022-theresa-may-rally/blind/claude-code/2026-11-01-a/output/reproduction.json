@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "entry_id": "holman-2022-theresa-may-rally",
+  "mode": "blind",
+  "run_id": "2026-11-01-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Table 4: the data file has no contemporaneous approval series, only `lag_approval` (labelled 'Lagged approval'); its timing (UK value drops at the Manchester quarter 2017q2) indicates it is the next-quarter approval aligned to the attack quarter, so it is used as the DV with the attack indicator in the same row.",
+    "Table 4: attack indicator = kill_16 (international attack, 16+ i.e. more than 15 deaths); woman executive = female_pres; execrlc (DPI left/center/right, 0-3) entered linearly; country FE on country_code (44 panels survive listwise deletion, not 66). Point estimates are OLS with country dummies (identical to xtpcse without AR terms); panel-corrected SEs not reproduced (clustered SEs printed for information only; SEs are not scored).",
+    "Table 2: did_data.dta; treatment = treatment1 (surveyed after attack in wave 12, constant within respondent), time = 1 for waves >= 12, interaction, wave dummies; time is collinear with the wave dummies, so (as Stata's left-to-right collinearity rule would) the last aliased wave dummy is dropped and time kept, which makes the time coefficient a contrast of the last wave with the base wave. Controls: white (ethnically British), female, labour, party_other, income, ideology2 (ideology with missing set to midpoint, per footnote 8); listwise deletion otherwise. Unweighted.",
+    "Table 2 May best PM: outcome = bestPMW (waves 7, 8, 10, 11, 12), logistic regression per the table note; coefficients reported in log-odds."
+  ],
+  "notes": "Two exploratory runs (variable inspection, no RESULT lines), then one estimation run which is final. Readme docx in the dataset dir was read for documentation (it has no specification details). While reading the paper's global-analysis section for method, prose effect sizes and the Table 4 constant/R2 were visible; the specification was not adjusted toward them. No script files in the dataset were opened (replication_files.do is not present in the mount anyway).",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T04:22:03Z",
+  "finished_at": "2026-11-02T04:45:00Z"
+}

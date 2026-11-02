@@ -1,0 +1,184 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: DISCUSSION PAPER SERIES
+Abstract (first 500 chars): IZA DP No. 12337
+MAY 2019
+Passive Choices and Cognitive Spillovers*
+Passive behavior is ubiquitous - even when facing various alternatives to choose from, 
+people commonly fail to take decisions. This paper provides evidence on the cognitive 
+foundations of such “passive choices” and studies implications for policies that encourage 
+active decision-making. In an experiment designed to study passive behavior, we document 
+three main results. First, we demonstrate that scarcity of cognitive resour
+Methodology Summary: - **Design:** Laboratory experiment (BonnEconLab, University of Bonn; oTree; ORSEE-style recruitment via Bock et al. 2014) with a 3x2 between-subjects design. Dimension 1 is cognitive resources: in the background task subjects memorize a 7-digit number (Scarce) or a 2-digit number (Ample). Dimension 2 is the decision environment: Baseline (the decision task is visible only while a key is held, with a random default), Directed Attention (task always displayed, random default preselected) and Active Choice (task always displayed, no default). 564 subjects took part: 8 sessions per environment, about 96 subjects per cell. Scarce/Ample was randomized across individuals within each session to remove session effects.
+- **Tasks and incentives:** Each round, a number is shown for 10 s and must be recalled after 30 s (EUR 0.40 if correct). During those 30 s, subjects pick which of 3 six-addend sums (each between 20 and 34) is largest (EUR 0.10 if correct). The default is randomly assigned and is correct in 6 of the 20 rounds. Tasks, numbers, defaults and their order were identical across all subjects and treatments.
+- **Session structure:** Part 1 has 10 rounds of the background task alone (5 to 9 digits). Part 2 has 10 rounds of the decision task alone (30 s each). Both serve as ability and balance checks (Table C.1). Part 3 is the main part: 20 rounds with both tasks at once. A post-experimental questionnaire follows, which for a random 50% of Baseline subjects includes a 10-item Raven's Progressive Matrices test. Feedback was given only after Part 3.
+- **Outcome measures:**
+  - Passivity: default adherence, i.e. choosing or keeping the default. It is also split by whether the default is correct or incorrect.
+  - Extensive-margin attention in Baseline: whether the subject pressed the key at least once in the round.
+  - Intensive-margin attention: total seconds spent viewing the decision task in a round, recorded in 50% of Baseline sessions, balanced across Scarce and Ample.
+  - Decision quality: share of decision tasks solved correctly, including conditional on entering the task.
+  - Background-task accuracy and overall payoffs, used to measure cognitive spillovers.
+  - Comparison of the default-preselected option in Directed with the same option in Active Choice.
+- **Non-parametric tests:** Mann-Whitney U tests on subject-level averages across the 20 rounds (the default unless noted otherwise). Also used: a Wilcoxon signed-rank test (main part vs Part 2 accuracy in Baseline-Ample), a Kolmogorov-Smirnov test on subject-round attention distributions, Fisher exact tests for the zero-attention shares, and first-order stochastic dominance comparisons of CDFs of subject mean attention. All p-values are two-sided.
+- **Parametric analysis:** Regressions and t-tests run on subject-round observations, with standard errors clustered at the subject level. The heterogeneity analysis regresses default adherence on a treatment (Scarce) dummy, a dummy for an above-median Raven score, and their interaction (diff-in-diff). It is estimated on the Raven subsample, with subject-clustered SEs. A top-quartile split is also reported.
+- **Decomposition:** An Oaxaca-Blinder decomposition (Appendix C.3) splits the Baseline-Scarce vs Baseline-Ample difference in passivity into an extensive-margin part (complete inattention) and an intensive-margin part.
+- **Machine learning:** No ML, train/test split or cross-validation. In Active Choice, rounds with no choice (5.35% of cases) are counted as incorrect (zero earnings).
+
+
+## Quantities to Compute
+Compute each quantity below and print it under the given name.  The paper's reported values are deliberately not shown.
+1. choice_quality_intervention_t2_col1 [type: coefficient; unit: change in the probability of correctly solving the decision task]
+   Location: Table 2, Panel (a) Choice quality, column 1, Intervention
+   Context: Table 2 ("Behavior in the targeted choice domain"), Panel (a), column 1. Lab experiment, subjects with scarce cognitive resources (the demanding background task of memorising a seven-digit number) in the Baseline, Directed Attention and Forced Choice environments, pooled over the decision-task payoff schemes and both experiment waves; the Ample-resources condition is not part of this table. OLS of an indicator equal to 1 if the subject correctly solves the decision task in a given round (one observation per subject and round of the main part) on Intervention, an indicator for being in Directed…
+2. choice_quality_intervention_t2_col2 [type: coefficient; unit: change in the probability of correctly solving the decision task]
+   Location: Table 2, Panel (a) Choice quality, column 2, Intervention
+   Context: Table 2, Panel (a), column 2: the column 1 regression (decision-task choice quality on the Intervention indicator, same subject-round sample) with controls: subjects' age, gender, field of study, high school GPA and last high-school math grade, ability in the background and the decision task (measured in the practice parts), perceived multitasking ability, and indicator variables for the subject's assigned payoff scheme and experiment wave. Robust standard errors clustered at the subject level.
+3. default_adherence_intervention_t2_col5 [type: coefficient; unit: change in the probability of choosing the default option]
+   Location: Table 2, Panel (b) Default adherence, column 5, Intervention
+   Context: Table 2, Panel (b), column 5. Same sample as Panel (a). OLS of an indicator equal to 1 if the subject's choice in the decision task in a given round coincides with the (choice alternative corresponding to the) default option, on the Intervention indicator (Directed Attention or Forced Choice vs. Baseline). No controls. Robust standard errors clustered at the subject level.
+4. default_adherence_intervention_t2_col6 [type: coefficient; unit: change in the probability of choosing the default option]
+   Location: Table 2, Panel (b) Default adherence, column 6, Intervention
+   Context: Table 2, Panel (b), column 6: the default-adherence regression of column 5 with the control set of column 2 (age, gender, field of study, high school GPA, last math grade, ability in both tasks, perceived multitasking ability, payoff-scheme and experiment-wave indicators). Robust standard errors clustered at the subject level.
+5. default_adherence_directed_attention_t2_col7 [type: coefficient; unit: change in the probability of choosing the default option]
+   Location: Table 2, Panel (b) Default adherence, column 7, Directed Attention
+   Context: Table 2, Panel (b), column 7. Default adherence (indicator that the round's choice coincides with the default option) regressed on separate indicators for the Directed Attention and Forced Choice environments, Baseline omitted; this is the Directed Attention coefficient. No controls; robust standard errors clustered at the subject level.
+6. default_adherence_forced_choice_t2_col7 [type: coefficient; unit: change in the probability of choosing the default option]
+   Location: Table 2, Panel (b) Default adherence, column 7, Forced Choice
+   Context: Table 2, Panel (b), column 7: the Forced Choice coefficient of the same regression (default adherence on Directed Attention and Forced Choice indicators, Baseline omitted, no controls, robust standard errors clustered by subject). In Forced Choice the decision task has no preselected option, so "default adherence" means choosing the alternative that is the default in the other environments.
+7. background_quality_intervention_lab_t3_col1 [type: coefficient; unit: change in the probability of correctly solving the background task]
+   Location: Table 3, Lab experiment, column 1, Intervention
+   Context: Table 3 ("Cognitive spillovers"), lab experiment, column 1: the paper's spillover result. Same lab sample as Table 2 (scarce cognitive resources; Baseline, Directed Attention, Forced Choice; all payoff schemes and both waves). OLS of an indicator equal to 1 if the subject correctly solves the background task (recalls the memorised number) in a given round, on the Intervention indicator. No controls; robust standard errors clustered at the subject level.
+8. background_quality_intervention_lab_t3_col2 [type: coefficient; unit: change in the probability of correctly solving the background task]
+   Location: Table 3, Lab experiment, column 2, Intervention
+   Context: Table 3, lab experiment, column 2: the column 1 background-task regression with the control set of Table 2 (age, gender, field of study, high school GPA, last math grade, ability in both tasks, perceived multitasking ability, payoff-scheme and experiment-wave indicators). Robust standard errors clustered at the subject level.
+9. memory_intervention_online_t3_col5 [type: coefficient; unit: change in the fraction of pairs uncovered in the Memory game]
+   Location: Table 3, Online experiment, column 5, Intervention
+   Context: Table 3, online experiment, column 5. In the online experiment the background task is a Memory game played alongside the decision task. OLS of the fraction of pairs a subject uncovers in the Memory game in a given round (one observation per subject and round) on the Intervention indicator (intervention vs. baseline condition of the online experiment). No controls; standard errors clustered at the subject level.
+10. payoff_share_intervention_t4_col1 [type: coefficient; unit: change in the share of the maximally attainable payoff]
+   Location: Table 4, Payoff share, column 1, Intervention
+   Context: Table 4 ("Effect of interventions on overall payoffs"), column 1: the paper's net-zero result. Same lab sample as Tables 2 and 3. OLS of the subject's realised share of the maximally attainable overall payoff (decision task plus background task) in the subject's treatment, calculated at the subject-round level, on the Intervention indicator. No controls; robust standard errors clustered at the subject level. Not statistically significant.
+11. n_obs_lab_tables_2_to_4 [type: other; unit: observations (subject-rounds, lab experiment)]
+   Location: Tables 2-4, N (every lab-experiment column)
+   Context: Number of observations (subject x round) in the lab-experiment regressions of Tables 2, 3 (columns 1-4) and 4: subjects with scarce cognitive resources in the three decision environments, every round of the main part.
+12. n_subjects_lab_tables_2_to_4 [type: other; unit: subjects (clusters)]
+   Location: Tables 2-4, No. Subjects (lab-experiment columns)
+   Context: Number of subjects, which is also the number of clusters, in the lab-experiment regressions of Tables 2, 3 (columns 1-4) and 4.
+13. memory_intervention_online_t3_col6 [type: coefficient; unit: change in the fraction of pairs uncovered in the Memory game]
+   Location: Table 3, Online experiment, column 6, Intervention
+   Context: Table 3, online experiment, column 6: the column 5 Memory-game regression (fraction of pairs uncovered per subject and round on the Intervention indicator) with the online experiment's controls: subjects' age, gender, and screen size. Standard errors clustered at the subject level.
+
+## Dataset Information
+Name: altmann-2022-cognitive-spillovers
+Local path: <repo>/.cache/datasets/altmann_2022_cognitive_spillovers.script-free
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- ReplicationPackage/EmpiricalAnalysis/original_data/formatted_data_replication.dta (3.7 MB) — 17840 rows, 46 columns: payoff, Attention, round, Treatment_Environment, attention_mean, default_correct_choice, diff_choice_second, ability_task, raven_score, Treatment_intervention, payoff_share_mean, payoff_share, raven_score_median, Treatment_Incentives, summation_correct, q_math_grade, q_math_grade_cat, load_correct, ability_load, q_subject, q_abitur_grade, economist, q_gender, raven_score_quartiles, high_task_difficulty, Treatment_Incentives_Baseline_sc, attention_positive_mean, no_attention, …
+- ReplicationPackage/EmpiricalAnalysis/original_data/formatted_data_long_mturk.dta (217.0 KB) — 5472 rows, 12 columns: round, math_task_correct, memory, gender, Treatment_intervention, passive_choice, payoff_share, math_time, subject_id, age, window_height1, window_width1
+- ReplicationPackage/EmpiricalAnalysis/library/stata/ado_ext/plus/_/_eststo.hlp (10 B)
+- ReplicationPackage/EmpiricalAnalysis/library/stata/ado_ext/plus/b/binscatter.sthlp (17.3 KB)
+- ReplicationPackage/EmpiricalAnalysis/library/stata/ado_ext/plus/backup.trk (12.3 KB)
+- ReplicationPackage/EmpiricalAnalysis/library/stata/ado_ext/plus/c/cdfplot.hlp (4.0 KB)
+- ReplicationPackage/EmpiricalAnalysis/library/stata/ado_ext/plus/f/fmm.hlp (8.2 KB)
+- ReplicationPackage/EmpiricalAnalysis/library/stata/ado_ext/plus/f/fmm_postestimation.hlp (4.3 KB)
+- ReplicationPackage/EmpiricalAnalysis/library/stata/ado_ext/plus/g/glcurve.hlp (9.7 KB)
+- ReplicationPackage/EmpiricalAnalysis/library/stata/ado_ext/plus/g/grc1leg.hlp (3.9 KB)
+- ReplicationPackage/EmpiricalAnalysis/library/stata/ado_ext/plus/o/oaxaca.hlp (15.2 KB)
+- ReplicationPackage/EmpiricalAnalysis/library/stata/ado_ext/plus/q/quantil2.hlp (2.2 KB)
+- ReplicationPackage/EmpiricalAnalysis/library/stata/ado_ext/plus/s/s1_grey_color.scheme (211 B)
+- ReplicationPackage/EmpiricalAnalysis/library/stata/ado_ext/plus/s/s1color_black_gray.scheme (143 B)
+- ReplicationPackage/EmpiricalAnalysis/library/stata/ado_ext/plus/s/strdist.sthlp (2.2 KB)
+- ReplicationPackage/EmpiricalAnalysis/library/stata/ado_ext/plus/stata.trk (13.2 KB)
+- ReplicationPackage/EmpiricalAnalysis/library/stata/ado_ext/plus/z/ztree2stata.hlp (6.3 KB)
+- ReplicationPackage/EmpiricalAnalysis/out/figure2.png (334.1 KB)
+- ReplicationPackage/EmpiricalAnalysis/out/figure3a.png (187.8 KB)
+- ReplicationPackage/EmpiricalAnalysis/out/figure3b.png (202.2 KB)
+- ReplicationPackage/EmpiricalAnalysis/out/figure4.png (172.1 KB)
+- ReplicationPackage/EmpiricalAnalysis/out/figure5.png (169.3 KB)
+- ReplicationPackage/EmpiricalAnalysis/out/figure6.png (169.6 KB)
+- ReplicationPackage/EmpiricalAnalysis/out/figure7.png (177.7 KB)
+- ReplicationPackage/EmpiricalAnalysis/out/figureB_1a.png (327.2 KB)
+- ReplicationPackage/EmpiricalAnalysis/out/figureB_1b.png (328.8 KB)
+- ReplicationPackage/EmpiricalAnalysis/out/figureO_1.png (265.8 KB)
+- ReplicationPackage/EmpiricalAnalysis/out/figureO_2.png (195.9 KB)
+- ReplicationPackage/EmpiricalAnalysis/out/figureO_3.png (299.4 KB)
+- ReplicationPackage/EmpiricalAnalysis/out/tableO_1.tex (3.5 KB)
+- ReplicationPackage/README.md (10.9 KB)
+- ReplicationPackage/oTree/Ability_Load/__pycache__/__init__.cpython-35.pyc (200 B)
+- ReplicationPackage/oTree/Ability_Load/__pycache__/__init__.cpython-36.pyc (226 B)
+- ReplicationPackage/oTree/Ability_Load/__pycache__/__init__.cpython-37.pyc (230 B)
+- ReplicationPackage/oTree/Ability_Load/__pycache__/models.cpython-35.pyc (2.2 KB)
+- ReplicationPackage/oTree/Ability_Load/__pycache__/models.cpython-36.pyc (2.0 KB)
+- ReplicationPackage/oTree/Ability_Load/__pycache__/models.cpython-37.pyc (2.1 KB)
+- ReplicationPackage/oTree/Ability_Load/__pycache__/pages.cpython-35.pyc (2.9 KB)
+- ReplicationPackage/oTree/Ability_Load/__pycache__/pages.cpython-37.pyc (2.7 KB)
+- ReplicationPackage/oTree/Ability_Load/_builtin/__pycache__/__init__.cpython-35.pyc (1.3 KB)
+- ReplicationPackage/oTree/Ability_Load/_builtin/__pycache__/__init__.cpython-37.pyc (1.2 KB)
+- ReplicationPackage/oTree/Ability_Load/templates/Ability_Load/Cognitive_Load.html (44 B)
+- ReplicationPackage/oTree/Ability_Load/templates/Ability_Load/Cognitive_Load_Entry.html (50 B)
+- ReplicationPackage/oTree/Ability_Load/templates/Ability_Load/Cognitive_Load_Starter.html (52 B)
+- ReplicationPackage/oTree/Ability_Load/templates/Ability_Load/Instructions.html (1.6 KB)
+- ReplicationPackage/oTree/Ability_Load/templates/Ability_Load/Wait.html (1.8 KB)
+- ReplicationPackage/oTree/Ability_Task/__pycache__/__init__.cpython-35.pyc (200 B)
+- ReplicationPackage/oTree/Ability_Task/__pycache__/__init__.cpython-36.pyc (226 B)
+- ReplicationPackage/oTree/Ability_Task/__pycache__/__init__.cpython-37.pyc (230 B)
+- ReplicationPackage/oTree/Ability_Task/__pycache__/models.cpython-35.pyc (4.5 KB)
+- ReplicationPackage/oTree/Ability_Task/__pycache__/models.cpython-36.pyc (4.3 KB)
+- ReplicationPackage/oTree/Ability_Task/__pycache__/models.cpython-37.pyc (4.2 KB)
+- ReplicationPackage/oTree/Ability_Task/__pycache__/pages.cpython-35.pyc (2.8 KB)
+- ReplicationPackage/oTree/Ability_Task/__pycache__/pages.cpython-37.pyc (2.6 KB)
+- ReplicationPackage/oTree/Ability_Task/_builtin/__pycache__/__init__.cpython-35.pyc (1.3 KB)
+- ReplicationPackage/oTree/Ability_Task/_builtin/__pycache__/__init__.cpython-37.pyc (1.2 KB)
+- ReplicationPackage/oTree/Ability_Task/static/Ability_Task/Screenshot.jpg (42.8 KB)
+- ReplicationPackage/oTree/Ability_Task/templates/Ability_Task/Default_Task.html (3.6 KB)
+- ReplicationPackage/oTree/Ability_Task/templates/Ability_Task/Instructions.html (1.4 KB)
+- ReplicationPackage/oTree/Load_and_Task_High_Load/__pycache__/__init__.cpython-35.pyc (201 B)
+- ReplicationPackage/oTree/Load_and_Task_High_Load/__pycache__/__init__.cpython-36.pyc (227 B)
+- ReplicationPackage/oTree/Load_and_Task_High_Load/__pycache__/__init__.cpython-37.pyc (231 B)
+- ReplicationPackage/oTree/Load_and_Task_High_Load/__pycache__/models.cpython-35.pyc (10.0 KB)
+- ReplicationPackage/oTree/Load_and_Task_High_Load/__pycache__/models.cpython-36.pyc (9.2 KB)
+- ReplicationPackage/oTree/Load_and_Task_High_Load/__pycache__/models.cpython-37.pyc (9.6 KB)
+- ReplicationPackage/oTree/Load_and_Task_High_Load/__pycache__/pages.cpython-35.pyc (10.2 KB)
+- ReplicationPackage/oTree/Load_and_Task_High_Load/__pycache__/pages.cpython-37.pyc (8.4 KB)
+- ReplicationPackage/oTree/Load_and_Task_High_Load/_builtin/__pycache__/__init__.cpython-35.pyc (1.3 KB)
+- ReplicationPackage/oTree/Load_and_Task_High_Load/_builtin/__pycache__/__init__.cpython-37.pyc (1.2 KB)
+- ReplicationPackage/oTree/Load_and_Task_High_Load/static/Load_and_Task/Screenshot.jpg (38.7 KB)
+- ReplicationPackage/oTree/Load_and_Task_High_Load/static/Load_and_Task/Screenshot_Active_Choice.jpg (42.8 KB)
+- ReplicationPackage/oTree/Load_and_Task_High_Load/templates/Load_and_Task_High_Load/Cognitive_Load.html (44 B)
+- ReplicationPackage/oTree/Load_and_Task_High_Load/templates/Load_and_Task_High_Load/Cognitive_Load_Entry.html (50 B)
+- ReplicationPackage/oTree/Load_and_Task_High_Load/templates/Load_and_Task_High_Load/Cognitive_Load_Starter.html (52 B)
+- ReplicationPackage/oTree/Load_and_Task_High_Load/templates/Load_and_Task_High_Load/Default_Task.html (10.5 KB)
+- ReplicationPackage/oTree/Load_and_Task_High_Load/templates/Load_and_Task_High_Load/Default_Task_Active_Choice.html (8.0 KB)
+- ReplicationPackage/oTree/Load_and_Task_High_Load/templates/Load_and_Task_High_Load/Default_Task_Forced_Attention.html (6.1 KB)
+- ReplicationPackage/oTree/Load_and_Task_High_Load/templates/Load_and_Task_High_Load/Instructions_Active_Choice.html (2.2 KB)
+- ReplicationPackage/oTree/Load_and_Task_High_Load/templates/Load_and_Task_High_Load/Instructions_Endogenous_Attention.html (2.8 KB)
+- ReplicationPackage/oTree/Load_and_Task_High_Load/templates/Load_and_Task_High_Load/Instructions_Forced_Attention.html (2.6 KB)
+- … and 60 more files (listing truncated)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/altmann_2022_cognitive_spillovers.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Independent Reproduction
+This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's description alone.  The authors' own analysis code is deliberately withheld.  Do NOT open, read, source, or execute any script files that may appear in the dataset directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, and similar) — load data files only.  Derive the estimating equation, sample restrictions, fixed effects, and standard-error clustering from the paper information and claims above.
+
+## Blind Reproduction
+This reproduction is also BLIND: the paper's reported values for the quantities above are deliberately withheld, and you will not be told how close your numbers are.  Compute each quantity as the paper's method defines it; do not tune the specification toward any number you expect.  Do NOT read result tables, logs, or output files that may appear in the dataset directory (.tex, .log, .pdf, .html, and similar) to recover the paper's numbers — compute everything from the data files.  Print a RESULT: line for every quantity listed, using its name exactly.
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

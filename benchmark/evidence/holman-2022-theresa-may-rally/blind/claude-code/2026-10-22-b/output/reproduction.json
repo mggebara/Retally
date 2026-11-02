@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "holman-2022-theresa-may-rally",
+  "mode": "blind",
+  "run_id": "2026-10-22-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Table 4: global_approval.dta has 44 countries (paper says 66); used as provided. DV is `lag_approval`, which is missing in the last quarter of every panel and so is the next-quarter (lead) approval aligned to quarter t; regressed on contemporaneous kill_16 (16+ deaths = more than 15; 60 attack quarters, 9 under women in the full file, 50 / 9 in the estimation sample).",
+    "Table 4: 'GDP' control is the `growth` variable as provided (values look like GDP levels); election control is election_qtr (the only election variable); execrlc (DPI left/center/right, 0 = no information) entered as categories; OLS with country dummies. Panel-corrected SEs do not affect point estimates and were not needed (the informational PCSE block returned NULL and printed nothing).",
+    "Table 2: OLS (likeability) and logit (best PM, log-odds coefficients, as the table note says) with wave dummies entered after `time`; the collinear last wave dummy is dropped (wave 16 for likeability, wave 12 for best PM), so `time` is identified relative to that convention. Controls white, gender, labour, party_other, income, ideology2 (midpoint-recoded ideology); listwise deletion; no survey weights. Restricting to wave-12 participants gives identical samples and estimates."
+  ],
+  "notes": "Independent blind reproduction from paper text and data files only. Two exploratory runs (variable inspection; no RESULT lines), then one final run. The paper text had the target values withheld; no author scripts or result files were opened. The Readme .docx and metadata.json in the data directory were read for documentation only. Table 4 R2 from lm with dummies (0.27) differs from the R2 printed in the paper's Table 4; this was not used to change the specification.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T03:25:38Z",
+  "finished_at": "2026-10-22T03:30:01Z"
+}

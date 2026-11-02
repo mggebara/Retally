@@ -143,6 +143,10 @@ _SCRATCH_PATH = re.compile(
 # Last resort, after the repo / worktree / scratch rules: any other path in a
 # home directory (e.g. ``~/.claude/projects/...`` an agent declared reading).
 _HOME_PATH = re.compile(r"/(?:Users|home)/[^/\s\"'`<>|()]+/")
+# Whatever ``/Users/`` prefix that leaves: a home path whose user segment is
+# not a plain name, e.g. Stata's ``"/Users/`c(username)'/Downloads"`` or a
+# ``"/Users/..."`` placeholder in replication code quoted in a prompt.
+_HOME_PREFIX = re.compile(r"/Users/[^/\s\"]*/?")
 
 
 def repo_roots(*extra: Path) -> list[str]:
@@ -170,13 +174,15 @@ def normalise_paths(text: str, roots: list[str]) -> str:
     or any other ``/tmp/claude-<uid>/`` path) ``<scratch>/``, and each
     repository root in ``roots`` ``<repo>`` — in that order, so a worktree
     inside the repo is not half-rewritten.  Any remaining path in a home
-    directory (``/Users/<name>/`` or ``/home/<name>/``) becomes ``<home>/``.
+    directory (``/Users/<name>/`` or ``/home/<name>/``) becomes ``<home>/``,
+    and so does any ``/Users/`` prefix still left after that (a user segment
+    that is not a plain name, such as Stata's `` `c(username)' ``).
     """
     text = _WORKTREE_PATH.sub("<worktree>/", text)
     text = _SCRATCH_PATH.sub("<scratch>/", text)
     for root in roots:
         text = re.sub(re.escape(root) + r"(?=/|[\s\"'`<>|()]|$)", "<repo>", text)
-    return _HOME_PATH.sub("<home>/", text)
+    return _HOME_PREFIX.sub("<home>/", _HOME_PATH.sub("<home>/", text))
 
 
 # ---------------------------------------------------------------------------

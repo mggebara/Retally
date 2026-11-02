@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "entry_id": "arias-2022-changing-tides-climate-migration",
+  "mode": "blind",
+  "run_id": "2026-11-01-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Language x Origin interaction included in the full model (cjoint convention for the design's restriction Language=None x Origin=Another region, as specified in conjoint_design.dat); reason-for-migration AMCEs are its main-effect coefficients."
+  ],
+  "notes": "Data: the two 'Climate Migration 2_ Conjoint' Qualtrics exports (US, Germany), first two label rows dropped. Profiles stacked from Conjoint-SDT columns F-task-attr (attribute names, order fixed within respondent) and F-task-profile-attr (levels); German labels mapped to English. Outcome = 1 if the forced choice (force_choice, Q184..Q198 for tasks 1-9) picked the profile. Sample = all profiles in tasks with a non-missing forced choice (respondents with >=1 choice; preview rows kept), giving 1086 US + 1074 DE = 2160 respondents (consistent with the abstract's total) and 18970 / 18862 profiles. OLS via fixest::feols of chosen on all seven attributes (baselines: economic opportunity, no language, unemployed, female, atheist/agnostic, another region, no vulnerability) plus Language:Origin, SEs clustered by ResponseId. Two exploratory runs (attempt-1, attempt-2) printed no RESULT lines. Paper's withheld values never compared against.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T04:18:47Z",
+  "finished_at": "2026-11-02T04:21:16Z"
+}

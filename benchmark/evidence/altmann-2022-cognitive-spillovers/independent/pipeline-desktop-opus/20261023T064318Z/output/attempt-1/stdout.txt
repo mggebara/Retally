@@ -1,0 +1,80 @@
+Lab columns:
+ [1] "payoff"                           "Attention"                       
+ [3] "load_correct"                     "round"                           
+ [5] "Treatment_Environment"            "default_followed"                
+ [7] "load_correct_mean"                "summation_correct_mean"          
+ [9] "summation_correct"                "default_followed_mean"           
+[11] "attention_mean"                   "attention_positive_mean"         
+[13] "default_correct_choice"           "diff_choice_second"              
+[15] "ability_load"                     "ability_task"                    
+[17] "q_age"                            "q_gender"                        
+[19] "q_subject"                        "q_degree"                        
+[21] "q_abitur_year"                    "q_abitur_grade"                  
+[23] "q_math_grade"                     "perc_multitasking_1"             
+[25] "perc_multitasking_2"              "risk"                            
+[27] "perc_multitasking_1_easy"         "raven_score"                     
+[29] "no_attention"                     "subject_id"                      
+[31] "original_lab"                     "Treatment_intervention"          
+[33] "payoff_share_mean"                "payoff_share"                    
+[35] "default_followed_correct_mean"    "raven_score_quartiles"           
+[37] "raven_score_median"               "high_task_difficulty"            
+[39] "subject_cat"                      "q_abitur_grade_quartile"         
+[41] "q_abitur_grade_cat"               "q_math_grade_cat"                
+[43] "Treatment_Incentives"             "Treatment_Incentives_Baseline_sc"
+[45] "Treatment_Incentives_Int_sc"      "economist"                       
+MTurk columns:
+ [1] "round"                  "age"                    "window_height1"        
+ [4] "window_width1"          "math_task_correct"      "memory"                
+ [7] "math_time"              "subject_id"             "gender"                
+[10] "Treatment_intervention" "passive_choice"         "payoff_share"          
+Treatment_intervention table:
+
+    0     1 
+ 5960 11880 
+Treatment_Environment table:
+
+          \\textsc{Baseline} \\textsc{Directed Attention} 
+                        5960                         6000 
+     \\textsc{Forced Choice} 
+                        5880 
+Candidate sample sizes:
+all_nonNA_intervention 
+                 17840 
+Chosen sample restriction: all_nonNA_intervention 
+Default adherence column: default_followed 
+Controls found: age= q_age  gender= q_gender  subject= q_subject  abitur= q_abitur_grade  math= q_math_grade  multi= perc_multitasking_1  incentives= Treatment_Incentives,Treatment_Incentives_Baseline_sc,Treatment_Incentives_Int_sc  wave= NA 
+Control terms used: c_age, c_gender, c_subject, c_abitur, c_math, c_abl_load, c_abl_task, c_multi, c_incent 
+OLS estimation, Dep. Var.: y_dec
+Observations: 17,840
+Standard-errors: Clustered (cl) 
+             Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept)  0.673658   0.012874 52.32757  < 2.2e-16 ***
+intervention 0.082992   0.015077  5.50458 4.8399e-08 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.442788   Adj. R2: 0.007699
+N with controls: 17440 
+RESULT:choice_quality_intervention_t2_col1=0.082992
+RESULT:choice_quality_intervention_t2_col1_se=0.015077
+RESULT:choice_quality_intervention_t2_col2=0.085884
+RESULT:choice_quality_intervention_t2_col2_se=0.012558
+RESULT:default_adherence_intervention_t2_col5=-0.157625
+RESULT:default_adherence_intervention_t2_col5_se=0.017209
+RESULT:default_adherence_intervention_t2_col6=-0.158605
+RESULT:default_adherence_intervention_t2_col6_se=0.015945
+RESULT:default_adherence_directed_attention_t2_col7=-0.098736
+RESULT:default_adherence_directed_attention_t2_col7_se=0.019723
+RESULT:default_adherence_forced_choice_t2_col7=-0.217716
+RESULT:default_adherence_forced_choice_t2_col7_se=0.016518
+RESULT:background_quality_intervention_lab_t3_col1=-0.018673
+RESULT:background_quality_intervention_lab_t3_col1_se=0.014101
+RESULT:background_quality_intervention_lab_t3_col2=-0.018690
+RESULT:background_quality_intervention_lab_t3_col2_se=0.010741
+RESULT:memory_intervention_online_t3_col5=-0.114252
+RESULT:memory_intervention_online_t3_col5_se=0.018804
+RESULT:memory_intervention_online_t3_col6=-0.113364
+RESULT:memory_intervention_online_t3_col6_se=0.017222
+RESULT:payoff_share_intervention_t4_col1=0.006465
+RESULT:payoff_share_intervention_t4_col1_se=0.011953
+RESULT:n_obs_lab_tables_2_to_4=17840.000000
+RESULT:n_subjects_lab_tables_2_to_4=892.000000

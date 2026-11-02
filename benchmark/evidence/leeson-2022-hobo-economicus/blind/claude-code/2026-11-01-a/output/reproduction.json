@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "entry_id": "leeson-2022-hobo-economicus",
+  "mode": "blind",
+  "run_id": "2026-11-01-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1: exploratory (station-name matching, merges, missingness; no RESULT lines). attempt-2: first full estimation; fixest's default dropped date fixed-effect singletons (N 240/98). Final: same specification with fixef.rm='none' so N counts every station-visit, as OLS with date dummies would (242/102). Coefficients are identical; the change was made for a method reason, not by comparison with any paper value (none were seen). Spec: OLS of panhandlers per visit on monthly station exits (passersby.csv merged on station-month-year; Georgetown assigned Foggy Bottom's counts), station mean of each passerby's friendliest response (highest marked category 1-5), shuttle indicator (shuttlemin<=10) and service indicator (servicemin<=10), visit-date FE, SEs clustered by station; five-station subsample = Farragut North, Farragut West, Gallery Place, McPherson Square, Metro Center. Receipts: donations/minutes*60 (N=80); (cash+inkind)/minutes*60, keeping rows with both non-missing (N=67). Brown-Forsythe = car::leveneTest(center=median); one-way ANOVA via aov.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T04:18:48Z",
+  "finished_at": "2026-11-02T04:21:30Z"
+}

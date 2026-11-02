@@ -1,0 +1,118 @@
+Using columns:
+          pm           py           cm           cy          age          sex 
+   "hrmonth"     "hryear"  "v2hrmonth"   "v2hryear"      "peage"      "pesex" 
+        educ         race         hisp         labp         labc           st 
+   "peeduca"       "race"   "prhspnon"      "pemlr"    "v2pemlr" "v2gestfips" 
+          w1           w2         iodp          cow          icd          ocd 
+   "pwsswgt"  "v2pwsswgt"  "v2puiodp1" "v2peio1cow" "v2peio1icd" "v2peio1ocd" 
+        earn        alloc 
+ "v2prernwa" "v2prwernal" 
+Rows read: 19836464
+            used   (Mb) gc trigger   (Mb)  max used   (Mb)
+Ncells    607193   32.5    1372967   73.4    709511   37.9
+Vcells 252118610 1923.6  318480710 2429.9 252158795 1923.9
+Year distribution (current month):
+
+  1994   1995   1996   1997   1998   1999   2000   2001   2002   2003   2004 
+840399 604199 801187 808707 807505 810151 808415 852909 940767 937771 923129 
+  2005   2006   2007   2008   2009   2010   2011   2012   2013   2014   2015 
+917339 911066 903822 906390 916742 918425 907589 903607 898493 900493 884122 
+  2016 
+733237 
+Share consecutive: 1
+            used   (Mb) gc trigger   (Mb)  max used   (Mb)
+Ncells    612512   32.8    1372967   73.4    709511   37.9
+Vcells 279893199 2135.5  555948299 4241.6 546577472 4170.1
+            used   (Mb) gc trigger   (Mb)  max used   (Mb)
+Ncells    635421   34.0    1372967   73.4    709511   37.9
+Vcells 242636159 1851.2  555948299 4241.6 546577472 4170.1
+            used   (Mb) gc trigger   (Mb)  max used   (Mb)
+Ncells    635449   34.0    1372967   73.4    709511   37.9
+Vcells 213658588 1630.1  555948299 4241.6 546577472 4170.1
+Rows after restrictions: 19318423
+            used   (Mb) gc trigger   (Mb)  max used   (Mb)
+Ncells    639785   34.2    1372967   73.4    709511   37.9
+Vcells 232987236 1777.6  555948299 4241.6 551792836 4209.9
+            used   (Mb) gc trigger   (Mb)  max used   (Mb)
+Ncells    639803   34.2    1372967   73.4    709511   37.9
+Vcells 155713564 1188.1  444758640 3393.3 551792836 4209.9
+UR file columns: v2gestfips, v2unemp_smy, v2hryear, v2hrmonth
+UR mapping: st=v2gestfips ur=v2unemp_smy year=v2hryear month=v2hrmonth
+            used   (Mb) gc trigger   (Mb)  max used   (Mb)
+Ncells    643804   34.4    1372967   73.4    709511   37.9
+Vcells 155803185 1188.7  444758640 3393.3 551792836 4209.9
+UR rows: 12740 range: 1.5-17.3
+UR year coverage:
+
+1994 1995 1996 1997 1998 1999 2000 2001 2002 2003 2004 2005 2006 2007 2008 2009 
+ 624  624  624  624  624  624  624  624  624  624  624  624  624  624  624  624 
+2010 2011 2012 2013 2014 
+ 624  624  624  624  260 
+UR state-months missing on grid: 1456; filled by interpolation: 0
+Rows without UR match by year:
+      cy      N
+   <int>  <int>
+1:  2014 519992
+2:  2015 868980
+3:  2016 646900
+            used   (Mb) gc trigger   (Mb)  max used   (Mb)
+Ncells    658469   35.2    1372967   73.4    752895   40.3
+Vcells 148215278 1130.8  444758640 3393.3 551792836 4209.9
+Analysis N: 17282551
+Mean hire young: 6.179785 experienced: 2.449078
+            used   (Mb) gc trigger   (Mb)  max used   (Mb)
+Ncells    658988   35.2    1372967   73.4    752895   40.3
+Vcells 171835449 1311.1  444758640 3393.3 551792836 4209.9
+RESULT:young_x_unemp_rate_preferred=-0.262864
+RESULT:experienced_x_unemp_rate_preferred=0.042986
+         Estimate Std. Error    t value     Pr(>|t|)
+young  5.51450265 0.12128391  45.467719 2.426010e-42
+yu    -0.26286358 0.02012519 -13.061422 9.722039e-18
+ou     0.04298603 0.01542957   2.785951 7.521199e-03
+attr(,"vcov_type")
+[1] "Clustered (st)"
+RESULT:n_obs_full_sample=1.72826e+07
+            used   (Mb) gc trigger   (Mb)  max used   (Mb)
+Ncells    750435   40.1    1372967   73.4    849179   45.4
+Vcells 172041107 1312.6  615067304 4692.6 551792836 4209.9
+RESULT:aggregate_unemp_rate_no_controls=-0.115254
+            used   (Mb) gc trigger   (Mb)  max used   (Mb)
+Ncells    750474   40.1    1372967   73.4    849179   45.4
+Vcells 172041223 1312.6  492053844 3754.1 551792836 4209.9
+RESULT:aggregate_unemp_rate_month_year_fe=-0.0337823
+            used   (Mb) gc trigger   (Mb)  max used   (Mb)
+Ncells    750478   40.1    1372967   73.4    849179   45.4
+Vcells 172041224 1312.6  472435690 3604.4 551792836 4209.9
+RESULT:young_x_unemp_rate_no_controls=-0.343961
+RESULT:experienced_x_unemp_rate_no_controls=-0.03919
+            used   (Mb) gc trigger   (Mb)  max used   (Mb)
+Ncells    750482   40.1    1372967   73.4    849179   45.4
+Vcells 172041225 1312.6  567002828 4325.9 551792836 4209.9
+RESULT:young_x_unemp_rate_employed=-0.175908
+RESULT:experienced_x_unemp_rate_employed=0.0206769
+            used   (Mb) gc trigger   (Mb)  max used   (Mb)
+Ncells    750491   40.1    1372967   73.4    849179   45.4
+Vcells 180682503 1378.5  653328057 4984.5 598383431 4565.4
+RESULT:young_x_unemp_rate_unemployed=-1.96964
+            used   (Mb) gc trigger   (Mb)  max used   (Mb)
+Ncells    754466   40.3    1372967   73.4    849179   45.4
+Vcells 180691297 1378.6  522662446 3987.6 598383431 4565.4
+RESULT:young_x_unemp_rate_nilf=-0.594419
+            used   (Mb) gc trigger   (Mb)  max used   (Mb)
+Ncells    754470   40.3    1372967   73.4    849179   45.4
+Vcells 180691298 1378.6  522662446 3987.6 598383431 4565.4
+          used (Mb) gc trigger   (Mb)  max used   (Mb)
+Ncells  754439 40.3    1372967   73.4    849179   45.4
+Vcells 7863705 60.0  418129957 3190.1 598383431 4565.4
+CPI file columns: year, month, cpi
+Industry crosswalk match rate: 0.9999164
+Occupation crosswalk match rate: 1
+Wage sample N: 131633
+         Estimate  Std. Error   t value     Pr(>|t|)
+young -0.12594311 0.012871571 -9.784595 3.327924e-13
+yu    -0.02584828 0.003848774 -6.715977 1.669895e-08
+ou    -0.00980402 0.004261153 -2.300790 2.561088e-02
+attr(,"vcov_type")
+[1] "Clustered (st)"
+RESULT:wage_young_x_unemp_rate_all_hires=-0.0258483
+RESULT:wage_experienced_x_unemp_rate_all_hires=-0.00980402

@@ -1,0 +1,116 @@
+to_prior_seats table (low values and 999):
+
+   (-1,0]     (0,1]     (1,2]     (2,3]     (3,4]    (4,10]  (10,100] (100,998] 
+      136        71        81        80        48       388      1216       236 
+(998,999] 
+       10 
+       
+        FALSE TRUE
+  FALSE  2009  247
+  TRUE     10    0
+       
+        FALSE TRUE
+  FALSE  1842   56
+  TRUE    177  191
+       
+        FALSE TRUE
+  FALSE  1825   56
+  TRUE    192  193
+parties with 999 seats:
+                      country year to_partyname
+149  United States of America 1996   Republican
+150  United States of America 2004   Republican
+433  United States of America 1996   Democratic
+434  United States of America 2004   Democratic
+940  United States of America 2016   Republican
+941  United States of America 2008   Republican
+942  United States of America 2012   Republican
+1320 United States of America 2016   Democratic
+1321 United States of America 2008   Democratic
+1322 United States of America 2012   Democratic
+to_complete / from_complete:
+
+master only (1)     matched (3) 
+              6            2260 
+
+master only (1)     matched (3) 
+              6            2260 
+                 
+                  FALSE TRUE
+  master only (1)     6    0
+  matched (3)      2013  247
+
+   0    1 
+1521  745 
+per-cy dyad counts (all):
+filter seats>=4 incl 999: 1579  nonNA pfeml: 1535 
+filter seats>=4 excl 999: 1569 
+nonNA pfeml any seats: 2019  both pfeml nonNA: 1826 
+cy with pfeml: 81 
+rile_distance sd full: 17.61256  mean: 22.44342 
+rile_distance_s check: 1 
+                 Estimate   Std. Error    t value Pr(>|t|)
+(Intercept)   -1.26697004 1.668838e-09 -759193129        0
+rile_distance  0.05674702 5.850090e-11  970019554        0
+       country year party_from party_to from_prior_seats to_prior_seats
+1  New Zealand 1996          E        B                9             37
+2    Australia 1996          A        D               80              0
+3  New Zealand 1996          E        A                9             44
+4  New Zealand 1996          E        C                9             10
+5  New Zealand 2002          D        E                9              7
+6  New Zealand 2002          D        A                9             49
+7  New Zealand 2002          D        F                9              1
+8  New Zealand 2002          D        B                9             39
+9  New Zealand 2002          D        C                9              5
+10   Australia 1996          B        D               49              0
+11   Australia 1996          C        D               16              0
+12   Australia 1996          A        B               80             49
+13   Australia 1996          A        C               80             16
+14       Spain 1996          D        E               17              5
+15   Australia 2004          B        A               65             68
+16   Australia 2004          B        D               65             13
+17       Spain 1996          A        E              141              5
+18       Spain 1996          B        E              159              5
+19       Spain 1996          C        E               18              5
+20 New Zealand 1996          E        D                9             10
+21 New Zealand 1996          C        D               10             10
+22 New Zealand 1996          A        D               44             10
+23 New Zealand 1996          B        D               37             10
+24 Netherlands 1998          C        E               34              5
+25 Netherlands 1998          A        E               37              5
+26 Netherlands 1998          B        E               31              5
+27       Spain 2000          E        C                5             21
+28       Spain 2000          E        B                5            141
+29       Spain 2000          E        A                5            156
+30       Spain 2000          E        D                5             16
+     to_pfeml party_like
+1  0.13333334   3.598552
+2          NA   5.236667
+3  0.28000000   7.530079
+4  0.00000000   3.252080
+5  0.42857143   1.557633
+6  0.18367347   3.359954
+7          NA   4.512195
+8  0.43589744   5.216290
+9  0.00000000   2.875386
+10         NA   4.912605
+11         NA   3.840000
+12 0.08163265   3.327842
+13 0.00000000   3.075630
+14 0.00000000   4.923077
+15 0.23188406   2.924419
+16 0.15384616   2.892157
+17 0.00000000   1.839623
+18 0.00000000   2.604096
+19 0.00000000   2.252632
+20         NA   1.278599
+21         NA   5.432158
+22         NA   2.515997
+23         NA   5.852672
+24         NA   4.886672
+25         NA   6.009129
+26         NA   4.443652
+27 0.33333334   2.615385
+28 0.27659574   3.250000
+29 0.14102565   3.692308
+30 0.25000000   3.750000

@@ -1,0 +1,76 @@
+DV: party_like  flip: FALSE  women var: to_pfeml 
+Candidate sample sizes:
+       mp_ge4        mp_gt4    mp_ge4_cmp     mp_ge4_dm mp_ge4_cmp_dm 
+         2019          2019          2019          2019          2019 
+       ps_ge4        ps_gt4     mp_ps_ge4    ps_ge4_cmp 
+         1535          1469          1535          1535 
+Chosen sample filter: mp_ge4 
+Rows after filter: 2266 
+rile raw mean/sd: 22.23923 17.52786 
+women mean/sd: 0.3028147 0.183727 
+OLS estimation, Dep. Var.: dv
+Observations: 2,019
+Fixed-effects: cy: 81
+Standard-errors: Clustered (cy) 
+      Estimate Std. Error t value   Pr(>|t|)    
+women  1.60382   0.290567 5.51961 4.0759e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.36402     Adj. R2: 0.15216 
+                Within R2: 0.032662
+OLS estimation, Dep. Var.: dv
+Observations: 2,019
+Fixed-effects: cy: 81
+Standard-errors: Clustered (cy) 
+          Estimate Std. Error  t value   Pr(>|t|)    
+women     1.486938   0.302989  4.90757 4.7746e-06 ***
+rile_std -0.580508   0.067866 -8.55375 6.6204e-13 ***
+coal      0.937359   0.175058  5.35456 8.0105e-07 ***
+opp       0.313668   0.105366  2.97692 3.8510e-03 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.24038     Adj. R2: 0.297801
+                Within R2: 0.200071
+DV: dislike  flip: TRUE  women var: to_pfeml 
+Gender table:
+   
+    FALSE TRUE
+  1  2260    0
+  2     0 2262
+OLS estimation, Dep. Var.: dv
+Observations: 2,012
+Fixed-effects: cy: 80
+Standard-errors: Clustered (cy) 
+          Estimate Std. Error  t value   Pr(>|t|)    
+women     1.712586   0.332939  5.14384 1.9128e-06 ***
+rile_std -0.596855   0.061744 -9.66658 4.8884e-15 ***
+coal      0.935225   0.167529  5.58248 3.2281e-07 ***
+opp       0.320834   0.108783  2.94930 4.1881e-03 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.31717     Adj. R2: 0.29813 
+                Within R2: 0.193091
+OLS estimation, Dep. Var.: dv
+Observations: 2,008
+Fixed-effects: cy: 80
+Standard-errors: Clustered (cy) 
+          Estimate Std. Error  t value   Pr(>|t|)    
+women     1.210044   0.265880  4.55110 1.9062e-05 ***
+rile_std -0.632106   0.069530 -9.09116 6.4572e-14 ***
+coal      0.982556   0.172220  5.70524 1.9422e-07 ***
+opp       0.295644   0.112551  2.62676 1.0350e-02 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.30707     Adj. R2: 0.283063
+                Within R2: 0.195638
+RESULT:women_mps_coef_bivariate=1.603816
+RESULT:women_mps_coef_full=1.486938
+RESULT:women_mps_coef_women_partisans=1.712586
+RESULT:women_mps_coef_men_partisans=1.210044
+RESULT:right_left_distance_coef_full=-0.580508
+RESULT:coalition_partners_coef_full=0.937359
+RESULT:opposition_partners_coef_full=0.313668
+RESULT:n_directed_dyads=2019
+RESULT:n_obs_women_partisans=2012
+RESULT:n_obs_men_partisans=2008
+RESULT:n_election_studies=81

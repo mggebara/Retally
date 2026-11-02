@@ -1,0 +1,69 @@
+Columns:
+ [1] "tn"                    "dispersed"             "age"                  
+ [4] "study"                 "mathgrade"             "disposable_income"    
+ [7] "raven_correct_answers" "math_answers_correct"  "crt_answers_correct"  
+[10] "session"               "treatment"             "average_ip"           
+[13] "decision_number"       "utility_point"         "corner"               
+[16] "chose_corner"          "indifference_point"    "pizza"                
+[19] "control"               "main"                  "id_stage2_upper"      
+[22] "pap_sample"            "id_stage2"             "avg_id_stage2"        
+[25] "qe_ard"                "qe_ard_lower"          "qe_ard_upper"         
+[28] "qe_rad"                "qe_rad_lower"          "qe_rad_upper"         
+[31] "RT_avg_stage_2"        "d_a0_main_tr"          "d_a1_main_tr"         
+[34] "d_a2_main_tr"          "d_g0_main_tr"          "d_g1_main_tr"         
+[37] "d_g2_main_tr"          "d_d1_main_tr"          "d_d2_main_tr"         
+[40] "d_d3_main_tr"          "d_d4_main_tr"          "d_d5_main_tr"         
+[43] "d_t1_main_tr"          "d_t2_main_tr"          "d_t3_main_tr"         
+[46] "d_t4_main_tr"          "std_rt_2_main_tr"      "std_math_main_tr"     
+[49] "std_crt_main_tr"       "std_raven_main_tr"     "std_start_row_main_tr"
+[52] "id_stage2_sign"        "cb_effect"            
+Rows: 7254 
+id candidate session_tn : max rows 9  share with 9 rows 1  n 806 
+id candidate tn : max rows 9  share with 9 rows 1  n 806 
+Using id: session_tn 
+Subjects without dispersed flag: 548 
+Balanced ip range: 0 884 
+Final ip range: -63 300 
+Shifted d scale: FALSE 
+chose_corner on final rows:
+cc
+<NA> 
+ 806 
+Final ip exceeds 62 for some subjects: treating stored value as manual upper bound
+treatment table:
+
+  0   1 
+407 399 
+main/control/pizza:
+, ,  = 0
+
+      
+         0   1
+  0      0   0
+  1      0   0
+  <NA> 128 134
+
+, ,  = 1
+
+      
+         0   1
+  0    128 130
+  1    143 143
+  <NA>   0   0
+
+
+  DonCtrl  DonTreat  MainCtrl MainTreat  MechCtrl MechTreat 
+      134       128       143       143       130       128 
+Exclusion rule A : N Main-Treatment = 106 
+Exclusion rule B : N Main-Treatment = 100 
+Exclusion rule A2 : N Main-Treatment = 76 
+Exclusion rule C : N Main-Treatment = 98 
+Exclusion rule D : N Main-Treatment = 106 
+Exclusion rule E : N Main-Treatment = 106 
+Using exclusion rule B 
+
+  DonCtrl  DonTreat  MainCtrl MainTreat 
+      101       100       103       100 
+d lower/mid/upper: 31.37 37.475 43.58 
+rel lower/mid/upper: 0.1886026 0.2238739 0.2591452 
+Tobit: 36.77746 

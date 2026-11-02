@@ -1,0 +1,154 @@
+Reason attribute: Reason for migration 
+                                        
+                                         econ drought flooding wildfires
+  Drought                                   0    4295        0         0
+  Economic opportunity                   4342       0        0         0
+  Flooding                                  0       0     4358         0
+  Political/religious/ethnic persecution    0       0        0         0
+  Wildfires                                 0       0        0      4327
+                                        
+                                         persecution
+  Drought                                          0
+  Economic opportunity                             0
+  Flooding                                         0
+  Political/religious/ethnic persecution        4206
+  Wildfires                                        0
+Other attributes: Gender | Language Fluency | Occupation | Origin | Religion | Vulnerability 
+Choice columns: force_choice, Q184, Q186, Q188, Q190, Q192, Q194, Q196, Q198  R2 = 0.04270373 
+OLS estimation, Dep. Var.: chosen
+Observations: 18,970
+Standard-errors: Clustered (id) 
+                                           Estimate Std. Error   t value
+(Intercept)                                0.450608   0.017123 26.315366
+reasondrought                              0.035062   0.011716  2.992642
+reasonflooding                             0.036883   0.011916  3.095263
+reasonwildfires                            0.040181   0.011351  3.539818
+reasonpersecution                          0.075684   0.012465  6.071832
+att1Male                                  -0.044535   0.007387 -6.028995
+att2Fluent                                 0.061262   0.009301  6.586522
+att2None                                  -0.043115   0.008908 -4.840311
+att3Doctor                                 0.115332   0.011214 10.285074
+att3Teacher                                0.068270   0.010705  6.377249
+att3Unemployed                            -0.071547   0.010828 -6.607707
+att4Another region in your country         0.025844   0.011700  2.208963
+att4Ethiopia                              -0.000178   0.011154 -0.015920
+att4Myanmar                                0.004407   0.011421  0.385900
+att4Ukraine                                0.014967   0.011751  1.273729
+att5Christian                              0.060059   0.009375  6.406466
+att5Muslim                                -0.046835   0.009288 -5.042628
+att6No surviving family members            0.025310   0.011258  2.248249
+att6None                                  -0.012635   0.011248 -1.123324
+att6Physically handicapped                -0.015505   0.011685 -1.326928
+att6Post Traumatic Stress Disorder (PTSD) -0.058722   0.011517 -5.098801
+                                            Pr(>|t|)    
+(Intercept)                                < 2.2e-16 ***
+reasondrought                             2.8283e-03 ** 
+reasonflooding                            2.0168e-03 ** 
+reasonwildfires                           4.1737e-04 ***
+reasonpersecution                         1.7463e-09 ***
+att1Male                                  2.2586e-09 ***
+att2Fluent                                7.0039e-11 ***
+att2None                                  1.4840e-06 ***
+att3Doctor                                 < 2.2e-16 ***
+att3Teacher                               2.6631e-10 ***
+att3Unemployed                            6.1052e-11 ***
+att4Another region in your country        2.7386e-02 *  
+att4Ethiopia                              9.8730e-01    
+att4Myanmar                               6.9965e-01    
+att4Ukraine                               2.0303e-01    
+att5Christian                             2.2151e-10 ***
+att5Muslim                                5.3783e-07 ***
+att6No surviving family members           2.4760e-02 *  
+att6None                                  2.6155e-01    
+att6Physically handicapped                1.8481e-01    
+att6Post Traumatic Stress Disorder (PTSD) 4.0311e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.489208   Adj. R2: 0.041693
+Reason attribute: Gründe für die Migration 
+                                           
+                                            econ drought flooding wildfires
+  Dürre                                        0    4222        0         0
+  Politische/religiöse/ethnische Verfolgung    0       0        0         0
+  Überflutung                                  0       0     4229         0
+  Waldbrände                                   0       0        0      4109
+  Wirtschaftliche Perspektive               4199       0        0         0
+                                           
+                                            persecution
+  Dürre                                               0
+  Politische/religiöse/ethnische Verfolgung        4103
+  Überflutung                                         0
+  Waldbrände                                          0
+  Wirtschaftliche Perspektive                         0
+Other attributes: Beruf | Geschlecht | Herkunft | Religion | Sprachkompetenz | Zusätzliche Belastung 
+Choice columns: force_choice, Q184, Q186, Q188, Q190, Q192, Q194, Q196, Q198  R2 = 0.05534796 
+OLS estimation, Dep. Var.: chosen
+Observations: 18,862
+Standard-errors: Clustered (id) 
+                                               Estimate Std. Error    t value
+(Intercept)                                    0.401497   0.016303  24.626454
+reasondrought                                  0.080667   0.011839   6.813376
+reasonflooding                                 0.086457   0.011613   7.444877
+reasonwildfires                                0.059798   0.012073   4.952977
+reasonpersecution                              0.162345   0.013206  12.293076
+att1Arzt                                       0.178934   0.011520  15.532967
+att1Lehrer                                     0.145656   0.011155  13.057957
+att1Reinigungskraft                            0.062625   0.010328   6.063866
+att2Weiblich                                   0.050390   0.007463   6.752185
+att3Äthiopien                                  0.004070   0.011283   0.360737
+att3Aus einem anderen Teil Ihres Landes        0.021253   0.013408   1.585154
+att3Myanmar                                    0.013529   0.010861   1.245605
+att3Ukraine                                   -0.001190   0.011569  -0.102904
+att4Christian                                  0.007555   0.008883   0.850554
+att4Muslim                                    -0.085497   0.009632  -8.876170
+att5Gebrochen                                 -0.092247   0.009080 -10.159484
+att5Keine                                     -0.140160   0.009908 -14.145469
+att6Keine                                     -0.021718   0.011382  -1.908202
+att6Keine überlebenden Familienmitglieder      0.013166   0.011212   1.174312
+att6Körperliche Behinderung                    0.002331   0.011430   0.203948
+att6PTBS (Posttraumatische Belastungsstörung) -0.035496   0.011471  -3.094576
+                                                Pr(>|t|)    
+(Intercept)                                    < 2.2e-16 ***
+reasondrought                                 1.5861e-11 ***
+reasonflooding                                1.9876e-13 ***
+reasonwildfires                               8.4850e-07 ***
+reasonpersecution                              < 2.2e-16 ***
+att1Arzt                                       < 2.2e-16 ***
+att1Lehrer                                     < 2.2e-16 ***
+att1Reinigungskraft                           1.8386e-09 ***
+att2Weiblich                                  2.3811e-11 ***
+att3Äthiopien                                 7.1837e-01    
+att3Aus einem anderen Teil Ihres Landes       1.1323e-01    
+att3Myanmar                                   2.1318e-01    
+att3Ukraine                                   9.1806e-01    
+att4Christian                                 3.9521e-01    
+att4Muslim                                     < 2.2e-16 ***
+att5Gebrochen                                  < 2.2e-16 ***
+att5Keine                                      < 2.2e-16 ***
+att6Keine                                     5.6632e-02 .  
+att6Keine überlebenden Familienmitglieder     2.4053e-01    
+att6Körperliche Behinderung                   8.3843e-01    
+att6PTBS (Posttraumatische Belastungsstörung) 2.0220e-03 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.485966   Adj. R2: 0.054345
+RESULT:amce_drought_us=0.035062
+RESULT:amce_drought_us_se=0.011716
+RESULT:amce_flooding_us=0.036883
+RESULT:amce_flooding_us_se=0.011916
+RESULT:amce_wildfires_us=0.040181
+RESULT:amce_wildfires_us_se=0.011351
+RESULT:amce_persecution_us=0.075684
+RESULT:amce_persecution_us_se=0.012465
+RESULT:respondents_us=1086
+RESULT:choice_tasks_us=18970
+RESULT:amce_drought_germany=0.080667
+RESULT:amce_drought_germany_se=0.011839
+RESULT:amce_flooding_germany=0.086457
+RESULT:amce_flooding_germany_se=0.011613
+RESULT:amce_wildfires_germany=0.059798
+RESULT:amce_wildfires_germany_se=0.012073
+RESULT:amce_persecution_germany=0.162345
+RESULT:amce_persecution_germany_se=0.013206
+RESULT:respondents_germany=1074
+RESULT:choice_tasks_germany=18862

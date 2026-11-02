@@ -1,0 +1,56 @@
+Full sample rows: 239 
+Five station rows: 87 
+Unique metros in five: Farragut North, Farragut West, McPherson Square, Metro Center 
+OLS estimation, Dep. Var.: panhandlers
+Observations: 237
+Fixed-effects: date: 47
+Standard-errors: Clustered (metro) 
+                 Estimate Std. Error  t value   Pr(>|t|)    
+passersby        0.004102   0.001109 3.698541 0.00112440 ** 
+friendliness     6.219032   3.181634 1.954666 0.06236745 .  
+shuttle_stop     0.779268   0.170579 4.568357 0.00012446 ***
+homeless_service 0.177432   0.194198 0.913667 0.36997986    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.05633     Adj. R2: 0.393194
+                Within R2: 0.288331
+OLS estimation, Dep. Var.: panhandlers
+Observations: 78
+Fixed-effects: date: 25
+Standard-errors: Clustered (metro) 
+                 Estimate Std. Error  t value Pr(>|t|)    
+passersby        0.005530   0.003944 1.401886 0.255501    
+friendliness     7.919751  12.716009 0.622817 0.577539    
+shuttle_stop     0.928082   0.226244 4.102125 0.026215 *  
+homeless_service 0.356148   0.278262 1.279901 0.290581    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.899344     Adj. R2: 0.290115
+                 Within R2: 0.339969
+rec_don n: 63 
+rec_dol n: 54 
+Levene's Test for Homogeneity of Variance (center = median)
+      Df F value Pr(>F)
+group  3  0.7338  0.536
+      59               
+Levene's Test for Homogeneity of Variance (center = median)
+      Df F value Pr(>F)
+group  3   0.205 0.8925
+      50               
+              Df Sum Sq Mean Sq F value Pr(>F)
+factor(metro)  3   13.8   4.610   0.484  0.695
+Residuals     59  562.0   9.525               
+              Df Sum Sq Mean Sq F value Pr(>F)
+factor(metro)  3     47   15.68   0.101  0.959
+Residuals     50   7764  155.27               
+RESULT:passersby_full_sample=0.004102
+RESULT:passersby_five_station_subsample=0.005530
+RESULT:friendliness_full_sample=6.219032
+RESULT:shuttle_stop_full_sample=0.779268
+RESULT:shuttle_stop_five_station_subsample=0.928082
+RESULT:brown_forsythe_donations_per_hour=0.733823
+RESULT:brown_forsythe_dollars_per_hour=0.204963
+RESULT:anova_f_donations_per_hour=0.484024
+RESULT:anova_f_dollars_per_hour=0.101006
+RESULT:station_visits_full_sample=239
+RESULT:station_visits_five_station_subsample=87

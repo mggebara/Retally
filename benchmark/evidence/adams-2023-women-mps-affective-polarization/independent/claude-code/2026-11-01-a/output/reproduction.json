@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "entry_id": "adams-2023-women-mps-affective-polarization",
+  "mode": "independent",
+  "run_id": "2026-11-01-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Sample restriction implemented as out-party (to-party) prior lower-house seats >= 4 (to_prior_seats), which yields exactly the paper's 1,842 dyads; applying the >=4 filter to both parties gives 1,535. US rows coded 999 seats are kept (major parties).",
+    "Coalition/opposition-partner dummies use prior_coalition / prior_opposition (codebook lists these as used in the analysis), not govern_together / opposition_together.",
+    "Left-right distance (CMP rile_distance) standardized over the estimation sample (mean 22.5, SD 17.5 vs paper's 22.4 / 17.6).",
+    "Gender-specific DV computed as 10 - dislike from gender_disagregated_8-8-21.rds (gender 2 = women, 1 = men)."
+  ],
+  "notes": "Three exploratory runs (no RESULT lines) inspected variables and sample filters. Final: fixest OLS with country-year (cntryyr) fixed effects, SEs clustered by cntryyr. All coefficients and Ns match Table 1 at reported precision (1.89, 1.73, 2.10, 1.13, -0.59, 0.94, 0.37; N 1842/1836/1833; 81 elections). Clustered SEs are somewhat smaller than published (e.g. 0.36 vs 0.43 on the bivariate coefficient); SEs are not among the claims. Codebook .docx files and readme.rtf in the mount were read as data documentation; no script files were opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T04:25:31Z",
+  "finished_at": "2026-11-02T04:29:00Z"
+}

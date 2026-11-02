@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "entry_id": "forsythe-2022-young-workers-recessions",
+  "mode": "blind",
+  "run_id": "2026-11-02-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 124, "kind": ""}
+  ],
+  "deviations": [
+    "Sample restriction follows the paper's explicit statement only: civilians aged 16+ (peage>=16) with valid education and labour-force status in both months, month t from Feb 1994 to Sep 2016; no upper age bound was imposed (the paper says 'working-age' but gives no cap). Matches were taken as supplied (the file has no second-month sex/race/age to re-confirm matches).",
+    "Years of schooling mapped from peeduca: 31:0, 32:2.5, 33:5.5, 34:7.5, 35:9, 36:10, 37:11, 38:12, 39:12, 40:13, 41:14, 42:14, 43:16, 44:18, 45:20, 46:20; potential experience = age - years - 6, young = PE <= 10.",
+    "Hire = employed in t (pemlr 1-2) and either non-employed in t-1 or v2puiodp1 == 2 (changed employer); new job class of worker 6/7 (self-employed) excluded. v2puiodp1 codes -1/-2/-3 treated as no employer change.",
+    "Demographic FE = sex x white (race==1) x Hispanic (prhspnon, else pehspnon, == 1) x 7 education groups; demographics and t-1 status from the first month, state and unemployment rate from month t.",
+    "Hiring LPMs were estimated on weighted cell means (state x month x demographic cell x young x t-1 status), with weight = sum of the average of the two months' CPS weights. Point estimates are identical to person-level WLS because every regressor is constant within a cell. N is the person-level count. Done because the 2 GB file takes about 214 s of the 300 s limit to read in the sandbox.",
+    "Only the needed 19 of 35 columns of yh_data.csv were read (fread select=); the full file was not loaded.",
+    "Wage regression: new hires with v2prernwa > 0 and v2prwernal == 0 (not allocated), deflated by the supplied CPI series at month t. Weights are the average CPS weight (no earnings weight is in the data). Occupation codes mapped to 2002 codes via crosswalk vintage 1990 (<=2002), 2002 (2003-2010), 2010 (2011+); industry via 1990 (<=2002), 2002 (2003-2008), 2007 (2009-2013), 2012 (2014+). 11 obs with an unmatched industry were dropped."
+  ],
+  "notes": "Independent blind reproduction in R (data.table + fixest). attempt-1: exploratory read and tabulation of coding (no RESULT lines). attempt-2: exploratory I/O timing probe that exceeded 300 s and was killed (treated as a timeout, exit 124; no RESULT lines). Final run: Table 1 Panel A cols 1 and 4, Panel B cols 1 and 4, Table 2 cols 2-4 (by t-1 status), and Table 10 Panel B col 1. All with CPS weights and state-clustered SEs. Ran in 243 s.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T05:50:35Z",
+  "finished_at": "2026-11-02T06:09:00Z"
+}

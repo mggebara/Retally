@@ -1,0 +1,702 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "female_sponsor_ncosponsors_all_ols",
+      "ground_truth": {
+        "value": 1.395,
+        "standard_error": 0.628,
+        "unit": "cosponsors per bill",
+        "claim_type": "coefficient",
+        "location": "Table 5, Panel A (Number of Cosponsors), row All, column 1 (OLS - full sample)",
+        "context": "Table 5 (\"RD and PS Matching Estimates\"), Panel A, all sponsors, column 1.  Bill-level OLS regression, U.S. House public bills of the 101st-111th Congresses; dependent variable: the number of cosponsors on the bill; regressor of interest: a dummy for a female sponsor (the table entry is its coefficient).  Controls: Congress fixed effects; bill characteristics (dummies for the committee of referral and for the minor topic); sponsor characteristics (age, tenure in Congress, rookie, committee leader — chair or ranking member — black, party dummy, occupational dummies, Ivy League degree, born in the state of election, total number of bills sponsored in the Congress); district characteristics (macro-area dummies, percent black, over-65, foreign-born and urban residents, log median income, log population density).  Robust standard errors clustered at the individual-Congress (sponsor-term) level.\n",
+        "decimals": 3,
+        "sample_size": 60670
+      },
+      "i4r": {
+        "reproduced_value": 1.395,
+        "outcome": "matches",
+        "notes": "Meta-database row 1391 (Change inference; DP75 Table 3): 1.395, SE 1.025 clustered by member (p = 0.174; loses significance). Amended controls (row 1415, DP75 Table 2): 1.370 (0.638).  Adding Congresses 112-116 (row 1435): 2.509 (0.675).\n",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "female_sponsor_ncosponsors_all_ols",
+        "claim_type": "coefficient",
+        "claimed": 1.395,
+        "reproduced": 0.9875765034,
+        "tolerance": 0.02,
+        "rel_err": 0.29205985419354835,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "female_sponsor_ncosponsors_all_ols",
+        "reproduced": 0.9875765034,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.0279,
+        "abs_err": 0.4074234966,
+        "rel_err": 0.29205985419354835,
+        "margin": 14.602992709677418,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=0.9875765034 vs claimed=1.395 (relative error 29.21%, tolerance 2.00%)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "female_sponsor_ncosponsors_rep_ols",
+      "ground_truth": {
+        "value": 3.149,
+        "standard_error": 1.017,
+        "unit": "cosponsors per bill",
+        "claim_type": "coefficient",
+        "location": "Table 5, Panel A (Number of Cosponsors), row Republicans, column 1 (OLS - full sample)",
+        "context": "Table 5, Panel A, column 1, restricted to bills with a Republican sponsor: the same OLS specification as for all sponsors (number of cosponsors on the female-sponsor dummy; Congress fixed effects; bill, sponsor and district characteristics; standard errors clustered by sponsor-Congress).  Significant at 1%.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 3.149,
+        "outcome": "matches",
+        "notes": "Row 1345 (Change inference): 3.149, SE 1.359 by member (p = 0.021). Amended controls (row 1432): 3.161 (1.019).  Extended sample (row 1389): 2.573 (1.186).\n",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "female_sponsor_ncosponsors_rep_ols",
+        "claim_type": "coefficient",
+        "claimed": 3.149,
+        "reproduced": 3.230173523,
+        "tolerance": 0.02,
+        "rel_err": 0.025777555731978378,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "female_sponsor_ncosponsors_rep_ols",
+        "reproduced": 3.230173523,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.06298000000000001,
+        "abs_err": 0.08117352299999991,
+        "rel_err": 0.025777555731978378,
+        "margin": 1.2888777865989187,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=3.230173523 vs claimed=3.149 (relative error 2.58%, tolerance 2.00%)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "female_sponsor_ncosponsors_rep_rd_ipw",
+      "ground_truth": {
+        "value": 6.734,
+        "standard_error": 3.946,
+        "unit": "cosponsors per bill",
+        "claim_type": "coefficient",
+        "location": "Table 5, Panel A (Number of Cosponsors), row Republicans, column 3 (RD - optimal bandwidth with inverse propensity score weighting)",
+        "context": "Table 5, Panel A, column 3, Republican sponsors.  Regression discontinuity in mixed-gender House elections: the number of cosponsors regressed on the female-sponsor dummy, the margin of victory of the female candidate and its interaction with the female dummy (slopes differing on either side of the threshold), Congress fixed effects and bill characteristics, within the optimal bandwidth (Calonico, Cattaneo and Titiunik 2014; computed on bill-level observations; 13 percentage points for this row), with observations weighted by the inverse of a propensity score for electing a woman, estimated within the bandwidth from district characteristics.  Standard errors clustered by sponsor-Congress. Significant at 10% in the published version.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 6.734,
+        "outcome": "matches",
+        "notes": "Row 1411 (Change inference): 6.734, SE 4.083 by member (p = 0.103). The meta-database's o_coeff here is 6.734 (3.946), the published value; the NBER WP prints 6.857 (3.912).  Amended controls (row 1440): 5.111 (4.031).  Extended sample (row 1408): 10.384 (7.509).\n",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "female_sponsor_ncosponsors_rep_rd_ipw",
+        "claim_type": "coefficient",
+        "claimed": 6.734,
+        "reproduced": 5.547598884,
+        "tolerance": 0.02,
+        "rel_err": 0.17618074190674188,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "female_sponsor_ncosponsors_rep_rd_ipw",
+        "reproduced": 5.547598884,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.13468,
+        "abs_err": 1.1864011159999999,
+        "rel_err": 0.17618074190674188,
+        "margin": 8.809037095337095,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=5.547598884 vs claimed=6.734 (relative error 17.62%, tolerance 2.00%)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "female_sponsor_ncosponsors_rep_ipw_sponsor",
+      "ground_truth": {
+        "value": 3.124,
+        "standard_error": 1.04,
+        "unit": "cosponsors per bill",
+        "claim_type": "coefficient",
+        "location": "Table 5, Panel A (Number of Cosponsors), row Republicans, column 5 (PS weighting - full sample, district + margin of victory + sponsor characteristics)",
+        "context": "Table 5, Panel A, column 5, Republican sponsors.  Full sample of electoral races (not only mixed-gender ones): weighted least squares of the number of cosponsors on the female-sponsor dummy, Congress fixed effects and bill characteristics, with observations weighted by the inverse of the estimated propensity score of electing a female representative, where the propensity score is a function of district characteristics, the margin of victory of the elected candidate and sponsor characteristics.  Standard errors clustered by sponsor-Congress.  Significant at 1%.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 3.124,
+        "outcome": "matches",
+        "notes": "Row 1363 (Change inference): 3.124, SE 1.295 by member (p = 0.016). Amended controls (row 1406): 2.899 (1.017).  Extended sample (row 1346): 2.561 (1.230).\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "female_sponsor_ncosponsors_rep_ipw_sponsor",
+        "claim_type": "coefficient",
+        "claimed": 3.124,
+        "reproduced": 3.063725977,
+        "tolerance": 0.02,
+        "rel_err": 0.0192938613956467,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "female_sponsor_ncosponsors_rep_ipw_sponsor",
+        "reproduced": 3.063725977,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.06248,
+        "abs_err": 0.06027402300000029,
+        "rel_err": 0.0192938613956467,
+        "margin": 0.9646930697823349,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "female_sponsor_pct_opposite_dem_ols",
+      "ground_truth": {
+        "value": -1.505,
+        "standard_error": 0.419,
+        "unit": "percentage points (percent of cosponsors from the opposite party)",
+        "claim_type": "coefficient",
+        "location": "Table 5, Panel B (Percent Cosponsors of Opposite Party), row Democrats, column 1 (OLS - full sample)",
+        "context": "Table 5, Panel B, column 1, Democratic sponsors.  The paper's main measure of bipartisanship: dependent variable is the percentage of the bill's cosponsors who belong to the opposite party.  Same OLS specification as Panel A column 1 (female-sponsor dummy; Congress fixed effects; bill, sponsor and district characteristics; standard errors clustered by sponsor-Congress).  Significant at 1%.\n",
+        "decimals": 3,
+        "sample_size": 32846
+      },
+      "i4r": {
+        "reproduced_value": -1.506,
+        "outcome": "matches",
+        "notes": "Row 1398 (Change inference): -1.506, SE 0.669 by member (p = 0.025) — 0.001 off the printed -1.505, within rounding.  Amended controls (row 1336): -1.663 (0.422).  Extended sample (row 1441): -2.016 (0.580).\n",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "female_sponsor_pct_opposite_dem_ols",
+        "claim_type": "coefficient",
+        "claimed": -1.505,
+        "reproduced": -1.730159071,
+        "tolerance": 0.02,
+        "rel_err": 0.14960735614617957,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "female_sponsor_pct_opposite_dem_ols",
+        "reproduced": -1.730159071,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.0301,
+        "abs_err": 0.2251590710000002,
+        "rel_err": 0.14960735614617957,
+        "margin": 7.480367807308977,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=-1.730159071 vs claimed=-1.505 (relative error 14.96%, tolerance 2.00%)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "female_sponsor_pct_opposite_dem_rd",
+      "ground_truth": {
+        "value": -3.351,
+        "standard_error": 1.91,
+        "unit": "percentage points (percent of cosponsors from the opposite party)",
+        "claim_type": "coefficient",
+        "location": "Table 5, Panel B (Percent Cosponsors of Opposite Party), row Democrats, column 2 (RD - optimal bandwidth)",
+        "context": "Table 5, Panel B, column 2, Democratic sponsors.  Regression discontinuity in mixed-gender House elections: percent of cosponsors from the opposite party on the female-sponsor dummy, the margin of victory of the female candidate and its interaction with the female dummy, and Congress fixed effects, within the optimal bandwidth (Calonico, Cattaneo and Titiunik 2014, computed on bill-level observations; 24 percentage points for this row). No other controls, no weights.  Standard errors clustered by sponsor-Congress.  Significant at 10%.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -3.351,
+        "outcome": "matches",
+        "notes": "Row 1400 (Change inference): -3.351, SE 1.864 by member (p = 0.075).  Amended controls (row 1454): -3.913 (1.921).  Extended sample (row 1438): -7.205 (3.857).\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "female_sponsor_pct_opposite_dem_rd",
+        "claim_type": "coefficient",
+        "claimed": -3.351,
+        "reproduced": -3.398899834,
+        "tolerance": 0.02,
+        "rel_err": 0.014294190987764806,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "female_sponsor_pct_opposite_dem_rd",
+        "reproduced": -3.398899834,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.06702,
+        "abs_err": 0.04789983399999986,
+        "rel_err": 0.014294190987764806,
+        "margin": 0.7147095493882403,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "female_sponsor_pct_opposite_dem_ipw_sponsor",
+      "ground_truth": {
+        "value": -1.208,
+        "standard_error": 0.525,
+        "unit": "percentage points (percent of cosponsors from the opposite party)",
+        "claim_type": "coefficient",
+        "location": "Table 5, Panel B (Percent Cosponsors of Opposite Party), row Democrats, column 5 (PS weighting - full sample, district + margin of victory + sponsor characteristics)",
+        "context": "Table 5, Panel B, column 5, Democratic sponsors: the full-sample inverse-propensity-score-weighted regression (propensity score from district characteristics, the margin of victory and sponsor characteristics; Congress fixed effects and bill characteristics in the outcome regression; standard errors clustered by sponsor-Congress), with percent of cosponsors from the opposite party as the outcome.  Significant at 5%.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -1.208,
+        "outcome": "matches",
+        "notes": "Row 1404 (Change inference): -1.208, SE 0.828 by member (p = 0.145; loses significance).  Amended controls (row 1401): -1.361 (0.532).  Extended sample (row 1354): -2.312 (0.730).\n",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "female_sponsor_pct_opposite_dem_ipw_sponsor",
+        "claim_type": "coefficient",
+        "claimed": -1.208,
+        "reproduced": -1.775497168,
+        "tolerance": 0.02,
+        "rel_err": 0.46978242384105967,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "female_sponsor_pct_opposite_dem_ipw_sponsor",
+        "reproduced": -1.775497168,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.02416,
+        "abs_err": 0.567497168,
+        "rel_err": 0.46978242384105967,
+        "margin": 23.48912119205298,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=-1.775497168 vs claimed=-1.208 (relative error 46.98%, tolerance 2.00%)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "female_sponsor_pct_opposite_rep_ols",
+      "ground_truth": {
+        "value": 3.666,
+        "standard_error": 0.916,
+        "unit": "percentage points (percent of cosponsors from the opposite party)",
+        "claim_type": "coefficient",
+        "location": "Table 5, Panel B (Percent Cosponsors of Opposite Party), row Republicans, column 1 (OLS - full sample)",
+        "context": "Table 5, Panel B, column 1, Republican sponsors: percent of cosponsors from the opposite party on the female-sponsor dummy, OLS with Congress fixed effects and bill, sponsor and district characteristics, standard errors clustered by sponsor-Congress. Significant at 1%.\n",
+        "decimals": 3,
+        "sample_size": 27669
+      },
+      "i4r": {
+        "reproduced_value": 3.666,
+        "outcome": "matches",
+        "notes": "Row 1434 (Change inference): 3.666, SE 1.494 by member (p = 0.014).  Amended controls (row 1431): 3.727 (0.921).  Extended sample (row 1409): 1.133 (0.868) — the Republican bipartisanship gap disappears in 2011-2020.\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "female_sponsor_pct_opposite_rep_ols",
+        "claim_type": "coefficient",
+        "claimed": 3.666,
+        "reproduced": 3.705857665,
+        "tolerance": 0.02,
+        "rel_err": 0.010872249045280957,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "female_sponsor_pct_opposite_rep_ols",
+        "reproduced": 3.705857665,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.07332,
+        "abs_err": 0.03985766499999999,
+        "rel_err": 0.010872249045280957,
+        "margin": 0.5436124522640479,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "female_sponsor_pct_opposite_rep_ipw_district",
+      "ground_truth": {
+        "value": 2.905,
+        "standard_error": 0.82,
+        "unit": "percentage points (percent of cosponsors from the opposite party)",
+        "claim_type": "coefficient",
+        "location": "Table 5, Panel B (Percent Cosponsors of Opposite Party), row Republicans, column 4 (PS weighting - full sample, district + margin of victory)",
+        "context": "Table 5, Panel B, column 4, Republican sponsors.  Full sample of electoral races: percent of cosponsors from the opposite party on the female-sponsor dummy, Congress fixed effects and bill characteristics, weighted by the inverse of the propensity score of electing a female representative estimated from district characteristics and the margin of victory of the elected candidate (no sponsor characteristics).  Standard errors clustered by sponsor-Congress.  Significant at 1%.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 2.905,
+        "outcome": "matches",
+        "notes": "Row 1453 (Change inference): 2.905, SE 1.453 by member (p = 0.046).  Amended controls (row 1351): 2.939 (0.809).  Extended sample (row 1450): -0.371 (0.911).\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "female_sponsor_pct_opposite_rep_ipw_district",
+        "claim_type": "coefficient",
+        "claimed": 2.905,
+        "reproduced": 2.90496091,
+        "tolerance": 0.02,
+        "rel_err": 1.345611015491201e-05,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "female_sponsor_pct_opposite_rep_ipw_district",
+        "reproduced": 2.90496091,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.0581,
+        "abs_err": 3.909000000001939e-05,
+        "rel_err": 1.345611015491201e-05,
+        "margin": 0.0006728055077456005,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_bills_ncosponsors_all_ols",
+      "ground_truth": {
+        "value": 60670.0,
+        "standard_error": null,
+        "unit": "bills",
+        "claim_type": "other",
+        "location": "Table 5, Panel A, row All, n. bills, column 1",
+        "context": "Number of bills (observations) in the all-sponsor OLS regression of the number of cosponsors, Table 5 Panel A column 1.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_bills_ncosponsors_all_ols",
+        "claim_type": "other",
+        "claimed": 60670.0,
+        "reproduced": 60685.0,
+        "tolerance": 0.01,
+        "rel_err": 0.00024723916268336906,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_bills_ncosponsors_all_ols",
+        "reproduced": 60685.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 606.7,
+        "abs_err": 15.0,
+        "rel_err": 0.00024723916268336906,
+        "margin": 0.024723916268336903,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_sponsor_terms_ncosponsors_all_ols",
+      "ground_truth": {
+        "value": 4746.0,
+        "standard_error": null,
+        "unit": "sponsors (individual-Congress clusters)",
+        "claim_type": "other",
+        "location": "Table 5, Panel A, row All, n. sponsors, column 1",
+        "context": "Number of sponsors (individual-Congress units, the clustering level) in the all-sponsor OLS regression of the number of cosponsors, Table 5 Panel A column 1.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_sponsor_terms_ncosponsors_all_ols",
+        "claim_type": "other",
+        "claimed": 4746.0,
+        "reproduced": 4747.0,
+        "tolerance": 0.01,
+        "rel_err": 0.00021070375052675939,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_sponsor_terms_ncosponsors_all_ols",
+        "reproduced": 4747.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 47.46,
+        "abs_err": 1.0,
+        "rel_err": 0.00021070375052675939,
+        "margin": 0.02107037505267594,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_bills_pct_opposite_dem_ols",
+      "ground_truth": {
+        "value": 32846.0,
+        "standard_error": null,
+        "unit": "bills",
+        "claim_type": "other",
+        "location": "Table 5, Panel B, row Democrats, n. bills, column 1",
+        "context": "Number of bills with a Democratic sponsor in the OLS regression of percent of cosponsors from the opposite party, Table 5 Panel B column 1.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_bills_pct_opposite_dem_ols",
+        "claim_type": "other",
+        "claimed": 32846.0,
+        "reproduced": 32846.0,
+        "tolerance": 0.01,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_bills_pct_opposite_dem_ols",
+        "reproduced": 32846.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 328.46,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_bills_pct_opposite_rep_ols",
+      "ground_truth": {
+        "value": 27669.0,
+        "standard_error": null,
+        "unit": "bills",
+        "claim_type": "other",
+        "location": "Table 5, Panel B, row Republicans, n. bills, column 1",
+        "context": "Number of bills with a Republican sponsor in the OLS regression of percent of cosponsors from the opposite party, Table 5 Panel B column 1.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_bills_pct_opposite_rep_ols",
+        "claim_type": "other",
+        "claimed": 27669.0,
+        "reproduced": 27669.0,
+        "tolerance": 0.01,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_bills_pct_opposite_rep_ols",
+        "reproduced": 27669.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 276.69,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 13,
+    "row_passed": 8,
+    "recomputed_passed": 8,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "gagliarducci-2022-gender-cooperation-congress",
+    "mode": "seeded",
+    "reproducer": "pipeline",
+    "label": "pipeline-desktop-opus",
+    "model": "desktop-opus",
+    "oracle": true,
+    "run": "20261023T064839Z",
+    "results_file": "pipeline-oracle-desktop-opus-9papers-all-modes-2026-10-23.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/gagliarducci-2022-gender-cooperation-congress/seeded/pipeline/20261023T064839Z",
+    "run_dir": null,
+    "date": "2026-10-23T06:48:39Z",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 13,
+    "final": 8,
+    "first_scored": 8,
+    "first_scored_index": 0,
+    "first_attempt": 8,
+    "n_refinements": 2,
+    "n_error_refinements": 0,
+    "n_claim_refinements": 2,
+    "n_executions": 2,
+    "n_files_stripped": null,
+    "agrees_with_i4r": false,
+    "deviations_manifest": [],
+    "deviations_stdout": [],
+    "notes": null,
+    "files_read_outside_mount": null,
+    "paper_text": null,
+    "complete": true,
+    "missing": []
+  }
+}

@@ -1,0 +1,31 @@
+Table 4 OLS with country FE; N = 4486 ; countries = 44 
+  attack quarters in sample: 50 ; under women: 9 
+            kill_16         female_pres kill_16:female_pres              growth 
+             2.2156             -3.2034             -2.9567              0.0000 
+      log_inflation        election_qtr 
+            -0.7741              4.0162 
+  R2 = 0.2719323 
+
+Table 2 May likeability (OLS): N = 143499 waves 9 10 11 12 13 14 15 16 
+treatment1:time      treatment1            time     (Intercept) 
+        -0.0996          0.0088         -0.4513          1.9605 
+  aliased: factor(wave)16 
+Table 2 May best PM (logit): N = 97155 waves 7 8 10 11 12 
+treatment1:time      treatment1            time     (Intercept) 
+        -0.3215         -0.0023          1.3641         -2.5026 
+  aliased: factor(wave)12 
+
+[info] wave-12-participants-only: like N = 143499 : -0.0996 0.0088 -0.4513 | bestPM N = 97155 : -0.3215 -0.0023 1.3641 
+[info] best PM as LPM: -0.052 -2e-04 0.2055 
+
+RESULT:intl_attack_table4=2.215648
+RESULT:intl_attack_x_woman_exec_table4=-2.956670
+RESULT:n_obs_table4=4486
+RESULT:did_attack_x_time_like_may_table2=-0.099607
+RESULT:did_attack_like_may_table2=0.008807
+RESULT:did_time_like_may_table2=-0.451291
+RESULT:did_attack_x_time_may_best_pm_table2=-0.321537
+RESULT:did_attack_may_best_pm_table2=-0.002315
+RESULT:did_time_may_best_pm_table2=1.364110
+RESULT:n_obs_did_like_may_table2=143499
+RESULT:n_obs_did_may_best_pm_table2=97155

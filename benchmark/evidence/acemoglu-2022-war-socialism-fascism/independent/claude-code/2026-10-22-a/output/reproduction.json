@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "entry_id": "acemoglu-2022-war-socialism-fascism",
+  "mode": "independent",
+  "run_id": "2026-10-22-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [],
+  "notes": "Data: fascism_db.dta only. attempt-1 listed variables and labels (exploratory, no RESULT lines). Specification from the paper text: OLS first stage of psu1919_vv on foots_pop6m, and 2SLS of each fascism outcome on psu1919_vv instrumented by foots_pop6m. Every variable except the fixed effects and regiment dummies is standardized (z-scored) within each estimation sample. Regressors: 359 regiment dummies (d_reg*) and province fixed effects (provincia1921). Demographic controls: a quartic in lpop1911 plus sh_pop_1911_be6. The column (6) controls add geography (larea, centre_alt, max_alt), psu1913_vv, military controls (veterans74_95, veterans96_00, ard_vol_pop6m, army_suppliers_d, cruent_d), agriculture controls (dlab, shcrop, landlord_ass) and urban controls (ind_workers, ind_firms, literacy, elites, bourgeoisie). Standard errors are clustered by circondario1921 using fixest's default small-sample corrections. The F-statistic is the squared clustered t-statistic of the instrument. attempt-2 used fixest's default singleton removal, which gave N=5772/5354. check_attempt reported every claim within tolerance. Because the paper text states N=5,775 for all columns, the final run keeps singletons (fixef.rm='none'). Coefficients are unchanged. N, the clustered SE and the F-statistic now match the paper (F=50.59).",
+  "files_read_outside_mount": ["benchmark/.cache/claude-code/acemoglu-2022-war-socialism-fascism/independent/2026-10-22-a/task.md (the task instructions, read as instructed)"],
+  "started_at": "2026-10-22T03:07:51Z",
+  "finished_at": "2026-10-22T03:11:30Z"
+}

@@ -1,0 +1,90 @@
+N raw: 1292 
+Columns: wave, wavenum, type_of_info, treatment, incentive, incentivetext, age_categories, income_categories, educ, student_status, working_status, married, children, female, risk_aversion, visits, past4, previsits1, previsits2, previsits3, previsits4, previsits5, previsits6, previsits7, previsits8, visits_100days, avevisits_20wks, visits_next4weeks, goal, percent_goal, days_0, days_1, days_2, days_3, days_5, days_7, days_12, wtp1v0_decision, wtp1v2_decision, wtp1v4_decision, wtp1v6_decision, wtp1v8_decision, wtp1v10_decision, wtp1v12_decision, wtp1v14_decision, wtp1v16_decision, wtp1v18_decision, wtp1v20_decision, wtp1v22_decision, wtp1v24_decision, wtp1v26_decision, wtp1v28_decision, wtp1v30_decision, wtp1v0_decision_2ndtry, wtp1v2_decision_2ndtry, wtp1v4_decision_2ndtry, wtp1v6_decision_2ndtry, wtp1v8_decision_2ndtry, wtp1v10_decision_2ndtry, wtp1v12_decision_2ndtry, wtp1v14_decision_2ndtry, wtp1v16_decision_2ndtry, wtp1v18_decision_2ndtry, wtp1v20_decision_2ndtry, wtp1v22_decision_2ndtry, wtp1v24_decision_2ndtry, wtp1v26_decision_2ndtry, wtp1v28_decision_2ndtry, wtp1v30_decision_2ndtry, wtp1, wtp2, wtp3, wtp5, wtp7, wtp12, maxwtp1, maxwtp2, maxwtp3, maxwtp5, maxwtp7, maxwtp12, q169, q170, chose_commit12, chose_anticommit11, q295, q296, past100days_went, past100days_should, sliderintro_wtp1, q137, q138, out_of_town_days, percent_meet_commit12, percent_meet_anticommit, typical_days_exer_elsewhere, passed_attention_check, passed_1st_try, passed_comprehension_check, prefer20_to_0, areyousure_prefer0_to_20, prefer80contingent_to_0, areyousure_prefer0_to_80, flag_exclude_exog, flag_low_wtp, flag_confusion 
+Full templates: days_# | wtp# | maxwtp# 
+WTP vars: wtp1,wtp2,wtp3,wtp5,wtp7,wtp12 
+Template days_# score 4.000 means 12.81,13.67,14.49,16.6,17.54,19.5
+Forecast vars: days_1,days_2,days_3,days_5,days_7,days_12 
+Wave table:
+        
+           1   2   3
+  fall   350   0   0
+  spring   0   0 414
+  winter   0 528   0
+Incentive table:
+   
+      0   1   2   3   5   7 commit
+  1 106   0 116   1   1 126      0
+  2 177   1 189   1  74  86      0
+  3 144   0   0   0   2 140    128
+Treatment by wave:
+   tr
+      0   1
+  1 106 244
+  2 177 351
+  3 144 270
+Excluded endogenous: 12 
+Table 3 sample N: 1152 
+                            t3c1             t3c2             t3c3
+Dependent Var.:              bcp              bcp              bcp
+                                                                  
+basic           -0.3912 (0.5501) -0.3837 (0.5483)  0.1493 (0.5775)
+enhanced         0.2500 (0.5050)  0.2574 (0.5054)  0.7166 (0.5159)
+z_goal                           -0.1637 (0.2168)                 
+z_act                                             0.5648* (0.2300)
+Fixed-Effects:  ---------------- ---------------- ----------------
+wave_n                       Yes              Yes              Yes
+_______________ ________________ ________________ ________________
+S.E. type       Heterosked.-rob. Heterosked.-rob. Heterosked.-rob.
+Observations               1,152            1,152            1,152
+R2                       0.00374          0.00425          0.00876
+Within R2                0.00038          0.00089          0.00542
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+More-commitment vars: chose_commit12 
+       12 
+0.4965438 
+Table 4 N: 1152 
+                            t4c1             t4c2               t4c3
+Dependent Var.:             take             take               take
+                                                                    
+basic            0.0075 (0.0584)  0.0087 (0.0584)    0.0029 (0.0577)
+enhanced        -0.0231 (0.0365) -0.0239 (0.0365)   -0.0276 (0.0358)
+z_bcp                            0.0229. (0.0121)                   
+z_goal                                            0.0997*** (0.0146)
+z_act                                                               
+Fixed-Effects:  ---------------- ---------------- ------------------
+wave_n                       Yes              Yes                Yes
+_______________ ________________ ________________ __________________
+S.E.: Clustered           by: id           by: id             by: id
+Observations               1,152            1,152              1,152
+R2                       0.00128          0.00338            0.04072
+Within R2                0.00036          0.00246            0.03983
+
+                             t4c4
+Dependent Var.:              take
+                                 
+basic            -0.0250 (0.0603)
+enhanced         -0.0512 (0.0387)
+z_bcp                            
+z_goal                           
+z_act           -0.0340* (0.0162)
+Fixed-Effects:  -----------------
+wave_n                        Yes
+_______________ _________________
+S.E.: Clustered            by: id
+Observations                1,152
+R2                        0.00508
+Within R2                 0.00416
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RESULT:bcp_basic_info_treatment_col1=-0.391157
+RESULT:bcp_enhanced_info_treatment_col1=0.249964
+RESULT:bcp_goal_minus_expected_attendance_col2=-0.163682
+RESULT:bcp_actual_minus_expected_attendance_col3=0.564759
+RESULT:bcp_regression_observations=1152.000000
+RESULT:takeup_more_basic_info_treatment_col1=0.007469
+RESULT:takeup_more_enhanced_info_treatment_col1=-0.023088
+RESULT:takeup_more_behavior_change_premium_col2=0.022935
+RESULT:takeup_more_goal_minus_expected_attendance_col3=0.099743
+RESULT:takeup_more_actual_minus_expected_attendance_col4=-0.033970
+RESULT:takeup_more_regression_observations=1152.000000

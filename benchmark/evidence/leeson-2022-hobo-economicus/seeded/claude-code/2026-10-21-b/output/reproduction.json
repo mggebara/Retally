@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "entry_id": "leeson-2022-hobo-economicus",
+  "mode": "seeded",
+  "run_id": "2026-10-21-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [],
+  "deviations": [],
+  "notes": "Translated 1_dataprep.do and 2_analysis.do to R in a single run. metroid is rebuilt alphabetically per file, the way Stata encode does it; the five subsample stations (ids 9,10,14,17,18) are Farragut North, Farragut West, Gallery Place, McPherson Square and Metro Center. Friendliness is each passerby's highest response category, averaged by station. service and shuttle are walking distance <= 10 minutes. Table 2 is feols(panhandlers ~ passersby + friendly + shuttle + service | day, cluster = metroid, fixef.rm = 'none'). Brown-Forsythe is car::leveneTest(center = median), the same as Stata robvar W50. ANOVA is a one-way aov by station. N = 242/102 station-visits and 80/67 receipt observations. The first run matched every claim at the printed precision, so there are no attempts and no claim comparison was used to change the script.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T02:02:32Z",
+  "finished_at": "2026-10-22T02:03:30Z"
+}

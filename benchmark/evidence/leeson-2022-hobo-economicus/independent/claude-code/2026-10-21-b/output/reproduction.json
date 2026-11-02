@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "leeson-2022-hobo-economicus",
+  "mode": "independent",
+  "run_id": "2026-10-21-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [],
+  "notes": "Built the station-visit panel from metrovisitslog.csv (242 visits), merging WMATA monthly exits by station-month-year (Georgetown assigned Foggy Bottom), station-average friendliness (each passerby's highest response category 1-5 flagged in passresp1-5, averaged over all passersby at the station), shuttle and service indicators (walking minutes <= 10). Table 1 summary statistics are matched exactly. Table 2: OLS of panhandlers on these regressors with date fixed effects and SEs clustered by station (fixest). Attempt 1 used fixest's default singleton removal, which dropped single-visit dates (240/98 obs); after comparing with the claimed observation counts, the final run keeps singletons (fixef.rm='none'), giving 242/102 obs. Coefficients are unchanged, and the clustered SEs then match the paper's Table 2 to 3 decimals. Tables 3-4: Brown-Forsythe test (car::leveneTest, center=median) and one-way ANOVA of donations/hour (donations/minutes*60, n=80) and dollars/hour ((cash+inkind)/minutes*60, n=67) across the five stations. All values match the paper.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T02:06:11Z",
+  "finished_at": "2026-10-22T02:07:52Z"
+}

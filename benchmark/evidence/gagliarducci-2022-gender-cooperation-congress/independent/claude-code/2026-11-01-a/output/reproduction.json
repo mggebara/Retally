@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "entry_id": "gagliarducci-2022-gender-cooperation-congress",
+  "mode": "independent",
+  "run_id": "2026-11-01-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "RD bandwidths fixed at the paper-reported CCT optimal bandwidths (13 for Republican cosponsors, 24 for Democratic percent-opposite); rdbwselect (mserd, triangular, p=1, bill level) recomputed 17.8 and 25.0 and is printed for reference.",
+    "Percent of opposite-party cosponsors set to 0 for bills with zero cosponsors (the CSV has it missing there; Table 5 Panel B Ns imply it was 0) and scaled to percentage points; one bill with a fraction above 1 set to missing.",
+    "Constructed controls not in the CSV: rookie = tenure 1; committee leader = chair or ranking member (comc|comr); total bills sponsored = count of bills per sponsor-Congress in the file; 4 macro regions (Northeast, Midwest, South, West) from ICPSR state codes; log population density = lnpop - lnarea; occupational dummies occ1-occ5 (occ0 and occ6 omitted); independent-party dummy alongside the Republican dummy.",
+    "Propensity scores: logit with Congress fixed effects estimated at bill level; ATE inverse-probability weights 1/p for women and 1/(1-p) for men. The margin of victory of the elected candidate = 100*|MV1_democrat|. For RD+IPW the score uses district characteristics within the bandwidth.",
+    "Sponsor-Congress clusters = Congress x sponsor name x state x district (4741 in the all-sponsor OLS against 4746 in the paper)."
+  ],
+  "notes": "Independent reproduction of Table 5 from the paper text and bills_analysis_101-111_replication.csv only (no author code opened). Column 1: OLS of the outcome on the female dummy with Congress and minor-topic fixed effects, 33 committee-of-referral dummies, sponsor characteristics and district characteristics, SEs clustered by sponsor-Congress (fixest). RD: mixed-gender races, |MV1_female| <= bandwidth, female dummy + MV1_female + female x MV1_female + Congress FE. PS columns: full sample, weighted least squares of the outcome on the female dummy + Congress FE + bill characteristics. One exploratory run (attempt-1, no RESULT lines); the first estimating run was compared with the claims via check_attempt, which reported all claims within tolerance, so the script was not changed and that run is final. Point estimates differ from the paper for some cells (e.g. Republican OLS cosponsors 2.40 against 3.149; Republican RD-IPW 5.87 against 6.734).",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T04:27:58Z",
+  "finished_at": "2026-11-02T04:30:29Z"
+}

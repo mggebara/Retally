@@ -1,0 +1,105 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: Why Don’t Firms Hire Young Workers During
+Abstract (first 500 chars): Recessions are known to be particularly damaging to young workers’ employment
+outcomes. I ﬁnd that during recessions the hiring rate falls faster for young workers
+than for more-experienced workers. I show this cannot be explained by the composition
+of jobs or workers’ labor supply decisions, and I conclude that ﬁrms preferentially hire
+experienced workers during periods of high unemployment. I develop a new model
+of cyclical upgrading that relaxes the classic assumptions of exogenous ﬁrm size a
+Methodology Summary: - **Data and sample construction:** The data are monthly Current Population Survey (CPS) interviews from January 1994 to September 2016. Individuals are linked across consecutive months with the Madrian and Lefgren (1999) procedure: matches are made on administrative IDs and confirmed using sex, race and age. The sample starts in 1994 because earlier questionnaires did not allow job-to-job moves to be observed. It keeps civilians over age 16 with non-missing age and education, which gives about 16.9 million observations. Two sets of months are dropped: May to August 1995, which lack the longitudinal link ID, and month pairs that span the eight-month sampling break between interview months 4 and 5.
+- **Key variables:** The business-cycle measure is the monthly state unemployment rate (51 units, including DC). Potential experience (PE) is defined as age minus years of education minus 6. "Young" means PE ≤ 10 years and "experienced" means PE > 10 years. The outcome D^hired equals 100 if the person is hired in month t, i.e. either (a) non-employed in t−1 and employed in t, or (b) employed in both months and reports changing firms since last month. New jobs classified as self-employment do not count as hires.
+- **Main estimating equation (Eq. 1):** The model is a linear probability model with outcome D^hired_ikst. Its terms are state FE (α_s), month-year FE (δ_t), PE-group indicators D^PE_k, and the interactions D^PE_k × State Unemp. Rate_st. The main effect of the unemployment rate is left out, so each γ_k is the hiring-rate response for PE group k, in percentage points per 1 percentage point of unemployment. The null hypothesis is that all γ_k are equal. The main figures (Fig. 2) use one-year PE bins, and Tables 1 and 2 use the two groups (≤10 vs >10).
+- **Preferred specification and controls:** The preferred specification is Table 1, Column 4. It includes state FE, month-year FE and non-parametric demographic FE. The demographic FE are full interactions of gender × race (white/non-white) × Hispanic × education, with seven education categories: <HS, HS, some college, 4-year degree, master's, professional, PhD. Columns 1–3 build up to it: no FE, then state FE, then state + demographic FE. The preferred sample includes all working-age individuals, whatever their labor-force status in t−1. Variants split the sample by origin state in t−1 (employed, unemployed, NILF; Table 2, Fig. 2) and by college degree (Table 9, Fig. 3).
+- **Inference and weighting:** Standard errors are clustered at the state level. Regressions are weighted by the average of the CPS sampling weights across the two matched months. Fig. 1 also applies an HP filter to annualized hiring rates to isolate their cyclical component.
+- **Composition and labor-supply checks:** Eq. 2 regresses the potential experience of new hires on the state unemployment rate. It includes state, month-year, occupation and industry FE plus demographic FE, with state-clustered SEs and CPS weights. Occupation and industry are crosswalked to consistent 2002 Census codes (508 occupations and 261 industries). Further checks:
+  - Table 6 runs state-month-year cell regressions of average PE, and of the ratio of hires' PE to the population's PE, overall and by labor-force status.
+  - Table 7 measures search intensity as the number of search methods used (Shimer 2004), for the unemployed only.
+  - Table 8 repeats the Table 2 regressions on two restricted samples: unemployed workers available to start within a week, and NILF individuals not in school.
+  - Tables 3–4 look at other flows: exits, E→U, job-to-job, U↔NILF, and quits vs. involuntary separations.
+- **Wage test (Table 10):** The sample is new hires with non-allocated log weekly wages, deflated to 1994 prices. These wages are observed only in interview months 4 and 8. Log wage is regressed on the state unemployment rate, overall (Panel A) and interacted with the young/experienced split (Panel B). Controls are state FE, month-year FE, detailed industry and occupation FE, and demographic FE, with state-clustered SEs. Columns cover all hires and then hires from employment, unemployment and NILF separately. The test compares the observed pattern with three theories: competitive (equal log-wage cyclicality across groups), classic rigid-wage upgrading (acyclical wages) and bargained cyclical upgrading (young workers' log wages more cyclical).
+- **Theory:** The paper builds a stylized single-firm model with random search, endogenous firm size, Stole–Zwiebel bargaining over two worker types, a per-worker fixed cost k and a vacancy cost c. Its key prediction (Proposition 2) is that young workers' log wages are more procyclical than experienced workers' log wages. The empirical work has no train/test split or cross-validation; evaluation rests on coefficient significance and tests that the coefficients are equal across groups.
+
+
+## Quantities to Compute
+Compute each quantity below and print it under the given name.  The paper's reported values are deliberately not shown.
+1. young_x_unemp_rate_no_controls [type: coefficient; unit: percentage points of the monthly hiring probability per percentage point of state unemployment]
+   Location: Table 1, Panel B, column (1), PE <= 10 x U. Rate
+   Context: Table 1 ("Hiring Over the Business Cycle: With and Without Controls"), Panel B, column (1), row PE <= 10 x U. Rate. Linear probability model (Equation 1 of the paper) of an indicator equal to 100 if the individual is hired in month t — begins a job at a new firm, either from non-employment in month t-1 or, if employed in t-1, reporting a change of employer since last month; new jobs classified as self-employment are not hires — on an indicator for potential experience (age minus years of education minus six) of at most ten years, and the state monthly unemployment rate interacted with each of …
+2. experienced_x_unemp_rate_no_controls [type: coefficient; unit: percentage points of the monthly hiring probability per percentage point of state unemployment]
+   Location: Table 1, Panel B, column (1), PE > 10 x U. Rate
+   Context: Table 1, Panel B, column (1), row PE > 10 x U. Rate: the experienced workers' (more than ten years of potential experience) hiring response in the same regression as young_x_unemp_rate_no_controls (no fixed effects, CPS weights, state-clustered standard errors).
+3. young_x_unemp_rate_preferred [type: coefficient; unit: percentage points of the monthly hiring probability per percentage point of state unemployment]
+   Location: Table 1, Panel B, column (4), PE <= 10 x U. Rate (also Table 2, column (1))
+   Context: Table 1, Panel B, column (4) — the paper's preferred specification, reprinted as Table 2, column (1) (sample: All) — row PE <= 10 x U. Rate. Same regression as young_x_unemp_rate_no_controls with state fixed effects, demographic fixed effects (indicators for every combination of gender, white / non-white, Hispanic descent and seven education levels: less than high school, high school, some college, four-year college, master's, professional degree, PhD) and month-year fixed effects. CPS weights; standard errors clustered by state.
+4. experienced_x_unemp_rate_preferred [type: coefficient; unit: percentage points of the monthly hiring probability per percentage point of state unemployment]
+   Location: Table 1, Panel B, column (4), PE > 10 x U. Rate (also Table 2, column (1))
+   Context: Table 1, Panel B, column (4) (= Table 2, column (1)), row PE > 10 x U. Rate: the experienced workers' hiring response in the preferred specification (state, demographic and month-year fixed effects), the same regression as young_x_unemp_rate_preferred. Positive and significant in the paper.
+5. aggregate_unemp_rate_no_controls [type: coefficient; unit: percentage points of the monthly hiring probability per percentage point of state unemployment]
+   Location: Table 1, Panel A, column (1), State Unemp. Rate
+   Context: Table 1, Panel A, column (1), row State Unemp. Rate. Regression of the hired indicator (times 100) on the state monthly unemployment rate alone, for all working-age individuals in the matched CPS panel, no fixed effects; CPS weights, standard errors clustered by state.
+6. aggregate_unemp_rate_month_year_fe [type: coefficient; unit: percentage points of the monthly hiring probability per percentage point of state unemployment]
+   Location: Table 1, Panel A, column (4), State Unemp. Rate
+   Context: Table 1, Panel A, column (4), row State Unemp. Rate: the same single-regressor hiring regression as aggregate_unemp_rate_no_controls with state, demographic and month-year fixed effects.
+7. young_x_unemp_rate_employed [type: coefficient; unit: percentage points of the monthly hiring probability per percentage point of state unemployment]
+   Location: Table 2, column (2) Employed, PE <= 10 x U. Rate
+   Context: Table 2 ("Hiring Over the Business Cycle: Young and Experienced"), column (2), sample Employed: the preferred specification (potential experience main effect, both unemployment-rate interactions, state, demographic and month-year fixed effects, CPS weights, state-clustered standard errors) estimated on individuals employed in month t-1, so a hire is a move to a new employer. Row PE <= 10 x U. Rate.
+8. experienced_x_unemp_rate_employed [type: coefficient; unit: percentage points of the monthly hiring probability per percentage point of state unemployment]
+   Location: Table 2, column (2) Employed, PE > 10 x U. Rate
+   Context: Table 2, column (2), sample Employed, row PE > 10 x U. Rate; same regression as young_x_unemp_rate_employed. Not statistically significant in the paper.
+9. young_x_unemp_rate_unemployed [type: coefficient; unit: percentage points of the monthly hiring probability per percentage point of state unemployment]
+   Location: Table 2, column (3) Unemployed, PE <= 10 x U. Rate
+   Context: Table 2, column (3), sample Unemployed: the preferred specification estimated on individuals unemployed in month t-1. Row PE <= 10 x U. Rate.
+10. young_x_unemp_rate_nilf [type: coefficient; unit: percentage points of the monthly hiring probability per percentage point of state unemployment]
+   Location: Table 2, column (4) NILF, PE <= 10 x U. Rate
+   Context: Table 2, column (4), sample NILF: the preferred specification estimated on individuals not in the labour force in month t-1. Row PE <= 10 x U. Rate.
+11. wage_young_x_unemp_rate_all_hires [type: coefficient; unit: log points of the weekly wage per percentage point of state unemployment]
+   Location: Table 10, Panel B, column (1) All, PE <= 10 x U. Rate
+   Context: Table 10 ("Log Wages During Recessions for New Hires"), Panel B ("Disaggregated by Potential Experience"), column (1), sample All (all new hires, whatever their status in the previous month). Regression of the log weekly wage of newly hired workers (weekly wages that are not allocated / imputed by the Census, deflated to 1994 dollars) on the potential-experience-at-most-ten indicator and its interactions with the state unemployment rate, as in Equation 1, with a constant and state, demographic, month-year, occupation and industry fixed effects; CPS weights, standard errors clustered by state. …
+12. wage_experienced_x_unemp_rate_all_hires [type: coefficient; unit: log points of the weekly wage per percentage point of state unemployment]
+   Location: Table 10, Panel B, column (1) All, PE > 10 x U. Rate
+   Context: Table 10, Panel B, column (1), sample All, row PE > 10 x U. Rate; same new-hire log-wage regression as wage_young_x_unemp_rate_all_hires.
+13. n_obs_full_sample [type: other; unit: person-month observations (matched consecutive-month pairs)]
+   Location: Table 1, N (all columns); Table 2, column (1)
+   Context: Number of observations in the full-sample hiring regressions of Table 1 (every column) and Table 2 column (1): matched consecutive-month CPS person observations, January 1994 to September 2016, after the sample restrictions described for young_x_unemp_rate_no_controls.
+
+## Dataset Information
+Name: forsythe-2022-young-workers-recessions
+Local path: <repo>/.cache/datasets/forsythe_2022_young_workers_recessions.script-free
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- 3 replication package/Data/ind_xwalk2002.csv (15.1 KB) — columns: v2peio1icd,v2ind_codeyear,v2censusind_2002recode
+- 3 replication package/Data/occ_xwalk2002.csv (21.8 KB) — columns: v2peio1ocd,v2censusocc_2002recode,v2occ_codeyear
+- 3 replication package/Data/v2unemp_smy.csv (180.0 KB) — columns: v2gestfips,v2unemp_smy,v2hryear,v2hrmonth
+- 3 replication package/Data/wage_deflation_1994_2016.csv (6.8 KB) — columns: year,month,cpi
+- 3 replication package/Data/yh_data.csv (2.0 GB) — columns: hrmonth,hryear,peage,pesex,peeduca,race,prhspnon,pemlr,pulk,pulkm2,pulkm3,pulkm4,pulkm5,pulkm6,pelkavl,pruntype,penlfact,peschft,pwsswgt,v2hrmonth,v2hryear,v2gestfips,v2pemlr,v2pehrusl1,v2pruntype,v2puiodp1,v2peio1cow,v2peio1icd,v2peio1ocd,…
+- 3 replication package/ReadMe.pdf (119.0 KB)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/forsythe_2022_young_workers_recessions.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Independent Reproduction
+This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's description alone.  The authors' own analysis code is deliberately withheld.  Do NOT open, read, source, or execute any script files that may appear in the dataset directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, and similar) — load data files only.  Derive the estimating equation, sample restrictions, fixed effects, and standard-error clustering from the paper information and claims above.
+
+## Blind Reproduction
+This reproduction is also BLIND: the paper's reported values for the quantities above are deliberately withheld, and you will not be told how close your numbers are.  Compute each quantity as the paper's method defines it; do not tune the specification toward any number you expect.  Do NOT read result tables, logs, or output files that may appear in the dataset directory (.tex, .log, .pdf, .html, and similar) to recover the paper's numbers — compute everything from the data files.  Print a RESULT: line for every quantity listed, using its name exactly.
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

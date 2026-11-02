@@ -1,0 +1,152 @@
+Corner-filter sizes:
+
+ DonC  DonT MainC MainT MechC MechT 
+  101   100   103   100   101   102 
+Sample sizes after exclusion:
+
+ DonC  DonT MainC MainT MechC MechT 
+  100   100   100   100   100   100 
+Cross-check with pap_sample flag:
+       
+          1
+  DonC  100
+  DonT  100
+  MainC 100
+  MainT 100
+  MechC 100
+  MechT 100
+Upper-corner subjects: 53  values of id_stage2 among them: 63 
+Mean x_t in Main-Treatment main sample:
+   1    2    3    4    5    6    7    8 
+39.2 34.9 33.6 41.5 41.8 42.2 35.9 38.2 
+$d_low
+
+t test of coefficients:
+
+            Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)  31.6400     2.6853  11.783 < 2.2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+$d_mid
+
+t test of coefficients:
+
+            Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)  37.6100     3.5753  10.519 < 2.2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+$d_up
+
+t test of coefficients:
+
+            Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)  43.5800     4.6835  9.3051 3.588e-15 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+$drel_low
+
+t test of coefficients:
+
+            Estimate Std. Error t value  Pr(>|t|)    
+(Intercept) 0.189748   0.016004  11.856 < 2.2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+$drel_mid
+
+t test of coefficients:
+
+            Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)  0.22416    0.02108  10.634 < 2.2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+$drel_up
+
+t test of coefficients:
+
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  0.25857    0.02750  9.4026  2.2e-15 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+
+Call:
+tobit(formula = d_low ~ 1, left = -63, right = 63, data = mt)
+
+Observations:
+         Total  Left-censored     Uncensored Right-censored 
+           100              0             73             27 
+
+Coefficients:
+            Estimate Std. Error z value Pr(>|z|)    
+(Intercept) 37.09364    3.65805   10.14   <2e-16 ***
+Log(scale)   3.55009    0.08892   39.92   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Scale: 34.82 
+
+Gaussian distribution
+Number of Newton-Raphson Iterations: 5 
+Log-likelihood: -389.3 on 2 Df
+
+
+t test of coefficients:
+
+            Estimate Std. Error t value  Pr(>|t|)    
+(Intercept) 0.075425   0.018950  3.9802 9.662e-05 ***
+ind         0.148734   0.028345  5.2472 3.957e-07 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+              Estimate Std. Error t value  Pr(>|t|)    
+(Intercept) -0.0265775  0.0083175 -3.1954  0.001625 ** 
+ind          0.1612079  0.0223477  7.2136 1.131e-11 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+              Estimate Std. Error t value  Pr(>|t|)    
+(Intercept) -0.0268117  0.0088901 -3.0159  0.002898 ** 
+ind          0.2509705  0.0228776 10.9702 < 2.2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+              Estimate Std. Error t value  Pr(>|t|)    
+(Intercept) -0.0172746  0.0098946 -1.7459   0.08239 .  
+ind          0.0926997  0.0213780  4.3362 2.306e-05 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+DEVIATION: upper-corner lower bound taken as recorded id_stage2 (=63) rather than 62 as in paper text; Tobit right-censoring at 63
+RESULT:abs_concentration_bias_midpoint_table2_col2=37.6100
+RESULT:abs_concentration_bias_tobit_table2_col4=37.0936
+RESULT:rel_concentration_bias_lower_table2_col1=0.1897
+RESULT:rel_concentration_bias_midpoint_table2_col2=0.2242
+RESULT:rel_concentration_bias_upper_table2_col3=0.2586
+RESULT:n_obs_table2=100
+RESULT:rel_cb_mechanism_treatment_table3_col1=0.0754
+RESULT:diff_main_minus_mechanism_table3_col1=0.1487
+RESULT:rel_cb_donation_treatment_table3_col2=0.1346
+RESULT:diff_donation_treatment_minus_control_table3_col2=0.1612
+RESULT:diff_main_treatment_minus_control_table3_col3=0.2510
+RESULT:diff_mechanism_treatment_minus_control_table3_col4=0.0927
+RESULT:n_obs_table3=200

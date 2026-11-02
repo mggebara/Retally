@@ -1,0 +1,52 @@
+Missing:  
+N = 2019 
+Mean party_like: 3.992892 
+Mean to_pfeml: 0.3028147 
+OLS estimation, Dep. Var.: party_like
+Observations: 2,019
+Standard-errors: Clustered (cntryyr) 
+                     Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept)          3.262018   0.121893 26.76142  < 2.2e-16 ***
+to_pfeml             1.767966   0.281747  6.27501 1.6852e-08 ***
+rile_distance_s     -0.493844   0.059028 -8.36629 1.5461e-12 ***
+govern_together      1.136234   0.141691  8.01910 7.4203e-12 ***
+opposition_together  0.209130   0.125120  1.67144 9.8542e-02 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.35416   Adj. R2: 0.196317
+OLS estimation, Dep. Var.: party_like
+Observations: 2,019
+Fixed-effects: cntryyr: 81
+Standard-errors: Clustered (cntryyr) 
+                     Estimate Std. Error  t value   Pr(>|t|)    
+to_pfeml             1.486938   0.302989  4.90757 4.7746e-06 ***
+rile_distance_s     -0.583628   0.068231 -8.55375 6.6204e-13 ***
+govern_together      0.937359   0.175058  5.35456 8.0105e-07 ***
+opposition_together  0.313668   0.105366  2.97692 3.8510e-03 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.24038     Adj. R2: 0.297801
+                Within R2: 0.200071
+OLS estimation, Dep. Var.: party_like
+Observations: 2,019
+Fixed-effects: cntryyr: 81,  party_to: 9
+Standard-errors: Clustered (cntryyr) 
+                     Estimate Std. Error  t value   Pr(>|t|)    
+to_pfeml             1.502453   0.272647  5.51063 4.2295e-07 ***
+rile_distance_s     -0.598191   0.069817 -8.56803 6.2062e-13 ***
+govern_together      0.901200   0.187658  4.80234 7.1933e-06 ***
+opposition_together  0.448156   0.107096  4.18464 7.2740e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.20221     Adj. R2: 0.337618
+                Within R2: 0.215224
+RESULT:n_obs=2019
+RESULT:ols_to_pfeml_coef=1.767966
+RESULT:ols_to_pfeml_se=0.281747
+RESULT:ols_rile_distance_s_coef=-0.493844
+RESULT:ols_govern_together_coef=1.136234
+RESULT:ols_opposition_together_coef=0.209130
+RESULT:fe_cntryyr_to_pfeml_coef=1.486938
+RESULT:fe_cntryyr_to_pfeml_se=0.302989
+RESULT:fe_cntryyr_partyto_to_pfeml_coef=1.502453
+RESULT:fe_cntryyr_partyto_to_pfeml_se=0.272647

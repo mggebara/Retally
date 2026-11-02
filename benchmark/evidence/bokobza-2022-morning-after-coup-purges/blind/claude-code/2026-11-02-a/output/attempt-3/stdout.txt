@@ -1,0 +1,138 @@
+                             m_bc               m_mc             m_bl
+Dependent Var.:                rr                 rr               rr
+                                                                     
+fca             0.1026** (0.0326) 0.1120*** (0.0324) 0.0615. (0.0324)
+l_gdp           -0.0356. (0.0184)  -0.0330. (0.0195) -0.0244 (0.0251)
+l_pop           -0.1457* (0.0634)  -0.1429* (0.0632) -0.1344 (0.0884)
+l_mon                                0.0153 (0.0221)                 
+l_mil                              -0.0525. (0.0267)                 
+l_par                             -0.0792** (0.0287)                 
+Fixed-Effects:  ----------------- ------------------ ----------------
+COUNTRY_ID                    Yes                Yes               No
+YEAR_DATA                     Yes                Yes              Yes
+leader_cab_id                  No                 No              Yes
+_______________ _________________ __________________ ________________
+S.E.: Clustered    by: COUNTRY_ID     by: COUNTRY_ID   by: COUNTRY_ID
+Observations                3,743              3,703            3,626
+R2                        0.22392            0.22901          0.33530
+Within R2                 0.00725            0.01199          0.00257
+
+                              m_ml
+Dependent Var.:                 rr
+                                  
+fca               0.0638* (0.0320)
+l_gdp             -0.0259 (0.0234)
+l_pop            -0.1461. (0.0861)
+l_mon           0.5607*** (0.0376)
+l_mil              0.0687 (0.0706)
+l_par              0.0815 (0.0936)
+Fixed-Effects:  ------------------
+COUNTRY_ID                      No
+YEAR_DATA                      Yes
+leader_cab_id                  Yes
+_______________ __________________
+S.E.: Clustered     by: COUNTRY_ID
+Observations                 3,590
+R2                         0.33828
+Within R2                  0.00841
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+individual base sample: 95344 
+                               m_exp             m_aff              m_res
+Dependent Var.:               purged            purged             purged
+                                                                         
+fca                0.1359** (0.0450) 0.1760** (0.0526)  0.2061** (0.0658)
+e23                  0.0047 (0.0075)                                     
+e46                 0.0185. (0.0094)                                     
+e6p                 -0.0032 (0.0099)                                     
+gdp_cap_pwt_ln_lag  -0.0007 (0.0181)   0.0103 (0.0185)    0.0011 (0.0174)
+fca x e23           -0.0337 (0.0405)                                     
+fca x e46           -0.0745 (0.0698)                                     
+fca x e6p           -0.0714 (0.0536)                                     
+nop                                   0.0330* (0.0143)                   
+lp                                    -0.0148 (0.0134)                   
+t1                                     0.0016 (0.0026)    0.0031 (0.0030)
+t2                                    -0.0001 (0.0002)   -0.0002 (0.0002)
+t3                                   1.76e-6 (3.57e-6)  5.99e-6 (4.15e-6)
+fca x nop                             -0.0654 (0.0705)                   
+fca x lp                             -0.1215* (0.0576)                   
+fa                                                       -0.0077 (0.0096)
+fi                                                      0.0279** (0.0106)
+nr                                                      0.0341** (0.0109)
+ot                                                     0.0520*** (0.0082)
+fca x fa                                                 -0.0389 (0.0696)
+fca x fi                                                 -0.0854 (0.0664)
+fca x nr                                                -0.1804* (0.0830)
+fca x ot                                                -0.1162* (0.0581)
+top                                                                      
+med                                                                      
+low                                                                      
+jun                                                                      
+fca x top                                                                
+fca x med                                                                
+fca x low                                                                
+fca x jun                                                                
+Fixed-Effects:     ----------------- ----------------- ------------------
+country_isocode                  Yes               Yes                Yes
+year                             Yes               Yes                Yes
+__________________ _________________ _________________ __________________
+S.E.: Clustered    by: country_iso.. by: country_iso.. by: country_isoc..
+Observations                  85,711            85,690             76,204
+R2                           0.12826           0.12483            0.13121
+Within R2                    0.00167           0.00218            0.00262
+
+                                m_imp
+Dependent Var.:                purged
+                                     
+fca                0.3741*** (0.0931)
+e23                                  
+e46                                  
+e6p                                  
+gdp_cap_pwt_ln_lag    0.0045 (0.0177)
+fca x e23                            
+fca x e46                            
+fca x e6p                            
+nop                                  
+lp                                   
+t1                   -0.0007 (0.0026)
+t2                  -7.42e-6 (0.0002)
+t3                  4.97e-7 (3.62e-6)
+fca x nop                            
+fca x lp                             
+fa                                   
+fi                                   
+nr                                   
+ot                                   
+fca x fa                             
+fca x fi                             
+fca x nr                             
+fca x ot                             
+top                  -0.0200 (0.0127)
+med                   0.0119 (0.0132)
+low                  0.0257. (0.0143)
+jun                  -0.0069 (0.0150)
+fca x top          -0.2558** (0.0941)
+fca x med          -0.2850** (0.0945)
+fca x low           -0.2652* (0.1195)
+fca x jun          -0.2604** (0.0872)
+Fixed-Effects:     ------------------
+country_isocode                   Yes
+year                              Yes
+__________________ __________________
+S.E.: Clustered    by: country_isoc..
+Observations                   89,631
+R2                            0.12582
+Within R2                     0.00251
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RESULT:failed_coup_base_country_fe=0.102553
+RESULT:failed_coup_main_country_fe=0.111954
+RESULT:failed_coup_base_leader_fe=0.061535
+RESULT:failed_coup_main_leader_fe=0.063813
+RESULT:failed_coup_experience_model=0.135905
+RESULT:failed_coup_x_over_6_years_experience=-0.071377
+RESULT:failed_coup_affiliation_model=0.175977
+RESULT:failed_coup_x_leaders_party=-0.121527
+RESULT:failed_coup_responsibility_model=0.206058
+RESULT:failed_coup_x_natural_resources=-0.180449
+RESULT:failed_coup_importance_model=0.374061

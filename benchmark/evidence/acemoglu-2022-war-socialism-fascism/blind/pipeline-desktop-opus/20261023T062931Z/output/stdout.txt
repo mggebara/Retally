@@ -1,0 +1,96 @@
+Rows: 5775  Cols: 1336 
+Using psu1919_vv for socialist share 1919 
+Using foots_pop6m for foot soldier casualties 
+Using fascist_violence for fascist violence 
+Using fascist_branch for fascist branches 
+Using fascist1921_vv for fascist share 1921 
+Using fascist1924_vv for fascist share 1924 
+Using circondario1921 for district cluster 
+Using provincia1921 for province 
+Using lpop1911 for log population 1911 
+Using sh_pop_1911_be6 for share below six 
+Using larea for log area 
+DEVIATION: variable for elevation main center not found; omitted
+Using max_alt for max elevation 
+Using psu1913_vv for socialist share 1913 
+Using veterans74_95 for veterans 1874-95 
+Using veterans96_00 for veterans 1896-1900 
+Using ard_vol_pop6m for assault+volunteer casualties 
+Using army_suppliers_d for army suppliers dummy 
+DEVIATION: variable for high-mortality battle dummy not found; omitted
+Using dlab for day laborers 
+Using shcrop for sharecroppers 
+DEVIATION: variable for landowner association not found; omitted
+Using ind_workers for industrial workers 
+Using ind_firms for industrial firms 
+Using literacy for literacy 
+Using elites for elites 
+Using bourgeoisie for bourgeoisie 
+Regiment dummies found: 0 
+DEVIATION: regiment dummies not found; omitted
+OLS estimation, Dep. Var.: psu1919_vv
+Observations: 5,772
+Fixed-effects: .prov: 61
+Standard-errors: Clustered (.clus) 
+                  Estimate Std. Error   t value   Pr(>|t|)    
+foots_pop6m       0.076725   0.012432  6.171764 4.4796e-09 ***
+.lpop1           -0.762469   1.635582 -0.466176 6.4166e-01    
+.lpop2            2.209543   4.642745  0.475913 6.3472e-01    
+.lpop3           -1.660275   4.461598 -0.372126 7.1024e-01    
+.lpop4            0.302291   1.454504  0.207831 8.3560e-01    
+sh_pop_1911_be6  -0.057345   0.014413 -3.978589 1.0097e-04 ***
+larea            -0.039080   0.027951 -1.398165 1.6381e-01    
+max_alt          -0.114167   0.027436 -4.161184 4.9329e-05 ***
+psu1913_vv        0.375710   0.033923 11.075430  < 2.2e-16 ***
+veterans74_95     0.133205   0.082421  1.616143 1.0784e-01    
+veterans96_00    -0.096305   0.047602 -2.023150 4.4562e-02 *  
+ard_vol_pop6m    -0.000852   0.007423 -0.114802 9.0873e-01    
+army_suppliers_d  0.017665   0.010341  1.708153 8.9361e-02 .  
+dlab              0.024662   0.041048  0.600800 5.4874e-01    
+shcrop           -0.086519   0.043473 -1.990172 4.8111e-02 *  
+ind_workers       0.032730   0.011454  2.857526 4.7815e-03 ** 
+ind_firms         0.000901   0.009378  0.096103 9.2355e-01    
+literacy         -0.038832   0.027663 -1.403738 1.6215e-01    
+elites           -0.048009   0.026864 -1.787097 7.5633e-02 .  
+bourgeoisie       0.021182   0.029889  0.708694 4.7945e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.577576     Adj. R2: 0.661661
+                 Within R2: 0.295212
+                             mv6             mb6             m21
+Dependent Var.: fascist_violence  fascist_branch  fascist1921_vv
+                                                                
+psu1919_vv       0.2734 (0.2058) 0.1939 (0.2046) 0.2364 (0.2159)
+Fixed-Effects:  ---------------- --------------- ---------------
+.prov                        Yes             Yes             Yes
+_______________ ________________ _______________ _______________
+S.E.: Clustered        by: .clus       by: .clus       by: .clus
+Observations               5,772           5,772           5,354
+R2                       0.15180         0.36891         0.55475
+Within R2                0.03101         0.21381         0.03080
+
+                           m24a            m24f
+Dependent Var.:  fascist1924_vv  fascist1924_vv
+                                               
+psu1919_vv      0.3294 (0.2432) 0.1774 (0.1913)
+Fixed-Effects:  --------------- ---------------
+.prov                       Yes             Yes
+_______________ _______________ _______________
+S.E.: Clustered       by: .clus       by: .clus
+Observations              5,772           5,772
+R2                      0.47125         0.50048
+Within R2               0.03464         0.08800
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RESULT:first_stage_casualties_table1_col1=0.088337
+RESULT:first_stage_casualties_table1_col6=0.076725
+RESULT:first_stage_fstat_table1_col6=38.090667
+RESULT:iv_violence_table2_panelA_col6=0.273410
+RESULT:iv_branches_table2_panelC_col6=0.193945
+RESULT:iv_fascist_vote1921_table3_panelA_col6=0.236371
+RESULT:iv_fascist_vote1924_table3_panelC_col1=0.329434
+RESULT:iv_fascist_vote1924_table3_panelC_col6=0.177379
+RESULT:n_obs_main_sample=5772
+RESULT:n_clusters_main_sample=178
+RESULT:n_obs_fascist_vote1921=5354
+RESULT:n_clusters_fascist_vote1921=171

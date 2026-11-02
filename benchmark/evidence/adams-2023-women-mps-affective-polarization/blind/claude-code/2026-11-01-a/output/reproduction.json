@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "entry_id": "adams-2023-women-mps-affective-polarization",
+  "mode": "blind",
+  "run_id": "2026-11-01-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Coalition/opposition dummies use prior_coalition / prior_opposition (governing status in the period up to the survey), which the dataset codebook flags as the analysis variables; govern_together / opposition_together (flagged 'not used') were not used.",
+    "Women/men partisan DV built as 10 - dislike from the gender-disaggregated file (it stores only the reversed 0=like scale), so coefficients are on the 0-10 liking scale like columns 1-2.",
+    "Seat counts of 999 treated as missing; the four-MP restriction requires to_prior_seats >= 4 and from_prior_seats >= 4.",
+    "Country-year fixed effects and clustering both on cntryyr (no country-year in the estimation sample holds two election dates). The table's 'Country and year fixed effects' label was read as country-year FE, following the text.",
+    "Left-right distance uses the dataset's precomputed standardized rile_distance_s (raw rile_distance mean 22.44 over the full file)."
+  ],
+  "notes": "One exploratory run (attempt-1, no RESULT lines) checked the variables, then one estimation run (final). OLS via fixest::feols on directed dyads with both parties >= 4 MPs (prior seats), country-year FE, SEs clustered by election (cntryyr). n_directed_dyads is the column-2 N (the same as column 1: 1525); n_election_studies is the number of distinct country-years in that sample (76; 19 countries remain after the restrictions). No specification was tuned toward any paper value.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T04:17:00Z",
+  "finished_at": "2026-11-02T04:24:00Z"
+}

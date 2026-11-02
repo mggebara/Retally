@@ -1,0 +1,3 @@
+Country-level models printed RESULT=NA for failed_coup_base_country_fe, failed_coup_main_country_fe, failed_coup_base_leader_fe, failed_coup_main_leader_fe.
+Cause: update(f, . ~ . | FE) on a formula collapsed the regressors and fixed effects into one term ("The variable 'coupattempt_whogov + ... | COUNTRY_ID + YEAR_DATA' has been removed because of collinearity").
+Fix: write the four feols formulas out explicitly. No comparison with claimed values was made.

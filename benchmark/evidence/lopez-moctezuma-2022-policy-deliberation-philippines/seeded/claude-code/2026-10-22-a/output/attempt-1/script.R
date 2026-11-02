@@ -1,0 +1,10 @@
+D <- "<repo>/benchmark/.cache/claude-code/lopez-moctezuma-2022-policy-deliberation-philippines/seeded/2026-10-22-a/mount/lopez_moctezuma_2022_policy_deliberation_philippines"
+load(file.path(D,"data_agg.RData")); load(file.path(D,"survey_raw.RData"))
+print(data.all[,c("barangay","city","assignment","treatment","partytreat","att.prop","turnout.party","share.treated")])
+s <- as.data.frame(survey_raw)
+print(table(s$partytreat, useNA="a"))
+s$att0 <- ifelse(is.na(s$attendance),0,s$attendance)
+agg <- aggregate(cbind(n=1, att=s$att0, a=s$assignment, t=s$treatment), by=list(city=s$city, barangay=s$barangay), FUN=sum)
+print(agg)
+print(sapply(s, function(x) sum(is.na(x))))
+print(lapply(s[,c("assignment","treatment","attendance","vote","turnout_pl","femhouse","fempol","equality","poverty","gap","cct","corruption")], function(x) table(x,useNA="a")))

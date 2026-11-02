@@ -1,0 +1,509 @@
+You are refining R code that reproduces results from an econometrics paper.
+The code RAN SUCCESSFULLY but the reproduced values do not match the
+paper's claims within the allowed tolerance.  Identify what is causing
+the gap and adjust the code to close it.
+
+## Paper
+Title: DISCUSSION PAPER SERIES
+Methodology: - **Design / data-generating process:** Lab experiment (BonnEconLab, oTree, ORSEE-type recruitment via Bock et al. 2014) with a 3x2 between-subjects design: decision environment (Baseline / Directed Attention / Active Choice) x cognitive load (Ample = memorize 2-digit numbers vs. Scarce = memorize 7-digit numbers in the background task). N = 564 subjects, 8 sessions per environment (~96 subjects per cell). Scarce vs. Ample was randomized across individuals within a session, which removes session effects. Tasks, numbers, defaults and their order were identical across all subjects and treatments. There is no ML-style train/test split or cross-validation; identification comes from random assignment to treatment.
+- **Tasks and parameters:** Main part (Part 3) has 20 rounds. In each round a number is shown for 10 s and recalled after 30 s (EUR 0.40 if correct). During those 30 s subjects do the decision task: pick which of 3 sums of six addends is largest, with each sum between 20 and 34 (EUR 0.10 if correct). In Baseline and Directed, one option is a randomly preselected default, and it was correct in 6 of 20 rounds (30%). In Baseline the decision task is visible only while a key is held down, so the experiment records whether subjects entered the task at all (extensive margin). Attention spans in seconds (intensive margin) were recorded in 50% of Baseline sessions. Directed shows the task permanently and keeps the default. Active shows it permanently with no default; 5.35% of Active cases had no choice and paid 0. Part 1 (10 recall rounds, 5–9 digits) and Part 2 (10 decision-task-only rounds) measure baseline ability and are used for balance checks (Table C.1).
+- **Outcome variables:** (i) Passivity / default adherence: 1 if the final choice equals the default, at the subject-round level. It is also split by whether the default was correct or incorrect. (ii) Inattention: never entered the decision task in a round (Baseline). (iii) Attention span: total seconds the decision task was viewed per round. (iv) Decision-task accuracy, background-task accuracy, and total payoffs, used to measure cognitive spillovers. (v) Choice share of the default option in Directed vs. the same option in Active.
+- **Main statistical tests:** Non-parametric tests use subject-level averages over the 20 rounds unless noted, and all tests are two-sided. Treatment comparisons use Mann-Whitney U tests. Part 2 vs. Part 3 accuracy within Baseline-Ample uses a Wilcoxon signed-rank test (83.6% vs. 86%, p = 0.308). Attention distributions are compared with a Kolmogorov-Smirnov test at the subject-round level. Complete inattention (32.1% vs. 2.5%) uses a Fisher exact test. Mean attention (25.76 s vs. 13.15 s; conditional on entering, 26.4 vs. 17.8 s) and decision accuracy conditional on entry (85.0% in Ample, 12.1 pp lower in Scarce) use t-tests. Subject-level CDFs check first-order stochastic dominance.
+- **Parametric / regression specification:** Parametric tests use subject-round observations, and standard errors are clustered at the subject level. The heterogeneity analysis regresses default adherence on a Scarce treatment dummy, a dummy for an above-median Raven score, and their interaction (diff-in-diff p = 0.022). Coefficients are raw percentage-point differences in rates, not standardised. The Raven score comes from a 10-item Raven's Progressive Matrices test given to a random 50% of Baseline subjects in the post-experimental questionnaire. The top quartile of the Raven score is also compared separately (37.3% vs. 33.6%, MWU p = 0.866).
+- **Decomposition:** An Oaxaca-Blinder decomposition (Appendix C.3) splits the Baseline-Scarce vs. Baseline-Ample passivity gap into an extensive-margin part (inattention) and the remainder. The extensive margin accounts for about 70% of the gap.
+- **Headline results and sample restrictions:** Default adherence is 31.8% in Baseline-Ample vs. 60.0% in Baseline-Scarce (MWU p < 0.01). When the default is correct it is 84.0% vs. 87.9% (p = 0.069); when it is incorrect it is 9.4% vs. 48.1% (p < 0.01). Directed-Ample is 30.2% vs. 31.8% in Baseline-Ample (p = 0.243), and Directed-Scarce is about 41% vs. 60%. Baseline-environment analyses use the Baseline sessions only. Attention-span analyses use the 50% subsample with recorded spans; in that subsample, inattention is 26.3% vs. 2.5%. Intensive-margin accuracy is computed only on rounds in which the subject entered the decision task. Directed and Active are compared with Baseline on decision-task accuracy, background-task accuracy and total payoffs to test for negative cognitive spillovers.
+
+
+## Current Code
+```r
+suppressPackageStartupMessages({
+  library(haven)
+  library(fixest)
+})
+set.seed(42)
+
+root <- "<repo>/.cache/datasets/altmann_2022_cognitive_spillovers.script-free/ReplicationPackage/EmpiricalAnalysis/original_data"
+lab_raw <- read_dta(file.path(root, "formatted_data_replication.dta"))
+d <- as.data.frame(lab_raw)
+
+results <- list()
+emit <- function(name, val) {
+  if (!is.null(val) && length(val) == 1 && is.finite(val)) results[[name]] <<- val
+}
+
+num <- function(x) suppressWarnings(as.numeric(zap_labels(x)))
+labtxt <- function(x) {
+  if (inherits(x, "haven_labelled")) as.character(as_factor(x, levels = "default")) else as.character(x)
+}
+
+cat("Rows:", nrow(d), " Cols:", ncol(d), "\n")
+print(names(d))
+for (v in names(d)) {
+  u <- unique(d[[v]])
+  if (length(u) <= 8) {
+    cat("----", v, "\n")
+    print(table(labtxt(d[[v]]), useNA = "ifany"))
+  }
+}
+
+# ---------------- Sample: scarce cognitive resources, three environments ----------------
+target_n <- 12160
+ti_all <- num(d$Treatment_intervention)
+check_sel <- function(s) {
+  s[is.na(s)] <- FALSE
+  sum(s) == target_n && length(unique(na.omit(ti_all[s]))) == 2
+}
+sel <- NULL
+s0 <- !is.na(ti_all)
+if (check_sel(s0)) sel <- s0
+
+excl <- c("load_correct", "load_correct_mean", "ability_load", "ability_task", "summation_correct",
+          "summation_correct_mean", "round", "Treatment_intervention", "default_correct_choice",
+          "payoff", "payoff_share", "payoff_share_mean", "Attention", "attention_mean",
+          "attention_positive", "raven_score", "raven_score_median", "raven_score_quartiles")
+
+# labels suggesting scarce/high load
+if (is.null(sel)) {
+  for (v in setdiff(names(d), excl)) {
+    x <- labtxt(d[[v]])
+    ux <- unique(x[!is.na(x)])
+    if (length(ux) < 2 || length(ux) > 12) next
+    s <- !is.na(x) & grepl("scarce|high.?load|high|7.?digit|seven", x, ignore.case = TRUE)
+    if (check_sel(s)) { sel <- s; cat("Scarce sample via labels of", v, "\n"); break }
+  }
+}
+if (is.null(sel)) {
+  cand_cols <- setdiff(names(d), excl)
+  pri <- grepl("load|scarce|ample|cogn|high|resource|treat", cand_cols, ignore.case = TRUE)
+  cand_cols <- c(cand_cols[pri], cand_cols[!pri])
+  for (v in cand_cols) {
+    x <- labtxt(d[[v]])
+    ux <- unique(x[!is.na(x)])
+    if (length(ux) < 2 || length(ux) > 12) next
+    for (u in ux) {
+      s <- !is.na(x) & x == u
+      if (check_sel(s)) { sel <- s; cat("Scarce sample via", v, "==", u, "\n"); break }
+    }
+    if (!is.null(sel)) break
+  }
+}
+if (is.null(sel)) {
+  cat("WARNING: could not identify scarce sample with N=12160; using non-missing intervention\n")
+  sel <- s0
+}
+sel[is.na(sel)] <- FALSE
+
+# ---------------- Subject id ----------------
+make_round_id <- function(dd) {
+  r <- num(dd$round)
+  cumsum(c(TRUE, diff(r) <= 0))
+}
+ds <- d[sel, , drop = FALSE]
+id_col <- NULL
+nsub_guess <- nrow(ds) / 20
+for (v in names(ds)) {
+  x <- ds[[v]]
+  if (any(is.na(x))) next
+  if (length(unique(x)) == nsub_guess) {
+    tb <- table(as.character(x))
+    if (all(tb == 20)) {
+      isid <- grepl("id|participant|subject|code|label", v, ignore.case = TRUE) && v != "q_subject"
+      if (is.null(id_col)) id_col <- v
+      else if (isid && !(grepl("id|participant|subject|code|label", id_col, ignore.case = TRUE) && id_col != "q_subject")) id_col <- v
+    }
+  }
+}
+if (!is.null(id_col) && !(grepl("id|participant|subject|code|label", id_col, ignore.case = TRUE) && id_col != "q_subject")) {
+  # non-id-like column; fall back to consecutive-round construction if consistent
+  rid <- make_round_id(d)[sel]
+  if (length(unique(rid)) == nsub_guess) id_col <- NULL
+}
+if (is.null(id_col)) {
+  ds$sid <- make_round_id(d)[sel]
+  cat("Subject id constructed from round sequence\n")
+} else {
+  ds$sid <- as.character(ds[[id_col]])
+  cat("Subject id column:", id_col, "\n")
+}
+
+ds$intervention <- num(ds$Treatment_intervention)
+if (!all(ds$intervention %in% c(0, 1))) {
+  ds$intervention <- as.numeric(ds$intervention != min(ds$intervention, na.rm = TRUE))
+}
+
+# ---------------- Default adherence variable ----------------
+is01 <- function(x) {
+  y <- num(x)
+  u <- unique(y[!is.na(y)])
+  length(u) <= 2 && length(u) >= 1 && all(u %in% c(0, 1))
+}
+dc <- names(d)[grepl("passiv|adher|default|chose_def|choice_def", names(d), ignore.case = TRUE)]
+dc <- dc[!grepl("correct|_mean$|median|quart", dc, ignore.case = TRUE)]
+dc <- dc[sapply(dc, function(v) is01(d[[v]]))]
+ord <- c(grep("passiv", dc, ignore.case = TRUE, value = TRUE),
+         grep("adher", dc, ignore.case = TRUE, value = TRUE),
+         dc)
+ord <- unique(ord)
+def_var <- if (length(ord)) ord[1] else NULL
+cat("Default adherence variable:", ifelse(is.null(def_var), "NONE", def_var), "\n")
+if (!is.null(def_var)) ds$default_adh <- num(ds[[def_var]])
+
+ds$choice_q <- num(ds$summation_correct)
+ds$bg_q <- num(ds$load_correct)
+ds$pshare <- num(ds$payoff_share)
+
+# ---------------- Environment dummies ----------------
+envl <- labtxt(ds$Treatment_Environment)
+print(table(envl, ds$intervention, useNA = "ifany"))
+ds$directed <- NA_real_
+ds$forced <- NA_real_
+dir_l <- ds$intervention == 1 & grepl("direct|forced.?att|attention", envl, ignore.case = TRUE)
+frc_l <- ds$intervention == 1 & !dir_l & grepl("active|choice|forc", envl, ignore.case = TRUE)
+if (sum(dir_l) > 0 && sum(frc_l) > 0 && all((dir_l | frc_l) == (ds$intervention == 1))) {
+  ds$directed <- as.numeric(dir_l)
+  ds$forced <- as.numeric(frc_l)
+} else {
+  ev <- unique(envl[ds$intervention == 1])
+  if (length(ev) == 2) {
+    if (!is.null(def_var)) {
+      mns <- sapply(ev, function(e) mean(ds$default_adh[envl == e], na.rm = TRUE))
+      dir_e <- ev[which.max(mns)]
+    } else {
+      dir_e <- sort(ev)[1]
+    }
+    ds$directed <- as.numeric(ds$intervention == 1 & envl == dir_e)
+    ds$forced <- as.numeric(ds$intervention == 1 & envl != dir_e)
+  }
+}
+
+# ---------------- Controls ----------------
+nmz <- names(ds)
+first_or_null <- function(v) if (length(v)) v[1] else NULL
+age_v <- first_or_null(nmz[grepl("^(q_)?age$", nmz, ignore.case = TRUE)])
+if (is.null(age_v)) age_v <- first_or_null(nmz[grepl("age", nmz, ignore.case = TRUE) &
+                                                  !grepl("page|average|image|stage|language|percentage", nmz, ignore.case = TRUE)])
+gender_v <- first_or_null(intersect(c("q_gender", "gender"), nmz))
+field_v <- first_or_null(intersect(c("economist"), nmz))
+abitur_v <- first_or_null(intersect(c("q_abitur_grade"), nmz))
+math_v <- first_or_null(intersect(c("q_math_grade"), nmz))
+abil_v <- intersect(c("ability_load", "ability_task"), nmz)
+multi_v <- first_or_null(nmz[grepl("multi", nmz, ignore.case = TRUE)])
+inc_v <- nmz[grepl("^Treatment_Incentives", nmz)]
+wave_v <- first_or_null(nmz[grepl("wave", nmz, ignore.case = TRUE)])
+cat("Controls: age=", age_v, " gender=", gender_v, " field=", field_v, " abitur=", abitur_v,
+    " math=", math_v, " abil=", paste(abil_v, collapse = ","), " multi=", multi_v,
+    " inc=", paste(inc_v, collapse = ","), " wave=", wave_v, "\n")
+
+ctrl_terms <- character()
+add_numeric <- function(v, newname) {
+  x <- num(ds[[v]])
+  if (all(is.na(x))) return(invisible(NULL))
+  if (any(is.na(x))) {
+    ds[[paste0(newname, "_miss")]] <<- as.numeric(is.na(x))
+    x[is.na(x)] <- mean(x, na.rm = TRUE)
+    ctrl_terms <<- c(ctrl_terms, paste0(newname, "_miss"))
+  }
+  ds[[newname]] <<- x
+  ctrl_terms <<- c(ctrl_terms, newname)
+}
+add_factor <- function(v, newname) {
+  x <- labtxt(ds[[v]])
+  x[is.na(x) | x == ""] <- "missing"
+  if (length(unique(x)) < 2) return(invisible(NULL))
+  ds[[newname]] <<- factor(x)
+  ctrl_terms <<- c(ctrl_terms, newname)
+}
+if (!is.null(age_v)) add_numeric(age_v, "c_age")
+if (!is.null(gender_v)) add_factor(gender_v, "c_gender")
+if (!is.null(field_v)) {
+  add_numeric(field_v, "c_field")
+} else if ("q_subject" %in% nmz) add_factor("q_subject", "c_field")
+if (!is.null(abitur_v)) add_numeric(abitur_v, "c_abitur")
+if (!is.null(math_v)) add_numeric(math_v, "c_math")
+for (i in seq_along(abil_v)) add_numeric(abil_v[i], paste0("c_abil", i))
+if (!is.null(multi_v)) add_numeric(multi_v, "c_multi")
+if (length(inc_v) == 1) {
+  add_factor(inc_v, "c_inc")
+} else if (length(inc_v) > 1) {
+  for (i in seq_along(inc_v)) {
+    x <- num(ds[[inc_v[i]]])
+    if (length(unique(na.omit(x))) > 2) add_factor(inc_v[i], paste0("c_inc", i)) else add_numeric(inc_v[i], paste0("c_inc", i))
+  }
+}
+if (!is.null(wave_v)) add_factor(wave_v, "c_wave")
+ctrl_str <- if (length(ctrl_terms)) paste(ctrl_terms, collapse = " + ") else "1"
+
+run <- function(y, rhs, data, coefname, cl = ~sid) {
+  out <- tryCatch({
+    f <- as.formula(paste(y, "~", rhs))
+    m <- feols(f, data = data, cluster = cl)
+    print(summary(m))
+    list(b = unname(coef(m)[coefname]), se = unname(sqrt(diag(vcov(m)))[coefname]), n = nobs(m))
+  }, error = function(e) { cat("Error in", y, ":", conditionMessage(e), "\n"); NULL })
+  out
+}
+
+r <- run("choice_q", "intervention", ds, "intervention")
+if (!is.null(r)) { emit("choice_quality_intervention_t2_col1", r$b); emit("choice_quality_intervention_t2_col1_se", r$se) }
+r <- run("choice_q", paste("intervention +", ctrl_str), ds, "intervention")
+if (!is.null(r)) { emit("choice_quality_intervention_t2_col2", r$b); emit("choice_quality_intervention_t2_col2_se", r$se) }
+
+if (!is.null(def_var)) {
+  r <- run("default_adh", "intervention", ds, "intervention")
+  if (!is.null(r)) { emit("default_adherence_intervention_t2_col5", r$b); emit("default_adherence_intervention_t2_col5_se", r$se) }
+  r <- run("default_adh", paste("intervention +", ctrl_str), ds, "intervention")
+  if (!is.null(r)) { emit("default_adherence_intervention_t2_col6", r$b); emit("default_adherence_intervention_t2_col6_se", r$se) }
+  if (!all(is.na(ds$directed))) {
+    m7 <- tryCatch(feols(default_adh ~ directed + forced, data = ds, cluster = ~sid), error = function(e) NULL)
+    if (!is.null(m7)) {
+      print(summary(m7))
+      se7 <- sqrt(diag(vcov(m7)))
+      emit("default_adherence_directed_attention_t2_col7", unname(coef(m7)["directed"]))
+      emit("default_adherence_directed_attention_t2_col7_se", unname(se7["directed"]))
+      emit("default_adherence_forced_choice_t2_col7", unname(coef(m7)["forced"]))
+      emit("default_adherence_forced_choice_t2_col7_se", unname(se7["forced"]))
+    }
+  }
+}
+
+r <- run("bg_q", "intervention", ds, "intervention")
+if (!is.null(r)) {
+  emit("background_quality_intervention_lab_t3_col1", r$b); emit("background_quality_intervention_lab_t3_col1_se", r$se)
+  emit("n_obs_lab_tables_2_to_4", r$n)
+}
+r <- run("bg_q", paste("intervention +", ctrl_str), ds, "intervention")
+if (!is.null(r)) { emit("background_quality_intervention_lab_t3_col2", r$b); emit("background_quality_intervention_lab_t3_col2_se", r$se) }
+
+r <- run("pshare", "intervention", ds, "intervention")
+if (!is.null(r)) { emit("payoff_share_intervention_t4_col1", r$b); emit("payoff_share_intervention_t4_col1_se", r$se) }
+
+emit("n_subjects_lab_tables_2_to_4", length(unique(ds$sid[!is.na(ds$bg_q) & !is.na(ds$intervention)])))
+
+# ---------------- Online experiment ----------------
+tryCatch({
+  m <- as.data.frame(read_dta(file.path(root, "formatted_data_long_mturk.dta")))
+  m$y <- num(m$memory)
+  cat("Memory summary:\n"); print(summary(m$y))
+  m$ti <- num(m$Treatment_intervention)
+  if (!all(m$ti %in% c(0, 1))) m$ti <- as.numeric(m$ti != min(m$ti, na.rm = TRUE))
+  m$sid <- as.character(m$subject_id)
+  m$c_age <- num(m$age)
+  g <- labtxt(m$gender); g[is.na(g) | g == ""] <- "missing"
+  m$c_gender <- factor(g)
+  m$c_wh <- num(m$window_height1)
+  m$c_ww <- num(m$window_width1)
+  r5 <- run("y", "ti", m, "ti")
+  if (!is.null(r5)) { emit("memory_intervention_online_t3_col5", r5$b); emit("memory_intervention_online_t3_col5_se", r5$se) }
+  r6 <- run("y", "ti + c_age + c_gender + c_wh + c_ww", m, "ti")
+  if (!is.null(r6)) { emit("memory_intervention_online_t3_col6", r6$b); emit("memory_intervention_online_t3_col6_se", r6$se) }
+}, error = function(e) cat("Online error:", conditionMessage(e), "\n"))
+
+for (k in names(results)) cat(sprintf("RESULT:%s=%.6f\n", k, results[[k]]))
+```
+
+## What the code produced
+  choice_quality_intervention_t2_col1 = 0.082992
+  choice_quality_intervention_t2_col1_se = 0.015077
+  default_adherence_intervention_t2_col5 = -0.157625
+  default_adherence_intervention_t2_col5_se = 0.017209
+  default_adherence_directed_attention_t2_col7 = -0.098736
+  default_adherence_directed_attention_t2_col7_se = 0.019723
+  default_adherence_forced_choice_t2_col7 = -0.217716
+  default_adherence_forced_choice_t2_col7_se = 0.016518
+  background_quality_intervention_lab_t3_col1 = -0.018673
+  background_quality_intervention_lab_t3_col1_se = 0.014101
+  n_obs_lab_tables_2_to_4 = 17840.0
+  payoff_share_intervention_t4_col1 = 0.006465
+  payoff_share_intervention_t4_col1_se = 0.011953
+  n_subjects_lab_tables_2_to_4 = 892.0
+  memory_intervention_online_t3_col5 = -0.114252
+  memory_intervention_online_t3_col5_se = 0.018804
+  memory_intervention_online_t3_col6 = -0.113364
+  memory_intervention_online_t3_col6_se = 0.017222
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+Rows: 17840  Cols: 46 
+ [1] "payoff"                           "Attention"                       
+ [3] "load_correct"                     "round"                           
+ [5] "Treatment_Environment"            "default_followed"                
+ [7] "load_correct_mean"                "summation_correct_mean"          
+ [9] "summation_correct"                "default_followed_mean"           
+[11] "attention_mean"                   "attention_positive_mean"         
+[13] "default_correct_choice"           "diff_choice_second"              
+[15] "ability_load"                     "ability_task"                    
+[17] "q_age"                            "q_gender"                        
+[19] "q_subject"                        "q_degree"                        
+[21] "q_abitur_year"                    "q_abitur_grade"                  
+[23] "q_math_grade"                     "perc_multitasking_1"             
+[25] "perc_multitasking_2"              "risk"                            
+[27] "perc_multitasking_1_easy"         "raven_score"                     
+[29] "no_attention"                     "subject_id"                      
+[31] "original_lab"                     "Treatment_intervention"          
+[33] "payoff_share_mean"                "payoff_share"                    
+[35] "default_followed_correct_mean"    "raven_score_quartiles"           
+[37] "raven_score_median"               "high_task_difficulty"            
+[39] "subject_cat"                      "q_abitur_grade_quartile"         
+[41] "q_abitur_grade_cat"               "q_math_grade_cat"                
+[43] "Treatment_Incentives"             "Treatment_Incentives_Baseline_sc"
+[45] "Treatment_Incentives_Int_sc"      "economist"                       
+---- payoff 
+
+                0 0.100000001490116 0.200000002980232 0.400000005960464 
+             1090              1430               452              4043 
+              0.5 0.600000023841858 0.800000011920929 
+             8986              1270               569 
+---- load_correct 
+
+Load correct  Not correct 
+       14571         3269 
+---- Treatment_Environment 
+
+          \\textsc{Baseline} \\textsc{Directed Attention} 
+                        5960                         6000 
+     \\textsc{Forced Choice} 
+                        5880 
+---- default_followed 
+
+Followed Default     Not Followed 
+            6787            11053 
+---- summation_correct 
+
+Math task correct       Not correct 
+            13004              4836 
+---- default_correct_choice 
+
+  Default correct Default incorrect 
+             5352             12488 
+---- diff_choice_second 
+
+   1    2    3    4    5    6    7 
+ 892 5352 3568 4460 1784  892  892 
+---- q_gender 
+
+Female   Male 
+ 10060   7780 
+---- q_degree 
+
+                               Abitur                              Bachelor 
+                                12860                                  3180 
+Kein Abschluss oder anderer Abschluss                       Master (Diplom) 
+             
+[... 3865 characters omitted ...]
+6 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.477306   Adj. R2: 0.03334
+OLS estimation, Dep. Var.: bg_q
+Observations: 17,840
+Standard-errors: Clustered (sid) 
+              Estimate Std. Error  t value  Pr(>|t|)    
+(Intercept)   0.829195   0.011237 73.78846 < 2.2e-16 ***
+intervention -0.018673   0.014101 -1.32421   0.18577    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.386763   Adj. R2: 4.623e-4
+Error in bg_q : object 'Baseline' not found 
+OLS estimation, Dep. Var.: pshare
+Observations: 17,840
+Standard-errors: Clustered (sid) 
+             Estimate Std. Error   t value  Pr(>|t|)    
+(Intercept)  0.796046   0.009633 82.633401 < 2.2e-16 ***
+intervention 0.006465   0.011953  0.540901   0.58871    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.317308   Adj. R2: 3.63e-5
+Memory summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  0.4000  0.7000  0.6766  1.0000  1.0000 
+OLS estimation, Dep. Var.: y
+Observations: 5,472
+Standard-errors: Clustered (sid) 
+             Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept)  0.733189   0.012437 58.95291  < 2.2e-16 ***
+ti          -0.114252   0.018804 -6.07602 2.1758e-09 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.320266   Adj. R2: 0.030655
+OLS estimation, Dep. Var.: y
+Observations: 5,472
+Standard-errors: Clustered (sid) 
+               Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)    0.645764   0.059924 10.776425  < 2.2e-16 ***
+ti            -0.113364   0.017222 -6.582442 1.0019e-10 ***
+c_age         -0.005908   0.000807 -7.323134 7.7355e-13 ***
+c_genderMale   0.014502   0.017565  0.825620 4.0934e-01    
+c_genderOther  0.144616   0.075101  1.925621 5.4619e-02 .  
+c_wh           0.000221   0.000071  3.138267 1.7819e-03 ** 
+c_ww           0.000093   0.000037  2.526276 1.1781e-02 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.305952   Adj. R2: 0.114558
+RESULT:choice_quality_intervention_t2_col1=0.082992
+RESULT:choice_quality_intervention_t2_col1_se=0.015077
+RESULT:default_adherence_intervention_t2_col5=-0.157625
+RESULT:default_adherence_intervention_t2_col5_se=0.017209
+RESULT:default_adherence_directed_attention_t2_col7=-0.098736
+RESULT:default_adherence_directed_attention_t2_col7_se=0.019723
+RESULT:default_adherence_forced_choice_t2_col7=-0.217716
+RESULT:default_adherence_forced_choice_t2_col7_se=0.016518
+RESULT:background_quality_intervention_lab_t3_col1=-0.018673
+RESULT:background_quality_intervention_lab_t3_col1_se=0.014101
+RESULT:n_obs_lab_tables_2_to_4=17840.000000
+RESULT:payoff_share_intervention_t4_col1=0.006465
+RESULT:payoff_share_intervention_t4_col1_se=0.011953
+RESULT:n_subjects_lab_tables_2_to_4=892.000000
+RESULT:memory_intervention_online_t3_col5=-0.114252
+RESULT:memory_intervention_online_t3_col5_se=0.018804
+RESULT:memory_intervention_online_t3_col6=-0.113364
+RESULT:memory_intervention_online_t3_col6_se=0.017222
+```
+
+## Claims still failing
+1. choice_quality_intervention_t2_col1: paper claims 0.107 change in the probability of correctly solving the decision task (coefficient), your code produced 0.082992, tolerance 0.1682, gap 22.44% relative
+2. choice_quality_intervention_t2_col2: paper claims 0.11 change in the probability of correctly solving the decision task (coefficient), your code produced N/A, tolerance 0.1545
+3. default_adherence_intervention_t2_col5: paper claims -0.217 change in the probability of choosing the default option (coefficient), your code produced -0.157625, tolerance 0.1014, gap 27.36% relative
+4. default_adherence_intervention_t2_col6: paper claims -0.219 change in the probability of choosing the default option (coefficient), your code produced N/A, tolerance 0.1005
+5. default_adherence_directed_attention_t2_col7: paper claims -0.137 change in the probability of choosing the default option (coefficient), your code produced -0.098736, tolerance 0.1898, gap 27.93% relative
+6. default_adherence_forced_choice_t2_col7: paper claims -0.3 change in the probability of choosing the default option (coefficient), your code produced -0.217716, tolerance 0.07, gap 27.43% relative
+7. background_quality_intervention_lab_t3_col2: paper claims -0.038 change in the probability of correctly solving the background task (coefficient), your code produced N/A, tolerance 0.3684
+8. n_obs_lab_tables_2_to_4: paper claims 12160.0 observations (subject-rounds, lab experiment) (other), your code produced 17840, tolerance 0.01, gap 46.71% relative
+9. n_subjects_lab_tables_2_to_4: paper claims 608.0 subjects (clusters) (other), your code produced 892, tolerance 0.01, gap 46.71% relative
+
+## Previous attempts (oldest first)
+  Attempt 1: choice_quality_intervention_t2_col1=0.082992, choice_quality_intervention_t2_col1_se=0.015077, default_adherence_intervention_t2_col5=-0.157625, default_adherence_intervention_t2_col5_se=0.017209, default_adherence_directed_attention_t2_col7=-0.098736, default_adherence_directed_attention_t2_col7_se=0.019723, default_adherence_forced_choice_t2_col7=-0.217716, default_adherence_forced_choice_t2_col7_se=0.016518, background_quality_intervention_lab_t3_col1=-0.018673, background_quality_intervention_lab_t3_col1_se=0.014101, n_obs_lab_tables_2_to_4=17840.0, payoff_share_intervention_t4_col1=0.006465, payoff_share_intervention_t4_col1_se=0.011953, n_subjects_lab_tables_2_to_4=892.0, memory_intervention_online_t3_col5=-0.114252, memory_intervention_online_t3_col5_se=0.018804, memory_intervention_online_t3_col6=-0.113364, memory_intervention_online_t3_col6_se=0.017222
+
+These attempts have already been tried.  Do not repeat a strategy
+that has already produced the same values.
+
+## Task
+Adjust the code minimally to close the gap on the failing claims.
+Prefer changes that align more closely with the paper's stated methodology:
+re-read the methodology summary above and check the model specification,
+covariate selection, fixed effects, clustering, and seed against what the
+paper actually specifies.  In econometrics papers, common gap-closers are:
+  - getting the cluster-robust SE right (vcovCL / cluster_var argument)
+  - matching the paper's exact fixed-effects structure
+  - using the same sample-restriction filters the paper applied
+  - matching the paper's weighting scheme (weights= argument)
+
+## Deviation reporting
+If you must change something the paper did NOT specify in order to close
+the gap, emit a ``DEVIATION:`` line via cat() describing the change:
+
+    cat('DEVIATION: Used HC1 robust SE because the paper does not specify but the default did not converge\n')
+
+## When to give up
+If after re-reading the methodology and the previous attempts you judge
+the gap cannot be closed without unreasonable deviation, return the SAME
+R CODE you were given, BYTE-FOR-BYTE unchanged.  The pipeline will record
+the claim as unreproducible.
+
+## Output convention (unchanged)
+Emit every metric as ``cat('RESULT:<name>=<value>\n')``.
+The dataset is a directory tree at '<repo>/.cache/datasets/altmann_2022_cognitive_spillovers.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+No network, no system().  set.seed(42).
+
+Output ONLY the R code — no explanation, no markdown fences.

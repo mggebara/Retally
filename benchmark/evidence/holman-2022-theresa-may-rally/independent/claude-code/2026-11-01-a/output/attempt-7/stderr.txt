@@ -1,0 +1,23 @@
+Error in `mutate()`:
+ℹ In argument: `lead1 = ifelse(lead(qtr) == qtr + 1, lead(lag_approval),
+  NA)`.
+ℹ In group 1: `country_code = 1`.
+Caused by error in `UseMethod()`:
+! no applicable method for 'lead' applied to an object of class "c('double', 'numeric')"
+Backtrace:
+     ▆
+  1. ├─... %>% ungroup()
+  2. ├─dplyr::ungroup(.)
+  3. ├─dplyr::mutate(...)
+  4. ├─dplyr:::mutate.data.frame(...)
+  5. │ └─dplyr:::mutate_cols(.data, dplyr_quosures(...), by)
+  6. │   ├─base::withCallingHandlers(...)
+  7. │   └─dplyr:::mutate_col(dots[[i]], data, mask, new_columns)
+  8. │     └─mask$eval_all_mutate(quo)
+  9. │       └─dplyr (local) eval()
+ 10. ├─base::ifelse(lead(qtr) == qtr + 1, lead(lag_approval), NA)
+ 11. ├─plm::lead(qtr)
+ 12. └─base::.handleSimpleError(...)
+ 13.   └─dplyr (local) h(simpleError(msg, call))
+ 14.     └─rlang::abort(message, class = error_class, parent = parent, call = error_call)
+Execution halted

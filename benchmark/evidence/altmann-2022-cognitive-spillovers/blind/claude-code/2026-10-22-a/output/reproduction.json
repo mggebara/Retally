@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "altmann-2022-cognitive-spillovers",
+  "mode": "blind",
+  "run_id": "2026-10-22-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Paper text supplied is the 2019 IZA working-paper version (no regression tables, no online experiment, 'Active Choice' instead of 'Forced Choice'); specifications were taken from the task descriptions of the published Tables 2-4 plus the data's variable labels.",
+    "Control set mapping (choice of codings is mine): age = q_age; gender = q_gender (female dummy); field of study = subject_cat factor (4 categories); high school GPA = q_abitur_grade_cat factor (quartiles plus a 5th category for missing GPA, so no observations are dropped); last math grade = q_math_grade_cat factor (quartiles); ability = ability_load and ability_task; perceived multitasking ability = perc_multitasking_1 (Likert); payoff-scheme indicators = Treatment_Incentives factor (10/20/40); wave = original_lab factor.",
+    "Online column 6 controls: age, gender as a factor (Female/Male/Other), and screen size entered as window_height1 and window_width1 linearly."
+  ],
+  "notes": "Lab sample: formatted_data_replication.dta restricted to Treatment_Incentives != Ample (scarce resources, 7-digit numbers), all three environments (Baseline, Directed Attention, Forced Choice), all 20 rounds, both waves: 12160 subject-rounds, 608 subjects. Outcomes: summation_correct (choice quality), default_followed (default adherence; in Forced Choice it codes choosing the alternative that is the default elsewhere), load_correct (background task), payoff_share (Table 4). Regressors: Treatment_intervention, or Directed/Forced dummies from Treatment_Environment (Baseline omitted). OLS via fixest::feols with SEs clustered by subject_id. Online: formatted_data_long_mturk.dta, memory on Treatment_intervention, 5472 subject-rounds, 608 subjects, clustered by subject. attempt-1 was an exploratory variable inspection with no RESULT lines. Before attempt-1, a botched launch (the script file had not been written, so Docker mounted an empty directory in its place and nothing ran) left an empty script.R directory and empty stdout/stderr; I removed the directory and overwrote those files with the real attempt-1 run. Only the README.md in the mount was read for documentation; no do-files, logs, .tex or figure outputs were opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T03:16:51Z",
+  "finished_at": "2026-10-22T03:19:07Z"
+}

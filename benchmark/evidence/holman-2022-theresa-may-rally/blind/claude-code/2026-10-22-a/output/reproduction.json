@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "entry_id": "holman-2022-theresa-may-rally",
+  "mode": "blind",
+  "run_id": "2026-10-22-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 1, "kind": "error"}
+  ],
+  "deviations": [
+    "Table 4: coefficients are from OLS with country (country_code) dummies; panel-corrected SEs are computed by hand (Beck-Katz, casewise) since no PCSE package is installed. Coefficients do not depend on the SE method. No AR(1)/Prais-Winsten correction was applied because the paper does not mention one.",
+    "Table 4: DV is lag_approval (the only approval variable, labelled 'Lagged approval'); attack indicator is kill_16 (international attack with 16+ deaths, i.e. more than 15; exactly 60 country-quarters, 9 under women executives as the paper states); execrlc entered linearly; 'growth' is used as stored (it is a real-GDP level series). The estimation sample has 44 country-office units, not the 66 the paper mentions (country_code takes only 44 distinct values in the data).",
+    "Table 2: all waves with a non-missing outcome are used (like May: waves 9-16; best PM: waves 7, 8, 10, 11, 12); likeMayW code 9999 (don't know) set to missing; outcome for best PM is bestPMW (1 = May, 0 = Corbyn), logit; controls white, gender, labour, party_other, income, ideology2 (ideology with missing coded to the scale midpoint); no survey weights. time is perfectly collinear with the wave dummies, so time is entered before them and the last wave dummy (16 for like May, 12 for best PM) is dropped; the reported Time coefficient depends on this choice."
+  ],
+  "notes": "Independent blind reproduction from the paper text and data files only (the readme .docx in the mount was read for file descriptions; replication_files.do is listed in metadata.json but is not in the mount and was not read). attempt-1 and attempt-2 were exploratory (variable inventories, codings, missingness); attempt-3 crashed in the hand-rolled PCSE step (singular X'X because GDP is on a ~1e7 scale) and was fixed by inverting via QR. Caveats: the Table 4 regression's R2 (0.268) is well below the R2 printed in the paper's Table 4 note, and the interaction is not significant under our PCSE (the paper says it is significant at 5%), so the paper's Table 4 specification probably differs in some way the text does not describe (e.g. sample, an xtpcse option, or variable construction). Per blind rules the specification was not adjusted toward any reported figure.",
+  "files_read_outside_mount": [
+    "<repo>/benchmark/.cache/claude-code/holman-2022-theresa-may-rally/blind/2026-10-22-a/task.md (task instructions, as directed by the user)"
+  ],
+  "started_at": "2026-10-22T03:16:49Z",
+  "finished_at": "2026-10-22T03:21:35Z"
+}

@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "carrera-2022-who-chooses-commitment",
+  "mode": "seeded",
+  "run_id": "2026-11-02-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "Translated Tables.do (regs_avg_delta_ex1_all and regs_commit_pooled_all) to R. Sample: flag_low_wtp==0 & flag_exclude_exog==0, then !missing(incentive). Table 3: OLS of avg_delta_ex1 (mean of delta2..delta12) on wave2, wave3, first_info, new_info (+ z-scored gap), HC1 robust SEs. Z-scores standardized over the !missing(incentive) sample as in the do-file. Table 4: reshaped commit8/12/16 long, LPM with threshold FE (fixef.rm='none'), wave dummies, SEs clustered by id. attempt-1 was an exploratory run inspecting variable encodings (no RESULT lines). The final run was the first run to print RESULT lines; the script was not changed after comparing with claimed values, so there are no claim attempts.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T05:50:00Z",
+  "finished_at": "2026-11-02T05:52:30Z"
+}

@@ -1,0 +1,193 @@
+Rows: 17840  Cols: 46 
+---- subject-level original_lab x intervention
+              
+                 0   1
+  Original Lab 188 375
+  Revision     110 219
+---- subject-level Treatment_Incentives x intervention
+       
+          0   1
+  10    143 283
+  20     43  82
+  40     18  39
+  Ample  94 190
+---- subject-level Treatment_Incentives_Baseline_sc x intervention
+                          
+                             0   1
+  \\textsc{Baseline-10}    143 283
+  \\textsc{Baseline-20}     43  82
+  \\textsc{Baseline-40}     18  39
+  \\textsc{Baseline-Ample}  94 190
+---- subject-level Treatment_Incentives_Int_sc x intervention
+                            
+                               0   1
+  \\textsc{Incentives-10}    143 283
+  \\textsc{Incentives-20}     43  82
+  \\textsc{Incentives-40}     18  39
+  \\textsc{Incentives-Ample}  94 190
+---- subject-level high_task_difficulty x intervention
+                 
+                    0   1
+  High Difficulty 153 322
+  Low Difficulty  145 272
+---- subject-level Treatment_Environment x intervention
+                              
+                                 0   1
+  \\textsc{Baseline}           298   0
+  \\textsc{Directed Attention}   0 300
+  \\textsc{Forced Choice}        0 294
+Candidate sample definitions with 608 subjects:
+   Treatment_Incentives!=Ample 
+Chosen sample: Treatment_Incentives!=Ample 
+DEVIATION: Sample for Tables 2-4 identified by searching subject-level variables for the definition yielding 608 subjects ( Treatment_Incentives!=Ample )
+Sample rows: 12160  subjects: 608 
+                              
+envl                              0    1
+  \\textsc{Baseline}           4080    0
+  \\textsc{Directed Attention}    0 4120
+  \\textsc{Forced Choice}         0 3960
+Controls: cx1 + cx2 + cx3 + cx4 + cx5 + cx6 + cx7 + cx8 
+OLS estimation, Dep. Var.: choice_q
+Observations: 12,160
+Standard-errors: Clustered (sid) 
+             Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept)  0.599020   0.014942 40.09069  < 2.2e-16 ***
+intervention 0.106921   0.017796  6.00813 3.2361e-09 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.467471   Adj. R2: 0.011448
+OLS estimation, Dep. Var.: choice_q
+Observations: 12,160
+Standard-errors: Clustered (sid) 
+              Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)   0.414522   0.066879  6.198057 1.0559e-09 ***
+intervention  0.107187   0.017320  6.188660 1.1169e-09 ***
+cx1          -0.002455   0.001667 -1.472326 1.4145e-01    
+cx2          -0.007471   0.016592 -0.450295 6.5266e-01    
+cx3          -0.028982   0.022768 -1.272948 2.0352e-01    
+cx4          -0.072791   0.066970 -1.086912 2.7751e-01    
+cx5           0.026031   0.016912  1.539185 1.2428e-01    
+cx6          -0.024025   0.009916 -2.422974 1.5686e-02 *  
+cx7           0.120788   0.037536  3.217901 1.3601e-03 ** 
+cx8           0.197323   0.050172  3.932942 9.3596e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.464567   Adj. R2: 0.023045
+OLS estimation, Dep. Var.: default_adh
+Observations: 12,160
+Standard-errors: Clustered (sid) 
+              Estimate Std. Error  t value  Pr(>|t|)    
+(Intercept)   0.562500    0.02005 28.05505 < 2.2e-16 ***
+intervention -0.216832    0.02225 -9.74546 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.482559   Adj. R2: 0.042997
+OLS estimation, Dep. Var.: default_adh
+Observations: 12,160
+Standard-errors: Clustered (sid) 
+              Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)   0.597826   0.078205  7.644368 8.2451e-14 ***
+intervention -0.217599   0.022133 -9.831402  < 2.2e-16 ***
+cx1           0.003027   0.001921  1.576171 1.1551e-01    
+cx2           0.003509   0.019339  0.181461 8.5607e-01    
+cx3           0.019559   0.026949  0.725767 4.6826e-01    
+cx4           0.011354   0.097355  0.116627 9.0719e-01    
+cx5          -0.030851   0.019983 -1.543910 1.2313e-01    
+cx6           0.016210   0.012018  1.348810 1.7790e-01    
+cx7          -0.017436   0.049167 -0.354622 7.2300e-01    
+cx8          -0.085772   0.061284 -1.399592 1.6215e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.481848   Adj. R2: 0.045185
+OLS estimation, Dep. Var.: default_adh
+Observations: 12,160
+Standard-errors: Clustered (sid) 
+             Estimate Std. Error   t value  Pr(>|t|)    
+(Intercept)  0.562500   0.020051  28.05389 < 2.2e-16 ***
+directed    -0.137015   0.025638  -5.34416 1.287e-07 ***
+forced      -0.299874   0.021087 -14.22073 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.477973   Adj. R2: 0.06102
+OLS estimation, Dep. Var.: bg_q
+Observations: 12,160
+Standard-errors: Clustered (sid) 
+              Estimate Std. Error  t value  Pr(>|t|)    
+(Intercept)   0.759804   0.013855 54.83784 < 2.2e-16 ***
+intervention -0.028245   0.017125 -1.64929  0.099605 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.437863   Adj. R2: 8.446e-4
+OLS estimation, Dep. Var.: bg_q
+Observations: 12,160
+Standard-errors: Clustered (sid) 
+              Estimate Std. Error   t value  Pr(>|t|)    
+(Intercept)   0.517838   0.060019  8.627891 < 2.2e-16 ***
+intervention -0.033443   0.014818 -2.256981  0.024364 *  
+cx1          -0.002379   0.001361 -1.748643  0.080858 .  
+cx2          -0.023902   0.015026 -1.590743  0.112188    
+cx3           0.009707   0.018602  0.521812  0.601992    
+cx4          -0.024910   0.052787 -0.471901  0.637167    
+cx5          -0.030384   0.013063 -2.325906  0.020352 *  
+cx6           0.000038   0.008525  0.004477  0.996430    
+cx7           0.510780   0.038694 13.200565 < 2.2e-16 ***
+cx8          -0.008793   0.046935 -0.187341  0.851456    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.424773   Adj. R2: 0.059071
+OLS estimation, Dep. Var.: pshare
+Observations: 12,160
+Standard-errors: Clustered (sid) 
+             Estimate Std. Error   t value  Pr(>|t|)    
+(Intercept)  0.724665   0.010708 67.677126 < 2.2e-16 ***
+intervention 0.005834   0.013242  0.440581   0.65967    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.349787   Adj. R2: -2.023e-5
+OLS estimation, Dep. Var.: y
+Observations: 5,472
+Standard-errors: Clustered (sid) 
+             Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept)  0.733189   0.012437 58.95291  < 2.2e-16 ***
+ti          -0.114252   0.018804 -6.07602 2.1758e-09 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.320266   Adj. R2: 0.030655
+OLS estimation, Dep. Var.: y
+Observations: 5,472
+Standard-errors: Clustered (sid) 
+               Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)    0.645764   0.059924 10.776425  < 2.2e-16 ***
+ti            -0.113364   0.017222 -6.582442 1.0019e-10 ***
+c_age         -0.005908   0.000807 -7.323134 7.7355e-13 ***
+c_genderMale   0.014502   0.017565  0.825620 4.0934e-01    
+c_genderOther  0.144616   0.075101  1.925621 5.4619e-02 .  
+c_wh           0.000221   0.000071  3.138267 1.7819e-03 ** 
+c_ww           0.000093   0.000037  2.526276 1.1781e-02 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.305952   Adj. R2: 0.114558
+RESULT:choice_quality_intervention_t2_col1=0.106921
+RESULT:choice_quality_intervention_t2_col1_se=0.017796
+RESULT:choice_quality_intervention_t2_col2=0.107187
+RESULT:choice_quality_intervention_t2_col2_se=0.017320
+RESULT:default_adherence_intervention_t2_col5=-0.216832
+RESULT:default_adherence_intervention_t2_col5_se=0.022250
+RESULT:default_adherence_intervention_t2_col6=-0.217599
+RESULT:default_adherence_intervention_t2_col6_se=0.022133
+RESULT:default_adherence_directed_attention_t2_col7=-0.137015
+RESULT:default_adherence_directed_attention_t2_col7_se=0.025638
+RESULT:default_adherence_forced_choice_t2_col7=-0.299874
+RESULT:default_adherence_forced_choice_t2_col7_se=0.021087
+RESULT:background_quality_intervention_lab_t3_col1=-0.028245
+RESULT:background_quality_intervention_lab_t3_col1_se=0.017125
+RESULT:n_obs_lab_tables_2_to_4=12160.000000
+RESULT:background_quality_intervention_lab_t3_col2=-0.033443
+RESULT:background_quality_intervention_lab_t3_col2_se=0.014818
+RESULT:payoff_share_intervention_t4_col1=0.005834
+RESULT:payoff_share_intervention_t4_col1_se=0.013242
+RESULT:n_subjects_lab_tables_2_to_4=608.000000
+RESULT:memory_intervention_online_t3_col5=-0.114252
+RESULT:memory_intervention_online_t3_col5_se=0.018804
+RESULT:memory_intervention_online_t3_col6=-0.113364
+RESULT:memory_intervention_online_t3_col6_se=0.017222

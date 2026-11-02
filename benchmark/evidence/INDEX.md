@@ -2,6 +2,135 @@
 
 Built by `python -m benchmark.evidence`; see `benchmark/README.md` ("Evidence bundles").
 
+## [acemoglu-2022-war-socialism-fascism](acemoglu-2022-war-socialism-fascism/REPORT.md)
+
+- [seeded · claude-code · 2026-10-22-a](acemoglu-2022-war-socialism-fascism/seeded/claude-code/2026-10-22-a/CELL.md) — 12/12
+- [seeded · pipeline-desktop-opus · 20261023T063725Z](acemoglu-2022-war-socialism-fascism/seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) — 12/12
+- [seeded · pipeline-desktop-opus-run2 · 20261023T151837Z](acemoglu-2022-war-socialism-fascism/seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — 12/12
+- [independent · claude-code · 2026-10-22-a](acemoglu-2022-war-socialism-fascism/independent/claude-code/2026-10-22-a/CELL.md) — 12/12
+- [independent · claude-code · 2026-11-01-a](acemoglu-2022-war-socialism-fascism/independent/claude-code/2026-11-01-a/CELL.md) — 12/12
+- [independent · pipeline-desktop-opus · 20261023T064839Z](acemoglu-2022-war-socialism-fascism/independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) — 11/12
+- [independent · pipeline-desktop-opus-run2 · 20261023T153002Z](acemoglu-2022-war-socialism-fascism/independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) — 11/12
+- [blind · claude-code · 2026-10-22-a](acemoglu-2022-war-socialism-fascism/blind/claude-code/2026-10-22-a/CELL.md) — 12/12
+- [blind · claude-code · 2026-11-01-a](acemoglu-2022-war-socialism-fascism/blind/claude-code/2026-11-01-a/CELL.md) — 12/12
+- [blind · pipeline-desktop-opus · 20261023T062931Z](acemoglu-2022-war-socialism-fascism/blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) — 4/12
+- [blind · pipeline-desktop-opus-run2 · 20261023T150832Z](acemoglu-2022-war-socialism-fascism/blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — 6/12
+
+## [adams-2023-women-mps-affective-polarization](adams-2023-women-mps-affective-polarization/REPORT.md)
+
+- [seeded · claude-code · 2026-10-21-b](adams-2023-women-mps-affective-polarization/seeded/claude-code/2026-10-21-b/CELL.md) — 11/11
+- [seeded · pipeline-claude-opus-4-7 · 20261021T142909Z](adams-2023-women-mps-affective-polarization/seeded/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) — 11/11
+- [seeded · pipeline-desktop-opus · 20261023T063725Z](adams-2023-women-mps-affective-polarization/seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) — 11/11
+- [seeded · pipeline-desktop-opus-run2 · 20261023T151837Z](adams-2023-women-mps-affective-polarization/seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — 11/11
+- [independent · claude-code · 2026-10-21-b](adams-2023-women-mps-affective-polarization/independent/claude-code/2026-10-21-b/CELL.md) — 11/11
+- [independent · claude-code · 2026-11-01-a](adams-2023-women-mps-affective-polarization/independent/claude-code/2026-11-01-a/CELL.md) — 11/11
+- [independent · pipeline-claude-opus-4-7 · 20261021T142909Z](adams-2023-women-mps-affective-polarization/independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) — 7/11
+- [independent · pipeline-desktop-opus · 20261023T064839Z](adams-2023-women-mps-affective-polarization/independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) — 10/11
+- [independent · pipeline-desktop-opus-run2 · 20261023T151837Z](adams-2023-women-mps-affective-polarization/independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — 8/11
+- [blind · claude-code · 2026-10-21-b](adams-2023-women-mps-affective-polarization/blind/claude-code/2026-10-21-b/CELL.md) — 8/11
+- [blind · claude-code · 2026-10-22-a](adams-2023-women-mps-affective-polarization/blind/claude-code/2026-10-22-a/CELL.md) — 8/11
+- [blind · claude-code · 2026-11-01-a](adams-2023-women-mps-affective-polarization/blind/claude-code/2026-11-01-a/CELL.md) — 7/11
+- [blind · pipeline-claude-opus-4-7 · 20261021T142909Z](adams-2023-women-mps-affective-polarization/blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) — 1/11
+- [blind · pipeline-desktop-opus · 20261023T063725Z](adams-2023-women-mps-affective-polarization/blind/pipeline-desktop-opus/20261023T063725Z/CELL.md) — 7/11
+- [blind · pipeline-desktop-opus-run2 · 20261023T150832Z](adams-2023-women-mps-affective-polarization/blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — 2/11
+
+## [altmann-2022-cognitive-spillovers](altmann-2022-cognitive-spillovers/REPORT.md)
+
+- [seeded · claude-code · 2026-10-22-a](altmann-2022-cognitive-spillovers/seeded/claude-code/2026-10-22-a/CELL.md) — 13/13
+- [seeded · pipeline-desktop-opus · 20261023T063725Z](altmann-2022-cognitive-spillovers/seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) — 13/13
+- [seeded · pipeline-desktop-opus-run2 · 20261023T151837Z](altmann-2022-cognitive-spillovers/seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — 13/13
+- [independent · claude-code · 2026-10-22-a](altmann-2022-cognitive-spillovers/independent/claude-code/2026-10-22-a/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-01-a](altmann-2022-cognitive-spillovers/independent/claude-code/2026-11-01-a/CELL.md) — 13/13
+- [independent · pipeline-desktop-opus · 20261023T064318Z](altmann-2022-cognitive-spillovers/independent/pipeline-desktop-opus/20261023T064318Z/CELL.md) — 13/13
+- [independent · pipeline-desktop-opus-run2 · 20261023T151837Z](altmann-2022-cognitive-spillovers/independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — 13/13
+- [blind · claude-code · 2026-10-22-a](altmann-2022-cognitive-spillovers/blind/claude-code/2026-10-22-a/CELL.md) — 13/13
+- [blind · claude-code · 2026-11-01-a](altmann-2022-cognitive-spillovers/blind/claude-code/2026-11-01-a/CELL.md) — 13/13
+- [blind · pipeline-desktop-opus · 20261023T062931Z](altmann-2022-cognitive-spillovers/blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) — 4/13
+- [blind · pipeline-desktop-opus-run2 · 20261023T150832Z](altmann-2022-cognitive-spillovers/blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — 4/13
+
+## [arias-2022-changing-tides-climate-migration](arias-2022-changing-tides-climate-migration/REPORT.md)
+
+- [seeded · claude-code · 2026-10-21-b](arias-2022-changing-tides-climate-migration/seeded/claude-code/2026-10-21-b/CELL.md) — 12/12
+- [seeded · pipeline-claude-opus-4-7 · 20261021T142909Z](arias-2022-changing-tides-climate-migration/seeded/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) — 4/12
+- [seeded · pipeline-desktop-opus · 20261023T063725Z](arias-2022-changing-tides-climate-migration/seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) — 12/12
+- [seeded · pipeline-desktop-opus-run2 · 20261023T152513Z](arias-2022-changing-tides-climate-migration/seeded/pipeline-desktop-opus-run2/20261023T152513Z/CELL.md) — 12/12
+- [independent · claude-code · 2026-10-21-b](arias-2022-changing-tides-climate-migration/independent/claude-code/2026-10-21-b/CELL.md) — 12/12
+- [independent · claude-code · 2026-11-01-a](arias-2022-changing-tides-climate-migration/independent/claude-code/2026-11-01-a/CELL.md) — 12/12
+- [independent · pipeline-claude-opus-4-7 · 20261021T142909Z](arias-2022-changing-tides-climate-migration/independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) — 0/12
+- [independent · pipeline-desktop-opus · 20261023T062931Z](arias-2022-changing-tides-climate-migration/independent/pipeline-desktop-opus/20261023T062931Z/CELL.md) — 12/12
+- [independent · pipeline-desktop-opus-run2 · 20261023T150832Z](arias-2022-changing-tides-climate-migration/independent/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — 12/12
+- [blind · claude-code · 2026-10-21-b](arias-2022-changing-tides-climate-migration/blind/claude-code/2026-10-21-b/CELL.md) — 12/12
+- [blind · claude-code · 2026-10-22-a](arias-2022-changing-tides-climate-migration/blind/claude-code/2026-10-22-a/CELL.md) — 12/12
+- [blind · claude-code · 2026-11-01-a](arias-2022-changing-tides-climate-migration/blind/claude-code/2026-11-01-a/CELL.md) — 12/12
+- [blind · pipeline-claude-opus-4-7 · 20261021T142909Z](arias-2022-changing-tides-climate-migration/blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) — 1/12
+- [blind · pipeline-desktop-opus · 20261023T062931Z](arias-2022-changing-tides-climate-migration/blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) — 12/12
+- [blind · pipeline-desktop-opus-run2 · 20261023T150832Z](arias-2022-changing-tides-climate-migration/blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — 12/12
+
+## [bokobza-2022-morning-after-coup-purges](bokobza-2022-morning-after-coup-purges/REPORT.md)
+
+- [seeded · claude-code · 2026-11-02-a](bokobza-2022-morning-after-coup-purges/seeded/claude-code/2026-11-02-a/CELL.md) — 11/11
+- [seeded · pipeline-desktop-opus · 20261102T062442Z](bokobza-2022-morning-after-coup-purges/seeded/pipeline-desktop-opus/20261102T062442Z/CELL.md) — 9/11
+- [independent · claude-code · 2026-11-02-a](bokobza-2022-morning-after-coup-purges/independent/claude-code/2026-11-02-a/CELL.md) — 11/11
+- [independent · pipeline-desktop-opus · 20261102T062442Z](bokobza-2022-morning-after-coup-purges/independent/pipeline-desktop-opus/20261102T062442Z/CELL.md) — 11/11
+- [blind · claude-code · 2026-11-02-a](bokobza-2022-morning-after-coup-purges/blind/claude-code/2026-11-02-a/CELL.md) — 11/11
+- [blind · pipeline-desktop-opus · 20261102T060946Z](bokobza-2022-morning-after-coup-purges/blind/pipeline-desktop-opus/20261102T060946Z/CELL.md) — 4/11
+
+## [brouwer-2022-teaching-norms](brouwer-2022-teaching-norms/REPORT.md)
+
+- [seeded · claude-code · 2026-11-02-a](brouwer-2022-teaching-norms/seeded/claude-code/2026-11-02-a/CELL.md) — 12/12
+- [seeded · pipeline-desktop-opus · 20261102T064502Z](brouwer-2022-teaching-norms/seeded/pipeline-desktop-opus/20261102T064502Z/CELL.md) — 12/12
+- [independent · claude-code · 2026-11-02-a](brouwer-2022-teaching-norms/independent/claude-code/2026-11-02-a/CELL.md) — 12/12
+- [independent · pipeline-desktop-opus · 20261102T062442Z](brouwer-2022-teaching-norms/independent/pipeline-desktop-opus/20261102T062442Z/CELL.md) — 12/12
+- [blind · claude-code · 2026-11-02-a](brouwer-2022-teaching-norms/blind/claude-code/2026-11-02-a/CELL.md) — 12/12
+- [blind · pipeline-desktop-opus · 20261102T062442Z](brouwer-2022-teaching-norms/blind/pipeline-desktop-opus/20261102T062442Z/CELL.md) — 12/12
+
+## [carrera-2022-who-chooses-commitment](carrera-2022-who-chooses-commitment/REPORT.md)
+
+- [seeded · claude-code · 2026-11-02-a](carrera-2022-who-chooses-commitment/seeded/claude-code/2026-11-02-a/CELL.md) — 11/11
+- [seeded · pipeline-desktop-opus · 20261102T060946Z](carrera-2022-who-chooses-commitment/seeded/pipeline-desktop-opus/20261102T060946Z/CELL.md) — 11/11
+- [independent · claude-code · 2026-11-02-a](carrera-2022-who-chooses-commitment/independent/claude-code/2026-11-02-a/CELL.md) — 11/11
+- [independent · pipeline-desktop-opus · 20261102T065825Z](carrera-2022-who-chooses-commitment/independent/pipeline-desktop-opus/20261102T065825Z/CELL.md) — 6/11
+- [blind · claude-code · 2026-11-02-a](carrera-2022-who-chooses-commitment/blind/claude-code/2026-11-02-a/CELL.md) — 11/11
+- [blind · pipeline-desktop-opus · 20261102T055735Z](carrera-2022-who-chooses-commitment/blind/pipeline-desktop-opus/20261102T055735Z/CELL.md) — 0/11
+
+## [dertwinkel-kalt-2022-concentration-bias](dertwinkel-kalt-2022-concentration-bias/REPORT.md)
+
+- [seeded · claude-code · 2026-10-22-a](dertwinkel-kalt-2022-concentration-bias/seeded/claude-code/2026-10-22-a/CELL.md) — 13/13
+- [seeded · pipeline-desktop-opus · 20261023T063725Z](dertwinkel-kalt-2022-concentration-bias/seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) — 13/13
+- [seeded · pipeline-desktop-opus-run2 · 20261023T151837Z](dertwinkel-kalt-2022-concentration-bias/seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — 13/13
+- [independent · claude-code · 2026-10-22-a](dertwinkel-kalt-2022-concentration-bias/independent/claude-code/2026-10-22-a/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-01-a](dertwinkel-kalt-2022-concentration-bias/independent/claude-code/2026-11-01-a/CELL.md) — 13/13
+- [independent · pipeline-desktop-opus · 20261023T062931Z](dertwinkel-kalt-2022-concentration-bias/independent/pipeline-desktop-opus/20261023T062931Z/CELL.md) — 13/13
+- [independent · pipeline-desktop-opus-run2 · 20261023T151837Z](dertwinkel-kalt-2022-concentration-bias/independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — 13/13
+- [blind · claude-code · 2026-10-22-a](dertwinkel-kalt-2022-concentration-bias/blind/claude-code/2026-10-22-a/CELL.md) — 13/13
+- [blind · claude-code · 2026-11-01-a](dertwinkel-kalt-2022-concentration-bias/blind/claude-code/2026-11-01-a/CELL.md) — 13/13
+- [blind · pipeline-desktop-opus · 20261023T062931Z](dertwinkel-kalt-2022-concentration-bias/blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) — 12/13
+- [blind · pipeline-desktop-opus-run2 · 20261023T150832Z](dertwinkel-kalt-2022-concentration-bias/blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — 13/13
+
+## [forsythe-2022-young-workers-recessions](forsythe-2022-young-workers-recessions/REPORT.md)
+
+- [seeded · claude-code · 2026-11-02-a](forsythe-2022-young-workers-recessions/seeded/claude-code/2026-11-02-a/CELL.md) — 13/13
+- [seeded · pipeline-desktop-opus · 20261102T062442Z](forsythe-2022-young-workers-recessions/seeded/pipeline-desktop-opus/20261102T062442Z/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-02-a](forsythe-2022-young-workers-recessions/independent/claude-code/2026-11-02-a/CELL.md) — 12/13
+- [independent · pipeline-desktop-opus · 20261102T064502Z](forsythe-2022-young-workers-recessions/independent/pipeline-desktop-opus/20261102T064502Z/CELL.md) — 11/13
+- [blind · claude-code · 2026-11-02-a](forsythe-2022-young-workers-recessions/blind/claude-code/2026-11-02-a/CELL.md) — 11/13
+- [blind · pipeline-desktop-opus · 20261102T062442Z](forsythe-2022-young-workers-recessions/blind/pipeline-desktop-opus/20261102T062442Z/CELL.md) — 10/13
+
+## [gagliarducci-2022-gender-cooperation-congress](gagliarducci-2022-gender-cooperation-congress/REPORT.md)
+
+- [seeded · claude-code · 2026-10-22-a](gagliarducci-2022-gender-cooperation-congress/seeded/claude-code/2026-10-22-a/CELL.md) — 13/13
+- [seeded · pipeline-desktop-opus · 20261023T064839Z](gagliarducci-2022-gender-cooperation-congress/seeded/pipeline-desktop-opus/20261023T064839Z/CELL.md) — 8/13
+- [seeded · pipeline-desktop-opus-run2 · 20261023T153400Z](gagliarducci-2022-gender-cooperation-congress/seeded/pipeline-desktop-opus-run2/20261023T153400Z/CELL.md) — 12/13
+- [independent · claude-code · 2026-10-22-a](gagliarducci-2022-gender-cooperation-congress/independent/claude-code/2026-10-22-a/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-01-a](gagliarducci-2022-gender-cooperation-congress/independent/claude-code/2026-11-01-a/CELL.md) — 13/13
+- [independent · pipeline-desktop-opus · 20261023T064839Z](gagliarducci-2022-gender-cooperation-congress/independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) — 13/13
+- [independent · pipeline-desktop-opus-run2 · 20261023T152513Z](gagliarducci-2022-gender-cooperation-congress/independent/pipeline-desktop-opus-run2/20261023T152513Z/CELL.md) — 13/13
+- [blind · claude-code · 2026-10-22-a](gagliarducci-2022-gender-cooperation-congress/blind/claude-code/2026-10-22-a/CELL.md) — 7/13
+- [blind · claude-code · 2026-10-22-b](gagliarducci-2022-gender-cooperation-congress/blind/claude-code/2026-10-22-b/CELL.md) — 9/13
+- [blind · claude-code · 2026-11-01-a](gagliarducci-2022-gender-cooperation-congress/blind/claude-code/2026-11-01-a/CELL.md) — 9/13
+- [blind · pipeline-desktop-opus · 20261023T062931Z](gagliarducci-2022-gender-cooperation-congress/blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) — 12/13
+- [blind · pipeline-desktop-opus-run2 · 20261023T150832Z](gagliarducci-2022-gender-cooperation-congress/blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — 7/13
+
 ## [grier-2023-sugar-roll-call-voting](grier-2023-sugar-roll-call-voting/REPORT.md)
 
 - [seeded · claude-code · 2026-10-21-b](grier-2023-sugar-roll-call-voting/seeded/claude-code/2026-10-21-b/CELL.md) — 10/11
@@ -36,6 +165,69 @@ Built by `python -m benchmark.evidence`; see `benchmark/README.md` ("Evidence bu
 - [blind · pipeline-claude-opus-4-7 · 20261021T142909Z](hanlon-2022-aircraft-ip-spillovers/blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) — 12/12
 - [blind · pipeline-desktop-opus · 20261023T062931Z](hanlon-2022-aircraft-ip-spillovers/blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) — 12/12
 - [blind · pipeline-desktop-opus-run2 · 20261023T150832Z](hanlon-2022-aircraft-ip-spillovers/blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — 12/12
+
+## [holman-2022-theresa-may-rally](holman-2022-theresa-may-rally/REPORT.md)
+
+- [seeded · claude-code · 2026-10-22-a](holman-2022-theresa-may-rally/seeded/claude-code/2026-10-22-a/CELL.md) — 11/11
+- [seeded · pipeline-desktop-opus · 20261023T063725Z](holman-2022-theresa-may-rally/seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) — 11/11
+- [seeded · pipeline-desktop-opus-run2 · 20261023T151837Z](holman-2022-theresa-may-rally/seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — 11/11
+- [independent · claude-code · 2026-10-22-a](holman-2022-theresa-may-rally/independent/claude-code/2026-10-22-a/CELL.md) — 10/11
+- [independent · claude-code · 2026-11-01-a](holman-2022-theresa-may-rally/independent/claude-code/2026-11-01-a/CELL.md) — 10/11
+- [independent · pipeline-desktop-opus · 20261023T064318Z](holman-2022-theresa-may-rally/independent/pipeline-desktop-opus/20261023T064318Z/CELL.md) — 3/11
+- [independent · pipeline-desktop-opus-run2 · 20261023T153002Z](holman-2022-theresa-may-rally/independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) — 8/11
+- [blind · claude-code · 2026-10-22-a](holman-2022-theresa-may-rally/blind/claude-code/2026-10-22-a/CELL.md) — 6/11
+- [blind · claude-code · 2026-10-22-b](holman-2022-theresa-may-rally/blind/claude-code/2026-10-22-b/CELL.md) — 5/11
+- [blind · claude-code · 2026-11-01-a](holman-2022-theresa-may-rally/blind/claude-code/2026-11-01-a/CELL.md) — 6/11
+- [blind · pipeline-desktop-opus · 20261023T062931Z](holman-2022-theresa-may-rally/blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) — 0/11
+- [blind · pipeline-desktop-opus-run2 · 20261023T150832Z](holman-2022-theresa-may-rally/blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — 0/11
+
+## [leeson-2022-hobo-economicus](leeson-2022-hobo-economicus/REPORT.md)
+
+- [seeded · claude-code · 2026-10-21-b](leeson-2022-hobo-economicus/seeded/claude-code/2026-10-21-b/CELL.md) — 11/11
+- [seeded · pipeline-claude-opus-4-7 · 20261021T142909Z](leeson-2022-hobo-economicus/seeded/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) — 11/11
+- [seeded · pipeline-claude-opus-5-5 · 20261022T044925Z](leeson-2022-hobo-economicus/seeded/pipeline-claude-opus-5-5/20261022T044925Z/CELL.md) — 11/11
+- [seeded · pipeline-desktop-opus-run2 · 20261023T151837Z](leeson-2022-hobo-economicus/seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — 11/11
+- [independent · claude-code · 2026-10-21-b](leeson-2022-hobo-economicus/independent/claude-code/2026-10-21-b/CELL.md) — 11/11
+- [independent · claude-code · 2026-11-01-a](leeson-2022-hobo-economicus/independent/claude-code/2026-11-01-a/CELL.md) — 11/11
+- [independent · pipeline-claude-opus-4-7 · 20261021T142909Z](leeson-2022-hobo-economicus/independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) — 9/11
+- [independent · pipeline-claude-opus-5-5 · 20261022T044925Z](leeson-2022-hobo-economicus/independent/pipeline-claude-opus-5-5/20261022T044925Z/CELL.md) — 11/11
+- [independent · pipeline-desktop-opus-run2 · 20261023T153002Z](leeson-2022-hobo-economicus/independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) — 8/11
+- [blind · claude-code · 2026-10-21-b](leeson-2022-hobo-economicus/blind/claude-code/2026-10-21-b/CELL.md) — 11/11
+- [blind · claude-code · 2026-11-01-a](leeson-2022-hobo-economicus/blind/claude-code/2026-11-01-a/CELL.md) — 11/11
+- [blind · pipeline-claude-opus-4-7 · 20261021T142909Z](leeson-2022-hobo-economicus/blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) — 4/11
+- [blind · pipeline-claude-opus-5-5 · 20261022T044925Z](leeson-2022-hobo-economicus/blind/pipeline-claude-opus-5-5/20261022T044925Z/CELL.md) — 8/11
+- [blind · pipeline-desktop-opus-run2 · 20261023T150832Z](leeson-2022-hobo-economicus/blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — 7/11
+
+## [lopez-moctezuma-2022-policy-deliberation-philippines](lopez-moctezuma-2022-policy-deliberation-philippines/REPORT.md)
+
+- [seeded · claude-code · 2026-10-22-a](lopez-moctezuma-2022-policy-deliberation-philippines/seeded/claude-code/2026-10-22-a/CELL.md) — 13/13
+- [seeded · pipeline-desktop-opus · 20261023T063725Z](lopez-moctezuma-2022-policy-deliberation-philippines/seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) — 13/13
+- [seeded · pipeline-desktop-opus-run2 · 20261023T151837Z](lopez-moctezuma-2022-policy-deliberation-philippines/seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — 13/13
+- [independent · claude-code · 2026-10-22-a](lopez-moctezuma-2022-policy-deliberation-philippines/independent/claude-code/2026-10-22-a/CELL.md) — 9/13
+- [independent · claude-code · 2026-11-01-a](lopez-moctezuma-2022-policy-deliberation-philippines/independent/claude-code/2026-11-01-a/CELL.md) — 9/13
+- [independent · pipeline-desktop-opus · 20261023T064839Z](lopez-moctezuma-2022-policy-deliberation-philippines/independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) — 9/13
+- [independent · pipeline-desktop-opus-run2 · 20261023T151837Z](lopez-moctezuma-2022-policy-deliberation-philippines/independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — 9/13
+- [blind · claude-code · 2026-10-22-a](lopez-moctezuma-2022-policy-deliberation-philippines/blind/claude-code/2026-10-22-a/CELL.md) — 9/13
+- [blind · claude-code · 2026-11-01-a](lopez-moctezuma-2022-policy-deliberation-philippines/blind/claude-code/2026-11-01-a/CELL.md) — 9/13
+- [blind · pipeline-desktop-opus · 20261023T062931Z](lopez-moctezuma-2022-policy-deliberation-philippines/blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) — 9/13
+- [blind · pipeline-desktop-opus-run2 · 20261023T150832Z](lopez-moctezuma-2022-policy-deliberation-philippines/blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — 9/13
+
+## [manekin-2022-effective-for-whom](manekin-2022-effective-for-whom/REPORT.md)
+
+- [seeded · claude-code · 2026-10-21-b](manekin-2022-effective-for-whom/seeded/claude-code/2026-10-21-b/CELL.md) — 12/12
+- [seeded · pipeline-claude-opus-4-7 · 20261021T142909Z](manekin-2022-effective-for-whom/seeded/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) — 7/12
+- [seeded · pipeline-claude-opus-5-5 · 20261022T044632Z](manekin-2022-effective-for-whom/seeded/pipeline-claude-opus-5-5/20261022T044632Z/CELL.md) — 12/12
+- [seeded · pipeline-desktop-opus-run2 · 20261023T151837Z](manekin-2022-effective-for-whom/seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — 12/12
+- [independent · claude-code · 2026-10-21-b](manekin-2022-effective-for-whom/independent/claude-code/2026-10-21-b/CELL.md) — 12/12
+- [independent · claude-code · 2026-11-01-a](manekin-2022-effective-for-whom/independent/claude-code/2026-11-01-a/CELL.md) — 12/12
+- [independent · pipeline-claude-opus-4-7 · 20261021T142909Z](manekin-2022-effective-for-whom/independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) — 12/12
+- [independent · pipeline-claude-opus-5-5 · 20261022T044632Z](manekin-2022-effective-for-whom/independent/pipeline-claude-opus-5-5/20261022T044632Z/CELL.md) — 12/12
+- [independent · pipeline-desktop-opus-run2 · 20261023T150832Z](manekin-2022-effective-for-whom/independent/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — 12/12
+- [blind · claude-code · 2026-10-21-b](manekin-2022-effective-for-whom/blind/claude-code/2026-10-21-b/CELL.md) — 12/12
+- [blind · claude-code · 2026-11-01-a](manekin-2022-effective-for-whom/blind/claude-code/2026-11-01-a/CELL.md) — 12/12
+- [blind · pipeline-claude-opus-4-7 · 20261021T142909Z](manekin-2022-effective-for-whom/blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) — 6/12
+- [blind · pipeline-claude-opus-5-5 · 20261022T044632Z](manekin-2022-effective-for-whom/blind/pipeline-claude-opus-5-5/20261022T044632Z/CELL.md) — 12/12
+- [blind · pipeline-desktop-opus-run2 · 20261023T150832Z](manekin-2022-effective-for-whom/blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — 9/12
 
 ## [montero-2022-cooperative-property-rights](montero-2022-cooperative-property-rights/REPORT.md)
 

@@ -1,0 +1,29 @@
+[ 220.7s] read yh_data.csv: 19836464 rows
+rows with missing exp: 846441; missing unemp: 2146380; missing demo2: 0; missing/zero weight: 0/0
+[ 225.2s] analysis sample: 16948516 rows
+occ xwalk dup keys: 0; ind xwalk dup keys: 0
+[ 225.7s] wage sample: 112858 rows
+[ 227.6s] cells: 1544682 (persons 16948516)
+[ 231.0s] Table 1 done
+[ 232.5s] Table 2 done
+[ 233.0s] Table 10 done
+SE(state-clustered) A1 u=0.0150 A4 u=0.0132 | B1 y=0.0203 o=0.0131 | B4 y=0.0185 o=0.0142
+Table2 grp1: N persons=10814088 young x U=-0.1679 (0.0156) old x U=0.0179 (0.0101)
+Table2 grp2: N persons=653100 young x U=-1.9278 (0.1666) old x U=-1.5051 (0.1761)
+Table2 grp3: N persons=5481328 young x U=-0.4898 (0.0332) old x U=0.0148 (0.0364)
+Table10 wage N=112858 young x U=-0.0262 (0.0036) old x U=-0.0116 (0.0035)
+DEVIATION: hiring regressions (Tables 1-2) estimated as WLS on exact weighted cell means over (state, month, demo2, young, prior labour-force status) to fit the 300 s / 4 GB sandbox; point estimates are algebraically identical, SEs use the same clustering but the small-sample N adjustment is omitted.
+RESULT:young_x_unemp_rate_no_controls=-0.335031
+RESULT:experienced_x_unemp_rate_no_controls=-0.036675
+RESULT:young_x_unemp_rate_preferred=-0.253253
+RESULT:experienced_x_unemp_rate_preferred=0.049562
+RESULT:aggregate_unemp_rate_no_controls=-0.119074
+RESULT:aggregate_unemp_rate_month_year_fe=-0.032623
+RESULT:young_x_unemp_rate_employed=-0.167865
+RESULT:experienced_x_unemp_rate_employed=0.017855
+RESULT:young_x_unemp_rate_unemployed=-1.927845
+RESULT:young_x_unemp_rate_nilf=-0.489847
+RESULT:wage_young_x_unemp_rate_all_hires=-0.026174
+RESULT:wage_experienced_x_unemp_rate_all_hires=-0.011598
+RESULT:n_obs_full_sample=16948516
+[ 233.0s] done

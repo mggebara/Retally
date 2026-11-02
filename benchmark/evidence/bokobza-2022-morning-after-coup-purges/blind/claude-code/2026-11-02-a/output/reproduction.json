@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "entry_id": "bokobza-2022-morning-after-coup-purges",
+  "mode": "blind",
+  "run_id": "2026-11-02-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Individual-level data: the shipped pop_pwt_ln_lag column is an exact copy of gdp_cap_pwt_ln_lag (so fixest dropped it as collinear in attempt-3); the final script rebuilds lagged logged population from pop_pwt_ln (previous calendar year, within country).",
+    "Leader-FE country-level models (Table A2): lagged controls are taken within the leader spell (as with Stata L. after xtset on the leader id), so each leader's first year has no lagged controls. Chosen because the paper/task state that lagged monarchy is collinear with leader FE, which holds only under within-leader lags (with within-country lags it varies in 5 leader spells right after a monarchy ended). Country-FE models use within-country lags.",
+    "Autocracy filter at country level: lag of BMR democracy1 built within country (consecutive years), sample 1967-2016; the failed-coup variable coupattempt_whogov is taken as already July-aligned. Individual level uses democracy_lag == 0 and coupattempt_presentyear.",
+    "Experience model (H2a): excludes the leader and importance tier 0.5 (junior minister or other low-ranking post); rows with missing importance are kept; no experience polynomials (paper footnote 15). Importance model drops the 6 rows with importance code 0 (Governor General) not in the paper's tier list."
+  ],
+  "notes": "Blind independent reproduction in R/fixest. Country level: OLS of replacement_rateadj_minister on coupattempt_whogov, lagged log GDP pc and log population (+ lagged monarchy, military, party dummies in Main), country or leader FE plus year FE, SEs clustered by country. Individual level: LPM of purged_y1 on failed-coup indicator x minister-characteristic dummies (experience group; party group with unknown/NA dropped; minister_type; importance tier), cubic in years in office (except experience model), lagged log GDP pc and population, country and year FE, SEs clustered by country; leader excluded; 1967-2016 autocracies. Attempts 1, 2 and 4 were exploratory (no RESULT lines). Attempt 3 was the first estimation run; after data diagnostics in attempt 4 (not any comparison with paper values, which were never seen) the final run fixed the population lag and the leader-FE lag structure. Image files (jpg) in the data directory were not opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T05:54:00Z",
+  "finished_at": "2026-11-02T06:01:00Z"
+}

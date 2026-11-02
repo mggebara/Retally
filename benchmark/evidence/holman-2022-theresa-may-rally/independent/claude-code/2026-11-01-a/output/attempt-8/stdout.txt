@@ -1,0 +1,49 @@
+Table 4 (OLS, country FE), coefficients:
+            kill_16         female_pres kill_16:female_pres 
+           2.322089           -2.937172           -3.828386 
+Panel-corrected SEs (within model):
+                     Estimate Std. Error    t value  Pr(>|t|)
+kill_16              2.322089   1.915344  1.2123614 0.2254386
+kill_16:female_pres -3.828386   4.260006 -0.8986809 0.3688715
+R2 (LSDV): 0.2675617  N: 4486 
+Table 2 May likeability:
+                   Estimate Std. Error     t value      Pr(>|t|)
+treatment1:time -0.09960724 0.02786719  -3.5743557  3.512065e-04
+treatment1       0.00880729 0.02212398   0.3980881  6.905659e-01
+time            -0.45129096 0.03380134 -13.3512746  1.231383e-40
+(Intercept)      1.96054306 0.05094839  38.4809590 2.569141e-322
+Table 2 May best PM (LPM):
+                     Estimate  Std. Error     t value     Pr(>|t|)
+treatment1:time -0.0519606027 0.005730035 -9.06811305 1.232723e-19
+treatment1      -0.0002071956 0.002931221 -0.07068578 9.436480e-01
+time             0.2055003611 0.004689849 43.81812278 0.000000e+00
+(Intercept)      0.1565104102 0.009076864 17.24278458 1.593349e-66
+Dropped (aliased) terms like: factor(wave)16 
+Dropped (aliased) terms bpm: factor(wave)12 
+diag T4 dv=lag_approval rlc=execrlc: attack=2.322 inter=-3.828 N=4486 R2=0.2676
+diag T4 dv=lag_approval rlc=factor(execrlc): attack=2.216 inter=-2.957 N=4486 R2=0.2719
+diag T4 dv=lead1 rlc=execrlc: attack=1.272 inter=-3.287 N=4453 R2=0.2667
+diag T4 dv=lead1 rlc=factor(execrlc): attack=1.252 inter=-2.590 N=4453 R2=0.2702
+diag T4 dv=lead2 rlc=execrlc: attack=0.838 inter=-1.613 N=4423 R2=0.2642
+diag T4 dv=lead2 rlc=factor(execrlc): attack=0.850 inter=-0.901 N=4423 R2=0.2679
+diag T4 lagged attack: attack=1.360 inter=-3.562 N=4452 R2=0.2683
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  2251284 120.3    3904605 208.6  3904605 208.6
+Vcells 32604051 248.8   51866760 395.8 42858506 327.0
+diag T2 treatment1: like inter=-0.0996 att=0.0088 time=-0.4513 | bpm inter=-0.0520 att=-0.0002 time=0.2055
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  2251349 120.3    3904605 208.6  3904605 208.6
+Vcells 34085605 260.1   62320112 475.5 52226709 398.5
+DEVIATION: Table 2 May best PM column estimated as a linear probability model (OLS), not logit
+DEVIATION: Table 4 approval timing uses the dataset's lag_approval with the contemporaneous kill_16 indicator
+RESULT:intl_attack_table4=2.322089
+RESULT:intl_attack_x_woman_exec_table4=-3.828386
+RESULT:n_obs_table4=4486.000000
+RESULT:did_attack_x_time_like_may_table2=-0.099607
+RESULT:did_attack_like_may_table2=0.008807
+RESULT:did_time_like_may_table2=-0.451291
+RESULT:did_attack_x_time_may_best_pm_table2=-0.051961
+RESULT:did_attack_may_best_pm_table2=-0.000207
+RESULT:did_time_may_best_pm_table2=0.205500
+RESULT:n_obs_did_like_may_table2=143499.000000
+RESULT:n_obs_did_may_best_pm_table2=97155.000000

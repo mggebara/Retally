@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "altmann-2022-cognitive-spillovers",
+  "mode": "independent",
+  "run_id": "2026-10-22-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Control set operationalised from variable labels: field of study = subject_cat factor; high-school GPA = q_abitur_grade_cat factor (quartiles, category 5 = missing, keeps all 12160 obs); last math grade = q_math_grade_cat factor (quartiles); perceived multitasking = perc_multitasking_1 (Likert) and perc_multitasking_2 (relative) entered linearly; payoff scheme = Treatment_Incentives factor; wave = original_lab.",
+    "Online screen size control entered as window_height1 and window_width1 linearly; gender as a factor (3 levels)."
+  ],
+  "notes": "Lab sample: formatted_data_replication.dta restricted to Treatment_Incentives != 4 (drops the Ample condition), giving 12160 subject-rounds and 608 subjects across Baseline, Directed Attention, Forced Choice. OLS via fixest with SEs clustered by subject_id. Outcomes: summation_correct (decision task), default_followed (default adherence), load_correct (background task), payoff_share. Online: formatted_data_long_mturk.dta, memory on Treatment_intervention, clustered by subject. Two exploratory runs (variable inspection, sample counts) preceded the single scored run; no claim-comparison or error-repair attempts were made. The supplied paper.txt appears to be an earlier version of the paper (no online experiment, different table numbering), so specifications followed the task's claim descriptions. The dataset README.md was read (documentation within the mount, not a script); no .do or other script files were opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T03:07:54Z",
+  "finished_at": "2026-10-22T03:10:05Z"
+}

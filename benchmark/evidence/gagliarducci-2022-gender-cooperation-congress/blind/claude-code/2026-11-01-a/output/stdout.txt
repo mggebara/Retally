@@ -1,0 +1,35 @@
+n committee dummies: 33 
+pct_opposite vs opp/(n+1): max abs diff 0.5 ; corr 0.9393249 
+pct missing when n=0: 19339 of 19339 
+OLS all ncosp: N 60669 clusters 4746 
+computed CCT mserd bw: rep ncosp 17.79 ; dem pct 16.45 (paper states 13 and 24)
+RD rep ncosp IPW:
+  PS: races=107, treated=27, ps range [0.0069, 0.7487]
+IPW rep ncosp sponsor:
+  PS: races=2092, treated=172, ps range [0.0000, 0.8563]
+IPW dem pct sponsor:
+  PS: races=2265, treated=358, ps range [0.0003, 0.8906]
+IPW rep pct district:
+  PS: races=2121, treated=180, ps range [0.0013, 0.4682]
+m1 b=1.3310 se=0.6301 N=60669
+m2 b=2.3963 se=1.0388 N=27670
+m3 b=8.2899 se=3.9913 N=1287
+m4 b=3.1429 se=1.0296 N=25641
+m5 b=-2.4380 se=0.7354 N=22712
+m6 b=-5.1325 se=4.2352 N=1376
+m7 b=-2.5240 se=0.8269 N=20257
+m8 b=4.3157 se=1.3410 N=18691
+m9 b=2.9109 se=1.1999 N=17601
+RESULT:female_sponsor_ncosponsors_all_ols=1.331041014
+RESULT:female_sponsor_ncosponsors_rep_ols=2.396342718
+RESULT:female_sponsor_ncosponsors_rep_rd_ipw=8.289875168
+RESULT:female_sponsor_ncosponsors_rep_ipw_sponsor=3.142875133
+RESULT:female_sponsor_pct_opposite_dem_ols=-2.437952081
+RESULT:female_sponsor_pct_opposite_dem_rd=-5.132482185
+RESULT:female_sponsor_pct_opposite_dem_ipw_sponsor=-2.523953024
+RESULT:female_sponsor_pct_opposite_rep_ols=4.31565348
+RESULT:female_sponsor_pct_opposite_rep_ipw_district=2.910924015
+RESULT:n_bills_ncosponsors_all_ols=60669
+RESULT:n_sponsor_terms_ncosponsors_all_ols=4746
+RESULT:n_bills_pct_opposite_dem_ols=22712
+RESULT:n_bills_pct_opposite_rep_ols=18691

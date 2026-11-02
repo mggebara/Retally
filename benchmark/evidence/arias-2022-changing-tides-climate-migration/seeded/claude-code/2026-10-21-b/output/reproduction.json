@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "entry_id": "arias-2022-changing-tides-climate-migration",
+  "mode": "seeded",
+  "run_id": "2026-10-21-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "cjoint is not installed in the sandbox: cjoint::read.qualtrics(new.format=TRUE) was re-implemented in base R (respondent x task x profile long format, attributes matched by name from F-k-a / F-k-j-a columns, selected = 1 if the forced-choice answer equals the profile number, NA if unanswered), and cjoint::amce() was estimated as an OLS of selected on the seven attribute factors with fixest::feols and respondent-clustered SEs. Baselines follow the authors' baselines list.",
+    "Germany: attribute columns were renamed by German attribute name (Beruf->Occupation, Geschlecht->Gender, Gruende fuer die Migration->Reason.for.migration, Herkunft->Origin, Sprachkompetenz->Language.Fluency, Zusaetzliche Belastung->Vulnerability) rather than by the script's column positions 23-36, which depend on cjoint's internal column order.",
+    "Germany: the reported AMCEs come from the main-effects model. The design file declares a Language Fluency x Origin restriction (no 'Keine' language with same-country origin, which the data confirm), and cjoint would add that interaction for dependent attributes. The interacted model is also printed: its reason-for-migration coefficients (drought/flooding/wildfires/persecution) are 0.0805/0.0865/0.0598/0.1617, versus 0.0807/0.0865/0.0598/0.1623 in the main-effects model. The main-effects model was chosen as the scored specification when the script was written, before any results were seen; the script was not changed afterward."
+  ],
+  "notes": "Followed Migration_Analysis_Final.R Study 1 (US and Germany) import + main conjoint AMCE. Sample steps replicated: drop unanswered tasks (selected NA), drop Occupation=='Unemployer' (no such rows), and for the US drop the first 4 long-format rows (cjt_us_data[5:nrow, ]). Respondents = unique ResponseIds with >=1 answered task; choice tasks = profile rows in the AMCE regression. All 12 RESULT values match the claimed values at reported precision (US 0.035/0.037/0.040/0.076; Germany 0.081/0.086/0.060/0.162; N 1086/1074; tasks 18966/18862). attempt-1 was an exploratory column/coding inspection with no RESULT lines. Before that, one docker invocation ran while attempt-1/script.R did not exist yet (my heredoc write had been refused), so Docker bind-mounted an empty directory and nothing was executed; that run produced empty outputs, which the real attempt-1 run then overwrote. No check_attempt comparison was needed because the script was not changed after viewing results.",
+  "files_read_outside_mount": [
+    "<repo>/benchmark/.cache/claude-code/arias-2022-changing-tides-climate-migration/seeded/2026-10-21-b/task.md (the task instructions, as directed)",
+    "<repo>/benchmark/reproductions/arias-2022-changing-tides-climate-migration/seeded/2026-10-21-b/render.json (pre-existing file in my own output directory; read only to confirm metadata)"
+  ],
+  "started_at": "2026-10-22T02:01:57Z",
+  "finished_at": "2026-10-22T02:06:00Z"
+}

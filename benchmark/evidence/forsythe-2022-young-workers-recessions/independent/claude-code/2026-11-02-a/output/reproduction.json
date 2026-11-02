@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "entry_id": "forsythe-2022-young-workers-recessions",
+  "mode": "independent",
+  "run_id": "2026-11-02-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 124, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 137, "kind": ""}
+  ],
+  "deviations": [
+    "Hiring LPMs (Table 1 A/B cols 1 and 4, Table 2 cols 1-4) estimated by WLS on weighted cell means over state x month x demographic cell x PE<=10 x prior labour-force status; all regressors are constant within cells, so point estimates equal person-level WLS; state-clustered SEs not computed/reported.",
+    "State (v2gestfips) is missing in the provided data for mid-2014 through 2016 (2.15M person-months); these cannot be matched to the state unemployment rate and are dropped. Sample also restricted to ages 16-80 (age top-coding above 80 varies over time) with non-missing Hispanic origin; resulting N = 16,964,441.",
+    "Years of schooling for potential experience imputed from CPS PEEDUCA categories: <1st=0, 1-4=2.5, 5-6=5.5, 7-8=7.5, 9th=9, 10th=10, 11th=11, 12th no diploma=12, HS=12, some college=13, associate=14, BA=16, MA/professional/PhD=18.",
+    "The 2 GB yh_data.csv was read with data.table::fread restricted to the 19 needed columns (select=), not loaded in full, because of the sandbox's 4 GB memory cap and 300 s time limit.",
+    "Wage regression uses the average of the two months' CPS final weights (earnings weights not in the data); industry/occupation crosswalked to 2002 census codes by code vintage (industry 1990 codes to 2002, 2002 codes 2003-08, 2007 codes 2009-13, 2012 codes 2014+; occupation 1990 codes to 2002, 2002 codes 2003-10, 2010 codes 2011+)."
+  ],
+  "notes": "Data are pre-matched consecutive-month pairs (unprefixed = t-1, v2 = t). Hired (x100) = employed in t (PEMLR 1-2) and either non-employed in t-1, or employed in t-1 with PUIODP1 = 2 (no longer with last month's employer); new jobs with class of worker self-employed (PEIO1COW 6,7) are not hires. Young = potential experience (age - schooling - 6) <= 10. Demographic FE = sex x white x Hispanic x 7 education levels. Unemployment rate merged by state and month t. Weights = average of PWSSWGT in t-1 and t. Wage sample: new hires with positive, non-allocated (PRWERNAL = 0) weekly earnings deflated to 1994 by the provided CPI, with state, demographic, month-year, occupation and industry FE (N = 118,285). Exploratory attempts: attempt-1 timed the full fread (209 s) and tabulated variables; attempt-2 tested chunked readBin streaming, which was slower and timed out (killed); attempt-3 gathered sample-restriction diagnostics and ran out of memory at the end of its diagnostics. None printed RESULT lines. No claim-comparison attempts were made.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T05:50:37Z",
+  "finished_at": "2026-11-02T06:12:30Z"
+}

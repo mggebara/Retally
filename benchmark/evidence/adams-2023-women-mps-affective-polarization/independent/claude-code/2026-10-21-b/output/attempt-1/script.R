@@ -1,0 +1,10 @@
+D <- "<repo>/benchmark/.cache/claude-code/adams-2023-women-mps-affective-polarization/independent/2026-10-21-b/mount/adams_2023_women_mps_affective_polarization"
+load(file.path(D,"dyadic_data_1-4-22.Rdata"))
+d <- as.data.frame(updated_data)
+options(width=200)
+print(names(d))
+str(d, list.len=100)
+g <- readRDS(file.path(D,"gender_disagregated_8-8-21.rds"))
+print(names(g)); print(table(g$gender))
+print(setdiff(names(g), names(d)))
+cat(readLines(file.path(D,"readme.rtf")), sep="\n")

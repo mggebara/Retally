@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "lopez-moctezuma-2022-policy-deliberation-philippines",
+  "mode": "blind",
+  "run_id": "2026-11-01-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Attendance weights (paper describes them only verbally): in barangays where town halls were held (treatment==1), self-reported attendees get att.prop/s_j and non-attendees (1-att.prop)/(1-s_j), where att.prop is attendees/registered voters from data_agg and s_j the share of self-reported attendees among all survey respondents in the barangay; weight 1 elsewhere; treated-barangay respondents with missing attendance dropped from weighted regressions.",
+    "Anderson indices: items oriented so that higher = more concern about poverty (poverty, gap, corruption reversed 6-x; cct as is) or more pro-gender-equality / less sexist (femhouse, fempol, equality, harassment as is; discrimination reversed 6-x); standardized on the unweighted control-group (assignment==0) mean and s.d. within each party's municipalities; weights = row sums of the inverse pairwise-complete covariance matrix; index averaged over available items and re-standardized on the control group.",
+    "Survey effective sample = respondents with non-missing turnout_pl (1,081 after dropping one row with missing city/barangay/assignment; paper reports 1,082). Vote outcomes (F.1) use respondents with turnout_pl==1.",
+    "Barangay-level ITT uses the assignment variable as coded in data_agg.RData; permutation p-values were not computed (only coefficients and N are requested)."
+  ],
+  "notes": "Table 1: OLS of turnout.party, share.treated, share.akbayan (Akbayan municipalities), share.umalabka (Umalab Ka municipalities) on assignment with city fixed effects (fixest). SI C.3/C.4: weighted OLS of Anderson summary indices on assignment with city FE, SE clustered by barangay, by party subsample. SI F.1: unweighted LPM (x100) of vote / vote.akbayan on assignment with city FE among party-list voters. One exploratory run (attempt-1, no RESULT lines) inspected variables; the single estimating run is final. No specification was changed after seeing estimates. Codebook PDFs in the mount were read for variable definitions only.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T04:21:31Z",
+  "finished_at": "2026-11-02T04:24:00Z"
+}

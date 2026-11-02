@@ -1,0 +1,324 @@
+You are refining R code that reproduces results from an econometrics paper.
+The code RAN SUCCESSFULLY but the reproduced values do not match the
+paper's claims within the allowed tolerance.  Identify what is causing
+the gap and adjust the code to close it.
+
+## Paper
+Title: American Political Science Review (2022) 116, 1, 249–264
+Methodology: - **Design / data (main study):** Natural experiment ("Unexpected Event during Survey Design", UESD) using British Election Study (BES) internet panel Wave 12 (YouGov, fielded May 5 to June 7, 2017). Treatment = surveyed after the May 22, 2017 Manchester Arena bombing (n = 16,972) vs. before (control, n = 16,377). Balance checks regress assignment on demographics (Appendix B, Table B1); only Labour Party membership is imbalanced, so a Labour-member control is always included. There is no train/test split or cross-validation; it is causal inference from survey regressions.
+- **Outcomes / preprocessing:** "Like May" is an 11-point scale (0 = strongly dislike, 10 = strongly like), in raw scale units and not standardised. "May best PM" is binary (1 = May, 0 = Corbyn). Full controls: ethnically British identity, gender, Labour Party membership, other party membership, income, ideology. Missing ideology and income are recoded to the scale midpoint (results reported as unchanged if those cases are dropped). Table 3 uses survey weights.
+- **Table 1 (headline):** Outcome ~ Surveyed-after-Manchester dummy + controls. Likeability uses OLS; best PM uses logit. Columns: (1) OLS, Labour control only: −0.332 (SE 0.054), N = 32,642, R² 0.143. (2) OLS, full controls: −0.351 (0.043), N = 26,506, R² 0.442. (3) Logit, Labour control only: −0.204 (0.038), N = 34,394, pseudo-R² 0.090. (4) Logit, full controls: −0.333 (0.042), N = 27,844, pseudo-R² 0.329. The paper reports a predicted drop of about 5 percentage points in the probability of choosing May as best PM. Standard errors are clustered on day of survey in all Wave-12-only analyses.
+- **Table 2 (interrupted time series DiD):** Panel data across BES waves. Outcome ~ Manchester attack (treatment: surveyed after the attack) × Time (0 for waves before the attack, 1 for wave 12 onward) + main effects + full controls + wave fixed effects. Likeability uses OLS; best PM is labelled logistic but the coefficients are on a probability scale. Interaction: −0.1274 (0.0187) for likeability, N = 143,499; −0.0501 (0.0044) for best PM, N = 97,155. Time: −0.5007 / 0.2098. Treatment main effect: 0.0178 / −0.0002. Constants: 1.9443 / 0.1505. An average-treatment-effect version is in Appendix Table A5.
+- **Mechanism (Figure 1, Table C1):** Gender-attitudes index built from 5 items asked in earlier waves: traditional gender roles, opposition to women's equality or more women in office, women's unfair workplace advantage, and discrimination in favour of women. Each item is rescaled to 0–1 and coded so that higher = more negative; the five are combined (alpha = 0.71, mean 0.39, SD 0.2). The index is interacted with the attack dummy, and marginal effects are plotted, about −0.4 at the modal value. Robustness checks add party and ideology interactions and triple interactions (Figure C2).
+- **Alternative explanations and robustness:** Table 3 runs the same full-control OLS for liking of May, Corbyn, Farron and Sturgeon (May −0.351, Corbyn +0.398*, Farron 0.059, Sturgeon +0.115*; N = 26,506 / 26,330 / 23,285 / 25,636). Further checks: separate models for Conservative and Labour supporters (Figure 2, Table C2); daily GBP/EUR exchange-rate control; Brexit "Leave" vote-intention control; ±10-day and ±4-day bandwidths around the attack (Figure 3, Table E2); a London Bridge attack check (Table A6); a placebo outcome on nuclear submarines; specifications with time controls, multilevel models and ARIMA models (Tables E4–E5); and a 2012 survey experiment with N = 992, 0–100 thermometers and a terror-threat vs. control news story, where May was rated 7 points higher under the threat condition (p = 0.003).
+- **Constituency analysis (Figure 4, Table G1):** OLS on England constituencies. Dependent variable is the change in Conservative vote share 2015–17, with a placebo on 2010–15. The key regressor is the standardized distance from Manchester to the constituency midpoint. Controls: population, Brexit vote share, and the shares who are ethnically British, over 65, UK-born, Christian, and unemployed. The distance coefficient is positive, with a one-tailed p = 0.079; the placebo is null.
+- **Cross-national test (Table 4):** Country-quarter TSCS covering 66 countries, 1975–2017, with 4,359 country-quarters, 20 of them countries with a woman leader at some point. The dependent variable is percent approving the executive in the quarter after the attack. The attack dummy marks an international attack (GTD definition) with more than 15 deaths: 60 country-quarters, 9 of them under women leaders. It is interacted with a woman-executive indicator, with country fixed effects. Controls: GDP growth, logged inflation, the executive's left–right ideology, and an election-year dummy. Results: about +3.1 points of approval for men and about −4.3 points for women. Significance is judged at p < 0.05.
+
+
+## Current Code
+```r
+suppressPackageStartupMessages({
+  library(haven)
+  library(data.table)
+  library(fixest)
+})
+set.seed(42)
+
+base <- "<repo>/.cache/datasets/holman_2022_theresa_may_rally.script-free"
+results <- list()
+emit <- function(name, val) {
+  if (!is.null(val) && length(val) == 1 && is.finite(val)) results[[name]] <<- val
+}
+
+is_binary <- function(x) {
+  u <- unique(x[!is.na(x)])
+  length(u) > 0 && all(u %in% c(0, 1))
+}
+
+# =====================================================================
+# Table 4: cross-national TSCS, executive approval
+# =====================================================================
+tryCatch({
+  ga <- as.data.frame(read_dta(file.path(base, "global_approval.dta")))
+  for (v in names(ga)) {
+    if (inherits(ga[[v]], "haven_labelled")) ga[[v]] <- as.numeric(zap_labels(ga[[v]]))
+  }
+  nm <- names(ga)
+  cvar <- if ("country" %in% nm) "country" else if ("ccode" %in% nm) "ccode" else "country_code"
+  ga$cid <- as.character(ga[[cvar]])
+  if (is.numeric(ga$qtr)) {
+    ga <- ga[order(ga$cid, ga$qtr), ]
+  } else {
+    ga <- ga[order(ga$cid), ]
+  }
+  qnum <- if (is.numeric(ga$qtr)) ga$qtr else ave(seq_len(nrow(ga)), ga$cid, FUN = seq_along)
+  lead_by <- function(x, k = 1) {
+    out <- rep(NA_real_, length(x))
+    idx <- split(seq_along(x), ga$cid)
+    for (ii in idx) {
+      n <- length(ii)
+      if (n > k) {
+        src <- ii[(1 + k):n]; dst <- ii[1:(n - k)]
+        ok <- (qnum[src] - qnum[dst]) == k
+        out[dst[ok]] <- as.numeric(x[src[ok]])
+      }
+    }
+    out
+  }
+
+  # outcome candidates
+  ycands <- list()
+  appr_names <- nm[grepl("approv", nm, ignore.case = TRUE)]
+  lead_names <- appr_names[grepl("lead|^f_|_f$|next|fwd|forward|f1", appr_names, ignore.case = TRUE)]
+  for (v in lead_names) ycands[[paste0("asis_", v)]] <- as.numeric(ga[[v]])
+  base_appr <- setdiff(appr_names, c(lead_names, appr_names[grepl("lag", appr_names, ignore.case = TRUE)]))
+  if (length(base_appr) > 0) {
+    av <- if ("approval" %in% base_appr) "approval" else base_appr[1]
+    ycands[["cur"]] <- as.numeric(ga[[av]])
+    ycands[["lead"]] <- lead_by(ga[[av]], 1)
+  } else if ("lag_approval" %in% nm) {
+    ycands[["cur"]] <- lead_by(ga$lag_approval, 1)
+    ycands[["lead"]] <- lead_by(ga$lag_approval, 2)
+  }
+
+  # attack candidates
+  acands <- list()
+  pref <- c("kill_16", "pres_15death", "rally_kill", "rally_event_any", "rally_event_any2", "rally_events")
+  others <- nm[grepl("kill|death", nm, ignore.case = TRUE)]
+  for (v in unique(c(intersect(pref, nm), others))) {
+    x <- as.numeric(ga[[v]])
+    if (is_binary(x)) {
+      acands[[v]] <- x
+    } else if (grepl("kill", v) && max(x, na.rm = TRUE) > 15) {
+      acands[[paste0(v, "_gt15")]] <- as.numeric(x > 15)
+    }
+  }
+
+  ex_raw <- as.numeric(ga$execrlc)
+  ex_na <- ex_raw; ex_na[!is.na(ex_na) & ex_na < 0] <- NA
+  ecands <- list(raw = ex_raw, negNA = ex_na)
+
+  best <- NULL; best_score <- Inf
+  for (yn in names(ycands)) for (an in names(acands)) for (en in names(ecands)) {
+    d <- data.frame(y = ycands[[yn]], att = acands[[an]], fem = as.numeric(ga$female_pres),
+                    growth = as.numeric(ga$growth), linf = as.numeric(ga$log_inflation),
+                    ex = ecands[[en]], elec = as.numeric(ga$election_qtr), cid = ga$cid)
+    d <- d[complete.cases(d), ]
+    if (nrow(d) < 100 || sum(d$att) == 0) next
+    m <- tryCatch(feols(y ~ att * fem + growth + linf + ex + elec | cid, data = d,
+                        warn = FALSE, notes = FALSE), error = function(e) NULL)
+    if (is.null(m)) next
+    N <- nobs(m)
+    sa <- sum(d$att); saf <- sum(d$att * d$fem)
+    sc <- abs(N - 4328) / 4328 + abs(sa - 60) / 60 + abs(saf - 9) / 9
+    if (en == "raw") sc <- sc + 1e-6
+    if (sc < best_score) { best_score <- sc; best <- list(m = m, yn = yn, an = an, en = en) }
+  }
+  if (!is.null(best)) {
+    cf <- coef(best$m)
+    emit("intl_attack_table4", unname(cf["att"]))
+    emit("intl_attack_x_woman_exec_table4", unname(cf["att:fem"]))
+    emit("n_obs_table4", nobs(best$m))
+    message("Table 4 spec: y=", best$yn, " attack=", best$an, " execrlc=", best$en)
+  }
+}, error = function(e) message("Table 4 error: ", conditionMessage(e)))
+
+# =====================================================================
+# Table 2: difference-in-differences across BES waves
+# =====================================================================
+tryCatch({
+  want <- c("wave", "id", "gender", "labour", "income", "ideology", "time", "may_bestpm",
+            "post_attack", "white", "treatment1", "treatment2", "party_other",
+            "likeMayW", "bestPMW")
+  dd <- read_dta(file.path(base, "did_data.dta"), col_select = any_of(want))
+
+  recode_bestpm <- function(x) {
+    labs <- attr(x, "labels")
+    v <- as.numeric(zap_labels(x))
+    if (is_binary(v)) return(v)
+    out <- rep(NA_real_, length(v))
+    if (!is.null(labs) && length(labs) > 0) {
+      may <- labs[grepl("May", names(labs))]
+      cor <- labs[grepl("Corbyn", names(labs))]
+      if (length(may) > 0 && length(cor) > 0) {
+        out[v %in% may] <- 1; out[v %in% cor] <- 0
+        return(out)
+      }
+    }
+    out[v == 1] <- 1; out[v == 2] <- 0
+    out
+  }
+  bp_cands <- list()
+  if ("bestPMW" %in% names(dd)) bp_cands[["bestPMW"]] <- recode_bestpm(dd$bestPMW)
+  if ("may_bestpm" %in% names(dd)) bp_cands[["may_bestpm"]] <- recode_bestpm(dd$may_bestpm)
+
+  dd <- as.data.table(zap_labels(dd))
+  dd[, names(dd) := lapply(.SD, as.numeric)]
+
+  dd[likeMayW > 10 | likeMayW < 0, likeMayW := NA]
+  # ideology / income: drop non-substantive codes, then midpoint-impute
+  impute_mid <- function(x) {
+    x[!is.na(x) & (x >= 98 | x < 0)] <- NA
+    mid <- (min(x, na.rm = TRUE) + max(x, na.rm = TRUE)) / 2
+    x[is.na(x)] <- mid
+    x
+  }
+  dd[ideology > 10, ideology := NA]
+  dd[, ideology := impute_mid(ideology)]
+  dd[, income := impute_mid(income)]
+  if (!"time" %in% names(dd)) dd[, time := as.numeric(wave >= 12)]
+  dd[is.na(time), time := as.numeric(wave >= 12)]
+
+  # treatment candidates: must be constant within respondent
+  tcands <- list()
+  for (v in intersect(c("post_attack", "treatment1", "treatment2"), names(dd))) {
+    x <- dd[[v]]
+    if (!is_binary(x)) next
+    tmp <- data.table(id = dd$id, x = x)[!is.na(x)]
+    if (nrow(tmp) == 0) next
+    cons <- tmp[, .(k = uniqueN(x)), by = id][, mean(k == 1)]
+    waves_cov <- uniqueN(dd$wave[!is.na(x)])
+    if (cons >= 0.99 && waves_cov > 1) tcands[[v]] <- x
+  }
+  if ("post_attack" %in% names(dd)) {
+    w12 <- dd[wave == 12 & !is.na(post_attack), .(tr = post_attack[1]), by = id]
+    tcands[["post_attack_prop"]] <- w12$tr[match(dd$id, w12$id)]
+  }
+
+  ctrls <- c("white", "gender", "labour", "party_other", "income", "ideology")
+  ctrls <- intersect(ctrls, names(dd))
+
+  fit_did <- function(y, tr) {
+    d <- data.table(y = y, tr = tr, time = dd$time, wave = dd$wave)
+    for (cv in ctrls) d[[cv]] <- dd[[cv]]
+    d <- d[complete.cases(d)]
+    if (nrow(d) < 100) return(NULL)
+    d[, wave := factor(wave)]
+    f <- as.formula(paste("y ~ tr + time + tr:time +", paste(ctrls, collapse = " + "), "+ wave"))
+    lm(f, data = d)
+  }
+
+  # likeability
+  best <- NULL; bestd <- Inf; best_t <- NULL
+  for (tn in names(tcands)) {
+    m <- tryCatch(fit_did(dd$likeMayW, tcands[[tn]]), error = function(e) NULL)
+    if (is.null(m)) next
+    dN <- abs(nobs(m) - 143499)
+    if (dN < bestd) { bestd <- dN; best <- m; best_t <- tn }
+  }
+  if (!is.null(best)) {
+    cf <- coef(best)
+    emit("did_attack_x_time_like_may_table2", unname(cf["tr:time"]))
+    emit("did_attack_like_may_table2", unname(cf["tr"]))
+    emit("did_time_like_may_table2", unname(cf["time"]))
+    emit("n_obs_did_like_may_table2", nobs(best))
+    message("Table 2 treatment: ", best_t)
+  }
+
+  # best PM (linear probability, coefficients on probability scale)
+  bestb <- NULL; bestdb <- Inf
+  tn_order <- unique(c(best_t, names(tcands)))
+  for (bn in names(bp_cands)) for (tn in tn_order) {
+    m <- tryCatch(fit_did(bp_cands[[bn]], tcands[[tn]]), error = function(e) NULL)
+    if (is.null(m)) next
+    dN <- abs(nobs(m) - 97155)
+    if (!identical(tn, best_t)) dN <- dN + 0.5
+    if (dN < bestdb) { bestdb <- dN; bestb <- m }
+  }
+  if (!is.null(bestb)) {
+    cf <- coef(bestb)
+    emit("did_attack_x_time_may_best_pm_table2", unname(cf["tr:time"]))
+    emit("did_attack_may_best_pm_table2", unname(cf["tr"]))
+    emit("did_time_may_best_pm_table2", unname(cf["time"]))
+    emit("n_obs_did_may_best_pm_table2", nobs(bestb))
+  }
+}, error = function(e) message("Table 2 error: ", conditionMessage(e)))
+
+for (nmr in names(results)) {
+  cat(sprintf("RESULT:%s=%.6f\n", nmr, results[[nmr]]))
+}
+```
+
+## What the code produced
+  intl_attack_table4 = 1.025046
+  intl_attack_x_woman_exec_table4 = -1.59318
+  n_obs_table4 = 4369.0
+  did_attack_x_time_like_may_table2 = -0.150165
+  did_attack_like_may_table2 = -0.105036
+  did_time_like_may_table2 = -0.226436
+  n_obs_did_like_may_table2 = 239919.0
+  did_attack_x_time_may_best_pm_table2 = -0.039816
+  did_attack_may_best_pm_table2 = -0.01479
+  did_time_may_best_pm_table2 = 0.185009
+  n_obs_did_may_best_pm_table2 = 145803.0
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+RESULT:intl_attack_table4=1.025046
+RESULT:intl_attack_x_woman_exec_table4=-1.593180
+RESULT:n_obs_table4=4369.000000
+RESULT:did_attack_x_time_like_may_table2=-0.150165
+RESULT:did_attack_like_may_table2=-0.105036
+RESULT:did_time_like_may_table2=-0.226436
+RESULT:n_obs_did_like_may_table2=239919.000000
+RESULT:did_attack_x_time_may_best_pm_table2=-0.039816
+RESULT:did_attack_may_best_pm_table2=-0.014790
+RESULT:did_time_may_best_pm_table2=0.185009
+RESULT:n_obs_did_may_best_pm_table2=145803.000000
+```
+
+## Last run's stderr (excerpt: first/last 3000 characters)
+```
+Table 4 spec: y=lead attack=kill_14 execrlc=negNA
+Table 2 treatment: post_attack
+```
+
+## Claims still failing
+1. intl_attack_table4: paper claims 3.112 percentage points of executive approval (coefficient), your code produced 1.02505, tolerance 0.2812, gap 67.06% relative
+2. intl_attack_x_woman_exec_table4: paper claims -4.333 percentage points of executive approval (coefficient), your code produced -1.59318, tolerance 0.429, gap 63.23% relative
+3. did_attack_x_time_like_may_table2: paper claims -0.1274 points on the 0-10 like/dislike scale (coefficient), your code produced -0.150165, tolerance 0.1468, gap 17.87% relative
+4. did_attack_like_may_table2: paper claims 0.0178 points on the 0-10 like/dislike scale (coefficient), your code produced -0.105036, tolerance 1.562, gap 690.09% relative
+5. did_time_like_may_table2: paper claims -0.5007 points on the 0-10 like/dislike scale (coefficient), your code produced -0.226436, tolerance 0.04574, gap 54.78% relative
+6. did_attack_x_time_may_best_pm_table2: paper claims -0.0501 change in the May-best-PM outcome (0/1) (coefficient), your code produced -0.039816, tolerance 0.08782, gap 20.53% relative
+7. did_attack_may_best_pm_table2: paper claims -0.0002 change in the May-best-PM outcome (0/1) (coefficient), your code produced -0.01479, tolerance 20, gap 7295.00% relative
+8. did_time_may_best_pm_table2: paper claims 0.2098 change in the May-best-PM outcome (0/1) (coefficient), your code produced 0.185009, tolerance 0.02, gap 11.82% relative
+9. n_obs_did_like_may_table2: paper claims 143499.0 observations (respondent-waves) (other), your code produced 239919, tolerance 0.01, gap 67.19% relative
+10. n_obs_did_may_best_pm_table2: paper claims 97155.0 observations (respondent-waves) (other), your code produced 145803, tolerance 0.01, gap 50.07% relative
+
+## Previous attempts (oldest first)
+  Attempt 1: intl_attack_table4=1.025046, intl_attack_x_woman_exec_table4=-1.59318, n_obs_table4=4369.0, did_attack_x_time_like_may_table2=-0.150165, did_attack_like_may_table2=-0.105036, did_time_like_may_table2=-0.226436, n_obs_did_like_may_table2=239919.0, did_attack_x_time_may_best_pm_table2=-0.039816, did_attack_may_best_pm_table2=-0.01479, did_time_may_best_pm_table2=0.185009, n_obs_did_may_best_pm_table2=145803.0
+
+These attempts have already been tried.  Do not repeat a strategy
+that has already produced the same values.
+
+## Task
+Adjust the code minimally to close the gap on the failing claims.
+Prefer changes that align more closely with the paper's stated methodology:
+re-read the methodology summary above and check the model specification,
+covariate selection, fixed effects, clustering, and seed against what the
+paper actually specifies.  In econometrics papers, common gap-closers are:
+  - getting the cluster-robust SE right (vcovCL / cluster_var argument)
+  - matching the paper's exact fixed-effects structure
+  - using the same sample-restriction filters the paper applied
+  - matching the paper's weighting scheme (weights= argument)
+
+## Deviation reporting
+If you must change something the paper did NOT specify in order to close
+the gap, emit a ``DEVIATION:`` line via cat() describing the change:
+
+    cat('DEVIATION: Used HC1 robust SE because the paper does not specify but the default did not converge\n')
+
+## When to give up
+If after re-reading the methodology and the previous attempts you judge
+the gap cannot be closed without unreasonable deviation, return the SAME
+R CODE you were given, BYTE-FOR-BYTE unchanged.  The pipeline will record
+the claim as unreproducible.
+
+## Output convention (unchanged)
+Emit every metric as ``cat('RESULT:<name>=<value>\n')``.
+The dataset is a directory tree at '<repo>/.cache/datasets/holman_2022_theresa_may_rally.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+No network, no system().  set.seed(42).
+
+Output ONLY the R code — no explanation, no markdown fences.

@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "acemoglu-2022-war-socialism-fascism",
+  "mode": "blind",
+  "run_id": "2026-11-01-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Standardized coefficients computed by z-scoring the outcome, endogenous regressor, instrument and controls within each regression's estimation sample (for the 1921 vote share, within the 5,358-municipality 1921 sample).",
+    "First-stage F-statistic for Table I col (6) computed as the squared district-clustered t-statistic of the casualty coefficient (fixest small-sample corrections, province FE nested in clusters); Stata ivreg2/reghdfe corrections may differ slightly.",
+    "Highest-mortality-battles dummy taken to be cruent_d; assault troops + volunteers casualty share taken to be ard_vol_pop6m; regiment FE = all 359 d_reg* dummies; province FE = provincia1921; clusters = circondario1921."
+  ],
+  "notes": "Blind independent reproduction from paper text only (no author code, no result files). attempt-1: exploratory variable listing (no RESULT lines). attempt-2: full estimation with fixest, which by default dropped 3 singleton-province municipalities (N=5772); not an error, but on method grounds (the dataset ships explicit province dummies, implying the authors used dummy-variable province FE, which keeps singletons) the final run keeps all observations (fixef.rm='none'), giving N=5775 / 181 districts for the main sample and 5358 / 175 for the 1921 vote share. Coefficients are identical between attempt-2 and the final run; only N and SEs/F changed marginally. Specification: OLS first stage and 2SLS with fixest::feols, controls per Table I notes (demographic: lpop1911 + lpop2-4 + sh_pop_1911_be6; geographic: larea, centre_alt, max_alt; psu1913_vv; military: veterans74_95, veterans96_00, ard_vol_pop6m, army_suppliers_d, cruent_d; agricultural: dlab, shcrop, landlord_ass; urban: ind_workers, ind_firms, literacy, elites, bourgeoisie), SEs clustered by circondario1921. No paper values were seen or compared.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T04:21:21Z",
+  "finished_at": "2026-11-02T04:25:00Z"
+}

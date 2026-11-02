@@ -1,0 +1,5 @@
+Run crashed (exit 1) before printing any RESULT: line:
+  Error in eval(extras, data, env) : object 'd' not found
+  Calls: fit ... eval -> <Anonymous> -> model.frame.default -> eval -> eval
+Cause: lm()'s weights argument is evaluated non-standardly inside the data frame, so `weights = d[[w]]` inside the helper failed.
+Fix: copy the weight column into a `.w` column of the data and pass `weights = .w`. No change to the specification.

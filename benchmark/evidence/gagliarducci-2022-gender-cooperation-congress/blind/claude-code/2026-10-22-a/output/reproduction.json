@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "entry_id": "gagliarducci-2022-gender-cooperation-congress",
+  "mode": "blind",
+  "run_id": "2026-10-22-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Data: AnalysisData/bills_analysis_101-111_replication.csv, restricted to public bills (private==0) with non-missing sponsor info; listwise deletion on all regressors.",
+    "Percent opposite-party cosponsors uses the dataset's pct_cosponsors_opposite (verified = opposite/number of cosponsors, missing when a bill has zero cosponsors) times 100, not opposite/(cosponsors+1) as described in the working-paper text.",
+    "Constructed variables not in the file: rookie = tenure_run==1; committee leader = chair or ranking member (comc|comr); total bills sponsored = count of public bills per sponsor-Congress in the file; census macro areas (Northeast base; Delaware coded South) from ICPSR state codes; log population density = lnpop - lnarea; sponsor-Congress cluster = Congress x state x district x term_served.",
+    "Occupation entered as 6 dummies (occ1-occ6, occ0 base) since the file has 7 categories, not the 5 dummies stated in the notes.",
+    "Bill characteristics: 33 committee-of-referral dummies as regressors plus minor-topic fixed effects; Congress fixed effects; fixest drops FE singletons (as reghdfe does).",
+    "RD bandwidths taken from the task context (13 pp for Rep #cosponsors RD-IPW, 24 pp for Dem percent-opposite RD) rather than recomputed with CCT 2014 (rdbwselect_2014 not available in R); uniform kernel, linear with separate slopes in MV1_female.",
+    "Propensity scores: probit of sponsor_female on district characteristics (macro areas, % black, % urban, % foreign born, % over 65, log median income, log density) plus Congress dummies, estimated at bill level separately by party; col 4 adds |MV1_democrat|*100 (margin of victory of the winner); col 5 further adds sponsor characteristics (age, tenure, rookie, leader, black, Ivy, born in state, bills sponsored, occupation dummies). ATE weights 1/p for women and 1/(1-p) for men; no trimming. Lagged Democratic share and campaign spending ratio not used (lagged share entirely missing in Congresses 101, 103, 108)."
+  ],
+  "notes": "Two exploratory runs (variable inspection, missingness, outcome definition check, rdbwselect diagnostics; no RESULT lines), then one scored run. Outcome regressions with fixest feols, SE clustered by sponsor-Congress. Uncertain choices: probit vs logit for the propensity score, exact PS covariate set, bill-level vs member-level PS estimation, occupation coding, and whether the authors used missing-value imputation for controls. README.pdf/docx in the package were not read.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T03:17:13Z",
+  "finished_at": "2026-10-22T03:21:43Z"
+}

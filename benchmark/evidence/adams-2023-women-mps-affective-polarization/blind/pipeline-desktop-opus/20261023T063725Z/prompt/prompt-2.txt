@@ -1,0 +1,230 @@
+You are fixing R code that was generated to reproduce results from an econometrics paper.
+
+## Original Code
+```r
+suppressPackageStartupMessages({
+  library(fixest)
+  library(dplyr)
+})
+set.seed(42)
+
+base <- "<repo>/.cache/datasets/adams_2023_women_mps_affective_polarization.script-free"
+load(file.path(base, "dyadic_data_1-4-22.Rdata"))   # creates updated_data
+dyad <- as.data.frame(updated_data)
+gend <- as.data.frame(readRDS(file.path(base, "gender_disagregated_8-8-21.rds")))
+
+strip_labels <- function(df) {
+  for (v in names(df)) {
+    x <- df[[v]]
+    if (inherits(x, "haven_labelled")) {
+      df[[v]] <- as.vector(unclass(x)); attributes(df[[v]]) <- NULL
+    }
+  }
+  df
+}
+gend_raw_gender <- gend$gender
+dyad <- strip_labels(dyad)
+gend <- strip_labels(gend)
+
+cat("Dyadic columns:\n"); print(names(dyad))
+
+# ---- locate the out-party women share variable ----
+find_women_var <- function(df) {
+  nm <- names(df)
+  cand <- nm[grepl("wom|fem", nm, ignore.case = TRUE)]
+  cand <- cand[sapply(cand, function(v) is.numeric(df[[v]]))]
+  if (length(cand) == 0) stop("No women-share variable found")
+  score <- sapply(cand, function(v) {
+    s <- 0
+    lv <- tolower(v)
+    if (grepl("^to_|_to_|_to$|to_", lv)) s <- s + 10
+    if (grepl("^from_|_from_|_from$|from_", lv)) s <- s - 20
+    if (grepl("lag|t_1|t1|prior|prev", lv)) s <- s + 5
+    if (grepl("prop|share|pct|perc|ratio|frac", lv)) s <- s + 3
+    if (grepl("lead|leader", lv)) s <- s - 15
+    if (grepl("number|num|count|_n$", lv)) s <- s - 4
+    if (grepl("sq|squared|2$", lv)) s <- s - 6
+    x <- df[[v]]
+    rng <- range(x, na.rm = TRUE)
+    if (rng[1] >= 0 && rng[2] <= 1 && length(unique(na.omit(x))) > 2) s <- s + 4
+    if (rng[1] >= 0 && rng[2] <= 100 && rng[2] > 1 && length(unique(na.omit(x))) > 2) s <- s + 1
+    if (length(unique(na.omit(x))) <= 2) s <- s - 10
+    s
+  })
+  cat("Women-share candidates and scores:\n"); print(score)
+  names(score)[which.max(score)]
+}
+
+find_dv <- function(df) {
+  nm <- names(df)
+  th <- nm[grepl("therm", nm, ignore.case = TRUE)]
+  th <- th[sapply(th, function(v) is.numeric(df[[v]]))]
+  if (length(th) > 0) return(th[1])
+  if ("party_like" %in% nm) return("party_like")
+  stop("No DV found")
+}
+
+prep <- function(df, wvar, dvvar) {
+  out <- df
+  out$dv <- out[[dvvar]]
+  w <- out[[wvar]]
+  if (max(w, na.rm = TRUE) > 1.0001) w <- w / 100
+  out$women_to <- w
+  out$country_c <- as.character(out$country)
+  out$year_c <- as.character(out$year)
+  out$cy <- paste(out$country_c, out$year_c, sep = "_")
+  if (all(c("party_from", "party_to") %in% names(out))) {
+    out <- out[is.na(out$party_from) | is.na(out$party_to) |
+                 as.character(out$party_from) != as.character(out$party_to), ]
+  }
+  if (all(c("to_mp_number", "from_mp_number") %in% names(out))) {
+    out <- out[!is.na(out$to_mp_number) & !is.na(out$from_mp_number) &
+                 out$to_mp_number >= 4 & out$from_mp_number >= 4, ]
+  }
+  out$govern_together <- as.numeric(out$govern_together)
+  out$opposition_together <- as.numeric(out$opposition_together)
+  out
+}
+
+wvar <- find_women_var(dyad)
+dvvar <- find_dv(dyad)
+cat("Using women var:", wvar, " DV:", dvvar, "\n")
+cat("DV summary:\n"); print(summary(dyad[[dvvar]]))
+
+d <- prep(dyad, wvar, dvvar)
+full_vars <- c("dv", "women_to", "rile_distance", "govern_together", "opposition_together", "cy")
+d_full <- d[complete.cases(d[, full_vars]), ]
+d_full$rile_std <- (d_full$rile_distance - mean(d_full$rile_distance)) / sd(d_full$rile_distance)
+cat("rile_distance mean/sd in sample:", mean(d_full$rile_distance), sd(d_full$rile_distance), "\n")
+
+m1 <- feols(dv ~ women_to | cy, data = d_full, cluster = ~cy)
+m2 <- feols(dv ~ women_to + rile_std + govern_together + opposition_together | cy,
+            data = d_full, cluster = ~cy)
+print(summary(m1)); print(summary(m2))
+cat("Adj R2 m1:", r2(m1, "ar2"), " m2:", r2(m2, "ar2"), "\n")
+
+# ---- gender-disaggregated models ----
+g_wvar <- if (wvar %in% names(gend)) wvar else find_women_var(gend)
+g_dvvar <- if (dvvar %in% names(gend)) dvvar else find_dv(gend)
+g <- prep(gend, g_wvar, g_dvvar)
+
+cat("Gender values:\n"); print(table(gend$gender, useNA = "ifany"))
+labs <- attr(gend_raw_gender, "labels")
+if (!is.null(labs)) { cat("Gender labels:\n"); print(labs) }
+
+classify_gender <- function(x, labs) {
+  res <- rep(NA_character_, length(x))
+  if (is.factor(x) || is.character(x)) {
+    xs <- tolower(trimws(as.character(x)))
+    res[grepl("^f|wom|female", xs)] <- "women"
+    res[grepl("^m|^man|^men|male", xs) & !grepl("female|wom", xs)] <- "men"
+    return(res)
+  }
+  if (!is.null(labs)) {
+    ln <- tolower(names(labs))
+    fv <- labs[grepl("fem|wom", ln)]
+    mv <- labs[grepl("male|^men|^man", ln) & !grepl("fem|wom", ln)]
+    if (length(fv) && length(mv)) {
+      res[x %in% fv] <- "women"; res[x %in% mv] <- "men"; return(res)
+    }
+  }
+  vals <- sort(unique(na.omit(x)))
+  if (all(vals %in% c(1, 2))) { res[x == 2] <- "women"; res[x == 1] <- "men" }
+  else if (all(vals %in% c(0, 1))) { res[x == 1] <- "women"; res[x == 0] <- "men" }
+  res
+}
+g$gcat <- classify_gender(g$gender, labs)
+print(table(g$gcat, useNA = "ifany"))
+
+fit_g <- function(sub) {
+  sub <- sub[complete.cases(sub[, full_vars]), ]
+  sub$rile_std <- (sub$rile_distance - mean(d_full$rile_distance)) / sd(d_full$rile_distance)
+  feols(dv ~ women_to + rile_std + govern_together + opposition_together | cy,
+        data = sub, cluster = ~cy)
+}
+m3 <- fit_g(g[!is.na(g$gcat) & g$gcat == "women", ])
+m4 <- fit_g(g[!is.na(g$gcat) & g$gcat == "men", ])
+print(summary(m3)); print(summary(m4))
+
+n_elec <- length(unique(d_full$cy[obs(m2)]))
+
+cat(sprintf("RESULT:women_mps_coef_bivariate=%.6f\n", coef(m1)["women_to"]))
+cat(sprintf("RESULT:women_mps_coef_full=%.6f\n", coef(m2)["women_to"]))
+cat(sprintf("RESULT:women_mps_coef_women_partisans=%.6f\n", coef(m3)["women_to"]))
+cat(sprintf("RESULT:women_mps_coef_men_partisans=%.6f\n", coef(m4)["women_to"]))
+cat(sprintf("RESULT:right_left_distance_coef_full=%.6f\n", coef(m2)["rile_std"]))
+cat(sprintf("RESULT:coalition_partners_coef_full=%.6f\n", coef(m2)["govern_together"]))
+cat(sprintf("RESULT:opposition_partners_coef_full=%.6f\n", coef(m2)["opposition_together"]))
+cat(sprintf("RESULT:n_directed_dyads=%d\n", nobs(m2)))
+cat(sprintf("RESULT:n_obs_women_partisans=%d\n", nobs(m3)))
+cat(sprintf("RESULT:n_obs_men_partisans=%d\n", nobs(m4)))
+cat(sprintf("RESULT:n_election_studies=%d\n", n_elec))
+```
+
+## Error / Unexpected Output
+```
+Error in th[sapply(th, function(v) is.numeric(df[[v]]))] : 
+  invalid subscript type 'list'
+Calls: find_dv
+Execution halted
+
+```
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+Dyadic columns:
+ [1] "country"                "year"                   "to_mp_number"          
+ [4] "from_mp_number"         "party_number"           "party_from"            
+ [7] "party_to"               "to_partyname"           "to_parfam"             
+[10] "from_partyname"         "from_parfam"            "from_senior_partner"   
+[13] "to_senior_partner"      "to_in_gov"              "from_in_gov"           
+[16] "govern_together"        "opposition_together"    "from_left_bloc"        
+[19] "from_right_bloc"        "to_left_bloc"           "to_right_bloc"         
+[22] "same_bloc"              "from_parlgov_id"        "to_parlgov_id"         
+[25] "from_nationalism"       "from_rile"              "from_planeco"          
+[28] "from_markeco"           "to_nationalism"         "to_rile"               
+[31] "to_planeco"             "to_markeco"             "elecdate"              
+[34] "sat_together_10years"   "sat_together_15years"   "sat_together_20years"  
+[37] "to_galtan"              "to_lrecon"              "from_galtan"           
+[40] "from_lrecon"            "nationalism_distance"   "rile_distance"         
+[43] "galtan_distance"        "lrecon_distamce"        "govern_together_10"    
+[46] "govern_together_15"     "govern_together_20"     "rile_distance_s"       
+[49] "nationalism_distance_s" "lrecon_distance_s"      "galtan_distance_s"     
+[52] "from_multiculturalism"  "to_multiculturalism"    "from_immigrate_policy" 
+[55] "to_immigrate_policy"    "from_society"           "from_economy"          
+[58] "to_society"             "to_economy"             "from_rrparty"          
+[61] "to_rrparty"             "econ_distance"          "econ_distance_s"       
+[64] "soc_distance"           "society_distance_s"     "from_femaleleader"     
+[67] "from_pfeml"             "from_complete"          "to_femaleleader"       
+[70] "to_pfeml"               "to_complete"            "nat_avg"               
+[73] "diff_pfeml"             "diff_femlead"           "from_prior_cab"        
+[76] "from_prior_seats"       "to_prior_cab"           "to_prior_seats"        
+[79] "prior_coalition"        "prior_opposition"       "cntryyr"               
+[82] "party_like"             "party_dislike"          "DM"                    
+[85] "logDM"                 
+Women-share candidates and scores:
+from_femaleleader        from_pfeml   to_femaleleader          to_pfeml 
+              -31               -16                -1                14 
+       diff_pfeml      diff_femlead 
+                4               -25
+```
+
+## Task
+Fix specifically the identified problem above. Do not rewrite the entire approach unless necessary.
+
+## Reminder: Output Convention
+The fixed R code MUST emit each reproduced metric on its own line using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names.
+
+## Reminder: Constraints
+- The dataset is a directory tree at '<repo>/.cache/datasets/adams_2023_women_mps_affective_polarization.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+- Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+- Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+- Do NOT access the internet.
+- Do NOT call system() / system2().
+- Use set.seed(42) for reproducibility.
+- Print all RESULT: lines at the end via cat().
+
+Output ONLY the corrected R code — no explanation, no markdown fences.

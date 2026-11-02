@@ -1,0 +1,2 @@
+Crash: lm.fit(Xs, Ys) -> NA/NaN/Inf in 'x'. One panel's estimated AR(1) rho exceeded 1 (max 1.070), so the Prais-Winsten first-observation weight sqrt(1-rho^2) was NaN.
+Fix: bound panel-specific rho to [-1, 1] before the Prais-Winsten transform (rho=1 gives the panel's first observation zero weight).

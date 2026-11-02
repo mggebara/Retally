@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "entry_id": "arias-2022-changing-tides-climate-migration",
+  "mode": "blind",
+  "run_id": "2026-10-21-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Language x Origin interaction included in the AMCE regression to respect the design-file restriction (Language None never paired with Origin 'Another region'); the restriction is enforced in the German data but not in the US data. An additive specification gives reason-for-migration AMCEs within 0.001 of the main-specification ones (printed in stdout as a check).",
+    "Sample: Qualtrics preview responses (DistributionChannel = 'preview') dropped; profiles whose forced-choice question was unanswered dropped; respondents are respondents with at least one answered choice task. Duplicate psid values (2 US, 8 DE) were kept as separate respondents (clustered on ResponseId)."
+  ],
+  "notes": "Data: the two 'Climate Migration 2_ Conjoint' Qualtrics CSVs (USA, Germany). Reshaped F-k-j (attribute name, task k, position j) and F-k-p-j (level, profile p) to one row per profile; forced-choice outcome is force_choice for task 1 and Q184, Q186, ..., Q198 for tasks 2-9 (1 = Migrant 1, 2 = Migrant 2). German levels mapped to English. AMCEs come from OLS of the chosen indicator on all seven attributes (baselines from Table 1: Economic opportunity, None, Female, Unemployed, Atheist/Agnostic, Another region, None), with standard errors clustered by respondent (HC1). choice_tasks_* is the number of profiles that enter estimation (2 per answered pair). Only one exploratory run (attempt-1, no RESULT lines) came before the scored run, and no repairs were needed. The paper text states a few Table 2 effect sizes in its prose (read while studying the method); the specification was chosen before any estimate was computed and was not changed afterwards. Combined respondent count 1085 + 1072 = 2157; the abstract reports 2160 (the gap probably comes from preview responses being counted), but the specification was not adjusted toward it.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T02:10:13Z",
+  "finished_at": "2026-10-22T02:13:30Z"
+}
