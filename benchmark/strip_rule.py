@@ -30,6 +30,9 @@ by file, what that copy leaves out.  Two layers:
    * Result macros: a ``.tex`` (not a manuscript) made mostly of numeric
      ``\\newcommand`` / ``\\def`` definitions, the in-text numbers a script
      wrote for the paper.
+   * Rendered scripts: an ``.html`` export of an R Markdown / knitr /
+     Jupyter run (several code chunks tagged with their language, such as
+     ``<pre class="r">``) carries the script and its output.
 
    A file byte-identical to a file stripped by name is stripped too.
 
@@ -326,10 +329,34 @@ def _tex_reason(text: str) -> str | None:
     return "regression-table" if is_table and _is_regression_table(text, signature_suffices=True) else None
 
 
-def _html_reason(text: str) -> str | None:
-    if "<table" not in text.lower():
+# A rendered script: knitr / pandoc / Jupyter HTML exports tag each code chunk with its
+# language (``<pre class="r">``, ``sourceCode r``, ``language-python``, ``hl-ipython3``).
+_HTML_CODE_CLASS = re.compile(r"<(?:pre|code|div)\b[^>]*\bclass\s*=\s*[\"']([^\"']*)[\"']", re.I)
+_HTML_CODE_LANGS = {
+    "r": "r", "language-r": "r", "lang-r": "r", "hl-r": "r",
+    "python": "python", "language-python": "python", "lang-python": "python", "ipython3": "python",
+    "hl-ipython3": "python", "hl-python": "python", "stata": "stata", "language-stata": "stata",
+}  # fmt: skip
+_HTML_MIN_CODE_BLOCKS = 5
+
+
+def _html_code_reason(text: str) -> str | None:
+    """``script-content:<lang>`` for an HTML page holding several language-tagged code chunks."""
+    counts: dict[str, int] = {}
+    for m in _HTML_CODE_CLASS.finditer(text):
+        langs = {_HTML_CODE_LANGS[t] for t in m.group(1).lower().split() if t in _HTML_CODE_LANGS}
+        for lang in langs:
+            counts[lang] = counts.get(lang, 0) + 1
+    if not counts:
         return None
-    return "regression-table" if _is_regression_table(text, signature_suffices=True) else None
+    lang, n = max(counts.items(), key=lambda kv: kv[1])
+    return f"script-content:{lang}" if n >= _HTML_MIN_CODE_BLOCKS else None
+
+
+def _html_reason(text: str) -> str | None:
+    if "<table" in text.lower() and _is_regression_table(text, signature_suffices=True):
+        return "regression-table"
+    return _html_code_reason(text)
 
 
 _CSV_STAT_ROW = re.compile(

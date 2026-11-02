@@ -1,0 +1,463 @@
+# Original paper: Bokobza, L., Krishnarajan, S., Nyrup, J., Sakstrup, C.,
+#   & Aaskoven, L. (2022). "The Morning After: Cabinet Instability and the
+#   Purging of Ministers after Failed Coup Attempts in Autocracies." The
+#   Journal of Politics, 84(3), 1437-1452.  doi:10.1086/716952
+#
+# Reproduction report: none in the I4R Discussion Paper series.  The paper
+#   is in the I4R First Meta Database as replication team 95 (tag T95,
+#   database rows 5629-5765, 137 rows, 135 with a replicator coefficient;
+#   date_entered 2023-09-28).  Verdict: reproducible —
+#   perfect_reproduction = Yes, computational_reproduction = 1,
+#   why_not_perfect_repro = "Perfect Reproduction", and every row records
+#   "Analysis and cleaning code produce the same output as presented in
+#   the paper" (run time under an hour; authors not contacted).  The
+#   replicators worked in Stata and R.  Their rows are cross-software and
+#   robustness checks against appendix Tables A1-A3 and K1-K3 and Figures
+#   3-5: the R individual-level models re-estimated with fixest (identical
+#   to the paper's felm) and plm, the country-level Stata models re-coded
+#   in R (with country / leader random effects as a variant), and
+#   fixed-effects logit / ordered-beta estimators.
+#
+# Why this paper:
+#   1. First Journal of Politics entry; political-economy panel design
+#      (country-year and minister-year linear models with country / leader
+#      and year fixed effects, country-clustered SEs).
+#   2. Mixed-language original: the country-level analysis is Stata, the
+#      individual-level analysis R (lfe::felm), so the reproduction mixes a
+#      .dta and a 96 MB .rds.
+#   3. Exact I4R reproduction with 135 paired rows; one never-revised
+#      Dataverse version under CC0.
+#
+# What original_claims pins.  The main text has no tables: every result
+#   is a coefficient plot (Figure 2 country level; Figures 3-5 minister
+#   level) whose numbers the paper prints in the online appendix "Tables
+#   for Figure 2" (A1 country fixed effects, A2 leader fixed effects) and
+#   "Tables for Figure 3, 4, & 5" (K1-K3).  Those tables ARE the headline
+#   results (the abstract's and introduction's "extra 8-11 percent of the
+#   cabinet" is the A1/A2 failed-coup range; "20 percentage points" for
+#   defence ministers is K2's failed-coup coefficient), so the pins are
+#   their failed-coup coefficients and the key interactions, with SEs as
+#   printed (two decimals).  The two headline sample sizes are not pinned
+#   because the main text states both (see the blind-mode caveat in the
+#   notes).  None of the robustness appendices (B-J, L-R) is pinned.
+#
+# Paper text.  The open copy is the Aarhus University Pure accepted
+#   manuscript (72 pp. with the online appendix).  Every pinned value
+#   equals the I4R o_coeff / o_std_err for the same cell (rounded to the
+#   printed two decimals; see the notes), so the AM tables match the
+#   published ones as far as the meta-database records them.
+
+id: bokobza-2022-morning-after-coup-purges
+# No I4R discussion paper exists; i4r_report_url points at the First Meta
+# Database's source repository (benchmark/corpus/SOURCE.md), as for the
+# other entries without a DP.
+i4r_report_url: https://github.com/I4Replication/I4R-First-Meta-Paper
+language: r
+outcome_label: reproducible
+split: holdout
+# Contamination bookkeeping.  No working-paper or preprint version was
+# found (web search 2026-11-01).  Crossref: DOI 10.1086/716952 registered
+# 2021-08-24 (the JOP online, just-accepted posting; Crossref has no
+# separate published-online date), print issue 84(3) dated 2022-07-01.
+# 2021-08-24 is taken as the first public version.  Package: Harvard
+# Dataverse doi:10.7910/DVN/GCDJ25 version 1.0, created 2021-08-02,
+# releaseTime 2021-08-04T00:32:07Z (Dataverse API; the dataset's
+# publicationDate field reads 2021-08-03, US time); the only version.
+publication_date: "2021-08-24"
+package_release_date: "2021-08-04"
+
+paper:
+  # Accepted manuscript with the online appendix, Aarhus University Pure,
+  # legacy /ws/files/ path (the portal's /files/ link returns 403);
+  # checked 2026-11-01: 200 application/pdf, %PDF magic, 72 pp.
+  source: https://pure.au.dk/ws/files/365105209/The_Morning_After_Cabinet_Instability_and_the_Purging_of_Ministers_after_Failed_Coup_Attempts_in_Autocracies_Accepted_.pdf
+  title: "The Morning After: Cabinet Instability and the Purging of Ministers after Failed Coup Attempts in Autocracies"
+  authors:
+    - Laure Bokobza
+    - Suthan Krishnarajan
+    - Jacob Nyrup
+    - Casper Sakstrup
+    - Lasse Aaskoven
+
+dataset:
+  source: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/GCDJ25&version=1.0
+  access_notes: >
+    Harvard Dataverse doi:10.7910/DVN/GCDJ25, VERSION 1.0 (released
+    2021-08-04), pinned with &version=1.0.  It is the only version, so it
+    is necessarily the one I4R replicated (entered 2023-09-28); the pin
+    only guards against a later revision.  CC0 1.0.  25 files under
+    "Final files/", none restricted, 102.8 MB as stored (Dataverse API,
+    checked 2026-11-01); no archives.  Data: morning_after_dataset_
+    countrylevel.dta (Stata 14, ingested and served as .tab; the
+    downloader fetches the 1.78 MB .dta original; country-year panel,
+    7,878 rows) and morning_after_dataset_individuallevel.rds (96.3 MB;
+    minister-year panel, 205,524 rows).  Code: morning_after_dofile_
+    countrylevel.txt (the Stata do-file saved as .txt; Figure 2 and
+    appendices A-J) and morning_after_script_individuallevel.R (lfe::felm;
+    Figures 1, 3-5 and appendices K-R), plus .Rhistory.  Files that carry
+    results: morning_after_logfile_countrylevel.smcl (Stata log of every
+    country-level model), morning_after_logfile_individuallevel.html (a
+    pandoc-rendered R Markdown log of the whole R script with its console
+    output), appendix_k1.tex / k2 / k3 (texreg tables K1-K3), and 14 .jpg
+    figures (figure1, 3, 4, 5 and appendix L-R plots; coefficient plots
+    with no printed numbers).  readme.txt documents which script makes
+    which figure (it names the do-file .do and the data .csv, which the
+    package ships as .txt and .rds).  The downloader also writes
+    metadata.json (dataset_version 1.0).
+
+code_repo:
+  url: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/GCDJ25&version=1.0
+
+original_claims:
+  # ---- Country level: Figure 2 / Table A1 (country fixed effects) ----
+  - description: failed_coup_base_country_fe
+    value: 0.10
+    claim_type: coefficient
+    standard_error: 0.03
+    sample_size: 3715
+    unit: change in the cabinet replacement rate (share of ministers, 0-1)
+    location: "Table A1 (Tables for Figure 2), column Base Model, Failed coup attempt"
+    context: >
+      Table A1 ("Failed coup attempts. Country fixed effects: Country-level
+      results"), Base Model column; plotted in the left panel of Figure 2.
+      Time-series cross-sectional OLS of the year-to-year cabinet
+      replacement rate (one minus the cabinet-size-adjusted retention rate
+      of ministers, from WhoGov, July to July) on a failed coup attempt
+      indicator (Powell and Thyne data; a failed coup before 1 July counts
+      in that year, one after 1 July in the following year), with logged
+      GDP per capita and logged population (Penn World Table 9.0) lagged
+      one year, country fixed effects and year fixed effects.  Sample:
+      country-years of independent countries with a lagged Boix-Miller-
+      Rosato democracy score of 0, 115 autocracies, 1967-2016.  Standard
+      errors clustered by country.
+  - description: failed_coup_main_country_fe
+    value: 0.11
+    claim_type: coefficient
+    standard_error: 0.03
+    sample_size: 3676
+    unit: change in the cabinet replacement rate (share of ministers, 0-1)
+    location: "Table A1, column Main Model, Failed coup attempt"
+    context: >
+      Table A1, Main Model column (Figure 2, left panel).  Same
+      specification as failed_coup_base_country_fe plus lagged dummies
+      for monarchy, military regime and party regime (Anckar and
+      Fredriksson 2019); country and year fixed effects, country-clustered
+      standard errors.
+  # ---- Country level: Table A2 (leader fixed effects) ----
+  - description: failed_coup_base_leader_fe
+    value: 0.08
+    claim_type: coefficient
+    standard_error: 0.03
+    sample_size: 3332
+    unit: change in the cabinet replacement rate (share of ministers, 0-1)
+    location: "Table A2 (Tables for Figure 2), column Base Model, Failed coup attempt"
+    context: >
+      Table A2 ("Failed coup attempts. Leader fixed effects: Country-level
+      results"), Base Model column (Figure 2, left panel, leader fixed
+      effects).  Same regressors as failed_coup_base_country_fe (failed
+      coup attempt, lagged logged GDP per capita and population, year
+      fixed effects) with leader fixed effects instead of country fixed
+      effects, so identification is within each autocrat's tenure.
+      Standard errors clustered by country.
+  - description: failed_coup_main_leader_fe
+    value: 0.09
+    claim_type: coefficient
+    standard_error: 0.03
+    sample_size: 3307
+    unit: change in the cabinet replacement rate (share of ministers, 0-1)
+    location: "Table A2, column Main Model, Failed coup attempt"
+    context: >
+      Table A2, Main Model column: the Main Model controls (lagged GDP per
+      capita, population, monarchy, military and party regime dummies)
+      with leader and year fixed effects; the monarchy dummy drops out as
+      collinear with the leader fixed effects.  Country-clustered standard
+      errors.
+  # ---- Minister level: Figure 3 / Table K1 (loyalty) ----
+  - description: failed_coup_experience_model
+    value: 0.14
+    claim_type: coefficient
+    standard_error: 0.04
+    sample_size: 90020
+    unit: change in the probability of being purged next year
+    location: "Table K1 (Table for Figure 3), column H2a: Experience, Failed coup attempt"
+    context: >
+      Table K1, column H2a: Experience; Figure 3 left panel.  Linear
+      probability model of whether a cabinet member is purged (absent from
+      the cabinet the following year; reshuffles within the cabinet are
+      not purges) on a failed coup attempt indicator, experience-group
+      dummies (2-3, 4-6, over 6 years in cabinet; reference under 2
+      years), their interactions with the failed coup indicator, lagged
+      logged GDP per capita and population, country and year fixed
+      effects.  Minister-years in autocracies 1967-2016, excluding the
+      leader and junior ministers or other low-ranking posts; standard
+      errors clustered by country.  The failed coup coefficient is the
+      effect for ministers with under two years of experience.
+  - description: failed_coup_x_over_6_years_experience
+    value: -0.10
+    claim_type: coefficient
+    standard_error: 0.05
+    sample_size: 90020
+    unit: difference in the change in purge probability
+    location: "Table K1, column H2a: Experience, FCA*Over 6 years of experience (Ref: <2 y)"
+    context: >
+      Table K1, column H2a: Experience: the interaction of the failed coup
+      attempt indicator with having over six years of cabinet experience
+      (reference: under two years), in the same linear probability model
+      as failed_coup_experience_model.
+  - description: failed_coup_affiliation_model
+    value: 0.17
+    claim_type: coefficient
+    standard_error: 0.06
+    sample_size: 86057
+    unit: change in the probability of being purged next year
+    location: "Table K1, column H2b: Affiliation, Failed coup attempt"
+    context: >
+      Table K1, column H2b: Affiliation; Figure 3 right panel.  Linear
+      probability model of being purged next year on the failed coup
+      attempt indicator, party affiliation dummies (no party affiliation;
+      from the leader's party; reference: from another party than the
+      leader's), their interactions with the failed coup indicator, cubic
+      polynomials in the minister's years in office, lagged logged GDP per
+      capita and population, country and year fixed effects,
+      country-clustered standard errors.  The failed coup coefficient is
+      the effect for ministers from another party than the leader's.
+  - description: failed_coup_x_leaders_party
+    value: -0.13
+    claim_type: coefficient
+    standard_error: 0.06
+    sample_size: 86057
+    unit: difference in the change in purge probability
+    location: "Table K1, column H2b: Affiliation, FCA*From the leader's party (Ref: Other party)"
+    context: >
+      Table K1, column H2b: the interaction of the failed coup attempt
+      indicator with being from the leader's party (reference: another
+      party), in the same model as failed_coup_affiliation_model.
+  # ---- Minister level: Figure 4 / Table K2 (responsibility) ----
+  - description: failed_coup_responsibility_model
+    value: 0.20
+    claim_type: coefficient
+    standard_error: 0.07
+    sample_size: 76530
+    unit: change in the probability of being purged next year
+    location: "Table K2 (Table for Figure 4), column H3a: Responsibility, Failed coup attempt"
+    context: >
+      Table K2, column H3a: Responsibility; Figure 4 left panel.  Linear
+      probability model of being purged next year on the failed coup
+      attempt indicator, portfolio dummies (Minister of Foreign Affairs,
+      of Finance, of Natural Resources, other type of minister; reference:
+      Minister of Defense), their interactions with the failed coup
+      indicator, cubic polynomials in years in office, lagged logged GDP
+      per capita and population, country and year fixed effects,
+      country-clustered standard errors.  The failed coup coefficient is
+      the effect for ministers of defense.
+  - description: failed_coup_x_natural_resources
+    value: -0.18
+    claim_type: coefficient
+    standard_error: 0.08
+    sample_size: 76530
+    unit: difference in the change in purge probability
+    location: "Table K2, column H3a: Responsibility, FCA*Minister of Natural Resources (Ref: D)"
+    context: >
+      Table K2, column H3a: the interaction of the failed coup attempt
+      indicator with being minister of natural resources (reference:
+      minister of defense), in the same model as
+      failed_coup_responsibility_model.
+  - description: failed_coup_importance_model
+    value: 0.37
+    claim_type: coefficient
+    standard_error: 0.09
+    sample_size: 90014
+    unit: change in the probability of being purged next year
+    location: "Table K2, column H3b: Importance, Failed coup attempt"
+    context: >
+      Table K2, column H3b: Importance; Figure 4 right panel.  Linear
+      probability model of being purged next year on the failed coup
+      attempt indicator, rank-tier dummies (vice-president / deputy prime
+      minister / top minister; medium-ranking; low-ranking; junior
+      minister; reference: prime minister or president who is not the
+      leader), their interactions with the failed coup indicator, cubic
+      polynomials in years in office, lagged logged GDP per capita and
+      population, country and year fixed effects, country-clustered
+      standard errors.  The failed coup coefficient is the effect for a
+      prime minister or president who is not the leader.
+
+# The meta-database's paired rows for the pinned cells.  Individual level
+# (claims 4-10): the replicators re-ran the authors' R models with fixest
+# instead of lfe::felm; those rows reproduce the coefficients exactly
+# (r_coeff = o_coeff to six decimals, SE within 0.00002) and record the
+# figure marginal effects (failed coup + interaction), so an interaction's
+# reproduced value is the difference of two fixest marginal effects.  The
+# plm rows carry the same coefficients with different (non-clustered) SEs.
+# Country level (claims 0-3): the verdict is a perfect reproduction of the
+# package; the replicators' own R re-coding of the Stata models
+# ("Reproduction in R", recorded as a recode) lands within one SE but not
+# on the printed values, and several columns share a rounded o_coeff so
+# rows cannot be tied to columns one-to-one.  Those claims record the
+# paper's value under the blanket verdict (as in leeson-2022), with the R
+# re-coding values in the notes.
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: 0.10
+    outcome: matches
+    notes: >
+      Blanket verdict (perfect reproduction).  R re-coding rows with
+      o_coeff 0.10 (Table A1 Base or Purges MAs, which share the rounded
+      value): 0.102 (0.031) and 0.129 (0.031).  Stata log: 0.0985 (0.0327).
+  - claim_id: 1
+    reproduced_value: 0.11
+    outcome: matches
+    notes: >
+      Blanket verdict (perfect reproduction).  The one R re-coding row
+      with o_coeff 0.11 (Table A1 Main Model): 0.121 (0.030); with country
+      random effects 0.121 (0.029).  Stata log: 0.1055 (0.0323).
+  - claim_id: 2
+    reproduced_value: 0.08
+    outcome: matches
+    notes: >
+      Blanket verdict (perfect reproduction).  Five Table A2 columns
+      print 0.08; the five R re-coding rows give 0.065-0.079 (SE
+      0.030-0.034).  Stata log: 0.0839 (0.0317).
+  - claim_id: 3
+    reproduced_value: 0.09
+    outcome: matches
+    notes: >
+      Blanket verdict (perfect reproduction).  Two Table A2 columns print
+      0.09 (Main Model, Purges MAs); the R re-coding rows give 0.071
+      (0.030) and 0.081 (0.031).  Stata log: 0.0853 (0.0318).
+  - claim_id: 4
+    reproduced_value: 0.142112
+    outcome: matches
+    notes: Meta-database row 5633 (table k1 experience, felm to fixest) 0.142112 (0.043907); o_coeff 0.142112 (0.041926).
+  - claim_id: 5
+    reproduced_value: -0.102939
+    outcome: matches
+    notes: >
+      Derived from the fixest marginal effects: over-6-years 0.039173
+      (row 5665) minus under-2-years 0.142112 (row 5633).  The figure 3a
+      logit row records the original interaction as -0.103 (0.052).
+  - claim_id: 6
+    reproduced_value: 0.174175
+    outcome: matches
+    notes: Meta-database row 5640 (table k1 affiliation, felm to fixest) 0.174175 (0.056069); o_coeff 0.174175 (0.056053).
+  - claim_id: 7
+    reproduced_value: -0.125831
+    outcome: matches
+    notes: >
+      Derived from the fixest marginal effects: leader's party 0.048344
+      (row 5660) minus other party 0.174175 (row 5640).  The figure 3b
+      logit row records the original interaction as -0.126 (0.061).
+  - claim_id: 8
+    reproduced_value: 0.202499
+    outcome: matches
+    notes: Meta-database row 5657 (table k2, felm to fixest) 0.202499 (0.06599); o_coeff 0.202499 (0.065968).
+  - claim_id: 9
+    reproduced_value: -0.183205
+    outcome: matches
+    notes: >
+      Derived from the fixest marginal effects: natural resources 0.019294
+      (row 5658) minus defense 0.202499 (row 5657).  The figure 4a logit
+      row records the original interaction as -0.183 (0.083).
+  - claim_id: 10
+    reproduced_value: 0.370185
+    outcome: matches
+    notes: Meta-database row 5743 (table k3 [K2 importance column], felm to fixest) 0.370185 (0.093416); o_coeff 0.370185 (0.09339).
+
+notes: >
+  Headline findings: failed coup attempts raise the year-to-year cabinet
+  replacement rate in autocracies by 8-11 percentage points (Figure 2;
+  Tables A1-A2: 0.10 and 0.11 with country fixed effects, 0.08 and 0.09
+  with leader fixed effects, SE 0.03 throughout), while alternative
+  instability events (civil war, nonviolent campaigns, military disputes,
+  interstate war, strikes; Table A3) do not once leader fixed effects are
+  included.  At the minister level, purges after failed coups target
+  newcomers (0.14 for under two years' experience; interaction -0.10 for
+  over six years), ministers from parties other than the leader's (0.17;
+  -0.13 for the leader's party), defence ministers (0.20; natural
+  resources -0.18 relative to defence) and non-leader prime ministers /
+  presidents (0.37).
+
+  Curation pass (2026-11-01).  Pinned 11 claims: four A1/A2 failed-coup
+  coefficients (Base and Main, country and leader fixed effects), four
+  K1 coefficients (failed coup and the over-6-years and leader's-party
+  interactions) and three K2 coefficients (failed coup in the
+  responsibility and importance models, natural-resources interaction),
+  each with its SE.  The A1 Base N (3,715) and the K1 experience-model N
+  (90,020) were pinned in a first draft and dropped after the step-6
+  leak check: the main text states both ("up to 3,715 country-year
+  observations"; Figure 3 note "Up to 90,020 minister-years"), so a blind
+  run would read them in the paper.  sample_size: A1 Base 3,715, Main 3,676; A2 Base
+  3,332, Main 3,307; K1 experience 90,020, affiliation 86,057; K2
+  responsibility 76,530, importance 90,014.  All coefficients and SEs
+  are printed to two decimals; the printed-precision floor (+-0.005)
+  binds.  Full-precision values (Stata log; I4R o_coeff for K): A1
+  0.0985 (0.0327), 0.1055 (0.0323); A2 0.0839 (0.0317), 0.0853 (0.0318);
+  K1 0.142112 (0.041926), interaction over 6 years -0.103 (0.052), 0.174175
+  (0.056053), leader's party -0.126 (0.061); K2 0.202499 (0.065968),
+  natural resources -0.183 (0.083), 0.370185 (0.09339).  Note that A1
+  Main 0.1055 and A2 Main 0.0853 sit just inside their printed bands.
+  Left out: the other A1/A2 columns (electoral, economic, instability,
+  purges moving averages, all controls), the A3 placebos, K1 2-3 and 4-6
+  year interactions, K2 foreign/finance/other and importance-tier
+  interactions, Table K3 (Figure 5), control coefficients, within R2s,
+  the Figure 1 medians (17.4% / 38.1%) and all robustness appendices.
+
+  Cross-check against the meta-database.  Every pinned coefficient and SE
+  equals its o_coeff / o_std_err rounded to two decimals: A1 rows record
+  0.10 / 0.11 (0.03), A2 rows 0.08 / 0.09 (0.03), K1 0.142112 (0.041926)
+  and 0.174175 (0.056053), K2 0.202499 (0.065968) and 0.370185 (0.09339);
+  the interactions match the figure-row o_coeff (-0.103, -0.126, -0.183)
+  and the differences of the recorded marginal effects.  The I4R "table
+  k3" label covers both the K2 importance column and Table K3.  Row 5691
+  records 0.85329 for what is 0.085329 (the "Other type of minister"
+  marginal effect; typo in the database).
+
+  What was read.  The accepted manuscript PDF (all 72 pp.: text, Figures
+  1-5 notes, appendices A-R); the meta-database's 137 team-95 rows;
+  Dataverse API metadata (version list, file list, licence); Crossref
+  metadata; the package: readme.txt, the coefficient lines and sample
+  sizes in the Stata .smcl log for Tables A1-A2, the R Markdown log's
+  structure and console output, and figure4.jpg.  The R script, do-file
+  and .tex tables were not read in full.
+
+  Package-only facts (never in contexts).  Country level: xtreg
+  replacement_rateadj_minister coupattempt_whogov L.gdp_cap_pwt_ln
+  L.pop_pwt_ln [L.military_c L.monarchy_c L.party_c] i.YEAR_DATA if
+  democracy1==0 & independent==1, fe cluster(COUNTRY_ID); the leader
+  fixed-effects tables re-xtset the panel on the leader identifier
+  (leader_cab_id) and run the same xtreg, fe.  The .dta has 7,878 rows.
+  Individual level: read_rds(...) filtered to democracy_lag == 0 &
+  leader == 0 & non-missing purged_y1, gdp_cap_pwt_ln and pop_pwt_ln
+  (98,719 rows; 95,751 with a non-missing coupattempt_presentyear, 2,039
+  of them coup years), then lfe::felm models with country and year
+  fixed effects and country clusters, written with texreg to
+  output/appendix_k*.tex; the R script loads packages with pacman and
+  uses windowsFonts.  The K1 experience sample (junior ministers
+  excluded) has 90,020 rows with a non-missing coup indicator, per the R
+  log's N computation for Figure 3.
+
+  Strip rule (independent / blind mount).  The name and content rules
+  already withheld .Rhistory, the .R script, the .smcl log, the do-file
+  saved as .txt (script-content:stata) and appendix_k1-3.tex
+  (regression-table).  They kept morning_after_logfile_individuallevel.html,
+  a pandoc-rendered R Markdown log holding the whole R script and its
+  console output (filter counts including the K1 N).  benchmark/
+  strip_rule.py now strips an HTML page with five or more
+  language-tagged code chunks (132 <pre class="r"> chunks here) as
+  script-content:r.  The 14 .jpg coefficient plots stay (binary, no
+  printed numbers; they are the paper's own figures).
+
+  Blind-mode caveat (oracle render check 2026-11-01).  The blind
+  pipeline's first prompt (the methodology summary, which receives the
+  paper text) contains no package script text and none of the 11 pinned
+  values as results; the pinned-value forms it does contain are "p <
+  0.05" and "p < 0.1" (footnotes 21 and 20) and the illustrative "If the
+  estimate is 0.10" (results section).  The prose does state rounded
+  effects: "10 percentage points" for the A1 Base model, an "8-11
+  percentage-point" range across Figure 2, and "20 percentage points"
+  for ministers of defense (with foreign affairs 16, finance 10, other
+  7), so a blind run sees claims 0 and 8 to the printed precision in
+  words.  Also: the pipeline's paper parser titles this PDF "General
+  Rights", from the Aarhus University cover sheet on page 1.
+
+  Original analysis in Stata (country level) and R (individual level,
+  lfe); language is r, the reproduction target.
