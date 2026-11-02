@@ -1777,6 +1777,252 @@ parenthesised decimal or a starred number, or only `observations` / `N` /
 F / p-value / R² rows) withholds all 27 of them from 2026-11-01 and
 nothing in the other 19 cached packages.
 
+### 3.6 Corpus growth to 17 evaluation papers (2026-11-02) — ✅ measured, no API spend
+
+The second shortlist pass (`benchmark/corpus/candidates-2026-11-01.md`,
+PR #90) was curated on 2026-11-01.  Eight candidates were attempted (six
+picks from the ranked list and the two 2026-10-21 reserves).  Four became
+catalog entries (PRs #91–#94) and four were excluded.  Labandeira and Kim,
+ranked 7 and 8, were not attempted.
+
+| Candidate | Outcome | Reason |
+|---|---|---|
+| `carrera-2022-who-chooses-commitment` | accepted (PR #91) | REStud field experiment, 8.1 MB Stata package, exact I4R reproduction |
+| `bokobza-2022-morning-after-coup-purges` | accepted (PR #93) | First JOP entry; claims taken from the appendix tables because the main text is figures only |
+| `forsythe-2022-young-workers-recessions` | accepted (PR #92) | CPS panel LPMs; labelled `robust` because I4R rebuilt the data rather than running the package |
+| `brouwer-2022-teaching-norms` | accepted (PR #94) | 2026-10-21 reserve; 4.6 MB Stata package; one main table |
+| `bautista-2023-geography-repression-autocracy` | excluded | The open text is the 2018 draft, with a different specification; 0 of its values match the published tables |
+| `de-haas-2023-finance-green-growth` | excluded | The open text is the 2019 ECB working paper, a different analysis; the package stubs five proprietary data files |
+| `guay-2022-ideological-asymmetries-motivated-reasoning` | excluded | 2026-10-21 reserve; figures only, with no printed headline values (the open text is the accepted manuscript) |
+| `bosquet-2022-peer-effects-academic-research` | excluded | A 7z archive the downloader cannot read; 3 GB of SAS + Stata and 46 result tables |
+
+The four entries (the caveats are in each YAML header):
+
+- **Carrera** (REStud 2022): 11 claims (Tables 3–4, with SEs and both
+  Ns).  I4R verdict `reproducible` (meta-database only; there is no DP).
+  The package is an 8.1 MB zip.  The open text is the NBER WP 26161
+  revision (August 2021).  The strip rule had to learn two things.  It
+  now treats an `N` / `Clusters` LaTeX row as an observations marker, and
+  it withholds result-macro `.tex` files.  The mount now withholds 28 files.
+- **Forsythe** (EJ 2022): 13 claims (Tables 1, 2 and 10, plus the
+  full-sample N).  Verdict `robust`, not `reproducible`: I4R DP 163
+  rebuilt the CPS panel from IPUMS and recoded every regression, so no
+  one on record has run the package.  The package is a 347.3 MB zip,
+  almost all of it one 2.17 GB `.csv`.  The strip rule needed nothing new
+  (the seven do-files go by name).  The open text is the author's
+  pre-publication version.
+- **Bokobza** (JOP 2022): 11 claims, from the online-appendix tables
+  (A1, A2, K1–K3) that print the main text's coefficient plots.  Verdict
+  `reproducible` (meta-database only).  The package is 102.8 MB,
+  including a 96 MB `.rds`.  The strip rule had to learn rendered
+  notebook HTML (`script-content:<lang>`).  The open text is the accepted
+  manuscript.  The country-level do-file ships as `.txt`.
+- **Brouwer** (EJ 2022): 12 claims (Table 2: three coefficients across
+  four LPMs, plus two Ns).  Verdict `reproducible` (DP 106).  The package
+  is a 4.6 MB zip.  The strip rule had to learn PDFs with
+  regression-table pages (`regression-table`), because the package ships
+  the accepted manuscript and appendix.  The open text is the accepted
+  manuscript (HAL).
+
+PR #96's `table-fragment` rule (3.5, "Harness changes") withholds only
+Hanlon files, so it does not change these four mounts.
+
+**Runs (2026-11-02, zero API spend).**  The agent ran as in 3.3–3.4: one
+desktop Opus subagent per cell, run id `2026-11-02-a`.  The pipeline ran
+through the oracle (label `desktop-opus`, 54 answered calls).  Both cover
+4 papers × 3 modes, and both are each system's *first sample* on these
+papers.  Files:
+`benchmark/results/claude-code-4papers-all-modes-2026-11-02.json` and
+`benchmark/results/pipeline-oracle-desktop-opus-4papers-all-modes-2026-11-02.json`.
+Both are folded into REPORT.md and into the report's headline tables.
+
+| Paper | Mode | n | Agent (first scored, refinements) | Pipeline oracle (first scored, refinements) |
+|---|---|---|---|---|
+| Carrera | seeded | 11 | 11 (11, 0) | 11 (11, 0) |
+| Carrera | independent | 11 | 11 (11, 0) | 6 (4, 4) |
+| Carrera | blind | 11 | 11 (11, 0) | 0 (0, 0) |
+| Forsythe | seeded | 13 | 13 (13, 0) | 13 (13, 1) |
+| Forsythe | independent | 13 | 12 (12, 0) | 11 (10, 3) |
+| Forsythe | blind | 13 | 11 (11, 0) | 10 (10, 2) |
+| Bokobza | seeded | 11 | 11 (7, 1) | 9 (9, 1) |
+| Bokobza | independent | 11 | 11 (11, 1) | 11 (6, 2) |
+| Bokobza | blind | 11 | 11 (11, 0) | 4 (4, 1) |
+| Brouwer | seeded | 12 | 12 (12, 0) | 12 (12, 0) |
+| Brouwer | independent | 12 | 12 (12, 0) | 12 (12, 0) |
+| Brouwer | blind | 12 | 12 (12, 0) | 12 (12, 0) |
+| **Total, 4 papers** | seeded | 47 | **47** (43) | **45** (45) |
+| | independent | 47 | **46** (46) | **40** (32) |
+| | blind | 47 | **45** (45) | **26** (26) |
+
+Refinements are error plus claim refinements; the agent's are its own
+bookkeeping, as before.  The Carrera and Brouwer agents matched every
+claim on their first scored run in every mode.
+
+**Totals over the 17 evaluation papers** (first sample of each system:
+the agent is 3.3 + 3.4 + the rows above; the pipeline on Opus 5.5 is the
+four API papers, the nine oracle papers of 3.5 and the four oracle rows
+above):
+
+| Mode | Agent, 13 earlier | Agent, 4 new | **Agent, 17** | Pipeline, 13 earlier | Pipeline, 4 new | **Pipeline, 17** |
+|---|---|---|---|---|---|---|
+| seeded | 153 / 154 | 47 / 47 | **200 / 201** | 149 / 154 | 45 / 47 | **194 / 201** |
+| independent | 148 / 154 | 46 / 47 | **194 / 201** | 129 / 154 | 40 / 47 | **169 / 201** |
+| blind | 135 / 154 | 45 / 47 | **180 / 201** | 92 / 154 | 26 / 47 | **118 / 201** |
+
+The 17-paper first-scored counts are 194 / 192 / 173 for the agent and
+193 / 121 / 118 for the pipeline.  **The harness gap over 17 papers**
+(agent minus pipeline, first samples) is 6 seeded, 25 independent and
+62 blind.  On the four new papers alone it is 2, 6 and 19; on the 13
+earlier papers it was 4, 19 and 43.  The pattern of 3.5 holds on papers
+neither system had seen in this project: near zero with the scripts,
+larger without them, and largest without the targets.  The second
+samples (3.5) exist only for the 13 earlier papers, so the 13-paper
+ranges of 3.5 (18–20 independent, 40–53 blind) cannot yet be restated
+over 17.
+
+**Misses, cell by cell** (every cell below n; categories as in the
+report's taxonomy; "unclassified" where neither the results file nor the
+run's own record says why):
+
+- *Agent, Forsythe independent (12/13).*  The Table 2
+  out-of-the-labour-force interaction is −0.585 against −0.49.
+  Unclassified.  The same claim misses in all four independent and blind
+  cells of both reproducers, at −0.55 to −0.59, and passes in both seeded
+  cells.  So whatever the do-file does there is not in the paper's text
+  as the agents read it.  The full-sample N passed (16,964,441 against
+  16,948,516, within 1 %).  The data have no state code from mid-2014
+  (2.15 M person-months), and this agent dropped those rows.
+- *Agent, Forsythe blind (11/13).*  The same coefficient misses
+  (−0.594; unclassified).  So does the N: 17,357,345, 2.4 % high, a
+  sample restriction.  This agent imposed no upper age bound ("working
+  age" is not defined in the paper), and its notes do not mention the
+  missing state codes.
+- *Pipeline, Bokobza seeded (9/11).*  The two leader-fixed-effects
+  coefficients (Table A2) are 0.059 and 0.062 against 0.08 and 0.09.  The
+  country-level analysis is a Stata do-file shipped as
+  `morning_after_dofile_countrylevel.txt`.  The seeded prompt lists it in
+  the dataset but does not show it as a script, so the seeded run had to
+  guess the country-level half.  It lagged the controls within country.
+  The Bokobza independent agent recorded that within-country lags give
+  exactly 0.059 / 0.062, and that lags within leader spells (Stata `L.`
+  after `xtset` on the leader id) give the printed values.  This is a
+  harness miss: the seeded script selector does not recognise a script
+  saved as `.txt`.
+- *Pipeline, Bokobza blind (4/11).*  The four country-level claims
+  passed.  All seven individual-level coefficients printed `NA`, although
+  the run's log shows the models estimated (83,852 observations in the
+  experience model).  Why the coefficients came out `NA` is not
+  recorded: unclassified (the report counts the `NA`s as extraction
+  errors).  Bokobza's individual-level population-lag column is a copy of
+  the GDP lag.  Both agents in independent and blind mode noticed this
+  and rebuilt it, while the pipeline built its own lags from the
+  unlagged columns.
+- *Pipeline, Carrera independent (6/11, first scored 4, 1 error + 3
+  claim refinements).*  Both Ns miss: 1,248 and 2,946 against 1,126 and
+  2,824.  That is the sample before the wave-3 $80 / 12-visit assignees
+  are dropped, which the agents dropped.  Sample restriction.  Three
+  coefficients miss alongside (two in Table 3, one in Table 4);
+  unclassified beyond the sample.
+- *Pipeline, Carrera blind (0/11).*  The script's sample filter emptied
+  the data.  It printed N = 0 for both tables and `NA` for every
+  coefficient, and blind mode has no claim refinement to recover.  A
+  sample-restriction miss.  It is recorded and not fixed, because the
+  pipeline stays frozen.
+- *Pipeline, Forsythe independent (11/13).*  The out-of-the-labour-force
+  coefficient (−0.594; unclassified, as for the agents).  The N is
+  17,282,600, 2.0 % high: sample restriction.
+- *Pipeline, Forsythe blind (10/13).*  The unemployed-origin (−1.74
+  against −1.93) and out-of-the-labour-force (−0.548) interactions are
+  unclassified.  The N is 14,296,610, 15.6 % low: sample restriction.
+
+Cells that end at n but did not start there: the agent's Bokobza seeded
+row first scored 7.  Its first estimation printed `NA` for the four
+country-level claims because `update()` merged regressors and fixed
+effects; the agent fixed that as an error refinement.  The pipeline's
+Bokobza independent row went from 6 to 11 through one error and one claim
+refinement.
+
+Forsythe's 2.17 GB `.csv` dominates its cells.  The agents' notes time a
+full read at 101–221 s of the 300 s sandbox limit.  Every agent read a
+19-column subset (`fread(select=)`) and fitted the hiring LPMs on
+weighted cell means, which gives the same point estimates as the
+person-level regression.
+
+**Memorisation probe over 17 papers** (zero API spend; file
+`benchmark/results/probe-desktop-opus-2026-11-02.json`).  The probe of
+3.5 was run on the four new papers and re-scored over all 17.  The rows
+for the 13 earlier papers are identical to the 2026-11-01 file's.  The
+table is `probe.markdown_table` over the file's rows with the four agent
+first- and second-sample files:
+
+| paper | claims | answered | within tol | within 2x | within 5x | median rel err | recalled / inferred / none / missing | blind: claude-code-7papers-all-modes-2026-10-21 | blind: claude-code-6papers-all-modes-2026-10-22 | blind: claude-code-4papers-all-modes-2026-11-02 | blind: claude-code-run2-13papers-indep-blind-2026-11-01 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| acemoglu-2022-war-socialism-fascism | 12 | 7 | 5 | 5 | 6 | 21.6% | 0 / 7 / 5 / 0 | — | 12/12 | — | 12/12 |
+| adams-2023-women-mps-affective-polarization | 11 | 7 | 1 | 4 | 7 | 46.9% | 0 / 7 / 4 / 0 | 8/11 | — | — | 7/11 |
+| altmann-2022-cognitive-spillovers | 13 | 11 | 4 | 6 | 9 | 43.3% | 0 / 11 / 2 / 0 | — | 13/13 | — | 13/13 |
+| arias-2022-changing-tides-climate-migration | 12 | 12 | 2 | 5 | 8 | 38.3% | 0 / 12 / 0 / 0 | 12/12 | — | — | 12/12 |
+| bokobza-2022-morning-after-coup-purges | 11 | 5 | 2 | 4 | 5 | 40.0% | 0 / 5 / 6 / 0 | — | — | 11/11 | — |
+| brouwer-2022-teaching-norms | 12 | 4 | 2 | 2 | 4 | 39.3% | 0 / 4 / 8 / 0 | — | — | 12/12 | — |
+| carrera-2022-who-chooses-commitment | 11 | 3 | 2 | 2 | 3 | 25.9% | 0 / 3 / 8 / 0 | — | — | 11/11 | — |
+| dertwinkel-kalt-2022-concentration-bias | 13 | 3 | 0 | 0 | 2 | 68.8% | 0 / 3 / 10 / 0 | — | 13/13 | — | 13/13 |
+| forsythe-2022-young-workers-recessions | 13 | 13 | 4 | 6 | 9 | 40.7% | 0 / 13 / 0 / 0 | — | — | 11/13 | — |
+| gagliarducci-2022-gender-cooperation-congress | 13 | 13 | 6 | 7 | 8 | 28.3% | 0 / 13 / 0 / 0 | — | 7/13 | — | 9/13 |
+| grier-2023-sugar-roll-call-voting | 11 | 2 | 0 | 0 | 1 | 8.9% | 0 / 2 / 9 / 0 | 10/11 | — | — | 10/11 |
+| hanlon-2022-aircraft-ip-spillovers | 12 | 10 | 1 | 2 | 4 | 157.3% | 0 / 10 / 2 / 0 | 12/12 | — | — | 12/12 |
+| holman-2022-theresa-may-rally | 11 | 4 | 0 | 2 | 2 | 110.1% | 0 / 4 / 7 / 0 | — | 6/11 | — | 6/11 |
+| leeson-2022-hobo-economicus | 11 | 4 | 3 | 4 | 4 | 0.1% | 0 / 4 / 7 / 0 | 11/11 | — | — | 11/11 |
+| lopez-moctezuma-2022-policy-deliberation-philippines | 13 | 0 | 0 | 0 | 0 | — | 0 / 0 / 13 / 0 | — | 9/13 | — | 9/13 |
+| manekin-2022-effective-for-whom | 12 | 6 | 4 | 5 | 6 | 19.8% | 0 / 6 / 6 / 0 | 12/12 | — | — | 12/12 |
+| montero-2022-cooperative-property-rights | 10 | 0 | 0 | 0 | 0 | — | 0 / 0 / 10 / 0 | 10/10 | — | — | 6/10 |
+| **total** | 201 | 104 | 36 | 54 | 78 | 38.5% | 0 / 104 / 97 / 0 |  |  |  |  |
+
+Of the 201 claims, 104 were answered and 36 fall within the blind
+tolerance.  None was rated `recalled` (0 / 104 / 97).  The four new
+papers add 10 hits to the 26 of 3.5: 2 each on Bokobza, Brouwer and
+Carrera, and 4 on Forsythe.  The 36 hits:
+
+- **3 are the Leeson context leak of 3.5** (derivable from the p-values
+  and degrees of freedom the old contexts stated).
+- **1 is a count within 1 %** (Gagliarducci's sponsor terms, as in 3.5).
+- **32 are guesses inside a ±1 SE band**, all rated `inferred`.  The
+  bands' relative half-widths run from 6 % to 225 %, and 29 of the 32
+  are at or below 65 %.  The ten new ones are all of this kind.  Most are
+  round numbers (0.07, 0.1, 0.02, 0.03), but three of Forsythe's four are
+  close: −0.35 against −0.335 (in a 6 % band, the narrowest of any hit),
+  0.05 against 0.0496 and −0.12 against −0.119.  Forsythe's working paper
+  dates from 2016, the oldest first version among the four.
+
+Per paper the probe and the agent's blind result still do not line up.
+On the four new papers the agent's blind count is 11, 12, 11 and 11 where
+the probe hit 2, 2, 2 and 4.  Both claims the Forsythe blind agent missed
+were also missed by the probe, by a wide margin (−0.1 against −0.49;
+19,000,000 against 16,948,516).  **Conclusion, restated over 17 papers:
+memory alone recovers 36 of 201 claims inside the blind band (about
+18 %), none by stated recall and three through a context leak.  That
+cannot account for the agent's blind 180 of 201.**  The caveats of 3.5
+apply unchanged.
+
+**Next.**
+
+- (a) Free: second samples of both systems on the four new papers (the
+  agent in independent and blind mode; the pipeline through the oracle in
+  all three modes).  Until then the 17-paper totals are first samples
+  only, and the 3.5 ranges stay 13-paper.
+- (b) Free: the next shortlist pass toward Phase 4's 20–30 papers.
+  Labandeira and Kim (ranks 7–8) are untried.  The exclusions above say
+  what to screen for earlier: whether the open text's tables match the
+  published ones, whether the package is complete, whether the main text
+  prints numbers, and whether the archive format is readable.
+- (c) Recorded, not fixed (the pipeline stays frozen): Carrera blind's
+  0 / 11 is a sample-filter miss with no refinement to catch it.
+  Bokobza seeded's two misses come from the seeded script selector not
+  showing a do-file shipped as `.txt`.  The second is a harness gap, not
+  a model gap, and is a candidate if tuning is ever unfrozen.
+- (d) Free: Forsythe's out-of-the-labour-force interaction misses in
+  every independent and blind cell for both reproducers.  Reading the
+  do-file against the paper's Table 2 note would say whether this
+  belongs under "under-specified methods section".
+
 ---
 
 ## Phase 4 — Corpus growth (4 → 20–30 papers)
