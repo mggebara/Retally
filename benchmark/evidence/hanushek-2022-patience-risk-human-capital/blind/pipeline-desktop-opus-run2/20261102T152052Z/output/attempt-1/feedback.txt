@@ -1,0 +1,19 @@
+Error in `as_factor()`:
+! Arguments in `...` must be used.
+✖ Problematic argument:
+• levels = "default"
+ℹ Did you misspell an argument name?
+Backtrace:
+     ▆
+  1. ├─...[]
+  2. └─data.table:::`[.data.table`(...)
+  3.   └─base::eval(jsub, SDenv, parent.frame())
+  4.     └─base::eval(jsub, SDenv, parent.frame())
+  5.       ├─haven::zap_labels(as_factor(country, levels = "default"))
+  6.       └─forcats::as_factor(country, levels = "default")
+  7.         └─rlang (local) `<fn>`()
+  8.           └─rlang:::check_dots(env, error, action, call)
+  9.             └─rlang:::action_dots(...)
+ 10.               ├─base (local) try_dots(...)
+ 11.               └─rlang (local) action(...)
+Execution halted

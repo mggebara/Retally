@@ -1,0 +1,3260 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: Hate Crimes and Gender Imbalances: Fears over Mate
+Abstract (first 500 chars): As the number of refugees rises across the world, anti-refugee violence has become a pressing concern. What ex-
+plains the incidence and support of such hate crime? We argue that fears among native men that refugees pose a threat in
+the competition for female partners are a critical but understudied factor driving hate crime. Employing a comprehensive
+data set on the incidence of hate crime across Germany, we first demonstrate that hate crime rises where men face disad-
+vantages in local mating 
+Methodology Summary: - **Ecological analysis (municipality level, Germany):** Logistic regression of a dichotomous hate-crime indicator (Mut gegen rechte Gewalt / Amadeu Antonio Foundation & PRO ASYL data: arson attacks and other attacks on refugee housing, plus physical attacks on refugees) on **Excess Males** = number of men / number of women aged 15–44 in the municipality (raw ratio, not standardised). Two outcome codings: (a) "Sum" — cross-section, 1 if the municipality had ≥1 anti-refugee hate crime over 2015–2017 combined (17% of municipalities), 0 otherwise; (b) "Annual" — municipality-year panel, 1 if ≥1 hate crime in that year (2015: 5.6%, 2016: 12.1%, 2017: 6.8% of 11,168 municipalities).
+- **Controls and fixed effects (preferred spec, Figure 1 / SI Table C.1):** population, population density, population change, unemployment rate, ratio of male to female unemployment rate (Male Disadvantage), number of refugees (stock, county level), change in refugee population (flow), percent highly educated, percent manufacturing, change in percent manufacturing, AfD vote share, violent crime per capita; county fixed effects (and year fixed effects in the annual panel). **Standard errors clustered at the county level.**
+- **Sample restriction:** municipalities with extreme Excess Males values (top and bottom 2.5 percentiles) are dropped (mostly tiny municipalities, median population 247). No train/test split or cross-validation; this is inferential regression.
+- **Headline quantity:** change in predicted probability of ≥1 hate crime when Excess Males moves from 1.0 (balanced) to 1.2 (≈80th percentile): +2.60 points (95% CI [0.88, 4.19]) and +1.71 points (95% CI [0.76, 2.55]) for the two models (Sum vs Annual). Also compares 20th→80th percentile effects with unemployment and education. Robustness: linear probability model (SI C.3), negative binomial on counts (SI C.5), physical attacks only (SI C.4), alternative age ranges (SI C.2), East–West interactions (SI C.6), Male Disadvantage as alternative mate-competition measure (SI Fig. C.8; r = −0.048 with Excess Males), placebo (SI C.9), interactions with county refugee inflows.
+- **Individual-level survey:** Respondi online panel, four waves (Sep 2016–Dec 2017), each ~3,000 respondents, quota-representative on age (18+), gender and state. Mate Competition item (Wave 4, 4-point agree scale) is tabulated by terciles of municipal Excess Males (Figure 2: proportion agreeing, i.e., response 3/4, with 95% CIs, for all respondents, men 18–44, men 30–40), with p-values per tercile.
+- **List experiment (Wave 2):** 50% of sample split into control (3 neutral items) and treatment (3 items + Only Means); difference in mean counts (2.09 − 1.94 ≈ 15% support) compared with direct question (18%; asked to the 75% not in the treatment group). Wave 1 list experiment uses the Message item.
+- **Main individual regression (Table 1):** OLS of Only Means (1–4, "violence is sometimes the only means…") on Mate Competition (1–4, unstandardised), sequentially adding Job Competition (1–4) and Life Satisfaction (0–10) (col. 2), sociodemographics (col. 3: age, gender, education, income, main economic activity, employment status, German citizenship, household size, self-assessed social status, religious affiliation, state of residence), national refugee attitudes (col. 4), local refugee attitudes (col. 5), and additional controls (col. 6: public contact with refugees, closeness to refugee shelters, estimated number of refugees in town, views about/closeness to AfD, left-right self-placement, attitudes toward Muslims). Conventional OLS standard errors (no clustering stated). Mate Competition coefficients: 0.437 (0.016), 0.263, 0.236, 0.206, 0.185, 0.155 (0.019); N = 3,019 (cols 1–2) and 3,008 (cols 3–6); R² 0.191 → 0.459. Ordered logit gives similar results.
+- **Extensions:** Figure 4 re-estimates the column (6) specification for other DVs (Justified, Message, Prevent, Condemn reverse-coded), reporting the one-unit Mate Competition effect with 95% CIs; results hold for men only (SI D.6); single-male status and Women's Role predict Mate Competition controlling for 17 other refugee-related views (SI Fig. D.3).
+
+
+## Claims to Reproduce
+1. mate_competition_table1_col1: 0.437 (points on the 1-4 Only Means scale per point of Mate Competition (1-4)) [type: coefficient]
+   Location: Table 1, column (1), Mate competition
+   Context: Table 1 ("Mate Competition Predicts Support for Hate Crime"), column (1). OLS of support for hate crime, the Only Means item ("When it comes to the refugee problem, violence is sometimes the only means that citizens have to get the attention of German politicians"; 1 = disagree strongly to 4 = agree strongly), on Mate Competition ("The inflow of refugees makes it more difficult for native men to find female partners"; same 1-4 scale), with no other regressors. Respondents of Wave 4 (December 2017) of the authors' online panel survey of German residents fielded by Respondi. Conventional OLS sta…
+2. mate_competition_table1_col2: 0.263 (points on the 1-4 Only Means scale per point of Mate Competition (1-4)) [type: coefficient]
+   Location: Table 1, column (2), Mate competition
+   Context: Table 1, column (2): the same OLS of Only Means on Mate Competition, adding Job Competition ("the inflow of young male refugees makes it more difficult for young native men to find apprenticeships and jobs", 4-point scale) and Life Satisfaction (0-10). Wave 4 respondents; conventional OLS standard errors.
+3. mate_competition_table1_col3: 0.236 (points on the 1-4 Only Means scale per point of Mate Competition (1-4)) [type: coefficient]
+   Location: Table 1, column (3), Mate competition
+   Context: Table 1, column (3): column (2) plus the sociodemographic controls (age, gender, education, income, main economic activity, employment status, German citizenship, household size, self-assessed social status, religious affiliation, state of residence). Wave 4 respondents; conventional OLS standard errors.
+4. mate_competition_table1_col4: 0.206 (points on the 1-4 Only Means scale per point of Mate Competition (1-4)) [type: coefficient]
+   Location: Table 1, column (4), Mate competition
+   Context: Table 1, column (4): column (3) plus the battery of attitudes toward refugees at the national level (respondents' views of the economic, cultural, political and social consequences and desirability of refugees for Germany as a whole; SI Table D.7). Wave 4 respondents; conventional OLS standard errors.
+5. mate_competition_table1_col5: 0.185 (points on the 1-4 Only Means scale per point of Mate Competition (1-4)) [type: coefficient]
+   Location: Table 1, column (5), Mate competition
+   Context: Table 1, column (5): column (4) plus the battery of attitudes toward refugees in the respondent's own municipality (local consequences of refugees; SI Table D.7). The text says adding the national and local batteries reduces the Mate Competition coefficient by about one fifth. Wave 4 respondents; conventional OLS standard errors.
+6. mate_competition_table1_col6: 0.155 (points on the 1-4 Only Means scale per point of Mate Competition (1-4)) [type: coefficient]
+   Location: Table 1, column (6), Mate competition
+   Context: Table 1, column (6), the paper's fullest specification: column (5) plus the additional controls (self-reported public contact with refugees, estimated closeness to refugee shelters, estimated number of refugees living in town, views about and closeness to the AfD, left-right ideological placement, and attitudes toward Muslims). Wave 4 respondents; conventional OLS standard errors. Figure 4 repeats this specification for the other hate-crime items.
+7. job_competition_table1_col2: 0.25 (points on the 1-4 Only Means scale per point of Job Competition (1-4)) [type: coefficient]
+   Location: Table 1, column (2), Job competition
+   Context: Table 1, column (2): the Job Competition coefficient in the OLS of Only Means on Mate Competition, Job Competition and Life Satisfaction. Wave 4 respondents; conventional OLS standard errors.
+8. n_obs_table1_col1: 3019.0 (survey respondents) [type: other]
+   Location: Table 1, columns (1)-(2), Observations
+   Context: Number of Wave 4 respondents in the Table 1 regressions without sociodemographic controls (columns 1 and 2): respondents with non-missing Only Means, Mate Competition, Job Competition and Life Satisfaction.
+9. n_obs_table1_col3: 3008.0 (survey respondents) [type: other]
+   Location: Table 1, columns (3)-(6), Observations
+   Context: Number of Wave 4 respondents in the Table 1 regressions with sociodemographic controls (columns 3 to 6).
+10. excess_males_sum_tableC1_col5: 1.406 (log-odds per unit of the male-to-female ratio) [type: coefficient]
+   Location: SI Table C1, column (5) Sum, Excess Males (Age 15 - 44)
+   Context: SI Appendix C.1, Table C1 ("The Effect of Excess Males on the Probability of Observing at least One Hate Crime"), column (5), the Sum model plotted in main-text Figure 1. Logistic regression across German municipalities of an indicator equal to one if the municipality saw at least one anti-refugee hate crime (arson or other attacks on refugee housing, or physical attacks on refugees, from the "Mut gegen rechte Gewalt" chronicle of the Amadeu Antonio Foundation and PRO ASYL) over 2015-2017, on Excess Males (the number of men divided by the number of women aged 15-44 in the municipality, 2015), …
+11. excess_males_annual_tableC1_col6: 1.537 (log-odds per unit of the male-to-female ratio) [type: coefficient]
+   Location: SI Table C1, column (6) Annual, Excess Males (Age 15 - 44)
+   Context: SI Table C1, column (6), the Annual model plotted in main-text Figure 1: the same logistic regression and controls as excess_males_sum_tableC1_col5, on municipality-years 2015, 2016 and 2017, with the outcome equal to one if the municipality saw at least one anti-refugee hate crime in that year, and state and year fixed effects. Same exclusion of extreme Excess Males values; standard errors clustered by county.
+12. n_obs_sum_tableC1_col5: 9282.0 (municipalities) [type: other]
+   Location: SI Table C1, column (5), Observations
+   Context: Number of municipalities in the SI Table C1 column (5) Sum model (complete cases after excluding the extreme Excess Males values).
+13. n_obs_annual_tableC1_col6: 27846.0 (municipality-years) [type: other]
+   Location: SI Table C1, column (6), Observations
+   Context: Number of municipality-year observations in the SI Table C1 column (6) Annual model.
+
+## Dataset Information
+Name: dancygier-2022-hate-crimes-gender-imbalances
+Local path: <repo>/.cache/datasets/dancygier_2022_hate_crimes_gender_imbalances
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- pop_gemeinde_2008_2018.dta (73.6 MB) — 150403 rows, 59 columns: year, pop_mf_0_2, pop_mf_3_5, pop_mf_6_9, pop_mf_15_17, pop_mf_18_19, pop_mf_40_44, pop_m_0_2, pop_m_3_5, pop_m_6_9, pop_m_15_17, pop_m_18_19, pop_m_40_44, pop_f_0_2, pop_f_3_5, pop_f_6_9, pop_f_15_17, pop_f_18_19, pop_f_40_44, ags_county, ags_state, ags_muni, location, pop_mf_10_14, pop_mf_20_24, pop_mf_25_29, pop_mf_30_34, pop_mf_35_39, pop_mf_45_49, pop_mf_50_54, pop_mf_55_59, pop_mf_60_64, pop_mf_65_74, pop_mf_75_more, pop_mf_total, pop_m_10_14, pop_m_20_24, pop_m_25_29, …
+- merged_context_2.dta (1.3 MB) — 4305 rows, 52 columns: year, population, refugees, unemp_gendergap, unemp_nonger, unemp_female, pc_ref_male, unemp_all, all_male0_3, all_male3_6, all_male6_15, all_male15_18, all_male30_40, all_male40_50, county_sectors_2009_2015, ags_county, no_processing, no_public_educ_health, pop15_high_degree2011, pop15_high_extra_degree2011, no_manufacturing, pc_manufacturing, all_male18_25, all_male25_30, all_male50_65, all_male65_75, all_male75_up, ref_male, no_unemp_nonger, no_unemp_disabled, no_unemp_15_1…
+- survey.dta (4.5 MB) — 12595 rows, 53 columns: wave, east, hate_violence_means, hate_justified, gender, state, citizenship, income, household_size, list, treatment_list, outcome_list, women_role, hate_pol_message, hate_prevent_settlement, hate_polcondemn, pop_15_44_muni_gendergap_2015, age_group, self_econ, lrscale, muslim_ind, contact_ind, refugee_ind, ref_citizenship, ref_reduce, ref_loc_housing, ref_crime, ref_loc_crime, res_id, MateComp.cont, JobComp.cont, LifeSatis.cont, age, singdivsep, marital, religion, eduyrs, oc…
+- refugee_gender.dta (124.8 KB) — 2874 rows, 15 columns: year, refugees, all_male0_3, all_male3_6, all_male6_15, all_male15_18, all_male30_40, all_male40_50, all_male18_25, all_male25_30, all_male50_65, all_male65_75, all_male75_up, ags_dist, all_totref
+- merged_context_1.dta (235.9 KB) — 2365 rows, 17 columns: year, unemp_gendergap, unemp_nonger, unemp_female, unemp_all, ags_county, no_unemp_nonger, no_unemp_disabled, no_unemp_15_19, no_unemp_15_24, no_unemp_55_64, no_unemp_longterm, unemp_civil, unemp_men, unemp_15_24_yearold, no_unemployed, pc_…
+- unemployment.dta (226.0 KB) — 2365 rows, 16 columns: year, unemp_nonger, unemp_female, unemp_all, no_unemp_nonger, no_unemp_disabled, no_unemp_15_19, no_unemp_15_24, no_unemp_55_64, no_unemp_longterm, unemp_civil, unemp_men, unemp_15_24_yearold, ags_dist, no_unemployed, pc_unemplongterm
+- refugees_2008_2017.dta (1.3 MB) — 4052 rows, 45 columns: year, population, east, ags_county, ags_state, num_state, reject_syr_high, reject_afg_high, empty_house, empty_house_2013, popshare, popshare_kss, popshare_de, pop_for, pop_ref, sh_syr_go, sh_afg_go, largest_for, largest_ref, diversity, div…
+- context.dta (7.1 MB) — 34164 rows, 28 columns: year, east, ags_county, ags_state, vote_afd_2013_muni, log_ref_inflow_1514, pc_ref_male, Hate_all_muni, Physical_muni, population_muni_2015, log_unemp_all_muni_2015, unemp_gendergap_2015, violence_percap_2015, pc_manufacturing_2015, d_manuf…
+- sectors.dta (476.9 KB) — 3808 rows, 11 columns: year, county_sectors_2009_2015, no_manufacturing, no_processing, no_public_educ_health, ags_dist, no_employed, no_agriculture, no_construction, no_retail_hotel_transport_inform, no_finance_service_retail
+- pop_kreise_2015_2017.dta (25.9 KB) — 1206 rows, 3 columns: year, population, ags_county
+- 1-ReadMe.txt (6.9 KB)
+- ContextAnalysis_Appendix.R (40.9 KB)
+- ContextAnalysis_Main.R (9.1 KB)
+- Help.R (6.1 KB)
+- SurveyAnalysis_Appendix.R (36.2 KB)
+- SurveyAnalysis_Main.R (18.1 KB)
+- YouGov.dta (207.1 KB)
+- area_mun.dta (747.4 KB)
+- base.dta (824.3 KB)
+- base_pl.dta (678.4 KB)
+- codebook_YouGov.pdf (136.2 KB)
+- codebook_context.pdf (137.5 KB)
+- codebook_context_placebo.pdf (161.0 KB)
+- codebook_survey.pdf (143.3 KB)
+- context_placebo.dta (3.9 MB)
+- crime.dta (21.2 KB)
+- education.dta (38.7 KB)
+- hate.dta (2.0 MB)
+- master.R (253 B)
+- merge_context.R (10.0 KB)
+- merge_context_placebo.R (10.6 KB)
+- metadata.json (1.5 KB)
+- number_in_texts.R (9.9 KB)
+- out_count_table.rdata (10.4 MB)
+- population.dta (45.9 KB)
+- produce_context_data.do (2.8 KB)
+- source_context.pdf (153.7 KB)
+- source_context_placebo.pdf (176.8 KB)
+- table1.tex (1.7 KB)
+- table_C1.tex (3.0 KB)
+- table_C2.tex (3.0 KB)
+- table_C3.tex (3.2 KB)
+- table_C4.tex (2.9 KB)
+- table_C5.tex (2.0 KB)
+- table_C6.tex (2.9 KB)
+- table_C7.tex (2.0 KB)
+- table_C9.tex (1.0 KB)
+- table_D5_1.tex (1.5 KB)
+- table_D5_2.tex (1.8 KB)
+- table_D6_1.tex (1.7 KB)
+- table_D6_3.tex (1.5 KB)
+- table_D8_1.tex (1.4 KB)
+- table_D8_2.tex (1.4 KB)
+- unempl_gemeinde_2008_2017.dta (7.7 MB)
+- voting.dta (1.6 MB)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/dancygier_2022_hate_crimes_gender_imbalances' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Original Replication Scripts
+The replication package (the dataset directory) ships the authors' own analysis scripts, reproduced below.  These are the GROUND TRUTH for the exact estimating equation, variable names, sample restrictions, fixed effects, and standard-error clustering — follow them over anything reconstructed from the methodology summary, and prefer them over the paper's text where the two disagree.  Your job is to write R code that implements the SAME SPECIFICATION: translate what the scripts estimate, do not transliterate their syntax line by line (a Stata .do file's regression, e.g. `reghdfe y x controls, absorb(fe) cluster(cl)`, becomes the equivalent fixest::feols() call in R).  Keep only the parts that produce the specific claims being reproduced; skip figure construction and unrelated robustness checks.  The scripts' data-file paths refer to the package's internal layout — resolve them against the dataset directory listed under Dataset Information.
+
+Stata-to-fixest sample matching: feols() drops fixed-effect singletons by default, but Stata's `reg y x i.fe` / `xi:` dummies keep them.  Pass `fixef.rm = "none"` to every feols() call that has fixed effects, otherwise the observation count and the robust SEs drift from the paper's.  Stata's `, r` / `vce(robust)` is `vcov = "hetero"`.
+
+### `ContextAnalysis_Appendix.R`
+```r
+# Replication File for Appendix Survey Analyses
+# Table C1 in Appendix C1: The Effect of Excess Males on the Probability of Observing at least One Hate Crime
+# Table C2 in Appendix C2: The Effect of Excess Males on the Probability of Observing at least One Hate Crime (Different Definition of “Excess Males”)
+# Table C3 in Appendix C3: The Effect of Excess Males on the Probability of Observing at least One Hate Crime (linear probability model)
+# Table C4 in Appendix C4: The Effect of Excess Males on the Probability of Observing at least One Physical Attack
+# Table C5 in Appendix C5: Negative Binomial Regression
+# Table C6 in Appendix C6: Interaction  between  Excess  Males  and  East/West  Germany
+# Table C7 in Appendix C7: Interaction between Excess Males and Refugee Inflow
+# Table C9 in Appendix C9: Placebo Analysis
+# Appendix C10: Descriptive Statistics
+
+# R version 4.0.2 (2020-06-22)
+
+rm(list=ls())
+# install.packages("readstata13")  #  readstata13_0.9.2
+# install.packages("MASS") # MASS_7.3-51.6  
+# install.packages("sandwich")  # sandwich_2.5-1 
+# install.packages("lmtest") # lmtest_0.9-37 
+# install.packages("stargazer") # stargazer_5.2.2
+
+require(readstata13)  #  readstata13_0.9.2
+require(MASS) # MASS_7.3-51.6  
+require(sandwich)  # sandwich_2.5-1 
+require(lmtest) # lmtest_0.9-37  
+require(stargazer) # stargazer_5.2.2
+source("Help.R")
+
+dat <- read.dta13("context.dta")
+
+dat_2015 <- dat[dat$year == 2015, ]
+dat_2016 <- dat[dat$year == 2016, ]
+dat_2017 <- dat[dat$year == 2017, ]
+dat_2015$Hate_all_muni_1517 <- dat_2015$Hate_all_muni + dat_2016$Hate_all_muni + dat_2017$Hate_all_muni
+dat_2015$Hate_all_muni_1517_bin <- ifelse(dat_2015$Hate_all_muni_1517 > 0, 1, 0)
+
+# Remove Extreme Value of Excess Males 
+range_x <- quantile(dat_2015$pop_15_44_muni_gendergap_2015, c(0.025, 0.975), na.rm = TRUE)
+dat_2015_s <- dat_2015[dat_2015$pop_15_44_muni_gendergap_2015 >= range_x[1] & 
+                         dat_2015$pop_15_44_muni_gendergap_2015 <= range_x[2], ]
+dat_s <- dat[dat$pop_15_44_muni_gendergap_2015 >= range_x[1] & 
+               dat$pop_15_44_muni_gendergap_2015 <= range_x[2], ]
+
+# ##########################################
+# Main Table (Table C1 in Appendix C1) 
+# ##########################################
+bin_1_sum <- bin.summary(Hate_all_muni_1517_bin ~ 
+                           pop_15_44_muni_gendergap_2015 + 
+                           log_population_muni_2015 + log_popdens_muni_2015 + 
+                           as.factor(ags_county), # county fixed effects
+                         id  = "ags_county", data = dat_2015_s)
+
+bin_1_p <- bin.summary(Hate_all_muni_bin ~ 
+                         pop_15_44_muni_gendergap_2015 + 
+                         log_population_muni_2015 + log_popdens_muni_2015 + 
+                         as.factor(ags_county) + as.factor(year), # county + year fixed effects
+                       id  = "ags_county", data = dat_s)
+
+bin_2_sum <- bin.summary(Hate_all_muni_1517_bin ~ 
+                           pop_15_44_muni_gendergap_2015 + 
+                           log_population_muni_2015 + log_popdens_muni_2015 + 
+                           log_unemp_all_muni_2015 + d_pop1511_muni + vote_afd_2013_muni + 
+                           as.factor(ags_county), # county fixed effects
+                         id  = "ags_county", data = dat_2015_s)
+
+bin_2_p <- bin.summary(Hate_all_muni_bin ~ 
+                         pop_15_44_muni_gendergap_2015 + 
+                         log_population_muni_2015 + log_popdens_muni_2015 + 
+                         log_unemp_all_muni_2015 + d_pop1511_muni + vote_afd_2013_muni + 
+                         as.factor(ags_county) + as.factor(year), # county + year fixed effects
+                       id  = "ags_county", data = dat_s)
+
+bin_3_sum <- bin.summary(Hate_all_muni_1517_bin ~ 
+                           pop_15_44_muni_gendergap_2015 + 
+                           log_population_muni_2015 + log_popdens_muni_2015 + 
+                           log_unemp_all_muni_2015 + d_pop1511_muni + vote_afd_2013_muni + 
+                           log_ref_inflow_1514  + log_pop_ref_2014 + log_violence_percap_2015 + ## county level
+                           pc_hidegree_all2011 + d_manuf1115 + pc_manufacturing_2015 + ## county level
+                           unemp_gendergap_2015 + 
+                           as.factor(ags_state), # state fixed effects
+                         id  = "ags_county", data = dat_2015_s)
+
+bin_3_p <- bin.summary(Hate_all_muni_bin ~ 
+                         pop_15_44_muni_gendergap_2015 + 
+                         log_population_muni_2015 + log_popdens_muni_2015 + 
+                         log_unemp_all_muni_2015 + d_pop1511_muni + vote_afd_2013_muni + 
+                         log_ref_inflow_1514  + log_pop_ref_2014 + log_violence_percap_2015 + ## county level
+                         pc_hidegree_all2011 + d_manuf1115 + pc_manufacturing_2015 + ## county level
+                         unemp_gendergap_2015 + 
+                         as.factor(ags_state) + as.factor(year), # state + year fixed effects
+                       id  = "ags_county", data = dat_s)
+
+fit_list <- list(bin_1_sum$fit, bin_1_p$fit,  
+                 bin_2_sum$fit, bin_2_p$fit,  
+                 bin_3_sum$fit, bin_3_p$fit)
+se_list  <- list(sqrt(diag(bin_1_sum$vcov)), sqrt(diag(bin_1_p$vcov)),
+                 sqrt(diag(bin_2_sum$vcov)), sqrt(diag(bin_2_p$vcov)),
+                 sqrt(diag(bin_3_sum$vcov)), sqrt(diag(bin_3_p$vcov)))
+
+star_out(stargazer(fit_list, se = se_list,
+                   covariate.labels = c("Excess Males (Age 15 - 44)", 
+                                        "Log (Population)","Log (Population Density)", 
+                                        "Log (Unemployment Rate)",
+                                        "% of population change (2011 vs 2015)", 
+                                        "Vote share for AfD (2013)", 
+                                        "Log (Refugee Inflow) (2014 vs 2015)",  "Log (Refugee Size) (2014)",  
+                                        "Log (General Violence per capita)",
+                                        "% of High Education", 
+                                        "Change in Manufacturing Share (2011 vs 2015)",
+                                        "Share of Manufacturing", "Male Disadvantage"),
+                   keep=c("pop_15_44_muni_gendergap_2015", 
+                          "log_population_muni_2015", 
+                          "log_popdens_muni_2015", "log_unemp_all_muni_2015",
+                          "d_pop1511_muni", "vote_afd_2013_muni", 
+                          "log_ref_inflow_1514", "log_pop_ref_2014",
+                          "log_violence_percap_2015", 
+                          "pc_hidegree_all2011", "d_manuf1115", "pc_manufacturing_2015", "unemp_gendergap_2015")),
+         name = "table_C1.tex")
+
+# ###############################################
+# Replicate Table with 25-44 (Table C2 in C2)
+# ###############################################
+range_x2 <- quantile(dat_2015$pop_25_44_muni_gendergap_2015, c(0.025, 0.975), na.rm = TRUE)
+dat_2015_s2 <- dat_2015[dat_2015$pop_25_44_muni_gendergap_2015 >= range_x2[1] & 
+                          dat_2015$pop_25_44_muni_gendergap_2015 <= range_x2[2], ]
+dat_s2 <- dat[dat$pop_25_44_muni_gendergap_2015 >= range_x2[1] & 
+                dat$pop_25_44_muni_gendergap_2015 <= range_x2[2], ]
+
+
+bin_r_1_sum <- bin.summary(Hate_all_muni_1517_bin ~ 
+                             pop_25_44_muni_gendergap_2015 + 
+                             log_population_muni_2015 + log_popdens_muni_2015 + 
+                             as.factor(ags_county),
+                           id  = "ags_county", data = dat_2015_s2)
+
+bin_r_1_p <- bin.summary(Hate_all_muni_bin ~ 
+                           pop_25_44_muni_gendergap_2015 + 
+                           log_population_muni_2015 + log_popdens_muni_2015 + 
+                           as.factor(ags_county) + as.factor(year),
+                         id  = "ags_county", data = dat_s2)
+
+bin_r_2_sum <- bin.summary(Hate_all_muni_1517_bin ~ 
+                             pop_25_44_muni_gendergap_2015 + 
+                             log_population_muni_2015 + log_popdens_muni_2015 + 
+                             log_unemp_all_muni_2015 + d_pop1511_muni + vote_afd_2013_muni + 
+                             as.factor(ags_county),
+                           id  = "ags_county", data = dat_2015_s2)
+
+bin_r_2_p <- bin.summary(Hate_all_muni_bin ~ 
+                           pop_25_44_muni_gendergap_2015 + 
+                           log_population_muni_2015 + log_popdens_muni_2015 + 
+                           log_unemp_all_muni_2015 + d_pop1511_muni + vote_afd_2013_muni + 
+                           as.factor(ags_county) + as.factor(year),
+                         id  = "ags_county", data = dat_s2)
+
+bin_r_3_sum <- bin.summary(Hate_all_muni_1517_bin ~ 
+                             pop_25_44_muni_gendergap_2015 + 
+                             log_population_muni_2015 + log_popdens_muni_2015 + 
+                             log_unemp_all_muni_2015 + d_pop1511_muni + vote_afd_2013_muni + 
+                             log_ref_inflow_1514  + log_pop_ref_2014 + log_violence_percap_2015 + ## county level
+                             pc_hidegree_all2011 + d_manuf1115 + pc_manufacturing_2015 + ## county level
+                             unemp_gendergap_2015 + 
+                             as.factor(ags_state),
+                           id  = "ags_county", data = dat_2015_s2)
+
+bin_r_3_p <- bin.summary(Hate_all_muni_bin ~ 
+                           pop_25_44_muni_gendergap_2015 + 
+                           log_population_muni_2015 + log_popdens_muni_2015 + 
+                           log_unemp_all_muni_2015 + d_pop1511_muni + vote_afd_2013_muni + 
+                           log_ref_inflow_1514  + log_pop_ref_2014 + log_violence_percap_2015 + ## county level
+                           pc_hidegree_all2011 + d_manuf1115 + pc_manufacturing_2015 + ## county level
+                           unemp_gendergap_2015 + 
+                           as.factor(ags_state) + as.factor(year),
+                         id  = "ags_county", data = dat_s2)
+
+
+## Table C2 in Appendix C2
+fit_list2 <- list(bin_r_1_sum$fit, bin_r_1_p$fit,  
+                  bin_r_2_sum$fit, bin_r_2_p$fit,  
+                  bin_r_3_sum$fit, bin_r_3_p$fit)
+se_list2  <- list(sqrt(diag(bin_r_1_sum$vcov)), sqrt(diag(bin_r_1_p$vcov)),
+                  sqrt(diag(bin_r_2_sum$vcov)), sqrt(diag(bin_r_2_p$vcov)),
+                  sqrt(diag(bin_r_3_sum$vcov)), sqrt(diag(bin_r_3_p$vcov)))
+
+star_out(stargazer(fit_list2, se = se_list2,
+                   covariate.labels = c("Excess Males (Age 25 - 44)", 
+                                        "Log (Population)","Log (Population Density)", 
+                                        "Log (Unemployment Rate)",
+                                        "% of population change (2011 vs 2015)", 
+                                        "Vote share for AfD (2013)", 
+                                        "Log (Refugee Inflow) (2014 vs 2015)",  "Log (Refugee Size) (2014)",  
+                                        "Log (General Violence per capita)",
+                                        "% of High Education", 
+                                        "Change in Manufacturing Share (2011 vs 2015)",
+                                        "Share of Manufacturing", "Male Disadvantage"),
+                   keep=c("pop_25_44_muni_gendergap_2015", 
+                          "log_population_muni_2015", 
+                          "log_popdens_muni_2015", "log_unemp_all_muni_2015",
+                          "d_pop1511_muni", "vote_afd_2013_muni", 
+                          "log_ref_inflow_1514", "log_pop_ref_2014",
+                          "log_violence_percap_2015", 
+                          "pc_hidegree_all2011", "d_manuf1115", "pc_manufacturing_2015", "unemp_gendergap_2015")),
+         name = "table_C2.tex")
+
+# #####################################
+# Linear Probability Model (Table C3 in Appendix C3)
+# #####################################
+lm_1_sum <- lm.summary(Hate_all_muni_1517_bin ~ 
+                         pop_15_44_muni_gendergap_2015 + 
+                         log_population_muni_2015 + log_popdens_muni_2015 + 
+                         as.factor(ags_county),
+                       id  = "ags_county", data = dat_2015_s)
+
+lm_1_p <- lm.summary(Hate_all_muni_bin ~ 
+                       pop_15_44_muni_gendergap_2015 + 
+                       log_population_muni_2015 + log_popdens_muni_2015 + 
+                       as.factor(ags_county) + as.factor(year),
+                     id  = "ags_county", data = dat_s)
+
+lm_2_sum <- lm.summary(Hate_all_muni_1517_bin ~ 
+                         pop_15_44_muni_gendergap_2015 + 
+                         log_population_muni_2015 + log_popdens_muni_2015 + 
+                         log_unemp_all_muni_2015 + d_pop1511_muni + vote_afd_2013_muni + 
+                         as.factor(ags_county),
+                       id  = "ags_county", data = dat_2015_s)
+
+lm_2_p <- lm.summary(Hate_all_muni_bin ~ 
+                       pop_15_44_muni_gendergap_2015 + 
+                       log_population_muni_2015 + log_popdens_muni_2015 + 
+                       log_unemp_all_muni_2015 + d_pop1511_muni + vote_afd_2013_muni + 
+                       as.factor(ags_county) + as.factor(year),
+                     id  = "ags_county", data = dat_s)
+
+lm_3_sum <- lm.summary(Hate_all_muni_1517_bin ~ 
+                         pop_15_44_muni_gendergap_2015 + 
+                         log_population_muni_2015 + log_popdens_muni_2015 + 
+                         log_unemp_all_muni_2015 + d_pop1511_muni + vote_afd_2013_muni + 
+                         log_ref_inflow_1514  + log_pop_ref_2014 + log_violence_percap_2015 + ## county level
+                         pc_hidegree_all2011 + d_manuf1115 + pc_manufacturing_2015 + ## county level
+                         unemp_gendergap_2015 + 
+                         as.factor(ags_state),
+                       id  = "ags_county", data = dat_2015_s)
+
+lm_3_p <- lm.summary(Hate_all_muni_bin ~ 
+                       pop_15_44_muni_gendergap_2015 + 
+                       log_population_muni_2015 + log_popdens_muni_2015 + 
+                       log_unemp_all_muni_2015 + d_pop1511_muni + vote_afd_2013_muni + 
+                       log_ref_inflow_1514  + log_pop_ref_2014 + log_violence_percap_2015 + ## county level
+                       pc_hidegree_all2011 + d_manuf1115 + pc_manufacturing_2015 + ## county level
+                       unemp_gendergap_2015 + 
+                       as.factor(ags_state) + as.factor(year),
+                     id  = "ags_county", data = dat_s)
+
+
+fit_list_lm <- list(lm_1_sum$fit, lm_1_p$fit,  
+                    lm_2_sum$fit, lm_2_p$fit,  
+                    lm_3_sum$fit, lm_3_p$fit)
+se_list_lm  <- list(sqrt(diag(lm_1_sum$vcov)), sqrt(diag(lm_1_p$vcov)),
+                    sqrt(diag(lm_2_sum$vcov)), sqrt(diag(lm_2_p$vcov)),
+                    sqrt(diag(lm_3_sum$vcov)), sqrt(diag(lm_3_p$vcov)))
+
+star_out(stargazer(fit_list_lm, se = se_list_lm,
+                   covariate.labels = c("Excess Males (Age 15 - 44)", 
+                                        "Log (Population)","Log (Population Density)", 
+                                        "Log (Unemployment Rate)",
+                                        "% of population change (2011 vs 2015)", 
+                                        "Vote share for AfD (2013)", 
+                                        "Log (Refugee Inflow) (2014 vs 2015)",  "Log (Refugee Size) (2014)",  
+                                        "Log (General Violence per capita)",
+                                        "% of High Education", 
+                                        "Change in Manufacturing Share (2011 vs 2015)",
+                                        "Share of Manufacturing", "Male Disadvantage"),
+                   keep=c("pop_15_44_muni_gendergap_2015", 
+                          "log_population_muni_2015", 
+                          "log_popdens_muni_2015", "log_unemp_all_muni_2015",
+                          "d_pop1511_muni", "vote_afd_2013_muni", 
+                          "log_ref_inflow_1514", "log_pop_ref_2014",
+                          "log_violence_percap_2015", 
+                          "pc_hidegree_all2011", "d_manuf1115", "pc_manufacturing_2015", "unemp_gendergap_2015")),
+         name = "table_C3.tex")
+
+
+## ############################################
+## Physical Attacks (Table C4 in Appendix C4)
+## ############################################
+dat_2015$Physical_muni_1517 <- dat_2015$Physical_muni + dat_2016$Physical_muni + dat_2017$Physical_muni
+dat_2015$Physical_muni_1517_bin <- ifelse(dat_2015$Physical_muni_1517 > 0, 1, 0)
+range_x <- quantile(dat_2015$pop_15_44_muni_gendergap_2015, c(0.025, 0.975), na.rm = TRUE)
+dat_2015_s <- dat_2015[dat_2015$pop_15_44_muni_gendergap_2015 >= range_x[1] & 
+                         dat_2015$pop_15_44_muni_gendergap_2015 <= range_x[2], ]
+dat_s <- dat[dat$pop_15_44_muni_gendergap_2015 >= range_x[1] & 
+               dat$pop_15_44_muni_gendergap_2015 <= range_x[2], ]
+
+bin_phys_1_sum <- bin.summary(Physical_muni_1517_bin ~ 
+                                pop_15_44_muni_gendergap_2015 + 
+                                log_population_muni_2015 + log_popdens_muni_2015 + 
+                                as.factor(ags_county),
+                              id  = "ags_county", data = dat_2015_s)
+
+bin_phys_1_p <- bin.summary(Physical_muni_bin ~ 
+                              pop_15_44_muni_gendergap_2015 + 
+                              log_population_muni_2015 + log_popdens_muni_2015 + 
+                              as.factor(ags_county) + as.factor(year),
+                            id  = "ags_county", data = dat_s)
+
+bin_phys_2_sum <- bin.summary(Physical_muni_1517_bin ~ 
+                                pop_15_44_muni_gendergap_2015 + 
+                                log_population_muni_2015 + log_popdens_muni_2015 + 
+                                log_unemp_all_muni_2015 + d_pop1511_muni + vote_afd_2013_muni + 
+                                as.factor(ags_county),
+                              id  = "ags_county", data = dat_2015_s)
+
+bin_phys_2_p <- bin.summary(Physical_muni_bin ~ 
+                              pop_15_44_muni_gendergap_2015 + 
+                              log_population_muni_2015 + log_popdens_muni_2015 + 
+                              log_unemp_all_muni_2015 + d_pop1511_muni + vote_afd_2013_muni + 
+                              as.factor(ags_county) + as.factor(year),
+                            id  = "ags_county", data = dat_s)
+
+bin_phys_3_sum <- bin.summary(Physical_muni_1517_bin ~ 
+                                pop_15_44_muni_gendergap_2015 + 
+                                log_population_muni_2015 + log_popdens_muni_2015 + 
+                                log_unemp_all_muni_2015 + d_pop1511_muni + vote_afd_2013_muni + 
+                                log_ref_inflow_1514  + log_pop_ref_2014 + log_violence_percap_2015 + ## county level
+                                pc_hidegree_all2011 + d_manuf1115 + pc_manufacturing_2015 + ## county level
+                                unemp_gendergap_2015 + 
+                                as.factor(ags_state),
+                              id  = "ags_county", data = dat_2015_s)
+
+bin_phys_3_p <- bin.summary(Physical_muni_bin ~ 
+                              pop_15_44_muni_gendergap_2015 + 
+                              log_population_muni_2015 + log_popdens_muni_2015 + 
+                              log_unemp_all_muni_2015 + d_pop1511_muni + vote_afd_2013_muni + 
+                              log_ref_inflow_1514  + log_pop_ref_2014 + log_violence_percap_2015 + ## county level
+                              pc_hidegree_all2011 + d_manuf1115 + pc_manufacturing_2015 + ## county level
+                              unemp_gendergap_2015 + 
+                              as.factor(ags_state) + as.factor(year),
+                            id  = "ags_county", data = dat_s)
+
+## Table C4 in Appendix C4
+fit_list_bin_phys <- list(bin_phys_1_sum$fit, bin_phys_1_p$fit,  
+                          bin_phys_2_sum$fit, bin_phys_2_p$fit,  
+                          bin_phys_3_sum$fit, bin_phys_3_p$fit)
+se_list_bin_phys  <- list(sqrt(diag(bin_phys_1_sum$vcov)), sqrt(diag(bin_phys_1_p$vcov)),
+                          sqrt(diag(bin_phys_2_sum$vcov)), sqrt(diag(bin_phys_2_p$vcov)),
+                          sqrt(diag(bin_phys_3_sum$vcov)), sqrt(diag(bin_phys_3_p$vcov)))
+
+star_out(stargazer(fit_list_bin_phys, se = se_list_bin_phys,
+                   covariate.labels = c("Excess Males (Age 15 - 44)", 
+                                        "Log (Population)","Log (Population Density)", 
+                                        "Log (Unemployment Rate)",
+                                        "% of population change (2011 vs 2015)", 
+                                        "Vote share for AfD (2013)", 
+                                        "Log (Refugee Inflow) (2014 vs 2015)",  "Log (Refugee Size) (2014)",  
+                                        "Log (General Violence per capita)",
+                                        "% of High Education", 
+                                        "Change in Manufacturing Share (2011 vs 2015)",
+                                        "Share of Manufacturing", "Male Disadvantage"),
+                   keep=c("pop_15_44_muni_gendergap_2015", 
+                          "log_population_muni_2015", 
+                          "log_popdens_muni_2015", "log_unemp_all_muni_2015",
+                          "d_pop1511_muni", "vote_afd_2013_muni", 
+                          "log_ref_inflow_1514", "log_pop_ref_2014",
+                          "log_violence_percap_2015", 
+                          "pc_hidegree_all2011", "d_manuf1115", "pc_manufacturing_2015", "unemp_gendergap_2015")),
+         name = "table_C4.tex")
+
+## ########################################
+## Appendix C5: Count Model 
+## ########################################
+rm(list=ls())
+
+dat <- read.dta13("context.dta")
+source("Help.R")
+
+dat_2015 <- dat[dat$year == 2015, ]
+dat_2016 <- dat[dat$year == 2016, ]
+dat_2017 <- dat[dat$year == 2017, ]
+dat_2015$Hate_all_muni_1517 <- dat_2015$Hate_all_muni + dat_2016$Hate_all_muni + dat_2017$Hate_all_muni
+
+# Remove Extreme Value of Excess Males 
+range_x <- quantile(dat_2015$pop_15_44_muni_gendergap_2015, c(0.025, 0.975), na.rm = TRUE)
+dat_2015_s <- dat_2015[dat_2015$pop_15_44_muni_gendergap_2015 >= range_x[1] & 
+                         dat_2015$pop_15_44_muni_gendergap_2015 <= range_x[2], ]
+dat_s <- dat[dat$pop_15_44_muni_gendergap_2015 >= range_x[1] & 
+               dat$pop_15_44_muni_gendergap_2015 <= range_x[2], ]
+
+for_s <- as.formula(Hate_all_muni_1517 ~ 
+                      pop_15_44_muni_gendergap_2015 + 
+                      log_population_muni_2015 + log_popdens_muni_2015 + 
+                      log_unemp_all_muni_2015 + d_pop1511_muni + vote_afd_2013_muni + 
+                      log_ref_inflow_1514  + log_pop_ref_2014 + log_violence_percap_2015 + ## county level
+                      pc_hidegree_all2011 + d_manuf1115 + pc_manufacturing_2015 + ## county level
+                      unemp_gendergap_2015 + 
+                      as.factor(ags_state)) # state fixed effects
+
+for_p <- as.formula(Hate_all_muni ~ 
+                      pop_15_44_muni_gendergap_2015 + 
+                      log_population_muni_2015 + log_popdens_muni_2015 + 
+                      log_unemp_all_muni_2015 + d_pop1511_muni + vote_afd_2013_muni + 
+                      log_ref_inflow_1514  + log_pop_ref_2014 + log_violence_percap_2015 + ## county level
+                      pc_hidegree_all2011 + d_manuf1115 + pc_manufacturing_2015 + ## county level
+                      unemp_gendergap_2015 +  as.factor(ags_state) + as.factor(year)) # state + year fixed effects
+
+## Use boostrap to compute standard errors (Use the "out_count.rdata" to get the exact same estimates)
+## Note: the following codes take a while to run
+full_run <- FALSE
+if(full_run == TRUE){
+  # Sum 
+  nb_1_sum_b <- glm.boot(for_s, family = "negative-binomial", 
+                         data = dat_2015_s, 
+                         cluster_id = dat_2015_s$ags_county)
+  
+  # Panel
+  nb_1_p_b <- glm.boot(for_p, family = "negative-binomial", 
+                       data = dat_s, 
+                       cluster_id = dat_s$ags_county)
+  
+  fit_list_nb <- list(nb_1_sum_b$fit, nb_1_p_b$fit)
+  se_list_nb  <- list(nb_1_sum_b$se, nb_1_p_b$se)
+  
+  out_count_table <- list(fit_list_nb, se_list_nb)
+  save(out_count_table, file =  "out_count_table.rdata")
+}
+
+load(file =  "out_count_table.rdata")
+fit_list_nb <- out_count_table[[1]]
+se_list_nb <- out_count_table[[2]]
+
+star_out(stargazer(fit_list_nb, se = se_list_nb,
+                   covariate.labels = c("Excess Males (Age 15 - 44)", 
+                                        "Log (Population)","Log (Population Density)", 
+                                        "Log (Unemployment Rate)",
+                                        "% of population change (2011 vs 2015)", 
+                                        "Vote share for AfD (2013)", 
+                                        "Log (Refugee Inflow) (2014 vs 2015)",  "Log (Refugee Size) (2014)",  
+                                        "Log (General Violence per capita)",
+                                        "% of High Education", 
+                                        "Change in Manufacturing Share (2011 vs 2015)",
+                                        "Share of Manufacturing", "Male Disadvantage"),
+                   keep=c("pop_15_44_muni_gendergap_2015", 
+                          "log_population_muni_2015", 
+                          "log_popdens_muni_2015", "log_unemp_all_muni_2015",
+                          "d_pop1511_muni", "vote_afd_2013_muni", 
+                          "log_ref_inflow_1514", "log_pop_ref_2014",
+                          "log_violence_percap_2015", 
+                          "pc_hidegree_all2011", "d_manuf1115", "pc_manufacturing_2015", "unemp_gendergap_2015")),
+         name = "table_C5.tex")
+
+
+
+## ########################################################################
+## Replicate Tables with East/West Interaction (Table C6 in Appendix C6)
+## ########################################################################
+rm(list=ls())
+
+dat <- read.dta13("context.dta")
+source("Help.R")
+
+dat_2015 <- dat[dat$year == 2015, ]
+dat_2016 <- dat[dat$year == 2016, ]
+dat_2017 <- dat[dat$year == 2017, ]
+dat_2015$Hate_all_muni_1517 <- dat_2015$Hate_all_muni + dat_2016$Hate_all_muni + dat_2017$Hate_all_muni
+dat_2015$Hate_all_muni_1517_bin <- as.numeric(dat_2015$Hate_all_muni_1517 > 0)
+
+# Remove Extreme Value of Excess Males 
+range_x <- quantile(dat_2015$pop_15_44_muni_gendergap_2015, c(0.025, 0.975), na.rm = TRUE)
+dat_2015_s <- dat_2015[dat_2015$pop_15_44_muni_gendergap_2015 >= range_x[1] & 
+                         dat_2015$pop_15_44_muni_gendergap_2015 <= range_x[2], ]
+dat_s <- dat[dat$pop_15_44_muni_gendergap_2015 >= range_x[1] & 
+               dat$pop_15_44_muni_gendergap_2015 <= range_x[2], ]
+
+dat_2015_s$west <- 1 - dat_2015_s$east
+dat_s$west <- 1 - dat_s$east
+
+bin_2_sum_ew <- bin.summary(Hate_all_muni_1517_bin ~ 
+                              pop_15_44_muni_gendergap_2015 + west + 
+                              log_population_muni_2015 + log_popdens_muni_2015 + 
+                              log_unemp_all_muni_2015 + d_pop1511_muni + vote_afd_2013_muni + 
+                              log_ref_inflow_1514  + log_pop_ref_2014 + log_violence_percap_2015 + ## county level
+                              pc_hidegree_all2011 + d_manuf1115 + pc_manufacturing_2015 + ## county level
+                              unemp_gendergap_2015,
+                            id  = "ags_county", data = dat_2015_s)
+
+bin_2_p_ew <- bin.summary(Hate_all_muni_bin ~ 
+                            pop_15_44_muni_gendergap_2015 + west + 
+                            log_population_muni_2015 + log_popdens_muni_2015 + 
+                            log_unemp_all_muni_2015 + d_pop1511_muni + vote_afd_2013_muni + 
+                            log_ref_inflow_1514  + log_pop_ref_2014 + log_violence_percap_2015 + ## county level
+                            pc_hidegree_all2011 + d_manuf1115 + pc_manufacturing_2015 + ## county level
+                            unemp_gendergap_2015 + as.factor(year),
+                          id  = "ags_county", data = dat_s)
+
+bin_3_sum_ew <- bin.summary(Hate_all_muni_1517_bin ~ 
+                              pop_15_44_muni_gendergap_2015*west + 
+                              log_population_muni_2015 + log_popdens_muni_2015 + 
+                              log_unemp_all_muni_2015 + d_pop1511_muni + vote_afd_2013_muni + 
+                              log_ref_inflow_1514  + log_pop_ref_2014 + log_violence_percap_2015 + ## county level
+                              pc_hidegree_all2011 + d_manuf1115 + pc_manufacturing_2015 + ## county level
+                              unemp_gendergap_2015,
+                            id  = "ags_county", data = dat_2015_s)
+
+bin_3_p_ew <- bin.summary(Hate_all_muni_bin ~ 
+                            pop_15_44_muni_gendergap_2015*west + 
+                            log_population_muni_2015 + log_popdens_muni_2015 + 
+                            log_unemp_all_muni_2015 + d_pop1511_muni + vote_afd_2013_muni + 
+                            log_ref_inflow_1514  + log_pop_ref_2014 + log_violence_percap_2015 + ## county level
+                            pc_hidegree_all2011 + d_manuf1115 + pc_manufacturing_2015 + ## county level
+                            unemp_gendergap_2015 + as.factor(year),
+                          id  = "ags_county", data = dat_s)
+
+fit_list_ew <- list(bin_2_sum_ew$fit, bin_2_p_ew$fit, 
+                    bin_3_sum_ew$fit, bin_3_p_ew$fit)
+se_list_ew  <- list(sqrt(diag(bin_2_sum_ew$vcov)), sqrt(diag(bin_2_p_ew$vcov)),
+                    sqrt(diag(bin_3_sum_ew$vcov)), sqrt(diag(bin_3_p_ew$vcov)))
+
+star_out(stargazer(fit_list_ew, se = se_list_ew,
+                   covariate.labels = c("Excess Males (Age 15 - 44)", "West",
+                                        "Log (Population)","Log (Population Density)", 
+                                        "Log (Unemployment Rate)",
+                                        "% of population change (2011 vs 2015)", 
+                                        "Vote share for AfD (2013)", 
+                                        "Log (Refugee Inflow) (2014 vs 2015)",  
+                                        "Log (Refugee Size) (2014)",  
+                                        "Log (General Violence per capita)",
+                                        "% of High Education", 
+                                        "Change in Manufacturing Share (2011 vs 2015)",
+                                        "Share of Manufacturing", "Male Disadvantage",
+                                        "Excess Males x West"),
+                   keep=c("pop_15_44_muni_gendergap_2015", "west",
+                          "log_population_muni_2015", 
+                          "log_popdens_muni_2015", "log_unemp_all_muni_2015",
+                          "d_pop1511_muni", "vote_afd_2013_muni", 
+                          "log_ref_inflow_1514", 
+                          "log_pop_ref_2014",
+                          "log_violence_percap_2015", 
+                          "pc_hidegree_all2011", "d_manuf1115", "pc_manufacturing_2015", "unemp_gendergap_2015",
+                          "pop_15_44_muni_gendergap_2015:west")),
+         name = "table_C6.tex")
+
+
+## ##############################################################
+## Interaction with Refugee Inflow (Table C7 in Appendix C7)
+## ##############################################################
+bin_sum_int <- bin.summary(Hate_all_muni_1517_bin ~ 
+                             pop_15_44_muni_gendergap_2015*log_ref_inflow_1514 + 
+                             log_population_muni_2015 + log_popdens_muni_2015 + 
+                             log_unemp_all_muni_2015 + d_pop1511_muni + vote_afd_2013_muni + 
+                             log_ref_inflow_1514  + log_pop_ref_2014 + log_violence_percap_2015 + ## county level
+                             pc_hidegree_all2011 + d_manuf1115 + pc_manufacturing_2015 + ## county level
+                             unemp_gendergap_2015 + 
+                             as.factor(ags_state),
+                           id  = "ags_county", data = dat_2015_s)
+
+bin_p_int <- bin.summary(Hate_all_muni_bin ~ 
+                           pop_15_44_muni_gendergap_2015*log_ref_inflow_1514 + 
+                           log_population_muni_2015 + log_popdens_muni_2015 + 
+                           log_unemp_all_muni_2015 + d_pop1511_muni + vote_afd_2013_muni + 
+                           log_ref_inflow_1514  + log_pop_ref_2014 + log_violence_percap_2015 + ## county level
+                           pc_hidegree_all2011 + d_manuf1115 + pc_manufacturing_2015 + ## county level
+                           unemp_gendergap_2015 + 
+                           as.factor(ags_state) + as.factor(year),
+                         id  = "ags_county", data = dat_s)
+
+## Table C7 in Appendix C7
+fit_list_int <- list(bin_sum_int$fit, bin_p_int$fit)
+se_list_int  <- list(sqrt(diag(bin_sum_int$vcov)), sqrt(diag(bin_p_int$vcov)))
+
+star_out(stargazer(fit_list_int, se = se_list_int,
+                   covariate.labels = c("Excess Males (Age 15 - 44)", 
+                                        "Log (Refugee Inflow) (2014 vs 2015)",  
+                                        "Log (Population)","Log (Population Density)", 
+                                        "Log (Unemployment Rate)",
+                                        "% of population change (2011 vs 2015)", 
+                                        "Vote share for AfD (2013)", 
+                                        "Log (Refugee Size) (2014)",  
+                                        "Log (General Violence per capita)",
+                                        "% of High Education", 
+                                        "Change in Manufacturing Share (2011 vs 2015)",
+                                        "Share of Manufacturing", "Male Disadvantage",
+                                        "Excess Males × Log (Refugee Inflow)"),
+                   keep=c("pop_15_44_muni_gendergap_2015", "log_ref_inflow_1514", 
+                          "log_population_muni_2015", 
+                          "log_popdens_muni_2015", "log_unemp_all_muni_2015",
+                          "d_pop1511_muni", "vote_afd_2013_muni", 
+                          "log_pop_ref_2014",
+                          "log_violence_percap_2015", 
+                          "pc_hidegree_all2011", "d_manuf1115", "pc_manufacturing_2015", "unemp_gendergap_2015",
+                          "pop_15_44_muni_gendergap_2015:log_ref_inflow_1514")),
+         name = "table_C7.tex")
+
+# ################################################################
+# Appendix C9. Placebo Analysis
+# ###############################################################
+rm(list=ls())
+
+dat_pl <- read.dta13("context_placebo.dta") # data for placebo analysis
+source("Help.R")
+
+dat_2015_s <- dat_pl[dat_pl$year == 2015, ]
+dat_2016_s <- dat_pl[dat_pl$year == 2016, ]
+dat_2017_s <- dat_pl[dat_pl$year == 2017, ]
+
+# ##########################################
+# 2015
+# ##########################################
+# main model + Placebo Treatment 
+bin_15_sum_pl <- bin.summary(Hate_all_muni_bin ~ 
+                               pop_15_44_muni_gendergap_future + 
+                               pop_15_44_muni_gendergap_anu + 
+                               log(population_muni_anu) + log(popdens_muni_anu) + 
+                               log_unemp_all_muni_anu + d_pop_muni_anu + vote_afd_2013_muni + 
+                               log_ref_inflow_anu  + log(pop_ref_anu) + log(violence_percap_anu) + ## county level
+                               pc_hidegree_all2011 + d_manuf1115 + pc_manufacturing_2015 + ## county level
+                               unemp_gendergap_anu + 
+                               as.factor(ags_state), # state fixed effects
+                             id  = "ags_county", data = dat_2015_s)
+
+# ##########################################
+# 2016
+# ##########################################
+# Main model + Placebo 
+bin_16_sum_pl <- bin.summary(Hate_all_muni_bin ~ pop_15_44_muni_gendergap_future + 
+                               pop_15_44_muni_gendergap_anu + 
+                               log(population_muni_anu) + log(popdens_muni_anu) + 
+                               log_unemp_all_muni_anu + d_pop_muni_anu + vote_afd_2013_muni + 
+                               log_ref_inflow_anu  + log(pop_ref_anu) + log(violence_percap_anu) + ## county level
+                               pc_hidegree_all2011 + d_manuf1115 + pc_manufacturing_2015 + ## county level
+                               unemp_gendergap_anu + 
+                               as.factor(ags_state), # state fixed effects
+                             id  = "ags_county", data = dat_2016_s)
+
+# ##########################
+# 2017
+# #########################
+# Main model + Placebo 
+bin_17_sum_pl <- bin.summary(Hate_all_muni_bin ~ pop_15_44_muni_gendergap_future + 
+                               pop_15_44_muni_gendergap_anu + 
+                               log(population_muni_anu) + log(popdens_muni_anu) + 
+                               log_unemp_all_muni_anu + d_pop_muni_anu + vote_afd_2013_muni + 
+                               log_ref_inflow_anu  + log(pop_ref_anu) + log(violence_percap_anu) + ## county level
+                               pc_hidegree_all2011 + d_manuf1115 + pc_manufacturing_2015 + ## county level
+                               unemp_gendergap_anu + 
+                               as.factor(ags_state), # state fixed effects
+                             id  = "ags_county", data = dat_2017_s)
+
+## ####################
+## Pooled Analysis
+## ####################
+# Final model + Placebo 
+bin_pool_sum_pl <- bin.summary(Hate_all_muni_bin ~ pop_15_44_muni_gendergap_future + 
+                                 pop_15_44_muni_gendergap_anu + 
+                                 log(population_muni_anu) + log(popdens_muni_anu) + 
+                                 log_unemp_all_muni_anu + d_pop_muni_anu + vote_afd_2013_muni + 
+                                 log_ref_inflow_anu  + log(pop_ref_anu) + log(violence_percap_anu) + ## county level
+                                 pc_hidegree_all2011 + d_manuf1115 + pc_manufacturing_2015 + ## county level
+                                 unemp_gendergap_anu + 
+                                 as.factor(ags_state) + as.factor(year), # state + year fixed effects
+                               id  = "ags_county", data = dat_pl)
+
+# Repeat the analysis for Large Counties
+dat_pool_s_l <- dat_pl[dat_pl$population_muni_anu > 
+                         quantile(dat_pl$population_muni_anu, prob  = 0.5), ] 
+
+# Main model + Placebo 
+bin_pool_sum_pl_l <- bin.summary(Hate_all_muni_bin ~ pop_15_44_muni_gendergap_future + 
+                                   pop_15_44_muni_gendergap_anu + 
+                                   log(population_muni_anu) + log(popdens_muni_anu) + 
+                                   log_unemp_all_muni_anu + d_pop_muni_anu + vote_afd_2013_muni + 
+                                   log_ref_inflow_anu  + log(pop_ref_anu) + log(violence_percap_anu) + ## county level
+                                   pc_hidegree_all2011 + d_manuf1115 + pc_manufacturing_2015 + ## county level
+                                   unemp_gendergap_anu + 
+                                   as.factor(ags_state) + as.factor(year), # state + year fixed effects
+                                 id  = "ags_county", data = dat_pool_s_l)
+
+# Table
+pl_fit_list_m <- list(bin_15_sum_pl$fit,
+                      bin_16_sum_pl$fit,
+                      bin_17_sum_pl$fit,
+                      bin_pool_sum_pl$fit,
+                      bin_pool_sum_pl_l$fit)
+pl_se_list_m  <- list(sqrt(diag(bin_15_sum_pl$vcov)),
+                      sqrt(diag(bin_16_sum_pl$vcov)),
+                      sqrt(diag(bin_17_sum_pl$vcov)),
+                      sqrt(diag(bin_pool_sum_pl$vcov)),
+                      sqrt(diag(bin_pool_sum_pl_l$vcov)))
+
+star_out(stargazer(pl_fit_list_m, se = pl_se_list_m,
+                   covariate.labels = c("Future-Treatment"),
+                   keep=c("pop_15_44_muni_gendergap_future")),
+         name = "table_C9.tex")
+
+
+# ##############################
+# Appendix C10. Descriptive Statistics
+# ##############################
+rm(list=ls())
+
+dat <- read.dta13("context.dta")
+
+min15 <- round(min(dat$pc_ref_male[dat$year ==  2015], na.rm = TRUE),2)
+min16 <- round(min(dat$pc_ref_male[dat$year ==  2016], na.rm = TRUE),2)
+
+pdf("figure_C10.pdf", height = 5, width = 10)
+par(mfrow = c(1, 2))
+plot(density(dat$pc_ref_male[dat$year ==  2015], na.rm  = TRUE),
+     main = "Proportion of Male Refugees (2015)", 
+     xlim = c(50, 100), xlab = "Percent of Male Refugees Among Refugees (county)")
+text(x = 90, y = 0.08, paste0("min = ", min15), font = 2)
+polygon(density(dat$pc_ref_male[dat$year ==  2015], na.rm  = TRUE)$x,
+        density(dat$pc_ref_male[dat$year ==  2015], na.rm  = TRUE)$y,col='grey80')
+
+plot(density(dat$pc_ref_male[dat$year ==  2016], na.rm  = TRUE),
+     main = "Proportion of Male Refugees (2016)", xlim = c(50, 100),
+     xlab = "Percent of Male Refugees Among Refugees (county)")
+text(x = 90, y = 0.12, paste0("min = ", min16), font = 2)
+polygon(density(dat$pc_ref_male[dat$year ==  2016], na.rm  = TRUE)$x,
+        density(dat$pc_ref_male[dat$year ==  2016], na.rm  = TRUE)$y,col='grey80')
+dev.off()
+
+
+```
+
+### `ContextAnalysis_Main.R`
+```r
+# Replication  File for 
+# Figure 1 (Effects of Excess Males on Prob of Hate Crime)
+# Appendix: Figure C8 (Effects of Male Diadvantage on Prob of Hate Crime)
+
+# R version 4.0.2 (2020-06-22)
+
+rm(list=ls())
+# install.packages("readstata13")  #  readstata13_0.9.2
+# install.packages("MASS") # MASS_7.3-51.6  
+# install.packages("sandwich")  # sandwich_2.5-1 
+# install.packages("lmtest") # lmtest_0.9-37  
+
+require(readstata13)  #  readstata13_0.9.2
+require(MASS) # MASS_7.3-51.6  
+require(sandwich)  # sandwich_2.5-1 
+require(lmtest) # lmtest_0.9-37  
+source("Help.R")
+
+dat <- read.dta13("context.dta")
+
+dat_2015 <- dat[dat$year == 2015, ]
+dat_2016 <- dat[dat$year == 2016, ]
+dat_2017 <- dat[dat$year == 2017, ]
+dat_2015$Hate_all_muni_1517 <- dat_2015$Hate_all_muni + dat_2016$Hate_all_muni + dat_2017$Hate_all_muni
+dat_2015$Hate_all_muni_1517_bin <- ifelse(dat_2015$Hate_all_muni_1517 > 0, 1, 0)
+
+## #########################
+## Main Figure (Figure 1)
+## #########################
+# Remove Extreme Value of Excess Males 
+range_x <- quantile(dat_2015$pop_15_44_muni_gendergap_2015, c(0.025, 0.975), na.rm = TRUE)
+dat_2015_s <- dat_2015[dat_2015$pop_15_44_muni_gendergap_2015 >= range_x[1] & 
+                         dat_2015$pop_15_44_muni_gendergap_2015 <= range_x[2], ]
+dat_s <- dat[dat$pop_15_44_muni_gendergap_2015 >= range_x[1] & 
+               dat$pop_15_44_muni_gendergap_2015 <= range_x[2], ]
+
+# sum
+bin_1_sum <- bin.summary(Hate_all_muni_1517_bin ~ 
+                           pop_15_44_muni_gendergap_2015 + 
+                           log_population_muni_2015 + log_popdens_muni_2015 + 
+                           log_unemp_all_muni_2015 + d_pop1511_muni + vote_afd_2013_muni + 
+                           log_ref_inflow_1514  + log_pop_ref_2014 + log_violence_percap_2015 + ## county level
+                           pc_hidegree_all2011 + d_manuf1115 + pc_manufacturing_2015 + ## county level
+                           unemp_gendergap_2015 + as.factor(ags_state),
+                         id  = "ags_county", data = dat_2015_s)
+
+# annual
+bin_1_p <- bin.summary(Hate_all_muni_bin ~ 
+                         pop_15_44_muni_gendergap_2015 + 
+                         log_population_muni_2015 + log_popdens_muni_2015 + 
+                         log_unemp_all_muni_2015 + d_pop1511_muni + vote_afd_2013_muni + 
+                         log_ref_inflow_1514  + log_pop_ref_2014 + log_violence_percap_2015 + ## county level
+                         pc_hidegree_all2011 + d_manuf1115 + pc_manufacturing_2015 + ## county level
+                         unemp_gendergap_2015 + as.factor(ags_state) + as.factor(year),
+                       id  = "ags_county", data = dat_s)
+
+# Excess Males
+# Effect Estimation 
+bin_1_sum_effect <- marginal_effect(bin_1_sum,
+                                    newdata = dat_2015_s, family = "logit",
+                                    main_var = "pop_15_44_muni_gendergap_2015",
+                                    difference = TRUE, 
+                                    treat_range = c(1, 1.2))
+
+bin_1_p_effect <- marginal_effect(bin_1_p,
+                                  newdata = dat_s, family = "logit",
+                                  main_var = "pop_15_44_muni_gendergap_2015",
+                                  difference = TRUE, 
+                                  treat_range = c(1, 1.2))
+
+# Dose function
+bin_1_sum_dose <- marginal_effect(bin_1_sum,
+                                  newdata = dat_2015_s, family = "logit",
+                                  main_var = "pop_15_44_muni_gendergap_2015")
+
+bin_1_p_dose <- marginal_effect(bin_1_p,
+                                newdata = dat_s, family = "logit",
+                                main_var = "pop_15_44_muni_gendergap_2015")
+
+
+# Male Diadvantage
+# Effect Estimation 
+bin_1_sum_gap <- marginal_effect(bin_1_sum,
+                                 newdata = dat_2015_s, family = "logit",
+                                 main_var = "unemp_gendergap_2015",
+                                 difference = TRUE, 
+                                 treat_range = c(1, 1.15))
+
+bin_1_p_gap <- marginal_effect(bin_1_p,
+                               newdata = dat_s, family = "logit",
+                               main_var = "unemp_gendergap_2015",
+                               difference = TRUE, 
+                               treat_range = c(1, 1.15))
+
+# Dose Function
+bin_1_sum_gap_dose <- marginal_effect(bin_1_sum,
+                                      newdata = dat_2015_s, family = "logit",
+                                      main_var = "unemp_gendergap_2015")
+
+bin_1_p_gap_dose <- marginal_effect(bin_1_p,
+                                    newdata = dat_s, family = "logit",
+                                    main_var = "unemp_gendergap_2015")
+
+# #####################
+# Plot Effects (Figure 1)
+# #####################
+point <- c(bin_1_sum_effect$out_main[2], bin_1_p_effect$out_main[2])
+high  <- c(bin_1_sum_effect$out_main[3], bin_1_p_effect$out_main[3])
+low   <- c(bin_1_sum_effect$out_main[1], bin_1_p_effect$out_main[1])
+
+## Short Panel 
+marginal_list <- list()
+marginal_list[[1]] <- bin_1_sum_dose
+marginal_list[[2]] <- bin_1_p_dose
+
+title_c <- c("Predicted Probability: Sum", "Predicted Probability: Annual")
+
+# Plot Dose function
+
+pdf("figure_1.pdf", height = 4, width = 11)
+par(mfrow = c(1,3), mar = c(4.5, 2, 4, 1), oma = c(0, 2, 0, 0))
+for(i in 1:2){
+  plot_coef_all  <- do.call("rbind", marginal_list[[i]]$out_main)
+  plot_x <-  marginal_list[[i]]$treat_range
+  if(i == 1){
+    ylim_u <- c(0.14, 0.23)
+    ylab_u <- ""
+  }
+  if(i == 2){
+    ylim_u <- c(0.06, 0.11)
+    ylab_u <- ""
+  }
+  
+  plot(plot_x, plot_coef_all[ ,2], pch = 19, 
+       main = paste("", title_c[i], sep = ""),
+       ylim = ylim_u, 
+       xlab = "Excess Males", 
+       ylab = ylab_u,
+       col = "black", cex = 2, type = "l", lwd = 3, cex.lab = 1.5, cex.main = 1.5, cex.axis = 1.5)
+  lines(plot_x, plot_coef_all[ ,1], col = "black", lty = 2)
+  lines(plot_x, plot_coef_all[ ,3], col = "black", lty = 2)
+  abline(h = marginal_list[[i]]$sample, lty = 2, col = "red", lwd = 2)
+  polygon(c(plot_x, rev(plot_x)), c(plot_coef_all[ ,1], rev(plot_coef_all[ ,3])),
+          col = adjustcolor("black", 0.2), border = NA)
+  par(new=TRUE)
+  hist(dat_2015_s$pop_15_44_muni_gendergap_2015, freq = FALSE, 
+       breaks = seq(from = 0, to = 6, by = 0.01), xlim = c(min(plot_x), max(plot_x)), 
+       xaxt = "n", yaxt = "n", xlab = "", ylab = "", ylim = c(0, 40), main ="")
+}
+par(mar = c(4.5, 5, 4, 1))
+plot(seq(1:2), point, ylim = c(-0.005, 0.045), 
+     ylab = "Effects on Prob (hate crime)", 
+     main = "Effects of Excess Males",
+     xlim = c(0.5, 2.5), xlab = "Outcome Types", xaxt = "n", pch = c(19, 15), 
+     cex.lab = 1.5, cex.axis = 1.5, cex.main = 1.5)
+segments(seq(1:6), low, seq(1:6), high, lwd = 2, c(rep("black",2), rep("black",2), rep("black",2)))
+Axis(side = 1, at = c(1, 2), labels = c("Sum", "Annual"), cex.axis = 1.5)
+abline(h = 0, lty = 2)
+mtext(side = 2, at = 0.5, "Prob (hate crime)", outer = TRUE, line = 0.5)
+dev.off()
+
+# ########################
+# Figure C.8 in Appendix
+# ########################
+
+# Plot Effects 
+point_g <- c(bin_1_sum_gap$out_main[2], bin_1_p_gap$out_main[2])
+high_g  <- c(bin_1_sum_gap$out_main[3], bin_1_p_gap$out_main[3])
+low_g   <- c(bin_1_sum_gap$out_main[1], bin_1_p_gap$out_main[1])
+
+## Short Panel 
+marginal_list_g <- list()
+marginal_list_g[[1]] <- bin_1_sum_gap_dose
+marginal_list_g[[2]] <- bin_1_p_gap_dose
+
+title_c <- c("Predicted Probability: Sum", "Predicted Probability: Annual")
+
+# Plot Dose function
+
+pdf("figure_C8.pdf", height = 4, width = 11)
+par(mfrow = c(1,3), mar = c(4.5, 2, 4, 1), oma = c(0, 2, 0, 0))
+for(i in 1:2){
+  plot_coef_all  <- do.call("rbind", marginal_list_g[[i]]$out_main)
+  plot_x <-  marginal_list_g[[i]]$treat_range
+  if(i <=1) ylim_u <- c(0.14, 0.22)
+  if(i > 1) ylim_u <- c(0.06, 0.11)
+  
+  plot(plot_x, plot_coef_all[ ,2], pch = 19,
+       main = paste("", title_c[i], sep = ""),
+       ylim = ylim_u,
+       xlab = "Male Disadvantage",
+       ylab = "",
+       col = "black", cex = 2, type = "l", lwd = 3, cex.lab = 1.5, cex.axis = 1.5, cex.main = 1.5)
+  lines(plot_x, plot_coef_all[ ,1], col = "black", lty = 2)
+  lines(plot_x, plot_coef_all[ ,3], col = "black", lty = 2)
+  abline(h = marginal_list_g[[i]]$sample, lty = 2, col = "red", lwd = 2)
+  polygon(c(plot_x, rev(plot_x)), c(plot_coef_all[ ,1], rev(plot_coef_all[ ,3])),
+          col = adjustcolor("black", 0.2), border = NA)
+  par(new=TRUE)
+  hist(dat_2015_s$unemp_gendergap_2015, freq = FALSE,
+       breaks = seq(from = 0, to = 6, by = 0.01), xlim = c(min(plot_x), max(plot_x)),
+       xaxt = "n", yaxt = "n", xlab = "", ylab = "", ylim = c(0, 40), main ="")
+}
+par(mar = c(4.5, 5, 4, 1))
+plot(seq(1:2), point_g, ylim = c(-0.01, 0.035), 
+     ylab = "Effects on Prob (hate crime)", 
+     main = "Effects of Male Disadvantage",
+     xlim = c(0.5, 2.5), xlab = "Outcome Types", xaxt = "n", pch = c(19, 15), 
+     cex.lab = 1.5, cex.axis = 1.5, cex.main = 1.5)
+segments(seq(1:6), low_g, seq(1:6), high_g, lwd = 2, c(rep("black",2), rep("black",2), rep("black",2)))
+Axis(side = 1, at = c(1, 2), labels = c("Sum", "Annual"), cex.axis = 1.25)
+abline(h = 0, lty = 2)
+mtext(side = 2, at = 0.5, "Prob (hate crime)", outer = TRUE, line = 0.5)
+dev.off()
+```
+
+### `SurveyAnalysis_Appendix.R`
+```r
+# Replication File for Appendix: Survey Analysis
+# Appendix D2 Figure D2: Replicate Figure 3 with only among anti-refugees
+# Appendix D3 Figure D3: Variables Predicting Mate Competition vs. Other Views About Refugees
+# Appendix D4 Figures D.4.1 and D.4.2: Replicate Figure 4 with wave 1
+# Appendix D5 Table D.5: Table representation of Figure 5
+# Appendix D6 Table D.6.1, Figure.6.2, Table.D.6.3, Table.D.6.4
+# Appendix D8 Table D.8.1: Robustness Check with YouGov Survey Data
+
+# R version 4.0.2 (2020-06-22)
+
+# ##################
+# Data Preparation
+# ##################
+rm(list=ls())
+# install.packages("readstata13")  #  readstata13_0.9.2
+# install.packages("MASS") # MASS_7.3-51.6  
+# install.packages("sandwich")  # sandwich_2.5-1 
+# install.packages("lmtest") # lmtest_0.9-37 
+# install.packages("stargazer") # stargazer_5.2.2
+# install.packages("foreign") # foreign_0.8-80
+# install.packages("list") # list_9.2
+
+
+require(readstata13)  #  readstata13_0.9.2
+require(MASS) # MASS_7.3-51.6
+require(sandwich)  # sandwich_2.5-1
+require(lmtest) # lmtest_0.9-37
+require(stargazer) # stargazer_5.2.2
+require(foreign) # foreign_0.8-80
+require(list) # list_9.2
+source("Help.R")
+
+dat <- read.dta13(file =  "survey.dta")
+
+# Subset to people who pass the check
+dat_use <- dat[dat$wave == 4, ]
+
+## ###############################
+## 1: Appendix D2 Figure D2
+## ###############################
+# Replicate only among anti-refugee
+quantile(dat_use$refugee_ind, probs = 0.75)
+
+dat_use_r <- dat_use[dat_use$refugee_ind > 0.875, ]
+dat_use_r$MateComp.cont_bin <- ifelse(dat_use_r$MateComp.cont >= 3, 1, 0)
+dat_use_r$excess_c <- ifelse(dat_use_r$pop_15_44_muni_gendergap_2015 < 1.04, "1",
+                             ifelse(dat_use_r$pop_15_44_muni_gendergap_2015 < 1.12, "2", "3"))
+dat_male_r <- dat_use_r[dat_use_r$gender == "Male" & dat_use_r$age <= 44 & dat_use_r$age >= 18, ]
+dat_male_y_r <- dat_use_r[dat_use_r$gender == "Male" & dat_use_r$age <= 40 & dat_use_r$age >= 30, ]
+
+mean_all_r <- tapply(dat_use_r$MateComp.cont_bin, dat_use_r$excess_c, mean)
+se_all_r   <- tapply(dat_use_r$MateComp.cont_bin, dat_use_r$excess_c, sd)/sqrt(table(dat_use_r$excess_c))
+
+mean_all_m_r <- tapply(dat_male_r$MateComp.cont_bin, dat_male_r$excess_c, mean)
+se_all_m_r <- tapply(dat_male_r$MateComp.cont_bin, dat_male_r$excess_c, sd)/sqrt(table(dat_male_r$excess_c))
+
+mean_all_y_r <- tapply(dat_male_y_r$MateComp.cont_bin, dat_male_y_r$excess_c, mean)
+se_all_y_r <- tapply(dat_male_y_r$MateComp.cont_bin, dat_male_y_r$excess_c, sd)/sqrt(table(dat_male_y_r$excess_c))
+
+pdf("figure_D2.pdf", height= 6, width = 17.5)
+par(mfrow = c(1, 3), mar = c(2,2,3,2), oma = c(4,4,0,0))
+plot(seq(1:3), mean_all_r, pch = 19, ylim = c(0, 1),
+     xlim = c(0.5, 3.5),
+     main = "All", xaxt = "n", xlab = "", ylab = "", cex.axis = 2.25, cex.main = 2.5,
+     cex = 2.25, cex.lab = 2.5)
+segments(seq(1:3), mean_all_r - 1.96*se_all_r,
+         seq(1:3), mean_all_r + 1.96*se_all_r, pch = 19, lwd = 3)
+Axis(side = 1, at = c(1,2,3), labels = c("1st tercile", "2nd tercile", "3rd tercile"), cex.axis = 2.25)
+
+plot(seq(1:3), mean_all_m_r, pch = 19, ylim = c(0, 1),
+     xlim = c(0.5, 3.5),
+     main = "Male (18-44)", xaxt = "n", xlab = "", ylab = "", cex.axis = 2.25, cex.main = 2.5,
+     cex = 2.25, cex.lab = 2.5)
+segments(seq(1:3), mean_all_m_r - 1.96*se_all_m_r,
+         seq(1:3), mean_all_m_r + 1.96*se_all_m_r, pch = 19, lwd = 3)
+Axis(side = 1, at = c(1,2,3), labels = c("1st tercile", "2nd tercile", "3rd tercile"), cex.axis = 2.25)
+
+plot(seq(1:3), mean_all_y_r, pch = 19, ylim = c(0, 1),
+     xlim = c(0.5, 3.5),
+     main = "Male (30 - 40)", xaxt = "n", xlab = "", ylab = "", cex.axis = 2.25, cex.main = 2.5,
+     cex = 2.25, cex.lab = 2.5)
+segments(seq(1:3), mean_all_y_r - 1.96*se_all_y_r,
+         seq(1:3), mean_all_y_r + 1.96*se_all_y_r, pch = 19, lwd = 3)
+Axis(side = 1, at = c(1,2,3), labels = c("1st tercile", "2nd tercile", "3rd tercile"), cex.axis = 2.25)
+mtext("Proportion Perceiving Mate Competition", side = 2, outer = TRUE, at = 0.5,
+      cex = 1.5, line = 1.75)
+mtext("Excess Males", side = 1, outer = TRUE, at = 0.175,
+      cex = 1.5, line = 1.75)
+mtext("Excess Males", side = 1, outer = TRUE, at = 0.5,
+      cex = 1.5, line = 1.75)
+mtext("Excess Males", side = 1, outer = TRUE, at = 0.825,
+      cex = 1.5, line = 1.75)
+dev.off()
+
+
+## ###############################
+## 2: Appendix D3 Figure D3
+## ###############################
+# Coefficients of Male x Single on Refugee Variables
+
+rm(list=ls())
+dat <- read.dta13(file =  "survey.dta")
+dat_use <- dat[dat$wave == 4, ]
+source("Help.R")
+dat_use$male <- as.numeric(dat_use$gender == "Male")
+
+# outcomes we want to analyze
+outcome_ref <- c("MateComp.cont", "JobComp.cont", "ref_integrating",
+                 "ref_citizenship","ref_reduce","ref_moredone", "ref_cultgiveup",
+                 "ref_economy", "ref_crime", "ref_terror", "ref_loc_services",
+                 "ref_loc_economy", "ref_loc_crime", "ref_loc_culture",
+                 "ref_loc_islam", "ref_loc_schools", "ref_loc_housing", "ref_loc_wayoflife")
+
+outcome_ref_name <- c("Mate competition", "Job competition", "Integration",
+                      "Citizenship for refugees","Number of refugees","More for refugees",
+                      "Culture",
+                      "Economy", "Crime", "Terrorism", "Local social services",
+                      "Local economy", "Local crime", "Local culture",
+                      "Islam", "Local school", "Housing", "Living")
+
+# Fit Ordered Logit
+lm_l <- list()
+lm_out <- list()
+male_mat <- sing_mat <- int_mat <- matrix(NA, nrow = 18, ncol = 2)
+for(i in 1:18){
+  control <- paste(outcome_ref[-i], collapse = "+")
+  for_i <- paste("as.factor(", outcome_ref[i],")", "~ male*singdivsep + ", control, sep = "")
+  lm_l[[i]]  <- polr(for_i, data = dat_use, Hess = TRUE)
+  lm_out[[i]] <- summary(lm_l[[i]])$coef
+  male_mat[i, 1:2] <- summary(lm_l[[i]])$coef["male", 1:2]
+  sing_mat[i, 1:2] <- summary(lm_l[[i]])$coef["singdivsep", 1:2]
+  int_mat[i, 1:2] <- summary(lm_l[[i]])$coef["male:singdivsep", 1:2]
+}
+rownames(int_mat) <- outcome_ref
+
+# Fit linear regression
+lm2_l <- list()
+lm2_out <- list()
+male_mat2 <- sing_mat2 <- int_mat2 <- matrix(NA, nrow = 18, ncol = 2)
+for(i in 1:18){
+  control <- paste(outcome_ref[-i], collapse = "+")
+  for_i <- paste(outcome_ref[i], "~ male*singdivsep + ", control, sep = "")
+  lm2_l[[i]]  <- lm(for_i, data = dat_use)
+  lm2_out[[i]] <- summary(lm2_l[[i]])$coef
+  male_mat2[i, 1:2] <- summary(lm2_l[[i]])$coef["male", 1:2]
+  sing_mat2[i, 1:2] <- summary(lm2_l[[i]])$coef["singdivsep", 1:2]
+  int_mat2[i, 1:2] <- summary(lm2_l[[i]])$coef["male:singdivsep", 1:2]
+}
+rownames(int_mat2) <- outcome_ref
+
+
+# Show Coefficients for Male x Single Interaction (after controlling for other refugee variables)
+# Both Ordered Logit and Linear regression
+col_p <-  rev(c("red", rep("black", 17)))
+
+pdf("figure_D3_1.pdf", height = 6, width = 8)
+par(mfrow = c(1, 2), mar = c(4, 2, 4, 1), oma = c(1, 10, 2, 2))
+plot(rev(int_mat[,1]), seq(1:18), pch = 19, xlim = c(-0.6, 1.0), ylim = c(1, 18),
+     xlab = "Coefficients", ylab = "", yaxt = "n",
+     main = "Ordered logit", col = col_p)
+segments(rev(int_mat[,1]) - 1.96*rev(int_mat[,2]), seq(1:18),
+         rev(int_mat[,1]) + 1.96*rev(int_mat[,2]), seq(1:18), col = col_p)
+abline(v = 0, lty = 2)
+
+plot(rev(int_mat2[,1]), seq(1:18), pch = 19, xlim = c(-0.3, 0.3), ylim = c(1, 18),
+     xlab = "Coefficients", ylab = "", yaxt = "n",
+     main = "Linear regression", col = col_p)
+segments(rev(int_mat2[,1]) - 1.96*rev(int_mat2[,2]), seq(1:18),
+         rev(int_mat2[,1]) + 1.96*rev(int_mat2[,2]), seq(1:18), col = col_p)
+abline(v = 0, lty = 2)
+
+Axis(side = 2, at = seq(1:18), labels = rev(outcome_ref_name), las = 1, tick = 0,
+     outer  = TRUE, hadj = 0, line = 7.5)
+mtext(side = 3, at = 0.5, text = "Coefficients of Male x Single", cex = 1.5, font = 2, outer = TRUE)
+dev.off()
+
+# ######################################
+# Coefficients of Women's Role on Mate Competition
+# ######################################
+# Ordered Logit
+lm_l <- list()
+lm_out <- list()
+role_mat <- matrix(NA, nrow = 18, ncol = 2)
+for(i in 1:18){
+  control <- paste(outcome_ref[-i], collapse = "+")
+  for_i <- paste("as.factor(", outcome_ref[i], ")", "~ women_role + ", control, sep = "")
+  lm_l[[i]]  <- polr(for_i, data = dat_use, Hess = TRUE)
+  lm_out[[i]] <- summary(lm_l[[i]])$coef
+  role_mat[i, 1:2] <- summary(lm_l[[i]])$coef["women_role", 1:2]
+}
+rownames(role_mat) <- outcome_ref
+
+# OLS
+lm_l2 <- list()
+lm_out2 <- list()
+role_mat2 <- matrix(NA, nrow = 18, ncol = 2)
+for(i in 1:18){
+  control <- paste(outcome_ref[-i], collapse = "+")
+  for_i <- paste(outcome_ref[i], "~ women_role + ", control, sep = "")
+  lm_l2[[i]]  <- lm(for_i, data = dat_use)
+  lm_out2[[i]] <- summary(lm_l2[[i]])$coef
+  role_mat2[i, 1:2] <- summary(lm_l2[[i]])$coef["women_role", 1:2]
+}
+rownames(role_mat2) <- outcome_ref
+
+pdf("figure_D3_2.pdf", height = 6, width = 8)
+par(mfrow = c(1, 2), mar = c(4, 2, 4, 1), oma = c(1, 10, 2, 2))
+
+plot(rev(role_mat[,1]), seq(1:18), pch = 19, xlim = c(-0.3, 0.6), ylim = c(1, 18),
+     xlab = "Coefficients", ylab = "", yaxt = "n",
+     main = "Ordered logit", col = col_p)
+segments(rev(role_mat[,1]) - 1.96*rev(role_mat[,2]), seq(1:18),
+         rev(role_mat[,1]) + 1.96*rev(role_mat[,2]), seq(1:18), col = col_p)
+abline(v = 0, lty = 2)
+
+plot(rev(role_mat2[,1]), seq(1:18), pch = 19, xlim = c(-0.1, 0.15), ylim = c(1, 18),
+     xlab = "Coefficients", ylab = "", yaxt = "n",
+     main = "Linear regression", col = col_p)
+segments(rev(role_mat2[,1]) - 1.96*rev(role_mat2[,2]), seq(1:18),
+         rev(role_mat2[,1]) + 1.96*rev(role_mat2[,2]), seq(1:18), col = col_p)
+abline(v = 0, lty = 2)
+
+Axis(side = 2, at = seq(1:18), labels = rev(outcome_ref_name), las = 1, tick = 0,
+     outer  = TRUE, hadj = 0, line = 7.5)
+
+mtext(side = 3, at = 0.5, text = "Coefficients of Women's Role",
+      cex = 1.5, font = 2, outer = TRUE)
+dev.off()
+
+
+## ###################################
+## Appendix D4: Figure D.4.1 & D.4.2
+## ###################################
+# Replicate Figure 3 with Wave 1
+data.u1 <- dat[dat$wave == 1, ]
+
+data.u1$List.treat <- ifelse(data.u1$treatment_list == "Scenario 2", 1, 0)
+
+# Difference-in-Means (0.12618)
+# Message (hate_pol_message):
+# Attacks against refugee homes are sometimes necessary to make it clear to politicians that we have a refugee problem
+diff.in.means.results <- ictreg(outcome_list ~ 1, data = data.u1,
+                                treat = "List.treat", J = 3, method = "lm")
+summary(diff.in.means.results)
+
+data.u1$means_bin <- ifelse(data.u1$hate_violence_means >= 3, 1, 0)
+data.u1$condemn_bin <- ifelse(data.u1$hate_polcondemn >= 3, 1, 0)
+data.u1$justified_bin <- ifelse(data.u1$hate_justified >= 3, 1, 0)
+
+only.mean <- mean(data.u1$means_bin)
+condemn.mean <- mean(data.u1$condemn_bin)
+justified.mean <- mean(data.u1$justified_bin)
+
+only.se <- sd(data.u1$means_bin)/sqrt(length(data.u1$means_bin))
+condemn.se <- sd(data.u1$condemn_bin)/sqrt(length(data.u1$condemn_bin))
+justified.se <- sd(data.u1$justified_bin)/sqrt(length(data.u1$justified_bin))
+
+# plot different questions within the same wave
+point <- c(summary(diff.in.means.results)$par.treat, only.mean, condemn.mean, justified.mean)
+se_p  <- c(summary(diff.in.means.results)$se.treat,  only.se, condemn.se, justified.se)
+base <- barplot(point, ylim = c(0, 0.20))
+bar_name_u <- c("Message (List)", "Only Means", "Condemn", "Justified")
+bar_name <- rep("",4)
+
+# Figure D.4.1
+pdf("figure_D4_1.pdf", height = 4.5, width = 8)
+par(mar = c(4, 5, 2, 1))
+barplot(point, ylim = c(0, 0.3), names.arg = bar_name,
+        col = c(adjustcolor("red", 0.4), "gray", "gray", "gray"), cex.axis = 1.3)
+arrows(base[,1], point - 1.96*se_p, base[,1], point + 1.96*se_p,
+       lwd = 3, angle = 90, length = 0.05, code = 3,
+       col = c("red", "black", "black", "black"))
+mtext(bar_name_u[1], outer = FALSE, side = 1, at = base[1], cex = 1.2, line = 2.4)
+mtext(bar_name_u[2], outer = FALSE, side = 1, at = base[2], cex = 1.2, line = 2.4)
+mtext(bar_name_u[3], outer = FALSE, side = 1, at = base[3], cex = 1.2, line = 2.4)
+mtext(bar_name_u[4], outer = FALSE, side = 1, at = base[4], cex = 1.2, line = 2.4)
+text(x = base[1], y = 0.28, "Estimate from \nList Experiment", col = "red", font = 2)
+text(x = base[3], y = 0.28, "Direct Questions", font = 2)
+dev.off()
+
+## "Message" across Waves
+data.u1 <- dat[dat$wave == 1, ]
+data.u2 <- dat[dat$wave == 2, ]
+data.u3 <- dat[dat$wave == 3, ]
+data.u4 <- dat[dat$wave == 4, ]
+dat_all <- rbind(data.u1, data.u2, data.u3, data.u4)
+
+dat_all$hate_pol_message_bin <- ifelse(dat_all$hate_pol_message >=3, 1, 0)
+message_direct <- tapply(dat_all$hate_pol_message_bin, dat_all$wave, mean, na.rm = TRUE)[c(2,3,4)]
+message_direct_num <- tapply(dat_all$hate_pol_message_bin, dat_all$wave, function(x) sum(is.na(x)==FALSE))[c(2,3,4)]
+message_direct_se <- tapply(dat_all$hate_pol_message_bin, dat_all$wave, sd, na.rm = TRUE)[c(2,3,4)]/sqrt(message_direct_num)
+
+# plot The same question over time
+point <- c(summary(diff.in.means.results)$par.treat, message_direct)
+se_p  <- c(summary(diff.in.means.results)$se.treat, message_direct_se)
+base <- barplot(point, ylim = c(0, 0.20))
+bar_name_u <- c("Message \n(List)", "Message \n(Direct, Wave 2)",
+                "Message \n(Direct, Wave 3)", "Message \n(Direct, Wave 4)")
+bar_name <- rep("",4)
+
+# Figure D.4.2
+pdf("figure_D4_2.pdf", height = 4.5, width = 8)
+par(mar = c(4, 5, 2, 1))
+barplot(point, ylim = c(0, 0.25), names.arg = bar_name,
+        col = c(adjustcolor("red", 0.4), "gray", "gray", "gray"), cex.axis = 1.3,
+        ylab = "Proportion of respondents", cex.lab = 1.45)
+arrows(base[,1], point - 1.96*se_p, base[,1], point + 1.96*se_p,
+       lwd = 3, angle = 90, length = 0.05, code = 3,
+       col = c("red", "black", "black", "black"))
+mtext(bar_name_u[1], outer = FALSE, side = 1, at = base[1], cex = 1.2, line = 2.4)
+mtext(bar_name_u[2], outer = FALSE, side = 1, at = base[2], cex = 1.2, line = 2.4)
+mtext(bar_name_u[3], outer = FALSE, side = 1, at = base[3], cex = 1.2, line = 2.4)
+mtext(bar_name_u[4], outer = FALSE, side = 1, at = base[4], cex = 1.2, line = 2.4)
+text(x = base[1], y = 0.225, "Estimate from \nList Experiment", col = "red", font = 2)
+text(x = base[3], y = 0.225, "Direct Questions", font = 2)
+dev.off()
+
+
+# #############################
+# Appendix D5 Table D5
+# #############################
+formula.5 <-
+  as.character("hate_violence_means ~ MateComp.cont + JobComp.cont +
+               LifeSatis.cont +  factor(age_group) + factor(gender) +
+               factor(state) + factor(citizenship) + factor(marital) +
+               factor(religion) + eduyrs + factor(occupation) +
+               factor(income) + factor(household_size) + factor(self_econ) +
+               factor(ref_integrating) + factor(ref_citizenship) + factor(ref_reduce) +
+               factor(ref_moredone) + factor(ref_cultgiveup) +
+               factor(ref_economy) + factor(ref_crime) + factor(ref_terror)  +
+               factor(ref_loc_services) +  factor(ref_loc_economy) + factor(ref_loc_crime) +
+               factor(ref_loc_culture) + factor(ref_loc_islam) +
+               factor(ref_loc_schools) + factor(ref_loc_housing) + factor(ref_loc_wayoflife)")
+
+formula.6 <- paste(formula.5, "factor(distance_ref) + factor(settle_ref)",
+                   "lrscale + afd + muslim_ind + afd_ind + contact_ind",
+                   sep="+", collapse="+")
+
+# with Difference Outcomes
+# hate_pol_message : "82. Support for Hate Crime_Attacks against refugee homes are somet"
+# hate_prevent_settlement : "82. Support for Hate Crime_Racist violence is defensible if it lea"
+# hate_polcondemn : "82. Support for Hate Crime_Politicians should condemn attacks agai"
+# hate_justified: "82. Support for Hate Crime_Hostility against foreigners is sometimes justified"
+
+formula.7.means   <- paste("hate_violence_means ~ ", as.character(as.formula(formula.6))[3], sep = "")
+formula.7.message <- paste("hate_pol_message ~", as.character(as.formula(formula.6))[3], sep = "")
+formula.7.prevent <- paste("hate_prevent_settlement ~", as.character(as.formula(formula.6))[3], sep = "")
+formula.7.condemn <- paste("hate_polcondemn ~ ", as.character(as.formula(formula.6))[3], sep = "")
+formula.7.justified <- paste("hate_justified ~ ", as.character(as.formula(formula.6))[3], sep = "")
+
+# output
+lm7.means <- lm(as.formula(formula.7.means), data=dat_use)
+lm7.justified <- lm(as.formula(formula.7.justified), data=dat_use)
+lm7.message <- lm(as.formula(formula.7.message), data=dat_use)
+lm7.prevent <- lm(as.formula(formula.7.prevent), data=dat_use)
+lm7.condemn <- lm(as.formula(formula.7.condemn), data=dat_use)
+
+## Table D.5 (in Appendix D.5)
+lm.list_d <- list(lm7.means, lm7.justified, lm7.message, lm7.prevent, lm7.condemn)
+star_out(stargazer(lm.list_d,
+                   covariate.labels = c("Mate Competition","Job Competition","Life Satisfaction"),
+                   keep=c("MateComp.cont","JobComp.cont","LifeSatis.cont")),
+         name = "table_D5_1.tex")
+
+## ##################################
+## Table D.5.2 (appendix) with East/West
+## ##################################
+rm(list=ls())
+# Set the directly appropriately
+
+dat <- read.dta13(file =  "survey.dta")
+source("Help.R")
+
+# Subset to wave 4
+dat_use <- dat[dat$wave == 4, ]
+{
+  dat_use$west <- 1 - dat_use$east
+
+  #  remove state
+  formula.5_int <-
+    as.character("hate_violence_means ~ MateComp.cont*west + JobComp.cont +
+               LifeSatis.cont +  factor(age_group) + factor(gender) +
+               factor(citizenship) + factor(marital) +
+               factor(religion) + eduyrs + factor(occupation) +
+               factor(income) + factor(household_size) + factor(self_econ) +
+               factor(ref_integrating) + factor(ref_citizenship) + factor(ref_reduce) +
+               factor(ref_moredone) + factor(ref_cultgiveup) +
+               factor(ref_economy) + factor(ref_crime) + factor(ref_terror)  +
+               factor(ref_loc_services) +  factor(ref_loc_economy) + factor(ref_loc_crime) +
+               factor(ref_loc_culture) + factor(ref_loc_islam) +
+               factor(ref_loc_schools) + factor(ref_loc_housing) + factor(ref_loc_wayoflife)")
+
+  formula.6_int <- paste(formula.5_int, "factor(distance_ref) + factor(settle_ref)",
+                         "lrscale + afd + muslim_ind + afd_ind + contact_ind",
+                         sep="+", collapse="+")
+
+  ## Interaction with East/West
+  # with Difference Outcomes
+  # hate_pol_message: "82. Support for Hate Crime_Attacks against refugee homes are somet"
+  # hate_prevent_settlement: "82. Support for Hate Crime_Racist violence is defensible if it lea"
+  # hate_polcondemn: "82. Support for Hate Crime_Politicians should condemn attacks agai"
+  # hate_justified: "82. Support for Hate Crime_Hostility against foreigners is sometimes justified"
+
+  formula.7_int.means   <- paste("hate_violence_means ~ ",
+                                 as.character(as.formula(formula.6_int))[3], sep = "")
+  formula.7_int.message <- paste("hate_pol_message ~",
+                                 as.character(as.formula(formula.6_int))[3], sep = "")
+  formula.7_int.prevent <- paste("hate_prevent_settlement ~",
+                                 as.character(as.formula(formula.6_int))[3], sep = "")
+  formula.7_int.condemn <- paste("hate_polcondemn ~ ",
+                                 as.character(as.formula(formula.6_int))[3], sep = "")
+  formula.7_int.justified <- paste("hate_justified ~ ",
+                                   as.character(as.formula(formula.6_int))[3], sep = "")
+
+  # output
+  lm7_int.means <- lm(as.formula(formula.7_int.means), data = dat_use)
+  lm7_int.justified <- lm(as.formula(formula.7_int.justified), data=dat_use)
+  lm7_int.message <- lm(as.formula(formula.7_int.message), data=dat_use)
+  lm7_int.prevent <- lm(as.formula(formula.7_int.prevent), data=dat_use)
+  lm7_int.condemn <- lm(as.formula(formula.7_int.condemn), data=dat_use)
+
+  ## Table D.5.2 (in Appendix D.5)
+  lm.list_int <- list(lm7_int.means, lm7_int.justified, lm7_int.message, lm7_int.prevent, lm7_int.condemn)
+  star_out(stargazer(lm.list_int,
+                     covariate.labels = c("Mate Competition",
+                                          "West",
+                                          "Job Competition","Life Satisfaction",
+                                          "Mate Competition x West"),
+                     keep=c("MateComp.cont",  "west",
+                            "JobComp.cont","LifeSatis.cont",
+                            "MateComp.cont:west")),
+           name  = "table_D5_2.tex")
+}
+
+# ##########################################
+# Appendix D6: Replcate Results with Men
+# ##########################################
+rm(list=ls())
+# Set the directly appropriately
+
+dat <- read.dta13(file =  "survey.dta")
+source("Help.R")
+
+# Subset to wave 4
+dat_use <- dat[dat$wave == 4, ]
+dat_male <- dat_use[dat_use$gender == "Male",]
+dat_female <- dat_use[dat_use$gender == "Female",]
+
+# ##########################################
+# Table D.6.1: Replicate Main Models
+# ##########################################
+{
+  
+  lm1 <- lm(hate_violence_means ~ MateComp.cont, data=dat_male)
+  
+  lm2 <- lm(hate_violence_means ~ MateComp.cont + JobComp.cont + LifeSatis.cont, data=dat_male)
+  
+  lm3 <- lm(hate_violence_means ~ MateComp.cont + JobComp.cont + LifeSatis.cont + 
+              factor(age_group) +     # age group
+              factor(state) +     # state  
+              factor(citizenship) +    # german citizen
+              factor(marital) +    # marital status
+              factor(religion) +    # religious affiliation
+              eduyrs +    # education
+              factor(occupation) +    # main activity
+              factor(income) +   # income
+              factor(household_size) +   # household size
+              factor(self_econ),    # subjective social status
+            data=dat_male)
+  
+  lm4 <- lm(hate_violence_means ~ MateComp.cont + JobComp.cont + LifeSatis.cont + 
+              factor(age_group) +   # age group
+              factor(state) +   # state  
+              factor(citizenship) +  # german citizen
+              factor(marital) +  # marital status
+              factor(religion) +  # religious affiliation
+              eduyrs +  # education
+              factor(occupation) +  # main activity
+              factor(income) + # income
+              factor(household_size) + # household size
+              factor(self_econ) + # subjective social status
+              factor(ref_integrating) + # Refugee Index (National-level; Q73) 8 in total
+              factor(ref_citizenship) + factor(ref_reduce) + factor(ref_moredone) + factor(ref_cultgiveup) + 
+              factor(ref_economy) + factor(ref_crime) + factor(ref_terror),
+            data=dat_male)
+  
+  lm5 <- lm(hate_violence_means ~ MateComp.cont + JobComp.cont + LifeSatis.cont + 
+              factor(age_group) +      # age group
+              factor(state) +      # state  
+              factor(citizenship) +     # german citizen
+              factor(marital) +     # marital status
+              factor(religion) +     # religious affiliation
+              eduyrs + # education
+              factor(occupation) +     # main activity
+              factor(income) +    # income
+              factor(household_size) +    # household size
+              factor(self_econ) +    # subjective social status
+              factor(ref_integrating) + # Refugee Index (National-level; Q73) 8 in total
+              factor(ref_citizenship) + factor(ref_reduce) + factor(ref_moredone) + factor(ref_cultgiveup) + 
+              factor(ref_economy) + factor(ref_crime) + factor(ref_terror) + 
+              factor(ref_loc_services) +    # Refugee Index (Local, Q75)
+              factor(ref_loc_economy) + factor(ref_loc_crime) + factor(ref_loc_culture) + factor(ref_loc_islam) + 
+              factor(ref_loc_schools) + factor(ref_loc_housing) + factor(ref_loc_wayoflife), ## end
+            data=dat_male)
+  
+  
+  # Add More Variables 
+  # lrscale  Q21  Left-Right Scale
+  # afd, Q23  Closeness to AfD
+  # muslim_ind, afd_ind, contact_ind
+  # distance_ref Q71. Distance to refugee reception centers
+  # settle_ref Q72. Settlement of refugees living in area
+  
+  formula.5 <- 
+    as.character("hate_violence_means ~ MateComp.cont + JobComp.cont + 
+               LifeSatis.cont +  factor(age_group) + 
+               factor(state) + factor(citizenship) + factor(marital) + 
+               factor(religion) + eduyrs + factor(occupation) + 
+               factor(income) + factor(household_size) + factor(self_econ) + 
+               factor(ref_integrating) + factor(ref_citizenship) + factor(ref_reduce) + 
+               factor(ref_moredone) + factor(ref_cultgiveup) + 
+               factor(ref_economy) + factor(ref_crime) + factor(ref_terror)  + 
+               factor(ref_loc_services) +  factor(ref_loc_economy) + factor(ref_loc_crime) + 
+               factor(ref_loc_culture) + factor(ref_loc_islam) + 
+               factor(ref_loc_schools) + factor(ref_loc_housing) + factor(ref_loc_wayoflife)")
+  
+  formula.6 <- paste(formula.5, "factor(distance_ref) + factor(settle_ref)", 
+                     "lrscale + afd + muslim_ind + afd_ind + contact_ind", 
+                     sep="+", collapse="+") 
+  
+  lm6 <- lm(as.formula(formula.6), data=dat_male)
+}
+lm.list.table1 <- list(lm1, lm2, lm3, lm4, lm5, lm6)
+
+# Table D.6.1
+star_out(stargazer(lm.list.table1,
+                   covariate.labels = c("Mate Competition","Job Competition","Life Satisfaction"),
+                   keep=c("MateComp.cont","JobComp.cont","LifeSatis.cont")), 
+         name = "table_D6_1.tex")
+
+## ###############################################
+## Figure D.6.2: Replicating Figure 4 (with Male)
+## ###############################################
+# with Difference Outcomes
+# hate_pol_message: "82. Support for Hate Crime_Attacks against refugee homes are somet"
+# hate_prevent_settlement: "82. Support for Hate Crime_Racist violence is defensible if it lea"
+# hate_polcondemn: "82. Support for Hate Crime_Politicians should condemn attacks agai"
+# hate_justified: "82. Support for Hate Crime_Hostility against foreigners is sometimes justified"
+
+# without gender
+formula.5 <- 
+  as.character("hate_violence_means ~ MateComp.cont + JobComp.cont + 
+               LifeSatis.cont +  factor(age_group) + 
+               factor(state) + factor(citizenship) + factor(marital) + 
+               factor(religion) + eduyrs + factor(occupation) + 
+               factor(income) + factor(household_size) + factor(self_econ) + 
+               factor(ref_integrating) + factor(ref_citizenship) + factor(ref_reduce) + 
+               factor(ref_moredone) + factor(ref_cultgiveup) + 
+               factor(ref_economy) + factor(ref_crime) + factor(ref_terror)  + 
+               factor(ref_loc_services) +  factor(ref_loc_economy) + factor(ref_loc_crime) + 
+               factor(ref_loc_culture) + factor(ref_loc_islam) + 
+               factor(ref_loc_schools) + factor(ref_loc_housing) + factor(ref_loc_wayoflife)")
+
+formula.6 <- paste(formula.5, "factor(distance_ref) + factor(settle_ref)", 
+                   "lrscale + afd + muslim_ind + afd_ind + contact_ind", 
+                   sep="+", collapse="+") 
+
+formula.7.means   <- paste("hate_violence_means ~ ", as.character(as.formula(formula.6))[3], sep = "")
+formula.7.message <- paste("hate_pol_message ~", as.character(as.formula(formula.6))[3], sep = "")
+formula.7.prevent <- paste("hate_prevent_settlement ~", as.character(as.formula(formula.6))[3], sep = "")
+formula.7.condemn <- paste("hate_polcondemn ~ ", as.character(as.formula(formula.6))[3], sep = "")
+formula.7.justified <- paste("hate_justified ~ ", as.character(as.formula(formula.6))[3], sep = "")
+
+# output
+lm7.means <- lm(as.formula(formula.7.means), data=dat_male)
+lm7.justified <- lm(as.formula(formula.7.justified), data=dat_male)
+lm7.message <- lm(as.formula(formula.7.message), data=dat_male)
+lm7.prevent <- lm(as.formula(formula.7.prevent), data=dat_male)
+lm7.condemn <- lm(as.formula(formula.7.condemn), data=dat_male)
+
+point <- c(coef(lm7.means)["MateComp.cont"],
+           coef(lm7.justified)["MateComp.cont"], coef(lm7.message)["MateComp.cont"],
+           coef(lm7.prevent)["MateComp.cont"], coef(lm7.condemn)["MateComp.cont"])
+
+se <- c(summary(lm7.means)$coef["MateComp.cont", 2],
+        summary(lm7.justified)$coef["MateComp.cont", 2], summary(lm7.message)$coef["MateComp.cont", 2],
+        summary(lm7.prevent)$coef["MateComp.cont", 2], summary(lm7.condemn)$coef["MateComp.cont", 2])
+
+
+pdf("figure_D6_2.pdf", height = 4, width = 8)
+par(mar = c(2,4,4,1))
+plot(seq(1:5), point, pch = 19, ylim = c(-0.05, 0.25), xlim = c(0.5, 5.5),
+     xlab = "", xaxt = "n", ylab = "Estimated Effects",
+     main = "Estimated Effects of Mate Competition (among male)", cex.lab = 1.25, cex.axis = 1.25, cex.main = 1.5)
+segments(seq(1:5), point - 1.96*se,
+         seq(1:5), point + 1.96*se, lwd = 2)
+Axis(side=1, at = seq(1:5), labels = c("Only Means", "Justified", "Message",
+                                       "Prevent", "Condemn"), cex.axis = 1.25)
+abline(h =0, lty = 2)
+dev.off()
+
+## Table D.6.3
+lm.list_d_m <- list(lm7.means, lm7.justified, lm7.message, lm7.prevent, lm7.condemn)
+star_out(stargazer(lm.list_d_m,
+                   covariate.labels = c("Mate Competition","Job Competition","Life Satisfaction"),
+                   keep=c("MateComp.cont","JobComp.cont","LifeSatis.cont")),
+         name  = "table_D6_3.tex")
+
+# ##########################################
+# Appendix D8, Table D8: YouGov analysis
+# ##########################################
+rm(list=ls())
+you_data <- read.dta13(file  = "YouGov.dta")
+source("Help.R")
+
+## (1) Main Regression
+lm1 <- lm(hate_cont ~ mate_compete +
+            age + # age
+            gender +  # gender
+            factor(sta) +  #state
+            factor(mstat) +  # Marital Status
+            reli + # religion
+            educ_aggr_rec  + # education
+            hinc +  # income
+            housz + # household size
+            pol_leftright, # leftright scale
+          data = you_data)
+summary(lm1)
+
+## (2) + Aggression Score
+lm2 <- lm(hate_cont ~
+            mate_compete +
+            age + # age
+            gender +  # gender
+            factor(sta) +  #state
+            factor(mstat) +  # Marital Status
+            reli + # religion
+            educ_aggr_rec  + # education
+            hinc +  # income
+            housz + # household size
+            pol_leftright + # leftright scale
+            angry_mean, # aggression score
+          data = you_data)
+summary(lm2)
+
+## (3) + Refugee Index
+lm3 <- lm(hate_cont ~
+            mate_compete +
+            age + # age
+            gender +  # gender
+            factor(sta) +  #state
+            factor(mstat) +  # Marital Status
+            reli + # religion
+            educ_aggr_rec  + # education
+            hinc +  # income
+            housz + # household size
+            pol_leftright + # leftright scale
+            angry_mean + # aggression score
+            ref_loc_services + ref_loc_economy + ref_loc_crime + ## Refugee Questions (9 Questions)
+            ref_loc_culture + ref_loc_islam + ref_local_job +
+            ref_loc_schools + ref_loc_housing + ref_loc_wayoflife,
+          data = you_data)
+summary(lm3)
+
+## (4) + Refugee Contact
+lm4 <- lm(hate_cont ~
+            mate_compete +
+            age + # age
+            gender +  # gender
+            factor(sta) +  #state
+            factor(mstat) +  # Marital Status
+            reli + # religion
+            educ_aggr_rec  + # education
+            hinc +  # income
+            housz + # household size
+            pol_leftright + # leftright scale
+            angry_mean + # aggression score
+            ref_loc_services + ref_loc_economy + ref_loc_crime + ## Refugee Questions (9 Questions)
+            ref_loc_culture + ref_loc_islam + ref_local_job +
+            ref_loc_schools + ref_loc_housing + ref_loc_wayoflife +
+            see_ref_road + see_ref_store + see_ref_center + ## Refugee Contact (5 Questions)
+            see_ref_school + see_ref_work,
+          data = you_data)
+summary(lm4)
+
+## (5) + AfD Score
+lm5 <- lm(hate_cont ~
+            mate_compete +
+            age + # age
+            gender +  # gender
+            factor(sta) +  #state
+            factor(mstat) +  # Marital Status
+            reli + # religion
+            educ_aggr_rec  + # education
+            hinc +  # income
+            housz + # household size
+            pol_leftright + # leftright scale
+            angry_mean + # aggression score
+            ref_loc_services + ref_loc_economy + ref_loc_crime + ## Refugee Questions (9 Questions)
+            ref_loc_culture + ref_loc_islam + ref_local_job +
+            ref_loc_schools + ref_loc_housing + ref_loc_wayoflife +
+            see_ref_road + see_ref_store + see_ref_center + ## Refugee Contact (5 Questions)
+            see_ref_school + see_ref_work +
+            afd.score, # Closeness to AfD
+          data = you_data)
+summary(lm5)
+
+star_out(stargazer(list(lm1, lm2, lm3, lm4, lm5),
+          covariate.labels = c("Mate Competition", "Aggressiveness"), keep=c("mate_compete", "angry_mean")),
+         name = "table_D8_1.tex")
+
+
+rm(list=ls())
+you_data <- read.dta13(file  = "YouGov.dta")
+you_male <- you_data[you_data$gender == levels(you_data$gender)[1], ]
+source("Help.R")
+
+{
+  ## (1) Main Regression 
+  lm1 <- lm(hate_cont ~ mate_compete + 
+              age + # age 
+              factor(sta) +  #state 
+              factor(mstat) +  # Marital Status
+              reli + # religion 
+              educ_aggr_rec  + # education 
+              hinc +  # income 
+              housz + # household size 
+              pol_leftright, # leftright scale
+            data = you_male)
+  
+  ## (2) + Aggression Score 
+  lm2 <- lm(hate_cont ~ 
+              mate_compete + 
+              age + # age 
+              factor(sta) +  #state 
+              factor(mstat) +  # Marital Status
+              reli + # religion 
+              educ_aggr_rec  + # education 
+              hinc +  # income 
+              housz + # household size 
+              pol_leftright + # leftright scale
+              angry_mean, # aggression score 
+            data = you_male)
+  
+  ## (3) + Refugee Index
+  lm3 <- lm(hate_cont ~ 
+              mate_compete + 
+              age + # age 
+              factor(sta) +  #state 
+              factor(mstat) +  # Marital Status
+              reli + # religion 
+              educ_aggr_rec  + # education 
+              hinc +  # income 
+              housz + # household size 
+              pol_leftright + # leftright scale
+              angry_mean + # aggression score 
+              ref_loc_services + ref_loc_economy + ref_loc_crime + ## Refugee Questions (9 Questions)
+              ref_loc_culture + ref_loc_islam + ref_local_job +
+              ref_loc_schools + ref_loc_housing + ref_loc_wayoflife, 
+            data = you_male)
+  summary(lm3)
+  
+  ## (4) + Refugee Contact 
+  lm4 <- lm(hate_cont ~ 
+              mate_compete + 
+              age + # age 
+              # gender +  # gender 
+              factor(sta) +  #state 
+              factor(mstat) +  # Marital Status
+              reli + # religion 
+              educ_aggr_rec  + # education 
+              hinc +  # income 
+              housz + # household size 
+              pol_leftright + # leftright scale
+              angry_mean + # aggression score 
+              ref_loc_services + ref_loc_economy + ref_loc_crime + ## Refugee Questions (9 Questions)
+              ref_loc_culture + ref_loc_islam + ref_local_job +
+              ref_loc_schools + ref_loc_housing + ref_loc_wayoflife +
+              see_ref_road + see_ref_store + see_ref_center + ## Refugee Contact (5 Questions)
+              see_ref_school + see_ref_work, 
+            data = you_male)
+  summary(lm4)
+  
+  ## (5) + AfD Score 
+  lm5 <- lm(hate_cont ~ 
+              mate_compete + 
+              age + # age 
+              # gender +  # gender 
+              factor(sta) +  #state 
+              factor(mstat) +  # Marital Status
+              reli + # religion 
+              educ_aggr_rec  + # education 
+              hinc +  # income 
+              housz + # household size 
+              pol_leftright + # leftright scale
+              angry_mean + # aggression score 
+              ref_loc_services + ref_loc_economy + ref_loc_crime + ## Refugee Questions (9 Questions)
+              ref_loc_culture + ref_loc_islam + ref_local_job +
+              ref_loc_schools + ref_loc_housing + ref_loc_wayoflife +
+              see_ref_road + see_ref_store + see_ref_center + ## Refugee Contact (5 Questions)
+              see_ref_school + see_ref_work + 
+              afd.score, # Closeness to AfD
+            data = you_male)
+  summary(lm5)
+}
+
+star_out(stargazer(list(lm1, lm2, lm3, lm4, lm5),
+                   covariate.labels = c("Mate Competition", "Aggressiveness"), 
+                   keep=c("mate_compete", "angry_mean")),
+         name = "table_D8_2.tex")
+
+```
+
+### `SurveyAnalysis_Main.R`
+```r
+# Replication File for Survey Analysis  
+# Figure 2: Individuals Living in Municipalities with a Higher Degree ofExcess MalesPerceiveMore Mate Competition
+# Figure 3: List Experiment
+# Table 1: Mate Competition Predicts Support for Hate Crime
+# Figure 4: Estimated Effects of Mate Competition on Support for Hate Crimes
+
+# R version 4.0.2 (2020-06-22)
+
+# ##################
+# Data Preparation  
+# ##################
+rm(list=ls())
+# Set the directly appropriately
+
+# install.packages("readstata13")  #  readstata13_0.9.2
+# install.packages("MASS") # MASS_7.3-51.6  
+# install.packages("sandwich")  # sandwich_2.5-1 
+# install.packages("lmtest") # lmtest_0.9-37 
+# install.packages("pBrackets") # pBrackets_1.0  
+# install.packages("stargazer") # stargazer_5.2.2
+
+
+require(readstata13)  #  readstata13_0.9.2
+require(MASS) # MASS_7.3-51.6  
+require(sandwich)  # sandwich_2.5-1 
+require(lmtest) # lmtest_0.9-37  
+require(pBrackets) # pBrackets_1.0  
+require(stargazer) # stargazer_5.2.2
+source("Help.R")
+
+dat <- read.dta13(file =  "survey.dta")
+
+# Subset to people in the wave 4
+dat_use <- dat[dat$wave == 4, ]
+
+# #######################
+# Figure 2
+# #######################
+# Prepare Two data sets
+dat_male <- dat_use[dat_use$gender == "Male" & dat_use$age <= 44 & dat_use$age >= 18, ]
+dat_male_y <- dat_use[dat_use$gender == "Male" & dat_use$age <= 40 & dat_use$age >= 30, ]
+
+# Overall Samples 
+dat_use$MateComp.cont_bin <- ifelse(dat_use$MateComp.cont >= 3, 1, 0)
+dat_use$excess_c <- ifelse(dat_use$pop_15_44_muni_gendergap_2015 < 1.04, "1", 
+                           ifelse(dat_use$pop_15_44_muni_gendergap_2015 < 1.12, "2", "3"))
+mean_all <- tapply(dat_use$MateComp.cont_bin, dat_use$excess_c, mean)
+se_all <- tapply(dat_use$MateComp.cont_bin, dat_use$excess_c, sd)/sqrt(table(dat_use$excess_c))
+
+# Male (18 - 44)
+dat_male$MateComp.cont_bin <- ifelse(dat_male$MateComp.cont >= 3, 1, 0)
+dat_male$excess_c <- ifelse(dat_male$pop_15_44_muni_gendergap_2015 < 1.04, "1", 
+                            ifelse(dat_male$pop_15_44_muni_gendergap_2015 < 1.12, "2", "3"))
+mean_all_m <- tapply(dat_male$MateComp.cont_bin, dat_male$excess_c, mean)
+se_all_m <- tapply(dat_male$MateComp.cont_bin, dat_male$excess_c, sd)/sqrt(table(dat_male$excess_c))
+
+# Male (30 - 40)
+dat_male_y$MateComp.cont_bin <- ifelse(dat_male_y$MateComp.cont >= 3, 1, 0)
+dat_male_y$excess_c <- ifelse(dat_male_y$pop_15_44_muni_gendergap_2015 < 1.04, "1", 
+                              ifelse(dat_male_y$pop_15_44_muni_gendergap_2015 < 1.12, "2", "3"))
+mean_all_y <- tapply(dat_male_y$MateComp.cont_bin, dat_male_y$excess_c, mean)
+se_all_y <- tapply(dat_male_y$MateComp.cont_bin, dat_male_y$excess_c, sd)/sqrt(table(dat_male_y$excess_c))
+
+
+mean_all ## 0.1835004 0.1970803 0.2244489 
+mean_all_m ## 0.2282609 0.2745902 0.3750000 
+mean_all_y ## 0.1743119 0.2818182 0.4705882 
+
+{
+  diff <- c(mean_all[2] - mean_all[1], 
+            mean_all[3] - mean_all[2],  
+            mean_all[3] - mean_all[1])
+  sd_d <- c(sqrt(se_all[2]^2 + se_all[1]^2), 
+            sqrt(se_all[3]^2 + se_all[2]^2),  
+            sqrt(se_all[3]^2 + se_all[1]^2))
+  diff_m <- c(mean_all_m[2] - mean_all_m[1], 
+              mean_all_m[3] - mean_all_m[2],  
+              mean_all_m[3] - mean_all_m[1])
+  sd_d_m <- c(sqrt(se_all_m[2]^2 + se_all_m[1]^2), 
+              sqrt(se_all_m[3]^2 + se_all_m[2]^2),  
+              sqrt(se_all_m[3]^2 + se_all_m[1]^2))
+  diff_y <- c(mean_all_y[2] - mean_all_y[1], 
+              mean_all_y[3] - mean_all_y[2],  
+              mean_all_y[3] - mean_all_y[1])
+  sd_d_y <- c(sqrt(se_all_y[2]^2 + se_all_y[1]^2), 
+              sqrt(se_all_y[3]^2 + se_all_y[2]^2),  
+              sqrt(se_all_y[3]^2 + se_all_y[1]^2))
+  
+  
+  diff_l <- c(diff, diff_m, diff_y)
+  se_l <- c(sd_d, sd_d_m, sd_d_y)
+  p_value <- 2*(1 - pnorm(abs(diff_l/se_l)))
+  diff_table <- cbind(diff_l, se_l, p_value)
+}
+
+pdf("figure_2.pdf", height= 15.5, width = 6.5)
+par(mfrow = c(3, 1), mar = c(6,5,5,2), oma = c(0,4,0,0))
+plot(seq(1:3), mean_all, pch = 19, ylim = c(0.1,0.4), 
+     xlim = c(0.5, 3.5),
+     main = "All", xaxt = "n", xlab = "", ylab = "", 
+     cex.axis = 2.25, cex.main = 2.5, yaxt  = "n",
+     cex = 2.25, cex.lab = 2.5)
+segments(seq(1:3), mean_all - 1.96*se_all, 
+         seq(1:3), mean_all + 1.96*se_all, pch = 19, lwd = 3)
+Axis(side = 1, at = c(1,2,3), labels = c("1st tercile", "2nd tercile", "3rd tercile"), cex.axis = 2.25)
+Axis(side = 2, at = c(0.1,0.2,0.3, 0.4), labels = c("0.1", "0.2", "0.3", "0.4"), cex.axis = 2.25)
+brackets(x1 = 1.1, y1  = 0.3, x2 = 1.9, y2 =  0.3, h = 0.01, type = 4)
+brackets(x1 = 2.1, y1  = 0.3, x2 = 2.9, y2 =  0.3, h = 0.01, type =  4)
+brackets(x1 = 1, y1  = 0.37, x2 = 3, y2 =  0.37, h = 0.01, type =  4)
+# text(x = 1.5, y = 0.33, paste0("pv = ", round(p_value[1],digits=3)), cex = 1.95)
+text(x = 1.5, y = 0.33, paste0("pv = 0.40"), cex = 1.95)
+text(x = 2.5, y = 0.33, paste0("pv = ", round(p_value[2],2)), cex = 1.95)
+text(x = 2, y = 0.40, paste0("pv = ", round(p_value[3],2)), cex = 1.95)
+mtext("Excess Males", side = 1, cex = 1.75, line = 3.75)
+mtext("Proportion Perceiving\nMate Competition", side = 2, cex = 1.75, line = 3.75)
+
+plot(seq(1:3), mean_all_m, pch = 19, ylim = c(0.1,0.6),
+     xlim = c(0.5, 3.5),
+     main = "Male (18-44)", xaxt = "n", xlab = "", ylab = "", cex.axis = 2.25, cex.main = 2.5,
+     cex = 2.25, cex.lab = 2.5)
+segments(seq(1:3), mean_all_m - 1.96*se_all_m, 
+         seq(1:3), mean_all_m + 1.96*se_all_m, pch = 19, lwd = 3)
+Axis(side = 1, at = c(1,2,3), labels = c("1st tercile", "2nd tercile", "3rd tercile"), cex.axis = 2.25)
+brackets(x1 = 1.1, y1  = 0.48, x2 = 1.9, y2 =  0.48, h = 0.01, type = 4)
+brackets(x1 = 2.1, y1  = 0.48, x2 = 2.9, y2 =  0.48, h = 0.01, type =  4)
+brackets(x1 = 1, y1  = 0.53, x2 = 3, y2 =  0.53, h = 0.03, type =  4)
+text(x = 1.5, y = 0.51, paste0("pv = ", round(p_value[4],2)), cex = 1.95)
+text(x = 2.5, y = 0.51, paste0("pv = ", round(p_value[5],2)), cex = 1.95)
+# text(x = 2, y = 0.58, paste0("pv = ", round(p_value[6],2)), cex = 1.95)
+text(x = 2, y = 0.58, paste0("pv = 0.00"), cex = 1.95)
+mtext("Excess Males", side = 1, cex = 1.75, line = 3.75)
+mtext("Proportion Perceiving\nMate Competition", side = 2, cex = 1.75, line = 3.75)
+
+
+plot(seq(1:3), mean_all_y, pch = 19, ylim = c(0.1,0.75),
+     xlim = c(0.5, 3.5),
+     main = "Male (30 - 40)", xaxt = "n", xlab = "", ylab = "", cex.axis = 2.25, cex.main = 2.5,
+     cex = 2.25, cex.lab = 2.5)
+segments(seq(1:3), mean_all_y - 1.96*se_all_y, 
+         seq(1:3), mean_all_y + 1.96*se_all_y, pch = 19, lwd = 3)
+Axis(side = 1, at = c(1,2,3), labels = c("1st tercile", "2nd tercile", "3rd tercile"), cex.axis = 2.25)
+brackets(x1 = 1.1, y1  = 0.62, x2 = 1.9, y2 =  0.62, h = 0.03, type = 4)
+brackets(x1 = 2.1, y1  = 0.62, x2 = 2.9, y2 =  0.62, h = 0.03, type =  4)
+brackets(x1 = 1, y1  = 0.7, x2 = 3, y2 =  0.7, h = 0.03, type =  4)
+text(x = 1.5, y = 0.67, paste0("pv = ", round(p_value[7],2)),cex = 1.95)
+text(x = 2.5, y = 0.67, paste0("pv = ", round(p_value[8],2)), cex = 1.95)
+text(x = 2, y = 0.75, paste0("pv = 0.00"), cex = 1.95)
+# text(x = 2, y = 0.75, paste0("pv = ", round(p_value[9],3)))
+mtext("Excess Males", side = 1, cex = 1.75, line = 3.75)
+mtext("Proportion Perceiving\nMate Competition", side = 2, cex = 1.75, line = 3.75)
+
+dev.off()
+
+# ############################
+# Main Models (Table 1)
+# ############################
+lm1 <- lm(hate_violence_means ~ MateComp.cont, data=dat_use)
+summary(lm1)
+
+lm2 <- lm(hate_violence_means ~ MateComp.cont + JobComp.cont + LifeSatis.cont, data=dat_use)
+summary(lm2)
+
+lm3 <- lm(hate_violence_means ~ MateComp.cont + JobComp.cont + LifeSatis.cont + 
+            factor(age_group) +     # age group
+            factor(gender) +     # gender 
+            factor(state) +     # state  
+            factor(citizenship) +    # german citizen
+            factor(marital) +    # marital status
+            factor(religion) +    # religious affiliation
+            eduyrs +    # education
+            factor(occupation) +    # main activity
+            factor(income) +   # income
+            factor(household_size) +   # household size
+            factor(self_econ),    # subjective social status
+          data=dat_use)
+summary(lm3)
+
+lm4 <- lm(hate_violence_means ~ MateComp.cont + JobComp.cont + LifeSatis.cont + 
+            factor(age_group) +   # age group
+            factor(gender) +   # gender 
+            factor(state) +   # state  
+            factor(citizenship) +  # german citizen
+            factor(marital) +  # marital status
+            factor(religion) +  # religious affiliation
+            eduyrs +  # education
+            factor(occupation) +  # main activity
+            factor(income) + # income
+            factor(household_size) + # household size
+            factor(self_econ) + # subjective social status
+            factor(ref_integrating) + # Refugee Index (National-level; Q73) 8 in total
+            factor(ref_citizenship) + factor(ref_reduce) + factor(ref_moredone) + factor(ref_cultgiveup) + 
+            factor(ref_economy) + factor(ref_crime) + factor(ref_terror),
+          data=dat_use)
+summary(lm4)
+
+lm5 <- lm(hate_violence_means ~ MateComp.cont + JobComp.cont + LifeSatis.cont + 
+            factor(age_group) +      # age group
+            factor(gender) +      # gender 
+            factor(state) +      # state  
+            factor(citizenship) +     # german citizen
+            factor(marital) +     # marital status
+            factor(religion) +     # religious affiliation
+            eduyrs + # education
+            factor(occupation) +     # main activity
+            factor(income) +    # income
+            factor(household_size) +    # household size
+            factor(self_econ) +    # subjective social status
+            factor(ref_integrating) + # Refugee Index (National-level; Q73) 8 in total
+            factor(ref_citizenship) + factor(ref_reduce) + factor(ref_moredone) + factor(ref_cultgiveup) + 
+            factor(ref_economy) + factor(ref_crime) + factor(ref_terror) + 
+            factor(ref_loc_services) +    # Refugee Index (Local, Q75)
+            factor(ref_loc_economy) + factor(ref_loc_crime) + factor(ref_loc_culture) + factor(ref_loc_islam) + 
+            factor(ref_loc_schools) + factor(ref_loc_housing) + factor(ref_loc_wayoflife), ## end
+          data=dat_use)
+summary(lm5)
+
+
+# Add More Variables 
+# lrscale  Q21  Left-Right Scale
+# afd, Q23  Closeness to AfD
+# muslim_ind, afd_ind, contact_ind
+# distance_ref Q71. Distance to refugee reception centers
+# settle_ref Q72. Settlement of refugees living in area
+
+formula.5 <- 
+  as.character("hate_violence_means ~ MateComp.cont + JobComp.cont + 
+               LifeSatis.cont +  factor(age_group) + factor(gender) + 
+               factor(state) + factor(citizenship) + factor(marital) + 
+               factor(religion) + eduyrs + factor(occupation) + 
+               factor(income) + factor(household_size) + factor(self_econ) + 
+               factor(ref_integrating) + factor(ref_citizenship) + factor(ref_reduce) + 
+               factor(ref_moredone) + factor(ref_cultgiveup) + 
+               factor(ref_economy) + factor(ref_crime) + factor(ref_terror)  + 
+               factor(ref_loc_services) +  factor(ref_loc_economy) + factor(ref_loc_crime) + 
+               factor(ref_loc_culture) + factor(ref_loc_islam) + 
+               factor(ref_loc_schools) + factor(ref_loc_housing) + factor(ref_loc_wayoflife)")
+
+formula.6 <- paste(formula.5, "factor(distance_ref) + factor(settle_ref)", 
+                   "lrscale + afd + muslim_ind + afd_ind + contact_ind", 
+                   sep="+", collapse="+") 
+
+lm6 <- lm(as.formula(formula.6), data=dat_use)
+summary(lm6)
+
+lm.list.table1 <- list(lm1, lm2, lm3, lm4, lm5, lm6)
+
+# Table 1
+star_out(stargazer(lm.list.table1,
+                   covariate.labels = c("Mate Competition","Job Competition","Life Satisfaction"),
+                   keep=c("MateComp.cont","JobComp.cont","LifeSatis.cont"),
+                   star.char = c("\\dagger", "*", "**"),
+                   notes = c("$^{\\dagger}$ p$<$0.1; $^{*}$ p$<$0.05; $^{**}$ p$<$0.01"), notes.append = FALSE), 
+         name = "table1.tex")
+
+## #################
+## Figure 4
+## #################
+# with Difference Outcomes 
+# hate_pol_message (v_320): "82. Support for Hate Crime_Attacks against refugee homes are somet" 
+# hate_prevent_settlement (v_319): "82. Support for Hate Crime_Racist violence is defensible if it lea"
+# hate_polcondemn (v_316): "82. Support for Hate Crime_Politicians should condemn attacks agai" 
+# hate_justified (v_315): "82. Support for Hate Crime_Hostility against foreigners is sometimes justified" 
+
+formula.7.means   <- paste("hate_violence_means ~ ", as.character(as.formula(formula.6))[3], sep = "")
+formula.7.message <- paste("hate_pol_message ~", as.character(as.formula(formula.6))[3], sep = "")
+formula.7.prevent <- paste("hate_prevent_settlement ~", as.character(as.formula(formula.6))[3], sep = "")
+formula.7.condemn <- paste("hate_polcondemn ~ ", as.character(as.formula(formula.6))[3], sep = "")
+formula.7.justified <- paste("hate_justified ~ ", as.character(as.formula(formula.6))[3], sep = "")
+
+# output
+lm7.means <- lm(as.formula(formula.7.means), data=dat_use)
+lm7.justified <- lm(as.formula(formula.7.justified), data=dat_use)
+lm7.message <- lm(as.formula(formula.7.message), data=dat_use)
+lm7.prevent <- lm(as.formula(formula.7.prevent), data=dat_use)
+lm7.condemn <- lm(as.formula(formula.7.condemn), data=dat_use)
+
+# Figure 5
+point <- c(coef(lm7.means)["MateComp.cont"],
+           coef(lm7.justified)["MateComp.cont"], coef(lm7.message)["MateComp.cont"], 
+           coef(lm7.prevent)["MateComp.cont"], coef(lm7.condemn)["MateComp.cont"])
+
+se <- c(summary(lm7.means)$coef["MateComp.cont", 2],
+        summary(lm7.justified)$coef["MateComp.cont", 2], summary(lm7.message)$coef["MateComp.cont", 2],
+        summary(lm7.prevent)$coef["MateComp.cont", 2], summary(lm7.condemn)$coef["MateComp.cont", 2])
+
+
+pdf("figure_4.pdf", height = 4, width = 8)
+par(mar = c(2,4,4,1))
+plot(seq(1:5), point, pch = 19, ylim = c(-0.05, 0.25), xlim = c(0.5, 5.5), 
+     xlab = "", xaxt = "n", ylab = "Estimated Effects", 
+     main = "Estimated Effects of Mate Competition", cex.lab = 1.25, cex.axis = 1.25, cex.main = 1.5)
+segments(seq(1:5), point - 1.96*se, 
+         seq(1:5), point + 1.96*se, lwd = 2)
+Axis(side=1, at = seq(1:5), labels = c("Only Means", "Justified", "Message", 
+                                       "Prevent", "Condemn"), cex.axis = 1.25)
+abline(h =0, lty = 2)
+dev.off()
+
+## Table C.5 (in Appendix C.5)
+# lm.list_d <- list(lm7.means, lm7.justified, lm7.message, lm7.prevent, lm7.condemn)
+# stargazer(lm.list_d,
+#           covariate.labels = c("Mate Competition","Job Competition","Life Satisfaction"),
+#           keep=c("MateComp.cont","JobComp.cont","LifeSatis.cont"))
+
+
+## #############################
+## Figure 3: List Experiment
+## #############################
+rm(list=ls())
+# install.packages("readstata13")  #  readstata13_0.9.2
+# install.packages("MASS") # MASS_7.3-51.6  
+# install.packages("sandwich")  # sandwich_2.5-1 
+# install.packages("lmtest") # lmtest_0.9-37 
+# install.packages("list") # list_9.2 
+
+require(readstata13)  #  readstata13_0.9.2
+require(MASS) # MASS_7.3-51.6  
+require(sandwich)  # sandwich_2.5-1 
+require(lmtest) # lmtest_0.9-37  
+require(list) # list_9.2 
+
+dat <- read.dta13(file =  "survey.dta")
+data.u2 <- dat[dat$wave == 2, ]
+
+# Means: When it comes to the refugee problem, violence is sometimes the only means that citizens have to get the attention of German politicians
+data.list.u2   <- data.u2[data.u2$list == "1",]
+data.direct.u2 <- data.u2[data.u2$list == "2",]
+data.list.u2 <- data.list.u2[is.na(data.list.u2$treatment_list)==FALSE,]
+data.list.u2$List.treat <- ifelse(data.list.u2$treatment_list == "Scenario 2", 1, 0)
+
+## Difference-in-Means
+## with Mean = 0.15401 sd = 0.03358
+diff.in.means.results2 <- ictreg(outcome_list ~ 1, data = data.list.u2,
+                                 treat = "List.treat", J=3, method = "lm")
+summary(diff.in.means.results2)
+
+## Compare to All People who answered Direct Question (n = 2170)
+data.u2.all.direct <- data.u2[is.na(data.u2$hate_violence_means) == FALSE, ]
+data.u2.all.direct$hate.direct.bin <- ifelse(data.u2.all.direct$hate_violence_means >=3, 1, 0)
+point_dir2 <- mean(data.u2.all.direct$hate.direct.bin) ## 0.181 
+se_dir2 <- sd(data.u2.all.direct$hate.direct.bin)/sqrt(length(data.u2.all.direct$hate.direct.bin)) # 0.0083
+
+# Compare Questions within Wave 2 
+# Direct Questions
+data.u2$message.bin <- ifelse(data.u2$hate_pol_message >= 3, 1, 0)
+data.u2$condemn.bin <- ifelse(data.u2$hate_polcondemn >= 3, 1, 0)
+data.u2$justified.bin <- ifelse(data.u2$hate_justified >= 3, 1, 0)
+
+message.mean2 <- mean(data.u2$message.bin)
+condemn.mean2 <- mean(data.u2$condemn.bin)
+justified.mean2 <- mean(data.u2$justified.bin)
+message.se2 <- sd(data.u2$message.bin)/sqrt(length(data.u2$message.bin)) # 0.0070
+condemn.se2 <- sd(data.u2$condemn.bin)/sqrt(length(data.u2$condemn.bin)) # 0.0079
+justified.se2 <- sd(data.u2$justified.bin)/sqrt(length(data.u2$justified.bin)) # 0.0074
+
+# plot
+point <- c(summary(diff.in.means.results2)$par.treat, point_dir2, justified.mean2, message.mean2, condemn.mean2)
+se_p  <- c(summary(diff.in.means.results2)$se.treat,  se_dir2, justified.se2, message.se2, condemn.se2)
+base <- barplot(point, ylim = c(0, 0.20))
+bar_name_u <- c("Only Means\n(List)","Only Means\n(Direct)", "Justified", "Message", "Condemn")
+bar_name <- rep("",5)
+
+pdf("figure_3.pdf", height = 4.5, width = 8)
+par(mar = c(4, 5, 2, 1))
+barplot(point, ylim = c(0, 0.3), names.arg = bar_name, 
+        col = c(adjustcolor("red", 0.4), "gray", "gray", "gray", "gray"), cex.axis = 1.3,
+        ylab = "Proportion of respondents", cex.lab = 1.45)
+arrows(base[,1], point - 1.96*se_p, base[,1], point + 1.96*se_p, 
+       lwd = 3, angle = 90, length = 0.05, code = 3,
+       col = c("red", "black", "black", "black", "black"))
+mtext(bar_name_u[1], outer = FALSE, side = 1, at = base[1], cex = 1.2, line = 2.4)
+mtext(bar_name_u[2], outer = FALSE, side = 1, at = base[2], cex = 1.2, line = 2.4)
+mtext(bar_name_u[3], outer = FALSE, side = 1, at = base[3], cex = 1.2, line = 2.4)
+mtext(bar_name_u[4], outer = FALSE, side = 1, at = base[4], cex = 1.2, line = 2.4)
+mtext(bar_name_u[5], outer = FALSE, side = 1, at = base[5], cex = 1.2, line = 2.4)
+text(x = base[1], y = 0.275, "Estimate from \nList Experiment", col = "red", font = 2)
+text(x = (base[3] + base[4])/2, y = 0.275, "Direct Questions", font = 2)
+dev.off()
+```
+
+### `master.R`
+```r
+# Main Analysis in the paper
+source("ContextAnalysis_Main.R")
+source("SurveyAnalysis_Main.R")
+
+# Numbers we report in the paper 
+source("number_in_texts.R")
+
+# Results in Appendix
+source("ContextAnalysis_Appendix.R")
+source("SurveyAnalysis_Appendix.R")
+
+```
+
+### `Help.R`
+```r
+# Help functions 
+
+marginal_effect <- function(out,
+                            newdata=NULL, 
+                            main_var, family = "logit",
+                            treat_range, difference = FALSE,
+                            seed=1234){
+  
+  fit  <- out$fit
+  # Coef and VCOV 
+  coef_mar <- coef(out$fit)[is.na(coef(out$fit)) == FALSE]
+  vcov_mar <- out$vcov
+  
+  # Sample Mean of Outcomes
+  y_orig <- model.frame(formula(fit), data = newdata)[ ,1]
+  sample_mean_outcome <- mean(y_orig, na.rm = TRUE)
+  
+  # Prepare model.frame and treat_range
+  newdata_use_b <- model.frame(formula(fit), data = newdata)
+  if(missing(treat_range)){
+    treat_range   <- quantile(newdata_use_b[, main_var], 
+                              c(0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95),
+                              na.rm = TRUE)
+  }
+  
+  # Create new_treat and new_control automatically
+  newdata_use_l  <- list()
+  for(i in 1:length(treat_range)){
+    newdata_use_l_b <- newdata_use_b
+    newdata_use_l_b[ , main_var] <- treat_range[i]
+    newdata_use_l_exp <- model.matrix(formula(fit), data = newdata_use_l_b)
+    newdata_use_l_exp <- newdata_use_l_exp[, names(coef_mar)]
+    newdata_use_l[[i]] <- newdata_use_l_exp
+  }
+  
+  set.seed(seed)
+  sim_coef <- mvrnorm(n = 1000, mu=coef_mar, Sigma=vcov_mar)
+  
+  # Linear Part 
+  linear_out <- lapply(newdata_use_l, 
+                       FUN = function(x) as.matrix(sim_coef) %*% as.matrix(t(x)))
+  
+  
+  if(family %in% c("nb", "poisson")){
+    out <- lapply(linear_out, FUN = function(x) apply(exp(x), 1, mean))
+  }else if(family %in% c("ols")){
+    out <- lapply(linear_out, FUN = function(x) apply(x, 1, mean))
+  }else if(family %in% c("logit")){
+    out <- lapply(linear_out, FUN = function(x) apply((exp(x)/(1 + exp(x))), 1, mean))
+  }else{
+    warning("family should be one of 'nb', 'poisson', 'logit', and 'ols'")
+  }
+  
+  if(difference == FALSE){
+    out_main <- lapply(out, FUN = function(x) c(quantile(x, c(0.025)), mean(x), quantile(x, c(0.975))))
+    names(out_main) <- treat_range
+    out_main_percent <- lapply(out, 
+                               FUN = function(x) 
+                                 c(quantile(x, c(0.025)), mean(x), quantile(x, c(0.975)))/sample_mean_outcome)
+    names(out_main_percent) <- treat_range
+  }else if(difference == TRUE){
+    out_b <- out[[2]]  - out[[1]]
+    out_main <- c(quantile(out_b, c(0.025)), mean(out_b), quantile(out_b, c(0.975)), 
+                  quantile(out_b, c(0.05)), quantile(out_b, c(0.95)))
+    out_main_percent <- out_main/sample_mean_outcome
+  }
+  
+  output <- list("out" = out, 
+                 "out_main" = out_main,
+                 "out_main_percent" = out_main_percent,
+                 "sample_mean" = sample_mean_outcome,
+                 "treat_range" = treat_range)
+}
+
+bin.summary <- function(formula, print_var, id, data, digits = 3, type = "logit"){
+  var  <- all.vars(formula)
+  data_use <- model.frame( ~ ., data = data[, c(var, id)])
+  
+  if(type == "logit")  fit <- glm(formula, data = data_use, family = "binomial")
+  if(type == "probit") fit <- glm(formula, data = data_use, family = binomial(link="probit"))
+  tab_p <- coeftest(fit, vcov = vcovCL(fit, cluster = data_use[, id]))
+  
+  if(missing(print_var)) print_var <- seq(1:min(20, nrow(tab_p)))
+  
+  mat <- tab_p[print_var, ]
+  
+  sig <- rep("", length(mat[,4]))
+  sig[mat[ , 4]  < 0.001] <- "***"
+  sig[mat[ , 4]  >= 0.001 & mat[ , 4]  < 0.01] <- "**"
+  sig[mat[ , 4]  >= 0.01 & mat[ , 4]  < 0.05] <- "*"
+  sig[mat[ , 4]  >= 0.05 & mat[ , 4]  < 0.1] <- "."
+  mat <- as.data.frame(mat)
+  mat <- round(mat, digits = digits)
+  mat$Sig <- sig 
+  
+  sample_size <- length(fit$residuals)
+  
+  cat("Coefficients:\n")
+  print(mat[, c(1, 2, 4, 5)], row.names=TRUE)
+  cat(paste("(Sample Size:", sample_size, ")\n", sep = ""))
+  
+  output <- list("fit" = fit, "vcov" = vcovCL(fit, cluster = data_use[, id]),
+                 "sample" = sample_size)
+  
+  return(output)
+}
+
+lm.summary <- function(formula, print_var, id, data, digits = 3){
+  var  <- all.vars(formula)
+  data_use <- model.frame( ~ ., data = data[, c(var, id)])
+  
+  fit <- lm(formula, data = data_use)
+  tab_p <- coeftest(fit, vcov = vcovCL(fit, cluster = data_use[, id]))
+  
+  if(missing(print_var)) print_var <- seq(1:min(20, nrow(tab_p)))
+  
+  mat <- tab_p[print_var, ]
+  
+  sig <- rep("", length(mat[,4]))
+  sig[mat[ , 4]  < 0.001] <- "***"
+  sig[mat[ , 4]  >= 0.001 & mat[ , 4]  < 0.01] <- "**"
+  sig[mat[ , 4]  >= 0.01 & mat[ , 4]  < 0.05] <- "*"
+  sig[mat[ , 4]  >= 0.05 & mat[ , 4]  < 0.1] <- "."
+  mat <- as.data.frame(mat)
+  mat <- round(mat, digits = digits)
+  mat$Sig <- sig 
+  
+  sample_size <- length(fit$residuals)
+  
+  cat("Coefficients:\n")
+  print(mat[, c(1, 2, 4, 5)], row.names=TRUE)
+  cat(paste("(Sample Size:", sample_size, ")\n", sep = ""))
+  
+  output <- list("fit" = fit, "vcov" = vcovCL(fit, cluster = data_use[, id]),
+                 "sample" = sample_size)
+  
+  return(output)
+}
+
+
+glm.boot <- function(formula, data, family, cluster_id, boot = 1000, seed = 1234){
+  
+  set.seed(seed)
+  data$cluster_id <- cluster_id
+  
+  data_u <- data[is.na(data$cluster_id) ==  FALSE, ]
+  coef_boot <- c()
+  for(b in 1:boot){
+    boot_id <- sample(unique(data_u$cluster_id), size = length(unique(data_u$cluster_id)), replace=TRUE)
+    # create bootstap sample with sapply
+    boot_which <- sapply(boot_id, function(x) which(data_u$cluster_id == x))
+    data_boot <- data_u[unlist(boot_which),]
+    if(family == "poisson"){
+      glm_boot <- glm(formula, family = "poisson", data = data_boot)
+      coef_boot <-  cbind(coef_boot, summary(glm_boot)$coef[,1])
+    }else if(family == "negative-binomial"){
+      glm_nb_boot <- glm.nb(formula, data = data_boot)
+      coef_boot <-  cbind(coef_boot, summary(glm_nb_boot)$coef[,1])
+    }
+    if((b%%100) == 0) cat(paste(b, "..."))
+  }
+  if(family == "poisson"){
+    glm_boot_final <- glm(formula, family = "poisson", data = data)
+  }else if(family == "negative-binomial"){
+    glm_boot_final <- glm.nb(formula, data = data)
+  }
+  se <- apply(coef_boot, 1, sd) # bootstrap SE
+  coef <- glm_boot_final$coefficients
+  
+  output <- list("fit" = glm_boot_final, "coef" = coef,  "se" = se)
+  
+  return(output)
+}
+
+star_out <- function(out, name){
+  writeLines(capture.output(out), name)
+}
+
+```
+
+### `merge_context.R`
+```r
+# Internal File for Merging datasets for producing "context.dta"
+# R version 4.0.2 (2020-06-22)
+
+rm(list=ls())
+# install.packages("readstata13") # readstata13_0.9.2
+
+require(readstata13)  #  readstata13_0.9.2
+
+setwd("source_data")
+
+# 0. Base data that contains AGS identifies and Year 
+base <- read.dta13("base.dta")
+
+# Note: 
+# Every data source we use below is fully described in "source_context.pdf" 
+
+# 1. Hate Crime Data 
+hate <- read.dta13("hate.dta")
+hate$Housing_all_muni <- hate$Arson_muni + hate$Other_muni
+hate$Hate_all_muni <- hate$Housing_all_muni + hate$Physical_muni
+
+context0 <- merge(base, hate[, c("ags_muni", "year", 
+                                 "Hate_all_muni", 
+                                 "Physical_muni")], by = c("ags_muni", "year"), all.x = TRUE)
+
+# 2. Population Data 
+pop_dat <- read.dta13("pop_gemeinde_2008_2018.dta")
+colnames(pop_dat)[colnames(pop_dat) == "ags"] <- "ags_muni"
+
+pop_dat$pop_m_25_44 <- pop_dat$pop_m_25_29 + pop_dat$pop_m_30_34 +  pop_dat$pop_m_35_39 + pop_dat$pop_m_40_44
+pop_dat$pop_f_25_44 <- pop_dat$pop_f_25_29 + pop_dat$pop_f_30_34 +  pop_dat$pop_f_35_39 + pop_dat$pop_f_40_44
+
+pop_dat$pop_m_15_44 <- pop_dat$pop_m_15_17 +  pop_dat$pop_m_18_19 +  pop_dat$pop_m_20_24 + pop_dat$pop_m_25_44
+pop_dat$pop_f_15_44 <- pop_dat$pop_f_15_17 +  pop_dat$pop_f_18_19 +  pop_dat$pop_f_20_24 + pop_dat$pop_f_25_44
+
+pop_dat$population_muni <- pop_dat$pop_mf_total
+
+pop_dat$pop_25_44_muni_gendergap <- pop_dat$pop_m_25_44/pop_dat$pop_f_25_44
+pop_dat$pop_15_44_muni_gendergap <- pop_dat$pop_m_15_44/pop_dat$pop_f_15_44
+pop_dat$pop_25_44_muni_gendergap[is.infinite(pop_dat$pop_25_44_muni_gendergap)] <- NA
+pop_dat$pop_15_44_muni_gendergap[is.infinite(pop_dat$pop_15_44_muni_gendergap)] <- NA
+
+pop_dat_2015 <- subset(pop_dat, year ==  2015)
+pop_dat_2015$pop_25_44_muni_gendergap_2015 <- pop_dat_2015$pop_m_25_44/pop_dat_2015$pop_f_25_44
+pop_dat_2015$pop_15_44_muni_gendergap_2015 <- pop_dat_2015$pop_m_15_44/pop_dat_2015$pop_f_15_44
+pop_dat_2015$pop_25_44_muni_gendergap_2015[is.infinite(pop_dat_2015$pop_25_44_muni_gendergap_2015)] <- NA
+pop_dat_2015$pop_15_44_muni_gendergap_2015[is.infinite(pop_dat_2015$pop_15_44_muni_gendergap_2015)] <- NA
+
+pop_dat_2015$population_muni_2015 <- pop_dat_2015$pop_mf_total
+
+
+#  3. area  
+area <- read.dta13("area_mun.dta")
+area_use <- area[area$ags %in% context0$ags_muni, ]
+colnames(area_use)[colnames(area_use) == "ags"] <- "ags_muni"
+
+pop_dat_2015 <- merge(pop_dat_2015, area_use[,c("ags_muni", "area_sqk")], all.x =  TRUE)
+pop_dat_2015$popdens_muni_2015 <- pop_dat_2015$population_muni_2015/pop_dat_2015$area_sqk
+
+pop_dat <- merge(pop_dat, area_use[,c("ags_muni", "area_sqk")], all.x =  TRUE)
+pop_dat$popdens_muni <- pop_dat$population_muni/pop_dat$area_sqk
+
+context0 <- merge(context0, pop_dat_2015[, c("ags_muni", 
+                                             "pop_25_44_muni_gendergap_2015",
+                                             "pop_15_44_muni_gendergap_2015",
+                                             "population_muni_2015",
+                                             "popdens_muni_2015")], by = c("ags_muni"), all.x = TRUE)
+
+# 4. Unemployment
+pop_dat <- read.dta13("pop_gemeinde_2008_2018.dta")
+colnames(pop_dat)[colnames(pop_dat) == "ags"] <- "ags_muni"
+pop_dat$pop_m_25_44 <- pop_dat$pop_m_25_29 + pop_dat$pop_m_30_34 +  pop_dat$pop_m_35_39 + pop_dat$pop_m_40_44
+pop_dat$pop_f_25_44 <- pop_dat$pop_f_25_29 + pop_dat$pop_f_30_34 +  pop_dat$pop_f_35_39 + pop_dat$pop_f_40_44
+pop_dat$pop_m_15_44 <- pop_dat$pop_m_15_17 +  pop_dat$pop_m_18_19 +  pop_dat$pop_m_20_24 + pop_dat$pop_m_25_44
+pop_dat$pop_f_15_44 <- pop_dat$pop_f_15_17 +  pop_dat$pop_f_18_19 +  pop_dat$pop_f_20_24 + pop_dat$pop_f_25_44
+unemp_dat <-  read.dta13("unempl_gemeinde_2008_2017.dta")
+colnames(unemp_dat)[colnames(unemp_dat) == "ags"] <- "ags_muni"
+colnames(unemp_dat)[colnames(unemp_dat) == "ags_dist"] <- "ags_county"
+
+## unemployed as share of working age population (age 15-64)
+pop_dat$pop_mf_15_64 <- pop_dat$pop_mf_15_17 +  pop_dat$pop_mf_18_19 +  pop_dat$pop_mf_20_24 + 
+  pop_dat$pop_mf_25_29 + pop_dat$pop_mf_30_34 +  pop_dat$pop_mf_35_39 + pop_dat$pop_mf_40_44 + 
+  pop_dat$pop_mf_45_49 + pop_dat$pop_mf_50_54 + pop_dat$pop_mf_55_59 + pop_dat$pop_mf_60_64
+
+pop_dat$pop_m_15_64 <- pop_dat$pop_m_15_44 + pop_dat$pop_m_45_49 + pop_dat$pop_m_50_54 + 
+  pop_dat$pop_m_55_59 + pop_dat$pop_m_60_64
+
+pop_dat$pop_f_15_64 <- pop_dat$pop_f_15_44 + pop_dat$pop_f_45_49 + pop_dat$pop_f_50_54 + 
+  pop_dat$pop_f_55_59 + pop_dat$pop_f_60_64
+
+unemp_dat_use <- unemp_dat[, c("ags_muni", "ags_county",
+                               "year", 
+                               "unempl_all_total", 
+                               "unempl_all_male_total", 
+                               "unempl_all_fem_total")]
+pop_dat_m <- pop_dat[pop_dat$year >= 2011, c("ags_muni", "year", "pop_mf_15_64", "pop_m_15_64", "pop_f_15_64")]
+unemp_merge  <- merge(pop_dat_m, unemp_dat_use, by = c("ags_muni", "year"), all.x = TRUE, all.y = FALSE)
+unemp_merge$unemp_all_muni  <- (unemp_merge$unempl_all_total/unemp_merge$pop_mf_15_64)*100
+
+unemp_2015 <- unemp_merge[unemp_merge$year == 2015, ]
+unemp_2015$unemp_all_muni_2015 <- unemp_2015$unemp_all_muni
+unemp_2015$log_unemp_all_muni_2015  <- log(unemp_2015$unemp_all_muni_2015 + 1)
+
+context0 <- merge(context0, unemp_2015[, c("ags_muni", 
+                                           "log_unemp_all_muni_2015")], by = c("ags_muni"), 
+                  all.x = TRUE, all.y = FALSE)
+
+# 5. Unemployment Gender Gap
+d2 <- read.dta13("merged_context_2.dta")  # we created this data set in "produce_context_data.do"
+d2_15 <- d2[d2$year == 2015, ]
+d2_15$unemp_gendergap_2015 <- round(d2_15$unemp_gendergap, 6)
+
+context0 <- merge(context0, d2_15[, c("ags_county", "unemp_gendergap_2015")], 
+                  all.x = TRUE, all.y = FALSE, by = "ags_county")
+
+# 6. Population Change
+pop_dat <- read.dta13("pop_gemeinde_2008_2018.dta")
+colnames(pop_dat)[colnames(pop_dat) == "ags"] <- "ags_muni"
+pop_dat$population_muni <- pop_dat$pop_mf_total
+pop_dat_2015 <- subset(pop_dat, year ==  2015)
+pop_dat_2011 <- subset(pop_dat, year ==  2011)
+pop_dat_2015$d_pop1511_muni <- 
+  (pop_dat_2015$population_muni - pop_dat_2011$population_muni)/pop_dat_2011$population_muni
+
+context0 <- merge(context0, pop_dat_2015[, c("ags_muni", 
+                                             "d_pop1511_muni")], by = c("ags_muni"), all.x = TRUE)
+
+# 7. Voting
+voting <- read.dta13("voting.dta")
+
+context0 <- merge(context0, voting[, c("ags_muni", 
+                                       "vote_afd_2013_muni")], by = c("ags_muni"), all.x = TRUE)
+
+# 8. Refugee Data
+ref_dat <- read.dta13("refugees_2008_2017.dta")
+ref_2014 <- subset(ref_dat, year == 2014)
+ref_2015 <- subset(ref_dat, year == 2015)
+table(ref_2014$ags_county  == ref_2015$ags_county)
+
+ref_2014$ref_inflow_1514 <- ref_2015$pop_ref - ref_2014$pop_ref
+ref_2014$log_ref_inflow_1514 <- log(1500 + ref_2014$ref_inflow_1514)
+
+ref_2014$pop_ref_2014 <- ref_2014$pop_ref
+ref_2014$pop_ref_2015 <- ref_2015$pop_ref
+
+# Proportion of male refugees
+ref_prop <- read.dta13("merged_context_2.dta") # we created this data set in "produce_context_data.do"
+
+context0 <- merge(context0, ref_2014[, c("ags_county", 
+                                         "log_ref_inflow_1514",
+                                         "pop_ref_2014")], by = c("ags_county"), all.x = TRUE)
+context0 <- merge(context0, ref_prop[, c("year", "ags_county", 
+                                         "pc_ref_male")], by = c("year", "ags_county"), all.x = TRUE)
+
+#  9. Violence
+crime <- read.dta13("crime.dta")
+crime <- crime[crime$year == 2015, ]
+
+pop_county <- read.dta13("pop_kreise_2015_2017.dta")
+pop_county1 <- subset(pop_county, year == 2015)
+
+crime2 <- merge(crime[, c("ags_county", "violence_num_cases")],
+                pop_county1[, c("ags_county", "population")],
+                by = "ags_county", all.x = TRUE, all.y = FALSE)
+crime2$violence_percap_2015 <- crime2$violence_num_cases/crime2$population
+
+context0 <- merge(context0, crime2[, c("ags_county", 
+                                       "violence_percap_2015")], by = c("ags_county"), all.x = TRUE)
+
+# 10. Education
+edu <- read.dta13("merged_context_2.dta") # we created this data set in "produce_context_data.do"
+edu  <- edu[edu$year ==  2011, ]
+edu <- edu[, c("ags_county", "pc_hidegree_all2011")]
+
+context0 <- merge(context0, edu[, c("ags_county", 
+                                    "pc_hidegree_all2011")], by = c("ags_county"), all.x = TRUE)
+
+
+#  10. Industry 
+manu0 <- read.dta13("merged_context_2.dta") # we created this data set in "produce_context_data.do"
+manu0 <- manu0[, c("year", "ags_county", "pc_manufacturing")]
+manu <- manu0[manu0$year >= 2011 & manu0$year <= 2015, ]
+rownames(manu) <- NULL
+manu_orig <- manu
+
+manu  <- manu_orig[manu_orig$year ==  2015, ]
+manu <- manu[, c("ags_county", "pc_manufacturing")]
+manu <- manu[is.element(manu$ags_county, unique(context0$ags_county)),]
+manu$pc_manufacturing_2015 <- manu$pc_manufacturing
+
+manu2011  <- manu_orig[manu_orig$year ==  2011, ]
+manu2011 <- manu2011[, c("ags_county", "pc_manufacturing")]
+manu2011 <- manu2011[is.element(manu2011$ags_county, unique(context0$ags_county)),]
+manu2011$pc_manufacturing_2011 <- manu2011$pc_manufacturing
+
+# d_manuf1115
+manu$d_manuf1115 <- manu$pc_manufacturing_2015 - manu2011$pc_manufacturing_2011
+
+context0 <- merge(context0, manu[, c("ags_county", 
+                                     "pc_manufacturing_2015",
+                                     "d_manuf1115")], by = c("ags_county"), all.x = TRUE)
+
+# 11. East
+context0$east <- 0
+context0$east[context0$ags_state %in% c("11","12","13","14","15","16")]  <-  1
+
+# 12. Create additional variables 
+context0$Hate_all_muni_bin <- as.numeric(context0$Hate_all_muni >  0)
+context0$Physical_muni_bin <- as.numeric(context0$Physical_muni >  0)
+
+context0$log_population_muni_2015 <- log(context0$population_muni_2015)
+context0$log_popdens_muni_2015 <- log(context0$popdens_muni_2015)
+context0$log_pop_ref_2014 <- log(context0$pop_ref_2014)
+context0$log_violence_percap_2015 <- log(context0$violence_percap_2015)
+
+context0 <- context0[order(context0$year, context0$ags_muni), ]
+save.dta13(context0, file = "context.dta")
+```
+
+### `merge_context_placebo.R`
+```r
+rm(list = ls())
+# install.packages("readstata13") # readstata13_0.9.2
+# install.packages("plm") # plm_2.2-3  
+
+library(readstata13) # readstata13_0.9.2
+library(plm) # plm_2.2-3  
+
+setwd("source_data")
+
+# 0. Base data that contains AGS identifies and Year 
+base_pl <- read.dta13("base_pl.dta")
+
+# Note: 
+# Every data source we use below is fully described in "source_context.pdf" 
+
+# 1. Hate Crime Data
+hate <- read.dta13("hate.dta")
+hate$Housing_all_muni <- hate$Arson_muni + hate$Other_muni
+hate$Hate_all_muni <- hate$Housing_all_muni + hate$Physical_muni
+
+
+context0 <- merge(base_pl, hate[, c("ags_muni", "year", 
+                                    "Hate_all_muni")], by = c("ags_muni", "year"), all.x = TRUE)
+
+# 2. Population Data 
+pop_dat <- read.dta13("pop_gemeinde_2008_2018.dta")
+pop_dat <- pop_dat[pop_dat$year >= 2011, ]
+
+pop_dat$pop_m_25_44 <- pop_dat$pop_m_25_29 + pop_dat$pop_m_30_34 +  pop_dat$pop_m_35_39 + pop_dat$pop_m_40_44
+pop_dat$pop_f_25_44 <- pop_dat$pop_f_25_29 + pop_dat$pop_f_30_34 +  pop_dat$pop_f_35_39 + pop_dat$pop_f_40_44
+
+pop_dat$pop_m_15_44 <- pop_dat$pop_m_15_17 +  pop_dat$pop_m_18_19 +  pop_dat$pop_m_20_24 + pop_dat$pop_m_25_44
+pop_dat$pop_f_15_44 <- pop_dat$pop_f_15_17 +  pop_dat$pop_f_18_19 +  pop_dat$pop_f_20_24 + pop_dat$pop_f_25_44
+
+pop_dat$population_muni_anu <- pop_dat$pop_mf_total
+
+pop_dat$pop_25_44_muni_gendergap_anu <- pop_dat$pop_m_25_44/pop_dat$pop_f_25_44
+pop_dat$pop_15_44_muni_gendergap_anu <- pop_dat$pop_m_15_44/pop_dat$pop_f_15_44
+pop_dat$pop_25_44_muni_gendergap_anu[is.infinite(pop_dat$pop_25_44_muni_gendergap_anu)] <- NA
+pop_dat$pop_15_44_muni_gendergap_anu[is.infinite(pop_dat$pop_15_44_muni_gendergap_anu)] <- NA
+
+pop_dat_pl <-  pop_dat[, c("year", "ags_muni","ags_county", "ags_state",
+                           "population_muni_anu", "pop_15_44_muni_gendergap_anu")]
+
+# creating pop_15_44_muni_gendergap_future
+pop_dat_pl_p <- pdata.frame(pop_dat_pl, index = c("ags_muni", "year"))
+pop_dat_pl_p$pop_15_44_muni_gendergap_future <- as.numeric(lead(pop_dat_pl_p$pop_15_44_muni_gendergap_anu, k = 1))
+class(pop_dat_pl_p) <- "data.frame"
+pop_dat_pl <- pop_dat_pl_p
+rownames(pop_dat_pl) <- NULL
+
+#  3. area  
+area <- read.dta13("area_mun.dta")
+area_use <- area[area$ags %in% base_pl$ags_muni, ]
+colnames(area_use)[colnames(area_use) == "ags"] <- "ags_muni"
+
+pop_dat_pl <- merge(pop_dat_pl, area_use[,c("ags_muni", "area_sqk")], all.x =  TRUE, all.y = FALSE)
+pop_dat_pl$popdens_muni_anu <- pop_dat_pl$population_muni_anu/pop_dat_pl$area_sqk
+
+pop_dat_2015 <- subset(pop_dat_pl, year ==  2015)
+pop_dat_2011 <- subset(pop_dat_pl, year ==  2011)
+pop_dat_2011 <- pop_dat_2011[match(pop_dat_2015$ags_muni, pop_dat_2011$ags_muni),]
+pop_dat_2015$d_pop_muni_anu <- 
+  (pop_dat_2015$population_muni - pop_dat_2011$population_muni)/pop_dat_2011$population_muni
+
+pop_dat_2016 <- subset(pop_dat_pl, year ==  2016)
+pop_dat_2012 <- subset(pop_dat_pl, year ==  2012)
+pop_dat_2012 <- pop_dat_2012[match(pop_dat_2016$ags_muni, pop_dat_2012$ags_muni),]
+pop_dat_2016$d_pop_muni_anu <- 
+  (pop_dat_2016$population_muni - pop_dat_2012$population_muni)/pop_dat_2012$population_muni
+
+pop_dat_2017 <- subset(pop_dat_pl, year ==  2017)
+pop_dat_2013 <- subset(pop_dat_pl, year ==  2013)
+pop_dat_2013 <- pop_dat_2013[match(pop_dat_2017$ags_muni, pop_dat_2013$ags_muni),]
+pop_dat_2017$d_pop_muni_anu <- 
+  (pop_dat_2017$population_muni - pop_dat_2013$population_muni)/pop_dat_2013$population_muni
+
+pop_dat_d <- rbind(pop_dat_2015, pop_dat_2016, pop_dat_2017)
+
+context0 <- merge(context0, pop_dat_d[, c("year", "ags_muni", 
+                                          "pop_15_44_muni_gendergap_anu",
+                                          "pop_15_44_muni_gendergap_future",
+                                          "population_muni_anu",
+                                          "popdens_muni_anu",
+                                          "d_pop_muni_anu")], by = c("year", "ags_muni"), 
+                  all.x = TRUE, all.y = FALSE)
+
+# 4. Unemployment
+pop_dat <- read.dta13("pop_gemeinde_2008_2018.dta")
+colnames(pop_dat)[colnames(pop_dat) == "ags"] <- "ags_muni"
+pop_dat$pop_m_25_44 <- pop_dat$pop_m_25_29 + pop_dat$pop_m_30_34 +  pop_dat$pop_m_35_39 + pop_dat$pop_m_40_44
+pop_dat$pop_f_25_44 <- pop_dat$pop_f_25_29 + pop_dat$pop_f_30_34 +  pop_dat$pop_f_35_39 + pop_dat$pop_f_40_44
+pop_dat$pop_m_15_44 <- pop_dat$pop_m_15_17 +  pop_dat$pop_m_18_19 +  pop_dat$pop_m_20_24 + pop_dat$pop_m_25_44
+pop_dat$pop_f_15_44 <- pop_dat$pop_f_15_17 +  pop_dat$pop_f_18_19 +  pop_dat$pop_f_20_24 + pop_dat$pop_f_25_44
+unemp_dat <- read.dta13("unempl_gemeinde_2008_2017.dta")
+colnames(unemp_dat)[colnames(unemp_dat) == "ags"] <- "ags_muni"
+colnames(unemp_dat)[colnames(unemp_dat) == "ags_dist"] <- "ags_county"
+
+## unemployed as share of working age population (age 15-64)
+pop_dat$pop_mf_15_64 <- pop_dat$pop_mf_15_17 +  pop_dat$pop_mf_18_19 +  pop_dat$pop_mf_20_24 + 
+  pop_dat$pop_mf_25_29 + pop_dat$pop_mf_30_34 +  pop_dat$pop_mf_35_39 + pop_dat$pop_mf_40_44 + 
+  pop_dat$pop_mf_45_49 + pop_dat$pop_mf_50_54 + pop_dat$pop_mf_55_59 + pop_dat$pop_mf_60_64
+
+pop_dat$pop_m_15_64 <- pop_dat$pop_m_15_44 + pop_dat$pop_m_45_49 + pop_dat$pop_m_50_54 + 
+  pop_dat$pop_m_55_59 + pop_dat$pop_m_60_64
+
+pop_dat$pop_f_15_64 <- pop_dat$pop_f_15_44 + pop_dat$pop_f_45_49 + pop_dat$pop_f_50_54 + 
+  pop_dat$pop_f_55_59 + pop_dat$pop_f_60_64
+
+unemp_dat_use <- unemp_dat[, c("ags_muni", "ags_county",
+                               "year", 
+                               "unempl_all_total", 
+                               "unempl_all_male_total", "unempl_all_fem_total")]
+pop_dat_m <- pop_dat[pop_dat$year >= 2011, c("ags_muni", "year", "pop_mf_15_64", "pop_m_15_64", "pop_f_15_64")]
+unemp_merge  <- merge(pop_dat_m, unemp_dat_use, by = c("ags_muni", "year"), all.x = TRUE, all.y = FALSE)
+
+unemp_merge$unemp_all_muni  <- (unemp_merge$unempl_all_total/unemp_merge$pop_mf_15_64)*100
+
+dat_2015 <- unemp_merge[unemp_merge$year == 2015, ]
+dat_2016 <- unemp_merge[unemp_merge$year == 2016, ]
+dat_2017 <- unemp_merge[unemp_merge$year == 2017, ]
+
+dat_2015$log_unemp_all_muni_anu <- log(dat_2015$unemp_all_muni  + 1) # constants are chosen to make sure all values are positive
+dat_2016$log_unemp_all_muni_anu <- log(dat_2016$unemp_all_muni  + 0.3)
+dat_2017$log_unemp_all_muni_anu <- log(dat_2017$unemp_all_muni  + 0.3)
+unemp_u <- rbind(dat_2015, dat_2016, dat_2017)
+
+context0  <- merge(context0, unemp_u[, c("ags_muni", "year",
+                                         "log_unemp_all_muni_anu")], 
+                   by = c("ags_muni", "year"), all.x = TRUE, all.y = FALSE)
+
+# 5 Unemployment Rate Gap
+d20 <- read.dta13("merged_context_2.dta")
+d2 <- unique(d20[, c("year", "ags_county", "unemp_gendergap")])
+d2$unemp_gendergap_anu <- d2$unemp_gendergap
+
+context0 <- merge(context0, d2[, c("year", "ags_county", "unemp_gendergap_anu")], 
+                  all.x = TRUE, all.y = FALSE, by = c("year", "ags_county"))
+
+# 6. Voting
+voting <- read.dta13("voting.dta")
+
+context0 <- merge(context0, voting[, c("ags_muni", 
+                                       "vote_afd_2013_muni")], by = c("ags_muni"), 
+                  all.x = TRUE, all.y = FALSE)
+
+# 7. Refugee Data
+ref_dat <- read.dta13("refugees_2008_2017.dta")
+ref_dat <- ref_dat[ref_dat$year >= 2011, ]
+
+# Creating pop_ref_anu
+ref_dat_p <- pdata.frame(ref_dat, index = c("ags_county", "year"))
+ref_dat_p$pop_ref_anu <- as.numeric(lag(ref_dat_p$pop_ref, k = 1))
+class(ref_dat_p) <- "data.frame"
+ref_dat <- ref_dat_p
+
+ref_dat <- ref_dat[ref_dat$ags_county %in% unique(ref_dat$ags_county[ref_dat$year == 2014]),]
+ref_2014 <- ref_dat[ref_dat$year == 2014, ]
+ref_2015 <- ref_dat[ref_dat$year == 2015, ]
+ref_2016 <- ref_dat[ref_dat$year == 2016, ]
+ref_2017 <- ref_dat[ref_dat$year == 2017, ]
+
+ref_2015$ref_inflow_1514 <- ref_2015$pop_ref - ref_2014$pop_ref
+ref_2016$ref_inflow_1615 <- ref_2016$pop_ref - ref_2015$pop_ref
+ref_2017$ref_inflow_1716 <- ref_2017$pop_ref - ref_2016$pop_ref
+
+ref_2015$log_ref_inflow_anu <- log(1500 + ref_2015$ref_inflow_1514) # constants are chosen such that all values are positive
+suppressWarnings(ref_2016$log_ref_inflow_anu <-  log(ref_2016$ref_inflow_1615 + 649))
+suppressWarnings(ref_2017$log_ref_inflow_anu <-  log(ref_2017$ref_inflow_1716 + 1261))
+
+ref_2015 <- ref_2015[, c("year", "ags_county", "pop_ref_anu", "log_ref_inflow_anu")]
+ref_2016 <- ref_2016[, c("year", "ags_county", "pop_ref_anu", "log_ref_inflow_anu")]
+ref_2017 <- ref_2017[, c("year", "ags_county", "pop_ref_anu", "log_ref_inflow_anu")]
+ref_data_c <- rbind(ref_2015, ref_2016, ref_2017)
+
+context0 <- merge(context0, ref_data_c[, c("year", "ags_county", 
+                                           "pop_ref_anu",
+                                           "log_ref_inflow_anu")], 
+                  by = c("year", "ags_county"), all.x = TRUE, all.y = FALSE)
+
+#  8. Violence
+crime <- read.dta13("crime.dta")
+pop <- read.dta13("pop_kreise_2015_2017.dta")
+
+crime2 <- merge(crime[, c("year", "ags_county", "violence_num_cases")],
+                pop[, c("year", "ags_county", "population")],
+                by = c("year", "ags_county"), all.x = TRUE, all.y = FALSE)
+crime2$violence_percap_anu <- crime2$violence_num_cases/crime2$population
+
+context0 <- merge(context0, crime2[, c("year", "ags_county", 
+                                       "violence_percap_anu")], by = c("year", "ags_county"), 
+                  all.x = TRUE, all.y = FALSE)
+
+# 9. Education
+edu <- read.dta13("merged_context_2.dta")
+edu  <- edu[edu$year ==  2011, ]
+edu <- edu[, c("ags_county", "pc_hidegree_all2011")]
+
+
+context0 <- merge(context0, edu[, c("ags_county", "pc_hidegree_all2011")], by = c("ags_county"), all.x = TRUE)
+
+#  10. Industry 
+manu0 <- read.dta13("merged_context_2.dta")
+manu0 <- manu0[, c("year", "ags_county", "pc_manufacturing")]
+manu <- manu0[manu0$year >= 2011 & manu0$year <= 2015, ]
+rownames(manu) <- NULL
+manu_orig <- manu
+
+manu  <- manu_orig[manu_orig$year ==  2015, ]
+manu <- manu[, c("ags_county", "pc_manufacturing")]
+manu <- manu[is.element(manu$ags_county, unique(base_pl$ags_county)),]
+manu$pc_manufacturing_2015 <- manu$pc_manufacturing
+
+manu2011  <- manu_orig[manu_orig$year ==  2011, ]
+manu2011 <- manu2011[, c("ags_county", "pc_manufacturing")]
+manu2011 <- manu2011[is.element(manu2011$ags_county, unique(base_pl$ags_county)),]
+manu2011$pc_manufacturing_2011 <- manu2011$pc_manufacturing
+
+# d_manuf1115
+manu$d_manuf1115 <- manu$pc_manufacturing_2015 - manu2011$pc_manufacturing_2011
+
+context0 <- merge(context0, manu[, c("ags_county", 
+                                     "pc_manufacturing_2015",
+                                     "d_manuf1115")], by = c("ags_county"), all.x = TRUE)
+
+
+# 11. Create additional variables 
+context0$Hate_all_muni_bin <- as.numeric(context0$Hate_all_muni >  0)
+
+context0 <- context0[order(context0$year, context0$ags_muni), ]
+save.dta13(context0, file = "context_placebo.dta")
+```
+
+### `number_in_texts.R`
+```r
+# Replication  File for numbers we mention in the main text of the paper. 
+# Please see "ContextAnalysis_Main.R", "SurveyAnalysis_Main.R", "ContextAnalysis_Appendix.R", and "SurveyAnalysis_Appendix.R"
+# to reproduce Tables and Figures in the paper and in the appendix. 
+
+# R version 4.0.2 (2020-06-22)
+
+rm(list=ls())
+# install.packages("readstata13")  #  readstata13_0.9.2
+# install.packages("MASS") # MASS_7.3-51.6  
+# install.packages("sandwich")  # sandwich_2.5-1 
+# install.packages("lmtest") # lmtest_0.9-37 
+
+require(readstata13)  #  readstata13_0.9.2
+require(MASS) # MASS_7.3-51.6  
+require(sandwich)  # sandwich_2.5-1 
+require(lmtest) # lmtest_0.9-37  
+source("Help.R")
+
+# ###############
+# Section: Existing Explanations and Mate Competition
+# ###############
+you_data <- read.dta13(file  = "YouGov.dta")
+
+# The number of people who think marriages between a German woman and a non-German man is common and very common
+prop.table(table(you_data$int_marriage))[3:4]
+
+# ###############
+# Section: Refugees and Mate Competition: A Topic of Debate
+# ###############
+# The number of hate crimes in 2015 and 2016 
+dat <- read.dta13("context.dta")
+tapply(dat$Hate_all_muni, dat$year, sum)[1:2]
+
+
+# ###############
+# Section: Empirical Analyses
+# ###############
+# ###############
+# Sub Section: Mate Competition and the Incidence of Anti-Refugee Hate Crime
+# ###############
+# The proportion of municipalities that witnessed at least one hate crime in each year
+round(tapply(dat$Hate_all_muni_bin, dat$year, mean)*100, 1)
+
+# The proportion of municipalities that witnessed at least one hate crime in three years
+dat_2015 <- dat[dat$year == 2015, ]
+dat_2016 <- dat[dat$year == 2016, ]
+dat_2017 <- dat[dat$year == 2017, ]
+dat_2015$Hate_all_muni_1517 <- dat_2015$Hate_all_muni + dat_2016$Hate_all_muni + dat_2017$Hate_all_muni
+dat_2015$Hate_all_muni_1517_bin <- ifelse(dat_2015$Hate_all_muni_1517 > 0, 1, 0)
+round(mean(dat_2015$Hate_all_muni_1517_bin)*100)
+
+# Point Estimates that we mention when discussing Figure 1
+# Remove Extreme Value of Excess Males 
+range_x <- quantile(dat_2015$pop_15_44_muni_gendergap_2015, c(0.025, 0.975), na.rm = TRUE)
+dat_2015_s <- dat_2015[dat_2015$pop_15_44_muni_gendergap_2015 >= range_x[1] & 
+                         dat_2015$pop_15_44_muni_gendergap_2015 <= range_x[2], ]
+dat_s <- dat[dat$pop_15_44_muni_gendergap_2015 >= range_x[1] & 
+               dat$pop_15_44_muni_gendergap_2015 <= range_x[2], ]
+
+# The size of population for exxluded municipalities
+dat_exc <- dat[dat$pop_15_44_muni_gendergap_2015 < range_x[1] | 
+                 dat$pop_15_44_muni_gendergap_2015 > range_x[2], ]
+
+ceiling(median(dat_exc$population_muni_2015, na.rm = TRUE)) # 247 
+
+# sum
+bin_1_sum <- bin.summary(Hate_all_muni_1517_bin ~ 
+                           pop_15_44_muni_gendergap_2015 + 
+                           log_population_muni_2015 + log_popdens_muni_2015 + 
+                           log_unemp_all_muni_2015 + d_pop1511_muni + vote_afd_2013_muni + 
+                           log_ref_inflow_1514  + log_pop_ref_2014 + log_violence_percap_2015 + ## county level
+                           pc_hidegree_all2011 + d_manuf1115 + pc_manufacturing_2015 + ## county level
+                           unemp_gendergap_2015 + as.factor(ags_state),
+                         id  = "ags_county", data = dat_2015_s)
+
+# annual
+bin_1_p <- bin.summary(Hate_all_muni_bin ~ 
+                         pop_15_44_muni_gendergap_2015 + 
+                         log_population_muni_2015 + log_popdens_muni_2015 + 
+                         log_unemp_all_muni_2015 + d_pop1511_muni + vote_afd_2013_muni + 
+                         log_ref_inflow_1514  + log_pop_ref_2014 + log_violence_percap_2015 + ## county level
+                         pc_hidegree_all2011 + d_manuf1115 + pc_manufacturing_2015 + ## county level
+                         unemp_gendergap_2015 + as.factor(ags_state) + as.factor(year),
+                       id  = "ags_county", data = dat_s)
+
+# Excess Males
+# Effect Estimation 
+bin_1_sum_effect <- marginal_effect(bin_1_sum,
+                                    newdata = dat_2015_s, family = "logit",
+                                    main_var = "pop_15_44_muni_gendergap_2015",
+                                    difference = TRUE, 
+                                    treat_range = c(1, 1.2))
+
+bin_1_p_effect <- marginal_effect(bin_1_p,
+                                  newdata = dat_s, family = "logit",
+                                  main_var = "pop_15_44_muni_gendergap_2015",
+                                  difference = TRUE, 
+                                  treat_range = c(1, 1.2))
+
+# Point estimate
+round(bin_1_sum_effect$out_main[1:3]*100, 2)
+# 2.5%       97.5% 
+# 0.88  2.60  4.19 
+round(bin_1_p_effect$out_main[1:3]*100, 2)
+# 2.5%       97.5% 
+# 0.76  1.71  2.55 
+
+
+## Comparing to round(bin_1_sum_effect$out_main[1:3]*100, 2)
+## The Effect of Unemployment 
+effect_unemp <- marginal_effect(bin_1_sum,
+                                newdata = dat_2015_s, family = "logit",
+                                main_var = "log_unemp_all_muni_2015",
+                                difference = TRUE, 
+                                treat_range = quantile(dat_2015_s$log_unemp_all_muni_2015, prob = c(0.2, 0.8), 
+                                                       na.rm = TRUE))
+round(effect_unemp$out_main[1:3]*100, 2) # 2.60 is more than half of 4.24 
+
+## The Effect of Education
+effect_educ <- marginal_effect(bin_1_sum,
+                               newdata = dat_2015_s, family = "logit",
+                               main_var = "pc_hidegree_all2011",
+                               difference = TRUE, 
+                               treat_range = quantile(dat_2015_s$pc_hidegree_all2011, prob = c(0.8, 0.2), 
+                                                      na.rm = TRUE))
+round(effect_educ$out_main[1:3]*100, 2) 
+# 2.60 is more than twice of 1.20
+
+
+# Correlation between Excess Males and Male Disadvantage
+round(cor(dat_2015_s$pop_15_44_muni_gendergap_2015, dat_2015_s$unemp_gendergap_2015, use = "complete.obs"), 3)
+
+
+# ###############
+# Sub Section: Mate Competition and Support for Anti-Refugee Hate Crime
+# ###############
+rm(list=ls())
+# install.packages("readstata13")  #  readstata13_0.9.2
+# install.packages("MASS") # MASS_7.3-51.6  
+# install.packages("sandwich")  # sandwich_2.5-1 
+# install.packages("lmtest") # lmtest_0.9-37 
+# install.packages("pBrackets") # pBrackets_1.0  
+# install.packages("stargazer") # stargazer_5.2.2
+
+require(readstata13)  #  readstata13_0.9.2
+require(MASS) # MASS_7.3-51.6  
+require(sandwich)  # sandwich_2.5-1 
+require(lmtest) # lmtest_0.9-37  
+require(pBrackets) # pBrackets_1.0  
+require(stargazer) # stargazer_5.2.2
+source("Help.R")
+
+dat <- read.dta13(file =  "survey.dta")
+
+# Subset to people in the wave 4
+dat_use <- dat[dat$wave == 4, ]
+
+# Prepare Two data sets
+dat_male <- dat_use[dat_use$gender == "Male" & dat_use$age <= 44 & dat_use$age >= 18, ]
+dat_male_y <- dat_use[dat_use$gender == "Male" & dat_use$age <= 40 & dat_use$age >= 30, ]
+
+# Overall Samples 
+dat_use$MateComp.cont_bin <- ifelse(dat_use$MateComp.cont >= 3, 1, 0)
+dat_use$excess_c <- ifelse(dat_use$pop_15_44_muni_gendergap_2015 < 1.04, "1", 
+                           ifelse(dat_use$pop_15_44_muni_gendergap_2015 < 1.12, "2", "3"))
+mean_all <- tapply(dat_use$MateComp.cont_bin, dat_use$excess_c, mean)
+se_all <- tapply(dat_use$MateComp.cont_bin, dat_use$excess_c, sd)/sqrt(table(dat_use$excess_c))
+
+# Male (18 - 44)
+dat_male$MateComp.cont_bin <- ifelse(dat_male$MateComp.cont >= 3, 1, 0)
+dat_male$excess_c <- ifelse(dat_male$pop_15_44_muni_gendergap_2015 < 1.04, "1", 
+                            ifelse(dat_male$pop_15_44_muni_gendergap_2015 < 1.12, "2", "3"))
+mean_all_m <- tapply(dat_male$MateComp.cont_bin, dat_male$excess_c, mean)
+se_all_m <- tapply(dat_male$MateComp.cont_bin, dat_male$excess_c, sd)/sqrt(table(dat_male$excess_c))
+
+# Male (30 - 40)
+dat_male_y$MateComp.cont_bin <- ifelse(dat_male_y$MateComp.cont >= 3, 1, 0)
+dat_male_y$excess_c <- ifelse(dat_male_y$pop_15_44_muni_gendergap_2015 < 1.04, "1", 
+                              ifelse(dat_male_y$pop_15_44_muni_gendergap_2015 < 1.12, "2", "3"))
+mean_all_y <- tapply(dat_male_y$MateComp.cont_bin, dat_male_y$excess_c, mean)
+se_all_y <- tapply(dat_male_y$MateComp.cont_bin, dat_male_y$excess_c, sd)/sqrt(table(dat_male_y$excess_c))
+
+
+round(mean_all,2)[c(1,3)] ## 0.18 0.22 
+round(mean_all_m,2)[c(1,3)] ## 0.23 0.38 
+round(mean_all_y,2)[c(1,3)] ## 0.17 0.47 
+
+# ################
+# List Experiment
+# ###############
+rm(list=ls())
+# install.packages("readstata13")  #  readstata13_0.9.2
+# install.packages("MASS") # MASS_7.3-51.6  
+# install.packages("sandwich")  # sandwich_2.5-1 
+# install.packages("lmtest") # lmtest_0.9-37 
+# install.packages("list") # list_9.2 
+
+require(readstata13)  #  readstata13_0.9.2
+require(MASS) # MASS_7.3-51.6  
+require(sandwich)  # sandwich_2.5-1 
+require(lmtest) # lmtest_0.9-37  
+require(list) # list_9.2 
+
+dat <- read.dta13(file =  "survey.dta")
+data.u2 <- dat[dat$wave == 2, ]
+
+# Means: When it comes to the refugee problem, violence is sometimes the only means that citizens have to get the attention of German politicians
+data.list.u2   <- data.u2[data.u2$list == "1",]
+data.direct.u2 <- data.u2[data.u2$list == "2",]
+data.list.u2 <- data.list.u2[is.na(data.list.u2$treatment_list)==FALSE,]
+data.list.u2$List.treat <- ifelse(data.list.u2$treatment_list == "Scenario 2", 1, 0)
+
+# The mean for Control Group
+round(mean(data.list.u2$outcome_list[data.list.u2$List.treat == 0]), 2)
+# The mean for Treatment Group
+round(mean(data.list.u2$outcome_list[data.list.u2$List.treat == 1]), 2)
+# Please see "SurveyAnalysis_Main.R" for complete analysis, which was used to create Figure 3. 
+# Here, we only reproduce the code for numbers we mention in the paper. 
+
+## Compare to All People who answered Direct Question (n = 2170)
+data.u2.all.direct <- data.u2[is.na(data.u2$hate_violence_means) == FALSE, ]
+data.u2.all.direct$hate.direct.bin <- ifelse(data.u2.all.direct$hate_violence_means >=3, 1, 0)
+round(mean(data.u2.all.direct$hate.direct.bin)*100) ## 18
+```
+
+### `produce_context_data.do`
+```stata
+*************************************************************
+*Purpose: Merge context data and generate additional vars
+*Stata Version: 16
+*************************************************************
+
+*-------------------------------
+*generate merged_context_1.dta
+*-------------------------------
+use "source_data/unemployment.dta", clear
+
+*unemployment gendergap
+*----------------------
+gen unemp_gendergap = unemp_men/unemp_female
+label var unemp_gendergap "male unemployment rate / female unemployment rate"
+
+rename ags_dist ags_county // "county" and "district" used as synonyms
+label var ags_c " Identifier for County"
+save "source_data/merged_context_1.dta",replace
+
+*-----------------------------
+*generate merged_context_2.dta
+*-----------------------------
+
+*unemployment data
+*-------------------
+use "source_data/unemployment.dta", clear
+
+gen unemp_gendergap = unemp_men/unemp_female
+label var unemp_gendergap "male unemployment rate / female unemployment rate"
+
+save "source_data/temp1.dta", replace
+
+*refugees by gender
+*-------------------
+use "source_data/refugee_gender.dta", clear
+
+egen ref_male = rowtotal(all_male0_3 all_male3_6 all_male6_15 all_male15_18 all_male18_25 all_male25_30 all_male30_40 all_male40_50 all_male50_65 all_male65_75 all_male75_up)
+gen pc_ref_male = ref_male*100/all_totref
+label var pc_ref_male "% male refugees, of all refugees"
+label var ref_male "total number of male refugees (all ages)"
+
+save "source_data/temp2.dta", replace
+
+*education
+*----------
+use "source_data/education.dta", clear
+
+*high degree
+gen pc_hidegree_all2011 = pop15_high_degree*100/pop15_total
+label var pc_hidegree_all2011 "% population with university entrance exam, incl. still in school" // (census 2011)
+
+save "source_data/temp3.dta", replace
+
+
+* sector
+*--------
+use "source_data/sectors.dta", clear
+
+gen pc_manufacturing = no_manufacturing/no_employed
+label var pc_manufacturing "pc_manufacturing"
+
+save "source_data/temp4.dta", replace
+
+*merge data
+*----------
+/*
+this is a more comprehensive dataset - start by using a master data file
+that includes the ags year combinations we need
+*/
+
+use  "source_data/population.dta"
+
+merge 1:1 ags year using "source_data/temp1.dta" // unemployment
+drop _m 
+merge 1:1 ags year using "source_data/temp2.dta" // refugees
+drop _m
+merge m:1 ags using "source_data/temp3.dta" // education in 2011 this m:1 merge
+drop _m
+merge 1:1 ags year using "source_data/temp4.dta" //sectors
+drop _m
+
+rename ags_dist ags_county // "county" and "district" used as synonyms
+label var ags_c " Identifier for County"
+
+save "source_data/merged_context_2.dta",replace
+erase "source_data/temp1.dta"
+erase "source_data/temp2.dta"
+erase "source_data/temp3.dta"
+erase "source_data/temp4.dta"
+
+```
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

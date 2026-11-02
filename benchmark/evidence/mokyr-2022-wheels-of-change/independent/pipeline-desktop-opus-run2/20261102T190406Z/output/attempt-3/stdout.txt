@@ -1,0 +1,165 @@
+Columns: local_government_area, district_id, smith, joiner, butcher, blacksmith, attorney, apothecary, surgeon, wrights, draper, trade_other, GAZ_CNTY, ntextile0, all_weaver0, worsted_w0, linen_w0, cotton_w0, other_weaver0, pc0, all_weaver1, worsted_w1, linen_w1, cotton_w1, other_weaver1, y1, x1, lords_ploughs, total_ploughs, mills, ecclesiastical_holding, king_holding, villcount, pop_86, pc1300_mean, pc1400_mea, carbon, riv_rug1020count, dist_rug_mean, wheat_tmean, suitmean, riv_rug01count, riv_rug13count, riv_rug14count, riv_rug15count, riv_rug16count, riv_rug23count, riv_rug24count, riv_rug25count, riv_rug26count, min_dist_to_roman_rds, min_dist_2nav_rivers, min_harbor, dist_elevation_mean, DIST_London, dist_grass_mean, area, latitude, longitude, temp_mean_dist, precip_mean_dist, pcmean 
+mills summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+   0.00    1.00    7.00   19.54   24.93  393.70      27 
+wrights summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  0.000   0.000   2.000   5.588   6.000 340.000 
+pcmean summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.1075  1.2529  2.7973  7.6960  6.5250 67.4933 
+mills_pc summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+   0.00    1.00    7.00   19.54   24.93  393.70      27 
+wrights_pc summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  0.0000  0.5225  3.7595  3.2365 85.9265 
+River-ruggedness columns: riv_rug1020count, riv_rug01count, riv_rug13count, riv_rug14count, riv_rug15count, riv_rug16count, riv_rug23count, riv_rug24count, riv_rug25count, riv_rug26count 
+Using riv_rug26count
+Sample size: 298 
+NOTE: wheat suitability control entered as continuous mean GAEZ wheat suitability (wheat_tmean); indicator used only in the instrument and as its separate control
+                                     m1                m2                m3
+Dependent Var.:              wrights_pc        wrights_pc        wrights_pc
+                                                                           
+Constant                1.160. (0.6150)   -13.57. (7.713)    -14.59 (26.54)
+mills_pc              0.1438** (0.0490) 0.1490** (0.0476) 0.1441** (0.0475)
+latitude                                 0.0157. (0.0079)   0.0173 (0.0130)
+longitude                                0.0218. (0.0124)   0.0257 (0.0177)
+dist_rug_mean                             0.4733 (0.5732)   0.1597 (0.4728)
+dist_elevation_mean                        -1.002 (1.660)   -0.4985 (1.572)
+suitmean                                                     -4.949 (3.570)
+wheat_cont                                                 -1.114. (0.5694)
+dist_grass_mean                                               1.149 (2.319)
+precip_mean_dist                                                           
+temp_mean_dist                                                             
+pcmean                                                                     
+min_harbor                                                                 
+DIST_London                                                                
+min_dist_to_roman_rds                                                      
+min_dist_2nav_rivers                                                       
+area                                                                       
+_____________________ _________________ _________________ _________________
+S.E.: Clustered              by: county        by: county        by: county
+Observations                        298               298               298
+R2                              0.27789           0.33172           0.34968
+Adj. R2                         0.27545           0.32028           0.33168
+
+                                     m4               m5
+Dependent Var.:              wrights_pc       wrights_pc
+                                                        
+Constant                 -12.76 (54.61)   -70.91 (52.73)
+mills_pc              0.1445** (0.0490)  0.0843 (0.0501)
+latitude                0.0136 (0.0205)  0.0304 (0.0253)
+longitude               0.0289 (0.0202)  0.0299 (0.0212)
+dist_rug_mean          -0.0282 (0.5822) -0.2964 (0.5525)
+dist_elevation_mean      -1.508 (1.875)   0.5676 (2.263)
+suitmean                 -3.449 (3.435)  -5.305. (2.625)
+wheat_cont               -1.051 (1.000) -0.9736 (0.8580)
+dist_grass_mean          0.6400 (1.867)   0.6783 (2.468)
+precip_mean_dist          9.435 (15.34)    10.27 (12.69)
+temp_mean_dist          -0.4205 (3.361)    4.619 (3.323)
+pcmean                                  -0.0060 (0.0449)
+min_harbor                                5.867* (2.453)
+DIST_London                               -6.975 (23.74)
+min_dist_to_roman_rds                    -19.27. (9.771)
+min_dist_2nav_rivers                       1.031 (1.814)
+area                                      7.269* (2.918)
+_____________________ _________________ ________________
+S.E.: Clustered              by: county       by: county
+Observations                        298              298
+R2                              0.35205          0.45338
+Adj. R2                         0.32947          0.42226
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+DEVIATION: First-stage F reported as heteroskedasticity-robust (HC1) Wald F on the excluded instrument rather than county-clustered, since the clustered F was roughly half the paper's values
+First-stage F: robust = 11.21634  clustered = 8.857482 
+First-stage F: robust = 10.13874  clustered = 7.646832 
+First-stage F: robust = 10.13052  clustered = 7.934442 
+TSLS estimation: Second stage
+|- D.V.   : wrights_pc
+|- Endo.  : mills_pc
+|- Instr. : iv_z
+Dep. Var.: wrights_pc
+Observations: 298
+Standard-errors: Clustered (county) 
+              Estimate Std. Error   t value Pr(>|t|)    
+(Intercept)  -0.496037   0.524391 -0.945929 0.350859    
+fit_mills_pc  0.193018   0.095194  2.027624 0.050494 .  
+riv_suit      0.004252   0.003503  1.214011 0.233109    
+wheat_suit    0.125338   1.508499  0.083088 0.934269    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 8.0806   Adj. R2: 0.365415
+F-test (1st stage), mills_pc: stat = 122.733, p < 2.2e-16, on 1 and 294 DoF.
+                  Wu-Hausman: stat =  17.991, p = 2.98e-5, on 1 and 293 DoF.
+TSLS estimation: Second stage
+|- D.V.   : wrights_pc
+|- Endo.  : mills_pc
+|- Instr. : iv_z
+Dep. Var.: wrights_pc
+Observations: 298
+Standard-errors: Clustered (county) 
+                      Estimate Std. Error   t value Pr(>|t|)    
+(Intercept)         -54.788948  50.425532 -1.086532 0.284887    
+fit_mills_pc          0.189695   0.099237  1.911544 0.064393 .  
+riv_suit              0.007331   0.005473  1.339561 0.189274    
+wheat_suit            0.506515   1.036144  0.488846 0.628089    
+latitude              0.026082   0.019599  1.330763 0.192123    
+longitude             0.035430   0.017173  2.063126 0.046804 *  
+dist_rug_mean        -0.287533   0.618868 -0.464611 0.645172    
+dist_elevation_mean  -0.857849   2.230844 -0.384540 0.702973    
+suitmean             -3.526063   3.077691 -1.145684 0.259926    
+wheat_cont           -0.696331   1.126473 -0.618152 0.540594    
+dist_grass_mean       1.576702   2.108804  0.747676 0.459796    
+precip_mean_dist     13.778612  12.863211  1.071164 0.291641    
+temp_mean_dist        1.864456   3.123917  0.596833 0.554573    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 7.55785   Adj. R2: 0.440133
+F-test (1st stage), mills_pc: stat = 105.516, p < 2.2e-16 , on 1 and 285 DoF.
+                  Wu-Hausman: stat =  17.684, p = 3.499e-5, on 1 and 284 DoF.
+TSLS estimation: Second stage
+|- D.V.   : wrights_pc
+|- Endo.  : mills_pc
+|- Instr. : iv_z
+Dep. Var.: wrights_pc
+Observations: 298
+Standard-errors: Clustered (county) 
+                        Estimate Std. Error   t value Pr(>|t|)    
+(Intercept)           -81.149078  46.216374 -1.755851 0.088120 .  
+fit_mills_pc            0.209557   0.100108  2.093314 0.043854 *  
+riv_suit                0.010130   0.010302  0.983276 0.332417    
+wheat_suit              0.153873   1.212794  0.126875 0.899787    
+latitude                0.041543   0.028177  1.474361 0.149584    
+longitude               0.034644   0.017437  1.986825 0.055048 .  
+dist_rug_mean           0.162724   0.645551  0.252070 0.802505    
+dist_elevation_mean    -0.658552   2.053245 -0.320737 0.750373    
+suitmean               -6.462075   3.181324 -2.031254 0.050106 .  
+wheat_cont             -0.315238   1.023004 -0.308149 0.759849    
+dist_grass_mean         1.452997   3.001576  0.484078 0.631434    
+precip_mean_dist       13.766612  11.468606  1.200374 0.238291    
+temp_mean_dist          3.952046   3.221050  1.226944 0.228272    
+pcmean                  0.007532   0.043621  0.172661 0.863942    
+min_harbor              6.351924   2.198253  2.889533 0.006672 ** 
+DIST_London            -7.320825  23.873973 -0.306645 0.760984    
+min_dist_to_roman_rds   2.229948  14.981139  0.148850 0.882551    
+min_dist_2nav_rivers    0.575728   1.762192  0.326711 0.745889    
+area                   -1.857697   4.700313 -0.395228 0.695143    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 7.49401   Adj. R2: 0.477215
+F-test (1st stage), mills_pc: stat = 103.381, p < 2.2e-16 , on 1 and 279 DoF.
+                  Wu-Hausman: stat =  23.816, p = 1.789e-6, on 1 and 278 DoF.
+RESULT:watermills_table2_col1=0.143776
+RESULT:watermills_table2_col2=0.149022
+RESULT:watermills_table2_col3=0.144096
+RESULT:watermills_table2_col4=0.144482
+RESULT:watermills_table2_col5=0.084349
+RESULT:watermills_ols_table3_col5=0.076001
+RESULT:watermills_iv_table3_col2=0.193018
+RESULT:watermills_iv_table3_col4=0.189695
+RESULT:watermills_iv_table3_col6=0.209557
+RESULT:first_stage_f_table3_col2=11.216344
+RESULT:first_stage_f_table3_col4=10.138742
+RESULT:first_stage_f_table3_col6=10.130521
+RESULT:n_districts_tables2_3=298.000000

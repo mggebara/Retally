@@ -1,0 +1,254 @@
+Summary of key variables:
+    personal      programmatic   programmatic2      ev_total     
+ Min.   :1.000   Min.   :1.425   Min.   :1.562   Min.   :0.0195  
+ 1st Qu.:2.302   1st Qu.:2.750   1st Qu.:2.833   1st Qu.:0.1510  
+ Median :2.811   Median :3.083   Median :3.200   Median :0.2655  
+ Mean   :2.842   Mean   :3.031   Mean   :3.150   Mean   :0.2866  
+ 3rd Qu.:3.455   3rd Qu.:3.352   3rd Qu.:3.515   3rd Qu.:0.4196  
+ Max.   :4.000   Max.   :3.958   Max.   :4.000   Max.   :0.6927  
+                                                 NAs    :42      
+     ethnic         extremist2          erule             cl       
+ Min.   :0.0000   Min.   :0.01204   Min.   :1.000   Min.   :1.000  
+ 1st Qu.:0.0000   1st Qu.:0.72858   1st Qu.:5.000   1st Qu.:1.000  
+ Median :0.0000   Median :1.58767   Median :5.000   Median :1.000  
+ Mean   :0.1806   Mean   :1.73376   Mean   :4.694   Mean   :1.607  
+ 3rd Qu.:0.0000   3rd Qu.:2.48738   3rd Qu.:5.000   3rd Qu.:2.000  
+ Max.   :1.0000   Max.   :6.28134   Max.   :7.000   Max.   :3.000  
+ NAs    :2        NAs    :1         NAs    :2                      
+     system        demsys     
+ Min.   :0.0   Min.   :0.000  
+ 1st Qu.:0.0   1st Qu.:2.773  
+ Median :2.0   Median :2.944  
+ Mean   :1.1   Mean   :3.087  
+ 3rd Qu.:2.0   3rd Qu.:3.989  
+ Max.   :2.0   Max.   :4.357  
+ NAs    :4     NAs    :33     
+Programmaticness variable used: programmatic 
+N complete: 428  countries: 74 
+Volatility q25: 0.146475  q75: 0.42035 
+OLS estimation, Dep. Var.: pers
+Observations: 428
+Standard-errors: Clustered (ccode) 
+             Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)  2.947437   0.628551  4.689254 1.2451e-05 ***
+vol          1.034372   0.234219  4.416262 3.4185e-05 ***
+partysize    1.404005   0.215547  6.513680 8.1956e-09 ***
+unions      -0.101071   0.095596 -1.057273 2.9387e-01    
+business     0.213860   0.116003  1.843573 6.9304e-02 .  
+religious    0.103607   0.108484  0.955044 3.4271e-01    
+pluralty     0.985321   0.329658  2.988918 3.8128e-03 ** 
+pr           0.284709   0.137942  2.063972 4.2575e-02 *  
+cl          -0.252200   0.057206 -4.408611 3.5151e-05 ***
+erule        0.122002   0.059552  2.048657 4.4091e-02 *  
+mdmh        -0.002026   0.030369 -0.066720 9.4699e-01    
+polity       0.008958   0.020251  0.442360 6.5954e-01    
+demsys       0.017543   0.047237  0.371389 7.1142e-01    
+system       0.087947   0.038288  2.297006 2.4488e-02 *  
+gdppc       -0.168850   0.041242 -4.094172 1.0818e-04 ***
+gini         0.001579   0.004677  0.337666 7.3658e-01    
+ethfrac      0.150942   0.190864  0.790832 4.3160e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.619294   Adj. R2: 0.216118
+OLS estimation, Dep. Var.: prog
+Observations: 428
+Standard-errors: Clustered (ccode) 
+             Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)  2.785771   0.592887  4.698650 1.2020e-05 ***
+vol         -0.391572   0.201925 -1.939192 5.6343e-02 .  
+partysize    0.976183   0.179127  5.449668 6.5177e-07 ***
+unions       0.374706   0.074715  5.015126 3.5979e-06 ***
+business    -0.124384   0.053627 -2.319430 2.3172e-02 *  
+religious    0.280760   0.072851  3.853870 2.4782e-04 ***
+pluralty     0.085103   0.371018  0.229376 8.1922e-01    
+pr           0.163472   0.153456  1.065271 2.9026e-01    
+cl          -0.052769   0.040347 -1.307876 1.9502e-01    
+erule       -0.016735   0.064790 -0.258292 7.9691e-01    
+mdmh         0.027964   0.020741  1.348256 1.8174e-01    
+polity       0.015759   0.017504  0.900294 3.7092e-01    
+demsys       0.019538   0.033400  0.584972 5.6037e-01    
+system       0.089692   0.037988  2.361096 2.0893e-02 *  
+gdppc       -0.036348   0.043072 -0.843908 4.0148e-01    
+gini         0.001646   0.003267  0.503939 6.1582e-01    
+ethfrac      0.127451   0.111491  1.143155 2.5671e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.34962   Adj. R2: 0.365871
+OLS estimation, Dep. Var.: pers
+Observations: 428
+Standard-errors: Clustered (ccode) 
+             Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)  2.638807   0.569974  4.629696 1.5559e-05 ***
+vol          1.258841   0.236913  5.313508 1.1198e-06 ***
+eth          0.550295   0.187376  2.936855 4.4330e-03 ** 
+partysize    1.504923   0.218406  6.890479 1.6617e-09 ***
+unions      -0.092715   0.094815 -0.977845 3.3138e-01    
+business     0.209301   0.117368  1.783282 7.8697e-02 .  
+religious    0.101690   0.113630  0.894921 3.7377e-01    
+pluralty     1.112671   0.336576  3.305850 1.4704e-03 ** 
+pr           0.364338   0.139662  2.608714 1.1017e-02 *  
+cl          -0.219868   0.053179 -4.134503 9.3884e-05 ***
+erule        0.161675   0.058158  2.779921 6.9110e-03 ** 
+mdmh        -0.004240   0.031886 -0.132979 8.9458e-01    
+polity       0.005606   0.019724  0.284231 7.7704e-01    
+demsys       0.028630   0.047463  0.603210 5.4824e-01    
+system       0.082041   0.040215  2.040039 4.4965e-02 *  
+gdppc       -0.176892   0.039282 -4.503121 2.4869e-05 ***
+gini         0.001554   0.004534  0.342716 7.3280e-01    
+ethfrac      0.091500   0.196022  0.466782 6.4205e-01    
+vol:eth     -1.391661   0.460464 -3.022304 3.4585e-03 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.613125   Adj. R2: 0.227899
+OLS estimation, Dep. Var.: prog
+Observations: 428
+Standard-errors: Clustered (ccode) 
+             Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)  2.753607   0.535235  5.144670 2.1748e-06 ***
+vol         -0.495307   0.219178 -2.259840 2.6815e-02 *  
+eth         -0.036153   0.103690 -0.348667 7.2834e-01    
+partysize    0.987448   0.176897  5.582052 3.8325e-07 ***
+unions       0.381386   0.071159  5.359673 9.3262e-07 ***
+business    -0.107697   0.050376 -2.137854 3.5877e-02 *  
+religious    0.251826   0.072933  3.452858 9.2661e-04 ***
+pluralty    -0.011391   0.302062 -0.037711 9.7002e-01    
+pr           0.141287   0.132472  1.066541 2.8969e-01    
+cl          -0.039811   0.040291 -0.988076 3.2638e-01    
+erule       -0.026679   0.054991 -0.485152 6.2902e-01    
+mdmh         0.024679   0.019549  1.262454 2.1080e-01    
+polity       0.012971   0.017133  0.757052 4.5146e-01    
+demsys       0.018711   0.032338  0.578601 5.6464e-01    
+system       0.064720   0.033990  1.904063 6.0843e-02 .  
+gdppc       -0.017121   0.041947 -0.408170 6.8434e-01    
+gini         0.001085   0.003131  0.346404 7.3004e-01    
+ethfrac      0.099490   0.105052  0.947051 3.4674e-01    
+vol:eth      0.558980   0.300842  1.858052 6.7194e-02 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.345319   Adj. R2: 0.37835
+OLS estimation, Dep. Var.: pers
+Observations: 428
+Standard-errors: Clustered (ccode) 
+             Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)  2.948791   0.628938  4.688527 1.2485e-05 ***
+vol          1.883613   0.466677  4.036226 1.3245e-04 ***
+ext          0.109131   0.072899  1.497031 1.3870e-01    
+partysize    1.351908   0.237333  5.696246 2.4156e-07 ***
+unions      -0.062288   0.098657 -0.631360 5.2978e-01    
+business     0.213420   0.114678  1.861038 6.6765e-02 .  
+religious    0.116352   0.105143  1.106614 2.7209e-01    
+pluralty     0.875151   0.315910  2.770251 7.0991e-03 ** 
+pr           0.277668   0.136702  2.031185 4.5878e-02 *  
+cl          -0.238217   0.059130 -4.028688 1.3597e-04 ***
+erule        0.106204   0.057920  1.833648 7.0782e-02 .  
+mdmh        -0.004744   0.031918 -0.148636 8.8225e-01    
+polity       0.003383   0.020116  0.168159 8.6692e-01    
+demsys       0.020678   0.050059  0.413060 6.8077e-01    
+system       0.081245   0.039154  2.075007 4.1511e-02 *  
+gdppc       -0.176195   0.042081 -4.187057 7.7964e-05 ***
+gini         0.001735   0.004727  0.367046 7.1465e-01    
+ethfrac      0.107411   0.194227  0.553015 5.8194e-01    
+vol:ext     -0.479992   0.222499 -2.157277 3.4276e-02 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.613183   Adj. R2: 0.227755
+OLS estimation, Dep. Var.: prog
+Observations: 428
+Standard-errors: Clustered (ccode) 
+             Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)  2.739256   0.644773  4.248404 6.2664e-05 ***
+vol         -1.076225   0.315394 -3.412316 1.0537e-03 ** 
+ext         -0.041523   0.035318 -1.175675 2.4354e-01    
+partysize    1.115626   0.162693  6.857243 1.9142e-09 ***
+unions       0.303376   0.066052  4.592977 1.7838e-05 ***
+business    -0.106065   0.049798 -2.129889 3.6552e-02 *  
+religious    0.292757   0.068966  4.244925 6.3448e-05 ***
+pluralty     0.190166   0.432342  0.439850 6.6134e-01    
+pr           0.170642   0.168252  1.014208 3.1383e-01    
+cl          -0.073223   0.038016 -1.926098 5.7986e-02 .  
+erule       -0.005137   0.074686 -0.068781 9.4535e-01    
+mdmh         0.029854   0.018552  1.609208 1.1189e-01    
+polity       0.019347   0.016440  1.176784 2.4310e-01    
+demsys       0.004325   0.032524  0.132967 8.9459e-01    
+system       0.100469   0.038376  2.617992 1.0748e-02 *  
+gdppc       -0.030682   0.041350 -0.742015 4.6046e-01    
+gini         0.001448   0.003008  0.481327 6.3172e-01    
+ethfrac      0.177122   0.107750  1.643824 1.0451e-01    
+vol:ext      0.392278   0.120003  3.268891 1.6482e-03 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.334446   Adj. R2: 0.416884
+dlameduck_runs table:
+
+    0     1  <NA> 
+15956  8162  3337 
+Range of running variable:
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max.      NAs 
+-100.000   -9.800    1.880    4.494   15.048  100.000    14147 
+Subset all : tau = 0.02559048  h = 18.75203  Nh = 1491 1789 
+Subset dl0 : tau = -0.08427046  h = 13.49111  Nh = 527 559 
+Subset dl1 : tau = 0.1062269  h = 13.3791  Nh = 655 804 
+Chosen subset: dl0 
+Call: rdrobust
+
+Sharp RD estimates using local polynomial regression.
+
+Number of Obs.                 1788
+BW type                       mserd
+Kernel                   Triangular
+VCE method                       NN
+
+                               Left        Right
+Number of Obs.                  836          952
+Eff. Number of Obs.             527          559
+Order est. (p)                    1            1
+Order bias (q)                    2            2
+BW est. (h)                  13.491       13.491
+BW bias (b)                  24.643       24.643
+rho (h/b)                     0.547        0.547
+Unique Obs.                     835          921
+
+=====================================================================
+                   Point    Robust Inference
+                Estimate         z     P>|z|      [ 95% C.I. ]       
+---------------------------------------------------------------------
+     RD Effect    -0.084    -2.058     0.040    [-0.185 , -0.005]    
+=====================================================================
+Call: rdrobust
+
+Sharp RD estimates using local polynomial regression.
+
+Number of Obs.                 1788
+BW type                       mserd
+Kernel                   Triangular
+VCE method                       NN
+
+                               Left        Right
+Number of Obs.                  836          952
+Eff. Number of Obs.             501          523
+Order est. (p)                    1            1
+Order bias (q)                    2            2
+BW est. (h)                  12.280       12.280
+BW bias (b)                  22.333       22.333
+rho (h/b)                     0.550        0.550
+Unique Obs.                     835          921
+
+=====================================================================
+                   Point    Robust Inference
+                Estimate         z     P>|z|      [ 95% C.I. ]       
+---------------------------------------------------------------------
+     RD Effect    -0.092    -2.439     0.015    [-0.185 , -0.020]    
+=====================================================================
+RESULT:personalism_volatility_difference_overall=0.283289
+RESULT:programmaticness_volatility_difference_overall=-0.107242
+RESULT:n_obs_table1=428.000000
+RESULT:personalism_volatility_difference_nonethnic=0.344765
+RESULT:programmaticness_volatility_difference_nonethnic=-0.135652
+RESULT:personalism_ethnic_minus_nonethnic_low_volatility=0.346451
+RESULT:programmaticness_ethnic_minus_nonethnic_high_volatility=0.198814
+RESULT:personalism_volatility_difference_moderate=0.515874
+RESULT:programmaticness_volatility_difference_moderate=-0.294751
+RESULT:personalism_extremist_minus_moderate_low_volatility=0.116474
+RESULT:programmaticness_extremist_minus_moderate_high_volatility=0.370113
+RESULT:rd_effect_young=-0.084270
+RESULT:rd_effect_young_outsider=-0.092132

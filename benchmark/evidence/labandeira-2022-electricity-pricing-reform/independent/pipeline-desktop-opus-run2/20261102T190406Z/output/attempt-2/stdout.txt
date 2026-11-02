@@ -1,0 +1,80 @@
+           used (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells   762595 40.8    1465875  78.3  1465875  78.3
+Vcells 10245802 78.2  102183668 779.6 83343848 635.9
+Summary of T2 :
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+ 0.0000  0.0000  0.0000  0.1907  0.0000  1.0000  177641 
+
+     0      1   <NA> 
+ 20859   4916 177641 
+Summary of time :
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+      1      79     139     139     200     260   11657 
+Summary of dup :
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  0.000   0.000   1.000   1.039   2.000   2.000 
+
+    0     1     2 
+62502 70457 70457 
+Summary of trim :
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.000   2.000   3.000   2.586   4.000   4.000 
+
+    1     2     3     4 
+44390 52209 50092 56725 
+Identity check lng-lnq-lnp:       Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-7.153e-07 -1.192e-07  0.000e+00  7.581e-09  2.384e-07  8.345e-07 
+          used (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  776777 41.5    1465875  78.3  1465875  78.3
+Vcells 7023580 53.6   81746935 623.7 83343848 635.9
+Obs in window: 56950 
+Paired households: 14401 
+Obs after pairing: 28802 
+T2 in paired sample:
+
+    0     1  <NA> 
+20859  4916  3027 
+reform vs T2:
+   
+        0     1  <NA>
+  0 20359     0  2014
+  1   500  4916  1013
+Continuous controls: hhsize rooms surface elderly 
+Categorical controls: educ active tenure old tamamu urban caprov ccaa quarter 
+Instrument z1 coverage: 0.6754045 
+Instrument z2 coverage: 0.9730574 
+Instrument z3 coverage: 0.6735643 
+Estimation sample: 11463  households: 7794 
+           Estimate  Std. Error     t value      Pr(>|t|)
+reform -0.127693771 0.022375747  -5.7067937  1.193430e-08
+msr    -0.004518745 0.007352564  -0.6145808  5.388495e-01
+lnp    -1.050281791 0.032738459 -32.0809778 3.244597e-212
+          Estimate  Std. Error    t value      Pr(>|t|)
+reform -0.14208304 0.028245424  -5.030303  5.131818e-07
+msr    -0.02170019 0.009551961  -2.271804  2.315599e-02
+lnp    -0.99536532 0.044322330 -22.457423 9.236127e-105
+           Estimate  Std. Error    t value     Pr(>|t|)
+reform -0.127693777 0.022375747 -5.7067939 1.193429e-08
+msr    -0.004518745 0.007352564 -0.6145809 5.388495e-01
+lnp    -0.050281811 0.032738460 -1.5358637 1.246124e-01
+           Estimate  Std. Error    t value     Pr(>|t|)
+reform -0.142083001 0.028245424 -5.0303016 5.131856e-07
+msr    -0.021700193 0.009551961 -2.2718050 2.315596e-02
+lnp     0.004634676 0.044322330  0.1045675 9.167247e-01
+iv2 kappa 1.000029 reform -0.0538372 se 0.06980906 lnp -0.1246418 
+iv4 kappa 1.000649 reform -0.1499609 se 0.0933078 lnp -1.110673 
+iv6 kappa 1.000029 reform -0.05383719 se 0.06980906 lnp 0.8753584 
+iv8 kappa 1.000649 reform -0.1499608 se 0.09330781 lnp -0.1106726 
+DEVIATION: Used the replication file's constructed variables (lnc_ele, lng_ele, lnp_kwh, lny, lny2, lnp_papas/aguav/gascar, alqui, edif25, SITUACTHOG_j) instead of rebuilding them, and dropped the ad-hoc median imputation of instrument unit values
+RESULT:reform_consumption_ols_col1=-0.127694
+RESULT:reform_consumption_iv_col2=-0.053837
+RESULT:reform_consumption_fe_col3=-0.142083
+RESULT:reform_consumption_fe_iv_col4=-0.149961
+RESULT:reform_expenditure_ols_col5=-0.127694
+RESULT:reform_expenditure_iv_col6=-0.053837
+RESULT:reform_expenditure_fe_col7=-0.142083
+RESULT:reform_expenditure_fe_iv_col8=-0.149961
+RESULT:price_elasticity_consumption_ols_col1=-1.050282
+RESULT:price_elasticity_consumption_fe_col3=-0.995365
+RESULT:n_obs_table2=11463.000000
+RESULT:n_households_table2=7794.000000

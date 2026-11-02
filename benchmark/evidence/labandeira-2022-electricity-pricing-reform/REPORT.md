@@ -38,6 +38,7 @@
 |---|---|---|---|
 | `claude-code` | [12/12](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a) | [8/12](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/12](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [6/12](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[7/12](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) |
 | `pipeline-desktop-opus` | [12/12](seeded/pipeline-desktop-opus/20261102T143152Z/CELL.md) (20261102T143152Z) | [5/12](independent/pipeline-desktop-opus/20261102T143735Z/CELL.md) (20261102T143735Z) | [4/12](blind/pipeline-desktop-opus/20261102T141403Z/CELL.md) (20261102T141403Z) |
+| `pipeline-desktop-opus-run2` | [12/12](seeded/pipeline-desktop-opus-run2/20261102T153300Z/CELL.md) (20261102T153300Z) | [7/12](independent/pipeline-desktop-opus-run2/20261102T190406Z/CELL.md) (20261102T190406Z) | [4/12](blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) (20261102T151132Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
 
@@ -49,16 +50,16 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 | Cell | Claim | Reproduced | Paper | Band | Error / band | Verdict |
 |---|---|---|---|---|---|---|
+| [blind/pipeline-desktop-opus-run2/20261102T151132Z](blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) | `reform_expenditure_iv_col6` | -0.062212 | -0.09 | ±0.027 (se_band) | 1.029 | FAIL |
 | [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) | `reform_expenditure_iv_col6` | -0.061963 | -0.09 | ±0.027 (se_band) | 1.038 | FAIL |
 | [blind/pipeline-desktop-opus/20261102T141403Z](blind/pipeline-desktop-opus/20261102T141403Z/CELL.md) | `reform_consumption_fe_col3` | -0.124752 | -0.154 | ±0.028 (se_band) | 1.045 | FAIL |
 | [blind/pipeline-desktop-opus/20261102T141403Z](blind/pipeline-desktop-opus/20261102T141403Z/CELL.md) | `reform_expenditure_fe_col7` | -0.124752 | -0.098 | ±0.028 (se_band) | 0.955 | PASS |
 | [blind/pipeline-desktop-opus/20261102T141403Z](blind/pipeline-desktop-opus/20261102T141403Z/CELL.md) | `reform_expenditure_fe_iv_col8` | -0.144614 | -0.089 | ±0.053 (se_band) | 1.049 | FAIL |
 | [blind/pipeline-desktop-opus/20261102T141403Z](blind/pipeline-desktop-opus/20261102T141403Z/CELL.md) | `price_elasticity_consumption_fe_col3` | -1.0028 | -1.026 | ±0.025 (se_band) | 0.928 | PASS |
+| [blind/pipeline-desktop-opus-run2/20261102T151132Z](blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) | `reform_expenditure_fe_iv_col8` | -0.136377 | -0.089 | ±0.053 (se_band) | 0.894 | PASS |
 | [independent/pipeline-desktop-opus/20261102T143735Z](independent/pipeline-desktop-opus/20261102T143735Z/CELL.md) | `reform_expenditure_ols_col5` | -0.133036 | -0.156 | ±0.027 (se_band) | 0.851 | PASS |
+| [independent/pipeline-desktop-opus-run2/20261102T190406Z](independent/pipeline-desktop-opus-run2/20261102T190406Z/CELL.md) | `reform_expenditure_iv_col6` | -0.068256 | -0.09 | ±0.027 (se_band) | 0.805 | PASS |
 | [independent/pipeline-desktop-opus/20261102T143735Z](independent/pipeline-desktop-opus/20261102T143735Z/CELL.md) | `price_elasticity_consumption_ols_col1` | -1.063 | -1.044 | ±0.024 (se_band) | 0.792 | PASS |
-| [blind/pipeline-desktop-opus/20261102T141403Z](blind/pipeline-desktop-opus/20261102T141403Z/CELL.md) | `price_elasticity_consumption_ols_col1` | -1.06262 | -1.044 | ±0.024 (se_band) | 0.776 | PASS |
-| [blind/claude-code/2026-11-02-b](blind/claude-code/2026-11-02-b/CELL.md) | `reform_expenditure_ols_col5` | -0.120966 | -0.156 | ±0.027 (se_band) | 1.298 | FAIL |
-| [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) | `reform_expenditure_ols_col5` | -0.120727 | -0.156 | ±0.027 (se_band) | 1.306 | FAIL |
 
 ### Declared deviations
 
@@ -82,6 +83,9 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Missing z_car for non-buyers imputed with region x year x quarter median of buyers' unit prices in IV columns
   - Pooled (non-FE) columns include the treated-group dummy D so T is a DiD interaction; absorbed by household FE in FE columns
   - Expenditure OLS/LSDV columns estimated without ln(price) because ln(price)=ln(exp)-ln(kWh) makes the T coefficient mechanically identical to the consumption equation
+- [independent/pipeline-desktop-opus-run2/20261102T190406Z](independent/pipeline-desktop-opus-run2/20261102T190406Z/CELL.md) (7/12; failed: `reform_consumption_ols_col1`, `reform_consumption_iv_col2`, `reform_expenditure_ols_col5`, `reform_expenditure_fe_col7`, `reform_expenditure_fe_iv_col8`)
+  - Missing instrument unit values (potatoes, water, fuel) imputed with the region x year x quarter median unit value; the paper's estimation sample (20,872 obs) is far larger than the complete-case instrument sample, so some imputation must have been used
+  - Used the replication file's constructed variables (lnc_ele, lng_ele, lnp_kwh, lny, lny2, lnp_papas/aguav/gascar, alqui, edif25, SITUACTHOG_j) and its treatment indicator T2 (which also defines the 25,775-obs analysis sample) instead of rebuilding them
 - [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) (6/12; failed: `reform_consumption_ols_col1`, `reform_consumption_iv_col2`, `reform_expenditure_ols_col5`, `reform_expenditure_iv_col6`, `reform_expenditure_fe_col7`, `reform_expenditure_fe_iv_col8`)
   - Instruments: the raw effective prices of potatoes/water/fuel are missing for ~1/3 of households; to keep the same N in all eight columns (as the paper states) the filled-in series lnPRE_*_ shipped in the analysis data (deflated, gaps filled with cell averages) are used, converted back to nominal logs by adding IP (equal to lnp_* wherever the household purchased).
   - LIML has no fixest/ivreg implementation; it is computed as a k-class estimator on variables partialled out on the exogenous regressors (and household FE via fixest), with exogenous coefficients (incl. T) recovered by regressing y - beta*lnp on the exogenous set. Only point estimates are computed for the IV columns (no SEs).
@@ -97,20 +101,23 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
-- independent: `n_households_table2` — pipeline 0/1, agent 2/2
-- independent: `n_obs_table2` — pipeline 0/1, agent 2/2
-- independent: `reform_consumption_fe_iv_col4` — pipeline 0/1, agent 2/2
-- blind: `n_households_table2` — pipeline 0/1, agent 2/2
-- blind: `n_obs_table2` — pipeline 0/1, agent 2/2
-- blind: `reform_consumption_fe_col3` — pipeline 0/1, agent 2/2
-- blind: `reform_expenditure_fe_col7` — pipeline 1/1, agent 0/2
+- blind: `n_households_table2` — pipeline 0/2, agent 2/2
+- blind: `n_obs_table2` — pipeline 0/2, agent 2/2
 
 Pass rates at least 50 points apart (not unanimous):
 
-- independent: `reform_consumption_ols_col1` — pipeline 0/1, agent 1/2
-- independent: `reform_expenditure_fe_col7` — pipeline 0/1, agent 1/2
-- independent: `reform_expenditure_fe_iv_col8` — pipeline 0/1, agent 1/2
-- blind: `reform_expenditure_iv_col6` — pipeline 0/1, agent 1/2
+- independent: `n_households_table2` — pipeline 1/2, agent 2/2
+- independent: `n_obs_table2` — pipeline 1/2, agent 2/2
+- independent: `reform_consumption_fe_iv_col4` — pipeline 1/2, agent 2/2
+- independent: `reform_consumption_ols_col1` — pipeline 0/2, agent 1/2
+- independent: `reform_expenditure_fe_col7` — pipeline 0/2, agent 1/2
+- independent: `reform_expenditure_fe_iv_col8` — pipeline 0/2, agent 1/2
+- independent: `reform_expenditure_ols_col5` — pipeline 1/2, agent 2/2
+- blind: `price_elasticity_consumption_ols_col1` — pipeline 1/2, agent 2/2
+- blind: `reform_consumption_fe_col3` — pipeline 1/2, agent 2/2
+- blind: `reform_expenditure_fe_col7` — pipeline 1/2, agent 0/2
+- blind: `reform_expenditure_fe_iv_col8` — pipeline 1/2, agent 0/2
+- blind: `reform_expenditure_iv_col6` — pipeline 0/2, agent 1/2
 
 ## Cells
 
@@ -121,6 +128,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### seeded · pipeline-desktop-opus · 20261102T143152Z
 
 [`seeded/pipeline-desktop-opus/20261102T143152Z/CELL.md`](seeded/pipeline-desktop-opus/20261102T143152Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 2; 2026-11-02T14:31:52Z; from `pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json`; evidence complete.
+
+### seeded · pipeline-desktop-opus-run2 · 20261102T153300Z
+
+[`seeded/pipeline-desktop-opus-run2/20261102T153300Z/CELL.md`](seeded/pipeline-desktop-opus-run2/20261102T153300Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 2; 2026-11-02T15:33:00Z; from `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`; evidence complete.
 
 ### independent · claude-code · 2026-11-02-a
 
@@ -134,6 +145,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/pipeline-desktop-opus/20261102T143735Z/CELL.md`](independent/pipeline-desktop-opus/20261102T143735Z/CELL.md) — final 5/12, re-scored 5/12; first scored 3/12; executions 4; 2026-11-02T14:37:35Z; from `pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-run2 · 20261102T190406Z
+
+[`independent/pipeline-desktop-opus-run2/20261102T190406Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261102T190406Z/CELL.md) — final 7/12, re-scored 7/12; first scored 3/12; executions 4; 2026-11-02T19:04:06Z; from `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`; evidence complete.
+
 ### blind · claude-code · 2026-11-02-a
 
 [`blind/claude-code/2026-11-02-a/CELL.md`](blind/claude-code/2026-11-02-a/CELL.md) — final 6/12, re-scored 6/12; first scored 6/12; executions 3; 2026-11-02T14:18:48Z; from `claude-code-6papers-all-modes-2026-11-02.json`; evidence complete.
@@ -145,4 +160,8 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · pipeline-desktop-opus · 20261102T141403Z
 
 [`blind/pipeline-desktop-opus/20261102T141403Z/CELL.md`](blind/pipeline-desktop-opus/20261102T141403Z/CELL.md) — final 4/12, re-scored 4/12; first scored 4/12; executions 1; 2026-11-02T14:14:03Z; from `pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-run2 · 20261102T151132Z
+
+[`blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md`](blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) — final 4/12, re-scored 4/12; first scored 4/12; executions 1; 2026-11-02T15:11:32Z; from `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`; evidence complete.
 

@@ -1,0 +1,94 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: The Economic Journal, 1–33 https://doi.org/10.1093/ej/ueab102 C⃝The Author(s) 2021. Published by Oxford University Press. All rights reserved. For
+Abstract (first 500 chars): THE WHEELS OF CHANGE: TECHNOLOGY ADOPTION, MILLWRIGHTS AND THE PERSISTENCE IN BRITAIN’S INDUSTRIALISATION ∗ Joel Mokyr, Assaf Sarid and Karine van der Beek This paper examines the effect of the early adoption of technology on the evolution of human capital and industrialisation. We argue that mechanical skills and competence were a main determinant of the location of
+Methodology Summary: - **Data / unit of analysis**: Cross-section of England's government-area districts (326 districts; 325 after dropping the Isles of Scilly for missing HYDE population data). Domesday Book (1086) coverage limits all regressions using DB mills to **298 districts** (London, Winchester, Bristol, Tamworth, Durham, Northumberland missing; Cumberland/Westmorland/Lancashire partial).
+- **Variable construction (preprocessing)**: Dependent variable = number of apprentices to "wrights" (millwrights, wheelwrights, "wrights") from the Apprenticeship Stamp Tax registers (IR 1), 1710–50, master locations geocoded to TownsList places (10,201 of 36,144 locations; zero elsewhere), aggregated to district and divided by mean district population 1710–50 (HYDE) — **per 10,000 people**. Key regressor = number of Domesday Book (water)mills per capita, normalised by the same 1710–50 mean population (per 10,000). Textile proxy: apprentices to drapers/clothiers (4,359 people) per capita; weavers as alternative. Variables are in levels (linear–linear), not logs, and headline coefficients are unstandardised.
+- **Baseline specification (Eq. 1, Table 2)**: OLS, w_i = β·Mills_i + X'γ + ε_i, with constant. Controls added stepwise: col (1) none; col (2) latitude, longitude (district centroid), mean ruggedness (TRI), mean elevation; col (3) + agricultural suitability, wheat suitability (FAO GAEZ), pasture suitability; col (4) + mean precipitation and temperature; col (5, preferred) + mean population 1710–50, minimal distance to an important harbour, distance to London, minimal distance to a Roman road, minimal distance to a navigable river, and district area. No fixed effects.
+- **Headline estimates**: β = 0.15 (SE 0.02) unconditional; 0.14 (0.02) in cols 2–4; **0.12 (0.03)** in col 5, all significant at 1%; adj. R² 0.57–0.61; N = 298. Interpretation: one additional DB mill per 10,000 people → ~0.12–0.14 more wright apprentices per 10,000 in 1710–50.
+- **Standard errors**: Heteroskedasticity-robust, **clustered at the (historical) county level** in all regressions.
+- **IV strategy (Table 3)**: 2SLS instrumenting DB mills per capita with "grinding-mill suitability": length of rivers in the district with moderate ruggedness (TRI between 2 and 6) interacted with a high-wheat-suitability indicator (mean GAEZ wheat suitability category ≤ 5). River suitability and wheat suitability enter as separate controls. IV estimates: 0.16 (0.04) no controls (first-stage F = 19.90); 0.15 (0.04) with main geographic + agricultural + climatic controls (F = 16.96); 0.16 (0.04) adding other geographic controls (F = 16.17); corresponding OLS 0.15, 0.14, 0.12; N = 298.
+- **Robustness / extensions**: Black Death test (Eq. 2): adds district population change 1300–1400 (HYDE) and its interaction with DB mills (coefficient of interest δ3); Winchester-district case study comparing rivers Meon vs Itchen (1086 vs 1759 mills); placebo regressions for industries without water-powered machinery; worsted-producer relocation; horserace of mills vs wrights; mediation analysis (wrights account for 30–70% of mills' total effect on industrialisation); bias-from-unobservables test (Section 5.4).
+- **Evaluation**: No train/test split or cross-validation; inference via coefficient magnitude, clustered-SE significance (two-sided tests at 1/5/10%), adjusted R², and first-stage F-statistics for IV strength.
+
+
+## Claims to Reproduce
+1. watermills_table2_col1: 0.15 (wright apprentices per capita per Domesday watermill per capita) [type: coefficient]
+   Location: Table 2, column (1), Watermills (per capita)
+   Context: Table 2 ("Number of Wright Apprentices per Capita and Domesday Book Mills per Capita"), column (1). Cross-section of English (government area) districts covered by the Domesday Book. OLS regression of the number of apprentices to wrights in 1710-50 (from the Apprentice Tax Registers) per capita on the number of watermills recorded in the Domesday Book (1086) per capita, with a constant and no controls; both counts are converted to per capita terms using the district's mean population in 1710-50 (the text reads the coefficient as wright apprentices per mill per 10,000 people). The table note sa…
+2. watermills_table2_col2: 0.14 (wright apprentices per capita per Domesday watermill per capita) [type: coefficient]
+   Location: Table 2, column (2), Watermills (per capita)
+   Context: Table 2, column (2): the column (1) regression adding the main geographic controls — latitude and longitude of the district's centroid, mean ruggedness and mean elevation. Same sample, SEs clustered at the historical county level.
+3. watermills_table2_col3: 0.14 (wright apprentices per capita per Domesday watermill per capita) [type: coefficient]
+   Location: Table 2, column (3), Watermills (per capita)
+   Context: Table 2, column (3): column (2) plus agricultural suitability, wheat suitability and mean pasture suitability. Wheat suitability is the paper's high-wheat-suitability indicator (mean wheat suitability category of the district lower than or equal to 5, the lower the more suitable).
+4. watermills_table2_col4: 0.14 (wright apprentices per capita per Domesday watermill per capita) [type: coefficient]
+   Location: Table 2, column (4), Watermills (per capita)
+   Context: Table 2, column (4): column (3) plus the climatic controls, mean precipitation and mean temperature.
+5. watermills_table2_col5: 0.12 (wright apprentices per capita per Domesday watermill per capita) [type: coefficient]
+   Location: Table 2, column (5), Watermills (per capita)
+   Context: Table 2, column (5), the paper's preferred OLS specification (Figure 1 plots its partial correlation): column (4) plus mean population in 1710-50, minimal distance to an important harbour, distance to London, minimal distance to a Roman road, minimal distance to a navigable river, and the district's area. SEs clustered at the historical county level.
+6. watermills_ols_table3_col5: 0.12 (wright apprentices per capita per Domesday watermill per capita) [type: coefficient]
+   Location: Table 3, column (5) OLS, Watermills (per capita)
+   Context: Table 3 ("Wright Apprentices per Capita and the Number of Domesday Mills per Capita"), column (5), OLS: the Table 2 column (5) specification (main geographic, agricultural, climatic and other geographic controls, population) with river suitability added as a control, i.e. the OLS counterpart of the column (6) IV. River suitability is the length of rivers in the district running through terrain of moderate ruggedness (ruggedness between 2 and 6). The Table 3 note reports heteroscedasticity robust standard errors; the paper states (Section 4.2) that in all regressions observations are clustered …
+7. watermills_iv_table3_col2: 0.16 (wright apprentices per capita per Domesday watermill per capita) [type: coefficient]
+   Location: Table 3, column (2) IV, Watermills (per capita)
+   Context: Table 3, column (2), IV (two-stage least squares): Domesday watermills per capita instrumented with the paper's geographic suitability for grain-grinding watermills, the length of rivers in the district with moderate ruggedness (between 2 and 6) interacted with the high-wheat-suitability indicator (mean wheat suitability category of 5 or lower). The two components, river suitability and wheat suitability, enter as controls; no other controls. Dependent variable: wright apprentices per capita, 1710-50. Standard errors as for column (5).
+8. watermills_iv_table3_col4: 0.15 (wright apprentices per capita per Domesday watermill per capita) [type: coefficient]
+   Location: Table 3, column (4) IV, Watermills (per capita)
+   Context: Table 3, column (4), IV: the column (2) model adding the main geographic controls (longitude, latitude, mean ruggedness, mean elevation), the agricultural controls (agricultural and pasture suitability besides wheat suitability) and the climatic controls (mean precipitation and temperature).
+9. watermills_iv_table3_col6: 0.16 (wright apprentices per capita per Domesday watermill per capita) [type: coefficient]
+   Location: Table 3, column (6) IV, Watermills (per capita)
+   Context: Table 3, column (6), the full IV specification: column (4) plus the other geographic controls (distance to London, to the main eighteenth-century harbours, to a historical Roman road and to a navigable river, and the district's area) and the district's mean population in 1710-50.
+10. first_stage_f_table3_col2: 19.9 (first-stage F-statistic) [type: other]
+   Location: Table 3, column (2), First-stage F-statistic
+   Context: Table 3, column (2): the first-stage F-statistic for the excluded instrument (river suitability x wheat suitability) in the IV with river suitability and wheat suitability as the only controls.
+11. first_stage_f_table3_col4: 16.96 (first-stage F-statistic) [type: other]
+   Location: Table 3, column (4), First-stage F-statistic
+   Context: Table 3, column (4): first-stage F-statistic of the IV with main geographic, agricultural and climatic controls.
+12. first_stage_f_table3_col6: 16.17 (first-stage F-statistic) [type: other]
+   Location: Table 3, column (6), First-stage F-statistic
+   Context: Table 3, column (6): first-stage F-statistic of the full IV specification.
+13. n_districts_tables2_3: 298.0 (districts) [type: other]
+   Location: Tables 2 and 3, Observations
+   Context: Number of district observations in the Table 2 and Table 3 regressions (the same in every column): districts with Domesday Book watermill data.
+
+## Dataset Information
+Name: mokyr-2022-wheels-of-change
+Local path: <repo>/.cache/datasets/mokyr_2022_wheels_of_change.script-free
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- 3 replication package/Replication files/Data/replication_data.dta (288.0 KB) — 325 rows, 62 columns: wrights, mills, area, latitude, longitude, min_dist_to_roman_rds, wheat_tmean, min_dist_2nav_rivers, min_harbor, dist_grass_mean, district_id, dist_rug_mean, suitmean, DIST_London, precip_mean_dist, worsted_w1, dist_elevation_mean, temp_mean_dist, pcmean, GAZ_CNTY, local_government_area, blacksmith, draper, ntextile0, worsted_w0, total_ploughs, pc1300_mean, all_weaver0, other_weaver0, all_weaver1, other_weaver1, riv_rug1020count, riv_rug01count, riv_rug13count, riv_rug14count…
+- 1 paper/MS20200480_figures.docx (169.3 KB)
+- 3 replication package/MS20200480_README.docx (40.5 KB)
+- 3 replication package/MS20200480_README.pdf (285.1 KB)
+- 3 replication package/Replication files/Appendix/EJAppendixFigB2.png (561.6 KB)
+- 3 replication package/Replication files/Appendix/EJAppendixFigB4.png (558.7 KB)
+- 3 replication package/Replication files/Data/replication section 5.3.xlsx (23.8 KB)
+- 3 replication package/Replication files/Data/replication_data.csv (123.6 KB) — columns: local_government_area,district_id,smith,joiner,butcher,blacksmith,attorney,apothecary,surgeon,wrights,draper,trade_other,GAZ_CNTY,ntextile0,all_weaver0,worsted_w0,linen_w0,cotton_w0,other_weaver0,pc0,all_weaver1,worsted_w1,linen_w1,cotton_w…
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/mokyr_2022_wheels_of_change.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Independent Reproduction
+This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's description alone.  The authors' own analysis code is deliberately withheld.  Do NOT open, read, source, or execute any script files that may appear in the dataset directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, and similar) — load data files only.  Derive the estimating equation, sample restrictions, fixed effects, and standard-error clustering from the paper information and claims above.
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

@@ -40,6 +40,7 @@
 |---|---|---|---|
 | `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) |
 | `pipeline-desktop-opus` | [13/13](seeded/pipeline-desktop-opus/20261102T141403Z/CELL.md) (20261102T141403Z) | [9/13](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) (20261102T141403Z) | [12/13](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) (20261102T095147Z) |
+| `pipeline-desktop-opus-run2` | [13/13](seeded/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) (20261102T152052Z) | [9/13](independent/pipeline-desktop-opus-run2/20261102T190406Z/CELL.md) (20261102T190406Z) | [9/13](blind/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) (20261102T152052Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
 
@@ -55,12 +56,12 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | [independent/claude-code/2026-11-02-b](independent/claude-code/2026-11-02-b/CELL.md) | `table2_col3_risk_taking` | -0.194 | -0.294 | ±0.122 (se_band) | 0.820 | PASS |
 | [independent/claude-code/2026-11-02-a](independent/claude-code/2026-11-02-a/CELL.md) | `table2_col3_risk_taking` | -0.194001 | -0.294 | ±0.122 (se_band) | 0.820 | PASS |
 | [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) | `table2_col3_risk_taking` | -0.194001 | -0.294 | ±0.122 (se_band) | 0.820 | PASS |
+| [blind/pipeline-desktop-opus-run2/20261102T152052Z](blind/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) | `table2_col3_risk_taking` | -0.205689 | -0.294 | ±0.122 (se_band) | 0.724 | PASS |
 | [blind/pipeline-desktop-opus/20261102T095147Z](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) | `table1_col5_natives_risk_taking` | -1.19398 | -1.32 | ±0.189 (se_band) | 0.667 | PASS |
 | [independent/pipeline-desktop-opus/20261102T141403Z](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) | `table2_col3_risk_taking` | -0.231388 | -0.294 | ±0.122 (se_band) | 0.513 | PASS |
+| [independent/pipeline-desktop-opus-run2/20261102T190406Z](independent/pipeline-desktop-opus-run2/20261102T190406Z/CELL.md) | `table2_col3_risk_taking` | -0.231388 | -0.294 | ±0.122 (se_band) | 0.513 | PASS |
 | [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `table1_col2_risk_taking` | -0.477249 | -0.482 | ±0.00964 (relative) | 0.493 | PASS |
 | [independent/claude-code/2026-11-02-a](independent/claude-code/2026-11-02-a/CELL.md) | `table2_col4_risk_taking` | -0.381868 | -0.449 | ±0.14 (se_band) | 0.480 | PASS |
-| [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) | `table2_col4_risk_taking` | -0.381868 | -0.449 | ±0.14 (se_band) | 0.480 | PASS |
-| [independent/claude-code/2026-11-02-b](independent/claude-code/2026-11-02-b/CELL.md) | `table2_col4_risk_taking` | -0.3819 | -0.449 | ±0.14 (se_band) | 0.479 | PASS |
 
 ### Declared deviations
 
@@ -112,11 +113,18 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
-- independent: `table2_col1_patience` — pipeline 0/1, agent 2/2
-- independent: `table2_col3_patience` — pipeline 0/1, agent 2/2
-- independent: `table2_col4_patience` — pipeline 0/1, agent 2/2
-- independent: `table2_col4_risk_taking` — pipeline 0/1, agent 2/2
-- blind: `table1_col2_risk_taking` — pipeline 0/1, agent 2/2
+- independent: `table2_col1_patience` — pipeline 0/2, agent 2/2
+- independent: `table2_col3_patience` — pipeline 0/2, agent 2/2
+- independent: `table2_col4_patience` — pipeline 0/2, agent 2/2
+- independent: `table2_col4_risk_taking` — pipeline 0/2, agent 2/2
+
+Pass rates at least 50 points apart (not unanimous):
+
+- blind: `table1_col2_risk_taking` — pipeline 1/2, agent 2/2
+- blind: `table2_col1_patience` — pipeline 1/2, agent 2/2
+- blind: `table2_col3_patience` — pipeline 1/2, agent 2/2
+- blind: `table2_col4_patience` — pipeline 1/2, agent 2/2
+- blind: `table2_col4_risk_taking` — pipeline 1/2, agent 2/2
 
 ## Cells
 
@@ -127,6 +135,10 @@ Claims where, in the same mode, one reproducer family passed in every run and th
 ### seeded · pipeline-desktop-opus · 20261102T141403Z
 
 [`seeded/pipeline-desktop-opus/20261102T141403Z/CELL.md`](seeded/pipeline-desktop-opus/20261102T141403Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-02T14:14:03Z; from `pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json`; evidence complete.
+
+### seeded · pipeline-desktop-opus-run2 · 20261102T152052Z
+
+[`seeded/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md`](seeded/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-02T15:20:52Z; from `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`; evidence complete.
 
 ### independent · claude-code · 2026-11-02-a
 
@@ -140,6 +152,10 @@ Claims where, in the same mode, one reproducer family passed in every run and th
 
 [`independent/pipeline-desktop-opus/20261102T141403Z/CELL.md`](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 2; 2026-11-02T14:14:03Z; from `pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-run2 · 20261102T190406Z
+
+[`independent/pipeline-desktop-opus-run2/20261102T190406Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261102T190406Z/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 4; 2026-11-02T19:04:06Z; from `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`; evidence complete.
+
 ### blind · claude-code · 2026-11-02-a
 
 [`blind/claude-code/2026-11-02-a/CELL.md`](blind/claude-code/2026-11-02-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 10; 2026-11-02T14:17:44Z; from `claude-code-6papers-all-modes-2026-11-02.json`; evidence complete.
@@ -151,4 +167,8 @@ Claims where, in the same mode, one reproducer family passed in every run and th
 ### blind · pipeline-desktop-opus · 20261102T095147Z
 
 [`blind/pipeline-desktop-opus/20261102T095147Z/CELL.md`](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) — final 12/13, re-scored 12/13; first scored 12/13; executions 1; 2026-11-02T09:51:47Z; from `pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-run2 · 20261102T152052Z
+
+[`blind/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md`](blind/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 2; 2026-11-02T15:20:52Z; from `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`; evidence complete.
 
