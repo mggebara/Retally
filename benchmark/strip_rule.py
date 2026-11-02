@@ -27,6 +27,12 @@ by file, what that copy leaves out.  Two layers:
      the same markers or hold a Stata ``export excel`` results matrix
      (``OLS_all`` / ``OLS_all_stars`` column pairs with ``***`` cells).
      A LaTeX row labelled ``N`` or ``Clusters`` counts as the observations row.
+   * Table fragments: a ``.tex`` / ``.txt`` made of bare table rows
+     (``label & 0.013 & ... \\\\``, no tabular, no caption: esttab output split
+     into per-row files, as Hanlon 2022 ships it) that prints estimates —
+     two or more rows with a parenthesised decimal or a starred number,
+     or nothing but ``observations`` / ``N`` / ``F-statistic`` /
+     ``p-value`` / R² rows.  A descriptive fragment is kept.
    * Result macros: a ``.tex`` (not a manuscript) made mostly of numeric
      ``\\newcommand`` / ``\\def`` definitions, the in-text numbers a script
      wrote for the paper.
@@ -111,7 +117,7 @@ class StrippedFile:
     reason: str
     """``script-suffix``, ``transcript-name``, ``stata-log``, ``smcl``,
     ``r-transcript``, ``python-output``, ``script-content:stata|r|python``,
-    ``regression-table``, ``result-macros`` or ``duplicate-of-script``."""
+    ``regression-table``, ``table-fragment``, ``result-macros`` or ``duplicate-of-script``."""
 
 
 def name_reason(path: Path) -> str | None:
@@ -320,6 +326,54 @@ def _result_macros(lines: list[str]) -> bool:
     return numeric >= 5 and 2 * numeric >= len(body)
 
 
+# A row-only table fragment: esttab/estout ``fragment`` output split into per-row files
+# (Hanlon 2022's ``Table1_R.tex``): ``label & 0.013 & ... \\`` rows, no tabular, no caption.
+_FRAGMENT_RULE_LINE = re.compile(
+    r"^\\(?:hline|midrule|toprule|bottomrule|addlinespace|cline\{[^}]*\}|cmidrule\S*)\s*(?:\[[^]]*\])?\s*$"
+)
+_FRAGMENT_ROW = re.compile(r"&.*\\\\\s*(?:\[[^]]*\])?\s*(?:\\(?:hline|midrule|addlinespace)\s*)?$")
+_FRAGMENT_ESTIMATE = re.compile(
+    r"\(\s*[-\u2212]?\d*\.\d+\s*\)"  # (0.012): a standard error
+    r"|\d\s*(?:\$?\^\{?|\\sym\{)?\s*\*{1,3}"  # 0.074** / 0.074$^{**}$ / 0.074\sym{**}
+)
+_FRAGMENT_ENV = re.compile(r"\\begin\{(?:tabular|longtable|table|tabularx|threeparttable)")
+# Row labels of an estimation-statistics row: a fragment holding only these rows
+# (``Table1_N.tex``: ``observations & 116 & 174 ...``) prints a regression's N / F / p.
+_FRAGMENT_STAT_LABEL = re.compile(
+    r"^\s*(?:observations|obs\.?|n|clusters|number of clusters|(?:adj(?:usted)?\.?\s*)?r-?squared"
+    r"|\$?\s*r\^\{?2\}?\s*\$?|\$?\s*[fp]\s*\$?\s*-?\s*(?:statistic|stat|value|test)s?)\s*$",
+    re.I,
+)
+
+
+def _table_fragment(lines: list[str]) -> bool:
+    """A file of bare LaTeX table rows that prints estimates (``table-fragment``).
+
+    No ``tabular`` / ``table`` environment (a whole table is judged by the
+    regression-table markers, and a summary table with SDs in parentheses
+    stays).  Most non-blank, non-comment lines (rule lines such as ``\\hline`` aside)
+    are rows (an ``&`` and a closing ``\\\\``), and either two or more rows
+    carry a parenthesised decimal ``(0.012)`` or a starred number
+    ``0.074**``, or every row is an estimation-statistics row
+    (``observations``, ``N``, ``Clusters``, ``F-statistic``, ``p-value``,
+    R²).  A descriptive fragment (shares, means, counts per group with no
+    SEs or stars) is kept.
+    """
+    if any(_FRAGMENT_ENV.search(ln) for ln in lines):
+        return False  # a whole table: the regression-table markers decide
+    body = [
+        s
+        for s in (ln.strip() for ln in lines)
+        if s and not s.startswith("%") and not _FRAGMENT_RULE_LINE.match(s)
+    ]
+    rows = [s for s in body if _FRAGMENT_ROW.search(s)]
+    if not rows or 3 * len(rows) < 2 * len(body):
+        return False
+    if sum(1 for s in rows if _FRAGMENT_ESTIMATE.search(s)) >= 2:
+        return True
+    return all(_FRAGMENT_STAT_LABEL.match(s.split("&", 1)[0]) for s in rows)
+
+
 def _tex_reason(text: str) -> str | None:
     if "\\documentclass" in text:
         # A manuscript: strip only when one of its own tabulars is a regression table.
@@ -330,7 +384,9 @@ def _tex_reason(text: str) -> str | None:
     is_table = (
         "\\begin{tabular" in text or "\\begin{longtable" in text or (text.count("&") >= 4 and "\\\\" in text)
     )
-    return "regression-table" if is_table and _is_regression_table(text, signature_suffices=True) else None
+    if is_table and _is_regression_table(text, signature_suffices=True):
+        return "regression-table"
+    return "table-fragment" if _table_fragment(_lines(text)) else None
 
 
 # A rendered script: knitr / pandoc / Jupyter HTML exports tag each code chunk with its
@@ -548,6 +604,8 @@ def content_reason(path: Path, *, size_cap: int = SIZE_CAP_BYTES) -> str | None:
         return code
     if _is_regression_table(text) and _NUMBERED_COLUMNS.search(text):
         return "regression-table"
+    if suffix == ".txt" and _table_fragment(lines):
+        return "table-fragment"
     return None
 
 

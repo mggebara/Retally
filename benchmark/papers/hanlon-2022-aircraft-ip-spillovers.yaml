@@ -385,11 +385,13 @@ notes: >
   independent / blind run of this entry, up to and including the
   2026-11-01-a agent sample and the run2 oracle sample, had them on the
   mount; the agents' own reports for those cells say they read only the
-  .dta files.  Still on the mount as of this change: the split esttab
-  fragments under 3 replication files/tables/ (Table1_R.tex, Table1_N.tex,
-  Table4_R.tex, ...: coefficient, SE and observation rows with no tabular
-  or Observations label), which print the pinned Table 1 and Table 4
-  values; no strip rule catches them yet.
+  .dta files.  The split esttab fragments under 3 replication files/tables/
+  (Table1_R.tex, Table1_N.tex, Table4_R.tex, ...: coefficient, SE,
+  observation, F and p-value rows with no tabular or Observations label),
+  which print the pinned Table 1 and Table 4 values, are withheld as
+  table-fragment from 2026-11-01 (27 files, Appendix E fragments
+  included; the descriptive Table2_PRE/POST and TableF1_match_* stay);
+  they were on every independent / blind mount before.
 
   First run 2026-10-21 (Phase 3.2 evaluation pass; main 0492c17, after
   the content-aware strip rule and the printed-precision floor; Opus

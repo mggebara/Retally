@@ -110,7 +110,13 @@ downloaded package (`benchmark/strip_rule.py`, applied by
   coefficient/`(se)` columns, `.xlsx` whose strings read the same way;
   result macros — a `.tex` made mostly of numeric `\newcommand` / `\def`
   definitions (the in-text numbers a script wrote for the paper; Carrera
-  2022 ships four); a
+  2022 ships four); table fragments — a `.tex`/`.txt` with no table
+  environment made mostly of bare `label & 0.013 & … \\` rows (esttab
+  output split into per-row files; Hanlon 2022 ships 27) that prints
+  estimates: two or more rows with a parenthesised decimal `(0.012)` or a
+  starred number `0.074**`, or nothing but `observations` / `N` /
+  `F-statistic` / `p-value` / R² rows (a descriptive fragment of shares
+  or means stays); a
   `.pdf` with a page carrying three regression-table markers (the
   accepted manuscript and online appendix EJ packages ship as
   `1 paper/*_accepted.pdf`, `2 appendix/*.pdf`; README and codebook PDFs
@@ -130,7 +136,7 @@ Every copy writes a manifest **beside** it, never inside the mounted
 tree: `<name>.script-free.retally-stripped.json`, listing each withheld
 path with its reason (`script-suffix`, `transcript-name`, `stata-log`,
 `smcl`, `r-transcript`, `python-output`, `script-content:stata|r|python`,
-`regression-table`, `result-macros`, `duplicate-of-script`).  The benchmark row records
+`regression-table`, `table-fragment`, `result-macros`, `duplicate-of-script`).  The benchmark row records
 the count as `n_files_stripped` (None in seeded mode).  No prompt names
 the withheld files.
 
