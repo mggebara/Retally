@@ -1,0 +1,366 @@
+# Original paper: Carrera, M., Royer, H., Stehr, M., Sydnor, J., &
+#   Taubinsky, D. (2022). "Who Chooses Commitment? Evidence and Welfare
+#   Implications." The Review of Economic Studies, 89(3), 1205-1244.
+#   doi:10.1093/restud/rdab056
+#
+# Reproduction report: no I4R Discussion Paper exists for this paper.
+#   The I4R First Meta Database (replication team 107, rows 6300-6334,
+#   entered 2023-12-13) is the record.  Verdict: perfect reproduction
+#   (perfect_reproduction = Yes, why_not_perfect_repro = "Perfect
+#   Reproduction", computational_reproduction = 1); the team's survey
+#   answer is "Analysis and cleaning code produce the same output as
+#   presented in the paper" (final data and complete analysis code
+#   provided; Stata run in 1-2 hours).  outcome_label: reproducible.
+#
+# Why this paper:
+#   1. Small package (8.1 MB zip): the reduced-form tables run from two
+#      Stata .dta files with one short do-file (MATLAB is only for the
+#      structural simulations, out of scope here).
+#   2. A REStud field experiment (gym attendance, commitment contracts)
+#      with a behavioural-economics design new to the catalog: OLS on
+#      participant-level data with robust SEs (Table 3) and a pooled
+#      participant x contract-threshold linear probability model with
+#      subject-clustered SEs (Table 4).
+#   3. Exact I4R reproduction; 30 paired rows in Tables 3-4.
+#
+# What original_claims pins: the headline coefficients of Tables 3 and 4
+#   (information-treatment effects and the sophistication proxies), each
+#   with its printed SE, plus the two regression sample sizes.  All are
+#   printed in the open text (NBER WP 26161, revised August 2021) exactly
+#   as the meta-database's o_coeff_dbl / o_std_err_dbl record the
+#   published tables, and identical to the package's own LaTeX output
+#   (Output/regs_avg_delta_ex1_all.tex, Output/regs_commit_pooled_all.tex).
+#
+# Leak check of the mount: the package ships its generated LaTeX tables
+#   and four "result macro" files (\newcommand{\name}{number}) next to the
+#   data.  Before this entry the strip rule removed only the scripts:
+#   Tables 3-4 are estout fragments with an "N" row and no "Observations"
+#   or table-tool signature, and the macro files are not tabulars.  This
+#   entry adds two generic rules to benchmark/strip_rule.py (an `N` /
+#   `Clusters` LaTeX row counts as the observations marker; a .tex made
+#   mostly of numeric \newcommand definitions is stripped as
+#   result-macros); the script-free copy now withholds 28 files.
+
+id: carrera-2022-who-chooses-commitment
+i4r_report_url: https://github.com/I4Replication/I4R-First-Meta-Paper
+language: r
+outcome_label: reproducible
+split: holdout
+# Contamination bookkeeping.  First public version: NBER Working Paper
+# 26161, August 2019, then titled "How are Preferences for Commitment
+# Revealed?" (NBER revision files rev0/rev1; a web search 2026-11-01
+# found the August 2019 and November 2019 revisions and a Drexel
+# repository record under the old title); the "Who Chooses Commitment?"
+# revision is dated August 2021.  publication_date is the working-paper
+# month.  REStud print: 89(3), 2022.  Package: Zenodo record 5173081,
+# created and published 2021-08-10 (Zenodo API created /
+# publication_date).
+publication_date: "2019-08"
+package_release_date: "2021-08-10"
+
+paper:
+  # NBER WP 26161, revised August 2021 (same title and Tables 3-4 as the
+  # published version; checked against every I4R o_coeff/o_std_err for
+  # Tables 3-4).  OUP's PDF refuses non-browser clients.  Checked
+  # 2026-11-01: 200 application/pdf, %PDF magic, 97 pp.
+  source: https://www.nber.org/system/files/working_papers/w26161/w26161.pdf
+  title: "Who Chooses Commitment? Evidence and Welfare Implications"
+  authors:
+    - Mariana Carrera
+    - Heather Royer
+    - Mark Stehr
+    - Justin Sydnor
+    - Dmitry Taubinsky
+
+dataset:
+  source: https://zenodo.org/records/5173081
+  access_notes: >
+    Zenodo record 5173081, open access, CC BY 4.0, one version: ONE file,
+    Who_Chooses_Commitment_Replication.zip (8,134,318 bytes, md5
+    92845f0f1f09893fc2e4fd41192bf439; 297 entries, 25.7 MB unpacked),
+    a single top-level folder Who_Chooses_Commitment_Replication/.  Data:
+    Data/cleaned_commitment_study_data.dta (one row per participant,
+    573 kB) and Data/cleaned_commitment_study_daily_data.dta (one row per
+    participant-day, 14.5 MB).  Code: Code/master_do_file_for_analysis.do,
+    Code/Stata/{Tables,Figures,Appendix,Parameter estimates}.do (Stata
+    14, estout/binscatter/coefplot from SSC), Code/run_simulations.m and
+    Code/MATLAB/{gymGame,compute_efficiency}.m.  Result-bearing files:
+    Output/*.tex (estout regression tables, among them Table 3 =
+    regs_avg_delta_ex1_all.tex and Table 4 = regs_commit_pooled_all.tex),
+    Output/Formatted output/*.tex (hand-edited final tables, e.g. Table 5
+    CCtable.tex), Output/numbers.tex, numbers_struct.tex,
+    numbers_struct_appx.tex and simulations.tex (\newcommand macros
+    holding the in-text numbers, Tables 7-9 and appendix tables),
+    Output/parameter_estimates/*.csv (222 structural-estimate rows used by
+    the MATLAB simulations), figure PDFs, and README.md (a table/figure
+    to program/line/output map, no estimates).  Also Experimental
+    Materials/ (Study Instructions Appendix.pdf, the Qualtrics .qsf),
+    Other/ (commitment.bib, econ-aea.bst, two images), LICENSE.txt.  The
+    script-free copy withholds the 8 scripts, the 16 estout/regression
+    .tex tables and the 4 macro files (28 in all); it keeps the summary
+    tables (Table 2, A2), Table 5 and A11-A12 rate tables, the
+    single-column appendix Table A19 (DailyAttIncr.tex), the structural
+    CSVs and the figure PDFs, none of which prints a pinned value.
+
+code_repo:
+  url: https://zenodo.org/records/5173081
+
+original_claims:
+  - description: bcp_basic_info_treatment_col1
+    value: 0.30
+    claim_type: coefficient
+    standard_error: 0.56
+    sample_size: 1126
+    unit: dollars of behavior change premium per $1 of incentive
+    location: "Table 3, column (1), Basic info. treatment"
+    context: >
+      Table 3 ("Association between the behavior change premium and
+      proxies for sophistication"), column (1), row Basic info. treatment.
+      OLS regression of the participant's behavior change premium on
+      indicators for the basic information treatment (wave 1) and the
+      enhanced information treatment (waves 2-3), with wave fixed
+      effects.  The behavior change premium is the conservative measure:
+      for each pair of adjacent piece-rate incentives above $1/day
+      ($1-$2, $2-$3, $3-$5, $5-$7, $7-$12), the increase in willingness
+      to pay per dollar of incentive increase minus the average of the
+      forecasted attendance at the two incentives, averaged over the five
+      pairs (excluding the $0-$1 step).  Sample: participants with an
+      exogenously assigned incentive, excluding wave 3 participants
+      assigned a commitment contract rather than a piece-rate incentive.
+      Heteroskedasticity-robust standard errors.
+  - description: bcp_enhanced_info_treatment_col1
+    value: 1.36
+    claim_type: coefficient
+    standard_error: 0.57
+    sample_size: 1126
+    unit: dollars of behavior change premium per $1 of incentive
+    location: "Table 3, column (1), Enhanced info. treatment"
+    context: >
+      Table 3, column (1), row Enhanced info. treatment.  Same regression
+      as bcp_basic_info_treatment_col1.
+  - description: bcp_goal_minus_expected_attendance_col2
+    value: 0.71
+    claim_type: coefficient
+    standard_error: 0.29
+    sample_size: 1126
+    unit: dollars of behavior change premium per SD
+    location: "Table 3, column (2), Goal - exp. attend. (z-score)"
+    context: >
+      Table 3, column (2), row Goal - exp. attend. (z-score).  Same
+      regression as column (1) adding the standardized (z-score over the
+      regression sample) difference between the participant's goal
+      attendance and their expected attendance in the absence of
+      incentives.  Robust SEs, wave fixed effects.
+  - description: bcp_actual_minus_expected_attendance_col3
+    value: 0.45
+    claim_type: coefficient
+    standard_error: 0.22
+    sample_size: 1126
+    unit: dollars of behavior change premium per SD
+    location: "Table 3, column (3), Actual - exp. attend. (z-score)"
+    context: >
+      Table 3, column (3), row Actual - exp. attend. (z-score).  Same
+      regression as column (1) adding the standardized difference between
+      the participant's actual attendance and their expected attendance
+      under the incentive they were assigned.  Robust SEs, wave fixed
+      effects.
+  - description: bcp_regression_observations
+    value: 1126
+    claim_type: other
+    unit: participants
+    location: "Table 3, N"
+    context: >
+      Observations in the Table 3 regressions (same in all three
+      columns): participants with an exogenously assigned incentive,
+      excluding the wave 3 participants assigned a commitment contract.
+  - description: takeup_more_basic_info_treatment_col1
+    value: -0.022
+    claim_type: coefficient
+    standard_error: 0.041
+    sample_size: 2824
+    unit: probability of take-up
+    location: "Table 4, column (1), Basic info. treatment"
+    context: >
+      Table 4 ("Association between take-up of 'more' commitment
+      contracts and proxies for sophistication"), column (1), row Basic
+      info. treatment.  Linear probability model of choosing the "more"
+      visits commitment contract ($80 only if visiting the gym at least
+      the threshold number of days in four weeks, over an $80 fixed
+      payment), pooling each participant's choices across the contract
+      thresholds offered (8, 12 and 16 visits in waves 1-2; 12 visits
+      only in wave 3), on the basic and enhanced information treatment
+      indicators with wave fixed effects and contract-threshold fixed
+      effects.  Same participant sample as Table 3.  Standard errors
+      clustered by subject.
+  - description: takeup_more_enhanced_info_treatment_col1
+    value: -0.080
+    claim_type: coefficient
+    standard_error: 0.031
+    sample_size: 2824
+    unit: probability of take-up
+    location: "Table 4, column (1), Enhanced info. treatment"
+    context: >
+      Table 4, column (1), row Enhanced info. treatment.  Same regression
+      as takeup_more_basic_info_treatment_col1.
+  - description: takeup_more_behavior_change_premium_col2
+    value: 0.027
+    claim_type: coefficient
+    standard_error: 0.011
+    sample_size: 2824
+    unit: probability of take-up per SD
+    location: "Table 4, column (2), Behavior change premium (z-score)"
+    context: >
+      Table 4, column (2), row Behavior change premium (z-score).  Same
+      regression as column (1) adding the behavior change premium of
+      Table 3, standardized over the participant-level regression sample.
+      Wave and contract-threshold fixed effects, SEs clustered by subject.
+  - description: takeup_more_goal_minus_expected_attendance_col3
+    value: 0.038
+    claim_type: coefficient
+    standard_error: 0.013
+    sample_size: 2824
+    unit: probability of take-up per SD
+    location: "Table 4, column (3), Goal - exp. attend. (z-score)"
+    context: >
+      Table 4, column (3), row Goal - exp. attend. (z-score).  Same
+      regression as column (1) adding the standardized goal minus
+      expected attendance gap defined as in Table 3.
+  - description: takeup_more_actual_minus_expected_attendance_col4
+    value: -0.043
+    claim_type: coefficient
+    standard_error: 0.013
+    sample_size: 2824
+    unit: probability of take-up per SD
+    location: "Table 4, column (4), Actual - exp. attend. (z-score)"
+    context: >
+      Table 4, column (4), row Actual - exp. attend. (z-score).  Same
+      regression as column (1) adding the standardized actual minus
+      expected attendance gap defined as in Table 3.
+  - description: takeup_more_regression_observations
+    value: 2824
+    claim_type: other
+    unit: participant-by-contract choices
+    location: "Table 4, N"
+    context: >
+      Observations in the Table 4 regressions (same in all four columns):
+      participant-by-threshold "more" contract choices for the Table 3
+      participant sample.
+
+# The meta-database's 35 rows for this paper (team 107, no DP): 30 with
+# o/r coefficient pairs against Tables 3-4 and 5 figure or blank rows.
+# Every paired row is a ROBUSTNESS variant ("Used alternative data
+# provided by the authors AND recoded in R", half of the Table 4 rows
+# also "changed to random effects model instead of clustered standard
+# errors"); e.g. Table 3 col 1 enhanced 1.36 (0.57) -> 1.20 (0.51),
+# Table 4 col 1 enhanced -0.080 (0.031) -> -0.092 (0.030), Table 4 col 2
+# BCP 0.027 (0.011) -> 0.021 (0.012) / 0.023 (0.010).  None is a plain
+# reproduction, so no r_coeff is transcribed (as in leeson-2022).  The
+# team's verdict (perfect_reproduction = Yes; "Analysis and cleaning
+# code produce the same output as presented in the paper") is the
+# blanket basis for every finding below; reproduced_value is the
+# paper's.
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: 0.30
+    outcome: matches
+    notes: I4R meta-database team 107 blanket verdict (perfect reproduction); value is the paper's. R-recode robustness row 0.28 (0.78).
+  - claim_id: 1
+    reproduced_value: 1.36
+    outcome: matches
+    notes: I4R meta-database team 107 blanket verdict; value is the paper's. R-recode robustness row 1.20 (0.51).
+  - claim_id: 2
+    reproduced_value: 0.71
+    outcome: matches
+    notes: I4R meta-database team 107 blanket verdict; value is the paper's. R-recode robustness row 0.58 (0.22).
+  - claim_id: 3
+    reproduced_value: 0.45
+    outcome: matches
+    notes: I4R meta-database team 107 blanket verdict; value is the paper's. R-recode robustness row 0.57 (0.22).
+  - claim_id: 4
+    reproduced_value: 1126
+    outcome: matches
+    notes: I4R meta-database team 107 blanket verdict; value is the paper's (N not recorded in the rows).
+  - claim_id: 5
+    reproduced_value: -0.022
+    outcome: matches
+    notes: I4R meta-database team 107 blanket verdict; value is the paper's. R-recode robustness rows -0.023 (0.042) / -0.022 (0.043, random effects).
+  - claim_id: 6
+    reproduced_value: -0.080
+    outcome: matches
+    notes: I4R meta-database team 107 blanket verdict; value is the paper's. R-recode robustness rows -0.092 (0.031) / -0.092 (0.030, random effects).
+  - claim_id: 7
+    reproduced_value: 0.027
+    outcome: matches
+    notes: I4R meta-database team 107 blanket verdict; value is the paper's. R-recode robustness rows 0.023 (0.010) / 0.021 (0.012, random effects).
+  - claim_id: 8
+    reproduced_value: 0.038
+    outcome: matches
+    notes: I4R meta-database team 107 blanket verdict; value is the paper's. R-recode robustness rows 0.032 (0.013) / 0.034 (0.013, random effects).
+  - claim_id: 9
+    reproduced_value: -0.043
+    outcome: matches
+    notes: I4R meta-database team 107 blanket verdict; value is the paper's. R-recode robustness rows -0.040 (0.014) / -0.042 (0.013, random effects).
+  - claim_id: 10
+    reproduced_value: 2824
+    outcome: matches
+    notes: I4R meta-database team 107 blanket verdict; value is the paper's (N not recorded in the rows).
+
+notes: >
+  Headline finding: in a gym-attendance field experiment, an enhanced
+  information treatment that made participants more aware of their
+  present focus raised the behavior change premium (Table 3 col 1: +1.36,
+  SE 0.57, from an information-control mean of 0.66) but LOWERED take-up
+  of "more visits" commitment contracts (Table 4 col 1: -0.080, SE
+  0.031); take-up is only weakly related to the behavior change premium
+  (0.027 per SD) and rises with over-optimism (actual minus expected
+  attendance, -0.043 per SD).
+
+  Curation pass (2026-11-01).  Pinned 11 claims: Table 3 col 1 basic and
+  enhanced information effects, col 2 goal-expected gap, col 3
+  actual-expected gap (each with its robust SE); Table 4 col 1 basic and
+  enhanced effects, col 2 behavior change premium, col 3 goal-expected
+  gap, col 4 actual-expected gap (each with its subject-clustered SE);
+  the Table 3 N (1,126 participants; also the Table 4 cluster count, not
+  pinned separately) and the Table 4 N (2,824 participant x threshold
+  choices).  Left out: the information-treatment coefficients in Table 3
+  cols 2-3 (0.45 (0.57), 1.41 (0.58); 0.28 (0.56), 1.25 (0.59)) and
+  Table 4 cols 2-4 (-0.023/-0.086, -0.013/-0.079, -0.019/-0.072), the
+  dependent-variable means (1.17 (0.22) and 0.66 (0.24) in Table 3; 0.49
+  (0.01) and 0.52 (0.01) in Table 4), Table 2 summary statistics (N =
+  1,248 participants after the 44 endogenous-assignment exclusions),
+  Table 5 take-up rates (no I4R row to check the open text against),
+  Table 6 (wave 3 beliefs), the in-text averages ($2.01 / $1.20 behavior
+  change premium) and everything structural (Tables 7-9, MATLAB).  The
+  Table 3 sample excludes the 122 wave 3 participants assigned a
+  commitment contract (1,248 - 122 = 1,126); the contexts state neither
+  count.
+
+  Cross-check.  Every pinned value and SE equals the I4R o_coeff_dbl /
+  o_std_err_dbl (published tables), the NBER August 2021 text, and the
+  package's own estout output (regs_avg_delta_ex1_all.tex,
+  regs_commit_pooled_all.tex).  The numbers.tex macros also carry 1.36,
+  0.71, 0.45 (the Table 3 in-text coefficients) and 8.0 / 3 / 3.8
+  (Table 4 coefficients x 100).
+
+  Package specification (package-only facts; never in contexts).
+  Tables.do lines 225-423: gap_goal_exp = goal - days_0; gap_actual_exp
+  = visits - days_exp; delta_k = (wtp_k - wtp_{k-1})/(k - (k-1)) -
+  (days_k + days_{k-1})/2 for the adjacent incentive pairs 1-2, 2-3, 3-5,
+  5-7, 7-12, avg_delta_ex1 their mean; sample `!missing(incentive)`; the
+  three variables are z-scored over that sample.  Table 3: `reg
+  avg_delta_ex1 wave2 wave3 first_info new_info [z_gap_goal_exp |
+  z_gap_actual_exp] if !missing(incentive), r`.  Table 4: `reshape long
+  commit, i(id) j(t)` then `reg commit i.t wave2 wave3 [z_avg_delta_ex1 |
+  z_gap_goal_exp | z_gap_actual_exp] first_info new_info if
+  !missing(incentive), vce(cluster id)`.  first_info / new_info are the
+  basic (wave 1) and enhanced (waves 2-3) information indicators.
+
+  What could not be verified.  The published REStud PDF was not read
+  (OUP refuses non-browser clients); the NBER revision's Tables 3-4
+  match every I4R published-value row, and the package output matches
+  both.  The do-files were not run and no independent re-estimate was
+  done; the I4R team's perfect-reproduction verdict is the evidence.
+
+  Original analysis in Stata 14 (reduced form) and MATLAB R2019a
+  (structural simulations, out of scope); language is r, the
+  reproduction target.

@@ -101,10 +101,13 @@ downloaded package (`benchmark/strip_rule.py`, applied by
   statsmodels output; analysis *code* saved under another name (a
   do-file as `.txt` — Leeson 2022 ships three — or R/Python source in a
   `.md`): most non-comment lines are commands; regression tables —
-  `.tex` (esttab fragments, stargazer, any tabular with `Observations` /
-  R² / standard-error rows), `.html`, plain-text esttab/outreg2 output,
+  `.tex` (esttab/estout fragments, stargazer, any tabular with `Observations`
+  (or an `N` / `Clusters` row) / R² / standard-error rows), `.html`, plain-text esttab/outreg2 output,
   `.csv` only with `Observations`/`R-squared` row labels plus `(1)`/
-  coefficient/`(se)` columns, `.xlsx` whose strings read the same way.
+  coefficient/`(se)` columns, `.xlsx` whose strings read the same way;
+  result macros — a `.tex` made mostly of numeric `\newcommand` / `\def`
+  definitions (the in-text numbers a script wrote for the paper; Carrera
+  2022 ships four).
 - **Byte copies** of a file stripped by name.
 
 Evidence must be strong (several independent markers) or the file
@@ -120,7 +123,7 @@ Every copy writes a manifest **beside** it, never inside the mounted
 tree: `<name>.script-free.retally-stripped.json`, listing each withheld
 path with its reason (`script-suffix`, `transcript-name`, `stata-log`,
 `smcl`, `r-transcript`, `python-output`, `script-content:stata|r|python`,
-`regression-table`, `duplicate-of-script`).  The benchmark row records
+`regression-table`, `result-macros`, `duplicate-of-script`).  The benchmark row records
 the count as `n_files_stripped` (None in seeded mode).  No prompt names
 the withheld files.
 
