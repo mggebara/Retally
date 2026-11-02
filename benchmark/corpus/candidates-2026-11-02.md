@@ -172,3 +172,19 @@ These were not re-checked, for reasons unchanged:
 **Total checked today: 62 papers.** That is 6 picks, the 3 re-checks and
 53 exclusions, out of a pool of 64 uncatalogued reports with at least 8
 paired rows.
+
+## Curation outcomes (2026-11-02)
+
+All six picks were curated into catalog entries on 2026-11-02; none
+failed at curation (against four of eight on the 2026-11-01 list).
+Results for the six entries are in ROADMAP 3.7.  With them the catalog
+has 28 entries, 26 in scope and 23 evaluation papers.
+
+| Candidate | Outcome | Caveat |
+|---|---|---|
+| `hollyer-2022-parties-as-disciplinarians` (#1) | accepted, PR #100 | 13 claims.  Paper and code disagree on the "extremist" party (distance 3 in the text, the 90th percentile in the do-file), which is why DP 54 missed those rows; at the ±1 SE band the text-following value still passes.  Dataverse v1.1 has files identical to v1.0. |
+| `douenne-2022-yellow-vests-carbon-tax` (#2) | accepted, PR #105 | 13 claims; `not_reproducible` (DP 58).  The package is the authors' GitHub repository at commit `0faf9e7` (43 MB zip), very likely the openICPSR snapshot but not compared file by file.  The strip rule learned to content-test `.RData` workspaces. |
+| `dancygier-2022-hate-crimes-gender-imbalances` (#3) | accepted, PR #102 | 13 claims; no DP (every meta-database row is a robustness variant).  Pinned to Dataverse v1.0 (v1.1 has identical files).  The existing rule already withholds its 15 stargazer `.tex` tables. |
+| `mokyr-2022-wheels-of-change` (#4) | accepted, PR #104 | 13 claims printed at two decimals and pinned as printed.  The manuscript ships as Word files with OCR'd tables; the strip rule learned `.docx` content tests and written-out significance legends. |
+| `labandeira-2022-electricity-pricing-reform` (#5) | accepted, PR #103 | 12 claims from the accepted manuscript; the meta-database's −0.89 is a typo for the printed −0.089.  The IV columns omit the quarterly dummies the paper describes and the price is a real price the paper does not call one, which costs text-following runs claims. |
+| `hanushek-2022-patience-risk-human-capital` (#6) | accepted, PR #101 | 13 claims.  The zip does hold the analysis data (930 MB, 5.5 GB unpacked), but the 2.47 GB Table 1 file is near the sandbox's 300 s I/O limit: column-selected reads clear it, naive reads do not. |

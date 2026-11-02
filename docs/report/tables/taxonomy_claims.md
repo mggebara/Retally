@@ -144,6 +144,7 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | pipeline 5.5 | `carrera-2022` | blind | `takeup_more_actual_minus_expected_attendance_col4` | -0.043 | NA | sample restriction |
 | pipeline 5.5 | `carrera-2022` | blind | `takeup_more_regression_observations` | 2824 | 0 | sample restriction |
 | pipeline 5.5 | `dertwinkel-kalt-2022` | blind | `rel_concentration_bias_lower_table2_col1` | 0.19 | 0.2591 | unclassified |
+| pipeline 5.5 | `douenne-2022` | blind | `believes_effective_on_approval_iv_table8_col1` | 0.416 | 0.1774 | unclassified |
 | pipeline 5.5 | `forsythe-2022` | independent | `young_x_unemp_rate_nilf` | -0.49 | -0.5944 | unclassified |
 | pipeline 5.5 | `forsythe-2022` | independent | `n_obs_full_sample` | 1.69485e+07 | 1.728e+07 | sample restriction |
 | pipeline 5.5 | `forsythe-2022` | blind | `young_x_unemp_rate_unemployed` | -1.928 | -1.741 | unclassified |
@@ -172,6 +173,14 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | pipeline 5.5 | `grier-2023` | blind | `sugar_contributions_12_months_incumbent_fe` | -0.0003 | -0.001137 | unclassified |
 | pipeline 5.5 | `grier-2023` | blind | `observations_district_fe` | 186 | 172 | data-file resolution |
 | pipeline 5.5 | `grier-2023` | blind | `observations_incumbent_fe` | 106 | 96 | data-file resolution |
+| pipeline 5.5 | `hanushek-2022` | independent | `table2_col3_patience` | 0.931 | 0.3334 | unclassified |
+| pipeline 5.5 | `hanushek-2022` | independent | `table2_col1_patience` | 0.779 | 0.2598 | unclassified |
+| pipeline 5.5 | `hanushek-2022` | independent | `table2_col4_patience` | 1.032 | 0.4423 | unclassified |
+| pipeline 5.5 | `hanushek-2022` | independent | `table2_col4_risk_taking` | -0.449 | -0.2328 | unclassified |
+| pipeline 5.5 | `hanushek-2022` | blind | `table1_col2_risk_taking` | -0.482 | -0.06445 | unclassified |
+| pipeline 5.5 | `hollyer-2022` | blind | `programmaticness_volatility_difference_overall` | -0.11 | -0.1631 | unclassified |
+| pipeline 5.5 | `hollyer-2022` | blind | `programmaticness_volatility_difference_nonethnic` | -0.15 | -0.2188 | unclassified |
+| pipeline 5.5 | `hollyer-2022` | blind | `programmaticness_ethnic_minus_nonethnic_high_volatility` | 0.2 | 0.1147 | unclassified |
 | pipeline 5.5 | `holman-2022` | independent | `intl_attack_table4` | 3.112 | 0.8906 | unclassified |
 | pipeline 5.5 | `holman-2022` | independent | `intl_attack_x_woman_exec_table4` | -4.333 | -1.663 | unclassified |
 | pipeline 5.5 | `holman-2022` | independent | `did_attack_x_time_like_may_table2` | -0.1274 | -0.0824 | unclassified |
@@ -191,6 +200,21 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | pipeline 5.5 | `holman-2022` | blind | `did_time_may_best_pm_table2` | 0.2098 | 3.142e-13 | unclassified |
 | pipeline 5.5 | `holman-2022` | blind | `n_obs_did_like_may_table2` | 143499 | 2.399e+05 | sample restriction |
 | pipeline 5.5 | `holman-2022` | blind | `n_obs_did_may_best_pm_table2` | 97155 | 1.481e+06 | sample restriction |
+| pipeline 5.5 | `labandeira-2022` | independent | `reform_consumption_ols_col1` | -0.178 | -0.1367 | unclassified |
+| pipeline 5.5 | `labandeira-2022` | independent | `reform_consumption_iv_col2` | -0.123 | -0.07804 | unclassified |
+| pipeline 5.5 | `labandeira-2022` | independent | `reform_consumption_fe_iv_col4` | -0.123 | -0.205 | unclassified |
+| pipeline 5.5 | `labandeira-2022` | independent | `reform_expenditure_fe_col7` | -0.098 | -0.1378 | unclassified |
+| pipeline 5.5 | `labandeira-2022` | independent | `reform_expenditure_fe_iv_col8` | -0.089 | -0.205 | unclassified |
+| pipeline 5.5 | `labandeira-2022` | independent | `n_obs_table2` | 20872 | 2.132e+04 | sample restriction |
+| pipeline 5.5 | `labandeira-2022` | independent | `n_households_table2` | 10729 | 1.185e+04 | sample restriction |
+| pipeline 5.5 | `labandeira-2022` | blind | `reform_consumption_ols_col1` | -0.178 | -0.1045 | sample restriction |
+| pipeline 5.5 | `labandeira-2022` | blind | `reform_consumption_iv_col2` | -0.123 | -0.05325 | sample restriction |
+| pipeline 5.5 | `labandeira-2022` | blind | `reform_consumption_fe_col3` | -0.154 | -0.1248 | sample restriction |
+| pipeline 5.5 | `labandeira-2022` | blind | `reform_expenditure_ols_col5` | -0.156 | -0.1045 | under-specified methods section |
+| pipeline 5.5 | `labandeira-2022` | blind | `reform_expenditure_iv_col6` | -0.09 | -0.05325 | under-specified methods section |
+| pipeline 5.5 | `labandeira-2022` | blind | `reform_expenditure_fe_iv_col8` | -0.089 | -0.1446 | under-specified methods section |
+| pipeline 5.5 | `labandeira-2022` | blind | `n_obs_table2` | 20872 | 1.235e+04 | sample restriction |
+| pipeline 5.5 | `labandeira-2022` | blind | `n_households_table2` | 10729 | 8404 | sample restriction |
 | pipeline 5.5 | `leeson-2022` | blind | `brown_forsythe_dollars_per_hour` | 0.276 | 0.4663 | sample restriction |
 | pipeline 5.5 | `leeson-2022` | blind | `anova_f_dollars_per_hour` | 0.15 | 0.3125 | sample restriction |
 | pipeline 5.5 | `leeson-2022` | blind | `station_visits_five_station_subsample` | 102 | 98 | sample restriction |
@@ -202,6 +226,18 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | pipeline 5.5 | `lopez-moctezuma-2022` | blind | `itt_poverty_index_umalabka_tableC3` | 0.126 | 0.1515 | under-specified methods section |
 | pipeline 5.5 | `lopez-moctezuma-2022` | blind | `itt_gender_index_akbayan_tableC4` | 0.45 | 0.3171 | under-specified methods section |
 | pipeline 5.5 | `lopez-moctezuma-2022` | blind | `itt_gender_index_umalabka_tableC4` | 0.095 | -0.01862 | under-specified methods section |
+| pipeline 5.5 | `mokyr-2022` | blind | `watermills_table2_col1` | 0.15 | 1438 | specification mismatch |
+| pipeline 5.5 | `mokyr-2022` | blind | `watermills_table2_col2` | 0.14 | 1490 | specification mismatch |
+| pipeline 5.5 | `mokyr-2022` | blind | `watermills_table2_col3` | 0.14 | 1454 | specification mismatch |
+| pipeline 5.5 | `mokyr-2022` | blind | `watermills_table2_col4` | 0.14 | 1440 | specification mismatch |
+| pipeline 5.5 | `mokyr-2022` | blind | `watermills_table2_col5` | 0.12 | 848.3 | specification mismatch |
+| pipeline 5.5 | `mokyr-2022` | blind | `watermills_ols_table3_col5` | 0.12 | 770.5 | specification mismatch |
+| pipeline 5.5 | `mokyr-2022` | blind | `watermills_iv_table3_col2` | 0.16 | 1930 | specification mismatch |
+| pipeline 5.5 | `mokyr-2022` | blind | `watermills_iv_table3_col4` | 0.15 | 1855 | specification mismatch |
+| pipeline 5.5 | `mokyr-2022` | blind | `watermills_iv_table3_col6` | 0.16 | 2087 | specification mismatch |
+| pipeline 5.5 | `mokyr-2022` | blind | `first_stage_f_table3_col2` | 19.9 | 8.857 | specification mismatch |
+| pipeline 5.5 | `mokyr-2022` | blind | `first_stage_f_table3_col4` | 16.96 | 7.324 | specification mismatch |
+| pipeline 5.5 | `mokyr-2022` | blind | `first_stage_f_table3_col6` | 16.17 | 7.924 | specification mismatch |
 | pipeline 5.5 | `montero-2022` | blind | `earnings_level_above500_bw300` | 60.49 | 196.8 | data-file resolution |
 | pipeline 5.5 | `montero-2022` | blind | `earnings_level_above500_bw150` | 52.79 | 196.8 | data-file resolution |
 | pipeline 5.5 | `montero-2022` | blind | `earnings_iqr_above500_bw300` | -42.97 | NA | data-file resolution |
@@ -215,6 +251,7 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | agent | `adams-2023` | blind | `n_directed_dyads` | 1842 | 1535 | under-specified methods section |
 | agent | `adams-2023` | blind | `n_obs_women_partisans` | 1836 | 1535 | under-specified methods section |
 | agent | `adams-2023` | blind | `n_obs_men_partisans` | 1833 | 1529 | under-specified methods section |
+| agent | `douenne-2022` | blind | `initial_acceptance_believes_not_lose_table4_col1` | 0.306 | 0.2279 | unclassified |
 | agent | `forsythe-2022` | independent | `young_x_unemp_rate_nilf` | -0.49 | -0.5847 | unclassified |
 | agent | `forsythe-2022` | blind | `young_x_unemp_rate_nilf` | -0.49 | -0.594 | unclassified |
 | agent | `forsythe-2022` | blind | `n_obs_full_sample` | 1.69485e+07 | 1.736e+07 | sample restriction |
@@ -232,6 +269,16 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | agent | `holman-2022` | blind | `did_time_like_may_table2` | -0.5007 | -0.4513 | under-specified methods section |
 | agent | `holman-2022` | blind | `did_attack_x_time_may_best_pm_table2` | -0.0501 | -0.3215 | under-specified methods section |
 | agent | `holman-2022` | blind | `did_time_may_best_pm_table2` | 0.2098 | 1.364 | under-specified methods section |
+| agent | `labandeira-2022` | independent | `reform_consumption_ols_col1` | -0.178 | -0.1341 | unclassified |
+| agent | `labandeira-2022` | independent | `reform_consumption_iv_col2` | -0.123 | -0.07914 | under-specified methods section |
+| agent | `labandeira-2022` | independent | `reform_expenditure_fe_col7` | -0.098 | -0.1509 | unclassified |
+| agent | `labandeira-2022` | independent | `reform_expenditure_fe_iv_col8` | -0.089 | -0.1704 | unclassified |
+| agent | `labandeira-2022` | blind | `reform_consumption_ols_col1` | -0.178 | -0.1207 | unclassified |
+| agent | `labandeira-2022` | blind | `reform_consumption_iv_col2` | -0.123 | -0.06196 | under-specified methods section |
+| agent | `labandeira-2022` | blind | `reform_expenditure_ols_col5` | -0.156 | -0.1207 | under-specified methods section |
+| agent | `labandeira-2022` | blind | `reform_expenditure_iv_col6` | -0.09 | -0.06196 | under-specified methods section |
+| agent | `labandeira-2022` | blind | `reform_expenditure_fe_col7` | -0.098 | -0.1501 | under-specified methods section |
+| agent | `labandeira-2022` | blind | `reform_expenditure_fe_iv_col8` | -0.089 | -0.1586 | under-specified methods section |
 | agent | `lopez-moctezuma-2022` | independent | `itt_poverty_index_akbayan_tableC3` | 0.496 | 0.2538 | under-specified methods section |
 | agent | `lopez-moctezuma-2022` | independent | `itt_poverty_index_umalabka_tableC3` | 0.126 | 0.2443 | under-specified methods section |
 | agent | `lopez-moctezuma-2022` | independent | `itt_gender_index_akbayan_tableC4` | 0.45 | 0.6018 | under-specified methods section |

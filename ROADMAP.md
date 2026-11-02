@@ -2023,6 +2023,436 @@ apply unchanged.
   do-file against the paper's Table 2 note would say whether this
   belongs under "under-specified methods section".
 
+### 3.7 Corpus growth to 23 evaluation papers (2026-11-02) — ✅ measured, no API spend
+
+**Funnel, pass 3.**  The third shortlist pass
+(`benchmark/corpus/candidates-2026-11-02.md`, PR #99) widened the net
+(rules R1–R6: packages up to 1 GB, no DP needed with at least 8 paired
+rows, open text from author or repository copies, any journal 2021–2024,
+Python originals with plain data) and checked 62 of the 64 uncatalogued
+I4R reports with at least 8 paired rows.  Six passed and all six were
+curated (PRs #100–#105); nothing failed at curation this time, against
+four of eight in 3.6.  The other 56 checked papers were excluded:
+
+| Candidate | Outcome | Reason |
+|---|---|---|
+| `hollyer-2022-parties-as-disciplinarians` | accepted (PR #100) | AJPS; 1.7 MB R + Stata package; DP 54 |
+| `hanushek-2022-patience-risk-human-capital` | accepted (PR #101) | EJ; 930 MB zip (5.5 GB unpacked); DP 48 |
+| `dancygier-2022-hate-crimes-gender-imbalances` | accepted (PR #102) | AJPS; R package; no DP (team 34) |
+| `labandeira-2022-electricity-pricing-reform` | accepted (PR #103) | EJ; 558 MB zip; 3.6 rank 7, re-listed once the accepted manuscript was found |
+| `mokyr-2022-wheels-of-change` | accepted (PR #104) | EJ; 7.8 MB Stata package; no DP (team 100) |
+| `douenne-2022-yellow-vests-carbon-tax` | accepted (PR #105) | AEJ: Policy; GitHub author mirror of an openICPSR deposit; DP 58, not reproducible |
+| 33 AEA papers (Dhar et al. T73 and the 32 listed) | excluded | package on openICPSR only (login and terms click-through); no Dataverse, Zenodo or GitHub original |
+| Seven JPE / EJ papers (T33, T77, T87, T88, T89, T101, T108) and Mayshar et al. (T96) | excluded | no original package anywhere |
+| Ono & Zilis (T2) | excluded | the open working paper's Table 3 differs from the published one |
+| Gsottbauer et al. (T76), Hariri & Wingender (T46) | excluded | published or accepted PDF returned 403 / 404; the working paper does not match |
+| Mangonnet et al. (T65) | excluded | PDF 403 and JOP closed; package 1,027.5 MB, just over the 1 GB rule |
+| Kim (T27), Martínez (T39), Zelizer (T81), Herzog et al. (T1) | excluded | only SSRN, a dissertation or a non-matching draft is open |
+| Four JOP papers (T4, T24, T79, T11) | excluded | PDF closed, no author or repository copy |
+| Bautista, De Haas, Guay (the 3.6 exclusions, re-checked) | still excluded | no matching open text; De Haas's stubbed data and Guay's figures-only results stand regardless |
+
+Not re-checked, for reasons unchanged: Bosquet (`.7z`), Grosjean (the
+package has no data), and the reports with fewer than 8 paired rows.
+The 33 openICPSR papers are blocked only by the login; whether to place
+those packages by hand under the user's account (Phase 4,
+"manual-placement escape hatch") is the user's decision and is pending.
+Without that login the pool of uncatalogued I4R reports with at least 8
+paired rows is effectively exhausted.  The catalog now has 28 entries,
+26 in scope, 23 of them evaluation papers (`split: holdout`).
+
+**The six entries** (caveats in each YAML header):
+
+- **Hollyer** (AJPS 2022): 13 claims (ten Table 1 predicted-value
+  differences with SEs, the Table 1 N, two Table 2 RD effects).  Verdict
+  `reproducible` (DP 54).  1.7 MB package.  Curation recorded a
+  paper-versus-code gap: the paper puts the "extremist" party at distance
+  3, the do-file at the 90th percentile of extremism (about 3.55), and
+  DP 54, working from the text, missed exactly those rows.  The strip
+  rule needed nothing new (the six scripts go by suffix).
+- **Hanushek** (EJ 2022): 13 claims (Table 1 cross-country and Table 2
+  migrant analysis).  Verdict `reproducible` (DP 48 found minor
+  discrepancies between text and code; every printed number reproduces).
+  930 MB zip, 5.5 GB unpacked, including the 2.47 GB Table 1 `.dta` and
+  its 2.97 GB `.csv` copy: the largest data set in the catalog, and the
+  one that met the sandbox's I/O limit ("Infrastructure limits" below).
+  The strip rule withholds the 21 do-files and nothing else.
+- **Dancygier** (AJPS 2022): 13 claims (Table 1 and the two SI Table C1
+  models behind Figure 1).  Verdict `reproducible` (team 34, no DP;
+  every meta-database row is a robustness variant).  95.1 MB R package.
+  The existing `regression-table` rule already withholds its 15
+  stargazer `.tex` tables; no harness change.
+- **Labandeira** (EJ 2022): 12 claims (Table 2).  Verdict `reproducible`
+  (minor discrepancies; no DP).  558 MB zip.  The open text is the
+  accepted manuscript, and the meta-database's −0.89 for column 8 is a
+  typo for the printed −0.089 (the printed value is pinned).  The
+  catalog notes record a paper-versus-code gap: the package's IV
+  columns (2, 6) omit the quarterly dummies the paper says every column
+  has, its FE-IV columns (4, 8) use robust rather than household-
+  clustered SEs, and the price regressor is a real price, which the
+  paper does not say.  The strip rule is unchanged.
+- **Mokyr** (EJ 2022): 13 claims (Tables 2–3, printed at two decimals
+  and pinned as printed).  Verdict `reproducible` (team 100, no DP).
+  7.8 MB package.  The strip rule had to learn two things: `.docx`
+  files are now content-tested like PDFs (the package ships its
+  manuscript and an OCR of its tables as Word files), and a
+  significance legend written out in words counts as a table marker.
+- **Douenne** (AEJ: Policy 2022): 13 claims (all of Table 4, plus the
+  Table 6 and Table 8 column 1 IV estimates).  Verdict `not_reproducible`
+  (DP 58: 56 misclassified treatment indicators; column 1 falls from
+  0.269 to 0.216 when fixed).  The package is a 43 MB GitHub archive of
+  the authors' repository pinned to the last commit (the openICPSR
+  deposit needs a login; the candidates file's 68.8 MB was measured
+  before download).  The strip rule had to learn R workspaces:
+  `.RData` / `.rda` files are now content-tested, because
+  `after_papier.RData` carries the stargazer output as strings.
+
+The earlier LaTeX, HTML, PDF and table-fragment rules (3.5–3.6) did
+not change any of these six mounts.
+
+**Runs (2026-11-02, zero API spend).**  The agent ran as in 3.3–3.6, one
+desktop Opus subagent per cell, run id `2026-11-02-a`.  The pipeline ran
+through the oracle (label `desktop-opus`, 76 answered calls).  Both
+cover 6 papers × 3 modes and both are each system's first sample on
+these papers.  Files:
+`benchmark/results/claude-code-6papers-all-modes-2026-11-02.json` and
+`benchmark/results/pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json`.
+Both are folded into REPORT.md and into the report's headline tables.
+Second agent samples of these six papers, and second samples of both
+systems on the four 3.6 papers, were run the same day (see "Two
+samples" below).
+
+| Paper | Mode | n | Agent (first scored, refinements) | Pipeline oracle (first scored, refinements) |
+|---|---|---|---|---|
+| Mokyr | seeded | 13 | 13 (13, 0) | 13 (13, 0) |
+| Mokyr | independent | 13 | 13 (13, 0) | 13 (1, 1) |
+| Mokyr | blind | 13 | 13 (13, 0) | 1 (1, 0) |
+| Labandeira | seeded | 12 | 12 (12, 0) | 12 (12, 1) |
+| Labandeira | independent | 12 | 8 (7, 2) | 5 (3, 3) |
+| Labandeira | blind | 12 | 6 (6, 0) | 4 (4, 0) |
+| Douenne | seeded | 13 | 13 (13, 1) | 5 (5, 4) |
+| Douenne | independent | 13 | 13 (12, 2) | 13 (12, 2) |
+| Douenne | blind | 13 | 12 (12, 0) | 12 (12, 1) |
+| Hollyer | seeded | 13 | 13 (13, 0) | 13 (13, 0) |
+| Hollyer | independent | 13 | 13 (13, 0) | 13 (11, 1) |
+| Hollyer | blind | 13 | 13 (13, 1) | 10 (10, 0) |
+| Hanushek | seeded | 13 | 13 (9, 2) | 13 (13, 0) |
+| Hanushek | independent | 13 | 13 (2, 1) | 9 (9, 1) |
+| Hanushek | blind | 13 | 13 (13, 1) | 12 (12, 0) |
+| Dancygier | seeded | 13 | 13 (13, 0) | 13 (13, 0) |
+| Dancygier | independent | 13 | 13 (13, 0) | 13 (11, 2) |
+| Dancygier | blind | 13 | 13 (13, 1) | 13 (13, 0) |
+| **Total, 6 papers** | seeded | 77 | **77** (73) | **69** (69) |
+| | independent | 77 | **73** (60) | **66** (47) |
+| | blind | 77 | **70** (70) | **52** (52) |
+
+Refinements are error plus claim refinements; the agent's are its own
+bookkeeping, as before.  Labandeira is where the agent drops furthest
+outside seeded mode: 8 / 12 independent and 6 / 12 blind are its lowest
+independent and blind shares on any evaluation paper so far (the
+previous lows were López-Moctezuma's 9 / 13 independent and Holman's
+6 / 11 blind).  The agent matched every claim of Mokyr, Hollyer,
+Hanushek and Dancygier in every mode.
+
+**Totals over the 23 evaluation papers** (first sample of each system:
+the agent is 3.3 + 3.4 + 3.6 + the rows above; the pipeline on Opus 5.5
+is the four API papers, the nine oracle papers of 3.5, the four of 3.6
+and the six above):
+
+| Mode | Agent, 17 earlier | Agent, 6 new | **Agent, 23** | Pipeline, 17 earlier | Pipeline, 6 new | **Pipeline, 23** |
+|---|---|---|---|---|---|---|
+| seeded | 200 / 201 | 77 / 77 | **277 / 278** | 194 / 201 | 69 / 77 | **263 / 278** |
+| independent | 194 / 201 | 73 / 77 | **267 / 278** | 169 / 201 | 66 / 77 | **235 / 278** |
+| blind | 180 / 201 | 70 / 77 | **250 / 278** | 118 / 201 | 52 / 77 | **170 / 278** |
+
+The 23-paper first-scored counts are 267 / 252 / 243 for the agent and
+262 / 168 / 170 for the pipeline.  **The harness gap over 23 papers**
+(agent minus pipeline, first samples) is 14 seeded, 32 independent and
+80 blind.  On the six new papers alone it is 8, 7 and 18; over the 17
+papers of 3.6 it was 6, 25 and 62.  The seeded gap on the six is larger
+than the independent one for one reason, Douenne's seeded pipeline
+cell (5 / 13; below).  Without it the pattern of 3.5–3.6 holds: near
+zero with the scripts, larger without them, largest without the
+targets.
+
+**Two samples.**  Second samples of the four 3.6 papers now exist for
+both systems: the agent in independent and blind mode (run id
+`2026-11-02-b`, `benchmark/results/claude-code-run2-4papers-indep-blind-2026-11-02.json`)
+and the pipeline through the oracle in all three modes (label
+`desktop-opus-run2`, 54 answered calls,
+`benchmark/results/pipeline-oracle-desktop-opus-run2-4papers-all-modes-2026-11-02.json`).
+The agent was also rerun on the six new papers in independent and
+blind mode (run id `2026-11-02-b`,
+`benchmark/results/claude-code-run2-6papers-indep-blind-2026-11-02.json`,
+PR #109), so the agent now has two samples in those modes on all 23
+papers; the pipeline has a second sample on 17.  All three files stay
+out of REPORT.md and the single-sample tables, as the 3.5 second
+samples do.
+
+- *Agent, sample 2 on the four:* 47 / 47 independent and 45 / 47 blind
+  (sample 1: 46 and 45).  Seven of the eight cells repeat.  Forsythe
+  independent went from 12 to 13: the out-of-the-labour-force
+  interaction that missed in every first-sample independent and blind
+  cell came out at −0.500 against −0.49, with the full-sample N exact
+  (16,948,516), so 3.6's "unclassified" for that claim was a matter of
+  sample handling the paper does not pin down, and one agent found it.
+  Forsythe blind repeated 11 / 13 with the same two misses.
+- *Agent, sample 2 on the six:* 76 / 77 independent and 71 / 77 blind
+  (sample 1: 73 and 70).  Ten of the twelve cells repeat:
+
+  | Paper | independent (sample 1 → 2) | blind (sample 1 → 2) |
+  |---|---|---|
+  | Mokyr | 13 → 13 | 13 → 13 |
+  | Labandeira | 8 → 11 | 6 → 7 |
+  | Douenne | 13 → 13 | 12 → 12 |
+  | Hollyer | 13 → 13 | 13 → 13 |
+  | Hanushek | 13 → 13 | 13 → 13 |
+  | Dancygier | 13 → 13 | 13 → 13 |
+
+  Labandeira independent reached 11 / 12 (first scored 7, 1 error + 3
+  claim refinements) after switching the treatment dummy to the lagged
+  `TT202` once it had compared with the claims, recorded as a deviation
+  (it is the package's treatment variable); the one miss is column 2
+  (−0.075 against −0.123), the quarterly-dummy gap again.  Labandeira
+  blind missed five claims (columns 1, 2, 5, 7, 8).  Douenne blind
+  missed the same claim as sample 1 (initial acceptance, 0.232 against
+  0.306), so that miss is stable, not noise.  Hanushek independent
+  again first scored 2 / 13: it re-standardised the GPS country means,
+  came out about 2.6 times too small, and one claim refinement fixed
+  it.  Both Hanushek cells of this sample read the full file
+  (`fread(select=)` on the CSV, all 1,992,276 rows, 2–3 minutes by the
+  coordinator's account).
+- *Pipeline, sample 2 on the four:* 43 / 33 / 38 of 47 (sample 1:
+  45 / 40 / 26).  Carrera swapped its zero: blind went from 0 to 6, and
+  independent from 6 to 0 (the script printed N = 0 for one table and
+  `NA` for every coefficient).  Bokobza blind went from 4 to 10 and
+  Bokobza seeded from 9 to 7 (all four fixed-effects coefficients of
+  Table A2 missed, against the two leader-FE ones in sample 1).  Forsythe was 13 / 11 / 10 both
+  times; Brouwer was 12 / 12 / 12 both times.
+
+Over the 17 papers that now have two samples of each system:
+
+| Mode | Agent 1 | Agent 2 | Pipeline 1 | Pipeline 2 | Gap range (four pairings) | 13-paper range (3.5) | 4-paper range (3.6 set) |
+|---|---|---|---|---|---|---|---|
+| seeded | 200 | — | 194 | 195 | 5–6 | 1–4 | 2–4 |
+| independent | 194 | 194 | 169 | 161 | 25–33 | 18–20 | 6–14 |
+| blind | 180 | 177 | 118 | 120 | 57–62 | 40–53 | 7–19 |
+
+(The seeded range pairs the agent's one seeded sample with both
+pipeline samples.)  Over all 23 papers the agent's two samples are
+267 / 270 independent and 250 / 248 blind, identical in 20 of 23 and 19
+of 23 cells; against the pipeline's one sample on the six new papers
+the 23-paper gap is 32–35 independent and 78–80 blind, but that range
+has two pairings, not four, and is not comparable with the 17-paper
+one.  The agent's cells are identical across samples in
+15 of 17 independent and 14 of 17 blind cells; the pipeline's in 14 of
+17 seeded, 10 of 17 independent and 8 of 17 blind (32 of 51 overall,
+mean absolute difference 1.16 claims per cell, largest 6).  The six new
+papers have one pipeline sample, so the 23-paper totals above are first
+samples only.
+
+**Misses, cell by cell** (every cell below n on the six new papers;
+categories as in the report's taxonomy; "unclassified" where neither the
+results file nor the evidence bundle says why):
+
+- *Agent, Labandeira independent (8/12, first scored 7, 2 claim
+  refinements).*  Misses: column 1 OLS (−0.134 against −0.178),
+  column 2 IV (−0.079 against −0.123), and the two household-FE
+  expenditure columns 7 and 8 (−0.151, −0.170 against −0.098, −0.089).
+  Column 2 is the cell the catalog's paper-versus-code note predicts:
+  the package's IV columns omit the quarterly dummies the paper says
+  every column has, so a run that follows the paper includes them
+  (under-specified methods section).  The other three are unclassified.
+  The agent's own notes say its LIML price coefficients do not match, so
+  its instrument construction probably differs.  N and households
+  matched exactly.
+- *Agent, Labandeira blind (6/12).*  The run took the price as
+  expenditure over quantity, so ln expenditure equals ln consumption
+  plus ln price in its data and every expenditure coefficient equals
+  its consumption counterpart.  Its notes say so: the paper reports
+  them as different, "which this data cannot reproduce with these
+  definitions".  The package's price is a deflated (real) price, which
+  the paper does not state.  The four expenditure columns (5–8) and
+  column 2 (the quarterly-dummy gap) are under-specified methods
+  section; column 1 OLS (−0.121) is unclassified.  N, households, both
+  elasticities and the two consumption FE columns passed.
+- *Agent, Douenne blind (12/13).*  Table 4 column 1 initial acceptance:
+  0.228 against 0.306 (band 0.066).  Unclassified.  The online-appendix
+  control lists are not in the package, and the agent rebuilt them from
+  variable names.
+- *Pipeline, Mokyr blind (1/13).*  Every watermill coefficient came out
+  about 10,000 times the printed value (1,437.8 against 0.15 in Table 2
+  column 1), and the three first-stage F statistics about half (8.86,
+  7.32, 7.92 against 19.9, 16.96, 16.17); only the district count (298)
+  matched.  The script built both per-capita variables per 10,000 of
+  the data's `pop` column, where the blind agent divided by `pcmean`.  An F statistic does not change when a regressor is
+  rescaled, so the denominator differed too, not just the units.  A
+  specification mismatch in variable construction.  The independent
+  pipeline cell, which saw the targets, first scored 1 / 13 and reached
+  13 / 13 after one claim refinement.
+- *Pipeline, Labandeira independent (5/12, first scored 3, 3 claim
+  refinements).*  N 21,317 and 11,852 households against
+  20,872 / 10,729: the run chose an instrument-availability rule for the
+  sample (a declared deviation), a sample restriction.  The five
+  coefficient misses (columns 1, 2, 4, 7, 8) are unclassified.
+- *Pipeline, Labandeira blind (4/12).*  N 12,349 and 8,404 households
+  against 20,872 and 10,729: the treatment and non-missing filters
+  differed, a sample restriction, and the consumption coefficients
+  (column 1 OLS −0.105 against −0.178, column 2, column 3) are counted
+  with it.  Its expenditure columns equal its consumption columns, as
+  in the agent's blind run, so the expenditure misses (columns 5, 6, 8)
+  are counted with the price-definition gap.  The two elasticities,
+  column 4 and column 7 passed inside the SE band.
+- *Pipeline, Douenne seeded (5/13, first scored 5, 1 error + 3 claim
+  refinements).*  The final script misses all six Table 4 column 3
+  coefficients, Table 4 column 4 (0.1496 against 0.153, outside the 2 %
+  seeded band) and the Table 8 IV (0.460 against 0.416), and it missed
+  the same eight on its first scored run, so the refinements recovered
+  nothing.  The script's column 3 model (`G0 * sg + sg * gj + sg * ta`)
+  and its Table 8 instrument set (`apres_modifs` plus an `info_CC` or
+  `info_PM` indicator) are its own; the seeded agent, shown the same
+  package scripts, matched all 13.  A seeded-mode specification mismatch.
+  The answering agent's own account of why (that it guessed these from
+  memory of the paper rather than from the code shown) is not in the
+  committed evidence, and the oracle caveat applies: the answerer runs
+  at the desktop default effort, not the effort the request names.
+  The same paper is 13 / 13 independent (first scored 12) and 12 / 13
+  blind in the pipeline, so this is the inverted case: the pipeline did
+  worse with the authors' code than without it.
+- *Pipeline, Douenne blind (12/13).*  The Table 8 IV: 0.177 against
+  0.416.  Unclassified.
+- *Pipeline, Hollyer blind (10/13).*  The three misses are all
+  Programmaticness rows: the overall and nonethnic volatility
+  differences (−0.163, −0.219 against −0.11, −0.15) and the ethnic
+  minus nonethnic high-volatility difference (0.115 against 0.20).  The
+  N was 428 against 431 (within tolerance).  Unclassified.  These are
+  *not* the extremist-party rows DP 54 could not reproduce: claims 8
+  and 9 passed in every cell of both systems, because their SE bands
+  (0.17 and 0.09) cover the text-following value (about 0.37 for
+  claim 9, as DP 54 found).  The paper-versus-code gap the entry records
+  is real but invisible at this tolerance.
+- *Pipeline, Hanushek independent (9/13).*  All seven Table 1 claims
+  passed on the full 1,992,276-row file (see "Infrastructure limits").
+  Four Table 2 migrant coefficients missed by 48–67 %: patience 0.333,
+  0.260 and 0.442 against 0.931, 0.779 and 1.032, and column 4
+  risk-taking −0.233 against −0.449.  Unclassified.  The patience
+  coefficients are about a third of the printed values.  The agent's
+  first scored independent run was off by the same factor after
+  re-standardising the preferences across students, and its one claim
+  refinement (using the supplied variables and weights) brought every
+  claim in; the pipeline's run declared a weighting choice instead.
+- *Pipeline, Hanushek blind (12/13).*  Table 1 column 2 risk-taking:
+  −0.064 against −0.482.  Unclassified.
+
+Cells that end at n but did not start there: the agent's Hanushek
+independent row (first scored 2, above) and seeded row (9), and its
+Douenne independent row (12).  The pipeline's Dancygier and Hollyer
+independent rows (11 each, two and one claim refinements) and Douenne
+independent (12).
+
+**Infrastructure limits.**
+
+- *Sandbox I/O (Hanushek; Forsythe in 3.6).*  The sandbox runs each
+  script for at most 300 s against a read-only mount.  The agents
+  measured that mount at roughly 5–15 MB/s, at which the 2.47 GB Table 1
+  `.dta` or its 2.97 GB `.csv` takes about 165–600 s to read once.  In
+  every first-sample agent cell at least one exploratory full read timed out (the
+  seeded agent reports both `fread(select=)` on the CSV and `haven` with
+  `col_select` on the `.dta` timing out), and each first-sample agent then estimated
+  Table 1 on a row sample, recorded as a DEVIATION line: 98.6 % in seeded
+  mode (column-wise parsing of the Stata file in spread-out blocks up
+  to a deadline), about 20 % independent and 50 % blind.  Table 2 (the
+  110 MB migrant file) was read in full.  All three cells still passed
+  every Table 1 claim.  The pipeline's scripts, in the same sandbox and
+  under the same limit, read the full file in all three modes:
+  `haven::read_dta(col_select=)` on the `.dta` in seeded and blind mode,
+  `data.table::fread(select=)` on the CSV in independent mode, each
+  printing N = 1,992,276, and seeded reproduced Table 1 exactly.  So the
+  300 s limit is not a hard wall for this file: the same column-selected
+  reads that timed out in the agents' exploration finished in the
+  pipeline's runs, and in the agent's second sample both Hanushek cells
+  read all 1,992,276 rows with `fread(select=)` in 2–3 minutes.  The
+  files do not say why the first-sample agents' reads timed out (mount
+  throughput at the time, or reading more columns while exploring).
+  What the record supports: an I/O constraint, not a hard wall, that
+  column-selected reads clear and that the first-sample agents worked
+  around by sampling after their exploratory reads timed out, all
+  recorded in the evidence.  Forsythe's 2.17 GB CSV is the same
+  constraint (3.6).
+- *Docker daemon wedge.*  During the agent batch the Docker daemon
+  wedged once: containers stuck in `Created`, `docker run` clients hung,
+  exit 125 on start.  It was restarted.  Seven agent cells record the
+  incident in their notes (Labandeira in all three modes, Douenne
+  independent and blind, Hanushek seeded and blind).  The hung runs
+  never started R; they were re-run and are not counted as attempts.
+  The Douenne blind cell's notes say Docker Desktop was restarted
+  mid-cell; by the coordinator's account that cell's agent did it on
+  its own.  Nothing in the scores depends on the wedge, but an agent
+  that can restart the host's Docker is outside the isolation this
+  project assumes, and a long batch needs a daemon health check.
+
+**Memorisation probe over 23 papers** (zero API spend; file
+`benchmark/results/probe-desktop-opus-2026-11-02.json`, now covering all
+23 evaluation papers; its rows for the 17 earlier papers are unchanged).
+Per paper, the six new rows (columns as in 3.6; the totals row covers
+all 23 papers):
+
+| paper | claims | answered | within tol | within 2x | within 5x | median rel err | recalled / inferred / none | agent blind (sample 1) |
+|---|---|---|---|---|---|---|---|---|
+| dancygier-2022-hate-crimes-gender-imbalances | 13 | 11 | 0 | 4 | 7 | 17.5% | 0 / 11 / 2 | 13/13 |
+| douenne-2022-yellow-vests-carbon-tax | 13 | 6 | 3 | 4 | 6 | 30.3% | 0 / 6 / 7 | 12/13 |
+| hanushek-2022-patience-risk-human-capital | 13 | 13 | 0 | 1 | 8 | 71.8% | 0 / 13 / 0 | 13/13 |
+| hollyer-2022-parties-as-disciplinarians | 13 | 8 | 1 | 4 | 6 | 38.1% | 0 / 8 / 5 | 13/13 |
+| labandeira-2022-electricity-pricing-reform | 12 | 7 | 1 | 1 | 4 | 42.5% | 0 / 7 / 5 | 6/12 |
+| mokyr-2022-wheels-of-change | 13 | 1 | 0 | 0 | 0 | 6.0% | 0 / 1 / 12 | 13/13 |
+| **total, 23 papers** | 278 | 150 | 41 | 68 | 109 | 38.7% | 0 / 150 / 128 | 250/278 |
+
+Of the 278 claims, 150 were answered and 41 fall within the blind
+tolerance.  None was rated `recalled` (0 / 150 / 128).  The six new
+papers add 5 hits to the 36 of 3.6: 3 on Douenne, 1 on Hollyer and 1 on
+Labandeira.  The 41 hits:
+
+- **3 are the Leeson context leak of 3.5.**
+- **1 is a count within 1 %** (Gagliarducci's sponsor terms).
+- **37 are guesses inside a ±1 SE band**, all rated `inferred`.  The
+  bands' relative half-widths still run from 6 % to 225 %, and 34 of the
+  37 are at or below 65 %.  The five new ones are of this kind.  Two of
+  Douenne's are close: 0.52 against 0.534 (Table 6 IV) and 0.42 against
+  0.416 (Table 8 IV); Douenne's working paper dates from 2019.
+
+Per paper the probe and the agent's blind result still do not line up.
+On the six new papers the agent's blind count is 13, 12, 13, 13, 6 and
+13 where the probe hit 0, 3, 0, 1, 1 and 0.  The one claim the Douenne
+blind agent missed (initial acceptance, 0.306) is one the probe landed
+inside its band (0.25), and the Table 8 IV the probe nearly hit is the
+claim the blind pipeline missed by a wide margin.  **Conclusion,
+restated over 23 papers: memory alone recovers 41 of 278 claims inside
+the blind band (about 15 %), none by stated recall and three through a
+context leak.  That cannot account for the agent's blind 250 of 278.**
+The caveats of 3.5 apply unchanged.
+
+**Next.**
+
+- (a) Free: a second oracle sample of the pipeline on the six new
+  papers in all three modes (the agent's second sample on them exists,
+  PR #109).  Until then the four-pairing ranges stay 17-paper.
+- (b) Decision pending (user): openICPSR.  33 AEA papers in the
+  meta-database are blocked only by the login.  The manual-placement
+  route of Phase 4 (a human downloads under their own account, the entry
+  records `data_access: manual`) is the only way the corpus grows much
+  past 23 from this source; without it the pool is exhausted.
+- (c) Recorded, not fixed (the pipeline stays frozen): Mokyr blind's
+  per-capita construction, Douenne seeded's own column 3 and Table 8
+  specifications, Labandeira's sample filters, and Carrera's and
+  Bokobza's sample-2 swings.  None is a harness bug the pipeline could
+  be patched for without tuning on evaluation papers.
+- (d) Free, harness: a Docker health check before each cell in long
+  batches, and an explicit rule (in `task.md`) that a cell agent stops
+  and reports rather than restarting Docker.
+- (e) Free: the Douenne seeded answering agent's own account of its
+  specification choices should be written into the evidence bundle if
+  it exists in the oracle store, so the "from memory" explanation can be
+  checked rather than quoted.
+
 ---
 
 ## Phase 4 — Corpus growth (4 → 20–30 papers)
