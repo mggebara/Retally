@@ -105,7 +105,12 @@ downloaded package (`benchmark/strip_rule.py`, applied by
   more language-tagged code chunks (`<pre class="r">`; Bokobza 2022
   ships its R log this way); regression tables —
   `.tex` (esttab/estout fragments, stargazer, any tabular with `Observations`
-  (or an `N` / `Clusters` row) / R² / standard-error rows), `.html`, plain-text esttab/outreg2 output,
+  (or an `N` / `Clusters` row) / R² / standard-error rows, and any
+  tabular with two or more starred estimates (`-1.43***`, or estout's
+  stars column `--0.005&***`) plus two or more `(0.20)` rows, which
+  catches one-column tables with no `N` row — Brouwer 2022's
+  `TableA14.tex`, Carrera 2022's `DailyAttIncr.tex` — while balance
+  tables, with SDs but no stars, stay), `.html`, plain-text esttab/outreg2 output,
   `.csv` only with `Observations`/`R-squared` row labels plus `(1)`/
   coefficient/`(se)` columns, `.xlsx` whose strings read the same way;
   result macros — a `.tex` made mostly of numeric `\newcommand` / `\def`

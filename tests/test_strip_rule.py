@@ -489,6 +489,143 @@ def test_descriptive_fragments_and_prose_are_kept(tmp_path):
     assert content_reason(_write(tmp_path, "Table1_R.md", HANLON_TABLE1_R_TEX)) is None
 
 
+# Whole regression tables with no ``N`` row and a single ``(1)`` column, so neither the
+# observations marker nor the numbered-columns marker fires: stars plus SEs decide.  And two
+# balance tables (means, SDs in parentheses, no stars) that must stay.  Verbatim from the
+# packages (Brouwer 2022 ``Results/TableA14.tex``, Carrera 2022 ``Output/DailyAttIncr.tex``,
+# Brouwer 2022 ``Results/TableA3.tex``, Altmann 2022 ``out/tableO_1.tex``).
+BROUWER_TABLEA14_TEX = r"""{
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\begin{tabular}{l*{1}{r}}
+\toprule
+                    &\multicolumn{1}{c}{(1)}   \\
+\midrule
+Social image        &       -1.43***\\
+                    &      (0.20)   \\
+Norm enforcement    &        0.21   \\
+                    &      (0.18)   \\
+Other reasons       &       -2.68***\\
+                    &      (0.38)   \\
+\midrule
+Teaching            &        0.39   \\
+Social image        &        0.09   \\
+Norm enforcement    &        0.49   \\
+Other reasons       &        0.03   \\
+\bottomrule
+\end{tabular}
+}
+"""  # noqa: E501
+CARRERA_DAILYATTINCR_TEX = r"""\begin{tabular}{l*{1}{r @{} l}}
+\hline
+            &\multicolumn{2}{c}{\shortstack{Attendance \\ likelihood}}\\
+            &\multicolumn{2}{c}{(1)}\\
+\hline
+Day         &     --0.005&***\\
+            &     (0.001)&   \\
+12+ visits contract&       0.051&   \\
+            &     (0.045)&   \\
+Day $\times$ 12+ visits contract&       0.005&** \\
+            &     (0.002)&   \\
+\hline
+Wave FEs    &         Yes&   \\
+N           &       7,336&   \\
+Clusters    &         262&   \\
+\hline\hline
+\end{tabular}
+"""  # noqa: E501
+BROUWER_TABLEA3_TEX = r"""{
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\begin{tabular}{l*{4}{rrrrr}}
+\toprule
+                    &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}&\multicolumn{1}{c}{(4)}         \\
+                    &         All&       Alone&       Child&       Diff.         \\
+\midrule
+Own Child           &        0.88&        0.91&        0.85&        0.06         \\
+                    &      (0.33)&      (0.29)&      (0.36)&      (0.05)         \\
+Son                 &        0.61&        0.62&        0.61&        0.01         \\
+                    &      (0.49)&      (0.49)&      (0.49)&      (0.07)         \\
+Daughter            &        0.64&        0.63&        0.64&       -0.01         \\
+                    &      (0.48)&      (0.49)&      (0.48)&      (0.07)         \\
+No. of Children     &        1.46&        1.40&        1.52&       -0.12         \\
+                    &      (0.64)&      (0.59)&      (0.67)&      (0.09)         \\
+Child Age = 3       &        0.06&        0.06&        0.06&       -0.00         \\
+                    &      (0.25)&      (0.24)&      (0.25)&      (0.03)         \\
+Child Age = 4       &        0.16&        0.16&        0.17&       -0.01         \\
+                    &      (0.37)&      (0.37)&      (0.38)&      (0.05)         \\
+Child Age = 5       &        0.26&        0.25&        0.27&       -0.02         \\
+                    &      (0.44)&      (0.44)&      (0.45)&      (0.06)         \\
+Child Age = 6       &        0.18&        0.17&        0.19&       -0.03         \\
+                    &      (0.39)&      (0.38)&      (0.40)&      (0.05)         \\
+Child Age = 7       &        0.23&        0.19&        0.26&       -0.07         \\
+                    &      (0.42)&      (0.39)&      (0.44)&      (0.06)         \\
+Child Age = 8       &        0.21&        0.23&        0.20&        0.03         \\
+                    &      (0.41)&      (0.42)&      (0.40)&      (0.06)         \\
+Child Age = 9       &        0.19&        0.15&        0.22&       -0.07         \\
+                    &      (0.39)&      (0.36)&      (0.41)&      (0.05)         \\
+Child Age = 10      &        0.08&        0.11&        0.06&        0.05         \\
+                    &      (0.27)&      (0.31)&      (0.23)&      (0.04)         \\
+Child Age = 11      &        0.03&        0.03&        0.03&       -0.00         \\
+                    &      (0.18)&      (0.18)&      (0.18)&      (0.02)         \\
+\bottomrule
+\end{tabular}
+}
+"""  # noqa: E501
+ALTMANN_TABLEO_1_TEX = r"""   \begin{tabular}{l*{13}{c}}
+\toprule
+                &\multicolumn{4}{c}{\textsc{Baseline}}  &\multicolumn{4}{c}{\textsc{Directed Attention}}&\multicolumn{4}{c}{\textsc{Forced Choice}}&\multicolumn{1}{c}{Kruskal-Wallis}\\\cmidrule(lr){2-5}\cmidrule(lr){6-9}\cmidrule(lr){10-13}\cmidrule(lr){14-14}
+                &       10&       20&       40&    Ample&       10&       20&       40&    Ample&       10&       20&       40&    Ample&  p-value\\
+\midrule
+Ability Background Task (std.)&    -0.08&     0.11&     0.08&     0.16&     0.01&    -0.10&     0.28&    -0.11&    -0.01&     0.28&    -0.17&    -0.09&     0.48\\
+                &   (1.05)&   (0.90)&   (1.19)&   (0.87)&   (1.03)&   (0.80)&   (0.91)&   (0.97)&   (0.98)&   (0.83)&   (1.23)&   (1.14)&         \\
+\addlinespace
+Ability Decision Task (std.)&    -0.03&     0.07&     0.21&     0.08&    -0.10&     0.09&     0.21&     0.12&    -0.01&     0.23&    -0.47&    -0.13&     0.35\\
+                &   (1.13)&   (1.02)&   (0.70)&   (1.02)&   (0.93)&   (0.96)&   (0.71)&   (0.92)&   (1.01)&   (0.74)&   (1.27)&   (1.05)&         \\
+\addlinespace
+Age             &    23.76&    23.74&    22.78&    23.13&    24.39&    23.14&    25.63&    23.33&    23.70&    23.62&    22.80&    24.74&     0.37\\
+                &   (5.53)&   (4.44)&   (3.62)&   (4.30)&   (5.08)&   (3.76)&  (10.93)&   (3.54)&   (4.37)&   (4.66)&   (3.14)&   (6.09)&         \\
+\addlinespace
+Female          &     0.58&     0.51&     0.61&     0.59&     0.54&     0.60&     0.37&     0.62&     0.51&     0.65&     0.65&     0.55&     0.66\\
+                &   (0.50)&   (0.51)&   (0.50)&   (0.50)&   (0.50)&   (0.50)&   (0.50)&   (0.49)&   (0.50)&   (0.48)&   (0.49)&   (0.50)&         \\
+\addlinespace
+\% Economists   &     0.13&     0.12&     0.17&     0.18&     0.16&     0.14&     0.11&     0.13&     0.17&     0.10&     0.10&     0.16&     0.96\\
+                &   (0.33)&   (0.32)&   (0.38)&   (0.39)&   (0.37)&   (0.35)&   (0.32)&   (0.34)&   (0.38)&   (0.30)&   (0.31)&   (0.36)&         \\
+\addlinespace
+Perceived multitasking, relative&    54.97&    50.44&    51.94&    58.60&    51.30&    52.64&    62.79&    61.64&    53.43&    56.42&    59.35&    57.51&     0.00\\
+                &  (18.97)&  (19.22)&  (20.40)&  (18.39)&  (20.69)&  (18.76)&  (20.64)&  (18.29)&  (19.04)&  (21.20)&  (13.65)&  (18.37)&         \\
+\addlinespace
+Perceived multitasking, Likert&     3.07&     3.28&     3.50&     2.78&     3.23&     3.14&     2.79&     2.66&     3.18&     3.08&     3.35&     2.64&     0.00\\
+                &   (0.78)&   (0.77)&   (1.04)&   (0.76)&   (0.84)&   (0.75)&   (0.98)&   (0.82)&   (0.74)&   (0.80)&   (0.67)&   (0.65)&         \\
+\addlinespace
+Raven Score     &     6.12&     5.98&     6.72&     6.09&     6.17&     6.21&     6.84&     6.20&     5.93&     6.47&     6.30&     6.06&     0.34\\
+                &   (1.48)&   (1.39)&   (1.49)&   (1.87)&   (1.58)&   (1.88)&   (1.64)&   (1.63)&   (1.53)&   (1.52)&   (1.84)&   (1.97)&         \\
+\midrule
+Participant in First wave&      .66&        0&        0&        1&      .66&        0&        0&        1&      .64&        0&        0&        1\\
+                &         &         &         &         &         &         &         &         &         &         &         &         \\
+\midrule
+N               &      143&       43&       18&       94&      145&       42&       19&       94&      138&       40&       20&       96\\
+                &         &         &         &         &         &         &         &         &         &         &         &         \\
+\bottomrule
+\end{tabular}
+"""  # noqa: E501
+
+
+def test_single_column_regression_tables_with_stars_and_ses_are_stripped(tmp_path):
+    assert content_reason(_write(tmp_path, "TableA14.tex", BROUWER_TABLEA14_TEX)) == "regression-table"
+    assert (
+        content_reason(_write(tmp_path, "DailyAttIncr.tex", CARRERA_DAILYATTINCR_TEX)) == "regression-table"
+    )
+
+
+def test_balance_tables_without_stars_are_kept(tmp_path):
+    assert content_reason(_write(tmp_path, "TableA3.tex", BROUWER_TABLEA3_TEX)) is None
+    assert content_reason(_write(tmp_path, "tableO_1.tex", ALTMANN_TABLEO_1_TEX)) is None
+    # One starred row is not enough, nor are stars without standard errors.
+    one_star = BROUWER_TABLEA14_TEX.replace("-2.68***", "-2.68   ")
+    assert content_reason(_write(tmp_path, "one_star.tex", one_star)) is None
+    no_se = "\n".join(ln for ln in BROUWER_TABLEA14_TEX.splitlines() if "(0." not in ln)
+    assert content_reason(_write(tmp_path, "no_se.tex", no_se)) is None
+
+
 RESULT_MACROS_TEX = r"""\newcommand{\lowwtpobs}{32}
 \newcommand{\committwelveobs}{1{,}248}
 \newcommand{\actexpmean}{-4.17}
