@@ -1,0 +1,32 @@
+suppressMessages(library(tidyverse))
+f <- "<repo>/benchmark/.cache/claude-code/dertwinkel-kalt-2022-concentration-bias/blind/2026-11-02-c/mount/dertwinkel_kalt_2022_concentration_bias/Consumption Experiment/Stata/Consumption_Experiment.csv"
+d <- read_csv(f, show_col_types = FALSE)
+e <- c(129,132,143,115,121,117,135,127)
+bal <- d %>% filter(decision_number <= 8)
+fin <- d %>% filter(decision_number == 9)
+cb <- bal %>% group_by(tn) %>% summarise(any_corner = any(corner != 0), any_upper = any(corner == 1), any_lower = any(corner == -1), nwd = n_distinct(utility_point))
+print(table(cb$nwd))
+xw <- bal %>% select(tn, utility_point, indifference_point) %>% arrange(tn, utility_point) %>% pivot_wider(names_from = utility_point, values_from = indifference_point, names_prefix = "x")
+s <- fin %>% select(tn, dispersed, pizza, control, main, treatment, pap_sample, corner, utility_point, ip9 = indifference_point, id_stage2, id_stage2_upper, avg_id_stage2, qe_rad, qe_rad_lower, qe_rad_upper, average_ip) %>%
+  left_join(cb, by = "tn") %>% left_join(xw, by = "tn")
+print(with(s, table(pap_sample, any_corner, useNA = "ifany")))
+print(with(s, table(is.na(id_stage2), any_lower, useNA = "ifany")))
+print(with(s, table(pap_sample, any_upper, useNA = "ifany")))
+X <- as.matrix(s[, paste0("x", 1:8)])
+s$avgx <- rowMeans(X)
+print(summary(s$avgx - s$average_ip))
+# relative measure, all 8 days
+den <- sweep(X, 2, e, "+")
+s$rel_all_mid <- s$avg_id_stage2 * rowMeans(1 / den)
+s$rel_all_low <- s$id_stage2 * rowMeans(1 / den)
+s$rel_all_up <- s$id_stage2_upper * rowMeans(1 / den)
+jj <- s$utility_point
+s$rel_j_mid <- s$avg_id_stage2 / (e[jj] + X[cbind(seq_len(nrow(X)), jj)])
+s %>% group_by(control) %>% summarise(dall = max(abs(rel_all_mid - qe_rad), na.rm = TRUE), dj = max(abs(rel_j_mid - qe_rad), na.rm = TRUE), dlow = max(abs(rel_all_low - qe_rad_lower), na.rm = TRUE), dup = max(abs(rel_all_up - qe_rad_upper), na.rm = TRUE)) %>% print()
+# corner coding in final trade-off
+print(with(s, table(corner, control)))
+print(s %>% filter(corner == -1) %>% select(tn, control, ip9, id_stage2, id_stage2_upper) %>% head(10) %>% as.data.frame())
+print(s %>% filter(corner == 0) %>% summarise(mn = min(ip9), mx = max(ip9), same = all(ip9 == id_stage2)))
+print(s %>% filter(corner == 1, control == 1) %>% select(tn, ip9, id_stage2, id_stage2_upper) %>% head() %>% as.data.frame())
+print(s %>% filter(pap_sample == 1) %>% count(dispersed, pizza, control))
+print(s %>% filter(pap_sample == 1, any_corner) %>% nrow())

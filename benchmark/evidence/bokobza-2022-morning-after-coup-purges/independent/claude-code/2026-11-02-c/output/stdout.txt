@@ -1,0 +1,148 @@
+country-level N: 3714 
+country-level N: 3676 
+country-level N: 3282 
+country-level N: 3261 
+individual-level N: 89746 
+individual-level N: 85778 
+individual-level N: 76305 
+individual-level N: 89740 
+sd of lagged log pop within country (mean): 0.2604751 
+                                                   m_exp             m_aff
+Dependent Var.:                                purged_y1         purged_y1
+                                                                          
+fca                                   0.1468*** (0.0418) 0.1770** (0.0527)
+expg2-3 years                            0.0025 (0.0073)                  
+expg4-6 years                            0.0123 (0.0093)                  
+expgOver 6 years                        -0.0116 (0.0096)                  
+gdp_cap_pwt_ln_lag                       0.0060 (0.0180)   0.0112 (0.0187)
+fca x expg2-3 years                     -0.0510 (0.0421)                  
+fca x expg4-6 years                     -0.1005 (0.0610)                  
+fca x expgOver 6 years                 -0.1004. (0.0510)                  
+pgindependent                                             0.0335* (0.0144)
+pgleader_party                                            -0.0141 (0.0135)
+exp1                                                       0.0015 (0.0026)
+exp2                                                      -0.0001 (0.0002)
+exp3                                                      1.6e-6 (3.59e-6)
+fca x pgindependent                                       -0.0664 (0.0705)
+fca x pgleader_party                                     -0.1226* (0.0577)
+mtMinister of Finance                                                     
+mtMinister of Foreign Affairs                                             
+mtMinister of Natural Resources                                           
+mtOther type of minister                                                  
+pop_pwt_ln_lag                                                            
+fca x mtMinister of Finance                                               
+fca x mtMinister of Foreign Affairs                                       
+fca x mtMinister of Natural Resources                                     
+fca x mtOther type of minister                                            
+tier0.5                                                                   
+tier1                                                                     
+tier2                                                                     
+tier3                                                                     
+fca x tier0.5                                                             
+fca x tier1                                                               
+fca x tier2                                                               
+fca x tier3                                                               
+Fixed-Effects:                        ------------------ -----------------
+country_isocode                                      Yes               Yes
+year                                                 Yes               Yes
+_____________________________________ __________________ _________________
+S.E.: Clustered                       by: country_isoc.. by: country_iso..
+Observations                                      89,746            85,778
+R2                                               0.12502           0.12461
+Within R2                                        0.00182           0.00218
+
+                                                   m_res              m_imp
+Dependent Var.:                                purged_y1          purged_y1
+                                                                           
+fca                                    0.2064** (0.0658) 0.3738*** (0.0931)
+expg2-3 years                                                              
+expg4-6 years                                                              
+expgOver 6 years                                                           
+gdp_cap_pwt_ln_lag                       0.0028 (0.0230)    0.0057 (0.0180)
+fca x expg2-3 years                                                        
+fca x expg4-6 years                                                        
+fca x expgOver 6 years                                                     
+pgindependent                                                              
+pgleader_party                                                             
+exp1                                     0.0031 (0.0030)   -0.0007 (0.0027)
+exp2                                    -0.0002 (0.0002)  -2.49e-6 (0.0002)
+exp3                                   5.88e-6 (4.17e-6)  4.18e-7 (3.65e-6)
+fca x pgindependent                                                        
+fca x pgleader_party                                                       
+mtMinister of Finance                  0.0281** (0.0106)                   
+mtMinister of Foreign Affairs           -0.0076 (0.0096)                   
+mtMinister of Natural Resources        0.0342** (0.0109)                   
+mtOther type of minister              0.0521*** (0.0082)                   
+pop_pwt_ln_lag                          -0.0030 (0.0229)                   
+fca x mtMinister of Finance             -0.0856 (0.0664)                   
+fca x mtMinister of Foreign Affairs     -0.0391 (0.0696)                   
+fca x mtMinister of Natural Resources  -0.1805* (0.0830)                   
+fca x mtOther type of minister         -0.1164* (0.0581)                   
+tier0.5                                                    -0.0073 (0.0150)
+tier1                                                      0.0254. (0.0143)
+tier2                                                       0.0116 (0.0132)
+tier3                                                      -0.0204 (0.0128)
+fca x tier0.5                                            -0.2599** (0.0872)
+fca x tier1                                               -0.2646* (0.1195)
+fca x tier2                                              -0.2846** (0.0946)
+fca x tier3                                              -0.2552** (0.0941)
+Fixed-Effects:                        ------------------ ------------------
+country_isocode                                      Yes                Yes
+year                                                 Yes                Yes
+_____________________________________ __________________ __________________
+S.E.: Clustered                       by: country_isoc.. by: country_isoc..
+Observations                                      76,305             89,740
+R2                                               0.13098            0.12562
+Within R2                                        0.00262            0.00252
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+                                       m_base_c                     m_main_c
+Dependent Var.:    replacement_rateadj_minister replacement_rateadj_minister
+                                                                            
+coupattempt_whogov            0.0985** (0.0327)            0.1055** (0.0323)
+l_gdp                         -0.0361. (0.0192)             -0.0331 (0.0205)
+l_pop                         -0.1139. (0.0656)            -0.1202. (0.0665)
+l_mon                                                        0.0308 (0.0211)
+l_mil                                                       -0.0331 (0.0293)
+l_par                                                      -0.0639* (0.0321)
+Fixed-Effects:     ---------------------------- ----------------------------
+COUNTRY_ID                                  Yes                          Yes
+YEAR_DATA                                   Yes                          Yes
+leader_cab_id                                No                           No
+__________________ ____________________________ ____________________________
+S.E.: Clustered                  by: COUNTRY_ID               by: COUNTRY_ID
+Observations                              3,714                        3,676
+R2                                      0.22384                      0.22852
+Within R2                               0.00622                      0.00898
+
+                                       m_base_l                     m_main_l
+Dependent Var.:    replacement_rateadj_minister replacement_rateadj_minister
+                                                                            
+coupattempt_whogov            0.0839** (0.0317)            0.0853** (0.0318)
+l_gdp                         -0.0386. (0.0200)            -0.0381. (0.0193)
+l_pop                         -0.1740* (0.0741)            -0.1825* (0.0732)
+l_mon                                                                       
+l_mil                                                        0.0412 (0.1266)
+l_par                                                       -0.0359 (0.0218)
+Fixed-Effects:     ---------------------------- ----------------------------
+COUNTRY_ID                                   No                           No
+YEAR_DATA                                   Yes                          Yes
+leader_cab_id                               Yes                          Yes
+__________________ ____________________________ ____________________________
+S.E.: Clustered                  by: COUNTRY_ID               by: COUNTRY_ID
+Observations                              3,282                        3,261
+R2                                      0.32810                      0.32721
+Within R2                               0.00645                      0.00692
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RESULT:failed_coup_base_country_fe=0.098488
+RESULT:failed_coup_main_country_fe=0.105549
+RESULT:failed_coup_base_leader_fe=0.083868
+RESULT:failed_coup_main_leader_fe=0.085272
+RESULT:failed_coup_experience_model=0.146839
+RESULT:failed_coup_x_over_6_years_experience=-0.100397
+RESULT:failed_coup_affiliation_model=0.177012
+RESULT:failed_coup_x_leaders_party=-0.122640
+RESULT:failed_coup_responsibility_model=0.206400
+RESULT:failed_coup_x_natural_resources=-0.180527
+RESULT:failed_coup_importance_model=0.373758

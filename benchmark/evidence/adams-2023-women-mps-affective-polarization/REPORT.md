@@ -36,7 +36,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [11/11](seeded/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[11/11](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [11/11](independent/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[11/11](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) | [8/11](blind/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[8/11](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[7/11](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) |
+| `claude-code` | [11/11](seeded/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[11/11](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [11/11](independent/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[11/11](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[11/11](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [8/11](blind/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[8/11](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[7/11](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[8/11](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
 | `pipeline-claude-opus-4-7` | [11/11](seeded/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [7/11](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [1/11](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) |
 | `pipeline-desktop-opus` | [11/11](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) | [10/11](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) (20261023T064839Z) | [7/11](blind/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) |
 | `pipeline-desktop-opus-run2` | [11/11](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [8/11](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [2/11](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
@@ -60,7 +60,7 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | [blind/pipeline-desktop-opus/20261023T063725Z](blind/pipeline-desktop-opus/20261023T063725Z/CELL.md) | `women_mps_coef_bivariate` | 1.60382 | 1.89 | ±0.43 (se_band) | 0.666 | PASS |
 | [blind/pipeline-desktop-opus/20261023T063725Z](blind/pipeline-desktop-opus/20261023T063725Z/CELL.md) | `women_mps_coef_men_partisans` | 1.45694 | 1.13 | ±0.5 (se_band) | 0.654 | PASS |
 | [independent/pipeline-claude-opus-4-7/20261021T142909Z](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `coalition_partners_coef_full` | 1.07692 | 0.94 | ±0.25 (se_band) | 0.548 | PASS |
-| [independent/pipeline-claude-opus-4-7/20261021T142909Z](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `women_mps_coef_men_partisans` | 1.8661 | 1.13 | ±0.5 (se_band) | 1.472 | FAIL |
+| [blind/claude-code/2026-11-02-c](blind/claude-code/2026-11-02-c/CELL.md) | `coalition_partners_coef_full` | 1.07692 | 0.94 | ±0.25 (se_band) | 0.548 | PASS |
 
 ### Declared deviations
 
@@ -78,6 +78,9 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Coalition/opposition-partner dummies use prior_coalition / prior_opposition (codebook lists these as used in the analysis), not govern_together / opposition_together.
   - Left-right distance (CMP rile_distance) standardized over the estimation sample (mean 22.5, SD 17.5 vs paper's 22.4 / 17.6).
   - Gender-specific DV computed as 10 - dislike from gender_disagregated_8-8-21.rds (gender 2 = women, 1 = men).
+- [independent/claude-code/2026-11-02-c](independent/claude-code/2026-11-02-c/CELL.md) (11/11)
+  - Sample restriction 'at least four MPs each' is implemented as to_prior_seats >= 4 (the evaluated out-party j only, with the 999 seat code retained), because requiring >= 4 prior seats of both parties gave 1,525 dyads against the paper's 1,842; the out-party-only filter reproduces 1,842 / 1,836 / 1,833 exactly. Chosen after the claim comparison of attempt-2.
+  - Gender models use 10 - dislike from the gender-disaggregated file as the 0-10 like thermometer (gender 2 = women, 1 = men).
 - [independent/pipeline-claude-opus-4-7/20261021T142909Z](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (7/11; failed: `women_mps_coef_men_partisans`, `n_directed_dyads`, `n_obs_women_partisans`, `n_obs_men_partisans`)
   - Treated prior_seats==999 as missing and substituted mp_number to recover ~1842 dyad sample; paper does not clearly specify the handling of this sentinel value.
 - [independent/pipeline-desktop-opus/20261023T064839Z](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) (10/11; failed: `women_mps_coef_men_partisans`)
@@ -103,16 +106,16 @@ _None._
 
 Pass rates at least 50 points apart (not unanimous):
 
-- independent: `n_directed_dyads` — pipeline 1/3, agent 2/2
-- independent: `n_obs_men_partisans` — pipeline 1/3, agent 2/2
-- independent: `n_obs_women_partisans` — pipeline 1/3, agent 2/2
-- independent: `women_mps_coef_men_partisans` — pipeline 1/3, agent 2/2
-- blind: `coalition_partners_coef_full` — pipeline 1/3, agent 3/3
-- blind: `opposition_partners_coef_full` — pipeline 1/3, agent 3/3
-- blind: `right_left_distance_coef_full` — pipeline 1/3, agent 3/3
-- blind: `women_mps_coef_bivariate` — pipeline 1/3, agent 3/3
-- blind: `women_mps_coef_full` — pipeline 1/3, agent 3/3
-- blind: `women_mps_coef_women_partisans` — pipeline 1/3, agent 3/3
+- independent: `n_directed_dyads` — pipeline 1/3, agent 3/3
+- independent: `n_obs_men_partisans` — pipeline 1/3, agent 3/3
+- independent: `n_obs_women_partisans` — pipeline 1/3, agent 3/3
+- independent: `women_mps_coef_men_partisans` — pipeline 1/3, agent 3/3
+- blind: `coalition_partners_coef_full` — pipeline 1/3, agent 4/4
+- blind: `opposition_partners_coef_full` — pipeline 1/3, agent 4/4
+- blind: `right_left_distance_coef_full` — pipeline 1/3, agent 4/4
+- blind: `women_mps_coef_bivariate` — pipeline 1/3, agent 4/4
+- blind: `women_mps_coef_full` — pipeline 1/3, agent 4/4
+- blind: `women_mps_coef_women_partisans` — pipeline 1/3, agent 4/4
 
 ## Cells
 
@@ -144,6 +147,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/claude-code/2026-11-01-a/CELL.md`](independent/claude-code/2026-11-01-a/CELL.md) — final 11/11, re-scored 11/11; first scored 11/11; executions 4; 2026-11-02T04:29:00Z; from `claude-code-run2-13papers-indep-blind-2026-11-01.json`; evidence complete.
 
+### independent · claude-code · 2026-11-02-c
+
+[`independent/claude-code/2026-11-02-c/CELL.md`](independent/claude-code/2026-11-02-c/CELL.md) — final 11/11, re-scored 11/11; first scored 7/11; executions 5; 2026-11-02T20:01:30Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
+
 ### independent · pipeline-claude-opus-4-7 · 20261021T142909Z
 
 [`independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md`](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) — final 7/11, re-scored 7/11; first scored 0/11; executions 5; 2026-10-21T14:29:09Z; from `pipeline-10papers-all-modes-2026-10-21.json`; evidence complete.
@@ -167,6 +174,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · claude-code · 2026-11-01-a
 
 [`blind/claude-code/2026-11-01-a/CELL.md`](blind/claude-code/2026-11-01-a/CELL.md) — final 7/11, re-scored 7/11; first scored 7/11; executions 2; 2026-11-02T04:24:00Z; from `claude-code-run2-13papers-indep-blind-2026-11-01.json`; evidence complete.
+
+### blind · claude-code · 2026-11-02-c
+
+[`blind/claude-code/2026-11-02-c/CELL.md`](blind/claude-code/2026-11-02-c/CELL.md) — final 8/11, re-scored 8/11; first scored 8/11; executions 3; 2026-11-02T20:11:40Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
 
 ### blind · pipeline-claude-opus-4-7 · 20261021T142909Z
 

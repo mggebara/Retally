@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "montero-2022-cooperative-property-rights",
+  "mode": "independent",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "The interquartile range is computed per property x survey round (match_id x year) over all such cells; the paper's 'at least five members represented' restriction is not applied, because the reported observation counts (327 and 118) equal the number of all property-round cells in the 300 and 150 ha samples (only 128 and 45 cells have five or more surveyed workers).",
+    "Percentiles use R quantile type 2 (Stata _pctile/egen pctile definition)."
+  ],
+  "notes": "Three exploratory runs (variable listing; sample/cluster/cell counts, no estimates), then one scored run kept as final. Specification: feols(outcome ~ Above500 + norm_dist + Above500:norm_dist | year), uniform kernel, sample |norm_dist| < bandwidth (300 or 150), SEs clustered by former owner (Expropretario_ISTA). Outcome: hh_income_pc (columns 1-2, worker level); within-property-round IQR of hh_income_pc (columns 3-4). Observation, cluster counts and dependent-variable means (73.59, 74.81, 38.63, 37.52) match Table 5 exactly. Point estimates: 82.25, 71.83, -56.42, -63.73 versus claimed 60.49, 52.79, -42.97, -51.79 (same signs, about 1.2-1.4x larger). check_attempt on the scored run reported all claims within tolerance, so the script was not changed. No docker hangs.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:04:00Z",
+  "finished_at": "2026-11-02T20:06:30Z"
+}

@@ -1,0 +1,17 @@
+suppressMessages({library(readr);library(dplyr);library(readxl)})
+B <- "<repo>/benchmark/.cache/claude-code/leeson-2022-hobo-economicus/blind/2026-11-02-c/mount/leeson_2022_hobo_economicus/3 replication package/replicate/replicate"
+cb <- file.path(B,"Codebook.xlsx")
+for (s in excel_sheets(cb)) { print(s); print(as.data.frame(read_excel(cb, sheet=s)), right=FALSE) }
+D <- file.path(B,"data")
+v <- read_csv(file.path(D,"metrovisitslog.csv"), show_col_types=FALSE)
+p <- read_csv(file.path(D,"passersby.csv"), show_col_types=FALSE)
+f <- read_csv(file.path(D,"friendliness.csv"), show_col_types=FALSE)
+r <- read_csv(file.path(D,"receipts.csv"), show_col_types=FALSE)
+sv <- read_csv(file.path(D,"service.csv"), show_col_types=FALSE)
+sh <- read_csv(file.path(D,"shuttle.csv"), show_col_types=FALSE)
+cat("visits", nrow(v), "\n"); print(table(v$metro))
+print(sort(unique(p$metro))); print(sort(unique(f$metro))); print(sort(unique(sv$metro))); print(sort(unique(sh$metro)))
+print(table(r$metro)); print(summary(r))
+print(sh[,1:2], n=30); print(sv[,1:2], n=30)
+print(summary(f)); cat("ndates", length(unique(v$date)),"\n")
+print(p, n=120)

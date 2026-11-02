@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "entry_id": "forsythe-2022-young-workers-recessions",
+  "mode": "independent",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 137, "kind": ""}
+  ],
+  "deviations": [
+    "yh_data.csv (about 2 GB) is read with data.table::fread(select=) keeping only the needed columns, to fit the 4 GB / 300 s sandbox.",
+    "Hiring regressions are estimated on weighted cell means (state x month-year x demographic cell x young x prior-month status x unemployment rate), weights = summed CPS weights; WLS point estimates are identical to the person-level regression, and N is the sum of cell counts.",
+    "The supplied LAUS state unemployment file ends in May 2014, so the matched sample effectively ends there; dropping pairs without a state unemployment rate plus restricting to age < 80 reproduces the paper's N = 16,948,516 exactly.",
+    "Years of education from peeduca: <1st grade 0, 1-4 2.5, 5-6 5.5, 7-8 7.5, 9th 9, 10th 10, 11th 11, 12th no diploma 12, HS 12, some college 13, associate 14, BA 16, MA 18, professional 20, PhD 20 (mapping not given in the paper).",
+    "Industry/occupation codes mapped to 2002 Census codes with the supplied crosswalks, assuming code vintages by survey year (industry: 1990 codes to 2002, 2002 codes 2003-2008, 2007 codes 2009-2013, 2012 codes 2014+; occupation: 1990 to 2002, 2002 codes 2003-2010, 2010 codes 2011+); 12 unmatched industry codes kept as their own FE levels.",
+    "Wage sample: hires with positive weekly earnings (v2prernwa) and earnings allocation flag v2prwernal == 0; this gives 120,306 observations versus 112,858 in the paper."
+  ],
+  "notes": "Two exploratory runs (attempt-1: variable inspection and read timing; attempt-2: sample-count checks, killed by the 4 GB memory cap at exit 137 after printing the counts). The final run estimates all 13 quantities in one script: hired = 100 if employed in month t (pemlr 1-2), not self-employed (class of worker 6/7), and either non-employed in t-1 or employed in t-1 and reporting a different employer (v2puiodp1 == 2); young = potential experience (age - years of education - 6) <= 10; weights are the average of the two months' CPS weights; state, demographic (sex x white x Hispanic x 7 education levels) and month-year (month t) FEs; SEs clustered by state. Afterwards, check_attempt reported every claim within tolerance, and the script was not changed. The final run's own timer showed 314 s, mostly the 280 s CSV read (the first exploratory read took 89 s). The 300 s perl alarm wrapper did not fire, and the container exited 0. No docker run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:00:36Z",
+  "finished_at": "2026-11-02T20:14:00Z"
+}

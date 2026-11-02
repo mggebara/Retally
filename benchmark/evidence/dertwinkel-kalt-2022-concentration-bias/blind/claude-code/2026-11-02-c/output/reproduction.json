@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "entry_id": "dertwinkel-kalt-2022-concentration-bias",
+  "mode": "blind",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Upper-corner lower bound set to 62 as the paper states (Sec. 2.3.5); the dataset's precomputed id_stage2 codes these subjects as 63. The precomputed variables were not used for the estimates.",
+    "Relative measure computed exactly as eq. (12), (1/8) sum_t d/(e_t + x_t), using e from footnote 3 and x_t = balanced-trade-off indifference point indexed by utility_point. The dataset's precomputed qe_rad differs slightly from this (about 0.5% in Treatment conditions, more in Control); the cause was not identified, and eq. (12) was applied to all conditions, Control included.",
+    "Main sample = pap_sample == 1 (preregistered sample, 100 per condition). All of these subjects have no corner in any balanced trade-off. Seven further subjects with no balanced corner (late sessions, none in Main-Treatment) are flagged pap_sample == 0 and excluded, on the reading that they exceed the preregistered sample size of 100.",
+    "Tobit: AER::tobit on the lower-bound d, left-censored at -63 and right-censored at 62. OLS standard errors are HC1 (Stata robust)."
+  ],
+  "notes": "Five exploratory runs (no RESULT lines): inspecting the data structure, checking how pap_sample relates to balanced corners, and checking the relative-measure construction against the precomputed columns. Then one final scored run. Lower-corner subjects in the final trade-off are kept at the coded value -63. For upper-corner subjects, the manually stated indifference point is the decision-9 indifference_point. In Table 3, the Donation column's difference is reported as Treatment minus Control. Table 3 has N = 200 in every column. No script, log or tex files from the dataset were opened. README.md was read for the file layout, and oTree/tasks_today.csv was glanced at; both are inside the mount.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:13:49Z",
+  "finished_at": "2026-11-02T20:19:10Z"
+}

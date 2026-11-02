@@ -1,0 +1,420 @@
+DYADIC names:
+ [1] "country"                "year"                   "to_mp_number"          
+ [4] "from_mp_number"         "party_number"           "party_from"            
+ [7] "party_to"               "to_partyname"           "to_parfam"             
+[10] "from_partyname"         "from_parfam"            "from_senior_partner"   
+[13] "to_senior_partner"      "to_in_gov"              "from_in_gov"           
+[16] "govern_together"        "opposition_together"    "from_left_bloc"        
+[19] "from_right_bloc"        "to_left_bloc"           "to_right_bloc"         
+[22] "same_bloc"              "from_parlgov_id"        "to_parlgov_id"         
+[25] "from_nationalism"       "from_rile"              "from_planeco"          
+[28] "from_markeco"           "to_nationalism"         "to_rile"               
+[31] "to_planeco"             "to_markeco"             "elecdate"              
+[34] "sat_together_10years"   "sat_together_15years"   "sat_together_20years"  
+[37] "to_galtan"              "to_lrecon"              "from_galtan"           
+[40] "from_lrecon"            "nationalism_distance"   "rile_distance"         
+[43] "galtan_distance"        "lrecon_distamce"        "govern_together_10"    
+[46] "govern_together_15"     "govern_together_20"     "rile_distance_s"       
+[49] "nationalism_distance_s" "lrecon_distance_s"      "galtan_distance_s"     
+[52] "from_multiculturalism"  "to_multiculturalism"    "from_immigrate_policy" 
+[55] "to_immigrate_policy"    "from_society"           "from_economy"          
+[58] "to_society"             "to_economy"             "from_rrparty"          
+[61] "to_rrparty"             "econ_distance"          "econ_distance_s"       
+[64] "soc_distance"           "society_distance_s"     "from_femaleleader"     
+[67] "from_pfeml"             "from_complete"          "to_femaleleader"       
+[70] "to_pfeml"               "to_complete"            "nat_avg"               
+[73] "diff_pfeml"             "diff_femlead"           "from_prior_cab"        
+[76] "from_prior_seats"       "to_prior_cab"           "to_prior_seats"        
+[79] "prior_coalition"        "prior_opposition"       "cntryyr"               
+[82] "party_like"             "party_dislike"          "DM"                    
+[85] "logDM"                 
+GENDER names:
+ [1] "country"                "year"                   "party_from"            
+ [4] "party_to"               "dislike"                "gender"                
+ [7] "to_mp_number"           "from_mp_number"         "party_number"          
+[10] "to_partyname"           "to_parfam"              "from_partyname"        
+[13] "from_parfam"            "from_senior_partner"    "to_senior_partner"     
+[16] "to_in_gov"              "from_in_gov"            "govern_together"       
+[19] "opposition_together"    "from_left_bloc"         "from_right_bloc"       
+[22] "to_left_bloc"           "to_right_bloc"          "same_bloc"             
+[25] "from_parlgov_id"        "to_parlgov_id"          "from_nationalism"      
+[28] "from_rile"              "from_planeco"           "from_markeco"          
+[31] "to_nationalism"         "to_rile"                "to_planeco"            
+[34] "to_markeco"             "elecdate"               "sat_together_10years"  
+[37] "sat_together_15years"   "sat_together_20years"   "to_galtan"             
+[40] "to_lrecon"              "from_galtan"            "from_lrecon"           
+[43] "nationalism_distance"   "rile_distance"          "galtan_distance"       
+[46] "lrecon_distamce"        "govern_together_10"     "govern_together_15"    
+[49] "govern_together_20"     "rile_distance_s"        "nationalism_distance_s"
+[52] "lrecon_distance_s"      "galtan_distance_s"      "from_multiculturalism" 
+[55] "to_multiculturalism"    "from_immigrate_policy"  "to_immigrate_policy"   
+[58] "from_society"           "from_economy"           "to_society"            
+[61] "to_economy"             "from_rrparty"           "to_rrparty"            
+[64] "econ_distance"          "econ_distance_s"        "soc_distance"          
+[67] "society_distance_s"     "from_femaleleader"      "from_pfeml"            
+[70] "from_complete"          "to_femaleleader"        "to_pfeml"              
+[73] "to_complete"            "nat_avg"                "diff_pfeml"            
+[76] "diff_femlead"           "from_prior_cab"         "from_prior_seats"      
+[79] "to_prior_cab"           "to_prior_seats"         "prior_coalition"       
+[82] "prior_opposition"       "cntryyr"                "party_like"            
+[85] "party_dislike"         
+'data.frame':	2266 obs. of  13 variables:
+ $ country            : chr  "New Zealand" "Australia" "New Zealand" "New Zealand" ...
+ $ year               : num  1996 1996 1996 1996 2002 ...
+ $ govern_together    : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ opposition_together: num  1 0 0 1 1 0 1 1 1 1 ...
+ $ elecdate           : chr  "10/12/96" "3/2/96" "10/12/96" "10/12/96" ...
+ $ rile_distance      : num  52.7 19 22.3 40.3 55.2 ...
+ $ from_pfeml         : num  NA 0.112 NA NA 0.333 ...
+ $ to_pfeml           : num  0.133 NA 0.28 0 0.429 ...
+ $ from_prior_seats   : num  9 80 9 9 9 9 9 9 9 49 ...
+ $ to_prior_seats     : num  37 0 44 10 7 49 1 39 5 0 ...
+ $ cntryyr            : chr  "New Zealand_1996" "Australia_1996" "New Zealand_1996" "New Zealand_1996" ...
+ $ party_like         : num  3.6 5.24 7.53 3.25 1.56 ...
+ $ party_dislike      : num  6.4 4.76 2.47 6.75 8.44 ...
+      year       to_mp_number   from_mp_number   party_number   
+ Min.   :1996   Min.   :11110   Min.   :11110   Min.   : 1.000  
+ 1st Qu.:2002   1st Qu.:14620   1st Qu.:14620   1st Qu.: 2.000  
+ Median :2007   Median :33610   Median :33611   Median : 4.000  
+ Mean   :2007   Mean   :34095   Mean   :34096   Mean   : 4.341  
+ 3rd Qu.:2011   3rd Qu.:51110   3rd Qu.:51110   3rd Qu.: 6.000  
+ Max.   :2017   Max.   :72701   Max.   :72701   Max.   :17.000  
+                                                NAs    :154     
+   to_parfam      from_parfam    from_senior_partner to_senior_partner
+ Min.   :10.00   Min.   :10.00   Min.   :0.0000      Min.   :0.0000   
+ 1st Qu.:30.00   1st Qu.:30.00   1st Qu.:0.0000      1st Qu.:0.0000   
+ Median :40.00   Median :40.00   Median :0.0000      Median :0.0000   
+ Mean   :45.58   Mean   :45.61   Mean   :0.1591      Mean   :0.1634   
+ 3rd Qu.:60.00   3rd Qu.:60.00   3rd Qu.:0.0000      3rd Qu.:0.0000   
+ Max.   :95.00   Max.   :95.00   Max.   :1.0000      Max.   :1.0000   
+                                 NAs    :399         NAs    :399      
+   to_in_gov      from_in_gov     govern_together   opposition_together
+ Min.   :0.000   Min.   :0.0000   Min.   :0.00000   Min.   :0.0000     
+ 1st Qu.:0.000   1st Qu.:0.0000   1st Qu.:0.00000   1st Qu.:0.0000     
+ Median :0.000   Median :0.0000   Median :0.00000   Median :0.0000     
+ Mean   :0.316   Mean   :0.3102   Mean   :0.08208   Mean   :0.4554     
+ 3rd Qu.:1.000   3rd Qu.:1.0000   3rd Qu.:0.00000   3rd Qu.:1.0000     
+ Max.   :1.000   Max.   :1.0000   Max.   :1.00000   Max.   :1.0000     
+                                                                       
+ from_left_bloc   from_right_bloc   to_left_bloc    to_right_bloc   
+ Min.   :0.0000   Min.   :0.0000   Min.   :0.0000   Min.   :0.0000  
+ 1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000  
+ Median :0.0000   Median :1.0000   Median :0.0000   Median :1.0000  
+ Mean   :0.3941   Mean   :0.6059   Mean   :0.3941   Mean   :0.6059  
+ 3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:1.0000  
+ Max.   :1.0000   Max.   :1.0000   Max.   :1.0000   Max.   :1.0000  
+                                                                    
+   same_bloc      from_parlgov_id  to_parlgov_id  from_nationalism 
+ Min.   :0.0000   Min.   :  26.0   Min.   :  26   Min.   :-28.986  
+ 1st Qu.:0.0000   1st Qu.: 448.0   1st Qu.: 448   1st Qu.:-11.779  
+ Median :0.0000   Median : 791.0   Median : 794   Median : -6.464  
+ Mean   :0.4541   Mean   : 905.7   Mean   : 905   Mean   : -5.573  
+ 3rd Qu.:1.0000   3rd Qu.:1361.0   3rd Qu.:1361   3rd Qu.: -0.944  
+ Max.   :1.0000   Max.   :2651.0   Max.   :2651   Max.   : 47.500  
+                  NAs    :72       NAs    :72     NAs    :62       
+   from_rile        from_planeco     from_markeco    to_nationalism   
+ Min.   :-63.380   Min.   : 0.000   Min.   : 0.000   Min.   :-28.986  
+ 1st Qu.:-19.931   1st Qu.: 1.185   1st Qu.: 0.486   1st Qu.:-11.621  
+ Median : -8.528   Median : 2.776   Median : 2.008   Median : -6.452  
+ Mean   : -5.379   Mean   : 3.490   Mean   : 3.470   Mean   : -5.467  
+ 3rd Qu.:  7.813   3rd Qu.: 5.002   3rd Qu.: 4.559   3rd Qu.: -0.944  
+ Max.   : 70.588   Max.   :23.944   Max.   :29.545   Max.   : 47.500  
+                   NAs    :62       NAs    :62       NAs    :62       
+    to_rile          to_planeco       to_markeco       to_galtan     
+ Min.   :-63.380   Min.   : 0.000   Min.   : 0.000   Min.   :0.1667  
+ 1st Qu.:-19.613   1st Qu.: 1.205   1st Qu.: 0.529   1st Qu.:2.8200  
+ Median : -7.865   Median : 2.776   Median : 2.030   Median :4.6250  
+ Mean   : -5.282   Mean   : 3.529   Mean   : 3.502   Mean   :4.8245  
+ 3rd Qu.:  7.895   3rd Qu.: 5.084   3rd Qu.: 4.597   3rd Qu.:6.6667  
+ Max.   : 70.588   Max.   :23.944   Max.   :29.545   Max.   :9.8000  
+                   NAs    :62       NAs    :62       NAs    :947     
+   to_lrecon        from_galtan      from_lrecon      nationalism_distance
+ Min.   :0.09091   Min.   :0.1667   Min.   :0.09091   Min.   : 0.000      
+ 1st Qu.:3.00000   1st Qu.:2.8571   1st Qu.:3.22000   1st Qu.: 3.516      
+ Median :5.00000   Median :4.6300   Median :5.00000   Median : 7.726      
+ Mean   :4.81868   Mean   :4.8362   Mean   :4.81223   Mean   :10.349      
+ 3rd Qu.:6.64833   3rd Qu.:6.6667   3rd Qu.:6.63000   3rd Qu.:14.072      
+ Max.   :8.64000   Max.   :9.8000   Max.   :8.64000   Max.   :62.219      
+ NAs    :947       NAs    :961      NAs    :961       NAs    :62          
+ rile_distance   galtan_distance lrecon_distamce govern_together_10
+ Min.   : 0.00   Min.   :0.000   Min.   :0.000   Min.   :0.0000    
+ 1st Qu.: 8.95   1st Qu.:1.420   1st Qu.:1.375   1st Qu.:0.0000    
+ Median :17.89   Median :2.500   Median :2.556   Median :0.0000    
+ Mean   :22.44   Mean   :2.833   Mean   :2.803   Mean   :0.1878    
+ 3rd Qu.:31.67   3rd Qu.:4.071   3rd Qu.:4.080   3rd Qu.:0.0000    
+ Max.   :95.31   Max.   :8.840   Max.   :7.730   Max.   :1.0000    
+                 NAs    :1026    NAs    :1026    NAs    :62        
+ govern_together_15 govern_together_20 rile_distance_s    
+ Min.   :0.0000     Min.   :0.0000     Min.   :-1.266970  
+ 1st Qu.:0.0000     1st Qu.:0.0000     1st Qu.:-0.759084  
+ Median :0.0000     Median :0.0000     Median :-0.251511  
+ Mean   :0.1307     Mean   :0.1534     Mean   : 0.006627  
+ 3rd Qu.:0.0000     3rd Qu.:0.0000     3rd Qu.: 0.530279  
+ Max.   :1.0000     Max.   :1.0000     Max.   : 4.141758  
+ NAs    :62         NAs    :62                            
+ nationalism_distance_s lrecon_distance_s  galtan_distance_s
+ Min.   :-1.06921       Min.   :-1.50801   Min.   :-1.4780  
+ 1st Qu.:-0.70032       1st Qu.:-0.76110   1st Qu.:-0.7468  
+ Median :-0.25862       Median :-0.11980   Median :-0.1906  
+ Mean   : 0.01659       Mean   : 0.01453   Mean   :-0.0193  
+ 3rd Qu.: 0.40718       3rd Qu.: 0.70829   3rd Qu.: 0.6186  
+ Max.   : 5.45861       Max.   : 2.69101   Max.   : 3.0743  
+ NAs    :62             NAs    :1026       NAs    :1026     
+ from_multiculturalism to_multiculturalism from_immigrate_policy
+ Min.   : 0.600        Min.   : 0.600      Min.   : 0.3333      
+ 1st Qu.: 3.170        1st Qu.: 3.170      1st Qu.: 3.0714      
+ Median : 5.110        Median : 5.110      Median : 5.0000      
+ Mean   : 5.195        Mean   : 5.198      Mean   : 4.9671      
+ 3rd Qu.: 6.800        3rd Qu.: 6.800      3rd Qu.: 6.2500      
+ Max.   :10.000        Max.   :10.000      Max.   :10.0000      
+ NAs    :1473          NAs    :1473        NAs    :1473         
+ to_immigrate_policy  from_society      from_economy       to_society     
+ Min.   : 0.3333     Min.   :-63.750   Min.   :-52.113   Min.   :-63.750  
+ 1st Qu.: 3.1100     1st Qu.:-19.475   1st Qu.:-17.442   1st Qu.:-19.213  
+ Median : 5.0000     Median : -9.766   Median : -9.821   Median : -9.631  
+ Mean   : 4.9746     Mean   : -8.827   Mean   : -9.044   Mean   : -8.577  
+ 3rd Qu.: 6.2500     3rd Qu.:  0.144   3rd Qu.: -2.110   3rd Qu.:  0.481  
+ Max.   :10.0000     Max.   : 63.281   Max.   : 38.637   Max.   : 63.281  
+ NAs    :1473                                                             
+   to_economy       from_rrparty       to_rrparty      econ_distance   
+ Min.   :-52.113   Min.   :0.00000   Min.   :0.00000   Min.   : 0.000  
+ 1st Qu.:-17.467   1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.: 4.588  
+ Median : -9.811   Median :0.00000   Median :0.00000   Median : 9.207  
+ Mean   : -9.016   Mean   :0.09095   Mean   :0.07855   Mean   :12.123  
+ 3rd Qu.: -1.995   3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:16.543  
+ Max.   : 38.637   Max.   :1.00000   Max.   :1.00000   Max.   :66.364  
+                   NAs    :1                                           
+ econ_distance_s      soc_distance    society_distance_s  from_femaleleader
+ Min.   :-1.162470   Min.   : 0.000   Min.   :-1.222790   Min.   :0.000    
+ 1st Qu.:-0.720631   1st Qu.: 7.684   1st Qu.:-0.730094   1st Qu.:0.000    
+ Median :-0.275854   Median :15.266   Median :-0.243938   Median :0.000    
+ Mean   : 0.004984   Mean   :19.172   Mean   : 0.006538   Mean   :0.243    
+ 3rd Qu.: 0.430540   3rd Qu.:26.674   3rd Qu.: 0.487541   3rd Qu.:0.000    
+ Max.   : 5.228250   Max.   :95.359   Max.   : 4.891609   Max.   :1.000    
+                                                          NAs    :17       
+   from_pfeml     to_femaleleader     to_pfeml         nat_avg    
+ Min.   :0.0000   Min.   :0.0000   Min.   :0.0000   Min.   :12.1  
+ 1st Qu.:0.1667   1st Qu.:0.0000   1st Qu.:0.1667   1st Qu.:26.0  
+ Median :0.3077   Median :0.0000   Median :0.3049   Median :33.6  
+ Mean   :0.3050   Mean   :0.2481   Mean   :0.3028   Mean   :31.6  
+ 3rd Qu.:0.4211   3rd Qu.:0.0000   3rd Qu.:0.4138   3rd Qu.:37.9  
+ Max.   :1.0000   Max.   :1.0000   Max.   :1.0000   Max.   :47.3  
+ NAs    :249      NAs    :11       NAs    :247      NAs    :130   
+   diff_pfeml       diff_femlead    from_prior_cab   from_prior_seats
+ Min.   :0.00000   Min.   :0.0000   Min.   :0.0000   Min.   :  0.0   
+ 1st Qu.:0.07483   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:  6.0   
+ Median :0.15515   Median :0.0000   Median :0.0000   Median : 20.0   
+ Mean   :0.19419   Mean   :0.3606   Mean   :0.3239   Mean   : 43.9   
+ 3rd Qu.:0.27157   3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.: 48.0   
+ Max.   :1.00000   Max.   :1.0000   Max.   :1.0000   Max.   :999.0   
+ NAs    :326       NAs    :752                                       
+  to_prior_cab    to_prior_seats   prior_coalition   prior_opposition
+ Min.   :0.0000   Min.   :  0.00   Min.   :0.00000   Min.   :0.0000  
+ 1st Qu.:0.0000   1st Qu.:  7.00   1st Qu.:0.00000   1st Qu.:0.0000  
+ Median :0.0000   Median : 20.00   Median :0.00000   Median :0.0000  
+ Mean   :0.3288   Mean   : 44.87   Mean   :0.09312   Mean   :0.4404  
+ 3rd Qu.:1.0000   3rd Qu.: 49.00   3rd Qu.:0.00000   3rd Qu.:1.0000  
+ Max.   :1.0000   Max.   :999.00   Max.   :1.00000   Max.   :1.0000  
+                                                                     
+   party_like       party_dislike         DM             logDM      
+ Min.   : 0.07692   Min.   :0.000   Min.   :  1.00   Min.   :0.000  
+ 1st Qu.: 2.88971   1st Qu.:4.969   1st Qu.:  5.14   1st Qu.:1.637  
+ Median : 3.96726   Median :6.033   Median : 10.69   Median :2.369  
+ Mean   : 3.95154   Mean   :6.048   Mean   : 64.25   Mean   :2.843  
+ 3rd Qu.: 5.03116   3rd Qu.:7.110   3rd Qu.:150.00   3rd Qu.:5.011  
+ Max.   :10.00000   Max.   :9.923   Max.   :410.00   Max.   :6.010  
+                                                                    
+n country-years: 81 
+
+               Australia                  Austria                   Canada 
+                      52                       80                       91 
+                 Denmark                  Finland                   France 
+                     128                      153                       89 
+                 Germany            Great Britain                   Greece 
+                     136                       59                       95 
+                 Iceland                  Ireland                   Israel 
+                     110                      107                       86 
+             Netherlands              New Zealand                   Norway 
+                     246                      163                      199 
+                Portugal                    Spain                   Sweden 
+                      68                      124                      153 
+             Switzerland United States of America 
+                     117                       10 
+prior seats <4: 368 385 
+
+   1    2 <NA> 
+2260 2262    0 
+      year         dislike           gender     to_mp_number   from_mp_number 
+ Min.   :1996   Min.   : 0.000   Min.   :1.0   Min.   :11110   Min.   :11110  
+ 1st Qu.:2002   1st Qu.: 4.950   1st Qu.:1.0   1st Qu.:14620   1st Qu.:14620  
+ Median :2007   Median : 6.056   Median :2.0   Median :33610   Median :33611  
+ Mean   :2007   Mean   : 6.073   Mean   :1.5   Mean   :33845   Mean   :33846  
+ 3rd Qu.:2011   3rd Qu.: 7.220   3rd Qu.:2.0   3rd Qu.:43810   3rd Qu.:43810  
+ Max.   :2017   Max.   :10.000   Max.   :2.0   Max.   :72701   Max.   :72701  
+                NAs    :10                                                    
+  party_number      to_parfam      from_parfam    from_senior_partner
+ Min.   : 1.000   Min.   :10.00   Min.   :10.00   Min.   :0.0000     
+ 1st Qu.: 2.000   1st Qu.:30.00   1st Qu.:30.00   1st Qu.:0.0000     
+ Median : 4.000   Median :40.00   Median :40.00   Median :0.0000     
+ Mean   : 4.325   Mean   :45.47   Mean   :45.54   Mean   :0.1601     
+ 3rd Qu.: 6.000   3rd Qu.:60.00   3rd Qu.:60.00   3rd Qu.:0.0000     
+ Max.   :17.000   Max.   :95.00   Max.   :95.00   Max.   :1.0000     
+ NAs    :268                                      NAs    :762        
+ to_senior_partner   to_in_gov       from_in_gov   govern_together  
+ Min.   :0.0000    Min.   :0.0000   Min.   :0.00   Min.   :0.00000  
+ 1st Qu.:0.0000    1st Qu.:0.0000   1st Qu.:0.00   1st Qu.:0.00000  
+ Median :0.0000    Median :0.0000   Median :0.00   Median :0.00000  
+ Mean   :0.1637    Mean   :0.3162   Mean   :0.31   Mean   :0.08204  
+ 3rd Qu.:0.0000    3rd Qu.:1.0000   3rd Qu.:1.00   3rd Qu.:0.00000  
+ Max.   :1.0000    Max.   :1.0000   Max.   :1.00   Max.   :1.00000  
+ NAs    :764                                                        
+ opposition_together from_left_bloc   from_right_bloc   to_left_bloc   
+ Min.   :0.0000      Min.   :0.0000   Min.   :0.0000   Min.   :0.0000  
+ 1st Qu.:0.0000      1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000  
+ Median :0.0000      Median :0.0000   Median :1.0000   Median :0.0000  
+ Mean   :0.4558      Mean   :0.3923   Mean   :0.6077   Mean   :0.3925  
+ 3rd Qu.:1.0000      3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:1.0000  
+ Max.   :1.0000      Max.   :1.0000   Max.   :1.0000   Max.   :1.0000  
+                                                                       
+ to_right_bloc      same_bloc      from_parlgov_id  to_parlgov_id   
+ Min.   :0.0000   Min.   :0.0000   Min.   :  26.0   Min.   :  26.0  
+ 1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.: 448.0   1st Qu.: 448.0  
+ Median :1.0000   Median :0.0000   Median : 791.0   Median : 791.0  
+ Mean   :0.6075   Mean   :0.4518   Mean   : 904.1   Mean   : 904.1  
+ 3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:1361.0   3rd Qu.:1361.0  
+ Max.   :1.0000   Max.   :1.0000   Max.   :2651.0   Max.   :2651.0  
+                                   NAs    :104      NAs    :104     
+ from_nationalism    from_rile        from_planeco     from_markeco   
+ Min.   :-28.986   Min.   :-63.380   Min.   : 0.000   Min.   : 0.000  
+ 1st Qu.:-11.719   1st Qu.:-19.931   1st Qu.: 1.190   1st Qu.: 0.486  
+ Median : -6.452   Median : -8.528   Median : 2.791   Median : 2.008  
+ Mean   : -5.550   Mean   : -5.391   Mean   : 3.505   Mean   : 3.451  
+ 3rd Qu.: -0.944   3rd Qu.:  7.813   3rd Qu.: 5.042   3rd Qu.: 4.559  
+ Max.   : 47.500   Max.   : 70.588   Max.   :23.944   Max.   :29.545  
+ NAs    :84                          NAs    :84       NAs    :84      
+ to_nationalism       to_rile          to_planeco       to_markeco    
+ Min.   :-28.986   Min.   :-63.380   Min.   : 0.000   Min.   : 0.000  
+ 1st Qu.:-11.569   1st Qu.:-19.617   1st Qu.: 1.213   1st Qu.: 0.529  
+ Median : -6.329   Median : -7.865   Median : 2.784   Median : 2.026  
+ Mean   : -5.437   Mean   : -5.288   Mean   : 3.539   Mean   : 3.484  
+ 3rd Qu.: -0.944   3rd Qu.:  7.895   3rd Qu.: 5.084   3rd Qu.: 4.597  
+ Max.   : 47.500   Max.   : 70.588   Max.   :23.944   Max.   :29.545  
+ NAs    :84                          NAs    :84       NAs    :84      
+   to_galtan        to_lrecon        from_galtan      from_lrecon     
+ Min.   :0.1667   Min.   :0.09091   Min.   :0.1667   Min.   :0.09091  
+ 1st Qu.:2.8200   1st Qu.:3.00000   1st Qu.:2.8571   1st Qu.:3.22000  
+ Median :4.6250   Median :5.00000   Median :4.6300   Median :5.00000  
+ Mean   :4.8304   Mean   :4.82045   Mean   :4.8496   Mean   :4.82026  
+ 3rd Qu.:6.7000   3rd Qu.:6.66667   3rd Qu.:6.6667   3rd Qu.:6.63000  
+ Max.   :9.8000   Max.   :8.64000   Max.   :9.8000   Max.   :8.64000  
+ NAs    :1858     NAs    :1858      NAs    :1886     NAs    :1886     
+ nationalism_distance rile_distance    galtan_distance lrecon_distamce
+ Min.   : 0.000       Min.   : 0.000   Min.   :0.000   Min.   :0.000  
+ 1st Qu.: 3.515       1st Qu.: 9.006   1st Qu.:1.420   1st Qu.:1.375  
+ Median : 7.692       Median :17.938   Median :2.520   Median :2.560  
+ Mean   :10.300       Mean   :22.432   Mean   :2.842   Mean   :2.814  
+ 3rd Qu.:13.862       3rd Qu.:31.504   3rd Qu.:4.080   3rd Qu.:4.090  
+ Max.   :62.219       Max.   :95.313   Max.   :8.840   Max.   :7.730  
+ NAs    :84                            NAs    :2024    NAs    :2024   
+ govern_together_10 govern_together_15 govern_together_20 rile_distance_s   
+ Min.   :0.0000     Min.   :0.0000     Min.   :0.0000     Min.   :-1.26697  
+ 1st Qu.:0.0000     1st Qu.:0.0000     1st Qu.:0.0000     1st Qu.:-0.75591  
+ Median :0.0000     Median :0.0000     Median :0.0000     Median :-0.24904  
+ Mean   :0.1863     Mean   :0.1298     Mean   :0.1541     Mean   : 0.00599  
+ 3rd Qu.:0.0000     3rd Qu.:0.0000     3rd Qu.:0.0000     3rd Qu.: 0.52079  
+ Max.   :1.0000     Max.   :1.0000     Max.   :1.0000     Max.   : 4.14176  
+ NAs    :84         NAs    :84         NAs    :84                           
+ nationalism_distance_s lrecon_distance_s  galtan_distance_s 
+ Min.   :-1.06921       Min.   :-1.50801   Min.   :-1.47801  
+ 1st Qu.:-0.70040       1st Qu.:-0.76110   1st Qu.:-0.74676  
+ Median :-0.26219       Median :-0.11739   Median :-0.18029  
+ Mean   : 0.01143       Mean   : 0.02076   Mean   :-0.01434  
+ 3rd Qu.: 0.38515       3rd Qu.: 0.71372   3rd Qu.: 0.62306  
+ Max.   : 5.45861       Max.   : 2.69101   Max.   : 3.07432  
+ NAs    :84             NAs    :2024       NAs    :2024      
+ from_multiculturalism to_multiculturalism from_immigrate_policy
+ Min.   : 0.600        Min.   : 0.600      Min.   : 0.3333      
+ 1st Qu.: 3.170        1st Qu.: 3.167      1st Qu.: 3.0714      
+ Median : 5.110        Median : 5.110      Median : 5.0000      
+ Mean   : 5.201        Mean   : 5.198      Mean   : 4.9701      
+ 3rd Qu.: 6.800        3rd Qu.: 6.800      3rd Qu.: 6.2500      
+ Max.   :10.000        Max.   :10.000      Max.   :10.0000      
+ NAs    :2942          NAs    :2942        NAs    :2942         
+ to_immigrate_policy  from_society      from_economy       to_society     
+ Min.   : 0.3333     Min.   :-63.750   Min.   :-52.113   Min.   :-63.750  
+ 1st Qu.: 3.1100     1st Qu.:-19.475   1st Qu.:-17.410   1st Qu.:-19.213  
+ Median : 5.0000     Median : -9.577   Median : -9.811   Median : -9.448  
+ Mean   : 4.9715     Mean   : -8.757   Mean   : -9.009   Mean   : -8.503  
+ 3rd Qu.: 6.2500     3rd Qu.:  0.144   3rd Qu.: -1.995   3rd Qu.:  0.481  
+ Max.   :10.0000     Max.   : 63.281   Max.   : 38.637   Max.   : 63.281  
+ NAs    :2942                                                             
+   to_economy       from_rrparty       to_rrparty      econ_distance   
+ Min.   :-52.113   Min.   :0.00000   Min.   :0.00000   Min.   : 0.000  
+ 1st Qu.:-17.442   1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.: 4.636  
+ Median : -9.778   Median :0.00000   Median :0.00000   Median : 9.308  
+ Mean   : -8.985   Mean   :0.09115   Mean   :0.07873   Mean   :12.189  
+ 3rd Qu.: -1.959   3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:16.677  
+ Max.   : 38.637   Max.   :1.00000   Max.   :1.00000   Max.   :66.364  
+                   NAs    :2                                           
+ econ_distance_s     soc_distance    society_distance_s  from_femaleleader
+ Min.   :-1.16247   Min.   : 0.000   Min.   :-1.222790   Min.   :0.0000   
+ 1st Qu.:-0.71603   1st Qu.: 7.691   1st Qu.:-0.729645   1st Qu.:0.0000   
+ Median :-0.26613   Median :15.234   Median :-0.245989   Median :0.0000   
+ Mean   : 0.01134   Mean   :19.139   Mean   : 0.004403   Mean   :0.2418   
+ 3rd Qu.: 0.44349   3rd Qu.:26.415   3rd Qu.: 0.470950   3rd Qu.:0.0000   
+ Max.   : 5.22825   Max.   :95.359   Max.   : 4.891609   Max.   :1.0000   
+                                                         NAs    :34       
+   from_pfeml     to_femaleleader     to_pfeml         nat_avg     
+ Min.   :0.0000   Min.   :0.0000   Min.   :0.0000   Min.   :12.10  
+ 1st Qu.:0.1666   1st Qu.:0.0000   1st Qu.:0.1667   1st Qu.:25.00  
+ Median :0.3049   Median :0.0000   Median :0.3030   Median :33.60  
+ Mean   :0.3044   Mean   :0.2467   Mean   :0.3021   Mean   :31.56  
+ 3rd Qu.:0.4211   3rd Qu.:0.0000   3rd Qu.:0.4118   3rd Qu.:37.90  
+ Max.   :1.0000   Max.   :1.0000   Max.   :1.0000   Max.   :47.30  
+ NAs    :498      NAs    :22       NAs    :493      NAs    :260    
+   diff_pfeml       diff_femlead   from_prior_cab   from_prior_seats
+ Min.   :0.00000   Min.   :0.000   Min.   :0.0000   Min.   :  0.00  
+ 1st Qu.:0.07432   1st Qu.:0.000   1st Qu.:0.0000   1st Qu.:  7.00  
+ Median :0.15385   Median :0.000   Median :0.0000   Median : 20.00  
+ Mean   :0.19329   Mean   :0.358   Mean   :0.3238   Mean   : 43.85  
+ 3rd Qu.:0.26820   3rd Qu.:1.000   3rd Qu.:1.0000   3rd Qu.: 48.00  
+ Max.   :1.00000   Max.   :1.000   Max.   :1.0000   Max.   :999.00  
+ NAs    :652       NAs    :1516                                     
+  to_prior_cab    to_prior_seats   prior_coalition  prior_opposition
+ Min.   :0.0000   Min.   :  0.00   Min.   :0.0000   Min.   :0.0000  
+ 1st Qu.:0.0000   1st Qu.:  7.00   1st Qu.:0.0000   1st Qu.:0.0000  
+ Median :0.0000   Median : 20.00   Median :0.0000   Median :0.0000  
+ Mean   :0.3286   Mean   : 44.76   Mean   :0.0931   Mean   :0.4407  
+ 3rd Qu.:1.0000   3rd Qu.: 49.00   3rd Qu.:0.0000   3rd Qu.:1.0000  
+ Max.   :1.0000   Max.   :999.00   Max.   :1.0000   Max.   :1.0000  
+                                                                    
+   party_like       party_dislike  
+ Min.   : 0.07692   Min.   :0.000  
+ 1st Qu.: 2.88339   1st Qu.:4.971  
+ Median : 3.95122   Median :6.049  
+ Mean   : 3.94442   Mean   :6.056  
+ 3rd Qu.: 5.02876   3rd Qu.:7.117  
+ Max.   :10.00000   Max.   :9.923  
+                                   
+gender cy: 80 
+      country year to_mp_number from_mp_number party_number party_from party_to
+1 New Zealand 1996        64320          64420            5          E        B
+2   Australia 1996        63321          63320            2          A        D
+3 New Zealand 1996        64620          64420            5          E        A
+4 New Zealand 1996        64621          64420            5          E        C
+5 New Zealand 2002        64110          64420            4          D        E
+6 New Zealand 2002        64320          64420            4          D        A
+                         to_partyname to_parfam         from_partyname
+1            New Zealand Labour Party        30        ACT New Zealand
+2                Australian Democrats        30 Australian Labor Party
+3          New Zealand National Party        60        ACT New Zealand
+4             New Zealand First Party        60        ACT New Zealand
+5 Green Party of Aotearoa New Zealand        10        ACT New Zealand
+6            New Zealand Labour Party        30        ACT New Zealand
+  from_parfam from_senior_partner
+1          40                  NA
+2          30                   1
+3          40                  NA
+4          40                  NA
+5          40                   0
+6          40                   0

@@ -1,0 +1,81 @@
+base 2019 
+1  to only: 2019  from only: 1902  both: 1902 
+2  to only: 1973  from only: 1838  both: 1797 
+3  to only: 1914  from only: 1761  both: 1668 
+4  to only: 1842  from only: 1683  both: 1535 
+5  to only: 1813  from only: 1636  both: 1469 
+6  to only: 1750  from only: 1574  both: 1366 
+from_pfeml NA in base: 193 
+both pfeml nonNA: 1826 
+both pfeml nonNA & seats>=4 both: 1499 
+frac of to_pfeml*seats near integer: 0.5552254 
+                    el                   to_partyname to_prior_seats to_pfeml
+125       Iceland 1999                  Liberal Party              2   0.0000
+132       Iceland 1999                  Liberal Party              2   0.0000
+135 Great Britain 1997                            SNP              3   0.3333
+139       Iceland 1999                  Liberal Party              2   0.0000
+147       Iceland 1999                  Liberal Party              2   0.0000
+152       Ireland 2002                    Green Party              2   0.0000
+156       Ireland 2002                   We Ourselves              1   0.0000
+183       Ireland 2002                   We Ourselves              1   0.0000
+204 Great Britain 1997                            SNP              3   0.3333
+218       Ireland 2002                    Green Party              2   0.0000
+222       Ireland 2002                   We Ourselves              1   0.0000
+258 Great Britain 1997                            SNP              3   0.3333
+272        Canada 1997 Progressive Conservative Party              2   0.5000
+418        Canada 1997 Progressive Conservative Party              2   0.5000
+431        Canada 1997 Progressive Conservative Party              2   0.5000
+448      Portugal 2002                      Left Bloc              2   0.0000
+468      Portugal 2002                      Left Bloc              2   0.0000
+500      Portugal 2002                      Left Bloc              2   0.0000
+511       Ireland 2002                    Green Party              2   0.0000
+515       Ireland 2002                   We Ourselves              1   0.0000
+537       Iceland 2003                  Liberal Party              2   0.0000
+545       Iceland 2003                  Liberal Party              2   0.0000
+546       Iceland 2003                  Liberal Party              2   0.0000
+547       Iceland 2003                  Liberal Party              2   0.0000
+577       Ireland 2002                    Green Party              2   0.0000
+673        Canada 1997 Progressive Conservative Party              2   0.5000
+684       Ireland 2002                    Green Party              2   0.0000
+688       Ireland 2002                   We Ourselves              1   0.0000
+770      Portugal 2002                      Left Bloc              2   0.0000
+795   New Zealand 2008              Progressive Party              1   0.0000
+                            from_partyname from_prior_seats
+125                     Independence Party               25
+132                    Left Green Movement                0
+135                          Conservatives              336
+139                      Progressive Party               12
+147                           The Alliance                9
+152                   Familiy of the Irish               54
+156                   Familiy of the Irish               54
+183                            Green Party                2
+204                                 Labour              271
+218                           Labour Party               17
+222                           Labour Party               17
+258                      Liberal Democrats               20
+272                Liberal Party of Canada              177
+418                            Quebec Bloc               54
+431                 Reform Party of Canada               52
+448 Social Democratic Center-Popular Party               15
+468                Social Democratic Party               81
+500                        Socialist Party              115
+511                    Soldiers of Destiny               77
+515                    Soldiers of Destiny               77
+537                                     IP               26
+545                             Left-Green                6
+546                                     PP               12
+547                        Social Alliance               17
+577                           We Ourselves                1
+673                   New Democratic Party                9
+684                  Progressive Democrats                4
+688                  Progressive Democrats                4
+770           Unified Democratic Coalition               17
+795                        ACT New Zealand                2
+party_like==NA: 0 
+       
+        FALSE TRUE
+  FALSE  1759   76
+  TRUE     83  101
+prior_seats > 0 & pfeml>0 & seats>=4 both, or pfeml defined:
+1842 
+drop dyads where either has seats<4 but count 0-seat as >=4? 1643 

@@ -1,0 +1,57 @@
+bills with opp > n cosponsors: 4 
+base sample: 60670 sponsor-terms: 4746 
+ncosp all OLS                            b=   1.403 se=  0.630 n= 60669 ns= 4746
+ncosp rep OLS                            b=   2.395 se=  1.037 n= 27670 ns= 2244
+  rdrobust MSE bandwidth (numb_cosponsors,rep): 19.71; used h=13
+ncosp rep RD+IPW h=13                    b=   6.365 se=  3.925 n=  1185 ns=  100
+  rdrobust MSE bandwidth (numb_cosponsors,rep): 19.71; used h=13
+ncosp rep RD h=13                        b=   6.101 se=  4.796 n=  1227 ns=  100
+$b
+  female 
+6.101033 
+
+$se
+  female 
+4.796265 
+
+$n
+[1] 1227
+
+$ns
+[1] 100
+
+ncosp rep PS distr+MV+spons              b=   2.467 se=  1.042 n= 23080 ns= 1882
+ncosp rep PS distr+MV                    b=   2.614 se=  0.959 n= 25641 ns= 2092
+$b
+  female 
+2.613893 
+
+$se
+   female 
+0.9588784 
+
+$n
+[1] 25641
+
+$ns
+[1] 2092
+
+pctopp dem OLS                           b=  -1.720 se=  0.472 n= 32846 ns= 2492
+  rdrobust MSE bandwidth (pct_opp,dem): 9.54; used h=24
+pctopp dem RD h=24                       b=  -3.021 se=  1.915 n=  1939 ns=  164
+pctopp dem PS distr+MV+spons             b=  -1.500 se=  0.577 n= 29363 ns= 2265
+pctopp rep OLS                           b=   3.116 se=  0.943 n= 27670 ns= 2244
+pctopp rep PS distr+MV                   b=   2.890 se=  0.834 n= 25641 ns= 2092
+RESULT:female_sponsor_ncosponsors_all_ols=1.402527
+RESULT:female_sponsor_ncosponsors_rep_ols=2.395233
+RESULT:female_sponsor_ncosponsors_rep_rd_ipw=6.364928
+RESULT:female_sponsor_ncosponsors_rep_ipw_sponsor=2.467472
+RESULT:female_sponsor_pct_opposite_dem_ols=-1.720482
+RESULT:female_sponsor_pct_opposite_dem_rd=-3.021359
+RESULT:female_sponsor_pct_opposite_dem_ipw_sponsor=-1.499857
+RESULT:female_sponsor_pct_opposite_rep_ols=3.115525
+RESULT:female_sponsor_pct_opposite_rep_ipw_district=2.889635
+RESULT:n_bills_ncosponsors_all_ols=60669
+RESULT:n_sponsor_terms_ncosponsors_all_ols=4746
+RESULT:n_bills_pct_opposite_dem_ols=32846
+RESULT:n_bills_pct_opposite_rep_ols=27670

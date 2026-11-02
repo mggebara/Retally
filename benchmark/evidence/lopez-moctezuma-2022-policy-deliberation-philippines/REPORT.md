@@ -39,7 +39,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [13/13](seeded/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [9/13](independent/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[9/13](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) | [9/13](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[9/13](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) |
+| `claude-code` | [13/13](seeded/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [9/13](independent/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[9/13](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[9/13](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [9/13](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[9/13](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[9/13](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
 | `pipeline-desktop-opus` | [13/13](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) | [9/13](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) (20261023T064839Z) | [9/13](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) |
 | `pipeline-desktop-opus-run2` | [13/13](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [9/13](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [9/13](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
 
@@ -55,14 +55,14 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 |---|---|---|---|---|---|---|
 | [independent/claude-code/2026-10-22-a](independent/claude-code/2026-10-22-a/CELL.md) | `itt_vote_overall_unweighted_tableF1_col2` | 23.5099 | 23.242 | ±0.46484 (relative) | 0.576 | PASS |
 | [independent/claude-code/2026-11-01-a](independent/claude-code/2026-11-01-a/CELL.md) | `itt_vote_overall_unweighted_tableF1_col2` | 23.5099 | 23.242 | ±0.46484 (relative) | 0.576 | PASS |
+| [independent/claude-code/2026-11-02-c](independent/claude-code/2026-11-02-c/CELL.md) | `itt_vote_overall_unweighted_tableF1_col2` | 23.5099 | 23.242 | ±0.46484 (relative) | 0.576 | PASS |
 | [independent/pipeline-desktop-opus/20261023T064839Z](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) | `itt_vote_overall_unweighted_tableF1_col2` | 23.5099 | 23.242 | ±0.46484 (relative) | 0.576 | PASS |
 | [independent/pipeline-desktop-opus-run2/20261023T151837Z](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) | `itt_vote_overall_unweighted_tableF1_col2` | 23.5099 | 23.242 | ±0.46484 (relative) | 0.576 | PASS |
 | [blind/claude-code/2026-10-22-a](blind/claude-code/2026-10-22-a/CELL.md) | `itt_vote_overall_unweighted_tableF1_col2` | 23.5099 | 23.242 | ±0.46484 (relative) | 0.576 | PASS |
 | [blind/claude-code/2026-11-01-a](blind/claude-code/2026-11-01-a/CELL.md) | `itt_vote_overall_unweighted_tableF1_col2` | 23.5099 | 23.242 | ±0.46484 (relative) | 0.576 | PASS |
+| [blind/claude-code/2026-11-02-c](blind/claude-code/2026-11-02-c/CELL.md) | `itt_vote_overall_unweighted_tableF1_col2` | 23.5099 | 23.242 | ±0.46484 (relative) | 0.576 | PASS |
 | [blind/pipeline-desktop-opus/20261023T062931Z](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) | `itt_vote_overall_unweighted_tableF1_col2` | 23.5099 | 23.242 | ±0.46484 (relative) | 0.576 | PASS |
 | [blind/pipeline-desktop-opus-run2/20261023T150832Z](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) | `itt_vote_overall_unweighted_tableF1_col2` | 23.5099 | 23.242 | ±0.46484 (relative) | 0.576 | PASS |
-| [independent/claude-code/2026-10-22-a](independent/claude-code/2026-10-22-a/CELL.md) | `itt_vote_akbayan_unweighted_tableF1_col3` | 32.0097 | 31.729 | ±0.63458 (relative) | 0.442 | PASS |
-| [independent/claude-code/2026-11-01-a](independent/claude-code/2026-11-01-a/CELL.md) | `itt_vote_akbayan_unweighted_tableF1_col3` | 32.0097 | 31.729 | ±0.63458 (relative) | 0.442 | PASS |
 
 ### Declared deviations
 
@@ -83,6 +83,10 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Attendance weights (survey analyses): weights are built in actually treated barangays as pt/ps for self-reported attendees and (1-pt)/(1-ps) for non-attendees, where pt = att.prop (attendees / registered voters, data_agg) and ps = the share of attendees among that barangay's respondents in the analysis sample; all other respondents get weight 1. The paper only describes the adjustment verbally; this exact form is my reconstruction.
   - Anderson (2008) indices: items oriented as higher = more agreement with the party's concern (poverty, gap, corruption reversed 6-x; cct as is; femhouse, fempol, equality, harassment as is; discrimination reversed 6-x), each standardized by the control-group (assignment==0) mean and s.d. within the party's municipalities, weighted by row sums of the inverse (pairwise) covariance matrix over the items a respondent has, then the index is re-standardized on the control group. Effective sample = respondents with non-missing turnout_pl (1,081 here; paper says 1,082). Regressions use city FE, attendance weights, SEs clustered by barangay.
   - Permutation p-values, CACE and SEs were not computed (only the listed point estimates and Ns).
+- [independent/claude-code/2026-11-02-c](independent/claude-code/2026-11-02-c/CELL.md) (9/13; failed: `itt_poverty_index_akbayan_tableC3`, `itt_poverty_index_umalabka_tableC3`, `itt_gender_index_akbayan_tableC4`, `itt_gender_index_umalabka_tableC4`)
+  - Attendance-oversampling weights reconstructed from the paper's one-sentence description: in barangays with treatment == 1, self-reported attendees are weighted att.prop / p_s and non-attendees (1 - att.prop) / (1 - p_s), where p_s is the survey share of attendees in the barangay and att.prop is attendees / registered voters from data_agg; weight 1 elsewhere and for missing attendance.
+  - Survey sample restricted to respondents with non-missing party-list turnout and non-missing city/barangay (effective sample, fn. 11).
+  - Index item orientation is my interpretation: poverty, gap, corruption reversed (higher = agrees the issue is a main problem), cct kept; gender items oriented toward awareness (femhouse, fempol, equality, harassment kept; discrimination reversed). Anderson index: items standardized on the within-panel control group (assignment == 0), inverse-covariance (pairwise) weights, available-item averaging, re-standardized on control s.d.
 - [independent/pipeline-desktop-opus/20261023T064839Z](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) (9/13; failed: `itt_poverty_index_akbayan_tableC3`, `itt_poverty_index_umalabka_tableC3`, `itt_gender_index_akbayan_tableC4`, `itt_gender_index_umalabka_tableC4`)
   - Index items located by name pattern (gender index has 6 items per paper); attitude items oriented via their value labels (higher = more agreement, DK/refused set to missing). Summary indices are constructed once on the pooled analysis sample (respondents with a valid turnout response in municipalities with both treatment and control samples; control-group mean/s.d. and inverse-covariance weights from the pooled control group) and then the ITT is estimated separately by party
 - [blind/claude-code/2026-10-22-a](blind/claude-code/2026-10-22-a/CELL.md) (9/13; failed: `itt_poverty_index_akbayan_tableC3`, `itt_poverty_index_umalabka_tableC3`, `itt_gender_index_akbayan_tableC4`, `itt_gender_index_umalabka_tableC4`)
@@ -95,6 +99,13 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Anderson indices: items oriented so that higher = more concern about poverty (poverty, gap, corruption reversed 6-x; cct as is) or more pro-gender-equality / less sexist (femhouse, fempol, equality, harassment as is; discrimination reversed 6-x); standardized on the unweighted control-group (assignment==0) mean and s.d. within each party's municipalities; weights = row sums of the inverse pairwise-complete covariance matrix; index averaged over available items and re-standardized on the control group.
   - Survey effective sample = respondents with non-missing turnout_pl (1,081 after dropping one row with missing city/barangay/assignment; paper reports 1,082). Vote outcomes (F.1) use respondents with turnout_pl==1.
   - Barangay-level ITT uses the assignment variable as coded in data_agg.RData; permutation p-values were not computed (only coefficients and N are requested).
+- [blind/claude-code/2026-11-02-c](blind/claude-code/2026-11-02-c/CELL.md) (9/13; failed: `itt_poverty_index_akbayan_tableC3`, `itt_poverty_index_umalabka_tableC3`, `itt_gender_index_akbayan_tableC4`, `itt_gender_index_umalabka_tableC4`)
+  - Attendance-oversampling weights reconstructed: in barangays with town-hall meetings (att.prop > 0 in data_agg), attendees weighted by att.prop / survey attendance share and non-attendees by (1 - att.prop) / (1 - survey share); weight 1 elsewhere and for respondents with missing attendance. The authors' exact weight formula is not given in the paper.
+  - Anderson (2008) indices: all five-point items (poverty, gap, corruption, equality, discrimination, harassment) reversed (6 - x) so that higher = more agreement, following the paper's literal statement; binary items (cct, femhouse, fempol) kept as coded. Items standardized on the assignment==0 group of each party's municipalities, inverse-covariance weights from the pairwise covariance matrix of standardized items, index averaged over available items and re-standardized on the control group; built separately within each party sample.
+  - Survey sample: respondents with non-missing party-list turnout response (and non-missing city), N = 1081 (paper reports 1,082; one respondent has missing city).
+  - Only point estimates computed; permutation inference not reproduced (not among the requested quantities).
+  - attendance IPW weights constructed from data_agg att.prop (attendance sheets / registered voters) vs. barangay survey attendance share; exact authors' weight formula not documented
+  - all five-point attitude items reversed (6-x) so higher = more agreement; binary items kept as coded
 
 ### Pipeline and agent disagree
 
@@ -128,6 +139,10 @@ _None._
 
 [`independent/claude-code/2026-11-01-a/CELL.md`](independent/claude-code/2026-11-01-a/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 6; 2026-11-02T04:33:57Z; from `claude-code-run2-13papers-indep-blind-2026-11-01.json`; evidence complete.
 
+### independent · claude-code · 2026-11-02-c
+
+[`independent/claude-code/2026-11-02-c/CELL.md`](independent/claude-code/2026-11-02-c/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 4; 2026-11-02T20:07:30Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus · 20261023T064839Z
 
 [`independent/pipeline-desktop-opus/20261023T064839Z/CELL.md`](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 4; 2026-10-23T06:48:39Z; from `pipeline-oracle-desktop-opus-9papers-all-modes-2026-10-23.json`; evidence complete.
@@ -143,6 +158,10 @@ _None._
 ### blind · claude-code · 2026-11-01-a
 
 [`blind/claude-code/2026-11-01-a/CELL.md`](blind/claude-code/2026-11-01-a/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 2; 2026-11-02T04:24:00Z; from `claude-code-run2-13papers-indep-blind-2026-11-01.json`; evidence complete.
+
+### blind · claude-code · 2026-11-02-c
+
+[`blind/claude-code/2026-11-02-c/CELL.md`](blind/claude-code/2026-11-02-c/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 2; 2026-11-02T20:40:00Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus · 20261023T062931Z
 

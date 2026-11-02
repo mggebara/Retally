@@ -36,7 +36,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [12/12](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[12/12](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [8/12](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/12](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [6/12](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[7/12](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) |
+| `claude-code` | [12/12](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[12/12](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [8/12](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/12](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[8/12](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [6/12](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[7/12](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[7/12](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
 | `pipeline-desktop-opus` | [12/12](seeded/pipeline-desktop-opus/20261102T143152Z/CELL.md) (20261102T143152Z) | [5/12](independent/pipeline-desktop-opus/20261102T143735Z/CELL.md) (20261102T143735Z) | [4/12](blind/pipeline-desktop-opus/20261102T141403Z/CELL.md) (20261102T141403Z) |
 | `pipeline-desktop-opus-run2` | [12/12](seeded/pipeline-desktop-opus-run2/20261102T153300Z/CELL.md) (20261102T153300Z) | [7/12](independent/pipeline-desktop-opus-run2/20261102T190406Z/CELL.md) (20261102T190406Z) | [4/12](blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) (20261102T151132Z) |
 
@@ -80,6 +80,12 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Household fixed-effects IV is estimated by LIML on within-household demeaned data.
   - Treatment dummy is the dataset's TT202 (reform dummy accounting for the one-month billing lag, matching Section 3.1's 'second reformed bill'), chosen after comparing the T2-based estimates with the claimed values (attempt-6).
   - Retirement-income dummy not included as a control (including it drops 73 observations below the reported N = 20,872).
+- [independent/claude-code/2026-11-02-c](independent/claude-code/2026-11-02-c/CELL.md) (8/12; failed: `reform_consumption_ols_col1`, `reform_consumption_iv_col2`, `reform_expenditure_fe_col7`, `reform_expenditure_fe_iv_col8`)
+  - LIML implemented by hand as a k-class estimator (kappa = smallest eigenvalue from the residuals of [y, ln p] on the exogenous regressors with and without the excluded instruments), then fixest IV with the constructed instrument ln p - kappa * first-stage residual; SEs clustered by household. fixest has no native LIML.
+  - Price regressor is lnPRE (ln price per kWh relative to the price index IP), in the same relative-price form as the only full-coverage instruments in the data (lnPRE_papas_, lnPRE_aguav_, lnPRE_gascar_). With the nominal lnp_kwh, ln(expenditure) = ln(kWh) + lnp_kwh holds exactly in the data, so the expenditure columns reproduce the consumption T coefficients exactly, which Table 2 does not show.
+  - Non-FE columns also include the treated-group dummy D (Tm); it is absorbed in the household-FE columns.
+  - Months since reform = dataset variable dist (0 before the reform, 1-7 after). Controls: ln income and its square (lny, lny2), household size, rooms, surface, elderly dummy, education (4 levels), economic situation (3 levels), renting, building >25 years, municipality size (5), urban, province capital, region (CCAA), quarter dummies; year FE.
+  - My first-stage F statistics (cluster-robust, about 8 without and about 3 with household FE) are far below the paper's 379.6 / 6.957, so the instrument or price definitions probably differ from the authors'; the IV columns should be read with that in mind.
 - [independent/pipeline-desktop-opus/20261102T143735Z](independent/pipeline-desktop-opus/20261102T143735Z/CELL.md) (5/12; failed: `reform_consumption_ols_col1`, `reform_consumption_iv_col2`, `reform_consumption_fe_iv_col4`, `reform_expenditure_fe_col7`, `reform_expenditure_fe_iv_col8`, `n_obs_table2`, `n_households_table2`)
   - Instrument-availability rule for the Table 2 sample is not fully specified; chose rule 'agu_any' (N=21317, households=11852) as the one whose obs and household counts best match 20,872 / 10,729
   - Missing z_pap for non-buyers imputed with region x year x quarter median of buyers' unit prices in IV columns
@@ -99,28 +105,31 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Retirement income (PENSIO_j) is not included as a control: it is in Table 1 but not in the control list of equation (4).
   - LIML implemented by hand (k-class with kappa = minimum eigenvalue); household-FE LIML estimated on within-demeaned data (FWL). Only point estimates are scored; cluster-robust SEs are printed as diagnostics.
   - Number of id counts all households in the estimation sample, including 586 that are left with a single observation after listwise deletion (fixest drops them from the FE fit; they do not affect the coefficients).
+- [blind/claude-code/2026-11-02-c](blind/claude-code/2026-11-02-c/CELL.md) (7/12; failed: `reform_consumption_ols_col1`, `reform_consumption_iv_col2`, `reform_expenditure_ols_col5`, `reform_expenditure_fe_col7`, `reform_expenditure_fe_iv_col8`)
+  - Treatment T is the dataset's T2 (=TT199): 1 for post-reform interviews from September 2013 on (months-since-reform dist 1-7). This matches Table 1 (T mean 0.19 overall, 0.50 in the treated group) and eq. (3); the alternative TT202, which codes the September 2013 (first reformed bill) interviews as 0, was not used.
+  - Price, income and instruments are the prepared real (deflated by the time price index IP) variables in the analysis file: lnPRE (= ln p_kWh - IP), lny and lny2 (= ln y - IP and its square), and the instruments lnPRE_papas_, lnPRE_aguav_, lnPRE_gascar_ (effective prices of potatoes, water, fuel, with missing values already filled by the file's cell averages, so the IV sample equals the OLS sample).
+  - LIML is coded by hand as a k-class estimator (fixest has no LIML); household FE versions use the within (demeaned) transformation, which gives LSDV point estimates. LIML SEs are a hand-coded household-clustered sandwich; they are not scored.
+  - Controls: household size (NMIEMB), rooms (NHABIT), surface (SUPERF), elderly dummy (mayores), education of head (ESTUDREDSP, 4 levels), economic situation (SITUACTHOG_j, 3 levels), renting (alqui), building >25 years (edif25), municipality size (TAMAMU, 5 levels), urban, province capital (CAPROV), region (CCAA), quarter (trim), months since reform (dist), year FE; no survey weights. Retirement-income dummy not included (not in the paper's control list for eq. 4).
+  - Sample: the 25,775 panel observations with non-missing T2, restricted to complete cases on all regression variables (mainly SITUACTHOG_j and SUPERF missing); n_obs and n_households are counted on that complete-case sample, singleton households included.
 
 ### Pipeline and agent disagree
 
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
-- blind: `n_households_table2` — pipeline 0/2, agent 2/2
-- blind: `n_obs_table2` — pipeline 0/2, agent 2/2
+- blind: `n_households_table2` — pipeline 0/2, agent 3/3
+- blind: `n_obs_table2` — pipeline 0/2, agent 3/3
 
 Pass rates at least 50 points apart (not unanimous):
 
-- independent: `n_households_table2` — pipeline 1/2, agent 2/2
-- independent: `n_obs_table2` — pipeline 1/2, agent 2/2
-- independent: `reform_consumption_fe_iv_col4` — pipeline 1/2, agent 2/2
-- independent: `reform_consumption_ols_col1` — pipeline 0/2, agent 1/2
-- independent: `reform_expenditure_fe_col7` — pipeline 0/2, agent 1/2
-- independent: `reform_expenditure_fe_iv_col8` — pipeline 0/2, agent 1/2
-- independent: `reform_expenditure_ols_col5` — pipeline 1/2, agent 2/2
-- blind: `price_elasticity_consumption_ols_col1` — pipeline 1/2, agent 2/2
-- blind: `reform_consumption_fe_col3` — pipeline 1/2, agent 2/2
-- blind: `reform_expenditure_fe_col7` — pipeline 1/2, agent 0/2
-- blind: `reform_expenditure_fe_iv_col8` — pipeline 1/2, agent 0/2
-- blind: `reform_expenditure_iv_col6` — pipeline 0/2, agent 1/2
+- independent: `n_households_table2` — pipeline 1/2, agent 3/3
+- independent: `n_obs_table2` — pipeline 1/2, agent 3/3
+- independent: `reform_consumption_fe_iv_col4` — pipeline 1/2, agent 3/3
+- independent: `reform_expenditure_ols_col5` — pipeline 1/2, agent 3/3
+- blind: `price_elasticity_consumption_ols_col1` — pipeline 1/2, agent 3/3
+- blind: `reform_consumption_fe_col3` — pipeline 1/2, agent 3/3
+- blind: `reform_expenditure_fe_col7` — pipeline 1/2, agent 0/3
+- blind: `reform_expenditure_fe_iv_col8` — pipeline 1/2, agent 0/3
+- blind: `reform_expenditure_iv_col6` — pipeline 0/2, agent 2/3
 
 ## Cells
 
@@ -148,6 +157,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/claude-code/2026-11-02-b/CELL.md`](independent/claude-code/2026-11-02-b/CELL.md) — final 11/12, re-scored 11/12; first scored 7/12; executions 9; 2026-11-02T15:10:30Z; from `claude-code-run2-6papers-indep-blind-2026-11-02.json`; evidence complete.
 
+### independent · claude-code · 2026-11-02-c
+
+[`independent/claude-code/2026-11-02-c/CELL.md`](independent/claude-code/2026-11-02-c/CELL.md) — final 8/12, re-scored 8/12; first scored 7/12; executions 6; 2026-11-02T20:14:30Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus · 20261102T143735Z
 
 [`independent/pipeline-desktop-opus/20261102T143735Z/CELL.md`](independent/pipeline-desktop-opus/20261102T143735Z/CELL.md) — final 5/12, re-scored 5/12; first scored 3/12; executions 4; 2026-11-02T14:37:35Z; from `pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json`; evidence complete.
@@ -163,6 +176,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · claude-code · 2026-11-02-b
 
 [`blind/claude-code/2026-11-02-b/CELL.md`](blind/claude-code/2026-11-02-b/CELL.md) — final 7/12, re-scored 7/12; first scored 7/12; executions 4; 2026-11-02T15:05:31Z; from `claude-code-run2-6papers-indep-blind-2026-11-02.json`; evidence complete.
+
+### blind · claude-code · 2026-11-02-c
+
+[`blind/claude-code/2026-11-02-c/CELL.md`](blind/claude-code/2026-11-02-c/CELL.md) — final 7/12, re-scored 7/12; first scored 7/12; executions 3; 2026-11-02T20:26:03Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus · 20261102T141403Z
 

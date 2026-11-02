@@ -1,0 +1,10 @@
+library(haven)
+d <- "<repo>/benchmark/.cache/claude-code/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-02-c/mount/hanlon_2022_aircraft_ip_spillovers/3 replication files/data/dta/"
+a <- read_dta(paste0(d, "airframe_data.dta")); e <- read_dta(paste0(d, "engine_data.dta"))
+str(a); print(table(a$country, useNA = "a")); print(table(a$type, useNA = "a")); print(table(a$year))
+print(with(a, table(country, type, useNA = "a")))
+print(with(a, table(country, is.na(ln_wingload)))); print(with(a, table(country, is.na(ln_maxspeed)))); print(summary(a$count))
+print(with(a, table(country, year)))
+str(e); print(table(e$country, useNA = "a")); print(table(e$year)); print(with(e, table(country, is.na(ln_hp_per_lbs)))); print(summary(e$count))
+print(with(e, table(country, year)))
+print(head(as.data.frame(a), 5))

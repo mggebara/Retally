@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "entry_id": "grier-2023-sugar-roll-call-voting",
+  "mode": "blind",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "The data hold nominal contribution totals (totalcont); the script deflates them to constant 2018 dollars with CPI-U annual averages (2013 = 232.957, 2018 = 251.107). The paper does not state the deflator or base year, so the scale of the contribution coefficients depends on this choice.",
+    "Window-to-file mapping: SugarReplicate.dta = baseline window (it is the widest: its totalcont weakly exceeds the others for >99% of rows); SugarReplicate_iter1.dta = 12 months before the vote; SugarReplicate_iter2.dta = calendar year. The iter1/iter2 mapping is inferred from timing (iter1 has more 113th-Congress money, consistent with the late-2012 election season, and less 115th-Congress money than iter2, which contains the late-2018 season), not documented.",
+    "The contribution regressor is totalcont (it differs across the three window files); sugcont is identical across files and was taken to be the original election-cycle aggregate, so it is not used."
+  ],
+  "notes": "Three exploratory runs (no RESULT lines) inspected the data: variables, which column differs across the three files, and the vote-switching counts. Outcome y = 1 for Aye, 0 otherwise (No, Not Voting, No Vote); with that coding the same-incumbent switchers are 53 (47 Aye->No, 6 No->Aye), matching the paper's Table 2. Model: logit of y on contributions, ACU score (ncu), tenure, poverty, bachelor's share, median income, share over 65, agriculture committee dummy, constant, and state-district dummies (id), estimated on complete cases restricted to units with two observations and a switched vote (the units an unconditional dummy logit identifies from), giving 93 districts / 186 observations. The incumbent model restricts to both == 1 (same member for both votes): 53 incumbents / 106 observations. Robust (HC0 x n/(n-1)) standard errors are printed for information. The agriculture committee coefficient is not identified (quasi-separation; it diverges with NaN SE) but this does not affect the listed quantities. One scored run, the final one; no claim comparisons; no error repairs. Nothing hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:14:25Z",
+  "finished_at": "2026-11-02T20:18:30Z"
+}

@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "entry_id": "altmann-2022-cognitive-spillovers",
+  "mode": "independent",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "The supplied paper.txt is an earlier working-paper version (564 subjects, one wave, 'Active Choice' naming), so the specification was taken from the claim descriptions together with the data's variable labels.",
+    "Controls coding is my choice: field of study as subject_cat dummies, high-school GPA as q_abitur_grade_cat dummies (the category for missing GPA keeps N=12160), last math grade as q_math_grade_cat quartile dummies, perceived multitasking as both perc_multitasking_1 (Likert) and perc_multitasking_2 (relative), payoff scheme as Treatment_Incentives dummies, wave as original_lab. Online controls are age, gender dummies, and window_height1 and window_width1 for screen size."
+  ],
+  "notes": "Attempt-1 was exploratory: it looked at variables and labels and printed no RESULT lines. Final run: the lab sample drops the Ample condition (Treatment_Incentives==4), which leaves 12160 subject-rounds and 608 subjects across Baseline, Directed Attention and Forced Choice. All models are OLS with fixest, SEs clustered by subject_id. Outcomes: summation_correct (decision task), default_followed (default adherence), load_correct (background task), payoff_share; online: memory in formatted_data_long_mturk.dta (5472 obs, 608 subjects). Every RESULT matches its claimed value to the reported precision. I compared after the final run and did not change the script afterwards, so there are no claim attempts. No docker hangs.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T19:58:36Z",
+  "finished_at": "2026-11-02T20:00:30Z"
+}

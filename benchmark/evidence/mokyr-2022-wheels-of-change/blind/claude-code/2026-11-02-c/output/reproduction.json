@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "entry_id": "mokyr-2022-wheels-of-change",
+  "mode": "blind",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "First-stage F-statistic computed as the Wald F of the single excluded instrument using the historical-county clustered vcov (equivalent to Kleibergen-Paap F for one instrument); the paper does not state which F variant it reports. Non-robust first-stage F values are printed as diagnostics but not scored.",
+    "Wheat suitability control in Table 2 col 3+ and Table 3 is the binary indicator wheat_tmean <= 5, as the task context specifies."
+  ],
+  "notes": "Data: replication_data.dta (325 districts). Sample: 298 districts with non-missing Domesday mills. Dependent variable wrights/pcmean, regressor mills/pcmean (per capita by mean 1710-50 population; matches Table 1 means 3.76 and 18.92). Controls: main geo = latitude, longitude, dist_rug_mean, dist_elevation_mean; agricultural = suitmean, wheat indicator, dist_grass_mean; climatic = precip_mean_dist, temp_mean_dist; other = pcmean, min_harbor, DIST_London, min_dist_to_roman_rds, min_dist_2nav_rivers, area. River suitability = riv_rug26count (river length with ruggedness 2-6); instrument = riv_rug26count x wheat indicator. OLS and 2SLS via fixest, SEs clustered by GAZ_CNTY (35 counties). attempt-1 was an exploratory data inspection with no RESULT lines. No author scripts or result files were opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T12:00:00Z",
+  "finished_at": "2026-11-02T12:20:00Z"
+}

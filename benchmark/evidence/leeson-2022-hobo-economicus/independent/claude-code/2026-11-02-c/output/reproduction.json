@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "leeson-2022-hobo-economicus",
+  "mode": "independent",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [],
+  "notes": "Built from the paper text and the data CSVs only; no scripts were opened. Table 2: OLS of panhandlers per station-visit on WMATA monthly exits, matched by station and month (the Georgetown row is already in passersby.csv); the station average of each passerby's friendliest response (the highest marked category, 1-5); shuttle-stop and homeless-service dummies (<=10 walking minutes); date fixed effects; SEs clustered by station (fixest). Tables 3-4: donations/minutes*60 and (cash+inkind)/minutes*60 across the five stations (N=80 and 67); Brown-Forsythe = car::leveneTest(center=median); one-way ANOVA via aov. Attempt 1 used fixest's default removal of date-FE singletons, which dropped 2 and 4 visits (N 240/98) and left the coefficients unchanged. After the check_attempt comparison, the final run keeps singletons (fixef.rm='none'). That gives N 242/102, and the clustered SEs then match the paper exactly (e.g. 0.851 and 2.793). All coefficients and test statistics match the paper to its reported precision.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:03:14Z",
+  "finished_at": "2026-11-02T20:05:30Z"
+}

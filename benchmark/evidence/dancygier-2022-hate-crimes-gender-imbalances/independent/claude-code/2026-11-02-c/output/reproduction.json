@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "entry_id": "dancygier-2022-hate-crimes-gender-imbalances",
+  "mode": "independent",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Table 1 controls coded from the paper and survey codebook without the authors' code: age (continuous), gender, years of education, income (12-category factor incl. 'No answer'), occupation/main activity (factor; covers both main activity and employment status), German citizenship, household size (numeric), self-assessed social status (numeric, 'bottom' code recoded to 0), religion (factor), state (factor). National battery = the 8 ref_* items; local battery = the 8 ref_loc_* items (all linear); additional controls = contact_ind, distance_ref (factor), settle_ref (factor), afd (0-100), afd_ind, lrscale, muslim_ind. R-squared in cols 3-6 is a little below the published values, so the exact coding of some controls likely differs.",
+    "SI Table C1 cols 5-6: logit with state fixed effects (plus year FE in the annual model), SEs clustered by county; controls log population, log population density, population change 2011-15, log unemployment rate, male/female unemployment ratio, log refugee stock 2014, log refugee inflow 2014-15, % highly educated, % manufacturing, change in manufacturing share, AfD vote share 2013, log violent crime per capita. Excess Males outside the 2.5th/97.5th percentiles (computed over 2015 municipality values) excluded before complete-case filtering."
+  ],
+  "notes": "Attempt-1 was an exploratory data inspection (no RESULT lines). The final run is the first and only scored run; all 13 quantities came out in line with the claims (check_attempt: all claims within tolerance), so no claim-driven revision was made. Table 1 cols 1-3 and both C1 coefficients and all four N match to the reported precision; cols 4-6 Mate Competition are 0.207/0.187/0.157 vs 0.206/0.185/0.155. Codebook PDFs in the mount (codebook_survey.pdf, codebook_context.pdf) and 1-ReadMe.txt/metadata.json were read; no script files were opened. No docker hang occurred.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:07:39Z",
+  "finished_at": "2026-11-02T20:09:42Z"
+}

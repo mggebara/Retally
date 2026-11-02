@@ -1,0 +1,61 @@
+OLS estimation, Dep. Var.: hh_income_pc
+Observations: 4,781
+Fixed-effects: year: 12
+Standard-errors: Clustered (owner) 
+                    Estimate Std. Error   t value Pr(>|t|)    
+Above500           82.300136  44.339130  1.856151 0.066437 .  
+norm_dist           0.062072   0.047279  1.312906 0.192281    
+Above500:norm_dist -0.183247   0.212166 -0.863697 0.389863    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 68.3     Adj. R2: 0.444409
+             Within R2: 0.024045
+OLS estimation, Dep. Var.: iqr
+Observations: 76
+Fixed-effects: year: 10
+Standard-errors: Clustered (owner) 
+                    Estimate Std. Error  t value Pr(>|t|) 
+Above500           24.501060  82.285138 0.297758  0.76677 
+norm_dist           0.005637   0.105910 0.053222  0.95771 
+Above500:norm_dist  0.445498   0.491351 0.906679  0.36769 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 77.4     Adj. R2: 0.142255
+             Within R2: 0.112458
+DIAG: bw300 IQR-sample clusters = 71
+OLS estimation, Dep. Var.: hh_income_pc
+Observations: 1,583
+Fixed-effects: year: 12
+Standard-errors: Clustered (owner) 
+                    Estimate Std. Error  t value Pr(>|t|) 
+Above500           71.829299  55.813001 1.286964  0.20655 
+norm_dist           0.030285   0.117937 0.256791  0.79884 
+Above500:norm_dist  0.092674   0.408389 0.226926  0.82180 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 60.2     Adj. R2: 0.573073
+             Within R2: 0.049112
+OLS estimation, Dep. Var.: iqr
+Observations: 28
+Fixed-effects: year: 8
+Standard-errors: Clustered (owner) 
+                   Estimate Std. Error   t value Pr(>|t|) 
+Above500           52.64749 103.726726  0.507560  0.61640 
+norm_dist          -0.45145   0.626599 -0.720476  0.47819 
+Above500:norm_dist  1.13177   1.252278  0.903769  0.37510 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 95.3     Adj. R2: -0.104394
+             Within R2:  0.082373
+DIAG: bw150 IQR-sample clusters = 25
+DEVIATION: survey-round FE in the one-observation-per-property IQR regressions use the survey year of each property's first row in the file (paper does not say how rounds are assigned when a property's workers span several rounds)
+RESULT:earnings_level_above500_bw300=82.30013571
+RESULT:earnings_level_above500_bw150=71.82929931
+RESULT:earnings_iqr_above500_bw300=24.50105968
+RESULT:earnings_iqr_above500_bw150=52.6474903
+RESULT:n_obs_earnings_level_bw300=4781
+RESULT:n_obs_earnings_level_bw150=1583
+RESULT:n_obs_earnings_iqr_bw300=76
+RESULT:n_obs_earnings_iqr_bw150=28
+RESULT:n_clusters_bw300=99
+RESULT:n_clusters_bw150=36

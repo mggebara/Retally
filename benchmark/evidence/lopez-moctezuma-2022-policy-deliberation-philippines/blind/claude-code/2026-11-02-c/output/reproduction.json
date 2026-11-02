@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "lopez-moctezuma-2022-policy-deliberation-philippines",
+  "mode": "blind",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Attendance-oversampling weights reconstructed: in barangays with town-hall meetings (att.prop > 0 in data_agg), attendees weighted by att.prop / survey attendance share and non-attendees by (1 - att.prop) / (1 - survey share); weight 1 elsewhere and for respondents with missing attendance. The authors' exact weight formula is not given in the paper.",
+    "Anderson (2008) indices: all five-point items (poverty, gap, corruption, equality, discrimination, harassment) reversed (6 - x) so that higher = more agreement, following the paper's literal statement; binary items (cct, femhouse, fempol) kept as coded. Items standardized on the assignment==0 group of each party's municipalities, inverse-covariance weights from the pairwise covariance matrix of standardized items, index averaged over available items and re-standardized on the control group; built separately within each party sample.",
+    "Survey sample: respondents with non-missing party-list turnout response (and non-missing city), N = 1081 (paper reports 1,082; one respondent has missing city).",
+    "Only point estimates computed; permutation inference not reproduced (not among the requested quantities)."
+  ],
+  "notes": "Attempt-1 was exploratory (data inspection, no RESULT lines). Final run: Table 1 via feols(outcome ~ assignment | city) on data_agg (39 barangays; 18 Akbayan, 21 Umalab Ka; San Diego/San Antonio is one row). Table F.1 unweighted LPMs (outcome x100) among respondents who voted, city FE, assignment. Tables C.3/C.4 weighted index regressions with city FE, barangay-clustered SEs. The orientation of the gender items is ambiguous in the paper; the literal 'higher = more agreement' rule was applied and not revised after seeing results. Codebook PDFs in the mount were read for variable definitions.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:17:59Z",
+  "finished_at": "2026-11-02T20:40:00Z"
+}

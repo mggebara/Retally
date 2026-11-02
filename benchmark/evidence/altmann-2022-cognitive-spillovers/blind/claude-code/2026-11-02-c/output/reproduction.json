@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "entry_id": "altmann-2022-cognitive-spillovers",
+  "mode": "blind",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Field of study entered as the 4-category subject_cat (Others/Law/Economics/Sciences) rather than the 14-value q_subject.",
+    "High-school GPA and last math grade entered as the dataset's categorical versions (q_abitur_grade_cat, quartiles with category 5 = missing/no A-level; q_math_grade_cat quartiles) so no observations are dropped for the 400 rows with missing GPA.",
+    "Perceived multitasking ability entered as the Likert item perc_multitasking_1 only (not perc_multitasking_2).",
+    "Online controls: age, gender factor (female/male/other), and screen size as window_height1 and window_width1 (linear).",
+    "Clustered SEs use fixest's default small-sample correction; coefficients are unaffected."
+  ],
+  "notes": "Attempt-1 was an exploratory variable listing (no RESULT lines). Lab sample: formatted_data_replication.dta restricted to Treatment_Incentives != Ample (payoff schemes 10/20/40, both waves via original_lab), giving 12160 subject-rounds and 608 subjects in Baseline, Directed Attention and Forced Choice. Outcomes: summation_correct (decision task correct), default_followed (default adherence; in Forced Choice the dataset codes choice of the default-equivalent alternative), load_correct (background task correct), payoff_share (share of maximal payoff). Regressors: Treatment_intervention, or Directed/Forced indicators for column 7. Controls (cols 2, 6, T3 col 2): q_age, q_gender, subject_cat, q_abitur_grade_cat, q_math_grade_cat, ability_load, ability_task, perc_multitasking_1, payoff-scheme and wave dummies. Online: formatted_data_long_mturk.dta, memory (0-1 points in Memory task, read as fraction of pairs uncovered) on Treatment_intervention, 5472 subject-rounds, 608 subjects. All OLS via fixest with SEs clustered by subject_id. The paper text supplied appears to be an earlier version without the regression tables or online experiment, so specifications follow the task's quantity descriptions plus the data labels. Read the dataset README.md (inside the mount) for file descriptions only.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:10:19Z",
+  "finished_at": "2026-11-02T20:11:57Z"
+}

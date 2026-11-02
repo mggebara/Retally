@@ -1,0 +1,47 @@
+999 rows to: 10  from: 10 
+                      country year to_partyname to_prior_seats   from_partyname
+149  United States of America 1996   Republican            999 Democratic Party
+150  United States of America 2004   Republican            999 Democratic Party
+433  United States of America 1996   Democratic            999 Republican Party
+434  United States of America 2004   Democratic            999 Republican Party
+940  United States of America 2016   Republican            999 Democratic Party
+941  United States of America 2008   Republican            999        Democrats
+942  United States of America 2012   Republican            999        Democrats
+1320 United States of America 2016   Democratic            999 Republican Party
+1321 United States of America 2008   Democratic            999      Republicans
+1322 United States of America 2012   Democratic            999      Republicans
+     from_prior_seats   to_pfeml
+149               999 0.05113636
+150               999 0.07692308
+433               999 0.08139535
+434               999 0.19339623
+940               999 0.08940000
+941               999 0.09090909
+942               999 0.10000000
+1320              999 0.33160001
+1321              999 0.20689656
+1322              999 0.25650001
+elecdate per cntryyr:
+named integer(0)
+all equal dislike = 10-like: TRUE 
+rows seat>=4: 1579  with to_pfeml: 1535  cy: 81 
+rows excl 999: 1569 1525 
+NA in pfeml when seats>=4:
+       
+        Australia Austria Canada Denmark Finland France Germany Great Britain
+  FALSE        24      52     60     123     139     44     100            24
+  TRUE          0       0      0       5       0      0       0             0
+       
+        Greece Iceland Ireland Israel Netherlands New Zealand Norway Portugal
+  FALSE     53      70      71     64          98          68    161       46
+  TRUE       0       0       0      0          26           8      0        0
+       
+        Spain Sweden Switzerland United States of America
+  FALSE    90    153          85                       10
+  TRUE      0      0           5                        0
+rile mean/sd in s: 22.67651 17.32431 
+rile mean/sd in d: 22.44342 17.61256 
+check standardization of rile_distance_s in full d: -1.26697 0.05674702 
+gender rows seats>=4 by gender (nonmissing): 1529 1535 
+dup check gender: 40  dyadic: 0 
+same-party rows: 0 

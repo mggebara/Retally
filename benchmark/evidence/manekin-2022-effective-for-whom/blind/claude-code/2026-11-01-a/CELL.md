@@ -51,7 +51,7 @@ Agent notes: attempt-1 was exploratory (variable inspection, no RESULT lines). F
 
 - [`prompt/task.md`](prompt/task.md) — 20,586 bytes, from `benchmark/results/artifacts/manekin-2022-effective-for-whom/blind/claude-code/20261102T043821Z/task.md`
 - [`prompt/render.json`](prompt/render.json) — 1,002 bytes, from `benchmark/results/artifacts/manekin-2022-effective-for-whom/blind/claude-code/20261102T043821Z/render.json`
-- [`prompt/paper.txt.ref`](prompt/paper.txt.ref) — 274 bytes, from `benchmark/.cache/claude-code/manekin-2022-effective-for-whom/blind/2026-11-01-a/paper.txt`
+- [`prompt/paper.txt.ref`](prompt/paper.txt.ref) — 261 bytes, from `benchmark/.cache/claude-code/manekin-2022-effective-for-whom/blind/2026-11-01-a/paper.txt`
 
 ## What it produced
 

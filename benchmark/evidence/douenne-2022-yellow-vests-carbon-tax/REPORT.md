@@ -39,7 +39,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [12/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[12/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) |
+| `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [12/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[12/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
 | `pipeline-desktop-opus` | [5/13](seeded/pipeline-desktop-opus/20261102T144245Z/CELL.md) (20261102T144245Z) | [13/13](independent/pipeline-desktop-opus/20261102T143152Z/CELL.md) (20261102T143152Z) | [12/13](blind/pipeline-desktop-opus/20261102T142733Z/CELL.md) (20261102T142733Z) |
 | `pipeline-desktop-opus-run2` | [6/13](seeded/pipeline-desktop-opus-run2/20261102T191457Z/CELL.md) (20261102T191457Z) | [13/13](independent/pipeline-desktop-opus-run2/20261102T153300Z/CELL.md) (20261102T153300Z) | [13/13](blind/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) (20261102T152052Z) |
 
@@ -53,16 +53,16 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 | Cell | Claim | Reproduced | Paper | Band | Error / band | Verdict |
 |---|---|---|---|---|---|---|
+| [independent/claude-code/2026-11-02-c](independent/claude-code/2026-11-02-c/CELL.md) | `predicted_winner_believes_not_lose_full_sample_table4_col2` | 0.2408 | 0.208 | ±0.035 (se_band) | 0.937 | PASS |
+| [blind/claude-code/2026-11-02-c](blind/claude-code/2026-11-02-c/CELL.md) | `initial_acceptance_believes_not_lose_table4_col1` | 0.246483 | 0.306 | ±0.066 (se_band) | 0.902 | PASS |
 | [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) | `winner_x_initial_win_belief_table4_col3` | 0.15118 | 0.08 | ±0.079 (se_band) | 0.901 | PASS |
 | [seeded/pipeline-desktop-opus/20261102T144245Z](seeded/pipeline-desktop-opus/20261102T144245Z/CELL.md) | `predicted_winner_believes_wins_table4_col4` | 0.149585 | 0.153 | ±0.00306 (relative) | 1.116 | FAIL |
 | [seeded/pipeline-desktop-opus-run2/20261102T191457Z](seeded/pipeline-desktop-opus-run2/20261102T191457Z/CELL.md) | `predicted_winner_believes_wins_table4_col4` | 0.149585 | 0.153 | ±0.00306 (relative) | 1.116 | FAIL |
 | [blind/claude-code/2026-11-02-b](blind/claude-code/2026-11-02-b/CELL.md) | `initial_acceptance_believes_not_lose_table4_col1` | 0.231724 | 0.306 | ±0.066 (se_band) | 1.125 | FAIL |
+| [blind/claude-code/2026-11-02-c](blind/claude-code/2026-11-02-c/CELL.md) | `winner_x_initial_win_belief_table4_col3` | 0.148682 | 0.08 | ±0.079 (se_band) | 0.869 | PASS |
 | [seeded/pipeline-desktop-opus-run2/20261102T191457Z](seeded/pipeline-desktop-opus-run2/20261102T191457Z/CELL.md) | `predicted_winner_heterogeneity_table4_col3` | 0.241792 | 0.246 | ±0.00492 (relative) | 0.855 | PASS |
 | [independent/claude-code/2026-11-02-a](independent/claude-code/2026-11-02-a/CELL.md) | `winner_x_initial_win_belief_table4_col3` | 0.146722 | 0.08 | ±0.079 (se_band) | 0.845 | PASS |
 | [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) | `initial_acceptance_believes_not_lose_table4_col1` | 0.227924 | 0.306 | ±0.066 (se_band) | 1.183 | FAIL |
-| [blind/claude-code/2026-11-02-b](blind/claude-code/2026-11-02-b/CELL.md) | `winner_x_initial_win_belief_table4_col3` | 0.140012 | 0.08 | ±0.079 (se_band) | 0.760 | PASS |
-| [independent/pipeline-desktop-opus-run2/20261102T153300Z](independent/pipeline-desktop-opus-run2/20261102T153300Z/CELL.md) | `predicted_winner_believes_not_lose_full_sample_table4_col2` | 0.232059 | 0.208 | ±0.035 (se_band) | 0.687 | PASS |
-| [independent/pipeline-desktop-opus-run2/20261102T153300Z](independent/pipeline-desktop-opus-run2/20261102T153300Z/CELL.md) | `initial_acceptance_heterogeneity_table4_col3` | 0.074335 | 0.015 | ±0.087 (se_band) | 0.682 | PASS |
 
 ### Declared deviations
 
@@ -85,6 +85,11 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Table 6 subsample [p10;p60]: respondent's own percentile in [10,60] or (non-single) second adult's percentile in [10,60]; N = 1961 vs 1969 in the paper.
   - Info on environmental effectiveness (Z_E) taken as apres_modifs (second-half sample that saw the effectiveness information); Z_CC = info_CC.
   - Table 4 R2 is lower than the paper's (0.267 vs 0.301 in col 1), suggesting the paper's control set is larger.
+- [independent/claude-code/2026-11-02-c](independent/claude-code/2026-11-02-c/CELL.md) (13/13)
+  - The paper's full control list is in the online appendix, which is not available; controls were reconstructed: incomes = respondent and second-adult income percentiles with kinks at the 20th and 70th percentiles (p, min(p-20,0), min(p-70,0)); estimated gains = simule_gain and its square; sociodemographics = sex, age bracket, socio-professional category, education (4), town size, region, consumption units, number aged 14+, smoker, main news source; other motives = belief the tax is effective (not 'No') in Tables 4 and 6, and the initial win/lose category in Table 8.
+  - All regressions use the survey weights (weight) and heteroskedasticity-robust SEs.
+  - Table 6 subsample built as respondent percentile in [10,60] or (more than one adult and second-adult percentile in [10,60]); this gives 1,961 observations versus 1,969 in the paper.
+  - Effectiveness information treatment Z_E identified as the apres_modifs indicator (the random half-split whose first-stage effect on believing in effectiveness is about 6 p.p.).
 - [independent/pipeline-desktop-opus/20261102T143152Z](independent/pipeline-desktop-opus/20261102T143152Z/CELL.md) (13/13)
   - Table 4 col. 1 drops effectiveness/progressivity belief controls (control list not given in provided text)
 - [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) (12/13; failed: `initial_acceptance_believes_not_lose_table4_col1`)
@@ -103,6 +108,12 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Predicted winner = simule_gagnant (the feedback actually shown); estimated net gain = simule_gain (EUR/year). Yellow Vests supporter = gilets_jaunes >= 1 (supports or is part of). Table 4 col. 3 adds the initial win/lose category as a factor plus winner interactions with initial acceptance, Yellow Vests support and initial not-lose belief.
   - Table 6 col. 1 sample: respondent or second-adult income percentile in [10, 60] (percentile_revenu_conjoint used as stored). Eligibility instruments = traite_cible, traite_cible_conjoint and their product; controls include policy-assigned (cible) fixed effects, single-adult dummy and initial acceptance.
   - All regressions unweighted OLS/2SLS (fixest), heteroskedasticity-robust SEs (SEs not scored).
+- [blind/claude-code/2026-11-02-c](blind/claude-code/2026-11-02-c/CELL.md) (13/13)
+  - The online-appendix control lists are not available; controls were constructed from the paper's description: socio-demographics (sex, age bracket, employment status, occupation, region, education, household size, number aged 14+, number of adults, smoker, news source, urban-area size, consumption units, following the dataset's variables_demo list minus income variables); incomes as a continuous piecewise-linear function of the respondent's and second adult's income percentiles with kinks at p20 and p70 (eq. 4); estimated gains as simule_gain and its square; other motives as belief in environmental effectiveness (Yes/No/PNR) and perceived progressivity (prog_not_no) in Tables 4 and 6, and initial win/lose category in Table 8.
+  - Table 8: the progressivity control was dropped because that question was asked only in the second half of the sample (apres_modifs), the same indicator as the effectiveness-information instrument, so it is mechanically zero in the instrument's control group (bad control). This change was made after attempt-5, whose first stage on this instrument was nearly absent (F about 2.3); Tables 4 and 6 were left unchanged.
+  - Yellow Vests supporter = gilets_jaunes > 0 (is part of or supports the movement). Predicted winner = simule_gagnant (the feedback actually shown); running variable = simule_gain (EUR/yr per c.u.). Initial win/lose belief G = initial category not 'Perdant'; column 3 also controls for the 3-level initial category.
+  - Table 6 [p10;p60] subsample: respondent percentile in [10,60], or a second adult (nb_adultes > 1) whose percentile is in [10,60]. Unweighted OLS/2SLS (fixest), heteroskedasticity-robust SEs (point estimates do not depend on this).
+  - memisc is not installed, so the labelled/memisc item columns were turned into plain vectors by stripping their attributes. No author functions stored in the RData were called.
 
 ### Pipeline and agent disagree
 
@@ -115,12 +126,12 @@ Claims where, in the same mode, one reproducer family passed in every run and th
 - seeded: `winner_x_initial_win_belief_table4_col3` — pipeline 0/2, agent 2/2
 - seeded: `winner_x_yellow_vests_supporter_table4_col3` — pipeline 0/2, agent 2/2
 - seeded: `yellow_vests_supporter_heterogeneity_table4_col3` — pipeline 0/2, agent 2/2
-- blind: `initial_acceptance_believes_not_lose_table4_col1` — pipeline 2/2, agent 0/2
 
 Pass rates at least 50 points apart (not unanimous):
 
 - seeded: `predicted_winner_heterogeneity_table4_col3` — pipeline 1/2, agent 2/2
-- blind: `believes_effective_on_approval_iv_table8_col1` — pipeline 1/2, agent 2/2
+- blind: `believes_effective_on_approval_iv_table8_col1` — pipeline 1/2, agent 3/3
+- blind: `initial_acceptance_believes_not_lose_table4_col1` — pipeline 2/2, agent 1/3
 
 ## Cells
 
@@ -148,6 +159,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/claude-code/2026-11-02-b/CELL.md`](independent/claude-code/2026-11-02-b/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 6; 2026-11-02T15:01:00Z; from `claude-code-run2-6papers-indep-blind-2026-11-02.json`; evidence complete.
 
+### independent · claude-code · 2026-11-02-c
+
+[`independent/claude-code/2026-11-02-c/CELL.md`](independent/claude-code/2026-11-02-c/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 6; 2026-11-02T20:09:30Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus · 20261102T143152Z
 
 [`independent/pipeline-desktop-opus/20261102T143152Z/CELL.md`](independent/pipeline-desktop-opus/20261102T143152Z/CELL.md) — final 13/13, re-scored 13/13; first scored 12/13; executions 3; 2026-11-02T14:31:52Z; from `pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json`; evidence complete.
@@ -163,6 +178,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · claude-code · 2026-11-02-b
 
 [`blind/claude-code/2026-11-02-b/CELL.md`](blind/claude-code/2026-11-02-b/CELL.md) — final 12/13, re-scored 12/13; first scored 12/13; executions 10; 2026-11-02T15:09:30Z; from `claude-code-run2-6papers-indep-blind-2026-11-02.json`; evidence complete.
+
+### blind · claude-code · 2026-11-02-c
+
+[`blind/claude-code/2026-11-02-c/CELL.md`](blind/claude-code/2026-11-02-c/CELL.md) — final 13/13, re-scored 13/13; first scored 12/13; executions 6; 2026-11-02T20:26:30Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus · 20261102T142733Z
 

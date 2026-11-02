@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "hanlon-2022-aircraft-ip-spillovers",
+  "mode": "blind",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was exploratory (variable structure, country/type/year tabulations; no RESULT lines). Final: prepared airframe_data.dta restricted to fighters and bombers, 1918-1935; continuous two-piece linear spline in year with knot at 1926 (s_before=min(year,1926), s_after=max(year-1926,0)); OLS with heteroskedasticity-robust (HC1) SEs via fixest. Table 1 cols 1-2: US only, ln_wingload / ln_maxspeed on spline + constant. Cols 3-4: pooled US+UK, ln outcome on constant, US indicator, common (UK baseline) spline, and spline x US; the spline x US coefficients are the US-relative slopes (numerically equivalent to a UK-only spline plus US interactions). Table 4 col 1: engine_data.dta (taken as the already-prepared engines-used-in-fighters/bombers file; it has no aircraft-type field), US only, ln_hp_per_lbs on spline + constant + liquid_cooled. No runs hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:14:51Z",
+  "finished_at": "2026-11-02T20:16:30Z"
+}

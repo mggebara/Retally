@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "dancygier-2022-hate-crimes-gender-imbalances",
+  "mode": "blind",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Table 1: 'main economic activity' and 'employment status' are both represented by the single occupation factor (the only such variable in survey.dta); income and religion enter as factors with 'No answer' kept as a category; age, years of education, household size and self-assessed social status enter linearly; state enters as fixed effects.",
+    "Table 1 national battery = the 8 ref_* items; local battery = the 8 ref_loc_* items (entered linearly, 1-4). Additional controls = contact_ind, distance_ref (factor incl. Don't know), settle_ref (factor), afd (0-100 closeness), afd_ind (AfD views index), lrscale, muslim_ind. refugee_ind omitted as it is an index of the national items.",
+    "Columns (3)-(6) share one sample (complete sociodemographics; only eduyrs has missing values, 11 respondents).",
+    "SI Table C1: controls from footnote 24 using the log versions available in context.dta (log population, log population density, population change 2011-15, log unemployment rate, male/female unemployment ratio, log refugee stock 2014, log refugee inflow 2014-15, % highly educated, % manufacturing, change in manufacturing share, AfD 2013 vote share, log violent crime per capita). State fixed effects in both models (plus year FE in the annual model), logit via glm, county-clustered SEs. Sum outcome = any Hate_all_muni over 2015-2017. Excess Males trimmed at the 2.5th/97.5th percentiles computed across all municipalities with non-missing values (type-7 quantiles), then complete cases."
+  ],
+  "notes": "One exploratory run (attempt-1, no RESULT lines) inspected survey.dta and context.dta. Final script estimates Table 1 columns 1-6 by OLS on Wave 4 (N=3019 for cols 1-2, 3008 for cols 3-6) and SI Table C1 columns 5-6 by logit with state (and year) FE, county-clustered SEs (N=9282 municipalities, 27846 municipality-years). Codebooks (codebook_survey.pdf, codebook_context.pdf) in the mount were read for variable definitions; no author scripts or result tables were opened (none present in the mount). The SI is not included in paper.txt, so the exact C1 specification (log vs level controls, FE level for the Sum model) was inferred from the main text and codebook. No specification was tuned toward any number in the paper.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:22:12Z",
+  "finished_at": "2026-11-02T20:25:00Z"
+}

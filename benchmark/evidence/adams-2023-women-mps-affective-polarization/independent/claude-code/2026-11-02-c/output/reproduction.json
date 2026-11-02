@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "entry_id": "adams-2023-women-mps-affective-polarization",
+  "mode": "independent",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Sample restriction 'at least four MPs each' is implemented as to_prior_seats >= 4 (the evaluated out-party j only, with the 999 seat code retained), because requiring >= 4 prior seats of both parties gave 1,525 dyads against the paper's 1,842; the out-party-only filter reproduces 1,842 / 1,836 / 1,833 exactly. Chosen after the claim comparison of attempt-2.",
+    "Gender models use 10 - dislike from the gender-disaggregated file as the 0-10 like thermometer (gender 2 = women, 1 = men)."
+  ],
+  "notes": "Data: dyadic_data_1-4-22.Rdata (updated_data) for columns 1-2, gender_disagregated_8-8-21.rds for columns 3-4. OLS with fixest::feols, DV = party_like (mean 0-10 thermometer of i's partisans toward j), regressor to_pfeml (out-party proportion women MPs, t-1), controls rile_distance_s, govern_together, opposition_together; country-year (election) fixed effects; SEs clustered by election. attempt-1: variable inspection. attempt-2: first full estimate with both-party seat filter (dropping 999 codes); compared with claims via check_attempt, Ns were off. attempts 3-4: exploratory sample counts under alternative seat filters. Final run: out-party seat filter; all Ns match and coefficients are within about 0.03 of the claims (1.89, 1.76, 2.13, 1.17, -0.60, 0.95, 0.33). No runs hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T19:58:34Z",
+  "finished_at": "2026-11-02T20:01:30Z"
+}

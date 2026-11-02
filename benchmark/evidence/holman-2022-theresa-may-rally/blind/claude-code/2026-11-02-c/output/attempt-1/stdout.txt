@@ -1,0 +1,884 @@
+country : Country  class: character 
+qtr : Quarter  class: numeric 
+rally_events : Rally terrorist events  class: numeric 
+rally_kill : N deaths in rally terrorist events  class: numeric 
+female_pres : Woman head of state  class: numeric 
+execrlc : DPI Exec ideology  class: haven_labelled 
+rally_event_any : Any rally terrorist event  class: numeric 
+country_code : group(country type_office)  class: numeric 
+ccode :   class: numeric 
+election_qtr :   class: numeric 
+lag_approval : Lagged approval  class: numeric 
+rally_event_any2 : Any rally terrorist event*  class: numeric 
+growth : Growth in real GDP  class: numeric 
+log_inflation : Inflation logged  class: numeric 
+manchester : Int'l terrorist attack 20 or more dead  class: numeric 
+kill_16 : Int'l terrorist attack 16+ death  class: numeric 
+kill_18 : Int'l terrorist attack, kill 18+  class: numeric 
+kill_10 : Int'l attack 10+ death  class: numeric 
+pres_15death : Country w a 15+ death terrorist attack  class: numeric 
+pres_20death : Country w a 20+ death terrorist attack  class: numeric 
+kill_12 : Int'l terrorist attack, kill 12+  class: numeric 
+kill_14 : Int'l terrorist attack, kill 14+  class: numeric 
+kill_20 : Int'l terrorist attack, kill 20+  class: numeric 
+kill_08 : Int'l terrorist attack, kill 8+  class: numeric 
+kill_06 : Int'l terrorist attack, kill 6+  class: numeric 
+kill_under5 : Int'l terrorist attack, kill under 5  class: numeric 
+kill_1_5 :   class: numeric 
+kill_3_5 :   class: numeric 
+      country          qtr         rally_events        rally_kill      
+ Length   :5469   Min.   : 60.0   Min.   : 0.00000   Min.   :   0.000  
+ N.unique :  44   1st Qu.:134.0   1st Qu.: 0.00000   1st Qu.:   0.000  
+ N.blank  :   0   Median :169.0   Median : 0.00000   Median :   0.000  
+ Min.nchar:   4   Mean   :165.3   Mean   : 0.07314   Mean   :   1.544  
+ Max.nchar:  18   3rd Qu.:201.0   3rd Qu.: 0.00000   3rd Qu.:   0.000  
+                  Max.   :231.0   Max.   :34.00000   Max.   :3004.000  
+                                                                       
+  female_pres         execrlc      rally_event_any    country_code  
+ Min.   :0.00000   Min.   :0.000   Min.   :0.00000   Min.   : 1.00  
+ 1st Qu.:0.00000   1st Qu.:1.000   1st Qu.:0.00000   1st Qu.:13.00  
+ Median :0.00000   Median :1.000   Median :0.00000   Median :29.00  
+ Mean   :0.09817   Mean   :1.643   Mean   :0.03785   Mean   :29.82  
+ 3rd Qu.:0.00000   3rd Qu.:3.000   3rd Qu.:0.00000   3rd Qu.:41.00  
+ Max.   :1.00000   Max.   :3.000   Max.   :1.00000   Max.   :66.00  
+ NAs    :376       NAs    :60                                       
+     ccode        election_qtr      lag_approval    rally_event_any2 
+ Min.   : 1.00   Min.   :0.00000   Min.   : 2.903   Min.   :0.00000  
+ 1st Qu.:13.00   1st Qu.:0.00000   1st Qu.:35.582   1st Qu.:0.00000  
+ Median :29.00   Median :0.00000   Median :43.788   Median :0.00000  
+ Mean   :29.82   Mean   :0.08192   Mean   :44.298   Mean   :0.02519  
+ 3rd Qu.:41.00   3rd Qu.:0.00000   3rd Qu.:52.819   3rd Qu.:0.00000  
+ Max.   :66.00   Max.   :1.00000   Max.   :86.950   Max.   :1.00000  
+                                   NAs    :106      NAs    :71       
+     growth         log_inflation       manchester          kill_16       
+ Min.   :    7372   Min.   :-4.7907   Min.   :0.000000   Min.   :0.00000  
+ 1st Qu.:   81539   1st Qu.: 0.8225   1st Qu.:0.000000   1st Qu.:0.00000  
+ Median :  312652   Median : 1.4294   Median :0.000000   Median :0.00000  
+ Mean   : 1197870   Mean   : 1.5532   Mean   :0.007131   Mean   :0.01097  
+ 3rd Qu.: 1526325   3rd Qu.: 2.2026   3rd Qu.:0.000000   3rd Qu.:0.00000  
+ Max.   :19542980   Max.   : 8.9202   Max.   :1.000000   Max.   :1.00000  
+ NAs    :45         NAs    :473                                           
+    kill_18            kill_10         pres_15death     pres_20death   
+ Min.   :0.000000   Min.   :0.00000   Min.   : 0.000   Min.   :0.0000  
+ 1st Qu.:0.000000   1st Qu.:0.00000   1st Qu.: 0.000   1st Qu.:0.0000  
+ Median :0.000000   Median :0.00000   Median : 0.000   Median :0.0000  
+ Mean   :0.009325   Mean   :0.01499   Mean   : 1.326   Mean   :0.7967  
+ 3rd Qu.:0.000000   3rd Qu.:0.00000   3rd Qu.: 2.000   3rd Qu.:1.0000  
+ Max.   :1.000000   Max.   :1.00000   Max.   :14.000   Max.   :9.0000  
+                                                                       
+    kill_12           kill_14           kill_20            kill_08       
+ Min.   :0.00000   Min.   :0.00000   Min.   :0.000000   Min.   :0.00000  
+ 1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.:0.000000   1st Qu.:0.00000  
+ Median :0.00000   Median :0.00000   Median :0.000000   Median :0.00000  
+ Mean   :0.01317   Mean   :0.01152   Mean   :0.007862   Mean   :0.01774  
+ 3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:0.000000   3rd Qu.:0.00000  
+ Max.   :1.00000   Max.   :1.00000   Max.   :1.000000   Max.   :1.00000  
+                                                                         
+    kill_06         kill_under5        kill_1_5          kill_3_5      
+ Min.   :0.00000   Min.   :0.0000   Min.   :0.00000   Min.   :0.00000  
+ 1st Qu.:0.00000   1st Qu.:1.0000   1st Qu.:0.00000   1st Qu.:0.00000  
+ Median :0.00000   Median :1.0000   Median :0.00000   Median :0.00000  
+ Mean   :0.02267   Mean   :0.9773   Mean   :0.01518   Mean   :0.01518  
+ 3rd Qu.:0.00000   3rd Qu.:1.0000   3rd Qu.:0.00000   3rd Qu.:0.00000  
+ Max.   :1.00000   Max.   :1.0000   Max.   :1.00000   Max.   :1.00000  
+                                                                       
+rally_events 
+
+   0    1    2    3    4    5    6    7    8   11   20   34 <NA> 
+5262  145   34    6   12    3    1    1    1    1    2    1    0 
+rally_kill 
+
+   0    3    4    5    6    7    8    9   10   11   12   13   14   15   16   17 
+5262   53   20   10   22    5    9    6    5    5    4    5    3    5    4    3 
+  18   19   20   21   22   24   30   32   34   38   43   50   53   56   58   70 
+   3    2    4    3    1    2    3    2    2    1    1    1    1    1    1    1 
+  76   77   85   87  109  111  119  132  154  191  270  273  275  279  325  329 
+   1    1    1    2    1    1    1    1    1    1    1    1    1    1    1    1 
+ 536 3004 <NA> 
+   1    1    0 
+rally_event_any 
+
+   0    1 <NA> 
+5262  207    0 
+rally_event_any2 
+
+   0    1 <NA> 
+5262  136   71 
+kill_16 
+
+   0    1 <NA> 
+5409   60    0 
+kill_18 
+
+   0    1 <NA> 
+5418   51    0 
+kill_10 
+
+   0    1 <NA> 
+5387   82    0 
+pres_15death 
+
+   0    1    2    3    7    9   14 <NA> 
+3446  637  735  220  127  132  172    0 
+pres_20death 
+
+   0    1    2    6    7    9 <NA> 
+3718  619  828  172   69   63    0 
+kill_12 
+
+   0    1 <NA> 
+5397   72    0 
+kill_14 
+
+   0    1 <NA> 
+5406   63    0 
+kill_20 
+
+   0    1 <NA> 
+5426   43    0 
+kill_08 
+
+   0    1 <NA> 
+5372   97    0 
+kill_06 
+
+   0    1 <NA> 
+5345  124    0 
+kill_under5 
+
+   0    1 <NA> 
+ 124 5345    0 
+kill_1_5 
+
+   0    1 <NA> 
+5386   83    0 
+kill_3_5 
+
+   0    1 <NA> 
+5386   83    0 
+
+   0    1 <NA> 
+4593  500  376 
+
+   0    1    2    3 <NA> 
+ 730 2250  649 1780   60 
+
+   0    1 <NA> 
+5021  448    0 
+[1]  95  96  97  98  99 100
+[1] 44
+           country qtr lag_approval pres_15death female_pres  growth
+153 United Kingdom 212     29.96579           14           0 2699238
+154 United Kingdom 213     32.35801           14           0 2699238
+155 United Kingdom 214     33.27408           14           0 2699238
+156 United Kingdom 215     34.15580           14           0 2776510
+157 United Kingdom 216     34.71071           14           0 2776510
+158 United Kingdom 217     35.28785           14           0 2776510
+159 United Kingdom 218     34.44123           14           0 2776510
+160 United Kingdom 219     36.31321           14           0 2842121
+161 United Kingdom 220     40.63896           14           0 2842121
+162 United Kingdom 221     39.82898           14           0 2842121
+163 United Kingdom 222     37.72762           14           0 2842121
+164 United Kingdom 223     35.25738           14           0 2891074
+165 United Kingdom 224     32.41359           14           0 2891074
+166 United Kingdom 225     40.28224           14           0 2891074
+167 United Kingdom 226     42.91670           14           0 2891074
+168 United Kingdom 227     42.65178           14           1 2941387
+169 United Kingdom 228     43.50789           14           1 2941387
+170 United Kingdom 229     32.04080           14           1 2941387
+171 United Kingdom 230     30.10319           14           1 2941387
+172 United Kingdom 231           NA           14           1      NA
+    log_inflation execrlc election_qtr manchester
+153    0.82927936       1            0          0
+154    0.82927936       1            0          0
+155    0.82927936       1            0          0
+156    0.82927936       1            0          0
+157    0.37233579       1            0          0
+158    0.37233579       1            0          0
+159    0.37233579       1            0          0
+160    0.37233579       1            0          0
+161   -0.99954504       1            0          0
+162   -0.99954504       1            1          0
+163   -0.99954504       1            0          0
+164   -0.99954504       1            0          0
+165    0.00838214       1            0          0
+166    0.00838214       1            0          0
+167    0.00838214       1            0          0
+168    0.00838214       1            0          0
+169    0.93913025       1            0          0
+170    0.93913025       1            1          1
+171    0.93913025       1            0          0
+172    0.93913025       1            0          0
+complete: 4486  countries: 43 
+      country qtr female_pres lag_approval kill_16
+1      Canada  73           0    35.956799       0
+2      Canada  74           0    33.391911       0
+3      Canada  75           0    35.448421       0
+4      Canada  76           0    38.759659       0
+5      Canada  77           0    37.111130       0
+6      Canada  78           0    34.772991       0
+7      Canada  79           0    32.044010       0
+8      Canada  80           0    41.447552       0
+9      Canada  81           0    45.236912       0
+10     Canada  82           0    43.068710       0
+11     Canada  83           0    40.058441       0
+12     Canada  84           0    53.864460       0
+13     Canada  85           0    35.090431       0
+14     Canada  86           0    32.628429       0
+15     Canada  87           0    30.265289       0
+16     Canada  88           0    27.607660       0
+17     Canada  89           0    28.551830       0
+18     Canada  90           0    29.690870       0
+19     Canada  91           0    31.713791       0
+20     Canada  92           0    33.215778       0
+21     Canada  93           0    34.201260       0
+22     Canada  94           0    37.410259       0
+23     Canada  95           0    38.836079       0
+24     Canada  96           0    39.996220       0
+25     Canada  97           0    48.698071       0
+26     Canada  98           0    53.600128       0
+27     Canada  99           0    54.698059       0
+28     Canada 100           0    50.797970       0
+29     Canada 101           0    48.749950       1
+30     Canada 102           0    43.505032       0
+31     Canada 103           0    44.989578       0
+32     Canada 104           0    40.769650       0
+33     Canada 105           0    40.864101       0
+34     Canada 106           0    36.846001       0
+35     Canada 107           0    34.277691       0
+36     Canada 108           0    35.193329       0
+37     Canada 109           0    36.387909       0
+38     Canada 110           0    38.208229       0
+39     Canada 111           0    40.480652       0
+40     Canada 112           0    42.346939       0
+41     Canada 113           0    53.364948       0
+42     Canada 114           0    51.879902       0
+43     Canada 115           0    47.800579       0
+44     Canada 116           0    40.666222       0
+45     Canada 117           0    39.214001       0
+46     Canada 118           0    34.799129       0
+47     Canada 119           0    30.202049       0
+48     Canada 120           0    29.021210       0
+49     Canada 121           0    28.534910       0
+50     Canada 122           0    26.617781       0
+51     Canada 123           0    25.544550       0
+52     Canada 124           0    24.165350       0
+53     Canada 125           0    22.306250       0
+54     Canada 126           0    23.427389       0
+55     Canada 127           0    22.703390       0
+56     Canada 128           0    24.715790       0
+57     Canada 129           0    26.239111       0
+58     Canada 130           0    24.059650       0
+59     Canada 131           0    25.430759       0
+60     Canada 132           0    24.548019       0
+61     Canada 133           0    30.960520       0
+62     Canada 134           1    46.517502       0
+63     Canada 135           1    52.782688       0
+64     Canada 136           0    53.836399       0
+65     Canada 137           0    54.493839       0
+66     Canada 138           0    53.175098       0
+67     Canada 139           0    53.342892       0
+68     Canada 140           0    50.004681       0
+69     Canada 141           0    49.096691       0
+70     Canada 142           0    49.339111       0
+71     Canada 143           0    46.855480       0
+72     Canada 144           0    46.910320       0
+73     Canada 145           0    46.767559       0
+74     Canada 146           0    46.985931       0
+75     Canada 147           0    44.100552       0
+76     Canada 148           0    41.821079       0
+77     Canada 149           0    47.868938       0
+78     Canada 150           0    49.055618       0
+79     Canada 151           0    54.280182       0
+80     Canada 152           0    51.710869       0
+81     Canada 153           0    49.369331       0
+82     Canada 154           0    48.643822       0
+83     Canada 155           0    46.355400       0
+84     Canada 156           0    48.308769       0
+85     Canada 157           0    48.876148       0
+86     Canada 158           0    52.545891       0
+87     Canada 159           0    50.907459       0
+88     Canada 160           0    45.271400       0
+89     Canada 161           0    48.583092       0
+90     Canada 162           0    48.996490       0
+91     Canada 163           0    46.926121       0
+92     Canada 164           0    45.101440       0
+93     Canada 165           0    50.662830       0
+94     Canada 166           0    47.198040       0
+95     Canada 167           0    45.710491       0
+96     Canada 168           0    38.511520       0
+97     Canada 169           0    36.956230       0
+98     Canada 170           0    36.740452       0
+99     Canada 171           0    42.172150       0
+100    Canada 172           0    41.217522       0
+101    Canada 173           0    43.494518       0
+102    Canada 174           0    48.618549       0
+103    Canada 175           0    45.727558       0
+104    Canada 176           0    47.879089       0
+105    Canada 177           0    48.311279       0
+106    Canada 178           0    43.883881       0
+107    Canada 179           0    41.858341       0
+108    Canada 180           0    36.008968       0
+109    Canada 181           0    39.684399       0
+110    Canada 182           0    45.049110       0
+111    Canada 183           0    49.380241       0
+112    Canada 184           0    47.980968       0
+113    Canada 185           0    51.917290       0
+114    Canada 186           0    46.381901       0
+115    Canada 187           0    47.146801       0
+116    Canada 188           0    42.636459       0
+117    Canada 189           0    45.058701       0
+118    Canada 190           0    46.468140       0
+119    Canada 191           0    42.938202       0
+120    Canada 192           0    41.775661       0
+121    Canada 193           0    49.050701       0
+122    Canada 194           0    39.865742       0
+123    Canada 195           0    43.417980       0
+124    Canada 196           0    42.004440       0
+125    Canada 197           0    44.114422       0
+126    Canada 198           0    45.087528       0
+127    Canada 199           0    43.769829       0
+128    Canada 200           0    40.658760       0
+129    Canada 201           0    42.131649       0
+130    Canada 202           0    46.402512       0
+131    Canada 203           0    47.039841       0
+132    Canada 204           0    49.585949       0
+133    Canada 205           0    54.428478       0
+134    Canada 206           0    55.146351       0
+135    Canada 207           0    55.631378       0
+136    Canada 208           0    43.770790       0
+137    Canada 209           0    43.207298       0
+138    Canada 210           0    37.900650       0
+139    Canada 211           0    35.119720       0
+140    Canada 212           0    33.671459       0
+141    Canada 213           0    32.578281       0
+142    Canada 214           0    35.169411       0
+143    Canada 215           0    35.272690       0
+144    Canada 216           0    40.510319       0
+145    Canada 217           0    39.995941       0
+146    Canada 218           0    41.182060       0
+147    Canada 219           0    40.952309       0
+148    Canada 220           0    38.571529       0
+149    Canada 221           0    34.566238       0
+150    Canada 222           0    49.587311       0
+151    Canada 223           0    59.526321       0
+152    Canada 224           0    61.391830       0
+153    Canada 225           0    66.324501       0
+154    Canada 226           0    59.746639       0
+155    Canada 227           0    54.609840       0
+156    Canada 228           0    54.938568       0
+157    Canada 229           0    52.764431       0
+158    Canada 230           0    49.158421       0
+159    Canada 231           0           NA       0
+160  Colombia 136           0    59.790829       0
+161  Colombia 137           0    64.107582       0
+162  Colombia 138           0    62.787849       0
+163  Colombia 139           0    58.517620       0
+164  Colombia 140           0    58.871140       0
+165  Colombia 141           0    54.715401       0
+166  Colombia 142           0    44.142681       0
+167  Colombia 143           0    43.496769       0
+168  Colombia 144           0    40.365620       0
+169  Colombia 145           0    44.225842       0
+170  Colombia 146           0    41.209599       0
+171  Colombia 147           0    39.163952       0
+172  Colombia 148           0    39.997421       0
+173  Colombia 149           0    36.159752       0
+174  Colombia 150           0    35.241982       0
+175  Colombia 151           0    35.116699       0
+176  Colombia 152           0    36.049740       0
+177  Colombia 153           0    36.529388       0
+178  Colombia 154           0    42.371868       1
+179  Colombia 155           0    40.710129       0
+180  Colombia 156           0    38.702869       0
+181  Colombia 157           0    30.221991       0
+182  Colombia 158           0    30.171061       0
+183  Colombia 159           0    29.730089       0
+184  Colombia 160           0    29.640631       0
+185  Colombia 161           0    29.469830       0
+186  Colombia 162           0    29.094419       0
+187  Colombia 163           0    30.196560       0
+188  Colombia 164           0    31.489300       0
+189  Colombia 165           0    31.016460       0
+190  Colombia 166           0    27.057600       0
+191  Colombia 167           0    27.173820       0
+192  Colombia 168           0    27.057159       0
+193  Colombia 169           0    46.105728       0
+194  Colombia 170           0    66.324928       0
+195  Colombia 171           0    61.048859       0
+196  Colombia 172           0    60.722939       0
+197  Colombia 173           0    64.240463       0
+198  Colombia 174           0    67.466637       0
+199  Colombia 175           0    68.667290       0
+200  Colombia 176           0    67.579269       0
+201  Colombia 177           0    62.841381       0
+202  Colombia 178           0    66.943367       0
+203  Colombia 179           0    65.402710       0
+204  Colombia 180           0    63.717239       0
+205  Colombia 181           0    65.938652       0
+206  Colombia 182           0    63.437851       0
+207  Colombia 183           0    64.050812       0
+208  Colombia 184           0    65.264549       0
+209  Colombia 185           0    65.209518       0
+210  Colombia 186           0    62.333660       0
+211  Colombia 187           0    63.669060       0
+212  Colombia 188           0    65.816742       0
+213  Colombia 189           0    63.163872       0
+214  Colombia 190           0    67.408340       0
+215  Colombia 191           0    70.786331       0
+216  Colombia 192           0    69.411728       0
+217  Colombia 193           0    73.773018       0
+218  Colombia 194           0    65.863480       0
+219  Colombia 195           0    64.040619       0
+220  Colombia 196           0    62.638618       0
+221  Colombia 197           0    64.472961       0
+222  Colombia 198           0    61.881241       0
+223  Colombia 199           0    61.102741       0
+224  Colombia 200           0    63.932091       0
+225  Colombia 201           0    65.348709       0
+226  Colombia 202           0    67.590218       0
+227  Colombia 203           0    65.985641       0
+228  Colombia 204           0    63.090580       0
+229  Colombia 205           0    63.213821       0
+230  Colombia 206           0    61.262821       0
+231  Colombia 207           0    59.952148       0
+232  Colombia 208           0    56.797249       0
+233  Colombia 209           0    52.824402       0
+234  Colombia 210           0    53.391258       0
+235  Colombia 211           0    49.154369       0
+236  Colombia 212           0    48.656879       0
+237  Colombia 213           0    33.592468       0
+238  Colombia 214           0    37.599720       0
+239  Colombia 215           0    39.251461       0
+240  Colombia 216           0    44.177090       0
+241  Colombia 217           0    46.479630       0
+242  Colombia 218           0    41.221668       0
+243  Colombia 219           0    42.927181       0
+244  Colombia 220           0    35.279209       0
+245  Colombia 221           0    32.335060       0
+246  Colombia 222           0    42.309120       0
+247  Colombia 223           0    29.209021       0
+248  Colombia 224           0    26.821840       0
+249  Colombia 225           0    32.633129       0
+250  Colombia 226           0    38.995258       0
+251  Colombia 227           0    28.409861       0
+252  Colombia 228           0    26.923460       0
+253  Colombia 229           0    29.713961       0
+254  Colombia 230           0    27.967291       0
+255  Colombia 231           0           NA       0
+256    Panama 122           0    47.019089       0
+257    Panama 123           0    40.087502       0
+258    Panama 124           0    35.666088       0
+259    Panama 125           0    32.570530       0
+260    Panama 126           0    30.671459       0
+261    Panama 127           0    29.345169       0
+262    Panama 128           0    27.452560       0
+263    Panama 129           0    27.209921       0
+264    Panama 130           0    27.170839       0
+265    Panama 131           0    25.512360       0
+266    Panama 132           0    29.321800       0
+267    Panama 133           0    32.953838       0
+268    Panama 134           0    32.944080       0
+269    Panama 135           0    32.456650       0
+270    Panama 136           0    37.736561       0
+271    Panama 137           0    53.952171       0
+272    Panama 138           0    74.964508       1
+273    Panama 139           0    68.688133       0
+274    Panama 140           0    56.332371       0
+275    Panama 141           0    45.603210       0
+276    Panama 142           0    38.704769       0
+277    Panama 143           0    46.831089       0
+278    Panama 144           0    50.235340       0
+279    Panama 145           0    40.762508       0
+280    Panama 146           0    42.313431       0
+281    Panama 147           0    42.301682       0
+282    Panama 148           0    44.568272       0
+283    Panama 149           0    48.300011       0
+284    Panama 150           0    36.357349       0
+285    Panama 151           0    47.541401       0
+286    Panama 152           0    47.029148       0
+287    Panama 153           0    38.731682       0
+288    Panama 154           0    45.468029       0
+289    Panama 155           0    41.911610       0
+290    Panama 156           0    44.420471       0
+291    Panama 157           0    47.534309       0
+292    Panama 158           0    53.377460       0
+293    Panama 159           0    61.063641       0
+294    Panama 160           0    48.462570       0
+295    Panama 161           0    47.046768       0
+296    Panama 162           0    48.957619       0
+297    Panama 163           0    40.331730       0
+298    Panama 164           0    33.749779       0
+299    Panama 165           0    38.555099       0
+300    Panama 166           0    36.478230       0
+301    Panama 167           0    34.116570       0
+302    Panama 168           0    36.058620       0
+303    Panama 169           0    37.946980       0
+304    Panama 170           0    22.395781       0
+305    Panama 171           0    33.106628       0
+306    Panama 172           0    34.888210       0
+307    Panama 173           0    29.674841       0
+308    Panama 174           0    28.228951       0
+309    Panama 175           0    31.610411       0
+310    Panama 176           0    31.628250       0
+311    Panama 177           0    34.912350       0
+312    Panama 178           0    65.353569       0
+313    Panama 179           0    55.098160       0
+314    Panama 180           0    34.940048       0
+315    Panama 181           0    41.175892       0
+316    Panama 182           0    52.408249       0
+317    Panama 183           0    48.260071       0
+318    Panama 184           0    53.178890       0
+319    Panama 185           0    54.521412       0
+320    Panama 186           0    60.668129       0
+321    Panama 187           0    52.204731       0
+322    Panama 188           0    47.800220       0
+323    Panama 189           0    52.134102       0
+324    Panama 190           0    50.884651       0
+325    Panama 191           0    46.377480       0
+326    Panama 192           0    40.134060       0
+327    Panama 193           0    44.060799       0
+328    Panama 194           0    42.742451       0
+329    Panama 195           0    42.431080       0
+330    Panama 196           0    48.144779       0
+331    Panama 197           0    84.060730       0
+332    Panama 198           0    81.939369       0
+333    Panama 199           0    75.120758       0
+334    Panama 200           0    73.675323       0
+335    Panama 201           0    61.102150       0
+336    Panama 202           0    63.666901       0
+337    Panama 203           0    62.041222       0
+338    Panama 204           0    66.419083       0
+339    Panama 205           0    57.245529       0
+340    Panama 206           0    44.012390       0
+341    Panama 207           0    37.886871       0
+342    Panama 208           0    36.627628       0
+343    Panama 209           0    40.799591       0
+344    Panama 210           0    45.771801       0
+345    Panama 211           1    49.814720       0
+346    Panama 212           1    54.564739       0
+347    Panama 213           1    59.817322       0
+348    Panama 214           1    58.829121       0
+349    Panama 215           1    61.970520       0
+350    Panama 216           1    66.932823       0
+351    Panama 217           1    72.906837       0
+352    Panama 218           1    72.384293       0
+353    Panama 219           1    68.842743       0
+354    Panama 220           1    64.292862       0
+355    Panama 221           1    50.735519       0
+356    Panama 222           1    52.124851       0
+357    Panama 223           1    43.365540       0
+358    Panama 224           1    39.540100       0
+359    Panama 225           1    34.135040       0
+360    Panama 226           1    35.576618       0
+361    Panama 227           1    36.531590       0
+362    Panama 228           1    38.213211       0
+363    Panama 229           1    32.026680       0
+364    Panama 230           1    37.020279       0
+365    Panama 231           1           NA       0
+366      Peru  84           0    40.916401       0
+367      Peru  85           0    38.265091       0
+368      Peru  86           0    41.495869       0
+369      Peru  87           0    35.732430       0
+370      Peru  88           0    28.442270       0
+371      Peru  89           0    26.782970       0
+372      Peru  90           0    28.137779       0
+373      Peru  91           0    27.120010       0
+374      Peru  92           0    24.094580       0
+375      Peru  93           0    21.618259       0
+376      Peru  94           0    21.126320       0
+377      Peru  95           0    20.211060       0
+378      Peru  96           0    21.296780       0
+379      Peru  97           0    24.088341       0
+380      Peru  98           0    22.660669       0
+381      Peru  99           0    37.063911       0
+382      Peru 100           0    26.121140       0
+383      Peru 101           0    40.858898       0
+384      Peru 102           0    49.498810       0
+385      Peru 103           0    56.617321       0
+386      Peru 104           0    56.180069       0
+387      Peru 105           0    51.323059       0
+388      Peru 106           0    49.632931       0
+389      Peru 107           0    51.792900       0
+390      Peru 108           0    48.653580       0
+391      Peru 109           0    43.066460       0
+392      Peru 110           0    32.518551       0
+393      Peru 111           0    32.691460       0
+394      Peru 112           0    31.508671       0
+395      Peru 113           0    35.946411       0
+396      Peru 114           0    28.359421       0
+397      Peru 115           0    15.837720       0
+398      Peru 116           0    14.295910       0
+399      Peru 117           0    16.869740       0
+400      Peru 118           0    17.163309       0
+401      Peru 119           0    17.416059       0
+402      Peru 120           0    18.229000       0
+403      Peru 121           0    26.206579       0
+404      Peru 122           0    38.732929       0
+405      Peru 123           0    34.715939       0
+406      Peru 124           0    35.675179       0
+407      Peru 125           0    29.598869       0
+408      Peru 126           0    39.368179       1
+409      Peru 127           0    42.728859       0
+410      Peru 128           0    51.965679       0
+411      Peru 129           0    48.705479       0
+412      Peru 130           0    46.221329       0
+413      Peru 131           0    44.579411       0
+414      Peru 132           0    43.900398       0
+415      Peru 133           0    44.995159       0
+416      Peru 134           0    46.331879       0
+417      Peru 135           0    46.392429       0
+418      Peru 136           0    46.399288       0
+419      Peru 137           0    46.400661       0
+420      Peru 138           0    46.400970       0
+421      Peru 139           0    46.401039       0
+422      Peru 140           0    50.493870       0
+423      Peru 141           0    47.751419       0
+424      Peru 142           0    47.862640       0
+425      Peru 143           0    47.909481       0
+426      Peru 144           0    44.212318       0
+427      Peru 145           0    41.195648       0
+428      Peru 146           0    40.937901       0
+429      Peru 147           0    38.710789       0
+430      Peru 148           0    34.440338       0
+431      Peru 149           0    28.371140       0
+432      Peru 150           0    37.090431       0
+433      Peru 151           0    37.063702       0
+434      Peru 152           0    36.999352       0
+435      Peru 153           0    36.982868       0
+436      Peru 154           0    36.979031       0
+437      Peru 155           0    36.978149       0
+438      Peru 156           0    36.977940       0
+439      Peru 157           0    36.977901       0
+440      Peru 158           0    36.977890       0
+441      Peru 159           0    36.977879       0
+442      Peru 160           0    36.977879       0
+443      Peru 161           0    36.977879       0
+444      Peru 162           0    36.977879       0
+445      Peru 163           0    40.616131       0
+446      Peru 164           0    40.720291       0
+447      Peru 165           0    39.602829       0
+448      Peru 166           0    22.370230       0
+449      Peru 167           0    16.990021       0
+450      Peru 168           0     8.003604       0
+451      Peru 169           0     7.631487       0
+452      Peru 170           0     7.660770       0
+453      Peru 171           0     7.915359       0
+454      Peru 172           0     5.843111       0
+455      Peru 173           0    10.110770       0
+456      Peru 174           0     6.389389       0
+457      Peru 175           0     2.902611       0
+458      Peru 176           0     3.463884       0
+459      Peru 177           0    12.932910       0
+460      Peru 178           0     6.008813       0
+461      Peru 179           0     4.840209       0
+462      Peru 180           0     4.533068       0
+463      Peru 181           0     6.284016       0
+464      Peru 182           0     6.185460       0
+465      Peru 183           0     9.436409       0
+466      Peru 184           0    16.968740       0
+467      Peru 185           0    31.604139       0
+468      Peru 186           0    32.800449       0
+469      Peru 187           0    32.604950       0
+470      Peru 188           0    28.218840       0
+471      Peru 189           0    29.033649       0
+472      Peru 190           0    24.544340       0
+473      Peru 191           0    19.869881       0
+474      Peru 192           0    19.336060       0
+475      Peru 193           0    13.225430       0
+476      Peru 194           0    18.366739       0
+477      Peru 195           0    18.938931       0
+478      Peru 196           0    17.416550       0
+479      Peru 197           0    20.811760       0
+480      Peru 198           0    18.810690       0
+481      Peru 199           0    17.793320       0
+482      Peru 200           0    17.143641       0
+483      Peru 201           0    19.762220       0
+484      Peru 202           0    20.049379       0
+485      Peru 203           0    17.348900       0
+486      Peru 204           0    20.622601       0
+487      Peru 205           0    34.420891       0
+488      Peru 206           0    36.031078       0
+489      Peru 207           0    34.335178       0
+490      Peru 208           0    31.787960       0
+491      Peru 209           0    27.738939       0
+492      Peru 210           0    28.479460       0
+493      Peru 211           0    33.594681       0
+494      Peru 212           0    31.261209       0
+495      Peru 213           0    21.406771       0
+496      Peru 214           0    17.849581       0
+497      Peru 215           0    18.737970       0
+498      Peru 216           0    14.838230       0
+499      Peru 217           0    16.603680       0
+500      Peru 218           0    17.392820       0
+501      Peru 219           0    16.040560       0
+502      Peru 220           0    13.523570       0
+503      Peru 221           0    10.587270       0
+504      Peru 222           0     8.880662       0
+505      Peru 223           0     9.530467       0
+506      Peru 224           0    10.110710       0
+507      Peru 225           0    36.558762       0
+508      Peru 226           0    33.649639       0
+509      Peru 227           0    24.828770       0
+510      Peru 228           0    30.080910       0
+511      Peru 229           0    19.737740       0
+512      Peru 230           0    16.751961       0
+513      Peru 231           0           NA       0
+514 Venezuela 108           0    53.492352       0
+515 Venezuela 109           0    53.329102       0
+516 Venezuela 110           0    52.725700       0
+517 Venezuela 111           0    39.747971       0
+518 Venezuela 112           0    38.081280       1
+519 Venezuela 113           0    40.039749       0
+520 Venezuela 114           0    42.070271       0
+521 Venezuela 115           0    42.087830       0
+522 Venezuela 116           0    41.241741       0
+523 Venezuela 117           0    38.594349       0
+524 Venezuela 118           0    43.016102       0
+525 Venezuela 119           0    40.003208       0
+526 Venezuela 120           0    39.740021       0
+527 Venezuela 121           0    39.637691       0
+528 Venezuela 122           0    40.850491       0
+529 Venezuela 123           0    39.505199       0
+530 Venezuela 124           0    40.013168       0
+531 Venezuela 125           0    39.562920       0
+532 Venezuela 126           0    36.558701       0
+533 Venezuela 127           0    31.220249       0
+534 Venezuela 128           0    28.579121       0
+535 Venezuela 129           0    27.972660       0
+536 Venezuela 130           0    25.684919       0
+537 Venezuela 131           0    25.109289       0
+538 Venezuela 132           0    40.664520       0
+539 Venezuela 133           0    41.465561       0
+540 Venezuela 134           0    51.285370       0
+541 Venezuela 135           0    50.411442       0
+542 Venezuela 136           0    50.050282       0
+543 Venezuela 137           0    46.766930       0
+544 Venezuela 138           0    42.768871       0
+545 Venezuela 139           0    39.643089       0
+546 Venezuela 140           0    42.769211       0
+547 Venezuela 141           0    44.067162       0
+548 Venezuela 142           0    42.721630       0
+549 Venezuela 143           0    41.832809       0
+550 Venezuela 144           0    32.496738       0
+551 Venezuela 145           0    37.451988       0
+552 Venezuela 146           0    31.751671       0
+553 Venezuela 147           0    45.211651       0
+554 Venezuela 148           0    42.456009       0
+555 Venezuela 149           0    37.548458       0
+556 Venezuela 150           0    50.393742       0
+557 Venezuela 151           0    34.483250       0
+558 Venezuela 152           0    27.831671       0
+559 Venezuela 153           0    32.054981       0
+560 Venezuela 154           0    41.529671       0
+561 Venezuela 155           0    53.815071       0
+562 Venezuela 156           0    59.530609       0
+563 Venezuela 157           0    61.679840       0
+564 Venezuela 158           0    59.087280       0
+565 Venezuela 159           0    57.653919       0
+566 Venezuela 160           0    52.457909       0
+567 Venezuela 161           0    54.042961       0
+568 Venezuela 162           0    50.797501       0
+569 Venezuela 163           0    52.126690       0
+570 Venezuela 164           0    49.815010       0
+571 Venezuela 165           0    46.511478       0
+572 Venezuela 166           0    41.222881       0
+573 Venezuela 167           0    37.277161       0
+574 Venezuela 168           0    39.652119       0
+575 Venezuela 169           0    37.611271       0
+576 Venezuela 170           0    36.917110       0
+577 Venezuela 171           0    36.208618       0
+578 Venezuela 172           0    37.484699       0
+579 Venezuela 173           0    35.623070       0
+580 Venezuela 174           0    38.845081       0
+581 Venezuela 175           0    39.686588       0
+582 Venezuela 176           0    41.232738       0
+583 Venezuela 177           0    43.932899       0
+584 Venezuela 178           0    47.515789       0
+585 Venezuela 179           0    50.738022       0
+586 Venezuela 180           0    51.932789       0
+587 Venezuela 181           0    50.204849       0
+588 Venezuela 182           0    52.823040       0
+589 Venezuela 183           0    53.068100       0
+590 Venezuela 184           0    53.234322       0
+591 Venezuela 185           0    52.201130       0
+592 Venezuela 186           0    52.512482       0
+593 Venezuela 187           0    52.360008       0
+594 Venezuela 188           0    51.462860       0
+595 Venezuela 189           0    49.995682       0
+596 Venezuela 190           0    47.827148       0
+597 Venezuela 191           0    45.382069       0
+598 Venezuela 192           0    46.471500       0
+599 Venezuela 193           0    46.536381       0
+600 Venezuela 194           0    46.963558       0
+601 Venezuela 195           0    47.390598       0
+602 Venezuela 196           0    46.351452       0
+603 Venezuela 197           0    44.502270       0
+604 Venezuela 198           0    42.772121       0
+605 Venezuela 199           0    40.855751       0
+606 Venezuela 200           0    41.078690       0
+607 Venezuela 201           0    40.504879       0
+608 Venezuela 202           0    41.882389       0
+609 Venezuela 203           0    43.555500       0
+610 Venezuela 204           0    43.973621       0
+611 Venezuela 205           0    45.887180       0
+612 Venezuela 206           0    46.392841       0
+613 Venezuela 207           0    48.981281       0
+614 Venezuela 208           0    51.949089       0
+615 Venezuela 209           0    50.365570       0
+616 Venezuela 210           0    52.597252       0
+617 Venezuela 211           0    48.200932       0
+618 Venezuela 212           0    45.142639       0
+619 Venezuela 213           0    42.443520       0
+620 Venezuela 214           0    42.398849       0
+621 Venezuela 215           0    41.659382       0
+622 Venezuela 216           0    40.126831       0
+623 Venezuela 217           0    37.030918       0
+624 Venezuela 218           0    31.950380       0
+625 Venezuela 219           0    30.965179       0
+626 Venezuela 220           0    30.460661       0
+627 Venezuela 221           0    29.351030       0
+628 Venezuela 222           0    29.178680       0
+629 Venezuela 223           0    29.778509       0
+630 Venezuela 224           0    28.308290       0
+631 Venezuela 225           0    26.682381       0
+632 Venezuela 226           0    26.798990       0
+633 Venezuela 227           0    28.072861       0
+634 Venezuela 228           0    26.902380       0
+635 Venezuela 229           0    27.489491       0
+636 Venezuela 230           0    28.409451       0
+637 Venezuela 231           0           NA       0
+id : ID  class: numeric 
+wave :   class: numeric 
+wt_new_W12 :   class: numeric 
+starttimeW :   class: POSIXct 
+endtimeW :   class: POSIXct 
+likeMayW : 0 1 2 3 4 5 6 7 8 9 10 9999  class: haven_labelled 
+likeCorbynW : 0 1 2 3 4 5 6 7 8 9 10 9999  class: haven_labelled 
+likeSturgeonW : 0 1 2 3 4 5 6 7 8 9 10 9999  class: haven_labelled 
+gender : Gender  class: haven_labelled 
+post_bridge : Surveyed after Bridge attack  class: numeric 
+dates_to_bomb : dates_to_bomb  class: numeric 
+z_distance : Distance to Manchester  class: numeric 
+white : Ethnically British  class: numeric 
+conservative : Conservative  class: numeric 
+labour : Labour  class: numeric 
+party_other : Other Party ID  class: numeric 
+income : Income  class: numeric 
+ideology : Ideology  class: numeric 
+ideology2 : Ideology  class: numeric 
+ideo3 : Ideology  class: numeric 
+may_bestpm : Think May would be best Prime Minister  class: numeric 
+post_attack : Surveyed after Manchester attack  class: numeric 
+likeMayW12a :   class: numeric 
+likeMayW12b :   class: numeric 
+gender_roles : Endorse gender roles  class: numeric 
+female_equality : Attempts to give women equal rights  class: numeric 
+women_office : +/- women in office  class: numeric 
+women_discrimin : How much discrim against women  class: numeric 
+women_jobs : Women unfair advantage jobs  class: numeric 
+likeFarronW :   class: numeric 
+bestPMW :   class: numeric 
+time : Time  class: numeric 
+treatment1 : Manchester Attack  class: numeric 
+treatment2 :   class: numeric 

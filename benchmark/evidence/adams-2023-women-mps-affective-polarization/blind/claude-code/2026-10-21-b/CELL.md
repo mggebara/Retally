@@ -54,7 +54,7 @@ Files read outside the mount: `<repo>/benchmark/.cache/claude-code/adams-2023-wo
 
 - [`prompt/task.md`](prompt/task.md) — 18,586 bytes, from `benchmark/results/artifacts/adams-2023-women-mps-affective-polarization/blind/claude-code/20261022T021417Z/task.md`
 - [`prompt/render.json`](prompt/render.json) — 1,111 bytes, from `benchmark/results/artifacts/adams-2023-women-mps-affective-polarization/blind/claude-code/20261022T021417Z/render.json`
-- [`prompt/paper.txt.ref`](prompt/paper.txt.ref) — 285 bytes, from `benchmark/.cache/claude-code/adams-2023-women-mps-affective-polarization/blind/2026-10-21-b/paper.txt`
+- [`prompt/paper.txt.ref`](prompt/paper.txt.ref) — 298 bytes, from `benchmark/.cache/claude-code/adams-2023-women-mps-affective-polarization/blind/2026-10-21-b/paper.txt`
 
 ## What it produced
 

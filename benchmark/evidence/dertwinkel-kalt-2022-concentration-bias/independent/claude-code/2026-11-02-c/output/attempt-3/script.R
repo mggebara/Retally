@@ -1,0 +1,12 @@
+suppressMessages(library(dplyr)); library(readr)
+d <- read_csv("<repo>/benchmark/.cache/claude-code/dertwinkel-kalt-2022-concentration-bias/independent/2026-11-02-c/mount/dertwinkel_kalt_2022_concentration_bias/Consumption Experiment/Stata/Consumption_Experiment.csv", show_col_types=FALSE, guess_max=10000)
+bal <- d %>% filter(decision_number <= 8)
+chk <- bal %>% group_by(tn) %>% summarise(anycorner = any(corner != 0), anyup = any(corner==1), anylow = any(corner==-1),
+  maxx = max(indifference_point), minx = min(indifference_point), n0 = sum(indifference_point==0), n125 = sum(indifference_point>=125))
+s <- d %>% filter(decision_number==9) %>% left_join(chk, by="tn")
+odd <- s %>% filter(!anycorner, pap_sample==0)
+print(as.data.frame(odd %>% select(tn, pizza, dispersed, treatment, corner, indifference_point, id_stage2, maxx, minx, n0, n125)))
+for (t in odd$tn) print(as.data.frame(bal %>% filter(tn==t) %>% select(tn, decision_number, utility_point, corner, chose_corner, indifference_point)))
+cat("pap NA breakdown\n"); print(table(s$anyup, s$anylow, s$pap_sample, useNA="ifany"))
+print(table(s$corner, s$pap_sample, useNA="ifany"))
+cat("n0/n125 among pap1\n"); print(table(s$n0[s$pap_sample %in% 1])); print(table(s$n125[s$pap_sample %in% 1]))

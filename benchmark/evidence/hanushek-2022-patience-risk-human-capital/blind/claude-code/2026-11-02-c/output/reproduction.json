@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "entry_id": "hanushek-2022-patience-risk-human-capital",
+  "mode": "blind",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "pisa_full_gps_final.csv (2.8 GB) read with only the 16 needed columns via data.table::fread(select=); all rows kept",
+    "GPS preference variables (patience, risktaking, coo_*) used as supplied: they are already z-standardised in the respective analytical sample and collapsed to country level (country-level mean ~0 in each sample); not re-standardised",
+    "Table 1 natives subsample defined as migra0 == 1, so students with imputed migration status are left out of it",
+    "Table 1 weights: wgtc (sampling weights rescaled so each country sums to 1); Table 2 weights: the supplied wgt (sampling weights normalised within country-wave over all students). The migrant file has no country-equalised weight",
+    "Table 2 SEs clustered by country of origin (text, Section 3.1); fixest drops one singleton country-wave observation, so N = 80,397 of the 80,398 rows",
+    "Table 1 controls: female, age, migra1, migra2, imputation dummies (imfemale, image, immigra0-2), wave FE. Table 2 controls: female, age, coo_oecd, imfemale, image (image is constant 0 there and drops out), residence-country-by-wave FE (countrywave, 180 cells)"
+  ],
+  "notes": "Independent blind reproduction. Attempt-1 was exploratory (it looked at variable distributions, weights, the migration coding and whether the preferences were already standardised) and printed no RESULT lines. The final run estimates Table 1 columns 1, 2, 3 and 5 on pisa_full_gps_final.csv (1,992,276 students, 49 countries, 263 country-waves) and Table 2 columns 1, 3 and 4 on pisa_full_gps_final_imcoo.csv (narrow migrant definition: 58 origin countries, 48 residence countries, 180 country-wave cells). All models use fixest::feols. No script, log or result files from the dataset were opened. While I read the paper's method section I saw some of the Table 2 values in the prose; the specification was not changed in response to them, and it was set before any estimate was computed.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:20:46Z",
+  "finished_at": "2026-11-02T20:33:00Z"
+}

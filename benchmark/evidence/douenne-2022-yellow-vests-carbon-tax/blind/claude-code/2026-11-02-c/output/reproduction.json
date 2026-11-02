@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "entry_id": "douenne-2022-yellow-vests-carbon-tax",
+  "mode": "blind",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "The online-appendix control lists are not available; controls were constructed from the paper's description: socio-demographics (sex, age bracket, employment status, occupation, region, education, household size, number aged 14+, number of adults, smoker, news source, urban-area size, consumption units, following the dataset's variables_demo list minus income variables); incomes as a continuous piecewise-linear function of the respondent's and second adult's income percentiles with kinks at p20 and p70 (eq. 4); estimated gains as simule_gain and its square; other motives as belief in environmental effectiveness (Yes/No/PNR) and perceived progressivity (prog_not_no) in Tables 4 and 6, and initial win/lose category in Table 8.",
+    "Table 8: the progressivity control was dropped because that question was asked only in the second half of the sample (apres_modifs), the same indicator as the effectiveness-information instrument, so it is mechanically zero in the instrument's control group (bad control). This change was made after attempt-5, whose first stage on this instrument was nearly absent (F about 2.3); Tables 4 and 6 were left unchanged.",
+    "Yellow Vests supporter = gilets_jaunes > 0 (is part of or supports the movement). Predicted winner = simule_gagnant (the feedback actually shown); running variable = simule_gain (EUR/yr per c.u.). Initial win/lose belief G = initial category not 'Perdant'; column 3 also controls for the 3-level initial category.",
+    "Table 6 [p10;p60] subsample: respondent percentile in [10,60], or a second adult (nb_adultes > 1) whose percentile is in [10,60]. Unweighted OLS/2SLS (fixest), heteroskedasticity-robust SEs (point estimates do not depend on this).",
+    "memisc is not installed, so the labelled/memisc item columns were turned into plain vectors by stripping their attributes. No author functions stored in the RData were called."
+  ],
+  "notes": "Blind independent reproduction. Attempts 1-4 were exploratory (listing objects and variables, tabulating candidate variables, reading variable labels to identify the effectiveness-information indicator apres_modifs); attempt-2 crashed on memisc-classed columns and was exploratory. Attempt-5 was the first scored run; the final run differs from it only in the Table 8 control set (see deviations), and all Table 4 and Table 6 values are identical. The questionnaire.qsf and survey.csv header in the mount were grepped to identify variables; the dataset README.md was read. No script files were opened. No docker run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:20:13Z",
+  "finished_at": "2026-11-02T20:26:30Z"
+}

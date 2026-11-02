@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "entry_id": "forsythe-2022-young-workers-recessions",
+  "mode": "blind",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "yh_data.csv (about 2 GB) read with data.table::fread(select=) of only the 19 needed columns, because of the 4 GB memory and 300 s sandbox limits.",
+    "State identifiers (v2gestfips) are missing in yh_data.csv from mid-2014 on, and v2unemp_smy.csv ends in May 2014, so the estimation sample covers Feb 1994 to May 2014 (240 months) rather than running to September 2016.",
+    "Hiring LPMs are estimated on weighted cell means (state x month x demographic cell x PE group x prior labour-force status, weights = summed person weights). The coefficients equal those of the individual-level weighted regression. Clustered standard errors are not exactly the individual-level ones, but no standard errors are reported.",
+    "Years of education are imputed from the PEEDUCA categories (31:0, 32:2.5, 33:5.5, 34:7.5, 35:9, 36:10, 37:11, 38-39:12, 40:13, 41-42:14, 43:16, 44:18, 45-46:20) to build potential experience = age - education - 6, using the month t-1 age and education.",
+    "Hire definition: employed in t (PEMLR 1-2), not self-employed in t (class of worker 6/7), and either not employed in t-1 or employed in t-1 with PUIODP1 == 2 (no longer with last month's employer). PUIODP1 not in universe, don't know or refused counts as not hired.",
+    "Wage regression: new hires with positive weekly earnings (PRERNWA) and a weekly-earnings allocation flag equal to 0. 13,958 hires whose allocation flag is missing are excluded. Earnings are deflated by the supplied CPI (1994 = 1) for month t. Industry and occupation codes are mapped to 2002 Census codes with the supplied crosswalks, using code-year vintages by date (industry: 1990 to 2002, 2002 for 2003-08, 2007 for 2009-13, 2012 for 2014 on; occupation: 1990 to 2002, 2002 for 2003-10, 2010 for 2011 on). The 11 unmatched industry codes are kept as their own categories.",
+    "Sample is restricted to age >= 16 (t-1 age) with valid education and labour-force status in both months. Weights are the average of the two months' PWSSWGT."
+  ],
+  "notes": "Independent blind reproduction in R (data.table and fixest). Attempt-1 was an exploratory run that inspected variable codings and data coverage and printed no RESULT lines. The final run estimates Table 1 Panels A and B (columns 1 and 4), Table 2 columns 1-4 and Table 10 Panel B column 1, and prints all 13 quantities; check_attempt reports nothing missing. Prior status: employed = PEMLR 1-2 in t-1, unemployed = 3-4, NILF = 5-7. Demographic FE are the full interaction of sex, white/non-white, Hispanic (PRHSPNON, or PEHSPNON in later years) and 7 education levels. Table notes in paper.txt were read for method only; paper.txt shows the employed/unemployed/NILF subsample Ns in Table 2, but nothing was tuned toward them. n_obs_full_sample is the raw count of matched person-month pairs in the estimation sample. The run took about 142 s, including a 101 s read. No docker hang.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:14:17Z",
+  "finished_at": "2026-11-02T20:24:00Z"
+}

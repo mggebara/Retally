@@ -1,0 +1,72 @@
+DEVIATION: yh_data.csv (2 GB) read with data.table::fread(select=) for only the needed columns, to fit the sandbox memory/time limits
+read secs 280 rows 19836464 
+N sample 16948516 
+weighted hire rate 3.513651  by status 1/2/3: 2.025401 21.47434 4.139424 
+hires with any wage 189734  non-allocated 120324 
+           used (Mb) gc trigger   (Mb)  max used   (Mb)
+Ncells   585465 31.3    1196790   64.0   1196790   64.0
+Vcells 11246625 85.9  546074796 4166.3 567097556 4326.7
+cells 1542441  N 16948516 
+              Estimate Std. Error  t value     Pr(>|t|)
+(Intercept)  4.2689638 0.07959687 53.63231 7.407934e-46
+urate       -0.1236066 0.01402630 -8.81249 9.459461e-12
+attr(,"vcov_type")
+[1] "Clustered (v2gestfips)"
+         Estimate Std. Error  t value   Pr(>|t|)
+urate -0.02855777 0.01364885 -2.09232 0.04150708
+attr(,"vcov_type")
+[1] "Clustered (v2gestfips)"
+               Estimate Std. Error    t value     Pr(>|t|)
+(Intercept)  2.81600636 0.07220244  39.001540 4.227155e-39
+young        5.24404615 0.12932399  40.549677 6.399988e-40
+yu          -0.34446535 0.01938267 -17.771817 2.971178e-23
+ou          -0.03963094 0.01248985  -3.173053 2.579870e-03
+attr(,"vcov_type")
+[1] "Clustered (v2gestfips)"
+         Estimate Std. Error    t value     Pr(>|t|)
+young  5.19484371 0.12749259  40.746239 5.060548e-40
+yu    -0.25382037 0.01913894 -13.261987 5.364898e-18
+ou     0.05514296 0.01484766   3.713915 5.144836e-04
+attr(,"vcov_type")
+[1] "Clustered (v2gestfips)"
+         Estimate Std. Error    t value     Pr(>|t|)
+young  2.78005733 0.09990181  27.827898 4.307645e-32
+yu    -0.17096001 0.01623123 -10.532784 2.723104e-14
+ou     0.02199763 0.01052542   2.089952 4.172878e-02
+attr(,"vcov_type")
+[1] "Clustered (v2gestfips)"
+       Estimate Std. Error    t value     Pr(>|t|)
+young  6.116534  0.6590372   9.281014 1.861145e-12
+yu    -1.939123  0.1650790 -11.746636 5.441414e-16
+ou    -1.536072  0.1808795  -8.492239 2.909256e-11
+attr(,"vcov_type")
+[1] "Clustered (v2gestfips)"
+         Estimate Std. Error     t value     Pr(>|t|)
+young  8.53211844 0.35496988  24.0361758 3.957141e-29
+yu    -0.50034086 0.03446815 -14.5160330 1.460996e-19
+ou     0.01958197 0.03713075   0.5273787 6.002631e-01
+attr(,"vcov_type")
+[1] "Clustered (v2gestfips)"
+N by status 10814088 653100 5481328 
+unmatched ind 12  occ 0 
+         Estimate  Std. Error    t value     Pr(>|t|)
+young -0.14303340 0.012956169 -11.039791 5.192470e-15
+yu    -0.02427674 0.003856312  -6.295324 7.590878e-08
+ou    -0.01066080 0.003857839  -2.763414 7.985389e-03
+attr(,"vcov_type")
+[1] "Clustered (v2gestfips)"
+wage N 120306 
+RESULT:young_x_unemp_rate_no_controls=-0.344465
+RESULT:experienced_x_unemp_rate_no_controls=-0.039631
+RESULT:young_x_unemp_rate_preferred=-0.253820
+RESULT:experienced_x_unemp_rate_preferred=0.055143
+RESULT:aggregate_unemp_rate_no_controls=-0.123607
+RESULT:aggregate_unemp_rate_month_year_fe=-0.028558
+RESULT:young_x_unemp_rate_employed=-0.170960
+RESULT:experienced_x_unemp_rate_employed=0.021998
+RESULT:young_x_unemp_rate_unemployed=-1.939123
+RESULT:young_x_unemp_rate_nilf=-0.500341
+RESULT:wage_young_x_unemp_rate_all_hires=-0.024277
+RESULT:wage_experienced_x_unemp_rate_all_hires=-0.010661
+RESULT:n_obs_full_sample=16948516
+total secs 314 
