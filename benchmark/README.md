@@ -453,6 +453,53 @@ Caveats:
   answer serves seeded, independent and blind; generation prompts differ
   per mode.
 
+### Memorisation probe
+
+Every catalog paper predates every model's training cutoff, so no
+pre- versus post-cutoff split is possible.  The probe is the cheap
+contamination evidence instead: ask a model for each pinned claim's
+number from memory — no data, no paper text, no tools — and score the
+answers exactly as blind mode is scored.  The answering is out of band,
+as for the oracle: one Claude Code subagent with no tools per prompt.
+
+```bash
+uv run python -m benchmark.probe render [--split holdout]  # benchmark/.cache/probe/<label>/<entry>/prompt.md
+uv run python -m benchmark.probe pending                   # entries with no installed answer
+uv run python -m benchmark.probe show <entry>              # paths of prompt.md and the answer.md to write
+# A no-tools subagent reads prompt.md and writes its reply, verbatim, to answer.md beside it.
+uv run python -m benchmark.probe install                   # answer.md -> answer.json (answered_at, answered_by)
+uv run python -m benchmark.probe status
+uv run python -m benchmark.probe score [--out FILE] [--compare benchmark/results/<run>.json ...]
+```
+
+`render` covers every in-scope entry with pinned claims.  The prompt
+gives the title, authors, journal and year (parsed from the YAML's
+`# Original paper:` header citation, since the schema has no such
+field) and each claim's token, `claim_type` and curated `context`,
+nothing else, and asks for a JSON object of numbers (or `null`) plus a
+`CONFIDENCE:` line per claim: `recalled`, `inferred` or `none`.
+`render` refuses to write a prompt that states any pinned value or
+standard error of the entry, as printed or rounded to one to three
+significant figures (counts are checked from two figures; ordinals and
+table references are not values).  `score` compares each answer with
+its own claim through the blind-mode comparator call
+(`ResultComparator.compare(..., mode=BLIND)`: ±1·SE where an SE is
+pinned, the per-type relative tolerance otherwise, never narrower than
+the printed-precision floor), writes
+`benchmark/results/probe-<label>-<date>.json` (runner-shaped rows,
+`mode: "probe"`, `reproducer: "memory-probe"`, readable by
+`metrics.result_rows`) and prints a per-paper table: answered, within
+1x / 2x / 5x tolerance, median relative error, confidence counts, and
+with `--compare` the same papers' blind pass counts.  `--label`
+defaults to `desktop-opus`, `--by` to `desktop-opus-subagent`.
+
+What it shows: a hit means the paper's number is recoverable from the
+model's training data, so a blind pass on that claim may be recall
+rather than derivation.  A miss does not mean the paper was unseen —
+the model may have read it without retaining the table, or retained
+it and declined to answer.  The answerer's isolation is by
+instruction, as for the oracle.
+
 ## Run artifacts: what the model actually wrote
 
 `results.json` keeps verdicts and per-claim numbers, not the code that
