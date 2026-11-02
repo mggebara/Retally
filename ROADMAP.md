@@ -2591,7 +2591,7 @@ elasticity, where sample 1 passed both elasticities and columns 4 and 7.
 (sample 2).  The agent has two samples in independent and blind mode on
 every paper (267 / 270 and 250 / 248) and one in seeded mode on every
 paper (277): it was never rerun seeded, on the six or on the earlier
-17.  Gap ranges, agent minus pipeline:
+17 (3.7.2 adds that sample).  Gap ranges, agent minus pipeline:
 
 | Mode | Agent 1 | Agent 2 | Pipeline 1 | Pipeline 2 | **Gap range, 23 papers** | 17-paper range (3.7) | 6-paper range |
 |---|---|---|---|---|---|---|---|
@@ -2615,10 +2615,157 @@ every pairing: smallest with the scripts, larger without them, largest
 without the targets.  Two draws per system, not a distribution: no
 standard error.
 
-**Next** (adds to 3.7's list): (f) a seeded second sample of the agent
-is now the only cell type with one sample on all 23 papers; (g) a third
+**Next** (adds to 3.7's list): (f) ~~a seeded second sample of the
+agent is now the only cell type with one sample on all 23 papers~~;
+done (3.7.2): every cell type now has two samples of each system on all
+23 papers; (g) a third
 sample of both systems would say whether the Mokyr independent and
 Hanushek blind swings are draw-to-draw noise or a bimodal outcome.
+
+### 3.7.2 Agent seeded second sample on all 23 papers (2026-11-02) — ✅ measured, no API spend
+
+The agent was rerun in seeded mode on all 23 evaluation papers, one
+desktop Opus subagent per cell as before (run id `2026-11-02-b`,
+`benchmark/results/claude-code-run2-23papers-seeded-2026-11-02.json`,
+PR #115).  This closes 3.7.1's item (f): both systems now have two
+samples of every paper in every mode.  Like every second sample the file
+stays out of REPORT.md and the single-sample tables (REPORT.md's header
+says nothing about second samples, so it is unchanged); it feeds the
+report's agent variance tables (Section 4.8), which now cover seeded
+mode.  As in 3.5–3.7.1, every figure below is recomputed from the
+results files by `docs/report/tables.py` (its discrepancies table).
+Sample 1 is the seeded row of `claude-code-7papers-all-modes-2026-10-21.json`
+(Adams, Arias, Grier, Hanlon, Leeson, Manekin, Montero),
+`claude-code-6papers-all-modes-2026-10-22.json` (Acemoglu, Altmann,
+Dertwinkel-Kalt, Gagliarducci, Holman, López-Moctezuma),
+`claude-code-4papers-all-modes-2026-11-02.json` (Bokobza, Brouwer,
+Carrera, Forsythe) and `claude-code-6papers-all-modes-2026-11-02.json`
+(the six of 3.7).
+
+Per paper, seeded mode, sample 1 → sample 2, final claims within
+tolerance with the first-scored count in brackets:
+
+| Paper | n | seeded, sample 1 → 2 |
+|---|---|---|
+| Acemoglu | 12 | 12 (12) → 12 (12) |
+| Adams | 11 | 11 (11) → 11 (11) |
+| Altmann | 13 | 13 (13) → 13 (13) |
+| Arias | 12 | 12 (12) → 12 (12) |
+| Bokobza | 11 | 11 (7) → 11 (11) |
+| Brouwer | 12 | 12 (12) → 12 (12) |
+| Carrera | 11 | 11 (11) → 11 (11) |
+| Dancygier | 13 | 13 (13) → 13 (13) |
+| Dertwinkel-Kalt | 13 | 13 (13) → 13 (13) |
+| Douenne | 13 | 13 (13) → 13 (13) |
+| Forsythe | 13 | 13 (13) → 13 (13) |
+| Gagliarducci | 13 | 13 (11) → 13 (12) |
+| Grier | 11 | 10 (10) → 10 (10) |
+| Hanlon | 12 | 12 (12) → 12 (12) |
+| Hanushek | 13 | 13 (9) → 13 (13) |
+| Hollyer | 13 | 13 (13) → 13 (13) |
+| Holman | 11 | 11 (11) → 0 (0) |
+| Labandeira | 12 | 12 (12) → 12 (12) |
+| Leeson | 11 | 11 (11) → 11 (11) |
+| López-Moctezuma | 13 | 13 (13) → 13 (13) |
+| Manekin | 12 | 12 (12) → 12 (12) |
+| Mokyr | 13 | 13 (13) → 13 (10) |
+| Montero | 10 | 10 (10) → 10 (10) |
+| **Total, 23 papers** | 278 | **277** (267) → **266** (262) |
+
+Twenty-two of the 23 final counts repeat (mean absolute difference
+0.48 claims per cell, largest 11, all of it Holman); the pipeline's
+seeded cells repeat in 19 of 23.  On the six papers of 3.7 and the four
+of 3.6 every seeded cell repeats (77 and 47 both times); the 11-claim
+drop is on the 13 earlier papers (153 → 142).  The first-scored counts
+moved in five cells: up in Bokobza (7 → 11) and Hanushek (9 → 13), whose
+second runs matched every claim on their first scored run; up by one in
+Gagliarducci (11 → 12); down in Mokyr (13 → 10) and Holman (11 → 0).
+
+- *Holman, 11 → 0: a recorded failure.*  The seeded script translates
+  the do-file's Table 4 (`xtpcse` with panel-specific AR(1)) and
+  Table 2 (Stata's default random effects) by hand, declared as two
+  deviations.  After an exploratory run (which confirmed all three
+  sample sizes: 143,499, 97,155 and 4,328), the panel-corrected-SE step
+  crashed four times.  The three error repairs the task allows fixed, in
+  turn, a NaN first-observation weight from one panel's ρ above 1
+  (`lm.fit`: NA/NaN/Inf in `x`), a country-dummy column zeroed by the
+  transform (exactly singular X′X) and an ill-conditioned X′X
+  inversion (reciprocal condition number 2.1e-17).  The final run then
+  crashed on a fourth bug: the per-panel variance vector was a 1-d
+  named array, so `Xs * sqrt(w)` is non-conformable (exit code 1).  The
+  agent's notes name the fix (`as.numeric(w)`) and record that it did
+  not apply it, because the repair budget was spent; the run printed no
+  RESULT lines, so all 11 claims, Table 2's included, are unreproduced.
+  The cell is scored as it ended and was not retried.  Sample 1 reached
+  11 / 11 with one error repair, so this is a harness-budget failure of
+  one draw, not evidence that the paper is hard to reproduce seeded.
+- *Grier, 10 → 10.*  The same claim missed in both samples: the
+  incumbent-only calendar-year contributions coefficient, −0.000565
+  against −0.0005 (about 13 % off, outside the printed-precision band of ±0.00005), on a
+  single run with no comparison-driven changes both times.  A stable
+  miss, not noise.
+- *Mokyr, first scored 13 → 10.*  Every coefficient and N matched on
+  the first scored run; the three first-stage F statistics did not,
+  because the script computed the ivreg2 Kleibergen-Paap F without a
+  small-sample adjustment.  One claim refinement applied Stata's
+  (N−1)/(N−K)·G/(G−1) cluster factor to the first-stage variance, which
+  gave 19.90, 16.96 and 16.17.
+- *Gagliarducci, first scored 11 → 12, final 13 both times.*  The first
+  scored run missed one claim, the Republican full-sample IPW coefficient
+  (3.354 against 3.124), because the propensity probit had
+  quasi-separation.  Two claim refinements followed: the first dropped
+  the perfect predictors but kept their predicted scores (3.713), the
+  second, after an exploratory run, emulated Stata's probit
+  perfect-prediction rule (the observations a dropped predictor
+  determines get a missing propensity score and so leave the weighted
+  regression), which reproduced every claim, declared as a deviation.
+  The same rule moved the Republican RD-IPW coefficient from 6.857, sample
+  1's first-scored miss, to 6.734.
+- *Large files.*  Both large-file papers were read in full this time.
+  Hanushek's script read all 1,992,276 rows of the 2.97 GB Table 1 CSV
+  with a column-selected `fread` (14 columns) in 152 s, its printed
+  timing; sample 1's seeded cell had estimated Table 1 on a 98.6 % block
+  sample after its exploratory reads timed out (3.7, "Infrastructure
+  limits").  Forsythe's read the 2.17 GB `yh_data.csv` (19 columns, all
+  rows; N = 16,948,516 as printed) in 90–135 s across its three runs;
+  the whole script took 193 s in the first scored run and 117 s in the
+  final one.  Both are declared as column-subset
+  deviations; neither came near the 300 s limit.
+- *Adams, 11 → 11.*  The script clusters by country, as the authors'
+  `replication_code.R` does (`starprep(clusters = country)`), where the
+  paper says election-clustered; it printed the election-clustered
+  summary too, and the coefficients are the same either way.  Declared
+  as a deviation.
+
+**Four pairings in every mode, 23 papers.**  This replaces 3.7.1's
+range table, whose seeded row had two pairings, with one where every
+mode has four (each agent sample against each pipeline sample); 3.7.1's
+table is left as written.  Agent minus pipeline:
+
+| Mode | Agent 1 | Agent 2 | Pipeline 1 | Pipeline 2 | **Gap range, 23 papers** | 17-paper range | 6-paper range |
+|---|---|---|---|---|---|---|---|
+| seeded | 277 | 266 | 263 | 265 | **1 to 14** | −6 to 6 | 7 to 8 |
+| independent | 267 | 270 | 235 | 223 | **32 to 47** | 25 to 33 | 7 to 14 |
+| blind | 250 | 248 | 170 | 172 | **76 to 80** | 57 to 62 | 18 to 19 |
+
+The independent and blind rows are 3.7.1's, unchanged.  The seeded
+range widens from 3.7.1's two-pairing 12–14 to 1–14, and the whole
+widening is Holman: without its crash the agent's second seeded sample
+would be 277 and the range 12 to 14.  On the 17 papers the seeded range
+now straddles zero (agent 200 and 189 against pipeline 194 and 195),
+against 5–6 with one agent sample (3.7); on the 13 earlier papers it is
+−10 to 4, on the four of 3.6 it is 2 to 4.  The ordering of 3.5–3.7.1
+holds in every pairing (seeded smallest, then independent, then blind),
+but the seeded range (13 wide) is now nearly as wide as the independent
+one (15) and much wider than the blind one (4): one crashed cell moves
+it by 11.  The agent's seeded cells repeat more
+often than the pipeline's (22 of 23 against 19 of 23), but its one
+swing is the largest single-cell move in either system's seeded mode.
+Two draws per system, not a distribution: no standard error.
+
+**Next** (adds to 3.7.1's list): (g) and 3.7's item (b) (openICPSR)
+stand.  Holman's crash is recorded, not fixed: raising the repair
+budget for one cell would change the protocol after seeing the result.
 
 ---
 
