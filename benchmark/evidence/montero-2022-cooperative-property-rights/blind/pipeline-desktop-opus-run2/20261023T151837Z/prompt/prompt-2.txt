@@ -1,0 +1,184 @@
+You are fixing R code that was generated to reproduce results from an econometrics paper.
+
+## Original Code
+```r
+suppressPackageStartupMessages({
+  library(haven)
+  library(dplyr)
+  library(fixest)
+})
+set.seed(42)
+
+base <- "/Users/matthew/dev/Retally/.cache/datasets/montero_2022_cooperative_property_rights.script-free"
+df <- haven::read_dta(file.path(base, "ehpm_incomemodule_wreform.dta"))
+df <- haven::zap_labels(df)
+df <- as.data.frame(df)
+nm <- names(df)
+message("Columns: ", paste(nm, collapse = ", "))
+
+find_col <- function(patterns, exclude = character(0), numeric_only = FALSE) {
+  for (p in patterns) {
+    hits <- nm[grepl(p, nm, ignore.case = TRUE)]
+    hits <- setdiff(hits, exclude)
+    if (numeric_only) hits <- hits[sapply(df[hits], is.numeric)]
+    if (length(hits) > 0) return(hits[1])
+  }
+  NA_character_
+}
+
+# ---------------- Running variable (former owner's cumulative holdings, centred at 500) ----
+num_cols <- nm[sapply(df, is.numeric)]
+above <- if ("Above500" %in% nm) df$Above500 else NULL
+
+agree <- function(v, thr) {
+  if (is.null(above)) return(NA)
+  ok <- !is.na(v) & !is.na(above)
+  if (sum(ok) < 50) return(0)
+  mean((v[ok] >= thr) == (above[ok] == 1))
+}
+
+xrun <- NULL
+dist_cands <- num_cols[grepl("dist", num_cols, ignore.case = TRUE)]
+dist_cands <- c(intersect("norm_dist_Above", dist_cands), setdiff(dist_cands, "norm_dist_Above"))
+for (cc in dist_cands) {
+  v <- df[[cc]]
+  if (sum(!is.na(v)) < 50) next
+  a <- agree(v, 0)
+  if (!is.na(a) && a >= 0.95 && max(abs(v), na.rm = TRUE) > 50) {
+    xrun <- v; message("Running variable (distance): ", cc, " agreement=", round(a, 3)); break
+  }
+}
+if (is.null(xrun)) {
+  hold_cands <- num_cols[grepl("cum|holding|total_?area|tenencia|owner_?area|total_?ha|landhold", num_cols, ignore.case = TRUE)]
+  hold_cands <- c(hold_cands, setdiff(num_cols, c(hold_cands, "Above500")))
+  for (cc in hold_cands) {
+    v <- df[[cc]]
+    if (sum(!is.na(v)) < 50) next
+    a <- agree(v, 500)
+    if (!is.na(a) && a >= 0.97 && mean(v >= 500, na.rm = TRUE) > 0.05 && mean(v < 500, na.rm = TRUE) > 0.05) {
+      xrun <- v - 500; message("Running variable (holdings): ", cc, " agreement=", round(a, 3)); break
+    }
+  }
+}
+if (is.null(xrun) && "norm_dist_Above" %in% nm) {
+  v <- df$norm_dist_Above
+  # assume normalized by 500 ha if on a small scale
+  if (max(abs(v), na.rm = TRUE) <= 50) {
+    xrun <- v * 500
+    cat("DEVIATION: running variable taken as norm_dist_Above*500 (scale assumed)\n")
+  } else xrun <- v
+}
+df$x <- xrun
+df$treat <- as.integer(df$x >= 0)
+
+# ---------------- Outcome: household earnings per capita ----------------
+excl <- c(nm[grepl("^Land_|Other_Income", nm)])
+ycol <- find_col(c("^ingpe$", "earn.*(pc|cap)", "(pc|cap).*earn", "inc.*(_pc|pc_|cap|percap)",
+                   "(_pc|percap|capita).*inc", "ingpe", "ingreso.*(pc|cap)"),
+                 exclude = excl, numeric_only = TRUE)
+if (!is.na(ycol)) {
+  df$y <- df[[ycol]]
+  message("Outcome: ", ycol)
+} else {
+  tot <- find_col(c("^ingfa$", "hh_?earn", "hh_?inc", "household.*(inc|earn)", "earn", "^money", "ingreso"),
+                  exclude = excl, numeric_only = TRUE)
+  sz <- find_col(c("^miembros$", "hh_?size", "tot_?mem", "nmiem", "members", "hhsize"), numeric_only = TRUE)
+  if (!is.na(tot) && !is.na(sz)) {
+    df$y <- df[[tot]] / df[[sz]]
+    cat("DEVIATION: earnings per capita constructed as", tot, "/", sz, "\n")
+  } else if (!is.na(tot)) {
+    df$y <- df[[tot]]
+    cat("DEVIATION: per-capita earnings variable not found; using", tot, "\n")
+  } else stop("No earnings variable found")
+}
+
+# ---------------- Cluster (former owner) and property id ----------------
+ocol <- find_col(c("^Expropretario_ISTA$", "owner_?id", "former_?owner", "exprop", "propietario", "owner"),
+                 exclude = c("Land_Owner"))
+if (is.na(ocol)) ocol <- if ("match_id" %in% nm) "match_id" else NA
+message("Owner cluster: ", ocol)
+df$owner <- as.character(df[[ocol]])
+df$owner[df$owner == "" ] <- NA
+
+pcol <- find_col(c("^property_?id$", "^prop_?id$"))
+if (!is.na(pcol)) {
+  df$pid <- as.character(df[[pcol]])
+} else if (all(c("Reform_Coop_id", "Hacienda_id") %in% nm)) {
+  df$pid <- paste(df$Reform_Coop_id, df$Hacienda_id, sep = "_")
+} else if ("match_id" %in% nm) {
+  df$pid <- as.character(df$match_id)
+} else df$pid <- df$owner
+
+has_fe <- "survey_year" %in% nm
+df$sy <- if (has_fe) df$survey_year else 1
+
+base_s <- df %>% filter(!is.na(x), !is.na(y), !is.na(owner))
+
+# ---------------- Levels regressions ----------------
+run_level <- function(bw) {
+  d <- base_s %>% filter(abs(x) <= bw)
+  m <- feols(y ~ treat + x + x:treat | sy, data = d, cluster = ~owner)
+  list(b = unname(coef(m)["treat"]), n = nobs(m), cl = length(unique(d$owner)))
+}
+l300 <- run_level(300)
+l150 <- run_level(150)
+
+# ---------------- IQR regressions (one obs per property, >=5 members) ----------------
+prop <- base_s %>%
+  group_by(pid) %>%
+  summarise(n_w = n(),
+            iqr = as.numeric(quantile(y, 0.75, type = 2) - quantile(y, 0.25, type = 2)),
+            x = first(x), treat = first(treat), owner = first(owner), .groups = "drop") %>%
+  filter(n_w >= 5)
+
+run_iqr <- function(bw) {
+  d <- prop %>% filter(abs(x) <= bw)
+  m <- feols(iqr ~ treat + x + x:treat, data = d, cluster = ~owner)
+  list(b = unname(coef(m)["treat"]), n = nobs(m), cl = length(unique(d$owner)))
+}
+i300 <- run_iqr(300)
+i150 <- run_iqr(150)
+cat("DEVIATION: IQR regressions use one observation per property; no survey-round FE (not identifiable with one obs per property)\n")
+
+cat(sprintf("RESULT:earnings_level_above500_bw300=%.6f\n", l300$b))
+cat(sprintf("RESULT:earnings_level_above500_bw150=%.6f\n", l150$b))
+cat(sprintf("RESULT:earnings_iqr_above500_bw300=%.6f\n", i300$b))
+cat(sprintf("RESULT:earnings_iqr_above500_bw150=%.6f\n", i150$b))
+cat(sprintf("RESULT:n_obs_earnings_level_bw300=%d\n", as.integer(l300$n)))
+cat(sprintf("RESULT:n_obs_earnings_level_bw150=%d\n", as.integer(l150$n)))
+cat(sprintf("RESULT:n_obs_earnings_iqr_bw300=%d\n", as.integer(i300$n)))
+cat(sprintf("RESULT:n_obs_earnings_iqr_bw150=%d\n", as.integer(i150$n)))
+cat(sprintf("RESULT:n_clusters_bw300=%d\n", as.integer(l300$cl)))
+cat(sprintf("RESULT:n_clusters_bw150=%d\n", as.integer(l150$cl)))
+```
+
+## Error / Unexpected Output
+```
+Columns: hh_head_order, dept, munic, canton, year, survey_year, hh_income, hh_income_pc, gender, age, literate, educ_yrs, educ_level, Occupation_Type, Occupation_Size, Work_hrs, Work_days, Work_Income_Freq, Work_Income, Other_Income, Aguinaldo_Income, Dividends_Income, Arrendamiento_Income, Prev_Occuptation_Type, Prev_Occuptation_Size, Prev_Occuptation_Sector, Prev_Occupation_WhyLeft, Landholding_Type, Landholding_Type2, Land_Owner, Land_Size, Land_Size_ha, Land_revenue, Land_Costs, Land_Net_Income, dept_num_x, Land_Salaries, poverty_level, educ_expenses, Work_Amt, Land_Revenue, income_decile, Occupation_Sector_Code, DEPARTAMENTO, COD_DEPTO_first, MUNICIPIO, CANTON, dept_num_y, canton_code_x, COD_DEPTO_first_x, COD_DEPTO_first_y, canton_code_y, dept_num, Coop_Member, Coop_Size, Coop_Size_Bin_x, mcode_x, Reform_Coop_id, ID, DEPID, DEPDSC, MUNID, MUNDSC, Coop_Name, AREA_HECTAREA, Total_Propretario, Total_Propretario2, NOM_CTON, CODIGO, Expropretario_ISTA, No__SOCIOS, Area_mzs, Area_has, Matched, NOM_MUN, NOM_DPTO, dm_code, dist_perc, dup_mun, reform, Total_Empl, Empl_Men_Fixed, Empl_Men_Temp, Empl_Women_Fixed, Empl_Women_Temp, Num_Members_2008, Non_Coop_Member, Num_Workers, Num_Workers_Bin_x, Hacienda_id, Total_Workers, Above500, norm_dist, own_amt, Landholding_Type_Factor, match_id, temp, num_members, Work_Wage, Work_Income_Daily, sex, age2, i_year1, i_year2, i_year3, i_year4, i_year5, i_year6, i_year7, i_year8, i_year9, i_year10, i_year11, i_year12, norm_dist_Above, ln_hh_inc_pc, hh_inc_pc_real, ln_hh_inc_pc_real, coop_size
+Running variable (distance): norm_dist agreement=1
+Error in hits[sapply(df[hits], is.numeric)] : 
+  invalid subscript type 'list'
+Calls: find_col
+Execution halted
+
+```
+
+## Task
+Fix specifically the identified problem above. Do not rewrite the entire approach unless necessary.
+
+## Reminder: Output Convention
+The fixed R code MUST emit each reproduced metric on its own line using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names.
+
+## Reminder: Constraints
+- The dataset is a directory tree at '/Users/matthew/dev/Retally/.cache/datasets/montero_2022_cooperative_property_rights.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+- Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+- Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+- Do NOT access the internet.
+- Do NOT call system() / system2().
+- Use set.seed(42) for reproducibility.
+- Print all RESULT: lines at the end via cat().
+
+Output ONLY the corrected R code — no explanation, no markdown fences.

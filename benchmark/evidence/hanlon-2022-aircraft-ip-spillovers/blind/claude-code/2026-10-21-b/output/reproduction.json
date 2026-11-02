@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "hanlon-2022-aircraft-ip-spillovers",
+  "mode": "blind",
+  "run_id": "2026-10-21-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Engine sample: engine_data.dta taken as the paper's fighter/bomber engine file (it carries airframe-matched counts); US rows with non-missing ln_hp_per_lbs used without further filtering (85 engines). The paper text does not spell out how the file was built.",
+    "Spline: continuous two-piece linear spline in Stata mkspline form, before = min(year,1926), after = max(year-1926,0), so 1926 belongs to the before segment and the coefficients are segment slopes, not slope changes.",
+    "Equation (5) parameterized as a constant, a US indicator, a baseline spline on all observations (the UK/comparison slope) and spline x US (US slope minus UK slope)."
+  ],
+  "notes": "Data: airframe_data.dta (types fighter and bomber, US and UK, years 1918-1935, all years in the file) and engine_data.dta. OLS with lm(); HC1 robust SEs printed but no point estimates depend on them. Table 1 columns 1-2: US only, log wing load / log max speed on the spline plus a constant (N=116 wing load, 174 max speed). Columns 3-4: pooled US+UK (N=165, 233). Table 4 column 1: US engines, log hp per lb on the spline plus a liquid-cooled indicator plus a constant (N=85). Attempt-1 was exploratory (variable inspection, no RESULT lines). Attempt-2 printed RESULT lines, but its pooled regressions used separate US-only and UK-only splines, so the 'vs UK' coefficients were plain US slopes (identical to columns 1-2) instead of relative slopes. Found by self-review of the specification, not by comparison with any paper value; reparameterized for the final run (see attempt-2/feedback.txt). Kind is '' because neither 'error' nor 'claim' applies. Disclosure: while reading paper.txt for the method (the Table 1 notes area, lines 1055-1075), a garbled fragment of three bare numbers from the Table 1 extraction showed on screen; it was not searched for and the specification was not adjusted toward it. No .do/.R or result files (.tex/.log/.pdf) in the mount were opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T02:10:14Z",
+  "finished_at": "2026-10-22T02:12:14Z"
+}

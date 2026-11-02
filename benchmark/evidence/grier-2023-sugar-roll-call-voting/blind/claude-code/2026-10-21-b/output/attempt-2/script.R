@@ -1,0 +1,31 @@
+suppressMessages({library(haven); library(dplyr)})
+D <- "/Users/matthew/dev/Retally/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/blind/2026-10-21-b/mount/grier_2023_sugar_roll_call_voting"
+fs <- c("SugarReplicate.dta","SugarReplicate_iter1.dta","SugarReplicate_iter2.dta")
+L <- lapply(fs, function(f) zap_labels(read_dta(file.path(D,f))))
+d <- L[[1]]
+d$tc0 <- L[[1]]$totalcont; d$tc1 <- L[[2]]$totalcont; d$tc2 <- L[[3]]$totalcont
+cat("rows per id:\n"); print(table(table(d$id)))
+print(aggregate(cbind(tc0,tc1,tc2,sugcont)~cong, data=d, FUN=sum))
+print(aggregate(cbind(tc0,tc1,tc2,sugcont)~cong, data=d, FUN=function(x) sum(x>0)))
+cat("tc0>=tc1:", mean(d$tc0>=d$tc1), " tc0>=tc2:", mean(d$tc0>=d$tc2), " tc1>=tc2:", mean(d$tc1>=d$tc2), "\n")
+cat("non-integer share by cong:\n")
+for (v in c("tc0","tc1","tc2","sugcont")) print(tapply(d[[v]], d$cong, function(x) mean(abs(x-round(x))>1e-6)))
+cat("share multiple of 100 by cong:\n")
+for (v in c("tc0","tc1","tc2","sugcont")) print(tapply(d[[v]], d$cong, function(x) mean(abs(x/100-round(x/100))<1e-6)))
+print(head(d[d$tc0>0, c("cong","id","name","tc0","tc1","tc2","sugcont")], 30))
+# vote coding and switchers
+d$aye <- as.integer(d$vote=="Aye")
+w <- d %>% group_by(id) %>% summarise(n=n(), s=sum(aye), votes=paste(vote, collapse="/"), nm=paste(name,collapse="/"), both=paste(both,collapse="/"))
+cat("districts with n==2 and switch (aye 0/1 any coding):", sum(w$n==2 & w$s==1), "\n")
+print(table(w$votes[w$n==2 & w$s==1]))
+d2 <- d %>% filter(vote %in% c("Aye","No"))
+w2 <- d2 %>% group_by(id) %>% summarise(n=n(), s=sum(aye))
+cat("switchers among Aye/No only:", sum(w2$n==2 & w2$s==1), "\n")
+cat("ids with n!=2:\n"); print(w[w$n!=2,])
+# same incumbent
+w3 <- d %>% group_by(id) %>% summarise(n=n(), s=sum(aye), samecid=n_distinct(cid)==1, samename=n_distinct(name)==1, bothv=paste(unique(both),collapse=","), votes=paste(vote, collapse="/"))
+sw <- w3 %>% filter(n==2, s==1)
+print(table(sw$samecid, sw$samename)); print(table(sw$bothv, sw$samecid))
+print(table(sw$votes, sw$samecid))
+print(as.data.frame(d %>% filter(id %in% sw$id) %>% arrange(id, cong) %>% select(id,cong,cid,name,vote,both,ncu,tenure,agcom,tc0,tc1,tc2,sugcont)))
+cat("NA rows:\n"); print(as.data.frame(d[!complete.cases(d[,c("ncu","tenure","both","sugcont","poverty","bach","medincome","over65","agcom")]),c("id","cong","name","vote","ncu","tenure","both","sugcont")]))

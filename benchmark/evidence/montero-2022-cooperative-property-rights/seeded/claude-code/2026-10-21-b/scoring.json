@@ -1,0 +1,566 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "earnings_level_above500_bw300",
+      "ground_truth": {
+        "value": 60.49,
+        "standard_error": 31.03,
+        "unit": "dollars per month (household earnings per capita)",
+        "claim_type": "coefficient",
+        "location": "Table 5, column 1 (Household Earnings per Capita, Levels, bandwidth 300)",
+        "context": "Table 5 (\"Impact of Ownership Type on Earnings and Earnings Distributions\"), column 1.  Regression discontinuity at the 1980 land reform's 500 ha cumulative-landholding threshold: properties of former owners above 500 ha became worker cooperatives, those below stayed outside-owned haciendas.  Outcome: household earnings per capita in the previous month, in dollars per month, of agricultural workers in the El Salvador household surveys (Encuesta de Hogares de Propositos Multiples, 2002-2013), matched to cooperatives and haciendas through the survey's questions on working as a cooperative member or hacienda laborer (matching limited to cantons with only one cooperative/large hacienda).  Regressor: Above500, an indicator for the property's former owner having over 500 ha in cumulative landholdings in 1980.  Linear control in the former owner's total landholdings estimated separately on each side of the cutoff (equation 1), sample limited to properties within 300 ha of the threshold, survey-round fixed effects, standard errors clustered at the former-owner level.  Observations are workers; the table also reports the number of properties, the number of clusters and the mean of the dependent variable.\n",
+        "decimals": 2,
+        "sample_size": 4770
+      },
+      "i4r": {
+        "reproduced_value": 13.21,
+        "outcome": "does_not_match",
+        "notes": "DP20 Table 3 col 3 (corrected data, duplicates removed): 13.21 (SE 32.35), N = 1,146 workers, p = 0.684 — the point estimate drops by ~three-quarters and loses significance.  Meta-database row labels this \"duplicates AND sample restriction\", but DP20's table is the duplicates-only correction (the five-member rule does not apply to the worker-level regression).\n",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "earnings_level_above500_bw300",
+        "claim_type": "coefficient",
+        "claimed": 60.49,
+        "reproduced": 60.494796,
+        "tolerance": 0.02,
+        "rel_err": 7.928583236896863e-05,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "earnings_level_above500_bw300",
+        "reproduced": 60.494796,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 1.2098,
+        "abs_err": 0.004795999999998912,
+        "rel_err": 7.928583236896863e-05,
+        "margin": 0.003964291618448431,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "earnings_level_above500_bw150",
+      "ground_truth": {
+        "value": 52.79,
+        "standard_error": 40.61,
+        "unit": "dollars per month (household earnings per capita)",
+        "claim_type": "coefficient",
+        "location": "Table 5, column 2 (Household Earnings per Capita, Levels, bandwidth 150)",
+        "context": "Table 5, column 2: the same specification as column 1 (household earnings per capita in the previous month on Above500, local linear control in the former owner's landholdings on each side of the 500 ha cutoff, survey-round fixed effects, standard errors clustered by former owner) with the sample limited to properties within 150 ha of the threshold.  Observations are workers.  Not statistically significant.\n",
+        "decimals": 2,
+        "sample_size": 1583
+      },
+      "i4r": {
+        "reproduced_value": -24.24,
+        "outcome": "does_not_match",
+        "notes": "DP20 Table 3 col 4 (corrected data): -24.24 (SE 41.90), N = 420 workers, p = 0.566 — the sign flips.\n",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "earnings_level_above500_bw150",
+        "claim_type": "coefficient",
+        "claimed": 52.79,
+        "reproduced": 52.790665,
+        "tolerance": 0.02,
+        "rel_err": 1.259708278079025e-05,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "earnings_level_above500_bw150",
+        "reproduced": 52.790665,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 1.0558,
+        "abs_err": 0.0006649999999979173,
+        "rel_err": 1.259708278079025e-05,
+        "margin": 0.0006298541390395124,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "earnings_iqr_above500_bw300",
+      "ground_truth": {
+        "value": -42.97,
+        "standard_error": 17.82,
+        "unit": "dollars per month (interquartile range of household earnings per capita)",
+        "claim_type": "coefficient",
+        "location": "Table 5, column 3 (Household Earnings per Capita, Interquartile Range, bandwidth 300)",
+        "context": "Table 5, column 3, the paper's inequality result (a lower within-property interquartile range of earnings for cooperatives). Outcome: the interquartile range (75th minus 25th percentile) of household earnings per capita in the previous month across the surveyed workers of each property, with the sample limited to cooperatives and haciendas for which there are at least five members represented in the household surveys.  Regressor Above500; linear control in the former owner's landholdings on each side of the 500 ha cutoff; properties within 300 ha of the threshold; survey-round fixed effects; standard errors clustered at the former-owner level.  One observation per property.\n",
+        "decimals": 2,
+        "sample_size": 327
+      },
+      "i4r": {
+        "reproduced_value": -72.24,
+        "outcome": "does_not_match",
+        "notes": "DP20 Table 1 col 3 (corrected data, duplicates removed, no five-member restriction, as in the original code): -72.24 (SE 17.37), N = 324.  Imposing the paper's stated five-member restriction instead: on the original data -50.91 (43.09), N = 128 with 3 treated property-years, p = 0.243 (col 5); on the corrected data -65.81 (45.36), N = 70 with 1 treated property-year (col 7) — DP20 concludes the data cannot support the analysis.\n",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "earnings_iqr_above500_bw300",
+        "claim_type": "coefficient",
+        "claimed": -42.97,
+        "reproduced": -42.967328,
+        "tolerance": 0.02,
+        "rel_err": 6.21829183150314e-05,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "earnings_iqr_above500_bw300",
+        "reproduced": -42.967328,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.8593999999999999,
+        "abs_err": 0.002671999999996899,
+        "rel_err": 6.21829183150314e-05,
+        "margin": 0.00310914591575157,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "earnings_iqr_above500_bw150",
+      "ground_truth": {
+        "value": -51.79,
+        "standard_error": 24.79,
+        "unit": "dollars per month (interquartile range of household earnings per capita)",
+        "claim_type": "coefficient",
+        "location": "Table 5, column 4 (Household Earnings per Capita, Interquartile Range, bandwidth 150)",
+        "context": "Table 5, column 4: the interquartile-range specification of column 3 (properties with at least five members represented in the surveys, Above500, local linear control on each side of the cutoff, survey-round fixed effects, former-owner clustering) with properties within 150 ha of the threshold.  One observation per property.\n",
+        "decimals": 2,
+        "sample_size": 118
+      },
+      "i4r": {
+        "reproduced_value": -79.78,
+        "outcome": "does_not_match",
+        "notes": "DP20 Table 1 col 4 (corrected data, no five-member restriction): -79.78 (SE 22.67), N = 116.  With the five-member restriction: on the original data -90.86 (84.53), N = 45, 2 treated, p = 0.295 (col 6); on the corrected data inestimable — 26 property-years, none above the threshold (col 8).\n",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "earnings_iqr_above500_bw150",
+        "claim_type": "coefficient",
+        "claimed": -51.79,
+        "reproduced": -51.78518,
+        "tolerance": 0.02,
+        "rel_err": 9.306815987646779e-05,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "earnings_iqr_above500_bw150",
+        "reproduced": -51.78518,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 1.0358,
+        "abs_err": 0.004820000000002267,
+        "rel_err": 9.306815987646779e-05,
+        "margin": 0.004653407993823389,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_earnings_level_bw300",
+      "ground_truth": {
+        "value": 4770.0,
+        "standard_error": null,
+        "unit": "observations (workers)",
+        "claim_type": "other",
+        "location": "Table 5, Observations, column 1",
+        "context": "Number of observations (surveyed workers) in the 300 ha earnings-level regression, Table 5 column 1.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 1146.0,
+        "outcome": "does_not_match",
+        "notes": "DP20 Table 3 col 3 — removing duplicates cuts the 300 ha worker sample from 4,770 to 1,146.",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_earnings_level_bw300",
+        "claim_type": "other",
+        "claimed": 4770.0,
+        "reproduced": 4770.0,
+        "tolerance": 0.01,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_earnings_level_bw300",
+        "reproduced": 4770.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 47.7,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_earnings_level_bw150",
+      "ground_truth": {
+        "value": 1583.0,
+        "standard_error": null,
+        "unit": "observations (workers)",
+        "claim_type": "other",
+        "location": "Table 5, Observations, column 2",
+        "context": "Number of observations (surveyed workers) in the 150 ha earnings-level regression, Table 5 column 2.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 420.0,
+        "outcome": "does_not_match",
+        "notes": "DP20 Table 3 col 4 — 1,583 -> 420 workers.",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_earnings_level_bw150",
+        "claim_type": "other",
+        "claimed": 1583.0,
+        "reproduced": 1583.0,
+        "tolerance": 0.01,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_earnings_level_bw150",
+        "reproduced": 1583.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 15.83,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_earnings_iqr_bw300",
+      "ground_truth": {
+        "value": 327.0,
+        "standard_error": null,
+        "unit": "observations (properties)",
+        "claim_type": "other",
+        "location": "Table 5, Observations, column 3",
+        "context": "Number of observations in the 300 ha interquartile-range regression, Table 5 column 3 (one observation per property).\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 324.0,
+        "outcome": "does_not_match",
+        "notes": "DP20 Table 1 col 3 — 327 -> 324 property-years (the six workers assigned to two properties are dropped).  With the five-member restriction: 128 (original data) / 70 (corrected).\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_earnings_iqr_bw300",
+        "claim_type": "other",
+        "claimed": 327.0,
+        "reproduced": 327.0,
+        "tolerance": 0.01,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_earnings_iqr_bw300",
+        "reproduced": 327.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 3.27,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_earnings_iqr_bw150",
+      "ground_truth": {
+        "value": 118.0,
+        "standard_error": null,
+        "unit": "observations (properties)",
+        "claim_type": "other",
+        "location": "Table 5, Observations, column 4",
+        "context": "Number of observations in the 150 ha interquartile-range regression, Table 5 column 4 (one observation per property).\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 116.0,
+        "outcome": "does_not_match",
+        "notes": "DP20 Table 1 col 4 — 118 -> 116 property-years; with the five-member restriction 45 / 26.",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_earnings_iqr_bw150",
+        "claim_type": "other",
+        "claimed": 118.0,
+        "reproduced": 118.0,
+        "tolerance": 0.01,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_earnings_iqr_bw150",
+        "reproduced": 118.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 1.18,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_clusters_bw300",
+      "ground_truth": {
+        "value": 98.0,
+        "standard_error": null,
+        "unit": "clusters (former owners)",
+        "claim_type": "other",
+        "location": "Table 5, Clusters, columns 1 and 3",
+        "context": "Number of former-owner clusters in the 300 ha samples of Table 5 (columns 1 and 3).\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 98.0,
+        "outcome": "matches",
+        "notes": "DP20 Tables 1 and 3, col 3 — 98 clusters before and after removing duplicates.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_clusters_bw300",
+        "claim_type": "other",
+        "claimed": 98.0,
+        "reproduced": 98.0,
+        "tolerance": 0.01,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_clusters_bw300",
+        "reproduced": 98.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 0.98,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_clusters_bw150",
+      "ground_truth": {
+        "value": 36.0,
+        "standard_error": null,
+        "unit": "clusters (former owners)",
+        "claim_type": "other",
+        "location": "Table 5, Clusters, columns 2 and 4",
+        "context": "Number of former-owner clusters in the 150 ha samples of Table 5 (columns 2 and 4).\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 36.0,
+        "outcome": "matches",
+        "notes": "DP20 Tables 1 and 3, col 4 — 36 clusters before and after removing duplicates.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_clusters_bw150",
+        "claim_type": "other",
+        "claimed": 36.0,
+        "reproduced": 36.0,
+        "tolerance": 0.013888888888888888,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "printed_precision"
+      },
+      "recomputed": {
+        "result_name": "n_clusters_bw150",
+        "reproduced": 36.0,
+        "band_source": "printed_precision",
+        "band_relative": 0.013888888888888888,
+        "band_absolute": 0.5,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 10,
+    "row_passed": 10,
+    "recomputed_passed": 10,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "montero-2022-cooperative-property-rights",
+    "mode": "seeded",
+    "reproducer": "claude-code",
+    "label": "claude-code",
+    "model": null,
+    "oracle": false,
+    "run": "2026-10-21-b",
+    "results_file": "claude-code-7papers-all-modes-2026-10-21.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/montero-2022-cooperative-property-rights/seeded/claude-code/20261022T021417Z",
+    "run_dir": "benchmark/reproductions/montero-2022-cooperative-property-rights/seeded/2026-10-21-b",
+    "date": "2026-10-22T02:03:08Z",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 10,
+    "final": 10,
+    "first_scored": 10,
+    "first_scored_index": 1,
+    "first_attempt": 0,
+    "n_refinements": 0,
+    "n_error_refinements": 0,
+    "n_claim_refinements": 0,
+    "n_executions": 2,
+    "n_files_stripped": null,
+    "agrees_with_i4r": false,
+    "deviations_manifest": [],
+    "deviations_stdout": [],
+    "notes": "Followed the 'Replicating original results' block of Replication_file.do. Rebuilt hh_inc_pc_real exactly as the .do file does (the original deflator has no 2010 term, so 2010 incomes become 0). Cols 1-2: OLS of hh_inc_pc_real on Above500, norm_dist, norm_dist*Above500, i_year1-12 (collinear one dropped), sex, age, age2, for |norm_dist|<300 and <150, clustered by Expropretario_ISTA (fixest feols). Cols 3-4: casewise-complete collapse to match_id x Expropretario_ISTA x i_year* cells, taking the IQR (Stata percentile definition = R quantile type 2) of hh_inc_pc_real and means of norm_dist/Above500, then the same regression without the individual controls. The do file does not impose the paper's 'at least five members' restriction on the original columns, and none was applied. Attempt-1 was an exploratory data inspection with no RESULT lines. The first estimating run is the final one. All coefficients, SEs, N and cluster counts match Table 5. No claim-feedback iterations were needed. The printed DV means (57.3, 64.7, 29.4, 29.2) differ from the table's (73.59, 74.81, 38.63, 37.52), which are probably nominal-income means. They are not claims here.",
+    "files_read_outside_mount": [],
+    "paper_text": "paper.txt",
+    "complete": true,
+    "missing": []
+  }
+}

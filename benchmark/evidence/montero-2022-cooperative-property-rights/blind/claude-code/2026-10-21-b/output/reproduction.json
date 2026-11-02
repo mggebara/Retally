@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "entry_id": "montero-2022-cooperative-property-rights",
+  "mode": "blind",
+  "run_id": "2026-10-21-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "IQR (columns 3-4) sample: every property x survey-round cell inside the bandwidth, with the IQR computed within the cell (single-worker cells get IQR 0). The paper says the sample is limited to properties with at least five members in the surveys, but applying that literally per cell (45 cells at 150 ha) or via the num_members variable (101) contradicts the property counts the paper reports for these columns (118 at 150 ha, 327 at 300 ha), which match all cells under a strict bandwidth. I followed the reported property counts.",
+    "Bandwidth inclusion is strict (|landholdings - 500| < bw). This only matters at 300 ha, where one property (match_id 540732174011, 11 workers in 5 survey rounds) sits exactly 300 ha from the cutoff and is dropped; strict inclusion matches the 327 properties the paper reports for column 3.",
+    "Percentiles use R quantile type 2, which matches Stata's summarize/egen percentile definition (the data are Stata files).",
+    "All survey years in the file (2000-2013) are used, although the text says 2002-2013; the 150 ha worker count (1,583) and cluster count (36) given in the task match the full file."
+  ],
+  "notes": "Data: ehpm_incomemodule_wreform.dta only (README.pdf not opened). Outcome hh_income_pc (household earnings per capita, previous month, USD). Specification as in eq. (1) and the Table 5 notes: OLS of the outcome on Above500 (own_amt >= 500), the running variable (own_amt - 500), and its interaction with Above500 (a linear fit on each side of the cutoff), uniform kernel inside the bandwidth, survey-year fixed effects (variable year), SEs clustered by former owner (Expropretario_ISTA; 105 owners, 111 properties identified by match_id). Columns 1-2 are worker-level. Columns 3-4 use one row per property x survey round with the 75th-minus-25th percentile of hh_income_pc. Diagnostics in the final stdout: mean DV 74.81 (level, 150 ha) and 37.52 (IQR, 150 ha); 327 / 118 property-year cells. Attempts 1-4 were exploratory runs (variable listing, ID structure, bandwidth and sample counts) and printed no RESULT lines. No claim comparisons; the paper's values were never seen.",
+  "files_read_outside_mount": [
+    "benchmark/.cache/claude-code/montero-2022-cooperative-property-rights/blind/2026-10-21-b/task.md (the task instructions; also copied into the run directory)",
+    "benchmark/.cache/claude-code/montero-2022-cooperative-property-rights/blind/2026-10-21-b/paper.txt (the paper text named by the task)"
+  ],
+  "started_at": "2026-10-22T02:10:14Z",
+  "finished_at": "2026-10-22T02:13:09Z"
+}

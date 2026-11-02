@@ -1,0 +1,28 @@
+Nrow: 5060 
+y_level non-NA: 5060 
+dist summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ -300.0  -255.0  -197.0   131.6  -137.0  6949.3 
+Above500 table:
+
+   0    1 
+4693  367 
+Cluster var: match_id 
+df_est nrow: 5060 
+
+--- Running ---
+  level bw=300: n=4781, clusters=105
+  level bw=150: n=1583, clusters=39
+  iqr bw=300: nprops=105
+  iqr bw=150: nprops=39
+RESULT:earnings_level_above500_bw300=74.1537
+RESULT:earnings_level_above500_bw150=95.7704
+RESULT:earnings_iqr_above500_bw300=6.9657
+RESULT:earnings_iqr_above500_bw150=45.6038
+RESULT:n_obs_earnings_level_bw300=4781
+RESULT:n_obs_earnings_level_bw150=1583
+RESULT:n_obs_earnings_iqr_bw300=105
+RESULT:n_obs_earnings_iqr_bw150=39
+RESULT:n_clusters_bw300=105
+RESULT:n_clusters_bw150=39
+DEVIATION: Changed cluster var from Land_Owner (only 7 unique non-NA) to match_id to match paper cluster counts; outcome changed to hh_inc_pc_real; running variable to own_amt-500 since norm_dist_Above was mostly 0.

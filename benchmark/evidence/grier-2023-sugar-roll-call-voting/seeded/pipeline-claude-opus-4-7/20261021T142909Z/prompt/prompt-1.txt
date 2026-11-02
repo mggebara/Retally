@@ -1,0 +1,193 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: American Political Science Review (2023) 117, 1, 340–346
+Abstract (first 500 chars): © The Author(s), 2022. Published by Cambridge University Press on behalf of the American Political Science Association. This is an Open Access article, distributed under the terms of the Creative Commons Attribution licence (http:// creativecommons.org/licenses/by/4.0), which permits unrestricted re-use, distribution and reproduction, provided the original article is properly cited. Letter Campaign Contributions and Roll-Call Voting in the U.S. House
+Methodology Summary: ## Methodology Summary
+
+- **Estimation method**: Fixed-effects logit model with two specifications: (1) district fixed effects and (2) incumbent (member) fixed effects. Identification comes only from units whose vote changed across the two amendments (93 vote-switching districts; 53 vote-switching incumbents).
+
+- **Estimating equation**: Dependent variable = 1 if the member voted "aye" on the sugar-reform amendment (against sugar interests), 0 otherwise. Key regressor = inflation-adjusted total sugar-industry contributions to the incumbent (sugar PAC contributions + sugar-industry individual contributions >$200), measured in dollar units (coefficients are unstandardized log-odds, e.g., –0.0006 per dollar in Table 1).
+
+- **Controls / preferred specification**: ACU ideology score (robustness: DW-Nominate), tenure (years in office), poverty rate, % with bachelor's degree, median income, % population >65, and a dummy for House Agriculture Committee membership. Demographics come from U.S. Census; votes from GovTrack; contributions from Center for Responsive Politics.
+
+- **Sample / observations**: Pooled data on the 2013 (Pitts) and 2018 (Foxx) sugar amendment votes. Estimation samples: 186 observations (district FE) and 106 observations (incumbent FE), restricted to units with changed votes by the FE logit. Antisugar contributions excluded because negligible.
+
+- **Standard errors**: Robust standard errors (no clustering specified).
+
+- **Preprocessing**: Contributions aggregated by incumbent and inflation-adjusted; primary time window = one year before vote through end of calendar year of vote.
+
+- **Robustness checks**: (1) Alternative contribution windows — calendar year of vote only (2013; 2018), and 12 months prior to vote date (6/20/12–6/20/13; 5/17/17–5/17/18); (2) Incumbent FE in addition to district FE; (3) Alternative ideology measure (DW-Nominate); (4) Alternative control sets (unemployment, % rural).
+
+- **Evaluation / reporting**: Pseudo-R² reported (0.745 district FE; 0.721 incumbent FE); marginal effects at 50 equally spaced values plotted via the Marhis Stata package with 95% CIs (Figures 1–3). No train/test split or cross-validation (observational causal-inference design).
+
+## Claims to Reproduce
+1. sugar_contributions_district_fe: -0.0006 (logit coefficient per real dollar of sugar-industry contributions) [type: coefficient]
+   Location: Table 1, District fixed effects, Inflation-adjusted sugar contributions
+   Context: Table 1 ("The Determinants of Voting in Favor of Sugar Reform"), column District fixed effects, row Inflation-adjusted sugar contributions. Logit; the dependent variable equals 1 for "aye" votes on the two reform amendments to the U.S. sugar program (the 2013 Pitts amendment, H. Amdt. 227 to H.R. 1947, and the 2018 Foxx amendment, H. Amdt. 605 to H.R. 2; aye = a vote against sugar interests) and 0 otherwise. One observation per House district and vote; the two votes are treated as repeated votes on the same issue. Regressor: inflation-adjusted sugar-industry contributions (all sugar-industry P…
+2. sugar_contributions_incumbent_fe: -0.0004 (logit coefficient per real dollar of sugar-industry contributions) [type: coefficient]
+   Location: Table 1, Incumbent fixed effects, Inflation-adjusted sugar contributions
+   Context: Table 1, column Incumbent fixed effects, row Inflation-adjusted sugar contributions. Same logit, outcome, regressor and controls as sugar_contributions_district_fe, with the sample restricted to incumbents who voted on both amendments (the same member in the district for both votes), so the fixed effects are incumbent fixed effects and only the 53 incumbents who changed their vote identify the coefficients (106 observations). Robust standard errors; the table prints p = 0.001, significant at 1%.
+3. acu_ideology_district_fe: 0.2 (logit coefficient per ACU point) [type: coefficient]
+   Location: Table 1, District fixed effects, ACU
+   Context: Table 1, column District fixed effects, row ACU: the American Conservative Union ideology score of the district's representative (1-100, higher = more conservative). Same district fixed-effects logit as sugar_contributions_district_fe; p = 0.001.
+4. tenure_district_fe: -0.3 (logit coefficient per unit of tenure) [type: coefficient]
+   Location: Table 1, District fixed effects, Tenure
+   Context: Table 1, column District fixed effects, row Tenure: the seniority of the district's representative (from the American Conservative Union). Same district fixed-effects logit as sugar_contributions_district_fe; p = 0.001.
+5. tenure_incumbent_fe: -1.43 (logit coefficient per unit of tenure) [type: coefficient]
+   Location: Table 1, Incumbent fixed effects, Tenure
+   Context: Table 1, column Incumbent fixed effects, row Tenure. Same incumbent fixed-effects logit as sugar_contributions_incumbent_fe; p = 0.001.
+6. sugar_contributions_calendar_year_district_fe: -0.0006 (logit coefficient per real dollar of sugar-industry contributions) [type: coefficient]
+   Location: Table 3, 1/1/13-12/31/13 and 1/1/18-12/31/18, District fixed effects
+   Context: Table 3 ("Coefficients of Inflation-Adjusted Sugar Contributions for Different Time Windows around the Votes"), row 1/1/13-12/31/13 and 1/1/18-12/31/18, column District fixed effects. The Table 1 column 1 district fixed-effects logit (same outcome, controls and sample) with sugar contributions measured over the calendar year of each vote (2013 and 2018) instead of the baseline window. Robust standard errors; p = 0.001.
+7. sugar_contributions_calendar_year_incumbent_fe: -0.0005 (logit coefficient per real dollar of sugar-industry contributions) [type: coefficient]
+   Location: Table 3, 1/1/13-12/31/13 and 1/1/18-12/31/18, Incumbent fixed effects
+   Context: Table 3, row 1/1/13-12/31/13 and 1/1/18-12/31/18, column Incumbent fixed effects. The Table 1 column 2 incumbent fixed-effects logit (same-incumbent sample) with sugar contributions measured over the calendar year of each vote. Robust standard errors; p = 0.001.
+8. sugar_contributions_12_months_district_fe: -0.0006 (logit coefficient per real dollar of sugar-industry contributions) [type: coefficient]
+   Location: Table 3, 6/20/12-6/20/13 and 5/17/17-5/17/18, District fixed effects
+   Context: Table 3, row 6/20/12-6/20/13 and 5/17/17-5/17/18, column District fixed effects. The Table 1 column 1 district fixed-effects logit with sugar contributions measured over the 12 months before each vote up to the date of the vote. Robust standard errors; p = 0.001.
+9. sugar_contributions_12_months_incumbent_fe: -0.0003 (logit coefficient per real dollar of sugar-industry contributions) [type: coefficient]
+   Location: Table 3, 6/20/12-6/20/13 and 5/17/17-5/17/18, Incumbent fixed effects
+   Context: Table 3, row 6/20/12-6/20/13 and 5/17/17-5/17/18, column Incumbent fixed effects. The Table 1 column 2 incumbent fixed-effects logit with sugar contributions measured over the 12 months before each vote up to the date of the vote. Robust standard errors; p = 0.003.
+10. observations_district_fe: 186.0 (observations (district-votes)) [type: other]
+   Location: Table 1, District fixed effects, Observations
+   Context: Observations in the district fixed-effects logit (Table 1 column 1; also Table 3 column 1): the 93 vote-switching districts times the two votes.
+11. observations_incumbent_fe: 106.0 (observations (incumbent-votes)) [type: other]
+   Location: Table 1, Incumbent fixed effects, Observations
+   Context: Observations in the incumbent fixed-effects logit (Table 1 column 2; also Table 3 column 2): the 53 incumbents who voted on both amendments and changed their vote, times the two votes.
+
+## Dataset Information
+Name: grier-2023-sugar-roll-call-voting
+Local path: /Users/matthew/dev/Retally/.cache/datasets/grier_2023_sugar_roll_call_voting
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- SugarReplicate.dta (134.4 KB) — 862 rows, 27 columns: poverty, rural, district, vote, tenure, totalcont, medincome, unemp, houselead, cong, cid, id, name, pop, over65, nohsgrad, bach, medearn, state, state_no, party, ncu, both, sugcont, agcom, aglead, dwn
+- SugarReplicate_iter1.dta (135.0 KB) — 862 rows, 27 columns: poverty, rural, district, vote, tenure, totalcont, medincome, unemp, houselead, cong, cid, id, name, pop, over65, nohsgrad, bach, medearn, state, state_no, party, ncu, both, sugcont, agcom, aglead, dwn
+- SugarReplicate_iter2.dta (134.4 KB) — 862 rows, 27 columns: poverty, rural, district, vote, tenure, totalcont, medincome, unemp, houselead, cong, cid, id, name, pop, over65, nohsgrad, bach, medearn, state, state_no, party, ncu, both, sugcont, agcom, aglead, dwn
+- APSR Replication Codes.do (2.3 KB)
+- Replication Read Me.docx (13.4 KB)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '/Users/matthew/dev/Retally/.cache/datasets/grier_2023_sugar_roll_call_voting' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Original Replication Scripts
+The replication package (the dataset directory) ships the authors' own analysis scripts, reproduced below.  These are the GROUND TRUTH for the exact estimating equation, variable names, sample restrictions, fixed effects, and standard-error clustering — follow them over anything reconstructed from the methodology summary, and prefer them over the paper's text where the two disagree.  Your job is to write R code that implements the SAME SPECIFICATION: translate what the scripts estimate, do not transliterate their syntax line by line (a Stata .do file's regression, e.g. `reghdfe y x controls, absorb(fe) cluster(cl)`, becomes the equivalent fixest::feols() call in R).  Keep only the parts that produce the specific claims being reproduced; skip figure construction and unrelated robustness checks.  The scripts' data-file paths refer to the package's internal layout — resolve them against the dataset directory listed under Dataset Information.
+
+Stata-to-fixest sample matching: feols() drops fixed-effect singletons by default, but Stata's `reg y x i.fe` / `xi:` dummies keep them.  Pass `fixef.rm = "none"` to every feols() call that has fixed effects, otherwise the observation count and the robust SEs drift from the paper's.  Stata's `, r` / `vce(robust)` is `vcov = "hetero"`.
+
+### `APSR Replication Codes.do`
+```stata
+*Sugar Bill APSR - Replication Code. Results in the paper used STATA version 15.
+
+*these are our main results (Table 1)
+
+* Import Data
+
+use "SugarReplicate.dta", clear
+
+
+*Generate Dummy Voting Variables and Make Nominal Contributions into Real Ones
+
+gen yesvote=0
+replace yesvote=1 if vote=="Aye"
+
+gen repub=0
+replace repub=1 if party == "Republican"
+
+gen rsugcont=totalcont
+replace rsugcont= totalcont / 1.103 if cong == 115
+
+
+*install program to create the marginal effects graphs
+
+ssc install marhis
+
+xtset id cong
+
+set matsize 11000
+
+*Create Column 1 of Table 1 (District Fixed Effects) We add the FE manually (i.id) because MARHIS only works with plain Logit command
+
+logit yesvote rsugcont ncu tenure poverty bach medincome over65 agcom i.id, robust
+
+*Create Figure 1
+
+marhis rsugcont, points(50) percent
+
+*Create Figure 2
+
+marhis ncu, points(50) percent
+
+*Create Figure 3
+
+marhis tenure, points(50) percent
+
+*Create Column 2 of Table 1 (Incumbent Fixed Effects) Keep both == 1 keeps only cases where the same incumbent voted on both ammendments
+
+keep if both == 1
+
+logit yesvote rsugcont ncu tenure poverty bach medincome over65 agcom i.id, robust
+
+
+*Generate Row 1 of Table 3 (District & Incumbent Fixed Effects using a different window as robustness)
+* this time, contributions are measured during the calendar year the vote occurred (2013 and 2018)
+
+use "SugarReplicate_iter1.dta", replace
+
+gen yesvote=0
+
+replace yesvote=1 if vote=="Aye"
+
+gen repub=0
+replace repub=1 if party == "Republican"
+
+gen rsugcont=totalcont
+replace rsugcont= totalcont / 1.103 if cong == 115
+
+logit yesvote rsugcont ncu tenure poverty bach medincome over65 agcom i.id, robust
+
+keep if both == 1
+
+logit yesvote rsugcont ncu tenure poverty bach medincome over65 agcom i.id, robust
+
+
+*Generate Row 2 of Table 3 (District & Incumbent Fixed Effects using a different window as robustness)
+* this time, contributions are measured during the 12 months before each vote occurred
+
+use "SugarReplicate_iter2.dta", replace
+
+gen yesvote=0
+replace yesvote=1 if vote=="Aye"
+gen repub=0
+replace repub=1 if party == "Republican"
+
+gen rsugcont=totalcont
+replace rsugcont= totalcont / 1.103 if cong == 115
+
+logit yesvote rsugcont ncu tenure poverty bach medincome over65 agcom i.id, robust
+
+keep if both == 1
+
+logit yesvote rsugcont ncu tenure poverty bach medincome over65 agcom i.id, robust
+
+
+```
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

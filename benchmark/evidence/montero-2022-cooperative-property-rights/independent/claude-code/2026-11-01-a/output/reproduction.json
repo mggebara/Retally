@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "entry_id": "montero-2022-cooperative-property-rights",
+  "mode": "independent",
+  "run_id": "2026-11-01-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "IQR regressions (Table 5 cols 3-4) use all property-by-survey-round cells; the paper's at-least-five-members-in-survey filter is not applied, because the paper's observation counts (327/118) equal the total number of such cells in the bandwidth (only 128/45 cells have >=5 surveyed workers).",
+    "Bandwidth implemented as strict |own_amt - 500| < bw (this reproduces the paper's N=4770, 98 clusters, 327 properties at bw 300); uniform kernel."
+  ],
+  "notes": "Attempts 1-4 were exploratory (no RESULT lines). attempt-1 crashed on a multibyte string while printing the variable listing, and attempt-2 repeated that listing with the fix; attempts 3-4 counted samples and clusters. Final spec: hh_income_pc on Above500 + (own_amt-500) + Above500*(own_amt-500), survey-year (year) fixed effects, SEs clustered by former owner (Expropretario_ISTA), fixest. Properties are match_id by survey-year cells; IQR uses Stata-style percentiles (quantile type 2). All N, cluster counts and dependent-variable means match Table 5 exactly. Coefficients come out larger than claimed (82.25/71.83/-56.42/-63.73 vs 60.49/52.79/-42.97/-51.79) with the same signs. Ran check_attempt once on the first scored run: it reported all claims within tolerance, so the script was not changed and that run is the final one (no claim attempts). README.pdf in the mount was read; it contains no specification details.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T04:26:30Z",
+  "finished_at": "2026-11-02T04:30:00Z"
+}

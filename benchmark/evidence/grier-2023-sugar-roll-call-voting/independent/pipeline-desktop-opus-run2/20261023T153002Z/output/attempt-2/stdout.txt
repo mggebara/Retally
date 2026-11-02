@@ -1,0 +1,96 @@
+Variables in SugarReplicate.dta: cong, cid, totalcont, id, name, pop, over65, nohsgrad, bach, medearn, poverty, medincome, unemp, rural, state, state_no, district, vote, party, ncu, tenure, both, sugcont, houselead, agcom, aglead, dwn 
+Contribution-like variables: sugcont 
+  sugcont: mean=9087.34 sd=10515.24 nonNA=861
+Selected: contributions = sugcont ; ideology = ncu ; tenure = tenure 
+Incumbent sample sizes by construction: both 106; pid 106; dist 104 
+Using incumbent sample: both 
+District FE logit: 
+                 Estimate   Std. Error    z value     Pr(>|z|)
+sugcont_use -3.937427e-04 6.612290e-05 -5.9547099 2.605336e-09
+acu_use      1.425025e-01 3.400285e-02  4.1908984 2.778520e-05
+tenure_use  -2.442966e-01 5.323382e-02 -4.5891240 4.451100e-06
+poverty      1.248874e+00 7.120666e-01  1.7538724 7.945238e-02
+bach         9.846267e-01 4.666231e-01  2.1101112 3.484878e-02
+medincome   -8.016441e-05 2.635853e-04 -0.3041308 7.610283e-01
+over65      -9.572559e-01 8.672487e-01 -1.1037848 2.696865e-01
+agcom       -4.388444e+01 1.280968e+01 -3.4258807 6.128096e-04
+Pseudo R2: 0.6814988 N: 186 
+Incumbent FE logit: 
+                 Estimate   Std. Error     z value     Pr(>|z|)
+sugcont_use  -0.002317166 0.0006801780  -3.4067057 6.575199e-04
+acu_use      -0.301093283 0.1724021568  -1.7464589 8.073124e-02
+tenure_use   -3.686299386 1.2466251133  -2.9570232 3.106247e-03
+poverty      10.415273291 2.7290449974   3.8164535 1.353836e-04
+bach          0.565479464 0.8528357939   0.6630578 5.072935e-01
+medincome     0.003237857 0.0008141786   3.9768389 6.983743e-05
+over65       -7.721773889 2.0635668851  -3.7419547 1.825944e-04
+agcom       -55.396776535 3.4255828880 -16.1714892 8.013764e-59
+Pseudo R2: 0.8521709 N: 106 
+DEVIATION: alternative-window contributions taken from window-named variables if present, else from SugarReplicate_iter1.dta (calendar year) and SugarReplicate_iter2.dta (12 months)
+Variables in SugarReplicate_iter1.dta : cong, cid, totalcont, id, name, pop, over65, nohsgrad, bach, medearn, poverty, medincome, unemp, rural, state, state_no, district, vote, party, ncu, tenure, both, sugcont, houselead, agcom, aglead, dwn 
+Contribution-like variables: sugcont 
+  sugcont: mean=9087.34 sd=10515.24 nonNA=861
+NOTE: SugarReplicate_iter1.dta contribution variable identical to main window
+Incumbent sample sizes by construction: both 106; pid 106; dist 104 
+Using incumbent sample: both 
+Variables in SugarReplicate_iter2.dta : cong, cid, totalcont, id, name, pop, over65, nohsgrad, bach, medearn, poverty, medincome, unemp, rural, state, state_no, district, vote, party, ncu, tenure, both, sugcont, houselead, agcom, aglead, dwn 
+Contribution-like variables: sugcont 
+  sugcont: mean=9087.34 sd=10515.24 nonNA=861
+NOTE: SugarReplicate_iter2.dta contribution variable identical to main window
+Incumbent sample sizes by construction: both 106; pid 106; dist 104 
+Using incumbent sample: both 
+Calendar-year window, district FE: 
+                 Estimate   Std. Error    z value     Pr(>|z|)
+sugcont_use -3.937427e-04 6.612290e-05 -5.9547099 2.605336e-09
+acu_use      1.425025e-01 3.400285e-02  4.1908984 2.778520e-05
+tenure_use  -2.442966e-01 5.323382e-02 -4.5891240 4.451100e-06
+poverty      1.248874e+00 7.120666e-01  1.7538724 7.945238e-02
+bach         9.846267e-01 4.666231e-01  2.1101112 3.484878e-02
+medincome   -8.016441e-05 2.635853e-04 -0.3041308 7.610283e-01
+over65      -9.572559e-01 8.672487e-01 -1.1037848 2.696865e-01
+agcom       -4.388444e+01 1.280968e+01 -3.4258807 6.128096e-04
+Pseudo R2: 0.6814988 N: 186 
+Calendar-year window, incumbent FE: 
+                 Estimate   Std. Error     z value     Pr(>|z|)
+sugcont_use  -0.002317166 0.0006801780  -3.4067057 6.575199e-04
+acu_use      -0.301093283 0.1724021568  -1.7464589 8.073124e-02
+tenure_use   -3.686299386 1.2466251133  -2.9570232 3.106247e-03
+poverty      10.415273291 2.7290449974   3.8164535 1.353836e-04
+bach          0.565479464 0.8528357939   0.6630578 5.072935e-01
+medincome     0.003237857 0.0008141786   3.9768389 6.983743e-05
+over65       -7.721773889 2.0635668851  -3.7419547 1.825944e-04
+agcom       -55.396776535 3.4255828880 -16.1714892 8.013764e-59
+Pseudo R2: 0.8521709 N: 106 
+12-month window, district FE: 
+                 Estimate   Std. Error    z value     Pr(>|z|)
+sugcont_use -3.937427e-04 6.612290e-05 -5.9547099 2.605336e-09
+acu_use      1.425025e-01 3.400285e-02  4.1908984 2.778520e-05
+tenure_use  -2.442966e-01 5.323382e-02 -4.5891240 4.451100e-06
+poverty      1.248874e+00 7.120666e-01  1.7538724 7.945238e-02
+bach         9.846267e-01 4.666231e-01  2.1101112 3.484878e-02
+medincome   -8.016441e-05 2.635853e-04 -0.3041308 7.610283e-01
+over65      -9.572559e-01 8.672487e-01 -1.1037848 2.696865e-01
+agcom       -4.388444e+01 1.280968e+01 -3.4258807 6.128096e-04
+Pseudo R2: 0.6814988 N: 186 
+12-month window, incumbent FE: 
+                 Estimate   Std. Error     z value     Pr(>|z|)
+sugcont_use  -0.002317166 0.0006801780  -3.4067057 6.575199e-04
+acu_use      -0.301093283 0.1724021568  -1.7464589 8.073124e-02
+tenure_use   -3.686299386 1.2466251133  -2.9570232 3.106247e-03
+poverty      10.415273291 2.7290449974   3.8164535 1.353836e-04
+bach          0.565479464 0.8528357939   0.6630578 5.072935e-01
+medincome     0.003237857 0.0008141786   3.9768389 6.983743e-05
+over65       -7.721773889 2.0635668851  -3.7419547 1.825944e-04
+agcom       -55.396776535 3.4255828880 -16.1714892 8.013764e-59
+Pseudo R2: 0.8521709 N: 106 
+RESULT:sugar_contributions_district_fe=-0.0003937427
+RESULT:sugar_contributions_incumbent_fe=-0.002317166
+RESULT:acu_ideology_district_fe=0.1425025
+RESULT:tenure_district_fe=-0.2442966
+RESULT:tenure_incumbent_fe=-3.686299
+RESULT:sugar_contributions_calendar_year_district_fe=-0.0003937427
+RESULT:sugar_contributions_calendar_year_incumbent_fe=-0.002317166
+RESULT:sugar_contributions_12_months_district_fe=-0.0003937427
+RESULT:sugar_contributions_12_months_incumbent_fe=-0.002317166
+RESULT:observations_district_fe=186
+RESULT:observations_incumbent_fe=106

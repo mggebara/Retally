@@ -1,0 +1,36 @@
+# Hanlon et al. (2022) independent reproduction: Table 1 cols 1-4, Table 4 col 1
+suppressPackageStartupMessages({library(haven); library(dplyr); library(fixest)})
+set.seed(42)
+d <- "/Users/matthew/dev/Retally/benchmark/.cache/claude-code/hanlon-2022-aircraft-ip-spillovers/independent/2026-11-01-a/mount/hanlon_2022_aircraft_ip_spillovers/3 replication files/data/dta/"
+a <- read_dta(paste0(d, "airframe_data.dta")) %>% zap_labels() %>% as.data.frame()
+e <- read_dta(paste0(d, "engine_data.dta")) %>% zap_labels() %>% as.data.frame()
+# two-piece linear spline, knot 1926 (Stata mkspline, non-marginal): each coef = segment slope
+spl <- function(df) { df$sp1 <- pmin(df$year, 1926); df$sp2 <- pmax(df$year - 1926, 0); df }
+a <- spl(a); e <- spl(e)
+a <- a %>% filter(type %in% c("fighter", "bomber"), year >= 1918, year <= 1935)
+a$US <- as.integer(a$country == "United States")
+us <- a %>% filter(US == 1)
+usuk <- a %>% filter(country %in% c("United States", "United Kingdom"))
+usuk$sp1US <- usuk$sp1 * usuk$US; usuk$sp2US <- usuk$sp2 * usuk$US
+
+m1 <- feols(ln_wingload ~ sp1 + sp2, data = us, vcov = "hetero")
+m2 <- feols(ln_maxspeed ~ sp1 + sp2, data = us, vcov = "hetero")
+m3 <- feols(ln_wingload ~ sp1US + sp2US + US + sp1 + sp2, data = usuk, vcov = "hetero")
+m4 <- feols(ln_maxspeed ~ sp1US + sp2US + US + sp1 + sp2, data = usuk, vcov = "hetero")
+eu <- e %>% filter(country == "United States")
+m5 <- feols(ln_hp_per_lbs ~ sp1 + sp2 + liquid_cooled, data = eu, vcov = "hetero")
+for (m in list(m1, m2, m3, m4, m5)) print(coeftable(m))
+cat("N:", nobs(m1), nobs(m2), nobs(m3), nobs(m4), nobs(m5), "\n")
+r <- function(n, v) cat(sprintf("RESULT:%s=%.6f\n", n, v))
+r("airframe_wingload_trend_before_1926_us", coef(m1)["sp1"])
+r("airframe_wingload_trend_after_1926_us", coef(m1)["sp2"])
+r("airframe_maxspeed_trend_before_1926_us", coef(m2)["sp1"])
+r("airframe_maxspeed_trend_after_1926_us", coef(m2)["sp2"])
+r("airframe_wingload_trend_before_1926_us_vs_uk", coef(m3)["sp1US"])
+r("airframe_wingload_trend_after_1926_us_vs_uk", coef(m3)["sp2US"])
+r("airframe_maxspeed_trend_before_1926_us_vs_uk", coef(m4)["sp1US"])
+r("airframe_maxspeed_trend_after_1926_us_vs_uk", coef(m4)["sp2US"])
+r("engine_hp_per_weight_trend_before_1926_us", coef(m5)["sp1"])
+r("engine_hp_per_weight_trend_after_1926_us", coef(m5)["sp2"])
+r("observations_airframe_wingload_us", nobs(m1))
+r("observations_engine_us", nobs(m5))

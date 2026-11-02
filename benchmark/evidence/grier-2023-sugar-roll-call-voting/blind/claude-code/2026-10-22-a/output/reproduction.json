@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "entry_id": "grier-2023-sugar-roll-call-voting",
+  "mode": "blind",
+  "run_id": "2026-10-22-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Inflation adjustment: the paper does not state the deflator or base year; contributions are deflated with CPI-U annual averages (2013 = 232.957, 2018 = 251.107) to constant 2013 dollars. A different base year rescales the sugar coefficients (e.g. 2018 dollars would divide them by about 1.078).",
+    "Window-to-file mapping: the readme says the three .dta files hold contributions over the three windows but does not say which is which. SugarReplicate.dta is treated as the baseline (its totalcont is >= the other two for >99% of rows, consistent with the superset window). SugarReplicate_iter2.dta is treated as the calendar-year window and SugarReplicate_iter1.dta as the 12-months-before-vote window, inferred from seasonality: iter1 is larger for 2013 (its window would contain fall 2012 election-season giving) and iter2 is larger for 2018 (calendar 2018 contains the fall 2018 election season). If the mapping is reversed, the calendar_year and 12_months results swap.",
+    "The regressor is totalcont (varies across the three files); sugcont is identical in all three files and is taken to be the original cycle-aggregated CRP measure, not used."
+  ],
+  "notes": "Unconditional fixed-effects logit (fixest::feglm, binomial, district-id fixed effects; equivalent to Stata logit with district dummies, cross-checked with glm + dummies), heteroskedasticity-robust SEs. Outcome = 1 if vote == 'Aye', 0 otherwise (No, Not Voting, No Vote). Controls as listed in Table 1: ACU score (ncu), tenure, poverty, bach, medincome, over65, agcom; no year dummy. Complete cases on model variables. District FE sample: districts whose outcome differs across the two votes, 93 districts / 186 obs. Incumbent FE sample: rows with both == 1 (same member voted in both), 53 switching incumbents / 106 obs; district FE within this sample equals incumbent FE. Sanity checks against non-target, non-withheld Table 1 values (no specification changes were made after seeing them): pseudo R2 0.746 (paper 0.745); district-FE poverty 2.19, bach 1.21, over65 -1.87; incumbent-FE ACU 0.06, poverty 2.24, bach 0.59, over65 -0.39 all match the printed values. Agriculture committee coefficients (-38.8 / -42.1 vs printed -36.3 / -39.3) differ, likely due to quasi-separation. Robust p-values for the incumbent-FE sugar coefficients (0.02 baseline, 0.05 calendar, 0.02 12-month) are larger than the paper reports; SEs are not scored. The readme docx in the data directory was read (documentation, not a script or result file). Attempts 1-3 were exploratory (no RESULT lines).",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T02:42:16Z",
+  "finished_at": "2026-10-22T02:45:54Z"
+}

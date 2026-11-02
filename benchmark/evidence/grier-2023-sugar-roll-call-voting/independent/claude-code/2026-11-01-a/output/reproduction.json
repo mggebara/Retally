@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "entry_id": "grier-2023-sugar-roll-call-voting",
+  "mode": "independent",
+  "run_id": "2026-11-01-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Inflation adjustment: data contributions are nominal integers; 2018 contributions deflated to 2013 dollars with CPI-U annual averages (232.957/251.107). The paper does not state the deflator or base year.",
+    "Window mapping assumed from the paper's order of description: SugarReplicate.dta = baseline window (1 year before vote to end of vote's calendar year), SugarReplicate_iter1.dta = calendar year of vote, SugarReplicate_iter2.dta = 12 months before vote. The contribution variable used is totalcont (the only column that differs across files); sugcont (identical across files) is not used.",
+    "Outcome coded 1 for Aye, 0 otherwise (No, No Vote, Not Voting), following the table note; this yields 94 switching districts, 93 after listwise deletion on missing covariates (186 obs), and 53 switching incumbents (same cid in both Congresses; 106 obs).",
+    "FE logit estimated as unconditional logit with FE dummies (glm, binomial) on units whose outcome varies, mirroring Stata logit with i.FE; robust HC0 p-values printed for information. The agriculture-committee coefficient is not identified (quasi-separation), as in the paper's -36/-39."
+  ],
+  "notes": "Three exploratory runs (variable inspection, window/file comparison, switching-unit counts; no RESULT lines), then one estimation run, which is the final run. No claim or error attempts. Controls: ACU (ncu), tenure, poverty, bach, medincome, over65, agcom. District FE = id (state*100+district); incumbent FE = cid restricted to members appearing in both Congresses. Results match Table 1 closely (pseudo R2 0.746/0.723 vs 0.745/0.721; poverty 2.19, bach 1.21, over65 -1.87 in the district-FE column).",
+  "files_read_outside_mount": [
+    "/Users/matthew/.claude/projects/-Users-matthew-dev-Retally/4331b322-448f-44d6-bc9b-f556920716ab/tool-results/btwa3i056.txt — the harness's saved copy of my own `cat paper.txt` output (the paper text, truncated in the terminal); no other content"
+  ],
+  "started_at": "2026-11-02T04:23:45Z",
+  "finished_at": "2026-11-02T04:26:29Z"
+}

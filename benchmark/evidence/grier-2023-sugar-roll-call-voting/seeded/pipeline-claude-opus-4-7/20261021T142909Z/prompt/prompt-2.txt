@@ -1,0 +1,170 @@
+You are refining R code that reproduces results from an econometrics paper.
+The code RAN SUCCESSFULLY but the reproduced values do not match the
+paper's claims within the allowed tolerance.  Identify what is causing
+the gap and adjust the code to close it.
+
+## Paper
+Title: American Political Science Review (2023) 117, 1, 340–346
+Methodology: ## Methodology Summary
+
+- **Estimation method**: Fixed-effects logit model with two specifications: (1) district fixed effects and (2) incumbent (member) fixed effects. Identification comes only from units whose vote changed across the two amendments (93 vote-switching districts; 53 vote-switching incumbents).
+
+- **Estimating equation**: Dependent variable = 1 if the member voted "aye" on the sugar-reform amendment (against sugar interests), 0 otherwise. Key regressor = inflation-adjusted total sugar-industry contributions to the incumbent (sugar PAC contributions + sugar-industry individual contributions >$200), measured in dollar units (coefficients are unstandardized log-odds, e.g., –0.0006 per dollar in Table 1).
+
+- **Controls / preferred specification**: ACU ideology score (robustness: DW-Nominate), tenure (years in office), poverty rate, % with bachelor's degree, median income, % population >65, and a dummy for House Agriculture Committee membership. Demographics come from U.S. Census; votes from GovTrack; contributions from Center for Responsive Politics.
+
+- **Sample / observations**: Pooled data on the 2013 (Pitts) and 2018 (Foxx) sugar amendment votes. Estimation samples: 186 observations (district FE) and 106 observations (incumbent FE), restricted to units with changed votes by the FE logit. Antisugar contributions excluded because negligible.
+
+- **Standard errors**: Robust standard errors (no clustering specified).
+
+- **Preprocessing**: Contributions aggregated by incumbent and inflation-adjusted; primary time window = one year before vote through end of calendar year of vote.
+
+- **Robustness checks**: (1) Alternative contribution windows — calendar year of vote only (2013; 2018), and 12 months prior to vote date (6/20/12–6/20/13; 5/17/17–5/17/18); (2) Incumbent FE in addition to district FE; (3) Alternative ideology measure (DW-Nominate); (4) Alternative control sets (unemployment, % rural).
+
+- **Evaluation / reporting**: Pseudo-R² reported (0.745 district FE; 0.721 incumbent FE); marginal effects at 50 equally spaced values plotted via the Marhis Stata package with 95% CIs (Figures 1–3). No train/test split or cross-validation (observational causal-inference design).
+
+## Current Code
+```r
+suppressPackageStartupMessages({
+  library(haven)
+  library(survival)
+  library(dplyr)
+})
+
+set.seed(42)
+
+base_path <- "/Users/matthew/dev/Retally/.cache/datasets/grier_2023_sugar_roll_call_voting"
+
+prep <- function(df) {
+  df$yesvote <- ifelse(df$vote == "Aye", 1, 0)
+  df$rsugcont <- ifelse(df$cong == 115, df$totalcont / 1.103, df$totalcont)
+  df
+}
+
+# Use clogit (conditional logit) with id as the stratum to match Stata's logit with i.id FE
+# For units that don't switch, clogit drops them automatically — matching the paper's identification
+
+fit_clogit <- function(df) {
+  clogit(yesvote ~ rsugcont + ncu + tenure + poverty + bach + medincome + over65 + agcom + strata(id),
+         data = df, method = "efron")
+}
+
+# ---- Table 1 ----
+d1 <- prep(read_dta(file.path(base_path, "SugarReplicate.dta")))
+
+# District FE
+m1_dist <- fit_clogit(d1)
+# Incumbent FE: keep both==1
+d1_inc <- d1 %>% filter(both == 1)
+m1_inc <- fit_clogit(d1_inc)
+
+# Observations: full sample size used in the Stata logit (not just switchers)
+# Stata reports N as full sample fed to logit
+n_dist <- nrow(d1)
+n_inc <- nrow(d1_inc)
+
+# ---- Table 3 Row 1 (calendar year) ----
+d2 <- prep(read_dta(file.path(base_path, "SugarReplicate_iter1.dta")))
+m2_dist <- fit_clogit(d2)
+d2_inc <- d2 %>% filter(both == 1)
+m2_inc <- fit_clogit(d2_inc)
+
+# ---- Table 3 Row 2 (12 months before) ----
+d3 <- prep(read_dta(file.path(base_path, "SugarReplicate_iter2.dta")))
+m3_dist <- fit_clogit(d3)
+d3_inc <- d3 %>% filter(both == 1)
+m3_inc <- fit_clogit(d3_inc)
+
+getc <- function(m, v) as.numeric(coef(m)[v])
+
+cat(sprintf("RESULT:sugar_contributions_district_fe=%.6f\n", getc(m1_dist, "rsugcont")))
+cat(sprintf("RESULT:sugar_contributions_incumbent_fe=%.6f\n", getc(m1_inc, "rsugcont")))
+cat(sprintf("RESULT:acu_ideology_district_fe=%.6f\n", getc(m1_dist, "ncu")))
+cat(sprintf("RESULT:tenure_district_fe=%.6f\n", getc(m1_dist, "tenure")))
+cat(sprintf("RESULT:tenure_incumbent_fe=%.6f\n", getc(m1_inc, "tenure")))
+cat(sprintf("RESULT:sugar_contributions_calendar_year_district_fe=%.6f\n", getc(m2_dist, "rsugcont")))
+cat(sprintf("RESULT:sugar_contributions_calendar_year_incumbent_fe=%.6f\n", getc(m2_inc, "rsugcont")))
+cat(sprintf("RESULT:sugar_contributions_12_months_district_fe=%.6f\n", getc(m3_dist, "rsugcont")))
+cat(sprintf("RESULT:sugar_contributions_12_months_incumbent_fe=%.6f\n", getc(m3_inc, "rsugcont")))
+cat(sprintf("RESULT:observations_district_fe=%d\n", m1_dist$n))
+cat(sprintf("RESULT:observations_incumbent_fe=%d\n", m1_inc$n))
+```
+
+## What the code produced
+  sugar_contributions_district_fe = -9.1e-05
+  sugar_contributions_incumbent_fe = -6e-05
+  acu_ideology_district_fe = 0.016557
+  tenure_district_fe = -0.017389
+  tenure_incumbent_fe = -0.072261
+  sugar_contributions_calendar_year_district_fe = -0.000105
+  sugar_contributions_calendar_year_incumbent_fe = -7.4e-05
+  sugar_contributions_12_months_district_fe = -7.8e-05
+  sugar_contributions_12_months_incumbent_fe = -4.5e-05
+  observations_district_fe = 860.0
+  observations_incumbent_fe = 612.0
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+RESULT:sugar_contributions_district_fe=-0.000091
+RESULT:sugar_contributions_incumbent_fe=-0.000060
+RESULT:acu_ideology_district_fe=0.016557
+RESULT:tenure_district_fe=-0.017389
+RESULT:tenure_incumbent_fe=-0.072261
+RESULT:sugar_contributions_calendar_year_district_fe=-0.000105
+RESULT:sugar_contributions_calendar_year_incumbent_fe=-0.000074
+RESULT:sugar_contributions_12_months_district_fe=-0.000078
+RESULT:sugar_contributions_12_months_incumbent_fe=-0.000045
+RESULT:observations_district_fe=860
+RESULT:observations_incumbent_fe=612
+```
+
+## Claims still failing
+1. sugar_contributions_district_fe: paper claims -0.0006 logit coefficient per real dollar of sugar-industry contributions (coefficient), your code produced -9.1e-05, tolerance 0.08333, gap 84.83% relative
+2. sugar_contributions_incumbent_fe: paper claims -0.0004 logit coefficient per real dollar of sugar-industry contributions (coefficient), your code produced -6e-05, tolerance 0.125, gap 85.00% relative
+3. acu_ideology_district_fe: paper claims 0.2 logit coefficient per ACU point (coefficient), your code produced 0.016557, tolerance 0.025, gap 91.72% relative
+4. tenure_district_fe: paper claims -0.3 logit coefficient per unit of tenure (coefficient), your code produced -0.017389, tolerance 0.02, gap 94.20% relative
+5. tenure_incumbent_fe: paper claims -1.43 logit coefficient per unit of tenure (coefficient), your code produced -0.072261, tolerance 0.02, gap 94.95% relative
+6. sugar_contributions_calendar_year_district_fe: paper claims -0.0006 logit coefficient per real dollar of sugar-industry contributions (coefficient), your code produced -0.000105, tolerance 0.08333, gap 82.50% relative
+7. sugar_contributions_calendar_year_incumbent_fe: paper claims -0.0005 logit coefficient per real dollar of sugar-industry contributions (coefficient), your code produced -7.4e-05, tolerance 0.1, gap 85.20% relative
+8. sugar_contributions_12_months_district_fe: paper claims -0.0006 logit coefficient per real dollar of sugar-industry contributions (coefficient), your code produced -7.8e-05, tolerance 0.08333, gap 87.00% relative
+9. sugar_contributions_12_months_incumbent_fe: paper claims -0.0003 logit coefficient per real dollar of sugar-industry contributions (coefficient), your code produced -4.5e-05, tolerance 0.1667, gap 85.00% relative
+10. observations_district_fe: paper claims 186.0 observations (district-votes) (other), your code produced 860, tolerance 0.01, gap 362.37% relative
+11. observations_incumbent_fe: paper claims 106.0 observations (incumbent-votes) (other), your code produced 612, tolerance 0.01, gap 477.36% relative
+
+## Previous attempts (oldest first)
+  Attempt 1: sugar_contributions_district_fe=-9.1e-05, sugar_contributions_incumbent_fe=-6e-05, acu_ideology_district_fe=0.016557, tenure_district_fe=-0.017389, tenure_incumbent_fe=-0.072261, sugar_contributions_calendar_year_district_fe=-0.000105, sugar_contributions_calendar_year_incumbent_fe=-7.4e-05, sugar_contributions_12_months_district_fe=-7.8e-05, sugar_contributions_12_months_incumbent_fe=-4.5e-05, observations_district_fe=860.0, observations_incumbent_fe=612.0
+
+These attempts have already been tried.  Do not repeat a strategy
+that has already produced the same values.
+
+## Task
+Adjust the code minimally to close the gap on the failing claims.
+Prefer changes that align more closely with the paper's stated methodology:
+re-read the methodology summary above and check the model specification,
+covariate selection, fixed effects, clustering, and seed against what the
+paper actually specifies.  In econometrics papers, common gap-closers are:
+  - getting the cluster-robust SE right (vcovCL / cluster_var argument)
+  - matching the paper's exact fixed-effects structure
+  - using the same sample-restriction filters the paper applied
+  - matching the paper's weighting scheme (weights= argument)
+
+## Deviation reporting
+If you must change something the paper did NOT specify in order to close
+the gap, emit a ``DEVIATION:`` line via cat() describing the change:
+
+    cat('DEVIATION: Used HC1 robust SE because the paper does not specify but the default did not converge\n')
+
+## When to give up
+If after re-reading the methodology and the previous attempts you judge
+the gap cannot be closed without unreasonable deviation, return the SAME
+R CODE you were given, BYTE-FOR-BYTE unchanged.  The pipeline will record
+the claim as unreproducible.
+
+## Output convention (unchanged)
+Emit every metric as ``cat('RESULT:<name>=<value>\n')``.
+The dataset is a directory tree at '/Users/matthew/dev/Retally/.cache/datasets/grier_2023_sugar_roll_call_voting' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+No network, no system().  set.seed(42).
+
+Output ONLY the R code — no explanation, no markdown fences.

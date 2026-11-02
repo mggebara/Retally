@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "montero-2022-cooperative-property-rights",
+  "mode": "independent",
+  "run_id": "2026-10-21-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "IQR outcome computed per property x survey round over all surveyed workers (Stata-style percentiles, R quantile type 2); the paper's 'at least five members represented' restriction is not applied as a filter, since applying it (num_members>=5 or >=5 surveyed workers) does not give the reported 327/118 observations, while no filter reproduces them and the reported dependent-variable means (38.63, 37.52) exactly.",
+    "Bandwidth implemented as strict |own_amt - 500| < bw; the inclusive version gives 4781 observations instead of the reported 4770."
+  ],
+  "notes": "Data: ehpm_incomemodule_wreform.dta only (README.pdf not opened). Running variable own_amt - 500 (former owner's cumulative holdings); Above500 from the data (consistent with own_amt >= 500). Spec per eq. (1) and the Table 5 note: OLS of hh_income_pc (levels, worker-level) or within property-year IQR of hh_income_pc on Above500 + rv + rv:Above500 (local linear, separate slopes), uniform kernel, survey-year (year) fixed effects, SEs clustered by former owner (Expropretario_ISTA). 'Properties' = match_id x survey year. All sample counts (4770/1583 obs, 327/118 properties, 98/36 clusters) and all four dependent-variable means match Table 5 exactly. Coefficients: levels 82.25 (bw300) / 71.83 (bw150) vs claimed 60.49 / 52.79; IQR -56.42 / -63.73 vs claimed -42.97 / -51.79 -- larger in magnitude but same sign and within about one reported SE. After the first scored run I ran check_attempt once; it reported all claims within tolerance, so the script was not changed and that run is the final (no claim attempt recorded). Attempts 1-3 were exploratory (variable listing, identifier/bandwidth/IQR-definition checks) and print no RESULT lines. Unresolved: the source of the remaining coefficient gap (possible extra controls, a different FE definition, or a different IQR construction) could not be pinned down from the paper text.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T02:06:09Z",
+  "finished_at": "2026-10-22T02:09:00Z"
+}

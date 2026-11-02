@@ -1,0 +1,67 @@
+
+=== bandwidth 300 ===
+OLS estimation, Dep. Var.: hh_income_pc
+Observations: 4,770
+Fixed-effects: yr: 12
+Standard-errors: Clustered (owner) 
+        Estimate Std. Error   t value Pr(>|t|)    
+above  82.251265  44.358161  1.854253 0.066741 .  
+dist    0.062202   0.047578  1.307374 0.194176    
+dist_a -0.183264   0.212240 -0.863476 0.390006    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 68.3     Adj. R2: 0.444435
+             Within R2: 0.024038
+OLS estimation, Dep. Var.: iqr
+Observations: 327
+Fixed-effects: yr: 12
+Standard-errors: Clustered (owner) 
+         Estimate Std. Error   t value Pr(>|t|)    
+above  -56.423095  23.574122 -2.393434 0.018616 *  
+dist    -0.028008   0.050239 -0.557505 0.578467    
+dist_a   0.292514   0.166584  1.755958 0.082252 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 70.8     Adj. R2: 0.172569
+             Within R2: 0.018286
+levels: N=4770 properties(prop-year)=327 clusters=98 meanDV=73.59
+iqr:    N=327 clusters=98 meanDV=38.63  (cells with >=5 workers: 128)
+
+=== bandwidth 150 ===
+OLS estimation, Dep. Var.: hh_income_pc
+Observations: 1,583
+Fixed-effects: yr: 12
+Standard-errors: Clustered (owner) 
+        Estimate Std. Error  t value Pr(>|t|) 
+above  71.829290  55.813013 1.286963  0.20655 
+dist    0.030285   0.117937 0.256791  0.79884 
+dist_a  0.092674   0.408389 0.226926  0.82180 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 60.2     Adj. R2: 0.573073
+             Within R2: 0.049112
+OLS estimation, Dep. Var.: iqr
+Observations: 118
+Fixed-effects: yr: 12
+Standard-errors: Clustered (owner) 
+         Estimate Std. Error   t value Pr(>|t|)    
+above  -63.727151  31.528035 -2.021285  0.05095 .  
+dist    -0.072542   0.195135 -0.371753  0.71232    
+dist_a   0.567736   0.397245  1.429184  0.16182    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 69.3     Adj. R2: -0.010221
+             Within R2:  0.03373 
+levels: N=1583 properties(prop-year)=118 clusters=36 meanDV=74.81
+iqr:    N=118 clusters=36 meanDV=37.52  (cells with >=5 workers: 45)
+DEVIATION: IQR sample uses every property-survey-round cell inside the bandwidth (the paper's 'at least five members' filter, applied literally per cell, would leave far fewer units than the properties the paper reports); bandwidth inclusion is strict (|dist| < bw).
+RESULT:earnings_level_above500_bw300=82.251265
+RESULT:earnings_level_above500_bw150=71.829290
+RESULT:earnings_iqr_above500_bw300=-56.423095
+RESULT:earnings_iqr_above500_bw150=-63.727151
+RESULT:n_obs_earnings_level_bw300=4770
+RESULT:n_obs_earnings_level_bw150=1583
+RESULT:n_obs_earnings_iqr_bw300=327
+RESULT:n_obs_earnings_iqr_bw150=118
+RESULT:n_clusters_bw300=98
+RESULT:n_clusters_bw150=36

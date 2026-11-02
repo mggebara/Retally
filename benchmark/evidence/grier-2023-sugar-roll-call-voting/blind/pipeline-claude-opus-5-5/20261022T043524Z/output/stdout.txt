@@ -1,0 +1,77 @@
+Call:
+coxph(formula = Surv(1 + 0 * vote, vote) ~ sugcont + ncu + tenure + 
+    poverty + bach + medincome + over65 + agcom + strata(strat), 
+    data = dd, method = "exact")
+
+  n= 172, number of events= 86 
+
+                coef  exp(coef)   se(coef)      z Pr(>|z|)   
+sugcont   -1.877e-04  9.998e-01  5.921e-05 -3.171  0.00152 **
+ncu        6.885e-02  1.071e+00  2.727e-02  2.525  0.01157 * 
+tenure    -1.158e-01  8.907e-01  4.582e-02 -2.526  0.01153 * 
+poverty    6.083e-01  1.837e+00  3.604e-01  1.688  0.09145 . 
+bach       5.035e-01  1.654e+00  3.985e-01  1.263  0.20647   
+medincome -4.366e-05  1.000e+00  1.426e-04 -0.306  0.75943   
+over65    -4.313e-01  6.496e-01  5.121e-01 -0.842  0.39959   
+agcom     -1.969e+01  2.804e-09  1.340e+04 -0.001  0.99883   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+          exp(coef) exp(-coef) lower .95 upper .95
+sugcont   9.998e-01  1.000e+00    0.9997    0.9999
+ncu       1.071e+00  9.335e-01    1.0155    1.1301
+tenure    8.907e-01  1.123e+00    0.8142    0.9744
+poverty   1.837e+00  5.443e-01    0.9066    3.7233
+bach      1.654e+00  6.044e-01    0.7576    3.6131
+medincome 1.000e+00  1.000e+00    0.9997    1.0002
+over65    6.496e-01  1.539e+00    0.2381    1.7723
+agcom     2.804e-09  3.566e+08    0.0000       Inf
+
+Concordance= 0.919  (se = 0.042 )
+Likelihood ratio test= 79  on 8 df,   p=8e-14
+Wald test            = 12.84  on 8 df,   p=0.1
+Score (logrank) test = 55.16  on 8 df,   p=4e-09
+
+Call:
+coxph(formula = Surv(1 + 0 * vote, vote) ~ sugcont + ncu + tenure + 
+    poverty + bach + medincome + over65 + agcom + strata(strat), 
+    data = dd, method = "exact")
+
+  n= 96, number of events= 48 
+
+                coef  exp(coef)   se(coef)      z Pr(>|z|)
+sugcont   -1.137e-03  9.989e-01  7.929e-04 -1.433    0.152
+ncu       -1.484e-01  8.621e-01  1.660e-01 -0.894    0.371
+tenure    -1.827e+00  1.609e-01  1.402e+00 -1.303    0.193
+poverty    5.108e+00  1.654e+02  3.526e+00  1.449    0.147
+bach       2.853e-01  1.330e+00  8.061e-01  0.354    0.723
+medincome  1.589e-03  1.002e+00  1.198e-03  1.326    0.185
+over65    -3.749e+00  2.354e-02  3.542e+00 -1.058    0.290
+agcom     -2.524e+01  1.098e-11  2.438e+04 -0.001    0.999
+
+          exp(coef) exp(-coef) lower .95 upper .95
+sugcont   9.989e-01  1.001e+00 9.973e-01 1.000e+00
+ncu       8.621e-01  1.160e+00 6.227e-01 1.194e+00
+tenure    1.609e-01  6.213e+00 1.031e-02 2.513e+00
+poverty   1.654e+02  6.047e-03 1.648e-01 1.659e+05
+bach      1.330e+00  7.518e-01 2.740e-01 6.457e+00
+medincome 1.002e+00  9.984e-01 9.992e-01 1.004e+00
+over65    2.354e-02  4.249e+01 2.273e-05 2.437e+01
+agcom     1.098e-11  9.108e+10 0.000e+00       Inf
+
+Concordance= 0.958  (se = 0.041 )
+Likelihood ratio test= 55.69  on 8 df,   p=3e-09
+Wald test            = 4.04  on 8 df,   p=0.9
+Score (logrank) test = 32.89  on 8 df,   p=6e-05
+
+RESULT:sugar_contributions_district_fe=-0.0001877371352
+RESULT:sugar_contributions_incumbent_fe=-0.001136561622
+RESULT:acu_ideology_district_fe=0.06885110128
+RESULT:tenure_district_fe=-0.115758368
+RESULT:tenure_incumbent_fe=-1.826677133
+RESULT:sugar_contributions_calendar_year_district_fe=-0.0001877371352
+RESULT:sugar_contributions_calendar_year_incumbent_fe=-0.001136561622
+RESULT:sugar_contributions_12_months_district_fe=-0.0001877371352
+RESULT:sugar_contributions_12_months_incumbent_fe=-0.001136561622
+RESULT:observations_district_fe=172
+RESULT:observations_incumbent_fe=96

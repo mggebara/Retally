@@ -1,0 +1,11 @@
+library(haven); library(dplyr)
+D <- "/Users/matthew/dev/Retally/benchmark/.cache/claude-code/hanlon-2022-aircraft-ip-spillovers/independent/2026-10-21-b/mount/hanlon_2022_aircraft_ip_spillovers/3 replication files/data/dta/"
+a <- read_dta(paste0(D,"airframe_data.dta")); e <- read_dta(paste0(D,"engine_data.dta"))
+print(str(a)); print(table(a$country, useNA="a")); print(table(a$type, useNA="a")); print(table(a$year))
+print(a %>% group_by(country,type) %>% summarise(n=n(), nwl=sum(!is.na(ln_wingload)), nms=sum(!is.na(ln_maxspeed)), miny=min(year), maxy=max(year)), n=50)
+print(a %>% filter(year>=1918, year<=1935) %>% group_by(country,type) %>% summarise(n=n(), nwl=sum(!is.na(ln_wingload)), nms=sum(!is.na(ln_maxspeed))), n=50)
+print(summary(a$count)); print(head(as.data.frame(a),10))
+print(str(e)); print(table(e$country, e$year))
+print(e %>% group_by(country) %>% summarise(n=n(), nw=sum(!is.na(ln_hp_per_lbs)), miny=min(year), maxy=max(year)))
+print(e %>% filter(year>=1918, year<=1935) %>% group_by(country) %>% summarise(n=n(), nw=sum(!is.na(ln_hp_per_lbs))))
+print(summary(e$count)); print(head(as.data.frame(e),10))

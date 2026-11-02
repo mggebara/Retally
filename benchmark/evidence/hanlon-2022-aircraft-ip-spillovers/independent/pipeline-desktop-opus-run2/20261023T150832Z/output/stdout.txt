@@ -1,0 +1,81 @@
+Airframe country values:
+
+         Japan United Kingdom  United States 
+           134            103            556 
+Airframe type values:
+
+ bomber fighter   recon trainer 
+    156     238     260     139 
+Engine country values:
+
+       Germany          Italy United Kingdom  United States 
+            79             76             38             85 
+OLS estimation, Dep. Var.: ln_wingload
+Observations: 116
+Standard-errors: Heteroskedasticity-robust 
+            Estimate Std. Error  t value  Pr(>|t|)    
+(Intercept) 2.306961   0.028415 81.18790 < 2.2e-16 ***
+pre         0.013439   0.005638  2.38378  0.018803 *  
+post        0.074146   0.005687 13.03872 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.132033   Adj. R2: 0.768784
+OLS estimation, Dep. Var.: ln_maxspeed
+Observations: 174
+Standard-errors: Heteroskedasticity-robust 
+             Estimate Std. Error    t value  Pr(>|t|)    
+(Intercept)  4.829088   0.029070 166.121904 < 2.2e-16 ***
+pre         -0.000777   0.006265  -0.124055   0.90142    
+post         0.066793   0.005954  11.217307 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.174614   Adj. R2: 0.546834
+OLS estimation, Dep. Var.: ln_wingload
+Observations: 165
+Standard-errors: Heteroskedasticity-robust 
+            Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept) 2.293591   0.031541 72.718166  < 2.2e-16 ***
+US          0.013369   0.042556  0.314154 7.5382e-01    
+pre         0.009141   0.006867  1.331012 1.8509e-01    
+post        0.049308   0.008526  5.783345 3.7745e-08 ***
+pre_US      0.004299   0.008905  0.482747 6.2994e-01    
+post_US     0.024838   0.010265  2.419606 1.6665e-02 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.130592   Adj. R2: 0.748461
+OLS estimation, Dep. Var.: ln_maxspeed
+Observations: 233
+Standard-errors: Heteroskedasticity-robust 
+             Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)  4.939397   0.037532 131.60514  < 2.2e-16 ***
+US          -0.110310   0.047551  -2.31984 2.1238e-02 *  
+pre          0.027382   0.006981   3.92260 1.1609e-04 ***
+post         0.036244   0.008276   4.37949 1.8168e-05 ***
+pre_US      -0.028159   0.009398  -2.99634 3.0359e-03 ** 
+post_US      0.030549   0.010211   2.99186 3.0791e-03 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.170141   Adj. R2: 0.552343
+OLS estimation, Dep. Var.: ln_hp_per_lbs
+Observations: 85
+Standard-errors: Heteroskedasticity-robust 
+               Estimate Std. Error    t value   Pr(>|t|)    
+(Intercept)   -0.370940   0.022810 -16.262105  < 2.2e-16 ***
+pre            0.039488   0.008758   4.508625 2.1777e-05 ***
+post          -0.010168   0.004502  -2.258852 2.6580e-02 *  
+liquid_cooled -0.005304   0.031307  -0.169413 8.6589e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.118907   Adj. R2: 0.250909
+RESULT:airframe_wingload_trend_before_1926_us=0.013439
+RESULT:airframe_wingload_trend_after_1926_us=0.074146
+RESULT:airframe_maxspeed_trend_before_1926_us=-0.000777
+RESULT:airframe_maxspeed_trend_after_1926_us=0.066793
+RESULT:airframe_wingload_trend_before_1926_us_vs_uk=0.004299
+RESULT:airframe_wingload_trend_after_1926_us_vs_uk=0.024838
+RESULT:airframe_maxspeed_trend_before_1926_us_vs_uk=-0.028159
+RESULT:airframe_maxspeed_trend_after_1926_us_vs_uk=0.030549
+RESULT:engine_hp_per_weight_trend_before_1926_us=0.039488
+RESULT:engine_hp_per_weight_trend_after_1926_us=-0.010168
+RESULT:observations_airframe_wingload_us=116
+RESULT:observations_engine_us=85

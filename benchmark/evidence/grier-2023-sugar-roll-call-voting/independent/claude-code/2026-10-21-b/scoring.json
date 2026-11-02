@@ -1,0 +1,617 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "sugar_contributions_district_fe",
+      "ground_truth": {
+        "value": -0.0006,
+        "standard_error": null,
+        "unit": "logit coefficient per real dollar of sugar-industry contributions",
+        "claim_type": "coefficient",
+        "location": "Table 1, District fixed effects, Inflation-adjusted sugar contributions",
+        "context": "Table 1 (\"The Determinants of Voting in Favor of Sugar Reform\"), column District fixed effects, row Inflation-adjusted sugar contributions.  Logit; the dependent variable equals 1 for \"aye\" votes on the two reform amendments to the U.S. sugar program (the 2013 Pitts amendment, H. Amdt. 227 to H.R. 1947, and the 2018 Foxx amendment, H. Amdt. 605 to H.R. 2; aye = a vote against sugar interests) and 0 otherwise.  One observation per House district and vote; the two votes are treated as repeated votes on the same issue. Regressor: inflation-adjusted sugar-industry contributions (all sugar-industry PACs plus individual contributions over $200 from people working in the sugar industry, Center for Responsive Politics) to the incumbent, aggregated from one year before the vote through the end of the calendar year of the vote.  Controls: the American Conservative Union ideology score (ACU, 1-100, higher = more conservative), tenure, the district poverty rate, % with a bachelor's degree, median income, % population over 65, and a dummy for membership on the House agriculture committee.  District fixed effects, so only the districts whose vote outcome changed between the two amendments identify the coefficients.  Probability values from robust standard errors; the table prints coefficient (p), p = 0.001, significant at 1%.\n",
+        "decimals": 4,
+        "sample_size": 186
+      },
+      "i4r": {
+        "reproduced_value": -0.0006,
+        "outcome": "matches",
+        "notes": "DP 57 Table 1 col 1 (robust SEs reproduction), -0.0006, p < 0.001.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 5e-05
+      },
+      "row": {
+        "description": "sugar_contributions_district_fe",
+        "claim_type": "coefficient",
+        "claimed": -0.0006,
+        "reproduced": -0.0006282,
+        "tolerance": 0.08333333333333334,
+        "rel_err": 0.04700000000000006,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "printed_precision"
+      },
+      "recomputed": {
+        "result_name": "sugar_contributions_district_fe",
+        "reproduced": -0.0006282,
+        "band_source": "printed_precision",
+        "band_relative": 0.08333333333333334,
+        "band_absolute": 5e-05,
+        "abs_err": 2.8200000000000035e-05,
+        "rel_err": 0.04700000000000006,
+        "margin": 0.5640000000000007,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "sugar_contributions_incumbent_fe",
+      "ground_truth": {
+        "value": -0.0004,
+        "standard_error": null,
+        "unit": "logit coefficient per real dollar of sugar-industry contributions",
+        "claim_type": "coefficient",
+        "location": "Table 1, Incumbent fixed effects, Inflation-adjusted sugar contributions",
+        "context": "Table 1, column Incumbent fixed effects, row Inflation-adjusted sugar contributions.  Same logit, outcome, regressor and controls as sugar_contributions_district_fe, with the sample restricted to incumbents who voted on both amendments (the same member in the district for both votes), so the fixed effects are incumbent fixed effects and only the incumbents who changed their vote identify the coefficients.  Robust standard errors; the table prints p = 0.001, significant at 1%.\n",
+        "decimals": 4,
+        "sample_size": 106
+      },
+      "i4r": {
+        "reproduced_value": -0.0004,
+        "outcome": "matches",
+        "notes": "DP 57 Table 1 col 2, -0.0004, p < 0.001 (the meta-database row's r_coeff \"-.004\" is a slip).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 5e-05
+      },
+      "row": {
+        "description": "sugar_contributions_incumbent_fe",
+        "claim_type": "coefficient",
+        "claimed": -0.0004,
+        "reproduced": -0.00039059,
+        "tolerance": 0.125,
+        "rel_err": 0.023525000000000015,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "printed_precision"
+      },
+      "recomputed": {
+        "result_name": "sugar_contributions_incumbent_fe",
+        "reproduced": -0.00039059,
+        "band_source": "printed_precision",
+        "band_relative": 0.125,
+        "band_absolute": 5e-05,
+        "abs_err": 9.410000000000006e-06,
+        "rel_err": 0.023525000000000015,
+        "margin": 0.18820000000000012,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "acu_ideology_district_fe",
+      "ground_truth": {
+        "value": 0.2,
+        "standard_error": null,
+        "unit": "logit coefficient per ACU point",
+        "claim_type": "coefficient",
+        "location": "Table 1, District fixed effects, ACU",
+        "context": "Table 1, column District fixed effects, row ACU: the American Conservative Union ideology score of the district's representative (1-100, higher = more conservative).  Same district fixed-effects logit as sugar_contributions_district_fe; p = 0.001.\n",
+        "decimals": 2,
+        "sample_size": 186
+      },
+      "i4r": {
+        "reproduced_value": 0.202,
+        "outcome": "matches",
+        "notes": "DP 57 Table 1 col 1, ACU 0.202 (paper prints 0.20).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "acu_ideology_district_fe",
+        "claim_type": "coefficient",
+        "claimed": 0.2,
+        "reproduced": 0.201814,
+        "tolerance": 0.024999999999999998,
+        "rel_err": 0.009069999999999911,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "printed_precision"
+      },
+      "recomputed": {
+        "result_name": "acu_ideology_district_fe",
+        "reproduced": 0.201814,
+        "band_source": "printed_precision",
+        "band_relative": 0.024999999999999998,
+        "band_absolute": 0.005,
+        "abs_err": 0.0018139999999999823,
+        "rel_err": 0.009069999999999911,
+        "margin": 0.36279999999999646,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "tenure_district_fe",
+      "ground_truth": {
+        "value": -0.3,
+        "standard_error": null,
+        "unit": "logit coefficient per unit of tenure",
+        "claim_type": "coefficient",
+        "location": "Table 1, District fixed effects, Tenure",
+        "context": "Table 1, column District fixed effects, row Tenure: the seniority of the district's representative (from the American Conservative Union).  Same district fixed-effects logit as sugar_contributions_district_fe; p = 0.001.\n",
+        "decimals": 2,
+        "sample_size": 186
+      },
+      "i4r": {
+        "reproduced_value": -0.297,
+        "outcome": "matches",
+        "notes": "DP 57 Table 1 col 1, tenure -0.297 (paper prints -0.30).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "tenure_district_fe",
+        "claim_type": "coefficient",
+        "claimed": -0.3,
+        "reproduced": -0.299557,
+        "tolerance": 0.02,
+        "rel_err": 0.0014766666666665706,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "tenure_district_fe",
+        "reproduced": -0.299557,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.006,
+        "abs_err": 0.0004429999999999712,
+        "rel_err": 0.0014766666666665706,
+        "margin": 0.07383333333332853,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "tenure_incumbent_fe",
+      "ground_truth": {
+        "value": -1.43,
+        "standard_error": null,
+        "unit": "logit coefficient per unit of tenure",
+        "claim_type": "coefficient",
+        "location": "Table 1, Incumbent fixed effects, Tenure",
+        "context": "Table 1, column Incumbent fixed effects, row Tenure.  Same incumbent fixed-effects logit as sugar_contributions_incumbent_fe; p = 0.001.\n",
+        "decimals": 2,
+        "sample_size": 106
+      },
+      "i4r": {
+        "reproduced_value": -1.433,
+        "outcome": "matches",
+        "notes": "DP 57 Table 1 col 2, tenure -1.433 (paper prints -1.43).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "tenure_incumbent_fe",
+        "claim_type": "coefficient",
+        "claimed": -1.43,
+        "reproduced": -1.425279,
+        "tolerance": 0.02,
+        "rel_err": 0.0033013986013985842,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "tenure_incumbent_fe",
+        "reproduced": -1.425279,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.0286,
+        "abs_err": 0.004720999999999975,
+        "rel_err": 0.0033013986013985842,
+        "margin": 0.1650699300699292,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "sugar_contributions_calendar_year_district_fe",
+      "ground_truth": {
+        "value": -0.0006,
+        "standard_error": null,
+        "unit": "logit coefficient per real dollar of sugar-industry contributions",
+        "claim_type": "coefficient",
+        "location": "Table 3, 1/1/13-12/31/13 and 1/1/18-12/31/18, District fixed effects",
+        "context": "Table 3 (\"Coefficients of Inflation-Adjusted Sugar Contributions for Different Time Windows around the Votes\"), row 1/1/13-12/31/13 and 1/1/18-12/31/18, column District fixed effects.  The Table 1 column 1 district fixed-effects logit (same outcome, controls and sample) with sugar contributions measured over the calendar year of each vote (2013 and 2018) instead of the baseline window.  Robust standard errors; p = 0.001.\n",
+        "decimals": 4,
+        "sample_size": 186
+      },
+      "i4r": {
+        "reproduced_value": null,
+        "outcome": "not_attempted",
+        "notes": "DP 57 does not report the paper's Table 3; the blanket verdict (perfect reproduction) covers the package, which produces it."
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 5e-05
+      },
+      "row": {
+        "description": "sugar_contributions_calendar_year_district_fe",
+        "claim_type": "coefficient",
+        "claimed": -0.0006,
+        "reproduced": -0.0005712,
+        "tolerance": 0.08333333333333334,
+        "rel_err": 0.047999999999999904,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "printed_precision"
+      },
+      "recomputed": {
+        "result_name": "sugar_contributions_calendar_year_district_fe",
+        "reproduced": -0.0005712,
+        "band_source": "printed_precision",
+        "band_relative": 0.08333333333333334,
+        "band_absolute": 5e-05,
+        "abs_err": 2.879999999999994e-05,
+        "rel_err": 0.047999999999999904,
+        "margin": 0.5759999999999988,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "sugar_contributions_calendar_year_incumbent_fe",
+      "ground_truth": {
+        "value": -0.0005,
+        "standard_error": null,
+        "unit": "logit coefficient per real dollar of sugar-industry contributions",
+        "claim_type": "coefficient",
+        "location": "Table 3, 1/1/13-12/31/13 and 1/1/18-12/31/18, Incumbent fixed effects",
+        "context": "Table 3, row 1/1/13-12/31/13 and 1/1/18-12/31/18, column Incumbent fixed effects.  The Table 1 column 2 incumbent fixed-effects logit (same-incumbent sample) with sugar contributions measured over the calendar year of each vote.  Robust standard errors; p = 0.001.\n",
+        "decimals": 4,
+        "sample_size": 106
+      },
+      "i4r": {
+        "reproduced_value": null,
+        "outcome": "not_attempted",
+        "notes": "DP 57 does not report the paper's Table 3."
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 5e-05
+      },
+      "row": {
+        "description": "sugar_contributions_calendar_year_incumbent_fe",
+        "claim_type": "coefficient",
+        "claimed": -0.0005,
+        "reproduced": -0.00056128,
+        "tolerance": 0.1,
+        "rel_err": 0.12256000000000007,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "printed_precision"
+      },
+      "recomputed": {
+        "result_name": "sugar_contributions_calendar_year_incumbent_fe",
+        "reproduced": -0.00056128,
+        "band_source": "printed_precision",
+        "band_relative": 0.1,
+        "band_absolute": 5e-05,
+        "abs_err": 6.128000000000004e-05,
+        "rel_err": 0.12256000000000007,
+        "margin": 1.2256000000000007,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=-0.00056128 vs claimed=-0.0005 (relative error 12.26%, tolerance 10.00%, half a unit in the printed place (4 decimals: ±5e-05))."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "sugar_contributions_12_months_district_fe",
+      "ground_truth": {
+        "value": -0.0006,
+        "standard_error": null,
+        "unit": "logit coefficient per real dollar of sugar-industry contributions",
+        "claim_type": "coefficient",
+        "location": "Table 3, 6/20/12-6/20/13 and 5/17/17-5/17/18, District fixed effects",
+        "context": "Table 3, row 6/20/12-6/20/13 and 5/17/17-5/17/18, column District fixed effects.  The Table 1 column 1 district fixed-effects logit with sugar contributions measured over the 12 months before each vote up to the date of the vote.  Robust standard errors; p = 0.001.\n",
+        "decimals": 4,
+        "sample_size": 186
+      },
+      "i4r": {
+        "reproduced_value": null,
+        "outcome": "not_attempted",
+        "notes": "DP 57 does not report the paper's Table 3."
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 5e-05
+      },
+      "row": {
+        "description": "sugar_contributions_12_months_district_fe",
+        "claim_type": "coefficient",
+        "claimed": -0.0006,
+        "reproduced": -0.00059512,
+        "tolerance": 0.08333333333333334,
+        "rel_err": 0.008133333333333279,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "printed_precision"
+      },
+      "recomputed": {
+        "result_name": "sugar_contributions_12_months_district_fe",
+        "reproduced": -0.00059512,
+        "band_source": "printed_precision",
+        "band_relative": 0.08333333333333334,
+        "band_absolute": 5e-05,
+        "abs_err": 4.879999999999967e-06,
+        "rel_err": 0.008133333333333279,
+        "margin": 0.09759999999999933,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "sugar_contributions_12_months_incumbent_fe",
+      "ground_truth": {
+        "value": -0.0003,
+        "standard_error": null,
+        "unit": "logit coefficient per real dollar of sugar-industry contributions",
+        "claim_type": "coefficient",
+        "location": "Table 3, 6/20/12-6/20/13 and 5/17/17-5/17/18, Incumbent fixed effects",
+        "context": "Table 3, row 6/20/12-6/20/13 and 5/17/17-5/17/18, column Incumbent fixed effects.  The Table 1 column 2 incumbent fixed-effects logit with sugar contributions measured over the 12 months before each vote up to the date of the vote.  Robust standard errors; p = 0.003.\n",
+        "decimals": 4,
+        "sample_size": 106
+      },
+      "i4r": {
+        "reproduced_value": null,
+        "outcome": "not_attempted",
+        "notes": "DP 57 does not report the paper's Table 3."
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 5e-05
+      },
+      "row": {
+        "description": "sugar_contributions_12_months_incumbent_fe",
+        "claim_type": "coefficient",
+        "claimed": -0.0003,
+        "reproduced": -0.00031494,
+        "tolerance": 0.16666666666666669,
+        "rel_err": 0.04980000000000006,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "printed_precision"
+      },
+      "recomputed": {
+        "result_name": "sugar_contributions_12_months_incumbent_fe",
+        "reproduced": -0.00031494,
+        "band_source": "printed_precision",
+        "band_relative": 0.16666666666666669,
+        "band_absolute": 5e-05,
+        "abs_err": 1.4940000000000016e-05,
+        "rel_err": 0.04980000000000006,
+        "margin": 0.2988000000000003,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "observations_district_fe",
+      "ground_truth": {
+        "value": 186.0,
+        "standard_error": null,
+        "unit": "observations (district-votes)",
+        "claim_type": "other",
+        "location": "Table 1, District fixed effects, Observations",
+        "context": "Observations in the district fixed-effects logit (Table 1 column 1; also Table 3 column 1): the vote-switching districts times the two votes.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 186.0,
+        "outcome": "matches",
+        "notes": "DP 57 text, \"effective number of observations for model 1 and 3 is 186\".",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "observations_district_fe",
+        "claim_type": "other",
+        "claimed": 186.0,
+        "reproduced": 186.0,
+        "tolerance": 0.01,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "observations_district_fe",
+        "reproduced": 186.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 1.86,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "observations_incumbent_fe",
+      "ground_truth": {
+        "value": 106.0,
+        "standard_error": null,
+        "unit": "observations (incumbent-votes)",
+        "claim_type": "other",
+        "location": "Table 1, Incumbent fixed effects, Observations",
+        "context": "Observations in the incumbent fixed-effects logit (Table 1 column 2; also Table 3 column 2): the incumbents who voted on both amendments and changed their vote, times the two votes.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 106.0,
+        "outcome": "matches",
+        "notes": "DP 57 text, \"that for model 2 and 4 is 106\".",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "observations_incumbent_fe",
+        "claim_type": "other",
+        "claimed": 106.0,
+        "reproduced": 106.0,
+        "tolerance": 0.01,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "observations_incumbent_fe",
+        "reproduced": 106.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 1.06,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 11,
+    "row_passed": 10,
+    "recomputed_passed": 10,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "grier-2023-sugar-roll-call-voting",
+    "mode": "independent",
+    "reproducer": "claude-code",
+    "label": "claude-code",
+    "model": null,
+    "oracle": false,
+    "run": "2026-10-21-b",
+    "results_file": "claude-code-7papers-all-modes-2026-10-21.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/claude-code/20261022T021417Z",
+    "run_dir": "benchmark/reproductions/grier-2023-sugar-roll-call-voting/independent/2026-10-21-b",
+    "date": "2026-10-22T02:09:30Z",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 11,
+    "final": 10,
+    "first_scored": 10,
+    "first_scored_index": 2,
+    "first_attempt": 0,
+    "n_refinements": 0,
+    "n_error_refinements": 0,
+    "n_claim_refinements": 0,
+    "n_executions": 3,
+    "n_files_stripped": 1,
+    "agrees_with_i4r": true,
+    "deviations_manifest": [
+      "Inflation adjustment done in-script: 115th-Congress (2018) contributions multiplied by CPI-U 2013/2018 annual-average ratio (232.957/251.107), i.e. expressed in 2013 dollars. The paper does not state the deflator or base year; the base year only rescales the contribution coefficient.",
+      "Robust (HC0) standard errors are printed as diagnostics only; HC0 is near-singular for two observations because the agriculture-committee coefficient diverges (quasi-separation), as in the paper's -36.3/-39.3."
+    ],
+    "deviations_stdout": [],
+    "notes": "Two exploratory runs (no RESULT lines) identified the data: id = district (state_no + district), y = 1 if vote == 'Aye' (No / Not Voting / No Vote = 0), both == 1 marks the same incumbent in both Congresses, ncu = ACU score. The three .dta files differ only in totalcont: SugarReplicate.dta = baseline window (1 year before the vote through end of the vote's calendar year; largest sums), _iter1 = calendar year of the vote, _iter2 = 12 months before the vote (identified from window nesting, e.g. pre-vote 2012 money appears in _iter2 but not _iter1). sugcont (identical across files, likely the original cycle-aggregated measure) is not used. Model: dummy-variable logit (glm binomial with factor(id)) of y on sugar contributions, ACU, tenure, poverty, bachelor's share, median income, over-65 share and agriculture-committee dummy, on districts observed in both votes whose vote switched (94 switchers, 1 dropped for a missing value -> 93 districts, 186 obs); incumbent version restricts to both == 1 (53 incumbents, 106 obs). Table 1 is matched closely: pseudo R2 0.746 vs 0.745 (district) and 0.721 vs 0.721 (incumbent), and every printed control coefficient matches. After the final run I compared results with the claims via check_attempt; only sugar_contributions_calendar_year_incumbent_fe is off (-0.00056 vs -0.0005). I did not change the script afterwards: re-basing to 2018 dollars would fix that number but push the calendar-year district coefficient to about -0.00053 against a claimed -0.0006, and there is no methodological reason to prefer it. So the final run is the only scored run and there are no claim attempts.",
+    "files_read_outside_mount": [],
+    "paper_text": "paper.txt",
+    "complete": true,
+    "missing": []
+  }
+}

@@ -1,0 +1,204 @@
+You are fixing R code that was generated to reproduce results from an econometrics paper.
+
+## Original Code
+```r
+set.seed(42)
+
+suppressPackageStartupMessages({
+  library(haven)
+  library(dplyr)
+  library(survival)
+  library(sandwich)
+  library(lmtest)
+})
+
+data_path <- "/Users/matthew/dev/Retally/.cache/datasets/grier_2023_sugar_roll_call_voting.script-free/SugarReplicate.dta"
+df <- read_dta(data_path)
+
+cat("Columns:", paste(names(df), collapse=", "), "\n")
+cat("Nrow:", nrow(df), "\n")
+cat("Unique cong:", paste(unique(df$cong), collapse=", "), "\n")
+
+# Check types
+cat("Class of state:", class(df$state), "\n")
+cat("Class of district:", class(df$district), "\n")
+cat("Class of cid:", class(df$cid), "\n")
+
+# Convert potential labelled/character columns
+to_chr <- function(x) {
+  if (inherits(x, "haven_labelled")) return(as.character(haven::as_factor(x)))
+  as.character(x)
+}
+
+df$district_id <- paste(to_chr(df$state), to_chr(df$district), sep="_")
+df$incumbent_id <- to_chr(df$cid)
+
+# Ensure numeric for all model vars
+num_vars <- c("vote", "sugcont", "ncu", "tenure", "poverty", "bach", "medincome", "over65", "agcom")
+for (v in num_vars) {
+  if (v %in% names(df)) df[[v]] <- as.numeric(df[[v]])
+}
+
+run_clogit <- function(data, fe_var, sug_var) {
+  f <- as.formula(paste0("vote ~ ", sug_var,
+                         " + ncu + tenure + poverty + bach + medincome + over65 + agcom + strata(", fe_var, ")"))
+  tryCatch(clogit(f, data = data), error = function(e) { cat("Error:", conditionMessage(e), "\n"); NULL })
+}
+
+m_district <- run_clogit(df, "district_id", "sugcont")
+cat("\n--- District FE (headline) ---\n")
+if (!is.null(m_district)) print(summary(m_district))
+
+inc_counts <- df %>% group_by(incumbent_id) %>% summarise(n = n())
+both_inc <- inc_counts$incumbent_id[inc_counts$n == 2]
+df_inc <- df %>% filter(incumbent_id %in% both_inc)
+
+m_incumbent <- run_clogit(df_inc, "incumbent_id", "sugcont")
+cat("\n--- Incumbent FE (headline) ---\n")
+if (!is.null(m_incumbent)) print(summary(m_incumbent))
+
+n_district_used <- if (!is.null(m_district)) m_district$n else NA
+n_incumbent_used <- if (!is.null(m_incumbent)) m_incumbent$n else NA
+
+path_iter1 <- "/Users/matthew/dev/Retally/.cache/datasets/grier_2023_sugar_roll_call_voting.script-free/SugarReplicate_iter1.dta"
+path_iter2 <- "/Users/matthew/dev/Retally/.cache/datasets/grier_2023_sugar_roll_call_voting.script-free/SugarReplicate_iter2.dta"
+
+df1 <- read_dta(path_iter1)
+df2 <- read_dta(path_iter2)
+
+for (v in num_vars) {
+  if (v %in% names(df1)) df1[[v]] <- as.numeric(df1[[v]])
+  if (v %in% names(df2)) df2[[v]] <- as.numeric(df2[[v]])
+}
+
+df1$district_id <- paste(to_chr(df1$state), to_chr(df1$district), sep="_")
+df1$incumbent_id <- to_chr(df1$cid)
+df2$district_id <- paste(to_chr(df2$state), to_chr(df2$district), sep="_")
+df2$incumbent_id <- to_chr(df2$cid)
+
+cat("\nMean sugcont base:", mean(df$sugcont, na.rm=TRUE), "\n")
+cat("Mean sugcont iter1:", mean(df1$sugcont, na.rm=TRUE), "\n")
+cat("Mean sugcont iter2:", mean(df2$sugcont, na.rm=TRUE), "\n")
+
+m_district_iter1 <- run_clogit(df1, "district_id", "sugcont")
+m_district_iter2 <- run_clogit(df2, "district_id", "sugcont")
+
+df1_inc <- df1 %>% filter(incumbent_id %in% both_inc)
+df2_inc <- df2 %>% filter(incumbent_id %in% both_inc)
+
+m_incumbent_iter1 <- run_clogit(df1_inc, "incumbent_id", "sugcont")
+m_incumbent_iter2 <- run_clogit(df2_inc, "incumbent_id", "sugcont")
+
+get_coef <- function(m, var) {
+  if (is.null(m)) return(NA)
+  cf <- coef(m)
+  if (var %in% names(cf)) return(as.numeric(cf[var]))
+  return(NA)
+}
+
+sugar_district_fe <- get_coef(m_district, "sugcont")
+sugar_incumbent_fe <- get_coef(m_incumbent, "sugcont")
+acu_district_fe <- get_coef(m_district, "ncu")
+tenure_district_fe <- get_coef(m_district, "tenure")
+tenure_incumbent_fe <- get_coef(m_incumbent, "tenure")
+
+sugar_cal_district <- get_coef(m_district_iter1, "sugcont")
+sugar_cal_incumbent <- get_coef(m_incumbent_iter1, "sugcont")
+sugar_12m_district <- get_coef(m_district_iter2, "sugcont")
+sugar_12m_incumbent <- get_coef(m_incumbent_iter2, "sugcont")
+
+fmt <- function(x) if (is.na(x)) "NA" else sprintf("%.6g", x)
+
+cat("\n\n========= RESULTS =========\n")
+cat(paste0("RESULT:sugar_contributions_district_fe=", fmt(sugar_district_fe), "\n"))
+cat(paste0("RESULT:sugar_contributions_incumbent_fe=", fmt(sugar_incumbent_fe), "\n"))
+cat(paste0("RESULT:acu_ideology_district_fe=", fmt(acu_district_fe), "\n"))
+cat(paste0("RESULT:tenure_district_fe=", fmt(tenure_district_fe), "\n"))
+cat(paste0("RESULT:tenure_incumbent_fe=", fmt(tenure_incumbent_fe), "\n"))
+cat(paste0("RESULT:sugar_contributions_calendar_year_district_fe=", fmt(sugar_cal_district), "\n"))
+cat(paste0("RESULT:sugar_contributions_calendar_year_incumbent_fe=", fmt(sugar_cal_incumbent), "\n"))
+cat(paste0("RESULT:sugar_contributions_12_months_district_fe=", fmt(sugar_12m_district), "\n"))
+cat(paste0("RESULT:sugar_contributions_12_months_incumbent_fe=", fmt(sugar_12m_incumbent), "\n"))
+cat(paste0("RESULT:observations_district_fe=", ifelse(is.na(n_district_used), "NA", as.integer(n_district_used)), "\n"))
+cat(paste0("RESULT:observations_incumbent_fe=", ifelse(is.na(n_incumbent_used), "NA", as.integer(n_incumbent_used)), "\n"))
+```
+
+## Error / Unexpected Output
+```
+Warning message:
+In as.numeric(df[[v]]) : NAs introduced by coercion
+Warning message:
+In max(event[who2]) : no non-missing arguments to max; returning -Inf
+Warning message:
+In max(event[who2]) : no non-missing arguments to max; returning -Inf
+Warning messages:
+1: In as.numeric(df1[[v]]) : NAs introduced by coercion
+2: In as.numeric(df2[[v]]) : NAs introduced by coercion
+Warning message:
+In max(event[who2]) : no non-missing arguments to max; returning -Inf
+Warning message:
+In max(event[who2]) : no non-missing arguments to max; returning -Inf
+Warning message:
+In max(event[who2]) : no non-missing arguments to max; returning -Inf
+Warning message:
+In max(event[who2]) : no non-missing arguments to max; returning -Inf
+
+```
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+Columns: cong, cid, totalcont, id, name, pop, over65, nohsgrad, bach, medearn, poverty, medincome, unemp, rural, state, state_no, district, vote, party, ncu, tenure, both, sugcont, houselead, agcom, aglead, dwn 
+Nrow: 862 
+Unique cong: 113, 115 
+Class of state: character 
+Class of district: numeric 
+Class of cid: character 
+Error: No (non-missing) observations 
+
+--- District FE (headline) ---
+Error: No (non-missing) observations 
+
+--- Incumbent FE (headline) ---
+
+Mean sugcont base: 9087.344 
+Mean sugcont iter1: 9087.344 
+Mean sugcont iter2: 9087.344 
+Error: No (non-missing) observations 
+Error: No (non-missing) observations 
+Error: No (non-missing) observations 
+Error: No (non-missing) observations 
+
+
+========= RESULTS =========
+RESULT:sugar_contributions_district_fe=NA
+RESULT:sugar_contributions_incumbent_fe=NA
+RESULT:acu_ideology_district_fe=NA
+RESULT:tenure_district_fe=NA
+RESULT:tenure_incumbent_fe=NA
+RESULT:sugar_contributions_calendar_year_district_fe=NA
+RESULT:sugar_contributions_calendar_year_incumbent_fe=NA
+RESULT:sugar_contributions_12_months_district_fe=NA
+RESULT:sugar_contributions_12_months_incumbent_fe=NA
+RESULT:observations_district_fe=NA
+RESULT:observations_incumbent_fe=NA
+```
+
+## Task
+Fix specifically the identified problem above. Do not rewrite the entire approach unless necessary.
+
+## Reminder: Output Convention
+The fixed R code MUST emit each reproduced metric on its own line using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names.
+
+## Reminder: Constraints
+- The dataset is a directory tree at '/Users/matthew/dev/Retally/.cache/datasets/grier_2023_sugar_roll_call_voting.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+- Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+- Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+- Do NOT access the internet.
+- Do NOT call system() / system2().
+- Use set.seed(42) for reproducibility.
+- Print all RESULT: lines at the end via cat().
+
+Output ONLY the corrected R code — no explanation, no markdown fences.

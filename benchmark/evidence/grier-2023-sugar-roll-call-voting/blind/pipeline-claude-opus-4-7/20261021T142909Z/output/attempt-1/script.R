@@ -1,0 +1,134 @@
+# Reproduction script for Grier et al. 2023 sugar roll-call voting
+set.seed(42)
+
+suppressPackageStartupMessages({
+  library(haven)
+  library(dplyr)
+  library(survival)
+  library(sandwich)
+  library(lmtest)
+})
+
+data_path <- "/Users/matthew/dev/Retally/.cache/datasets/grier_2023_sugar_roll_call_voting.script-free/SugarReplicate.dta"
+df <- read_dta(data_path)
+
+# Look at structure
+cat("Columns:", paste(names(df), collapse=", "), "\n")
+cat("Nrow:", nrow(df), "\n")
+cat("Unique cong:", paste(unique(df$cong), collapse=", "), "\n")
+
+# vote = 1 if "aye" (against sugar interests)
+# sugcont = inflation adjusted sugar contributions (headline window)
+# Need to identify which vars correspond to different time windows
+# Looking at vars: sugcont, totalcont - sugcont is likely one window
+
+# Controls: ncu (ACU score?), tenure, poverty, bach, medincome, over65, agcom
+# Let's check
+
+summary(df$sugcont)
+summary(df$ncu)
+summary(df$tenure)
+
+# Create district id and incumbent id
+# district likely has state+district identifier
+# cid = candidate id (incumbent)
+
+# District FE: use district (likely combined with state)
+# Need unique district identifier across both congresses
+df$district_id <- paste(df$state, df$district, sep="_")
+
+# Incumbent FE: use cid (candidate id)
+df$incumbent_id <- df$cid
+
+# Helper function for fixed-effects conditional logit using clogit
+run_clogit <- function(data, fe_var, sug_var) {
+  f <- as.formula(paste0("vote ~ ", sug_var, 
+                         " + ncu + tenure + poverty + bach + medincome + over65 + agcom + strata(", fe_var, ")"))
+  tryCatch(clogit(f, data = data), error = function(e) { cat("Error:", conditionMessage(e), "\n"); NULL })
+}
+
+# District FE, headline window (sugcont)
+m_district <- run_clogit(df, "district_id", "sugcont")
+cat("\n--- District FE (headline) ---\n")
+print(summary(m_district))
+
+# Incumbent FE: restrict to incumbents observed in both congresses
+inc_counts <- df %>% group_by(incumbent_id) %>% summarise(n = n())
+both_inc <- inc_counts$incumbent_id[inc_counts$n == 2]
+df_inc <- df %>% filter(incumbent_id %in% both_inc)
+
+m_incumbent <- run_clogit(df_inc, "incumbent_id", "sugcont")
+cat("\n--- Incumbent FE (headline) ---\n")
+print(summary(m_incumbent))
+
+# Count observations (vote-switching only identify in clogit)
+n_district_used <- if (!is.null(m_district)) m_district$n else NA
+n_incumbent_used <- if (!is.null(m_incumbent)) m_incumbent$n else NA
+
+# For Table 3 time windows, we need different contribution vars
+# The data has sugcont and totalcont; we might not have 3 separate windows
+# Let's check if there are any other contribution-like vars
+# Only sugcont and totalcont appear sugar-related
+# Likely the three iter files correspond to the three windows!
+
+# Try alternatives
+path_iter1 <- "/Users/matthew/dev/Retally/.cache/datasets/grier_2023_sugar_roll_call_voting.script-free/SugarReplicate_iter1.dta"
+path_iter2 <- "/Users/matthew/dev/Retally/.cache/datasets/grier_2023_sugar_roll_call_voting.script-free/SugarReplicate_iter2.dta"
+
+df1 <- read_dta(path_iter1)
+df2 <- read_dta(path_iter2)
+
+df1$district_id <- paste(df1$state, df1$district, sep="_")
+df1$incumbent_id <- df1$cid
+df2$district_id <- paste(df2$state, df2$district, sep="_")
+df2$incumbent_id <- df2$cid
+
+# Check if sugcont differs
+cat("\nMean sugcont base:", mean(df$sugcont, na.rm=TRUE), "\n")
+cat("Mean sugcont iter1:", mean(df1$sugcont, na.rm=TRUE), "\n")
+cat("Mean sugcont iter2:", mean(df2$sugcont, na.rm=TRUE), "\n")
+
+# District FE on iter1 and iter2
+m_district_iter1 <- run_clogit(df1, "district_id", "sugcont")
+m_district_iter2 <- run_clogit(df2, "district_id", "sugcont")
+
+df1_inc <- df1 %>% filter(incumbent_id %in% both_inc)
+df2_inc <- df2 %>% filter(incumbent_id %in% both_inc)
+
+m_incumbent_iter1 <- run_clogit(df1_inc, "incumbent_id", "sugcont")
+m_incumbent_iter2 <- run_clogit(df2_inc, "incumbent_id", "sugcont")
+
+# Extract coefficients
+get_coef <- function(m, var) {
+  if (is.null(m)) return(NA)
+  cf <- coef(m)
+  if (var %in% names(cf)) return(as.numeric(cf[var]))
+  return(NA)
+}
+
+sugar_district_fe <- get_coef(m_district, "sugcont")
+sugar_incumbent_fe <- get_coef(m_incumbent, "sugcont")
+acu_district_fe <- get_coef(m_district, "ncu")
+tenure_district_fe <- get_coef(m_district, "tenure")
+tenure_incumbent_fe <- get_coef(m_incumbent, "tenure")
+
+# Need to figure out which iter corresponds to calendar year vs 12 months
+# iter1 and iter2 are the two robustness windows. We'll assign them both and label.
+# Without clearer info, assume iter1 = calendar year, iter2 = 12 months before vote
+sugar_cal_district <- get_coef(m_district_iter1, "sugcont")
+sugar_cal_incumbent <- get_coef(m_incumbent_iter1, "sugcont")
+sugar_12m_district <- get_coef(m_district_iter2, "sugcont")
+sugar_12m_incumbent <- get_coef(m_incumbent_iter2, "sugcont")
+
+cat("\n\n========= RESULTS =========\n")
+cat(sprintf("RESULT:sugar_contributions_district_fe=%.6g\n", sugar_district_fe))
+cat(sprintf("RESULT:sugar_contributions_incumbent_fe=%.6g\n", sugar_incumbent_fe))
+cat(sprintf("RESULT:acu_ideology_district_fe=%.6g\n", acu_district_fe))
+cat(sprintf("RESULT:tenure_district_fe=%.6g\n", tenure_district_fe))
+cat(sprintf("RESULT:tenure_incumbent_fe=%.6g\n", tenure_incumbent_fe))
+cat(sprintf("RESULT:sugar_contributions_calendar_year_district_fe=%.6g\n", sugar_cal_district))
+cat(sprintf("RESULT:sugar_contributions_calendar_year_incumbent_fe=%.6g\n", sugar_cal_incumbent))
+cat(sprintf("RESULT:sugar_contributions_12_months_district_fe=%.6g\n", sugar_12m_district))
+cat(sprintf("RESULT:sugar_contributions_12_months_incumbent_fe=%.6g\n", sugar_12m_incumbent))
+cat(sprintf("RESULT:observations_district_fe=%d\n", as.integer(n_district_used)))
+cat(sprintf("RESULT:observations_incumbent_fe=%d\n", as.integer(n_incumbent_used)))

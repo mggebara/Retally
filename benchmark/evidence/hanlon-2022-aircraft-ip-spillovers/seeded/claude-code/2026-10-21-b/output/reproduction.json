@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "entry_id": "hanlon-2022-aircraft-ip-spillovers",
+  "mode": "seeded",
+  "run_id": "2026-10-21-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [],
+  "deviations": [],
+  "notes": "Translated the Table 1 and Table 4 blocks of 2-results-main.do into fixest::feols with vcov='hetero' (Stata vce(r)). Airframes: airframe_data.dta restricted to US/UK fighters and bombers; mkspline knot 1926 as pre1926=min(year,1926), post1926=max(year-1926,0); US-only columns regress ln_wingload / ln_maxspeed on pre1926_US post1926_US; pooled columns add pre1926, post1926 and a US dummy. Engines: engine_data.dta US/UK, US-only regression of ln_hp_per_lbs on pre1926_US post1926_US liquid_cooled. Single run, no comparison-driven changes; all estimates round to the claimed values (N=116 and 85 match).",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T02:02:22Z",
+  "finished_at": "2026-10-22T02:03:30Z"
+}
