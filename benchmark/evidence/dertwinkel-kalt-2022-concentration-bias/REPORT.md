@@ -38,7 +38,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [13/13](seeded/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) | [13/13](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) |
+| `claude-code` | [13/13](seeded/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[13/13](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [13/13](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[13/13](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
 | `pipeline-desktop-opus` | [13/13](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) | [13/13](independent/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) | [12/13](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) |
 | `pipeline-desktop-opus-run2` | [13/13](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [13/13](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [13/13](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
 
@@ -73,6 +73,9 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Main sample taken from the data's preregistered-sample flag pap_sample (100 per condition); a pure 'no corner in any balanced trade-off' filter leaves 100-103 per condition (the extra subjects are presumably dropped by the stratified pairing in fn. 14).
   - Control conditions: d~rel computed with the same eq. (12) formula (average over all 8 workdays) as treatment conditions; the paper does not spell out the control-condition denominator.
   - upper-corner lower bound taken as recorded id_stage2 (=63) rather than 62 as in paper text; Tobit right-censoring at 63
+- [independent/claude-code/2026-11-02-c](independent/claude-code/2026-11-02-c/CELL.md) (13/13)
+  - Upper-corner subjects' lower bound uses the value coded in the data (63) rather than the 62 stated in the paper text; with 62 the absolute midpoint mean would be 37.475 (printed as a diagnostic).
+  - Main sample built as: no corner choice in any balanced trade-off, then the first 100 eligible subjects per condition by subject number (preregistered sample size). This matches the data's pap_sample flag for 599 of 600 subjects (one Donation-Control subject differs).
 - [blind/claude-code/2026-10-22-a](blind/claude-code/2026-10-22-a/CELL.md) (13/13)
   - Upper-corner choices in the unbalanced trade-off use a lower bound of 63, the value the dataset assigns to upper corners (interior values run to 61; stated indifference points start at 63), instead of the 62 given in the paper text. With 62, the Main-Treatment midpoint mean of d would be 37.475 instead of 37.61. This sensitivity is printed as a DEVIATION line.
   - Tobit (Table 2 col 4) uses censoring points -63 (lower corner) and 63 (upper corner, matching the coding above), via AER::tobit.
@@ -83,6 +86,11 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Control conditions: the relative measure is d / (e_j + x_j) on the repeated workday j (the paper's eq. 12 is defined for the Treatment conditions, where the deviation applies to all eight workdays).
   - Main sample = subjects with no corner choice in any balanced trade-off AND pap_sample == 1 (the dataset's preregistered-sample flag). This drops 7 more corner-free subjects, all from late sessions 18-19 plus one Donation-Control subject, and leaves exactly 100 subjects per condition. None of the 7 is in Main-Treatment.
   - n_obs_table3 reports column 1's N; the per-column Ns are printed above. — names `n_obs_table3`
+- [blind/claude-code/2026-11-02-c](blind/claude-code/2026-11-02-c/CELL.md) (13/13)
+  - Upper-corner lower bound set to 62 as the paper states (Sec. 2.3.5); the dataset's precomputed id_stage2 codes these subjects as 63. The precomputed variables were not used for the estimates.
+  - Relative measure computed exactly as eq. (12), (1/8) sum_t d/(e_t + x_t), using e from footnote 3 and x_t = balanced-trade-off indifference point indexed by utility_point. The dataset's precomputed qe_rad differs slightly from this (about 0.5% in Treatment conditions, more in Control); the cause was not identified, and eq. (12) was applied to all conditions, Control included.
+  - Main sample = pap_sample == 1 (preregistered sample, 100 per condition). All of these subjects have no corner in any balanced trade-off. Seven further subjects with no balanced corner (late sessions, none in Main-Treatment) are flagged pap_sample == 0 and excluded, on the reading that they exceed the preregistered sample size of 100.
+  - Tobit: AER::tobit on the lower-bound d, left-censored at -63 and right-censored at 62. OLS standard errors are HC1 (Stata robust).
 
 ### Pipeline and agent disagree
 
@@ -92,7 +100,7 @@ _None._
 
 Pass rates at least 50 points apart (not unanimous):
 
-- blind: `rel_concentration_bias_lower_table2_col1` — pipeline 1/2, agent 2/2
+- blind: `rel_concentration_bias_lower_table2_col1` — pipeline 1/2, agent 3/3
 
 ## Cells
 
@@ -120,6 +128,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/claude-code/2026-11-01-a/CELL.md`](independent/claude-code/2026-11-01-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 3; 2026-11-02T04:30:30Z; from `claude-code-run2-13papers-indep-blind-2026-11-01.json`; evidence complete.
 
+### independent · claude-code · 2026-11-02-c
+
+[`independent/claude-code/2026-11-02-c/CELL.md`](independent/claude-code/2026-11-02-c/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 4; 2026-11-02T20:04:00Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus · 20261023T062931Z
 
 [`independent/pipeline-desktop-opus/20261023T062931Z/CELL.md`](independent/pipeline-desktop-opus/20261023T062931Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-10-23T06:29:31Z; from `pipeline-oracle-desktop-opus-9papers-all-modes-2026-10-23.json`; evidence complete.
@@ -135,6 +147,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · claude-code · 2026-11-01-a
 
 [`blind/claude-code/2026-11-01-a/CELL.md`](blind/claude-code/2026-11-01-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 4; 2026-11-02T04:45:00Z; from `claude-code-run2-13papers-indep-blind-2026-11-01.json`; evidence complete.
+
+### blind · claude-code · 2026-11-02-c
+
+[`blind/claude-code/2026-11-02-c/CELL.md`](blind/claude-code/2026-11-02-c/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 6; 2026-11-02T20:19:10Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus · 20261023T062931Z
 

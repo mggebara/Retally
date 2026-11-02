@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "entry_id": "adams-2023-women-mps-affective-polarization",
+  "mode": "blind",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "Two exploratory runs (variable listing; sample/coding checks, no RESULT lines), then one scored run. Data: dyadic_data_1-4-22.Rdata (columns 1-2) and gender_disagregated_8-8-21.rds (columns 3-4). Sample: directed dyads with to_prior_seats >= 4 and from_prior_seats >= 4 (US parties carry a 999 placeholder seat count and are kept), rows with missing to_pfeml dropped by the estimator. DV: party_like (0-10 thermometer); for the gender file, 10 - dislike (codebook: dislike is the thermometer rescaled 0=like, 10=dislike; verified party_dislike == 10 - party_like in the dyadic file), gender 2 = women, 1 = men. Regressor to_pfeml; controls rile_distance_s (dataset's standardized CMP rile distance; raw mean 22.44 / SD 17.61 over the full file matching the paper's footnote), govern_together, opposition_together. fixest feols with cntryyr fixed effects and SEs clustered by cntryyr. n_election_studies = distinct cntryyr in the full-model estimation sample (one election date per cntryyr). No docker hangs.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:09:22Z",
+  "finished_at": "2026-11-02T20:11:40Z"
+}

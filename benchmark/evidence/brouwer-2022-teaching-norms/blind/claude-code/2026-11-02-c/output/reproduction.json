@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "brouwer-2022-teaching-norms",
+  "mode": "blind",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was exploratory (variable tabulations, no RESULT lines). Final: pooled OLS LPMs with fixest::feols, SEs clustered by School (30 clusters), from Data/master.csv. Punishment sample = scenes Violation and Violation+Help (400); Helping sample = Help and Violation+Help (401). Regressors Child, VH (=ViolationHelp), Child x VH; controls in cols 2/4: male (Male Target), hugo (Male Actor, assumed to be the male actor indicator), Morning, witness, rich, Rain, Hot. The row with missing target gender drops in each controlled model (399 and 400 obs). No result tables, logs, or script files from the dataset directory were read; check_attempt reported no missing quantities.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:12:05Z",
+  "finished_at": "2026-11-02T20:13:14Z"
+}

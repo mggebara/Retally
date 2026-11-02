@@ -1,0 +1,271 @@
+# Retally reproduction task: douenne-2022-yellow-vests-carbon-tax (blind, run 2026-11-02-c)
+
+You are reproducing quantitative results from an econometrics paper for the
+Retally benchmark.  You will write R code, run it in a network-less Docker
+sandbox, and record what you did as files.  The files are what gets scored.
+
+- Benchmark cell: entry `douenne-2022-yellow-vests-carbon-tax`, mode `blind`, run `2026-11-02-c`
+- Paper: Yellow Vests, Pessimistic Beliefs, and Carbon Tax Aversion
+- Paper text (extracted from the PDF; tables may be garbled): `<repo>/benchmark/.cache/claude-code/douenne-2022-yellow-vests-carbon-tax/blind/2026-11-02-c/paper.txt`
+- Data (the ONLY data you get): `<repo>/benchmark/.cache/claude-code/douenne-2022-yellow-vests-carbon-tax/blind/2026-11-02-c/mount/douenne_2022_yellow_vests_carbon_tax`
+- Output directory (the ONLY place you write): `<repo>/benchmark/reproductions/douenne-2022-yellow-vests-carbon-tax/blind/2026-11-02-c`
+
+## Mode rules
+
+These apply in every mode:
+
+- Write R only.  Run it only inside the sandbox, with the command under
+  "How to run a script"; never run R on the host.
+- No network: do not download anything, do not look the paper or its
+  replication package up online.
+- Use only the files under `<repo>/benchmark/.cache/claude-code/douenne-2022-yellow-vests-carbon-tax/blind/2026-11-02-c/mount/douenne_2022_yellow_vests_carbon_tax` as data, and `<repo>/benchmark/.cache/claude-code/douenne-2022-yellow-vests-carbon-tax/blind/2026-11-02-c/paper.txt` as
+  the paper.
+- Do not read anything else in this repository or on this machine: not the
+  catalog YAMLs under `benchmark/papers/`, not `.cache/datasets/`, not
+  `benchmark/results/`, not other reproductions under `benchmark/reproductions/`,
+  not other task directories.  If you nevertheless read any other file, list
+  it in `files_read_outside_mount` in `reproduction.json`, with why.
+
+## Independent Reproduction
+This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's description alone.  The authors' own analysis code is deliberately withheld.  Do NOT open, read, source, or execute any script files that may appear in the dataset directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, and similar) — load data files only.  Derive the estimating equation, sample restrictions, fixed effects, and standard-error clustering from the paper information and claims above.
+
+## Blind Reproduction
+This reproduction is also BLIND: the paper's reported values for the quantities above are deliberately withheld, and you will not be told how close your numbers are.  Compute each quantity as the paper's method defines it; do not tune the specification toward any number you expect.  Do NOT read result tables, logs, or output files that may appear in the dataset directory (.tex, .log, .pdf, .html, and similar) to recover the paper's numbers — compute everything from the data files.  Print a RESULT: line for every quantity listed, using its name exactly.
+
+- Never search the paper text for the quantities' reported values, and never
+  adjust the specification toward any number in the paper.  Use the paper
+  for its method, sample and variable definitions only.
+- `kind: "claim"` attempts are forbidden: you are not told the claimed
+  values and must not compare against them.
+- At most 3 `kind: "error"` repairs (a run that crashed or
+  printed no `RESULT:` line, followed by a fix).
+- To check that every quantity got a value (this prints names only, never a
+  value or a target):
+
+      cd <repo> && uv run python -m benchmark.reproducers.check_attempt --run-dir <repo>/benchmark/reproductions/douenne-2022-yellow-vests-carbon-tax/blind/2026-11-02-c --stdout <a stdout.txt>
+
+## Quantities to Compute
+Compute each quantity below and print it under the given name.  The paper's reported values are deliberately not shown.
+1. predicted_winner_believes_not_lose_table4_col1 [type: coefficient; unit: change in the probability of believing one does not lose (0/1 outcome)]
+   Location: Table 4, column (1), Predicted winner
+   Context: Table 4 ("Effect of Feedback on Belief of Winning"), column (1), the paper's main specification (equation 2), a regression discontinuity in the respondent-specific estimated net gain from the tax and dividend policy. Among respondents who received the customized win/lose feedback, restricted to those whose estimated net gain is within EUR 50 per year of zero: a linear probability model of the belief after feedback (1 if the respondent believes they do not lose, 0 if they believe they lose) on the predicted-winner indicator (the win feedback, which switches on when the estimated net gain exceed…
+2. initial_acceptance_believes_not_lose_table4_col1 [type: coefficient; unit: change in the probability of believing one does not lose (0/1 outcome)]
+   Location: Table 4, column (1), Initial tax acceptance
+   Context: Table 4, column (1): the coefficient on initial acceptance of the tax and dividend (the answer when the policy was first presented, before any feedback) in the main feedback regression (estimated net gain within EUR 50 of zero; quadratic in the estimated net gain; income, socio-demographic and other-motive controls).
+3. predicted_winner_believes_not_lose_full_sample_table4_col2 [type: coefficient; unit: change in the probability of believing one does not lose (0/1 outcome)]
+   Location: Table 4, column (2), Predicted winner
+   Context: Table 4, column (2): the same regression as column (1) estimated on every respondent who received the win/lose feedback (no restriction on the estimated net gain). Coefficient on the predicted-winner indicator.
+4. predicted_winner_heterogeneity_table4_col3 [type: coefficient; unit: change in the probability of believing one does not lose (0/1 outcome)]
+   Location: Table 4, column (3), Predicted winner
+   Context: Table 4, column (3): column (1) (estimated net gain within EUR 50 of zero) with heterogeneous treatment effects — the predicted-winner indicator interacted with initial tax acceptance, with being a Yellow Vests supporter (declared themselves part of or supporting the movement), and with the initial win/lose belief (whether the respondent initially thought they would not lose), the main effects of these, and the same controls plus the initial win/lose category. Coefficient on the predicted-winner indicator (the effect for the omitted groups).
+5. initial_acceptance_heterogeneity_table4_col3 [type: coefficient; unit: change in the probability of believing one does not lose (0/1 outcome)]
+   Location: Table 4, column (3), Initial tax acceptance
+   Context: Table 4, column (3), the heterogeneity regression: the main effect of initial tax acceptance.
+6. yellow_vests_supporter_heterogeneity_table4_col3 [type: coefficient; unit: change in the probability of believing one does not lose (0/1 outcome)]
+   Location: Table 4, column (3), Yellow Vests supporter
+   Context: Table 4, column (3), the heterogeneity regression: the main effect of being a Yellow Vests supporter.
+7. winner_x_initial_acceptance_table4_col3 [type: coefficient; unit: change in the probability of believing one does not lose (0/1 outcome)]
+   Location: Table 4, column (3), Predicted winner x Initial tax acceptance
+   Context: Table 4, column (3): the interaction of the predicted-winner indicator with initial tax acceptance — how much larger the effect of the win feedback is among respondents who initially accepted the tax and dividend.
+8. winner_x_yellow_vests_supporter_table4_col3 [type: coefficient; unit: change in the probability of believing one does not lose (0/1 outcome)]
+   Location: Table 4, column (3), Predicted winner x Yellow Vests supporter
+   Context: Table 4, column (3): the interaction of the predicted-winner indicator with being a Yellow Vests supporter — the paper's evidence that opponents of the tax discard favourable information.
+9. winner_x_initial_win_belief_table4_col3 [type: coefficient; unit: change in the probability of believing one does not lose (0/1 outcome)]
+   Location: Table 4, column (3), Predicted winner x G
+   Context: Table 4, column (3): the interaction of the predicted-winner indicator with the initial win/lose belief (initially believing one does not lose).
+10. predicted_winner_believes_wins_table4_col4 [type: coefficient; unit: change in the probability of believing one wins (0/1 outcome)]
+   Location: Table 4, column (4), Predicted winner
+   Context: Table 4, column (4): column (1) (estimated net gain within EUR 50 of zero, same controls) with the dependent variable switched to the belief that one wins (1 if the respondent believes they win, 0 otherwise). Coefficient on the predicted-winner indicator.
+11. n_obs_table4_col1 [type: other; unit: respondents]
+   Location: Table 4, column (1), Observations
+   Context: Number of respondents in the Table 4 column (1) regression: those who received the win/lose feedback and whose estimated net gain is within EUR 50 per year of zero.
+12. believes_not_lose_on_acceptance_iv_table6_col1 [type: coefficient; unit: change in the probability of accepting the tax and targeted dividend]
+   Location: Table 6, column (1), Believes does not lose
+   Context: Table 6 ("Effect of Self-Interest on Acceptance"), column (1), the paper's main self-interest estimate: two-stage least squares of acceptance of the tax and targeted dividend ("Yes" or "Don't know" to supporting it) on the belief that one does not lose from it, instrumented by the respondent's and the second adult's random eligibility for the targeted dividend (eligibility thresholds at the 20th, 30th, 40th or 50th income percentile, randomly assigned) and their interaction (first stage: Table 5 column 1), controlling for fixed effects for the policy assigned, a single-adult indicator, initial…
+13. believes_effective_on_approval_iv_table8_col1 [type: coefficient; unit: change in the probability of approving the tax and dividend]
+   Location: Table 8, column (1), Believes in effectiveness
+   Context: Table 8 ("Effect of Believing in Environmental Effectiveness on Approval"), column (1), the paper's main environmental-effectiveness estimate: two-stage least squares of initial approval of the tax and dividend (answer "Yes") on believing it is environmentally effective (answer "Yes"), instrumented by the two randomly displayed information treatments on the scientific consensus about the effectiveness of carbon taxation and on climate change (first stage: Table 7), controlling for socio-demographics, other motives, incomes and estimated gains. All respondents.
+
+## Dataset Information
+Name: douenne_2022_yellow_vests_carbon_tax
+Local path: <repo>/benchmark/.cache/claude-code/douenne-2022-yellow-vests-carbon-tax/blind/2026-11-02-c/mount/douenne_2022_yellow_vests_carbon_tax
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/after_preparation.RData (12.1 MB) — objects: s (data.frame, 3002 rows, 437 columns: gain, winning_category, winning_feedback_category, single, sample, id, date, endDate, fini, duree_no_info, nombre_clics_no_info, premier_clic_info_PM, dernier_clic_info_PM, duree_info_PM, nombre_clics_info_PM, premier_clic_info_CC, dernier_clic_info_CC, duree_info_CC, nombre_clics_info_CC, premier_clic_info_CC_PM, dernier_clic_info_CC_PM, duree_info_CC_PM, nombre_clics_info_CC_PM, code_postal, sexe, age, statut_emploi, csp, diplome, taille_menage, nb_adultes, score_climate_ca…), sl (data.frame, 2777 rows, 437 columns: gain, winning_category, winning_feedback_category, single, sample, id, date, endDate, fini, duree_no_info, nombre_clics_no_info, premier_clic_info_PM, dernier_clic_info_PM, duree_info_PM, nombre_clics_info_PM, premier_clic_info_CC, dernier_…), sq (data.frame, 2729 rows, 437 columns: gain, winning_category, winning_feedback_category, single, sample, id, date, endDate, fini, duree_no_info, nombre_clics_no_info, premier_clic_info_PM, dernier_clic_info_PM, duree_info_PM, nombre_clics_info_PM, premier_clic_info_CC, dernier_…), sa (data.frame, 3395 rows, 437 columns), ss (data.frame, 3165 rows, 425 columns), fit (data.frame, 10258 rows, 39 columns), fit_2 (data.frame, 10258 rows, 39 columns), fit_housing_2 (data.frame, 26729 rows, 10 columns), entd (data.frame, 30162 rows, 10 columns), objective_gains (data.frame, 10342 rows, 8 columns), subjective_gains (data.frame, 10000 rows, 7 columns), objective_gains_inelastic (data.frame, 10342 rows, 7 columns), rev_i_erfs2014 (data.frame, 88814 rows, 2 columns), weighting_s (function), variables_gilets_jaunes (character), Label (function), variables_transferts_inter (character), variables_aleatoires (character), variables_toutes (character), variables_transport (character), … and 52 more objects
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/LICENSE (33.7 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/README.md (11.5 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/agglos.csv (7.9 KB) — columns: id;taille_agglo
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/correspondance-code-insee-code-postal.csv (26.2 MB) — columns: Code INSEE;Code Postal;Commune;Département;Région;Statut;Altitude Moyenne;Superficie;Population;geo_point_2d;geo_shape;ID Geofla;Code Commune;Code Canton;Code Arrondissement;Code Département;Code Région
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/df_menages_domicile_teg.csv (926.2 KB) — columns: ;distrteg;v1_btravdist;v1_btravmtp;mode;poids_qind1
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/df_objective_gains.csv (610.1 KB) — columns: ;gain_net_numeric_uc_fuel;gain_net_numeric_uc_chauffage;gain_net_numeric_uc_taxe_carbone;weight
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/df_objective_gains_inelastic.csv (564.5 KB) — columns: ;gain_net_numeric_uc_fuel;gain_net_numeric_uc_chauffage;gain_net_numeric_uc_taxe_carbone
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/df_subjective_gains.csv (607.3 KB) — columns: ;subjective_gain_numeric_fuel;subjective_gain_numeric_chauffage;subjective_gain_numeric_taxe_carbone
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/questionnaire.qsf (494.4 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/quotas.xlsx (13.6 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/rev_i_erfs2014.csv (1.7 MB) — columns: "","x"
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/survey.csv (10.6 MB) — columns: StartDate,EndDate,Status,IPAddress,Progress,Duration (in seconds),Finished,RecordedDate,ResponseId,RecipientLastName,RecipientFirstName,RecipientEmail,ExternalReference,LocationLatitude,LocationLongitude,DistributionChannel,UserLanguage,Q14…
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/survey_prepared.csv (8.9 MB) — columns: "id";"date";"endDate";"fini";"duree_no_info";"nombre_clics_no_info";"premier_clic_info_PM";"dernier_clic_info_PM";"duree_info_PM";"nombre_clics_info_PM";"premier_clic_info_CC";"dernier_clic_info_CC";"duree_info_CC";"nombre_clics_info_CC";"p…
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/conso-eff-fonction.xls (1.2 MB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/CC_benefits_synchro.png (18.7 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/CC_cause_val.png (510.5 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/CC_effects_val.png (510.5 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/CC_generation_min_val.png (558.5 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/CC_knowledge_valbtr.png (14.8 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/CC_problems_synchro.png (17.9 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/CC_region_val.png (558.5 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/CC_responsible_valb.png (589.2 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/CC_talks_val.png (558.5 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/CC_target_emission_val.png (558.5 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/RDD_Acceptance_flat_90CI_black.png (9.0 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/WTP_both_Legend_right.png (22.8 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/approval_trim.png (7.8 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/average_cost_decile.png (9.0 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/biais.png (39.6 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/cdf_carbon_tax_titled.png (6.9 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/cdf_housing_titled.png (6.2 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/cdf_transport_titled.png (6.9 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/change_if_no.png (38.4 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/correlation_matrix2.jpeg (60.5 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/correlations_Yellow_Vests.png (9.4 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/decision_tree_wo_values_wo_color.png (56.2 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/diagram_survey_attitudes.png (19.8 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/diagram_survey_revision_2nd_round (1).png (75.3 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/diesel_catch_up_val.png (471.7 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/effort_rate_uc.png (11.5 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/elasticities_agg_val.png (20.4 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/elasticities_perso_own_val.png (20.8 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/environmenta_policies_val.png (1.7 MB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/pdf_carbon_tax_titled.png (6.5 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/pdf_housing_titled.png (6.2 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/pdf_transport_titled.png (6.2 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/proba_correct_prediction.png (29.2 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/shale_val.png (471.7 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/tax_condition_valc.png (69.5 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/tax_losers.png (1.1 MB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/tax_winners_synchro.png (15.7 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/transports_distance_trim.png (7.0 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/transports_frequency_trim.png (11.3 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/transports_opinion.png (9.0 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/transports_use_trim.png (21.5 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/transports_work.png (17.5 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/model_reforms_data/prediction expenditures (2).csv (2.3 MB) — columns: ,domestic_fuel_expenditures,natural_gas_expenditures,natural_gas_variable_expenditures,hh_weight,income_decile,hh_income,hh_id,domestic_fuel,natural_gas,consumption_units,age_hh_representative,accommodation_size,age_18_24,age_25_34,age_35_4…
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/model_reforms_data/prediction expenditures.csv (2.8 MB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/model_reforms_data/prediction housing expenditures (2).csv (765.3 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/model_reforms_data/prediction housing expenditures.csv (1.1 MB)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/benchmark/.cache/claude-code/douenne-2022-yellow-vests-carbon-tax/blind/2026-11-02-c/mount/douenne_2022_yellow_vests_carbon_tax' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## How to run a script
+
+Write each script to a file under the output directory, then run it with
+exactly this command (the data directory is mounted read-only at its own
+path; nothing else from the host is visible; `$SCRIPT` is the absolute path of
+the script you wrote):
+
+    SCRIPT=<repo>/benchmark/reproductions/douenne-2022-yellow-vests-carbon-tax/blind/2026-11-02-c/script.R   # or <repo>/benchmark/reproductions/douenne-2022-yellow-vests-carbon-tax/blind/2026-11-02-c/attempt-<n>/script.R
+    docker run --rm --label retally.run=claude-code-douenne-2022-yellow-vests-carbon-tax-blind-2026-11-02-c --network none --memory 4g --cpus 1.0 --read-only --tmpfs /tmp:size=256m --cap-drop ALL --security-opt no-new-privileges -v "$SCRIPT":/workspace/script.R:ro -v <repo>/benchmark/.cache/claude-code/douenne-2022-yellow-vests-carbon-tax/blind/2026-11-02-c/mount/douenne_2022_yellow_vests_carbon_tax:<repo>/benchmark/.cache/claude-code/douenne-2022-yellow-vests-carbon-tax/blind/2026-11-02-c/mount/douenne_2022_yellow_vests_carbon_tax:ro --workdir /workspace retally-sandbox-r:latest Rscript /workspace/script.R > "$(dirname "$SCRIPT")/stdout.txt" 2> "$(dirname "$SCRIPT")/stderr.txt"; echo "exit code: $?"
+
+The sandbox time limit is 300 seconds (memory 4g, 1.0 CPU).  Wrap the
+command in a timeout of that many seconds: prefix it with
+`perl -e 'alarm shift; exec @ARGV' 300` (or `gtimeout 300` if installed;
+macOS has no `timeout`).  If the timeout fires, stop the container with
+`docker ps -q --filter label=retally.run=claude-code-douenne-2022-yellow-vests-carbon-tax-blind-2026-11-02-c | xargs docker kill` and treat the
+run as a crash (exit code 124).
+
+If a `docker run` produces no output for more than ten minutes (no
+container output, no error, the command does not return), the Docker
+daemon is probably wedged.  Stop: kill the command, and do not restart
+Docker Desktop or the Docker daemon yourself.  The hung attempt is not
+counted: do not save it as an `attempt-<n>` directory or as the final run,
+and say in `notes` that it hung.  Report it in your final message (which
+step hung, and for how long) instead of retrying.
+
+## Output contract
+
+The output directory `<repo>/benchmark/reproductions/douenne-2022-yellow-vests-carbon-tax/blind/2026-11-02-c` already holds `render.json`; leave it
+there.  Add:
+
+```
+<repo>/benchmark/reproductions/douenne-2022-yellow-vests-carbon-tax/blind/2026-11-02-c/
+  script.R  stdout.txt  stderr.txt      # the FINAL run: its RESULT: lines are what is scored
+  attempt-1/  attempt-2/  ...           # every execution BEFORE the final one, in order
+    script.R  stdout.txt  stderr.txt  feedback.txt   # feedback.txt when kind is not ""
+  reproduction.json                     # written LAST
+```
+
+- `attempt-<n>` directories are every execution before the final one, in
+  the order they ran; the final files at the top are the run whose
+  `RESULT:` lines are scored.  If you go back to an earlier attempt, copy
+  that attempt's files to the top level as the final run.
+- `feedback.txt` holds what you acted on before the next attempt: the error
+  you fixed (`kind: "error"`) or the `check_attempt` comparison
+  (`kind: "claim"`).
+- Exploratory runs (inspecting variables, counting rows, checking a filter;
+  no estimate of a listed quantity) are attempts with `kind: ""` and need no
+  `feedback.txt`.  They must NOT print any `RESULT:` line, not even a
+  placeholder: the first run that prints one is scored as your first scored
+  attempt.  Print `RESULT:` lines only from a script that estimates the
+  listed quantities, and `kind: "error"` only for a run that crashed or
+  that was meant to print them and did not.
+- Write `reproduction.json` last, in this schema:
+
+```
+reproduction.json (schema 1), written last by the agent into its run directory
+benchmark/reproductions/<entry_id>/<mode>/<run_id>/:
+
+{
+  "schema": 1,
+  "entry_id": "montero-2022-cooperative-property-rights",
+  "mode": "independent",
+  "run_id": "2026-10-22-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [],
+  "notes": "free text: what the agent did, what it could not do",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T10:00:00Z",
+  "finished_at": "2026-10-22T10:40:00Z"
+}
+
+* entry_id, mode and run_id must match the directory the file sits in.
+* final: the run that is scored -- script.R, stdout.txt, stderr.txt at the
+  run-dir root, and its exit code.  If the agent reverts to an earlier
+  attempt it copies that attempt's files there.
+* attempts: every execution before the final one, oldest first.  Each
+  attempt-<n>/ holds script.R, stdout.txt, stderr.txt, and feedback.txt
+  when kind is not "".  kind is the refinement that followed it:
+  "error" (it crashed or printed no RESULT: line; the agent repaired it),
+  "claim" (the agent compared its RESULT: values with the claimed values
+  and changed the script; never allowed in blind mode), or "" (neither).
+* All paths are relative to the run directory; absolute paths and ".."
+  are rejected.
+* deviations: free-text methodology changes, in addition to any
+  DEVIATION: lines in the final stdout.
+* The numbers scored are the RESULT: lines of the files, never anything
+  written in this JSON.
+```
+
+End your final message with the final run's `RESULT:` lines and a short
+note.  Nothing needed for scoring may live only in the message: the files
+are the record.
+
+Do not edit any file in the repository; your only writes are under `<repo>/benchmark/reproductions/douenne-2022-yellow-vests-carbon-tax/blind/2026-11-02-c`.

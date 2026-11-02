@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "entry_id": "carrera-2022-who-chooses-commitment",
+  "mode": "blind",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "Two exploratory runs (variable listing; flag counts, contract-choice coding, WTP top-coding check), no RESULT lines. Final run: participant file cleaned_commitment_study_data.dta; sample drops the 44 endogenous-assignment cases (flag_exclude_exog, flag_low_wtp) and the 122 remaining wave-3 threshold80_12 participants -> 1126. BCP = mean over pairs (1,2),(2,3),(3,5),(5,7),(7,12) of [wtp(p1)-wtp(p0)]/(p1-p0) - (days_p0+days_p1)/2 (wtp already incorporates fill-in-the-blank values above slider max). Goal gap = goal - days_0; actual gap = visits - days_{assigned incentive}; z-scored over the 1126 sample. Table 3: feols with wave FE, HC1 robust SEs. Table 4: stacked 'more' choices (q169 >=8 and q295 >=16 coded 2 = chose, inferred from co-movement with chose_commit12; chose_commit12 for >=12; 8/16 asked in waves 1-2 only), wave + threshold FE, SEs clustered by participant (row index as id). No Docker hang.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:12:37Z",
+  "finished_at": "2026-11-02T20:15:00Z"
+}

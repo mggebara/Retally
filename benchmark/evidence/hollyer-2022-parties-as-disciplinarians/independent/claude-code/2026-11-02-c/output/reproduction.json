@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "hollyer-2022-parties-as-disciplinarians",
+  "mode": "independent",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Table 1 covariate set reconstructed from the paper text and codebook: party size, union/business/religious links; plurality and PR indicators (mixed omitted), list type (cl: closed/open/non-list, factor), logged mean district magnitude, Polity, log democratic tenure, political system (factor), log GDP per capita, Gini, ethnic fractionalization. Sample = complete cases on outcomes, volatility, these covariates and the ethnic-links variable (431 parties, 75 countries); the extremism models lose one party with missing extremist2 (430).",
+    "Ethnic party = ethnic > 0.5 (majority of expert coders report ethnic/linguistic ties). Extremism = extremist2 (vote-weighted absolute left-right distance from country mean); extremist party evaluated at 3 as the paper states. Volatility p25/p75 taken over the party-level estimation sample. Predicted-value differences computed as linear contrasts of OLS coefficients; SEs clustered by country (HC1).",
+    "Table 2: rdrobust defaults (local linear, triangular kernel, mserd bandwidth, NN variance) on the open-seat sample dlameduck_runs == 0, cutoff 0 on mv_incparty."
+  ],
+  "notes": "One exploratory run (attempt-1, no RESULT lines) to inspect variables and complete-case counts, then a single estimation run (final). No claim comparisons were made and no claim-driven changes. The RD estimates match Table 2 exactly (incl. bandwidths and effective N). Table 1 volatility differences match to two decimals; the extremist-minus-moderate contrasts at distance 3 come out smaller than the paper's (personalism low-volatility 0.126 vs 0.15; programmaticness high-volatility 0.371 vs 0.44), consistent in ratio with the paper having evaluated the extremist party at a somewhat larger distance (~3.5), but the paper text says 3, so 3 was kept. One launch of the run wrapper failed before docker started (output directory missing; a combined write+copy command had been refused by the sandbox guard); nothing executed, so it is not counted as an attempt.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:06:43Z",
+  "finished_at": "2026-11-02T20:09:00Z"
+}

@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "hollyer-2022-parties-as-disciplinarians",
+  "mode": "blind",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Covariate set reconstructed from the paper text: party size, union/business/religious linkages; plurality and PR dummies (mixed omitted); ballot-rule dummies from cl (cl=1 omitted, codes unlabelled in the data); logged mean district magnitude; Polity; democracy tenure (demsys); separation of powers as dummies for system (presidential omitted); logged GDP pc; Gini; ethnic fractionalization. ctot (commodity terms of trade) not used since the paper does not list it.",
+    "Volatility 25th/75th percentiles computed on the party-level estimation sample with the Stata _pctile definition (R quantile type 2).",
+    "Extremism measure: extremist2 (overall left-right distance from country mean, labelled 'weighted by size'); extremist party set at distance 3. Ideology regressions use 430 parties (one missing extremism); n_obs_table1 reported from the common base sample (431 parties, 75 countries).",
+    "Brazil RD sample: dlameduck_runs == 0 (incumbent mayor did not run for a second term at t, so the winner at t is not term-limited at t+1); rdrobust p=1, triangular kernel, mserd bandwidths, no clustering; conventional point estimate reported."
+  ],
+  "notes": "Attempt-1 was an exploratory variable inspection (no RESULT lines). The final run is the first and only scored run; no claim-based tuning. Disclosure: while reading the Brazil RD method passage of paper.txt (lines ~1394-1405), the text contained rough Table 2 point estimates and robust CIs that were not fully withheld; the RD specification (open-seat sample, rdrobust defaults, mserd) was fixed from the method description and Table 2 note and was not adjusted. No docker hangs.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:20:30Z",
+  "finished_at": "2026-11-02T20:22:33Z"
+}

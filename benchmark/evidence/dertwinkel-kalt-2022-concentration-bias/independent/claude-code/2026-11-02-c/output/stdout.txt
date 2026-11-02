@@ -1,0 +1,39 @@
+Eligible (no balanced corner) per group:
+
+   Donation-Control  Donation-Treatment        Main-Control      Main-Treatment 
+                101                 100                 103                 100 
+  Mechanism-Control Mechanism-Treatment 
+                101                 102 
+Main sample per group:
+
+   Donation-Control  Donation-Treatment        Main-Control      Main-Treatment 
+                100                 100                 100                 100 
+  Mechanism-Control Mechanism-Treatment 
+                100                 100 
+Cross-check with data's pap_sample flag: kept subjects flagged 1 = 599 of 600 ; dropped eligible flagged 1 = 1 
+Table2 abs_lower  coef 31.6400  se 2.6853
+Table2 abs_mid    coef 37.6100  se 3.5753
+Table2 abs_upper  coef 43.5800  se 4.6835
+Table2 rel_lower  coef 0.1897  se 0.0160
+Table2 rel_mid    coef 0.2242  se 0.0211
+Table2 rel_upper  coef 0.2586  se 0.0275
+Censoring points: -63 63 
+Table2 tobit coef 37.0936 se 3.6581
+Diagnostic: mean d~ with lower bound 62: lower 31.370 mid 37.475
+Table3 Main-Treatment vs Mechanism-Treatment: const 0.0754 (0.0190) diff 0.1487 (0.0283) N 200
+Table3 Donation-Control vs Donation-Treatment: const 0.1346 (0.0207) diff -0.1597 (0.0221) N 200
+Table3 Main-Treatment vs Main-Control: const -0.0226 (0.0081) diff 0.2467 (0.0226) N 200
+Table3 Mechanism-Treatment vs Mechanism-Control: const -0.0144 (0.0100) diff 0.0899 (0.0214) N 200
+RESULT:abs_concentration_bias_midpoint_table2_col2=37.6100
+RESULT:abs_concentration_bias_tobit_table2_col4=37.0936
+RESULT:rel_concentration_bias_lower_table2_col1=0.1897
+RESULT:rel_concentration_bias_midpoint_table2_col2=0.2242
+RESULT:rel_concentration_bias_upper_table2_col3=0.2586
+RESULT:n_obs_table2=100
+RESULT:rel_cb_mechanism_treatment_table3_col1=0.0754
+RESULT:diff_main_minus_mechanism_table3_col1=0.1487
+RESULT:rel_cb_donation_treatment_table3_col2=0.1346
+RESULT:diff_donation_treatment_minus_control_table3_col2=0.1597
+RESULT:diff_main_treatment_minus_control_table3_col3=0.2467
+RESULT:diff_mechanism_treatment_minus_control_table3_col4=0.0899
+RESULT:n_obs_table3=200

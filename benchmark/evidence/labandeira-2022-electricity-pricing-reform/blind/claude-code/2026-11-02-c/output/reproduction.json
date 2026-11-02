@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "entry_id": "labandeira-2022-electricity-pricing-reform",
+  "mode": "blind",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Treatment T is the dataset's T2 (=TT199): 1 for post-reform interviews from September 2013 on (months-since-reform dist 1-7). This matches Table 1 (T mean 0.19 overall, 0.50 in the treated group) and eq. (3); the alternative TT202, which codes the September 2013 (first reformed bill) interviews as 0, was not used.",
+    "Price, income and instruments are the prepared real (deflated by the time price index IP) variables in the analysis file: lnPRE (= ln p_kWh - IP), lny and lny2 (= ln y - IP and its square), and the instruments lnPRE_papas_, lnPRE_aguav_, lnPRE_gascar_ (effective prices of potatoes, water, fuel, with missing values already filled by the file's cell averages, so the IV sample equals the OLS sample).",
+    "LIML is coded by hand as a k-class estimator (fixest has no LIML); household FE versions use the within (demeaned) transformation, which gives LSDV point estimates. LIML SEs are a hand-coded household-clustered sandwich; they are not scored.",
+    "Controls: household size (NMIEMB), rooms (NHABIT), surface (SUPERF), elderly dummy (mayores), education of head (ESTUDREDSP, 4 levels), economic situation (SITUACTHOG_j, 3 levels), renting (alqui), building >25 years (edif25), municipality size (TAMAMU, 5 levels), urban, province capital (CAPROV), region (CCAA), quarter (trim), months since reform (dist), year FE; no survey weights. Retirement-income dummy not included (not in the paper's control list for eq. 4).",
+    "Sample: the 25,775 panel observations with non-missing T2, restricted to complete cases on all regression variables (mainly SITUACTHOG_j and SUPERF missing); n_obs and n_households are counted on that complete-case sample, singleton households included."
+  ],
+  "notes": "Two exploratory runs (variable listing; panel structure and variable definitions, no RESULT lines), then one estimation run, which is the final scored run. No error repairs, no claim comparisons. Paper read for method only. Readme.pdf in the mount was not opened. The FE-IV first stage is weak (cluster-robust Wald F about 10.6), so the IV columns are imprecise.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:20:01Z",
+  "finished_at": "2026-11-02T20:26:03Z"
+}

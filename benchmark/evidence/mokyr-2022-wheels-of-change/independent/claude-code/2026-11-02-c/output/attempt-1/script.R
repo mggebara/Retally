@@ -1,0 +1,10 @@
+suppressMessages({library(haven)})
+d <- read_dta("<repo>/benchmark/.cache/claude-code/mokyr-2022-wheels-of-change/independent/2026-11-02-c/mount/mokyr_2022_wheels_of_change/3 replication package/Replication files/Data/replication_data.dta")
+d <- as.data.frame(zap_labels(d))
+cat(dim(d), "\n")
+print(names(d))
+for (v in names(d)) { x <- d[[v]]; if (is.numeric(x)) cat(sprintf("%-25s n=%d mean=%.4f sd=%.4f min=%.4f max=%.4f\n", v, sum(!is.na(x)), mean(x,na.rm=TRUE), sd(x,na.rm=TRUE), min(x,na.rm=TRUE), max(x,na.rm=TRUE))) else cat(v, class(x), length(unique(x)), "\n") }
+cat("GAZ_CNTY unique:", length(unique(d$GAZ_CNTY)), "\n")
+print(table(d$wheat_tmean <= 5, useNA="ifany"))
+print(summary(d$mills/d$pcmean)); print(summary(d$wrights/d$pcmean))
+print(head(d[, c("local_government_area","wrights","mills","pcmean","GAZ_CNTY","wheat_tmean","riv_rug26count")]))

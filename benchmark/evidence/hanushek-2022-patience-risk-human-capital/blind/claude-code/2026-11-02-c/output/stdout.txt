@@ -1,0 +1,86 @@
+                               t2_1                t2_3                t2_4
+Dependent Var.:             pv1math             pv1math             pv1math
+                                                                           
+coo_patience     0.8051*** (0.1044)  0.9122*** (0.1085)   1.027*** (0.1249)
+female          -0.0976*** (0.0080) -0.0979*** (0.0081) -0.0978*** (0.0079)
+age              0.1677*** (0.0178)  0.1670*** (0.0179)  0.1674*** (0.0180)
+coo_oecd         -0.2837** (0.0846) -0.3210*** (0.0778) -0.4059*** (0.0978)
+imfemale        -0.9027*** (0.1585) -0.8985*** (0.1582) -0.8855*** (0.1624)
+coo_risktaking                        -0.1940. (0.1058)  -0.3819** (0.1406)
+coo_posrecip                                               -0.0713 (0.1863)
+coo_negrecip                                                0.0832 (0.0862)
+coo_altruism                                               -0.1081 (0.1720)
+coo_trust                                                  -0.2040 (0.1440)
+Fixed-Effects:  ------------------- ------------------- -------------------
+countrywave                     Yes                 Yes                 Yes
+_______________ ___________________ ___________________ ___________________
+S.E.: Clustered             by: coo             by: coo             by: coo
+Observations                 80,397              80,397              80,397
+R2                          0.26334             0.26407             0.26548
+Within R2                   0.03233             0.03328             0.03513
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Table 2: countries of origin 58  residence countries 48  cw cells 180 
+                               t1_1                t1_2                t1_3
+Dependent Var.:             pv1math             pv1math             pv1math
+                                                                           
+patience         0.9133*** (0.1264)                       1.220*** (0.1319)
+female          -0.0780*** (0.0132) -0.0827*** (0.0141) -0.0767*** (0.0127)
+age               0.1070** (0.0355)    0.0975* (0.0462)  0.1195*** (0.0272)
+migra1             -0.1676 (0.1351)     0.0489 (0.1135)    -0.1153 (0.1578)
+migra2            -0.1272. (0.0724)    0.1351. (0.0771)    -0.0920 (0.0812)
+imfemale            0.1601 (0.1979)     0.1691 (0.2594)     0.1625 (0.2315)
+image             -0.4064. (0.2367)    -0.2545 (0.2705)    -0.3663 (0.2488)
+immigra0          1.015*** (0.1716)   1.049*** (0.1824)  0.8832*** (0.1643)
+immigra1        -0.8690*** (0.0737) -0.7667*** (0.0759) -0.8066*** (0.0817)
+immigra2        -0.6485*** (0.0739) -0.6953*** (0.0611) -0.5589*** (0.0468)
+risktaking                            -0.4742. (0.2592)  -1.232*** (0.1841)
+Fixed-Effects:  ------------------- ------------------- -------------------
+wave                            Yes                 Yes                 Yes
+_______________ ___________________ ___________________ ___________________
+S.E.: Clustered         by: country         by: country         by: country
+Observations              1,992,276           1,992,276           1,992,276
+R2                          0.13790             0.04648             0.20113
+Within R2                   0.11730             0.02369             0.18204
+
+                               t1_5
+Dependent Var.:             pv1math
+                                   
+patience          1.296*** (0.1334)
+female          -0.0769*** (0.0132)
+age              0.1153*** (0.0280)
+migra1                             
+migra2                             
+imfemale           -0.2409 (0.1710)
+image             -0.1932. (0.0984)
+immigra0                           
+immigra1                           
+immigra2                           
+risktaking       -1.320*** (0.1885)
+Fixed-Effects:  -------------------
+wave                            Yes
+_______________ ___________________
+S.E.: Clustered         by: country
+Observations              1,751,822
+R2                          0.21352
+Within R2                   0.19343
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Table 1: countries 49  country-waves 263 
+DEVIATION: the 2.8 GB pisa_full_gps_final.csv was read with only the 16 columns the Table 1 models need (fread select=); all rows kept
+DEVIATION: GPS preference variables used as supplied (already z-standardised in the analytical sample and collapsed to country level by the authors); not re-standardised
+DEVIATION: natives defined as migra0 == 1; students with imputed migration status are excluded from the natives subsample
+DEVIATION: Table 2 weights are the supplied sampling weights (wgt, normalised within country-wave over all students); SEs clustered by country of origin
+RESULT:table1_col3_patience=1.220055676
+RESULT:table1_col3_risk_taking=-1.231693658
+RESULT:table1_col1_patience=0.9132601983
+RESULT:table1_col2_risk_taking=-0.4741503312
+RESULT:table1_col5_natives_patience=1.295826166
+RESULT:table1_col5_natives_risk_taking=-1.320344416
+RESULT:table1_col3_observations=    1992276
+RESULT:table2_col3_patience=0.9122195848
+RESULT:table2_col3_risk_taking=-0.1940007222
+RESULT:table2_col1_patience=0.805099974
+RESULT:table2_col4_patience=1.027093654
+RESULT:table2_col4_risk_taking=-0.3818682119
+RESULT:table2_col3_observations=      80397

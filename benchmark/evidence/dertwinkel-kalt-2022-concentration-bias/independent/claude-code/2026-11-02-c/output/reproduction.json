@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "dertwinkel-kalt-2022-concentration-bias",
+  "mode": "independent",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Upper-corner subjects' lower bound uses the value coded in the data (63) rather than the 62 stated in the paper text; with 62 the absolute midpoint mean would be 37.475 (printed as a diagnostic).",
+    "Main sample built as: no corner choice in any balanced trade-off, then the first 100 eligible subjects per condition by subject number (preregistered sample size). This matches the data's pap_sample flag for 599 of 600 subjects (one Donation-Control subject differs)."
+  ],
+  "notes": "Used only Consumption_Experiment.csv. Built d~ (lower/midpoint/upper) and d~rel from the raw rows: d~rel = mean_t d~/(e_t+x~_t) for Treatment conditions (eq. 12) and d~/(e_j+x~_j) for the repeated balanced trade-off j in Control conditions. Table 2: OLS on a constant (HC1), Tobit (AER::tobit) on the lower-bound d~ censored at -63/63. Table 3: OLS of midpoint d~rel on a constant and a condition indicator over two pooled conditions (HC1). Three exploratory runs (no RESULT lines) checked variable coding, sample flags and the relative-measure formula against the data's own derived columns. The final run was the first scored run. I compared it with the claims using check_attempt (all within tolerance) and did not change the script afterwards.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:00:16Z",
+  "finished_at": "2026-11-02T20:04:00Z"
+}

@@ -1,0 +1,25 @@
+INFO: rdrobust mserd bandwidth (bill level): rep ncosp = 17.79; dem pctopp = 16.45 (paper-stated 13 and 24 used)
+INFO: ncosp all OLS                                 b=1.4025 se=0.6297 n=60669
+INFO: ncosp rep OLS                                 b=2.3952 se=1.0373 n=27670
+INFO: ncosp rep RD-IPW                              b=6.6978 se=3.9170 n=1287
+INFO: ncosp rep IPW distr+MV+spons                  b=2.7441 se=1.0455 n=25641
+INFO: pctopp dem OLS                                b=-2.4388 se=0.7354 n=22712
+INFO: pctopp dem RD                                 b=-5.1325 se=4.2352 n=1376
+INFO: pctopp dem IPW distr+MV+spons                 b=-2.2418 se=0.8214 n=20257
+INFO: pctopp rep OLS                                b=4.3279 se=1.3413 n=18691
+INFO: pctopp rep IPW distr+MV                       b=2.6989 se=1.1232 n=17601
+DEVIATION: macro-area dummies built from Census regions of the sponsor state; log population density = lnpop - lnarea; rookie = tenure 1; committee leader = chair or ranking member; total bills sponsored counted per sponsor-Congress in the data; singletons dropped (reghdfe-style).
+DEVIATION: RD bandwidths fixed at the paper-stated optimal values (13 pp Rep ncosp, 24 pp Dem pct opposite) with uniform kernel; IPW uses ATE weights 1/p and 1/(1-p) from a bill-level logit.
+RESULT:female_sponsor_ncosponsors_all_ols=1.402527
+RESULT:female_sponsor_ncosponsors_rep_ols=2.395233
+RESULT:female_sponsor_ncosponsors_rep_rd_ipw=6.697832
+RESULT:female_sponsor_ncosponsors_rep_ipw_sponsor=2.744137
+RESULT:female_sponsor_pct_opposite_dem_ols=-2.438769
+RESULT:female_sponsor_pct_opposite_dem_rd=-5.132482
+RESULT:female_sponsor_pct_opposite_dem_ipw_sponsor=-2.241830
+RESULT:female_sponsor_pct_opposite_rep_ols=4.327940
+RESULT:female_sponsor_pct_opposite_rep_ipw_district=2.698884
+RESULT:n_bills_ncosponsors_all_ols=60669
+RESULT:n_sponsor_terms_ncosponsors_all_ols=4746
+RESULT:n_bills_pct_opposite_dem_ols=22712
+RESULT:n_bills_pct_opposite_rep_ols=18691

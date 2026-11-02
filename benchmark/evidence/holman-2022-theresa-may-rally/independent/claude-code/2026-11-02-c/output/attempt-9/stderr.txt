@@ -1,0 +1,22 @@
+Error in `d[, c(y, att, "time", "wave", ctrl)]`:
+! Can't subset columns that don't exist.
+✖ Column `ideo3f` doesn't exist.
+Backtrace:
+     ▆
+  1. ├─base::cat(fit(y, att, ideo), "\n")
+  2. ├─global fit(y, att, ideo)
+  3. │ ├─base::as.data.frame(...)
+  4. │ ├─d[complete.cases(d[, c(y, att, "time", "wave", ctrl)]), ]
+  5. │ ├─tibble:::`[.tbl_df`(...)
+  6. │ ├─stats::complete.cases(d[, c(y, att, "time", "wave", ctrl)])
+  7. │ ├─d[, c(y, att, "time", "wave", ctrl)]
+  8. │ └─tibble:::`[.tbl_df`(d, , c(y, att, "time", "wave", ctrl))
+  9. │   └─tibble:::vectbl_as_col_location(...)
+ 10. │     ├─tibble:::subclass_col_index_errors(...)
+ 11. │     │ └─base::withCallingHandlers(...)
+ 12. │     └─vctrs::vec_as_location(j, n, names, missing = "error", call = call)
+ 13. └─vctrs (local) `<fn>`() at vctrs/R/subscript-loc.R:84:3
+ 14.   └─vctrs:::stop_subscript_oob(...)
+ 15.     └─vctrs:::stop_subscript(...) at vctrs/R/subscript-loc.R:503:3
+ 16.       └─rlang::abort(...) at vctrs/R/subscript.R:150:3
+Execution halted

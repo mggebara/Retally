@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "entry_id": "arias-2022-changing-tides-climate-migration",
+  "mode": "blind",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Restriction in the design (Language Fluency None never paired with Origin 'Another region in your country') is not modelled with an interaction; AMCEs come from a plain OLS with main-effect dummies for all seven attributes. Reason for migration is unrestricted, so its AMCEs are unaffected in expectation.",
+    "Sample: Qualtrics survey-preview responses (DistributionChannel 'preview') dropped; every profile pair with a non-missing forced choice kept, including respondents who did not finish all nine tasks. Respondent and choice-task counts are computed from this estimation sample."
+  ],
+  "notes": "attempt-1 was exploratory (no RESULT lines): inspected the Qualtrics conjoint exports (F-k-j attribute names, F-k-p-j levels, forced choice in force_choice and Q184..Q198). Final: reshaped the U.S. and German conjoint CSVs to one row per profile (two per pair), outcome = profile chosen in the forced choice, German levels translated to English via the conjoint_design .dat files (Atheist mapped to the Agnostic baseline). OLS with fixest, all seven attributes, baselines economic opportunity / no language / female / unemployed / agnostic(atheist) / another region / no vulnerability, SEs clustered by respondent (ResponseId). Respondents = distinct respondents contributing at least one choice; choice tasks = profiles in the estimation. No script files in the dataset were opened; only data files were read. In reading the paper's method section I incidentally saw text values that were not withheld (e.g. U.S. wildfires about 4 points, German wildfires about 6 points, two Table 2 vulnerability rows); the specification was fixed in advance and not tuned toward them.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:11:16Z",
+  "finished_at": "2026-11-02T20:14:00Z"
+}

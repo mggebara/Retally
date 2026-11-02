@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "grier-2023-sugar-roll-call-voting",
+  "mode": "independent",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Agriculture-committee coefficient is quasi-separated (R's glm drifts to about -57 rather than Stata's -36.3); not a scored claim.",
+    "Contributions variable taken to be totalcont as supplied (assumed already inflation-adjusted by the authors); no further deflation applied."
+  ],
+  "notes": "Two exploratory runs (attempt-1: variable inspection and comparison of the three .dta files, which differ only in totalcont; attempt-2: window totals and switching-sample counts). Final model: logit (glm binomial) of aye (vote == 'Aye', all other responses 0) on totalcont, ACU score (ncu), tenure, poverty, bach, medincome, over65, agcom plus fixed-effect dummies (with a constant), on the units observed for both votes whose vote switched; robust HC0 sandwich SEs scaled by n/(n-1). District FE: district id; 93 switching districts after dropping one with missing tenure, N=186. Incumbent FE: rows with both==1 (same member at both votes), 53 switchers, N=106. Windows: SugarReplicate.dta = baseline (largest totals, 1 year before vote to end of calendar year), SugarReplicate_iter1.dta = calendar-year window, SugarReplicate_iter2.dta = 12 months up to the vote (mapping inferred from file order matching Table 3 row order). Readme .docx read for data provenance only. The first scored run was final; no claim or error iterations. No docker hangs. The paper text was read via the harness copy of paper.txt saved in the session tool-results directory (identical content, output overflow).",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:01:19Z",
+  "finished_at": "2026-11-02T20:03:14Z"
+}

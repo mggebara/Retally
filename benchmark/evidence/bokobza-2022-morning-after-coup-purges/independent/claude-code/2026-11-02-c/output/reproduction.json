@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "entry_id": "bokobza-2022-morning-after-coup-purges",
+  "mode": "independent",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [
+    "Country-level autocracy sample uses democracy1 == 0 (the Boix-Miller-Rosato variable in the country file); this reproduces the reported base-model sample of 3,715 country-years in 115 countries (fixest drops 1 singleton, N = 3,714). A one-year lag of democracy1 gave 3,749 obs in 117 countries.",
+    "Leader-FE models (Table A2) take the one-year lags of the controls within each leader spell (leader_cab_id), i.e. the panel is leader x year; this drops each leader's first year (N = 3,282 / 3,261 vs. reported 3,332 / 3,307) and makes lagged monarchy collinear with the leader FE, as the paper reports. Attempt 3 lagged within country (N = 3,591) and gave leader-FE coefficients of 0.059 / 0.062.",
+    "Individual-level H2a (experience) model sample: non-leader minister-years in autocracies (democracy_lag == 0) with a non-missing importance tier, including junior ministers; this matches the reported N (90,020) better than excluding juniors (~80k). N = 89,746.",
+    "In three of the four individual-level models fixest drops lagged log population as collinear with the country and year fixed effects even with collin.tol = 1e-14; the paper reports a coefficient for it. In the responsibility model, where it is kept, the failed-coup coefficients are unchanged from attempt 3, where it was dropped."
+  ],
+  "notes": "Attempts 1-2 were exploratory runs (variable listings and sample counts, no estimates). Attempt 3 was the first full run; check_attempt reported every claim within tolerance. I changed the script anyway on specification grounds: the leader-FE N (3,591) did not match the reported 3,332, and monarchy did not drop out as the paper says it should. The final run takes the lags within each leader spell for the leader-FE models and lowers the collinearity tolerance for the individual-level models. Country-level models: OLS (fixest) of replacement_rateadj_minister on coupattempt_whogov (already July-recoded in the data) with lagged log GDP per capita and population (plus lagged monarchy, military and party dummies in the Main models), country or leader FE plus year FE, clustered by country. Individual-level models: linear probability models of purged_y1 for non-leader ministers in autocracies, with the failed-coup indicator interacted with experience group, party group, minister type or importance tier; cubic in years in office except in the experience model; lagged log GDP per capita and population; country and year FE, clustered by country. No docker run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T19:58:43Z",
+  "finished_at": "2026-11-02T20:03:00Z"
+}

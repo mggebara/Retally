@@ -1,0 +1,29 @@
+read done, rows: 19836464  secs: 100.9 
+rows after age/educ filter: 19393217  missing state: 2035872  missing urate: 2035872 
+N full: 17357345  months: 240  last ym: 201405  states: 51  secs: 108.9 
+weighted hire rate all/young/old: 3.393124 6.17111 2.449583 
+share young: 0.2367587 
+wage hires: 118406  (hires with wage but allocation flag NA: 13958 )
+cells: 1542915  secs: 136.5 
+hiring regressions done, secs: 140.9 
+N by origin: 10810795 644834 5901716 
+ind xwalk unmatched: 11  occ xwalk unmatched: 0 
+wage N: 118387 
+DEVIATION: yh_data.csv read with data.table::fread(select=) of the 19 needed columns only (4 GB memory / 300 s sandbox limits).
+DEVIATION: state identifiers are missing in the data after mid-2014 and the state unemployment file ends May 2014, so the estimation sample ends May 2014 rather than September 2016.
+DEVIATION: hiring regressions estimated on weighted cell means (state x month x demographic cell x PE group x prior status); coefficients are identical to the individual-level weighted LPM.
+DEVIATION: years of education imputed from PEEDUCA categories (31:0, 32:2.5, 33:5.5, 34:7.5, 35:9, 36:10, 37:11, 38-39:12, 40:13, 41-42:14, 43:16, 44:18, 45-46:20).
+RESULT:young_x_unemp_rate_no_controls=-0.343066
+RESULT:experienced_x_unemp_rate_no_controls=-0.039095
+RESULT:young_x_unemp_rate_preferred=-0.256665
+RESULT:experienced_x_unemp_rate_preferred=0.051657
+RESULT:aggregate_unemp_rate_no_controls=-0.115205
+RESULT:aggregate_unemp_rate_month_year_fe=-0.024615
+RESULT:young_x_unemp_rate_employed=-0.172814
+RESULT:experienced_x_unemp_rate_employed=0.022795
+RESULT:young_x_unemp_rate_unemployed=-1.981303
+RESULT:young_x_unemp_rate_nilf=-0.593998
+RESULT:wage_young_x_unemp_rate_all_hires=-0.025102
+RESULT:wage_experienced_x_unemp_rate_all_hires=-0.010221
+RESULT:n_obs_full_sample=17357345
+total secs: 141.7 

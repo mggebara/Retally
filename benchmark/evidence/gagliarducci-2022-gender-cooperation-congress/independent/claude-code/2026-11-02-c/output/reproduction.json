@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "entry_id": "gagliarducci-2022-gender-cooperation-congress",
+  "mode": "independent",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Percent of opposite-party cosponsors constructed as 100*numb_cosponsors_opposite/(numb_cosponsors+1) per the paper's footnote 11, not the dataset's pct_cosponsors_opposite (which divides by numb_cosponsors).",
+    "RD bandwidths fixed at the values reported in the paper (13 for Republican cosponsors, 24 for Democratic percent opposite) rather than recomputed; current rdrobust MSE bandwidths (19.7 and 9.5) are printed for reference. Uniform kernel, linear in the margin with slopes differing by side.",
+    "Propensity scores: bill-level logit of the female dummy (no Congress FE), ATE inverse-probability weights 1/p and 1/(1-p); observations perfectly predicted by a binary covariate dropped as Stata's logit would. Column 3 PS on district characteristics within the bandwidth; columns 4/5 on district characteristics + |MV1_democrat| (+ sponsor characteristics in column 5).",
+    "Macro areas = Census regions (Northeast, Midwest, South; West omitted); log population density = lnpop - lnarea; rookie = tenure_run==1; committee leader = chair or ranking member; occupational dummies occ1-occ5; total bills sponsored counted per sponsor-Congress in the data.",
+    "fixest dropped one singleton fixed-effect observation, so the all-sponsor OLS uses 60,669 bills (paper 60,670; the complete-case sample is exactly 60,670 bills, 4,746 sponsor-terms)."
+  ],
+  "notes": "Two exploratory runs (variable inspection, sample counts; no RESULT lines) then one estimating run, which is final. After it ran I compared its RESULT lines to the claims with check_attempt ('All claims within tolerance') and did not change the script, so no claim attempt is recorded. Data: Data/AnalysisData/bills_analysis_101-111_replication.dta. OLS: Congress and minor-topic FE, 33 committee dummies, sponsor and district characteristics, SE clustered by sponsor-Congress. The unweighted Republican RD for cosponsors (Table 5 Panel A col 2, not a listed claim) reproduces the paper exactly (6.101, 1,227 bills, 100 sponsors), which supports the RD sample construction. Party-specific OLS estimates are further from the paper than the pooled one (e.g. Republican cosponsors 2.40 vs 3.149), and PS-weighted samples are somewhat smaller than the paper's.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:01:15Z",
+  "finished_at": "2026-11-02T20:05:00Z"
+}

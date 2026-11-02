@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "entry_id": "holman-2022-theresa-may-rally",
+  "mode": "independent",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-6", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-7", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-8", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-9", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-10", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Table 4: N is 4486 country-quarters (44 countries) rather than the paper's 4328 (66 countries); the posted global_approval.dta contains 44 usable countries and no lead/lag or growth-rate variant tried (exploratory attempts 4 and 6) reproduced 4328.",
+    "Table 4: the dependent variable is the posted 'lag_approval' (the only approval series in the file), regressed on the contemporaneous 16+-death international attack indicator kill_16; GDP enters in levels (variable 'growth', rescaled by 1e6), execrlc linear. Coefficients are OLS with country dummies; panel-corrected SEs computed by hand (Beck-Katz, pairwise covariances), no AR(1) correction.",
+    "Table 2: both columns estimated by OLS (the May best PM column as a linear probability model, since the reported coefficients/SEs are on the probability scale despite the note saying logistic). Wave dummies entered after 'time' so the last collinear wave dummy is omitted, Stata-style; SEs clustered by respondent (not scored). Ideology uses ideology2 (missing set to midpoint), which reproduces both reported Ns exactly."
+  ],
+  "notes": "Attempts 1-6 explored the data (readme docx text, variable structure, sample-size searches for Table 4). Attempt 7 crashed (singular X'X in the PCSE function because GDP is in levels) and was fixed by rescaling GDP. Attempt 8 was the first scored run; I compared it with check_attempt (feedback.txt): the Table 4 coefficients were within tolerance, but N(Table 4) and the May-likeability interaction and time coefficients, plus the best-PM time coefficient, were off. Attempts 9 (crashed from a bug in the exploratory script) and 10 explored Table 2 variants (alternative ideology codings, treatment2, which wave dummy gets omitted, adding a Conservative dummy). None was better justified by the paper, so the final run reruns the attempt-8 script unchanged; its output is identical to attempt 8. Remaining gaps: May-likeability DiD interaction -0.0996 vs -0.1274 and time -0.451 vs -0.501; Table 4 N 4486 vs 4328. No docker run hung. replication_files.do was not opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:02:03Z",
+  "finished_at": "2026-11-02T20:10:30Z"
+}

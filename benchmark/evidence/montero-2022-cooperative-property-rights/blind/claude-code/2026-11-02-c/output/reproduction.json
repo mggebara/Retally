@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "entry_id": "montero-2022-cooperative-property-rights",
+  "mode": "blind",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "IQR regressions (one observation per property, IQR pooled across all of the property's surveyed workers): survey-round FE uses the survey year of each property's first row in the file, since the paper does not say how a round is assigned when a property's workers span several rounds.",
+    "All survey years in the data file (2000-2013) are kept, although the paper's text says 2002-2013; the file contains no 2002/2003 rounds, and no year restriction was applied.",
+    "Former-owner clusters are identified by Expropretario_ISTA; bandwidth samples are |own_amt - 500| <= bw (uniform kernel); percentiles use R quantile type 2 (Stata pctile convention)."
+  ],
+  "notes": "Two exploratory runs (attempt-1: variable listing; attempt-2: identifiers, bandwidth sample sizes, years per property), with no RESULT lines. Specification: hh_income_pc ~ Above500 + norm_dist + Above500:norm_dist | year (linear in the running variable on each side of the cutoff), with SEs clustered by former owner (Expropretario_ISTA), on worker-level data within 300/150 ha. IQR: 75th minus 25th percentile of hh_income_pc per property (match_id) among properties with >=5 surveyed workers, one row per property, with the same RD regression. Attempt-3 was the first scored run. Its coefficients are identical to the final run's, but fixest's default dropped singleton survey-year FE groups in the IQR regressions (N 75/26). The final run keeps singletons (fixef.rm='none'), as Stata's reg with i.year would, giving N 76/28. The change was made for that methodological reason only; no comparison with paper values was made. Cluster counts reported are those of the worker-level samples (columns 1/2); the IQR samples have fewer owners (71 at 300 ha, 25 at 150 ha; printed as DIAG). While reading the paper's methods prose, the results paragraph introducing Table 5 came into view; it mentions a dollar figure for the IQR difference. It was not used for, and did not influence, any specification choice.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:19:03Z",
+  "finished_at": "2026-11-02T20:21:32Z"
+}

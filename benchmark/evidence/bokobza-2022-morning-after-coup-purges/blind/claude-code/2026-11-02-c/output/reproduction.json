@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "entry_id": "bokobza-2022-morning-after-coup-purges",
+  "mode": "blind",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-6", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-7", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Individual-level data: the supplied pop_pwt_ln_lag column is an exact copy of gdp_cap_pwt_ln_lag (correlation 1), so population dropped out as collinear in attempt-6. The final script rebuilds the one-year lag of logged population from the country-year pop_pwt_ln series (consecutive years within country); the rebuilt GDP lag matches the supplied one to 4e-7.",
+    "H2a experience model sample: footnote 16 says junior ministers / other low-ranking posts are excluded, but the reported N (90,020) is only matched by keeping junior ministers and dropping minister-years without an importance tier (my N 89,637; excluding juniors would give 85,711). I used non-leader minister-years with a non-missing importance tier, i.e. the N-consistent sample.",
+    "Leader-FE country models: controls lagged within leader spells (Stata-style L. with leader as panel), which drops each leader's first year; this reproduces the reported N pattern (3,361 before singleton removal vs 3,332 reported; country-FE 3,745 vs 3,715 reported, the same ~30-observation gap).",
+    "The country-level failed-coup variable coupattempt_whogov was taken as already recoded to the July-to-July WhoGov window (it lines up with the individual-level coupattempt_presentyear shifted one year, regardless of coup month); no further recoding applied. Individual level uses coupattempt_presentyear (Powell & Thyne); the _br variables (Bjørnskov-Rode) were not used.",
+    "fixest removes fixed-effect singletons (2 countries in country-FE, ~84 leaders in leader-FE models); this does not change point estimates.",
+    "Country-level sample: lagged Boix-Miller-Rosato democracy1 == 0 (lag within country), years 1967-2016. Individual-level sample: democracy_lag == 0, 1967-2016, leader == 0; affiliation drops 'unknown' party; responsibility uses minister_type (ref Defense); importance uses tiers 0.5-4 (ref 4 = PM/President not the leader). Individual samples are ~350-380 obs smaller than reported in every column, cause not identified."
+  ],
+  "notes": "Five exploratory runs (attempt-1..5, no RESULT lines) inspected variables and sample sizes. attempt-6 was the first full estimation; inspecting its output showed log population dropped as collinear in all individual-level models, traced in exploratory attempt-7 to pop_pwt_ln_lag being a duplicate of the GDP lag; the final run rebuilds the population lag. No comparison with paper values was made (blind). All models are OLS/LPM via fixest with country (or leader) and year fixed effects and country-clustered SEs.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:11:59Z",
+  "finished_at": "2026-11-02T20:18:30Z"
+}

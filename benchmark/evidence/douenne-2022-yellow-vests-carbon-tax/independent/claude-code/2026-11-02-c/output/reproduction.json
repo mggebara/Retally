@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "entry_id": "douenne-2022-yellow-vests-carbon-tax",
+  "mode": "independent",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 1, "kind": "error"}
+  ],
+  "deviations": [
+    "The paper's full control list is in the online appendix, which is not available; controls were reconstructed: incomes = respondent and second-adult income percentiles with kinks at the 20th and 70th percentiles (p, min(p-20,0), min(p-70,0)); estimated gains = simule_gain and its square; sociodemographics = sex, age bracket, socio-professional category, education (4), town size, region, consumption units, number aged 14+, smoker, main news source; other motives = belief the tax is effective (not 'No') in Tables 4 and 6, and the initial win/lose category in Table 8.",
+    "All regressions use the survey weights (weight) and heteroskedasticity-robust SEs.",
+    "Table 6 subsample built as respondent percentile in [10,60] or (more than one adult and second-adult percentile in [10,60]); this gives 1,961 observations versus 1,969 in the paper.",
+    "Effectiveness information treatment Z_E identified as the apres_modifs indicator (the random half-split whose first-stage effect on believing in effectiveness is about 6 p.p.)."
+  ],
+  "notes": "Data: s (3,002 respondents) from after_preparation.RData; memisc-classed columns were stripped to base vectors because memisc is not installed in the sandbox. Attempts 1-4 were exploratory (object/column listing and variable tabulations; attempts 2-3 crashed on memisc classes during exploration and printed no RESULT lines). Attempt 5 was the first estimation script and crashed on a type error (TRUE/FALSE-coded Yellow Vests columns stored as character); fixed and rerun as the final run. The final run's values were compared with the claims via check_attempt ('All claims within tolerance'); the script was not changed afterwards, so no claim attempt is recorded. Table 4: RDD LPM on the 1,968 feedback recipients (757 with |gain|<50), quadratic in estimated gain; col 3 adds interactions with initial acceptance, Yellow Vests supporter (part of or supports the movement), and initial not-lose belief plus initial win/lose category controls. Table 6 col 1: 2SLS of targeted-dividend acceptance on believing one does not lose, instrumented by T1, T2, T1xT2 with policy-threshold FE, single-adult indicator and initial acceptance. Table 8 col 1: 2SLS of initial approval on believing the tax effective ('Yes'), instrumented by the effectiveness and climate-change information treatments. No docker run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:05:26Z",
+  "finished_at": "2026-11-02T20:09:30Z"
+}

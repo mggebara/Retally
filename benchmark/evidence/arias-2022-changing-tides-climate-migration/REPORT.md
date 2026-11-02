@@ -38,7 +38,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [12/12](seeded/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [12/12](independent/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) | [12/12](blind/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[12/12](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) |
+| `claude-code` | [12/12](seeded/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [12/12](independent/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[12/12](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [12/12](blind/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[12/12](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[12/12](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
 | `pipeline-claude-opus-4-7` | [4/12](seeded/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [0/12](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [1/12](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) |
 | `pipeline-desktop-opus` | [12/12](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) | [12/12](independent/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) | [12/12](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) |
 | `pipeline-desktop-opus-run2` | [12/12](seeded/pipeline-desktop-opus-run2/20261023T152513Z/CELL.md) (20261023T152513Z) | [12/12](independent/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) | [12/12](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
@@ -78,6 +78,8 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 - [independent/claude-code/2026-11-01-a](independent/claude-code/2026-11-01-a/CELL.md) (12/12)
   - US profile count is 18970 (9485 answered pairs from 1086 respondents, keeping every answered task including the one Qualtrics preview response); the paper reports 18966. The 2-pair difference could not be traced to any filter; no filter was applied to chase it.
   - Language x Origin interaction included to mirror the design-file restriction (cjoint-style); the additive model gives Reason coefficients within 0.0006 (printed in stdout). In the US data the restriction was evidently not enforced (1274 None-fluency/Another-region profiles).
+- [independent/claude-code/2026-11-02-c](independent/claude-code/2026-11-02-c/CELL.md) (12/12)
+  - Dropped Qualtrics survey-preview responses (Status = 1: 2 U.S., 3 German rows) before stacking; this leaves 1085 U.S. / 1072 German respondents and 18,952 / 18,826 profiles versus the paper's 1086 / 1074 and 18,966 / 18,862. Without that filter the raw counts are 1086 / 1074 respondents with at least one choice and 9485 / 9431 answered pairs.
 - [independent/pipeline-claude-opus-4-7/20261021T142909Z](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (0/12; failed: `amce_drought_us`, `amce_flooding_us`, `amce_wildfires_us`, `amce_persecution_us`, `amce_drought_germany`, `amce_flooding_germany`, `amce_wildfires_germany`, `amce_persecution_germany`, `respondents_us`, `respondents_germany`, `choice_tasks_us`, `choice_tasks_germany`)
   - The AMCE estimates do not match the paper despite correct attribute coding. The core issue appears to be that the choice variable detection is picking up wrong columns, inverting or scrambling the chosen indicator. Switching to more careful choice detection: for conjoint tasks, the choice should be the question asked after each pair, and we need to look at the specific pattern.
 - [blind/claude-code/2026-10-21-b](blind/claude-code/2026-10-21-b/CELL.md) (12/12)
@@ -88,6 +90,9 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - No respondent filters (Status/preview, Finished, duplicate panel IDs) were applied: every profile whose forced-choice answer is non-missing is used, including those from respondents who did not finish all nine tasks. Respondents = distinct ResponseIds with at least one answered choice task; choice tasks = profile-level observations entering the AMCE regression (2 per answered pair).
 - [blind/claude-code/2026-11-01-a](blind/claude-code/2026-11-01-a/CELL.md) (12/12)
   - Language x Origin interaction included in the full model (cjoint convention for the design's restriction Language=None x Origin=Another region, as specified in conjoint_design.dat); reason-for-migration AMCEs are its main-effect coefficients.
+- [blind/claude-code/2026-11-02-c](blind/claude-code/2026-11-02-c/CELL.md) (12/12)
+  - Restriction in the design (Language Fluency None never paired with Origin 'Another region in your country') is not modelled with an interaction; AMCEs come from a plain OLS with main-effect dummies for all seven attributes. Reason for migration is unrestricted, so its AMCEs are unaffected in expectation.
+  - Sample: Qualtrics survey-preview responses (DistributionChannel 'preview') dropped; every profile pair with a non-missing forced choice kept, including respondents who did not finish all nine tasks. Respondent and choice-task counts are computed from this estimation sample.
 
 ### Pipeline and agent disagree
 
@@ -125,6 +130,10 @@ _None._
 
 [`independent/claude-code/2026-11-01-a/CELL.md`](independent/claude-code/2026-11-01-a/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 3; 2026-11-02T04:40:00Z; from `claude-code-run2-13papers-indep-blind-2026-11-01.json`; evidence complete.
 
+### independent · claude-code · 2026-11-02-c
+
+[`independent/claude-code/2026-11-02-c/CELL.md`](independent/claude-code/2026-11-02-c/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 2; 2026-11-02T20:01:00Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
+
 ### independent · pipeline-claude-opus-4-7 · 20261021T142909Z
 
 [`independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md`](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) — final 0/12, re-scored 0/12; first scored 0/12; executions 7; 2026-10-21T14:29:09Z; from `pipeline-10papers-all-modes-2026-10-21.json`; evidence complete.
@@ -148,6 +157,10 @@ _None._
 ### blind · claude-code · 2026-11-01-a
 
 [`blind/claude-code/2026-11-01-a/CELL.md`](blind/claude-code/2026-11-01-a/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 3; 2026-11-02T04:21:16Z; from `claude-code-run2-13papers-indep-blind-2026-11-01.json`; evidence complete.
+
+### blind · claude-code · 2026-11-02-c
+
+[`blind/claude-code/2026-11-02-c/CELL.md`](blind/claude-code/2026-11-02-c/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 2; 2026-11-02T20:14:00Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
 
 ### blind · pipeline-claude-opus-4-7 · 20261021T142909Z
 

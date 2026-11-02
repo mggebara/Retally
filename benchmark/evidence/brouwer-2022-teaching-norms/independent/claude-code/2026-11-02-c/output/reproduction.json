@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "brouwer-2022-teaching-norms",
+  "mode": "independent",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was an exploratory run (variable codings, scene/treatment tables, missingness; no RESULT lines). Final run: pooled OLS LPMs with fixest::feols on master.dta. Punishment sample = Violation and Violation+Help scenes (scene 2,3); Helping sample = Help and Violation+Help scenes (scene 1,3). Regressors are Child, VH (scene==3), and Child x VH; the controlled models add male (Male Target), hugo (taken to be the Male Actor dummy), Morning, witness, rich, Rain, Hot. Standard errors clustered by School (30 clusters). The one target with missing gender drops out of the controlled models. The script was not changed after I compared it with the claims, so no claim attempts. Coefficients, standard errors, N and R2 match Table 2 at its printed precision.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T19:58:34Z",
+  "finished_at": "2026-11-02T19:59:37Z"
+}

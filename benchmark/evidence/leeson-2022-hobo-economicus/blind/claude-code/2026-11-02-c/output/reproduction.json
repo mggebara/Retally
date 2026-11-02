@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "entry_id": "leeson-2022-hobo-economicus",
+  "mode": "blind",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1: exploratory run (codebook, station names, merges); no RESULT lines. attempt-2: full estimation. Coefficients came from fixest, which by default drops singleton date fixed effects (240/98 obs). Final run: same specification, but singletons kept (fixef.rm='none'; observation counts from an equivalent lm with date dummies). This matches a plain OLS with date dummies and gives 242/102 station-visits. Coefficients are identical; nothing was compared with paper values. Specification: OLS of panhandlers per visit on monthly passersby (thousands exiting; matched by visit month/year; Georgetown already carries Foggy Bottom's counts in passersby.csv), station-average friendliness (mean over passersby of their highest response category marked 1), shuttle indicator (shuttlemin<=10), service indicator (servicemin<=10), date FE, SEs clustered by station. Five-station subsample = Farragut North, Farragut West, Gallery Place, McPherson Square, Metro Center. Receipts: donations/minutes*60 (80 obs); (cash+inkind)/minutes*60 with rows missing either dropped (67 obs). Brown-Forsythe = car::leveneTest(center=median) F; ANOVA F = one-way aov by station. The Docker command was run through a wrapper script (literal paths) because of the sandbox guard. No hangs.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:16:59Z",
+  "finished_at": "2026-11-02T20:19:30Z"
+}

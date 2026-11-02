@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "carrera-2022-who-chooses-commitment",
+  "mode": "independent",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was exploratory (variable listing, no RESULT lines). Final run: participant-level file cleaned_commitment_study_data.dta; sample drops flag_exclude_exog==1 and flag_low_wtp==1 (endogenous incentive assignment, 44 obs) and wave-3 threshold80_12 group, giving N=1126. Conservative BCP = mean over pairs (1,2),(2,3),(3,5),(5,7),(7,12) of (wtp_{k+1}-wtp_k)/delta - (days_k+days_{k+1})/2 (mean 1.17, info-control 0.66, matching the paper). Goal gap = goal - days_0; actual gap = visits - days_{assigned incentive}; z-scored over the 1126 sample (unstandardized mean/SD match the table notes). Table 3: OLS with wave FE, HC1 robust SEs (fixest). Table 4: stacked 'more' choices (q169==2 at 8, chose_commit12 at 12, q295==2 at 16; waves 1-2 three thresholds, wave 3 only 12) giving 2824 obs; LPM with wave and threshold FE, SEs clustered by participant (row index, as the participant file has no id column). No claim-driven changes were made; all estimates agree with Table 3/4 to the reported precision.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T19:58:00Z",
+  "finished_at": "2026-11-02T20:10:00Z"
+}

@@ -36,7 +36,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [11/11](seeded/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[0/11](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [10/11](independent/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[10/11](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) | [6/11](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[5/11](blind/claude-code/2026-10-22-b/CELL.md) (2026-10-22-b)<br>[6/11](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) |
+| `claude-code` | [11/11](seeded/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[0/11](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [10/11](independent/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[10/11](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[7/11](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [6/11](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[5/11](blind/claude-code/2026-10-22-b/CELL.md) (2026-10-22-b)<br>[6/11](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[6/11](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
 | `pipeline-desktop-opus` | [11/11](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) | [3/11](independent/pipeline-desktop-opus/20261023T064318Z/CELL.md) (20261023T064318Z) | [0/11](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) |
 | `pipeline-desktop-opus-run2` | [11/11](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [8/11](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) (20261023T153002Z) | [0/11](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
 
@@ -52,14 +52,14 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 |---|---|---|---|---|---|---|
 | [independent/pipeline-desktop-opus-run2/20261023T153002Z](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) | `did_time_like_may_table2` | -0.478198 | -0.5007 | ±0.0229 (se_band) | 0.983 | PASS |
 | [blind/claude-code/2026-10-22-b](blind/claude-code/2026-10-22-b/CELL.md) | `intl_attack_table4` | 2.21565 | 3.112 | ±0.875 (se_band) | 1.024 | FAIL |
+| [independent/claude-code/2026-11-02-c](independent/claude-code/2026-11-02-c/CELL.md) | `did_time_may_best_pm_table2` | 0.2055 | 0.2098 | ±0.004196 (relative) | 1.025 | FAIL |
 | [independent/pipeline-desktop-opus/20261023T064318Z](independent/pipeline-desktop-opus/20261023T064318Z/CELL.md) | `n_obs_table4` | 4369 | 4328 | ±43.28 (relative) | 0.947 | PASS |
 | [independent/pipeline-desktop-opus/20261023T064318Z](independent/pipeline-desktop-opus/20261023T064318Z/CELL.md) | `n_obs_did_like_may_table2` | 145012 | 143499 | ±1434.99 (relative) | 1.054 | FAIL |
 | [independent/pipeline-desktop-opus-run2/20261023T153002Z](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) | `did_time_may_best_pm_table2` | 0.205917 | 0.2098 | ±0.004196 (relative) | 0.925 | PASS |
 | [independent/claude-code/2026-10-22-a](independent/claude-code/2026-10-22-a/CELL.md) | `intl_attack_table4` | 2.32209 | 3.112 | ±0.875 (se_band) | 0.903 | PASS |
 | [independent/claude-code/2026-11-01-a](independent/claude-code/2026-11-01-a/CELL.md) | `intl_attack_table4` | 2.32209 | 3.112 | ±0.875 (se_band) | 0.903 | PASS |
+| [independent/claude-code/2026-11-02-c](independent/claude-code/2026-11-02-c/CELL.md) | `intl_attack_table4` | 2.32209 | 3.112 | ±0.875 (se_band) | 0.903 | PASS |
 | [blind/claude-code/2026-11-01-a](blind/claude-code/2026-11-01-a/CELL.md) | `intl_attack_table4` | 2.32209 | 3.112 | ±0.875 (se_band) | 0.903 | PASS |
-| [blind/claude-code/2026-10-22-a](blind/claude-code/2026-10-22-a/CELL.md) | `intl_attack_table4` | 2.32209 | 3.112 | ±0.875 (se_band) | 0.903 | PASS |
-| [independent/pipeline-desktop-opus-run2/20261023T153002Z](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) | `intl_attack_x_woman_exec_table4` | -2.14364 | -4.333 | ±1.859 (se_band) | 1.178 | FAIL |
 
 ### Declared deviations
 
@@ -82,6 +82,10 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Table 4: DV is the dataset's only approval measure (lag_approval) regressed on the contemporaneous kill_16 (16+ deaths) indicator; execrlc entered linearly; country_code fixed effects via OLS. The sample is all complete cases (N=4486); the paper's N=4328 could not be reconstructed (growth-rate, lead/lag timing and AR(1)-trimming variants were counted in exploratory runs and none gives 4328). Point estimates are OLS-LSDV; Beck-Katz panel-corrected SEs (plm vcovBK) are printed but not scored, and no AR(1) correction was applied.
   - Table 2 May best PM column estimated as a linear probability model (random-effects GLS), not logit
   - Table 4 approval timing uses the dataset's lag_approval with the contemporaneous kill_16 indicator
+- [independent/claude-code/2026-11-02-c](independent/claude-code/2026-11-02-c/CELL.md) (7/11; failed: `n_obs_table4`, `did_attack_x_time_like_may_table2`, `did_time_like_may_table2`, `did_time_may_best_pm_table2`)
+  - Table 4: N is 4486 country-quarters (44 countries) rather than the paper's 4328 (66 countries); the posted global_approval.dta contains 44 usable countries and no lead/lag or growth-rate variant tried (exploratory attempts 4 and 6) reproduced 4328.
+  - Table 4: the dependent variable is the posted 'lag_approval' (the only approval series in the file), regressed on the contemporaneous 16+-death international attack indicator kill_16; GDP enters in levels (variable 'growth', rescaled by 1e6), execrlc linear. Coefficients are OLS with country dummies; panel-corrected SEs computed by hand (Beck-Katz, pairwise covariances), no AR(1) correction.
+  - Table 2: both columns estimated by OLS (the May best PM column as a linear probability model, since the reported coefficients/SEs are on the probability scale despite the note saying logistic). Wave dummies entered after 'time' so the last collinear wave dummy is omitted, Stata-style; SEs clustered by respondent (not scored). Ideology uses ideology2 (missing set to midpoint), which reproduces both reported Ns exactly.
 - [independent/pipeline-desktop-opus/20261023T064318Z](independent/pipeline-desktop-opus/20261023T064318Z/CELL.md) (3/11; failed: `intl_attack_table4`, `intl_attack_x_woman_exec_table4`, `did_attack_x_time_like_may_table2`, `did_attack_like_may_table2`, `did_time_like_may_table2`, `did_time_may_best_pm_table2`, `n_obs_did_like_may_table2`, `n_obs_did_may_best_pm_table2`)
   - Table 2 likeability model restricted to BES waves 1-13 (window chosen to match the paper's reported N; paper does not list waves)
   - Table 2 best-PM model restricted to BES waves 9-12 (window chosen to match the paper's reported N; paper does not list waves)
@@ -103,18 +107,22 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Table 4: attack indicator = kill_16 (international attack, 16+ i.e. more than 15 deaths); woman executive = female_pres; execrlc (DPI left/center/right, 0-3) entered linearly; country FE on country_code (44 panels survive listwise deletion, not 66). Point estimates are OLS with country dummies (identical to xtpcse without AR terms); panel-corrected SEs not reproduced (clustered SEs printed for information only; SEs are not scored).
   - Table 2: did_data.dta; treatment = treatment1 (surveyed after attack in wave 12, constant within respondent), time = 1 for waves >= 12, interaction, wave dummies; time is collinear with the wave dummies, so (as Stata's left-to-right collinearity rule would) the last aliased wave dummy is dropped and time kept, which makes the time coefficient a contrast of the last wave with the base wave. Controls: white (ethnically British), female, labour, party_other, income, ideology2 (ideology with missing set to midpoint, per footnote 8); listwise deletion otherwise. Unweighted.
   - Table 2 May best PM: outcome = bestPMW (waves 7, 8, 10, 11, 12), logistic regression per the table note; coefficients reported in log-odds.
+- [blind/claude-code/2026-11-02-c](blind/claude-code/2026-11-02-c/CELL.md) (6/11; failed: `n_obs_table4`, `did_attack_x_time_like_may_table2`, `did_time_like_may_table2`, `did_attack_x_time_may_best_pm_table2`, `did_time_may_best_pm_table2`)
+  - Table 4: panel-corrected SEs computed by a hand-written Beck-Katz estimator (pairwise contemporaneous covariances, like Stata xtpcse's default) because no PCSE package is installed; coefficients are plain OLS with country_code dummies.
+  - Table 4: execrlc (DPI executive ideology, 0-3) entered linearly as given, including its unlabelled 0 code; growth used as the dataset provides it (a GDP level).
+  - Table 2: time is collinear with the wave dummies; the last wave dummy is omitted (what Stata does when time comes before i.wave), so the Time coefficient is the last wave's shift relative to the first wave of each outcome's panel. SEs clustered by respondent (the paper says only 'standard errors'). No survey weights.
 
 ### Pipeline and agent disagree
 
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
-- independent: `intl_attack_table4` — pipeline 0/2, agent 2/2
-- independent: `intl_attack_x_woman_exec_table4` — pipeline 0/2, agent 2/2
-- blind: `did_attack_like_may_table2` — pipeline 0/2, agent 3/3
-- blind: `did_attack_may_best_pm_table2` — pipeline 0/2, agent 3/3
-- blind: `intl_attack_x_woman_exec_table4` — pipeline 0/2, agent 3/3
-- blind: `n_obs_did_like_may_table2` — pipeline 0/2, agent 3/3
-- blind: `n_obs_did_may_best_pm_table2` — pipeline 0/2, agent 3/3
+- independent: `intl_attack_table4` — pipeline 0/2, agent 3/3
+- independent: `intl_attack_x_woman_exec_table4` — pipeline 0/2, agent 3/3
+- blind: `did_attack_like_may_table2` — pipeline 0/2, agent 4/4
+- blind: `did_attack_may_best_pm_table2` — pipeline 0/2, agent 4/4
+- blind: `intl_attack_x_woman_exec_table4` — pipeline 0/2, agent 4/4
+- blind: `n_obs_did_like_may_table2` — pipeline 0/2, agent 4/4
+- blind: `n_obs_did_may_best_pm_table2` — pipeline 0/2, agent 4/4
 
 Pass rates at least 50 points apart (not unanimous):
 
@@ -129,14 +137,11 @@ Pass rates at least 50 points apart (not unanimous):
 - seeded: `n_obs_did_like_may_table2` — pipeline 2/2, agent 1/2
 - seeded: `n_obs_did_may_best_pm_table2` — pipeline 2/2, agent 1/2
 - seeded: `n_obs_table4` — pipeline 2/2, agent 1/2
-- independent: `did_attack_like_may_table2` — pipeline 1/2, agent 2/2
-- independent: `did_attack_x_time_like_may_table2` — pipeline 1/2, agent 2/2
-- independent: `did_time_like_may_table2` — pipeline 1/2, agent 2/2
-- independent: `did_time_may_best_pm_table2` — pipeline 1/2, agent 2/2
-- independent: `n_obs_did_like_may_table2` — pipeline 1/2, agent 2/2
-- independent: `n_obs_did_may_best_pm_table2` — pipeline 1/2, agent 2/2
-- independent: `n_obs_table4` — pipeline 1/2, agent 0/2
-- blind: `intl_attack_table4` — pipeline 0/2, agent 2/3
+- independent: `did_attack_like_may_table2` — pipeline 1/2, agent 3/3
+- independent: `n_obs_did_like_may_table2` — pipeline 1/2, agent 3/3
+- independent: `n_obs_did_may_best_pm_table2` — pipeline 1/2, agent 3/3
+- independent: `n_obs_table4` — pipeline 1/2, agent 0/3
+- blind: `intl_attack_table4` — pipeline 0/2, agent 3/4
 
 ## Cells
 
@@ -164,6 +169,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/claude-code/2026-11-01-a/CELL.md`](independent/claude-code/2026-11-01-a/CELL.md) — final 10/11, re-scored 10/11; first scored 6/11; executions 9; 2026-11-02T04:38:00Z; from `claude-code-run2-13papers-indep-blind-2026-11-01.json`; evidence complete.
 
+### independent · claude-code · 2026-11-02-c
+
+[`independent/claude-code/2026-11-02-c/CELL.md`](independent/claude-code/2026-11-02-c/CELL.md) — final 7/11, re-scored 7/11; first scored 7/11; executions 11; 2026-11-02T20:10:30Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus · 20261023T064318Z
 
 [`independent/pipeline-desktop-opus/20261023T064318Z/CELL.md`](independent/pipeline-desktop-opus/20261023T064318Z/CELL.md) — final 3/11, re-scored 3/11; first scored 1/11; executions 3; 2026-10-23T06:43:18Z; from `pipeline-oracle-desktop-opus-9papers-all-modes-2026-10-23.json`; evidence complete.
@@ -183,6 +192,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · claude-code · 2026-11-01-a
 
 [`blind/claude-code/2026-11-01-a/CELL.md`](blind/claude-code/2026-11-01-a/CELL.md) — final 6/11, re-scored 6/11; first scored 6/11; executions 3; 2026-11-02T04:45:00Z; from `claude-code-run2-13papers-indep-blind-2026-11-01.json`; evidence complete.
+
+### blind · claude-code · 2026-11-02-c
+
+[`blind/claude-code/2026-11-02-c/CELL.md`](blind/claude-code/2026-11-02-c/CELL.md) — final 6/11, re-scored 6/11; first scored 6/11; executions 4; 2026-11-02T20:19:29Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus · 20261023T062931Z
 

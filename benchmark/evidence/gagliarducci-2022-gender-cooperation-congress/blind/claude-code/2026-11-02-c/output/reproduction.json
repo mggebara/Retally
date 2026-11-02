@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "entry_id": "gagliarducci-2022-gender-cooperation-congress",
+  "mode": "blind",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Data: bills_analysis_101-111_replication.dta; sample = public bills (private==0 or missing) with sponsor information; pct opposite is the file's pct_cosponsors_opposite (opposite/cosponsors, missing with zero cosponsors) x100.",
+    "Macro-area dummies (3) built from Census regions of the sponsor's state; log population density = lnpop - lnarea; rookie = tenure_run==1; committee leader = comc or comr; occupation dummies occ1-occ5; total bills sponsored counted per sponsor-Congress in the data.",
+    "Bill characteristics: 33 house_* committee-of-referral dummies plus minor-topic fixed effects; Congress fixed effects; fixest with singleton removal (reghdfe-style); SEs clustered by sponsor-Congress (v2 x state x district x term_served).",
+    "RD: mixed-gender races, linear in MV1_female with separate slopes, uniform kernel, bandwidth fixed at the paper-stated optimal values (13 pp Rep number of cosponsors, 24 pp Dem pct opposite); rdrobust mserd bandwidths printed for information only (17.79, 16.45).",
+    "Propensity scores: bill-level logits within the party sample; RD-IPW on district characteristics within bandwidth; full-sample IPW on district characteristics + winner margin |MV1_democrat| (+ sponsor characteristics in column 5); ATE weights 1/p, 1/(1-p)."
+  ],
+  "notes": "Two exploratory runs (variable inventory, definition checks; no RESULT lines), then one estimation run which is final. No claim comparisons (blind). Did not open Dofiles, Log, Output or README.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:14:03Z",
+  "finished_at": "2026-11-02T20:17:30Z"
+}

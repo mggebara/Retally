@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "mokyr-2022-wheels-of-change",
+  "mode": "independent",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was exploratory (variable summaries, no RESULT lines). The final run is the first and only estimation run; it was not compared with check_attempt and was not changed afterwards. Data: replication_data.dta. Per capita = count / pcmean (mean population 1710-50, matches Table 1 means 18.92 and 3.76). Sample: districts with non-missing Domesday mills (298). High wheat suitability = wheat_tmean <= 5; river suitability = riv_rug26count (rivers in ruggedness 2-6), divided by 1000 (scale does not affect the mills coefficient); instrument = river suitability x high wheat suitability. Controls: main = latitude, longitude, dist_rug_mean, dist_elevation_mean; agricultural = suitmean, wheat indicator, dist_grass_mean; climatic = precip_mean_dist, temp_mean_dist; other = pcmean, min_harbor, DIST_London, min_dist_to_roman_rds, min_dist_2nav_rivers, area. OLS and 2SLS with fixest, SEs clustered by historical county (GAZ_CNTY, 37 clusters). First-stage F = cluster-robust Wald F on the excluded instrument (fixest ivwald1); the iid first-stage F is much larger (69/55/65) and is printed for information only.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:04:54Z",
+  "finished_at": "2026-11-02T20:06:08Z"
+}

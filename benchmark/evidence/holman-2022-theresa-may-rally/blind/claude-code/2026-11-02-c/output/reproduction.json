@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "entry_id": "holman-2022-theresa-may-rally",
+  "mode": "blind",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 1, "kind": "error"}
+  ],
+  "deviations": [
+    "Table 4: panel-corrected SEs computed by a hand-written Beck-Katz estimator (pairwise contemporaneous covariances, like Stata xtpcse's default) because no PCSE package is installed; coefficients are plain OLS with country_code dummies.",
+    "Table 4: execrlc (DPI executive ideology, 0-3) entered linearly as given, including its unlabelled 0 code; growth used as the dataset provides it (a GDP level).",
+    "Table 2: time is collinear with the wave dummies; the last wave dummy is omitted (what Stata does when time comes before i.wave), so the Time coefficient is the last wave's shift relative to the first wave of each outcome's panel. SEs clustered by respondent (the paper says only 'standard errors'). No survey weights."
+  ],
+  "notes": "Independent blind reproduction from the paper text and data files only (the replication .do file is not in the mount and was not sought). Table 4: global_approval.dta; DV lag_approval (missing in each panel's last quarter, so it is next-quarter approval despite its label); attack = kill_16 (international attack with 16+ deaths, 60 country-quarters, matching the paper's count); interaction with female_pres; controls growth, log_inflation, execrlc, election_qtr; country_code fixed effects; complete cases (N=4486, 44 panels). Table 2: did_data.dta long panel; treatment1 (surveyed after the Manchester attack in wave 12) x time (wave>=12), wave FE, controls white, gender, labour, party_other, income, ideology2 (ideology with missing values set to the midpoint, per footnote 8); like May = likeMayW, OLS, waves 9-16; May best PM = bestPMW (1 May, 0 Corbyn), logit, waves 7,8,10,11,12; logit coefficients reported. Attempts 1-2 were exploratory (variable labels, tabulations); attempt 3 crashed in the PCSE bread (singular solve due to scaling) and was fixed with the QR-based unscaled covariance. No docker hang. No specification was tuned toward any paper number.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:15:20Z",
+  "finished_at": "2026-11-02T20:19:29Z"
+}

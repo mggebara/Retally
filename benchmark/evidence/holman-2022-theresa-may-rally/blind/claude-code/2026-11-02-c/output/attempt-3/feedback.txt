@@ -1,0 +1,4 @@
+Crash before any RESULT line:
+Error in solve.default(crossprod(X)) : system is computationally singular: reciprocal condition number = 8.2901e-17
+(in pcse_vcov; the growth variable is a GDP level in the millions, so X'X is badly scaled)
+Fix: use the QR-based unscaled covariance summary(model)$cov.unscaled as the bread instead of solve(crossprod(X)).

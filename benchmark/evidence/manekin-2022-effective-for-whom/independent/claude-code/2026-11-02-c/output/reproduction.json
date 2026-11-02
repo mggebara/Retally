@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "manekin-2022-effective-for-whom",
+  "mode": "independent",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was exploratory (str/tables of the four survey data frames, no RESULT lines). Final run: OLS via lm(). Study 1 (US wave1, Israel wave1): outcome on minority-identity dummies (US: identity_protesters==1 Black; Israel: 1 Ethiopian, 2 Arab) plus tactic dummies (tactic 1 traffic, 2 destroy), base white protesters marching, weighted by the 'weight' column, as the claim descriptions state. Study 2 US (us_survey_wave2): outcome on black + group_goal + commitment, unweighted (the data frame has no weight column); police-action regression drops 5 missing outcomes (N=3008). Study 2 Israel N from the perceived-violence regression on Ethiopian/Arab dummies + group_goal + commitment. Classical OLS SEs; coefficients and SEs match Tables 1 and 2. No comparison-driven changes were made, so there is no claim attempt. No docker run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:03:37Z",
+  "finished_at": "2026-11-02T20:04:41Z"
+}

@@ -1,0 +1,382 @@
+[1] "MetroVisitsLog"
+  Variable Name Variable Label       
+1 metro         Metro station        
+2 date          Date                 
+3 panhandlers   Number of panhandlers
+  Description                                      
+1 Metro station visited                            
+2 Date of visit to station                         
+3 Number of panhandlers observed at station visited
+  Values                                   
+1 See Table B1.                            
+2 Date of observation in MM/DD/YYYY format.
+3 Range: 0-10. None missing.               
+[1] "Friendliness"
+  Variable Name Variable Label              
+1 passerbyid    Passerby ID                 
+2 date          Date                        
+3 passresp1     Passerby response category 1
+4 passresp2     Passerby response category 2
+5 passresp3     Passerby response category 3
+6 passresp4     Passerby response category 4
+7 passresp5     Passerby response category 5
+8 metro         Metro station               
+  Description                                                                               
+1 Unique identifier of passersby approached with request for directions                     
+2 Date when passerby was approached                                                         
+3 Indicator variable equal to 1 if passerby ignored solicitation                            
+4 indicator variable equal to 1 if passerby acknowledged solicitation but kept walking      
+5 indicator variable equal to 1 if passerby stopped to acknowledge solicitation             
+6 indicator variable equal to 1 if passerby stopped and provided directions                 
+7 indicator variable equal to 1 if passerby stopped and provided directions by sharing a map
+8 Metro station where passerby was approached                                               
+  Values                                   
+1 Range: 1-701. None missing.              
+2 Date of observation in MM/DD/YYYY format.
+3 0 or 1. None missing.                    
+4 0 or 1. None missing.                    
+5 0 or 1. None missing.                    
+6 0 or 1. None missing.                    
+7 0 or 1. None missing.                    
+8 See Table B1.                            
+[1] "Receipts"
+  Variable Name Variable Label                                  
+1 observationid Observation ID                                  
+2 panhandlerid  Unique panhandler ID                            
+3 date          Date                                            
+4 metro         Metro station                                   
+5 donations     Number of donations received                    
+6 minutes       Minutes observed working                        
+7 cash          Dollars received in cash                        
+8 inkind        Dollars received in in-kind                     
+9 declinedoffer Declined offer to count dollars received in cash
+  Description                                                                                 
+1 Observation identifier for panhandlers in receipts dataset                                  
+2 Unique panhandler identifier                                                                
+3 Date when panhandler was observed                                                           
+4 Metro station where panhandler was observed                                                 
+5 Number of donations panhandler received                                                     
+6 Number of minutes panhandler was observed working                                           
+7 Dollars panhandler received in cash                                                         
+8 Dollar value panhandler received in-kind                                                    
+9 Indicator variable equal to 1 if panhandler declined offer to count dollars received in cash
+  Values                                                                                                                     
+1 Range: 1-80. None missing.                                                                                                 
+2 Range: 1-76. None missing.                                                                                                 
+3 Date of observation in MM/DD/YYYY format.                                                                                  
+4 See Table B1.                                                                                                              
+5 Range: 0-17. None missing.                                                                                                 
+6 Range: 4-223. None missing.                                                                                                
+7 Range: 0-40. Missing: 10. Missing when declined offer to count dollars (9) or accepted offer but did not count dollars (1).
+8 Range: 0-5.99. Missing: 5. Missing when dollar value of in-kind receipts could not be imputed from market price.           
+9 0 or 1. Missing: 9. Missing when donations==0.                                                                             
+[1] "Passersby"
+  Variable Name Variable Label     
+1 metro         Metro station      
+2 month         Month              
+3 year          Year               
+4 passersby     Number of passersby
+  Description                                            
+1 Metro station name                                     
+2 Month                                                  
+3 Year                                                   
+4 Monthly number of Metro riders per 1000 exiting station
+  Values                              
+1 See Table B1.                       
+2 Range: 2-12. None missing.          
+3 Range: 2016-2017. None missing.     
+4 Range: 67.117-690.533. None missing.
+[1] "Service"
+  Variable Name    Variable Label                                
+1 metro            Metro station                                 
+2 servicemin       Walking distance to closest service in minutes
+3 closestservice   Address of closest homeless service provider  
+4 googledirections Google directions                             
+  Description                                                                                
+1 Metro station name                                                                         
+2 Walking distance to closest homeless service provider measured in minutes using Google Maps
+3 Address of homeless service provider located closest to metro station                      
+4 GoogleMaps directions from metro station to address of nearest homeless service provider   
+  Values                             
+1 See Table B1.                      
+2 Range: 1-66. None missing.         
+3 String variable containing address.
+4 String variable containing link.   
+[1] "Shuttle"
+  Variable Name    Variable Label                                     
+1 metro            Metro station                                      
+2 shuttlemin       Walking distance to closest shuttle stop in minutes
+3 closestshuttle   Address of closest homeless shuttle stop           
+4 googledirections Google directions                                  
+  Description                                                                            
+1 Metro station name                                                                     
+2 Walking distance to closest homeless shuttle stop measured in minutes using Google Maps
+3 Address of homeless shuttle stop located closest to metro station                      
+4 GoogleMaps directions from metro station to address of nearest homeless shuttle stop   
+  Values                             
+1 See Table B1.                      
+2 Range: 2-280. None missing.        
+3 String variable containing address.
+4 String variable containing link.   
+visits 242 
+
+          Archives Arlington Cemetery           Ballston      Capital South 
+                 7                  4                 11                  4 
+         Clarendon         Courthouse       Crystal City      Dupont Circle 
+                 9                  8                  7                  6 
+    Farragut North      Farragut West     Federal Center   Federal Triangle 
+                15                 19                  6                 10 
+      Foggy Bottom      Gallery Place         Georgetown     L'Enfant Plaza 
+                 5                 15                  3                  7 
+  McPherson Square       Metro Center          Navy Yard           Pentagon 
+                25                 28                  4                  4 
+     Pentagon City            Rosslyn        Smithsonian             Vienna 
+                 5                  6                 10                 13 
+   Virginia Square         Waterfront 
+                 7                  4 
+ [1] "Archives"           "Arlington Cemetery" "Ballston"          
+ [4] "Capital South"      "Clarendon"          "Courthouse"        
+ [7] "Crystal City"       "Dupont Circle"      "Farragut North"    
+[10] "Farragut West"      "Federal Center"     "Federal Triangle"  
+[13] "Foggy Bottom"       "Gallery Place"      "Georgetown"        
+[16] "L'Enfant Plaza"     "McPherson Square"   "Metro Center"      
+[19] "Navy Yard"          "Pentagon"           "Pentagon City"     
+[22] "Rosslyn"            "Smithsonian"        "Vienna"            
+[25] "Virginia Square"    "Waterfront"        
+ [1] "Archives"           "Arlington Cemetery" "Ballston"          
+ [4] "Capital South"      "Clarendon"          "Courthouse"        
+ [7] "Crystal City"       "Dupont Circle"      "Farragut North"    
+[10] "Farragut West"      "Federal Center"     "Federal Triangle"  
+[13] "Foggy Bottom"       "Gallery Place"      "Georgetown"        
+[16] "L'Enfant Plaza"     "McPherson Square"   "Metro Center"      
+[19] "Navy Yard"          "Pentagon"           "Pentagon City"     
+[22] "Rosslyn"            "Smithsonian"        "Vienna"            
+[25] "Virginia Square"    "Waterfront"        
+ [1] "Archives"           "Arlington Cemetery" "Ballston"          
+ [4] "Capital South"      "Clarendon"          "Courthouse"        
+ [7] "Crystal City"       "Dupont Circle"      "Farragut North"    
+[10] "Farragut West"      "Federal Center"     "Federal Triangle"  
+[13] "Foggy Bottom"       "Gallery Place"      "Georgetown"        
+[16] "L'Enfant Plaza"     "McPherson Square"   "Metro Center"      
+[19] "Navy Yard"          "Pentagon"           "Pentagon City"     
+[22] "Rosslyn"            "Smithsonian"        "Vienna"            
+[25] "Virginia Square"    "Waterfront"        
+ [1] "Archives"           "Arlington Cemetery" "Ballston"          
+ [4] "Capital South"      "Clarendon"          "Courthouse"        
+ [7] "Crystal City"       "Dupont Circle"      "Farragut North"    
+[10] "Farragut West"      "Federal Center"     "Federal Triangle"  
+[13] "Foggy Bottom"       "Gallery Place"      "Georgetown"        
+[16] "L'Enfant Plaza"     "McPherson Square"   "Metro Center"      
+[19] "Navy Yard"          "Pentagon"           "Pentagon City"     
+[22] "Rosslyn"            "Smithsonian"        "Vienna"            
+[25] "Virginia Square"    "Waterfront"        
+
+  Farragut North    Farragut West    Gallery Place McPherson Square 
+              14               12               17               17 
+    Metro Center 
+              20 
+ observationid    panhandlerid          date          metro      donations     
+ Min.   : 1.00   Min.   : 1.00   Length   :80   Length   :80   Min.   : 0.000  
+ 1st Qu.:20.75   1st Qu.:20.75   N.unique : 4   N.unique : 5   1st Qu.: 0.000  
+ Median :40.50   Median :40.50   N.blank  : 0   N.blank  : 0   Median : 1.000  
+ Mean   :40.50   Mean   :39.60   Min.nchar: 9   Min.nchar:12   Mean   : 2.413  
+ 3rd Qu.:60.25   3rd Qu.:58.25   Max.nchar: 9   Max.nchar:16   3rd Qu.: 3.000  
+ Max.   :80.00   Max.   :76.00                                 Max.   :17.000  
+                                                                               
+    minutes            cash            inkind       declinedoffer 
+ Min.   :  4.00   Min.   : 0.000   Min.   :0.0000   Min.   :0.00  
+ 1st Qu.: 20.00   1st Qu.: 0.000   1st Qu.:0.0000   1st Qu.:0.00  
+ Median : 36.50   Median : 0.500   Median :0.0000   Median :0.00  
+ Mean   : 50.69   Mean   : 5.423   Mean   :0.2705   Mean   :0.18  
+ 3rd Qu.: 60.75   3rd Qu.: 7.750   3rd Qu.:0.0000   3rd Qu.:0.00  
+ Max.   :223.00   Max.   :40.000   Max.   :5.9900   Max.   :1.00  
+                  NAs    :10       NAs    :5        NAs    :30    
+# A tibble: 26 × 2
+   metro              shuttlemin
+   <chr>                   <dbl>
+ 1 Archives                    8
+ 2 Arlington Cemetery         88
+ 3 Ballston                   99
+ 4 Capital South              18
+ 5 Clarendon                  78
+ 6 Courthouse                 67
+ 7 Crystal City               87
+ 8 Dupont Circle              19
+ 9 Farragut North             14
+10 Farragut West              13
+11 Federal Center             22
+12 Federal Triangle            9
+13 Foggy Bottom               25
+14 Gallery Place               4
+15 Georgetown                 38
+16 L'Enfant Plaza             19
+17 McPherson Square            7
+18 Metro Center                2
+19 Navy Yard                  11
+20 Pentagon                  105
+21 Pentagon City             100
+22 Rosslyn                    53
+23 Smithsonian                15
+24 Vienna                    280
+25 Virginia Square            90
+26 Waterfront                  7
+# A tibble: 26 × 2
+   metro              servicemin
+   <chr>                   <dbl>
+ 1 Archives                    8
+ 2 Arlington Cemetery         66
+ 3 Ballston                   20
+ 4 Capital South              14
+ 5 Clarendon                   5
+ 6 Courthouse                  4
+ 7 Crystal City               39
+ 8 Dupont Circle               6
+ 9 Farragut North             12
+10 Farragut West               9
+11 Federal Center             16
+12 Federal Triangle           17
+13 Foggy Bottom                3
+14 Gallery Place               8
+15 Georgetown                  2
+16 L'Enfant Plaza             18
+17 McPherson Square            1
+18 Metro Center               16
+19 Navy Yard                  21
+20 Pentagon                   28
+21 Pentagon City              26
+22 Rosslyn                    21
+23 Smithsonian                20
+24 Vienna                     27
+25 Virginia Square            12
+26 Waterfront                 34
+   passerbyid         date       passresp1        passresp2     
+ Min.   :  1   Length   :701   Min.   :0.0000   Min.   :0.0000  
+ 1st Qu.:176   N.unique : 29   1st Qu.:0.0000   1st Qu.:0.0000  
+ Median :351   N.blank  :  0   Median :0.0000   Median :0.0000  
+ Mean   :351   Min.nchar:  8   Mean   :0.2311   Mean   :0.1541  
+ 3rd Qu.:526   Max.nchar: 10   3rd Qu.:0.0000   3rd Qu.:0.0000  
+ Max.   :701                   Max.   :1.0000   Max.   :1.0000  
+   passresp3        passresp4        passresp5            metro    
+ Min.   :0.0000   Min.   :0.0000   Min.   :0.0000   Length   :701  
+ 1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000   N.unique : 26  
+ Median :1.0000   Median :1.0000   Median :0.0000   N.blank  :  0  
+ Mean   :0.6148   Mean   :0.5178   Mean   :0.2268   Min.nchar:  6  
+ 3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:0.0000   Max.nchar: 18  
+ Max.   :1.0000   Max.   :1.0000   Max.   :1.0000                  
+ndates 49 
+# A tibble: 113 × 4
+    metro              month  year passersby
+    <chr>              <dbl> <dbl>     <dbl>
+  1 Archives               5  2017     212. 
+  2 Archives               6  2017     250. 
+  3 Ballston              10  2016     225. 
+  4 Ballston              11  2016     204. 
+  5 Ballston              12  2016     177. 
+  6 Ballston               3  2017     234. 
+  7 Ballston               4  2017     225. 
+  8 Ballston               5  2017     229. 
+  9 Ballston               6  2017     236. 
+ 10 Dupont Circle          5  2017     448. 
+ 11 Dupont Circle          6  2017     490. 
+ 12 Dupont Circle         10  2017     416. 
+ 13 Dupont Circle         11  2017     416. 
+ 14 Farragut North        10  2016     495. 
+ 15 Farragut North        11  2016     415. 
+ 16 Farragut North         2  2017     473. 
+ 17 Farragut North         3  2017     550. 
+ 18 Farragut North         4  2017     490. 
+ 19 Farragut North         5  2017     527. 
+ 20 Farragut North         6  2017     543. 
+ 21 Farragut West         10  2016     450. 
+ 22 Farragut West         11  2016     433. 
+ 23 Farragut West         12  2016     382. 
+ 24 Farragut West          2  2017     383. 
+ 25 Farragut West          3  2017     465. 
+ 26 Farragut West          4  2017     431. 
+ 27 Farragut West          5  2017     459. 
+ 28 Farragut West          6  2017     491. 
+ 29 Federal Center         5  2017     126. 
+ 30 Federal Center        10  2017     126. 
+ 31 Federal Center        11  2017     126. 
+ 32 Federal Triangle       3  2017     200. 
+ 33 Federal Triangle       4  2017     211. 
+ 34 Federal Triangle       5  2017     200. 
+ 35 Federal Triangle       6  2017     202. 
+ 36 Foggy Bottom           5  2017     476. 
+ 37 Foggy Bottom           6  2017     516. 
+ 38 Gallery Place          2  2017     582. 
+ 39 Gallery Place          3  2017     691. 
+ 40 Gallery Place          4  2017     635. 
+ 41 Gallery Place          5  2017     598. 
+ 42 Gallery Place          6  2017     604. 
+ 43 Georgetown             5  2017     476. 
+ 44 Georgetown             6  2017     516. 
+ 45 L'Enfant Plaza         4  2017     480. 
+ 46 L'Enfant Plaza         5  2017     478. 
+ 47 L'Enfant Plaza         6  2017     497. 
+ 48 McPherson Square      10  2016     319. 
+ 49 McPherson Square      11  2016     289. 
+ 50 McPherson Square      12  2016     271. 
+ 51 McPherson Square       2  2017     271. 
+ 52 McPherson Square       3  2017     339. 
+ 53 McPherson Square       4  2017     317. 
+ 54 McPherson Square       5  2017     334. 
+ 55 McPherson Square       6  2017     359. 
+ 56 Metro Center          10  2016     572. 
+ 57 Metro Center          11  2016     495. 
+ 58 Metro Center          12  2016     529. 
+ 59 Metro Center           2  2017     512. 
+ 60 Metro Center           3  2017     634. 
+ 61 Metro Center           4  2017     631. 
+ 62 Metro Center           5  2017     613. 
+ 63 Metro Center           6  2017     635. 
+ 64 Smithsonian            3  2017     334. 
+ 65 Smithsonian            4  2017     373. 
+ 66 Smithsonian            5  2017     267. 
+ 67 Smithsonian            6  2017     341. 
+ 68 Vienna                 3  2017     222. 
+ 69 Vienna                 4  2017     221. 
+ 70 Vienna                 5  2017     220. 
+ 71 Vienna                 6  2017     233. 
+ 72 Vienna                10  2017     215. 
+ 73 Vienna                11  2017     215. 
+ 74 Arlington Cemetery     6  2017      67.1
+ 75 Arlington Cemetery    10  2017      72.9
+ 76 Arlington Cemetery    11  2017      72.9
+ 77 Capital South          5  2017     179. 
+ 78 Capital South         10  2017     210. 
+ 79 Capital South         11  2017     210. 
+ 80 Clarendon              3  2017     113. 
+ 81 Clarendon              4  2017     108. 
+ 82 Clarendon              5  2017     111. 
+ 83 Clarendon              6  2017     117. 
+ 84 Clarendon             10  2017     109. 
+ 85 Courthouse             3  2017     163. 
+ 86 Courthouse             4  2017     153. 
+ 87 Courthouse             5  2017     153. 
+ 88 Courthouse             6  2017     161. 
+ 89 Courthouse            10  2017     149. 
+ 90 Crystal City           3  2017     255. 
+ 91 Crystal City           6  2017     265. 
+ 92 Crystal City          10  2017     249. 
+ 93 Crystal City          11  2017     249. 
+ 94 Navy Yard              6  2017     335. 
+ 95 Navy Yard             10  2017     294. 
+ 96 Navy Yard             11  2017     294. 
+ 97 Pentagon               6  2017     296. 
+ 98 Pentagon              10  2017     268. 
+ 99 Pentagon              11  2017     268. 
+100 Pentagon City          6  2017     340. 
+101 Pentagon City         10  2017     320. 
+102 Pentagon City         11  2017     320. 
+103 Rosslyn                5  2017     291. 
+104 Rosslyn                6  2017     308. 
+105 Rosslyn               10  2017     292. 
+106 Virginia Square        3  2017      87.9
+107 Virginia Square        4  2017      83.4
+108 Virginia Square        5  2017      85.7
+109 Virginia Square        6  2017      89.2
+110 Virginia Square       10  2017      81.0
+111 Waterfront             6  2017      99.5
+112 Waterfront            10  2017      95.3
+113 Waterfront            11  2017      95.3

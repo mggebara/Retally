@@ -39,7 +39,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [13/13](seeded/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) | [13/13](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) |
+| `claude-code` | [13/13](seeded/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[13/13](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [13/13](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[13/13](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
 | `pipeline-desktop-opus` | [13/13](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) | [13/13](independent/pipeline-desktop-opus/20261023T064318Z/CELL.md) (20261023T064318Z) | [4/13](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) |
 | `pipeline-desktop-opus-run2` | [13/13](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [13/13](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [4/13](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
 
@@ -69,6 +69,9 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 - [independent/claude-code/2026-10-22-a](independent/claude-code/2026-10-22-a/CELL.md) (13/13)
   - Control set operationalised from variable labels: field of study = subject_cat factor; high-school GPA = q_abitur_grade_cat factor (quartiles, category 5 = missing, keeps all 12160 obs); last math grade = q_math_grade_cat factor (quartiles); perceived multitasking = perc_multitasking_1 (Likert) and perc_multitasking_2 (relative) entered linearly; payoff scheme = Treatment_Incentives factor; wave = original_lab.
   - Online screen size control entered as window_height1 and window_width1 linearly; gender as a factor (3 levels).
+- [independent/claude-code/2026-11-02-c](independent/claude-code/2026-11-02-c/CELL.md) (13/13)
+  - The supplied paper.txt is an earlier working-paper version (564 subjects, one wave, 'Active Choice' naming), so the specification was taken from the claim descriptions together with the data's variable labels.
+  - Controls coding is my choice: field of study as subject_cat dummies, high-school GPA as q_abitur_grade_cat dummies (the category for missing GPA keeps N=12160), last math grade as q_math_grade_cat quartile dummies, perceived multitasking as both perc_multitasking_1 (Likert) and perc_multitasking_2 (relative), payoff scheme as Treatment_Incentives dummies, wave as original_lab. Online controls are age, gender dummies, and window_height1 and window_width1 for screen size.
 - [independent/pipeline-desktop-opus-run2/20261023T151837Z](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (13/13)
   - Sample for Tables 2-4 identified by searching subject-level variables for the definition yielding 608 subjects ( Treatment_Incentives!=Ample )
 - [blind/claude-code/2026-10-22-a](blind/claude-code/2026-10-22-a/CELL.md) (13/13)
@@ -80,6 +83,12 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Controls: age, female, field of study (subject_cat), A-level GPA quartile indicators with a missing-GPA category (q_abitur_grade_cat, keeps N constant), last math grade quartile indicators (q_math_grade_cat), background- and decision-task ability from the practice parts, perceived multitasking (5-point Likert item perc_multitasking_1), payoff-scheme (10/20/40) and wave (original_lab) indicators.
   - Online controls: age, gender (3-level factor), screen size as browser window height and width.
   - GPA and last math grade entered as quartile indicators (GPA with a missing-category), perceived multitasking as the 5-point Likert item; online screen size as window height and width.
+- [blind/claude-code/2026-11-02-c](blind/claude-code/2026-11-02-c/CELL.md) (13/13)
+  - Field of study entered as the 4-category subject_cat (Others/Law/Economics/Sciences) rather than the 14-value q_subject.
+  - High-school GPA and last math grade entered as the dataset's categorical versions (q_abitur_grade_cat, quartiles with category 5 = missing/no A-level; q_math_grade_cat quartiles) so no observations are dropped for the 400 rows with missing GPA.
+  - Perceived multitasking ability entered as the Likert item perc_multitasking_1 only (not perc_multitasking_2).
+  - Online controls: age, gender factor (female/male/other), and screen size as window_height1 and window_width1 (linear).
+  - Clustered SEs use fixest's default small-sample correction; coefficients are unaffected.
 - [blind/pipeline-desktop-opus-run2/20261023T150832Z](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (4/13; failed: `choice_quality_intervention_t2_col1`, `choice_quality_intervention_t2_col2`, `default_adherence_intervention_t2_col5`, `default_adherence_intervention_t2_col6`, `default_adherence_directed_attention_t2_col7`, `default_adherence_forced_choice_t2_col7`, `background_quality_intervention_lab_t3_col2`, `n_obs_lab_tables_2_to_4`, `n_subjects_lab_tables_2_to_4`)
   - could not identify scarce indicator; using all observations
 
@@ -87,15 +96,15 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
-- blind: `background_quality_intervention_lab_t3_col2` — pipeline 0/2, agent 2/2
-- blind: `choice_quality_intervention_t2_col1` — pipeline 0/2, agent 2/2
-- blind: `choice_quality_intervention_t2_col2` — pipeline 0/2, agent 2/2
-- blind: `default_adherence_directed_attention_t2_col7` — pipeline 0/2, agent 2/2
-- blind: `default_adherence_forced_choice_t2_col7` — pipeline 0/2, agent 2/2
-- blind: `default_adherence_intervention_t2_col5` — pipeline 0/2, agent 2/2
-- blind: `default_adherence_intervention_t2_col6` — pipeline 0/2, agent 2/2
-- blind: `n_obs_lab_tables_2_to_4` — pipeline 0/2, agent 2/2
-- blind: `n_subjects_lab_tables_2_to_4` — pipeline 0/2, agent 2/2
+- blind: `background_quality_intervention_lab_t3_col2` — pipeline 0/2, agent 3/3
+- blind: `choice_quality_intervention_t2_col1` — pipeline 0/2, agent 3/3
+- blind: `choice_quality_intervention_t2_col2` — pipeline 0/2, agent 3/3
+- blind: `default_adherence_directed_attention_t2_col7` — pipeline 0/2, agent 3/3
+- blind: `default_adherence_forced_choice_t2_col7` — pipeline 0/2, agent 3/3
+- blind: `default_adherence_intervention_t2_col5` — pipeline 0/2, agent 3/3
+- blind: `default_adherence_intervention_t2_col6` — pipeline 0/2, agent 3/3
+- blind: `n_obs_lab_tables_2_to_4` — pipeline 0/2, agent 3/3
+- blind: `n_subjects_lab_tables_2_to_4` — pipeline 0/2, agent 3/3
 
 ## Cells
 
@@ -123,6 +132,10 @@ Claims where, in the same mode, one reproducer family passed in every run and th
 
 [`independent/claude-code/2026-11-01-a/CELL.md`](independent/claude-code/2026-11-01-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-02T04:28:24Z; from `claude-code-run2-13papers-indep-blind-2026-11-01.json`; evidence complete.
 
+### independent · claude-code · 2026-11-02-c
+
+[`independent/claude-code/2026-11-02-c/CELL.md`](independent/claude-code/2026-11-02-c/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-02T20:00:30Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus · 20261023T064318Z
 
 [`independent/pipeline-desktop-opus/20261023T064318Z/CELL.md`](independent/pipeline-desktop-opus/20261023T064318Z/CELL.md) — final 13/13, re-scored 13/13; first scored 4/13; executions 3; 2026-10-23T06:43:18Z; from `pipeline-oracle-desktop-opus-9papers-all-modes-2026-10-23.json`; evidence complete.
@@ -138,6 +151,10 @@ Claims where, in the same mode, one reproducer family passed in every run and th
 ### blind · claude-code · 2026-11-01-a
 
 [`blind/claude-code/2026-11-01-a/CELL.md`](blind/claude-code/2026-11-01-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 3; 2026-11-02T04:40:00Z; from `claude-code-run2-13papers-indep-blind-2026-11-01.json`; evidence complete.
+
+### blind · claude-code · 2026-11-02-c
+
+[`blind/claude-code/2026-11-02-c/CELL.md`](blind/claude-code/2026-11-02-c/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-02T20:11:57Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus · 20261023T062931Z
 

@@ -34,7 +34,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [11/11](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [11/11](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [11/11](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) |
+| `claude-code` | [11/11](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [11/11](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[11/11](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [11/11](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[11/11](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
 | `pipeline-desktop-opus` | [11/11](seeded/pipeline-desktop-opus/20261102T060946Z/CELL.md) (20261102T060946Z) | [6/11](independent/pipeline-desktop-opus/20261102T065825Z/CELL.md) (20261102T065825Z) | [0/11](blind/pipeline-desktop-opus/20261102T055735Z/CELL.md) (20261102T055735Z) |
 | `pipeline-desktop-opus-run2` | [11/11](seeded/pipeline-desktop-opus-run2/20261102T091036Z/CELL.md) (20261102T091036Z) | [0/11](independent/pipeline-desktop-opus-run2/20261102T092119Z/CELL.md) (20261102T092119Z) | [6/11](blind/pipeline-desktop-opus-run2/20261102T091036Z/CELL.md) (20261102T091036Z) |
 
@@ -70,31 +70,31 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
-- independent: `bcp_basic_info_treatment_col1` — pipeline 0/2, agent 2/2
-- independent: `bcp_enhanced_info_treatment_col1` — pipeline 0/2, agent 2/2
-- independent: `bcp_regression_observations` — pipeline 0/2, agent 2/2
-- independent: `takeup_more_enhanced_info_treatment_col1` — pipeline 0/2, agent 2/2
-- independent: `takeup_more_regression_observations` — pipeline 0/2, agent 2/2
-- blind: `bcp_goal_minus_expected_attendance_col2` — pipeline 0/2, agent 2/2
-- blind: `bcp_regression_observations` — pipeline 0/2, agent 2/2
-- blind: `takeup_more_basic_info_treatment_col1` — pipeline 0/2, agent 2/2
-- blind: `takeup_more_goal_minus_expected_attendance_col3` — pipeline 0/2, agent 2/2
-- blind: `takeup_more_regression_observations` — pipeline 0/2, agent 2/2
+- independent: `bcp_basic_info_treatment_col1` — pipeline 0/2, agent 3/3
+- independent: `bcp_enhanced_info_treatment_col1` — pipeline 0/2, agent 3/3
+- independent: `bcp_regression_observations` — pipeline 0/2, agent 3/3
+- independent: `takeup_more_enhanced_info_treatment_col1` — pipeline 0/2, agent 3/3
+- independent: `takeup_more_regression_observations` — pipeline 0/2, agent 3/3
+- blind: `bcp_goal_minus_expected_attendance_col2` — pipeline 0/2, agent 3/3
+- blind: `bcp_regression_observations` — pipeline 0/2, agent 3/3
+- blind: `takeup_more_basic_info_treatment_col1` — pipeline 0/2, agent 3/3
+- blind: `takeup_more_goal_minus_expected_attendance_col3` — pipeline 0/2, agent 3/3
+- blind: `takeup_more_regression_observations` — pipeline 0/2, agent 3/3
 
 Pass rates at least 50 points apart (not unanimous):
 
-- independent: `bcp_actual_minus_expected_attendance_col3` — pipeline 1/2, agent 2/2
-- independent: `bcp_goal_minus_expected_attendance_col2` — pipeline 1/2, agent 2/2
-- independent: `takeup_more_actual_minus_expected_attendance_col4` — pipeline 1/2, agent 2/2
-- independent: `takeup_more_basic_info_treatment_col1` — pipeline 1/2, agent 2/2
-- independent: `takeup_more_behavior_change_premium_col2` — pipeline 1/2, agent 2/2
-- independent: `takeup_more_goal_minus_expected_attendance_col3` — pipeline 1/2, agent 2/2
-- blind: `bcp_actual_minus_expected_attendance_col3` — pipeline 1/2, agent 2/2
-- blind: `bcp_basic_info_treatment_col1` — pipeline 1/2, agent 2/2
-- blind: `bcp_enhanced_info_treatment_col1` — pipeline 1/2, agent 2/2
-- blind: `takeup_more_actual_minus_expected_attendance_col4` — pipeline 1/2, agent 2/2
-- blind: `takeup_more_behavior_change_premium_col2` — pipeline 1/2, agent 2/2
-- blind: `takeup_more_enhanced_info_treatment_col1` — pipeline 1/2, agent 2/2
+- independent: `bcp_actual_minus_expected_attendance_col3` — pipeline 1/2, agent 3/3
+- independent: `bcp_goal_minus_expected_attendance_col2` — pipeline 1/2, agent 3/3
+- independent: `takeup_more_actual_minus_expected_attendance_col4` — pipeline 1/2, agent 3/3
+- independent: `takeup_more_basic_info_treatment_col1` — pipeline 1/2, agent 3/3
+- independent: `takeup_more_behavior_change_premium_col2` — pipeline 1/2, agent 3/3
+- independent: `takeup_more_goal_minus_expected_attendance_col3` — pipeline 1/2, agent 3/3
+- blind: `bcp_actual_minus_expected_attendance_col3` — pipeline 1/2, agent 3/3
+- blind: `bcp_basic_info_treatment_col1` — pipeline 1/2, agent 3/3
+- blind: `bcp_enhanced_info_treatment_col1` — pipeline 1/2, agent 3/3
+- blind: `takeup_more_actual_minus_expected_attendance_col4` — pipeline 1/2, agent 3/3
+- blind: `takeup_more_behavior_change_premium_col2` — pipeline 1/2, agent 3/3
+- blind: `takeup_more_enhanced_info_treatment_col1` — pipeline 1/2, agent 3/3
 
 ## Cells
 
@@ -122,6 +122,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/claude-code/2026-11-02-b/CELL.md`](independent/claude-code/2026-11-02-b/CELL.md) — final 11/11, re-scored 11/11; first scored 7/11; executions 3; 2026-11-02T07:04:30Z; from `claude-code-run2-4papers-indep-blind-2026-11-02.json`; evidence complete.
 
+### independent · claude-code · 2026-11-02-c
+
+[`independent/claude-code/2026-11-02-c/CELL.md`](independent/claude-code/2026-11-02-c/CELL.md) — final 11/11, re-scored 11/11; first scored 11/11; executions 2; 2026-11-02T20:10:00Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus · 20261102T065825Z
 
 [`independent/pipeline-desktop-opus/20261102T065825Z/CELL.md`](independent/pipeline-desktop-opus/20261102T065825Z/CELL.md) — final 6/11, re-scored 6/11; first scored 4/11; executions 5; 2026-11-02T06:58:25Z; from `pipeline-oracle-desktop-opus-4papers-all-modes-2026-11-02.json`; evidence complete.
@@ -137,6 +141,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · claude-code · 2026-11-02-b
 
 [`blind/claude-code/2026-11-02-b/CELL.md`](blind/claude-code/2026-11-02-b/CELL.md) — final 11/11, re-scored 11/11; first scored 11/11; executions 3; 2026-11-02T07:20:00Z; from `claude-code-run2-4papers-indep-blind-2026-11-02.json`; evidence complete.
+
+### blind · claude-code · 2026-11-02-c
+
+[`blind/claude-code/2026-11-02-c/CELL.md`](blind/claude-code/2026-11-02-c/CELL.md) — final 11/11, re-scored 11/11; first scored 11/11; executions 3; 2026-11-02T20:15:00Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus · 20261102T055735Z
 

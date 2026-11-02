@@ -1,0 +1,32 @@
+suppressMessages({library(haven); library(dplyr)})
+d <- read_dta("<repo>/benchmark/.cache/claude-code/montero-2022-cooperative-property-rights/blind/2026-11-02-c/mount/montero_2022_cooperative_property_rights/ehpm_incomemodule_wreform.dta")
+d <- zap_labels(d)
+print(summary(d$norm_dist - (d$own_amt - 500)))
+print(table(d$year, useNA="ifany"))
+print(table(d$Above500, d$reform))
+print(table(d$Coop_Member, d$reform))
+print(table(d$Matched, useNA="ifany"))
+print(table(d$temp)); print(table(d$sex))
+print(table(d$Occupation_Type, d$reform))
+# identifiers
+cat("match_id per Reform_Coop_id/Hacienda_id\n")
+print(head(d %>% distinct(match_id, Reform_Coop_id, Hacienda_id, Expropretario_ISTA, ID, own_amt, reform), 30))
+cat("n distinct match_id, ID, Expropretario_ISTA, own_amt:", n_distinct(d$match_id), n_distinct(d$ID), n_distinct(d$Expropretario_ISTA), n_distinct(d$own_amt), "\n")
+for (bw in c(300,150)) {
+  s <- d %>% filter(abs(norm_dist) <= bw)
+  cat("bw", bw, "rows", nrow(s), "match_id", n_distinct(s$match_id), "ID", n_distinct(s$ID), "ExpISTA", n_distinct(s$Expropretario_ISTA), "own_amt", n_distinct(s$own_amt), "TotProp", n_distinct(s$Total_Propretario), "TotProp2", n_distinct(s$Total_Propretario2), "\n")
+  s2 <- d %>% filter(abs(norm_dist) < bw)
+  cat("  strict <: rows", nrow(s2), "\n")
+}
+# years per property
+yp <- d %>% group_by(match_id) %>% summarise(ny = n_distinct(year), n = n())
+print(table(yp$ny)); print(summary(yp$n))
+py <- d %>% count(match_id, year)
+print(table(py$n >= 5)); print(table((yp$n>=5)))
+cat("num_members check\n")
+print(head(d %>% group_by(match_id) %>% summarise(n=n(), nm=first(num_members), nmu=n_distinct(num_members), cs=first(coop_size)), 20))
+print(summary(d$hh_income_pc)); print(summary(d$hh_inc_pc_real))
+# owner id vs own_amt relation
+o <- d %>% distinct(Expropretario_ISTA, own_amt)
+cat("ExpISTA with multiple own_amt:", sum(duplicated(o$Expropretario_ISTA)), " own_amt with multiple ExpISTA:", sum(duplicated(o$own_amt)), "\n")
+print(d %>% distinct(match_id, own_amt, Expropretario_ISTA, ID, reform) %>% group_by(own_amt) %>% filter(n()>1) %>% arrange(own_amt) %>% as.data.frame())

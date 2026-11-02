@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "entry_id": "arias-2022-changing-tides-climate-migration",
+  "mode": "independent",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Dropped Qualtrics survey-preview responses (Status = 1: 2 U.S., 3 German rows) before stacking; this leaves 1085 U.S. / 1072 German respondents and 18,952 / 18,826 profiles versus the paper's 1086 / 1074 and 18,966 / 18,862. Without that filter the raw counts are 1086 / 1074 respondents with at least one choice and 9485 / 9431 answered pairs."
+  ],
+  "notes": "Used the two Climate Migration 2 conjoint CSVs (U.S. and Germany). Stacked the nine paired tasks into profile-level rows: the outcome is 1 if the profile was chosen in the forced choice (force_choice for task 1, Q184-Q198 for tasks 2-9). Attribute values were mapped through the per-task randomized attribute order columns F-t-k and F-t-p-k. Unanswered tasks were dropped. Estimated the full-model AMCE as OLS of chosen on all seven attributes' dummies, with baselines from Table 1: economic opportunity, no language, unemployed, female, agnostic/atheist, another region, no vulnerability. Standard errors are clustered by respondent (fixest). The reason-for-migration AMCEs match Table 2 to three decimals in both countries. One check_attempt comparison of the final run reported all claims within tolerance, and the script was not changed after it, so no claim attempt is recorded. attempt-1 was an exploratory variable and count inspection that printed no RESULT lines.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T19:58:35Z",
+  "finished_at": "2026-11-02T20:01:00Z"
+}

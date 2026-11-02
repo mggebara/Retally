@@ -1,0 +1,149 @@
+'data.frame':	601 obs. of  44 variables:
+ $ obs           : int  1 2 3 4 5 6 7 8 9 10 ...
+ $ wobs          : int  1 2 1 2 3 4 3 5 6 1 ...
+ $ School        : chr  "CB" "CB" "CB" "CB" ...
+ $ day           : chr  "2-May-19" "2-May-19" "2-May-19" "2-May-19" ...
+ $ Child         : int  0 0 1 1 1 1 0 1 1 1 ...
+ $ children      : chr  "Alone" "Alone" "2 Children" "2 Children" ...
+ $ children2     : chr  "Alone" "Alone" "2 Children" "2 Children" ...
+ $ children3     : chr  "Alone" "Alone" "2 Children" "2 Children" ...
+ $ scene         : chr  "Violation" "Help" "Violation" "Help" ...
+ $ Condition     : chr  "VA" "HA" "VC" "HC" ...
+ $ Violation     : int  1 0 1 0 0 0 0 1 0 0 ...
+ $ ViolationHelp : int  0 0 0 0 0 0 0 0 0 1 ...
+ $ Help          : int  0 1 0 1 1 1 1 0 1 0 ...
+ $ Punishment    : int  1 NA 0 NA NA NA NA 0 NA 0 ...
+ $ Helping       : int  0 0 0 0 0 0 1 0 1 0 ...
+ $ HelpingParents: int  0 0 0 0 0 0 1 0 1 0 ...
+ $ kidshelped    : int  NA NA NA NA NA NA NA NA NA NA ...
+ $ male          : int  NA 0 0 1 0 0 0 1 0 1 ...
+ $ hugo          : int  1 0 0 0 0 0 1 1 1 1 ...
+ $ Morning       : int  0 0 0 0 0 0 0 0 0 1 ...
+ $ witness       : int  0 0 0 1 0 0 0 0 0 0 ...
+ $ rich          : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ Rain          : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ Hot           : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ inc_Q         : int  2 2 2 2 2 2 2 2 2 1 ...
+ $ povrate       : num  0.142 0.142 0.142 0.142 0.142 0.142 0.142 0.142 0.142 0.398 ...
+ $ response2     : int  0 1 0 1 1 1 1 1 0 0 ...
+ $ OwnChild      : int  NA 1 NA 1 1 1 1 1 NA NA ...
+ $ TIME          : int  -34 -4 5 8 10 16 -6 4 7 -18 ...
+ $ T10           : int  -30 0 10 10 10 20 -10 0 10 -20 ...
+ $ boy           : int  NA 0 NA 1 1 0 0 1 NA NA ...
+ $ girl          : int  NA 1 NA 1 0 1 1 0 NA NA ...
+ $ numkids       : int  NA 1 NA 2 1 1 1 1 NA NA ...
+ $ childage2     : int  NA 0 NA 0 0 0 0 0 NA NA ...
+ $ childage3     : int  NA 0 NA 0 0 0 0 0 NA NA ...
+ $ childage4     : int  NA 0 NA 0 0 0 0 0 NA NA ...
+ $ childage5     : int  NA 0 NA 0 0 0 0 0 NA NA ...
+ $ childage6     : int  NA 0 NA 1 0 1 0 0 NA NA ...
+ $ childage7     : int  NA 1 NA 0 0 0 0 0 NA NA ...
+ $ childage8     : int  NA 0 NA 1 0 0 0 1 NA NA ...
+ $ childage9     : int  NA 0 NA 0 1 0 1 0 NA NA ...
+ $ childage10    : int  NA 0 NA 0 0 0 0 0 NA NA ...
+ $ childage11    : int  NA 0 NA 0 0 0 0 0 NA NA ...
+ $ childage12    : int  NA 0 NA 0 0 0 0 0 NA NA ...
+== Child 
+
+  0   1 
+301 300 
+== children 
+
+    1 Child  2 Children 3+ Children       Alone 
+        180         103          17         301 
+== scene 
+
+          Help      Violation Violation+Help 
+           201            200            200 
+== Condition 
+
+ HA  HC  VA  VC VHA VHC 
+101 100 100 100 100 100 
+== Violation 
+
+  0   1 
+401 200 
+== ViolationHelp 
+
+  0   1 
+401 200 
+== Help 
+
+  0   1 
+400 201 
+== Punishment 
+
+   0    1 <NA> 
+ 355   45  201 
+== Helping 
+
+  0   1 
+481 120 
+== male 
+
+   0    1 <NA> 
+ 390  209    2 
+== hugo 
+
+  0   1 
+295 306 
+== Morning 
+
+  0   1 
+289 312 
+== witness 
+
+  0   1 
+513  88 
+== rich 
+
+  0   1 
+296 305 
+== Rain 
+
+  0   1 
+554  47 
+== Hot 
+
+  0   1 
+431 170 
+== School 
+
+AF AH AL AR CA CB CO CR DI EH GP HB HR JC JD JK JM JR LB LE LJ LO LP LS MB MF 
+20 11 19 10 29  9 24 23 25 25  8  5 31 25 26 18 30 34 24  6 33 23  9 24 22 21 
+MO NJ PV SS 
+15 19  8 25 
+                Violation
+scene              0   1
+  Help           201   0
+  Violation        0 200
+  Violation+Help 200   0
+                ViolationHelp
+scene              0   1
+  Help           201   0
+  Violation      200   0
+  Violation+Help   0 200
+                Help
+scene              0   1
+  Help             0 201
+  Violation      200   0
+  Violation+Help 200   0
+                
+scene            FALSE TRUE
+  Help               0  201
+  Violation        200    0
+  Violation+Help   200    0
+                
+scene            FALSE
+  Help             201
+  Violation        200
+  Violation+Help   200
+     children
+Child 1 Child 2 Children 3+ Children Alone
+    0       0          0           0   301
+    1     180        103          17     0
+                Child
+scene              0   1
+  Help           101 100
+  Violation      100 100
+  Violation+Help 100 100

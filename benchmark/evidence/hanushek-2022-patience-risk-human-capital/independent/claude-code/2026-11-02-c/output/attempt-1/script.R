@@ -1,0 +1,13 @@
+suppressPackageStartupMessages(library(data.table))
+D <- "<repo>/benchmark/.cache/claude-code/hanushek-2022-patience-risk-human-capital/independent/2026-11-02-c/mount/hanushek_2022_patience_risk_human_capital/Replication/Data/CSV"
+t0 <- Sys.time()
+m <- fread(file.path(D,"pisa_full_gps_final_imcoo.csv"), select=c("country","wave","wgt","coo","coo_patience","coo_risktaking","coo_posrecip","coo_trust","coo_patience_orig","coo_oecd","age","image","female","imfemale","pv1math","pv1mathorig","countrywave","migra0","migra1","migra2","immigra1","fatbrncnt","stubrncnt"))
+print(summary(m)); print(table(m$wave)); cat("ncoo", uniqueN(m$coo), "nres", uniqueN(m$country), "ncw", uniqueN(m$countrywave), "\n")
+print(head(unique(m[,.(coo,coo_patience,coo_patience_orig)])[order(coo)],10))
+x <- fread(file.path(D,"pisa_full_gps_final.csv"), select=c("country","wave","wgt","wgtc","patience","risktaking","posrecip","age","image","female","imfemale","pv1math","pv1mathorig","migra0","migra1","migra2","immigra0","immigra1","immigra2","oecd"))
+cat("read secs", as.numeric(Sys.time()-t0,units="secs"), "\n")
+print(summary(x)); print(table(x$wave)); cat("N",nrow(x),"countries",uniqueN(x$country),"\n")
+print(x[, .(sw=sum(wgt), swc=sum(wgtc), n=.N), by=country][1:8])
+print(x[, .N, by=.(migra0,migra1,migra2)])
+cp <- unique(x[,.(country,patience,risktaking)]); cat("country-level sd pat", sd(cp$patience), "risk", sd(cp$risktaking), "mean", mean(cp$patience), "\n")
+cat("student-level sd pat", sd(x$patience), "\n")

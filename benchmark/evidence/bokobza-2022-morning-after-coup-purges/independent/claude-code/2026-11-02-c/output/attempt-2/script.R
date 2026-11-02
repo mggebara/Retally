@@ -1,0 +1,36 @@
+D <- "<repo>/benchmark/.cache/claude-code/bokobza-2022-morning-after-coup-purges/independent/2026-11-02-c/mount/bokobza_2022_morning_after_coup_purges"
+library(haven); library(dplyr)
+c <- read_dta(file.path(D,"morning_after_dataset_countrylevel.dta")) %>% arrange(COUNTRY_ID, YEAR_DATA)
+c <- c %>% group_by(COUNTRY_ID) %>% mutate(
+  ld = ifelse(dplyr::lag(YEAR_DATA)==YEAR_DATA-1, dplyr::lag(democracy1), NA),
+  lg = ifelse(dplyr::lag(YEAR_DATA)==YEAR_DATA-1, dplyr::lag(gdp_cap_pwt_ln), NA),
+  lp = ifelse(dplyr::lag(YEAR_DATA)==YEAR_DATA-1, dplyr::lag(pop_pwt_ln), NA)) %>% ungroup()
+cat("dup country-year:", sum(duplicated(c[,c("COUNTRY_ID","YEAR_DATA")])), "\n")
+print(table(c$coupattempt_month_whogov[c$coupattempt_whogov==1]))
+s <- c %>% filter(ld==0, !is.na(replacement_rateadj_minister), !is.na(coupattempt_whogov), !is.na(lg), !is.na(lp))
+cat("N ld==0 complete:", nrow(s), "countries", n_distinct(s$COUNTRY_ID), "coups", sum(s$coupattempt_whogov), "yrs", range(s$YEAR_DATA), "\n")
+s2 <- c %>% filter(ldemocracy_br==0, !is.na(replacement_rateadj_minister), !is.na(coupattempt_whogov), !is.na(lg), !is.na(lp))
+cat("N ldemocracy_br==0:", nrow(s2), n_distinct(s2$COUNTRY_ID), "\n")
+s3 <- c %>% filter(democracy1==0, !is.na(replacement_rateadj_minister), !is.na(coupattempt_whogov), !is.na(lg), !is.na(lp))
+cat("N democracy1==0:", nrow(s3), n_distinct(s3$COUNTRY_ID), "\n")
+cat("all ld==0 nonmissing DV & coup:", nrow(filter(c, ld==0, !is.na(replacement_rateadj_minister), !is.na(coupattempt_whogov))), "\n")
+cat("coup yrs in ld==0, DV nonmiss:", sum(filter(c, ld==0, !is.na(replacement_rateadj_minister))$coupattempt_whogov, na.rm=TRUE), "\n")
+
+i <- readRDS(file.path(D,"morning_after_dataset_individuallevel.rds"))
+print(table(i$importance_factor, i$importance_numeric, useNA="a"))
+print(table(i$minister_type, useNA="a")); print(table(i$minister_classification, useNA="a"))
+print(table(i$democracy_lag, i$democracy_lag_br, useNA="a"))
+print(table(i$party_group, i$leader, useNA="a"))
+print(table(i$experience, i$experience_group)[1:12,])
+print(table(i$year));
+a <- i %>% filter(democracy_lag==0)
+cat("autoc rows:", nrow(a), " leader0:", sum(a$leader==0), " countries:", n_distinct(a$country_isocode), "\n")
+a0 <- a %>% filter(leader==0, !is.na(coupattempt_presentyear), !is.na(gdp_cap_pwt_ln_lag), !is.na(pop_pwt_ln_lag))
+cat("leader0 complete:", nrow(a0), n_distinct(a0$country_isocode), n_distinct(a0$name), "yrs", range(a0$year), "\n")
+print(table(a0$importance_factor, useNA="a"))
+cat("excl junior:", sum(a0$importance_numeric!="0.5" | is.na(a0$importance_numeric)), sum(a0$importance_numeric!="0.5", na.rm=TRUE), "\n")
+cat("with party_group nonNA & not unknown:", sum(!is.na(a0$party_group) & a0$party_group!="unknown"), "\n")
+cat("minister_type nonNA:", sum(!is.na(a0$minister_type)), "\n")
+cat("importance nonNA:", sum(!is.na(a0$importance_numeric)), "\n")
+print(table(a0$coupattempt_presentyear))
+print(head(i[i$country_isocode=="AFG" & i$year %in% 1966:1968, c("year","name","experience","purged_y1","hired","leader","classification")], 40))

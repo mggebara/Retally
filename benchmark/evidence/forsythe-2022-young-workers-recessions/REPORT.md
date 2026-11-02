@@ -39,7 +39,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [12/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [11/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) |
+| `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [12/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [11/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[11/13](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
 | `pipeline-desktop-opus` | [13/13](seeded/pipeline-desktop-opus/20261102T062442Z/CELL.md) (20261102T062442Z) | [11/13](independent/pipeline-desktop-opus/20261102T064502Z/CELL.md) (20261102T064502Z) | [10/13](blind/pipeline-desktop-opus/20261102T062442Z/CELL.md) (20261102T062442Z) |
 | `pipeline-desktop-opus-run2` | [13/13](seeded/pipeline-desktop-opus-run2/20261102T092119Z/CELL.md) (20261102T092119Z) | [11/13](independent/pipeline-desktop-opus-run2/20261102T142444Z/CELL.md) (20261102T142444Z) | [10/13](blind/pipeline-desktop-opus-run2/20261102T144228Z/CELL.md) (20261102T144228Z) |
 
@@ -92,6 +92,14 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Years of education from PEEDUCA: 31=0, 32=2.5, 33=5.5, 34=7.5, 35=9, 36=10, 37=11, 38=12, 39=12, 40=13, 41-42=14, 43=16, 44=18, 45-46=20 (the paper does not give its mapping).
   - Wage sample: hires in t with weekly earnings > 0 and allocation flag PRWERNAL == 0 (1994-early 1995 have no flag and drop out); occupation/industry crosswalk code year assigned by date (occ: 1990 codes through 2002, 2002 codes 2003-2010, 2010 codes 2011+; ind: 1990 through 2002, 2002 codes 2003-2008, 2007 codes 2009-2013, 2012 codes 2014+). N = 120,294 vs 112,858 in the paper.
   - yh_data.csv (2 GB) read with data.table::fread(select=) restricted to the 20 columns needed, to fit the sandbox's 4 GB / 300 s limits
+- [independent/claude-code/2026-11-02-c](independent/claude-code/2026-11-02-c/CELL.md) (13/13)
+  - yh_data.csv (about 2 GB) is read with data.table::fread(select=) keeping only the needed columns, to fit the 4 GB / 300 s sandbox.
+  - Hiring regressions are estimated on weighted cell means (state x month-year x demographic cell x young x prior-month status x unemployment rate), weights = summed CPS weights; WLS point estimates are identical to the person-level regression, and N is the sum of cell counts.
+  - The supplied LAUS state unemployment file ends in May 2014, so the matched sample effectively ends there; dropping pairs without a state unemployment rate plus restricting to age < 80 reproduces the paper's N = 16,948,516 exactly.
+  - Years of education from peeduca: <1st grade 0, 1-4 2.5, 5-6 5.5, 7-8 7.5, 9th 9, 10th 10, 11th 11, 12th no diploma 12, HS 12, some college 13, associate 14, BA 16, MA 18, professional 20, PhD 20 (mapping not given in the paper).
+  - Industry/occupation codes mapped to 2002 Census codes with the supplied crosswalks, assuming code vintages by survey year (industry: 1990 codes to 2002, 2002 codes 2003-2008, 2007 codes 2009-2013, 2012 codes 2014+; occupation: 1990 to 2002, 2002 codes 2003-2010, 2010 codes 2011+); 12 unmatched industry codes kept as their own FE levels.
+  - Wage sample: hires with positive weekly earnings (v2prernwa) and earnings allocation flag v2prwernal == 0; this gives 120,306 observations versus 112,858 in the paper.
+  - yh_data.csv (2 GB) read with data.table::fread(select=) for only the needed columns, to fit the sandbox memory/time limits
 - [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) (11/13; failed: `young_x_unemp_rate_nilf`, `n_obs_full_sample`)
   - Sample restriction follows the paper's explicit statement only: civilians aged 16+ (peage>=16) with valid education and labour-force status in both months, month t from Feb 1994 to Sep 2016; no upper age bound was imposed (the paper says 'working-age' but gives no cap). Matches were taken as supplied (the file has no second-month sex/race/age to re-confirm matches).
   - Years of schooling mapped from peeduca: 31:0, 32:2.5, 33:5.5, 34:7.5, 35:9, 36:10, 37:11, 38:12, 39:12, 40:13, 41:14, 42:14, 43:16, 44:18, 45:20, 46:20; potential experience = age - years - 6, young = PE <= 10.
@@ -108,17 +116,29 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Sample: age >= 16 (from the t-1 record), valid labour-force status in both months, positive average weight. Demographics, age and education come from the t-1 record. Hire: employed (PEMLR 1-2) in t, with the t job not self-employed (PEIO1COW 6/7), and either not employed in t-1 or employed in t-1 with PUIODP1=2 (different employer). Weight is the average of the two months' PWSSWGT.
   - Wage regression: hires in t with PRWERNAL=0 (not allocated) and PRERNWA>0, log(PRERNWA/cpi), with averaged CPS weights. Occupation and industry are crosswalked to 2002 codes assuming code years: occupation 1990 (<=2002), 2002 (2003-2010), 2010 (2011+); industry 1990 (<=2002), 2002 (2003-2008), 2007 (2009-2013), 2012 (2014+). Eleven hires with unmatched industry codes are dropped as singleton/NA by fixest.
   - yh_data.csv read with data.table::fread(select=) of the 20 needed columns only (2 GB file, 300 s / 4 GB sandbox)
+- [blind/claude-code/2026-11-02-c](blind/claude-code/2026-11-02-c/CELL.md) (11/13; failed: `young_x_unemp_rate_nilf`, `n_obs_full_sample`)
+  - yh_data.csv (about 2 GB) read with data.table::fread(select=) of only the 19 needed columns, because of the 4 GB memory and 300 s sandbox limits.
+  - State identifiers (v2gestfips) are missing in yh_data.csv from mid-2014 on, and v2unemp_smy.csv ends in May 2014, so the estimation sample covers Feb 1994 to May 2014 (240 months) rather than running to September 2016.
+  - Hiring LPMs are estimated on weighted cell means (state x month x demographic cell x PE group x prior labour-force status, weights = summed person weights). The coefficients equal those of the individual-level weighted regression. Clustered standard errors are not exactly the individual-level ones, but no standard errors are reported.
+  - Years of education are imputed from the PEEDUCA categories (31:0, 32:2.5, 33:5.5, 34:7.5, 35:9, 36:10, 37:11, 38-39:12, 40:13, 41-42:14, 43:16, 44:18, 45-46:20) to build potential experience = age - education - 6, using the month t-1 age and education.
+  - Hire definition: employed in t (PEMLR 1-2), not self-employed in t (class of worker 6/7), and either not employed in t-1 or employed in t-1 with PUIODP1 == 2 (no longer with last month's employer). PUIODP1 not in universe, don't know or refused counts as not hired.
+  - Wage regression: new hires with positive weekly earnings (PRERNWA) and a weekly-earnings allocation flag equal to 0. 13,958 hires whose allocation flag is missing are excluded. Earnings are deflated by the supplied CPI (1994 = 1) for month t. Industry and occupation codes are mapped to 2002 Census codes with the supplied crosswalks, using code-year vintages by date (industry: 1990 to 2002, 2002 for 2003-08, 2007 for 2009-13, 2012 for 2014 on; occupation: 1990 to 2002, 2002 for 2003-10, 2010 for 2011 on). The 11 unmatched industry codes are kept as their own categories.
+  - Sample is restricted to age >= 16 (t-1 age) with valid education and labour-force status in both months. Weights are the average of the two months' PWSSWGT.
+  - yh_data.csv read with data.table::fread(select=) of the 19 needed columns only (4 GB memory / 300 s sandbox limits).
+  - state identifiers are missing in the data after mid-2014 and the state unemployment file ends May 2014, so the estimation sample ends May 2014 rather than September 2016.
+  - hiring regressions estimated on weighted cell means (state x month x demographic cell x PE group x prior status); coefficients are identical to the individual-level weighted LPM.
+  - years of education imputed from PEEDUCA categories (31:0, 32:2.5, 33:5.5, 34:7.5, 35:9, 36:10, 37:11, 38-39:12, 40:13, 41-42:14, 43:16, 44:18, 45-46:20).
 
 ### Pipeline and agent disagree
 
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
-- independent: `n_obs_full_sample` — pipeline 0/2, agent 2/2
-- blind: `young_x_unemp_rate_unemployed` — pipeline 0/2, agent 2/2
+- independent: `n_obs_full_sample` — pipeline 0/2, agent 3/3
+- blind: `young_x_unemp_rate_unemployed` — pipeline 0/2, agent 3/3
 
 Pass rates at least 50 points apart (not unanimous):
 
-- independent: `young_x_unemp_rate_nilf` — pipeline 0/2, agent 1/2
+- independent: `young_x_unemp_rate_nilf` — pipeline 0/2, agent 2/3
 
 ## Cells
 
@@ -146,6 +166,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/claude-code/2026-11-02-b/CELL.md`](independent/claude-code/2026-11-02-b/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 3; 2026-11-02T09:06:52Z; from `claude-code-run2-4papers-indep-blind-2026-11-02.json`; evidence complete.
 
+### independent · claude-code · 2026-11-02-c
+
+[`independent/claude-code/2026-11-02-c/CELL.md`](independent/claude-code/2026-11-02-c/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 3; 2026-11-02T20:14:00Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus · 20261102T064502Z
 
 [`independent/pipeline-desktop-opus/20261102T064502Z/CELL.md`](independent/pipeline-desktop-opus/20261102T064502Z/CELL.md) — final 11/13, re-scored 11/13; first scored 10/13; executions 4; 2026-11-02T06:45:02Z; from `pipeline-oracle-desktop-opus-4papers-all-modes-2026-11-02.json`; evidence complete.
@@ -161,6 +185,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · claude-code · 2026-11-02-b
 
 [`blind/claude-code/2026-11-02-b/CELL.md`](blind/claude-code/2026-11-02-b/CELL.md) — final 11/13, re-scored 11/13; first scored 11/13; executions 2; 2026-11-02T09:09:00Z; from `claude-code-run2-4papers-indep-blind-2026-11-02.json`; evidence complete.
+
+### blind · claude-code · 2026-11-02-c
+
+[`blind/claude-code/2026-11-02-c/CELL.md`](blind/claude-code/2026-11-02-c/CELL.md) — final 11/13, re-scored 11/13; first scored 11/13; executions 2; 2026-11-02T20:24:00Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus · 20261102T062442Z
 

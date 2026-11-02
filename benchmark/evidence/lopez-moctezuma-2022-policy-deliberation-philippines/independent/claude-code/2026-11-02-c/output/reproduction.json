@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "entry_id": "lopez-moctezuma-2022-policy-deliberation-philippines",
+  "mode": "independent",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Attendance-oversampling weights reconstructed from the paper's one-sentence description: in barangays with treatment == 1, self-reported attendees are weighted att.prop / p_s and non-attendees (1 - att.prop) / (1 - p_s), where p_s is the survey share of attendees in the barangay and att.prop is attendees / registered voters from data_agg; weight 1 elsewhere and for missing attendance.",
+    "Survey sample restricted to respondents with non-missing party-list turnout and non-missing city/barangay (effective sample, fn. 11).",
+    "Index item orientation is my interpretation: poverty, gap, corruption reversed (higher = agrees the issue is a main problem), cct kept; gender items oriented toward awareness (femhouse, fempol, equality, harassment kept; discrimination reversed). Anderson index: items standardized on the within-panel control group (assignment == 0), inverse-covariance (pairwise) weights, available-item averaging, re-standardized on control s.d."
+  ],
+  "notes": "Table 1 barangay ITTs and Ns reproduce exactly (city FE OLS on assignment). SI Table F.1 unweighted individual vote ITTs come out 23.51 and 32.01 vs 23.24 and 31.73 claimed. The four attitude-index ITTs (SI Tables C.3/C.4) are not reproduced: 0.337/0.320 (poverty, Akbayan/Umalab Ka) vs 0.496/0.126 and 0.363/-0.017 (gender) vs 0.450/0.095; the results are sensitive to item orientation and to how the oversampling weights are built, and neither is fully specified in the paper. attempt-1 explored the data; attempt-2 was the first scored run (raw item coding), compared with the claims and then changed to the current orientation; attempt-3 explored component-level ITTs under different weights and samples (no RESULT lines). The final run was also compared with check_attempt (index claims still off) and kept unchanged. It prints DIAG lines that give the index ITTs under unweighted and attendee-only weights; these are not scored. No docker run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:03:21Z",
+  "finished_at": "2026-11-02T20:07:30Z"
+}

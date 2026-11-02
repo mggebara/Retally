@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "entry_id": "manekin-2022-effective-for-whom",
+  "mode": "blind",
+  "run_id": "2026-11-02-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Israeli identity factor coding assumed 0 = white Jews, 1 = Ethiopian Jews, 2 = Arabs (the paper's listing order; 0 confirmed as white by Study 2's omitted white/group-goal cells, 1 vs 2 not labelled in the data).",
+    "Study 2 regressions are unweighted because the Study 2 data files carry no weight variable; Study 1 regressions use the 'weight' column."
+  ],
+  "notes": "attempt-1 was exploratory (str/tables/NA counts, no RESULT lines). Final: Study 1 weighted OLS of each 0-10 outcome on minority-identity dummies plus tactic dummies (base white protesters marching), all respondents in each file (US wave file pools its three waves; Israeli file includes Jewish and Arab respondents). Study 2 OLS on black/minority dummies + group_goal + commitment. Sample sizes are regression nobs (US S2 police action drops 5 missing, nobs 3008; perceived violence nobs 3013). No script, table, log or figure file in the dataset was opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T20:18:28Z",
+  "finished_at": "2026-11-02T20:20:30Z"
+}
