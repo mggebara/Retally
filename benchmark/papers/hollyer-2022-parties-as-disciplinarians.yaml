@@ -1,0 +1,462 @@
+# Original paper: Hollyer, J. R., Klašnja, M., & Titiunik, R. (2022).
+#   "Parties as Disciplinarians: Charisma and Commitment Problems in
+#   Programmatic Campaigning." American Journal of Political Science,
+#   66(1), 75-92.  doi:10.1111/ajps.12638 (first published online
+#   2021-06-14).
+#
+# Reproduction report: Kelly, E., Odermatt, A., & Metson, L. (2023).
+#   "Computational Reproduction and Robustness Replication for Hollyer,
+#   Klašnja and Titiunik (2022): A Replication Report from the Nottingham
+#   Replication Games." I4R Discussion Paper No. 54 (August 2023; I4R
+#   First Meta Database replication team 62, rows 2575-2750, 176 rows of
+#   which 158 carry both an original and a replicated coefficient).
+#
+#   Verdict: reproducible.  The meta-database records
+#   perfect_reproduction = Yes, computational_reproduction = 1, with the
+#   note "Replicators re-do analysis in a different programming language
+#   but found no substantial coding errors."  DP54 re-wrote the
+#   cross-national Stata analysis in R from the paper's description (not
+#   from the do-file) and re-ran the Brazilian RD in R: it reproduces
+#   every Table D1 coefficient except the Gini index, every Table 1
+#   predicted value "except the ones for extremist parties", and Table 2
+#   "in full".  In DP54's words the analysis is "largely reproducible"
+#   with "minor discrepancies"; it does not dispute the headline results.
+#   (Both DP54 discrepancies trace to the package, not to an error in the
+#   paper's estimates: see notes, "Package-only facts".)
+#
+# Why this paper:
+#   1. Smallest package of the 2026-11-02 shortlist (1.7 MB as stored):
+#      four Stata .dta files, one Stata do-file pair for the
+#      cross-national analysis and one R script for the RD.
+#   2. Two different designs in one entry: an OLS cross-section with
+#      country-clustered SEs reported as predicted values and their
+#      differences (Table 1), and a local-linear regression
+#      discontinuity estimated with rdrobust (Table 2).
+#   3. A built-in paper-versus-code gap for independent/blind modes: the
+#      paper says the "extremist party" in Table 1 sits at a distance of
+#      3 from the country mean, the code evaluates it at the 90th
+#      percentile of the extremism measure, and DP54 (working from the
+#      text) missed exactly those rows.
+#   4. Published version and supplementary appendix open on co-author
+#      Titiunik's homepage.
+#
+# What original_claims pins: Table 1's ten headline differences (the
+#   high-minus-low volatility differences for all parties, nonethnic and
+#   ideologically moderate parties, and the four group-attachment
+#   comparisons Hypothesis 3 rests on) with their SEs, the Table 1 N, and
+#   Table 2's two RD effects.  No appendix robustness, no summary
+#   statistics.
+#
+# Contamination bookkeeping.  The article was first published online
+#   2021-06-14 (Crossref published-online; print AJPS 66(1), January
+#   2022).  No working-paper or preprint version under this title was
+#   found (web search 2026-11-02; the acknowledgments mention APSA 2015
+#   and 2016 and EPSA 2015 and 2017 presentations, but no posted draft
+#   was found).  The supplementary appendix on Titiunik's site is dated
+#   22 February 2021.  Package: Harvard Dataverse doi:10.7910/DVN/AWSQTW
+#   version 1.0 released 2021-05-05 (Dataverse API releaseTime; created
+#   2021-02-17); version 1.1 released 2022-04-27 with byte-identical
+#   files (same 12 file ids and md5s), i.e. a metadata-only revision.
+
+id: hollyer-2022-parties-as-disciplinarians
+i4r_report_url: https://www.econstor.eu/bitstream/10419/274553/1/I4R-DP054.pdf
+# Target language for regeneration.  The original is Stata 16 (the
+# cross-national analysis, Table 1) and R 4.0.3 with rdrobust (the
+# Brazilian RD, Table 2).
+language: r
+outcome_label: reproducible
+# Pipeline tuning is frozen; this is an evaluation paper.
+split: holdout
+publication_date: "2021-06-14"
+package_release_date: "2021-05-05"
+
+paper:
+  # The published AJPS PDF (Wiley typeset, 18 pp.) on co-author
+  # Titiunik's homepage; fetched 2026-11-02: 200 application/pdf, %PDF
+  # magic, to a Retally-curation user agent.  The supplementary appendix
+  # (28 pp., dated 22 Feb 2021; Tables C2 and D1 describe the Table 1
+  # models) is at
+  # https://titiunik.github.io/files/publications/HollyerKlasnjaTitiunik2022-AJPS-SA.pdf
+  source: https://titiunik.github.io/files/publications/HollyerKlasnjaTitiunik2022-AJPS.pdf
+  title: "Parties as Disciplinarians: Charisma and Commitment Problems in Programmatic Campaigning"
+  authors:
+    - James R. Hollyer
+    - Marko Klašnja
+    - Rocío Titiunik
+
+dataset:
+  source: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/AWSQTW&version=1.1
+  access_notes: >
+    Harvard Dataverse (doi:10.7910/DVN/AWSQTW), pinned to VERSION 1.1
+    (2022-04-27) with &version=1.1: it was the current version when I4R
+    replicated the paper (DP54, August 2023).  Version 1.0 (2021-05-05)
+    carries the same 12 files with the same file ids and md5s, so 1.1 is
+    a metadata-only revision and either reproduces the paper.  No
+    licence; the Dataverse terms say the data come "with limited
+    information on how it can be used" (the local cache is not
+    redistributed).  12 files, none restricted, 1,690,882 bytes as stored
+    (Dataverse API, checked 2026-11-02).  Four Stata 14 datasets were
+    ingested (listed as .tab) and arrive as their .dta originals via
+    ?format=original: cross-national-data.dta (157 kB; 506 parties x 25
+    columns, the Table 1 data), brazil-RD-data.dta (495 kB; the Table 2
+    data), brazil-validation-data.dta (667 kB; appendix Table E3) and
+    brazil-receipts-candidates-data.dta (271 kB; appendix Table E2).
+    Scripts: cross-national-analysis.do (Figures 3-5, C1; Tables 1, C3,
+    D1-D7) with cross-national-designate-controls.do (covariate setup),
+    brazil-RD-analysis.R (Figure 6, Table 2, Table E3), Table-E2.do,
+    Figure1.R and Figure2.R (model figures).  Documentation:
+    00-README.txt (file list and software, no numbers) and codebook.pdf
+    (2 pp., variable definitions only).  No archives, no logs, no table
+    output, no copy of the paper.  The downloader writes metadata.json
+    (dataset_version 1.1) beside the files.
+
+code_repo:
+  url: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/AWSQTW&version=1.1
+
+original_claims:
+  # ---- Table 1: cross-national predicted values (DALP parties) ----
+  - description: personalism_volatility_difference_overall
+    value: 0.30
+    claim_type: coefficient
+    standard_error: 0.06
+    unit: points on the 1-4 Personalism scale
+    location: "Table 1, Overall row, Personalism, Difference column"
+    context: >
+      Table 1 ("Electoral Volatility, Group Attachments, and Electoral
+      Strategies"), upper panel.  Party-level OLS regression (Democratic
+      Accountability and Linkages Project expert survey, 2009) of
+      Personalism, the party's reliance on its leader's charismatic
+      personality on a 1-4 scale, on electoral volatility (the country's
+      average Pedersen index over up to four election pairs before 2009,
+      rescaled to 0-1), with party-level covariates (party size, links to
+      unions, business and religious organisations) and country-level
+      covariates (plurality and proportional-representation indicators,
+      closed- and open-list indicators with non-list PR omitted, average
+      lower-house district magnitude, presidential and parliamentary
+      system indicators with assembly-elected presidential omitted,
+      system tenure, Polity score, logged GDP per capita, Gini index and
+      ethnic fractionalisation); standard errors clustered by country.
+      The table reports predicted Personalism at low volatility (25th
+      percentile of the sample) and high volatility (75th percentile);
+      this claim is the high-minus-low difference.
+  - description: programmaticness_volatility_difference_overall
+    value: -0.11
+    claim_type: coefficient
+    standard_error: 0.05
+    unit: points on the 1-4 Programmaticness scale
+    location: "Table 1, Overall row, Programmaticness, Difference column"
+    context: >
+      Table 1, upper panel: the same regression and covariates with
+      Programmaticness as the outcome (the average of two 1-4 expert
+      items: how much the party mobilises support by emphasising its
+      policy positions, and how much it appeals to voters' long-term
+      partisan loyalty).  High-volatility (75th percentile) minus
+      low-volatility (25th percentile) predicted Programmaticness;
+      country-clustered standard errors.
+  - description: personalism_volatility_difference_nonethnic
+    value: 0.35
+    claim_type: coefficient
+    standard_error: 0.06
+    unit: points on the 1-4 Personalism scale
+    location: "Table 1, Ethnicity panel, Nonethnic party row, Personalism, Difference column"
+    context: >
+      Table 1, middle (Ethnicity) panel.  The Personalism regression of
+      the upper panel with an ethnic-party indicator (parties most of
+      whose expert coders report strong linkages to ethnic or linguistic
+      organisations) and its interaction with volatility added; same
+      covariates, country-clustered SEs.  Predicted Personalism for a
+      nonethnic party at high (75th percentile) minus low (25th
+      percentile) volatility.
+  - description: programmaticness_volatility_difference_nonethnic
+    value: -0.15
+    claim_type: coefficient
+    standard_error: 0.06
+    unit: points on the 1-4 Programmaticness scale
+    location: "Table 1, Ethnicity panel, Nonethnic party row, Programmaticness, Difference column"
+    context: >
+      Table 1, Ethnicity panel: the Programmaticness regression with the
+      ethnic-party indicator and its interaction with volatility; predicted
+      Programmaticness for a nonethnic party at high minus low volatility.
+  - description: personalism_ethnic_minus_nonethnic_low_volatility
+    value: 0.31
+    claim_type: coefficient
+    standard_error: 0.13
+    unit: points on the 1-4 Personalism scale
+    location: "Table 1, Ethnicity panel, Difference row, Personalism, Low volatility column"
+    context: >
+      Table 1, Ethnicity panel, bottom (Difference) row: predicted
+      Personalism of an ethnic party minus that of a nonethnic party at
+      low volatility (25th percentile), from the ethnic-interaction
+      Personalism regression.  One of the four Hypothesis 3 comparisons.
+  - description: programmaticness_ethnic_minus_nonethnic_high_volatility
+    value: 0.20
+    claim_type: coefficient
+    standard_error: 0.06
+    unit: points on the 1-4 Programmaticness scale
+    location: "Table 1, Ethnicity panel, Difference row, Programmaticness, High volatility column"
+    context: >
+      Table 1, Ethnicity panel, Difference row: predicted
+      Programmaticness of an ethnic party minus that of a nonethnic party
+      at high volatility (75th percentile), from the ethnic-interaction
+      Programmaticness regression.  One of the four Hypothesis 3
+      comparisons.
+  - description: personalism_volatility_difference_moderate
+    value: 0.53
+    claim_type: coefficient
+    standard_error: 0.13
+    unit: points on the 1-4 Personalism scale
+    location: "Table 1, Ideology panel, Moderate party row, Personalism, Difference column"
+    context: >
+      Table 1, lower (Ideology) panel.  The Personalism regression with
+      ideological extremism (the absolute distance of the party's 1-10
+      left-right placement from the country's mean party placement,
+      continuous, roughly 0-6) and its interaction with volatility added;
+      same covariates, country-clustered SEs.  A moderate party sits at
+      the country's average placement (distance zero).  Predicted
+      Personalism for a moderate party at high (75th percentile) minus
+      low (25th percentile) volatility.
+  - description: programmaticness_volatility_difference_moderate
+    value: -0.30
+    claim_type: coefficient
+    standard_error: 0.08
+    unit: points on the 1-4 Programmaticness scale
+    location: "Table 1, Ideology panel, Moderate party row, Programmaticness, Difference column"
+    context: >
+      Table 1, Ideology panel: the Programmaticness regression with
+      ideological extremism and its interaction with volatility;
+      predicted Programmaticness for a moderate party (distance zero) at
+      high minus low volatility.
+  - description: personalism_extremist_minus_moderate_low_volatility
+    value: 0.15
+    claim_type: coefficient
+    standard_error: 0.17
+    unit: points on the 1-4 Personalism scale
+    location: "Table 1, Ideology panel, Difference row, Personalism, Low volatility column"
+    context: >
+      Table 1, Ideology panel, Difference row: predicted Personalism of
+      an extremist party minus that of a moderate party at low volatility
+      (25th percentile), from the extremism-interaction Personalism
+      regression.  The paper places the extremist party at an absolute
+      distance of 3 from the country mean on the 0-6 scale
+      ("approximately the 75th percentile").  One of the four Hypothesis
+      3 comparisons; not significant in the paper.
+  - description: programmaticness_extremist_minus_moderate_high_volatility
+    value: 0.44
+    claim_type: coefficient
+    standard_error: 0.09
+    unit: points on the 1-4 Programmaticness scale
+    location: "Table 1, Ideology panel, Difference row, Programmaticness, High volatility column"
+    context: >
+      Table 1, Ideology panel, Difference row: predicted Programmaticness
+      of an extremist party (the paper: distance 3 from the country mean,
+      "approximately the 75th percentile") minus that of a moderate party
+      at high volatility (75th percentile), from the extremism-interaction
+      Programmaticness regression.  One of the four Hypothesis 3
+      comparisons.
+  - description: n_obs_table1
+    value: 431
+    claim_type: other
+    unit: observations (parties)
+    location: "Table 1, note"
+    context: >
+      Number of party observations the Table 1 analyses are based on, as
+      stated in the table note (parties in 75 countries with complete
+      data on the outcomes, volatility and all covariates).
+
+  # ---- Table 2: Brazilian mayoral RD ----
+  - description: rd_effect_young
+    value: -0.084
+    claim_type: coefficient
+    unit: change in the probability (0-1) of nominating a young candidate
+    location: "Table 2, row Young, tau_RD"
+    context: >
+      Table 2 ("RD Effect of Incumbent Party's Victory at t on Nomination
+      of Charismatic Candidate at t + 1").  Brazilian mayoral elections
+      1996-2012, restricted to elections where the winning candidate is
+      not term-limited in the next election (open-seat sample; the
+      incumbent mayor does not run for a second term).  Running variable:
+      the incumbent party's margin of victory at t (its vote share minus
+      that of its strongest opponent), cutoff zero.  Outcome: the party's
+      mayoral candidate at t + 1 is young (younger than 35 the first time
+      they run for mayor).  Conventional RD point estimate from local
+      linear polynomial estimation with the MSE-optimal main bandwidth and
+      a separate MSE-optimal bias bandwidth, with robust bias-corrected
+      inference, implemented with rdrobust (Calonico et al. 2017).
+  - description: rd_effect_young_outsider
+    value: -0.092
+    claim_type: coefficient
+    unit: change in the probability (0-1) of nominating a young outsider candidate
+    location: "Table 2, row Young and outsider, tau_RD"
+    context: >
+      Table 2: the same RD design and estimator with the outcome that the
+      party's candidate at t + 1 is both younger than 35 and an outsider
+      the first time they run (neither an elected official nor a
+      government employee of any kind).  Conventional local linear RD
+      point estimate, MSE-optimal main and bias bandwidths, rdrobust.
+
+# DP54 Table 4 ("Replication of Table 1") and Table 5 ("Computational
+# reproduction of original Table 2"); the meta-database rows (team 62)
+# carry the same values: Table 1 rows o 0.3 / r 0.29, 0.31 / 0.3,
+# 0.53 / 0.52, -0.3 / -0.29, 0.15 / 0.12, 0.44 / 0.37; Table 2 rows
+# -0.084 / -0.084 and -0.092 / -0.092 (other Table 2 rows are DP54's
+# bandwidth/kernel/polynomial robustness variants).  DP54 computed the
+# Table 1 predictions with R's marginaleffects from a re-implementation
+# written off the paper's text, so 0.01 gaps on the non-extremist rows
+# are percentile-definition and rounding differences, which DP54 counts
+# as reproduced; the extremist rows are the ones it reports as not
+# reproduced.
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: 0.29
+    outcome: matches
+    notes: DP54 Table 4, Overall, Personalism difference 0.29 (SE 0.07) vs printed 0.30 (0.06); counted as reproduced by DP54.
+  - claim_id: 1
+    reproduced_value: -0.11
+    outcome: matches
+    notes: DP54 Table 4, Overall, Programmaticness difference -0.11 (SE 0.06).
+  - claim_id: 2
+    reproduced_value: 0.35
+    outcome: matches
+    notes: DP54 Table 4, Nonethnic, Personalism difference 0.35 (SE 0.07).
+  - claim_id: 3
+    reproduced_value: -0.15
+    outcome: matches
+    notes: DP54 Table 4, Nonethnic, Programmaticness difference -0.15 (SE 0.07).
+  - claim_id: 4
+    reproduced_value: 0.30
+    outcome: matches
+    notes: DP54 Table 4, Differences.Ethnic, Personalism low volatility 0.30 (SE 0.13) vs printed 0.31 (0.13).
+  - claim_id: 5
+    reproduced_value: 0.20
+    outcome: matches
+    notes: DP54 Table 4, Differences.Ethnic, Programmaticness high volatility 0.20 (SE 0.06).
+  - claim_id: 6
+    reproduced_value: 0.52
+    outcome: matches
+    notes: DP54 Table 4, Moderate, Personalism difference 0.52 (SE 0.13) vs printed 0.53 (0.13).
+  - claim_id: 7
+    reproduced_value: -0.29
+    outcome: matches
+    notes: DP54 Table 4, Moderate, Programmaticness difference -0.29 (SE 0.09) vs printed -0.30 (0.08).
+  - claim_id: 8
+    reproduced_value: 0.12
+    outcome: does_not_match
+    notes: >
+      DP54 Table 4, Differences.Ideo, Personalism low volatility 0.12 (SE
+      0.14) vs printed 0.15 (0.17); DP54 reports the extremist-party
+      predictions as not reproduced.  DP54 placed the extremist party at
+      distance 3, as the paper states; the do-file uses the 90th
+      percentile of the extremism measure (see notes).
+  - claim_id: 9
+    reproduced_value: 0.37
+    outcome: does_not_match
+    notes: >
+      DP54 Table 4, Differences.Ideo, Programmaticness high volatility
+      0.37 (SE 0.08) vs printed 0.44 (0.09); DP54's largest gap is the
+      extremist-party high-volatility level (3.13 vs 3.20).  Same cause as
+      claim 8.
+  - claim_id: 10
+    reproduced_value: 431
+    outcome: matches
+    notes: DP54 Table 2 (replication of appendix Table D1), Num. obs. 431 for the baseline and ethnic models (430 for the ideology models).
+  - claim_id: 11
+    reproduced_value: -0.084
+    outcome: matches
+    notes: DP54 Table 5, Young, tau -0.084 (p 0.040, h 13.491, b 24.643, N+ 527, N- 559), reproduced exactly.
+  - claim_id: 12
+    reproduced_value: -0.092
+    outcome: matches
+    notes: DP54 Table 5, Young and Outsider, tau -0.092 (p 0.015, h 12.280, b 22.333, N+ 501, N- 523), reproduced exactly.
+
+notes: >
+  Headline findings (as published): across DALP parties, higher electoral
+  volatility goes with more Personalism and less Programmaticness
+  (Hypothesis 1, Table 1 upper panel), but only for nonethnic and
+  ideologically moderate parties; ethnic and extremist parties'
+  strategies do not vary with volatility (Hypothesis 2), and in stable
+  systems ethnic/extremist parties are more personalist while in
+  volatile systems they are more programmatic (Hypothesis 3, three of
+  four comparisons significant).  In Brazil, a party that barely wins a
+  mayoral election is about 8-9 percentage points less likely to field a
+  young (or young outsider) candidate next time (Table 2, local linear
+  RD).  DP54 reproduces all of this except the extremist-party rows of
+  Table 1.
+
+  Original analysis: Stata 16 (Table 1) and R 4.0.3 with rdrobust (Table
+  2); language: r is the reproduction target.
+
+  Curation pass (2026-11-02).  Pinned 13 claims: ten Table 1 differences
+  with their SEs (the volatility differences for all, nonethnic and
+  moderate parties; the four Hypothesis 3 comparisons ethnic/extremist
+  minus nonethnic/moderate at the relevant volatility level), the Table 1
+  N, and the two Table 2 RD point estimates.  Values exactly as printed
+  in the published AJPS PDF, two decimals in Table 1 (trailing zeros
+  kept: 0.30, 0.20, -0.30) and three in Table 2; the printed-precision
+  floor is therefore 0.005 on every Table 1 claim.  Every pinned value
+  equals the meta-database's o_coeff_dbl / o_std_err_dbl where a row
+  exists (the DB stores 0.30 as 0.3 and -0.30 as -0.3; Table 2 rows
+  carry no SE in the DB and the paper prints none).  Not pinned: the
+  Table 1 levels (the differences are what the hypotheses rest on), the
+  ethnic- and extremist-party volatility differences (0.04, 0.03, 0.05,
+  0.08: the "invariance" rows), the two remaining Hypothesis 3 cells
+  (both near zero), and Table 2's p-values, confidence intervals,
+  bandwidths and N+/N- (rdrobust outputs that move with the bandwidth
+  selector version).  Table 1 N is 431 parties in 75 countries per the
+  note; appendix Table D1 shows the ideology models use 430.
+
+  What was read.  The published AJPS PDF (all 18 pp.: model, empirical
+  implications, the cross-national section, Table 1, the Brazil section,
+  Table 2 and footnotes 17-21); the supplementary appendix (Sections C
+  and D: Tables C1-C3, D1); DP54 (27 pp., EconStor: text, Tables 2-6);
+  the Dataverse API metadata for versions 1.0 and 1.1; the package
+  (00-README.txt, codebook.pdf, brazil-RD-analysis.R,
+  cross-national-designate-controls.do, the Table 1 section and margins
+  programs of cross-national-analysis.do; estimation-sample counts of
+  cross-national-data.dta); the 176 team-62 meta-database rows.
+
+  Package-only facts (never in contexts).  Table 1: setup loads
+  cross-national-data.dta and runs cross-national-designate-controls.do,
+  which divides gini by 100 (DP54's "Gini coefficient of 0" comes from
+  skipping this) and sets p_controls = partysize unions business
+  religious and controls = pluralty i.pr b3.cl mdmh b1.system demsys
+  polity gdppc gini ethfrac.  Models: reg personal|programmatic ev_total
+  $p_controls $controls, cluster(ccode); then i.ethnic##c.ev_total and
+  c.extremist2##c.ev_total versions.  Predicted values are Stata margins
+  (average predictions over the estimation sample) at ev_total = its
+  p25 and p75 in e(sample) (sum, d), and differences via lincom.  In
+  the group-attachment models the high-attachment party is set at the
+  p90 of the attachment variable in e(sample): 1 for ethnic, but for
+  extremist2 about 3.55 (numpy linear p90 on the 430-party sample; p75
+  is about 2.58), NOT the "3, approximately the 75th percentile" the
+  paper states.  That is why DP54, which used 3, could not match the
+  extremist rows; a run that follows the paper text is expected to miss
+  claims 8 and 9 (and the extremist levels) while hitting the moderate
+  rows.  Estimation sample: 431 complete cases over 75 ccode clusters
+  (430 with extremist2); ev_total p25/p75 about 0.146/0.420.  Table 2:
+  brazil-RD-data.dta; outcomes youngF_inc_for1 and outyg1F_inc_for1,
+  running variable mv_incparty, sample dlameduck_runs == 0;
+  rdrobust(y, x) with defaults (local linear, triangular kernel,
+  mserd bandwidth, separate b), Estimate[1] is the conventional
+  estimate; the h = b column reruns with rho = 1.
+
+  Leak surface.  The independent/blind script-free copy drops all six
+  scripts by suffix (Figure1.R, Figure2.R, brazil-RD-analysis.R,
+  cross-national-analysis.do, cross-national-designate-controls.do,
+  Table-E2.do) and keeps the four .dta files, 00-README.txt (a file
+  list) and codebook.pdf (variable definitions); none carries a result.
+
+  Blind-mode render check (2026-11-02, LLM oracle, zero API calls).
+  Both blind and independent cells reached llm_answer_pending.  The
+  blind generation prompt (reached by answering the methodology and
+  hyperparameter calls with result-free placeholders) contains none of
+  the 13 values or 10 SEs as printed or rounded to 1-3 significant
+  figures, and no script text; its dataset listing shows only the four
+  .dta files, 00-README.txt and codebook.pdf.  As for every entry, the
+  methodology summariser itself receives the full paper text (Tables 1
+  and 2 included) with an instruction to leave results out, so the
+  blind summary is only as clean as the summariser.  The paper's prose
+  also restates rounded results that a value-matching redactor (the
+  claude-code reproducer's) may not catch: "about 0.3 on a 1-4 scale"
+  (Table 1 overall Personalism difference), "approximately 8 percentage
+  points" and "about 9 percentage points" (Table 2), plus the Table 2
+  confidence intervals in the text.
