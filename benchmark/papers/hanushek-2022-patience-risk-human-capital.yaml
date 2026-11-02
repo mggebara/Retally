@@ -1,0 +1,422 @@
+# Original paper: Hanushek, E. A., Kinne, L., Lergetporer, P., &
+#   Woessmann, L. (2022). "Patience, Risk-Taking, and Human Capital
+#   Investment across Countries." The Economic Journal, 132(646),
+#   2290-2307.  doi:10.1093/ej/ueab105
+#
+# Reproduction report: de Gendre, A., Feld, J., & Salamanca, N. (2023).
+#   "A Comment on 'Patience, Risk-Taking, and Human Capital Investment
+#   Across Countries' by Hanushek et al. (2021)." I4R Discussion Paper
+#   No. 48, July 2023 (I4R First Meta Database replication team 63, rows
+#   2751-2845).  Verdict: computationally reproducible with minor
+#   discrepancies.  DP 48 re-ran the do-files and reproduced Tables 1-4,
+#   "identical to the ones shown in the published paper" apart from
+#   formatting (section 2).  The discrepancies are three imprecisions
+#   in how the paper describes the Table 1-2 analysis: (1) Table 2's
+#   notes list an OECD-country-of-origin dummy that Section 3.1 does not
+#   mention; (2) the "country mean" item non-response control of Table
+#   1 col 8 / Table 2 col 7 is a country-by-wave mean; (3) "migration
+#   status" is two flags, first- and second-generation.  The meta-database
+#   records computational_reproduction = 1, perfect_reproduction = No
+#   ("Discrepencies between programming and writing in paper").  The
+#   schema has no "minor discrepancies" label, so outcome_label is
+#   reproducible: every printed number reproduces (as for leeson-2022).
+#
+# Why this paper:
+#   1. Large student-level PISA x GPS regressions: about two million
+#      students for Table 1, and a migrant sample with residence-country-
+#      by-wave fixed effects for Table 2.  Both use clustered SEs.  It is
+#      the largest data set in the catalog (930 MB zip, 5.5 GB unpacked).
+#   2. The final analysis data sets ship as .dta and as .csv, so the
+#      headline tables need no restricted raw PISA/GPS files.
+#   3. The published EJ PDF is open on Hanushek's Stanford site, and DP
+#      48 prints the baseline reproductions (Tables A1/A2).
+#
+# What original_claims pins: Table 1 (cross-country) col 3 patience and
+#   risk-taking with SEs, col 1 patience, col 2 risk-taking, col 5
+#   (natives) patience and risk-taking, and the col 3 student count;
+#   Table 2 (migrant analysis) col 3 patience and risk-taking, col 1
+#   patience, col 4 patience and risk-taking, and the col 3 student
+#   count.  Every coefficient and SE equals the meta-database's
+#   o_coeff_dbl / o_std_err_dbl where a row exists (Table 1 col 3 and
+#   Table 2 col 3 are the only original_table values in the database).
+#
+# Contamination bookkeeping.  The paper first circulated as "Culture and
+#   Student Achievement: The Intertwined Roles of Patience and
+#   Risk-Taking": NBER WP 27484 and IZA DP 13453 (July 2020), and CRC TRR
+#   190 Rationality & Competition DP 249, dated 2020-07-08 (EconPapers).
+#   Found by web search 2026-11-02; the EJ's first-page footnote names
+#   the earlier title.  publication_date is that working-paper month.
+#   EJ: received 2021-03-26, accepted 2021-12-20, Advance Access
+#   2021-12-31 (first page); print August 2022.
+#   Package: Harvard Dataverse doi:10.7910/DVN/6HXBSD, version 1.0,
+#   created 2021-09-30, released 2021-10-04 (Dataverse API releaseTime
+#   and DataCite "Available").  It is the only version.  The paper and
+#   DP 48 cite the AEA-style openICPSR deposit 10.3886/E153101V2 instead.
+#   That deposit has the same title; DataCite registers V1 on 2021-10-21
+#   and V2 on 2021-11-12, both later than the Dataverse release, so
+#   package_release_date is the Dataverse date.
+publication_date: "2020-07"
+package_release_date: "2021-10-04"
+
+id: hanushek-2022-patience-risk-human-capital
+i4r_report_url: https://www.econstor.eu/bitstream/10419/273433/1/I4R-DP048.pdf
+language: r
+outcome_label: reproducible
+split: holdout
+
+paper:
+  # Published EJ PDF (OUP typeset, "Downloaded from academic.oup.com ...
+  # on 21 July 2022" footer), 18 pp., hosted on Hanushek's Stanford
+  # site; fetched 2026-11-02: %PDF, to a Retally-curation user agent.
+  source: https://hanushek.stanford.edu/sites/default/files/Hanushek%2BKinne%2BLergetporer%2BWoessmann%202022%20EJ%20132%28646%29.pdf
+  title: "Patience, Risk-Taking, and Human Capital Investment across Countries"
+  authors:
+    - Eric A. Hanushek
+    - Lavinia Kinne
+    - Philipp Lergetporer
+    - Ludger Woessmann
+
+dataset:
+  source: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/6HXBSD&version=1.0
+  access_notes: >
+    Harvard Dataverse doi:10.7910/DVN/6HXBSD, CC0 1.0, one version
+    (1.0, released 2021-10-04), pinned with &version=1.0 so a later
+    deposit cannot silently change the package; 1.0 is the version
+    current when I4R replicated (DP 48, July 2023).  ONE file,
+    Replication.zip (929,690,049 bytes, not restricted, not ingested).
+    It unpacks to Replication/ with 51 files, 5.5 GB:
+    Data/Working/ holds seven Stata analysis data sets.  They are
+    pisa_full_gps_final.dta (2.47 GB; cross-country, Table 1),
+    pisa_full_gps_final_imcoo.dta (110 MB; migrants, Tables 2-3), and
+    the alternative migrant definitions _coo, _cooavg, _coobothm,
+    _imcooavg and _imcoobothm.
+    Data/CSV/ holds the same seven as .csv (pisa_full_gps_final.csv
+    2.97 GB) plus dist_cepii.csv.  Data/Orig/Other/ has six small
+    .xlsx inputs (central exit exams, continents, GDP per capita,
+    migrant selectivity, hc_data, OECD membership) and dist_cepii.dta.
+    Data/Orig/PISA/ and Data/Orig/GPS/ hold only empty wave folders
+    and Thumbs.db files.  The raw PISA and GPS files are public but not
+    shipped, so the data-preparation do-files cannot run.  The analysis
+    do-files run from Data/Working.
+    Do/ holds 21 Stata do-files (0_masterfile, 1a-1e preparation, 2a-2d
+    analysis prep, 3_analysis_crosscountry, 3_analysis_migrants).
+    README.docx documents data provenance and maps tables to do-file
+    line ranges; it prints no estimates.  Results/ is EMPTY: the code
+    writes T1.xls etc. there.  No logs, .tex/.xls tables or paper PDF
+    ship.  The strip rule removes the 21 .do files only.
+
+code_repo:
+  url: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/6HXBSD&version=1.0
+
+original_claims:
+  - description: table1_col3_patience
+    value: 1.226
+    claim_type: coefficient
+    standard_error: 0.132
+    sample_size: 1992276
+    unit: SD of PISA math score per SD of national patience
+    location: "Table 1, column (3) Full sample, Patience"
+    context: >
+      Table 1 ("National Preferences and Student Achievement across
+      Countries: The Intertwined Roles of Patience and Risk-taking"),
+      column (3), row Patience.  Student-level least squares regression
+      of the PISA math test score (original PISA scores divided by 100,
+      so a unit is one standard deviation), pooled over all PISA waves
+      2000-2018, on the country's Global Preference Survey patience and
+      risk-taking entered together.  Each preference is z-standardised
+      in the analytical sample and collapsed to the country level.
+      Controls: student gender, age and migration status, imputation
+      dummies, and test-wave fixed effects.  Weighted by students'
+      sampling probabilities within countries, giving equal weight to
+      each country.  Sample: all students in the 49 PISA countries with
+      GPS data.  Robust standard errors clustered at the country level.
+  - description: table1_col3_risk_taking
+    value: -1.241
+    claim_type: coefficient
+    standard_error: 0.184
+    sample_size: 1992276
+    unit: SD of PISA math score per SD of national risk-taking
+    location: "Table 1, column (3) Full sample, Risk-taking"
+    context: >
+      Table 1, column (3), row Risk-taking.  Same regression as
+      table1_col3_patience (patience and risk-taking entered together).
+  - description: table1_col1_patience
+    value: 0.917
+    claim_type: coefficient
+    standard_error: 0.127
+    sample_size: 1992276
+    unit: SD of PISA math score per SD of national patience
+    location: "Table 1, column (1) Full sample, Patience"
+    context: >
+      Table 1, column (1), row Patience.  Same specification as
+      table1_col3_patience but with patience as the only preference
+      measure (risk-taking omitted).
+  - description: table1_col2_risk_taking
+    value: -0.482
+    claim_type: coefficient
+    standard_error: 0.261
+    sample_size: 1992276
+    unit: SD of PISA math score per SD of national risk-taking
+    location: "Table 1, column (2) Full sample, Risk-taking"
+    context: >
+      Table 1, column (2), row Risk-taking.  Same specification as
+      table1_col3_patience but with risk-taking as the only preference
+      measure (patience omitted).
+  - description: table1_col5_natives_patience
+    value: 1.296
+    claim_type: coefficient
+    standard_error: 0.133
+    sample_size: 1751822
+    unit: SD of PISA math score per SD of national patience
+    location: "Table 1, column (5) Natives, Patience"
+    context: >
+      Table 1, column (5) Natives, row Patience.  The column (3)
+      regression (patience and risk-taking together, same weighting,
+      wave fixed effects and country-clustered SEs) estimated on native
+      students only.  Students are migrants if both parents were born
+      abroad; natives are the rest.  The migration-status controls drop
+      out within this subsample.
+  - description: table1_col5_natives_risk_taking
+    value: -1.320
+    claim_type: coefficient
+    standard_error: 0.189
+    sample_size: 1751822
+    unit: SD of PISA math score per SD of national risk-taking
+    location: "Table 1, column (5) Natives, Risk-taking"
+    context: >
+      Table 1, column (5) Natives, row Risk-taking.  Same regression as
+      table1_col5_natives_patience.
+  - description: table1_col3_observations
+    value: 1992276
+    claim_type: other
+    unit: students
+    location: "Table 1, column (3), Observations"
+    context: >
+      Observations in the Table 1 column (3) regression: students in
+      all PISA waves 2000-2018 in the 49 countries with GPS data (the
+      full-sample N shared by columns 1-4, 7 and 8).
+  - description: table2_col3_patience
+    value: 0.931
+    claim_type: coefficient
+    standard_error: 0.116
+    sample_size: 80398
+    unit: SD of PISA math score per SD of country-of-origin patience
+    location: "Table 2, column (3) Full sample, Patience (country-of-origin)"
+    context: >
+      Table 2 ("Patience, Risk-taking, and Student Achievement: Migrant
+      Analysis"), column (3), row Patience (country-of-origin).
+      Least squares regression of the PISA math score (divided by 100),
+      PISA waves 2003-2018, on the GPS patience and risk-taking of the
+      student's country of origin, entered together.  Sample: migrant
+      students, both of whose parents were born outside the country
+      where the student attends school, with an identified origin
+      country that has GPS data.  First-generation migrants are
+      assigned their country of birth, second-generation migrants their
+      father's country of origin.  The sample spans 58 countries of
+      origin and 48 residence countries.  Includes the 180 residence-
+      country-by-wave fixed effects.  Controls: student gender, age, a
+      dummy for an OECD country of origin, and imputation dummies.
+      Robust standard errors clustered at the country-of-origin level.
+  - description: table2_col3_risk_taking
+    value: -0.294
+    claim_type: coefficient
+    standard_error: 0.122
+    sample_size: 80398
+    unit: SD of PISA math score per SD of country-of-origin risk-taking
+    location: "Table 2, column (3) Full sample, Risk-taking (country-of-origin)"
+    context: >
+      Table 2, column (3), row Risk-taking (country-of-origin).  Same
+      regression as table2_col3_patience.
+  - description: table2_col1_patience
+    value: 0.779
+    claim_type: coefficient
+    standard_error: 0.115
+    sample_size: 80398
+    unit: SD of PISA math score per SD of country-of-origin patience
+    location: "Table 2, column (1) Full sample, Patience (country-of-origin)"
+    context: >
+      Table 2, column (1), row Patience (country-of-origin).  Same
+      specification as table2_col3_patience but with country-of-origin
+      patience as the only preference measure.
+  - description: table2_col4_patience
+    value: 1.032
+    claim_type: coefficient
+    standard_error: 0.133
+    sample_size: 80398
+    unit: SD of PISA math score per SD of country-of-origin patience
+    location: "Table 2, column (4) Full sample, Patience (country-of-origin)"
+    context: >
+      Table 2, column (4), row Patience (country-of-origin).  The
+      column (3) regression plus the four other GPS preferences of the
+      country of origin (positive reciprocity, negative reciprocity,
+      altruism, trust) as controls.
+  - description: table2_col4_risk_taking
+    value: -0.449
+    claim_type: coefficient
+    standard_error: 0.140
+    sample_size: 80398
+    unit: SD of PISA math score per SD of country-of-origin risk-taking
+    location: "Table 2, column (4) Full sample, Risk-taking (country-of-origin)"
+    context: >
+      Table 2, column (4), row Risk-taking (country-of-origin).  Same
+      regression as table2_col4_patience.
+  - description: table2_col3_observations
+    value: 80398
+    claim_type: other
+    unit: migrant students
+    location: "Table 2, column (3), Observations"
+    context: >
+      Observations in the Table 2 column (3) regression: first- and
+      second-generation migrant students, PISA waves 2003-2018 (the
+      full-sample N shared by columns 1-5).
+
+# The meta-database's 95 rows for this paper (team 63, DP 48) hold 90
+# paired rows, and every one is a ROBUSTNESS or conceptual-replication
+# variant: Table 1 col 3 re-estimated without weights, without imputed
+# observations, on other plausible values, without high-leverage
+# observations, or on TIMSS/PIRLS instead of PISA; Table 2 col 3 also
+# with and without the OECD-origin dummy.  None is a plain reproduction,
+# so no r_coeff is transcribed.  The reproduced values below come from
+# DP 48's own baseline rows: Table A1 bold row 1.226 (0.132) / -1.241
+# (0.184), and Table A2 bold row 0.931 (0.116) / -0.294 (0.122).  For
+# the other claims, DP 48 section 2 says Tables 1-4 reproduce
+# identically (blanket verdict, recorded as the paper's value, as in
+# leeson-2022).
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: 1.226
+    outcome: matches
+    notes: DP 48 Table A1 baseline (bold) row, 1.226 (0.132).
+  - claim_id: 1
+    reproduced_value: -1.241
+    outcome: matches
+    notes: DP 48 Table A1 baseline (bold) row, -1.241 (0.184).
+  - claim_id: 2
+    reproduced_value: 0.917
+    outcome: matches
+    notes: DP 48 section 2 blanket verdict (Tables 1-4 identical); value is the paper's.
+  - claim_id: 3
+    reproduced_value: -0.482
+    outcome: matches
+    notes: DP 48 section 2 blanket verdict; value is the paper's.
+  - claim_id: 4
+    reproduced_value: 1.296
+    outcome: matches
+    notes: DP 48 section 2 blanket verdict; value is the paper's.
+  - claim_id: 5
+    reproduced_value: -1.320
+    outcome: matches
+    notes: DP 48 section 2 blanket verdict; value is the paper's.
+  - claim_id: 6
+    reproduced_value: 1992276
+    outcome: matches
+    notes: DP 48 section 3.1 states the full sample N (1,992,276) when dropping imputed values.
+  - claim_id: 7
+    reproduced_value: 0.931
+    outcome: matches
+    notes: DP 48 Table A2 baseline (bold) row, 0.931 (0.116).
+  - claim_id: 8
+    reproduced_value: -0.294
+    outcome: matches
+    notes: DP 48 Table A2 baseline (bold) row, -0.294 (0.122).
+  - claim_id: 9
+    reproduced_value: 0.779
+    outcome: matches
+    notes: DP 48 section 2 blanket verdict; value is the paper's.
+  - claim_id: 10
+    reproduced_value: 1.032
+    outcome: matches
+    notes: DP 48 section 2 blanket verdict; value is the paper's.
+  - claim_id: 11
+    reproduced_value: -0.449
+    outcome: matches
+    notes: DP 48 section 2 blanket verdict; value is the paper's.
+  - claim_id: 12
+    reproduced_value: 80398
+    outcome: matches
+    notes: DP 48 section 3.2 cites the 80,398 migrant observations.
+
+notes: >
+  Pinned values (kept out of every context): Table 1 col 3 patience
+  1.226 (0.132) and risk-taking -1.241 (0.184); col 1 patience 0.917
+  (0.127); col 2 risk-taking -0.482 (0.261); col 5 natives 1.296 (0.133)
+  and -1.320 (0.189), N 1,751,822; full-sample N 1,992,276.  Table 2 col
+  3 patience 0.931 (0.116) and risk-taking -0.294 (0.122); col 1 patience
+  0.779 (0.115); col 4 patience 1.032 (0.133) and risk-taking -0.449
+  (0.140); migrant N 80,398.  All are printed to three decimals.  Left
+  out: Table 1 cols 4 and 6-8 and Table 2 cols 2 and 5-9 (other
+  preferences, migrants-only and effort controls, language subsamples),
+  the subsample-difference rows, R2s, Tables 3-4, the country-level R2
+  of Figure 1 (0.672, from a figure), and the appendix.
+
+  Dropped claim: Table 1 col 6 (migrants) patience 0.702 (0.172).  The
+  independent cross-check below gives 0.698 (0.169) and risk-taking
+  -0.371 (0.221) against the printed -0.370 (0.225), with the same N
+  (192,736).  That is within one SE but outside the 2 % band.  The
+  cause was not traced (possibly weight precision in the CSV export,
+  or collinearity handling of the migration flags).  DP 48 reports the
+  Stata run reproduces it.
+
+  What was read.  The published EJ PDF (all 18 pp.: Tables 1-4, text,
+  footnotes); I4R DP 48 (EconStor, 20 pp., incl. Tables A1-A3); the
+  meta-database's 95 rows; the Dataverse and DataCite API metadata for
+  both package DOIs; the whole package listing (downloaded with the
+  project downloader to .cache/datasets/, never committed); README.docx;
+  0_masterfile.do and the Table 1-2 sections of
+  3_analysis_crosscountry.do and 3_analysis_migrants.do; the CSV
+  headers.
+
+  Independent cross-check (not the package code: pyfixest on the .csv
+  copies of the working data).  It reproduces every pinned value at the
+  printed precision.  Table 1 (pisa_full_gps_final.csv, 1,992,276 rows,
+  49 countries): col 1 0.917 (0.127); col 2 -0.482 (0.261); col 3 1.226
+  (0.132) / -1.241 (0.184); col 5 1.296 (0.133) / -1.320 (0.189), N
+  1,751,822.  Table 2 (pisa_full_gps_final_imcoo.csv): col 1 0.779
+  (0.115); col 2 0.183 (0.210); col 3 0.931 (0.116) / -0.294 (0.122);
+  col 4 1.032 (0.133) / -0.449 (0.140).  pyfixest drops one singleton
+  observation (N 80,397); Stata's reg keeps it, hence the printed
+  80,398.
+
+  Package structure (package-only facts; never in contexts).  Table 1
+  is `reg pv1math patience risktaking female age migra1 migra2 image
+  imfemale immigra1 i.wave [pw=wgtc], vce(cluster country)` on
+  Data/Working/pisa_full_gps_final.dta.  The dependent variable is
+  pv1math, the FIRST plausible value divided by 100, and wgtc is the
+  equal-country-weight sampling weight.  Natives are migra0==1
+  (migra1/migra2 dropped); migrants are migra0==0.  Table 2 is `reg
+  pv1math coo_patience coo_risktaking female age imfemale image
+  coo_oecd i.countrywave, vce(cluster coo)` on
+  Data/Working/pisa_full_gps_final_imcoo.dta.  It is UNWEIGHTED (no
+  pweight; the paper's Table 2 notes do not mention weights), and
+  countrywave is the 180 residence-country-by-wave cells.  Column 4
+  adds coo_posrecip coo_negrecip coo_altruism coo_trust.  The
+  0_masterfile.do path is a hard-coded Windows G:\ drive; outputs go
+  to Results\ via outreg2 (ssc).  The full cross-country file is 2.5 GB
+  as .dta and 3.0 GB as .csv: a reproduction must read only the needed
+  columns (haven col_select / data.table select) or memory will be the
+  binding constraint.
+
+  What could not be verified.  The do-files were not run (no Stata),
+  and the cross-check is an independent re-estimate.  Whether the
+  Dataverse 1.0 zip is byte-identical to the openICPSR E153101V2
+  deposit that DP 48 used was not checked: openICPSR needs a login.
+  Both carry the same title, and DP 48's reproduction of every table
+  is consistent with the Dataverse data reproducing the pinned values
+  above.
+
+  Curation check (2026-11-02, zero cost).  I ran `benchmark.runner
+  --llm-oracle curation-check --only
+  hanushek-2022-patience-risk-human-capital` once in --mode blind and
+  once in --mode independent.  Both cells stopped as llm_answer_pending
+  on the first call, the methodology summary, with 0 API calls.  That
+  prompt embeds the paper text, Tables 1-2 included, by design.  It
+  carried no package script text, file names or claim tokens.  The
+  project downloader fetched Dataverse 1.0 and recorded the version in
+  metadata.json.  The strip rule withholds the 21 .do files
+  (script-suffix) and nothing else.  The kept README.docx and six .xlsx
+  inputs contain no pinned value, and Results/ is empty.  The blind
+  code-generation prompt is checked by tests/test_blind_prompt.py
+  (passes).
+
+  Original analysis in Stata 15 (21 do-files).  language is r, the
+  reproduction target (the pipeline translates Stata originals to R).
