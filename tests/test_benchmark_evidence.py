@@ -293,6 +293,18 @@ def test_normalise_paths_rewrites_repo_worktree_and_scratch() -> None:
     assert str(evidence.REPO_ROOT) in evidence.repo_roots()
 
 
+def test_normalise_paths_rewrites_home_paths_without_a_plain_user_name() -> None:
+    text = (
+        'global main "/Users/`c(username)\'/Downloads/Replication"\n'
+        'else global main "C:/Users/`c(username)\'/Downloads/Replication"\n'
+        'global PROJECT_ROOT "/Users/..."\n'
+    )
+    out = evidence.normalise_paths(text, [])
+    assert "/Users/" not in out
+    assert 'global main "<home>/Downloads/Replication"' in out
+    assert 'global PROJECT_ROOT "<home>/"' in out
+
+
 def test_built_tree_has_no_absolute_source_paths(tmp_path: Path) -> None:
     out, _ = _build(tmp_path)
     root = str((tmp_path / "src").resolve())

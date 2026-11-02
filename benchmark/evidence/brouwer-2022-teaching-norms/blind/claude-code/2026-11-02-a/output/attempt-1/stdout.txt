@@ -1,0 +1,115 @@
+[1] 601  44
+== scene 
+
+          Help      Violation Violation+Help 
+           201            200            200 
+== Condition 
+
+ VC  VA  HC  HA VHC VHA 
+100 100 100 101 100 100 
+== Child 
+
+  0   1 
+301 300 
+== Violation 
+
+  0   1 
+401 200 
+== ViolationHelp 
+
+  0   1 
+401 200 
+== Help 
+
+  0   1 
+400 201 
+== Punishment 
+
+   0    1 <NA> 
+ 355   45  201 
+== Helping 
+
+  0   1 
+481 120 
+== male 
+
+   0    1 <NA> 
+ 390  209    2 
+== hugo 
+
+  0   1 
+295 306 
+== Morning 
+
+  0   1 
+289 312 
+== witness 
+
+  0   1 
+513  88 
+== rich 
+
+  0   1 
+296 305 
+== Rain 
+
+  0   1 
+554  47 
+== Hot 
+
+  0   1 
+431 170 
+== School 
+
+AF AH AL AR CA CB CO CR DI EH GP HB HR JC JD JK JM JR LB LE LJ LO LP LS MB MF 
+20 11 19 10 29  9 24 23 25 25  8  5 31 25 26 18 30 34 24  6 33 23  9 24 22 21 
+MO NJ PV SS 
+15 19  8 25 
+     Violation
+scene   0   1
+    1 201   0
+    2   0 200
+    3 200   0
+     ViolationHelp
+scene   0   1
+    1 201   0
+    2 200   0
+    3   0 200
+     Help
+scene   0   1
+    1   0 201
+    2 200   0
+    3 200   0
+     
+scene FALSE TRUE
+    1     0  201
+    2   200    0
+    3   200    0
+     
+scene FALSE
+    1   201
+    2   200
+    3   200
+tibble [601 × 6] (S3: tbl_df/tbl/data.frame)
+ $ scene    : dbl+lbl [1:601] 2, 1, 2, 1, 1, 1, 1, 2, 1, 3, 3, 2, 3, 3, 3, 2, 1, 1, ...
+   ..@ label       : chr "Scene played by the actor"
+   ..@ format.stata: chr "%62.0g"
+   ..@ labels      : Named num [1:3] 1 2 3
+   .. ..- attr(*, "names")= chr [1:3] "Help" "Violation" "Violation+Help"
+ $ Condition: dbl+lbl [1:601] 2, 4, 1, 3, 3, 3, 4, 1, 3, 5, 5, 1, 5, 6, 6, 2, 4, 4, ...
+   ..@ label       : chr "Experimental condition"
+   ..@ format.stata: chr "%9.0g"
+   ..@ labels      : Named num [1:6] 1 2 3 4 5 6
+   .. ..- attr(*, "names")= chr [1:6] "VC" "VA" "HC" "HA" ...
+ $ male     : num [1:601] NA 0 0 1 0 0 0 1 0 1 ...
+  ..- attr(*, "label")= chr "Male Target"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ hugo     : num [1:601] 1 0 0 0 0 0 1 1 1 1 ...
+  ..- attr(*, "label")= chr "Male Actor"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ witness  : num [1:601] 0 0 0 1 0 0 0 0 0 0 ...
+  ..- attr(*, "label")= chr "No witness=0; Witness=1"
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ rich     : num [1:601] 0 0 0 0 0 0 0 0 0 0 ...
+  ..- attr(*, "label")= chr "Rich Area"
+  ..- attr(*, "format.stata")= chr "%9.0g"

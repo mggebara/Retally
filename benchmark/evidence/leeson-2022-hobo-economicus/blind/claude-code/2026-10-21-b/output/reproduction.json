@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "entry_id": "leeson-2022-hobo-economicus",
+  "mode": "blind",
+  "run_id": "2026-10-21-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Homeless service / shuttle-stop indicators coded as walking time <= 10 minutes from service.csv / shuttle.csv (paper: 'within a ten-minute walk').",
+    "Passerby friendliness = highest response category (1-5) marked for each passerby, averaged over all passersby surveyed at the station (station-level constant).",
+    "Dollars per hour = (cash + inkind)/minutes*60, missing if either cash or inkind is missing (gives the 67 observations the paper describes).",
+    "Brown-Forsythe = Levene test centred on the median (car::leveneTest, center=median); ANOVA = one-way lm F test.",
+    "Table 2 estimated with fixest feols, date fixed effects, SEs clustered by station, fixef.rm='none' so date-singleton visits stay in the sample (equivalent to OLS with date dummies; point estimates unaffected)."
+  ],
+  "notes": "attempt-1: exploratory run (merge coverage, codebook, receipt missingness), no RESULT lines. attempt-2: first scored run; fixest dropped 2 (full) and 4 (subsample) date-singleton visits by default, giving 240/98 observations although the task's sample description is all 242 station-visits and the 102 subsample visits; rerun with fixef.rm='none'. Coefficients are identical between attempt-2 and the final run; only observation counts, SEs and adjusted R2 changed. This was a sample-definition fix, not a comparison with reported values (kind '' since it was neither a crash nor a claim check). All passersby month merges succeeded (Georgetown already carries Foggy Bottom's counts in passersby.csv). Only the CSV data files and Codebook.xlsx (first sheet, variable descriptions) were read from the mount; no PDFs or scripts opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T02:10:13Z",
+  "finished_at": "2026-10-22T02:12:41Z"
+}

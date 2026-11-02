@@ -1,0 +1,89 @@
+Summary (full):
+     panhandlers passersby friendliness     service     shuttle
+n     242.000000  242.0000  242.0000000 242.0000000 242.0000000
+mean    1.066116  348.9542    3.1121593   0.4008264   0.3677686
+sd      1.581719  168.0502    0.1940313   0.4910816   0.4831973
+Summary (five):
+     panhandlers passersby friendliness     service     shuttle
+n     102.000000  102.0000   102.000000 102.0000000 102.0000000
+mean    1.921569  485.5230     3.024688   0.5784314   0.6666667
+sd      1.811330  120.0442     0.117726   0.4962488   0.4737325
+OLS estimation, Dep. Var.: panhandlers
+Observations: 240
+Fixed-effects: date: 47
+Standard-errors: Clustered (metro) 
+             Estimate Std. Error t value   Pr(>|t|)    
+passersby    0.004914   0.001079 4.55373 0.00011848 ***
+friendliness 1.595109   0.847150 1.88291 0.07139890 .  
+shuttle      0.780689   0.181644 4.29790 0.00022984 ***
+service      0.449913   0.276392 1.62780 0.11610545    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.09849     Adj. R2: 0.391728
+                Within R2: 0.326226
+Adj. R2: 0.391728
+OLS estimation, Dep. Var.: panhandlers
+Observations: 98
+Fixed-effects: date: 33
+Standard-errors: Clustered (metro) 
+             Estimate Std. Error  t value Pr(>|t|)    
+passersby    0.006135   0.002136 2.871940 0.045380 *  
+friendliness 1.461772   2.737159 0.534047 0.621608    
+shuttle      0.889644   0.222911 3.991038 0.016251 *  
+service      0.814809   0.514301 1.584305 0.188300    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.38357     Adj. R2: 0.069313
+                Within R2: 0.150942
+Adj. R2: 0.069313
+Coefs m2:
+   passersby friendliness      shuttle      service 
+ 0.006134586  1.461771605  0.889644487  0.814809056 
+N donations: 80  N dollars: 67 
+# A tibble: 5 × 4
+  metro             mean    sd     n
+  <fct>            <dbl> <dbl> <int>
+1 Farragut North    3.29  2.79    14
+2 Farragut West     3.08  3.72    12
+3 Gallery Place     3.16  3.69    17
+4 McPherson Square  2.69  3.54    17
+5 Metro Center      2.10  2.39    20
+# A tibble: 5 × 4
+  metro             mean    sd     n
+  <fct>            <dbl> <dbl> <int>
+1 Farragut North    5.96  6.92    11
+2 Farragut West     7.46 13.7      9
+3 Gallery Place     4.33  5.84    15
+4 McPherson Square  6.17 10.8     16
+5 Metro Center      7.02 15.8     16
+Levene's Test for Homogeneity of Variance (center = median)
+      Df F value Pr(>F)
+group  4  0.5413 0.7059
+      75               
+Levene's Test for Homogeneity of Variance (center = median)
+      Df F value Pr(>F)
+group  4  0.2758 0.8925
+      62               
+Analysis of Variance Table
+
+Response: donph
+          Df Sum Sq Mean Sq F value Pr(>F)
+metro      4  16.57  4.1422  0.3984 0.8092
+Residuals 75 779.72 10.3963               
+Analysis of Variance Table
+
+Response: dolph
+          Df Sum Sq Mean Sq F value Pr(>F)
+metro      4   77.5  19.385  0.1509 0.9619
+Residuals 62 7965.7 128.479               
+RESULT:passersby_full_sample=0.004914
+RESULT:passersby_five_station_subsample=0.006135
+RESULT:friendliness_full_sample=1.595109
+RESULT:shuttle_stop_full_sample=0.780689
+RESULT:shuttle_stop_five_station_subsample=0.889644
+RESULT:brown_forsythe_donations_per_hour=0.541281
+RESULT:brown_forsythe_dollars_per_hour=0.275802
+RESULT:anova_f_donations_per_hour=0.398434
+RESULT:anova_f_dollars_per_hour=0.150879
+RESULT:station_visits_full_sample=240
+RESULT:station_visits_five_station_subsample=98

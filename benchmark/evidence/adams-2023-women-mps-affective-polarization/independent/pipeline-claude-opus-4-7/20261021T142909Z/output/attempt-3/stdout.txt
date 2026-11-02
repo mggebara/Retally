@@ -1,0 +1,49 @@
+Columns: country, year, to_mp_number, from_mp_number, party_number, party_from, party_to, to_partyname, to_parfam, from_partyname, from_parfam, from_senior_partner, to_senior_partner, to_in_gov, from_in_gov, govern_together, opposition_together, from_left_bloc, from_right_bloc, to_left_bloc, to_right_bloc, same_bloc, from_parlgov_id, to_parlgov_id, from_nationalism, from_rile, from_planeco, from_markeco, to_nationalism, to_rile, to_planeco, to_markeco, elecdate, sat_together_10years, sat_together_15years, sat_together_20years, to_galtan, to_lrecon, from_galtan, from_lrecon, nationalism_distance, rile_distance, galtan_distance, lrecon_distamce, govern_together_10, govern_together_15, govern_together_20, rile_distance_s, nationalism_distance_s, lrecon_distance_s, galtan_distance_s, from_multiculturalism, to_multiculturalism, from_immigrate_policy, to_immigrate_policy, from_society, from_economy, to_society, to_economy, from_rrparty, to_rrparty, econ_distance, econ_distance_s, soc_distance, society_distance_s, from_femaleleader, from_pfeml, from_complete, to_femaleleader, to_pfeml, to_complete, nat_avg, diff_pfeml, diff_femlead, from_prior_cab, from_prior_seats, to_prior_cab, to_prior_seats, prior_coalition, prior_opposition, cntryyr, party_like, party_dislike, DM, logDM 
+Nrow raw: 2266 
+Women-related cols: from_femaleleader, from_pfeml, to_femaleleader, to_pfeml, diff_pfeml, diff_femlead 
+Men-related cols: from_femaleleader, to_femaleleader 
+Like/therm cols: party_like, party_dislike 
+MP/seat cols: to_mp_number, from_mp_number, from_complete, to_complete, from_prior_seats, to_prior_seats 
+N after complete.cases main: 2019 
+to_mp_number range: 11110-72701 NAs: 0 
+from_mp_number range: 11110-72701 NAs: 0 
+from_complete range: master only (1)-matched (3) NAs: 0 
+to_complete range: master only (1)-matched (3) NAs: 0 
+from_prior_seats range: 0-999 NAs: 0 
+to_prior_seats range: 0-999 NAs: 0 
+from mp col:  
+to mp col:  
+OLS estimation, Dep. Var.: party_like
+Observations: 2,019
+Fixed-effects: cntryyr: 81
+Standard-errors: Clustered (cntryyr) 
+         Estimate Std. Error t value   Pr(>|t|)    
+to_pfeml  1.60382   0.290567 5.51961 4.0759e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.36402     Adj. R2: 0.15216 
+                Within R2: 0.032662
+OLS estimation, Dep. Var.: party_like
+Observations: 2,019
+Fixed-effects: cntryyr: 81
+Standard-errors: Clustered (cntryyr) 
+                     Estimate Std. Error  t value   Pr(>|t|)    
+to_pfeml             1.486938   0.302989  4.90757 4.7746e-06 ***
+rile_distance_s     -0.583628   0.068231 -8.55375 6.6204e-13 ***
+govern_together      0.937359   0.175058  5.35456 8.0105e-07 ***
+opposition_together  0.313668   0.105366  2.97692 3.8510e-03 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.24038     Adj. R2: 0.297801
+                Within R2: 0.200071
+women DV found:  
+men DV found:  
+n cntryyr: 81 
+RESULT:n_obs=2019
+RESULT:n_directed_dyads=2019
+RESULT:n_election_studies=81
+RESULT:women_mps_coef_bivariate=1.603816
+RESULT:women_mps_coef_full=1.486938
+RESULT:right_left_distance_coef_full=-0.583628
+RESULT:coalition_partners_coef_full=0.937359
+RESULT:opposition_partners_coef_full=0.313668

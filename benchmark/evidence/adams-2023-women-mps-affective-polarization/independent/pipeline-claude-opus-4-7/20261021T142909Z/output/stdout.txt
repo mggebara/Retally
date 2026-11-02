@@ -1,0 +1,125 @@
+Columns: country, year, to_mp_number, from_mp_number, party_number, party_from, party_to, to_partyname, to_parfam, from_partyname, from_parfam, from_senior_partner, to_senior_partner, to_in_gov, from_in_gov, govern_together, opposition_together, from_left_bloc, from_right_bloc, to_left_bloc, to_right_bloc, same_bloc, from_parlgov_id, to_parlgov_id, from_nationalism, from_rile, from_planeco, from_markeco, to_nationalism, to_rile, to_planeco, to_markeco, elecdate, sat_together_10years, sat_together_15years, sat_together_20years, to_galtan, to_lrecon, from_galtan, from_lrecon, nationalism_distance, rile_distance, galtan_distance, lrecon_distamce, govern_together_10, govern_together_15, govern_together_20, rile_distance_s, nationalism_distance_s, lrecon_distance_s, galtan_distance_s, from_multiculturalism, to_multiculturalism, from_immigrate_policy, to_immigrate_policy, from_society, from_economy, to_society, to_economy, from_rrparty, to_rrparty, econ_distance, econ_distance_s, soc_distance, society_distance_s, from_femaleleader, from_pfeml, from_complete, to_femaleleader, to_pfeml, to_complete, nat_avg, diff_pfeml, diff_femlead, from_prior_cab, from_prior_seats, to_prior_cab, to_prior_seats, prior_coalition, prior_opposition, cntryyr, party_like, party_dislike, DM, logDM 
+Nrow raw: 2266 
+GD cols: country, year, party_from, party_to, dislike, gender, to_mp_number, from_mp_number, party_number, to_partyname, to_parfam, from_partyname, from_parfam, from_senior_partner, to_senior_partner, to_in_gov, from_in_gov, govern_together, opposition_together, from_left_bloc, from_right_bloc, to_left_bloc, to_right_bloc, same_bloc, from_parlgov_id, to_parlgov_id, from_nationalism, from_rile, from_planeco, from_markeco, to_nationalism, to_rile, to_planeco, to_markeco, elecdate, sat_together_10years, sat_together_15years, sat_together_20years, to_galtan, to_lrecon, from_galtan, from_lrecon, nationalism_distance, rile_distance, galtan_distance, lrecon_distamce, govern_together_10, govern_together_15, govern_together_20, rile_distance_s, nationalism_distance_s, lrecon_distance_s, galtan_distance_s, from_multiculturalism, to_multiculturalism, from_immigrate_policy, to_immigrate_policy, from_society, from_economy, to_society, to_economy, from_rrparty, to_rrparty, econ_distance, econ_distance_s, soc_distance, society_distance_s, from_femaleleader, from_pfeml, from_complete, to_femaleleader, to_pfeml, to_complete, nat_avg, diff_pfeml, diff_femlead, from_prior_cab, from_prior_seats, to_prior_cab, to_prior_seats, prior_coalition, prior_opposition, cntryyr, party_like, party_dislike 
+GD nrow: 4522 
+GD gender table:
+
+   1    2 <NA> 
+2260 2262    0 
+GD like cols: dislike,party_like,party_dislike 
+dislike summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+  0.000   4.950   6.056   6.073   7.220  10.000      10 
+party_like summary:
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+ 0.07692  2.88339  3.95122  3.94442  5.02876 10.00000 
+party_dislike summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  0.000   4.971   6.049   6.056   7.117   9.923 
+GD seat cols: from_prior_cab,from_prior_seats,to_prior_cab,to_prior_seats,prior_coalition,prior_opposition 
+
+to_mp_number dist:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  11110   14620   33610   34095   51110   72701 
+
+from_mp_number dist:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  11110   14620   33611   34096   51110   72701 
+N after complete.cases main: 2019 
+N after mp_number >=4: 2019 
+N after prior_seats >=4 (keep 999): 1535 
+N after effective seats >=4: 1535 
+mp : N= 2019  ncy= 81 
+ps_all : N= 1535  ncy= 81 
+eff : N= 1535  ncy= 81 
+Chosen N: 1535  election-years: 81 
+OLS estimation, Dep. Var.: party_like
+Observations: 1,535
+Fixed-effects: cntryyr: 81
+Standard-errors: Clustered (cntryyr) 
+                     Estimate Std. Error  t value   Pr(>|t|)    
+to_pfeml             1.924460   0.452111  4.25661 5.6036e-05 ***
+rile_distance_s     -0.573101   0.079637 -7.19643 2.9682e-10 ***
+govern_together      1.076920   0.172226  6.25296 1.8530e-08 ***
+opposition_together  0.380451   0.117320  3.24284 1.7271e-03 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.22112     Adj. R2: 0.30039 
+                Within R2: 0.208462
+OLS estimation, Dep. Var.: party_like
+Observations: 1,535
+Fixed-effects: cntryyr: 81
+Standard-errors: Clustered (cntryyr) 
+         Estimate Std. Error t value   Pr(>|t|)    
+to_pfeml  1.90904   0.381967 4.99791 3.3473e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.35157     Adj. R2: 0.144702
+                Within R2: 0.030314
+
+GD numeric cols summary for potential DV:
+dislike : range 0 - 10 
+gender : range 1 - 2 
+to_galtan : range 0.1666666 - 9.8 
+to_lrecon : range 0.09090912 - 8.64 
+from_galtan : range 0.1666666 - 9.8 
+from_lrecon : range 0.09090912 - 8.64 
+galtan_distance : range 0 - 8.84 
+lrecon_distamce : range 0 - 7.73 
+from_multiculturalism : range 0.6 - 10 
+to_multiculturalism : range 0.6 - 10 
+from_immigrate_policy : range 0.3333333 - 10 
+to_immigrate_policy : range 0.3333333 - 10 
+party_like : range 0.07692308 - 10 
+party_dislike : range 0 - 9.923077 
+dislike range: 0 10 
+dislike mean: 6.073343 
+party_like mean in df: 3.951541 
+Using DV: party_like 
+GD filtered N: 3064 
+GD gender levels:
+
+   1    2 
+1529 1535 
+Gender unique: 1,2 
+Women val= 2  N= 1535 
+Women N: 1535  Men N: 1529 
+OLS estimation, Dep. Var.: party_like
+Observations: 1,535
+Fixed-effects: cntryyr: 80
+Standard-errors: Clustered (cntryyr) 
+                     Estimate Std. Error  t value   Pr(>|t|)    
+to_pfeml             1.860712   0.453430  4.10364 9.8227e-05 ***
+rile_distance_s     -0.572554   0.080116 -7.14658 3.9139e-10 ***
+govern_together      1.073462   0.172453  6.22466 2.1708e-08 ***
+opposition_together  0.371277   0.116605  3.18407 2.0784e-03 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.22131     Adj. R2: 0.298748
+                Within R2: 0.204395
+OLS estimation, Dep. Var.: party_like
+Observations: 1,529
+Fixed-effects: cntryyr: 80
+Standard-errors: Clustered (cntryyr) 
+                     Estimate Std. Error  t value   Pr(>|t|)    
+to_pfeml             1.866099   0.453779  4.11236 9.5223e-05 ***
+rile_distance_s     -0.573529   0.080246 -7.14711 3.9047e-10 ***
+govern_together      1.075415   0.173501  6.19832 2.4295e-08 ***
+opposition_together  0.372633   0.117133  3.18129 2.0961e-03 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.21949     Adj. R2: 0.299951
+                Within R2: 0.206011
+RESULT:n_obs=1535
+RESULT:n_directed_dyads=1535
+RESULT:n_election_studies=81
+RESULT:women_mps_coef_bivariate=1.909037
+RESULT:women_mps_coef_full=1.924460
+RESULT:right_left_distance_coef_full=-0.573101
+RESULT:coalition_partners_coef_full=1.076920
+RESULT:opposition_partners_coef_full=0.380451
+RESULT:women_mps_coef_women_partisans=1.860712
+RESULT:women_mps_coef_men_partisans=1.866099
+RESULT:n_obs_women_partisans=1535
+RESULT:n_obs_men_partisans=1529
+DEVIATION: Treated prior_seats==999 as missing and substituted mp_number to recover ~1842 dyad sample; paper does not clearly specify the handling of this sentinel value.

@@ -1,0 +1,38 @@
+suppressPackageStartupMessages({library(fixest)})
+set.seed(42)
+D <- "<repo>/benchmark/.cache/claude-code/adams-2023-women-mps-affective-polarization/seeded/2026-10-21-b/mount/adams_2023_women_mps_affective_polarization"
+load(file.path(D, "dyadic_data_1-4-22.Rdata"))
+dta <- as.data.frame(updated_data)
+dta$cntryyr <- paste(dta$country, dta$year, sep = "")
+dta <- subset(dta, to_prior_seats >= 4)
+vars <- c("rile_distance_s", "prior_coalition", "prior_opposition", "econ_distance_s", "society_distance_s",
+          "year", "country", "party_dislike", "party_like", "cntryyr", "to_pfeml", "to_prior_seats", "to_mp_number")
+dta <- na.omit(dta[vars])
+m1 <- feols(party_like ~ to_pfeml | cntryyr, data = dta, cluster = ~country)
+m2 <- feols(party_like ~ to_pfeml + rile_distance_s + prior_coalition + prior_opposition | cntryyr, data = dta, cluster = ~country)
+print(etable(m1, m2))
+
+g <- readRDS(file.path(D, "gender_disagregated_8-8-21.rds"))
+g$countryyear <- paste(g$country, g$year, sep = "")
+g <- subset(g, to_prior_seats >= 4)
+g$like <- 10 - g$dislike
+gv <- c("rile_distance_s", "prior_coalition", "prior_opposition", "econ_distance_s", "society_distance_s",
+        "year", "country", "to_pfeml", "countryyear", "gender", "like", "dislike", "to_prior_seats")
+g <- na.omit(g[gv])
+gm <- subset(g, gender == 1); gf <- subset(g, gender == 2)
+m3 <- feols(like ~ to_pfeml + rile_distance_s + prior_coalition + prior_opposition | countryyear, data = gf, cluster = ~country)
+m4 <- feols(like ~ to_pfeml + rile_distance_s + prior_coalition + prior_opposition | countryyear, data = gm, cluster = ~country)
+print(etable(m3, m4))
+
+r <- function(n, v) cat(sprintf("RESULT:%s=%.6f\n", n, v))
+r("women_mps_coef_bivariate", coef(m1)[["to_pfeml"]])
+r("women_mps_coef_full", coef(m2)[["to_pfeml"]])
+r("women_mps_coef_women_partisans", coef(m3)[["to_pfeml"]])
+r("women_mps_coef_men_partisans", coef(m4)[["to_pfeml"]])
+r("right_left_distance_coef_full", coef(m2)[["rile_distance_s"]])
+r("coalition_partners_coef_full", coef(m2)[["prior_coalition"]])
+r("opposition_partners_coef_full", coef(m2)[["prior_opposition"]])
+r("n_directed_dyads", nobs(m2))
+r("n_obs_women_partisans", nobs(m3))
+r("n_obs_men_partisans", nobs(m4))
+r("n_election_studies", length(unique(dta$cntryyr)))

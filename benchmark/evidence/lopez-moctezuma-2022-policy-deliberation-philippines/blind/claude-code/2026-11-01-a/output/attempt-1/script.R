@@ -1,0 +1,17 @@
+D <- "<repo>/benchmark/.cache/claude-code/lopez-moctezuma-2022-policy-deliberation-philippines/blind/2026-11-01-a/mount/lopez_moctezuma_2022_policy_deliberation_philippines"
+load(file.path(D, "data_agg.RData")); load(file.path(D, "survey_raw.RData"))
+options(width = 200)
+print(data.all[, c("barangay","city","assignment","treatment","partytreat","turnout.party","share.treated","att.prop","att.prop.turn")])
+str(data.all)
+s <- as.data.frame(survey_raw)
+str(s)
+print(table(s$city, s$assignment, useNA = "ifany"))
+print(with(s, table(barangay, assignment, useNA="ifany")))
+for (v in c("turnout_all","turnout_pl","vote","vote.akbayan","vote.umalabka","attendance","femhouse","fempol","equality","discrimination","harassment","poverty","gap","corruption","cct","partytreat","assign.akbayan","assign.umalabka")) { cat(v, "\n"); print(table(s[[v]], useNA = "ifany")) }
+print(with(s, table(turnout_pl, turnout_all, useNA="ifany")))
+print(with(s, table(is.na(vote), turnout_pl, useNA="ifany")))
+print(with(s, table(is.na(vote), turnout_all, useNA="ifany")))
+print(with(s, table(partytreat, assignment, useNA="ifany")))
+print(with(s, tapply(attendance, barangay, mean, na.rm=TRUE)))
+print(with(s, table(barangay %in% data.all$barangay, useNA="ifany")))
+print(setdiff(unique(s$barangay), data.all$barangay))

@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "dertwinkel-kalt-2022-concentration-bias",
+  "mode": "independent",
+  "run_id": "2026-11-01-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [
+    "Upper-corner subjects' lower bound taken as the recorded id_stage2 value (63) rather than 62 as stated in the paper text; Tobit right-censoring point set to 63 accordingly.",
+    "Main sample taken from the data's preregistered-sample flag pap_sample (100 per condition); a pure 'no corner in any balanced trade-off' filter leaves 100-103 per condition (the extra subjects are presumably dropped by the stratified pairing in fn. 14).",
+    "Control conditions: d~rel computed with the same eq. (12) formula (average over all 8 workdays) as treatment conditions; the paper does not spell out the control-condition denominator."
+  ],
+  "notes": "Consumption experiment CSV only. Subject-level x~_t from balanced trade-offs (utility_point = trade-off j; decision_number is presentation order, verified by matching eq. (10) means), d~ from decision 9 (lower = id_stage2, upper = id_stage2_upper manually stated, midpoint = average). d~rel = mean_t d~/(e_t + x~_t) with e from fn. 3. Table 2: OLS on constant with HC1 robust SE; Tobit (AER::tobit) censored at -63/63. Table 3: OLS of midpoint d~rel on constant + condition indicator on pooled pairs, HC1 SE; Donation-Treatment level is the DonT mean. attempt-1 exploratory (no RESULT). attempt-2 indexed e by decision_number, used 62 as lower bound and a corner-only filter (N 100-103); compared with claims via check_attempt (all within tolerance) then fixed. Final run: Table 2 matches exactly; Table 3 control-comparison differences are ~0.003 above the paper (control intercepts differ slightly), likely due to the control-condition d~rel denominator.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T04:26:59Z",
+  "finished_at": "2026-11-02T04:30:30Z"
+}

@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "entry_id": "altmann-2022-cognitive-spillovers",
+  "mode": "seeded",
+  "run_id": "2026-10-22-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [],
+  "deviations": [],
+  "notes": "Translated the authors' do-files (4_2_Interventions_targeted_domain.do, 4_2_Cognitive_Spillover.do, 4_3_Payoffs_And_Efficiency.do, globals from master.do) into fixest::feols OLS with subject-clustered SEs. Lab sample: formatted_data_replication.dta with Treatment_Incentives != 4 (Ample dropped); controls = i.Treatment_Incentives, i.original_lab, c.(ability_task ability_load)##i.original_lab, q_age, i.q_gender, i.perc_multitasking_1_easy, perc_multitasking_2, i.subject_cat, i.q_abitur_grade_cat, i.q_math_grade_cat. Online: formatted_data_long_mturk.dta, memory on Treatment_intervention (+ window_height1 window_width1 age i.gender). N = 12160 and 608 clusters in every lab regression; 5472 online. All RESULT values match the claims on rounding after a single scored run, so no claim or error attempts were recorded. Procedural note: an earlier docker invocation ran before script.R had been written (the shell write was blocked by the harness), and docker created an empty directory at the script.R mount path; Rscript had no script to execute and produced empty stdout/stderr. That spurious directory and the empty logs were deleted, and it is not counted as an attempt because no script was executed.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T03:00:26Z",
+  "finished_at": "2026-10-22T03:01:43Z"
+}

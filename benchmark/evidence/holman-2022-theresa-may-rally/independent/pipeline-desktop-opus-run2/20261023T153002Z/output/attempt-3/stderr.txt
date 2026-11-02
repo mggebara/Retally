@@ -1,0 +1,30 @@
+global_approval columns: country, qtr, rally_events, rally_kill, female_pres, execrlc, rally_event_any, country_code, ccode, election_qtr, lag_approval, rally_event_any2, growth, log_inflation, manchester, kill_16, kill_18, kill_10, pres_15death, pres_20death, kill_12, kill_14, kill_20, kill_08, kill_06, kill_under5, kill_1_5, kill_3_5
+attack var: kill_16
+attack country-quarters: 60; under women: 9
+year range: 1975-2017
+T4 spec lead2|all|noldv: N=4423 att=0.838 ia=-1.613
+T4 spec lead2|all|ldv: N=4420 att=-0.466 ia=1.262
+T4 spec lead1|all|noldv: N=4453 att=1.272 ia=-3.287
+T4 spec lead1|all|ldv: N=4450 att=-0.525 ia=-0.120
+T4 spec raw|all|noldv: N=4486 att=2.322 ia=-3.828
+T4 spec raw|all|ldv: N=4449 att=1.560 ia=-3.453
+T4 chosen: lead2|all|ldv
+weight candidates: wt_new_W12
+DiD cand like|treatment1|raw|ideology2|none N=143499 const=1.9605 treat=0.0088 time=-0.4513 tt=-0.0996
+DiD cand like|treatment1|raw|ideology2|wt_new_W12 N=143499 const=2.1759 treat=-0.0338 time=-0.3102 tt=-0.0968
+DiD cand like|treatment1|raw|ideo3|none N=143499 const=1.5426 treat=0.0074 time=-0.4460 tt=-0.1022
+DiD cand like|treatment1|raw|ideo3|wt_new_W12 N=143499 const=1.8760 treat=-0.0412 time=-0.3126 tt=-0.0986
+DiD cand like|treatment2|raw|ideology2|none N=143499 const=1.9597 treat=0.0474 time=-0.4830 tt=-0.1112
+DiD cand like|treatment2|raw|ideology2|wt_new_W12 N=143499 const=2.1673 treat=-0.0377 time=-0.3446 tt=-0.0716
+DiD cand like|treatment2|raw|ideo3|none N=143499 const=1.5423 treat=0.0389 time=-0.4782 tt=-0.1147
+DiD cand like|treatment2|raw|ideo3|wt_new_W12 N=143499 const=1.8661 treat=-0.0509 time=-0.3473 tt=-0.0738
+DiD chosen: like|treatment2|raw|ideology2|none
+DiD cand bpw_1v0|treatment1|raw|ideology2|none N=97155 const=0.1565 treat=-0.0002 time=0.2055 tt=-0.0520
+DiD cand bpw_1v0|treatment1|raw|ideology2|wt_new_W12 N=97155 const=0.1989 treat=-0.0027 time=0.2013 tt=-0.0550
+DiD cand bpw_1v0|treatment1|raw|ideo3|none N=97155 const=0.0724 treat=-0.0004 time=0.2059 tt=-0.0521
+DiD cand bpw_1v0|treatment1|raw|ideo3|wt_new_W12 N=97155 const=0.1358 treat=-0.0038 time=0.2014 tt=-0.0548
+DiD cand bpw_1v0|treatment2|raw|ideology2|none N=97155 const=0.1562 treat=0.0015 time=0.1884 tt=-0.0495
+DiD cand bpw_1v0|treatment2|raw|ideology2|wt_new_W12 N=97155 const=0.1986 treat=-0.0064 time=0.1830 tt=-0.0498
+DiD cand bpw_1v0|treatment2|raw|ideo3|none N=97155 const=0.0721 treat=0.0011 time=0.1889 tt=-0.0502
+DiD cand bpw_1v0|treatment2|raw|ideo3|wt_new_W12 N=97155 const=0.1352 treat=-0.0076 time=0.1833 tt=-0.0503
+DiD chosen: bpw_1v0|treatment2|raw|ideology2|none

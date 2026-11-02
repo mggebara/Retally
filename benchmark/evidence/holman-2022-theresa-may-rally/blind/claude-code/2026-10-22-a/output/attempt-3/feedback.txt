@@ -1,0 +1,2 @@
+Crash (exit 1) before any RESULT: line: the hand-rolled panel-corrected SE step failed with 'solve.default(crossprod(X)): system is computationally singular: reciprocal condition number = 8.29e-17' because the GDP control (growth) is on a scale of ~1e7, making X'X badly conditioned.
+Fix: invert X'X via its QR decomposition (chol2inv(qr.R(qr(X)))), which is numerically stable; the specification is unchanged.

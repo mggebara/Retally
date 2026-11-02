@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "entry_id": "adams-2023-women-mps-affective-polarization",
+  "mode": "seeded",
+  "run_id": "2026-10-21-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [],
+  "deviations": ["Standard errors clustered by country as in the authors' replication_code.R (paper text says clustered by election); no claimed quantity depends on the standard errors. lm with as.factor(cntryyr) translated to fixest::feols with cntryyr absorbed (identical point estimates)."],
+  "notes": "Translated Table 1 columns 1-4 from replication_code.R: dyadic_data_1-4-22.Rdata (updated_data) for columns 1-2 and gender_disagregated_8-8-21.rds for columns 3-4 (like = 10 - dislike, gender 2 = women, 1 = men), to_prior_seats >= 4, na.omit over the script's variable list, country-year fixed effects. n_election_studies is the number of distinct country-years in the column 1-2 estimation sample. Single run; all values match the claims at printed precision; no comparison-driven changes.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T02:01:59Z",
+  "finished_at": "2026-10-22T02:02:37Z"
+}

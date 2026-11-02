@@ -1,0 +1,48 @@
+Columns: hrmonth,hryear,peage,pesex,peeduca,race,prhspnon,pemlr,pulk,pulkm2,pulkm3,pulkm4,pulkm5,pulkm6,pelkavl,pruntype,penlfact,peschft,pwsswgt,v2hrmonth,v2hryear,v2gestfips,v2pemlr,v2pehrusl1,v2pruntype,v2puiodp1,v2peio1cow,v2peio1icd,v2peio1ocd,v2prernhly,v2prernwa,v2pwsswgt,v2prwernal,v2prhernal,pehspnon 
+hisp col: prhspnon 
+wage col: v2prernwa  alloc col: v2prwernal 
+Raw rows: 19836464 
+Rows after restrictions: 16332482 
+Analysis rows: 14296610  mean hired: 3.326646 
+OLS estimation, Dep. Var.: hired
+Observations: 14,296,610
+Weights: w
+Fixed-effects: state: 51,  demo: 56,  ym: 196
+Standard-errors: Clustered (state) 
+       Estimate Std. Error   t value   Pr(>|t|)    
+young  5.305605   0.118965  44.59789  < 2.2e-16 ***
+ur_y  -0.239404   0.021308 -11.23538 2.7639e-15 ***
+ur_e   0.049388   0.017149   2.87991 5.8422e-03 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 17.8     Adj. R2: 0.009475
+             Within R2: 0.007266
+RESULT:young_x_unemp_rate_preferred=-0.2394044563
+RESULT:experienced_x_unemp_rate_preferred=0.04938762499
+RESULT:young_x_unemp_rate_no_controls=-0.3336381138
+RESULT:experienced_x_unemp_rate_no_controls=-0.04512998471
+RESULT:n_obs_full_sample=14296610
+RESULT:aggregate_unemp_rate_no_controls=-0.116495519
+RESULT:aggregate_unemp_rate_month_year_fe=-0.02014197065
+RESULT:young_x_unemp_rate_employed=-0.1619175304
+RESULT:experienced_x_unemp_rate_employed=0.01621394218
+RESULT:young_x_unemp_rate_unemployed=-1.740698547
+RESULT:young_x_unemp_rate_nilf=-0.5477965838
+Wage sample rows: 101940 
+crosswalk v2peio1ocd match rate: 1 
+crosswalk v2peio1icd match rate: 0.9998921 
+OLS estimation, Dep. Var.: lw
+Observations: 101,919
+Weights: w
+Fixed-effects: state: 51,  demo: 51,  ym: 196,  occ: 481,  ind: 262
+Standard-errors: Clustered (state) 
+       Estimate Std. Error  t value   Pr(>|t|)    
+young -0.130194   0.013879 -9.38093 1.3197e-12 ***
+ur_y  -0.023867   0.003752 -6.36095 5.9958e-08 ***
+ur_e  -0.009205   0.004027 -2.28580 2.6540e-02 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.752001     Adj. R2: 0.406396
+                 Within R2: 0.017524
+RESULT:wage_young_x_unemp_rate_all_hires=-0.02386692409
+RESULT:wage_experienced_x_unemp_rate_all_hires=-0.009204711381

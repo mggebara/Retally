@@ -1,0 +1,163 @@
+===== Codebook for Dyadic Party Dataset.docx 
+ Codebook for Dyadic Party Dataset (dyadic_data_1-4-22.Rdata)
+Note – The structure of the dataset is directed dyads, meaning that each row captures the relationship between two parties, with a From party (the evaluating party) and a To party (the evaluated party).
+Note – If a variable has _s after it in the dataset, it is the same variable but has been standardized to have a mean of 0 and a standard deviation of 1. 
+country – Name of Country 
+year – Year of Election 
+cntryyr – Name of Country and Year of election 
+to_mp_number – The manifestos project (https://manifesto-project.wzb.eu/) number for the To Party 
+from_mp_number – The manifestos project (https://manifesto-project.wzb.eu/) number for the From Party 
+party_from – The letter assigned to the “from” party in the CSES codebook – used for merging with CSES 
+party_to – Same as above, for to party 
+to_parfam – The party family of the “To” Party, following the the comparative manifestos project (https://manifesto-project.wzb.eu/) codebook 
+10 = Green 
+20 = Rad Left/Socialist30 = Social Democratic/Center-Left 40 = Liberal50 = Christian Democratic60 = Conservative70 = Radical Right80 = Agrarian90 = Regionalist95 = Misc/Other 
+from_parfam – The party family of the from party, see above for codes 
+party_like the mean thermometer score from partisans of the from party  assigned to the to party, drawn from the Comparative Study of Electoral Systems (10 = positive feelings and 0 = negative feelings). See https://cses.org for more
+party_dislike – the mean thermometer score from partisans of the from party  assigned to the to party. Again fromt he CSES, rescaled so that 0 = positive feelings and 10 = negative feelings 
+to_pfeml – The percentage of evaluated party’s parliamentary delegation who are women 1-year before the election, coded continuously from 0-1 (0= 0% Women MPs, 1=100% of delegation is women)
+from_pfeml – The percentage of evaluating party’s parliamentary delegation who are women 1-year before the election, coded continuously from 0-1 (0= 0% Women MPs, 1=100% of delegation is women)
+diff_pfeml – The absolute difference between the percentage of the evaluated party and the evaluating party’s parliamentary delegations who are women 1-year before the election, coded continuously from 0-1 (0= equal percentage of Women MPs, 1= one party has 0 women MPs, the other has 100% women MPs)
+to_femaleleader– Is the leader of the party being evaluated female? (1= yes, 0=no)
+rile (to/from/distance) – Rile is the unidimensional left right measure of party ideologiy from the Comparative Manifestos Project. For more details see (https://manifesto-project.wzb.eu/datasets)
+prior_coalition – Were the parties in government together during the period before the election survey (1 = yes, 0 = no)
+prior_opposition – Were the parties in opposition together during the period before the election survey (1 = yes, 0 = no)
+to_left_bloc – Is the to party on the left of the country’s political system (1 = yes, 0 = no)
+to_right_bloc – Is the to party on the right of the country’s political system (1 = yes, 0 = no) 
+DM – The average district magnitude in the country during that election year
+logDM -  the natural log of the average district magnitude
+to_rrparty / from_rrparty – Is the party radical right (1 =yes, 0 = no) 
+to_prior_seats – The number of parliamentary seats (lower chamber) held by the to-party prior to the election  
+from_prior_seats – The number of parliamentary seats (lower chamber) held by the from-party prior to the election  
+partydyad – ID variable for the specific dyad of from-to party in the dataset, used to cluster standard errors at the party-dyad level. Coded in terms of the CMP identifier of the from party and CMP identifier of the to-party.  
+
+Variables not used in analysis but present in dataset:
+from_senior_partner – Is the from party the senior partner in government (1 = yes, 0 = no) 
+to_senior_partner – Is the to party the senior partner in government (1 = yes, 0 = no) 
+To_in_gov – Is the to party in the governing coalition (1 = yes, 0 = no) 
+From_in_gov – Is the from party in the governing coalition (1 = yes, 0 = no) 
+Govern_together – Are the parties in government together (1 = yes, 0 = no) 
+Opposition_together – Are the parties in opposition together (1 = yes, 0 = no) 
+From_left_bloc – Is the from party on the left of the country’s political system (1 = yes, 0 = no) 
+From_right_bloc – Is the from party on the right of the country’s political system (1 = yes, 0 = no) 
+Same_bloc – Are the parties on the same side of the country’s political system (1 = yes, 0 = no) 
+Nationalism (To/From/Distance) – A score derived from Burgoon (2009) using CMP to measure how nationalist a party is. Primary use would be for a robustness check of our “society” score. 
+Rile (To/From/Distance) – Rile is the unidimensional left right measure of party ideologiy from the CMP 
+ElecDate – the date of the election, useful if there are two elections in one country year 
+Sat_together10 – Have the parties been in government together in the last 10 years 
+Sat_together15 – Have the parties been in government together in the last 15 years 
+Sat_together20 – Have the parties been in government together in the last 20 years 
+Galtan(to/from/distance) – A measure of “cultural” ideology from the CHES. Has limited coverage (1999-2015, EU only) 
+Lrecon(to/from/distance) - A measure of “economic” distance from the CHES. Has limited coverage (1999-2015, EU only) 
+Multiculturalism - A measure of “multicultural” ideology from the CHES. Has limited coverage (2006-2015, EU only) 
+Immigration_policy - A measure of “immigration” ideology from the CHES. Has limited coverage (2006-2015, EU only) 
+Govern_together_10 – Have the parties been in government in the last 10 years, not including the current coalition (1 =yes, 0 = no) 
+Govern_together_20 – Have the parties been in government in the last 20 years, but not in the most recent 10. (1 =yes, 0 = no) 
+Economy(to/from/distance) – Our main measure of economic policy ideology, comes from the CMP. Details are here: https://manifesto-project.wzb.eu/information/documents/visualizations 
+Society(to/from/distance) – Our main measure of “cultural” distance, comes from the CMP. Details are here: https://manifesto-project.wzb.eu/information/documents/visualizations 
+ 
+===== Codebook for Gender Disaggregated Dyadic Party Dataset.docx 
+ Codebook for Gender Disaggregated Dyadic Party Dataset (gender_disaggregated_8-8-21.Rds)
+Note – The structure of the dataset is directed dyads,, capturing the relationship between two parties, with a From party (the evaluating party) and a To party (the evaluated party). The data is then further disaggregated by the gender of the party supporters, mean each row represents the relationship between the male or female supporters of one party, evaluating another party. 
+Note – If a variable has _s after it in the dataset, it is the same variable but has been standardized to have a mean of 0 and a standard deviation of 1. 
+country – Name of Country 
+year – Year of Election 
+cntryyr – Name of Country and Year of election 
+Gender – Gender of the evaluating partisan group, 1 = male, 2 = female 
+to_mp_number – The manifestos project (https://manifesto-project.wzb.eu/) number for the To Party 
+from_mp_number – The manifestos project (https://manifesto-project.wzb.eu/) number for the From Party 
+party_from – The letter assigned to the “from” party in the CSES codebook – used for merging with CSES 
+party_to – Same as above, for to party 
+to_parfam – The party family of the “To” Party, following the the comparative manifestos project (https://manifesto-project.wzb.eu/) codebook 
+10 = Green 
+20 = Rad Left/Socialist30 = Social Democratic/Center-Left 40 = Liberal50 = Christian Democratic60 = Conservative70 = Radical Right80 = Agrarian90 = Regionalist95 = Misc/Other 
+from_parfam – The party family of the from party, see above for codes 
+dislike – the mean thermometer score from gender group of partisans of the from party  assigned to the to party, drawn from the Comparative Study of Electoral Systems, but rescaled such that(0 = positive feelings and 10 = negative feelings. See https://cses.org for more
+to_pfeml – The percentage of evaluated party’s parliamentary delegation who are women 1-year before the election, coded continuously from 0-1 (0= 0% Women MPs, 1=100% of delegation is women)
+from_pfeml – The percentage of evaluating party’s parliamentary delegation who are women 1-year before the election, coded continuously from 0-1 (0= 0% Women MPs, 1=100% of delegation is women)
+diff_pfeml – The absolute difference between the percentage of the evaluated party and the evaluating party’s parliamentary delegations who are women 1-year before the election, coded continuously from 0-1 (0= equal percentage of Women MPs, 1= one party has 0 women MPs, the other has 100% women MPs)
+to_femaleleader– Is the leader of the party being evaluated female? (1= yes, 0=no)
+rile (to/from/distance) – Rile is the unidimensional left right measure of party ideologiy from the Comparative Manifestos Project. For more details see (https://manifesto-project.wzb.eu/datasets)
+prior_coalition – Were the parties in government together during the period before the election survey (1 = yes, 0 = no)
+prior_opposition – Were the parties in opposition together during the period before the election survey (1 = yes, 0 = no)
+to_prior_seats – The number of parliamentary seats (lower chamber) held by the to-party prior to the election  
+Variables not used in analysis but present in dataset:
+to_left_bloc – Is the to party on the left of the country’s political system (1 = yes, 0 = no)
+to_right_bloc – Is the to party on the right of the country’s political system (1 = yes, 0 = no) 
+DM – The average district magnitude in the country during that election year
+logDM -  the natural log of the average district magnitude
+to_rrparty / from_rrparty – Is the party radical right (1 =yes, 0 = no 
+from_senior_partner – Is the from party the senior partner in government (1 = yes, 0 = no) 
+to_senior_partner – Is the to party the senior partner in government (1 = yes, 0 = no) 
+To_in_gov – Is the to party in the governing coalition (1 = yes, 0 = no) 
+From_in_gov – Is the from party in the governing coalition (1 = yes, 0 = no) 
+Govern_together – Are the parties in government together (1 = yes, 0 = no) 
+Opposition_together – Are the parties in opposition together (1 = yes, 0 = no) 
+From_left_bloc – Is the from party on the left of the country’s political system (1 = yes, 0 = no) 
+From_right_bloc – Is the from party on the right of the country’s political system (1 = yes, 0 = no) 
+Same_bloc – Are the parties on the same side of the country’s political system (1 = yes, 0 = no) 
+Nationalism (To/From/Distance) – A score derived from Burgoon (2009) using CMP to measure how nationalist a party is. Primary use would be for a robustness check of our “society” score. 
+Rile (To/From/Distance) – Rile is the unidimensional left right measure of party ideologiy from the CMP 
+ElecDate – the date of the election, useful if there are two elections in one country year 
+Sat_together10 – Have the parties been in government together in the last 10 years 
+Sat_together15 – Have the parties been in government together in the last 15 years 
+Sat_together20 – Have the parties been in government together in the last 20 years 
+Galtan(to/from/distance) – A measure of “cultural” ideology from the CHES. Has limited coverage (1999-2015, EU only) 
+Lrecon(to/from/distance) - A measure of “economic” distance from the CHES. Has limited coverage (1999-2015, EU only) 
+Multiculturalism - A measure of “multicultural” ideology from the CHES. Has limited coverage (2006-2015, EU only) 
+Immigration_policy - A measure of “immigration” ideology from the CHES. Has limited coverage (2006-2015, EU only) 
+Govern_together_10 – Have the parties been in government in the last 10 years, not including the current coalition (1 =yes, 0 = no) 
+Govern_together_20 – Have the parties been in government in the last 20 years, but not in the most recent 10. (1 =yes, 0 = no) 
+Economy(to/from/distance) – Our main measure of economic policy ideology, comes from the CMP. Details are here: https://manifesto-project.wzb.eu/information/documents/visualizations 
+Society(to/from/distance) – Our main measure of “cultural” distance, comes from the CMP. Details are here: https://manifesto-project.wzb.eu/information/documents/visualizations 
+party_like the mean thermometer score from partisans (all genders) of the from party  assigned to the to party, drawn from the Comparative Study of Electoral Systems (10 = positive feelings and 0 = negative feelings). See https://cses.org for more
+party_dislike – the mean thermometer score from partisans (all genders) of the from party  assigned to the to party. Again fromt he CSES, rescaled so that 0 = positive feelings and 10 = negative feelings 
+from_prior_seats – The number of parliamentary seats (lower chamber) held by the from-party prior to the election  
+
+ 
+nrow d 2266 cntryyr 81 
+   party_like       party_dislike      to_pfeml      rile_distance   rile_distance_s     to_prior_seats   from_prior_seats govern_together   opposition_together
+ Min.   : 0.07692   Min.   :0.000   Min.   :0.0000   Min.   : 0.00   Min.   :-1.266970   Min.   :  0.00   Min.   :  0.0    Min.   :0.00000   Min.   :0.0000     
+ 1st Qu.: 2.88971   1st Qu.:4.969   1st Qu.:0.1667   1st Qu.: 8.95   1st Qu.:-0.759084   1st Qu.:  7.00   1st Qu.:  6.0    1st Qu.:0.00000   1st Qu.:0.0000     
+ Median : 3.96726   Median :6.033   Median :0.3049   Median :17.89   Median :-0.251511   Median : 20.00   Median : 20.0    Median :0.00000   Median :0.0000     
+ Mean   : 3.95154   Mean   :6.048   Mean   :0.3028   Mean   :22.44   Mean   : 0.006627   Mean   : 44.87   Mean   : 43.9    Mean   :0.08208   Mean   :0.4554     
+ 3rd Qu.: 5.03116   3rd Qu.:7.110   3rd Qu.:0.4138   3rd Qu.:31.67   3rd Qu.: 0.530279   3rd Qu.: 49.00   3rd Qu.: 48.0    3rd Qu.:0.00000   3rd Qu.:1.0000     
+ Max.   :10.00000   Max.   :9.923   Max.   :1.0000   Max.   :95.31   Max.   : 4.141758   Max.   :999.00   Max.   :999.0    Max.   :1.00000   Max.   :1.0000     
+                                    NAs    :247                                                                                                                 
+k 1 2007 81 complete 1902 
+k 4 1579 81 complete 1535 
+k 5 1495 81 complete 1469 
+cc all 2019 
+
+master only (1)     matched (3) 
+              6            2260 
+
+master only (1)     matched (3) 
+              6            2260 
+sd party_like 1.536651 
+    dislike         party_like       party_dislike   to_prior_seats  
+ Min.   : 0.000   Min.   : 0.07692   Min.   :0.000   Min.   :  0.00  
+ 1st Qu.: 4.950   1st Qu.: 2.88339   1st Qu.:4.971   1st Qu.:  7.00  
+ Median : 6.056   Median : 3.95122   Median :6.049   Median : 20.00  
+ Mean   : 6.073   Mean   : 3.94442   Mean   :6.056   Mean   : 44.76  
+ 3rd Qu.: 7.220   3rd Qu.: 5.02876   3rd Qu.:7.117   3rd Qu.: 49.00  
+ Max.   :10.000   Max.   :10.00000   Max.   :9.923   Max.   :999.00  
+ NAs    :10                                                          
+     country year party_from party_to gender  dislike party_like party_dislike
+1  Australia 1996          A        B      1 6.745875   3.327842      6.672158
+2  Australia 1996          A        B      2 6.598684   3.327842      6.672158
+3  Australia 1996          A        C      2 6.730640   3.075630      6.924370
+4  Australia 1996          A        C      1 7.117450   3.075630      6.924370
+5  Australia 1996          A        D      1 4.834437   5.236667      4.763333
+6  Australia 1996          A        D      2 4.691275   5.236667      4.763333
+7  Australia 1996          B        A      1 7.340580   2.589527      7.410473
+8  Australia 1996          B        A      2 7.471519   2.589527      7.410473
+9  Australia 1996          B        C      1 3.850365   6.267797      3.732203
+10 Australia 1996          B        C      2 3.629747   6.267797      3.732203
+           
+            1996 1997 1998 1999 2000 2001 2002 2003 2004 2005 2006 2007 2008 2009 2010 2011 2012 2013 2014 2015 2016 2017
+  Australia   12    0    0    0    0    0    0    0   12    0    0   12    0    0    0    0    0   16    0    0    0    0
+  Austria      0    0    0    0    0    0    0    0    0    0    0    0   20    0    0    0    0   30    0    0    0   30
+  Canada       0   20    0    0    0    0    0    0   12    0    0    0   20    0    0   19    0    0    0   20    0    0
+  Denmark      0    0   30    0    0   56    0    0    0    0    0   42    0    0    0    0    0    0    0    0    0    0
+  Finland      0    0    0    0    0    0    0   41    0    0    0   56    0    0    0   56    0    0    0    0    0    0

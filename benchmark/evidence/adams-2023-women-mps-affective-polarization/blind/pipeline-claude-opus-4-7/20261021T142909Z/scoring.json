@@ -1,0 +1,618 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "women_mps_coef_bivariate",
+      "ground_truth": {
+        "value": 1.89,
+        "standard_error": 0.43,
+        "unit": "thermometer points (0-10) per unit proportion of women MPs",
+        "claim_type": "coefficient",
+        "location": "Table 1, column 1 (Bivariate model), [out-party j's proportion of women MPs (t - 1)]",
+        "context": "Table 1 (\"Predictors of Out-Party Thermometer Evaluations\"), column 1, the reduced-form model without controls.  Ordinary least squares on directed party dyads: the dependent variable is the mean 0-10 feeling-thermometer rating that party i's partisans (respondents who feel close, or a little closer, to party i) assign to out-party j in the Comparative Study of Electoral Systems (CSES) election survey of year t; the regressor is out-party j's proportion of women MPs, lagged one year before the survey and scaled 0 (all men) to 1 (all women).  Sample: every directed pair of parties with at least four MPs each in the year before the survey, in 20 Western democracies and the CSES election studies of 1996-2017 (each pair enters twice, once in each direction).  Country-year fixed effects (the table row reads \"Country and year fixed effects\"); standard errors clustered by election.\n",
+        "decimals": 2,
+        "sample_size": 1842
+      },
+      "i4r": {
+        "reproduced_value": 1.89,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict (perfect reproduction, team 10); the only per-row entry is an imputation robustness variant (1.890).",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.22751322751322753,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "women_mps_coef_bivariate",
+        "claim_type": "coefficient",
+        "claimed": 1.89,
+        "reproduced": -1.953931,
+        "tolerance": 0.22751322751322753,
+        "rel_err": 2.033825925925926,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "women_mps_coef_bivariate",
+        "reproduced": -1.953931,
+        "band_source": "se_band",
+        "band_relative": 0.22751322751322753,
+        "band_absolute": 0.43,
+        "abs_err": 3.843931,
+        "rel_err": 2.033825925925926,
+        "margin": 8.93937441860465,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=-1.953931 vs claimed=1.89 (relative error 203.38%, tolerance 22.75%, the ±1·SE band with SE=0.43)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "women_mps_coef_full",
+      "ground_truth": {
+        "value": 1.73,
+        "standard_error": 0.52,
+        "unit": "thermometer points (0-10) per unit proportion of women MPs",
+        "claim_type": "coefficient",
+        "location": "Table 1, column 2 (Full model), [out-party j's proportion of women MPs (t - 1)]",
+        "context": "Table 1, column 2, the full model and the paper's headline estimate (the change in predicted out-party evaluations from moving from zero to all women MPs).  Same dependent variable, regressor, sample, country-year fixed effects and election-clustered standard errors as column 1, adding three controls: the absolute left-right distance between parties i and j in the current election from the Comparative Manifesto Project left-right scale, standardized; a dummy for i and j being governing coalition partners at the time of the survey; and a dummy for i and j both being in opposition (baseline: one governing and one opposition party).\n",
+        "decimals": 2,
+        "sample_size": 1842
+      },
+      "i4r": {
+        "reproduced_value": 1.73,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; the only per-row entry is an imputation robustness variant (1.741).",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.30057803468208094,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "women_mps_coef_full",
+        "claim_type": "coefficient",
+        "claimed": 1.73,
+        "reproduced": -1.465887,
+        "tolerance": 0.30057803468208094,
+        "rel_err": 1.8473335260115606,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "women_mps_coef_full",
+        "reproduced": -1.465887,
+        "band_source": "se_band",
+        "band_relative": 0.30057803468208094,
+        "band_absolute": 0.52,
+        "abs_err": 3.195887,
+        "rel_err": 1.8473335260115606,
+        "margin": 6.145936538461538,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=-1.465887 vs claimed=1.73 (relative error 184.73%, tolerance 30.06%, the ±1·SE band with SE=0.52)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "women_mps_coef_women_partisans",
+      "ground_truth": {
+        "value": 2.1,
+        "standard_error": 0.53,
+        "unit": "thermometer points (0-10) per unit proportion of women MPs",
+        "claim_type": "coefficient",
+        "location": "Table 1, column 3 (Women partisans), [out-party j's proportion of women MPs (t - 1)]",
+        "context": "Table 1, column 3: the full model of column 2 (same regressor, controls, country-year fixed effects, election-clustered standard errors, parties with at least four MPs) re-estimated with the dependent variable computed only from self-identified women partisans' thermometer ratings of the out-party.\n",
+        "decimals": 2,
+        "sample_size": 1836
+      },
+      "i4r": {
+        "reproduced_value": 2.1,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; no per-row entry for column 3.",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.2523809523809524,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "women_mps_coef_women_partisans",
+        "claim_type": "coefficient",
+        "claimed": 2.1,
+        "reproduced": -1.187376,
+        "tolerance": 0.2523809523809524,
+        "rel_err": 1.5654171428571428,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "women_mps_coef_women_partisans",
+        "reproduced": -1.187376,
+        "band_source": "se_band",
+        "band_relative": 0.2523809523809524,
+        "band_absolute": 0.53,
+        "abs_err": 3.287376,
+        "rel_err": 1.5654171428571428,
+        "margin": 6.2025962264150944,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=-1.187376 vs claimed=2.1 (relative error 156.54%, tolerance 25.24%, the ±1·SE band with SE=0.53)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "women_mps_coef_men_partisans",
+      "ground_truth": {
+        "value": 1.13,
+        "standard_error": 0.5,
+        "unit": "thermometer points (0-10) per unit proportion of women MPs",
+        "claim_type": "coefficient",
+        "location": "Table 1, column 4 (Men partisans), [out-party j's proportion of women MPs (t - 1)]",
+        "context": "Table 1, column 4: the full model of column 2 re-estimated with the dependent variable computed only from men partisans' thermometer ratings of the out-party (same regressor, controls, fixed effects, clustering and sample restriction).\n",
+        "decimals": 2,
+        "sample_size": 1833
+      },
+      "i4r": {
+        "reproduced_value": 1.13,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; no per-row entry for column 4.",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.4424778761061947,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "women_mps_coef_men_partisans",
+        "claim_type": "coefficient",
+        "claimed": 1.13,
+        "reproduced": -1.691465,
+        "tolerance": 0.4424778761061947,
+        "rel_err": 2.4968716814159295,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "women_mps_coef_men_partisans",
+        "reproduced": -1.691465,
+        "band_source": "se_band",
+        "band_relative": 0.4424778761061947,
+        "band_absolute": 0.5,
+        "abs_err": 2.821465,
+        "rel_err": 2.4968716814159295,
+        "margin": 5.64293,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=-1.691465 vs claimed=1.13 (relative error 249.69%, tolerance 44.25%, the ±1·SE band with SE=0.5)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "right_left_distance_coef_full",
+      "ground_truth": {
+        "value": -0.6,
+        "standard_error": 0.09,
+        "unit": "thermometer points (0-10) per SD of left-right distance",
+        "claim_type": "coefficient",
+        "location": "Table 1, column 2 (Full model), [elite right-left distance i, j (t)]",
+        "context": "Table 1, column 2, the coefficient on the standardized absolute left-right distance between parties i and j in the current election (Comparative Manifesto Project coding of the manifestos' left-right tone; mean 22.4, SD 17.6 on the -100 to +100 scale before standardizing), from the full model described for women_mps_coef_full.\n",
+        "decimals": 2,
+        "sample_size": 1842
+      },
+      "i4r": {
+        "reproduced_value": -0.6,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; the only per-row entry is an imputation robustness variant (-0.605).",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.15,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "right_left_distance_coef_full",
+        "claim_type": "coefficient",
+        "claimed": -0.6,
+        "reproduced": 0.58237,
+        "tolerance": 0.15,
+        "rel_err": 1.970616666666667,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "right_left_distance_coef_full",
+        "reproduced": 0.58237,
+        "band_source": "se_band",
+        "band_relative": 0.15,
+        "band_absolute": 0.09,
+        "abs_err": 1.1823700000000001,
+        "rel_err": 1.970616666666667,
+        "margin": 13.137444444444446,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=0.58237 vs claimed=-0.6 (relative error 197.06%, tolerance 15.00%, the ±1·SE band with SE=0.09)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "coalition_partners_coef_full",
+      "ground_truth": {
+        "value": 0.94,
+        "standard_error": 0.25,
+        "unit": "thermometer points (0-10)",
+        "claim_type": "coefficient",
+        "location": "Table 1, column 2 (Full model), [i, j are coalition partners (t)]",
+        "context": "Table 1, column 2, the coefficient on the dummy for parties i and j being governing coalition partners at the time of the election survey (baseline: one governing and one opposition party), from the full model described for women_mps_coef_full.\n",
+        "decimals": 2,
+        "sample_size": 1842
+      },
+      "i4r": {
+        "reproduced_value": 0.94,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; the only per-row entry is an imputation robustness variant (0.907).",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.26595744680851063,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "coalition_partners_coef_full",
+        "claim_type": "coefficient",
+        "claimed": 0.94,
+        "reproduced": -0.931327,
+        "tolerance": 0.26595744680851063,
+        "rel_err": 1.9907734042553191,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "coalition_partners_coef_full",
+        "reproduced": -0.931327,
+        "band_source": "se_band",
+        "band_relative": 0.26595744680851063,
+        "band_absolute": 0.24999999999999997,
+        "abs_err": 1.871327,
+        "rel_err": 1.9907734042553191,
+        "margin": 7.485308000000001,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=-0.931327 vs claimed=0.94 (relative error 199.08%, tolerance 26.60%, the ±1·SE band with SE=0.25)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "opposition_partners_coef_full",
+      "ground_truth": {
+        "value": 0.37,
+        "standard_error": 0.11,
+        "unit": "thermometer points (0-10)",
+        "claim_type": "coefficient",
+        "location": "Table 1, column 2 (Full model), [i, j are opposition partners (t)]",
+        "context": "Table 1, column 2, the coefficient on the dummy for parties i and j both being opposition parties at the time of the election survey (baseline: one governing and one opposition party), from the full model described for women_mps_coef_full.\n",
+        "decimals": 2,
+        "sample_size": 1842
+      },
+      "i4r": {
+        "reproduced_value": 0.37,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; the only per-row entry is an imputation robustness variant (0.366).",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.2972972972972973,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "opposition_partners_coef_full",
+        "claim_type": "coefficient",
+        "claimed": 0.37,
+        "reproduced": -0.344646,
+        "tolerance": 0.2972972972972973,
+        "rel_err": 1.9314756756756757,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "opposition_partners_coef_full",
+        "reproduced": -0.344646,
+        "band_source": "se_band",
+        "band_relative": 0.2972972972972973,
+        "band_absolute": 0.11,
+        "abs_err": 0.714646,
+        "rel_err": 1.9314756756756757,
+        "margin": 6.496781818181818,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=-0.344646 vs claimed=0.37 (relative error 193.15%, tolerance 29.73%, the ±1·SE band with SE=0.11)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "n_directed_dyads",
+      "ground_truth": {
+        "value": 1842.0,
+        "standard_error": null,
+        "unit": "directed party dyads (observations)",
+        "claim_type": "other",
+        "location": "Table 1, Observations, columns 1-2; Results (text)",
+        "context": "Number of directed party-dyad observations in the main models (Table 1 columns 1 and 2; the text's count of \"directed party dyads in our dataset\"): every ordered pair of parties with at least four MPs each, across the 20 Western party systems and the CSES election studies.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 1842.0,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; value is the paper's.",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_directed_dyads",
+        "claim_type": "other",
+        "claimed": 1842.0,
+        "reproduced": 2019.0,
+        "tolerance": 0.01,
+        "rel_err": 0.09609120521172639,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_directed_dyads",
+        "reproduced": 2019.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 18.42,
+        "abs_err": 177.0,
+        "rel_err": 0.09609120521172639,
+        "margin": 9.609120521172638,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=2019.0 vs claimed=1842.0 (relative error 9.61%, tolerance 1.00%)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "n_obs_women_partisans",
+      "ground_truth": {
+        "value": 1836.0,
+        "standard_error": null,
+        "unit": "directed party dyads (observations)",
+        "claim_type": "other",
+        "location": "Table 1, Observations, column 3",
+        "context": "Number of directed party-dyad observations in the women-partisans model (Table 1 column 3).\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 1836.0,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; value is the paper's.",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_women_partisans",
+        "claim_type": "other",
+        "claimed": 1836.0,
+        "reproduced": 2008.0,
+        "tolerance": 0.01,
+        "rel_err": 0.09368191721132897,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_women_partisans",
+        "reproduced": 2008.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 18.36,
+        "abs_err": 172.0,
+        "rel_err": 0.09368191721132897,
+        "margin": 9.368191721132899,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=2008.0 vs claimed=1836.0 (relative error 9.37%, tolerance 1.00%)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "n_obs_men_partisans",
+      "ground_truth": {
+        "value": 1833.0,
+        "standard_error": null,
+        "unit": "directed party dyads (observations)",
+        "claim_type": "other",
+        "location": "Table 1, Observations, column 4",
+        "context": "Number of directed party-dyad observations in the men-partisans model (Table 1 column 4).\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 1833.0,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; value is the paper's.",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_men_partisans",
+        "claim_type": "other",
+        "claimed": 1833.0,
+        "reproduced": 2012.0,
+        "tolerance": 0.01,
+        "rel_err": 0.09765411893071467,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_men_partisans",
+        "reproduced": 2012.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 18.330000000000002,
+        "abs_err": 179.0,
+        "rel_err": 0.09765411893071467,
+        "margin": 9.765411893071466,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=2012.0 vs claimed=1833.0 (relative error 9.77%, tolerance 1.00%)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "n_election_studies",
+      "ground_truth": {
+        "value": 81.0,
+        "standard_error": null,
+        "unit": "CSES election studies (country-years)",
+        "claim_type": "other",
+        "location": "Data and Analysis; Results (text)",
+        "context": "Number of CSES election studies (country election-years, 1996-2017, 20 Western democracies) the directed dyads are drawn from — the units by which the paper clusters its standard errors.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 81.0,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_election_studies",
+        "claim_type": "other",
+        "claimed": 81.0,
+        "reproduced": 81.0,
+        "tolerance": 0.01,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_election_studies",
+        "reproduced": 81.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 0.81,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 11,
+    "row_passed": 1,
+    "recomputed_passed": 1,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "adams-2023-women-mps-affective-polarization",
+    "mode": "blind",
+    "reproducer": "pipeline",
+    "label": "pipeline-claude-opus-4-7",
+    "model": "claude-opus-4-7",
+    "oracle": false,
+    "run": "20261021T142909Z",
+    "results_file": "pipeline-10papers-all-modes-2026-10-21.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/adams-2023-women-mps-affective-polarization/blind/pipeline/20261021T142909Z",
+    "run_dir": null,
+    "date": "2026-10-21T14:29:09Z",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 11,
+    "final": 1,
+    "first_scored": 1,
+    "first_scored_index": 1,
+    "first_attempt": 0,
+    "n_refinements": 1,
+    "n_error_refinements": 1,
+    "n_claim_refinements": 0,
+    "n_executions": 2,
+    "n_files_stripped": 1,
+    "agrees_with_i4r": false,
+    "deviations_manifest": [],
+    "deviations_stdout": [],
+    "notes": null,
+    "files_read_outside_mount": null,
+    "paper_text": null,
+    "complete": true,
+    "missing": []
+  }
+}

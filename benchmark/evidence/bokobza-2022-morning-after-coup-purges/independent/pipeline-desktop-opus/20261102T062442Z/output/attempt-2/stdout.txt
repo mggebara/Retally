@@ -1,0 +1,342 @@
+Country-level columns: COUNTRY_DATA, COUNTRY_ID, YEAR_DATA, ccode, leader_cab_id, democracy1, independent, replacement_rateadj_minister, replacement_rateadj_minister_300, replacement_rateadj_minister_200, replacement_rateadj_minister_100, leaderexperience_continuous, coupattempt_whogov, coupattempt_month_whogov, gdp_cap_pwt_ln, pop_pwt_ln, military_c, monarchy_c, party_c, elec_all, t1_e_a, oil_valuepop_2014_ln, growth_pwt, onset1, nonvio_camp_2, mid_onset, war_onset, domestic3_10, coupattempt_whogov_br, polity2, lpolity2, democracy_br, ldemocracy_br, system_category, latent_personalism, coupattempt_whogov_type_br, type_num 
+Control gdp(cl) uses gdp_cap_pwt_ln (lagged by script)
+Control pop(cl) uses pop_pwt_ln (lagged by script)
+Country-level base sample rows (pre-coup var): 3794 
+              independent    coupattempt_whogov_any coupattempt_whogov_br_any 
+                     3686                        90                       130 
+Chosen country-level failed coup variable: coupattempt_whogov_any 
+Country-level N: 3686  failed coups: 90 
+OLS estimation, Dep. Var.: y
+Observations: 3,684
+Fixed-effects: cid: 113,  yr: 50
+Standard-errors: Clustered (cid) 
+      Estimate Std. Error  t value Pr(>|t|)    
+fca   0.079223   0.033059  2.39639 0.018214 *  
+lgdp -0.039172   0.019606 -1.99795 0.048146 *  
+lpop -0.120507   0.059672 -2.01949 0.045824 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.252117     Adj. R2: 0.188804
+                 Within R2: 0.005375
+OLS estimation, Dep. Var.: y
+Observations: 3,640
+Fixed-effects: cid: 113,  yr: 50
+Standard-errors: Clustered (cid) 
+      Estimate Std. Error  t value  Pr(>|t|)    
+fca   0.086977   0.032548  2.67229 0.0086582 ** 
+lgdp -0.033774   0.020591 -1.64024 0.1037618    
+lpop -0.124063   0.061118 -2.02988 0.0447388 *  
+lmil -0.039993   0.029503 -1.35555 0.1779712    
+lpar -0.066895   0.027987 -2.39026 0.0185051 *  
+lmon  0.036695   0.026081  1.40698 0.1622034    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.249669     Adj. R2: 0.192708
+                 Within R2: 0.008449
+OLS estimation, Dep. Var.: y
+Observations: 3,511
+Fixed-effects: lid: 336,  yr: 50
+Standard-errors: Clustered (cid) 
+      Estimate Std. Error  t value Pr(>|t|)    
+fca   0.059602   0.035288  1.68903 0.093996 .  
+lgdp -0.032357   0.024616 -1.31445 0.191379    
+lpop -0.147353   0.085703 -1.71933 0.088316 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.218171     Adj. R2: 0.23416 
+                 Within R2: 0.003102
+OLS estimation, Dep. Var.: y
+Observations: 3,476
+Fixed-effects: lid: 331,  yr: 50
+Standard-errors: Clustered (cid) 
+      Estimate Std. Error  t value  Pr(>|t|)    
+fca   0.066903   0.034648  1.93092  0.056021 .  
+lgdp -0.025260   0.023207 -1.08845  0.278735    
+lpop -0.132184   0.085382 -1.54815  0.124408    
+lmil -0.139331   0.057566 -2.42036  0.017113 *  
+lpar -0.056461   0.051556 -1.09514  0.275805    
+lmon  0.565468   0.029679 19.05288 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.21581     Adj. R2: 0.237006
+                Within R2: 0.008748
+Individual-level columns: year, country_isocode, country_name, position, name, title, gender, birthyear, party, party_english, leader, classification, portfolio_1, prestige_1, prestige_numeric, importance_numeric, leader_party, party_group, experience, purged_y1, purged_y2, coupattempt_presentyear, coup_presentyear, coup_lastyear, coupattempt_presentyear_br, coup_presentyear_br, coup_lastyear_br, coupattempt_whogov_type_br, leaderexperience_continuous, democracy_lag_br, n_party, democracy_lag, gdp_cap_pwt_ln, pop_pwt_ln, polity2, gdp_cap_pwt_ln_lag, pop_pwt_ln_lag, lag_polity2, importance_factor, Group, minister_type, minister_classification, age, experience_group, hired 
+Column year class: integer  head values:
+
+2002 2001 2010 2012 2013 2009 2014 2016 
+4940 4918 4908 4891 4869 4863 4855 4847 
+Column purged_y1 class: integer  head values:
+
+     0      1 
+146576  58948 
+Column democracy_lag_br class: character  head values:
+
+Autocracy Democracy      <NA> 
+   120984     81264      3276 
+Column democracy_lag class: integer  head values:
+
+     0      1   <NA> 
+120552  81278   3694 
+Column gdp_cap_pwt_ln class: numeric  head values:
+
+            <NA>         7.272249         7.336703          7.41883 
+           22002               86               86               86 
+8.79811573028564         7.107571         7.169203         8.032432 
+              86               85               85               85 
+Column pop_pwt_ln class: numeric  head values:
+
+            <NA> 1.56261551380157          2.61262         2.628511 
+           22002               86               86               86 
+        2.643574         2.555958         2.576601         7.011239 
+              86               85               85               85 
+Column gdp_cap_pwt_ln_lag class: numeric  head values:
+
+            <NA>         7.227118         7.272249         7.336703 
+           24848               86               86               86 
+8.77279949188232         7.019475         7.107571         7.968645 
+              86               85               85               85 
+Column pop_pwt_ln_lag class: numeric  head values:
+
+            <NA>         7.227118         7.272249         7.336703 
+           24848               86               86               86 
+8.77279949188232         7.019475         7.107571         7.968645 
+              86               85               85               85 
+Column experience class: integer  head values:
+
+    1     2     3     4     5     6     7     8 
+50368 36861 27307 20638 15334 11123  8559  6806 
+Column coupattempt_presentyear class: character  head values:
+
+No coup attempt            <NA>    Coup attempt 
+         189559           12910            3055 
+Column coup_presentyear class: integer  head values:
+
+     0   <NA>      1 
+189583  12910   3031 
+Column leader class: integer  head values:
+
+     0      1 
+197465   8059 
+Column importance_numeric class: character  head values:
+
+     2      3    0.5      1   <NA>      5      4      0 
+114497  34862  21007  12983  10125   8059   3608    383 
+Non-missing y: 205524  non-missing yr: 205524 
+Control gdp(ind) uses gdp_cap_pwt_ln (lagged by script)
+Control pop(ind) uses pop_pwt_ln (lagged by script)
+Non-missing lgdp: 181755  lpop: 181755 
+ldem table:
+
+     0      1   <NA> 
+120984  81264   3276 
+Leader rows: 8059 
+Condition ldem TRUE rows: 120984 
+Condition years TRUE rows: 200430 
+Condition y TRUE rows: 205524 
+Condition notleader TRUE rows: 197465 
+Condition gdp TRUE rows: 181755 
+Condition pop TRUE rows: 181755 
+Individual base sample rows: 98345 
+       att_any att_minus_coup       cl_merge 
+             0              0             85 
+Chosen individual failed coup variable: cl_merge 
+Importance levels and PM shares:
+         [,1]         [,2]        [,3]         [,4]         [,5]         [,6]
+lv_imp      0 5.000000e-01 1.00000e+00 2.000000e+00 3.000000e+00    4.0000000
+pm_share    0 6.403035e-02 2.20018e-02 8.703522e-03 2.907787e-02    0.7464052
+n          23 8.699000e+03 5.54500e+03 5.193300e+04 1.506300e+04 1530.0000000
+Excluding importance tiers: 0.5 0 
+OLS estimation, Dep. Var.: y
+Observations: 74,071
+Fixed-effects: cid: 110,  yr: 50
+Standard-errors: Clustered (cid) 
+      Estimate Std. Error   t value Pr(>|t|)    
+fca   0.043167   0.046031  0.937791 0.350425    
+M1   -0.000300   0.008314 -0.036033 0.971322    
+FxM1  0.009927   0.058001  0.171157 0.864417    
+M2    0.016543   0.009310  1.776829 0.078386 .  
+FxM2  0.044960   0.073890  0.608481 0.544135    
+M3   -0.003942   0.010232 -0.385218 0.700827    
+FxM3  0.018762   0.071778  0.261385 0.794289    
+lgdp -0.021124   0.018382 -1.149178 0.252998    
+lpop -0.058816   0.063594 -0.924872 0.357076    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.409552     Adj. R2: 0.122903
+                 Within R2: 0.001121
+ b_2_3  c_4_6  d_gt6 
+"FxM1" "FxM2" "FxM3" 
+
+ independent leader_party  other_party      unknown         <NA> 
+       22390        49099         8176         4203         4173 
+
+leaderp  nopart   other    <NA> 
+  49099   22390   12379    4173 
+OLS estimation, Dep. Var.: y
+Observations: 83,868
+Fixed-effects: cid: 110,  yr: 50
+Standard-errors: Clustered (cid) 
+      Estimate Std. Error   t value   Pr(>|t|)    
+fca   0.237382   0.066548  3.567066 0.00053777 ***
+M1   -0.048532   0.013314 -3.645291 0.00041096 ***
+FxM1 -0.155126   0.081187 -1.910729 0.05866657 .  
+M2    0.017754   0.013752  1.291012 0.19943095    
+FxM2 -0.292771   0.081877 -3.575738 0.00052208 ***
+lgdp -0.006285   0.017924 -0.350645 0.72653119    
+lpop -0.049948   0.061034 -0.818372 0.41493052    
+e1    0.009171   0.025550  0.358945 0.72033050    
+e2   -0.006860   0.018138 -0.378224 0.70600015    
+e3    0.001399   0.003375  0.414537 0.67929538    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.410932     Adj. R2: 0.121612
+                 Within R2: 0.003916
+leaderp  nopart 
+ "FxM1"  "FxM2" 
+pf
+                                         
+                                   10740 
+            education, training & skills 
+                                    5242 
+                                   other 
+                                    4636 
+            communications & information 
+                                    4606 
+                       foreign relations 
+                                    4575 
+   defense, military & national security 
+                                    4284 
+agriculture, food, fisheries & livestock 
+                                    4216 
+              finance, budget & treasury 
+                                    4067 
+                 health & social welfare 
+                                    3948 
+     government, interior & home affairs 
+                                    3784 
+                 justice & legal affairs 
+                                    3261 
+                     industry & commerce 
+                                    3102 
+                  planning & development 
+                                    2964 
+                             environment 
+                                    2930 
+             construction & public works 
+                                    2731 
+                                  energy 
+                                    2219 
+     labor, employment & social security 
+                                    2135 
+                      culture & heritage 
+                                    1638 
+              foreign economic relations 
+                                    1630 
+       executive & legislative relations 
+                                    1576 
+                general economic affairs 
+                                    1225 
+                               transport 
+                                    1184 
+       enterprises, companies & business 
+                                    1114 
+                           civil service 
+                                     965 
+                                 housing 
+                                     938 
+                                  sports 
+                                     928 
+                       natural resources 
+                                     825 
+                       without portfolio 
+                                     814 
+                                religion 
+                                     810 
+                                regional 
+                                     737 
+          science, technology & research 
+                                     597 
+                        local government 
+                                     589 
+                                 tourism 
+                                     576 
+     audit, oversight & internal affairs 
+                                     456 
+                       children & family 
+                                     367 
+                                   women 
+                                     313 
+                immigration & emigration 
+                                     300 
+                        political reform 
+                                     227 
+                                veterans 
+                                     212 
+          correctional services & police 
+                                     201 
+
+a_def b_for c_fin d_nat e_oth 
+ 4284  6205  4067   825 72660 
+OLS estimation, Dep. Var.: y
+Observations: 88,041
+Fixed-effects: cid: 110,  yr: 50
+Standard-errors: Clustered (cid) 
+      Estimate Std. Error   t value   Pr(>|t|)    
+fca   0.078974   0.049072  1.609360 1.1043e-01    
+M1    0.000853   0.007584  0.112504 9.1063e-01    
+FxM1 -0.001989   0.055506 -0.035840 9.7148e-01    
+M2    0.018066   0.009215  1.960428 5.2498e-02 .  
+FxM2  0.048596   0.060528  0.802868 4.2380e-01    
+M3    0.027773   0.015983  1.737693 8.5089e-02 .  
+FxM3 -0.111846   0.140787 -0.794438 4.2867e-01    
+M4    0.032275   0.006919  4.664834 8.8222e-06 ***
+FxM4 -0.021523   0.044612 -0.482457 6.3045e-01    
+lgdp -0.013883   0.016789 -0.826934 4.1008e-01    
+lpop -0.054667   0.060403 -0.905044 3.6744e-01    
+e1   -0.001709   0.025292 -0.067571 9.4625e-01    
+e2   -0.001965   0.018054 -0.108822 9.1354e-01    
+e3    0.000727   0.003391  0.214407 8.3063e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.41032     Adj. R2: 0.118388
+                Within R2: 0.001348
+ b_for  c_fin  d_nat  e_oth 
+"FxM1" "FxM2" "FxM3" "FxM4" 
+OLS estimation, Dep. Var.: y
+Observations: 82,793
+Fixed-effects: cid: 110,  yr: 50
+Standard-errors: Clustered (cid) 
+      Estimate Std. Error   t value Pr(>|t|)    
+fca   0.152381   0.103276  1.475474 0.142968    
+M1   -0.014802   0.044878 -0.329828 0.742163    
+M2   -0.000091   0.014824 -0.006136 0.995115    
+FxM2 -0.011218   0.096997 -0.115655 0.908139    
+M3    0.030228   0.015205  1.987981 0.049321 *  
+FxM3 -0.101427   0.090406 -1.121899 0.264371    
+M4    0.014002   0.013265  1.055525 0.293519    
+FxM4 -0.100376   0.096827 -1.036652 0.302192    
+M5   -0.018784   0.012974 -1.447851 0.150529    
+FxM5 -0.096636   0.102002 -0.947398 0.345532    
+lgdp -0.015629   0.016804 -0.930070 0.354390    
+lpop -0.062216   0.061038 -1.019305 0.310315    
+e1   -0.004980   0.025005 -0.199181 0.842492    
+e2    0.001919   0.018018  0.106503 0.915379    
+e3    0.000013   0.003432  0.003714 0.997044    
+... 1 variable was removed because of collinearity (FxM1)
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.410236     Adj. R2: 0.1204  
+                 Within R2: 0.001951
+     0    0.5      1      2      3 
+"FxM1" "FxM2" "FxM3" "FxM4" "FxM5" 
+RESULT:failed_coup_base_country_fe=0.079223
+RESULT:failed_coup_main_country_fe=0.086977
+RESULT:failed_coup_base_leader_fe=0.059602
+RESULT:failed_coup_main_leader_fe=0.066903
+RESULT:failed_coup_experience_model=0.043167
+RESULT:failed_coup_x_over_6_years_experience=0.018762
+RESULT:failed_coup_affiliation_model=0.237382
+RESULT:failed_coup_x_leaders_party=-0.155126
+RESULT:failed_coup_responsibility_model=0.078974
+RESULT:failed_coup_x_natural_resources=-0.111846
+RESULT:failed_coup_importance_model=0.152381

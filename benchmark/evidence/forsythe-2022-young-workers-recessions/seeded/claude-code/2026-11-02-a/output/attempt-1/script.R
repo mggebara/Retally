@@ -1,0 +1,13 @@
+suppressMessages(library(data.table))
+t0 <- Sys.time()
+D <- "<repo>/benchmark/.cache/claude-code/forsythe-2022-young-workers-recessions/seeded/2026-11-02-a/mount/forsythe_2022_young_workers_recessions/3 replication package/Data"
+cols <- c("peage","pesex","peeduca","race","prhspnon","pehspnon","pemlr","pwsswgt","v2hrmonth","v2hryear","v2gestfips","v2pemlr","v2puiodp1","v2peio1cow","v2peio1icd","v2peio1ocd","v2prernwa","v2pwsswgt","v2prwernal")
+dt <- fread(file.path(D,"yh_data.csv"), select=cols, nThread=1, showProgress=FALSE)
+cat("read secs", as.numeric(Sys.time()-t0,units="secs"), "\n")
+cat("nrow", nrow(dt), "\n"); print(sapply(dt, class))
+print(object.size(dt), units="MB")
+print(table(dt$v2hryear)); print(table(dt$peeduca, useNA="ifany"))
+print(summary(dt$peage)); print(table(dt$v2pemlr)); print(table(dt$v2puiodp1)); print(table(dt$v2peio1cow))
+print(table(dt$v2prwernal, useNA="ifany")); print(summary(dt$v2prernwa))
+print(table(dt$pehspnon, useNA="ifany")); print(table(dt$prhspnon, useNA="ifany"))
+cat("total secs", as.numeric(Sys.time()-t0,units="secs"), "\n"); print(gc())

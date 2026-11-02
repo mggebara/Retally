@@ -1,0 +1,12 @@
+suppressMessages(library(dplyr))
+d <- read.csv("<repo>/benchmark/.cache/claude-code/dertwinkel-kalt-2022-concentration-bias/independent/2026-11-01-a/mount/dertwinkel_kalt_2022_concentration_bias/Consumption Experiment/Stata/Consumption_Experiment.csv")
+print(dim(d)); str(d)
+print(with(d, table(treatment, decision_number)))
+s <- d %>% group_by(tn) %>% summarise(across(c(dispersed,pizza,control,main,treatment,pap_sample), ~first(.x)), n=n(), ncorner=sum(corner[decision_number<=8],na.rm=TRUE))
+print(s %>% count(dispersed,pizza,control,main,treatment,pap_sample))
+print(table(s$ncorner, s$pap_sample))
+print(summary(d[d$decision_number==9, c("indifference_point","utility_point","corner","chose_corner","id_stage2","id_stage2_upper","avg_id_stage2","qe_ard","qe_ard_lower","qe_ard_upper","qe_rad","qe_rad_lower","qe_rad_upper","cb_effect","id_stage2_sign")]))
+print(table(d$corner, d$chose_corner, useNA="a"))
+print(head(d[d$tn %in% unique(d$tn)[1:3], c("tn","decision_number","indifference_point","corner","chose_corner","id_stage2","id_stage2_upper","qe_ard","qe_ard_lower","qe_ard_upper","qe_rad")], 30))
+x9 <- d[d$decision_number==9,]
+print(x9 %>% group_by(main,dispersed,pizza,control,pap_sample) %>% summarise(n=n(), ard=mean(qe_ard,na.rm=T), rad=mean(qe_rad,na.rm=T), radl=mean(qe_rad_lower,na.rm=T), nna=sum(is.na(qe_rad))))

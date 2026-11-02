@@ -1,0 +1,79 @@
+Diagnostics: no-corner subjects by condition:
+# A tibble: 6 × 3
+  cond      arm           n
+  <chr>     <chr>     <int>
+1 Donation  Control     101
+2 Donation  Treatment   100
+3 Main      Control     103
+4 Main      Treatment   100
+5 Mechanism Control     101
+6 Mechanism Treatment   102
+Main sample by condition:
+# A tibble: 6 × 3
+  cond      arm           n
+  <chr>     <chr>     <int>
+1 Donation  Control     100
+2 Donation  Treatment   100
+3 Main      Control     100
+4 Main      Treatment   100
+5 Mechanism Control     100
+6 Mechanism Treatment   100
+d_lower : est 31.37  se 2.653629 
+d_mid : est 37.475  se 3.557226 
+d_upper : est 43.58  se 4.683459 
+r_lower : est 0.1881644  se 0.01581872 
+r_mid : est 0.223367  se 0.02097325 
+r_upper : est 0.2585696  se 0.0274999 
+tobit: est 36.77746  se 3.612882 
+
+t test of coefficients:
+
+            Estimate Std. Error t value  Pr(>|t|)    
+(Intercept) 0.075262   0.018916  3.9788 9.713e-05 ***
+D           0.148105   0.028243  5.2439 4.020e-07 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+              Estimate Std. Error t value  Pr(>|t|)    
+(Intercept) -0.0229294  0.0074129 -3.0932  0.002266 ** 
+D            0.1570141  0.0219486  7.1537 1.601e-11 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+              Estimate Std. Error t value  Pr(>|t|)    
+(Intercept) -0.0225504  0.0081355 -2.7718  0.006106 ** 
+D            0.2459174  0.0224959 10.9317 < 2.2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+             Estimate Std. Error t value  Pr(>|t|)    
+(Intercept) -0.014437   0.010029 -1.4396    0.1516    
+D            0.089699   0.021410  4.1896 4.206e-05 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Donation-Treatment mean: 0.1340848  se 0.02065887 
+N per Table 3 column: 200 200 200 200 
+RESULT:abs_concentration_bias_midpoint_table2_col2=37.475000
+RESULT:abs_concentration_bias_tobit_table2_col4=36.777463
+RESULT:rel_concentration_bias_lower_table2_col1=0.188164
+RESULT:rel_concentration_bias_midpoint_table2_col2=0.223367
+RESULT:rel_concentration_bias_upper_table2_col3=0.258570
+RESULT:n_obs_table2=100
+RESULT:rel_cb_mechanism_treatment_table3_col1=0.075262
+RESULT:diff_main_minus_mechanism_table3_col1=0.148105
+RESULT:rel_cb_donation_treatment_table3_col2=0.134085
+RESULT:diff_donation_treatment_minus_control_table3_col2=0.157014
+RESULT:diff_main_treatment_minus_control_table3_col3=0.245917
+RESULT:diff_mechanism_treatment_minus_control_table3_col4=0.089699
+RESULT:n_obs_table3=200
+DEVIATION: n_obs_table3 reports column 1's N; the per-column Ns are printed above.

@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "entry_id": "gagliarducci-2022-gender-cooperation-congress",
+  "mode": "independent",
+  "run_id": "2026-10-22-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "RD columns (2)-(3) use the optimal bandwidths reported in the paper (25/30/13 for number of cosponsors, 16/24/11 for percent opposite) rather than the bandwidths from rdrobust::rdbwselect (mserd, bill level), which the script also computes and prints (e.g. 17.8 for Republicans/number of cosponsors, 25.0 for Democrats/percent opposite).",
+    "Macro-area dummies were built from ICPSR state codes (Northeast 1-14, Midwest 21-37, South 40-56, West 61-82), since no region variable is in the data. Log population density = lnpop - lnarea.",
+    "Rookie = tenure_run == 1; committee leader = chair (comc) or ranking member (comr); occupation dummies occ1-occ5 (unknown and miscellaneous form the base); total bills sponsored = count of bills per sponsor-Congress in the analysis file.",
+    "Percent of cosponsors from the opposite party = 100 * pct_cosponsors_opposite, set to 0 for bills with no cosponsors.",
+    "Propensity scores come from logits estimated at the bill level within each party subsample. The full-sample IPW columns use district characteristics + |MV1_democrat| (+ sponsor characteristics in column 5). The RD+IPW score uses district characteristics only, within the bandwidth. Weights are 1/p for female sponsors and 1/(1-p) for male sponsors.",
+    "fixest drops one fixed-effect singleton (minor topic), so N is 1 lower than the paper's for some cells (60669 vs 60670)."
+  ],
+  "notes": "Data: AnalysisData/bills_analysis_101-111_replication.dta only. Column 1 is OLS (feols) of the outcome on the female-sponsor dummy, sponsor characteristics, district characteristics, 33 committee-of-referral dummies, and Congress and minor-topic fixed effects, with SEs clustered by sponsor-Congress. Column 2 is a local-linear RD on MV1_female with separate slopes on each side and Congress FE, in mixed-gender races within the bandwidth. Column 3 adds bill characteristics and IPW weights to the column 2 regression. Columns 4-5 are weighted regressions on the full sample with Congress FE and bill characteristics. One exploratory run (attempt-1) inspected the variables. The first estimation run is the final one: check_attempt reported all claims within tolerance, and the script was not changed afterwards.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T03:08:06Z",
+  "finished_at": "2026-10-22T03:10:46Z"
+}

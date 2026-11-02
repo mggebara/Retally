@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "entry_id": "adams-2023-women-mps-affective-polarization",
+  "mode": "blind",
+  "run_id": "2026-10-21-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Sample restriction applied literally as the paper states it: both parties i and j had >= 4 prior lower-chamber seats (from_prior_seats >= 4 & to_prior_seats >= 4), then listwise deletion on to_pfeml (44 rows), giving 1,535 dyads. Exploration (attempt-2) showed that filtering on the evaluated (to) party's seats only, with non-missing to_pfeml, yields 1,842 rows -- the dyad count quoted in the task context -- which suggests the authors' code may have applied the >=4-MP filter only to the out-party. This alternative was NOT adopted, because switching to it would be adjusting the specification toward a number given in the task.",
+    "Coalition/opposition-partner dummies use prior_coalition / prior_opposition (government status in the period before/at the time of the post-election survey), which the dataset codebook lists as the variables used in the analysis; govern_together / opposition_together are listed by the codebook as not used.",
+    "Elite left-right distance uses the dataset's pre-standardized rile_distance_s (standardized over the full 2,266-row dyadic file, mean 22.44, SD 17.61, matching footnote 3), not re-standardized on the estimation sample.",
+    "Gender-disaggregated DV computed as 10 - dislike (dislike is the reversed 0-10 thermometer); gender 2 = women, 1 = men per the codebook. Same >=4-seat rule for both parties."
+  ],
+  "notes": "Independent, blind reproduction of Table 1. Data: dyadic_data_1-4-22.Rdata (updated_data) for columns 1-2 and gender_disagregated_8-8-21.rds for columns 3-4. DV = party_like (mean 0-10 thermometer i's partisans give j). Regressor = to_pfeml (j's share of women MPs at t-1). Full model adds rile_distance_s, prior_coalition, prior_opposition. OLS via fixest::feols with country-year (cntryyr) fixed effects and SEs clustered by cntryyr (election). n_election_studies = distinct cntryyr in the column-2 estimation sample (81, 20 countries). Read, besides paper.txt and data files, the data directory's readme.rtf and the three codebook .docx files (data documentation, not scripts or result tables). No author code was present or read. Two exploratory runs (attempt-1, attempt-2) printed no RESULT lines; the final run is the first and only scored estimation.",
+  "files_read_outside_mount": [
+    "<repo>/benchmark/.cache/claude-code/adams-2023-women-mps-affective-polarization/blind/2026-10-21-b/task.md (the task instructions, read as directed)"
+  ],
+  "started_at": "2026-10-22T02:10:15Z",
+  "finished_at": "2026-10-22T02:12:33Z"
+}

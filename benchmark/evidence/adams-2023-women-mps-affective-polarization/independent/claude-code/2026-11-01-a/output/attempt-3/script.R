@@ -1,0 +1,12 @@
+P <- "<repo>/benchmark/.cache/claude-code/adams-2023-women-mps-affective-polarization/independent/2026-11-01-a/mount/adams_2023_women_mps_affective_polarization"
+load(file.path(P, "dyadic_data_1-4-22.Rdata"))
+d <- as.data.frame(updated_data)
+cc <- !is.na(d$party_like) & !is.na(d$to_pfeml)
+cat("nrow cc", sum(cc), "\n")
+for (k in 0:6) cat("k", k, " both>=k", sum(cc & d$to_prior_seats>=k & d$from_prior_seats>=k), " to>=k", sum(cc & d$to_prior_seats>=k), " from>=k", sum(cc & d$from_prior_seats>=k), " both>k or zero", sum(cc & (d$to_prior_seats>=k | d$to_prior_seats==0) & (d$from_prior_seats>=k | d$from_prior_seats==0)), "\n")
+cat("cc & to_pfeml & from_pfeml nonNA:", sum(cc & !is.na(d$from_pfeml)), "\n")
+cat("zero seats rows (to):", sum(cc & d$to_prior_seats==0), " (from):", sum(cc & d$from_prior_seats==0), "\n")
+print(table(d$from_complete, useNA="a")); print(table(d$to_complete, useNA="a"))
+cat("cc & from_pfeml nonNA & both>=4:", sum(cc & !is.na(d$from_pfeml) & d$to_prior_seats>=4 & d$from_prior_seats>=4), "\n")
+cat("cc & to_pfeml>0:", sum(cc & d$to_pfeml>0), "\n")
+cat("all rows both>=4:", sum(d$to_prior_seats>=4 & d$from_prior_seats>=4), "\n")

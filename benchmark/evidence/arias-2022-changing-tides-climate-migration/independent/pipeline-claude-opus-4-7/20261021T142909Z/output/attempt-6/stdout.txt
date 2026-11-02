@@ -1,0 +1,29 @@
+DEVIATION: Switched to amce package-style estimation; the main issue is that the DE conjoint has a reason-detection problem causing wildfires to be dropped (likely due to encoding of Waldbrände) and the model is picking up partial data. Rebuilding reason detection and re-estimating.
+US rows: 1196 
+DE rows: 1159 
+US reason table:
+
+    drought    economic    flooding persecution   wildfires        <NA> 
+       4295        4342        4358        4206        4327           0 
+DE reason table:
+
+    drought    economic    flooding persecution   wildfires        <NA> 
+       4222        4199        4229        4103        4109           0 
+DE origin table:
+
+afghanistan    ethiopia    internal     myanmar     ukraine        <NA> 
+       4510        4338        3043        4611        4360           0 
+US rows after prep: 19234 
+DE rows after prep: 19078 
+RESULT:amce_drought_us=0.0027
+RESULT:amce_flooding_us=0.0051
+RESULT:amce_wildfires_us=-0.0028
+RESULT:amce_persecution_us=-0.0137
+RESULT:amce_drought_germany=0.0126
+RESULT:amce_flooding_germany=0.0096
+RESULT:amce_wildfires_germany=0.0209
+RESULT:amce_persecution_germany=0.0240
+RESULT:respondents_us=1167
+RESULT:respondents_germany=1143
+RESULT:choice_tasks_us=19234
+RESULT:choice_tasks_germany=19078

@@ -1,0 +1,325 @@
+== first/last row lag_approval NA by panel ==
+    country_code     n firstNA lastNA   nNA  minq  maxq   gaps
+           <num> <int>  <lgcl> <lgcl> <int> <num> <num> <lgcl>
+ 1:            1   137   FALSE   TRUE     1    95   231  FALSE
+ 2:            2   172   FALSE   TRUE     1    60   231  FALSE
+ 3:            3   123   FALSE   TRUE     1   109   231  FALSE
+ 4:            4    78   FALSE   TRUE     1   154   231  FALSE
+ 5:            5   155   FALSE   TRUE     1    77   231  FALSE
+ 6:            6   112   FALSE   TRUE     1   120   231  FALSE
+ 7:            9   159   FALSE   TRUE     1    73   231  FALSE
+ 8:           10   111   FALSE   TRUE     1   121   231  FALSE
+ 9:           11    96   FALSE   TRUE     1   136   231  FALSE
+10:           12   158   FALSE   TRUE     1    74   231  FALSE
+11:           13   112   FALSE   TRUE     1   120   231  FALSE
+12:           17   160   FALSE   TRUE     1    60   219  FALSE
+13:           18    69   FALSE   TRUE     1   163   231  FALSE
+14:           19   154   FALSE   TRUE     1    78   231  FALSE
+15:           20   127   FALSE   TRUE     1   105   231  FALSE
+16:           21   172   FALSE   TRUE     1    60   231  FALSE
+17:           24   172   FALSE   TRUE     1    60   231  FALSE
+18:           25   115    TRUE   TRUE    32   117   231  FALSE
+19:           26   121   FALSE   TRUE     1   111   231  FALSE
+20:           27   127   FALSE   TRUE     1   105   231  FALSE
+21:           28    78   FALSE   TRUE     1   154   231  FALSE
+22:           29   123   FALSE   TRUE     1   109   231  FALSE
+23:           30   160   FALSE   TRUE     1    72   231  FALSE
+24:           31   115    TRUE   TRUE    25   117   231  FALSE
+25:           32   172   FALSE   TRUE     1    60   231  FALSE
+26:           33    41   FALSE   TRUE     1   185   225  FALSE
+27:           34    41   FALSE   TRUE     1   185   225  FALSE
+28:           35   116   FALSE   TRUE     1   116   231  FALSE
+29:           36   109   FALSE   TRUE     1   123   231  FALSE
+30:           37   113   FALSE   TRUE     1   119   231  FALSE
+31:           38   110   FALSE   TRUE     1   122   231  FALSE
+32:           39    85    TRUE   TRUE     7   147   231  FALSE
+33:           40   148   FALSE   TRUE     1    84   231  FALSE
+34:           41   127   FALSE   TRUE     1   105   231  FALSE
+35:           42   114   FALSE   TRUE     1   118   231  FALSE
+36:           45   127   FALSE   TRUE     1   105   231  FALSE
+37:           50    86   FALSE   TRUE     1   146   231  FALSE
+38:           53   119   FALSE   TRUE     1   113   231  FALSE
+39:           54   134   FALSE   TRUE     1    98   231  FALSE
+40:           55    63   FALSE   TRUE     1   169   231  FALSE
+41:           59    69   FALSE   TRUE     1   161   229  FALSE
+42:           63   172   FALSE   TRUE     1    60   231  FALSE
+43:           64   172   FALSE   TRUE     1    60   231  FALSE
+44:           65   121   FALSE   TRUE     1   111   231  FALSE
+45:           66   124   FALSE   TRUE     1   108   231  FALSE
+    country_code     n firstNA lastNA   nNA  minq  maxq   gaps
+           <num> <int>  <lgcl> <lgcl> <int> <num> <num> <lgcl>
+               country
+                <char>
+ 1:          Argentina
+ 2:          Australia
+ 3:            Austria
+ 4:            Bolivia
+ 5:             Brazil
+ 6:           Bulgaria
+ 7:             Canada
+ 8:              Chile
+ 9:           Colombia
+10:         Costa Rica
+11:     Czech Republic
+12:            Denmark
+13: Dominican Republic
+14:            Ecuador
+15:        El Salvador
+16:             France
+17:            Germany
+18:             Greece
+19:          Guatemala
+20:           Honduras
+21:            Hungary
+22:            Iceland
+23:            Ireland
+24:              Italy
+25:              Japan
+26:          Macedonia
+27:          Macedonia
+28:             Mexico
+29:        New Zealand
+30:          Nicaragua
+31:             Panama
+32:           Paraguay
+33:               Peru
+34:        Philippines
+35:             Poland
+36:           Portugal
+37:             Russia
+38:        South Korea
+39:              Spain
+40:             Turkey
+41:            Ukraine
+42:     United Kingdom
+43:      United States
+44:            Uruguay
+45:          Venezuela
+               country
+                <char>
+UK rows around 2017:
+     qtr lag_approval kill_16 manchester female_pres          execrlc
+   <num>        <num>   <num>      <num>       <num> <haven_labelled>
+1:   224     32.41359       0          0           0                1
+2:   225     40.28224       0          0           0                1
+3:   226     42.91670       0          0           0                1
+4:   227     42.65178       0          0           1                1
+5:   228     43.50789       0          0           1                1
+6:   229     32.04080       1          1           1                1
+7:   230     30.10319       0          0           1                1
+8:   231           NA       0          0           1                1
+   election_qtr  growth log_inflation
+          <num>   <num>         <num>
+1:            0 2891074    0.00838214
+2:            0 2891074    0.00838214
+3:            0 2891074    0.00838214
+4:            0 2941387    0.00838214
+5:            0 2941387    0.93913025
+6:            1 2941387    0.93913025
+7:            0 2941387    0.93913025
+8:            0      NA    0.93913025
+           country   qtr female_pres lag_approval
+            <char> <num>       <num>        <num>
+ 1:      Argentina   128           0     48.58809
+ 2:      Argentina   138           0     42.58549
+ 3:         Canada   101           0     48.74995
+ 4:       Colombia   154           0     42.37187
+ 5:    El Salvador   107           0     37.73736
+ 6:    El Salvador   108           0     37.76344
+ 7:         France   223           0     21.56237
+ 8:         France   226           0     17.36587
+ 9:       Honduras   109           0     44.78987
+10:       Honduras   113           0     46.92090
+11:         Panama   138           0     74.96451
+12:           Peru   126           0     39.36818
+13:    Philippines   163           0     34.15225
+14:    Philippines   171           1     25.52228
+15:    Philippines   172           1     37.52613
+16:    Philippines   173           1     35.13516
+17:    Philippines   225           0     70.36991
+18:    Philippines   226           0     68.65651
+19:    Philippines   230           0     70.28678
+20:         Russia   174           0     61.93000
+21:         Russia   178          NA     52.89400
+22:         Russia   204          NA     68.95800
+23:          Spain   101           0     38.99094
+24:          Spain   109           0     46.54490
+25:          Spain   176           0     48.62412
+26:         Turkey   175           0     44.11896
+27:         Turkey   213          NA     52.14353
+28:         Turkey   222           0     54.20435
+29:         Turkey   223           0     56.20214
+30:         Turkey   224           0     58.21999
+31:         Turkey   225           0     80.64865
+32:         Turkey   226          NA     75.53002
+33:         Turkey   227           0     68.26916
+34:         Turkey   228          NA     68.05672
+35:        Ukraine   217           0     46.27267
+36:        Ukraine   218           0     23.13087
+37:        Ukraine   219          NA     21.36566
+38:        Ukraine   220          NA     18.00362
+39:        Ukraine   221           0     16.28802
+40:        Ukraine   222           0     16.78957
+41:        Ukraine   223           0     10.76980
+42:        Ukraine   227           0     14.30273
+43:        Ukraine   228           0     13.95371
+44: United Kingdom    61           0     33.89094
+45: United Kingdom    62           0     33.35590
+46: United Kingdom    64           0     34.33059
+47: United Kingdom    65           0     34.21140
+48: United Kingdom    66           0     27.80611
+49: United Kingdom    78           1     35.93599
+50: United Kingdom    91           1     40.12331
+51: United Kingdom   100           1     32.69752
+52: United Kingdom   114           1     39.07575
+53: United Kingdom   115           1     36.72041
+54: United Kingdom   128           0     39.53458
+55: United Kingdom   154           0     49.24634
+56: United Kingdom   182           0     34.67619
+57: United Kingdom   229           1     32.04080
+58:  United States   166           0     71.95708
+59:  United States   225           0     49.07575
+60:      Venezuela   112           0     38.08128
+           country   qtr female_pres lag_approval
+            <char> <num>       <num>        <num>
+
+TRUE 
+5469 
+ Right Center   Left 
+     1      2      3 
+rows 1481408 ids 92588 
+     wave     n  like like9999 bestPM  mbpm    t1  t1na  time    t2    pa   pa1
+    <num> <int> <int>    <int>  <int> <int> <int> <int> <num> <int> <int> <int>
+ 1:     1 92588     0        0      0 92588 16377     0     0  4295 92588 16377
+ 2:     2 92588     0        0      0 92588 16377     0     0  4295 92588 16377
+ 3:     3 92588     0        0      0 92588 16377     0     0  4295 92588 16377
+ 4:     4 92588     0        0      0 92588 16377     0     0  4295 92588 16377
+ 5:     5 92588     0        0      0 92588 16377     0     0  4295 92588 16377
+ 6:     6 92588     0        0      0 92588 16377     0     0  4295 92588 16377
+ 7:     7 92588     0        0  28360 92588 16377     0     0  4295 92588 16377
+ 8:     8 92588     0        0  30926 92588 16377     0     0  4295 92588 16377
+ 9:     9 92588 25554        0      0 92588 16377     0     0  4295 92588 16377
+10:    10 92588 27884        0  27094 92588 16377     0     0  4295 92588 16377
+11:    11 92588 29091        0  28146 92588 16377     0     0  4295 92588 16377
+12:    12 92588 32642        0  31277 92588 16377     0     1 63399 92588 16377
+13:    13 92588 29841        0      0 92588 16377     0     1 63399 92588 16377
+14:    14 92588 29425        0      0 92588 16377     0     1 63399 92588 16377
+15:    15 92588 29491        0      0 92588 16377     0     1 63399 92588 16377
+16:    16 92588 35991        0      0 92588 16377     0     1 63399 92588 16377
+treatment1 constant within id? V1
+    1 
+92588 
+treatment2 constant within id? V1
+    1     2 
+33484 59104 
+post_attack constant within id? V1
+    1 
+92588 
+          post_attack
+treatment1     0     1  <NA>
+      0    76211     0     0
+      1        0 16377     0
+      <NA>     0     0     0
+          post_attack
+treatment2     0     1  <NA>
+      0    18017 11172     0
+      1    58194  5205     0
+      <NA>     0     0     0
+       wave
+bestPMW     1     2     3     4     5     6     7     8     9    10    11    12
+   0        0     0     0     0     0     0 18597 20971     0 13040 12187 14801
+   1        0     0     0     0     0     0  9763  9955     0 14054 15959 16476
+   <NA> 92588 92588 92588 92588 92588 92588 64228 61662 92588 65494 64442 61311
+       wave
+bestPMW    13    14    15    16  <NA>
+   0        0     0     0     0     0
+   1        0     0     0     0     0
+   <NA> 92588 92588 92588 92588     0
+       may_bestpm
+bestPMW     0     1  <NA>
+   0    14801     0     0
+   1        0 16476     0
+   <NA> 61311     0     0
+white 
+
+      0       1    <NA> 
+ 454320 1027088       0 
+gender 
+
+     1      2   <NA> 
+669248 812144     16 
+labour 
+
+      0       1    <NA> 
+1327520  153888       0 
+party_other 
+
+      0       1    <NA> 
+ 307952 1173456       0 
+income 
+
+     1      2      3      4      5      6      7      8      9     10     11 
+ 24896  48432  72944  71712  72688  67712  59920 289984  42848  34976  44704 
+    12     13     14     15   <NA> 
+ 30480  38480  14592   6448 560592 
+ideology 
+
+      0       1       2       3       4       5       6       7       8       9 
+  18064   16144   44992   58656   43904   84160   44304   54688   48848   15328 
+     10    <NA> 
+  17472 1034848 
+ideology2 
+
+     0      1      2      3      4      5      6      7      8      9     10 
+ 18064  16144  44992  58656  43904 187904  44304  54688  48848  15328  17472 
+  <NA> 
+931104 
+ideo3 
+
+     1      2      3   <NA> 
+137856 276112 136336 931104 
+conservative 
+
+      0       1    <NA> 
+1327344  154064       0 
+may_bestpm 
+
+      0       1    <NA> 
+1217792  263616       0 
+controls constant within id?
+whiteV1
+    1 
+92588 
+genderV1
+    1 
+92588 
+labourV1
+    1 
+92588 
+party_otherV1
+    1 
+92588 
+incomeV1
+    1 
+92588 
+ideologyV1
+    1 
+92588 
+ideology2V1
+    1 
+92588 
+         V1       V2    V3    V4
+      <num>    <num> <int> <int>
+1: 4.907179 4.502112 16020 15626
+    wave
+time     1     2     3     4     5     6     7     8     9    10    11    12
+   0 92588 92588 92588 92588 92588 92588 92588 92588 92588 92588 92588     0
+   1     0     0     0     0     0     0     0     0     0     0     0 92588
+    wave
+time    13    14    15    16
+   0     0     0     0     0
+   1 92588 92588 92588 92588
+          
+treatment1 FALSE  TRUE
+         0 17016 59195
+         1 15626   751

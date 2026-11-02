@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "carrera-2022-who-chooses-commitment",
+  "mode": "independent",
+  "run_id": "2026-11-02-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was exploratory: it printed variable names, labels and summaries, and no RESULT lines. The final script reads cleaned_commitment_study_data.dta. It drops the 44 endogenously assigned participants (flag_exclude_exog or flag_low_wtp), leaving 1248, then drops the wave-3 threshold80_12 assignees, leaving 1126. The conservative BCP is the mean over the pairs (1,2),(2,3),(3,5),(5,7),(7,12) of (wtp_{k+1}-wtp_k)/Delta - (days_k+days_{k+1})/2. Goal-exp is goal - days_0; actual-exp is visits - days_{assigned incentive}. Both are z-scored over the 1126 sample, and the unstandardized means and SDs match the table notes (3.34/3.64 and -4.17/6.61). Table 3 is OLS with wave FE and HC1 SEs (fixest). Table 4 is an LPM on the long data: q169==2 (8+) and q295==2 (16+) for waves 1-2, and chose_commit12 for all waves. It has wave and threshold FE, SEs clustered by participant, and N=2824. All estimates match the paper's tables to the reported precision. The comparison with the claims was made after the final run and the script was not changed.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T05:50:36Z",
+  "finished_at": "2026-11-02T05:52:13Z"
+}

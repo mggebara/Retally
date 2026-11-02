@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "entry_id": "dertwinkel-kalt-2022-concentration-bias",
+  "mode": "blind",
+  "run_id": "2026-10-22-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Upper-corner choices in the unbalanced trade-off use a lower bound of 63, the value the dataset assigns to upper corners (interior values run to 61; stated indifference points start at 63), instead of the 62 given in the paper text. With 62, the Main-Treatment midpoint mean of d would be 37.475 instead of 37.61. This sensitivity is printed as a DEVIATION line.",
+    "Tobit (Table 2 col 4) uses censoring points -63 (lower corner) and 63 (upper corner, matching the coding above), via AER::tobit.",
+    "Control conditions: the relative measure is d/(e_j + x_j) for the repeated workday j only, not the eight-day average of eq. 12, because in Control the deviation applies only to workday j. Rebuilt from the raw data, this matches the dataset's precomputed qe_ard."
+  ],
+  "notes": "Data: Consumption Experiment/Stata/Consumption_Experiment.csv (9 rows per subject: decisions 1-8 are balanced trade-offs, 9 is the final trade-off). The relative measure is rebuilt from raw indifference points and the mandatory tasks e=(129,132,143,115,121,117,135,127) from paper footnote 3. For Treatment it equals the dataset's qe_ard/_lower/_upper to 1e-7. The main sample is pap_sample==1: no corner choice in any balanced trade-off. That gives 100 subjects in each of the six conditions. Seven extra subjects with no balanced corner, from late sessions, are flagged out by pap_sample, consistent with a preregistered 100 per condition. None of them is in Main-Treatment. Estimates are OLS on a constant or a condition dummy, with HC1 robust SEs. The Donation difference is reported as Treatment minus Control. Exploratory attempts 1-3 printed no RESULT lines. Attempt 2 crashed on a dplyr summarise bug in exploration code. Reading the paper's method sections unavoidably showed a few unredacted table entries, such as the Mechanism-Control constant and some SEs. The specification was not adjusted toward them. Script files in the data directory were not opened. The data README.md was read for file descriptions only.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T03:16:50Z",
+  "finished_at": "2026-10-22T03:21:00Z"
+}

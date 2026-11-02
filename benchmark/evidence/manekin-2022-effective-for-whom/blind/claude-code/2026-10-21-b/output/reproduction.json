@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "manekin-2022-effective-for-whom",
+  "mode": "blind",
+  "run_id": "2026-10-21-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 1, "kind": "error"}
+  ],
+  "deviations": [
+    "Study 2 regressions (US and Israel) are unweighted: the Study 2 data files contain no weight variable. Study 1 regressions use the `weight` column, as the task context states.",
+    "The Israeli identity_protesters factor is unlabeled; codes taken as 0 = white Jews, 1 = Ethiopian Jews, 2 = Arabs, following the order the paper lists the conditions (in Study 2 code 0 has about half the cell count of the others, consistent with the two omitted white-protester conditions, which supports 0 = white; the 1 vs 2 assignment cannot be verified from the data).",
+    "Study 1 Israel uses the full file (Jewish and Arab respondents pooled, 3063 rows); no other sample restrictions applied anywhere."
+  ],
+  "notes": "attempt-1 inspected variables and counts (no RESULT lines). attempt-2 was the first estimation script; it crashed because lm()'s weights argument could not see a helper-function variable, fixed without changing the specification. Final: OLS of degree_violence and police_action_required (0-10) on the protester-identity indicator(s) plus treatment indicators (Study 1: tactic dummies, base white protesters marching; Study 2: group_goal and commitment, base white/generic goal/no commitment). Sample sizes are the nobs of the perceived-violence regressions (US Study 2 police-action regression has 3008 obs because of 5 missing outcomes). Only paper.txt and .rdata files under the mount were read; no scripts, tables or figures in the dataset directory were opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T02:10:14Z",
+  "finished_at": "2026-10-22T02:25:00Z"
+}

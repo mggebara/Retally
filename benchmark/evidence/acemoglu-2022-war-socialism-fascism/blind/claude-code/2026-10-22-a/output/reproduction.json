@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "acemoglu-2022-war-socialism-fascism",
+  "mode": "blind",
+  "run_id": "2026-10-22-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Standardized coefficients computed by standardizing the outcome, the 1919 socialist vote share and the instrument (mean 0, sd 1) over each variable's non-missing values in fascism_db.dta before estimation; for the 1921 fascist vote share (5,358 non-missing) this is the 1921-sample standardization of that variable, while the regressor and instrument use the full 5,775-municipality moments.",
+    "Regiment fixed effects entered as all 359 d_reg* dummy columns in fascism_db.dta (collinear ones dropped by fixest); province fixed effects absorbed via provincia1921; SEs clustered by circondario1921 with fixest's default small-sample corrections. F-stat is the squared cluster-robust t-statistic of the instrument in the first stage."
+  ],
+  "notes": "Independent blind reproduction from paper text only. attempt-1: exploratory variable listing (no RESULT lines). attempt-2: full estimation, but fixest silently dropped 3 municipalities in singleton provinces (N=5772, 178 clusters); since the paper describes the estimation sample as all municipalities in the database across 64 provinces, the final run keeps singletons (fixef.rm='none'), giving N=5775, 181 districts, 64 provinces. This change was based on the paper's sample description, not on any reported value; coefficients are unchanged by it. Controls: demographic = lpop1911, lpop2-4, sh_pop_1911_be6; geographic = larea, centre_alt, max_alt; psu1913_vv; military = veterans74_95, veterans96_00, ard_vol_pop6m, army_suppliers_d, cruent_d; agricultural = dlab, shcrop, landlord_ass; urban = ind_workers, ind_firms, literacy, elites, bourgeoisie. Instrument foots_pop6m; endogenous psu1919_vv; outcomes fascist_violence, fascist_branch, fascist1921_vv (imputed 1921 sample), fascist1924_vv. Only fascism_db.dta was loaded; fascism_mod_elections_db.dta was not needed.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T03:16:55Z",
+  "finished_at": "2026-10-22T03:20:20Z"
+}

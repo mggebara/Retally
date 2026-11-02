@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "manekin-2022-effective-for-whom",
+  "mode": "independent",
+  "run_id": "2026-11-01-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": ["Study 2 U.S. regressions are unweighted: us_survey_wave2 has no weight variable."],
+  "notes": "attempt-1 was exploratory (it printed variable structure and codings, with no RESULT lines). Final: Study 1 weighted OLS (lm, weights = weight) of each 0-10 outcome on protester-identity indicators (US: identity_protesters==1 is Black; Israel: 1 = Ethiopian, 2 = Arab, assumed from the paper's ordering) and tactic indicators (1 = traffic, 2 = destroy), with white protesters marching as the base. Study 2 is unweighted OLS on black, group_goal and commitment. Sample sizes are regression nobs on full files. Values were compared with the claimed values only after the final run, and the script was not changed afterwards, so there are no claim attempts. All coefficients and Ns match the paper's tables.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T04:25:00Z",
+  "finished_at": "2026-11-02T04:40:00Z"
+}

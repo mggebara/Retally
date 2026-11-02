@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "entry_id": "holman-2022-theresa-may-rally",
+  "mode": "independent",
+  "run_id": "2026-10-22-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-6", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Table 4: estimation sample is every complete country-quarter in global_approval.dta (4,486 obs, 44 country_code panels) instead of the reported 4,328; no rule found in the paper or data that yields 4,328 (checked lagged regressors, lead DV, execrlc>0, AR(1) spell trimming).",
+    "Table 4: coefficients from OLS with country_code fixed effects (xtpcse without AR(1) gives the same point estimates); printed SEs are iid, not panel-corrected.",
+    "Table 4: dependent variable is lag_approval, which the series shows to be approval in the quarter after row t (US 9/11 row holds the 2001Q4 peak; UK Manchester row holds the post-election 2017Q3 slump), i.e. next-quarter approval as the paper describes; attack = kill_16 (16+ deaths, matches the paper's 60 attack quarters, 9 under women).",
+    "Table 2: estimated as random-effects GLS (Stata xtreg re, Swamy-Arora with harmonic-mean T) implemented by hand, with wave dummies (base = first wave; last post-attack wave omitted as collinear with time, as Stata does). The May best PM column is a linear probability model, not a logit, because the reported magnitudes and SEs are LPM-scale. Income missing values are dropped (not imputed); ideology2 (missing set to midpoint) is used."
+  ],
+  "notes": "Exploratory runs attempt-1..4 inspected variables, sample sizes and series timing (no RESULT lines). attempt-5 was the first estimating run; I compared it with the claims (check_attempt flagged only n_obs_table4), ran one more sample-size exploration (attempt-6) looking for a rule giving 4,328, found none, and reverted to attempt-5 unchanged as the final run. Table 2 reproduces every coefficient, SE (to 4 dp) and both Ns exactly. Table 4 gives 2.322 (claimed 3.112) and -3.828 (claimed -4.333) with N 4,486 vs 4,328. Before attempt-1 a malformed run occurred: the script file had not been written (a shell write was refused), so Docker mounted an empty directory as script.R and Rscript produced no output; that directory was removed and the run is not listed as an attempt because no script existed. The dataset readme .docx and metadata.json in the mount were read as documentation; replication_files.do is listed in metadata.json but is not in the mount and was not read.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T03:07:53Z",
+  "finished_at": "2026-10-22T03:15:29Z"
+}

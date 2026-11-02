@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "entry_id": "acemoglu-2022-war-socialism-fascism",
+  "mode": "seeded",
+  "run_id": "2026-10-22-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "Translated Tables1-7.do (Tables I-III) into fixest. Each variable standardized over its non-missing values (egen std). Regiment dummies d_reg* and province dummies province* entered as regressors (as in Stata, where they are listed controls; ivreg2 partial() does not change the coefficients). First stage: OLS clustered by circondario1921 with Stata-style small-sample correction; F-stat = squared clustered t on z_foots_pop6m (Stata 'test' after reg, cl). 2SLS via feols IV with district clustering. attempt-1 was an exploratory variable/missingness check. The single estimation run matched the claims to rounding without modification, so no claim-feedback attempts were used.",
+  "files_read_outside_mount": [
+    "benchmark/.cache/claude-code/acemoglu-2022-war-socialism-fascism/seeded/2026-10-22-a/task.md (the task instructions, as directed by the user)"
+  ],
+  "started_at": "2026-10-22T03:00:00Z",
+  "finished_at": "2026-10-22T03:02:30Z"
+}

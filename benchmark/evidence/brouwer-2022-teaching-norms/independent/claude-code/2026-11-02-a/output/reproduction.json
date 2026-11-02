@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "brouwer-2022-teaching-norms",
+  "mode": "independent",
+  "run_id": "2026-11-02-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was exploratory (tabulated scene, ViolationHelp, controls; no RESULT lines). Final: fixest feols LPMs on master.csv. Punishment sample = Violation and Violation+Help scenes; Helping sample = Help and Violation+Help scenes. Regressors Child*VH (VH = ViolationHelp); controls male (Male Target), hugo (Male Actor), Morning, witness, rich, Rain, Hot; SEs clustered by School (30 clusters). Rows with missing male dropped by listwise deletion (N 399/400). All coefficients, N and R2 match Table 2 at reported precision; script not changed after comparison with claims.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T05:54:27Z",
+  "finished_at": "2026-11-02T06:02:00Z"
+}

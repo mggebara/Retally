@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "lopez-moctezuma-2022-policy-deliberation-philippines",
+  "mode": "seeded",
+  "run_id": "2026-10-22-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "ri::genprobexact / ri::estate are not installed; assignment probabilities computed as the within-city share of treated barangays (exact for this complete block-cluster randomization), and the ITT computed as the IPW-weighted OLS of the outcome on assignment plus city dummies, which is what ri::estate does when given X and prob. Randomization-inference p-values were not computed (not claimed).",
+    "survey_ind.RData and survey_agg.RData are not shipped; they were rebuilt from survey_raw.RData following survey_clean.R (control-group-standardized items, inverse-covariance weighted indices). The fastLink name match of survey to official barangays was replaced by an exact barangay-name merge on the 10 treated surveyed barangays (all 10 linked; only treated barangays enter the attendance weights).",
+    "Clustered SEs by barangay computed with sandwich::vcovCL (HC1) rather than the authors' varcov.cluster; only point estimates are scored."
+  ],
+  "notes": "Followed tables_figures_agg.R (Table 1), survey_clean.R + tables_fig_ind.R (Tables C.3, C.4: attendance-weighted city-FE regressions on assignment by party) and tables_fig_ind_unweighted.R (Table F.1: assignment-IPW-weighted city-FE regressions). attempt-1 was an exploratory data inspection with no RESULT lines. One earlier docker invocation was issued before the final script.R existed on disk (a heredoc write had been refused by the harness); docker created an empty directory named script.R and Rscript produced no output; that empty directory was removed and the script was then written and run as the final run. All values match the paper to the reported precision except F.1 col 2 (23.267 vs 23.242). No claim-feedback iterations were made.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T03:00:59Z",
+  "finished_at": "2026-10-22T03:03:14Z"
+}

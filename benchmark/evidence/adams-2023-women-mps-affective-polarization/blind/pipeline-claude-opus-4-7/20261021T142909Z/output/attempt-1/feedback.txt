@@ -1,0 +1,20 @@
+Error in `filter()`:
+ℹ In argument: `!is.na(.data[[NULL]])`.
+Caused by error in `.data[[NULL]]`:
+! Must subset the data pronoun with a string, not `NULL`.
+Backtrace:
+     ▆
+  1. ├─df_s %>% ...
+  2. ├─dplyr::filter(., !is.na(.data[[dv_var]]), !is.na(.data[[wmp_var]]))
+  3. ├─dplyr:::filter.data.frame(., !is.na(.data[[dv_var]]), !is.na(.data[[wmp_var]]))
+  4. │ └─dplyr:::filter_impl(...)
+  5. │   └─dplyr:::filter_rows(...)
+  6. │     └─dplyr:::filter_eval(...)
+  7. │       ├─base::withCallingHandlers(...)
+  8. │       └─mask$eval_all_filter(dots_expanded, invert, env_filter)
+  9. │         └─dplyr (local) eval()
+ 10. ├─<unknown>
+ 11. └─rlang:::`[[.rlang_data_pronoun`(.data, NULL)
+ 12.   └─rlang:::data_pronoun_get(...)
+ 13.     └─rlang::abort(...)
+Execution halted

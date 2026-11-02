@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "entry_id": "lopez-moctezuma-2022-policy-deliberation-philippines",
+  "mode": "independent",
+  "run_id": "2026-11-01-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-3", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-4", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-5", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [
+    "Attendance weights (survey analyses): weights are built in actually treated barangays as pt/ps for self-reported attendees and (1-pt)/(1-ps) for non-attendees, where pt = att.prop (attendees / registered voters, data_agg) and ps = the share of attendees among that barangay's respondents in the analysis sample; all other respondents get weight 1. The paper only describes the adjustment verbally; this exact form is my reconstruction.",
+    "Anderson (2008) indices: items oriented as higher = more agreement with the party's concern (poverty, gap, corruption reversed 6-x; cct as is; femhouse, fempol, equality, harassment as is; discrimination reversed 6-x), each standardized by the control-group (assignment==0) mean and s.d. within the party's municipalities, weighted by row sums of the inverse (pairwise) covariance matrix over the items a respondent has, then the index is re-standardized on the control group. Effective sample = respondents with non-missing turnout_pl (1,081 here; paper says 1,082). Regressions use city FE, attendance weights, SEs clustered by barangay.",
+    "Permutation p-values, CACE and SEs were not computed (only the listed point estimates and Ns)."
+  ],
+  "notes": "Table 1 (barangay level, eq. 1: lm of turnout.party / share.treated / share.akbayan / share.umalabka on assignment + city FE using data.all) reproduces all four ITTs and all three Ns exactly. Table F.1 unweighted individual vote ITTs (100*vote and 100*vote.akbayan on assignment with city FE, respondents with turnout_pl==1; N=890 vs 891 in the data due to one respondent with missing city/barangay) give 23.51 and 32.01 against claimed 23.242 and 31.729, within tolerance. The four attitude summary indices (SI Tables C.3/C.4) do not reproduce: 0.337/0.320/0.363/-0.017 against claimed 0.496/0.126/0.45/0.095. Attempt-2 crashed (Umalab Ka party key had a space) and was fixed. Attempts 3-5 were compared with the claims via check_attempt. Attempts 4 and 5 also printed non-RESULT diagnostic grids, which I compared with the claimed index values and with numbers quoted in the paper text (item effects, weighted vote ITTs). Attempt-4's grid varied sample, within-party vs pooled index, weights, re-standardization, complete-case vs pairwise and item orientation flips. Attempt-5's grid varied five attendance-weight schemes, att.prop vs att.prop.turn, and the base for the survey share. No variant matched all four indices, or the text's weighted vote ITTs (about 13.5 / 16.7 / 6.6) or item effects (Akbayan Discrimination 0.88). So I reverted to the principled attempt-3 specification, and the final files are copies of attempt-3. The authors' generated survey_ind.RData (which holds their indices) is not in the package, and how they built the indices and weights probably differs from the paper's description.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T04:27:50Z",
+  "finished_at": "2026-11-02T04:33:57Z"
+}

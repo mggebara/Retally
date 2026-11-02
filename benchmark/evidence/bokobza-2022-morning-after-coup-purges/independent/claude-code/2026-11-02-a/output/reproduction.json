@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "entry_id": "bokobza-2022-morning-after-coup-purges",
+  "mode": "independent",
+  "run_id": "2026-11-02-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [
+    "Individual-level lagged log population built from the country-year panel because the supplied pop_pwt_ln_lag column is identical to gdp_cap_pwt_ln_lag; lagged log GDP/cap also rebuilt the same way (matches the supplied GDP lag in 99.99% of rows).",
+    "H2a experience model sample: non-leader minister-years with non-missing importance tier (junior ministers kept). The paper text says juniors are excluded, but its reported N (90,020, vs 90,014 for the importance model, a gap of exactly the 6 'tier 0' rows) indicates they were kept.",
+    "Country-level autocracy filter uses democracy1 == 0 as stored (it reproduces the paper's 3,715 obs / 115 countries / 95 coups); lagging it again gives 3,745 obs / 117 countries.",
+    "Leader-FE models (Table A2): controls lagged within leader spells (panel set by leader_cab_id), which reproduces the paper's N of 3,332 (3,282 plus 50 singletons) and the monarchy dummy dropping as collinear."
+  ],
+  "notes": "Country level: OLS of replacement_rateadj_minister on coupattempt_whogov, lagged log GDP/cap and population (plus lagged monarchy/military/party dummies in the Main model), with country or leader FE and year FE; fixest, country-clustered SEs; 1967-2016. Individual level: LPM of purged_y1 on the failed-coup indicator (coupattempt_presentyear) interacted with experience group, party group, minister type or importance tier; cubic in years in office except in the experience model; lagged log GDP/cap and population; country and year FE; country-clustered SEs; non-leader minister-years with democracy_lag==0, 1967-2016 (base N 95,344 vs the paper's 95,751). Attempts 1-3 were exploratory (variable inspection, sample counts). Attempt 4 was the first full estimation; check_attempt put every claim within tolerance, but I acted on my own comparison of the leader-FE coefficients (0.059/0.062 vs claimed 0.08/0.09) together with the N and collinearity mismatch, and switched to lags within leader spells. The final run's leader-FE estimates are 0.084/0.085.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T05:54:22Z",
+  "finished_at": "2026-11-02T05:59:40Z"
+}

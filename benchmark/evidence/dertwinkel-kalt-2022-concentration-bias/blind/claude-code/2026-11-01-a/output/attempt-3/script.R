@@ -1,0 +1,11 @@
+suppressMessages(library(tidyverse))
+options(width = 250)
+p <- "<repo>/benchmark/.cache/claude-code/dertwinkel-kalt-2022-concentration-bias/blind/2026-11-01-a/mount/dertwinkel_kalt_2022_concentration_bias/Consumption Experiment/Stata/Consumption_Experiment.csv"
+d <- read_csv(p, show_col_types = FALSE)
+bal <- d %>% filter(decision_number <= 8)
+anyc <- bal %>% group_by(tn) %>% summarise(any_corner = any(corner != 0), avg_x = mean(indifference_point))
+fin <- d %>% filter(decision_number == 9) %>% left_join(anyc, by = "tn")
+x <- fin %>% filter(!any_corner, pap_sample == 0)
+print(as.data.frame(x %>% select(tn, session, treatment, pizza, main, corner, indifference_point, average_ip, avg_x, id_stage2, age, disposable_income)))
+cat("pap_sample NA subjects, any_corner:\n"); print(table(fin$any_corner[is.na(fin$pap_sample)]))
+cat("id_stage2 NA among no-corner:", sum(is.na(fin$id_stage2) & !fin$any_corner), "\n")

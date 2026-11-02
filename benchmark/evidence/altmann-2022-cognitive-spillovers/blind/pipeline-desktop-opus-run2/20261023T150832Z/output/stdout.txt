@@ -1,0 +1,290 @@
+Columns: payoff, Attention, load_correct, round, Treatment_Environment, default_followed, load_correct_mean, summation_correct_mean, summation_correct, default_followed_mean, attention_mean, attention_positive_mean, default_correct_choice, diff_choice_second, ability_load, ability_task, q_age, q_gender, q_subject, q_degree, q_abitur_year, q_abitur_grade, q_math_grade, perc_multitasking_1, perc_multitasking_2, risk, perc_multitasking_1_easy, raven_score, no_attention, subject_id, original_lab, Treatment_intervention, payoff_share_mean, payoff_share, default_followed_correct_mean, raven_score_quartiles, raven_score_median, high_task_difficulty, subject_cat, q_abitur_grade_quartile, q_abitur_grade_cat, q_math_grade_cat, Treatment_Incentives, Treatment_Incentives_Baseline_sc, Treatment_Incentives_Int_sc, economist 
+Labels of load_correct : 0=Not correct; 1=Load correct 
+Labels of Treatment_Environment : 1=\textsc{Baseline}; 2=\textsc{Directed Attention}; 3=\textsc{Forced Choice}; 4=\textsc{Baseline-8}; 5=\textsc{High Qual.} 
+Labels of default_followed : 0=Not Followed; 1=Followed Default 
+Labels of summation_correct : 0=Not correct; 1=Math task correct 
+Labels of default_correct_choice : 0=Default incorrect; 1=Default correct 
+Labels of q_gender : 0=Male; 1=Female 
+Labels of perc_multitasking_1_easy : 0=Multitasking hard; 1=Multitasking Easy 
+Labels of original_lab : 0=Revision; 1=Original Lab 
+Labels of Treatment_intervention : 0=Baseline; 1=\textsc{Intervention} 
+Labels of raven_score_quartiles : 1=Very Low Raven; 2=Low Raven; 3=High Raven; 4=Very High Raven 
+Labels of raven_score_median : 1=Low Raven; 2=High Raven 
+Labels of high_task_difficulty : 0=Low Difficulty; 1=High Difficulty 
+Labels of subject_cat : 0=Others; 1=Law; 2=Economics; 3=Sciences 
+Labels of Treatment_Incentives : 1=10; 2=20; 3=40; 4=Ample 
+Labels of Treatment_Incentives_Baseline_sc : 1=\textsc{Baseline-10}; 2=\textsc{Baseline-20}; 3=\textsc{Baseline-40}; 4=\textsc{Baseline-Ample} 
+Labels of Treatment_Incentives_Int_sc : 1=\textsc{Incentives-10}; 2=\textsc{Incentives-20}; 3=\textsc{Incentives-40}; 4=\textsc{Incentives-Ample} 
+Subject id column: subject_id 
+DEVIATION: could not identify scarce indicator; using all observations
+Scarce rows: 17840 of 17840 
+Environment values:
+                              scarce
+env_l                          TRUE
+  \\textsc{baseline}           5960
+  \\textsc{directed attention} 6000
+  \\textsc{forced choice}      5880
+Agreement Treatment_intervention vs environment: 1 
+Default adherence column: default_followed 
+Controls found: age= q_age  gender= q_gender  field= q_subject  abitur= q_abitur_grade  math= q_math_grade  ab_load= ability_load  ab_task= ability_task  multitask= perc_multitasking_1  incentives= Treatment_Incentives  wave= 
+Scarce sample: rows 17840  subjects 892 
+Control formula: c_age + factor(c_gender) + factor(c_field) + c_abitur + c_math + c_abload + c_abtask + c_multi + factor(c_incent) 
+OLS estimation, Dep. Var.: quality
+Observations: 17,840
+Standard-errors: Clustered (sid) 
+            Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept) 0.673658   0.012874 52.32757  < 2.2e-16 ***
+interv      0.082992   0.015077  5.50458 4.8399e-08 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.442788   Adj. R2: 0.007699
+OLS estimation, Dep. Var.: quality
+Observations: 17,440
+Standard-errors: Clustered (sid) 
+                                                    Estimate Std. Error
+(Intercept)                                         0.465124   0.058729
+interv                                              0.085884   0.012558
+c_age                                              -0.001584   0.001163
+factor(c_gender)Male                                0.010290   0.012553
+factor(c_field)Argrawissenschaften                  0.029159   0.035716
+factor(c_field)Informatik                           0.058483   0.032479
+factor(c_field)kein Studium                         0.130699   0.031778
+factor(c_field)Mathematik                           0.040750   0.039210
+factor(c_field)Medizin                              0.025273   0.031111
+factor(c_field)Naturwissenschaften                  0.047446   0.021754
+factor(c_field)Politikwissenschaften                0.018311   0.040174
+factor(c_field)Psychologie                          0.009772   0.033979
+factor(c_field)Rechtswissenschaft                   0.008637   0.018631
+factor(c_field)Soziologie                           0.015215   0.087316
+factor(c_field)Sprach- und Literaturwissenschaften  0.021884   0.026378
+factor(c_field)Theologie                            0.022441   0.043616
+factor(c_field)VWL                                  0.021660   0.020722
+c_abitur                                            0.014348   0.013186
+c_math                                             -0.010690   0.007534
+c_abload                                            0.119839   0.031687
+c_abtask                                            0.219454   0.039129
+c_multi                                            -0.042191   0.007753
+factor(c_incent)20                                  0.042208   0.018824
+factor(c_incent)40                                  0.114840   0.020746
+factor(c_incent)Ample                               0.167376   0.012657
+                                                     t value   Pr(>|t|)    
+(Intercept)                                         7.919878 7.2309e-15 ***
+interv                                              6.839080 1.4999e-11 ***
+c_age                                              -1.361675 1.7365e-01    
+factor(c_gender)Male                                0.819765 4.1257e-01    
+factor(c_field)Argrawissenschaften                  0.816415 4.1449e-01    
+factor(c_field)Informatik                           1.800620 7.2109e-02 .  
+factor(c_field)kein Studium                         4.112852 4.2782e-05 ***
+factor(c_field)Mathematik                           1.039272 2.9897e-01    
+factor(c_field)Medizin                              0.812331 4.1682e-01    
+factor(c_field)Naturwissenschaften                  2.181051 2.9446e-02 *  
+factor(c_field)Politikwissenschaften                0.455801 6.4865e-01    
+factor(c_field)Psychologie                          0.287597 7.7372e-01    
+factor(c_field)Rechtswissenschaft                   0.463590 6.4306e-01    
+factor(c_field)Soziologie                           0.174247 8.6171e-01    
+factor(c_field)Sprach- und Literaturwissenschaften  0.829642 4.0697e-01    
+factor(c_field)Theologie                            0.514512 6.0702e-01    
+factor(c_field)VWL                                  1.045273 2.9619e-01    
+c_abitur                                            1.088132 2.7684e-01    
+c_math                                             -1.418933 1.5628e-01    
+c_abload                                            3.782005 1.6619e-04 ***
+c_abtask                                            5.608517 2.7405e-08 ***
+c_multi                                            -5.441616 6.8655e-08 ***
+factor(c_incent)20                                  2.242278 2.5194e-02 *  
+factor(c_incent)40                                  5.535640 4.1047e-08 ***
+factor(c_incent)Ample                              13.224400  < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.427505   Adj. R2: 0.069629
+OLS estimation, Dep. Var.: def_adh
+Observations: 17,840
+Standard-errors: Clustered (sid) 
+             Estimate Std. Error  t value  Pr(>|t|)    
+(Intercept)  0.485403   0.015758 30.80453 < 2.2e-16 ***
+interv      -0.157625   0.017209 -9.15931 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.479768   Adj. R2: 0.023396
+OLS estimation, Dep. Var.: def_adh
+Observations: 17,440
+Standard-errors: Clustered (sid) 
+                                                    Estimate Std. Error
+(Intercept)                                         0.486965   0.070281
+interv                                             -0.158605   0.015945
+c_age                                               0.001248   0.001476
+factor(c_gender)Male                               -0.000668   0.014368
+factor(c_field)Argrawissenschaften                 -0.067096   0.039753
+factor(c_field)Informatik                          -0.065100   0.029025
+factor(c_field)kein Studium                        -0.070812   0.033157
+factor(c_field)Mathematik                           0.026468   0.043344
+factor(c_field)Medizin                             -0.009215   0.036072
+factor(c_field)Naturwissenschaften                 -0.036486   0.023858
+factor(c_field)Politikwissenschaften                0.010681   0.053540
+factor(c_field)Psychologie                         -0.008182   0.042146
+factor(c_field)Rechtswissenschaft                  -0.016115   0.022400
+factor(c_field)Soziologie                           0.057380   0.109292
+factor(c_field)Sprach- und Literaturwissenschaften -0.038777   0.028690
+factor(c_field)Theologie                            0.023681   0.061713
+factor(c_field)VWL                                 -0.017198   0.025517
+c_abitur                                           -0.014956   0.015901
+c_math                                              0.006238   0.009104
+c_abload                                           -0.019207   0.040433
+c_abtask                                           -0.069360   0.048513
+c_multi                                             0.037666   0.009678
+factor(c_incent)20                                  0.008835   0.024550
+factor(c_incent)40                                 -0.070371   0.026134
+factor(c_incent)Ample                              -0.099297   0.013445
+                                                     t value   Pr(>|t|)    
+(Intercept)                                         6.928867 8.2473e-12 ***
+interv                                             -9.947287  < 2.2e-16 ***
+c_age                                               0.845384 3.9813e-01    
+factor(c_gender)Male                               -0.046463 9.6295e-01    
+factor(c_field)Argrawissenschaften                 -1.687814 9.1805e-02 .  
+factor(c_field)Informatik                          -2.242873 2.5156e-02 *  
+factor(c_field)kein Studium                        -2.135632 3.2988e-02 *  
+factor(c_field)Mathematik                           0.610659 5.4158e-01    
+factor(c_field)Medizin                             -0.255467 7.9842e-01    
+factor(c_field)Naturwissenschaften                 -1.529283 1.2656e-01    
+factor(c_field)Politikwissenschaften                0.199503 8.4192e-01    
+factor(c_field)Psychologie                         -0.194132 8.4612e-01    
+factor(c_field)Rechtswissenschaft                  -0.719418 4.7208e-01    
+factor(c_field)Soziologie                           0.525020 5.9970e-01    
+factor(c_field)Sprach- und Literaturwissenschaften -1.351565 1.7687e-01    
+factor(c_field)Theologie                            0.383724 7.0128e-01    
+factor(c_field)VWL                                 -0.673976 5.0051e-01    
+c_abitur                                           -0.940538 3.4720e-01    
+c_math                                              0.685224 4.9338e-01    
+c_abload                                           -0.475043 6.3488e-01    
+c_abtask                                           -1.429712 1.5316e-01    
+c_multi                                             3.892057 1.0698e-04 ***
+factor(c_incent)20                                  0.359889 7.1902e-01    
+factor(c_incent)40                                 -2.692722 7.2232e-03 ** 
+factor(c_incent)Ample                              -7.385557 3.5522e-13 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.474389   Adj. R2: 0.043642
+OLS estimation, Dep. Var.: def_adh
+Observations: 17,840
+Standard-errors: Clustered (sid) 
+             Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)  0.485403   0.015758  30.80367  < 2.2e-16 ***
+directed    -0.098736   0.019723  -5.00608 6.6947e-07 ***
+forced      -0.217716   0.016518 -13.18043  < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.477306   Adj. R2: 0.03334
+OLS estimation, Dep. Var.: background
+Observations: 17,840
+Standard-errors: Clustered (sid) 
+             Estimate Std. Error  t value  Pr(>|t|)    
+(Intercept)  0.829195   0.011237 73.78846 < 2.2e-16 ***
+interv      -0.018673   0.014101 -1.32421   0.18577    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.386763   Adj. R2: 4.623e-4
+OLS estimation, Dep. Var.: background
+Observations: 17,440
+Standard-errors: Clustered (sid) 
+                                                    Estimate Std. Error
+(Intercept)                                         0.642607   0.054827
+interv                                             -0.018690   0.010741
+c_age                                              -0.001275   0.001067
+factor(c_gender)Male                                0.003549   0.011353
+factor(c_field)Argrawissenschaften                 -0.046820   0.025794
+factor(c_field)Informatik                           0.014990   0.033316
+factor(c_field)kein Studium                        -0.080999   0.039911
+factor(c_field)Mathematik                           0.070645   0.023920
+factor(c_field)Medizin                             -0.046429   0.024961
+factor(c_field)Naturwissenschaften                 -0.035349   0.017725
+factor(c_field)Politikwissenschaften               -0.051545   0.037347
+factor(c_field)Psychologie                         -0.041230   0.023515
+factor(c_field)Rechtswissenschaft                  -0.023636   0.015524
+factor(c_field)Soziologie                          -0.040489   0.036579
+factor(c_field)Sprach- und Literaturwissenschaften -0.037760   0.024681
+factor(c_field)Theologie                           -0.091126   0.073038
+factor(c_field)VWL                                 -0.014911   0.015994
+c_abitur                                           -0.019214   0.009821
+c_math                                              0.000521   0.006533
+c_abload                                            0.400516   0.031822
+c_abtask                                           -0.027560   0.036468
+c_multi                                            -0.022282   0.006916
+factor(c_incent)20                                  0.001529   0.016248
+factor(c_incent)40                                 -0.084394   0.024293
+factor(c_incent)Ample                               0.200703   0.010138
+                                                     t value   Pr(>|t|)    
+(Intercept)                                        11.720609  < 2.2e-16 ***
+interv                                             -1.740053 0.08220294 .  
+c_age                                              -1.194470 0.23261922    
+factor(c_gender)Male                                0.312593 0.75466510    
+factor(c_field)Argrawissenschaften                 -1.815116 0.06984989 .  
+factor(c_field)Informatik                           0.449941 0.65286512    
+factor(c_field)kein Studium                        -2.029463 0.04271475 *  
+factor(c_field)Mathematik                           2.953387 0.00322758 ** 
+factor(c_field)Medizin                             -1.860043 0.06321638 .  
+factor(c_field)Naturwissenschaften                 -1.994272 0.04643371 *  
+factor(c_field)Politikwissenschaften               -1.380167 0.16788927    
+factor(c_field)Psychologie                         -1.753313 0.07989998 .  
+factor(c_field)Rechtswissenschaft                  -1.522553 0.12823357    
+factor(c_field)Soziologie                          -1.106915 0.26863637    
+factor(c_field)Sprach- und Literaturwissenschaften -1.529963 0.12638889    
+factor(c_field)Theologie                           -1.247652 0.21249371    
+factor(c_field)VWL                                 -0.932287 0.35144649    
+c_abitur                                           -1.956428 0.05073396 .  
+c_math                                              0.079732 0.93646884    
+c_abload                                           12.585994  < 2.2e-16 ***
+c_abtask                                           -0.755736 0.45001208    
+c_multi                                            -3.222038 0.00132008 ** 
+factor(c_incent)20                                  0.094116 0.92503873    
+factor(c_incent)40                                 -3.474068 0.00053791 ***
+factor(c_incent)Ample                              19.797020  < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.359896   Adj. R2: 0.131736
+OLS estimation, Dep. Var.: pshare
+Observations: 17,840
+Standard-errors: Clustered (sid) 
+            Estimate Std. Error   t value  Pr(>|t|)    
+(Intercept) 0.796046   0.009633 82.633401 < 2.2e-16 ***
+interv      0.006465   0.011953  0.540901   0.58871    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.317308   Adj. R2: 3.63e-5
+Online memory summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  0.4000  0.7000  0.6766  1.0000  1.0000 
+OLS estimation, Dep. Var.: mem
+Observations: 5,472
+Standard-errors: Clustered (sid) 
+             Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept)  0.733189   0.012437 58.95291  < 2.2e-16 ***
+interv      -0.114252   0.018804 -6.07602 2.1758e-09 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.320266   Adj. R2: 0.030655
+OLS estimation, Dep. Var.: mem
+Observations: 5,472
+Standard-errors: Clustered (sid) 
+               Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)    0.645764   0.059924 10.776425  < 2.2e-16 ***
+interv        -0.113364   0.017222 -6.582442 1.0019e-10 ***
+c_age         -0.005908   0.000807 -7.323134 7.7355e-13 ***
+c_genderMale   0.014502   0.017565  0.825620 4.0934e-01    
+c_genderOther  0.144616   0.075101  1.925621 5.4619e-02 .  
+c_h            0.000221   0.000071  3.138267 1.7819e-03 ** 
+c_w            0.000093   0.000037  2.526276 1.1781e-02 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.305952   Adj. R2: 0.114558
+RESULT:choice_quality_intervention_t2_col1=0.082992
+RESULT:choice_quality_intervention_t2_col2=0.085884
+RESULT:default_adherence_intervention_t2_col5=-0.157625
+RESULT:default_adherence_intervention_t2_col6=-0.158605
+RESULT:default_adherence_directed_attention_t2_col7=-0.098736
+RESULT:default_adherence_forced_choice_t2_col7=-0.217716
+RESULT:background_quality_intervention_lab_t3_col1=-0.018673
+RESULT:background_quality_intervention_lab_t3_col2=-0.018690
+RESULT:memory_intervention_online_t3_col5=-0.114252
+RESULT:payoff_share_intervention_t4_col1=0.006465
+RESULT:n_obs_lab_tables_2_to_4=17840
+RESULT:n_subjects_lab_tables_2_to_4=892
+RESULT:memory_intervention_online_t3_col6=-0.113364

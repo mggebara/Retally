@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "lopez-moctezuma-2022-policy-deliberation-philippines",
+  "mode": "blind",
+  "run_id": "2026-10-22-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Attendance-oversampling weights reconstructed from the paper's description: in barangays with town-hall attendance, self-reported attendees get weight att.prop/s_j and non-attendees (1-att.prop)/(1-s_j), where s_j is the survey attendee share in the barangay and att.prop the attendance-sheet share of registered voters (data_agg); all other respondents weight 1. Respondents with missing attendance treated as non-attendees for the weights.",
+    "Anderson (2008) indices built on all survey respondents with a non-missing city/barangay (control group = assignment 0), item weights from the inverse of the pairwise covariance matrix of the control-standardized items, averaged over available items, then re-standardized on the control group. Item orientation: poverty, gap, corruption reversed (6 - x) so higher = more agreement the issue is a main problem; cct as coded. Gender: equality and harassment as coded (5 = strongly disagree with a sexist statement), discrimination reversed (higher = agrees women miss out due to discrimination), femhouse and fempol as coded.",
+    "Individual regressions restricted to respondents with a valid party-list turnout answer (1,081 here vs 1,082 in the paper; one respondent lacks city/barangay). Vote outcomes (F.1) among party-list voters, unweighted, x100.",
+    "Barangay-level regressions use data_agg (39 barangays; Luisiana's San Diego/San Antonio is a single row) with the assignment variable as coded there."
+  ],
+  "notes": "Table 1: OLS of turnout.party / share.treated / share.akbayan / share.umalabka on assignment with city fixed effects (fixest), all 39 barangays or the 18 Akbayan / 21 Umalab Ka barangays. A within-city permutation p-value was printed for information only and not used for anything. SI C.3/C.4: weighted OLS of the poverty/gender Anderson indices on assignment with city FE, SEs clustered by barangay, by party-list municipality group. SI F.1: unweighted LPM of vote (x100) on assignment with city FE among respondents who voted in the party-list race. attempt-1 was an exploratory data-inspection run with no RESULT lines. Before attempt-1, a botched docker invocation ran on a not-yet-written script path (docker created an empty directory in its place, no R code executed); that empty directory was removed and is not counted as an attempt. Codebook PDFs in the data directory were read for variable definitions. Blind mode: no comparison to reported values was made.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T03:16:50Z",
+  "finished_at": "2026-10-22T03:20:33Z"
+}

@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "altmann-2022-cognitive-spillovers",
+  "mode": "independent",
+  "run_id": "2026-11-01-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was exploratory: it listed variables and labels and printed no RESULT lines. The final run is the first and only scored run. Lab sample: formatted_data_replication.dta with Treatment_Incentives != 4 (the scarce payoff schemes 10/20/40; 4 = Ample), all 3 environments, both waves: 12160 subject-rounds, 608 subjects. Outcomes: summation_correct (decision task), default_followed, load_correct (background task), payoff_share. Treatment: Treatment_intervention; col 7 uses Treatment_Environment==2 (Directed) and ==3 (Forced). Controls (picked from the claim descriptions before seeing any estimates): q_age, q_gender, subject_cat factor (field of study), q_abitur_grade_cat factor (GPA quartiles plus a missing category, so no rows are dropped), q_math_grade_cat factor, ability_load, ability_task, perc_multitasking_1 and _2, Treatment_Incentives factor, original_lab (wave). Online: formatted_data_long_mturk.dta, memory on Treatment_intervention; col 6 adds age, gender factor, window_height1 and window_width1 (screen size). All OLS via fixest with SEs clustered by subject_id. The paper.txt supplied is an earlier working-paper version (564 subjects, Active Choice, no online study), so I took the specifications from the claim descriptions. I read the dataset README.md (inside the mount); I opened no code files.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T04:26:57Z",
+  "finished_at": "2026-11-02T04:28:24Z"
+}

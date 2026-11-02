@@ -1,0 +1,39 @@
+lnarea >15 by Congress (diagnostic):
+     
+      FALSE TRUE
+  101  5687    0
+  102  5996    0
+  103  4967   42
+  104  4123   15
+  105  4647   14
+  106  5428   17
+  107  5527   22
+  108     0 5240
+  109     0 6157
+  110     0 7100
+  111     0 6352
+  [diag] ncosp all ols                                 b=1.4118 se=0.6312 n=60669
+  [diag] ncosp rep ols                                 b=2.3773 se=1.0313 n=27670
+  [diag] ncosp/rep CCT mserd bandwidth computed on bills: 17.79 (paper's bandwidth used: 13)
+  [diag] ncosp rep rd ipw (h=13)                       b=6.9867 se=3.9571 n=1287
+  [diag] ncosp rep ipw distr+mv+spons                  b=2.9205 se=1.0487 n=25641
+  [diag] pctopp dem ols                                b=-2.2720 se=0.7320 n=22712
+  [diag] pctopp/dem CCT mserd bandwidth computed on bills: 16.45 (paper's bandwidth used: 24)
+  [diag] pctopp dem rd (h=24)                          b=-5.1325 se=4.2352 n=1376
+  [diag] pctopp dem ipw distr+mv+spons                 b=-1.7515 se=0.8162 n=20257
+  [diag] pctopp rep ols                                b=4.4798 se=1.3366 n=18691
+  [diag] pctopp rep ipw distr+mv                       b=2.3146 se=1.1145 n=17601
+RESULT:female_sponsor_ncosponsors_all_ols=1.411834
+RESULT:female_sponsor_ncosponsors_rep_ols=2.377295
+RESULT:female_sponsor_ncosponsors_rep_rd_ipw=6.986735
+RESULT:female_sponsor_ncosponsors_rep_ipw_sponsor=2.920546
+RESULT:female_sponsor_pct_opposite_dem_ols=-2.271988
+RESULT:female_sponsor_pct_opposite_dem_rd=-5.132482
+RESULT:female_sponsor_pct_opposite_dem_ipw_sponsor=-1.751529
+RESULT:female_sponsor_pct_opposite_rep_ols=4.479791
+RESULT:female_sponsor_pct_opposite_rep_ipw_district=2.314599
+RESULT:n_bills_ncosponsors_all_ols=60669
+RESULT:n_sponsor_terms_ncosponsors_all_ols=4746
+RESULT:n_bills_pct_opposite_dem_ols=22712
+RESULT:n_bills_pct_opposite_rep_ols=18691
+DEVIATION: percent of opposite-party cosponsors uses the dataset's pct_cosponsors_opposite (opposite/cosponsors, sponsor not in denominator) x100; propensity scores are probit at bill level with ATE inverse-probability weights; RD bandwidths are the ones stated for these rows (13, 24) with a uniform kernel.

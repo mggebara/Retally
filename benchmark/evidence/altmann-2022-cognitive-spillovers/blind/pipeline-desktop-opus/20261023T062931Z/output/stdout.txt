@@ -1,0 +1,147 @@
+Lab columns:
+ [1] "payoff"                           "Attention"                       
+ [3] "load_correct"                     "round"                           
+ [5] "Treatment_Environment"            "default_followed"                
+ [7] "load_correct_mean"                "summation_correct_mean"          
+ [9] "summation_correct"                "default_followed_mean"           
+[11] "attention_mean"                   "attention_positive_mean"         
+[13] "default_correct_choice"           "diff_choice_second"              
+[15] "ability_load"                     "ability_task"                    
+[17] "q_age"                            "q_gender"                        
+[19] "q_subject"                        "q_degree"                        
+[21] "q_abitur_year"                    "q_abitur_grade"                  
+[23] "q_math_grade"                     "perc_multitasking_1"             
+[25] "perc_multitasking_2"              "risk"                            
+[27] "perc_multitasking_1_easy"         "raven_score"                     
+[29] "no_attention"                     "subject_id"                      
+[31] "original_lab"                     "Treatment_intervention"          
+[33] "payoff_share_mean"                "payoff_share"                    
+[35] "default_followed_correct_mean"    "raven_score_quartiles"           
+[37] "raven_score_median"               "high_task_difficulty"            
+[39] "subject_cat"                      "q_abitur_grade_quartile"         
+[41] "q_abitur_grade_cat"               "q_math_grade_cat"                
+[43] "Treatment_Incentives"             "Treatment_Incentives_Baseline_sc"
+[45] "Treatment_Incentives_Int_sc"      "economist"                       
+load_correct labels: Not correct=0; Load correct=1 
+Treatment_Environment labels: \textsc{Baseline}=1; \textsc{Directed Attention}=2; \textsc{Forced Choice}=3; \textsc{Baseline-8}=4; \textsc{High Qual.}=5 
+default_followed labels: Not Followed=0; Followed Default=1 
+summation_correct labels: Not correct=0; Math task correct=1 
+default_correct_choice labels: Default incorrect=0; Default correct=1 
+q_gender labels: Male=0; Female=1 
+perc_multitasking_1_easy labels: Multitasking hard=0; Multitasking Easy=1 
+original_lab labels: Revision=0; Original Lab=1 
+Treatment_intervention labels: Baseline=0; \textsc{Intervention}=1 
+raven_score_quartiles labels: Very Low Raven=1; Low Raven=2; High Raven=3; Very High Raven=4 
+raven_score_median labels: Low Raven=1; High Raven=2 
+high_task_difficulty labels: Low Difficulty=0; High Difficulty=1 
+subject_cat labels: Others=0; Law=1; Economics=2; Sciences=3 
+Treatment_Incentives labels: 10=1; 20=2; 40=3; Ample=4 
+Treatment_Incentives_Baseline_sc labels: \textsc{Baseline-10}=1; \textsc{Baseline-20}=2; \textsc{Baseline-40}=3; \textsc{Baseline-Ample}=4 
+Treatment_Incentives_Int_sc labels: \textsc{Incentives-10}=1; \textsc{Incentives-20}=2; \textsc{Incentives-40}=3; \textsc{Incentives-Ample}=4 
+Environment values:
+env_raw
+          \\textsc{baseline} \\textsc{directed attention} 
+                        5960                         6000 
+     \\textsc{forced choice} 
+                        5880 
+Intervention x env:
+          
+              0    1
+  Baseline 5960    0
+  Directed    0 6000
+  Forced      0 5880
+Load candidates:  
+No load variable identified; using all rows with non-missing intervention and environment
+Sample rows: 17840  subjects: 892 
+Passive candidates: default_followed, default_followed_mean, default_followed_correct_mean 
+Controls used: c_q_age, f_q_gender, f_q_subject, c_q_abitur_grade, c_q_math_grade, c_ability_load, c_ability_task, c_perc_multitasking_1, f_Treatment_Incentives, f_Treatment_Incentives_Baseline_sc, f_Treatment_Incentives_Int_sc 
+OLS estimation, Dep. Var.: dec_correct
+Observations: 17,840
+Standard-errors: Clustered (subject_id) 
+            Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept) 0.673658   0.012874 52.32757  < 2.2e-16 ***
+interv      0.082992   0.015077  5.50458 4.8399e-08 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.442788   Adj. R2: 0.007699
+Error: object 'Baseline' not found 
+OLS estimation, Dep. Var.: passive
+Observations: 17,840
+Standard-errors: Clustered (subject_id) 
+             Estimate Std. Error  t value  Pr(>|t|)    
+(Intercept)  0.485403   0.015758 30.80453 < 2.2e-16 ***
+interv      -0.157625   0.017209 -9.15931 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.479768   Adj. R2: 0.023396
+Error: object 'Baseline' not found 
+OLS estimation, Dep. Var.: passive
+Observations: 17,840
+Standard-errors: Clustered (subject_id) 
+             Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)  0.485403   0.015758  30.80367  < 2.2e-16 ***
+directed    -0.098736   0.019723  -5.00608 6.6947e-07 ***
+forced      -0.217716   0.016518 -13.18043  < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.477306   Adj. R2: 0.03334
+OLS estimation, Dep. Var.: bg_correct
+Observations: 17,840
+Standard-errors: Clustered (subject_id) 
+             Estimate Std. Error  t value  Pr(>|t|)    
+(Intercept)  0.829195   0.011237 73.78846 < 2.2e-16 ***
+interv      -0.018673   0.014101 -1.32421   0.18577    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.386763   Adj. R2: 4.623e-4
+Error: object 'Baseline' not found 
+OLS estimation, Dep. Var.: pshare
+Observations: 17,840
+Standard-errors: Clustered (subject_id) 
+            Estimate Std. Error   t value  Pr(>|t|)    
+(Intercept) 0.796046   0.009633 82.633401 < 2.2e-16 ***
+interv      0.006465   0.011953  0.540901   0.58871    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.317308   Adj. R2: 3.63e-5
+MTurk columns:
+ [1] "round"                  "age"                    "window_height1"        
+ [4] "window_width1"          "math_task_correct"      "memory"                
+ [7] "math_time"              "subject_id"             "gender"                
+[10] "Treatment_intervention" "passive_choice"         "payoff_share"          
+OLS estimation, Dep. Var.: mem
+Observations: 5,472
+Standard-errors: Clustered (subject_id) 
+             Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept)  0.733189   0.012437 58.95291  < 2.2e-16 ***
+interv      -0.114252   0.018804 -6.07602 2.1758e-09 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.320266   Adj. R2: 0.030655
+OLS estimation, Dep. Var.: mem
+Observations: 5,472
+Standard-errors: Clustered (subject_id) 
+               Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)    0.645764   0.059924 10.776425  < 2.2e-16 ***
+interv        -0.113364   0.017222 -6.582442 1.0019e-10 ***
+age_c         -0.005908   0.000807 -7.323134 7.7355e-13 ***
+gender_fMale   0.014502   0.017565  0.825620 4.0934e-01    
+gender_fOther  0.144616   0.075101  1.925621 5.4619e-02 .  
+wh             0.000221   0.000071  3.138267 1.7819e-03 ** 
+ww             0.000093   0.000037  2.526276 1.1781e-02 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.305952   Adj. R2: 0.114558
+RESULT:choice_quality_intervention_t2_col1=0.08299211353
+RESULT:choice_quality_intervention_t2_col2=NA
+RESULT:default_adherence_intervention_t2_col5=-0.1576249068
+RESULT:default_adherence_intervention_t2_col6=NA
+RESULT:default_adherence_directed_attention_t2_col7=-0.0987360179
+RESULT:default_adherence_forced_choice_t2_col7=-0.2177156097
+RESULT:background_quality_intervention_lab_t3_col1=-0.01867274535
+RESULT:background_quality_intervention_lab_t3_col2=NA
+RESULT:memory_intervention_online_t3_col5=-0.1142516852
+RESULT:payoff_share_intervention_t4_col1=0.006465361013
+RESULT:n_obs_lab_tables_2_to_4=17840
+RESULT:n_subjects_lab_tables_2_to_4=892
+RESULT:memory_intervention_online_t3_col6=-0.1133638374

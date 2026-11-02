@@ -1,0 +1,668 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "study1_us_black_perceived_violence",
+      "ground_truth": {
+        "value": 0.235,
+        "standard_error": 0.117,
+        "unit": "points on a 0-10 scale",
+        "claim_type": "coefficient",
+        "location": "Table 1, Panel (A) US Sample, Black protesters, Perceived degree of violence",
+        "context": "Table 1 (\"Group Identity and Protest Tactic\"), Panel (A) U.S. sample, row Black protesters, column Perceived degree of violence. Study 1 online survey experiment (U.S., three waves, November 2018-January 2019): respondents read a simulated news article about a protest with the protesters' identity randomized (white vs Black, signaled by names and a photo) and the tactic randomized (marching in streets, shutting down traffic, destroying police cars), a 2 x 3 factorial design.  Outcome: how violent the respondent would say the protest was, 0 (completely nonviolent) to 10 (extremely violent).  OLS of the outcome on an indicator for Black protesters and indicators for the two more intense tactics; base category white protesters marching in the streets.  The paper's supplementary information (Section 3) states that Study 1 oversampled Black Americans and Arab Israelis and that sample weights correct for this; the Study 1 estimates are weighted.\n",
+        "decimals": 3,
+        "sample_size": 2269
+      },
+      "i4r": {
+        "reproduced_value": 0.235,
+        "outcome": "matches",
+        "notes": "DP86 s.3.2, Table 1 reproduces exactly; meta-database rows for this cell are re-weighting variants (0.137 unweighted, 0.199 new weights).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.49787234042553197,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "study1_us_black_perceived_violence",
+        "claim_type": "coefficient",
+        "claimed": 0.235,
+        "reproduced": 0.235246,
+        "tolerance": 0.49787234042553197,
+        "rel_err": 0.0010468085106384,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "study1_us_black_perceived_violence",
+        "reproduced": 0.235246,
+        "band_source": "se_band",
+        "band_relative": 0.49787234042553197,
+        "band_absolute": 0.117,
+        "abs_err": 0.000246000000000024,
+        "rel_err": 0.0010468085106384,
+        "margin": 0.002102564102564307,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "study1_us_black_police_action",
+      "ground_truth": {
+        "value": 0.268,
+        "standard_error": 0.127,
+        "unit": "points on a 0-10 scale",
+        "claim_type": "coefficient",
+        "location": "Table 1, Panel (A) US Sample, Black protesters, Police action required",
+        "context": "Table 1, Panel (A) U.S. sample, row Black protesters, column Police action required.  Same Study 1 U.S. design and OLS specification as study1_us_black_perceived_violence (Black protester indicator plus tactic indicators; base white protesters marching in the streets; weighted), with the outcome the respondent's view, 0-10, of the extent to which police action is required to address the protest.\n",
+        "decimals": 3,
+        "sample_size": 2269
+      },
+      "i4r": {
+        "reproduced_value": 0.268,
+        "outcome": "matches",
+        "notes": "DP86 s.3.2, Table 1 reproduces exactly; re-weighting rows 0.171 / 0.212 not transcribed.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.47388059701492535,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "study1_us_black_police_action",
+        "claim_type": "coefficient",
+        "claimed": 0.268,
+        "reproduced": 0.26801,
+        "tolerance": 0.47388059701492535,
+        "rel_err": 3.731343283585821e-05,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "study1_us_black_police_action",
+        "reproduced": 0.26801,
+        "band_source": "se_band",
+        "band_relative": 0.47388059701492535,
+        "band_absolute": 0.127,
+        "abs_err": 1.0000000000010001e-05,
+        "rel_err": 3.731343283585821e-05,
+        "margin": 7.874015748039371e-05,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "study1_israel_ethiopian_perceived_violence",
+      "ground_truth": {
+        "value": 0.425,
+        "standard_error": 0.107,
+        "unit": "points on a 0-10 scale",
+        "claim_type": "coefficient",
+        "location": "Table 1, Panel (B) Israel Sample, Ethiopian protesters, Perceived degree of violence",
+        "context": "Table 1, Panel (B) Israel sample, row Ethiopian protesters, column Perceived degree of violence.  Study 1 Israeli survey (two waves, February-March 2019): protester identity randomized among white Jews (majority), Ethiopian Jews and Israeli Arabs (minorities), noted in the article title, and tactic among marching in streets, shutting down traffic and destroying garbage cans (3 x 3 design). Outcome: perceived violence of the protest, 0-10.  OLS on indicators for Ethiopian and Arab protesters and the two more intense tactics; base white protesters marching in the streets; weighted (see study1_us_black_perceived_violence).\n",
+        "decimals": 3,
+        "sample_size": 3063
+      },
+      "i4r": {
+        "reproduced_value": 0.425,
+        "outcome": "matches",
+        "notes": "DP86 s.3.2, Table 1 reproduces exactly; re-weighting rows 0.426 / 0.332 not transcribed.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.25176470588235295,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "study1_israel_ethiopian_perceived_violence",
+        "claim_type": "coefficient",
+        "claimed": 0.425,
+        "reproduced": 0.407652,
+        "tolerance": 0.25176470588235295,
+        "rel_err": 0.040818823529411706,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "study1_israel_ethiopian_perceived_violence",
+        "reproduced": 0.407652,
+        "band_source": "se_band",
+        "band_relative": 0.25176470588235295,
+        "band_absolute": 0.107,
+        "abs_err": 0.017347999999999975,
+        "rel_err": 0.040818823529411706,
+        "margin": 0.1621308411214951,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "study1_israel_ethiopian_police_action",
+      "ground_truth": {
+        "value": 0.181,
+        "standard_error": 0.118,
+        "unit": "points on a 0-10 scale",
+        "claim_type": "coefficient",
+        "location": "Table 1, Panel (B) Israel Sample, Ethiopian protesters, Police action required",
+        "context": "Table 1, Panel (B) Israel sample, row Ethiopian protesters, column Police action required (0-10).  Same Study 1 Israeli specification as study1_israel_ethiopian_perceived_violence.\n",
+        "decimals": 3,
+        "sample_size": 3063
+      },
+      "i4r": {
+        "reproduced_value": 0.181,
+        "outcome": "matches",
+        "notes": "DP86 s.3.2, Table 1 reproduces exactly; re-weighting rows 0.165 / 0.095 not transcribed.",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.6519337016574586,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "study1_israel_ethiopian_police_action",
+        "claim_type": "coefficient",
+        "claimed": 0.181,
+        "reproduced": 0.872614,
+        "tolerance": 0.6519337016574586,
+        "rel_err": 3.8210718232044196,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "study1_israel_ethiopian_police_action",
+        "reproduced": 0.872614,
+        "band_source": "se_band",
+        "band_relative": 0.6519337016574586,
+        "band_absolute": 0.118,
+        "abs_err": 0.691614,
+        "rel_err": 3.8210718232044196,
+        "margin": 5.861135593220339,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=0.872614 vs claimed=0.181 (relative error 382.11%, tolerance 65.19%, the ±1·SE band with SE=0.118)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "study1_israel_arab_perceived_violence",
+      "ground_truth": {
+        "value": 0.623,
+        "standard_error": 0.108,
+        "unit": "points on a 0-10 scale",
+        "claim_type": "coefficient",
+        "location": "Table 1, Panel (B) Israel Sample, Arab protesters, Perceived degree of violence",
+        "context": "Table 1, Panel (B) Israel sample, row Arab protesters, column Perceived degree of violence (0-10).  Same Study 1 Israeli specification as study1_israel_ethiopian_perceived_violence; this is the coefficient on the Arab protester indicator.\n",
+        "decimals": 3,
+        "sample_size": 3063
+      },
+      "i4r": {
+        "reproduced_value": 0.623,
+        "outcome": "matches",
+        "notes": "DP86 s.3.2, Table 1 reproduces exactly; re-weighting rows 0.584 / 0.496 not transcribed."
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.17335473515248795,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "study1_israel_arab_perceived_violence",
+        "claim_type": "coefficient",
+        "claimed": 0.623,
+        "reproduced": null,
+        "tolerance": 0.17335473515248795,
+        "rel_err": null,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": null,
+        "reproduced": null,
+        "band_source": "se_band",
+        "band_relative": 0.17335473515248795,
+        "band_absolute": 0.10799999999999998,
+        "abs_err": null,
+        "rel_err": null,
+        "margin": null,
+        "passed": false,
+        "notes": "No reproduced value available."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "study1_israel_arab_police_action",
+      "ground_truth": {
+        "value": 0.964,
+        "standard_error": 0.119,
+        "unit": "points on a 0-10 scale",
+        "claim_type": "coefficient",
+        "location": "Table 1, Panel (B) Israel Sample, Arab protesters, Police action required",
+        "context": "Table 1, Panel (B) Israel sample, row Arab protesters, column Police action required (0-10).  Same Study 1 Israeli specification as study1_israel_ethiopian_perceived_violence.\n",
+        "decimals": 3,
+        "sample_size": 3063
+      },
+      "i4r": {
+        "reproduced_value": 0.964,
+        "outcome": "matches",
+        "notes": "DP86 s.3.2, Table 1 reproduces exactly; re-weighting rows 0.890 / 0.887 not transcribed."
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.12344398340248962,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "study1_israel_arab_police_action",
+        "claim_type": "coefficient",
+        "claimed": 0.964,
+        "reproduced": null,
+        "tolerance": 0.12344398340248962,
+        "rel_err": null,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": null,
+        "reproduced": null,
+        "band_source": "se_band",
+        "band_relative": 0.12344398340248962,
+        "band_absolute": 0.119,
+        "abs_err": null,
+        "rel_err": null,
+        "margin": null,
+        "passed": false,
+        "notes": "No reproduced value available."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "study2_us_black_perceived_violence",
+      "ground_truth": {
+        "value": 0.347,
+        "standard_error": 0.115,
+        "unit": "points on a 0-10 scale",
+        "claim_type": "coefficient",
+        "location": "Table 2, Panel (A) US Sample, Black protesters, Perceived degree of violence",
+        "context": "Table 2 (\"Group Identity, Protest Goal, and Commitment to Nonviolence\"), Panel (A) U.S. sample, row Black protesters, column Perceived degree of violence.  Study 2 online survey experiment (U.S., June 2020): a 2 x 2 x 2 factorial vignette design randomizing protester identity (white vs Black), protest goal (general: protesting layoffs; group-based: protesting racial prejudice and police brutality) and whether protesters explicitly stated a commitment to nonviolence.  Outcome: perceived violence, 0-10.  OLS of the outcome on indicators for Black protesters, minority group goal and commitment to nonviolence; base white protesters, generic goal, no commitment.  The paper does not describe weights for Study 2.\n",
+        "decimals": 3,
+        "sample_size": 3013
+      },
+      "i4r": {
+        "reproduced_value": 0.347,
+        "outcome": "matches",
+        "notes": "DP86 s.4.1, Table 2 replicates perfectly; new-weights row 0.247 not transcribed.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.33141210374639773,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "study2_us_black_perceived_violence",
+        "claim_type": "coefficient",
+        "claimed": 0.347,
+        "reproduced": 0.346652,
+        "tolerance": 0.33141210374639773,
+        "rel_err": 0.0010028818443802868,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "study2_us_black_perceived_violence",
+        "reproduced": 0.346652,
+        "band_source": "se_band",
+        "band_relative": 0.33141210374639773,
+        "band_absolute": 0.115,
+        "abs_err": 0.00034799999999995945,
+        "rel_err": 0.0010028818443802868,
+        "margin": 0.0030260869565213863,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "study2_us_black_police_action",
+      "ground_truth": {
+        "value": 0.429,
+        "standard_error": 0.114,
+        "unit": "points on a 0-10 scale",
+        "claim_type": "coefficient",
+        "location": "Table 2, Panel (A) US Sample, Black protesters, Police action required",
+        "context": "Table 2, Panel (A) U.S. sample, row Black protesters, column Police action required (0-10).  Same Study 2 U.S. specification as study2_us_black_perceived_violence; Table 2 reports slightly fewer observations for this column than for the other two (respondents missing this outcome are dropped).\n",
+        "decimals": 3,
+        "sample_size": 3008
+      },
+      "i4r": {
+        "reproduced_value": 0.429,
+        "outcome": "matches",
+        "notes": "DP86 s.4.1, Table 2 replicates perfectly; new-weights row 0.440 not transcribed.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.26573426573426573,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "study2_us_black_police_action",
+        "claim_type": "coefficient",
+        "claimed": 0.429,
+        "reproduced": 0.42873,
+        "tolerance": 0.26573426573426573,
+        "rel_err": 0.0006293706293706118,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "study2_us_black_police_action",
+        "reproduced": 0.42873,
+        "band_source": "se_band",
+        "band_relative": 0.26573426573426573,
+        "band_absolute": 0.11399999999999999,
+        "abs_err": 0.00026999999999999247,
+        "rel_err": 0.0006293706293706118,
+        "margin": 0.002368421052631513,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "respondents_study1_us",
+      "ground_truth": {
+        "value": 2269.0,
+        "standard_error": null,
+        "unit": "respondents",
+        "claim_type": "other",
+        "location": "Research Design (text); Table 1, Panel (A), Observations",
+        "context": "Study 1 U.S. sample size: respondents to the U.S. survey experiment, the observations in each Table 1 Panel (A) regression.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 2269.0,
+        "outcome": "matches",
+        "notes": "DP86 s.3.2 (Table 1 exact); value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "respondents_study1_us",
+        "claim_type": "other",
+        "claimed": 2269.0,
+        "reproduced": 2269.0,
+        "tolerance": 0.01,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "respondents_study1_us",
+        "reproduced": 2269.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 22.69,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "respondents_study1_israel",
+      "ground_truth": {
+        "value": 3063.0,
+        "standard_error": null,
+        "unit": "respondents",
+        "claim_type": "other",
+        "location": "Research Design (text); Table 1, Panel (B), Observations",
+        "context": "Study 1 Israeli sample size: respondents to the Israeli survey experiment, the observations in each Table 1 Panel (B) regression.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 3063.0,
+        "outcome": "matches",
+        "notes": "DP86 s.3.2 (Table 1 exact); value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "respondents_study1_israel",
+        "claim_type": "other",
+        "claimed": 3063.0,
+        "reproduced": 3063.0,
+        "tolerance": 0.01,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "respondents_study1_israel",
+        "reproduced": 3063.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 30.63,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "respondents_study2_us",
+      "ground_truth": {
+        "value": 3013.0,
+        "standard_error": null,
+        "unit": "respondents",
+        "claim_type": "other",
+        "location": "Research Design (text); Table 2, Panel (A), Observations",
+        "context": "Study 2 U.S. sample size: respondents to the June 2020 U.S. survey experiment, the observations in the Table 2 Panel (A) perceived violence and recall regressions.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 3013.0,
+        "outcome": "matches",
+        "notes": "DP86 s.4.1 (Table 2 exact); value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "respondents_study2_us",
+        "claim_type": "other",
+        "claimed": 3013.0,
+        "reproduced": 3013.0,
+        "tolerance": 0.01,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "respondents_study2_us",
+        "reproduced": 3013.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 30.13,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "respondents_study2_israel",
+      "ground_truth": {
+        "value": 3465.0,
+        "standard_error": null,
+        "unit": "respondents",
+        "claim_type": "other",
+        "location": "Research Design (text); Table 2, Panel (B), Observations",
+        "context": "Study 2 Israeli sample size: respondents to the June 2020 Israeli survey experiment, the observations in each Table 2 Panel (B) regression.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 3465.0,
+        "outcome": "matches",
+        "notes": "DP86 s.4.1 (Table 2 exact); value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "respondents_study2_israel",
+        "claim_type": "other",
+        "claimed": 3465.0,
+        "reproduced": 3465.0,
+        "tolerance": 0.01,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "respondents_study2_israel",
+        "reproduced": 3465.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 34.65,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 12,
+    "row_passed": 9,
+    "recomputed_passed": 9,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "manekin-2022-effective-for-whom",
+    "mode": "blind",
+    "reproducer": "pipeline",
+    "label": "pipeline-desktop-opus-run2",
+    "model": "desktop-opus-run2",
+    "oracle": true,
+    "run": "20261023T150832Z",
+    "results_file": "pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/manekin-2022-effective-for-whom/blind/pipeline/20261023T150832Z",
+    "run_dir": null,
+    "date": "2026-10-23T15:08:32Z",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 12,
+    "final": 9,
+    "first_scored": 9,
+    "first_scored_index": 0,
+    "first_attempt": 9,
+    "n_refinements": 0,
+    "n_error_refinements": 0,
+    "n_claim_refinements": 0,
+    "n_executions": 1,
+    "n_files_stripped": 96,
+    "agrees_with_i4r": false,
+    "deviations_manifest": [],
+    "deviations_stdout": [],
+    "notes": null,
+    "files_read_outside_mount": null,
+    "paper_text": null,
+    "complete": true,
+    "missing": []
+  }
+}

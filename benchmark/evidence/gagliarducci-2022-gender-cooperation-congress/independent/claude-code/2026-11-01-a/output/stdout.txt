@@ -1,0 +1,32 @@
+pct_opp > 100 set NA: 1 
+occ row sums:
+
+    1 
+60780 
+OLS all numb_cosponsors                    b=   1.384 se=  0.630 n= 60669 sponsors= 4741
+OLS all pct_opp                            b=   0.108 se=  0.638 n= 60668 sponsors= 4741
+OLS dem numb_cosponsors                    b=   1.144 se=  0.746 n= 32846 sponsors= 2494
+OLS dem pct_opp                            b=  -1.784 se=  0.579 n= 32846 sponsors= 2494
+OLS rep numb_cosponsors                    b=   2.398 se=  1.039 n= 27670 sponsors= 2246
+OLS rep pct_opp                            b=   4.178 se=  1.153 n= 27669 sponsors= 2246
+RD dem pct_opp: CCT bandwidth computed=24.98, paper=24
+RD dem pct_opp                             b=  -2.410 se=  3.007 n=  1962 sponsors=  166
+RD rep numb_cosponsors: CCT bandwidth computed=17.79, paper=13
+RD-IPW rep numb_cosponsors                 b=   5.867 se=  3.810 n=  1261 sponsors=  105
+PS distr+MV rep pct_opp                    b=   2.781 se=  0.977 n= 26087 sponsors= 2122
+PS distr+MV+spons rep numb_cosponsors      b=   2.227 se=  0.988 n= 25641 sponsors= 2093
+PS distr+MV+spons dem pct_opp              b=  -1.342 se=  0.687 n= 29363 sponsors= 2267
+RESULT:female_sponsor_ncosponsors_all_ols=1.3840
+RESULT:female_sponsor_ncosponsors_rep_ols=2.3978
+RESULT:female_sponsor_ncosponsors_rep_rd_ipw=5.8671
+RESULT:female_sponsor_ncosponsors_rep_ipw_sponsor=2.2269
+RESULT:female_sponsor_pct_opposite_dem_ols=-1.7838
+RESULT:female_sponsor_pct_opposite_dem_rd=-2.4100
+RESULT:female_sponsor_pct_opposite_dem_ipw_sponsor=-1.3425
+RESULT:female_sponsor_pct_opposite_rep_ols=4.1782
+RESULT:female_sponsor_pct_opposite_rep_ipw_district=2.7814
+RESULT:n_bills_ncosponsors_all_ols=60669
+RESULT:n_sponsor_terms_ncosponsors_all_ols=4741
+RESULT:n_bills_pct_opposite_dem_ols=32846
+RESULT:n_bills_pct_opposite_rep_ols=27669
+DEVIATION: RD bandwidths fixed at the paper-reported CCT optimal bandwidths (CCT bandwidths recomputed and printed for reference)

@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "entry_id": "carrera-2022-who-chooses-commitment",
+  "mode": "blind",
+  "run_id": "2026-11-02-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Subject identifier for clustering in Table 4 is the participant row in cleaned_commitment_study_data.dta (one row per participant; no id column in that file)."
+  ],
+  "notes": "attempt-1 was exploratory (variable listing, no RESULT lines). Final: participant-level data; dropped the 44 endogenous-assignment cases (flag_exclude_exog, flag_low_wtp) and wave-3 participants assigned the $80/12-visit contract, leaving N=1126. Conservative BCP = per-participant mean over pairs (1,2),(2,3),(3,5),(5,7),(7,12) of [wtp(q)-wtp(p)]/(q-p) - [days_p+days_q]/2. Goal gap = goal - days_0; actual gap = visits - days_{assigned incentive}; z-scored on the regression sample. Table 3: OLS on basic (wave 1 graph) and enhanced (waves 2-3) info dummies + wave FE, HC1 SEs. Table 4: stacked 'more' choices (q169==2 for >=8, chose_commit12 for >=12, q295==2 for >=16; waves 1-2 all three thresholds, wave 3 only 12), wave + threshold FE, SEs clustered by participant; N=2824. Sanity checks against values the paper reports as definitions (goal-gap mean 3.34/SD 3.64, actual-gap SD 6.61, info-control BCP mean 0.66, take-up 64/49/32%) matched; nothing was tuned.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T05:48:00Z",
+  "finished_at": "2026-11-02T05:52:30Z"
+}

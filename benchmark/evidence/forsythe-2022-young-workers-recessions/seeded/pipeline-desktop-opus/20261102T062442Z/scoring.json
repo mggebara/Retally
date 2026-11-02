@@ -1,0 +1,722 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "young_x_unemp_rate_no_controls",
+      "ground_truth": {
+        "value": -0.335,
+        "standard_error": 0.0203,
+        "unit": "percentage points of the monthly hiring probability per percentage point of state unemployment",
+        "claim_type": "coefficient",
+        "location": "Table 1, Panel B, column (1), PE <= 10 x U. Rate",
+        "context": "Table 1 (\"Hiring Over the Business Cycle: With and Without Controls\"), Panel B, column (1), row PE <= 10 x U. Rate.  Linear probability model (Equation 1 of the paper) of an indicator equal to 100 if the individual is hired in month t — begins a job at a new firm, either from non-employment in month t-1 or, if employed in t-1, reporting a change of employer since last month; new jobs classified as self-employment are not hires — on an indicator for potential experience (age minus years of education minus six) of at most ten years, and the state monthly unemployment rate interacted with each of the two potential-experience groups (at most ten years; more than ten years), with no main effect of the unemployment rate.  Column (1) has no fixed effects.  Sample: the matched monthly CPS panel, January 1994 to September 2016 (pairs of consecutive months matched on administrative IDs and confirmed on sex, race and age, following Madrian and Lefgren; May-August 1995 and month pairs spanning the eight-month sampling break excluded), civilians over 16 with non-missing age and education, all labour-force statuses in t-1.  Weighted by the average of the two months' CPS sampling weights; standard errors clustered by state (51 including DC).  The coefficient is the young workers' hiring response to one percentage point of state unemployment.\n",
+        "decimals": 3,
+        "sample_size": 16948516
+      },
+      "i4r": {
+        "reproduced_value": -0.343,
+        "outcome": "matches",
+        "notes": "DP 163 Table 1 Panel B col 1, -0.343 (0.0171).",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "young_x_unemp_rate_no_controls",
+        "claim_type": "coefficient",
+        "claimed": -0.335,
+        "reproduced": -0.335031,
+        "tolerance": 0.02,
+        "rel_err": 9.253731343284551e-05,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "young_x_unemp_rate_no_controls",
+        "reproduced": -0.335031,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.0067,
+        "abs_err": 3.100000000000325e-05,
+        "rel_err": 9.253731343284551e-05,
+        "margin": 0.004626865671642276,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "experienced_x_unemp_rate_no_controls",
+      "ground_truth": {
+        "value": -0.0367,
+        "standard_error": 0.0131,
+        "unit": "percentage points of the monthly hiring probability per percentage point of state unemployment",
+        "claim_type": "coefficient",
+        "location": "Table 1, Panel B, column (1), PE > 10 x U. Rate",
+        "context": "Table 1, Panel B, column (1), row PE > 10 x U. Rate: the experienced workers' (more than ten years of potential experience) hiring response in the same regression as young_x_unemp_rate_no_controls (no fixed effects, CPS weights, state-clustered standard errors).\n",
+        "decimals": 4,
+        "sample_size": 16948516
+      },
+      "i4r": {
+        "reproduced_value": -0.0407,
+        "outcome": "matches",
+        "notes": "DP 163 Table 1 Panel B col 1, -0.0407 (0.0122); meta-database records the paper's value as -0.367 (a dropped zero).",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 5e-05
+      },
+      "row": {
+        "description": "experienced_x_unemp_rate_no_controls",
+        "claim_type": "coefficient",
+        "claimed": -0.0367,
+        "reproduced": -0.036675,
+        "tolerance": 0.02,
+        "rel_err": 0.0006811989100818579,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "experienced_x_unemp_rate_no_controls",
+        "reproduced": -0.036675,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.0007340000000000001,
+        "abs_err": 2.5000000000004186e-05,
+        "rel_err": 0.0006811989100818579,
+        "margin": 0.034059945504092894,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "young_x_unemp_rate_preferred",
+      "ground_truth": {
+        "value": -0.253,
+        "standard_error": 0.0185,
+        "unit": "percentage points of the monthly hiring probability per percentage point of state unemployment",
+        "claim_type": "coefficient",
+        "location": "Table 1, Panel B, column (4), PE <= 10 x U. Rate (also Table 2, column (1))",
+        "context": "Table 1, Panel B, column (4) — the paper's preferred specification, reprinted as Table 2, column (1) (sample: All) — row PE <= 10 x U. Rate.  Same regression as young_x_unemp_rate_no_controls with state fixed effects, demographic fixed effects (indicators for every combination of gender, white / non-white, Hispanic descent and seven education levels: less than high school, high school, some college, four-year college, master's, professional degree, PhD) and month-year fixed effects.  CPS weights; standard errors clustered by state.\n",
+        "decimals": 3,
+        "sample_size": 16948516
+      },
+      "i4r": {
+        "reproduced_value": -0.244,
+        "outcome": "matches",
+        "notes": "DP 163 Table 1 Panel B col 4 / Table 2 col 1, -0.244 (0.0163).",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "young_x_unemp_rate_preferred",
+        "claim_type": "coefficient",
+        "claimed": -0.253,
+        "reproduced": -0.253253,
+        "tolerance": 0.02,
+        "rel_err": 0.0010000000000000128,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "young_x_unemp_rate_preferred",
+        "reproduced": -0.253253,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.00506,
+        "abs_err": 0.0002530000000000032,
+        "rel_err": 0.0010000000000000128,
+        "margin": 0.050000000000000634,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "experienced_x_unemp_rate_preferred",
+      "ground_truth": {
+        "value": 0.0496,
+        "standard_error": 0.0142,
+        "unit": "percentage points of the monthly hiring probability per percentage point of state unemployment",
+        "claim_type": "coefficient",
+        "location": "Table 1, Panel B, column (4), PE > 10 x U. Rate (also Table 2, column (1))",
+        "context": "Table 1, Panel B, column (4) (= Table 2, column (1)), row PE > 10 x U. Rate: the experienced workers' hiring response in the preferred specification (state, demographic and month-year fixed effects), the same regression as young_x_unemp_rate_preferred.  Positive and significant in the paper.\n",
+        "decimals": 4,
+        "sample_size": 16948516
+      },
+      "i4r": {
+        "reproduced_value": 0.0616,
+        "outcome": "matches",
+        "notes": "DP 163 Table 1 Panel B col 4 / Table 2 col 1, 0.0616 (0.0126); within one paper SE, significance rises to 0.1%.",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 5e-05
+      },
+      "row": {
+        "description": "experienced_x_unemp_rate_preferred",
+        "claim_type": "coefficient",
+        "claimed": 0.0496,
+        "reproduced": 0.049562,
+        "tolerance": 0.02,
+        "rel_err": 0.0007661290322579914,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "experienced_x_unemp_rate_preferred",
+        "reproduced": 0.049562,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.000992,
+        "abs_err": 3.799999999999637e-05,
+        "rel_err": 0.0007661290322579914,
+        "margin": 0.03830645161289956,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "aggregate_unemp_rate_no_controls",
+      "ground_truth": {
+        "value": -0.119,
+        "standard_error": 0.015,
+        "unit": "percentage points of the monthly hiring probability per percentage point of state unemployment",
+        "claim_type": "coefficient",
+        "location": "Table 1, Panel A, column (1), State Unemp. Rate",
+        "context": "Table 1, Panel A, column (1), row State Unemp. Rate.  Regression of the hired indicator (times 100) on the state monthly unemployment rate alone, for all working-age individuals in the matched CPS panel, no fixed effects; CPS weights, standard errors clustered by state.\n",
+        "decimals": 3,
+        "sample_size": 16948516
+      },
+      "i4r": {
+        "reproduced_value": -0.119,
+        "outcome": "matches",
+        "notes": "DP 163 Table 1 Panel A col 1, -0.119 (0.0130).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "aggregate_unemp_rate_no_controls",
+        "claim_type": "coefficient",
+        "claimed": -0.119,
+        "reproduced": -0.119074,
+        "tolerance": 0.02,
+        "rel_err": 0.0006218487394958371,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "aggregate_unemp_rate_no_controls",
+        "reproduced": -0.119074,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.0023799999999999997,
+        "abs_err": 7.400000000000462e-05,
+        "rel_err": 0.0006218487394958371,
+        "margin": 0.03109243697479186,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "aggregate_unemp_rate_month_year_fe",
+      "ground_truth": {
+        "value": -0.0326,
+        "standard_error": 0.0132,
+        "unit": "percentage points of the monthly hiring probability per percentage point of state unemployment",
+        "claim_type": "coefficient",
+        "location": "Table 1, Panel A, column (4), State Unemp. Rate",
+        "context": "Table 1, Panel A, column (4), row State Unemp. Rate: the same single-regressor hiring regression as aggregate_unemp_rate_no_controls with state, demographic and month-year fixed effects.\n",
+        "decimals": 4,
+        "sample_size": 16948516
+      },
+      "i4r": {
+        "reproduced_value": -0.0186,
+        "outcome": "does_not_match",
+        "notes": "DP 163 Table 1 Panel A col 4, -0.0186 (0.0117), not significant; about 1.1 paper SEs from the paper's value (the paper's is significant at 5%).",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 5e-05
+      },
+      "row": {
+        "description": "aggregate_unemp_rate_month_year_fe",
+        "claim_type": "coefficient",
+        "claimed": -0.0326,
+        "reproduced": -0.032623,
+        "tolerance": 0.02,
+        "rel_err": 0.0007055214723927051,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "aggregate_unemp_rate_month_year_fe",
+        "reproduced": -0.032623,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.0006519999999999999,
+        "abs_err": 2.3000000000002185e-05,
+        "rel_err": 0.0007055214723927051,
+        "margin": 0.03527607361963526,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "young_x_unemp_rate_employed",
+      "ground_truth": {
+        "value": -0.168,
+        "standard_error": 0.0156,
+        "unit": "percentage points of the monthly hiring probability per percentage point of state unemployment",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (2) Employed, PE <= 10 x U. Rate",
+        "context": "Table 2 (\"Hiring Over the Business Cycle: Young and Experienced\"), column (2), sample Employed: the preferred specification (potential experience main effect, both unemployment-rate interactions, state, demographic and month-year fixed effects, CPS weights, state-clustered standard errors) estimated on individuals employed in month t-1, so a hire is a move to a new employer.  Row PE <= 10 x U. Rate.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.167,
+        "outcome": "matches",
+        "notes": "DP 163 Table 2 col 2, -0.167 (0.0162).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "young_x_unemp_rate_employed",
+        "claim_type": "coefficient",
+        "claimed": -0.168,
+        "reproduced": -0.167865,
+        "tolerance": 0.02,
+        "rel_err": 0.0008035714285715713,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "young_x_unemp_rate_employed",
+        "reproduced": -0.167865,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.00336,
+        "abs_err": 0.000135000000000024,
+        "rel_err": 0.0008035714285715713,
+        "margin": 0.040178571428578565,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "experienced_x_unemp_rate_employed",
+      "ground_truth": {
+        "value": 0.0179,
+        "standard_error": 0.0101,
+        "unit": "percentage points of the monthly hiring probability per percentage point of state unemployment",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (2) Employed, PE > 10 x U. Rate",
+        "context": "Table 2, column (2), sample Employed, row PE > 10 x U. Rate; same regression as young_x_unemp_rate_employed.  Not statistically significant in the paper.\n",
+        "decimals": 4,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.0291,
+        "outcome": "does_not_match",
+        "notes": "DP 163 Table 2 col 2, 0.0291 (0.00975), significant at 1%; about 1.1 paper SEs from the paper's insignificant value.",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 5e-05
+      },
+      "row": {
+        "description": "experienced_x_unemp_rate_employed",
+        "claim_type": "coefficient",
+        "claimed": 0.0179,
+        "reproduced": 0.017855,
+        "tolerance": 0.02,
+        "rel_err": 0.002513966480446922,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "experienced_x_unemp_rate_employed",
+        "reproduced": 0.017855,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.000358,
+        "abs_err": 4.49999999999999e-05,
+        "rel_err": 0.002513966480446922,
+        "margin": 0.1256983240223461,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "young_x_unemp_rate_unemployed",
+      "ground_truth": {
+        "value": -1.928,
+        "standard_error": 0.167,
+        "unit": "percentage points of the monthly hiring probability per percentage point of state unemployment",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (3) Unemployed, PE <= 10 x U. Rate",
+        "context": "Table 2, column (3), sample Unemployed: the preferred specification estimated on individuals unemployed in month t-1.  Row PE <= 10 x U. Rate.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -1.887,
+        "outcome": "matches",
+        "notes": "DP 163 Table 2 col 3, -1.887 (0.157).",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "young_x_unemp_rate_unemployed",
+        "claim_type": "coefficient",
+        "claimed": -1.928,
+        "reproduced": -1.927845,
+        "tolerance": 0.02,
+        "rel_err": 8.039419087132014e-05,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "young_x_unemp_rate_unemployed",
+        "reproduced": -1.927845,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.03856,
+        "abs_err": 0.00015499999999990521,
+        "rel_err": 8.039419087132014e-05,
+        "margin": 0.004019709543566007,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "young_x_unemp_rate_nilf",
+      "ground_truth": {
+        "value": -0.49,
+        "standard_error": 0.0332,
+        "unit": "percentage points of the monthly hiring probability per percentage point of state unemployment",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (4) NILF, PE <= 10 x U. Rate",
+        "context": "Table 2, column (4), sample NILF: the preferred specification estimated on individuals not in the labour force in month t-1.  Row PE <= 10 x U. Rate.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.578,
+        "outcome": "does_not_match",
+        "notes": "DP 163 Table 2 col 4, -0.578 (0.0368); about 2.7 paper SEs larger in magnitude (DP finds larger young-experienced gaps for the non-employed).",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "young_x_unemp_rate_nilf",
+        "claim_type": "coefficient",
+        "claimed": -0.49,
+        "reproduced": -0.489847,
+        "tolerance": 0.02,
+        "rel_err": 0.0003122448979592127,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "young_x_unemp_rate_nilf",
+        "reproduced": -0.489847,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.0098,
+        "abs_err": 0.00015300000000001424,
+        "rel_err": 0.0003122448979592127,
+        "margin": 0.015612244897960637,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "wage_young_x_unemp_rate_all_hires",
+      "ground_truth": {
+        "value": -0.0262,
+        "standard_error": 0.0036,
+        "unit": "log points of the weekly wage per percentage point of state unemployment",
+        "claim_type": "coefficient",
+        "location": "Table 10, Panel B, column (1) All, PE <= 10 x U. Rate",
+        "context": "Table 10 (\"Log Wages During Recessions for New Hires\"), Panel B (\"Disaggregated by Potential Experience\"), column (1), sample All (all new hires, whatever their status in the previous month). Regression of the log weekly wage of newly hired workers (weekly wages that are not allocated / imputed by the Census, deflated to 1994 dollars) on the potential-experience-at-most-ten indicator and its interactions with the state unemployment rate, as in Equation 1, with a constant and state, demographic, month-year, occupation and industry fixed effects; CPS weights, standard errors clustered by state.  Row PE <= 10 x U. Rate.\n",
+        "decimals": 4,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.025,
+        "outcome": "matches",
+        "notes": "DP 163 Table 10 Panel B col 1, -0.0250 (0.00406).",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 5e-05
+      },
+      "row": {
+        "description": "wage_young_x_unemp_rate_all_hires",
+        "claim_type": "coefficient",
+        "claimed": -0.0262,
+        "reproduced": -0.026174,
+        "tolerance": 0.02,
+        "rel_err": 0.000992366412213806,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "wage_young_x_unemp_rate_all_hires",
+        "reproduced": -0.026174,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.000524,
+        "abs_err": 2.6000000000001716e-05,
+        "rel_err": 0.000992366412213806,
+        "margin": 0.04961832061069029,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "wage_experienced_x_unemp_rate_all_hires",
+      "ground_truth": {
+        "value": -0.0116,
+        "standard_error": 0.00348,
+        "unit": "log points of the weekly wage per percentage point of state unemployment",
+        "claim_type": "coefficient",
+        "location": "Table 10, Panel B, column (1) All, PE > 10 x U. Rate",
+        "context": "Table 10, Panel B, column (1), sample All, row PE > 10 x U. Rate; same new-hire log-wage regression as wage_young_x_unemp_rate_all_hires.\n",
+        "decimals": 4,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.0103,
+        "outcome": "matches",
+        "notes": "DP 163 Table 10 Panel B col 1, -0.0103 (0.00419).",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 5e-05
+      },
+      "row": {
+        "description": "wage_experienced_x_unemp_rate_all_hires",
+        "claim_type": "coefficient",
+        "claimed": -0.0116,
+        "reproduced": -0.011598,
+        "tolerance": 0.02,
+        "rel_err": 0.00017241379310332163,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "wage_experienced_x_unemp_rate_all_hires",
+        "reproduced": -0.011598,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.000232,
+        "abs_err": 1.9999999999985307e-06,
+        "rel_err": 0.00017241379310332163,
+        "margin": 0.00862068965516608,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_full_sample",
+      "ground_truth": {
+        "value": 16948516.0,
+        "standard_error": null,
+        "unit": "person-month observations (matched consecutive-month pairs)",
+        "claim_type": "other",
+        "location": "Table 1, N (all columns); Table 2, column (1)",
+        "context": "Number of observations in the full-sample hiring regressions of Table 1 (every column) and Table 2 column (1): matched consecutive-month CPS person observations, January 1994 to September 2016, after the sample restrictions described for young_x_unemp_rate_no_controls.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 16208583.0,
+        "outcome": "does_not_match",
+        "notes": "DP 163 Tables 1-2, N 16,208,583 from the IPUMS rebuild (tighter longitudinal matching) against the paper's.",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_full_sample",
+        "claim_type": "other",
+        "claimed": 16948516.0,
+        "reproduced": 16948516.0,
+        "tolerance": 0.01,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_full_sample",
+        "reproduced": 16948516.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 169485.16,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 13,
+    "row_passed": 13,
+    "recomputed_passed": 13,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "forsythe-2022-young-workers-recessions",
+    "mode": "seeded",
+    "reproducer": "pipeline",
+    "label": "pipeline-desktop-opus",
+    "model": "desktop-opus",
+    "oracle": true,
+    "run": "20261102T062442Z",
+    "results_file": "pipeline-oracle-desktop-opus-4papers-all-modes-2026-11-02.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/forsythe-2022-young-workers-recessions/seeded/pipeline/20261102T062442Z",
+    "run_dir": null,
+    "date": "2026-11-02T06:24:42Z",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 13,
+    "final": 13,
+    "first_scored": 13,
+    "first_scored_index": 1,
+    "first_attempt": 0,
+    "n_refinements": 1,
+    "n_error_refinements": 1,
+    "n_claim_refinements": 0,
+    "n_executions": 2,
+    "n_files_stripped": null,
+    "agrees_with_i4r": false,
+    "deviations_manifest": [],
+    "deviations_stdout": [],
+    "notes": null,
+    "files_read_outside_mount": null,
+    "paper_text": null,
+    "complete": true,
+    "missing": []
+  }
+}

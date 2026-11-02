@@ -1,0 +1,130 @@
+Dyadic columns:
+ [1] "country"                "year"                   "to_mp_number"          
+ [4] "from_mp_number"         "party_number"           "party_from"            
+ [7] "party_to"               "to_partyname"           "to_parfam"             
+[10] "from_partyname"         "from_parfam"            "from_senior_partner"   
+[13] "to_senior_partner"      "to_in_gov"              "from_in_gov"           
+[16] "govern_together"        "opposition_together"    "from_left_bloc"        
+[19] "from_right_bloc"        "to_left_bloc"           "to_right_bloc"         
+[22] "same_bloc"              "from_parlgov_id"        "to_parlgov_id"         
+[25] "from_nationalism"       "from_rile"              "from_planeco"          
+[28] "from_markeco"           "to_nationalism"         "to_rile"               
+[31] "to_planeco"             "to_markeco"             "elecdate"              
+[34] "sat_together_10years"   "sat_together_15years"   "sat_together_20years"  
+[37] "to_galtan"              "to_lrecon"              "from_galtan"           
+[40] "from_lrecon"            "nationalism_distance"   "rile_distance"         
+[43] "galtan_distance"        "lrecon_distamce"        "govern_together_10"    
+[46] "govern_together_15"     "govern_together_20"     "rile_distance_s"       
+[49] "nationalism_distance_s" "lrecon_distance_s"      "galtan_distance_s"     
+[52] "from_multiculturalism"  "to_multiculturalism"    "from_immigrate_policy" 
+[55] "to_immigrate_policy"    "from_society"           "from_economy"          
+[58] "to_society"             "to_economy"             "from_rrparty"          
+[61] "to_rrparty"             "econ_distance"          "econ_distance_s"       
+[64] "soc_distance"           "society_distance_s"     "from_femaleleader"     
+[67] "from_pfeml"             "from_complete"          "to_femaleleader"       
+[70] "to_pfeml"               "to_complete"            "nat_avg"               
+[73] "diff_pfeml"             "diff_femlead"           "from_prior_cab"        
+[76] "from_prior_seats"       "to_prior_cab"           "to_prior_seats"        
+[79] "prior_coalition"        "prior_opposition"       "cntryyr"               
+[82] "party_like"             "party_dislike"          "DM"                    
+[85] "logDM"                 
+Gender columns:
+ [1] "country"                "year"                   "party_from"            
+ [4] "party_to"               "dislike"                "gender"                
+ [7] "to_mp_number"           "from_mp_number"         "party_number"          
+[10] "to_partyname"           "to_parfam"              "from_partyname"        
+[13] "from_parfam"            "from_senior_partner"    "to_senior_partner"     
+[16] "to_in_gov"              "from_in_gov"            "govern_together"       
+[19] "opposition_together"    "from_left_bloc"         "from_right_bloc"       
+[22] "to_left_bloc"           "to_right_bloc"          "same_bloc"             
+[25] "from_parlgov_id"        "to_parlgov_id"          "from_nationalism"      
+[28] "from_rile"              "from_planeco"           "from_markeco"          
+[31] "to_nationalism"         "to_rile"                "to_planeco"            
+[34] "to_markeco"             "elecdate"               "sat_together_10years"  
+[37] "sat_together_15years"   "sat_together_20years"   "to_galtan"             
+[40] "to_lrecon"              "from_galtan"            "from_lrecon"           
+[43] "nationalism_distance"   "rile_distance"          "galtan_distance"       
+[46] "lrecon_distamce"        "govern_together_10"     "govern_together_15"    
+[49] "govern_together_20"     "rile_distance_s"        "nationalism_distance_s"
+[52] "lrecon_distance_s"      "galtan_distance_s"      "from_multiculturalism" 
+[55] "to_multiculturalism"    "from_immigrate_policy"  "to_immigrate_policy"   
+[58] "from_society"           "from_economy"           "to_society"            
+[61] "to_economy"             "from_rrparty"           "to_rrparty"            
+[64] "econ_distance"          "econ_distance_s"        "soc_distance"          
+[67] "society_distance_s"     "from_femaleleader"      "from_pfeml"            
+[70] "from_complete"          "to_femaleleader"        "to_pfeml"              
+[73] "to_complete"            "nat_avg"                "diff_pfeml"            
+[76] "diff_femlead"           "from_prior_cab"         "from_prior_seats"      
+[79] "to_prior_cab"           "to_prior_seats"         "prior_coalition"       
+[82] "prior_opposition"       "cntryyr"                "party_like"            
+[85] "party_dislike"         
+DV: party_like  flip: FALSE  women var: to_pfeml 
+Rows after MP filter: 2266 
+rile raw mean/sd: 22.23923 17.52786 
+women mean/sd: 0.3028147 0.183727 
+OLS estimation, Dep. Var.: dv
+Observations: 2,019
+Fixed-effects: cy: 81
+Standard-errors: Clustered (cy) 
+      Estimate Std. Error t value   Pr(>|t|)    
+women  1.60382   0.290567 5.51961 4.0759e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.36402     Adj. R2: 0.15216 
+                Within R2: 0.032662
+OLS estimation, Dep. Var.: dv
+Observations: 2,019
+Fixed-effects: cy: 81
+Standard-errors: Clustered (cy) 
+          Estimate Std. Error  t value   Pr(>|t|)    
+women     1.486938   0.302989  4.90757 4.7746e-06 ***
+rile_std -0.580508   0.067866 -8.55375 6.6204e-13 ***
+coal      0.937359   0.175058  5.35456 8.0105e-07 ***
+opp       0.313668   0.105366  2.97692 3.8510e-03 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.24038     Adj. R2: 0.297801
+                Within R2: 0.200071
+DV: dislike  flip: TRUE  women var: to_pfeml 
+Gender table:
+   
+    FALSE TRUE
+  1  2260    0
+  2     0 2262
+OLS estimation, Dep. Var.: dv
+Observations: 2,012
+Fixed-effects: cy: 80
+Standard-errors: Clustered (cy) 
+          Estimate Std. Error  t value   Pr(>|t|)    
+women     1.712586   0.332939  5.14384 1.9128e-06 ***
+rile_std -0.596855   0.061744 -9.66658 4.8884e-15 ***
+coal      0.935225   0.167529  5.58248 3.2281e-07 ***
+opp       0.320834   0.108783  2.94930 4.1881e-03 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.31717     Adj. R2: 0.29813 
+                Within R2: 0.193091
+OLS estimation, Dep. Var.: dv
+Observations: 2,008
+Fixed-effects: cy: 80
+Standard-errors: Clustered (cy) 
+          Estimate Std. Error  t value   Pr(>|t|)    
+women     1.210044   0.265880  4.55110 1.9062e-05 ***
+rile_std -0.632106   0.069530 -9.09116 6.4572e-14 ***
+coal      0.982556   0.172220  5.70524 1.9422e-07 ***
+opp       0.295644   0.112551  2.62676 1.0350e-02 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.30707     Adj. R2: 0.283063
+                Within R2: 0.195638
+RESULT:women_mps_coef_bivariate=1.603816
+RESULT:women_mps_coef_full=1.486938
+RESULT:women_mps_coef_women_partisans=1.712586
+RESULT:women_mps_coef_men_partisans=1.210044
+RESULT:right_left_distance_coef_full=-0.580508
+RESULT:coalition_partners_coef_full=0.937359
+RESULT:opposition_partners_coef_full=0.313668
+RESULT:n_directed_dyads=2019
+RESULT:n_obs_women_partisans=2012
+RESULT:n_obs_men_partisans=2008
+RESULT:n_election_studies=81

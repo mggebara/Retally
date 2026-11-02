@@ -1,0 +1,31 @@
+Column 1: OLS
+  ncosp all OLS                                 b=1.4279 se=0.6305 n=60669
+  ncosp rep OLS                                 b=2.9774 se=1.0296 n=27670
+  pctopp dem OLS                                b=-2.4311 se=0.7353 n=22712
+  pctopp rep OLS                                b=4.7773 se=1.3531 n=18691
+Column 2: RD (h = 24, Dem, pct opposite)
+  pctopp dem RD                                 b=-5.1325 se=4.2352 n=1376
+Column 3: RD + IPW (h = 13, Rep, ncosp)
+  [ps] n=1327  p range 0.0000-0.9818  max w 19.6
+  ncosp rep RD-IPW                              b=5.9549 se=3.7193 n=1287
+Column 4: PS district + MV (Rep, pct opposite)
+  [ps] n=17601  p range 0.0000-0.7852  max w 75.4
+  pctopp rep PS distr+MV                        b=1.9455 se=1.1414 n=17601
+Column 5: PS district + MV + sponsor (Rep ncosp; Dem pct opposite)
+  [ps] n=25642  p range 0.0000-0.9857  max w 2052.9
+  ncosp rep PS distr+MV+spon                    b=2.5798 se=1.1267 n=25641
+  [ps] n=20258  p range 0.0000-0.9051  max w 766.4
+  pctopp dem PS distr+MV+spon                   b=-2.0820 se=0.8121 n=20257
+RESULT:female_sponsor_ncosponsors_all_ols=1.427890
+RESULT:female_sponsor_ncosponsors_rep_ols=2.977450
+RESULT:female_sponsor_ncosponsors_rep_rd_ipw=5.954918
+RESULT:female_sponsor_ncosponsors_rep_ipw_sponsor=2.579831
+RESULT:female_sponsor_pct_opposite_dem_ols=-2.431068
+RESULT:female_sponsor_pct_opposite_dem_rd=-5.132482
+RESULT:female_sponsor_pct_opposite_dem_ipw_sponsor=-2.082028
+RESULT:female_sponsor_pct_opposite_rep_ols=4.777270
+RESULT:female_sponsor_pct_opposite_rep_ipw_district=1.945471
+RESULT:n_bills_ncosponsors_all_ols=60669
+RESULT:n_sponsor_terms_ncosponsors_all_ols=4746
+RESULT:n_bills_pct_opposite_dem_ols=22712
+RESULT:n_bills_pct_opposite_rep_ols=18691

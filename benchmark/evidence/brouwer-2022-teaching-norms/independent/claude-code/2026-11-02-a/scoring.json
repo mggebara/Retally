@@ -1,0 +1,670 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "child_punishment_no_controls",
+      "ground_truth": {
+        "value": 0.11,
+        "standard_error": 0.05,
+        "unit": "probability of direct punishment (0-1)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (1) Punishment, row Child",
+        "context": "Table 2 (\"Determinants of Punishment Rate (Left) and Helping Rate (Right)\"), column (1), row Child.  Pooled OLS linear probability model of Punishment, a dummy equal to 1 if the targeted parent verbally and explicitly confronted the actor about the littering violation, on a Child dummy (the parent was accompanying one or more children, against walking alone), a VH dummy (the Violation + Help scene, in which the actor also drops the contents of a bag after littering) and their interaction, with no other controls.  The sample is the targeted parents in the Violation and Violation + Help scenes; the Help scene, which has no violation, is excluded.  Field experiment near 30 public elementary schools in Lyon, May-June 2019. Standard errors clustered at the school level.\n",
+        "decimals": 2,
+        "sample_size": 400
+      },
+      "i4r": {
+        "reproduced_value": 0.11,
+        "outcome": "matches",
+        "notes": "DP 106 Table 3 col 1, Child 0.11 (0.05).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.4545454545454546,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "child_punishment_no_controls",
+        "claim_type": "coefficient",
+        "claimed": 0.11,
+        "reproduced": 0.11,
+        "tolerance": 0.4545454545454546,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "child_punishment_no_controls",
+        "reproduced": 0.11,
+        "band_source": "se_band",
+        "band_relative": 0.4545454545454546,
+        "band_absolute": 0.05,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "child_punishment_controls",
+      "ground_truth": {
+        "value": 0.12,
+        "standard_error": 0.04,
+        "unit": "probability of direct punishment (0-1)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (2) Punishment, row Child",
+        "context": "Table 2, column (2), row Child.  Same punishment model and sample as child_punishment_no_controls, adding the controls Male Target (father targeted), Male Actor (the male actor played the scene), Morning, Witness (another non-targeted adult was observing and able to intervene), Rich area (the school's IRIS area median income is above the city-wide median), Rain and Hot.  One observation is dropped for missing data on the target's gender.  School-clustered standard errors.\n",
+        "decimals": 2,
+        "sample_size": 399
+      },
+      "i4r": {
+        "reproduced_value": 0.12,
+        "outcome": "matches",
+        "notes": "DP 106 Table 3 col 2, Child 0.12 (0.04); meta-db robustness rows 0.11-0.12 under other controls.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.33333333333333337,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "child_punishment_controls",
+        "claim_type": "coefficient",
+        "claimed": 0.12,
+        "reproduced": 0.116104,
+        "tolerance": 0.33333333333333337,
+        "rel_err": 0.032466666666666644,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "child_punishment_controls",
+        "reproduced": 0.116104,
+        "band_source": "se_band",
+        "band_relative": 0.33333333333333337,
+        "band_absolute": 0.04,
+        "abs_err": 0.0038959999999999967,
+        "rel_err": 0.032466666666666644,
+        "margin": 0.09739999999999992,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "child_helping_no_controls",
+      "ground_truth": {
+        "value": 0.21,
+        "standard_error": 0.05,
+        "unit": "probability of helping (0-1)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (3) Helping, row Child",
+        "context": "Table 2, column (3), row Child.  Pooled OLS linear probability model of Helping, a dummy equal to 1 if the targeted parent picked up at least one of the dropped items (or asked the child to), on Child, VH and Child x VH, with no other controls.  The sample is the parents in the Help and Violation + Help scenes; the Violation scene, which has no helping opportunity, is excluded.  School-clustered standard errors.\n",
+        "decimals": 2,
+        "sample_size": 401
+      },
+      "i4r": {
+        "reproduced_value": 0.21,
+        "outcome": "matches",
+        "notes": "DP 106 Table 3 col 3, Child 0.21 (0.05).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.2380952380952381,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "child_helping_no_controls",
+        "claim_type": "coefficient",
+        "claimed": 0.21,
+        "reproduced": 0.212574,
+        "tolerance": 0.2380952380952381,
+        "rel_err": 0.012257142857142956,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "child_helping_no_controls",
+        "reproduced": 0.212574,
+        "band_source": "se_band",
+        "band_relative": 0.2380952380952381,
+        "band_absolute": 0.05,
+        "abs_err": 0.0025740000000000207,
+        "rel_err": 0.012257142857142956,
+        "margin": 0.051480000000000414,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "child_helping_controls",
+      "ground_truth": {
+        "value": 0.22,
+        "standard_error": 0.06,
+        "unit": "probability of helping (0-1)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (4) Helping, row Child",
+        "context": "Table 2, column (4), row Child.  Same helping model and sample as child_helping_no_controls, with the controls of child_punishment_controls (Male Target, Male Actor, Morning, Witness, Rich area, Rain, Hot).  The target with missing gender is dropped. School-clustered standard errors.\n",
+        "decimals": 2,
+        "sample_size": 400
+      },
+      "i4r": {
+        "reproduced_value": 0.22,
+        "outcome": "matches",
+        "notes": "DP 106 Table 3 col 4, Child 0.22 (0.06); meta-db robustness rows 0.21-0.25 under other controls.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.2727272727272727,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "child_helping_controls",
+        "claim_type": "coefficient",
+        "claimed": 0.22,
+        "reproduced": 0.221438,
+        "tolerance": 0.2727272727272727,
+        "rel_err": 0.006536363636363613,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "child_helping_controls",
+        "reproduced": 0.221438,
+        "band_source": "se_band",
+        "band_relative": 0.2727272727272727,
+        "band_absolute": 0.06,
+        "abs_err": 0.0014379999999999948,
+        "rel_err": 0.006536363636363613,
+        "margin": 0.02396666666666658,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "vh_punishment_controls",
+      "ground_truth": {
+        "value": -0.04,
+        "standard_error": 0.03,
+        "unit": "probability of direct punishment (0-1)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (2) Punishment, row VH",
+        "context": "Table 2, column (2), row VH: the Violation + Help scene dummy in the controlled punishment regression of child_punishment_controls.  It is the change in the punishment rate of parents alone when a helping opportunity follows the violation.\n",
+        "decimals": 2,
+        "sample_size": 399
+      },
+      "i4r": {
+        "reproduced_value": -0.04,
+        "outcome": "matches",
+        "notes": "DP 106 Table 3 col 2, VH -0.04 (0.03); meta-db robustness rows -0.03 / -0.04.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.75,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "vh_punishment_controls",
+        "claim_type": "coefficient",
+        "claimed": -0.04,
+        "reproduced": -0.038555,
+        "tolerance": 0.75,
+        "rel_err": 0.036125000000000046,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "vh_punishment_controls",
+        "reproduced": -0.038555,
+        "band_source": "se_band",
+        "band_relative": 0.75,
+        "band_absolute": 0.03,
+        "abs_err": 0.0014450000000000018,
+        "rel_err": 0.036125000000000046,
+        "margin": 0.04816666666666673,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "vh_helping_controls",
+      "ground_truth": {
+        "value": -0.1,
+        "standard_error": 0.04,
+        "unit": "probability of helping (0-1)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (4) Helping, row VH",
+        "context": "Table 2, column (4), row VH: the Violation + Help scene dummy in the controlled helping regression of child_helping_controls.  It is the change in the helping rate of parents alone when the actor littered before dropping the items (indirect punishment).\n",
+        "decimals": 2,
+        "sample_size": 400
+      },
+      "i4r": {
+        "reproduced_value": -0.1,
+        "outcome": "matches",
+        "notes": "DP 106 Table 3 col 4, VH -0.10 (0.04); meta-db robustness rows -0.10 / -0.12.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.39999999999999997,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "vh_helping_controls",
+        "claim_type": "coefficient",
+        "claimed": -0.1,
+        "reproduced": -0.103548,
+        "tolerance": 0.39999999999999997,
+        "rel_err": 0.035479999999999956,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "vh_helping_controls",
+        "reproduced": -0.103548,
+        "band_source": "se_band",
+        "band_relative": 0.39999999999999997,
+        "band_absolute": 0.04,
+        "abs_err": 0.0035479999999999956,
+        "rel_err": 0.035479999999999956,
+        "margin": 0.08869999999999989,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "child_x_vh_punishment_no_controls",
+      "ground_truth": {
+        "value": -0.13,
+        "standard_error": 0.04,
+        "unit": "probability of direct punishment (0-1)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (1) Punishment, row Child x VH",
+        "context": "Table 2, column (1), row Child x VH: the interaction of the Child and Violation + Help dummies in the uncontrolled punishment regression of child_punishment_no_controls.\n",
+        "decimals": 2,
+        "sample_size": 400
+      },
+      "i4r": {
+        "reproduced_value": -0.13,
+        "outcome": "matches",
+        "notes": "DP 106 Table 3 col 1, Child x VH -0.13 (0.04).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.3076923076923077,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "child_x_vh_punishment_no_controls",
+        "claim_type": "coefficient",
+        "claimed": -0.13,
+        "reproduced": -0.13,
+        "tolerance": 0.3076923076923077,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "child_x_vh_punishment_no_controls",
+        "reproduced": -0.13,
+        "band_source": "se_band",
+        "band_relative": 0.3076923076923077,
+        "band_absolute": 0.04,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "child_x_vh_punishment_controls",
+      "ground_truth": {
+        "value": -0.12,
+        "standard_error": 0.04,
+        "unit": "probability of direct punishment (0-1)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (2) Punishment, row Child x VH",
+        "context": "Table 2, column (2), row Child x VH, in the controlled punishment regression of child_punishment_controls.\n",
+        "decimals": 2,
+        "sample_size": 399
+      },
+      "i4r": {
+        "reproduced_value": -0.12,
+        "outcome": "matches",
+        "notes": "DP 106 Table 3 col 2, Child x VH -0.12 (0.04); meta-db robustness rows -0.13 under other controls.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.33333333333333337,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "child_x_vh_punishment_controls",
+        "claim_type": "coefficient",
+        "claimed": -0.12,
+        "reproduced": -0.12233,
+        "tolerance": 0.33333333333333337,
+        "rel_err": 0.01941666666666666,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "child_x_vh_punishment_controls",
+        "reproduced": -0.12233,
+        "band_source": "se_band",
+        "band_relative": 0.33333333333333337,
+        "band_absolute": 0.04,
+        "abs_err": 0.0023299999999999987,
+        "rel_err": 0.01941666666666666,
+        "margin": 0.05824999999999997,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "child_x_vh_helping_no_controls",
+      "ground_truth": {
+        "value": -0.06,
+        "standard_error": 0.07,
+        "unit": "probability of helping (0-1)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (3) Helping, row Child x VH",
+        "context": "Table 2, column (3), row Child x VH, in the uncontrolled helping regression of child_helping_no_controls.  This is the test of the indirect-punishment conjecture (Result 3: not significant).\n",
+        "decimals": 2,
+        "sample_size": 401
+      },
+      "i4r": {
+        "reproduced_value": -0.06,
+        "outcome": "matches",
+        "notes": "DP 106 Table 3 col 3, Child x VH -0.06 (0.07).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 1.1666666666666667,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "child_x_vh_helping_no_controls",
+        "claim_type": "coefficient",
+        "claimed": -0.06,
+        "reproduced": -0.062574,
+        "tolerance": 1.1666666666666667,
+        "rel_err": 0.04290000000000012,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "child_x_vh_helping_no_controls",
+        "reproduced": -0.062574,
+        "band_source": "se_band",
+        "band_relative": 1.1666666666666667,
+        "band_absolute": 0.07,
+        "abs_err": 0.002574000000000007,
+        "rel_err": 0.04290000000000012,
+        "margin": 0.03677142857142866,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "child_x_vh_helping_controls",
+      "ground_truth": {
+        "value": -0.07,
+        "standard_error": 0.08,
+        "unit": "probability of helping (0-1)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (4) Helping, row Child x VH",
+        "context": "Table 2, column (4), row Child x VH, in the controlled helping regression of child_helping_controls.\n",
+        "decimals": 2,
+        "sample_size": 400
+      },
+      "i4r": {
+        "reproduced_value": -0.07,
+        "outcome": "matches",
+        "notes": "DP 106 Table 3 col 4, Child x VH -0.07 (0.08); meta-db robustness rows -0.07 / -0.10.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 1.1428571428571428,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "child_x_vh_helping_controls",
+        "claim_type": "coefficient",
+        "claimed": -0.07,
+        "reproduced": -0.067709,
+        "tolerance": 1.1428571428571428,
+        "rel_err": 0.03272857142857145,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "child_x_vh_helping_controls",
+        "reproduced": -0.067709,
+        "band_source": "se_band",
+        "band_relative": 1.1428571428571428,
+        "band_absolute": 0.08,
+        "abs_err": 0.0022910000000000014,
+        "rel_err": 0.03272857142857145,
+        "margin": 0.028637500000000017,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "observations_punishment_controls",
+      "ground_truth": {
+        "value": 399.0,
+        "standard_error": null,
+        "unit": "targeted parents",
+        "claim_type": "other",
+        "location": "Table 2, column (2), Observations",
+        "context": "Observations in the controlled punishment regression (Table 2, column 2): parents in the Violation and Violation + Help scenes with non-missing controls.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 399.0,
+        "outcome": "matches",
+        "notes": "DP 106 Table 3 col 2, Observations 399.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "observations_punishment_controls",
+        "claim_type": "other",
+        "claimed": 399.0,
+        "reproduced": 399.0,
+        "tolerance": 0.01,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "observations_punishment_controls",
+        "reproduced": 399.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 3.99,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "observations_helping_no_controls",
+      "ground_truth": {
+        "value": 401.0,
+        "standard_error": null,
+        "unit": "targeted parents",
+        "claim_type": "other",
+        "location": "Table 2, column (3), Observations",
+        "context": "Observations in the uncontrolled helping regression (Table 2, column 3): parents in the Help and Violation + Help scenes.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 401.0,
+        "outcome": "matches",
+        "notes": "DP 106 Table 3 col 3, Observations 401.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "observations_helping_no_controls",
+        "claim_type": "other",
+        "claimed": 401.0,
+        "reproduced": 401.0,
+        "tolerance": 0.01,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "observations_helping_no_controls",
+        "reproduced": 401.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 4.01,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 12,
+    "row_passed": 12,
+    "recomputed_passed": 12,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "brouwer-2022-teaching-norms",
+    "mode": "independent",
+    "reproducer": "claude-code",
+    "label": "claude-code",
+    "model": null,
+    "oracle": false,
+    "run": "2026-11-02-a",
+    "results_file": "claude-code-4papers-all-modes-2026-11-02.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/brouwer-2022-teaching-norms/independent/claude-code/20261102T062001Z",
+    "run_dir": "benchmark/reproductions/brouwer-2022-teaching-norms/independent/2026-11-02-a",
+    "date": "2026-11-02T06:02:00Z",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 12,
+    "final": 12,
+    "first_scored": 12,
+    "first_scored_index": 1,
+    "first_attempt": 0,
+    "n_refinements": 0,
+    "n_error_refinements": 0,
+    "n_claim_refinements": 0,
+    "n_executions": 2,
+    "n_files_stripped": 18,
+    "agrees_with_i4r": true,
+    "deviations_manifest": [],
+    "deviations_stdout": [],
+    "notes": "attempt-1 was exploratory (tabulated scene, ViolationHelp, controls; no RESULT lines). Final: fixest feols LPMs on master.csv. Punishment sample = Violation and Violation+Help scenes; Helping sample = Help and Violation+Help scenes. Regressors Child*VH (VH = ViolationHelp); controls male (Male Target), hugo (Male Actor), Morning, witness, rich, Rain, Hot; SEs clustered by School (30 clusters). Rows with missing male dropped by listwise deletion (N 399/400). All coefficients, N and R2 match Table 2 at reported precision; script not changed after comparison with claims.",
+    "files_read_outside_mount": [],
+    "paper_text": "paper.txt",
+    "complete": true,
+    "missing": []
+  }
+}

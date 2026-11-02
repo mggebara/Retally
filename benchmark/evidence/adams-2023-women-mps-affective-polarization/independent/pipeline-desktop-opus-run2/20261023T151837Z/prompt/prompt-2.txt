@@ -1,0 +1,382 @@
+You are refining R code that reproduces results from an econometrics paper.
+The code RAN SUCCESSFULLY but the reproduced values do not match the
+paper's claims within the allowed tolerance.  Identify what is causing
+the gap and adjust the code to close it.
+
+## Paper
+Title: American Political Science Review (2023) 117, 1, 318–324
+Methodology: - **Data and unit of analysis**: The authors combine an original party-level dataset on women's share of parliamentary seats with CSES survey data. It covers 20 Western democracies, 81 election surveys from 1996 to 2017 and 125 parties. The unit is the directed party dyad (i, j, t). Each party pair enters twice: once for i's partisans rating j, and once for j's partisans rating i. Partisans are respondents who say they are "close" or "a little closer" to party i.
+- **Dependent variable**: [party i's supporters' evaluations of out-party j (t)]. This is the mean 0–10 CSES feeling-thermometer rating that party i's partisans give out-party j in the election survey of year t (0 = strongly dislike, 10 = strongly like). Its SD is 1.54. The model is linear in levels, with no logs.
+- **Key regressor**: [out-party j's proportion of women MPs (t – 1)]. This is the share of j's parliamentary delegation who are women, lagged one year before the survey and scaled 0–1 in raw proportion units, not standardised (mean 0.29, SD 0.16). The headline coefficient is therefore the change in thermometer points from moving 0 → 1. Table 1, column 2 reports +1.73 (SE 0.52); from −1 SD to +1 SD (0.13 → 0.45) the predicted gain is about 0.55.
+- **Controls (full model, Table 1 col. 2)**:
+  - [elite right–left distance i, j (t)]: the absolute distance between parties i and j on the CMP left–right (rile) score of the current manifesto. Only this control is standardised (z-score; raw mean 22.4, SD 17.6).
+  - [i, j are coalition partners (t)]: a dummy for i and j governing together at t.
+  - [i, j are opposition partners (t)]: a dummy for both i and j being in opposition at t.
+  - The omitted category is a pair with one governing party and one opposition party.
+- **Fixed effects and estimator**: OLS with country-year (election) fixed effects, so estimates come from within-election comparisons. Robust standard errors are clustered by election (country-year). Significance uses two-tailed tests at *p < 0.05 and **p < 0.01.
+- **Sample restriction**: Only dyads where both parties had at least 4 MPs in the year before the survey are kept. This gives N = 1,842 directed dyads in columns 1 and 2. Column 1 regresses the DV on women's share alone plus FE (coefficient 1.89, SE 0.43, adj. R² 0.15). Column 2 adds the controls (adj. R² 0.31).
+- **Subgroup models**: The full model is re-estimated with the DV built only from women partisans (col. 3: N = 1,836, coefficient 2.10, SE 0.53) and only from men partisans (col. 4: N = 1,833, coefficient 1.13, SE 0.50).
+- **Robustness checks (appendix)**:
+  - including parties with fewer than 4 MPs (S2)
+  - controls for out-party family (S3)
+  - early vs. late periods (S4)
+  - in-party women's share (S5)
+  - electoral-system proportionality (S6)
+  - non-linearity past parity (S7)
+  - out-parties led by women vs. men (S8)
+  - country FE instead of country-year FE (S9/S10)
+  - a stacked individual-level dataset with individual FE (S11)
+- **Evaluation**: There is no train/test split or cross-validation. Inference rests on coefficient size, clustered SEs and p-values, and the paper reports adjusted R².
+
+
+## Current Code
+```r
+suppressPackageStartupMessages({
+  library(fixest)
+  library(dplyr)
+})
+set.seed(42)
+
+base <- "<repo>/.cache/datasets/adams_2023_women_mps_affective_polarization.script-free"
+
+load(file.path(base, "dyadic_data_1-4-22.Rdata"))
+dy <- as.data.frame(updated_data)
+gd <- as.data.frame(readRDS(file.path(base, "gender_disagregated_8-8-21.rds")))
+
+cat("Dyadic columns:\n"); print(names(dy))
+cat("Gender columns:\n"); print(names(gd))
+
+strip <- function(x) {
+  x <- tryCatch(haven::zap_labels(x), error = function(e) x)
+  as.vector(x)
+}
+
+# ---- Dependent variable detection ----
+is_thermo <- function(x) {
+  x <- suppressWarnings(as.numeric(strip(x)))
+  x <- x[!is.na(x)]
+  if (length(x) < 50) return(FALSE)
+  if (min(x) < 0 || max(x) > 10) return(FALSE)
+  if (length(unique(x)) < 20) return(FALSE)
+  mean(abs(x - round(x)) > 1e-8) > 0.3
+}
+find_dv <- function(df) {
+  nm <- names(df)
+  pri <- c(
+    nm[grepl("therm|evaluat|feeling", nm, ignore.case = TRUE)],
+    nm[tolower(nm) %in% c("like", "mean_like", "like_score", "avg_like")],
+    nm[tolower(nm) %in% c("dislike", "mean_dislike")],
+    nm[grepl("like", nm, ignore.case = TRUE) & !grepl("dislike", nm, ignore.case = TRUE)],
+    nm[grepl("dislike", nm, ignore.case = TRUE)]
+  )
+  pri <- unique(pri)
+  for (v in pri) {
+    if (is_thermo(df[[v]])) {
+      flip <- grepl("dislike", v, ignore.case = TRUE)
+      return(list(var = v, flip = flip))
+    }
+  }
+  stop("No DV found")
+}
+
+# ---- Women share detection ----
+find_women <- function(df) {
+  nm <- names(df)
+  cand <- nm[grepl("wom|fem", nm, ignore.case = TRUE) & !grepl("^from|_from", nm, ignore.case = TRUE)]
+  cand <- cand[!grepl("lead|chair|vote|respond|partisan", cand, ignore.case = TRUE)]
+  if (length(cand) == 0) {
+    cand <- nm[grepl("^to_.*(prop|share|pct|perc)", nm, ignore.case = TRUE)]
+  }
+  if (length(cand) == 0) stop("No women share variable found")
+  score <- function(v) {
+    s <- 0
+    if (grepl("^to", v, ignore.case = TRUE)) s <- s + 4
+    if (grepl("lag", v, ignore.case = TRUE)) s <- s + 2
+    if (grepl("prop|share|pct|perc|percent", v, ignore.case = TRUE)) s <- s + 1
+    if (grepl("leader|lead", v, ignore.case = TRUE)) s <- s - 10
+    s
+  }
+  cand <- cand[order(-sapply(cand, score))]
+  for (v in cand) {
+    x <- suppressWarnings(as.numeric(strip(df[[v]])))
+    if (all(is.na(x))) next
+    if (length(unique(na.omit(x))) < 5) next
+    return(v)
+  }
+  stop("No usable women share variable")
+}
+
+women_share <- function(df, v) {
+  x <- suppressWarnings(as.numeric(strip(df[[v]])))
+  mx <- max(x, na.rm = TRUE)
+  if (mx <= 1.0001) return(x)
+  isint <- all(abs(x - round(x)) < 1e-8, na.rm = TRUE)
+  if (isint && "to_mp_number" %in% names(df)) {
+    mp <- suppressWarnings(as.numeric(strip(df$to_mp_number)))
+    if (all(x <= mp, na.rm = TRUE)) return(x / mp)
+  }
+  if (mx <= 100) return(x / 100)
+  x
+}
+
+prep <- function(df) {
+  dvi <- find_dv(df)
+  wv <- find_women(df)
+  cat("DV:", dvi$var, " flip:", dvi$flip, " women var:", wv, "\n")
+  y <- suppressWarnings(as.numeric(strip(df[[dvi$var]])))
+  if (dvi$flip) y <- 10 - y
+  out <- df
+  out$dv <- y
+  out$women <- women_share(df, wv)
+  out$rile_raw <- abs(suppressWarnings(as.numeric(strip(df$rile_distance))))
+  out$coal <- suppressWarnings(as.numeric(strip(df$govern_together)))
+  out$opp <- suppressWarnings(as.numeric(strip(df$opposition_together)))
+  out$to_mp <- suppressWarnings(as.numeric(strip(df$to_mp_number)))
+  out$from_mp <- suppressWarnings(as.numeric(strip(df$from_mp_number)))
+  out$cy <- paste(as.character(strip(df$country)), as.character(strip(df$year)), sep = "_")
+  if (all(c("party_from", "party_to") %in% names(df))) {
+    out <- out[as.character(strip(out$party_from)) != as.character(strip(out$party_to)), ]
+  }
+  out <- out[!is.na(out$to_mp) & !is.na(out$from_mp) & out$to_mp >= 4 & out$from_mp >= 4, ]
+  out
+}
+
+d <- prep(dy)
+cat("Rows after MP filter:", nrow(d), "\n")
+
+full_vars <- c("dv", "women", "rile_raw", "coal", "opp", "cy")
+d2 <- d[complete.cases(d[, full_vars]), ]
+d2$rile_std <- (d2$rile_raw - mean(d2$rile_raw)) / sd(d2$rile_raw)
+cat("rile raw mean/sd:", mean(d2$rile_raw), sd(d2$rile_raw), "\n")
+cat("women mean/sd:", mean(d2$women), sd(d2$women), "\n")
+
+d1 <- d[complete.cases(d[, c("dv", "women", "cy")]), ]
+m1 <- feols(dv ~ women | cy, data = d1, cluster = ~cy)
+m2 <- feols(dv ~ women + rile_std + coal + opp | cy, data = d2, cluster = ~cy)
+print(summary(m1)); print(summary(m2))
+
+# ---- Gender-disaggregated models ----
+gender_split <- function(g) {
+  gv <- g$gender
+  labs <- attr(gv, "labels")
+  if (!is.null(labs)) {
+    fem_codes <- labs[grepl("fem|wom", names(labs), ignore.case = TRUE)]
+    if (length(fem_codes) > 0) return(as.numeric(strip(gv)) %in% as.numeric(fem_codes))
+  }
+  if (is.factor(gv) || is.character(gv)) {
+    s <- tolower(as.character(gv))
+    return(grepl("^f|wom", s))
+  }
+  x <- as.numeric(strip(gv))
+  u <- sort(unique(na.omit(x)))
+  if (all(u %in% c(1, 2))) return(x == 2)
+  if (all(u %in% c(0, 1))) return(x == 1)
+  x == max(u)
+}
+
+res_w <- NA; res_m <- NA; n_w <- NA; n_m <- NA
+try({
+  g <- prep(gd)
+  g$is_f <- gender_split(g[, , drop = FALSE])
+  cat("Gender table:\n"); print(table(g$gender, g$is_f, useNA = "ifany"))
+  run_g <- function(sub) {
+    sub <- sub[complete.cases(sub[, full_vars]), ]
+    sub$rile_std <- (sub$rile_raw - mean(sub$rile_raw)) / sd(sub$rile_raw)
+    feols(dv ~ women + rile_std + coal + opp | cy, data = sub, cluster = ~cy)
+  }
+  mw <- run_g(g[g$is_f %in% TRUE, ])
+  mm <- run_g(g[g$is_f %in% FALSE, ])
+  print(summary(mw)); print(summary(mm))
+  res_w <- coef(mw)["women"]; n_w <- nobs(mw)
+  res_m <- coef(mm)["women"]; n_m <- nobs(mm)
+}, silent = FALSE)
+
+cat(sprintf("RESULT:women_mps_coef_bivariate=%.6f\n", coef(m1)["women"]))
+cat(sprintf("RESULT:women_mps_coef_full=%.6f\n", coef(m2)["women"]))
+if (!is.na(res_w)) cat(sprintf("RESULT:women_mps_coef_women_partisans=%.6f\n", res_w))
+if (!is.na(res_m)) cat(sprintf("RESULT:women_mps_coef_men_partisans=%.6f\n", res_m))
+cat(sprintf("RESULT:right_left_distance_coef_full=%.6f\n", coef(m2)["rile_std"]))
+cat(sprintf("RESULT:coalition_partners_coef_full=%.6f\n", coef(m2)["coal"]))
+cat(sprintf("RESULT:opposition_partners_coef_full=%.6f\n", coef(m2)["opp"]))
+cat(sprintf("RESULT:n_directed_dyads=%d\n", as.integer(nobs(m2))))
+if (!is.na(n_w)) cat(sprintf("RESULT:n_obs_women_partisans=%d\n", as.integer(n_w)))
+if (!is.na(n_m)) cat(sprintf("RESULT:n_obs_men_partisans=%d\n", as.integer(n_m)))
+cat(sprintf("RESULT:n_election_studies=%d\n", length(unique(d2$cy))))
+```
+
+## What the code produced
+  women_mps_coef_bivariate = 1.603816
+  women_mps_coef_full = 1.486938
+  women_mps_coef_women_partisans = 1.712586
+  women_mps_coef_men_partisans = 1.210044
+  right_left_distance_coef_full = -0.580508
+  coalition_partners_coef_full = 0.937359
+  opposition_partners_coef_full = 0.313668
+  n_directed_dyads = 2019.0
+  n_obs_women_partisans = 2012.0
+  n_obs_men_partisans = 2008.0
+  n_election_studies = 81.0
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+Dyadic columns:
+ [1] "country"                "year"                   "to_mp_number"          
+ [4] "from_mp_number"         "party_number"           "party_from"            
+ [7] "party_to"               "to_partyname"           "to_parfam"             
+[10] "from_partyname"         "from_parfam"            "from_senior_partner"   
+[13] "to_senior_partner"      "to_in_gov"              "from_in_gov"           
+[16] "govern_together"        "opposition_together"    "from_left_bloc"        
+[19] "from_right_bloc"        "to_left_bloc"           "to_right_bloc"         
+[22] "same_bloc"              "from_parlgov_id"        "to_parlgov_id"         
+[25] "from_nationalism"       "from_rile"              "from_planeco"          
+[28] "from_markeco"           "to_nationalism"         "to_rile"               
+[31] "to_planeco"             "to_markeco"             "elecdate"              
+[34] "sat_together_10years"   "sat_together_15years"   "sat_together_20years"  
+[37] "to_galtan"              "to_lrecon"              "from_galtan"           
+[40] "from_lrecon"            "nationalism_distance"   "rile_distance"         
+[43] "galtan_distance"        "lrecon_distamce"        "govern_together_10"    
+[46] "govern_together_15"     "govern_together_20"     "rile_distance_s"       
+[49] "nationalism_distance_s" "lrecon_distance_s"      "galtan_distance_s"     
+[52] "from_multiculturalism"  "to_multiculturalism"    "from_immigrate_policy" 
+[55] "to_immigrate_policy"    "from_society"           "from_economy"          
+[58] "to_society"             "to_economy"             "from_rrparty"          
+[61] "to_rrparty"             "econ_distance"          "econ_distance_s"       
+[64] "soc_distance"           "society_distance_s"     "from_femaleleader"     
+[67] "from_pfeml"             "from_complete"          "to_femaleleader"       
+[70] "to_pfeml"               "to_complete"            "nat_avg"               
+[73] "diff_pfeml"             "diff_femlead"           "from_prior_cab"        
+[76] "from_prior_seats"       "to_prior_cab"           "to_prior_seats"        
+[79] "prior_coalition"        "prior_opposition"       "cntryyr"               
+[82] "party_like"             "party_dislike"          "DM"                    
+[85] "logDM"                 
+Gender columns:
+ [1] "country"                "year"                   "party_from"            
+ [4] "party_to"               "dislike"                "gender"                
+ [7] "to_mp_number"           "from_mp_number"         "party_number"          
+[10] "to_partyname"           "to_parfam"              "from_partyname"        
+[13] "from_parfam"            "from_senior_partner"    "to_senior_partner"     
+[16] "to_in_gov"              "from_in_gov"            "govern_together"       
+[19] "opposition_together"    "from_left_bloc"         "from_right_bloc"       
+[22] "to_left_bloc"           "to_right_bloc"          "same_bloc"             
+[25] "from_parlgov_id"        "to_parlgov_id"          "fr
+[... 1145 characters omitted ...]
+] "from_complete"          "to_femaleleader"        "to_pfeml"              
+[73] "to_complete"            "nat_avg"                "diff_pfeml"            
+[76] "diff_femlead"           "from_prior_cab"         "from_prior_seats"      
+[79] "to_prior_cab"           "to_prior_seats"         "prior_coalition"       
+[82] "prior_opposition"       "cntryyr"                "party_like"            
+[85] "party_dislike"         
+DV: party_like  flip: FALSE  women var: to_pfeml 
+Rows after MP filter: 2266 
+rile raw mean/sd: 22.23923 17.52786 
+women mean/sd: 0.3028147 0.183727 
+OLS estimation, Dep. Var.: dv
+Observations: 2,019
+Fixed-effects: cy: 81
+Standard-errors: Clustered (cy) 
+      Estimate Std. Error t value   Pr(>|t|)    
+women  1.60382   0.290567 5.51961 4.0759e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.36402     Adj. R2: 0.15216 
+                Within R2: 0.032662
+OLS estimation, Dep. Var.: dv
+Observations: 2,019
+Fixed-effects: cy: 81
+Standard-errors: Clustered (cy) 
+          Estimate Std. Error  t value   Pr(>|t|)    
+women     1.486938   0.302989  4.90757 4.7746e-06 ***
+rile_std -0.580508   0.067866 -8.55375 6.6204e-13 ***
+coal      0.937359   0.175058  5.35456 8.0105e-07 ***
+opp       0.313668   0.105366  2.97692 3.8510e-03 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.24038     Adj. R2: 0.297801
+                Within R2: 0.200071
+DV: dislike  flip: TRUE  women var: to_pfeml 
+Gender table:
+   
+    FALSE TRUE
+  1  2260    0
+  2     0 2262
+OLS estimation, Dep. Var.: dv
+Observations: 2,012
+Fixed-effects: cy: 80
+Standard-errors: Clustered (cy) 
+          Estimate Std. Error  t value   Pr(>|t|)    
+women     1.712586   0.332939  5.14384 1.9128e-06 ***
+rile_std -0.596855   0.061744 -9.66658 4.8884e-15 ***
+coal      0.935225   0.167529  5.58248 3.2281e-07 ***
+opp       0.320834   0.108783  2.94930 4.1881e-03 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.31717     Adj. R2: 0.29813 
+                Within R2: 0.193091
+OLS estimation, Dep. Var.: dv
+Observations: 2,008
+Fixed-effects: cy: 80
+Standard-errors: Clustered (cy) 
+          Estimate Std. Error  t value   Pr(>|t|)    
+women     1.210044   0.265880  4.55110 1.9062e-05 ***
+rile_std -0.632106   0.069530 -9.09116 6.4572e-14 ***
+coal      0.982556   0.172220  5.70524 1.9422e-07 ***
+opp       0.295644   0.112551  2.62676 1.0350e-02 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.30707     Adj. R2: 0.283063
+                Within R2: 0.195638
+RESULT:women_mps_coef_bivariate=1.603816
+RESULT:women_mps_coef_full=1.486938
+RESULT:women_mps_coef_women_partisans=1.712586
+RESULT:women_mps_coef_men_partisans=1.210044
+RESULT:right_left_distance_coef_full=-0.580508
+RESULT:coalition_partners_coef_full=0.937359
+RESULT:opposition_partners_coef_full=0.313668
+RESULT:n_directed_dyads=2019
+RESULT:n_obs_women_partisans=2012
+RESULT:n_obs_men_partisans=2008
+RESULT:n_election_studies=81
+```
+
+## Claims still failing
+1. n_directed_dyads: paper claims 1842.0 directed party dyads (observations) (other), your code produced 2019, tolerance 0.01, gap 9.61% relative
+2. n_obs_women_partisans: paper claims 1836.0 directed party dyads (observations) (other), your code produced 2012, tolerance 0.01, gap 9.59% relative
+3. n_obs_men_partisans: paper claims 1833.0 directed party dyads (observations) (other), your code produced 2008, tolerance 0.01, gap 9.55% relative
+
+## Previous attempts (oldest first)
+  Attempt 1: women_mps_coef_bivariate=1.603816, women_mps_coef_full=1.486938, women_mps_coef_women_partisans=1.712586, women_mps_coef_men_partisans=1.210044, right_left_distance_coef_full=-0.580508, coalition_partners_coef_full=0.937359, opposition_partners_coef_full=0.313668, n_directed_dyads=2019.0, n_obs_women_partisans=2012.0, n_obs_men_partisans=2008.0, n_election_studies=81.0
+
+These attempts have already been tried.  Do not repeat a strategy
+that has already produced the same values.
+
+## Task
+Adjust the code minimally to close the gap on the failing claims.
+Prefer changes that align more closely with the paper's stated methodology:
+re-read the methodology summary above and check the model specification,
+covariate selection, fixed effects, clustering, and seed against what the
+paper actually specifies.  In econometrics papers, common gap-closers are:
+  - getting the cluster-robust SE right (vcovCL / cluster_var argument)
+  - matching the paper's exact fixed-effects structure
+  - using the same sample-restriction filters the paper applied
+  - matching the paper's weighting scheme (weights= argument)
+
+## Deviation reporting
+If you must change something the paper did NOT specify in order to close
+the gap, emit a ``DEVIATION:`` line via cat() describing the change:
+
+    cat('DEVIATION: Used HC1 robust SE because the paper does not specify but the default did not converge\n')
+
+## When to give up
+If after re-reading the methodology and the previous attempts you judge
+the gap cannot be closed without unreasonable deviation, return the SAME
+R CODE you were given, BYTE-FOR-BYTE unchanged.  The pipeline will record
+the claim as unreproducible.
+
+## Output convention (unchanged)
+Emit every metric as ``cat('RESULT:<name>=<value>\n')``.
+The dataset is a directory tree at '<repo>/.cache/datasets/adams_2023_women_mps_affective_polarization.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+No network, no system().  set.seed(42).
+
+Output ONLY the R code — no explanation, no markdown fences.

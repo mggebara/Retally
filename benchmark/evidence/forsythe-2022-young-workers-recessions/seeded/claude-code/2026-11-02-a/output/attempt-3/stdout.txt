@@ -1,0 +1,66 @@
+threads 3 
+freadR.c has been passed a filename: <repo>/benchmark/.cache/claude-code/forsythe-2022-young-workers-recessions/seeded/2026-11-02-a/mount/forsythe_2022_young_workers_recessions/3 replication package/Data/yh_data.csv
+[01] Check arguments
+  Using 3 threads (omp_get_max_threads()=6, nth=3)
+  NAstrings = [<<NA>>]
+  None of the NAstrings look like numbers.
+  show progress = 0
+  0/1 column will be read as integer
+  Y/N column will be read as character
+[02] Opening the file
+  Opening file <repo>/benchmark/.cache/claude-code/forsythe-2022-young-workers-recessions/seeded/2026-11-02-a/mount/forsythe_2022_young_workers_recessions/3 replication package/Data/yh_data.csv
+  File opened, size = 2.025GiB (2174065890 bytes).
+  Memory mapped ok
+[03] Detect and skip BOM
+[04] Arrange mmap to be \0 terminated
+  \n has been found in the input (counts: 0 \r by themselves vs 988 [\r]*\n) and different lines can end with different line endings (e.g. mixed \n and \r\n in one file). This is common and ideal.
+[05] Skipping initial rows if needed
+  Positioned on line 1 starting: <<hrmonth,hryear,peage,pesex,pee>>
+[06] Detect separator, quoting rule, and ncolumns
+  Detecting sep automatically ...
+  sep=','  with 100 lines of 35 fields using quote rule 0
+  Detected 35 columns on line 1. This line is either column names or first data row. Line starts as: <<hrmonth,hryear,peage,pesex,pee>>
+  Quote rule picked = 0
+  fill=false and the most number of columns found is 35
+[07] Detect column types, dec, good nrow estimate and whether first row is column names
+  sep=',' so dec set to '.'
+  Number of sampling jump points = 100 because (2174065889 bytes from row 1 to eof) / (2 * 10328 jump0size) == 105251
+  Type codes (jump 000)    : 77777777777777777797777777777999111  Quote rule 0
+  Type codes (jump 001)    : 77777777777777777797777777777999777  Quote rule 0
+  Type codes (jump 100)    : 77777777777777777797777777777999777  Quote rule 0
+  'header' determined to be true due to column 1 containing a string on row 1 and a lower type (int32) in the rest of the 10046 sample rows
+  =====
+  Sampled 10046 rows (handled \n inside quoted fields) at 101 jump points
+  Bytes from first data row on line 2 to the end of last row: 2174065587
+  Line length: mean=109.56 sd=3.90 min=95 max=123
+  Estimated number of rows: 2174065587 / 109.56 = 19844162
+  Initial alloc = 21828578 rows (19844162 + 9%) using bytes/max(mean-2*sd,min) clamped between [1.1*estn, 2.0*estn]
+  =====
+[08] Assign column names
+[09] Apply user overrides on column types
+  After 0 type and 16 drop user overrides : 00777777000000000097777007777099707
+[10] Allocate memory for the datatable
+  Allocating 19 column slots (35 - 16 dropped) with 21828578 rows
+[11] Read the data
+  jumps=[0..2073), chunk_size=1048753, total_size=2174065587
+Read 19836464 rows x 19 columns from 2.025GiB (2174065890 bytes) file in 03:25.321 wall clock time
+[12] Finalizing the datatable
+  Type counts:
+        16 : drop      '0'
+        16 : int32     '7'
+         3 : float64   '9'
+=============================
+   0.018s (  0%) Memory map 2.025GiB file
+   2.284s (  1%) sep=',' ncol=35 and header detection
+   0.000s (  0%) Column type detection using 10046 sample rows
+   0.218s (  0%) Allocation of 21828578 rows x 35 cols (1.789GiB) of which 19836464 ( 91%) rows used
+ 202.800s ( 99%) Reading 2073 chunks (0 swept) of 1.000MiB (each chunk 9568 rows) using 3 threads
+   +  202.306s ( 99%) Parse to row-major thread buffers (grown 0 times)
+   +    0.417s (  0%) Transpose
+   +    0.077s (  0%) Waiting
+   0.000s (  0%) Rereading 0 columns due to out-of-sample type exceptions
+ 205.321s        Total
+fread secs 205.3996 
+            used   (Mb) gc trigger   (Mb)  max used   (Mb)
+Ncells    352500   18.9     709511   37.9    709511   37.9
+Vcells 240737834 1836.7  317813355 2424.8 240754447 1836.9

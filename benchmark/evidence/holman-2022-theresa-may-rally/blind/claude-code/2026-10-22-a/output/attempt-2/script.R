@@ -1,0 +1,30 @@
+suppressPackageStartupMessages({library(haven); library(dplyr)})
+D <- "<repo>/benchmark/.cache/claude-code/holman-2022-theresa-may-rally/blind/2026-10-22-a/mount/holman_2022_theresa_may_rally"
+g <- read_dta(file.path(D,"global_approval.dta"))
+print(attr(g$execrlc, "labels"))
+cat("n countries:", length(unique(g$country)), "\n")
+miss <- g %>% group_by(country) %>% summarise(n=n(), lagap=sum(!is.na(lag_approval)), fem=sum(!is.na(female_pres)), inf=sum(!is.na(log_inflation)), gr=sum(!is.na(growth)), rlc=sum(!is.na(execrlc)), k16=sum(kill_16))
+print(as.data.frame(miss))
+cat("kill_16 total:", sum(g$kill_16), " female & k16:", sum(g$kill_16==1 & g$female_pres==1, na.rm=TRUE), "\n")
+print(as.data.frame(g[g$kill_16==1 & g$female_pres %in% 1, c("country","qtr","lag_approval")]))
+cat("dup country-qtr:", sum(duplicated(g[,c("country","qtr")])), "\n")
+print(table(g$country_code==g$ccode))
+
+d <- read_dta(file.path(D,"did_data.dta"))
+cat("rows", nrow(d), " ids", length(unique(d$id)), "\n")
+print(table(d$wave, useNA="ifany"))
+for (v in c("time","treatment1","treatment2","post_attack","gender","white","labour","party_other","conservative","ideology","ideology2","ideo3","income","may_bestpm","bestPMW")) {
+  cat("\n--", v, "\n"); print(attr(d[[v]],"labels")); print(table(as.numeric(d[[v]]), useNA="ifany")) }
+cat("\nlikeMayW by wave (non-NA, non-9999):\n")
+print(tapply(!is.na(d$likeMayW) & d$likeMayW!=9999, d$wave, sum))
+cat("bestPMW by wave non-NA:\n"); print(tapply(!is.na(d$bestPMW), d$wave, sum))
+cat("may_bestpm by wave non-NA:\n"); print(tapply(!is.na(d$may_bestpm), d$wave, sum))
+cat("time by wave:\n"); print(table(d$wave, d$time, useNA="ifany"))
+cat("treatment1 by wave:\n"); print(table(d$wave, d$treatment1, useNA="ifany"))
+cat("treatment2 by wave:\n"); print(table(d$wave, d$treatment2, useNA="ifany"))
+cat("post_attack by wave:\n"); print(table(d$wave, d$post_attack, useNA="ifany"))
+cat("bestPMW values by wave:\n"); print(table(d$wave, d$bestPMW, useNA="ifany"))
+cat("may_bestpm by wave:\n"); print(table(d$wave, d$may_bestpm, useNA="ifany"))
+# is treatment1 time-invariant within id?
+tv <- d %>% group_by(id) %>% summarise(k=n_distinct(treatment1, na.rm=TRUE), kg=n_distinct(gender), kl=n_distinct(labour), ki=n_distinct(income))
+print(summary(tv))

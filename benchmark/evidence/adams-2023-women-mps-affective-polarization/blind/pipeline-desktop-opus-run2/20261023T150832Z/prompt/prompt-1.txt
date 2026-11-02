@@ -1,0 +1,105 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: American Political Science Review (2023) 117, 1, 318–324
+Abstract (first 500 chars): © The Author(s), 2022. Published by Cambridge University Press on behalf of the American Political Science Association. This is an Open Access article, distributed under the terms of the Creative Commons Attribution licence (http:// creativecommons.org/licenses/by/4.0), which permits unrestricted re-use, distribution and reproduction, provided the original article is properly cited. Letter Can’t We All Just Get Along? How Women MPs Can Ameliorate
+Methodology Summary: - **Data and unit of analysis**: An original party-level dataset on women's share of each party's parliamentary delegation (125 parties, 20 Western democracies, 1996–2017) is merged with CSES post-election surveys (81 election studies). The data are directed party dyads: each observation is party i's partisans' rating of out-party j in election survey year t. Each pair i, j appears twice, once in each direction (i rating j and j rating i). The estimation sample is 1,842 directed dyads (Table 1, columns 1–2).
+- **Dependent variable**: [party i's supporters' evaluations of out-party j (t)] is the mean 0–10 CSES feeling-thermometer score (0 = strongly dislike, 10 = strongly like) that party i's partisans give out-party j. Partisans are respondents who say they feel "close" or "a little closer" to party i, from the two-step CSES party-closeness question.
+- **Key regressor**: [out-party j's proportion of women MPs (t – 1)] is the share of j's MPs who are women, measured one year before the survey (e.g., 2012 data for the 2013 German election). It is a raw proportion from 0 (all men) to 1 (all women) and is not standardised, so its coefficient is the change in thermometer units for moving from 0 to 1.
+- **Controls (full model, Table 1 col. 2)**:
+  - [elite right–left distance i, j (t)]: the absolute distance between i's and j's Comparative Manifesto Project left–right scores (original scale −100 to +100) in the current election. This control is standardised, so its coefficient is per 1 SD.
+  - Dummy [i, j are coalition partners (t)]: both parties govern together at the time of the survey.
+  - Dummy [i, j are opposition partners (t)]: both parties are in opposition.
+  - The omitted baseline is a pair with one governing party and one opposition party.
+  - Column 1 is the bivariate model: the women-MPs share only, plus fixed effects.
+- **Estimator, fixed effects and standard errors**: OLS with country-year (election) fixed effects, so identification comes from within-election comparisons of out-parties. (The Table 1 row is labelled "Country and year fixed effects.") Standard errors are robust and clustered by election (country-year survey).
+- **Sample restrictions**: The sample includes only dyads where both parties i and j had at least 4 MPs in the year before the survey. Smaller parties are dropped, and Appendix S2 adds them back as a robustness check. The sample is limited to 20 Western publics and CSES election studies from 1996–2017.
+- **Subgroup models**: The full model is re-estimated with dyad means built only from women partisans (col. 3, N = 1,836) and only from men partisans (col. 4, N = 1,833).
+- **Robustness (appendix)**:
+  - Out-party family controls (S3)
+  - Early vs. late periods (S4)
+  - In-party share of women MPs (S5)
+  - Electoral-system proportionality (S6)
+  - Nonlinearity above parity (S7)
+  - Out-parties led by women vs. men (S8)
+  - Country instead of country-year fixed effects, and other fixed-effects specifications (S9–S10)
+  - A stacked individual-level dataset with individual fixed effects (S11)
+  - Evaluation uses coefficient signs and significance from two-tailed tests (p < 0.05, p < 0.01), plus adjusted R².
+
+
+## Quantities to Compute
+Compute each quantity below and print it under the given name.  The paper's reported values are deliberately not shown.
+1. women_mps_coef_bivariate [type: coefficient; unit: thermometer points (0-10) per unit proportion of women MPs]
+   Location: Table 1, column 1 (Bivariate model), [out-party j's proportion of women MPs (t - 1)]
+   Context: Table 1 ("Predictors of Out-Party Thermometer Evaluations"), column 1, the reduced-form model without controls. Ordinary least squares on directed party dyads: the dependent variable is the mean 0-10 feeling-thermometer rating that party i's partisans (respondents who feel close, or a little closer, to party i) assign to out-party j in the Comparative Study of Electoral Systems (CSES) election survey of year t; the regressor is out-party j's proportion of women MPs, lagged one year before the survey and scaled 0 (all men) to 1 (all women). Sample: every directed pair of parties with at least f…
+2. women_mps_coef_full [type: coefficient; unit: thermometer points (0-10) per unit proportion of women MPs]
+   Location: Table 1, column 2 (Full model), [out-party j's proportion of women MPs (t - 1)]
+   Context: Table 1, column 2, the full model and the paper's headline estimate (the change in predicted out-party evaluations from moving from zero to all women MPs). Same dependent variable, regressor, sample, country-year fixed effects and election-clustered standard errors as column 1, adding three controls: the absolute left-right distance between parties i and j in the current election from the Comparative Manifesto Project left-right scale, standardized; a dummy for i and j being governing coalition partners at the time of the survey; and a dummy for i and j both being in opposition (baseline: one …
+3. women_mps_coef_women_partisans [type: coefficient; unit: thermometer points (0-10) per unit proportion of women MPs]
+   Location: Table 1, column 3 (Women partisans), [out-party j's proportion of women MPs (t - 1)]
+   Context: Table 1, column 3: the full model of column 2 (same regressor, controls, country-year fixed effects, election-clustered standard errors, parties with at least four MPs) re-estimated with the dependent variable computed only from self-identified women partisans' thermometer ratings of the out-party.
+4. women_mps_coef_men_partisans [type: coefficient; unit: thermometer points (0-10) per unit proportion of women MPs]
+   Location: Table 1, column 4 (Men partisans), [out-party j's proportion of women MPs (t - 1)]
+   Context: Table 1, column 4: the full model of column 2 re-estimated with the dependent variable computed only from men partisans' thermometer ratings of the out-party (same regressor, controls, fixed effects, clustering and sample restriction).
+5. right_left_distance_coef_full [type: coefficient; unit: thermometer points (0-10) per SD of left-right distance]
+   Location: Table 1, column 2 (Full model), [elite right-left distance i, j (t)]
+   Context: Table 1, column 2, the coefficient on the standardized absolute left-right distance between parties i and j in the current election (Comparative Manifesto Project coding of the manifestos' left-right tone; mean 22.4, SD 17.6 on the -100 to +100 scale before standardizing), from the full model described for women_mps_coef_full.
+6. coalition_partners_coef_full [type: coefficient; unit: thermometer points (0-10)]
+   Location: Table 1, column 2 (Full model), [i, j are coalition partners (t)]
+   Context: Table 1, column 2, the coefficient on the dummy for parties i and j being governing coalition partners at the time of the election survey (baseline: one governing and one opposition party), from the full model described for women_mps_coef_full.
+7. opposition_partners_coef_full [type: coefficient; unit: thermometer points (0-10)]
+   Location: Table 1, column 2 (Full model), [i, j are opposition partners (t)]
+   Context: Table 1, column 2, the coefficient on the dummy for parties i and j both being opposition parties at the time of the election survey (baseline: one governing and one opposition party), from the full model described for women_mps_coef_full.
+8. n_directed_dyads [type: other; unit: directed party dyads (observations)]
+   Location: Table 1, Observations, columns 1-2; Results (text)
+   Context: Number of directed party-dyad observations in the main models (Table 1 columns 1 and 2; the text's count of "directed party dyads in our dataset"): every ordered pair of parties with at least four MPs each, across the 20 Western party systems and the CSES election studies.
+9. n_obs_women_partisans [type: other; unit: directed party dyads (observations)]
+   Location: Table 1, Observations, column 3
+   Context: Number of directed party-dyad observations in the women-partisans model (Table 1 column 3).
+10. n_obs_men_partisans [type: other; unit: directed party dyads (observations)]
+   Location: Table 1, Observations, column 4
+   Context: Number of directed party-dyad observations in the men-partisans model (Table 1 column 4).
+11. n_election_studies [type: other; unit: CSES election studies (country-years)]
+   Location: Data and Analysis; Results (text)
+   Context: Number of CSES election studies (country election-years, 1996-2017, 20 Western democracies) the directed dyads are drawn from — the units by which the paper clusters its standard errors.
+
+## Dataset Information
+Name: adams-2023-women-mps-affective-polarization
+Local path: <repo>/.cache/datasets/adams_2023_women_mps_affective_polarization.script-free
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- multilevel_1-5-22.Rdata (9.8 MB) — objects: multilevel_data (tbl_df, 428172 rows, 88 columns: thermometer_score, country, year, party_number, govern_together, opposition_together, govern_together_10, govern_together_15, govern_together_20, party_like, party_dislike, ID, party_from, gender, party_to, to_mp_number, from_mp_number, to_partyname, to_parfam, from_partyname, from_parfam, from_senior_partner, to_senior_partner, to_in_gov, from_in_gov, from_left_bloc, from_right_bloc, to_left_bloc, to_right_bloc, same_bloc, from_parlgov_id, to_parlgov_id, from_nationalism, fr…)
+- gender_disagregated_8-8-21.rds (265.9 KB) — data.frame, 4522 rows, 85 columns: country, year, dislike, party_number, govern_together, opposition_together, govern_together_10, govern_together_15, govern_together_20, party_like, party_dislike, party_from, party_to, gender, to_mp_number, from_mp_number, to_partyname, to_parfam, from_partyname, from_parfam, from_senior_partner, to_senior_partner, to_in_gov, from_in_gov, from_left_bloc, from_right_bloc, to_left_bloc, to_right_bloc, same_bloc, from_parlgov_id, to_parlgov_id, from_nationalism, from_rile, from_…
+- dyadic_data_1-4-22.Rdata (247.7 KB) — objects: updated_data (spec_tbl_df, 2266 rows, 85 columns: country, year, party_number, govern_together, opposition_together, govern_together_10, govern_together_15, govern_together_20, party_like, party_dislike, to_mp_number, from_mp_number, party_from, party_to, to_partyname, to_parfam, from_partyname, from_parfam, from_senior_partner, to_senior_partner, to_in_gov, from_in_gov, from_left_bloc, from_right_bloc, to_left_bloc, to_right_bloc, same_bloc, from_parlgov_id, to_parlgov_id, from_nationalism, from_rile, from_planeco, from_mar…)
+- Codebook for Dyadic Party Dataset.docx (17.1 KB)
+- Codebook for Gender Disaggregated Dyadic Party Dataset.docx (17.6 KB)
+- Codebook for Multilevel Dataset.docx (17.8 KB)
+- readme.rtf (2.0 KB)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/adams_2023_women_mps_affective_polarization.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Independent Reproduction
+This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's description alone.  The authors' own analysis code is deliberately withheld.  Do NOT open, read, source, or execute any script files that may appear in the dataset directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, and similar) — load data files only.  Derive the estimating equation, sample restrictions, fixed effects, and standard-error clustering from the paper information and claims above.
+
+## Blind Reproduction
+This reproduction is also BLIND: the paper's reported values for the quantities above are deliberately withheld, and you will not be told how close your numbers are.  Compute each quantity as the paper's method defines it; do not tune the specification toward any number you expect.  Do NOT read result tables, logs, or output files that may appear in the dataset directory (.tex, .log, .pdf, .html, and similar) to recover the paper's numbers — compute everything from the data files.  Print a RESULT: line for every quantity listed, using its name exactly.
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

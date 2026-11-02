@@ -1,0 +1,692 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "itt_turnout_barangay_table1_col1",
+      "ground_truth": {
+        "value": -4.544,
+        "standard_error": null,
+        "unit": "percentage points (party-list turnout, % of registered voters)",
+        "claim_type": "coefficient",
+        "location": "Table 1, column 1 (Turnout), ITT row",
+        "context": "Table 1 (\"Intention-to-Treat Effect on Electoral Returns at the Barangay Level\"), column 1.  Intention-to-treat effect of random assignment of a town-hall (deliberative) campaign by either party list (Akbayan or Umalab Ka) on party-list turnout, as a percentage of registered voters, from official COMELEC returns of the May 2013 party-list election, across all experimental barangays (one assigned treatment and two controls per selected municipality). Regression of the electoral return on the assignment dummy with municipality (city) fixed effects (equation 1); inference under randomization of the treatment, permutation p-value p = .404.  Not significant.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "itt_turnout_barangay_table1_col1",
+        "claim_type": "coefficient",
+        "claimed": -4.544,
+        "reproduced": -4.544482,
+        "tolerance": 0.02,
+        "rel_err": 0.000106073943662139,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "itt_turnout_barangay_table1_col1",
+        "reproduced": -4.544482,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.09087999999999999,
+        "abs_err": 0.0004820000000007596,
+        "rel_err": 0.000106073943662139,
+        "margin": 0.00530369718310695,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "itt_vote_overall_barangay_table1_col2",
+      "ground_truth": {
+        "value": 1.096,
+        "standard_error": null,
+        "unit": "percentage points (vote share of the treating party list)",
+        "claim_type": "coefficient",
+        "location": "Table 1, column 2 (Vote (overall)), ITT row",
+        "context": "Table 1, column 2: intention-to-treat effect of town-hall-meeting assignment on the vote share (% of total party-list votes) of the party list campaigning in the barangay, Akbayan and Umalab Ka pooled; all experimental barangays; same specification as column 1 (assignment dummy, municipality fixed effects, randomization inference, permutation p = .048).  The paper's headline result.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "itt_vote_overall_barangay_table1_col2",
+        "claim_type": "coefficient",
+        "claimed": 1.096,
+        "reproduced": 1.096264,
+        "tolerance": 0.02,
+        "rel_err": 0.00024087591240859482,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "itt_vote_overall_barangay_table1_col2",
+        "reproduced": 1.096264,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.021920000000000002,
+        "abs_err": 0.00026399999999981993,
+        "rel_err": 0.00024087591240859482,
+        "margin": 0.01204379562042974,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "itt_vote_akbayan_barangay_table1_col3",
+      "ground_truth": {
+        "value": 1.955,
+        "standard_error": null,
+        "unit": "percentage points (Akbayan vote share)",
+        "claim_type": "coefficient",
+        "location": "Table 1, column 3 (Vote (Akbayan)), ITT row",
+        "context": "Table 1, column 3: intention-to-treat effect on Akbayan's vote share (% of party-list votes), barangays of the municipalities randomly assigned to Akbayan only; assignment dummy with municipality fixed effects, randomization inference (permutation p = .087).\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "itt_vote_akbayan_barangay_table1_col3",
+        "claim_type": "coefficient",
+        "claimed": 1.955,
+        "reproduced": 1.954857,
+        "tolerance": 0.02,
+        "rel_err": 7.314578005115306e-05,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "itt_vote_akbayan_barangay_table1_col3",
+        "reproduced": 1.954857,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.0391,
+        "abs_err": 0.00014300000000000423,
+        "rel_err": 7.314578005115306e-05,
+        "margin": 0.0036572890025576526,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "itt_vote_umalabka_barangay_table1_col4",
+      "ground_truth": {
+        "value": 0.36,
+        "standard_error": null,
+        "unit": "percentage points (Umalab Ka vote share)",
+        "claim_type": "coefficient",
+        "location": "Table 1, column 4 (Vote (Umalab Ka)), ITT row",
+        "context": "Table 1, column 4: intention-to-treat effect on Umalab Ka's vote share (% of party-list votes), barangays of the municipalities randomly assigned to Umalab Ka only; assignment dummy with municipality fixed effects, randomization inference (permutation p = .141).  Not significant.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "itt_vote_umalabka_barangay_table1_col4",
+        "claim_type": "coefficient",
+        "claimed": 0.36,
+        "reproduced": 0.360326,
+        "tolerance": 0.02,
+        "rel_err": 0.0009055555555555361,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "itt_vote_umalabka_barangay_table1_col4",
+        "reproduced": 0.360326,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.0072,
+        "abs_err": 0.00032599999999999296,
+        "rel_err": 0.0009055555555555361,
+        "margin": 0.0452777777777768,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_barangay_table1_cols1_2",
+      "ground_truth": {
+        "value": 39.0,
+        "standard_error": null,
+        "unit": "observations (barangays)",
+        "claim_type": "other",
+        "location": "Table 1, Observations, columns 1 and 2",
+        "context": "Number of barangays (all experimental barangays, both party lists) in the turnout and pooled vote-share regressions of Table 1, columns 1 and 2.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_barangay_table1_cols1_2",
+        "claim_type": "other",
+        "claimed": 39.0,
+        "reproduced": 39.0,
+        "tolerance": 0.01282051282051282,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "printed_precision"
+      },
+      "recomputed": {
+        "result_name": "n_obs_barangay_table1_cols1_2",
+        "reproduced": 39.0,
+        "band_source": "printed_precision",
+        "band_relative": 0.01282051282051282,
+        "band_absolute": 0.5,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_barangay_akbayan_table1_col3",
+      "ground_truth": {
+        "value": 18.0,
+        "standard_error": null,
+        "unit": "observations (barangays)",
+        "claim_type": "other",
+        "location": "Table 1, Observations, column 3",
+        "context": "Number of barangays in the Akbayan vote-share regression, Table 1 column 3 (barangays of the Akbayan municipalities).\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_barangay_akbayan_table1_col3",
+        "claim_type": "other",
+        "claimed": 18.0,
+        "reproduced": 18.0,
+        "tolerance": 0.027777777777777776,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "printed_precision"
+      },
+      "recomputed": {
+        "result_name": "n_obs_barangay_akbayan_table1_col3",
+        "reproduced": 18.0,
+        "band_source": "printed_precision",
+        "band_relative": 0.027777777777777776,
+        "band_absolute": 0.5,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_barangay_umalabka_table1_col4",
+      "ground_truth": {
+        "value": 21.0,
+        "standard_error": null,
+        "unit": "observations (barangays)",
+        "claim_type": "other",
+        "location": "Table 1, Observations, column 4",
+        "context": "Number of barangays in the Umalab Ka vote-share regression, Table 1 column 4 (barangays of the Umalab Ka municipalities).\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_barangay_umalabka_table1_col4",
+        "claim_type": "other",
+        "claimed": 21.0,
+        "reproduced": 21.0,
+        "tolerance": 0.023809523809523808,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "printed_precision"
+      },
+      "recomputed": {
+        "result_name": "n_obs_barangay_umalabka_table1_col4",
+        "reproduced": 21.0,
+        "band_source": "printed_precision",
+        "band_relative": 0.023809523809523808,
+        "band_absolute": 0.5,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "itt_poverty_index_akbayan_tableC3",
+      "ground_truth": {
+        "value": 0.496,
+        "standard_error": null,
+        "unit": "standard deviations (summary index, control-group s.d.)",
+        "claim_type": "coefficient",
+        "location": "SI Table C.3, Akbayan Treatment panel, column 1 (Index), ITT row",
+        "context": "Supporting-information Table C.3 (\"Intention to Treat Effect on Attitudes on Poverty\"), upper panel (Akbayan treatment), column 1. Post-election survey respondents in the Akbayan municipalities. Outcome: the summary index of poverty-related attitudes (Anderson 2008: the four items Poverty, Gap, CCT and Corruption, each oriented so higher means more agreement, standardized with respect to the control group's mean and s.d., combined as an inverse-covariance weighted average).  Linear regression on treatment assignment with city fixed effects (equation 3), weighted to adjust for the oversampling of meeting attendees (inverse probability weights: the proportion of self-reported attendees in the survey relative to actual attendees from the meetings' attendance sheets, in treatment barangays), standard errors clustered by barangay (p = 0.017).  The surveyed municipalities exclude Imus, Pateros and Santa Maria.  The main text shows this estimate in Figure 5.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.496,
+        "outcome": "matches",
+        "notes": "Team-level verdict (code reproduces the paper's output).  Database row \"appendix table c.3\" (o_coeff 0.496, o_p 0.017) is the remove-weights robustness check: r_coeff 0.138 (SE 0.160, p = 0.391), not transcribed.\n",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "itt_poverty_index_akbayan_tableC3",
+        "claim_type": "coefficient",
+        "claimed": 0.496,
+        "reproduced": 0.36525,
+        "tolerance": 0.02,
+        "rel_err": 0.2636088709677419,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "itt_poverty_index_akbayan_tableC3",
+        "reproduced": 0.36525,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.00992,
+        "abs_err": 0.13074999999999998,
+        "rel_err": 0.2636088709677419,
+        "margin": 13.180443548387094,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=0.36525 vs claimed=0.496 (relative error 26.36%, tolerance 2.00%)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "itt_poverty_index_umalabka_tableC3",
+      "ground_truth": {
+        "value": 0.126,
+        "standard_error": null,
+        "unit": "standard deviations (summary index, control-group s.d.)",
+        "claim_type": "coefficient",
+        "location": "SI Table C.3, Umalab Ka Treatment panel, column 1 (Index), ITT row",
+        "context": "SI Table C.3, lower panel (Umalab Ka treatment), column 1: the same poverty-attitudes summary index and specification as the Akbayan panel (assignment, city fixed effects, attendance weights, clustering by barangay), respondents in the Umalab Ka municipalities (p = 0.048).  The text reports it as \"a small, but significant ITT\" on the poverty index (Figure 5, lower panel).\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.126,
+        "outcome": "matches",
+        "notes": "Team-level verdict.  Database row \"appendix table c.3\" (o_coeff 0.126, o_p 0.048), remove weights: r_coeff 0.182 (SE 0.183, p = 0.321), not transcribed.\n",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "itt_poverty_index_umalabka_tableC3",
+        "claim_type": "coefficient",
+        "claimed": 0.126,
+        "reproduced": 0.292229,
+        "tolerance": 0.02,
+        "rel_err": 1.319277777777778,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "itt_poverty_index_umalabka_tableC3",
+        "reproduced": 0.292229,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.00252,
+        "abs_err": 0.16622900000000002,
+        "rel_err": 1.319277777777778,
+        "margin": 65.96388888888889,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=0.292229 vs claimed=0.126 (relative error 131.93%, tolerance 2.00%)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "itt_gender_index_akbayan_tableC4",
+      "ground_truth": {
+        "value": 0.45,
+        "standard_error": null,
+        "unit": "standard deviations (summary index, control-group s.d.)",
+        "claim_type": "coefficient",
+        "location": "SI Table C.4, Akbayan Treatment panel, column 1 (Index), ITT row",
+        "context": "SI Table C.4 (\"ITT Effect and CACE on Attitudes on Gender\"), Akbayan treatment panel, column 1.  Outcome: the summary index of attitudes on gender discrimination and sexism built from the five gender items (Female Rep., Female Pol., Equality, Discrimination, Harassment), oriented, standardized on the control group and inverse-covariance weighted as above.  Respondents in the Akbayan municipalities; assignment with city fixed effects, attendance weights, standard errors clustered by barangay (p = 0.032).  The main text reports this as the town-hall effect on awareness of gender-related issues (Figure 5, upper panel).\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.45,
+        "outcome": "matches",
+        "notes": "Team-level verdict.  Database row \"appendix table c.4, panel 1, column 1\" (o_coeff 0.45, o_p 0.032), remove weights: r_coeff -0.001 (SE 0.036, p = 0.977) — the gender-index effect vanishes unweighted; not transcribed.\n",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "itt_gender_index_akbayan_tableC4",
+        "claim_type": "coefficient",
+        "claimed": 0.45,
+        "reproduced": 0.404224,
+        "tolerance": 0.02,
+        "rel_err": 0.10172444444444441,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "itt_gender_index_akbayan_tableC4",
+        "reproduced": 0.404224,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.009000000000000001,
+        "abs_err": 0.04577599999999998,
+        "rel_err": 0.10172444444444441,
+        "margin": 5.0862222222222195,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=0.404224 vs claimed=0.45 (relative error 10.17%, tolerance 2.00%)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "itt_gender_index_umalabka_tableC4",
+      "ground_truth": {
+        "value": 0.095,
+        "standard_error": null,
+        "unit": "standard deviations (summary index, control-group s.d.)",
+        "claim_type": "coefficient",
+        "location": "SI Table C.4, Umalab Ka Treatment panel, column 1 (Index), ITT row",
+        "context": "SI Table C.4, Umalab Ka treatment panel, column 1: the gender- attitudes summary index of the Akbayan panel, respondents in the Umalab Ka municipalities, same specification (p = 0.079).\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.095,
+        "outcome": "matches",
+        "notes": "Team-level verdict.  Database row \"appendix table c.4, panel 2, column 1\" (o_coeff 0.095, o_p 0.079), remove weights: r_coeff 0.088 (SE 0.087, p = 0.312), not transcribed.\n",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "itt_gender_index_umalabka_tableC4",
+        "claim_type": "coefficient",
+        "claimed": 0.095,
+        "reproduced": -0.009665,
+        "tolerance": 0.02,
+        "rel_err": 1.1017368421052631,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "itt_gender_index_umalabka_tableC4",
+        "reproduced": -0.009665,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.0019,
+        "abs_err": 0.10466500000000001,
+        "rel_err": 1.1017368421052631,
+        "margin": 55.08684210526316,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=-0.009665 vs claimed=0.095 (relative error 110.17%, tolerance 2.00%)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "itt_vote_overall_unweighted_tableF1_col2",
+      "ground_truth": {
+        "value": 23.242,
+        "standard_error": null,
+        "unit": "percentage points (probability of voting for the treating party list)",
+        "claim_type": "coefficient",
+        "location": "SI Table F.1, column 2 (Vote (Overall)), ITT row",
+        "context": "SI Table F.1 (\"ITT Effect and CACE on Electoral Returns at the Individual Level (Unweighted Results)\"), column 2: the robustness version of the individual-level vote-choice ITT WITHOUT the attendance-oversampling adjustment (so self-reported attendees are overrepresented).  Outcome: survey respondent reports voting for the party list that campaigned in their municipality, in percent, among respondents who turned out, both party lists pooled.  Linear probability model on treatment assignment with city fixed effects; inference for the ITT under randomization of the treatment (permutation p = 0.00001).  Imus, Pateros and Santa Maria not included.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 23.242,
+        "outcome": "matches",
+        "notes": "Team-level verdict.  Database row \"appendix table f.2\" (= Table F.1 column 2; o_coeff recorded as 0.234 against the printed 23.242, i.e. 0.232 as a proportion — a transcription slip in the database; o_p 0.000), include omitted cities: r_coeff 0.235 (SE 0.052), not transcribed.\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "itt_vote_overall_unweighted_tableF1_col2",
+        "claim_type": "coefficient",
+        "claimed": 23.242,
+        "reproduced": 23.509924,
+        "tolerance": 0.02,
+        "rel_err": 0.01152757938215303,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "itt_vote_overall_unweighted_tableF1_col2",
+        "reproduced": 23.509924,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.46484000000000003,
+        "abs_err": 0.2679240000000007,
+        "rel_err": 0.01152757938215303,
+        "margin": 0.5763789691076514,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "itt_vote_akbayan_unweighted_tableF1_col3",
+      "ground_truth": {
+        "value": 31.729,
+        "standard_error": null,
+        "unit": "percentage points (probability of voting for Akbayan)",
+        "claim_type": "coefficient",
+        "location": "SI Table F.1, column 3 (Vote (Akbyan)), ITT row",
+        "context": "SI Table F.1, column 3: unweighted individual-level ITT on reporting a vote for Akbayan, in percent, respondents in the Akbayan municipalities who turned out; assignment with city fixed effects, permutation inference (p = 0.00000).\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 31.729,
+        "outcome": "matches",
+        "notes": "Team-level verdict.  Database row \"appendix table f.3\" (= Table F.1 column 3; o_coeff 0.317, o_p 0.000), include omitted cities: r_coeff 0.320 (SE 0.066), not transcribed.\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "itt_vote_akbayan_unweighted_tableF1_col3",
+        "claim_type": "coefficient",
+        "claimed": 31.729,
+        "reproduced": 32.009665,
+        "tolerance": 0.02,
+        "rel_err": 0.0088456932144095,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "itt_vote_akbayan_unweighted_tableF1_col3",
+        "reproduced": 32.009665,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.63458,
+        "abs_err": 0.28066499999999905,
+        "rel_err": 0.0088456932144095,
+        "margin": 0.442284660720475,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 13,
+    "row_passed": 9,
+    "recomputed_passed": 9,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "lopez-moctezuma-2022-policy-deliberation-philippines",
+    "mode": "blind",
+    "reproducer": "claude-code",
+    "label": "claude-code",
+    "model": null,
+    "oracle": false,
+    "run": "2026-10-22-a",
+    "results_file": "claude-code-6papers-all-modes-2026-10-22.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/lopez-moctezuma-2022-policy-deliberation-philippines/blind/claude-code/20261022T032229Z",
+    "run_dir": "benchmark/reproductions/lopez-moctezuma-2022-policy-deliberation-philippines/blind/2026-10-22-a",
+    "date": "2026-10-22T03:20:33Z",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 13,
+    "final": 9,
+    "first_scored": 9,
+    "first_scored_index": 1,
+    "first_attempt": 0,
+    "n_refinements": 0,
+    "n_error_refinements": 0,
+    "n_claim_refinements": 0,
+    "n_executions": 2,
+    "n_files_stripped": 16,
+    "agrees_with_i4r": false,
+    "deviations_manifest": [
+      "Attendance-oversampling weights reconstructed from the paper's description: in barangays with town-hall attendance, self-reported attendees get weight att.prop/s_j and non-attendees (1-att.prop)/(1-s_j), where s_j is the survey attendee share in the barangay and att.prop the attendance-sheet share of registered voters (data_agg); all other respondents weight 1. Respondents with missing attendance treated as non-attendees for the weights.",
+      "Anderson (2008) indices built on all survey respondents with a non-missing city/barangay (control group = assignment 0), item weights from the inverse of the pairwise covariance matrix of the control-standardized items, averaged over available items, then re-standardized on the control group. Item orientation: poverty, gap, corruption reversed (6 - x) so higher = more agreement the issue is a main problem; cct as coded. Gender: equality and harassment as coded (5 = strongly disagree with a sexist statement), discrimination reversed (higher = agrees women miss out due to discrimination), femhouse and fempol as coded.",
+      "Individual regressions restricted to respondents with a valid party-list turnout answer (1,081 here vs 1,082 in the paper; one respondent lacks city/barangay). Vote outcomes (F.1) among party-list voters, unweighted, x100.",
+      "Barangay-level regressions use data_agg (39 barangays; Luisiana's San Diego/San Antonio is a single row) with the assignment variable as coded there."
+    ],
+    "deviations_stdout": [],
+    "notes": "Table 1: OLS of turnout.party / share.treated / share.akbayan / share.umalabka on assignment with city fixed effects (fixest), all 39 barangays or the 18 Akbayan / 21 Umalab Ka barangays. A within-city permutation p-value was printed for information only and not used for anything. SI C.3/C.4: weighted OLS of the poverty/gender Anderson indices on assignment with city FE, SEs clustered by barangay, by party-list municipality group. SI F.1: unweighted LPM of vote (x100) on assignment with city FE among respondents who voted in the party-list race. attempt-1 was an exploratory data-inspection run with no RESULT lines. Before attempt-1, a botched docker invocation ran on a not-yet-written script path (docker created an empty directory in its place, no R code executed); that empty directory was removed and is not counted as an attempt. Codebook PDFs in the data directory were read for variable definitions. Blind mode: no comparison to reported values was made.",
+    "files_read_outside_mount": [],
+    "paper_text": "paper.blind.txt",
+    "complete": true,
+    "missing": []
+  }
+}

@@ -1,0 +1,33 @@
+Table 4 (OLS, country FE), coefficients:
+            kill_16         female_pres kill_16:female_pres 
+           2.322089           -2.937172           -3.828386 
+Panel-corrected SEs (within model):
+                     Estimate Std. Error    t value  Pr(>|t|)
+kill_16              2.322089   1.915344  1.2123614 0.2254386
+kill_16:female_pres -3.828386   4.260006 -0.8986809 0.3688715
+R2 (LSDV): 0.2675617  N: 4486 
+Table 2 May likeability (RE):
+               Estimate Std. Error     z-value      Pr(>|z|)
+att_time    -0.12742935 0.01866072  -6.8287488  8.565838e-12
+treatment1   0.01777651 0.02792734   0.6365272  5.244329e-01
+time        -0.50072174 0.02285113 -21.9123442 1.981180e-106
+(Intercept)  1.94429846 0.08826517  22.0279241 1.555399e-107
+Table 2 May best PM (RE LPM):
+                 Estimate  Std. Error      z-value     Pr(>|z|)
+att_time    -0.0500980669 0.004402295 -11.37998881 5.260648e-30
+treatment1  -0.0001637571 0.003960159  -0.04135113 9.670160e-01
+time         0.2097601019 0.003609309  58.11641415 0.000000e+00
+(Intercept)  0.1506001211 0.013091457  11.50369433 1.263875e-30
+DEVIATION: Table 2 May best PM column estimated as a linear probability model (random-effects GLS), not logit
+DEVIATION: Table 4 approval timing uses the dataset's lag_approval with the contemporaneous kill_16 indicator
+RESULT:intl_attack_table4=2.322089
+RESULT:intl_attack_x_woman_exec_table4=-3.828386
+RESULT:n_obs_table4=4486.000000
+RESULT:did_attack_x_time_like_may_table2=-0.127429
+RESULT:did_attack_like_may_table2=0.017777
+RESULT:did_time_like_may_table2=-0.500722
+RESULT:did_attack_x_time_may_best_pm_table2=-0.050098
+RESULT:did_attack_may_best_pm_table2=-0.000164
+RESULT:did_time_may_best_pm_table2=0.209760
+RESULT:n_obs_did_like_may_table2=143499.000000
+RESULT:n_obs_did_may_best_pm_table2=97155.000000

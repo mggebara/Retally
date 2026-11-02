@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "entry_id": "holman-2022-theresa-may-rally",
+  "mode": "independent",
+  "run_id": "2026-11-01-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-6", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-7", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-8", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [
+    "Table 2 May best PM column estimated as a linear probability model (random-effects GLS), not the logit the table note describes; the published coefficients/SEs/constant are on the linear-probability scale.",
+    "Table 2 estimated as respondent random-effects GLS (Swamy-Arora, plm), i.e. Stata xtreg's default, with explicit wave dummies; time is collinear with the wave dummies, so the last wave dummy is dropped.",
+    "Table 4: DV is the dataset's only approval measure (lag_approval) regressed on the contemporaneous kill_16 (16+ deaths) indicator; execrlc entered linearly; country_code fixed effects via OLS. The sample is all complete cases (N=4486); the paper's N=4328 could not be reconstructed (growth-rate, lead/lag timing and AR(1)-trimming variants were counted in exploratory runs and none gives 4328). Point estimates are OLS-LSDV; Beck-Katz panel-corrected SEs (plm vcovBK) are printed but not scored, and no AR(1) correction was applied."
+  ],
+  "notes": "Exploratory runs (attempts 1-5) inspected variables and counted complete cases only. In the DiD, controls white+gender+labour+party_other+income+ideology2 give exactly N=143,499 / 97,155. Attempt 6 (pooled OLS DiD; factor execrlc in Table 4) was compared with the claims; Table 4 then moved to linear execrlc and the DiD treatment to post_attack (estimates identical to treatment1 in these samples). Attempt 7 crashed because plm masked dplyr::lead; fixed. Attempt 8 was compared; the DiD then moved from pooled OLS to random-effects GLS, which reproduces all Table 2 coefficients, constants and SEs exactly. Table 4: both coefficients are within tolerance (2.32 vs 3.11, -3.83 vs -4.33), but N (4486 vs 4328) and R2 (0.27 vs 0.58) differ, so the paper's exact Table 4 sample/estimator (likely xtpcse, possibly with AR(1)) was not recovered. The dataset Readme (.docx, a documentation file inside the mount) was read; no script files were opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T04:29:06Z",
+  "finished_at": "2026-11-02T04:38:00Z"
+}

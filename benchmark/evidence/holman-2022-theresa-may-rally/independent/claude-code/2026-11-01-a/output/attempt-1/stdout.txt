@@ -1,0 +1,264 @@
+tibble [5,469 × 28] (S3: tbl_df/tbl/data.frame)
+ $ country         : chr [1:5469] "Argentina" "Argentina" "Argentina" "Argentina" ...
+ $ qtr             : num [1:5469] 95 96 97 98 99 100 101 102 103 104 ...
+ $ rally_events    : num [1:5469] 0 0 0 0 0 0 0 0 0 0 ...
+ $ rally_kill      : num [1:5469] 0 0 0 0 0 0 0 0 0 0 ...
+ $ female_pres     : num [1:5469] 0 0 0 0 0 0 0 0 0 0 ...
+ $ execrlc         : dbl+lbl [1:5469] 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,...
+   ..@ label       : chr "DPI Exec ideology"
+   ..@ format.stata: chr "%8.0g"
+   ..@ labels      : Named num [1:3] 1 2 3
+ $ rally_event_any : num [1:5469] 0 0 0 0 0 0 0 0 0 0 ...
+ $ country_code    : num [1:5469] 1 1 1 1 1 1 1 1 1 1 ...
+ $ ccode           : num [1:5469] 1 1 1 1 1 1 1 1 1 1 ...
+ $ election_qtr    : num [1:5469] 1 0 0 0 0 0 0 0 1 0 ...
+ $ lag_approval    : num [1:5469] 70.9 70.8 66.2 62.8 60 ...
+ $ rally_event_any2: num [1:5469] 0 0 0 0 0 0 0 0 0 0 ...
+ $ growth          : num [1:5469] 486568 486568 486568 486568 452722 ...
+ $ log_inflation   : num [1:5469] NA NA NA NA NA NA NA NA NA NA ...
+ $ manchester      : num [1:5469] 0 0 0 0 0 0 0 0 0 0 ...
+ $ kill_16         : num [1:5469] 0 0 0 0 0 0 0 0 0 0 ...
+ $ kill_18         : num [1:5469] 0 0 0 0 0 0 0 0 0 0 ...
+ $ kill_10         : num [1:5469] 0 0 0 0 0 0 0 0 0 0 ...
+ $ pres_15death    : num [1:5469] 2 2 2 2 2 2 2 2 2 2 ...
+ $ pres_20death    : num [1:5469] 2 2 2 2 2 2 2 2 2 2 ...
+ $ kill_12         : num [1:5469] 0 0 0 0 0 0 0 0 0 0 ...
+ $ kill_14         : num [1:5469] 0 0 0 0 0 0 0 0 0 0 ...
+ $ kill_20         : num [1:5469] 0 0 0 0 0 0 0 0 0 0 ...
+ $ kill_08         : num [1:5469] 0 0 0 0 0 0 0 0 0 0 ...
+ $ kill_06         : num [1:5469] 0 0 0 0 0 0 0 0 0 0 ...
+ $ kill_under5     : num [1:5469] 1 1 1 1 1 1 1 1 1 1 ...
+ $ kill_1_5        : num [1:5469] 0 0 0 0 0 0 0 0 0 0 ...
+ $ kill_3_5        : num [1:5469] 0 0 0 0 0 0 0 0 0 0 ...
+country : Country 
+qtr : Quarter 
+rally_events : Rally terrorist events 
+rally_kill : N deaths in rally terrorist events 
+female_pres : Woman head of state 
+execrlc : DPI Exec ideology 
+rally_event_any : Any rally terrorist event 
+country_code : group(country type_office) 
+ccode :  
+election_qtr :  
+lag_approval : Lagged approval 
+rally_event_any2 : Any rally terrorist event* 
+growth : Growth in real GDP 
+log_inflation : Inflation logged 
+manchester : Int'l terrorist attack 20 or more dead 
+kill_16 : Int'l terrorist attack 16+ death 
+kill_18 : Int'l terrorist attack, kill 18+ 
+kill_10 : Int'l attack 10+ death 
+pres_15death : Country w a 15+ death terrorist attack 
+pres_20death : Country w a 20+ death terrorist attack 
+kill_12 : Int'l terrorist attack, kill 12+ 
+kill_14 : Int'l terrorist attack, kill 14+ 
+kill_20 : Int'l terrorist attack, kill 20+ 
+kill_08 : Int'l terrorist attack, kill 8+ 
+kill_06 : Int'l terrorist attack, kill 6+ 
+kill_under5 : Int'l terrorist attack, kill under 5 
+kill_1_5 :  
+kill_3_5 :  
+      country          qtr         rally_events        rally_kill      
+ Length   :5469   Min.   : 60.0   Min.   : 0.00000   Min.   :   0.000  
+ N.unique :  44   1st Qu.:134.0   1st Qu.: 0.00000   1st Qu.:   0.000  
+ N.blank  :   0   Median :169.0   Median : 0.00000   Median :   0.000  
+ Min.nchar:   4   Mean   :165.3   Mean   : 0.07314   Mean   :   1.544  
+ Max.nchar:  18   3rd Qu.:201.0   3rd Qu.: 0.00000   3rd Qu.:   0.000  
+                  Max.   :231.0   Max.   :34.00000   Max.   :3004.000  
+                                                                       
+  female_pres         execrlc      rally_event_any    country_code  
+ Min.   :0.00000   Min.   :0.000   Min.   :0.00000   Min.   : 1.00  
+ 1st Qu.:0.00000   1st Qu.:1.000   1st Qu.:0.00000   1st Qu.:13.00  
+ Median :0.00000   Median :1.000   Median :0.00000   Median :29.00  
+ Mean   :0.09817   Mean   :1.643   Mean   :0.03785   Mean   :29.82  
+ 3rd Qu.:0.00000   3rd Qu.:3.000   3rd Qu.:0.00000   3rd Qu.:41.00  
+ Max.   :1.00000   Max.   :3.000   Max.   :1.00000   Max.   :66.00  
+ NAs    :376       NAs    :60                                       
+     ccode        election_qtr      lag_approval    rally_event_any2 
+ Min.   : 1.00   Min.   :0.00000   Min.   : 2.903   Min.   :0.00000  
+ 1st Qu.:13.00   1st Qu.:0.00000   1st Qu.:35.582   1st Qu.:0.00000  
+ Median :29.00   Median :0.00000   Median :43.788   Median :0.00000  
+ Mean   :29.82   Mean   :0.08192   Mean   :44.298   Mean   :0.02519  
+ 3rd Qu.:41.00   3rd Qu.:0.00000   3rd Qu.:52.819   3rd Qu.:0.00000  
+ Max.   :66.00   Max.   :1.00000   Max.   :86.950   Max.   :1.00000  
+                                   NAs    :106      NAs    :71       
+     growth         log_inflation       manchester          kill_16       
+ Min.   :    7372   Min.   :-4.7907   Min.   :0.000000   Min.   :0.00000  
+ 1st Qu.:   81539   1st Qu.: 0.8225   1st Qu.:0.000000   1st Qu.:0.00000  
+ Median :  312652   Median : 1.4294   Median :0.000000   Median :0.00000  
+ Mean   : 1197870   Mean   : 1.5532   Mean   :0.007131   Mean   :0.01097  
+ 3rd Qu.: 1526325   3rd Qu.: 2.2026   3rd Qu.:0.000000   3rd Qu.:0.00000  
+ Max.   :19542980   Max.   : 8.9202   Max.   :1.000000   Max.   :1.00000  
+ NAs    :45         NAs    :473                                           
+    kill_18            kill_10         pres_15death     pres_20death   
+ Min.   :0.000000   Min.   :0.00000   Min.   : 0.000   Min.   :0.0000  
+ 1st Qu.:0.000000   1st Qu.:0.00000   1st Qu.: 0.000   1st Qu.:0.0000  
+ Median :0.000000   Median :0.00000   Median : 0.000   Median :0.0000  
+ Mean   :0.009325   Mean   :0.01499   Mean   : 1.326   Mean   :0.7967  
+ 3rd Qu.:0.000000   3rd Qu.:0.00000   3rd Qu.: 2.000   3rd Qu.:1.0000  
+ Max.   :1.000000   Max.   :1.00000   Max.   :14.000   Max.   :9.0000  
+                                                                       
+    kill_12           kill_14           kill_20            kill_08       
+ Min.   :0.00000   Min.   :0.00000   Min.   :0.000000   Min.   :0.00000  
+ 1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.:0.000000   1st Qu.:0.00000  
+ Median :0.00000   Median :0.00000   Median :0.000000   Median :0.00000  
+ Mean   :0.01317   Mean   :0.01152   Mean   :0.007862   Mean   :0.01774  
+ 3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:0.000000   3rd Qu.:0.00000  
+ Max.   :1.00000   Max.   :1.00000   Max.   :1.000000   Max.   :1.00000  
+                                                                         
+    kill_06         kill_under5        kill_1_5          kill_3_5      
+ Min.   :0.00000   Min.   :0.0000   Min.   :0.00000   Min.   :0.00000  
+ 1st Qu.:0.00000   1st Qu.:1.0000   1st Qu.:0.00000   1st Qu.:0.00000  
+ Median :0.00000   Median :1.0000   Median :0.00000   Median :0.00000  
+ Mean   :0.02267   Mean   :0.9773   Mean   :0.01518   Mean   :0.01518  
+ 3rd Qu.:0.00000   3rd Qu.:1.0000   3rd Qu.:0.00000   3rd Qu.:0.00000  
+ Max.   :1.00000   Max.   :1.0000   Max.   :1.00000   Max.   :1.00000  
+                                                                       
+n countries 44 
+
+   0    1    2    3    7    9   14 <NA> 
+3446  637  735  220  127  132  172    0 
+
+   0    1 <NA> 
+4593  500  376 
+
+   0    1 <NA> 
+5409   60    0 
+
+   0    1    2    3 <NA> 
+ 730 2250  649 1780   60 
+
+   0    1 <NA> 
+5021  448    0 
+     country qtr rally_events rally_kill female_pres execrlc rally_event_any
+1  Argentina  95            0          0           0       0               0
+2  Argentina  96            0          0           0       2               0
+3  Argentina  97            0          0           0       2               0
+4  Argentina  98            0          0           0       2               0
+5  Argentina  99            0          0           0       2               0
+6  Argentina 100            0          0           0       2               0
+7  Argentina 101            0          0           0       2               0
+8  Argentina 102            0          0           0       2               0
+9  Argentina 103            0          0           0       2               0
+10 Argentina 104            0          0           0       2               0
+11 Argentina 105            0          0           0       2               0
+12 Argentina 106            0          0           0       2               0
+   country_code ccode election_qtr lag_approval rally_event_any2   growth
+1             1     1            1     70.88222                0 486568.0
+2             1     1            0     70.82196                0 486568.0
+3             1     1            0     66.17466                0 486568.0
+4             1     1            0     62.80960                0 486568.0
+5             1     1            0     59.96486                0 452721.8
+6             1     1            0     57.72357                0 452721.8
+7             1     1            0     62.34926                0 452721.8
+8             1     1            0     61.92035                0 452721.8
+9             1     1            1     59.81919                0 485062.6
+10            1     1            0     57.78862                0 485062.6
+11            1     1            0     56.19816                0 485062.6
+12            1     1            0     52.76501                0 485062.6
+   log_inflation manchester kill_16 kill_18 kill_10 pres_15death pres_20death
+1             NA          0       0       0       0            2            2
+2             NA          0       0       0       0            2            2
+3             NA          0       0       0       0            2            2
+4             NA          0       0       0       0            2            2
+5             NA          0       0       0       0            2            2
+6             NA          0       0       0       0            2            2
+7             NA          0       0       0       0            2            2
+8             NA          0       0       0       0            2            2
+9             NA          0       0       0       0            2            2
+10            NA          0       0       0       0            2            2
+11            NA          0       0       0       0            2            2
+12            NA          0       0       0       0            2            2
+   kill_12 kill_14 kill_20 kill_08 kill_06 kill_under5 kill_1_5 kill_3_5
+1        0       0       0       0       0           1        0        0
+2        0       0       0       0       0           1        0        0
+3        0       0       0       0       0           1        0        0
+4        0       0       0       0       0           1        0        0
+5        0       0       0       0       0           1        0        0
+6        0       0       0       0       0           1        0        0
+7        0       0       0       0       0           1        0        0
+8        0       0       0       0       0           1        0        0
+9        0       0       0       0       0           1        0        0
+10       0       0       0       0       0           1        0        0
+11       0       0       0       0       0           1        0        0
+12       0       0       0       0       0           1        0        0
+[1] "numeric"
+[1]  95  96  97  98  99 100
+tibble [5 × 34] (S3: tbl_df/tbl/data.frame)
+ $ id             : num [1:5] 1 1 1 1 1
+ $ wave           : num [1:5] 1 2 3 4 5
+ $ wt_new_W12     : num [1:5] NA NA NA NA NA
+ $ starttimeW     : POSIXct[1:5], format: "2014-03-03 19:59:22" "2014-05-28 15:12:42" ...
+ $ endtimeW       : POSIXct[1:5], format: "2014-03-03 20:19:42" "2014-05-28 15:26:49" ...
+ $ likeMayW       : dbl+lbl [1:5] NA, NA, NA, NA, NA
+   ..@ format.stata: chr "%16.0g"
+   ..@ labels      : Named num [1:12] 0 1 2 3 4 5 6 7 8 9 ...
+ $ likeCorbynW    : dbl+lbl [1:5] NA, NA, NA, NA, NA
+   ..@ format.stata: chr "%16.0g"
+   ..@ labels      : Named num [1:12] 0 1 2 3 4 5 6 7 8 9 ...
+ $ likeSturgeonW  : dbl+lbl [1:5] NA, NA, NA, NA, NA
+   ..@ format.stata: chr "%16.0g"
+   ..@ labels      : Named num [1:12] 0 1 2 3 4 5 6 7 8 9 ...
+ $ gender         : dbl+lbl [1:5] 1, 1, 1, 1, 1
+   ..@ label       : chr "Gender"
+   ..@ format.stata: chr "%9.0g"
+   ..@ labels      : Named num [1:2] 1 2
+ $ post_bridge    : num [1:5] NA NA NA NA NA
+ $ dates_to_bomb  : num [1:5] NA NA NA NA NA
+ $ z_distance     : num [1:5] NA NA NA NA NA
+ $ white          : num [1:5] 1 1 1 1 1
+ $ conservative   : num [1:5] 0 0 0 0 0
+ $ labour         : num [1:5] 0 0 0 0 0
+ $ party_other    : num [1:5] 1 1 1 1 1
+ $ income         : num [1:5] 3 3 3 3 3
+ $ ideology       : num [1:5] NA NA NA NA NA
+ $ ideology2      : num [1:5] NA NA NA NA NA
+ $ ideo3          : num [1:5] NA NA NA NA NA
+ $ may_bestpm     : num [1:5] 0 0 0 0 0
+ $ post_attack    : num [1:5] 0 0 0 0 0
+ $ likeMayW12a    : num [1:5] NA NA NA NA NA
+ $ likeMayW12b    : num [1:5] NA NA NA NA NA
+ $ gender_roles   : num [1:5] 2 2 2 2 2
+ $ female_equality: num [1:5] 3 3 3 3 3
+ $ women_office   : num [1:5] NA NA NA NA NA
+ $ women_discrimin: num [1:5] 5 5 5 5 5
+ $ women_jobs     : num [1:5] 3 3 3 3 3
+ $ likeFarronW    : num [1:5] NA NA NA NA NA
+ $ bestPMW        : num [1:5] NA NA NA NA NA
+ $ time           : num [1:5] 0 0 0 0 0
+ $ treatment1     : num [1:5] 0 0 0 0 0
+ $ treatment2     : num [1:5] 0 0 0 0 0
+id : ID 
+wave :  
+wt_new_W12 :  
+starttimeW :  
+endtimeW :  
+likeMayW : 0 1 2 3 4 5 6 7 8 9 10 9999 
+likeCorbynW : 0 1 2 3 4 5 6 7 8 9 10 9999 
+likeSturgeonW : 0 1 2 3 4 5 6 7 8 9 10 9999 
+gender : Gender 
+post_bridge : Surveyed after Bridge attack 
+dates_to_bomb : dates_to_bomb 
+z_distance : Distance to Manchester 
+white : Ethnically British 
+conservative : Conservative 
+labour : Labour 
+party_other : Other Party ID 
+income : Income 
+ideology : Ideology 
+ideology2 : Ideology 
+ideo3 : Ideology 
+may_bestpm : Think May would be best Prime Minister 
+post_attack : Surveyed after Manchester attack 
+likeMayW12a :  
+likeMayW12b :  
+gender_roles : Endorse gender roles 
+female_equality : Attempts to give women equal rights 
+women_office : +/- women in office 
+women_discrimin : How much discrim against women 
+women_jobs : Women unfair advantage jobs 
+likeFarronW :  
+bestPMW :  
+time : Time 
+treatment1 : Manchester Attack 
+treatment2 :  

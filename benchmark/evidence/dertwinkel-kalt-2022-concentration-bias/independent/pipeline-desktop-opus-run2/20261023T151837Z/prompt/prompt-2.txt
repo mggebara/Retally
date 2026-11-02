@@ -1,0 +1,342 @@
+You are fixing R code that was generated to reproduce results from an econometrics paper.
+
+## Original Code
+```r
+suppressPackageStartupMessages({
+  library(readr)
+  library(dplyr)
+  library(sandwich)
+  library(lmtest)
+  library(AER)
+})
+set.seed(42)
+
+base <- "<repo>/.cache/datasets/dertwinkel_kalt_2022_concentration_bias.script-free"
+df <- readr::read_csv(file.path(base, "Consumption Experiment/Stata/Consumption_Experiment.csv"),
+                      show_col_types = FALSE, guess_max = 100000)
+df <- as.data.frame(df)
+cat("Columns:\n"); print(names(df))
+cat("Rows:", nrow(df), "\n")
+
+num <- function(x) suppressWarnings(as.numeric(as.character(x)))
+has <- function(v) v %in% names(df)
+
+# ---------- subject id ----------
+cand_ids <- list()
+if (has("tn") && has("session")) cand_ids[["session_tn"]] <- paste(df$session, df$tn, sep = "_")
+if (has("tn")) cand_ids[["tn"]] <- as.character(df$tn)
+if (has("id")) cand_ids[["id"]] <- as.character(df$id)
+score_id <- function(id) {
+  tb <- table(id)
+  c(max = max(tb), share9 = mean(tb == 9), n = length(tb))
+}
+best <- NULL; best_sc <- -Inf
+for (nm in names(cand_ids)) {
+  s <- score_id(cand_ids[[nm]])
+  cat("id candidate", nm, ": max rows", s["max"], " share with 9 rows", s["share9"], " n", s["n"], "\n")
+  sc <- s["share9"] - ifelse(s["max"] > 9, 1, 0)
+  if (sc > best_sc) { best_sc <- sc; best <- nm }
+}
+df$sid <- cand_ids[[best]]
+cat("Using id:", best, "\n")
+
+df$ip <- num(df$indifference_point)
+df$dn <- if (has("decision_number")) num(df$decision_number) else NA
+df$disp <- if (has("dispersed")) num(df$dispersed) else NA
+
+# ---------- identify final (unbalanced / control-repeat) row ----------
+df <- df %>% group_by(sid) %>% mutate(rowpos = row_number()) %>% ungroup() %>% as.data.frame()
+df$final <- FALSE
+if (!all(is.na(df$disp))) df$final <- !is.na(df$disp) & df$disp == 1
+sub_has_final <- tapply(df$final, df$sid, any)
+need <- names(sub_has_final)[!sub_has_final]
+if (length(need) > 0) {
+  cat("Subjects without dispersed flag:", length(need), "\n")
+  for (s in need) {
+    idx <- which(df$sid == s)
+    if (length(idx) < 2) next
+    dnv <- df$dn[idx]
+    if (any(!is.na(dnv) & dnv == 9)) {
+      df$final[idx[which(dnv == 9)[1]]] <- TRUE
+    } else if (any(duplicated(dnv))) {
+      dup <- dnv[duplicated(dnv)][1]
+      df$final[idx[max(which(dnv == dup))]] <- TRUE
+    } else {
+      df$final[idx[length(idx)]] <- TRUE
+    }
+  }
+}
+
+bal <- df[!df$final, ]
+fin <- df[df$final, ]
+fin <- fin[!duplicated(fin$sid), ]
+cat("Balanced ip range:", range(bal$ip, na.rm = TRUE), "\n")
+cat("Final ip range:", range(fin$ip, na.rm = TRUE), "\n")
+
+# ---------- d scale ----------
+shifted <- FALSE
+if (min(fin$ip, na.rm = TRUE) >= 0 && max(fin$ip, na.rm = TRUE) > 62) {
+  # possibly stored on 0..125 scale; only shift if no subject exceeds 125
+  if (max(fin$ip, na.rm = TRUE) <= 125 && mean(fin$ip > 62, na.rm = TRUE) > 0.4) shifted <- TRUE
+}
+fin$d_raw <- if (shifted) fin$ip - 63 else fin$ip
+cat("Shifted d scale:", shifted, "\n")
+
+# ---------- upper bound (manually stated) ----------
+fin$upper_corner <- fin$d_raw >= 62
+if (has("chose_corner")) {
+  cc <- num(fin$chose_corner)
+  cat("chose_corner on final rows:\n"); print(table(cc, useNA = "ifany"))
+}
+fin$d_lower <- pmin(fin$d_raw, 62)
+fin$d_upper <- fin$d_raw
+if (any(fin$d_raw > 62, na.rm = TRUE)) {
+  cat("Final ip exceeds 62 for some subjects: treating stored value as manual upper bound\n")
+  fin$upper_corner <- fin$d_raw >= 62
+} else {
+  pat <- "manual|upper|stated|open|max_task|how_?many|willing|ub$|maximum|corner_value|corner_tasks|tasks_corner"
+  cands <- setdiff(grep(pat, names(df), ignore.case = TRUE, value = TRUE), c("chose_corner", "corner"))
+  cat("Upper-bound candidate columns:", cands, "\n")
+  chosen <- NULL
+  for (cn in cands) {
+    v <- num(fin[[cn]])
+    vc <- v[fin$upper_corner]
+    if (sum(!is.na(vc)) >= 0.5 * sum(fin$upper_corner, na.rm = TRUE) && sum(!is.na(vc)) > 0) {
+      cat("candidate", cn, "summary among corner subjects:\n"); print(summary(vc))
+      if (median(vc, na.rm = TRUE) >= 62 || median(vc, na.rm = TRUE) > 0) { chosen <- cn; break }
+    }
+  }
+  if (!is.null(chosen)) {
+    v <- num(fin[[chosen]])
+    if (shifted && median(v[fin$upper_corner], na.rm = TRUE) > 125) v <- v - 63
+    # if values appear to be total extra tasks rather than d, keep as is when >= 62
+    up <- ifelse(fin$upper_corner & !is.na(v), pmax(v, 62), fin$d_raw)
+    fin$d_upper <- up
+    cat("Using upper-bound column:", chosen, "\n")
+  } else {
+    cat("No upper-bound column found; upper = lower\n")
+  }
+}
+fin$d_mid <- ifelse(fin$upper_corner, (fin$d_lower + fin$d_upper) / 2, fin$d_lower)
+
+# ---------- balanced x by workday ----------
+e <- c(129, 132, 143, 115, 121, 117, 135, 127)
+bal <- bal %>% group_by(sid) %>% arrange(rowpos, .by_group = TRUE) %>%
+  mutate(j = if (all(!is.na(dn)) && all(sort(dn) == seq_along(dn)) && n() == 8) dn else row_number()) %>%
+  ungroup() %>% as.data.frame()
+bal$j[bal$j > 8] <- NA
+bal$e <- e[bal$j]
+xw <- bal %>% filter(!is.na(j)) %>% group_by(sid) %>%
+  summarise(sum_inv = sum(1 / (e + ip)), nbal = n(),
+            minip = min(ip), maxip = max(ip), .groups = "drop") %>% as.data.frame()
+
+# ---------- corner exclusion candidates ----------
+flagA <- if (has("corner")) tapply(num(bal$corner), bal$sid, function(z) any(z == 1, na.rm = TRUE)) else NULL
+flagB <- if (has("chose_corner")) tapply(num(bal$chose_corner), bal$sid, function(z) any(z == 1, na.rm = TRUE)) else NULL
+if (has("corner")) {
+  flagA2 <- tapply(num(df$corner), df$sid, function(z) any(z == 1, na.rm = TRUE))
+} else flagA2 <- NULL
+flagC <- tapply(bal$ip, bal$sid, function(z) any(z <= 0 | z >= 125, na.rm = TRUE))
+flagD <- tapply(bal$ip, bal$sid, function(z) any(z < 0 | z >= 125, na.rm = TRUE))
+flagE <- tapply(bal$ip, bal$sid, function(z) any(z >= 125, na.rm = TRUE))
+flags <- list(A = flagA, B = flagB, A2 = flagA2, C = flagC, D = flagD, E = flagE)
+flags <- flags[!sapply(flags, is.null)]
+
+# ---------- conditions ----------
+sub <- df %>% group_by(sid) %>% slice(1) %>% ungroup() %>% as.data.frame()
+gv <- function(v) if (has(v)) num(sub[[v]]) else rep(NA, nrow(sub))
+sub$main_ <- gv("main"); sub$control_ <- gv("control"); sub$pizza_ <- gv("pizza")
+if (has("treatment")) { cat("treatment table:\n"); print(table(sub$treatment, useNA = "ifany")) }
+cat("main/control/pizza:\n"); print(table(sub$main_, sub$control_, sub$pizza_, useNA = "ifany"))
+cond <- rep(NA_character_, nrow(sub))
+trt <- if (has("treatment")) as.character(sub$treatment) else rep(NA, nrow(sub))
+if (has("treatment") && any(grepl("[A-Za-z]", trt))) {
+  tl <- tolower(trt)
+  cond <- ifelse(grepl("donat", tl) & grepl("control", tl), "DonCtrl",
+          ifelse(grepl("donat", tl), "DonTreat",
+          ifelse(grepl("mech", tl) & grepl("control", tl), "MechCtrl",
+          ifelse(grepl("mech", tl), "MechTreat",
+          ifelse(grepl("main", tl) & grepl("control", tl), "MainCtrl",
+          ifelse(grepl("main", tl), "MainTreat", NA))))))
+}
+if (all(is.na(cond))) {
+  don <- !is.na(sub$pizza_) & sub$pizza_ == 0
+  ctl <- !is.na(sub$control_) & sub$control_ == 1
+  mn <- !is.na(sub$main_) & sub$main_ == 1
+  cond <- ifelse(don & ctl, "DonCtrl", ifelse(don, "DonTreat",
+          ifelse(mn & ctl, "MainCtrl", ifelse(mn, "MainTreat",
+          ifelse(ctl, "MechCtrl", "MechTreat")))))
+}
+sub$cond <- cond
+print(table(sub$cond, useNA = "ifany"))
+
+dat <- sub[, c("sid", "cond")] %>%
+  inner_join(fin[, c("sid", "d_lower", "d_mid", "d_upper", "upper_corner")], by = "sid") %>%
+  inner_join(xw, by = "sid")
+dat <- dat[dat$nbal == 8, ]
+
+# choose exclusion rule matching preregistered N = 100 in Main-Treatment
+bestf <- NULL; bestdiff <- Inf
+for (nm in names(flags)) {
+  f <- flags[[nm]]
+  keep <- !as.logical(f[dat$sid]); keep[is.na(keep)] <- TRUE
+  nmain <- sum(keep & dat$cond == "MainTreat", na.rm = TRUE)
+  cat("Exclusion rule", nm, ": N Main-Treatment =", nmain, "\n")
+  if (abs(nmain - 100) < bestdiff) { bestdiff <- abs(nmain - 100); bestf <- nm }
+}
+cat("Using exclusion rule", bestf, "\n")
+f <- flags[[bestf]]
+keep <- !as.logical(f[dat$sid]); keep[is.na(keep)] <- TRUE
+dat <- dat[keep, ]
+print(table(dat$cond))
+
+dat$rel_lower <- dat$d_lower * dat$sum_inv / 8
+dat$rel_mid <- dat$d_mid * dat$sum_inv / 8
+dat$rel_upper <- dat$d_upper * dat$sum_inv / 8
+
+m <- dat[dat$cond == "MainTreat", ]
+ols1 <- function(y) {
+  fit <- lm(y ~ 1)
+  c(coef(fit)[1], sqrt(diag(vcovHC(fit, type = "HC1")))[1])
+}
+r_dl <- ols1(m$d_lower); r_dm <- ols1(m$d_mid); r_du <- ols1(m$d_upper)
+r_rl <- ols1(m$rel_lower); r_rm <- ols1(m$rel_mid); r_ru <- ols1(m$rel_upper)
+cat("d lower/mid/upper:", r_dl[1], r_dm[1], r_du[1], "\n")
+cat("rel lower/mid/upper:", r_rl[1], r_rm[1], r_ru[1], "\n")
+
+lo <- min(-63, min(m$d_lower, na.rm = TRUE))
+tob <- tryCatch(AER::tobit(d_lower ~ 1, left = lo, right = 62, data = m), error = function(e) NULL)
+tob_coef <- if (!is.null(tob)) coef(tob)[1] else NA
+cat("Tobit:", tob_coef, "\n")
+
+pair <- function(treat, ctrl) {
+  dd <- dat[dat$cond %in% c(treat, ctrl), ]
+  dd$T <- as.numeric(dd$cond == treat)
+  fit <- lm(rel_mid ~ T, data = dd)
+  se <- sqrt(diag(vcovHC(fit, type = "HC1")))
+  list(const = unname(coef(fit)[1]), diff = unname(coef(fit)[2]), se = se, n = nrow(dd))
+}
+c1 <- pair("MainTreat", "MechTreat")
+c2 <- pair("DonTreat", "DonCtrl")
+c3 <- pair("MainTreat", "MainCtrl")
+c4 <- pair("MechTreat", "MechCtrl")
+cat("Table3 Ns:", c1$n, c2$n, c3$n, c4$n, "\n")
+
+donT <- mean(dat$rel_mid[dat$cond == "DonTreat"], na.rm = TRUE)
+
+cat(sprintf("RESULT:abs_concentration_bias_midpoint_table2_col2=%.4f\n", r_dm[1]))
+cat(sprintf("RESULT:abs_concentration_bias_tobit_table2_col4=%.4f\n", tob_coef))
+cat(sprintf("RESULT:rel_concentration_bias_lower_table2_col1=%.4f\n", r_rl[1]))
+cat(sprintf("RESULT:rel_concentration_bias_midpoint_table2_col2=%.4f\n", r_rm[1]))
+cat(sprintf("RESULT:rel_concentration_bias_upper_table2_col3=%.4f\n", r_ru[1]))
+cat(sprintf("RESULT:n_obs_table2=%d\n", nrow(m)))
+cat(sprintf("RESULT:rel_cb_mechanism_treatment_table3_col1=%.4f\n", c1$const))
+cat(sprintf("RESULT:diff_main_minus_mechanism_table3_col1=%.4f\n", c1$diff))
+cat(sprintf("RESULT:rel_cb_donation_treatment_table3_col2=%.4f\n", donT))
+cat(sprintf("RESULT:diff_donation_treatment_minus_control_table3_col2=%.4f\n", c2$diff))
+cat(sprintf("RESULT:diff_main_treatment_minus_control_table3_col3=%.4f\n", c3$diff))
+cat(sprintf("RESULT:diff_mechanism_treatment_minus_control_table3_col4=%.4f\n", c4$diff))
+cat(sprintf("RESULT:n_obs_table3=%d\n", c1$n))
+```
+
+## Error / Unexpected Output
+```
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Calls: pair -> lm -> lm.fit
+Execution halted
+
+```
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+Columns:
+ [1] "tn"                    "dispersed"             "age"                  
+ [4] "study"                 "mathgrade"             "disposable_income"    
+ [7] "raven_correct_answers" "math_answers_correct"  "crt_answers_correct"  
+[10] "session"               "treatment"             "average_ip"           
+[13] "decision_number"       "utility_point"         "corner"               
+[16] "chose_corner"          "indifference_point"    "pizza"                
+[19] "control"               "main"                  "id_stage2_upper"      
+[22] "pap_sample"            "id_stage2"             "avg_id_stage2"        
+[25] "qe_ard"                "qe_ard_lower"          "qe_ard_upper"         
+[28] "qe_rad"                "qe_rad_lower"          "qe_rad_upper"         
+[31] "RT_avg_stage_2"        "d_a0_main_tr"          "d_a1_main_tr"         
+[34] "d_a2_main_tr"          "d_g0_main_tr"          "d_g1_main_tr"         
+[37] "d_g2_main_tr"          "d_d1_main_tr"          "d_d2_main_tr"         
+[40] "d_d3_main_tr"          "d_d4_main_tr"          "d_d5_main_tr"         
+[43] "d_t1_main_tr"          "d_t2_main_tr"          "d_t3_main_tr"         
+[46] "d_t4_main_tr"          "std_rt_2_main_tr"      "std_math_main_tr"     
+[49] "std_crt_main_tr"       "std_raven_main_tr"     "std_start_row_main_tr"
+[52] "id_stage2_sign"        "cb_effect"            
+Rows: 7254 
+id candidate session_tn : max rows 9  share with 9 rows 1  n 806 
+id candidate tn : max rows 9  share with 9 rows 1  n 806 
+Using id: session_tn 
+Subjects without dispersed flag: 548 
+Balanced ip range: 0 884 
+Final ip range: -63 300 
+Shifted d scale: FALSE 
+chose_corner on final rows:
+cc
+<NA> 
+ 806 
+Final ip exceeds 62 for some subjects: treating stored value as manual upper bound
+treatment table:
+
+  0   1 
+407 399 
+main/control/pizza:
+, ,  = 0
+
+      
+         0   1
+  0      0   0
+  1      0   0
+  <NA> 128 134
+
+, ,  = 1
+
+      
+         0   1
+  0    128 130
+  1    143 143
+  <NA>   0   0
+
+
+  DonCtrl  DonTreat  MainCtrl MainTreat  MechCtrl MechTreat 
+      134       128       143       143       130       128 
+Exclusion rule A : N Main-Treatment = 106 
+Exclusion rule B : N Main-Treatment = 100 
+Exclusion rule A2 : N Main-Treatment = 76 
+Exclusion rule C : N Main-Treatment = 98 
+Exclusion rule D : N Main-Treatment = 106 
+Exclusion rule E : N Main-Treatment = 106 
+Using exclusion rule B 
+
+  DonCtrl  DonTreat  MainCtrl MainTreat 
+      101       100       103       100 
+d lower/mid/upper: 31.37 37.475 43.58 
+rel lower/mid/upper: 0.1886026 0.2238739 0.2591452 
+Tobit: 36.77746
+```
+
+## Task
+Fix specifically the identified problem above. Do not rewrite the entire approach unless necessary.
+
+## Reminder: Output Convention
+The fixed R code MUST emit each reproduced metric on its own line using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names.
+
+## Reminder: Constraints
+- The dataset is a directory tree at '<repo>/.cache/datasets/dertwinkel_kalt_2022_concentration_bias.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+- Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+- Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+- Do NOT access the internet.
+- Do NOT call system() / system2().
+- Use set.seed(42) for reproducibility.
+- Print all RESULT: lines at the end via cat().
+
+Output ONLY the corrected R code — no explanation, no markdown fences.

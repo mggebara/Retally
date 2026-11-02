@@ -1,0 +1,618 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "passersby_full_sample",
+      "ground_truth": {
+        "value": 0.005,
+        "standard_error": 0.001,
+        "unit": "panhandlers per passerby (Table 1 units)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (1) Full sample, Number of passersby",
+        "context": "Table 2 (\"Determinants of the Number of Panhandlers Across Metro Stations\"), column (1) Full sample, row Number of passersby.  OLS regression of the number of panhandlers counted at a Metro station on a visit (one square-block area around the station exits) on the number of passersby at the station in the month of the visit (WMATA monthly count of riders exiting the station, on the scale of Table 1: mean 348.954, i.e. thousands of exits per month; Georgetown is assigned Foggy Bottom-GWU's count), passerby friendliness (the station average of passersby's friendliest response, 1-5, to a request for directions), a homeless shuttle stop indicator (within a ten-minute walk) and a homeless service indicator (within a ten-minute walk), with date fixed effects.  Observations are Metro station-visits: visits to 26 stations (25 Metrorail stations plus the Georgetown intersection) in 2016-2017.  Robust standard errors clustered by Metro station.\n",
+        "decimals": 3,
+        "sample_size": 242
+      },
+      "i4r": {
+        "reproduced_value": 0.005,
+        "outcome": "matches",
+        "notes": "DP 55 Table 2 col 1, 0.005 (0.001).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.2,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "passersby_full_sample",
+        "claim_type": "coefficient",
+        "claimed": 0.005,
+        "reproduced": 0.004914,
+        "tolerance": 0.2,
+        "rel_err": 0.017200000000000028,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "passersby_full_sample",
+        "reproduced": 0.004914,
+        "band_source": "se_band",
+        "band_relative": 0.2,
+        "band_absolute": 0.001,
+        "abs_err": 8.600000000000014e-05,
+        "rel_err": 0.017200000000000028,
+        "margin": 0.08600000000000013,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "passersby_five_station_subsample",
+      "ground_truth": {
+        "value": 0.006,
+        "standard_error": 0.002,
+        "unit": "panhandlers per passerby (Table 1 units)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (2) Five-station subsample, Number of passersby",
+        "context": "Table 2, column (2) Five-station subsample, row Number of passersby. Same OLS specification as passersby_full_sample (friendliness, shuttle-stop and homeless-service controls, date fixed effects, SEs clustered by Metro station), on the visits to the five neighbouring downtown stations Farragut North, Farragut West, Gallery Place-Chinatown, McPherson Square and Metro Center.\n",
+        "decimals": 3,
+        "sample_size": 102
+      },
+      "i4r": {
+        "reproduced_value": 0.006,
+        "outcome": "matches",
+        "notes": "DP 55 blanket verdict (all tables reproduce in Stata and R); value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.3333333333333333,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "passersby_five_station_subsample",
+        "claim_type": "coefficient",
+        "claimed": 0.006,
+        "reproduced": 0.006135,
+        "tolerance": 0.3333333333333333,
+        "rel_err": 0.02249999999999995,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "passersby_five_station_subsample",
+        "reproduced": 0.006135,
+        "band_source": "se_band",
+        "band_relative": 0.3333333333333333,
+        "band_absolute": 0.002,
+        "abs_err": 0.0001349999999999997,
+        "rel_err": 0.02249999999999995,
+        "margin": 0.06749999999999985,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "friendliness_full_sample",
+      "ground_truth": {
+        "value": 1.595,
+        "standard_error": 0.851,
+        "unit": "panhandlers per friendliness point",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (1) Full sample, Passerby friendliness",
+        "context": "Table 2, column (1) Full sample, row Passerby friendliness.  Same regression as passersby_full_sample.\n",
+        "decimals": 3,
+        "sample_size": 242
+      },
+      "i4r": {
+        "reproduced_value": 1.595,
+        "outcome": "matches",
+        "notes": "DP 55 Table 2 col 1, 1.595 (0.851).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.5335423197492163,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "friendliness_full_sample",
+        "claim_type": "coefficient",
+        "claimed": 1.595,
+        "reproduced": 1.595109,
+        "tolerance": 0.5335423197492163,
+        "rel_err": 6.833855799381616e-05,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "friendliness_full_sample",
+        "reproduced": 1.595109,
+        "band_source": "se_band",
+        "band_relative": 0.5335423197492163,
+        "band_absolute": 0.851,
+        "abs_err": 0.00010900000000013677,
+        "rel_err": 6.833855799381616e-05,
+        "margin": 0.0001280846063456366,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "shuttle_stop_full_sample",
+      "ground_truth": {
+        "value": 0.781,
+        "standard_error": 0.182,
+        "unit": "panhandlers",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (1) Full sample, Homeless shuttle stop",
+        "context": "Table 2, column (1) Full sample, row Homeless shuttle stop (station within a ten-minute walk of a stop of the homeless shuttle).  Same regression as passersby_full_sample.\n",
+        "decimals": 3,
+        "sample_size": 242
+      },
+      "i4r": {
+        "reproduced_value": 0.781,
+        "outcome": "matches",
+        "notes": "DP 55 Table 2 col 1, 0.781 (0.182).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.23303457106274006,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "shuttle_stop_full_sample",
+        "claim_type": "coefficient",
+        "claimed": 0.781,
+        "reproduced": 0.780689,
+        "tolerance": 0.23303457106274006,
+        "rel_err": 0.00039820742637651887,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "shuttle_stop_full_sample",
+        "reproduced": 0.780689,
+        "band_source": "se_band",
+        "band_relative": 0.23303457106274006,
+        "band_absolute": 0.182,
+        "abs_err": 0.00031100000000006123,
+        "rel_err": 0.00039820742637651887,
+        "margin": 0.0017087912087915453,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "shuttle_stop_five_station_subsample",
+      "ground_truth": {
+        "value": 0.89,
+        "standard_error": 0.227,
+        "unit": "panhandlers",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (2) Five-station subsample, Homeless shuttle stop",
+        "context": "Table 2, column (2) Five-station subsample, row Homeless shuttle stop.  Same regression as passersby_five_station_subsample.\n",
+        "decimals": 3,
+        "sample_size": 102
+      },
+      "i4r": {
+        "reproduced_value": 0.89,
+        "outcome": "matches",
+        "notes": "DP 55 blanket verdict; value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.2550561797752809,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "shuttle_stop_five_station_subsample",
+        "claim_type": "coefficient",
+        "claimed": 0.89,
+        "reproduced": 0.889644,
+        "tolerance": 0.2550561797752809,
+        "rel_err": 0.0004000000000000258,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "shuttle_stop_five_station_subsample",
+        "reproduced": 0.889644,
+        "band_source": "se_band",
+        "band_relative": 0.2550561797752809,
+        "band_absolute": 0.227,
+        "abs_err": 0.00035600000000002296,
+        "rel_err": 0.0004000000000000258,
+        "margin": 0.0015682819383260923,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "brown_forsythe_donations_per_hour",
+      "ground_truth": {
+        "value": 0.541,
+        "standard_error": null,
+        "unit": "Brown-Forsythe W statistic",
+        "claim_type": "other",
+        "location": "Table 3, Panel A: donations per hour, Brown-Forsythe W-statistic",
+        "context": "Table 3 (\"Test of Equality of Variance in Panhandling Receipts Across Metro Stations\"), Panel A, Brown-Forsythe W-statistic. Brown-Forsythe test of equal variance of the number of donations each panhandler received per hour (donations divided by minutes observed working, times 60) across the five subsample stations.  Observations are panhandlers observed in 2019: 80 observations (76 unique panhandlers).\n",
+        "decimals": 3,
+        "sample_size": 80
+      },
+      "i4r": {
+        "reproduced_value": 0.541,
+        "outcome": "matches",
+        "notes": "DP 55 blanket verdict; value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "brown_forsythe_donations_per_hour",
+        "claim_type": "other",
+        "claimed": 0.541,
+        "reproduced": 0.541281,
+        "tolerance": 0.01,
+        "rel_err": 0.0005194085027725984,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "brown_forsythe_donations_per_hour",
+        "reproduced": 0.541281,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 0.005410000000000001,
+        "abs_err": 0.0002809999999999757,
+        "rel_err": 0.0005194085027725984,
+        "margin": 0.05194085027725983,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "brown_forsythe_dollars_per_hour",
+      "ground_truth": {
+        "value": 0.276,
+        "standard_error": null,
+        "unit": "Brown-Forsythe W statistic",
+        "claim_type": "other",
+        "location": "Table 3, Panel B: dollars per hour, Brown-Forsythe W-statistic",
+        "context": "Table 3, Panel B, Brown-Forsythe W-statistic.  Same test for dollars received per hour (cash plus the market value of in-kind donations, divided by minutes observed working, times 60); 67 observations, the panhandlers whose dollar receipts were counted.\n",
+        "decimals": 3,
+        "sample_size": 67
+      },
+      "i4r": {
+        "reproduced_value": 0.276,
+        "outcome": "matches",
+        "notes": "DP 55 blanket verdict; value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "brown_forsythe_dollars_per_hour",
+        "claim_type": "other",
+        "claimed": 0.276,
+        "reproduced": 0.275802,
+        "tolerance": 0.01,
+        "rel_err": 0.0007173913043479401,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "brown_forsythe_dollars_per_hour",
+        "reproduced": 0.275802,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 0.0027600000000000003,
+        "abs_err": 0.00019800000000003148,
+        "rel_err": 0.0007173913043479401,
+        "margin": 0.071739130434794,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "anova_f_donations_per_hour",
+      "ground_truth": {
+        "value": 0.4,
+        "standard_error": null,
+        "unit": "one-way ANOVA F statistic",
+        "claim_type": "other",
+        "location": "Table 4, Panel A: donations per hour, ANOVA F-statistic",
+        "context": "Table 4 (\"Test of Equality of Mean Panhandling Receipts Across Metro Stations\"), Panel A, ANOVA F-statistic.  One-way analysis of variance of donations per hour across the five subsample stations, 80 observations.\n",
+        "decimals": 2,
+        "sample_size": 80
+      },
+      "i4r": {
+        "reproduced_value": 0.4,
+        "outcome": "matches",
+        "notes": "DP 55 Table 6 panel A, F 0.400 (p 0.809); DP 55 notes Table 4's within/between row labels are swapped (F unaffected).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "anova_f_donations_per_hour",
+        "claim_type": "other",
+        "claimed": 0.4,
+        "reproduced": 0.398434,
+        "tolerance": 0.012499999999999999,
+        "rel_err": 0.00391500000000003,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "printed_precision"
+      },
+      "recomputed": {
+        "result_name": "anova_f_donations_per_hour",
+        "reproduced": 0.398434,
+        "band_source": "printed_precision",
+        "band_relative": 0.012499999999999999,
+        "band_absolute": 0.005,
+        "abs_err": 0.0015660000000000118,
+        "rel_err": 0.00391500000000003,
+        "margin": 0.31320000000000237,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "anova_f_dollars_per_hour",
+      "ground_truth": {
+        "value": 0.15,
+        "standard_error": null,
+        "unit": "one-way ANOVA F statistic",
+        "claim_type": "other",
+        "location": "Table 4, Panel B: dollars per hour, ANOVA F-statistic",
+        "context": "Table 4, Panel B, ANOVA F-statistic.  One-way analysis of variance of dollars per hour across the five subsample stations, 67 observations.\n",
+        "decimals": 2,
+        "sample_size": 67
+      },
+      "i4r": {
+        "reproduced_value": 0.15,
+        "outcome": "matches",
+        "notes": "DP 55 blanket verdict; value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "anova_f_dollars_per_hour",
+        "claim_type": "other",
+        "claimed": 0.15,
+        "reproduced": 0.150879,
+        "tolerance": 0.03333333333333333,
+        "rel_err": 0.005860000000000125,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "printed_precision"
+      },
+      "recomputed": {
+        "result_name": "anova_f_dollars_per_hour",
+        "reproduced": 0.150879,
+        "band_source": "printed_precision",
+        "band_relative": 0.03333333333333333,
+        "band_absolute": 0.005,
+        "abs_err": 0.0008790000000000187,
+        "rel_err": 0.005860000000000125,
+        "margin": 0.17580000000000373,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "station_visits_full_sample",
+      "ground_truth": {
+        "value": 242.0,
+        "standard_error": null,
+        "unit": "station-visits",
+        "claim_type": "other",
+        "location": "Table 2, column (1), Observations",
+        "context": "Observations in the full-sample Table 2 regression: Metro station-visits (visits to 26 stations).\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 242.0,
+        "outcome": "matches",
+        "notes": "DP 55 blanket verdict; value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "station_visits_full_sample",
+        "claim_type": "other",
+        "claimed": 242.0,
+        "reproduced": 242.0,
+        "tolerance": 0.01,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "station_visits_full_sample",
+        "reproduced": 242.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 2.42,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "station_visits_five_station_subsample",
+      "ground_truth": {
+        "value": 102.0,
+        "standard_error": null,
+        "unit": "station-visits",
+        "claim_type": "other",
+        "location": "Table 2, column (2), Observations",
+        "context": "Observations in the five-station-subsample Table 2 regression.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 102.0,
+        "outcome": "matches",
+        "notes": "DP 55 blanket verdict; value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "station_visits_five_station_subsample",
+        "claim_type": "other",
+        "claimed": 102.0,
+        "reproduced": 102.0,
+        "tolerance": 0.01,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "station_visits_five_station_subsample",
+        "reproduced": 102.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 1.02,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 11,
+    "row_passed": 11,
+    "recomputed_passed": 11,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "leeson-2022-hobo-economicus",
+    "mode": "independent",
+    "reproducer": "claude-code",
+    "label": "claude-code",
+    "model": null,
+    "oracle": false,
+    "run": "2026-10-21-b",
+    "results_file": "claude-code-7papers-all-modes-2026-10-21.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/leeson-2022-hobo-economicus/independent/claude-code/20261022T021417Z",
+    "run_dir": "benchmark/reproductions/leeson-2022-hobo-economicus/independent/2026-10-21-b",
+    "date": "2026-10-22T02:07:52Z",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 11,
+    "final": 11,
+    "first_scored": 10,
+    "first_scored_index": 0,
+    "first_attempt": 10,
+    "n_refinements": 1,
+    "n_error_refinements": 0,
+    "n_claim_refinements": 1,
+    "n_executions": 2,
+    "n_files_stripped": 6,
+    "agrees_with_i4r": true,
+    "deviations_manifest": [],
+    "deviations_stdout": [],
+    "notes": "Built the station-visit panel from metrovisitslog.csv (242 visits), merging WMATA monthly exits by station-month-year (Georgetown assigned Foggy Bottom), station-average friendliness (each passerby's highest response category 1-5 flagged in passresp1-5, averaged over all passersby at the station), shuttle and service indicators (walking minutes <= 10). Table 1 summary statistics are matched exactly. Table 2: OLS of panhandlers on these regressors with date fixed effects and SEs clustered by station (fixest). Attempt 1 used fixest's default singleton removal, which dropped single-visit dates (240/98 obs); after comparing with the claimed observation counts, the final run keeps singletons (fixef.rm='none'), giving 242/102 obs. Coefficients are unchanged, and the clustered SEs then match the paper's Table 2 to 3 decimals. Tables 3-4: Brown-Forsythe test (car::leveneTest, center=median) and one-way ANOVA of donations/hour (donations/minutes*60, n=80) and dollars/hour ((cash+inkind)/minutes*60, n=67) across the five stations. All values match the paper.",
+    "files_read_outside_mount": [],
+    "paper_text": "paper.txt",
+    "complete": true,
+    "missing": []
+  }
+}

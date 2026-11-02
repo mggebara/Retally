@@ -1,0 +1,181 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: Funding by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under
+Abstract (first 500 chars): Many intertemporal trade-offs are unbalanced: while the advantages of options are concen-
+trated in a few periods, the disadvantages are dispersed over numerous periods. We provide
+novel experimental evidence for “concentration bias”, the tendency to overweight advantages
+that are concentrated in time. Subjects commit to too much overtime work that is dispersed
+over multiple days in exchange for a bonus that is concentrated in time: concentration bias
+increases subjects’ willingness to work by 2
+Methodology Summary: - **Design and identification (consumption experiment, Main-Treatment):** This is a preregistered within-subject lab experiment (AEA RCT registry 4446/4341). Each subject first completes 8 *balanced* trade-offs in random order. In trade-off j, extra real-effort tasks on workday j are exchanged for a raise r_j in a restaurant voucher redeemed on a later "restaurant day" (t = 9). These trade-offs elicit the indifference points x̃ = (x̃1,…,x̃8). Next, each subject faces one *unbalanced* trade-off that is individualised to them: x̃_t + d extra tasks on all 8 workdays in exchange for the summed raise R = r1+…+r8. The indifference point d̃ is the absolute measure of concentration bias. Discounted utility predicts d̃ = 0 and focusing predicts d̃ > 0. The relative measure is d̃_rel = (1/8) Σ_t d̃ / (e_t + x̃_t), using the midpoint proxy for corner subjects.
+- **Parameters:** Mandatory tasks e = (129,132,143,115,121,117,135,127) per workday. Base voucher v1 = €7.50. Raises r = (€2.90,€2.70,€3.10,€2.70,€3.20,€2.90,€3.10,€3.20). Subjects choose their 8 workdays from 20 dates and the restaurant day from 7 dates. The real-effort task is transcribing 6 numbers into letters, with 10 practice tasks.
+- **Elicitation:** Each trade-off covers 126 binary choices: x ∈ {0,…,125} in balanced trade-offs and d ∈ {−63,…,62} in the unbalanced one. Subjects make at most 9 of these choices directly. The first direct choice is random, and each later one is the midpoint of the interval not yet covered. All remaining choices are implied by monotonicity. The indifference point is the largest number of tasks the subject accepts. Incentives follow a random-choice payment rule: in each session of 27–32 subjects, 3 are randomly selected to carry out their work plan. They receive the voucher plus a €100 lump sum, and every subject receives a €10 show-up payment plus earnings from the arithmetic test.
+- **Sample restrictions and corner handling:** As preregistered, subjects with at least one corner choice in any balanced trade-off are excluded, leaving N = 100 per condition. Subjects with an upper corner in the unbalanced trade-off (always choosing overtime) get three proxies for d̃: (i) a lower bound of 62, (ii) an upper bound equal to their unincentivised self-stated indifference point, and (iii) the midpoint of the two. The midpoint is the headline proxy.
+- **Estimation (Table 2):** The mean of d̃ and the mean of d̃_rel are estimated by OLS of the measure on a constant, separately for the lower-bound, midpoint and upper-bound proxies (columns 1–3). Column 4 is a Tobit regression on the lower-bound measure that treats 62 as the upper censoring point. Robust (heteroskedasticity-consistent) standard errors are used, and the tests are against zero. The headline estimate is d̃_rel in the midpoint specification, Table 2 column 2, in raw (unstandardised) units: a proportion of per-workday tasks.
+- **Between-condition comparisons (Table 3):** OLS on pooled pairs of conditions (N = 200 each) estimates the condition mean and the difference between conditions, with robust standard errors. The pairs are:
+  - Mechanism-Treatment, where the voucher raise is framed as a sum of its parts, versus Main-Treatment;
+  - Donation-Treatment, which uses a charitable donation instead of the voucher, versus Donation-Control;
+  - Main-Treatment and Mechanism-Treatment versus their Control conditions, in which the final trade-off repeats balanced trade-off j = 1, 4 or 8 with d ∈ [−63, +62].
+
+  Within each pair, assignment was randomised within session and stratified on the average number of balanced-choice tasks (neighbouring-rank pairs). Further tests are: the share of subjects with d̃_rel > 0 tested against 50%, and comparisons of the share with bias and of conditional magnitudes between conditions.
+- **Covariates and heterogeneity:** Cognitive proxies (Raven matrices, CRT, an incentivised arithmetic test), demographics and response times are collected and used as controls or correlates in the preregistered heterogeneity regressions (Online Appendix A.3). Robustness checks use an alternative relative measure, the absolute measure, and the sample that includes corner choices (Appendices A.4–A.6).
+- **Money experiment (secondary):** Convex time-budget allocations (Andreoni–Sprenger) between an earlier and a later payment at a positive interest rate. Conditions are Money-Main (n = 185) and Money-Mechanism (n = 189). The outcome is the savings rate, the share of the budget allocated to the later payoff. It is compared within subject between balanced choices (both payoffs concentrated) and unbalanced choices (the earlier or the later payoff dispersed over 2, 4 or 8 dates). The choices are identical across subjects and not individualised.
+
+
+## Quantities to Compute
+Compute each quantity below and print it under the given name.  The paper's reported values are deliberately not shown.
+1. abs_concentration_bias_midpoint_table2_col2 [type: coefficient; unit: additional real-effort tasks per workday]
+   Location: Table 2, column 2 (OLS, Midpoint), row 'd~ in Main-Treatment'
+   Context: Table 2 ("Absolute and relative concentration bias in Main-Treatment"), column 2. The average absolute measure of concentration bias, d~: the number of additional per-workday real-effort tasks a subject is willing to complete in the unbalanced trade-off beyond the indifference points elicited in the eight balanced trade-offs. Subjects with an upper corner choice in the unbalanced trade-off are assigned the midpoint between the lower bound (62) and their manually stated indifference point. Estimated by OLS of d~ on a constant (the sample mean); robust standard errors. Sample: all Main-Treatment…
+2. abs_concentration_bias_tobit_table2_col4 [type: coefficient; unit: additional real-effort tasks per workday]
+   Location: Table 2, column 4 (Tobit), row 'd~ in Main-Treatment'
+   Context: Table 2, column 4: a Tobit regression of the absolute measure d~ on a constant, based on the lower-bound measure (upper-corner subjects assigned the upper end of the elicitation range) and treating the ends of the elicitation range as censoring points. Same Main-Treatment main sample as column 2.
+3. rel_concentration_bias_lower_table2_col1 [type: coefficient; unit: share (relative increase in per-workday willingness to work)]
+   Location: Table 2, column 1 (OLS, Lower bound), row 'd~rel in Main-Treatment'
+   Context: Table 2, column 1, second row: the average relative measure of concentration bias, d~rel = (1/8) sum over workdays t of d~ / (e_t + x~_t), where e_t is the mandatory number of tasks on workday t and x~_t the indifference point elicited in balanced trade-off t; upper-corner subjects' d~ set to the lower bound. OLS on a constant, robust standard errors, Main-Treatment main sample.
+4. rel_concentration_bias_midpoint_table2_col2 [type: coefficient; unit: share (relative increase in per-workday willingness to work)]
+   Location: Table 2, column 2 (OLS, Midpoint), row 'd~rel in Main-Treatment'
+   Context: Table 2, column 2, second row: the paper's headline measure (Result 1) — the average relative measure of concentration bias d~rel, with upper-corner subjects' d~ set to the midpoint between the lower bound and their manually stated indifference point. OLS on a constant, robust standard errors, Main-Treatment main sample.
+5. rel_concentration_bias_upper_table2_col3 [type: coefficient; unit: share (relative increase in per-workday willingness to work)]
+   Location: Table 2, column 3 (OLS, Upper bound), row 'd~rel in Main-Treatment'
+   Context: Table 2, column 3, second row: the average relative measure d~rel with upper-corner subjects' d~ set to their manually stated indifference point (upper bound). OLS on a constant, robust standard errors, Main-Treatment main sample.
+6. n_obs_table2 [type: other; unit: observations (subjects)]
+   Location: Table 2, Observations (all four columns)
+   Context: Number of observations (subjects) in each column of Table 2: the Main-Treatment subjects remaining after the preregistered exclusion of subjects with a corner choice in any balanced trade-off.
+7. rel_cb_mechanism_treatment_table3_col1 [type: coefficient; unit: share (relative measure of concentration bias)]
+   Location: Table 3, column 1, row 'd~rel in Mechanism-Treatment'
+   Context: Table 3 ("Average relative measure of concentration bias (d~rel) across conditions"), column 1: OLS of the midpoint-based relative measure d~rel on a constant and an indicator for Main-Treatment, estimated on the pooled Main-Treatment and Mechanism-Treatment main samples (between-subjects); this row is the constant, i.e. average d~rel in Mechanism-Treatment (raise in the voucher shown as a sum of its parts). Robust standard errors.
+8. diff_main_minus_mechanism_table3_col1 [type: coefficient; unit: share (difference in relative measure of concentration bias)]
+   Location: Table 3, column 1, row 'Difference: Main-Treatment - Mechanism-Treatment'
+   Context: Table 3, column 1: the coefficient on the Main-Treatment indicator in the column 1 regression — the difference in average d~rel, Main-Treatment minus Mechanism-Treatment (Result 2). Robust standard errors.
+9. rel_cb_donation_treatment_table3_col2 [type: coefficient; unit: share (relative measure of concentration bias)]
+   Location: Table 3, column 2, row 'd~rel in Donation-Treatment'
+   Context: Table 3, column 2: OLS of d~rel on a constant and a condition indicator on the pooled Donation-Treatment and Donation-Control main samples (the benefit of working is a donation to a charity instead of a restaurant voucher); this row is average d~rel in Donation-Treatment (Result 3). Robust standard errors.
+10. diff_donation_treatment_minus_control_table3_col2 [type: coefficient; unit: share (difference in relative measure of concentration bias)]
+   Location: Table 3, column 2, row 'Difference: Donation-Treatment - Donation-Control'
+   Context: Table 3, column 2: the difference in average d~rel between Donation-Treatment and Donation-Control, reported as Donation-Treatment minus Donation-Control. In the Control conditions the final trade-off repeats a balanced trade-off (j = 1, 4 or 8) with the same deviation range as the unbalanced trade-off, so the "placebo" deviation should be zero. Robust standard errors.
+11. diff_main_treatment_minus_control_table3_col3 [type: coefficient; unit: share (difference in relative measure of concentration bias)]
+   Location: Table 3, column 3, row 'Difference: Main-Treatment - Main-Control'
+   Context: Table 3, column 3: OLS of d~rel on a constant and a Treatment indicator on the pooled Main-Treatment and Main-Control main samples; this row is the Treatment coefficient, the difference in average d~rel, Main-Treatment minus Main-Control (the constant, reported in the row above, is average d~rel in Main-Control). Robust standard errors.
+12. diff_mechanism_treatment_minus_control_table3_col4 [type: coefficient; unit: share (difference in relative measure of concentration bias)]
+   Location: Table 3, column 4, row 'Difference: Mechanism-Treatment - Mechanism-Control'
+   Context: Table 3, column 4: OLS of d~rel on a constant and a Treatment indicator on the pooled Mechanism-Treatment and Mechanism-Control main samples; this row is the Treatment coefficient, the difference in average d~rel, Mechanism-Treatment minus Mechanism-Control. Robust standard errors.
+13. n_obs_table3 [type: other; unit: observations (subjects, two conditions pooled)]
+   Location: Table 3, Observations (all four columns)
+   Context: Number of observations in each column of Table 3: the main samples of the two between-subjects conditions compared in that column, after the preregistered exclusions.
+
+## Dataset Information
+Name: dertwinkel-kalt-2022-concentration-bias
+Local path: <repo>/.cache/datasets/dertwinkel_kalt_2022_concentration_bias.script-free
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- Consumption Experiment/R/Figures C1 i-vi.pdf (395.2 KB)
+- Consumption Experiment/Stata/Consumption_Experiment.csv (930.5 KB) — columns: tn,dispersed,age,study,mathgrade,disposable_income,raven_correct_answers,math_answers_correct,crt_answers_correct,session,treatment,average_ip,decision_number,utility_point,corner,chose_corner,indifference_point,pizza,control,main,id_stage2…
+- Consumption Experiment/Stata/Figure 3.pdf (26.0 KB)
+- Consumption Experiment/Stata/Figures A5-A7.pdf (69.2 KB)
+- Consumption Experiment/Table 1.tex (4.0 KB)
+- Consumption Experiment/oTree/CRT/__pycache__/__init__.cpython-36.pyc (174 B)
+- Consumption Experiment/oTree/CRT/__pycache__/__init__.cpython-37.pyc (185 B)
+- Consumption Experiment/oTree/CRT/__pycache__/__init__.cpython-38.pyc (189 B)
+- Consumption Experiment/oTree/CRT/__pycache__/models.cpython-36.pyc (1.7 KB)
+- Consumption Experiment/oTree/CRT/__pycache__/models.cpython-37.pyc (1.7 KB)
+- Consumption Experiment/oTree/CRT/__pycache__/models.cpython-38.pyc (1.8 KB)
+- Consumption Experiment/oTree/CRT/__pycache__/pages.cpython-36.pyc (1.6 KB)
+- Consumption Experiment/oTree/CRT/__pycache__/pages.cpython-37.pyc (1.7 KB)
+- Consumption Experiment/oTree/CRT/__pycache__/pages.cpython-38.pyc (1.6 KB)
+- Consumption Experiment/oTree/CRT/_builtin/__pycache__/__init__.cpython-36.pyc (855 B)
+- Consumption Experiment/oTree/CRT/_builtin/__pycache__/__init__.cpython-37.pyc (904 B)
+- Consumption Experiment/oTree/CRT/_builtin/__pycache__/__init__.cpython-38.pyc (915 B)
+- Consumption Experiment/oTree/CRT/templates/CRT/Instructions.html (468 B)
+- Consumption Experiment/oTree/CRT/templates/CRT/Page1.html (330 B)
+- Consumption Experiment/oTree/CRT/templates/CRT/Page2.html (328 B)
+- Consumption Experiment/oTree/CRT/templates/CRT/Page3.html (326 B)
+- Consumption Experiment/oTree/Procfile (63 B)
+- Consumption Experiment/oTree/README.txt (303 B)
+- Consumption Experiment/oTree/StartPage/__pycache__/__init__.cpython-35.pyc (141 B)
+- Consumption Experiment/oTree/StartPage/__pycache__/__init__.cpython-36.pyc (190 B)
+- Consumption Experiment/oTree/StartPage/__pycache__/__init__.cpython-37.pyc (190 B)
+- Consumption Experiment/oTree/StartPage/__pycache__/__init__.cpython-38.pyc (195 B)
+- Consumption Experiment/oTree/StartPage/__pycache__/models.cpython-35.pyc (1.4 KB)
+- Consumption Experiment/oTree/StartPage/__pycache__/models.cpython-36 (Louis Strangs in Konflikt stehende Kopie 2018-04-10).pyc (1.6 KB)
+- Consumption Experiment/oTree/StartPage/__pycache__/models.cpython-36.pyc (1.6 KB)
+- Consumption Experiment/oTree/StartPage/__pycache__/models.cpython-37.pyc (1.6 KB)
+- Consumption Experiment/oTree/StartPage/__pycache__/models.cpython-38.pyc (1.6 KB)
+- Consumption Experiment/oTree/StartPage/__pycache__/views.cpython-35.pyc (1.1 KB)
+- Consumption Experiment/oTree/StartPage/__pycache__/views.cpython-36 (Louis Strangs in Konflikt stehende Kopie 2018-04-10).pyc (1.5 KB)
+- Consumption Experiment/oTree/StartPage/__pycache__/views.cpython-36.pyc (2.6 KB)
+- Consumption Experiment/oTree/StartPage/__pycache__/views.cpython-37.pyc (2.3 KB)
+- Consumption Experiment/oTree/StartPage/__pycache__/views.cpython-38.pyc (2.2 KB)
+- Consumption Experiment/oTree/StartPage/_builtin/__pycache__/__init__.cpython-35.pyc (1.2 KB)
+- Consumption Experiment/oTree/StartPage/_builtin/__pycache__/__init__.cpython-36.pyc (1.2 KB)
+- Consumption Experiment/oTree/StartPage/_builtin/__pycache__/__init__.cpython-37.pyc (1.2 KB)
+- Consumption Experiment/oTree/StartPage/_builtin/__pycache__/__init__.cpython-38.pyc (1.2 KB)
+- Consumption Experiment/oTree/StartPage/migrations/__pycache__/__init__.cpython-35.pyc (152 B)
+- Consumption Experiment/oTree/StartPage/static/StartPage/UBo-BonnEconLab.svg (33.0 KB)
+- Consumption Experiment/oTree/StartPage/static/StartPage/uni_bonn.svg (9.8 KB)
+- Consumption Experiment/oTree/StartPage/templates/StartPage/StartPageWork.html (3.8 KB)
+- Consumption Experiment/oTree/_rooms/econ101.txt (135 B)
+- Consumption Experiment/oTree/_rooms/subjects.txt (399 B)
+- Consumption Experiment/oTree/_static/global/SourceCodePro-Black.ttf.woff (91.5 KB)
+- Consumption Experiment/oTree/_static/global/SourceCodePro-BlackIt.ttf.woff (79.6 KB)
+- Consumption Experiment/oTree/_static/global/SourceCodePro-Bold.ttf.woff (93.2 KB)
+- Consumption Experiment/oTree/_static/global/SourceCodePro-BoldIt.ttf.woff (80.8 KB)
+- Consumption Experiment/oTree/_static/global/SourceCodePro-ExtraLight.ttf.woff (91.9 KB)
+- Consumption Experiment/oTree/_static/global/SourceCodePro-ExtraLightIt.ttf.woff (79.1 KB)
+- Consumption Experiment/oTree/_static/global/SourceCodePro-It.ttf.woff (82.3 KB)
+- Consumption Experiment/oTree/_static/global/SourceCodePro-Light.ttf.woff (93.7 KB)
+- Consumption Experiment/oTree/_static/global/SourceCodePro-LightIt.ttf.woff (81.0 KB)
+- Consumption Experiment/oTree/_static/global/SourceCodePro-Medium.ttf.woff (93.5 KB)
+- Consumption Experiment/oTree/_static/global/SourceCodePro-MediumIt.ttf.woff (80.6 KB)
+- Consumption Experiment/oTree/_static/global/SourceCodePro-Regular.ttf.woff (93.6 KB)
+- Consumption Experiment/oTree/_static/global/SourceCodePro-Semibold.ttf.woff (93.3 KB)
+- Consumption Experiment/oTree/_static/global/SourceCodePro-SemiboldIt.ttf.woff (80.7 KB)
+- Consumption Experiment/oTree/_static/global/SourceCodePro_SourceSansPro_LICENSE.txt (4.5 KB)
+- Consumption Experiment/oTree/_static/global/SourceSansPro-Black.ttf.woff (111.1 KB)
+- Consumption Experiment/oTree/_static/global/SourceSansPro-BlackIt.ttf.woff (48.5 KB)
+- Consumption Experiment/oTree/_static/global/SourceSansPro-Bold.ttf.woff (115.1 KB)
+- Consumption Experiment/oTree/_static/global/SourceSansPro-BoldIt.ttf.woff (49.4 KB)
+- Consumption Experiment/oTree/_static/global/SourceSansPro-ExtraLight.ttf.woff (111.7 KB)
+- Consumption Experiment/oTree/_static/global/SourceSansPro-ExtraLightIt.ttf.woff (48.5 KB)
+- Consumption Experiment/oTree/_static/global/SourceSansPro-It.ttf.woff (49.8 KB)
+- Consumption Experiment/oTree/_static/global/SourceSansPro-Light.ttf.woff (115.5 KB)
+- Consumption Experiment/oTree/_static/global/SourceSansPro-LightIt.ttf.woff (49.8 KB)
+- Consumption Experiment/oTree/_static/global/SourceSansPro-Regular.ttf.woff (116.3 KB)
+- Consumption Experiment/oTree/_static/global/SourceSansPro-Semibold.ttf.woff (115.6 KB)
+- Consumption Experiment/oTree/_static/global/SourceSansPro-SemiboldIt.ttf.woff (49.7 KB)
+- Consumption Experiment/oTree/_static/global/favicon.ico (4.3 KB)
+- Consumption Experiment/oTree/_static/global/instructions.css (1.2 KB)
+- Consumption Experiment/oTree/_static/global/js/consistency.js (818 B)
+- Consumption Experiment/oTree/_static/global/js/hide_show_button.js (240 B)
+- Consumption Experiment/oTree/_static/global/js/hide_show_button_WTP.js (280 B)
+- Consumption Experiment/oTree/_static/global/js/onclickdisabled.js (164 B)
+- … and 235 more files (listing truncated)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/dertwinkel_kalt_2022_concentration_bias.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Independent Reproduction
+This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's description alone.  The authors' own analysis code is deliberately withheld.  Do NOT open, read, source, or execute any script files that may appear in the dataset directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, and similar) — load data files only.  Derive the estimating equation, sample restrictions, fixed effects, and standard-error clustering from the paper information and claims above.
+
+## Blind Reproduction
+This reproduction is also BLIND: the paper's reported values for the quantities above are deliberately withheld, and you will not be told how close your numbers are.  Compute each quantity as the paper's method defines it; do not tune the specification toward any number you expect.  Do NOT read result tables, logs, or output files that may appear in the dataset directory (.tex, .log, .pdf, .html, and similar) to recover the paper's numbers — compute everything from the data files.  Print a RESULT: line for every quantity listed, using its name exactly.
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

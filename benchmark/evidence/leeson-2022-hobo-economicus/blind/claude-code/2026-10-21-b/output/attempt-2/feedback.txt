@@ -1,0 +1,6 @@
+Not a crash and not a claim comparison. fixest's feols dropped fixed-effect singletons by default
+(2 and 4 date-singleton visits), so the regressions used 240 and 98 observations, while the task's
+method description defines the Table 2 sample as all 242 station-visits (full) and the 102 visits to
+the five subsample stations. Singleton observations do not change OLS point estimates (they are fit
+exactly by their date dummy), so the fix (fixef.rm = "none", equivalent to OLS with date dummies)
+only changes the observation counts / df. No reported value was consulted.

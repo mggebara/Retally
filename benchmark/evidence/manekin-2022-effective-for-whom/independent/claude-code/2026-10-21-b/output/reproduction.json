@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "manekin-2022-effective-for-whom",
+  "mode": "independent",
+  "run_id": "2026-10-21-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was exploratory (variable structure, treatment coding, weights; no RESULT lines). Final: OLS via lm(). Study 1 (US wave 1, Israel wave 1): outcome on minority-identity dummies (US: identity_protesters==1 Black; Israel: identity_protesters 1=Ethiopian, 2=Arab) and tactic dummies (tactic 1, 2), base white/march, weighted by the survey weight variable. Study 2 US (wave 2): outcome on black, group_goal, commitment, unweighted (no weight variable supplied); police-action regression drops the 5 missing responses (N=3008). Respondent counts are the regression N / data rows. Coefficients, standard errors, intercepts and R2 all line up with the paper's printed Tables 1 and 2. No claim-check attempts were needed; the script was not changed after the first estimating run.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T02:06:09Z",
+  "finished_at": "2026-10-22T02:07:14Z"
+}

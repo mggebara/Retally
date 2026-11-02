@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "brouwer-2022-teaching-norms",
+  "mode": "blind",
+  "run_id": "2026-11-02-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was exploratory (variable codings, missingness; no RESULT lines). Final: master.dta; punishment sample = scenes Violation and Violation+Help (400), helping sample = scenes Help and Violation+Help (401). feols OLS LPM of outcome on Child*VH (VH = scene==Violation+Help), controls male (Male Target), hugo (Male Actor), Morning, witness, rich, Rain, Hot; SEs clustered by School (30 clusters). The missing-gender target drops listwise (399 and 400 obs in the controlled models). Specification taken from the paper text; no paper values consulted.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T05:55:34Z",
+  "finished_at": "2026-11-02T06:05:00Z"
+}

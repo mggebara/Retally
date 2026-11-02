@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "entry_id": "dertwinkel-kalt-2022-concentration-bias",
+  "mode": "blind",
+  "run_id": "2026-11-01-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "n_obs_table3 reports the column-1 N (Main-Treatment + Mechanism-Treatment); all four columns have N = 200 in this reproduction.",
+    "Control conditions: the relative measure is d / (e_j + x_j) on the repeated workday j (the paper's eq. 12 is defined for the Treatment conditions, where the deviation applies to all eight workdays).",
+    "Main sample = subjects with no corner choice in any balanced trade-off AND pap_sample == 1 (the dataset's preregistered-sample flag). This drops 7 more corner-free subjects, all from late sessions 18-19 plus one Donation-Control subject, and leaves exactly 100 subjects per condition. None of the 7 is in Main-Treatment."
+  ],
+  "notes": "Consumption_Experiment.csv only (806 subjects x 9 decisions). Decisions 1-8 are the balanced trade-offs (utility_point = workday t, indifference_point = x_t); decision 9 is the unbalanced trade-off (Treatment) or the repeated balanced trade-off j (Control). Upper-corner subjects in decision 9 (corner == 1) have their manually stated value in indifference_point. Lower bound sets d = 62, as the paper states; upper bound uses the manual value; midpoint is (62 + manual) / 2. e = (129,132,143,115,121,117,135,127) from paper fn. 3. Estimates are OLS on a constant (Table 2) or on a constant plus a condition dummy (Table 3), with HC1 robust SEs. The Tobit is AER::tobit of the lower-bound d with left = -63 and right = 62. The Donation-Treatment row is the Treatment-group mean (constant + coefficient). Three exploratory runs printed no RESULT lines. One scored run, with no specification changes after it. No author scripts or result logs/tables were opened; the dataset README.md was read for file and variable orientation.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T04:20:00Z",
+  "finished_at": "2026-11-02T04:45:00Z"
+}

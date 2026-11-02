@@ -1,0 +1,92 @@
+Main sample sizes by condition:
+# A tibble: 6 × 4
+  pizza  main control     n
+  <dbl> <dbl>   <dbl> <int>
+1     0    NA       0   100
+2     0    NA       1   100
+3     1     0       0   100
+4     1     0       1   100
+5     1     1       0   100
+6     1     1       1   100
+Table 2 col2 d mid:
+    Estimate   Std. Error      t value     Pr(>|t|) 
+3.761000e+01 3.575319e+00 1.051934e+01 8.077970e-18 
+Table 2 col4 tobit:
+
+Test of coefficients:
+
+             Estimate Std. Error z value  Pr(>|z|)    
+(Intercept) 37.093640   3.658051  10.140 < 2.2e-16 ***
+Log(scale)   3.550091   0.088919  39.925 < 2.2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Table 2 rel lower/mid/upper SEs:
+      Estimate Std. Error   t value     Pr(>|t|)
+[1,] 0.1897480 0.01600445 11.855952 1.043357e-20
+[2,] 0.2241588 0.02107960 10.633921 4.550637e-18
+[3,] 0.2585696 0.02749990  9.402565 2.199820e-15
+Table 3 col1:
+
+t test of coefficients:
+
+            Estimate Std. Error t value  Pr(>|t|)    
+(Intercept) 0.075425   0.018950  3.9802 9.662e-05 ***
+main        0.148734   0.028345  5.2472 3.957e-07 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Table 3 col2:
+
+t test of coefficients:
+
+             Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)  0.134630   0.020742  6.4907 6.718e-10 ***
+control     -0.157560   0.022027 -7.1530 1.608e-11 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+              Estimate Std. Error t value  Pr(>|t|)    
+(Intercept) -0.0229294  0.0074129 -3.0932  0.002266 ** 
+treat        0.1575598  0.0220270  7.1530 1.608e-11 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Table 3 col3:
+
+t test of coefficients:
+
+              Estimate Std. Error t value  Pr(>|t|)    
+(Intercept) -0.0225504  0.0081355 -2.7718  0.006106 ** 
+treat        0.2467092  0.0225951 10.9187 < 2.2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Table 3 col4:
+
+t test of coefficients:
+
+             Estimate Std. Error t value  Pr(>|t|)    
+(Intercept) -0.014437   0.010029 -1.4396    0.1516    
+treat        0.089862   0.021440  4.1913 4.179e-05 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Table 3 Ns: 200 200 200 200 
+DEVIATION: upper-corner lower bound taken as 63 (dataset coding of upper corners) rather than 62 (paper text); with 62 the Main-Treatment mean midpoint d would be 37.4750 
+RESULT:abs_concentration_bias_midpoint_table2_col2=37.610000
+RESULT:abs_concentration_bias_tobit_table2_col4=37.093640
+RESULT:rel_concentration_bias_lower_table2_col1=0.189748
+RESULT:rel_concentration_bias_midpoint_table2_col2=0.224159
+RESULT:rel_concentration_bias_upper_table2_col3=0.258570
+RESULT:n_obs_table2=100
+RESULT:rel_cb_mechanism_treatment_table3_col1=0.075425
+RESULT:diff_main_minus_mechanism_table3_col1=0.148734
+RESULT:rel_cb_donation_treatment_table3_col2=0.134630
+RESULT:diff_donation_treatment_minus_control_table3_col2=0.157560
+RESULT:diff_main_treatment_minus_control_table3_col3=0.246709
+RESULT:diff_mechanism_treatment_minus_control_table3_col4=0.089862
+RESULT:n_obs_table3=200

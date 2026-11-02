@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "arias-2022-changing-tides-climate-migration",
+  "mode": "independent",
+  "run_id": "2026-11-01-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "US profile count is 18970 (9485 answered pairs from 1086 respondents, keeping every answered task including the one Qualtrics preview response); the paper reports 18966. The 2-pair difference could not be traced to any filter; no filter was applied to chase it.",
+    "Language x Origin interaction included to mirror the design-file restriction (cjoint-style); the additive model gives Reason coefficients within 0.0006 (printed in stdout). In the US data the restriction was evidently not enforced (1274 None-fluency/Another-region profiles)."
+  ],
+  "notes": "Data: 'Climate Migration 2_ Conjoint' USA and Germany Qualtrics exports (first two header rows dropped). Task 1 choice = force_choice, tasks 2-9 = Q184,Q186,...,Q198; profile attributes from F-k-j-a with attribute order from F-k-a; German levels mapped to English. Outcome = 1 if profile chosen. OLS (fixest) of chosen on factors for all seven attributes (baselines: Economic opportunity, None fluency, Female, Unemployed, Atheist/Agnostic, Another region, None vulnerability) plus Language:Origin, SEs clustered by respondent. Sample: all respondents with at least one answered choice task (1086 US, 1074 DE). Two exploratory runs (attempt-1, attempt-2) inspected columns and counts without RESULT lines. No claim-driven script changes were made; the first scored run is final.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T04:23:35Z",
+  "finished_at": "2026-11-02T04:40:00Z"
+}

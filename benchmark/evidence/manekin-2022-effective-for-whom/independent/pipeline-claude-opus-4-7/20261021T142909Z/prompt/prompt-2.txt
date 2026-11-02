@@ -1,0 +1,151 @@
+You are fixing R code that was generated to reproduce results from an econometrics paper.
+
+## Original Code
+```r
+#!/usr/bin/env Rscript
+
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(fixest)
+})
+
+set.seed(42)
+
+base_path <- "<repo>/.cache/datasets/manekin_2022_effective_for_whom.script-free/Replication/Data"
+
+load(file.path(base_path, "us_survey_wave1.rdata"))
+load(file.path(base_path, "isr_survey_wave1.rdata"))
+load(file.path(base_path, "us_survey_wave2.rdata"))
+load(file.path(base_path, "isr_survey_wave2.rdata"))
+
+# Study 1 US
+us1 <- us_survey_wave1
+us1$identity_protesters <- relevel(factor(us1$identity_protesters), ref = "white")
+us1$tactic <- relevel(factor(us1$tactic), ref = "march")
+
+# Try common baseline naming - check levels
+cat("US1 identity levels:", levels(us1$identity_protesters), "\n", file=stderr())
+cat("US1 tactic levels:", levels(us1$tactic), "\n", file=stderr())
+
+# Fit, use weights
+m_us1_pv <- tryCatch(
+  lm(degree_violence ~ identity_protesters + tactic, data = us1, weights = weight),
+  error = function(e) lm(degree_violence ~ identity_protesters + tactic, data = us1)
+)
+m_us1_pa <- tryCatch(
+  lm(police_action_required ~ identity_protesters + tactic, data = us1, weights = weight),
+  error = function(e) lm(police_action_required ~ identity_protesters + tactic, data = us1)
+)
+
+cat("US1 PV coefs:\n", file=stderr()); print(coef(m_us1_pv))
+cat("US1 PA coefs:\n", file=stderr()); print(coef(m_us1_pa))
+
+# Grab black coefficient
+get_coef <- function(m, pattern) {
+  cf <- coef(m)
+  idx <- grep(pattern, names(cf), ignore.case = TRUE)
+  if (length(idx) == 0) return(NA)
+  cf[idx[1]]
+}
+
+us1_black_pv <- get_coef(m_us1_pv, "black")
+us1_black_pa <- get_coef(m_us1_pa, "black")
+
+# Study 1 Israel
+isr1 <- isr_survey_wave1
+cat("ISR1 identity levels:", unique(as.character(isr1$identity_protesters)), "\n", file=stderr())
+cat("ISR1 tactic levels:", unique(as.character(isr1$tactic)), "\n", file=stderr())
+
+isr1$identity_protesters <- factor(isr1$identity_protesters)
+# baseline should be white Jewish
+white_levels <- grep("white|jewish|jew", levels(isr1$identity_protesters), ignore.case = TRUE, value = TRUE)
+if (length(white_levels) > 0) {
+  isr1$identity_protesters <- relevel(isr1$identity_protesters, ref = white_levels[1])
+}
+isr1$tactic <- factor(isr1$tactic)
+march_levels <- grep("march|street", levels(isr1$tactic), ignore.case = TRUE, value = TRUE)
+if (length(march_levels) > 0) {
+  isr1$tactic <- relevel(isr1$tactic, ref = march_levels[1])
+}
+
+m_isr1_pv <- tryCatch(
+  lm(degree_violence ~ identity_protesters + tactic, data = isr1, weights = weight),
+  error = function(e) lm(degree_violence ~ identity_protesters + tactic, data = isr1)
+)
+m_isr1_pa <- tryCatch(
+  lm(police_action_required ~ identity_protesters + tactic, data = isr1, weights = weight),
+  error = function(e) lm(police_action_required ~ identity_protesters + tactic, data = isr1)
+)
+
+cat("ISR1 PV coefs:\n", file=stderr()); print(coef(m_isr1_pv))
+cat("ISR1 PA coefs:\n", file=stderr()); print(coef(m_isr1_pa))
+
+isr1_eth_pv <- get_coef(m_isr1_pv, "ethiop")
+isr1_eth_pa <- get_coef(m_isr1_pa, "ethiop")
+isr1_arab_pv <- get_coef(m_isr1_pv, "arab")
+isr1_arab_pa <- get_coef(m_isr1_pa, "arab")
+
+# Study 2 US
+us2 <- us_survey_wave2
+cat("US2 names:\n", file=stderr()); print(names(us2))
+cat("US2 black vals:", unique(us2$black), "\n", file=stderr())
+cat("US2 group_goal vals:", unique(us2$group_goal), "\n", file=stderr())
+cat("US2 commitment vals:", unique(us2$commitment), "\n", file=stderr())
+
+m_us2_pv <- lm(degree_violence ~ black + group_goal + commitment, data = us2)
+m_us2_pa <- lm(police_action_required ~ black + group_goal + commitment, data = us2)
+
+cat("US2 PV coefs:\n", file=stderr()); print(coef(m_us2_pv))
+cat("US2 PA coefs:\n", file=stderr()); print(coef(m_us2_pa))
+
+us2_black_pv <- get_coef(m_us2_pv, "^black")
+us2_black_pa <- get_coef(m_us2_pa, "^black")
+
+# N sizes
+n_us1 <- nrow(us_survey_wave1)
+n_isr1 <- nrow(isr_survey_wave1)
+n_us2 <- nrow(us_survey_wave2)
+n_isr2 <- nrow(isr_survey_wave2)
+
+cat(sprintf("RESULT:study1_us_black_perceived_violence=%.4f\n", us1_black_pv))
+cat(sprintf("RESULT:study1_us_black_police_action=%.4f\n", us1_black_pa))
+cat(sprintf("RESULT:study1_israel_ethiopian_perceived_violence=%.4f\n", isr1_eth_pv))
+cat(sprintf("RESULT:study1_israel_ethiopian_police_action=%.4f\n", isr1_eth_pa))
+cat(sprintf("RESULT:study1_israel_arab_perceived_violence=%.4f\n", isr1_arab_pv))
+cat(sprintf("RESULT:study1_israel_arab_police_action=%.4f\n", isr1_arab_pa))
+cat(sprintf("RESULT:study2_us_black_perceived_violence=%.4f\n", us2_black_pv))
+cat(sprintf("RESULT:study2_us_black_police_action=%.4f\n", us2_black_pa))
+cat(sprintf("RESULT:respondents_study1_us=%d\n", n_us1))
+cat(sprintf("RESULT:respondents_study1_israel=%d\n", n_isr1))
+cat(sprintf("RESULT:respondents_study2_us=%d\n", n_us2))
+cat(sprintf("RESULT:respondents_study2_israel=%d\n", n_isr2))
+```
+
+## Error / Unexpected Output
+```
+Error in relevel.factor(factor(us1$identity_protesters), ref = "white") : 
+  'ref' must be an existing level
+Calls: relevel -> relevel.factor
+Execution halted
+
+```
+
+## Task
+Fix specifically the identified problem above. Do not rewrite the entire approach unless necessary.
+
+## Reminder: Output Convention
+The fixed R code MUST emit each reproduced metric on its own line using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names.
+
+## Reminder: Constraints
+- The dataset is a directory tree at '<repo>/.cache/datasets/manekin_2022_effective_for_whom.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+- Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+- Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+- Do NOT access the internet.
+- Do NOT call system() / system2().
+- Use set.seed(42) for reproducibility.
+- Print all RESULT: lines at the end via cat().
+
+Output ONLY the corrected R code — no explanation, no markdown fences.

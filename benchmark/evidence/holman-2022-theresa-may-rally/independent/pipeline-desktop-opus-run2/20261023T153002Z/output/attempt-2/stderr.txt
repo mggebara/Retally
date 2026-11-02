@@ -1,0 +1,59 @@
+global_approval columns: country, qtr, rally_events, rally_kill, female_pres, execrlc, rally_event_any, country_code, ccode, election_qtr, lag_approval, rally_event_any2, growth, log_inflation, manchester, kill_16, kill_18, kill_10, pres_15death, pres_20death, kill_12, kill_14, kill_20, kill_08, kill_06, kill_under5, kill_1_5, kill_3_5
+attack var: kill_16
+attack country-quarters: 60; under women: 9
+T4 spec lag_approval_raw: N=4486 att=2.322 ia=-3.828
+T4 spec lag_approval_lead1: N=4453 att=1.272 ia=-3.287
+T4 spec lag_approval_lead2: N=4423 att=0.838 ia=-1.613
+T4 chosen: lag_approval_lead2
+bestPMW values: x |       0       1    <NA>  |   79596   66207 1335605 
+  y=like inc=raw ideo=raw N=120732
+  y=like inc=raw ideo=mid N=174787
+  y=like inc=raw ideo=ideology2 N=143499
+  y=like inc=raw ideo=ideo3 N=143499
+  y=like inc=mid ideo=raw N=144544
+  y=like inc=mid ideo=mid N=239919
+  y=like inc=mid ideo=ideology2 N=171913
+  y=like inc=mid ideo=ideo3 N=171913
+DiD spec y=like inc=raw ideo=ideology2 N=143499
+  y=bpw_1v0 inc=raw ideo=raw N=82701
+  y=bpw_1v0 inc=raw ideo=mid N=124534
+  y=bpw_1v0 inc=raw ideo=ideology2 N=97155
+  y=bpw_1v0 inc=raw ideo=ideo3 N=97155
+  y=bpw_1v0 inc=mid ideo=raw N=96160
+  y=bpw_1v0 inc=mid ideo=mid N=145803
+  y=bpw_1v0 inc=mid ideo=ideology2 N=113021
+  y=bpw_1v0 inc=mid ideo=ideo3 N=113021
+  y=bpw_1v02 inc=raw ideo=raw N=82701
+  y=bpw_1v02 inc=raw ideo=mid N=124534
+  y=bpw_1v02 inc=raw ideo=ideology2 N=97155
+  y=bpw_1v02 inc=raw ideo=ideo3 N=97155
+  y=bpw_1v02 inc=mid ideo=raw N=96160
+  y=bpw_1v02 inc=mid ideo=mid N=145803
+  y=bpw_1v02 inc=mid ideo=ideology2 N=113021
+  y=bpw_1v02 inc=mid ideo=ideo3 N=113021
+  y=bpw_1vother inc=raw ideo=raw N=82701
+  y=bpw_1vother inc=raw ideo=mid N=124534
+  y=bpw_1vother inc=raw ideo=ideology2 N=97155
+  y=bpw_1vother inc=raw ideo=ideo3 N=97155
+  y=bpw_1vother inc=mid ideo=raw N=96160
+  y=bpw_1vother inc=mid ideo=mid N=145803
+  y=bpw_1vother inc=mid ideo=ideology2 N=113021
+  y=bpw_1vother inc=mid ideo=ideo3 N=113021
+  y=may_bestpm inc=raw ideo=raw N=364368
+  y=may_bestpm inc=raw ideo=mid N=920816
+  y=may_bestpm inc=raw ideo=ideology2 N=445504
+  y=may_bestpm inc=raw ideo=ideo3 N=445504
+  y=may_bestpm inc=mid ideo=raw N=446560
+  y=may_bestpm inc=mid ideo=mid N=1481392
+  y=may_bestpm inc=mid ideo=ideology2 N=550304
+  y=may_bestpm inc=mid ideo=ideo3 N=550304
+  y=may_bestpm_valid inc=raw ideo=raw N=82701
+  y=may_bestpm_valid inc=raw ideo=mid N=124534
+  y=may_bestpm_valid inc=raw ideo=ideology2 N=97155
+  y=may_bestpm_valid inc=raw ideo=ideo3 N=97155
+  y=may_bestpm_valid inc=mid ideo=raw N=96160
+  y=may_bestpm_valid inc=mid ideo=mid N=145803
+  y=may_bestpm_valid inc=mid ideo=ideology2 N=113021
+  y=may_bestpm_valid inc=mid ideo=ideo3 N=113021
+DiD spec y=bpw_1v0 inc=raw ideo=ideology2 N=97155
+Table 2 error: subscript out of bounds

@@ -1,0 +1,101 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: The Economic Journal, 132 (August), 2325–2338 https://doi.org/10.1093/ej/ueab103 C⃝The Author(s) 2022. Published by Oxford University Press. All rights
+Abstract (first 500 chars): =675264 (last accessed: 3 November 2021).
+Conroy, S.J. (2001). ‘Predicting the effects of changes in welfare payments on the probabilities of receiving alternate
+sources of income: The case of homeless persons in Los Angeles’, Contemporary Economic Policy, vol. 19(3), pp.
+299–312.
+DC Data Catalog. (2018). ‘Homeless facility shuttle stops’, http://data.dc.gov/ (last accessed: 16 July 2018).
+Dordick, G., O’Flaherty, B., Brounstein, J. and Sinha, S. (2018). ‘Policy for panhandling: How to encourage
+Methodology Summary: # Methodology Summary
+
+- **Data collection**: Observational field data on (a) panhandler counts at 26 locations (25 DC Metrorail stations + Georgetown intersection) via 242 station-visits over 10 months in 2016–2017, and (b) hourly panhandling receipts at a 5-station downtown subsample (Farragut North, Farragut West, Gallery Pl-Chinatown, McPherson Square, Metro Center) via 67.6 hours of covert observation of 80 panhandlers across 4 visits per station in Feb–Apr 2019. Receipts were verified by paying panhandlers $5 to count donations on-site; in-kind donations monetized at market prices.
+
+- **Rationality regression (Table 2)**: OLS of *number of panhandlers at station-visit* on *number of monthly exiting passersby* (headline regressor, unstandardised level-level specification), *passerby friendliness* (1–5 scale from solicitation experiment with 701 passersby), and indicators for proximity (≤10-min walk) to a *homeless service* and *homeless shuttle stop*. Includes **date fixed effects**; **robust standard errors clustered by Metro station**. Estimated separately on full sample (N=242) and 5-station subsample (N=102). Standardised-beta effects reported in text as an auxiliary interpretation only.
+
+- **Sample restriction for equalisation tests**: Restricted to 5 clustered downtown stations (each within 24-min walk of the others and 14-min walk of a homeless shuttle stop) to approximate low-cost arbitrage between stations; all 5 stations visited simultaneously 7:30–11:30 a.m. on identical dates.
+
+- **Equality-of-returns tests (Tables 3–5)**: Three cross-station nonparametric/ANOVA tests on hourly receipts (donations/hour, N=80; dollars/hour, N=67):
+  - **Brown-Forsythe** test for equality of variances (robust to skew; Levene's used as robustness check)
+  - **One-way ANOVA** F-test for equality of means
+  - **Kruskal-Wallis** chi-squared test for equality of medians
+
+- **Robustness and power**: Results re-run bounding observed working minutes at lower bound of 10 minutes and upper bounds of 2 SD (144.6 min) and 3 SD (191.55 min) above the mean. Power calculations performed for the ANOVA under three variance scenarios (sample estimate; between-variance ±15%, within-variance ∓15%).
+
+- **Evaluation protocol**: Hypothesis is failure to reject equality (p-values reported in parentheses in Tables 3–5); evidence of maximisation inferred from (i) significant positive passerby coefficient in Table 2 and (ii) non-rejection of equal variances/means/medians of hourly receipts across the 5 subsample stations.
+
+## Claims to Reproduce
+1. passersby_full_sample: 0.005 (panhandlers per passerby (Table 1 units)) [type: coefficient]
+   Location: Table 2, column (1) Full sample, Number of passersby
+   Context: Table 2 ("Determinants of the Number of Panhandlers Across Metro Stations"), column (1) Full sample, row Number of passersby. OLS regression of the number of panhandlers counted at a Metro station on a visit (one square-block area around the station exits) on the number of passersby at the station in the month of the visit (WMATA monthly count of riders exiting the station, on the scale of Table 1: mean 348.954, i.e. thousands of exits per month; Georgetown is assigned Foggy Bottom-GWU's count), passerby friendliness (the station average of passersby's friendliest response, 1-5, to a request f…
+2. passersby_five_station_subsample: 0.006 (panhandlers per passerby (Table 1 units)) [type: coefficient]
+   Location: Table 2, column (2) Five-station subsample, Number of passersby
+   Context: Table 2, column (2) Five-station subsample, row Number of passersby. Same OLS specification as passersby_full_sample (friendliness, shuttle-stop and homeless-service controls, date fixed effects, SEs clustered by Metro station), on the visits to the five neighbouring downtown stations Farragut North, Farragut West, Gallery Place-Chinatown, McPherson Square and Metro Center (102 station-visits).
+3. friendliness_full_sample: 1.595 (panhandlers per friendliness point) [type: coefficient]
+   Location: Table 2, column (1) Full sample, Passerby friendliness
+   Context: Table 2, column (1) Full sample, row Passerby friendliness. Same regression as passersby_full_sample.
+4. shuttle_stop_full_sample: 0.781 (panhandlers) [type: coefficient]
+   Location: Table 2, column (1) Full sample, Homeless shuttle stop
+   Context: Table 2, column (1) Full sample, row Homeless shuttle stop (station within a ten-minute walk of a stop of the homeless shuttle). Same regression as passersby_full_sample.
+5. shuttle_stop_five_station_subsample: 0.89 (panhandlers) [type: coefficient]
+   Location: Table 2, column (2) Five-station subsample, Homeless shuttle stop
+   Context: Table 2, column (2) Five-station subsample, row Homeless shuttle stop. Same regression as passersby_five_station_subsample.
+6. brown_forsythe_donations_per_hour: 0.541 (Brown-Forsythe W statistic) [type: other]
+   Location: Table 3, Panel A: donations per hour, Brown-Forsythe W-statistic
+   Context: Table 3 ("Test of Equality of Variance in Panhandling Receipts Across Metro Stations"), Panel A, Brown-Forsythe W-statistic (p-value 0.706). Brown-Forsythe test of equal variance of the number of donations each panhandler received per hour (donations divided by minutes observed working, times 60) across the five subsample stations. Observations are panhandlers observed in 2019: 80 observations (76 unique panhandlers).
+7. brown_forsythe_dollars_per_hour: 0.276 (Brown-Forsythe W statistic) [type: other]
+   Location: Table 3, Panel B: dollars per hour, Brown-Forsythe W-statistic
+   Context: Table 3, Panel B, Brown-Forsythe W-statistic (p-value 0.893). Same test for dollars received per hour (cash plus the market value of in-kind donations, divided by minutes observed working, times 60); 67 observations, the panhandlers whose dollar receipts were counted.
+8. anova_f_donations_per_hour: 0.4 (one-way ANOVA F statistic) [type: other]
+   Location: Table 4, Panel A: donations per hour, ANOVA F-statistic
+   Context: Table 4 ("Test of Equality of Mean Panhandling Receipts Across Metro Stations"), Panel A, ANOVA F-statistic (p-value 0.809). One-way analysis of variance of donations per hour across the five subsample stations (4 and 75 degrees of freedom), 80 observations.
+9. anova_f_dollars_per_hour: 0.15 (one-way ANOVA F statistic) [type: other]
+   Location: Table 4, Panel B: dollars per hour, ANOVA F-statistic
+   Context: Table 4, Panel B, ANOVA F-statistic (p-value 0.962). One-way analysis of variance of dollars per hour across the five subsample stations (4 and 62 degrees of freedom), 67 observations.
+10. station_visits_full_sample: 242.0 (station-visits) [type: other]
+   Location: Table 2, column (1), Observations
+   Context: Observations in the full-sample Table 2 regression: Metro station-visits (242 visits to 26 stations).
+11. station_visits_five_station_subsample: 102.0 (station-visits) [type: other]
+   Location: Table 2, column (2), Observations
+   Context: Observations in the five-station-subsample Table 2 regression.
+
+## Dataset Information
+Name: leeson-2022-hobo-economicus
+Local path: <repo>/.cache/datasets/leeson_2022_hobo_economicus.script-free
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- 3 replication package/IRB_Approval.pdf (211.1 KB)
+- 3 replication package/replicate/replicate/Codebook.xlsx (15.9 KB)
+- 3 replication package/replicate/replicate/ReadMe.pdf (217.1 KB)
+- 3 replication package/replicate/replicate/data/friendliness.csv (26.0 KB) — columns: passerbyid,date,passresp1,passresp2,passresp3,passresp4,passresp5,metro
+- 3 replication package/replicate/replicate/data/metrovisitslog.csv (6.2 KB) — columns: metro,date,panhandlers
+- 3 replication package/replicate/replicate/data/passersby.csv (3.4 KB) — columns: metro,month,year,passersby
+- 3 replication package/replicate/replicate/data/receipts.csv (3.4 KB) — columns: observationid,panhandlerid,date,metro,donations,minutes,cash,inkind,declinedoffer
+- 3 replication package/replicate/replicate/data/service.csv (3.0 KB) — columns: metro,servicemin,closestservice,googledirections
+- 3 replication package/replicate/replicate/data/shuttle.csv (2.0 KB) — columns: metro,shuttlemin,closestshuttle,googledirections
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/leeson_2022_hobo_economicus.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Independent Reproduction
+This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's description alone.  The authors' own analysis code is deliberately withheld.  Do NOT open, read, source, or execute any script files that may appear in the dataset directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, and similar) — load data files only.  Derive the estimating equation, sample restrictions, fixed effects, and standard-error clustering from the paper information and claims above.
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

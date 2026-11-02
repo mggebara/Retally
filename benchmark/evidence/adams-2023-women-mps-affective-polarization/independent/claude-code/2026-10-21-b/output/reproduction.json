@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "entry_id": "adams-2023-women-mps-affective-polarization",
+  "mode": "independent",
+  "run_id": "2026-10-21-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "The paper restricts to dyads where both parties have at least four MPs in the year before the survey. In the data, filtering on the evaluated (to) party's prior seats (to_prior_seats >= 4) reproduces the reported N of 1,842 exactly, while filtering on both parties gives 1,535. I used the to-party filter. Dyads where to_pfeml is missing are dropped listwise.",
+    "Elite right-left distance is the dataset's pre-standardized rile_distance_s (standardized over the full 2,266-row dyadic file; its raw mean of 22.4 and SD of 17.6 match the paper's footnote 3), not re-standardized within the estimation sample.",
+    "Coalition and opposition partner dummies are govern_together and opposition_together (status at the time of the survey), not prior_coalition and prior_opposition.",
+    "The gender-specific DV is 10 - dislike from gender_disagregated_8-8-21.rds (gender 2 = women, 1 = men), with the same to_prior_seats >= 4 filter."
+  ],
+  "notes": "Three exploratory runs (no RESULT lines) inspected the variables, the codebooks (extracted from the .docx with utils::unzip inside the sandbox) and sample-restriction counts. Final model: fixest feols of party_like on to_pfeml (+ rile_distance_s, govern_together, opposition_together in the full model) with cntryyr fixed effects and SEs clustered by cntryyr, for Table 1 columns 1-4. All four Ns (1842/1842/1836/1833) and the 81 elections match exactly. The coefficients are close to Table 1. The largest gaps are the full-model women-MPs coefficient (1.758 vs 1.73) and the opposition-partners coefficient (0.334 vs 0.37). I made no claim-driven changes and never ran check_attempt.",
+  "files_read_outside_mount": [
+    "<repo>/benchmark/.cache/claude-code/adams-2023-women-mps-affective-polarization/independent/2026-10-21-b/task.md (the task instructions, read as directed)",
+    "<home>/.claude/projects/-Users-matthew-dev-Retally/4331b322-448f-44d6-bc9b-f556920716ab/tool-results/b2vazh9gx.txt (the harness saved the cat of paper.txt there because the output was too large; I read only its inline preview, which is the same paper text)"
+  ],
+  "started_at": "2026-10-22T02:06:09Z",
+  "finished_at": "2026-10-22T02:08:30Z"
+}

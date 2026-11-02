@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "entry_id": "arias-2022-changing-tides-climate-migration",
+  "mode": "independent",
+  "run_id": "2026-10-21-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Profile count reported as all profiles in choice tasks the respondent answered (18970 US); the paper reports 18966, a difference of 4 profiles (2 tasks) whose source I did not identify. The German count matches exactly (18862)."
+  ],
+  "notes": "Used only the two 'Climate Migration 2_ Conjoint' Qualtrics CSVs (US, Germany). Dropped the two Qualtrics header rows; reshaped the 9 tasks x 2 profiles to long format by mapping the randomized attribute order (F-t-k = attribute name at position k in task t, F-t-p-k = level for profile p). Choice items: force_choice (task 1), Q184, Q186, ..., Q198 (tasks 2-9); chosen = 1 if the choice equals the profile index. Kept tasks with a non-missing choice. That gives 1086 US and 1074 German respondents, matching the paper. German levels translated to English; agnostic/atheist pooled as the religion baseline. AMCEs come from an OLS linear probability model of chosen on dummies for all seven attributes (baselines from Table 1: economic opportunity, no language, female, unemployed, agnostic/atheist, another region, no vulnerability), estimated separately by country with fixest and SEs clustered by respondent (ResponseId). No interaction for the language x origin randomization restriction: the US design file's restriction names 'Country of Origin', so it was not enforced in the US data, and it does not affect the reason-for-migration AMCEs. Attempt-1 was exploratory (variable inspection, no RESULT lines). I compared the final run with the claims once using check_attempt: all claims within tolerance, and I did not change the script afterwards.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T02:06:11Z",
+  "finished_at": "2026-10-22T02:09:00Z"
+}

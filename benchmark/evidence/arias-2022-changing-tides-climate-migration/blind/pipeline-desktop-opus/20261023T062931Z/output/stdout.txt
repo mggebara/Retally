@@ -1,0 +1,118 @@
+US : tasks = 9 ; attributes: Language Fluency | Reason for migration | Gender | Origin | Vulnerability | Religion | Occupation 
+US : choice columns = force_choice, Q184, Q186, Q188, Q190, Q192, Q194, Q196, Q198 
+US : reason attribute = Reason for migration ; levels: Flooding | Economic opportunity | Wildfires | Political/religious/ethnic persecution | Drought ; baseline = Economic opportunity 
+OLS estimation, Dep. Var.: chosen
+Observations: 18,952
+Standard-errors: Clustered (id) 
+                                              Estimate Std. Error   t value
+(Intercept)                                   0.361832   0.015872 22.796918
+reasonDrought                                 0.035277   0.011725  3.008701
+reasonFlooding                                0.036931   0.011925  3.096934
+reasonPolitical/religious/ethnic persecution  0.076119   0.012469  6.104504
+reasonWildfires                               0.039762   0.011358  3.500672
+a1Broken                                      0.043259   0.008915  4.852415
+a1Fluent                                      0.104433   0.009315 11.211067
+a2Male                                       -0.044343   0.007391 -5.999412
+a3Afghanistan                                -0.026307   0.011702 -2.248051
+a3Ethiopia                                   -0.026560   0.011255 -2.359907
+a3Myanmar                                    -0.021498   0.011563 -1.859237
+a3Ukraine                                    -0.010971   0.011742 -0.934353
+a4No surviving family members                 0.025641   0.011262  2.276865
+a4None                                       -0.012098   0.011248 -1.075648
+a4Physically handicapped                     -0.015233   0.011688 -1.303340
+a4Post Traumatic Stress Disorder (PTSD)      -0.058501   0.011523 -5.077092
+a5Christian                                   0.059754   0.009378  6.371520
+a5Muslim                                     -0.046662   0.009293 -5.020952
+a6Cleaner                                     0.070939   0.010825  6.553075
+a6Doctor                                      0.186775   0.011551 16.169257
+a6Teacher                                     0.139479   0.010878 12.822053
+                                               Pr(>|t|)    
+(Intercept)                                   < 2.2e-16 ***
+reasonDrought                                2.6843e-03 ** 
+reasonFlooding                               2.0056e-03 ** 
+reasonPolitical/religious/ethnic persecution 1.4341e-09 ***
+reasonWildfires                              4.8296e-04 ***
+a1Broken                                     1.3982e-06 ***
+a1Fluent                                      < 2.2e-16 ***
+a2Male                                       2.6959e-09 ***
+a3Afghanistan                                2.4773e-02 *  
+a3Ethiopia                                   1.8456e-02 *  
+a3Myanmar                                    6.3264e-02 .  
+a3Ukraine                                    3.5033e-01    
+a4No surviving family members                2.2988e-02 *  
+a4None                                       2.8232e-01    
+a4Physically handicapped                     1.9274e-01    
+a4Post Traumatic Stress Disorder (PTSD)      4.5085e-07 ***
+a5Christian                                  2.7617e-10 ***
+a5Muslim                                     6.0076e-07 ***
+a6Cleaner                                    8.6961e-11 ***
+a6Doctor                                      < 2.2e-16 ***
+a6Teacher                                     < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.489215   Adj. R2: 0.041662
+Germany : tasks = 9 ; attributes: Geschlecht | Beruf | Religion | Gründe für die Migration | Zusätzliche Belastung | Sprachkompetenz | Herkunft 
+Germany : choice columns = force_choice, Q184, Q186, Q188, Q190, Q192, Q194, Q196, Q198 
+Germany : reason attribute = Gründe für die Migration ; levels: Politische/religiöse/ethnische Verfolgung | Waldbrände | Wirtschaftliche Perspektive | Dürre | Überflutung ; baseline = Wirtschaftliche Perspektive 
+OLS estimation, Dep. Var.: chosen
+Observations: 18,826
+Standard-errors: Clustered (id) 
+                                                 Estimate Std. Error   t value
+(Intercept)                                      0.332770   0.018792 17.708334
+reasonDürre                                      0.080717   0.011866  6.802314
+reasonPolitische/religiöse/ethnische Verfolgung  0.162093   0.013209 12.270939
+reasonÜberflutung                                0.086278   0.011633  7.416710
+reasonWaldbrände                                 0.059643   0.012091  4.932917
+a1Männlich                                      -0.050736   0.007471 -6.791013
+a2Arzt                                           0.179939   0.011518 15.622826
+a2Lehrer                                         0.146384   0.011165 13.110946
+a2Reinigungskraft                                0.063289   0.010341  6.120066
+a3Christian                                      0.007535   0.008897  0.846950
+a3Muslim                                        -0.084740   0.009633 -8.796961
+a4Keine                                         -0.021235   0.011394 -1.863659
+a4Keine überlebenden Familienmitglieder          0.012449   0.011229  1.108576
+a4Körperliche Behinderung                        0.001709   0.011447  0.149326
+a4PTBS (Posttraumatische Belastungsstörung)     -0.035308   0.011483 -3.074774
+a5Fließend                                       0.140133   0.009921 14.124195
+a5Gebrochen                                      0.047922   0.009106  5.262637
+a6Afghanistan                                   -0.022509   0.013397 -1.680226
+a6Äthiopien                                     -0.017231   0.013370 -1.288792
+a6Myanmar                                       -0.007637   0.013042 -0.585607
+a6Ukraine                                       -0.022693   0.013154 -1.725146
+                                                  Pr(>|t|)    
+(Intercept)                                      < 2.2e-16 ***
+reasonDürre                                     1.7089e-11 ***
+reasonPolitische/religiöse/ethnische Verfolgung  < 2.2e-16 ***
+reasonÜberflutung                               2.4369e-13 ***
+reasonWaldbrände                                9.3859e-07 ***
+a1Männlich                                      1.8423e-11 ***
+a2Arzt                                           < 2.2e-16 ***
+a2Lehrer                                         < 2.2e-16 ***
+a2Reinigungskraft                               1.3102e-09 ***
+a3Christian                                     3.9721e-01    
+a3Muslim                                         < 2.2e-16 ***
+a4Keine                                         6.2643e-02 .  
+a4Keine überlebenden Familienmitglieder         2.6786e-01    
+a4Körperliche Behinderung                       8.8132e-01    
+a4PTBS (Posttraumatische Belastungsstörung)     2.1600e-03 ** 
+a5Fließend                                       < 2.2e-16 ***
+a5Gebrochen                                     1.7148e-07 ***
+a6Afghanistan                                   9.3205e-02 .  
+a6Äthiopien                                     1.9775e-01    
+a6Myanmar                                       5.5826e-01    
+a6Ukraine                                       8.4790e-02 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.485954   Adj. R2: 0.054391
+RESULT:amce_drought_us=0.03527739888
+RESULT:amce_flooding_us=0.0369307802
+RESULT:amce_wildfires_us=0.03976229357
+RESULT:amce_persecution_us=0.07611916375
+RESULT:amce_drought_germany=0.08071678547
+RESULT:amce_flooding_germany=0.08627807965
+RESULT:amce_wildfires_germany=0.05964316796
+RESULT:amce_persecution_germany=0.1620927574
+RESULT:respondents_us=1085
+RESULT:respondents_germany=1072
+RESULT:choice_tasks_us=18952
+RESULT:choice_tasks_germany=18826

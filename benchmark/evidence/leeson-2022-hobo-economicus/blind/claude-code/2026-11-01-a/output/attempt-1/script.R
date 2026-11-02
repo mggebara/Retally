@@ -1,0 +1,15 @@
+suppressMessages(library(tidyverse))
+d <- "<repo>/benchmark/.cache/claude-code/leeson-2022-hobo-economicus/blind/2026-11-01-a/mount/leeson_2022_hobo_economicus/3 replication package/replicate/replicate/data/"
+v <- read_csv(paste0(d,"metrovisitslog.csv"), show_col_types=FALSE)
+p <- read_csv(paste0(d,"passersby.csv"), show_col_types=FALSE)
+f <- read_csv(paste0(d,"friendliness.csv"), show_col_types=FALSE)
+r <- read_csv(paste0(d,"receipts.csv"), show_col_types=FALSE)
+sh <- read_csv(paste0(d,"shuttle.csv"), show_col_types=FALSE)
+se <- read_csv(paste0(d,"service.csv"), show_col_types=FALSE)
+for (x in list(v,p,f,r,sh,se)) { print(sort(unique(x$metro))) }
+print(dim(v)); print(summary(v)); print(table(v$metro))
+v$date <- mdy(v$date); print(table(format(v$date,"%Y-%m")))
+print(length(unique(v$date)))
+print(p %>% count(metro) %>% as.data.frame())
+print(summary(f)); print(table(rowSums(f[,3:7]))); print(table(f$metro))
+print(summary(r)); print(as.data.frame(r))

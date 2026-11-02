@@ -1,0 +1,82 @@
+DE column sample (first 50):
+ [1] "StartDate"             "EndDate"               "Status"               
+ [4] "IPAddress"             "Progress"              "Duration (in seconds)"
+ [7] "Finished"              "RecordedDate"          "ResponseId"           
+[10] "RecipientLastName"     "RecipientFirstName"    "RecipientEmail"       
+[13] "ExternalReference"     "LocationLatitude"      "LocationLongitude"    
+[16] "DistributionChannel"   "UserLanguage"          "Q59_First Click"      
+[19] "Q59_Last Click"        "Q59_Page Submit"       "Q59_Click Count"      
+[22] "GENDER_resp"           "EDUCATION_resp"        "IDEOLOGY"             
+[25] "RELIGIOSITY_resp"      "NATIVE_BORN"           "EMPLOYMENT_resp"      
+[28] "Age"                   "TRUST_GOVT"            "POL_INTEREST"         
+[31] "FP_ORIENTATION_1"      "FP_ORIENTATION_2"      "FP_ORIENTATION_3"     
+[34] "FP_ORIENTATION_4"      "EMPATHY_1"             "EMPATHY_2"            
+[37] "EMPATHY_3"             "EMPATHY_4"             "Q93_First Click"      
+[40] "Q93_Last Click"        "Q93_Page Submit"       "Q93_Click Count"      
+[43] "Q127_First Click"      "Q127_Last Click"       "Q127_Page Submit"     
+[46] "Q127_Click Count"      "RATE_MIG1"             "RATE_MIG2"            
+[49] "force_choice"          "Q152_First Click"     
+DE total cols: 301 
+DE F cols (first 30):
+ [1] "Finished"         "FP_ORIENTATION_1" "FP_ORIENTATION_2" "FP_ORIENTATION_3"
+ [5] "FP_ORIENTATION_4" "F-1-1"            "F-1-2"            "F-1-3"           
+ [9] "F-1-4"            "F-1-5"            "F-1-6"            "F-1-7"           
+[13] "F-2-1"            "F-2-2"            "F-2-3"            "F-2-4"           
+[17] "F-2-5"            "F-2-6"            "F-2-7"            "F-3-1"           
+[21] "F-3-2"            "F-3-3"            "F-3-4"            "F-3-5"           
+[25] "F-3-6"            "F-3-7"            "F-4-1"            "F-4-2"           
+[29] "F-4-3"            "F-4-4"           
+US rows after Qualtrics filter: 1031 
+DE rows after Qualtrics filter: 1026 
+Country US: sep='-', n_hdr=63, n_val=126
+Country DE: sep='-', n_hdr=63, n_val=126
+US reason sample:
+[1] "Flooding"                              
+[2] "Economic opportunity"                  
+[3] "Wildfires"                             
+[4] "Political/religious/ethnic persecution"
+[5] "Drought"                               
+DE reason sample:
+[1] "Politische/religiöse/ethnische Verfolgung"
+[2] "Waldbrände"                               
+[3] "Wirtschaftliche Perspektive"              
+[4] "Dürre"                                    
+[5] "Überflutung"                              
+DE slot names across all slots:
+  slot1: Geschlecht|Beruf|Religion|Gründe für die Migration|Zusätzliche Belastung
+  slot2: Gründe für die Migration|Sprachkompetenz|Zusätzliche Belastung|Beruf|Religion
+  slot3: Beruf|Herkunft|Religion|Sprachkompetenz|Zusätzliche Belastung
+  slot4: Religion|Zusätzliche Belastung|Beruf|Geschlecht|Herkunft
+  slot5: Sprachkompetenz|Zusätzliche Belastung|Herkunft|Religion|Geschlecht
+  slot6: Zusätzliche Belastung|Religion|Sprachkompetenz|Gründe für die Migration|Geschlecht
+  slot7: Herkunft|Geschlecht|Zusätzliche Belastung|Religion|Sprachkompetenz
+DE slot values sample:
+  slot1: Männlich|Reinigungskraft|Weiblich|Atheist|Überflutung|Waldbrände|Lehrer|Keine überlebenden Familienmitglieder
+  slot2: Politische/religiöse/ethnische Verfolgung|Waldbrände|Wirtschaftliche Perspektive|Fließend|Körperliche Behinderung|Lehrer|Arzt|Christian
+  slot3: Arzt|Myanmar|Christian|Äthiopien|Keine|Ernährungsunsicherheit|Überflutung|Ukraine
+  slot4: Atheist|PTBS (Posttraumatische Belastungsstörung)|Lehrer|Weiblich|Arzt|Myanmar|Keine|Politische/religiöse/ethnische Verfolgung
+  slot5: Gebrochen|Keine|Äthiopien|Fließend|Atheist|Männlich|Christian|Lehrer
+  slot6: Ernährungsunsicherheit|Atheist|Gebrochen|Dürre|Waldbrände|Männlich|Myanmar|Keine
+  slot7: Myanmar|Weiblich|Aus einem anderen Teil Ihres Landes|Ernährungsunsicherheit|Christian|Körperliche Behinderung|Gebrochen|Äthiopien
+US reason_std table:
+
+    drought    economic    flooding persecution   wildfires        <NA> 
+       3691        3749        3769        3613        3736           0 
+DE reason_std table:
+
+    drought    economic    flooding persecution        <NA> 
+       3727        3704        3751        3636        3650 
+US rows after prep: 18558 
+DE rows after prep: 14818 
+RESULT:amce_drought_us=-0.0043
+RESULT:amce_flooding_us=-0.0039
+RESULT:amce_wildfires_us=-0.0065
+RESULT:amce_persecution_us=0.0129
+RESULT:amce_drought_germany=0.0209
+RESULT:amce_flooding_germany=0.0110
+RESULT:amce_wildfires_germany=NA
+RESULT:amce_persecution_germany=0.0048
+RESULT:respondents_us=1031
+RESULT:respondents_germany=1026
+RESULT:choice_tasks_us=18558
+RESULT:choice_tasks_germany=14818

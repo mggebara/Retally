@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "entry_id": "lopez-moctezuma-2022-policy-deliberation-philippines",
+  "mode": "independent",
+  "run_id": "2026-10-22-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-3", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Attendance-oversampling weights reconstructed from the paper's one-sentence description: in barangays with town-hall attendees (att.prop > 0 in data_agg), self-reported attendees get weight att.prop / (survey attendee share in that barangay), all other respondents weight 1. The exact weighting formula of the authors is not given in the paper text available; a two-sided IPW (non-attendees weighted (1-pa)/(1-ps)) was tried in attempts 2-3.",
+    "Anderson (2008) indices: items oriented so higher = more agreement with the problem statement for poverty/gap/corruption (6 - code), cct as coded; gender items oriented toward gender-egalitarian awareness (femhouse, fempol as coded; equality and harassment as coded, i.e. disagreement with sexist statements; discrimination reversed). Items standardized on the control group of each party's municipalities; inverse-covariance weights from the full-sample covariance of the standardized items; respondents with missing items use the available items; index re-standardized on the control group. Only five gender items exist in the data (the paper mentions six).",
+    "Survey sample: respondents with a valid party-list turnout answer (paper footnote 11; 1,081 with non-missing city/assignment vs 1,082 reported). Vote outcomes in F.1 are among respondents who turned out (turnout_pl == 1).",
+    "Permutation p-values for Table 1 computed by within-municipality reshuffling of assignment (2,000 draws, two-sided); they are printed for information only and do not match the paper's (e.g. 0.14 vs .048 for column 2)."
+  ],
+  "notes": "Table 1 (barangay-level ITT, OLS of outcome on assignment with city FE, data_agg) reproduces exactly: -4.544, 1.096, 1.955, 0.360 with N = 39/39/18/21. Unweighted individual-level vote ITTs (Table F.1) are 23.51 and 32.01 vs 23.242 and 31.729 claimed (LPM with city FE, respondents who turned out, clustered by barangay). The SI Table C.3/C.4 Anderson summary-index ITTs could not be pinned down: the paper text does not give the exact IPW formula or the item orientation for the gender items, and no tried combination (two-sided vs attendee-only IPW, att.prop vs att.prop.turn, raw vs reoriented items, full vs control covariance, available vs complete items) matched all four claimed values; the main-text item-level effects (e.g. Discrimination 0.88 s.d.) could not be approached under any variant tried, suggesting a different weighting or item construction. Final run uses the attendee-only IPW reading. Attempt-1 and attempt-4 were exploratory (data inspection; item-level attitude ITTs under alternative weights, not listed quantities) and printed no RESULT lines. One aborted docker invocation (script file not yet copied, so Docker created an empty directory in place of attempt-3/script.R and produced empty output) was cleaned up and re-run as attempt-3; it executed no R code.",
+  "files_read_outside_mount": [
+    "benchmark/.cache/claude-code/lopez-moctezuma-2022-policy-deliberation-philippines/independent/2026-10-22-a/task.md (the task description itself, read as instructed)"
+  ],
+  "started_at": "2026-10-22T03:07:54Z",
+  "finished_at": "2026-10-22T03:15:00Z"
+}

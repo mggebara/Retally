@@ -1,0 +1,147 @@
+
+Call:
+lm(formula = degree_violence ~ black + traffic + destroy, data = us1, 
+    weights = weight)
+
+Weighted Residuals:
+     Min       1Q   Median       3Q      Max 
+-10.1411  -2.1205  -0.2579   1.9866  10.3464 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)   2.7736     0.1168  23.751   <2e-16 ***
+black         0.2352     0.1168   2.015   0.0441 *  
+traffic       0.2710     0.1429   1.896   0.0581 .  
+destroy       3.3821     0.1431  23.634   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 2.813 on 2265 degrees of freedom
+Multiple R-squared:  0.2345,	Adjusted R-squared:  0.2335 
+F-statistic: 231.3 on 3 and 2265 DF,  p-value: < 2.2e-16
+
+
+Call:
+lm(formula = police_action_required ~ black + traffic + destroy, 
+    data = us1, weights = weight)
+
+Weighted Residuals:
+     Min       1Q   Median       3Q      Max 
+-11.2275  -2.3649   0.1663   2.0640  10.6219 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)   3.8367     0.1268  30.253  < 2e-16 ***
+black         0.2680     0.1268   2.114  0.03467 *  
+traffic       0.4289     0.1552   2.763  0.00577 ** 
+destroy       2.9709     0.1554  19.116  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 3.055 on 2265 degrees of freedom
+Multiple R-squared:   0.16,	Adjusted R-squared:  0.1589 
+F-statistic: 143.8 on 3 and 2265 DF,  p-value: < 2.2e-16
+
+
+Call:
+lm(formula = degree_violence ~ eth + arab + traffic + destroy, 
+    data = is1, weights = weight)
+
+Weighted Residuals:
+    Min      1Q  Median      3Q     Max 
+-7.2637 -1.6368  0.2129  1.5879  6.2461 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  3.91517    0.09901  39.545  < 2e-16 ***
+eth          0.42507    0.10701   3.972 7.29e-05 ***
+arab         0.62309    0.10765   5.788 7.84e-09 ***
+traffic      0.25434    0.10799   2.355   0.0186 *  
+destroy      2.53789    0.10659  23.810  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 2.412 on 3058 degrees of freedom
+Multiple R-squared:  0.1918,	Adjusted R-squared:  0.1908 
+F-statistic: 181.5 on 4 and 3058 DF,  p-value: < 2.2e-16
+
+
+Call:
+lm(formula = police_action_required ~ eth + arab + traffic + 
+    destroy, data = is1, weights = weight)
+
+Weighted Residuals:
+    Min      1Q  Median      3Q     Max 
+-7.9998 -1.8775  0.1755  2.1974  5.4624 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)   4.6786     0.1096  42.694  < 2e-16 ***
+eth           0.1807     0.1184   1.526 0.127207    
+arab          0.9642     0.1192   8.092 8.38e-16 ***
+traffic       0.3945     0.1195   3.300 0.000976 ***
+destroy       2.1504     0.1180  18.227  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 2.669 on 3058 degrees of freedom
+Multiple R-squared:  0.1298,	Adjusted R-squared:  0.1287 
+F-statistic: 114.1 on 4 and 3058 DF,  p-value: < 2.2e-16
+
+
+Call:
+lm(formula = degree_violence ~ black + group_goal + commitment, 
+    data = us2)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.3003 -3.0569 -0.3256  2.2898  6.9178 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)   3.3256     0.1139  29.190  < 2e-16 ***
+black         0.3467     0.1151   3.011  0.00263 ** 
+group_goal    0.6280     0.1151   5.454 5.32e-08 ***
+commitment   -0.2434     0.1150  -2.117  0.03436 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 3.155 on 3009 degrees of freedom
+Multiple R-squared:  0.01461,	Adjusted R-squared:  0.01363 
+F-statistic: 14.88 on 3 and 3009 DF,  p-value: 1.299e-09
+
+
+Call:
+lm(formula = police_action_required ~ black + group_goal + commitment, 
+    data = us2)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-5.1066 -2.6778  0.0817  2.3518  6.0817 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)   4.1304     0.1131  36.506  < 2e-16 ***
+black         0.4287     0.1143   3.750  0.00018 ***
+group_goal    0.5474     0.1143   4.787 1.77e-06 ***
+commitment   -0.2121     0.1142  -1.858  0.06331 .  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 3.13 on 3004 degrees of freedom
+  (5 observations deleted due to missingness)
+Multiple R-squared:  0.01373,	Adjusted R-squared:  0.01274 
+F-statistic: 13.94 on 3 and 3004 DF,  p-value: 5.051e-09
+
+RESULT:study1_us_black_perceived_violence=0.235246
+RESULT:study1_us_black_police_action=0.268010
+RESULT:study1_israel_ethiopian_perceived_violence=0.425066
+RESULT:study1_israel_ethiopian_police_action=0.180704
+RESULT:study1_israel_arab_perceived_violence=0.623088
+RESULT:study1_israel_arab_police_action=0.964200
+RESULT:study2_us_black_perceived_violence=0.346652
+RESULT:study2_us_black_police_action=0.428730
+RESULT:respondents_study1_us=2269.000000
+RESULT:respondents_study1_israel=3063.000000
+RESULT:respondents_study2_us=3013.000000
+RESULT:respondents_study2_israel=3465.000000

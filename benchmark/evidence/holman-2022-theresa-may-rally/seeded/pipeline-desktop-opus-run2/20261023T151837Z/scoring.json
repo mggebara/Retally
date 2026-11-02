@@ -1,0 +1,613 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "intl_attack_table4",
+      "ground_truth": {
+        "value": 3.112,
+        "standard_error": 0.875,
+        "unit": "percentage points of executive approval",
+        "claim_type": "coefficient",
+        "location": "Table 4, International terrorist attack (All countries, attacks with more than 15 deaths)",
+        "context": "Table 4 (\"Effect of Terrorist Attacks on Executive Approval Ratings\").  Linear regression on time-series cross-sectional data of country-quarters: the percentage of the public approving of the executive in the quarter following the attack, regressed on an indicator for a major international terrorist attack (an attack with an international component under the Global Terrorism Database's definition and more than 15 deaths), the presence of a woman executive, their interaction, and controls for GDP growth, logged inflation, the left-center-right placement of the leader and elections, with country fixed effects and panel-corrected standard errors.  Sample: countries in the executive approval database that also appear in the Global Terrorism Database, 1975-2017.  This coefficient is the attack effect for men executives (the rally).\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "intl_attack_table4",
+        "claim_type": "coefficient",
+        "claimed": 3.112,
+        "reproduced": 3.112028,
+        "tolerance": 0.02,
+        "rel_err": 8.997429305885919e-06,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "intl_attack_table4",
+        "reproduced": 3.112028,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.062240000000000004,
+        "abs_err": 2.799999999991698e-05,
+        "rel_err": 8.997429305885919e-06,
+        "margin": 0.00044987146529429595,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "intl_attack_x_woman_exec_table4",
+      "ground_truth": {
+        "value": -4.333,
+        "standard_error": 1.859,
+        "unit": "percentage points of executive approval",
+        "claim_type": "coefficient",
+        "location": "Table 4, International terrorist attack x Woman executive",
+        "context": "Table 4, the paper's global test of the gender-revised rally framework: the coefficient on the interaction of a major international terrorist attack (more than 15 deaths) with a woman executive, in the same linear country-quarter regression of next-quarter executive approval (controls for woman executive, GDP, logged inflation, left-center-right placement of the leader and elections; country fixed effects; panel-corrected standard errors). Negative and significant at the 5% level in the paper.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -3.452,
+        "outcome": "does_not_match",
+        "notes": "Coding error fixed: the election-quarter covariates (current quarter and four lags).  DP41 Table 1 Panel A col 6 / meta-database row \"Fixing election quarter coding errors\": -3.452 (SE 1.821), p = 0.058, N = 4,429 — no longer significant at 5%.  DP41 re-coded elections from public sources (60 contemporaneous observations changed; 317 amendments across the lags: US elections missing, Japan's upper house missing, run-offs and multi-round elections coded in one quarter only, errors for Austria 2016q4, Ecuador 1997q4, Iceland 2008q2/2012q2, Mexico 1991q3, Paraguay 2000q3, Turkey 2014q3).  Other DP41 variants (robustness, not corrections): no election controls -2.992 (1.841); no controls -2.650 (1.812); excluding the May-Manchester quarter -3.279 (1.982), and with corrected elections too -2.390 (1.945); country-clustered xtreg -3.194 (p = 0.558).  Authors' corrigendum (updated data, 14+ deaths threshold): -3.910 (1.798), N = 4,612.\n",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "intl_attack_x_woman_exec_table4",
+        "claim_type": "coefficient",
+        "claimed": -4.333,
+        "reproduced": -4.332725,
+        "tolerance": 0.02,
+        "rel_err": 6.346642049394121e-05,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "intl_attack_x_woman_exec_table4",
+        "reproduced": -4.332725,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.08666,
+        "abs_err": 0.00027500000000024727,
+        "rel_err": 6.346642049394121e-05,
+        "margin": 0.0031733210246970606,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_table4",
+      "ground_truth": {
+        "value": 4328.0,
+        "standard_error": null,
+        "unit": "observations (country-quarters)",
+        "claim_type": "other",
+        "location": "Table 4, Observations",
+        "context": "Number of country-quarter observations in the Table 4 regression (all countries, attacks with more than 15 deaths).\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 4429.0,
+        "outcome": "does_not_match",
+        "notes": "DP41 Table 1 Panel A col 6 (corrected election-quarter variables): the printed 4,328 becomes 4,429, because the re-coded election lags fill quarters that were missing (elections before a country's first observed quarter were coded by hand: 26 elections in 22 countries).  The corrigendum's re-built panel has 4,612.\n",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table4",
+        "claim_type": "other",
+        "claimed": 4328.0,
+        "reproduced": 4328.0,
+        "tolerance": 0.01,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_table4",
+        "reproduced": 4328.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 43.28,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "did_attack_x_time_like_may_table2",
+      "ground_truth": {
+        "value": -0.1274,
+        "standard_error": 0.0187,
+        "unit": "points on the 0-10 like/dislike scale",
+        "claim_type": "coefficient",
+        "location": "Table 2, column May likeability, Manchester attack * time",
+        "context": "Table 2 (\"Difference-in-Difference, with Fixed Effects\"), May likeability column.  British Election Study internet panel, using waves before and after the 22 May 2017 Manchester Arena bombing. Outcome: how much the respondent likes Theresa May, 0 (strongly dislike) to 10 (strongly like).  Regressors: Manchester attack (the respondent was surveyed after the attack in the attack wave, wave 12), time (0 for waves before the attack, 1 for waves from 12 onward), their interaction (the coefficient here), wave fixed effects, and controls for identifying as ethnically British, gender, Labour party membership, other party membership, income and ideology.  OLS according to the table note; standard errors in parentheses.\n",
+        "decimals": 4,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.1274,
+        "outcome": "matches",
+        "notes": "DP41 Table B1 col 1: -0.1274 (0.0187), N = 143,499, reproduced exactly; DP41 corrects nothing in the likeability model.  (The authors' 2024 corrigendum later restricts it to waves 9-12: -0.3273 (0.0255), N = 79,619.)\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 5e-05
+      },
+      "row": {
+        "description": "did_attack_x_time_like_may_table2",
+        "claim_type": "coefficient",
+        "claimed": -0.1274,
+        "reproduced": -0.12739,
+        "tolerance": 0.02,
+        "rel_err": 7.849293563587128e-05,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "did_attack_x_time_like_may_table2",
+        "reproduced": -0.12739,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.0025480000000000004,
+        "abs_err": 1.0000000000010001e-05,
+        "rel_err": 7.849293563587128e-05,
+        "margin": 0.003924646781793563,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "did_attack_like_may_table2",
+      "ground_truth": {
+        "value": 0.0178,
+        "standard_error": 0.0278,
+        "unit": "points on the 0-10 like/dislike scale",
+        "claim_type": "coefficient",
+        "location": "Table 2, column May likeability, Manchester attack",
+        "context": "Table 2, May likeability column: the coefficient on the Manchester attack (surveyed-after-the-attack) indicator in the same difference-in-differences regression (time, interaction, wave fixed effects, full controls).  Not significant.\n",
+        "decimals": 4,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.0178,
+        "outcome": "matches",
+        "notes": "DP41 Table B1 col 1 — 0.0178 (0.0278), reproduced exactly.  Corrigendum (waves 9-12) 0.0115 (0.0281).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 5e-05
+      },
+      "row": {
+        "description": "did_attack_like_may_table2",
+        "claim_type": "coefficient",
+        "claimed": 0.0178,
+        "reproduced": 0.017785,
+        "tolerance": 0.02,
+        "rel_err": 0.0008426966292135463,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "did_attack_like_may_table2",
+        "reproduced": 0.017785,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.000356,
+        "abs_err": 1.5000000000001124e-05,
+        "rel_err": 0.0008426966292135463,
+        "margin": 0.04213483146067731,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "did_time_like_may_table2",
+      "ground_truth": {
+        "value": -0.5007,
+        "standard_error": 0.0229,
+        "unit": "points on the 0-10 like/dislike scale",
+        "claim_type": "coefficient",
+        "location": "Table 2, column May likeability, Time",
+        "context": "Table 2, May likeability column: the coefficient on the time indicator (waves from the attack wave onward) in the same difference-in-differences regression.\n",
+        "decimals": 4,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.5007,
+        "outcome": "matches",
+        "notes": "DP41 Table B1 col 1 — -0.5007 (0.0229), reproduced exactly.  Corrigendum (waves 9-12) 0.7820 (0.0212).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 5e-05
+      },
+      "row": {
+        "description": "did_time_like_may_table2",
+        "claim_type": "coefficient",
+        "claimed": -0.5007,
+        "reproduced": -0.50065,
+        "tolerance": 0.02,
+        "rel_err": 9.986019572597262e-05,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "did_time_like_may_table2",
+        "reproduced": -0.50065,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.010014,
+        "abs_err": 4.999999999999449e-05,
+        "rel_err": 9.986019572597262e-05,
+        "margin": 0.004993009786298631,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "did_attack_x_time_may_best_pm_table2",
+      "ground_truth": {
+        "value": -0.0501,
+        "standard_error": 0.0044,
+        "unit": "change in the May-best-PM outcome (0/1)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column May best PM, Manchester attack * time",
+        "context": "Table 2, May best PM column: the same difference-in-differences specification (Manchester attack, time, their interaction, wave fixed effects, full controls) with the outcome \"Who would make the best prime minister?\", coded 1 for Theresa May and 0 for Jeremy Corbyn.  The table note describes this column as a logistic regression; standard errors in parentheses.  This is the interaction coefficient.\n",
+        "decimals": 4,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.0502,
+        "outcome": "matches",
+        "notes": "Coding error fixed: the best-PM outcome in waves 7-8 (35,060 of the 97,155 observations), where the question named David Cameron, is coded as preferring May.  DP41 Table B1 col 3 drops waves 1-8: -0.0502 (SE 0.0038), N = 62,095 — the coefficient barely moves. Fixing the estimator as well (logit, as the paper states, instead of the xtreg actually run) gives -0.6806 (0.0576) on all waves (col 4) and -1.0181 (0.0797) without waves 1-8 (col 5), on the log-odds scale.  Corrigendum (OLS, waves 10-12): -0.0502 (0.0038), N = 62,095.\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 5e-05
+      },
+      "row": {
+        "description": "did_attack_x_time_may_best_pm_table2",
+        "claim_type": "coefficient",
+        "claimed": -0.0501,
+        "reproduced": -0.05007,
+        "tolerance": 0.02,
+        "rel_err": 0.0005988023952094872,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "did_attack_x_time_may_best_pm_table2",
+        "reproduced": -0.05007,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.001002,
+        "abs_err": 2.9999999999995308e-05,
+        "rel_err": 0.0005988023952094872,
+        "margin": 0.029940119760474358,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "did_attack_may_best_pm_table2",
+      "ground_truth": {
+        "value": -0.0002,
+        "standard_error": 0.004,
+        "unit": "change in the May-best-PM outcome (0/1)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column May best PM, Manchester attack",
+        "context": "Table 2, May best PM column: the coefficient on the Manchester attack indicator.  Not significant.\n",
+        "decimals": 4,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.0024,
+        "outcome": "does_not_match",
+        "notes": "DP41 Table B1 col 3 (waves 1-8 dropped): 0.0024 (0.0046) vs the printed -0.0002 (0.0040) — sign flips, both insignificant and within one SE.  Corrigendum: 0.0024 (0.0046).\n",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 5e-05
+      },
+      "row": {
+        "description": "did_attack_may_best_pm_table2",
+        "claim_type": "coefficient",
+        "claimed": -0.0002,
+        "reproduced": -0.000171,
+        "tolerance": 0.25,
+        "rel_err": 0.145,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "printed_precision"
+      },
+      "recomputed": {
+        "result_name": "did_attack_may_best_pm_table2",
+        "reproduced": -0.000171,
+        "band_source": "printed_precision",
+        "band_relative": 0.25,
+        "band_absolute": 5e-05,
+        "abs_err": 2.9e-05,
+        "rel_err": 0.145,
+        "margin": 0.58,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "did_time_may_best_pm_table2",
+      "ground_truth": {
+        "value": 0.2098,
+        "standard_error": 0.0036,
+        "unit": "change in the May-best-PM outcome (0/1)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column May best PM, Time",
+        "context": "Table 2, May best PM column: the coefficient on the time indicator.\n",
+        "decimals": 4,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.0287,
+        "outcome": "does_not_match",
+        "notes": "DP41 Table B1 col 3 (waves 1-8 dropped): 0.0287 (0.0029) vs the printed 0.2098 — most of the printed \"time\" effect is the Cameron-to-May question change.  The corrigendum prints 0.2286 (0.0149) under a different parameterisation (its constant is the wave 10 coefficient).\n",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 5e-05
+      },
+      "row": {
+        "description": "did_time_may_best_pm_table2",
+        "claim_type": "coefficient",
+        "claimed": 0.2098,
+        "reproduced": 0.209799,
+        "tolerance": 0.02,
+        "rel_err": 4.76644423247495e-06,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "did_time_may_best_pm_table2",
+        "reproduced": 0.209799,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.004196,
+        "abs_err": 9.999999999732445e-07,
+        "rel_err": 4.76644423247495e-06,
+        "margin": 0.00023832221162374748,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_did_like_may_table2",
+      "ground_truth": {
+        "value": 143499.0,
+        "standard_error": null,
+        "unit": "observations (respondent-waves)",
+        "claim_type": "other",
+        "location": "Table 2, Observations, column May likeability",
+        "context": "Number of panel observations in the Table 2 May likeability regression.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 143499.0,
+        "outcome": "matches",
+        "notes": "DP41 Table B1 col 1 — 143,499, reproduced exactly.  Corrigendum (waves 9-12) 79,619.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_did_like_may_table2",
+        "claim_type": "other",
+        "claimed": 143499.0,
+        "reproduced": 143499.0,
+        "tolerance": 0.01,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_did_like_may_table2",
+        "reproduced": 143499.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 1434.99,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_did_may_best_pm_table2",
+      "ground_truth": {
+        "value": 97155.0,
+        "standard_error": null,
+        "unit": "observations (respondent-waves)",
+        "claim_type": "other",
+        "location": "Table 2, Observations, column May best PM",
+        "context": "Number of panel observations in the Table 2 May best PM regression.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 62095.0,
+        "outcome": "does_not_match",
+        "notes": "DP41 Table B1 col 3 — dropping the Cameron-era waves 7-8 (35,060 obs; DP41 drops waves 1-8) leaves 62,095 of 97,155.",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_did_may_best_pm_table2",
+        "claim_type": "other",
+        "claimed": 97155.0,
+        "reproduced": 97155.0,
+        "tolerance": 0.01,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_did_may_best_pm_table2",
+        "reproduced": 97155.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 971.5500000000001,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 11,
+    "row_passed": 11,
+    "recomputed_passed": 11,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "holman-2022-theresa-may-rally",
+    "mode": "seeded",
+    "reproducer": "pipeline",
+    "label": "pipeline-desktop-opus-run2",
+    "model": "desktop-opus-run2",
+    "oracle": true,
+    "run": "20261023T151837Z",
+    "results_file": "pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/holman-2022-theresa-may-rally/seeded/pipeline/20261023T151837Z",
+    "run_dir": null,
+    "date": "2026-10-23T15:18:37Z",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 11,
+    "final": 11,
+    "first_scored": 11,
+    "first_scored_index": 0,
+    "first_attempt": 11,
+    "n_refinements": 0,
+    "n_error_refinements": 0,
+    "n_claim_refinements": 0,
+    "n_executions": 1,
+    "n_files_stripped": null,
+    "agrees_with_i4r": false,
+    "deviations_manifest": [],
+    "deviations_stdout": [],
+    "notes": null,
+    "files_read_outside_mount": null,
+    "paper_text": null,
+    "complete": true,
+    "missing": []
+  }
+}

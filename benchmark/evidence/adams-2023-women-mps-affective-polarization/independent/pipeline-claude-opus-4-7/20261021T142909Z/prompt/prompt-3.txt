@@ -1,0 +1,217 @@
+You are refining R code that reproduces results from an econometrics paper.
+The code RAN SUCCESSFULLY but the reproduced values do not match the
+paper's claims within the allowed tolerance.  Identify what is causing
+the gap and adjust the code to close it.
+
+## Paper
+Title: American Political Science Review (2023) 117, 1, 318–324
+Methodology: ## Methodology Summary
+
+- **Estimation method**: Ordinary least squares (OLS) regression on a dataset of 1,842 directed party dyads across 20 Western democracies, 81 election-years (1996–2017), 125 parties, using CSES survey data merged with an original dataset on party-level women's parliamentary representation.
+
+- **Estimating equation**: Dependent variable is [party i's supporters' mean 0–10 thermometer evaluation of out-party j in year t]. Key regressor is [out-party j's proportion of women MPs (t–1)], scaled 0–1 (lagged one year). Functional form is linear (levels on levels, not log-log). Coefficients are **unstandardised** — the headline +1.73 is interpreted as the thermometer change from moving j's share of women MPs from 0 to 1; a one-SD change (0.13 → 0.45) yields +0.55 thermometer units.
+
+- **Controls (preferred specification, Table 1 col. 2)**: [elite right–left distance i,j (t)] (absolute CMP left–right distance, standardised); [i,j are coalition partners (t)] dummy; [i,j are opposition partners (t)] dummy (baseline = one governing + one opposition party).
+
+- **Fixed effects**: Country-year fixed effects (identifying off within-country, within-election variation across out-parties). Robustness: country-only FE, and individual FE in a stacked individual-level dataset.
+
+- **Standard errors**: Robust standard errors clustered at the **election** level.
+
+- **Sample restrictions**: Dyads limited to parties with **at least 4 MPs each** in the year before the election survey (small parties excluded due to few partisan respondents and limited affective relevance); each pair enters twice (i→j and j→i).
+
+- **Subgroup/robustness analyses**: Separate models for women vs. men partisans (cols. 3–4); controls for party family; electoral-system proportionality; early vs. late period split; in-party women MP share; nonlinearity past gender parity; split by out-party leader gender; inclusion of smaller parties; stacked individual-level data with individual FE.
+
+- **Evaluation**: Statistical significance via two-tailed tests (p < 0.05, p < 0.01); model fit reported via adjusted R² (0.31 for the full model). No train/test split or cross-validation — this is an observational regression study, not predictive modeling.
+
+## Current Code
+```r
+#!/usr/bin/env Rscript
+
+set.seed(42)
+
+suppressPackageStartupMessages({
+  library(fixest)
+  library(dplyr)
+  library(haven)
+})
+
+base <- "<repo>/.cache/datasets/adams_2023_women_mps_affective_polarization.script-free"
+
+# Load dyadic data
+load(file.path(base, "dyadic_data_1-4-22.Rdata"))
+df <- as.data.frame(updated_data)
+
+# DV: party_like (thermometer-style like rating of out-party)
+# Key regressor: to_pfeml (proportion female MPs of target/out party)
+# Controls: rile_distance_s (standardized abs left-right distance), govern_together, opposition_together
+
+# Check available variables
+needed <- c("party_like","to_pfeml","rile_distance_s","govern_together","opposition_together",
+            "country","year","party_from","party_to","cntryyr")
+cat("Missing:", setdiff(needed, colnames(df)), "\n")
+
+# Drop missing
+dsub <- df[complete.cases(df[, c("party_like","to_pfeml","rile_distance_s",
+                                  "govern_together","opposition_together")]), ]
+
+cat("N =", nrow(dsub), "\n")
+cat("Mean party_like:", mean(dsub$party_like), "\n")
+cat("Mean to_pfeml:", mean(dsub$to_pfeml), "\n")
+
+# Baseline regression with country-year and dyad-type fixed effects, clustered SE
+m1 <- feols(party_like ~ to_pfeml + rile_distance_s + govern_together + opposition_together,
+            data = dsub, cluster = ~cntryyr)
+print(summary(m1))
+
+# With fixed effects for country-year and party dyad
+m2 <- feols(party_like ~ to_pfeml + rile_distance_s + govern_together + opposition_together
+            | cntryyr, data = dsub, cluster = ~cntryyr)
+print(summary(m2))
+
+m3 <- feols(party_like ~ to_pfeml + rile_distance_s + govern_together + opposition_together
+            | cntryyr + party_to, data = dsub, cluster = ~cntryyr)
+print(summary(m3))
+
+# Extract coefficients
+b1_pfeml <- coef(m1)[["to_pfeml"]]
+se1_pfeml <- se(m1)[["to_pfeml"]]
+b1_rile <- coef(m1)[["rile_distance_s"]]
+b1_gov <- coef(m1)[["govern_together"]]
+b1_opp <- coef(m1)[["opposition_together"]]
+
+b2_pfeml <- coef(m2)[["to_pfeml"]]
+se2_pfeml <- se(m2)[["to_pfeml"]]
+
+b3_pfeml <- coef(m3)[["to_pfeml"]]
+se3_pfeml <- se(m3)[["to_pfeml"]]
+
+cat(sprintf("RESULT:n_obs=%d\n", nrow(dsub)))
+cat(sprintf("RESULT:ols_to_pfeml_coef=%.6f\n", b1_pfeml))
+cat(sprintf("RESULT:ols_to_pfeml_se=%.6f\n", se1_pfeml))
+cat(sprintf("RESULT:ols_rile_distance_s_coef=%.6f\n", b1_rile))
+cat(sprintf("RESULT:ols_govern_together_coef=%.6f\n", b1_gov))
+cat(sprintf("RESULT:ols_opposition_together_coef=%.6f\n", b1_opp))
+cat(sprintf("RESULT:fe_cntryyr_to_pfeml_coef=%.6f\n", b2_pfeml))
+cat(sprintf("RESULT:fe_cntryyr_to_pfeml_se=%.6f\n", se2_pfeml))
+cat(sprintf("RESULT:fe_cntryyr_partyto_to_pfeml_coef=%.6f\n", b3_pfeml))
+cat(sprintf("RESULT:fe_cntryyr_partyto_to_pfeml_se=%.6f\n", se3_pfeml))
+```
+
+## What the code produced
+  n_obs = 2019.0
+  ols_to_pfeml_coef = 1.767966
+  ols_to_pfeml_se = 0.281747
+  ols_rile_distance_s_coef = -0.493844
+  ols_govern_together_coef = 1.136234
+  ols_opposition_together_coef = 0.20913
+  fe_cntryyr_to_pfeml_coef = 1.486938
+  fe_cntryyr_to_pfeml_se = 0.302989
+  fe_cntryyr_partyto_to_pfeml_coef = 1.502453
+  fe_cntryyr_partyto_to_pfeml_se = 0.272647
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+Missing:  
+N = 2019 
+Mean party_like: 3.992892 
+Mean to_pfeml: 0.3028147 
+OLS estimation, Dep. Var.: party_like
+Observations: 2,019
+Standard-errors: Clustered (cntryyr) 
+                     Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept)          3.262018   0.121893 26.76142  < 2.2e-16 ***
+to_pfeml             1.767966   0.281747  6.27501 1.6852e-08 ***
+rile_distance_s     -0.493844   0.059028 -8.36629 1.5461e-12 ***
+govern_together      1.136234   0.141691  8.01910 7.4203e-12 ***
+opposition_together  0.209130   0.125120  1.67144 9.8542e-02 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.35416   Adj. R2: 0.196317
+OLS estimation, Dep. Var.: party_like
+Observations: 2,019
+Fixed-effects: cntryyr: 81
+Standard-errors: Clustered (cntryyr) 
+                     Estimate Std. Error  t value   Pr(>|t|)    
+to_pfeml             1.486938   0.302989  4.90757 4.7746e-06 ***
+rile_distance_s     -0.583628   0.068231 -8.55375 6.6204e-13 ***
+govern_together      0.937359   0.175058  5.35456 8.0105e-07 ***
+opposition_together  0.313668   0.105366  2.97692 3.8510e-03 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.24038     Adj. R2: 0.297801
+                Within R2: 0.200071
+OLS estimation, Dep. Var.: party_like
+Observations: 2,019
+Fixed-effects: cntryyr: 81,  party_to: 9
+Standard-errors: Clustered (cntryyr) 
+                     Estimate Std. Error  t value   Pr(>|t|)    
+to_pfeml             1.502453   0.272647  5.51063 4.2295e-07 ***
+rile_distance_s     -0.598191   0.069817 -8.56803 6.2062e-13 ***
+govern_together      0.901200   0.187658  4.80234 7.1933e-06 ***
+opposition_together  0.448156   0.107096  4.18464 7.2740e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.20221     Adj. R2: 0.337618
+                Within R2: 0.215224
+RESULT:n_obs=2019
+RESULT:ols_to_pfeml_coef=1.767966
+RESULT:ols_to_pfeml_se=0.281747
+RESULT:ols_rile_distance_s_coef=-0.493844
+RESULT:ols_govern_together_coef=1.136234
+RESULT:ols_opposition_together_coef=0.209130
+RESULT:fe_cntryyr_to_pfeml_coef=1.486938
+RESULT:fe_cntryyr_to_pfeml_se=0.302989
+RESULT:fe_cntryyr_partyto_to_pfeml_coef=1.502453
+RESULT:fe_cntryyr_partyto_to_pfeml_se=0.272647
+```
+
+## Claims still failing
+1. women_mps_coef_bivariate: paper claims 1.89 thermometer points (0-10) per unit proportion of women MPs (coefficient), your code produced N/A, tolerance 0.2275
+2. women_mps_coef_full: paper claims 1.73 thermometer points (0-10) per unit proportion of women MPs (coefficient), your code produced N/A, tolerance 0.3006
+3. women_mps_coef_women_partisans: paper claims 2.1 thermometer points (0-10) per unit proportion of women MPs (coefficient), your code produced N/A, tolerance 0.2524
+4. women_mps_coef_men_partisans: paper claims 1.13 thermometer points (0-10) per unit proportion of women MPs (coefficient), your code produced N/A, tolerance 0.4425
+5. right_left_distance_coef_full: paper claims -0.6 thermometer points (0-10) per SD of left-right distance (coefficient), your code produced N/A, tolerance 0.15
+6. coalition_partners_coef_full: paper claims 0.94 thermometer points (0-10) (coefficient), your code produced N/A, tolerance 0.266
+7. opposition_partners_coef_full: paper claims 0.37 thermometer points (0-10) (coefficient), your code produced N/A, tolerance 0.2973
+8. n_directed_dyads: paper claims 1842.0 directed party dyads (observations) (other), your code produced N/A, tolerance 0.01
+9. n_obs_women_partisans: paper claims 1836.0 directed party dyads (observations) (other), your code produced 2019, tolerance 0.01, gap 9.97% relative
+10. n_obs_men_partisans: paper claims 1833.0 directed party dyads (observations) (other), your code produced 2019, tolerance 0.01, gap 10.15% relative
+11. n_election_studies: paper claims 81.0 CSES election studies (country-years) (other), your code produced N/A, tolerance 0.01
+
+## Previous attempts (oldest first)
+  Attempt 1: n_obs=2019.0, ols_to_pfeml_coef=1.767966, ols_to_pfeml_se=0.281747, ols_rile_distance_s_coef=-0.493844, ols_govern_together_coef=1.136234, ols_opposition_together_coef=0.20913, fe_cntryyr_to_pfeml_coef=1.486938, fe_cntryyr_to_pfeml_se=0.302989, fe_cntryyr_partyto_to_pfeml_coef=1.502453, fe_cntryyr_partyto_to_pfeml_se=0.272647
+
+These attempts have already been tried.  Do not repeat a strategy
+that has already produced the same values.
+
+## Task
+Adjust the code minimally to close the gap on the failing claims.
+Prefer changes that align more closely with the paper's stated methodology:
+re-read the methodology summary above and check the model specification,
+covariate selection, fixed effects, clustering, and seed against what the
+paper actually specifies.  In econometrics papers, common gap-closers are:
+  - getting the cluster-robust SE right (vcovCL / cluster_var argument)
+  - matching the paper's exact fixed-effects structure
+  - using the same sample-restriction filters the paper applied
+  - matching the paper's weighting scheme (weights= argument)
+
+## Deviation reporting
+If you must change something the paper did NOT specify in order to close
+the gap, emit a ``DEVIATION:`` line via cat() describing the change:
+
+    cat('DEVIATION: Used HC1 robust SE because the paper does not specify but the default did not converge\n')
+
+## When to give up
+If after re-reading the methodology and the previous attempts you judge
+the gap cannot be closed without unreasonable deviation, return the SAME
+R CODE you were given, BYTE-FOR-BYTE unchanged.  The pipeline will record
+the claim as unreproducible.
+
+## Output convention (unchanged)
+Emit every metric as ``cat('RESULT:<name>=<value>\n')``.
+The dataset is a directory tree at '<repo>/.cache/datasets/adams_2023_women_mps_affective_polarization.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+No network, no system().  set.seed(42).
+
+Output ONLY the R code — no explanation, no markdown fences.

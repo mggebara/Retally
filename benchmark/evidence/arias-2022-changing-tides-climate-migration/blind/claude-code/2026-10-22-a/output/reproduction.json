@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "arias-2022-changing-tides-climate-migration",
+  "mode": "blind",
+  "run_id": "2026-10-22-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 1, "kind": "error"}
+  ],
+  "deviations": [
+    "AMCEs are estimated by additive OLS (all seven attributes as dummies, Table 1 baselines) with respondent-clustered SEs via fixest, rather than with the cjoint package. The design file restricts Language=None with Origin=Another region; this restriction was enforced in the German randomization (0 such profiles) but not in the U.S. data (1274 such profiles). No Language x Origin interaction was added; reason for migration is randomized independently of both, so its AMCEs are unaffected in expectation.",
+    "No respondent filters (Status/preview, Finished, duplicate panel IDs) were applied: every profile whose forced-choice answer is non-missing is used, including those from respondents who did not finish all nine tasks. Respondents = distinct ResponseIds with at least one answered choice task; choice tasks = profile-level observations entering the AMCE regression (2 per answered pair)."
+  ],
+  "notes": "Data: the two Study 1 conjoint Qualtrics exports (USA and Germany). The first two rows after the header (question text, ImportId) were dropped. Task t profile p attribute slot a comes from F-t-a (attribute name, order randomized per respondent) and F-t-p-a (level). The forced choice for task 1 is force_choice, and for tasks 2-9 it is Q184, Q186, ..., Q198. German labels were mapped to the English levels; Agnostic (U.S.) and Atheist (Germany) share the religion baseline. Outcome: 1 if the profile was the one chosen. Baselines: Economic opportunity, None, Female, Unemployed, Atheist/Agnostic, Another region in your country, None. Attempt-1 was exploratory (column structure, counts) and printed no RESULT lines. Attempt-2 crashed because the German 'Keine' level was not mapped to 'None'; that was fixed for the final run. Disclosure: reading the full paper text (needed for the method) exposed the prose in the Study 1 results section, which states the reason-for-migration effects in percentage points, and the abstract's total respondent count. The specification was fixed from the paper's method description and the data structure before any estimate was produced, and it was not changed after the estimates were seen.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T02:42:18Z",
+  "finished_at": "2026-10-22T02:45:13Z"
+}

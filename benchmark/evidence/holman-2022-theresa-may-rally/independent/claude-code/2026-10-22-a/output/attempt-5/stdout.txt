@@ -1,0 +1,65 @@
+OLS estimation, Dep. Var.: lag_approval
+Observations: 4,486
+Fixed-effects: country_code: 44
+Standard-errors: IID 
+                       Estimate  Std. Error   t value   Pr(>|t|)    
+attack              2.322088945 1.864775591  1.245238 2.1311e-01    
+female_pres        -2.937171666 0.656353417 -4.474985 7.8332e-06 ***
+growth             -0.000000446 0.000000205 -2.169950 3.0064e-02 *  
+log_inflation      -0.804521191 0.165732203 -4.854344 1.2494e-06 ***
+execrlc             1.371258950 0.192433709  7.125877 1.2014e-12 ***
+election_qtr        3.986140083 0.635758337  6.269898 3.9569e-10 ***
+attack:female_pres -3.828385836 4.261919759 -0.898277 3.6909e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 11.3     Adj. R2: 0.259304
+             Within R2: 0.031361
+Table 4 N = 4486  countries = 44 
+                    b     se
+const          1.9443 0.0879
+attack         0.0178 0.0278
+time          -0.5007 0.0229
+wave10         0.8184 0.0189
+wave11         0.9430 0.0182
+wave12         1.1623 0.0190
+wave13         0.3564 0.0196
+wave14         0.5240 0.0204
+wave15         0.0498 0.0209
+white          0.4982 0.0439
+gender         0.4522 0.0253
+labour        -2.4725 0.0419
+party_other   -2.0790 0.0341
+income        -0.0059 0.0041
+ideology2      0.5301 0.0070
+attack_x_time -0.1274 0.0187
+N = 143499  ids = 27431  sigma_e = 1.648639  sigma_u = 1.923761 
+                    b     se
+const          0.1505 0.0132
+attack        -0.0002 0.0040
+time           0.2098 0.0036
+wave8         -0.0277 0.0032
+wave10         0.1810 0.0033
+wave11         0.2246 0.0031
+white          0.0947 0.0066
+gender         0.0014 0.0038
+labour        -0.4396 0.0063
+party_other   -0.3243 0.0051
+income         0.0066 0.0006
+ideology2      0.0630 0.0010
+attack_x_time -0.0501 0.0044
+N = 97155  ids = 27104  sigma_e = 0.2927667  sigma_u = 0.2639579 
+pooled OLS likeMayW :  (Intercept) 2.8762; treatment1 0.0088; time -1.367; treatment1:time -0.0996 
+pooled OLS bestPMW :  (Intercept) 0.3792; treatment1 -2e-04; time -0.0172; treatment1:time -0.052 
+DEVIATION: Table 4 sample is all complete country-quarters in global_approval.dta ( 4486 ), not 4,328 as reported; SEs printed are iid, not panel-corrected (coefficients unaffected).
+DEVIATION: Table 2 estimated as random-effects GLS (xtreg re style) with wave dummies; the May best PM column is a linear probability model (reported magnitudes are LPM-scale), not logit.
+RESULT:intl_attack_table4=2.322089
+RESULT:intl_attack_x_woman_exec_table4=-3.828386
+RESULT:n_obs_table4=4486
+RESULT:did_attack_x_time_like_may_table2=-0.127390
+RESULT:did_attack_like_may_table2=0.017785
+RESULT:did_time_like_may_table2=-0.500650
+RESULT:did_attack_x_time_may_best_pm_table2=-0.050069
+RESULT:did_attack_may_best_pm_table2=-0.000171
+RESULT:did_time_may_best_pm_table2=0.209799
+RESULT:n_obs_did_like_may_table2=143499
+RESULT:n_obs_did_may_best_pm_table2=97155

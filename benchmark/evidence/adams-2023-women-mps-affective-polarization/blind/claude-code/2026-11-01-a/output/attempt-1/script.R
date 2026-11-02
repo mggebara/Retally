@@ -1,0 +1,17 @@
+D <- "<repo>/benchmark/.cache/claude-code/adams-2023-women-mps-affective-polarization/blind/2026-11-01-a/mount/adams_2023_women_mps_affective_polarization"
+load(file.path(D, "dyadic_data_1-4-22.Rdata"))
+d <- as.data.frame(updated_data)
+print(names(d))
+print(dim(d))
+for (v in c("to_prior_seats","from_prior_seats","to_pfeml","party_like","party_dislike","rile_distance","rile_distance_s","prior_coalition","prior_opposition","govern_together","opposition_together","cntryyr")) if (v %in% names(d)) {cat("==",v,"\n"); print(summary(d[[v]]))}
+cat("n cntryyr", length(unique(d$cntryyr)), " n country", length(unique(d$country)), "\n")
+print(table(d$country))
+cat("seats>=4 both:", sum(d$to_prior_seats>=4 & d$from_prior_seats>=4, na.rm=TRUE), "\n")
+print(with(d, table(prior_coalition, govern_together, useNA="ifany")))
+print(with(d, table(prior_opposition, opposition_together, useNA="ifany")))
+g <- readRDS(file.path(D, "gender_disagregated_8-8-21.rds"))
+print(names(g)); print(dim(g)); print(table(g$gender, useNA="ifany"))
+print(summary(g$dislike)); print(summary(g$to_prior_seats))
+cat("g seats>=4 both:", sum(g$to_prior_seats>=4 & g$from_prior_seats>=4, na.rm=TRUE), "\n")
+print(grep("rile|dist", names(d), value=TRUE))
+print(grep("rile|dist", names(g), value=TRUE))

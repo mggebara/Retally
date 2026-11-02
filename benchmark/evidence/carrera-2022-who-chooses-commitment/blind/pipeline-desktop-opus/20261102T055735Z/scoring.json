@@ -1,0 +1,609 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "bcp_basic_info_treatment_col1",
+      "ground_truth": {
+        "value": 0.3,
+        "standard_error": 0.56,
+        "unit": "dollars of behavior change premium per $1 of incentive",
+        "claim_type": "coefficient",
+        "location": "Table 3, column (1), Basic info. treatment",
+        "context": "Table 3 (\"Association between the behavior change premium and proxies for sophistication\"), column (1), row Basic info. treatment. OLS regression of the participant's behavior change premium on indicators for the basic information treatment (wave 1) and the enhanced information treatment (waves 2-3), with wave fixed effects.  The behavior change premium is the conservative measure: for each pair of adjacent piece-rate incentives above $1/day ($1-$2, $2-$3, $3-$5, $5-$7, $7-$12), the increase in willingness to pay per dollar of incentive increase minus the average of the forecasted attendance at the two incentives, averaged over the five pairs (excluding the $0-$1 step).  Sample: participants with an exogenously assigned incentive, excluding wave 3 participants assigned a commitment contract rather than a piece-rate incentive. Heteroskedasticity-robust standard errors.\n",
+        "decimals": 2,
+        "sample_size": 1126
+      },
+      "i4r": {
+        "reproduced_value": 0.3,
+        "outcome": "matches",
+        "notes": "I4R meta-database team 107 blanket verdict (perfect reproduction); value is the paper's. R-recode robustness row 0.28 (0.78)."
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 1.866666666666667,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "bcp_basic_info_treatment_col1",
+        "claim_type": "coefficient",
+        "claimed": 0.3,
+        "reproduced": null,
+        "tolerance": 1.866666666666667,
+        "rel_err": null,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": null,
+        "reproduced": null,
+        "band_source": "se_band",
+        "band_relative": 1.866666666666667,
+        "band_absolute": 0.56,
+        "abs_err": null,
+        "rel_err": null,
+        "margin": null,
+        "passed": false,
+        "notes": "No reproduced value available."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "bcp_enhanced_info_treatment_col1",
+      "ground_truth": {
+        "value": 1.36,
+        "standard_error": 0.57,
+        "unit": "dollars of behavior change premium per $1 of incentive",
+        "claim_type": "coefficient",
+        "location": "Table 3, column (1), Enhanced info. treatment",
+        "context": "Table 3, column (1), row Enhanced info. treatment.  Same regression as bcp_basic_info_treatment_col1.\n",
+        "decimals": 2,
+        "sample_size": 1126
+      },
+      "i4r": {
+        "reproduced_value": 1.36,
+        "outcome": "matches",
+        "notes": "I4R meta-database team 107 blanket verdict; value is the paper's. R-recode robustness row 1.20 (0.51)."
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.4191176470588235,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "bcp_enhanced_info_treatment_col1",
+        "claim_type": "coefficient",
+        "claimed": 1.36,
+        "reproduced": null,
+        "tolerance": 0.4191176470588235,
+        "rel_err": null,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": null,
+        "reproduced": null,
+        "band_source": "se_band",
+        "band_relative": 0.4191176470588235,
+        "band_absolute": 0.57,
+        "abs_err": null,
+        "rel_err": null,
+        "margin": null,
+        "passed": false,
+        "notes": "No reproduced value available."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "bcp_goal_minus_expected_attendance_col2",
+      "ground_truth": {
+        "value": 0.71,
+        "standard_error": 0.29,
+        "unit": "dollars of behavior change premium per SD",
+        "claim_type": "coefficient",
+        "location": "Table 3, column (2), Goal - exp. attend. (z-score)",
+        "context": "Table 3, column (2), row Goal - exp. attend. (z-score).  Same regression as column (1) adding the standardized (z-score over the regression sample) difference between the participant's goal attendance and their expected attendance in the absence of incentives.  Robust SEs, wave fixed effects.\n",
+        "decimals": 2,
+        "sample_size": 1126
+      },
+      "i4r": {
+        "reproduced_value": 0.71,
+        "outcome": "matches",
+        "notes": "I4R meta-database team 107 blanket verdict; value is the paper's. R-recode robustness row 0.58 (0.22)."
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.4084507042253521,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "bcp_goal_minus_expected_attendance_col2",
+        "claim_type": "coefficient",
+        "claimed": 0.71,
+        "reproduced": null,
+        "tolerance": 0.4084507042253521,
+        "rel_err": null,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": null,
+        "reproduced": null,
+        "band_source": "se_band",
+        "band_relative": 0.4084507042253521,
+        "band_absolute": 0.29,
+        "abs_err": null,
+        "rel_err": null,
+        "margin": null,
+        "passed": false,
+        "notes": "No reproduced value available."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "bcp_actual_minus_expected_attendance_col3",
+      "ground_truth": {
+        "value": 0.45,
+        "standard_error": 0.22,
+        "unit": "dollars of behavior change premium per SD",
+        "claim_type": "coefficient",
+        "location": "Table 3, column (3), Actual - exp. attend. (z-score)",
+        "context": "Table 3, column (3), row Actual - exp. attend. (z-score).  Same regression as column (1) adding the standardized difference between the participant's actual attendance and their expected attendance under the incentive they were assigned.  Robust SEs, wave fixed effects.\n",
+        "decimals": 2,
+        "sample_size": 1126
+      },
+      "i4r": {
+        "reproduced_value": 0.45,
+        "outcome": "matches",
+        "notes": "I4R meta-database team 107 blanket verdict; value is the paper's. R-recode robustness row 0.57 (0.22)."
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.4888888888888889,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "bcp_actual_minus_expected_attendance_col3",
+        "claim_type": "coefficient",
+        "claimed": 0.45,
+        "reproduced": null,
+        "tolerance": 0.4888888888888889,
+        "rel_err": null,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": null,
+        "reproduced": null,
+        "band_source": "se_band",
+        "band_relative": 0.4888888888888889,
+        "band_absolute": 0.22,
+        "abs_err": null,
+        "rel_err": null,
+        "margin": null,
+        "passed": false,
+        "notes": "No reproduced value available."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "bcp_regression_observations",
+      "ground_truth": {
+        "value": 1126.0,
+        "standard_error": null,
+        "unit": "participants",
+        "claim_type": "other",
+        "location": "Table 3, N",
+        "context": "Observations in the Table 3 regressions (same in all three columns): participants with an exogenously assigned incentive, excluding the wave 3 participants assigned a commitment contract.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 1126.0,
+        "outcome": "matches",
+        "notes": "I4R meta-database team 107 blanket verdict; value is the paper's (N not recorded in the rows).",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "bcp_regression_observations",
+        "claim_type": "other",
+        "claimed": 1126.0,
+        "reproduced": 0.0,
+        "tolerance": 0.01,
+        "rel_err": 1.0,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "bcp_regression_observations",
+        "reproduced": 0.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 11.26,
+        "abs_err": 1126.0,
+        "rel_err": 1.0,
+        "margin": 100.0,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=0.0 vs claimed=1126.0 (relative error 100.00%, tolerance 1.00%)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "takeup_more_basic_info_treatment_col1",
+      "ground_truth": {
+        "value": -0.022,
+        "standard_error": 0.041,
+        "unit": "probability of take-up",
+        "claim_type": "coefficient",
+        "location": "Table 4, column (1), Basic info. treatment",
+        "context": "Table 4 (\"Association between take-up of 'more' commitment contracts and proxies for sophistication\"), column (1), row Basic info. treatment.  Linear probability model of choosing the \"more\" visits commitment contract ($80 only if visiting the gym at least the threshold number of days in four weeks, over an $80 fixed payment), pooling each participant's choices across the contract thresholds offered (8, 12 and 16 visits in waves 1-2; 12 visits only in wave 3), on the basic and enhanced information treatment indicators with wave fixed effects and contract-threshold fixed effects.  Same participant sample as Table 3.  Standard errors clustered by subject.\n",
+        "decimals": 3,
+        "sample_size": 2824
+      },
+      "i4r": {
+        "reproduced_value": -0.022,
+        "outcome": "matches",
+        "notes": "I4R meta-database team 107 blanket verdict; value is the paper's. R-recode robustness rows -0.023 (0.042) / -0.022 (0.043, random effects)."
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 1.8636363636363638,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "takeup_more_basic_info_treatment_col1",
+        "claim_type": "coefficient",
+        "claimed": -0.022,
+        "reproduced": null,
+        "tolerance": 1.8636363636363638,
+        "rel_err": null,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": null,
+        "reproduced": null,
+        "band_source": "se_band",
+        "band_relative": 1.8636363636363638,
+        "band_absolute": 0.041,
+        "abs_err": null,
+        "rel_err": null,
+        "margin": null,
+        "passed": false,
+        "notes": "No reproduced value available."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "takeup_more_enhanced_info_treatment_col1",
+      "ground_truth": {
+        "value": -0.08,
+        "standard_error": 0.031,
+        "unit": "probability of take-up",
+        "claim_type": "coefficient",
+        "location": "Table 4, column (1), Enhanced info. treatment",
+        "context": "Table 4, column (1), row Enhanced info. treatment.  Same regression as takeup_more_basic_info_treatment_col1.\n",
+        "decimals": 3,
+        "sample_size": 2824
+      },
+      "i4r": {
+        "reproduced_value": -0.08,
+        "outcome": "matches",
+        "notes": "I4R meta-database team 107 blanket verdict; value is the paper's. R-recode robustness rows -0.092 (0.031) / -0.092 (0.030, random effects)."
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.3875,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "takeup_more_enhanced_info_treatment_col1",
+        "claim_type": "coefficient",
+        "claimed": -0.08,
+        "reproduced": null,
+        "tolerance": 0.3875,
+        "rel_err": null,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": null,
+        "reproduced": null,
+        "band_source": "se_band",
+        "band_relative": 0.3875,
+        "band_absolute": 0.031000000000000003,
+        "abs_err": null,
+        "rel_err": null,
+        "margin": null,
+        "passed": false,
+        "notes": "No reproduced value available."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "takeup_more_behavior_change_premium_col2",
+      "ground_truth": {
+        "value": 0.027,
+        "standard_error": 0.011,
+        "unit": "probability of take-up per SD",
+        "claim_type": "coefficient",
+        "location": "Table 4, column (2), Behavior change premium (z-score)",
+        "context": "Table 4, column (2), row Behavior change premium (z-score).  Same regression as column (1) adding the behavior change premium of Table 3, standardized over the participant-level regression sample. Wave and contract-threshold fixed effects, SEs clustered by subject.\n",
+        "decimals": 3,
+        "sample_size": 2824
+      },
+      "i4r": {
+        "reproduced_value": 0.027,
+        "outcome": "matches",
+        "notes": "I4R meta-database team 107 blanket verdict; value is the paper's. R-recode robustness rows 0.023 (0.010) / 0.021 (0.012, random effects)."
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.4074074074074074,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "takeup_more_behavior_change_premium_col2",
+        "claim_type": "coefficient",
+        "claimed": 0.027,
+        "reproduced": null,
+        "tolerance": 0.4074074074074074,
+        "rel_err": null,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": null,
+        "reproduced": null,
+        "band_source": "se_band",
+        "band_relative": 0.4074074074074074,
+        "band_absolute": 0.011,
+        "abs_err": null,
+        "rel_err": null,
+        "margin": null,
+        "passed": false,
+        "notes": "No reproduced value available."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "takeup_more_goal_minus_expected_attendance_col3",
+      "ground_truth": {
+        "value": 0.038,
+        "standard_error": 0.013,
+        "unit": "probability of take-up per SD",
+        "claim_type": "coefficient",
+        "location": "Table 4, column (3), Goal - exp. attend. (z-score)",
+        "context": "Table 4, column (3), row Goal - exp. attend. (z-score).  Same regression as column (1) adding the standardized goal minus expected attendance gap defined as in Table 3.\n",
+        "decimals": 3,
+        "sample_size": 2824
+      },
+      "i4r": {
+        "reproduced_value": 0.038,
+        "outcome": "matches",
+        "notes": "I4R meta-database team 107 blanket verdict; value is the paper's. R-recode robustness rows 0.032 (0.013) / 0.034 (0.013, random effects)."
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.34210526315789475,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "takeup_more_goal_minus_expected_attendance_col3",
+        "claim_type": "coefficient",
+        "claimed": 0.038,
+        "reproduced": null,
+        "tolerance": 0.34210526315789475,
+        "rel_err": null,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": null,
+        "reproduced": null,
+        "band_source": "se_band",
+        "band_relative": 0.34210526315789475,
+        "band_absolute": 0.013,
+        "abs_err": null,
+        "rel_err": null,
+        "margin": null,
+        "passed": false,
+        "notes": "No reproduced value available."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "takeup_more_actual_minus_expected_attendance_col4",
+      "ground_truth": {
+        "value": -0.043,
+        "standard_error": 0.013,
+        "unit": "probability of take-up per SD",
+        "claim_type": "coefficient",
+        "location": "Table 4, column (4), Actual - exp. attend. (z-score)",
+        "context": "Table 4, column (4), row Actual - exp. attend. (z-score).  Same regression as column (1) adding the standardized actual minus expected attendance gap defined as in Table 3.\n",
+        "decimals": 3,
+        "sample_size": 2824
+      },
+      "i4r": {
+        "reproduced_value": -0.043,
+        "outcome": "matches",
+        "notes": "I4R meta-database team 107 blanket verdict; value is the paper's. R-recode robustness rows -0.040 (0.014) / -0.042 (0.013, random effects)."
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.3023255813953489,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "takeup_more_actual_minus_expected_attendance_col4",
+        "claim_type": "coefficient",
+        "claimed": -0.043,
+        "reproduced": null,
+        "tolerance": 0.3023255813953489,
+        "rel_err": null,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": null,
+        "reproduced": null,
+        "band_source": "se_band",
+        "band_relative": 0.3023255813953489,
+        "band_absolute": 0.013000000000000001,
+        "abs_err": null,
+        "rel_err": null,
+        "margin": null,
+        "passed": false,
+        "notes": "No reproduced value available."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "takeup_more_regression_observations",
+      "ground_truth": {
+        "value": 2824.0,
+        "standard_error": null,
+        "unit": "participant-by-contract choices",
+        "claim_type": "other",
+        "location": "Table 4, N",
+        "context": "Observations in the Table 4 regressions (same in all four columns): participant-by-threshold \"more\" contract choices for the Table 3 participant sample.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 2824.0,
+        "outcome": "matches",
+        "notes": "I4R meta-database team 107 blanket verdict; value is the paper's (N not recorded in the rows).",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "takeup_more_regression_observations",
+        "claim_type": "other",
+        "claimed": 2824.0,
+        "reproduced": 0.0,
+        "tolerance": 0.01,
+        "rel_err": 1.0,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "takeup_more_regression_observations",
+        "reproduced": 0.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 28.240000000000002,
+        "abs_err": 2824.0,
+        "rel_err": 1.0,
+        "margin": 100.0,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=0.0 vs claimed=2824.0 (relative error 100.00%, tolerance 1.00%)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 11,
+    "row_passed": 0,
+    "recomputed_passed": 0,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "carrera-2022-who-chooses-commitment",
+    "mode": "blind",
+    "reproducer": "pipeline",
+    "label": "pipeline-desktop-opus",
+    "model": "desktop-opus",
+    "oracle": true,
+    "run": "20261102T055735Z",
+    "results_file": "pipeline-oracle-desktop-opus-4papers-all-modes-2026-11-02.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/carrera-2022-who-chooses-commitment/blind/pipeline/20261102T055735Z",
+    "run_dir": null,
+    "date": "2026-11-02T05:57:35Z",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 11,
+    "final": 0,
+    "first_scored": 0,
+    "first_scored_index": 0,
+    "first_attempt": 0,
+    "n_refinements": 0,
+    "n_error_refinements": 0,
+    "n_claim_refinements": 0,
+    "n_executions": 1,
+    "n_files_stripped": 28,
+    "agrees_with_i4r": false,
+    "deviations_manifest": [],
+    "deviations_stdout": [],
+    "notes": null,
+    "files_read_outside_mount": null,
+    "paper_text": null,
+    "complete": true,
+    "missing": []
+  }
+}

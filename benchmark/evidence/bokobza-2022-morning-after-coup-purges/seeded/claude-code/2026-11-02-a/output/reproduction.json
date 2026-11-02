@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "bokobza-2022-morning-after-coup-purges",
+  "mode": "seeded",
+  "run_id": "2026-11-02-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "error"}
+  ],
+  "deviations": [
+    "Country-level Stata xtreg, fe with i.YEAR_DATA translated to fixest::feols with panel and year fixed effects; Stata L. lags built by matching YEAR_DATA-1 within the xtset panel (COUNTRY_ID for Table A1, leader_cab_id for Table A2) on the full dataset before applying the democracy1==0 & independent==1 filter. fixest drops fixed-effect singletons (no effect on coefficients) and uses its own small-sample clustered SE correction, which differs slightly from Stata's xtreg.",
+    "Individual-level lfe::felm models translated to fixest::feols; the failed coup factor coupattempt_presentyear is coded as a 0/1 indicator (1 = 'Coup attempt'), equivalent to the factor dummy felm creates."
+  ],
+  "notes": "Attempt-1 was exploratory (variable inspection, no RESULT lines). Attempt-2 printed NA for the four country-level claims because update() on a formula containing '|' merged regressors and fixed effects into one term; fixed by writing the formulas out. No comparison with claimed values was used to change the script. Individual-level Ns match the authors' appendix_k1/k2.tex (90020, 86057, 76530, 90014).",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T05:50:40Z",
+  "finished_at": "2026-11-02T06:10:00Z"
+}

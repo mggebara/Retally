@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "manekin-2022-effective-for-whom",
+  "mode": "seeded",
+  "run_id": "2026-10-21-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 1, "kind": "error"}
+  ],
+  "deviations": [],
+  "notes": "The task's embedded 'Original Replication Scripts' section contained only macOS AppleDouble (._*) resource-fork files, so the real author scripts were read from the mounted data directory (Replication/Code/Manekin_Mitts_Effective_for_Whom_Replication.R, replicate_table_1.R, replicate_table_4.R). Paper Table 1 = package table_1 (weighted lm of outcome on identity_protesters + tactic, wave-1 data); paper Table 2 = package table_4 (unweighted lm on black + group_goal + commitment for US wave 2; identity_protesters + group_goal + commitment for Israel wave 2). Israel identity_protesters is coded 0/1/2; 1 = Ethiopian, 2 = Arab, following the authors' stargazer covariate labels. Respondent counts are nobs() of the perceived-violence regressions. Attempt-1 crashed on a coefficient-name pattern (selection by 'eth'/'arab' text); fixed by selecting identity_protesters1/2. The final values were eyeballed against the claims after the final run (all agree to the printed precision); no script change followed, so there is no claim attempt.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T02:01:58Z",
+  "finished_at": "2026-10-22T02:10:00Z"
+}

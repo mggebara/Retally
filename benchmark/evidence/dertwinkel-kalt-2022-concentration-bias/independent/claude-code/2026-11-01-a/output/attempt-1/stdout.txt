@@ -1,0 +1,213 @@
+[1] 7254   53
+'data.frame':	7254 obs. of  53 variables:
+ $ tn                   : int  1 1 1 1 1 1 1 1 1 2 ...
+ $ dispersed            : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ age                  : int  26 26 26 26 26 26 26 26 26 24 ...
+ $ study                : chr  "Naturwissenschaften" "Naturwissenschaften" "Naturwissenschaften" "Naturwissenschaften" ...
+ $ mathgrade            : chr  "2+" "2+" "2+" "2+" ...
+ $ disposable_income    : int  400 400 400 400 400 400 400 400 400 400 ...
+ $ raven_correct_answers: int  5 5 5 5 5 5 5 5 5 5 ...
+ $ math_answers_correct : int  1 1 1 1 1 1 1 1 1 1 ...
+ $ crt_answers_correct  : int  2 2 2 2 2 2 2 2 2 3 ...
+ $ session              : int  1 1 1 1 1 1 1 1 1 1 ...
+ $ treatment            : int  0 0 0 0 0 0 0 0 0 1 ...
+ $ average_ip           : num  NA NA NA NA NA ...
+ $ decision_number      : int  1 2 3 4 5 6 7 8 9 1 ...
+ $ utility_point        : int  6 2 4 5 3 7 8 1 8 4 ...
+ $ corner               : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ chose_corner         : int  NA NA NA NA NA NA NA 0 NA NA ...
+ $ indifference_point   : int  65 55 68 77 37 54 52 83 4 10 ...
+ $ pizza                : int  1 1 1 1 1 1 1 1 1 1 ...
+ $ control              : int  1 1 1 1 1 1 1 1 1 0 ...
+ $ main                 : int  1 1 1 1 1 1 1 1 1 1 ...
+ $ id_stage2_upper      : int  NA NA NA NA NA NA NA NA 4 NA ...
+ $ pap_sample           : int  1 1 1 1 1 1 1 1 1 1 ...
+ $ id_stage2            : int  NA NA NA NA NA NA NA NA 4 NA ...
+ $ avg_id_stage2        : num  NA NA NA NA NA NA NA NA 4 NA ...
+ $ qe_ard               : num  NA NA NA NA NA ...
+ $ qe_ard_lower         : num  NA NA NA NA NA ...
+ $ qe_ard_upper         : num  NA NA NA NA NA ...
+ $ qe_rad               : num  NA NA NA NA NA ...
+ $ qe_rad_lower         : num  NA NA NA NA NA ...
+ $ qe_rad_upper         : num  NA NA NA NA NA ...
+ $ RT_avg_stage_2       : num  3.2 3.2 3.2 3.2 3.2 ...
+ $ d_a0_main_tr         : num  NA NA NA NA NA NA NA NA NA -0.28 ...
+ $ d_a1_main_tr         : num  NA NA NA NA NA ...
+ $ d_a2_main_tr         : num  NA NA NA NA NA ...
+ $ d_g0_main_tr         : num  NA NA NA NA NA ...
+ $ d_g1_main_tr         : num  NA NA NA NA NA NA NA NA NA 0.44 ...
+ $ d_g2_main_tr         : num  NA NA NA NA NA NA NA NA NA -0.02 ...
+ $ d_d1_main_tr         : num  NA NA NA NA NA NA NA NA NA 0.81 ...
+ $ d_d2_main_tr         : num  NA NA NA NA NA NA NA NA NA -0.25 ...
+ $ d_d3_main_tr         : num  NA NA NA NA NA NA NA NA NA -0.22 ...
+ $ d_d4_main_tr         : num  NA NA NA NA NA ...
+ $ d_d5_main_tr         : num  NA NA NA NA NA NA NA NA NA -0.13 ...
+ $ d_t1_main_tr         : num  NA NA NA NA NA ...
+ $ d_t2_main_tr         : num  NA NA NA NA NA ...
+ $ d_t3_main_tr         : num  NA NA NA NA NA NA NA NA NA -0.25 ...
+ $ d_t4_main_tr         : num  NA NA NA NA NA NA NA NA NA -0.22 ...
+ $ std_rt_2_main_tr     : num  0 0 0 0 0 ...
+ $ std_math_main_tr     : num  0 0 0 0 0 ...
+ $ std_crt_main_tr      : num  0 0 0 0 0 ...
+ $ std_raven_main_tr    : num  0 0 0 0 0 ...
+ $ std_start_row_main_tr: num  0 0 0 0 0 ...
+ $ id_stage2_sign       : int  NA NA NA NA NA NA NA NA 1 NA ...
+ $ cb_effect            : int  NA NA NA NA NA NA NA NA 1 NA ...
+         decision_number
+treatment   1   2   3   4   5   6   7   8   9
+        0 407 407 407 407 407 407 407 407 407
+        1 399 399 399 399 399 399 399 399 399
+# A tibble: 18 × 7
+   dispersed pizza control  main treatment pap_sample     n
+       <int> <int>   <int> <int>     <int>      <int> <int>
+ 1         0     1       0     1         1          0    36
+ 2         0     1       0     1         1          1   100
+ 3         0     1       0     1         1         NA     7
+ 4         0     1       1     1         0          0    35
+ 5         0     1       1     1         0          1   100
+ 6         0     1       1     1         0         NA     8
+ 7         1     1       0     0         1          0    23
+ 8         1     1       0     0         1          1   100
+ 9         1     1       0     0         1         NA     5
+10         1     1       1     0         0          0    25
+11         1     1       1     0         0          1   100
+12         1     1       1     0         0         NA     5
+13        NA     0       0    NA         1          0    22
+14        NA     0       0    NA         1          1   100
+15        NA     0       0    NA         1         NA     6
+16        NA     0       1    NA         0          0    28
+17        NA     0       1    NA         0          1   100
+18        NA     0       1    NA         0         NA     6
+    
+       0   1
+  -8   0   0
+  -7   0   0
+  -4   0   0
+  -2   0   0
+  -1   0   0
+  0    7 600
+  1   39   0
+  2   12   0
+  3   17   0
+  4    9   0
+  5   11   0
+  6    7   0
+  7   11   0
+  8   56   0
+ indifference_point utility_point       corner         chose_corner
+ Min.   :-63.00     Min.   :1.000   Min.   :-1.0000   Min.   : NA  
+ 1st Qu.: -4.00     1st Qu.:1.000   1st Qu.: 0.0000   1st Qu.: NA  
+ Median :  2.00     Median :4.000   Median : 0.0000   Median : NA  
+ Mean   : 16.62     Mean   :4.475   Mean   : 0.1179   Mean   :NaN  
+ 3rd Qu.: 34.75     3rd Qu.:8.000   3rd Qu.: 0.0000   3rd Qu.: NA  
+ Max.   :300.00     Max.   :8.000   Max.   : 1.0000   Max.   : NA  
+                                                      NAs    :806  
+   id_stage2      id_stage2_upper  avg_id_stage2        qe_ard        
+ Min.   :-63.00   Min.   :-63.00   Min.   :-63.00   Min.   :-0.47711  
+ 1st Qu.: -3.00   1st Qu.: -3.00   1st Qu.: -3.00   1st Qu.:-0.02206  
+ Median :  2.00   Median :  2.00   Median :  2.00   Median : 0.01481  
+ Mean   : 11.93   Mean   : 17.68   Mean   : 14.81   Mean   : 0.07324  
+ 3rd Qu.: 35.00   3rd Qu.: 35.00   3rd Qu.: 35.00   3rd Qu.: 0.17575  
+ Max.   : 63.00   Max.   :300.00   Max.   :181.50   Max.   : 0.78493  
+ NAs    :37       NAs    :37       NAs    :37       NAs    :37        
+  qe_ard_lower       qe_ard_upper          qe_rad          qe_rad_lower     
+ Min.   :-0.47711   Min.   :-0.47711   Min.   :-0.47607   Min.   :-0.47502  
+ 1st Qu.:-0.02206   1st Qu.:-0.02206   1st Qu.:-0.02183   1st Qu.:-0.02183  
+ Median : 0.01481   Median : 0.01481   Median : 0.01470   Median : 0.01465  
+ Mean   : 0.06006   Mean   : 0.08642   Mean   : 0.07169   Mean   : 0.05722  
+ 3rd Qu.: 0.17491   3rd Qu.: 0.18190   3rd Qu.: 0.17460   3rd Qu.: 0.17000  
+ Max.   : 0.45530   Max.   : 1.13225   Max.   : 0.78282   Max.   : 0.45161  
+ NAs    :37         NAs    :37         NAs    :37         NAs    :37        
+  qe_rad_upper        cb_effect      id_stage2_sign   
+ Min.   :-0.47502   Min.   :0.0000   Min.   :-1.0000  
+ 1st Qu.:-0.02183   1st Qu.:0.0000   1st Qu.:-1.0000  
+ Median : 0.01465   Median :1.0000   Median : 1.0000  
+ Mean   : 0.08333   Mean   :0.5631   Mean   : 0.2302  
+ 3rd Qu.: 0.17704   3rd Qu.:1.0000   3rd Qu.: 1.0000  
+ Max.   : 1.12803   Max.   :1.0000   Max.   : 1.0000  
+ NAs    :37         NAs    :37       NAs    :37       
+      
+          0    1 <NA>
+  -1      0   14  116
+  0     607   91 5525
+  1       0   94  807
+  <NA>    0    0    0
+   tn decision_number indifference_point corner chose_corner id_stage2
+1   1               1                 65      0           NA        NA
+2   1               2                 55      0           NA        NA
+3   1               3                 68      0           NA        NA
+4   1               4                 77      0           NA        NA
+5   1               5                 37      0           NA        NA
+6   1               6                 54      0           NA        NA
+7   1               7                 52      0           NA        NA
+8   1               8                 83      0            0        NA
+9   1               9                  4      0           NA         4
+10  2               1                 10      0           NA        NA
+11  2               2                 10      0           NA        NA
+12  2               3                 10      0           NA        NA
+13  2               4                 12      0           NA        NA
+14  2               5                 10      0           NA        NA
+15  2               6                  8      0           NA        NA
+16  2               7                 10      0           NA        NA
+17  2               8                 11      0            0        NA
+18  2               9                 43      0           NA        43
+19  3               1                 63      0           NA        NA
+20  3               2                 52      0           NA        NA
+21  3               3                 69      0           NA        NA
+22  3               4                 79      0           NA        NA
+23  3               5                 53      0           NA        NA
+24  3               6                 90      0           NA        NA
+25  3               7                 84      0           NA        NA
+26  3               8                 71      0            0        NA
+27  3               9                -10      0           NA       -10
+   id_stage2_upper      qe_ard qe_ard_lower qe_ard_upper      qe_rad
+1               NA          NA           NA           NA          NA
+2               NA          NA           NA           NA          NA
+3               NA          NA           NA           NA          NA
+4               NA          NA           NA           NA          NA
+5               NA          NA           NA           NA          NA
+6               NA          NA           NA           NA          NA
+7               NA          NA           NA           NA          NA
+8               NA          NA           NA           NA          NA
+9                4  0.02234637   0.02234637   0.02234637  0.02176921
+10              NA          NA           NA           NA          NA
+11              NA          NA           NA           NA          NA
+12              NA          NA           NA           NA          NA
+13              NA          NA           NA           NA          NA
+14              NA          NA           NA           NA          NA
+15              NA          NA           NA           NA          NA
+16              NA          NA           NA           NA          NA
+17              NA          NA           NA           NA          NA
+18              43  0.31399348   0.31399348   0.31399348  0.31336039
+19              NA          NA           NA           NA          NA
+20              NA          NA           NA           NA          NA
+21              NA          NA           NA           NA          NA
+22              NA          NA           NA           NA          NA
+23              NA          NA           NA           NA          NA
+24              NA          NA           NA           NA          NA
+25              NA          NA           NA           NA          NA
+26              NA          NA           NA           NA          NA
+27             -10 -0.05000000  -0.05000000  -0.05000000 -0.05031646
+# A tibble: 18 × 10
+# Groups:   main, dispersed, pizza, control [6]
+    main dispersed pizza control pap_sample     n       ard      rad     radl
+   <int>     <int> <int>   <int>      <int> <int>     <dbl>    <dbl>    <dbl>
+ 1     0         1     1       0          0    23   0.100     0.0986   0.0793
+ 2     0         1     1       0          1   100   0.0754    0.0751   0.0680
+ 3     0         1     1       0         NA     5 NaN       NaN      NaN     
+ 4     0         1     1       1          0    25  -0.00537  -0.0130  -0.0260
+ 5     0         1     1       1          1   100  -0.0144   -0.0158  -0.0171
+ 6     0         1     1       1         NA     5 NaN       NaN      NaN     
+ 7     1         0     1       0          0    36   0.248     0.246    0.188 
+ 8     1         0     1       0          1   100   0.224     0.223    0.188 
+ 9     1         0     1       0         NA     7 NaN       NaN      NaN     
+10     1         0     1       1          0    35   0.0602    0.0596   0.0442
+11     1         0     1       1          1   100  -0.0226   -0.0245  -0.0265
+12     1         0     1       1         NA     8 NaN       NaN      NaN     
+13    NA        NA     0       0          0    22   0.211     0.210    0.169 
+14    NA        NA     0       0          1   100   0.135     0.134    0.114 
+15    NA        NA     0       0         NA     6 NaN       NaN      NaN     
+16    NA        NA     0       1          0    28   0.0369    0.0322   0.0262
+17    NA        NA     0       1          1   100  -0.0229   -0.0245  -0.0261
+18    NA        NA     0       1         NA     6 NaN       NaN      NaN     
+# ℹ 1 more variable: nna <int>

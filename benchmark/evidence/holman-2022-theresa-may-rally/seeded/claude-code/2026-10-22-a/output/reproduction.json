@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "holman-2022-theresa-may-rally",
+  "mode": "seeded",
+  "run_id": "2026-10-22-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 1, "kind": "error"}
+  ],
+  "deviations": [
+    "Table 4 xtpcse corr(psar1) implemented by hand: OLS residuals -> panel-specific rho (rhotype regress, consecutive-quarter pairs using tsset-style lags) -> Prais-Winsten transform (a time gap starts a new segment) -> OLS. One panel's rho (1.070) was bounded to 1. Only point estimates and N are reported; panel-corrected SEs were not computed.",
+    "Table 2 xtreg (Stata default random-effects GLS, Swamy-Arora with harmonic-mean T for unbalanced panels) implemented by hand. The paper's note calls the best-PM column logistic, but the authors' script runs linear xtreg RE, which is what is reproduced."
+  ],
+  "notes": "attempt-1 was exploratory (variable structure, sample sizes; no RESULT lines). attempt-2 crashed because one panel's AR(1) rho exceeded 1; fixed by bounding rho to [-1,1]. The final run reproduces all 11 claims: Table 2 RE DiD coefficients and Ns exactly; Table 4 kill_16 = 3.112, interaction = -4.333 (constant 46.030), N = 4328. No check_attempt comparison was needed or run.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T03:02:01Z",
+  "finished_at": "2026-10-22T03:04:50Z"
+}

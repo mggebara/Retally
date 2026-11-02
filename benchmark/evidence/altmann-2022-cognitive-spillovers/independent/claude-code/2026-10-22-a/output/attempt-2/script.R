@@ -1,0 +1,12 @@
+suppressMessages({library(haven); library(dplyr)})
+D <- "<repo>/benchmark/.cache/claude-code/altmann-2022-cognitive-spillovers/independent/2026-10-22-a/mount/altmann_2022_cognitive_spillovers/ReplicationPackage/EmpiricalAnalysis/original_data/"
+d <- zap_labels(read_dta(paste0(D,"formatted_data_replication.dta")))
+s <- filter(d, Treatment_Incentives != 4)
+cat("N", nrow(s), "subjects", length(unique(s$subject_id)), "\n")
+print(colSums(is.na(s)))
+print(table(s$Treatment_Environment, s$Treatment_intervention))
+print(table(s$q_abitur_grade_cat, useNA="ifany")); print(table(s$q_math_grade_cat, useNA="ifany"))
+print(table(s$subject_cat, useNA="ifany")); print(table(s$original_lab))
+print(summary(s[,c("q_abitur_grade","q_math_grade","perc_multitasking_1","perc_multitasking_2","q_age","payoff_share")]))
+print(s %>% group_by(Treatment_Environment) %>% summarise(dec=mean(summation_correct), def=mean(default_followed), bg=mean(load_correct), ps=mean(payoff_share)))
+print(table(s$Treatment_Incentives_Baseline_sc, s$Treatment_Incentives))
