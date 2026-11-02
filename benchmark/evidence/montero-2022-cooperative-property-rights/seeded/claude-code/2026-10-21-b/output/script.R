@@ -1,7 +1,7 @@
 ## Montero (2022) Table 5 replication, following Replication_file.do ("Replicating original results")
 suppressPackageStartupMessages({library(haven); library(dplyr); library(fixest)})
 set.seed(42)
-d <- read_dta("/Users/matthew/dev/Retally/benchmark/.cache/claude-code/montero-2022-cooperative-property-rights/seeded/2026-10-21-b/mount/montero_2022_cooperative_property_rights/ehpm_incomemodule_wreform.dta")
+d <- read_dta("<repo>/benchmark/.cache/claude-code/montero-2022-cooperative-property-rights/seeded/2026-10-21-b/mount/montero_2022_cooperative_property_rights/ehpm_incomemodule_wreform.dta")
 d <- zap_labels(d)
 
 ## Original real income measure (as in the .do file: year 2010 gets 0 because it has no term)

@@ -48,16 +48,16 @@ Agent notes: attempt-1 was exploratory: it inspected airframe_data.dta and engin
 
 ## What the model was given
 
-- [`prompt/task.md`](prompt/task.md) — 24,358 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/independent/claude-code/20261022T021417Z/task.md`
-- [`prompt/render.json`](prompt/render.json) — 986 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/independent/claude-code/20261022T021417Z/render.json`
+- [`prompt/task.md`](prompt/task.md) — 24,038 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/independent/claude-code/20261022T021417Z/task.md`
+- [`prompt/render.json`](prompt/render.json) — 906 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/independent/claude-code/20261022T021417Z/render.json`
 - [`prompt/paper.txt.ref`](prompt/paper.txt.ref) — 268 bytes, from `benchmark/.cache/claude-code/hanlon-2022-aircraft-ip-spillovers/independent/2026-10-21-b/paper.txt`
 
 ## What it produced
 
-- [`output/attempt-1/script.R`](output/attempt-1/script.R) — 1,128 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/independent/claude-code/20261022T021417Z/attempt-1/script.R`
+- [`output/attempt-1/script.R`](output/attempt-1/script.R) — 1,108 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/independent/claude-code/20261022T021417Z/attempt-1/script.R`
 - [`output/attempt-1/stderr.txt`](output/attempt-1/stderr.txt) — 814 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/independent/claude-code/20261022T021417Z/attempt-1/stderr.txt`
 - [`output/attempt-1/stdout.txt`](output/attempt-1/stdout.txt) — 11,628 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/independent/claude-code/20261022T021417Z/attempt-1/stdout.txt`
 - [`output/reproduction.json`](output/reproduction.json) — 1,595 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/independent/claude-code/20261022T021417Z/reproduction.json`
-- [`output/script.R`](output/script.R) — 2,214 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/independent/claude-code/20261022T021417Z/script.R`
+- [`output/script.R`](output/script.R) — 2,194 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/independent/claude-code/20261022T021417Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 462 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/independent/claude-code/20261022T021417Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 3,266 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/independent/claude-code/20261022T021417Z/stdout.txt`

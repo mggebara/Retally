@@ -1,6 +1,6 @@
 suppressPackageStartupMessages({library(haven); library(fixest)})
 set.seed(42)
-D <- "/Users/matthew/dev/Retally/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/seeded/2026-10-21-b/mount/grier_2023_sugar_roll_call_voting"
+D <- "<repo>/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/seeded/2026-10-21-b/mount/grier_2023_sugar_roll_call_voting"
 prep <- function(f) {
   d <- as.data.frame(read_dta(file.path(D, f)))
   d$yesvote <- as.integer(d$vote == "Aye")

@@ -1,5 +1,5 @@
 suppressMessages({library(haven); library(dplyr)})
-D <- "/Users/matthew/dev/Retally/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/independent/2026-10-21-b/mount/grier_2023_sugar_roll_call_voting"
+D <- "<repo>/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/independent/2026-10-21-b/mount/grier_2023_sugar_roll_call_voting"
 fs <- c("SugarReplicate.dta","SugarReplicate_iter1.dta","SugarReplicate_iter2.dta")
 L <- lapply(fs, function(f) read_dta(file.path(D,f)))
 d <- L[[1]]

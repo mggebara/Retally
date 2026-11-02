@@ -52,7 +52,9 @@ Where things come from (all read-only; ``--source-root`` defaults to the repo):
 
 Copy rules: text only; any file over 2 MB is listed with its size instead of
 copied; data files (``.dta``, ``.csv``, ``.rds``, …) and anything under a
-``mount`` directory are never copied.  Nothing else is stripped.  A paper
+``mount`` directory are never copied.  Absolute paths are rewritten to ``<repo>``,
+``<worktree>``, ``<scratch>`` or ``<home>`` (:func:`normalise_paths`).  Nothing else
+is stripped.  A paper
 text embedded verbatim in a prompt is replaced by a one-line reference
 ``[paper text: <entry>/paper.txt, N chars, sha256 …]``.
 
@@ -129,6 +131,53 @@ _REQUEST_MAX_TOKENS = (16384, 8192, 32000)
 _ATTEMPT_DIR = re.compile(r"^attempt-(\d+)$")
 _PROMPT_FILE = re.compile(r"^prompt-(\d+)\.txt$")
 
+# Absolute paths are machine-specific; every text file written into the tree
+# has them rewritten to placeholders (see :func:`normalise_paths`).
+_WORKTREE_PATH = re.compile(
+    r"/[^\s\"'`<>|()]*?/\.claude/worktrees/agent-[^/\s\"'`<>|()]+(?:/|(?=[\s\"'`<>|()]|$))"
+)
+_SCRATCH_PATH = re.compile(
+    r"(?:/private)?/tmp/claude-\d+/(?:[^\s\"'`<>|()]*?/scratchpad(?:/|(?=[\s\"'`<>|()]|$)))?"
+)
+
+# Last resort, after the repo / worktree / scratch rules: any other path in a
+# home directory (e.g. ``~/.claude/projects/...`` an agent declared reading).
+_HOME_PATH = re.compile(r"/(?:Users|home)/[^/\s\"'`<>|()]+/")
+
+
+def repo_roots(*extra: Path) -> list[str]:
+    """Absolute repository roots to rewrite to ``<repo>``, longest first.
+
+    The module's own repo (``REPO_ROOT``); when that is an agent worktree
+    (``<main>/.claude/worktrees/agent-*``), also the main checkout it
+    belongs to; plus any ``extra`` roots (the build's ``--source-root``).
+    """
+    roots = {str(REPO_ROOT), *(str(Path(e)) for e in extra), *(str(Path(e).resolve()) for e in extra)}
+    for root in list(roots):
+        parts = Path(root).parts
+        if ".claude" in parts and parts[parts.index(".claude") + 1 : parts.index(".claude") + 2] == (
+            "worktrees",
+        ):
+            roots.add(str(Path(*parts[: parts.index(".claude")])))
+    return sorted((r for r in roots if r not in ("/", "")), key=len, reverse=True)
+
+
+def normalise_paths(text: str, roots: list[str]) -> str:
+    """``text`` with machine-specific absolute paths rewritten.
+
+    Agent worktrees (``…/.claude/worktrees/agent-*/``) become
+    ``<worktree>/``, Claude scratchpads (``/private/tmp/claude-<uid>/…/scratchpad/``,
+    or any other ``/tmp/claude-<uid>/`` path) ``<scratch>/``, and each
+    repository root in ``roots`` ``<repo>`` — in that order, so a worktree
+    inside the repo is not half-rewritten.  Any remaining path in a home
+    directory (``/Users/<name>/`` or ``/home/<name>/``) becomes ``<home>/``.
+    """
+    text = _WORKTREE_PATH.sub("<worktree>/", text)
+    text = _SCRATCH_PATH.sub("<scratch>/", text)
+    for root in roots:
+        text = re.sub(re.escape(root) + r"(?=/|[\s\"'`<>|()]|$)", "<repo>", text)
+    return _HOME_PATH.sub("<home>/", text)
+
 
 # ---------------------------------------------------------------------------
 # Sources
@@ -140,6 +189,13 @@ class Sources:
     """Where ``build`` reads from: the repo checkout that holds the gitignored run files."""
 
     root: Path
+
+    @property
+    def roots(self) -> list[str]:
+        return repo_roots(self.root)
+
+    def normalise(self, text: str) -> str:
+        return normalise_paths(text, self.roots)
 
     @property
     def oracle_dir(self) -> Path:
@@ -437,14 +493,12 @@ def _copy_file(
     if not _is_text(data):
         files.refused.append(f"{shown} ({size} bytes; not UTF-8 text, not copied)")
         return
-    dst.parent.mkdir(parents=True, exist_ok=True)
-    dst.write_bytes(data)
-    into.append(Copied(rel=rel, size=size, source=shown))
+    _write_text(sources, dst, rel, data.decode("utf-8"), shown, into)
 
 
-def _write_text(dst: Path, rel: str, text: str, source: str, into: list[Copied]) -> None:
+def _write_text(sources: Sources, dst: Path, rel: str, text: str, source: str, into: list[Copied]) -> None:
     dst.parent.mkdir(parents=True, exist_ok=True)
-    data = text.encode("utf-8")
+    data = sources.normalise(text).encode("utf-8")
     dst.write_bytes(data)
     into.append(Copied(rel=rel, size=len(data), source=source))
 
@@ -492,9 +546,9 @@ def build_cell(
     scoring = score_cell(cell, entry, final_stdout)
     scoring["cell"] = cell_header(cell, files)
     (out / "scoring.json").write_text(
-        json.dumps(scoring, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+        sources.normalise(json.dumps(scoring, indent=2, ensure_ascii=False) + "\n"), encoding="utf-8"
     )
-    (out / "CELL.md").write_text(render_cell_md(cell, scoring, files), encoding="utf-8")
+    (out / "CELL.md").write_text(sources.normalise(render_cell_md(cell, scoring, files)), encoding="utf-8")
     return {"cell": cell.relpath, "complete": not files.missing, "missing": list(files.missing)}
 
 
@@ -536,7 +590,7 @@ def _collect_pipeline(
             files.notes.append(
                 f"{name}: embedded paper text replaced by a reference to {cell.entry_id}/{v.name}"
             )
-        _write_text(out / "prompt" / name, f"prompt/{name}", replaced, source, files.prompts)
+        _write_text(sources, out / "prompt" / name, f"prompt/{name}", replaced, source, files.prompts)
         n = _PROMPT_FILE.match(name)
         idx = n.group(1) if n else name
         hit = find_reply(text, store)
@@ -546,7 +600,7 @@ def _collect_pipeline(
         path, shape = hit
         reply = str((_read_json(path) or {}).get("text", ""))
         rel = f"output/answer-{idx}.md"
-        _write_text(out / rel, rel, reply, sources.display(path), files.outputs)
+        _write_text(sources, out / rel, rel, reply, sources.display(path), files.outputs)
         files.notes.append(
             f"answer-{idx}.md: reply to {name} from the {store_name} "
             f"(request {path.stem}: model {shape['model']}, "
@@ -605,6 +659,7 @@ def _collect_agent(
         ref = cell.paper.reference(cell.entry_id)
         shown = sources.display(cell.paper_path) if cell.paper_path else "?"
         _write_text(
+            sources,
             out / "prompt" / "paper.txt.ref",
             "prompt/paper.txt.ref",
             f"The task's paper file {shown}:\n{ref}\n",
@@ -1247,10 +1302,11 @@ def report(
         cells = load_cells(evidence, entry_id)
         target = out if out is not None and len(ids) == 1 else evidence / entry_id / "REPORT.md"
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text(render_report(entry_id, cells, catalog.get(entry_id)), encoding="utf-8")
+        text = render_report(entry_id, cells, catalog.get(entry_id))
+        target.write_text(normalise_paths(text, repo_roots()), encoding="utf-8")
         written.append(target)
     index = evidence / "INDEX.md"
-    index.write_text(render_index(evidence), encoding="utf-8")
+    index.write_text(normalise_paths(render_index(evidence), repo_roots()), encoding="utf-8")
     written.append(index)
     return written
 

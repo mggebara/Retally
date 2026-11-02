@@ -1,5 +1,5 @@
 suppressMessages({library(haven); library(dplyr)})
-d <- read_dta("/Users/matthew/dev/Retally/benchmark/.cache/claude-code/montero-2022-cooperative-property-rights/independent/2026-11-01-a/mount/montero_2022_cooperative_property_rights/ehpm_incomemodule_wreform.dta")
+d <- read_dta("<repo>/benchmark/.cache/claude-code/montero-2022-cooperative-property-rights/independent/2026-11-01-a/mount/montero_2022_cooperative_property_rights/ehpm_incomemodule_wreform.dta")
 d$dist <- d$own_amt - 500
 print(table(d$Above500, d$own_amt >= 500))
 print(summary(d$norm_dist)); print(summary(abs(d$dist) - d$norm_dist))

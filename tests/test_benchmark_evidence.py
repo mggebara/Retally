@@ -268,3 +268,38 @@ def test_report_renders(tmp_path: Path) -> None:
     assert "no weights" in report_md
     index = (out / "INDEX.md").read_text(encoding="utf-8")
     assert f"{ENTRY}/REPORT.md" in index
+
+
+def test_normalise_paths_rewrites_repo_worktree_and_scratch() -> None:
+    roots = evidence.repo_roots(Path("/opt/Retally"))
+    text = (
+        "data: /opt/Retally/benchmark/.cache/x/mount\n"
+        'root "/opt/Retally"\n'
+        "wt: /opt/Retally/.claude/worktrees/agent-abc123/benchmark/runner.py\n"
+        "scratch: /private/tmp/claude-501/-home-u-Retally/0f1e/scratchpad/brief.md\n"
+        "other: /opt/RetallyOld/file and /tmp/claude-501/foo\n"
+        "home: /Users/someone/.claude/projects/x/tool-results/a.txt\n"
+    )
+    out = evidence.normalise_paths(text, roots)
+    assert "data: <repo>/benchmark/.cache/x/mount" in out
+    assert 'root "<repo>"' in out
+    assert "wt: <worktree>/benchmark/runner.py" in out
+    assert "scratch: <scratch>/brief.md" in out
+    # A sibling directory that merely shares the prefix is left alone.
+    assert "/opt/RetallyOld/file" in out
+    assert "home: <home>/.claude/projects/x/tool-results/a.txt" in out
+    assert "<scratch>/foo" in out
+    # The module's own checkout (and its main checkout, if a worktree) is always a root.
+    assert str(evidence.REPO_ROOT) in evidence.repo_roots()
+
+
+def test_built_tree_has_no_absolute_source_paths(tmp_path: Path) -> None:
+    out, _ = _build(tmp_path)
+    root = str((tmp_path / "src").resolve())
+    task = (out / ENTRY / "independent/claude-code/2026-01-02-a/prompt/task.md").read_text(encoding="utf-8")
+    assert "<repo>/benchmark/.cache/claude-code/" in task
+    for path in out.rglob("*"):
+        if path.is_file():
+            text = path.read_text(encoding="utf-8")
+            assert root not in text, path
+            assert str(tmp_path) not in text, path

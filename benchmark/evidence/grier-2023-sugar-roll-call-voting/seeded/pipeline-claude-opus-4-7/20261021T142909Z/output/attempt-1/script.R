@@ -6,7 +6,7 @@ suppressPackageStartupMessages({
 
 set.seed(42)
 
-base_path <- "/Users/matthew/dev/Retally/.cache/datasets/grier_2023_sugar_roll_call_voting"
+base_path <- "<repo>/.cache/datasets/grier_2023_sugar_roll_call_voting"
 
 # Inspect data first
 d1_raw <- read_dta(file.path(base_path, "SugarReplicate.dta"))

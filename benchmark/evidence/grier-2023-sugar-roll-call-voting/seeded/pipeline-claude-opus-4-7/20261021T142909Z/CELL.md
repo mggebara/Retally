@@ -43,19 +43,19 @@ _None declared._
 
 ## What the model was given
 
-- [`prompt/prompt-1.txt`](prompt/prompt-1.txt) — 15,577 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/pipeline/20261021T142909Z/prompt-1.txt`
-- [`prompt/prompt-2.txt`](prompt/prompt-2.txt) — 11,403 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/pipeline/20261021T142909Z/prompt-2.txt`
+- [`prompt/prompt-1.txt`](prompt/prompt-1.txt) — 15,537 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/pipeline/20261021T142909Z/prompt-1.txt`
+- [`prompt/prompt-2.txt`](prompt/prompt-2.txt) — 11,363 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/pipeline/20261021T142909Z/prompt-2.txt`
 
 ## What it produced
 
-- [`output/attempt-1/script.R`](output/attempt-1/script.R) — 2,147 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/pipeline/20261021T142909Z/attempt-1/script.R`
+- [`output/attempt-1/script.R`](output/attempt-1/script.R) — 2,127 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/pipeline/20261021T142909Z/attempt-1/script.R`
 - [`output/attempt-1/stderr.txt`](output/attempt-1/stderr.txt) — 287 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/pipeline/20261021T142909Z/attempt-1/stderr.txt`
 - [`output/attempt-1/stdout.txt`](output/attempt-1/stdout.txt) — 1,302 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/pipeline/20261021T142909Z/attempt-1/stdout.txt`
-- [`output/script.R`](output/script.R) — 2,499 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/pipeline/20261021T142909Z/script.R`
+- [`output/script.R`](output/script.R) — 2,479 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/pipeline/20261021T142909Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/pipeline/20261021T142909Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 532 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/pipeline/20261021T142909Z/stdout.txt`
-- [`output/answer-1.md`](output/answer-1.md) — 2,508 bytes, from `benchmark/.cache/llm/67a681171747d57bef65ea67.json`
-- [`output/answer-2.md`](output/answer-2.md) — 2,147 bytes, from `benchmark/.cache/llm/73b88714e47da3a6e419e023.json`
+- [`output/answer-1.md`](output/answer-1.md) — 2,488 bytes, from `benchmark/.cache/llm/67a681171747d57bef65ea67.json`
+- [`output/answer-2.md`](output/answer-2.md) — 2,127 bytes, from `benchmark/.cache/llm/73b88714e47da3a6e419e023.json`
 
 ## Notes
 

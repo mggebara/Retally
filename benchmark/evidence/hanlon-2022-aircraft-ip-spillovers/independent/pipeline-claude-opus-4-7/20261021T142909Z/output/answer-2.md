@@ -8,7 +8,7 @@ suppressPackageStartupMessages({
 
 set.seed(42)
 
-base <- "/Users/matthew/dev/Retally/.cache/datasets/hanlon_2022_aircraft_ip_spillovers.script-free"
+base <- "<repo>/.cache/datasets/hanlon_2022_aircraft_ip_spillovers.script-free"
 airframe <- read_dta(file.path(base, "3 replication files/data/dta/airframe_data.dta"))
 engine <- read_dta(file.path(base, "3 replication files/data/dta/engine_data.dta"))
 

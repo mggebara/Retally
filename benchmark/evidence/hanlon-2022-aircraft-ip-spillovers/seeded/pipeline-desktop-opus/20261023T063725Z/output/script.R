@@ -6,7 +6,7 @@ suppressPackageStartupMessages({
 
 set.seed(42)
 
-base <- "/Users/matthew/dev/Retally/.cache/datasets/hanlon_2022_aircraft_ip_spillovers"
+base <- "<repo>/.cache/datasets/hanlon_2022_aircraft_ip_spillovers"
 af_path <- file.path(base, "3 replication files/data/dta/airframe_data.dta")
 en_path <- file.path(base, "3 replication files/data/dta/engine_data.dta")
 

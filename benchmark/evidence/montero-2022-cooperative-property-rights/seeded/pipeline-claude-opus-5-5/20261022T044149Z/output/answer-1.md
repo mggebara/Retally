@@ -8,7 +8,7 @@ suppressPackageStartupMessages({
 })
 set.seed(42)
 
-path <- "/Users/matthew/dev/Retally/.cache/datasets/montero_2022_cooperative_property_rights"
+path <- "<repo>/.cache/datasets/montero_2022_cooperative_property_rights"
 df <- read_dta(file.path(path, "ehpm_incomemodule_wreform.dta"))
 df <- zap_labels(df)
 df <- as.data.frame(df)

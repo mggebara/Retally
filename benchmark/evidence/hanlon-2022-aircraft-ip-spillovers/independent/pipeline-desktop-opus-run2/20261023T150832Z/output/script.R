@@ -5,7 +5,7 @@ suppressPackageStartupMessages({
 })
 set.seed(42)
 
-base <- "/Users/matthew/dev/Retally/.cache/datasets/hanlon_2022_aircraft_ip_spillovers.script-free"
+base <- "<repo>/.cache/datasets/hanlon_2022_aircraft_ip_spillovers.script-free"
 af <- haven::read_dta(file.path(base, "3 replication files/data/dta/airframe_data.dta"))
 en <- haven::read_dta(file.path(base, "3 replication files/data/dta/engine_data.dta"))
 

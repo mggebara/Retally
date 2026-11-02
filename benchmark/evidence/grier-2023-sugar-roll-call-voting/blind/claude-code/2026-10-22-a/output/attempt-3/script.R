@@ -1,5 +1,5 @@
 suppressMessages({library(haven); library(dplyr)})
-D <- "/Users/matthew/dev/Retally/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/blind/2026-10-22-a/mount/grier_2023_sugar_roll_call_voting"
+D <- "<repo>/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/blind/2026-10-22-a/mount/grier_2023_sugar_roll_call_voting"
 d <- read_dta(file.path(D,"SugarReplicate.dta"))
 d$y <- as.numeric(d$vote=="Aye")
 vars <- c("totalcont","ncu","tenure","poverty","bach","medincome","over65","agcom")

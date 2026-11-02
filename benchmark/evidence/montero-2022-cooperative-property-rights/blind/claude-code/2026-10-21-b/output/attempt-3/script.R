@@ -1,5 +1,5 @@
 suppressMessages({library(haven); library(dplyr)})
-d <- read_dta("/Users/matthew/dev/Retally/benchmark/.cache/claude-code/montero-2022-cooperative-property-rights/blind/2026-10-21-b/mount/montero_2022_cooperative_property_rights/ehpm_incomemodule_wreform.dta")
+d <- read_dta("<repo>/benchmark/.cache/claude-code/montero-2022-cooperative-property-rights/blind/2026-10-21-b/mount/montero_2022_cooperative_property_rights/ehpm_incomemodule_wreform.dta")
 d <- zap_labels(d)
 cat("norm_dist_Above vs norm_dist*Above500 max diff:", max(abs(d$norm_dist_Above - d$norm_dist*d$Above500)), "\n")
 cat("rows with |norm_dist| in [149,151]:", sum(abs(abs(d$norm_dist)-150) < 1), " in [299,301]:", sum(abs(abs(d$norm_dist)-300) < 1), "\n")

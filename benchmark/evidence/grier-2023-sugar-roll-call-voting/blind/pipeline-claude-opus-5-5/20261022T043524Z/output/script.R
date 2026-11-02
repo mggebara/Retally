@@ -14,7 +14,7 @@ suppressPackageStartupMessages({
 })
 set.seed(42)
 
-base <- "/Users/matthew/dev/Retally/.cache/datasets/grier_2023_sugar_roll_call_voting.script-free"
+base <- "<repo>/.cache/datasets/grier_2023_sugar_roll_call_voting.script-free"
 
 # Load a .dta file, strip Stata labels, and build the analysis variables.
 load_data <- function(f) {

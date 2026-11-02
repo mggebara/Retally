@@ -1,5 +1,5 @@
 suppressMessages({library(haven); library(dplyr)})
-d <- "/Users/matthew/dev/Retally/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/blind/2026-11-01-a/mount/grier_2023_sugar_roll_call_voting"
+d <- "<repo>/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/blind/2026-11-01-a/mount/grier_2023_sugar_roll_call_voting"
 a <- read_dta(file.path(d,"SugarReplicate.dta")); b <- read_dta(file.path(d,"SugarReplicate_iter1.dta")); c2 <- read_dta(file.path(d,"SugarReplicate_iter2.dta"))
 str(as.data.frame(a)); print(summary(as.data.frame(a)))
 for (v in names(a)) { lab <- attr(a[[v]],"label"); if(!is.null(lab)) cat(v, ":", lab, "\n") }

@@ -9,7 +9,7 @@ suppressPackageStartupMessages({
 
 set.seed(42)
 
-data_path <- "/Users/matthew/dev/Retally/.cache/datasets/montero_2022_cooperative_property_rights.script-free/ehpm_incomemodule_wreform.dta"
+data_path <- "<repo>/.cache/datasets/montero_2022_cooperative_property_rights.script-free/ehpm_incomemodule_wreform.dta"
 df <- read_dta(data_path)
 
 cat("Nrow:", nrow(df), "\n")

@@ -1,5 +1,5 @@
 suppressMessages({library(haven); library(dplyr)})
-d <- read_dta("/Users/matthew/dev/Retally/benchmark/.cache/claude-code/montero-2022-cooperative-property-rights/blind/2026-11-01-a/mount/montero_2022_cooperative_property_rights/ehpm_incomemodule_wreform.dta")
+d <- read_dta("<repo>/benchmark/.cache/claude-code/montero-2022-cooperative-property-rights/blind/2026-11-01-a/mount/montero_2022_cooperative_property_rights/ehpm_incomemodule_wreform.dta")
 d <- zap_labels(d)
 cat("own_amt-500 vs norm_dist:\n"); print(summary(d$own_amt - 500 - d$norm_dist))
 print(table(Above500 = d$Above500, neg = d$norm_dist < 0))

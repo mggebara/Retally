@@ -1,7 +1,7 @@
 # Montero (2022) Table 5: RD at 500 ha, earnings levels and within-property IQR
 set.seed(42)
 suppressMessages({library(haven); library(dplyr); library(fixest)})
-d <- read_dta("/Users/matthew/dev/Retally/benchmark/.cache/claude-code/montero-2022-cooperative-property-rights/independent/2026-11-01-a/mount/montero_2022_cooperative_property_rights/ehpm_incomemodule_wreform.dta")
+d <- read_dta("<repo>/benchmark/.cache/claude-code/montero-2022-cooperative-property-rights/independent/2026-11-01-a/mount/montero_2022_cooperative_property_rights/ehpm_incomemodule_wreform.dta")
 d <- zap_labels(d)
 d$dist <- d$own_amt - 500                 # former owner's cumulative holdings, centred at cutoff
 d$owner <- as.character(d$Expropretario_ISTA)  # former-owner cluster id

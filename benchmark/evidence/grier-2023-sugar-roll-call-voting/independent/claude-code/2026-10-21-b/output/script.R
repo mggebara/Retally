@@ -2,7 +2,7 @@
 # District / incumbent fixed-effects logit (dummy-variable logit, as in Stata `logit ... i.id, robust`).
 set.seed(42)
 suppressMessages({library(haven); library(dplyr); library(sandwich); library(lmtest)})
-D <- "/Users/matthew/dev/Retally/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/independent/2026-10-21-b/mount/grier_2023_sugar_roll_call_voting"
+D <- "<repo>/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/independent/2026-10-21-b/mount/grier_2023_sugar_roll_call_voting"
 rd <- function(f) zap_labels(read_dta(file.path(D, f)))
 base <- rd("SugarReplicate.dta")        # totalcont: 1 yr before vote -> end of vote's calendar year (widest window)
 cal  <- rd("SugarReplicate_iter1.dta")  # totalcont: calendar year of vote

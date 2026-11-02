@@ -1,7 +1,7 @@
 # Independent reproduction: Hanlon (2022) Tables 1 and 4
 library(haven); library(dplyr); library(fixest)
 set.seed(42)
-D <- "/Users/matthew/dev/Retally/benchmark/.cache/claude-code/hanlon-2022-aircraft-ip-spillovers/independent/2026-10-21-b/mount/hanlon_2022_aircraft_ip_spillovers/3 replication files/data/dta/"
+D <- "<repo>/benchmark/.cache/claude-code/hanlon-2022-aircraft-ip-spillovers/independent/2026-10-21-b/mount/hanlon_2022_aircraft_ip_spillovers/3 replication files/data/dta/"
 a <- read_dta(paste0(D,"airframe_data.dta")) %>% zap_labels()
 e <- read_dta(paste0(D,"engine_data.dta")) %>% zap_labels()
 # two-piece continuous linear spline, knot at 1926 (as Stata mkspline)

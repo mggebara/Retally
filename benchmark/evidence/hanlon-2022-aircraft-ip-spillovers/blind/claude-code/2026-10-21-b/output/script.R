@@ -3,7 +3,7 @@ library(haven)
 library(sandwich)
 library(lmtest)
 set.seed(42)
-d <- "/Users/matthew/dev/Retally/benchmark/.cache/claude-code/hanlon-2022-aircraft-ip-spillovers/blind/2026-10-21-b/mount/hanlon_2022_aircraft_ip_spillovers/3 replication files/data/dta/"
+d <- "<repo>/benchmark/.cache/claude-code/hanlon-2022-aircraft-ip-spillovers/blind/2026-10-21-b/mount/hanlon_2022_aircraft_ip_spillovers/3 replication files/data/dta/"
 a <- as.data.frame(read_dta(paste0(d, "airframe_data.dta")))
 e <- as.data.frame(read_dta(paste0(d, "engine_data.dta")))
 

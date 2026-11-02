@@ -3,7 +3,7 @@ library(fixest)
 library(survival)
 set.seed(42)
 
-base <- "/Users/matthew/dev/Retally/.cache/datasets/grier_2023_sugar_roll_call_voting.script-free"
+base <- "<repo>/.cache/datasets/grier_2023_sugar_roll_call_voting.script-free"
 
 prep <- function(file) {
   d <- as.data.frame(zap_labels(read_dta(file.path(base, file))))

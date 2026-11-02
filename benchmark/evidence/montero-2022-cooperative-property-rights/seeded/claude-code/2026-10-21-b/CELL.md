@@ -45,16 +45,16 @@ Agent notes: Followed the 'Replicating original results' block of Replication_fi
 
 ## What the model was given
 
-- [`prompt/task.md`](prompt/task.md) — 29,463 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/seeded/claude-code/20261022T021417Z/task.md`
-- [`prompt/render.json`](prompt/render.json) — 864 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/seeded/claude-code/20261022T021417Z/render.json`
+- [`prompt/task.md`](prompt/task.md) — 29,143 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/seeded/claude-code/20261022T021417Z/task.md`
+- [`prompt/render.json`](prompt/render.json) — 804 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/seeded/claude-code/20261022T021417Z/render.json`
 - [`prompt/paper.txt.ref`](prompt/paper.txt.ref) — 275 bytes, from `benchmark/.cache/claude-code/montero-2022-cooperative-property-rights/seeded/2026-10-21-b/paper.txt`
 
 ## What it produced
 
-- [`output/attempt-1/script.R`](output/attempt-1/script.R) — 621 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/seeded/claude-code/20261022T021417Z/attempt-1/script.R`
+- [`output/attempt-1/script.R`](output/attempt-1/script.R) — 601 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/seeded/claude-code/20261022T021417Z/attempt-1/script.R`
 - [`output/attempt-1/stderr.txt`](output/attempt-1/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/seeded/claude-code/20261022T021417Z/attempt-1/stderr.txt`
 - [`output/attempt-1/stdout.txt`](output/attempt-1/stdout.txt) — 5,212 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/seeded/claude-code/20261022T021417Z/attempt-1/stdout.txt`
 - [`output/reproduction.json`](output/reproduction.json) — 1,658 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/seeded/claude-code/20261022T021417Z/reproduction.json`
-- [`output/script.R`](output/script.R) — 3,688 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/seeded/claude-code/20261022T021417Z/script.R`
+- [`output/script.R`](output/script.R) — 3,668 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/seeded/claude-code/20261022T021417Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/seeded/claude-code/20261022T021417Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 1,662 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/seeded/claude-code/20261022T021417Z/stdout.txt`

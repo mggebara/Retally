@@ -45,20 +45,20 @@ _None declared._
 
 ## What the model was given
 
-- [`prompt/prompt-1.txt`](prompt/prompt-1.txt) — 20,559 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/blind/pipeline/20261021T142909Z/prompt-1.txt`
-- [`prompt/prompt-2.txt`](prompt/prompt-2.txt) — 5,562 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/blind/pipeline/20261021T142909Z/prompt-2.txt`
+- [`prompt/prompt-1.txt`](prompt/prompt-1.txt) — 20,519 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/blind/pipeline/20261021T142909Z/prompt-1.txt`
+- [`prompt/prompt-2.txt`](prompt/prompt-2.txt) — 5,522 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/blind/pipeline/20261021T142909Z/prompt-2.txt`
 
 ## What it produced
 
 - [`output/attempt-1/feedback.txt`](output/attempt-1/feedback.txt) — 150 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/blind/pipeline/20261021T142909Z/attempt-1/feedback.txt`
-- [`output/attempt-1/script.R`](output/attempt-1/script.R) — 3,532 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/blind/pipeline/20261021T142909Z/attempt-1/script.R`
+- [`output/attempt-1/script.R`](output/attempt-1/script.R) — 3,512 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/blind/pipeline/20261021T142909Z/attempt-1/script.R`
 - [`output/attempt-1/stderr.txt`](output/attempt-1/stderr.txt) — 150 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/blind/pipeline/20261021T142909Z/attempt-1/stderr.txt`
 - [`output/attempt-1/stdout.txt`](output/attempt-1/stdout.txt) — 0 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/blind/pipeline/20261021T142909Z/attempt-1/stdout.txt`
-- [`output/script.R`](output/script.R) — 3,760 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/blind/pipeline/20261021T142909Z/script.R`
+- [`output/script.R`](output/script.R) — 3,740 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/blind/pipeline/20261021T142909Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/blind/pipeline/20261021T142909Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 656 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/blind/pipeline/20261021T142909Z/stdout.txt`
-- [`output/answer-1.md`](output/answer-1.md) — 3,532 bytes, from `benchmark/.cache/llm/1897b6ad2862d5c33cbe2922.json`
-- [`output/answer-2.md`](output/answer-2.md) — 3,760 bytes, from `benchmark/.cache/llm/382c383345270826976ae7ab.json`
+- [`output/answer-1.md`](output/answer-1.md) — 3,512 bytes, from `benchmark/.cache/llm/1897b6ad2862d5c33cbe2922.json`
+- [`output/answer-2.md`](output/answer-2.md) — 3,740 bytes, from `benchmark/.cache/llm/382c383345270826976ae7ab.json`
 
 ## Notes
 

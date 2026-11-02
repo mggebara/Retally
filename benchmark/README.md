@@ -609,8 +609,13 @@ benchmark/evidence/
   embedded verbatim in a prompt is replaced by `[paper text:
   <entry>/paper.txt, N chars, sha256 …]`; agent prompts point at the
   paper file by path, and `prompt/paper.txt.ref` names the stored copy.
-  Nothing else is stripped: stdout can hold data summaries and prompts
-  hold local paths, exactly as the model saw them.
+  Machine-specific absolute paths are rewritten in every file written:
+  the repository root (found from the module's location, plus the main
+  checkout when that is an agent worktree, plus `--source-root`) becomes
+  `<repo>`, `…/.claude/worktrees/agent-*/` becomes `<worktree>/`, a
+  `/private/tmp/claude-<uid>/…/scratchpad/` path `<scratch>/`, and any
+  other home-directory path `<home>/`.  Nothing else is stripped: stdout
+  can hold data summaries, exactly as the model saw them.
 * **REPORT.md** lists the paper and its pinned claims with the I4R
   replicator values, a mode × reproducer matrix of pass counts (one entry
   per run, linking each `CELL.md`), and a "what to hand-check" list: the

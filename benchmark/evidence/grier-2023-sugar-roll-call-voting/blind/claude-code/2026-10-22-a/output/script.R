@@ -7,7 +7,7 @@
 # districts that do not switch). Robust SEs.
 set.seed(42)
 suppressMessages({library(haven); library(dplyr); library(fixest)})
-D <- "/Users/matthew/dev/Retally/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/blind/2026-10-22-a/mount/grier_2023_sugar_roll_call_voting"
+D <- "<repo>/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/blind/2026-10-22-a/mount/grier_2023_sugar_roll_call_voting"
 
 # Files: the readme says the three dta files hold author-aggregated sugar
 # contributions (variable totalcont) over the three windows in the text.

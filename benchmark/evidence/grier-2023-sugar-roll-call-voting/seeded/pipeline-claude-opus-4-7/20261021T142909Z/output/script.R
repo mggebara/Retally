@@ -6,7 +6,7 @@ suppressPackageStartupMessages({
 
 set.seed(42)
 
-base_path <- "/Users/matthew/dev/Retally/.cache/datasets/grier_2023_sugar_roll_call_voting"
+base_path <- "<repo>/.cache/datasets/grier_2023_sugar_roll_call_voting"
 
 prep <- function(df) {
   df$yesvote <- ifelse(df$vote == "Aye", 1, 0)

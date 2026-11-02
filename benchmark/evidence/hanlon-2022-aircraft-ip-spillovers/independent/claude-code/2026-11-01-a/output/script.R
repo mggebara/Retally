@@ -1,7 +1,7 @@
 # Hanlon et al. (2022) independent reproduction: Table 1 cols 1-4, Table 4 col 1
 suppressPackageStartupMessages({library(haven); library(dplyr); library(fixest)})
 set.seed(42)
-d <- "/Users/matthew/dev/Retally/benchmark/.cache/claude-code/hanlon-2022-aircraft-ip-spillovers/independent/2026-11-01-a/mount/hanlon_2022_aircraft_ip_spillovers/3 replication files/data/dta/"
+d <- "<repo>/benchmark/.cache/claude-code/hanlon-2022-aircraft-ip-spillovers/independent/2026-11-01-a/mount/hanlon_2022_aircraft_ip_spillovers/3 replication files/data/dta/"
 a <- read_dta(paste0(d, "airframe_data.dta")) %>% zap_labels() %>% as.data.frame()
 e <- read_dta(paste0(d, "engine_data.dta")) %>% zap_labels() %>% as.data.frame()
 # two-piece linear spline, knot 1926 (Stata mkspline, non-marginal): each coef = segment slope

@@ -14,7 +14,7 @@ suppressPackageStartupMessages({
 })
 set.seed(42)
 
-path <- "/Users/matthew/dev/Retally/.cache/datasets/montero_2022_cooperative_property_rights.script-free"
+path <- "<repo>/.cache/datasets/montero_2022_cooperative_property_rights.script-free"
 df <- as.data.frame(haven::zap_labels(haven::read_dta(file.path(path, "ehpm_incomemodule_wreform.dta"))))
 nm <- names(df)
 
@@ -156,7 +156,7 @@ For example:  cat('RESULT:beta=0.342\n')
 Use snake_case metric names.
 
 ## Reminder: Constraints
-- The dataset is a directory tree at '/Users/matthew/dev/Retally/.cache/datasets/montero_2022_cooperative_property_rights.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+- The dataset is a directory tree at '<repo>/.cache/datasets/montero_2022_cooperative_property_rights.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
 - Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
 - Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
 - Do NOT access the internet.

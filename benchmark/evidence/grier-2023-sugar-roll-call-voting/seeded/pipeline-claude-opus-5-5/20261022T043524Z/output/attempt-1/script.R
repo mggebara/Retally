@@ -3,7 +3,7 @@ library(sandwich)
 
 set.seed(42)
 
-base <- "/Users/matthew/dev/Retally/.cache/datasets/grier_2023_sugar_roll_call_voting"
+base <- "<repo>/.cache/datasets/grier_2023_sugar_roll_call_voting"
 
 prep <- function(file) {
   d <- haven::read_dta(file.path(base, file))

@@ -9,7 +9,7 @@ suppressPackageStartupMessages({
   library(lmtest)
 })
 
-data_path <- "/Users/matthew/dev/Retally/.cache/datasets/grier_2023_sugar_roll_call_voting.script-free/SugarReplicate.dta"
+data_path <- "<repo>/.cache/datasets/grier_2023_sugar_roll_call_voting.script-free/SugarReplicate.dta"
 df <- read_dta(data_path)
 
 # Look at structure
@@ -72,8 +72,8 @@ n_incumbent_used <- if (!is.null(m_incumbent)) m_incumbent$n else NA
 # Likely the three iter files correspond to the three windows!
 
 # Try alternatives
-path_iter1 <- "/Users/matthew/dev/Retally/.cache/datasets/grier_2023_sugar_roll_call_voting.script-free/SugarReplicate_iter1.dta"
-path_iter2 <- "/Users/matthew/dev/Retally/.cache/datasets/grier_2023_sugar_roll_call_voting.script-free/SugarReplicate_iter2.dta"
+path_iter1 <- "<repo>/.cache/datasets/grier_2023_sugar_roll_call_voting.script-free/SugarReplicate_iter1.dta"
+path_iter2 <- "<repo>/.cache/datasets/grier_2023_sugar_roll_call_voting.script-free/SugarReplicate_iter2.dta"
 
 df1 <- read_dta(path_iter1)
 df2 <- read_dta(path_iter2)

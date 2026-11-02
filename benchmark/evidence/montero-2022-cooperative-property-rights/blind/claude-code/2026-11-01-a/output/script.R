@@ -4,7 +4,7 @@
 #   |dist| <= bandwidth, SEs clustered by former owner.
 suppressMessages({library(haven); library(dplyr); library(fixest)})
 set.seed(42)
-d <- read_dta("/Users/matthew/dev/Retally/benchmark/.cache/claude-code/montero-2022-cooperative-property-rights/blind/2026-11-01-a/mount/montero_2022_cooperative_property_rights/ehpm_incomemodule_wreform.dta")
+d <- read_dta("<repo>/benchmark/.cache/claude-code/montero-2022-cooperative-property-rights/blind/2026-11-01-a/mount/montero_2022_cooperative_property_rights/ehpm_incomemodule_wreform.dta")
 d <- zap_labels(d)
 d <- d %>% mutate(dist = norm_dist,            # own_amt - 500
                   dist_above = dist * Above500,

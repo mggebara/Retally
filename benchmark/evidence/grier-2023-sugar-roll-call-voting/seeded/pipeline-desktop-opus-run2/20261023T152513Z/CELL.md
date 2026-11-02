@@ -43,16 +43,16 @@ _None declared._
 
 ## What the model was given
 
-- [`prompt/prompt-1.txt`](prompt/prompt-1.txt) — 17,140 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/pipeline/20261023T152513Z/prompt-1.txt`
-- [`prompt/prompt-2.txt`](prompt/prompt-2.txt) — 12,840 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/pipeline/20261023T152513Z/prompt-2.txt`
+- [`prompt/prompt-1.txt`](prompt/prompt-1.txt) — 17,100 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/pipeline/20261023T152513Z/prompt-1.txt`
+- [`prompt/prompt-2.txt`](prompt/prompt-2.txt) — 12,800 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/pipeline/20261023T152513Z/prompt-2.txt`
 
 ## What it produced
 
-- [`output/script.R`](output/script.R) — 3,226 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/pipeline/20261023T152513Z/script.R`
+- [`output/script.R`](output/script.R) — 3,206 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/pipeline/20261023T152513Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 721 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/pipeline/20261023T152513Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 583 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/pipeline/20261023T152513Z/stdout.txt`
-- [`output/answer-1.md`](output/answer-1.md) — 3,227 bytes, from `benchmark/.cache/llm-oracle/desktop-opus-run2/answers/ffc5c386c737b6d0b8b89f72.json`
-- [`output/answer-2.md`](output/answer-2.md) — 3,227 bytes, from `benchmark/.cache/llm-oracle/desktop-opus-run2/answers/09548705a920a929a8a8e500.json`
+- [`output/answer-1.md`](output/answer-1.md) — 3,207 bytes, from `benchmark/.cache/llm-oracle/desktop-opus-run2/answers/ffc5c386c737b6d0b8b89f72.json`
+- [`output/answer-2.md`](output/answer-2.md) — 3,207 bytes, from `benchmark/.cache/llm-oracle/desktop-opus-run2/answers/09548705a920a929a8a8e500.json`
 
 ## Notes
 

@@ -5,7 +5,7 @@ suppressPackageStartupMessages({
 
 set.seed(42)
 
-base <- "/Users/matthew/dev/Retally/.cache/datasets/grier_2023_sugar_roll_call_voting"
+base <- "<repo>/.cache/datasets/grier_2023_sugar_roll_call_voting"
 
 to_chr <- function(x) {
   if (inherits(x, "haven_labelled")) x <- as.character(haven::as_factor(x))

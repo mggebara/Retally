@@ -5,7 +5,7 @@ suppressPackageStartupMessages({
 })
 set.seed(42)
 
-base_dir <- '/Users/matthew/dev/Retally/.cache/datasets/grier_2023_sugar_roll_call_voting.script-free'
+base_dir <- '<repo>/.cache/datasets/grier_2023_sugar_roll_call_voting.script-free'
 
 load_data <- function(fname) {
   d <- haven::read_dta(file.path(base_dir, fname))

@@ -3,7 +3,7 @@
 set.seed(42)
 suppressMessages({library(haven); library(dplyr); library(sandwich); library(survival)})
 
-d <- "/Users/matthew/dev/Retally/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/blind/2026-11-01-a/mount/grier_2023_sugar_roll_call_voting"
+d <- "<repo>/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/blind/2026-11-01-a/mount/grier_2023_sugar_roll_call_voting"
 # Per the Read Me, the three .dta files are identical except for the author-aggregated sugar
 # contributions (totalcont) over the three windows described in the text.
 #   SugarReplicate.dta       : baseline, one year before the vote through end of the vote's calendar year

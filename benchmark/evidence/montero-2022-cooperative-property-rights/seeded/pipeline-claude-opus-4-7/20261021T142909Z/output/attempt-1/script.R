@@ -7,7 +7,7 @@ suppressPackageStartupMessages({
 
 set.seed(42)
 
-data_path <- "/Users/matthew/dev/Retally/.cache/datasets/montero_2022_cooperative_property_rights/ehpm_incomemodule_wreform.dta"
+data_path <- "<repo>/.cache/datasets/montero_2022_cooperative_property_rights/ehpm_incomemodule_wreform.dta"
 df <- read_dta(data_path)
 
 # Create real income measure (original from paper's Table 5)

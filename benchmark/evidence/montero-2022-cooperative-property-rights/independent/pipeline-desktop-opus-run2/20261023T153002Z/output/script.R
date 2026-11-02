@@ -5,7 +5,7 @@ suppressPackageStartupMessages({
 })
 set.seed(42)
 
-path <- "/Users/matthew/dev/Retally/.cache/datasets/montero_2022_cooperative_property_rights.script-free/ehpm_incomemodule_wreform.dta"
+path <- "<repo>/.cache/datasets/montero_2022_cooperative_property_rights.script-free/ehpm_incomemodule_wreform.dta"
 df <- as.data.frame(haven::zap_labels(haven::read_dta(path)))
 nms <- names(df)
 

@@ -1,5 +1,5 @@
 suppressPackageStartupMessages({library(haven); library(dplyr)})
-d <- read_dta("/Users/matthew/dev/Retally/benchmark/.cache/claude-code/montero-2022-cooperative-property-rights/seeded/2026-10-21-b/mount/montero_2022_cooperative_property_rights/ehpm_incomemodule_wreform.dta")
+d <- read_dta("<repo>/benchmark/.cache/claude-code/montero-2022-cooperative-property-rights/seeded/2026-10-21-b/mount/montero_2022_cooperative_property_rights/ehpm_incomemodule_wreform.dta")
 print(dim(d)); print(names(d))
 print(table(d$year, useNA="ifany"))
 print(summary(d[, c("hh_income_pc","norm_dist","Above500","sex","age","age2","num_members","Expropretario_ISTA","match_id")]))

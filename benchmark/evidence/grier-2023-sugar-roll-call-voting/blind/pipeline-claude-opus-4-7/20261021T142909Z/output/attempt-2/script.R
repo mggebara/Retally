@@ -8,7 +8,7 @@ suppressPackageStartupMessages({
   library(lmtest)
 })
 
-data_path <- "/Users/matthew/dev/Retally/.cache/datasets/grier_2023_sugar_roll_call_voting.script-free/SugarReplicate.dta"
+data_path <- "<repo>/.cache/datasets/grier_2023_sugar_roll_call_voting.script-free/SugarReplicate.dta"
 df <- read_dta(data_path)
 
 cat("Columns:", paste(names(df), collapse=", "), "\n")
@@ -56,8 +56,8 @@ if (!is.null(m_incumbent)) print(summary(m_incumbent))
 n_district_used <- if (!is.null(m_district)) m_district$n else NA
 n_incumbent_used <- if (!is.null(m_incumbent)) m_incumbent$n else NA
 
-path_iter1 <- "/Users/matthew/dev/Retally/.cache/datasets/grier_2023_sugar_roll_call_voting.script-free/SugarReplicate_iter1.dta"
-path_iter2 <- "/Users/matthew/dev/Retally/.cache/datasets/grier_2023_sugar_roll_call_voting.script-free/SugarReplicate_iter2.dta"
+path_iter1 <- "<repo>/.cache/datasets/grier_2023_sugar_roll_call_voting.script-free/SugarReplicate_iter1.dta"
+path_iter2 <- "<repo>/.cache/datasets/grier_2023_sugar_roll_call_voting.script-free/SugarReplicate_iter2.dta"
 
 df1 <- read_dta(path_iter1)
 df2 <- read_dta(path_iter2)

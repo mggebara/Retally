@@ -1,5 +1,5 @@
 library(haven); library(dplyr)
-d <- "/Users/matthew/dev/Retally/benchmark/.cache/claude-code/hanlon-2022-aircraft-ip-spillovers/independent/2026-11-01-a/mount/hanlon_2022_aircraft_ip_spillovers/3 replication files/data/dta/"
+d <- "<repo>/benchmark/.cache/claude-code/hanlon-2022-aircraft-ip-spillovers/independent/2026-11-01-a/mount/hanlon_2022_aircraft_ip_spillovers/3 replication files/data/dta/"
 a <- read_dta(paste0(d,"airframe_data.dta")); e <- read_dta(paste0(d,"engine_data.dta"))
 str(a); str(e)
 print(table(a$country, useNA="a")); print(table(a$type, useNA="a")); print(table(a$year))

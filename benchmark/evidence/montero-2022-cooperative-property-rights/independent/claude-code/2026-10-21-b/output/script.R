@@ -1,7 +1,7 @@
 ## Montero (2022) Table 5: RD at 500 ha on household earnings per capita (levels and within-property IQR)
 suppressPackageStartupMessages({library(haven); library(dplyr); library(fixest)})
 set.seed(42)
-d <- read_dta("/Users/matthew/dev/Retally/benchmark/.cache/claude-code/montero-2022-cooperative-property-rights/independent/2026-10-21-b/mount/montero_2022_cooperative_property_rights/ehpm_incomemodule_wreform.dta")
+d <- read_dta("<repo>/benchmark/.cache/claude-code/montero-2022-cooperative-property-rights/independent/2026-10-21-b/mount/montero_2022_cooperative_property_rights/ehpm_incomemodule_wreform.dta")
 d <- zap_labels(d)
 d$rv <- d$own_amt - 500                 # running variable: former owner's cumulative holdings minus 500 ha
 stopifnot(all((d$rv >= 0) == (d$Above500 == 1)))

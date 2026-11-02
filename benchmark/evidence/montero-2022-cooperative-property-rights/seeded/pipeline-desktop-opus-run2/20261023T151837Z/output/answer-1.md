@@ -5,7 +5,7 @@ suppressPackageStartupMessages({
 })
 set.seed(42)
 
-dir <- "/Users/matthew/dev/Retally/.cache/datasets/montero_2022_cooperative_property_rights"
+dir <- "<repo>/.cache/datasets/montero_2022_cooperative_property_rights"
 raw <- haven::read_dta(file.path(dir, "ehpm_incomemodule_wreform.dta"))
 raw <- haven::zap_labels(raw)
 dt <- as.data.table(raw)

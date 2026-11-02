@@ -3,7 +3,7 @@ library(sandwich)
 
 set.seed(42)
 
-base <- "/Users/matthew/dev/Retally/.cache/datasets/grier_2023_sugar_roll_call_voting"
+base <- "<repo>/.cache/datasets/grier_2023_sugar_roll_call_voting"
 
 prep <- function(file, defl = 1.103, base_year = c("2013", "2018")) {
   base_year <- match.arg(base_year)

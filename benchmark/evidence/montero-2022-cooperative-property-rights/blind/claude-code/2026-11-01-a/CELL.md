@@ -48,19 +48,19 @@ Agent notes: Two exploratory runs (variable listing; running-variable/sample che
 
 ## What the model was given
 
-- [`prompt/task.md`](prompt/task.md) — 16,467 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/blind/claude-code/20261102T043821Z/task.md`
-- [`prompt/render.json`](prompt/render.json) — 990 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/blind/claude-code/20261102T043821Z/render.json`
+- [`prompt/task.md`](prompt/task.md) — 16,147 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/blind/claude-code/20261102T043821Z/task.md`
+- [`prompt/render.json`](prompt/render.json) — 910 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/blind/claude-code/20261102T043821Z/render.json`
 - [`prompt/paper.txt.ref`](prompt/paper.txt.ref) — 280 bytes, from `benchmark/.cache/claude-code/montero-2022-cooperative-property-rights/blind/2026-11-01-a/paper.txt`
 
 ## What it produced
 
-- [`output/attempt-1/script.R`](output/attempt-1/script.R) — 529 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/blind/claude-code/20261102T043821Z/attempt-1/script.R`
+- [`output/attempt-1/script.R`](output/attempt-1/script.R) — 509 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/blind/claude-code/20261102T043821Z/attempt-1/script.R`
 - [`output/attempt-1/stderr.txt`](output/attempt-1/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/blind/claude-code/20261102T043821Z/attempt-1/stderr.txt`
 - [`output/attempt-1/stdout.txt`](output/attempt-1/stdout.txt) — 12,465 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/blind/claude-code/20261102T043821Z/attempt-1/stdout.txt`
-- [`output/attempt-2/script.R`](output/attempt-2/script.R) — 1,974 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/blind/claude-code/20261102T043821Z/attempt-2/script.R`
+- [`output/attempt-2/script.R`](output/attempt-2/script.R) — 1,954 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/blind/claude-code/20261102T043821Z/attempt-2/script.R`
 - [`output/attempt-2/stderr.txt`](output/attempt-2/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/blind/claude-code/20261102T043821Z/attempt-2/stderr.txt`
 - [`output/attempt-2/stdout.txt`](output/attempt-2/stdout.txt) — 5,148 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/blind/claude-code/20261102T043821Z/attempt-2/stdout.txt`
 - [`output/reproduction.json`](output/reproduction.json) — 1,898 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/blind/claude-code/20261102T043821Z/reproduction.json`
-- [`output/script.R`](output/script.R) — 3,318 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/blind/claude-code/20261102T043821Z/script.R`
+- [`output/script.R`](output/script.R) — 3,298 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/blind/claude-code/20261102T043821Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 63 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/blind/claude-code/20261102T043821Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 910 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/blind/claude-code/20261102T043821Z/stdout.txt`

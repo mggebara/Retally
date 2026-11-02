@@ -6,9 +6,9 @@ sandbox, and record what you did as files.  The files are what gets scored.
 
 - Benchmark cell: entry `grier-2023-sugar-roll-call-voting`, mode `independent`, run `2026-11-01-a`
 - Paper: Campaign Contributions and Roll-Call Voting in the U.S. House of Representatives: The Case of the Sugar Industry
-- Paper text (extracted from the PDF; tables may be garbled): `/Users/matthew/dev/Retally/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a/paper.txt`
-- Data (the ONLY data you get): `/Users/matthew/dev/Retally/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a/mount/grier_2023_sugar_roll_call_voting`
-- Output directory (the ONLY place you write): `/Users/matthew/dev/Retally/benchmark/reproductions/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a`
+- Paper text (extracted from the PDF; tables may be garbled): `<repo>/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a/paper.txt`
+- Data (the ONLY data you get): `<repo>/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a/mount/grier_2023_sugar_roll_call_voting`
+- Output directory (the ONLY place you write): `<repo>/benchmark/reproductions/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a`
 
 ## Mode rules
 
@@ -18,7 +18,7 @@ These apply in every mode:
   "How to run a script"; never run R on the host.
 - No network: do not download anything, do not look the paper or its
   replication package up online.
-- Use only the files under `/Users/matthew/dev/Retally/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a/mount/grier_2023_sugar_roll_call_voting` as data, and `/Users/matthew/dev/Retally/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a/paper.txt` as
+- Use only the files under `<repo>/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a/mount/grier_2023_sugar_roll_call_voting` as data, and `<repo>/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a/paper.txt` as
   the paper.
 - Do not read anything else in this repository or on this machine: not the
   catalog YAMLs under `benchmark/papers/`, not `.cache/datasets/`, not
@@ -31,7 +31,7 @@ These apply in every mode:
   made to that attempt's `feedback.txt`, one line per off-target claim in
   the form `<name>: reproduced <v>, claimed <c>`.  Produce it with:
 
-      cd /Users/matthew/dev/Retally && uv run python -m benchmark.reproducers.check_attempt --run-dir /Users/matthew/dev/Retally/benchmark/reproductions/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a --stdout <that attempt's stdout.txt>
+      cd <repo> && uv run python -m benchmark.reproducers.check_attempt --run-dir <repo>/benchmark/reproductions/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a --stdout <that attempt's stdout.txt>
 
   At most 3 `kind: "claim"` attempts.
 - At most 3 `kind: "error"` repairs (a run that crashed or
@@ -78,7 +78,7 @@ This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's d
 
 ## Dataset Information
 Name: grier_2023_sugar_roll_call_voting
-Local path: /Users/matthew/dev/Retally/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a/mount/grier_2023_sugar_roll_call_voting
+Local path: <repo>/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a/mount/grier_2023_sugar_roll_call_voting
 File format: csv
 Files in the dataset directory (paths relative to the local path above):
 - SugarReplicate.dta (134.4 KB) — 862 rows, 27 columns: poverty, district, vote, tenure, medincome, houselead, cong, cid, totalcont, id, name, pop, over65, nohsgrad, bach, medearn, unemp, rural, state, state_no, party, ncu, both, sugcont, agcom, aglead, dwn
@@ -94,7 +94,7 @@ Use snake_case metric names matching the claim descriptions.
 
 ## Code Requirements
 Write a complete, self-contained R script that runs under Rscript.
-The dataset is a directory tree at '/Users/matthew/dev/Retally/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a/mount/grier_2023_sugar_roll_call_voting' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+The dataset is a directory tree at '<repo>/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a/mount/grier_2023_sugar_roll_call_voting' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
 Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
 Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
 Set a deterministic seed with ``set.seed(42)`` for any randomness.
@@ -109,8 +109,8 @@ exactly this command (the data directory is mounted read-only at its own
 path; nothing else from the host is visible; `$SCRIPT` is the absolute path of
 the script you wrote):
 
-    SCRIPT=/Users/matthew/dev/Retally/benchmark/reproductions/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a/script.R   # or /Users/matthew/dev/Retally/benchmark/reproductions/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a/attempt-<n>/script.R
-    docker run --rm --label retally.run=claude-code-grier-2023-sugar-roll-call-voting-independent-2026-11-01-a --network none --memory 4g --cpus 1.0 --read-only --tmpfs /tmp:size=256m --cap-drop ALL --security-opt no-new-privileges -v "$SCRIPT":/workspace/script.R:ro -v /Users/matthew/dev/Retally/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a/mount/grier_2023_sugar_roll_call_voting:/Users/matthew/dev/Retally/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a/mount/grier_2023_sugar_roll_call_voting:ro --workdir /workspace retally-sandbox-r:latest Rscript /workspace/script.R > "$(dirname "$SCRIPT")/stdout.txt" 2> "$(dirname "$SCRIPT")/stderr.txt"; echo "exit code: $?"
+    SCRIPT=<repo>/benchmark/reproductions/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a/script.R   # or <repo>/benchmark/reproductions/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a/attempt-<n>/script.R
+    docker run --rm --label retally.run=claude-code-grier-2023-sugar-roll-call-voting-independent-2026-11-01-a --network none --memory 4g --cpus 1.0 --read-only --tmpfs /tmp:size=256m --cap-drop ALL --security-opt no-new-privileges -v "$SCRIPT":/workspace/script.R:ro -v <repo>/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a/mount/grier_2023_sugar_roll_call_voting:<repo>/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a/mount/grier_2023_sugar_roll_call_voting:ro --workdir /workspace retally-sandbox-r:latest Rscript /workspace/script.R > "$(dirname "$SCRIPT")/stdout.txt" 2> "$(dirname "$SCRIPT")/stderr.txt"; echo "exit code: $?"
 
 The sandbox time limit is 300 seconds (memory 4g, 1.0 CPU).  Wrap the
 command in a timeout of that many seconds: prefix it with
@@ -121,11 +121,11 @@ run as a crash (exit code 124).
 
 ## Output contract
 
-The output directory `/Users/matthew/dev/Retally/benchmark/reproductions/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a` already holds `render.json`; leave it
+The output directory `<repo>/benchmark/reproductions/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a` already holds `render.json`; leave it
 there.  Add:
 
 ```
-/Users/matthew/dev/Retally/benchmark/reproductions/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a/
+<repo>/benchmark/reproductions/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a/
   script.R  stdout.txt  stderr.txt      # the FINAL run: its RESULT: lines are what is scored
   attempt-1/  attempt-2/  ...           # every execution BEFORE the final one, in order
     script.R  stdout.txt  stderr.txt  feedback.txt   # feedback.txt when kind is not ""
@@ -193,4 +193,4 @@ End your final message with the final run's `RESULT:` lines and a short
 note.  Nothing needed for scoring may live only in the message: the files
 are the record.
 
-Do not edit any file in the repository; your only writes are under `/Users/matthew/dev/Retally/benchmark/reproductions/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a`.
+Do not edit any file in the repository; your only writes are under `<repo>/benchmark/reproductions/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a`.

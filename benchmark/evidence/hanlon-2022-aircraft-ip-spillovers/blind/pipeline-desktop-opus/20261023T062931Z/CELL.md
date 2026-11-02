@@ -45,14 +45,14 @@ Per-claim ground truth, tolerance rule and errors: [`scoring.json`](scoring.json
 
 ## What the model was given
 
-- [`prompt/prompt-1.txt`](prompt/prompt-1.txt) — 21,767 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/blind/pipeline/20261023T062931Z/prompt-1.txt`
+- [`prompt/prompt-1.txt`](prompt/prompt-1.txt) — 21,727 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/blind/pipeline/20261023T062931Z/prompt-1.txt`
 
 ## What it produced
 
-- [`output/script.R`](output/script.R) — 3,844 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/blind/pipeline/20261023T062931Z/script.R`
+- [`output/script.R`](output/script.R) — 3,824 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/blind/pipeline/20261023T062931Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/blind/pipeline/20261023T062931Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 3,017 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/blind/pipeline/20261023T062931Z/stdout.txt`
-- [`output/answer-1.md`](output/answer-1.md) — 3,854 bytes, from `benchmark/.cache/llm-oracle/desktop-opus/answers/096b7bf6f14c51b03ad9a7ad.json`
+- [`output/answer-1.md`](output/answer-1.md) — 3,834 bytes, from `benchmark/.cache/llm-oracle/desktop-opus/answers/096b7bf6f14c51b03ad9a7ad.json`
 
 ## Notes
 

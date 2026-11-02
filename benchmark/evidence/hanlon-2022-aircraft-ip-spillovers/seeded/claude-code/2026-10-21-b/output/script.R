@@ -1,7 +1,7 @@
 # Hanlon (2022) -- Table 1 (cols 1-4) and Table 4 (col 1), following 2-results-main.do
 suppressPackageStartupMessages({ library(haven); library(fixest) })
 set.seed(42)
-base <- "/Users/matthew/dev/Retally/benchmark/.cache/claude-code/hanlon-2022-aircraft-ip-spillovers/seeded/2026-10-21-b/mount/hanlon_2022_aircraft_ip_spillovers/3 replication files/data/dta"
+base <- "<repo>/benchmark/.cache/claude-code/hanlon-2022-aircraft-ip-spillovers/seeded/2026-10-21-b/mount/hanlon_2022_aircraft_ip_spillovers/3 replication files/data/dta"
 
 # mkspline pre1926 1926 post1926 = year
 spline <- function(d) {

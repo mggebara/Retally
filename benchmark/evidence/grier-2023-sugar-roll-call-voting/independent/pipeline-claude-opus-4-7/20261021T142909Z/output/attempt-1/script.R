@@ -10,7 +10,7 @@ suppressPackageStartupMessages({
 
 set.seed(42)
 
-data_path <- "/Users/matthew/dev/Retally/.cache/datasets/grier_2023_sugar_roll_call_voting.script-free/SugarReplicate.dta"
+data_path <- "<repo>/.cache/datasets/grier_2023_sugar_roll_call_voting.script-free/SugarReplicate.dta"
 df <- read_dta(data_path)
 
 # Inspect columns: sugcont (sugar contributions), vote, ncu (ACU?), tenure, etc.

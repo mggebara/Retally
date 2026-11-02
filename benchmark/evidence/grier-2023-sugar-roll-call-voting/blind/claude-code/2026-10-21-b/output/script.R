@@ -2,7 +2,7 @@
 # Independent, blind reproduction of Table 1 (cols 1-2) and Table 3.
 suppressMessages({library(haven); library(dplyr); library(sandwich); library(lmtest); library(survival)})
 set.seed(42)
-D <- "/Users/matthew/dev/Retally/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/blind/2026-10-21-b/mount/grier_2023_sugar_roll_call_voting"
+D <- "<repo>/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/blind/2026-10-21-b/mount/grier_2023_sugar_roll_call_voting"
 
 # The three .dta files differ only in `totalcont`, the author-aggregated sugar-industry
 # contributions for the three time windows (Read Me).  Identified from the data:

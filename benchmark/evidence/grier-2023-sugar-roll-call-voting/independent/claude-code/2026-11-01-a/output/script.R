@@ -6,7 +6,7 @@
 # only units whose vote switched between 2013 and 2018.  Robust (HC0-type) p-values printed.
 set.seed(42)
 suppressMessages({library(haven); library(dplyr); library(sandwich); library(lmtest)})
-D <- "/Users/matthew/dev/Retally/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a/mount/grier_2023_sugar_roll_call_voting"
+D <- "<repo>/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a/mount/grier_2023_sugar_roll_call_voting"
 
 # CPI-U annual averages (BLS): 2013 = 232.957, 2018 = 251.107. 2018 money expressed in 2013 dollars.
 cpi13 <- 232.957; cpi18 <- 251.107

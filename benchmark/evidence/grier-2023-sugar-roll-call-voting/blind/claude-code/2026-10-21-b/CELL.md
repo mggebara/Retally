@@ -52,19 +52,19 @@ Agent notes: Outcome = 1 for Aye, 0 otherwise (No, Not Voting, No Vote). Control
 
 ## What the model was given
 
-- [`prompt/task.md`](prompt/task.md) — 17,741 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261022T021417Z/task.md`
-- [`prompt/render.json`](prompt/render.json) — 1,143 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261022T021417Z/render.json`
+- [`prompt/task.md`](prompt/task.md) — 17,421 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261022T021417Z/task.md`
+- [`prompt/render.json`](prompt/render.json) — 1,063 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261022T021417Z/render.json`
 - [`prompt/paper.txt.ref`](prompt/paper.txt.ref) — 265 bytes, from `benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/blind/2026-10-21-b/paper.txt`
 
 ## What it produced
 
-- [`output/attempt-1/script.R`](output/attempt-1/script.R) — 1,204 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261022T021417Z/attempt-1/script.R`
+- [`output/attempt-1/script.R`](output/attempt-1/script.R) — 1,184 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261022T021417Z/attempt-1/script.R`
 - [`output/attempt-1/stderr.txt`](output/attempt-1/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261022T021417Z/attempt-1/stderr.txt`
 - [`output/attempt-1/stdout.txt`](output/attempt-1/stdout.txt) — 11,807 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261022T021417Z/attempt-1/stdout.txt`
-- [`output/attempt-2/script.R`](output/attempt-2/script.R) — 2,401 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261022T021417Z/attempt-2/script.R`
+- [`output/attempt-2/script.R`](output/attempt-2/script.R) — 2,381 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261022T021417Z/attempt-2/script.R`
 - [`output/attempt-2/stderr.txt`](output/attempt-2/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261022T021417Z/attempt-2/stderr.txt`
 - [`output/attempt-2/stdout.txt`](output/attempt-2/stdout.txt) — 21,948 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261022T021417Z/attempt-2/stdout.txt`
 - [`output/reproduction.json`](output/reproduction.json) — 2,250 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261022T021417Z/reproduction.json`
-- [`output/script.R`](output/script.R) — 4,696 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261022T021417Z/script.R`
+- [`output/script.R`](output/script.R) — 4,676 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261022T021417Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 1,106 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261022T021417Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 5,554 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261022T021417Z/stdout.txt`

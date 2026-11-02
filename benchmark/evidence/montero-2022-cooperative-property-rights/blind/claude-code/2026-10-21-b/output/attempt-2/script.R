@@ -1,5 +1,5 @@
 suppressMessages({library(haven); library(dplyr)})
-d <- read_dta("/Users/matthew/dev/Retally/benchmark/.cache/claude-code/montero-2022-cooperative-property-rights/blind/2026-10-21-b/mount/montero_2022_cooperative_property_rights/ehpm_incomemodule_wreform.dta")
+d <- read_dta("<repo>/benchmark/.cache/claude-code/montero-2022-cooperative-property-rights/blind/2026-10-21-b/mount/montero_2022_cooperative_property_rights/ehpm_incomemodule_wreform.dta")
 d <- zap_labels(d)
 cat("own_amt-500 vs norm_dist max diff:", max(abs(d$own_amt-500-d$norm_dist)), "\n")
 cat("Above500 vs own_amt>=500 mismatch:", sum(d$Above500 != (d$own_amt>=500)), "\n")

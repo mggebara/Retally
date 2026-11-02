@@ -5,7 +5,7 @@ library(fixest)
 library(survival)
 set.seed(42)
 
-base <- "/Users/matthew/dev/Retally/.cache/datasets/grier_2023_sugar_roll_call_voting.script-free"
+base <- "<repo>/.cache/datasets/grier_2023_sugar_roll_call_voting.script-free"
 
 covs_all <- c("sugcont", "ncu", "tenure", "poverty", "bach", "medincome", "over65", "agcom")
 

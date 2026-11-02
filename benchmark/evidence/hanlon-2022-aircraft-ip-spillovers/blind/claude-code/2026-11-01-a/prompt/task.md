@@ -6,9 +6,9 @@ sandbox, and record what you did as files.  The files are what gets scored.
 
 - Benchmark cell: entry `hanlon-2022-aircraft-ip-spillovers`, mode `blind`, run `2026-11-01-a`
 - Paper: Spillover Effects of Intellectual Property Protection in the Interwar Aircraft Industry
-- Paper text (extracted from the PDF; tables may be garbled): `/Users/matthew/dev/Retally/benchmark/.cache/claude-code/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-01-a/paper.txt`
-- Data (the ONLY data you get): `/Users/matthew/dev/Retally/benchmark/.cache/claude-code/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-01-a/mount/hanlon_2022_aircraft_ip_spillovers`
-- Output directory (the ONLY place you write): `/Users/matthew/dev/Retally/benchmark/reproductions/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-01-a`
+- Paper text (extracted from the PDF; tables may be garbled): `<repo>/benchmark/.cache/claude-code/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-01-a/paper.txt`
+- Data (the ONLY data you get): `<repo>/benchmark/.cache/claude-code/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-01-a/mount/hanlon_2022_aircraft_ip_spillovers`
+- Output directory (the ONLY place you write): `<repo>/benchmark/reproductions/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-01-a`
 
 ## Mode rules
 
@@ -18,7 +18,7 @@ These apply in every mode:
   "How to run a script"; never run R on the host.
 - No network: do not download anything, do not look the paper or its
   replication package up online.
-- Use only the files under `/Users/matthew/dev/Retally/benchmark/.cache/claude-code/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-01-a/mount/hanlon_2022_aircraft_ip_spillovers` as data, and `/Users/matthew/dev/Retally/benchmark/.cache/claude-code/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-01-a/paper.txt` as
+- Use only the files under `<repo>/benchmark/.cache/claude-code/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-01-a/mount/hanlon_2022_aircraft_ip_spillovers` as data, and `<repo>/benchmark/.cache/claude-code/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-01-a/paper.txt` as
   the paper.
 - Do not read anything else in this repository or on this machine: not the
   catalog YAMLs under `benchmark/papers/`, not `.cache/datasets/`, not
@@ -42,7 +42,7 @@ This reproduction is also BLIND: the paper's reported values for the quantities 
 - To check that every quantity got a value (this prints names only, never a
   value or a target):
 
-      cd /Users/matthew/dev/Retally && uv run python -m benchmark.reproducers.check_attempt --run-dir /Users/matthew/dev/Retally/benchmark/reproductions/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-01-a --stdout <a stdout.txt>
+      cd <repo> && uv run python -m benchmark.reproducers.check_attempt --run-dir <repo>/benchmark/reproductions/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-01-a --stdout <a stdout.txt>
 
 ## Quantities to Compute
 Compute each quantity below and print it under the given name.  The paper's reported values are deliberately not shown.
@@ -85,7 +85,7 @@ Compute each quantity below and print it under the given name.  The paper's repo
 
 ## Dataset Information
 Name: hanlon_2022_aircraft_ip_spillovers
-Local path: /Users/matthew/dev/Retally/benchmark/.cache/claude-code/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-01-a/mount/hanlon_2022_aircraft_ip_spillovers
+Local path: <repo>/benchmark/.cache/claude-code/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-01-a/mount/hanlon_2022_aircraft_ip_spillovers
 File format: csv
 Files in the dataset directory (paths relative to the local path above):
 - 3 replication files/data/dta/airframe_data.dta (102.3 KB) — 793 rows, 24 columns: year, country, maxspeed, wing_area, wingload, enginehp, no_engines, grossweight, count, engine_maker, ln_wingload, ln_maxspeed, twoplusengines, type, cruise, climb_ft_per_min, climb_to_10000, ceiling, range, endurance, powerload, ln_ceiling, ln_cruise, ln_powerload
@@ -178,7 +178,7 @@ Use snake_case metric names matching the claim descriptions.
 
 ## Code Requirements
 Write a complete, self-contained R script that runs under Rscript.
-The dataset is a directory tree at '/Users/matthew/dev/Retally/benchmark/.cache/claude-code/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-01-a/mount/hanlon_2022_aircraft_ip_spillovers' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+The dataset is a directory tree at '<repo>/benchmark/.cache/claude-code/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-01-a/mount/hanlon_2022_aircraft_ip_spillovers' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
 Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
 Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
 Set a deterministic seed with ``set.seed(42)`` for any randomness.
@@ -193,8 +193,8 @@ exactly this command (the data directory is mounted read-only at its own
 path; nothing else from the host is visible; `$SCRIPT` is the absolute path of
 the script you wrote):
 
-    SCRIPT=/Users/matthew/dev/Retally/benchmark/reproductions/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-01-a/script.R   # or /Users/matthew/dev/Retally/benchmark/reproductions/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-01-a/attempt-<n>/script.R
-    docker run --rm --label retally.run=claude-code-hanlon-2022-aircraft-ip-spillovers-blind-2026-11-01-a --network none --memory 4g --cpus 1.0 --read-only --tmpfs /tmp:size=256m --cap-drop ALL --security-opt no-new-privileges -v "$SCRIPT":/workspace/script.R:ro -v /Users/matthew/dev/Retally/benchmark/.cache/claude-code/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-01-a/mount/hanlon_2022_aircraft_ip_spillovers:/Users/matthew/dev/Retally/benchmark/.cache/claude-code/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-01-a/mount/hanlon_2022_aircraft_ip_spillovers:ro --workdir /workspace retally-sandbox-r:latest Rscript /workspace/script.R > "$(dirname "$SCRIPT")/stdout.txt" 2> "$(dirname "$SCRIPT")/stderr.txt"; echo "exit code: $?"
+    SCRIPT=<repo>/benchmark/reproductions/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-01-a/script.R   # or <repo>/benchmark/reproductions/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-01-a/attempt-<n>/script.R
+    docker run --rm --label retally.run=claude-code-hanlon-2022-aircraft-ip-spillovers-blind-2026-11-01-a --network none --memory 4g --cpus 1.0 --read-only --tmpfs /tmp:size=256m --cap-drop ALL --security-opt no-new-privileges -v "$SCRIPT":/workspace/script.R:ro -v <repo>/benchmark/.cache/claude-code/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-01-a/mount/hanlon_2022_aircraft_ip_spillovers:<repo>/benchmark/.cache/claude-code/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-01-a/mount/hanlon_2022_aircraft_ip_spillovers:ro --workdir /workspace retally-sandbox-r:latest Rscript /workspace/script.R > "$(dirname "$SCRIPT")/stdout.txt" 2> "$(dirname "$SCRIPT")/stderr.txt"; echo "exit code: $?"
 
 The sandbox time limit is 300 seconds (memory 4g, 1.0 CPU).  Wrap the
 command in a timeout of that many seconds: prefix it with
@@ -205,11 +205,11 @@ run as a crash (exit code 124).
 
 ## Output contract
 
-The output directory `/Users/matthew/dev/Retally/benchmark/reproductions/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-01-a` already holds `render.json`; leave it
+The output directory `<repo>/benchmark/reproductions/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-01-a` already holds `render.json`; leave it
 there.  Add:
 
 ```
-/Users/matthew/dev/Retally/benchmark/reproductions/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-01-a/
+<repo>/benchmark/reproductions/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-01-a/
   script.R  stdout.txt  stderr.txt      # the FINAL run: its RESULT: lines are what is scored
   attempt-1/  attempt-2/  ...           # every execution BEFORE the final one, in order
     script.R  stdout.txt  stderr.txt  feedback.txt   # feedback.txt when kind is not ""
@@ -277,4 +277,4 @@ End your final message with the final run's `RESULT:` lines and a short
 note.  Nothing needed for scoring may live only in the message: the files
 are the record.
 
-Do not edit any file in the repository; your only writes are under `/Users/matthew/dev/Retally/benchmark/reproductions/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-01-a`.
+Do not edit any file in the repository; your only writes are under `<repo>/benchmark/reproductions/hanlon-2022-aircraft-ip-spillovers/blind/2026-11-01-a`.

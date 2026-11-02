@@ -44,14 +44,14 @@ _None declared._
 
 ## What the model was given
 
-- [`prompt/prompt-1.txt`](prompt/prompt-1.txt) — 14,404 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/pipeline/20261023T150832Z/prompt-1.txt`
+- [`prompt/prompt-1.txt`](prompt/prompt-1.txt) — 14,364 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/pipeline/20261023T150832Z/prompt-1.txt`
 
 ## What it produced
 
-- [`output/script.R`](output/script.R) — 4,963 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/pipeline/20261023T150832Z/script.R`
+- [`output/script.R`](output/script.R) — 4,943 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/pipeline/20261023T150832Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 930 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/pipeline/20261023T150832Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 3,434 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/pipeline/20261023T150832Z/stdout.txt`
-- [`output/answer-1.md`](output/answer-1.md) — 4,964 bytes, from `benchmark/.cache/llm-oracle/desktop-opus-run2/answers/ee2281037d5ed13b780f2031.json`
+- [`output/answer-1.md`](output/answer-1.md) — 4,944 bytes, from `benchmark/.cache/llm-oracle/desktop-opus-run2/answers/ee2281037d5ed13b780f2031.json`
 
 ## Notes
 

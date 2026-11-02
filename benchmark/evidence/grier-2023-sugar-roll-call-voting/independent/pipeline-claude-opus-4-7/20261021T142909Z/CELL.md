@@ -44,32 +44,32 @@ _None declared._
 
 ## What the model was given
 
-- [`prompt/prompt-1.txt`](prompt/prompt-1.txt) — 12,343 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/pipeline/20261021T142909Z/prompt-1.txt`
-- [`prompt/prompt-2.txt`](prompt/prompt-2.txt) — 4,967 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/pipeline/20261021T142909Z/prompt-2.txt`
-- [`prompt/prompt-3.txt`](prompt/prompt-3.txt) — 4,330 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/pipeline/20261021T142909Z/prompt-3.txt`
-- [`prompt/prompt-4.txt`](prompt/prompt-4.txt) — 4,550 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/pipeline/20261021T142909Z/prompt-4.txt`
+- [`prompt/prompt-1.txt`](prompt/prompt-1.txt) — 12,303 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/pipeline/20261021T142909Z/prompt-1.txt`
+- [`prompt/prompt-2.txt`](prompt/prompt-2.txt) — 4,927 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/pipeline/20261021T142909Z/prompt-2.txt`
+- [`prompt/prompt-3.txt`](prompt/prompt-3.txt) — 4,290 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/pipeline/20261021T142909Z/prompt-3.txt`
+- [`prompt/prompt-4.txt`](prompt/prompt-4.txt) — 4,510 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/pipeline/20261021T142909Z/prompt-4.txt`
 
 ## What it produced
 
 - [`output/attempt-1/feedback.txt`](output/attempt-1/feedback.txt) — 158 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/pipeline/20261021T142909Z/attempt-1/feedback.txt`
-- [`output/attempt-1/script.R`](output/attempt-1/script.R) — 2,930 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/pipeline/20261021T142909Z/attempt-1/script.R`
+- [`output/attempt-1/script.R`](output/attempt-1/script.R) — 2,910 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/pipeline/20261021T142909Z/attempt-1/script.R`
 - [`output/attempt-1/stderr.txt`](output/attempt-1/stderr.txt) — 158 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/pipeline/20261021T142909Z/attempt-1/stderr.txt`
 - [`output/attempt-1/stdout.txt`](output/attempt-1/stdout.txt) — 0 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/pipeline/20261021T142909Z/attempt-1/stdout.txt`
 - [`output/attempt-2/feedback.txt`](output/attempt-2/feedback.txt) — 328 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/pipeline/20261021T142909Z/attempt-2/feedback.txt`
-- [`output/attempt-2/script.R`](output/attempt-2/script.R) — 2,123 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/pipeline/20261021T142909Z/attempt-2/script.R`
+- [`output/attempt-2/script.R`](output/attempt-2/script.R) — 2,103 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/pipeline/20261021T142909Z/attempt-2/script.R`
 - [`output/attempt-2/stderr.txt`](output/attempt-2/stderr.txt) — 328 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/pipeline/20261021T142909Z/attempt-2/stderr.txt`
 - [`output/attempt-2/stdout.txt`](output/attempt-2/stdout.txt) — 0 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/pipeline/20261021T142909Z/attempt-2/stdout.txt`
 - [`output/attempt-3/feedback.txt`](output/attempt-3/feedback.txt) — 283 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/pipeline/20261021T142909Z/attempt-3/feedback.txt`
-- [`output/attempt-3/script.R`](output/attempt-3/script.R) — 2,388 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/pipeline/20261021T142909Z/attempt-3/script.R`
+- [`output/attempt-3/script.R`](output/attempt-3/script.R) — 2,368 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/pipeline/20261021T142909Z/attempt-3/script.R`
 - [`output/attempt-3/stderr.txt`](output/attempt-3/stderr.txt) — 283 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/pipeline/20261021T142909Z/attempt-3/stderr.txt`
 - [`output/attempt-3/stdout.txt`](output/attempt-3/stdout.txt) — 0 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/pipeline/20261021T142909Z/attempt-3/stdout.txt`
-- [`output/script.R`](output/script.R) — 2,612 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/pipeline/20261021T142909Z/script.R`
+- [`output/script.R`](output/script.R) — 2,592 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/pipeline/20261021T142909Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 283 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/pipeline/20261021T142909Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 0 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/pipeline/20261021T142909Z/stdout.txt`
-- [`output/answer-1.md`](output/answer-1.md) — 2,930 bytes, from `benchmark/.cache/llm/0ccc0a70bc9f3eefeaacf92d.json`
-- [`output/answer-2.md`](output/answer-2.md) — 2,123 bytes, from `benchmark/.cache/llm/30368f8e76eba1224e31a9e8.json`
-- [`output/answer-3.md`](output/answer-3.md) — 2,388 bytes, from `benchmark/.cache/llm/86fadb181c1d9934f6ee55e2.json`
-- [`output/answer-4.md`](output/answer-4.md) — 2,612 bytes, from `benchmark/.cache/llm/eadb1e5d4b5a7d8bcb0b424c.json`
+- [`output/answer-1.md`](output/answer-1.md) — 2,910 bytes, from `benchmark/.cache/llm/0ccc0a70bc9f3eefeaacf92d.json`
+- [`output/answer-2.md`](output/answer-2.md) — 2,103 bytes, from `benchmark/.cache/llm/30368f8e76eba1224e31a9e8.json`
+- [`output/answer-3.md`](output/answer-3.md) — 2,368 bytes, from `benchmark/.cache/llm/86fadb181c1d9934f6ee55e2.json`
+- [`output/answer-4.md`](output/answer-4.md) — 2,592 bytes, from `benchmark/.cache/llm/eadb1e5d4b5a7d8bcb0b424c.json`
 
 ## Notes
 

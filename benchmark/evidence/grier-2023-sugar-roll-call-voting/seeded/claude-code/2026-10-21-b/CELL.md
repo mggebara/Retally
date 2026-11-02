@@ -46,13 +46,13 @@ Agent notes: Followed APSR Replication Codes.do: yesvote = (vote=='Aye'), rsugco
 
 ## What the model was given
 
-- [`prompt/task.md`](prompt/task.md) — 21,487 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/claude-code/20261022T021417Z/task.md`
-- [`prompt/render.json`](prompt/render.json) — 1,024 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/claude-code/20261022T021417Z/render.json`
+- [`prompt/task.md`](prompt/task.md) — 21,167 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/claude-code/20261022T021417Z/task.md`
+- [`prompt/render.json`](prompt/render.json) — 964 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/claude-code/20261022T021417Z/render.json`
 - [`prompt/paper.txt.ref`](prompt/paper.txt.ref) — 260 bytes, from `benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/seeded/2026-10-21-b/paper.txt`
 
 ## What it produced
 
 - [`output/reproduction.json`](output/reproduction.json) — 1,643 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/claude-code/20261022T021417Z/reproduction.json`
-- [`output/script.R`](output/script.R) — 1,837 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/claude-code/20261022T021417Z/script.R`
+- [`output/script.R`](output/script.R) — 1,817 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/claude-code/20261022T021417Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 866 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/claude-code/20261022T021417Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 5,527 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/claude-code/20261022T021417Z/stdout.txt`

@@ -1,5 +1,5 @@
 suppressMessages({library(haven); library(dplyr)})
-D <- "/Users/matthew/dev/Retally/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a/mount/grier_2023_sugar_roll_call_voting"
+D <- "<repo>/benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/independent/2026-11-01-a/mount/grier_2023_sugar_roll_call_voting"
 d <- read_dta(file.path(D,"SugarReplicate.dta")) %>% mutate(aye = as.integer(vote=="Aye"))
 cat("dup id-cong (all rows):", sum(duplicated(d[,c("id","cong")])), "\n")
 print(d %>% group_by(id,cong) %>% filter(n()>1) %>% select(id,cong,name,cid,vote,both,tenure) %>% as.data.frame())

@@ -43,14 +43,14 @@ _None declared._
 
 ## What the model was given
 
-- [`prompt/prompt-1.txt`](prompt/prompt-1.txt) — 12,223 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/blind/pipeline/20261021T142909Z/prompt-1.txt`
+- [`prompt/prompt-1.txt`](prompt/prompt-1.txt) — 12,183 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/blind/pipeline/20261021T142909Z/prompt-1.txt`
 
 ## What it produced
 
-- [`output/script.R`](output/script.R) — 6,908 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/blind/pipeline/20261021T142909Z/script.R`
+- [`output/script.R`](output/script.R) — 6,888 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/blind/pipeline/20261021T142909Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 146 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/blind/pipeline/20261021T142909Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 9,105 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/blind/pipeline/20261021T142909Z/stdout.txt`
-- [`output/answer-1.md`](output/answer-1.md) — 6,917 bytes, from `benchmark/.cache/llm/8e48767d56d120214594a0b6.json`
+- [`output/answer-1.md`](output/answer-1.md) — 6,897 bytes, from `benchmark/.cache/llm/8e48767d56d120214594a0b6.json`
 
 ## Notes
 

@@ -44,32 +44,32 @@ Per-claim ground truth, tolerance rule and errors: [`scoring.json`](scoring.json
 
 ## What the model was given
 
-- [`prompt/prompt-1.txt`](prompt/prompt-1.txt) — 12,970 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/pipeline/20261022T044149Z/prompt-1.txt`
-- [`prompt/prompt-2.txt`](prompt/prompt-2.txt) — 9,541 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/pipeline/20261022T044149Z/prompt-2.txt`
-- [`prompt/prompt-3.txt`](prompt/prompt-3.txt) — 11,059 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/pipeline/20261022T044149Z/prompt-3.txt`
-- [`prompt/prompt-4.txt`](prompt/prompt-4.txt) — 18,662 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/pipeline/20261022T044149Z/prompt-4.txt`
+- [`prompt/prompt-1.txt`](prompt/prompt-1.txt) — 12,930 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/pipeline/20261022T044149Z/prompt-1.txt`
+- [`prompt/prompt-2.txt`](prompt/prompt-2.txt) — 9,501 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/pipeline/20261022T044149Z/prompt-2.txt`
+- [`prompt/prompt-3.txt`](prompt/prompt-3.txt) — 11,019 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/pipeline/20261022T044149Z/prompt-3.txt`
+- [`prompt/prompt-4.txt`](prompt/prompt-4.txt) — 18,622 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/pipeline/20261022T044149Z/prompt-4.txt`
 
 ## What it produced
 
 - [`output/attempt-1/feedback.txt`](output/attempt-1/feedback.txt) — 1,658 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/pipeline/20261022T044149Z/attempt-1/feedback.txt`
-- [`output/attempt-1/script.R`](output/attempt-1/script.R) — 5,997 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/pipeline/20261022T044149Z/attempt-1/script.R`
+- [`output/attempt-1/script.R`](output/attempt-1/script.R) — 5,977 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/pipeline/20261022T044149Z/attempt-1/script.R`
 - [`output/attempt-1/stderr.txt`](output/attempt-1/stderr.txt) — 1,658 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/pipeline/20261022T044149Z/attempt-1/stderr.txt`
 - [`output/attempt-1/stdout.txt`](output/attempt-1/stdout.txt) — 0 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/pipeline/20261022T044149Z/attempt-1/stdout.txt`
 - [`output/attempt-2/feedback.txt`](output/attempt-2/feedback.txt) — 3,064 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/pipeline/20261022T044149Z/attempt-2/feedback.txt`
-- [`output/attempt-2/script.R`](output/attempt-2/script.R) — 6,109 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/pipeline/20261022T044149Z/attempt-2/script.R`
+- [`output/attempt-2/script.R`](output/attempt-2/script.R) — 6,089 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/pipeline/20261022T044149Z/attempt-2/script.R`
 - [`output/attempt-2/stderr.txt`](output/attempt-2/stderr.txt) — 3,064 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/pipeline/20261022T044149Z/attempt-2/stderr.txt`
 - [`output/attempt-2/stdout.txt`](output/attempt-2/stdout.txt) — 0 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/pipeline/20261022T044149Z/attempt-2/stdout.txt`
 - [`output/attempt-3/feedback.txt`](output/attempt-3/feedback.txt) — 738 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/pipeline/20261022T044149Z/attempt-3/feedback.txt`
-- [`output/attempt-3/script.R`](output/attempt-3/script.R) — 6,533 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/pipeline/20261022T044149Z/attempt-3/script.R`
+- [`output/attempt-3/script.R`](output/attempt-3/script.R) — 6,513 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/pipeline/20261022T044149Z/attempt-3/script.R`
 - [`output/attempt-3/stderr.txt`](output/attempt-3/stderr.txt) — 2,209 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/pipeline/20261022T044149Z/attempt-3/stderr.txt`
 - [`output/attempt-3/stdout.txt`](output/attempt-3/stdout.txt) — 379 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/pipeline/20261022T044149Z/attempt-3/stdout.txt`
-- [`output/script.R`](output/script.R) — 5,730 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/pipeline/20261022T044149Z/script.R`
+- [`output/script.R`](output/script.R) — 5,710 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/pipeline/20261022T044149Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 586 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/pipeline/20261022T044149Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 576 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/pipeline/20261022T044149Z/stdout.txt`
-- [`output/answer-1.md`](output/answer-1.md) — 5,997 bytes, from `benchmark/.cache/llm/87ad7100caf4879b3744a411.json`
-- [`output/answer-2.md`](output/answer-2.md) — 6,109 bytes, from `benchmark/.cache/llm/eb048c39e62720ef9434c1dc.json`
-- [`output/answer-3.md`](output/answer-3.md) — 6,533 bytes, from `benchmark/.cache/llm/9d4c97ea36d33b62131bf8a7.json`
-- [`output/answer-4.md`](output/answer-4.md) — 5,730 bytes, from `benchmark/.cache/llm/d22bbf66003a6f3a060813dc.json`
+- [`output/answer-1.md`](output/answer-1.md) — 5,977 bytes, from `benchmark/.cache/llm/87ad7100caf4879b3744a411.json`
+- [`output/answer-2.md`](output/answer-2.md) — 6,089 bytes, from `benchmark/.cache/llm/eb048c39e62720ef9434c1dc.json`
+- [`output/answer-3.md`](output/answer-3.md) — 6,513 bytes, from `benchmark/.cache/llm/9d4c97ea36d33b62131bf8a7.json`
+- [`output/answer-4.md`](output/answer-4.md) — 5,710 bytes, from `benchmark/.cache/llm/d22bbf66003a6f3a060813dc.json`
 
 ## Notes
 

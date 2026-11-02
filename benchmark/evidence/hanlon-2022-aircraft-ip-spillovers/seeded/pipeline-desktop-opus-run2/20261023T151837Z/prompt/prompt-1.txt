@@ -66,7 +66,7 @@ Methodology Summary: - **Identification / policy experiment:** Uses Section 10 o
 
 ## Dataset Information
 Name: hanlon-2022-aircraft-ip-spillovers
-Local path: /Users/matthew/dev/Retally/.cache/datasets/hanlon_2022_aircraft_ip_spillovers
+Local path: <repo>/.cache/datasets/hanlon_2022_aircraft_ip_spillovers
 File format: csv
 Files in the dataset directory (paths relative to the local path above):
 - 3 replication files/data/dta/airframe_data.dta (102.3 KB) — 793 rows, 24 columns: year, country, maxspeed, wing_area, wingload, grossweight, enginehp, no_engines, count, engine_maker, ln_wingload, ln_maxspeed, powerload, ln_powerload, twoplusengines, type, cruise, climb_ft_per_min, climb_to_10000, ceiling, range, endurance, ln_ceiling, ln_cruise
@@ -159,7 +159,7 @@ Use snake_case metric names matching the claim descriptions.
 
 ## Code Requirements
 Write a complete, self-contained R script that runs under Rscript.
-The dataset is a directory tree at '/Users/matthew/dev/Retally/.cache/datasets/hanlon_2022_aircraft_ip_spillovers' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+The dataset is a directory tree at '<repo>/.cache/datasets/hanlon_2022_aircraft_ip_spillovers' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
 Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
 Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
 Set a deterministic seed with ``set.seed(42)`` for any randomness.

@@ -44,14 +44,14 @@ _None declared._
 
 ## What the model was given
 
-- [`prompt/prompt-1.txt`](prompt/prompt-1.txt) — 128,793 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/seeded/pipeline/20261023T063725Z/prompt-1.txt`
+- [`prompt/prompt-1.txt`](prompt/prompt-1.txt) — 128,753 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/seeded/pipeline/20261023T063725Z/prompt-1.txt`
 
 ## What it produced
 
-- [`output/script.R`](output/script.R) — 4,215 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/seeded/pipeline/20261023T063725Z/script.R`
+- [`output/script.R`](output/script.R) — 4,195 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/seeded/pipeline/20261023T063725Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/seeded/pipeline/20261023T063725Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 1,341 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/seeded/pipeline/20261023T063725Z/stdout.txt`
-- [`output/answer-1.md`](output/answer-1.md) — 4,216 bytes, from `benchmark/.cache/llm-oracle/desktop-opus/answers/135c6316838e3227705ffe03.json`
+- [`output/answer-1.md`](output/answer-1.md) — 4,196 bytes, from `benchmark/.cache/llm-oracle/desktop-opus/answers/135c6316838e3227705ffe03.json`
 
 ## Notes
 
