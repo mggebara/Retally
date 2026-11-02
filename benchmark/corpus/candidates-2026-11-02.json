@@ -1,0 +1,579 @@
+{
+ "generated": "2026-11-02",
+ "source": "I4R First Meta Database (benchmark/corpus/i4r_first_meta_database.csv.gz)",
+ "verdict_mapping": {
+  "reproducible": "perfect_reproduction=Yes",
+  "minor discrepancies": "perfect_reproduction=No and computational_reproduction=1",
+  "not reproducible": "computational_reproduction=0"
+ },
+ "user_agent": "Retally-curation/0.1 (+https://github.com/mggebara/Retally)",
+ "widening_rules": {
+  "1": "package size up to 1 GB (note files over 500 MB)",
+  "2": "archives .zip/.tar.gz/.tgz/.tar only",
+  "3": "no I4R DP needed if >=8 paired o_coeff_dbl/r_coeff_dbl rows",
+  "4": "open text via author homepages, university repositories, WP series (tables spot-checked)",
+  "5": "any meta-database journal 2021-2024",
+  "6": "Python originals acceptable with plain-file data"
+ },
+ "text_check": "Full PDF fetched; every paired o_coeff_dbl (and o_std_err_dbl) searched in the extracted text at the DB's precision; contexts read for ambiguous hits",
+ "papers": [
+  {
+   "rank": 1,
+   "id": "hollyer-2022-parties-as-disciplinarians",
+   "i4r_team": 62,
+   "tag": "T62",
+   "db_row_index": "2575-2750",
+   "title": "Parties as Disciplinarians: Charisma and Commitment Problems in Programmatic Campaigning",
+   "authors": [
+    "James R. Hollyer",
+    "Marko Klašnja",
+    "Rocío Titiunik"
+   ],
+   "journal": "American Journal of Political Science",
+   "year": 2022,
+   "doi": "10.1111/ajps.12638",
+   "widening_rules": [
+    4
+   ],
+   "paper_pdf_url": "https://titiunik.github.io/files/publications/HollyerKlasnjaTitiunik2022-AJPS.pdf",
+   "paper_pdf_check": "200 application/pdf, %PDF magic, 18 pp.; published version (AJPS 66(1): 75-92) on co-author Titiunik's homepage",
+   "supplement_pdf_url": "https://titiunik.github.io/files/publications/HollyerKlasnjaTitiunik2022-AJPS-SA.pdf",
+   "text_match": "Published text: 109/158 paired o_coeff_dbl values found (Table 1 rows all found); supplementary appendix (22 Feb 2021): 134/158 coeff+SE found, incl. appendix Table D1 e.g. 0.38 (0.07), 0.47 (0.12), 1.42 (0.22). Table 2 rows carry no SE in the DB.",
+   "package_source_url": "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/AWSQTW",
+   "package_api_check": {
+    "status": 200,
+    "size_mb": 1.7,
+    "bytes": 1690882,
+    "files": 12,
+    "restricted": 0,
+    "versions": [
+     "1.0 2021-05-05",
+     "1.1 2022-04-27"
+    ],
+    "file_fetch": "206 on /api/access/datafile/4575838",
+    "largest_file": "brazil-validation-data.tab 0.8 MB"
+   },
+   "software": "R + Stata",
+   "data_formats": [
+    ".dta"
+   ],
+   "i4r_verdict": "reproducible (perfect_reproduction=Yes, computational_reproduction=1)",
+   "i4r_report_ref": "I4R DP 54",
+   "i4r_rows": {
+    "total": 176,
+    "r_coeff": 158,
+    "distinct_original_values": 76,
+    "main_tables": "Tables 1-2, appendix Table D1"
+   },
+   "method_summary": "Brazilian mayoral RDD (DB: RDD) plus cross-national multivariate regression (DB: other)",
+   "reasons": [
+    "Smallest package in the pass (1.7 MB, 4 .dta, R and Stata scripts)",
+    "Published version open on a co-author homepage, supplementary appendix too",
+    "158 paired rows with 76 distinct original values; DP 54"
+   ],
+   "risks": [
+    "Most I4R rows sit in the supplementary appendix (Table D1)",
+    "Two Dataverse versions (1.0, 1.1): pin the one current at the I4R games",
+    "Package ships Figure1.R/Figure2.R and Table-E2.do; check what the strip rule leaves"
+   ]
+  },
+  {
+   "rank": 2,
+   "id": "douenne-2022-yellow-vests-carbon-tax",
+   "i4r_team": 110,
+   "tag": "T110",
+   "db_row_index": "6627-6692",
+   "title": "Yellow Vests, Pessimistic Beliefs, and Carbon Tax Aversion",
+   "authors": [
+    "Thomas Douenne",
+    "Adrien Fabre"
+   ],
+   "journal": "American Economic Journal: Economic Policy",
+   "year": 2022,
+   "doi": "10.1257/pol.20200092",
+   "widening_rules": [
+    4,
+    5,
+    6
+   ],
+   "paper_pdf_url": "https://pure.uva.nl/ws/files/131576690/pol.20200092.pdf",
+   "paper_pdf_check": "200 application/pdf, %PDF magic, 32 pp.; UvA-DARE cover sheet 'Final published version' + AEJ:EP 14(1): 81-110 typeset pages (OpenAlex mislabels it submittedVersion)",
+   "text_match": "46/46 paired o_coeff_dbl and o_std_err_dbl found (Table 4), e.g. 0.269 (0.058), 0.246 (0.064), -0.151 (0.069)",
+   "package_source_url": "https://github.com/thomasdouenne/yellow_vests_aej_ep",
+   "package_pin": "commit 0faf9e7121ba1f67b1f5b327ed55efcc1665daec; direct URL https://codeload.github.com/thomasdouenne/yellow_vests_aej_ep/zip/0faf9e7121ba1f67b1f5b327ed55efcc1665daec",
+   "package_api_check": {
+    "status": 200,
+    "size_mb": 68.8,
+    "files": 106,
+    "license": "AGPL-3.0",
+    "created": "2020-12-02",
+    "last_push": "2021-05-11",
+    "file_fetch": "200 application/zip from codeload (Range ignored; body discarded)",
+    "file_types": {
+     ".py": 19,
+     ".R": 4,
+     ".RData": 2,
+     ".csv": 13,
+     ".tex": 15,
+     ".png": 41,
+     ".xls": 1,
+     ".xlsx": 1,
+     ".qsf": 1
+    },
+    "largest_file": "code/correspondance-code-insee-code-postal.csv 27.4 MB",
+    "note": "Official AEA package is openICPSR 128143 (2022-01-28, login required); the GitHub repo is the authors' own working repository, not the deposit"
+   },
+   "software": "Python + R (original); reproduction target R",
+   "data_formats": [
+    ".csv",
+    ".RData"
+   ],
+   "i4r_verdict": "not reproducible (perfect_reproduction=No, computational_reproduction=0)",
+   "i4r_report_ref": "I4R DP 58 (comment)",
+   "i4r_rows": {
+    "total": 66,
+    "r_coeff": 46,
+    "distinct_original_values": 7,
+    "main_tables": "Table 4"
+   },
+   "method_summary": "French household survey; effect of believing one wins from the reform on acceptance, IV / discontinuity designs (DB flags: RDD)",
+   "reasons": [
+    "First AEJ: Economic Policy paper and the only 'not reproducible' verdict in the pass",
+    "Published text open (UvA Pure /ws/files/); every paired row matches",
+    "Plain .csv data; R is part of the original code"
+   ],
+   "risks": [
+    "Package is a GitHub repo, not an archived deposit: the downloader's direct-URL path must take the codeload zip; pin the commit",
+    "Repo last pushed 2021-05-11, before the openICPSR deposit; it may differ from what I4R ran (DP 58: cleaning code fails or differs)",
+    "Mixed Python/R pipeline: the cleaning is Python",
+    "Only 7 distinct original values among 46 rows (all Table 4)",
+    "Repo carries generated .tex tables and 41 .png figures (strip rule)"
+   ]
+  },
+  {
+   "rank": 3,
+   "id": "dancygier-2022-hate-crimes-gender-imbalances",
+   "i4r_team": 34,
+   "tag": "T34",
+   "db_row_index": "1509-1546",
+   "title": "Hate Crimes and Gender Imbalances: Fears over Mate Competition and Violence against Refugees",
+   "authors": [
+    "Rafaela Dancygier",
+    "Naoki Egami",
+    "Amaney Jamal",
+    "Ramona Rischke"
+   ],
+   "journal": "American Journal of Political Science",
+   "year": 2022,
+   "doi": "10.1111/ajps.12595",
+   "widening_rules": [
+    4
+   ],
+   "paper_pdf_url": "https://naokiegami.com/paper/hatecrime.pdf",
+   "paper_pdf_check": "200 application/pdf, %PDF magic, 15 pp.; published OA version (AJPS 66(2): 501-515, CC BY-NC-ND) on co-author Egami's homepage",
+   "supplement_pdf_url": "https://naokiegami.com/paper/hatecrime_SM.pdf",
+   "text_match": "Published Table 1 col (6) 0.155 (0.019) matches; the other I4R rows are printed in the open online appendix: 19/21 coeff+SE found (Figure 4 specification table 0.173/0.192/0.204/0.027; Tables C1-C5 e.g. 1.634 (0.902), 0.846 (0.319)). Two rows (0.957) not found.",
+   "package_source_url": "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/QXJDJ5",
+   "package_api_check": {
+    "status": 200,
+    "size_mb": 95.1,
+    "bytes": 95123258,
+    "files": 54,
+    "restricted": 0,
+    "versions": [
+     "1.0 2020-12-09",
+     "1.1 2022-11-22"
+    ],
+    "file_fetch": "206 on /api/access/datafile/4200467",
+    "largest_file": "pop_gemeinde_2008_2018.tab 46.7 MB",
+    "file_types": {
+     ".dta": 21,
+     ".R": 9,
+     ".do": 1,
+     ".tex": 15,
+     ".pdf": 6,
+     ".rdata": 1,
+     ".txt": 1
+    }
+   },
+   "software": "R (+ one Stata data-prep do-file)",
+   "data_formats": [
+    ".dta",
+    ".rdata"
+   ],
+   "i4r_verdict": "reproducible (perfect_reproduction=Yes, computational_reproduction=1)",
+   "i4r_report_ref": "none in DP series",
+   "i4r_rows": {
+    "total": 38,
+    "r_coeff": 21,
+    "distinct_original_values": 13,
+    "main_tables": "Table 1, appendix Tables C1-C5"
+   },
+   "method_summary": "German online survey (OLS) plus municipality panel of anti-refugee hate crimes (DB flags: online survey, DiD)",
+   "reasons": [
+    "R original, published OA text on a co-author homepage",
+    "Reproducible verdict; tables printed in text and open appendix"
+   ],
+   "risks": [
+    "Package ships 15 generated .tex tables (table1.tex, table_C*.tex) and number_in_texts.R: strip rule must withhold them",
+    "Most paired rows are appendix C tables",
+    "Two Dataverse versions: pin 1.0 unless 1.1 is metadata-only"
+   ]
+  },
+  {
+   "rank": 4,
+   "id": "mokyr-2022-wheels-of-change",
+   "i4r_team": 100,
+   "tag": "T100",
+   "db_row_index": "5895-5911",
+   "title": "The Wheels of Change: Technology Adoption, Millwrights and the Persistence in Britain's Industrialisation",
+   "authors": [
+    "Joel Mokyr",
+    "Assaf Sarid",
+    "Karine van der Beek"
+   ],
+   "journal": "The Economic Journal",
+   "year": 2022,
+   "doi": "10.1093/ej/ueab102",
+   "widening_rules": [
+    4
+   ],
+   "paper_pdf_url": "https://bpb-us-e1.wpmucdn.com/sites.northwestern.edu/dist/3/1222/files/2024/02/The-Wheels-of-Change-2022-2d19383637e6a5b4.pdf",
+   "paper_pdf_check": "200 application/pdf, %PDF magic, 33 pp.; published version (EJ typeset, doi 10.1093/ej/ueab102) on Mokyr's Northwestern site",
+   "text_match": "Published tables print 2 decimals; I4R records 3: Table 2 col (5) 0.12 (0.03) vs 0.120 (0.028); Table 3 col (5) 0.12 (0.03) vs 0.117 (0.028); col (6) 0.16 (0.04) vs 0.159 (0.037). All three agree by rounding.",
+   "package_source_url": "https://zenodo.org/records/5731589",
+   "package_api_check": {
+    "status": 200,
+    "size_mb": 7.8,
+    "bytes": 7751812,
+    "files": 3,
+    "access": "open",
+    "license": "cc-by-4.0",
+    "published": "2021-11-27",
+    "resource_type": "publication/article",
+    "file_fetch": "206 on Zenodo file link",
+    "names": [
+     "Nov1-replication package.zip",
+     "Nov-1-replication-appendix.zip",
+     "Nov-1-paper.zip"
+    ],
+    "zip_listing": "replication_data.dta/.csv, main.do, Tables.do, Figures.do, Table_replication.log/.aux, README docx/pdf (Zenodo preview)"
+   },
+   "software": "Stata",
+   "data_formats": [
+    ".dta",
+    ".csv"
+   ],
+   "i4r_verdict": "reproducible (perfect_reproduction=Yes, computational_reproduction=1)",
+   "i4r_report_ref": "none in DP series",
+   "i4r_rows": {
+    "total": 17,
+    "r_coeff": 12,
+    "distinct_original_values": 3,
+    "main_tables": "Tables 2-3"
+   },
+   "method_summary": "English district cross-section: OLS and IV (river suitability x wheat) of 18th-century wright apprentices on Domesday mills (DB flags: DiD, IV)",
+   "reasons": [
+    "Small Stata package, published text open",
+    "Reproducible verdict; economic-history IV"
+   ],
+   "risks": [
+    "Only 3 distinct original estimates; the curator pins more from the printed Tables 2-3",
+    "Printed precision is 2 decimals: pin as printed",
+    "Package includes Nov-1-paper.zip (the paper) and Table_replication.log: strip rule must withhold them"
+   ]
+  },
+  {
+   "rank": 5,
+   "id": "labandeira-2022-electricity-pricing-reform",
+   "i4r_team": 49,
+   "tag": "T49",
+   "db_row_index": "2226-2248",
+   "title": "Major Reforms in Electricity Pricing: Evidence from a Quasi-Experiment",
+   "authors": [
+    "Xavier Labandeira",
+    "José M. Labeaga",
+    "Jordi J. Teixidó"
+   ],
+   "journal": "The Economic Journal",
+   "year": 2022,
+   "doi": "10.1093/ej/ueab076",
+   "widening_rules": [
+    1,
+    4
+   ],
+   "carried_over": "2026-11-01 pick #7, not yet curated; open text upgraded from the 2018 IREA WP to the accepted manuscript",
+   "paper_pdf_url": "https://diposit.ub.edu/bitstreams/6883bfcc-fd5d-466e-adb7-52565ba562bd/download",
+   "paper_pdf_check": "200 application/pdf, %PDF magic, 36 pp.; accepted manuscript dated 5 Aug 2021 (Diposit UB 2445/185932, 'Versió acceptada'); redirects to /server/api/core/bitstreams/.../content",
+   "text_match": "21/22 paired coeff+SE found in Table 2, e.g. -0.154 (0.028), -0.123 (0.054), -0.098 (0.028). The 22nd: col (8) prints -0.089 (0.053); the DB records -0.89 (entry error, SE matches).",
+   "package_source_url": "https://zenodo.org/records/5423782",
+   "package_api_check": {
+    "status": 200,
+    "size_mb": 558.1,
+    "bytes": 558082125,
+    "files": 1,
+    "access": "open",
+    "license": "cc-by-4.0",
+    "published": "2021-09-03",
+    "file_fetch": "206 on Zenodo file link",
+    "largest_file": "3 Replication package.zip 558.1 MB (over 500 MB)",
+    "zip_listing": "Readme.pdf, data_to_run_DOFILE3.dta/.csv, 3 do-files, 38 raw INE .txt (Zenodo preview)"
+   },
+   "software": "Stata",
+   "data_formats": [
+    ".dta",
+    ".csv",
+    ".txt"
+   ],
+   "i4r_verdict": "minor discrepancies (perfect_reproduction=No, computational_reproduction=1)",
+   "i4r_report_ref": "none in DP series",
+   "i4r_rows": {
+    "total": 23,
+    "r_coeff": 22,
+    "distinct_original_values": 5,
+    "main_tables": "Table 2"
+   },
+   "method_summary": "Spanish household budget survey; DiD + IV on the 2014 electricity pricing reform",
+   "reasons": [
+    "Accepted-manuscript text now open; Table 2 matches",
+    "Minor-discrepancies verdict"
+   ],
+   "risks": [
+    "Single 558 MB zip (slow sandbox mount)",
+    "All I4R rows from Table 2",
+    "DB row for col (8) has a dropped zero (-0.89 for -0.089)"
+   ]
+  },
+  {
+   "rank": 6,
+   "id": "hanushek-2022-patience-risk-human-capital",
+   "i4r_team": 63,
+   "tag": "T63",
+   "db_row_index": "2751-2845",
+   "title": "Patience, Risk-Taking, and Human Capital Investment Across Countries",
+   "authors": [
+    "Eric A. Hanushek",
+    "Lavinia Kinne",
+    "Philipp Lergetporer",
+    "Ludger Woessmann"
+   ],
+   "journal": "The Economic Journal",
+   "year": 2022,
+   "doi": "10.1093/ej/ueab105",
+   "widening_rules": [
+    1,
+    4
+   ],
+   "paper_pdf_url": "https://hanushek.stanford.edu/sites/default/files/Hanushek%2BKinne%2BLergetporer%2BWoessmann%202022%20EJ%20132%28646%29.pdf",
+   "paper_pdf_check": "200 application/pdf, %PDF magic, 18 pp.; published version (EJ 132(646): 2290-2307) on Hanushek's Stanford site",
+   "supplement_pdf_url": "https://hanushek.stanford.edu/sites/default/files/Hanushek%2BKinne%2BLergetporer%2BWoessmann%202022%20EJ%20On-Line%20Appendix.pdf",
+   "text_match": "90/90 paired coeff+SE found, e.g. Table 1 col (3) 1.226 (0.132), -1.241 (0.184); Table 2 col (3) -0.294 (0.122)",
+   "package_source_url": "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/6HXBSD",
+   "package_api_check": {
+    "status": 200,
+    "size_mb": 929.7,
+    "bytes": 929690049,
+    "files": 1,
+    "restricted": 0,
+    "license": "CC0 1.0",
+    "versions": [
+     "1.0 2021-10-04"
+    ],
+    "file_fetch": "206 on /api/access/datafile/5208568",
+    "largest_file": "Replication.zip 929.7 MB (over 500 MB)",
+    "note": "Contents unverified (Dataverse does not list zip members). Also on openICPSR E153101."
+   },
+   "software": "Stata",
+   "data_formats": [
+    "unverified (zip)"
+   ],
+   "i4r_verdict": "minor discrepancies (perfect_reproduction=No, computational_reproduction=1)",
+   "i4r_report_ref": "I4R DP 48 (comment)",
+   "i4r_rows": {
+    "total": 95,
+    "r_coeff": 90,
+    "distinct_original_values": 4,
+    "main_tables": "Tables 1-2"
+   },
+   "method_summary": "Cross-country student-level regressions of PISA achievement on country patience and risk-taking (DB: correlational study)",
+   "reasons": [
+    "Published text open; every paired row matches",
+    "Previously excluded on size; now inside the 1 GB rule",
+    "DP 48 comment"
+   ],
+   "risks": [
+    "Single 930 MB zip, contents unverified: confirm it holds data (PISA micro-data) and not only code",
+    "Only 4 distinct original values among 90 rows; pin more from the printed Tables 1-2",
+    "Slow mount for a near-1 GB archive"
+   ]
+  }
+ ],
+ "rechecks_2026_11_01_curation_failures": [
+  {
+   "id": "bautista-2023-geography-repression-autocracy",
+   "i4r_team": 90,
+   "tag": "T90",
+   "db_row_index": "5213-5251",
+   "doi": "10.1111/ajps.12614",
+   "curation_failure_2026_11_01": "open text was a 2018 Harris draft with a different specification; 0 matching values",
+   "status_2026_11_02": "still no published or accepted text",
+   "routes_tried": [
+    "Pearson Institute WP with final title (uploaded 2021-02): https://thepearsoninstitute.org/sites/default/files/2021-02/The%20Geography%20of%20Repression%20and%20Opposition%20to%20Autocracy_Pearson_2019.pdf -> connection error (expired TLS certificate reported; DNS failure on 2026-11-01)",
+    "Repositorio UC (repositorio-az.uc.cl) -> DNS failure",
+    "Universidad del Rosario Pure -> record without file",
+    "SSRN 3249606 -> blocked to scripts",
+    "OpenAlex: closed"
+   ]
+  },
+  {
+   "id": "de-haas-2023-finance-green-growth",
+   "i4r_team": 30,
+   "tag": "T30",
+   "db_row_index": "1266-1321",
+   "doi": "10.1093/ej/ueac081",
+   "curation_failure_2026_11_01": "open text was the 2019 ECB WP, a different analysis; package stubs five proprietary data files",
+   "status_2026_11_02": "still no published or accepted text; the package problem stands regardless",
+   "routes_tried": [
+    "KU Leuven Lirias 20.500.12942/721664 -> redirects to a JS-only Limo page, no file visible",
+    "CEPR DP14012 (repec.cepr.org) -> 403",
+    "EBRD WP 217 (2018, 'Finance and Carbon Emissions') -> no direct PDF found",
+    "OpenAlex: closed; author EBRD page and LSE repository: nothing"
+   ]
+  },
+  {
+   "id": "guay-2022-ideological-asymmetries-motivated-reasoning",
+   "i4r_team": 40,
+   "tag": "T40",
+   "db_row_index": "1707-1850",
+   "doi": "10.1111/ajps.12624",
+   "curation_failure_2026_11_01": "headline results are figures only, no printed values (open text was the accepted manuscript)",
+   "status_2026_11_02": "published/accepted text exists but the failure is structural: still excluded",
+   "routes_tried": [
+    "MIT DSpace accepted manuscript (new bitstream link https://dspace.mit.edu/bitstreams/333790c2-3d78-4331-9e6b-a4faf20948f9/download) -> 429 twice today; the 2026-11-01 base-handle link served it",
+    "I4R DP 79 cites only the original's Figures 1-6; every DB row's original_table is a figure panel",
+    "No open Supporting Information with regression tables found (Wiley SI refuses scripts); Dataverse CGHTPZ has knitted .html outputs but no appendix PDF"
+   ]
+  }
+ ],
+ "failed": [
+  {
+   "tag": "T2",
+   "paper": "Ono & Zilis, Ascriptive Characteristics...",
+   "journal": "AJPS 2022",
+   "package": "Dataverse ZHOL6Y",
+   "failing_requirement": "PDF version mismatch. RIETI DP 20-E-063 (2020) serves %PDF, but its Table 3 differs from the published values (WP -0.20 vs -0.19; -0.23 vs -0.24; -0.005 vs -0.004; published -0.44 (0.07) and -0.15 (0.06) absent). Table 2 matches. UKnowledge viewcontent: 403 twice."
+  },
+  {
+   "tag": "T73",
+   "paper": "Dhar, Jain & Jayachandran, Reshaping Adolescents' Gender Attitudes",
+   "journal": "AER 2022",
+   "package": "openICPSR E149882 only",
+   "failing_requirement": "Package. Text passes (IPR WP-19-08 rev. Aug 2021: 220/220 coeff+SE; AEA PDF 403). The AER package is openICPSR only (login). Dataverse 6DUTIC is a 2019 3ie deposit (one Data.zip, 27.5 MB), not the AER package; file access returned 400."
+  },
+  {
+   "tag": "T76",
+   "paper": "Gsottbauer et al., Social Class and (Un)Ethical Behaviour",
+   "journal": "EJ 2022",
+   "package": "Zenodo 6226207",
+   "failing_requirement": "PDF. Tilburg Pure published file: /files/ 403 twice, /ws/files/ 404. LMU epub 114927: no file. Innsbruck WP 2020-10 serves %PDF but matches only 11/24 coefficients."
+  },
+  {
+   "tag": "T46",
+   "paper": "Hariri & Wingender, Jumping the Gun",
+   "journal": "EJ 2022",
+   "package": "Zenodo 7077694",
+   "failing_requirement": "PDF. KU accepted manuscript: /files/ 403 twice, /ws/files/ 404. OUP (bronze OA) refuses scripts. Dataverse 2YAHIA (2026) is a different paper (permitless carry laws)."
+  },
+  {
+   "tag": "T65",
+   "paper": "Mangonnet, Kopas & Urpelainen, Playing Politics with Environmental Protection",
+   "journal": "JOP 2022",
+   "package": "Dataverse N6LIMH",
+   "failing_requirement": "PDF and size. SAIS-ISEP Nov 2021 draft: 403 twice; JOP closed. Package is 1,027.5 MB (just over 1 GB decimal), one 966 MB CSV."
+  },
+  {
+   "tag": "T27",
+   "paper": "Kim, Entertaining Beliefs in Economic Mobility",
+   "journal": "AJPS 2022",
+   "package": "Dataverse FVRZYU",
+   "failing_requirement": "PDF. 2026-11-01 pick #8 demoted: only SSRN (blocked) and the 2019 dissertation, which fails the stronger check."
+  },
+  {
+   "tag": "T39",
+   "paper": "Martínez, How Much Should We Trust the Dictator's GDP Growth Estimates?",
+   "journal": "JPE 2022",
+   "package": "Dataverse 9M0S0M",
+   "failing_requirement": "PDF. SSRN only; the Ostrom Workshop 2018 draft (404 on 2026-11-01) is the only other copy."
+  },
+  {
+   "tag": "T81",
+   "paper": "Zelizer, Talking Shops",
+   "journal": "AJPS 2022",
+   "package": "Dataverse S3M5AX",
+   "failing_requirement": "PDF. Closed; the only other copy is a 2019 Princeton CSDP draft with a different subtitle (403)."
+  },
+  {
+   "tag": "T4",
+   "paper": "Hamel & Wilcox-Archuleta, Black Workers in White Places",
+   "journal": "JOP 2022",
+   "package": "Dataverse FMOR6K",
+   "failing_requirement": "PDF closed (OpenAlex, Semantic Scholar; no author copy)."
+  },
+  {
+   "tag": "T24",
+   "paper": "Chu & Recchia, Does Public Opinion Affect the Preferences of Foreign Policy Leaders?",
+   "journal": "JOP 2022",
+   "package": "Dataverse BNINNL",
+   "failing_requirement": "PDF closed (author site links the journal only)."
+  },
+  {
+   "tag": "T79",
+   "paper": "Córdova & Kras, State Action to Prevent Violence Against Women",
+   "journal": "JOP 2022",
+   "package": "Dataverse D2WL5I",
+   "failing_requirement": "PDF closed (author sites have no copy)."
+  },
+  {
+   "tag": "T11",
+   "paper": "Gubler, Karpowitz, Monson, Romney & South, Changing Hearts and Minds?",
+   "journal": "JOP 2022",
+   "package": "Dataverse FUCDTT (2024 re-release)",
+   "failing_requirement": "PDF closed."
+  },
+  {
+   "tag": "T1",
+   "paper": "Herzog, Baron & Gibbons, Antinormative Messaging...",
+   "journal": "JOP 2022",
+   "package": "Dataverse GLT4FX",
+   "failing_requirement": "PDF. Accepted version on SSRN only (blocked)."
+  },
+  {
+   "tag": "T96",
+   "paper": "Mayshar, Moav & Pascali, The Origin of the State",
+   "journal": "JPE 2022",
+   "package": "only a 2025 comment package (Dataverse 6KG67M)",
+   "failing_requirement": "Package. The other Dataverse title hits are unrelated datasets."
+  },
+  {
+   "tag": "T33, T77, T87, T88, T89, T101, T108",
+   "paper": "Borowiecki; Christensen & Timmins; Bianchi & Giorcelli; Waldinger; Carlson et al.; Dickens; Hoopes et al.",
+   "journal": "JPE / EJ 2022",
+   "package": "none original",
+   "failing_requirement": "Package. Today's Zenodo/Dataverse/GitHub searches found no original package (peterchristensen/Sorting-or-Steering is an empty repo; cwestheide/i4r_dp66_code is the comment's code)."
+  },
+  {
+   "tag": "32 AEA reports: T3, T8, T9, T13, T14, T20, T23, T26, T28, T37, T44, T48, T50, T53, T54, T55, T56, T67, T71, T72, T75, T80, T82, T84, T85, T91, T93, T98, T99, T102, T103, T106",
+   "paper": "AER / AEJ / AER: Insights papers",
+   "journal": "AEA 2022-2023",
+   "package": "openICPSR only",
+   "failing_requirement": "Package. No copy outside openICPSR (login + terms) on Harvard Dataverse (title and article-DOI searches), Zenodo (title and author searches) or GitHub. GitHub hits are third-party replication repos (T8, T13, T71, T106), not originals."
+  }
+ ],
+ "not_rechecked": [
+  "T64 Bosquet: .7z archive (rule 2)",
+  "T43 Grosjean: package has no data",
+  "T17, T19, T35, T57, T61, T69 and reports with 0 paired rows: under 8 paired rows (rule 3)"
+ ],
+ "total_checked": 62,
+ "pool": "64 uncatalogued reports with >=8 paired rows"
+}
