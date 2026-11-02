@@ -1,0 +1,438 @@
+# Original paper: Labandeira, X., Labeaga, J. M., & Teixidó, J. J.
+#   (2022). "Major Reforms in Electricity Pricing: Evidence from a
+#   Quasi-Experiment." The Economic Journal, 132(644), 1517-1541.
+#   doi:10.1093/ej/ueab076 (first published online 2021-09-22).
+#
+# Reproduction report: no I4R Discussion Paper exists for this paper.
+#   The I4R First Meta Database (replication team 49, University of
+#   Calgary, five replicators; rows 2226-2248, entered 2023-09-12) is the
+#   record.  Verdict: computationally reproducible with minor
+#   discrepancies (computational_reproduction = 1, perfect_reproduction
+#   = No).  why_not_perfect_repro: "There are minor changes at the third
+#   decimal point in tables 4 and 5.  There is also a minor discrepancy
+#   between the text and the code, though the values created are all the
+#   same as the original paper's estimates."  Survey answer: "Analysis
+#   and cleaning code produce the same output as presented in the paper"
+#   (raw and final data, complete cleaning and analysis code; Stata, run
+#   in under an hour).  The schema has no "minor discrepancies" label, so
+#   outcome_label is reproducible (as for leeson-2022): every Table 2
+#   number the team checked reproduces, and the discrepancies are
+#   third-decimal changes in the quantile Tables 4-5 (not pinned) and
+#   text-versus-code differences that the meta-database's "coding
+#   correction" rows quantify (see i4r_replicator_findings).
+#
+# Why this paper:
+#   1. A household-panel difference-in-differences with an IV variant
+#      (LIML, three instruments, household fixed effects by
+#      within-transformation) on the Spanish Household Budget Survey:
+#      energy demand / IO, new to the catalog.
+#   2. 22 paired meta-database rows, all on Table 2's treatment
+#      coefficient (columns 2, 3, 4, 6, 7, 8).
+#   3. A ready analysis file ships (.dta plus a .csv copy), so the
+#      60-minute raw-data build is not needed; package on Zenodo, CC BY 4.0.
+#
+# Open text and version check (step 1).  The open text is the ACCEPTED
+#   MANUSCRIPT dated 5 August 2021 (Diposit UB handle 2445/185932); the
+#   package README says the code was "last run top to bottom on August 5,
+#   2021", the same day.  Every Table 2 treatment coefficient and SE the
+#   meta-database records as the published value (o_coeff_dbl /
+#   o_std_err_dbl; 6 distinct coefficients, 6 SEs, 22 rows) is printed
+#   identically in the manuscript, except one database typo: column 8 is
+#   printed -0.089 and recorded -0.89 (o_coeff "-0.89", same SE 0.053,
+#   o_p 0.095 consistent with -0.089/0.053); the printed -0.089 is pinned.
+#   The other pinned values (columns 1 and 5 treatment, the two
+#   price-elasticity rows, N and households) have no meta-database row;
+#   they were verified against the package by an independent re-estimate
+#   (see notes), which reproduces every one.
+#
+# What original_claims pins: Table 2's treatment (Reform T) coefficient
+#   in all eight columns with SEs, the ln(price) coefficient of columns 1
+#   and 3 with SEs, and the Table 2 observation and household counts.
+#   12 claims.
+#
+# Leak check of the mount: the package ships no logs, no table output
+#   (the do-files write .xls files that are not included), no manuscript
+#   PDF; Readme.pdf documents data provenance and run order only (no
+#   estimates).  The strip rule's suffix rule removes the three .do
+#   files; nothing else carries results, so the strip rule is unchanged.
+
+id: labandeira-2022-electricity-pricing-reform
+i4r_report_url: https://github.com/I4Replication/I4R-First-Meta-Paper
+language: r
+outcome_label: reproducible
+split: holdout
+# Contamination bookkeeping.  First public version: IREA Working Paper
+# 2018/28 (University of Barcelona), same title; the PDF carries no
+# month, its PDF ModDate is 2018-12-11 and the IREA server's
+# Last-Modified header is 2018-12-11 (checked 2026-11-02).  That WP
+# already prints the OLS and fixed-effects columns of Table 2 (its
+# columns 1-4 = the published columns 1, 3, 5, 7, same treatment
+# values); the IV columns are new in the published version.  Accepted
+# manuscript 2021-08-05; EJ online 2021-09-22 (Crossref published-online);
+# print EJ 132(644), May 2022.  Package: Zenodo record 5423782, created
+# and published 2021-09-03 (Zenodo API created / publication_date), one
+# version (concept record 5423781).
+publication_date: "2018-12"
+package_release_date: "2021-09-03"
+
+paper:
+  # Accepted manuscript (5 Aug 2021, 36 pp.) in the University of
+  # Barcelona repository Diposit UB, handle 2445/185932; the bitstream URL
+  # redirects to /server/api/core/bitstreams/.../content.  Fetched
+  # 2026-11-02: 200, %PDF, 1,100,346 bytes, to a Retally-curation user
+  # agent.
+  source: https://diposit.ub.edu/bitstreams/6883bfcc-fd5d-466e-adb7-52565ba562bd/download
+  title: "Major Reforms in Electricity Pricing: Evidence from a Quasi-Experiment"
+  authors:
+    - Xavier Labandeira
+    - José M. Labeaga
+    - Jordi J. Teixidó
+
+dataset:
+  source: https://zenodo.org/records/5423782
+  access_notes: >
+    Zenodo record 5423782 (one version; concept 5423781), open access,
+    CC BY 4.0: ONE file, "3 Replication package.zip" (558,082,125 bytes,
+    md5 babd3effb22d2d5868344d0ad83f67c1; about 3.3 GB unpacked).  Not
+    nested.  It holds a folder "3 Replication package/" with Readme.pdf
+    (data provenance and run order; no estimates), dofiles/ (1_Raw
+    data.do, 2_Dataset.do, "3_ Results TABLES.do"), "analysis data/"
+    (data_to_run_DOFILE3.dta, 290 MB, and the same data as "Data_to
+    run_DOFILE3.csv", 328 MB: 203,416 household-year rows, 2006-2015, 403
+    columns) and "raw data/" (2.8 GB: the INE Household Budget Survey
+    user files "Fichero de usuario de gastos/hogar a2006-a2015.txt" and
+    the purchased panel-link files enlace*.TXT, all fixed-width text).
+    No logs, no table output (do-file 3 writes outreg2 .xls files that
+    are not shipped), no paper PDF.  The script-free copy removes the
+    three .do files only.  Download through the project's downloader
+    took about 5 minutes (2 MB/s).
+
+code_repo:
+  url: https://zenodo.org/records/5423782
+
+original_claims:
+  # ---- Table 2: consumption columns ----
+  - description: reform_consumption_ols_col1
+    value: -0.178
+    claim_type: coefficient
+    standard_error: 0.027
+    unit: log points of annualised household electricity consumption (kWh)
+    location: "Table 2, column (1), Reform (T)"
+    context: >
+      Table 2 ("Effect of the Reform on Residential Electricity
+      Consumption and Expenditure (2011-2014)"), column (1), row Reform
+      (T): the paper's difference-in-differences estimate of the August
+      2013 Spanish electricity pricing reform (fixed charge raised,
+      regulated volumetric rate cut) on household electricity
+      consumption, estimated by OLS.  Data: Spanish Household Budget
+      Survey households interviewed between August 2011 and April 2014,
+      each interviewed twice, in the same two-week period of two
+      consecutive years; the control group has both interviews before
+      the reform, the treated group its second interview after it.  T is
+      the post-reform dummy for interviews whose electricity bill falls
+      under the reform (the paper places the response one month after
+      the reform, when households receive a reformed bill).  Dependent
+      variable: log of electricity consumption in the month before the
+      interview (kWh, annualised by the survey).  Regressors: T, log
+      household price per kWh (expenditure divided by consumption), log
+      income and its square, months since reform, and controls for
+      household size, number of rooms, dwelling surface, elderly members,
+      education of the household head, household economic situation
+      (number of economically active members), renting, building older
+      than 25 years, municipality-size dummies, urban area, province
+      capital, regional dummies, quarterly dummies and year fixed
+      effects.  No household fixed effects.  Standard errors clustered
+      at the household level.
+  - description: reform_consumption_iv_col2
+    value: -0.123
+    claim_type: coefficient
+    standard_error: 0.026
+    unit: log points of annualised household electricity consumption (kWh)
+    location: "Table 2, column (2), Reform (T)"
+    context: >
+      Table 2, column (2), row Reform (T): the column (1) consumption
+      regression with the log electricity price instrumented by the
+      households' effective prices (expenditure divided by quantity) of
+      potatoes, water and fuel, estimated by limited-information maximum
+      likelihood (LIML); year fixed effects and controls, no household
+      fixed effects, standard errors clustered at the household level
+      according to the table note.
+  - description: reform_consumption_fe_col3
+    value: -0.154
+    claim_type: coefficient
+    standard_error: 0.028
+    unit: log points of annualised household electricity consumption (kWh)
+    location: "Table 2, column (3), Reform (T)"
+    context: >
+      Table 2, column (3), row Reform (T): the column (1) consumption
+      regression estimated with household fixed effects (LSDV / within
+      estimator), year fixed effects and the same controls; standard
+      errors clustered at the household level.  The paper's main
+      estimate of the reform's effect on consumption once unobserved
+      household heterogeneity is controlled for.
+  - description: reform_consumption_fe_iv_col4
+    value: -0.123
+    claim_type: coefficient
+    standard_error: 0.054
+    unit: log points of annualised household electricity consumption (kWh)
+    location: "Table 2, column (4), Reform (T)"
+    context: >
+      Table 2, column (4), row Reform (T): the household fixed-effects
+      consumption regression of column (3) with the log electricity price
+      instrumented by the effective prices of potatoes, water and fuel
+      (LIML), the paper's preferred specification.  The table note
+      states robust standard errors clustered at the household level.
+  # ---- Table 2: expenditure columns ----
+  - description: reform_expenditure_ols_col5
+    value: -0.156
+    claim_type: coefficient
+    standard_error: 0.027
+    unit: log points of annualised household electricity expenditure (EUR)
+    location: "Table 2, column (5), Reform (T)"
+    context: >
+      Table 2, column (5), row Reform (T): the column (1) OLS
+      specification (same sample, regressors, controls, quarterly
+      dummies and year fixed effects, household-clustered standard
+      errors) with the log of household electricity expenditure as the
+      dependent variable.
+  - description: reform_expenditure_iv_col6
+    value: -0.090
+    claim_type: coefficient
+    standard_error: 0.027
+    unit: log points of annualised household electricity expenditure (EUR)
+    location: "Table 2, column (6), Reform (T)"
+    context: >
+      Table 2, column (6), row Reform (T): the column (2) IV (LIML)
+      specification, log price instrumented by the effective prices of
+      potatoes, water and fuel, no household fixed effects, with log
+      electricity expenditure as the dependent variable.
+  - description: reform_expenditure_fe_col7
+    value: -0.098
+    claim_type: coefficient
+    standard_error: 0.028
+    unit: log points of annualised household electricity expenditure (EUR)
+    location: "Table 2, column (7), Reform (T)"
+    context: >
+      Table 2, column (7), row Reform (T): the column (3) household
+      fixed-effects specification with log electricity expenditure as the
+      dependent variable; household-clustered standard errors.
+  - description: reform_expenditure_fe_iv_col8
+    value: -0.089
+    claim_type: coefficient
+    standard_error: 0.053
+    unit: log points of annualised household electricity expenditure (EUR)
+    location: "Table 2, column (8), Reform (T)"
+    context: >
+      Table 2, column (8), row Reform (T): the column (4) household
+      fixed-effects IV (LIML) specification with log electricity
+      expenditure as the dependent variable; the paper's preferred
+      expenditure estimate (significant at the 10% level in the table).
+  # ---- Table 2: price coefficients ----
+  - description: price_elasticity_consumption_ols_col1
+    value: -1.044
+    claim_type: coefficient
+    standard_error: 0.024
+    unit: elasticity of consumption with respect to the kWh price
+    location: "Table 2, column (1), ln(price kWh)"
+    context: >
+      Table 2, column (1), row ln(price kWh): the coefficient on the log
+      household price per kWh (all taxes included) in the OLS consumption
+      regression of reform_consumption_ols_col1.
+  - description: price_elasticity_consumption_fe_col3
+    value: -1.026
+    claim_type: coefficient
+    standard_error: 0.025
+    unit: elasticity of consumption with respect to the kWh price
+    location: "Table 2, column (3), ln(price kWh)"
+    context: >
+      Table 2, column (3), row ln(price kWh): the log-price coefficient in
+      the household fixed-effects consumption regression of
+      reform_consumption_fe_col3.
+  # ---- Table 2: sample ----
+  - description: n_obs_table2
+    value: 20872
+    claim_type: other
+    unit: household-year observations
+    location: "Table 2, Observations"
+    context: >
+      Number of observations in the Table 2 regressions (the same in all
+      eight columns): household-interview observations of the 2011-2014
+      panel with complete data on the regression variables.
+  - description: n_households_table2
+    value: 10729
+    claim_type: other
+    unit: households
+    location: "Table 2, Number of id (columns 3, 4, 7, 8)"
+    context: >
+      Number of households (the "Number of id" row) in the household
+      fixed-effects columns of Table 2.
+
+# No I4R Discussion Paper; the meta-database's 22 paired rows (team 49)
+# are all robustness or coding-correction variants of Table 2's
+# treatment coefficient, none a plain re-run.  The team's verdict is that
+# the package reproduces the printed estimates ("the values created are
+# all the same as the original paper's estimates"), so each finding
+# below records the printed value as reproduced (outcome matches) and
+# lists the variant rows in its note.  The "coding correction" rows are
+# the text-versus-code discrepancy: re-running the code as the paper
+# describes it (household-clustered SEs in columns 4 and 8; quarterly
+# dummies in the IV columns 2 and 6) — reported here, not taken as the
+# reproduced value, because the replicators classed the paper
+# computationally reproducible.
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: -0.178
+    outcome: matches
+    notes: Team 49 blanket verdict (code reproduces the paper's output); no meta-database row for column 1.
+  - claim_id: 1
+    reproduced_value: -0.123
+    outcome: matches
+    notes: >
+      Team 49 blanket verdict; value is the paper's.  Variant rows:
+      coding correction "as described in the paper", adding quarter fixed
+      effects, -0.170 (0.027) (row 2243); adding a constant -0.127 (0.027)
+      (row 2239); constant and quarter FE -0.075 (0.069) (row 2245).
+  - claim_id: 2
+    reproduced_value: -0.154
+    outcome: matches
+    notes: >
+      Team 49 blanket verdict; value is the paper's.  Variant rows: region
+      x year FE -0.153 (0.028); only reported controls -0.156 (0.028);
+      quarter x year FE -0.252 (0.030); quarter x year x region FE -0.052
+      (0.110); no time-varying controls -0.059 (0.014); price controls
+      -0.133 (0.013); months-before-reform recoded negative -0.133 (0.013).
+  - claim_id: 3
+    reproduced_value: -0.123
+    outcome: matches
+    notes: >
+      Team 49 blanket verdict; value is the paper's.  Coding correction
+      row 2231 (clustering at the household level, as the table note
+      says): coefficient unchanged at -0.123, SE 0.076 instead of the
+      printed 0.054, p = 0.108 (no longer significant at 5%).
+  - claim_id: 4
+    reproduced_value: -0.156
+    outcome: matches
+    notes: Team 49 blanket verdict; no meta-database row for column 5.
+  - claim_id: 5
+    reproduced_value: -0.090
+    outcome: matches
+    notes: >
+      Team 49 blanket verdict; value is the paper's.  Variant rows: coding
+      correction adding quarter fixed effects -0.204 (0.028) (row 2247);
+      adding a constant -0.089 (0.027) (row 2238); constant and quarter FE
+      -0.080 (0.066) (row 2244).
+  - claim_id: 6
+    reproduced_value: -0.098
+    outcome: matches
+    notes: >
+      Team 49 blanket verdict; value is the paper's.  Variant rows: region
+      x year FE -0.098 (0.028); only reported controls -0.100 (0.028);
+      quarter x year FE -0.155 (0.030); quarter x year x region FE 0.056
+      (0.110); no time-varying controls -0.143 (0.013); price controls
+      -0.145 (0.013); months-before-reform recoded negative -0.145 (0.013).
+  - claim_id: 7
+    reproduced_value: -0.089
+    outcome: matches
+    notes: >
+      Team 49 blanket verdict; value is the paper's.  The meta-database
+      records the original as -0.89 (a dropped zero; SE 0.053 and p 0.095
+      match the printed -0.089).  Coding correction row 2229 (household
+      clustering): coefficient unchanged (recorded -0.89, i.e. -0.089), SE
+      0.075 instead of 0.053, p = 0.237.
+  - claim_id: 8
+    reproduced_value: -1.044
+    outcome: matches
+    notes: Team 49 blanket verdict; no meta-database row for the price coefficients.
+  - claim_id: 9
+    reproduced_value: -1.026
+    outcome: matches
+    notes: Team 49 blanket verdict; no meta-database row for the price coefficients.
+  - claim_id: 10
+    reproduced_value: 20872
+    outcome: matches
+    notes: Team 49 blanket verdict; N not recorded in the rows.
+  - claim_id: 11
+    reproduced_value: 10729
+    outcome: matches
+    notes: Team 49 blanket verdict; household count not recorded in the rows.
+
+notes: >
+  Headline findings (as published): after Spain's August 2013 reform,
+  which more than doubled the fixed (capacity) charge and cut the
+  regulated volumetric rate, treated households cut electricity
+  consumption (about 15% with household fixed effects, 12% in the
+  preferred FE-IV column) and electricity expenditure (about 9-10%),
+  i.e. they responded to the higher average price rather than the lower
+  marginal price, and the reform lowered rather than raised revenue.
+  Tables 3-5 (2013 cross-section, quantile regressions) and the
+  progressivity indices are not pinned.
+
+  Pinned values (package-only facts kept here): Table 2 treatment
+  coefficient and SE in columns 1-8: -0.178 (0.027), -0.123 (0.026),
+  -0.154 (0.028), -0.123 (0.054), -0.156 (0.027), -0.090 (0.027), -0.098
+  (0.028), -0.089 (0.053); ln(price kWh) column 1 -1.044 (0.024), column
+  3 -1.026 (0.025); Observations 20,872 in every column; Number of id
+  10,729.  Left out: ln(income), its square and months-since-reform rows,
+  the constants, R-squared, and the IV diagnostics (first-stage F,
+  Kleibergen-Paap, Cragg-Donald, Montiel-Pflueger, Sargan, Hansen).
+
+  Independent cross-check (not the package code: numpy least squares
+  with household-clustered sandwich SEs on data_to_run_DOFILE3.dta,
+  complete cases of the column 1 variables among rows with a non-missing
+  treatment dummy).  N = 20,872, households 10,729 (10,143 with two
+  observations).  Column 1: T -0.1779 (0.0268), ln price -1.0445
+  (0.0245), ln income 0.3961, its square -0.0283, months since reform
+  0.0202; column 3 (within, clustered): T -0.1536 (0.0279), ln price
+  -1.0262 (0.0251); column 5: T -0.1563 (0.0269), ln price -0.0492;
+  column 7: T -0.0984 (0.0278), ln price -0.0268.  Every printed value of
+  columns 1, 3, 5, 7 is reproduced at the printed precision.  The IV
+  columns (2, 4, 6, 8) were not re-estimated; their treatment
+  coefficients and SEs equal the meta-database's published values.
+
+  Package-only facts (never in contexts).  "3_ Results TABLES.do" opens
+  "data.dta" from a hard-coded Windows path (the shipped file is
+  data_to_run_DOFILE3.dta); it needs ivreg2, weakivtest, outreg2, univar,
+  progres (ssc).  Treatment is TT202 (= 1 for second interviews after
+  two-week period 202, i.e. from the October 2013 interviews on;
+  missing for first interviews in that window); outcome lnc_ele /
+  lng_ele; price lnPRE = log kWh price minus a household-specific
+  Stone-type price index IP (a real price — the paper does not say so);
+  lny is deflated the same way; dist = months since reform, coded 0 for
+  every untreated observation (the meta-database's "recoded negative"
+  rows change this).  2_Dataset.do trims consumption and kWh price to
+  their 1st-99th percentiles (not stated in the paper).  Column 1: reg
+  ... i.TAMAMU i.CCAA CAPROV NMIEMB NHABIT SUPERF i.ESTUDRED
+  i.SITUACTHOG_j mayores alqui urban edif25 i.year i.trim, vce(cluster
+  id) — i.ESTUDRED abbreviates the data's ESTUDREDSP; e(sample) defines
+  sample1 and the data are then kept to it.  Columns 3/7: xtreg ..., fe
+  vce(cluster id).  Columns 2/6: ivreg2 ... (lnPRE = lnPRE_aguav_
+  lnPRE_papas_ lnPRE_gascar_) with dummies itam2-5, iccaa2-19,
+  iestud2-4, isitu2-3, iyear7-9, cluster(id) liml nocons — NO quarterly
+  dummies and no constant, although the paper says every column has
+  quarterly dummies (the meta-database's coding-correction rows add
+  them: -0.170 / -0.204).  Columns 4/8: ivreg2 on hand-demeaned (w*)
+  variables with r first liml nocons — heteroskedasticity-robust, NOT
+  household-clustered, although the table note says clustered (the
+  coding-correction rows cluster: SE 0.076 / 0.075); the demeaned
+  regressors omit the province-capital, rooms, surface, urban,
+  municipality-size, region and quarter terms.  A reproduction that
+  follows the paper's text will therefore tend to miss columns 2 and 6
+  (quarter dummies move the coefficient) and the SEs of columns 4 and 8.
+
+  What was read.  The accepted manuscript (all 36 pp.; Table 2 and its
+  note, Sections 2-3); the IREA WP 2018/28 (Table 2 and abstract, for
+  the contamination dates); the Zenodo API record; the package listing,
+  Readme.pdf, do-file 3 (Tables 1-7) and the variable construction in
+  do-file 2 (price index, trimming, months since reform, treatment);
+  the analysis .dta (columns, summaries); the meta-database's 23 team-49
+  rows (one empty).  Not read: do-file 1 (raw-data build) beyond its
+  role in the README; the raw .txt files.
+
+  What could not be verified.  The published EJ typeset version (OUP
+  refuses scripts): pinned values are from the accepted manuscript,
+  which matches every meta-database published value and the package
+  re-estimate.  The IV columns were not re-run independently.  The
+  do-files were not run.
+
+  Original analysis in Stata 14 (three do-files); language is r, the
+  reproduction target.
