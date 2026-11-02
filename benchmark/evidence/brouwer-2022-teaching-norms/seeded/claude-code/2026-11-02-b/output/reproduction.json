@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "entry_id": "brouwer-2022-teaching-norms",
+  "mode": "seeded",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [],
+  "deviations": [],
+  "notes": "Translated the do-file's Table 2 regressions (reg y i.Child##i.ViolationHelp [controls] if Help==0 / Violation==0, cluster(School)) into fixest::feols with School-clustered SEs on master.dta. Controls: male, hugo, Morning, witness, rich, Rain, Hot; the one observation with missing male is dropped in the controlled models (N=399 punishment). Single run; no claim comparison was used to change the script.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T19:30:00Z",
+  "finished_at": "2026-11-02T19:33:00Z"
+}

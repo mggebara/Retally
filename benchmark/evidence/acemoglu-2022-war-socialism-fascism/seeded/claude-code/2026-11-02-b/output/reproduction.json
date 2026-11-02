@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "entry_id": "acemoglu-2022-war-socialism-fascism",
+  "mode": "seeded",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 1, "kind": "error"}
+  ],
+  "deviations": [],
+  "notes": "Translated Tables1-7.do (Tables I-III) to fixest. Variables standardized as egen std() over all non-missing rows of fascism_db.dta. Regiment (d_reg*) and province (province*) dummies entered as explicit regressors as in Stata reg/ivreg2 (collinear dummies dropped by feols); ivreg2's partial() does not change point estimates. SEs clustered by circondario1921. First-stage F for column 6 = (b/se)^2 from the clustered OLS first stage with Stata-style small-sample adjustment (the `test` after `reg, cl()`). attempt-1 was an exploratory variable inspection; attempt-2 crashed because circondario1921 is a string and was coerced to numeric NA; fixed by keeping it as character. No claim-feedback iterations were used.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T19:30:00Z",
+  "finished_at": "2026-11-02T19:42:00Z"
+}

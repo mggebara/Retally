@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "entry_id": "douenne-2022-yellow-vests-carbon-tax",
+  "mode": "seeded",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "memisc is not installed in the sandbox, so memisc 'item' columns (e.g. taxe_approbation, taxe_efficace, gilets_jaunes, diplome4, taille_agglo) and Hmisc 'labelled' classes were stripped to their underlying values: character items enter lm as factors, double items as numeric, and no values are recoded as missing. With this, the Table 4 column 1 sample is 757, the same as the paper.",
+    "The control-variable vectors (variables_reg_effect_feedback, variables_reg_self_interest, variables_reg_ee) are taken from after_papier.RData, where papier.R stored them; the data frame s comes from after_preparation.RData, as papier.R loads it."
+  ],
+  "notes": "Follows papier.R exactly, using weighted lm. Table 4 columns 1-4 are reg_effect_feedback_1..4. Table 6 column 1 is the manual two-step tsls_si1 on the [p10; p60] subsample, and Table 8 column 1 is the two-step tsls_ee1. These two-step point estimates equal weighted 2SLS. The 4 exploratory attempts inspected variable classes and memisc attributes and printed no RESULT lines; attempts 1-3 crashed while printing memisc S4 objects. The first scored run is the final run, and nothing was changed after any comparison with the claims.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T19:38:19Z",
+  "finished_at": "2026-11-02T19:52:00Z"
+}

@@ -38,7 +38,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [12/12](seeded/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a) | [12/12](independent/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[12/12](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) | [12/12](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[12/12](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) |
+| `claude-code` | [12/12](seeded/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[12/12](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [12/12](independent/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[12/12](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) | [12/12](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[12/12](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) |
 | `pipeline-desktop-opus` | [12/12](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) | [11/12](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) (20261023T064839Z) | [4/12](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) |
 | `pipeline-desktop-opus-run2` | [12/12](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [11/12](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) (20261023T153002Z) | [6/12](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
 
@@ -56,12 +56,12 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | [blind/pipeline-desktop-opus/20261023T062931Z](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) | `iv_violence_table2_panelA_col6` | 0.27341 | 0.5 | ±0.2 (se_band) | 1.133 | FAIL |
 | [blind/pipeline-desktop-opus/20261023T062931Z](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) | `iv_fascist_vote1921_table3_panelA_col6` | 0.236371 | 0.34 | ±0.18 (se_band) | 0.576 | PASS |
 | [seeded/claude-code/2026-10-22-a](seeded/claude-code/2026-10-22-a/CELL.md) | `iv_fascist_vote1924_table3_panelC_col1` | 0.395648 | 0.4 | ±0.008 (relative) | 0.544 | PASS |
+| [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `iv_fascist_vote1924_table3_panelC_col1` | 0.395648 | 0.4 | ±0.008 (relative) | 0.544 | PASS |
 | [seeded/pipeline-desktop-opus/20261023T063725Z](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) | `iv_fascist_vote1924_table3_panelC_col1` | 0.395648 | 0.4 | ±0.008 (relative) | 0.544 | PASS |
 | [seeded/pipeline-desktop-opus-run2/20261023T151837Z](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) | `iv_fascist_vote1924_table3_panelC_col1` | 0.395648 | 0.4 | ±0.008 (relative) | 0.544 | PASS |
 | [independent/pipeline-desktop-opus-run2/20261023T153002Z](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) | `first_stage_casualties_table1_col6` | 0.095048 | 0.1 | ±0.01 (se_band) | 0.495 | PASS |
 | [independent/pipeline-desktop-opus-run2/20261023T153002Z](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) | `iv_violence_table2_panelA_col6` | 0.402824 | 0.5 | ±0.2 (se_band) | 0.486 | PASS |
 | [blind/pipeline-desktop-opus/20261023T062931Z](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) | `iv_branches_table2_panelC_col6` | 0.193945 | 0.5 | ±0.2 (se_band) | 1.530 | FAIL |
-| [seeded/claude-code/2026-10-22-a](seeded/claude-code/2026-10-22-a/CELL.md) | `iv_fascist_vote1921_table3_panelA_col6` | 0.336898 | 0.34 | ±0.0068 (relative) | 0.456 | PASS |
 
 ### Declared deviations
 
@@ -106,6 +106,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### seeded · claude-code · 2026-10-22-a
 
 [`seeded/claude-code/2026-10-22-a/CELL.md`](seeded/claude-code/2026-10-22-a/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 2; 2026-10-22T03:02:30Z; from `claude-code-6papers-all-modes-2026-10-22.json`; evidence complete.
+
+### seeded · claude-code · 2026-11-02-b
+
+[`seeded/claude-code/2026-11-02-b/CELL.md`](seeded/claude-code/2026-11-02-b/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 3; 2026-11-02T19:42:00Z; from `claude-code-run2-23papers-seeded-2026-11-02.json`; evidence complete.
 
 ### seeded · pipeline-desktop-opus · 20261023T063725Z
 

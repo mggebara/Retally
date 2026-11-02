@@ -38,7 +38,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [12/12](seeded/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b) | [12/12](independent/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) | [12/12](blind/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[12/12](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) |
+| `claude-code` | [12/12](seeded/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [12/12](independent/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) | [12/12](blind/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[12/12](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) |
 | `pipeline-claude-opus-4-7` | [4/12](seeded/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [0/12](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [1/12](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) |
 | `pipeline-desktop-opus` | [12/12](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) | [12/12](independent/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) | [12/12](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) |
 | `pipeline-desktop-opus-run2` | [12/12](seeded/pipeline-desktop-opus-run2/20261023T152513Z/CELL.md) (20261023T152513Z) | [12/12](independent/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) | [12/12](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
@@ -54,15 +54,15 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | Cell | Claim | Reproduced | Paper | Band | Error / band | Verdict |
 |---|---|---|---|---|---|---|
 | [blind/pipeline-claude-opus-4-7/20261021T142909Z](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `amce_flooding_germany` | 0.091215 | 0.086 | ±0.012 (se_band) | 0.435 | PASS |
+| [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `amce_drought_germany` | 0.080475 | 0.081 | ±0.00162 (relative) | 0.324 | PASS |
 | [seeded/pipeline-desktop-opus-run2/20261023T152513Z](seeded/pipeline-desktop-opus-run2/20261023T152513Z/CELL.md) | `amce_drought_germany` | 0.080475 | 0.081 | ±0.00162 (relative) | 0.324 | PASS |
+| [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `amce_flooding_germany` | 0.086466 | 0.086 | ±0.00172 (relative) | 0.271 | PASS |
 | [seeded/pipeline-desktop-opus-run2/20261023T152513Z](seeded/pipeline-desktop-opus-run2/20261023T152513Z/CELL.md) | `amce_flooding_germany` | 0.086466 | 0.086 | ±0.00172 (relative) | 0.271 | PASS |
 | [seeded/claude-code/2026-10-21-b](seeded/claude-code/2026-10-21-b/CELL.md) | `amce_flooding_germany` | 0.086457 | 0.086 | ±0.00172 (relative) | 0.266 | PASS |
 | [seeded/pipeline-desktop-opus/20261023T063725Z](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) | `amce_flooding_germany` | 0.086457 | 0.086 | ±0.00172 (relative) | 0.266 | PASS |
 | [seeded/claude-code/2026-10-21-b](seeded/claude-code/2026-10-21-b/CELL.md) | `amce_persecution_us` | 0.07568 | 0.076 | ±0.00152 (relative) | 0.211 | PASS |
+| [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `amce_persecution_us` | 0.07568 | 0.076 | ±0.00152 (relative) | 0.211 | PASS |
 | [seeded/pipeline-desktop-opus/20261023T063725Z](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) | `amce_persecution_us` | 0.07568 | 0.076 | ±0.00152 (relative) | 0.211 | PASS |
-| [seeded/pipeline-desktop-opus-run2/20261023T152513Z](seeded/pipeline-desktop-opus-run2/20261023T152513Z/CELL.md) | `amce_persecution_us` | 0.07568 | 0.076 | ±0.00152 (relative) | 0.211 | PASS |
-| [seeded/claude-code/2026-10-21-b](seeded/claude-code/2026-10-21-b/CELL.md) | `amce_drought_germany` | 0.080667 | 0.081 | ±0.00162 (relative) | 0.206 | PASS |
-| [seeded/pipeline-desktop-opus/20261023T063725Z](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) | `amce_drought_germany` | 0.080667 | 0.081 | ±0.00162 (relative) | 0.206 | PASS |
 
 ### Declared deviations
 
@@ -70,6 +70,9 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - cjoint is not installed in the sandbox: cjoint::read.qualtrics(new.format=TRUE) was re-implemented in base R (respondent x task x profile long format, attributes matched by name from F-k-a / F-k-j-a columns, selected = 1 if the forced-choice answer equals the profile number, NA if unanswered), and cjoint::amce() was estimated as an OLS of selected on the seven attribute factors with fixest::feols and respondent-clustered SEs. Baselines follow the authors' baselines list.
   - Germany: attribute columns were renamed by German attribute name (Beruf->Occupation, Geschlecht->Gender, Gruende fuer die Migration->Reason.for.migration, Herkunft->Origin, Sprachkompetenz->Language.Fluency, Zusaetzliche Belastung->Vulnerability) rather than by the script's column positions 23-36, which depend on cjoint's internal column order.
   - Germany: the reported AMCEs come from the main-effects model. The design file declares a Language Fluency x Origin restriction (no 'Keine' language with same-country origin, which the data confirm), and cjoint would add that interaction for dependent attributes. The interacted model is also printed: its reason-for-migration coefficients (drought/flooding/wildfires/persecution) are 0.0805/0.0865/0.0598/0.1617, versus 0.0807/0.0865/0.0598/0.1623 in the main-effects model. The main-effects model was chosen as the scored specification when the script was written, before any results were seen; the script was not changed afterward.
+- [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) (12/12)
+  - cjoint is not installed: cjoint::read.qualtrics() was re-implemented (Qualtrics new-format CSV, F-task-attr / F-task-profile-attr columns, selected = chosen profile, NA choices dropped, respondent-major order) and cjoint::amce() was replaced by OLS via fixest::feols with SEs clustered by respondent (cjoint's small-sample SE adjustment may differ slightly; SEs are not claimed).
+  - German model includes the Language x Origin interaction, which is what cjoint::amce adds for the restriction declared in conjoint_design_german2.dat; the Reason AMCE is the Reason coefficient from that regression. The US design's restriction names 'Country of Origin', which is not a design attribute, and the US data show no restriction, so the US model is additive. Alternatives are printed as diagnostics and differ by under 0.001.
 - [independent/claude-code/2026-10-21-b](independent/claude-code/2026-10-21-b/CELL.md) (12/12)
   - Profile count reported as all profiles in choice tasks the respondent answered (18970 US); the paper reports 18966, a difference of 4 profiles (2 tasks) whose source I did not identify. The German count matches exactly (18862).
 - [independent/claude-code/2026-11-01-a](independent/claude-code/2026-11-01-a/CELL.md) (12/12)
@@ -97,6 +100,10 @@ _None._
 ### seeded · claude-code · 2026-10-21-b
 
 [`seeded/claude-code/2026-10-21-b/CELL.md`](seeded/claude-code/2026-10-21-b/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 2; 2026-10-22T02:06:00Z; from `claude-code-7papers-all-modes-2026-10-21.json`; evidence complete.
+
+### seeded · claude-code · 2026-11-02-b
+
+[`seeded/claude-code/2026-11-02-b/CELL.md`](seeded/claude-code/2026-11-02-b/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 3; 2026-11-02T19:42:00Z; from `claude-code-run2-23papers-seeded-2026-11-02.json`; evidence complete.
 
 ### seeded · pipeline-claude-opus-4-7 · 20261021T142909Z
 

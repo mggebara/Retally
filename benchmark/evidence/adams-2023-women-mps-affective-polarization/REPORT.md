@@ -36,7 +36,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [11/11](seeded/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b) | [11/11](independent/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[11/11](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) | [8/11](blind/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[8/11](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[7/11](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) |
+| `claude-code` | [11/11](seeded/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[11/11](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [11/11](independent/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[11/11](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) | [8/11](blind/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[8/11](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[7/11](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) |
 | `pipeline-claude-opus-4-7` | [11/11](seeded/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [7/11](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [1/11](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) |
 | `pipeline-desktop-opus` | [11/11](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) | [10/11](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) (20261023T064839Z) | [7/11](blind/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) |
 | `pipeline-desktop-opus-run2` | [11/11](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [8/11](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [2/11](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
@@ -66,6 +66,8 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 - [seeded/claude-code/2026-10-21-b](seeded/claude-code/2026-10-21-b/CELL.md) (11/11)
   - Standard errors clustered by country as in the authors' replication_code.R (paper text says clustered by election); no claimed quantity depends on the standard errors. lm with as.factor(cntryyr) translated to fixest::feols with cntryyr absorbed (identical point estimates).
+- [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) (11/11)
+  - lm(... + as.factor(cntryyr)) translated to fixest::feols with cntryyr absorbed as a fixed effect (identical point estimates). SEs clustered by country as in replication_code.R's starprep(clusters = country); the paper text says election-clustered, so the election-clustered summary is also printed (coefficients unaffected).
 - [independent/claude-code/2026-10-21-b](independent/claude-code/2026-10-21-b/CELL.md) (11/11)
   - The paper restricts to dyads where both parties have at least four MPs in the year before the survey. In the data, filtering on the evaluated (to) party's prior seats (to_prior_seats >= 4) reproduces the reported N of 1,842 exactly, while filtering on both parties gives 1,535. I used the to-party filter. Dyads where to_pfeml is missing are dropped listwise.
   - Elite right-left distance is the dataset's pre-standardized rile_distance_s (standardized over the full 2,266-row dyadic file; its raw mean of 22.4 and SD of 17.6 match the paper's footnote 3), not re-standardized within the estimation sample.
@@ -117,6 +119,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### seeded · claude-code · 2026-10-21-b
 
 [`seeded/claude-code/2026-10-21-b/CELL.md`](seeded/claude-code/2026-10-21-b/CELL.md) — final 11/11, re-scored 11/11; first scored 11/11; executions 1; 2026-10-22T02:02:37Z; from `claude-code-7papers-all-modes-2026-10-21.json`; evidence complete.
+
+### seeded · claude-code · 2026-11-02-b
+
+[`seeded/claude-code/2026-11-02-b/CELL.md`](seeded/claude-code/2026-11-02-b/CELL.md) — final 11/11, re-scored 11/11; first scored 11/11; executions 1; 2026-11-02T19:36:00Z; from `claude-code-run2-23papers-seeded-2026-11-02.json`; evidence complete.
 
 ### seeded · pipeline-claude-opus-4-7 · 20261021T142909Z
 

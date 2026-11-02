@@ -36,7 +36,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [11/11](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a) | [11/11](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [11/11](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) |
+| `claude-code` | [11/11](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [11/11](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [11/11](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) |
 | `pipeline-desktop-opus` | [9/11](seeded/pipeline-desktop-opus/20261102T062442Z/CELL.md) (20261102T062442Z) | [11/11](independent/pipeline-desktop-opus/20261102T062442Z/CELL.md) (20261102T062442Z) | [4/11](blind/pipeline-desktop-opus/20261102T060946Z/CELL.md) (20261102T060946Z) |
 | `pipeline-desktop-opus-run2` | [7/11](seeded/pipeline-desktop-opus-run2/20261102T092119Z/CELL.md) (20261102T092119Z) | [10/11](independent/pipeline-desktop-opus-run2/20261102T142444Z/CELL.md) (20261102T142444Z) | [10/11](blind/pipeline-desktop-opus-run2/20261102T091036Z/CELL.md) (20261102T091036Z) |
 
@@ -52,20 +52,23 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 |---|---|---|---|---|---|---|
 | [blind/pipeline-desktop-opus-run2/20261102T091036Z](blind/pipeline-desktop-opus-run2/20261102T091036Z/CELL.md) | `failed_coup_x_leaders_party` | -0.0673015 | -0.13 | ±0.06 (se_band) | 1.045 | FAIL |
 | [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `failed_coup_main_leader_fe` | 0.085272 | 0.09 | ±0.005 (printed_precision) | 0.946 | PASS |
+| [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `failed_coup_main_leader_fe` | 0.085272 | 0.09 | ±0.005 (printed_precision) | 0.946 | PASS |
 | [independent/pipeline-desktop-opus-run2/20261102T142444Z](independent/pipeline-desktop-opus-run2/20261102T142444Z/CELL.md) | `failed_coup_affiliation_model` | 0.113672 | 0.17 | ±0.06 (se_band) | 0.939 | PASS |
 | [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `failed_coup_main_country_fe` | 0.105549 | 0.11 | ±0.005 (printed_precision) | 0.890 | PASS |
+| [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `failed_coup_main_country_fe` | 0.105549 | 0.11 | ±0.005 (printed_precision) | 0.890 | PASS |
 | [seeded/pipeline-desktop-opus/20261102T062442Z](seeded/pipeline-desktop-opus/20261102T062442Z/CELL.md) | `failed_coup_main_country_fe` | 0.105549 | 0.11 | ±0.005 (printed_precision) | 0.890 | PASS |
 | [independent/claude-code/2026-11-02-b](independent/claude-code/2026-11-02-b/CELL.md) | `failed_coup_main_leader_fe` | 0.063813 | 0.09 | ±0.03 (se_band) | 0.873 | PASS |
 | [blind/claude-code/2026-11-02-b](blind/claude-code/2026-11-02-b/CELL.md) | `failed_coup_main_leader_fe` | 0.063813 | 0.09 | ±0.03 (se_band) | 0.873 | PASS |
 | [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `failed_coup_affiliation_model` | 0.174175 | 0.17 | ±0.005 (printed_precision) | 0.835 | PASS |
-| [seeded/pipeline-desktop-opus/20261102T062442Z](seeded/pipeline-desktop-opus/20261102T062442Z/CELL.md) | `failed_coup_affiliation_model` | 0.174175 | 0.17 | ±0.005 (printed_precision) | 0.835 | PASS |
-| [seeded/pipeline-desktop-opus-run2/20261102T092119Z](seeded/pipeline-desktop-opus-run2/20261102T092119Z/CELL.md) | `failed_coup_affiliation_model` | 0.174175 | 0.17 | ±0.005 (printed_precision) | 0.835 | PASS |
 
 ### Declared deviations
 
 - [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) (11/11)
   - Country-level Stata xtreg, fe with i.YEAR_DATA translated to fixest::feols with panel and year fixed effects; Stata L. lags built by matching YEAR_DATA-1 within the xtset panel (COUNTRY_ID for Table A1, leader_cab_id for Table A2) on the full dataset before applying the democracy1==0 & independent==1 filter. fixest drops fixed-effect singletons (no effect on coefficients) and uses its own small-sample clustered SE correction, which differs slightly from Stata's xtreg.
   - Individual-level lfe::felm models translated to fixest::feols; the failed coup factor coupattempt_presentyear is coded as a 0/1 indicator (1 = 'Coup attempt'), equivalent to the factor dummy felm creates.
+- [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) (11/11)
+  - Country-level xtreg, fe with i.YEAR_DATA translated to fixest::feols with panel (COUNTRY_ID or leader_cab_id) and year fixed effects, clustered by COUNTRY_ID; Stata L. lags reproduced as the value at (same xtset panel, year-1), missing across gaps, so leader-FE lags are within leader tenure. fixest drops fixed-effect singletons, which does not change the point estimates.
+  - Individual-level felm models translated to feols; the failed coup factor was recoded to a 0/1 indicator (fca) so the main FCA coefficient is the effect for the reference category, as in the authors' * interaction models.
 - [independent/claude-code/2026-11-02-a](independent/claude-code/2026-11-02-a/CELL.md) (11/11)
   - Individual-level lagged log population built from the country-year panel because the supplied pop_pwt_ln_lag column is identical to gdp_cap_pwt_ln_lag; lagged log GDP/cap also rebuilt the same way (matches the supplied GDP lag in 99.99% of rows).
   - H2a experience model sample: non-leader minister-years with non-missing importance tier (junior ministers kept). The paper text says juniors are excluded, but its reported N (90,020, vs 90,014 for the importance model, a gap of exactly the 6 'tier 0' rows) indicates they were kept.
@@ -96,14 +99,14 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
-- seeded: `failed_coup_base_leader_fe` — pipeline 0/2, agent 1/1
-- seeded: `failed_coup_main_leader_fe` — pipeline 0/2, agent 1/1
+- seeded: `failed_coup_base_leader_fe` — pipeline 0/2, agent 2/2
+- seeded: `failed_coup_main_leader_fe` — pipeline 0/2, agent 2/2
 - blind: `failed_coup_x_leaders_party` — pipeline 0/2, agent 2/2
 
 Pass rates at least 50 points apart (not unanimous):
 
-- seeded: `failed_coup_base_country_fe` — pipeline 1/2, agent 1/1
-- seeded: `failed_coup_main_country_fe` — pipeline 1/2, agent 1/1
+- seeded: `failed_coup_base_country_fe` — pipeline 1/2, agent 2/2
+- seeded: `failed_coup_main_country_fe` — pipeline 1/2, agent 2/2
 - independent: `failed_coup_x_leaders_party` — pipeline 1/2, agent 2/2
 - blind: `failed_coup_affiliation_model` — pipeline 1/2, agent 2/2
 - blind: `failed_coup_experience_model` — pipeline 1/2, agent 2/2
@@ -117,6 +120,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### seeded · claude-code · 2026-11-02-a
 
 [`seeded/claude-code/2026-11-02-a/CELL.md`](seeded/claude-code/2026-11-02-a/CELL.md) — final 11/11, re-scored 11/11; first scored 7/11; executions 3; 2026-11-02T06:10:00Z; from `claude-code-4papers-all-modes-2026-11-02.json`; evidence complete.
+
+### seeded · claude-code · 2026-11-02-b
+
+[`seeded/claude-code/2026-11-02-b/CELL.md`](seeded/claude-code/2026-11-02-b/CELL.md) — final 11/11, re-scored 11/11; first scored 11/11; executions 3; 2026-11-02T19:33:45Z; from `claude-code-run2-23papers-seeded-2026-11-02.json`; evidence complete.
 
 ### seeded · pipeline-desktop-opus · 20261102T062442Z
 

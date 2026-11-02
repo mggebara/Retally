@@ -38,7 +38,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [12/12](seeded/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b) | [12/12](independent/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) | [12/12](blind/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) |
+| `claude-code` | [12/12](seeded/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [12/12](independent/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) | [12/12](blind/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) |
 | `pipeline-claude-opus-4-7` | [7/12](seeded/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [12/12](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [6/12](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) |
 | `pipeline-claude-opus-5-5` | [12/12](seeded/pipeline-claude-opus-5-5/20261022T044632Z/CELL.md) (20261022T044632Z) | [12/12](independent/pipeline-claude-opus-5-5/20261022T044632Z/CELL.md) (20261022T044632Z) | [12/12](blind/pipeline-claude-opus-5-5/20261022T044632Z/CELL.md) (20261022T044632Z) |
 | `pipeline-desktop-opus-run2` | [12/12](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [12/12](independent/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) | [9/12](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
@@ -61,8 +61,8 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | [blind/pipeline-desktop-opus-run2/20261023T150832Z](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) | `study1_israel_ethiopian_perceived_violence` | 0.407652 | 0.425 | ±0.107 (se_band) | 0.162 | PASS |
 | [independent/pipeline-claude-opus-4-7/20261021T142909Z](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `study1_israel_ethiopian_police_action` | 0.1653 | 0.181 | ±0.118 (se_band) | 0.133 | PASS |
 | [seeded/claude-code/2026-10-21-b](seeded/claude-code/2026-10-21-b/CELL.md) | `study1_israel_ethiopian_police_action` | 0.180704 | 0.181 | ±0.00362 (relative) | 0.082 | PASS |
+| [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `study1_israel_ethiopian_police_action` | 0.180704 | 0.181 | ±0.00362 (relative) | 0.082 | PASS |
 | [seeded/pipeline-claude-opus-5-5/20261022T044632Z](seeded/pipeline-claude-opus-5-5/20261022T044632Z/CELL.md) | `study1_israel_ethiopian_police_action` | 0.180704 | 0.181 | ±0.00362 (relative) | 0.082 | PASS |
-| [seeded/pipeline-desktop-opus-run2/20261023T151837Z](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) | `study1_israel_ethiopian_police_action` | 0.180704 | 0.181 | ±0.00362 (relative) | 0.082 | PASS |
 
 ### Declared deviations
 
@@ -95,6 +95,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### seeded · claude-code · 2026-10-21-b
 
 [`seeded/claude-code/2026-10-21-b/CELL.md`](seeded/claude-code/2026-10-21-b/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 2; 2026-10-22T02:10:00Z; from `claude-code-7papers-all-modes-2026-10-21.json`; evidence complete.
+
+### seeded · claude-code · 2026-11-02-b
+
+[`seeded/claude-code/2026-11-02-b/CELL.md`](seeded/claude-code/2026-11-02-b/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-11-02T19:38:00Z; from `claude-code-run2-23papers-seeded-2026-11-02.json`; evidence complete.
 
 ### seeded · pipeline-claude-opus-4-7 · 20261021T142909Z
 

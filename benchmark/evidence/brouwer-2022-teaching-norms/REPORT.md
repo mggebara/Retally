@@ -39,7 +39,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [12/12](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a) | [12/12](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[12/12](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [12/12](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[12/12](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) |
+| `claude-code` | [12/12](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[12/12](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [12/12](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[12/12](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [12/12](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[12/12](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) |
 | `pipeline-desktop-opus` | [12/12](seeded/pipeline-desktop-opus/20261102T064502Z/CELL.md) (20261102T064502Z) | [12/12](independent/pipeline-desktop-opus/20261102T062442Z/CELL.md) (20261102T062442Z) | [12/12](blind/pipeline-desktop-opus/20261102T062442Z/CELL.md) (20261102T062442Z) |
 | `pipeline-desktop-opus-run2` | [12/12](seeded/pipeline-desktop-opus-run2/20261102T091036Z/CELL.md) (20261102T091036Z) | [12/12](independent/pipeline-desktop-opus-run2/20261102T090216Z/CELL.md) (20261102T090216Z) | [12/12](blind/pipeline-desktop-opus-run2/20261102T090216Z/CELL.md) (20261102T090216Z) |
 
@@ -54,15 +54,15 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | Cell | Claim | Reproduced | Paper | Band | Error / band | Verdict |
 |---|---|---|---|---|---|---|
 | [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `child_punishment_controls` | 0.116104 | 0.12 | ±0.005 (printed_precision) | 0.779 | PASS |
+| [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `child_punishment_controls` | 0.116104 | 0.12 | ±0.005 (printed_precision) | 0.779 | PASS |
 | [seeded/pipeline-desktop-opus/20261102T064502Z](seeded/pipeline-desktop-opus/20261102T064502Z/CELL.md) | `child_punishment_controls` | 0.116104 | 0.12 | ±0.005 (printed_precision) | 0.779 | PASS |
 | [seeded/pipeline-desktop-opus-run2/20261102T091036Z](seeded/pipeline-desktop-opus-run2/20261102T091036Z/CELL.md) | `child_punishment_controls` | 0.116104 | 0.12 | ±0.005 (printed_precision) | 0.779 | PASS |
 | [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `vh_helping_controls` | -0.103548 | -0.1 | ±0.005 (printed_precision) | 0.710 | PASS |
+| [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `vh_helping_controls` | -0.103548 | -0.1 | ±0.005 (printed_precision) | 0.710 | PASS |
 | [seeded/pipeline-desktop-opus/20261102T064502Z](seeded/pipeline-desktop-opus/20261102T064502Z/CELL.md) | `vh_helping_controls` | -0.103548 | -0.1 | ±0.005 (printed_precision) | 0.710 | PASS |
 | [seeded/pipeline-desktop-opus-run2/20261102T091036Z](seeded/pipeline-desktop-opus-run2/20261102T091036Z/CELL.md) | `vh_helping_controls` | -0.103548 | -0.1 | ±0.005 (printed_precision) | 0.710 | PASS |
 | [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `child_helping_no_controls` | 0.212574 | 0.21 | ±0.005 (printed_precision) | 0.515 | PASS |
-| [seeded/pipeline-desktop-opus/20261102T064502Z](seeded/pipeline-desktop-opus/20261102T064502Z/CELL.md) | `child_helping_no_controls` | 0.212574 | 0.21 | ±0.005 (printed_precision) | 0.515 | PASS |
-| [seeded/pipeline-desktop-opus-run2/20261102T091036Z](seeded/pipeline-desktop-opus-run2/20261102T091036Z/CELL.md) | `child_helping_no_controls` | 0.212574 | 0.21 | ±0.005 (printed_precision) | 0.515 | PASS |
-| [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `child_x_vh_helping_no_controls` | -0.062574 | -0.06 | ±0.005 (printed_precision) | 0.515 | PASS |
+| [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `child_helping_no_controls` | 0.212574 | 0.21 | ±0.005 (printed_precision) | 0.515 | PASS |
 
 ### Declared deviations
 
@@ -79,6 +79,10 @@ _None._
 ### seeded · claude-code · 2026-11-02-a
 
 [`seeded/claude-code/2026-11-02-a/CELL.md`](seeded/claude-code/2026-11-02-a/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-11-02T05:55:30Z; from `claude-code-4papers-all-modes-2026-11-02.json`; evidence complete.
+
+### seeded · claude-code · 2026-11-02-b
+
+[`seeded/claude-code/2026-11-02-b/CELL.md`](seeded/claude-code/2026-11-02-b/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-11-02T19:33:00Z; from `claude-code-run2-23papers-seeded-2026-11-02.json`; evidence complete.
 
 ### seeded · pipeline-desktop-opus · 20261102T064502Z
 

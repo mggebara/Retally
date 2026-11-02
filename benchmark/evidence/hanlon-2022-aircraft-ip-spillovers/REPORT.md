@@ -37,7 +37,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [12/12](seeded/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b) | [12/12](independent/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) | [12/12](blind/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) |
+| `claude-code` | [12/12](seeded/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [12/12](independent/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) | [12/12](blind/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) |
 | `pipeline-claude-opus-4-7` | [12/12](seeded/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [10/12](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [12/12](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) |
 | `pipeline-desktop-opus` | [12/12](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) | [12/12](independent/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) | [12/12](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) |
 | `pipeline-desktop-opus-run2` | [12/12](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [12/12](independent/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) | [12/12](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
@@ -54,14 +54,14 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 |---|---|---|---|---|---|---|
 | [seeded/pipeline-desktop-opus/20261023T063725Z](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) | `airframe_wingload_trend_before_1926_us` | 0.0134392 | 0.013 | ±0.0005 (printed_precision) | 0.878 | PASS |
 | [seeded/claude-code/2026-10-21-b](seeded/claude-code/2026-10-21-b/CELL.md) | `airframe_wingload_trend_before_1926_us` | 0.013439 | 0.013 | ±0.0005 (printed_precision) | 0.878 | PASS |
+| [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `airframe_wingload_trend_before_1926_us` | 0.013439 | 0.013 | ±0.0005 (printed_precision) | 0.878 | PASS |
 | [seeded/pipeline-claude-opus-4-7/20261021T142909Z](seeded/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `airframe_wingload_trend_before_1926_us` | 0.013439 | 0.013 | ±0.0005 (printed_precision) | 0.878 | PASS |
 | [seeded/pipeline-desktop-opus-run2/20261023T151837Z](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) | `airframe_wingload_trend_before_1926_us` | 0.013439 | 0.013 | ±0.0005 (printed_precision) | 0.878 | PASS |
 | [independent/pipeline-claude-opus-4-7/20261021T142909Z](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `airframe_maxspeed_trend_before_1926_us` | -0.0082 | -0.001 | ±0.006 (se_band) | 1.200 | FAIL |
 | [seeded/pipeline-desktop-opus/20261023T063725Z](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) | `airframe_maxspeed_trend_after_1926_us_vs_uk` | 0.0305485 | 0.031 | ±0.00062 (relative) | 0.728 | PASS |
 | [seeded/claude-code/2026-10-21-b](seeded/claude-code/2026-10-21-b/CELL.md) | `airframe_maxspeed_trend_after_1926_us_vs_uk` | 0.030549 | 0.031 | ±0.00062 (relative) | 0.727 | PASS |
+| [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `airframe_maxspeed_trend_after_1926_us_vs_uk` | 0.030549 | 0.031 | ±0.00062 (relative) | 0.727 | PASS |
 | [seeded/pipeline-claude-opus-4-7/20261021T142909Z](seeded/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `airframe_maxspeed_trend_after_1926_us_vs_uk` | 0.030549 | 0.031 | ±0.00062 (relative) | 0.727 | PASS |
-| [seeded/pipeline-desktop-opus-run2/20261023T151837Z](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) | `airframe_maxspeed_trend_after_1926_us_vs_uk` | 0.030549 | 0.031 | ±0.00062 (relative) | 0.727 | PASS |
-| [independent/pipeline-claude-opus-4-7/20261021T142909Z](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `airframe_maxspeed_trend_after_1926_us` | 0.075 | 0.067 | ±0.006 (se_band) | 1.333 | FAIL |
 
 ### Declared deviations
 
@@ -85,6 +85,10 @@ _None._
 ### seeded · claude-code · 2026-10-21-b
 
 [`seeded/claude-code/2026-10-21-b/CELL.md`](seeded/claude-code/2026-10-21-b/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-10-22T02:03:30Z; from `claude-code-7papers-all-modes-2026-10-21.json`; evidence complete.
+
+### seeded · claude-code · 2026-11-02-b
+
+[`seeded/claude-code/2026-11-02-b/CELL.md`](seeded/claude-code/2026-11-02-b/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-11-02T19:35:30Z; from `claude-code-run2-23papers-seeded-2026-11-02.json`; evidence complete.
 
 ### seeded · pipeline-claude-opus-4-7 · 20261021T142909Z
 

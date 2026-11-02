@@ -1,0 +1,2191 @@
+# Retally reproduction task: acemoglu-2022-war-socialism-fascism (seeded, run 2026-11-02-b)
+
+You are reproducing quantitative results from an econometrics paper for the
+Retally benchmark.  You will write R code, run it in a network-less Docker
+sandbox, and record what you did as files.  The files are what gets scored.
+
+- Benchmark cell: entry `acemoglu-2022-war-socialism-fascism`, mode `seeded`, run `2026-11-02-b`
+- Paper: War, Socialism, and the Rise of Fascism: an Empirical Exploration
+- Paper text (extracted from the PDF; tables may be garbled): `<repo>/benchmark/.cache/claude-code/acemoglu-2022-war-socialism-fascism/seeded/2026-11-02-b/paper.txt`
+- Data (the ONLY data you get): `<repo>/benchmark/.cache/claude-code/acemoglu-2022-war-socialism-fascism/seeded/2026-11-02-b/mount/acemoglu_2022_war_socialism_fascism`
+- Output directory (the ONLY place you write): `<repo>/benchmark/reproductions/acemoglu-2022-war-socialism-fascism/seeded/2026-11-02-b`
+
+## Mode rules
+
+These apply in every mode:
+
+- Write R only.  Run it only inside the sandbox, with the command under
+  "How to run a script"; never run R on the host.
+- No network: do not download anything, do not look the paper or its
+  replication package up online.
+- Use only the files under `<repo>/benchmark/.cache/claude-code/acemoglu-2022-war-socialism-fascism/seeded/2026-11-02-b/mount/acemoglu_2022_war_socialism_fascism` as data, and `<repo>/benchmark/.cache/claude-code/acemoglu-2022-war-socialism-fascism/seeded/2026-11-02-b/paper.txt` as
+  the paper.
+- Do not read anything else in this repository or on this machine: not the
+  catalog YAMLs under `benchmark/papers/`, not `.cache/datasets/`, not
+  `benchmark/results/`, not other reproductions under `benchmark/reproductions/`,
+  not other task directories.  If you nevertheless read any other file, list
+  it in `files_read_outside_mount` in `reproduction.json`, with why.
+- Seeded mode: the authors' own analysis scripts are on disk under the data
+  directory and reproduced below under "Original Replication Scripts".  You
+  may follow them:
+
+  The replication package (the dataset directory) ships the authors' own analysis scripts,
+  reproduced below.  These are the GROUND TRUTH for the exact estimating equation, variable names,
+  sample restrictions, fixed effects, and standard-error clustering — follow them over anything
+  reconstructed from the methodology summary, and prefer them over the paper's text where the two
+  disagree.  Your job is to write R code that implements the SAME SPECIFICATION: translate what the
+  scripts estimate, do not transliterate their syntax line by line (a Stata .do file's regression,
+  e.g. `reghdfe y x controls, absorb(fe) cluster(cl)`, becomes the equivalent fixest::feols() call
+  in R).  Keep only the parts that produce the specific claims being reproduced; skip figure
+  construction and unrelated robustness checks.  The scripts' data-file paths refer to the package's
+  internal layout — resolve them against the dataset directory listed under Dataset Information.
+- You may compare your `RESULT:` values with the claimed values yourself.
+  Every time you do that and then change the script, record the run you
+  compared as an attempt with `kind: "claim"`, and write the comparison you
+  made to that attempt's `feedback.txt`, one line per off-target claim in
+  the form `<name>: reproduced <v>, claimed <c>`.  Produce it with:
+
+      cd <repo> && uv run python -m benchmark.reproducers.check_attempt --run-dir <repo>/benchmark/reproductions/acemoglu-2022-war-socialism-fascism/seeded/2026-11-02-b --stdout <that attempt's stdout.txt>
+
+  At most 3 `kind: "claim"` attempts.
+- At most 3 `kind: "error"` repairs (a run that crashed or
+  printed no `RESULT:` line, followed by a fix).
+
+## Claims to Reproduce
+1. first_stage_casualties_table1_col1: 0.12 (standardized coefficient (standard deviations of the 1919 socialist vote share per standard deviation of casualties)) [type: coefficient]
+   Location: Table I, column (1), Share of foot soldier casualties
+   Context: Table I ("The Impact of Foot Soldier Casualties in World War I on the Socialist Vote Share in 1919"), column (1), the first stage. OLS across Italian municipalities of the socialist vote share in the 1919 election on the share of foot soldier casualties (the count of World War I foot soldier casualties from the municipality divided by the total male population over the age of six in 1911), with regiment fixed effects (dummies for any deaths from the municipality in a given regiment), province fixed effects and demographic controls (a quartic in log population and the share of the population be…
+2. first_stage_casualties_table1_col6: 0.1 (standardized coefficient) [type: coefficient]
+   Location: Table I, column (6), Share of foot soldier casualties
+   Context: Table I, column (6): the first stage with the full control set — column (1)'s regiment and province fixed effects and demographic controls plus geographic controls (log area, elevation of the main center, maximum elevation), the socialist vote share in 1913, military controls (veterans from the classes 1874-95 and 1896-1900, casualties among special assault troops and volunteers as a share of the male population above six in 1911, a dummy for army-supplying production plants, a dummy for any casualties in the highest-mortality battles), agricultural controls (share of day laborers, share of sh…
+3. first_stage_fstat_table1_col6: 50.59 (F-statistic) [type: other]
+   Location: Table I, column (6), F-stat.
+   Context: The F-statistic for the excluded instrument (share of foot soldier casualties) reported at the bottom of Table I, column (6): the test of the casualty coefficient in the full-controls first stage, with district-clustered standard errors.
+4. iv_violence_table2_panelA_col6: 0.5 (standardized coefficient (SDs of fascist violence per SD of the 1919 socialist vote share)) [type: coefficient]
+   Location: Table II, Panel A (2SLS), column (6), Socialist vote share in 1919
+   Context: Table II, Panel A, column (6). 2SLS of fascist violence in 1920-22 (episodes of fascist political violence per 1,000 inhabitants) on the socialist vote share in 1919, instrumented by the share of foot soldier casualties, with the full control set of Table I column (6) (regiment and province fixed effects; demographic, geographic, 1913 socialist share, military, agricultural and urban controls). Standardized coefficients; standard errors clustered at the district level.
+5. iv_branches_table2_panelC_col6: 0.5 (standardized coefficient) [type: coefficient]
+   Location: Table II, Panel C (2SLS), column (6), Socialist vote share in 1919
+   Context: Table II, Panel C, column (6). 2SLS of the presence of local branches of the Fascist Party in fall 1921 (from prefect reports) on the socialist vote share in 1919, instrumented by the share of foot soldier casualties, full control set as in Table I column (6). Standardized coefficients; district-clustered standard errors.
+6. iv_fascist_vote1921_table3_panelA_col6: 0.34 (standardized coefficient) [type: coefficient]
+   Location: Table III, Panel A (2SLS), column (6), Socialist vote share in 1919
+   Context: Table III, Panel A, column (6). 2SLS of the fascist vote share in the 1921 election (fascist lists plus the fascist candidates' share of the National Bloc lists, imputed from district, province or electoral-district candidate data where municipality data are missing) on the socialist vote share in 1919, instrumented by the share of foot soldier casualties, full control set as in Table I column (6). The 1921 sample is smaller than the 1919/1924 sample. Standardized coefficients; district-clustered standard errors.
+7. iv_fascist_vote1924_table3_panelC_col1: 0.4 (standardized coefficient) [type: coefficient]
+   Location: Table III, Panel C (2SLS), column (1), Socialist vote share in 1919
+   Context: Table III, Panel C, column (1). 2SLS of the fascist vote share in the 1924 election on the socialist vote share in 1919, instrumented by the share of foot soldier casualties, with only regiment and province fixed effects and demographic controls (the most parsimonious specification). Standardized coefficients; district-clustered standard errors.
+8. iv_fascist_vote1924_table3_panelC_col6: 0.51 (standardized coefficient) [type: coefficient]
+   Location: Table III, Panel C (2SLS), column (6), Socialist vote share in 1919
+   Context: Table III, Panel C, column (6). 2SLS of the fascist vote share in the 1924 election on the socialist vote share in 1919, instrumented by the share of foot soldier casualties, with the full control set of Table I column (6). Standardized coefficients; district-clustered standard errors.
+9. n_obs_main_sample: 5775.0 (observations (municipalities)) [type: other]
+   Location: Table I, Observations (all columns); also Table II and Table III Panels C-D
+   Context: Number of municipalities in the estimation sample of the first stage (Table I), the fascist violence and branch regressions (Table II) and the 1924 fascist vote share regressions (Table III, Panels C and D).
+10. n_clusters_main_sample: 181.0 (clusters (districts)) [type: other]
+   Location: Table I, Number of clusters (all columns); also Table II and Table III Panels C-D
+   Context: Number of district (circondario) clusters in the main estimation sample (Table I, Table II, Table III Panels C and D).
+11. n_obs_fascist_vote1921: 5358.0 (observations (municipalities)) [type: other]
+   Location: Table III, Panels A-B, Observations
+   Context: Number of municipalities in the 1921 fascist vote share regressions (Table III, Panels A and B, all columns).
+12. n_clusters_fascist_vote1921: 175.0 (clusters (districts)) [type: other]
+   Location: Table III, Panels A-B, Number of clusters
+   Context: Number of district clusters in the 1921 fascist vote share regressions (Table III, Panels A and B).
+
+## Dataset Information
+Name: acemoglu_2022_war_socialism_fascism
+Local path: <repo>/benchmark/.cache/claude-code/acemoglu-2022-war-socialism-fascism/seeded/2026-11-02-b/mount/acemoglu_2022_war_socialism_fascism
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- fascism_db.dta (29.8 MB) — 5775 rows, 1336 columns: fascist_violence, fascist_branch, literacy, bourgeoisie, political_violence, foots_pop6m, sh_pop_1911_be6, fascist1921restr, ind_firms, army_suppliers_d, ind_workers, fascist1921_vv, fascist1924_vv, psu1913_vv, psu1919_vv, dlab, larea, max_alt, circondario1921, nationalist1919_vv, casualties_pop6m, other_violence, z_fascism_index, veterans74_95, veterans96_00, fascist1919_vv, off_fascist1924_vv, volunt_pop6m, fascist_murders, volunteers1866d, volunteers1866_pop, province1, pr…
+- fascism_mod_elections_db.dta (361.3 MB) — 109725 rows, 899 columns: election, literacy, bourgeoisie, foots_pop6m, sh_pop_1911_be6, ind_firms, army_suppliers_d, ind_workers, fascist1924_vv, psu1913_vv, dlab, larea, max_alt, circondario1921, z_fascism_index, army_suppliers_d_1, army_suppliers_d_2, army_suppliers_d_3, army_suppliers_d_4, army_suppliers_d_5, army_suppliers_d_6, army_suppliers_d_7, army_suppliers_d_8, army_suppliers_d_9, army_suppliers_d_10, army_suppliers_d_11, army_suppliers_d_12, army_suppliers_d_13, army_suppliers_d_14, army_s…
+- TabA13FWER.R (813 B)
+- Tab_A1.do (329 B)
+- Tab_A14.R (1.8 KB)
+- Tab_A2.do (4.2 KB)
+- Tab_A22.do (2.2 KB)
+- Tab_A3_A13-A15_A21.do (24.1 KB)
+- Table8.do (2.2 KB)
+- Tables1-7.do (8.6 KB)
+- _masterfile_figures.do (2.1 KB)
+- _masterfile_tables.do (986 B)
+- desktop.ini (244 B)
+- fig1_maps.do (3.2 KB)
+- fig2.do (1.3 KB)
+- fig3.do (6.9 KB)
+- fig4.do (3.4 KB)
+- fig5.do (4.3 KB)
+- fig6.do (4.5 KB)
+- figA4a.do (9.0 KB)
+- figA4b.do (12.2 KB)
+- labels.do (3.5 KB)
+- x_gmm.ado (8.5 KB)
+- x_ols.ado (5.2 KB)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/benchmark/.cache/claude-code/acemoglu-2022-war-socialism-fascism/seeded/2026-11-02-b/mount/acemoglu_2022_war_socialism_fascism' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Original Replication Scripts
+The replication package (the dataset directory) ships the authors' own analysis scripts, reproduced below.  These are the GROUND TRUTH for the exact estimating equation, variable names, sample restrictions, fixed effects, and standard-error clustering — follow them over anything reconstructed from the methodology summary, and prefer them over the paper's text where the two disagree.  Your job is to write R code that implements the SAME SPECIFICATION: translate what the scripts estimate, do not transliterate their syntax line by line (a Stata .do file's regression, e.g. `reghdfe y x controls, absorb(fe) cluster(cl)`, becomes the equivalent fixest::feols() call in R).  Keep only the parts that produce the specific claims being reproduced; skip figure construction and unrelated robustness checks.  The scripts' data-file paths refer to the package's internal layout — resolve them against the dataset directory listed under Dataset Information.
+
+Stata-to-fixest sample matching: feols() drops fixed-effect singletons by default, but Stata's `reg y x i.fe` / `xi:` dummies keep them.  Pass `fixef.rm = "none"` to every feols() call that has fixed effects, otherwise the observation count and the robust SEs drift from the paper's.  Stata's `, r` / `vce(robust)` is `vcov = "hetero"`.
+
+### `Table8.do`
+```stata
+clear all
+set matsize 5000
+
+use "${datapath}/fascism_mod_elections_db.dta",clear
+
+foreach var of varlist left c_right far_right far_left  {
+egen z_`var' = std(`var')
+foreach i of numlist 1/19 {
+egen z_`var'`i'=std(`var') if election==`i'
+}
+}
+
+egen z_fascist1924_vv = std(fascist1924_vv) 
+egen z_foots_pop6m = std(foots_pop6m) 
+
+* label vars
+la var z_fascist1924_vv		"Fascist vote share in 1924"
+la var z_foots_pop6m		"Share of footsoldier casualties"
+la var election				"election"
+foreach i of numlist 1/19 {
+la var z_left`i'			"Left"
+la var z_c_right`i'			"Centre-right"
+la var z_far_left`i'		"Extreme left"
+la var z_far_right`i'		"Extreme right"
+}
+
+
+local cntrls "lpop1911_1-bourgeoisie_19 d_reg* d_elec* province*"
+
+
+foreach depvar of varlist z_left z_c_right z_far_left z_far_right{
+qui ivreg2 `depvar' (z_fascist1924_vv=z_foots_pop6m) `cntrls', partial(d_reg* d_elec* province*) cl(comune1921)
+outreg2 using "${outpath}/TAB_8A_`depvar'.tex", dec(2) keep(z_fascist1924_vv) addstat("Number of clusters", e(N_clust), "1st stage F-stat", e(widstat))  nocons label noaster replace
+}
+
+
+foreach election of numlist 1/9{
+foreach depvar of varlist z_left z_c_right z_far_left z_far_right{
+if (`election'==1 & `depvar' ==z_far_right)|(`election'==3 & `depvar' ==z_far_left)|(`election'==4 & `depvar' ==z_far_left)|(`election'==5 & `depvar' ==z_far_left) {
+}
+else {
+ivreg2 `depvar'`election' (z_fascist1924_vv=z_foots_pop6m) `cntrls' if election==`election', partial(d_reg* d_elec* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_8A_`depvar'.tex", dec(2) keep(z_fascist1924_vv) addstat("Number of clusters", e(N_clust), "1st stage F-stat", e(widstat)) nocons label noaster append
+}
+}
+}
+
+foreach election of numlist 10/19{
+foreach depvar of varlist z_left z_c_right z_far_left z_far_right{
+if (`election'==13 & `depvar' ==z_far_right) {
+}
+else {
+qui ivreg2 `depvar'`election' (z_fascist1924_vv=z_foots_pop6m) `cntrls' if election==`election', partial(d_reg* d_elec* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_8B_`depvar'.tex", dec(2) keep(z_fascist1924_vv) addstat("Number of clusters", e(N_clust), "1st stage F-stat", e(widstat)) nocons label noaster append
+}
+}
+}
+
+```
+
+### `Tables1-7.do`
+```stata
+clear all
+
+set more off
+
+use "${datapath}/fascism_db.dta",clear
+
+* standardize dependent and independent vars
+foreach var of varlist fascist_violence-strike_agr_1920 lpop1911-volunteers1866_pop rain1918-rain_var {
+egen z_`var'=std(`var')
+}
+
+* relabel them
+run "labels.do"
+
+
+local cntls_spec1 "z_lpop1911 z_lpop2 z_lpop3 z_lpop4 z_sh_pop_1911_be6 d_reg* province*"
+local cntls_spec2 "`cntls_spec1' z_larea z_centre_alt z_max_alt"
+local cntls_spec3 "`cntls_spec2' z_psu1913_vv"
+local cntls_spec4 "`cntls_spec3' z_veterans74_95 z_veterans96_00 z_ard_vol_pop6m z_cruent_d z_army_suppliers_d"
+local cntls_spec5 "`cntls_spec4' z_dlab z_shcrop z_landlord_ass"
+local cntls_spec6 "`cntls_spec5' z_ind_workers z_ind_firms z_literacy z_elites z_bourgeoisie"
+
+
+*TAB_1 FIRST STAGE
+foreach i of numlist 1/6 {
+qui reg z_psu1919_vv z_foots_pop6m `cntls_spec`i'', cl(circondario1921)
+qui test z_foots_pop6m
+outreg2 using "${outpath}/TAB_1.tex", dec(2) keep(z_foots_pop6m z_veterans74_95 z_veterans96_00 z_ard_vol_pop6m) addstat("Number of clusters", e(N_clust),"1st stage F-stat", r(F)) nocons label noaster append
+}
+
+*TAB_2
+*PANEL A
+foreach i of numlist 1/6 {
+qui ivreg2 z_fascist_violence (z_psu1919_vv=z_foots_pop6m) `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_2A.tex", dec(2) keep(z_psu1919_vv) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+}
+*PANEL B
+foreach i of numlist 1/6 {
+qui reg z_fascist_violence z_psu1919_vv `cntls_spec`i'', cl(circondario1921)
+outreg2 using "${outpath}/TAB_2B.tex", dec(2) keep(z_psu1919_vv) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+}
+*PANEL C
+foreach i of numlist 1/6 {
+qui ivreg2 z_fascist_branch (z_psu1919_vv=z_foots_pop6m) `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_2C.tex", dec(2) keep(z_psu1919_vv) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+}
+*PANEL D
+foreach i of numlist 1/6 {
+qui reg z_fascist_branch z_psu1919_vv `cntls_spec`i'', cl(circondario1921)
+outreg2 using "${outpath}/TAB_2D.tex", dec(2) keep(z_psu1919_vv) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+}
+
+*TAB 2SLS MAIN2
+*PANEL A
+foreach i of numlist 1/6 {
+qui ivreg2 z_fascist1921_vv (z_psu1919_vv=z_foots_pop6m) `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_3A.tex", dec(2) keep(z_psu1919_vv) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+}
+*PANEL B
+foreach i of numlist 1/6 {
+qui reg z_fascist1921_vv z_psu1919_vv `cntls_spec`i'', cl(circondario1921)
+outreg2 using "${outpath}/TAB_3B.tex", dec(2) keep(z_psu1919_vv) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+}
+*PANEL C
+foreach i of numlist 1/6 {
+qui ivreg2 z_fascist1924_vv (z_psu1919_vv=z_foots_pop6m) `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_3C.tex", dec(2) keep(z_psu1919_vv) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+}
+*PANEL D
+foreach i of numlist 1/6 {
+qui reg z_fascist1924_vv z_psu1919_vv `cntls_spec`i'', cl(circondario1921)
+outreg2 using "${outpath}/TAB_3D.tex", dec(2) keep(z_psu1919_vv) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+}
+
+*TAB4
+*PANEL A
+foreach i of numlist 1/6 {
+qui ivreg2 z_psu1920d (z_psu1919_vv=z_foots_pop6m) `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_4A.tex", dec(2) keep(z_psu1919_vv) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+}
+*panel B
+foreach i of numlist 1/6 {
+qui reg z_psu1920d z_psu1919_vv `cntls_spec`i'', cl(circondario1921)
+outreg2 using "${outpath}/TAB_4B.tex", dec(2) keep(z_psu1919_vv) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+}
+*PANEL C
+foreach i of numlist 1/6 {
+qui ivreg2 z_strike_agr_1920 (z_psu1919_vv=z_foots_pop6m) `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_4C.tex", dec(2) keep(z_psu1919_vv) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+}
+*PANEL D
+foreach i of numlist 1/6 {
+qui reg z_strike_agr_1920 z_psu1919_vv `cntls_spec`i'', cl(circondario1921)
+outreg2 using "${outpath}/TAB_4D.tex", dec(2) keep(z_psu1919_vv) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+}
+
+*TAB5
+***Panel A
+foreach var in ppi traditional psu{
+foreach i of numlist 1 4 6 {
+qui ivreg2 z_`var'1921_vv (z_psu1919_vv=z_foots_pop6m) `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_5A.tex", dec(2) keep(z_psu1919_vv) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+}
+}
+***Panel B
+foreach var in ppi traditional psu{
+foreach i of numlist 1 4 6 {
+qui reg z_`var'1921_vv z_foots_pop6m `cntls_spec`i'', cl(circondario1921)
+outreg2 using "${outpath}/TAB_5B.tex", dec(2) keep(z_foots_pop6m) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+}
+}
+***Panel C
+foreach var in ppi traditional psu{
+foreach i of numlist 1 4 6 {
+qui ivreg2 z_`var'1924_vv (z_psu1919_vv=z_foots_pop6m) `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_5C.tex", dec(2) keep(z_psu1919_vv) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+}
+}
+***Panel D
+foreach var in ppi traditional psu{
+foreach i of numlist 1 4 6 {
+qui reg z_`var'1924_vv z_foots_pop6m `cntls_spec`i'', cl(circondario1921)
+outreg2 using "${outpath}/TAB_5D.tex", dec(2) keep(z_foots_pop6m) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+}
+}
+
+
+*Table 6
+*Panel A/B
+g interaction=psu1919_vv*landlord_ass
+egen z_interaction=std(interaction)
+la var z_interaction	"Socialists x landowner association dummy"
+g IV_interaction=foots_pop6m*landlord_ass
+egen z_IV_interaction=std(IV_interaction)
+la var z_IV_interaction	"Casualties x landowner association dummy"
+foreach depvar in z_fascist_violence z_fascist_branch z_fascist1921_vv z_fascist1924_vv {
+foreach i of numlist 1 4 6 {
+qui ivreg2 `depvar' (z_psu1919_vv z_interaction =z_foots_pop6m z_IV_interaction) z_landlord_ass `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_6A.tex", dec(2) keep(z_psu1919_vv z_interaction) addstat("Number of clusters", e(N_clust), "Kleibergen-Paap F-stat", e(widstat)) nocons label noaster append
+*
+qui reg `depvar' z_foots_pop6m z_IV_interaction z_landlord_ass `cntls_spec`i'', cl(circondario1921)
+outreg2 using "${outpath}/TAB_6B.tex", dec(2) keep(z_foots_pop6m z_IV_interaction) nocons label noaster append
+}
+}
+drop interaction IV_interaction z_interaction z_IV_interaction
+*Panel C/D
+g interaction=psu1919_vv*z_elites
+egen z_interaction=std(interaction)
+la var z_interaction	"Socialists x elites"
+g IV_interaction=foots_pop6m*z_elites
+egen z_IV_interaction=std(IV_interaction)
+la var z_IV_interaction	"Casualties x elites"
+foreach depvar in z_fascist_violence z_fascist_branch z_fascist1921_vv z_fascist1924_vv {
+foreach i of numlist 1 4 6 {
+qui ivreg2 `depvar' (z_psu1919_vv z_interaction =z_foots_pop6m z_IV_interaction) z_elites `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_6C.tex", dec(2) keep(z_psu1919_vv z_interaction) addstat("Number of clusters", e(N_clust), "Kleibergen-Paap F-stat", e(widstat)) nocons label noaster append
+*
+qui reg `depvar' z_foots_pop6m z_IV_interaction z_elites `cntls_spec`i'', cl(circondario1921)
+outreg2 using "${outpath}/TAB_6D.tex", dec(2) keep(z_foots_pop6m z_IV_interaction) nocons label noaster append
+}
+}
+drop interaction IV_interaction z_interaction z_IV_interaction
+
+
+*TAB7
+***DUMMY
+*PANEL A
+foreach i of numlist 1/6 {
+qui ivreg2 z_deportations_d (z_fascist1924_vv=z_foots_pop6m) z_jewish_pop1911 z_nazi_occ_duration `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_7A.tex", dec(2) keep(z_fascist1924_vv) addstat("Number of clusters", e(N_clust), "1st stage F-stat", e(widstat)) nocons label noaster append
+}
+***CAPPED AT 1
+*PANEL B
+foreach i of numlist 1/6 {
+qui ivreg2 z_depo_pop_cap1 (z_fascist1924_vv=z_foots_pop6m) z_jewish_pop1911 z_nazi_occ_duration `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_7B.tex", dec(2) keep(z_fascist1924_vv) addstat("Number of clusters", e(N_clust), "1st stage F-stat", e(widstat)) nocons label noaster append
+}
+***CAPPED AT 1 NO CAMPS
+*PANEL C
+foreach i of numlist 1/6 {
+qui ivreg2 z_depo_pop_cap1 (z_fascist1924_vv=z_foots_pop6m) z_jewish_pop1911 z_nazi_occ_duration `cntls_spec`i'' if KZ!=1, partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_7C.tex", dec(2) keep(z_fascist1924_vv) addstat("Number of clusters", e(N_clust), "1st stage F-stat", e(widstat)) nocons label noaster append
+}
+
+```
+
+### `_masterfile_tables.do`
+```stata
+/* 
+master file reproducing all Tables for ADDR (2021) except for Table A14 which is constructed in R
+*/
+
+* change directory to database folder
+gl datapath ".../replication/data"
+* insert output path here
+gl outpath ".../replication/output"
+* change directory to dofile folder
+cd ".../replication/do/tables"
+
+*---------------------------------------------------------------------------------*
+* Table (1) to (7)
+*---------------------------------------------------------------------------------*
+run "Tables1-7.do"
+
+*---------------------------------------------------------------------------------*
+* Table (8)
+*---------------------------------------------------------------------------------*
+run "Table8.do"
+
+*---------------------------------------------------------------------------------*
+							* APPENDIX TABLES * 
+*---------------------------------------------------------------------------------*
+run "Tab_A1.do"
+run "Tab_A2.do"
+run "Tab_A3_A13-A15_A21.do"
+run "Tab_A22.do"
+
+```
+
+### `_masterfile_figures.do`
+```stata
+/* 
+master file reproducing all figures for ADDR 2021
+*/
+
+* set color scheme
+ssc install blindschemes, replace all
+set scheme plottigblind
+
+* chagne directory to database folder
+gl datapath ""
+* insert output path 
+gl outpath ""
+* change directory to dofile folder
+cd ".../do/figures"
+
+*---------------------------------------------------------------------------------*
+							* MAIN FIGURES * 
+*---------------------------------------------------------------------------------*
+
+*---------------------------------------------------------------------------------*
+* Figure (2): Bin Scatter first-stage
+*---------------------------------------------------------------------------------*
+run "fig2.do"
+
+*---------------------------------------------------------------------------------*
+* Figure (3): Falsification tests
+*---------------------------------------------------------------------------------*
+run "fig3.do"
+
+*---------------------------------------------------------------------------------*
+* Figure (4): Bin Scatter outcome variables
+*---------------------------------------------------------------------------------*
+run "fig4.do"
+
+*---------------------------------------------------------------------------------*
+* Figure (5): Reduced form estimates across full sample and never taker samples 
+*---------------------------------------------------------------------------------*
+run "fig5.do"
+
+*---------------------------------------------------------------------------------*
+* Figure (6): Reduced form estimates across full sample and never taker samples 
+*---------------------------------------------------------------------------------*
+run "fig6.do"
+
+*---------------------------------------------------------------------------------*
+							* APPENDIX FIGURES * 
+*---------------------------------------------------------------------------------*
+
+*---------------------------------------------------------------------------------*
+* Figure (A4): Falsification tests for alternative instruments 
+*---------------------------------------------------------------------------------*
+run "figA4a.do"
+
+run "figA4b.do"
+
+```
+
+### `TabA13FWER.R`
+```r
+# ADDR 
+# adjusting pvalues to account for the FWER
+# when construcing Table A13 we export unadjuasted pvalues in the output folder
+library(tidyverse)
+library(stats)
+library(data.table)
+
+# path to unadjusted pavalues
+dt = ".../replication/output/unadj_pv_sp146_FLS_NT13NT19.csv" %>% fread() %>% 
+  group_by(spec, sample) %>% 
+  mutate(holm_pv = p.adjust(standard_pv, method = "holm", n = 4)) %>% 
+  mutate(bonf_pv = p.adjust(standard_pv, method = "bonferroni", n = 4)) %>%
+  mutate(hoch_pv = p.adjust(standard_pv, method = "hochberg", n = 4)) %>%
+  mutate(hommel_pv = p.adjust(standard_pv, method = "hommel", n = 4)) %>% 
+  mutate_at(vars(ends_with("pv")), ~round(., 2)) %>% 
+  arrange(sample, depvar, spec)
+
+
+dt %>% 
+  # path to adjusted pvalues
+  fwrite(., ".../replication/output/adj_pv_sp146_allsamples.csv")
+
+```
+
+### `Tab_A1.do`
+```stata
+clear all
+
+set more off
+use "${datapath}/fascism_db.dta",clear
+
+keep comune1921-bourgeoisie
+drop longitude latitude
+
+outreg2 using "${outpath}/Tab_A1.tex", dec(2) sum(log) label replace
+
+use "${datapath}/fascism_mod_elections_db.dta",clear
+
+outreg2 using "${outpath}/Tab_A1_modern_elections.tex", dec(2) sum(log) label replace
+
+
+
+```
+
+### `Tab_A14.R`
+```r
+library(devtools)
+library(ivdoctr)
+library(tidyverse)
+library(data.table)
+library(haven)
+
+# declare path to data
+path = ""
+# declare path to output
+outpath = ""
+
+# read main data in 
+dt <- "{path}/fascism_db.dta" %>% str_glue() %>% read_dta() %>% 
+  
+  # standardize and rename vars
+  mutate_at(vars(fascist_violence:strike_agr_1920, lpop1911:volunteers1866_pop, rain1918:rain_var), 
+            list(std = ~ (.-mean(., na.rm = TRUE))/sd(., na.rm = TRUE))) %>% 
+  rename_at(vars(ends_with("_std")), ~paste0("z_", gsub("_std", "", .)) )
+  
+
+# controls:
+prov_ctr = dt %>% select(starts_with("province")) %>% names()
+reg_d = dt %>% select(starts_with("d_reg")) %>% names()
+demo=c("z_lpop1911","z_lpop2","z_lpop3","z_lpop4","z_sh_pop_1911_be6")
+geo=c("z_larea","z_centre_alt","z_max_alt")
+corps=c("z_ard_vol_pop6m","z_cruent_d","z_veterans74_95","z_veterans96_00","z_army_suppliers_d")
+rural=c("z_dlab","z_shcrop","z_landlord_ass")
+urban=c("z_ind_workers","z_ind_firms","z_literacy","z_elites","z_bourgeoisie")
+full_ctr=c(demo,geo,"z_psu1913_vv",corps,rural,urban,prov_ctr,reg_d)
+
+
+# Looping over outcome variables:
+outcomes <- c("z_fascist1924_vv","z_fascist_violence","z_fascist_branch","z_fascist1921_vv")
+
+set.seed(1111)
+
+for(outcome in outcomes){
+  
+  var_2_keep<-c(outcome, "z_psu1919_vv", "z_foots_pop6m", full_ctr)
+  Data = dt %>% select(var_2_keep) %>% na.omit(.)
+  
+  K1 <- ivdoctr:::makeExample(outcome, "z_psu1919_vv", "z_foots_pop6m", Data, controls =full_ctr , robust = TRUE,
+                              r_TstarU_restriction =  matrix(c(-0.1, -0.9), nrow = 1), k_restriction= matrix(c(0.5, 1), nrow = 1), n_draws = 5000,
+                              n_RF_draws = 1000, n_IS_draws = 1000, resample = FALSE, outcome)
+  
+  ivdoctr:::makeTable(paste0(outpath, "/Ditraglia_", outcome,".tex"), binary = FALSE, K1)
+  
+}
+
+```
+
+### `Tab_A2.do`
+```stata
+****************************
+*********TABLE A2***********
+*********CONLEY SE**********
+****************************
+
+clear all
+
+set more off
+use "${datapath}/fascism_db.dta",clear
+
+* standardize dependent and independent vars
+foreach var of varlist fascist_violence-strike_agr_1920 lpop1911-volunteers1866_pop rain1918-rain_var {
+egen z_`var'=std(`var')
+}
+
+* relabel them
+run "labels.do"
+
+
+***partialling out of the fixed effects to use x_ols and x_gmm
+foreach var in fascist_violence fascist_branch fascist1921_vv fascist1924_vv psu1919_vv foots_pop6m lpop1911 lpop2 lpop3 lpop4 sh_pop_1911_be6 larea centre_alt max_alt psu1913_vv ard_vol_pop6m cruent_d veterans74_95 veterans96_00 army_suppliers_d dlab shcrop landlord_ass ind_workers ind_firms literacy elites bourgeoisie {
+qui reg z_`var' province* d_reg*
+predict r_`var', residuals
+}
+local cntls_spec1 "r_lpop1911 r_lpop2 r_lpop3 r_lpop4 r_sh_pop_1911_be6"
+local cntls_spec4 "`cntls_spec1' r_larea r_centre_alt r_max_alt r_psu1913_vv r_veterans74_95 r_veterans96_00 r_ard_vol_pop6m r_cruent_d r_army_suppliers_d"
+local cntls_spec6 "`cntls_spec4' r_dlab r_shcrop r_landlord_ass r_ind_workers r_ind_firms r_literacy r_elites r_bourgeoisie"
+
+gen cutoff1=1.5
+gen cutoff2=1.5
+	
+matrix Table_Conley = J(5,15,.)
+*First Stage
+foreach i of numlist 1 4 6 {
+local x=`x'+1
+local wc=wordcount("`cntls_spec`i''")+1
+qui x_ols latitude longitude cutoff1 cutoff2 r_psu1919_vv r_foots_pop6m `cntls_spec`i'', xreg(`wc') coord(2)
+local se=sqrt(cov_dep[1,1])
+matrix Table_Conley[2,`x']= `se'
+qui reg r_psu1919_vv r_foots_pop6m `cntls_spec`i'', noconst
+local coeff=_b[r_foots_pop6m]
+matrix Table_Conley[1,`x']= `coeff'
+matrix Table_Conley[5,`x']= (`coeff'/`se')^2
+
+drop dis1 dis2 epsilon window
+}
+*IV
+foreach i of numlist 1 4 6 {
+local x=`x'+1
+local wc=wordcount("`cntls_spec`i''")+1
+qui x_gmm latitude longitude cutoff1 cutoff2 r_fascist_vio r_psu1919_vv `cntls_spec`i'' r_foots_pop6m `cntls_spec`i'' , xreg(`wc') inst(`wc') coord(2)
+matrix Table_Conley[3,`x']= betagmm[1,1]
+matrix Table_Conley[4,`x']= sqrt(cov_dep[1,1])
+drop dis1 dis2 zubar*
+}
+
+foreach i of numlist 1 4 6 {
+local x=`x'+1
+local wc=wordcount("`cntls_spec`i''")+1
+qui x_gmm latitude longitude cutoff1 cutoff2 r_fascist_branch r_psu1919_vv `cntls_spec`i'' r_foots_pop6m `cntls_spec`i'' , xreg(`wc') inst(`wc') coord(2)
+matrix Table_Conley[3,`x']= betagmm[1,1]
+matrix Table_Conley[4,`x']= sqrt(cov_dep[1,1])
+drop dis1 dis2 zubar*
+}
+
+local x=12
+foreach i of numlist 1 4 6 {
+local x=`x'+1
+local wc=wordcount("`cntls_spec`i''")+1
+qui x_gmm latitude longitude cutoff1 cutoff2 r_fascist1924_vv r_psu1919_vv `cntls_spec`i'' r_foots_pop6m `cntls_spec`i'' , xreg(`wc') inst(`wc') coord(2)
+matrix Table_Conley[3,`x']= betagmm[1,1]
+matrix Table_Conley[4,`x']= sqrt(cov_dep[1,1])
+drop dis1 dis2 zubar*
+}
+
+
+drop if z_fascist1921_vv==.
+
+foreach var in fascist_violence fascist_branch fascist1921_vv fascist1924_vv psu1919_vv foots_pop6m lpop1911 lpop2 lpop3 lpop4 sh_pop_1911_be6 larea centre_alt max_alt psu1913_vv ard_vol_pop6m cruent_d veterans74_95 veterans96_00 army_suppliers_d dlab shcrop landlord_ass ind_workers ind_firms literacy elites bourgeoisie {
+drop r_`var'
+qui reg z_`var' province* d_reg*
+predict r_`var', residuals
+}
+local x=9
+foreach i of numlist 1 4 6 {
+local x=`x'+1
+local wc=wordcount("`cntls_spec`i''")+1
+qui x_gmm latitude longitude cutoff1 cutoff2 r_fascist1921_vv r_psu1919_vv `cntls_spec`i'' r_foots_pop6m `cntls_spec`i'' , xreg(`wc') inst(`wc') coord(2)
+matrix Table_Conley[3,`x']= betagmm[1,1]
+matrix Table_Conley[4,`x']= sqrt(cov_dep[1,1])
+drop dis1 dis2 zubar*
+}
+
+matrix colnames Table_Conley= "Socialist vote share in 1919" "Socialist vote share in 1919" "Socialist vote share in 1919" "Fascist violence in 1920-2" "Fascist violence in 1920-2" "Fascist violence in 1920-2" "Fascist branches in 1921" "Fascist branches in 1921" "Fascist branches in 1921" "Fascist vote share in 1921" "Fascist vote share in 1921" "Fascist vote share in 1921" "Fascist vote share in 1924" "Fascist vote share in 1924" "Fascist vote share in 1924"
+matrix rownames Table_Conley= "Share of footsoldier casualties" "Conley standard error" "Socialist vote share in 1919" "Conley standard error" "1st stage F-stat"
+
+estout matrix(Table_Conley ,fmt(2)) using "${outpath}/TAB_A2.tex", style(tex) replace
+
+```
+
+### `Tab_A22.do`
+```stata
+clear all
+set matsize 5000
+
+use "${datapath}/fascism_mod_elections_db.dta",clear
+
+
+foreach var of varlist left c_right far_right far_left  {
+egen z_`var' = std(`var')
+foreach i of numlist 1/19 {
+egen z_`var'`i'=std(`var') if election==`i'
+}
+}
+
+egen z_fascist1924_vv = std(fascist1924_vv) 
+egen z_foots_pop6m = std(foots_pop6m) 
+
+
+la var z_left			"Left"
+la var z_c_right		"Centre-right"
+la var z_far_left		"Extreme left"
+la var z_far_right		"Extreme right"
+la var z_fascist1924_vv		"Fascist vote share in 1924"
+la var z_fascism_index		"Fascism index 1920-24"
+la var election			"election"
+foreach i of numlist 1/19 {
+la var z_left`i'		"Left"
+la var z_c_right`i'		"Centre-right"
+la var z_far_left`i'		"Extreme left"
+la var z_far_right`i'		"Extreme right"
+}
+
+
+local cntrls "lpop1911_1-bourgeoisie_19 d_reg* d_elec* province*"
+
+
+foreach depvar of varlist z_left z_c_right z_far_left z_far_right{
+qui ivreg2 `depvar' (z_fascism_index=z_foots_pop6m) `cntrls', partial(d_reg* d_elec* province*) cl(comune1921)
+outreg2 using "${outpath}/TAB_A22A_`depvar'.tex", dec(2) keep(z_fascism_index) addstat("Number of clusters", e(N_clust), "1st stage F-stat", e(widstat))  nocons label noaster replace
+}
+
+
+foreach election of numlist 1/9{
+foreach depvar of varlist z_left z_c_right z_far_left z_far_right{
+if (`election'==1 & `depvar' ==z_far_right)|(`election'==3 & `depvar' ==z_far_left)|(`election'==4 & `depvar' ==z_far_left)|(`election'==5 & `depvar' ==z_far_left) {
+}
+else {
+ivreg2 `depvar'`election' (z_fascism_index=z_foots_pop6m) `cntrls' if election==`election', partial(d_reg* d_elec* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_A22A_`depvar'.tex", dec(2) keep(z_fascism_index) addstat("Number of clusters", e(N_clust), "1st stage F-stat", e(widstat)) nocons label noaster append
+}
+}
+}
+
+foreach election of numlist 10/19{
+foreach depvar of varlist z_left z_c_right z_far_left z_far_right{
+if (`election'==13 & `depvar' ==z_far_right) {
+}
+else {
+qui ivreg2 `depvar'`election' (z_fascism_index=z_foots_pop6m) `cntrls' if election==`election', partial(d_reg* d_elec* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_A22B_`depvar'.tex", dec(2) keep(z_fascism_index) addstat("Number of clusters", e(N_clust), "1st stage F-stat", e(widstat)) nocons label noaster append
+}
+}
+}
+
+```
+
+### `Tab_A3_A13-A15_A21.do`
+```stata
+clear all
+set matsize 5000
+
+set more off
+use "${datapath}/fascism_db.dta",clear
+
+* standardize dependent and independent vars
+foreach var of varlist fascist_violence-strike_agr_1920 lpop1911-volunteers1866_pop rain1918-rain_var {
+egen z_`var'=std(`var')
+
+}
+
+* relabel them
+run "labels.do"
+
+
+*****
+local demo "z_lpop1911 z_lpop2 z_lpop3 z_lpop4 z_sh_pop_1911_be6"
+local cntls_spec1 "z_lpop1911 z_lpop2 z_lpop3 z_lpop4 z_sh_pop_1911_be6 d_reg* province*"
+local cntls_spec2 "`cntls_spec1' z_larea z_centre_alt z_max_alt"
+local cntls_spec3 "`cntls_spec2' z_psu1913_vv"
+local cntls_spec4 "`cntls_spec3' z_veterans74_95 z_veterans96_00 z_ard_vol_pop6m z_cruent_d z_army_suppliers_d"
+local cntls_spec5 "`cntls_spec4' z_dlab z_shcrop z_landlord_ass"
+local cntls_spec6 "`cntls_spec5' z_ind_workers z_ind_firms z_literacy z_elites z_bourgeoisie"
+***Specifications with Alternative Fixef Effects
+local sem_fe "d_fr1_d_ds_may1915-d_fr16_d_ds_may1918"
+local cntls_alt_sem_fe_spec1 "`demo' `sem_fe' province*"
+local cntls_alt_sem_fe_spec4 "`cntls_alt_sem_fe_spec1' z_larea z_centre_alt z_max_alt z_psu1913_vv z_veterans74_95 z_veterans96_00 z_ard_vol_pop6m z_cruent_d z_army_suppliers_d"
+local cntls_alt_sem_fe_spec6 "`cntls_alt_sem_fe_spec4' z_dlab z_shcrop z_landlord_ass z_ind_workers z_ind_firms z_literacy z_elites z_bourgeoisie"
+***
+local month_fe "d_fr1_d_dm_may1915-d_fr16_d_dm_nov1918"
+local cntls_alt_month_fe_spec1 "`demo' `month_fe' province*"
+local cntls_alt_month_fe_spec4 "`cntls_alt_month_fe_spec1' z_larea z_centre_alt z_max_alt z_psu1913_vv z_veterans74_95 z_veterans96_00 z_ard_vol_pop6m z_cruent_d z_army_suppliers_d"
+local cntls_alt_month_fe_spec6 "`cntls_alt_month_fe_spec4' z_dlab z_shcrop z_landlord_ass z_ind_workers z_ind_firms z_literacy z_elites z_bourgeoisie"
+***Specifications For Excess Mortality (without regiment fixed effects)
+local cntls_excess_spec1 "`demo' province*"
+local cntls_excess_spec4 "`cntls_excess_spec1' z_larea z_centre_alt z_max_alt z_psu1913_vv z_veterans74_95 z_veterans96_00 z_ard_vol_pop6m z_cruent_d z_army_suppliers_d"
+local cntls_excess_spec6 "`cntls_excess_spec4' z_dlab z_shcrop z_landlord_ass z_ind_workers z_ind_firms z_literacy z_elites z_bourgeoisie"
+
+
+*APPENDIX
+
+*TAB_A3 - NO FE
+reg z_psu1919_vv z_foots_pop6m `demo', cl(`clustering'circondario1921)
+outreg2 using "${outpath}/TAB_A3.tex", dec(2) keep(z_foots_pop6m) addstat("Number of clusters", e(N_clust)) nocons label noaster replace
+*
+foreach depvar of varlist z_fascist_violence z_fascist_branch z_fascist1921_vv z_fascist1924_vv {
+qui ivreg2 `depvar' (z_psu1919_vv=z_foots_pop6m) `demo', cl(circondario1921)
+outreg2 using "${outpath}/TAB_A3.tex", dec(2) keep(z_psu1919_vv) addstat("Number of clusters",e(N_clust),"First-stage F-stat",e(widstat)) nocons label noaster append
+}
+
+*TAB_A4 ALTERNATIVE FIRST STAGES
+foreach instr of varlist z_draftres_foots_pop6m z_draft_foots_pop6m z_casualties_pop6m{
+foreach i of numlist 1 4 6 {
+qui reg z_psu1919_vv `instr' `cntls_spec`i'', cl(circondario1921)
+qui test `instr'
+outreg2 using "${outpath}/TAB_A4.tex", dec(2) keep(`instr') addstat("Number of clusters", e(N_clust), 1st stage F-stat,r(F)) nocons label noaster append
+}
+}
+*
+
+*TAB_A5 (REDUCED FORM FOR THE FOUR MAIN OUTPUT VARIABLES)
+foreach depvar in z_fascist_violence z_fascist_branch z_fascist1921_vv z_fascist1924_vv {
+foreach i of numlist 1 4 6 {
+qui reg `depvar' z_foots_pop6m `cntls_spec`i'', cl(circondario1921)
+outreg2 using "${outpath}/TAB_A5.tex", dec(2) keep(z_foots_pop6m) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+}
+}
+
+
+*TAB A6 ON TOTAL EFFECTS OF MILITARY CONTROLS
+*PANEL A
+foreach i of numlist 4 6 {
+qui reg z_psu1919_vv z_foots_pop6m `cntls_spec`i'', cl(circondario1921)
+outreg2 using "${outpath}/TAB_A6A.tex", dec(2) keep(z_veterans74_95 z_veterans96_00 z_ard_vol_pop6m z_army_suppliers_d) nocons label noaster append
+}
+foreach depvar of varlist z_fascist_violence z_fascist_branch z_fascist1921_vv z_fascist1924_vv{
+foreach i of numlist 4 6 {
+qui ivreg2 `depvar' (z_psu1919_vv=z_foots_pop6m) `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_A6A.tex", dec(2) keep(z_veterans74_95 z_veterans96_00 z_ard_vol_pop6m z_army_suppliers_d) nocons label noaster append
+}
+}
+
+*PANEL B 
+matrix Table_A6B = J(8,10,.)
+
+**store first stage
+foreach i of numlist 4 6 {
+qui reg z_psu1919_vv z_foots_pop6m `cntls_spec`i''
+predict z_psu_hat`i',xb
+est store first`i'
+}
+**store first stage for Fascist vote share in 1921
+foreach i of numlist 4 6 {
+qui reg z_psu1919_vv z_foots_pop6m `cntls_spec`i'' if z_fascist1921_vv!=.
+predict z_psu_hat`i'b,xb
+est store first`i'b
+}
+**store IV
+foreach depvar of varlist z_fascist_violence z_fascist_branch z_fascist1921_vv z_fascist1924_vv{
+foreach i of numlist 4 6 {
+if `depvar'==z_fascist1921_vv {
+qui reg `depvar' z_psu_hat`i'b `cntls_spec`i''
+est store `depvar'`i'
+}
+else {
+qui reg `depvar' z_psu_hat`i' `cntls_spec`i''
+est store `depvar'`i'
+}
+}
+}
+local x=2
+foreach depvar of varlist z_fascist_violence z_fascist_branch z_fascist1921_vv z_fascist1924_vv{
+local x=`x'+2
+foreach i of numlist 4 6{
+if `depvar'==z_fascist1921_vv suest `depvar'`i' first`i'b, cl(circondario1921)
+else suest `depvar'`i' first`i', cl(circondario1921)
+
+foreach military of varlist z_veterans74_95 z_veterans96_00 z_ard_vol_pop6m z_army_suppliers_d {
+local y=`y'+2
+if `depvar'==z_fascist1921_vv nlcom [`depvar'`i'_mean]_b[`military']+[`depvar'`i'_mean]_b[z_psu_hat`i'b]*[first`i'b_mean]_b[`military']
+else nlcom [`depvar'`i'_mean]_b[`military']+[`depvar'`i'_mean]_b[z_psu_hat`i']*[first`i'_mean]_b[`military']
+matrix b = r(b)
+matrix V = r(V)
+local se sqrt(V[1,1])
+local se_str "(`se')"
+matrix Table_A6B[`y'-1,`x'-1+`i'/2-2] = b[1,1]
+matrix Table_A6B[`y',`x'-1+`i'/2-2]= `se'
+}
+local y=0
+}
+}
+matrix rownames Table_A6B= "Veterans (classes 1874-1895)" " " "Veterans (classes 1896-1900)" " " "Assault tr. + volunt. casualties" " "  "Army supplying production plant" " "
+matrix colnames Table_A6B= "Fascist violence in 1920-2" "Fascist violence in 1920-2" "Fascist branches in 1921" "Fascist branches in 1921" "Fascist vote share in 1921" "Fascist vote share in 1921" "Fascist vote share in 1924" "Fascist vote share in 1924"
+
+estout matrix(Table_A6B ,fmt(2)) using "${outpath}/TAB_A6B.tex", style(tex) replace
+
+
+
+*TAB_A7 (additional first stage for fascist1921_vv
+foreach i of numlist 1/6 {
+qui reg z_psu1919_vv z_foots_pop6m `cntls_spec`i'' if z_fascist1921_vv!=., cl(circondario1921)
+qui test z_foots_pop6m
+outreg2 using "${outpath}/TAB_A7.tex", dec(2) keep(z_foots_pop6m) addstat("Number of clusters", e(N_clust),"1st stage F-stat",r(F)) nocons label noaster append
+}
+
+*TAB_A8 - No South
+foreach i of numlist 1 4 6 {
+qui reg z_psu1919_vv z_foots_pop6m `cntls_spec`i'' if no_south==1, cl(circondario1921)
+outreg2 using "${outpath}/TAB_A8.tex", dec(2) keep(z_foots_pop6m) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+}
+foreach depvar in z_fascist_violence z_fascist_branch z_fascist1921_vv z_fascist1924_vv {
+foreach i of numlist 1 4 6 {
+qui ivreg2 `depvar' (z_psu1919_vv=z_foots_pop6m) `cntls_spec`i'' if no_south==1, partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_A8.tex", dec(2) keep(z_psu1919_vv) addstat("Number of clusters", e(N_clust) , "1st stage F-stat", e(widstat)) nocons label noaster append
+}
+}
+*TAB_A9 second stage alternative IV
+*PANEL A
+foreach instr of varlist z_draftres_foots_pop6m z_draft_foots_pop6m z_casualties_pop6m{
+foreach i of numlist 1 4 6 {
+qui ivreg2 z_fascist_violence (z_psu1919_vv=`instr') `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_A9A.tex", dec(2) keep(z_psu1919_vv) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+*PANEL B
+qui ivreg2 z_fascist_branch (z_psu1919_vv=`instr') `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_A9B.tex", dec(2) keep(z_psu1919_vv) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+*PANEL C
+qui ivreg2 z_fascist1921_vv (z_psu1919_vv=`instr') `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_A9C.tex", dec(2) keep(z_psu1919_vv) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+*PANEL D
+qui ivreg2 z_fascist1924_vv (z_psu1919_vv=`instr') `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_A9D.tex", dec(2) keep(z_psu1919_vv) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+}
+}
+
+	
+*TAB_A10 alt_fe
+foreach j in sem_fe month_fe {
+foreach i of numlist 1 4 6 {
+qui ivreg2 z_fascist_violence (z_psu1919_vv=z_foots_pop6m) `cntls_alt_`j'_spec`i'', partial(``j'' province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_A10A.tex", dec(2) keep(z_psu1919_vv) addstat("Number of clusters", e(N_clust), "1st stage F-stat", e(widstat)) nocons label noaster append
+qui ivreg2 z_fascist_branch (z_psu1919_vv=z_foots_pop6m) `cntls_alt_`j'_spec`i'', partial(``j'' province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_A10B.tex", dec(2) keep(z_psu1919_vv) addstat("Number of clusters", e(N_clust), "1st stage F-stat", e(widstat)) nocons label noaster append
+qui ivreg2 z_fascist1921_vv (z_psu1919_vv=z_foots_pop6m) `cntls_alt_`j'_spec`i'', partial(``j'' province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_A10C.tex", dec(2) keep(z_psu1919_vv) addstat("Number of clusters", e(N_clust), "1st stage F-stat", e(widstat)) nocons label noaster append
+qui ivreg2 z_fascist1924_vv (z_psu1919_vv=z_foots_pop6m) `cntls_alt_`j'_spec`i'', partial(``j'' province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_A10D.tex", dec(2) keep(z_psu1919_vv) addstat("Number of clusters", e(N_clust), "1st stage F-stat", e(widstat)) nocons label noaster append
+}
+}
+
+
+*TAB_A11
+*Panel A
+foreach depvar of varlist z_fascist_murders z_political_violence z_other_violence {
+foreach i of numlist 1 4 6 {
+qui ivreg2 `depvar' (z_psu1919_vv=z_foots_pop6m) `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_A11A.tex", dec(2) keep(z_psu1919_vv) addstat("Number of clusters", e(N_clust) , "1st stage F-stat", e(widstat)) nocons label noaster append
+}
+}
+*Panel B
+foreach depvar of varlist z_fascist1921restr z_pnf1921_vv z_pnf1921_d{
+foreach i of numlist 1 4 6 {
+qui ivreg2 `depvar' (z_psu1919_vv=z_foots_pop6m) `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_A11B.tex", dec(2) keep(z_psu1919_vv) addstat("Number of clusters", e(N_clust) , "1st stage F-stat", e(widstat)) nocons label noaster append
+}
+}
+*Panel C
+foreach depvar of varlist z_fascist1921_vv z_fascist1924_vv{
+foreach i of numlist 1 4 6 {
+qui ivreg2 `depvar' (z_psu1919_vv=z_foots_pop6m) z_fascist1919_vv `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_A11C.tex", dec(2) keep(z_psu1919_vv) addstat("Number of clusters", e(N_clust) , "1st stage F-stat", e(widstat)) nocons label noaster append
+}
+}
+*
+foreach i of numlist 1 4 6 {
+qui ivreg2 z_off_fascist1924_vv (z_psu1919_vv=z_foots_pop6m) `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_A11C.tex", dec(2) keep(z_psu1919_vv) addstat("Number of clusters", e(N_clust) , "1st stage F-stat", e(widstat)) nocons label noaster append
+}
+
+
+
+*TAB_A12 RED SCARE SOCIALIST 1920 & INDEX
+*panel A
+foreach i of numlist 1 4 6 {
+qui reg z_psu1920d z_foots_pop6m `cntls_spec`i'', cl(circondario1921)
+outreg2 using "${outpath}/TAB_A12A.tex", dec(2) keep(z_foots_pop6m) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+}
+foreach depvar of varlist z_fascist_violence z_fascist_branch z_fascist1921_vv z_fascist1924_vv{
+foreach i of numlist 1 4 6 {
+qui ivreg2 `depvar' (z_psu1920d=z_foots_pop6m) `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_A12A.tex", dec(2) keep(z_psu1920d) addstat("Number of clusters", e(N_clust), "1st Stage F-stat", e(widstat)) nocons label noaster append
+}
+}
+*panel B
+foreach i of numlist 1 4 6 {
+qui reg z_red_scare_index z_foots_pop6m `cntls_spec`i'', cl(circondario1921)
+outreg2 using "${outpath}/TAB_A12B.tex", dec(2) keep(z_foots_pop6m) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+}
+foreach depvar of varlist z_fascist_violence z_fascist_branch z_fascist1921_vv z_fascist1924_vv{
+foreach i of numlist 1 4 6 {
+qui ivreg2 `depvar' (z_red_scare_index=z_foots_pop6m) `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_A12B.tex", dec(2) keep(z_red_scare_index) addstat("Number of clusters", e(N_clust), "1st Stage F-stat", e(widstat)) nocons label noaster append
+}
+}
+*panel C
+foreach i of numlist 1 4 6 {
+qui reg z_psu1921_vv z_foots_pop6m `cntls_spec`i'', cl(circondario1921)
+outreg2 using "${outpath}/TAB_A12C.tex", dec(2) keep(z_foots_pop6m) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+}
+foreach depvar of varlist z_fascist_violence z_fascist_branch z_fascist1921_vv z_fascist1924_vv{
+foreach i of numlist 1 4 6 {
+qui ivreg2 `depvar' (z_psu1921_vv=z_foots_pop6m) `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_A12C.tex", dec(2) keep(z_psu1921_vv) addstat("Number of clusters", e(N_clust), "1st Stage F-stat", e(widstat)) nocons label noaster append
+}
+}
+
+*TAB A13: NEVER-TAKERS
+reg z_psu1919_vv z_foots_pop6m `cntls_spec1'
+predict psu1919hat, xb
+
+sum psu1919hat,d
+g nt1919 = psu1919hat<r(p25)
+g nt1913 = psu_cand1913==0
+
+
+foreach depvar of varlist z_fascist_violence z_fascist_branch z_fascist1921_vv z_fascist1924_vv {
+foreach i of numlist 1 4 6 {
+qui reg `depvar' z_foots_pop6m `cntls_spec`i'', cluster(circondario1921)
+
+
+preserve
+clear
+matrix res = r(table)
+svmat res, names("V") 
+keep V1 // keep only 1st coef stats
+keep in 4 // keep only pvalue
+rename V1 standard_pv 
+gen depvar = "`depvar'"
+gen spec = `i'
+gen sample = "Full"
+tempfile FSpv_`depvar'_spec`i'
+save `FSpv_`depvar'_spec`i''
+restore
+
+
+outreg2 using "${outpath}/TAB_A13A.tex", dec(2) keep(z_foots_pop6m) nocons label noaster append
+eststo: qui reg `depvar' z_foots_pop6m `cntls_spec`i''
+***predicted socialist in 1919 in the lowest quartile
+eststo: qui reg `depvar' z_foots_pop6m `cntls_spec`i'' if nt1919==1
+
+
+qui suest est1 est2, cluster(circondario1921)
+test [est1_mean]z_foots_pop6m=[est2_mean]z_foots_pop6m
+local pvalue=r(p)
+qui reg `depvar' z_foots_pop6m `cntls_spec`i'' if nt1919==1, cluster(circondario1921)
+
+preserve
+clear
+matrix res = r(table)
+svmat res, names("V") 
+keep V1 // keep only 1st coef stats
+keep in 4 // keep only pvalue
+rename V1 standard_pv
+gen depvar = "`depvar'"
+gen spec = `i'
+gen sample = "NT19"
+tempfile NT19pv_`depvar'_spec`i'
+save `NT19pv_`depvar'_spec`i''
+restore
+
+outreg2 using "${outpath}/TAB_A13B.tex", dec(2) keep(z_foots_pop6m) addstat(P-value, `pvalue') nocons label noaster append
+***no socialist candidate in 1913
+eststo: qui reg `depvar' z_foots_pop6m `cntls_spec`i'' if nt1913==1
+
+qui suest est1 est3, cluster(circondario1921)
+test [est1_mean]z_foots_pop6m=[est3_mean]z_foots_pop6m
+local pvalue=r(p)
+qui reg `depvar' z_foots_pop6m `cntls_spec`i'' if nt1913==1, cluster(circondario1921)
+
+preserve
+clear
+matrix res = r(table)
+svmat res, names("V") 
+keep V1 // keep only 1st coef stats
+keep in 4 // keep only pvalue
+rename V1 standard_pv
+gen depvar = "`depvar'"
+gen spec = `i'
+gen sample = "NT13"
+tempfile NT13pv_`depvar'_spec`i'
+save `NT13pv_`depvar'_spec`i''
+restore
+
+outreg2 using "${outpath}/TAB_A13C.tex", dec(2) keep(z_foots_pop6m) addstat(P-value, `pvalue') nocons label noaster append
+eststo clear
+}
+}
+
+preserve
+use `FSpv_z_fascist_violence_spec1', clear
+append using `FSpv_z_fascist_violence_spec4'
+append using `FSpv_z_fascist_violence_spec6'
+
+foreach depvar in z_fascist_branch z_fascist1921_vv z_fascist1924_vv {
+foreach i in 1 4 6 {
+
+append using `FSpv_`depvar'_spec`i''
+
+}
+}
+
+foreach depvar in z_fascist_violence z_fascist_branch z_fascist1921_vv z_fascist1924_vv {
+foreach i in 1 4 6 {
+
+append using `NT13pv_`depvar'_spec`i''
+append using `NT19pv_`depvar'_spec`i''
+
+}
+}
+* export pvalues to adjust them to FWER
+export delimited using "${outpath}/unadj_pv_sp146_FLS_NT13NT19.csv", replace
+restore
+
+
+*TAB_A15: other parties in 1921 and 1924 controlling for 1919
+*Panel A
+foreach var in ppi traditional {
+foreach i of numlist 1 4 6 {
+qui ivreg2 z_`var'1921_vv (z_psu1919_vv=z_foots_pop6m) z_`var'1919_vv `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_A15A.tex", dec(2) keep(z_psu1919_vv z_`var'1919_vv) addstat("Number of clusters", e(N_clust), "1st stage F-stat", e(widstat)) nocons label noaster append
+}
+}
+*Panel B
+foreach var in ppi traditional {
+foreach i of numlist 1 4 6 {
+qui reg z_`var'1921_vv z_foots_pop6m z_`var'1919_vv `cntls_spec`i'', cl(circondario1921)
+outreg2 using "${outpath}/TAB_A15B.tex", dec(2) keep(z_foots_pop6m z_`var'1919_vv) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+}
+}
+*Panel C
+foreach var in ppi traditional {
+foreach i of numlist 1 4 6 {
+qui ivreg2 z_`var'1924_vv (z_psu1919_vv=z_foots_pop6m) z_`var'1919_vv `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_A15C.tex", dec(2) keep(z_psu1919_vv z_`var'1919_vv) addstat("Number of clusters", e(N_clust), "1st stage F-stat", e(widstat)) nocons label noaster append
+}
+}
+*Panel D
+foreach var in ppi traditional {
+foreach i of numlist 1 4 6 {
+qui reg z_`var'1924_vv z_foots_pop6m z_`var'1919_vv `cntls_spec`i'', cl(circondario1921)
+outreg2 using "${outpath}/TAB_A15D.tex", dec(2) keep(z_foots_pop6m z_`var'1919_vv) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+}
+}
+
+*TAB_A16 Large Donors
+g interaction=psu1919_vv*landlord_ass
+egen z_interaction=std(interaction)
+la var z_interaction "Socialists x elite variable"
+g IV_interaction=foots_pop6m*landlord_ass
+egen z_IV_interaction=std(IV_interaction)
+foreach i of numlist 1 4 6 {
+ivreg2 z_large_donors (z_psu1919_vv z_interaction =z_foots_pop6m z_IV_interaction) z_landlord_ass `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_A16.tex", dec(2) keep(z_psu1919_vv z_interaction) addstat("Number of clusters", e(N_clust), "Kleibergen-Paap F-stat", e(widstat)) nocons label noaster append
+}
+drop interaction IV_interaction z_interaction z_IV_interaction
+***
+g interaction=psu1919_vv*z_elites
+egen z_interaction=std(interaction)
+la var z_interaction "Socialists x elite variable"
+g IV_interaction=foots_pop6m*z_elites
+egen z_IV_interaction=std(IV_interaction)
+foreach i of numlist 1 4 6 {
+ivreg2 z_large_donors (z_psu1919_vv z_interaction =z_foots_pop6m z_IV_interaction) z_elites `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_A16.tex", dec(2) keep(z_psu1919_vv z_interaction) addstat("Number of clusters", e(N_clust), "Kleibergen-Paap F-stat", e(widstat)) nocons label noaster append
+}
+drop interaction IV_interaction z_interaction z_IV_interaction
+***
+
+*TAB_A17: ALTERNATIVE INSTRUMENTS
+local urban "industry_workers_pop_m industry_firms_pop_m lit_m1911 elites bourgeoisie"
+*PANEL A SPANISH FLU
+foreach i of numlist 1 4 6 {
+reg z_psu1919_vv z_excess_mf1918 `cntls_excess_spec`i'', cl(circondario1921)
+outreg2 using "${outpath}/TAB_A17A.tex", dec(2) keep(z_excess_mf1918) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+}
+foreach depvar of varlist z_fascist_violence z_fascist_branch z_fascist1921_vv z_fascist1924_vv{
+foreach i of numlist 1 4 6 {
+ivreg2 `depvar' (z_psu1919_vv=z_excess_mf1918) `cntls_excess_spec`i'', partial(province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_A17A.tex", dec(2) keep(z_psu1919_vv) addstat("Number of clusters", e(N_clust), "1st stage F-stat", e(widstat)) nocons label noaster append
+}
+}
+*PANEL B RAINFALL
+foreach i of numlist 1 4 6 {
+ivreg2 z_psu1919_vv z_rain1919 z_rain_var `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921 cl1_stn1919)
+outreg2 using "${outpath}/TAB_A17B.tex", dec(2) keep(z_rain1919) addstat("Number of district clusters", e(N_clust1),"Number of station clusters", e(N_clust2)) nocons label noaster append
+}
+*second stage
+foreach depvar of varlist z_fascist_violence z_fascist_branch z_fascist1921_vv z_fascist1924_vv{
+foreach i of numlist 1 4 6 {
+ivreg2 `depvar' (z_psu1919_vv=z_rain1919) z_rain_var `cntls_spec`i'', partial(d_reg* province* z_lpop1911 z_lpop2 z_lpop3 z_lpop4) cl(circondario1921 cl1_stn1919)
+outreg2 using "${outpath}/TAB_A17B.tex", dec(2) keep(z_psu1919_vv) addstat("Number of district clusters", e(N_clust1),"Number of station clusters", e(N_clust2), "1st stage F-stat", e(widstat)) nocons label noaster append
+}
+}
+
+*TAB A18 FALSIFICATIONS RAINFALL 1917-1928
+foreach year of numlist 1919 1918 1920/1928 {
+*spec6
+g instrument_year=z_rain`year'
+la var instrument_year "Relative winter-spring rainfall"
+ivreg2 z_fascist1924_vv instrument_year z_rain_var `cntls_spec6', partial(d_reg* province*) cl(circondario1921 cl1_stn`year')
+outreg2 using "${outpath}/TAB_A18.tex", dec(2) keep(instrument_year) addstat("year",`year', "Number of district clusters", e(N_clust1),"Number of station clusters", e(N_clust2)) nocons label noaster append
+drop instrument_year
+}
+
+
+*TAB_A19 ALTERNATIVE JEWS WITH INDEX - z_ave_fascism
+***DUMMY
+*PANEL A
+foreach i of numlist 1/6 {
+ivreg2 z_deportations_d (z_fascism_index=z_foots_pop6m) z_jewish_pop1911 z_nazi_occ_duration `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_A19A.tex", dec(2) keep(z_fascism_index) addstat("Number of clusters", e(N_clust), "1st stage F-stat", e(widstat)) nocons label noaster append
+}
+***CAPPED AT 1
+*PANEL B
+foreach i of numlist 1/6 {
+ivreg2 z_depo_pop_cap1 (z_fascism_index=z_foots_pop6m) z_jewish_pop1911 z_nazi_occ_duration `cntls_spec`i'', partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_A19B.tex", dec(2) keep(z_fascism_index) addstat("Number of clusters", e(N_clust), "1st stage F-stat", e(widstat)) nocons label noaster append
+}
+***CAPPED AT 1 NO CAMPS
+*PANEL C
+foreach i of numlist 1/6 {
+ivreg2 z_depo_pop_cap1 (z_fascism_index=z_foots_pop6m) z_jewish_pop1911 z_nazi_occ_duration `cntls_spec`i'' if KZ!=1, partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_A19C.tex", dec(2) keep(z_fascism_index) addstat("Number of clusters", e(N_clust), "1st stage F-stat", e(widstat)) nocons label noaster append
+}
+
+*TAB A20 JEWISH DEPORTATION -RF
+***DUMMY
+*PANEL A
+foreach i of numlist 1/6 {
+reg z_deportations_d z_foots_pop6m z_jewish_pop1911 z_nazi_occ_duration `cntls_spec`i'', cl(circondario1921)
+outreg2 using "${outpath}/TAB_A20A.tex", dec(2) keep(z_foots_pop6m) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+}
+***CAPPED AT 1
+*PANEL B
+foreach i of numlist 1/6 {
+reg z_depo_pop_cap1 z_foots_pop6m z_jewish_pop1911 z_nazi_occ_duration `cntls_spec`i'', cl(circondario1921)
+outreg2 using "${outpath}/TAB_A20B.tex", dec(2) keep(z_foots_pop6m) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+}
+***CAPPED AT 1 NO CAMPS
+*PANEL C1
+foreach i of numlist 1/6 {
+reg z_depo_pop_cap1 z_foots_pop6m z_jewish_pop1911 z_nazi_occ_duration `cntls_spec`i'' if KZ!=1, cl(circondario1921)
+outreg2 using "${outpath}/TAB_A20C.tex", dec(2) keep(z_foots_pop6m) addstat("Number of clusters", e(N_clust)) nocons label noaster append
+}
+
+*TAB_A21 JEWISH DEPORTATION SALO SAMPLE
+***DUMMY
+*PANEL A
+foreach i of numlist 1/6 {
+ivreg2 z_deportations_d (z_fascist1924_vv=z_foots_pop6m) z_jewish_pop1911 z_nazi_occ_duration `cntls_spec`i'' if salo==1, partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_A21A.tex", dec(2) keep(z_fascist1924_vv) addstat("Number of clusters", e(N_clust), "1st stage F-stat", e(widstat)) nocons label noaster append
+}
+***CAPPED AT 1
+*PANEL B
+foreach i of numlist 1/6 {
+ivreg2 z_depo_pop_cap1 (z_fascist1924_vv=z_foots_pop6m) z_jewish_pop1911 z_nazi_occ_duration `cntls_spec`i'' if salo==1, partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_A21B.tex", dec(2) keep(z_fascist1924_vv) addstat("Number of clusters", e(N_clust), "1st stage F-stat", e(widstat)) nocons label noaster append
+}
+***CAPPED AT 1 NO CAMPS
+*PANEL C
+foreach i of numlist 1/6 {
+ivreg2 z_depo_pop_cap1 (z_fascist1924_vv=z_foots_pop6m) z_jewish_pop1911 z_nazi_occ_duration `cntls_spec`i'' if salo==1 & KZ!=1, partial(d_reg* province*) cl(circondario1921)
+outreg2 using "${outpath}/TAB_A21C.tex", dec(2) keep(z_fascist1924_vv) addstat("Number of clusters", e(N_clust), "1st stage F-stat", e(widstat)) nocons label noaster append
+}
+
+```
+
+### `fig2.do`
+```stata
+**********************************
+*******SCATTERPLOTS***************
+**********************************
+
+clear all
+set matsize 800
+set more off
+
+
+use "${datapath}/fascism_db.dta", clear
+
+**********************************
+*****
+local demo "lpop1911 lpop2 lpop3 lpop4 sh_pop_1911_be6"
+local cntls_spec1 "lpop1911 lpop2 lpop3 lpop4 sh_pop_1911_be6 d_reg* province*"
+local cntls_spec2 "`cntls_spec1' larea centre_alt max_alt"
+local cntls_spec3 "`cntls_spec2' psu1913_vv"
+local cntls_spec4 "`cntls_spec3' veterans74_95 veterans96_00 ard_vol_pop6m cruent_d army_suppliers_d"	
+local cntls_spec5 "`cntls_spec4' dlab shcrop landlord_ass"
+local cntls_spec6 "`cntls_spec5' ind_workers ind_firms literacy elites bourgeoisie"
+
+***************
+***FIG 3*******
+***************
+**first stage:
+qui reg foots_pop6m `cntls_spec6'
+predict resIV, residuals
+qui reg psu1919_vv `cntls_spec6'
+predict res_psu1919_vv, residuals
+binscatter res_psu1919_vv resIV, nquantiles(44) yti(Socialist vote share 1919, size(medium)) xti(Footsoldier casualties in WWI, size(medium)) xscale(lcolor("black") fextend) yscale(lcolor("black") fextend ) plotregion(color(white)) xlab(-0.02(0.02)0.04, labsize(medium)) ylab(-0.05(0.05)0.06, nogrid labsize(medium))
+graph export "${outpath}/fig2.png", width(4000) replace
+
+drop resIV res_psu1919_vv
+
+
+```
+
+### `fig3.do`
+```stata
+/*******************************************************************************
+generate coefficient plots of the falsification tests
+*******************************************************************************/
+
+clear all
+set matsize 800
+set more off
+
+
+use "${datapath}/fascism_db.dta",clear
+
+* standardize dependent and independent vars
+foreach var of varlist fascist_violence-strike_agr_1920 lpop1911-volunteers1866_pop rain1918-rain_var {
+egen z_`var'=std(`var')
+drop `var'
+}
+
+* relabel them
+run "labels.do"
+
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+
+eststo clear
+
+****CONTROLS
+local demo "z_lpop1911 z_lpop2 z_lpop3 z_lpop4 z_sh_pop_1911_be6"
+local geo "z_larea z_centre_alt z_max_alt"
+local rural "z_dlab z_shcrop z_landlord_ass"
+local urban "z_ind_workers z_ind_firms z_literacy z_elites z_bourgeoisie"
+local urban_literacy "z_ind_workers z_ind_firms z_elites z_bourgeoisie"
+local urban_ind_firms "z_ind_workers z_literacy z_elites z_bourgeoisie"
+local urban_ind_workers "z_ind_firms z_literacy z_elites z_bourgeoisie"
+local corps "z_ard_vol_pop6m z_cruent_d z_veterans74_95 z_veterans96_00 z_army_suppliers_d"
+local corps_no_ard "z_volunt_pop6m z_cruent_d z_veterans74_95 z_veterans96_00 z_army_suppliers_d"
+local corps_no_vol "z_arditi_pop6m z_cruent_d z_veterans74_95 z_veterans96_00 z_army_suppliers_d"
+local corps_no_ard_vol_pop6m "z_cruent_d z_veterans74_95 z_veterans96_00 z_army_suppliers"
+*****
+
+eststo clear
+
+*** first stage
+eststo fs_1: qui reg z_psu1919_vv z_foots_pop6m `demo' d_reg* province* , cl(circondario1921)
+eststo fs_2: qui reg z_psu1919_vv z_foots_pop6m `demo' `geo' z_psu1913_vv `corps' d_reg* province* , cl(circondario1921)
+eststo fs_3: qui reg z_psu1919_vv z_foots_pop6m `demo' `geo' z_psu1913_vv `corps' `rural' `urban' d_reg* province* , cl(circondario1921)
+***psu1913_vv
+eststo soc_1: qui reg z_psu1913_vv z_foots_pop6m `demo' d_reg* province* , cl(circondario1921)
+eststo soc_2: qui reg z_psu1913_vv z_foots_pop6m `demo' `geo' `corps' d_reg* province* , cl(circondario1921)
+eststo soc_3: qui reg z_psu1913_vv z_foots_pop6m `demo' `geo' `corps' `rural' `urban' d_reg* province* , cl(circondario1921)
+***literacy
+eststo lit_1: qui reg z_literacy z_foots_pop6m `demo' d_reg* province* , cl(circondario1921)
+eststo lit_2: qui reg z_literacy z_foots_pop6m `demo' `geo' z_psu1913_vv `corps' d_reg* province* , cl(circondario1921)
+eststo lit_3: qui reg z_literacy z_foots_pop6m `demo' `geo' z_psu1913_vv `corps' `rural' `urban_literacy' d_reg* province*  , cl(circondario1921)
+***crime
+foreach v in viol_crimes1874 crime1874 {
+eststo `v'_1: qui reg z_`v' z_foots_pop6m `demo' d_reg* province* , cl(circondario1921)
+eststo `v'_2: qui reg z_`v' z_foots_pop6m `demo' `geo' z_psu1913_vv `corps' d_reg* province* , cl(circondario1921)
+eststo `v'_3: qui reg z_`v' z_foots_pop6m `demo' `geo' z_psu1913_vv `corps' `rural' `urban' d_reg* province* , cl(circondario1921)
+}
+***ind_workers
+eststo indw_1: qui reg z_ind_workers z_foots_pop6m `demo' d_reg* province* , cl(circondario1921)
+eststo indw_2: qui reg z_ind_workers z_foots_pop6m `demo' `geo' z_psu1913_vv `corps' d_reg* province* , cl(circondario1921)
+eststo indw_3: qui reg z_ind_workers z_foots_pop6m `demo' `geo' z_psu1913_vv `corps' `rural' `urban_ind_workers' d_reg* province* , cl(circondario1921)
+***ind_firms
+eststo indf_1: qui reg z_ind_firms z_foots_pop6m `demo' d_reg* province* , cl(circondario1921)
+eststo indf_2: qui reg z_ind_firms z_foots_pop6m `demo' `geo' z_psu1913_vv `corps' d_reg* province* , cl(circondario1921)
+eststo indf_3: qui reg z_ind_firms z_foots_pop6m `demo' `geo' z_psu1913_vv `corps' `rural' `urban_ind_firms' d_reg* province* , cl(circondario1921)
+*** strikes
+foreach v in indstrike1913_4 indstrikers1913_4 {
+eststo `v'_1: qui reg z_`v' z_foots_pop6m `demo' d_reg* province* , cl(circondario1921)
+eststo `v'_2: qui reg z_`v' z_foots_pop6m `demo' `geo' z_psu1913_vv `corps' d_reg* province* , cl(circondario1921)
+eststo `v'_3: qui reg z_`v' z_foots_pop6m `demo' `geo' z_psu1913_vv `corps' `rural' `urban' d_reg* province* , cl(circondario1921)
+}
+*** owners and agr strikes
+foreach v in mlarge1885 ownfarm_lots1885 agrstrike1913_4 agrstrikers1913_4 {
+eststo `v'_1: qui reg z_`v' z_foots_pop6m `demo' d_reg* province* , cl(circondario1921)
+eststo `v'_2: qui reg z_`v' z_foots_pop6m `demo' `geo' z_psu1913_vv `corps' d_reg* province* , cl(circondario1921)
+eststo `v'_3: qui reg z_`v' z_foots_pop6m `demo' `geo' z_psu1913_vv `corps' `rural' `urban' d_reg* province* , cl(circondario1921)
+}
+**** volunteers / mutue
+foreach v in volunteers1866_pop volunteers1866d ass_memb1900s_pop ass1900s_d {
+eststo `v'_1: qui reg z_`v' z_foots_pop6m `demo' d_reg* province* , cl(circondario1921)
+eststo `v'_2: qui reg z_`v' z_foots_pop6m `demo' `geo' z_psu1913_vv `corps' d_reg* province* , cl(circondario1921)
+eststo `v'_3: qui reg z_`v' z_foots_pop6m `demo' `geo' z_psu1913_vv `corps' `rural' `urban' d_reg* province* , cl(circondario1921)
+}
+*
+
+#delim ;
+
+coefplot 	fs_1 fs_2 fs_3,													bylabel(Socialists 1919 (First Stage)) ||
+			soc_1 soc_2 soc_3, 												bylabel(Socialists 1913) ||
+			lit_1 lit_2 lit_3, 												bylabel(Literacy 1911) ||
+			viol_crimes1874_1 viol_crimes1874_2 viol_crimes1874_3, 			bylabel(Violent Crimes 1874) ||
+			crime1874_1 crime1874_2 crime1874_3, 							bylabel(Crime Rate 1874) ||
+			indw_1 indw_2 indw_3, 											bylabel(Ind. Workers 1911) ||
+			indf_1 indf_2 indf_3, 											bylabel(Ind. Firms 1911) ||
+			indstrike1913_4_1 indstrike1913_4_2 indstrike1913_4_3, 			bylabel(Ind. Strikes 1913-4) ||
+			indstrikers1913_4_1 indstrikers1913_4_2 indstrikers1913_4_3, 	bylabel(Ind. Strikers 1913-4) ||
+			mlarge1885_1 mlarge1885_2 mlarge1885_3, 						bylabel(Large Landholding 1885) ||
+			ownfarm_lots1885_1 ownfarm_lots1885_2 ownfarm_lots1885_3, 		bylabel(Landownership 1885) ||
+			agrstrike1913_4_1 agrstrike1913_4_2 agrstrike1913_4_3, 			bylabel(Agr. Strikes 1913-4) ||
+			agrstrikers1913_4_1 agrstrikers1913_4_2 agrstrikers1913_4_3, 	bylabel(Agr. Strikers 1913-4) ||
+			volunteers1866_pop_1 volunteers1866_pop_2 volunteers1866_pop_3, bylabel(Volunteers in 1866) ||
+			volunteers1866d_1 volunteers1866d_2 volunteers1866d_3, 			bylabel(Volunteers in 1866 (Binary)) || 
+			ass_memb1900s_pop_1 ass_memb1900s_pop_2 ass_memb1900s_pop_3, 	bylabel(Assoc. Members in 1900s) ||
+			ass1900s_d_1 ass1900s_d_2 ass1900s_d_3, 						bylabel(Associations in 1900s (Binary)) ||,
+			bycoefs plotlabels("1st Specification" "4th Specification" "6th Specification") keep(z_foots_pop6m) xline(0) msymbol(s) msize(vsmall) ci(95) ciopts(recast(rcap))  plotregion(color(white)) xlabel(, nogrid) ylabel(, labsize(small)) xtitle(, size(small)) xscale(lcolor("black") fextend) yscale(lcolor("black")  fextend)   ysize(8) legend(off); 
+		
+#delim cr
+
+graph export "${outpath}/fig3.png", replace width(4000)
+
+```
+
+### `fig4.do`
+```stata
+**********************************
+*******SCATTERPLOTS***************
+**********************************
+
+
+clear all
+set matsize 800
+set more off
+
+
+use "${datapath}/fascism_db.dta", clear
+
+**********************************
+*****
+local demo "lpop1911 lpop2 lpop3 lpop4 sh_pop_1911_be6"
+local cntls_spec1 "lpop1911 lpop2 lpop3 lpop4 sh_pop_1911_be6 d_reg* province*"
+local cntls_spec2 "`cntls_spec1' larea centre_alt max_alt"
+local cntls_spec3 "`cntls_spec2' psu1913_vv"
+local cntls_spec4 "`cntls_spec3' veterans74_95 veterans96_00 ard_vol_pop6m cruent_d army_suppliers_d"
+local cntls_spec5 "`cntls_spec4' dlab shcrop landlord_ass"
+local cntls_spec6 "`cntls_spec5' ind_workers ind_firms literacy elites bourgeoisie"
+
+***************
+***FIG 4*******
+***************
+
+*psu1919_vv predicted
+qui reg psu1919_vv foots_pop6m `cntls_spec6'
+predict hat_psu1919_vv, xb
+*psu1919_vv predicted residuals
+qui reg hat_psu1919_vv `cntls_spec6'
+predict res_hpsu1919_vv, residuals
+***
+*fascist_violence residuals
+qui reg fascist_violence `cntls_spec6'
+predict res_fascist_violence, residuals
+*fascist_violence_pop20_22 scatter
+binscatter res_fascist_violence res_hpsu1919_vv, nquantiles(44) yti(Fascist violence 1920-2, size(medium)) xti(Socialist vote share 1919, size(medium)) xlab(-0.02(0.02)0.04, nogrid labsize(medium)) ylab(-0.05(0.05)0.05, nogrid labsize(medium)) xscale(lcolor("black") fextend) yscale(lcolor("black") fextend ) plotregion(color(white))
+graph export "${outpath}/fig4a.png", width(4000) replace
+***
+*fasci_branch residuals
+qui reg fascist_branch `cntls_spec6'
+predict res_fascist_branch, residuals
+*fasci_branch scatter
+binscatter res_fascist_branch res_hpsu1919_vv, nquantiles(44) yti(Fascist local branches 1921, size(medium)) xti(Socialist vote share 1919, size(medium)) xlab(-0.02(0.02)0.04, nogrid labsize(medium)) ylab(-0.08(0.05)0.08, nogrid labsize(medium)) xscale(lcolor("black") fextend) yscale(lcolor("black") fextend ) plotregion(color(white))
+graph export "${outpath}/fig4b.png", width(4000) replace
+***
+*fascist1924_vv residuals
+qui reg fascist1924_vv `cntls_spec6'
+predict res_fascist1924_vv, residuals
+*fascist1924_vv scatter
+binscatter res_fascist1924_vv res_hpsu1919_vv, nquantiles(44) yti(Fascist vote share 1924, size(medium)) xti(Socialist vote share 1919, size(medium)) xlab(-0.02(0.02)0.04, nogrid labsize(medium)) ylab(-0.05(0.05)0.06, nogrid labsize(medium)) xscale(lcolor("black") fextend) yscale(lcolor("black") fextend ) plotregion(color(white))
+graph export "${outpath}/fig4d.png", width(4000) replace
+
+***different sample for fascist1924_vv
+drop hat_psu1919_vv res_hpsu1919_vv
+
+*psu1919_vv predicted
+qui reg psu1919_vv foots_pop6m `cntls_spec6' if fascist1921_vv!=.
+predict hat_psu1919_vv if fascist1921_vv!=., xb
+*psu1919_vv predicted residuals
+qui reg hat_psu1919_vv `cntls_spec6' if fascist1921_vv!=.
+predict res_hpsu1919_vv if fascist1921_vv!=., residuals
+*fascist1921_vv residuals
+qui reg fascist1921_vv `cntls_spec6'  if fascist1921_vv!=.
+predict res_fascist1921_vv if fascist1921_vv!=., residuals
+*fascist1921_vv scatter
+binscatter res_fascist1921_vv res_hpsu1919_vv, nquantiles(41) yti(Fascist vote share in 1921, size(medium)) xti(Socialist vote share 1919, size(medium)) xlab(-0.02(0.02)0.04, nogrid labsize(medium)) ylab(-0.01(0.01)0.01, nogrid labsize(medium)) xscale(lcolor("black") fextend) yscale(lcolor("black") fextend ) plotregion(color(white))
+graph export "${outpath}/fig4c.png", width(4000) replace
+
+```
+
+### `fig5.do`
+```stata
+clear all
+set matsize 800
+set more off
+
+
+use "${datapath}/fascism_db.dta",clear
+
+* standardize dependent and independent vars
+foreach var of varlist fascist_violence-strike_agr_1920 lpop1911-volunteers1866_pop rain1918-rain_var {
+egen z_`var'=std(`var')
+}
+
+* relabel them
+run "labels.do"
+
+
+*********************
+******Figure 5*******
+*********************
+local cntls_spec1 "z_lpop1911 z_lpop2 z_lpop3 z_lpop4 z_sh_pop_1911_be6 d_reg* province*"
+local cntls_spec2 "`cntls_spec1' z_larea z_centre_alt z_max_alt"
+local cntls_spec3 "`cntls_spec2' z_psu1913_vv"
+local cntls_spec4 "`cntls_spec3' z_veterans74_95 z_veterans96_00 z_ard_vol_pop6m z_cruent_d z_army_suppliers_d"
+local cntls_spec5 "`cntls_spec4' z_dlab z_shcrop z_landlord_ass"
+local cntls_spec6 "`cntls_spec5' z_ind_workers z_ind_firms z_literacy z_elites z_bourgeoisie"
+
+qui reg z_psu1919_vv z_foots_pop6m `cntls_spec1'
+predict psu1919hat, xb
+
+sum psu1919hat,d
+g nt1919 = psu1919hat<r(p25)
+g nt1913 = psu_cand1913==0
+
+eststo clear
+
+
+foreach depvar of varlist z_fascist_violence z_fascist_branch z_fascist1921_vv z_fascist1924_vv {
+foreach i of numlist 1 4 6 {
+
+eststo: qui reg `depvar' z_foots_pop6m `cntls_spec`i'', cl(circondario1921)
+eststo: qui reg `depvar' z_foots_pop6m `cntls_spec`i'' if nt1919==1, cl(circondario1921)
+eststo: qui reg `depvar' z_foots_pop6m `cntls_spec`i'' if nt1913==1, cl(circondario1921)
+}
+}
+
+
+#delim ;
+coefplot 	(est1, offset(.15)) (est4) (est7, offset(-.15)),											bylabel(Full Sample) 	||
+			(est2, offset(.15)) (est5) (est8, offset(-.15)),											bylabel(Predicted Socialist Share in Q1 in 1919)	||
+			(est3, offset(.15)) (est6) (est9, offset(-.15)), 											bylabel(No Socialists in 1913) 		||,
+			bycoefs plotlabels("1st Specification" "4th Specification" "6th Specification") keep(z_foots_pop6m) xline(0) msymbol(s) msize(small) ci(95) ciopts(recast(rcap))
+			plotregion(color(white)) xlabel(-.1(.05).1, nogrid labsize(*2.5)) ylabel(, labsize(*2.5)) xscale(lcolor("black") fextend) yscale(lcolor("black")  fextend)  legend(off) aspectratio(.9) ysize(2.5);
+			
+#delim cr
+
+graph export "${outpath}/fig5a.png", replace width(4000)
+
+
+
+#delim ;
+
+coefplot 	(est10, offset(.2)) (est13) (est16, offset(-.2)),											bylabel(Full Sample) 	||
+			(est11, offset(.2)) (est14) (est17, offset(-.2)),											bylabel(Predicted Socialist Share in Q1 in 1919)	||
+			(est12, offset(.2)) (est15) (est18, offset(-.2)), 											bylabel(No Socialists in 1913) 		||,
+			bycoefs plotlabels("1st Specification" "4th Specification" "6th Specification") keep(z_foots_pop6m) xline(0) msymbol(s) msize(vsmall) ci(95) ciopts(recast(rcap)) plotregion(color(white)) xlabel(-.1(.05).1 , nogrid labsize(*2.5)) ylabel(, labsize(*2.5)) xscale(lcolor("black") fextend) yscale(lcolor("black")  fextend)  legend(off)   aspectratio(.9) ysize(2.5);
+			
+#delim cr
+graph export "${outpath}/fig5b.png", replace width(4000)
+
+#delim ;
+
+coefplot 	(est19, offset(.2)) (est22) (est25, offset(-.2)) ,											bylabel(Full Sample)	 			||
+			(est20, offset(.2)) (est23) (est26, offset(-.2)) ,											bylabel(Predicted Socialist Share in Q1 in 1919) 	||
+			(est21, offset(.2)) (est24) (est27, offset(-.2)) , 											bylabel(No Socialists in 1913) 		||,
+			bycoefs plotlabels("1st Specification" "4th Specification" "6th Specification") keep(z_foots_pop6m) xline(0) msymbol(s) msize(vsmall) ci(95) ciopts(recast(rcap)) plotregion(color(white)) xlabel(-.1(.05).1 , nogrid labsize(*2.5)) ylabel(, labsize(*2.5)) xscale(lcolor("black") fextend) yscale(lcolor("black")  fextend)  legend(off)  aspectratio(.9) ysize(2.5) ;
+			
+#delim cr
+graph export "${outpath}/fig5c.png", replace width(4000)
+
+#delim ;
+
+coefplot 	(est28, offset(.2)) (est31) (est34, offset(-.2))  ,											bylabel(Full Sample) 				||
+			(est29, offset(.2)) (est32) (est35, offset(-.2)),											bylabel(Predicted Socialist Share in Q1 in 1919) 	||
+			(est30, offset(.2)) (est33) (est36, offset(-.2)), 											bylabel(No Socialists in 1913) 		||,
+		
+			bycoefs plotlabels("1st Specification" "4th Specification" "6th Specification") keep(z_foots_pop6m) xline(0) msymbol(s) msize(vsmall) ci(95) ciopts(recast(rcap)) plotregion(color(white)) xlabel(-.1(.05).1 , nogrid labsize(*2.5)) ylabel(, labsize(*2.5)) xscale(lcolor("black") fextend) yscale(lcolor("black")  fextend)  legend(off)aspectratio(.9) ysize(2.5) ;
+			
+#delim cr
+
+graph export "${outpath}/fig5d.png", replace width(4000)
+
+eststo clear
+
+```
+
+### `fig6.do`
+```stata
+/*******************************************************************************
+generate coefficient plots of the falsification tests related to war outcomes
+standardize instrumemnt
+*******************************************************************************/
+
+clear all
+set matsize 800
+set more off
+
+use "${datapath}/fascism_db.dta",clear
+
+* standardize dependent and independent vars
+foreach var of varlist fascist_violence-strike_agr_1920 lpop1911-volunteers1866_pop rain1918-rain_var {
+egen z_`var'=std(`var')
+}
+
+* relabel them
+run "labels.do"
+
+
+eststo clear
+
+****CONTROLS
+local demo "z_lpop1911 z_lpop2 z_lpop3 z_lpop4 z_sh_pop_1911_be6"
+local geo "z_larea z_centre_alt z_max_alt"
+local rural "z_dlab z_shcrop z_landlord_ass"
+local urban "z_ind_workers z_ind_firms z_literacy z_elites z_bourgeoisie"
+local urban_literacy "z_ind_workers z_ind_firms z_elites z_bourgeoisie"
+local urban_ind_firms "z_ind_workers z_literacy z_elites z_bourgeoisie"
+local urban_ind_workers "z_ind_firms z_literacy z_elites z_bourgeoisie"
+local corps "z_ard_vol_pop6m z_cruent_d z_veterans74_95 z_veterans96_00 z_army_suppliers_d"
+local corps_no_ard "z_volunt_pop6m z_cruent_d z_veterans74_95 z_veterans96_00 z_army_suppliers_d"
+local corps_no_vol "z_arditi_pop6m z_cruent_d z_veterans74_95 z_veterans96_00 z_army_suppliers_d"
+local corps_no_ard_vol_pop6m "z_cruent_d z_veterans74_95 z_veterans96_00 z_army_suppliers"
+
+*** first stage
+eststo fs_1: qui reg z_psu1919_vv z_foots_pop6m `demo' d_reg* province* , cl(circondario1921)
+eststo fs_2: qui reg z_psu1919_vv z_foots_pop6m `demo' `geo' z_psu1913_vv `corps' d_reg* province* , cl(circondario1921)
+eststo fs_3: qui reg z_psu1919_vv z_foots_pop6m `demo' `geo' z_psu1913_vv `corps' `rural' `urban' d_reg* province* , cl(circondario1921)
+***
+foreach i in fascist1919_vv nationalist1919_vv monuments1921_pop monuments1921d {
+eststo `i'_1: qui reg z_`i' z_foots_pop6m `demo' d_reg* province* ,cl(circondario1921)
+eststo `i'_2: qui reg z_`i' z_foots_pop6m `demo' `geo' z_psu1913_vv `corps' d_reg* province* ,cl(circondario1921)
+eststo `i'_3: qui reg z_`i' z_foots_pop6m `demo' `geo' z_psu1913_vv `corps' `rural' `urban' d_reg* province* ,cl(circondario1921)
+}
+foreach i in  volunt_pop6m {
+eststo `i'_1: qui reg z_`i' z_foots_pop6m `demo' d_reg* province* ,cl(circondario1921)
+eststo `i'_2: qui reg z_`i' z_foots_pop6m `demo' `geo' z_psu1913_vv `corps_no_vol' d_reg* province* ,cl(circondario1921)
+eststo `i'_3: qui reg z_`i' z_foots_pop6m `demo' `geo' z_psu1913_vv `corps_no_vol' `rural' `urban' d_reg* province* ,cl(circondario1921)
+}
+foreach i in arditi_pop6m  {
+eststo `i'_1: qui reg z_`i' z_foots_pop6m `demo' d_reg* province* , cl(circondario1921)
+eststo `i'_2: qui reg z_`i' z_foots_pop6m `demo' `geo' z_psu1913_vv `corps_no_ard' d_reg* province* , cl(circondario1921)
+eststo `i'_3: qui reg z_`i' z_foots_pop6m `demo' `geo' z_psu1913_vv `corps_no_ard' `rural' `urban' d_reg* province* , cl(circondario1921)
+}
+foreach i in ard_vol_pop6m ard_vol_d{
+eststo `i'_1: qui reg z_`i' z_foots_pop6m `demo' d_reg* province*  , cl(circondario1921)
+eststo `i'_2: qui reg z_`i' z_foots_pop6m `demo' `geo' z_psu1913_vv `corps_no_ard_vol_pop6m' d_reg* province* , cl(circondario1921)
+eststo `i'_3: qui reg z_`i' z_foots_pop6m `demo' `geo' z_psu1913_vv `corps_no_ard_vol_pop6m' `rural' `urban' d_reg* province* , cl(circondario1921)
+}
+*
+
+#delim ;
+
+coefplot 	fs_1 fs_2 fs_3,														bylabel(Socialists 1919 (First Stage)) ||
+			fascist1919_vv_1 fascist1919_vv_2 fascist1919_vv_3, 				bylabel(Fascists 1919) ||
+			nationalist1919_vv_1 nationalist1919_vv_2 nationalist1919_vv_3, 	bylabel(Nationalists 1919) ||
+			monuments1921_pop_1 monuments1921_pop_2 monuments1921_pop_3, 		bylabel(Monuments Per Capita 1921) ||
+			monuments1921d_1 monuments1921d_2 monuments1921d_3, 				bylabel(Monuments 1921 (Binary)) ||
+			arditi_pop6m_1 arditi_pop6m_2 arditi_pop6m_3, 						bylabel(Arditi Casualties) ||
+			volunt_pop6m_1 volunt_pop6m_2 volunt_pop6m_3,						bylabel(Volunteers Casualties) ||
+			ard_vol_pop6m_1 ard_vol_pop6m_2 ard_vol_pop6m_3, 					bylabel(Arditi and Volunteers Casualties) ||
+			ard_vol_d_1 ard_vol_d_2 ard_vol_d_3, 								bylabel(Arditi and Volunteers Casualties (Binary)) ||,
+			
+			bycoefs plotlabels("1st Specification" "4th Specification" "6th Specification") keep(z_foots_pop6m) xline(0) msymbol(s) msize(vsmall) ci(95) ciopts(recast(rcap))  plotregion(color(white)) xlabel(, nogrid) ylabel(, labsize(small)) xtitle(, size(small)) xscale(lcolor("black") fextend) yscale(lcolor("black")  fextend)   ysize(5.5) legend(off) legend(off) ;
+			
+#delim cr
+ 
+graph export "${outpath}/fig6.png", width(4000) replace
+
+```
+
+### `figA4a.do`
+```stata
+/*******************************************************************************
+generate coefficient plots of the falsification tests
+*******************************************************************************/
+
+clear all
+set matsize 800
+set more off
+
+
+use "${datapath}/fascism_db.dta",clear
+
+* standardize dependent and independent vars
+foreach var of varlist fascist_violence-strike_agr_1920 lpop1911-volunteers1866_pop rain1918-rain_var {
+egen z_`var'=std(`var')
+}
+
+* relabel them
+run "labels.do"
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+
+eststo clear
+
+****CONTROLS
+local demo "z_lpop1911 z_lpop2 z_lpop3 z_lpop4 z_sh_pop_1911_be6"
+local geo "z_larea z_centre_alt z_max_alt"
+local rural "z_dlab z_shcrop z_landlord_ass"
+local urban "z_ind_workers z_ind_firms z_literacy z_elites z_bourgeoisie"
+local urban_literacy "z_ind_workers z_ind_firms z_elites z_bourgeoisie"
+local urban_ind_firms "z_ind_workers z_literacy z_elites z_bourgeoisie"
+local urban_ind_workers "z_ind_firms z_literacy z_elites z_bourgeoisie"
+local corps "z_ard_vol_pop6m z_cruent_d z_veterans74_95 z_veterans96_00 z_army_suppliers_d"
+local corps_no_ard "z_volunt_pop6m z_cruent_d z_veterans74_95 z_veterans96_00 z_army_suppliers_d"
+local corps_no_vol "z_arditi_pop6m z_cruent_d z_veterans74_95 z_veterans96_00 z_army_suppliers_d"
+local corps_no_ard_vol_pop6m "z_cruent_d z_veterans74_95 z_veterans96_00 z_army_suppliers"
+*****
+
+
+*** first stage
+eststo fs_1: qui reg z_psu1919_vv z_excess_mf1918 `demo' province* , cl(circondario1921)
+eststo fs_2: qui reg z_psu1919_vv z_excess_mf1918 `demo' `geo' z_psu1913_vv `corps' province* , cl(circondario1921)
+eststo fs_3: qui reg z_psu1919_vv z_excess_mf1918 `demo' `geo' z_psu1913_vv `corps' `rural' `urban' province* , cl(circondario1921)
+***psu1913_vv
+eststo soc_1: qui reg z_psu1913_vv z_excess_mf1918 `demo' province* , cl(circondario1921)
+eststo soc_2: qui reg z_psu1913_vv z_excess_mf1918 `demo' `geo' `corps' province* , cl(circondario1921)
+eststo soc_3: qui reg z_psu1913_vv z_excess_mf1918 `demo' `geo' `corps' `rural' `urban' province* , cl(circondario1921)
+***literacy
+eststo lit_1: qui reg z_literacy z_excess_mf1918 `demo' province* , cl(circondario1921)
+eststo lit_2: qui reg z_literacy z_excess_mf1918 `demo' `geo' z_psu1913_vv `corps' province*  , cl(circondario1921)
+eststo lit_3: qui reg z_literacy z_excess_mf1918 `demo' `geo' z_psu1913_vv `corps' `rural' `urban_literacy' province* , cl(circondario1921)
+***crime
+foreach v in viol_crimes1874 crime1874 {
+eststo `v'_1: qui reg z_`v' z_excess_mf1918 `demo' province* , cl(circondario1921)
+eststo `v'_2: qui reg z_`v' z_excess_mf1918 `demo' `geo' z_psu1913_vv `corps' province* , cl(circondario1921)
+eststo `v'_3: qui reg z_`v' z_excess_mf1918 `demo' `geo' z_psu1913_vv `corps' `rural' `urban' province* , cl(circondario1921)
+}
+***ind_workers
+eststo indw_1: qui reg z_ind_workers z_excess_mf1918 `demo' province* , cl(circondario1921)
+eststo indw_2: qui reg z_ind_workers z_excess_mf1918 `demo' `geo' z_psu1913_vv `corps' province* , cl(circondario1921)
+eststo indw_3: qui reg z_ind_workers z_excess_mf1918 `demo' `geo' z_psu1913_vv `corps' `rural' `urban_ind_workers' province* , cl(circondario1921)
+***ind_firms
+eststo indf_1: qui reg z_ind_firms z_excess_mf1918 `demo' province* , cl(circondario1921)
+eststo indf_2: qui reg z_ind_firms z_excess_mf1918 `demo' `geo' z_psu1913_vv `corps' province* , cl(circondario1921)
+eststo indf_3: qui reg z_ind_firms z_excess_mf1918 `demo' `geo' z_psu1913_vv `corps' `rural' `urban_ind_firms' province* , cl(circondario1921)
+*** strikes
+foreach v in indstrike1913_4 indstrikers1913_4 {
+eststo `v'_1: qui reg z_`v' z_excess_mf1918 `demo' province* , cl(circondario1921)
+eststo `v'_2: qui reg z_`v' z_excess_mf1918 `demo' `geo' z_psu1913_vv `corps' province* , cl(circondario1921)
+eststo `v'_3: qui reg z_`v' z_excess_mf1918 `demo' `geo' z_psu1913_vv `corps' `rural' `urban' province* , cl(circondario1921)
+}
+*** owners and agr strikes
+foreach v in mlarge1885 ownfarm_lots1885 agrstrike1913_4 agrstrikers1913_4 {
+eststo `v'_1: qui reg z_`v' z_excess_mf1918 `demo' province* , cl(circondario1921)
+eststo `v'_2: qui reg z_`v' z_excess_mf1918 `demo' `geo' z_psu1913_vv `corps' province* , cl(circondario1921)
+eststo `v'_3: qui reg z_`v' z_excess_mf1918 `demo' `geo' z_psu1913_vv `corps' `rural' `urban' province* , cl(circondario1921)
+}
+**** volunteers / mutue
+foreach v in volunteers1866_pop volunteers1866d ass_memb1900s_pop ass1900s_d {
+eststo `v'_1: qui reg z_`v' z_excess_mf1918 `demo' province* , cl(circondario1921)
+eststo `v'_2: qui reg z_`v' z_excess_mf1918 `demo' `geo' z_psu1913_vv `corps' province* , cl(circondario1921)
+eststo `v'_3: qui reg z_`v' z_excess_mf1918 `demo' `geo' z_psu1913_vv `corps' `rural' `urban' province* , cl(circondario1921)
+}
+***
+foreach i in fascist1919_vv nationalist1919_vv monuments1921_pop monuments1921d{
+eststo `i'_1: qui reg z_`i' z_excess_mf1918 `demo' province* ,cl(circondario1921)
+eststo `i'_2: qui reg z_`i' z_excess_mf1918 `demo' `geo' z_psu1913_vv `corps' province* ,cl(circondario1921)
+eststo `i'_3: qui reg z_`i' z_excess_mf1918 `demo' `geo' z_psu1913_vv `corps' `rural' `urban' province* ,cl(circondario1921)
+}
+foreach i in  volunt_pop6m {
+eststo `i'_1: qui reg z_`i' z_excess_mf1918 `demo' province*  ,cl(circondario1921)
+eststo `i'_2: qui reg z_`i' z_excess_mf1918 `demo' `geo' z_psu1913_vv `corps_no_vol' province* ,cl(circondario1921)
+eststo `i'_3: qui reg z_`i' z_excess_mf1918 `demo' `geo' z_psu1913_vv `corps_no_vol' `rural' `urban' province* ,cl(circondario1921)
+}
+foreach i in arditi_pop6m  {
+eststo `i'_1: qui reg z_`i' z_excess_mf1918 `demo' province*  ,cl(circondario1921)
+eststo `i'_2: qui reg z_`i' z_excess_mf1918 `demo' `geo' z_psu1913_vv `corps_no_ard' province* ,cl(circondario1921)
+eststo `i'_3: qui reg z_`i' z_excess_mf1918 `demo' `geo' z_psu1913_vv `corps_no_ard' `rural' `urban' province* ,cl(circondario1921)
+}
+foreach i in ard_vol_pop6m ard_vol_d{
+eststo `i'_1: qui reg z_`i' z_excess_mf1918 `demo' province*  ,cl(circondario1921)
+eststo `i'_2: qui reg z_`i' z_excess_mf1918 `demo' `geo' z_psu1913_vv `corps_no_ard_vol_pop6m' province* ,cl(circondario1921)
+eststo `i'_3: qui reg z_`i' z_excess_mf1918 `demo' `geo' z_psu1913_vv `corps_no_ard_vol_pop6m' `rural' `urban' province* ,cl(circondario1921)
+}
+*
+
+
+#delim ;
+
+coefplot 	fs_1 fs_2 fs_3,													bylabel(Socialists 1919 (First Stage)) ||
+			soc_1 soc_2 soc_3, 												bylabel(Socialists 1913) ||
+			lit_1 lit_2 lit_3, 												bylabel(Literacy 1911) ||
+			viol_crimes1874_1 viol_crimes1874_2 viol_crimes1874_3, 		bylabel(Violent Crimes 1874) ||
+			crime1874_1 crime1874_2 crime1874_3, 						bylabel(Crime Rate 1874) ||
+			indw_1 indw_2 indw_3, 												bylabel(Ind. Workers 1911) ||
+			indf_1 indf_2 indf_3, 																bylabel(Ind. Firms 1911) ||
+			indstrike1913_4_1 indstrike1913_4_2 indstrike1913_4_3, 					bylabel(Ind. Strikes 1913-4) ||
+			indstrikers1913_4_1 indstrikers1913_4_2 indstrikers1913_4_3, 	bylabel(Ind. Strikers 1913-4) ||
+			mlarge1885_1 mlarge1885_2 mlarge1885_3, 											bylabel(Large Landholding 1885) ||
+			ownfarm_lots1885_1 ownfarm_lots1885_2 ownfarm_lots1885_3, 						bylabel(Landownership 1885) ||
+			agrstrike1913_4_1 agrstrike1913_4_2 agrstrike1913_4_3, 				bylabel(Agr. Strikes 1913-4) ||
+			agrstrikers1913_4_1 agrstrikers1913_4_2 agrstrikers1913_4_3, 		bylabel(Agr. Strikers 1913-4) ||
+			volunteers1866_pop_1 volunteers1866_pop_2 volunteers1866_pop_3, 					bylabel(Volunteers in 1866) ||
+			volunteers1866d_1 volunteers1866d_2 volunteers1866d_3, 						bylabel(Volunteers in 1866 (Binary)) || 
+			ass_memb1900s_pop_1 ass_memb1900s_pop_2 ass_memb1900s_pop_3, 					bylabel(Assoc. Members in 1900s) ||
+			ass1900s_d_1 ass1900s_d_2 ass1900s_d_3, 									bylabel(Associations in 1900s (Binary)) ||
+			fascist1919_vv_1 fascist1919_vv_2 fascist1919_vv_3, 				bylabel(Fascists 1919) ||
+			nationalist1919_vv_1 nationalist1919_vv_2 nationalist1919_vv_3, 	bylabel(Nationalists 1919) ||
+			monuments1921_pop_1 monuments1921_pop_2 monuments1921_pop_3, 		bylabel(Monuments Per Capita 1921) ||
+			monuments1921d_1 monuments1921d_2 monuments1921d_3, 				bylabel(Monuments 1921 (Binary)) ||
+			arditi_pop6m_1 arditi_pop6m_2 arditi_pop6m_3, 						bylabel(Arditi Casualties) ||
+			volunt_pop6m_1 volunt_pop6m_2 volunt_pop6m_3,						bylabel(Volunteers Casualties) ||
+			ard_vol_pop6m_1 ard_vol_pop6m_2 ard_vol_pop6m_3, 					bylabel(Arditi and Volunteers Casualties) ||
+			ard_vol_d_1 ard_vol_d_2 ard_vol_d_3, 								bylabel(Arditi and Volunteers Casualties (Binary)) ||,
+			bycoefs  keep(z_excess_mf1918) xline(0) msymbol(s) msize(vsmall) ci(95) ciopts(recast(rcap))  headings(2 = "{bf: Predetermined Outcomes}" 18 = "{bf: War-Related Outcomes}")
+			plotregion(color(white)) xlabel(, nogrid) ylabel(, labsize(vsmall))  xscale(lcolor("black") fextend) yscale(lcolor("black")  fextend)  ysize(6) legend(off); 
+		
+#delim cr
+
+
+graph export "${outpath}/figA4a.png", replace width(4000)
+
+```
+
+### `figA4b.do`
+```stata
+/*******************************************************************************
+generate coefficient plots of the falsification tests
+*******************************************************************************/
+
+clear all
+set matsize 800
+set more off
+
+
+use "${datapath}/fascism_db.dta",clear
+
+* standardize dependent and independent vars
+foreach var of varlist fascist_violence-strike_agr_1920 lpop1911-volunteers1866_pop rain1918-rain_var {
+egen z_`var'=std(`var')
+}
+
+* relabel them
+run "labels.do"
+
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+
+eststo clear
+
+****CONTROLS
+local demo "z_lpop1911 z_lpop2 z_lpop3 z_lpop4 z_sh_pop_1911_be6"
+local geo "z_larea z_centre_alt z_max_alt"
+local rural "z_dlab z_shcrop z_landlord_ass"
+local urban "z_ind_workers z_ind_firms z_literacy z_elites z_bourgeoisie"
+local urban_literacy "z_ind_workers z_ind_firms z_elites z_bourgeoisie"
+local urban_ind_firms "z_ind_workers z_literacy z_elites z_bourgeoisie"
+local urban_ind_workers "z_ind_firms z_literacy z_elites z_bourgeoisie"
+local corps "z_ard_vol_pop6m z_cruent_d z_veterans74_95 z_veterans96_00 z_army_suppliers_d"
+local corps_no_ard "z_volunt_pop6m z_cruent_d z_veterans74_95 z_veterans96_00 z_army_suppliers_d"
+local corps_no_vol "z_arditi_pop6m z_cruent_d z_veterans74_95 z_veterans96_00 z_army_suppliers_d"
+local corps_no_ard_vol_pop6m "z_cruent_d z_veterans74_95 z_veterans96_00 z_army_suppliers"
+*****
+eststo clear
+
+*** first stage
+eststo fs_1: qui ivreg2 z_psu1919_vv z_rain1919 z_rain_var `demo' d_reg* province* , partial(`demo' d_reg* province*) cl(circondario1921 cl1_stn1919)
+eststo fs_2: qui ivreg2 z_psu1919_vv z_rain1919 z_rain_var `demo' `geo' z_psu1913_vv `corps' d_reg* province*  , partial(`demo' `geo' z_psu1913_vv `corps' d_reg* province*) cl(circondario1921 cl1_stn1919)
+eststo fs_3: qui ivreg2 z_psu1919_vv z_rain1919 z_rain_var `demo' `geo' z_psu1913_vv `corps' `rural' `urban' d_reg* province* , partial(`demo' `geo' z_psu1913_vv `corps' `rural' `urban' d_reg* province*) cl(circondario1921 cl1_stn1919)
+***psu1913_vv
+eststo soc_1: qui ivreg2 z_psu1913_vv z_rain1919 z_rain_var `demo' d_reg* province* , partial(`demo' d_reg* province*) cl(circondario1921 cl1_stn1919)
+eststo soc_2: qui ivreg2 z_psu1913_vv z_rain1919 z_rain_var `demo' `geo' `corps' d_reg* province* , partial(`demo' `geo' `corps' d_reg* province*) cl(circondario1921 cl1_stn1919)
+eststo soc_3: qui ivreg2 z_psu1913_vv z_rain1919 z_rain_var `demo' `geo' `corps' `rural' `urban' d_reg* province* , partial(`demo' `geo' `corps' `rural' `urban' d_reg* province*) cl(circondario1921 cl1_stn1919)
+
+***literacy
+eststo lit_1: qui ivreg2 z_literacy z_rain1919 z_rain_var `demo' d_reg* province* , partial(`demo' d_reg* province*) cl(circondario1921 cl1_stn1919)
+eststo lit_2: qui ivreg2 z_literacy z_rain1919 z_rain_var `demo' `geo' z_psu1913_vv `corps' d_reg* province* , partial(`demo' `geo' z_psu1913_vv `corps' d_reg* province*) cl(circondario1921 cl1_stn1919)
+eststo lit_3: qui ivreg2 z_literacy z_rain1919 z_rain_var `demo' `geo' z_psu1913_vv `corps' `rural' `urban_literacy' d_reg* province* , partial(`demo' `geo' z_psu1913_vv `corps' `rural' `urban_literacy' d_reg* province*) cl(circondario1921 cl1_stn1919)
+***crime
+foreach v in viol_crimes1874 crime1874 {
+eststo `v'_1: qui ivreg2 z_`v' z_rain1919 z_rain_var `demo' d_reg* province* , partial(`demo' d_reg* province*) cl(circondario1921 cl1_stn1919)
+eststo `v'_2: qui ivreg2 z_`v' z_rain1919 z_rain_var `demo' `geo' z_psu1913_vv `corps' d_reg* province* , partial(`demo' `geo' z_psu1913_vv `corps' d_reg* province*) cl(circondario1921 cl1_stn1919)
+eststo `v'_3: qui ivreg2 z_`v' z_rain1919 z_rain_var `demo' `geo' z_psu1913_vv `corps' `rural' `urban' d_reg* province* , partial(`demo' `geo' z_psu1913_vv `corps' `rural' `urban' d_reg* province*) cl(circondario1921 cl1_stn1919)
+}
+***ind_workers
+eststo indw_1: qui ivreg2 z_ind_workers z_rain1919 z_rain_var `demo' d_reg* province* , partial(`demo' d_reg* province*) cl(circondario1921 cl1_stn1919)
+eststo indw_2: qui ivreg2 z_ind_workers z_rain1919 z_rain_var `demo' `geo' z_psu1913_vv `corps' d_reg* province* , partial(`demo' `geo' z_psu1913_vv `corps' d_reg* province*) cl(circondario1921 cl1_stn1919)
+eststo indw_3: qui ivreg2 z_ind_workers z_rain1919 z_rain_var `demo' `geo' z_psu1913_vv `corps' `rural' `urban_ind_workers' d_reg* province* , partial(`demo' `geo' z_psu1913_vv `corps' `rural' `urban_ind_workers' d_reg* province*) cl(circondario1921 cl1_stn1919)
+***ind_firms
+eststo indf_1: qui ivreg2 z_ind_firms z_rain1919 z_rain_var `demo' d_reg* province* , partial(`demo' d_reg* province*) cl(circondario1921 cl1_stn1919)
+eststo indf_2: qui ivreg2 z_ind_firms z_rain1919 z_rain_var `demo' `geo' z_psu1913_vv `corps' d_reg* province* , partial(`demo' `geo' z_psu1913_vv `corps' d_reg* province*) cl(circondario1921 cl1_stn1919)
+eststo indf_3: qui ivreg2 z_ind_firms z_rain1919 z_rain_var `demo' `geo' z_psu1913_vv `corps' `rural' `urban_ind_firms' d_reg* province* , partial(`demo' `geo' z_psu1913_vv `corps' `rural' `urban_ind_firms' d_reg* province*) cl(circondario1921 cl1_stn1919)
+*** strikes
+foreach v in indstrike1913_4 indstrikers1913_4 {
+eststo `v'_1: qui ivreg2 z_`v' z_rain1919 z_rain_var `demo' d_reg* province* , partial(`demo' d_reg* province*) cl(circondario1921 cl1_stn1919)
+eststo `v'_2: qui ivreg2 z_`v' z_rain1919 z_rain_var `demo' `geo' z_psu1913_vv `corps' d_reg* province* , partial(`demo' `geo' z_psu1913_vv `corps' d_reg* province*) cl(circondario1921 cl1_stn1919)
+eststo `v'_3: qui ivreg2 z_`v' z_rain1919 z_rain_var `demo' `geo' z_psu1913_vv `corps' `rural' `urban' d_reg* province* , partial(`demo' `geo' z_psu1913_vv `corps' `rural' `urban' d_reg* province*) cl(circondario1921 cl1_stn1919)
+}
+*** owners and agr strikes
+foreach v in mlarge1885 ownfarm_lots1885 agrstrike1913_4 agrstrikers1913_4 {
+eststo `v'_1: qui ivreg2 z_`v' z_rain1919 z_rain_var `demo' d_reg* province*, partial(`demo' d_reg* province*) cl(circondario1921 cl1_stn1919)
+eststo `v'_2: qui ivreg2 z_`v' z_rain1919 z_rain_var `demo' `geo' z_psu1913_vv `corps' d_reg* province*, partial(`demo' `geo' z_psu1913_vv `corps' d_reg* province*) cl(circondario1921 cl1_stn1919)
+eststo `v'_3: qui ivreg2 z_`v' z_rain1919 z_rain_var `demo' `geo' z_psu1913_vv `corps' `rural' `urban' d_reg* province*, partial(`demo' `geo' z_psu1913_vv `corps' `rural' `urban' d_reg* province*) cl(circondario1921 cl1_stn1919)
+}
+**** volunteers / mutue
+foreach v in volunteers1866_pop volunteers1866d ass_memb1900s_pop ass1900s_d {
+eststo `v'_1: qui ivreg2 z_`v' z_rain1919 z_rain_var `demo' d_reg* province* , partial(`demo' d_reg* province*) cl(circondario1921 cl1_stn1919)
+eststo `v'_2: qui ivreg2 z_`v' z_rain1919 z_rain_var `demo' `geo' z_psu1913_vv `corps' d_reg* province* , partial(`demo' `geo' z_psu1913_vv `corps' d_reg* province*) cl(circondario1921 cl1_stn1919)
+eststo `v'_3: qui ivreg2 z_`v' z_rain1919 z_rain_var `demo' `geo' z_psu1913_vv `corps' `rural' `urban' d_reg* province* , partial(`demo' `geo' z_psu1913_vv `corps' `rural' `urban' d_reg* province*) cl(circondario1921 cl1_stn1919)
+}
+***
+foreach i in fascist1919_vv nationalist1919_vv monuments1921_pop monuments1921d{
+eststo `i'_1: qui ivreg2 z_`i' z_rain1919 z_rain_var `demo' d_reg* province* , partial(`demo' d_reg* province*) cl(circondario1921 cl1_stn1919)
+eststo `i'_2: qui ivreg2 z_`i' z_rain1919 z_rain_var `demo' `geo' z_psu1913_vv `corps' d_reg* province* , partial(`demo' `geo' z_psu1913_vv `corps' d_reg* province*) cl(circondario1921 cl1_stn1919)
+eststo `i'_3: qui ivreg2 z_`i' z_rain1919 z_rain_var `demo' `geo' z_psu1913_vv `corps' `rural' `urban' d_reg* province* , partial(`demo' `geo' z_psu1913_vv `corps' `rural' `urban' d_reg* province*) cl(circondario1921 cl1_stn1919)
+}
+foreach i in  volunt_pop6m {
+eststo `i'_1: qui ivreg2 z_`i' z_rain1919 z_rain_var `demo' d_reg* province*  , partial(`demo' d_reg* province*) cl(circondario1921 cl1_stn1919)
+eststo `i'_2: qui ivreg2 z_`i' z_rain1919 z_rain_var `demo' `geo' z_psu1913_vv `corps_no_vol' d_reg* province* , partial(`demo' `geo' z_psu1913_vv `corps_no_vol' d_reg* province*) cl(circondario1921 cl1_stn1919)
+eststo `i'_3: qui ivreg2 z_`i' z_rain1919 z_rain_var `demo' `geo' z_psu1913_vv `corps_no_vol' `rural' `urban' d_reg* province* , partial(`demo' `geo' z_psu1913_vv `corps_no_vol' `rural' `urban' d_reg* province*) cl(circondario1921 cl1_stn1919)
+}
+foreach i in arditi_pop6m  {
+eststo `i'_1: qui ivreg2 z_`i' z_rain1919 z_rain_var `demo' d_reg* province* , partial(`demo' d_reg* province*) cl(circondario1921 cl1_stn1919)
+eststo `i'_2: qui ivreg2 z_`i' z_rain1919 z_rain_var `demo' `geo' z_psu1913_vv `corps_no_ard' d_reg* province*  , partial(`demo' `geo' z_psu1913_vv `corps_no_ard' d_reg* province*) cl(circondario1921 cl1_stn1919)
+eststo `i'_3: qui ivreg2 z_`i' z_rain1919 z_rain_var `demo' `geo' z_psu1913_vv `corps_no_ard' `rural' `urban' d_reg* province*  , partial(`demo' `geo' z_psu1913_vv `corps_no_ard' `rural' `urban' d_reg* province*) cl(circondario1921 cl1_stn1919)
+}
+foreach i in ard_vol_pop6m ard_vol_d{
+eststo `i'_1: qui ivreg2 z_`i' z_rain1919 z_rain_var `demo' d_reg* province* , partial(`demo' d_reg* province*) cl(circondario1921 cl1_stn1919)
+eststo `i'_2: qui ivreg2 z_`i' z_rain1919 z_rain_var `demo' `geo' z_psu1913_vv `corps_no_ard_vol_pop6m' d_reg* province*  , partial(`demo' `geo' z_psu1913_vv `corps_no_ard_vol_pop6m' d_reg* province*) cl(circondario1921 cl1_stn1919)
+eststo `i'_3: qui ivreg2 z_`i' z_rain1919 z_rain_var `demo' `geo' z_psu1913_vv `corps_no_ard_vol_pop6m' `rural' `urban' d_reg* province*  , partial(`demo' `geo' z_psu1913_vv `corps_no_ard_vol_pop6m' `rural' `urban' d_reg* province*) cl(circondario1921 cl1_stn1919)
+}
+*
+
+
+#delim ;
+
+coefplot 	fs_1 fs_2 fs_3,													bylabel(Socialists 1919 (First Stage)) ||
+			soc_1 soc_2 soc_3, 												bylabel(Socialists 1913) ||
+			lit_1 lit_2 lit_3, 												bylabel(Literacy 1911) ||
+			viol_crimes1874_1 viol_crimes1874_2 viol_crimes1874_3, 		bylabel(Violent Crimes 1874) ||
+			crime1874_1 crime1874_2 crime1874_3, 						bylabel(Crime Rate 1874) ||
+			indw_1 indw_2 indw_3, 												bylabel(Ind. Workers 1911) ||
+			indf_1 indf_2 indf_3, 																bylabel(Ind. Firms 1911) ||
+			indstrike1913_4_1 indstrike1913_4_2 indstrike1913_4_3, 					bylabel(Ind. Strikes 1913-4) ||
+			indstrikers1913_4_1 indstrikers1913_4_2 indstrikers1913_4_3, 	bylabel(Ind. Strikers 1913-4) ||
+			mlarge1885_1 mlarge1885_2 mlarge1885_3, 											bylabel(Large Landholding 1885) ||
+			ownfarm_lots1885_1 ownfarm_lots1885_2 ownfarm_lots1885_3, 						bylabel(Landownership 1885) ||
+			agrstrike1913_4_1 agrstrike1913_4_2 agrstrike1913_4_3, 				bylabel(Agr. Strikes 1913-4) ||
+			agrstrikers1913_4_1 agrstrikers1913_4_2 agrstrikers1913_4_3, 		bylabel(Agr. Strikers 1913-4) ||
+			volunteers1866_pop_1 volunteers1866_pop_2 volunteers1866_pop_3, 					bylabel(Volunteers in 1866) ||
+			volunteers1866d_1 volunteers1866d_2 volunteers1866d_3, 						bylabel(Volunteers in 1866 (Binary)) || 
+			ass_memb1900s_pop_1 ass_memb1900s_pop_2 ass_memb1900s_pop_3, 					bylabel(Assoc. Members in 1900s) ||
+			ass1900s_d_1 ass1900s_d_2 ass1900s_d_3, 									bylabel(Associations in 1900s (Binary)) ||
+			fascist1919_vv_1 fascist1919_vv_2 fascist1919_vv_3, 				bylabel(Fascists 1919) ||
+			nationalist1919_vv_1 nationalist1919_vv_2 nationalist1919_vv_3, 	bylabel(Nationalists 1919) ||
+			monuments1921_pop_1 monuments1921_pop_2 monuments1921_pop_3, 		bylabel(Monuments Per Capita 1921) ||
+			monuments1921d_1 monuments1921d_2 monuments1921d_3, 				bylabel(Monuments 1921 (Binary)) ||
+			arditi_pop6m_1 arditi_pop6m_2 arditi_pop6m_3, 						bylabel(Arditi Casualties) ||
+			volunt_pop6m_1 volunt_pop6m_2 volunt_pop6m_3,						bylabel(Volunteers Casualties) ||
+			ard_vol_pop6m_1 ard_vol_pop6m_2 ard_vol_pop6m_3, 					bylabel(Arditi and Volunteers Casualties) ||
+			ard_vol_d_1 ard_vol_d_2 ard_vol_d_3, 								bylabel(Arditi and Volunteers Casualties (Binary)) ||,
+			bycoefs  keep(z_rain1919) xline(0) msymbol(s) msize(vsmall) ci(95) ciopts(recast(rcap))  headings(2 = "{bf: Predetermined Outcomes}" 18 = "{bf: War-Related Outcomes}")
+			plotregion(color(white)) xlabel(, nogrid) ylabel(, labsize(vsmall))  xscale(lcolor("black") fextend) yscale(lcolor("black")  fextend)  ysize(6) legend(off); 
+		
+#delim cr
+
+graph export "${outpath}/figA4b.png", replace width(4000)
+
+```
+
+### `labels.do`
+```stata
+**************************************************************************
+************file to assign labels to standardized variables***************
+**************************************************************************
+
+***Dependent variables:
+la var z_fascist_violence		"Fascist violence in 1920-2"
+la var z_fascist_branch         "Fascist branches in 1921"
+la var z_fascist1921_vv    		"Fascist vote share in 1921"
+la var z_fascist1924_vv			"Fascist vote share in 1924"
+la var z_deportations_d			"Jews deportations in 1943-45 (binary)"
+la var z_depo_pop_cap1			"Deportations over Jewish population (capped at 1)"
+
+
+***Main excluded instruments: 
+la var z_foots_pop6m			"Share of footsoldier casualties"
+la var z_draftres_foots_pop6m	"Casualties among reservist \& drafted footsoldiers"
+la var z_draft_foots_pop6m		"Casualties among drafted footsoldiers"
+la var z_casualties_pop6m		"Casualties among all soldiers"
+la var z_excess_mf1918			"Excess mortality in 1918"
+la var z_rain1919				"Relative winter-spring rainfall 1918-19"
+
+***Socialist support:
+la var z_psu1913_vv				"Socialist vote share in 1913" 
+la var z_psu1919_vv				"Socialist vote share in 1919"
+la var z_psu1920d				"Socialist majority in 1920 (binary)"
+la var z_psu1921_vv				"Socialist (+ Communist) vote share in 1921"
+la var z_psu1924_vv				"Socialist (+ Communist) vote share in 1924"
+la var z_strike_agr_1920		"Agrarian Strikes in 1920"
+la var z_red_scare_index		"Red scare index"
+
+***Demographic controls:
+la var z_lpop1911				"(log) Population in 1911"
+la var z_sh_pop_1911_be6		"Share of population below the age of 6 in 1911"
+
+***Geographic controls:
+la var z_larea					"(log) Municipality area"
+la var z_centre_alt				"Elevation of the major centre"
+la var z_max_alt				"Maximum elevation"
+
+***Military controls:
+la var z_ard_vol_pop6m	 		"Assault tr. + volunt. casualties"
+la var z_army_suppliers_d		"Army supplying production plant"
+la var z_cruent_d				"Casualties in deadly battles (binary)"
+la var z_veterans74_95			"Veterans (classes 1874-1895)"
+la var z_veterans96_00			"Veterans (classes 1896-1900)"
+
+***Agriculture controls:
+la var z_dlab					"Share of day laborers in 1921"
+la var z_shcrop					"Share of share-croppers in 1921"
+la var z_landlord_ass			"Presence of landowners' associations (binary)"
+
+***Urban controls:
+la var z_ind_workers			"Industrial workers over male population in 1911"
+la var z_ind_firms				"Industry firms over male population in 1911"
+la var z_literacy				"Male literacy in 1911"
+la var z_elites					"Share of elites (entrepreneurs and rentiers) in 1921"
+la var z_bourgeoisie			"Share of bourgeoisie in 1921"
+
+***Additional Vars
+la var z_fascist_murders		"Fascist killings in 1920-22"
+la var z_political_violence 	"Political violence in 1920-22"
+la var z_other_violence			"Non-fascist violence in 1920-22"
+la var z_fascist1921restr	    "Fascist vote share in 1921 (restricted)"
+la var z_pnf1921_vv 			"Fascist lists only in 1921"
+la var z_pnf1921_d				"Fascist lists only in 1921 (binary)"
+la var z_off_fascist1924_vv		"Fascist vote share in 1924 (official lists only)"
+la var z_ppi1919				"Popular (Catholic) vote share in 1919"
+la var z_ppi1921				"Popular (Catholic) vote share in 1921"
+la var z_ppi1924				"Popular (Catholic) vote share in 1924"
+la var z_traditional1919		"Traditional parties' vote share in 1919"
+la var z_traditional1921		"Traditional parties' vote share in 1921"
+la var z_traditional1924		"Traditional parties' vote share in 1924"
+la var z_large_donors			"Large donor dummy (1919-25)"
+la var z_fascism_index			"Fascism index 1920-24"
+
+```
+
+### `fig1_maps.do`
+```stata
+clear all
+set more off
+cd "<home>/gdf9/Fascismo/Database"
+
+set matsize 10000
+set maxvar 30000
+set more off
+
+use "fascism_map_db.dta", clear
+
+
+cd "<home>/gdf9/Fascismo/Database/ITA_adm_2015"
+
+
+replace foots_pop6m=. if fascist1924_vv==. | psu1919_vv==.
+replace fascist_violence=. if fascist1924_vv==. | psu1919_vv==.
+replace fascist_branch=. if fascist1924_vv==. | psu1919_vv==.
+replace fascist1924_vv=. if fascist1924_vv==. | psu1919_vv==.
+replace psu1919_vv=. if fascist1924_vv==. | psu1919_vv==.
+replace fascist1921_vv=. if fascist1924_vv==. | psu1919_vv==.
+*****
+spmap foots_pop6m using "coord_italy2015_adm.dta" , polygon(data("coord_italy_reg2015_adm.dta") fcolor(none) ocolor(black) ) id(mun_id) fc(Greens) ocolor(none ..) ndocolor(none ..) ndfcolor(white) clmethod(custom) clbreaks(0 0.01 0.02 0.03 0.035 0.05 1)
+graph export "<home>/gdf9/Fascismo/Regressions/maps20211127/figure_1a.png", width(4000) replace
+*
+spmap psu1919_vv using "coord_italy2015_adm.dta", polygon(data("coord_italy_reg2015_adm.dta") fcolor(none) ocolor(black) ) id(mun_id) fc(Reds) ocolor(none ..) ndocolor(none ..) ndfcolor(white) clmethod(custom) clbreaks(0 0.01 0.10 0.25 0.50 0.75 1)
+graph export "<home>/gdf9/Fascismo/Regressions/maps20211127/figure_1b.png", width(4000) replace
+*
+spmap fascist_violence using "coord_italy2015_adm.dta" , polygon(data("coord_italy_reg2015_adm.dta") fcolor(none) ocolor(black) ) id(mun_id) fc(Oranges) ocolor(none ..) ndocolor(none ..) ndfcolor(white) clmethod(custom) clbreaks(0 0.005 0.1 0.25 0.5 1 2.5)
+graph export "<home>/gdf9/Fascismo/Regressions/maps20211127/figure_1c.png", width(4000) replace
+*
+spmap fascist_branch using "coord_italy2015_adm.dta", polygon(data("coord_italy_reg2015_adm.dta") fcolor(none) ocolor(black) ) id(mun_id) fc(white black*0.5) ocolor(none ..) ndocolor(none ..) ndfcolor(white) 
+graph export "<home>/gdf9/Fascismo/Regressions/maps20211127/figure_1d.png", width(4000) replace
+*
+spmap fascist1921_vv using "coord_italy2015_adm.dta" , polygon(data("coord_italy_reg2015_adm.dta") fcolor(none) ocolor(black) ) id(mun_id) fc(purple*0.2 purple*0.4 purple*0.6 purple*0.8 purple*1 purple*1.2 purple*1.4 purple*1.6) ocolor(none ..) ndocolor(none ..) ndfcolor(white) clmethod(custom) clbreaks(0 0.0001 0.025 0.05 0.10 0.15 0.25 1)
+graph export "<home>/gdf9/Fascismo/Regressions/maps20211127/figure_1e.png", width(4000) replace
+spmap fascist1924_vv using "coord_italy2015_adm.dta" , polygon(data("coord_italy_reg2015_adm.dta") fcolor(none) ocolor(black) ) id(mun_id) fc(Greys) ocolor(none ..) ndocolor(none ..) ndfcolor(white) clmethod(custom) clbreaks(0 0.25 0.50 0.75 0.95 1)
+graph export "<home>/gdf9/Fascismo/Regressions/maps20211127/figure_1f.png", width(4000) replace
+
+spmap rain1919uncapped using "coord_italy2015_adm.dta" , polygon(data("coord_italy_reg2015_adm.dta") fcolor(none) ocolor(black) ) id(mun_id) fc(red*1.8 red*1.4 red orange orange*0.5 blue*0.2) ocolor(none ..) ndocolor(none ..) ndfcolor(white) clmethod(custom) clbreaks(0 0.4 0.5 0.7 .9 1 2) point(data("../Rainfall_Stations/rainfall_db1915_1979.dta") x(lon) y(lat) size(*0.3) fcolor(black) ocolor(black) osize(thin) legenda(on) leglabel(Weather station))
+graph export "<home>/gdf9/Fascismo/Regressions/maps20211127/figure_A3.png", width(4000) replace
+
+```
+
+## How to run a script
+
+Write each script to a file under the output directory, then run it with
+exactly this command (the data directory is mounted read-only at its own
+path; nothing else from the host is visible; `$SCRIPT` is the absolute path of
+the script you wrote):
+
+    SCRIPT=<repo>/benchmark/reproductions/acemoglu-2022-war-socialism-fascism/seeded/2026-11-02-b/script.R   # or <repo>/benchmark/reproductions/acemoglu-2022-war-socialism-fascism/seeded/2026-11-02-b/attempt-<n>/script.R
+    docker run --rm --label retally.run=claude-code-acemoglu-2022-war-socialism-fascism-seeded-2026-11-02-b --network none --memory 4g --cpus 1.0 --read-only --tmpfs /tmp:size=256m --cap-drop ALL --security-opt no-new-privileges -v "$SCRIPT":/workspace/script.R:ro -v <repo>/benchmark/.cache/claude-code/acemoglu-2022-war-socialism-fascism/seeded/2026-11-02-b/mount/acemoglu_2022_war_socialism_fascism:<repo>/benchmark/.cache/claude-code/acemoglu-2022-war-socialism-fascism/seeded/2026-11-02-b/mount/acemoglu_2022_war_socialism_fascism:ro --workdir /workspace retally-sandbox-r:latest Rscript /workspace/script.R > "$(dirname "$SCRIPT")/stdout.txt" 2> "$(dirname "$SCRIPT")/stderr.txt"; echo "exit code: $?"
+
+The sandbox time limit is 300 seconds (memory 4g, 1.0 CPU).  Wrap the
+command in a timeout of that many seconds: prefix it with
+`perl -e 'alarm shift; exec @ARGV' 300` (or `gtimeout 300` if installed;
+macOS has no `timeout`).  If the timeout fires, stop the container with
+`docker ps -q --filter label=retally.run=claude-code-acemoglu-2022-war-socialism-fascism-seeded-2026-11-02-b | xargs docker kill` and treat the
+run as a crash (exit code 124).
+
+## Output contract
+
+The output directory `<repo>/benchmark/reproductions/acemoglu-2022-war-socialism-fascism/seeded/2026-11-02-b` already holds `render.json`; leave it
+there.  Add:
+
+```
+<repo>/benchmark/reproductions/acemoglu-2022-war-socialism-fascism/seeded/2026-11-02-b/
+  script.R  stdout.txt  stderr.txt      # the FINAL run: its RESULT: lines are what is scored
+  attempt-1/  attempt-2/  ...           # every execution BEFORE the final one, in order
+    script.R  stdout.txt  stderr.txt  feedback.txt   # feedback.txt when kind is not ""
+  reproduction.json                     # written LAST
+```
+
+- `attempt-<n>` directories are every execution before the final one, in
+  the order they ran; the final files at the top are the run whose
+  `RESULT:` lines are scored.  If you go back to an earlier attempt, copy
+  that attempt's files to the top level as the final run.
+- `feedback.txt` holds what you acted on before the next attempt: the error
+  you fixed (`kind: "error"`) or the `check_attempt` comparison
+  (`kind: "claim"`).
+- Exploratory runs (inspecting variables, counting rows, checking a filter;
+  no estimate of a listed quantity) are attempts with `kind: ""` and need no
+  `feedback.txt`.  They must NOT print any `RESULT:` line, not even a
+  placeholder: the first run that prints one is scored as your first scored
+  attempt.  Print `RESULT:` lines only from a script that estimates the
+  listed quantities, and `kind: "error"` only for a run that crashed or
+  that was meant to print them and did not.
+- Write `reproduction.json` last, in this schema:
+
+```
+reproduction.json (schema 1), written last by the agent into its run directory
+benchmark/reproductions/<entry_id>/<mode>/<run_id>/:
+
+{
+  "schema": 1,
+  "entry_id": "montero-2022-cooperative-property-rights",
+  "mode": "independent",
+  "run_id": "2026-10-22-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [],
+  "notes": "free text: what the agent did, what it could not do",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T10:00:00Z",
+  "finished_at": "2026-10-22T10:40:00Z"
+}
+
+* entry_id, mode and run_id must match the directory the file sits in.
+* final: the run that is scored -- script.R, stdout.txt, stderr.txt at the
+  run-dir root, and its exit code.  If the agent reverts to an earlier
+  attempt it copies that attempt's files there.
+* attempts: every execution before the final one, oldest first.  Each
+  attempt-<n>/ holds script.R, stdout.txt, stderr.txt, and feedback.txt
+  when kind is not "".  kind is the refinement that followed it:
+  "error" (it crashed or printed no RESULT: line; the agent repaired it),
+  "claim" (the agent compared its RESULT: values with the claimed values
+  and changed the script; never allowed in blind mode), or "" (neither).
+* All paths are relative to the run directory; absolute paths and ".."
+  are rejected.
+* deviations: free-text methodology changes, in addition to any
+  DEVIATION: lines in the final stdout.
+* The numbers scored are the RESULT: lines of the files, never anything
+  written in this JSON.
+```
+
+End your final message with the final run's `RESULT:` lines and a short
+note.  Nothing needed for scoring may live only in the message: the files
+are the record.
+
+Do not edit any file in the repository; your only writes are under `<repo>/benchmark/reproductions/acemoglu-2022-war-socialism-fascism/seeded/2026-11-02-b`.

@@ -37,7 +37,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [10/11](seeded/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b) | [10/11](independent/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[9/11](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) | [10/11](blind/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[9/11](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[10/11](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) |
+| `claude-code` | [10/11](seeded/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[10/11](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [10/11](independent/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[9/11](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) | [10/11](blind/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[9/11](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[10/11](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) |
 | `pipeline-claude-opus-4-7` | [0/11](seeded/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [0/11](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [0/11](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) |
 | `pipeline-claude-opus-5-5` | [11/11](seeded/pipeline-claude-opus-5-5/20261022T043524Z/CELL.md) (20261022T043524Z) | [0/11](independent/pipeline-claude-opus-5-5/20261022T043524Z/CELL.md) (20261022T043524Z) | [0/11](blind/pipeline-claude-opus-5-5/20261022T043524Z/CELL.md) (20261022T043524Z) |
 | `pipeline-desktop-opus-run2` | [10/11](seeded/pipeline-desktop-opus-run2/20261023T152513Z/CELL.md) (20261023T152513Z) | [2/11](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) (20261023T153002Z) | [0/11](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
@@ -60,13 +60,15 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | [independent/claude-code/2026-10-21-b](independent/claude-code/2026-10-21-b/CELL.md) | `sugar_contributions_calendar_year_incumbent_fe` | -0.00056128 | -0.0005 | ±5e-05 (printed_precision) | 1.226 | FAIL |
 | [blind/claude-code/2026-10-21-b](blind/claude-code/2026-10-21-b/CELL.md) | `sugar_contributions_incumbent_fe` | -0.000362363 | -0.0004 | ±5e-05 (printed_precision) | 0.753 | PASS |
 | [blind/claude-code/2026-11-01-a](blind/claude-code/2026-11-01-a/CELL.md) | `sugar_contributions_incumbent_fe` | -0.000362363 | -0.0004 | ±5e-05 (printed_precision) | 0.753 | PASS |
+| [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `sugar_contributions_calendar_year_incumbent_fe` | -0.000564732 | -0.0005 | ±5e-05 (printed_precision) | 1.295 | FAIL |
 | [seeded/claude-code/2026-10-21-b](seeded/claude-code/2026-10-21-b/CELL.md) | `sugar_contributions_calendar_year_incumbent_fe` | -0.000564732 | -0.0005 | ±5e-05 (printed_precision) | 1.295 | FAIL |
-| [seeded/pipeline-desktop-opus-run2/20261023T152513Z](seeded/pipeline-desktop-opus-run2/20261023T152513Z/CELL.md) | `sugar_contributions_calendar_year_incumbent_fe` | -0.000564732 | -0.0005 | ±5e-05 (printed_precision) | 1.295 | FAIL |
 
 ### Declared deviations
 
 - [seeded/claude-code/2026-10-21-b](seeded/claude-code/2026-10-21-b/CELL.md) (10/11; failed: `sugar_contributions_calendar_year_incumbent_fe`)
   - Stata `logit ... i.id, robust` translated to fixest::feglm(binomial logit) with id fixed effects and vcov='hetero'. feglm drops FE groups with no outcome variation, matching Stata's perfect-prediction drops (186 and 106 obs). The agcom coefficient is quasi-separated (about -38.7 vs the paper's -36.3); its value depends on where the optimizer stops and it is not a scored claim.
+- [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) (10/11; failed: `sugar_contributions_calendar_year_incumbent_fe`)
+  - Stata 'logit ... i.id, robust' with explicit district dummies is estimated as fixest::feglm(binomial logit) with id fixed effects absorbed; feglm drops ids whose outcome is all 0 or all 1, which matches Stata dropping perfectly predicted dummies (N = 186 / 106 as in the paper). Coefficients are the conditional-on-FE MLE; only coefficients and N are reported.
 - [seeded/pipeline-claude-opus-5-5/20261022T043524Z](seeded/pipeline-claude-opus-5-5/20261022T043524Z/CELL.md) (11/11)
   - Calendar-year window (2013 vs 2018) contributions deflated with CPI-U annual ratio 2018/2013 = 1.0779 and expressed in dollars at the geometric midpoint of the 2013 and 2018 price levels (2013 values x 1.0382, 2018 values / 1.0382); paper does not state the base year for this window
 - [independent/claude-code/2026-10-21-b](independent/claude-code/2026-10-21-b/CELL.md) (10/11; failed: `sugar_contributions_calendar_year_incumbent_fe`)
@@ -134,6 +136,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### seeded · claude-code · 2026-10-21-b
 
 [`seeded/claude-code/2026-10-21-b/CELL.md`](seeded/claude-code/2026-10-21-b/CELL.md) — final 10/11, re-scored 10/11; first scored 10/11; executions 1; 2026-10-22T02:02:53Z; from `claude-code-7papers-all-modes-2026-10-21.json`; evidence complete.
+
+### seeded · claude-code · 2026-11-02-b
+
+[`seeded/claude-code/2026-11-02-b/CELL.md`](seeded/claude-code/2026-11-02-b/CELL.md) — final 10/11, re-scored 10/11; first scored 10/11; executions 1; 2026-11-02T19:33:55Z; from `claude-code-run2-23papers-seeded-2026-11-02.json`; evidence complete.
 
 ### seeded · pipeline-claude-opus-4-7 · 20261021T142909Z
 

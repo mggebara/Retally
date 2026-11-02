@@ -39,7 +39,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a) | [12/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [11/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) |
+| `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [12/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [11/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) |
 | `pipeline-desktop-opus` | [13/13](seeded/pipeline-desktop-opus/20261102T062442Z/CELL.md) (20261102T062442Z) | [11/13](independent/pipeline-desktop-opus/20261102T064502Z/CELL.md) (20261102T064502Z) | [10/13](blind/pipeline-desktop-opus/20261102T062442Z/CELL.md) (20261102T062442Z) |
 | `pipeline-desktop-opus-run2` | [13/13](seeded/pipeline-desktop-opus-run2/20261102T092119Z/CELL.md) (20261102T092119Z) | [11/13](independent/pipeline-desktop-opus-run2/20261102T142444Z/CELL.md) (20261102T142444Z) | [10/13](blind/pipeline-desktop-opus-run2/20261102T144228Z/CELL.md) (20261102T144228Z) |
 
@@ -70,6 +70,12 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Table 1 and Table 2 hiring regressions are estimated as weighted least squares on exact weighted cell means over (state, month, demo2, young, prior labour-force status group), with cell weights equal to summed CPS weights. All regressors and fixed effects are constant within these cells, so point estimates are algebraically identical to the person-level aweighted regressions in YH_regs.do. This keeps the run inside the 300 s / 4 GB sandbox. Clustered standard errors (state) use the same meat and bread, but the (N-1)/(N-K) small-sample factor is omitted; they are printed for information only.
   - yh_data.csv was read in full (all 19,836,464 rows), but only the 19 columns the Table 1/2/10 specifications need (fread select=). The occupation/industry crosswalk merges are applied only to the new-hire wage sample.
   - hiring regressions (Tables 1-2) estimated as WLS on exact weighted cell means over (state, month, demo2, young, prior labour-force status) to fit the 300 s / 4 GB sandbox; point estimates are algebraically identical, SEs use the same clustering but the small-sample N adjustment is omitted.
+- [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) (13/13)
+  - yh_data.csv (about 2 GB) read with data.table::fread(select=) of only the 19 columns the claimed specifications use, to fit the sandbox's 300 s / 4 GB limits.
+  - Hiring regressions (Table 1 Panels A/B, Table 2) estimated by weighted least squares on cells of state x month x demo2 x young x prior labour-force status, with the cell weight being the sum of the CPS weights and the outcome being the weighted mean of hired100. Every regressor and fixed effect is constant within a cell, so the point estimates equal those of the person-level aweighted regression; the clustered-SE small-sample factor uses the number of cells instead of persons. The wage regression (Table 10) is run at person level.
+  - Stata's m:1 crosswalk merges are done as lookups on keys deduplicated by (code, code-year).
+  - yh_data.csv read with data.table::fread(select=) of only the 19 columns used (memory/time limits of the sandbox)
+  - hiring regressions (Tables 1-2) estimated by WLS on state x month x demo2 x young x prior-status cells with summed CPS weights; identical point estimates to the person-level aweighted regression, clustered SE small-sample factor uses cell count
 - [independent/claude-code/2026-11-02-a](independent/claude-code/2026-11-02-a/CELL.md) (12/13; failed: `young_x_unemp_rate_nilf`)
   - Hiring LPMs (Table 1 A/B cols 1 and 4, Table 2 cols 1-4) estimated by WLS on weighted cell means over state x month x demographic cell x PE<=10 x prior labour-force status; all regressors are constant within cells, so point estimates equal person-level WLS; state-clustered SEs not computed/reported.
   - State (v2gestfips) is missing in the provided data for mid-2014 through 2016 (2.15M person-months); these cannot be matched to the state unemployment rate and are dropped. Sample also restricted to ages 16-80 (age top-coding above 80 varies over time) with non-missing Hispanic origin; resulting N = 16,964,441.
@@ -119,6 +125,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### seeded · claude-code · 2026-11-02-a
 
 [`seeded/claude-code/2026-11-02-a/CELL.md`](seeded/claude-code/2026-11-02-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 6; 2026-11-02T06:08:46Z; from `claude-code-4papers-all-modes-2026-11-02.json`; evidence complete.
+
+### seeded · claude-code · 2026-11-02-b
+
+[`seeded/claude-code/2026-11-02-b/CELL.md`](seeded/claude-code/2026-11-02-b/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 3; 2026-11-02T19:42:40Z; from `claude-code-run2-23papers-seeded-2026-11-02.json`; evidence complete.
 
 ### seeded · pipeline-desktop-opus · 20261102T062442Z
 

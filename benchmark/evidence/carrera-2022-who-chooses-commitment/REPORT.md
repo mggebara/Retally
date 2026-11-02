@@ -34,7 +34,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [11/11](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a) | [11/11](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [11/11](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) |
+| `claude-code` | [11/11](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [11/11](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [11/11](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) |
 | `pipeline-desktop-opus` | [11/11](seeded/pipeline-desktop-opus/20261102T060946Z/CELL.md) (20261102T060946Z) | [6/11](independent/pipeline-desktop-opus/20261102T065825Z/CELL.md) (20261102T065825Z) | [0/11](blind/pipeline-desktop-opus/20261102T055735Z/CELL.md) (20261102T055735Z) |
 | `pipeline-desktop-opus-run2` | [11/11](seeded/pipeline-desktop-opus-run2/20261102T091036Z/CELL.md) (20261102T091036Z) | [0/11](independent/pipeline-desktop-opus-run2/20261102T092119Z/CELL.md) (20261102T092119Z) | [6/11](blind/pipeline-desktop-opus-run2/20261102T091036Z/CELL.md) (20261102T091036Z) |
 
@@ -49,6 +49,7 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | Cell | Claim | Reproduced | Paper | Band | Error / band | Verdict |
 |---|---|---|---|---|---|---|
 | [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `takeup_more_basic_info_treatment_col1` | -0.021511 | -0.022 | ±0.0005 (printed_precision) | 0.978 | PASS |
+| [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `takeup_more_basic_info_treatment_col1` | -0.021511 | -0.022 | ±0.0005 (printed_precision) | 0.978 | PASS |
 | [seeded/pipeline-desktop-opus/20261102T060946Z](seeded/pipeline-desktop-opus/20261102T060946Z/CELL.md) | `takeup_more_basic_info_treatment_col1` | -0.021511 | -0.022 | ±0.0005 (printed_precision) | 0.978 | PASS |
 | [seeded/pipeline-desktop-opus-run2/20261102T091036Z](seeded/pipeline-desktop-opus-run2/20261102T091036Z/CELL.md) | `takeup_more_basic_info_treatment_col1` | -0.021511 | -0.022 | ±0.0005 (printed_precision) | 0.978 | PASS |
 | [independent/pipeline-desktop-opus/20261102T065825Z](independent/pipeline-desktop-opus/20261102T065825Z/CELL.md) | `bcp_basic_info_treatment_col1` | -0.273601 | 0.3 | ±0.56 (se_band) | 1.024 | FAIL |
@@ -56,8 +57,7 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | [independent/pipeline-desktop-opus/20261102T065825Z](independent/pipeline-desktop-opus/20261102T065825Z/CELL.md) | `takeup_more_basic_info_treatment_col1` | 0.008781 | -0.022 | ±0.041 (se_band) | 0.751 | PASS |
 | [blind/pipeline-desktop-opus-run2/20261102T091036Z](blind/pipeline-desktop-opus-run2/20261102T091036Z/CELL.md) | `takeup_more_basic_info_treatment_col1` | -0.0741149 | -0.022 | ±0.041 (se_band) | 1.271 | FAIL |
 | [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `takeup_more_behavior_change_premium_col2` | 0.026744 | 0.027 | ±0.00054 (relative) | 0.474 | PASS |
-| [seeded/pipeline-desktop-opus/20261102T060946Z](seeded/pipeline-desktop-opus/20261102T060946Z/CELL.md) | `takeup_more_behavior_change_premium_col2` | 0.026744 | 0.027 | ±0.00054 (relative) | 0.474 | PASS |
-| [seeded/pipeline-desktop-opus-run2/20261102T091036Z](seeded/pipeline-desktop-opus-run2/20261102T091036Z/CELL.md) | `takeup_more_behavior_change_premium_col2` | 0.026744 | 0.027 | ±0.00054 (relative) | 0.474 | PASS |
+| [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `takeup_more_behavior_change_premium_col2` | 0.026744 | 0.027 | ±0.00054 (relative) | 0.474 | PASS |
 
 ### Declared deviations
 
@@ -101,6 +101,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### seeded · claude-code · 2026-11-02-a
 
 [`seeded/claude-code/2026-11-02-a/CELL.md`](seeded/claude-code/2026-11-02-a/CELL.md) — final 11/11, re-scored 11/11; first scored 11/11; executions 2; 2026-11-02T05:52:30Z; from `claude-code-4papers-all-modes-2026-11-02.json`; evidence complete.
+
+### seeded · claude-code · 2026-11-02-b
+
+[`seeded/claude-code/2026-11-02-b/CELL.md`](seeded/claude-code/2026-11-02-b/CELL.md) — final 11/11, re-scored 11/11; first scored 11/11; executions 1; 2026-11-02T19:34:00Z; from `claude-code-run2-23papers-seeded-2026-11-02.json`; evidence complete.
 
 ### seeded · pipeline-desktop-opus · 20261102T060946Z
 

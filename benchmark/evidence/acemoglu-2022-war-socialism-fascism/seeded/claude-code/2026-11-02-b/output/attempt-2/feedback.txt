@@ -1,0 +1,3 @@
+Crash: "All observations contain NAs ... (Breakup: vcov: 5,775.)" with warning "NAs introduced by coercion".
+circondario1921 is a string variable; as.numeric() turned every value into NA, so the cluster variable was all missing.
+Fix: keep circondario1921 as a character cluster identifier (no numeric coercion).

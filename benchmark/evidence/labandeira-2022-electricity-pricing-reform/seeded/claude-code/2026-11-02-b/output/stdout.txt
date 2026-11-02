@@ -1,0 +1,49 @@
+Sample1 N = 20872  households = 10729 
+kappa: 1.000369 1.000041 1.000043 1.000033 
+lnPRE coefs IV cols 2,4,6,8: -0.9404701 -0.6708701 -0.6871799 0.09383769 
+                                 m1                  m3                  m5
+Dependent Var.:             lnc_ele             lnc_ele             lng_ele
+                                                                           
+TT202           -0.1779*** (0.0268) -0.1536*** (0.0279) -0.1563*** (0.0269)
+lnPRE            -1.044*** (0.0245)  -1.026*** (0.0251)   -0.0492* (0.0245)
+lny              0.3961*** (0.0755)    0.2886* (0.1203)  0.3932*** (0.0755)
+I(I(lny^2))     -0.0283*** (0.0077)   -0.0277* (0.0124) -0.0281*** (0.0077)
+dist               0.0202* (0.0082)     0.0073 (0.0088)     0.0089 (0.0082)
+Fixed-Effects:  ------------------- ------------------- -------------------
+id                               No                 Yes                  No
+_______________ ___________________ ___________________ ___________________
+S.E.: Clustered              by: id              by: id              by: id
+Observations                 20,872              20,872              20,872
+R2                          0.29501             0.81810             0.18949
+Within R2                        --             0.17681                  --
+
+                                 m7
+Dependent Var.:             lng_ele
+                                   
+TT202           -0.0984*** (0.0278)
+lnPRE              -0.0268 (0.0251)
+lny                0.2876* (0.1205)
+I(I(lny^2))       -0.0277* (0.0124)
+dist              -0.0165. (0.0088)
+Fixed-Effects:  -------------------
+id                              Yes
+_______________ ___________________
+S.E.: Clustered              by: id
+Observations                 20,872
+R2                          0.79101
+Within R2                   0.02404
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+nobs: 20872 20872 20872 20872 20872 
+RESULT:reform_consumption_ols_col1=-0.177911
+RESULT:reform_consumption_iv_col2=-0.122972
+RESULT:reform_consumption_fe_col3=-0.153634
+RESULT:reform_consumption_fe_iv_col4=-0.122668
+RESULT:reform_expenditure_ols_col5=-0.156255
+RESULT:reform_expenditure_iv_col6=-0.090444
+RESULT:reform_expenditure_fe_col7=-0.098427
+RESULT:reform_expenditure_fe_iv_col8=-0.088586
+RESULT:price_elasticity_consumption_ols_col1=-1.044485
+RESULT:price_elasticity_consumption_fe_col3=-1.026201
+RESULT:n_obs_table2=20872.000000
+RESULT:n_households_table2=10729.000000

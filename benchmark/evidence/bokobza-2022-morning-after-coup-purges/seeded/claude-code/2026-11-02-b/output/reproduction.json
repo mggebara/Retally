@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "bokobza-2022-morning-after-coup-purges",
+  "mode": "seeded",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 1, "kind": "error"}
+  ],
+  "deviations": [
+    "Country-level xtreg, fe with i.YEAR_DATA translated to fixest::feols with panel (COUNTRY_ID or leader_cab_id) and year fixed effects, clustered by COUNTRY_ID; Stata L. lags reproduced as the value at (same xtset panel, year-1), missing across gaps, so leader-FE lags are within leader tenure. fixest drops fixed-effect singletons, which does not change the point estimates.",
+    "Individual-level felm models translated to feols; the failed coup factor was recoded to a 0/1 indicator (fca) so the main FCA coefficient is the effect for the reference category, as in the authors' * interaction models."
+  ],
+  "notes": "Attempt-1 was exploratory (variable types, factor levels, uniqueness of panel keys; no RESULT lines). Attempt-2 crashed because update(f, . ~ . | FE) collapsed the regressors into one dropped term; fixed by writing formulas explicitly. Final run follows the authors' do-file (Appendix A) and R script (Appendix K). Individual-level Ns match Tables K1/K2 exactly (90020, 86057, 76530, 90014); all eleven coefficients match the claimed values at reported precision. Country-level Ns: 3714/3676 (country FE), 3282/3261 (leader FE) after fixest singleton removal. No claim-feedback refinement was made.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T19:31:15Z",
+  "finished_at": "2026-11-02T19:33:45Z"
+}

@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "entry_id": "hanlon-2022-aircraft-ip-spillovers",
+  "mode": "seeded",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [],
+  "deviations": [],
+  "notes": "Translated Table 1 (cols 1-4) and Table 4 (col 1) from 2-results-main.do into fixest::feols with heteroskedasticity-robust SEs. Data: airframe_data.dta restricted to US/UK fighters and bombers; engine_data.dta restricted to US/UK. Stata mkspline pre1926 1926 post1926 = year reproduced as pre1926 = min(year,1926), post1926 = max(year-1926,0); US interactions as in the do-file. US-only regressions use only the US-interacted spline pieces plus a constant (plus liquid_cooled for engines); pooled regressions include pre1926, pre1926_US, post1926, post1926_US and US. Single run, no claim comparison or repairs.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T19:33:00Z",
+  "finished_at": "2026-11-02T19:35:30Z"
+}

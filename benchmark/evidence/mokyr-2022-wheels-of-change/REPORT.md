@@ -38,7 +38,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) |
+| `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) |
 | `pipeline-desktop-opus` | [13/13](seeded/pipeline-desktop-opus/20261102T142733Z/CELL.md) (20261102T142733Z) | [13/13](independent/pipeline-desktop-opus/20261102T142733Z/CELL.md) (20261102T142733Z) | [1/13](blind/pipeline-desktop-opus/20261102T141403Z/CELL.md) (20261102T141403Z) |
 | `pipeline-desktop-opus-run2` | [13/13](seeded/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) (20261102T152052Z) | [7/13](independent/pipeline-desktop-opus-run2/20261102T190406Z/CELL.md) (20261102T190406Z) | [1/13](blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) (20261102T151132Z) |
 
@@ -57,11 +57,11 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | [independent/pipeline-desktop-opus-run2/20261102T190406Z](independent/pipeline-desktop-opus-run2/20261102T190406Z/CELL.md) | `watermills_table2_col5` | 0.084349 | 0.12 | ±0.03 (se_band) | 1.188 | FAIL |
 | [independent/pipeline-desktop-opus-run2/20261102T190406Z](independent/pipeline-desktop-opus-run2/20261102T190406Z/CELL.md) | `watermills_ols_table3_col5` | 0.084349 | 0.12 | ±0.03 (se_band) | 1.188 | FAIL |
 | [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `watermills_table2_col1` | 0.146106 | 0.15 | ±0.005 (printed_precision) | 0.779 | PASS |
+| [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `watermills_table2_col1` | 0.146106 | 0.15 | ±0.005 (printed_precision) | 0.779 | PASS |
 | [seeded/pipeline-desktop-opus/20261102T142733Z](seeded/pipeline-desktop-opus/20261102T142733Z/CELL.md) | `watermills_table2_col1` | 0.146106 | 0.15 | ±0.005 (printed_precision) | 0.779 | PASS |
 | [seeded/pipeline-desktop-opus-run2/20261102T152052Z](seeded/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) | `watermills_table2_col1` | 0.146106 | 0.15 | ±0.005 (printed_precision) | 0.779 | PASS |
 | [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `watermills_table2_col2` | 0.143814 | 0.14 | ±0.005 (printed_precision) | 0.763 | PASS |
-| [seeded/pipeline-desktop-opus/20261102T142733Z](seeded/pipeline-desktop-opus/20261102T142733Z/CELL.md) | `watermills_table2_col2` | 0.143814 | 0.14 | ±0.005 (printed_precision) | 0.763 | PASS |
-| [seeded/pipeline-desktop-opus-run2/20261102T152052Z](seeded/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) | `watermills_table2_col2` | 0.143814 | 0.14 | ±0.005 (printed_precision) | 0.763 | PASS |
+| [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `watermills_table2_col2` | 0.143814 | 0.14 | ±0.005 (printed_precision) | 0.763 | PASS |
 
 ### Declared deviations
 
@@ -108,6 +108,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### seeded · claude-code · 2026-11-02-a
 
 [`seeded/claude-code/2026-11-02-a/CELL.md`](seeded/claude-code/2026-11-02-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-02T10:06:22Z; from `claude-code-6papers-all-modes-2026-11-02.json`; evidence complete.
+
+### seeded · claude-code · 2026-11-02-b
+
+[`seeded/claude-code/2026-11-02-b/CELL.md`](seeded/claude-code/2026-11-02-b/CELL.md) — final 13/13, re-scored 13/13; first scored 10/13; executions 2; 2026-11-02T19:38:40Z; from `claude-code-run2-23papers-seeded-2026-11-02.json`; evidence complete.
 
 ### seeded · pipeline-desktop-opus · 20261102T142733Z
 

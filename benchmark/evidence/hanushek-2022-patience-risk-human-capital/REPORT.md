@@ -38,7 +38,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) |
+| `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) |
 | `pipeline-desktop-opus` | [13/13](seeded/pipeline-desktop-opus/20261102T141403Z/CELL.md) (20261102T141403Z) | [9/13](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) (20261102T141403Z) | [12/13](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) (20261102T095147Z) |
 | `pipeline-desktop-opus-run2` | [13/13](seeded/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) (20261102T152052Z) | [9/13](independent/pipeline-desktop-opus-run2/20261102T190406Z/CELL.md) (20261102T190406Z) | [9/13](blind/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) (20261102T152052Z) |
 
@@ -73,6 +73,9 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Table 1 estimated on 1965000 of 1992276 student rows (98.6%): the 2.47 GB pisa_full_gps_final.dta cannot be read through the mount within the 300 s sandbox limit, so the script parses the Stata file directly and reads only the needed columns from 655 evenly spread blocks of 3000 consecutive rows until a time deadline.
   - Table 1 standard errors are clustered on the country-level (patience, risk-taking) pair (49 distinct values) because the country variable is a Stata strL that the direct parser does not decode; coefficients are unaffected.
   - table1_col3_observations is the row count in the .dta header (N), reported because none of the rows read has a missing regression variable; the regression itself used only the subsample. — names `table1_col3_observations`
+- [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) (13/13)
+  - Read only the 14 columns needed for Table 1 (and 14 for Table 2) via data.table::fread(select=) from the CSV forms of pisa_full_gps_final and pisa_full_gps_final_imcoo instead of the .dta files; all rows kept.
+  - read only the 14 columns used by the Table 1 regressions from the CSV form of pisa_full_gps_final (column subsetting, all rows kept) to fit the sandbox time/memory limits
 - [independent/claude-code/2026-11-02-a](independent/claude-code/2026-11-02-a/CELL.md) (13/13)
   - Only the needed columns of the PISA files were read (data.table::fread select=); the replicate weights and other variables were skipped.
   - Table 1 (cols 1, 2, 3, 5) is estimated on an evenly spread block sample (about 20% of the rows, 0.5 MB blocks visited in van der Corput order until a 228 s time budget ran out) of Replication/Data/CSV/pisa_full_gps_final.csv. The full 3 GB file cannot be read through the read-only mount within the 300 s sandbox limit (measured raw throughput about 5-8 MB/s). All 49 countries and 253 of 263 country-waves are in the sample. Within each country-wave the sampled students' wgtc weights are rescaled to that cell's full weight (1/#waves of the country), keeping equal weight per country. The sample is timing-dependent, so a rerun can draw a slightly different subset.
@@ -131,6 +134,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### seeded · claude-code · 2026-11-02-a
 
 [`seeded/claude-code/2026-11-02-a/CELL.md`](seeded/claude-code/2026-11-02-a/CELL.md) — final 13/13, re-scored 13/13; first scored 9/13; executions 6; 2026-11-02T14:22:06Z; from `claude-code-6papers-all-modes-2026-11-02.json`; evidence complete.
+
+### seeded · claude-code · 2026-11-02-b
+
+[`seeded/claude-code/2026-11-02-b/CELL.md`](seeded/claude-code/2026-11-02-b/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-02T19:46:00Z; from `claude-code-run2-23papers-seeded-2026-11-02.json`; evidence complete.
 
 ### seeded · pipeline-desktop-opus · 20261102T141403Z
 

@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "forsythe-2022-young-workers-recessions",
+  "mode": "seeded",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [
+    "yh_data.csv (about 2 GB) read with data.table::fread(select=) of only the 19 columns the claimed specifications use, to fit the sandbox's 300 s / 4 GB limits.",
+    "Hiring regressions (Table 1 Panels A/B, Table 2) estimated by weighted least squares on cells of state x month x demo2 x young x prior labour-force status, with the cell weight being the sum of the CPS weights and the outcome being the weighted mean of hired100. Every regressor and fixed effect is constant within a cell, so the point estimates equal those of the person-level aweighted regression; the clustered-SE small-sample factor uses the number of cells instead of persons. The wage regression (Table 10) is run at person level.",
+    "Stata's m:1 crosswalk merges are done as lookups on keys deduplicated by (code, code-year)."
+  ],
+  "notes": "Followed YH_data_init.do and YH_regs.do: hired2 x 100 outcome, young = potential experience <= 10, youngurate/oldurate interactions, demo2 = group(minority, female, hisp, educ), state + month-year + demo2 fixed effects, CPS weight (v2pwsswgt+pwsswgt)/2, state-clustered SEs, fixef.rm='none'. Sample: exp and state unemployment rate non-missing (N = 16,948,516, matching the paper). Table 10 Panel B col 1: log real weekly wage of new hires with v2prwernal==0, with occupation (2002 recode) and industry (2002 recode) fixed effects (N = 112,858). attempt-1 was an exploratory read/timing run with no RESULT lines. attempt-2 was the first scored run; check_attempt reported every claim within tolerance. The only change after it was printing n_obs_full_sample as an exact integer (%.6g had rounded it to 1.69485e+07). The final run reproduces all 13 claims.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T19:32:59Z",
+  "finished_at": "2026-11-02T19:42:40Z"
+}

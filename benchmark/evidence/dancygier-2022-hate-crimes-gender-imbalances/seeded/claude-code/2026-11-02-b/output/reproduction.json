@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "dancygier-2022-hate-crimes-gender-imbalances",
+  "mode": "seeded",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was exploratory (variable types, missingness, wave counts, year alignment of context.dta; no RESULT lines). Final script translates SurveyAnalysis_Main.R Table 1 (six lm() OLS models on wave 4, factor dummies as in the authors' script; haven labels stripped, giving the same category partition as readstata13 factors) and ContextAnalysis_Appendix.R Table C1 cols 5-6 (logit glm on complete cases of model vars plus ags_county, after trimming Excess Males to its 2.5-97.5 percentile range in the 2015 cross-section; state FE, plus year FE for the annual panel; vcovCL by county). All 13 claims matched at reported precision on the first scored run; no claim-feedback iterations were needed.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T19:39:00Z",
+  "finished_at": "2026-11-02T19:41:30Z"
+}

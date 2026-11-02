@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "grier-2023-sugar-roll-call-voting",
+  "mode": "seeded",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [],
+  "deviations": [
+    "Stata 'logit ... i.id, robust' with explicit district dummies is estimated as fixest::feglm(binomial logit) with id fixed effects absorbed; feglm drops ids whose outcome is all 0 or all 1, which matches Stata dropping perfectly predicted dummies (N = 186 / 106 as in the paper). Coefficients are the conditional-on-FE MLE; only coefficients and N are reported."
+  ],
+  "notes": "Followed APSR Replication Codes.do: yesvote = 1 if vote == 'Aye' (else 0), rsugcont = totalcont deflated by 1.103 for cong 115; logit of yesvote on rsugcont, ncu, tenure, poverty, bach, medincome, over65, agcom with id fixed effects, robust SEs; incumbent column restricts to both == 1. Repeated on SugarReplicate_iter1.dta (calendar-year window) and SugarReplicate_iter2.dta (12-month window) for Table 3. Single run; no comparison-driven changes. All 11 RESULT values round to the claimed values.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T19:33:11Z",
+  "finished_at": "2026-11-02T19:33:55Z"
+}

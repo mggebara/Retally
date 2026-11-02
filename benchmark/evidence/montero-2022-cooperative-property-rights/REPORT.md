@@ -36,7 +36,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [10/10](seeded/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b) | [10/10](independent/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[10/10](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) | [10/10](blind/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[6/10](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) |
+| `claude-code` | [10/10](seeded/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[10/10](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [10/10](independent/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[10/10](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) | [10/10](blind/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[6/10](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) |
 | `pipeline-claude-opus-4-7` | [10/10](seeded/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [3/10](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [0/10](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) |
 | `pipeline-claude-opus-5-5` | [10/10](seeded/pipeline-claude-opus-5-5/20261022T044149Z/CELL.md) (20261022T044149Z) | [10/10](independent/pipeline-claude-opus-5-5/20261022T044149Z/CELL.md) (20261022T044149Z) | [0/10](blind/pipeline-claude-opus-5-5/20261022T044149Z/CELL.md) (20261022T044149Z) |
 | `pipeline-desktop-opus-run2` | [10/10](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [7/10](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) (20261023T153002Z) | [1/10](blind/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) |
@@ -120,6 +120,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### seeded · claude-code · 2026-10-21-b
 
 [`seeded/claude-code/2026-10-21-b/CELL.md`](seeded/claude-code/2026-10-21-b/CELL.md) — final 10/10, re-scored 10/10; first scored 10/10; executions 2; 2026-10-22T02:03:08Z; from `claude-code-7papers-all-modes-2026-10-21.json`; evidence complete.
+
+### seeded · claude-code · 2026-11-02-b
+
+[`seeded/claude-code/2026-11-02-b/CELL.md`](seeded/claude-code/2026-11-02-b/CELL.md) — final 10/10, re-scored 10/10; first scored 10/10; executions 1; 2026-11-02T19:36:47Z; from `claude-code-run2-23papers-seeded-2026-11-02.json`; evidence complete.
 
 ### seeded · pipeline-claude-opus-4-7 · 20261021T142909Z
 

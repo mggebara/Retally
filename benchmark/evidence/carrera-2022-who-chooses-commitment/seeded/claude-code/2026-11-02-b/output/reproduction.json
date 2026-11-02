@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "entry_id": "carrera-2022-who-chooses-commitment",
+  "mode": "seeded",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [],
+  "deviations": [],
+  "notes": "Translated Tables.do (regs_avg_delta_ex1_all and regs_commit_pooled_all) to R: sample flag_low_wtp==0 & flag_exclude_exog==0 & non-missing incentive; behavior change premium avg_delta_ex1 = mean of delta2..delta12; z-scores over the non-missing-incentive sample; Table 3 OLS with wave2/wave3 dummies and HC1 SEs; Table 4 pooled LPM over commit8/12/16 (reshaped long) with threshold and wave dummies, SEs clustered by id. Single run; all eleven values match the claims at the reported precision. No claim-comparison iterations.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T19:31:00Z",
+  "finished_at": "2026-11-02T19:34:00Z"
+}

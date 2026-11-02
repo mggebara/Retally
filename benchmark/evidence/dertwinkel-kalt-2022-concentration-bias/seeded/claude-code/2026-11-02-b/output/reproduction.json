@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "entry_id": "dertwinkel-kalt-2022-concentration-bias",
+  "mode": "seeded",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [],
+  "deviations": [],
+  "notes": "Single run, no prior attempts. Translated the authors' 'Consumption_Experiment tables and values.do' Table 2 and Table 3 regressions to R using the precomputed variables in Consumption_Experiment.csv (avg_id_stage2, id_stage2, qe_ard_lower/qe_ard/qe_ard_upper, pap_sample, dispersed, treatment, pizza, main, control). OLS on a constant / condition indicator via fixest::feols with vcov='hetero'; Tobit via AER::tobit with left=-63, right=63 (Stata ll(-63) ul(63)). Rows with missing outcome dropped as Stata does; Stata's `x == 1` treated as false for missing x. Donation-Treatment level is the constant of qe_ard ~ control, and the reported difference is minus the control coefficient, per the do-file comment. N = 100 (Table 2) and 200 (all Table 3 columns).",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T19:32:39Z",
+  "finished_at": "2026-11-02T19:33:32Z"
+}
