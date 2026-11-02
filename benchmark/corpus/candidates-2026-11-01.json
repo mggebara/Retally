@@ -1,0 +1,466 @@
+{
+  "generated": "2026-11-01",
+  "source": "I4R First Meta Database (benchmark/corpus/i4r_first_meta_database.csv.gz)",
+  "verdict_mapping": {
+    "reproducible": "perfect_reproduction=Yes",
+    "minor discrepancies": "perfect_reproduction=No and computational_reproduction=1",
+    "not reproducible": "computational_reproduction=0"
+  },
+  "user_agent": "Retally-curation/0.1 (+https://github.com/mggebara/Retally)",
+  "papers": [
+    {
+      "rank": 1,
+      "id": "de-haas-2023-finance-green-growth",
+      "i4r_team": 30,
+      "tag": "T30",
+      "db_row_index": "1266-1321",
+      "title": "Finance and Green Growth",
+      "authors": [
+        "Ralph De Haas",
+        "Alexander A. Popov"
+      ],
+      "journal": "The Economic Journal",
+      "year": 2023,
+      "doi": "10.1093/ej/ueac081",
+      "paper_pdf_url": "https://www.ecb.europa.eu/pub/pdf/scpwps/ecb.wp2318~44719344e8.en.pdf",
+      "paper_pdf_check": "206 application/pdf, %PDF magic (ECB Working Paper 2318, 2019, earlier title 'Finance and Carbon Emissions')",
+      "package_source_url": "https://zenodo.org/records/7220094",
+      "package_api_check": {
+        "status": 200,
+        "size_mb": 6.2,
+        "files": 1,
+        "access": "open",
+        "license": "cc-by-4.0",
+        "published": "2022-10-18",
+        "file_fetch": "206 on Zenodo file link",
+        "zip_listing": "23 .dta, 7 .do, Readme.pdf (Zenodo preview)",
+        "note": "An earlier, identical-size record exists: zenodo 7185770 (2022-10-11)"
+      },
+      "software": "Stata",
+      "data_formats": [
+        ".dta"
+      ],
+      "i4r_verdict": "minor discrepancies (perfect_reproduction=No, computational_reproduction=1)",
+      "i4r_report_ref": "I4R DP 95 (comment)",
+      "i4r_rows": {
+        "total": 56,
+        "r_coeff": 55,
+        "main_tables": "Tables 2-3"
+      },
+      "method_summary": "Country-industry panel (16 industries x 48 countries, 1990-2013) of CO2 emissions on financial structure; FE / DiD-style interactions, IV and Arellano-Bond GMM (DB flags: DiD, IV, other: GMM).",
+      "reasons": [
+        "Macro/industry panel, a method family the evaluation set lacks",
+        "Second-smallest package (6.2 MB): 23 .dta files plus 7 numbered do-files",
+        "I4R DP 95 with replicator coefficients; 55 paired rows",
+        "Minor-discrepancies verdict adds to the verdict mix"
+      ],
+      "risks": [
+        "Open PDF is the 2019 ECB WP under the earlier title; published table numbers and coefficients will differ, so seed from I4R rows",
+        "The EJ published a 2025 correction after the comment found two coding errors: confirm the Zenodo package is the original (both records predate the correction)",
+        "Two Zenodo records (7185770 and 7220094); pin 7220094 and note the other"
+      ]
+    },
+    {
+      "rank": 2,
+      "id": "carrera-2022-who-chooses-commitment",
+      "i4r_team": 107,
+      "tag": "T107",
+      "db_row_index": "6300-6334",
+      "title": "Who Chooses Commitment? Evidence and Welfare Implications",
+      "authors": [
+        "Mariana Carrera",
+        "Heather Royer",
+        "Mark Stehr",
+        "Justin Sydnor",
+        "Dmitry Taubinsky"
+      ],
+      "journal": "The Review of Economic Studies",
+      "year": 2022,
+      "doi": "10.1093/restud/rdab056",
+      "paper_pdf_url": "https://www.nber.org/system/files/working_papers/w26161/w26161.pdf",
+      "paper_pdf_check": "200 application/pdf, %PDF magic (NBER WP 26161, same title)",
+      "package_source_url": "https://zenodo.org/records/5173081",
+      "package_api_check": {
+        "status": 200,
+        "size_mb": 8.1,
+        "files": 1,
+        "access": "open",
+        "license": "cc-by-4.0",
+        "published": "2021-08-10",
+        "file_fetch": "206 on Zenodo file link",
+        "zip_listing": "5 .do, 2 .dta, 3 .m, 222 .csv (simulation output), LaTeX tables, Qualtrics .qsf (Zenodo preview)"
+      },
+      "software": "Stata (MATLAB for structural simulations only)",
+      "data_formats": [
+        ".dta",
+        ".csv"
+      ],
+      "i4r_verdict": "reproducible (perfect_reproduction=Yes, computational_reproduction=1)",
+      "i4r_report_ref": "none in DP series",
+      "i4r_rows": {
+        "total": 35,
+        "r_coeff": 30,
+        "main_tables": "Tables 3-4"
+      },
+      "method_summary": "Gym-attendance field experiment offering commitment contracts; reduced-form take-up regressions (Tables 3-4) plus structural welfare simulations (DB flags: RCT/field experiment, simulations).",
+      "reasons": [
+        "Small package (8.1 MB) whose reduced-form tables run from two .dta files",
+        "Exact reproduction by I4R; 30 paired rows",
+        "REStud field experiment with a behavioural-economics angle"
+      ],
+      "risks": [
+        "Structural/welfare parts need MATLAB (run_simulations.m); keep claims to the Stata tables",
+        "NBER WP (2019) predates the REStud version; check table numbering",
+        "Many generated .csv/.tex outputs in the zip add file-selection noise"
+      ]
+    },
+    {
+      "rank": 3,
+      "id": "bokobza-2022-morning-after-coup-purges",
+      "i4r_team": 95,
+      "tag": "T95",
+      "db_row_index": "5629-5765",
+      "title": "The Morning After: Cabinet Instability and the Purging of Ministers after Failed Coup Attempts in Autocracies",
+      "authors": [
+        "Laure Bokobza",
+        "Suthan Krishnarajan",
+        "Jacob Nyrup",
+        "Casper Sakstrup",
+        "Lasse Aaskoven"
+      ],
+      "journal": "The Journal of Politics",
+      "year": 2022,
+      "doi": "10.1086/716952",
+      "paper_pdf_url": "https://pure.au.dk/ws/files/365105209/The_Morning_After_Cabinet_Instability_and_the_Purging_of_Ministers_after_Failed_Coup_Attempts_in_Autocracies_Accepted_.pdf",
+      "paper_pdf_check": "200 application/pdf, %PDF magic (Aarhus Pure accepted manuscript via legacy /ws/files/ path; the portal's /files/ link returns 403)",
+      "package_source_url": "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/GCDJ25",
+      "package_api_check": {
+        "status": 200,
+        "size_mb": 102.8,
+        "files": 25,
+        "restricted": 0,
+        "license": "CC0 1.0",
+        "version": "1.0 (2021-08-04), only version",
+        "file_fetch": "206 on /api/access/datafile"
+      },
+      "software": "Stata (country level) + R (individual level)",
+      "data_formats": [
+        ".dta",
+        ".rds"
+      ],
+      "i4r_verdict": "reproducible (perfect_reproduction=Yes, computational_reproduction=1)",
+      "i4r_report_ref": "none in DP series",
+      "i4r_rows": {
+        "total": 137,
+        "r_coeff": 135,
+        "main_tables": "Appendix Tables A1-A3, K1-K2; Figures 3-5"
+      },
+      "method_summary": "Country-year and minister-level linear panel models of cabinet purges after failed coups, with placebo tests (DB flag: other - linear panel models).",
+      "reasons": [
+        "JOP adds a journal the evaluation set lacks",
+        "135 paired I4R rows, exact reproduction",
+        "Single, never-revised Dataverse version (1.0)",
+        "Excluded on 2026-10-21 (AU Pure 403); now reachable"
+      ],
+      "risks": [
+        "Size is mostly 14 .jpg figures; data are one .dta and one .rds",
+        "Stata do-file is shipped as .txt (morning_after_dofile_countrylevel.txt)",
+        "I4R rows come from appendix tables and figures, not the main text tables"
+      ]
+    },
+    {
+      "rank": 4,
+      "id": "bosquet-2022-peer-effects-academic-research",
+      "i4r_team": 64,
+      "tag": "T64",
+      "db_row_index": "2846-2885",
+      "title": "Peer Effects in Academic Research: Senders and Receivers",
+      "authors": [
+        "Clément Bosquet",
+        "Pierre-Philippe Combes",
+        "Emeric Henry",
+        "Thierry Mayer"
+      ],
+      "journal": "The Economic Journal",
+      "year": 2022,
+      "doi": "10.1093/ej/ueac031",
+      "paper_pdf_url": "https://sciencespo.hal.science/hal-03874070v1/file/2022_bosquet_combes_henry_mayer_peer_effects_in_academic_research_senders_and_receivers.pdf",
+      "paper_pdf_check": "206 application/pdf, %PDF magic (Sciences Po HAL, 2022 version; hal-03393072 2019 version also serves a PDF)",
+      "package_source_url": "https://zenodo.org/records/6457037",
+      "package_api_check": {
+        "status": 200,
+        "size_mb": 78.9,
+        "files": 1,
+        "access": "open",
+        "license": "cc-by-4.0",
+        "published": "2022-04-13",
+        "file_fetch": "206 on Zenodo file link",
+        "zip_listing": "unverified: .7z archive, Zenodo does not preview it"
+      },
+      "software": "Stata (+ 'other' per I4R DB)",
+      "data_formats": [
+        "unverified: .7z not previewable"
+      ],
+      "i4r_verdict": "reproducible (perfect_reproduction=Yes, computational_reproduction=1)",
+      "i4r_report_ref": "none in DP series",
+      "i4r_rows": {
+        "total": 40,
+        "r_coeff": 39,
+        "main_tables": "Table 3"
+      },
+      "method_summary": "Peer effects among French academic economists using IV for co-location / promotion shocks (DB flag: IV).",
+      "reasons": [
+        "Exact reproduction; 39 paired rows from one table",
+        "Open HAL copy of a 2022 version",
+        "Economics-of-science topic, new to the set"
+      ],
+      "risks": [
+        "Archive is .7z and could not be listed: confirm data are included and not confidential French administrative records",
+        "'Other' software flagged in the I4R DB; check before seeding",
+        "All rows from Table 3"
+      ]
+    },
+    {
+      "rank": 5,
+      "id": "forsythe-2022-young-workers-recessions",
+      "i4r_team": 109,
+      "tag": "T109",
+      "db_row_index": "6412-6626",
+      "title": "Why Don't Firms Hire Young Workers During Recessions?",
+      "authors": [
+        "Eliza Forsythe"
+      ],
+      "journal": "The Economic Journal",
+      "year": 2022,
+      "doi": "10.1093/ej/ueab096",
+      "paper_pdf_url": "https://publish.illinois.edu/elizaforsythe/files/2022/01/Forsythe_Youth_Hiring_prepub_version_2021.pdf",
+      "paper_pdf_check": "206 application/pdf, %PDF magic (author pre-publication version, 2021)",
+      "package_source_url": "https://zenodo.org/records/5710784",
+      "package_api_check": {
+        "status": 200,
+        "size_mb": 347.3,
+        "files": 1,
+        "access": "open",
+        "license": "cc-by-4.0",
+        "published": "2021-11-18",
+        "file_fetch": "206 on Zenodo file link",
+        "zip_listing": "7 .do, 5 .csv (CPS extract yh_data.csv), ReadMe.pdf (Zenodo preview)"
+      },
+      "software": "Stata",
+      "data_formats": [
+        ".csv"
+      ],
+      "i4r_verdict": "reproducible (perfect_reproduction=Yes, computational_reproduction=1)",
+      "i4r_report_ref": "I4R DP 163",
+      "i4r_rows": {
+        "total": 215,
+        "r_coeff": 214,
+        "main_tables": "Tables 1-6, 10, Appendix B.2"
+      },
+      "method_summary": "CPS-based linear probability models of hiring by worker age over the business cycle (DB flag: other - LPM).",
+      "reasons": [
+        "Macro-labour panel; I4R DP 163 with 214 paired rows across six tables",
+        "Exact reproduction",
+        "Author's pre-publication PDF"
+      ],
+      "risks": [
+        "347 MB, almost all one CPS .csv; slow to download and load",
+        "Large row count: curate a subset of headline claims"
+      ]
+    },
+    {
+      "rank": 6,
+      "id": "bautista-2023-geography-repression-autocracy",
+      "i4r_team": 90,
+      "tag": "T90",
+      "db_row_index": "5213-5251",
+      "title": "The Geography of Repression and Opposition to Autocracy",
+      "authors": [
+        "Maria Angélica Bautista",
+        "Felipe González",
+        "Luis R. Martínez",
+        "Pablo Muñoz",
+        "Mounu Prem"
+      ],
+      "journal": "American Journal of Political Science",
+      "year": 2023,
+      "doi": "10.1111/ajps.12614",
+      "paper_pdf_url": "https://harris.uchicago.edu/files/repression_v2_prelim_6.pdf",
+      "paper_pdf_check": "206 application/pdf, %PDF magic (Harris School preliminary draft, last-modified 2018-11-05, earlier title 'The Geography of Repression and Support for Democracy')",
+      "package_source_url": "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/EYAWES",
+      "package_api_check": {
+        "status": 200,
+        "size_mb": 166.7,
+        "files": 122,
+        "restricted": 0,
+        "license": "not set",
+        "version": "1.1 (2023-04-26); 1.0 (2021-02-22)",
+        "file_fetch": "206 on /api/access/datafile"
+      },
+      "software": "Stata",
+      "data_formats": [
+        ".dta",
+        ".csv",
+        "shapefile zips"
+      ],
+      "i4r_verdict": "reproducible (perfect_reproduction=Yes, computational_reproduction=1)",
+      "i4r_report_ref": "none in DP series",
+      "i4r_rows": {
+        "total": 39,
+        "r_coeff": 35,
+        "main_tables": "Tables 2-3"
+      },
+      "method_summary": "Distance to pre-coup military bases as an instrument for Pinochet-era repression, county-level vote outcomes (DB flag: IV).",
+      "reasons": [
+        "Political-economy history (Chile) with an IV design",
+        "Exact reproduction; 35 paired rows",
+        "Bundled .ado files (acreg, lassoShooting)"
+      ],
+      "risks": [
+        "Only open PDF is a 2018 preliminary draft under an earlier title; table numbers likely differ",
+        "167 MB with many figure PDFs and shapefile zips (file-selection noise)",
+        "Pearson Institute 2019 copy could not be resolved from this environment (DNS)"
+      ]
+    },
+    {
+      "rank": 7,
+      "id": "labandeira-2022-electricity-pricing-reform",
+      "i4r_team": 49,
+      "tag": "T49",
+      "db_row_index": "2226-2248",
+      "title": "Major Reforms in Electricity Pricing: Evidence from a Quasi-Experiment",
+      "authors": [
+        "Xavier Labandeira",
+        "Jose M. Labeaga",
+        "Jordi J. Teixido"
+      ],
+      "journal": "The Economic Journal",
+      "year": 2022,
+      "doi": "10.1093/ej/ueab076",
+      "paper_pdf_url": "https://www.ub.edu/irea/working_papers/2018/201828.pdf",
+      "paper_pdf_check": "206 application/pdf, %PDF magic (IREA Working Paper 2018/28, same title)",
+      "package_source_url": "https://zenodo.org/records/5423782",
+      "package_api_check": {
+        "status": 200,
+        "size_mb": 558.1,
+        "files": 1,
+        "access": "open",
+        "license": "cc-by-4.0",
+        "published": "2021-09-03",
+        "file_fetch": "206 on Zenodo file link",
+        "zip_listing": "3 .do, 1 .dta, 1 .csv, 38 raw INE household-budget-survey .txt files, Readme.pdf (Zenodo preview)"
+      },
+      "software": "Stata",
+      "data_formats": [
+        ".dta",
+        ".csv",
+        ".txt (raw survey)"
+      ],
+      "i4r_verdict": "minor discrepancies (perfect_reproduction=No, computational_reproduction=1)",
+      "i4r_report_ref": "none in DP series",
+      "i4r_rows": {
+        "total": 23,
+        "r_coeff": 22,
+        "main_tables": "Table 2 (cols 2-8)"
+      },
+      "method_summary": "Household electricity demand response to the 2014 Spanish real-time pricing reform; DiD with IV (DB flags: DiD, IV).",
+      "reasons": [
+        "IO/energy-demand topic, new to the set",
+        "Minor-discrepancies verdict; 22 paired rows",
+        "Ships a ready analysis .dta, so the raw .txt need not be processed"
+      ],
+      "risks": [
+        "558 MB: above the ~500 MB ceiling of the 2026-10-21 picks",
+        "2018 WP predates the EJ version; check Table 2 numbering"
+      ]
+    },
+    {
+      "rank": 8,
+      "id": "kim-2022-entertaining-beliefs-economic-mobility",
+      "i4r_team": 27,
+      "tag": "T27",
+      "db_row_index": "1199-1213",
+      "title": "Entertaining Beliefs in Economic Mobility",
+      "authors": [
+        "Eunji Kim"
+      ],
+      "journal": "American Journal of Political Science",
+      "year": 2022,
+      "doi": "10.1111/ajps.12702",
+      "paper_pdf_url": "https://repository.upenn.edu/server/api/core/bitstreams/c9a17945-bc43-4b7b-83cf-8c2383722b1d/content",
+      "paper_pdf_check": "206 application/pdf, %PDF magic (Penn PhD dissertation of the same title, 27 MB; not the article)",
+      "package_source_url": "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/FVRZYU",
+      "package_api_check": {
+        "status": 200,
+        "size_mb": 55.1,
+        "files": 21,
+        "restricted": 0,
+        "license": "not set",
+        "version": "1.1 (2023-04-26); 1.0 (2022-01-13)",
+        "file_fetch": "206 on /api/access/datafile"
+      },
+      "software": "R",
+      "data_formats": [
+        ".RData"
+      ],
+      "i4r_verdict": "reproducible (perfect_reproduction=Yes, computational_reproduction=1)",
+      "i4r_report_ref": "none in DP series",
+      "i4r_rows": {
+        "total": 15,
+        "r_coeff": 14,
+        "main_tables": "Tables 1-2, Appendix F2"
+      },
+      "method_summary": "Survey, lab and online experiments on how rags-to-riches TV shapes beliefs in mobility (DB flags: lab experiment, online experiment, online survey).",
+      "reasons": [
+        "R original with clean .RData files and Rmd scripts",
+        "Exact reproduction; 14 paired rows"
+      ],
+      "risks": [
+        "Only open text is the 2019 dissertation, not the AJPS article; claims must be matched to the I4R rows and may not appear in the same tables",
+        "55 MB, just over the 50 MB preference",
+        "SSRN accepted version (3838127) returns 403"
+      ]
+    }
+  ],
+  "reserves_2026_10_21": [
+    {
+      "id": "guay-2022-ideological-asymmetries-motivated-reasoning",
+      "i4r_team": 40,
+      "tag": "T40",
+      "db_row_index": "1707-1850",
+      "doi": "10.1111/ajps.12624",
+      "status_2026_11_01": "reachable",
+      "paper_pdf_url": "https://dspace.mit.edu/bitstream/handle/1721.1/140315/10.1111-ajps.12624.pdf",
+      "paper_pdf_check": "206 application/pdf, %PDF magic (MIT DSpace, published version; redirects to cf003.cdn.4science.cloud)",
+      "routes_failed": [
+        "Wiley pdfdirect: 403 (twice)",
+        "MIT DSpace version handles 1721.1/140315.2 and .4: landing 200, bitstream REST returns 500"
+      ],
+      "package_note": "Dataverse CGHTPZ now at version 2.0 (2023-05-01; earlier 1.0 2021-04-05, 1.1 2022-11-22). A major version means files changed: pin 1.x.",
+      "i4r_report_ref": "I4R DP 79",
+      "i4r_rows": {
+        "total": 144,
+        "r_coeff": 143
+      }
+    },
+    {
+      "id": "brouwer-2022-teaching-norms",
+      "i4r_team": 83,
+      "tag": "T83",
+      "db_row_index": "4164-4448",
+      "doi": "10.1093/ej/ueac074",
+      "status_2026_11_01": "reachable",
+      "paper_pdf_url": "https://cnrs.hal.science/hal-03725575v1/file/Teaching_Children__HAL_17July22.pdf",
+      "paper_pdf_check": "206 application/pdf, %PDF magic (HAL, submitted version 17 July 2022); https://hal.science/hal-03793652v1/document also 206 %PDF",
+      "routes_failed": [
+        "OUP article-pdf (academic.oup.com): 403 (twice)"
+      ],
+      "package_note": "Zenodo 7045559 (4.6 MB) also contains 'EJ MS20210782_accepted.pdf' inside the zip (seen in Zenodo preview)",
+      "i4r_report_ref": "I4R DP 106",
+      "i4r_rows": {
+        "total": 285,
+        "r_coeff": 284
+      }
+    }
+  ]
+}
