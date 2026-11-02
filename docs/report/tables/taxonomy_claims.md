@@ -144,25 +144,25 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | pipeline 5.5 | `grier-2023` | blind | `sugar_contributions_12_months_incumbent_fe` | -0.0003 | -0.001137 | unclassified |
 | pipeline 5.5 | `grier-2023` | blind | `observations_district_fe` | 186 | 172 | data-file resolution |
 | pipeline 5.5 | `grier-2023` | blind | `observations_incumbent_fe` | 106 | 96 | data-file resolution |
-| pipeline 5.5 | `holman-2022` | independent | `intl_attack_table4` | 3.112 | 0.8906 | specification mismatch |
-| pipeline 5.5 | `holman-2022` | independent | `intl_attack_x_woman_exec_table4` | -4.333 | -1.663 | specification mismatch |
-| pipeline 5.5 | `holman-2022` | independent | `did_attack_x_time_like_may_table2` | -0.1274 | -0.0824 | specification mismatch |
-| pipeline 5.5 | `holman-2022` | independent | `did_attack_like_may_table2` | 0.0178 | -0.129 | specification mismatch |
-| pipeline 5.5 | `holman-2022` | independent | `did_time_like_may_table2` | -0.5007 | -0.3019 | specification mismatch |
-| pipeline 5.5 | `holman-2022` | independent | `did_time_may_best_pm_table2` | 0.2098 | 0.02336 | specification mismatch |
-| pipeline 5.5 | `holman-2022` | independent | `n_obs_did_like_may_table2` | 143499 | 1.45e+05 | unclassified |
-| pipeline 5.5 | `holman-2022` | independent | `n_obs_did_may_best_pm_table2` | 97155 | 8.652e+04 | unclassified |
+| pipeline 5.5 | `holman-2022` | independent | `intl_attack_table4` | 3.112 | 0.8906 | unclassified |
+| pipeline 5.5 | `holman-2022` | independent | `intl_attack_x_woman_exec_table4` | -4.333 | -1.663 | unclassified |
+| pipeline 5.5 | `holman-2022` | independent | `did_attack_x_time_like_may_table2` | -0.1274 | -0.0824 | unclassified |
+| pipeline 5.5 | `holman-2022` | independent | `did_attack_like_may_table2` | 0.0178 | -0.129 | unclassified |
+| pipeline 5.5 | `holman-2022` | independent | `did_time_like_may_table2` | -0.5007 | -0.3019 | unclassified |
+| pipeline 5.5 | `holman-2022` | independent | `did_time_may_best_pm_table2` | 0.2098 | 0.02336 | unclassified |
+| pipeline 5.5 | `holman-2022` | independent | `n_obs_did_like_may_table2` | 143499 | 1.45e+05 | sample restriction |
+| pipeline 5.5 | `holman-2022` | independent | `n_obs_did_may_best_pm_table2` | 97155 | 8.652e+04 | sample restriction |
 | pipeline 5.5 | `holman-2022` | blind | `intl_attack_table4` | 3.112 | NA | extraction error |
 | pipeline 5.5 | `holman-2022` | blind | `intl_attack_x_woman_exec_table4` | -4.333 | NA | extraction error |
 | pipeline 5.5 | `holman-2022` | blind | `n_obs_table4` | 4328 | NA | extraction error |
-| pipeline 5.5 | `holman-2022` | blind | `did_attack_x_time_like_may_table2` | -0.1274 | -0.1502 | specification mismatch |
-| pipeline 5.5 | `holman-2022` | blind | `did_attack_like_may_table2` | 0.0178 | -0.105 | specification mismatch |
-| pipeline 5.5 | `holman-2022` | blind | `did_time_like_may_table2` | -0.5007 | -0.2264 | specification mismatch |
-| pipeline 5.5 | `holman-2022` | blind | `did_attack_x_time_may_best_pm_table2` | -0.0501 | -1.165e-13 | specification mismatch |
-| pipeline 5.5 | `holman-2022` | blind | `did_attack_may_best_pm_table2` | -0.0002 | 1.249 | specification mismatch |
-| pipeline 5.5 | `holman-2022` | blind | `did_time_may_best_pm_table2` | 0.2098 | 3.142e-13 | specification mismatch |
-| pipeline 5.5 | `holman-2022` | blind | `n_obs_did_like_may_table2` | 143499 | 2.399e+05 | unclassified |
-| pipeline 5.5 | `holman-2022` | blind | `n_obs_did_may_best_pm_table2` | 97155 | 1.481e+06 | unclassified |
+| pipeline 5.5 | `holman-2022` | blind | `did_attack_x_time_like_may_table2` | -0.1274 | -0.1502 | unclassified |
+| pipeline 5.5 | `holman-2022` | blind | `did_attack_like_may_table2` | 0.0178 | -0.105 | unclassified |
+| pipeline 5.5 | `holman-2022` | blind | `did_time_like_may_table2` | -0.5007 | -0.2264 | unclassified |
+| pipeline 5.5 | `holman-2022` | blind | `did_attack_x_time_may_best_pm_table2` | -0.0501 | -1.165e-13 | unclassified |
+| pipeline 5.5 | `holman-2022` | blind | `did_attack_may_best_pm_table2` | -0.0002 | 1.249 | unclassified |
+| pipeline 5.5 | `holman-2022` | blind | `did_time_may_best_pm_table2` | 0.2098 | 3.142e-13 | unclassified |
+| pipeline 5.5 | `holman-2022` | blind | `n_obs_did_like_may_table2` | 143499 | 2.399e+05 | sample restriction |
+| pipeline 5.5 | `holman-2022` | blind | `n_obs_did_may_best_pm_table2` | 97155 | 1.481e+06 | sample restriction |
 | pipeline 5.5 | `leeson-2022` | blind | `brown_forsythe_dollars_per_hour` | 0.276 | 0.4663 | sample restriction |
 | pipeline 5.5 | `leeson-2022` | blind | `anova_f_dollars_per_hour` | 0.15 | 0.3125 | sample restriction |
 | pipeline 5.5 | `leeson-2022` | blind | `station_visits_five_station_subsample` | 102 | 98 | sample restriction |

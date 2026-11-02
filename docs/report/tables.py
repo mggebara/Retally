@@ -50,6 +50,12 @@ AGENT_FILES = [
     "claude-code-6papers-all-modes-2026-10-22.json",
 ]
 AGENT_RERUN_FILES = ["claude-code-blind-rerun-2026-10-22.json", "claude-code-blind-rerun-2026-10-22-b.json"]
+# Second complete pipeline sample on all 13 evaluation papers, through the
+# oracle (ROADMAP 3.5, "Variance pass"; label ``desktop-opus-run2``).  Kept
+# out of ``RAW`` so that every single-sample table is unchanged; it feeds
+# only the ``variance_pipeline`` tables.
+PIPELINE_RUN2_FILE = "pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json"
+RUN2_LABEL = "desktop-opus-run2"
 
 # Pipeline 4.7 variance on the dev papers (ROADMAP 1.8 and Phase 3): one
 # cache-on independent row plus three cache-off runs, at the pipeline state
@@ -196,6 +202,16 @@ ORACLE_NINE = sorted({e for (rep, e, _m) in CELL if rep == ORC})
 ORACLE_THREE = sorted(set(SEVEN) - set(API_FOUR))
 SIX_NEW = sorted(set(HOLDOUT) - set(SEVEN))
 assert set(API_FOUR) | set(ORACLE_NINE) == set(HOLDOUT) and not set(API_FOUR) & set(ORACLE_NINE)
+
+
+RUN2: dict[tuple[str, str], dict[str, Any]] = {}
+for _r in load_rows(PIPELINE_RUN2_FILE):
+    assert metrics.reproducer_of(_r) == "pipeline" and metrics.model_of(_r) == RUN2_LABEL, _r["entry_id"]
+    assert not _r.get("skipped"), _r["entry_id"]
+    _key = (_r["entry_id"], metrics.mode_of(_r))
+    assert _key not in RUN2, f"duplicate run2 cell {_key}"
+    RUN2[_key] = _r
+assert {e for e, _m in RUN2} == set(HOLDOUT) and len(RUN2) == len(HOLDOUT) * len(MODES)
 
 
 def p55_cell(entry: str, mode: str) -> dict[str, Any] | None:
@@ -635,7 +651,125 @@ def t_variance() -> str:
         ["Agent, blind", "n", "First run", "Second run", "Second-run file"], rr, ["l", "r", "r", "r", "l"]
     )
     return (
-        "Every other cell in this report is a single run.\n\n" + t1 + "\nAgent blind second samples:\n\n" + t2
+        "Earlier repeat runs: the pipeline on `claude-opus-4-7` on the three dev papers (independent "
+        "mode), and the agent's second samples in blind mode.\n\n"
+        + t1
+        + "\nAgent blind second samples:\n\n"
+        + t2
+    )
+
+
+def _variance_cells(mode: str) -> list[tuple[str, int, int, int, int]]:
+    """(entry, n, sample 1, sample 2, agent) for one mode over the 13 evaluation papers."""
+    out = []
+    for e in HOLDOUT:
+        s1, s2, a = p55_cell(e, mode), RUN2[(e, mode)], cell(AGENT, e, mode)
+        assert s1 is not None and a is not None and total(s1) == total(s2) == total(a), (e, mode)
+        out.append((e, total(s1), passed(s1), passed(s2), passed(a)))
+    return out
+
+
+def _variance_stats(
+    cells: list[tuple[str, int, int, int, int]],
+) -> tuple[int, int, int, int, int, float, int]:
+    """(n, sample 1, sample 2, agent, cells identical, sum of abs. diffs, max abs. diff)."""
+    diffs = [abs(s1 - s2) for _e, _n, s1, s2, _a in cells]
+    return (
+        sum(c[1] for c in cells),
+        sum(c[2] for c in cells),
+        sum(c[3] for c in cells),
+        sum(c[4] for c in cells),
+        sum(1 for d in diffs if d == 0),
+        float(sum(diffs)),
+        max(diffs),
+    )
+
+
+def t_variance_pipeline() -> str:
+    hdr = [
+        "Mode",
+        "Claims",
+        "Sample 1",
+        "Sample 2",
+        "Agent (one sample)",
+        "Agent − sample 1",
+        "Agent − sample 2",
+        "Cells identical",
+        "Mean abs. diff per cell",
+        "Max abs. diff",
+    ]
+    out = []
+    every: list[tuple[str, int, int, int, int]] = []
+    for m in MODES:
+        cells = _variance_cells(m)
+        every += cells
+        n, s1, s2, a, same, sad, mx = _variance_stats(cells)
+        out.append(
+            [
+                m,
+                n,
+                s1,
+                s2,
+                a,
+                f"{a - s1:+d}",
+                f"{a - s2:+d}",
+                f"{same} / {len(cells)}",
+                f"{sad / len(cells):.2f}",
+                mx,
+            ]
+        )
+    n, s1, s2, a, same, sad, mx = _variance_stats(every)
+    out.append(
+        [
+            "**all modes**",
+            n,
+            s1,
+            s2,
+            a,
+            "—",
+            "—",
+            f"**{same} / {len(every)}**",
+            f"**{sad / len(every):.2f}**",
+            f"**{mx}**",
+        ]
+    )
+    return (
+        "Two samples of the pipeline on Opus 5.5 over the 13 evaluation papers (claims within "
+        "tolerance of the paper's printed value).  *Sample 1* is the model-matched row used everywhere "
+        "else in this report: the API run (`claude-opus-5-5`) for Grier, Leeson, Manekin and Montero "
+        "and the first oracle run for the other nine.  *Sample 2* is a second oracle run on all 13 "
+        f"(label `{RUN2_LABEL}`, `{PIPELINE_RUN2_FILE}`), so for the four API papers the two samples "
+        "differ in route as well as draw.  The agent column is its single sample.  *Cells identical*, "
+        "*mean* and *max abs. diff* compare the two pipeline samples cell by cell (paper × mode).\n\n"
+        + table(hdr, out, ["l", "r", "r", "r", "r", "r", "r", "r", "r", "r"])
+    )
+
+
+def t_variance_pipeline_cells() -> str:
+    hdr = ["Paper", "Sample 1 route", "Mode", "n", "Sample 1", "Sample 2", "Abs. diff", "Agent"]
+    out = []
+    for e in HOLDOUT:
+        route = "API" if e in API_FOUR else "oracle"
+        for m in MODES:
+            s1, s2, a = p55_cell(e, m), RUN2[(e, m)], cell(AGENT, e, m)
+            assert s1 is not None and a is not None
+            d = abs(passed(s1) - passed(s2))
+            out.append(
+                [
+                    f"`{short(e)}`",
+                    route,
+                    m,
+                    total(s1),
+                    passed(s1),
+                    passed(s2),
+                    f"**{d}**" if d else "0",
+                    passed(a),
+                ]
+            )
+    return (
+        "Per paper and mode: final claims within tolerance in each pipeline sample, their absolute "
+        "difference (bold where non-zero), and the agent's single sample.\n\n"
+        + table(hdr, out, ["l", "l", "l", "r", "r", "r", "r", "r"])
     )
 
 
@@ -778,8 +912,10 @@ TAXONOMY_RULES: dict[tuple[str, str, str], dict[str, Any]] = {
     (HARNESS_47, "arias-2022", "blind"): {"claims": dict.fromkeys(ARIAS_COUNTS, SAMPLE), "rest": SPEC},
     # 3.2: "The independent run printed no value at all (three error repairs)."
     (HARNESS_47, "grier-2023", "independent"): {"rest": EXTRACT},
-    # 3.2: N reported over all rows, not the estimation sample.  The coefficients equal the
-    # pipeline-5.5 blind row's to every printed digit, and 3.2 and 3.5 give different causes.
+    # N reported over all rows (842 / 604), as 3.2 describes for the seeded row.  3.2's estimator
+    # account quotes the seeded row's numbers (-0.00009, N 860 / 612), not this row's.  The blind
+    # coefficients equal the pipeline-5.5 API blind row's and the second oracle sample's to every
+    # printed digit, and no stated cause covers them (draft section 5, "Unclassified").
     (HARNESS_47, "grier-2023", "blind"): {
         "claims": dict.fromkeys(GRIER_COUNTS, SAMPLE),
         "rest": UNCLASSIFIED,
@@ -801,7 +937,9 @@ TAXONOMY_RULES: dict[tuple[str, str, str], dict[str, Any]] = {
     # --- pipeline on Opus 5.5: API rows (ROADMAP 3.5, first table) ---
     # 3.5: 172 / 94 observations, the undocumented _iter1 / _iter2 window files.
     (HARNESS_55, "grier-2023", "independent"): {"rest": DATA_FILE},
-    # Same N story (172 / 96); coefficients equal the 4.7 blind row's, see above.
+    # N 172 / 96, which 3.5 groups with the independent row's 172 / 94 under the window files.  The
+    # coefficients equal the 4.7 blind row's; the window files cannot explain the Table 1 claims,
+    # which come from the main file, so the coefficients stay unclassified (see above).
     (HARNESS_55, "grier-2023", "blind"): {
         "claims": dict.fromkeys(GRIER_COUNTS, DATA_FILE),
         "rest": UNCLASSIFIED,
@@ -822,16 +960,20 @@ TAXONOMY_RULES: dict[tuple[str, str, str], dict[str, Any]] = {
     (HARNESS_55, "altmann-2022", "blind"): {"na": EXTRACT, "rest": SAMPLE},
     (HARNESS_55, "dertwinkel-kalt-2022", "blind"): {"rest": UNCLASSIFIED},
     (HARNESS_55, "gagliarducci-2022", "blind"): {"rest": UNCLASSIFIED},
-    # 3.5: random-effects / linear-probability models where the paper uses fixed effects and logit;
-    # the two N claims' cause is not stated.
+    # 3.5 says "random-effects / linear probability models where the paper uses fixed effects and
+    # logit", but 3.4 and the entry's notes say the authors' do-file is itself random effects and
+    # linear, and that specification reproduces Table 2 in seeded mode, so it cannot be the cause
+    # of a miss.  No other cause is stated: the coefficients are unclassified.  The two Table 2 N
+    # claims show a different estimation sample on their face (145,012 / 86,517 independent;
+    # 239,919 / 1,481,392 blind; printed 143,499 / 97,155).
     (HARNESS_55, "holman-2022", "independent"): {
-        "claims": dict.fromkeys(HOLMAN_N, UNCLASSIFIED),
-        "rest": SPEC,
+        "claims": dict.fromkeys(HOLMAN_N, SAMPLE),
+        "rest": UNCLASSIFIED,
     },
     (HARNESS_55, "holman-2022", "blind"): {
         "na": EXTRACT,
-        "claims": dict.fromkeys(HOLMAN_N, UNCLASSIFIED),
-        "rest": SPEC,
+        "claims": dict.fromkeys(HOLMAN_N, SAMPLE),
+        "rest": UNCLASSIFIED,
     },
     # Same four index claims as the agent (3.4): weights and orientations unstated.
     (HARNESS_55, "lopez-moctezuma-2022", "independent"): {"rest": UNDER},
@@ -1021,6 +1163,46 @@ def _quoted_totals() -> list[tuple[str, str, str, str, str]]:
         q.append(("3.5", "harness gap, 7 papers", mode, str(a), harness_gap(SEVEN, mode)))
     for mode, a in (("seeded", 5), ("independent", 9), ("blind", 20)):
         q.append(("3.5", "harness gap, 6 papers (3.4 set)", mode, str(a), harness_gap(SIX_NEW, mode)))
+    for mode, a, b in (("seeded", 149, 152), ("independent", 129, 128), ("blind", 92, 82)):
+        q.append(
+            (
+                "3.5 variance pass",
+                "pipeline sample 1, 13 papers",
+                f"{mode} final",
+                str(a),
+                s(P55_ALL, HOLDOUT, mode),
+            )
+        )
+        q.append(
+            (
+                "3.5 variance pass",
+                "pipeline sample 2, 13 papers",
+                f"{mode} final",
+                str(b),
+                str(sum(passed(RUN2[(e, mode)]) for e in HOLDOUT)),
+            )
+        )
+    _every = [c for m in MODES for c in _variance_cells(m)]
+    _vs = _variance_stats(_every)
+    q.append(
+        (
+            "3.5 variance pass",
+            "pipeline samples 1 vs 2",
+            "cells identical",
+            "25 of 39",
+            f"{_vs[4]} of {len(_every)}",
+        )
+    )
+    q.append(
+        (
+            "3.5 variance pass",
+            "pipeline samples 1 vs 2",
+            "mean abs. diff",
+            "0.97",
+            f"{_vs[5] / len(_every):.2f}",
+        )
+    )
+    q.append(("3.5 variance pass", "pipeline samples 1 vs 2", "max abs. diff", "5", str(_vs[6])))
     for mode, a in (("seeded", "0.3%"), ("independent", "4.9%"), ("blind", "22.3%")):
         c = metrics.closeness(rows_for(P47, SEVEN, mode))
         q.append(("3.2", "pipeline 4.7 median rel. error", mode, a, f"{c.median_rel_err * 100:.1f}%"))
@@ -1046,12 +1228,68 @@ def _quoted_totals() -> list[tuple[str, str, str, str, str]]:
     return q
 
 
+# ---------------------------------------------------------------------------
+# Claim-level evidence for the two section-5 consistency questions
+# ---------------------------------------------------------------------------
+
+CONSISTENCY_CELLS = [
+    ("grier-2023", "independent"),
+    ("grier-2023", "blind"),
+    ("holman-2022", "independent"),
+    ("holman-2022", "blind"),
+]
+
+
+def _claim_value(row: dict[str, Any] | None, claim: str) -> str:
+    if row is None:
+        return "—"
+    cd = next(c for c in row["claim_details"] if c["description"] == claim)
+    v = cd.get("reproduced")
+    if v is None:
+        s = "NA"
+    elif float(v).is_integer() and abs(v) >= 1:
+        s = f"{int(v):,}"
+    else:
+        s = f"{v:.4g}"
+    return s + (" ✓" if cd.get("passed") else "")
+
+
+def t_consistency_claims() -> str:
+    hdr = ["Paper", "Mode", "Claim", "Printed", "Pipeline 4.7", "Pipeline 5.5, sample 1", "Sample 2", "Agent"]
+    out = []
+    for short_id, m in CONSISTENCY_CELLS:
+        e = ENTRY_BY_SHORT[short_id]
+        s1, s2, r47, a = p55_cell(e, m), RUN2[(e, m)], cell(P47, e, m), cell(AGENT, e, m)
+        assert s1 is not None
+        for cd in s1["claim_details"]:
+            c = cd["description"]
+            out.append(
+                [
+                    f"`{short_id}`",
+                    m,
+                    f"`{c}`",
+                    f"{cd['claimed']:g}",
+                    _claim_value(r47, c),
+                    _claim_value(s1, c),
+                    _claim_value(s2, c),
+                    _claim_value(a, c),
+                ]
+            )
+    return (
+        "Reproduced values (✓ = within tolerance) for the Grier and Holman cells discussed in "
+        "Section 5.  Sample 1 is the API row for Grier and the first oracle row for Holman; sample 2 "
+        "is the second oracle run (Section 4.8).  Pipeline 4.7 has no Holman rows.\n\n"
+        + table(hdr, out, ["l", "l", "l", "r", "r", "r", "r", "r"])
+    )
+
+
 def t_discrepancies() -> str:
     checks = _roadmap_35_cells() + _quoted_totals()
     bad = [c for c in checks if c[3] != c[4]]
     rows = [[f"ROADMAP {sec}", what, item, quoted, recomputed] for sec, what, item, quoted, recomputed in bad]
     return (
-        f"{len(checks)} numbers quoted in ROADMAP 3.2–3.5 were recomputed from the results files; "
+        f"{len(checks)} numbers quoted in ROADMAP 3.2–3.5 (including the 3.5 variance pass) were "
+        "recomputed from the results files; "
         f"{len(bad)} differ.\n\n"
         + (
             table(["Source", "What", "Item", "ROADMAP", "Recomputed"], rows, ["l", "l", "l", "r", "r"])
@@ -1072,9 +1310,12 @@ TABLES = {
     "closeness": t_closeness,
     "three_way": t_three_way,
     "variance": t_variance,
+    "variance_pipeline": t_variance_pipeline,
+    "variance_pipeline_cells": t_variance_pipeline_cells,
     "cost": t_cost,
     "dates": t_dates,
     "taxonomy": t_taxonomy,
+    "consistency_claims": t_consistency_claims,
     "discrepancies": t_discrepancies,
 }
 
