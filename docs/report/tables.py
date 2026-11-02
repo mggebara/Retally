@@ -64,11 +64,13 @@ AGENT_FILES = [
 ]
 AGENT_RERUN_FILES = ["claude-code-blind-rerun-2026-10-22.json", "claude-code-blind-rerun-2026-10-22-b.json"]
 # Second complete pipeline sample, through the oracle (label ``desktop-opus-run2``):
-# all 13 papers of ROADMAP 3.2-3.5 ("Variance pass") and the four papers of 3.6
-# (ROADMAP 3.7).  Kept out of ``RAW`` so that every single-sample table is
+# all 13 papers of ROADMAP 3.2-3.5 ("Variance pass"), the four papers of 3.6
+# (ROADMAP 3.7) and the six of 3.7 (ROADMAP 3.7.1), so the pipeline has two
+# samples on all 23.  Kept out of ``RAW`` so that every single-sample table is
 # unchanged; it feeds only the ``variance_pipeline`` tables and the probe comparison.
 PIPELINE_RUN2_FILE = "pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json"
 PIPELINE_RUN2_NEW_FILE = "pipeline-oracle-desktop-opus-run2-4papers-all-modes-2026-11-02.json"
+PIPELINE_RUN2_SIX_FILE = "pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json"
 RUN2_LABEL = "desktop-opus-run2"
 # Second Claude Code sample in independent and blind mode: the 13 papers of
 # ROADMAP 3.5 ("Agent second sample"; run id ``2026-11-01-a``) and the four of
@@ -262,13 +264,15 @@ assert set(SEVENTEEN) | set(NEW_SIX) == set(HOLDOUT) and len(HOLDOUT) == 23
 
 
 RUN2: dict[tuple[str, str], dict[str, Any]] = {}
-for _r in load_rows(PIPELINE_RUN2_FILE) + load_rows(PIPELINE_RUN2_NEW_FILE):
+for _r in (
+    load_rows(PIPELINE_RUN2_FILE) + load_rows(PIPELINE_RUN2_NEW_FILE) + load_rows(PIPELINE_RUN2_SIX_FILE)
+):
     assert metrics.reproducer_of(_r) == "pipeline" and metrics.model_of(_r) == RUN2_LABEL, _r["entry_id"]
     assert not _r.get("skipped"), _r["entry_id"]
     _key = (_r["entry_id"], metrics.mode_of(_r))
     assert _key not in RUN2, f"duplicate run2 cell {_key}"
     RUN2[_key] = _r
-assert {e for e, _m in RUN2} == set(SEVENTEEN) and len(RUN2) == len(SEVENTEEN) * len(MODES)
+assert {e for e, _m in RUN2} == set(HOLDOUT) and len(RUN2) == len(HOLDOUT) * len(MODES)
 
 AGENT2: dict[tuple[str, str], dict[str, Any]] = {}
 for _r in load_rows(AGENT_RUN2_FILE) + load_rows(AGENT_RUN2_NEW_FILE) + load_rows(AGENT_RUN2_SIX_FILE):
@@ -860,7 +864,13 @@ def t_variance_pipeline() -> str:
         "Max abs. diff",
     ]
     out = []
-    for label, entries in (("13 earlier", THIRTEEN), ("4 (3.6 set)", NEW_FOUR), ("17", SEVENTEEN)):
+    for label, entries in (
+        ("13 earlier", THIRTEEN),
+        ("4 (3.6 set)", NEW_FOUR),
+        ("17", SEVENTEEN),
+        ("6 (3.7 set)", NEW_SIX),
+        ("23", HOLDOUT),
+    ):
         every: list[tuple[str, int, int, int, int]] = []
         for m in MODES:
             cells = _variance_cells(m, entries)
@@ -898,13 +908,13 @@ def t_variance_pipeline() -> str:
             ]
         )
     return (
-        "Two samples of the pipeline on Opus 5.5 over the 17 evaluation papers of ROADMAP 3.2–3.6 "
-        "(claims within tolerance of the paper's printed value); the six papers of ROADMAP 3.7 have one "
-        "sample and are not in this table.  *Sample 1* is the model-matched row used everywhere "
+        "Two samples of the pipeline on Opus 5.5 over all 23 evaluation papers (claims within "
+        "tolerance of the paper's printed value).  *Sample 1* is the model-matched row used everywhere "
         "else in this report: the API run (`claude-opus-5-5`) for Grier, Leeson, Manekin and Montero "
-        "and the first oracle run for the other thirteen.  *Sample 2* is a second oracle run "
+        "and the first oracle run for the other nineteen.  *Sample 2* is a second oracle run "
         f"(label `{RUN2_LABEL}`; `{PIPELINE_RUN2_FILE}` for the 13 earlier papers, "
-        f"`{PIPELINE_RUN2_NEW_FILE}` for the four of ROADMAP 3.6), so for the four API papers the two "
+        f"`{PIPELINE_RUN2_NEW_FILE}` for the four of ROADMAP 3.6, `{PIPELINE_RUN2_SIX_FILE}` for the six "
+        "of ROADMAP 3.7), so for the four API papers the two "
         "samples differ in route as well as draw.  The agent column is its first sample.  *Cells "
         "identical*, *mean* and *max abs. diff* compare the two pipeline samples cell by cell "
         "(paper × mode).\n\n" + table(hdr, out, ["l", "l", "r", "r", "r", "r", "r", "r", "r", "r", "r"])
@@ -914,7 +924,7 @@ def t_variance_pipeline() -> str:
 def t_variance_pipeline_cells() -> str:
     hdr = ["Paper", "Sample 1 route", "Mode", "n", "Sample 1", "Sample 2", "Abs. diff", "Agent"]
     out = []
-    for e in SEVENTEEN:
+    for e in HOLDOUT:
         route = "API" if e in API_FOUR else "oracle"
         for m in MODES:
             s1, s2, a = p55_cell(e, m), RUN2[(e, m)], cell(AGENT, e, m)
@@ -942,8 +952,8 @@ def t_variance_pipeline_cells() -> str:
 def _agent_variance_cells(mode: str, entries: list[str] | None = None) -> list[tuple[Any, ...]]:
     """(entry, n, agent 1, agent 2, pipeline 1, pipeline 2 or None) for one mode over ``entries``.
 
-    The default is the 13 earlier papers.  The six papers of ROADMAP 3.7 have no second pipeline
-    sample, so their pipeline 2 is None.
+    The default is the 13 earlier papers.  Pipeline 2 is None for a paper without a second
+    pipeline sample (none since ROADMAP 3.7.1; kept so a new paper can enter before its rerun).
     """
     out = []
     for e in THIRTEEN if entries is None else entries:
@@ -1021,17 +1031,16 @@ def t_variance_agent() -> str:
         )
     return (
         "Two samples of the agent over all 23 evaluation papers, in the two modes the agent was rerun in, "
-        "against the pipeline on Opus 5.5, which has two samples on the 17 papers of ROADMAP 3.2–3.6 "
-        "and one on the six of ROADMAP 3.7 (claims within tolerance of the paper's printed value).  "
+        "against the pipeline on Opus 5.5, which has two samples on all 23 (claims within tolerance of "
+        "the paper's printed value).  "
         "*Agent sample 1* is the row used everywhere else in this report (ROADMAP 3.3, 3.4, 3.6, 3.7); "
         f"*agent sample 2* is a second Claude Code run (`{AGENT_RUN2_FILE}` for the 13 earlier papers, "
         f"`{AGENT_RUN2_NEW_FILE}` for the four of ROADMAP 3.6, `{AGENT_RUN2_SIX_FILE}` for the six of "
         "ROADMAP 3.7).  The pipeline samples are those of the table above.  *Cells identical*, *mean* "
         "and *max abs. diff* compare the two agent samples cell by cell; the last column is the "
-        "smallest and largest of the agent-minus-pipeline differences: four pairings (each agent sample "
-        "against each pipeline sample) where the pipeline has two samples, two pairings (each agent "
-        "sample against the pipeline's one) where it has one.  Rows with two pairings are not comparable "
-        "with rows with four.\n\n" + table(hdr, out, ["l", "l", "r", "r", "r", "r", "r", "r", "r", "r", "r"])
+        "smallest and largest of the agent-minus-pipeline differences over the four pairings (each agent "
+        "sample against each pipeline sample).\n\n"
+        + table(hdr, out, ["l", "l", "r", "r", "r", "r", "r", "r", "r", "r", "r"])
     )
 
 
@@ -1046,8 +1055,8 @@ def t_variance_agent_cells() -> str:
     out.sort(key=lambda r: (r[0], AGENT_RUN2_MODES.index(r[1])))
     return (
         "Per paper, independent and blind mode: final claims within tolerance in each agent sample, "
-        "their absolute difference (bold where non-zero), and the pipeline samples (one on the six "
-        "papers of ROADMAP 3.7).\n\n" + table(hdr, out, ["l", "l", "r", "r", "r", "r", "r", "r"])
+        "their absolute difference (bold where non-zero), and the two pipeline samples.\n\n"
+        + table(hdr, out, ["l", "l", "r", "r", "r", "r", "r", "r"])
     )
 
 
@@ -1148,8 +1157,8 @@ def t_probe() -> str:
         "context, asked for each number from memory, scored with the blind-mode comparator.  *Within "
         "2×* and *within 5×* count answers whose relative error is at most two or five times the "
         "claim's tolerance.  The last four columns are the blind-mode counts of the two agent and two "
-        "pipeline samples, for comparison; the second samples exist for the 17 papers of ROADMAP "
-        f"3.2–3.6 only.  Over all 23 papers, of the {tot['tol']} hits, {k['derivable from context']} "
+        "pipeline samples, for comparison (both systems' second samples cover all 23 papers).  Over all "
+        f"23 papers, of the {tot['tol']} hits, {k['derivable from context']} "
         f"are derivable from the claim context, {sum(v for c, v in k.items() if c.startswith('within '))} "
         f"passes a relative tolerance, and {k['inside ±1 SE band']} land inside a ±1 SE band whose "
         f"relative half-width is {pct(lo, 0)} to {pct(hi, 0)} ({n65} of {nb} at or below 65 %).\n\n"
@@ -1944,11 +1953,19 @@ def _roadmap_37_checks() -> list[tuple[str, str, str, str, str]]:
         ("blind", 250, 248, "19 of 23", "78–80"),
     ):
         st = _agent_variance_stats(mode, HOLDOUT)
+        # 3.7 paired both agent samples with the pipeline's first sample only (3.7.1 has all four).
+        g1 = [st["a1"] - st["p1"], st["a2"] - st["p1"]]
         out += [
             (sec_v, "agent, 23 papers", f"{mode} sample 1", str(a1), str(st["a1"])),
             (sec_v, "agent, 23 papers", f"{mode} sample 2", str(a2), str(st["a2"])),
             (sec_v, "agent, 23 papers", f"{mode} cells identical", same, f"{st['same']} of {st['cells']}"),
-            (sec_v, "gap range, 23 papers (two pairings)", mode, rng, f"{st['gap_lo']}–{st['gap_hi']}"),
+            (
+                sec_v,
+                "gap range, 23 papers, against pipeline sample 1 (two pairings)",
+                mode,
+                rng,
+                f"{min(g1)}–{max(g1)}",
+            ),
         ]
 
     from benchmark import probe
@@ -2000,6 +2017,145 @@ def _roadmap_37_checks() -> list[tuple[str, str, str, str, str]]:
         q = " / ".join(m.group(i) for i in range(2, 7))
         rc = " / ".join(str(sm[k]) for k in ("n", "answered", "tol", "x2", "x5"))
         out.append((sec_p, f"probe row {short(m.group(1))}", "claims / answered / tol / 2x / 5x", q, rc))
+    return out
+
+
+def _roadmap_371_checks() -> list[tuple[str, str, str, str, str]]:
+    """ROADMAP 3.7.1: the pipeline's second sample on the six papers of 3.7 and the 23-paper ranges."""
+    text = (REPO / "ROADMAP.md").read_text()
+    sec = text.split("\n### 3.7.1")[1].split("\n---\n")[0]
+    out: list[tuple[str, str, str, str, str]] = []
+    src = "3.7.1"
+
+    def s(rep: str, entries: list[str], mode: str) -> str:
+        return str(sum_passed(rep, entries, mode)[0])
+
+    def f(rep: str, entries: list[str], mode: str) -> str:
+        return str(sum_passed(rep, entries, mode)[2])
+
+    cellpat = r"(\d+) \((\d+)\) → (\d+) \((\d+)\)"
+    pat = re.compile(rf"^\| ([A-Za-zé-]+) \| (\d+) \| {cellpat} \| {cellpat} \| {cellpat} \|$")
+    n_rows = 0
+    for line in sec.splitlines():
+        m = pat.match(line.strip())
+        if not m:
+            continue
+        n_rows += 1
+        e = ENTRY_BY_SHORT[ROADMAP_NAMES[m.group(1).lower()]]
+        for i, mode in enumerate(MODES):
+            s1, s2 = cell(ORC, e, mode), RUN2[(e, mode)]
+            assert s1 is not None, (e, mode)
+            g = 3 + 4 * i
+            if i == 0:
+                out.append((src, f"{short(e)}", "n", m.group(2), str(total(s1))))
+            for what, q, rc in (
+                ("sample 1 final", m.group(g), str(passed(s1))),
+                ("sample 1 first scored", m.group(g + 1), str(fs(s1))),
+                ("sample 2 final", m.group(g + 2), str(passed(s2))),
+                ("sample 2 first scored", m.group(g + 3), str(fs(s2))),
+            ):
+                out.append((src, f"{short(e)} {mode}", what, q, rc))
+    assert n_rows == len(NEW_SIX), n_rows
+
+    def s2sum(entries: list[str], mode: str) -> tuple[int, int | None]:
+        rs = [RUN2[(e, mode)] for e in entries]
+        fss = [fs(r) for r in rs]
+        return sum(passed(r) for r in rs), None if any(v is None for v in fss) else sum(v or 0 for v in fss)
+
+    for mode, p1, p1f, p2, p2f, same in (
+        ("seeded", 69, 69, 70, 69, 5),
+        ("independent", 66, 47, 62, 48, 4),
+        ("blind", 52, 52, 52, 52, 3),
+    ):
+        fin2, fs2 = s2sum(NEW_SIX, mode)
+        pc = _variance_stats(_variance_cells(mode, NEW_SIX))
+        out += [
+            (src, "pipeline sample 1, 6 papers", f"{mode} final", str(p1), s(ORC, NEW_SIX, mode)),
+            (src, "pipeline sample 1, 6 papers", f"{mode} first scored", str(p1f), f(ORC, NEW_SIX, mode)),
+            (src, "pipeline sample 2, 6 papers", f"{mode} final", str(p2), str(fin2)),
+            (src, "pipeline sample 2, 6 papers", f"{mode} first scored", str(p2f), str(fs2)),
+            (src, "pipeline cells identical, 6 papers", mode, f"{same} of 6", f"{pc[4]} of {len(NEW_SIX)}"),
+        ]
+    _six = [c for m in MODES for c in _variance_cells(m, NEW_SIX)]
+    _vs6 = _variance_stats(_six)
+    out += [
+        (
+            src,
+            "pipeline samples 1 vs 2, 6 papers",
+            "cells identical",
+            "12 of 18",
+            f"{_vs6[4]} of {len(_six)}",
+        ),
+        (src, "pipeline samples 1 vs 2, 6 papers", "mean abs. diff", "0.83", f"{_vs6[5] / len(_six):.2f}"),
+        (src, "pipeline samples 1 vs 2, 6 papers", "max abs. diff", "6", str(_vs6[6])),
+        (
+            src,
+            "oracle answered calls, sample 2 on the six",
+            "calls",
+            "79",
+            str(json.loads((RESULTS / PIPELINE_RUN2_SIX_FILE).read_text())["usage"]["api_calls"]),
+        ),
+    ]
+
+    # The 23-paper range table: totals and gap ranges per mode, with the 17- and 6-paper ranges beside.
+    rpat = re.compile(
+        r"^\| (seeded|independent|blind) \| (\d+) \| (\d+|—) \| (\d+) \| (\d+) \| "
+        r"\*\*(\d+)–(\d+)\*\* \| (\d+)–(\d+) \| (\d+)–(\d+) \|$"
+    )
+    n_modes = 0
+    for line in sec.splitlines():
+        m = rpat.match(line.strip())
+        if not m:
+            continue
+        n_modes += 1
+        mode = m.group(1)
+        p1 = sum(passed(cell(P55_ALL, e, mode) or {}) for e in HOLDOUT)
+        p2 = sum(passed(RUN2[(e, mode)]) for e in HOLDOUT)
+        a1 = sum_passed(AGENT, HOLDOUT, mode)[0]
+        a2 = sum(passed(AGENT2[(e, mode)]) for e in HOLDOUT) if mode in AGENT_RUN2_MODES else None
+        out += [
+            (src, "23 papers", f"{mode} agent 1", m.group(2), str(a1)),
+            (src, "23 papers", f"{mode} agent 2", m.group(3), "—" if a2 is None else str(a2)),
+            (src, "23 papers", f"{mode} pipeline 1", m.group(4), str(p1)),
+            (src, "23 papers", f"{mode} pipeline 2", m.group(5), str(p2)),
+        ]
+        for label, entries, lo, hi in (
+            ("23", HOLDOUT, m.group(6), m.group(7)),
+            ("17", SEVENTEEN, m.group(8), m.group(9)),
+            ("6", NEW_SIX, m.group(10), m.group(11)),
+        ):
+            if mode in AGENT_RUN2_MODES:
+                sv = _agent_variance_stats(mode, entries)
+                assert sv["p2"] is not None, (label, mode)
+                rng = f"{sv['gap_lo']}–{sv['gap_hi']}"
+            else:
+                a = sum_passed(AGENT, entries, mode)[0]
+                gaps = [a - sum(passed(cell(P55_ALL, x, mode) or {}) for x in entries)] + [
+                    a - sum(passed(RUN2[(x, mode)]) for x in entries)
+                ]
+                rng = f"{min(gaps)}–{max(gaps)}"
+            out.append((src, f"gap range, {label} papers", mode, f"{lo}–{hi}", rng))
+    assert n_modes == len(MODES), n_modes
+
+    for mode, same in (("seeded", "19 of 23"), ("independent", "14 of 23"), ("blind", "11 of 23")):
+        pc = _variance_stats(_variance_cells(mode, HOLDOUT))
+        out.append((src, "pipeline cells identical, 23 papers", mode, same, f"{pc[4]} of {len(HOLDOUT)}"))
+    for mode, same in (("independent", "20 of 23"), ("blind", "19 of 23")):
+        st = _agent_variance_stats(mode, HOLDOUT)
+        out.append((src, "agent cells identical, 23 papers", mode, same, f"{st['same']} of {st['cells']}"))
+    _all = [c for m in MODES for c in _variance_cells(m, HOLDOUT)]
+    _vs = _variance_stats(_all)
+    out += [
+        (
+            src,
+            "pipeline samples 1 vs 2, 23 papers",
+            "cells identical",
+            "44 of 69",
+            f"{_vs[4]} of {len(_all)}",
+        ),
+        (src, "pipeline samples 1 vs 2, 23 papers", "mean abs. diff", "1.07", f"{_vs[5] / len(_all):.2f}"),
+        (src, "pipeline samples 1 vs 2, 23 papers", "max abs. diff", "6", str(_vs[6])),
+    ]
     return out
 
 
@@ -2245,13 +2401,20 @@ def t_consistency_claims() -> str:
 
 
 def t_discrepancies() -> str:
-    checks = _roadmap_35_cells() + _quoted_totals() + _roadmap_36_checks() + _roadmap_37_checks()
+    checks = (
+        _roadmap_35_cells()
+        + _quoted_totals()
+        + _roadmap_36_checks()
+        + _roadmap_37_checks()
+        + _roadmap_371_checks()
+    )
     bad = [c for c in checks if c[3] != c[4]]
     rows = [[f"ROADMAP {sec}", what, item, quoted, recomputed] for sec, what, item, quoted, recomputed in bad]
     return (
-        f"{len(checks)} numbers quoted in ROADMAP 3.2–3.7 (including the 3.5 variance pass, the "
-        "agent's second sample, the memorization probe, the four papers of 3.6 and the six papers "
-        "and two-sample ranges of 3.7) were "
+        f"{len(checks)} numbers quoted in ROADMAP 3.2–3.7.1 (including the 3.5 variance pass, the "
+        "agent's second sample, the memorization probe, the four papers of 3.6, the six papers "
+        "and two-sample ranges of 3.7, and the pipeline's second sample and 23-paper ranges of "
+        "3.7.1) were "
         "recomputed from the results files; "
         f"{len(bad)} differ.\n\n"
         + (

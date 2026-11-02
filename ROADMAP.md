@@ -2243,7 +2243,7 @@ pipeline samples.)  Over all 23 papers the agent's two samples are
 of 23 cells; against the pipeline's one sample on the six new papers
 the 23-paper gap is 32–35 independent and 78–80 blind, but that range
 has two pairings, not four, and is not comparable with the 17-paper
-one.  The agent's cells are identical across samples in
+one (3.7.1 replaces it with the four-pairing 32–47 and 76–80).  The agent's cells are identical across samples in
 15 of 17 independent and 14 of 17 blind cells; the pipeline's in 14 of
 17 seeded, 10 of 17 independent and 8 of 17 blind (32 of 51 overall,
 mean absolute difference 1.16 claims per cell, largest 6).  The six new
@@ -2437,9 +2437,10 @@ The caveats of 3.5 apply unchanged.
 
 **Next.**
 
-- (a) Free: a second oracle sample of the pipeline on the six new
-  papers in all three modes (the agent's second sample on them exists,
-  PR #109).  Until then the four-pairing ranges stay 17-paper.
+- (a) ~~Free: a second oracle sample of the pipeline on the six new
+  papers in all three modes.~~  Done (PR #111, written up in 3.7.1):
+  both systems now have two samples in independent and blind mode on
+  all 23 papers, and the four-pairing ranges cover 23.
 - (b) Decision pending (user): openICPSR.  33 AEA papers in the
   meta-database are blocked only by the login.  The manual-placement
   route of Phase 4 (a human downloads under their own account, the entry
@@ -2457,6 +2458,155 @@ The caveats of 3.5 apply unchanged.
   specification choices should be written into the evidence bundle if
   it exists in the oracle store, so the "from memory" explanation can be
   checked rather than quoted.
+
+### 3.7.1 Pipeline second sample on the six newest papers (2026-11-02) — ✅ measured, no API spend
+
+The pipeline was rerun through the oracle on the six papers of 3.7 in
+all three modes (label `desktop-opus-run2`, 79 answered calls,
+`benchmark/results/pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`,
+PR #111), alongside the agent's second sample on them
+(`claude-code-run2-6papers-indep-blind-2026-11-02.json`, covered in
+3.7).  Like every second sample it stays out of REPORT.md and the
+single-sample tables; it feeds the report's variance tables (Section
+4.8).  As in 3.5–3.7, every figure below is recomputed from the
+results files by `docs/report/tables.py` (its discrepancies table).
+
+Per paper, sample 1 → sample 2, final claims within tolerance with the
+first-scored count in brackets:
+
+| Paper | n | seeded (1 → 2) | independent (1 → 2) | blind (1 → 2) |
+|---|---|---|---|---|
+| Dancygier | 13 | 13 (13) → 13 (13) | 13 (11) → 13 (13) | 13 (13) → 13 (13) |
+| Douenne | 13 | 5 (5) → 6 (5) | 13 (12) → 13 (12) | 12 (12) → 13 (13) |
+| Hanushek | 13 | 13 (13) → 13 (13) | 9 (9) → 9 (9) | 12 (12) → 9 (9) |
+| Hollyer | 13 | 13 (13) → 13 (13) | 13 (11) → 13 (10) | 10 (10) → 12 (12) |
+| Labandeira | 12 | 12 (12) → 12 (12) | 5 (3) → 7 (3) | 4 (4) → 4 (4) |
+| Mokyr | 13 | 13 (13) → 13 (13) | 13 (1) → 7 (1) | 1 (1) → 1 (1) |
+| **Total, 6 papers** | 77 | **69** (69) → **70** (69) | **66** (47) → **62** (48) | **52** (52) → **52** (52) |
+
+Twelve of the eighteen cells repeat their final count (5 of 6 seeded,
+4 of 6 independent, 3 of 6 blind; mean absolute difference 0.83 claims
+per cell, largest 6).  The totals hide the swings:
+
+- *Mokyr independent, 13 → 7* (first scored 1 / 13 both times).  Both
+  first scored runs built the per-capita variables as the blind cell
+  did, so the watermill coefficients came out about 10,000 times too
+  large (1,437.8 against 0.15) and the first-stage F statistics about
+  half (8.86, 7.32, 7.92).  Sample 1's 13 came entirely from its one
+  claim refinement.  Sample 2's three claim refinements fixed the units
+  (Table 2 columns 1–4 and Table 3 IV columns 2 and 4 came in) but not
+  the rest: the clustered F stayed at 8.86, 7.32 and 7.92, and the
+  final script switched to a heteroskedasticity-robust F, declared as a
+  deviation (the clustered F "was roughly half the paper's values"),
+  which gave 11.22, 10.14 and 10.13 against 19.9, 16.96 and 16.17.  The
+  refinement that recovered sample 1 did not recover sample 2.
+- *Douenne seeded, 5 → 6* (first scored 5 both times; 1 error + 3 claim
+  refinements both times).  Sample 2's refinements recovered one claim,
+  Table 4 column 3's predicted-winner coefficient (0.242 against 0.246).
+  The inverted case of 3.7 holds in both samples: with the authors'
+  scripts the pipeline reproduced 5 and 6 of 13, without them 13 and 13
+  independent and 12 and 13 blind.
+- *Hanushek blind, 12 → 9.*  Sample 1 reproduced Table 2 exactly
+  (patience 0.931 in column 3); sample 2 missed three Table 2 patience
+  coefficients and column 4 risk-taking, at 36–45 % of the printed
+  values (0.345, 0.279, 0.447 against 0.931, 0.779, 1.032; −0.203
+  against −0.449),
+  close to the pipeline's independent cell in both
+  samples.  Sample 1's one blind miss (Table 1 column 2 risk-taking)
+  passed this time (−0.474 against −0.482).
+- *Labandeira independent, 5 → 7* (first scored 3 both times).  Sample
+  2 reached the paper's N and household count exactly (20,872 and
+  10,729, against sample 1's 21,317 and 11,852) by imputing missing
+  instrument unit values with the region × year × quarter median, a
+  declared deviation, and passed column 4; it lost column 5.
+- *Douenne blind, 12 → 13.*  Sample 1's one miss, the Table 8 IV
+  (0.177 against 0.416), passed at 0.419, so the wide miss 3.7 noted
+  beside the probe is one sample's, not a stable one.
+- *Hollyer blind, 10 → 12.*  Sample 1's three Programmaticness misses
+  all passed; sample 2 missed one Personalism row instead.
+
+Where both samples printed the same wrong numbers, the miss is not
+noise: Mokyr blind (all twelve misses identical in both samples) and
+Hanushek independent (the same four Table 2 values, 0.333, 0.260,
+0.442 and −0.233, after one claim refinement in sample 1 and three in
+sample 2); Douenne seeded printed 0.1496 against 0.153 for Table 4
+column 4 in both.  Two cells repeated their final count from a
+different start: Dancygier independent first scored 13 rather than 11,
+Hollyer independent 10 rather than 11.
+
+**Misses in the cells that changed** (sample 2; categories as in the
+report's taxonomy; "unclassified" where neither the results file nor
+the evidence bundle says why):
+
+- *Mokyr independent (7/13).*  The three first-stage F statistics: a
+  specification mismatch in variable construction, as in the blind
+  cell of 3.7 (an F does not change when a regressor is rescaled, so
+  matching coefficients with an F at half the printed value means the
+  constructed regressor still differs; the script chose its population
+  denominator between `pcmean` and `pc0` by a rule of its own).
+  Table 2 column 5 and Table 3 OLS column 5 (both 0.084 against 0.12,
+  band 0.03) and Table 3 IV column 6 (0.210 against 0.16, band 0.04):
+  unclassified.
+- *Douenne seeded (6/13).*  Five Table 4 column 3 coefficients, Table 4
+  column 4 (0.1496 against 0.153, outside the 2 % seeded band) and the
+  Table 8 IV (0.436 against 0.416).  The script's column 3 model
+  (`simule_gagnant` interacted with the Yellow Vests and acceptance
+  indicators, plus a don't-know control) and its Table 8 instrument set
+  (`apres_modifs + info_CC`) are its own, as in sample 1: a seeded-mode
+  specification mismatch.  No deviation declared.
+- *Hanushek blind (9/13).*  Table 2 columns 1, 3 and 4 patience and
+  column 4 risk-taking.  Unclassified (no deviation declared; the same
+  shortfall as the pipeline's independent misses, which 3.7 also left
+  unclassified).
+- *Labandeira independent (7/12).*  Columns 1 and 2 (−0.121, −0.068
+  against −0.178, −0.123): unclassified.  Columns 5, 7 and 8: the
+  script's expenditure coefficients equal its consumption ones
+  (−0.121, −0.150, −0.164 in columns 1 / 5, 3 / 7 and 4 / 8), the
+  price-definition gap of the 3.7 blind cells (the package's price is a
+  real price, which the paper does not state): under-specified methods
+  section.
+- *Douenne blind (13/13).*  None.
+- *Hollyer blind (12/13).*  Personalism, nonethnic volatility
+  difference: 0.413 against 0.35 (band 0.06).  Unclassified.
+
+Labandeira blind repeated 4 / 12 with a different set: sample 2's N was
+46,206 (32,316 households) against sample 1's 12,349, still a sample
+restriction, and it passed columns 3, 4 and 8 and the fixed-effects
+elasticity, where sample 1 passed both elasticities and columns 4 and 7.
+
+**Two samples of both systems on all 23 papers.**  The pipeline's
+23-paper totals are 263 / 235 / 170 (sample 1) and 265 / 223 / 172
+(sample 2).  The agent has two samples in independent and blind mode on
+every paper (267 / 270 and 250 / 248) and one in seeded mode on every
+paper (277): it was never rerun seeded, on the six or on the earlier
+17.  Gap ranges, agent minus pipeline:
+
+| Mode | Agent 1 | Agent 2 | Pipeline 1 | Pipeline 2 | **Gap range, 23 papers** | 17-paper range (3.7) | 6-paper range |
+|---|---|---|---|---|---|---|---|
+| seeded | 277 | — | 263 | 265 | **12–14** | 5–6 | 7–8 |
+| independent | 267 | 270 | 235 | 223 | **32–47** | 25–33 | 7–14 |
+| blind | 250 | 248 | 170 | 172 | **76–80** | 57–62 | 18–19 |
+
+Independent and blind ranges take four pairings (each agent sample
+against each pipeline sample); seeded takes two (the agent's one
+seeded sample against both pipeline samples).  They replace 3.7's
+two-pairing 32–35 and 78–80.  The independent range widened at the top
+because the pipeline's second sample lost 4 on the six papers (Mokyr
+−6, Labandeira +2) on top of the 8 it lost on the 17; the blind range
+moved down by 2 at the bottom from the pipeline's +2 on the 17 (its
+blind total on the six was 52 both times).  Over the 23 papers the
+pipeline's cells are identical across samples in 19 of 23 seeded,
+14 of 23 independent and 11 of 23 blind cells (44 of 69, mean absolute
+difference 1.07 claims per cell, largest 6); the agent's in 20 of 23
+independent and 19 of 23 blind.  The ordering of 3.5–3.7 holds in
+every pairing: smallest with the scripts, larger without them, largest
+without the targets.  Two draws per system, not a distribution: no
+standard error.
+
+**Next** (adds to 3.7's list): (f) a seeded second sample of the agent
+is now the only cell type with one sample on all 23 papers; (g) a third
+sample of both systems would say whether the Mokyr independent and
+Hanushek blind swings are draw-to-draw noise or a bimodal outcome.
 
 ---
 
