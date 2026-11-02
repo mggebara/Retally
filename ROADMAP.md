@@ -1770,7 +1770,12 @@ agents' own reports for the Hanlon cells say they read only the `.dta`
 files.  Hanlon's split esttab fragments (`3 replication files/tables/
 Table1_R.tex`, `Table1_N.tex`, `Table4_R.tex`, ...: coefficient, SE and
 observation rows with no tabular or `Observations` label) still print
-its pinned values and are still on the mount; no rule catches them yet.
+its pinned values and were on every independent / blind mount up to
+this change; a fourth rule (`table-fragment`: a `.tex` / `.txt` with no
+table environment made mostly of `&`…`\\` rows, two or more with a
+parenthesised decimal or a starred number, or only `observations` / `N` /
+F / p-value / R² rows) withholds all 27 of them from 2026-11-01 and
+nothing in the other 19 cached packages.
 
 ---
 

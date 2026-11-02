@@ -438,6 +438,57 @@ def test_estout_table_with_an_n_row_is_stripped_but_a_summary_table_is_kept(tmp_
     assert content_reason(_write(tmp_path, "descriptive.tex", SUMMARY_N_TEX)) is None
 
 
+# Hanlon (2022) ships esttab output split into row-only fragments
+# (``3 replication files/tables/Table1_R.tex``, ``Table1_N.tex``): no tabular, no caption,
+# no ``Observations`` label.  Verbatim from the package.
+HANLON_TABLE1_R_TEX = r"""Before 1926 $\times$ year $\times$ US   &     0.013&    -0.001&          &     0.004&    -0.028&          &    -0.005&    -0.031\\
+                                        &   (0.006)&   (0.006)&          &   (0.009)&   (0.009)&          &   (0.010)&   (0.009)\\
+After 1926 $\times$ year $\times$ US    &     0.074&     0.067&          &     0.025&     0.031&          &     0.023&     0.024\\
+                                        &   (0.006)&   (0.006)&          &   (0.010)&   (0.010)&          &   (0.010)&   (0.009)\\
+"""  # noqa: E501
+HANLON_TABLE1_N_TEX = (
+    r"observations                            &       116&       174&          &       165&       233&"
+    r"          &       140&       192\\" + "\n"
+)
+HANLON_TABLE1_F_TEX = (
+    r"$ F $-statistic                         &      34.7&      37.6&          &       1.5&      11.4&"
+    r"          &       2.5&      13.3\\" + "\n"
+)
+# Descriptive fragments in the same folder (``Table2_PRE.tex``, ``TableF1_match_boeing.tex``).
+DESCRIPTIVE_FRAGMENT_TEX = r"""Before 1926                             &    0.5366&    0.4118&    0.2581&    0.7333\\
+boeing              &    0.2917&    0.9375&          &    0.3750&    0.0312\\
+"""  # noqa: E501
+STARRED_FRAGMENT_TEX = r"""\hline
+Treatment     &     0.074**&     0.067*  \\
+Control mean  &     1.20   &     1.31    \\
+Female        &    -0.012***&   -0.010$^{**}$\\
+\hline
+"""
+
+
+def test_row_only_table_fragments_are_stripped(tmp_path):
+    assert content_reason(_write(tmp_path, "Table1_R.tex", HANLON_TABLE1_R_TEX)) == "table-fragment"
+    assert content_reason(_write(tmp_path, "Table1_N.tex", HANLON_TABLE1_N_TEX)) == "table-fragment"
+    assert content_reason(_write(tmp_path, "Table1_F.tex", HANLON_TABLE1_F_TEX)) == "table-fragment"
+    assert content_reason(_write(tmp_path, "stars.tex", STARRED_FRAGMENT_TEX)) == "table-fragment"
+    assert content_reason(_write(tmp_path, "Table1_R.txt", HANLON_TABLE1_R_TEX)) == "table-fragment"
+
+
+def test_descriptive_fragments_and_prose_are_kept(tmp_path):
+    # Shares with no SEs or stars: a descriptive fragment stays.
+    assert content_reason(_write(tmp_path, "Table2_PRE.tex", DESCRIPTIVE_FRAGMENT_TEX)) is None
+    # A single parenthesised number is not enough.
+    one_se = DESCRIPTIVE_FRAGMENT_TEX + r"  &  (0.012) & \\" + "\n"
+    assert content_reason(_write(tmp_path, "one_se.tex", one_se)) is None
+    # Rows are a minority of the file: prose with a couple of rows stays.
+    prose = "A paragraph of text about the estimates.\n" * 10
+    assert content_reason(_write(tmp_path, "notes.tex", prose + HANLON_TABLE1_R_TEX)) is None
+    # A whole summary tabular with SDs in parentheses stays (the fragment rule needs no environment).
+    assert content_reason(_write(tmp_path, "descriptive.tex", SUMMARY_N_TEX)) is None
+    # Other suffixes do not take the fragment path.
+    assert content_reason(_write(tmp_path, "Table1_R.md", HANLON_TABLE1_R_TEX)) is None
+
+
 RESULT_MACROS_TEX = r"""\newcommand{\lowwtpobs}{32}
 \newcommand{\committwelveobs}{1{,}248}
 \newcommand{\actexpmean}{-4.17}
