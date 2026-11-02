@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "entry_id": "mokyr-2022-wheels-of-change",
+  "mode": "seeded",
+  "run_id": "2026-11-02-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [],
+  "deviations": [
+    "First-stage F reported as an R translation of ivreg2's Kleibergen-Paap rk Wald F for one endogenous regressor and one excluded instrument: first-stage Wald statistic on msuit26mean with the unadjusted cluster (county_id) VCE, scaled by (N-K)/N*(G-1)/G. The squared cluster t-statistic with Stata's small-sample adjustment is printed as a diagnostic (not a RESULT)."
+  ],
+  "notes": "Followed main.do and Tables.do (Tables 2 and 3). Loaded replication_data.dta; built county_id from GAZ_CNTY, mills_pc and wrights_pc = count/pcmean, wheat_suit = wheat_tmean<=5, riv_rug26count/1000, msuit26mean = wheat_suit*riv_rug26count. Table 2 cols 1-5 and Table 3 col 5 are OLS via fixest::feols with SEs clustered by county_id (min_dist* = min_dist_to_roman_rds, min_dist_2nav_rivers). Table 3 cols 2/4/6 are 2SLS via feols, instrumenting mills_pc with msuit26mean. N = 298 in every column, with 35 clusters. One run only. After it, I compared the RESULT values with the claims using check_attempt, which reported all claims within tolerance, so the script was not changed and no claim attempt is recorded.",
+  "files_read_outside_mount": [
+    "<home>/.claude/projects/-Users-matthew-dev-Retally/4331b322-448f-44d6-bc9b-f556920716ab/tool-results/b1kz9m10n.txt: the harness saved its own copy of task.md here because the output was too long to show; I read the task through this copy. It has the same content as task.md."
+  ],
+  "started_at": "2026-11-02T10:03:00Z",
+  "finished_at": "2026-11-02T10:06:22Z"
+}

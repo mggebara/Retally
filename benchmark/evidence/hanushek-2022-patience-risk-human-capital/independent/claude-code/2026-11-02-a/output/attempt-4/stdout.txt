@@ -1,0 +1,88 @@
+migrant file rows 80398 loaded at 27 s
+Table 2 done at 27 s; origins 58 residence 48 
+big file: read 1321 of 5938 blocks ( 22.2 % ), 442951 rows at 228 s
+DEVIATION: Table 1 estimated on an evenly spread block sample of 22.2% of pisa_full_gps_final.csv (1321 of 5938 0.5 MB blocks, 442951 students) because the 3 GB file cannot be read through the mount within the 300 s sandbox limit (~6 MB/s); only the needed columns were parsed
+dta header N = 1992276 
+countries 49 country-waves 254 missing share 0 
+DEVIATION: table1_col3_observations is the row count in the .dta header (1992276) times the complete-case share in the block sample (1.00000); the sample regression itself used 442951 students
+Table 1 done at 232 s
+                                r11                 r12                 r13
+Dependent Var.:             pv1math             pv1math             pv1math
+                                                                           
+pat              0.3508*** (0.0484)                      0.4677*** (0.0504)
+female          -0.0719*** (0.0119) -0.0749*** (0.0135) -0.0706*** (0.0117)
+imfemale            0.2131 (0.3409)     0.3610 (0.3538)     0.2338 (0.3788)
+age                0.0993* (0.0377)     0.0727 (0.0472)  0.1125*** (0.0301)
+image              -0.3857 (0.3344)    -0.2558 (0.3406)    -0.3563 (0.3453)
+migra1             -0.1457 (0.1290)     0.0677 (0.1091)    -0.0956 (0.1525)
+migra2             -0.1174 (0.0739)    0.1458. (0.0793)    -0.0804 (0.0829)
+immigra0         0.9355*** (0.1884)  0.9311*** (0.1848)  0.8361*** (0.1818)
+immigra1        -0.7848*** (0.1122) -0.6319*** (0.0867) -0.7532*** (0.1267)
+immigra2        -0.6671*** (0.0869) -0.7172*** (0.0660) -0.5769*** (0.0559)
+risk                                  -0.0980. (0.0524) -0.2508*** (0.0370)
+Fixed-Effects:  ------------------- ------------------- -------------------
+wave                            Yes                 Yes                 Yes
+_______________ ___________________ ___________________ ___________________
+S.E.: Clustered         by: isocode         by: isocode         by: isocode
+Observations                442,951             442,951             442,951
+R2                          0.13762             0.04591             0.20138
+Within R2                   0.11788             0.02407             0.18310
+
+                                r15
+Dependent Var.:             pv1math
+                                   
+pat              0.4964*** (0.0511)
+female          -0.0692*** (0.0122)
+imfemale            0.2402 (0.3855)
+age              0.1109*** (0.0308)
+image              -0.3726 (0.3424)
+migra1                             
+migra2                             
+immigra0         0.8272*** (0.1881)
+immigra1        -0.7660*** (0.1398)
+immigra2        -0.5666*** (0.0564)
+risk            -0.2685*** (0.0376)
+Fixed-Effects:  -------------------
+wave                            Yes
+_______________ ___________________
+S.E.: Clustered         by: isocode
+Observations                404,004
+R2                          0.22014
+Within R2                   0.20037
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+                                r21                 r23                 r24
+Dependent Var.:             pv1math             pv1math             pv1math
+                                                                           
+coo_patience       0.0882. (0.0449)    0.1133* (0.0439)   0.1502** (0.0442)
+female          -0.0931*** (0.0266) -0.0929*** (0.0264) -0.0930*** (0.0247)
+imfemale        -0.9060*** (0.1592) -0.9017*** (0.1583) -0.9036*** (0.1573)
+age                0.1325* (0.0499)    0.1312* (0.0496)   0.1324** (0.0491)
+coo_oecd           -0.0919 (0.0741)    -0.1189 (0.0733)   -0.1598. (0.0861)
+coo_risktaking                        -0.0621. (0.0361)    -0.0625 (0.0392)
+coo_posrecip                                               -0.0826 (0.0557)
+coo_negrecip                                              -0.0683* (0.0309)
+coo_altruism                                                0.0002 (0.0427)
+coo_trust                                                  -0.0345 (0.0442)
+Fixed-Effects:  ------------------- ------------------- -------------------
+countrywave                     Yes                 Yes                 Yes
+_______________ ___________________ ___________________ ___________________
+S.E.: Clustered     by: coo_isocode     by: coo_isocode     by: coo_isocode
+Observations                 80,397              80,397              80,397
+R2                          0.43002             0.43081             0.43381
+Within R2                   0.00739             0.00875             0.01399
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RESULT:table2_col1_patience=0.088252
+RESULT:table2_col3_patience=0.113255
+RESULT:table2_col3_risk_taking=-0.0620856
+RESULT:table2_col4_patience=0.150243
+RESULT:table2_col4_risk_taking=-0.0624556
+RESULT:table2_col3_observations=80397
+RESULT:table1_col1_patience=0.350822
+RESULT:table1_col2_risk_taking=-0.0979935
+RESULT:table1_col3_patience=0.467699
+RESULT:table1_col3_risk_taking=-0.250821
+RESULT:table1_col5_natives_patience=0.496416
+RESULT:table1_col5_natives_risk_taking=-0.268486
+RESULT:table1_col3_observations=1.99228e+06

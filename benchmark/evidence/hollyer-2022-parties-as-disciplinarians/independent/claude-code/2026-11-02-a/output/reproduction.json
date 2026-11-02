@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "entry_id": "hollyer-2022-parties-as-disciplinarians",
+  "mode": "independent",
+  "run_id": "2026-11-02-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Ethnic party coded as ethnic > 0.5 (majority of expert coders report ethnic/linguistic linkages); extremism uses extremist2 (vote-share-weighted absolute distance from country mean, per codebook) with the extremist party at distance 3 as the paper states.",
+    "Covariate mapping inferred from paper text and codebook: partysize, unions, business, religious, pluralty, pr (mixed omitted), cl dummies (closed, open; non-list omitted), mdmh, polity, demsys, system dummies (presidential omitted), gdppc, gini, ethfrac. Volatility percentiles taken over the 431-party estimation sample. Extremism models use 430 parties (one missing extremist2)."
+  ],
+  "notes": "Attempt-1 was exploratory (summaries, complete-case count = 431 parties / 75 countries). The final run is the first scored run; I compared it with the claims and did not change the script afterwards. Ten of 13 values match to the reported precision. The two extremist-minus-moderate differences come out as 0.126 and 0.371, against 0.15 and 0.44 claimed. Both are off by the same factor (~1.19), which suggests the paper's extremist party sits at an effective distance of about 3.56 rather than 3. I did not tune this. RD (open-seat sample, dlameduck_runs==0, rdrobust local linear, mserd) matches exactly: h=13.491, b=24.643, N=527/559.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T01:43:00Z",
+  "finished_at": "2026-11-02T01:50:00Z"
+}

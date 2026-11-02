@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "entry_id": "mokyr-2022-wheels-of-change",
+  "mode": "blind",
+  "run_id": "2026-11-02-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "First-stage F reported as the county-clustered Wald F on the single excluded instrument (fixest ivwald1), consistent with the paper's statement that all regressions cluster at the county level; Table 3 notes mention heteroscedasticity-robust SEs, and the paper's exact F definition (e.g. Stata ivreg2 KP F with its small-sample corrections) is not stated."
+  ],
+  "notes": "attempt-1 was exploratory (variable inspection, no RESULT lines). Data: replication_data.dta. Dependent var = wrights/pcmean, regressor = mills/pcmean (pcmean = mean population 1710-50; the per-10,000 scale cancels in the coefficient). Sample = 298 districts with non-missing Domesday mills. Controls: main = latitude, longitude, dist_rug_mean, dist_elevation_mean; agricultural = suitmean, wheat_hi (wheat_tmean<=5), dist_grass_mean; climatic = precip_mean_dist, temp_mean_dist; other = pcmean, min_harbor, DIST_London, min_dist_to_roman_rds, min_dist_2nav_rivers, area. River suitability = riv_rug26count; instrument = riv_rug26count x wheat_hi. Table 3 col 2 IV controls only river suitability and wheat_hi; col 4 adds main/agri/climatic; col 6 adds other + population; col 5 OLS = Table 2 col 5 + river suitability. SEs clustered by GAZ_CNTY (35 clusters in sample). fixest feols for OLS and 2SLS.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T00:00:00Z",
+  "finished_at": "2026-11-02T00:30:00Z"
+}

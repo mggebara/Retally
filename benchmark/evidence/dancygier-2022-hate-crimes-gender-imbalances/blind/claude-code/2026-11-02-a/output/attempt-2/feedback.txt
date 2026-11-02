@@ -1,0 +1,4 @@
+Run crashed before printing any RESULT: line:
+  Error in cf["`MateComp.cont`", 1] : subscript out of bounds
+lm() names the coefficient "MateComp.cont" (no backticks) even when the formula term is backticked.
+Fix: look up coefficients as "MateComp.cont" / "JobComp.cont". No specification change.

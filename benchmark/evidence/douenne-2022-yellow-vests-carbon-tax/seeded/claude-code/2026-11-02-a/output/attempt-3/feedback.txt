@@ -1,0 +1,3 @@
+Run crashed (exit 1): flatten() called is.factor() on memisc-classed columns, triggering an S4 class lookup that needs the uninstalled memisc package:
+  Error in .requirePackage(package): unable to load required package memisc
+Fix: test oldClass(x) directly and drop attributes with attributes(x) <- NULL (factors rebuilt from their levels).

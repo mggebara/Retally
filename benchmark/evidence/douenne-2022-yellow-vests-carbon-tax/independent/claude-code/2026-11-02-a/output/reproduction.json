@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "entry_id": "douenne-2022-yellow-vests-carbon-tax",
+  "mode": "independent",
+  "run_id": "2026-11-02-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-6", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [
+    "Online-appendix control list unavailable; controls reconstructed from variable names: incomes = continuous piecewise-linear in both adults' income percentiles (kinks at 20 and 70); estimated gains = simule_gain and its square; sociodemographics = sex, age brackets, employment status, socio-professional category, region, education (4), town size, number of adults, household size, number aged 14+, smoker, main news source.",
+    "Other motives: Table 4 uses the progressivity belief (prog_na, with not-asked as a category); Table 6 uses effectiveness (Oui/Non/NSP) and progressivity beliefs; Table 8 uses the initial win/lose category (progressivity omitted because it was asked only of the apres_modifs half, collinear with the effectiveness-information instrument).",
+    "Effectiveness-information instrument Z_E identified as apres_modifs (second half of sample received the effectiveness info, per its variable label); Z_CC = info_CC.",
+    "Regressions unweighted, heteroskedasticity-robust SEs (fixest, hetero); the paper does not state regression weights.",
+    "Table 6 col 1 subsample: respondent or second-adult income percentile in [10, 60] (N = 1969, matches); Table 6 policy fixed effects from cible; Table 6 instruments traite_cible, traite_cible_conjoint and interaction."
+  ],
+  "notes": "Loaded s (3002 respondents) from code/after_preparation.RData; memisc item columns stripped to base vectors (memisc not installed). Table 4: LPM of post-feedback belief on predicted-winner indicator simule_gagnant, initial acceptance, quadratic in simule_gain, controls; feedback branch variante_taxe_info=='f', |simule_gain|<50 gives N=757 (matches); full feedback sample N=1968 (matches). Col 3 adds YV supporter (gilets_jaunes>0), interactions with initial acceptance, YV and initial not-lose belief, plus initial win/lose category factor. Tables 6 and 8 col 1 by 2SLS with fixest. One claim comparison (attempt-6) found only Table 4 col 1 initial acceptance off target (0.227 vs 0.306); the final run drops the effectiveness-belief control from the Table 4 regressions, after which all claims are within tolerance. Two earlier hung Docker runs (daemon wedged, containers never started, exit 125) were rerun in place in attempt-4 after Docker was restarted and are not counted as attempts.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T10:06:45Z",
+  "finished_at": "2026-11-02T14:17:30Z"
+}

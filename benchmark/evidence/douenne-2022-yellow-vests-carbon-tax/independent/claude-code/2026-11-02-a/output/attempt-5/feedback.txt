@@ -1,0 +1,2 @@
+Error: feols(A0dot ~ ... | eff ~ ZE + ZCC): "All observations contain NAs. Estimation cannot be done. (Breakup: IV: 0/3,002.)"
+Cause: apres_modifs is stored as character "TRUE"/"FALSE"; as.numeric() gave NA. Fix: convert TRUE/FALSE strings via as.logical before as.numeric for all binary variables.

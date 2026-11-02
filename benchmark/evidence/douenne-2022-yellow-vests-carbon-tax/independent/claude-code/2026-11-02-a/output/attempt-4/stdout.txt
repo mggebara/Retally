@@ -1,0 +1,61 @@
+variante_monetaire : variante_monetaire: Indicatrice aléatoire que les questions sur les perdant_/gagnant_ de la taxe portent sur le pouvoir d'achat ou non (0: quels seraient les gagnants-perdant/1: quelles catégories gagneraient-perdraient en pouvoir d'achat) 
+apres_modifs : apres_modifs: Indicatrice de la seconde moitié de l'échantillon, avec une info sur l'efficacité contre la pollution et des questions et informations sur la progressivité (progressivite_feedback_avec/sans_info, progressivite_progressif), et une reformulation des questions transferts_inter (aide publique au développement des Français) 
+variante_taxe_info : variante_taxe_info: (f/p) Variante aléatoire entre f: feedback (=simulation, 2/3) et p: progressivité (1/3), dans l'information donnée sur la taxe compensée avant de demander à nouveau le gain et l'approbation, ainsi que les bénéfices et problèmes 
+variante_partielle : variante_partielle: Variante aléatoire (c/f) de la taxe partielle sur le chauffage ou les carburants (=fuel) 
+info_CC : info_CC: Indicatrice aléatoire que l'information sur le changement climatique a été présentée (150k morts/an monde, tendance +5/+8°C en 2100/2250, +2°C techniquement possible, sinon extinctions, intensification catastrophes, +270 M subissant inondations en 2100, + de conflits et migrations) 
+traite_cible : traite_cible: Indicatrice de transfert reçu par le répondant lors de la hausse de la taxe carbone avec compensation ciblée. Montants: 550/360/270/220 €/an/adulte pour cible à 20/30/40/50 
+traite_cible_conjoint : traite_cible_conjoint: Indicatrice de transfert reçu par le conjoint du répondant lors de la hausse de la taxe carbone avec compensation ciblée. Montants: 550/360/270/220 €/an/adulte pour cible à 20/30/40/50 
+win_cible_category : win_cible_category: Le répondant s'estime non perdant suite à la hausse de la taxe carbone compensée par recyclage ciblé (cible: 20/30/40/50% les plus modestes): 1*(s$gagnant_cible_categorie!='Perdant') 
+tax_cible_acceptance : tax_cible_acceptance: Acceptation de la hausse de la taxe carbone compensée par recyclage ciblé (cible: 20/30/40/50% les plus modestes): 1*(taxe_cible_approbation!='Non') 
+simule_gain : simule_gain: Gain net annuel simulé par UC pour le ménage du répondant suite à une hausse de taxe carbone compensée: (16.1 + pmin(2, nb_adultes) * 110 - hausse_depenses)/UC 
+simule_gain_cible : simule_gain_cible: Gain net par UC simulé pour le ménage du répondant suite à une hausse de taxe carbone avec compensation ciblée: versement_cible - hausse_depenses 
+simule_gain_interaction : simule_gain_interaction: Gain net par UC annuel simulé avec des termes d'interaction surface*fioul/gaz pour le ménage du répondant suite à une hausse de taxe carbone compensée: 9.1 + pmin(2, nb_adultes) * 110 - hausse_chauffage_interaction_inelastique * 0.8 - hausse_carburants 
+percentile_revenu :  
+percentile_revenu_conjoint :  
+revenu_conjoint :  
+single : single: nb_adultes == 1 
+Revenu :  
+Revenu2 :  
+Simule_gain : simule_gain: Gain net annuel simulé par UC pour le ménage du répondant suite à une hausse de taxe carbone compensée: (16.1 + pmin(2, nb_adultes) * 110 - hausse_depenses)/UC 
+Simule_gain2 : simule_gain: Gain net annuel simulé par UC pour le ménage du répondant suite à une hausse de taxe carbone compensée: (16.1 + pmin(2, nb_adultes) * 110 - hausse_depenses)/UC 
+biais_sur : biais_sur: Certitude à 99% que le gain subjectif du répondant est biaisé à la baisse: abs(simule_gain - gain) > 110 
+simule_gagnant : simule_gagnant: Indicatrice sur la prédiction que le ménage serait gagnant avec la taxe compensée, d'après nos simulations 
+cible : cible: Ciblage du recyclage de la hausse de la taxe carbone, attribué en fonction du revenu du répondant et de son ménage (20/30/40/50% les plus modestes) 
+categorie_cible : categorie_cible: Catégorie de revenu du répondant (et de son ménage) taxe à recyclage ciblé - Catégories: percentile <20/20-30/30-40/40-50/50-70/>70, sachant que revenu_conjoint détermine la catégorie quand percentile de revenu > 70 (780/1140/1430/1670/2220) 
+versement_cible : versement_cible: Versement annuel reçu par le ménage du répondant lors de la hausse de la taxe carbone avec compensation ciblée. Montants: 550/360/270/220 €/an/parent pour cible à 20/30/40/50 
+sample :  
+mauvaise_qualite : mauvaise_qualite: Indicatrice d'une réponse aberrante à revenu, taille_menage, nb_14_et_plus, km ou surface. 
+taxe_info_approbation : taxe_info_approbation: après info simule_gagnant et/ou progressivité - Approbation d'une hausse de la taxe carbone compensée (+110€/an /adulte, +13/15% gaz/fioul, +0.11/13 €/L diesel/essence) 
+gagnant_info_categorie : gagnant_info_categorie: après info simule_gagnant et/ou progressivité: Ménage Gagnant/Non affecté/Perdant par hausse taxe carbone redistribuée à tous (+110€/an /adulte, +13/15% gaz/fioul, +0.11/13 €/L diesel/essence) 
+convaincu_cible : convaincu_cible: Indicatrice que le répondant est passé de désapprobation à non désapprobation suite à un versement ciblé pour lui ou son conjoint 
+
+fb & |sg|<50: 757  <=50: 757 
+eff by vm:
+        0         1 
+0.1589986 0.1601050 
+eff by am:
+    FALSE      TRUE 
+0.1412067 0.1793629 
+eff by cc:
+        0         1 
+0.1480744 0.1711230 
+   
+    FALSE TRUE
+  0   762  716
+  1   796  728
+
+p2 for single:
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+ 0.01801  6.05085  6.05085  6.69208  6.05085 99.79733 
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+-2000.00     0.00     0.00    32.73     0.00 16000.00 
+p10-60 any: 1969  any w/ single excl: 1961 
+strict: 1969 1961 
+       
+         20  30  40  50
+  _20   854   0   0   0
+  20_30 168 174   0   0
+  30_40   0 239 219   0
+  40_50   0   0 207 209
+  50_70   0   0   0 725
+  70_    47  43  62  55

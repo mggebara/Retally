@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "mokyr-2022-wheels-of-change",
+  "mode": "independent",
+  "run_id": "2026-11-02-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was exploratory (variable summaries, no RESULT lines). The final run is the first and only estimating run, and the script was not changed after comparing it with the claims. Data: replication_data.dta. Per-capita variables are wrights/pcmean and mills/pcmean; their means (3.76, 18.922) match Table 1. Sample: the 298 districts with non-missing Domesday mills. Controls: main geo = latitude, longitude, dist_rug_mean, dist_elevation_mean; agricultural = suitmean, 1(wheat_tmean<=5), dist_grass_mean; climatic = precip_mean_dist, temp_mean_dist; other = pcmean, min_harbor, DIST_London, min_dist_to_roman_rds, min_dist_2nav_rivers, area. River suitability = riv_rug26count (river length at ruggedness 2-6). Instrument = riv_rug26count x 1(wheat_tmean<=5), with both components as controls in every IV. Estimated with fixest OLS/2SLS and SEs clustered by historical county (GAZ_CNTY, 35 clusters). The first-stage F is the squared cluster-robust t of the excluded instrument (equivalent to the Kleibergen-Paap Wald F with one instrument); it reproduces 19.90/16.96/16.17. iid and heteroskedasticity-robust F values, printed as diagnostics, do not match.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T10:04:34Z",
+  "finished_at": "2026-11-02T10:06:30Z"
+}

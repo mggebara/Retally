@@ -1,0 +1,7 @@
+kind: error
+The run crashed (exit 1) during the Table 1 block reads of pisa_full_gps_final.dta:
+  Error: Failed to parse .../pisa_full_gps_final.dta: Unable to read from file.
+No RESULT lines were printed. Table 2 had completed (fixest also noted one singleton country-wave observation removed).
+Fix: wrap each haven::read_dta block read in tryCatch with one retry and skip (and count) a block that still fails;
+set fixef.rm = "none" so the singleton observation is kept (coefficients unaffected, N counts all migrant rows);
+wrap gc() in invisible() to avoid printing its table.

@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "entry_id": "labandeira-2022-electricity-pricing-reform",
+  "mode": "independent",
+  "run_id": "2026-11-02-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 124, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 124, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-6", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [
+    "LIML implemented by hand as a k-class estimator (fixest has only 2SLS); FE-LIML applies it to within-household demeaned data; household-clustered sandwich SEs.",
+    "Instruments are the provided gap-filled deflated log effective prices lnPRE_papas_, lnPRE_aguav_, lnPRE_gascar_ (the unfilled versions would cut N to ~10,300, inconsistent with the paper's equal N across columns). The LIML price coefficients do not match the paper, so the instrument construction likely differs.",
+    "Price regressor is the deflated log kWh price lnPRE (nominal lnp_kwh makes the expenditure and consumption reform coefficients identical, which the paper's are not).",
+    "Treated-group dummy D (Tm) included in the pooled (non-FE) models; absorbed under household FE."
+  ],
+  "notes": "Sample: rows with non-missing T2 (the Aug 2011-Apr 2014 two-interview panel, 25,775 obs, matching the paper), then complete cases on regression variables -> 20,872 obs, 10,729 households (both match Table 2 exactly). Reform (T) = T2; months since reform = dist; controls: ln income and its square, household size, rooms, square metres, elderly present, building >25y, renting, urban, province capital, education, employment-situation, municipality-size, region and quarter dummies, year FE. Price elasticities match (-1.043 vs -1.044 OLS; -1.033 vs -1.026 FE); FE consumption effect -0.166 vs -0.154; OLS effects (-0.134, -0.139) smaller in magnitude than claimed; IV/LIML columns and the FE expenditure effect do not reproduce well. Attempts 2 and 3 were the same exploratory script as attempt 4; they hung because the Docker daemon was wedged (containers stuck in Created), produced no output, and were killed; Docker was restarted by the coordinator. Attempt 4 is the successful exploratory run. Readme.pdf in the mount was read (data provenance only); the dofiles folder was empty; no scripts were opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T10:08:28Z",
+  "finished_at": "2026-11-02T14:20:00Z"
+}

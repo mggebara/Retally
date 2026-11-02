@@ -1,0 +1,13 @@
+# Exploratory: timing and variable checks (no RESULT lines)
+library(data.table)
+D <- "<repo>/benchmark/.cache/claude-code/hanushek-2022-patience-risk-human-capital/seeded/2026-11-02-a/mount/hanushek_2022_patience_risk_human_capital/Replication/Data"
+t0 <- Sys.time()
+cols <- c("pv1math","patience","risktaking","female","age","migra0","migra1","migra2","image","imfemale","immigra1","wave","wgtc","country")
+x <- fread(file.path(D,"CSV/pisa_full_gps_final.csv"), select=cols, nThread=1, showProgress=FALSE)
+cat("read secs", as.numeric(difftime(Sys.time(),t0,units="secs")), "\n")
+print(dim(x)); print(summary(x)); print(sapply(x, class))
+print(table(x$wave)); print(length(unique(x$country)))
+cat("mem MB", as.numeric(object.size(x))/1e6, "\n")
+library(haven)
+m <- read_dta(file.path(D,"Working/pisa_full_gps_final_imcoo.dta"), col_select=c(pv1math,coo_patience,coo_risktaking,coo_posrecip,coo_negrecip,coo_altruism,coo_trust,female,age,imfemale,image,coo_oecd,countrywave,coo,wave))
+print(dim(m)); print(summary(m)); print(table(m$wave))
