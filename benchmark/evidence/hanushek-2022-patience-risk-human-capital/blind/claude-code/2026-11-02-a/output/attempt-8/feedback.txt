@@ -1,0 +1,5 @@
+kind: "" (infrastructure hang during the Docker daemon wedge; not counted as a repair attempt per coordinator)
+The run printed nothing (stdout.txt and stderr.txt empty, no exit code recorded): the agent session was cut off by a
+usage limit while the container was running, and the execution was killed externally before R flushed any output.
+No RESULT lines were printed. The script itself was not at fault as far as can be told.
+Fix: none to the method; the identical script is re-run as the final run.

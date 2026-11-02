@@ -1,0 +1,509 @@
+context dims 34164 28 
+ [1] "ags_county"                    "year"                         
+ [3] "ags_muni"                      "ags_state"                    
+ [5] "Hate_all_muni"                 "Physical_muni"                
+ [7] "pop_25_44_muni_gendergap_2015" "pop_15_44_muni_gendergap_2015"
+ [9] "population_muni_2015"          "popdens_muni_2015"            
+[11] "log_unemp_all_muni_2015"       "unemp_gendergap_2015"         
+[13] "d_pop1511_muni"                "vote_afd_2013_muni"           
+[15] "log_ref_inflow_1514"           "pop_ref_2014"                 
+[17] "pc_ref_male"                   "violence_percap_2015"         
+[19] "pc_hidegree_all2011"           "pc_manufacturing_2015"        
+[21] "d_manuf1115"                   "east"                         
+[23] "Hate_all_muni_bin"             "Physical_muni_bin"            
+[25] "log_population_muni_2015"      "log_popdens_muni_2015"        
+[27] "log_pop_ref_2014"              "log_violence_percap_2015"     
+
+ 2015  2016  2017  <NA> 
+11388 11388 11388     0 
+tibble [3 × 28] (S3: tbl_df/tbl/data.frame)
+ $ ags_county                   : chr [1:3] "01001" "01002" "01003"
+  ..- attr(*, "format.stata")= chr "%5s"
+ $ year                         : num [1:3] 2015 2015 2015
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ ags_muni                     : dbl+lbl [1:3] 1, 2, 3
+   ..@ format.stata: chr "%9.0g"
+   ..@ labels      : Named num [1:11388] 1 2 3 4 5 6 7 8 9 10 ...
+   .. ..- attr(*, "names")= chr [1:11388] "01001000" "01002000" "01003000" "01004000" ...
+ $ ags_state                    : chr [1:3] "01" "01" "01"
+  ..- attr(*, "format.stata")= chr "%2s"
+ $ Hate_all_muni                : num [1:3] 2 4 6
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ Physical_muni                : num [1:3] 0 1 1
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ pop_25_44_muni_gendergap_2015: num [1:3] 1.18 1.02 1.01
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ pop_15_44_muni_gendergap_2015: num [1:3] 1.098 0.987 1.016
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ population_muni_2015         : num [1:3] 85942 246306 216253
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ popdens_muni_2015            : num [1:3] 1515 2076 1010
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ log_unemp_all_muni_2015      : num [1:3] 2.24 2.15 2.17
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ unemp_gendergap_2015         : num [1:3] 1.28 1.26 1.19
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ d_pop1511_muni               : num [1:3] 0.0379 0.0363 0.0265
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ vote_afd_2013_muni           : num [1:3] NA NA NA
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ log_ref_inflow_1514          : num [1:3] 7.56 7.97 7.8
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ pop_ref_2014                 : num [1:3] 635 3145 2075
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ pc_ref_male                  : num [1:3] 67.8 64.4 60.8
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ violence_percap_2015         : num [1:3] 0.00413 0.00377 0.00375
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ pc_hidegree_all2011          : num [1:3] 21.3 28.6 19.9
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ pc_manufacturing_2015        : num [1:3] 0.1064 0.0925 0.138
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ d_manuf1115                  : num [1:3] 0.00303 -0.00134 0.0081
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ east                         : num [1:3] 0 0 0
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ Hate_all_muni_bin            : num [1:3] 1 1 1
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ Physical_muni_bin            : num [1:3] 0 1 1
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ log_population_muni_2015     : num [1:3] 11.4 12.4 12.3
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ log_popdens_muni_2015        : num [1:3] 7.32 7.64 6.92
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ log_pop_ref_2014             : num [1:3] 6.45 8.05 7.64
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ log_violence_percap_2015     : num [1:3] -5.49 -5.58 -5.58
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ - attr(*, "label")= chr "Written by R"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+  0.000   1.020   1.078   1.100   1.155   5.879     303 
+2015 n 11388 hate mean 0.05584826 nmuni 11388 
+2016 n 11388 hate mean 0.1208289 nmuni 11388 
+2017 n 11388 hate mean 0.06770285 nmuni 11388 
+                   ags_county                          year 
+                            0                             0 
+                     ags_muni                     ags_state 
+                            0                             0 
+                Hate_all_muni                 Physical_muni 
+                            0                             0 
+pop_25_44_muni_gendergap_2015 pop_15_44_muni_gendergap_2015 
+                           48                           303 
+         population_muni_2015             popdens_muni_2015 
+                            3                          1293 
+      log_unemp_all_muni_2015          unemp_gendergap_2015 
+                          459                           132 
+               d_pop1511_muni            vote_afd_2013_muni 
+                          123                          1713 
+          log_ref_inflow_1514                  pop_ref_2014 
+                          360                           360 
+                  pc_ref_male          violence_percap_2015 
+                        11737                           132 
+          pc_hidegree_all2011         pc_manufacturing_2015 
+                         2277                           195 
+                  d_manuf1115                          east 
+                          195                             0 
+            Hate_all_muni_bin             Physical_muni_bin 
+                            0                             0 
+     log_population_muni_2015         log_popdens_muni_2015 
+                            3                          1293 
+             log_pop_ref_2014      log_violence_percap_2015 
+                          360                           132 
+survey dims 12595 53 
+ [1] "res_id"                        "wave"                         
+ [3] "east"                          "hate_violence_means"          
+ [5] "hate_pol_message"              "hate_prevent_settlement"      
+ [7] "hate_polcondemn"               "hate_justified"               
+ [9] "MateComp.cont"                 "JobComp.cont"                 
+[11] "LifeSatis.cont"                "pop_15_44_muni_gendergap_2015"
+[13] "age"                           "singdivsep"                   
+[15] "age_group"                     "gender"                       
+[17] "state"                         "citizenship"                  
+[19] "marital"                       "religion"                     
+[21] "eduyrs"                        "occupation"                   
+[23] "income"                        "household_size"               
+[25] "self_econ"                     "distance_ref"                 
+[27] "settle_ref"                    "lrscale"                      
+[29] "afd"                           "muslim_ind"                   
+[31] "afd_ind"                       "contact_ind"                  
+[33] "refugee_ind"                   "list"                         
+[35] "treatment_list"                "outcome_list"                 
+[37] "ref_integrating"               "ref_citizenship"              
+[39] "ref_reduce"                    "ref_moredone"                 
+[41] "ref_cultgiveup"                "ref_economy"                  
+[43] "ref_crime"                     "ref_terror"                   
+[45] "ref_loc_services"              "ref_loc_economy"              
+[47] "ref_loc_crime"                 "ref_loc_culture"              
+[49] "ref_loc_islam"                 "ref_loc_schools"              
+[51] "ref_loc_housing"               "ref_loc_wayoflife"            
+[53] "women_role"                   
+
+   1    2    3    4 
+3419 2883 3274 3019 
+                       res_id                          wave 
+                            0                             0 
+                         east           hate_violence_means 
+                            0                             0 
+             hate_pol_message       hate_prevent_settlement 
+                            0                             0 
+              hate_polcondemn                hate_justified 
+                            0                             0 
+                MateComp.cont                  JobComp.cont 
+                            0                             0 
+               LifeSatis.cont pop_15_44_muni_gendergap_2015 
+                            0                           127 
+                          age                    singdivsep 
+                            0                             0 
+                    age_group                        gender 
+                            0                             0 
+                        state                   citizenship 
+                            0                             0 
+                      marital                      religion 
+                            0                             0 
+                       eduyrs                    occupation 
+                           11                             0 
+                       income                household_size 
+                            0                             0 
+                    self_econ                  distance_ref 
+                            0                             0 
+                   settle_ref                       lrscale 
+                            0                             0 
+                          afd                    muslim_ind 
+                            0                             0 
+                      afd_ind                   contact_ind 
+                            0                             0 
+                  refugee_ind                          list 
+                            0                          3019 
+               treatment_list                  outcome_list 
+                         3019                          3019 
+              ref_integrating               ref_citizenship 
+                            0                             0 
+                   ref_reduce                  ref_moredone 
+                            0                             0 
+               ref_cultgiveup                   ref_economy 
+                            0                             0 
+                    ref_crime                    ref_terror 
+                            0                             0 
+             ref_loc_services               ref_loc_economy 
+                            0                             0 
+                ref_loc_crime               ref_loc_culture 
+                            0                             0 
+                ref_loc_islam               ref_loc_schools 
+                            0                             0 
+              ref_loc_housing             ref_loc_wayoflife 
+                            0                             0 
+                   women_role 
+                            0 
+== res_id haven_labelled vctrs_vctr double 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      3    1431    2924    2887    4306    5751 
+== wave numeric 
+
+   4 <NA> 
+3019    0 
+== east numeric 
+
+   0    1 <NA> 
+2527  492    0 
+== hate_violence_means numeric 
+
+   1    2    3    4 <NA> 
+1562  886  411  160    0 
+== hate_pol_message numeric 
+
+   1    2    3    4 <NA> 
+1883  621  352  163    0 
+== hate_prevent_settlement numeric 
+
+   1    2    3    4 <NA> 
+1890  659  329  141    0 
+== hate_polcondemn numeric 
+
+   1    2    3    4 <NA> 
+1272 1072  492  183    0 
+== hate_justified numeric 
+
+   1    2    3    4 <NA> 
+1710  735  414  160    0 
+== MateComp.cont numeric 
+
+   1    2    3    4 <NA> 
+1343 1084  405  187    0 
+== JobComp.cont numeric 
+
+   1    2    3    4 <NA> 
+ 814 1128  715  362    0 
+== LifeSatis.cont numeric 
+
+   0    1    2    3    4    5    6    7    8    9   10 <NA> 
+  42   54  141  211  149  367  307  621  729  293  105    0 
+== pop_15_44_muni_gendergap_2015 numeric 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+ 0.6591  1.0116  1.0482  1.0569  1.0913  1.8148     127 
+== age numeric 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  19.00   32.00   48.00   45.96   58.00   89.00 
+== singdivsep numeric 
+
+   0    1 <NA> 
+2024  995    0 
+== age_group haven_labelled vctrs_vctr double 
+
+       18-29        30-39        40-49        50-59 60 and older         <NA> 
+         650          499          592          695          583            0 
+== gender haven_labelled vctrs_vctr double 
+
+  Male Female   <NA> 
+  1560   1459      0 
+== state haven_labelled vctrs_vctr double 
+
+     - PLEASE SELECT -   Baden-W<fc>rttemberg                 Bayern 
+                     0                    384                    467 
+                Berlin            Brandenburg                 Bremen 
+                   137                     93                     27 
+               Hamburg                 Hessen Mecklenburg-Vorpommern 
+                    68                    227                     66 
+         Niedersachsen    Nordrhein-Westfalen        Rheinland-Pfalz 
+                   287                    641                    148 
+              Saarland                Sachsen         Sachsen-Anhalt 
+                    39                    164                     89 
+    Schleswig-Holstein           Th<fc>ringen                   <NA> 
+                   102                     80                      0 
+== citizenship numeric 
+
+   0    1 <NA> 
+  57 2962    0 
+== marital haven_labelled vctrs_vctr double 
+
+          Single, without partner With partner, not living together 
+                              744                               253 
+    With partner, living together                           Married 
+                              466                              1196 
+           Registered partnership              Divorced / separated 
+                               18                               251 
+                          Widowed                              <NA> 
+                               91                                 0 
+== religion haven_labelled vctrs_vctr double 
+
+                           No, I don't feel close to any religion 
+                                                             1337 
+                                                   Roman Catholic 
+                                                              572 
+                                                       Protestant 
+                                                              683 
+                                           Protestant Free Church 
+                                                               60 
+                                                 Other Protestant 
+                                                                4 
+                                                 Eastern Orthodox 
+                                                               18 
+                                                  Other Christian 
+                                                               23 
+                                                           Jewish 
+                                                                5 
+                                                           Muslim 
+                                                               24 
+Eastern religion (Buddhism, Hinduism, Sikhism, Shinto, Tao, etc.) 
+                                                               42 
+                                     Other non-Christian religion 
+                                                               11 
+     Christian, but not close to a particular religious community 
+                                                              190 
+                                                        No answer 
+                                                               50 
+                                                     Yes, namely: 
+                                                                0 
+                                                             <NA> 
+                                                                0 
+== eduyrs numeric 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+    1.0    12.0    14.0    14.5    17.0    30.0      11 
+== occupation haven_labelled vctrs_vctr double 
+
+                                  Homemaker 
+                                        136 
+                             Parental leave 
+                                         30 
+In schooling / vocational training, student 
+                                        277 
+                  Unemployed / seeking work 
+                                         99 
+                                    Retired 
+                                        544 
+               Permanently sick or disabled 
+                                         52 
+                           Unskilled worker 
+                                        150 
+                             Skilled worker 
+                                        225 
+          Employee in low / medium position 
+                                        808 
+                  Employee in high position 
+                                        338 
+                              Civil servant 
+                                         49 
+                       Senior civil servant 
+                                         36 
+    Senior civil servant <96> highest level 
+                                         57 
+                 Self-employed / freelancer 
+                                        193 
+                                      Other 
+                                         25 
+                                       <NA> 
+                                          0 
+== income haven_labelled vctrs_vctr double 
+
+           below 500 <80>   500 to below 1,000 <80> 1,000 to below 1,500 <80> 
+                       79                       238                       349 
+1,500 to below 2,000 <80> 2,000 to below 2,500 <80> 2,500 to below 3,000 <80> 
+                      393                       372                       379 
+3,000 to below 3,500 <80> 3,500 to below 4,000 <80> 4,000 to below 4,500 <80> 
+                      268                       239                       144 
+4,500 to below 5,000 <80>        5,000 or more <80>                 No answer 
+                      108                       156                       294 
+                     <NA> 
+                        0 
+== household_size haven_labelled vctrs_vctr double 
+
+- PLEASE SELECT -                 1                 2                 3 
+                0               859              1230               493 
+                4                 5                 6                 7 
+              333                73                20                 6 
+                8                 9                10                11 
+                4                 0                 0                 0 
+               12                13                14                15 
+                1                 0                 0                 0 
+              15+              <NA> 
+                0                 0 
+== self_econ haven_labelled vctrs_vctr double 
+
+           1            2            3            4            5            6 
+          30           90          244          282          706          707 
+           7            8            9   10 ( TOP ) 0 ( BOTTOM )         <NA> 
+         618          258           39           18           27            0 
+== distance_ref haven_labelled vctrs_vctr double 
+
+ Less than 3 kilometer         3-5 kilometers        6-10 kilometers 
+                   905                    629                    461 
+      11-20 kilometers       21-50 kilometers More than 50 kilometer 
+                   274                    221                     84 
+            Don't know                   <NA> 
+                   445                      0 
+== settle_ref haven_labelled vctrs_vctr double 
+
+There are no refugees in my town                        1 <96> 49 
+                             138                              557 
+                     50 <96> 249                     250 <96> 499 
+                             766                              486 
+                    500 <96> 999                    1000 and more 
+                             331                              741 
+                            <NA> 
+                               0 
+== lrscale numeric 
+
+   0    1    2    3    4    5    6    7    8    9   10 <NA> 
+  54  102  302  395  360  927  354  229  202   51   43    0 
+== afd numeric 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   0.00    0.00    1.00   16.73   20.00  100.00 
+== muslim_ind numeric 
+
+    0 0.125  0.25 0.375   0.5 0.625  0.75 0.875     1  <NA> 
+  170   254   301   296   297   291   402   479   529     0 
+== afd_ind numeric 
+
+                0 0.333333333333333 0.666666666666667                 1 
+             1201               504               503               811 
+             <NA> 
+                0 
+== contact_ind numeric 
+
+                0 0.166666666666667 0.333333333333333               0.5 
+              829               335               825               503 
+0.666666666666667 0.833333333333333                 1              <NA> 
+              297               197                33                 0 
+== refugee_ind numeric 
+
+    0 0.125  0.25 0.375   0.5 0.625  0.75 0.875     1  <NA> 
+  227   238   220   257   246   309   343   497   682     0 
+== list numeric 
+
+<NA> 
+3019 
+== treatment_list haven_labelled vctrs_vctr double 
+
+Scenario 1 Scenario 2       <NA> 
+         0          0       3019 
+== outcome_list numeric 
+
+<NA> 
+3019 
+== ref_integrating numeric 
+
+   1    2    3    4 <NA> 
+  77  989 1261  692    0 
+== ref_citizenship numeric 
+
+   1    2    3    4 <NA> 
+ 424 1161  814  620    0 
+== ref_reduce numeric 
+
+   1    2    3    4 <NA> 
+ 292  625 1026 1076    0 
+== ref_moredone numeric 
+
+   1    2    3    4 <NA> 
+ 469  726  936  888    0 
+== ref_cultgiveup numeric 
+
+   1    2    3    4 <NA> 
+ 212  834 1425  548    0 
+== ref_economy numeric 
+
+   1    2    3    4 <NA> 
+ 253 1172  979  615    0 
+== ref_crime numeric 
+
+   1    2    3    4 <NA> 
+ 279  691 1174  875    0 
+== ref_terror numeric 
+
+   1    2    3    4 <NA> 
+ 304  673 1083  959    0 
+== ref_loc_services numeric 
+
+   1    2    3    4 <NA> 
+ 182  646 1277  914    0 
+== ref_loc_economy numeric 
+
+   1    2    3    4 <NA> 
+ 158 1036 1194  631    0 
+== ref_loc_crime numeric 
+
+   1    2    3    4 <NA> 
+ 381  864 1075  699    0 
+== ref_loc_culture numeric 
+
+   1    2    3    4 <NA> 
+ 335 1265  905  514    0 
+== ref_loc_islam numeric 
+
+   1    2    3    4 <NA> 
+ 332  951 1091  645    0 
+== ref_loc_schools numeric 
+
+   1    2    3    4 <NA> 
+  97  348 1336 1238    0 
+== ref_loc_housing numeric 
+
+   1    2    3    4 <NA> 
+ 269  628 1183  939    0 
+== ref_loc_wayoflife numeric 
+
+   1    2    3    4 <NA> 
+ 217  834 1388  580    0 
+== women_role numeric 
+
+   1    2    3    4 <NA> 
+ 821 1048  897  253    0 

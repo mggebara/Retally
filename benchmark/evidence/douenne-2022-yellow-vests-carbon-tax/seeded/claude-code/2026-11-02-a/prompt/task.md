@@ -1,0 +1,3038 @@
+# Retally reproduction task: douenne-2022-yellow-vests-carbon-tax (seeded, run 2026-11-02-a)
+
+You are reproducing quantitative results from an econometrics paper for the
+Retally benchmark.  You will write R code, run it in a network-less Docker
+sandbox, and record what you did as files.  The files are what gets scored.
+
+- Benchmark cell: entry `douenne-2022-yellow-vests-carbon-tax`, mode `seeded`, run `2026-11-02-a`
+- Paper: Yellow Vests, Pessimistic Beliefs, and Carbon Tax Aversion
+- Paper text (extracted from the PDF; tables may be garbled): `<repo>/benchmark/.cache/claude-code/douenne-2022-yellow-vests-carbon-tax/seeded/2026-11-02-a/paper.txt`
+- Data (the ONLY data you get): `<repo>/benchmark/.cache/claude-code/douenne-2022-yellow-vests-carbon-tax/seeded/2026-11-02-a/mount/douenne_2022_yellow_vests_carbon_tax`
+- Output directory (the ONLY place you write): `<repo>/benchmark/reproductions/douenne-2022-yellow-vests-carbon-tax/seeded/2026-11-02-a`
+
+## Mode rules
+
+These apply in every mode:
+
+- Write R only.  Run it only inside the sandbox, with the command under
+  "How to run a script"; never run R on the host.
+- No network: do not download anything, do not look the paper or its
+  replication package up online.
+- Use only the files under `<repo>/benchmark/.cache/claude-code/douenne-2022-yellow-vests-carbon-tax/seeded/2026-11-02-a/mount/douenne_2022_yellow_vests_carbon_tax` as data, and `<repo>/benchmark/.cache/claude-code/douenne-2022-yellow-vests-carbon-tax/seeded/2026-11-02-a/paper.txt` as
+  the paper.
+- Do not read anything else in this repository or on this machine: not the
+  catalog YAMLs under `benchmark/papers/`, not `.cache/datasets/`, not
+  `benchmark/results/`, not other reproductions under `benchmark/reproductions/`,
+  not other task directories.  If you nevertheless read any other file, list
+  it in `files_read_outside_mount` in `reproduction.json`, with why.
+- Seeded mode: the authors' own analysis scripts are on disk under the data
+  directory and reproduced below under "Original Replication Scripts".  You
+  may follow them:
+
+  The replication package (the dataset directory) ships the authors' own analysis scripts,
+  reproduced below.  These are the GROUND TRUTH for the exact estimating equation, variable names,
+  sample restrictions, fixed effects, and standard-error clustering — follow them over anything
+  reconstructed from the methodology summary, and prefer them over the paper's text where the two
+  disagree.  Your job is to write R code that implements the SAME SPECIFICATION: translate what the
+  scripts estimate, do not transliterate their syntax line by line (a Stata .do file's regression,
+  e.g. `reghdfe y x controls, absorb(fe) cluster(cl)`, becomes the equivalent fixest::feols() call
+  in R).  Keep only the parts that produce the specific claims being reproduced; skip figure
+  construction and unrelated robustness checks.  The scripts' data-file paths refer to the package's
+  internal layout — resolve them against the dataset directory listed under Dataset Information.
+- You may compare your `RESULT:` values with the claimed values yourself.
+  Every time you do that and then change the script, record the run you
+  compared as an attempt with `kind: "claim"`, and write the comparison you
+  made to that attempt's `feedback.txt`, one line per off-target claim in
+  the form `<name>: reproduced <v>, claimed <c>`.  Produce it with:
+
+      cd <repo> && uv run python -m benchmark.reproducers.check_attempt --run-dir <repo>/benchmark/reproductions/douenne-2022-yellow-vests-carbon-tax/seeded/2026-11-02-a --stdout <that attempt's stdout.txt>
+
+  At most 3 `kind: "claim"` attempts.
+- At most 3 `kind: "error"` repairs (a run that crashed or
+  printed no `RESULT:` line, followed by a fix).
+
+## Claims to Reproduce
+1. predicted_winner_believes_not_lose_table4_col1: 0.269 (change in the probability of believing one does not lose (0/1 outcome)) [type: coefficient]
+   Location: Table 4, column (1), Predicted winner
+   Context: Table 4 ("Effect of Feedback on Belief of Winning"), column (1), the paper's main specification (equation 2), a regression discontinuity in the respondent-specific estimated net gain from the tax and dividend policy. Among respondents who received the customized win/lose feedback, restricted to those whose estimated net gain is within EUR 50 per year of zero: a linear probability model of the belief after feedback (1 if the respondent believes they do not lose, 0 if they believe they lose) on the predicted-winner indicator (the win feedback, which switches on when the estimated net gain exceed…
+2. initial_acceptance_believes_not_lose_table4_col1: 0.306 (change in the probability of believing one does not lose (0/1 outcome)) [type: coefficient]
+   Location: Table 4, column (1), Initial tax acceptance
+   Context: Table 4, column (1): the coefficient on initial acceptance of the tax and dividend (the answer when the policy was first presented, before any feedback) in the main feedback regression (estimated net gain within EUR 50 of zero; quadratic in the estimated net gain; income, socio-demographic and other-motive controls).
+3. predicted_winner_believes_not_lose_full_sample_table4_col2: 0.208 (change in the probability of believing one does not lose (0/1 outcome)) [type: coefficient]
+   Location: Table 4, column (2), Predicted winner
+   Context: Table 4, column (2): the same regression as column (1) estimated on every respondent who received the win/lose feedback (no restriction on the estimated net gain). Coefficient on the predicted-winner indicator.
+4. predicted_winner_heterogeneity_table4_col3: 0.246 (change in the probability of believing one does not lose (0/1 outcome)) [type: coefficient]
+   Location: Table 4, column (3), Predicted winner
+   Context: Table 4, column (3): column (1) (estimated net gain within EUR 50 of zero) with heterogeneous treatment effects — the predicted-winner indicator interacted with initial tax acceptance, with being a Yellow Vests supporter (declared themselves part of or supporting the movement), and with the initial win/lose belief (whether the respondent initially thought they would not lose), the main effects of these, and the same controls plus the initial win/lose category. Coefficient on the predicted-winner indicator (the effect for the omitted groups).
+5. initial_acceptance_heterogeneity_table4_col3: 0.015 (change in the probability of believing one does not lose (0/1 outcome)) [type: coefficient]
+   Location: Table 4, column (3), Initial tax acceptance
+   Context: Table 4, column (3), the heterogeneity regression: the main effect of initial tax acceptance.
+6. yellow_vests_supporter_heterogeneity_table4_col3: 0.019 (change in the probability of believing one does not lose (0/1 outcome)) [type: coefficient]
+   Location: Table 4, column (3), Yellow Vests supporter
+   Context: Table 4, column (3), the heterogeneity regression: the main effect of being a Yellow Vests supporter.
+7. winner_x_initial_acceptance_table4_col3: 0.166 (change in the probability of believing one does not lose (0/1 outcome)) [type: coefficient]
+   Location: Table 4, column (3), Predicted winner x Initial tax acceptance
+   Context: Table 4, column (3): the interaction of the predicted-winner indicator with initial tax acceptance — how much larger the effect of the win feedback is among respondents who initially accepted the tax and dividend.
+8. winner_x_yellow_vests_supporter_table4_col3: -0.151 (change in the probability of believing one does not lose (0/1 outcome)) [type: coefficient]
+   Location: Table 4, column (3), Predicted winner x Yellow Vests supporter
+   Context: Table 4, column (3): the interaction of the predicted-winner indicator with being a Yellow Vests supporter — the paper's evidence that opponents of the tax discard favourable information.
+9. winner_x_initial_win_belief_table4_col3: 0.08 (change in the probability of believing one does not lose (0/1 outcome)) [type: coefficient]
+   Location: Table 4, column (3), Predicted winner x G
+   Context: Table 4, column (3): the interaction of the predicted-winner indicator with the initial win/lose belief (initially believing one does not lose).
+10. predicted_winner_believes_wins_table4_col4: 0.153 (change in the probability of believing one wins (0/1 outcome)) [type: coefficient]
+   Location: Table 4, column (4), Predicted winner
+   Context: Table 4, column (4): column (1) (estimated net gain within EUR 50 of zero, same controls) with the dependent variable switched to the belief that one wins (1 if the respondent believes they win, 0 otherwise). Coefficient on the predicted-winner indicator.
+11. n_obs_table4_col1: 757.0 (respondents) [type: other]
+   Location: Table 4, column (1), Observations
+   Context: Number of respondents in the Table 4 column (1) regression: those who received the win/lose feedback and whose estimated net gain is within EUR 50 per year of zero.
+12. believes_not_lose_on_acceptance_iv_table6_col1: 0.534 (change in the probability of accepting the tax and targeted dividend) [type: coefficient]
+   Location: Table 6, column (1), Believes does not lose
+   Context: Table 6 ("Effect of Self-Interest on Acceptance"), column (1), the paper's main self-interest estimate: two-stage least squares of acceptance of the tax and targeted dividend ("Yes" or "Don't know" to supporting it) on the belief that one does not lose from it, instrumented by the respondent's and the second adult's random eligibility for the targeted dividend (eligibility thresholds at the 20th, 30th, 40th or 50th income percentile, randomly assigned) and their interaction (first stage: Table 5 column 1), controlling for fixed effects for the policy assigned, a single-adult indicator, initial…
+13. believes_effective_on_approval_iv_table8_col1: 0.416 (change in the probability of approving the tax and dividend) [type: coefficient]
+   Location: Table 8, column (1), Believes in effectiveness
+   Context: Table 8 ("Effect of Believing in Environmental Effectiveness on Approval"), column (1), the paper's main environmental-effectiveness estimate: two-stage least squares of initial approval of the tax and dividend (answer "Yes") on believing it is environmentally effective (answer "Yes"), instrumented by the two randomly displayed information treatments on the scientific consensus about the effectiveness of carbon taxation and on climate change (first stage: Table 7), controlling for socio-demographics, other motives, incomes and estimated gains. All respondents.
+
+## Dataset Information
+Name: douenne_2022_yellow_vests_carbon_tax
+Local path: <repo>/benchmark/.cache/claude-code/douenne-2022-yellow-vests-carbon-tax/seeded/2026-11-02-a/mount/douenne_2022_yellow_vests_carbon_tax
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/after_papier.RData (12.8 MB) — objects: s (data.frame, 3002 rows, 448 columns: gain, winning_category, winning_feedback_category, single, sample, effective, id, date, endDate, fini, duree_no_info, nombre_clics_no_info, premier_clic_info_PM, dernier_clic_info_PM, duree_info_PM, nombre_clics_info_PM, premier_clic_info_CC, dernier_clic_info_CC, duree_info_CC, nombre_clics_info_CC, premier_clic_info_CC_PM, dernier_clic_info_CC_PM, duree_info_CC_PM, nombre_clics_info_CC_PM, code_postal, sexe, age, statut_emploi, csp, diplome, taille_menage, nb_adultes, score…), sb (data.frame, 824 rows, 443 columns: gain, winning_category, winning_feedback_category, single, sample, id, date, endDate, fini, duree_no_info, nombre_clics_no_info, premier_clic_info_PM, dernier_clic_info_PM, duree_info_PM, nombre_clics_info_PM, premier_clic_info_CC, dernier_…), sl (data.frame, 2777 rows, 438 columns: gain, winning_category, winning_feedback_category, single, sample, id, date, endDate, fini, duree_no_info, nombre_clics_no_info, premier_clic_info_PM, dernier_clic_info_PM, duree_info_PM, nombre_clics_info_PM, premier_clic_info_CC, dernier_…), sq (data.frame, 2729 rows, 438 columns), sa (data.frame, 3395 rows, 437 columns), ss (data.frame, 3165 rows, 426 columns), fit (data.frame, 10258 rows, 39 columns), fit_2 (data.frame, 10258 rows, 39 columns), fit_housing_2 (data.frame, 26729 rows, 10 columns), entd (data.frame, 30162 rows, 10 columns), rev_i_erfs2014 (data.frame, 88814 rows, 2 columns), formula_update_with_gain_perdants (formula), weighting_s (function), variables_politiques_environnementales (character), data1 (function), data5 (function), prog (character), variables_comportement_CC (character), stack_bars (function), variables_reg_effect_feedback (character), … and 119 more objects
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/after_preparation.RData (12.1 MB) — objects: s (data.frame, 3002 rows, 437 columns: gain, winning_category, winning_feedback_category, single, sample, id, date, endDate, fini, duree_no_info, nombre_clics_no_info, premier_clic_info_PM, dernier_clic_info_PM, duree_info_PM, nombre_clics_info_PM, premier_clic_info_CC, dernier_clic_info_CC, duree_info_CC, nombre_clics_info_CC, premier_clic_info_CC_PM, dernier_clic_info_CC_PM, duree_info_CC_PM, nombre_clics_info_CC_PM, code_postal, sexe, age, statut_emploi, csp, diplome, taille_menage, nb_adultes, score_climate_ca…), sl (data.frame, 2777 rows, 437 columns: gain, winning_category, winning_feedback_category, single, sample, id, date, endDate, fini, duree_no_info, nombre_clics_no_info, premier_clic_info_PM, dernier_clic_info_PM, duree_info_PM, nombre_clics_info_PM, premier_clic_info_CC, dernier_…), sq (data.frame, 2729 rows, 437 columns: gain, winning_category, winning_feedback_category, single, sample, id, date, endDate, fini, duree_no_info, nombre_clics_no_info, premier_clic_info_PM, dernier_clic_info_PM, duree_info_PM, nombre_clics_info_PM, premier_clic_info_CC, dernier_…), sa (data.frame, 3395 rows, 437 columns), ss (data.frame, 3165 rows, 425 columns), fit (data.frame, 10258 rows, 39 columns), fit_2 (data.frame, 10258 rows, 39 columns), fit_housing_2 (data.frame, 26729 rows, 10 columns), entd (data.frame, 30162 rows, 10 columns), objective_gains (data.frame, 10342 rows, 8 columns), subjective_gains (data.frame, 10000 rows, 7 columns), objective_gains_inelastic (data.frame, 10342 rows, 7 columns), rev_i_erfs2014 (data.frame, 88814 rows, 2 columns), weighting_s (function), variables_gilets_jaunes (character), Label (function), variables_transferts_inter (character), variables_aleatoires (character), variables_toutes (character), variables_transport (character), … and 52 more objects
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/LICENSE (33.7 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/README.md (11.5 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/__init__.py (1 B)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/agglos.csv (7.9 KB) — columns: id;taille_agglo
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/correspondance-code-insee-code-postal.csv (26.2 MB) — columns: Code INSEE;Code Postal;Commune;Département;Région;Statut;Altitude Moyenne;Superficie;Population;geo_point_2d;geo_shape;ID Geofla;Code Commune;Code Canton;Code Arrondissement;Code Département;Code Région
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/df_menages_domicile_teg.csv (926.2 KB) — columns: ;distrteg;v1_btravdist;v1_btravmtp;mode;poids_qind1
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/df_objective_gains.csv (610.1 KB) — columns: ;gain_net_numeric_uc_fuel;gain_net_numeric_uc_chauffage;gain_net_numeric_uc_taxe_carbone;weight
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/df_objective_gains_inelastic.csv (564.5 KB) — columns: ;gain_net_numeric_uc_fuel;gain_net_numeric_uc_chauffage;gain_net_numeric_uc_taxe_carbone
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/df_subjective_gains.csv (607.3 KB) — columns: ;subjective_gain_numeric_fuel;subjective_gain_numeric_chauffage;subjective_gain_numeric_taxe_carbone
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/matching_predict_winner.R (1.4 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/packages_functions.R (70.7 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/papier.R (106.7 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/preparation.R (163.6 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/questionnaire.qsf (494.4 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/quotas.xlsx (13.6 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/rev_i_erfs2014.csv (1.7 MB) — columns: "","x"
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/survey.csv (10.6 MB) — columns: StartDate,EndDate,Status,IPAddress,Progress,Duration (in seconds),Finished,RecordedDate,ResponseId,RecipientLastName,RecipientFirstName,RecipientEmail,ExternalReference,LocationLatitude,LocationLongitude,DistributionChannel,UserLanguage,Q14…
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/survey_prepared.csv (8.9 MB) — columns: "id";"date";"endDate";"fini";"duree_no_info";"nombre_clics_no_info";"premier_clic_info_PM";"dernier_clic_info_PM";"duree_info_PM";"nombre_clics_info_PM";"premier_clic_info_CC";"dernier_clic_info_CC";"duree_info_CC";"nombre_clics_info_CC";"p…
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/consistency_beliefs_losses.py (5.8 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/conso-eff-fonction.xls (1.2 MB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/CC_benefits_synchro.png (18.7 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/CC_cause_val.png (510.5 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/CC_effects_val.png (510.5 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/CC_generation_min_val.png (558.5 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/CC_knowledge_valbtr.png (14.8 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/CC_problems_synchro.png (17.9 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/CC_region_val.png (558.5 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/CC_responsible_valb.png (589.2 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/CC_talks_val.png (558.5 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/CC_target_emission_val.png (558.5 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/RDD_Acceptance_flat_90CI_black.png (9.0 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/WTP_both_Legend_right.png (22.8 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/approval_trim.png (7.8 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/average_cost_decile.png (9.0 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/biais.png (39.6 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/cdf_carbon_tax_titled.png (6.9 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/cdf_housing_titled.png (6.2 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/cdf_transport_titled.png (6.9 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/change_if_no.png (38.4 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/correlation_matrix2.jpeg (60.5 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/correlations_Yellow_Vests.png (9.4 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/decision_tree_wo_values_wo_color.png (56.2 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/diagram_survey_attitudes.png (19.8 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/diagram_survey_revision_2nd_round (1).png (75.3 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/diesel_catch_up_val.png (471.7 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/effort_rate_uc.png (11.5 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/elasticities_agg_val.png (20.4 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/elasticities_perso_own_val.png (20.8 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/environmenta_policies_val.png (1.7 MB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/pdf_carbon_tax_titled.png (6.5 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/pdf_housing_titled.png (6.2 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/pdf_transport_titled.png (6.2 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/proba_correct_prediction.png (29.2 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/shale_val.png (471.7 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/tax_condition_valc.png (69.5 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/tax_losers.png (1.1 MB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/tax_winners_synchro.png (15.7 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/transports_distance_trim.png (7.0 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/transports_frequency_trim.png (11.3 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/transports_opinion.png (9.0 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/transports_use_trim.png (21.5 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/images/transports_work.png (17.5 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/model_reforms/__init__.py (1 B)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/model_reforms/define_tax_incidence.py (1.6 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/model_reforms/diesel_standard_example.py (2.4 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/model_reforms/domestic_fuel_standard_example.py (2.4 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/model_reforms/gas_standard_example.py (2.4 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/model_reforms/gasoline_standard_example.py (2.4 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/model_reforms_data/__init__.py (1 B)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/model_reforms_data/compute_co2_emissions.py (1.5 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/model_reforms_data/define_tax_incidence_data.py (2.3 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/model_reforms_data/gains_losses_data.py (5.2 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/model_reforms_data/prediction expenditures (2).csv (2.3 MB) — columns: ,domestic_fuel_expenditures,natural_gas_expenditures,natural_gas_variable_expenditures,hh_weight,income_decile,hh_income,hh_id,domestic_fuel,natural_gas,consumption_units,age_hh_representative,accommodation_size,age_18_24,age_25_34,age_35_4…
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/model_reforms_data/prediction expenditures.csv (2.8 MB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/model_reforms_data/prediction housing expenditures (2).csv (765.3 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/model_reforms_data/prediction housing expenditures.csv (1.1 MB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/model_reforms_data/prepare_dataset.py (6.9 KB)
+- yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/model_reforms_data/prepare_dataset_housing.py (5.4 KB)
+- … and 20 more files (listing truncated)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/benchmark/.cache/claude-code/douenne-2022-yellow-vests-carbon-tax/seeded/2026-11-02-a/mount/douenne_2022_yellow_vests_carbon_tax' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Original Replication Scripts
+The replication package (the dataset directory) ships the authors' own analysis scripts, reproduced below.  These are the GROUND TRUTH for the exact estimating equation, variable names, sample restrictions, fixed effects, and standard-error clustering — follow them over anything reconstructed from the methodology summary, and prefer them over the paper's text where the two disagree.  Your job is to write R code that implements the SAME SPECIFICATION: translate what the scripts estimate, do not transliterate their syntax line by line (a Stata .do file's regression, e.g. `reghdfe y x controls, absorb(fe) cluster(cl)`, becomes the equivalent fixest::feols() call in R).  Keep only the parts that produce the specific claims being reproduced; skip figure construction and unrelated robustness checks.  The scripts' data-file paths refer to the package's internal layout — resolve them against the dataset directory listed under Dataset Information.
+
+### `yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/matching_predict_winner.R`
+```r
+library("StatMatch")
+# Import data
+df_donor_enl <- read.csv(file = "C:<home>/Documents/Github/yellow_vests_aej_ep/df_donor_enl.csv", header = -1, sep=";")
+df_receiver_bdf <- read.csv(file = "C:<home>/Documents/Github/yellow_vests_aej_ep/df_receiver_bdf.csv", header = -1, sep=";")
+
+# Compute matching:
+out.nnd <- NND.hotdeck(
+  data.rec = df_receiver_bdf, data.don = df_donor_enl,
+  match.vars = c("accommodation_size", "hh_income", "hh_income_2"),# "consumption_units", "age_18_24", "age_25_34", "age_35_49", "age_50_64"),
+  don.class = c("natural_gas", "domestic_fuel"),
+  dist.fun = "Gower"
+)
+
+# Create fused file
+fused.nnd.m <- create.fused(
+  data.rec = df_receiver_bdf, data.don = df_donor_enl,
+  mtc.ids = out.nnd$mtc.ids,
+  z.vars = c("housing_expenditures_increase_to_impute")
+)
+
+fused.nnd.m$predicted_winner_matching <- 1 * (fused.nnd.m$transport_expenditures_increase + fused.nnd.m$housing_expenditures_increase_to_impute < 110 * fused.nnd.m$nb_beneficiaries)
+1 - sum(fused.nnd.m$winner * fused.nnd.m$predicted_winner_matching) / sum(fused.nnd.m$winner)
+1 - sum((fused.nnd.m$winner == 0) * (fused.nnd.m$predicted_winner_matching == 0)) / sum((fused.nnd.m$winner == 0))
+mean(fused.nnd.m$winner != fused.nnd.m$predicted_winner_matching)
+# With accommodation size only : 18.6%
+# With accommodation size and income (squared) : 18.0%
+# With many more variables : 17.7%
+
+```
+
+### `yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/packages_functions.R`
+```r
+# options(download.file.method = "wget"); # For Ubuntu 14.04
+package <- function(p) { 
+  if (!is.element(p, installed.packages()[,1])) {
+    install.packages(p); 
+  }
+  library(p, character.only = TRUE)
+} # loads packages with automatical install if needed
+
+library(utils)
+package("xtable")
+package('tidyverse')
+# package("rms") # TODO
+package('pwr')
+package("foreign")
+package("remotes")
+if (!("memisc" %in% installed.packages())) {
+  install_version("memisc", version = "0.99.22", repos = "http://cran.r-project.org")
+} else if ("memisc" %in% installed.packages() & installed.packages()["memisc", "Version"] != "0.99.22") {
+  package("installr") # /!\ Beware, installr only works on Windows. On other platform, uninstall "memisc" manually.
+  uninstall.packages("memisc")
+  install_version("memisc", version = "0.99.22", repos = "http://cran.r-project.org") }
+library(memisc)
+# package("memisc")
+package("DT")
+package("pastecs")
+package("lsr")
+package("ggplot2")
+package("stringr")
+package("survey")
+package("plotly")
+package("RColorBrewer")
+library(magick)
+package('gdata')
+package("Hmisc")
+# package("quantreg") # TODO
+package("rcompanion")
+package("DescTools")
+# package("VCA") # TODO
+# package("glmnet") # TODO
+# package("installr") # not for linux
+package("processx")
+package("readstata13")
+package("permute")
+package("AER")
+package("ivmodel")
+package("rattle")
+package("data.table")
+package("reshape2")
+package("margins")
+# package("rddtools")
+# package("rddapp")
+# package("mets")
+package("plyr")
+package("descr")
+package("stargazer")
+package("clipr")
+package("ergm") # wtd.median
+package("mfx")
+package("margins")
+package("plotrix")
+package("grDevices")
+package("colorspace")
+package("RColorBrewer")
+package("colorRamps")
+package("ordinal")
+package("oglmx")
+package("logistf")
+package("emmeans")
+package("ggeffects")
+package("snakecase")
+package("rdd")
+package("corrplot")
+package("psy")
+package("equivalence")
+# package("np")
+# package("AMR")
+# package("devtools")
+# install_github("jdstorey/qvalue")
+# package("qvalue")
+# package("car")
+# package("latex2exp")
+# install_github(repo = "MatthieuStigler/RCompAngrist", subdir = "RCompAngrist")
+# package("RCompAngrist")
+
+
+package("lavaan")
+# package("psych") # library(psych, exclude = "describe")
+# package("semTools")
+
+# package("interplot")
+# package("jtools")
+# package("effects")
+# package("sjplot")
+# package("doMC") # for parallel computing, does not work on Windows
+
+# Fs <- function(QID) { s[QID][[1]] }
+# Vs <- function(QID) { as.vector(Fs(QID))  } 
+n <- function(var) { as.numeric(as.vector(var)) }
+NSPs <- function(QID) { length(V(QID)[V(QID) == "NSP (Je ne veux pas répondre)"])/length(V(QID)) }
+nsps <- function(id) { length(v(id)[v(id) == "NSP (Je ne veux pas répondre)"])/length(v(id)) }
+Label <- function(var) {
+  if (length(annotation(var))==1) { annotation(var)[1] }
+  else { label(var)  }
+}
+decrit <- function(variable, miss = FALSE, weights = NULL, numbers=FALSE) { 
+  if (length(annotation(variable))>0 & !numbers) {
+    if (!miss) {
+      # if (is.element("Oui", levels(as.factor(variable))) | grepl("(char)", annotation(variable)) | is.element("quotient", levels(as.factor(variable)))  | is.element("Pour", levels(as.factor(variable))) | is.element("Plutôt", levels(as.factor(variable))) ) { describe(as.factor(variable[variable!="" & !is.na(variable)]), weights = weights[variable!="" & !is.na(variable)], descript=Label(variable)) }
+      # else { describe(variable[variable!="" & !is.na(variable)], weights = weights[variable!="" & !is.na(variable)], descript=Label(variable)) }
+      if (length(which(!is.na(suppressWarnings(as.numeric(levels(as.factor(variable)))))))==0) { describe(as.factor(variable[variable!=""]), weights = weights[variable!=""], descript=Label(variable)) } # encore avant:  & !is.na(variable), avant: (length(which(is.numeric(levels(as.factor(variable)))))==0)
+      else { describe(as.numeric(as.vector(variable[variable!=""])), weights = weights[variable!=""], descript=Label(variable)) } # avant:  & !is.na(variable)
+    }
+    else {
+      if (length(which(suppressWarnings(!is.na(as.numeric(levels(as.factor(variable)))))))>10) describe(include.missings(variable[variable!="" & !is.na(variable)]), weights = weights[variable!="" & !is.na(variable)], descript=Label(variable)) # encore avant:  & !is.na(variable), avant: (length(which(is.numeric(levels(as.factor(variable)))))==0)
+      else describe(as.factor(include.missings(variable[variable!="" & !is.na(variable)])), weights = weights[variable!="" & !is.na(variable)], descript=Label(variable)) }
+  }
+  else {  
+    if (length(annotation(variable))>0) {
+      if (miss) describe(variable[variable!=""], weights = weights[variable!=""], descript=Label(variable))
+      else describe(variable[variable!="" & !is.missing(variable)], weights = weights[variable!="" & !is.missing(variable)], descript=paste(length(which(is.missing(variable))), "missing obs.", Label(variable)))
+    } else describe(variable[variable!=""], weights = weights[variable!=""])  }
+}
+CImedian <- function(vec) { # 95% confidence interval
+  res <- tryCatch(unlist(ci.median(vec[!is.na(vec) & vec!=-1])), error=function(e) {print('NA')})
+  return(paste(res[paste('ci.lower')], res[paste('ci.median')], res[paste('ci.upper')], length(which(!is.na(vec) & vec!=-1)))) 
+}
+clean_number <- function(vec, high_numbers='') { 
+   numeric_vec <- as.numeric(gsub(",", ".", gsub("[[:alpha:]  !#$%&')?/(@:;€_-]","",vec)))
+   if (high_numbers=='remove') { is.na(numeric_vec) <- numeric_vec>10000 }
+   else if (high_numbers=='divide') { numeric_vec[numeric_vec>10000 & !is.na(numeric_vec)] <- numeric_vec[numeric_vec>10000 & !is.na(numeric_vec)]/12 }
+   else if (high_numbers=='divide&remove') { 
+     numeric_vec[numeric_vec>10000 & !is.na(numeric_vec)] <- numeric_vec[numeric_vec>10000 & !is.na(numeric_vec)]/12
+     is.na(numeric_vec) <- numeric_vec>6000 }
+   return(numeric_vec)
+}
+uc <- function(nb_pers, nb_14_et_plus) {
+  # https://www.insee.fr/fr/metadonnees/definition/c1802
+  return(1 + 0.5 * pmax(0, nb_14_et_plus - 1) + 0.3 * pmax(0, nb_pers - nb_14_et_plus))
+}
+quotient <- function(nb_pers, nb_adultes) {
+	# https://droit-finances.commentcamarche.com/contents/907-quotient-familial-calcul-du-nombre-de-parts-fiscales
+	# nb de parts fiscales en fonction de la situation et de nb_pers = 1 / 2 / 3 / 4 / 5
+	# marie: x / 2 / 2.5 / 3 / 4 --- en concubinage: x / 1 / 1.5 /2 / 3 (= marie - 1) --- seul: 1 / 2 / 2.5 / 3.5 / 4.5
+	return((nb_pers == 1) + (nb_pers == 2)*2 + (nb_pers == 3)*2.5 + (nb_pers == 4)*3 + (nb_pers > 4)*pmin(6, nb_pers - 1) + (nb_adultes==1)*(nb_pers > 3)*0.5 )
+}
+irpp <- function(rev, nb_adultes, nb_pers) {
+	# quotient <- (nb_pers < 2) + (nb_pers == 2) * 2 + (nb_pers == 3) * 2.5 + (nb_pers == 4) * 3 + (nb_pers > 4) * pmin(6, nb_pers - 1)
+	income <- 0.9334 * rev / quotient(nb_pers, nb_adultes) # (1 + (0.029 * 1.28))*0.9 : passage au brut (+28% en moyenne), CSG+CRDS non déductibles (2,90%), puis abattement de 10%
+	ir <- 0
+	ir <- ir + (income - 12815.25*12) * 0.45 * (income > 12815.25*12)
+	ir <- ir + (pmin(income, 12676*12) - 6051.42*12) * 0.41  * (income > 6051.42*12)
+	ir <- ir + (pmin(income, 6051.42*12) - 2257.17*12) * 0.3  * (income > 2257.17*12)
+	ir <- ir + (pmin(income, 2257.17*12) - 817.25*12) * 0.14  * (income > 817.25*12)
+	
+	ir <- quotient(nb_pers, nb_adultes) * ir
+	seuil_decote <- (nb_adultes>1)*2585/12 + (nb_adultes<=1)*1569/12
+	# decote <- (1920 - 0.75 * ir) * (marie & ir<2560) + (1165 - 0.75 * ir) * (!(marie) & ir<1553)
+	decote <- (ir < seuil_decote) * 0.75 * (seuil_decote - ir)
+	return(pmax((ir-decote),0)) # vrai calcul
+}
+piece.formula <- function(var.names, knots, vector=F) {
+  formula.sign <- rep(" - ", length(knots))
+  formula.sign[knots < 0] <- " + "
+  formulas <- c()
+  for (v in var.names) formulas <- c(formulas, paste(v, "+", paste("I(pmin(", v, formula.sign, abs(knots), ", 0))", collapse = " + ", sep="")))
+  formula <- paste(formulas, collapse = ' + ')
+  if (vector) return(strsplit(formula, ' + ', fixed=T)[[1]])
+  else return(formula)
+}
+
+
+##### Graphiques #####
+stack_bars <- function(vars, data=s, miss=T, labels=NA, title=NA, accord=FALSE, en = FALSE, margin=c(2.5,17,0,3), cex=1, width=0.77/length(vars), weights=FALSE) {
+  matrice <- c()
+  colors <-   c(rainbow(4, end=4/15)[1:3], "green", "forestgreen") # c("red", "orange", "yellow", "green", "darkgreen") # rainbow(5, end=1/3)
+  for (var in vars) {
+    if (miss) {
+      mat <- c(length(which(data[[var]]==-2))/length(which(!is.missing(data[[var]]))), length(which(data[[var]]==-1))/length(which(!is.missing(data[[var]]))), length(which(data[[var]]==0))/length(which(!is.missing(data[[var]]))), length(which(data[[var]]==1))/length(which(!is.missing(data[[var]]))), length(which(data[[var]]==2))/length(which(!is.missing(data[[var]]))),length(which(is.missing(data[[var]]) & !is.na(data[[var]])))/length(which(!is.missing(data[[var]]) & !is.na(data[[var]]))))
+      if (weights) { mat <- c(sum(data[['weight']][which(data[[var]]==-2)])/sum(data[['weight']][!is.missing(data[[var]])]), sum(data[['weight']][which(data[[var]]==-1)])/sum(data[['weight']][!is.missing(data[[var]])]), sum(data[['weight']][which(data[[var]]==0)])/sum(data[['weight']][!is.missing(data[[var]])]), sum(data[['weight']][which(data[[var]]==1)])/sum(data[['weight']][!is.missing(data[[var]])]), sum(data[['weight']][which(data[[var]]==2)])/sum(data[['weight']][!is.missing(data[[var]])]),sum(data[['weight']][which(is.missing(data[[var]]) & !is.na(data[[var]]))])/sum(data[['weight']][!is.missing(data[[var]])])) }
+      colors <- c(colors, "lightgrey")    }
+    else {
+      mat <- c(length(which(data[[var]]==-2))/length(which(!is.missing(data[[var]]))), length(which(data[[var]]==-1))/length(which(!is.missing(data[[var]]))), length(which(data[[var]]==0))/length(which(!is.missing(data[[var]]))),  length(which(data[[var]]==1))/length(which(!is.missing(data[[var]]))),  length(which(data[[var]]==2))/length(which(!is.missing(data[[var]]))))    
+      if (weights) { mat <- c(sum(data[['weight']][which(data[[var]]==-2)])/sum(data[['weight']][!is.missing(data[[var]])]), sum(data[['weight']][which(data[[var]]==-1)])/sum(data[['weight']][!is.missing(data[[var]])]), sum(data[['weight']][which(data[[var]]==0)])/sum(data[['weight']][!is.missing(data[[var]])]), sum(data[['weight']][which(data[[var]]==1)])/sum(data[['weight']][!is.missing(data[[var]])]), sum(data[['weight']][which(data[[var]]==2)])/sum(data[['weight']][!is.missing(data[[var]])])) } }
+    matrice <- c(matrice, mat) }
+  matrice <- matrix(c(matrice), ncol=length(vars))
+  if (is.na(labels)) { labels <- vars }
+  if (accord) { values <- c("Pas du tout", "Pas vraiment d'accord", "Indifférent-e", "Assez", "Tout à fait d'accord")
+  if (miss) { widths <- c(0.16,0.16,0.13,0.125,0.145,0.05) }
+  else { widths <- c(0.18,0.185,0.15,0.14,0.2) } }
+  else { values <- c("Baisser fortement", "légèrement", "Maintenir", "Augmenter légèrement", "fortement")
+  if (miss) { widths <- c(0.153,0.14,0.14,0.15,0.083,0.05) }
+  else { widths <- c(0.173,0.16,0.165,0.19,0.095) } }
+  if (en) {values <- c("Strongly decrease", "Slightly decrease", "Maintain", "Slightly increase", "Strongly increase")
+  if (accord) values <- c("Totally disagree", "Disagree", "Indifferent", "Agree", "Totally agree")
+  if (miss) { widths <- c(0.16,0.15,0.14,0.13,0.12,0.06) }
+  else { widths <- c(0.173,0.16,0.165,0.19,0.095) } }
+  if (miss) { 
+    if (en) values <- c(values, "PNR")
+    else values <- c(values, "NSP") }
+  # if (accord) { values <- c("Pas du tout d'accord", "Pas vraiment d'accord", "Indifférent-e", "Assez d'accord", "Tout à fait d'accord") }
+  # else { values <- c("Baisser fortement", "Baisser légèrement", "Maintenir au niveau actuel", "Augmenter légèrement", "Augmenter fortement") }
+  # if (miss) { values <- c(values, "NSP (Ne sait pas, ne se prononce pas)")} # TODO: trouver widths pour ceux-là et les mettre
+  before_par <- par()
+  titre <- 0
+  if (!is.na(title)) { titre <- 1.5 }
+  par(mar=margin, oma=c(0,0,titre,0))
+  frame()
+  abline(v=seq(0,1,by=0.1), lty=3, col="grey")
+  axis(1, at = seq(0,1,by=0.1))
+  barplot(matrice, width=width, horiz=TRUE, add=TRUE, col=colors, names.arg = labels, cex.names = cex, border=NA, ylim=c(0,1), legend.text=values, las=1, args.legend=list(horiz=TRUE, bty='o', box.lwd=0, xjust=1, text.width=widths, x.intersp=0.3, x="topright")) # ncol=3, inset=-0.3
+  title(title, outer=TRUE)
+  par(before_par)
+  # legend("topright", fill=colors, legend=values, ncol=2)
+}
+oui_non <- function(vars, file, labels = vars, data = s, display_value = T, sort=T, colors=color(2), weights=T, margin_r=0, margin_l=NA, title="", en=FALSE, NSP=FALSE) { # 250 l
+  margin_t <- 30
+  if (title!="") { margin_t <- 80 }
+  if (grepl("<br>", title)) { margin_t <- 130 }
+  if (is.na(margin_l)) { margin_l <- 4.7*max(nchar(labels)/(1 + str_count(labels, '<br>'))) }
+  oui <- non <- nsp <- c()
+  for (var in vars) {
+    if (weights) {
+      oui <- c(oui, sum(data[['weight']][which(data[[var]]==T | data[[var]]=="Oui" | data[[var]]=="Pour" | data[[var]]=="Taxer davantage le capital" | data[[var]]=="quotient")])/sum(data[['weight']][which(data[[var]]==T | data[[var]]==FALSE | data[[var]]=="Oui" | data[[var]]=="Non" | data[[var]]=="NSP"| data[[var]]=="Pour" | data[[var]]=="Contre" | data[[var]]=="Taxer davantage le capital" | data[[var]]=="Taxer davantage le travail" | data[[var]]=="quotient" | data[[var]]=="indiv")]) )
+      non <- c(non, sum(data[['weight']][which(data[[var]]==FALSE | data[[var]]=="Non" | data[[var]]=="Contre" | data[[var]]=="Taxer davantage le travail" | data[[var]]=="indiv")])/sum(data[['weight']][which(data[[var]]==T | data[[var]]==FALSE | data[[var]]=="Oui" | data[[var]]=="Non" | data[[var]]=="NSP"| data[[var]]=="Pour" | data[[var]]=="Contre" | data[[var]]=="Taxer davantage le capital" | data[[var]]=="Taxer davantage le travail" | data[[var]]=="quotient" | data[[var]]=="indiv")]) )
+      nsp <- c(nsp, sum(data[['weight']][which(data[[var]]=="NSP" | data[[var]]==-1)])/sum(data[['weight']][which(data[[var]]=="Oui" | data[[var]]=="Non" | data[[var]]=="Pour" | data[[var]]=="Contre" | data[[var]]=="Taxer davantage le capital" | data[[var]]=="Taxer davantage le travail" | data[[var]]=="quotient" | data[[var]]=="indiv")]) ) #  | data[[var]]==-1 | data[[var]]=="NSP"
+    }
+    else {
+      oui <- c(oui, length(which(data[[var]]==T | data[[var]]=="Oui" | data[[var]]=="Pour" | data[[var]]=="Taxer davantage le capital" | data[[var]]=="quotient"))/length(which(data[[var]]==T | data[[var]]==FALSE | data[[var]]=="Oui" | data[[var]]=="Non" | data[[var]]=="NSP"| data[[var]]=="Pour" | data[[var]]=="Contre" | data[[var]]=="Taxer davantage le capital" | data[[var]]=="Taxer davantage le travail" | data[[var]]=="quotient" | data[[var]]=="indiv")) )
+      non <- c(non, length(which(data[[var]]==FALSE | data[[var]]=="Non" | data[[var]]=="Contre" | data[[var]]=="Taxer davantage le travail" | data[[var]]=="indiv"))/length(which(data[[var]]==T | data[[var]]==FALSE | data[[var]]=="Oui" | data[[var]]=="Non" | data[[var]]=="NSP"| data[[var]]=="Pour" | data[[var]]=="Contre" | data[[var]]=="Taxer davantage le capital" | data[[var]]=="Taxer davantage le travail" | data[[var]]=="quotient" | data[[var]]=="indiv")) )
+      nsp <- c(nsp, length(which(data[[var]]=="NSP" | data[[var]]==-1))/length(which(data[[var]]=="Oui" | data[[var]]=="Non" | data[[var]]=="Pour" | data[[var]]=="Contre" | data[[var]]=="Taxer davantage le capital" | data[[var]]=="Taxer davantage le travail" | data[[var]]=="quotient" | data[[var]]=="indiv")) )
+    }  
+  }
+  true_nsp <- round(100 * nsp*(oui+non))
+  oui <- round(100 * oui)
+  non <- round(100 * non)
+  nsp <- round(100 * nsp)
+  if (sort) order_as <- order(oui/(oui+non))
+  else order_as <- 1:length(oui)
+  y <- labels[order_as]
+  non <- non[order_as]
+  nsp <- nsp[order_as]
+  true_nsp <- true_nsp[order_as]
+  if (sort) oui <- sort(oui)
+  o <- round(100 * oui / (oui + non))
+  n <- round(100 * non / (oui + non))
+  
+  if (en==T) {
+    hover_oui <- paste('Yes<br>', oui, '% of answers<br>', o, '% of expressed answers')
+    hover_non <- paste('No<br>', non, '% of answers<br>',n, '% of expressed answers')
+    hover_nsp <- paste('PNR<br>', true_nsp, '% of answers')  
+    Text <- c("Yes", "No", "PNR")      }
+  else if (en==FALSE) {
+    hover_oui <- paste('Oui<br>', oui, '% des réponses<br>', o, '% des réponses exprimées')
+    hover_non <- paste('Non<br>', non, '% des réponses<br>',n, '% des réponses exprimées')
+    hover_nsp <- paste('NSP<br>', true_nsp, '% des réponses')  
+    Text <- c("Oui", "Non", "NSP") }
+  else {
+    hover_oui <- paste('Oui<br>', oui, '% des réponses<br>', o, '% des réponses exprimées')
+    hover_non <- paste('Non<br>', non, '% des réponses<br>',n, '% des réponses exprimées')
+    hover_nsp <- paste('NSP<br>', true_nsp, '% des réponses')  
+    Text <- en
+    if (length(Text ==2)) Text <- c(Text, 'PNR')}
+  if (display_value) {
+    hover_oui <- paste(oui, '%')
+    hover_non <- paste(non, '%')
+    hover_nsp <- paste(true_nsp, '%')
+  }
+  if (!(NSP)) Text[3] <- ''
+  print(oui)
+  print(non)
+  print(nsp)
+  print(o)
+  print(n)
+  data <- data.frame(y, oui, non, nsp, o, n)
+  data$y <- factor(data$y, levels = data[["y"]])
+  y <- c(y, '')
+  bars <- plot_ly(data, x = ~o, y = ~y, type = 'bar', orientation = 'h', text = hover_oui, textposition = 'auto', # last one displays values; colors were forestgreen and darkred
+                  hoverinfo = 'text', marker = list(color = colors[1], line = list(color = 'white', width = 1))) %>%
+    add_trace(x = ~n, text = hover_non, hoverinfo = 'text', marker = list(color = colors[2])) %>%
+    add_trace(x = ~nsp, text = hover_nsp, hoverinfo = 'text', marker = list(color = 'lightgrey')) %>%
+    layout(xaxis = list(title = "",
+                        showgrid = FALSE,
+                        showline = FALSE,
+                        showticklabels = FALSE,
+                        zeroline = FALSE,
+                        domain = c(0.15, 1)),
+           yaxis = list(title = "",
+                        showgrid = FALSE,
+                        showline = FALSE,
+                        showticklabels = FALSE,
+                        zeroline = FALSE),
+           hovermode = 'closest',
+           barmode = 'stack',
+           title = title,
+           titlefont = list(color='black'),
+           font = list(color='black'),
+           # paper_bgcolor = 'rgb(248, 248, 255)', plot_bgcolor = 'rgb(248, 248, 255)',
+           margin = list(l = margin_l, r = margin_r, t = margin_t, b = 0),
+           showlegend = FALSE) %>%
+    # labeling the y-axis
+    add_annotations(xref = 'paper', yref = 'y', x = 0.14, y = y,
+                    xanchor = 'right',
+                    text = y,
+                    font = list(family = 'Arial', size = 14, color = 'black'),
+                    showarrow = FALSE, align = 'right') %>%
+    # labeling the first Likert scale (on the top)
+    add_annotations(xref = 'x', yref = 'paper',
+                    x = c(10, 90, 110),
+                    y = 1.1,
+                    text = Text,
+                    font = list(family = 'Arial', size = 15, color = 'black'),
+                    showarrow = FALSE) # %>%
+  # labeling the percentages of each bar (x_axis)
+  # add_annotations(xref = 'x', yref = 'y',
+  #                 x = o / 2, y = y,
+  #                 text = paste(data[,"oui"], '%'),
+  #                 font = list(family = 'Arial', size = 14, color = 'white'),
+  #                 showarrow = FALSE) %>%
+  # add_annotations(xref = 'x', yref = 'y',
+  #                 x = o + n / 2, y = y,
+  #                 text = paste(data[,"non"], '%'),
+  #                 font = list(family = 'Arial', size = 14, color = 'white'),
+  #                 showarrow = FALSE) %>%
+  # add_annotations(xref = 'x', yref = 'y',
+  #                 x = o + n + nsp / 2, y = y,
+  #                 text = paste(data[,"nsp"], '%'),
+  #                 font = list(family = 'Arial', size = 14, color = 'white'),
+  #                 showarrow = FALSE) %>%
+  # api_create(bars, filename=file, sharing="public")
+  return(bars) # bugs most often than not
+}
+data5 <- function(vars, data=s, miss=T, weights=T, rev=FALSE) {
+  matrice <- c()
+  colors <-  c(rainbow(4, end=4/15), "forestgreen") # c("red", "orange", "yellow", "green", "darkgreen") # rainbow(5, end=1/3)
+  for (var in vars) {
+    if (miss) {
+      if (is.null(annotation(data[[var]]))) {
+        mat <- c(length(which(n(data[[var]])==-2))/length(which(!is.missing(n(data[[var]])))), length(which(n(data[[var]])==-1))/length(which(!is.missing(n(data[[var]])))), length(which(n(data[[var]])==0))/length(which(!is.missing(n(data[[var]])))), length(which(n(data[[var]])==1))/length(which(!is.missing(n(data[[var]])))), length(which(n(data[[var]])==2))/length(which(!is.missing(n(data[[var]])))),length(which(is.na(data[[var]])))/length(which(!is.missing(n(data[[var]]))))) # removed "n()"
+        if (weights) { mat <- c(sum(data[['weight']][which(n(data[[var]])==-2)])/sum(data[['weight']][!is.missing(n(data[[var]]))]), sum(data[['weight']][which(n(data[[var]])==-1)])/sum(data[['weight']][!is.missing(n(data[[var]]))]), sum(data[['weight']][which(n(data[[var]])==0)])/sum(data[['weight']][!is.missing(n(data[[var]]))]), sum(data[['weight']][which(n(data[[var]])==1)])/sum(data[['weight']][!is.missing(n(data[[var]]))]), sum(data[['weight']][which(n(data[[var]])==2)])/sum(data[['weight']][!is.missing(n(data[[var]]))]),sum(data[['weight']][which(is.na(data[[var]]))])/sum(data[['weight']][!is.missing(n(data[[var]]))])) } }
+      else {
+        mat <- c(length(which(n(data[[var]])==-2))/length(which(!is.missing(n(data[[var]])))), length(which(n(data[[var]])==-1))/length(which(!is.missing(n(data[[var]])))), length(which(n(data[[var]])==0))/length(which(!is.missing(n(data[[var]])))), length(which(n(data[[var]])==1))/length(which(!is.missing(n(data[[var]])))), length(which(n(data[[var]])==2))/length(which(!is.missing(n(data[[var]])))),length(which(is.missing(data[[var]]) & !is.na(data[[var]])))/length(which(!is.missing(data[[var]])))) # removed "n()"
+        if (weights) { mat <- c(sum(data[['weight']][which(n(data[[var]])==-2)])/sum(data[['weight']][!is.missing(n(data[[var]]))]), sum(data[['weight']][which(n(data[[var]])==-1)])/sum(data[['weight']][!is.missing(n(data[[var]]))]), sum(data[['weight']][which(n(data[[var]])==0)])/sum(data[['weight']][!is.missing(n(data[[var]]))]), sum(data[['weight']][which(n(data[[var]])==1)])/sum(data[['weight']][!is.missing(n(data[[var]]))]), sum(data[['weight']][which(n(data[[var]])==2)])/sum(data[['weight']][!is.missing(n(data[[var]]))]),sum(data[['weight']][which(is.missing(data[[var]]) & !is.na(data[[var]]))])/sum(data[['weight']][!is.missing(data[[var]])])) } }
+      colors <- c(colors, "lightgrey")    }
+    else {
+      mat <- c(length(which(n(data[[var]])==-2))/length(which(!is.missing(n(data[[var]])))), length(which(n(data[[var]])==-1))/length(which(!is.missing(n(data[[var]])))), length(which(n(data[[var]])==0))/length(which(!is.missing(n(data[[var]])))),  length(which(n(data[[var]])==1))/length(which(!is.missing(n(data[[var]])))),  length(which(n(data[[var]])==2))/length(which(!is.missing(n(data[[var]])))))    
+      if (weights) { mat <- c(sum(data[['weight']][which(n(data[[var]])==-2)])/sum(data[['weight']][!is.missing(n(data[[var]]))]), sum(data[['weight']][which(n(data[[var]])==-1)])/sum(data[['weight']][!is.missing(n(data[[var]]))]), sum(data[['weight']][which(n(data[[var]])==0)])/sum(data[['weight']][!is.missing(n(data[[var]]))]), sum(data[['weight']][which(n(data[[var]])==1)])/sum(data[['weight']][!is.missing(n(data[[var]]))]), sum(data[['weight']][which(n(data[[var]])==2)])/sum(data[['weight']][!is.missing(n(data[[var]]))])) } }
+    matrice <- c(matrice, mat) }
+  matrice <- matrix(c(matrice), ncol=length(vars))
+  if (rev & !(miss)) return(matrice[5:1,])
+  else if (rev & miss) return(matrice[c(5:1,6),])
+  else return(matrice)
+  # return(as.data.frame(matrice))
+}
+data1 <- function(vars, data=s, weights=T) {
+  res <- c()
+  for (var in vars) {
+    if (weights) { res <- c(res, sum(data[['weight']][which(data[[var]]==TRUE)])/sum(data[['weight']][which(data[[var]]==TRUE | data[[var]]==FALSE)])) }
+    else { res <- c(res, length(which(data[[var]]==T)))/length(which(data[[var]]==T | data[[var]]==FALSE)) }
+  }
+  return( matrix(res, ncol=length(vars)) )
+}
+dataN <- function(var, data=s, miss=T, weights = T, return = "", fr=T, rev=FALSE) {
+  mat <- c()
+  if (is.character(data[[var]]) | (is.numeric(data[[var]]) & !grepl("item", class(data[[var]])))) v <- as.factor(data[[var]])
+  else v <- data[[var]]
+  if (is.null(annotation(v))) levels <- levels(v)
+  else levels <- labels(v)@.Data
+  levels <- levels[!(levels %in% c("NSP", "PNR", "Non concerné·e"))]
+  for (val in levels) { # before: no %in% nowherer below
+    if (weights) mat <- c(mat, sum(data[['weight']][which(v==val)])/sum(data[['weight']][!is.missing(v) & (!(v %in% c("NSP", "Non concerné·e")))]))
+    else mat <- c(mat, length(which(v==val))/length(which(!is.missing(v) & (!(v %in% c("NSP", "Non concerné·e")))))) }
+  if (rev) mat <- rev(mat)
+  if (miss) {
+    if (is.null(annotation(v))) {
+      if (weights) mat <- c(mat, sum(data[['weight']][which(is.na(v) | v %in% c("NSP", "Non concerné·e"))])/sum(data[['weight']][!is.missing(v) & (!(v %in% c("NSP", "Non concerné·e")))]))
+      else mat <- c(mat, length(which(is.na(v) | v %in% c("NSP", "Non concerné·e")))/length(which(!is.missing(v) & (!(v %in% c("NSP", "Non concerné·e"))))))
+    } else  {
+      if (weights) mat <- c(mat, sum(data[['weight']][which(is.missing(v) & !is.na(v))])/sum(data[['weight']][!is.missing(v)]))
+      else mat <- c(mat, length(which(is.missing(v) & !is.na(v)))/length(which(!is.missing(v)))) } }
+  if (max(nchar(levels))==3 & 'Oui' %in% levels & 'Non' %in% levels) { if (which(levels=='Non') < which(levels=='Oui')) mat[2:1] <- mat[1:2]; levels[c(which(levels=='Oui'),which(levels=='Non'))] <- c('Non', 'Oui') }
+  if ((return %in% c("levels", "legend")) & miss & fr) return(c(levels, 'NSP'))
+  else if ((return %in% c("levels", "legend")) & miss & (!(fr))) return(c(levels, 'PNR'))
+  else if ((return %in% c("levels", "legend")) & (!(miss))) return(levels)
+  else return(matrix(mat, ncol=1))
+}
+dataKN <- function(vars, data=s, miss=T, weights = T, return = "", fr=T, rev=FALSE) {
+  res <- c()
+  for (var in vars) res <- c(res, dataN(var, data, miss, weights, return, fr, rev))
+  return(matrix(res, ncol=length(vars)))
+}
+color5 <- c(rainbow(4, end=4/15)[1:3], "#00FF00", "#228B22") # the last two are: green, forestgreen
+color <- function(v, grey=FALSE, grey_replaces_last = T, rev_color = FALSE, theme='RdBu') {
+  if (is.matrix(v)) n <- nrow(v)
+  else if (length(v) > 1) n <- length(v)
+  else n <- v # cf. http://research.stowers.org/mcm/efg/R/Color/Chart/ColorChart.pdf
+  if (grey & grey_replaces_last & n > 1) n <- n-1
+  if (theme=='rainbow') {
+    if (n == 1) cols <- c("#66B3B3") # "brown": #A52A2A Presentation Teal: #008096 (title) #1A8C8C (dark) #66B3B3 #99CCCC (light)
+    else if (n == 2) cols <- c("#66B3B3", "#A52A2A") # c("lightgreen", "plum") = c("#90EE90", "#DDA0DD")
+    else if (n == 3) cols <- color5[c(1,3,5)]
+    else if (n == 4) cols <- c(rainbow(4, end=4/15)[1:3], "#228B22")
+    else if (n == 5) cols <- c(rainbow(4, end=4/15)[1:3], "#00FF00", "#228B22") # the last two are: green, forestgreen
+    else if (n == 6) cols <- rainbow(6)
+    else if (n == 7) cols <- c("#000000", rainbow(7)[c(1:3,5:7)])
+    else cols <- rainbow(n) # diverge_hcl green2red brewer.pal(n, Spectral/RdBu...)  https://www.nceas.ucsb.edu/~frazier/RSpatialGuides/colorPaletteCheatsheet.pdf
+  } else {
+    cols <- rev(brewer.pal(n, theme))
+    if (n == 1) cols <- cols[1]
+    # if (n == 2) cols <- cols[c(1,3)]
+    else if (n %% 2 == 0) cols <- rev(brewer.pal(n+2, theme))[c(1:(n/2),(n/2+2):(n+1))] }
+  if (rev_color) cols <- rev(cols)
+  if (grey & n > 1) return(c(cols, "#D3D3D3")) # lightgrey
+  else return(cols)
+}
+# accord5 <- c("Pas du tout d'accord", "Pas vraiment d'accord", "Indifférent-e", "Assez d'accord", "Tout à fait d'accord")
+oui_non5 <- c("Non, pas du tout", "Non, pas vraiment", "Indifférent-e/NSP", "Oui, plutôt", "Oui, tout à fait")
+yes_no5 <- c("Not at all", "Not really", "Indifferent/PNR", "Rather yes", "Yes, completely")
+# agree5 <- c("Strongly disagree", "Disagree", "Indifferent", "Agree", "Strongly agree")
+# evol5 <- c("Baisser fortement", "Baisser légèrement", "Maintenir au niveau", "Augmenter légèrement", "Augmenter fortement")
+# evolve5 <- c("Strongly decrease", "Slightly decrease", "Maintain", "Slightly increase", "Strongly increase")
+barres <- function(data, file, title="", labels, color=c(), rev_color = FALSE, hover=legend, nsp=TRUE, sort=TRUE, legend=hover, showLegend=T, margin_r=0, margin_l=NA, online=FALSE, display_values=T, thin=FALSE, legend_x=NA, show_ticks=T, xrange=NA) {
+  if (length(color)==0) color <- color(data, nsp, rev_color = rev_color)
+  margin_t <- 0 + 25*(!(thin))
+  if (title!="") { margin_t <- 100 }
+  if (grepl("<br>", title)) { margin_t <- 150 }
+  legendSize <- 15 # 10, 13
+  legendY <- 1.1  + 0.3*thin/(ncol(data)-1) # last term may be problematic
+  legendX <- 0.2
+  # legendFont <- 'Open Sans'
+  if (is.na(margin_l)) { margin_l <- 4.7*max(nchar(labels)/(1 + str_count(labels, '<br>'))) }
+  if (max(nchar(labels)) > 25) { legendSize <- 15 } # 9, 13
+  # if (max(nchar(labels)) > 50) { legendSize <- 8 }
+  # if (max(nchar(labels)) > 60) { legendSize <- 7 }
+  if (max(nchar(labels)) > 50) { # 70
+    legendSize <- 13 # 11
+    # legendY = 1.2
+    legendX= -0.2 # 1
+    # if (ncol(data)>1) margin_t = 170
+  }
+  if (!is.na(legend_x)) legendX <- legend_x
+  if (!showLegend) { margin_t <- max(0, margin_t - 70) }
+  if (ncol(data)==1) legendY = 1.5 + 0.3*thin
+  if (sort) {
+    agree <- c()
+    if (nrow(data)==5 | nrow(data)==6) { for (i in 1:length(labels)) { agree <- c(agree, data[4, i] + data[5, i]) } }
+    else if (nrow(data)==7) { for (i in 1:length(labels)) { agree <- c(agree, data[6, i] + data[7, i]) } }
+    else { for (i in 1:length(labels)) { agree <- c(agree, data[1, i]) } }
+    labels <- labels[order(agree)]
+    data <- matrix(data[, order(agree)], nrow=nrow(data))
+  }
+  if (nrow(data)==1 & sort) {  
+    hover <- hover[order(agree)]
+    value <- c()
+    for (i in 1:length(hover)) { 
+      hover[i] <- paste(hover[i], "<br>Choisi dans ", round(100*data[1, i]), "% des réponses", sep="")
+      value[i] <- paste(round(100*data[1, i]), '%', sep='') }
+    hovers <- matrix(hover, nrow=length(hover))
+    values <- matrix(value, nrow=length(hover))
+  }
+  else {
+    hovers <- values <- c()
+    if (nsp) {
+      for (i in 1:(length(hover)-1)) { 
+        for (j in 1:length(labels)) {
+          hovers <- c(hovers, paste(hover[i], '<br>', round(100*data[i, j]/(1+data[length(hover), j])), '% des réponses<br>', round(100*data[i, j]), '% des réponses exprimées') )
+          values <- c(values, paste(round(100*data[i, j]/(1+data[length(hover), j])), '%', sep=''))
+        }
+      }
+      for (j in 1:length(labels)) {
+        hovers <- c(hovers, paste(hover[length(hover)], '<br>', round(100*data[length(hover), j]/(1+data[length(hover), j])), '% des réponses<br>') )
+          values <- c(values, paste(round(100*data[length(hover), j]/(1+data[length(hover), j])), '%', sep=''))
+      }
+    }
+    else {
+      if (is.element(hover[length(hover)],c("PNR", "NSP"))) hover <- hover[1:(length(hover)-1)]
+      if (is.element(legend[length(legend)],c("PNR", "NSP"))) legend <- legend[1:(length(legend)-1)]
+      for (i in 1:length(hover)) { 
+        for (j in 1:length(labels)) {
+          hovers <- c(hovers, paste(hover[i], '<br>', round(100*data[i, j]), '% des réponses exprimées<br>') )
+          values <- c(values, paste(round(100*data[i, j]), '%', sep=''))
+        }
+      }  
+    }
+    hovers <- matrix(hovers, ncol=length(hover))
+    values <- matrix(values, ncol=length(hover))
+  }
+  if (!(display_values)) values <- replace(values, T, '')
+  
+  bars <- plot_ly(x = data[1,], y = labels, type = 'bar', orientation = 'h', text = values[,1], textposition = 'auto', # sort=FALSE, 
+                  hoverinfo = hovers[,1], name=legend[1], marker = list(color = color[1], line = list(color = 'white'))) %>% # , width = 0
+    
+    layout(xaxis = list(title = "",
+                        showgrid = show_ticks,
+                        showline = FALSE,
+                        showticklabels = show_ticks,
+                        gridcolor = toRGB("gray70"), # + noir, + proche de 0
+                        gridwidth = 1,
+                        griddash = "dot",
+                        autotick = FALSE,
+                        ticks = "outside",
+                        tick0 = 0,
+                        dtick = 0.1,
+                        ticklen = 5*show_ticks,
+                        tickwidth = 1,
+                        tickcolor = toRGB("gray70"),
+                        zeroline = T, 
+                        range = xrange,
+                        domain = c(0.01 + 0.14*(!(" " %in% labels)), 1)
+    ),
+    yaxis = list(title = "",
+                 showgrid = FALSE,
+                 showline = FALSE,
+                 showticklabels = FALSE,
+                 categoryorder = "trace",
+                 # automargin = T,
+                 zeroline = FALSE),
+    hovermode = 'closest',
+    barmode = 'stack',
+    title = title,
+    titlefont = list(color='black'),
+    font = list(color='black', size=legendSize-1),
+    # paper_bgcolor = 'rgb(248, 248, 255)', plot_bgcolor = 'rgb(248, 248, 255)',
+    margin = list(l = margin_l, r = margin_r, t = margin_t, b = 24, autoexpand = thin), # 21, autoexpand=FALSE removes useless margin at bottom but creates bug with legend
+    # margin = list(b = 20, t = margin_t),
+    legend = list(orientation='h', y=legendY, x=legendX, traceorder='normal', font=list(size=legendSize, color='black')), # family='Balto',  , family=legendFont
+    showlegend = (showLegend & (!("Yes" %in% legend) & !("Oui" %in% legend)))) %>%
+    
+    # labeling the y-axis
+    add_annotations(xref = 'paper', yref = 'y', x = 0.14, y = labels,
+                    xanchor = 'right',
+                    text = labels,
+                    font = list(family = 'Arial', size = 14, color = 'black'),
+                    showarrow = FALSE, align = 'right') # %>%
+    # Legend in the Yes/No case
+    if (("Yes" %in% legend) | ("Oui" %in% legend)) { 
+      bars <- bars %>% add_annotations(xref = 'x', yref = 'paper',
+                    x = c(0.1, 0.9, 1.1),
+                    y = 1.5,
+                    text = legend,
+                    font = list(family = 'Arial', size = 16, color = 'black'),
+                    showarrow = FALSE) } # %>%
+  # print(nrow(data))
+  # print(nrow(hovers))
+  # print(ncol(hovers))
+  if (nrow(data)>1) { for (i in 2:nrow(data)) {
+    bars <- add_trace(bars, evaluate=TRUE, x = data[i,], name=legend[i], text = values[,i], hoverinfo = 'text', hovertext = hovers[,i], marker = list(color = color[i]))
+  } }
+  if (online) { api_create(bars, filename=file, sharing="public") }
+  return(bars)
+}
+CImedian <- function(vec) { # 95% confidence interval
+  res <- tryCatch(unlist(ci.median(vec[!is.na(vec) & vec!=-1])), error=function(e) {print('NA')})
+  return(paste(res[paste('ci.lower')], res[paste('ci.median')], res[paste('ci.upper')], length(which(!is.na(vec) & vec!=-1)))) }
+
+# from http://pcwww.liv.ac.uk/~william/R/crosstab.r http://rstudio-pubs-static.s3.amazonaws.com/6975_c4943349b6174f448104a5513fed59a9.html
+Crosstab <- function (..., dec.places = NULL, type = NULL, style = "wide", row.vars = NULL, col.vars = NULL, percentages = TRUE,  addmargins = TRUE, subtotals=TRUE) {
+  #Declare function used to convert frequency counts into relevant type of proportion or percentage
+  mk.pcnt.tbl <- function(tbl, type) {
+    a <- length(row.vars)
+    b <- length(col.vars)
+    mrgn <- switch(type, column.pct = c(row.vars[-a], col.vars), 
+                   row.pct = c(row.vars, col.vars[-b]),
+                   joint.pct = c(row.vars[-a], col.vars[-b]),
+                   total.pct = NULL)
+    tbl <- prop.table(tbl, mrgn)
+    if (percentages) {
+      tbl <- tbl * 100
+    }
+    tbl
+  }
+  
+  #Find no. of vars (all; row; col) for use in subsequent code
+  n.row.vars <- length(row.vars)
+  n.col.vars <- length(col.vars)
+  n.vars <- n.row.vars + n.col.vars
+  
+  
+  #Check to make sure all user-supplied arguments have valid values
+  stopifnot(as.integer(dec.places) == dec.places, dec.places > -1)
+  #type: see next section of code
+  stopifnot(is.character(style))    
+  stopifnot(is.logical(percentages))
+  stopifnot(is.logical(addmargins))
+  stopifnot(is.logical(subtotals))
+  stopifnot(n.vars>=1)
+  
+  #Convert supplied table type(s) into full text string (e.g. "f" becomes "frequency")
+  #If invalid type supplied, failed match gives user automatic error message
+  types <- NULL
+  choices <- c("frequency", "row.pct", "column.pct", "joint.pct", "total.pct")
+  for (tp in type) types <- c(types, match.arg(tp, choices))
+  type <- types
+  
+  #If no type supplied, default to 'frequency + total' for univariate tables and to
+  #'frequency' for multi-dimenstional tables
+  
+  #For univariate table....
+  if (n.vars == 1) {
+    if (is.null(type)) {
+      # default = freq count + total.pct  
+      type <- c("frequency", "total.pct")
+      #row.vars <- 1
+    } else {
+      #and any requests for row / col / joint.pct must be changed into requests for 'total.pct'
+      type <- ifelse(type == "frequency", "frequency", "total.pct")
+    }
+    #For multivariate tables...
+  } else if (is.null(type)) {
+    # default = frequency count  
+    type <- "frequency"
+  }
+  
+  
+  
+  #Check for integrity of requested analysis and adjust values of function arguments as required
+  
+  if ((addmargins==FALSE) & (subtotals==FALSE)) {
+    warning("WARNING: Request to suppress subtotals (subtotals=FALSE) ignored because no margins requested (addmargins=FALSE)")
+    subtotals <- TRUE
+  }
+  
+  if ((n.vars>1) & (length(type)>1) & (addmargins==TRUE)) {
+    warning("WARNING: Only row totals added when more than one table type requested")
+    #Code lower down selecting type of margin implements this...
+  }
+  
+  if ((length(type)>1) & (subtotals==FALSE)) { 
+    warning("WARNING: Can only request supply one table type if requesting suppression of subtotals; suppression of subtotals not executed")
+    subtotals <- TRUE
+  }
+  
+  if ((length(type)==1) & (subtotals==FALSE)) {
+    choices <- c("frequency", "row.pct", "column.pct", "joint.pct", "total.pct")
+    tp <- match.arg(type, choices)
+    if (tp %in% c("row.pct","column.pct","joint.pct")) {
+      warning("WARNING: subtotals can only be suppressed for tables of type 'frequency' or 'total.pct'")
+      subtotals<- TRUE
+    }
+  }
+  
+  if ((n.vars > 2) & (n.col.vars>1) & (subtotals==FALSE)) 
+    warning("WARNING: suppression of subtotals assumes only 1 col var; table flattened accordingly")
+  
+  
+  if ( (subtotals==FALSE) & (n.vars>2) )  {
+    #If subtotals not required AND total table vars > 2
+    #Reassign all but last col.var as row vars
+    #[because, for simplicity, Crosstabs assumes removal of subtotals uses tables with only ONE col var]
+    #N.B. Subtotals only present in tables with > 2 cross-classified vars...
+    if (length(col.vars)>1) {
+      row.vars <- c(row.vars,col.vars[-length(col.vars)])
+      col.vars <- col.vars[length(col.vars)]
+      n.row.vars <- length(row.vars)
+      n.col.vars <- 1
+    }
+  }
+  
+  #If dec.places not set by user, set to 2 unlesss only one table of type frequency requested,
+  #in which case set to 0.  [Leaves user with possibility of having frequency tables with > 0 dp]
+  if (is.null(dec.places)) {
+    if ((length(type)==1) & (type[1]=="frequency")) {
+      dec.places <- 0
+    } else {
+      dec.places <-2
+    }
+  }
+  
+  #Take the original input data, whatever form originally supplied in,
+  #convert into table format using requested row and col vars, and save as 'tbl'
+  
+  args <- list(...)    
+  
+  if (length(args) > 1) {
+    if (!all(sapply(args, is.factor))) 
+      stop("If more than one argument is passed then all must be factors")
+    tbl <- table(...)
+  }
+  else {
+    if (is.factor(...)) {
+      tbl <- table(...)
+    }
+    else if (is.table(...)) {
+      tbl <- eval(...)
+    }
+    else if (is.data.frame(...)) {
+      #tbl <- table(...)
+      if (is.null(row.vars) && is.null(col.vars)) {
+        tbl <- table(...)
+      }
+      else {
+        var.names <- c(row.vars,col.vars)
+        A <- (...)
+        tbl <- table(A[var.names])
+        if(length(var.names==1)) names(dimnames(tbl)) <- var.names
+        #[table() only autocompletes dimnames for multivariate Crosstabs of dataframes]
+      }
+    }
+    else if (class(...) == "ftable") {
+      tbl <- eval(...)
+      if (is.null(row.vars) && is.null(col.vars)) {
+        row.vars <- names(attr(tbl, "row.vars"))
+        col.vars <- names(attr(tbl, "col.vars"))
+      }
+      tbl <- as.table(tbl)
+    }
+    else if (class(...) == "ctab") {
+      tbl <- eval(...)
+      if (is.null(row.vars) && is.null(col.vars)) {
+        row.vars <- tbl$row.vars
+        col.vars <- tbl$col.vars
+      }
+      for (opt in c("dec.places", "type", "style", "percentages", 
+                    "addmargins", "subtotals")) if (is.null(get(opt))) 
+                      assign(opt, eval(parse(text = paste("tbl$", opt, 
+                                                          sep = ""))))
+      tbl <- tbl$table
+    }
+    else {
+      stop("first argument must be either factors or a table object")
+    }
+  }
+  
+  #Convert supplied table style into full text string (e.g. "l" becomes "long")
+  style <- match.arg(style, c("long", "wide"))
+  
+  #Extract row and col names to be used in creating 'tbl' from supplied input data
+  nms <- names(dimnames(tbl))
+  z <- length(nms)
+  if (!is.null(row.vars) && !is.numeric(row.vars)) {
+    row.vars <- order(match(nms, row.vars), na.last = NA)
+  }
+  if (!is.null(col.vars) && !is.numeric(col.vars)) {
+    col.vars <- order(match(nms, col.vars), na.last = NA)
+  }
+  if (!is.null(row.vars) && is.null(col.vars)) {
+    col.vars <- (1:z)[-row.vars]
+  }
+  if (!is.null(col.vars) && is.null(row.vars)) {
+    row.vars <- (1:z)[-col.vars]
+  }
+  if (is.null(row.vars) && is.null(col.vars)) {
+    col.vars <- z
+    row.vars <- (1:z)[-col.vars]
+  }
+  
+  #Take the original input data, converted into table format using supplied row and col vars (tbl)
+  #and create a second version (Crosstab) which stores results as percentages if a percentage table type is requested.
+  if (type[1] == "frequency") 
+    Crosstab <- tbl
+  else 
+    Crosstab <- mk.pcnt.tbl(tbl, type[1])
+  
+  
+  #If multiple table types requested, create and add these to 
+  if (length(type) > 1) {
+    tbldat <- as.data.frame.table(Crosstab)
+    z <- length(names(tbldat)) + 1
+    tbldat[z] <- 1
+    pcntlab <- type
+    pcntlab[match("frequency", type)] <- "Count"
+    pcntlab[match("row.pct", type)] <- "Row %"
+    pcntlab[match("column.pct", type)] <- "Column %"
+    pcntlab[match("joint.pct", type)] <- "Joint %"
+    pcntlab[match("total.pct", type)] <- "Total %"
+    for (i in 2:length(type)) {
+      if (type[i] == "frequency") 
+        Crosstab <- tbl
+      else Crosstab <- mk.pcnt.tbl(tbl, type[i])
+      Crosstab <- as.data.frame.table(Crosstab)
+      Crosstab[z] <- i
+      tbldat <- rbind(tbldat, Crosstab)
+    }
+    tbldat[[z]] <- as.factor(tbldat[[z]])
+    levels(tbldat[[z]]) <- pcntlab
+    Crosstab <- xtabs(Freq ~ ., data = tbldat)
+    names(dimnames(Crosstab))[z - 1] <- ""
+  }
+  
+  
+  #Add margins if required, adding only those margins appropriate to user request
+  if (addmargins==TRUE) {
+    
+    vars <- c(row.vars,col.vars)
+    
+    if (length(type)==1) {
+      if (type=="row.pct") 
+      { Crosstab <- addmargins(Crosstab,margin=c(vars[n.vars]))
+      tbl <- addmargins(tbl,margin=c(vars[n.vars]))
+      }
+      else 
+      { if (type=="column.pct") 
+      { Crosstab <- addmargins(Crosstab,margin=c(vars[n.row.vars]))
+      tbl <- addmargins(tbl,margin=c(vars[n.row.vars]))
+      }
+        else 
+        { if (type=="joint.pct") 
+        { Crosstab <- addmargins(Crosstab,margin=c(vars[(n.row.vars)],vars[n.vars])) 
+        tbl <- addmargins(tbl,margin=c(vars[(n.row.vars)],vars[n.vars])) 
+        }
+          else #must be total.pct OR frequency
+          { Crosstab <- addmargins(Crosstab)
+          tbl <- addmargins(tbl)
+          }
+        }
+      } 
+    }
+    
+    #If more than one table type requested, only adding row totals makes any sense...
+    if (length(type)>1) {
+      Crosstab <- addmargins(Crosstab,margin=c(vars[n.vars]))
+      tbl <- addmargins(tbl,margin=c(vars[n.vars]))
+    }
+    
+  }  
+  
+  
+  #If subtotals not required, and total vars > 2, create dataframe version of table, with relevent
+  #subtotal rows / cols dropped [Subtotals only present in tables with > 2 cross-classified vars]
+  t1 <- NULL
+  if ( (subtotals==FALSE) & (n.vars>2) )  {
+    
+    #Create version of Crosstab in ftable format
+    t1 <- Crosstab 
+    t1 <- ftable(t1,row.vars=row.vars,col.vars=col.vars)
+    
+    #Convert to a dataframe
+    t1 <- as.data.frame(format(t1),stringsAsFactors=FALSE)
+    
+    #Remove backslashes from category names AND colnames
+    t1 <- apply(t1[,],2, function(x) gsub("\"","",x))
+    #Remove preceding and trailing spaces from category names to enable accurate capture of 'sum' rows/cols
+    #[Use of grep might extrac category labels with 'sum' as part of a longer one or two word string...]
+    t1 <- apply(t1,2,function(x) gsub("[[:space:]]*$","",gsub("^[[:space:]]*","",x)))
+    
+    #Reshape dataframe to that variable and category labels display as required
+    #(a) Move col category names down one row; and move col variable name one column to right
+    t1[2,(n.row.vars+1):ncol(t1)] <- t1[1,(n.row.vars+1):ncol(t1)]
+    t1[1,] <- ""
+    t1[1,(n.row.vars+2)] <- t1[2,(n.row.vars+1)]    
+    #(b) Drop the now redundant column separating the row.var labels from the table data + col.var labels
+    t1 <- t1[,-(n.row.vars+1)]
+    
+    #In 'lab', assign category labels for each variable to all rows (to allow identification of sub-totals) 
+    lab <- t1[,1:n.row.vars]
+    for (c in 1:n.row.vars) {
+      for (r in 2:nrow(lab)) {
+        if (lab[r,c]=="") lab[r,c] <- lab[r-1,c]  
+      }
+    }
+    
+    lab <- (apply(lab[,1:n.row.vars],2,function(x) x=="Sum"))
+    lab <- apply(lab,1,sum)
+    #Filter out rows of dataframe containing subtotals
+    
+    t1 <- t1[((lab==0) | (lab==n.row.vars)),]
+    
+    #Move the 'Sum' label associated with last row to the first column; in the process
+    #setting the final row labels associated with other row variables to ""
+    t1[nrow(t1),1] <- "Sum"
+    t1[nrow(t1),(2:n.row.vars)] <- ""
+    
+    #set row and column names to NULL
+    rownames(t1) <- NULL
+    colnames(t1) <- NULL
+    
+  }
+  
+  
+  
+  #Create output object 'result' [class: Crosstab]
+  result <- NULL
+  #(a) record of argument values used to produce tabular output
+  result$row.vars <- row.vars
+  result$col.vars <- col.vars
+  result$dec.places <- dec.places
+  result$type <- type
+  result$style <- style
+  result$percentages <- percentages
+  result$addmargins <- addmargins
+  result$subtotals <- subtotals
+  
+  #(b) tabular output [3 variants]
+  result$table <- tbl  #Stores original cross-tab frequency counts without margins [class: table]
+  result$Crosstab <- Crosstab #Stores cross-tab in table format using requested style(frequency/pct) and table margins (on/off)
+  #[class: table]  
+  result$Crosstab.nosub <- t1  #Crosstab with subtotals suppressed [class: dataframe; or NULL if no subtotals suppressed]  
+  class(result) <- "Crosstab"    
+  
+  #Return 'result' as output of function
+  result
+  
+}
+
+print.Crosstab <- function(x,dec.places=x$dec.places,subtotals=x$subtotals,...) {
+  
+  row.vars <- x$row.vars
+  col.vars <- x$col.vars
+  n.row.vars <- length(row.vars)
+  n.col.vars <- length(col.vars)
+  n.vars <- n.row.vars + n.col.vars
+  
+  if (length(x$type)>1) {
+    z<-length(names(dimnames(x$Crosstab)))
+    if (x$style=="long") {
+      row.vars<-c(row.vars,z) 
+    } else {
+      col.vars<-c(z,col.vars)
+    }
+  }
+  
+  if (n.vars==1) {
+    if (length(x$type)==1) {
+      tmp <- data.frame(round(x$Crosstab,x$dec.places))
+      colnames(tmp)[2] <- ifelse(x$type=="frequency","Count","%")
+      print(tmp,row.names=FALSE)
+    } else {
+      print(round(x$Crosstab,x$dec.places))
+    }
+  }
+  
+  
+  #If table has only 2 dimensions, or subtotals required for >2 dimensional table,
+  #print table using ftable() on x$Crosstab
+  if ((n.vars == 2) | ((subtotals==TRUE) & (n.vars>2))) {
+    
+    tbl <- ftable(x$Crosstab,row.vars=row.vars,col.vars=col.vars)
+    
+    if (!all(as.integer(tbl)==as.numeric(tbl))) tbl <- round(tbl,dec.places)
+    print(tbl,...)
+    
+  }
+  
+  #If subtotals NOT required AND > 2 dimensions, print table using write.table() on x$Crosstab.nosub
+  if ((subtotals==FALSE) & (n.vars>2))  {
+    
+    t1 <- x$Crosstab.nosub
+    
+    #Convert numbers to required decimal places, right aligned
+    width <- max( nchar(t1[1,]), nchar(t1[2,]), 7 )
+    dec.places <- x$dec.places
+    number.format <- paste("%",width,".",dec.places,"f",sep="")
+    t1[3:nrow(t1),((n.row.vars+1):ncol(t1))] <- sprintf(number.format,as.numeric(t1[3:nrow(t1),((n.row.vars+1):ncol(t1))]))
+    
+    #Adjust column variable label to same width as numbers, left aligned, padding with trailing spaces as required
+    col.var.format <- paste("%-",width,"s",sep="")
+    t1[1,(n.row.vars+1):ncol(t1)] <- sprintf(col.var.format,t1[1,(n.row.vars+1):ncol(t1)])
+    #Adjust column category labels to same width as numbers, right aligned, padding with preceding spaces as required
+    col.cat.format <- paste("%",width,"s",sep="")
+    t1[2,(n.row.vars+1):ncol(t1)] <- sprintf(col.cat.format,t1[2,(n.row.vars+1):ncol(t1)])
+    
+    #Adjust row labels so that each column is of fixed width, using trailing spaces as required
+    for (i in 1:n.row.vars) {
+      width <- max(nchar(t1[,i])) + 2
+      row.lab.format <- paste("%-",width,"s",sep="")
+      t1[,i] <- sprintf(row.lab.format,t1[,i])
+    }
+    
+    write.table(t1,quote=FALSE,col.names=FALSE,row.names=FALSE)
+    
+  }
+  
+}
+# plot(1:3,1:3) # example
+# dev.copy(png, filename="../images/test.png") # save plot from R
+# dev.off()
+
+# orca(example, file = "image.png") # BEST METHOD
+# export(example, file = "image.png") # other method which should work with plotly
+
+##### Template #####
+
+# relabel_and_rename <- function(s) {
+#   # Notation: ~ means that it's a random variant; * means that another question is exactly the same (in another random branch)
+#   
+#   # The commented lines below should be executed before creating relabel_and_rename, to ease the filling of each name and label
+#   # for (i in 1:length(s)) {
+#   #   label(s[[i]]) <- paste(names(s)[i], ": ", label(s[[i]]), s[[i]][1], sep="");
+#   #   print(paste(i, label(s[[i]])))
+#   # }
+#   
+#   label(s[[1]]) <- ""
+#   label(s[[2]]) <- ""
+#   label(s[[3]]) <- ""
+#   label(s[[4]]) <- ""
+#   label(s[[5]]) <- ""
+#   label(s[[6]]) <- ""
+#   label(s[[7]]) <- ""
+#   label(s[[8]]) <- ""
+#   label(s[[9]]) <- ""
+#   label(s[[10]]) <- ""
+#   label(s[[11]]) <- ""
+#   label(s[[12]]) <- ""
+#   label(s[[13]]) <- ""
+#   label(s[[14]]) <- ""
+#   label(s[[15]]) <- ""
+#   label(s[[16]]) <- ""
+#   label(s[[17]]) <- ""
+#   label(s[[18]]) <- ""
+#   label(s[[19]]) <- ""
+#   label(s[[20]]) <- ""
+#   label(s[[21]]) <- ""
+#   label(s[[22]]) <- ""
+#   label(s[[23]]) <- ""
+#   label(s[[24]]) <- ""
+#   label(s[[25]]) <- ""
+#   label(s[[26]]) <- ""
+#   label(s[[27]]) <- ""
+#   label(s[[28]]) <- ""
+#   label(s[[29]]) <- ""
+#   label(s[[30]]) <- ""
+#   label(s[[31]]) <- ""
+#   label(s[[32]]) <- ""
+#   label(s[[33]]) <- ""
+#   label(s[[34]]) <- ""
+#   label(s[[35]]) <- ""
+#   label(s[[36]]) <- ""
+#   label(s[[37]]) <- ""
+#   label(s[[38]]) <- ""
+#   label(s[[39]]) <- ""
+#   label(s[[40]]) <- ""
+#   label(s[[41]]) <- ""
+#   label(s[[42]]) <- ""
+#   label(s[[43]]) <- ""
+#   label(s[[44]]) <- ""
+#   label(s[[45]]) <- ""
+#   label(s[[46]]) <- ""
+#   label(s[[47]]) <- ""
+#   label(s[[48]]) <- ""
+#   label(s[[49]]) <- ""
+#   label(s[[50]]) <- ""
+#   label(s[[51]]) <- ""
+#   label(s[[52]]) <- ""
+#   label(s[[53]]) <- ""
+#   label(s[[54]]) <- ""
+#   label(s[[55]]) <- ""
+#   label(s[[56]]) <- ""
+#   label(s[[57]]) <- ""
+#   label(s[[58]]) <- ""
+#   label(s[[59]]) <- ""
+#   label(s[[60]]) <- ""
+#   label(s[[61]]) <- ""
+#   label(s[[62]]) <- ""
+#   label(s[[63]]) <- ""
+#   label(s[[64]]) <- ""
+#   label(s[[65]]) <- ""
+#   label(s[[66]]) <- ""
+#   label(s[[67]]) <- ""
+#   label(s[[68]]) <- ""
+#   label(s[[69]]) <- ""
+#   label(s[[70]]) <- ""
+#   label(s[[71]]) <- ""
+#   label(s[[72]]) <- ""
+#   label(s[[73]]) <- ""
+#   label(s[[74]]) <- ""
+#   label(s[[75]]) <- ""
+#   label(s[[76]]) <- ""
+#   label(s[[77]]) <- ""
+#   label(s[[78]]) <- ""
+#   label(s[[79]]) <- ""
+#   label(s[[80]]) <- ""
+#   label(s[[81]]) <- ""
+#   label(s[[82]]) <- ""
+#   label(s[[83]]) <- ""
+#   label(s[[84]]) <- ""
+#   label(s[[85]]) <- ""
+#   label(s[[86]]) <- ""
+#   label(s[[87]]) <- ""
+#   label(s[[88]]) <- ""
+#   label(s[[89]]) <- ""
+#   label(s[[90]]) <- ""
+#   label(s[[91]]) <- ""
+#   label(s[[92]]) <- ""
+#   label(s[[93]]) <- ""
+#   label(s[[94]]) <- ""
+#   label(s[[95]]) <- ""
+#   label(s[[96]]) <- ""
+#   label(s[[97]]) <- ""
+#   label(s[[98]]) <- ""
+#   label(s[[99]]) <- ""
+#   label(s[[100]]) <- ""
+#   label(s[[101]]) <- ""
+#   label(s[[102]]) <- ""
+#   label(s[[103]]) <- ""
+#   label(s[[104]]) <- ""
+#   label(s[[105]]) <- ""
+#   label(s[[106]]) <- ""
+#   label(s[[107]]) <- ""
+#   label(s[[108]]) <- ""
+#   label(s[[109]]) <- ""
+#   label(s[[110]]) <- ""
+#   label(s[[111]]) <- ""
+#   label(s[[112]]) <- ""
+#   label(s[[113]]) <- ""
+#   label(s[[114]]) <- ""
+#   label(s[[115]]) <- ""
+#   label(s[[116]]) <- ""
+#   label(s[[117]]) <- ""
+#   label(s[[118]]) <- ""
+#   label(s[[119]]) <- ""
+#   label(s[[120]]) <- ""
+#   label(s[[121]]) <- ""
+#   label(s[[122]]) <- ""
+#   label(s[[123]]) <- ""
+#   label(s[[124]]) <- ""
+#   label(s[[125]]) <- ""
+#   label(s[[126]]) <- ""
+#   label(s[[127]]) <- ""
+#   label(s[[128]]) <- ""
+#   label(s[[129]]) <- ""
+#   label(s[[130]]) <- ""
+#   label(s[[131]]) <- ""
+#   label(s[[132]]) <- ""
+#   label(s[[133]]) <- ""
+#   label(s[[134]]) <- ""
+#   label(s[[135]]) <- ""
+#   label(s[[136]]) <- ""
+#   label(s[[137]]) <- ""
+#   label(s[[138]]) <- ""
+#   label(s[[139]]) <- ""
+#   label(s[[140]]) <- ""
+#   label(s[[141]]) <- ""
+#   label(s[[142]]) <- ""
+#   label(s[[143]]) <- ""
+#   label(s[[144]]) <- ""
+#   label(s[[145]]) <- ""
+#   label(s[[146]]) <- ""
+#   label(s[[147]]) <- ""
+#   label(s[[148]]) <- ""
+#   label(s[[149]]) <- ""
+#   label(s[[150]]) <- ""
+#   label(s[[151]]) <- ""
+#   label(s[[152]]) <- ""
+#   label(s[[153]]) <- ""
+#   label(s[[154]]) <- ""
+#   label(s[[155]]) <- ""
+#   label(s[[156]]) <- ""
+#   label(s[[157]]) <- ""
+#   label(s[[158]]) <- ""
+#   label(s[[159]]) <- ""
+#   label(s[[160]]) <- ""
+#   label(s[[161]]) <- ""
+#   label(s[[162]]) <- ""
+#   label(s[[163]]) <- ""
+#   label(s[[164]]) <- ""
+#   label(s[[165]]) <- ""
+#   label(s[[166]]) <- ""
+#   label(s[[167]]) <- ""
+#   label(s[[168]]) <- ""
+#   label(s[[169]]) <- ""
+#   label(s[[170]]) <- ""
+#   label(s[[171]]) <- ""
+#   label(s[[172]]) <- ""
+#   label(s[[173]]) <- ""
+#   label(s[[174]]) <- ""
+#   label(s[[175]]) <- ""
+#   label(s[[176]]) <- ""
+#   label(s[[177]]) <- ""
+#   label(s[[178]]) <- ""
+#   label(s[[179]]) <- ""
+#   label(s[[180]]) <- ""
+#   label(s[[181]]) <- ""
+#   label(s[[182]]) <- ""
+#   label(s[[183]]) <- ""
+#   label(s[[184]]) <- ""
+#   label(s[[185]]) <- ""
+#   label(s[[186]]) <- ""
+#   label(s[[187]]) <- ""
+#   label(s[[188]]) <- ""
+#   label(s[[189]]) <- ""
+#   label(s[[190]]) <- ""
+#   label(s[[191]]) <- ""
+#   label(s[[192]]) <- ""
+#   label(s[[193]]) <- ""
+#   label(s[[194]]) <- ""
+#   label(s[[195]]) <- ""
+#   label(s[[196]]) <- ""
+#   label(s[[197]]) <- ""
+#   label(s[[198]]) <- ""
+#   label(s[[199]]) <- ""
+#   label(s[[200]]) <- ""
+#   label(s[[201]]) <- ""
+#   label(s[[202]]) <- ""
+#   label(s[[203]]) <- ""
+#   label(s[[204]]) <- ""
+#   label(s[[205]]) <- ""
+#   label(s[[206]]) <- ""
+#   label(s[[207]]) <- ""
+#   label(s[[208]]) <- ""
+#   label(s[[209]]) <- ""
+#   label(s[[210]]) <- ""
+#   label(s[[211]]) <- ""
+#   label(s[[212]]) <- ""
+#   label(s[[213]]) <- ""
+#   label(s[[214]]) <- ""
+#   label(s[[215]]) <- ""
+#   label(s[[216]]) <- ""
+#   label(s[[217]]) <- ""
+#   label(s[[218]]) <- ""
+#   label(s[[219]]) <- ""
+#   label(s[[220]]) <- ""
+#   label(s[[221]]) <- ""
+#   label(s[[222]]) <- ""
+#   label(s[[223]]) <- ""
+#   label(s[[224]]) <- ""
+#   label(s[[225]]) <- ""
+#   label(s[[226]]) <- ""
+#   label(s[[227]]) <- ""
+#   label(s[[228]]) <- ""
+#   label(s[[229]]) <- ""
+#   label(s[[230]]) <- ""
+#   label(s[[231]]) <- ""
+#   label(s[[232]]) <- ""
+#   label(s[[233]]) <- ""
+#   label(s[[234]]) <- ""
+#   label(s[[235]]) <- ""
+#   label(s[[236]]) <- ""
+#   label(s[[237]]) <- ""
+#   label(s[[238]]) <- ""
+#   label(s[[239]]) <- ""
+#   label(s[[240]]) <- ""
+#   label(s[[241]]) <- ""
+#   label(s[[242]]) <- ""
+#   label(s[[243]]) <- ""
+#   label(s[[244]]) <- ""
+#   label(s[[245]]) <- ""
+#   label(s[[246]]) <- ""
+#   label(s[[247]]) <- ""
+#   label(s[[248]]) <- ""
+#   label(s[[249]]) <- ""
+#   label(s[[250]]) <- ""
+#   label(s[[251]]) <- ""
+#   label(s[[252]]) <- ""
+#   label(s[[253]]) <- ""
+#   label(s[[254]]) <- ""
+#   label(s[[255]]) <- ""
+#   label(s[[256]]) <- ""
+#   label(s[[257]]) <- ""
+#   label(s[[258]]) <- ""
+#   label(s[[259]]) <- ""
+#   label(s[[260]]) <- ""
+#   label(s[[261]]) <- ""
+#   label(s[[262]]) <- ""
+#   label(s[[263]]) <- ""
+#   label(s[[264]]) <- ""
+#   label(s[[265]]) <- ""
+#   label(s[[266]]) <- ""
+#   label(s[[267]]) <- ""
+#   label(s[[268]]) <- ""
+#   label(s[[269]]) <- ""
+#   label(s[[270]]) <- ""
+#   label(s[[271]]) <- ""
+#   label(s[[272]]) <- ""
+#   label(s[[273]]) <- ""
+#   label(s[[274]]) <- ""
+#   label(s[[275]]) <- ""
+#   label(s[[276]]) <- ""
+#   label(s[[277]]) <- ""
+#   label(s[[278]]) <- ""
+#   label(s[[279]]) <- ""
+#   label(s[[280]]) <- ""
+#   label(s[[281]]) <- ""
+#   label(s[[282]]) <- ""
+#   label(s[[283]]) <- ""
+#   label(s[[284]]) <- ""
+#   label(s[[285]]) <- ""
+#   label(s[[286]]) <- ""
+#   label(s[[287]]) <- ""
+#   label(s[[288]]) <- ""
+#   label(s[[289]]) <- ""
+#   label(s[[290]]) <- ""
+#   label(s[[291]]) <- ""
+#   label(s[[292]]) <- ""
+#   label(s[[293]]) <- ""
+#   label(s[[294]]) <- ""
+#   label(s[[295]]) <- ""
+#   label(s[[296]]) <- ""
+#   label(s[[297]]) <- ""
+#   label(s[[298]]) <- ""
+#   label(s[[299]]) <- ""
+#   label(s[[300]]) <- ""
+#   label(s[[301]]) <- ""
+#   label(s[[302]]) <- ""
+#   label(s[[303]]) <- ""
+#   label(s[[304]]) <- ""
+#   label(s[[305]]) <- ""
+#   label(s[[306]]) <- ""
+#   label(s[[307]]) <- ""
+#   label(s[[308]]) <- ""
+#   label(s[[309]]) <- ""
+#   label(s[[310]]) <- ""
+#   label(s[[311]]) <- ""
+#   label(s[[312]]) <- ""
+#   label(s[[313]]) <- ""
+#   label(s[[314]]) <- ""
+#   label(s[[315]]) <- ""
+#   label(s[[316]]) <- ""
+#   label(s[[317]]) <- ""
+#   label(s[[318]]) <- ""
+#   label(s[[319]]) <- ""
+#   
+#   return(s)
+# }
+data1 <- function(vars, data=e, weights=T) {
+  res <- c()
+  for (var in vars) {
+    if (weights) { res <- c(res, sum(data[['weight']][which(data[[var]]==TRUE)])/sum(data[['weight']][which(data[[var]]==TRUE | data[[var]]==FALSE)])) }
+    else { res <- c(res, length(which(data[[var]]==T))/length(which(data[[var]]==T | data[[var]]==FALSE))) }
+  }
+  return( matrix(res, ncol=length(vars)) )
+}
+dataN <- function(var, data=e, miss=T, weights = T, return = "", fr=T, rev=FALSE, rev_legend = FALSE) {
+  if (is.null(data[['weight']])) weights <- F # TODO? warning
+  mat <- c()
+  if (is.character(data[[var]]) | (is.numeric(data[[var]]) & !grepl("item", class(data[[var]])))) v <- as.factor(data[[var]])
+  else v <- data[[var]]
+  if (is.null(annotation(v))) levels <- levels(v)
+  else levels <- labels(v)@.Data
+
+... [truncated: 12,482 more bytes of this script omitted] ...
+
+```
+
+### `yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/papier.R`
+```r
+## Source to reproduce "Yellow Vests, Pessimistic Beliefs, and Carbon Tax Aversion"
+#     by Thomas Douenne & Adrien Fabre, under licence GNU Affero Public Licence
+# All files can be found on github: https://github.com/bixiou/yellow_vests_aej_ep
+#     in particular, file to prepare the dataset (preparation.R), to load the packages and functions (packages_functions.R),
+#     R environment with all the data prepared (.RData) and python files for complementary computations
+
+source("packages_functions.R")
+# load("after_papier.RData") # This loads the .RData generated after executing preparation.R and papier.R, so that one can run any line of this file almost independently (sometimes variables like taxe_efficace.hat or non_perdant should be redefined using the nearest above line that defines it though)
+load("after_preparation.RData") # This loads the .RData generated after executing preparation.R: it contains the dataframe (s) but lacks the definition of some objects (such as variables_reg_self_interest)
+
+##### 1 Introduction #####
+decrit(s$taxe_approbation, miss=T, weights = s$weight)
+
+
+##### 2 Context, survey, and data #####
+## 2.1 Context of the study
+decrit(s$gilets_jaunes >= 0, numbers=T, miss=T, weights=s$weight)
+decrit(s$gilets_jaunes[s$centre!=''] >= 0, numbers=T, miss=T, weights=s$weight[s$centre!=''])
+
+
+## 2.2 Our survey
+# 2.2.1 
+median(s$duree/60)
+
+# 2.2.2 Table 2.1: Proportion of respondents per target of the payment
+decrit(s$cible) # other lines of the Table are computed in preparation.R
+
+## 2.3  Official households surveys
+# See README
+# Matching BdF/ENTD : cf. repository Github openfisca_france_indirect_taxation/build_survey_data/matching_bdf_entd : all files
+# Data preparation: cf. prepare_dataset.py
+# Computation of net gains: cf. define_tax_incidence_data.py and gain_losses_data.py
+
+
+##### 3 Pessimistic beliefs #####
+## 3.1 Self-interest
+# Objective winning category: cf. consistency_belief_losses.py for weighted results reported in comments
+decrit(objective_gains$all > 0, weights = objective_gains$weight) # 0.703
+decrit(objective_gains$transport > 0, weights = objective_gains$weight) # 0.736
+decrit(objective_gains$housing > 0, weights = objective_gains$weight) # 0.6749
+# Subjective winning category
+decrit(s$gagnant_categorie, weights = s$weight) # 14.0% think they win (21.7% unaffected)
+decrit(s$gagnant_fuel_categorie, weights = s$weight) # 15.5% think they win (21.8% unaffected)
+decrit(s$gagnant_chauffage_categorie, weights = s$weight) # 17.0% think they win (30.0% unaffected)
+# Over-estimation of policy costs 
+# Objective net gains
+wtd.mean(objective_gains$transport, weights = objective_gains$weight) # mean +18
+wtd.mean(objective_gains$housing, weights = objective_gains$weight) # +6
+wtd.mean(objective_gains$all, weights = objective_gains$weight) # +24
+# Subjective net gains
+decrit(s$gain_fuel, weights = s$weight) # mean -61 
+decrit(s$gain_chauffage, weights = s$weight) # -43
+decrit(s$gain, weights = s$weight) # -89 
+decrit(as.numeric(s$gain) - s$simule_gain, weights = s$weight) # mean -126, median -116
+decrit(s$simule_gain > s$gain, weights = s$weight) # 89%
+decrit(s$simule_gain_inelastique - s$gain > 0, weights = s$weight) # 77%
+
+# Figure 3.1: CDF of subjective vs. objective gain (including in the inelastic case)
+mar_old <- par()$mar
+cex_old <- par()$cex
+par(mar = c(3.4, 3.4, 1.1, 0.1), cex=1.5)
+# (a) transport
+cdf_transport <- Ecdf(objective_gains$transport)
+cdf_transport_inelastic <- Ecdf(objective_gains_inelastic$transport)
+plot(Ecdf(s$gain_fuel), type="s", lwd=2, col="orange", main="", ylab="", xlab="") + grid()
+lines(cdf_transport$x, cdf_transport$y, lwd=2, col="darkblue")
+lines(cdf_transport_inelastic$x, cdf_transport_inelastic$y, lwd=2, lty=2, col="darkblue")
+title(ylab=expression("Proportion "<=" x"), xlab="Gain (in €/year per c.u.)", line=2.3)
+abline(v = c(-190, -110, -70, -40, -15, 0, 10, 20, 30, 40), lty=3, col=rgb(1,165/255,0,1))
+axis(3, at=c(-190, -110, -70, -40, -15, 0, 10, 20, 30, 40), tck=0.0, lwd=0, lwd.ticks = 0, padj=1.5, col.axis="orange", cex.axis=0.9)
+# (b) housing
+cdf_housing <- Ecdf(objective_gains$housing)
+cdf_housing_inelastic <- Ecdf(objective_gains_inelastic$housing)
+plot(Ecdf(s$gain_chauffage), type="s", lwd=2, col="orange", xlim=c(-250, 70), main="", ylab="", xlab="") + grid()
+lines(cdf_housing$x, cdf_housing$y, lwd=2, col="darkblue")
+lines(cdf_housing_inelastic$x, cdf_housing_inelastic$y, lwd=2, lty=2, col="darkblue")
+title(ylab=expression("Proportion "<=" x"), xlab="Gain (in €/year per c.u.)", line=2.3)
+abline(v=c(-190, -110, -70, -40, -15, 0, 10, 20, 30, 40), lty=3, col="orange") # rgb(1,0,0,0.7)
+axis(3, at=c(-190, -110, -70, -40, -15, 0, 10, 20, 30, 40), tck=0.0, lwd=0, lwd.ticks = 0, padj=1.5, col.axis="orange", cex.axis=0.9)
+# (c) both combined 
+cdf_all <- Ecdf(objective_gains$all)
+cdf_all_inelastic <- Ecdf(objective_gains_inelastic$all)
+plot(Ecdf(s$gain), type="s", lwd=2, col="orange", xlim=c(-400, 150), main="", ylab="", xlab="") + grid()
+lines(cdf_all$x, cdf_all$y, lwd=2, col="darkblue")
+lines(cdf_all_inelastic$x, cdf_all_inelastic$y, lwd=2, lty=2, col="darkblue")
+title(ylab=expression("Proportion "<=" x"), xlab="Gain (in €/year per c.u.)", line=2.3)
+abline(v=c(-280, -190, -120, -70, -30, 0, 20, 40, 60, 80), lty=3, col="orange")
+axis(3, at=c(-280, -190, -120, -70, -30, 0, 20, 40, 60, 80), tck=0.0, lwd=0, lwd.ticks = 0, padj=1.5, col.axis="orange", cex.axis=0.9)
+# legend("topleft", col=c("orange", "darkblue", "darkblue"), cex = 0.85, lty = c(1,1,2), lwd=2, legend = c("Subjective", "Objective", "Objective inelastic"))
+# restore graphical parameters
+par(mar = mar_old, cex = cex_old)
+
+mean(abs(fit$predicted_gain - fit$gain) > 110) # 5%
+wtd.mean(abs(s$simule_gain - s$gain) > 110, weights = s$weight) # 55%
+
+# Table 3.1: Heterogeneity in bias
+variables_demo_bias <- variables_demo 
+variables_demo_bias <- variables_demo_bias[!(variables_demo_bias %in% c("sexe", "age_50_64", "age_65_plus", "taille_agglo"))]
+formula_bias <- as.formula(paste("abs(simule_gain - gain) > 110 ~ (sexe=='Féminin') + as.factor(taille_agglo) + (Diplome>=5) + revenu + ecologiste + Gauche_droite + 
+                                 uc + Gilets_jaunes + ", paste(variables_demo_bias, collapse=' + ')))
+reg_bias <- lm(formula_bias, data=s, weights=s$weight)
+summary(reg_bias) # R^2: 0.06 (half due to Yellow Vests)
+logit_bias <- glm(formula_bias, family = binomial(link='logit'), data=s)
+summary(logit_bias)
+logit_bias_margins <- logitmfx(formula_bias, s, atmean=FALSE)$mfxest
+logit_bias_margins
+formula_bias_bis <- as.formula(paste("abs(simule_gain - gain) > 110 ~ taxe_approbation + (sexe=='Féminin') + as.factor(taille_agglo) + (Diplome>=5) + revenu + 
+                                     ecologiste + Gauche_droite + uc + Gilets_jaunes + ", paste(variables_demo_bias, collapse=' + ')))
+reg_bias_bis <- lm(formula_bias_bis, data=s, weights=s$weight)
+summary(reg_bias_bis)
+
+Table_heterogenous_bias <- stargazer(reg_bias, logit_bias, reg_bias_bis, out = "../tables/bias.tex",
+                                     title="Determinants of bias in subjective gains", model.names = T, model.numbers = FALSE, #star.cutoffs = c(0.1, 1e-5, 1e-30), # "Diploma: Bachelor or above", 
+                                     covariate.labels = c("Initial tax: PNR (I don't know)", "Initial tax: Approves",
+                                                          "Yellow Vests: PNR","Yellow Vests: understands","Yellow Vests: supports", "Yellow Vests: is part",
+                                                          "Ecologist", "Left-right: Indeterminate", "Left-right: Left", "Left-right: Center", "Left-right: Right", "Left-right: Extreme-right"),
+                                     dep.var.labels = c("Large bias ($\\left|\\widehat{\\gamma}-g\\right| > 110$)"), dep.var.caption = "", header = FALSE,
+                                     keep = c("taxe_approbation", "Gilets_jaunes", "Gauche_droite", "ecologiste"),
+                                     order = c("taxe_approbation", "Gilets_jaunes", "ecologiste", "Gauche_droite"),
+                                     omit.table.layout = 'n', star.cutoffs = NA,
+                                     coef = list(NULL, logit_bias_margins[,1], NULL),
+                                     se = list(NULL, logit_bias_margins[,2], NULL),
+                                     add.lines = list(c("Controls: Socio-demo, political leaning", "\\checkmark", "\\checkmark", "\\checkmark")),
+                                     no.space=TRUE, intercept.bottom=FALSE, intercept.top=TRUE, omit.stat=c("adj.rsq", "f", "ser", "ll", "aic"), label="tab:bias")
+# write_clip(gsub('\\end{table}', ' } {\\footnotesize \\parbox[t]{12cm}{\\linespread{1.2}\\selectfont \\textsc{Note:}  Standard errors are reported in parentheses. For logit, average marginal effects are reported and not coefficients. Omitted variables are \\textit{Yellow Vests: opposes}; \\textit{Left-right: Extreme-left}. The list of controls can be found in Appendix \\ref{set_controls}. A large bias is defined as a difference between subjective ($g$) and objectively estimated ($\\hat{\\gamma})$ net gain larger than 110\\euro{}/year per c.u. }}  \\end{table} ',
+#                 gsub('\\begin{tabular}{@', '\\makebox[\\textwidth][c]{ \\begin{tabular}{@',
+#                 Table_heterogenous_bias, fixed=TRUE), fixed=TRUE), collapse=' ')
+
+# False discovery rate at 5%
+pvalues_reg_bias <- summary(reg_bias)$coefficients[2:length(summary(reg_bias)$coefficients[,4]),4]
+for (v in c("Gilets_jaunes", "as.factor(taille_agglo)", "Gauche_droite", "statut_emploi", "csp", "region", "age", "actualite")) { # 
+  nullhyp <- names(reg_bias$coefficients)[which(grepl(v, names(reg_bias$coefficients), fixed = T))]
+  pvalues_reg_bias <- pvalues_reg_bias[!(names(pvalues_reg_bias) %in% nullhyp)]
+  pvalues_reg_bias[v] <- linearHypothesis(reg_bias, nullhyp)$`Pr(>F)`[2]
+}
+nullhyp <- c('nb_adultes', 'nb_14_et_plus', 'uc')
+pvalues_reg_bias <- pvalues_reg_bias[!(names(pvalues_reg_bias) %in% nullhyp)]
+pvalues_reg_bias['composition_menage'] <- linearHypothesis(reg_bias, nullhyp)$`Pr(>F)`[2]
+nullhyp <- c('revenu', 'rev_tot', 'niveau_vie')
+pvalues_reg_bias <- pvalues_reg_bias[!(names(pvalues_reg_bias) %in% nullhyp)]
+pvalues_reg_bias['revenus'] <- linearHypothesis(reg_bias, nullhyp)$`Pr(>F)`[2]
+sort(p.adjust(pvalues_reg_bias, method = 'BH'), decreasing=T) 
+
+
+## 3.2 Environmental effectiveness
+decrit(s$taxe_efficace[s$apres_modifs==F], weights = s$weight[s$apres_modifs==F], miss = T) # 14.51% vs. 68.0% (17.52% PNR)
+
+# See computation_co2_emissions.py for the effect on emissions
+
+# footnote 25 on elasticities
+wtd.mean((s$Elasticite_chauffage[s$taxe_efficace=='Non']<= -0.5), weights = s$weight[s$taxe_efficace=='Non'], na.rm=T) # 45%
+wtd.mean((s$Elasticite_fuel[s$taxe_efficace=='Non']<= -0.5), weights = s$weight[s$taxe_efficace=='Non'], na.rm=T) # 43%
+decrit(s$Elasticite_fuel, weights = s$weight) # -0.45
+decrit(s$Elasticite_chauffage, weights = s$weight) # -0.43
+
+## 3.3 Progressivity
+decrit(s$progressivite[s$info_progressivite==T], weights = s$weight[s$info_progressivite==T]) # 19.47% vs. 60.1% (20.4% PNR)
+
+
+##### 4 How attitudes shape beliefs #####
+## 4.1 Self-interest
+# Table 4.1: Binomial confidence intervals around share of respondents
+decrit(s$gagnant_categorie, weights= s$weight)
+decrit(s$simule_gagnant, weights= s$weight)
+# Simulated winners (non weighted):
+x = sum(s[s$variante_taxe_info == 'f' & s$simule_gagnant==1 & s$gagnant_categorie == 'Gagnant' & s$gagnant_feedback_categorie == 'Gagnant',]$weight)
+n = sum(s[s$variante_taxe_info == 'f' & s$simule_gagnant==1 & s$gagnant_categorie == 'Gagnant',]$weight)
+binconf(x = x, n = n) # 78.8%
+x = sum(s[s$variante_taxe_info == 'f' & s$simule_gagnant==1 & s$gagnant_categorie == 'Non affecté' & s$gagnant_feedback_categorie == 'Gagnant',]$weight)
+n = sum(s[s$variante_taxe_info == 'f' & s$simule_gagnant==1 & s$gagnant_categorie == 'Non affecté',]$weight)
+binconf(x = x, n = n) # 21.6%
+x = sum(s[s$variante_taxe_info == 'f' & s$simule_gagnant==1 & s$gagnant_categorie == 'Perdant' & s$gagnant_feedback_categorie == 'Gagnant',]$weight)
+n = sum(s[s$variante_taxe_info == 'f' & s$simule_gagnant==1 & s$gagnant_categorie == 'Perdant',]$weight)
+binconf(x = x, n = n) # 12.2%
+x = sum(s[s$variante_taxe_info == 'f' & s$simule_gagnant==1 & s$gagnant_categorie != 'Non affecté' & s$gagnant_feedback_categorie == 'Gagnant',]$weight)
+n = sum(s[s$variante_taxe_info == 'f' & s$simule_gagnant==1 & s$gagnant_categorie != 'Non affecté',]$weight)
+binconf(x = x, n = n) # 26.1%
+x = sum(s[s$variante_taxe_info == 'f' & s$simule_gagnant==1 & s$gagnant_feedback_categorie == 'Gagnant',]$weight)
+n = sum(s[s$variante_taxe_info == 'f' & s$simule_gagnant==1,]$weight)
+binconf(x = x, n = n) # 25.1%
+
+# Simulated losers (non weighted):
+x = sum(s[s$variante_taxe_info == 'f' & s$simule_gagnant==0 & s$gagnant_categorie == 'Gagnant' & s$gagnant_feedback_categorie == 'Perdant',]$weight)
+n = sum(s[s$variante_taxe_info == 'f' & s$simule_gagnant==0 & s$gagnant_categorie == 'Gagnant',]$weight)
+binconf(x = x, n = n) # 81.5%
+x = sum(s[s$variante_taxe_info == 'f' & s$simule_gagnant==0 & s$gagnant_categorie == 'Non affecté' & s$gagnant_feedback_categorie == 'Perdant',]$weight)
+n = sum(s[s$variante_taxe_info == 'f' & s$simule_gagnant==0 & s$gagnant_categorie == 'Non affecté',]$weight)
+binconf(x = x, n = n) # 44.9%
+x = sum(s[s$variante_taxe_info == 'f' & s$simule_gagnant==0 & s$gagnant_categorie == 'Perdant' & s$gagnant_feedback_categorie == 'Perdant',]$weight)
+n = sum(s[s$variante_taxe_info == 'f' & s$simule_gagnant==0 & s$gagnant_categorie == 'Perdant',]$weight)
+binconf(x = x, n = n) # 93.9%
+x = sum(s[s$variante_taxe_info == 'f' & s$simule_gagnant==0 & s$gagnant_categorie != 'Non affecté' & s$gagnant_feedback_categorie == 'Perdant',]$weight)
+n = sum(s[s$variante_taxe_info == 'f' & s$simule_gagnant==0 & s$gagnant_categorie != 'Non affecté',]$weight)
+binconf(x = x, n = n) # 92.9%
+x = sum(s[s$variante_taxe_info == 'f' & s$simule_gagnant==0 & s$gagnant_feedback_categorie == 'Perdant',]$weight)
+n = sum(s[s$variante_taxe_info == 'f' & s$simule_gagnant==0,]$weight)
+binconf(x = x, n = n) # 85.7%
+
+wtd.mean(abs(s$simule_gain) > 110, weights = s$weight) # 28%
+mean(fit$mistake[fit$gain > 110]) # 1%
+
+# 4.1.2 Effect of feedback on beliefs
+variables_reg_effect_feedback <- c("prog_na", "Simule_gain", "Simule_gain2", "taxe_efficace", "single",  "hausse_depenses_par_uc", variables_demo, piece.formula(c("percentile_revenu", "percentile_revenu_conjoint"), c(20,70), vector=T)) 
+variables_reg_effect_feedback <- variables_reg_effect_feedback[!(variables_reg_effect_feedback %in% c("revenu", "rev_tot", "age", "age_65_plus"))]
+
+# (1) Not no, close to the threshold
+formula_effect_feedback_1 <- as.formula(paste("gagnant_feedback_categorie!='Perdant' ~ simule_gagnant + tax_acceptance + (taxe_approbation=='NSP') + ", 
+                                      paste(variables_reg_effect_feedback, collapse = ' + ')))
+reg_effect_feedback_1 <- lm(formula_effect_feedback_1, data=s, subset=variante_taxe_info=='f' & abs(simule_gain) < 50, weights = s$weight, na.action='na.exclude')
+summary(reg_effect_feedback_1)
+
+# (2) Not no, full sample
+formula_effect_feedback_2 <- as.formula(paste("gagnant_feedback_categorie!='Perdant' ~ simule_gagnant + tax_acceptance + (taxe_approbation=='NSP') + ", 
+                                              paste(variables_reg_effect_feedback, collapse = ' + ')))
+reg_effect_feedback_2 <- lm(formula_effect_feedback_2, data=s, subset=variante_taxe_info=='f', weights = s$weight, na.action='na.exclude')
+summary(reg_effect_feedback_2)
+
+# (3) Not no, close to the threshold, interaction with yellow vests and tax acceptance
+s$gj <- s$gilets_jaunes > 0 # Defines "Yellow Vests supporter"
+formula_effect_feedback_3 <- as.formula(paste("gagnant_feedback_categorie!='Perdant' ~ (gagnant_categorie!='Perdant') * simule_gagnant + simule_gagnant * gj + simule_gagnant * tax_acceptance + (taxe_approbation=='NSP') + ", 
+                                              paste(variables_reg_effect_feedback, collapse = ' + ')))
+reg_effect_feedback_3 <- lm(formula_effect_feedback_3, data=s, subset=variante_taxe_info=='f' & abs(simule_gain) < 50, weights = s$weight, na.action='na.exclude')
+summary(reg_effect_feedback_3)
+
+# (4) Yes, close to the threshold
+formula_effect_feedback_4 <- as.formula(paste("gagnant_feedback_categorie=='Gagnant' ~ simule_gagnant + tax_acceptance + (taxe_approbation=='NSP') + ", 
+                                              paste(variables_reg_effect_feedback, collapse = ' + ')))
+reg_effect_feedback_4 <- lm(formula_effect_feedback_4, data=s, subset=variante_taxe_info=='f' & abs(simule_gain) < 50, weights = s$weight, na.action='na.exclude')
+summary(reg_effect_feedback_4)
+
+# Table 4.2 
+table_effect_feedback <- stargazer(reg_effect_feedback_1, reg_effect_feedback_2, reg_effect_feedback_3, reg_effect_feedback_4,
+      title="Effect feedback on belief of winning.", star.cutoffs = NA, omit.table.layout = 'n', #star.cutoffs = c(0.1, 1e-5, 1e-30),
+      covariate.labels = c("Predicted winner ($\\widehat{\\Gamma}$)", "Initial tax Acceptance ($A^0$)", "Yellow Vests supporter", "$\\widehat{\\Gamma} \\times A^0$", "$\\widehat{\\Gamma} \\times$ Yellow Vests supporter", "$\\widehat{\\Gamma} \\times G$"),
+      dep.var.labels = c("Believes does not lose", "Believes wins"), dep.var.caption = "", header = FALSE, 
+      keep = c("^simule_gagnant", "acceptance", "gj", "_gagnant"), order = c("^simule_gagnant1$", "^tax_acceptance", "^gj", "tax_acc", "gj"),
+      add.lines = list(c("Controls: Incomes (piecewise continuous)", " \\checkmark", " \\checkmark", " \\checkmark", "\\checkmark"),
+               c("\\quad estimated gains, socio-demo, other motives ", "", "", "", ""),
+               c("Controls: initial win/lose category ($G$)", "", "", " \\checkmark", ""),
+               # c("\\quad and interaction ($G \\times \\widehat{\\Gamma}$)", "", "", "", ""),
+               c("Sub-sample", "$\\left| \\widehat{\\gamma}\\right|<50$", "", "$\\left| \\widehat{\\gamma}\\right|<50$", "$\\left| \\widehat{\\gamma}\\right|<50$")),
+      no.space=TRUE, intercept.bottom=FALSE, intercept.top=TRUE, omit.stat=c("adj.rsq", "f", "ser"), label="tab:effect_feedback")
+cat(table_effect_feedback, sep = '\n', file = "../tables/effect_feedback.tex")
+# write_clip(gsub('\\end{table}', '} {\\footnotesize \\parbox[t]{\\textwidth}{\\linespread{1.2}\\selectfont \\textsc{Note:} Standard errors are reported in parentheses. The list of controls can be found in Appendix \\ref{set_controls}.} }\\end{table}', 
+#                 gsub('\\begin{tabular}{@', '\\makebox[\\textwidth][c]{ \\begin{tabular}{@', table_effect_feedback, fixed=TRUE), fixed=T), collapse=' ')
+
+
+
+# 4.2 Environmental effectiveness: see Appendix D.4
+# No effect of our information on other variables than taxe_efficace
+summary(lm((cause_CC=='anthropique') ~ apres_modifs + info_CC * info_PM, data=s, weights=s$weight))
+summary(lm(as.numeric(effets_CC) ~ apres_modifs + info_CC * info_PM, data=s, subset=!is.missing(effets_CC), weights=s$weight))
+
+# 4.3 Beliefs over progressivity: see Appendix D.4
+cor(s$info_progressivite, (s$progressivite!='Non'), use='complete.obs') # -0.006
+
+
+##### 5 How beliefs determine attitudes #####
+## 5.1 Self-interest
+# Identification challenge
+sum(s$weight[s$simule_gagnant==1])/sum(s$weight) # 76%
+sum(s$weight[s$taxe_approbation=='Non' & s$gagnant_categorie!='Gagnant' & s$simule_gagnant==1])/sum(s$weight[s$simule_gagnant==1]) # 62%
+
+# Table 5.1 and Table 5.2
+variables_reg_self_interest <- c("prog_na", "Simule_gain", "Simule_gain2", "taxe_efficace", "single",  "hausse_depenses_par_uc", variables_demo, piece.formula(c("percentile_revenu", "percentile_revenu_conjoint"), c(20,70), vector=T)) 
+variables_reg_self_interest <- variables_reg_self_interest[!(variables_reg_self_interest %in% c("revenu", "rev_tot", "age", "age_65_plus"))]
+# (1) Main identification strategy (sub-sample p10-p60): 53 p.p.***
+formula_tsls1_si1 <- as.formula(paste("gagnant_cible_categorie!='Perdant' ~ traite_cible*traite_cible_conjoint + cible + I(taxe_approbation=='NSP') + tax_acceptance + ", 
+                                      paste(variables_reg_self_interest, collapse = ' + ')))
+tsls1_si1 <- lm(formula_tsls1_si1, data=s, subset = (percentile_revenu <= 60 & percentile_revenu >= 10) | (percentile_revenu_conjoint <= 60 & percentile_revenu_conjoint >= 10), weights = s$weight)
+summary(tsls1_si1)
+s$non_perdant[(s$percentile_revenu <= 60 & s$percentile_revenu >= 10) | (s$percentile_revenu_conjoint <= 60 & s$percentile_revenu_conjoint >= 10)] <- tsls1_si1$fitted.values
+formula_tsls2_si1 <- as.formula(paste("taxe_cible_approbation!='Non' ~ ", 
+                                      paste(variables_reg_self_interest, collapse = ' + '), "+ cible + I(taxe_approbation=='NSP') + tax_acceptance + non_perdant")) # 
+tsls2_si1 <- lm(formula_tsls2_si1, data=s, subset = (percentile_revenu <= 60 & percentile_revenu >= 10) | (percentile_revenu_conjoint <= 60 & percentile_revenu_conjoint >= 10), weights = s$weight)
+summary(tsls2_si1) 
+
+iv_si1 <- summary(ivreg(as.formula(paste("taxe_cible_approbation!='Non' ~ ", paste(variables_reg_self_interest, collapse=' + '), 
+        " + cible + I(taxe_approbation=='NSP') + tax_acceptance + (gagnant_cible_categorie!='Perdant') | . - (gagnant_cible_categorie!='Perdant') + traite_cible*traite_cible_conjoint")), 
+        data = s, subset = (percentile_revenu <= 60 & percentile_revenu >= 10) | (percentile_revenu_conjoint <= 60 & percentile_revenu_conjoint >= 10), weights = s$weight), diagnostics = TRUE) # stratified RCT: replace cible by as.numeric(cible) + categorie_cible
+iv_si1 # used for effective F-Stat
+
+# Alternative specifications for robustness
+# (2) Whole sample: 46 p.p.***
+formula_tsls1_si2 <- as.formula(paste("gagnant_cible_categorie!='Perdant' ~ ", paste(variables_reg_self_interest, collapse=' + '), 
+                                      " + single + cible + I(taxe_approbation=='NSP') + tax_acceptance + traite_cible*traite_cible_conjoint"))
+tsls1_si2 <- lm(formula_tsls1_si2, data=s, weights = s$weight)
+summary(tsls1_si2)
+s$non_perdant <- tsls1_si2$fitted.values
+formula_tsls2_si2 <- as.formula(paste("taxe_cible_approbation!='Non' ~ ", paste(variables_reg_self_interest, collapse=' + '), 
+                                      " + I(taxe_approbation=='NSP') + tax_acceptance + single + cible + non_perdant"))
+tsls2_si2 <- lm(formula_tsls2_si2, data=s, weights = s$weight)
+summary(tsls2_si2)
+
+iv_si2 <- summary(ivreg(as.formula(paste("taxe_cible_approbation!='Non' ~ ", paste(variables_reg_self_interest, collapse=' + '), 
+          " + I(taxe_approbation=='NSP') + tax_acceptance + single + cible + (gagnant_cible_categorie!='Perdant') | . - (gagnant_cible_categorie!='Perdant') + traite_cible*traite_cible_conjoint")), data = s, weights = s$weight), diagnostics = TRUE)
+iv_si2 # used for effective F-Stat
+
+# (3) Simple OLS: 44 p.p. ***
+formula_ols_si3  <- as.formula(paste("taxe_cible_approbation!='Non' ~ cible + I(taxe_approbation=='NSP') + ", paste(variables_reg_self_interest, collapse = ' + '), " + non_perdant + tax_acceptance")) # 
+s$non_perdant <- as.numeric(s$gagnant_cible_categorie!='Perdant')
+ols_si3 <- lm(formula_ols_si3, data=s, weights = s$weight)
+summary(ols_si3)
+
+# (4) Feedback ,restricted to |simule_gain| < 50: 64 p.p. ***
+formula_tsls1_si4 <- as.formula(paste("gagnant_feedback_categorie!='Perdant' ~ simule_gagnant + tax_acceptance + (taxe_approbation=='NSP') + ", 
+                                      paste(variables_reg_self_interest, collapse = ' + ')))
+tsls1_si4 <- lm(formula_tsls1_si4, data=s, subset=variante_taxe_info=='f' & abs(simule_gain) < 50, weights = s$weight, na.action='na.exclude')
+summary(tsls1_si4)
+s$non_perdant[s$variante_taxe_info=='f' & abs(s$simule_gain) < 50] <- tsls1_si4$fitted.values
+formula_tsls2_si4 <- as.formula(paste("taxe_feedback_approbation!='Non' ~ (taxe_approbation=='NSP') + ", 
+                                      paste(variables_reg_self_interest, collapse = ' + '), " + non_perdant + tax_acceptance"))
+tsls2_si4 <- lm(formula_tsls2_si4, data=s, subset=variante_taxe_info=='f' & abs(simule_gain) < 50, weights = s$weight) 
+summary(tsls2_si4)
+
+iv_si4 <- summary(ivreg(as.formula(paste("taxe_feedback_approbation!='Non' ~ tax_acceptance + I(taxe_approbation=='NSP') + ", paste(variables_reg_self_interest, collapse = ' + '),
+      " + (gagnant_feedback_categorie!='Perdant') | . - (gagnant_feedback_categorie!='Perdant') + simule_gagnant")), data = s, 
+      subset=variante_taxe_info=='f' & abs(simule_gain) < 50, weights = s$weight), diagnostics = TRUE)
+
+
+f_stats_si <- sprintf("%.1f", round(c(iv_si1$diagnostics[1,3], iv_si2$diagnostics[1,3], iv_si4$diagnostics[1,3]), 1))
+
+# Table 5.1: first-stage SI 
+Table_si1 <- stargazer(tsls1_si1, tsls1_si2, tsls1_si4, 
+                    title="First stage regressions results for self-interest", #omit.table.layout = 'n', star.cutoffs = NA,
+                    covariate.labels = c("Transfer to respondent ($T_1$)", "Transfer to spouse ($T_2$)",
+                                         "$T_1 \\times T_2$", "Simulated winner ($\\widehat{\\Gamma}$)", "Initial tax Acceptance ($A^0$)"),
+                    dep.var.labels = c("Targeted Dividend ($G^T$)", "After feedback ($G^F$)"), dep.var.caption = "Believes does not lose", header = FALSE,
+                    column.labels = c("(1)", "(2)", "(4)"), model.numbers = FALSE,
+                    keep = c("traite", "simule_gagnant", "acceptance"), order = c("traite", "simule_gagnant", "acceptance"),
+                    add.lines = list(c("Controls: Incomes (piecewise continuous)", " \\checkmark", " \\checkmark", "\\checkmark"),
+                                       c("\\quad estimated gains, socio-demo, other motives ", "", "", ""),
+                                  # c("Controls: Estimated gain", "", "", " \\checkmark ", " \\checkmark", " \\checkmark"),
+                                  c("Controls: Policy assigned", " \\checkmark", " \\checkmark", " "),
+                                  # c("Controls: Socio-demo, other motives", "", "", " \\checkmark", " ", " \\checkmark"),
+                                  c("Sub-sample", "[p10; p60]", "", "$\\left| \\widehat{\\gamma}\\right|<50$"),
+                                  c("Effective F-Statistic", f_stats_si)),
+                    no.space=TRUE, intercept.bottom=FALSE, intercept.top=TRUE, omit.stat=c("adj.rsq", "f", "ser"), label="first_stage_private_benefits")
+cat(Table_si1, sep = '\n', file = "../tables/first_stage_private_benefits.tex")
+# write_clip(gsub('\\end{table}', '} {\\footnotesize \\parbox[t]{\\textwidth}{\\linespread{1.2}\\selectfont \\textsc{Note:} In (1,2), the random eligibility to the dividend (conditionally on income) is used as source of exogenous variation in the belief. In (4), the discontinuity in the win/lose feedback when the net gain switches from negative to positive is used. Column numbers correspond to second stage results, Table \\vref{results_private_benefits}.}} \\end{table}', gsub('\\begin{tabular}{@', '\\makebox[\\textwidth][c]{ \\begin{tabular}{@', 
+#                                                        Table_si1, fixed=TRUE), fixed=TRUE), collapse=' ')
+
+# Table 5.2: second-stage SI 
+Table_si2 <- stargazer(tsls2_si1, tsls2_si2, ols_si3, tsls2_si4, 
+                    title="Effect of self-interest on acceptance", column.labels = c("\\textit{IV: random target/eligibility}", "$OLS$", "\\textit{IV: discontinuity in feedback}"), column.separate = c(2,1,1),
+                    dep.var.labels = c("Targeted Dividend ($A^T$)", "After Feedback ($A^F$)"), dep.var.caption = "Acceptance (``Yes'' or ``Don't know'' to policy support)", header = FALSE,
+                    covariate.labels = c("Believes does not lose ($G$)", "Initial tax Acceptance ($A^0$)", "",  "Environmentally effective: ``Yes''"),
+                    keep = c("non_perdant", "tax_acceptance"), order = c("non_perdant", "tax_acceptance"), omit.table.layout = 'n', star.cutoffs = NA, 
+                    add.lines = list(
+                      # "Method: 2SLS & \\checkmark & \\checkmark &  & \\checkmark",
+                      c("Controls: Incomes (piecewise continuous)", "\\checkmark ", "\\checkmark  ", "\\checkmark ", "\\checkmark"), 
+                      c("\\quad estimated gains, socio-demo, other motives ", "", "", "", ""),
+                      # c("Controls: Estimated gain ", "\\checkmark", "", "\\checkmark", "\\checkmark"),
+                      c("Controls: Policy assigned", "\\checkmark ", "\\checkmark ", "\\checkmark  ", ""),
+                      c("Sub-sample", "[p10; p60]", "", "", "$\\left| \\widehat{\\gamma}\\right|<50$"),
+                      c("Effective F-Statistic", f_stats_si[1:2], "", f_stats_si[3])),
+                    no.space=TRUE, intercept.bottom=FALSE, intercept.top=TRUE, omit.stat=c("adj.rsq", "f", "ser", "ll", "aic"), label="results_private_benefits")
+cat(Table_si2, sep = '\n', file = "../tables/results_private_benefits.tex")
+# write_clip(gsub('\\end{table}', '} {\\footnotesize \\parbox[t]{\\textwidth}{\\linespread{1.2}\\selectfont \\textsc{Note:} Standard errors are reported in parentheses. The list of controls can be found in Appendix \\ref{set_controls}. The source of exogenous variation in the belief used in first-stages for the targeted dividend is the random assignment of the income threshold, which determines eligibility to the dividend. The first-stage for the non-targeted dividend exploits instead the discontinuity in the win/lose feedback when the net gain switches from negative to positive.} }\\end{table}', 
+#                     gsub('\\begin{tabular}{@', '\\makebox[\\textwidth][c]{ \\begin{tabular}{@', Table_si2, fixed=TRUE), fixed=T), collapse=' ')
+
+
+## 5.2 Environmental effectiveness
+# Table 5.3 and Table 5.4
+variables_reg_ee <- c("Revenu", "Revenu2", "Revenu_conjoint", "Revenu_conjoint2", "single", "Simule_gain", "Simule_gain2", "gagnant_categorie", variables_demo)
+variables_reg_ee <- variables_reg_ee[!(variables_reg_ee %in% c("revenu", "rev_tot", "age", "age_65_plus"))]
+
+# (1) Yes ~ Yes, 2SLS: 42*** p.p.
+
+formula_tsls1_ee1 <- as.formula(paste("taxe_efficace=='Oui' ~", paste(variables_reg_ee, collapse = ' + '), " + apres_modifs + info_CC"))
+tsls1_ee1 <- lm(formula_tsls1_ee1, data=s, weights = s$weight, na.action='na.exclude')
+summary(tsls1_ee1)
+s$taxe_efficace.hat <- tsls1_ee1$fitted.values
+formula_tsls2_ee1 <- as.formula(paste("(taxe_approbation=='Oui') ~", paste(variables_reg_ee, collapse = ' + '), " + taxe_efficace.hat"))
+tsls2_ee1 <- lm(formula_tsls2_ee1, data=s, weights = s$weight) 
+summary(tsls2_ee1)
+
+iv_ee1 <- summary(ivreg(as.formula(paste("taxe_approbation=='Oui' ~ ", paste(variables_reg_ee, collapse = ' + '), "+ (taxe_efficace=='Oui') | ", paste(variables_reg_ee, collapse = ' + '), " + apres_modifs + info_CC")), data = s), diagnostics = T)
+iv_ee1 # used for effective F-Stat / note that the command ivreg does not allow the use of sample weights
+
+# (2) Yes ~ Yes, OLS: 37*** p.p.
+s$taxe_efficace.hat <- as.numeric(s$taxe_efficace=='Oui')
+formula_ee2 <- as.formula(paste("(taxe_approbation=='Oui') ~", paste(variables_reg_ee, collapse = ' + '), " + taxe_efficace.hat"))
+ols_ee2 <- lm(formula_ee2, data=s, weights = s$weight) 
+summary(ols_ee2)
+
+# (3) not No ~ Yes, 2SLS: 50** p.p.
+formula_tsls1_ee3 <- as.formula(paste("taxe_efficace=='Oui' ~", paste(variables_reg_ee, collapse = ' + '), " + apres_modifs + info_CC"))
+tsls1_ee3 <- lm(formula_tsls1_ee3, data=s, weights = s$weight, na.action='na.exclude')
+summary(tsls1_ee3)
+s$taxe_efficace.hat <- tsls1_ee3$fitted.values
+formula_tsls2_ee3 <- as.formula(paste("(taxe_approbation!='Non') ~", paste(variables_reg_ee, collapse = ' + '), " + taxe_efficace.hat"))
+tsls2_ee3 <- lm(formula_tsls2_ee3, data=s, weights = s$weight) 
+summary(tsls2_ee3)
+
+iv_ee3 <- summary(ivreg(as.formula(paste("taxe_approbation!='Non' ~ ", paste(variables_reg_ee, collapse = ' + '), "+ (taxe_efficace=='Oui') | ", paste(variables_reg_ee, collapse = ' + '), " + apres_modifs + info_CC")), data = s, weights = s$weight), diagnostics = T)
+iv_ee3 # used for effective F-Stat
+
+# (A4) not No ~ not No, 2SLS: 48** p.p.
+formula_tsls1_eea4 <- as.formula(paste("taxe_efficace!='Non' ~", paste(variables_reg_ee, collapse = ' + '), " + apres_modifs + info_CC"))
+tsls1_eea4 <- lm(formula_tsls1_eea4, data=s, weights = s$weight, na.action='na.exclude')
+summary(tsls1_eea4)
+s$taxe_efficace.not_no <- tsls1_eea4$fitted.values
+formula_tsls2_eea4 <- as.formula(paste("(taxe_approbation!='Non') ~", paste(variables_reg_ee, collapse = ' + '), " + taxe_efficace.not_no"))
+tsls2_eea4 <- lm(formula_tsls2_eea4, data=s, weights = s$weight) 
+summary(tsls2_eea4)
+
+iv_eea4 <- summary(ivreg(as.formula(paste("(taxe_approbation!='Non') ~ ", paste(variables_reg_ee, collapse = ' + '),  "+ (taxe_efficace!='Non') | ", paste(variables_reg_ee, collapse = ' + '), " + apres_modifs + info_CC")), data = s), diagnostics = T)
+iv_eea4 # used for effective F-Stat
+
+# LIML applied to (1)
+s$taxe_approuve <- s$taxe_approbation=='Oui'
+s$taxe_approuve.hat <- tsls1_ee1$fitted.values
+liml_ee1_check <- ivmodelFormula(as.formula(paste("taxe_approuve ~ ", paste(variables_reg_ee, collapse = ' + '), "+ taxe_approuve.hat | ", paste(variables_reg_ee, collapse = ' + '), " + apres_modifs + info_CC")), data = s)
+liml_ee1_check
+
+f_stats_ee <- sprintf("%.1f", round(c(iv_ee1$diagnostics[1,3], iv_eea4$diagnostics[1,3]), 1))
+
+# Table 5.3: first-stage EE
+Table_ee1 <- stargazer(tsls1_ee1, tsls1_eea4, out = "../tables/first_stage_environmental_effectiveness.tex",
+                       title="First stage regressions results for environmental effectiveness", #star.cutoffs = c(0.1, 1e-5, 1e-30),
+                       # "Info on Climate Change and/or on Particulates", "Info on Climate Change only", "Info on Particulates only"
+                       covariate.labels = c("Info on Environmental Effectiveness ($Z_{E}$)",  
+                                            "Info on Climate Change ($Z_{CC}$)", "Info on Particulate Matter ($Z_{PM}$)", "$Z_{CC} \\times Z_{PM}$"), 
+                       dep.var.labels = c("``Yes''", "not ``No''"), dep.var.caption = "Environmental effectiveness", header = FALSE, #star.cutoffs = NA, omit.table.layout = 'n',
+                       keep = c("info", "apres_modifs"), 
+                       column.labels = c("(1; 3)", "(A4)"), model.numbers = FALSE,
+                       add.lines = list(c("Controls: Socio-demo, other motives,", "\\checkmark ", "\\checkmark "), 
+                                        c("\\quad incomes, estimated gains", "", ""),
+                                        c("Effective F-Statistic", f_stats_ee)), 
+                       no.space=TRUE, intercept.bottom=FALSE, intercept.top=TRUE, omit.stat=c("adj.rsq", "f", "ser"), label="first_stage_environmental_effectiveness")
+# write_clip(gsub('\\end{table}', '} {\\footnotesize \\textsc{Note:} In column names, (A4) refer to columns of alternative second stages in Table \\ref{tab:eea}. The information randomly displayed about climate change ($Z_{CC}$) and the effectiveness of carbon taxation ($Z_{E}$) are used as sources of exogenous variation in the belief. We chose the set of instruments that maximizes the effective F-statistics. Our specification is well-founded as the Sargan test does not reject the validity of our over-identification restrictions (p-value of 0.93). See discussion in the main text, Section \\vref{subsec:motive_ee}.} \\end{table}', gsub('\\begin{tabular}{@', '\\makebox[\\textwidth][c]{ \\begin{tabular}{@', 
+#                                                        Table_ee1, fixed=TRUE), fixed=TRUE), collapse=' ')
+
+# Table 5.4: second-stage EE
+Table_ee2 <- stargazer(tsls2_ee1, ols_ee2, tsls2_ee3, title="Effect of believing in environmental effectiveness on approval", star.cutoffs = NA, omit.table.layout = 'n',
+                       covariate.labels = c("Believes in effectiveness ($\\dot{E}$)"), # Environmental effectiveness: ``Yes''
+                       dep.var.labels = c("Approval ($\\dot{A^0}$)", "Acceptance ($A^0$)"), header = FALSE, column.labels = c("$IV$", "$OLS$", "$IV$"), dep.var.caption = "Initial Tax \\& Dividend",
+                       keep = c("efficace"), # "Constant",
+                       # coef = list(NULL, NULL, liml_ee3$coef),
+                       # se = list(NULL, NULL, liml_ee3$sd),
+                       add.lines = list(c("Instruments: info E.E. \\& C.C. ", "\\checkmark ", "", "\\checkmark "),
+                                        c("Controls: Socio-demo, other motives, ", "\\checkmark ", "\\checkmark  ", "\\checkmark "),
+                                        c("\\quad incomes, estimated gains", "", "", ""),
+                                        c("Effective F-Statistic", f_stats_ee[1], "", f_stats_ee[1])), out = "../tables/ee.tex",
+                       no.space=TRUE, intercept.bottom=FALSE, intercept.top=TRUE, omit.stat=c("adj.rsq", "f", "ser", "ll", "aic"), label="tab:ee")
+# write_clip(gsub('\\end{table}', "} {\\footnotesize \\parbox[t]{\\textwidth}{\\linespread{1.2}\\selectfont \\textsc{Note:} Standard errors are reported in parentheses. The list of controls can be found in Appendix \\ref{set_controls}, and first stage results in Table \\vref{first_stage_environmental_effectiveness}. The dependent variable corresponds to either initial approval (answer ``Yes'' to support of the policy) or acceptance (answer not ``No''). The first stage exploits the information randomly displayed about climate change (C.C.) and the effectiveness of carbon taxation (E.E.) as exogenous instruments.}}\\end{table}", 
+#                     gsub('\\begin{tabular}{@', '\\makebox[\\textwidth][c]{ \\begin{tabular}{@', Table_ee2, fixed=TRUE), fixed=TRUE), collapse=' ')
+
+# Note: of Table 5.4
+summary(ivreg(as.formula(paste("taxe_approbation=='Oui' ~ ", paste(variables_reg_ee, collapse = ' + '), "+ (taxe_efficace=='Oui') | ", paste(variables_reg_ee, collapse = ' + '), 
+                               " + apres_modifs * info_CC * info_PM")), data = s), diagnostics=T)
+summary(ivreg(as.formula(paste("taxe_approbation=='Oui' ~ ", paste(variables_reg_ee, collapse = ' + '), "+ (taxe_efficace=='Oui') | ", paste(variables_reg_ee, collapse = ' + '), 
+                               " + apres_modifs * info_CC")), data = s), diagnostics=T)
+summary(ivreg(as.formula(paste("taxe_approbation=='Oui' ~ ", paste(variables_reg_ee, collapse = ' + '), "+ (taxe_efficace=='Oui') | ", paste(variables_reg_ee, collapse = ' + '), 
+                               " + apres_modifs + info_CC")), data = s), diagnostics=T)
+
+## 5.3 Progressivity: see Appendix K
+
+
+##### 6 Conclusion #####
+decrit(s$taxe_approbation, weights = s$weight, miss=T) # 70%
+decrit(s$simule_gain > s$gain, weights = s$weight) # 89%
+decrit(s$progressivite!='Oui' & s$taxe_efficace!='Oui', weights = s$weight) # 60%
+
+
+##### Appendix A. Raw data #####
+# Table A.1
+decrit(s$sexe)
+decrit(s$age)
+decrit(s$csp)
+decrit(s$diplome4)
+decrit(s$taille_agglo)
+decrit(s$region) 
+
+# Table A.2
+# for objective data, see python (BdF), preparation.R (ERFS, cf. wtd.mean(db$nb_adultes, db$wprm)) 
+#   and for domestic fuel: https://www.lesechos.fr/industrie-services/energie-environnement/le-chauffage-au-fioul-devient-de-plus-en-plus-cher-147372
+decrit(s$taille_menage)
+decrit(s$nb_adultes)
+decrit(s$uc)
+decrit(s$chauffage)
+decrit(s$surface)
+decrit(s$km)
+decrit(s$conso) 
+
+# t-tests test for representativeness of sample
+fq <- list()
+fq[['sexe']] <- list(name=c("Féminin", "Masculin"), 
+                     freq=c(0.516,0.484))
+fq[['csp']] <- list(name=c("Inactif", "Ouvrier", "Cadre", "Indépendant", "Intermédiaire", "Retraité", "Employé", "Agriculteur"), 
+                    freq=c(0.1244,0.1214,0.0943,0.0341,0.1364,0.3279,0.1535,0.008))
+fq[['region']] <- list(name=c("autre","ARA", "Est", "Nord", "IDF", "Ouest", "SO", "Occ", "Centre", "PACA"), 
+                       freq=c(0.001,0.124,0.129,0.093,0.189,0.103,0.093,0.091,0.099,0.078))
+fq[['age']] <- list(name=c("18-24", "25-34", "35-49", "50-64", "65+"), 
+                    freq=c(0.117,0.147,0.242,0.242,0.252))
+fq[['taille_agglo']] <- list(name=c(1:5), 
+                             freq=c(0.2166,0.1710,0.1408,0.3083,0.1633))
+fq[['diplome4']] <- list(name=c("Aucun diplôme ou brevet", "CAP ou BEP", "Baccalauréat", "Supérieur"), 
+                         freq=c(0.301, 0.246, 0.168, 0.285))
+variables_strata <- c('sexe', 'age', 'csp', 'diplome4', 'taille_agglo', 'region')
+ttests_quotas <- list()
+for (v in variables_strata) {
+  for (i in 1:length(fq[[v]]$freq)) ttests_quotas[[v]] <- c(ttests_quotas[[v]], t.test((1*(s[[v]]==fq[[v]]$name[i])), mu=fq[[v]]$freq[i])$p.value) # prop.test yields same results
+  names(ttests_quotas[[v]]) <- fq[[v]]$name
+}
+mean_characs <- ttests_characs <- c('taille_menage'=2.36, 'nb_adultes'=2.03, 'uc'=1.60, 'gaz'=0.42, 'fioul'=0.12, 'surface'=97, 'km'=13735, 'conso'=6.39)
+for (c in c('taille_menage', 'nb_adultes', 'uc', 'gaz', 'fioul', 'surface', 'km', 'conso'))  ttests_characs[c] <- t.test(as.numeric(s[[c]]), mu=mean_characs[c])$p.value 
+
+length(which(sort(p.adjust(c(ttests_characs, unlist(ttests_quotas)), method = 'fdr'), decreasing=T)<0.05)) # 12
+length(c(ttests_characs, unlist(ttests_quotas))) # 42
+
+
+##### Appendix C. The use of official household survey data #####
+## C.3 Predicting gains and losses
+# Table C.1: cf. ../test_predictions_ols_regression_with_transports.py and ../model_reform_data/regression_feedback.py
+# Figure C.1
+ggplot(data=fit, aes(x=gain)) + theme_bw() + stat_smooth(method = "auto", aes(y=predicted_winner, outfit=fitted_proba<<-..y..), se=F) + ylim(c(0,1)) +  # rerun with outfit=fitted_x<<-..x.. to get value at +100. 0.66*fitted_proba[71]+0.34*fitted_proba[70] = 96%
+   xlab("Objective gain per consumption unit (density in black)") + ylab("Probability of correctly predicting gain (in blue)") + xlim(c(-250, 200)) + 
+   geom_density(aes(y=..scaled..), bw=30) + geom_vline(xintercept=0, col='grey') 
+
+# Figure C.2
+mar_old <- par()$mar
+cex_old <- par()$cex
+par(mar = c(4.1, 4.1, 1.1, 0.1), cex=1.5)
+plot(Ecdf(s$simule_gain - s$gain), type="s", lwd=2, col="red", xlim=c(-100, 400), xlab=expression("Bias: objective minus subjective net gain (in €/year per C.U.)"), main="", ylab=expression("Proportion "<=" x")) + grid() #  \\widehat{\\gamma} - g
+lines(density(s$simule_gain - s$gain, bw=30)$x, density(s$simule_gain - s$gain, bw=30)$y/0.004, xlim=c(-100, 400), lwd=2, type='l', col="darkblue")
+par(mar = mar_old, cex = cex_old)
+decrit(s$simule_gain > s$gain) # 11%
+sum(((s$simule_gain - s$gain) > 200)*s$weight) / sum(s$weight) # 23%
+
+## C.4 Distributive effects
+# Figure C.3: cf. consistency_belief_losses.py (function compute_effort_rate_decile() defined in standardize_data_bdf_ptc.py)
+
+
+##### Appendix D. Beliefs and persistence #####
+## Table D.1 Elasticities
+variables_reg_elast <- c("Revenu", "Revenu2", "Revenu_conjoint", "Revenu_conjoint2", "single", "Simule_gain", "Simule_gain2", variables_demo, variables_energie)
+variables_reg_elast <- variables_reg_elast[!(variables_reg_elast %in%
+    c("revenu", "rev_tot", "age", "age_65_plus", "fioul", "gaz", "hausse_chauffage", "hausse_essence", "hausse_diesel", "hausse_depenses", "simule_gain"))]
+elas_c <- lm(taxe_efficace!='Non' ~ Elasticite_chauffage, data=s, subset = variante_partielle=='c', weights = s$weight)
+summary(elas_c)
+elas_f <- lm(taxe_efficace!='Non' ~ Elasticite_fuel, data=s, subset = variante_partielle=='f', weights = s$weight)
+summary(elas_f)
+formula_c <- as.formula(paste("taxe_efficace!='Non' ~ Elasticite_chauffage + ", paste(variables_reg_elast, collapse=' + ')))
+elast_c_controls <- lm(formula_c, data=s, subset = variante_partielle=='c', weights = s$weight)
+summary(elast_c_controls)
+formula_f <- as.formula(paste("taxe_efficace!='Non' ~ Elasticite_fuel + ", paste(variables_reg_elast, collapse=' + ')))
+elast_f_controls <- lm(formula_f, data=s, subset = variante_partielle=='f', weights = s$weight)
+summary(elast_f_controls)
+
+Table_elast <- stargazer(elas_c, elas_f, elast_c_controls, elast_f_controls, out = "../tables/elasticities_effectiveness.tex",
+        title="Effect of subjective elasticities on perceived environmental effectiveness", model.names = FALSE, #star.cutoffs = c(0.1, 1e-5, 1e-30),
+        covariate.labels = c("Price elasticity: Housing", "Price elasticity: Transports", "Income","Size of town", "Age","Domestic fuel", "Natural gas", "Diesel"), 
+        dep.var.labels = c("Environmental effectiveness: not ``No''"), dep.var.caption = "", header = FALSE,
+        keep = c("Elasticite"),
+        add.lines = list(c("Controls: Socio-demo, energy", "", "", "\\checkmark  ", "\\checkmark")),
+        no.space=TRUE, intercept.bottom=FALSE, intercept.top=TRUE, omit.stat=c("adj.rsq", "f", "ser", "ll", "aic"), label="table:elasticities_effectiveness")
+# write_clip(gsub('\\end{table}', '} {\\footnotesize \\textsc{Note:} See discussion in the main text, Section \\vref{subsec:perception_ee}.} \\end{table}', gsub('\\begin{tabular}{@', 
+#                                                        '\\makebox[\\textwidth][c]{ \\begin{tabular}{@', Table_elast, fixed=TRUE), fixed=TRUE), collapse=' ')
+
+
+## D.2 Self-interest
+# Table D.2
+decrit(s$gagnant_categorie[s$simule_gagnant==1], weights = s$weight[s$simule_gagnant==1])
+decrit(s$gagnant_feedback_categorie[s$simule_gagnant==1], weights = s$weight[s$simule_gagnant==1])
+crosstab(s$winning_category[s$simule_gagnant==1], s$winning_feedback_category[s$simule_gagnant==1], 
+                                    s$weight[s$simule_gagnant==1], # dnn=c(expression('Winning category,'~bold(Before)~feedback), ''),
+                                    prop.r=T, sort=2:1, cex.axis=0.9) # sort=2:1, dir=c("h", "v"), inv.x=T, inv.y=T, color = FALSE # see mosaicplot
+
+# Table D.3
+decrit(s$gagnant_categorie[s$simule_gagnant==0], weights = s$weight[s$simule_gagnant==0])
+decrit(s$gagnant_feedback_categorie[s$simule_gagnant==0], weights = s$weight[s$simule_gagnant==0])
+crosstab(s$winning_category[s$simule_gagnant==0], s$winning_feedback_category[s$simule_gagnant==0], 
+                                    s$weight[s$simule_gagnant==0], # dnn=c(expression('Winning category, '~bold(Before)~feedback), ''),
+                                    prop.r=T, sort=2:1, cex.axis=0.9) # sort=2:1, dir=c("h", "v"), inv.x=T, inv.y=T, color = FALSE # see mosaicplot
+
+# Table D.4
+sb <- s[abs(s$simule_gain) > 110,]
+decrit(sb$gagnant_categorie, weights= sb$weight)
+decrit(sb$simule_gagnant, weights= sb$weight)
+# Simulated winners (non weighted):
+x = sum(sb[sb$variante_taxe_info == 'f' & sb$simule_gagnant==1 & sb$gagnant_categorie == 'Gagnant' & sb$gagnant_feedback_categorie == 'Gagnant',]$weight)
+n = sum(sb[sb$variante_taxe_info == 'f' & sb$simule_gagnant==1 & sb$gagnant_categorie == 'Gagnant',]$weight)
+binconf(x = x, n = n) # 77.6%
+x = sum(sb[sb$variante_taxe_info == 'f' & sb$simule_gagnant==1 & sb$gagnant_categorie == 'Non affecté' & sb$gagnant_feedback_categorie == 'Gagnant',]$weight)
+n = sum(sb[sb$variante_taxe_info == 'f' & sb$simule_gagnant==1 & sb$gagnant_categorie == 'Non affecté',]$weight)
+binconf(x = x, n = n) # 20.7%
+x = sum(sb[sb$variante_taxe_info == 'f' & sb$simule_gagnant==1 & sb$gagnant_categorie == 'Perdant' & sb$gagnant_feedback_categorie == 'Gagnant',]$weight)
+n = sum(sb[sb$variante_taxe_info == 'f' & sb$simule_gagnant==1 & sb$gagnant_categorie == 'Perdant',]$weight)
+binconf(x = x, n = n) # 10.8%
+x = sum(sb[sb$variante_taxe_info == 'f' & sb$simule_gagnant==1 & sb$gagnant_categorie != 'Non affecté' & sb$gagnant_feedback_categorie == 'Gagnant',]$weight)
+n = sum(sb[sb$variante_taxe_info == 'f' & sb$simule_gagnant==1 & sb$gagnant_categorie != 'Non affecté',]$weight)
+binconf(x = x, n = n) # 32.7%
+x = sum(sb[sb$variante_taxe_info == 'f' & sb$simule_gagnant==1 & sb$gagnant_feedback_categorie == 'Gagnant',]$weight)
+n = sum(sb[sb$variante_taxe_info == 'f' & sb$simule_gagnant==1,]$weight)
+binconf(x = x, n = n) # 28.9%
+
+# Simulated winners (non weighted):
+x = sum(sb[sb$variante_taxe_info == 'f' & sb$simule_gagnant==0 & sb$gagnant_categorie == 'Gagnant' & sb$gagnant_feedback_categorie == 'Perdant',]$weight)
+n = sum(sb[sb$variante_taxe_info == 'f' & sb$simule_gagnant==0 & sb$gagnant_categorie == 'Gagnant',]$weight)
+binconf(x = x, n = n) # 78.4%
+x = sum(sb[sb$variante_taxe_info == 'f' & sb$simule_gagnant==0 & sb$gagnant_categorie == 'Non affecté' & sb$gagnant_feedback_categorie == 'Perdant',]$weight)
+n = sum(sb[sb$variante_taxe_info == 'f' & sb$simule_gagnant==0 & sb$gagnant_categorie == 'Non affecté',]$weight)
+binconf(x = x, n = n) # 32.7%
+x = sum(sb[sb$variante_taxe_info == 'f' & sb$simule_gagnant==0 & sb$gagnant_categorie == 'Perdant' & sb$gagnant_feedback_categorie == 'Perdant',]$weight)
+n = sum(sb[sb$variante_taxe_info == 'f' & sb$simule_gagnant==0 & sb$gagnant_categorie == 'Perdant',]$weight)
+binconf(x = x, n = n) # 92.2%
+x = sum(sb[sb$variante_taxe_info == 'f' & sb$simule_gagnant==0 & sb$gagnant_categorie != 'Non affecté' & sb$gagnant_feedback_categorie == 'Perdant',]$weight)
+n = sum(sb[sb$variante_taxe_info == 'f' & sb$simule_gagnant==0 & sb$gagnant_categorie != 'Non affecté',]$weight)
+binconf(x = x, n = n) # 91.1%
+x = sum(sb[sb$variante_taxe_info == 'f' & sb$simule_gagnant==0 & sb$gagnant_feedback_categorie == 'Perdant',]$weight)
+n = sum(sb[sb$variante_taxe_info == 'f' & sb$simule_gagnant==0,]$weight)
+binconf(x = x, n = n) # 83.0%
+
+
+## D.3 Environmental effectiveness
+# Table D.5 Effect of primings on beliefs about environmental effectiveness
+variables_update_ee <- c("Revenu", variables_demo)
+variables_update_ee <- variables_update_ee[!(variables_update_ee %in% c("revenu", "rev_tot", "age", "age_65_plus"))]
+# (1) OLS without controls
+reg_update_ee1 <- lm(taxe_efficace!='Non' ~ apres_modifs + info_CC * info_PM, data=s, weights = s$weight, na.action='na.exclude')
+summary(reg_update_ee1)
+# (2) OLS with controls
+formula_update_ee <- as.formula(paste("taxe_efficace!='Non' ~ apres_modifs + info_CC * info_PM + ",
+                                paste(variables_update_ee, collapse = ' + ')))
+reg_update_ee2 <- lm(formula_update_ee, data=s, weights = s$weight, na.action='na.exclude')
+summary(reg_update_ee2)
+# (3) logit with controls
+logit_update_ee3 <- glm(formula_update_ee, family = binomial(link='logit'), data=s)
+summary(logit_update_ee3)
+logit_update_ee3_margins <- logitmfx(formula_update_ee, s, atmean=FALSE)$mfxest
+logit_update_ee3_margins
+# (4) OLS Yes ~ (instead of not No)
+formula_update_ee_bis <- as.formula(paste("taxe_efficace=='Oui' ~ apres_modifs + info_CC * info_PM + ",
+                                      paste(variables_update_ee, collapse = ' + ')))
+reg_update_ee4 <- lm(formula_update_ee_bis, data=s, weights = s$weight, na.action='na.exclude')
+summary(reg_update_ee4)
+
+Table_update_ee <- stargazer(reg_update_ee1, reg_update_ee2, logit_update_ee3, reg_update_ee4, out = "../tables/update_ee.tex",
+                             title="Effect of primings on beliefs about environmental effectiveness", # "Diploma: Bachelor or above",
+                             covariate.labels = c("Info on Environmental Effectiveness ($Z_{E}$)",
+                                                  "Info on Climate Change ($Z_{CC}$)", "Info on Particulate Matter ($Z_{PM}$)", "$Z_{CC} \\times Z_{PM}$"),
+                             dep.var.labels = c("not ``No''", "``Yes''"), dep.var.caption = "Environmental effectiveness", header = FALSE,
+                             keep = c("info", "apres_modifs"),
+                             coef = list(NULL, NULL, logit_update_ee3_margins[,1], NULL),
+                             se = list(NULL, NULL, logit_update_ee3_margins[,2], NULL),
+                             column.labels = c("(1)", "(2)", "(3)", "(4)"), model.numbers = FALSE,
+                             add.lines = list(c("Controls: Socio-demo ", "", "\\checkmark ", "\\checkmark ", "\\checkmark ")),
+                             no.space=TRUE, intercept.bottom=FALSE, intercept.top=TRUE, omit.stat=c("adj.rsq", "f", "ser", "ll", "aic"), label="tab:update_ee")
+# write_clip(gsub('\\end{table}', '} \\end{table}', gsub('\\begin{tabular}{@', '\\makebox[\\textwidth][c]{ \\begin{tabular}{@',
+#                                                        Table_update_ee, fixed=TRUE), fixed=TRUE), collapse=' ')
+
+## D.4 Progressivity
+# Table D.6 
+ols_prog_1 <- lm(progressivite!='Non' ~ info_progressivite, data=s, weights=s$weight)
+summary(ols_prog_1)
+ols_prog_2 <- lm(progressivite!='Non' ~ info_progressivite * biais_sur, data=s, weights=s$weight)
+summary(ols_prog_2)
+formula_ols_prog_3 <- as.formula(paste("progressivite!='Non' ~  info_progressivite * biais_sur + ", paste(c(variables_demo, variables_politiques), collapse = '+ ')))
+ols_prog_3 <- lm(formula_ols_prog_3, data=s, weights=s$weight)
+summary(ols_prog_3)
+
+prog <- stargazer(ols_prog_1, ols_prog_2, ols_prog_3, title="Effect of information on perceived progressivity", #star.cutoffs = c(0.1, 1e-5, 1e-30), 
+                               covariate.labels = c("Constant", "Information on progressivity ($Z_P$)", "Large bias $(\\left|\\widehat{\\gamma}-g\\right|>110)$",
+                                                  "Interaction $Z_P \\times (\\left|\\widehat{\\gamma}-g\\right|>110)$"),
+                               keep = c("Constant", "info_progressiviteTRUE$", "biais_sur"),
+                               dep.var.labels = "Progressivity: not ``No'' ($P$)", dep.var.caption = "", header = FALSE,
+                               add.lines = list(c("Controls: Socio-demo, politics ", "", "", "\\checkmark ")), 
+                               no.space=TRUE, intercept.bottom=FALSE, intercept.top=TRUE, omit.stat=c("adj.rsq", "f", "ser"), label="tab:prog")
+cat(prog, sep = '\n', file = "../tables/prog.tex")
+# write_clip(gsub('\\end{table}', ' } {\\footnotesize \\textsc{Note:} See discussion in the main text, Section \\vref{subsec:persistence-prog}.} \\end{table} ', gsub('\\begin{tabular}{@',
+#                                                          '\\makebox[\\textwidth][c]{ \\begin{tabular}{@', prog, fixed=TRUE), fixed=TRUE), collapse=' ')
+
+
+##### Appendix E. Additional specifications #####
+# Table E.1
+# (1) Target: Acceptance ~ win 
+formula_tsls1_sia1 <- as.formula(paste("gagnant_cible_categorie=='Gagnant' ~ traite_cible*traite_cible_conjoint + cible + I(taxe_approbation=='NSP') + tax_acceptance + ", 
+                                      paste(variables_reg_self_interest, collapse = ' + ')))
+tsls1_sia1 <- lm(formula_tsls1_sia1, data=s, subset = (percentile_revenu <= 60 & percentile_revenu >= 10) | (percentile_revenu_conjoint <= 60 & percentile_revenu_conjoint >= 10), weights = s$weight)
+summary(tsls1_sia1)
+s$gagnant[(s$percentile_revenu <= 60 & s$percentile_revenu >= 10) | (s$percentile_revenu_conjoint <= 60 & s$percentile_revenu_conjoint >= 10)] <- tsls1_sia1$fitted.values
+formula_tsls2_sia1 <- as.formula(paste("taxe_cible_approbation!='Non' ~ ", 
+                                      paste(variables_reg_self_interest, collapse = ' + '), "+ cible + I(taxe_approbation=='NSP') + tax_acceptance + gagnant")) # 
+tsls2_sia1 <- lm(formula_tsls2_sia1, data=s, subset = (percentile_revenu <= 60 & percentile_revenu >= 10) | (percentile_revenu_conjoint <= 60 & percentile_revenu_conjoint >= 10), weights = s$weight)
+summary(tsls2_sia1) 
+
+iv_sia1 <- summary(ivreg(as.formula(paste("taxe_cible_approbation!='Non' ~ ", paste(variables_reg_self_interest, collapse=' + '), 
+        " + cible + I(taxe_approbation=='NSP') + tax_acceptance + (gagnant_cible_categorie=='Gagnant') | . - (gagnant_cible_categorie=='Gagnant') + traite_cible*traite_cible_conjoint")), 
+        data = s, subset = (percentile_revenu <= 60 & percentile_revenu >= 10) | (percentile_revenu_conjoint <= 60 & percentile_revenu_conjoint >= 10), weights = s$weight), diagnostics = TRUE)
+iv_sia1 # used for effective F-Stat
+
+# (2) Target: Approval ~ win
+formula_tsls1_sia2 <- as.formula(paste("gagnant_cible_categorie=='Gagnant' ~ traite_cible*traite_cible_conjoint + cible + I(taxe_approbation=='NSP') + tax_acceptance + ", 
+                                      paste(variables_reg_self_interest, collapse = ' + ')))
+tsls1_sia2 <- lm(formula_tsls1_sia2, data=s, subset = (percentile_revenu <= 60 & percentile_revenu >= 10) | (percentile_revenu_conjoint <= 60 & percentile_revenu_conjoint >= 10), weights = s$weight)
+summary(tsls1_sia2)
+s$gagnant[(s$percentile_revenu <= 60 & s$percentile_revenu >= 10) | (s$percentile_revenu_conjoint <= 60 & s$percentile_revenu_conjoint >= 10)] <- tsls1_sia2$fitted.values
+formula_tsls2_sia2 <- as.formula(paste("taxe_cible_approbation=='Oui' ~ ", 
+                                      paste(variables_reg_self_interest, collapse = ' + '), "+ cible + I(taxe_approbation=='NSP') + tax_acceptance + gagnant")) # 
+tsls2_sia2 <- lm(formula_tsls2_sia2, data=s, subset = (percentile_revenu <= 60 & percentile_revenu >= 10) | (percentile_revenu_conjoint <= 60 & percentile_revenu_conjoint >= 10), weights = s$weight)
+summary(tsls2_sia2) 
+
+iv_sia2 <- summary(ivreg(as.formula(paste("taxe_cible_approbation=='Oui' ~ ", paste(variables_reg_self_interest, collapse=' + '), 
+        " + cible + I(taxe_approbation=='NSP') + tax_acceptance + (gagnant_cible_categorie=='Gagnant') | . - (gagnant_cible_categorie=='Gagnant') + traite_cible*traite_cible_conjoint")), 
+        data = s, subset = (percentile_revenu <= 60 & percentile_revenu >= 10) | (percentile_revenu_conjoint <= 60 & percentile_revenu_conjoint >= 10), weights = s$weight), diagnostics = TRUE)
+iv_sia2 # used for effective F-Stat
+
+# (3) Target: Approval ~ not lose
+formula_tsls1_sia3 <- as.formula(paste("gagnant_cible_categorie!='Perdant' ~ traite_cible*traite_cible_conjoint + cible + I(taxe_approbation=='NSP') + tax_acceptance + ", 
+                                      paste(variables_reg_self_interest, collapse = ' + ')))
+tsls1_sia3 <- lm(formula_tsls1_sia3, data=s, subset = (percentile_revenu <= 60 & percentile_revenu >= 10) | (percentile_revenu_conjoint <= 60 & percentile_revenu_conjoint >= 10), weights = s$weight)
+summary(tsls1_sia3)
+s$non_perdant[(s$percentile_revenu <= 60 & s$percentile_revenu >= 10) | (s$percentile_revenu_conjoint <= 60 & s$percentile_revenu_conjoint >= 10)] <- tsls1_sia3$fitted.values
+formula_tsls2_sia3 <- as.formula(paste("taxe_cible_approbation=='Oui' ~ ", 
+                                      paste(variables_reg_self_interest, collapse = ' + '), "+ cible + I(taxe_approbation=='NSP') + tax_acceptance + non_perdant")) # 
+tsls2_sia3 <- lm(formula_tsls2_sia3, data=s, subset = (percentile_revenu <= 60 & percentile_revenu >= 10) | (percentile_revenu_conjoint <= 60 & percentile_revenu_conjoint >= 10), weights = s$weight)
+summary(tsls2_sia3) 
+
+iv_sia3 <- summary(ivreg(as.formula(paste("taxe_cible_approbation=='Oui' ~ ", paste(variables_reg_self_interest, collapse=' + '), 
+        " + cible + I(taxe_approbation=='NSP') + tax_acceptance + (gagnant_cible_categorie!='Perdant') | . - (gagnant_cible_categorie!='Perdant') + traite_cible*traite_cible_conjoint")), 
+        data = s, subset = (percentile_revenu <= 60 & percentile_revenu >= 10) | (percentile_revenu_conjoint <= 60 & percentile_revenu_conjoint >= 10), weights = s$weight), diagnostics = TRUE)
+iv_sia3 # used for effective F-Stat
+
+# (4) Feedback: Acceptance ~ win
+formula_tsls1_sia4 <- as.formula(paste("gagnant_feedback_categorie=='Gagnant' ~ simule_gagnant + tax_acceptance + (taxe_approbation=='NSP') + ", 
+                                      paste(variables_reg_self_interest, collapse = ' + ')))
+tsls1_sia4 <- lm(formula_tsls1_sia4, data=s, subset=variante_taxe_info=='f' & abs(simule_gain) < 50, weights = s$weight, na.action='na.exclude')
+summary(tsls1_sia4)
+s$gagnant[s$variante_taxe_info=='f' & abs(s$simule_gain) < 50] <- tsls1_sia4$fitted.values
+formula_tsls2_sia4 <- as.formula(paste("taxe_feedback_approbation!='Non' ~ (taxe_approbation=='NSP') + ", 
+
+... [truncated: 49,230 more bytes of this script omitted] ...
+
+```
+
+### `yellow_vests_aej_ep-0faf9e7121ba1f67b1f5b327ed55efcc1665daec/code/preparation.R`
+```r
+#setwd("/var/www/yellow_vests_aej_ep/code")
+setwd("C:<home>/Documents/Github/yellow_vests_aej_ep/code")
+#setwd("C:<home>/Documents/Github/yellow_vests_aej_ep/code")
+# setwd("<home>/Documents/yellow_vests_aej_ep/code")
+# setwd("C:<home>/Documents/yellow_vests_aej_ep/code")
+
+source("packages_functions.R")
+
+clean_number <- function(vec, high_numbers='') { 
+   numeric_vec <- as.numeric(gsub(",", ".", gsub("[[:alpha:]  !#$%&')?/(@:;€_-]","",vec)))
+   if (high_numbers=='remove') { is.na(numeric_vec) <- numeric_vec>10000 }
+   else if (high_numbers=='divide') { numeric_vec[numeric_vec>10000 & !is.na(numeric_vec)] <- numeric_vec[numeric_vec>10000 & !is.na(numeric_vec)]/12 }
+   else if (high_numbers=='divide&remove') { 
+     numeric_vec[numeric_vec>10000 & !is.na(numeric_vec)] <- numeric_vec[numeric_vec>10000 & !is.na(numeric_vec)]/12
+     is.na(numeric_vec) <- numeric_vec>6000 }
+   return(numeric_vec)
+}
+uc <- function(nb_pers, nb_14_et_plus) {
+  # https://www.insee.fr/fr/metadonnees/definition/c1802
+  return(1 + 0.5 * pmax(0, nb_14_et_plus - 1) + 0.3 * pmax(0, nb_pers - nb_14_et_plus))
+}
+quotient <- function(nb_pers, nb_adultes) {
+	# https://droit-finances.commentcamarche.com/contents/907-quotient-familial-calcul-du-nombre-de-parts-fiscales
+	# nb de parts fiscales en fonction de la situation et de nb_pers = 1 / 2 / 3 / 4 / 5
+	# marie: x / 2 / 2.5 / 3 / 4 --- en concubinage: x / 1 / 1.5 /2 / 3 (= marie - 1) --- seul: 1 / 2 / 2.5 / 3.5 / 4.5
+	return((nb_pers == 1) + (nb_pers == 2)*2 + (nb_pers == 3)*2.5 + (nb_pers == 4)*3 + (nb_pers > 4)*pmin(6, nb_pers - 1) + (nb_adultes==1)*(nb_pers > 3)*0.5 )
+}
+irpp <- function(rev, nb_adultes, nb_pers) {
+	# quotient <- (nb_pers < 2) + (nb_pers == 2) * 2 + (nb_pers == 3) * 2.5 + (nb_pers == 4) * 3 + (nb_pers > 4) * pmin(6, nb_pers - 1)
+	income <- 0.9334 * rev / quotient(nb_pers, nb_adultes) # (1 + (0.029 * 1.28))*0.9 : passage au brut (+28% en moyenne), CSG+CRDS non déductibles (2,90%), puis abattement de 10%
+	ir <- 0
+	ir <- ir + (income - 12815.25*12) * 0.45 * (income > 12815.25*12)
+	ir <- ir + (pmin(income, 12676*12) - 6051.42*12) * 0.41  * (income > 6051.42*12)
+	ir <- ir + (pmin(income, 6051.42*12) - 2257.17*12) * 0.3  * (income > 2257.17*12)
+	ir <- ir + (pmin(income, 2257.17*12) - 817.25*12) * 0.14  * (income > 817.25*12)
+	
+	ir <- quotient(nb_pers, nb_adultes) * ir
+	seuil_decote <- (nb_adultes>1)*2585/12 + (nb_adultes<=1)*1569/12
+	# decote <- (1920 - 0.75 * ir) * (marie & ir<2560) + (1165 - 0.75 * ir) * (!(marie) & ir<1553)
+	decote <- (ir < seuil_decote) * 0.75 * (seuil_decote - ir)
+	return(pmax((ir-decote),0)) # vrai calcul
+}
+
+##### Correspondance zipcode - region #####
+# communes_agglo <- read.xls("table-appartenance-geo-communes-18_V2.xls", pattern="CODGEO") # 2018
+# communes_PLM <- read.xls("table-appartenance-geo-communes-18_V2.xls", sheet=2, pattern="CODGEO") # Paris Lyon Marseille
+# communes_data <- read.csv("correspondance-code-insee-code-postal.csv", sep=";") # 2013
+# communes_agglo <- communes_agglo[,c('CODGEO', 'TUU2015')]
+# communes_PLM <- communes_PLM[,c('CODGEO', 'TUU2015')]
+# colnames(communes_agglo) <- c('Code.INSEE', 'taille_agglo')
+# colnames(communes_PLM) <- c('Code.INSEE', 'taille_agglo')
+# communes_agglo$Code.INSEE <- as.character(communes_agglo$Code.INSEE)
+# communes_PLM$Code.INSEE <- as.character(communes_PLM$Code.INSEE)
+# communes_data <- communes_data[,c('Code.INSEE', "Code.Postal", 'Population')]
+# communes <- merge(merge(communes_agglo, communes_PLM, all=T), communes_data, all=T)
+# sum(communes$Population[is.na(communes$taille_agglo)], na.rm=T) # 750k missing because of Code.INSEE renaming
+# taille_agglo <- aggregate(1000*Population ~ taille_agglo, communes, sum)
+# colnames(taille_agglo) <- c('taille_agglo', 'pop')
+# taille_agglo$share <- taille_agglo$pop / sum(taille_agglo$pop)
+# taille_agglo # total: 63.76 M
+# taille_agglo$share[taille_agglo$taille_agglo==0] # rural
+# sum(taille_agglo$share[taille_agglo$taille_agglo<=3 & taille_agglo$taille_agglo>0]) # <20k
+# sum(taille_agglo$share[taille_agglo$taille_agglo<=5 & taille_agglo$taille_agglo>3]) # <100k
+# sum(taille_agglo$share[taille_agglo$taille_agglo<8 & taille_agglo$taille_agglo>5]) # >100k
+# taille_agglo$share[taille_agglo$taille_agglo==8] # Paris
+
+
+##### Quantiles de revenus ERFS 2014 #####
+# quantiles <- function(data, weights = NULL)  {
+#   if (is.null(weights)) return(function(q) { pmax(0,quantile(data, probs = q, na.rm = TRUE, names = FALSE) / 12)} )
+#   else return(function(q) { pmax(0, wtd.quantile(data, probs = q, na.rm = TRUE, weights = weights) / 12)} )
+# }
+# seuils_all <- function(q) {
+#   s <- vector("numeric", length=5)
+#   for (i in 1:9) s[i] <- q(i/10)
+#   # s[1] <- q(0.1, weights = weights)
+#   # s[2] <- q(0.2, weights = weights)
+#   # s[3] <- q(0.3, weights = weights)
+#   # s[4] <- q(0.4, weights = weights)
+#   # s[5] <- q(0.5, weights = weights)
+#   # s[6] <- q(0.6, weights = weights)
+#   # s[7] <- q(0.7, weights = weights)
+#   # s[8] <- q(0.8, weights = weights)
+#   # s[9] <- q(0.9, weights = weights)
+#   return(round(s,0))
+# }
+# wd <- getwd()
+# setwd("U:/Données/ERFS_2014")
+# setwd("/mnt/dd/adrien/DD/Économie/Données/ERFS_2014/Stata")
+# indiv <- read.dta13("fpr_indiv_2014.dta")
+# irft4 <- read.dta13("fpr_irf14e14t4.dta")
+# menage <- read.dta13("fpr_menage_2014.dta")
+# menage$presta_sociales <- menage$prest_fam_petite_enfance + menage$prest_fam_autres + menage$prest_precarite_rsa + menage$m_rsa_actm + menage$prest_precarite_hand + menage$prest_precarite_vieil + menage$prest_logement + menage$ppe
+# irft4 <- irft4[,which(is.element(colnames(irft4),c("noindiv", "noiprm", "nbinde", "nbenfa18", "ag", "mchoe", "ancinatm")))]
+# menage <- menage[,which(is.element(colnames(menage),c("ident14", "revdispm","impots" ,"revdecm", "nivviem", "presta_sociales", "revenu_ajuste", "rev_cat_net", "wpri")))]
+# # Prestas aux parents, i.e. aux deux adultes les plus âgés du ménage
+# temp <- merge(indiv, irft4, by="noindiv")
+# db <- merge(temp, menage, by="ident14")
+# names(db)[1] <- "group"
+# names(db)[29] <- "age"
+# db$age <- as.numeric(db$age)
+# temp <- aggregate(age ~ group, db, function(vec) {
+#   if (length(vec) >= 2) return(max(vec[-which.max(vec)]))
+#   else return(-1)})
+# names(temp)[2] <- "age_second"
+# db$order <- seq(len=nrow(db))
+# db <- merge(db, temp, all=TRUE, by="group")
+# temp <- aggregate((age >= pmax(age_second, 18)) ~ group, db, sum)
+# names(temp)[2] <- "adult_above_second"
+# db$order <- seq(len=nrow(db))
+# db <- merge(db, temp, all=TRUE, by="group")
+# temp <- aggregate((age > 17) ~ group, db, sum)
+# names(temp)[2] <- "nb_adultes"
+# db$order <- seq(len=nrow(db))
+# db <- merge(db, temp, all=TRUE, by="group")
+# db$revenu_imputable_i <- db$salaires_i + db$chomage_i + db$retraites_i + db$rag_i + db$rnc_i + db$ric_i + db$pens_alim_recue_i # Ce dernier, dont l'ajout est discutable, ne représente que  5 milliards
+# temp <- aggregate(revenu_imputable_i ~ group, db, sum)
+# names(temp)[2] <- "revenu_imputable_m"
+# db <- merge(temp, db, all=TRUE,by="group")
+# db <- db[sort.list(db$order),]
+# # On exclut les revenus négatifs
+# db$proportion_imputee[db$revenu_imputable_m > 0] <- db$revenu_imputable_i[db$revenu_imputable_m > 0] / db$revenu_imputable_m[db$revenu_imputable_m > 0]
+# db$proportion_imputee[db$revenu_imputable_m == 0 & db$age > 17 & db$nb_adultes>0] <- 1 / db$nb_adultes[db$revenu_imputable_m == 0 & db$age > 17 & db$nb_adultes>0]
+# db$proportion_imputee[db$revenu_imputable_m == 0 & db$age < 18] <- 0
+# 
+# db$revtot_i_par <- db$revdecm * db$proportion_imputee + db$presta_sociales * (db$age >= pmax(db$age_second, 18)) /  pmax(1, db$adult_above_second)
+# sum(db$revtot_i_par, na.rm=T)/sum(menage$presta_sociales + menage$revdecm, na.rm=T) # 1.000032
+# 
+# # Déciles de revenus inflatés : (croissance PIB 2014-2018	1.06075007	https://www.insee.fr/fr/statistiques/2830613#tableau-Tableau1 ) MàJ 2020: should be 1.0633
+# deciles_erfs_inflates <- 1.06075007*seuils_all(quantiles(db$revtot_i_par[!is.na(db$revtot_i_par) & db$age > 17]))
+# # This is the one used:
+# round(deciles_erfs_inflates) # 229 779 1142 1429 1671 1922 2222 2641 3436
+# deciles_erfs_inflates_weighted <- 1.06075007*seuils_all(quantiles(db$revtot_i_par[!is.na(db$revtot_i_par) & db$age > 17], weights = db$wprm[!is.na(db$revtot_i_par) & db$age > 17]))
+# round(deciles_erfs_inflates_weighted) # 237 789 1151 1436 1677 1927 2231 2657 3462
+# deciles_menage_erfs_inflates_weighted <- 1.06075007*seuils_all(quantiles(db$revdecm + db$presta_sociales, weights = db$wprm))
+
+# rev_i_erfs2014.csv <- db$revtot_i_par[!is.na(db$revtot_i_par) & db$age > 17]
+# write.csv(rev_i_erfs2014.csv, "rev_i_erfs2014.csv")
+rev_i_erfs2014 <- read.csv("rev_i_erfs2014.csv")
+percentiles_revenu <- ecdf(rev_i_erfs2014$x)
+
+# distribution_revenu_erfs <- wtd.Ecdf(db$revtot_i_par[!is.na(db$revtot_i_par) & db$age > 17 & !is.na(db$age)])
+# distribution_revenu_erfs_weighted <- wtd.Ecdf(db$revtot_i_par[!is.na(db$revtot_i_par) & db$age > 17 & !is.na(db$age)], weights = db$wprm[!is.na(db$revtot_i_par) & db$age > 17 & !is.na(db$age)])
+# # plot(distribution_revenu_erfs$x, distribution_revenu_erfs$ecdf, type='l', xlim=c(0,60000), col="blue")
+# distribution_rev_tot_erfs <- wtd.Ecdf(db$revdecm + db$presta_sociales)
+# distribution_rev_tot_erfs_weighted <- wtd.Ecdf(db$revdecm + db$presta_sociales, weights = db$wprm)
+#
+# # Distribution of adults > 70th. income percentile in function of their spouse income
+# db$revenu_conjoint <- db$revdecm + db$presta_sociales - db$revtot_i_par # selon la définition du sondage où il n'y a que deux parents
+# db$revenu_conjoint[db$nb_adultes < 2] <- 9999*12
+# share__20 <- length(which((db$revtot_i_par < 734*12 | (db$revenu_conjoint < 734*12 & db$revtot_i_par > 2095*12)) & !is.na(db$revtot_i_par) & db$age > 17))/length(which(!is.na(db$revtot_i_par) & db$age > 17))
+# share_20_30 <- length(which(((db$revtot_i_par < 1077*12 & db$revtot_i_par >= 734*12) | (db$revenu_conjoint < 1077*12 & db$revenu_conjoint >= 734*12 & db$revtot_i_par > 2095*12)) & !is.na(db$revtot_i_par) & db$age > 17))/length(which(!is.na(db$revtot_i_par) & db$age > 17))
+# share_30_40 <- length(which(((db$revtot_i_par < 1347*12 & db$revtot_i_par >= 1077*12) | (db$revenu_conjoint < 1347*12 & db$revenu_conjoint >= 1077*12 & db$revtot_i_par > 2095*12)) & !is.na(db$revtot_i_par) & db$age > 17))/length(which(!is.na(db$revtot_i_par) & db$age > 17))
+# share_40_50 <- length(which(((db$revtot_i_par < 1575*12 & db$revtot_i_par >= 1347*12) | (db$revenu_conjoint < 1575*12 & db$revenu_conjoint >= 1347*12 & db$revtot_i_par > 2095*12)) & !is.na(db$revtot_i_par) & db$age > 17))/length(which(!is.na(db$revtot_i_par) & db$age > 17))
+# share_50_70 <- length(which(((db$revtot_i_par < 2095*12 & db$revtot_i_par >= 1575*12) | (db$revenu_conjoint < 2095*12 & db$revenu_conjoint >= 1575*12 & db$revtot_i_par > 2095*12)) & !is.na(db$revtot_i_par) & db$age > 17))/length(which(!is.na(db$revtot_i_par) & db$age > 17))
+# share_70_ <- length(which(db$revtot_i_par >= 2095*12 & db$revenu_conjoint >= 2095*12 & !is.na(db$revtot_i_par) & db$age > 17))/length(which(!is.na(db$revtot_i_par) & db$age > 17))
+# sum(c(share__20, share_20_30, share_30_40, share_40_50, share_50_70, share_70_))
+# expected_target_proportions <- share_70_ / 4 + c('20' = share__20 + share_20_30/2, '30' = share_20_30/2 + share_30_40/2, '40' = share_30_40/2 + share_40_50/2, '50' = share_40_50/2 + share_50_70)
+# round(expected_target_proportions, 3)
+# # decrit(s$cible) # incredibly close!
+# # shares <- c('_20' = share__20, '20_30'=share_20_30, '30_40'=share_30_40, '40_50'=share_40_50, '50_70'=share_50_70, '70_'=share_70_)
+# # decrit(s$categorie_cible)
+# wtd.mean(db$nb_adultes, db$wprm) # 2.033
+# # wtd.mean(s$nb_adultes, s$weight) # 1.933
+#
+# rm(db, temp, irft4, menage, indiv)
+# setwd(wd)
+
+
+##### Preparation #####
+
+relabel_and_rename_s <- function() {
+  # Notation: ~ means that it's a random variant; * means that another question is exactly the same (in another random branch)
+  
+  # The commented lines below should be executed before creating relabel_and_rename, to ease the filling of each name and label
+  # for (i in 1:length(s)) {
+  #   label(s[[i]]) <- paste(names(s)[i], ": ", label(s[[i]]), sep="");
+  #   print(paste(i, label(s[[i]])))
+  # }
+  names(s)[1] <<- "date"
+  label(s[[1]]) <<- "date: Date de commencement du sondage"
+  names(s)[2] <<- "endDate"
+  label(s[[2]]) <<- "endDate: Date de fin"
+  names(s)[3] <<- "status"
+  label(s[[3]]) <<- "status: 'IP Address'"
+  names(s)[4] <<- "ip" # no data
+  label(s[[4]]) <<- "ip: Adresse IP"
+  names(s)[5] <<- "progress"
+  label(s[[5]]) <<- "progress: Progrès"
+  names(s)[6] <<- "duree2"
+  label(s[[6]]) <<- "duree2: Durée de complétion du questionnaire (pn secondes)"
+  names(s)[7] <<- "fini"
+  label(s[[7]]) <<- "fini: Terminé"
+  names(s)[8] <<- "recordedDate"
+  label(s[[8]]) <<- "recordedDate: Date enregistrée"
+  names(s)[9] <<- "X_recordId"
+  label(s[[9]]) <<- "X_recordId: ID de réponse"
+  names(s)[10] <<- "recipientLastName"
+  label(s[[10]]) <<- "recipientLastName: Nom du destinataire"
+  names(s)[11] <<- "recipientFirstName"
+  label(s[[11]]) <<- "recipientFirstName: Prénom du destinataire"
+  names(s)[12] <<- "recipientEmail"
+  label(s[[12]]) <<- "recipientEmail: Adresse e-mail du destinataire"
+  names(s)[13] <<- "externalDataReference"
+  label(s[[13]]) <<- "externalDataReference: Référence externe"
+  names(s)[14] <<- "locationLatitude"
+  label(s[[14]]) <<- "locationLatitude: LocationLatitude - Latitude de l'emplacement"
+  names(s)[15] <<- "locationLongitude"
+  label(s[[15]]) <<- "locationLongitude: LocationLongitude - Longitude de l'emplacement"
+  names(s)[16] <<- "distributionChannel"
+  label(s[[16]]) <<- "distributionChannel: DistributionChannel - Canal de distribution"
+  names(s)[17] <<- "langue"
+  label(s[[17]]) <<- "langue - Langue du répondant"
+  names(s)[18] <<- "premier_clic_no_info"
+  label(s[[18]]) <<- "premier_clic_no_info: Premier clic - Ancrage: pas d'information - Q147"
+  names(s)[19] <<- "dernier_clic_no_info"
+  label(s[[19]]) <<- "dernier_clic_no_info: Dernier clic - Ancrage: pas d'information - Q147"
+  names(s)[20] <<- "duree_no_info"
+  label(s[[20]]) <<- "duree_no_info: Temps de soumission - Ancrage: pas d'information - Q147"
+  names(s)[21] <<- "nombre_clics_no_info"
+  label(s[[21]]) <<- "nombre_clics_no_info: Nombre de clics - Ancrage: pas d'information - Q147"
+  names(s)[22] <<- "premier_clic_info_PM"
+  label(s[[22]]) <<- "premier_clic_info_PM: Premier clic - Ancrage: information sur les particules fines - Q144"
+  names(s)[23] <<- "dernier_clic_info_PM"
+  label(s[[23]]) <<- "dernier_clic_info_PM: Dernier clic - Ancrage: information sur les particules fines - Q144"
+  names(s)[24] <<- "duree_info_PM"
+  label(s[[24]]) <<- "duree_info_PM: Temps de soumission - Ancrage: information sur les particules fines - Q144"
+  names(s)[25] <<- "nombre_clics_info_PM"
+  label(s[[25]]) <<- "nombre_clics_info_PM: Nombre de clics - Ancrage: information sur les particules fines - Q144"
+  names(s)[26] <<- "premier_clic_info_CC"
+  label(s[[26]]) <<- "premier_clic_info_CC: Premier clic - Ancrage: information sur le changement climatique - Q145"
+  names(s)[27] <<- "dernier_clic_info_CC"
+  label(s[[27]]) <<- "dernier_clic_info_CC: Dernier clic - Ancrage: information sur le changement climatique - Q145"
+  names(s)[28] <<- "duree_info_CC"
+  label(s[[28]]) <<- "duree_info_CC: Temps de soumission - Ancrage: information sur le changement climatique - Q145"
+  names(s)[29] <<- "nombre_clics_info_CC"
+  label(s[[29]]) <<- "nombre_clics_info_CC_: Nombre de clics - Ancrage: information sur le changement climatique - Q145"
+  names(s)[30] <<- "premier_clic_info_CC_PM"
+  label(s[[30]]) <<- "premier_clic_info_CC_PM: Premier clic - Ancrage: informations sur les particules fines et sur le changement climatique - Q146"
+  names(s)[31] <<- "dernier_clic_info_CC_PM"
+  label(s[[31]]) <<- "dernier_clic_info_CC_PM: Dernier clic - Ancrage: informations sur les particules fines et sur le changement climatique - Q146"
+  names(s)[32] <<- "duree_info_CC_PM"
+  label(s[[32]]) <<- "duree_info_CC_PM: Temps de soumission - Ancrage: informations sur les particules fines et sur le changement climatique - Q146"
+  names(s)[33] <<- "nombre_clics_info_CC_PM"
+  label(s[[33]]) <<- "nombre_clics_info_CC_PM: Nombre de clics - Ancrage: informations sur les particules fines et sur le changement climatique - Q146"
+  names(s)[34] <<- "code_postal"
+  label(s[[34]]) <<- "code_postal: Code Postal - Q93"
+  names(s)[35] <<- "sexe"
+  label(s[[35]]) <<- "sexe: Sexe (Masculin/Féminin) - Q96"
+  names(s)[36] <<- "age"
+  label(s[[36]]) <<- "age: Tranche d'âge (18-24/25-34/35-49/50-64/65+) - Q184"
+  names(s)[37] <<- "statut_emploi"
+  label(s[[37]]) <<- "statut_emploi: Statut d'emploi (Chômage/CDD/CDI/fonctionnaire/étudiant-e/retraité-e/précaire/autre actif/autre inactif) - Q35"
+  names(s)[38] <<- "csp"
+  label(s[[38]]) <<- "csp: Catégorie Socio-Professionnelle: Agriculteur/Indépendant: Artisan, commerçant.e/Cadre: Profession libérale, cadre/Intermédiaire: Profession intermédiaire/Employé/Ouvrier/Retraité/Inactif: Autres inactif/ve - Q98"
+  names(s)[39] <<- "diplome"
+  label(s[[39]]) <<- "diplome: Diplôme le plus haut obtenu ou prévu: Aucun/Brevet/CAP/Bac/+2/+3/>+4) - Q102"
+  names(s)[40] <<- "taille_menage"
+  label(s[[40]]) <<- "taille_menage: Taille du ménage #(vous, membres de votre famille vivant avec vous et personnes à votre charge) - Q29"
+  names(s)[41] <<- "revenu"
+  label(s[[41]]) <<- "revenu: Revenu mensuel net du répondant - Q148"
+  names(s)[42] <<- "rev_tot"
+  label(s[[42]]) <<- "rev_tot: Revenu mensuel net du ménage - Q25"
+  names(s)[43] <<- "nb_14_et_plus"
+  label(s[[43]]) <<- "nb_14_et_plus: Nombre de personnes âgées d'au moins 14 ans dans le ménage - Q31"
+  names(s)[44] <<- "nb_adultes"
+  label(s[[44]]) <<- "nb_adultes: Nombre de personnes majeures dans le ménage - Q149"
+  names(s)[45] <<- "surface"
+  label(s[[45]]) <<- "surface: Surface du logement (en m²) - Q175"
+  names(s)[46] <<- "mode_chauffage"
+  label(s[[46]]) <<- "mode_chauffage: Mode de chauffage du logement (individuel/collectif/NSP) - Q178"
+  names(s)[47] <<- "chauffage"
+  label(s[[47]]) <<- "chauffage: source d'énergie principale (Électricité/Gaz de ville/Butane, propane, gaz en citerne/Fioul, mazout, pétrole/Bois, solaire, géothermie, aérothermie (pompe à chaleur)/Autre/NSP)"
+  names(s)[48] <<- "nb_vehicules_texte"
+  label(s[[48]]) <<- "nb_vehicules_texte: Nombre de véhicules motorisés dont dispose le ménage (Aucun/Un/Deux ou plus) - Q37"
+  names(s)[49] <<- "km_0"
+  label(s[[49]]) <<- "km_0: (nb_vehicules=0) Nombre de kilomètres parcourus en voiture ou moto par le répondant lors des 12 derniers mois - Q142"
+  names(s)[50] <<- "fuel_1"
+  label(s[[50]]) <<- "fuel_1: (nb_vehicules=1) Carburant du véhicule (Essence/Diesel/Électrique ou hybride/Autre) - Q77"
+  names(s)[51] <<- "conso_1"
+  label(s[[51]]) <<- "conso_1: (nb_vehicules=1) Consommation moyenne du véhicule (en litres aux 100 km) - Q174"
+  names(s)[52] <<- "km_1"
+  label(s[[52]]) <<- "km_1: (nb_vehicules=1) Nombre de kilomètres parcourus par le véhicule lors des 12 derniers mois - Q38"
+  names(s)[53] <<- "fuel_2_1"
+  label(s[[53]]) <<- "fuel_2_1: (nb_vehicules=2) Carburant du véhicule principal (Essence/Diesel/Électrique ou hybride/Autre) - Q100"
+  names(s)[54] <<- "fuel_2_2"
+  label(s[[54]]) <<- "fuel_2_2: (nb_vehicules=2) Carburant du deuxième véhicule (Essence/Diesel/Électrique ou hybride/Autre) - Q101"
+  names(s)[55] <<- "conso_2"
+  label(s[[55]]) <<- "conso_2: (nb_vehicules=2) Consommation moyenne des véhicules du ménage (en litres aux 100 km) - Q176"
+  names(s)[56] <<- "km_2"
+  label(s[[56]]) <<- "km_2: (nb_vehicules=2) Nombre de kilomètres parcourus par l'ensemble des véhicules lors des 12 derniers mois - Q141"
+  names(s)[57] <<- "perte_relative_tva"
+  label(s[[57]]) <<- "perte_relative_tva: Une hausse de la TVA ferait perdre plus à votre ménage que la moyenne (Oui, beaucoup/un peu plus/Autant que la moyenne/Non, un peu/beaucoup moins/NSP) - Q150"
+  names(s)[58] <<- "perte_relative_fuel"
+  label(s[[58]]) <<- "perte_relative_fuel: ~ Une hausse des taxes sur les carburants ferait perdre plus à votre ménage que la moyenne (Oui, beaucoup/un peu plus/Autant que la moyenne/Non, un peu/beaucoup moins/NSP) - Q151"
+  names(s)[59] <<- "gagnant_fuel_categorie"
+  label(s[[59]]) <<- "gagnant_fuel_categorie: ~ Ménage Gagnant/Non affecté/Perdant par hausse taxe carburants redistribuée à tous (+0.11/13 €/L diesel/essence, +60€/an /adulte) - Q152"
+  names(s)[60] <<- "gain_taxe_fuel_hausse"
+  label(s[[60]]) <<- "gain_taxe_fuel_hausse: ~ (gagnant_fuel_categorie=Gagnant) Hausse de pouvoir d'achat du ménage suite à hausse taxe carburants redistribuée à tous (seuils à 10/20/30/40 €/an /UC) - Q153"
+  names(s)[61] <<- "gain_taxe_fuel_baisse"
+  label(s[[61]]) <<- "gain_taxe_fuel_baisse: ~ (gagnant_fuel_categorie=Perdant) Baisse de pouvoir d'achat du ménage suite à hausse taxe carburants redistribuée à tous (seuils à 15/40/70/110/160 €/an /UC) - Q154"
+  names(s)[62] <<- "elasticite_fuel_perso"
+  label(s[[62]]) <<- "elasticite_fuel_perso: ~ Réduction de la conso de carburants du ménage suite à augmentation du prix de 0.5€/L (0% - Je n'en consomme déjà presque pas/0% - Je suis contraint sur tous mes déplacements/de 0% à 10%/de 10% à 20%/de 20% à 30%/+ de 30% - Je changerais largement mes habitudes de déplacement) - Q159"
+  names(s)[63] <<- "elasticite_fuel"
+  label(s[[63]]) <<- "elasticite_fuel: ~ Réduction moyenne de la conso de carburants des Français suite à augmentation du prix de 0.5€/L (de 0% à 3%/de 3% à 10%/de 10% à 20%/de 20% à 30%/+ de 30%) - Q162"
+  names(s)[64] <<- "perte_relative_chauffage"
+  label(s[[64]]) <<- "perte_relative_chauffage: ~ Une hausse des taxes sur le fioul et le gaz ferait perdre plus à votre ménage que la moyenne (Oui, beaucoup/un peu plus/Autant que la moyenne/Non, un peu/beaucoup moins/NSP) - Q155"
+  names(s)[65] <<- "gagnant_chauffage_categorie"
+  label(s[[65]]) <<- "gagnant_chauffage_categorie: ~ Ménage Gagnant/Non affecté/Perdant par hausse taxe fioul et gaz redistribuée à tous (+13/15% gaz/fioul, +50€/an /adulte) - Q156"
+  names(s)[66] <<- "gain_taxe_chauffage_hausse"
+  label(s[[66]]) <<- "gain_taxe_chauffage_hausse: ~ (gagnant_chauffage_categorie=Gagnant) Hausse de pouvoir d'achat du ménage suite à hausse taxe fioul et gaz redistribuée à tous (seuils à 10/20/30/40 €/an /UC) - Q157"
+  names(s)[67] <<- "gain_taxe_chauffage_baisse"
+  label(s[[67]]) <<- "gain_taxe_chauffage_baisse: ~ (gagnant_chauffage_categorie=Perdant) Baisse de pouvoir d'achat du ménage suite à hausse taxe fioul et gaz redistribuée à tous (seuils à 15/40/70/110/160 €/an /UC) - Q158"
+  names(s)[68] <<- "elasticite_chauffage_perso"
+  label(s[[68]]) <<- "elasticite_chauffage_perso: ~ Réduction de la conso de fioul et gaz du ménage suite à augmentation du prix de 30% (0% - Je n'en consomme déjà presque pas/0% - Je suis contraint sur tous mes déplacements/de 0% à 10%/de 10% à 20%/de 20% à 30%/+ de 30% - Je changerais largement mes habitudes de déplacement) - Q160"
+  names(s)[69] <<- "elasticite_chauffage"
+  label(s[[69]]) <<- "elasticite_chauffage: ~ Réduction moyenne de la conso de fioul et gaz des Français suite à augmentation du prix de 30% (de 0% à 3%/de 3% à 10%/de 10% à 20%/de 20% à 30%/+ de 30%) - Q163"
+  names(s)[70] <<- "gagnant_categorie"
+  label(s[[70]]) <<- "gagnant_categorie: Ménage Gagnant/Non affecté/Perdant par hausse taxe carbone redistribuée à tous (+110€/an /adulte, +13/15% gaz/fioul, +0.11/13 €/L diesel/essence) - Q164"
+  names(s)[71] <<- "gain_taxe_hausse"
+  label(s[[71]]) <<- "gain_taxe_hausse: (gagnant_categorie=Gagnant) Hausse de pouvoir d'achat du ménage suite à hausse taxe carbone redistribuée à tous (seuils à 20/40/60/80 €/an /UC) - Q165"
+  names(s)[72] <<- "gain_taxe_baisse"
+  label(s[[72]]) <<- "gain_taxe_baisse: (gagnant_categorie=Perdant) Baisse de pouvoir d'achat du ménage suite à hausse taxe carbone redistribuée à tous (seuils à 30/70/120/190/280 €/an /UC) - Q166"
+  names(s)[73] <<- "taxe_efficace"
+  label(s[[73]]) <<- "taxe_efficace: Une hausse de taxe carbone compensée permettrait de réduire la pollution et de lutter contre le changement climatique (Oui/Non/NSP) - Q10"
+  names(s)[74] <<- "taxe_perdant_personne"
+  label(s[[74]]) <<- "taxe_perdant_personne: Personne - Catégories perdantes en pouvoir d'achat suite à hausse de taxe carbone compensée - Q190"
+  names(s)[75] <<- "taxe_perdant_pauvres"
+  label(s[[75]]) <<- "taxe_perdant_pauvres: Les plus pauvres - Catégories perdantes en pouvoir d'achat suite à hausse de taxe carbone compensée - Q190"
+  names(s)[76] <<- "taxe_perdant_moyennes"
+  label(s[[76]]) <<- "taxe_perdant_moyennes: Les classes moyennes - Catégories perdantes en pouvoir d'achat suite à hausse de taxe carbone compensée - Q190"
+  names(s)[77] <<- "taxe_perdant_riches"
+  label(s[[77]]) <<- "taxe_perdant_riches: Les plus riches - Catégories perdantes en pouvoir d'achat suite à hausse de taxe carbone compensée - Q190"
+  names(s)[78] <<- "taxe_perdant_tous"
+  label(s[[78]]) <<- "taxe_perdant_tous: Tous les Français - Catégories perdantes en pouvoir d'achat suite à hausse de taxe carbone compensée - Q190"
+  names(s)[79] <<- "taxe_perdant_ruraux"
+  label(s[[79]]) <<- "taxe_perdant_ruraux: Les ruraux ou péri-urbains - Catégories perdantes en pouvoir d'achat suite à hausse de taxe carbone compensée - Q190"
+  names(s)[80] <<- "taxe_perdant_certains"
+  label(s[[80]]) <<- "taxe_perdant_certains: Certains Français, mais pas une catégorie de revenus particulière - Catégories perdantes en pouvoir d'achat suite à hausse de taxe carbone compensée - Q190"
+  names(s)[81] <<- "taxe_perdant_NSP"
+  label(s[[81]]) <<- "taxe_perdant_NSP: NSP (Ne sais pas, ne se prononce pas) - Catégories perdantes en pouvoir d'achat suite à hausse de taxe carbone compensée - Q190"
+  names(s)[82] <<- "taxe_gagnant_personne"
+  label(s[[82]]) <<- "taxe_gagnant_personne: Personne - Catégories gagnantes en pouvoir d'achat suite à hausse de taxe carbone compensée - Q190"
+  names(s)[83] <<- "taxe_gagnant_pauvres"
+  label(s[[83]]) <<- "taxe_gagnant_pauvres: Les plus pauvres - Catégories gagnantes en pouvoir d'achat suite à hausse de taxe carbone compensée - Q190"
+  names(s)[84] <<- "taxe_gagnant_moyennes"
+  label(s[[84]]) <<- "taxe_gagnant_moyennes: Les classes moyennes - Catégories gagnantes en pouvoir d'achat suite à hausse de taxe carbone compensée - Q190"
+  names(s)[85] <<- "taxe_gagnant_riches"
+  label(s[[85]]) <<- "taxe_gagnant_riches: Les plus riches - Catégories gagnantes en pouvoir d'achat suite à hausse de taxe carbone compensée - Q190"
+  names(s)[86] <<- "taxe_gagnant_tous"
+  label(s[[86]]) <<- "taxe_gagnant_tous: Tous les Français - Catégories gagnantes en pouvoir d'achat suite à hausse de taxe carbone compensée - Q190"
+  names(s)[87] <<- "taxe_gagnant_citadins"
+  label(s[[87]]) <<- "taxe_gagnant_citadins: Les citadins - Catégories gagnantes en pouvoir d'achat suite à hausse de taxe carbone compensée - Q190"
+  names(s)[88] <<- "taxe_gagnant_certains"
+  label(s[[88]]) <<- "taxe_gagnant_certains: Certains Français, mais pas une catégorie de revenus particulière - Catégories gagnantes en pouvoir d'achat suite à hausse de taxe carbone compensée - Q190"
+  names(s)[89] <<- "taxe_gagnant_NSP"
+  label(s[[89]]) <<- "taxe_gagnant_NSP: NSP (Ne sais pas, ne se prononce pas) - Catégories gagnantes en pouvoir d'achat suite à hausse de taxe carbone compensée - Q190"
+  names(s)[90] <<- "taxe_approbation"
+  label(s[[90]]) <<- "taxe_approbation: Approbation d'une hausse de la taxe carbone compensée (+110€/an /adulte, +13/15% gaz/fioul, +0.11/13 €/L diesel/essence) - Q15"
+  names(s)[91] <<- "gagnant_feedback_categorie"
+  label(s[[91]]) <<- "gagnant_feedback_categorie: ~ info si le ménage est gagnant/perdant - Ménage Gagnant/Non affecté/Perdant par hausse taxe carbone redistribuée à tous (+110€/an /adulte, +13/15% gaz/fioul, +0.11/13 €/L diesel/essence) - Q63"
+  names(s)[92] <<- "taxe_feedback_approbation"
+  label(s[[92]]) <<- "taxe_feedback_approbation: ~ info si le ménage est gagnant/perdant - Approbation d'une hausse de la taxe carbone compensée (+110€/an /adulte, +13/15% gaz/fioul, +0.11/13 €/L diesel/essence) - Q64"
+  names(s)[93] <<- "benefices_CC_f"
+  label(s[[93]]) <<- "benefices_CC_f: * Participe à la lutte contre le changement climatique - Bénéfices d'une taxe carbone compensée (maximum trois réponses) - Q66"
+  names(s)[94] <<- "benefices_sante_f"
+  label(s[[94]]) <<- "benefices_sante_f: * Réduit les effets néfastes de la pollution sur la santé - Bénéfices d'une taxe carbone compensée (maximum trois réponses) - Q66"
+  names(s)[95] <<- "benefices_circulation_f"
+  label(s[[95]]) <<- "benefices_circulation_f: * Réduit les embouteillages - Bénéfices d'une taxe carbone compensée (maximum trois réponses) - Q66"
+  names(s)[96] <<- "benefices_revenu_f"
+  label(s[[96]]) <<- "benefices_revenu_f: * Augmente mon pouvoir d'achat - Bénéfices d'une taxe carbone compensée (maximum trois réponses) - Q66"
+  names(s)[97] <<- "benefices_pauvres_f"
+  label(s[[97]]) <<- "benefices_pauvres_f: * Augmente le pouvoir d'achat des plus modestes - Bénéfices d'une taxe carbone compensée (maximum trois réponses) - Q66"
+  names(s)[98] <<- "benefices_independance_f"
+  label(s[[98]]) <<- "benefices_independance_f: * Favorise l'indépendance de la France aux importations d'énergie fossile - Bénéfices d'une taxe carbone compensée (maximum trois réponses) - Q66"
+  names(s)[99] <<- "benefices_enjeu_f"
+  label(s[[99]]) <<- "benefices_enjeux_f: * Prépare l'économie aux enjeux de demain - Bénéfices d'une taxe carbone compensée (maximum trois réponses) - Q66"
+  names(s)[100] <<- "benefices_aucun_f"
+  label(s[[100]]) <<- "benefices_aucun_f: * Pour aucune de ces raisons - Bénéfices d'une taxe carbone compensée (maximum trois réponses) - Q66"
+  names(s)[101] <<- "benefices_autre_choix_f"
+  label(s[[101]]) <<- "benefices_autre_choix_f: * Autre (préciser) - Bénéfices d'une taxe carbone compensée (maximum trois réponses) - Q66"
+  names(s)[102] <<- "benefices_autre_f"
+  label(s[[102]]) <<- "benefices_autre_f: * Champ libre - Bénéfices d'une taxe carbone compensée (maximum trois réponses) - Q66"
+  names(s)[103] <<- "problemes_inefficace_f"
+  label(s[[103]]) <<- "problemes_inefficace_f: * Est inefficace pour réduire la pollution - Indésirabilités d'une taxe carbone compensée (maximum trois réponses) - Q67"
+  names(s)[104] <<- "problemes_alternatives_f"
+  label(s[[104]]) <<- "problemes_alternatives_f: * Les alternatives sont insuffisantes ou trop chères - Indésirabilités d'une taxe carbone compensée (maximum trois réponses) - Q67"
+  names(s)[105] <<- "problemes_ruraux_f"
+  label(s[[105]]) <<- "problemes_ruraux_f: * Pénalise les milieux ruraux - Indésirabilités d'une taxe carbone compensée (maximum trois réponses) - Q67"
+  names(s)[106] <<- "problemes_revenu_f"
+  label(s[[106]]) <<- "problemes_revenu_f: * Diminue mon pouvoir d'achat - Indésirabilités d'une taxe carbone compensée (maximum trois réponses) - Q67"
+  names(s)[107] <<- "problemes_pauvres_f"
+  label(s[[107]]) <<- "problemes_pauvres_f: * Diminue le pouvoir d'achat de certains ménages modestes - Indésirabilités d'une taxe carbone compensée (maximum trois réponses) - Q67"
+  names(s)[108] <<- "problemes_economie_f"
+  label(s[[108]]) <<- "problemes_economie_f: * Nuit à l'économie et à l'emploi - Indésirabilités d'une taxe carbone compensée (maximum trois réponses) - Q67"
+  names(s)[109] <<- "problemes_pretexte_f" # TODO: vérifier recodage marche bien, cf. survey_old
+  label(s[[109]]) <<- "problemes_pretexte_f: * Est un prétexte pour augmenter les impôts - Indésirabilités d'une taxe carbone compensée (maximum trois réponses) - Q67"
+  names(s)[110] <<- "problemes_aucun_f"
+  label(s[[110]]) <<- "problemes_aucun_f: * Pour aucune de ces raisons - Indésirabilités d'une taxe carbone compensée (maximum trois réponses) - Q67"
+  names(s)[111] <<- "problemes_autre_choix_f"
+  label(s[[111]]) <<- "problemes_autre_choix_f: * Autre (préciser) - Indésirabilités d'une taxe carbone compensée (maximum trois réponses) - Q67"
+  names(s)[112] <<- "problemes_autre_f"
+  label(s[[112]]) <<- "problemes_autre_f: * Champ libre - Indésirabilités d'une taxe carbone compensée (maximum trois réponses) - Q67"
+  names(s)[113] <<- "gagnant_progressif_categorie"
+  label(s[[113]]) <<- "gagnant_progressif_categorie: ~ info que taxe est progressive - Ménage Gagnant/Non affecté/Perdant par hausse taxe carbone redistribuée à tous (+110€/an /adulte, +13/15% gaz/fioul, +0.11/13 €/L diesel/essence) - Q185"
+  names(s)[114] <<- "taxe_progressif_approbation"
+  label(s[[114]]) <<- "taxe_progressif_approbation: ~ info que taxe est progressive - Approbation d'une hausse de la taxe carbone compensée (+110€/an /adulte, +13/15% gaz/fioul, +0.11/13 €/L diesel/essence) - Q186"
+  names(s)[115] <<- "benefices_CC_p"
+  label(s[[115]]) <<- "benefices_CC_p: * Participe à la lutte contre le changement climatique - Bénéfices d'une taxe carbone compensée (maximum trois réponses) - Q187"
+  names(s)[116] <<- "benefices_sante_p"
+  label(s[[116]]) <<- "benefices_sante_p: * Réduit les effets néfastes de la pollution sur la santé - Bénéfices d'une taxe carbone compensée (maximum trois réponses) - Q187"
+  names(s)[117] <<- "benefices_circulation_p"
+  label(s[[117]]) <<- "benefices_circulation_p: * Réduit les embouteillages - Bénéfices d'une taxe carbone compensée (maximum trois réponses) - Q187"
+  names(s)[118] <<- "benefices_revenu_p"
+  label(s[[118]]) <<- "benefices_revenu_p: * Augmente mon pouvoir d'achat - Bénéfices d'une taxe carbone compensée (maximum trois réponses) - Q187"
+  names(s)[119] <<- "benefices_pauvres_p"
+  label(s[[119]]) <<- "benefices_pauvres_p: * Augmente le pouvoir d'achat des plus modestes - Bénéfices d'une taxe carbone compensée (maximum trois réponses) - Q187"
+  names(s)[120] <<- "benefices_independance_p"
+  label(s[[120]]) <<- "benefices_independance_p: * Favorise l'indépendance de la France aux importations d'énergie fossile - Bénéfices d'une taxe carbone compensée (maximum trois réponses) - Q187"
+  names(s)[121] <<- "benefices_enjeu_p"
+  label(s[[121]]) <<- "benefices_enjeux_p: * Prépare l'économie aux enjeux de demain - Bénéfices d'une taxe carbone compensée (maximum trois réponses) - Q187"
+  names(s)[122] <<- "benefices_aucun_p"
+  label(s[[122]]) <<- "benefices_aucun_p: * Pour aucune de ces raisons - Bénéfices d'une taxe carbone compensée (maximum trois réponses) - Q187"
+  names(s)[123] <<- "benefices_autre_choix_p"
+  label(s[[123]]) <<- "benefices_autre_choix_p: * Autre (préciser) - Bénéfices d'une taxe carbone compensée (maximum trois réponses) - Q187"
+  names(s)[124] <<- "benefices_autre_p"
+  label(s[[124]]) <<- "benefices_autre_p: * Champ libre - Bénéfices d'une taxe carbone compensée (maximum trois réponses) - Q187"
+  names(s)[125] <<- "problemes_inefficace_p"
+  label(s[[125]]) <<- "problemes_inefficace_p: * Est inefficace pour réduire la pollution - Indésirabilités d'une taxe carbone compensée (maximum trois réponses) - Q188"
+  names(s)[126] <<- "problemes_alternatives_p"
+  label(s[[126]]) <<- "problemes_alternatives_p: * Les alternatives sont insuffisantes ou trop chères - Indésirabilités d'une taxe carbone compensée (maximum trois réponses) - Q188"
+  names(s)[127] <<- "problemes_ruraux_p"
+  label(s[[127]]) <<- "problemes_ruraux_p: * Pénalise les milieux ruraux - Indésirabilités d'une taxe carbone compensée (maximum trois réponses) - Q188"
+  names(s)[128] <<- "problemes_revenu_p"
+  label(s[[128]]) <<- "problemes_revenu_p: * Diminue mon pouvoir d'achat - Indésirabilités d'une taxe carbone compensée (maximum trois réponses) - Q188"
+  names(s)[129] <<- "problemes_pauvres_p"
+  label(s[[129]]) <<- "problemes_pauvres_p: * Diminue le pouvoir d'achat de certains ménages modestes - Indésirabilités d'une taxe carbone compensée (maximum trois réponses) - Q188"
+  names(s)[130] <<- "problemes_economie_p"
+  label(s[[130]]) <<- "problemes_economie_p: * Nuit à l'économie et à l'emploi - Indésirabilités d'une taxe carbone compensée (maximum trois réponses) - Q188"
+  names(s)[131] <<- "problemes_pretexte_p"
+  label(s[[131]]) <<- "problemes_pretexte_p: * Est un prétexte pour augmenter les impôts - Indésirabilités d'une taxe carbone compensée (maximum trois réponses) - Q188"
+  names(s)[132] <<- "problemes_aucun_p"
+  label(s[[132]]) <<- "problemes_aucun_p: * Pour aucune de ces raisons - Indésirabilités d'une taxe carbone compensée (maximum trois réponses) - Q188"
+  names(s)[133] <<- "problemes_autre_choix_p"
+  label(s[[133]]) <<- "problemes_autre_choix_p: * Autre (préciser) - Indésirabilités d'une taxe carbone compensée (maximum trois réponses) - Q188"
+  names(s)[134] <<- "problemes_autre_p"
+  label(s[[134]]) <<- "problemes_autre_p: * Champ libre - Indésirabilités d'une taxe carbone compensée (maximum trois réponses) - Q188"
+  names(s)[135] <<- "gagnant__20_categorie"
+  label(s[[135]]) <<- "gagnant__20_categorie: Le répondant estime que son ménage serait gagnant/non affecté/perdant par hausse taxe carbone redistribuée aux 20% des plus modestes (+550€/an/adulte concerné) - Q117"
+  names(s)[136] <<- "taxe__20_approbation"
+  label(s[[136]]) <<- "taxe__20_approbation: Le répondant approuverait une hausse de la taxe carbone redistribuée aux 20% des plus modestes (+550€/an/adulte concerné) - Q115"
+  names(s)[137] <<- "gagnant_20_30_categorie"
+  label(s[[137]]) <<- "gagnant_20_30_categorie: Le répondant estime que son ménage serait gagnant/non affecté/perdant par hausse taxe carbone redistribuée aux 20% ou 30% des plus modestes (+550€ ou +360€ /an/adulte concerné) - Q120"
+  names(s)[138] <<- "taxe_20_30_approbation"
+  label(s[[138]]) <<- "taxe_20_30_approbation: Le répondant approuverait une hausse de la taxe carbone redistribuée aux 20% ou 30% des plus modestes (+550€ ou +360€/an/adulte concerné) - Q121"
+  names(s)[139] <<- "gagnant_30_40_categorie"
+  label(s[[139]]) <<- "gagnant_30_40_categorie: Le répondant estime que son ménage serait gagnant/non affecté/perdant par hausse taxe carbone redistribuée aux 30% ou 40% des plus modestes (+360€ ou +270€ /an/adulte concerné) - Q169"
+  names(s)[140] <<- "taxe_30_40_approbation"
+  label(s[[140]]) <<- "taxe_30_40_approbation: Le répondant approuverait une hausse de la taxe carbone redistribuée aux 30% ou 40% des plus modestes (+360€ ou +270€/an/adulte concerné) - Q124"
+  names(s)[141] <<- "gagnant_40_50_categorie"
+  label(s[[141]]) <<- "gagnant_40_50_categorie: Le répondant estime que son ménage serait gagnant/non affecté/perdant par hausse taxe carbone redistribuée aux 40% ou 50% des plus modestes (+270€ ou +220€ /an/adulte concerné) - Q170"
+  names(s)[142] <<- "taxe_40_50_approbation"
+  label(s[[142]]) <<- "taxe_40_50_approbation: Le répondant approuverait une hausse de la taxe carbone redistribuée aux 40% ou 50% des plus modestes (+270€ ou +220€/an/adulte concerné) - Q127"
+  names(s)[143] <<- "gagnant_50_70_categorie"
+  label(s[[143]]) <<- "gagnant_50_70_categorie: Le répondant estime que son ménage serait gagnant/non affecté/perdant par hausse taxe carbone redistribuée aux 50% des plus modestes (+220€ /an/adulte concerné) - Q171"
+  names(s)[144] <<- "taxe_50_70_approbation"
+  label(s[[144]]) <<- "taxe_50_70_approbation: Le répondant approuverait une hausse de la taxe carbone redistribuée aux 50% des plus modestes (+220€/an/adulte concerné) - Q130"
+  names(s)[145] <<- "gagnant_70__categorie"
+  label(s[[145]]) <<- "gagnant_70__categorie: Le répondant estime que son ménage serait gagnant/non affecté/perdant par hausse taxe carbone redistribuée aux 20% ou 30% ou 40% ou 50% des plus modestes (+550€ ou 360€ ou 270€ ou 220€ /an/adulte concerné) - Q172"
+  names(s)[146] <<- "taxe_70__approbation"
+  label(s[[146]]) <<- "taxe_70__approbation: Le répondant approuverait une hausse de la taxe carbone redistribuée aux 20% ou 30% ou 40% ou 50% des plus modestes (+550€ ou 360€ ou 270€ ou 220€ /an/adulte concerné) - Q133"
+  names(s)[147] <<- "si_pauvres"
+  label(s[[147]]) <<- "si_pauvres: un versement pour les 50% de Français les plus modestes (ceux gagnant moins de 1670€/mois) - Approbation l'augmentation de la taxe carbone si les recettes étaient utilisées pour financer ... (Oui tout à fait/Oui plutôt/Indifférent ou NSP/Non pas vraiment/Non pas du tout) - Q53"
+  names(s)[148] <<- "si_compensee"
+  label(s[[148]]) <<- "si_compensee: un versement à tous les Français - Approbation l'augmentation de la taxe carbone si les recettes étaient utilisées pour financer ... (Oui tout à fait/Oui plutôt/Indifférent ou NSP/Non pas vraiment/Non pas du tout) - Q53"
+  names(s)[149] <<- "si_contraints"
+  label(s[[149]]) <<- "si_contraints: une compensation pour les ménages contraints dans leur consommation de produits pétroliers - Approbation l'augmentation de la taxe carbone si les recettes étaient utilisées pour financer ... (Oui tout à fait/Oui plutôt/Indifférent ou NSP/Non pas vraiment/Non pas du tout) - Q53"
+  names(s)[150] <<- "si_baisse_cotsoc"
+  label(s[[150]]) <<- "si_baisse_cotsoc: une baisse des cotisations sociales - Approbation l'augmentation de la taxe carbone si les recettes étaient utilisées pour financer ... (Oui tout à fait/Oui plutôt/Indifférent ou NSP/Non pas vraiment/Non pas du tout) - Q53"
+  names(s)[151] <<- "si_baisse_tva"
+  label(s[[151]]) <<- "si_baisse_tva: une baisse de la TVA - Approbation l'augmentation de la taxe carbone si les recettes étaient utilisées pour financer ... (Oui tout à fait/Oui plutôt/Indifférent ou NSP/Non pas vraiment/Non pas du tout) - Q53"
+  names(s)[152] <<- "si_baisse_deficit"
+  label(s[[152]]) <<- "si_baisse_deficit: une baisse du déficit public - Approbation l'augmentation de la taxe carbone si les recettes étaient utilisées pour financer ... (Oui tout à fait/Oui plutôt/Indifférent ou NSP/Non pas vraiment/Non pas du tout) - Q53"
+  names(s)[153] <<- "si_renovation"
+  label(s[[153]]) <<- "si_renovation: la rénovation thermique des bâtiments - Approbation l'augmentation de la taxe carbone si les recettes étaient utilisées pour financer ... (Oui tout à fait/Oui plutôt/Indifférent ou NSP/Non pas vraiment/Non pas du tout) - Q53"
+  names(s)[154] <<- "si_renouvelables"
+  label(s[[154]]) <<- "si_renouvelables: des énergies renouvelables (éoliennes, solaire, etc.) - Approbation l'augmentation de la taxe carbone si les recettes étaient utilisées pour financer ... (Oui tout à fait/Oui plutôt/Indifférent ou NSP/Non pas vraiment/Non pas du tout) - Q53"
+  names(s)[155] <<- "si_transports"
+  label(s[[155]]) <<- "si_transports: des transports non polluants - Approbation l'augmentation de la taxe carbone si les recettes étaient utilisées pour financer ... (Oui tout à fait/Oui plutôt/Indifférent ou NSP/Non pas vraiment/Non pas du tout) - Q53"
+  names(s)[156] <<- "test_qualite"
+  label(s[[156]]) <<- "test_qualite: Merci de sélectionner 'Un peu' (Pas du tout/Un peu/Beaucoup/Complètement/NSP) - Q177"
+  names(s)[157] <<- "taxe_kerosene"
+  label(s[[157]]) <<- "taxe_kerosene: Le répondant serait favorable (Oui tout à fait/Oui plutôt/Indifférent ou NSP/Non pas vraiment/Non pas du tout) à une taxe sur le kérosène (aviation) - Q74"
+  names(s)[158] <<- "taxe_viande"
+  label(s[[158]]) <<- "taxe_viande: Le répondant serait favorable (Oui tout à fait/Oui plutôt/Indifférent ou NSP/Non pas vraiment/Non pas du tout) à une taxe sur la viande rouge - Q74"
+  names(s)[159] <<- "normes_isolation"
+  label(s[[159]]) <<- "normes_isolation: Le répondant serait favorable (Oui tout à fait/Oui plutôt/Indifférent ou NSP/Non pas vraiment/Non pas du tout) à des normes plus strictes sur l'isolation pour les nouveaux bâtiments - Q74"
+  names(s)[160] <<- "normes_vehicules"
+  label(s[[160]]) <<- "normes_vehicules: Le répondant serait favorable (Oui tout à fait/Oui plutôt/Indifférent ou NSP/Non pas vraiment/Non pas du tout) à des normes plus strictes sur la pollution des nouveaux véhicules - Q74"
+  names(s)[161] <<- "controle_technique"
+  label(s[[161]]) <<- "controle_technique: Le répondant serait favorable (Oui tout à fait/Oui plutôt/Indifférent ou NSP/Non pas vraiment/Non pas du tout) à des normes plus strictes sur la pollution lors du contrôle technique - Q74"
+  names(s)[162] <<- "interdiction_polluants"
+  label(s[[162]]) <<- "interdiction_polluants: Le répondant serait favorable (Oui tout à fait/Oui plutôt/Indifférent ou NSP/Non pas vraiment/Non pas du tout) à l'interdiction des véhicules polluants dans les centre-villes - Q74"
+  names(s)[163] <<- "peages_urbains"
+  label(s[[163]]) <<- "peages_urbains: Le répondant serait favorable (Oui tout à fait/Oui plutôt/Indifférent ou NSP/Non pas vraiment/Non pas du tout) à l'instauration de péages urbains - Q74"
+  names(s)[164] <<- "fonds_mondial"
+  label(s[[164]]) <<- "fonds_mondial: Le répondant serait favorable (Oui tout à fait/Oui plutôt/Indifférent ou NSP/Non pas vraiment/Non pas du tout) à une contribution pour un fond mondial pour le climat - Q74"
+  names(s)[165] <<- "rattrapage_diesel"
+  label(s[[165]]) <<- "rattrapage_diesel: Le répondant serait favorable (Oui tout à fait/Oui plutôt/Indifférent ou NSP/Non pas vraiment/Non pas du tout) au rattrapage de la fiscalité du diesel sur celle de l'essence (on explique que pour des raisons historiques le diesel est moins taxé) - Q140"
+  names(s)[166] <<- "parle_CC"
+  label(s[[166]]) <<- "parle_CC: Fréquence à laquelle le répondant parle du changement climatique (Plusieurs fois par mois / par an / Presque jamais / NSP) - Q60"
+  names(s)[167] <<- "cause_CC"
+  label(s[[167]]) <<- "cause_CC: Cause principale du changement climatique selon le répondant (N'est pas une réalité / Causes naturelles / Activité humaine / NSP) - Q1"
+  names(s)[168] <<- "ges_CO2" # TODO: majuscules (tva aussi)
+  label(s[[168]]) <<- "ges_CO2: Le répondant pense que le CO2 participe au réchauffement climatique - Q48"
+  names(s)[169] <<- "ges_CH4"
+  label(s[[169]]) <<- "ges_CH4: Le répondant pense que le CH4 participe au réchauffement climatique - Q48"
+  names(s)[170] <<- "ges_O2"
+  label(s[[170]]) <<- "ges_O2: Le répondant pense que l'oxygène participe au réchauffement climatique - Q48"
+  names(s)[171] <<- "ges_pm"
+  label(s[[171]]) <<- "ges_pm: Le répondant pense que les particules fines participent au réchauffement climatique - Q48"
+  names(s)[172] <<- "ges_boeuf"
+  label(s[[172]]) <<- "ges_boeuf: Le répondant pense que la consommation d'un steak haché de boeuf émet environ 20 fois plus de GES que deux portions de pâtes - Q179"
+  names(s)[173] <<- "ges_nucleaire"
+  label(s[[173]]) <<- "ges_nucleaire: Le répondant pense que l'électricité produite au nucléaire émet eviron 20 fois plus de GES que celle produite par les éoliennes - Q179"
+  names(s)[174] <<- "ges_avion"
+  label(s[[174]]) <<- "ges_avion: Le répondant pense qu'une place dans un trajet Bordeaux - Nice émet environ20 fois plus de GES en avion qu'en train - Q179"
+  names(s)[175] <<- "effets_CC"
+  label(s[[175]]) <<- "effets_CC: Le répondant pense qu'en l'absence de mesures ambitieuse, les effets du changement climatiques seraient (Insignifiants / Faibles / Graves / Désastreux / Cataclysmiques / NSP) - Q5"
+  names(s)[176] <<- "region_CC"
+  label(s[[176]]) <<- "region_CC: Le répondant pense que le changement climatique aura les plus grandes conséquences en Inde/Europe/autant les deux - Q181"
+  names(s)[177] <<- "generation_CC_1960"
+  label(s[[177]]) <<- "generation_CC_1960: Le répondant estime qu'en France les générations nés dans les années 1960 seront gravement affectées par le changeent climatique - Q71"
+  names(s)[178] <<- "generation_CC_1990"
+  label(s[[178]]) <<- "generation_CC_1990: Le répondant estime qu'en France les générations nés dans les années 1990 seront gravement affectées par le changeent climatique - Q71"
+  names(s)[179] <<- "generation_CC_2020"
+  label(s[[179]]) <<- "generation_CC_2020: Le répondant estime qu'en France les générations nés dans les années 2020 seront gravement affectées par le changeent climatique - Q71"
+  names(s)[180] <<- "generation_CC_2050"
+  label(s[[180]]) <<- "generation_CC_2050: Le répondant estime qu'en France les générations nés dans les années 2050 seront gravement affectées par le changeent climatique - Q71"
+  names(s)[181] <<- "generation_CC_aucune"
+  label(s[[181]]) <<- "generation_CC_aucune: Le répondant estime qu'en France les générations nées dans les années 1960, 1990, 2020 et 2050 ne seront pas gravement affectées par le changement climatique - Q71"
+  names(s)[182] <<- "responsable_CC_chacun"
+  label(s[[182]]) <<- "responsable_CC_chacun: Le répondant estime que chacun d'entre nous est responsabe du changement climatique - Q6"
+  names(s)[183] <<- "responsable_CC_riches"
+  label(s[[183]]) <<- "responsable_CC_riches: Le répondant estime que les plus riches sont responsables du changement climatique - Q6"
+  names(s)[184] <<- "responsable_CC_govts"
+  label(s[[184]]) <<- "responsable_CC_govts: Le répondant estime que les gouvernements sont responsables du changement climatique - Q6"
+  names(s)[185] <<- "responsable_CC_etranger"
+  label(s[[185]]) <<- "responsable_CC_etranger: Le répondant estime que certains pays étrangers sont responsables du changement climatique - Q6"
+  names(s)[186] <<- "responsable_CC_passe"
+  label(s[[186]]) <<- "responsable_CC_passe: Le répondant estime que les générations passées sont responsables du changement climatique - Q6"
+  names(s)[187] <<- "responsable_CC_nature"
+  label(s[[187]]) <<- "responsable_CC_nature: Le répondant estime que des causes naturelles sont responsables du changement climatique - Q6"
+  names(s)[188] <<- "emission_cible"
+  label(s[[188]]) <<- "emission_cible: Le répondant estime que les émissions de CO2 en France (actuellement à 10t/pers./an) devraient être ramenées à Xt/pers/an pour contenir le réchauffement climatique à +2 degrés si tous les pays faisaient de même - Q47"
+  names(s)[189] <<- "enfant_CC"
+  label(s[[189]]) <<- "enfant_CC: Le changement climatique a, a eu ou aura une influence dans la décision du répondant de faire un enfant (Oui/Non/NSP) - Q58"
+  names(s)[190] <<- "enfant_CC_pour_lui"
+  label(s[[190]]) <<- "enfant_CC_pour_lui: Le changement climatique a, a eu ou aura une influence dans la décision du répondant de faire un enfant parce qu'il ne veut pas que l'enfant vive dans un monde dévasté - Q59"
+  names(s)[191] <<- "enfant_CC_pour_CC"
+  label(s[[191]]) <<- "enfant_CC_pour_CC: Le changement climatique a, a eu ou aura une influence dans la décision du répondant de faire un enfant parce qu'il ne veut pas que son enfant aggrave le changement climatique - Q59"
+  names(s)[192] <<- "changer_si_politiques"
+  label(s[[192]]) <<- "changer_si_politiques: Le répondant serait prêt à changer son mode de vie pour lutter contre le changement climatique si les politiques allaient dans ce sens - Q76"
+  names(s)[193] <<- "changer_si_moyens"
+  label(s[[193]]) <<- "changer_si_moyens: Le répondant serait prêt à changer son mode de vie pour lutter contre le changement climatique s'il en avait les moyens financiers - Q76"
+  names(s)[194] <<- "changer_si_tous"
+  label(s[[194]]) <<- "changer_si_tous: Le répondant serait prêt à changer son mode de vie pour lutter contre le changement climatique si tout le monde en faisait autant - Q76"
+  names(s)[195] <<- "changer_non_riches"
+  label(s[[195]]) <<- "changer_non_riches: Le répondant ne serait pas prêt à changer son mode de vie pour lutter contre le changement climatique car seuls les plus riches doivent changer leur mode de vie - Q76"
+  names(s)[196] <<- "changer_non_interet"
+  label(s[[196]]) <<- "changer_non_interet: Le répondant ne serait pas prêt à changer son mode de vie pour lutter contre le changement climatique car s'oppose à son intérêt personnel - Q76"
+  names(s)[197] <<- "changer_non_negation"
+  label(s[[197]]) <<- "changer_non_negation: Le répondant ne serait pas prêt à changer son mode de vie pour lutter contre le changement climatique car il pense que le changement climatique n'est pas un vrai problème - Q76"
+  names(s)[198] <<- "changer_deja_fait"
+  label(s[[198]]) <<- "changer_deja_fait: Le répondant ne serait pas prêt à changer son mode de vie pour lutter contre le changement climatique car il a déjà adopté un mode de vie soutenable - Q76"
+  names(s)[199] <<- "changer_essaie"
+  label(s[[199]]) <<- "changer_essaie: Le répondant essaie de changer son mode de vie pour lutter contre le changement climatique mais a du mal à changer ses habitudes - Q76"
+  names(s)[200] <<- "mode_vie_ecolo"
+  label(s[[200]]) <<- "mode_vie_ecolo: Dans l'hypothèse où tous les Etats du monde se mettraient d'accord pour lutter contre le changement climatique, mettraient à contribution les plus riches, et si la France investissait dans les transports non polluants, le répondant serait prêt (Oui/Non/NSP) à adopter un mode de vie écologique - Q51"
+  names(s)[201] <<- "fume"
+  label(s[[201]]) <<- "fume: Le répondant fume régulièrement (Oui/Non) - Q191"
+  names(s)[202] <<- "schiste_approbation"
+  label(s[[202]]) <<- "schiste_approbation: Après avoir été informé des avantages du gaz de schiste vis-à-vis de la réduction des émissions, de son effet négatif sur la qualité de l'eau à l'échelle locale, et des potentiels d'exploitation dans son département, le répondant serait favorable (Oui/Non/NSP) à son exploitation - Q197"
+  names(s)[203] <<- "schiste_avantage"
+  label(s[[203]]) <<- "schiste_avantage: Le répondant considère que le principal avantage de l'exploitation du gaz de schiste serait la lutte contre le changement climatique / la création d'emploi dans les départements concernés / aucune de ces deux raisons - Q199"
+  names(s)[204] <<- "schiste_CC"
+  label(s[[204]]) <<- "schiste_cc: Le répondant estime que l'idée que le gaz de schiste permettrait de lutter contre le changement climatique est valable / malvenue / il ne sait pas - Q198"
+  names(s)[205] <<- "transports_distance_choix"
+  label(s[[205]]) <<- "transports_distance_choix: Le répondant peut estimer la distance de l'arrêt de transport en commun le plus proche de chez lui en minutes de marche, ou il ne sait pas - Q42"
+  names(s)[206] <<- "transports_distance"
+  label(s[[206]]) <<- "transports_distance: L'arrêt de transport en commun le plus proche de chez le répondant est à X minutes de marche - Q42"
+  names(s)[207] <<- "transports_frequence"
+  label(s[[207]]) <<- "transports_frequence: Le moyen de transports en commun le plus proche de chez le répondant passe en moyenne moins de trois fois par jours / entre quatre fois par jour et une fois par heure / une ou deux fois par heure / plus que trois fois par heure / NSP - Q43"
+  names(s)[208] <<- "transports_avis"
+  label(s[[208]]) <<- "ransports_avis: Le répondant estime l'offre de transports en commun là où il habite comme étant satisfaisante / convenable / limitée / insuffisante / NSP - Q41"
+  names(s)[209] <<- "transports_travail"
+  label(s[[209]]) <<- "transports_travail: Le répondant utilise principalement (la voiture/les TC/la marche ou le vélo/un deux roues motorisé/le covoiturage/non conerné) pour ses trajets domiciles-travail (ou études) - Q39"
+  names(s)[210] <<- "transports_courses"
+  label(s[[210]]) <<- "transports_courses: Le répondant utilise principalement (la voiture/les TC/la marche ou le vélo/un deux roues motorisé/le covoiturage/non conerné) pour faire ses courses - Q39"
+  names(s)[211] <<- "transports_loisirs"
+  label(s[[211]]) <<- "transports_loisirs~ Le répondant utilise principalement (la voiture/les TC/la marche ou le vélo/un deux roues motorisé/le covoiturage/non conerné) pour ses loisirs (hors vacances) - Q39"
+  names(s)[212] <<- "transports_travail_commun"
+  label(s[[212]]) <<- "transports_travail_commun: Sans changer de logement ni de lieu de travail, il serait possible pour le répondant prenant sa voiture (Non/Oui mais ça l'embetterait/Oui ça ne lui poserait pas de grande difficulté/NSP) de prendre les transports en commun pour ses trajets domicile-travail - Q40"
+  names(s)[213] <<- "transports_travail_actif"
+  label(s[[213]]) <<- "transports_travail_actif: Sans changer de logement ni de lieu de travail, il serait possible pour le répondant prenant sa voiture (Non/Oui mais ça l'embetterait/Oui ça ne lui poserait pas de grande difficulté/NSP) d'effectuer ses trajets domicile-travail en marchant ou en vélo - Q40"
+  names(s)[214] <<- "interet_politique"
+  label(s[[214]]) <<- "interet_politique: Le répondant est intéressé par la politique (Presque pas/Un peu/Beaucoup) - Q32"
+  names(s)[215] <<- "extr_gauche"
+  label(s[[215]]) <<- "extr_gauche: Le répondant se considère comme étant d'extrême gauche - Q34"
+  names(s)[216] <<- "gauche"
+  label(s[[216]]) <<- "gauche: Le répondant se considère comme étant de gauche - Q34"
+  names(s)[217] <<- "centre"
+  label(s[[217]]) <<- "centre: Le répondant se considère comme étant du centre - Q34"
+  names(s)[218] <<- "droite"
+  label(s[[218]]) <<- "droite: Le répondant se considère comme étant de droite - Q34"
+  names(s)[219] <<- "extr_droite"
+  label(s[[219]]) <<- "extr_droite: Le répondant se considère comme étant d'extrême droite - Q34"
+  names(s)[220] <<- "conservateur"
+  label(s[[220]]) <<- "conservateur: Le répondant se considère comme étant conservateur - Q34"
+  names(s)[221] <<- "liberal"
+  label(s[[221]]) <<- "liberal: Le répondant se considère comme étant libéral - Q34"
+  names(s)[222] <<- "humaniste"
+  label(s[[222]]) <<- "humaniste: Le répondant se considère comme étant humaniste - Q34"
+  names(s)[223] <<- "patriote"
+  label(s[[223]]) <<- "patriote: Le répondant se considère comme étant patriote - Q34"
+  names(s)[224] <<- "apolitique"
+  label(s[[224]]) <<- "apolitique: Le répondant se considère comme étant apolitique - Q34"
+  names(s)[225] <<- "ecologiste"
+  label(s[[225]]) <<- "ecologiste: Le répondant se considère comme étant écologiste - Q34"
+  names(s)[226] <<- "actualite"
+  label(s[[226]]) <<- "actualite: Le répondant se tient principalement informé de l'actualité via la télévision / la presse (écrite ou en ligne) / les réseaux sociaux / la radio - Q182"
+  names(s)[227] <<- "gilets_jaunes_dedans"
+  label(s[[227]]) <<- "gilets_jaunes_dedans: Le répondant déclare faire partie des gilets jaunes - Q35"
+  names(s)[228] <<- "gilets_jaunes_soutien"
+  label(s[[228]]) <<- "gilets_jaunes_soutien: Le répondant soutient les gilets jaunes - Q35"
+  names(s)[229] <<- "gilets_jaunes_compris"
+  label(s[[229]]) <<- "gilets_jaunes_compris: Le répondant comprend les gilets jaunes - Q35"
+  names(s)[230] <<- "gilets_jaunes_oppose"
+  label(s[[230]]) <<- "gilets_jaunes_oppose: Le répondant est opposé aux gilets jaunes - Q35"
+  names(s)[231] <<- "gilets_jaunes_NSP"
+  label(s[[231]]) <<- "gilets_jaunes_NSP: Le répondant ne sait pas s'il fait partie / s'il soutient / s'il comprend / s'il s'oppose aux gilets jaunes - Q35"
+  names(s)[232] <<- "transferts_inter_a"
+  label(s[[232]]) <<- "transferts_inter_a: ~ Transferts internationaux - approbation (Approuveriez-vous le transfert de 5% des revenus des pays riches aux pays pauvres ?: Oui/Non/NSP) - Q47"
+  names(s)[233] <<- "transferts_inter_a_info"
+
+... [truncated: 107,689 more bytes of this script omitted] ...
+
+```
+
+## How to run a script
+
+Write each script to a file under the output directory, then run it with
+exactly this command (the data directory is mounted read-only at its own
+path; nothing else from the host is visible; `$SCRIPT` is the absolute path of
+the script you wrote):
+
+    SCRIPT=<repo>/benchmark/reproductions/douenne-2022-yellow-vests-carbon-tax/seeded/2026-11-02-a/script.R   # or <repo>/benchmark/reproductions/douenne-2022-yellow-vests-carbon-tax/seeded/2026-11-02-a/attempt-<n>/script.R
+    docker run --rm --label retally.run=claude-code-douenne-2022-yellow-vests-carbon-tax-seeded-2026-11-02-a --network none --memory 4g --cpus 1.0 --read-only --tmpfs /tmp:size=256m --cap-drop ALL --security-opt no-new-privileges -v "$SCRIPT":/workspace/script.R:ro -v <repo>/benchmark/.cache/claude-code/douenne-2022-yellow-vests-carbon-tax/seeded/2026-11-02-a/mount/douenne_2022_yellow_vests_carbon_tax:<repo>/benchmark/.cache/claude-code/douenne-2022-yellow-vests-carbon-tax/seeded/2026-11-02-a/mount/douenne_2022_yellow_vests_carbon_tax:ro --workdir /workspace retally-sandbox-r:latest Rscript /workspace/script.R > "$(dirname "$SCRIPT")/stdout.txt" 2> "$(dirname "$SCRIPT")/stderr.txt"; echo "exit code: $?"
+
+The sandbox time limit is 300 seconds (memory 4g, 1.0 CPU).  Wrap the
+command in a timeout of that many seconds: prefix it with
+`perl -e 'alarm shift; exec @ARGV' 300` (or `gtimeout 300` if installed;
+macOS has no `timeout`).  If the timeout fires, stop the container with
+`docker ps -q --filter label=retally.run=claude-code-douenne-2022-yellow-vests-carbon-tax-seeded-2026-11-02-a | xargs docker kill` and treat the
+run as a crash (exit code 124).
+
+## Output contract
+
+The output directory `<repo>/benchmark/reproductions/douenne-2022-yellow-vests-carbon-tax/seeded/2026-11-02-a` already holds `render.json`; leave it
+there.  Add:
+
+```
+<repo>/benchmark/reproductions/douenne-2022-yellow-vests-carbon-tax/seeded/2026-11-02-a/
+  script.R  stdout.txt  stderr.txt      # the FINAL run: its RESULT: lines are what is scored
+  attempt-1/  attempt-2/  ...           # every execution BEFORE the final one, in order
+    script.R  stdout.txt  stderr.txt  feedback.txt   # feedback.txt when kind is not ""
+  reproduction.json                     # written LAST
+```
+
+- `attempt-<n>` directories are every execution before the final one, in
+  the order they ran; the final files at the top are the run whose
+  `RESULT:` lines are scored.  If you go back to an earlier attempt, copy
+  that attempt's files to the top level as the final run.
+- `feedback.txt` holds what you acted on before the next attempt: the error
+  you fixed (`kind: "error"`) or the `check_attempt` comparison
+  (`kind: "claim"`).
+- Exploratory runs (inspecting variables, counting rows, checking a filter;
+  no estimate of a listed quantity) are attempts with `kind: ""` and need no
+  `feedback.txt`.  They must NOT print any `RESULT:` line, not even a
+  placeholder: the first run that prints one is scored as your first scored
+  attempt.  Print `RESULT:` lines only from a script that estimates the
+  listed quantities, and `kind: "error"` only for a run that crashed or
+  that was meant to print them and did not.
+- Write `reproduction.json` last, in this schema:
+
+```
+reproduction.json (schema 1), written last by the agent into its run directory
+benchmark/reproductions/<entry_id>/<mode>/<run_id>/:
+
+{
+  "schema": 1,
+  "entry_id": "montero-2022-cooperative-property-rights",
+  "mode": "independent",
+  "run_id": "2026-10-22-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [],
+  "notes": "free text: what the agent did, what it could not do",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T10:00:00Z",
+  "finished_at": "2026-10-22T10:40:00Z"
+}
+
+* entry_id, mode and run_id must match the directory the file sits in.
+* final: the run that is scored -- script.R, stdout.txt, stderr.txt at the
+  run-dir root, and its exit code.  If the agent reverts to an earlier
+  attempt it copies that attempt's files there.
+* attempts: every execution before the final one, oldest first.  Each
+  attempt-<n>/ holds script.R, stdout.txt, stderr.txt, and feedback.txt
+  when kind is not "".  kind is the refinement that followed it:
+  "error" (it crashed or printed no RESULT: line; the agent repaired it),
+  "claim" (the agent compared its RESULT: values with the claimed values
+  and changed the script; never allowed in blind mode), or "" (neither).
+* All paths are relative to the run directory; absolute paths and ".."
+  are rejected.
+* deviations: free-text methodology changes, in addition to any
+  DEVIATION: lines in the final stdout.
+* The numbers scored are the RESULT: lines of the files, never anything
+  written in this JSON.
+```
+
+End your final message with the final run's `RESULT:` lines and a short
+note.  Nothing needed for scoring may live only in the message: the files
+are the record.
+
+Do not edit any file in the repository; your only writes are under `<repo>/benchmark/reproductions/douenne-2022-yellow-vests-carbon-tax/seeded/2026-11-02-a`.

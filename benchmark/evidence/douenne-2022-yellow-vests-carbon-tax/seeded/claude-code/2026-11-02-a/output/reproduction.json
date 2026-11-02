@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "douenne-2022-yellow-vests-carbon-tax",
+  "mode": "seeded",
+  "run_id": "2026-11-02-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 1, "kind": "error"}
+  ],
+  "deviations": [
+    "Hmisc/memisc 'labelled'/'.item' column classes were stripped to plain vectors (memisc is not installed); numeric memisc items such as diplome4 and taille_agglo therefore enter as numeric regressors."
+  ],
+  "notes": "Followed papier.R: Table 4 = reg_effect_feedback_1..4 (weighted lm, subset variante_taxe_info=='f' [& |simule_gain|<50]); Table 6 col 1 = manual 2SLS tsls1_si1/tsls2_si1 on the [p10,p60] subsample, instruments traite_cible*traite_cible_conjoint; Table 8 col 1 = manual 2SLS tsls1_ee1/tsls2_ee1, instruments apres_modifs + info_CC. Data from after_preparation.RData (as papier.R loads); control-name vectors rebuilt with piece.formula/variables_demo and checked identical to those stored in after_papier.RData. Attempts 1-2 were exploratory (attempt 1 crashed on a memisc class lookup while printing classes). Attempt 3 crashed on the same issue and was repaired. The final run's values were compared by eye with the claims; all round to the claimed values and no change followed, so there is no claim attempt.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T10:03:00Z",
+  "finished_at": "2026-11-02T10:08:00Z"
+}

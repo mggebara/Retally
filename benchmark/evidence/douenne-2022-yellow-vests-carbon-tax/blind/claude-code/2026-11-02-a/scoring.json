@@ -1,0 +1,708 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "predicted_winner_believes_not_lose_table4_col1",
+      "ground_truth": {
+        "value": 0.269,
+        "standard_error": 0.058,
+        "unit": "change in the probability of believing one does not lose (0/1 outcome)",
+        "claim_type": "coefficient",
+        "location": "Table 4, column (1), Predicted winner",
+        "context": "Table 4 (\"Effect of Feedback on Belief of Winning\"), column (1), the paper's main specification (equation 2), a regression discontinuity in the respondent-specific estimated net gain from the tax and dividend policy.  Among respondents who received the customized win/lose feedback, restricted to those whose estimated net gain is within EUR 50 per year of zero: a linear probability model of the belief after feedback (1 if the respondent believes they do not lose, 0 if they believe they lose) on the predicted-winner indicator (the win feedback, which switches on when the estimated net gain exceeds zero), a quadratic in the estimated net gain, initial acceptance of the tax and dividend, and controls for incomes (piecewise continuous), socio-demographics and other motives.  This is the coefficient on the predicted-winner indicator.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.216,
+        "outcome": "does_not_match",
+        "notes": "Coding error fixed: treatment set to 1 exactly when the simulated net gain is positive.  DP58 Table 2 col 3 / meta-database row 6688: 0.216 (SE 0.066), p = 0.001, N = 757 (col 4, no covariates: 0.234 (0.069)). As coded: 0.272 (0.059) (row 6656); no covariates 0.241 (0.056). rdrobust variants (DP58 Table 3, rows 6631-6690): conventional 0.157-0.282, bias-corrected 0.131-0.287; the misclassified respondents dropped (col 6) 0.282 (0.069).\n",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.21561338289962825,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "predicted_winner_believes_not_lose_table4_col1",
+        "claim_type": "coefficient",
+        "claimed": 0.269,
+        "reproduced": 0.281949,
+        "tolerance": 0.21561338289962825,
+        "rel_err": 0.04813754646840144,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "predicted_winner_believes_not_lose_table4_col1",
+        "reproduced": 0.281949,
+        "band_source": "se_band",
+        "band_relative": 0.21561338289962825,
+        "band_absolute": 0.058,
+        "abs_err": 0.012948999999999988,
+        "rel_err": 0.04813754646840144,
+        "margin": 0.22325862068965496,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "initial_acceptance_believes_not_lose_table4_col1",
+      "ground_truth": {
+        "value": 0.306,
+        "standard_error": 0.066,
+        "unit": "change in the probability of believing one does not lose (0/1 outcome)",
+        "claim_type": "coefficient",
+        "location": "Table 4, column (1), Initial tax acceptance",
+        "context": "Table 4, column (1): the coefficient on initial acceptance of the tax and dividend (the answer when the policy was first presented, before any feedback) in the main feedback regression (estimated net gain within EUR 50 of zero; quadratic in the estimated net gain; income, socio-demographic and other-motive controls).\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.21568627450980393,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "initial_acceptance_believes_not_lose_table4_col1",
+        "claim_type": "coefficient",
+        "claimed": 0.306,
+        "reproduced": 0.227924,
+        "tolerance": 0.21568627450980393,
+        "rel_err": 0.25515032679738564,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "initial_acceptance_believes_not_lose_table4_col1",
+        "reproduced": 0.227924,
+        "band_source": "se_band",
+        "band_relative": 0.21568627450980393,
+        "band_absolute": 0.066,
+        "abs_err": 0.078076,
+        "rel_err": 0.25515032679738564,
+        "margin": 1.182969696969697,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=0.227924 vs claimed=0.306 (relative error 25.52%, tolerance 21.57%, the ±1·SE band with SE=0.066)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "predicted_winner_believes_not_lose_full_sample_table4_col2",
+      "ground_truth": {
+        "value": 0.208,
+        "standard_error": 0.035,
+        "unit": "change in the probability of believing one does not lose (0/1 outcome)",
+        "claim_type": "coefficient",
+        "location": "Table 4, column (2), Predicted winner",
+        "context": "Table 4, column (2): the same regression as column (1) estimated on every respondent who received the win/lose feedback (no restriction on the estimated net gain).  Coefficient on the predicted-winner indicator.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.16826923076923078,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "predicted_winner_believes_not_lose_full_sample_table4_col2",
+        "claim_type": "coefficient",
+        "claimed": 0.208,
+        "reproduced": 0.224876,
+        "tolerance": 0.16826923076923078,
+        "rel_err": 0.0811346153846154,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "predicted_winner_believes_not_lose_full_sample_table4_col2",
+        "reproduced": 0.224876,
+        "band_source": "se_band",
+        "band_relative": 0.16826923076923078,
+        "band_absolute": 0.035,
+        "abs_err": 0.016876000000000002,
+        "rel_err": 0.0811346153846154,
+        "margin": 0.4821714285714286,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "predicted_winner_heterogeneity_table4_col3",
+      "ground_truth": {
+        "value": 0.246,
+        "standard_error": 0.064,
+        "unit": "change in the probability of believing one does not lose (0/1 outcome)",
+        "claim_type": "coefficient",
+        "location": "Table 4, column (3), Predicted winner",
+        "context": "Table 4, column (3): column (1) (estimated net gain within EUR 50 of zero) with heterogeneous treatment effects — the predicted-winner indicator interacted with initial tax acceptance, with being a Yellow Vests supporter (declared themselves part of or supporting the movement), and with the initial win/lose belief (whether the respondent initially thought they would not lose), the main effects of these, and the same controls plus the initial win/lose category. Coefficient on the predicted-winner indicator (the effect for the omitted groups).\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.256,
+        "outcome": "matches",
+        "notes": "DP58 Table 5 col 1 / meta-database row 6673 (corrected treatment, the paper's specification): 0.256 (0.065).  With the running-variable polynomial interacted with the subgroup indicators (cols 2-4): 0.180 (0.074), 0.209 (0.086), 0.220 (0.078).\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.2601626016260163,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "predicted_winner_heterogeneity_table4_col3",
+        "claim_type": "coefficient",
+        "claimed": 0.246,
+        "reproduced": 0.227422,
+        "tolerance": 0.2601626016260163,
+        "rel_err": 0.07552032520325197,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "predicted_winner_heterogeneity_table4_col3",
+        "reproduced": 0.227422,
+        "band_source": "se_band",
+        "band_relative": 0.2601626016260163,
+        "band_absolute": 0.064,
+        "abs_err": 0.018577999999999983,
+        "rel_err": 0.07552032520325197,
+        "margin": 0.2902812499999997,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "initial_acceptance_heterogeneity_table4_col3",
+      "ground_truth": {
+        "value": 0.015,
+        "standard_error": 0.087,
+        "unit": "change in the probability of believing one does not lose (0/1 outcome)",
+        "claim_type": "coefficient",
+        "location": "Table 4, column (3), Initial tax acceptance",
+        "context": "Table 4, column (3), the heterogeneity regression: the main effect of initial tax acceptance.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.061,
+        "outcome": "does_not_match",
+        "notes": "DP58 Table 5 col 1 / row 6660: 0.061 (0.069) vs the printed 0.015 (0.087), both insignificant.  Cols 2-4: -0.065 (0.097), -0.163 (0.128), -0.272 (0.109).\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 5.8,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "initial_acceptance_heterogeneity_table4_col3",
+        "claim_type": "coefficient",
+        "claimed": 0.015,
+        "reproduced": -0.02537,
+        "tolerance": 5.8,
+        "rel_err": 2.6913333333333336,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "initial_acceptance_heterogeneity_table4_col3",
+        "reproduced": -0.02537,
+        "band_source": "se_band",
+        "band_relative": 5.8,
+        "band_absolute": 0.087,
+        "abs_err": 0.04037,
+        "rel_err": 2.6913333333333336,
+        "margin": 0.4640229885057472,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "yellow_vests_supporter_heterogeneity_table4_col3",
+      "ground_truth": {
+        "value": 0.019,
+        "standard_error": 0.058,
+        "unit": "change in the probability of believing one does not lose (0/1 outcome)",
+        "claim_type": "coefficient",
+        "location": "Table 4, column (3), Yellow Vests supporter",
+        "context": "Table 4, column (3), the heterogeneity regression: the main effect of being a Yellow Vests supporter.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.013,
+        "outcome": "matches",
+        "notes": "DP58 Table 5 col 1 / row 6648: 0.013 (0.059).  Cols 2-4: -0.090 (0.081), -0.075 (0.105), 0.026 (0.091).\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 3.0526315789473686,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "yellow_vests_supporter_heterogeneity_table4_col3",
+        "claim_type": "coefficient",
+        "claimed": 0.019,
+        "reproduced": 0.037609,
+        "tolerance": 3.0526315789473686,
+        "rel_err": 0.9794210526315789,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "yellow_vests_supporter_heterogeneity_table4_col3",
+        "reproduced": 0.037609,
+        "band_source": "se_band",
+        "band_relative": 3.0526315789473686,
+        "band_absolute": 0.058,
+        "abs_err": 0.018608999999999997,
+        "rel_err": 0.9794210526315789,
+        "margin": 0.3208448275862068,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "winner_x_initial_acceptance_table4_col3",
+      "ground_truth": {
+        "value": 0.166,
+        "standard_error": 0.079,
+        "unit": "change in the probability of believing one does not lose (0/1 outcome)",
+        "claim_type": "coefficient",
+        "location": "Table 4, column (3), Predicted winner x Initial tax acceptance",
+        "context": "Table 4, column (3): the interaction of the predicted-winner indicator with initial tax acceptance — how much larger the effect of the win feedback is among respondents who initially accepted the tax and dividend.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.15,
+        "outcome": "does_not_match",
+        "notes": "DP58 Table 5 col 1 / row 6637: 0.150 (0.080), p = 0.061 (printed 0.166, significant at 5%).  With the polynomial interacted (the replicators' preferred correction, cols 2-4): 0.378 (0.124), 0.460 (0.145), 0.618 (0.126) — the acceptance heterogeneity grows.\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.4759036144578313,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "winner_x_initial_acceptance_table4_col3",
+        "claim_type": "coefficient",
+        "claimed": 0.166,
+        "reproduced": 0.191002,
+        "tolerance": 0.4759036144578313,
+        "rel_err": 0.15061445783132527,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "winner_x_initial_acceptance_table4_col3",
+        "reproduced": 0.191002,
+        "band_source": "se_band",
+        "band_relative": 0.4759036144578313,
+        "band_absolute": 0.079,
+        "abs_err": 0.025001999999999996,
+        "rel_err": 0.15061445783132527,
+        "margin": 0.3164810126582278,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "winner_x_yellow_vests_supporter_table4_col3",
+      "ground_truth": {
+        "value": -0.151,
+        "standard_error": 0.069,
+        "unit": "change in the probability of believing one does not lose (0/1 outcome)",
+        "claim_type": "coefficient",
+        "location": "Table 4, column (3), Predicted winner x Yellow Vests supporter",
+        "context": "Table 4, column (3): the interaction of the predicted-winner indicator with being a Yellow Vests supporter — the paper's evidence that opponents of the tax discard favourable information.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.162,
+        "outcome": "does_not_match",
+        "notes": "DP58 Table 5 col 1 / row 6668: -0.162 (0.070), p = 0.020.  With the polynomial interacted (cols 2-4): -0.084 (0.106), -0.081 (0.120), -0.155 (0.106), none significant — DP58's main finding: the Yellow Vests heterogeneity may be an artefact of misspecification.\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.456953642384106,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "winner_x_yellow_vests_supporter_table4_col3",
+        "claim_type": "coefficient",
+        "claimed": -0.151,
+        "reproduced": -0.145431,
+        "tolerance": 0.456953642384106,
+        "rel_err": 0.03688079470198669,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "winner_x_yellow_vests_supporter_table4_col3",
+        "reproduced": -0.145431,
+        "band_source": "se_band",
+        "band_relative": 0.456953642384106,
+        "band_absolute": 0.069,
+        "abs_err": 0.005568999999999991,
+        "rel_err": 0.03688079470198669,
+        "margin": 0.08071014492753609,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "winner_x_initial_win_belief_table4_col3",
+      "ground_truth": {
+        "value": 0.08,
+        "standard_error": 0.079,
+        "unit": "change in the probability of believing one does not lose (0/1 outcome)",
+        "claim_type": "coefficient",
+        "location": "Table 4, column (3), Predicted winner x G",
+        "context": "Table 4, column (3): the interaction of the predicted-winner indicator with the initial win/lose belief (initially believing one does not lose).\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.084,
+        "outcome": "matches",
+        "notes": "DP58 Table 5 col 1 / row 6633: 0.084 (0.080).  Cols 2-4: 0.043 (0.119), -0.017 (0.142), -0.013 (0.123).\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.9875,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "winner_x_initial_win_belief_table4_col3",
+        "claim_type": "coefficient",
+        "claimed": 0.08,
+        "reproduced": 0.15118,
+        "tolerance": 0.9875,
+        "rel_err": 0.88975,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "winner_x_initial_win_belief_table4_col3",
+        "reproduced": 0.15118,
+        "band_source": "se_band",
+        "band_relative": 0.9875,
+        "band_absolute": 0.079,
+        "abs_err": 0.07118000000000001,
+        "rel_err": 0.88975,
+        "margin": 0.9010126582278482,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "predicted_winner_believes_wins_table4_col4",
+      "ground_truth": {
+        "value": 0.153,
+        "standard_error": 0.045,
+        "unit": "change in the probability of believing one wins (0/1 outcome)",
+        "claim_type": "coefficient",
+        "location": "Table 4, column (4), Predicted winner",
+        "context": "Table 4, column (4): column (1) (estimated net gain within EUR 50 of zero, same controls) with the dependent variable switched to the belief that one wins (1 if the respondent believes they win, 0 otherwise).  Coefficient on the predicted-winner indicator.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.29411764705882354,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "predicted_winner_believes_wins_table4_col4",
+        "claim_type": "coefficient",
+        "claimed": 0.153,
+        "reproduced": 0.14324,
+        "tolerance": 0.29411764705882354,
+        "rel_err": 0.06379084967320256,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "predicted_winner_believes_wins_table4_col4",
+        "reproduced": 0.14324,
+        "band_source": "se_band",
+        "band_relative": 0.29411764705882354,
+        "band_absolute": 0.045,
+        "abs_err": 0.009759999999999991,
+        "rel_err": 0.06379084967320256,
+        "margin": 0.2168888888888887,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_table4_col1",
+      "ground_truth": {
+        "value": 757.0,
+        "standard_error": null,
+        "unit": "respondents",
+        "claim_type": "other",
+        "location": "Table 4, column (1), Observations",
+        "context": "Number of respondents in the Table 4 column (1) regression: those who received the win/lose feedback and whose estimated net gain is within EUR 50 per year of zero.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 757.0,
+        "outcome": "matches",
+        "notes": "DP58 Tables 2 and 5: N = 757 in every column, with the treatment as coded and corrected (the sample is defined by the simulated net gain, not the indicator).\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table4_col1",
+        "claim_type": "other",
+        "claimed": 757.0,
+        "reproduced": 757.0,
+        "tolerance": 0.01,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_table4_col1",
+        "reproduced": 757.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 7.57,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "believes_not_lose_on_acceptance_iv_table6_col1",
+      "ground_truth": {
+        "value": 0.534,
+        "standard_error": 0.132,
+        "unit": "change in the probability of accepting the tax and targeted dividend",
+        "claim_type": "coefficient",
+        "location": "Table 6, column (1), Believes does not lose",
+        "context": "Table 6 (\"Effect of Self-Interest on Acceptance\"), column (1), the paper's main self-interest estimate: two-stage least squares of acceptance of the tax and targeted dividend (\"Yes\" or \"Don't know\" to supporting it) on the belief that one does not lose from it, instrumented by the respondent's and the second adult's random eligibility for the targeted dividend (eligibility thresholds at the 20th, 30th, 40th or 50th income percentile, randomly assigned) and their interaction (first stage: Table 5 column 1), controlling for fixed effects for the policy assigned, a single-adult indicator, initial acceptance of the tax and dividend, incomes (piecewise linear with kinks at the 20th and 70th percentiles), estimated gains, socio-demographics and other motives.  Sample: households where at least one adult's income is between the 10th and 60th percentiles.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.24719101123595505,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "believes_not_lose_on_acceptance_iv_table6_col1",
+        "claim_type": "coefficient",
+        "claimed": 0.534,
+        "reproduced": 0.549709,
+        "tolerance": 0.24719101123595505,
+        "rel_err": 0.02941760299625463,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "believes_not_lose_on_acceptance_iv_table6_col1",
+        "reproduced": 0.549709,
+        "band_source": "se_band",
+        "band_relative": 0.24719101123595505,
+        "band_absolute": 0.132,
+        "abs_err": 0.015708999999999973,
+        "rel_err": 0.02941760299625463,
+        "margin": 0.11900757575757555,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "believes_effective_on_approval_iv_table8_col1",
+      "ground_truth": {
+        "value": 0.416,
+        "standard_error": 0.168,
+        "unit": "change in the probability of approving the tax and dividend",
+        "claim_type": "coefficient",
+        "location": "Table 8, column (1), Believes in effectiveness",
+        "context": "Table 8 (\"Effect of Believing in Environmental Effectiveness on Approval\"), column (1), the paper's main environmental-effectiveness estimate: two-stage least squares of initial approval of the tax and dividend (answer \"Yes\") on believing it is environmentally effective (answer \"Yes\"), instrumented by the two randomly displayed information treatments on the scientific consensus about the effectiveness of carbon taxation and on climate change (first stage: Table 7), controlling for socio-demographics, other motives, incomes and estimated gains.  All respondents.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.4038461538461539,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "believes_effective_on_approval_iv_table8_col1",
+        "claim_type": "coefficient",
+        "claimed": 0.416,
+        "reproduced": 0.426894,
+        "tolerance": 0.4038461538461539,
+        "rel_err": 0.026187500000000037,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "believes_effective_on_approval_iv_table8_col1",
+        "reproduced": 0.426894,
+        "band_source": "se_band",
+        "band_relative": 0.4038461538461539,
+        "band_absolute": 0.168,
+        "abs_err": 0.010894000000000015,
+        "rel_err": 0.026187500000000037,
+        "margin": 0.06484523809523818,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 13,
+    "row_passed": 12,
+    "recomputed_passed": 12,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "douenne-2022-yellow-vests-carbon-tax",
+    "mode": "blind",
+    "reproducer": "claude-code",
+    "label": "claude-code",
+    "model": null,
+    "oracle": false,
+    "run": "2026-11-02-a",
+    "results_file": "claude-code-6papers-all-modes-2026-11-02.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/douenne-2022-yellow-vests-carbon-tax/blind/claude-code/20261102T142249Z",
+    "run_dir": "benchmark/reproductions/douenne-2022-yellow-vests-carbon-tax/blind/2026-11-02-a",
+    "date": "2026-11-02T14:17:00Z",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 13,
+    "final": 12,
+    "first_scored": 12,
+    "first_scored_index": 5,
+    "first_attempt": 0,
+    "n_refinements": 0,
+    "n_error_refinements": 0,
+    "n_claim_refinements": 0,
+    "n_executions": 7,
+    "n_files_stripped": 39,
+    "agrees_with_i4r": false,
+    "deviations_manifest": [
+      "The online-appendix control lists are unavailable. Controls were rebuilt from the data. Sociodemographics: sex, age bracket, employment status, CSP, education (4 levels), agglomeration size, region, household size, number aged 14+, left-right placement, smoker, main news source. Other motives: belief in environmental effectiveness and in progressivity. Incomes: continuous piecewise-linear terms in both adults' income percentiles with kinks at p20 and p70. Estimated gains: quadratic in the estimated net gain per consumption unit.",
+      "Estimated net gain = simule_gain (EUR/yr per consumption unit). Predicted winner = simule_gagnant, the displayed feedback; it differs from 1{simule_gain>0} for 56 respondents, 52 of them inside the |gain|<50 band.",
+      "Table 8: the progressivity belief is left out of the other-motive controls. It was only elicited in the survey wave that also received the effectiveness information (apres_modifs), so it is collinear with the instrument. The other-motive control there is the initial win/lose category.",
+      "Yellow Vests supporter = Gilets_jaunes in {soutient, est_dedans}. The initial win/lose belief G = initial category not 'Loser'. Column 3 also controls for the 3-level initial category.",
+      "Table 6 col 1 subsample = at least one adult's income percentile in [10,60] (both percentile variables as provided; 1,969 respondents). Eligibility instruments are traite_cible, traite_cible_conjoint and their product. Controls add policy-threshold fixed effects, a single-adult indicator and initial acceptance.",
+      "Table 8 instruments: apres_modifs = info on the scientific consensus about effectiveness (identified by its effect on the effectiveness belief) and info_CC. Strict definitions: approval = 'Oui', effective = 'Oui'.",
+      "Heteroskedasticity-robust standard errors (coefficients do not depend on this)."
+    ],
+    "deviations_stdout": [
+      "control lists (online appendix) unavailable; sociodemo/other-motive/income controls reconstructed from variable names; heteroskedasticity-robust SEs.",
+      "Table 8 other-motive controls = initial win/lose category only (progressivity belief omitted: its missingness coincides with the E.E. information wave, collinear with the instrument)."
+    ],
+    "notes": "Data: the object s (3,002 respondents) from code/after_preparation.RData. memisc S4 columns were converted to base vectors because memisc is not installed. No scripts, logs or result files in the package were opened. Attempts 1-5 were exploratory and printed no RESULT lines. Attempts 2 and 3 crashed while converting the memisc columns. Before its final completed run, attempt 3 also hit Docker infrastructure failures: a 'Transport endpoint is not connected' mount error, hung containers stuck in 'Created', and a daemon crash. Docker Desktop was restarted and the identical script then ran. Attempt 6 was the first scored run. Its collinearity warning showed that the progressivity 'not asked' level was collinear with the effectiveness-information instrument, which collapsed the Table 8 first stage (F = 1.5). The final run drops that control from Table 8 only (first-stage F = 10.9). No paper values were consulted or compared. Paper numbers used were sample-description counts only: 1,968 feedback recipients and 1,969 respondents in the [p10;p60] subsample, both matched by construction.",
+    "files_read_outside_mount": [],
+    "paper_text": "paper.blind.txt",
+    "complete": true,
+    "missing": []
+  }
+}

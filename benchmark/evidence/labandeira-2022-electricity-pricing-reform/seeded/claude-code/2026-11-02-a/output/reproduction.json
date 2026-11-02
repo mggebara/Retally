@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "labandeira-2022-electricity-pricing-reform",
+  "mode": "seeded",
+  "run_id": "2026-11-02-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Data read from the package's CSV copy (Data_to run_DOFILE3.csv) with a column subset via data.table::fread, because haven::read_dta with col_select failed to parse the .dta (attempt-1).",
+    "Stata's i.ESTUDRED resolves by unique abbreviation to ESTUDREDSP, which is used (ESTUDRED itself is not in the dataset).",
+    "ivreg2 LIML (columns 2, 4, 6, 8) implemented as a hand-written k-class LIML estimator (kappa = smallest eigenvalue), since fixest has no LIML; only point estimates are reported. xtreg fe is feols with id fixed effects and fixef.rm='none'."
+  ],
+  "notes": "Followed 3_ Results TABLES.do Table 2: sample1 = complete cases of the column-1 OLS regression (N=20872, 10729 households, matching the paper). Columns 1/5 are OLS with factor dummies (TAMAMU, CCAA, ESTUDREDSP, SITUACTHOG_j, year, trim), clustered by id. Columns 3/7 are within estimators. Columns 2/6 are LIML with no constant, using the do-file's itam/iccaa/iestud/isitu/iyear dummy set and instruments lnPRE_aguav_, lnPRE_papas_, lnPRE_gascar_. Columns 4/8 are LIML on id-demeaned variables (means over sample1) with no constant. All 12 RESULT values match the claims at the reported precision, and the ln(price) coefficients in the other columns match Table 2 as well. The script was not changed after any comparison, so there are no claim attempts. Attempt-1 was exploratory (the .dta read failed). Attempt-2 was a successful exploratory run (the variable list and the sample count). Two further runs hung because the Docker daemon was wedged; the container never started (exit 125). Per the coordinator they are not counted as attempts and were moved out of the run directory.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T10:07:24Z",
+  "finished_at": "2026-11-02T14:15:30Z"
+}

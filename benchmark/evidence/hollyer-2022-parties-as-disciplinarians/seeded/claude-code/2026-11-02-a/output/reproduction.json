@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "entry_id": "hollyer-2022-parties-as-disciplinarians",
+  "mode": "seeded",
+  "run_id": "2026-11-02-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [],
+  "deviations": [],
+  "notes": "Single run. Table 1: OLS (fixest::feols, country-clustered SEs) of personal/programmatic on ev_total (+ ethnic or extremist2 interaction) with the authors' $p_controls and $controls (pr factor, cl base 3, system base 1, gini/100), listwise deletion as in Stata reg. Stata margins reproduced analytically from the linear coefficients: volatility at p25/p75 of e(sample) (Stata summarize-detail percentiles = R quantile type 2), group attachment at 0 vs p90 of e(sample) as in the authors' getmargins program (ethnic: 1; extremist2: 3.55, whereas the paper text says 3; the script was followed). N = 431 parties / 75 countries (430 in the extremism models). Table 2: rdrobust defaults (local linear, MSE-optimal h and b) on dlameduck_runs == 0. All values round to the claimed figures; no comparison-driven changes were made.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T09:45:29Z",
+  "finished_at": "2026-11-02T09:47:00Z"
+}

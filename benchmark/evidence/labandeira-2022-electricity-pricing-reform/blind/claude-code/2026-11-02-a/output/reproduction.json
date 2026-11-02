@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "labandeira-2022-electricity-pricing-reform",
+  "mode": "blind",
+  "run_id": "2026-11-02-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Instruments: the raw effective prices of potatoes/water/fuel are missing for ~1/3 of households; to keep the same N in all eight columns (as the paper states) the filled-in series lnPRE_*_ shipped in the analysis data (deflated, gaps filled with cell averages) are used, converted back to nominal logs by adding IP (equal to lnp_* wherever the household purchased).",
+    "LIML has no fixest/ivreg implementation; it is computed as a k-class estimator on variables partialled out on the exogenous regressors (and household FE via fixest), with exogenous coefficients (incl. T) recovered by regressing y - beta*lnp on the exogenous set. Only point estimates are computed for the IV columns (no SEs).",
+    "Sample: the T2 panel (25,775 rows, Aug 2011-Apr 2014) with listwise deletion on all regression variables; economic situation (SITUACTHOG_j) is missing for 4,445 rows, giving 20,872 obs / 10,729 households (586 singleton households; fixest drops them in FE columns, which does not change FE coefficients; reported N and household count include them, as Stata xtreg would)."
+  ],
+  "notes": "Spec (eq. 4): ln y on Reform T (T2), ln(price kWh) (lnp_kwh), ln income and its square (lny, lny2), months since reform (dist), controls (household size, rooms, m2, elderly, education dummies, economic-situation dummies, renting, building >25y, municipality-size dummies, urban, province-capital dummies, region dummies), quarter dummies and year FE; household FE in cols 3/4/7/8; household-clustered SEs. T2 was taken as T because its non-missing sample is exactly the paper's 25,775-observation panel. Because the price is defined as expenditure/consumption, ln expenditure = ln consumption + ln price exactly in this data, so every expenditure Reform coefficient equals its consumption counterpart (and the price coefficient is shifted by +1); the paper reports them as different, which this data cannot reproduce with these definitions. Not tuned toward any paper value (blind). Two earlier docker runs hung on a wedged Docker daemon and never executed; they are not counted as attempts. Readme.pdf in the dataset was not read (blind rule on .pdf).",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T10:09:28Z",
+  "finished_at": "2026-11-02T14:18:48Z"
+}

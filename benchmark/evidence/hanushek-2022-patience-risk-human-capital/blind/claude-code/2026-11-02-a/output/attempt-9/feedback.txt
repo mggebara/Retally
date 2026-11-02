@@ -1,0 +1,6 @@
+kind: "" (infrastructure hang during the Docker daemon wedge; not counted as a repair attempt per coordinator)
+The run never started R: docker exited 125 because the Docker daemon crashed while starting the container
+  docker: error during connect: Post ".../containers/<id>/start": EOF.
+  level=error msg="error waiting for container: unexpected EOF"
+No RESULT lines were printed. (The interrupted attempt-8 process hit the same daemon crash at the same moment.)
+Fix: restarted Docker Desktop; the identical script is re-run as the final run. No change to the method.

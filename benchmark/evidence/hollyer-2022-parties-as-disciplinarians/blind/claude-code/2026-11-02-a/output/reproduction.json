@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "entry_id": "hollyer-2022-parties-as-disciplinarians",
+  "mode": "blind",
+  "run_id": "2026-11-02-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "error"}
+  ],
+  "deviations": [
+    "Volatility 25th/75th percentiles taken over the party-level estimation sample (N=430) using Stata-style percentiles (R quantile type 2); the paper says only 'in the sample'.",
+    "Ethnic party coded as ethnic > 0.5 (strict majority of expert coders report ethnic/linguistic linkages).",
+    "Ideological extremism uses the supplied extremist2 variable (per the codebook, vote-share-weighted absolute distance from the country mean left-right placement); extremist party at distance 3, moderate at 0.",
+    "Country covariates coded as: pluralty and pr dummies (mixed omitted); closed-list (cl==1) and open-list (cl==2) dummies (non-list omitted); mdmh; polity; demsys; system as a 3-level factor (presidential omitted); gdppc; gini; ethfrac. Party covariates: partysize, unions, business, religious.",
+    "Table 1 sample is complete cases on both outcomes, volatility, all covariates, ethnic and extremist2 (430 parties, 75 countries), so every panel uses the same sample."
+  ],
+  "notes": "Table 1: OLS with country-clustered (HC1/CR1) SEs; the quantities are linear combinations of coefficients (beta*(p75-p25) for the volatility differences; b_group + b_interaction*vol for group differences), which do not depend on the covariate values. Table 2: rdrobust (local linear, triangular kernel, mserd bandwidths) on the open-seat sample (dlameduck_runs==0), running variable mv_incparty, cutoff 0; conventional point estimate reported. attempt-1 was an exploratory run (no RESULT lines). attempt-2: docker ran before the script file existed, because the sandbox guard refused the command that would have written it; Docker created an empty directory at script.R, nothing ran, and there was no output. attempt-2/script.R is an empty placeholder recording that. The codebook.pdf inside the mount was read for variable definitions. The authors' .do/.R scripts were not opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T01:42:00Z",
+  "finished_at": "2026-11-02T01:50:00Z"
+}

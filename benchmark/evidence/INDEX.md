@@ -93,6 +93,12 @@ Built by `python -m benchmark.evidence`; see `benchmark/README.md` ("Evidence bu
 - [blind · claude-code · 2026-11-02-a](carrera-2022-who-chooses-commitment/blind/claude-code/2026-11-02-a/CELL.md) — 11/11
 - [blind · pipeline-desktop-opus · 20261102T055735Z](carrera-2022-who-chooses-commitment/blind/pipeline-desktop-opus/20261102T055735Z/CELL.md) — 0/11
 
+## [dancygier-2022-hate-crimes-gender-imbalances](dancygier-2022-hate-crimes-gender-imbalances/REPORT.md)
+
+- [seeded · claude-code · 2026-11-02-a](dancygier-2022-hate-crimes-gender-imbalances/seeded/claude-code/2026-11-02-a/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-02-a](dancygier-2022-hate-crimes-gender-imbalances/independent/claude-code/2026-11-02-a/CELL.md) — 13/13
+- [blind · claude-code · 2026-11-02-a](dancygier-2022-hate-crimes-gender-imbalances/blind/claude-code/2026-11-02-a/CELL.md) — 13/13
+
 ## [dertwinkel-kalt-2022-concentration-bias](dertwinkel-kalt-2022-concentration-bias/REPORT.md)
 
 - [seeded · claude-code · 2026-10-22-a](dertwinkel-kalt-2022-concentration-bias/seeded/claude-code/2026-10-22-a/CELL.md) — 13/13
@@ -106,6 +112,12 @@ Built by `python -m benchmark.evidence`; see `benchmark/README.md` ("Evidence bu
 - [blind · claude-code · 2026-11-01-a](dertwinkel-kalt-2022-concentration-bias/blind/claude-code/2026-11-01-a/CELL.md) — 13/13
 - [blind · pipeline-desktop-opus · 20261023T062931Z](dertwinkel-kalt-2022-concentration-bias/blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) — 12/13
 - [blind · pipeline-desktop-opus-run2 · 20261023T150832Z](dertwinkel-kalt-2022-concentration-bias/blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — 13/13
+
+## [douenne-2022-yellow-vests-carbon-tax](douenne-2022-yellow-vests-carbon-tax/REPORT.md)
+
+- [seeded · claude-code · 2026-11-02-a](douenne-2022-yellow-vests-carbon-tax/seeded/claude-code/2026-11-02-a/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-02-a](douenne-2022-yellow-vests-carbon-tax/independent/claude-code/2026-11-02-a/CELL.md) — 13/13
+- [blind · claude-code · 2026-11-02-a](douenne-2022-yellow-vests-carbon-tax/blind/claude-code/2026-11-02-a/CELL.md) — 12/13
 
 ## [forsythe-2022-young-workers-recessions](forsythe-2022-young-workers-recessions/REPORT.md)
 
@@ -166,6 +178,18 @@ Built by `python -m benchmark.evidence`; see `benchmark/README.md` ("Evidence bu
 - [blind · pipeline-desktop-opus · 20261023T062931Z](hanlon-2022-aircraft-ip-spillovers/blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) — 12/12
 - [blind · pipeline-desktop-opus-run2 · 20261023T150832Z](hanlon-2022-aircraft-ip-spillovers/blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — 12/12
 
+## [hanushek-2022-patience-risk-human-capital](hanushek-2022-patience-risk-human-capital/REPORT.md)
+
+- [seeded · claude-code · 2026-11-02-a](hanushek-2022-patience-risk-human-capital/seeded/claude-code/2026-11-02-a/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-02-a](hanushek-2022-patience-risk-human-capital/independent/claude-code/2026-11-02-a/CELL.md) — 13/13
+- [blind · claude-code · 2026-11-02-a](hanushek-2022-patience-risk-human-capital/blind/claude-code/2026-11-02-a/CELL.md) — 13/13
+
+## [hollyer-2022-parties-as-disciplinarians](hollyer-2022-parties-as-disciplinarians/REPORT.md)
+
+- [seeded · claude-code · 2026-11-02-a](hollyer-2022-parties-as-disciplinarians/seeded/claude-code/2026-11-02-a/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-02-a](hollyer-2022-parties-as-disciplinarians/independent/claude-code/2026-11-02-a/CELL.md) — 13/13
+- [blind · claude-code · 2026-11-02-a](hollyer-2022-parties-as-disciplinarians/blind/claude-code/2026-11-02-a/CELL.md) — 13/13
+
 ## [holman-2022-theresa-may-rally](holman-2022-theresa-may-rally/REPORT.md)
 
 - [seeded · claude-code · 2026-10-22-a](holman-2022-theresa-may-rally/seeded/claude-code/2026-10-22-a/CELL.md) — 11/11
@@ -180,6 +204,12 @@ Built by `python -m benchmark.evidence`; see `benchmark/README.md` ("Evidence bu
 - [blind · claude-code · 2026-11-01-a](holman-2022-theresa-may-rally/blind/claude-code/2026-11-01-a/CELL.md) — 6/11
 - [blind · pipeline-desktop-opus · 20261023T062931Z](holman-2022-theresa-may-rally/blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) — 0/11
 - [blind · pipeline-desktop-opus-run2 · 20261023T150832Z](holman-2022-theresa-may-rally/blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — 0/11
+
+## [labandeira-2022-electricity-pricing-reform](labandeira-2022-electricity-pricing-reform/REPORT.md)
+
+- [seeded · claude-code · 2026-11-02-a](labandeira-2022-electricity-pricing-reform/seeded/claude-code/2026-11-02-a/CELL.md) — 12/12
+- [independent · claude-code · 2026-11-02-a](labandeira-2022-electricity-pricing-reform/independent/claude-code/2026-11-02-a/CELL.md) — 8/12
+- [blind · claude-code · 2026-11-02-a](labandeira-2022-electricity-pricing-reform/blind/claude-code/2026-11-02-a/CELL.md) — 6/12
 
 ## [leeson-2022-hobo-economicus](leeson-2022-hobo-economicus/REPORT.md)
 
@@ -228,6 +258,12 @@ Built by `python -m benchmark.evidence`; see `benchmark/README.md` ("Evidence bu
 - [blind · pipeline-claude-opus-4-7 · 20261021T142909Z](manekin-2022-effective-for-whom/blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) — 6/12
 - [blind · pipeline-claude-opus-5-5 · 20261022T044632Z](manekin-2022-effective-for-whom/blind/pipeline-claude-opus-5-5/20261022T044632Z/CELL.md) — 12/12
 - [blind · pipeline-desktop-opus-run2 · 20261023T150832Z](manekin-2022-effective-for-whom/blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — 9/12
+
+## [mokyr-2022-wheels-of-change](mokyr-2022-wheels-of-change/REPORT.md)
+
+- [seeded · claude-code · 2026-11-02-a](mokyr-2022-wheels-of-change/seeded/claude-code/2026-11-02-a/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-02-a](mokyr-2022-wheels-of-change/independent/claude-code/2026-11-02-a/CELL.md) — 13/13
+- [blind · claude-code · 2026-11-02-a](mokyr-2022-wheels-of-change/blind/claude-code/2026-11-02-a/CELL.md) — 13/13
 
 ## [montero-2022-cooperative-property-rights](montero-2022-cooperative-property-rights/REPORT.md)
 

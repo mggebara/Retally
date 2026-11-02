@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "dancygier-2022-hate-crimes-gender-imbalances",
+  "mode": "seeded",
+  "run_id": "2026-11-02-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Data read with haven::read_dta + zap_labels instead of readstata13::read.dta13; all labelled survey variables are fully labelled, so factor() on the numeric codes gives the same dummy sets as the authors' factors.",
+    "Help.R::bin.summary reimplemented as glm(binomial) on na.omit of the model variables plus the cluster id, with sandwich::vcovCL clustered by ags_county (same as the authors)."
+  ],
+  "notes": "attempt-1 was exploratory (variable types/labels, wave counts, context.dta structure; no RESULT lines). The final run is the first and only scored run: Table 1 columns 1-6 are lm() on wave-4 respondents following SurveyAnalysis_Main.R; SI Table C1 columns 5 (Sum, 2015 cross-section, state FE) and 6 (Annual, municipality-years, state + year FE) are logits following ContextAnalysis_Appendix.R, after trimming Excess Males to its 2.5-97.5 percentile range in 2015. I checked that municipality row order matches across years before summing hate crimes positionally as the authors do. After the run I compared the RESULT values with the claimed values by eye: all 13 match to the reported precision, so the script was not changed and no claim attempt was recorded.",
+  "files_read_outside_mount": [
+    "<home>/.claude/projects/-Users-matthew-dev-Retally/4331b322-448f-44d6-bc9b-f556920716ab/tool-results/bwiaya230.txt: the harness's saved copy of task.md (output too long to show inline); same content as the task file, read to see the full task"
+  ],
+  "started_at": "2026-11-02T09:44:00Z",
+  "finished_at": "2026-11-02T09:47:27Z"
+}

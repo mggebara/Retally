@@ -1,0 +1,34 @@
+migrant file rows: 80398  origins: 58  residence: 48  country-waves: 180  secs: 8.9 
+Table 2 col3 SEs (country-of-origin clustered):
+                 Estimate Std. Error   t value     Pr(>|t|)
+coo_patience    0.9122196  0.1085076  8.406966 1.455385e-11
+coo_risktaking -0.1940007  0.1057642 -1.834276 7.183447e-02
+Table 2 done at 9.9 s
+rows in full file (header): 1992276 
+failed blocks: 0 
+blocks read: 333 of 333  rows loaded: 996276  share: 0.5  secs: 206 
+DEVIATION: full PISA file (1992276 rows, 2.5 GB) cannot be read through the mount within the 300 s sandbox limit (~10 MB/s); Table 1 is estimated on a systematic subsample of 996276 rows (50.0%): 3000-row blocks every 6000 rows, 333 of 333 blocks read; only the needed columns are loaded (haven col_select); sampling weights wgtc are renormalised within country-wave so each country keeps equal total weight and equal weight per wave.
+complete-case share in loaded rows: 1  countries: 49  country-waves: 253 
+DEVIATION: table1_col3_observations is the full-file row count times the complete-case share of the loaded rows (no missing values were found in any regression variable in exploratory reads of all rows).
+countries with GPS within-SD available: 43 of 49 
+individual-level GPS SD used: patience 1.018081  risk-taking 0.9758566 
+DEVIATION: the data hold only country-level GPS means; the individual-level z-standardisation in the 49-country sample is reconstructed with the within-country GPS SDs of the migrant file (validated on the 58 origin countries, where it reproduces the file's own standardisation slope to <1%).
+Table 1 col3 SEs (country clustered):
+        Estimate Std. Error   t value     Pr(>|t|)
+pat_z   1.240104  0.1314749  9.432253 1.656365e-12
+risk_z -1.220454  0.1788233 -6.824917 1.364501e-08
+Table 1 col3 loaded-sample nobs: 996276  natives loaded nobs: 875794  secs: 210.9 
+RESULT:table1_col3_patience=1.240104
+RESULT:table1_col3_risk_taking=-1.220454
+RESULT:table1_col1_patience=0.927467
+RESULT:table1_col2_risk_taking=-0.489398
+RESULT:table1_col5_natives_patience=1.304451
+RESULT:table1_col5_natives_risk_taking=-1.289648
+RESULT:table1_col3_observations=1992276
+RESULT:table2_col3_patience=0.912220
+RESULT:table2_col3_risk_taking=-0.194001
+RESULT:table2_col1_patience=0.805100
+RESULT:table2_col4_patience=1.027094
+RESULT:table2_col4_risk_taking=-0.381868
+RESULT:table2_col3_observations=80398
+total secs: 210.9 
