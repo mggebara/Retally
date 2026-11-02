@@ -8,7 +8,7 @@
 
 ## 1. Summary
 
-We built a benchmark that asks a language-model system to reproduce the headline numbers of published economics and political-science papers, scored against the papers' printed values and against the values that human replicators at the Institute for Replication (I4R) obtained.  Each paper is attempted in three modes: *seeded* (the authors' replication scripts are provided), *independent* (scripts withheld, target values shown) and *blind* (scripts and target values withheld).  Two systems sat the benchmark: a fixed pipeline that writes one R script and refines it, and a Claude Code agent with its own loop.  On thirteen evaluation papers (154 pinned claims) the agent reproduced 153, 148 and 135 claims within tolerance of the paper's printed value in seeded, independent and blind mode.  The pipeline, run on the same model family, reproduced 149, 129 and 92, and 152, 128 and 82 in a second complete sample.  On the seven papers where an older model was also run, moving the pipeline from `claude-opus-4-7` to Opus 5.5 raised its blind count from 24 to 51 of 79, against the agent's 75.  The finding: with the authors' code in hand both systems are near the ceiling, and the loss when the code and the targets are withheld is mostly a property of the harness and of what the papers' methods sections leave unstated.  Across the two pipeline samples the gap to the agent is about 20 claims in independent mode and 43 to 53 in blind mode, while the seeded difference is within the spread between the samples.  The limitations: the pipeline on Opus 5.5 has two samples per cell and every other configuration, the agent included, mostly one, on a corpus of thirteen papers that all predate the models' training cutoffs; two samples show how much a cell moves but do not give a standard error, so none of these differences carries a measured uncertainty.
+We built a benchmark that asks a language-model system to reproduce the headline numbers of published economics and political-science papers, scored against the papers' printed values and against the values that human replicators at the Institute for Replication (I4R) obtained.  Each paper is attempted in three modes: *seeded* (the authors' replication scripts are provided), *independent* (scripts withheld, target values shown) and *blind* (scripts and target values withheld).  Two systems sat the benchmark: a fixed pipeline that writes one R script and refines it, and a Claude Code agent with its own loop.  On thirteen evaluation papers (154 pinned claims) the agent reproduced 153, 148 and 135 claims within tolerance of the paper's printed value in seeded, independent and blind mode, and 147 and 132 in a second independent and blind sample.  The pipeline, run on the same model family, reproduced 149, 129 and 92, and 152, 128 and 82 in a second complete sample.  On the seven papers where an older model was also run, moving the pipeline from `claude-opus-4-7` to Opus 5.5 raised its blind count from 24 to 51 of 79, against the agent's 75.  The finding: with the authors' code in hand both systems are near the ceiling, and the loss when the code and the targets are withheld is mostly a property of the harness and of what the papers' methods sections leave unstated.  Pairing each of the agent's two samples with each of the pipeline's, the gap is 18 to 20 claims in independent mode and 40 to 53 in blind mode, while the seeded difference is within the spread between the pipeline samples.  A memorization probe, asking the same model for each number from memory with no data, landed 26 of the 154 claims inside the blind tolerance, none by stated recall, so memory does not explain the agent's blind result.  The limitations: the pipeline on Opus 5.5 has two samples per cell, the agent two in independent and blind mode and one in seeded, and the older pipeline one, on a corpus of thirteen papers that all predate the models' training cutoffs; two samples show how much a cell moves but do not give a standard error, so none of these differences carries a measured uncertainty.
 
 ## 2. Introduction
 
@@ -256,7 +256,7 @@ This decomposition should not be leaned on hard, for three reasons.  The four AP
 
 > **Editor's note:** How hard to lean on the model-versus-harness decomposition is a judgment call.  The defensible core is the seven-paper total and the qualitative pattern (harness effect zero seeded, larger blind).  The per-route split argues for caution, because the route was confounded with paper selection.  Options: present the decomposition as the main result with the caveats above (current draft), demote it to a paragraph, or spend roughly $10–13 (ROADMAP 3.5) on an API run of the nine oracle papers to remove the effort caveat before leaning on it.
 >
-> *Recommended resolution:* Demote it to a paragraph and headline the thirteen-paper harness gap instead, which now holds across two pipeline samples (Section 4.8); the seven-paper split rests on one sample, on four papers picked by expected gain, and its oracle-route harness effects of one claim are smaller than the per-cell swings.  The paid API run is worth it only if the decomposition is to stay a main result.
+> *Recommended resolution:* Demote it to a paragraph and headline the thirteen-paper harness gap instead, which now holds across two samples of each system (Section 4.8); the seven-paper split rests on one sample, on four papers picked by expected gain, and its oracle-route harness effects of one claim are smaller than the per-cell swings.  The paid API run is worth it only if the decomposition is to stay a main result.
 
 ### 4.5 What refinement buys
 
@@ -370,12 +370,12 @@ The two papers I4R rated not reproducible tell the more useful story.  On Monter
 
 ### 4.8 Variance
 
-The pipeline on Opus 5.5 was run a second time on all thirteen evaluation papers in all three modes, through the oracle (ROADMAP 3.5, "Variance pass").  *Sample 1* is the row used everywhere else in this report; *sample 2* is the new run.
+The pipeline on Opus 5.5 was run a second time on all thirteen evaluation papers in all three modes, through the oracle (ROADMAP 3.5, "Variance pass"), and the agent a second time on all thirteen in independent and blind mode (ROADMAP 3.5, "Agent second sample").  For each system *sample 1* is the row used everywhere else in this report and *sample 2* the new run.
 
 <!-- table:variance_pipeline -->
-Two samples of the pipeline on Opus 5.5 over the 13 evaluation papers (claims within tolerance of the paper's printed value).  *Sample 1* is the model-matched row used everywhere else in this report: the API run (`claude-opus-5-5`) for Grier, Leeson, Manekin and Montero and the first oracle run for the other nine.  *Sample 2* is a second oracle run on all 13 (label `desktop-opus-run2`, `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`), so for the four API papers the two samples differ in route as well as draw.  The agent column is its single sample.  *Cells identical*, *mean* and *max abs. diff* compare the two pipeline samples cell by cell (paper × mode).
+Two samples of the pipeline on Opus 5.5 over the 13 evaluation papers (claims within tolerance of the paper's printed value).  *Sample 1* is the model-matched row used everywhere else in this report: the API run (`claude-opus-5-5`) for Grier, Leeson, Manekin and Montero and the first oracle run for the other nine.  *Sample 2* is a second oracle run on all 13 (label `desktop-opus-run2`, `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`), so for the four API papers the two samples differ in route as well as draw.  The agent column is its first sample.  *Cells identical*, *mean* and *max abs. diff* compare the two pipeline samples cell by cell (paper × mode).
 
-| Mode | Claims | Sample 1 | Sample 2 | Agent (one sample) | Agent − sample 1 | Agent − sample 2 | Cells identical | Mean abs. diff per cell | Max abs. diff |
+| Mode | Claims | Sample 1 | Sample 2 | Agent (sample 1) | Agent − sample 1 | Agent − sample 2 | Cells identical | Mean abs. diff per cell | Max abs. diff |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | seeded | 154 | 149 | 152 | 153 | +4 | +1 | 11 / 13 | 0.38 | 4 |
 | independent | 154 | 129 | 128 | 148 | +19 | +20 | 8 / 13 | 1.15 | 5 |
@@ -383,12 +383,12 @@ Two samples of the pipeline on Opus 5.5 over the 13 evaluation papers (claims wi
 | **all modes** | 462 | 370 | 362 | 436 | — | — | **25 / 39** | **0.97** | **5** |
 <!-- /table:variance_pipeline -->
 
-**What two samples show.**  The mode totals moved from 149 to 152 seeded, from 129 to 128 independent and from 92 to 82 blind.  Against the agent's single sample (153, 148 and 135) the gap is 4 or 1 claims seeded, 19 or 20 independent and 43 or 53 blind.  The seeded gap is therefore within the spread between the two pipeline samples, which differ by 3 claims in that mode; the independent gap is about 20 claims in both samples; and the blind gap is 43 or 53 claims (ROADMAP 3.5 rounds this to "about 45–55"), with the blind total itself moving by 10 between the samples.  These are two draws, not a distribution, and we attach no standard error and no significance statement to any of them.
+**What two pipeline samples show.**  The pipeline's mode totals moved from 149 to 152 seeded, from 129 to 128 independent and from 92 to 82 blind.  Against the agent's first sample (153, 148 and 135) the gap is 4 or 1 claims seeded, 19 or 20 independent and 43 or 53 blind.  The seeded gap is therefore within the spread between the two pipeline samples, which differ by 3 claims in that mode, and the agent was not rerun in seeded mode.  The blind total itself moves by 10 between the pipeline samples.
 
 **Cells.**  Of the 39 paper-by-mode cells, 25 came out identical in both samples; the mean absolute difference is 0.97 claims per cell and the largest is 5.  Blind mode moves most (6 of 13 cells identical, against 11 of 13 seeded).  The largest swings are Adams blind (7 to 2), Gagliarducci blind (12 to 7) and Holman independent (3 to 8), then Gagliarducci seeded (8 to 12).  A per-paper comparison of a few claims, between the pipeline and the agent or between two papers, is inside this noise, and the per-paper tables in Sections 4.3 and 4.7 should be read as descriptions of one draw.  The aggregates are steadier than the cells because swings in opposite directions partly cancel.
 
 <!-- table:variance_pipeline_cells -->
-Per paper and mode: final claims within tolerance in each pipeline sample, their absolute difference (bold where non-zero), and the agent's single sample.
+Per paper and mode: final claims within tolerance in each pipeline sample, their absolute difference (bold where non-zero), and the agent's first sample.
 
 | Paper | Sample 1 route | Mode | n | Sample 1 | Sample 2 | Abs. diff | Agent |
 |---|---|---|---:|---:|---:|---:|---:|
@@ -435,10 +435,58 @@ Per paper and mode: final claims within tolerance in each pipeline sample, their
 
 Two qualifications.  For Grier, Leeson, Manekin and Montero, sample 1 came from the API at the pipeline's configured effort and sample 2 from the oracle at the desktop default, so those twelve cells differ in route as well as draw (ROADMAP 3.5).  And some misses are not noise at all: Grier blind printed the same coefficients in both samples and on `claude-opus-4-7` (Section 5), Holman blind printed the same values in both samples apart from two coefficients that are numerically zero in both (appendix table), and Altmann blind and López-Moctezuma independent and blind repeated their counts exactly.
 
-**What is still a single sample.**  The agent has one sample per cell in seeded and independent mode on every paper, and in blind mode on eight of the thirteen; the other five blind cells have the second runs below.  The pipeline on `claude-opus-4-7` has one sample per cell on the evaluation papers.  The model decomposition of Section 4.4 and the verdict table of Section 4.7 use the first pipeline sample only.
+**The agent's second sample.**  The agent was rerun on all thirteen papers in independent and blind mode in the same way as the first time, one subagent per cell (ROADMAP 3.5, "Agent second sample").
+
+<!-- table:variance_agent -->
+Two samples of the agent and two of the pipeline on Opus 5.5 over the 13 evaluation papers, in the two modes the agent was rerun in (claims within tolerance of the paper's printed value).  *Agent sample 1* is the row used everywhere else in this report (ROADMAP 3.3–3.4); *agent sample 2* is a second Claude Code run on all 13 (`claude-code-run2-13papers-indep-blind-2026-11-01.json`).  The pipeline samples are those of the table above.  *Cells identical*, *mean* and *max abs. diff* compare the two agent samples cell by cell; the last column is the smallest and largest of the four agent-minus-pipeline differences (each agent sample against each pipeline sample).
+
+| Mode | Claims | Agent sample 1 | Agent sample 2 | Pipeline sample 1 | Pipeline sample 2 | Agent cells identical | Agent mean abs. diff per cell | Agent max abs. diff | Agent − pipeline (four pairings) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| independent | 154 | 148 | 147 | 129 | 128 | 12 / 13 | 0.08 | 1 | 18 to 20 |
+| blind | 154 | 135 | 132 | 92 | 82 | 10 / 13 | 0.54 | 4 | 40 to 53 |
+<!-- /table:variance_agent -->
+
+The agent moves much less than the pipeline.  Its totals went from 148 to 147 in independent mode and from 135 to 132 in blind mode; 12 of 13 independent cells and 10 of 13 blind cells came out identical, against 8 and 6 for the pipeline, with mean absolute differences of 0.08 and 0.54 claims per cell.  The largest swing is Montero blind (10 to 6), whose own agent flagged its estimates as fragile, flipping sign without a survey-round fixed effect (ROADMAP 3.5).  The Adams pair shows how a cell can move on an unstated rule: the independent agent used a one-sided four-seat rule and built 1,842 dyads, the blind agent a two-sided rule and built 1,525.
+
+**What the four samples show.**  Taking each agent sample against each pipeline sample, the gap is 18 to 20 claims in independent mode and 40 to 53 in blind mode, out of 154.  The independent gap barely moves.  The blind range is wide, and most of its width comes from the pipeline, whose blind total moved by 10 while the agent's moved by 3.  So the headline holds under resampling of both systems: a gap of about 20 claims without the scripts, and of 40 to 53 when the targets are withheld as well.  These are two draws per system, not a distribution, and we attach no standard error and no significance statement to any of them.
+
+<!-- table:variance_agent_cells -->
+Per paper, independent and blind mode: final claims within tolerance in each agent sample, their absolute difference (bold where non-zero), and the two pipeline samples.
+
+| Paper | Mode | n | Agent 1 | Agent 2 | Agent abs. diff | Pipeline 1 | Pipeline 2 |
+|---|---|---:|---:|---:|---:|---:|---:|
+| `acemoglu-2022` | independent | 12 | 12 | 12 | 0 | 11 | 11 |
+| `acemoglu-2022` | blind | 12 | 12 | 12 | 0 | 4 | 6 |
+| `adams-2023` | independent | 11 | 11 | 11 | 0 | 10 | 8 |
+| `adams-2023` | blind | 11 | 8 | 7 | **1** | 7 | 2 |
+| `altmann-2022` | independent | 13 | 13 | 13 | 0 | 13 | 13 |
+| `altmann-2022` | blind | 13 | 13 | 13 | 0 | 4 | 4 |
+| `arias-2022` | independent | 12 | 12 | 12 | 0 | 12 | 12 |
+| `arias-2022` | blind | 12 | 12 | 12 | 0 | 12 | 12 |
+| `dertwinkel-kalt-2022` | independent | 13 | 13 | 13 | 0 | 13 | 13 |
+| `dertwinkel-kalt-2022` | blind | 13 | 13 | 13 | 0 | 12 | 13 |
+| `gagliarducci-2022` | independent | 13 | 13 | 13 | 0 | 13 | 13 |
+| `gagliarducci-2022` | blind | 13 | 7 | 9 | **2** | 12 | 7 |
+| `grier-2023` | independent | 11 | 10 | 9 | **1** | 0 | 2 |
+| `grier-2023` | blind | 11 | 10 | 10 | 0 | 0 | 0 |
+| `hanlon-2022` | independent | 12 | 12 | 12 | 0 | 12 | 12 |
+| `hanlon-2022` | blind | 12 | 12 | 12 | 0 | 12 | 12 |
+| `holman-2022` | independent | 11 | 10 | 10 | 0 | 3 | 8 |
+| `holman-2022` | blind | 11 | 6 | 6 | 0 | 0 | 0 |
+| `leeson-2022` | independent | 11 | 11 | 11 | 0 | 11 | 8 |
+| `leeson-2022` | blind | 11 | 11 | 11 | 0 | 8 | 7 |
+| `lopez-moctezuma-2022` | independent | 13 | 9 | 9 | 0 | 9 | 9 |
+| `lopez-moctezuma-2022` | blind | 13 | 9 | 9 | 0 | 9 | 9 |
+| `manekin-2022` | independent | 12 | 12 | 12 | 0 | 12 | 12 |
+| `manekin-2022` | blind | 12 | 12 | 12 | 0 | 12 | 9 |
+| `montero-2022` | independent | 10 | 10 | 10 | 0 | 10 | 7 |
+| `montero-2022` | blind | 10 | 10 | 6 | **4** | 0 | 1 |
+<!-- /table:variance_agent_cells -->
+
+**What is still a single sample.**  The agent has one sample per cell in seeded mode; in independent mode it now has two on every paper, and in blind mode two on every paper and three on the five papers it was rerun on in ROADMAP 3.4 (table below).  Every agent row elsewhere in this report is its first sample.  The pipeline on `claude-opus-4-7` has one sample per cell on the evaluation papers.  The model decomposition of Section 4.4 and the verdict table of Section 4.7 use the first sample of each system only.  The second agent sample carries the same isolation caveats as the first: three agents reported glimpsing something outside the task (a garbled table row, a saved copy of their own printed paper text, prose effect sizes in the method section), and none reported adjusting toward a value (ROADMAP 3.5).
 
 <!-- table:variance -->
-Earlier repeat runs: the pipeline on `claude-opus-4-7` on the three dev papers (independent mode), and the agent's second samples in blind mode.
+Earlier repeat runs: the pipeline on `claude-opus-4-7` on the three dev papers (independent mode), and the agent's blind reruns of ROADMAP 3.4.
 
 | Dev paper (independent, pipeline 4.7) | n | Cache on | Cache off 1 | Cache off 2 | Cache off 3 |
 |---|---:|---:|---:|---:|---:|
@@ -446,7 +494,7 @@ Earlier repeat runs: the pipeline on `claude-opus-4-7` on the three dev papers (
 | `alesina-2022` | 11 | 7 | 0 | 6 | 5 |
 | `bisbee-2022` | 11 | 5 | 7 | 8 | 8 |
 
-Agent blind second samples:
+Agent blind reruns (ROADMAP 3.4):
 
 | Agent, blind | n | First run | Second run | Second-run file |
 |---|---:|---:|---:|---|
@@ -562,15 +610,40 @@ First public version of the paper: 2015-08 to 2022-06-14.  Package release: 2020
 | `montero-2022` | 2017-12 | 2023-03-31 |
 <!-- /table:dates -->
 
-We therefore cannot populate a pre-cutoff versus post-cutoff split, and we do not offer one.  A model may have seen a paper, its package or its I4R report.  The gap between modes is conditional on whatever the model already knows; it is not a contamination control.  The cheap memorization probe planned in Phase 5 (ask for a paper's headline coefficient with no data access) has not been run.
+We therefore cannot populate a pre-cutoff versus post-cutoff split, and we do not offer one.  A model may have seen a paper, its package or its I4R report.  The gap between modes is conditional on whatever the model already knows; it is not a contamination control.  The memorization probe below measures how much of the blind result memory alone could supply.
 
 **Seeded and independent mode show the targets.**  Only blind mode withholds the printed values.  Independent passes include target-guided search (Section 4.5).
 
 **Remaining leaks.**  The dataset listing's row counts equal a pinned sample size for Acemoglu (5,775) and López-Moctezuma (39), and a rounded prose value survives blind redaction on Holman ("3.1 points" for 3.112); both affect the pipeline and the agent identically (ROADMAP 3.4).  Claim contexts stated sample sizes for Adams, Leeson and Montero until PR #69 moved them to the entries' notes; the agent rows for the first seven papers (ROADMAP 3.3) predate that fix, and two blind agents used those counts (ROADMAP 3.3).  The agent's refinement counts are self-reported.  The agent's isolation from the repository checkout is by instruction and by its own report of files read.
 
+**Memorization probe.**  We asked the agent's model for every pinned number from memory (ROADMAP 3.5, "Memorisation probe").  One desktop Opus subagent per paper, with no tools, saw the title, authors, venue and each claim's name, type and curated context, which is what the blind prompt carries minus the paper and the data.  It gave each answer a confidence of *recalled*, *inferred* or *none*, and the answers were scored with the blind-mode comparator.
+
+<!-- table:probe -->
+Memorization probe (`benchmark/probe.py`, `probe-desktop-opus-2026-11-01.json`): one no-tools desktop Opus subagent per paper, shown the title, authors, venue and each pinned claim's name, type and context, asked for each number from memory, scored with the blind-mode comparator.  *Within 2×* and *within 5×* count answers whose relative error is at most two or five times the claim's tolerance.  The last four columns are the blind-mode counts of the two agent and two pipeline samples, for comparison.  Of the 26 hits, 3 are derivable from the claim context, 1 passes a relative tolerance, and 22 land inside a ±1 SE band whose relative half-width is 12 % to 225 % (19 of 22 at or below 65 %).
+
+| Paper | Claims | Answered | Within tol. | Within 2× | Within 5× | Median rel. err | Recalled / inferred / none | Agent blind 1 | Agent blind 2 | Pipeline blind 1 | Pipeline blind 2 |
+|---|---:|---:|---:|---:|---:|---:|---|---:|---:|---:|---:|
+| `acemoglu-2022` | 12 | 7 | 5 | 5 | 6 | 21.6 % | 0 / 7 / 5 | 12 | 12 | 4 | 6 |
+| `adams-2023` | 11 | 7 | 1 | 4 | 7 | 46.9 % | 0 / 7 / 4 | 8 | 7 | 7 | 2 |
+| `altmann-2022` | 13 | 11 | 4 | 6 | 9 | 43.3 % | 0 / 11 / 2 | 13 | 13 | 4 | 4 |
+| `arias-2022` | 12 | 12 | 2 | 5 | 8 | 38.3 % | 0 / 12 / 0 | 12 | 12 | 12 | 12 |
+| `dertwinkel-kalt-2022` | 13 | 3 | 0 | 0 | 2 | 68.8 % | 0 / 3 / 10 | 13 | 13 | 12 | 13 |
+| `gagliarducci-2022` | 13 | 13 | 6 | 7 | 8 | 28.3 % | 0 / 13 / 0 | 7 | 9 | 12 | 7 |
+| `grier-2023` | 11 | 2 | 0 | 0 | 1 | 8.9 % | 0 / 2 / 9 | 10 | 10 | 0 | 0 |
+| `hanlon-2022` | 12 | 10 | 1 | 2 | 4 | 157.3 % | 0 / 10 / 2 | 12 | 12 | 12 | 12 |
+| `holman-2022` | 11 | 4 | 0 | 2 | 2 | 110.1 % | 0 / 4 / 7 | 6 | 6 | 0 | 0 |
+| `leeson-2022` | 11 | 4 | 3 | 4 | 4 | 0.1 % | 0 / 4 / 7 | 11 | 11 | 8 | 7 |
+| `lopez-moctezuma-2022` | 13 | 0 | 0 | 0 | 0 | — | 0 / 0 / 13 | 9 | 9 | 9 | 9 |
+| `manekin-2022` | 12 | 6 | 4 | 5 | 6 | 19.8 % | 0 / 6 / 6 | 12 | 12 | 12 | 9 |
+| `montero-2022` | 10 | 0 | 0 | 0 | 0 | — | 0 / 0 / 10 | 10 | 6 | 0 | 1 |
+| **total** | 154 | 79 | 26 | 40 | 57 | 38.3 % | 0 / 79 / 75 | 135 | 132 | 92 | 82 |
+<!-- /table:probe -->
+
+Memory alone puts 26 of 154 claims inside the blind tolerance, about a sixth, and the answering model rated none of its 79 answers as recalled.  The hits are weak evidence of memorization.  Twenty-two are coarse guesses, all rated *inferred*, inside one-standard-error bands that are mostly wide.  One is a count that came within 1 % (Gagliarducci's sponsor-terms count, 4,700 answered against 4,746).  The remaining three are a leak of a kind the catalog's context test did not cover.  The Leeson Brown–Forsythe and ANOVA statistics were not stated in their claim contexts, but each context gave the test's p-value and, for the ANOVAs, its degrees of freedom.  The answering agent said it back-computed the statistics from those.  Those contexts were in every Leeson prompt in this report, blind mode included, for the pipeline and the agent alike.  They have since been reworded, and a test now forbids p-values, degrees of freedom and t-statistics in the contexts of any entry that pins a test statistic, but every Leeson row here was produced with the old text (ROADMAP 3.5, Next (d)).  Paper by paper, the probe does not track the agent: it answered nothing on Montero and López-Moctezuma and hit nothing on Grier and Holman, papers where the agent's blind counts are between 6 and 10.  So memory cannot account for the agent's blind result.  The probe does not show that the papers were unseen, because a model can have read a paper without retaining its coefficients, and the answering model is the same desktop Opus that produced the agent rows.  Every hit is listed in the appendix.
+
 **The oracle is not the API.**  Oracle answers come from desktop subagents at default effort, not at the effort the pipeline's request names; isolation is by instruction; and the extraction prompts truncate the paper text by design, which several answering agents noted (ROADMAP 3.5).  We present oracle rows beside the API rows, labeled, and never pool them in a table.  The "pipeline on Opus 5.5" aggregate in Sections 4.3–4.4 combines the two routes by paper, and its caveats are stated there.
 
-**Few runs per cell.**  The pipeline on Opus 5.5 has two samples per cell; the agent has two in five blind cells and one everywhere else; the pipeline on `claude-opus-4-7` has one on the evaluation papers.  Two samples bound nothing.  See Section 4.8.
+**Few runs per cell.**  The pipeline on Opus 5.5 has two samples per cell; the agent has two in independent and blind mode (three in five blind cells) and one in seeded mode; the pipeline on `claude-opus-4-7` has one on the evaluation papers.  Two samples bound nothing.  See Section 4.8.
 
 **Scope.**  Every reproduction is written in R.  Stata originals are included only because their claims can be scored without running Stata.  The corpus is thirteen evaluation papers (154 claims), selected by availability of open data, open PDFs and an I4R verdict, not at random; five of the thirteen are from APSR or AJPS, and most methods are regressions on observational or experimental data.
 
@@ -590,7 +663,7 @@ The agent in this report used the file-system route: render a task per cell, let
 
 ## 8. Next steps
 
-Four pieces of work would most change what this report can claim.  A full variance pass, three runs per paper per mode on a frozen and tagged harness, would let the gaps carry uncertainty.  Part of it exists: the pipeline on Opus 5.5 has two samples on all thirteen papers (Section 4.8).  What is missing is a second agent sample in seeded and independent mode on every paper and in blind mode on eight, a third sample for both systems, and an API-route second sample for the four papers whose two pipeline samples came by different routes.  Corpus growth to the 20–30 papers the roadmap targets, with the open-data and open-PDF funnel recorded, would make the per-category counts in Section 5 mean something.  The memorization probe would put a number on contamination.  And the pipeline freeze question needs an answer: the two Opus 5.5 pipeline misses that are harness rather than model (Grier's data file, with the reservations of Section 5, and Montero blind's) are concrete targets if tuning is unfrozen, but tuning on evaluation papers would end their use as evaluation papers.
+Four pieces of work would most change what this report can claim.  A full variance pass, three runs per paper per mode on a frozen and tagged harness, would let the gaps carry uncertainty.  Part of it exists: the pipeline on Opus 5.5 has two samples on all thirteen papers, and the agent two in independent and blind mode (Section 4.8).  What is missing is a second agent sample in seeded mode, a third sample for both systems, and an API-route second sample for the four papers whose two pipeline samples came by different routes.  Corpus growth to the 20–30 papers the roadmap targets, with the open-data and open-PDF funnel recorded, would make the per-category counts in Section 5 mean something.  A small set of post-cutoff replications, if I4R publishes them in machine-readable form, would give the contamination control that the memorization probe (Section 6) cannot (ROADMAP Phase 5 treats it as a bonus that expires with the next model release).  The probe itself should be rerun after the Leeson context rewording and on every new entry.  And the pipeline freeze question needs an answer: the two Opus 5.5 pipeline misses that are harness rather than model (Grier's data file, with the reservations of Section 5, and Montero blind's) are concrete targets if tuning is unfrozen, but tuning on evaluation papers would end their use as evaluation papers.
 
 > **Editor's note:** Venue.  Options in ROADMAP Phase 5: an arXiv or SocArXiv preprint, the I4R discussion-paper series (I4R has run AI replication games and is the natural audience), or a methods journal.  The register of this draft fits the first two.
 >
@@ -607,7 +680,7 @@ Four pieces of work would most change what this report can claim.  A full varian
 [^i4r-cell]: ROADMAP 3.3 states that the "agrees with I4R, not with the paper" cell did not occur.  At the verdict level it does occur for the agent's three Grier rows (Section 4.7).  The ROADMAP statement is right in substance and wrong as a count.
 
 <!-- table:discrepancies -->
-299 numbers quoted in ROADMAP 3.2–3.5 (including the 3.5 variance pass) were recomputed from the results files; 3 differ.
+327 numbers quoted in ROADMAP 3.2–3.5 (including the 3.5 variance pass, the agent's second sample and the memorization probe) were recomputed from the results files; 3 differ.
 
 | Source | What | Item | ROADMAP | Recomputed |
 |---|---|---|---:|---:|
@@ -882,3 +955,38 @@ Reproduced values (✓ = within tolerance) for the Grier and Holman cells discus
 | `holman-2022` | blind | `n_obs_did_like_may_table2` | 143499 | — | 239,919 | 239,919 | 143,499 ✓ |
 | `holman-2022` | blind | `n_obs_did_may_best_pm_table2` | 97155 | — | 1,481,392 | 1,481,392 | 97,155 ✓ |
 <!-- /table:consistency_claims -->
+
+### Appendix: memorization-probe hits
+
+<!-- table:probe_hits -->
+Every memorization-probe answer within tolerance (26 of 154 claims).  *Band* is the comparator's relative tolerance for the claim; *derivable from context* marks the Leeson test statistics the answering agent said it back-computed from the p-values and degrees of freedom the claim contexts then stated (Section 6).
+
+| Paper | Claim | Printed | Probe answer | Band (rel.) | Band source | Confidence | Class |
+|---|---|---:|---:|---:|---|---|---|
+| `acemoglu-2022` | `first_stage_casualties_table1_col1` | 0.12 | 0.1 | 16.7 % | se_band | inferred | inside ±1 SE band |
+| `acemoglu-2022` | `iv_violence_table2_panelA_col6` | 0.5 | 0.4 | 40.0 % | se_band | inferred | inside ±1 SE band |
+| `acemoglu-2022` | `iv_branches_table2_panelC_col6` | 0.5 | 0.5 | 40.0 % | se_band | inferred | inside ±1 SE band |
+| `acemoglu-2022` | `iv_fascist_vote1921_table3_panelA_col6` | 0.34 | 0.5 | 52.9 % | se_band | inferred | inside ±1 SE band |
+| `acemoglu-2022` | `iv_fascist_vote1924_table3_panelC_col6` | 0.51 | 0.4 | 33.3 % | se_band | inferred | inside ±1 SE band |
+| `adams-2023` | `coalition_partners_coef_full` | 0.94 | 0.8 | 26.6 % | se_band | inferred | inside ±1 SE band |
+| `altmann-2022` | `choice_quality_intervention_t2_col1` | 0.107 | 0.12 | 16.8 % | se_band | inferred | inside ±1 SE band |
+| `altmann-2022` | `choice_quality_intervention_t2_col2` | 0.11 | 0.12 | 15.5 % | se_band | inferred | inside ±1 SE band |
+| `altmann-2022` | `default_adherence_directed_attention_t2_col7` | -0.137 | -0.13 | 19.0 % | se_band | inferred | inside ±1 SE band |
+| `altmann-2022` | `payoff_share_intervention_t4_col1` | 0.006 | 0 | 216.7 % | se_band | inferred | inside ±1 SE band |
+| `arias-2022` | `amce_wildfires_us` | 0.04 | 0.04 | 27.5 % | se_band | inferred | inside ±1 SE band |
+| `arias-2022` | `amce_persecution_us` | 0.076 | 0.08 | 15.8 % | se_band | inferred | inside ±1 SE band |
+| `gagliarducci-2022` | `female_sponsor_ncosponsors_all_ols` | 1.395 | 1 | 45.0 % | se_band | inferred | inside ±1 SE band |
+| `gagliarducci-2022` | `female_sponsor_ncosponsors_rep_ols` | 3.149 | 2.5 | 32.3 % | se_band | inferred | inside ±1 SE band |
+| `gagliarducci-2022` | `female_sponsor_ncosponsors_rep_rd_ipw` | 6.734 | 3 | 58.6 % | se_band | inferred | inside ±1 SE band |
+| `gagliarducci-2022` | `female_sponsor_ncosponsors_rep_ipw_sponsor` | 3.124 | 2.5 | 33.3 % | se_band | inferred | inside ±1 SE band |
+| `gagliarducci-2022` | `female_sponsor_pct_opposite_rep_ols` | 3.666 | 4 | 25.0 % | se_band | inferred | inside ±1 SE band |
+| `gagliarducci-2022` | `n_sponsor_terms_ncosponsors_all_ols` | 4746 | 4700 | 1.0 % | relative | inferred | within relative tolerance |
+| `hanlon-2022` | `airframe_wingload_trend_before_1926_us_vs_uk` | 0.004 | 0.01 | 225.0 % | se_band | inferred | inside ±1 SE band |
+| `leeson-2022` | `brown_forsythe_donations_per_hour` | 0.541 | 0.54 | 1.0 % | relative | inferred | derivable from context |
+| `leeson-2022` | `anova_f_donations_per_hour` | 0.4 | 0.4 | 1.2 % | printed_precision | inferred | derivable from context |
+| `leeson-2022` | `anova_f_dollars_per_hour` | 0.15 | 0.15 | 3.3 % | printed_precision | inferred | derivable from context |
+| `manekin-2022` | `study1_us_black_perceived_violence` | 0.235 | 0.3 | 49.8 % | se_band | inferred | inside ±1 SE band |
+| `manekin-2022` | `study1_us_black_police_action` | 0.268 | 0.3 | 47.4 % | se_band | inferred | inside ±1 SE band |
+| `manekin-2022` | `study1_israel_ethiopian_police_action` | 0.181 | 0.2 | 65.2 % | se_band | inferred | inside ±1 SE band |
+| `manekin-2022` | `study1_israel_arab_police_action` | 0.964 | 0.9 | 12.3 % | se_band | inferred | inside ±1 SE band |
+<!-- /table:probe_hits -->
