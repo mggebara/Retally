@@ -1,0 +1,77 @@
+File: SugarReplicate.dta  vars: cong, cid, totalcont, id, name, pop, over65, nohsgrad, bach, medearn, poverty, medincome, unemp, rural, state, state_no, district, vote, party, ncu, tenure, both, sugcont, houselead, agcom, aglead, dwn 
+y table:
+
+   0    1 <NA> 
+ 499  343   20 
+Covariates used: sugcont, ncu, tenure, poverty, bach, medincome, over65, agcom 
+dkey candidate id : groups 435  max size 2  switcher obs 172 
+dkey candidate state_district : groups 436  max size 2  switcher obs 172 
+Using dkey: id 
+District switcher obs: 172  Incumbent switcher obs: 94 
+GLM estimation, family = binomial, Dep. Var.: y
+Observations: 172
+Fixed-effects: dkey: 86
+Standard-errors: Heteroskedasticity-robust 
+            Estimate Std. Error    z value   Pr(>|z|)    
+sugcont    -0.000375   0.000096  -3.904539 9.4405e-05 ***
+ncu         0.137702   0.049049   2.807439 4.9937e-03 ** 
+tenure     -0.231517   0.077903  -2.971848 2.9601e-03 ** 
+poverty     1.216527   1.129685   1.076872 2.8154e-01    
+bach        1.006937   0.719374   1.399741 1.6159e-01    
+medincome  -0.000087   0.000394  -0.221578 8.2464e-01    
+over65     -0.862647   1.315213  -0.655899 5.1189e-01    
+agcom     -33.934459   1.414242 -23.994810  < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Log-Likelihood: -40.2   Adj. Pseudo R2: -0.117392
+           BIC: 564.3     Squared Cor.:  0.739563
+GLM estimation, family = binomial, Dep. Var.: y
+Observations: 94
+Fixed-effects: ikey: 47
+Standard-errors: Heteroskedasticity-robust 
+            Estimate Std. Error   z value  Pr(>|z|)    
+sugcont    -0.002273   0.001109 -2.050390  0.040326 *  
+ncu        -0.296826   0.270652 -1.096708  0.272769    
+tenure     -3.653354   1.949908 -1.873603  0.060985 .  
+poverty    10.216276   4.475482  2.282721  0.022447 *  
+bach        0.570604   1.313026  0.434572  0.663873    
+medincome   0.003178   0.001334  2.383136  0.017166 *  
+over65     -7.498376   3.607141 -2.078759  0.037640 *  
+agcom     -45.196420   5.070445 -8.913698 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Log-Likelihood: -10.8   Adj. Pseudo R2: 0.004729
+           BIC: 271.6     Squared Cor.: 0.853337
+File: SugarReplicate_iter1.dta  vars: cong, cid, totalcont, id, name, pop, over65, nohsgrad, bach, medearn, poverty, medincome, unemp, rural, state, state_no, district, vote, party, ncu, tenure, both, sugcont, houselead, agcom, aglead, dwn 
+y table:
+
+   0    1 <NA> 
+ 499  343   20 
+Covariates used: sugcont, ncu, tenure, poverty, bach, medincome, over65, agcom 
+dkey candidate id : groups 435  max size 2  switcher obs 172 
+dkey candidate state_district : groups 436  max size 2  switcher obs 172 
+Using dkey: id 
+District switcher obs: 172  Incumbent switcher obs: 94 
+File: SugarReplicate_iter2.dta  vars: cong, cid, totalcont, id, name, pop, over65, nohsgrad, bach, medearn, poverty, medincome, unemp, rural, state, state_no, district, vote, party, ncu, tenure, both, sugcont, houselead, agcom, aglead, dwn 
+y table:
+
+   0    1 <NA> 
+ 499  343   20 
+Covariates used: sugcont, ncu, tenure, poverty, bach, medincome, over65, agcom 
+dkey candidate id : groups 435  max size 2  switcher obs 172 
+dkey candidate state_district : groups 436  max size 2  switcher obs 172 
+Using dkey: id 
+District switcher obs: 172  Incumbent switcher obs: 94 
+RESULT:sugar_contributions_district_fe=-0.000375474
+RESULT:sugar_contributions_district_fe_se=9.61635e-05
+RESULT:sugar_contributions_incumbent_fe=-0.00227312
+RESULT:sugar_contributions_incumbent_fe_se=0.00110863
+RESULT:acu_ideology_district_fe=0.137702
+RESULT:tenure_district_fe=-0.231517
+RESULT:tenure_incumbent_fe=-3.65335
+RESULT:sugar_contributions_calendar_year_district_fe=-0.000375474
+RESULT:sugar_contributions_calendar_year_incumbent_fe=-0.00227312
+RESULT:sugar_contributions_12_months_district_fe=-0.000375474
+RESULT:sugar_contributions_12_months_incumbent_fe=-0.00227312
+RESULT:observations_district_fe=172
+RESULT:observations_incumbent_fe=94

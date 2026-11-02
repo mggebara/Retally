@@ -1,0 +1,3 @@
+Self-review of specification (no comparison with any paper value; blind mode).
+In attempt-2 the pooled US-UK regressions (equation 5) used a US-only spline (spline x US) together with a UK-only spline (spline x (1-US)). In that parameterization the spline x US coefficients are simply the US slopes, identical to Table 1 columns 1-2, not the US slope relative to the UK as the task and the paper define beta_before/beta_after.
+Fix: put the baseline (comparison-country) spline on all observations and keep spline x US plus the US indicator, so the spline x US coefficients equal the US slope minus the UK slope. Same fitted model, reparameterized. Nothing else changed.

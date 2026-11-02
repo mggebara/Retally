@@ -1857,6 +1857,12 @@ Goal: turn the benchmark into the deliverable.
   clearly (data already MIT via the I4R meta-database) and document how
   others plug in a different model/agent via the Phase 2 protocol. If the
   benchmark outlives the pipeline, that is success, not failure.
+- **Hand-checkable evidence:** every scored cell gets an evidence bundle —
+  the exact prompt, the raw output, the per-claim scoring against the
+  catalog and a `CELL.md`, pulled together per paper in a `REPORT.md`
+  (`python -m benchmark.evidence`; see "Evidence bundles" in
+  `benchmark/README.md`).  Committed so far for grier-2023, montero-2022
+  and hanlon-2022 under `benchmark/evidence/`.
 
 **Exit criteria:** preprint-quality report + citable frozen benchmark
 release.

@@ -1,0 +1,204 @@
+You are refining R code that reproduces results from an econometrics paper.
+The code RAN SUCCESSFULLY but the reproduced values do not match the
+paper's claims within the allowed tolerance.  Identify what is causing
+the gap and adjust the code to close it.
+
+## Paper
+Title: Cooperative Property Rights
+Methodology: - **Design / estimator:** Sharp-assignment regression discontinuity (RD) at the 500 ha cumulative-landholding threshold of the 1980 El Salvador land reform (Decree 153, Phase I). Equation (1): y_po = α + γ·Above500_o + f(holdings_o) + ε_po for owners o in the risk set RS, where y_po is the outcome for plot/property p owned by pre-reform owner o, Above500_o = 1(cumulative landholdings_o ≥ 500 ha) (owner-level, not property size), and f(·) is the RD polynomial in the former owner's total 1980 landholdings (running variable, centred at 500 ha). γ is the reduced-form (intent-to-treat) effect of being above the threshold on outcomes (cooperatives vs. outside-owned haciendas). Outcomes are in their natural units (land shares, yields, IQR of earnings); no standardisation of headline estimates is stated (only the geographic balance figure, Fig. 4, plots standardised coefficients).
+- **Polynomial, kernel, bandwidth (baseline):** Following Calonico, Cattaneo & Titiunik (2014a,b) and Calonico et al. (2017), a local linear polynomial estimated separately on each side of the cutoff, with the MSE-optimal bandwidth (rdrobust-style); the risk set RS is owners within that bandwidth of 500 ha. Appendix J checks robustness to alternative polynomials and bandwidths. The first-stage RD plot (Fig. 5) instead uses a local quadratic on each side, a fixed 300 ha bandwidth, a uniform kernel, and 25 ha bins.
+- **Fuzzy RD / IV:** Compliance is imperfect (above-threshold owners ~75 percentage points more likely to be expropriated; ~20% of above-threshold properties stayed haciendas, a few below-threshold ones were expropriated), so the paper also reports fuzzy-RD (scaled IV) estimates that instrument "reform cooperative_po" with Above500_o.
+- **Standard errors:** Clustered at the former-landholder (pre-reform owner) level, since one owner may have held several plots and treatment is defined by the owner's total holdings.
+- **Data and sample construction:** Pre-reform 1980 landholdings come from the Property Registry via ISTA records (expropriated owners) and Figueroa Aquino & Marroquín Mena (1991) (non-expropriated owners with >100 ha); the list of expropriated properties and cooperatives comes from MAG (1983). These are matched to the 2007–08 IV Agricultural Census (94,168 producers) by property name, municipality, department and size (~70% match rate, with no discontinuity in the match probability at the threshold, Fig. D3). The estimation sample is matched properties of owners with >100 ha whose holdings fall within the bandwidth around 500 ha. Worker outcomes use the 2002–2013 EHPM household surveys, with individuals matched to cooperatives or haciendas by canton, restricted to cantons with only one cooperative or large hacienda (91% matching accuracy checked against the 2008–2010 surveys).
+- **Outcomes / evaluation (Table 1 predictions):** (1) share of land devoted to cash crops (sugarcane, coffee) vs. staple crops (maize, beans); (2) cash-crop yields; (3) staple-crop yields; (4) the interquartile range or distribution of worker earnings (more compressed in cooperatives). Aggregate productivity (revenue per ha, profits per ha) is also examined. Alternative mechanisms (credit access, migration) are tested in Section VII.
+- **Validity checks:** A McCrary (2008) density test, run by collapsing the data into landholding bins and regressing bin counts on eq. (1) (Fig. 3), finds no sorting. Balance tests (Fig. 4) estimate eq. (1) on geographic covariates with a local linear specification and MSE-optimal bandwidth: land suitability, precipitation, elevation, suitability for sugarcane, coffee and cotton, and suitability for maize, beans, rice and sorghum. These show no significant discontinuities. Robustness checks include matching methods (App. D.2), bounds based on the edges of the balance-test confidence intervals (App. D.3), and alternative bandwidths and polynomials (App. J).
+- **Controls / fixed effects:** The baseline specification includes only the RD polynomial in the running variable, with slopes estimated separately on each side. The supplied text names no additional fixed effects or covariates for the preferred specification. The text provided is truncated before the results tables, so the column-level control sets and point estimates are not available here.
+
+
+## Current Code
+```r
+suppressPackageStartupMessages({
+  library(haven)
+  library(dplyr)
+  library(fixest)
+})
+set.seed(42)
+
+path <- "<repo>/.cache/datasets/montero_2022_cooperative_property_rights.script-free/ehpm_incomemodule_wreform.dta"
+df <- as.data.frame(haven::zap_labels(haven::read_dta(path)))
+nms <- names(df)
+
+num <- function(v) suppressWarnings(as.numeric(v))
+
+# ---------- treatment ----------
+df$Above500 <- num(df$Above500)
+
+# ---------- cluster (former owner) ----------
+v <- df$Expropretario_ISTA
+if (is.character(v)) v[trimws(v) == ""] <- NA
+df$owner_cl <- as.character(v)
+miss <- is.na(df$owner_cl)
+if (any(miss) && "own_amt" %in% nms) df$owner_cl[miss] <- paste0("amt_", round(num(df$own_amt[miss]), 4))
+
+# ---------- year ----------
+df$yr <- num(df$survey_year)
+if ("year" %in% nms) { yy <- num(df$year); df$yr[is.na(df$yr)] <- yy[is.na(df$yr)] }
+
+# ---------- property id ----------
+if ("match_id" %in% nms && sum(!is.na(df$match_id) & df$match_id != "") > 0.8 * nrow(df)) {
+  df$prop <- as.character(df$match_id)
+} else {
+  rc <- if ("Reform_Coop_id" %in% nms) as.character(df$Reform_Coop_id) else NA
+  hc <- if ("Hacienda_id" %in% nms) as.character(df$Hacienda_id) else NA
+  rc[!is.na(rc) & trimws(rc) == ""] <- NA; hc[!is.na(hc) & trimws(hc) == ""] <- NA
+  df$prop <- ifelse(!is.na(rc), paste0("C", rc), ifelse(!is.na(hc), paste0("H", hc), NA))
+  if (all(is.na(df$prop))) df$prop <- as.character(df$canton)
+}
+df$prop <- paste(df$owner_cl, df$prop, sep = "|")
+
+# ---------- candidate running variables and outcomes ----------
+run_list <- list()
+if ("own_amt" %in% nms) run_list[["own_amt-500"]] <- num(df$own_amt) - 500
+if ("norm_dist" %in% nms) {
+  nd <- num(df$norm_dist)
+  ok <- !is.na(nd) & !is.na(df$Above500)
+  if (sum(ok) > 50) {
+    agr <- mean((nd[ok] >= 0) == (df$Above500[ok] == 1))
+    q90 <- stats::quantile(abs(nd), 0.9, na.rm = TRUE)
+    message(sprintf("norm_dist agreement %.3f q90 %.1f", agr, q90))
+    if (agr > 0.97 && q90 > 20) run_list[["norm_dist"]] <- nd
+  }
+}
+y_list <- list()
+for (cn in c("hh_income_pc", "hh_inc_pc_real")) if (cn %in% nms) y_list[[cn]] <- num(df[[cn]])
+
+# choose the combination whose bw300 sample best matches the stated
+# estimation sample (workers within 300 ha, former-owner clusters)
+best <- NULL; best_score <- Inf
+for (rn in names(run_list)) for (yn in names(y_list)) {
+  x <- run_list[[rn]]; y <- y_list[[yn]]
+  ok <- !is.na(x) & !is.na(y) & !is.infinite(y) & !is.na(df$Above500) & abs(x) <= 300 & !is.na(df$yr)
+  n <- sum(ok); ncl <- length(unique(df$owner_cl[ok]))
+  sc <- abs(n - 4770) / 4770 + abs(ncl - 98) / 98 + ifelse(yn == "hh_income_pc", 0, 1e-6) + ifelse(rn == "own_amt-500", 0, 2e-6)
+  message(sprintf("combo %s / %s: n=%d ncl=%d", rn, yn, n, ncl))
+  if (sc < best_score) { best_score <- sc; best <- c(rn, yn) }
+}
+df$x <- run_list[[best[1]]]
+df$y <- y_list[[best[2]]]
+df$y[is.infinite(df$y)] <- NA
+message("Running variable: ", best[1], "; outcome: ", best[2])
+if (best[2] != "hh_income_pc") cat("DEVIATION: Used real (deflated) household earnings per capita, which best matched the stated sample\n")
+
+est_level <- function(bw) {
+  d <- df %>% filter(!is.na(y), !is.na(x), !is.na(Above500), abs(x) <= bw, !is.na(yr))
+  m <- feols(y ~ Above500 + x + Above500:x | yr, data = d, cluster = ~owner_cl)
+  list(b = unname(coef(m)["Above500"]), n = nobs(m),
+       ncl = length(unique(d$owner_cl)))
+}
+# IQR of earnings computed within property x survey year cells
+est_iqr <- function(bw) {
+  d <- df %>% filter(!is.na(y), !is.na(x), !is.na(Above500), abs(x) <= bw, !is.na(yr))
+  p <- d %>% group_by(prop, yr) %>%
+    summarise(n = n(),
+              iqr = unname(quantile(y, 0.75, na.rm = TRUE) - quantile(y, 0.25, na.rm = TRUE)),
+              Above500 = first(Above500), x = first(x), owner_cl = first(owner_cl),
+              .groups = "drop") %>%
+    filter(n >= 2)
+  m <- feols(iqr ~ Above500 + x + Above500:x | yr, data = p, cluster = ~owner_cl)
+  list(b = unname(coef(m)["Above500"]), n = nobs(m))
+}
+
+safe <- function(f, ...) tryCatch(f(...), error = function(e) { message("Error: ", conditionMessage(e)); NULL })
+l300 <- safe(est_level, 300); l150 <- safe(est_level, 150)
+i300 <- safe(est_iqr, 300);   i150 <- safe(est_iqr, 150)
+
+out <- function(name, val) if (!is.null(val) && length(val) && !is.na(val)) cat(sprintf("RESULT:%s=%.6f\n", name, val))
+if (!is.null(l300)) { out("earnings_level_above500_bw300", l300$b); out("n_obs_earnings_level_bw300", l300$n); out("n_clusters_bw300", l300$ncl) }
+if (!is.null(l150)) { out("earnings_level_above500_bw150", l150$b); out("n_obs_earnings_level_bw150", l150$n); out("n_clusters_bw150", l150$ncl) }
+if (!is.null(i300)) { out("earnings_iqr_above500_bw300", i300$b); out("n_obs_earnings_iqr_bw300", i300$n) }
+if (!is.null(i150)) { out("earnings_iqr_above500_bw150", i150$b); out("n_obs_earnings_iqr_bw150", i150$n) }
+cat("DEVIATION: IQR of earnings computed within property-by-survey-year cells (min 2 workers) with survey-year fixed effects\n")
+```
+
+## What the code produced
+  earnings_level_above500_bw300 = 82.545029
+  n_obs_earnings_level_bw300 = 4781.0
+  n_clusters_bw300 = 99.0
+  earnings_level_above500_bw150 = 72.180888
+  n_obs_earnings_level_bw150 = 1583.0
+  n_clusters_bw150 = 36.0
+  earnings_iqr_above500_bw300 = -78.623492
+  n_obs_earnings_iqr_bw300 = 218.0
+  earnings_iqr_above500_bw150 = -139.39778
+  n_obs_earnings_iqr_bw150 = 80.0
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+RESULT:earnings_level_above500_bw300=82.545029
+RESULT:n_obs_earnings_level_bw300=4781.000000
+RESULT:n_clusters_bw300=99.000000
+RESULT:earnings_level_above500_bw150=72.180888
+RESULT:n_obs_earnings_level_bw150=1583.000000
+RESULT:n_clusters_bw150=36.000000
+RESULT:earnings_iqr_above500_bw300=-78.623492
+RESULT:n_obs_earnings_iqr_bw300=218.000000
+RESULT:earnings_iqr_above500_bw150=-139.397780
+RESULT:n_obs_earnings_iqr_bw150=80.000000
+DEVIATION: IQR of earnings computed within property-by-survey-year cells (min 2 workers) with survey-year fixed effects
+```
+
+## Last run's stderr (excerpt: first/last 3000 characters)
+```
+norm_dist agreement 1.000 q90 283.0
+combo own_amt-500 / hh_income_pc: n=4781 ncl=99
+combo own_amt-500 / hh_inc_pc_real: n=4781 ncl=99
+combo norm_dist / hh_income_pc: n=4781 ncl=99
+combo norm_dist / hh_inc_pc_real: n=4781 ncl=99
+Running variable: own_amt-500; outcome: hh_income_pc
+```
+
+## Claims still failing
+1. earnings_iqr_above500_bw300: paper claims -42.97 dollars per month (interquartile range of household earnings per capita) (coefficient), your code produced -78.6235, tolerance 0.4147, gap 82.97% relative
+2. earnings_iqr_above500_bw150: paper claims -51.79 dollars per month (interquartile range of household earnings per capita) (coefficient), your code produced -139.398, tolerance 0.4787, gap 169.16% relative
+3. n_obs_earnings_iqr_bw300: paper claims 327.0 observations (properties) (other), your code produced 218, tolerance 0.01, gap 33.33% relative
+4. n_obs_earnings_iqr_bw150: paper claims 118.0 observations (properties) (other), your code produced 80, tolerance 0.01, gap 32.20% relative
+5. n_clusters_bw300: paper claims 98.0 clusters (former owners) (other), your code produced 99, tolerance 0.01, gap 1.02% relative
+
+## Previous attempts (oldest first)
+  Attempt 1: earnings_level_above500_bw300=101.434901, n_obs_earnings_level_bw300=3991.0, n_clusters_bw300=95.0, earnings_level_above500_bw150=94.676467, n_obs_earnings_level_bw150=1513.0, n_clusters_bw150=34.0, earnings_iqr_above500_bw300=44.900866, n_obs_earnings_iqr_bw300=76.0, earnings_iqr_above500_bw150=95.652647, n_obs_earnings_iqr_bw150=28.0
+  Attempt 2: earnings_level_above500_bw300=82.545029, n_obs_earnings_level_bw300=4781.0, n_clusters_bw300=99.0, earnings_level_above500_bw150=72.180888, n_obs_earnings_level_bw150=1583.0, n_clusters_bw150=36.0, earnings_iqr_above500_bw300=-78.623492, n_obs_earnings_iqr_bw300=218.0, earnings_iqr_above500_bw150=-139.39778, n_obs_earnings_iqr_bw150=80.0
+
+These attempts have already been tried.  Do not repeat a strategy
+that has already produced the same values.
+
+## Task
+Adjust the code minimally to close the gap on the failing claims.
+Prefer changes that align more closely with the paper's stated methodology:
+re-read the methodology summary above and check the model specification,
+covariate selection, fixed effects, clustering, and seed against what the
+paper actually specifies.  In econometrics papers, common gap-closers are:
+  - getting the cluster-robust SE right (vcovCL / cluster_var argument)
+  - matching the paper's exact fixed-effects structure
+  - using the same sample-restriction filters the paper applied
+  - matching the paper's weighting scheme (weights= argument)
+
+## Deviation reporting
+If you must change something the paper did NOT specify in order to close
+the gap, emit a ``DEVIATION:`` line via cat() describing the change:
+
+    cat('DEVIATION: Used HC1 robust SE because the paper does not specify but the default did not converge\n')
+
+## When to give up
+If after re-reading the methodology and the previous attempts you judge
+the gap cannot be closed without unreasonable deviation, return the SAME
+R CODE you were given, BYTE-FOR-BYTE unchanged.  The pipeline will record
+the claim as unreproducible.
+
+## Output convention (unchanged)
+Emit every metric as ``cat('RESULT:<name>=<value>\n')``.
+The dataset is a directory tree at '<repo>/.cache/datasets/montero_2022_cooperative_property_rights.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+No network, no system().  set.seed(42).
+
+Output ONLY the R code — no explanation, no markdown fences.

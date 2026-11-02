@@ -1,0 +1,2729 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: NBER WORKING PAPER SERIES
+Abstract (first 500 chars): Can strengthening intellectual property (IP) protection for producers of one good affect 
+innovation in other related goods? To answer this question, we exploit a unique policy 
+experiment in the interwar military aircraft industry. Airframe designs had little IP protection 
+before 1926, but changes passed by Congress in 1926 provided airframe manufacturers with 
+enhanced property rights over new designs. We show that granting property rights to air-frame 
+producers increased innovation in airfr
+Methodology Summary: # Methodology Summary
+
+**Research design / identification strategy:**
+- Natural experiment exploiting the 1926 Air Corps Act, which gave US airframe producers de facto IP protection (via negotiated procurement contracts) while leaving aero-engine IP protection unchanged. The authors use a pre/post 1926 comparison within the US, plus a difference-in-differences-style comparison between the US and the UK (and, where data allow, Germany, Italy, Japan).
+
+**Sample and data construction:**
+- Near-universe of military airframe models and matched aero-engines, 1918–1935, hand-collected from aircraft reference books. Observation = a new airframe model (including sub-variants, e.g., PW-9A, PW-9B) or engine design.
+- Analysis restricted primarily to **fighters and bombers**, because these are high-performance segments most distinct from civilian aircraft and where performance metrics are most meaningful. Other segments (e.g., reconnaissance) relegated to the appendix.
+
+**Outcome variables (direct performance measures, used instead of patents since patents are endogenous to the IP regime):**
+- Airframes: **wing load** (gross weight / wing area) — preferred measure; also **maximum speed** (mph).
+- Aero-engines: **horsepower / engine weight**, **horsepower / displacement (liters)**, **horsepower / frontal area (sq. in.)**.
+- Supplementary outcomes: development of new liquid-cooled engines, vintage gap between engines and the airframes they power, and merger activity between airframe and engine firms.
+
+**Specification / estimation:**
+- Primary evidence is graphical (time-series plots of performance metrics for US vs. comparison countries, pre- vs. post-1926). The paper does not describe a formal regression with fixed effects, clustered SEs, or a headline coefficient of interest in the excerpt provided — identification rests on visual pre/post and US-vs-UK comparisons around the 1926 break.
+- Theoretical model: static one-period partial-equilibrium model with Bertrand competition (no IP) vs. Nash-in-Nash monopolist–monopsonist bargaining (with IP); used to derive testable predictions (Propositions 1–4) rather than to structurally estimate.
+
+**Variables excluded due to data limitations:**
+- Airframe and engine prices, and firm profits (not consistently available), so analysis relies on physical performance characteristics.
+
+**Robustness / alternative-mechanism checks discussed:**
+- Rule out confounds from the 1925 Air Mail Act and 1926 Air Commerce Act by noting military dominated high-performance segment (military spending $88M vs. civilian $55M, 1926–1936; much higher unit values and horsepower).
+- Rule out common technology-frontier shocks via cross-country comparison, aided by the fact that NACA budget growth shows no 1926 break (Appendix Figure B3) and research was internationally disseminated.
+- Test merger prediction (Proposition 4) via firm-history analysis of vertical-complement mergers between airframe and engine producers.
+
+## Claims to Reproduce
+1. airframe_wingload_trend_before_1926_us: 0.013 (log points per year) [type: coefficient]
+   Location: Table 1, column 1 (United States Only, Wing Load), Before 1926 x year x US
+   Context: Table 1 ("Results for Airframe Innovation Before and After 1926"), column 1, row Before 1926 x year x US. OLS of equation (4): the dependent variable is the log of wing load (airframe weight in pounds divided by wing area in square feet) for each new U.S. military fighter or bomber airframe model (an observation is the introduction of a new model, including new versions of existing designs, dated by year of first delivery; the paper's figures cover 1918-1935). The regressors are a two-piece linear spline in year with a knot at 1926, giving separate slopes before and after 1926 while keeping th…
+2. airframe_wingload_trend_after_1926_us: 0.074 (log points per year) [type: coefficient]
+   Location: Table 1, column 1 (United States Only, Wing Load), After 1926 x year x US
+   Context: Table 1, column 1, row After 1926 x year x US: the after-1926 slope of the same U.S.-only regression as airframe_wingload_trend_before_1926_us (log wing load of U.S. fighter and bomber models on a continuous two-piece linear spline in year with a knot at 1926 plus a constant; robust standard errors).
+3. airframe_maxspeed_trend_before_1926_us: -0.001 (log points per year) [type: coefficient]
+   Location: Table 1, column 2 (United States Only, Maximum Speed), Before 1926 x year x US
+   Context: Table 1, column 2, row Before 1926 x year x US. Same U.S.-only specification as airframe_wingload_trend_before_1926_us (equation (4): two-piece linear spline in year, knot at 1926, plus a constant; robust standard errors) with the log of maximum speed in miles per hour as the dependent variable, for U.S. fighter and bomber airframe models. Before-1926 slope.
+4. airframe_maxspeed_trend_after_1926_us: 0.067 (log points per year) [type: coefficient]
+   Location: Table 1, column 2 (United States Only, Maximum Speed), After 1926 x year x US
+   Context: Table 1, column 2, row After 1926 x year x US: the after-1926 slope of the U.S.-only log maximum speed regression described in airframe_maxspeed_trend_before_1926_us.
+5. airframe_wingload_trend_before_1926_us_vs_uk: 0.004 (log points per year) [type: coefficient]
+   Location: Table 1, column 3 (Comparison of US and UK, Wing Load), Before 1926 x year x US
+   Context: Table 1, column 3, row Before 1926 x year x US. OLS of equation (5) on pooled U.S. and U.K. military fighter and bomber airframe models; dependent variable the log of wing load. The coefficients of interest are the two pieces of a linear spline in year (knot at 1926) interacted with an indicator for the United States, measuring the rate of innovation in the United States relative to the United Kingdom before and after 1926. Other terms: a constant, an indicator for the United States, and a linear spline (same knot) for the comparison country (the United Kingdom). No engine controls. Robust sta…
+6. airframe_wingload_trend_after_1926_us_vs_uk: 0.025 (log points per year) [type: coefficient]
+   Location: Table 1, column 3 (Comparison of US and UK, Wing Load), After 1926 x year x US
+   Context: Table 1, column 3, row After 1926 x year x US: the after-1926 U.S. relative slope of the pooled U.S.-U.K. log wing load regression described in airframe_wingload_trend_before_1926_us_vs_uk.
+7. airframe_maxspeed_trend_before_1926_us_vs_uk: -0.028 (log points per year) [type: coefficient]
+   Location: Table 1, column 4 (Comparison of US and UK, Maximum Speed), Before 1926 x year x US
+   Context: Table 1, column 4, row Before 1926 x year x US. Same pooled U.S.-U.K. specification as airframe_wingload_trend_before_1926_us_vs_uk (equation (5): spline in year with knot at 1926 interacted with a U.S. indicator, plus a constant, a U.S. indicator and the U.K. spline; no engine controls; robust standard errors) with the log of maximum speed in miles per hour as the dependent variable. Before-1926 relative slope.
+8. airframe_maxspeed_trend_after_1926_us_vs_uk: 0.031 (log points per year) [type: coefficient]
+   Location: Table 1, column 4 (Comparison of US and UK, Maximum Speed), After 1926 x year x US
+   Context: Table 1, column 4, row After 1926 x year x US: the after-1926 U.S. relative slope of the pooled U.S.-U.K. log maximum speed regression described in airframe_maxspeed_trend_before_1926_us_vs_uk.
+9. engine_hp_per_weight_trend_before_1926_us: 0.039 (log points per year) [type: coefficient]
+   Location: Table 4, column 1 (United States Only, HP / Weight), Before 1926 x year x US
+   Context: Table 4 ("Results for Aero-Engine Innovation Before and After 1926"), column 1, row Before 1926 x year x US. OLS on U.S. aero-engines used in military fighter and bomber aircraft, with a specification similar to equation (4): the dependent variable is the log of horsepower divided by engine weight in pounds; the regressors are a two-piece linear spline in year with a knot at 1926 (continuous level), a constant, and an indicator for whether the engine is liquid-cooled. Robust standard errors. Before-1926 slope.
+10. engine_hp_per_weight_trend_after_1926_us: -0.01 (log points per year) [type: coefficient]
+   Location: Table 4, column 1 (United States Only, HP / Weight), After 1926 x year x US
+   Context: Table 4, column 1, row After 1926 x year x US: the after-1926 slope of the U.S.-only log horsepower-per-pound regression described in engine_hp_per_weight_trend_before_1926_us (the paper's evidence that aero-engine performance growth slowed after 1926).
+11. observations_airframe_wingload_us: 116.0 (airframe models) [type: other]
+   Location: Table 1, column 1, observations
+   Context: Number of observations in Table 1 column 1: new U.S. military fighter and bomber airframe models with wing load observed, the sample of the U.S.-only log wing load regression.
+12. observations_engine_us: 85.0 (aero-engines) [type: other]
+   Location: Table 4, column 1, observations
+   Context: Number of observations in Table 4 column 1: U.S. aero-engines used in fighters and bombers with horsepower per pound observed, the sample of the U.S.-only engine regression.
+
+## Dataset Information
+Name: hanlon-2022-aircraft-ip-spillovers
+Local path: <repo>/.cache/datasets/hanlon_2022_aircraft_ip_spillovers
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- 3 replication files/data/dta/airframe_data.dta (102.3 KB) — 793 rows, 24 columns: year, country, maxspeed, wing_area, wingload, grossweight, enginehp, no_engines, count, engine_maker, ln_wingload, ln_maxspeed, powerload, ln_powerload, twoplusengines, type, cruise, climb_ft_per_min, climb_to_10000, ceiling, range, endurance, ln_ceiling, ln_cruise
+- 3 replication files/data/dta/engine_data.dta (17.5 KB) — 278 rows, 8 columns: country, year, liquid_cooled, count, ln_hp_per_frontal, ln_hp_per_disp, ln_hp_per_lbs, ln_hp_per_disp_rpm
+- 3 replication files/data/dta/engine_data_fahey.dta (12.1 KB) — 249 rows, 6 columns: country, year, liquid_cooled, ln_hp_per_disp, ln_hp_per_lbs, ln_hp_per_disp_rpm
+- 3 replication files/data/dta/vintage_data.dta (11.1 KB) — 330 rows, 4 columns: year, country, firstyear, type
+- 1 paper/MS20201110_accepted.pdf (2.8 MB)
+- 1 paper/MS20201110_main.pdf (460.4 KB)
+- 1 paper/MS20201110_main.tex (101.2 KB)
+- 1 paper/MS20201110_online_appendix.pdf (1.7 MB)
+- 1 paper/OUP-EJ.cls (29.7 KB)
+- 1 paper/aircraft_master.bib (24.4 KB)
+- 1 paper/ejbib.bst (33.3 KB)
+- 1 paper/figures/Figure1A.eps (33.4 KB)
+- 1 paper/figures/Figure1B.eps (36.5 KB)
+- 1 paper/figures/Figure2A.eps (30.3 KB)
+- 1 paper/figures/Figure2B.eps (29.6 KB)
+- 1 paper/figures/Figure2C.eps (30.2 KB)
+- 2 appendix/MS20201110_online_appendix.pdf (2.0 MB)
+- 3 replication files/ReadMe.pdf (27.3 KB)
+- 3 replication files/data/raw/Appendix_Engine_HHI.csv (532 B) — columns: ﻿year,hhi_engine,hhi_horsepower
+- 3 replication files/data/raw/Appendix_Engine_Maker.csv (1.9 KB) — columns: year,count_Curtiss,count_Lawrance,count_Others,count_PW,count_Packard,count_Wright,no_engines_Curtiss,no_engines_Lawrance,no_engines_Others,no_engines_PW,no_engines_Packard,no_engines_Wright,engine_hp_Curtiss,engine_hp_Lawrance,engine_hp_Ot…
+- 3 replication files/data/raw/Appendix_Firm_Boeing.csv (4.1 KB) — columns: ﻿model,family,count,year,maxspeed,wing_load,buyer_type,military
+- 3 replication files/data/raw/Appendix_Firm_Curtiss.csv (7.5 KB) — columns: ﻿model,family,count,year,maxspeed,wing_load,buyer_type,military
+- 3 replication files/data/raw/Appendix_Firm_Douglas.csv (4.6 KB) — columns: ﻿model,family,count,year,maxspeed,wing_load,buyer_type,military
+- 3 replication files/data/raw/Appendix_NACA_Budget.csv (211 B) — columns: ﻿year,naca
+- 3 replication files/data/raw/Appendix_Unit_Values.csv (411 B) — columns: ﻿year,military,civil
+- 3 replication files/data/raw/JANES_engine_data.csv (95.6 KB) — columns: yr_introduced,country,company,engine,military,cylinder,diesel,cooling,displ,weightlbs,hpnormal,rpm,hpaltitude,fuel_per_hp_hour,comments,hp_per_lbs,notes,hp_per_displ
+- 3 replication files/data/raw/JAPAN_data.csv (35.1 KB) — columns: branch,company,location,model,count,year,own_design,type,figher_type,engine_maker,engine_type,no_engines,engine_hp,wing_areasqm,emptyweightkg,grossweightkg,maxspeedkt,cruisekt,climb_to_3000,rangenm,endurance,ceiling,bomb_load_kg,wing_area,e…
+- 3 replication files/data/raw/UK_data.csv (37.9 KB) — columns: ﻿uk_airframe_id,Branch,Company,Location,Model,Count,Year,Own_design,Type,Fighter_type,Wings,Material,Engine_maker,Engine_type,No_engines,Engine_HP,Wing_area,Empty weight,Gross weight,Max speed,Cruise,Climb_ft_per_min,Climb_to_10000,Range,En…
+- 3 replication files/data/raw/US_data1.csv (315.7 KB)
+- 3 replication files/data/raw/US_data2.csv (29.2 KB)
+- 3 replication files/data/raw/airframe_data_appendix.csv (10.0 KB)
+- 3 replication files/data/raw/engine_data_appendix.csv (46.3 KB)
+- 3 replication files/data/raw/firm_level_data.csv (84.6 KB)
+- 3 replication files/data/raw/patent_data_appendix.csv (33.3 KB)
+- 3 replication files/data/raw/prepared_atc_data.csv (52.1 KB)
+- 3 replication files/do/1-data-airframes.do (7.5 KB)
+- 3 replication files/do/1-data-engines.do (8.3 KB)
+- 3 replication files/do/1-data-vintage.do (4.7 KB)
+- 3 replication files/do/2-results-main.do (24.3 KB)
+- 3 replication files/do/3-results-appendix.do (62.0 KB)
+- 3 replication files/figures/Appendix/FigureA1_Appendix_Theory.pdf (31.6 KB)
+- 3 replication files/figures/Appendix/FigureB1_Appendix_Patents.pdf (50.6 KB)
+- 3 replication files/figures/Appendix/FigureB2_Appendix_Unit_Values.pdf (12.2 KB)
+- 3 replication files/figures/Appendix/FigureB3_Appendix_NACA_Budget.pdf (9.4 KB)
+- 3 replication files/figures/Appendix/FigureB4_Appendix_MarketShare.pdf (24.1 KB)
+- 3 replication files/figures/Appendix/FigureB5_Appendix_HHI_Engine.pdf (15.2 KB)
+- 3 replication files/figures/Appendix/FigureB5_Appendix_HHI_Horsepower.pdf (15.7 KB)
+- 3 replication files/figures/Appendix/FigureE1_Appendix_Correlation.pdf (112.0 KB)
+- 3 replication files/figures/Appendix/FigureE2_Appendix_ATC.pdf (37.7 KB)
+- 3 replication files/figures/Appendix/FigureE3_Appendix_Penalized_PanelA.pdf (15.7 KB)
+- 3 replication files/figures/Appendix/FigureE3_Appendix_Penalized_PanelB.pdf (16.3 KB)
+- 3 replication files/figures/Appendix/FigureE4_Appendix_Boeing_PanelA.pdf (36.5 KB)
+- 3 replication files/figures/Appendix/FigureE4_Appendix_Curtiss_PanelB.pdf (43.0 KB)
+- 3 replication files/figures/Appendix/FigureE4_Appendix_Douglas_PanelC.pdf (35.2 KB)
+- 3 replication files/figures/Appendix/FigureF2_US_airframe.jpg (146.3 KB)
+- 3 replication files/figures/Appendix/FigureF2_US_engine.jpg (89.6 KB)
+- 3 replication files/figures/Appendix/FigureF3_British.jpg (221.9 KB)
+- 3 replication files/figures/Figure1A.eps (33.4 KB)
+- 3 replication files/figures/Figure1B.eps (36.5 KB)
+- 3 replication files/figures/Figure2A.eps (30.3 KB)
+- 3 replication files/figures/Figure2B.eps (29.6 KB)
+- 3 replication files/figures/Figure2C.eps (30.2 KB)
+- 3 replication files/tables/Appendix/TableD1_Appendix_Designs.jpg (492.9 KB)
+- 3 replication files/tables/Appendix/TableE1_robust_airframes_Fstat.tex (131 B)
+- 3 replication files/tables/Appendix/TableE1_robust_airframes_obs.tex (131 B)
+- 3 replication files/tables/Appendix/TableE1_robust_airframes_pval.tex (131 B)
+- 3 replication files/tables/Appendix/TableE1_robust_airframes_reg.tex (524 B)
+- 3 replication files/tables/Appendix/TableE2_robust_airframes_break_Fstat.tex (131 B)
+- 3 replication files/tables/Appendix/TableE2_robust_airframes_break_obs.tex (131 B)
+- 3 replication files/tables/Appendix/TableE2_robust_airframes_break_pval.tex (131 B)
+- 3 replication files/tables/Appendix/TableE2_robust_airframes_break_reg.tex (1.8 KB)
+- 3 replication files/tables/Appendix/TableE3_robust_engines_Fstat.tex (131 B)
+- 3 replication files/tables/Appendix/TableE3_robust_engines_obs.tex (131 B)
+- 3 replication files/tables/Appendix/TableE3_robust_engines_pval.tex (131 B)
+- 3 replication files/tables/Appendix/TableE3_robust_engines_reg.tex (524 B)
+- 3 replication files/tables/Appendix/TableE4_robust_engines_break_Fstat.tex (120 B)
+- 3 replication files/tables/Appendix/TableE4_robust_engines_break_obs.tex (120 B)
+- 3 replication files/tables/Appendix/TableE4_robust_engines_break_pval.tex (120 B)
+- 3 replication files/tables/Appendix/TableE4_robust_engines_break_reg.tex (1.6 KB)
+- 3 replication files/tables/Appendix/TableE5_military-civil-obs.tex (93 B)
+- … and 16 more files (listing truncated)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/hanlon_2022_aircraft_ip_spillovers' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Original Replication Scripts
+The replication package (the dataset directory) ships the authors' own analysis scripts, reproduced below.  These are the GROUND TRUTH for the exact estimating equation, variable names, sample restrictions, fixed effects, and standard-error clustering — follow them over anything reconstructed from the methodology summary, and prefer them over the paper's text where the two disagree.  Your job is to write R code that implements the SAME SPECIFICATION: translate what the scripts estimate, do not transliterate their syntax line by line (a Stata .do file's regression, e.g. `reghdfe y x controls, absorb(fe) cluster(cl)`, becomes the equivalent fixest::feols() call in R).  Keep only the parts that produce the specific claims being reproduced; skip figure construction and unrelated robustness checks.  The scripts' data-file paths refer to the package's internal layout — resolve them against the dataset directory listed under Dataset Information.
+
+Stata-to-fixest sample matching: feols() drops fixed-effect singletons by default, but Stata's `reg y x i.fe` / `xi:` dummies keep them.  Pass `fixef.rm = "none"` to every feols() call that has fixed effects, otherwise the observation count and the robust SEs drift from the paper's.  Stata's `, r` / `vce(robust)` is `vcov = "hetero"`.
+
+### `3 replication files/do/2-results-main.do`
+```stata
+********************************************************************************
+
+cls
+clear all
+ssc install keeporder
+ssc install estout
+
+********************************************************************************
+
+*global aircraft "[ File path here ]"
+
+********************************************************************************
+
+**-> Figure 1 : Airframe Innovation in the United States and United Kingdom <-**
+	
+	**** United States ****
+	
+	* Load Airframe Data
+	qui use "$aircraft/data/dta/airframe_data.dta",clear
+	qui keep if country== "United States" | country == "United Kingdom"
+	qui keep if type == "fighter" | type == "bomber"
+	
+	* Standardize Outcomes
+	qui sum ln_wingload 
+	qui g ln_wingload_std = (ln_wingload - `r(mean)')/`r(sd)'
+	qui sum ln_maxspeed 
+	qui g ln_maxspeed_std = (ln_maxspeed - `r(mean)')/`r(sd)'
+	drop if country == "United Kingdom"
+	
+	* Make Spline
+	qui mkspline pre1926 1926 post1926 = year
+	qui reg ln_wingload_std pre1926 post1926 
+	qui adjust, by(year) gen(yhat1)
+	qui reg ln_maxspeed_std pre1926 post1926 
+	qui adjust , by(year) gen(yhat2)
+	
+	* Make Panels
+	
+		*-> Wing Load
+		qui gr tw 	(scatter ln_wingload_std year, mc(black) ms(o) msize(large) mfc(white%25)) ///
+					(line yhat1 year, sort lc(black) lp(dash) lw(vthick)) ///
+					, legend(off) graphregion(color(white)) title("United States", color(black) size(vlarge)) xtitle("") ///
+					l2("log of wing load, std.", color(black) size(large)) xlabel(1915(5)1935,nogrid labsize(large)) ///
+					ylabel(-3(1)3,nogrid labsize(large)) yscale(range(-3.25 3.25)) xline(1926,lc(red%25) lp(solid) lw(thick)) ///
+					saving("$aircraft/figures/Airframes1.gph", replace) 
+		
+		*-> Maximum Speed
+		qui gr tw 	(scatter ln_maxspeed_std year, mc(black) ms(o) msize(large) mfc(white%25)) ///
+					(line yhat2 year, sort lc(black) lp(dash) lw(vthick)) ///
+					, legend(off) graphregion(color(white)) title("United States", color(black) size(vlarge)) xtitle("") ///
+					l2("log of maximum speed, std.", color(black) size(large)) xlabel(1915(5)1935,nogrid labsize(large)) ///
+					ylabel(-3(1)3,nogrid labsize(large)) yscale(range(-3.25 3.25)) xline(1926,lc(red%25) lp(solid) lw(thick)) ///
+					saving("$aircraft/figures/Airframes2.gph", replace) 
+
+	**** United Kingdom ****
+	
+	* Load Airframe Data
+	qui use "$aircraft/data/dta/airframe_data.dta",clear
+	qui keep if country== "United Kingdom" | country == "United States"
+	qui keep if type == "fighter" | type == "bomber"
+
+	* Standardize Outcomes
+	qui sum ln_wingload 
+	qui g ln_wingload_std = (ln_wingload - `r(mean)')/`r(sd)'
+	qui sum ln_maxspeed 
+	qui g ln_maxspeed_std = (ln_maxspeed - `r(mean)')/`r(sd)'
+	drop if country == "United States"
+	
+	* Make Spline
+	qui mkspline pre1926 1926 post1926 = year
+	qui reg ln_wingload_std pre1926 post1926 
+	qui adjust, by(year) gen(yhat1)
+	qui reg ln_maxspeed_std pre1926 post1926  
+	qui adjust , by(year) gen(yhat2)
+	
+	* Make Panels
+	
+		*-> Wing Load
+		qui gr tw 	(scatter ln_wingload_std year, mc(black) ms(o) msize(large) mfc(white%25)) ///
+					(line yhat1 year, sort lc(black) lp(dash) lw(vthick)) ///
+					, legend(off) graphregion(color(white)) title("United Kingdom", color(black) size(vlarge)) xtitle("") ///
+					l2("log of wing load, std.", color(black) size(large)) xlabel(1915(5)1935,nogrid labsize(large)) ///
+					ylabel(-3(1)3,nogrid labsize(large)) yscale(range(-3.25 3.25)) xline(1926,lc(red%25) lp(solid) lw(thick)) ///
+					saving("$aircraft/figures/Airframes3.gph", replace) 
+		
+		*-> Maximum Speed
+		qui gr tw 	(scatter ln_maxspeed_std year, mc(black) ms(o) msize(large) mfc(white%25)) ///
+					(line yhat2 year, sort lc(black) lp(dash) lw(vthick)) ///
+					, legend(off) graphregion(color(white)) title("United Kingdom", color(black) size(vlarge)) xtitle("") ///
+					l2("log of maximum speed, std.", color(black) size(large)) xlabel(1915(5)1935,nogrid labsize(large)) ///
+					ylabel(-3(1)3,nogrid labsize(large)) yscale(range(-3.25 3.25)) xline(1926,lc(red%25) lp(solid) lw(thick)) ///
+					saving("$aircraft/figures/Airframes4.gph", replace) 
+		
+	**** Combine Panels ****
+	
+		*-> Wing Load
+		qui gr combine	"$aircraft/figures/Airframes1.gph" "$aircraft/figures/Airframes3.gph" ///
+						, graphregion(color(white)) xcommon ycommon xsize(6) ysize(1.5) rows(1) 
+			
+			*> Export
+			qui gr export "$aircraft/figures/Figure1A.eps", as(eps) replace 
+			
+		
+		*-> Maximum Speed
+		qui gr combine	"$aircraft/figures/Airframes2.gph" "$aircraft/figures/Airframes4.gph" ///
+						, graphregion(color(white)) xcommon ycommon xsize(6) ysize(1.5) rows(1) 
+			
+			*> Export
+			qui gr export "$aircraft/figures/Figure1B.eps", as(eps) replace
+		
+		*-> Remove
+		forvalues i = 1/4 {
+			rm "$aircraft/figures/Airframes`i'.gph" 
+			}
+
+**-> Figure 2 : Engine Innovation in the United States and United Kingdom <-****
+	
+	**** Panel A : United States ****
+	
+	* Load Engine Data
+	qui use "$aircraft/data/dta/engine_data.dta",replace
+	qui keep if country == "United States" | country == "United Kingdom"
+	
+	* Standardize Outcomes
+	qui sum ln_hp_per_lbs
+	qui g ln_hp_per_lbs_std = (ln_hp_per_lbs - `r(mean)')/`r(sd)'
+	qui sum ln_hp_per_disp
+	qui g ln_hp_per_disp_std = (ln_hp_per_disp - `r(mean)')/`r(sd)'
+	qui sum ln_hp_per_frontal
+	qui g ln_hp_per_frontal_std = (ln_hp_per_frontal - `r(mean)')/`r(sd)'
+	drop if country == "United Kingdom"
+	
+	* Make Spline
+	qui mkspline pre1926 1926 post1926 = year
+	qui reg ln_hp_per_lbs_std pre1926 post1926 
+	qui adjust , by(year) gen(yhat1)
+	qui reg ln_hp_per_disp_std pre1926 post1926 
+	qui adjust , by(year) gen(yhat2)
+	qui reg ln_hp_per_frontal_std pre1926 post1926 
+	qui adjust , by(year) gen(yhat3)
+
+	* Make Panel
+		
+		*-> Horsepower / Weight
+		qui gr tw 	(scatter ln_hp_per_lbs_std year, mc(black) ms(o) msize(large) mfc(white%25)) ///
+					(line yhat1 year, sort lc(black) lp(dash) lw(vthick)) ///
+					, legend(off) graphregion(color(white)) title("United States", color(black) size(vlarge)) xtitle("") ///
+					l2("log of horsepower / weight, std.", color(black) size(large)) xlabel(1915(5)1935,nogrid labsize(large)) ///
+					ylabel(-3(1)3,nogrid labsize(large)) yscale(range(-3.25 3.25)) xline(1926,lc(red%25) lp(solid) lw(thick)) ///
+					saving("$aircraft/figures/Engines1.gph", replace) 
+		
+		*-> Horsepower / Displacement
+		qui gr tw 	(scatter ln_hp_per_disp_std year, mc(black) ms(o) msize(large) mfc(white%25)) ///
+					(line yhat2 year, sort lc(black) lp(dash) lw(vthick)) ///
+					, legend(off) graphregion(color(white)) title("United States", color(black) size(vlarge)) xtitle("") ///
+					l2("log of horsepower / displ., std.", color(black) size(large)) xlabel(1915(5)1935,nogrid labsize(large)) ///
+					ylabel(-3(1)3,nogrid labsize(large)) yscale(range(-3.25 3.25)) xline(1926,lc(red%25) lp(solid) lw(thick)) ///
+					saving("$aircraft/figures/Engines2.gph", replace) 
+		
+		*-> Horsepower / Frontal Area
+		qui gr tw 	(scatter ln_hp_per_frontal_std year, mc(black) ms(o) msize(large) mfc(white%25)) ///
+					(line yhat3 year, sort lc(black) lp(dash) lw(vthick)) ///
+					, legend(off) graphregion(color(white)) title("United States", color(black) size(vlarge)) xtitle("") ///
+					l2("log of horsepower / area, std.", color(black) size(large)) xlabel(1915(5)1935,nogrid labsize(large)) ///
+					ylabel(-3(1)3,nogrid labsize(large)) yscale(range(-3.25 3.25)) xline(1926,lc(red%25) lp(solid) lw(thick)) ///
+					saving("$aircraft/figures/Engines3.gph", replace) 
+
+	**** Panel B : United Kingdom ****
+	
+	* Load Engine Data
+	qui use "$aircraft/data/dta/engine_data.dta",replace
+	qui keep if country == "United Kingdom" | country == "United States"
+	
+	* Standardize Outcomes
+	qui sum ln_hp_per_lbs 
+	qui g ln_hp_per_lbs_std = (ln_hp_per_lbs - `r(mean)')/`r(sd)'
+	qui sum ln_hp_per_disp
+	qui g ln_hp_per_disp_std = (ln_hp_per_disp - `r(mean)')/`r(sd)'
+	qui sum ln_hp_per_frontal
+	qui g ln_hp_per_frontal_std = (ln_hp_per_frontal - `r(mean)')/`r(sd)'
+	drop if country == "United States"
+
+	* Make Spline
+	qui mkspline pre1926 1926 post1926 = year
+	qui reg ln_hp_per_lbs_std pre1926 post1926
+	qui adjust , by(year) gen(yhat1)
+	qui reg ln_hp_per_disp_std pre1926 post1926 
+	qui adjust , by(year) gen(yhat2)
+	qui reg ln_hp_per_frontal_std pre1926 post1926 
+	qui adjust , by(year) gen(yhat3)
+	
+	* Make Panel
+		
+		*-> Horsepower / Weight
+		qui gr tw 	(scatter ln_hp_per_lbs_std year, mc(black) ms(o) msize(large) mfc(white%25)) ///
+					(line yhat1 year, sort lc(black) lp(dash) lw(vthick)) ///
+					, legend(off) graphregion(color(white)) title("United Kingdom", color(black) size(vlarge)) xtitle("") ///
+					l2("log of horsepower / weight, std.", color(black) size(large)) xlabel(1915(5)1935,nogrid labsize(large)) ///
+					ylabel(-3(1)3,nogrid labsize(large)) yscale(range(-3.25 3.25)) xline(1926,lc(red%25) lp(solid) lw(thick)) ///
+					saving("$aircraft/figures/Engines4.gph", replace) 
+		
+		*-> Horsepower / Displacement
+		qui gr tw 	(scatter ln_hp_per_disp_std year , mc(black) ms(o) msize(large) mfc(white%25)) ///
+					(line yhat2 year, sort lc(black) lp(dash) lw(vthick)) ///
+					, legend(off) graphregion(color(white)) title("United Kingdom)", color(black) size(vlarge)) xtitle("") ///
+					l2("log of horsepower / displacement, std.", color(black) size(large)) xlabel(1915(5)1935,nogrid labsize(large)) ///
+					ylabel(-3(1)3,nogrid labsize(large)) yscale(range(-3.25 3.25)) xline(1926,lc(red%25) lp(solid) lw(thick)) ///
+					saving("$aircraft/figures/Engines5.gph", replace) 
+		
+		*-> Horsepower / Frontal Area
+		qui gr tw 	(scatter ln_hp_per_frontal_std year, mc(black) ms(o) msize(large) mfc(white%25)) ///
+					(line yhat3 year, sort lc(black) lp(dash) lw(vthick)) ///
+					, legend(off) graphregion(color(white)) title("United Kingdom", color(black) size(vlarge)) xtitle("") ///
+					l2("log of horsepower / frontal area, std.", color(black) size(large)) xlabel(1915(5)1935,nogrid labsize(large)) ///
+					ylabel(-3(1)3,nogrid labsize(large)) yscale(range(-3.25 3.25)) xline(1926,lc(red%25) lp(solid) lw(thick)) ///
+					saving("$aircraft/figures/Engines6.gph", replace) 
+		
+	**** Combine Panels ****
+	
+		*-> Horsepower / Weight
+		qui gr combine	"$aircraft/figures/Engines1.gph" "$aircraft/figures/Engines4.gph" ///
+						, graphregion(color(white)) xcommon ycommon xsize(6) ysize(1.5) rows(1) 
+			
+			*> Export
+			qui gr export "$aircraft/figures/Figure2A.eps", as(eps) replace 
+		
+		*-> Horsepower / Displacement
+		qui gr combine	"$aircraft/figures/Engines2.gph" "$aircraft/figures/Engines5.gph" ///
+						, graphregion(color(white)) xcommon ycommon xsize(6) ysize(1.5) rows(1) 
+			
+			*> Export
+			qui gr export "$aircraft/figures/Figure2B.eps", as(eps) replace 
+			
+		*-> Horsepower / Frontal Area
+		qui gr combine	"$aircraft/figures/Engines3.gph" "$aircraft/figures/Engines6.gph" ///
+						, graphregion(color(white)) xcommon ycommon xsize(6) ysize(1.5) rows(1) 
+			
+			*> Export
+			qui gr export "$aircraft/figures/Figure2C.eps", as(eps) replace 
+			
+		*-> Remove
+		forvalues i = 1/6 {
+			rm "$aircraft/figures/Engines`i'.gph" 
+			}
+
+**-> Table 1 : Airframe Regression Results <-***********************************
+	
+	est clear
+	
+	**** Prepare Data ****
+	
+	* Load Airframe Data
+	qui use "$aircraft/data/dta/airframe_data.dta",clear
+	qui keep if country== "United States" | country=="United Kingdom"
+	qui keep if type == "fighter" | type == "bomber"
+
+	* Keep Variables
+	keeporder country year ln_wingload ln_maxspeed no_engines enginehp type
+	xi i.type
+	
+	* Additional Variables
+	qui g US 			= (country == "United States")
+	qui g engines 		= (no_engines>1)
+	qui g ln_enginehp 	= log(enginehp)
+	
+	* Make Spline
+	qui mkspline pre1926 1926 post1926 = year
+	qui g pre1926_US 	= US*pre1926
+	qui g post1926_US 	= US*post1926
+
+	**** Regressions ****
+	
+	* US Only 
+		
+		*-> Wing Load
+		qui reg ln_wingload pre1926_US post1926_US if US==1, vce(r)
+		qui eststo reg_y1_us
+		qui estadd scalar obs = e(N)
+		
+			/* Test Statistics */
+			foreach var in F p {
+				qui test pre1926_US=post1926_US
+				qui eststo `var'_test1_us
+				qui estadd scalar `var'_test = r(`var')
+				}
+		
+		*-> Maximum Speed
+		qui reg ln_maxspeed pre1926_US post1926_US if US==1, vce(r)
+		qui eststo reg_y2_us
+		qui estadd scalar obs = e(N)
+		
+			/* Test Statistics */
+			foreach var in F p {
+				qui test pre1926_US=post1926_US
+				qui eststo `var'_test2_us
+				qui estadd scalar `var'_test = r(`var')
+				}
+				
+		*-> Empty
+		qui reg ln_maxspeed
+		qui eststo reg_empty1
+		qui eststo F_empty1
+		qui eststo p_empty1
+
+	* US and UK, with US dummy and year fixed effects
+		
+		*-> Wing Load
+		qui reg ln_wingload pre1926* post1926* US, vce(r)
+		qui eststo reg_y1_all
+		qui estadd scalar obs = e(N)
+		
+			/* Test Statistics */
+			foreach var in F p {
+				qui test pre1926_US=post1926_US
+				qui eststo `var'_test1_all
+				qui estadd scalar `var'_test = r(`var')
+				}
+
+		*-> Maximum Speed 
+		qui reg ln_maxspeed pre1926* post1926* US , vce(r)
+		qui eststo reg_y2_all
+		qui estadd scalar obs = e(N)
+		
+			/* Test Statistics */
+			foreach var in F p {
+				qui test pre1926_US=post1926_US
+				qui eststo `var'_test2_all
+				qui estadd scalar `var'_test = r(`var')
+				}
+
+		*-> Empty
+		qui reg ln_maxspeed
+		qui eststo reg_empty2
+		qui eststo F_empty2
+		qui eststo p_empty2
+
+	* US and UK, with US dummy, year fixed effects, and engine controls
+		
+		*-> Wing Load 
+		qui reg ln_wingload pre1926* post1926* US ln_enginehp engines, vce(r)
+		qui eststo reg_y1_controls
+		qui estadd scalar obs = e(N)
+		
+			/* Test Statistics */
+			foreach var in F p {
+				qui test pre1926_US=post1926_US
+				qui eststo `var'_test1_controls
+				qui estadd scalar `var'_test = r(`var')
+				}
+
+		*-> Maximum Speed
+		qui reg ln_maxspeed pre1926* post1926* US ln_enginehp engines, vce(r)
+		qui eststo reg_y2_controls
+		qui estadd scalar obs = e(N)
+		
+			/* Test Statistics */
+			foreach var in F p {
+				qui test pre1926_US=post1926_US
+				qui eststo `var'_test2_controls
+				qui estadd scalar `var'_test = r(`var')
+				}
+
+	**** Results ****
+	
+	* Display 
+	estout reg*, 	///
+					replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) varwidth(40) ///
+					modelwidth(10) keep(pre1926_US post1926_US) order(pre1926_US post1926_US) ///
+					varlabels(post1926_US "After 1926 $\times$ year $\times$ US" pre1926_US "Before 1926 $\times$ year $\times$ US")
+	
+	estout F_*, 	///
+					replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(F_test, fmt(1) labels( "$ F $-statistic"))
+
+	estout p_*, 	///
+					replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(p_test, fmt(3) labels( "$ p $-value " ))
+
+	estout reg*, 	///
+					replace style(tex) cells(b(fmt(0)) se(par fmt(4))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(obs, fmt(%12.0gc) labels("observations"))
+
+	* Output
+	estout reg* using "$aircraft/tables/Table1_R.tex", 	///
+					replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) varwidth(40) ///
+					modelwidth(10) keep(pre1926_US post1926_US) order(pre1926_US post1926_US) ///
+					varlabels(post1926_US "After 1926 $\times$ year $\times$ US" pre1926_US "Before 1926 $\times$ year $\times$ US")
+	
+	estout F_* using "$aircraft/tables/Table1_F.tex", 	///
+					style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(F_test, fmt(1) labels( "$ F $-statistic"))
+
+	estout p_* using "$aircraft/tables/Table1_P.tex", 	///
+					replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(p_test, fmt(3) labels( "$ p $-value " ))
+
+	estout reg* using "$aircraft/tables/Table1_N.tex", 	///
+					replace style(tex) cells(b(fmt(0)) se(par fmt(4))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(obs, fmt(%12.0gc) labels("observations"))
+
+**-> Table 2 : Fraction of Engines Liquid-Cooled <-*****************************
+
+	est clear
+
+	* Load Engine Data
+	qui use "$aircraft/data/dta/engine_data.dta",replace
+	qui keep if country== "United States" | country=="United Kingdom" | country=="Italy" | country=="Germany"
+	qui keep if year>=1918 & year<=1935 
+	
+	* Country Indicators
+	qui g US = (country== "United States" )
+	qui g UK = (country== "United Kingdom")
+	qui g GER = (country== "Germany")
+	qui g ITL = (country== "Italy")
+	
+	* Fraction Liquid-Cooled
+	foreach country in US UK GER ITL {
+		qui mean liquid_cooled if year <=1926 & `country'==1
+		eststo `country'_pre
+		qui total liquid_cooled if year <=1926 & `country'==1
+		eststo `country'_pre2
+		qui mean liquid_cooled if year > 1926 & `country'==1
+		eststo `country'_post
+		qui total liquid_cooled if year > 1926 & `country'==1
+		eststo `country'_post2
+		}
+	
+	
+	* Display
+		
+		*-> Pre-1926
+		estout US_pre US_pre2 UK_pre UK_pre2 GER_pre GER_pre2 ITL_pre ITL_pre2, ///
+				replace style(tex) cells(b(fmt(4)) ) ///
+				collabels(none) mlabels(none) eqlabels(none) varwidth(40) ///
+				modelwidth(10) keep(liquid_cooled) order(liquid_cooled) ///
+				varlabels(liquid_cooled "Before 1926")
+	
+		*-> Post-1926
+		estout US_post US_post2 UK_post UK_post2 GER_post GER_post2 ITL_post ITL_post2, ///
+				replace style(tex) cells(b(fmt(4)) ) ///
+				collabels(none) mlabels(none) eqlabels(none) varwidth(40) ///
+				modelwidth(10) keep(liquid_cooled) order(liquid_cooled) ///
+				varlabels(liquid_cooled "After 1926")			
+	* Output
+		
+		*-> Pre-1926
+		estout US_pre UK_pre GER_pre ITL_pre using "$aircraft/tables/Table2_PRE.tex", ///
+				replace style(tex) cells(b(fmt(4)) ) ///
+				collabels(none) mlabels(none) eqlabels(none) varwidth(40) ///
+				modelwidth(10) keep(liquid_cooled) order(liquid_cooled) ///
+				varlabels(liquid_cooled "Before 1926")
+	
+		*-> Post-1926
+		estout US_post UK_post GER_post ITL_post using "$aircraft/tables/Table2_POST.tex", ///
+				replace style(tex) cells(b(fmt(4)) ) ///
+				collabels(none) mlabels(none) eqlabels(none) varwidth(40) ///
+				modelwidth(10) keep(liquid_cooled) order(liquid_cooled) ///
+				varlabels(liquid_cooled "After 1926")			
+	
+**-> Table 3 : Adoption Lag for Aero-Engines <-*********************************
+
+	* Load Data
+	use "$aircraft/data/dta/vintage_data.dta",clear
+	
+	* Generate Variables
+	g diff_year = year - firstyear
+	g post = (year>1926)
+	g US = (country == "United States")
+	g post_US = post*US
+	
+	* Regressions
+		
+		est clear
+	
+		*-> US Only
+		qui reg diff_year post if US,vce(r)
+		qui eststo
+		qui estadd scalar obs = e(N)
+		
+		*-> Empty
+		qui reg diff_year
+		qui eststo
+		
+		*-> US & US Comparison
+		qui reg diff_year post US post_US,vce(r)
+		qui eststo
+		qui estadd scalar obs = e(N)
+		
+	* Display 
+	estout est* , 	///
+					replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) varwidth(40) ///
+					modelwidth(10) keep(post US post_US) order(post US post_US) ///
+					varlabels(post "After 1926" US "United States" post_US "After 1926 $\times$ United States")
+	estout est* , 	///
+					replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) varwidth(40) ///
+					modelwidth(10) drop(*) stats(obs, fmt(%12.0gc) labels("observations"))
+			
+	* Output 
+	estout est* using "$aircraft/tables/Table3_1.tex", 	///
+					replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) varwidth(40) ///
+					modelwidth(10) keep(post US post_US) order(post US post_US) ///
+					varlabels(post "After 1926" US "United States" post_US "After 1926 $\times$ United States")
+	estout est* using "$aircraft/tables/Table3_2.tex", 	///
+					replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) varwidth(40) ///
+					modelwidth(10) drop(*) stats(obs, fmt(%12.0gc) labels("observations"))
+				
+**-> Table 4 : Engine Regression Results <-*************************************
+
+	est clear
+
+	* Load Engine Data
+	qui use "$aircraft/data/dta/engine_data.dta",replace
+	qui keep if country== "United States" | country=="United Kingdom"
+	
+	* Keep Variables
+	keeporder country year ln_hp_per_disp ln_hp_per_lbs ln_hp_per_frontal liquid_cooled
+	
+	* Additional Variables
+	qui g US = (country == "United States")	
+
+	* Make Spline
+	qui mkspline pre1926 1926 post1926 = year
+	qui g pre1926_US = US*pre1926
+	qui g post1926_US = US*post1926
+
+	**** Regressions ****
+	
+	* US Only 
+		
+		*-> Horsepower / Weight (in pounds)
+		qui reg ln_hp_per_lbs pre1926_US post1926_US liquid_cooled if US, vce(r)
+		qui eststo reg_y1_us
+		qui estadd scalar obs = e(N)
+		
+			/* Test Statistics */
+			foreach var in F p {
+				qui test pre1926_US=post1926_US
+				qui eststo `var'_test1_us
+				qui estadd scalar `var'_test = r(`var')
+				}
+
+		*-> Horsepower / Displacement (in liters)
+		 reg ln_hp_per_disp pre1926_US post1926_US liquid_cooled if US , vce(r)
+		qui eststo reg_y2_us
+		qui estadd scalar obs = e(N)
+		
+			/* Test Statistics */
+			foreach var in F p {
+				qui test pre1926_US=post1926_US
+				qui eststo `var'_test2_us
+				qui estadd scalar `var'_test = r(`var')
+				}
+
+		*-> Horsepower / Frontal Area (in square inches)
+		qui reg ln_hp_per_frontal pre1926_US post1926_US liquid_cooled if US , vce(r)
+		qui eststo reg_y3_us
+		qui estadd scalar obs = e(N)
+		
+			/* Test Statistics */
+			foreach var in F p {
+				qui test pre1926_US=post1926_US
+				qui eststo `var'_test3_us
+				qui estadd scalar `var'_test = r(`var')
+				}
+
+		*-> Empty
+		qui reg ln_hp_per_lbs
+		qui eststo reg_empty1
+		qui eststo F_empty1
+		qui eststo p_empty1
+
+	* US and UK, with US dummy, liquid-cooled dummy, and year fixed effects
+		
+		*-> Horsepower / Weight (in pounds)
+		qui reg ln_hp_per_lbs pre1926* post1926* US liquid_cooled, vce(r)
+		qui eststo reg_y1_all
+		qui estadd scalar obs = e(N)
+		
+			/* Test Statistics */
+			foreach var in F p {
+				qui test pre1926_US=post1926_US
+				qui eststo `var'_test1_all
+				qui estadd scalar `var'_test = r(`var')
+				}
+		
+		*-> Horsepower / Displacement (in liters)
+		qui reg ln_hp_per_disp pre1926* post1926* US liquid_cooled, vce(r)
+		qui eststo reg_y2_all
+		qui estadd scalar obs = e(N)
+		
+			/* Test Statistics */
+			foreach var in F p {
+				qui test pre1926_US=post1926_US
+				qui eststo `var'_test2_all
+				qui estadd scalar `var'_test = r(`var')
+				}
+
+		*-> Horsepower / Frontal Area (in square inches) (Robust)
+		qui reg ln_hp_per_frontal pre1926* post1926* US liquid_cooled, vce(r)
+		qui eststo reg_y3_all
+		qui estadd scalar obs = e(N)
+		
+			/* Test Statistics */
+			foreach var in F p {
+				qui test pre1926_US=post1926_US
+				qui eststo `var'_test3_all
+				qui estadd scalar `var'_test = r(`var')
+				}
+
+	**** Results ****
+	
+	* Display 
+	estout reg*, 	///
+					replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) varwidth(40) ///
+					modelwidth(10) keep(pre1926_US post1926_US) order(pre1926_US post1926_US) ///
+					varlabels(post1926_US "After 1926 $\times$ year $\times$ US" pre1926_US "Before 1926 $\times$ year $\times$ US")
+	
+	estout F_*, 	///
+					replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(F_test, fmt(1) labels( "$ F $-statistic"))
+
+	estout p_*, 	///
+					replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(p_test, fmt(3) labels( "$ p $-value " ))
+
+	estout reg*, 	///
+					replace style(tex) cells(b(fmt(0)) se(par fmt(4))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(obs, fmt(%12.0gc) labels("observations"))
+	
+	* Output 
+	estout reg* using "$aircraft/tables/Table4_R.tex", 	///
+					replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) varwidth(40) ///
+					modelwidth(10) keep(pre1926_US post1926_US) order(pre1926_US post1926_US) ///
+					varlabels(post1926_US "After 1926 $\times$ year $\times$ US" pre1926_US "Before 1926 $\times$ year $\times$ US")
+	
+	estout F_* using "$aircraft/tables/Table4_F.tex", 	///
+					replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(F_test, fmt(1) labels( "$ F $-statistic"))
+
+	estout p_* using "$aircraft/tables/Table4_P.tex", 	///
+					replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(p_test, fmt(3) labels( "$ p $-value " ))
+
+	estout reg* using "$aircraft/tables/Table4_N.tex", 	///
+					replace style(tex) cells(b(fmt(0)) se(par fmt(4))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(obs, fmt(%12.0gc) labels("observations"))
+	
+
+```
+
+### `3 replication files/do/3-results-appendix.do`
+```stata
+********************************************************************************
+
+cls
+clear all
+net install grc1leg,from("http://www.stata.com/users/vwiggins/") 
+ssc install pspline
+ssc install estout 
+ssc install keeporder
+
+********************************************************************************
+
+*global aircraft "[ File path here ]"
+
+********************************************************************************
+
+**-> Appendix Figure : Theory  <-*********************************************
+
+	gr tw 	(function y = .4*ln(x+.1) + .1,lc(black) lw(thick)) ///
+			(function y = -.2*ln(4*x),lc(black) lw(thick)) ///
+			, graphregion(color(white)) xtitle("I{subscript:{it:mjF}}", size(vlarge)) ytitle(" ") xlabel(none) ylabel(none) ///
+			yscale(range(-1 1)) xscale(range(0 .1)) legend(off) plotregion(margin(0 0 0 0)) ///
+			text(.2 .9 "RHS", size(large)) text(.5 .125 "LHS = {&phi}(I{subscript:{it:miF}})", size(large)) ///
+			saving("$aircraft/figures/Appendix/Theory1.gph", replace) ///
+			title("Equilibrium I{subscript:{it:miF}} defined by equation (9) given I{subscript:{it:miL}}", color(black) size(medium))
+
+	gr tw 	(function y = -.2*ln(.1*x + .01) - .5,lc(black) lw(thick)) ///
+			(function y = -ln(x-.099999) - 4, range(0 .15) lc(black) lw(thick)) ///
+			, graphregion(color(white)) xtitle("I{subscript:{it:mjF}}", size(vlarge)) ytitle("I{subscript:{it:mL}}", size(vlarge)) xlabel(none) ylabel(none) ///
+			yscale(range(-1 1)) xscale(range(0 .01)) legend(off) plotregion(margin(0 0 0 0)) ///
+			text(.15 .9 "Leader FOC curve", size(large)) text(3.5 .25 "Follower FOC curve", size(large)) ///
+			saving("$aircraft/figures/Appendix/Theory2.gph", replace) ///
+			title("Equilibrium combination of I{subscript:{it:miL}} and I{subscript:{it:miF}} defined by equations (8) and (9)", color(black) size(medium))
+
+	* Combine Figures
+	qui gr combine	"$aircraft/figures/Appendix/Theory1.gph" ///
+					"$aircraft/figures/Appendix/Theory2.gph" ///
+					, graphregion(color(white)) xcommon xsize(10) rows(1) 
+	qui gr export "$aircraft/figures/Appendix/FigureA1_Appendix_Theory.pdf", as(pdf) replace				
+	rm "$aircraft/figures/Appendix/Theory1.gph" 
+	rm "$aircraft/figures/Appendix/Theory2.gph" 
+	
+**-> Appendix, Figure : Airframe and Engine Patent Activity <-******************
+
+	* Load Patent Data
+	import delimited "$aircraft/data/raw/patent_data_appendix.csv",clear
+	
+	* Make Figure, All
+	gr tw 	(scatter count pyear if military==1 & pyear<1938 & pyear>1910 & subclass== "airframe-related", c(l) lc(blue) mc(blue) lp(solid)) ///
+			(scatter count pyear if military!=1 & notassigned==0 & pyear<1938 & pyear>1910 & subclass== "airframe-related", c(l) lc(red) mc(red) lp(solid)) ///
+			(scatter count pyear if military!=1 & notassigned==1 & pyear<1938 & pyear>1910 & subclass== "airframe-related", c(l) lc(green) mc(green) lp(solid)) ///
+			(scatter count pyear if military==1 & pyear<1938 & pyear>1910 & subclass== "engine-related", c(l) lc(blue) mc(blue) mfc(white)  lp(dash)) ///
+			(scatter count pyear if military!=1 & notassigned==0 & pyear<1938 & pyear>1910 & subclass== "engine-related", c(l) lc(red) mc(red) mfc(white) lp(dash)) ///
+			(scatter count pyear if military!=1 & notassigned==1 & pyear<1938 & pyear>1910 & subclass== "engine-related", c(l) lc(green) mc(green) mfc(white) lp(dash)) ///
+			, graphregion(color(white)) l1title("Number of Patents") ytitle(" ") xtitle(" ") ylabel(,nogrid) ///
+			legend(order(1 "Military, airframe" 2 "Non-Military, airframe" 3 "Not Assigned, airframe" 4 "Military, engine" 5 "Non-Military, engine" 6 "Not Assigned, engine") region(lcolor(white)) size(small) rows(2)) ///
+			xline(1926,lc(red%25) lp(solid) lw(thick)) saving("$aircraft/figures/Appendix/Patents1.gph", replace) 
+	
+	* Make Figure, Military
+	gr tw 	(scatter count pyear if military==1 & pyear<1938 & pyear>1910 & subclass== "airframe-related", c(l) lc(blue) mc(blue) lp(solid)) ///
+			(scatter count pyear if military==1 & pyear<1938 & pyear>1910 & subclass== "engine-related", c(l) lc(blue) mc(blue) mfc(white)  lp(dash)) ///
+			, graphregion(color(white)) l1title("Number of Patents") ytitle("") xtitle(" ") ylabel(,nogrid) ///
+			legend(order(1 "Military, airframe" 2 "Military, engine") region(lcolor(white)) size(medsmall) rows(2)) ///
+			xline(1926,lc(red%25) lp(solid) lw(thick)) saving("$aircraft/figures/Appendix/Patents2.gph", replace) 
+	
+	* Combine Figures
+	qui gr combine	"$aircraft/figures/Appendix/Patents1.gph" ///
+					"$aircraft/figures/Appendix/Patents2.gph" ///
+					, graphregion(color(white)) xcommon xsize(4) ysize(6) rows(2) ///
+					saving("$aircraft/figures/Appendix/Airframes.gph", replace) 
+	
+	* Export Figure
+	gr export "$aircraft/figures/Appendix/FigureB1_Appendix_Patents.pdf", as(pdf) replace
+	
+	* Remove
+	rm "$aircraft/figures/Appendix/Patents1.gph"
+	rm "$aircraft/figures/Appendix/Patents2.gph" 
+	rm "$aircraft/figures/Appendix/Airframes.gph"
+	
+**-> Appendix, Figure : Military versus Civilian Unit Costs <-******************
+	
+	* Load Unit Value Data
+	insheet using "$aircraft/data/raw/Appendix_Unit_Values.csv",clear
+	
+	* Make Figure
+	gr tw (line military year, lc(black) lp(solid)) (line civil year, lc(black) lp(dash)) ///
+		, graphregion(color(white)) ylabel(,nogrid format(%12.0fc)) xlabel(1925(5)1935) ///
+		legend(region(lcolor(white))) yscale(range(0 45000)) ytitle("") xtitle("")
+		
+	* Export Figure	
+	qui gr export "$aircraft/figures/Appendix/FigureB2_Appendix_Unit_Values.pdf", as(pdf) replace		
+	
+**-> Appendix, Figure : NACA Budget <-******************************************
+
+	* Load Unit Value Data
+	insheet using "$aircraft/data/raw/Appendix_NACA_Budget.csv",clear
+	
+	* Make Figure
+	gr tw (line naca year, lc(black) lp(solid)) ///
+		, graphregion(color(white)) ylabel(0(500000)1500000,nogrid format(%12.0fc)) xlabel(1925(5)1935) ///
+		legend(region(lcolor(white))) yscale(range(0 1750000)) ytitle("") xtitle("") xline(1926,lc(red%25) lp(solid) lw(thick))
+		
+	* Export Figure	
+	qui gr export "$aircraft/figures/Appendix/FigureB3_Appendix_NACA_Budget.pdf", as(pdf) replace		
+
+**-> Appendix Figure : Military Engine Producer Market Share <-*****************
+	
+	* Load Engine Data
+	import delimited "$aircraft/data/raw/Appendix_Engine_Maker.csv", clear 
+
+	* Make Left Panel
+	graph bar count_curtiss count_wright count_pw count_lawrance  count_packard count_others ///
+		, over(year, label(angle(90))) stack percent ylabel(,nogrid) graphregion(color(white)) ///
+		bar(1, lcolor(black) color(black*1)) bar(2, lcolor(black) color(black*0.5)) bar(3, lcolor(black) color(gray*0.5)) ///
+		bar(4, lcolor(black) color(gray*0.25)) bar(5, lcolor(black) color(gray*0.1)) bar(6, lcolor(black) color(white)) ///
+		legend(order(1 "Curtiss" 2 "Wright" 3 "Pratt & Whitney" 4 "Lawrance" 5 "Packard" 6 "Other") rows(2) region(lcolor(white))) ///
+		title("Total Engines", color(black)) saving("$aircraft/figures/Appendix/enginemaker1.gph", replace)
+	
+	* Make Right Panel
+	graph bar engine_hp_curtiss engine_hp_wright engine_hp_pw engine_hp_lawrance  engine_hp_packard engine_hp_others ///
+		, over(year,   label(angle(90))) stack percent ylabel(,nogrid) graphregion(color(white)) ///
+		bar(1, lcolor(black) color(black*1)) bar(2, lcolor(black) color(black*0.5)) bar(3, lcolor(black) color(gray*0.5)) ///
+		bar(4, lcolor(black) color(gray*0.25)) bar(5, lcolor(black) color(gray*0.1)) bar(6, lcolor(black) color(white)) ///
+		legend(order(1 "Curtiss" 2 "Wright" 3 "Pratt & Whitney" 4 "Lawrance" 5 "Packard" 6 "Other") rows(2) region(lcolor(white))) ///
+		title("Total Horsepower", color(black)) saving("$aircraft/figures/Appendix/enginemaker2.gph", replace)
+
+	* Combine Left and Right Panel
+	qui grc1leg "$aircraft/figures/Appendix/enginemaker1.gph" ///
+				"$aircraft/figures/Appendix/enginemaker2.gph", graphregion(color(white)) 
+	gr export "$aircraft/figures/Appendix/FigureB4_Appendix_MarketShare.pdf", replace as(pdf)
+		
+	* Remove Auxiliary Files
+	rm "$aircraft/figures/Appendix/enginemaker1.gph"
+	rm "$aircraft/figures/Appendix/enginemaker2.gph"
+	
+**-> Appendix, Figure : HHI for Military Engines <-*****************************
+
+	* Load HHI Data
+	insheet using "$aircraft/data/raw/Appendix_Engine_HHI.csv",clear
+	
+	* Make Three-Average
+	g hhi_engine_3year = (hhi_engine + hhi_engine[_n-1] + hhi_engine[_n-2])/3
+	g hhi_horsepower_3year = (hhi_horsepower + hhi_horsepower[_n-1] + hhi_horsepower[_n-2])/3
+	
+	* Make Figure, Engine
+	gr tw (line hhi_engine year, lc(black) lp(solid)) (line hhi_engine_3year year, lc(black) lp(dash)) ///
+		, graphregion(color(white)) ylabel(0(3000)12000,nogrid format(%12.0fc)) xlabel(1920(5)1940) ///
+		legend(order(1 "HHI" 2 "3-year moving average") region(lcolor(white))) yscale(range(0 13000)) ytitle("") xtitle("") ///
+		title("A. HHI based on number of engines produced", color(black))
+		
+	* Export Figure, Engine
+	qui gr export "$aircraft/figures/Appendix/FigureB5_Appendix_HHI_Engine.pdf", as(pdf) replace		
+
+	* Make Figure, Horsepower
+	gr tw (line hhi_horsepower year, lc(black) lp(solid)) (line hhi_horsepower_3year year, lc(black) lp(dash)) ///
+		, graphregion(color(white)) ylabel(0(3000)12000,nogrid format(%12.0fc)) xlabel(1920(5)1940) ///
+		legend(order(1 "HHI" 2 "3-year moving average") region(lcolor(white))) yscale(range(0 13000)) ytitle("") xtitle("") ///
+		title("B. HHI based on number of horsepower produced", color(black))
+		
+	* Export Figure, Horsepower
+	qui gr export "$aircraft/figures/Appendix/FigureB5_Appendix_HHI_Horsepower.pdf", as(pdf) replace		
+
+**-> Appendix Figure : Correlation Between Alt Airframe Performance <-**********
+
+	* Load Airframe Data
+	qui use "$aircraft/data/dta/airframe_data.dta",clear
+	keep if country=="United States"
+	
+	* Make Panels
+	gr tw (scatter maxspeed wingload, mc(black) ms(o) msize(large) mfc(white%50)) (lfit maxspeed wingload, lc(black) lp(dash)) ///
+		, title("Maximum Speed", color(black)) legend(off) graphregion(color(white)) ylabel(,nogrid) saving("$aircraft/figures/Appendix/maxspeed.gph", replace) xtitle("") ytitle("maximum speed (miles per hour)")
+	gr tw (scatter powerload wingload if powerload<50, mc(black) ms(o) msize(large) mfc(white%50)) (lfit powerload wingload, lc(black) lp(dash)) ///
+		, title("Power Load", color(black)) legend(off) graphregion(color(white)) ylabel(,nogrid) saving("$aircraft/figures/Appendix/powerload.gph", replace) xtitle("") ytitle("power load")	
+	gr tw (scatter cruise wingload, mc(black) ms(o) msize(large) mfc(white%50)) (lfit cruise wingload, lc(black) lp(dash)) ///
+		, title("Cruising Speed", color(black)) legend(off) graphregion(color(white)) ylabel(,nogrid) saving("$aircraft/figures/Appendix/cruise.gph", replace) xtitle("") ytitle("cruising speed (miles per hour)")
+	gr tw (scatter climb_ft_per_min wingload, mc(black) ms(o) msize(large) mfc(white%50)) (lfit climb_ft_per_min wingload, lc(black) lp(dash)) ///
+		, title("Take-Off Rate", color(black)) legend(off) graphregion(color(white)) ylabel(,nogrid) saving("$aircraft/figures/Appendix/climb_ft_per_min.gph", replace) xtitle("") ytitle("take-off rate (feet per minute)")
+	gr tw (scatter range wingload if range<5000, mc(black) ms(o) msize(large) mfc(white%50)) (lfit range wingload, lc(black) lp(dash)) ///
+		, title("Distance Range", color(black)) legend(off) graphregion(color(white)) ylabel(,nogrid) saving("$aircraft/figures/Appendix/range.gph", replace) xtitle("") ytitle("distance range (miles)") xlabel(0(10)40)
+	gr tw (scatter ceiling wingload if ceiling<50000, mc(black) ms(o) msize(large) mfc(white%50)) (lfit ceiling wingload, lc(black) lp(dash)) ///
+		, title("Altitude Ceiling", color(black)) legend(off) graphregion(color(white)) ylabel(,nogrid) saving("$aircraft/figures/Appendix/ceiling.gph", replace) xtitle("") ytitle("altitude ceiling (feet)")
+	
+	* Combine
+	gr combine 	"$aircraft/figures/Appendix/maxspeed.gph" ///
+				"$aircraft/figures/Appendix/cruise.gph" ///
+				"$aircraft/figures/Appendix/climb_ft_per_min.gph" ///
+				"$aircraft/figures/Appendix/range.gph" ///
+				"$aircraft/figures/Appendix/ceiling.gph" ///
+				"$aircraft/figures/Appendix/powerload.gph", graphregion(color(white)) b1title("Wing Load (gross weight (in pounds) divided by wing area (in square feet)")
+	
+	* Export
+	qui gr export "$aircraft/figures/Appendix/FigureE1_Appendix_Correlation.pdf", as(pdf) replace	
+	
+	* Remove Auxiliary Files	
+	rm "$aircraft/figures/Appendix/maxspeed.gph"
+	rm "$aircraft/figures/Appendix/cruise.gph" 
+	rm "$aircraft/figures/Appendix/climb_ft_per_min.gph" 
+	rm "$aircraft/figures/Appendix/range.gph" 
+	rm "$aircraft/figures/Appendix/powerload.gph" 
+	rm "$aircraft/figures/Appendix/ceiling.gph"
+	
+**-> Appendix Figure : Timing for Airframe and Engine Innovation <-*************
+
+	scalar startyear = 1918
+	scalar endyear = 1935
+	
+	* Load Airframe Data
+	qui use "$aircraft/data/dta/airframe_data.dta",clear
+	qui keep if country== "United States" 
+	qui keep if type == "fighter" | type == "bomber"
+	qui keep if year>=`=startyear' & year<=`=endyear'
+	
+	* Standardize Outcomes
+	qui sum ln_wingload
+	qui g ln_wingload_std = (ln_wingload - `r(mean)')/`r(sd)'
+	qui sum ln_maxspeed
+	qui g ln_maxspeed_std = (ln_maxspeed - `r(mean)')/`r(sd)'
+
+	* Penalized Spline, Wing Load
+	pspline ln_wingload_std year, nknots(1) noscatter legend(off) ///
+		graphregion(color(white)) ylabel(-3(1)3,nogrid labsize(large)) xline(1926,lc(red%25) lp(solid) lw(vthick)) ///
+		lineopts(lc(black) lstyle(foreground) lc(black) lp(solid) lw(medthick)) xlabel(1915(5)1940,nogrid labsize(large)) xtitle(" ") ///
+		ytitle("log of wing load, std.",color(black) size(large)) ///
+		title("Wing Load (in pounds per square foot)", color(black) size(large)) saving("$aircraft/figures/Appendix/AirframesUS_timing1.gph", replace) 
+	mat list r(knots)
+	
+	* Penalized Spline, Maximum Speed
+	pspline ln_maxspeed_std year, nknots(1)noscatter legend(off) ///
+		graphregion(color(white)) ylabel(-3(1)3,nogrid labsize(large)) xline(1926,lc(red%25) lp(solid) lw(vthick)) ///
+		lineopts(lc(black) lstyle(foreground) lc(black) lp(solid) lw(medthick)) xlabel(1915(5)1940,nogrid labsize(large)) xtitle(" ") ///
+		ytitle("log of maximum speed, std.",color(black) size(large)) ///
+		title("Maximum Speed (in miles per hour)", color(black) size(large)) saving("$aircraft/figures/Appendix/AirframesUS_timing2.gph", replace) 
+	mat list r(knots)
+	
+	* Combine US Timing Panels
+	qui gr combine	"$aircraft/figures/Appendix/AirframesUS_timing1.gph" ///
+					"$aircraft/figures/Appendix/AirframesUS_timing2.gph" ///
+					, rows(1) graphregion(color(white)) xcommon ycommon xsize(6) ysize(2)
+		
+	* Export
+	qui gr export "$aircraft/figures/Appendix/FigureE3_Appendix_Penalized_PanelA.pdf", as(pdf) replace				
+	
+	* Load Engine Data
+	qui use "$aircraft/data/dta/engine_data.dta",replace
+	qui keep if country== "United States"
+	qui keep if year>=1918 & year<=1935
+
+	* Standardize Outcomes
+	qui sum ln_hp_per_lbs 
+	qui g ln_hp_per_lbs_std = (ln_hp_per_lbs - `r(mean)')/`r(sd)'
+	qui sum ln_hp_per_disp 
+	qui g ln_hp_per_disp_std = (ln_hp_per_disp - `r(mean)')/`r(sd)'
+	qui sum ln_hp_per_frontal
+	qui g ln_hp_per_frontal_std = (ln_hp_per_frontal - `r(mean)')/`r(sd)'
+
+	* Penalized Spline, Horsepower / Weight
+	pspline ln_hp_per_lbs_std year, nknots(1) noscatter legend(off) ///
+		graphregion(color(white)) ylabel(-3(1)3,nogrid labsize(large)) xline(1926,lc(red%25) lp(solid) lw(vthick)) ///
+		lineopts(lc(black) lstyle(foreground) lc(black) lp(solid) lw(medthick)) xlabel(1915(5)1940,nogrid labsize(large)) xtitle(" ") ///
+		ytitle("log of horsepower / weight, std.",color(black) size(large)) ///
+		title("Horsepower / Weight (in pounds)", color(black) size(large)) saving("$aircraft/figures/Appendix/EnginesUS_timing1.gph", replace) 
+	mat list r(knots)	
+	
+	* Penalized Spline, Horsepower / Displacement
+	pspline ln_hp_per_disp_std year liquid_cooled, nknots(1) noscatter legend(off) ///
+		graphregion(color(white)) ylabel(-3(1)3,nogrid labsize(large)) xline(1926,lc(red%25) lp(solid) lw(vthick)) ///
+		lineopts(lc(black) lstyle(foreground) lc(black) lp(solid) lw(medthick)) xlabel(1915(5)1940,nogrid labsize(large)) xtitle(" ") ///
+		ytitle("log of horsepower / displacement, std.",color(black) size(large)) ///
+		title("Horsepower / Displacement (in liters)", color(black) size(large)) saving("$aircraft/figures/Appendix/EnginesUS_timing2.gph", replace) 
+	mat list r(knots)	
+
+	* Penalized Spline, Horsepower / Frontal Area
+	pspline ln_hp_per_frontal_std year liquid_cooled, nknots(1) noscatter legend(off) ///
+		graphregion(color(white)) ylabel(-3(1)3,nogrid labsize(large)) xline(1926,lc(red%25) lp(solid) lw(vthick)) ///
+		lineopts(lc(black) lstyle(foreground) lc(black) lp(solid) lw(medthick)) xlabel(1915(5)1940,nogrid labsize(large)) xtitle(" ") ///
+		ytitle("log of horsepower / frontal area, std.",color(black) size(large)) ///
+		title("Horsepower / Frontal Area (in square inches)", color(black) size(large)) saving("$aircraft/figures/Appendix/EnginesUS_timing3.gph", replace) 
+	mat list r(knots)	
+	
+	* Combine US Timing Panels
+	qui gr combine	"$aircraft/figures/Appendix/EnginesUS_timing1.gph" ///
+					"$aircraft/figures/Appendix/EnginesUS_timing2.gph" ///
+					"$aircraft/figures/Appendix/EnginesUS_timing3.gph" ///
+					, rows(1) graphregion(color(white)) xcommon ycommon xsize(10)
+	
+	* Export
+	qui gr export "$aircraft/figures/Appendix/FigureE3_Appendix_Penalized_PanelB.pdf", as(pdf) replace				
+	
+	* Remove
+	rm "$aircraft/figures/Appendix/AirframesUS_timing1.gph"
+	rm "$aircraft/figures/Appendix/AirframesUS_timing2.gph"
+	rm "$aircraft/figures/Appendix/EnginesUS_timing1.gph"
+	rm "$aircraft/figures/Appendix/EnginesUS_timing2.gph"
+	rm "$aircraft/figures/Appendix/EnginesUS_timing3.gph"
+	
+**-> Appendix, Figure : Change in Airframe Innovation by Company <-*************
+	
+	* Load Boeing Data
+	insheet using "$aircraft/data/raw/Appendix_Firm_Boeing.csv",clear
+
+	* Standardize Outcomes
+	qui g ln_wingload = log(wing_load)
+	qui g ln_maxspeed = log(maxspeed)
+	qui sum ln_wingload 
+	qui g ln_wingload_std = (ln_wingload - `r(mean)')/`r(sd)'
+	qui sum ln_maxspeed 
+	qui g ln_maxspeed_std = (ln_maxspeed - `r(mean)')/`r(sd)'
+
+	* Make Spline
+	qui mkspline pre1926 1926 post1926 = year
+	qui reg ln_wingload_std pre1926 post1926 
+	qui adjust, by(year) gen(yhat1)
+	qui reg ln_maxspeed_std pre1926 post1926 
+	qui adjust , by(year) gen(yhat2)
+
+	* Make Panel, Boeing
+	qui gr tw 	(scatter ln_wingload_std year, mc(black) ms(o) msize(large) mfc(white%50)) ///
+				(line yhat1 year, sort lc(black) lp(dash) lw(vthick)) ///
+				, legend(off) graphregion(color(white)) title("Wing Load", color(black) size(large)) xtitle("") ///
+				l2("log of wing load, std.", color(black) size(medium)) ///
+				xmtick(1920(5)1935) xlabel(1920(5)1935,nogrid labsize(large)) xscale(range(1920 1935)) ///
+				ylabel(-3(1)3,nogrid labsize(large)) xline(1926,lc(red%25) lp(solid) lw(thick)) ///
+				saving("$aircraft/figures/Appendix/Boeing1.gph", replace) 
+	qui gr tw 	(scatter ln_maxspeed_std year, mc(black) ms(o) msize(large) mfc(white%50)) ///
+				(line yhat2 year, sort lc(black) lp(dash) lw(vthick)) ///
+				, legend(off) graphregion(color(white)) title("Maximum Speed", color(black) size(large)) xtitle("") ///
+				l2("log of maximum speed, std.", color(black) size(medium)) ///
+				xmtick(1920(5)1935) xlabel(1920(5)1935,nogrid labsize(large)) xscale(range(1920 1935)) ///
+				ylabel(-3(1)3,nogrid labsize(large)) xline(1926,lc(red%25) lp(solid) lw(thick)) ///
+				saving("$aircraft/figures/Appendix/Boeing2.gph", replace) 
+
+	* Combine
+	qui gr combine	"$aircraft/figures/Appendix/Boeing1.gph" ///
+					"$aircraft/figures/Appendix/Boeing2.gph" ///
+					, graphregion(color(white)) xcommon ycommon xsize(10) rows(1) ///
+					title("A. Boeing", color(black) size(vlarge))
+		
+	* Export	
+	qui gr export "$aircraft/figures/Appendix/FigureE4_Appendix_Boeing_PanelA.pdf", as(pdf) replace				
+
+	* Remove
+	rm "$aircraft/figures/Appendix/Boeing1.gph"
+	rm "$aircraft/figures/Appendix/Boeing2.gph" 
+
+	* Load Boeing Data
+	insheet using "$aircraft/data/raw/Appendix_Firm_Curtiss.csv",clear
+
+	* Standardize Outcomes
+	qui g ln_wingload = log(wing_load)
+	qui g ln_maxspeed = log(maxspeed)
+	qui sum ln_wingload 
+	qui g ln_wingload_std = (ln_wingload - `r(mean)')/`r(sd)'
+	qui sum ln_maxspeed 
+	qui g ln_maxspeed_std = (ln_maxspeed - `r(mean)')/`r(sd)'
+
+	* Make Spline
+	qui mkspline pre1926 1926 post1926 = year
+	qui reg ln_wingload_std pre1926 post1926 
+	qui adjust, by(year) gen(yhat1)
+	qui reg ln_maxspeed_std pre1926 post1926 
+	qui adjust , by(year) gen(yhat2)
+
+	* Make Panel, Curtiss
+	qui gr tw 	(scatter ln_wingload_std year, mc(black) ms(o) msize(large) mfc(white%50)) ///
+				(line yhat1 year, sort lc(black) lp(dash) lw(vthick)) ///
+				, legend(off) graphregion(color(white)) title("Wing Load", color(black) size(large)) xtitle("") ///
+				l2("log of wing load, std.", color(black) size(medium)) ///
+				xmtick(1920(5)1935) xlabel(1920(5)1935,nogrid labsize(large)) xscale(range(1920 1935)) ///
+				ylabel(-3(1)3,nogrid labsize(large)) xline(1926,lc(red%25) lp(solid) lw(thick)) ///
+				saving("$aircraft/figures/Appendix/Curtiss1.gph", replace) 
+	qui gr tw 	(scatter ln_maxspeed_std year, mc(black) ms(o) msize(large) mfc(white%50)) ///
+				(line yhat2 year, sort lc(black) lp(dash) lw(vthick)) ///
+				, legend(off) graphregion(color(white)) title("Maximum Speed", color(black) size(large)) xtitle("") ///
+				l2("log of maximum speed, std.", color(black) size(medium)) ///
+				xmtick(1920(5)1935) xlabel(1920(5)1935,nogrid labsize(large)) xscale(range(1920 1935)) ///
+				ylabel(-3(1)3,nogrid labsize(large)) xline(1926,lc(red%25) lp(solid) lw(thick)) ///
+				saving("$aircraft/figures/Appendix/Curtiss2.gph", replace) 
+	
+	* Combine
+	qui gr combine	"$aircraft/figures/Appendix/Curtiss1.gph" ///
+					"$aircraft/figures/Appendix/Curtiss2.gph" ///
+					, graphregion(color(white)) xcommon ycommon xsize(10) rows(1) ///
+					title("B. Curtiss", color(black) size(vlarge))
+	
+	* Export
+	qui gr export "$aircraft/figures/Appendix/FigureE4_Appendix_Curtiss_PanelB.pdf", as(pdf) replace				
+
+	* Remove
+	rm "$aircraft/figures/Appendix/Curtiss1.gph"
+	rm "$aircraft/figures/Appendix/Curtiss2.gph" 
+
+	* Load Douglas Data
+	insheet using "$aircraft/data/raw/Appendix_Firm_Douglas.csv",clear
+
+	* Standardize Outcomes
+	qui g ln_wingload = log(wing_load)
+	qui g ln_maxspeed = log(maxspeed)
+	qui sum ln_wingload 
+	qui g ln_wingload_std = (ln_wingload - `r(mean)')/`r(sd)'
+	qui sum ln_maxspeed 
+	qui g ln_maxspeed_std = (ln_maxspeed - `r(mean)')/`r(sd)'
+
+	* Make Spline
+	qui mkspline pre1926 1926 post1926 = year
+	qui reg ln_wingload_std pre1926 post1926 
+	qui adjust, by(year) gen(yhat1)
+	qui reg ln_maxspeed_std pre1926 post1926 
+	qui adjust , by(year) gen(yhat2)
+
+	* Make Panel, Douglas
+	qui gr tw 	(scatter ln_wingload_std year, mc(black) ms(o) msize(large) mfc(white%50)) ///
+				(line yhat1 year, sort lc(black) lp(dash) lw(vthick)) ///
+				, legend(off) graphregion(color(white)) title("Wing Load", color(black) size(large)) xtitle("") ///
+				l2("log of wing load, std.", color(black) size(medium)) ///
+				xmtick(1920(5)1935) xlabel(1920(5)1935,nogrid labsize(large)) xscale(range(1920 1935)) ///
+				ylabel(-3(1)3,nogrid labsize(large)) xline(1926,lc(red%25) lp(solid) lw(thick)) ///
+				saving("$aircraft/figures/Appendix/Douglas1.gph", replace) 
+	qui gr tw 	(scatter ln_maxspeed_std year, mc(black) ms(o) msize(large) mfc(white%50)) ///
+				(line yhat2 year, sort lc(black) lp(dash) lw(vthick)) ///
+				, legend(off) graphregion(color(white)) title("Maximum Speed", color(black) size(large)) xtitle("") ///
+				l2("log of maximum speed, std.", color(black) size(medium)) ///
+				xmtick(1920(5)1935) xlabel(1920(5)1935,nogrid labsize(large)) xscale(range(1920 1935)) ///
+				ylabel(-3(1)3,nogrid labsize(large)) xline(1926,lc(red%25) lp(solid) lw(thick)) ///
+				saving("$aircraft/figures/Appendix/Douglas2.gph", replace) 
+	
+	* Combine
+	qui gr combine	"$aircraft/figures/Appendix/Douglas1.gph" ///
+					"$aircraft/figures/Appendix/Douglas2.gph" ///
+					, graphregion(color(white)) xcommon ycommon xsize(10) rows(1) ///
+					title("C. Douglas", color(black) size(vlarge))
+	
+	* Export
+	qui gr export "$aircraft/figures/Appendix/FigureE4_Appendix_Douglas_PanelC.pdf", as(pdf) replace				
+	
+	* Remove
+	rm "$aircraft/figures/Appendix/Douglas1.gph"
+	rm "$aircraft/figures/Appendix/Douglas2.gph" 
+
+**-> Appendix Figure : Comparing Jane's and ATC Data <-*************************
+
+	* Load ATC Engine Data
+	import delimited "$aircraft/data/raw/prepared_atc_data.csv",clear	
+	qui keep if initial_atc==1
+	drop year 
+	rename firstyear year
+	keep if year>=1928 & year<=1938
+	
+	* Keep Variables
+	keeporder year atc_year ratedhp janeshp
+
+	* Make Figure
+	preserve
+	g count = 1	
+	collapse (sum) count, by(ratedhp janeshp)
+	g ln_ratedhp = log(ratedhp)
+	g ln_janeshp = log(janeshp)
+	gr tw (scatter ln_ratedhp ln_janeshp [aw=count], mc(black) mfc(white%20) ms(O)) ///
+		, graphregion(color(white)) xtitle("log of horsepower (Jane's)", size(large)) ytitle("log of horsepower (ATC)", size(large)) ///
+		ylabel(3(1)7,nogrid labsize(large)) xlabel(3(1)7,nogrid labsize(large)) yscale(range(3 7.5)) xscale(range(3 7.5)) ///
+		saving("$aircraft/figures/appendix/temp1.gph",replace)
+	restore
+	
+	* Make Figure
+	preserve	
+	g count = 1	
+	collapse (sum) count, by(atc_year year)
+	gr tw (scatter atc_year year [aw=count], mc(black) mfc(white%20) ms(O)) ///
+		, graphregion(color(white)) xtitle("first year in Jane's", size(large)) ytitle("year of ATC", size(large)) ///
+		ylabel(1928(2)1938,nogrid labsize(large)) xlabel(1928(2)1938,nogrid labsize(large)) yscale(range(1927.5 1938)) xscale(range(1927.5 1938)) ///
+		saving("$aircraft/figures/appendix/temp2.gph",replace)
+	restore
+	
+	* Combine
+	gr combine "$aircraft/figures/appendix/temp1.gph" "$aircraft/figures/appendix/temp2.gph", ///
+		graphregion(color(white)) xsize(10) ysize(5)
+	
+	* Export
+	qui gr export "$aircraft/figures/appendix/FigureE2_Appendix_ATC.pdf", as(pdf) replace		
+
+	* Remove
+	rm "$aircraft/figures/appendix/temp1.gph" 
+	rm "$aircraft/figures/appendix/temp2.gph"
+	
+**-> Appendix Table : Airframe Robustness Results <-****************************
+
+	est clear
+	scalar startyear = 1918
+	scalar endyear = 1935
+	
+	* Load Airframe Data
+	qui use "$aircraft/data/dta/airframe_data.dta",clear
+	qui keep if country== "United States" | country=="United Kingdom" | country =="Japan"
+	qui keep if type == "fighter" | type == "bomber" | type == "recon"
+
+	* Additional Variables
+	qui g US = (country == "United States")
+	qui g engines = (no_engines>1)
+	qui g ln_enginehp = log(enginehp)
+	
+	* Make Spline
+	qui mkspline pre1926 1926 post1926 = year
+	qui g pre1926_US = US*pre1926
+	qui g post1926_US = US*post1926
+	
+	* Regressions, Airframes (All Countries, Unweighted)
+
+		*-> US & UK with controls: Wingload
+		qui reg ln_wingload pre1926_US post1926_US pre1926 post1926 US engines ln_enginehp if year>=`=startyear' & year<=`=endyear' & type == "fighter" | type == "bomber",r
+		qui eststo reg_y1_airframes
+		qui estadd scalar obs = e(N)
+		qui reg ln_wingload pre1926_US post1926_US pre1926 post1926 US engines ln_enginehp if year>=`=startyear' & year<=`=endyear' & type == "fighter" | type == "bomber",r
+		qui eststo fstat_y1_airframes
+		qui test pre1926_US = post1926_US
+		qui estadd scalar Fdiff = r(F)		
+		qui reg ln_wingload pre1926_US post1926_US pre1926 post1926 US engines ln_enginehp if year>=`=startyear' & year<=`=endyear' & type == "fighter" | type == "bomber",r
+		qui eststo pvalue_y1_airframes
+		qui test pre1926_US = post1926_US
+		qui estadd scalar pvalue = r(p)
+		
+		*-> US & UK with controls: Maximum Speed
+		qui reg ln_maxspeed pre1926_US post1926_US pre1926 post1926 US engines ln_enginehp if year>=`=startyear' & year<=`=endyear' & type == "fighter" | type == "bomber",r
+		qui eststo reg_y2_airframes
+		qui estadd scalar obs = e(N)
+		qui reg ln_maxspeed pre1926_US post1926_US pre1926 post1926 US engines ln_enginehp if year>=`=startyear' & year<=`=endyear' & type == "fighter" | type == "bomber",r
+		qui eststo fstat_y2_airframes
+		qui test pre1926_US = post1926_US
+		qui estadd scalar Fdiff = r(F)		
+		qui reg ln_maxspeed pre1926_US post1926_US pre1926 post1926 US engines ln_enginehp if year>=`=startyear' & year<=`=endyear' & type == "fighter" | type == "bomber",r
+		qui eststo pvalue_y2_airframes
+		qui test pre1926_US = post1926_US
+		qui estadd scalar pvalue = r(p)
+		
+		*-> Empty
+		qui reg ln_ceiling US [aw=count] if year>=`=startyear' & year<=`=endyear' & US==1
+		qui eststo reg_empty1
+		qui eststo fstat_empty1
+		qui eststo pvalue_empty1
+	
+	* Regressions, Airframes (Weighted)
+
+		drop if country=="Japan"
+		*-> US & UK with controls: Wingload
+		qui reg ln_wingload pre1926_US post1926_US pre1926 post1926 US engines ln_enginehp [aw=count] if year>=`=startyear' & year<=`=endyear' & type == "fighter" | type == "bomber",r
+		qui eststo reg_y1_unweighted
+		qui estadd scalar obs = e(N)
+		qui reg ln_wingload pre1926_US post1926_US pre1926 post1926 US engines ln_enginehp [aw=count] if year>=`=startyear' & year<=`=endyear' & type == "fighter" | type == "bomber",r
+		qui eststo fstat_y1_unweighted
+		qui test pre1926_US = post1926_US
+		qui estadd scalar Fdiff = r(F)		
+		qui reg ln_wingload pre1926_US post1926_US pre1926 post1926 US engines ln_enginehp [aw=count] if year>=`=startyear' & year<=`=endyear' & type == "fighter" | type == "bomber",r
+		qui eststo pvalue_y1_unweighted
+		qui test pre1926_US = post1926_US
+		qui estadd scalar pvalue = r(p)
+		
+		*-> US & UK with controls: Maximum Speed
+		qui reg ln_maxspeed pre1926_US post1926_US pre1926 post1926 US engines ln_enginehp [aw=count] if year>=`=startyear' & year<=`=endyear' & type == "fighter" | type == "bomber",r
+		qui eststo reg_y2_unweighted
+		qui estadd scalar obs = e(N)
+		qui reg ln_maxspeed pre1926_US post1926_US pre1926 post1926 US engines ln_enginehp [aw=count] if year>=`=startyear' & year<=`=endyear' & type == "fighter" | type == "bomber",r
+		qui eststo fstat_y2_unweighted
+		qui test pre1926_US = post1926_US
+		qui estadd scalar Fdiff = r(F)		
+		qui reg ln_maxspeed pre1926_US post1926_US pre1926 post1926 US engines ln_enginehp [aw=count] if year>=`=startyear' & year<=`=endyear' & type == "fighter" | type == "bomber",r
+		qui eststo pvalue_y2_unweighted
+		qui test pre1926_US = post1926_US
+		qui estadd scalar pvalue = r(p)
+		
+		*-> Empty
+		qui reg ln_ceiling US [aw=count] if year>=`=startyear' & year<=`=endyear' & US==1
+		qui eststo reg_empty3
+		qui eststo fstat_empty3
+		qui eststo pvalue_empty3
+		
+	* Regressions, Airframes (Recon)
+		
+		*-> US & UK with controls: Wingload
+		qui reg ln_wingload pre1926_US post1926_US pre1926 post1926 US engines ln_enginehp if year>=`=startyear' & year<=`=endyear' & type == "recon",r
+		qui eststo reg_y1_other
+		qui estadd scalar obs = e(N)
+		qui reg ln_wingload pre1926_US post1926_US pre1926 post1926 US engines ln_enginehp if year>=`=startyear' & year<=`=endyear' & type == "recon",r
+		qui eststo fstat_y1_other
+		qui test pre1926_US = post1926_US
+		qui estadd scalar Fdiff = r(F)		
+		qui reg ln_wingload pre1926_US post1926_US pre1926 post1926 US engines ln_enginehp if year>=`=startyear' & year<=`=endyear' & type == "recon",r
+		qui eststo pvalue_y1_other
+		qui test pre1926_US = post1926_US
+		qui estadd scalar pvalue = r(p)
+		
+		*-> US & UK with controls: Maximum Speed
+		qui reg ln_maxspeed pre1926_US post1926_US pre1926 post1926 US engines ln_enginehp if year>=`=startyear' & year<=`=endyear' & type == "recon",r
+		qui eststo reg_y2_other
+		qui estadd scalar obs = e(N)
+		qui reg ln_maxspeed pre1926_US post1926_US pre1926 post1926 US engines ln_enginehp if year>=`=startyear' & year<=`=endyear' & type == "recon",r
+		qui eststo fstat_y2_other
+		qui test pre1926_US = post1926_US
+		qui estadd scalar Fdiff = r(F)		
+		qui reg ln_maxspeed pre1926_US post1926_US pre1926 post1926 US engines ln_enginehp if year>=`=startyear' & year<=`=endyear' & type == "recon",r
+		qui eststo pvalue_y2_other
+		qui test pre1926_US = post1926_US
+		qui estadd scalar pvalue = r(p)
+	
+	* Display
+		
+		*-> regressions
+		estout 		reg*, ///
+					replace style(tex) cells(b(fmt(3)) se(par fmt(3))) ///
+					collabels(none) mlabels(none) eqlabels(none) varwidth(40) ///
+					modelwidth(10) keep(pre1926_US post1926_US) order(pre1926_US post1926_US) ///
+					varlabels(post1926_US "After 1926 $\times$ year $\times$ US" pre1926_US "Before 1926 $\times$ year $\times$ US")
+			
+		*-> F-statistic
+		 estout 	fstat* ///
+					, replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(Fdiff, fmt(1) labels( "$ F $-statistic" ))
+
+		*-> p-value
+		 estout 	pvalue* ///
+					, replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(pvalue, fmt(3) labels( "$ p $-value " ))
+		
+		*-> observations
+		 estout 	reg* ///
+					, replace style(tex) cells(b(fmt(0)) se(par fmt(4))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(obs, fmt(%12.0gc) labels("observations"))
+					
+	* Output
+		
+		*-> regressions
+		estout 		reg* using "$aircraft/tables/Appendix/TableE1_robust_airframes_reg.tex" ///
+					, replace style(tex) cells(b(fmt(3)) se(par fmt(3))) ///
+					collabels(none) mlabels(none) eqlabels(none) varwidth(40) ///
+					modelwidth(10) keep(pre1926_US post1926_US) order(pre1926_US post1926_US) ///
+					varlabels(post1926_US "After 1926 $\times$ year $\times$ US" pre1926_US "Before 1926 $\times$ year $\times$ US")
+			
+		*-> F-statistic
+		 estout 	fstat* using "$aircraft/tables/Appendix/TableE1_robust_airframes_Fstat.tex" ///
+					, replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(Fdiff, fmt(1) labels( "$ F $-statistic" ))
+
+		*-> p-value
+		 estout 	pvalue* using "$aircraft/tables/Appendix/TableE1_robust_airframes_pval.tex" ///
+					, replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(pvalue, fmt(3) labels( "$ p $-value " ))
+		
+		*-> observations
+		 estout 	reg* using "$aircraft/tables/Appendix/TableE1_robust_airframes_obs.tex" ///
+					, replace style(tex) cells(b(fmt(0)) se(par fmt(4))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(obs, fmt(%12.0gc) labels("observations"))
+				
+**-> Appendix Table : Aero-Engine Robustness Results <-*************************
+
+	est clear
+
+	* Load Engine Data
+	qui use "$aircraft/data/dta/engine_data.dta",replace
+	qui keep if country== "United States" | country=="United Kingdom" | country=="Italy" | country=="Germany"
+	qui replace count = 1 if count==.
+	qui keep if year>=1918 & year<=1935
+	
+	* Additional Variables
+	qui g US = (country == "United States")	
+	
+	* Make Spline
+	qui mkspline pre1926 1926 post1926 = year
+	qui g pre1926_US = US*pre1926
+	qui g post1926_US = US*post1926
+	
+	* Regressions, Aero-Engines (Weighted)
+
+		*-> US & UK with controls: Horsepower / Weight
+		qui reg ln_hp_per_lbs pre1926_US post1926_US pre1926 post1926 US liquid_cooled if country== "United States" | country=="United Kingdom" [aw=count],r
+		qui eststo reg_y1_country
+		qui estadd scalar obs = e(N)
+		qui reg ln_hp_per_lbs pre1926_US post1926_US pre1926 post1926 US liquid_cooled if country== "United States" | country=="United Kingdom" [aw=count],r
+		qui eststo fstat_y1_country
+		qui test pre1926_US = post1926_US
+		qui estadd scalar Fdiff = r(F)		
+		qui reg ln_hp_per_lbs pre1926_US post1926_US pre1926 post1926 US liquid_cooled if country== "United States" | country=="United Kingdom" [aw=count],r
+		qui eststo pvalue_y1_country
+		qui test pre1926_US = post1926_US
+		qui estadd scalar pvalue = r(p)
+		
+		*-> US & UK with controls: Horsepower / Displacement
+		qui reg ln_hp_per_disp pre1926_US post1926_US pre1926 post1926 US liquid_cooled if country== "United States" | country=="United Kingdom" [aw=count],r
+		qui eststo reg_y2_country
+		qui estadd scalar obs = e(N)
+		qui reg ln_hp_per_disp pre1926_US post1926_US pre1926 post1926 US liquid_cooled if country== "United States" | country=="United Kingdom" [aw=count],r
+		qui eststo fstat_y2_country
+		qui test pre1926_US = post1926_US
+		qui estadd scalar Fdiff = r(F)		
+		qui reg ln_hp_per_disp pre1926_US post1926_US pre1926 post1926 US liquid_cooled if country== "United States" | country=="United Kingdom" [aw=count],r 
+		qui eststo pvalue_y2_country
+		qui test pre1926_US = post1926_US
+		qui estadd scalar pvalue = r(p)
+
+		*-> Empty
+		qui reg ln_hp_per_lbs US
+		qui eststo reg_empty1
+		qui eststo pvalue_empty1
+		qui eststo fstat_empty1
+	
+	* Regressions, Aero-Engines (Unweighted)
+	
+		*-> US & UK with controls: Horsepower / Weight
+		qui reg ln_hp_per_lbs pre1926_US post1926_US pre1926 post1926 US liquid_cooled,r
+		qui eststo reg_y1_unweighted
+		qui estadd scalar obs = e(N)
+		qui reg ln_hp_per_lbs pre1926_US post1926_US pre1926 post1926 US liquid_cooled,r
+		qui eststo fstat_y1_unweighted
+		qui test pre1926_US = post1926_US
+		qui estadd scalar Fdiff = r(F)		
+		qui reg ln_hp_per_lbs pre1926_US post1926_US pre1926 post1926 US liquid_cooled,r
+		qui eststo pvalue_y1_unweighted
+		qui test pre1926_US = post1926_US
+		qui estadd scalar pvalue = r(p)
+		
+		drop if country=="Italy" | country=="Germany"
+		*-> US & UK with controls: Horsepower / Displacement
+		qui reg ln_hp_per_disp pre1926_US post1926_US pre1926 post1926 US liquid_cooled,r
+		qui eststo reg_y2_unweighted
+		qui estadd scalar obs = e(N)
+		qui reg ln_hp_per_disp pre1926_US post1926_US pre1926 post1926 US liquid_cooled,r
+		qui eststo fstat_y2_unweighted
+		qui test pre1926_US = post1926_US
+		qui estadd scalar Fdiff = r(F)		
+		qui reg ln_hp_per_disp pre1926_US post1926_US pre1926 post1926 US liquid_cooled,r
+		qui eststo pvalue_y2_unweighted
+		qui test pre1926_US = post1926_US
+		qui estadd scalar pvalue = r(p)
+	
+		*-> Empty
+		qui reg ln_hp_per_lbs US
+		qui eststo reg_empty2
+		qui eststo pvalue_empt2
+		qui eststo fstat_empty2
+	
+	* Load Engine Data
+	qui use "$aircraft/data/dta/engine_data_fahey.dta",replace
+	qui keep if country== "United States" | country=="United Kingdom"
+	
+	* Additional Variables
+	qui g US = (country == "United States")	
+	
+	* Make Spline
+	qui mkspline pre1926 1926 post1926 = year
+	qui g pre1926_US = US*pre1926
+	qui g post1926_US = US*post1926
+	
+	* Regressions, Aero-Engines (Fahey Data)
+
+		*-> US & UK with controls: Horsepower / Weight
+		qui reg ln_hp_per_lbs pre1926_US post1926_US pre1926 post1926 US liquid_cooled if year>=1918 & year<=1935 ,r
+		qui eststo reg_y1_fahey
+		qui estadd scalar obs = e(N)
+		qui reg ln_hp_per_lbs pre1926_US post1926_US pre1926 post1926 US liquid_cooled if year>=1918 & year<=1935 ,r
+		qui eststo fstat_y1_fahey
+		qui test pre1926_US = post1926_US
+		qui estadd scalar Fdiff = r(F)		
+		qui reg ln_hp_per_lbs pre1926_US post1926_US pre1926 post1926 US liquid_cooled if year>=1918 & year<=1935 ,r
+		qui eststo pvalue_y1_fahey
+		qui test pre1926_US = post1926_US
+		qui estadd scalar pvalue = r(p)
+		
+		*-> US & UK with controls: Horsepower / Displacement
+		qui reg ln_hp_per_disp pre1926_US post1926_US pre1926 post1926 US liquid_cooled if year>=1918 & year<=1935 ,r
+		qui eststo reg_y2_fahey
+		qui estadd scalar obs = e(N)
+		qui reg ln_hp_per_disp pre1926_US post1926_US pre1926 post1926 US liquid_cooled if year>=1918 & year<=1935 ,r
+		qui eststo fstat_y2_fahey
+		qui test pre1926_US = post1926_US
+		qui estadd scalar Fdiff = r(F)		
+		qui reg ln_hp_per_disp pre1926_US post1926_US pre1926 post1926 US liquid_cooled if year>=1918 & year<=1935 ,r
+		qui eststo pvalue_y2_fahey
+		qui test pre1926_US = post1926_US
+		qui estadd scalar pvalue = r(p)
+	
+	* Display
+		
+		*-> regressions
+		estout 		reg*, ///
+					replace style(tex) cells(b(fmt(3)) se(par fmt(3))) ///
+					collabels(none) mlabels(none) eqlabels(none) varwidth(40) ///
+					modelwidth(10) keep(pre1926_US post1926_US) order(pre1926_US post1926_US) ///
+					varlabels(post1926_US "After 1926 $\times$ year $\times$ US" pre1926_US "Before 1926 $\times$ year $\times$ US")
+			
+		*-> F-statistic
+		 estout 	fstat* ///
+					, replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(Fdiff, fmt(1) labels( "$ F $-statistic" ))
+
+		*-> p-value
+		 estout 	pvalue* ///
+					, replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(pvalue, fmt(3) labels( "$ p $-value " ))
+		
+		*-> observations
+		 estout 	reg* ///
+					, replace style(tex) cells(b(fmt(0)) se(par fmt(4))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(obs, fmt(%12.0gc) labels("observations"))
+			
+	* Output
+		
+		*-> regressions
+		estout 		reg* using "$aircraft/tables/Appendix/TableE3_robust_engines_reg.tex" ///
+					, replace style(tex) cells(b(fmt(3)) se(par fmt(3))) ///
+					collabels(none) mlabels(none) eqlabels(none) varwidth(40) ///
+					modelwidth(10) keep(pre1926_US post1926_US) order(pre1926_US post1926_US) ///
+					varlabels(post1926_US "After 1926 $\times$ year $\times$ US" pre1926_US "Before 1926 $\times$ year $\times$ US")
+			
+		*-> F-statistic
+		 estout 	fstat* using "$aircraft/tables/Appendix/TableE3_robust_engines_Fstat.tex" ///
+					, replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(Fdiff, fmt(1) labels( "$ F $-statistic" ))
+
+		*-> p-value
+		 estout 	pvalue* using "$aircraft/tables/Appendix/TableE3_robust_engines_pval.tex" ///
+					, replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(pvalue, fmt(3) labels( "$ p $-value " ))
+		
+		*-> observations
+		 estout 	reg* using "$aircraft/tables/Appendix/TableE3_robust_engines_obs.tex" ///
+					, replace style(tex) cells(b(fmt(0)) se(par fmt(4))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(obs, fmt(%12.0gc) labels("observations"))
+				
+**-> Appendix Table : Military-Civilian Results <-******************************
+	
+	* Load Airframe Data
+	import delimited "$aircraft/data/raw/firm_level_data.csv",clear
+	
+	* Military buyer variable 
+	qui gen mbuyer=0
+	qui replace mbuyer=1 if buyer_type=="Military" | buyer_type=="Military  export"
+
+	* Generate outcome variables 
+	qui g ln_wing_load = log(wing_load)
+	qui g ln_maxspeed = log(maxspeed)
+		
+	* Restrict to post 1926 (too few observations before) 
+	*preserve
+	qui keep if year>1926
+	
+	* Generate trend variable 
+	qui g tt=year-1926
+	qui g military_tt=tt*military_producer
+	qui g mbuyer_tt=mbuyer*tt
+	qui g m0_b0 = 1 if military_producer==0 & mbuyer==0
+	qui g m1_b0 = 1 if military_producer==1 & mbuyer==0
+	qui g m0_b1 = 1 if military_producer==0 & mbuyer==1
+	qui g m1_b1 = 1 if military_producer==1 & mbuyer==1
+	
+	* Regression results 
+	est clear
+	xi i.company
+	qui areg ln_wing_load military_tt military_producer _I* if year>1926, a(year) r
+	qui eststo
+	qui areg ln_maxspeed military_tt military_producer _I* if year>1926, a(year) r
+	qui eststo
+	
+	* Load Engine Data
+	qui import delimited "$aircraft/data/raw/engine_data_appendix.csv", clear
+	
+	* Generate Year Variable
+	drop year1942
+	foreach year of numlist 1920 1921/1938 {
+		qui capture replace year`year' = "`year'" if year`year'=="x"
+		}
+	qui destring year1*,replace
+	qui egen firstyear = rowmin(year1*)
+	qui drop if firstyear==.
+	drop year1*
+	rename firstyear yr_introduced
+	
+	* Identify military/civil  
+	qui gen company_type="civil"
+	qui replace company_type="military" if company=="Wright"
+	qui replace company_type="military" if company=="Curtiss"
+	qui replace company_type="military" if company=="Pratt & Whitney"
+	qui gen military_producer=0
+	qui replace military_producer=1 if company_type=="military"
+
+	* Create trend variables 
+	qui gen tt=yr_introduced-1919
+	qui gen post=0
+	qui replace post=1 if yr_introduced>1926
+	qui gen pre=0
+	qui replace pre=1 if yr_introduced<=1926
+	qui gen pre_tt=pre*tt
+	qui gen post_tt=post*tt
+	qui gen post_tt_military=post_tt*military_producer
+	qui gen pre_tt_military=pre_tt*military_producer
+	qui g military_post = military_producer*post
+	qui g military_tt = military_producer*tt*post
+	qui g military_tt_pre = military_producer*tt*pre
+	qui g ln_hp_per_lbs = log(hpnormal/weightlbs)
+	qui g ln_hp_per_displ = log(hpnormal/(0.0163871*dispcubin))
+	qui g ln_hp_per_displ_rpm = log(hpnormal/(0163871*dispcubin*rpm))
+	qui g ln_hp_per_frontal = log(hpnormal/frontalareasqin)
+
+	* Create company fixed effects 
+	qui xi i.company
+	
+	* Regressions for post 1926 only
+	qui areg ln_hp_per_lbs military_tt military_post _I* post if yr_introduced>1926, a(yr_introduced) r
+	qui eststo
+	
+	* Regressions for post 1926 only
+	qui areg ln_hp_per_displ military_tt military_post _I* post if yr_introduced>1926, a(yr_introduced) r
+	qui eststo
+	
+	* Regressions for post 1926 only 
+	qui areg ln_hp_per_frontal military_tt military_post _I* post if yr_introduced>1926, a(yr_introduced) r
+	qui eststo
+
+	*  Display aiframe and engine results 
+	 estout est*, ///
+		replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) varwidth(45) modelwidth(8) ///
+		order(military_tt) keep(military_tt) varlabels(military_tt "Military $\times$ year ")
+	 estout est*, ///
+		replace style(tex) cells(b(fmt(0)) se(par fmt(4))) collabels(none) mlabels(none) eqlabels(none) ///
+		varwidth(45) modelwidth(8) drop(*) stats(N, fmt(%12.0gc) labels("observations"))
+	
+	* Output aiframe and engine results 
+	qui estout est* using "$aircraft/tables/Appendix/TableE5_military-civil-reg.tex", ///
+		replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) varwidth(45) modelwidth(8) ///
+		order(military_tt) keep(military_tt) varlabels(military_tt "Military $\times$ year ")
+	qui estout est* using "$aircraft/tables/Appendix/TableE5_military-civil-obs.tex", ///
+		replace style(tex) cells(b(fmt(0)) se(par fmt(4))) collabels(none) mlabels(none) eqlabels(none) ///
+		varwidth(45) modelwidth(8) drop(*) stats(N, fmt(%12.0gc) labels("observations"))
+	
+**-> Appendix Table : Airframe Regression Results with Breaks <-****************
+	
+	est clear
+	
+	* Load Airframe Data
+	qui use "$aircraft/data/dta/airframe_data.dta",clear
+	qui keep if country== "United States" | country=="United Kingdom"
+	qui keep if type == "fighter" | type == "bomber"
+	qui keep if year>=1918 & year<=19135
+	
+	* Additional Variables
+	qui g post = (year>=1926)
+	qui g US = (country == "United States")
+	qui g post_US = post*US
+	qui g engines = (no_engines>1)
+	qui g ln_enginehp = log(enginehp)
+	
+	* Make Spline	
+	qui mkspline pre1926 1926 post1926 = year
+	qui g pre1926_US = US*pre1926
+	qui g post1926_US = US*post1926
+	
+	* Country-Year Group
+	qui egen country_year = group(country year)
+	
+	* Regressions
+		
+		*-> US Only: Wingload
+		qui reg ln_wingload pre1926_US post1926_US post if US==1,r
+		qui eststo reg_y1,
+		qui estadd scalar obs = e(N)
+		qui reg ln_wingload pre1926_US post1926_US post if US==1,r
+		qui eststo fstat_y1
+		qui test pre1926_US = post1926_US
+		qui estadd scalar Fdiff = r(F)		
+		qui reg ln_wingload pre1926_US post1926_US post if US==1,r
+		qui eststo pvalue_y1
+		qui test pre1926_US = post1926_US
+		qui estadd scalar pvalue = r(p)
+		
+		*-> US Only: Maximum Speed
+		qui reg ln_maxspeed pre1926_US post1926_US post if US==1,r
+		qui eststo reg_y2
+		qui estadd scalar obs = e(N)
+		qui reg ln_maxspeed pre1926_US post1926_US post if US==1,r
+		qui eststo fstat_y2
+		qui test pre1926_US = post1926_US
+		qui estadd scalar Fdiff = r(F)		
+		qui reg ln_maxspeed pre1926_US post1926_US post if US==1,r
+		qui eststo pvalue_y2
+		qui test pre1926_US = post1926_US
+		qui estadd scalar pvalue = r(p)
+
+		*-> Empty
+		qui reg ln_ceiling  
+		qui eststo reg_empty1
+		qui eststo fstat_empty1
+		qui eststo pvalue_empty1
+		
+		*-> US & UK: Wingload
+		qui reg ln_wingload pre1926_US post1926_US pre1926 post1926 US post_US post,r
+		qui eststo reg_y1_all
+		qui estadd scalar obs = e(N)
+		qui reg ln_wingload pre1926_US post1926_US pre1926 post1926 US post_US post,r
+		qui eststo fstat_y1_all
+		qui test pre1926_US = post1926_US
+		qui estadd scalar Fdiff = r(F)		
+		qui reg ln_wingload pre1926_US post1926_US pre1926 post1926 US post_US post,r
+		qui eststo pvalue_y1_all
+		qui test pre1926_US = post1926_US
+		qui estadd scalar pvalue = r(p)
+		
+		*-> US & UK: Maximum Speed
+		qui reg ln_maxspeed pre1926_US post1926_US pre1926 post1926 US post_US post,r
+		qui eststo reg_y2_all
+		qui estadd scalar obs = e(N)
+		qui reg ln_maxspeed pre1926_US post1926_US pre1926 post1926 US post_US post,r
+		qui eststo fstat_y2_all
+		qui test pre1926_US = post1926_US
+		qui estadd scalar Fdiff = r(F)		
+		qui reg ln_maxspeed pre1926_US post1926_US pre1926 post1926 US post_US post,r
+		qui eststo pvalue_y2_all
+		qui test pre1926_US = post1926_US
+		qui estadd scalar pvalue = r(p)
+
+		*-> Empty
+		qui reg ln_ceiling  
+		qui eststo reg_empty2
+		qui eststo fstat_empty2
+		qui eststo pvalue_empty2
+		
+		*-> US & UK with controls: Wingload
+		qui reg ln_wingload pre1926_US post1926_US pre1926 post1926 US post_US post engines ln_enginehp,r
+		qui eststo reg_y1_controls
+		qui estadd scalar obs = e(N)
+		qui reg ln_wingload pre1926_US post1926_US pre1926 post1926 US post_US post engines ln_enginehp,r
+		qui eststo fstat_y1_controls
+		qui test pre1926_US = post1926_US
+		qui estadd scalar Fdiff = r(F)		
+		qui reg ln_wingload pre1926_US post1926_US pre1926 post1926 US post_US post engines ln_enginehp,r
+		qui eststo pvalue_y1_controls
+		qui test pre1926_US = post1926_US
+		qui estadd scalar pvalue = r(p)
+		
+		*-> US & UK with controls: Maximum Speed
+		qui reg ln_maxspeed pre1926_US post1926_US pre1926 post1926 US post_US post engines ln_enginehp,r
+		qui eststo reg_y2_controls
+		qui estadd scalar obs = e(N)
+		qui reg ln_maxspeed pre1926_US post1926_US pre1926 post1926 US post_US post engines ln_enginehp,r
+		qui eststo fstat_y2_controls
+		qui test pre1926_US = post1926_US
+		qui estadd scalar Fdiff = r(F)		
+		qui reg ln_maxspeed pre1926_US post1926_US pre1926 post1926 US post_US post engines ln_enginehp,r
+		qui eststo pvalue_y2_controls
+		qui test pre1926_US = post1926_US
+		qui estadd scalar pvalue = r(p)
+
+	* Display
+		
+		*-> regressions
+		estout 		reg*, ///
+					replace style(tex) cells(b(fmt(3)) se(par fmt(3))) ///
+					collabels(none) mlabels(none) eqlabels(none) varwidth(40) ///
+					modelwidth(10) keep(pre1926_US post1926_US pre1926 post1926 post_US post US) order(pre1926_US post1926_US pre1926 post1926 post_US post US) ///
+					varlabels(post1926_US "After 1926 $\times$ year $\times$ US" ///
+					pre1926_US "Before 1926 $\times$ year $\times$ US" ///
+					pre1926 "After 1926 $\times$ year" post1926 "Before 1926 $\times$ year" ///
+					post_US "After 1926 $\times$ US" post "After 1926" US "United States")
+			
+		*-> F-statistic
+		 estout 	fstat* ///
+					, replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(Fdiff, fmt(1) labels( "$ F $-statistic" ))
+
+		*-> p-value
+		 estout 	pvalue* ///
+					, replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(pvalue, fmt(3) labels( "$ p $-value " ))
+		
+		*-> observations
+		 estout 	reg* ///
+					, replace style(tex) cells(b(fmt(0)) se(par fmt(4))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(obs, fmt(%12.0gc) labels("observations"))
+		
+	* Output
+		
+		*-> regressions
+		estout 		reg* using "$aircraft/tables/Appendix/TableE2_robust_airframes_break_reg.tex" ///
+					, replace style(tex) cells(b(fmt(3)) se(par fmt(3))) ///
+					collabels(none) mlabels(none) eqlabels(none) varwidth(40) ///
+					modelwidth(10) keep(pre1926_US post1926_US pre1926 post1926 post_US post US) order(pre1926_US post1926_US pre1926 post1926 post_US post US) ///
+					varlabels(post1926_US "After 1926 $\times$ year $\times$ US" ///
+					pre1926_US "Before 1926 $\times$ year $\times$ US" ///
+					pre1926 "After 1926 $\times$ year" post1926 "Before 1926 $\times$ year" ///
+					post_US "After 1926 $\times$ US" post "After 1926" US "United States")
+			
+		*-> F-statistic
+		 estout 	fstat* using "$aircraft/tables/Appendix/TableE2_robust_airframes_break_Fstat.tex" ///
+					, replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(Fdiff, fmt(1) labels( "$ F $-statistic" ))
+
+		*-> p-value
+		 estout 	pvalue* using "$aircraft/tables/Appendix/TableE2_robust_airframes_break_pval.tex" ///
+					, replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(pvalue, fmt(3) labels( "$ p $-value " ))
+		
+		*-> observations
+		 estout 	reg* using "$aircraft/tables/Appendix/TableE2_robust_airframes_break_obs.tex" ///
+					, replace style(tex) cells(b(fmt(0)) se(par fmt(4))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(obs, fmt(%12.0gc) labels("observations"))
+				
+**-> Appendix Table : Engine Regression Results with Breaks <-******************
+
+	est clear
+	
+	* Load Engine Data
+	qui use "$aircraft/data/dta/engine_data.dta",clear
+	qui keep if country== "United States" | country=="United Kingdom"
+	qui keep if year>=1918 & year<=1935
+	
+	* Additional Variables
+	qui g post = (year>=1926)
+	qui g US = (country == "United States")	
+	qui g post_US = post*US
+	
+	* Make Spline
+	qui mkspline pre1926 1926 post1926 = year
+	qui g pre1926_US = US*pre1926
+	qui g post1926_US = US*post1926
+
+	* Regressions   
+		
+		*-> US Only: Horsepower / Weight
+		qui reg ln_hp_per_lbs pre1926_US post1926_US post liquid_cooled if US==1,r
+		qui eststo reg_y1
+		qui estadd scalar obs = e(N)
+		qui reg ln_hp_per_lbs pre1926_US post1926_US post liquid_cooled if US==1,r
+		qui eststo fstat_y1
+		qui test pre1926_US = post1926_US
+		qui estadd scalar Fdiff = r(F)		
+		qui reg ln_hp_per_lbs pre1926_US post1926_US post liquid_cooled if US==1,r
+		qui eststo pvalue_y1
+		qui test pre1926_US = post1926_US
+		qui estadd scalar pvalue = r(p)
+		
+		*-> US Only: Horsepower / Displacement
+		qui reg ln_hp_per_disp pre1926_US post1926_US post liquid_cooled if US==1,r
+		qui eststo reg_y2
+		qui estadd scalar obs = e(N)
+		qui reg ln_hp_per_disp pre1926_US post1926_US post liquid_cooled if US==1,r
+		qui eststo fstat_y2
+		qui test pre1926_US = post1926_US
+		qui estadd scalar Fdiff = r(F)		
+		qui reg ln_hp_per_disp pre1926_US post1926_US post liquid_cooled if US==1,r
+		qui eststo pvalue_y2
+		qui test pre1926_US = post1926_US
+		qui estadd scalar pvalue = r(p)
+		
+		*-> US Only: Horsepower / Frontal Area
+		qui reg ln_hp_per_frontal pre1926_US post1926_US post liquid_cooled if US==1,r
+		qui eststo reg_y3
+		qui estadd scalar obs = e(N)
+		qui reg ln_hp_per_frontal pre1926_US post1926_US post liquid_cooled if US==1,r
+		qui eststo fstat_y3
+		qui test pre1926_US = post1926_US
+		qui estadd scalar Fdiff = r(F)		
+		qui reg ln_hp_per_frontal pre1926_US post1926_US post liquid_cooled if US==1,r
+		qui eststo pvalue_y3
+		qui test pre1926_US = post1926_US
+		qui estadd scalar pvalue = r(p)
+
+		*-> Empty
+		qui reg ln_hp_per_lbs 
+		qui eststo reg_empty2
+		qui eststo pvalue_empty2
+		qui eststo fstat_empty2
+				
+		*-> US & UK with controls: Horsepower / Weight
+		qui reg ln_hp_per_lbs pre1926_US post1926_US pre1926 post1926 US post_US post liquid_cooled,r
+		qui eststo reg_y1_controls
+		qui estadd scalar obs = e(N)
+		qui reg ln_hp_per_lbs pre1926_US post1926_US pre1926 post1926 US post_US post liquid_cooled,r
+		qui eststo fstat_y1_controls
+		qui test pre1926_US = post1926_US
+		qui estadd scalar Fdiff = r(F)		
+		qui reg ln_hp_per_lbs pre1926_US post1926_US pre1926 post1926 US post_US post liquid_cooled,r
+		qui eststo pvalue_y1_controls
+		qui test pre1926_US = post1926_US
+		qui estadd scalar pvalue = r(p)
+		
+		*-> US & UK with controls: Horsepower / Displacement
+		qui reg ln_hp_per_disp pre1926_US post1926_US pre1926 post1926 US post_US post liquid_cooled,r
+		qui eststo reg_y2_controls
+		qui estadd scalar obs = e(N)
+		qui reg ln_hp_per_disp pre1926_US post1926_US pre1926 post1926 US post_US post liquid_cooled,r
+		qui eststo fstat_y2_controls
+		qui test pre1926_US = post1926_US
+		qui estadd scalar Fdiff = r(F)		
+		qui reg ln_hp_per_disp pre1926_US post1926_US pre1926 post1926 US post_US post liquid_cooled,r
+		qui eststo pvalue_y2_controls
+		qui test pre1926_US = post1926_US
+		qui estadd scalar pvalue = r(p)
+		
+		*-> US & UK with controls: Horsepower / Frontal Area
+		qui reg ln_hp_per_frontal pre1926_US post1926_US pre1926 post1926 US post_US post liquid_cooled,r
+		qui eststo reg_y3_controls
+		qui estadd scalar obs = e(N)
+		qui reg ln_hp_per_frontal pre1926_US post1926_US pre1926 post1926 US post_US post liquid_cooled,r
+		qui eststo fstat_y3_controls
+		qui test pre1926_US = post1926_US
+		qui estadd scalar Fdiff = r(F)		
+		qui reg ln_hp_per_frontal pre1926_US post1926_US pre1926 post1926 US post_US post liquid_cooled,r
+		qui eststo pvalue_y3_controls
+		qui test pre1926_US = post1926_US
+		qui estadd scalar pvalue = r(p)
+	
+	* Display
+		
+		*-> regressions
+		estout 		reg* ///
+					, replace style(tex) cells(b(fmt(3)) se(par fmt(3))) ///
+					collabels(none) mlabels(none) eqlabels(none) varwidth(40) ///
+					modelwidth(10) keep(pre1926_US post1926_US pre1926 post1926 post_US post US) order(pre1926_US post1926_US pre1926 post1926 post_US post US) ///
+					varlabels(post1926_US "After 1926 $\times$ year $\times$ US" ///
+					pre1926_US "Before 1926 $\times$ year $\times$ US" ///
+					pre1926 "After 1926 $\times$ year" post1926 "Before 1926 $\times$ year" ///
+					post_US "After 1926 $\times$ US" post "After 1926" US "United States")
+			
+		*-> F-statistic
+		 estout 	fstat* ///
+					, replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(Fdiff, fmt(1) labels( "$ F $-statistic" ))
+
+		*-> p-value
+		 estout 	pvalue* ///
+					, replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(pvalue, fmt(3) labels( "$ p $-value " ))
+		
+		*-> observations
+		 estout 	reg* ///
+					, replace style(tex) cells(b(fmt(0)) se(par fmt(4))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(obs, fmt(%12.0gc) labels("observations"))
+		
+	* Output
+		
+		*-> regressions
+		estout 		reg* using "$aircraft/tables/Appendix/TableE4_robust_engines_break_reg.tex" ///
+					, replace style(tex) cells(b(fmt(3)) se(par fmt(3))) ///
+					collabels(none) mlabels(none) eqlabels(none) varwidth(40) ///
+					modelwidth(10) keep(pre1926_US post1926_US pre1926 post1926 post_US post US) order(pre1926_US post1926_US pre1926 post1926 post_US post US) ///
+					varlabels(post1926_US "After 1926 $\times$ year $\times$ US" ///
+					pre1926_US "Before 1926 $\times$ year $\times$ US" ///
+					pre1926 "After 1926 $\times$ year" post1926 "Before 1926 $\times$ year" ///
+					post_US "After 1926 $\times$ US" post "After 1926" US "United States")
+			
+		*-> F-statistic
+		 estout 	fstat* using "$aircraft/tables/Appendix/TableE4_robust_engines_break_Fstat.tex" ///
+					, replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(Fdiff, fmt(1) labels( "$ F $-statistic" ))
+
+		*-> p-value
+		 estout 	pvalue* using "$aircraft/tables/Appendix/TableE4_robust_engines_break_pval.tex" ///
+					, replace style(tex) cells(b(fmt(3)) se(par fmt(3))) collabels(none) mlabels(none) eqlabels(none) ///
+					varwidth(40) modelwidth(10) drop(*) stats(pvalue, fmt(3) labels( "$ p $-value " ))
+		
+		*-> observations
+
+... [truncated: 3,538 more bytes of this script omitted] ...
+
+```
+
+### `__MACOSX/3 replication files/do/._2-results-main.do`
+```stata
+    Mac OS X            	   2       D                                      ATTR      D   �   T                  �     com.apple.lastuseddate#PS          *  $com.apple.metadata:_kMDItemUserTags    *     com.dropbox.attrs    D�]a    ���;    bplist00�                            	
+
+����P      �����
+
+```
+
+### `__MACOSX/3 replication files/do/._3-results-appendix.do`
+```stata
+    Mac OS X            	   2  �     �                                      ATTR      �  4   �                 4     com.apple.lastuseddate#PS      D   *  $com.apple.metadata:_kMDItemUserTags    n   Y  7com.apple.metadata:kMDLabel_j5bpmrb7gdj6ghx3uiqt3qncla     �     com.dropbox.attrs    \�ea    :X�    bplist00�                            	�K��*(D6m���a�����ëH[���[���@��<�Sp,rj4 �rdHz�v���D�{��tw�e��V�! v��#� �8U�U�Wi
+
+����P      � ���u
+```
+
+### `3 replication files/do/1-data-airframes.do`
+```stata
+********************************************************************************
+
+cls
+clear all
+ssc install keeporder
+
+********************************************************************************
+
+*global aircraft "[ File path here ]"
+
+********************************************************************************
+**-> Airframes <-***************************************************************
+********************************************************************************
+
+*-------> United States
+	
+	* Load Data
+	import delimited "$aircraft/data/raw/US_data1.csv",clear
+	
+	* Generate Country Variable
+	g country = "United States" 
+	label var country "Country"
+	
+	* Identify Airframe Type Variable
+	qui g fighter = (type=="Fighter"|type=="Carrier fighter"|type=="Carrier jet fighter"|type=="Pursuit"|type=="Jet fighter"|type=="Atack") if country == "United States"
+	qui g trainer = (type=="Tranining"|type=="Trainer/Observation"|type=="Training"|type=="Tranier"|type=="Tranining"|type=="Primary trainer"|type=="Specialized trainer") if country == "United States"
+	qui g bomber = (type=="Bomber"|type=="Bomber floatplane"|type=="Carrier bomber"|type=="Heavy bomber"|type=="Jet Bomber"|type=="Jet Heavy Bomber"|type=="Jet Medium Bomber"|type=="Jet light bomber"|type=="Jet reconnaisance bomber"|type=="Light bomber"|type=="Medium bomber") if country == "United States"
+	qui g recon = (type=="Observation" | type=="Observation amphibian" | type=="Observation floatplane" | type=="Observation seaplane" | type=="Observation/bombing" | type=="Reconnaissance")
+	drop type
+	g type = "fighter" if fighter==1
+	replace type = "bomber" if bomber==1
+	replace type = "trainer" if trainer==1
+	replace type = "recon" if recon==1
+	label var type "Type"
+	drop fighter bomber trainer recon
+	
+	* Generate Outcome Variables
+	label var maxspeed "Maximum Speed" 
+	label var grossweight "Gross Weight"
+	label var wing_area "Wing Area"
+	label var cruise "Cruise Speed"
+	label var climb_ft_per_min "Climb feet per minute"
+	label var climb_to_10000 "Climb to 10,000 feet"
+	label var ceiling "Ceiling"
+	label var range "Range"
+	label var endurance "Endurance"
+	
+	* Generate Other Variables
+	label var enginehp "Engine Horsepower"
+	label var no_engines "Number of Engines"
+	label var count "Count"
+	label var year "Year"
+	label var company "Company"
+	label var location "Location"
+	label var model "Model"
+															
+	* Keep/Order Variables
+	keeporder year country type enginehp maxspeed grossweight wing_area maxspeed cruise climb_ft_per_min climb_to_10000 ceiling range endurance count no_engines engine_maker
+	
+	* Save US Data
+	save "$aircraft/data/dta/temp/temp_airframe_us.dta",replace
+
+*-------> United Kingdom (Matched to Fighter and Bomber Data)
+	
+	* Load Data
+	import delimited "$aircraft/data/raw/UK_data.csv",clear
+
+	* Generate Country Variable
+	g country = "United Kingdom" 
+	label var country "Country"
+	
+	* Identify Airframe Type Variable
+	g fighter = (type=="Fighter"|type=="Carrier fighter") if country == "United Kingdom"
+	g trainer = (type=="Training") if country == "United Kingdom"
+	g bomber = (type=="Bomber"|type=="Carrier torpedo bomber"|type=="Dive bomber"|type=="Torpedo bomber"|type=="Reconnaisance and bomber seaplane") if country == "United Kingdom"
+	g recon = (type=="Observation"|type=="Observatn/training"|type=="Reconnaisance"|type=="Reconnaisance amphibian"|type=="Reconnaisance and bomber seaplane"|type=="Reconnaisance flying boat"|type=="Reconnaisance seaplane"|type=="Reconnaissance"|type=="Reconnaissance flying-boat")
+	drop type
+	g type = "fighter" if fighter==1
+	replace type = "bomber" if bomber==1
+	replace type = "trainer" if trainer==1
+	replace type = "recon" if recon==1
+	label var type "Type"
+	drop fighter bomber trainer recon
+
+	* Generate Outcome Variables
+	label var maxspeed "Maximum Speed"
+	label var grossweight "Gross Weight"
+	label var wing_area "Wing Area"
+	label var cruise "Cruise Speed"
+	label var climb_ft_per_min "Climb feet per minute"
+	label var climb_to_10000 "Climb to 10,000 feet"
+	label var ceiling "Ceiling"
+	label var range "Range"
+	label var endurance "Endurance"
+	  
+	* Generate Other Variables
+	qui destring engine_hp*, force replace
+	label var enginehp "Engine Horsepower"
+	label var no_engines "Number of Engines"
+	label var count "Count"
+	label var year "Year"
+	label var company "Company"
+	label var location "Location"
+	label var model "Model"
+	
+	* Keep/Order Variables
+	keeporder year country type enginehp maxspeed grossweight wing_area maxspeed cruise climb_ft_per_min climb_to_10000 ceiling range endurance count no_engines
+	
+	* Save UK Data
+	save "$aircraft/data/dta/temp/temp_airframe_uk.dta",replace
+	
+*-------> Japan
+	
+	* Load Data
+	import delimited "$aircraft/data/raw/JAPAN_data.csv",clear
+	
+	* Generate Country Variable
+	g country = "Japan"
+	label var country "Country"
+	
+	* Identify Airframe Type Variable
+	g fighter = (type=="Carrier fighter"|type=="Fighter"|type=="Attack"|type=="Carrier attack"|type=="Seaplane fighter") 
+	g trainer = (type=="Training") 
+	g bomber = (type=="Bomber"|type=="Heavy bomber"|type=="Light bomber"|type=="Carrier bomber"|type=="Carrier dive bomber"|type=="Carrier torpedo bomber") 
+	g recon = (type=="Observation" | type=="Observatn/training" | type=="Reconnaisance" | type=="Reconnaisance Seaplane" | type=="Reconnaisance amphibian" | type=="Reconnaisance and bomber seaplane" | type=="Reconnaisance flying boat" | type=="Reconnaisance seaplane" | type=="Reconnaissance" | type=="Reconnaissance flying-boat")
+	drop type
+	g type = "fighter" if fighter==1
+	replace type = "bomber" if bomber==1
+	replace type = "trainer" if trainer==1
+	replace type = "recon" if recon==1
+	label var type "Type"
+	drop fighter bomber trainer recon
+	
+	* Generate Outcome Variables
+	label var maxspeed "Maximum Speed" 
+	label var grossweight "Gross Weight"
+	label var wing_area "Wing Area"
+	label var cruise "Cruise Speed"
+	label var ceiling "Ceiling"
+	label var endurance "Endurance"
+	
+	* Generate Other Variables
+	rename engine_hp enginehp 
+	label var enginehp "Engine Horsepower"
+	label var no_engines "Number of Engines"
+	label var count "Count"
+	label var year "Year"
+	label var company "Company"
+	label var location "Location"
+	label var model "Model"
+	
+	* Keep/Order Variables
+	keeporder year country type enginehp maxspeed grossweight wing_area maxspeed cruise ceiling endurance count no_engines
+	
+	* Save Japan Data
+	save "$aircraft/data/dta/temp/temp_airframe_japan.dta",replace
+
+*-------> Combine and Save Airframe Data for All Countries
+	
+	* Append Country Data
+	clear all
+	foreach country in "us" "uk" "japan" {
+		qui append using "$aircraft/data/dta/temp/temp_airframe_`country'.dta"
+		rm "$aircraft/data/dta/temp/temp_airframe_`country'.dta"
+		}
+	
+	* Generate Outcome Variables
+	g wingload = grossweight/wing_area
+	g powerload = grossweight/enginehp
+	foreach outcome of varlist wingload maxspeed ceiling cruise powerload {
+		qui g ln_`outcome' = log(`outcome')	
+		}
+	
+	* Generate Other Variables
+	g twoplusengines = (no_engines>1)
+	/*
+	* Generate Merge Variable (for US)
+	qui g merge = 0
+		
+		*-> Curtiss (including merged companies)
+		qui replace merge = 1 if 	company == "Wright-Martin" | ///
+									company == "Wright" | ///
+									company == "Huff-Daland" | ///
+									company == "Loenig" | ///
+									company == "Curtiss" 
+														
+		*-> Boeing (including merged companies)
+		qui replace merge = 1 if 	company == "Boeing" | ///
+									company == "Vought" | ///
+									company == "Vought-Sikorski" | ///
+									company == "Stearman" 
+	*/		
+	* Save Country Data
+	qui keep if year<=1935 & year>=1918
+	qui drop if type==""
+	qui save "$aircraft/data/dta/airframe_data.dta",replace
+	
+
+```
+
+### `3 replication files/do/1-data-engines.do`
+```stata
+********************************************************************************
+
+cls
+clear all
+ssc install keeporder
+
+********************************************************************************
+
+*global aircraft "[ File path here ]"
+
+********************************************************************************
+**-> Engines <-*****************************************************************
+********************************************************************************
+
+*-------> United States	(Fahey Data)
+	
+	* Load Data
+	import delimited "$aircraft/data/raw/US_data2.csv",clear
+	drop source*
+	
+	* Generate Country Variable
+	g country = "United States" 
+	label var country "Country"
+	
+	* Generate Outcome Variables
+	g horsepower = normalrating
+	replace horsepower = horspoweralternative if horsepower ==.
+	label var horsepower "Horsepower"
+	g weight = weightdry
+	replace weight = weightdryalternative if weight==.
+	label var weight "Dry Weight (in lbs)"
+	g hp_per_lbs = horsepower/weight
+	label var hp_per_lbs "Horsepower per Pound"
+	g hp_per_disp = horsepower/pistondisplacementinliters
+	label var hp_per_disp "Horsepower per Liter of Piston Displacement"
+	g hp_per_disp_rpm = horsepower/(pistondisplacementinliters*revolutionsperminuterpm)
+	label var hp_per_disp_rpm "Horsepower per (Liter of Piston Displacement and RPM)"
+	
+	* Generate Other Variables
+	rename yearoffirstusebyarmy year
+	label var year "Year"
+	rename builder make
+	label var make "Make"
+	label var model "Model"
+	g liquid_cooled = (cooling=="liquid")
+	label var liquid_cooled "Liquid Cooled Engine == 1"
+	
+	* Keep/Order Variables
+	keeporder country make model year liquid_cooled hp_per_disp hp_per_lbs hp_per_disp_rpm 
+
+	* Save US Data
+	save "$aircraft/data/dta/temp/temp_engine_us_fahey.dta",replace
+
+*-------> United States (Fighter and Bomber Data)
+	
+	* Load Data
+	import delimited "$aircraft/data/raw/US_data1.csv",clear
+	replace count = 1 if count==.
+	
+	* Generate Country Variable
+	g country = "United States" 
+	label var country "Country"
+	
+	* Identify Airframe Type Variable
+	g fighter = (type=="Fighter"|type=="Carrier fighter"|type=="Carrier jet fighter"|type=="Pursuit"|type=="Jet fighter"|type=="Atack") if country == "United States"
+	g bomber = (type=="Bomber"|type=="Bomber floatplane"|type=="Carrier bomber"|type=="Heavy bomber"|type=="Jet Bomber"|type=="Jet Heavy Bomber"|type=="Jet Medium Bomber"|type=="Jet light bomber"|type=="Jet reconnaisance bomber"|type=="Light bomber"|type=="Medium bomber") if country == "United States"
+	keep if fighter | bomber
+	drop type
+	
+	* Generate Outcome Variables
+	g hp_per_lbs = enginehp/weight
+	g hp_per_disp = enginehp/displ
+	g hp_per_frontal = enginehp/frontalarea
+	g hp_per_disp_rpm = enginehp/(displ*rpm)
+	
+	* Generate Cooling Variable
+	g liquid_cooled = (cooling=="liquid")
+	
+	* Drop Missing
+	drop if hp_per_lbs==. & hp_per_disp==. & hp_per_frontal==. & hp_per_disp_rpm==.
+	
+	* Collapse
+	collapse (mean) hp_* (sum) count (min) year=firstyear (max) liquid_cooled, by(country engine_maker engine_type enginehp disp)
+	
+	* Keep/Order Variables
+	keeporder country engine_make engine_type year count hp_* liquid
+	sort country engine_make engine_type year
+
+	* Save US Data
+	save "$aircraft/data/dta/temp/temp_engine_us.dta",replace
+	
+*-------> United Kingdom (Fighter and Bomber Data)
+	
+	* Load Data
+	import delimited "$aircraft/data/raw/UK_data.csv",clear
+	rename (engine_maker engine_type) (engine_maker engine_type)
+	replace count = 1 if count==.
+	
+	* Generate Country Variable
+	g country = "United Kingdom" 
+	label var country "Country"
+	
+	* Identify Airframe Type Variable
+	g fighter = (type=="Fighter"|type=="Carrier fighter") if country == "United Kingdom"
+	g bomber = (type=="Bomber"|type=="Carrier torpedo bomber"|type=="Dive bomber"|type=="Torpedo bomber"|type=="Reconnaisance and bomber seaplane") if country == "United Kingdom"
+	keep if fighter | bomber
+	drop type
+	
+	* Generate Outcome Variables
+	g hp_per_lbs = enginehp/weight
+	g hp_per_disp = enginehp/displ
+	g hp_per_frontal = enginehp/frontalarea
+	g hp_per_disp_rpm = enginehp/(displ*rpm)
+
+	* Generate Cooling Variable
+	g liquid_cooled = (cooling=="W")
+	
+	* Drop Missing
+	drop if hp_per_lbs==. & hp_per_disp==. & hp_per_frontal==. & hp_per_disp_rpm==.
+
+	* Collapse
+	collapse (mean) hp_* (sum) count=count (min) year=firstyear (max) liquid_cooled, by(country engine_maker engine_type engine_hp enginehp)
+	
+	* Keep/Order Variables
+	keeporder country engine_make engine_type year count hp_* liquid
+	sort country engine_make engine_type year
+
+	* Save US Data
+	save "$aircraft/data/dta/temp/temp_engine_uk.dta",replace
+	
+*-------> Italy
+	
+	* Load Data
+	import delimited "$aircraft/data/raw/JANES_engine_data.csv", clear
+	keep if country=="Italy" 
+	drop country
+	
+	* Generate Country Variable
+	g country = "Italy"
+	label var country "Country"
+	
+	* Generate Outcome Variables
+	rename hp_per_displ hp_per_disp
+	label var hp_per_disp "Horsepower per Liter of Piston Displacement"
+	rename hp_per_lbs hp_per_lbs
+	label var hp_per_lbs "Horsepower per Pound"
+	g hp_per_disp_rpm = hp_per_disp*(1/rpm)
+	label var hp_per_disp_rpm "Horsepower per (Liter of Piston Displacement and RPM)"
+
+	* Generate Other Variables
+	rename company engine_make 
+	label var engine_make "Make"
+	rename engine engine_type
+	label var engine_type "Model"
+	rename yr_introduced year
+	label var year "Year"
+	g liquid_cooled = (cooling=="liquid")
+	label var liquid_cooled "Liquid Cooled Engine == 1"
+	qui g airframe_year = year
+	
+	* Keep/Order Variables
+	keeporder country engine_make engine_type year liquid_cooled hp_per_disp hp_per_lbs hp_per_disp_rpm
+	
+	* Save Italy Data
+	save "$aircraft/data/dta/temp/temp_engine_italy.dta",replace
+
+*-------> Germany
+	
+	* Load Data
+	import delimited "$aircraft/data/raw/JANES_engine_data.csv", clear
+	keep if country=="Germany" 
+	drop country
+	
+	* Generate Country Variable
+	g country = "Germany" 
+	label var country "Country"
+	
+	* Generate Outcome Variables
+	rename hp_per_displ hp_per_disp
+	label var hp_per_disp "Horsepower per Liter of Piston Displacement"
+	rename hp_per_lbs hp_per_lbs
+	label var hp_per_lbs "Horsepower per Pound"
+	g hp_per_disp_rpm = hp_per_disp*(1/rpm)
+	label var hp_per_disp_rpm "Horsepower per (Liter of Piston Displacement and RPM)"
+	
+	* Generate Other Variables
+	rename company engine_make
+	label var engine_make "Make"
+	rename engine engine_type
+	label var engine_type "Model"
+	rename yr_introduced year
+	label var year "Year"
+	g liquid_cooled = (cooling=="liquid")
+	label var liquid_cooled "Liquid Cooled Engine == 1"
+	qui g airframe_year = year
+	
+	* Keep/Order Variables
+	keeporder country engine_make engine_type year liquid_cooled hp_per_disp hp_per_lbs hp_per_disp_rpm
+	
+	* Save Germany Data
+	save "$aircraft/data/dta/temp/temp_engine_germany.dta",replace
+
+*-------> Combine and Save Airframe Data for All Countries (US Main Data)
+	
+	* Append Country Data
+	clear all
+	append using "$aircraft/data/dta/temp/temp_engine_us.dta"
+	rm "$aircraft/data/dta/temp/temp_engine_us.dta"
+	qui append using "$aircraft/data/dta/temp/temp_engine_uk.dta"
+	append using "$aircraft/data/dta/temp/temp_engine_italy.dta"
+	append using "$aircraft/data/dta/temp/temp_engine_germany.dta"
+
+	* Keep Year in (1918 - 1935)
+	keep if year>=1918 & year<=1935
+
+	* Generate Outcome Variables
+	foreach outcome of varlist hp_per_disp hp_per_lbs hp_per_disp_rpm hp_per_frontal {
+		g ln_`outcome' = log(`outcome')	
+		}
+	
+	* Keep Variables
+	keeporder country year count liquid_cooled ln_*
+	sort country year
+	
+	* Save Country Data
+	save "$aircraft/data/dta/engine_data.dta",replace
+
+*-------> Combine and Save Airframe Data for All Countries (US Fahey Data) 
+
+	* Append Country Data
+	clear all
+	append using "$aircraft/data/dta/temp/temp_engine_us_fahey.dta"
+	rm "$aircraft/data/dta/temp/temp_engine_us_fahey.dta"
+	append using "$aircraft/data/dta/temp/temp_engine_uk.dta"
+	rm "$aircraft/data/dta/temp/temp_engine_uk.dta"
+	append using "$aircraft/data/dta/temp/temp_engine_italy.dta"
+	rm "$aircraft/data/dta/temp/temp_engine_italy.dta"
+	append using "$aircraft/data/dta/temp/temp_engine_germany.dta"
+	rm "$aircraft/data/dta/temp/temp_engine_germany.dta"
+
+	* Keep Year in (1918 - 1935)
+	keep if year>=1918 & year<=1935
+
+	* Generate Outcome Variables
+	foreach outcome of varlist hp_per_disp hp_per_lbs hp_per_disp_rpm {
+		g ln_`outcome' = log(`outcome')		
+		}
+	
+	* Keep Variables
+	keeporder country year liquid_cooled ln_*
+	sort country year
+	
+	* Save Country Data
+	save "$aircraft/data/dta/engine_data_fahey.dta",replace
+	
+
+```
+
+### `3 replication files/do/1-data-vintage.do`
+```stata
+********************************************************************************
+
+cls
+clear all
+ssc install keeporder
+
+********************************************************************************
+
+*global aircraft "[ File path here ]"
+
+********************************************************************************
+**-> Vintage <-*****************************************************************
+********************************************************************************
+
+*-------> United States
+	
+	* Load Data
+	import delimited "$aircraft/data/raw/US_data1.csv",clear
+	
+	* Generate Country Variable
+	g country = "United States" 
+	label var country "Country"
+	
+	* Identify Airframe Type Variable
+	qui g fighter = (type=="Fighter"|type=="Carrier fighter"|type=="Carrier jet fighter"|type=="Pursuit"|type=="Jet fighter"|type=="Atack") if country == "United States"
+	qui g trainer = (type=="Tranining"|type=="Trainer/Observation"|type=="Training"|type=="Tranier"|type=="Tranining"|type=="Primary trainer"|type=="Specialized trainer") if country == "United States"
+	qui g bomber = (type=="Bomber"|type=="Bomber floatplane"|type=="Carrier bomber"|type=="Heavy bomber"|type=="Jet Bomber"|type=="Jet Heavy Bomber"|type=="Jet Medium Bomber"|type=="Jet light bomber"|type=="Jet reconnaisance bomber"|type=="Light bomber"|type=="Medium bomber") if country == "United States"
+	qui g recon = (type=="Observation" | type=="Observation amphibian" | type=="Observation floatplane" | type=="Observation seaplane" | type=="Observation/bombing" | type=="Reconnaissance")
+	drop type
+	g type = "fighter" if fighter==1
+	replace type = "bomber" if bomber==1
+	replace type = "trainer" if trainer==1
+	replace type = "recon" if recon==1
+	label var type "Type"
+	drop fighter bomber trainer recon
+	
+	* Generate Outcome Variables
+	label var maxspeed "Maximum Speed" 
+	label var grossweight "Gross Weight"
+	label var wing_area "Wing Area"
+	label var cruise "Cruise Speed"
+	label var climb_ft_per_min "Climb feet per minute"
+	label var climb_to_10000 "Climb to 10,000 feet"
+	label var ceiling "Ceiling"
+	label var range "Range"
+	label var endurance "Endurance"
+	
+	* Generate Other Variables
+	label var enginehp "Engine Horsepower"
+	label var no_engines "Number of Engines"
+	label var count "Count"
+	label var year "Year"
+	label var company "Company"
+	label var location "Location"
+	label var model "Model"
+															
+	* Keep/Order Variables
+	keeporder year country type firstyear
+	
+	* Save US Data
+	save "$aircraft/data/dta/temp/temp_airframe_us.dta",replace
+
+*-------> United Kingdom
+	
+	* Load Data
+	import delimited "$aircraft/data/raw/UK_data.csv",clear
+
+	* Generate Country Variable
+	g country = "United Kingdom" 
+	label var country "Country"
+	
+	* Identify Airframe Type Variable
+	g fighter = (type=="Fighter"|type=="Carrier fighter") if country == "United Kingdom"
+	g trainer = (type=="Training") if country == "United Kingdom"
+	g bomber = (type=="Bomber"|type=="Carrier torpedo bomber"|type=="Dive bomber"|type=="Torpedo bomber"|type=="Reconnaisance and bomber seaplane") if country == "United Kingdom"
+	g recon = (type=="Observation"|type=="Observatn/training"|type=="Reconnaisance"|type=="Reconnaisance amphibian"|type=="Reconnaisance and bomber seaplane"|type=="Reconnaisance flying boat"|type=="Reconnaisance seaplane"|type=="Reconnaissance"|type=="Reconnaissance flying-boat")
+	drop type
+	g type = "fighter" if fighter==1
+	replace type = "bomber" if bomber==1
+	replace type = "trainer" if trainer==1
+	replace type = "recon" if recon==1
+	label var type "Type"
+	drop fighter bomber trainer recon
+
+	* Generate Outcome Variables
+	label var maxspeed "Maximum Speed"
+	label var grossweight "Gross Weight"
+	label var wing_area "Wing Area"
+	label var cruise "Cruise Speed"
+	label var climb_ft_per_min "Climb feet per minute"
+	label var climb_to_10000 "Climb to 10,000 feet"
+	label var ceiling "Ceiling"
+	label var range "Range"
+	label var endurance "Endurance"
+	  
+	* Generate Other Variables
+	qui destring engine_hp*, force replace
+	label var enginehp "Engine Horsepower"
+	label var no_engines "Number of Engines"
+	label var count "Count"
+	label var year "Year"
+	label var company "Company"
+	label var location "Location"
+	label var model "Model"
+
+	* Keep/Order Variables
+	keeporder year country type firstyear
+	
+	* Save UK Data
+	save "$aircraft/data/dta/temp/temp_airframe_uk.dta",replace
+	
+
+*-------> Combine and Save Airframe Data for All Countries
+	
+	* Append Country Data
+	clear all
+	foreach country in "us" "uk"{
+		qui append using "$aircraft/data/dta/temp/temp_airframe_`country'.dta"
+		rm "$aircraft/data/dta/temp/temp_airframe_`country'.dta"
+		}
+		
+	* Save Country Data
+	qui keep if year<=1935 & year>=1918
+	qui keep if type == "fighter" | type == "bomber"
+	qui save "$aircraft/data/dta/vintage_data.dta",replace
+	
+
+```
+
+### `__MACOSX/3 replication files/do/._1-data-airframes.do`
+```stata
+    Mac OS X            	   2       C                                      ATTR      C   �   S                  �     com.apple.lastuseddate#PS          *  $com.apple.metadata:_kMDItemUserTags    *     com.dropbox.attrs    ��ea     ��     bplist00�                            	
+
+����P      �ˤ�
+```
+
+### `__MACOSX/3 replication files/do/._1-data-engines.do`
+```stata
+    Mac OS X            	   2  �     �                                      ATTR      �  4   �                 4     com.apple.lastuseddate#PS      D   *  $com.apple.metadata:_kMDItemUserTags    n   Y  7com.apple.metadata:kMDLabel_j5bpmrb7gdj6ghx3uiqt3qncla     �     com.dropbox.attrs    ��ea    F*+    bplist00�                            	���_H�ڼcKTi�#�f���&=v[㥉����!�#�)%�$f/��t,��v�3ƺI�Y��Y�|؄��d�P�����4��C���-y;�
+
+����P      �	���
+```
+
+### `__MACOSX/3 replication files/do/._1-data-vintage.do`
+```stata
+    Mac OS X            	   2       D                                      ATTR      D   �   T                  �     com.apple.lastuseddate#PS          *  $com.apple.metadata:_kMDItemUserTags    *     com.dropbox.attrs    ��ea    �h�    bplist00�                            	
+
+����P      ������
+```
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

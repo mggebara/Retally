@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "hanlon-2022-aircraft-ip-spillovers",
+  "mode": "independent",
+  "run_id": "2026-10-21-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was exploratory: it inspected airframe_data.dta and engine_data.dta (counts by country and type, no estimates). The final script uses only those two .dta files. Airframes: fighter and bomber models from 1918-1935, log wing load or log max speed regressed on a continuous two-piece linear spline in year with a knot at 1926 (s1 = min(year,1926), s2 = max(year-1926,0)) plus a constant, HC1 robust SEs (fixest hetero). For the US-UK comparison: pooled US+UK, with the common spline (which is the UK spline), a US dummy, and the spline interacted with US; the interaction coefficients are the US-relative slopes. Engines: US engines in engine_data.dta, log hp per lbs on the spline plus a liquid-cooled dummy, robust SEs. Sample sizes come out as 116/174/165/233 (Table 1) and 85 (Table 4), matching the paper. All 12 coefficients and counts match the claimed values to printed precision, and so do the standard errors. I compared the results with the claims after the first scored run but did not change the script, so there are no claim attempts. No script files in the dataset were opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T02:06:09Z",
+  "finished_at": "2026-10-22T02:07:25Z"
+}

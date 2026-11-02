@@ -1,0 +1,221 @@
+tibble [793 × 24] (S3: tbl_df/tbl/data.frame)
+ $ year            : num [1:793] 1922 1922 1931 1928 1929 ...
+  ..- attr(*, "label")= chr "Year"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ country         : chr [1:793] "United States" "United States" "United States" "United States" ...
+  ..- attr(*, "label")= chr "Country"
+  ..- attr(*, "format.stata")= chr "%14s"
+ $ type            : chr [1:793] "fighter" "fighter" "trainer" "trainer" ...
+  ..- attr(*, "label")= chr "Type"
+  ..- attr(*, "format.stata")= chr "%9s"
+ $ enginehp        : num [1:793] NA NA NA NA 600 600 460 460 460 460 ...
+  ..- attr(*, "label")= chr "Engine Horsepower"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ maxspeed        : num [1:793] NA NA 111 NA 133 133 159 NA 159 NA ...
+  ..- attr(*, "label")= chr "Maximum Speed"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ grossweight     : num [1:793] NA NA 2423 NA 16500 ...
+  ..- attr(*, "label")= chr "Gross Weight"
+  ..- attr(*, "format.stata")= chr "%12.0g"
+ $ wing_area       : num [1:793] NA NA NA NA NA NA 260 NA NA NA ...
+  ..- attr(*, "label")= chr "Wing Area"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ cruise          : num [1:793] NA NA NA NA NA NA 142 NA NA NA ...
+  ..- attr(*, "label")= chr "Cruise Speed"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ climb_ft_per_min: num [1:793] NA NA NA NA NA NA 1630 NA NA NA ...
+  ..- attr(*, "label")= chr "Climb feet per minute"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ climb_to_10000  : num [1:793] NA NA NA NA NA NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "Climb to 10,000 feet"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ ceiling         : num [1:793] NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "Ceiling"
+  ..- attr(*, "format.stata")= chr "%12.0g"
+ $ range           : num [1:793] NA NA NA NA NA NA 390 NA NA NA ...
+  ..- attr(*, "label")= chr "Range"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ endurance       : num [1:793] NA NA NA NA NA NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "Endurance"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ count           : num [1:793] 2 2 4 577 12 12 10 2 30 2 ...
+  ..- attr(*, "label")= chr "Count"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ no_engines      : num [1:793] 1 1 1 1 2 2 1 1 1 1 ...
+  ..- attr(*, "label")= chr "Number of Engines"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ engine_maker    : chr [1:793] "Aeromarine" "Aeromarine" "Continental" "Continental" ...
+  ..- attr(*, "format.stata")= chr "%16s"
+ $ wingload        : num [1:793] NA NA NA NA NA ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ powerload       : num [1:793] NA NA NA NA 27.5 ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ ln_wingload     : num [1:793] NA NA NA NA NA ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ ln_maxspeed     : num [1:793] NA NA 4.71 NA 4.89 ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ ln_ceiling      : num [1:793] NA NA NA NA NA ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ ln_cruise       : num [1:793] NA NA NA NA NA ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ ln_powerload    : num [1:793] NA NA NA NA 3.31 ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ twoplusengines  : num [1:793] 0 0 0 0 1 1 0 0 0 0 ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+
+         Japan United Kingdom  United States           <NA> 
+           134            103            556              0 
+
+ bomber fighter   recon trainer    <NA> 
+    156     238     260     139       0 
+      
+       Japan United Kingdom United States
+  1918     0             16            33
+  1919     1              1            17
+  1920     2              3            10
+  1921     3              1             3
+  1922     8              5            31
+  1923     3              6            27
+  1924     1              2            29
+  1925    11              8            26
+  1926     7              6            35
+  1927    10              7            37
+  1928     7              3            56
+  1929    10              3            49
+  1930     7              7            32
+  1931    10              5            27
+  1932    11              7            38
+  1933    21              6            47
+  1934    17              6            30
+  1935     5             11            29
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   1.00    3.00   25.00   78.51   66.00 7066.00 
+       
+        Japan United Kingdom United States
+  FALSE   125             75           197
+  TRUE      9             28           359
+       
+        Japan United Kingdom United States
+  FALSE   129             89           345
+  TRUE      5             14           211
+   year       country    type enginehp maxspeed grossweight wing_area cruise
+1  1922 United States fighter       NA       NA          NA        NA     NA
+2  1922 United States fighter       NA       NA          NA        NA     NA
+3  1931 United States trainer       NA      111        2423        NA     NA
+4  1928 United States trainer       NA       NA          NA        NA     NA
+5  1929 United States  bomber      600      133       16500        NA     NA
+6  1928 United States  bomber      600      133       16500        NA     NA
+7  1925 United States fighter      460      159        2835       260    142
+8  1925 United States fighter      460       NA          NA        NA     NA
+9  1925 United States fighter      460      159        3030        NA     NA
+10 1925 United States fighter      460       NA          NA        NA     NA
+   climb_ft_per_min climb_to_10000 ceiling range endurance count no_engines
+1                NA             NA      NA    NA        NA     2          1
+2                NA             NA      NA    NA        NA     2          1
+3                NA             NA      NA    NA        NA     4          1
+4                NA             NA      NA    NA        NA   577          1
+5                NA             NA      NA    NA        NA    12          2
+6                NA             NA      NA    NA        NA    12          2
+7              1630             NA   18925   390        NA    10          1
+8                NA             NA      NA    NA        NA     2          1
+9                NA             NA      NA    NA        NA    30          1
+10               NA             NA      NA    NA        NA     2          1
+   engine_maker wingload powerload ln_wingload ln_maxspeed ln_ceiling ln_cruise
+1    Aeromarine       NA        NA          NA          NA         NA        NA
+2    Aeromarine       NA        NA          NA          NA         NA        NA
+3   Continental       NA        NA          NA    4.709530         NA        NA
+4   Continental       NA        NA          NA          NA         NA        NA
+5       Curtiss       NA 27.500000          NA    4.890349         NA        NA
+6       Curtiss       NA 27.500000          NA    4.890349         NA        NA
+7       Curtiss 10.90385  6.163043    2.389116    5.068904   9.848239  4.955827
+8       Curtiss       NA        NA          NA          NA         NA        NA
+9       Curtiss       NA  6.586957          NA    5.068904         NA        NA
+10      Curtiss       NA        NA          NA          NA         NA        NA
+   ln_powerload twoplusengines
+1            NA              0
+2            NA              0
+3            NA              0
+4            NA              0
+5      3.314186              1
+6      3.314186              1
+7      1.818571              0
+8            NA              0
+9      1.885091              0
+10           NA              0
+         
+          Japan United Kingdom United States
+  bomber     16             35           105
+  fighter    48             34           156
+  recon      49             19           192
+  trainer    21             15           103
+tibble [278 × 8] (S3: tbl_df/tbl/data.frame)
+ $ country           : chr [1:278] "Germany" "Germany" "Germany" "Germany" ...
+  ..- attr(*, "label")= chr "Country"
+  ..- attr(*, "format.stata")= chr "%14s"
+ $ year              : num [1:278] 1920 1920 1920 1920 1920 1920 1920 1920 1920 1920 ...
+  ..- attr(*, "label")= chr "(min) firstyear"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ count             : num [1:278] NA NA NA NA NA NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "(sum) count"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ liquid_cooled     : num [1:278] 0 0 1 0 0 0 0 0 0 0 ...
+  ..- attr(*, "label")= chr "(max) liquid_cooled"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ ln_hp_per_disp    : num [1:278] 1.85 2.56 2.41 2.06 2.15 ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ ln_hp_per_lbs     : num [1:278] -0.998 -1.229 -1.355 -1.196 -1.384 ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ ln_hp_per_disp_rpm: num [1:278] -5.2 -4.94 -4.68 -4.99 -5.12 ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ ln_hp_per_frontal : num [1:278] NA NA NA NA NA NA NA NA NA NA ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+
+       Germany          Italy United Kingdom  United States 
+            79             76             38             85 
+      
+       Germany Italy United Kingdom United States
+  1918       0     0              3             5
+  1919       0     0              2             0
+  1920      16     8              0             0
+  1922       0     0              2             5
+  1923       2     0              5             0
+  1924       0     0              0             3
+  1925      10     3              4            15
+  1926       3     4              1            13
+  1927       1     2              3             8
+  1928       6     9              3             0
+  1929      11    14              1             1
+  1930       4     5              3             0
+  1931       4     2              5            13
+  1932       9    11              0            15
+  1933       7     3              1             0
+  1934       3     4              2             6
+  1935       3    11              3             1
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+    1.0     9.5    60.0   156.6   171.5  1995.0     155 
+       
+        Germany Italy United Kingdom United States
+  FALSE      78    65             38            85
+  TRUE        1    11              0             0
+   country year count liquid_cooled ln_hp_per_disp ln_hp_per_lbs
+1  Germany 1920    NA             0       1.850873    -0.9975694
+2  Germany 1920    NA             0       2.560061    -1.2288101
+3  Germany 1920    NA             1       2.412586    -1.3545457
+4  Germany 1920    NA             0       2.061995    -1.1960202
+5  Germany 1920    NA             0       2.145813    -1.3843299
+6  Germany 1920    NA             0       2.439296    -1.3276981
+7  Germany 1920    NA             0       2.454571    -1.1505579
+8  Germany 1920    NA             0       1.872970    -1.3966910
+9  Germany 1920    NA             0       2.541284    -0.9800970
+10 Germany 1920    NA             0       2.251120    -1.1960204
+   ln_hp_per_disp_rpm ln_hp_per_frontal
+1           -5.196644                NA
+2           -4.935481                NA
+3           -4.677491                NA
+4           -4.985523                NA
+5           -5.116115                NA
+6           -4.822631                NA
+7           -5.040970                NA
+8           -5.174548                NA
+9           -4.771936                NA
+10          -5.062100                NA

@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "entry_id": "grier-2023-sugar-roll-call-voting",
+  "mode": "blind",
+  "run_id": "2026-10-21-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Inflation adjustment: totalcont is nominal; 2013 contributions converted to 2018 dollars with CPI-U annual averages (232.957 for 2013, 251.107 for 2018). The paper does not state the deflator or base year; a 2013-dollar base would scale the contribution coefficients by about 1.078.",
+    "Fixed-effects logit estimated as an unconditional logit with district (or incumbent) dummies plus a constant, as the paper's table reports a constant, restricted to vote-switching groups (the only groups that identify the FE logit). Robust (HC1) SEs printed but not scored.",
+    "Window files identified from the data, not from documentation: SugarReplicate.dta = baseline (largest totals), _iter1 = calendar year, _iter2 = 12 months before the vote up to the vote date.",
+    "Agriculture committee dummy is perfectly separated among switchers (agcom=1 always with a No vote), so its coefficient diverges; other coefficients are at the converged limit."
+  ],
+  "notes": "Outcome = 1 for Aye, 0 otherwise (No, Not Voting, No Vote). Controls: ACU (ncu), tenure, poverty, bach, medincome, over65, agcom; regressor totalcont deflated. This coding gives 94 switching districts, of which one (OK-1, Hern, missing tenure) drops, leaving 93 districts / 186 obs; the incumbent sample (both==1 and switched) has 53 members / 106 obs, FE by district id (one member, Smith TX-21, has two cid codes). Pseudo R2 0.7458 / 0.7206 and the printed poverty, bachelor's and over-65 coefficients came out as they did on the first estimating run; nothing was tuned. Exploratory runs attempt-1 and attempt-2 inspected variables, the window files and switcher counts and printed no RESULT lines. A conditional logit is printed as a diagnostic only.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T02:10:12Z",
+  "finished_at": "2026-10-22T02:13:13Z"
+}

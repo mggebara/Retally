@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "hanlon-2022-aircraft-ip-spillovers",
+  "mode": "independent",
+  "run_id": "2026-11-01-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was exploratory (inspected airframe_data.dta and engine_data.dta, counted samples; no RESULT lines). Final: OLS with heteroskedasticity-robust SEs (fixest, vcov='hetero'). Airframes restricted to fighters and bombers, 1918-1935. Two-piece linear spline in year with a knot at 1926 (sp1=min(year,1926), sp2=max(year-1926,0); each coefficient is a segment slope, like Stata mkspline). Table 1 cols 1-2: US only, log wing load / log max speed on the spline plus a constant. Cols 3-4: pooled US+UK on spline, spline x US, US dummy and constant; the spline x US coefficients are the US slopes relative to the UK. Table 4 col 1: US engines from engine_data.dta (85 obs, all of them), log hp per lb on the spline, a liquid-cooled dummy and a constant. Sample sizes match the paper (116/174/165/233/85), as do the SEs. I compared the final RESULT values with the claims; all agree to the reported precision, and the script was not changed afterwards, so no claim attempt is recorded.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T04:25:07Z",
+  "finished_at": "2026-11-02T04:26:09Z"
+}

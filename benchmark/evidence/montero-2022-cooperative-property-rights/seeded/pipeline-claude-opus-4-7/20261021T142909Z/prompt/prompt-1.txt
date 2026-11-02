@@ -1,0 +1,319 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: Cooperative Property Rights
+Abstract (first 500 chars): from one proposed ex-
+planation for why there might be differences in access to capital between cooperative own-
+ership and outside ownership in other contexts. In particular, scholars have highlighted
+that cooperatives in other sectors are less likely to raise funds through equity, as selling
+shares dilutes the voting power of worker members (Hart and Moore 1996). This means
+that they may be more credit constrained as they do not have as many ways to access capital.
+However, as argued in Putter
+Methodology Summary: # Experimental Methodology Summary
+
+- **Identification strategy**: Sharp/fuzzy regression discontinuity (RD) design exploiting the 500 hectare cumulative-landholdings threshold from El Salvador's 1980 Decree 153 land reform, which determined whether a property was expropriated and converted into a cooperative.
+
+- **Estimating equation**: `y_po = α + γ·Above500_o + f(holdings_o) + ε_po`, where the dependent variable `y_po` varies by outcome (e.g., share of land in cash vs. staple crops, crop yields, interquartile range of worker earnings), the key regressor `Above500_o` is an indicator for the former owner having ≥500 ha cumulative landholdings, and `f(holdings_o)` is a smooth RD polynomial in the running variable (owner's total prereform landholdings). Headline coefficients are in the native units of each outcome (not standardized; standardized β's appear only in the balance-test figure).
+
+- **Preferred specification details**: Local linear polynomial estimated separately on each side of the cutoff; MSE-optimal bandwidth from Calonico, Cattaneo, Titiunik (2014b) and Calonico et al. (2017); uniform kernel. Fuzzy RD estimates also reported, instrumenting cooperative status with the Above500 rule. First stage: crossing the threshold raises expropriation probability by ~75%.
+
+- **Standard errors**: Clustered at the former-landholder level (since owners could own multiple plots and the running variable is defined at owner level).
+
+- **Sample / observations**: Plot-level data from El Salvador's 2007 IV Census of Agriculture (94,168 producers), matched to prereform 1980 Property Registry records via name, municipality, department, and size (~70% match rate, with no discontinuity in match probability at threshold). Sample restricted to the "risk set" of former owners within the MSE-optimal bandwidth around 500 ha. Worker income analysis uses 2002–2013 Encuesta de Hogares de Propósitos Multiples, restricted to cantons with only one cooperative/large hacienda to enable matching (verified 91% accuracy using 2008–2010 name data).
+
+- **Identification tests**: (i) McCrary (2008) density/sorting test around 500 ha threshold; (ii) RD balance tests on geographic covariates (land suitability, precipitation, elevation, suitability for sugarcane/coffee/cotton/maize/beans/rice/sorghum); (iii) check for discontinuity in match probability.
+
+- **Robustness** (Appendix J/D): Alternative RD polynomial orders, alternative bandwidths, matching methods, and sensitivity analysis assuming reform properties sit at the edge of balance-test confidence intervals.
+
+- **Outcomes/evaluation**: Four model-derived predictions tested — (1) share of land in cash vs. staple crops, (2) cash crop yields, (3) staple crop yields, (4) interquartile range of worker earnings — with results plotted as RD graphs (25-ha bins) and reported as point estimates with clustered SEs.
+
+## Claims to Reproduce
+1. earnings_level_above500_bw300: 60.49 (dollars per month (household earnings per capita)) [type: coefficient]
+   Location: Table 5, column 1 (Household Earnings per Capita, Levels, bandwidth 300)
+   Context: Table 5 ("Impact of Ownership Type on Earnings and Earnings Distributions"), column 1. Regression discontinuity at the 1980 land reform's 500 ha cumulative-landholding threshold: properties of former owners above 500 ha became worker cooperatives, those below stayed outside-owned haciendas. Outcome: household earnings per capita in the previous month, in dollars per month, of agricultural workers in the El Salvador household surveys (Encuesta de Hogares de Propositos Multiples, 2002-2013), matched to cooperatives and haciendas through the survey's questions on working as a cooperative member o…
+2. earnings_level_above500_bw150: 52.79 (dollars per month (household earnings per capita)) [type: coefficient]
+   Location: Table 5, column 2 (Household Earnings per Capita, Levels, bandwidth 150)
+   Context: Table 5, column 2: the same specification as column 1 (household earnings per capita in the previous month on Above500, local linear control in the former owner's landholdings on each side of the 500 ha cutoff, survey-round fixed effects, standard errors clustered by former owner) with the sample limited to properties within 150 ha of the threshold (1,583 workers; 118 properties; 36 clusters; mean of the dependent variable 74.81). Not statistically significant.
+3. earnings_iqr_above500_bw300: -42.97 (dollars per month (interquartile range of household earnings per capita)) [type: coefficient]
+   Location: Table 5, column 3 (Household Earnings per Capita, Interquartile Range, bandwidth 300)
+   Context: Table 5, column 3, the paper's inequality result ("the interquartile range of cooperatives is approximately $43 per month lower"). Outcome: the interquartile range (75th minus 25th percentile) of household earnings per capita in the previous month across the surveyed workers of each property, with the sample limited to cooperatives and haciendas for which there are at least five members represented in the household surveys. Regressor Above500; linear control in the former owner's landholdings on each side of the 500 ha cutoff; properties within 300 ha of the threshold; survey-round fixed effec…
+4. earnings_iqr_above500_bw150: -51.79 (dollars per month (interquartile range of household earnings per capita)) [type: coefficient]
+   Location: Table 5, column 4 (Household Earnings per Capita, Interquartile Range, bandwidth 150)
+   Context: Table 5, column 4: the interquartile-range specification of column 3 (properties with at least five members represented in the surveys, Above500, local linear control on each side of the cutoff, survey-round fixed effects, former-owner clustering) with properties within 150 ha of the threshold (118 observations and properties; 36 clusters; mean of the dependent variable 37.52).
+5. n_obs_earnings_level_bw300: 4770.0 (observations (workers)) [type: other]
+   Location: Table 5, Observations, column 1
+   Context: Number of observations (surveyed workers) in the 300 ha earnings-level regression, Table 5 column 1.
+6. n_obs_earnings_level_bw150: 1583.0 (observations (workers)) [type: other]
+   Location: Table 5, Observations, column 2
+   Context: Number of observations (surveyed workers) in the 150 ha earnings-level regression, Table 5 column 2.
+7. n_obs_earnings_iqr_bw300: 327.0 (observations (properties)) [type: other]
+   Location: Table 5, Observations, column 3
+   Context: Number of observations in the 300 ha interquartile-range regression, Table 5 column 3 (the table also reports 327 properties).
+8. n_obs_earnings_iqr_bw150: 118.0 (observations (properties)) [type: other]
+   Location: Table 5, Observations, column 4
+   Context: Number of observations in the 150 ha interquartile-range regression, Table 5 column 4 (the table also reports 118 properties).
+9. n_clusters_bw300: 98.0 (clusters (former owners)) [type: other]
+   Location: Table 5, Clusters, columns 1 and 3
+   Context: Number of former-owner clusters in the 300 ha samples of Table 5 (columns 1 and 3).
+10. n_clusters_bw150: 36.0 (clusters (former owners)) [type: other]
+   Location: Table 5, Clusters, columns 2 and 4
+   Context: Number of former-owner clusters in the 150 ha samples of Table 5 (columns 2 and 4).
+
+## Dataset Information
+Name: montero-2022-cooperative-property-rights
+Local path: <repo>/.cache/datasets/montero_2022_cooperative_property_rights
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- ehpm_incomemodule_wreform.dta (4.4 MB) — 5060 rows, 119 columns: Work_Income, Land_Owner, Land_Size, Land_revenue, Land_Costs, Land_Revenue, Matched, reform, Total_Workers, Above500, own_amt, Land_Net_Income, Land_Size_ha, hh_head_order, munic, survey_year, Other_Income, Land_Salaries, Reform_Coop_id, Coop_Name, AREA_HECTAREA, Hacienda_id, Landholding_Type_Factor, match_id, norm_dist_Above, educ_level, Prev_Occuptation_Sector, poverty_level, Occupation_Sector_Code, Empl_Men_Fixed, Empl_Women_Fixed, Num_Workers, Num_Workers_Bin_x, Landholdi…
+- README.pdf (44.5 KB)
+- Replication_file.do (11.2 KB)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/montero_2022_cooperative_property_rights' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Original Replication Scripts
+The replication package (the dataset directory) ships the authors' own analysis scripts, reproduced below.  These are the GROUND TRUTH for the exact estimating equation, variable names, sample restrictions, fixed effects, and standard-error clustering — follow them over anything reconstructed from the methodology summary, and prefer them over the paper's text where the two disagree.  Your job is to write R code that implements the SAME SPECIFICATION: translate what the scripts estimate, do not transliterate their syntax line by line (a Stata .do file's regression, e.g. `reghdfe y x controls, absorb(fe) cluster(cl)`, becomes the equivalent fixest::feols() call in R).  Keep only the parts that produce the specific claims being reproduced; skip figure construction and unrelated robustness checks.  The scripts' data-file paths refer to the package's internal layout — resolve them against the dataset directory listed under Dataset Information.
+
+Stata-to-fixest sample matching: feols() drops fixed-effect singletons by default, but Stata's `reg y x i.fe` / `xi:` dummies keep them.  Pass `fixef.rm = "none"` to every feols() call that has fixed effects, otherwise the observation count and the robust SEs drift from the paper's.  Stata's `, r` / `vce(robust)` is `vcov = "hetero"`.
+
+### `Replication_file.do`
+```stata
+
+** Set Workspace **
+global dir=""
+cd "$dir"
+
+*Install packages and schemes:
+net install gr0002_3, from(http://www.stata-journal.com/software/sj4-3)
+ssc install grqreg
+
+use "$dir/ehpm_incomemodule_wreform.dta", clear 
+capture drop ln_hh_inc_pc hh_inc_pc_real ln_hh_inc_pc_real 
+gen ln_hh_inc_pc = log(hh_income_pc)
+
+**Original real income measure
+gen hh_inc_pc_real = (year==2000)*hh_income_pc*71.57/100 + ///
+                 (year==2001)*hh_income_pc*74.25/100 + (year==2004)*hh_income_pc*80.68/100 + ///
+                 (year==2005)*hh_income_pc*84.47/100 + (year==2006)*hh_income_pc*87.88/100 + ///
+                 (year==2007)*hh_income_pc*91.90/100 + (year==2008)*hh_income_pc*98.06/100 + ///
+                 (year==2009)*hh_income_pc*99.10/100 + (year==2011)*hh_income_pc*105.13/100 + ///
+                 (year==2012)*hh_income_pc*106.95/100 + (year==2013)*hh_income_pc*107.79/100 
+gen ln_hh_inc_pc_real = log(hh_inc_pc_real )
+
+*Corrected real income measure
+gen hh_inc_pc_realC = (year==2000)*hh_income_pc*71.57/100 + ///
+                 (year==2001)*hh_income_pc*74.25/100 + (year==2004)*hh_income_pc*80.68/100 + ///
+                 (year==2005)*hh_income_pc*84.47/100 + (year==2006)*hh_income_pc*87.88/100 + ///
+                 (year==2007)*hh_income_pc*91.90/100 + (year==2008)*hh_income_pc*98.06/100 + ///
+                 (year==2009)*hh_income_pc*99.10/100 + (year==2011)*hh_income_pc*105.13/100 + ///
+                 (year==2012)*hh_income_pc*106.95/100 + (year==2013)*hh_income_pc*107.79/100  + ///
+				 (year==2010)*hh_income_pc
+gen ln_hh_inc_pc_realC = log(hh_inc_pc_realC )
+
+
+****************************************
+*** Replicating original results
+****************************************
+
+*****Cols 1 and 2 Table 5 of original paper, Cols 1 and 2 of Table 3 in comment
+*Income
+preserve
+eststo T3c1: reg hh_inc_pc_real Above500 norm_dist c.norm_dist#Above500 i_year* sex  age age2 if abs(norm_dist) <  300 , cluster(Expropretario_ISTA)
+	tab Above500 if e(sample)
+eststo T3c2: reg hh_inc_pc_real Above500 norm_dist c.norm_dist#Above500 i_year*  sex  age age2 if abs(norm_dist) < 150 , cluster(Expropretario_ISTA)
+	tab Above500 if e(sample)
+restore	
+
+*****Cols 3 and 4 Table 5 of original paper, Cols 1 and 2 of Table 1 in comment
+*IQR
+preserve
+collapse (iqr) hh_income_pc hh_inc_pc_real (mean) num_members norm_dist Above500, by(match_id Expropretario_ISTA i_year*) cw
+eststo T1c1:  reg hh_inc_pc_real Above500 norm_dist c.norm_dist#Above500 i_year* if  abs(norm_dist) < 300 , cluster(Expropretario_ISTA)
+	tab Above500 if e(sample)
+eststo T1c2: reg hh_inc_pc_real Above500 norm_dist c.norm_dist#Above500 i_year* if  abs(norm_dist) < 150 , cluster(Expropretario_ISTA)
+	tab Above500 if e(sample)
+restore
+
+*****Figure 6 in orginal paper, Figure 1 left panel in comment
+preserve
+gen Above500_QPlot = Above500
+label var Above500_QPlot "Quantile Estimates for: Above 500 (ha)"
+drop if num_members < 5
+local bwidth =150
+bsqreg ln_hh_inc_pc_real  Above500_QPlot norm_dist norm_dist_Above  i_year1-i_year8 i_year10-i_year11  if abs(norm_dist) < 150 & hh_income_pc >0,  q(.50) 
+set scheme lean1
+grqreg Above500_QPlot,  ci reps(40) qstep(.2) seed(821)   subtitle("Replication figure")
+restore
+
+
+****************************************
+*** Updated results
+****************************************
+
+*Table 1, Cols 5 and 6: Sample restriction to original estimation sample
+preserve
+egen group=group(match_id Expropretario_ISTA year)
+bys group: gen groupN=_N
+collapse (iqr) hh_inc_pc_real (mean)  groupN  norm_dist Above500, by(match_id Expropretario_ISTA i_year*) cw
+eststo T1c5: reg hh_inc_pc_real Above500 norm_dist c.norm_dist#Above500 i_year* if  abs(norm_dist) < 300 &  groupN>4, cluster(Expropretario_ISTA)
+tab Above500 if e(sample)
+eststo T1c6: reg hh_inc_pc_real Above500 norm_dist c.norm_dist#Above500 i_year* if  abs(norm_dist) < 150&  groupN>4 , cluster(Expropretario_ISTA)
+tab Above500 if e(sample)
+restore
+
+
+*** Remove duplicate observations
+
+*Duplicate by "identifying variables" (add norm_dist because a few individuals that are the same are distributed to different properties, removed below)
+duplicates drop dept  munic canton year hh_income hh_income_pc Landholding_Type Total_Workers age norm_dist,force
+
+*These are checked against the rawdata. Identified by manually checking all individuals from households with more than one observation
+*Remove those that do not exist in the raw data
+drop if  munic==3 & canton==17 & hh_income_pc==32 & age==48 & year==2008
+drop if  munic==3 & canton==17 & hh_income_pc==38.46 & age==29 & year==2008
+drop if  munic==3 & canton==6 & hh_income_pc==21.39 & age==53 & year==2010
+drop if  munic==3 & canton==6 & hh_income_pc==28.35 & age==24& year==2010
+drop if  munic==16 & canton==1 & hh_income_pc==47.38 & age==66& year==2010
+drop if  munic==16 & canton==1 & hh_income_pc==47.38 & age==25& year==2010
+drop if  munic==16 & canton==1 & hh_income_pc==32.39 & age==66& year==2010
+drop if  munic==16 & canton==1 & hh_income_pc==32.39 & age==22& year==2010
+drop if  munic==16 & canton==1 & hh_income_pc==32.39 & age==25& year==2010
+drop if  munic==16 & canton==1 & hh_income_pc==20.75 & age==66& year==2010
+drop if  munic==16 & canton==1 & hh_income_pc==20.75 & age==22& year==2010
+drop if  munic==16 & canton==1 & hh_income_pc==39.83 & age==25& year==2010
+drop if  munic==16 & canton==1 & hh_income_pc==39.83 & age==22& year==2010
+drop if  munic==6 & canton==7 & hh_income_pc==25.97 & age==23& year==2011
+drop if  munic==6 & canton==7 & hh_income_pc==25.97 & age==35& year==2011
+drop if  munic==6 & canton==7 & hh_income_pc==140.31 & age==50& year==2011
+drop if  munic==6 & canton==7 & hh_income_pc==140.31 & age==23& year==2011
+drop if  munic==6 & canton==7 & hh_income_pc==142.53 & age==50& year==2011
+drop if  munic==6 & canton==7 & hh_income_pc==142.53 & age==35& year==2011
+drop if  munic==7 & canton==1 & hh_income_pc==21.83 & age==32& year==2011
+drop if  munic==7 & canton==1 & hh_income_pc==21.83 & age==29& year==2011
+drop if  munic==7 & canton==1 & hh_income_pc==21.83 & age==34& year==2011
+drop if  munic==7 & canton==1 & hh_income_pc==21.83 & age==36& year==2011
+drop if  munic==7 & canton==1 & hh_income_pc==22.25 & age==24& year==2011
+drop if  munic==7 & canton==1 & hh_income_pc==22.25 & age==34& year==2011
+drop if  munic==7 & canton==1 & hh_income_pc==22.25 & age==29& year==2011
+drop if  munic==7 & canton==1 & hh_income_pc==22.25 & age==36& year==2011
+drop if  munic==7 & canton==1 & hh_income_pc==43.88 & age==32& year==2011
+drop if  munic==7 & canton==1 & hh_income_pc==43.88 & age==24& year==2011
+drop if  munic==6 & canton==8 & hh_income_pc==24.75 & age==32 & year==2011
+drop if  munic==6 & canton==8 & hh_income_pc==21.12 & age==62 & year==2011
+drop if  munic==8 & canton==0 & hh_income_pc==139.83 & age==57 & year==2011
+drop if  munic==8 & canton==0 & hh_income_pc==55.5 & age==50 & year==2011
+drop if  munic==8 & canton==0 & hh_income_pc==139.83 & age==57& year==2012
+drop if  munic==8 & canton==0 & hh_income_pc==55.5 & age==50& year==2012
+drop if  munic==7 & canton==10 & hh_income_pc==63.19 & age==22& year==2013
+drop if  munic==7 & canton==10 & hh_income_pc==82.36 & age==56& year==2013
+drop if  munic==5 & canton==10 & hh_income_pc==25 & age==49& year==2013
+drop if  munic==5 & canton==10 & hh_income_pc==25 & age==26& year==2013
+drop if  munic==5 & canton==10 & hh_income_pc==11.42 & age==26& year==2013
+drop if  munic==5 & canton==10 & hh_income_pc==66.67 & age==49& year==2013
+drop if  munic==7 & canton==11 & hh_income_pc==104 & age==32& year==2013
+drop if  munic==7 & canton==11 & hh_income_pc==61.92 & age==65& year==2013
+
+*OBS: 6 individuals are allocated to TWO properties. Remove these to assure unique estimates
+bysort dept  munic canton year hh_income hh_income_pc Landholding_Type Total_Workers age: gen dupl_HH=_N
+drop if dupl_HH>1
+
+
+*Table 1, Cols 3 and 4: "Corrected data"
+preserve
+collapse (iqr) hh_inc_pc_realC (mean)  norm_dist Above500, by(match_id Expropretario_ISTA i_year*) cw
+eststo T1c3:  reg hh_inc_pc_realC Above500 norm_dist c.norm_dist#Above500 i_year* if  abs(norm_dist) < 300 , cluster(Expropretario_ISTA)
+tab Above500 if e(sample)
+eststo T1c4:  reg hh_inc_pc_realC Above500 norm_dist c.norm_dist#Above500 i_year* if  abs(norm_dist) < 150 , cluster(Expropretario_ISTA)
+tab Above500 if e(sample)
+restore
+
+
+*Table 1, Cols 7 and 8:  "Corrected data and sample restriction"
+preserve
+egen group=group(match_id Expropretario_ISTA year)
+bys group: gen groupN=_N
+collapse (iqr) hh_inc_pc_realC (mean)  groupN  norm_dist Above500, by(match_id Expropretario_ISTA i_year*) cw
+eststo T1c7: reg hh_inc_pc_realC Above500 norm_dist c.norm_dist#Above500 i_year* if  abs(norm_dist) < 300 &  groupN>4, cluster(Expropretario_ISTA)
+tab Above500 if e(sample)
+eststo T1c8: reg hh_inc_pc_realC Above500 norm_dist c.norm_dist#Above500 i_year* if  abs(norm_dist) < 150&  groupN>4 , cluster(Expropretario_ISTA)
+tab Above500 if e(sample)
+restore
+
+
+*Table 2, Cols 1 and 2: "Property-year, n>3"
+preserve
+egen group=group(match_id Expropretario_ISTA year)
+bys group: gen groupN=_N
+collapse (iqr) hh_inc_pc_realC (mean)  groupN norm_dist Above500, by(match_id Expropretario_ISTA i_year*) cw
+eststo T2c1:  reg hh_inc_pc_realC Above500 norm_dist c.norm_dist#Above500 i_year* if  abs(norm_dist) < 300 &  groupN>3, cluster(Expropretario_ISTA)
+tab Above500 if e(sample)
+eststo T2c2: reg hh_inc_pc_realC Above500 norm_dist c.norm_dist#Above500 i_year* if  abs(norm_dist) < 150&  groupN>3 , cluster(Expropretario_ISTA)
+tab Above500 if e(sample)
+restore
+
+
+*Table 2, Cols 3 and 4: "Property-year, n>2"
+preserve
+egen group=group(match_id Expropretario_ISTA year)
+bys group: gen groupN=_N
+collapse (iqr) hh_inc_pc_realC (mean)  groupN norm_dist Above500, by(match_id Expropretario_ISTA i_year*) cw
+eststo T2c3: reg hh_inc_pc_realC Above500 norm_dist c.norm_dist#Above500 i_year* if  abs(norm_dist) < 300 &  groupN>2, cluster(Expropretario_ISTA)
+tab Above500 if e(sample)
+eststo T2c4: reg hh_inc_pc_realC Above500 norm_dist c.norm_dist#Above500 i_year* if  abs(norm_dist) < 150&  groupN>2 , cluster(Expropretario_ISTA)
+tab Above500 if e(sample)
+restore
+
+
+*Table 3, Cols 3 and 4: "Corrected data"
+eststo T3c3: reg hh_inc_pc_realC Above500 norm_dist c.norm_dist#Above500 i_year* sex  age age2 if abs(norm_dist) <  300 , cluster(Expropretario_ISTA)
+	sum hh_income_pc if abs(norm_dist)<300
+	tab Above500 if e(sample)
+eststo T3c4: reg hh_inc_pc_realC Above500 norm_dist c.norm_dist#Above500 i_year*  sex  age age2 if abs(norm_dist) < 150 , cluster(Expropretario_ISTA)
+	tab Above500 if e(sample)
+	sum hh_income_pc if abs(norm_dist)<150
+	
+
+*Figure 1, right panel, "corrected figure"
+preserve
+gen Above500_QPlot = Above500
+label var Above500_QPlot "Quantile Estimates for: Above 500 (ha)"
+bsqreg ln_hh_inc_pc_realC   Above500_QPlot norm_dist norm_dist_Above age age2 i_year1-i_year8 i_year10-i_year11  if abs(norm_dist) < 150 & hh_income_pc >0,  q(.50) 
+set scheme lean1
+grqreg Above500_QPlot,  ci reps(40) qstep(.2) seed(821)   subtitle("Corrected figure") 
+restore
+
+
+*Table 1
+label var Above500 "Above500"
+noisily esttab T1c1 T1c2 T1c3 T1c4 T1c5 T1c6 T1c7 T1c8, ///
+	keep(Above500) s(N ) label nomtitles starlevels(* 0.10 ** 0.05 *** 0.01) se t(%8.2g)
+
+*Table 2
+noisily esttab T2c1 T2c2 T2c3 T2c4, ///
+	keep(Above500) s(N ) label nomtitles starlevels(* 0.10 ** 0.05 *** 0.01) se t(%8.2g)
+
+*Table 3
+noisily esttab T3c1 T3c2 T3c3 T3c4 , ///
+	keep(Above500) s(N ) label nomtitles starlevels(* 0.10 ** 0.05 *** 0.01) se t(%8.2g)
+
+
+```
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

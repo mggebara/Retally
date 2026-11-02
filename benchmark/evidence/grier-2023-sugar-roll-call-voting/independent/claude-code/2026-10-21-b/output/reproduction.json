@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "grier-2023-sugar-roll-call-voting",
+  "mode": "independent",
+  "run_id": "2026-10-21-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Inflation adjustment done in-script: 115th-Congress (2018) contributions multiplied by CPI-U 2013/2018 annual-average ratio (232.957/251.107), i.e. expressed in 2013 dollars. The paper does not state the deflator or base year; the base year only rescales the contribution coefficient.",
+    "Robust (HC0) standard errors are printed as diagnostics only; HC0 is near-singular for two observations because the agriculture-committee coefficient diverges (quasi-separation), as in the paper's -36.3/-39.3."
+  ],
+  "notes": "Two exploratory runs (no RESULT lines) identified the data: id = district (state_no + district), y = 1 if vote == 'Aye' (No / Not Voting / No Vote = 0), both == 1 marks the same incumbent in both Congresses, ncu = ACU score. The three .dta files differ only in totalcont: SugarReplicate.dta = baseline window (1 year before the vote through end of the vote's calendar year; largest sums), _iter1 = calendar year of the vote, _iter2 = 12 months before the vote (identified from window nesting, e.g. pre-vote 2012 money appears in _iter2 but not _iter1). sugcont (identical across files, likely the original cycle-aggregated measure) is not used. Model: dummy-variable logit (glm binomial with factor(id)) of y on sugar contributions, ACU, tenure, poverty, bachelor's share, median income, over-65 share and agriculture-committee dummy, on districts observed in both votes whose vote switched (94 switchers, 1 dropped for a missing value -> 93 districts, 186 obs); incumbent version restricts to both == 1 (53 incumbents, 106 obs). Table 1 is matched closely: pseudo R2 0.746 vs 0.745 (district) and 0.721 vs 0.721 (incumbent), and every printed control coefficient matches. After the final run I compared results with the claims via check_attempt; only sugar_contributions_calendar_year_incumbent_fe is off (-0.00056 vs -0.0005). I did not change the script afterwards: re-basing to 2018 dollars would fix that number but push the calendar-year district coefficient to about -0.00053 against a claimed -0.0006, and there is no methodological reason to prefer it. So the final run is the only scored run and there are no claim attempts.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T02:06:10Z",
+  "finished_at": "2026-10-22T02:09:30Z"
+}

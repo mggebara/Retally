@@ -1,0 +1,116 @@
+own_amt-500 vs norm_dist:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-6.104e-05  0.000e+00  0.000e+00  8.519e-08  0.000e+00  3.052e-05 
+        neg
+Above500 FALSE TRUE
+       0     0 4693
+       1   367    0
+   
+    FALSE TRUE
+  0  4693    0
+  1     0  367
+
+2000 2001 2004 2005 2006 2007 2008 2009 2010 2011 2012 2013 
+ 329  808  162  211  302  252  100   22  798  948  648  480 
+
+   1 2000 2001 2009 2011 2012 2013 <NA> 
+1027  329  808   22  948  648  480  798 
+   
+       0    1
+  0 4658    0
+  1   35  367
+   
+       0    1
+  0 4658    0
+  1   35  367
+                            
+                                0    1
+  ¿Asalariado permanente?      10    9
+  ¿Asalariado temporal?       490   12
+  ¿Asalariado/a permanente?   111    4
+  ¿Asalariado/a temporal?     270    2
+  ¿Cuenta propia con local?     1    0
+  ¿Cuenta propia sin local?  1401    3
+  ¿Cuenta propio con local?     8    0
+  ¿Empleador o patrono?        13    1
+  ¿Empleador/a  o patrono/a?   84    0
+  ¿Familiar no remunerado?     11    0
+  ¿Servicio domestico?          1    0
+  Asalariado permanente       128   12
+  Asalariado temporal         444   83
+  Cooperativista               20   53
+  Cuenta propia sin local     972  156
+  Empleador o patrono?          6    1
+  Familiar no remunerado        0    3
+  NA                          642   26
+  Patrono                      79    2
+  Servicio dom\xe9stico         2    0
+props: 111  owners: 105 
+match_id ~ Reform_Coop_id/Hacienda_id
+# A tibble: 15 × 6
+   match_id Reform_Coop_id Hacienda_id Expropretario_ISTA own_amt Above500
+   <chr>    <chr>          <chr>                    <dbl>   <dbl>    <dbl>
+ 1 83       83             NA                382972138011    691.        1
+ 2 6        6              NA                         487    647.        1
+ 3 15       15             NA                109452095011   1236.        1
+ 4 92       92             NA                410012039011   1182.        1
+ 5 42       42             NA                169692112011    541         1
+ 6 80       80             NA                         325    514.        1
+ 7 98       98             NA                         146   7449.        1
+ 8 79       79             NA                         520    643.        1
+ 9 78       78             NA                         437    795         1
+10 124      124            NA                574252026011    607.        1
+11 37       37             NA                158892007011    541         1
+12 71       71             NA                306092114011    605.        1
+13 114      114            NA                         567   1164.        1
+14 118      118            NA                         153    591.        1
+15 122      122            NA                         375   1387.        1
+      match_id         n               nown       nown2         ab        
+ Length   :111   Min.   :  1.00   Min.   :1   Min.   :1   Min.   :0.0000  
+ N.unique :111   1st Qu.:  4.00   1st Qu.:1   1st Qu.:1   1st Qu.:0.0000  
+ N.blank  :  0   Median :  8.00   Median :1   Median :1   Median :0.0000  
+ Min.nchar:  1   Mean   : 45.59   Mean   :1   Mean   :1   Mean   :0.1712  
+ Max.nchar: 12   3rd Qu.: 38.00   3rd Qu.:1   3rd Qu.:1   3rd Qu.:0.0000  
+                 Max.   :579.00   Max.   :1   Max.   :1   Max.   :1.0000  
+       nd               nyr        
+ Min.   :-300.00   Min.   : 1.000  
+ 1st Qu.:-255.00   1st Qu.: 2.000  
+ Median :-182.00   Median : 3.000  
+ Mean   : -33.61   Mean   : 3.189  
+ 3rd Qu.: -70.00   3rd Qu.: 4.000  
+ Max.   :6949.30   Max.   :10.000  
+
+  1 
+111 
+
+  1 
+111 
+owners per own_amt: 91 
+bw 300 rows 4781 props 105 owners 99 own_amt 85 
+  strict <: 4770 
+  prop-year with >=5: 128   props with >=5 total: 76 
+  props with >=5 total & non-NA inc
+bw 150 rows 1583 props 39 owners 36 own_amt 33 
+  strict <: 1583 
+  prop-year with >=5: 45   props with >=5 total: 28 
+  props with >=5 total & non-NA inc
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   0.00   23.54   40.00   76.78   76.00  986.00 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   0.00   14.52   31.94   59.54   68.40  705.68 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    3.0    97.0   228.0   340.5   630.0   770.0 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+   0.00    4.00    8.00   20.27   14.00  425.00     370 
+norm_dist values near bw:
+ [1]   14.00   14.40   25.00   41.00   47.00   49.00   68.00   69.00   71.00
+[10]   76.00   78.00   84.00   85.00   91.37   99.00  100.00  105.40  107.20
+[19]  108.00  121.00  125.00  126.00  127.00  130.00  133.00  137.00  139.00
+[28]  141.00  142.00  142.80  143.00  146.00  147.10  161.00  165.00  166.00
+[37]  168.00  169.00  179.00  182.00  185.00  191.40  193.00  193.40  197.00
+[46]  199.00  202.00  203.00  208.00  209.00  211.00  213.03  222.00  224.00
+[55]  234.00  239.00  240.00  241.00  242.00  244.00  247.00  252.00  255.00
+[64]  256.00  257.00  259.00  260.00  261.00  262.00  264.00  266.00  272.00
+[73]  275.00  277.00  283.00  284.00  285.00  286.00  288.00  290.00  293.00
+[82]  295.00  296.00  297.00  300.00  663.60  681.90  735.70  887.40 2392.10
+[91] 6949.30

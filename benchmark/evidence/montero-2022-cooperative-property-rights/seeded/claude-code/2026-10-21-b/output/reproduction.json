@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "montero-2022-cooperative-property-rights",
+  "mode": "seeded",
+  "run_id": "2026-10-21-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "Followed the 'Replicating original results' block of Replication_file.do. Rebuilt hh_inc_pc_real exactly as the .do file does (the original deflator has no 2010 term, so 2010 incomes become 0). Cols 1-2: OLS of hh_inc_pc_real on Above500, norm_dist, norm_dist*Above500, i_year1-12 (collinear one dropped), sex, age, age2, for |norm_dist|<300 and <150, clustered by Expropretario_ISTA (fixest feols). Cols 3-4: casewise-complete collapse to match_id x Expropretario_ISTA x i_year* cells, taking the IQR (Stata percentile definition = R quantile type 2) of hh_inc_pc_real and means of norm_dist/Above500, then the same regression without the individual controls. The do file does not impose the paper's 'at least five members' restriction on the original columns, and none was applied. Attempt-1 was an exploratory data inspection with no RESULT lines. The first estimating run is the final one. All coefficients, SEs, N and cluster counts match Table 5. No claim-feedback iterations were needed. The printed DV means (57.3, 64.7, 29.4, 29.2) differ from the table's (73.59, 74.81, 38.63, 37.52), which are probably nominal-income means. They are not claims here.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T02:01:51Z",
+  "finished_at": "2026-10-22T02:03:08Z"
+}

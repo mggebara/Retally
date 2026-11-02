@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "grier-2023-sugar-roll-call-voting",
+  "mode": "seeded",
+  "run_id": "2026-10-21-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [],
+  "deviations": [
+    "Stata `logit ... i.id, robust` translated to fixest::feglm(binomial logit) with id fixed effects and vcov='hetero'. feglm drops FE groups with no outcome variation, matching Stata's perfect-prediction drops (186 and 106 obs). The agcom coefficient is quasi-separated (about -38.7 vs the paper's -36.3); its value depends on where the optimizer stops and it is not a scored claim."
+  ],
+  "notes": "Followed APSR Replication Codes.do: yesvote = (vote=='Aye'), rsugcont = totalcont/1.103 for cong==115, district-FE logit on the full sample, incumbent-FE logit on both==1, repeated for SugarReplicate_iter1.dta (calendar-year window) and SugarReplicate_iter2.dta (12-month window). One scored run; it matched every claim at printed precision, so check_attempt was not used and there are no claim or error attempts. Before that run, a Docker invocation was made by mistake while script.R did not yet exist (the shell heredoc that should have written it was refused by the harness). Docker created an empty directory at the script.R mount path, R ran nothing, and stdout/stderr were empty. I removed the empty directory and overwrote the empty output files. That run executed no script, so it is not recorded as an attempt.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T02:01:55Z",
+  "finished_at": "2026-10-22T02:02:53Z"
+}

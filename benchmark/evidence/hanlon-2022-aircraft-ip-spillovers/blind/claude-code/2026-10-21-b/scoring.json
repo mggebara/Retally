@@ -1,0 +1,674 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "airframe_wingload_trend_before_1926_us",
+      "ground_truth": {
+        "value": 0.013,
+        "standard_error": 0.006,
+        "unit": "log points per year",
+        "claim_type": "coefficient",
+        "location": "Table 1, column 1 (United States Only, Wing Load), Before 1926 x year x US",
+        "context": "Table 1 (\"Results for Airframe Innovation Before and After 1926\"), column 1, row Before 1926 x year x US.  OLS of equation (4): the dependent variable is the log of wing load (airframe weight in pounds divided by wing area in square feet) for each new U.S. military fighter or bomber airframe model (an observation is the introduction of a new model, including new versions of existing designs, dated by year of first delivery; the paper's figures cover 1918-1935).  The regressors are a two-piece linear spline in year with a knot at 1926, giving separate slopes before and after 1926 while keeping the level continuous; a constant is the only other term.  This claim is the before-1926 slope (the annual rate of technological progress before 1926).  Robust standard errors.\n",
+        "decimals": 3,
+        "sample_size": 116
+      },
+      "i4r": {
+        "reproduced_value": 0.013,
+        "outcome": "matches",
+        "notes": "Meta-database row \"table 1, column 1\" (R recode), r_coeff 0.013 (0.006).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.46153846153846156,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "airframe_wingload_trend_before_1926_us",
+        "claim_type": "coefficient",
+        "claimed": 0.013,
+        "reproduced": 0.01343919927,
+        "tolerance": 0.46153846153846156,
+        "rel_err": 0.03378455923076931,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "airframe_wingload_trend_before_1926_us",
+        "reproduced": 0.01343919927,
+        "band_source": "se_band",
+        "band_relative": 0.46153846153846156,
+        "band_absolute": 0.006,
+        "abs_err": 0.000439199270000001,
+        "rel_err": 0.03378455923076931,
+        "margin": 0.0731998783333335,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "airframe_wingload_trend_after_1926_us",
+      "ground_truth": {
+        "value": 0.074,
+        "standard_error": 0.006,
+        "unit": "log points per year",
+        "claim_type": "coefficient",
+        "location": "Table 1, column 1 (United States Only, Wing Load), After 1926 x year x US",
+        "context": "Table 1, column 1, row After 1926 x year x US: the after-1926 slope of the same U.S.-only regression as airframe_wingload_trend_before_1926_us (log wing load of U.S. fighter and bomber models on a continuous two-piece linear spline in year with a knot at 1926 plus a constant; robust standard errors).\n",
+        "decimals": 3,
+        "sample_size": 116
+      },
+      "i4r": {
+        "reproduced_value": 0.074,
+        "outcome": "matches",
+        "notes": "Meta-database row \"table 1, column 1\" (R recode), r_coeff 0.074 (0.006).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.08108108108108109,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "airframe_wingload_trend_after_1926_us",
+        "claim_type": "coefficient",
+        "claimed": 0.074,
+        "reproduced": 0.07414631638,
+        "tolerance": 0.08108108108108109,
+        "rel_err": 0.0019772483783783413,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "airframe_wingload_trend_after_1926_us",
+        "reproduced": 0.07414631638,
+        "band_source": "se_band",
+        "band_relative": 0.08108108108108109,
+        "band_absolute": 0.006,
+        "abs_err": 0.00014631637999999725,
+        "rel_err": 0.0019772483783783413,
+        "margin": 0.024386063333332875,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "airframe_maxspeed_trend_before_1926_us",
+      "ground_truth": {
+        "value": -0.001,
+        "standard_error": 0.006,
+        "unit": "log points per year",
+        "claim_type": "coefficient",
+        "location": "Table 1, column 2 (United States Only, Maximum Speed), Before 1926 x year x US",
+        "context": "Table 1, column 2, row Before 1926 x year x US.  Same U.S.-only specification as airframe_wingload_trend_before_1926_us (equation (4): two-piece linear spline in year, knot at 1926, plus a constant; robust standard errors) with the log of maximum speed in miles per hour as the dependent variable, for U.S. fighter and bomber airframe models.  Before-1926 slope.\n",
+        "decimals": 3,
+        "sample_size": 174
+      },
+      "i4r": {
+        "reproduced_value": -0.001,
+        "outcome": "matches",
+        "notes": "Meta-database row \"table 1, column 2\" (R recode), r_coeff -0.001 (0.006).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 6.0,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "airframe_maxspeed_trend_before_1926_us",
+        "claim_type": "coefficient",
+        "claimed": -0.001,
+        "reproduced": -0.000777186965,
+        "tolerance": 6.0,
+        "rel_err": 0.22281303500000005,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "airframe_maxspeed_trend_before_1926_us",
+        "reproduced": -0.000777186965,
+        "band_source": "se_band",
+        "band_relative": 6.0,
+        "band_absolute": 0.006,
+        "abs_err": 0.00022281303500000006,
+        "rel_err": 0.22281303500000005,
+        "margin": 0.03713550583333334,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "airframe_maxspeed_trend_after_1926_us",
+      "ground_truth": {
+        "value": 0.067,
+        "standard_error": 0.006,
+        "unit": "log points per year",
+        "claim_type": "coefficient",
+        "location": "Table 1, column 2 (United States Only, Maximum Speed), After 1926 x year x US",
+        "context": "Table 1, column 2, row After 1926 x year x US: the after-1926 slope of the U.S.-only log maximum speed regression described in airframe_maxspeed_trend_before_1926_us.\n",
+        "decimals": 3,
+        "sample_size": 174
+      },
+      "i4r": {
+        "reproduced_value": 0.067,
+        "outcome": "matches",
+        "notes": "Meta-database row \"table 1, column 2\" (R recode), r_coeff 0.067 (0.006).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.08955223880597014,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "airframe_maxspeed_trend_after_1926_us",
+        "claim_type": "coefficient",
+        "claimed": 0.067,
+        "reproduced": 0.06679272938,
+        "tolerance": 0.08955223880597014,
+        "rel_err": 0.003093591343283659,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "airframe_maxspeed_trend_after_1926_us",
+        "reproduced": 0.06679272938,
+        "band_source": "se_band",
+        "band_relative": 0.08955223880597014,
+        "band_absolute": 0.006,
+        "abs_err": 0.00020727062000000518,
+        "rel_err": 0.003093591343283659,
+        "margin": 0.034545103333334194,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "airframe_wingload_trend_before_1926_us_vs_uk",
+      "ground_truth": {
+        "value": 0.004,
+        "standard_error": 0.009,
+        "unit": "log points per year",
+        "claim_type": "coefficient",
+        "location": "Table 1, column 3 (Comparison of US and UK, Wing Load), Before 1926 x year x US",
+        "context": "Table 1, column 3, row Before 1926 x year x US.  OLS of equation (5) on pooled U.S. and U.K. military fighter and bomber airframe models; dependent variable the log of wing load.  The coefficients of interest are the two pieces of a linear spline in year (knot at 1926) interacted with an indicator for the United States, measuring the rate of innovation in the United States relative to the United Kingdom before and after 1926.  Other terms: a constant, an indicator for the United States, and a linear spline (same knot) for the comparison country (the United Kingdom).  No engine controls.  Robust standard errors.  Before-1926 relative slope.\n",
+        "decimals": 3,
+        "sample_size": 165
+      },
+      "i4r": {
+        "reproduced_value": 0.004,
+        "outcome": "matches",
+        "notes": "Meta-database row \"table 1, column 3\" (R recode), r_coeff 0.004 (0.010).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 2.25,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "airframe_wingload_trend_before_1926_us_vs_uk",
+        "claim_type": "coefficient",
+        "claimed": 0.004,
+        "reproduced": 0.00429866032,
+        "tolerance": 2.25,
+        "rel_err": 0.07466507999999991,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "airframe_wingload_trend_before_1926_us_vs_uk",
+        "reproduced": 0.00429866032,
+        "band_source": "se_band",
+        "band_relative": 2.25,
+        "band_absolute": 0.009000000000000001,
+        "abs_err": 0.00029866031999999966,
+        "rel_err": 0.07466507999999991,
+        "margin": 0.03318447999999996,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "airframe_wingload_trend_after_1926_us_vs_uk",
+      "ground_truth": {
+        "value": 0.025,
+        "standard_error": 0.01,
+        "unit": "log points per year",
+        "claim_type": "coefficient",
+        "location": "Table 1, column 3 (Comparison of US and UK, Wing Load), After 1926 x year x US",
+        "context": "Table 1, column 3, row After 1926 x year x US: the after-1926 U.S. relative slope of the pooled U.S.-U.K. log wing load regression described in airframe_wingload_trend_before_1926_us_vs_uk.\n",
+        "decimals": 3,
+        "sample_size": 165
+      },
+      "i4r": {
+        "reproduced_value": 0.025,
+        "outcome": "matches",
+        "notes": "Meta-database row \"table 1, column 3\" (R recode), r_coeff 0.025 (0.009).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.39999999999999997,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "airframe_wingload_trend_after_1926_us_vs_uk",
+        "claim_type": "coefficient",
+        "claimed": 0.025,
+        "reproduced": 0.02483841825,
+        "tolerance": 0.39999999999999997,
+        "rel_err": 0.006463270000000021,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "airframe_wingload_trend_after_1926_us_vs_uk",
+        "reproduced": 0.02483841825,
+        "band_source": "se_band",
+        "band_relative": 0.39999999999999997,
+        "band_absolute": 0.01,
+        "abs_err": 0.00016158175000000052,
+        "rel_err": 0.006463270000000021,
+        "margin": 0.016158175000000052,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "airframe_maxspeed_trend_before_1926_us_vs_uk",
+      "ground_truth": {
+        "value": -0.028,
+        "standard_error": 0.009,
+        "unit": "log points per year",
+        "claim_type": "coefficient",
+        "location": "Table 1, column 4 (Comparison of US and UK, Maximum Speed), Before 1926 x year x US",
+        "context": "Table 1, column 4, row Before 1926 x year x US.  Same pooled U.S.-U.K. specification as airframe_wingload_trend_before_1926_us_vs_uk (equation (5): spline in year with knot at 1926 interacted with a U.S. indicator, plus a constant, a U.S. indicator and the U.K. spline; no engine controls; robust standard errors) with the log of maximum speed in miles per hour as the dependent variable.  Before-1926 relative slope.\n",
+        "decimals": 3,
+        "sample_size": 233
+      },
+      "i4r": {
+        "reproduced_value": -0.028,
+        "outcome": "matches",
+        "notes": "Meta-database row \"table 1, column 4\" (R recode), r_coeff -0.028 (0.010).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.3214285714285714,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "airframe_maxspeed_trend_before_1926_us_vs_uk",
+        "claim_type": "coefficient",
+        "claimed": -0.028,
+        "reproduced": -0.02815919036,
+        "tolerance": 0.3214285714285714,
+        "rel_err": 0.005685369999999949,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "airframe_maxspeed_trend_before_1926_us_vs_uk",
+        "reproduced": -0.02815919036,
+        "band_source": "se_band",
+        "band_relative": 0.3214285714285714,
+        "band_absolute": 0.009,
+        "abs_err": 0.0001591903599999986,
+        "rel_err": 0.005685369999999949,
+        "margin": 0.01768781777777762,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "airframe_maxspeed_trend_after_1926_us_vs_uk",
+      "ground_truth": {
+        "value": 0.031,
+        "standard_error": 0.01,
+        "unit": "log points per year",
+        "claim_type": "coefficient",
+        "location": "Table 1, column 4 (Comparison of US and UK, Maximum Speed), After 1926 x year x US",
+        "context": "Table 1, column 4, row After 1926 x year x US: the after-1926 U.S. relative slope of the pooled U.S.-U.K. log maximum speed regression described in airframe_maxspeed_trend_before_1926_us_vs_uk.\n",
+        "decimals": 3,
+        "sample_size": 233
+      },
+      "i4r": {
+        "reproduced_value": 0.031,
+        "outcome": "matches",
+        "notes": "Meta-database row \"table 1, column 4\" (R recode), r_coeff 0.031 (0.010).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.3225806451612903,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "airframe_maxspeed_trend_after_1926_us_vs_uk",
+        "claim_type": "coefficient",
+        "claimed": 0.031,
+        "reproduced": 0.03054854534,
+        "tolerance": 0.3225806451612903,
+        "rel_err": 0.014563053548387082,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "airframe_maxspeed_trend_after_1926_us_vs_uk",
+        "reproduced": 0.03054854534,
+        "band_source": "se_band",
+        "band_relative": 0.3225806451612903,
+        "band_absolute": 0.01,
+        "abs_err": 0.00045145465999999954,
+        "rel_err": 0.014563053548387082,
+        "margin": 0.045145465999999954,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "engine_hp_per_weight_trend_before_1926_us",
+      "ground_truth": {
+        "value": 0.039,
+        "standard_error": 0.009,
+        "unit": "log points per year",
+        "claim_type": "coefficient",
+        "location": "Table 4, column 1 (United States Only, HP / Weight), Before 1926 x year x US",
+        "context": "Table 4 (\"Results for Aero-Engine Innovation Before and After 1926\"), column 1, row Before 1926 x year x US.  OLS on U.S. aero-engines used in military fighter and bomber aircraft, with a specification similar to equation (4): the dependent variable is the log of horsepower divided by engine weight in pounds; the regressors are a two-piece linear spline in year with a knot at 1926 (continuous level), a constant, and an indicator for whether the engine is liquid-cooled.  Robust standard errors.  Before-1926 slope.\n",
+        "decimals": 3,
+        "sample_size": 85
+      },
+      "i4r": {
+        "reproduced_value": 0.039,
+        "outcome": "matches",
+        "notes": "No row covers Table 4; blanket verdict (perfect_reproduction = Yes); value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.23076923076923075,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "engine_hp_per_weight_trend_before_1926_us",
+        "claim_type": "coefficient",
+        "claimed": 0.039,
+        "reproduced": 0.03948798397,
+        "tolerance": 0.23076923076923075,
+        "rel_err": 0.012512409487179521,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "engine_hp_per_weight_trend_before_1926_us",
+        "reproduced": 0.03948798397,
+        "band_source": "se_band",
+        "band_relative": 0.23076923076923075,
+        "band_absolute": 0.009,
+        "abs_err": 0.0004879839700000013,
+        "rel_err": 0.012512409487179521,
+        "margin": 0.05422044111111126,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "engine_hp_per_weight_trend_after_1926_us",
+      "ground_truth": {
+        "value": -0.01,
+        "standard_error": 0.005,
+        "unit": "log points per year",
+        "claim_type": "coefficient",
+        "location": "Table 4, column 1 (United States Only, HP / Weight), After 1926 x year x US",
+        "context": "Table 4, column 1, row After 1926 x year x US: the after-1926 slope of the U.S.-only log horsepower-per-pound regression described in engine_hp_per_weight_trend_before_1926_us (the paper's evidence that aero-engine performance growth slowed after 1926).\n",
+        "decimals": 3,
+        "sample_size": 85
+      },
+      "i4r": {
+        "reproduced_value": -0.01,
+        "outcome": "matches",
+        "notes": "No row covers Table 4; blanket verdict (perfect_reproduction = Yes); value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.5,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "engine_hp_per_weight_trend_after_1926_us",
+        "claim_type": "coefficient",
+        "claimed": -0.01,
+        "reproduced": -0.01016843303,
+        "tolerance": 0.5,
+        "rel_err": 0.016843302999999983,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "engine_hp_per_weight_trend_after_1926_us",
+        "reproduced": -0.01016843303,
+        "band_source": "se_band",
+        "band_relative": 0.5,
+        "band_absolute": 0.005,
+        "abs_err": 0.00016843302999999983,
+        "rel_err": 0.016843302999999983,
+        "margin": 0.033686605999999966,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "observations_airframe_wingload_us",
+      "ground_truth": {
+        "value": 116.0,
+        "standard_error": null,
+        "unit": "airframe models",
+        "claim_type": "other",
+        "location": "Table 1, column 1, observations",
+        "context": "Number of observations in Table 1 column 1: new U.S. military fighter and bomber airframe models with wing load observed, the sample of the U.S.-only log wing load regression.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 116.0,
+        "outcome": "matches",
+        "notes": "No row records observation counts; blanket verdict; value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "observations_airframe_wingload_us",
+        "claim_type": "other",
+        "claimed": 116.0,
+        "reproduced": 116.0,
+        "tolerance": 0.01,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "observations_airframe_wingload_us",
+        "reproduced": 116.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 1.16,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "observations_engine_us",
+      "ground_truth": {
+        "value": 85.0,
+        "standard_error": null,
+        "unit": "aero-engines",
+        "claim_type": "other",
+        "location": "Table 4, column 1, observations",
+        "context": "Number of observations in Table 4 column 1: U.S. aero-engines used in fighters and bombers with horsepower per pound observed, the sample of the U.S.-only engine regression.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 85.0,
+        "outcome": "matches",
+        "notes": "No row records observation counts; blanket verdict; value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "observations_engine_us",
+        "claim_type": "other",
+        "claimed": 85.0,
+        "reproduced": 85.0,
+        "tolerance": 0.01,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "observations_engine_us",
+        "reproduced": 85.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 0.85,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 12,
+    "row_passed": 12,
+    "recomputed_passed": 12,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "hanlon-2022-aircraft-ip-spillovers",
+    "mode": "blind",
+    "reproducer": "claude-code",
+    "label": "claude-code",
+    "model": null,
+    "oracle": false,
+    "run": "2026-10-21-b",
+    "results_file": "claude-code-7papers-all-modes-2026-10-21.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/blind/claude-code/20261022T021417Z",
+    "run_dir": "benchmark/reproductions/hanlon-2022-aircraft-ip-spillovers/blind/2026-10-21-b",
+    "date": "2026-10-22T02:12:14Z",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 12,
+    "final": 12,
+    "first_scored": 8,
+    "first_scored_index": 1,
+    "first_attempt": 0,
+    "n_refinements": 0,
+    "n_error_refinements": 0,
+    "n_claim_refinements": 0,
+    "n_executions": 3,
+    "n_files_stripped": 11,
+    "agrees_with_i4r": true,
+    "deviations_manifest": [
+      "Engine sample: engine_data.dta taken as the paper's fighter/bomber engine file (it carries airframe-matched counts); US rows with non-missing ln_hp_per_lbs used without further filtering (85 engines). The paper text does not spell out how the file was built.",
+      "Spline: continuous two-piece linear spline in Stata mkspline form, before = min(year,1926), after = max(year-1926,0), so 1926 belongs to the before segment and the coefficients are segment slopes, not slope changes.",
+      "Equation (5) parameterized as a constant, a US indicator, a baseline spline on all observations (the UK/comparison slope) and spline x US (US slope minus UK slope)."
+    ],
+    "deviations_stdout": [],
+    "notes": "Data: airframe_data.dta (types fighter and bomber, US and UK, years 1918-1935, all years in the file) and engine_data.dta. OLS with lm(); HC1 robust SEs printed but no point estimates depend on them. Table 1 columns 1-2: US only, log wing load / log max speed on the spline plus a constant (N=116 wing load, 174 max speed). Columns 3-4: pooled US+UK (N=165, 233). Table 4 column 1: US engines, log hp per lb on the spline plus a liquid-cooled indicator plus a constant (N=85). Attempt-1 was exploratory (variable inspection, no RESULT lines). Attempt-2 printed RESULT lines, but its pooled regressions used separate US-only and UK-only splines, so the 'vs UK' coefficients were plain US slopes (identical to columns 1-2) instead of relative slopes. Found by self-review of the specification, not by comparison with any paper value; reparameterized for the final run (see attempt-2/feedback.txt). Kind is '' because neither 'error' nor 'claim' applies. Disclosure: while reading paper.txt for the method (the Table 1 notes area, lines 1055-1075), a garbled fragment of three bare numbers from the Table 1 extraction showed on screen; it was not searched for and the specification was not adjusted toward it. No .do/.R or result files (.tex/.log/.pdf) in the mount were opened.",
+    "files_read_outside_mount": [],
+    "paper_text": "paper.blind.e5cfefeb5b0d.txt",
+    "complete": true,
+    "missing": []
+  }
+}

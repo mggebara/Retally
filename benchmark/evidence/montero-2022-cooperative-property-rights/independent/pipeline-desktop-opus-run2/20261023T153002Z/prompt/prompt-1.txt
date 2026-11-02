@@ -1,0 +1,85 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: Cooperative Property Rights
+Abstract (first 500 chars): from one proposed ex-
+planation for why there might be differences in access to capital between cooperative own-
+ership and outside ownership in other contexts. In particular, scholars have highlighted
+that cooperatives in other sectors are less likely to raise funds through equity, as selling
+shares dilutes the voting power of worker members (Hart and Moore 1996). This means
+that they may be more credit constrained as they do not have as many ways to access capital.
+However, as argued in Putter
+Methodology Summary: - **Design / estimator:** Sharp-assignment regression discontinuity (RD) at the 500 ha cumulative-landholding threshold of the 1980 El Salvador land reform (Decree 153, Phase I). Equation (1): y_po = α + γ·Above500_o + f(holdings_o) + ε_po for owners o in the risk set RS, where y_po is the outcome for plot/property p owned by pre-reform owner o, Above500_o = 1(cumulative landholdings_o ≥ 500 ha) (owner-level, not property size), and f(·) is the RD polynomial in the former owner's total 1980 landholdings (running variable, centred at 500 ha). γ is the reduced-form (intent-to-treat) effect of being above the threshold on outcomes (cooperatives vs. outside-owned haciendas). Outcomes are in their natural units (land shares, yields, IQR of earnings); no standardisation of headline estimates is stated (only the geographic balance figure, Fig. 4, plots standardised coefficients).
+- **Polynomial, kernel, bandwidth (baseline):** Following Calonico, Cattaneo & Titiunik (2014a,b) and Calonico et al. (2017), a local linear polynomial estimated separately on each side of the cutoff, with the MSE-optimal bandwidth (rdrobust-style); the risk set RS is owners within that bandwidth of 500 ha. Appendix J checks robustness to alternative polynomials and bandwidths. The first-stage RD plot (Fig. 5) instead uses a local quadratic on each side, a fixed 300 ha bandwidth, a uniform kernel, and 25 ha bins.
+- **Fuzzy RD / IV:** Compliance is imperfect (above-threshold owners ~75 percentage points more likely to be expropriated; ~20% of above-threshold properties stayed haciendas, a few below-threshold ones were expropriated), so the paper also reports fuzzy-RD (scaled IV) estimates that instrument "reform cooperative_po" with Above500_o.
+- **Standard errors:** Clustered at the former-landholder (pre-reform owner) level, since one owner may have held several plots and treatment is defined by the owner's total holdings.
+- **Data and sample construction:** Pre-reform 1980 landholdings come from the Property Registry via ISTA records (expropriated owners) and Figueroa Aquino & Marroquín Mena (1991) (non-expropriated owners with >100 ha); the list of expropriated properties and cooperatives comes from MAG (1983). These are matched to the 2007–08 IV Agricultural Census (94,168 producers) by property name, municipality, department and size (~70% match rate, with no discontinuity in the match probability at the threshold, Fig. D3). The estimation sample is matched properties of owners with >100 ha whose holdings fall within the bandwidth around 500 ha. Worker outcomes use the 2002–2013 EHPM household surveys, with individuals matched to cooperatives or haciendas by canton, restricted to cantons with only one cooperative or large hacienda (91% matching accuracy checked against the 2008–2010 surveys).
+- **Outcomes / evaluation (Table 1 predictions):** (1) share of land devoted to cash crops (sugarcane, coffee) vs. staple crops (maize, beans); (2) cash-crop yields; (3) staple-crop yields; (4) the interquartile range or distribution of worker earnings (more compressed in cooperatives). Aggregate productivity (revenue per ha, profits per ha) is also examined. Alternative mechanisms (credit access, migration) are tested in Section VII.
+- **Validity checks:** A McCrary (2008) density test, run by collapsing the data into landholding bins and regressing bin counts on eq. (1) (Fig. 3), finds no sorting. Balance tests (Fig. 4) estimate eq. (1) on geographic covariates with a local linear specification and MSE-optimal bandwidth: land suitability, precipitation, elevation, suitability for sugarcane, coffee and cotton, and suitability for maize, beans, rice and sorghum. These show no significant discontinuities. Robustness checks include matching methods (App. D.2), bounds based on the edges of the balance-test confidence intervals (App. D.3), and alternative bandwidths and polynomials (App. J).
+- **Controls / fixed effects:** The baseline specification includes only the RD polynomial in the running variable, with slopes estimated separately on each side. The supplied text names no additional fixed effects or covariates for the preferred specification. The text provided is truncated before the results tables, so the column-level control sets and point estimates are not available here.
+
+
+## Claims to Reproduce
+1. earnings_level_above500_bw300: 60.49 (dollars per month (household earnings per capita)) [type: coefficient]
+   Location: Table 5, column 1 (Household Earnings per Capita, Levels, bandwidth 300)
+   Context: Table 5 ("Impact of Ownership Type on Earnings and Earnings Distributions"), column 1. Regression discontinuity at the 1980 land reform's 500 ha cumulative-landholding threshold: properties of former owners above 500 ha became worker cooperatives, those below stayed outside-owned haciendas. Outcome: household earnings per capita in the previous month, in dollars per month, of agricultural workers in the El Salvador household surveys (Encuesta de Hogares de Propositos Multiples, 2002-2013), matched to cooperatives and haciendas through the survey's questions on working as a cooperative member o…
+2. earnings_level_above500_bw150: 52.79 (dollars per month (household earnings per capita)) [type: coefficient]
+   Location: Table 5, column 2 (Household Earnings per Capita, Levels, bandwidth 150)
+   Context: Table 5, column 2: the same specification as column 1 (household earnings per capita in the previous month on Above500, local linear control in the former owner's landholdings on each side of the 500 ha cutoff, survey-round fixed effects, standard errors clustered by former owner) with the sample limited to properties within 150 ha of the threshold. Observations are workers. Not statistically significant.
+3. earnings_iqr_above500_bw300: -42.97 (dollars per month (interquartile range of household earnings per capita)) [type: coefficient]
+   Location: Table 5, column 3 (Household Earnings per Capita, Interquartile Range, bandwidth 300)
+   Context: Table 5, column 3, the paper's inequality result (a lower within-property interquartile range of earnings for cooperatives). Outcome: the interquartile range (75th minus 25th percentile) of household earnings per capita in the previous month across the surveyed workers of each property, with the sample limited to cooperatives and haciendas for which there are at least five members represented in the household surveys. Regressor Above500; linear control in the former owner's landholdings on each side of the 500 ha cutoff; properties within 300 ha of the threshold; survey-round fixed effects; st…
+4. earnings_iqr_above500_bw150: -51.79 (dollars per month (interquartile range of household earnings per capita)) [type: coefficient]
+   Location: Table 5, column 4 (Household Earnings per Capita, Interquartile Range, bandwidth 150)
+   Context: Table 5, column 4: the interquartile-range specification of column 3 (properties with at least five members represented in the surveys, Above500, local linear control on each side of the cutoff, survey-round fixed effects, former-owner clustering) with properties within 150 ha of the threshold. One observation per property.
+5. n_obs_earnings_level_bw300: 4770.0 (observations (workers)) [type: other]
+   Location: Table 5, Observations, column 1
+   Context: Number of observations (surveyed workers) in the 300 ha earnings-level regression, Table 5 column 1.
+6. n_obs_earnings_level_bw150: 1583.0 (observations (workers)) [type: other]
+   Location: Table 5, Observations, column 2
+   Context: Number of observations (surveyed workers) in the 150 ha earnings-level regression, Table 5 column 2.
+7. n_obs_earnings_iqr_bw300: 327.0 (observations (properties)) [type: other]
+   Location: Table 5, Observations, column 3
+   Context: Number of observations in the 300 ha interquartile-range regression, Table 5 column 3 (one observation per property).
+8. n_obs_earnings_iqr_bw150: 118.0 (observations (properties)) [type: other]
+   Location: Table 5, Observations, column 4
+   Context: Number of observations in the 150 ha interquartile-range regression, Table 5 column 4 (one observation per property).
+9. n_clusters_bw300: 98.0 (clusters (former owners)) [type: other]
+   Location: Table 5, Clusters, columns 1 and 3
+   Context: Number of former-owner clusters in the 300 ha samples of Table 5 (columns 1 and 3).
+10. n_clusters_bw150: 36.0 (clusters (former owners)) [type: other]
+   Location: Table 5, Clusters, columns 2 and 4
+   Context: Number of former-owner clusters in the 150 ha samples of Table 5 (columns 2 and 4).
+
+## Dataset Information
+Name: montero-2022-cooperative-property-rights
+Local path: <repo>/.cache/datasets/montero_2022_cooperative_property_rights.script-free
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- ehpm_incomemodule_wreform.dta (4.4 MB) — 5060 rows, 119 columns: canton, Land_Owner, Land_Size, Land_revenue, Land_Costs, Land_Revenue, CANTON, Matched, reform, Total_Workers, Above500, own_amt, Land_Size_ha, munic, survey_year, Other_Income, Reform_Coop_id, Coop_Name, AREA_HECTAREA, Expropretario_ISTA, Hacienda_id, Landholding_Type_Factor, match_id, norm_dist_Above, educ_level, Prev_Occuptation_Sector, Land_Net_Income, Land_Salaries, poverty_level, Occupation_Sector_Code, canton_code_x, canton_code_y, Empl_Men_Fixed, Empl_Women_Fixed, Num…
+- README.pdf (44.5 KB)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/montero_2022_cooperative_property_rights.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Independent Reproduction
+This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's description alone.  The authors' own analysis code is deliberately withheld.  Do NOT open, read, source, or execute any script files that may appear in the dataset directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, and similar) — load data files only.  Derive the estimating equation, sample restrictions, fixed effects, and standard-error clustering from the paper information and claims above.
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

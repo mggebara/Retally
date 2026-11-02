@@ -1,0 +1,89 @@
+Airframe countries:
+
+         Japan United Kingdom  United States 
+           134            103            556 
+Airframe types:
+
+ bomber fighter   recon trainer 
+    156     238     260     139 
+Airframe year range: 1918 1935 
+Sample candidate: type_filter=TRUE year_filter=TRUE US wingload N=116
+Sample candidate: type_filter=TRUE year_filter=FALSE US wingload N=116
+Sample candidate: type_filter=FALSE year_filter=TRUE US wingload N=197
+Sample candidate: type_filter=FALSE year_filter=FALSE US wingload N=197
+Using airframe sample: type_filter=TRUE year_filter=TRUE
+
+t test of coefficients:
+
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 2.3069606  0.0284151 81.1879   <2e-16 ***
+pre         0.0134392  0.0056378  2.3838   0.0188 *  
+post        0.0741463  0.0056866 13.0387   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+               Estimate  Std. Error  t value Pr(>|t|)    
+(Intercept)  4.82908763  0.02906954 166.1219   <2e-16 ***
+pre         -0.00077719  0.00626485  -0.1241   0.9014    
+post         0.06679273  0.00595444  11.2173   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+             Estimate Std. Error t value  Pr(>|t|)    
+(Intercept) 2.2935914  0.0315408 72.7182 < 2.2e-16 ***
+US          0.0133692  0.0425563  0.3142   0.75382    
+pre         0.0091405  0.0068674  1.3310   0.18509    
+post        0.0493079  0.0085258  5.7833 3.774e-08 ***
+pre_US      0.0042987  0.0089046  0.4827   0.62994    
+post_US     0.0248384  0.0102655  2.4196   0.01667 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+              Estimate Std. Error  t value  Pr(>|t|)    
+(Intercept)  4.9393975  0.0375319 131.6051 < 2.2e-16 ***
+US          -0.1103099  0.0475507  -2.3198 0.0212379 *  
+pre          0.0273820  0.0069806   3.9226 0.0001161 ***
+post         0.0362442  0.0082759   4.3795 1.817e-05 ***
+pre_US      -0.0281592  0.0093978  -2.9963 0.0030359 ** 
+post_US      0.0305485  0.0102106   2.9919 0.0030791 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Engine countries:
+
+       Germany          Italy United Kingdom  United States 
+            79             76             38             85 
+Engine year range: 1918 1935 
+Engine N all years=85, 1918-1935=85
+
+t test of coefficients:
+
+                Estimate Std. Error  t value  Pr(>|t|)    
+(Intercept)   -0.3709399  0.0228101 -16.2621 < 2.2e-16 ***
+pre            0.0394880  0.0087583   4.5086 2.178e-05 ***
+post          -0.0101684  0.0045016  -2.2589   0.02658 *  
+liquid_cooled -0.0053037  0.0313066  -0.1694   0.86589    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+RESULT:airframe_wingload_trend_before_1926_us=0.013439
+RESULT:airframe_wingload_trend_after_1926_us=0.074146
+RESULT:airframe_maxspeed_trend_before_1926_us=-0.000777
+RESULT:airframe_maxspeed_trend_after_1926_us=0.066793
+RESULT:airframe_wingload_trend_before_1926_us_vs_uk=0.004299
+RESULT:airframe_wingload_trend_after_1926_us_vs_uk=0.024838
+RESULT:airframe_maxspeed_trend_before_1926_us_vs_uk=-0.028159
+RESULT:airframe_maxspeed_trend_after_1926_us_vs_uk=0.030549
+RESULT:engine_hp_per_weight_trend_before_1926_us=0.039488
+RESULT:engine_hp_per_weight_trend_after_1926_us=-0.010168
+RESULT:observations_airframe_wingload_us=116
+RESULT:observations_engine_us=85

@@ -546,6 +546,84 @@ wrong-data-file failure from a wrong-specification one.
 `benchmark/results/artifacts/` is gitignored: it is per-run, can be
 large, and may contain excerpts of the replication data.
 
+## Evidence bundles: prompt, output, scoring and report per cell
+
+The artifacts above are gitignored and scattered (pipeline cells under
+`results/artifacts/`, agent cells under `reproductions/`, oracle replies
+under `.cache/llm-oracle/`, scores in the results files).
+`benchmark.evidence` gathers them into a committed tree a reader can
+hand-check, one directory per scored cell:
+
+```bash
+uv run python -m benchmark.evidence build benchmark/results/A.json [B.json ...] \
+    [--entry ID ...] [--out benchmark/evidence] [--source-root /path/to/checkout]
+uv run python -m benchmark.evidence report [--entry ID] [--evidence benchmark/evidence]
+```
+
+```
+benchmark/evidence/
+  INDEX.md                                   # papers -> cells
+  <entry_id>/
+    REPORT.md                                # the paper's report (below)
+    paper.txt  paper.blind.txt               # paper texts the cells were given, stored once
+    <mode>/<reproducer-label>/<run>/         # one cell: a non-skipped results row
+      prompt/      prompt-<n>.txt (pipeline) | task.md, render.json, paper.txt.ref (agent)
+      output/      script.R, stdout.txt, stderr.txt, attempt-<n>/, reproduction.json,
+                   answer-<n>.md (the raw model reply to prompt-<n>, before parsing)
+      scoring.json per claim: ground truth (value, SE, unit, location, context,
+                   decimals), I4R value, tolerance rule, matched RESULT name,
+                   reproduced value, abs/rel error, band, verdict; and the row's
+                   own claim_details entry beside it
+      CELL.md      header, claims table, deviations, file list with sizes
+```
+
+* **Labels and runs.** Pipeline cells are `pipeline-<model>` (the model
+  from the row's usage, e.g. `pipeline-claude-opus-5-5`, or an oracle
+  label such as `pipeline-desktop-opus-run2`) and keyed by the artifacts
+  timestamp; agent cells are the reproducer name and keyed by the
+  `run_id` in `reproduction.json`.  `build` replaces the whole
+  `<entry_id>/` directory of every paper it touches, so pass every results
+  file for those papers in one call.
+* **Raw replies.** The LLM cache and the oracle key a request by
+  `sha256(json.dumps(kwargs, sort_keys=True))[:24]`; `build` rebuilds the
+  pipeline's request around each prompt (`model`, `max_tokens`,
+  `output_config.effort` — the few values the generator has used) and
+  reads the reply from `.cache/llm-oracle/<label>/answers/` (oracle rows)
+  or `.cache/llm/` (API rows).  Only code-generation prompts are in the
+  artifacts; the extraction call(s) the row's usage also counts leave no
+  prompt, and `CELL.md` says how many.  An oracle answer file stores only
+  the reply, so for a row whose artifacts directory is gone the prompt is
+  recoverable only from a request still under `pending/` (matched on the
+  entry's claim names and the mode's prompt section, marked
+  "reconstructed"); otherwise the cell is listed as partial with what is
+  missing.
+* **Scoring is recomputed, not copied.** `scoring.json` re-runs
+  `ResultComparator.compare_all` on the final stdout's `RESULT:` lines
+  against the catalog's pinned claims in the row's mode (the same
+  conversion and comparator `score_reproduction` uses) and flags any claim
+  whose verdict differs from the row — which happens only if the catalog
+  or the comparator changed after the run.
+* **Size and safety.** Text only.  A file over 2 MB is listed with its
+  size, not copied; data files (`.dta`, `.csv`, `.rds`, …), binaries and
+  anything under a `mount/` directory are never copied.  A paper text
+  embedded verbatim in a prompt is replaced by `[paper text:
+  <entry>/paper.txt, N chars, sha256 …]`; agent prompts point at the
+  paper file by path, and `prompt/paper.txt.ref` names the stored copy.
+  Machine-specific absolute paths are rewritten in every file written:
+  the repository root (found from the module's location, plus the main
+  checkout when that is an agent worktree, plus `--source-root`) becomes
+  `<repo>`, `…/.claude/worktrees/agent-*/` becomes `<worktree>/`, a
+  `/private/tmp/claude-<uid>/…/scratchpad/` path `<scratch>/`, and any
+  other home-directory path `<home>/`.  Nothing else is stripped: stdout
+  can hold data summaries, exactly as the model saw them.
+* **REPORT.md** lists the paper and its pinned claims with the I4R
+  replicator values, a mode × reproducer matrix of pass counts (one entry
+  per run, linking each `CELL.md`), and a "what to hand-check" list: the
+  claims closest to their band edge (|error| / band nearest 1), every
+  declared deviation (with the claims it names), the claims where the
+  pipeline and the agent disagree in the same mode, and any re-score that
+  differs from its row.
+
 ## Plugging in another agent
 
 The harness talks to an agent only through the protocol in

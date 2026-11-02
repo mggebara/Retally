@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "montero-2022-cooperative-property-rights",
+  "mode": "blind",
+  "run_id": "2026-11-01-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Interquartile range computed per property pooling all survey rounds (Stata type-2 quantiles), properties with >=5 surveyed workers in the bandwidth sample; one observation per property. Because one observation per property cannot carry survey-round FE directly, columns 3-4 use FE for the property's modal survey round (fixest dropped 2 singletons at 150 ha, N=26 of 28 eligible properties).",
+    "All survey years in the provided file (2000-2013) kept, although the paper text says 2002-2013; the data file is the authors' constructed analysis sample."
+  ],
+  "notes": "Two exploratory runs (variable listing; running-variable/sample checks; no RESULT lines), then one estimation run that is the final. Levels: feols(hh_income_pc ~ Above500 + norm_dist + norm_dist:Above500 | year), |norm_dist| <= bandwidth (300 or 150 ha, inclusive), SEs clustered by former owner (Expropretario_ISTA). norm_dist equals own_amt - 500 and Above500 = 1(norm_dist >= 0). Clusters reported are former owners in the worker-level samples (99 at 300 ha, 36 at 150 ha). The IQR estimates are fragile: without the modal-round FE the Above500 coefficient changes sign (positive at both bandwidths), and their SEs are large. Outcome is nominal hh_income_pc (hh_inc_pc_real also exists in the file; the paper reports dollars per month, so nominal was used). README.pdf was not read.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T04:18:48Z",
+  "finished_at": "2026-11-02T04:21:30Z"
+}

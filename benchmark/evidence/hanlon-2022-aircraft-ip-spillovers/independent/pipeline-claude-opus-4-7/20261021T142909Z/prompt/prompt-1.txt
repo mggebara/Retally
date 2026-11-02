@@ -1,0 +1,185 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: NBER WORKING PAPER SERIES
+Abstract (first 500 chars): Can strengthening intellectual property (IP) protection for producers of one good affect 
+innovation in other related goods? To answer this question, we exploit a unique policy 
+experiment in the interwar military aircraft industry. Airframe designs had little IP protection 
+before 1926, but changes passed by Congress in 1926 provided airframe manufacturers with 
+enhanced property rights over new designs. We show that granting property rights to air-frame 
+producers increased innovation in airfr
+Methodology Summary: # Methodology Summary
+
+**Research design / identification strategy:**
+- Natural experiment exploiting the 1926 Air Corps Act, which gave US airframe producers de facto IP protection (via negotiated procurement contracts) while leaving aero-engine IP protection unchanged. The authors use a pre/post 1926 comparison within the US, plus a difference-in-differences-style comparison between the US and the UK (and, where data allow, Germany, Italy, Japan).
+
+**Sample and data construction:**
+- Near-universe of military airframe models and matched aero-engines, 1918–1935, hand-collected from aircraft reference books. Observation = a new airframe model (including sub-variants, e.g., PW-9A, PW-9B) or engine design.
+- Analysis restricted primarily to **fighters and bombers**, because these are high-performance segments most distinct from civilian aircraft and where performance metrics are most meaningful. Other segments (e.g., reconnaissance) relegated to the appendix.
+
+**Outcome variables (direct performance measures, used instead of patents since patents are endogenous to the IP regime):**
+- Airframes: **wing load** (gross weight / wing area) — preferred measure; also **maximum speed** (mph).
+- Aero-engines: **horsepower / engine weight**, **horsepower / displacement (liters)**, **horsepower / frontal area (sq. in.)**.
+- Supplementary outcomes: development of new liquid-cooled engines, vintage gap between engines and the airframes they power, and merger activity between airframe and engine firms.
+
+**Specification / estimation:**
+- Primary evidence is graphical (time-series plots of performance metrics for US vs. comparison countries, pre- vs. post-1926). The paper does not describe a formal regression with fixed effects, clustered SEs, or a headline coefficient of interest in the excerpt provided — identification rests on visual pre/post and US-vs-UK comparisons around the 1926 break.
+- Theoretical model: static one-period partial-equilibrium model with Bertrand competition (no IP) vs. Nash-in-Nash monopolist–monopsonist bargaining (with IP); used to derive testable predictions (Propositions 1–4) rather than to structurally estimate.
+
+**Variables excluded due to data limitations:**
+- Airframe and engine prices, and firm profits (not consistently available), so analysis relies on physical performance characteristics.
+
+**Robustness / alternative-mechanism checks discussed:**
+- Rule out confounds from the 1925 Air Mail Act and 1926 Air Commerce Act by noting military dominated high-performance segment (military spending $88M vs. civilian $55M, 1926–1936; much higher unit values and horsepower).
+- Rule out common technology-frontier shocks via cross-country comparison, aided by the fact that NACA budget growth shows no 1926 break (Appendix Figure B3) and research was internationally disseminated.
+- Test merger prediction (Proposition 4) via firm-history analysis of vertical-complement mergers between airframe and engine producers.
+
+## Claims to Reproduce
+1. airframe_wingload_trend_before_1926_us: 0.013 (log points per year) [type: coefficient]
+   Location: Table 1, column 1 (United States Only, Wing Load), Before 1926 x year x US
+   Context: Table 1 ("Results for Airframe Innovation Before and After 1926"), column 1, row Before 1926 x year x US. OLS of equation (4): the dependent variable is the log of wing load (airframe weight in pounds divided by wing area in square feet) for each new U.S. military fighter or bomber airframe model (an observation is the introduction of a new model, including new versions of existing designs, dated by year of first delivery; the paper's figures cover 1918-1935). The regressors are a two-piece linear spline in year with a knot at 1926, giving separate slopes before and after 1926 while keeping th…
+2. airframe_wingload_trend_after_1926_us: 0.074 (log points per year) [type: coefficient]
+   Location: Table 1, column 1 (United States Only, Wing Load), After 1926 x year x US
+   Context: Table 1, column 1, row After 1926 x year x US: the after-1926 slope of the same U.S.-only regression as airframe_wingload_trend_before_1926_us (log wing load of U.S. fighter and bomber models on a continuous two-piece linear spline in year with a knot at 1926 plus a constant; robust standard errors).
+3. airframe_maxspeed_trend_before_1926_us: -0.001 (log points per year) [type: coefficient]
+   Location: Table 1, column 2 (United States Only, Maximum Speed), Before 1926 x year x US
+   Context: Table 1, column 2, row Before 1926 x year x US. Same U.S.-only specification as airframe_wingload_trend_before_1926_us (equation (4): two-piece linear spline in year, knot at 1926, plus a constant; robust standard errors) with the log of maximum speed in miles per hour as the dependent variable, for U.S. fighter and bomber airframe models. Before-1926 slope.
+4. airframe_maxspeed_trend_after_1926_us: 0.067 (log points per year) [type: coefficient]
+   Location: Table 1, column 2 (United States Only, Maximum Speed), After 1926 x year x US
+   Context: Table 1, column 2, row After 1926 x year x US: the after-1926 slope of the U.S.-only log maximum speed regression described in airframe_maxspeed_trend_before_1926_us.
+5. airframe_wingload_trend_before_1926_us_vs_uk: 0.004 (log points per year) [type: coefficient]
+   Location: Table 1, column 3 (Comparison of US and UK, Wing Load), Before 1926 x year x US
+   Context: Table 1, column 3, row Before 1926 x year x US. OLS of equation (5) on pooled U.S. and U.K. military fighter and bomber airframe models; dependent variable the log of wing load. The coefficients of interest are the two pieces of a linear spline in year (knot at 1926) interacted with an indicator for the United States, measuring the rate of innovation in the United States relative to the United Kingdom before and after 1926. Other terms: a constant, an indicator for the United States, and a linear spline (same knot) for the comparison country (the United Kingdom). No engine controls. Robust sta…
+6. airframe_wingload_trend_after_1926_us_vs_uk: 0.025 (log points per year) [type: coefficient]
+   Location: Table 1, column 3 (Comparison of US and UK, Wing Load), After 1926 x year x US
+   Context: Table 1, column 3, row After 1926 x year x US: the after-1926 U.S. relative slope of the pooled U.S.-U.K. log wing load regression described in airframe_wingload_trend_before_1926_us_vs_uk.
+7. airframe_maxspeed_trend_before_1926_us_vs_uk: -0.028 (log points per year) [type: coefficient]
+   Location: Table 1, column 4 (Comparison of US and UK, Maximum Speed), Before 1926 x year x US
+   Context: Table 1, column 4, row Before 1926 x year x US. Same pooled U.S.-U.K. specification as airframe_wingload_trend_before_1926_us_vs_uk (equation (5): spline in year with knot at 1926 interacted with a U.S. indicator, plus a constant, a U.S. indicator and the U.K. spline; no engine controls; robust standard errors) with the log of maximum speed in miles per hour as the dependent variable. Before-1926 relative slope.
+8. airframe_maxspeed_trend_after_1926_us_vs_uk: 0.031 (log points per year) [type: coefficient]
+   Location: Table 1, column 4 (Comparison of US and UK, Maximum Speed), After 1926 x year x US
+   Context: Table 1, column 4, row After 1926 x year x US: the after-1926 U.S. relative slope of the pooled U.S.-U.K. log maximum speed regression described in airframe_maxspeed_trend_before_1926_us_vs_uk.
+9. engine_hp_per_weight_trend_before_1926_us: 0.039 (log points per year) [type: coefficient]
+   Location: Table 4, column 1 (United States Only, HP / Weight), Before 1926 x year x US
+   Context: Table 4 ("Results for Aero-Engine Innovation Before and After 1926"), column 1, row Before 1926 x year x US. OLS on U.S. aero-engines used in military fighter and bomber aircraft, with a specification similar to equation (4): the dependent variable is the log of horsepower divided by engine weight in pounds; the regressors are a two-piece linear spline in year with a knot at 1926 (continuous level), a constant, and an indicator for whether the engine is liquid-cooled. Robust standard errors. Before-1926 slope.
+10. engine_hp_per_weight_trend_after_1926_us: -0.01 (log points per year) [type: coefficient]
+   Location: Table 4, column 1 (United States Only, HP / Weight), After 1926 x year x US
+   Context: Table 4, column 1, row After 1926 x year x US: the after-1926 slope of the U.S.-only log horsepower-per-pound regression described in engine_hp_per_weight_trend_before_1926_us (the paper's evidence that aero-engine performance growth slowed after 1926).
+11. observations_airframe_wingload_us: 116.0 (airframe models) [type: other]
+   Location: Table 1, column 1, observations
+   Context: Number of observations in Table 1 column 1: new U.S. military fighter and bomber airframe models with wing load observed, the sample of the U.S.-only log wing load regression.
+12. observations_engine_us: 85.0 (aero-engines) [type: other]
+   Location: Table 4, column 1, observations
+   Context: Number of observations in Table 4 column 1: U.S. aero-engines used in fighters and bombers with horsepower per pound observed, the sample of the U.S.-only engine regression.
+
+## Dataset Information
+Name: hanlon-2022-aircraft-ip-spillovers
+Local path: <repo>/.cache/datasets/hanlon_2022_aircraft_ip_spillovers.script-free
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- 3 replication files/data/dta/airframe_data.dta (102.3 KB) — 793 rows, 24 columns: year, country, maxspeed, wing_area, wingload, grossweight, enginehp, no_engines, count, engine_maker, ln_wingload, ln_maxspeed, powerload, ln_powerload, twoplusengines, type, cruise, climb_ft_per_min, climb_to_10000, ceiling, range, endurance, ln_ceiling, ln_cruise
+- 3 replication files/data/dta/engine_data.dta (17.5 KB) — 278 rows, 8 columns: country, year, liquid_cooled, count, ln_hp_per_frontal, ln_hp_per_disp, ln_hp_per_lbs, ln_hp_per_disp_rpm
+- 3 replication files/data/dta/engine_data_fahey.dta (12.1 KB) — 249 rows, 6 columns: country, year, liquid_cooled, ln_hp_per_disp, ln_hp_per_lbs, ln_hp_per_disp_rpm
+- 3 replication files/data/dta/vintage_data.dta (11.1 KB) — 330 rows, 4 columns: year, country, firstyear, type
+- 1 paper/MS20201110_accepted.pdf (2.8 MB)
+- 1 paper/MS20201110_main.pdf (460.4 KB)
+- 1 paper/MS20201110_online_appendix.pdf (1.7 MB)
+- 1 paper/OUP-EJ.cls (29.7 KB)
+- 1 paper/aircraft_master.bib (24.4 KB)
+- 1 paper/ejbib.bst (33.3 KB)
+- 1 paper/figures/Figure1A.eps (33.4 KB)
+- 1 paper/figures/Figure1B.eps (36.5 KB)
+- 1 paper/figures/Figure2A.eps (30.3 KB)
+- 1 paper/figures/Figure2B.eps (29.6 KB)
+- 1 paper/figures/Figure2C.eps (30.2 KB)
+- 2 appendix/MS20201110_online_appendix.pdf (2.0 MB)
+- 3 replication files/ReadMe.pdf (27.3 KB)
+- 3 replication files/data/raw/Appendix_Engine_HHI.csv (532 B) — columns: ﻿year,hhi_engine,hhi_horsepower
+- 3 replication files/data/raw/Appendix_Engine_Maker.csv (1.9 KB) — columns: year,count_Curtiss,count_Lawrance,count_Others,count_PW,count_Packard,count_Wright,no_engines_Curtiss,no_engines_Lawrance,no_engines_Others,no_engines_PW,no_engines_Packard,no_engines_Wright,engine_hp_Curtiss,engine_hp_Lawrance,engine_hp_Ot…
+- 3 replication files/data/raw/Appendix_Firm_Boeing.csv (4.1 KB) — columns: ﻿model,family,count,year,maxspeed,wing_load,buyer_type,military
+- 3 replication files/data/raw/Appendix_Firm_Curtiss.csv (7.5 KB) — columns: ﻿model,family,count,year,maxspeed,wing_load,buyer_type,military
+- 3 replication files/data/raw/Appendix_Firm_Douglas.csv (4.6 KB) — columns: ﻿model,family,count,year,maxspeed,wing_load,buyer_type,military
+- 3 replication files/data/raw/Appendix_NACA_Budget.csv (211 B) — columns: ﻿year,naca
+- 3 replication files/data/raw/Appendix_Unit_Values.csv (411 B) — columns: ﻿year,military,civil
+- 3 replication files/data/raw/JANES_engine_data.csv (95.6 KB) — columns: yr_introduced,country,company,engine,military,cylinder,diesel,cooling,displ,weightlbs,hpnormal,rpm,hpaltitude,fuel_per_hp_hour,comments,hp_per_lbs,notes,hp_per_displ
+- 3 replication files/data/raw/JAPAN_data.csv (35.1 KB) — columns: branch,company,location,model,count,year,own_design,type,figher_type,engine_maker,engine_type,no_engines,engine_hp,wing_areasqm,emptyweightkg,grossweightkg,maxspeedkt,cruisekt,climb_to_3000,rangenm,endurance,ceiling,bomb_load_kg,wing_area,e…
+- 3 replication files/data/raw/UK_data.csv (37.9 KB) — columns: ﻿uk_airframe_id,Branch,Company,Location,Model,Count,Year,Own_design,Type,Fighter_type,Wings,Material,Engine_maker,Engine_type,No_engines,Engine_HP,Wing_area,Empty weight,Gross weight,Max speed,Cruise,Climb_ft_per_min,Climb_to_10000,Range,En…
+- 3 replication files/data/raw/US_data1.csv (315.7 KB)
+- 3 replication files/data/raw/US_data2.csv (29.2 KB)
+- 3 replication files/data/raw/airframe_data_appendix.csv (10.0 KB)
+- 3 replication files/data/raw/engine_data_appendix.csv (46.3 KB)
+- 3 replication files/data/raw/firm_level_data.csv (84.6 KB)
+- 3 replication files/data/raw/patent_data_appendix.csv (33.3 KB)
+- 3 replication files/data/raw/prepared_atc_data.csv (52.1 KB)
+- 3 replication files/figures/Appendix/FigureA1_Appendix_Theory.pdf (31.6 KB)
+- 3 replication files/figures/Appendix/FigureB1_Appendix_Patents.pdf (50.6 KB)
+- 3 replication files/figures/Appendix/FigureB2_Appendix_Unit_Values.pdf (12.2 KB)
+- 3 replication files/figures/Appendix/FigureB3_Appendix_NACA_Budget.pdf (9.4 KB)
+- 3 replication files/figures/Appendix/FigureB4_Appendix_MarketShare.pdf (24.1 KB)
+- 3 replication files/figures/Appendix/FigureB5_Appendix_HHI_Engine.pdf (15.2 KB)
+- 3 replication files/figures/Appendix/FigureB5_Appendix_HHI_Horsepower.pdf (15.7 KB)
+- 3 replication files/figures/Appendix/FigureE1_Appendix_Correlation.pdf (112.0 KB)
+- 3 replication files/figures/Appendix/FigureE2_Appendix_ATC.pdf (37.7 KB)
+- 3 replication files/figures/Appendix/FigureE3_Appendix_Penalized_PanelA.pdf (15.7 KB)
+- 3 replication files/figures/Appendix/FigureE3_Appendix_Penalized_PanelB.pdf (16.3 KB)
+- 3 replication files/figures/Appendix/FigureE4_Appendix_Boeing_PanelA.pdf (36.5 KB)
+- 3 replication files/figures/Appendix/FigureE4_Appendix_Curtiss_PanelB.pdf (43.0 KB)
+- 3 replication files/figures/Appendix/FigureE4_Appendix_Douglas_PanelC.pdf (35.2 KB)
+- 3 replication files/figures/Appendix/FigureF2_US_airframe.jpg (146.3 KB)
+- 3 replication files/figures/Appendix/FigureF2_US_engine.jpg (89.6 KB)
+- 3 replication files/figures/Appendix/FigureF3_British.jpg (221.9 KB)
+- 3 replication files/figures/Figure1A.eps (33.4 KB)
+- 3 replication files/figures/Figure1B.eps (36.5 KB)
+- 3 replication files/figures/Figure2A.eps (30.3 KB)
+- 3 replication files/figures/Figure2B.eps (29.6 KB)
+- 3 replication files/figures/Figure2C.eps (30.2 KB)
+- 3 replication files/tables/Appendix/TableD1_Appendix_Designs.jpg (492.9 KB)
+- 3 replication files/tables/Appendix/TableE1_robust_airframes_Fstat.tex (131 B)
+- 3 replication files/tables/Appendix/TableE1_robust_airframes_obs.tex (131 B)
+- 3 replication files/tables/Appendix/TableE1_robust_airframes_pval.tex (131 B)
+- 3 replication files/tables/Appendix/TableE1_robust_airframes_reg.tex (524 B)
+- 3 replication files/tables/Appendix/TableE2_robust_airframes_break_Fstat.tex (131 B)
+- 3 replication files/tables/Appendix/TableE2_robust_airframes_break_obs.tex (131 B)
+- 3 replication files/tables/Appendix/TableE2_robust_airframes_break_pval.tex (131 B)
+- 3 replication files/tables/Appendix/TableE2_robust_airframes_break_reg.tex (1.8 KB)
+- 3 replication files/tables/Appendix/TableE3_robust_engines_Fstat.tex (131 B)
+- 3 replication files/tables/Appendix/TableE3_robust_engines_obs.tex (131 B)
+- 3 replication files/tables/Appendix/TableE3_robust_engines_pval.tex (131 B)
+- 3 replication files/tables/Appendix/TableE3_robust_engines_reg.tex (524 B)
+- 3 replication files/tables/Appendix/TableE4_robust_engines_break_Fstat.tex (120 B)
+- 3 replication files/tables/Appendix/TableE4_robust_engines_break_obs.tex (120 B)
+- 3 replication files/tables/Appendix/TableE4_robust_engines_break_pval.tex (120 B)
+- 3 replication files/tables/Appendix/TableE4_robust_engines_break_reg.tex (1.6 KB)
+- 3 replication files/tables/Appendix/TableE5_military-civil-obs.tex (93 B)
+- 3 replication files/tables/Appendix/TableE5_military-civil-reg.tex (186 B)
+- 3 replication files/tables/Appendix/TableF1_match_boeing.tex (111 B)
+- 3 replication files/tables/Appendix/TableF1_match_curtiss.tex (111 B)
+- 3 replication files/tables/Appendix/TableF1_match_other.tex (111 B)
+- 3 replication files/tables/Table1_F.tex (131 B)
+- 3 replication files/tables/Table1_N.tex (131 B)
+- … and 10 more files (listing truncated)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/hanlon_2022_aircraft_ip_spillovers.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Independent Reproduction
+This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's description alone.  The authors' own analysis code is deliberately withheld.  Do NOT open, read, source, or execute any script files that may appear in the dataset directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, and similar) — load data files only.  Derive the estimating equation, sample restrictions, fixed effects, and standard-error clustering from the paper information and claims above.
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

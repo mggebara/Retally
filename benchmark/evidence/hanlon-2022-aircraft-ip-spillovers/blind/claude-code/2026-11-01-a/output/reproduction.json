@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "hanlon-2022-aircraft-ip-spillovers",
+  "mode": "blind",
+  "run_id": "2026-11-01-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was exploratory (it inspected variables and counts in airframe_data.dta and engine_data.dta and printed no RESULT lines). Final run: airframes restricted to type in {fighter, bomber}, 1918-1935. The spline is continuous with pieces min(year,1926) and max(year-1926,0), as in Stata mkspline without the marginal option, so each coefficient is the slope inside its segment. Eq. (4): log outcome on the two pieces plus a constant, US only. Eq. (5): pooled US+UK, with a common spline as the UK baseline, a US indicator and the US-interacted pieces, so the US coefficients are slopes relative to the UK. Table 4 col 1: US rows of engine_data.dta (85 rows with ln_hp_per_lbs; the file looks pre-aggregated to fighter/bomber engines and has no type variable, so all US rows were used), with the pieces plus liquid_cooled. HC1 robust SEs via fixest; there are no weights. Only data files were loaded; no scripts, .tex, logs or PDFs from the mount were opened. Disclosure: when I printed paper.txt lines 755-900 plus 1055-1075 to read the method, the output included one stray line of three integers from the garbled Table 1 block (its observations row). That happened before any estimation. The specification was fixed from the method text alone and was not adjusted afterwards. Only one scored run was made.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T04:15:00Z",
+  "finished_at": "2026-11-02T04:21:00Z"
+}
