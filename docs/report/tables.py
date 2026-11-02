@@ -76,12 +76,17 @@ RUN2_LABEL = "desktop-opus-run2"
 # ROADMAP 3.5 ("Agent second sample"; run id ``2026-11-01-a``) and the four of
 # 3.6 (ROADMAP 3.7; run id ``2026-11-02-b``).  Kept out of ``RAW`` for the same
 # reason; it feeds only the ``variance_agent`` tables and the probe comparison.
-# Seeded was not rerun.
 AGENT_RUN2_FILE = "claude-code-run2-13papers-indep-blind-2026-11-01.json"
 AGENT_RUN2_NEW_FILE = "claude-code-run2-4papers-indep-blind-2026-11-02.json"
 # ... and the six of 3.7 (run id ``2026-11-02-b``), so the agent has two samples on all 23.
 AGENT_RUN2_SIX_FILE = "claude-code-run2-6papers-indep-blind-2026-11-02.json"
-AGENT_RUN2_MODES = ("independent", "blind")
+# Seeded mode on all 23 papers (ROADMAP 3.7.2; run id ``2026-11-02-b``), so the agent,
+# like the pipeline, has two samples of every cell.
+AGENT_RUN2_SEEDED_FILE = "claude-code-run2-23papers-seeded-2026-11-02.json"
+AGENT_RUN2_MODES = ("seeded", "independent", "blind")
+# The modes with two agent samples when ROADMAP 3.7 and 3.7.1 were written (their checks quote "—"
+# for the agent's seeded sample 2).
+AGENT_RUN2_MODES_37 = ("independent", "blind")
 # Memorisation probe (ROADMAP 3.5, "Memorisation probe"; ``benchmark/probe.py``),
 # re-scored over all 23 evaluation papers (ROADMAP 3.6, 3.7).  Its rows for the
 # earlier papers are identical to the earlier files'.
@@ -275,7 +280,12 @@ for _r in (
 assert {e for e, _m in RUN2} == set(HOLDOUT) and len(RUN2) == len(HOLDOUT) * len(MODES)
 
 AGENT2: dict[tuple[str, str], dict[str, Any]] = {}
-for _r in load_rows(AGENT_RUN2_FILE) + load_rows(AGENT_RUN2_NEW_FILE) + load_rows(AGENT_RUN2_SIX_FILE):
+for _r in (
+    load_rows(AGENT_RUN2_FILE)
+    + load_rows(AGENT_RUN2_NEW_FILE)
+    + load_rows(AGENT_RUN2_SIX_FILE)
+    + load_rows(AGENT_RUN2_SEEDED_FILE)
+):
     assert metrics.reproducer_of(_r) == AGENT and not _r.get("skipped"), _r["entry_id"]
     _key = (_r["entry_id"], metrics.mode_of(_r))
     assert _key[1] in AGENT_RUN2_MODES and _key not in AGENT2, f"unexpected agent run2 cell {_key}"
@@ -1030,13 +1040,15 @@ def t_variance_agent() -> str:
             ]
         )
     return (
-        "Two samples of the agent over all 23 evaluation papers, in the two modes the agent was rerun in, "
-        "against the pipeline on Opus 5.5, which has two samples on all 23 (claims within tolerance of "
-        "the paper's printed value).  "
+        "Two samples of the agent over all 23 evaluation papers in every mode, against the pipeline on "
+        "Opus 5.5, which also has two samples on all 23 (claims within tolerance of the paper's printed "
+        "value).  "
         "*Agent sample 1* is the row used everywhere else in this report (ROADMAP 3.3, 3.4, 3.6, 3.7); "
-        f"*agent sample 2* is a second Claude Code run (`{AGENT_RUN2_FILE}` for the 13 earlier papers, "
-        f"`{AGENT_RUN2_NEW_FILE}` for the four of ROADMAP 3.6, `{AGENT_RUN2_SIX_FILE}` for the six of "
-        "ROADMAP 3.7).  The pipeline samples are those of the table above.  *Cells identical*, *mean* "
+        "*agent sample 2* is a second Claude Code run: in independent and blind mode "
+        f"`{AGENT_RUN2_FILE}` for the 13 earlier papers, `{AGENT_RUN2_NEW_FILE}` for the four of "
+        f"ROADMAP 3.6 and `{AGENT_RUN2_SIX_FILE}` for the six of ROADMAP 3.7; in seeded mode "
+        f"`{AGENT_RUN2_SEEDED_FILE}` for all 23 (ROADMAP 3.7.2).  The pipeline samples are those of "
+        "the table above.  *Cells identical*, *mean* "
         "and *max abs. diff* compare the two agent samples cell by cell; the last column is the "
         "smallest and largest of the agent-minus-pipeline differences over the four pairings (each agent "
         "sample against each pipeline sample).\n\n"
@@ -1054,7 +1066,7 @@ def t_variance_agent_cells() -> str:
         out.append([f"`{short(e)}`", m, n, a1, a2, f"**{d}**" if d else "0", p1, "—" if p2 is None else p2])
     out.sort(key=lambda r: (r[0], AGENT_RUN2_MODES.index(r[1])))
     return (
-        "Per paper, independent and blind mode: final claims within tolerance in each agent sample, "
+        "Per paper and mode: final claims within tolerance in each agent sample, "
         "their absolute difference (bold where non-zero), and the two pipeline samples.\n\n"
         + table(hdr, out, ["l", "l", "r", "r", "r", "r", "r", "r"])
     )
@@ -2023,7 +2035,7 @@ def _roadmap_37_checks() -> list[tuple[str, str, str, str, str]]:
 def _roadmap_371_checks() -> list[tuple[str, str, str, str, str]]:
     """ROADMAP 3.7.1: the pipeline's second sample on the six papers of 3.7 and the 23-paper ranges."""
     text = (REPO / "ROADMAP.md").read_text()
-    sec = text.split("\n### 3.7.1")[1].split("\n---\n")[0]
+    sec = text.split("\n### 3.7.1")[1].split("\n### 3.7.2")[0].split("\n---\n")[0]
     out: list[tuple[str, str, str, str, str]] = []
     src = "3.7.1"
 
@@ -2112,7 +2124,7 @@ def _roadmap_371_checks() -> list[tuple[str, str, str, str, str]]:
         p1 = sum(passed(cell(P55_ALL, e, mode) or {}) for e in HOLDOUT)
         p2 = sum(passed(RUN2[(e, mode)]) for e in HOLDOUT)
         a1 = sum_passed(AGENT, HOLDOUT, mode)[0]
-        a2 = sum(passed(AGENT2[(e, mode)]) for e in HOLDOUT) if mode in AGENT_RUN2_MODES else None
+        a2 = sum(passed(AGENT2[(e, mode)]) for e in HOLDOUT) if mode in AGENT_RUN2_MODES_37 else None
         out += [
             (src, "23 papers", f"{mode} agent 1", m.group(2), str(a1)),
             (src, "23 papers", f"{mode} agent 2", m.group(3), "—" if a2 is None else str(a2)),
@@ -2124,7 +2136,7 @@ def _roadmap_371_checks() -> list[tuple[str, str, str, str, str]]:
             ("17", SEVENTEEN, m.group(8), m.group(9)),
             ("6", NEW_SIX, m.group(10), m.group(11)),
         ):
-            if mode in AGENT_RUN2_MODES:
+            if mode in AGENT_RUN2_MODES_37:
                 sv = _agent_variance_stats(mode, entries)
                 assert sv["p2"] is not None, (label, mode)
                 rng = f"{sv['gap_lo']}–{sv['gap_hi']}"
@@ -2156,6 +2168,136 @@ def _roadmap_371_checks() -> list[tuple[str, str, str, str, str]]:
         (src, "pipeline samples 1 vs 2, 23 papers", "mean abs. diff", "1.07", f"{_vs[5] / len(_all):.2f}"),
         (src, "pipeline samples 1 vs 2, 23 papers", "max abs. diff", "6", str(_vs[6])),
     ]
+    return out
+
+
+def _roadmap_372_checks() -> list[tuple[str, str, str, str, str]]:
+    """ROADMAP 3.7.2: the agent's seeded second sample on all 23 papers and the four-pairing ranges."""
+    text = (REPO / "ROADMAP.md").read_text()
+    sec = text.split("\n### 3.7.2")[1].split("\n---\n")[0]
+    out: list[tuple[str, str, str, str, str]] = []
+    src = "3.7.2"
+    mode = "seeded"
+
+    def rng(lo: int, hi: int) -> str:
+        return f"{lo} to {hi}".replace("-", "−")
+
+    pat = re.compile(r"^\| ([^|*]+?) \| (\d+) \| (\d+) \((\d+)\) → (\d+) \((\d+)\) \|$")
+    n_rows = 0
+    for line in sec.splitlines():
+        m = pat.match(line.strip())
+        if not m:
+            continue
+        n_rows += 1
+        e = ENTRY_BY_SHORT[ROADMAP_NAMES[m.group(1).lower()]]
+        a1, a2 = cell(AGENT, e, mode), AGENT2[(e, mode)]
+        assert a1 is not None, e
+        for what, q, rc in (
+            ("n", m.group(2), str(total(a1))),
+            ("sample 1 final", m.group(3), str(passed(a1))),
+            ("sample 1 first scored", m.group(4), str(fs(a1))),
+            ("sample 2 final", m.group(5), str(passed(a2))),
+            ("sample 2 first scored", m.group(6), str(fs(a2))),
+        ):
+            out.append((src, f"{short(e)} seeded", what, q, rc))
+    assert n_rows == len(HOLDOUT), n_rows
+
+    s1 = sum_passed(AGENT, HOLDOUT, mode)
+    rs2 = [AGENT2[(e, mode)] for e in HOLDOUT]
+    tm = re.search(
+        r"\| \*\*Total, 23 papers\*\* \| (\d+) \| \*\*(\d+)\*\* \((\d+)\) → \*\*(\d+)\*\* \((\d+)\) \|", sec
+    )
+    assert tm, "3.7.2 total row"
+    out += [
+        (src, "agent seeded, 23 papers", "claims", tm.group(1), str(s1[1])),
+        (src, "agent seeded, 23 papers", "sample 1 final", tm.group(2), str(s1[0])),
+        (src, "agent seeded, 23 papers", "sample 1 first scored", tm.group(3), str(s1[2])),
+        (src, "agent seeded, 23 papers", "sample 2 final", tm.group(4), str(sum(passed(r) for r in rs2))),
+        (
+            src,
+            "agent seeded, 23 papers",
+            "sample 2 first scored",
+            tm.group(5),
+            str(sum(fs(r) or 0 for r in rs2)),
+        ),
+    ]
+    st = _agent_variance_stats(mode, HOLDOUT)
+    pc = _variance_stats(_variance_cells(mode, HOLDOUT))
+    moved = sum(1 for e in HOLDOUT if fs(cell(AGENT, e, mode) or {}) != fs(AGENT2[(e, mode)]))
+    out += [
+        (
+            src,
+            "agent seeded cells identical, 23 papers",
+            "final",
+            "22 of 23",
+            f"{st['same']} of {st['cells']}",
+        ),
+        (src, "agent seeded, 23 papers", "mean abs. diff", "0.48", f"{st['mean']:.2f}"),
+        (src, "agent seeded, 23 papers", "max abs. diff", "11", str(st["max"])),
+        (
+            src,
+            "pipeline seeded cells identical, 23 papers",
+            "final",
+            "19 of 23",
+            f"{pc[4]} of {len(HOLDOUT)}",
+        ),
+        (src, "agent seeded, first scored moved", "cells", "5", str(moved)),
+    ]
+    for label, entries, q in (
+        ("6 (3.7 set)", NEW_SIX, "77 → 77"),
+        ("4 (3.6 set)", NEW_FOUR, "47 → 47"),
+        ("13 earlier", THIRTEEN, "153 → 142"),
+    ):
+        sv = _agent_variance_stats(mode, entries)
+        out.append((src, f"agent seeded, {label}", "sample 1 → 2", q, f"{sv['a1']} → {sv['a2']}"))
+    for label, entries, q in (("13 earlier", THIRTEEN, "−10 to 4"), ("4 (3.6 set)", NEW_FOUR, "2 to 4")):
+        sv = _agent_variance_stats(mode, entries)
+        out.append((src, f"seeded gap range, {label} papers", mode, q, rng(sv["gap_lo"], sv["gap_hi"])))
+    sv17 = _agent_variance_stats(mode, SEVENTEEN)
+    out.append(
+        (
+            src,
+            "seeded totals, 17 papers",
+            "agent 1 / agent 2 / pipeline 1 / pipeline 2",
+            "200 / 189 / 194 / 195",
+            f"{sv17['a1']} / {sv17['a2']} / {sv17['p1']} / {sv17['p2']}",
+        )
+    )
+
+    # The four-pairing range table: every mode, 23 papers, with the 17- and 6-paper ranges beside.
+    r = r"(−?\d+) to (−?\d+)"
+    rpat = re.compile(
+        r"^\| (seeded|independent|blind) \| (\d+) \| (\d+) \| (\d+) \| (\d+) \| "
+        rf"\*\*{r}\*\* \| {r} \| {r} \|$"
+    )
+    n_modes = 0
+    for line in sec.splitlines():
+        m = rpat.match(line.strip())
+        if not m:
+            continue
+        n_modes += 1
+        md = m.group(1)
+        sv = _agent_variance_stats(md, HOLDOUT)
+        for what, q, rc in (
+            ("agent 1", m.group(2), sv["a1"]),
+            ("agent 2", m.group(3), sv["a2"]),
+            ("pipeline 1", m.group(4), sv["p1"]),
+            ("pipeline 2", m.group(5), sv["p2"]),
+        ):
+            out.append((src, "23 papers", f"{md} {what}", q, str(rc)))
+        for label, entries, g in (("23", HOLDOUT, 6), ("17", SEVENTEEN, 8), ("6", NEW_SIX, 10)):
+            sv = _agent_variance_stats(md, entries)
+            quoted = f"{m.group(g)} to {m.group(g + 1)}"
+            out.append(
+                (
+                    src,
+                    f"gap range, {label} papers (four pairings)",
+                    md,
+                    quoted,
+                    rng(sv["gap_lo"], sv["gap_hi"]),
+                )
+            )
+    assert n_modes == len(MODES), n_modes
     return out
 
 
@@ -2407,14 +2549,15 @@ def t_discrepancies() -> str:
         + _roadmap_36_checks()
         + _roadmap_37_checks()
         + _roadmap_371_checks()
+        + _roadmap_372_checks()
     )
     bad = [c for c in checks if c[3] != c[4]]
     rows = [[f"ROADMAP {sec}", what, item, quoted, recomputed] for sec, what, item, quoted, recomputed in bad]
     return (
-        f"{len(checks)} numbers quoted in ROADMAP 3.2–3.7.1 (including the 3.5 variance pass, the "
+        f"{len(checks)} numbers quoted in ROADMAP 3.2–3.7.2 (including the 3.5 variance pass, the "
         "agent's second sample, the memorization probe, the four papers of 3.6, the six papers "
-        "and two-sample ranges of 3.7, and the pipeline's second sample and 23-paper ranges of "
-        "3.7.1) were "
+        "and two-sample ranges of 3.7, the pipeline's second sample and 23-paper ranges of "
+        "3.7.1, and the agent's seeded second sample and four-pairing ranges of 3.7.2) were "
         "recomputed from the results files; "
         f"{len(bad)} differ.\n\n"
         + (
