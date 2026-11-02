@@ -209,7 +209,8 @@ def _headline_counts(results: list[dict[str, Any]]) -> dict[str, int]:
 def _transient_summary(results: list[dict[str, Any]]) -> str | None:
     """Headline note for rows that failed on transient errors, or None when there are none.
 
-    Transient rows (network, Anthropic billing / auth / rate-limit / outage;
+    Transient rows (network, Anthropic billing / auth / rate-limit / outage,
+    Docker daemon unavailable;
     see ``runner._transient_error_kind``) are not measurements and were not
     cached, so the report says so loudly instead of letting them read as
     pipeline failures.

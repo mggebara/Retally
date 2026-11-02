@@ -72,6 +72,7 @@ import urllib3.exceptions
 # helper and this module both reach into the sibling schema module.
 from benchmark import pricing
 from benchmark import schema as bschema
+from benchmark.docker_health import DockerUnavailable
 from benchmark.reproducer import (
     ComponentMetrics,
     MissingAPIKeyError,
@@ -795,13 +796,20 @@ _DOWNLOAD_FAILURE_PREFIX = "Failed to download dataset "
 dataset-fetch failure in."""
 
 
-# ``error_kind`` values.  The first four are transient (never cached).
+# ``error_kind`` values.  All but ``pipeline`` are transient (never cached).
 NETWORK_ERROR = "network"
 API_BILLING_ERROR = "api_billing"
 API_UNAVAILABLE_ERROR = "api_unavailable"
 API_AUTH_ERROR = "api_auth"
+DOCKER_UNAVAILABLE_ERROR = "docker_unavailable"
 PIPELINE_ERROR = "pipeline"
-TRANSIENT_ERROR_KINDS = (NETWORK_ERROR, API_BILLING_ERROR, API_UNAVAILABLE_ERROR, API_AUTH_ERROR)
+TRANSIENT_ERROR_KINDS = (
+    NETWORK_ERROR,
+    API_BILLING_ERROR,
+    API_UNAVAILABLE_ERROR,
+    API_AUTH_ERROR,
+    DOCKER_UNAVAILABLE_ERROR,
+)
 
 _CREDIT_EXHAUSTED_TEXT = "credit balance is too low"
 """Anthropic's 400 message when the account is out of credit.  Matched on
@@ -852,9 +860,12 @@ def _transient_error_kind(exc: BaseException) -> str | None:
     * ``api_unavailable``: an Anthropic rate limit (429), connection error
       or timeout, or any ``APIStatusError`` with status >= 500;
     * ``api_auth``: an Anthropic ``AuthenticationError`` (401) or
-      ``PermissionDeniedError`` (403).
+      ``PermissionDeniedError`` (403);
+    * ``docker_unavailable``: ``benchmark.docker_health.DockerUnavailable``,
+      the harness's daemon health check before a sandbox execution failed
+      (daemon stopped, wedged, or ``docker`` not on PATH).
 
-    These are about the account, the service or the network, not the paper.
+    These are about the account, the service, the network or the host, not the paper.
     Everything else — a parse failure, a generation error, a sandbox
     problem, an ordinary 400 for a malformed request — is a genuine outcome
     and stays cacheable.  (A script that crashes *inside* the sandbox never
@@ -864,6 +875,8 @@ def _transient_error_kind(exc: BaseException) -> str | None:
     cur: BaseException | None = exc
     while cur is not None and id(cur) not in seen:
         seen.add(id(cur))
+        if isinstance(cur, DockerUnavailable):
+            return DOCKER_UNAVAILABLE_ERROR
         kind = _anthropic_error_kind(cur)
         if kind is not None:
             return kind

@@ -39,6 +39,7 @@ from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Any, Protocol, runtime_checkable
 
+from benchmark.docker_health import HealthCheckedExecutor, check_docker_daemon
 from benchmark.strip_rule import (  # SCRIPT_* re-exported for existing callers
     SCRIPT_NAME_PATTERNS,  # noqa: F401
     SCRIPT_NAMES,  # noqa: F401
@@ -49,6 +50,7 @@ from benchmark.strip_rule import (  # SCRIPT_* re-exported for existing callers
     manifest_path,
     name_reason,
 )
+from retally.codegen.docker_executor import DockerExecutor, RDockerExecutor
 from retally.models import Claim, Dataset, DatasetReference, Language, ReproductionMode
 from retally.usage import UsageTracker
 
@@ -377,15 +379,39 @@ class PipelineReproducer:
     The pipeline already withholds the scripts from the prompt; this makes
     the withholding physical.  ``isolate_independent_scripts=False``
     restores the prompt-only behaviour.
+
+    When the pipeline's ``executor`` / ``r_executor`` is a Docker executor,
+    the daemon is health-checked (``benchmark.docker_health``) once before
+    the run starts, so no API calls are spent when Docker is already down,
+    and again before every sandbox execution, by wrapping those executors
+    for the duration of the call.  A failed check raises
+    ``DockerUnavailable``, which the runner records as the transient
+    ``docker_unavailable`` error kind.
     """
 
     name = "pipeline"
 
-    def __init__(self, pipeline: Any, *, isolate_independent_scripts: bool = True) -> None:
+    def __init__(
+        self,
+        pipeline: Any,
+        *,
+        isolate_independent_scripts: bool = True,
+        docker_check: Any = check_docker_daemon,
+    ) -> None:
         self.pipeline = pipeline
         self.isolate_independent_scripts = isolate_independent_scripts
+        self.docker_check = docker_check
+        """Zero-arg callable raising ``DockerUnavailable`` when the daemon does not answer."""
         self.last_usage: dict[str, Any] | None = None
         """Usage of the most recent ``reproduce`` call (set even when it raised)."""
+
+    def _docker_executor_attrs(self) -> list[str]:
+        """The pipeline's executor attributes that hold a Docker executor."""
+        return [
+            attr
+            for attr in ("executor", "r_executor")
+            if isinstance(getattr(self.pipeline, attr, None), (DockerExecutor, RDockerExecutor))
+        ]
 
     def reproduce(
         self,
@@ -396,6 +422,10 @@ class PipelineReproducer:
         claims: list[Claim] | None,
         reproduction_mode: ReproductionMode,
     ) -> Reproduction:
+        self.last_usage = None
+        docker_attrs = self._docker_executor_attrs()
+        if docker_attrs:
+            self.docker_check()  # fail fast, before any API call is paid for
         isolate = self.isolate_independent_scripts and reproduction_mode.withholds_code
         original_downloader = getattr(self.pipeline, "downloader", None)
         wrapper: _ScriptFreeDownloader | None = None
@@ -408,7 +438,9 @@ class PipelineReproducer:
         if not isinstance(tracker, UsageTracker):
             tracker = None
         before = tracker.snapshot() if tracker is not None else None
-        self.last_usage = None
+        original_executors = {attr: getattr(self.pipeline, attr) for attr in docker_attrs}
+        for attr, inner in original_executors.items():
+            setattr(self.pipeline, attr, HealthCheckedExecutor(inner, check=self.docker_check))
         try:
             report = self.pipeline.validate(
                 paper_source,
@@ -418,6 +450,8 @@ class PipelineReproducer:
                 reproduction_mode=reproduction_mode,
             )
         finally:
+            for attr, inner in original_executors.items():
+                setattr(self.pipeline, attr, inner)
             if isolate and original_downloader is not None:
                 self.pipeline.downloader = original_downloader
             if tracker is not None:
