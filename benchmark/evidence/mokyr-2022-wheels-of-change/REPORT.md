@@ -38,7 +38,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a) | [13/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a) |
+| `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) |
 | `pipeline-desktop-opus` | [13/13](seeded/pipeline-desktop-opus/20261102T142733Z/CELL.md) (20261102T142733Z) | [13/13](independent/pipeline-desktop-opus/20261102T142733Z/CELL.md) (20261102T142733Z) | [1/13](blind/pipeline-desktop-opus/20261102T141403Z/CELL.md) (20261102T141403Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
@@ -68,23 +68,26 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - First-stage F reported as an R translation of ivreg2's Kleibergen-Paap rk Wald F for one endogenous regressor and one excluded instrument: first-stage Wald statistic on msuit26mean with the unadjusted cluster (county_id) VCE, scaled by (N-K)/N*(G-1)/G. The squared cluster t-statistic with Stata's small-sample adjustment is printed as a diagnostic (not a RESULT).
 - [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) (13/13)
   - First-stage F reported as the county-clustered Wald F on the single excluded instrument (fixest ivwald1), consistent with the paper's statement that all regressions cluster at the county level; Table 3 notes mention heteroscedasticity-robust SEs, and the paper's exact F definition (e.g. Stata ivreg2 KP F with its small-sample corrections) is not stated.
+- [blind/claude-code/2026-11-02-b](blind/claude-code/2026-11-02-b/CELL.md) (13/13)
+  - First-stage F-statistics are cluster-robust (historical county) Wald F on the single excluded instrument (equivalent to Kleibergen-Paap Wald F); iid first-stage F values are printed as diagnostics but not scored.
+  - Latitude/longitude use the dataset's labelled 'latitude'/'longitude' variables (projected coordinates), not y1/x1 (degrees).
 
 ### Pipeline and agent disagree
 
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
-- blind: `first_stage_f_table3_col2` — pipeline 0/1, agent 1/1
-- blind: `first_stage_f_table3_col4` — pipeline 0/1, agent 1/1
-- blind: `first_stage_f_table3_col6` — pipeline 0/1, agent 1/1
-- blind: `watermills_iv_table3_col2` — pipeline 0/1, agent 1/1
-- blind: `watermills_iv_table3_col4` — pipeline 0/1, agent 1/1
-- blind: `watermills_iv_table3_col6` — pipeline 0/1, agent 1/1
-- blind: `watermills_ols_table3_col5` — pipeline 0/1, agent 1/1
-- blind: `watermills_table2_col1` — pipeline 0/1, agent 1/1
-- blind: `watermills_table2_col2` — pipeline 0/1, agent 1/1
-- blind: `watermills_table2_col3` — pipeline 0/1, agent 1/1
-- blind: `watermills_table2_col4` — pipeline 0/1, agent 1/1
-- blind: `watermills_table2_col5` — pipeline 0/1, agent 1/1
+- blind: `first_stage_f_table3_col2` — pipeline 0/1, agent 2/2
+- blind: `first_stage_f_table3_col4` — pipeline 0/1, agent 2/2
+- blind: `first_stage_f_table3_col6` — pipeline 0/1, agent 2/2
+- blind: `watermills_iv_table3_col2` — pipeline 0/1, agent 2/2
+- blind: `watermills_iv_table3_col4` — pipeline 0/1, agent 2/2
+- blind: `watermills_iv_table3_col6` — pipeline 0/1, agent 2/2
+- blind: `watermills_ols_table3_col5` — pipeline 0/1, agent 2/2
+- blind: `watermills_table2_col1` — pipeline 0/1, agent 2/2
+- blind: `watermills_table2_col2` — pipeline 0/1, agent 2/2
+- blind: `watermills_table2_col3` — pipeline 0/1, agent 2/2
+- blind: `watermills_table2_col4` — pipeline 0/1, agent 2/2
+- blind: `watermills_table2_col5` — pipeline 0/1, agent 2/2
 
 ## Cells
 
@@ -100,6 +103,10 @@ Claims where, in the same mode, one reproducer family passed in every run and th
 
 [`independent/claude-code/2026-11-02-a/CELL.md`](independent/claude-code/2026-11-02-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-02T10:06:30Z; from `claude-code-6papers-all-modes-2026-11-02.json`; evidence complete.
 
+### independent · claude-code · 2026-11-02-b
+
+[`independent/claude-code/2026-11-02-b/CELL.md`](independent/claude-code/2026-11-02-b/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-02T14:56:30Z; from `claude-code-run2-6papers-indep-blind-2026-11-02.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus · 20261102T142733Z
 
 [`independent/pipeline-desktop-opus/20261102T142733Z/CELL.md`](independent/pipeline-desktop-opus/20261102T142733Z/CELL.md) — final 13/13, re-scored 13/13; first scored 1/13; executions 2; 2026-11-02T14:27:33Z; from `pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json`; evidence complete.
@@ -107,6 +114,10 @@ Claims where, in the same mode, one reproducer family passed in every run and th
 ### blind · claude-code · 2026-11-02-a
 
 [`blind/claude-code/2026-11-02-a/CELL.md`](blind/claude-code/2026-11-02-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-02T00:30:00Z; from `claude-code-6papers-all-modes-2026-11-02.json`; evidence complete.
+
+### blind · claude-code · 2026-11-02-b
+
+[`blind/claude-code/2026-11-02-b/CELL.md`](blind/claude-code/2026-11-02-b/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-02T14:59:00Z; from `claude-code-run2-6papers-indep-blind-2026-11-02.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus · 20261102T141403Z
 

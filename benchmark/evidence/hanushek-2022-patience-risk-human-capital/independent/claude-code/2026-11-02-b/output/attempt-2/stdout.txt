@@ -1,0 +1,58 @@
+DEVIATION: read only the 16 needed columns of pisa_full_gps_final.csv (CSV form) for speed; no rows dropped
+                                m1                m2                  m3
+Dependent Var.:            pv1math           pv1math             pv1math
+                                                                        
+pat_z           0.3511*** (0.0486)                    0.4690*** (0.0507)
+risk_z                             -0.1145. (0.0626) -0.2973*** (0.0444)
+Fixed-Effects:  ------------------ ----------------- -------------------
+wave                           Yes               Yes                 Yes
+_______________ __________________ _________________ ___________________
+S.E.: Clustered        by: country       by: country         by: country
+Observations             1,992,276         1,992,276           1,992,276
+R2                         0.13790           0.04648             0.20113
+Within R2                  0.11730           0.02369             0.18204
+
+                                 m5
+Dependent Var.:             pv1math
+                                   
+pat_z            0.4981*** (0.0513)
+risk_z          -0.3187*** (0.0455)
+Fixed-Effects:  -------------------
+wave                            Yes
+_______________ ___________________
+S.E.: Clustered         by: country
+Observations              1,751,822
+R2                          0.21352
+Within R2                   0.19343
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+            used  (Mb) gc trigger   (Mb)  max used   (Mb)
+Ncells    787540  42.1    1476102   78.9    975850   52.2
+Vcells 106217566 810.4  299433938 2284.5 248813044 1898.3
+                                 n1                 n3                 n4
+Dependent Var.:             pv1math            pv1math            pv1math
+                                                                         
+coo_patience_z   0.3144*** (0.0408) 0.3563*** (0.0424) 0.4011*** (0.0488)
+coo_risktaking_z                     -0.0528. (0.0288) -0.1039** (0.0382)
+Fixed-Effects:   ------------------ ------------------ ------------------
+countrywave                     Yes                Yes                Yes
+________________ __________________ __________________ __________________
+S.E.: Clustered             by: coo            by: coo            by: coo
+Observations                 80,397             80,397             80,397
+R2                          0.26334            0.26407            0.26548
+Within R2                   0.03233            0.03328            0.03513
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RESULT:table1_col3_patience=0.4690
+RESULT:table1_col3_risk_taking=-0.2973
+RESULT:table1_col1_patience=0.3511
+RESULT:table1_col2_risk_taking=-0.1145
+RESULT:table1_col5_natives_patience=0.4981
+RESULT:table1_col5_natives_risk_taking=-0.3187
+RESULT:table1_col3_observations=1992276
+RESULT:table2_col3_patience=0.3563
+RESULT:table2_col3_risk_taking=-0.0528
+RESULT:table2_col1_patience=0.3144
+RESULT:table2_col4_patience=0.4011
+RESULT:table2_col4_risk_taking=-0.1039
+RESULT:table2_col3_observations=80397

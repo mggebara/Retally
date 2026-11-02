@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "mokyr-2022-wheels-of-change",
+  "mode": "independent",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was exploratory (variable listing from replication_data.dta, no RESULT lines). Final script: wrights and Domesday mills divided by pcmean (mean population 1710-50); sample = 298 districts with non-missing mills. Wheat suitability = 1{wheat_tmean <= 5}; river suitability = riv_rug26count (river length at ruggedness 2-6); instrument = river suitability x wheat suitability. OLS and 2SLS with fixest, SEs clustered by historical county (GAZ_CNTY, 35 clusters in sample). Controls: main geographic (latitude, longitude, dist_rug_mean, dist_elevation_mean), agricultural (suitmean, wheat suitability, dist_grass_mean), climatic (precip_mean_dist, temp_mean_dist), other (pcmean, min_harbor, DIST_London, min_dist_to_roman_rds, min_dist_2nav_rivers, area). First-stage F = cluster-robust Wald F on the excluded instrument (fixest ivwald1). The 'hetero' F printed in the diagnostic line equals the clustered one because fixest's ivwald1 reuses the first-stage vcov stored at estimation; it is diagnostic only and not scored. No claim-comparison-driven changes were made.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T14:54:53Z",
+  "finished_at": "2026-11-02T14:56:30Z"
+}

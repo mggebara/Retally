@@ -1,0 +1,12 @@
+suppressMessages({library(haven); library(dplyr)})
+d <- haven::read_dta("<repo>/benchmark/.cache/claude-code/mokyr-2022-wheels-of-change/blind/2026-11-02-b/mount/mokyr_2022_wheels_of_change/3 replication package/Replication files/Data/replication_data.dta")
+cat(dim(d), "\n")
+for (v in names(d)) { x <- d[[v]]; lab <- attr(x, "label"); if (is.numeric(x)) cat(sprintf("%-25s %-40s n=%d NA=%d mean=%.4g min=%.4g max=%.4g\n", v, ifelse(is.null(lab),"",lab), length(x), sum(is.na(x)), mean(x,na.rm=TRUE), min(x,na.rm=TRUE), max(x,na.rm=TRUE))) else cat(v, class(x), head(x,3), "\n") }
+cat("mills nonNA:", sum(!is.na(d$mills)), " mills>0:", sum(d$mills>0, na.rm=TRUE), "\n")
+cat("counties:", length(unique(d$GAZ_CNTY)), " counties w/ mills:", length(unique(d$GAZ_CNTY[!is.na(d$mills)])), "\n")
+print(table(d$wheat_tmean <= 5, useNA="ifany"))
+print(summary(d$wrights / d$pcmean))
+c <- read.csv("<repo>/benchmark/.cache/claude-code/mokyr-2022-wheels-of-change/blind/2026-11-02-b/mount/mokyr_2022_wheels_of_change/3 replication package/Replication files/Data/replication_data.csv")
+cat("csv dim", dim(c), " csv mills nonNA", sum(!is.na(c$mills)), "\n")
+print(setdiff(names(d), names(c))); print(setdiff(names(c), names(d)))
+print(head(as.data.frame(d[, c("local_government_area","GAZ_CNTY","wrights","mills","pcmean","pc0","riv_rug26count","wheat_tmean")]), 10))

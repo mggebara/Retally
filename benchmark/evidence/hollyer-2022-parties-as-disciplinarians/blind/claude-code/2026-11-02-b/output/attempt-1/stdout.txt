@@ -1,0 +1,192 @@
+tibble [506 × 25] (S3: tbl_df/tbl/data.frame)
+ $ ccode        : num [1:506] 8 8 8 8 8 24 24 24 32 32 ...
+  ..- attr(*, "label")= chr "Country code"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ partysize    : num [1:506] 0.185 0.013 0.041 0.405 0.246 ...
+  ..- attr(*, "label")= chr "Party size"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ unions       : num [1:506] 0 0 0 0.5 0.5 ...
+  ..- attr(*, "label")= chr "Linkages: unions"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ business     : num [1:506] 0.25 0.2 0.444 0.5 0.5 ...
+  ..- attr(*, "label")= chr "Linkages: business"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ religious    : num [1:506] 0 0.4 0 0 0.1 ...
+  ..- attr(*, "label")= chr "Linkages: religious org's"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ ev_total     : num [1:506] 0.544 0.544 0.544 0.544 0.544 ...
+  ..- attr(*, "label")= chr "Volatility"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ ctot         : num [1:506] -0.312 -0.312 -0.312 -0.312 -0.312 ...
+  ..- attr(*, "label")= chr "Commodity terms of trade"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ system       : dbl+lbl [1:506]  2,  2,  2,  2,  2,  0,  0,  0,  0,  0,  0,  0,  0,  2...
+   ..@ label       : chr "Political System"
+   ..@ format.stata: chr "%26.0g"
+   ..@ labels      : Named num [1:3] 0 1 2
+   .. ..- attr(*, "names")= chr [1:3] "Presidential" "Assembly-Elected President" "Parliamentary"
+ $ mdmh         : num [1:506] 2.41 2.41 2.41 2.41 2.41 ...
+  ..- attr(*, "label")= chr "Mean district magnitude (lower house, logged)"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ cl           : num [1:506] 1 1 1 1 1 1 1 1 1 1 ...
+  ..- attr(*, "label")= chr "Closed List"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ demsys       : dbl+lbl [1:506] 2.83, 2.83, 2.83, 2.83, 2.83,   NA,   NA,   NA, 3.22, ...
+   ..@ label       : chr "System tenure (log-years)"
+   ..@ format.stata: chr "%9.0g"
+   ..@ labels      : Named num -999
+   .. ..- attr(*, "names")= chr "NA"
+ $ ethfrac      : num [1:506] 0.22 0.22 0.22 0.22 0.22 ...
+  ..- attr(*, "label")= chr "Ethnic Fractionalization"
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ polity       : num [1:506] 9 9 9 9 9 -2 -2 -2 8 8 ...
+  ..- attr(*, "label")= chr "Polity score"
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ gdppc        : num [1:506] 9.06 9.06 9.06 9.06 9.06 ...
+  ..- attr(*, "label")= chr "GDP per capita, PPP (logged)"
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ gini         : num [1:506] 30 30 30 30 30 ...
+  ..- attr(*, "label")= chr "GINI index (World Bank estimate)"
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ personal     : num [1:506] 2.25 2.08 3.5 3.58 3.92 ...
+  ..- attr(*, "label")= chr "Personalistic"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ programmatic : num [1:506] 3.04 3.05 2.92 3.21 3.42 ...
+  ..- attr(*, "label")= chr "Programmatic"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ programmatic2: num [1:506] 2.83 2.7 2.83 3.08 3 ...
+  ..- attr(*, "label")= chr "Programmatic (alternative)"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ extremist2   : num [1:506] 1.868 0.355 1.132 1.021 0.479 ...
+  ..- attr(*, "label")= chr "Extremism, overall left-right (weighted by size)"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ extremist2_2d: num [1:506] 2.557 0.716 1.262 1.423 0.622 ...
+  ..- attr(*, "label")= chr "Extremism 2D, city block (weighted by size)"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ extremist2_3d: num [1:506] 2.801 1.917 1.284 1.512 0.644 ...
+  ..- attr(*, "label")= chr "Extremism 3D, city block (weighted by size)"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ pluralty     : num [1:506] 0 0 0 0 0 NA NA NA 0 0 ...
+  ..- attr(*, "label")= chr "Plurality"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ pr           : num [1:506] 1 1 1 1 1 NA NA NA 1 1 ...
+  ..- attr(*, "label")= chr "PR"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ erule        : dbl+lbl [1:506] 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 3, 3, 3, 3, 5, ...
+   ..@ label       : chr "Detailed electoral rules"
+   ..@ format.stata: chr "%16.0g"
+   ..@ labels      : Named num [1:7] 1 2 3 4 5 6 7
+   .. ..- attr(*, "names")= chr [1:7] "SMDP" "Two-round" "Alternative vote" "Block vote" ...
+ $ ethnic       : num [1:506] 0 1 0 0 0 1 0 1 0 0 ...
+  ..- attr(*, "label")= chr "Linkages: ethnic"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ - attr(*, "notes")= chr [1:5] "4" "\"Someday my log has something to say about this.\"" "Without chemicals, he points." "\"Bunnies aren't just cute like everybody supposes.\"" ...
+NULL
+     ccode         partysize          unions          business     
+ Min.   :  8.0   Min.   :0.0000   Min.   :0.0000   Min.   :0.0000  
+ 1st Qu.:222.0   1st Qu.:0.0435   1st Qu.:0.0000   1st Qu.:0.1645  
+ Median :422.0   Median :0.0925   Median :0.2500   Median :0.4606  
+ Mean   :432.4   Mean   :0.1492   Mean   :0.3522   Mean   :0.4668  
+ 3rd Qu.:608.0   3rd Qu.:0.2164   3rd Qu.:0.6250   3rd Qu.:0.7500  
+ Max.   :894.0   Max.   :0.7873   Max.   :1.0000   Max.   :1.0000  
+                                  NAs    :2        NAs    :2       
+   religious         ev_total           ctot              system   
+ Min.   :0.0000   Min.   :0.0195   Min.   :-1.62296   Min.   :0.0  
+ 1st Qu.:0.0000   1st Qu.:0.1510   1st Qu.:-0.40039   1st Qu.:0.0  
+ Median :0.1111   Median :0.2655   Median :-0.25621   Median :2.0  
+ Mean   :0.2616   Mean   :0.2866   Mean   :-0.17335   Mean   :1.1  
+ 3rd Qu.:0.4458   3rd Qu.:0.4196   3rd Qu.:-0.08729   3rd Qu.:2.0  
+ Max.   :1.0000   Max.   :0.6927   Max.   : 3.79761   Max.   :2.0  
+ NAs    :2        NAs    :42       NAs    :22         NAs    :4    
+      mdmh               cl            demsys         ethfrac        
+ Min.   :-0.3285   Min.   :1.000   Min.   :0.000   Min.   :0.001998  
+ 1st Qu.: 0.6803   1st Qu.:1.000   1st Qu.:2.773   1st Qu.:0.168202  
+ Median : 2.0464   Median :1.000   Median :2.944   Median :0.396850  
+ Mean   : 1.9416   Mean   :1.607   Mean   :3.087   Mean   :0.380647  
+ 3rd Qu.: 2.6596   3rd Qu.:2.000   3rd Qu.:3.989   3rd Qu.:0.553478  
+ Max.   : 6.1092   Max.   :3.000   Max.   :4.357   Max.   :0.858800  
+ NAs    :6                         NAs    :33      NAs    :7         
+     polity           gdppc             gini          personal    
+ Min.   :-6.000   Min.   : 6.714   Min.   :23.72   Min.   :1.000  
+ 1st Qu.: 7.000   1st Qu.: 8.964   1st Qu.:31.29   1st Qu.:2.302  
+ Median : 9.000   Median : 9.669   Median :34.80   Median :2.811  
+ Mean   : 7.913   Mean   : 9.578   Mean   :38.33   Mean   :2.842  
+ 3rd Qu.:10.000   3rd Qu.:10.377   3rd Qu.:45.39   3rd Qu.:3.455  
+ Max.   :10.000   Max.   :11.085   Max.   :64.73   Max.   :4.000  
+                  NAs    :10       NAs    :28                     
+  programmatic   programmatic2     extremist2      extremist2_2d   
+ Min.   :1.425   Min.   :1.562   Min.   :0.01204   Min.   :0.1108  
+ 1st Qu.:2.750   1st Qu.:2.833   1st Qu.:0.72858   1st Qu.:1.6783  
+ Median :3.083   Median :3.200   Median :1.58767   Median :2.7889  
+ Mean   :3.031   Mean   :3.150   Mean   :1.73376   Mean   :3.1333  
+ 3rd Qu.:3.352   3rd Qu.:3.515   3rd Qu.:2.48738   3rd Qu.:4.3790  
+ Max.   :3.958   Max.   :4.000   Max.   :6.28134   Max.   :9.8293  
+                                 NAs    :1         NAs    :1       
+ extremist2_3d        pluralty            pr             erule      
+ Min.   : 0.2607   Min.   :0.0000   Min.   :0.0000   Min.   :1.000  
+ 1st Qu.: 2.3156   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:5.000  
+ Median : 3.8863   Median :0.0000   Median :1.0000   Median :5.000  
+ Mean   : 4.5012   Mean   :0.2306   Mean   :0.5746   Mean   :4.694  
+ 3rd Qu.: 6.1061   3rd Qu.:0.0000   3rd Qu.:1.0000   3rd Qu.:5.000  
+ Max.   :14.7627   Max.   :1.0000   Max.   :1.0000   Max.   :7.000  
+ NAs    :1         NAs    :3        NAs    :3        NAs    :2      
+     ethnic      
+ Min.   :0.0000  
+ 1st Qu.:0.0000  
+ Median :0.0000  
+ Mean   :0.1806  
+ 3rd Qu.:0.0000  
+ Max.   :1.0000  
+ NAs    :2       
+
+   0    1    2 <NA> 
+ 211   30  261    4 
+
+  1   2   3 
+290 125  91 
+
+   0    1 <NA> 
+ 387  116    3 
+
+   0    1 <NA> 
+ 214  289    3 
+
+   1    2    3    4    5    6    7 <NA> 
+  74   12    4   26  279    6  103    2 
+countries: 88 
+cc base: 431 75 
+cc all: 430 75 
+personal 0 
+programmatic 0 
+ev_total 42 
+partysize 0 
+unions 2 
+business 2 
+religious 2 
+pluralty 3 
+pr 3 
+cl 0 
+mdmh 6 
+polity 0 
+demsys 33 
+system 4 
+gdppc 10 
+gini 28 
+ethfrac 7 
+ethnic na 2  extremist2 na 1 
+
+FALSE  TRUE  <NA> 
+  413    91     2 
+      25%       50%       75%       90% 
+0.7285752 1.5876694 2.4873776 3.4560499 
+  mv_incparty       dlameduck_runs   youngF_inc_for1  outyg1F_inc_for1 
+ Min.   :-100.000   Min.   :0.0000   Min.   :0.0000   Min.   :0.00000  
+ 1st Qu.:  -9.800   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.00000  
+ Median :   1.880   Median :0.0000   Median :0.0000   Median :0.00000  
+ Mean   :   4.494   Mean   :0.3384   Mean   :0.1015   Mean   :0.07949  
+ 3rd Qu.:  15.048   3rd Qu.:1.0000   3rd Qu.:0.0000   3rd Qu.:0.00000  
+ Max.   : 100.000   Max.   :1.0000   Max.   :1.0000   Max.   :1.00000  
+ NAs    :14147      NAs    :3337     NAs    :21366    NAs    :21366    
+
+    0     1  <NA> 
+15956  8162  3337 

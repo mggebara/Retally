@@ -1,0 +1,7 @@
+Run crashed at grid spec M (fixest i(trim):i(year) -> "duplicate 'row.names' are not allowed") before printing RESULT lines; the grid rows printed before the crash were compared with the claimed Table 2 values.
+Comparison of the baseline spec A (T = T2) with claims:
+reform_consumption_ols_col1: reproduced -0.119, claimed -0.178
+reform_expenditure_ols_col5: reproduced -0.121, claimed -0.156
+reform_expenditure_fe_col7: reproduced -0.151, claimed -0.098
+reform_consumption_fe_col3: reproduced -0.166, claimed -0.154
+Acted on: grid spec E (treatment dummy TT202, the reform dummy shifted for the one-month billing lag, i.e. the second reformed bill as described in Section 3.1) matched the OLS/FE columns; switched T to TT202 and dropped the grid.

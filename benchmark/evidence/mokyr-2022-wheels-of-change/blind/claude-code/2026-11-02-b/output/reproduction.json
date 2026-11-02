@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "entry_id": "mokyr-2022-wheels-of-change",
+  "mode": "blind",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "First-stage F-statistics are cluster-robust (historical county) Wald F on the single excluded instrument (equivalent to Kleibergen-Paap Wald F); iid first-stage F values are printed as diagnostics but not scored.",
+    "Latitude/longitude use the dataset's labelled 'latitude'/'longitude' variables (projected coordinates), not y1/x1 (degrees)."
+  ],
+  "notes": "Data: replication_data.dta (325 English districts). Sample: 298 districts with non-missing Domesday mills. Dependent variable wrights/pcmean, regressor mills/pcmean (pcmean = mean population 1710-50; common per-10,000 scaling does not change slopes). Wheat suitability = 1(wheat_tmean <= 5); river suitability = riv_rug26count (river length at ruggedness 2-6); instrument = river suitability x wheat suitability. Controls: geo = latitude, longitude, dist_rug_mean, dist_elevation_mean; agri = suitmean, wheat indicator, dist_grass_mean; climate = precip_mean_dist, temp_mean_dist; other = pcmean, min_harbor, DIST_London, min_dist_to_roman_rds, min_dist_2nav_rivers, area. Table 3 OLS col5 = Table 2 col5 + river suitability; IV cols 2/4/6 include river suitability and wheat suitability as controls plus the respective control sets. All estimated with fixest, SEs clustered by GAZ_CNTY (35 clusters). attempt-1 was an exploratory variable inspection with no RESULT lines; the final run is the first scored run.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T14:56:51Z",
+  "finished_at": "2026-11-02T14:59:00Z"
+}

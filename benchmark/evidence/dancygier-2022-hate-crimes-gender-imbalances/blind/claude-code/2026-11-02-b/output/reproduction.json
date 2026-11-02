@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "dancygier-2022-hate-crimes-gender-imbalances",
+  "mode": "blind",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Table 1 'employment status' has no separate variable in survey.dta; the occupation factor (which mixes main activity and employment status, e.g. unemployed, retired, employee) is used for both.",
+    "Table 1 ordinal controls: income, occupation, religion, state, gender entered as factors (income keeps its 'No answer' category); self-assessed status (self_econ, code 11 recoded to 0) and household size (code minus 1) entered linearly; education = eduyrs (years), whose 11 missing Wave 4 values set N for cols 3-6.",
+    "Table 1 national/local batteries: the 8 ref_* and 8 ref_loc_* items entered linearly. Additional controls: contact_ind, distance_ref (factor incl. don't know), settle_ref (factor), afd, afd_ind, lrscale, muslim_ind.",
+    "Table C1: controls use the log versions provided in context.dta for population, density, refugee stock and violent crime (log_unemp_all_muni_2015 for unemployment); state fixed effects (per task description; the main text mentions county FE), plus year FE in the annual model; SEs clustered by ags_county; trimming at the 2.5/97.5 percentiles of Excess Males (15-44) computed across all municipalities with non-missing values before listwise deletion. Sum outcome = any Hate_all_muni over 2015-2017."
+  ],
+  "notes": "One exploratory run (attempt-1: variable inventory, no RESULT lines), then one scored run. Table 1: OLS of hate_violence_means on MateComp.cont etc. on Wave 4 respondents (lm, conventional SEs). Table C1 cols 5/6: fixest::feglm logit with state (and year) FE, clustered by county; glm with state dummies gives identical col 5 coefficient. Only 11 states remain in the context models after complete cases. No specification was tuned toward paper values.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T14:57:52Z",
+  "finished_at": "2026-11-02T15:00:30Z"
+}

@@ -38,7 +38,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a) | [13/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a) |
+| `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) |
 | `pipeline-desktop-opus` | [13/13](seeded/pipeline-desktop-opus/20261102T141403Z/CELL.md) (20261102T141403Z) | [9/13](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) (20261102T141403Z) | [12/13](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) (20261102T095147Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
@@ -52,6 +52,7 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | Cell | Claim | Reproduced | Paper | Band | Error / band | Verdict |
 |---|---|---|---|---|---|---|
 | [blind/pipeline-desktop-opus/20261102T095147Z](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) | `table1_col3_risk_taking` | -1.08571 | -1.241 | ±0.184 (se_band) | 0.844 | PASS |
+| [independent/claude-code/2026-11-02-b](independent/claude-code/2026-11-02-b/CELL.md) | `table2_col3_risk_taking` | -0.194 | -0.294 | ±0.122 (se_band) | 0.820 | PASS |
 | [independent/claude-code/2026-11-02-a](independent/claude-code/2026-11-02-a/CELL.md) | `table2_col3_risk_taking` | -0.194001 | -0.294 | ±0.122 (se_band) | 0.820 | PASS |
 | [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) | `table2_col3_risk_taking` | -0.194001 | -0.294 | ±0.122 (se_band) | 0.820 | PASS |
 | [blind/pipeline-desktop-opus/20261102T095147Z](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) | `table1_col5_natives_risk_taking` | -1.19398 | -1.32 | ±0.189 (se_band) | 0.667 | PASS |
@@ -59,8 +60,7 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `table1_col2_risk_taking` | -0.477249 | -0.482 | ±0.00964 (relative) | 0.493 | PASS |
 | [independent/claude-code/2026-11-02-a](independent/claude-code/2026-11-02-a/CELL.md) | `table2_col4_risk_taking` | -0.381868 | -0.449 | ±0.14 (se_band) | 0.480 | PASS |
 | [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) | `table2_col4_risk_taking` | -0.381868 | -0.449 | ±0.14 (se_band) | 0.480 | PASS |
-| [independent/pipeline-desktop-opus/20261102T141403Z](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) | `table2_col4_risk_taking` | -0.232767 | -0.449 | ±0.14 (se_band) | 1.545 | FAIL |
-| [blind/pipeline-desktop-opus/20261102T095147Z](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) | `table1_col2_risk_taking` | -0.0644497 | -0.482 | ±0.261 (se_band) | 1.600 | FAIL |
+| [independent/claude-code/2026-11-02-b](independent/claude-code/2026-11-02-b/CELL.md) | `table2_col4_risk_taking` | -0.3819 | -0.449 | ±0.14 (se_band) | 0.479 | PASS |
 
 ### Declared deviations
 
@@ -80,6 +80,11 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Table 2 weights are the supplied student weight wgt (sampling weights normalised per residence country-wave), unchanged. Singletons are kept (fixef.rm='none'), so N = 80,398. Table 2 SEs are clustered by country of origin, Table 1 SEs by country.
   - Table 1 estimated on an evenly spread block sample of 19.9% of pisa_full_gps_final.csv (1180 of 5938 0.5 MB blocks, 395484 students) because the 3 GB file cannot be read through the mount within the 300 s sandbox limit (~6 MB/s); only the needed columns were parsed
   - table1_col3_observations is the row count in the .dta header (1992276) times the complete-case share in the block sample (1.00000); the sample regression itself used 395484 students — names `table1_col3_observations`
+- [independent/claude-code/2026-11-02-b](independent/claude-code/2026-11-02-b/CELL.md) (13/13)
+  - Read only the needed columns of Replication/Data/CSV/pisa_full_gps_final.csv with data.table::fread(select=) to fit the 300 s sandbox limit; no rows dropped (N = 1,992,276).
+  - Natives (Table 1 col 5) defined as migra0 == 1 (1,751,822 students); students with imputed (fractional) migration status are excluded from the native subsample, so the migration controls drop out as described.
+  - Table 2 standard errors clustered by country of origin (as in the text); coefficients unaffected.
+  - read only the 16 needed columns of pisa_full_gps_final.csv (CSV form) for speed; no rows dropped
 - [independent/pipeline-desktop-opus/20261102T141403Z](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) (9/13; failed: `table2_col3_patience`, `table2_col1_patience`, `table2_col4_patience`, `table2_col4_risk_taking`)
   - Migrant regressions weight students by sampling weights scaled to give each residence country equal total weight in the full PISA sample (not re-equalised within the migrant subsample)
 - [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) (13/13)
@@ -91,16 +96,27 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - full PISA file (1992276 rows, 2.5 GB) cannot be read through the mount within the 300 s sandbox limit (~10 MB/s); Table 1 is estimated on a systematic subsample of 996276 rows (50.0%): 3000-row blocks every 6000 rows, 333 of 333 blocks read; only the needed columns are loaded (haven col_select); sampling weights wgtc are renormalised within country-wave so each country keeps equal total weight and equal weight per wave.
   - table1_col3_observations is the full-file row count times the complete-case share of the loaded rows (no missing values were found in any regression variable in exploratory reads of all rows). — names `table1_col3_observations`
   - the data hold only country-level GPS means; the individual-level z-standardisation in the 49-country sample is reconstructed with the within-country GPS SDs of the migrant file (validated on the 58 origin countries, where it reproduces the file's own standardisation slope to <1%).
+- [blind/claude-code/2026-11-02-b](blind/claude-code/2026-11-02-b/CELL.md) (13/13)
+  - Read only the needed columns of the 2.8 GB pisa_full_gps_final.csv with data.table::fread(select=) to fit the sandbox limits; all rows kept.
+  - Math achievement uses the first plausible value only (pv1math, already divided by 100 in the data).
+  - Preference measures are the dataset's prepared country-level GPS variables (patience, risktaking; coo_* for origin), used as provided; individual GPS data are not in the package, so the in-sample z-standardisation could not be redone.
+  - Table 2 regressions unweighted (Table 2 notes describe plain least squares, unlike Table 1's weighted regressions); Table 1 weighted by wgtc (sampling weights rescaled to sum to one per country).
+  - Table 1 migration-status controls: migra1, migra2 (first/second generation, mean-imputed) plus imputation dummies immigra1, immigra2; natives defined as migra0==1 with non-imputed status.
+  - fixest dropped one singleton residence-country-by-wave observation in Table 2, so N is 80,397 of 80,398.
+  - Read only the needed columns of the 2.8 GB pisa_full_gps_final.csv (fread select=) to fit the sandbox time/memory limits; all rows kept.
+  - Achievement uses the first plausible value only (pv1math, already divided by 100 in the data), not all ten PVs.
+  - Preference measures are the dataset's prepared country-level GPS variables (patience, risktaking; coo_* for origin), used as provided (already standardised); individual GPS data are not in the package so the standardisation could not be redone.
+  - Table 2 regressions are unweighted (the Table 2 notes describe plain least squares, unlike Table 1's weighted regressions).
 
 ### Pipeline and agent disagree
 
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
-- independent: `table2_col1_patience` — pipeline 0/1, agent 1/1
-- independent: `table2_col3_patience` — pipeline 0/1, agent 1/1
-- independent: `table2_col4_patience` — pipeline 0/1, agent 1/1
-- independent: `table2_col4_risk_taking` — pipeline 0/1, agent 1/1
-- blind: `table1_col2_risk_taking` — pipeline 0/1, agent 1/1
+- independent: `table2_col1_patience` — pipeline 0/1, agent 2/2
+- independent: `table2_col3_patience` — pipeline 0/1, agent 2/2
+- independent: `table2_col4_patience` — pipeline 0/1, agent 2/2
+- independent: `table2_col4_risk_taking` — pipeline 0/1, agent 2/2
+- blind: `table1_col2_risk_taking` — pipeline 0/1, agent 2/2
 
 ## Cells
 
@@ -116,6 +132,10 @@ Claims where, in the same mode, one reproducer family passed in every run and th
 
 [`independent/claude-code/2026-11-02-a/CELL.md`](independent/claude-code/2026-11-02-a/CELL.md) — final 13/13, re-scored 13/13; first scored 2/13; executions 5; 2026-11-02T10:08:30Z; from `claude-code-6papers-all-modes-2026-11-02.json`; evidence complete.
 
+### independent · claude-code · 2026-11-02-b
+
+[`independent/claude-code/2026-11-02-b/CELL.md`](independent/claude-code/2026-11-02-b/CELL.md) — final 13/13, re-scored 13/13; first scored 2/13; executions 3; 2026-11-02T15:05:26Z; from `claude-code-run2-6papers-indep-blind-2026-11-02.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus · 20261102T141403Z
 
 [`independent/pipeline-desktop-opus/20261102T141403Z/CELL.md`](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 2; 2026-11-02T14:14:03Z; from `pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json`; evidence complete.
@@ -123,6 +143,10 @@ Claims where, in the same mode, one reproducer family passed in every run and th
 ### blind · claude-code · 2026-11-02-a
 
 [`blind/claude-code/2026-11-02-a/CELL.md`](blind/claude-code/2026-11-02-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 10; 2026-11-02T14:17:44Z; from `claude-code-6papers-all-modes-2026-11-02.json`; evidence complete.
+
+### blind · claude-code · 2026-11-02-b
+
+[`blind/claude-code/2026-11-02-b/CELL.md`](blind/claude-code/2026-11-02-b/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 3; 2026-11-02T15:08:35Z; from `claude-code-run2-6papers-indep-blind-2026-11-02.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus · 20261102T095147Z
 

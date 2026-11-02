@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "entry_id": "hanushek-2022-patience-risk-human-capital",
+  "mode": "blind",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 1, "kind": ""}
+  ],
+  "deviations": [
+    "Read only the needed columns of the 2.8 GB pisa_full_gps_final.csv with data.table::fread(select=) to fit the sandbox limits; all rows kept.",
+    "Math achievement uses the first plausible value only (pv1math, already divided by 100 in the data).",
+    "Preference measures are the dataset's prepared country-level GPS variables (patience, risktaking; coo_* for origin), used as provided; individual GPS data are not in the package, so the in-sample z-standardisation could not be redone.",
+    "Table 2 regressions unweighted (Table 2 notes describe plain least squares, unlike Table 1's weighted regressions); Table 1 weighted by wgtc (sampling weights rescaled to sum to one per country).",
+    "Table 1 migration-status controls: migra1, migra2 (first/second generation, mean-imputed) plus imputation dummies immigra1, immigra2; natives defined as migra0==1 with non-imputed status.",
+    "fixest dropped one singleton residence-country-by-wave observation in Table 2, so N is 80,397 of 80,398."
+  ],
+  "notes": "Two exploratory runs (attempt-1: column summaries of the main CSV and weights, no estimates; attempt-2: migrant-file summaries, crashed on a table() subscript in exploratory code, no estimates). Final run: Table 1 cols 1/2/3/5 by feols of pv1math on country patience/risk-taking with gender, age, migration status and imputation dummies, wave FE, weights wgtc, SEs clustered by country (49 countries, 263 country-waves). Table 2 cols 1/3/4 on the imcoo migrant file (58 origins, 48 residence countries, 180 residence-country-by-wave FE), controls gender, age, OECD-origin dummy, imputation dummies, SEs clustered by country of origin. No script files in the data directory were opened; no result tables consulted.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T15:00:16Z",
+  "finished_at": "2026-11-02T15:08:35Z"
+}

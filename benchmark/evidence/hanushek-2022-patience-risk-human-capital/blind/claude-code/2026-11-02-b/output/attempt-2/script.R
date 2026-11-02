@@ -1,0 +1,13 @@
+suppressMessages(library(data.table))
+D <- "<repo>/benchmark/.cache/claude-code/hanushek-2022-patience-risk-human-capital/blind/2026-11-02-b/mount/hanushek_2022_patience_risk_human_capital/Replication/Data/CSV"
+m <- fread(file.path(D,"pisa_full_gps_final_imcoo.csv"), select=c("country","wave","coo","pv1math","coo_patience","coo_risktaking","coo_posrecip","coo_negrecip","coo_altruism","coo_trust","coo_oecd","female","imfemale","age","image","wgt","countrywave","migra1","migra2","migra0","immigra1","coo_patience_orig","coo_risktaking_orig","stubrncnt","fatbrncnt","motbrncnt"), showProgress=FALSE)
+print(dim(m)); print(summary(m))
+cat("coo", uniqueN(m$coo), "res", uniqueN(m$country), "cw", uniqueN(m$countrywave), "\n"); print(table(m$wave))
+u <- unique(m[, .(coo, coo_patience, coo_patience_orig, coo_risktaking, coo_risktaking_orig, coo_oecd)]); print(nrow(u)); print(u[order(coo)])
+print(coef(lm(coo_patience ~ coo_patience_orig, u))); print(coef(lm(coo_risktaking ~ coo_risktaking_orig, u)))
+print(m[, .(sd_stud=sd(coo_patience_orig), mean_stud=mean(coo_patience_orig), sdr=sd(coo_risktaking_orig), mr=mean(coo_risktaking_orig))])
+print(m[, .(mp=mean(coo_patience), sp=sd(coo_patience), mr=mean(coo_risktaking), sr=sd(coo_risktaking), spr=sd(coo_posrecip), sa=sd(coo_altruism))])
+print(summary(m[, .(s=sum(wgt)), by=countrywave]$s))
+print(table(m1=m$migra1, m2=m$migra2, useNA="ifany")[1:3,1:3])
+cat("complete", m[complete.cases(m[, .(pv1math,coo_patience,coo_risktaking,coo_posrecip,coo_negrecip,coo_altruism,coo_trust,coo_oecd,female,age)]), .N], "\n")
+print(table(m$stubrncnt==m$country))

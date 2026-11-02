@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "hollyer-2022-parties-as-disciplinarians",
+  "mode": "blind",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was exploratory only (variable summaries, missingness, complete-case counts; no RESULT lines). Final run: Table 1 is a party-level OLS of personal / programmatic on ev_total plus party covariates (partysize, unions, business, religious) and country covariates (pluralty, pr [mixed omitted], closed- and open-list dummies from cl [non-list omitted], mdmh, polity, demsys, assembly-elected and parliamentary dummies from system [presidential omitted], gdppc, gini, ethfrac). SEs clustered by ccode (HC1). Each model uses its own complete-case sample: 431 parties / 75 countries for the overall and ethnic models, 430 for the extremism models (one party lacks extremist2). n_obs_table1 is reported as 431. Ethnic party = ethnic > 0.5 (the variable is already 0/1 in the data). Extremism = extremist2 (vote-share-weighted absolute left-right distance from the country mean); extremist party at 3, moderate at 0. Low and high volatility are the 25th and 75th percentiles of ev_total over the party-level estimation sample (Stata-style percentile definition, R type 2). The differences are linear combinations of coefficients, so where the other covariates are held does not affect them. Table 2: rdrobust on the open-seat sample (dlameduck_runs == 0), running variable mv_incparty, cutoff 0, local linear, triangular kernel, mserd bandwidths; the RESULT is the conventional estimate. The authors' scripts and any result files were not opened; the codebook PDF in the mount was read for variable definitions.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T14:57:20Z",
+  "finished_at": "2026-11-02T14:59:50Z"
+}

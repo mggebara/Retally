@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "entry_id": "labandeira-2022-electricity-pricing-reform",
+  "mode": "independent",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-4", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-5", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-6", "exit_code": 1, "kind": "claim"},
+    {"dir": "attempt-7", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-8", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "LIML is hand-coded as a k-class estimator (the installed ivreg package has no LIML method); household-clustered sandwich SEs with Stata-style small-sample factor.",
+    "Household fixed-effects IV is estimated by LIML on within-household demeaned data.",
+    "Treatment dummy is the dataset's TT202 (reform dummy accounting for the one-month billing lag, matching Section 3.1's 'second reformed bill'), chosen after comparing the T2-based estimates with the claimed values (attempt-6).",
+    "Retirement-income dummy not included as a control (including it drops 73 observations below the reported N = 20,872)."
+  ],
+  "notes": "Data: analysis file data_to_run_DOFILE3.dta, 2011-2014 panel (T2 non-missing, 25,775 obs), restricted to complete cases on the regression variables -> N = 20,872, 10,729 households, exactly as in Table 2. Dependent variables lnc_ele / lng_ele (annualised kWh / EUR); price lnPRE (household kWh price deflated by the time price index); income lny, lny^2; controls: months since reform (dist), household size, rooms, surface, elderly, education and economic-situation dummies, renting, building >25 years, municipality-size dummies, urban, province capital, region dummies, quarter dummies, year FE; household FE in cols 3,4,7,8; SEs clustered by household. Instruments: deflated effective prices of potatoes, water and fuel (lnPRE_papas_, lnPRE_aguav_, lnPRE_gascar_, with the dataset's filled values for non-purchasers). Attempt history: 1-2 exploration (columns, sample counts); 3 crashed (ivreg has no LIML) -> hand-coded LIML; 4 full run with T = T2, compared with claims (claim 1); 5 exploration of price/instrument construction; 6 specification grid compared with claims, crashed before printing RESULT lines (claim 2) -> switched to T = TT202; 7 full run, compared with claims (claim 3): all OLS/FE and FE-IV columns match to about 3 decimals, but the pooled LIML column 2 (and less so column 6) does not: my pooled first stage is weak (cluster F ~8 vs the paper's 379.6), so the pooled IV price coefficient is +0.31 instead of -0.94; 8 exploratory first-stage F diagnostics found no principled alternative exogenous set or instrument definition reproducing the paper's strong pooled first stage, so I reverted: the final files are an exact copy of attempt-7 (script unchanged).",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T14:54:52Z",
+  "finished_at": "2026-11-02T15:10:30Z"
+}
