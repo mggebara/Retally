@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "entry_id": "hollyer-2022-parties-as-disciplinarians",
+  "mode": "seeded",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [],
+  "deviations": [],
+  "notes": "Single run, no prior attempts. Table 1: OLS (fixest::feols, country-clustered SEs) following cross-national-analysis.do and cross-national-designate-controls.do: party controls partysize unions business religious; country controls pluralty, factor(pr), factor(cl) base 3, mdmh, factor(system) base 1, demsys, polity, gdppc, gini/100, ethfrac. Stata margins at ev_total = p25/p75 of the estimation sample (Stata summarize-detail percentiles = R quantile type 2) and group attachment = 0 vs p90 in the estimation sample (ethnic p90 = 1; extremist2 p90 = 3.55, as in the authors' script rather than the paper's stated 3); for a linear model these predictive margins reduce to linear contrasts of the coefficients, computed directly. N = 431 parties in 75 countries (430 in the extremism models due to one missing extremist2). Table 2: rdrobust defaults (conventional local-linear estimate, MSE-optimal bandwidths) on dlameduck_runs == 0, running variable mv_incparty. Did not compute SEs/p-values since no claim needs them. Did not run check_attempt; compared by eye after the final run only, no changes made.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T19:37:00Z",
+  "finished_at": "2026-11-02T19:42:00Z"
+}

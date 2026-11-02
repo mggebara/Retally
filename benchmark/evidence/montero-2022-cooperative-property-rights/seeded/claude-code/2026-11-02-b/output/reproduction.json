@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "entry_id": "montero-2022-cooperative-property-rights",
+  "mode": "seeded",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [],
+  "deviations": [],
+  "notes": "Translated Replication_file.do blocks T3c1/T3c2 (Table 5 cols 1-2: worker-level OLS of hh_inc_pc_real on Above500, norm_dist, norm_dist x Above500, i_year* dummies, sex, age, age2, |norm_dist|<300/150, clustered by Expropretario_ISTA) and T1c1/T1c2 (Table 5 cols 3-4: collapse (iqr) hh_inc_pc_real with casewise deletion by match_id x Expropretario_ISTA x i_year*, IQR via Stata's centile definition = R quantile type 2, then the same RD regression without individual controls) into fixest::feols. hh_inc_pc_real built exactly as the do-file's original measure (0 for 2010, which the original deflator omits). Single run, no comparison-driven changes; fixest dropped collinear i_year12 and sex as Stata would.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T19:35:56Z",
+  "finished_at": "2026-11-02T19:36:47Z"
+}

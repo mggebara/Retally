@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "entry_id": "hanushek-2022-patience-risk-human-capital",
+  "mode": "seeded",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [],
+  "deviations": ["Read only the 14 columns needed for Table 1 (and 14 for Table 2) via data.table::fread(select=) from the CSV forms of pisa_full_gps_final and pisa_full_gps_final_imcoo instead of the .dta files; all rows kept."],
+  "notes": "Translated 3_analysis_crosscountry.do Table 1 (reg pv1math prefs female age migra1 migra2 image imfemale immigra1 i.wave [pw=wgtc], cluster country; natives migra0==1 drop migra1/migra2/immigra1) and 3_analysis_migrants.do Table 2 (unweighted, i.countrywave FE, cluster coo, controls female age imfemale image coo_oecd) into fixest::feols with fixef.rm='none'. Single run; all estimates and Ns match the paper to reported precision. In Table 2 fixest drops 'image' as collinear (constant in the migrant sample), which Stata would also omit. Did not use check_attempt or change the script after comparing.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T19:39:25Z",
+  "finished_at": "2026-11-02T19:46:00Z"
+}

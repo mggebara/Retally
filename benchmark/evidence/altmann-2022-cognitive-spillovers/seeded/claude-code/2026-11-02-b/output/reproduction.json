@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "entry_id": "altmann-2022-cognitive-spillovers",
+  "mode": "seeded",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [],
+  "deviations": [],
+  "notes": "Translated the authors' do-files (4_2_Interventions_targeted_domain.do, 4_2_Cognitive_Spillover.do, 4_3_Payoffs_And_Efficiency.do) to fixest::feols. Lab sample: formatted_data_replication.dta with Treatment_Incentives != 4 (drops Ample). Outcomes summation_correct, default_followed, load_correct, payoff_share on the Treatment_intervention indicator (or Treatment_Environment dummies with Baseline omitted for col 7); controls = factor(Treatment_Incentives) + factor(original_lab) + (ability_task + ability_load) x original_lab + q_age + factor(q_gender) + factor(perc_multitasking_1_easy) + perc_multitasking_2 + factor(subject_cat) + factor(q_abitur_grade_cat) + factor(q_math_grade_cat), as in master.do globals. SEs clustered by subject_id. Online: formatted_data_long_mturk.dta, memory on Treatment_intervention, with window_height1 + window_width1 + age + factor(gender) for col 6. Single run, no claim comparisons used to change the script; all 13 values match the claimed values at reported precision (N=12160, 608 subjects).",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T19:31:29Z",
+  "finished_at": "2026-11-02T19:32:31Z"
+}

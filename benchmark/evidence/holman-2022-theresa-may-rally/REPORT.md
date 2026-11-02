@@ -36,7 +36,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [11/11](seeded/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a) | [10/11](independent/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[10/11](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) | [6/11](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[5/11](blind/claude-code/2026-10-22-b/CELL.md) (2026-10-22-b)<br>[6/11](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) |
+| `claude-code` | [11/11](seeded/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[0/11](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [10/11](independent/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[10/11](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) | [6/11](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[5/11](blind/claude-code/2026-10-22-b/CELL.md) (2026-10-22-b)<br>[6/11](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) |
 | `pipeline-desktop-opus` | [11/11](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) | [3/11](independent/pipeline-desktop-opus/20261023T064318Z/CELL.md) (20261023T064318Z) | [0/11](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) |
 | `pipeline-desktop-opus-run2` | [11/11](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [8/11](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) (20261023T153002Z) | [0/11](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
 
@@ -66,6 +66,9 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 - [seeded/claude-code/2026-10-22-a](seeded/claude-code/2026-10-22-a/CELL.md) (11/11)
   - Table 4 xtpcse corr(psar1) implemented by hand: OLS residuals -> panel-specific rho (rhotype regress, consecutive-quarter pairs using tsset-style lags) -> Prais-Winsten transform (a time gap starts a new segment) -> OLS. One panel's rho (1.070) was bounded to 1. Only point estimates and N are reported; panel-corrected SEs were not computed.
   - Table 2 xtreg (Stata default random-effects GLS, Swamy-Arora with harmonic-mean T for unbalanced panels) implemented by hand. The paper's note calls the best-PM column logistic, but the authors' script runs linear xtreg RE, which is what is reproduced.
+- [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) (0/11; failed: `intl_attack_table4`, `intl_attack_x_woman_exec_table4`, `n_obs_table4`, `did_attack_x_time_like_may_table2`, `did_attack_like_may_table2`, `did_time_like_may_table2`, `did_attack_x_time_may_best_pm_table2`, `did_attack_may_best_pm_table2`, `did_time_may_best_pm_table2`, `n_obs_did_like_may_table2`, `n_obs_did_may_best_pm_table2`)
+  - Table 4 (xtpcse, cor(psar1), independent) implemented by hand: OLS residuals, panel-specific rho from regressing e_t on e_{t-1} over consecutive quarters, truncated to [-1, 1]; Prais-Winsten transform with the sqrt(1 - rho^2) first-observation weight also applied to the first observation after an internal gap (195 such gaps in the estimation sample); panel-heteroskedastic PCSEs. Stata's exact handling of gaps and of rho > 1 (one panel, rho = 1.07) is not known; with rho truncated to 1 that country's dummy is aliased after the transform.
+  - Table 2 (xtreg, default random effects) implemented by hand as Swamy-Arora GLS with the unbalanced-panel harmonic-mean T; wave dummies with the later collinear wave dummy omitted (Stata ordering), linear model also for the best-PM column as in the do-file.
 - [independent/claude-code/2026-10-22-a](independent/claude-code/2026-10-22-a/CELL.md) (10/11; failed: `n_obs_table4`)
   - Table 4: estimation sample is every complete country-quarter in global_approval.dta (4,486 obs, 44 country_code panels) instead of the reported 4,328; no rule found in the paper or data that yields 4,328 (checked lagged regressors, lead DV, execrlc>0, AR(1) spell trimming).
   - Table 4: coefficients from OLS with country_code fixed effects (xtpcse without AR(1) gives the same point estimates); printed SEs are iid, not panel-corrected.
@@ -115,6 +118,17 @@ Claims where, in the same mode, one reproducer family passed in every run and th
 
 Pass rates at least 50 points apart (not unanimous):
 
+- seeded: `did_attack_like_may_table2` — pipeline 2/2, agent 1/2
+- seeded: `did_attack_may_best_pm_table2` — pipeline 2/2, agent 1/2
+- seeded: `did_attack_x_time_like_may_table2` — pipeline 2/2, agent 1/2
+- seeded: `did_attack_x_time_may_best_pm_table2` — pipeline 2/2, agent 1/2
+- seeded: `did_time_like_may_table2` — pipeline 2/2, agent 1/2
+- seeded: `did_time_may_best_pm_table2` — pipeline 2/2, agent 1/2
+- seeded: `intl_attack_table4` — pipeline 2/2, agent 1/2
+- seeded: `intl_attack_x_woman_exec_table4` — pipeline 2/2, agent 1/2
+- seeded: `n_obs_did_like_may_table2` — pipeline 2/2, agent 1/2
+- seeded: `n_obs_did_may_best_pm_table2` — pipeline 2/2, agent 1/2
+- seeded: `n_obs_table4` — pipeline 2/2, agent 1/2
 - independent: `did_attack_like_may_table2` — pipeline 1/2, agent 2/2
 - independent: `did_attack_x_time_like_may_table2` — pipeline 1/2, agent 2/2
 - independent: `did_time_like_may_table2` — pipeline 1/2, agent 2/2
@@ -129,6 +143,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### seeded · claude-code · 2026-10-22-a
 
 [`seeded/claude-code/2026-10-22-a/CELL.md`](seeded/claude-code/2026-10-22-a/CELL.md) — final 11/11, re-scored 11/11; first scored 11/11; executions 3; 2026-10-22T03:04:50Z; from `claude-code-6papers-all-modes-2026-10-22.json`; evidence complete.
+
+### seeded · claude-code · 2026-11-02-b
+
+[`seeded/claude-code/2026-11-02-b/CELL.md`](seeded/claude-code/2026-11-02-b/CELL.md) — final 0/11, re-scored 0/11; first scored 0/11; executions 5; 2026-11-02T19:40:00Z; from `claude-code-run2-23papers-seeded-2026-11-02.json`; evidence complete.
 
 ### seeded · pipeline-desktop-opus · 20261023T063725Z
 

@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "entry_id": "labandeira-2022-electricity-pricing-reform",
+  "mode": "seeded",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "ESTUDRED is not in the shipped analysis dataset; i.ESTUDRED in the OLS/FE columns is entered as its dummies iestud2-iestud4 (iestud1-4 were generated from ESTUDRED in 2_Dataset.do), which is the same specification.",
+    "LIML (ivreg2 ... liml nocons) is implemented by hand as the k-class estimator with kappa = smallest eigenvalue; only point estimates are computed for the IV columns (no claim depends on their standard errors)."
+  ],
+  "notes": "Used 'analysis data/data_to_run_DOFILE3.dta' (the data.dta produced by 2_Dataset.do). Sample = complete cases of the column-1 regression variables (e(sample)): 20,872 obs, 10,729 households. Cols 1/5: feols OLS with TAMAMU, CCAA, SITUACTHOG_j, year and quarter factors, clustered by id. Cols 3/7: same with household FE (fixef.rm='none'). Cols 2/6: LIML, no constant, regressors and dummies exactly as in the ivreg2 call (itam2-5, iccaa2-19, iestud2-4, isitu2-3, iyear7-9), instruments lnPRE_aguav_, lnPRE_papas_, lnPRE_gascar_. Cols 4/8: LIML, no constant, on household-demeaned variables as in the do-file. One exploratory run (attempt-1, no RESULT lines) checked variable names and the sample size; the first scored run is the final run and was not changed after comparing with the claims. All 12 claims match to the reported 3 decimals.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T19:36:00Z",
+  "finished_at": "2026-11-02T19:52:00Z"
+}

@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "entry_id": "lopez-moctezuma-2022-policy-deliberation-philippines",
+  "mode": "seeded",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "survey_clean.R links survey barangays to official barangays with fastLink (not installed); replaced by an exact barangay-name match, which matches all 10 treated survey barangays (control weights are 1 regardless).",
+    "ri::estate / ri::genprobexact replaced by direct computation: assignment probability = share of assigned barangays within each city; ITT = lm(y ~ assignment + city dummies) with weights Z/p + (1-Z)/(1-p). Randomization-inference p-values and clustered SEs were not computed (only coefficients and N are claimed)."
+  ],
+  "notes": "Attempt 1 was exploratory (inspected data_agg and survey_raw barangay names, attendance). Final script follows tables_figures_agg.R (Table 1), survey_clean.R (Anderson-style inverse-covariance indices, standardized on treatment==0 s.d.), tables_fig_ind.R (C.3/C.4: WLS with attendance weights att.prop/attendance.agg, city FE, by party list) and tables_fig_ind_unweighted.R (F.1: assignment-probability weights, city FE). All values match the claims to the reported precision except F.1 col 2 (23.267 vs claimed 23.242); not iterated on.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T19:33:00Z",
+  "finished_at": "2026-11-02T19:38:00Z"
+}

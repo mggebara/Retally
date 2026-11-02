@@ -36,7 +36,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [12/12](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a) | [8/12](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/12](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [6/12](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[7/12](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) |
+| `claude-code` | [12/12](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[12/12](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [8/12](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/12](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [6/12](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[7/12](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) |
 | `pipeline-desktop-opus` | [12/12](seeded/pipeline-desktop-opus/20261102T143152Z/CELL.md) (20261102T143152Z) | [5/12](independent/pipeline-desktop-opus/20261102T143735Z/CELL.md) (20261102T143735Z) | [4/12](blind/pipeline-desktop-opus/20261102T141403Z/CELL.md) (20261102T141403Z) |
 | `pipeline-desktop-opus-run2` | [12/12](seeded/pipeline-desktop-opus-run2/20261102T153300Z/CELL.md) (20261102T153300Z) | [7/12](independent/pipeline-desktop-opus-run2/20261102T190406Z/CELL.md) (20261102T190406Z) | [4/12](blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) (20261102T151132Z) |
 
@@ -67,6 +67,9 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Data read from the package's CSV copy (Data_to run_DOFILE3.csv) with a column subset via data.table::fread, because haven::read_dta with col_select failed to parse the .dta (attempt-1).
   - Stata's i.ESTUDRED resolves by unique abbreviation to ESTUDREDSP, which is used (ESTUDRED itself is not in the dataset).
   - ivreg2 LIML (columns 2, 4, 6, 8) implemented as a hand-written k-class LIML estimator (kappa = smallest eigenvalue), since fixest has no LIML; only point estimates are reported. xtreg fe is feols with id fixed effects and fixef.rm='none'.
+- [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) (12/12)
+  - ESTUDRED is not in the shipped analysis dataset; i.ESTUDRED in the OLS/FE columns is entered as its dummies iestud2-iestud4 (iestud1-4 were generated from ESTUDRED in 2_Dataset.do), which is the same specification.
+  - LIML (ivreg2 ... liml nocons) is implemented by hand as the k-class estimator with kappa = smallest eigenvalue; only point estimates are computed for the IV columns (no claim depends on their standard errors).
 - [independent/claude-code/2026-11-02-a](independent/claude-code/2026-11-02-a/CELL.md) (8/12; failed: `reform_consumption_ols_col1`, `reform_consumption_iv_col2`, `reform_expenditure_fe_col7`, `reform_expenditure_fe_iv_col8`)
   - LIML implemented by hand as a k-class estimator (fixest has only 2SLS); FE-LIML applies it to within-household demeaned data; household-clustered sandwich SEs.
   - Instruments are the provided gap-filled deflated log effective prices lnPRE_papas_, lnPRE_aguav_, lnPRE_gascar_ (the unfilled versions would cut N to ~10,300, inconsistent with the paper's equal N across columns). The LIML price coefficients do not match the paper, so the instrument construction likely differs.
@@ -124,6 +127,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### seeded · claude-code · 2026-11-02-a
 
 [`seeded/claude-code/2026-11-02-a/CELL.md`](seeded/claude-code/2026-11-02-a/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 3; 2026-11-02T14:15:30Z; from `claude-code-6papers-all-modes-2026-11-02.json`; evidence complete.
+
+### seeded · claude-code · 2026-11-02-b
+
+[`seeded/claude-code/2026-11-02-b/CELL.md`](seeded/claude-code/2026-11-02-b/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 2; 2026-11-02T19:52:00Z; from `claude-code-run2-23papers-seeded-2026-11-02.json`; evidence complete.
 
 ### seeded · pipeline-desktop-opus · 20261102T143152Z
 

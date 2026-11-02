@@ -1,0 +1,4749 @@
+# Retally reproduction task: lopez-moctezuma-2022-policy-deliberation-philippines (seeded, run 2026-11-02-b)
+
+You are reproducing quantitative results from an econometrics paper for the
+Retally benchmark.  You will write R code, run it in a network-less Docker
+sandbox, and record what you did as files.  The files are what gets scored.
+
+- Benchmark cell: entry `lopez-moctezuma-2022-policy-deliberation-philippines`, mode `seeded`, run `2026-11-02-b`
+- Paper: Policy Deliberation and Voter Persuasion: Experimental Evidence from an Election in the Philippines
+- Paper text (extracted from the PDF; tables may be garbled): `<repo>/benchmark/.cache/claude-code/lopez-moctezuma-2022-policy-deliberation-philippines/seeded/2026-11-02-b/paper.txt`
+- Data (the ONLY data you get): `<repo>/benchmark/.cache/claude-code/lopez-moctezuma-2022-policy-deliberation-philippines/seeded/2026-11-02-b/mount/lopez_moctezuma_2022_policy_deliberation_philippines`
+- Output directory (the ONLY place you write): `<repo>/benchmark/reproductions/lopez-moctezuma-2022-policy-deliberation-philippines/seeded/2026-11-02-b`
+
+## Mode rules
+
+These apply in every mode:
+
+- Write R only.  Run it only inside the sandbox, with the command under
+  "How to run a script"; never run R on the host.
+- No network: do not download anything, do not look the paper or its
+  replication package up online.
+- Use only the files under `<repo>/benchmark/.cache/claude-code/lopez-moctezuma-2022-policy-deliberation-philippines/seeded/2026-11-02-b/mount/lopez_moctezuma_2022_policy_deliberation_philippines` as data, and `<repo>/benchmark/.cache/claude-code/lopez-moctezuma-2022-policy-deliberation-philippines/seeded/2026-11-02-b/paper.txt` as
+  the paper.
+- Do not read anything else in this repository or on this machine: not the
+  catalog YAMLs under `benchmark/papers/`, not `.cache/datasets/`, not
+  `benchmark/results/`, not other reproductions under `benchmark/reproductions/`,
+  not other task directories.  If you nevertheless read any other file, list
+  it in `files_read_outside_mount` in `reproduction.json`, with why.
+- Seeded mode: the authors' own analysis scripts are on disk under the data
+  directory and reproduced below under "Original Replication Scripts".  You
+  may follow them:
+
+  The replication package (the dataset directory) ships the authors' own analysis scripts,
+  reproduced below.  These are the GROUND TRUTH for the exact estimating equation, variable names,
+  sample restrictions, fixed effects, and standard-error clustering — follow them over anything
+  reconstructed from the methodology summary, and prefer them over the paper's text where the two
+  disagree.  Your job is to write R code that implements the SAME SPECIFICATION: translate what the
+  scripts estimate, do not transliterate their syntax line by line (a Stata .do file's regression,
+  e.g. `reghdfe y x controls, absorb(fe) cluster(cl)`, becomes the equivalent fixest::feols() call
+  in R).  Keep only the parts that produce the specific claims being reproduced; skip figure
+  construction and unrelated robustness checks.  The scripts' data-file paths refer to the package's
+  internal layout — resolve them against the dataset directory listed under Dataset Information.
+- You may compare your `RESULT:` values with the claimed values yourself.
+  Every time you do that and then change the script, record the run you
+  compared as an attempt with `kind: "claim"`, and write the comparison you
+  made to that attempt's `feedback.txt`, one line per off-target claim in
+  the form `<name>: reproduced <v>, claimed <c>`.  Produce it with:
+
+      cd <repo> && uv run python -m benchmark.reproducers.check_attempt --run-dir <repo>/benchmark/reproductions/lopez-moctezuma-2022-policy-deliberation-philippines/seeded/2026-11-02-b --stdout <that attempt's stdout.txt>
+
+  At most 3 `kind: "claim"` attempts.
+- At most 3 `kind: "error"` repairs (a run that crashed or
+  printed no `RESULT:` line, followed by a fix).
+
+## Claims to Reproduce
+1. itt_turnout_barangay_table1_col1: -4.544 (percentage points (party-list turnout, % of registered voters)) [type: coefficient]
+   Location: Table 1, column 1 (Turnout), ITT row
+   Context: Table 1 ("Intention-to-Treat Effect on Electoral Returns at the Barangay Level"), column 1. Intention-to-treat effect of random assignment of a town-hall (deliberative) campaign by either party list (Akbayan or Umalab Ka) on party-list turnout, as a percentage of registered voters, from official COMELEC returns of the May 2013 party-list election, across all experimental barangays (one assigned treatment and two controls per selected municipality). Regression of the electoral return on the assignment dummy with municipality (city) fixed effects (equation 1); inference under randomization of th…
+2. itt_vote_overall_barangay_table1_col2: 1.096 (percentage points (vote share of the treating party list)) [type: coefficient]
+   Location: Table 1, column 2 (Vote (overall)), ITT row
+   Context: Table 1, column 2: intention-to-treat effect of town-hall-meeting assignment on the vote share (% of total party-list votes) of the party list campaigning in the barangay, Akbayan and Umalab Ka pooled; all experimental barangays; same specification as column 1 (assignment dummy, municipality fixed effects, randomization inference, permutation p = .048). The paper's headline result.
+3. itt_vote_akbayan_barangay_table1_col3: 1.955 (percentage points (Akbayan vote share)) [type: coefficient]
+   Location: Table 1, column 3 (Vote (Akbayan)), ITT row
+   Context: Table 1, column 3: intention-to-treat effect on Akbayan's vote share (% of party-list votes), barangays of the municipalities randomly assigned to Akbayan only; assignment dummy with municipality fixed effects, randomization inference (permutation p = .087).
+4. itt_vote_umalabka_barangay_table1_col4: 0.36 (percentage points (Umalab Ka vote share)) [type: coefficient]
+   Location: Table 1, column 4 (Vote (Umalab Ka)), ITT row
+   Context: Table 1, column 4: intention-to-treat effect on Umalab Ka's vote share (% of party-list votes), barangays of the municipalities randomly assigned to Umalab Ka only; assignment dummy with municipality fixed effects, randomization inference (permutation p = .141). Not significant.
+5. n_obs_barangay_table1_cols1_2: 39.0 (observations (barangays)) [type: other]
+   Location: Table 1, Observations, columns 1 and 2
+   Context: Number of barangays (all experimental barangays, both party lists) in the turnout and pooled vote-share regressions of Table 1, columns 1 and 2.
+6. n_obs_barangay_akbayan_table1_col3: 18.0 (observations (barangays)) [type: other]
+   Location: Table 1, Observations, column 3
+   Context: Number of barangays in the Akbayan vote-share regression, Table 1 column 3 (barangays of the Akbayan municipalities).
+7. n_obs_barangay_umalabka_table1_col4: 21.0 (observations (barangays)) [type: other]
+   Location: Table 1, Observations, column 4
+   Context: Number of barangays in the Umalab Ka vote-share regression, Table 1 column 4 (barangays of the Umalab Ka municipalities).
+8. itt_poverty_index_akbayan_tableC3: 0.496 (standard deviations (summary index, control-group s.d.)) [type: coefficient]
+   Location: SI Table C.3, Akbayan Treatment panel, column 1 (Index), ITT row
+   Context: Supporting-information Table C.3 ("Intention to Treat Effect on Attitudes on Poverty"), upper panel (Akbayan treatment), column 1. Post-election survey respondents in the Akbayan municipalities. Outcome: the summary index of poverty-related attitudes (Anderson 2008: the four items Poverty, Gap, CCT and Corruption, each oriented so higher means more agreement, standardized with respect to the control group's mean and s.d., combined as an inverse-covariance weighted average). Linear regression on treatment assignment with city fixed effects (equation 3), weighted to adjust for the oversampling o…
+9. itt_poverty_index_umalabka_tableC3: 0.126 (standard deviations (summary index, control-group s.d.)) [type: coefficient]
+   Location: SI Table C.3, Umalab Ka Treatment panel, column 1 (Index), ITT row
+   Context: SI Table C.3, lower panel (Umalab Ka treatment), column 1: the same poverty-attitudes summary index and specification as the Akbayan panel (assignment, city fixed effects, attendance weights, clustering by barangay), respondents in the Umalab Ka municipalities (p = 0.048). The text reports it as "a small, but significant ITT" on the poverty index (Figure 5, lower panel).
+10. itt_gender_index_akbayan_tableC4: 0.45 (standard deviations (summary index, control-group s.d.)) [type: coefficient]
+   Location: SI Table C.4, Akbayan Treatment panel, column 1 (Index), ITT row
+   Context: SI Table C.4 ("ITT Effect and CACE on Attitudes on Gender"), Akbayan treatment panel, column 1. Outcome: the summary index of attitudes on gender discrimination and sexism built from the five gender items (Female Rep., Female Pol., Equality, Discrimination, Harassment), oriented, standardized on the control group and inverse-covariance weighted as above. Respondents in the Akbayan municipalities; assignment with city fixed effects, attendance weights, standard errors clustered by barangay (p = 0.032). The main text reports this as the town-hall effect on awareness of gender-related issues (Fig…
+11. itt_gender_index_umalabka_tableC4: 0.095 (standard deviations (summary index, control-group s.d.)) [type: coefficient]
+   Location: SI Table C.4, Umalab Ka Treatment panel, column 1 (Index), ITT row
+   Context: SI Table C.4, Umalab Ka treatment panel, column 1: the gender- attitudes summary index of the Akbayan panel, respondents in the Umalab Ka municipalities, same specification (p = 0.079).
+12. itt_vote_overall_unweighted_tableF1_col2: 23.242 (percentage points (probability of voting for the treating party list)) [type: coefficient]
+   Location: SI Table F.1, column 2 (Vote (Overall)), ITT row
+   Context: SI Table F.1 ("ITT Effect and CACE on Electoral Returns at the Individual Level (Unweighted Results)"), column 2: the robustness version of the individual-level vote-choice ITT WITHOUT the attendance-oversampling adjustment (so self-reported attendees are overrepresented). Outcome: survey respondent reports voting for the party list that campaigned in their municipality, in percent, among respondents who turned out, both party lists pooled. Linear probability model on treatment assignment with city fixed effects; inference for the ITT under randomization of the treatment (permutation p = 0.000…
+13. itt_vote_akbayan_unweighted_tableF1_col3: 31.729 (percentage points (probability of voting for Akbayan)) [type: coefficient]
+   Location: SI Table F.1, column 3 (Vote (Akbyan)), ITT row
+   Context: SI Table F.1, column 3: unweighted individual-level ITT on reporting a vote for Akbayan, in percent, respondents in the Akbayan municipalities who turned out; assignment with city fixed effects, permutation inference (p = 0.00000).
+
+## Dataset Information
+Name: lopez_moctezuma_2022_policy_deliberation_philippines
+Local path: <repo>/benchmark/.cache/claude-code/lopez-moctezuma-2022-policy-deliberation-philippines/seeded/2026-11-02-b/mount/lopez_moctezuma_2022_policy_deliberation_philippines
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- survey_raw.RData (15.1 KB) — objects: survey_raw (tbl_df, 1314 rows, 37 columns: city, barangay, assignment, treatment, treat.akbayan, treat.umalabka, vote.akbayan, vote.umalabka, vote, attendance, gender, equality, discrimination, harassment, poverty, corruption, id, region, turnout_all, turnout_pl, partytreat, assign.akbayan, assign.umalabka, attendance.rallies, income, education, age, religion, status, linguistic, info_all, info_fam, info_others, femhouse, fempol, gap, cct)
+- data_agg.RData (3.4 KB) — objects: data.all (data.frame, 39 rows, 21 columns: barangay, city, assignment, treatment, turnout.party, votes.akbayan, votes.umalabka, share.akbayan, share.umalabka, region, partytreat, reg.num, vote.num, vote.num.party, turnout.general, share.treated, reg.pop.thousand, female.pop, urban, att.prop, att.prop.turn)
+- Codebook_aggregate_dataset.pdf (88.5 KB)
+- Codebook_individual_dataset.pdf (55.8 KB)
+- MuniCities.dbf (1.7 MB)
+- MuniCities.shp (12.0 MB)
+- MuniCities.shx (13.0 KB)
+- Regions.dbf (4.3 KB)
+- Regions.shp (9.0 MB)
+- Regions.shx (236 B)
+- corr_att.R (9.6 KB)
+- data_barangay.csv (1.5 KB) — columns: barangay,city,region,treatment,partytreat
+- figure_B1_table_B1.R (4.7 KB)
+- functions_agg.R (699 B)
+- functions_ind.R (3.4 KB)
+- functions_survey.R (433 B)
+- main_agg.R (1.3 KB)
+- main_ind.R (1.7 KB)
+- main_survey.R (971 B)
+- maps.R (2.8 KB)
+- readme.txt (5.2 KB)
+- survey_clean.R (5.2 KB)
+- table_A1_A2.R (2.8 KB)
+- tables_fig_ind.R (43.3 KB)
+- tables_fig_ind_balanced.R (19.9 KB)
+- tables_fig_ind_covs.R (45.1 KB)
+- tables_fig_ind_unweighted.R (10.4 KB)
+- tables_figures_agg.R (14.9 KB)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/benchmark/.cache/claude-code/lopez-moctezuma-2022-policy-deliberation-philippines/seeded/2026-11-02-b/mount/lopez_moctezuma_2022_policy_deliberation_philippines' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Original Replication Scripts
+The replication package (the dataset directory) ships the authors' own analysis scripts, reproduced below.  These are the GROUND TRUTH for the exact estimating equation, variable names, sample restrictions, fixed effects, and standard-error clustering — follow them over anything reconstructed from the methodology summary, and prefer them over the paper's text where the two disagree.  Your job is to write R code that implements the SAME SPECIFICATION: translate what the scripts estimate, do not transliterate their syntax line by line (a Stata .do file's regression, e.g. `reghdfe y x controls, absorb(fe) cluster(cl)`, becomes the equivalent fixest::feols() call in R).  Keep only the parts that produce the specific claims being reproduced; skip figure construction and unrelated robustness checks.  The scripts' data-file paths refer to the package's internal layout — resolve them against the dataset directory listed under Dataset Information.
+
+### `main_agg.R`
+```r
+###################################################
+### Philippines Experiment
+### Gabriel López-Moctezuma et al.
+### Official Aggregate data management script for results
+###################################################
+
+rm(list = ls()) # Clear history
+
+##Location of the main directory
+main.dir <-  ""
+
+## Load data and functions
+setwd(paste0(main.dir,"/data/aggregate/"))
+
+## Output directory
+output <- main.dir
+
+##  Loading required packages
+list.packages <- c("readr",
+                   "plyr",
+                   "dplyr",
+                   "tidyr",
+                   "stringr",
+                   "xtable",
+                   "ri",
+                   "stargazer",
+                   "dummies",
+                   "AER",
+                   "mvtnorm")
+
+
+package.check <- lapply(
+    list.packages,
+    FUN = function(x) {
+        if (!require(x, character.only = TRUE)) {
+            install.packages(x, dependencies = TRUE)
+            library(x, character.only = TRUE)
+        }
+    }
+)
+
+options(knitr.table.format = "latex")
+
+## Set seed
+set.seed(1983)
+
+## Source user-defined functions
+source(paste0(main.dir,"/code/aggregate/functions_agg.R"))
+
+source(paste0(main.dir,"/code/aggregate/tables_figures_agg.R"))
+source(paste0(main.dir,"/code/aggregate/table_A1_A2.R"))
+source(paste0(main.dir,"/code/aggregate/figure_B1_table_B1.R"))
+
+```
+
+### `main_ind.R`
+```r
+###################################################
+### Philippines Experiment
+### Gabriel López-Moctezuma et al.
+### Individual survey data management script for results
+###################################################
+
+rm(list = ls()) # Clear history
+
+#Path of main directory
+main.dir <-  ""
+
+## Load data and functions
+setwd(paste0(main.dir,"/data/survey/"))
+
+## Output directory
+output <- main.dir
+
+##  Loading required packages
+list.packages <- c("readr",
+                   "plyr",
+                   "dplyr",
+                   "tidyr",
+                   "stringr",
+                   "xtable",
+                   "ri",
+                   "stargazer",
+                   "dummies",
+                   "AER",
+                   "parallel",
+                   "doParallel",
+                   "mvtnorm",
+                   "MatchIt",
+                   "Amelia")
+
+package.check <- lapply(
+    list.packages,
+    FUN = function(x) {
+        if (!require(x, character.only = TRUE)) {
+            install.packages(x, dependencies = TRUE)
+            library(x, character.only = TRUE)
+        }
+    }
+)
+
+options(knitr.table.format = "latex")
+
+## Set seed
+set.seed(1983)
+
+## Source user-defined functions
+## Loading functions to calculate robust standard errors
+source(paste0(main.dir,"/code/individual/functions_ind.R")) # Auxiliary functions for individual analysis
+
+source(paste0(main.dir,"/code/individual/tables_fig_ind.R"))
+source(paste0(main.dir,"/code/individual/tables_fig_ind_covs.R"))
+source(paste0(main.dir,"/code/individual/tables_fig_ind_balanced.R"))
+source(paste0(main.dir,"/code/individual/tables_fig_ind_unweighted.R"))
+source(paste0(main.dir,"/code/individual/corr_att.R"))
+
+```
+
+### `main_survey.R`
+```r
+###################################################
+### Philippines Experiment
+### Gabriel López-Moctezuma et al.
+### Raw survey Data
+###################################################
+
+rm(list = ls()) # Clear history
+
+main.dir <-  ""
+
+## Load data and functions
+setwd(paste0(main.dir,"/data/survey/"))
+
+## Output directory
+output <- main.dir
+
+##  Loading required packages
+list.packages <- c("readr",
+                   "plyr",
+                   "dplyr",
+                   "tidyr",
+                   "stringr",
+                   "data.table",
+                   "fastLink")
+
+package.check <- lapply(
+    list.packages,
+    FUN = function(x) {
+        if (!require(x, character.only = TRUE)) {
+            install.packages(x, dependencies = TRUE)
+            library(x, character.only = TRUE)
+        }
+    }
+)
+
+options(knitr.table.format = "latex")
+
+source(paste0(main.dir,"/code/survey/functions_survey.R"))
+source(paste0(main.dir,"/code/survey/survey_clean.R"))
+
+```
+
+### `table_A1_A2.R`
+```r
+## Load aggregate data
+load("data_agg.RData")
+
+parties <- as.character(unique(data.all$partytreat))
+
+partynames <- c("Umalab Ka", "Akbayan")
+
+##Tables A1 and A2 in the paper
+for (i in 1:length(parties)){
+
+    ## We split the data by party-list
+    data.party <- as.tbl(data.all) %>%
+        filter(partytreat == parties[i]) %>%
+        arrange(city,
+                barangay)
+
+    ## Construct table of summary statistics
+    turnout.table <- data.frame(city = data.party$city,
+                                barangay = data.party$barangay,
+                                status = data.party$treatment,
+                                turnout.general = data.party$turnout.general,
+                                turnout.party = data.party$turnout.party,
+                                share.treated = data.party$share.treated)
+
+    turnout.table$status <- ifelse(turnout.table$status == 0,
+                                   "Control",
+                                   "Treated")
+
+    turnout.table[,4:6] <- round(turnout.table[,4:6], digits = 2)
+
+    ##Summary statistics across barangays
+    mean.turnout <- round(colMeans(turnout.table[,4:6], na.rm = TRUE),
+                          digits = 2)
+
+    sd.turnout <- round(c(sd(turnout.table$turnout.general, na.rm = TRUE),
+                          sd(turnout.table$turnout.party, na.rm = TRUE),
+                          sd(turnout.table$share.treated, na.rm = TRUE)),
+                        digits = 2)
+
+    turnout.table <- rbind(as.matrix(turnout.table),
+                           c("Mean", rep("",2),mean.turnout),
+                           c("S.D.", rep("",2),sd.turnout))
+
+    turnout.table[is.na(turnout.table) == 1] <- "-"
+
+    colnames(turnout.table) <- c("City", "Barangay", "Status", "Turnout (National)",
+                                 "Turnout (Party-list)", "Vote Share (Treatment)")
+
+    ## Add footnotes
+    if(parties[i] == "akbayan"){
+
+        add.to.row <- list(pos = list(nrow(turnout.table)), command = NULL)
+
+        command <- paste0("\\hline\n",
+                          "\\multicolumn{", ncol(turnout.table),"}{l}",
+                          "{\\footnotesize Note: No available general election figures for the barangays of Cabooan, Zone VI and Hagonoy.}\n")
+
+        add.to.row$command <- command
+
+    } else {
+
+        add.to.row <- NULL
+    }
+
+    print.xtable(xtable(turnout.table,
+                 digits = 3,
+                 caption = paste("Turnout for the National and Party-List Elections (", partynames[i]," Barangays)", sep = ""),
+                 align = c("l","l","l","l","c","c","c"),
+                 label = paste("turnout_", parties[i],sep = "")),
+                 file = paste0(output,"/summary_agg_",parties[i],".txt"),
+          include.rownames = FALSE,
+          hline.after = c(-1,0,nrow(turnout.table) - 2),
+          add.to.row = add.to.row,
+          size = "footnotesize")
+
+}
+
+```
+
+### `figure_B1_table_B1.R`
+```r
+## Load aggregate data at the barangay level
+load("data_agg.RData")
+## Balance variables
+vars <- c("reg.pop.thousand",
+          "female.pop",
+          "urban")
+
+## Use F-test to assess the null hypothesis that the covariates predict random assignment (Z) no better than would be expected by chance
+
+assignment <- data.all$assignment
+
+cluster <- data.all$barangay
+block <- data.all$city
+
+perms <- genperms(assignment,
+                  blockvar=block,
+                  clustvar=cluster)
+
+numiter <- ncol(perms)
+probs <- genprobexact(assignment,
+                      blockvar = block,
+                      clustvar=cluster)  # subjects are clustered by precinct
+
+covs <- as.matrix(data.all[,c("reg.pop.thousand",
+                              "female.pop",
+                              "urban")])
+
+weights <- assignment/probs + (1-assignment)/(1-probs)
+Fstat <- summary(lm(assignment ~ covs, weights = weights))$fstatistic[1]   # F-statistic from actual data
+Fstatstore <- rep(NA,numiter)
+for (n in 1:numiter) {
+    probs <- genprobexact(perms[,n],
+                          blockvar = block,
+                          clustvar=cluster)
+    weights <- perms[,n]/probs + (1-perms[,n])/(1-probs)
+    Fstatstore[n] <- summary(lm(perms[,n]~covs, weights = weights))$fstatistic[1]   # F-statistic under the null of random assignment of Z
+}
+
+pvalue <- mean(Fstatstore >= Fstat)
+kernel.null <- density(Fstatstore)
+
+
+## Figure B.1
+pdf(paste(output,"/fstatcov.pdf",sep=""))
+plot(kernel.null,
+     xlim = c(min(kernel.null$x), max(kernel.null$x)),
+     ylim = c(min(kernel.null$y), max(kernel.null$y)),
+     main = "",
+     xlab = "F-statistic(%)",
+     ylab = "Frequency",
+     )
+polygon(kernel.null, col="blue", border="blue")
+abline(v=Fstat, lty = 2, col = "red")
+text(Fstat + 1,
+     max(kernel.null$y),
+     paste("Fstat = ", round(Fstat, digits = 2), sep = ""),
+     col = "red")
+mtext(paste("p-value=", round(pvalue, 4)), 3)
+
+dev.off()
+
+## We store the  output in the following lists
+reglist <- atelist  <- coeflist <- plist <- p_rilist <- vector( "list", length(vars))
+
+## We estimate the ATE of each pre-treatment variable on electoral returns
+for (i in 1:length(vars)){
+
+    data.reg <- data.all[complete.cases(data.all[vars[i]]),]
+
+    assignment <- data.reg$assignment
+    treatment <- data.reg$treatment
+    att.prop <- data.reg$att.prop
+    att.prop.turn <- data.reg$att.prop.turn
+    outcome <- data.reg[,vars[i]]
+    cluster <- data.reg$barangay
+    block <- data.reg$city
+    ## Control for cluster fixed effects
+    X <- dummy("city", data.reg)[,-1]
+    ## Generate all possible permutations
+    perms <- genperms(assignment,
+                      blockvar=block,
+                      clustvar=cluster)
+
+    ## Compute probability of treatment
+    probs <- genprobexact(assignment,
+                          blockvar=block,
+                          clustvar=cluster)
+    ## Compute weights given assignment prob
+    weights <- assignment/probs + (1-assignment)/(1-probs)
+
+    ## Estimate the ATE
+    atelist[[i]] <- estate(outcome,
+                  assignment,
+                  X = X,
+                  prob=probs)
+
+        ## Store results
+    reglist[[i]] <- lm(outcome ~ assignment + X,
+                       weights = weights)
+    coeflist[[i]] <- coef(reglist[[i]])
+    plist[[i]] <- summary(reglist[[i]])$coefficients[,4]
+
+}
+
+## Balance Test results
+coef.bal <- list(coeflist[[1]],
+                 coeflist[[2]],
+                 coeflist[[3]])
+
+p.bal = list(plist[[1]],
+             plist[[2]],
+             plist[[3]])
+
+caption.bal <- "Pre-treatment Balance Test at the Barangay Level"
+label.bal <- "res_bal_all"
+
+## Latex table for balance test
+table.bal <- stargazer(reglist[[1]],
+                       reglist[[2]],
+                       reglist[[3]],
+                       coef = coef.bal,
+                       report = "vcp",
+                       p = p.bal,
+                       title = caption.bal,
+                       no.space = TRUE,
+                       dep.var.labels.include = FALSE,
+                       covariate.labels = c("ATE",
+                                            "Control"),
+                       omit = c("city"),
+                       column.labels = c("Population",
+                                         "Registered Voters"),
+                       omit.stat = c("f","adj.rsq",
+                                     "ser"),
+                       label = label.bal,
+                       notes.append = TRUE,
+                       notes.align = "l",
+                       notes = c("Inference for the ATE under randomization of the treatment",
+                                 "Permutation $p$-values for ATE"))
+
+## Table B.1
+write.table(table.bal, paste0(output,"/table_bal.txt"), sep="",row.names= FALSE,na="", quote = FALSE, col.names = FALSE)
+
+
+```
+
+### `tables_fig_ind.R`
+```r
+## Individual survey results
+load("survey_ind.RData")
+
+## Load aggregate survey data
+load("survey_agg.RData")
+
+## Load aggregate data
+load("../aggregate/data_agg.RData")
+
+## We calculate weights based on attendance at the aggregate level
+att.self <- survey.agg %>% filter(treatment == 1) %>%
+    select(barangay,
+           barangay.official,
+           city,
+           city.official,
+           attendance.agg)
+
+attendees <- as.tbl(data.all) %>% filter(treatment == 1) %>%
+    mutate(att.prop = att.prop * 100,
+           att.prop.turn = att.prop.turn * 100)
+
+data.agg.att <- left_join(att.self,
+                      attendees,
+                      by = c("city.official" = "city",
+                             "barangay.official" = "barangay")) %>%
+    mutate(weight.att = ifelse(attendance.agg > 0,
+                               att.prop / attendance.agg,
+                               1)) %>%
+               dplyr::select(city,
+                  barangay,
+                  weight.att)
+
+data <- survey_raw
+
+data <- left_join(data,
+                  data.agg.att,
+                  by = c("city",
+                         "barangay"))
+
+data <- data %>% mutate(weight.att = ifelse(treatment == 0,
+                                            1,
+                                            weight.att))
+
+data.fit.assign <- data.frame(assignment = data$assignment,
+                       partytreat = data$partytreat,
+                       gender = data$gender,
+                       income = data$income,
+                       age = data$age,
+                       religion = data$religion,
+                       status = data$status,
+                       linguistic = data$linguistic,
+                       education = data$education)
+
+data.fit.assign <- data.fit.assign[complete.cases(data.fit.assign),]
+
+## Nearest neighbor matching
+prop.assign  <- matchit(assignment ~ gender + income + age + religion + status + linguistic + education,
+                 data=data.fit.assign,
+                 method="nearest",
+                 replace=TRUE,
+                 ratio= 2)
+data.fit.assign$prop.score <- prop.assign$distance
+sum.prop <- summary(prop.assign)$sum.all
+sum.prop <- round(sum.prop[,-((ncol(sum.prop)-1):ncol(sum.prop))], digits = 3)
+
+## Latex table of results
+## Table B.2
+print(xtable(sum.prop),
+      file = paste0(output,
+                    "/table_prop_assign.txt"))
+
+
+## Kernel estimates of propensity scores
+pscore.control.raw <- data.fit.assign$prop.score[data.fit.assign$assignment == 0]
+kernel.control.raw <- density(pscore.control.raw)
+pscore.treat.raw <- data.fit.assign$prop.score[data.fit.assign$assignment == 1]
+kernel.treat.raw <- density(pscore.treat.raw)
+rr <- range(data.fit.assign$prop.score)
+
+
+## Figure B.2 (right panel)
+pdf(paste(output,"/kernelraw_assign.pdf",sep=""))
+plot(kernel.control.raw, col = "red",
+     xlim = c(min(min(kernel.control.raw$x),min(kernel.treat.raw$x) ), max(max(kernel.control.raw$x), max(kernel.treat.raw$x))),
+     ylim = c(min(min(kernel.control.raw$y), min(kernel.treat.raw$y)), max(max(kernel.control.raw$y), max(kernel.treat.raw$y))),
+     xlab = paste("Propensity Score (N=", nrow(eval(data.fit.assign)), ")", sep = ""),
+     ylab = "Density", main = "Survey Sample")
+lines(kernel.treat.raw, col = "blue")
+dev.off()
+
+## QQ Plots
+## Figure B.2 (left panel)
+pdf(paste(output,"/qqraw_assign.pdf",sep=""))
+qqplot(pscore.control.raw, pscore.treat.raw, col = "red", pch = 20, bg = "red",
+       xlab = "Treated Units", ylab = "Control Units", xlim = rr, ylim = rr)
+abline(0,1, lty = 1)
+abline(a=(rr[2]-rr[1])*0.1,b=1,lty=2)
+abline(a=-(rr[2]-rr[1])*0.1,b=1,lty=2)
+dev.off()
+
+
+## ITT Effect
+data$turnout_pl <- data$turnout_pl * 100
+data$vote <- data$vote * 100
+data$vote.akbayan <- data$vote.akbayan * 100
+data$vote.umalabka <- data$vote.umalabka * 100
+
+## List of dependent variables
+vars <- c("turnout_pl",
+          "vote",
+          "vote.akbayan",
+          "vote.umalabka")
+labels <- c("Turnout",
+            "Vote",
+            "Vote (Akbayan)",
+            "Vote (Umalabka)")
+
+## We store the regression output
+reglist.wc.weight  <- coeflist.wc.weight <- plist.wc.weight  <- vcovlist.wc.weight <- ivlist.wc.weight <- coefivlist.wc.weight <- vcovivlist.wc.weight <- plistiv.wc.weight <- mg.ols <-  mg.iv <-
+    lower.weight <- upper.weight <- lower.weight.iv <- upper.weight.iv <- vector( "list", length(vars))
+
+data <- as.data.frame(data)
+## Linear estimation
+for (i in 1:length(vars)){
+    formula.control <- paste(vars[i]," ~ assignment", sep = "") # Regression formula w/o city dummies
+    formula.wc <- paste(vars[i]," ~ assignment + city", sep = "") # Regression formula w/o city dummies
+
+    formula.control.iv <- paste(vars[i]," ~ treatment| assignment", sep = "")
+    formula.wc.iv <- paste(vars[i]," ~ treatment + city | assignment + city", sep = "")
+
+    if (vars[i] == "turnout_pl" |
+        vars[i] == "vote"){
+
+               data.reg.wc <- data[,c(vars[i],
+                                      "barangay",
+                                      "city",
+                                      "assignment",
+                                      "treatment",
+                                      "weight.att"
+                                      )]
+        data.reg.wc <- data.reg.wc[complete.cases(data.reg.wc),]
+
+    } else {
+        if (vars[i] == "vote.akbayan") {
+            data.reg.wc <- data[data$partytreat == "Akbayan",c(vars[i],
+                                                               "barangay",
+                                                               "city",
+                                                               "assignment",
+                                                               "treatment",
+                                                               "weight.att"
+                                                               )]
+
+            data.reg.wc <- data.reg.wc[complete.cases(data.reg.wc),]
+
+        } else {
+
+            data.reg.wc <- data[data$partytreat == "Umalab Ka",c(vars[i],
+                                                                 "barangay",
+                                                                 "city",
+                                                                 "assignment",
+                                                                 "treatment",
+                                                                 "weight.att"
+                                                                 )]
+
+            data.reg.wc <- data.reg.wc[complete.cases(data.reg.wc),]
+
+        }
+    }
+
+    reglist.wc.weight[[i]] <- lm(eval(formula.wc), weights = weight.att, data = data.reg.wc)
+    reglist.control <- lm(eval(formula.control), weights = weight.att, data = data.reg.wc)
+    coeflist.wc.weight[[i]] <- coef(reglist.wc.weight[[i]])
+    coeflist.wc.weight[[i]]["(Intercept)"] <- coef(reglist.control)["(Intercept)"]
+    vcovlist.wc.weight[[i]] <- varcov.cluster(as.data.frame(data.reg.wc), reglist.wc.weight[[i]], cluster1= "barangay")
+    plist.wc.weight[[i]] <- coeftest(reglist.wc.weight[[i]], vcovlist.wc.weight[[i]])[,4]
+    plist.wc.weight[[i]]["(Intercept)"] <- coeftest(reglist.control, varcov.cluster(as.data.frame(data.reg.wc), reglist.control, cluster1= "barangay"))[,4]["(Intercept)"]
+
+    ivlist.wc.weight[[i]] <- ivreg(eval(formula.wc.iv), weights = weight.att, data = data.reg.wc)
+    reglist.control.iv <- ivreg(eval(formula.control.iv), weights = weight.att, data = data.reg.wc)
+    coefivlist.wc.weight[[i]] <- coef(ivlist.wc.weight[[i]])
+    coefivlist.wc.weight[[i]]["(Intercept)"] <- coef(reglist.control.iv)["(Intercept)"]
+    vcovivlist.wc.weight[[i]] <- varcov.cluster(as.data.frame(data.reg.wc), ivlist.wc.weight[[i]], cluster1= "barangay")
+    plistiv.wc.weight[[i]] <- coeftest(ivlist.wc.weight[[i]], vcovivlist.wc.weight[[i]])[,4]
+    plistiv.wc.weight[[i]]["(Intercept)"] <- coeftest(reglist.control.iv, varcov.cluster(as.data.frame(data.reg.wc), reglist.control.iv, cluster1= "barangay"))[,4]["(Intercept)"]
+
+
+        mg.ols[[i]] <- coef(reglist.wc.weight[[i]])["assignment"]
+
+        lower.weight[[i]] <- mg.ols[[i]] -
+            (qnorm(.975) * sqrt(vcovlist.wc.weight[[i]]["assignment","assignment"]))
+
+        upper.weight[[i]] <- mg.ols[[i]] +
+            (qnorm(.975) * sqrt(vcovlist.wc.weight[[i]]["assignment","assignment"]))
+
+        mg.iv[[i]] <- coef(ivlist.wc.weight[[i]])["treatment"]
+
+        lower.weight.iv[[i]] <- mg.iv[[i]] -
+            (qnorm(.975) * sqrt(vcovivlist.wc.weight[[i]]["treatment","treatment"]))
+
+        upper.weight.iv[[i]] <- mg.iv[[i]] +
+            (qnorm(.975) * sqrt(vcovivlist.wc.weight[[i]]["treatment","treatment"]))
+
+}
+
+    mg.ols <- unlist(mg.ols)
+    mg.iv <- unlist(mg.iv)
+    lower.weight <- unlist(lower.weight)
+    upper.weight <- unlist(upper.weight)
+
+    lower.weight.iv <- unlist(lower.weight.iv)
+    upper.weight.iv <- unlist(upper.weight.iv)
+
+    all.coef <- c(mg.ols[1],mg.iv[1],
+                  mg.ols[2],mg.iv[2],
+                  mg.ols[3],mg.iv[3],
+                  mg.ols[4],mg.iv[4])
+
+
+    lower.coef <- c(lower.weight[1],lower.weight.iv[1],
+                         lower.weight[2],lower.weight.iv[2],
+                         lower.weight[3],lower.weight.iv[3],
+                         lower.weight[4],lower.weight.iv[4]
+                         )
+
+    upper.coef <- c(upper.weight[1],upper.weight.iv[1],
+                           upper.weight[2],upper.weight.iv[2],
+                           upper.weight[3],upper.weight.iv[3],
+                           upper.weight[4],upper.weight.iv[4]
+                           )
+    points <- c(1.3,1.4,
+                1.8,1.9,
+                2.3,2.4,
+                2.8,2.9)
+    lty <- c(1,2,
+             1,2,
+             1,2,
+             1,2)
+
+    pch <- c(19,17,
+             19,17,
+             19,17,
+             19,17)
+
+## Figure 3
+    pdf(paste(output,"/votes.pdf",sep=""),
+        width = 9, height = 7)
+    plot(points,
+         all.coef,
+             xlab = "", ylab = "Percentage of Respondents", xlim = c(1, 3), ylim = c(min(lower.coef) - 1,
+                                                            max(upper.coef) + 0.5), pch = pch,
+             axes = FALSE, cex = 1.3)
+
+    for (k in 1:length(points)){
+        lines(c(points[k], points[k]),
+              c(lower.coef[k], upper.coef[k]),
+              lty = lty[k],
+              lwd = 2
+              )
+      lines(c(points[k], points[k]),
+              c(lower.coef[k], upper.coef[k]),
+              lty = lty[k],
+              )
+    }
+
+    text(c(1.35,1.85,2.35,2.85),
+         rep(min(lower.coef) - 0.5,
+             times = 6),
+         labels)
+
+        axis(side = 2)
+        abline(h = 0, lty = 2)
+        legend("topleft",
+               c("ITT", "CACE"),
+               pch = c(19,17),
+               lty = c(1,2),
+               bty = "n")
+    dev.off()
+
+
+p.wc = list(plist.wc.weight[[1]], plist.wc.weight[[2]], plist.wc.weight[[3]], plist.wc.weight[[4]])
+
+coef.wc = list(coeflist.wc.weight[[1]], coeflist.wc.weight[[2]], coeflist.wc.weight[[3]], coeflist.wc.weight[[4]])
+
+table.1 <- stargazer(reglist.wc.weight[[1]],
+                     reglist.wc.weight[[2]],
+                     reglist.wc.weight[[3]],
+                     reglist.wc.weight[[4]],
+                     report = "vcp",
+                     p = p.wc,
+                     coef = coef.wc,
+                     title = "Intention to Treat Effect on Electoral Returns at the Individual Level",
+                     no.space = TRUE,
+                     omit = "city",
+                     covariate.labels = c("ITT",
+                                          "Control"),
+                     digits = 3,
+                     dep.var.labels.include = FALSE,
+                     column.labels = c("Turnout", "Vote (Overall)", "Vote (Akbyan)", "Vote (Umalab-Ka)"),
+                     omit.stat = c("f","adj.rsq", "ser"),
+                     label = "itt_ols",
+                     notes.append = TRUE,
+                     notes.align = "l",
+                     notes = c("Note: Pre-treatment controls include gender, income, age, religion, marriage status, linguistic group, and education.",
+                         "Note: WLS by proportion of meeting attendees per barangay"))
+
+## Function to insert row to table
+table.1 <- as.data.frame(table.1)
+table.1$table.1 <- as.character(table.1$table.1)
+
+## We insert CACE results
+cace <- paste0(" CACE & ",
+               paste0(round(c(ivlist.wc.weight[[1]]$coefficients["treatment"],
+                              ivlist.wc.weight[[2]]$coefficients["treatment"],
+                              ivlist.wc.weight[[3]]$coefficients["treatment"],
+                              ivlist.wc.weight[[4]]$coefficients["treatment"]),
+                            3),
+                      collapse = " & "),
+               "\\\\")
+
+cace.p <- paste0(" & ",
+                 paste0(paste0("p = ",round(c(plistiv.wc.weight[[1]]["treatment"],
+                                              plistiv.wc.weight[[2]]["treatment"],
+                                              plistiv.wc.weight[[3]]["treatment"],
+                                              plistiv.wc.weight[[4]]["treatment"]),
+                                            3)),
+                        collapse = " & "),
+                 "\\\\")
+
+r <- 17
+table.1 <- insertrow(table.1,cace,r)
+table.1 <- insertrow(table.1,cace.p,r+1)
+
+r <- 21
+fe <- "{\\bf City FE} & Yes & Yes & Yes & Yes \\\\"
+pretreat <- "{\\bf Pre-treatment Vars.} & No & No & No & No \\\\"
+table.1 <- insertrow(table.1,fe,r)
+table.1 <- insertrow(table.1,pretreat,r+1)
+
+##Table C.2
+write.table(table.1,
+              file = paste0(output,
+                          "/table_itt.txt"),
+            sep="",row.names= FALSE,na="", quote = FALSE, col.names = FALSE)
+
+## Marginal Treatment Effect by Education, Income and Gender
+## Store the regression output
+reglist.weight <- vector( "list", length(vars))
+vcovlist.weight <- vector( "list", length(vars))
+
+ivlist.weight <- vector( "list", length(vars))
+vcovivlist.weight <- vector( "list", length(vars))
+
+## Linear estimation
+vars <- c(
+          "vote.akbayan",
+          "vote.umalabka",
+          "sexism",
+          "poverty.all")
+
+
+vars.cond <- c("income", "gender", "education")
+
+data$treat.gender <- data$treatment * data$gender
+data$assign.gender <- data$assignment * data$gender
+
+data$treat.income <- data$treatment * data$income
+data$assign.income <- data$assignment * data$income
+
+data$treat.education <- data$treatment * data$education
+data$assign.education <- data$assignment * data$education
+
+vars <- c(
+          "vote.akbayan",
+          "vote.umalabka")
+
+
+treat.int <- c("treat.income",
+               "treat.gender",
+               "treat.education")
+
+assign.int <- c("assign.income",
+                "assign.gender",
+                "assign.education")
+
+
+for (i in 1:length(vars)){
+
+    for (j in 1:length(vars.cond)){
+
+        formula <- paste(vars[i]," ~ assignment + ", vars.cond[j], " + city  + (assignment *", vars.cond[j], ")",
+                         sep = "") # Regression formula
+
+        formula.cace <- paste(vars[i]," ~ treatment + ", vars.cond[j], " + city  + ",treat.int[j]," |.- treatment - ",treat.int[j]," + assignment + ",assign.int[j],
+                         sep = "") # Regression formula
+
+            if (vars[i] == "vote.akbayan" |
+                vars[i] == "sexism") {
+                data.reg <- data[data$partytreat == "Akbayan",c(vars[i],
+                                                                "barangay",
+                                                                "assignment",
+                                                                "treatment",
+                                                                "city",
+                                                                vars.cond[j],
+                                                                treat.int[j],
+                                                                assign.int[j],
+                                                                "weight.att")]
+
+            data.reg <- data.reg[complete.cases(data.reg),]
+
+            } else {
+                data.reg <- data[data$partytreat == "Umalab Ka",c(vars[i],
+                                                                  "barangay",
+                                                                  "assignment",
+                                                                  "treatment",
+                                                                  "city",
+                                                                  vars.cond[j],
+                                                                       treat.int[j],
+                                                                  assign.int[j],
+                                                                  "weight.att")]
+
+            data.reg <- data.reg[complete.cases(data.reg),]
+
+            }
+
+        reglist.weight[[i]] <- lm(eval(formula), weights = weight.att, data = data.reg)
+        vcovlist.weight[[i]] <- varcov.cluster(as.data.frame(data.reg), reglist.weight[[i]], cluster1= "barangay")
+
+        ivlist.weight[[i]] <- ivreg(eval(formula.cace), weights = weight.att, data = data.reg)
+        vcovivlist.weight[[i]] <- varcov.cluster(as.data.frame(data.reg), ivlist.weight[[i]], cluster1= "barangay")
+
+        int.weight <- coef(reglist.weight[[i]])[eval(paste("assignment:",vars.cond[j],sep = ""))]
+
+        lower.int <- int.weight -
+            (qnorm(.975) * sqrt(vcovlist.weight[[i]][eval(paste("assignment:",vars.cond[j],sep = "")),
+                                                     eval(paste("assignment:",vars.cond[j],sep = ""))]))
+
+
+        upper.int <- int.weight +
+            (qnorm(.975) * sqrt(vcovlist.weight[[i]][eval(paste("assignment:",vars.cond[j],sep = "")),
+                                                     eval(paste("assignment:",vars.cond[j],sep = ""))]))
+
+        mg.weight <- coef(reglist.weight[[i]])["assignment"] +
+            (coef(reglist.weight[[i]])[eval(paste("assignment:",vars.cond[j],sep = ""))])
+
+        lower.weight <- mg.weight -
+            (qnorm(.975) * sqrt(vcovlist.weight[[i]]["assignment","assignment"] +
+                                vcovlist.weight[[i]][eval(paste("assignment:",vars.cond[j],sep = "")),
+                                                     eval(paste("assignment:",vars.cond[j],sep = ""))]
+                                + 2 * vcovlist.weight[[i]]["assignment",
+                                                           eval(paste("assignment:",vars.cond[j],sep = ""))]))
+
+        upper.weight <- mg.weight +
+            (qnorm(.975) * sqrt(vcovlist.weight[[i]]["assignment","assignment"] +
+                                vcovlist.weight[[i]][eval(paste("assignment:",vars.cond[j],sep = "")),
+                                                     eval(paste("assignment:",vars.cond[j],sep = ""))]
+                                + 2 * vcovlist.weight[[i]]["assignment",
+                                                           eval(paste("assignment:",vars.cond[j],sep = ""))]))
+
+
+        all.coef.weight <- c(coef(reglist.weight[[i]])["assignment"], mg.weight, int.weight)
+
+        all.lower.weight <- c(coef(reglist.weight[[i]])["assignment"] - qnorm(0.975) *
+                              sqrt(vcovlist.weight[[i]]["assignment","assignment"]),
+                              lower.weight)
+        all.upper.weight <- c(coef(reglist.weight[[i]])["assignment"] + qnorm(0.975) *
+                              sqrt(vcovlist.weight[[i]]["assignment","assignment"]),
+                              upper.weight)
+
+
+        int.weight.iv <- coef(ivlist.weight[[i]])[eval(paste("treat.",vars.cond[j],sep = ""))]
+
+
+        lower.int.iv <- int.weight.iv -
+            (qnorm(.975) * sqrt(vcovivlist.weight[[i]][eval(paste("treat.",vars.cond[j],sep = "")),
+                                                       eval(paste("treat.",vars.cond[j],sep = ""))]))
+
+        upper.int.iv <- int.weight.iv +
+            (qnorm(.975) * sqrt(vcovivlist.weight[[i]][eval(paste("treat.",vars.cond[j],sep = "")),
+                                                       eval(paste("treat.",vars.cond[j],sep = ""))]))
+
+        mg.weight.iv <- coef(ivlist.weight[[i]])["treatment"] +
+            (coef(ivlist.weight[[i]])[treat.int[j]])
+
+        lower.weight.iv <- mg.weight.iv -
+            (qnorm(.975) * sqrt(vcovivlist.weight[[i]]["treatment","treatment"] +
+                                vcovivlist.weight[[i]][treat.int[j],
+                                                       treat.int[j]]
+                                + 2 * vcovivlist.weight[[i]]["treatment",
+                                                             treat.int[j]]))
+
+        upper.weight.iv <- mg.weight.iv +
+            (qnorm(.975) * sqrt(vcovivlist.weight[[i]]["treatment","treatment"] +
+                                vcovivlist.weight[[i]][treat.int[j],
+                                                       treat.int[j]]
+                                + 2 * vcovivlist.weight[[i]]["treatment",
+                                                             treat.int[j]]))
+
+
+        all.coef.weight.iv <- c(coef(ivlist.weight[[i]])["treatment"], mg.weight.iv)
+
+        all.lower.weight.iv <- c(coef(ivlist.weight[[i]])["treatment"] - qnorm(0.975) *
+                                 sqrt(vcovivlist.weight[[i]]["treatment","treatment"]),
+                                 lower.weight.iv)
+        all.upper.weight.iv <- c(coef(ivlist.weight[[i]])["treatment"] + qnorm(0.975) *
+                                 sqrt(vcovivlist.weight[[i]]["treatment","treatment"]),
+                                 upper.weight.iv)
+
+        all.coef.notreat <- c(coef(reglist.weight[[i]])["assignment"],
+                              coef(ivlist.weight[[i]])["treatment"])
+
+        all.coef.treat <- c(mg.weight,
+                            mg.weight.iv)
+
+        all.coef.diff <- c(int.weight,
+                           int.weight.iv)
+
+
+        all.lower.notreat <- c(coef(reglist.weight[[i]])["assignment"] - qnorm(0.975) *
+                               sqrt(vcovlist.weight[[i]]["assignment","assignment"]),
+                               coef(ivlist.weight[[i]])["treatment"] - qnorm(0.975) *
+                               sqrt(vcovivlist.weight[[i]]["treatment","treatment"]))
+
+        all.upper.notreat <- c(coef(reglist.weight[[i]])["assignment"] + qnorm(0.975) *
+                               sqrt(vcovlist.weight[[i]]["assignment","assignment"]),
+                               coef(ivlist.weight[[i]])["treatment"] + qnorm(0.975) *
+                               sqrt(vcovivlist.weight[[i]]["treatment","treatment"]))
+
+        all.lower.treat <- c(lower.weight,
+                             lower.weight.iv)
+
+        all.upper.treat <- c(upper.weight,
+                             upper.weight.iv)
+
+        all.lower.int <- c(lower.int,
+                           lower.int.iv)
+
+        all.upper.int <- c(upper.int,
+                           upper.int.iv)
+
+
+        points <- c(1.3,1.4,1.8,1.9, 2.3, 2.4)
+        lty <- c(1,2,1,2,1,2)
+        pch <- c(19,17,19,17,19,17)
+
+        if (vars.cond[j] == "income"){
+            labels <- c("Low Income",
+                        "High Income",
+                        "Difference")
+        } else {
+
+            if(vars.cond[j] == "education"){
+                labels <- c("Low Education",
+                            "High Education",
+                            "Difference")
+            } else {
+                labels <- c("Male",
+                            "Female",
+                            "Difference")
+                }
+        }
+
+        if(vars[i] == "sexism" | vars[i] == "poverty.all"){
+            ylim <- c(min(c(all.lower.notreat,
+                            all.lower.treat,
+                            all.lower.int)),
+                      max(c(all.upper.notreat,
+                            all.upper.treat,
+                            all.upper.int)))
+        } else {
+            ylim <- c(min(c(all.lower.notreat,
+                            all.lower.treat,
+                            all.lower.int)) - 10,
+                      max(c(all.upper.notreat,
+                            all.upper.treat,
+                            all.upper.int)) + 5)
+        }
+        ## Figure 4
+        pdf(paste(output,"/treat_", vars[i], "_int_", vars.cond[j], ".pdf",sep=""))
+
+        plot(points, c(all.coef.notreat,
+                       all.coef.treat,
+                       all.coef.diff),
+             main = "Conditional Treatment Effect",
+             xlab = "", ylab = "Percentage of Respondents",
+             xlim = c(1, 2.5),
+             ylim = ylim,
+             pch = pch,
+             axes = FALSE,
+             cex = 1.3)
+        text(c(1.35,1.85, 2.35),
+             rep(min(c(all.lower.notreat,
+                       all.lower.treat,
+                       all.lower.int)) - 1.2,
+                 times = 3),
+             labels)
+        for (k in 1:6){
+            lines(c(points[k],points[k]),
+                  c(c(all.lower.notreat, all.lower.treat, all.lower.int)[k], c(all.upper.notreat, all.upper.treat, all.upper.int)[k]),
+                  lty = lty[k],
+                  lwd = 2
+                  )
+            lines(c(points[k],points[k]),
+                  c(c(all.lower.notreat, all.lower.treat, all.lower.int)[k], c(all.upper.notreat, all.upper.treat, all.upper.int)[k]),
+                  lty = lty[k])
+        }
+        axis(side = 2)
+        abline(h = 0, lty = 2)
+        legend("topleft",
+               c("ITT", "CACE"),
+               pch = c(19,17),
+               lty = c(1,2),
+               bty = "n")
+        dev.off()
+
+    }
+}
+
+party <- c("Akbayan", "Umalab Ka")
+party.name <- c("akbayan", "umalabka")
+tablelist <- vector("list",length(party))
+tablelist.weight <- vector("list",length(party))
+tablelist.weight.iv <- vector("list",length(party))
+
+## Sexism
+## List of dependent variables
+vars <- c("sexism", "equality.est", "discrimination.est", "harassment.est", "femhouse.est", "fempol.est")
+
+labels <- c("Index",
+            "Equality",
+            "Discrimination",
+            "Harassment",
+            "Female Rep.",
+            "Female Pol.")
+
+## Store the regression output
+reglist.wc.weight  <- coeflist.wc.weight <- plist.wc.weight  <- vcovlist.wc.weight <- ivlist.wc.weight <- coefivlist.wc.weight <- vcovivlist.wc.weight <- plistiv.wc.weight <- mg.ols <-  mg.iv <-
+    lower.weight <- upper.weight <- lower.weight.iv <- upper.weight.iv <- vector( "list", length(vars))
+
+## Linear estimation
+for (p in 1:length(party)){
+
+    for (i in 1:length(vars)){
+
+        data.reg <- data[data$partytreat == party[p],c(vars[i],
+                                                       "barangay",
+                                                       "assignment",
+                                                       "treatment",
+                                                       "city",
+                                                       "weight.att")]
+
+        data.reg <- data.reg[complete.cases(data.reg),]
+
+        formula.wc <- paste(vars[i]," ~ assignment + city", sep = "")
+        formula.wc.iv <- paste(vars[i]," ~ treatment + city | assignment + city", sep = "")
+
+
+        reglist.wc.weight[[i]] <- lm(eval(formula.wc), weights = weight.att, data = data.reg)
+        coeflist.wc.weight[[i]] <- coef(reglist.wc.weight[[i]])
+        vcovlist.wc.weight[[i]] <- varcov.cluster(as.data.frame(data.reg), reglist.wc.weight[[i]], cluster1= "barangay")
+        plist.wc.weight[[i]] <- coeftest(reglist.wc.weight[[i]], vcovlist.wc.weight[[i]])[,4]
+
+        ivlist.wc.weight[[i]] <- ivreg(eval(formula.wc.iv), weights = weight.att, data = data.reg)
+        coefivlist.wc.weight[[i]] <- coef(ivlist.wc.weight[[i]])
+        vcovivlist.wc.weight[[i]] <- varcov.cluster(as.data.frame(data.reg), ivlist.wc.weight[[i]], cluster1= "barangay")
+        plistiv.wc.weight[[i]] <- coeftest(ivlist.wc.weight[[i]], vcovivlist.wc.weight[[i]])[,4]
+
+        mg.ols[[i]] <- coef(reglist.wc.weight[[i]])["assignment"]
+
+        lower.weight[[i]] <- mg.ols[[i]] -
+            (qnorm(.975) * sqrt(vcovlist.wc.weight[[i]]["assignment","assignment"]))
+
+        upper.weight[[i]] <- mg.ols[[i]] +
+            (qnorm(.975) * sqrt(vcovlist.wc.weight[[i]]["assignment","assignment"]))
+
+        mg.iv[[i]] <- coef(ivlist.wc.weight[[i]])["treatment"]
+
+        lower.weight.iv[[i]] <- mg.iv[[i]] -
+            (qnorm(.975) * sqrt(vcovivlist.wc.weight[[i]]["treatment","treatment"]))
+
+        upper.weight.iv[[i]] <- mg.iv[[i]] +
+            (qnorm(.975) * sqrt(vcovivlist.wc.weight[[i]]["treatment","treatment"]))
+
+    }
+
+    mg.ols <- unlist(mg.ols)
+    mg.iv <- unlist(mg.iv)
+    lower.weight <- unlist(lower.weight)
+    upper.weight <- unlist(upper.weight)
+
+    lower.weight.iv <- unlist(lower.weight.iv)
+    upper.weight.iv <- unlist(upper.weight.iv)
+
+    all.coef.sexism <- c(mg.ols[1],mg.iv[1],
+                         mg.ols[2],mg.iv[2],
+                         mg.ols[3],mg.iv[3],
+                         mg.ols[4],mg.iv[4],
+                         mg.ols[5],mg.iv[5],
+                         mg.ols[6],mg.iv[6])
+
+    lower.coef.sexism <- c(lower.weight[1],lower.weight.iv[1],
+                         lower.weight[2],lower.weight.iv[2],
+                         lower.weight[3],lower.weight.iv[3],
+                         lower.weight[4],lower.weight.iv[4],
+                         lower.weight[5],lower.weight.iv[5],
+                         lower.weight[6],lower.weight.iv[6]
+                         )
+
+    upper.coef.sexism <- c(upper.weight[1],upper.weight.iv[1],
+                           upper.weight[2],upper.weight.iv[2],
+                           upper.weight[3],upper.weight.iv[3],
+                           upper.weight[4],upper.weight.iv[4],
+                           upper.weight[5],upper.weight.iv[5],
+                           upper.weight[6],upper.weight.iv[6]
+                           )
+    points <- c(1.3,1.4,
+                1.8,1.9,
+                2.3,2.4,
+                2.8,2.9,
+                3.3,3.4,
+                3.8,3.9)
+    lty <- c(1,2,
+             1,2,
+             1,2,
+             1,2,
+             1,2,
+             1,2)
+
+    pch <- c(19,17,
+             19,17,
+             19,17,
+             19,17,
+             19,17,
+             19,17)
+
+    ## Figure 5
+    pdf(paste(output,"/attitude_", party.name[p], "_sexism.pdf",sep=""))
+
+    plot(points,
+         all.coef.sexism,
+             xlab = "", ylab = "Standard Deviation", xlim = c(1, 4), ylim = c(min(lower.coef.sexism) - 1,
+                                                            max(upper.coef.sexism) + 0.5), pch = pch,
+             axes = FALSE, cex = 1.3)
+
+    for (k in 1:length(points)){
+        lines(c(points[k], points[k]),
+              c(lower.coef.sexism[k], upper.coef.sexism[k]),
+              lty = lty[k],
+              lwd = 2
+              )
+      lines(c(points[k], points[k]),
+              c(lower.coef.sexism[k], upper.coef.sexism[k]),
+              lty = lty[k],
+              )
+    }
+
+    text(c(1.35,1.85,2.35,2.85,3.35,3.85),
+         rep(min(lower.coef.sexism) - 0.5,
+             times = 6),
+         labels,
+         cex = 0.8)
+
+        axis(side = 2)
+        abline(h = 0, lty = 2)
+        legend("topleft",
+               c("ITT", "CACE"),
+               pch = c(19,17),
+               lty = c(1,2),
+               bty = "n")
+    dev.off()
+
+    p.wc = list(plist.wc.weight[[1]], plist.wc.weight[[2]], plist.wc.weight[[3]], plist.wc.weight[[4]], plist.wc.weight[[5]], plist.wc.weight[[6]])
+
+    coef.wc.weight = list(coeflist.wc.weight[[1]], coeflist.wc.weight[[2]], coeflist.wc.weight[[3]], coeflist.wc.weight[[4]], coeflist.wc.weight[[5]], coeflist.wc.weight[[6]])
+
+    table.weight <- stargazer(reglist.wc.weight[[1]],
+                              reglist.wc.weight[[2]],
+                              reglist.wc.weight[[3]],
+                              reglist.wc.weight[[4]],
+                              reglist.wc.weight[[5]],
+                              reglist.wc.weight[[6]],
+                              coef = coef.wc.weight,
+                              report = "vcp",
+                              p = p.wc,
+                              no.space = TRUE,
+                              omit = c("city"),
+                              digits = 3,
+                              dep.var.labels = paste(party[p], " Treatment:", sep = ""),
+                              covariate.labels = c("ITT"),
+                              column.labels = labels,
+                              omit.stat = c("f","adj.rsq", "ser"),
+                              omit.table.layout = "n")
+
+    table.weight <- as.data.frame(table.weight[7:(length(table.weight)-2)])
+    names(table.weight) <- "table"
+    table.weight$table <- as.character(table.weight$table)
+
+    ## We insert CACE results
+    cace <- paste0(" CACE & ",
+                   paste0(round(c(ivlist.wc.weight[[1]]$coefficients["treatment"],
+                                  ivlist.wc.weight[[2]]$coefficients["treatment"],
+                                  ivlist.wc.weight[[3]]$coefficients["treatment"],
+                                  ivlist.wc.weight[[4]]$coefficients["treatment"],
+                                  ivlist.wc.weight[[5]]$coefficients["treatment"],
+                                  ivlist.wc.weight[[6]]$coefficients["treatment"]),
+                                3),
+                          collapse = " & "),
+                   "\\\\")
+
+    cace.p <- paste0(" & ",
+                     paste0(paste0("p = ",round(c(plistiv.wc.weight[[1]]["treatment"],
+                                                  plistiv.wc.weight[[2]]["treatment"],
+                                                  plistiv.wc.weight[[3]]["treatment"],
+                                                  plistiv.wc.weight[[4]]["treatment"],
+                                                  plistiv.wc.weight[[5]]["treatment"],
+                                                  plistiv.wc.weight[[6]]["treatment"]
+                                                  ),
+                                                3)),
+                            collapse = " & "),
+                     "\\\\")
+
+    r <- 12
+    table.weight <- insertrow(table.weight,cace,r)
+    table.weight <- insertrow(table.weight,cace.p,r+1)
+
+    r <- 20
+    fe <- "{\\bf City FE} & Yes & Yes & Yes & Yes \\\\"
+    pretreat <- "{\\bf Pre-treatment Vars.} & No & No & No & No \\\\"
+    table.weight <- insertrow(table.weight,fe,r)
+    table.weight <- insertrow(table.weight,pretreat,r+1)
+    tablelist.weight[[p]] <- table.weight
+}
+
+first.lines <- as.data.frame(c("\\begin{table}[!htbp] \\centering",
+                               "\\caption{Intention to Treat Effect on Attitudes on Gender}",
+                               "\\label{itt_gender}"))
+last.lines <- as.data.frame(table.1[29:nrow(table.1),])
+names(first.lines) <- names(last.lines) <- "table"
+
+table.sex.weight <- rbind(first.lines,
+                   tablelist.weight[[1]],
+                   tablelist.weight[[2]],
+                   last.lines)
+
+## Table C.4
+write.table(table.sex.weight,
+              file = paste0(output,
+                          "/table_sex.txt"),
+            sep="",row.names= FALSE,na="", quote = FALSE, col.names = FALSE)
+
+
+tablelist <- vector("list",length(party))
+tablelist.weight <- vector("list",length(party))
+
+
+## Poverty
+## List of dependent variables
+vars <- c("poverty.all", "poverty.est", "cct.est", "gap.est", "corruption.est")
+labels <- c("Index",
+            "Poverty",
+            "CCT",
+            "Gap",
+            "Corruption")
+
+## Store the regression output
+reglist.wc.weight  <- coeflist.wc.weight <- plist.wc.weight <- vcovlist.wc.weight <- ivlist.wc.weight <- coefivlist.wc.weight <- vcovivlist.wc.weight <- plistiv.wc.weight <- mg.ols <-  mg.iv <-
+    lower.weight <- upper.weight <- lower.weight.iv <- upper.weight.iv <- vector( "list", length(vars))
+
+## Linear estimation
+for (p in 1:length(party)){
+
+    for (i in 1:length(vars)){
+
+        data.reg <- data[data$partytreat == party[p],c(vars[i],
+                                                       "barangay",
+                                                       "assignment",
+                                                       "treatment",
+                                                       "city",
+                                                       "weight.att")]
+
+        data.reg <- data.reg[complete.cases(data.reg),]
+
+        formula.wc <- paste(vars[i]," ~ assignment + city", sep = "")
+        formula.wc.iv <- paste(vars[i]," ~ treatment  + city| assignment + city", sep = "")
+
+        reglist.wc.weight[[i]] <- lm(eval(formula.wc), weights = weight.att, data = data.reg)
+        coeflist.wc.weight[[i]] <- coef(reglist.wc.weight[[i]])
+        vcovlist.wc.weight[[i]] <- varcov.cluster(data.reg, reglist.wc.weight[[i]], cluster1= "barangay")
+        plist.wc.weight[[i]] <- coeftest(reglist.wc.weight[[i]], vcovlist.wc.weight[[i]])[,4]
+
+        ivlist.wc.weight[[i]] <- ivreg(eval(formula.wc.iv), weights = weight.att, data = data.reg)
+        coefivlist.wc.weight[[i]] <- coef(ivlist.wc.weight[[i]])
+        vcovivlist.wc.weight[[i]] <- varcov.cluster(data.reg, ivlist.wc.weight[[i]], cluster1= "barangay")
+        plistiv.wc.weight[[i]] <- coeftest(ivlist.wc.weight[[i]], vcovivlist.wc.weight[[i]])[,4]
+
+
+        ##
+
+        mg.ols[[i]] <- coef(reglist.wc.weight[[i]])["assignment"]
+
+        lower.weight[[i]] <- mg.ols[[i]] -
+            (qnorm(.975) * sqrt(vcovlist.wc.weight[[i]]["assignment","assignment"]))
+
+        upper.weight[[i]] <- mg.ols[[i]] +
+            (qnorm(.975) * sqrt(vcovlist.wc.weight[[i]]["assignment","assignment"]))
+
+        mg.iv[[i]] <- coef(ivlist.wc.weight[[i]])["treatment"]
+
+        lower.weight.iv[[i]] <- mg.iv[[i]] -
+            (qnorm(.975) * sqrt(vcovivlist.wc.weight[[i]]["treatment","treatment"]))
+
+        upper.weight.iv[[i]] <- mg.iv[[i]] +
+            (qnorm(.975) * sqrt(vcovivlist.wc.weight[[i]]["treatment","treatment"]))
+
+    }
+
+    mg.ols <- unlist(mg.ols)
+    mg.iv <- unlist(mg.iv)
+    lower.weight <- unlist(lower.weight)
+    upper.weight <- unlist(upper.weight)
+
+    lower.weight.iv <- unlist(lower.weight.iv)
+    upper.weight.iv <- unlist(upper.weight.iv)
+
+    all.coef.poverty <- c(mg.ols[1],mg.iv[1],
+                         mg.ols[2],mg.iv[2],
+                         mg.ols[3],mg.iv[3],
+                         mg.ols[4],mg.iv[4],
+                         mg.ols[5],mg.iv[5])
+
+    lower.coef.poverty <- c(lower.weight[1],lower.weight.iv[1],
+                         lower.weight[2],lower.weight.iv[2],
+                         lower.weight[3],lower.weight.iv[3],
+                         lower.weight[4],lower.weight.iv[4],
+                         lower.weight[5],lower.weight.iv[5]
+                         )
+
+    upper.coef.poverty <- c(upper.weight[1],upper.weight.iv[1],
+                           upper.weight[2],upper.weight.iv[2],
+                           upper.weight[3],upper.weight.iv[3],
+                           upper.weight[4],upper.weight.iv[4],
+                           upper.weight[5],upper.weight.iv[5]
+                           )
+    points <- c(1.3,1.4,
+                1.8,1.9,
+                2.3,2.4,
+                2.8,2.9,
+                3.3,3.4)
+    lty <- c(1,2,
+             1,2,
+             1,2,
+             1,2,
+             1,2)
+
+    pch <- c(19,17,
+             19,17,
+             19,17,
+             19,17,
+             19,17)
+
+    ## Figure 5
+    pdf(paste(output,"/attitude_", party.name[p], "_poverty.pdf",sep=""))
+
+
+    plot(points,
+         all.coef.poverty,
+             xlab = "", ylab = "Standard Deviation", xlim = c(1, 3.5), ylim = c(min(lower.coef.poverty) - 1,
+                                                            max(upper.coef.poverty) + 0.5), pch = pch,
+             axes = FALSE, cex = 1.3)
+
+    for (k in 1:length(points)){
+        lines(c(points[k], points[k]),
+              c(lower.coef.poverty[k], upper.coef.poverty[k]),
+              lty = lty[k],
+              lwd = 2
+              )
+      lines(c(points[k], points[k]),
+              c(lower.coef.poverty[k], upper.coef.poverty[k]),
+              lty = lty[k],
+              )
+    }
+
+    text(c(1.35,1.85,2.35,2.85,3.35),
+         rep(min(lower.coef.poverty) - 0.5,
+             times = 5),
+         labels,
+         cex = 0.8)
+
+        axis(side = 2)
+        abline(h = 0, lty = 2)
+        legend("topleft",
+               c("ITT", "CACE"),
+               pch = c(19,17),
+               lty = c(1,2),
+               bty = "n")
+    dev.off()
+
+    p.wc = list(plist.wc.weight[[1]], plist.wc.weight[[2]], plist.wc.weight[[3]], plist.wc.weight[[4]],  plist.wc.weight[[5]])
+
+
+    coef.wc.weight = list(coeflist.wc.weight[[1]], coeflist.wc.weight[[2]], coeflist.wc.weight[[3]], coeflist.wc.weight[[4]], coeflist.wc.weight[[5]])
+
+    table.weight <- stargazer(reglist.wc.weight[[1]],
+                              reglist.wc.weight[[2]],
+                              reglist.wc.weight[[3]],
+                              reglist.wc.weight[[4]],
+                              reglist.wc.weight[[5]],
+                              coef = coef.wc.weight,
+                              report = "vcp",
+                              p = p.wc,
+                              no.space = TRUE,
+                              omit = c("city"),
+                              digits = 3,
+                              dep.var.labels = paste(party[p], " Treatment:", sep = ""),
+                              covariate.labels = c("ITT"),
+                              column.labels = labels,
+                              omit.stat = c("f","adj.rsq", "ser"),
+                              omit.table.layout = "n")
+
+    table.weight <- as.data.frame(table.weight[7:(length(table.weight)-2)])
+    names(table.weight) <- "table"
+    table.weight$table <- as.character(table.weight$table)
+
+    ## We insert CACE results
+    cace <- paste0(" CACE & ",
+                   paste0(round(c(ivlist.wc.weight[[1]]$coefficients["treatment"],
+                                  ivlist.wc.weight[[2]]$coefficients["treatment"],
+                                  ivlist.wc.weight[[3]]$coefficients["treatment"],
+                                  ivlist.wc.weight[[4]]$coefficients["treatment"],
+                                  ivlist.wc.weight[[5]]$coefficients["treatment"]),
+                                3),
+                          collapse = " & "),
+                   "\\\\")
+
+    cace.p <- paste0(" & ",
+                     paste0(paste0("p = ",round(c(plistiv.wc.weight[[1]]["treatment"],
+                                                  plistiv.wc.weight[[2]]["treatment"],
+                                                  plistiv.wc.weight[[3]]["treatment"],
+                                                  plistiv.wc.weight[[4]]["treatment"],
+                                                  plistiv.wc.weight[[5]]["treatment"]
+                                                  ),
+                                                3)),
+                            collapse = " & "),
+                     "\\\\")
+
+    r <- 12
+    table.weight <- insertrow(table.weight,cace,r)
+    table.weight <- insertrow(table.weight,cace.p,r+1)
+
+    r <- 16
+    fe <- "{\\bf City FE} & Yes & Yes & Yes & Yes \\\\"
+    pretreat <- "{\\bf Pre-treatment Vars.} & No & No & No & No \\\\"
+    table.weight <- insertrow(table.weight,fe,r)
+    table.weight <- insertrow(table.weight,pretreat,r+1)
+    tablelist.weight[[p]] <- table.weight
+}
+
+
+first.lines <- as.data.frame(c("\\begin{table}[!htbp] \\centering",
+                               "\\caption{Intention to Treat Effect on Attitudes on Poverty}",
+                               "\\label{itt_pov}"))
+last.lines <- as.data.frame(table.1[29:nrow(table.1),])
+names(first.lines) <- names(last.lines) <- "table"
+
+table.pov.weight <- rbind(first.lines,
+                   tablelist.weight[[1]],
+                   tablelist.weight[[2]],
+                   last.lines)
+
+## Table C.3
+write.table(table.pov.weight,
+              file = paste0(output,
+                          "/table_pov.txt"),
+            sep="",row.names= FALSE,na="", quote = FALSE, col.names = FALSE)
+
+
+```
+
+### `tables_fig_ind_balanced.R`
+```r
+## Individual survey results
+load("survey_ind.RData")
+
+## Load aggregate survey data
+load("survey_agg.RData")
+
+## Load aggregate observed aggregate attendance
+load("../aggregate/data_agg.RData")
+
+## We calculate weights based on attendance at the aggregate level
+att.self <- survey.agg %>% filter(treatment == 1) %>%
+    select(barangay,
+           barangay.official,
+           city,
+           city.official,
+           attendance.agg)
+
+attendees <- as.tbl(data.all) %>% filter(treatment == 1) %>%
+    mutate(att.prop = att.prop * 100,
+           att.prop.turn = att.prop.turn * 100)
+
+data.agg.att <- left_join(att.self,
+                      attendees,
+                      by = c("city.official" = "city",
+                             "barangay.official" = "barangay")) %>%
+    mutate(weight.att = ifelse(attendance.agg > 0,
+                               att.prop / attendance.agg,
+                               1)) %>%
+               dplyr::select(city,
+                  barangay,
+                  weight.att)
+
+data <- survey_raw
+
+data <- left_join(data,
+                  data.agg.att,
+                  by = c("city",
+                         "barangay"))
+
+data <- data %>% mutate(weight.att = ifelse(treatment == 0,
+                                            1,
+                                            weight.att))
+## ITT Effect
+data$turnout_pl <- data$turnout_pl * 100
+data$vote <- data$vote * 100
+data$vote.akbayan <- data$vote.akbayan * 100
+data$vote.umalabka <- data$vote.umalabka * 100
+
+data.amelia <- data %>%
+    as.data.frame()
+
+## We run Amelia
+## Set the bounds
+## Number of imputations
+M <- 20
+set.seed(1983)
+suppressWarnings(a.out <- amelia(data.amelia,
+                m = M,
+                cs = "id",
+                idvars = c(
+                           "barangay",
+                           "region",
+                           "city",
+                           "partytreat"),
+                noms = c("turnout_all",
+                         "turnout_pl",
+                         "vote.akbayan",
+                         "vote.umalabka",
+                         "treatment",
+                         "assignment",
+                         "treat.akbayan",
+                         "treat.umalabka",
+                         "assign.akbayan",
+                         "assign.umalabka",
+                         "vote",
+                         "attendance",
+                         "attendance.rallies",
+                         "gender",
+                         "income",
+                         "religion",
+                         "status",
+                         "linguistic",
+                         "education",
+                         "femhouse",
+                         "fempol"
+                         ),
+                ords = c(
+                    "info_others",
+                    "info_all",
+                    "info_fam",
+                    "age",
+                    "equality",
+                    "discrimination",
+                    "harassment",
+                    "poverty",
+                    "corruption",
+                    "gap",
+                    "cct"
+                         ),
+                max.resample = 1000,
+                empri = 0.01 * nrow(data.amelia))
+                )
+
+save(a.out,
+     file = paste0("data_mi.RData"))
+
+vars <- c("turnout_pl",
+          "vote",
+          "vote.akbayan",
+          "vote.umalabka")
+labels <- c("Turnout",
+            "Vote",
+            "Vote (Akbayan)",
+            "Vote (Umalabka)")
+
+
+nProcs <- detectCores()
+registerDoParallel(cores = nProcs)
+
+first.all <- foreach (m = 1:M) %dopar% {
+
+    data <- a.out$imputations[[m]]
+
+    ## Store the regression output
+    reglist.wc.weight  <- coeflist.wc.weight <- plist.wc.weight  <- selist.wc.weight <- ivlist.wc.weight <- coefivlist.wc.weight <- seivlist.wc.weight <- plistiv.wc.weight <-  vector( "list", length(vars))
+
+    for (i in 1:length(vars)){
+
+        formula.wc <- paste(vars[i]," ~ assignment + city + gender + income + education + religion + age + status + linguistic", sep = "") # Regression formula w/o city dummies
+        formula.control <- paste(vars[i]," ~ assignment", sep = "") # Regression formula w/o city dummies
+
+        formula.control.iv <- paste(vars[i]," ~ treatment| assignment", sep = "")
+        formula.wc.iv <- paste(vars[i]," ~ treatment + city +  gender + income + education + religion + age  + status + linguistic| .- treatment + assignment ", sep = "")
+
+        if (vars[i] == "turnout_pl" |
+            vars[i] == "vote"){
+
+            data.reg.wc <- data[,c(vars[i],
+                                   "barangay",
+                                   "city",
+                                   "gender",
+                                   "income",
+                                   "education",
+                                   "religion",
+                                   "age",
+                                   "status",
+                                   "linguistic",
+                                   "assignment",
+                                   "treatment",
+                                   "weight.att"
+                                   )]
+            data.reg.wc <- data.reg.wc[complete.cases(data.reg.wc),]
+
+        } else {
+            if (vars[i] == "vote.akbayan") {
+                data.reg.wc <- data[data$partytreat == "Akbayan",c(vars[i],
+                                                                   "barangay",
+                                                                   "city",
+                                                                   "gender",
+                                                                   "income",
+                                                                   "education",
+                                                                   "religion",
+                                                                   "age",
+                                                                   "status",
+                                                                   "linguistic",
+                                                                   "assignment",
+                                                                   "treatment",
+                                                                   "weight.att"
+                                                                   )]
+
+                data.reg.wc <- data.reg.wc[complete.cases(data.reg.wc),]
+
+            } else {
+
+                data.reg.wc <- data[data$partytreat == "Umalab Ka",c(vars[i],
+                                                                     "barangay",
+                                                                     "city",
+                                                                     "gender",
+                                                                     "income",
+                                                                     "education",
+                                                                     "religion",
+                                                                     "age",
+                                                                     "status",
+                                                                     "linguistic",
+                                                                     "assignment",
+                                                                     "treatment",
+                                                                     "weight.att"
+                                                                     )]
+
+                data.reg.wc <- data.reg.wc[complete.cases(data.reg.wc),]
+
+            }
+        }
+
+    reglist.wc.weight[[i]] <- lm(eval(formula.wc), weights = weight.att, data = data.reg.wc)
+    reglist.control <- lm(eval(formula.control), weights = weight.att, data = data.reg.wc)
+    coeflist.wc.weight[[i]] <- coef(reglist.wc.weight[[i]])
+    coeflist.wc.weight[[i]]["(Intercept)"] <- coef(reglist.control)["(Intercept)"]
+    selist.wc.weight[[i]] <- sqrt(diag(varcov.cluster(as.data.frame(data.reg.wc), reglist.wc.weight[[i]], cluster1= "barangay")))
+    plist.wc.weight[[i]] <- coeftest(reglist.wc.weight[[i]], varcov.cluster(as.data.frame(data.reg.wc), reglist.wc.weight[[i]], cluster1= "barangay"))[,4]
+    plist.wc.weight[[i]]["(Intercept)"] <- coeftest(reglist.control, varcov.cluster(as.data.frame(data.reg.wc), reglist.control, cluster1= "barangay"))[,4]["(Intercept)"]
+
+    ivlist.wc.weight[[i]] <- AER::ivreg(eval(formula.wc.iv), weights = weight.att, data = data.reg.wc)
+    reglist.control.iv <- AER::ivreg(eval(formula.control.iv), weights = weight.att, data = data.reg.wc)
+    coefivlist.wc.weight[[i]] <- coef(ivlist.wc.weight[[i]])
+    coefivlist.wc.weight[[i]]["(Intercept)"] <- coef(reglist.control.iv)["(Intercept)"]
+    seivlist.wc.weight[[i]] <- sqrt(diag(varcov.cluster(as.data.frame(data.reg.wc), ivlist.wc.weight[[i]], cluster1= "barangay")))
+    plistiv.wc.weight[[i]] <- coeftest(ivlist.wc.weight[[i]], varcov.cluster(as.data.frame(data.reg.wc), ivlist.wc.weight[[i]], cluster1= "barangay"))[,4]
+    plistiv.wc.weight[[i]]["(Intercept)"] <- coeftest(reglist.control.iv, varcov.cluster(as.data.frame(data.reg.wc), reglist.control.iv, cluster1= "barangay"))[,4]["(Intercept)"]
+    }
+
+    return(list(coeflist.wc.weight = coeflist.wc.weight,
+                selist.wc.weight = selist.wc.weight,
+                coefivlist.wc.weight = coefivlist.wc.weight,
+                seivlist.wc.weight = seivlist.wc.weight,
+                reglist.wc.weight = reglist.wc.weight,
+                ivlist.wc.weight = ivlist.wc.weight,
+                plist.wc.weight = plist.wc.weight,
+                plistiv.wc.weight = plistiv.wc.weight
+                ))
+}
+
+b.out.turnout <- NULL
+b.out.vote <- NULL
+b.out.vote.akbayan <- NULL
+b.out.vote.umalabka <- NULL
+se.out.turnout <- NULL
+se.out.vote <- NULL
+se.out.vote.akbayan <- NULL
+se.out.vote.umalabka <- NULL
+p.out.turnout <- NULL
+p.out.vote <- NULL
+p.out.vote.akbayan <- NULL
+p.out.vote.umalabka <- NULL
+
+b.out.turnout.iv <- NULL
+b.out.vote.iv <- NULL
+b.out.vote.akbayan.iv <- NULL
+b.out.vote.umalabka.iv <- NULL
+se.out.turnout.iv <- NULL
+se.out.vote.iv <- NULL
+se.out.vote.akbayan.iv <- NULL
+se.out.vote.umalabka.iv <- NULL
+p.out.turnout.iv <- NULL
+p.out.vote.iv <- NULL
+p.out.vote.akbayan.iv <- NULL
+p.out.vote.umalabka.iv <- NULL
+
+for(m in 1:M){
+    b.out.turnout <- rbind(b.out.turnout,
+                           first.all[[m]]$coeflist.wc.weight[[1]])
+    b.out.vote <- rbind(b.out.vote,
+                        first.all[[m]]$coeflist.wc.weight[[2]])
+    b.out.vote.akbayan <- rbind(b.out.vote.akbayan,
+                                first.all[[m]]$coeflist.wc.weight[[3]])
+    b.out.vote.umalabka <- rbind(b.out.vote.umalabka,
+                                 first.all[[m]]$coeflist.wc.weight[[4]])
+    se.out.turnout <- rbind(se.out.turnout,
+                            first.all[[m]]$selist.wc.weight[[1]])
+    se.out.vote <- rbind(se.out.vote,
+                         first.all[[m]]$selist.wc.weight[[2]])
+    se.out.vote.akbayan <- rbind(se.out.vote.akbayan,
+                                 first.all[[m]]$selist.wc.weight[[3]])
+    se.out.vote.umalabka <- rbind(se.out.vote.umalabka,
+                                  first.all[[m]]$selist.wc.weight[[4]])
+    p.out.turnout <- rbind(p.out.turnout,
+                           first.all[[m]]$plist.wc.weight[[1]])
+    p.out.vote <- rbind(p.out.vote,
+                        first.all[[m]]$plist.wc.weight[[2]])
+    p.out.vote.akbayan <- rbind(p.out.vote.akbayan,
+                                first.all[[m]]$plist.wc.weight[[3]])
+    p.out.vote.umalabka <- rbind(p.out.vote.umalabka,
+                                 first.all[[m]]$plist.wc.weight[[4]])
+
+    b.out.turnout.iv <- rbind(b.out.turnout.iv,
+                              first.all[[m]]$coefivlist.wc.weight[[1]])
+    b.out.vote.iv <- rbind(b.out.vote.iv,
+                           first.all[[m]]$coefivlist.wc.weight[[2]])
+    b.out.vote.akbayan.iv <- rbind(b.out.vote.akbayan.iv,
+                                   first.all[[m]]$coefivlist.wc.weight[[3]])
+    b.out.vote.umalabka.iv <- rbind(b.out.vote.umalabka.iv,
+                                    first.all[[m]]$coefivlist.wc.weight[[4]])
+    se.out.turnout.iv <- rbind(se.out.turnout.iv,
+                               first.all[[m]]$seivlist.wc.weight[[1]])
+    se.out.vote.iv <- rbind(se.out.vote.iv,
+                            first.all[[m]]$seivlist.wc.weight[[2]])
+    se.out.vote.akbayan.iv <- rbind(se.out.vote.akbayan.iv,
+                                    first.all[[m]]$seivlist.wc.weight[[3]])
+    se.out.vote.umalabka.iv <- rbind(se.out.vote.umalabka.iv,
+                                     first.all[[m]]$seivlist.wc.weight[[4]])
+    p.out.turnout.iv <- rbind(p.out.turnout.iv,
+                              first.all[[m]]$plistiv.wc.weight[[1]])
+    p.out.vote.iv <- rbind(p.out.vote.iv,
+                           first.all[[m]]$plistiv.wc.weight[[2]])
+    p.out.vote.akbayan.iv <- rbind(p.out.vote.akbayan.iv,
+                                   first.all[[m]]$plistiv.wc.weight[[3]])
+    p.out.vote.umalabka.iv <- rbind(p.out.vote.umalabka.iv,
+                                    first.all[[m]]$plistiv.wc.weight[[4]])
+}
+
+combined.results.turnout <- mi.meld(q = b.out.turnout, se = se.out.turnout)
+combined.results.vote <- mi.meld(q = b.out.vote, se = se.out.vote)
+combined.results.vote.akbayan <- mi.meld(q = b.out.vote.akbayan, se = se.out.vote.akbayan)
+combined.results.vote.umalabka <- mi.meld(q = b.out.vote.umalabka, se = se.out.vote.umalabka)
+
+combined.p.turnout <- colMeans(p.out.turnout)
+combined.p.vote <- colMeans(p.out.vote)
+combined.p.vote.akbayan <- colMeans(p.out.vote.akbayan)
+combined.p.vote.umalabka <- colMeans(p.out.vote.umalabka)
+
+combined.results.turnout.iv <- mi.meld(q = b.out.turnout.iv, se = se.out.turnout.iv)
+combined.results.vote.iv <- mi.meld(q = b.out.vote.iv, se = se.out.vote.iv)
+combined.results.vote.akbayan.iv <- mi.meld(q = b.out.vote.akbayan.iv, se = se.out.vote.akbayan.iv)
+combined.results.vote.umalabka.iv <- mi.meld(q = b.out.vote.umalabka.iv, se = se.out.vote.umalabka.iv)
+
+
+combined.p.turnout.iv <- colMeans(p.out.turnout.iv)
+combined.p.vote.iv <- colMeans(p.out.vote.iv)
+combined.p.vote.akbayan.iv <- colMeans(p.out.vote.akbayan.iv)
+combined.p.vote.umalabka.iv <- colMeans(p.out.vote.umalabka.iv)
+
+
+mg.ols <- c(combined.results.turnout$q.mi[,"assignment"],
+            combined.results.vote$q.mi[,"assignment"],
+            combined.results.vote.akbayan$q.mi[,"assignment"],
+            combined.results.vote.umalabka$q.mi[,"assignment"])
+
+se.ols <- c(combined.results.turnout$se.mi[,"assignment"],
+            combined.results.vote$se.mi[,"assignment"],
+            combined.results.vote.akbayan$se.mi[,"assignment"],
+            combined.results.vote.umalabka$se.mi[,"assignment"])
+
+lower.weight <- mg.ols -
+    (qnorm(.975) * se.ols)
+
+upper.weight <- mg.ols +
+    (qnorm(.975) * se.ols)
+
+mg.iv <- c(combined.results.turnout.iv$q.mi[,"treatment"],
+            combined.results.vote.iv$q.mi[,"treatment"],
+            combined.results.vote.akbayan.iv$q.mi[,"treatment"],
+            combined.results.vote.umalabka.iv$q.mi[,"treatment"])
+
+se.iv <- c(combined.results.turnout.iv$se.mi[,"treatment"],
+            combined.results.vote.iv$se.mi[,"treatment"],
+            combined.results.vote.akbayan.iv$se.mi[,"treatment"],
+            combined.results.vote.umalabka.iv$se.mi[,"treatment"])
+
+lower.weight.iv <- mg.iv -
+    (qnorm(.975) * se.iv)
+
+upper.weight.iv <- mg.iv +
+    (qnorm(.975) * se.iv)
+
+all.coef <- c(mg.ols[1],mg.iv[1],
+              mg.ols[2],mg.iv[2],
+              mg.ols[3],mg.iv[3],
+              mg.ols[4],mg.iv[4])
+
+
+lower.coef <- c(lower.weight[1],lower.weight.iv[1],
+                lower.weight[2],lower.weight.iv[2],
+                lower.weight[3],lower.weight.iv[3],
+                lower.weight[4],lower.weight.iv[4]
+                )
+
+upper.coef <- c(upper.weight[1],upper.weight.iv[1],
+                upper.weight[2],upper.weight.iv[2],
+                upper.weight[3],upper.weight.iv[3],
+                upper.weight[4],upper.weight.iv[4]
+                )
+points <- c(1.3,1.4,
+            1.8,1.9,
+            2.3,2.4,
+            2.8,2.9)
+lty <- c(1,2,
+         1,2,
+         1,2,
+         1,2)
+
+pch <- c(19,17,
+         19,17,
+         19,17,
+         19,17)
+
+
+## Figure E.1
+pdf(paste(output,"/votes_cov_mi.pdf",sep=""),
+    width = 9, height = 7)
+
+plot(points,
+     all.coef,
+     xlab = "", ylab = "", xlim = c(1, 3), ylim = c(min(lower.coef) - 1,
+                                                    max(upper.coef) + 0.5), pch = pch,
+     axes = FALSE, cex = 1.3)
+
+for (k in 1:length(points)){
+    lines(c(points[k], points[k]),
+          c(lower.coef[k], upper.coef[k]),
+          lty = lty[k],
+          lwd = 2
+          )
+    lines(c(points[k], points[k]),
+          c(lower.coef[k], upper.coef[k]),
+          lty = lty[k],
+          )
+}
+
+text(c(1.35,1.85,2.35,2.85),
+     rep(min(lower.coef) - 0.5,
+         times = 6),
+     labels)
+
+axis(side = 2)
+abline(h = 0, lty = 2)
+legend("topleft",
+       c("ITT", "CACE"),
+       pch = c(19,17),
+       lty = c(1,2),
+       bty = "n")
+dev.off()
+
+p.wc = list(combined.p.turnout,
+            combined.p.vote,
+           combined.p.vote.akbayan,
+            combined.p.vote.umalabka)
+
+coef.wc = list(combined.results.turnout$q.mi[1,],
+               combined.results.vote$q.mi[1,],
+               combined.results.vote.akbayan$q.mi[1,],
+               combined.results.vote.umalabka$q.mi[1,])
+
+table.1 <- stargazer(first.all[[1]]$reglist.wc.weight[[1]],
+                     first.all[[1]]$reglist.wc.weight[[2]],
+                     first.all[[1]]$reglist.wc.weight[[3]],
+                     first.all[[1]]$reglist.wc.weight[[4]],
+                     report = "vcp",
+                     covariate.labels = c("ITT"),
+                     p = p.wc,
+                     coef = coef.wc,
+                     title = "Intention to Treat Effect on Electoral Returns at the Individual Level",
+                     no.space = TRUE,
+                     omit = "city",
+                     digits = 3,
+                     dep.var.labels.include = FALSE,
+                     column.labels = c("Turnout", "Vote (Overall)", "Vote (Akbyan)", "Vote (Umalab-Ka)"),
+                     omit.stat = c("f","adj.rsq", "ser"),
+                     label = "itt_ols",
+                     notes.append = TRUE,
+                     notes.align = "l",
+                     notes = c("Note: Pre-treatment controls include gender, income, age, religion, marriage status, linguistic group, and education.",
+                         "Note: WLS by proportion of meeting attendees per barangay"))
+
+## Function to insert row to table
+table.1 <- as.data.frame(table.1)
+table.1$table.1 <- as.character(table.1$table.1)
+
+
+## We insert CACE results
+cace <- paste0(" CACE & ",
+               paste0(round(c(combined.results.turnout.iv$q.mi[1,"treatment"],
+                              combined.results.vote.iv$q.mi[1,"treatment"],
+                              combined.results.vote.akbayan.iv$q.mi[1,"treatment"],
+                              combined.results.vote.umalabka.iv$q.mi[1,"treatment"]),
++                            3),
+                      collapse = " & "),
+               "\\\\")
+
+cace.p <- paste0(" & ",
+                 paste0(paste0("p = ",round(c(combined.p.turnout.iv["treatment"],
+                                              combined.p.vote.iv["treatment"],
+                                              combined.p.vote.akbayan.iv["treatment"],
+                                              combined.p.vote.umalabka.iv["treatment"]),
+                                            3)),
+                        collapse = " & "),
+                 "\\\\")
+
+r <- 17
+table.1 <- insertrow(table.1,cace,r)
+table.1 <- insertrow(table.1,cace.p,r+1)
+
+r <- 35
+fe <- "{\\bf City FE} & Yes & Yes & Yes & Yes \\\\"
+pretreat <- "{\\bf Pre-treatment Vars.} & Yes & Yes & Yes & Yes \\\\"
+table.1 <- insertrow(table.1,fe,r)
+table.1 <- insertrow(table.1,pretreat,r+1)
+
+##Table E.1
+write.table(table.1,
+              file = paste0(output,
+                          "/table_itt_balanced.txt"),
+            sep="",row.names= FALSE,na="", quote = FALSE, col.names = FALSE)
+
+```
+
+### `tables_fig_ind_covs.R`
+```r
+## Individual survey results
+load("survey_ind.RData")
+
+## Load aggregate survey data
+load("survey_agg.RData")
+
+## Load aggregate observed aggregate attendance
+load("../aggregate/data_agg.RData")
+
+## We calculate weights based on attendance at the aggregate level
+att.self <- survey.agg %>% filter(treatment == 1) %>%
+    select(barangay,
+           barangay.official,
+           city,
+           city.official,
+           attendance.agg)
+
+attendees <- as.tbl(data.all) %>% filter(treatment == 1) %>%
+    mutate(att.prop = att.prop * 100,
+           att.prop.turn = att.prop.turn * 100)
+
+data.agg.att <- left_join(att.self,
+                      attendees,
+                      by = c("city.official" = "city",
+                             "barangay.official" = "barangay")) %>%
+    mutate(weight.att = ifelse(attendance.agg > 0,
+                               att.prop / attendance.agg,
+                               1)) %>%
+               dplyr::select(city,
+                  barangay,
+                  weight.att)
+
+data <- survey_raw
+
+data <- left_join(data,
+                  data.agg.att,
+                  by = c("city",
+                         "barangay"))
+
+data <- data %>% mutate(weight.att = ifelse(treatment == 0,
+                                            1,
+                                            weight.att))
+
+## ITT Effect
+data$turnout_pl <- data$turnout_pl * 100
+data$vote <- data$vote * 100
+data$vote.akbayan <- data$vote.akbayan * 100
+data$vote.umalabka <- data$vote.umalabka * 100
+
+## List of dependent variables
+vars <- c("turnout_pl",
+          "vote",
+          "vote.akbayan",
+          "vote.umalabka")
+labels <- c("Turnout",
+            "Vote",
+            "Vote (Akbayan)",
+            "Vote (Umalabka)")
+
+## We store the regression output
+reglist.wc.weight  <- coeflist.wc.weight <- plist.wc.weight  <- vcovlist.wc.weight <- ivlist.wc.weight <- coefivlist.wc.weight <- vcovivlist.wc.weight <- plistiv.wc.weight <- mg.ols <-  mg.iv <-
+    lower.weight <- upper.weight <- lower.weight.iv <- upper.weight.iv <- vector( "list", length(vars))
+
+data <- as.data.frame(data)
+## Linear estimation
+for (i in 1:length(vars)){
+    formula.control <- paste(vars[i]," ~ assignment + income + gender + education + age + religion + status + linguistic", sep = "") # Regression formula w/o city dummies
+    formula.wc <- paste(vars[i]," ~ assignment + income + gender + education + age + religion + status + linguistic + city", sep = "") # Regression formula w/o city dummies
+
+    formula.control.iv <- paste(vars[i]," ~ treatment + income + gender + education + age + religion + status + linguistic|.- treatment + assignment", sep = "")
+    formula.wc.iv <- paste(vars[i]," ~ treatment + income + gender + education + age + religion + status + linguistic + city |.- treatment + assignment", sep = "")
+
+    if (vars[i] == "turnout_pl" |
+        vars[i] == "vote"){
+
+               data.reg.wc <- data[,c(vars[i],
+                                      "barangay",
+                                      "city",
+                                      "gender",
+                                      "income",
+                                      "education",
+                                      "religion",
+                                      "age",
+                                      "status",
+                                      "linguistic",
+                                      "assignment",
+                                      "treatment",
+                                      "weight.att"
+                                      )]
+        data.reg.wc <- data.reg.wc[complete.cases(data.reg.wc),]
+
+    } else {
+        if (vars[i] == "vote.akbayan") {
+            data.reg.wc <- data[data$partytreat == "Akbayan",c(vars[i],
+                                                               "barangay",
+                                                               "city",
+                                                               "gender",
+                                                               "income",
+                                                               "education",
+                                                               "religion",
+                                                               "age",
+                                                               "status",
+                                                               "linguistic",
+                                                               "assignment",
+                                                               "treatment",
+                                                               "weight.att"
+                                                               )]
+
+            data.reg.wc <- data.reg.wc[complete.cases(data.reg.wc),]
+
+        } else {
+
+            data.reg.wc <- data[data$partytreat == "Umalab Ka",c(vars[i],
+                                                                 "barangay",
+                                                                 "city",
+                                                                 "gender",
+                                                                 "income",
+                                                                 "education",
+                                                                 "religion",
+                                                                 "age",
+                                                                 "status",
+                                                                 "linguistic",
+                                                                 "assignment",
+                                                                 "treatment",
+                                                                 "weight.att"
+                                                                 )]
+
+            data.reg.wc <- data.reg.wc[complete.cases(data.reg.wc),]
+
+        }
+    }
+
+    reglist.wc.weight[[i]] <- lm(eval(formula.wc), weights = weight.att, data = data.reg.wc)
+    reglist.control <- lm(eval(formula.control), weights = weight.att, data = data.reg.wc)
+    coeflist.wc.weight[[i]] <- coef(reglist.wc.weight[[i]])
+    coeflist.wc.weight[[i]]["(Intercept)"] <- coef(reglist.control)["(Intercept)"]
+    vcovlist.wc.weight[[i]] <- varcov.cluster(as.data.frame(data.reg.wc), reglist.wc.weight[[i]], cluster1= "barangay")
+    plist.wc.weight[[i]] <- coeftest(reglist.wc.weight[[i]], vcovlist.wc.weight[[i]])[,4]
+    plist.wc.weight[[i]]["(Intercept)"] <- coeftest(reglist.control, varcov.cluster(as.data.frame(data.reg.wc), reglist.control, cluster1= "barangay"))[,4]["(Intercept)"]
+
+    ivlist.wc.weight[[i]] <- ivreg(eval(formula.wc.iv), weights = weight.att, data = data.reg.wc)
+    reglist.control.iv <- ivreg(eval(formula.control.iv), weights = weight.att, data = data.reg.wc)
+    coefivlist.wc.weight[[i]] <- coef(ivlist.wc.weight[[i]])
+    coefivlist.wc.weight[[i]]["(Intercept)"] <- coef(reglist.control.iv)["(Intercept)"]
+    vcovivlist.wc.weight[[i]] <- varcov.cluster(as.data.frame(data.reg.wc), ivlist.wc.weight[[i]], cluster1= "barangay")
+    plistiv.wc.weight[[i]] <- coeftest(ivlist.wc.weight[[i]], vcovivlist.wc.weight[[i]])[,4]
+    plistiv.wc.weight[[i]]["(Intercept)"] <- coeftest(reglist.control.iv, varcov.cluster(as.data.frame(data.reg.wc), reglist.control.iv, cluster1= "barangay"))[,4]["(Intercept)"]
+
+
+        mg.ols[[i]] <- coef(reglist.wc.weight[[i]])["assignment"]
+
+        lower.weight[[i]] <- mg.ols[[i]] -
+            (qnorm(.975) * sqrt(vcovlist.wc.weight[[i]]["assignment","assignment"]))
+
+        upper.weight[[i]] <- mg.ols[[i]] +
+            (qnorm(.975) * sqrt(vcovlist.wc.weight[[i]]["assignment","assignment"]))
+
+        mg.iv[[i]] <- coef(ivlist.wc.weight[[i]])["treatment"]
+
+        lower.weight.iv[[i]] <- mg.iv[[i]] -
+            (qnorm(.975) * sqrt(vcovivlist.wc.weight[[i]]["treatment","treatment"]))
+
+        upper.weight.iv[[i]] <- mg.iv[[i]] +
+            (qnorm(.975) * sqrt(vcovivlist.wc.weight[[i]]["treatment","treatment"]))
+
+}
+
+    mg.ols <- unlist(mg.ols)
+    mg.iv <- unlist(mg.iv)
+    lower.weight <- unlist(lower.weight)
+    upper.weight <- unlist(upper.weight)
+
+    lower.weight.iv <- unlist(lower.weight.iv)
+    upper.weight.iv <- unlist(upper.weight.iv)
+
+    all.coef <- c(mg.ols[1],mg.iv[1],
+                  mg.ols[2],mg.iv[2],
+                  mg.ols[3],mg.iv[3],
+                  mg.ols[4],mg.iv[4])
+
+
+    lower.coef <- c(lower.weight[1],lower.weight.iv[1],
+                         lower.weight[2],lower.weight.iv[2],
+                         lower.weight[3],lower.weight.iv[3],
+                         lower.weight[4],lower.weight.iv[4]
+                         )
+
+    upper.coef <- c(upper.weight[1],upper.weight.iv[1],
+                           upper.weight[2],upper.weight.iv[2],
+                           upper.weight[3],upper.weight.iv[3],
+                           upper.weight[4],upper.weight.iv[4]
+                           )
+    points <- c(1.3,1.4,
+                1.8,1.9,
+                2.3,2.4,
+                2.8,2.9)
+    lty <- c(1,2,
+             1,2,
+             1,2,
+             1,2)
+
+    pch <- c(19,17,
+             19,17,
+             19,17,
+             19,17)
+
+## Figure D.1
+    pdf(paste(output,"/votes_covs.pdf",sep=""),
+        width = 9, height = 7)
+    plot(points,
+         all.coef,
+             xlab = "", ylab = "Percentage of Respondents", xlim = c(1, 3), ylim = c(min(lower.coef) - 1,
+                                                            max(upper.coef) + 0.5), pch = pch,
+             axes = FALSE, cex = 1.3)
+
+    for (k in 1:length(points)){
+        lines(c(points[k], points[k]),
+              c(lower.coef[k], upper.coef[k]),
+              lty = lty[k],
+              lwd = 2
+              )
+      lines(c(points[k], points[k]),
+              c(lower.coef[k], upper.coef[k]),
+              lty = lty[k],
+              )
+    }
+
+    text(c(1.35,1.85,2.35,2.85),
+         rep(min(lower.coef) - 0.5,
+             times = 6),
+         labels)
+
+        axis(side = 2)
+        abline(h = 0, lty = 2)
+        legend("topleft",
+               c("ITT", "CACE"),
+               pch = c(19,17),
+               lty = c(1,2),
+               bty = "n")
+    dev.off()
+
+
+p.wc <- list(plist.wc.weight[[1]], plist.wc.weight[[2]], plist.wc.weight[[3]], plist.wc.weight[[4]])
+
+coef.wc <- list(coeflist.wc.weight[[1]], coeflist.wc.weight[[2]], coeflist.wc.weight[[3]], coeflist.wc.weight[[4]])
+
+table.1 <- stargazer(reglist.wc.weight[[1]],
+                     reglist.wc.weight[[2]],
+                     reglist.wc.weight[[3]],
+                     reglist.wc.weight[[4]],
+                     report = "vcp",
+                     p = p.wc,
+                     coef = coef.wc,
+                     title = "Intention to Treat Effect on Electoral Returns at the Individual Level",
+                     no.space = TRUE,
+                     omit = "city",
+                     digits = 3,
+                     covariate.labels = c("ITT"),
+                     dep.var.labels.include = FALSE,
+                     column.labels = c("Turnout", "Vote (Overall)", "Vote (Akbyan)", "Vote (Umalab-Ka)"),
+                     omit.stat = c("f","adj.rsq", "ser"),
+                     label = "itt_ols",
+                     notes.append = TRUE,
+                     notes.align = "l",
+                     notes = c("Note: Pre-treatment controls include gender, income, age, religion, marriage status, linguistic group, and education.",
+                         "Note: WLS by proportion of meeting attendees per barangay"))
+
+## Function to insert row to table
+table.1 <- as.data.frame(table.1)
+table.1$table.1 <- as.character(table.1$table.1)
+
+## We insert CACE results
+cace <- paste0(" CACE & ",
+               paste0(round(c(ivlist.wc.weight[[1]]$coefficients["treatment"],
+                              ivlist.wc.weight[[2]]$coefficients["treatment"],
+                              ivlist.wc.weight[[3]]$coefficients["treatment"],
+                              ivlist.wc.weight[[4]]$coefficients["treatment"]),
+                            3),
+                      collapse = " & "),
+               "\\\\")
+
+cace.p <- paste0(" & ",
+                 paste0(paste0("p = ",round(c(plistiv.wc.weight[[1]]["treatment"],
+                                              plistiv.wc.weight[[2]]["treatment"],
+                                              plistiv.wc.weight[[3]]["treatment"],
+                                              plistiv.wc.weight[[4]]["treatment"]),
+                                            3)),
+                        collapse = " & "),
+                 "\\\\")
+
+r <- 17
+table.1 <- insertrow(table.1,cace,r)
+table.1 <- insertrow(table.1,cace.p,r+1)
+
+r <-35
+fe <- "{\\bf City FE} & Yes & Yes & Yes & Yes \\\\"
+pretreat <- "{\\bf Pre-treatment Vars.} & No & No & No & No \\\\"
+table.1 <- insertrow(table.1,fe,r)
+table.1 <- insertrow(table.1,pretreat,r+1)
+
+##Table D.2
+write.table(table.1,
+              file = paste0(output,
+                          "/table_itt_covs.txt"),
+            sep="",row.names= FALSE,na="", quote = FALSE, col.names = FALSE)
+
+## Marginal Treatment Effect by Education, Income and Gender
+## Store the regression output
+reglist.weight <- vector( "list", length(vars))
+vcovlist.weight <- vector( "list", length(vars))
+
+ivlist.weight <- vector( "list", length(vars))
+vcovivlist.weight <- vector( "list", length(vars))
+
+## Linear estimation
+vars <- c(
+          "vote.akbayan",
+          "vote.umalabka",
+          "sexism",
+          "poverty.all")
+
+
+vars.cond <- c("income", "gender", "education")
+
+data$treat.gender <- data$treatment * data$gender
+data$assign.gender <- data$assignment * data$gender
+
+data$treat.income <- data$treatment * data$income
+data$assign.income <- data$assignment * data$income
+
+data$treat.education <- data$treatment * data$education
+data$assign.education <- data$assignment * data$education
+
+vars <- c(
+          "vote.akbayan",
+          "vote.umalabka")
+
+
+treat.int <- c("treat.income",
+               "treat.gender",
+               "treat.education")
+
+assign.int <- c("assign.income",
+                "assign.gender",
+                "assign.education")
+
+
+for (i in 1:length(vars)){
+
+    for (j in 1:length(vars.cond)){
+
+        formula <- paste(vars[i]," ~ assignment + income + gender + education + age + religion + status + linguistic +", vars.cond[j], " + city  + (assignment *", vars.cond[j], ")",
+                         sep = "") # Regression formula
+
+        formula.cace <- paste(vars[i]," ~ treatment  + income + gender + education + age + religion + status + linguistic +", vars.cond[j], " + city  + ",treat.int[j]," |.- treatment - ",treat.int[j]," + assignment + ",assign.int[j],
+                         sep = "") # Regression formula
+
+            if (vars[i] == "vote.akbayan" |
+                vars[i] == "sexism") {
+                data.reg <- data[data$partytreat == "Akbayan",c(vars[i],
+                                                                "barangay",
+                                                                "assignment",
+                                                                "treatment",
+                                                                 "gender",
+                                                                 "income",
+                                                                 "education",
+                                                                 "religion",
+                                                                 "age",
+                                                                 "status",
+                                                                 "linguistic",
+                                                                "city",
+                                                                vars.cond[j],
+                                                                treat.int[j],
+                                                                assign.int[j],
+                                                                "weight.att")]
+
+            data.reg <- data.reg[complete.cases(data.reg),]
+
+            } else {
+                data.reg <- data[data$partytreat == "Umalab Ka",c(vars[i],
+                                                                  "barangay",
+                                                                  "assignment",
+                                                                  "treatment",
+                                                                  "gender",
+                                                                  "income",
+                                                                  "education",
+                                                                  "religion",
+                                                                  "age",
+                                                                  "status",
+                                                                  "linguistic",
+                                                                  "city",
+                                                                  vars.cond[j],
+                                                                  treat.int[j],
+                                                                  assign.int[j],
+                                                                  "weight.att")]
+
+            data.reg <- data.reg[complete.cases(data.reg),]
+
+            }
+
+        reglist.weight[[i]] <- lm(eval(formula), weights = weight.att, data = data.reg)
+        vcovlist.weight[[i]] <- varcov.cluster(as.data.frame(data.reg), reglist.weight[[i]], cluster1= "barangay")
+
+        ivlist.weight[[i]] <- ivreg(eval(formula.cace), weights = weight.att, data = data.reg)
+        vcovivlist.weight[[i]] <- varcov.cluster(as.data.frame(data.reg), ivlist.weight[[i]], cluster1= "barangay")
+
+        int.weight <- coef(reglist.weight[[i]])[eval(paste("assignment:",vars.cond[j],sep = ""))]
+
+        lower.int <- int.weight -
+            (qnorm(.975) * sqrt(vcovlist.weight[[i]][eval(paste("assignment:",vars.cond[j],sep = "")),
+                                                     eval(paste("assignment:",vars.cond[j],sep = ""))]))
+
+
+        upper.int <- int.weight +
+            (qnorm(.975) * sqrt(vcovlist.weight[[i]][eval(paste("assignment:",vars.cond[j],sep = "")),
+                                                     eval(paste("assignment:",vars.cond[j],sep = ""))]))
+
+        mg.weight <- coef(reglist.weight[[i]])["assignment"] +
+            (coef(reglist.weight[[i]])[eval(paste("assignment:",vars.cond[j],sep = ""))])
+
+        lower.weight <- mg.weight -
+            (qnorm(.975) * sqrt(vcovlist.weight[[i]]["assignment","assignment"] +
+                                vcovlist.weight[[i]][eval(paste("assignment:",vars.cond[j],sep = "")),
+                                                     eval(paste("assignment:",vars.cond[j],sep = ""))]
+                                + 2 * vcovlist.weight[[i]]["assignment",
+                                                           eval(paste("assignment:",vars.cond[j],sep = ""))]))
+
+        upper.weight <- mg.weight +
+            (qnorm(.975) * sqrt(vcovlist.weight[[i]]["assignment","assignment"] +
+                                vcovlist.weight[[i]][eval(paste("assignment:",vars.cond[j],sep = "")),
+                                                     eval(paste("assignment:",vars.cond[j],sep = ""))]
+                                + 2 * vcovlist.weight[[i]]["assignment",
+                                                           eval(paste("assignment:",vars.cond[j],sep = ""))]))
+
+
+        all.coef.weight <- c(coef(reglist.weight[[i]])["assignment"], mg.weight, int.weight)
+
+        all.lower.weight <- c(coef(reglist.weight[[i]])["assignment"] - qnorm(0.975) *
+                              sqrt(vcovlist.weight[[i]]["assignment","assignment"]),
+                              lower.weight)
+        all.upper.weight <- c(coef(reglist.weight[[i]])["assignment"] + qnorm(0.975) *
+                              sqrt(vcovlist.weight[[i]]["assignment","assignment"]),
+                              upper.weight)
+
+
+        int.weight.iv <- coef(ivlist.weight[[i]])[eval(paste("treat.",vars.cond[j],sep = ""))]
+
+
+        lower.int.iv <- int.weight.iv -
+            (qnorm(.975) * sqrt(vcovivlist.weight[[i]][eval(paste("treat.",vars.cond[j],sep = "")),
+                                                       eval(paste("treat.",vars.cond[j],sep = ""))]))
+
+        upper.int.iv <- int.weight.iv +
+            (qnorm(.975) * sqrt(vcovivlist.weight[[i]][eval(paste("treat.",vars.cond[j],sep = "")),
+                                                       eval(paste("treat.",vars.cond[j],sep = ""))]))
+
+        mg.weight.iv <- coef(ivlist.weight[[i]])["treatment"] +
+            (coef(ivlist.weight[[i]])[treat.int[j]])
+
+        lower.weight.iv <- mg.weight.iv -
+            (qnorm(.975) * sqrt(vcovivlist.weight[[i]]["treatment","treatment"] +
+                                vcovivlist.weight[[i]][treat.int[j],
+                                                       treat.int[j]]
+                                + 2 * vcovivlist.weight[[i]]["treatment",
+                                                             treat.int[j]]))
+
+        upper.weight.iv <- mg.weight.iv +
+            (qnorm(.975) * sqrt(vcovivlist.weight[[i]]["treatment","treatment"] +
+                                vcovivlist.weight[[i]][treat.int[j],
+                                                       treat.int[j]]
+                                + 2 * vcovivlist.weight[[i]]["treatment",
+                                                             treat.int[j]]))
+
+
+        all.coef.weight.iv <- c(coef(ivlist.weight[[i]])["treatment"], mg.weight.iv)
+
+        all.lower.weight.iv <- c(coef(ivlist.weight[[i]])["treatment"] - qnorm(0.975) *
+                                 sqrt(vcovivlist.weight[[i]]["treatment","treatment"]),
+                                 lower.weight.iv)
+        all.upper.weight.iv <- c(coef(ivlist.weight[[i]])["treatment"] + qnorm(0.975) *
+                                 sqrt(vcovivlist.weight[[i]]["treatment","treatment"]),
+                                 upper.weight.iv)
+
+        all.coef.notreat <- c(coef(reglist.weight[[i]])["assignment"],
+                              coef(ivlist.weight[[i]])["treatment"])
+
+        all.coef.treat <- c(mg.weight,
+                            mg.weight.iv)
+
+        all.coef.diff <- c(int.weight,
+                           int.weight.iv)
+
+
+        all.lower.notreat <- c(coef(reglist.weight[[i]])["assignment"] - qnorm(0.975) *
+                               sqrt(vcovlist.weight[[i]]["assignment","assignment"]),
+                               coef(ivlist.weight[[i]])["treatment"] - qnorm(0.975) *
+                               sqrt(vcovivlist.weight[[i]]["treatment","treatment"]))
+
+        all.upper.notreat <- c(coef(reglist.weight[[i]])["assignment"] + qnorm(0.975) *
+                               sqrt(vcovlist.weight[[i]]["assignment","assignment"]),
+                               coef(ivlist.weight[[i]])["treatment"] + qnorm(0.975) *
+                               sqrt(vcovivlist.weight[[i]]["treatment","treatment"]))
+
+        all.lower.treat <- c(lower.weight,
+                             lower.weight.iv)
+
+        all.upper.treat <- c(upper.weight,
+                             upper.weight.iv)
+
+        all.lower.int <- c(lower.int,
+                           lower.int.iv)
+
+        all.upper.int <- c(upper.int,
+                           upper.int.iv)
+
+
+        points <- c(1.3,1.4,1.8,1.9, 2.3, 2.4)
+        lty <- c(1,2,1,2,1,2)
+        pch <- c(19,17,19,17,19,17)
+
+        if (vars.cond[j] == "income"){
+            labels <- c("Low Income",
+                        "High Income",
+                        "Difference")
+        } else {
+
+            if(vars.cond[j] == "education"){
+                labels <- c("Low Education",
+                            "High Education",
+                            "Difference")
+            } else {
+                labels <- c("Male",
+                            "Female",
+                            "Difference")
+                }
+        }
+
+        if(vars[i] == "sexism" | vars[i] == "poverty.all"){
+            ylim <- c(min(c(all.lower.notreat,
+                            all.lower.treat,
+                            all.lower.int)),
+                      max(c(all.upper.notreat,
+                            all.upper.treat,
+                            all.upper.int)))
+        } else {
+            ylim <- c(min(c(all.lower.notreat,
+                            all.lower.treat,
+                            all.lower.int)) - 10,
+                      max(c(all.upper.notreat,
+                            all.upper.treat,
+                            all.upper.int)) + 5)
+        }
+        ## Figure D.2
+        pdf(paste(output,"/treat_", vars[i], "_int_", vars.cond[j], "_covs.pdf",sep=""))
+
+        plot(points, c(all.coef.notreat,
+                       all.coef.treat,
+                       all.coef.diff),
+             main = "Conditional Treatment Effect",
+             xlab = "", ylab = "Percentage of Respondents",
+             xlim = c(1, 2.5),
+             ylim = ylim,
+             pch = pch,
+             axes = FALSE,
+             cex = 1.3)
+        text(c(1.35,1.85, 2.35),
+             rep(min(c(all.lower.notreat,
+                       all.lower.treat,
+                       all.lower.int)) - 1.2,
+                 times = 3),
+             labels)
+        for (k in 1:6){
+            lines(c(points[k],points[k]),
+                  c(c(all.lower.notreat, all.lower.treat, all.lower.int)[k], c(all.upper.notreat, all.upper.treat, all.upper.int)[k]),
+                  lty = lty[k],
+                  lwd = 2
+                  )
+            lines(c(points[k],points[k]),
+                  c(c(all.lower.notreat, all.lower.treat, all.lower.int)[k], c(all.upper.notreat, all.upper.treat, all.upper.int)[k]),
+                  lty = lty[k])
+        }
+        axis(side = 2)
+        abline(h = 0, lty = 2)
+        legend("topleft",
+               c("ITT", "CACE"),
+               pch = c(19,17),
+               lty = c(1,2),
+               bty = "n")
+        dev.off()
+
+    }
+}
+
+party <- c("Akbayan", "Umalab Ka")
+party.name <- c("akbayan", "umalabka")
+tablelist <- vector("list",length(party))
+tablelist.weight <- vector("list",length(party))
+tablelist.weight.iv <- vector("list",length(party))
+
+## Sexism
+## List of dependent variables
+vars <- c("sexism", "equality.est", "discrimination.est", "harassment.est", "femhouse.est", "fempol.est")
+
+labels <- c("Index",
+            "Equality",
+            "Discrimination",
+            "Harassment",
+            "Female Rep.",
+            "Female Pol.")
+
+## Store the regression output
+reglist.wc.weight  <- coeflist.wc.weight <- plist.wc.weight  <- vcovlist.wc.weight <- ivlist.wc.weight <- coefivlist.wc.weight <- vcovivlist.wc.weight <- plistiv.wc.weight <- mg.ols <-  mg.iv <-
+    lower.weight <- upper.weight <- lower.weight.iv <- upper.weight.iv <- vector( "list", length(vars))
+
+## Linear estimation
+for (p in 1:length(party)){
+
+    for (i in 1:length(vars)){
+
+        data.reg <- data[data$partytreat == party[p],c(vars[i],
+                                                       "barangay",
+                                                       "assignment",
+                                                       "treatment",
+                                                       "gender",
+                                                       "income",
+                                                       "education",
+                                                       "religion",
+                                                       "age",
+                                                       "status",
+                                                       "linguistic",
+                                                       "city",
+                                                       "weight.att")]
+
+        data.reg <- data.reg[complete.cases(data.reg),]
+
+        formula.wc <- paste(vars[i]," ~ assignment +  income + gender + education + age + religion + status + linguistic + city", sep = "")
+        formula.wc.iv <- paste(vars[i]," ~ treatment + income + gender + education + age + religion + status + linguistic + city |.- treatment + assignment", sep = "")
+
+
+        reglist.wc.weight[[i]] <- lm(eval(formula.wc), weights = weight.att, data = data.reg)
+        coeflist.wc.weight[[i]] <- coef(reglist.wc.weight[[i]])
+        vcovlist.wc.weight[[i]] <- varcov.cluster(as.data.frame(data.reg), reglist.wc.weight[[i]], cluster1= "barangay")
+        plist.wc.weight[[i]] <- coeftest(reglist.wc.weight[[i]], vcovlist.wc.weight[[i]])[,4]
+
+        ivlist.wc.weight[[i]] <- ivreg(eval(formula.wc.iv), weights = weight.att, data = data.reg)
+        coefivlist.wc.weight[[i]] <- coef(ivlist.wc.weight[[i]])
+        vcovivlist.wc.weight[[i]] <- varcov.cluster(as.data.frame(data.reg), ivlist.wc.weight[[i]], cluster1= "barangay")
+        plistiv.wc.weight[[i]] <- coeftest(ivlist.wc.weight[[i]], vcovivlist.wc.weight[[i]])[,4]
+
+        mg.ols[[i]] <- coef(reglist.wc.weight[[i]])["assignment"]
+
+        lower.weight[[i]] <- mg.ols[[i]] -
+            (qnorm(.975) * sqrt(vcovlist.wc.weight[[i]]["assignment","assignment"]))
+
+        upper.weight[[i]] <- mg.ols[[i]] +
+            (qnorm(.975) * sqrt(vcovlist.wc.weight[[i]]["assignment","assignment"]))
+
+        mg.iv[[i]] <- coef(ivlist.wc.weight[[i]])["treatment"]
+
+        lower.weight.iv[[i]] <- mg.iv[[i]] -
+            (qnorm(.975) * sqrt(vcovivlist.wc.weight[[i]]["treatment","treatment"]))
+
+        upper.weight.iv[[i]] <- mg.iv[[i]] +
+            (qnorm(.975) * sqrt(vcovivlist.wc.weight[[i]]["treatment","treatment"]))
+
+    }
+
+    mg.ols <- unlist(mg.ols)
+    mg.iv <- unlist(mg.iv)
+    lower.weight <- unlist(lower.weight)
+    upper.weight <- unlist(upper.weight)
+
+    lower.weight.iv <- unlist(lower.weight.iv)
+    upper.weight.iv <- unlist(upper.weight.iv)
+
+    all.coef.sexism <- c(mg.ols[1],mg.iv[1],
+                         mg.ols[2],mg.iv[2],
+                         mg.ols[3],mg.iv[3],
+                         mg.ols[4],mg.iv[4],
+                         mg.ols[5],mg.iv[5],
+                         mg.ols[6],mg.iv[6])
+
+    lower.coef.sexism <- c(lower.weight[1],lower.weight.iv[1],
+                         lower.weight[2],lower.weight.iv[2],
+                         lower.weight[3],lower.weight.iv[3],
+                         lower.weight[4],lower.weight.iv[4],
+                         lower.weight[5],lower.weight.iv[5],
+                         lower.weight[6],lower.weight.iv[6]
+                         )
+
+    upper.coef.sexism <- c(upper.weight[1],upper.weight.iv[1],
+                           upper.weight[2],upper.weight.iv[2],
+                           upper.weight[3],upper.weight.iv[3],
+                           upper.weight[4],upper.weight.iv[4],
+                           upper.weight[5],upper.weight.iv[5],
+                           upper.weight[6],upper.weight.iv[6]
+                           )
+    points <- c(1.3,1.4,
+                1.8,1.9,
+                2.3,2.4,
+                2.8,2.9,
+                3.3,3.4,
+                3.8,3.9)
+    lty <- c(1,2,
+             1,2,
+             1,2,
+             1,2,
+             1,2,
+             1,2)
+
+    pch <- c(19,17,
+             19,17,
+             19,17,
+             19,17,
+             19,17,
+             19,17)
+
+    ## Figure D.3
+    pdf(paste(output,"/attitude_", party.name[p], "_sexism_covs.pdf",sep=""))
+
+    plot(points,
+         all.coef.sexism,
+             xlab = "", ylab = "Standard Deviation", xlim = c(1, 4), ylim = c(min(lower.coef.sexism) - 1,
+                                                            max(upper.coef.sexism) + 0.5), pch = pch,
+             axes = FALSE, cex = 1.3)
+
+    for (k in 1:length(points)){
+        lines(c(points[k], points[k]),
+              c(lower.coef.sexism[k], upper.coef.sexism[k]),
+              lty = lty[k],
+              lwd = 2
+              )
+      lines(c(points[k], points[k]),
+              c(lower.coef.sexism[k], upper.coef.sexism[k]),
+              lty = lty[k],
+              )
+    }
+
+    text(c(1.35,1.85,2.35,2.85,3.35,3.85),
+         rep(min(lower.coef.sexism) - 0.5,
+             times = 6),
+         labels,
+         cex = 0.8)
+
+        axis(side = 2)
+        abline(h = 0, lty = 2)
+        legend("topleft",
+               c("ITT", "CACE"),
+               pch = c(19,17),
+               lty = c(1,2),
+               bty = "n")
+    dev.off()
+
+    p.wc = list(plist.wc.weight[[1]], plist.wc.weight[[2]], plist.wc.weight[[3]], plist.wc.weight[[4]], plist.wc.weight[[5]], plist.wc.weight[[6]])
+
+    coef.wc.weight = list(coeflist.wc.weight[[1]], coeflist.wc.weight[[2]], coeflist.wc.weight[[3]], coeflist.wc.weight[[4]], coeflist.wc.weight[[5]], coeflist.wc.weight[[6]])
+
+    table.weight <- stargazer(reglist.wc.weight[[1]],
+                              reglist.wc.weight[[2]],
+                              reglist.wc.weight[[3]],
+                              reglist.wc.weight[[4]],
+                              reglist.wc.weight[[5]],
+                              reglist.wc.weight[[6]],
+                              coef = coef.wc.weight,
+                              report = "vcp",
+                              p = p.wc,
+                              digits = 3,
+                              no.space = TRUE,
+                              omit = c("city"),
+                              dep.var.labels = paste(party[p], " Treatment:", sep = ""),
+                              covariate.labels = c("ITT"),
+                              column.labels = labels,
+                              omit.stat = c("f","adj.rsq", "ser"),
+                              omit.table.layout = "n")
+
+    table.weight <- as.data.frame(table.weight[7:(length(table.weight)-2)])
+    names(table.weight) <- "table"
+    table.weight$table <- as.character(table.weight$table)
+
+    ## We insert CACE results
+    cace <- paste0(" CACE & ",
+                   paste0(round(c(ivlist.wc.weight[[1]]$coefficients["treatment"],
+                                  ivlist.wc.weight[[2]]$coefficients["treatment"],
+                                  ivlist.wc.weight[[3]]$coefficients["treatment"],
+                                  ivlist.wc.weight[[4]]$coefficients["treatment"],
+                                  ivlist.wc.weight[[5]]$coefficients["treatment"],
+                                  ivlist.wc.weight[[6]]$coefficients["treatment"]),
+                                3),
+                          collapse = " & "),
+                   "\\\\")
+
+    cace.p <- paste0(" & ",
+                     paste0(paste0("p = ",round(c(plistiv.wc.weight[[1]]["treatment"],
+                                                  plistiv.wc.weight[[2]]["treatment"],
+                                                  plistiv.wc.weight[[3]]["treatment"],
+                                                  plistiv.wc.weight[[4]]["treatment"],
+                                                  plistiv.wc.weight[[5]]["treatment"],
+                                                  plistiv.wc.weight[[6]]["treatment"]
+                                                  ),
+                                                3)),
+                            collapse = " & "),
+                     "\\\\")
+
+    r <- 12
+    table.weight <- insertrow(table.weight,cace,r)
+    table.weight <- insertrow(table.weight,cace.p,r+1)
+
+    r <- 30
+    fe <- "{\\bf City FE} & Yes & Yes & Yes & Yes \\\\"
+    pretreat <- "{\\bf Pre-treatment Vars.} & Yes & Yes & Yes & Yes \\\\"
+    table.weight <- insertrow(table.weight,fe,r)
+    table.weight <- insertrow(table.weight,pretreat,r+1)
+    tablelist.weight[[p]] <- table.weight
+}
+
+first.lines <- as.data.frame(c("\\begin{table}[!htbp] \\centering",
+                               "\\caption{Intention to Treat Effect on Attitudes on Gender}",
+                               "\\label{itt_gender}"))
+last.lines <- as.data.frame(table.1[42:nrow(table.1),])
+names(first.lines) <- names(last.lines) <- "table"
+
+table.sex.weight <- rbind(first.lines,
+                   tablelist.weight[[1]],
+                   tablelist.weight[[2]],
+                   last.lines)
+
+## Table D.3
+write.table(table.sex.weight,
+              file = paste0(output,
+                          "/table_sex_covs.txt"),
+            sep="",row.names= FALSE,na="", quote = FALSE, col.names = FALSE)
+
+
+tablelist <- vector("list",length(party))
+tablelist.weight <- vector("list",length(party))
+
+
+## Poverty
+## List of dependent variables
+vars <- c("poverty.all", "poverty.est", "cct.est", "gap.est", "corruption.est")
+labels <- c("Index",
+            "Poverty",
+            "CCT",
+            "Gap",
+            "Corruption")
+
+## Store the regression output
+reglist.wc.weight  <- coeflist.wc.weight <- plist.wc.weight <- vcovlist.wc.weight <- ivlist.wc.weight <- coefivlist.wc.weight <- vcovivlist.wc.weight <- plistiv.wc.weight <- mg.ols <-  mg.iv <-
+    lower.weight <- upper.weight <- lower.weight.iv <- upper.weight.iv <- vector( "list", length(vars))
+
+## Linear estimation
+for (p in 1:length(party)){
+
+    for (i in 1:length(vars)){
+
+        data.reg <- data[data$partytreat == party[p],c(vars[i],
+                                                       "barangay",
+                                                       "assignment",
+                                                       "treatment",
+                                                       "gender",
+                                                       "income",
+                                                       "education",
+                                                       "religion",
+                                                       "age",
+                                                       "status",
+                                                       "linguistic",
+                                                       "city",
+                                                       "weight.att")]
+
+        data.reg <- data.reg[complete.cases(data.reg),]
+
+        formula.wc <- paste(vars[i]," ~ assignment + income + gender + education + age + religion + status + linguistic + city", sep = "")
+        formula.wc.iv <- paste(vars[i]," ~ treatment + income + gender + education + age + religion + status + linguistic + city|.- treatment + assignment", sep = "")
+
+        reglist.wc.weight[[i]] <- lm(eval(formula.wc), weights = weight.att, data = data.reg)
+        coeflist.wc.weight[[i]] <- coef(reglist.wc.weight[[i]])
+        vcovlist.wc.weight[[i]] <- varcov.cluster(data.reg, reglist.wc.weight[[i]], cluster1= "barangay")
+        plist.wc.weight[[i]] <- coeftest(reglist.wc.weight[[i]], vcovlist.wc.weight[[i]])[,4]
+
+        ivlist.wc.weight[[i]] <- ivreg(eval(formula.wc.iv), weights = weight.att, data = data.reg)
+        coefivlist.wc.weight[[i]] <- coef(ivlist.wc.weight[[i]])
+        vcovivlist.wc.weight[[i]] <- varcov.cluster(data.reg, ivlist.wc.weight[[i]], cluster1= "barangay")
+        plistiv.wc.weight[[i]] <- coeftest(ivlist.wc.weight[[i]], vcovivlist.wc.weight[[i]])[,4]
+
+
+        ##
+
+        mg.ols[[i]] <- coef(reglist.wc.weight[[i]])["assignment"]
+
+        lower.weight[[i]] <- mg.ols[[i]] -
+            (qnorm(.975) * sqrt(vcovlist.wc.weight[[i]]["assignment","assignment"]))
+
+        upper.weight[[i]] <- mg.ols[[i]] +
+            (qnorm(.975) * sqrt(vcovlist.wc.weight[[i]]["assignment","assignment"]))
+
+        mg.iv[[i]] <- coef(ivlist.wc.weight[[i]])["treatment"]
+
+        lower.weight.iv[[i]] <- mg.iv[[i]] -
+            (qnorm(.975) * sqrt(vcovivlist.wc.weight[[i]]["treatment","treatment"]))
+
+        upper.weight.iv[[i]] <- mg.iv[[i]] +
+            (qnorm(.975) * sqrt(vcovivlist.wc.weight[[i]]["treatment","treatment"]))
+
+    }
+
+    mg.ols <- unlist(mg.ols)
+    mg.iv <- unlist(mg.iv)
+    lower.weight <- unlist(lower.weight)
+    upper.weight <- unlist(upper.weight)
+
+    lower.weight.iv <- unlist(lower.weight.iv)
+    upper.weight.iv <- unlist(upper.weight.iv)
+
+    all.coef.poverty <- c(mg.ols[1],mg.iv[1],
+                         mg.ols[2],mg.iv[2],
+                         mg.ols[3],mg.iv[3],
+                         mg.ols[4],mg.iv[4],
+                         mg.ols[5],mg.iv[5])
+
+    lower.coef.poverty <- c(lower.weight[1],lower.weight.iv[1],
+                         lower.weight[2],lower.weight.iv[2],
+                         lower.weight[3],lower.weight.iv[3],
+                         lower.weight[4],lower.weight.iv[4],
+                         lower.weight[5],lower.weight.iv[5]
+                         )
+
+    upper.coef.poverty <- c(upper.weight[1],upper.weight.iv[1],
+                           upper.weight[2],upper.weight.iv[2],
+                           upper.weight[3],upper.weight.iv[3],
+                           upper.weight[4],upper.weight.iv[4],
+                           upper.weight[5],upper.weight.iv[5]
+                           )
+    points <- c(1.3,1.4,
+                1.8,1.9,
+                2.3,2.4,
+                2.8,2.9,
+                3.3,3.4)
+    lty <- c(1,2,
+             1,2,
+             1,2,
+             1,2,
+             1,2)
+
+    pch <- c(19,17,
+             19,17,
+             19,17,
+             19,17,
+             19,17)
+
+    ## Figure D.3
+    pdf(paste(output,"/attitude_", party.name[p], "_poverty_covs.pdf",sep=""))
+
+
+    plot(points,
+         all.coef.poverty,
+             xlab = "", ylab = "Standard Deviation", xlim = c(1, 3.5), ylim = c(min(lower.coef.poverty) - 1,
+                                                            max(upper.coef.poverty) + 0.5), pch = pch,
+             axes = FALSE, cex = 1.3)
+
+    for (k in 1:length(points)){
+        lines(c(points[k], points[k]),
+              c(lower.coef.poverty[k], upper.coef.poverty[k]),
+              lty = lty[k],
+              lwd = 2
+              )
+      lines(c(points[k], points[k]),
+              c(lower.coef.poverty[k], upper.coef.poverty[k]),
+              lty = lty[k],
+              )
+    }
+
+    text(c(1.35,1.85,2.35,2.85,3.35),
+         rep(min(lower.coef.poverty) - 0.5,
+             times = 5),
+         labels,
+         cex = 0.8)
+
+        axis(side = 2)
+        abline(h = 0, lty = 2)
+        legend("topleft",
+               c("ITT", "CACE"),
+               pch = c(19,17),
+               lty = c(1,2),
+               bty = "n")
+    dev.off()
+
+    p.wc = list(plist.wc.weight[[1]], plist.wc.weight[[2]], plist.wc.weight[[3]], plist.wc.weight[[4]],  plist.wc.weight[[5]])
+
+
+    coef.wc.weight = list(coeflist.wc.weight[[1]], coeflist.wc.weight[[2]], coeflist.wc.weight[[3]], coeflist.wc.weight[[4]], coeflist.wc.weight[[5]])
+
+    table.weight <- stargazer(reglist.wc.weight[[1]],
+                              reglist.wc.weight[[2]],
+                              reglist.wc.weight[[3]],
+                              reglist.wc.weight[[4]],
+                              reglist.wc.weight[[5]],
+                              coef = coef.wc.weight,
+                              report = "vcp",
+                              p = p.wc,
+                              no.space = TRUE,
+                              omit = c("city"),
+                              digits = 3,
+                              dep.var.labels = paste(party[p], " Treatment:", sep = ""),
+                              covariate.labels = c("ITT"),
+                              column.labels = labels,
+                              omit.stat = c("f","adj.rsq", "ser"),
+                              omit.table.layout = "n")
+
+    table.weight <- as.data.frame(table.weight[7:(length(table.weight)-2)])
+    names(table.weight) <- "table"
+    table.weight$table <- as.character(table.weight$table)
+
+    ## We insert CACE results
+    cace <- paste0(" CACE & ",
+                   paste0(round(c(ivlist.wc.weight[[1]]$coefficients["treatment"],
+                                  ivlist.wc.weight[[2]]$coefficients["treatment"],
+                                  ivlist.wc.weight[[3]]$coefficients["treatment"],
+                                  ivlist.wc.weight[[4]]$coefficients["treatment"],
+                                  ivlist.wc.weight[[5]]$coefficients["treatment"]),
+                                3),
+                          collapse = " & "),
+                   "\\\\")
+
+    cace.p <- paste0(" & ",
+                     paste0(paste0("p = ",round(c(plistiv.wc.weight[[1]]["treatment"],
+                                                  plistiv.wc.weight[[2]]["treatment"],
+                                                  plistiv.wc.weight[[3]]["treatment"],
+                                                  plistiv.wc.weight[[4]]["treatment"],
+                                                  plistiv.wc.weight[[5]]["treatment"]
+                                                  ),
+                                                3)),
+                            collapse = " & "),
+                     "\\\\")
+
+    r <- 12
+    table.weight <- insertrow(table.weight,cace,r)
+    table.weight <- insertrow(table.weight,cace.p,r+1)
+
+    r <- 28
+    fe <- "{\\bf City FE} & Yes & Yes & Yes & Yes \\\\"
+    pretreat <- "{\\bf Pre-treatment Vars.} & Yes & Yes & Yes & Yes \\\\"
+    table.weight <- insertrow(table.weight,fe,r)
+    table.weight <- insertrow(table.weight,pretreat,r+1)
+    tablelist.weight[[p]] <- table.weight
+}
+
+first.lines <- as.data.frame(c("\\begin{table}[!htbp] \\centering",
+                               "\\caption{Intention to Treat Effect on Attitudes on Poverty}",
+                               "\\label{itt_pov}"))
+last.lines <- as.data.frame(table.1[42:nrow(table.1),])
+names(first.lines) <- names(last.lines) <- "table"
+
+table.pov.weight <- rbind(first.lines,
+                   tablelist.weight[[1]],
+                   tablelist.weight[[2]],
+                   last.lines)
+
+## Table D.2
+write.table(table.pov.weight,
+              file = paste0(output,
+                          "/table_pov_covs.txt"),
+            sep="",row.names= FALSE,na="", quote = FALSE, col.names = FALSE)
+
+
+
+
+```
+
+### `tables_fig_ind_unweighted.R`
+```r
+## All questions
+## Individual survey results
+load("survey_ind.RData")
+
+## Load aggregate survey data
+load("survey_agg.RData")
+
+data <- survey_raw
+
+data <- data %>% mutate(probs.assign = genprobexact(assignment,
+                                                    blockvar = city,
+                                                    clustvar = barangay),
+                        weight.assign = (assignment / probs.assign) + ((1 - assignment)/ (1 - probs.assign)))
+
+## ITT Effect
+data$turnout_pl <- data$turnout_pl * 100
+data$vote <- data$vote * 100
+data$vote.akbayan <- data$vote.akbayan * 100
+data$vote.umalabka <- data$vote.umalabka * 100
+
+## List of dependent variables
+vars <- c("turnout_pl",
+          "vote",
+          "vote.akbayan",
+          "vote.umalabka")
+labels <- c("Turnout",
+            "Vote",
+            "Vote (Akbayan)",
+            "Vote (Umalabka)")
+
+## We store the regression output
+reglist.wc.weight  <- coeflist.wc.weight <- plist.wc.weight  <- vcovlist.wc.weight <- ivlist.wc.weight <- coefivlist.wc.weight <- vcovivlist.wc.weight <- plistiv.wc.weight <- mg.ols <-  mg.iv <-
+    lower.weight <- upper.weight <- lower.weight.iv <- upper.weight.iv <- vector( "list", length(vars))
+
+data <- as.data.frame(data)
+## Linear estimation
+for (i in 1:length(vars)){
+    formula.control <- paste(vars[i]," ~ assignment", sep = "") # Regression formula w/o city dummies
+    formula.wc <- paste(vars[i]," ~ assignment + city", sep = "") # Regression formula w/o city dummies
+
+    formula.control.iv <- paste(vars[i]," ~ treatment| assignment", sep = "")
+    formula.wc.iv <- paste(vars[i]," ~ treatment + city | assignment + city", sep = "")
+
+    if (vars[i] == "turnout_pl" |
+        vars[i] == "vote"){
+
+               data.reg.wc <- data[,c(vars[i],
+                                      "barangay",
+                                      "city",
+                                      "assignment",
+                                      "treatment",
+                                      "weight.assign"
+                                      )]
+        data.reg.wc <- data.reg.wc[complete.cases(data.reg.wc),]
+
+    } else {
+        if (vars[i] == "vote.akbayan") {
+            data.reg.wc <- data[data$partytreat == "Akbayan",c(vars[i],
+                                                               "barangay",
+                                                               "city",
+                                                               "assignment",
+                                                               "treatment",
+                                                               "weight.assign"
+                                                               )]
+
+            data.reg.wc <- data.reg.wc[complete.cases(data.reg.wc),]
+
+        } else {
+
+            data.reg.wc <- data[data$partytreat == "Umalab Ka",c(vars[i],
+                                                                 "barangay",
+                                                                 "city",
+                                                                 "assignment",
+                                                                 "treatment",
+                                                                 "weight.assign"
+                                                                 )]
+
+            data.reg.wc <- data.reg.wc[complete.cases(data.reg.wc),]
+
+        }
+    }
+
+    reglist.wc.weight[[i]] <- lm(eval(formula.wc), weights = weight.assign, data = data.reg.wc)
+    reglist.control <- lm(eval(formula.control), weights = weight.assign, data = data.reg.wc)
+    coeflist.wc.weight[[i]] <- coef(reglist.wc.weight[[i]])
+    coeflist.wc.weight[[i]]["(Intercept)"] <- coef(reglist.control)["(Intercept)"]
+    vcovlist.wc.weight[[i]] <- varcov.cluster(as.data.frame(data.reg.wc), reglist.wc.weight[[i]], cluster1= "barangay")
+    plist.wc.weight[[i]] <- coeftest(reglist.wc.weight[[i]], vcovlist.wc.weight[[i]])[,4]
+    plist.wc.weight[[i]]["(Intercept)"] <- coeftest(reglist.control, varcov.cluster(as.data.frame(data.reg.wc), reglist.control, cluster1= "barangay"))[,4]["(Intercept)"]
+
+    ivlist.wc.weight[[i]] <- ivreg(eval(formula.wc.iv), weights = weight.assign, data = data.reg.wc)
+    reglist.control.iv <- ivreg(eval(formula.control.iv), weights = weight.assign, data = data.reg.wc)
+    coefivlist.wc.weight[[i]] <- coef(ivlist.wc.weight[[i]])
+    coefivlist.wc.weight[[i]]["(Intercept)"] <- coef(reglist.control.iv)["(Intercept)"]
+    vcovivlist.wc.weight[[i]] <- varcov.cluster(as.data.frame(data.reg.wc), ivlist.wc.weight[[i]], cluster1= "barangay")
+    plistiv.wc.weight[[i]] <- coeftest(ivlist.wc.weight[[i]], vcovivlist.wc.weight[[i]])[,4]
+    plistiv.wc.weight[[i]]["(Intercept)"] <- coeftest(reglist.control.iv, varcov.cluster(as.data.frame(data.reg.wc), reglist.control.iv, cluster1= "barangay"))[,4]["(Intercept)"]
+
+
+        mg.ols[[i]] <- coef(reglist.wc.weight[[i]])["assignment"]
+
+        lower.weight[[i]] <- mg.ols[[i]] -
+            (qnorm(.975) * sqrt(vcovlist.wc.weight[[i]]["assignment","assignment"]))
+
+        upper.weight[[i]] <- mg.ols[[i]] +
+            (qnorm(.975) * sqrt(vcovlist.wc.weight[[i]]["assignment","assignment"]))
+
+        mg.iv[[i]] <- coef(ivlist.wc.weight[[i]])["treatment"]
+
+        lower.weight.iv[[i]] <- mg.iv[[i]] -
+            (qnorm(.975) * sqrt(vcovivlist.wc.weight[[i]]["treatment","treatment"]))
+
+        upper.weight.iv[[i]] <- mg.iv[[i]] +
+            (qnorm(.975) * sqrt(vcovivlist.wc.weight[[i]]["treatment","treatment"]))
+
+}
+
+    mg.ols <- unlist(mg.ols)
+    mg.iv <- unlist(mg.iv)
+    lower.weight <- unlist(lower.weight)
+    upper.weight <- unlist(upper.weight)
+
+    lower.weight.iv <- unlist(lower.weight.iv)
+    upper.weight.iv <- unlist(upper.weight.iv)
+
+    all.coef <- c(mg.ols[1],mg.iv[1],
+                  mg.ols[2],mg.iv[2],
+                  mg.ols[3],mg.iv[3],
+                  mg.ols[4],mg.iv[4])
+
+
+    lower.coef <- c(lower.weight[1],lower.weight.iv[1],
+                         lower.weight[2],lower.weight.iv[2],
+                         lower.weight[3],lower.weight.iv[3],
+                         lower.weight[4],lower.weight.iv[4]
+                         )
+
+    upper.coef <- c(upper.weight[1],upper.weight.iv[1],
+                           upper.weight[2],upper.weight.iv[2],
+                           upper.weight[3],upper.weight.iv[3],
+                           upper.weight[4],upper.weight.iv[4]
+                           )
+    points <- c(1.3,1.4,
+                1.8,1.9,
+                2.3,2.4,
+                2.8,2.9)
+    lty <- c(1,2,
+             1,2,
+             1,2,
+             1,2)
+
+    pch <- c(19,17,
+             19,17,
+             19,17,
+             19,17)
+
+## Figure F.1
+    pdf(paste(output,"/votes_unweighted.pdf",sep=""),
+        width = 9, height = 7)
+    plot(points,
+         all.coef,
+             xlab = "", ylab = "Percentage of Respondents", xlim = c(1, 3), ylim = c(min(lower.coef) - 1,
+                                                            max(upper.coef) + 0.5), pch = pch,
+             axes = FALSE, cex = 1.3)
+
+    for (k in 1:length(points)){
+        lines(c(points[k], points[k]),
+              c(lower.coef[k], upper.coef[k]),
+              lty = lty[k],
+              lwd = 2
+              )
+      lines(c(points[k], points[k]),
+              c(lower.coef[k], upper.coef[k]),
+              lty = lty[k],
+              )
+    }
+
+    text(c(1.35,1.85,2.35,2.85),
+         rep(min(lower.coef) - 0.5,
+             times = 6),
+         labels)
+
+        axis(side = 2)
+        abline(h = 0, lty = 2)
+        legend("topleft",
+               c("ITT", "CACE"),
+               pch = c(19,17),
+               lty = c(1,2),
+               bty = "n")
+    dev.off()
+
+
+p.wc = list(plist.wc.weight[[1]], plist.wc.weight[[2]], plist.wc.weight[[3]], plist.wc.weight[[4]])
+
+coef.wc = list(coeflist.wc.weight[[1]], coeflist.wc.weight[[2]], coeflist.wc.weight[[3]], coeflist.wc.weight[[4]])
+
+table.1 <- stargazer(reglist.wc.weight[[1]],
+                     reglist.wc.weight[[2]],
+                     reglist.wc.weight[[3]],
+                     reglist.wc.weight[[4]],
+                     report = "vcp",
+                     p = p.wc,
+                     coef = coef.wc,
+                     title = "Intention to Treat Effect on Electoral Returns at the Individual Level",
+                     no.space = TRUE,
+                     omit = "city",
+                     digits = 3,
+                     covariate.labels = c("ITT",
+                                          "Control"),
+                     dep.var.labels.include = FALSE,
+                     column.labels = c("Turnout", "Vote (Overall)", "Vote (Akbyan)", "Vote (Umalab-Ka)"),
+                     omit.stat = c("f","adj.rsq", "ser"),
+                     label = "itt_ols",
+                     notes.append = TRUE,
+                     notes.align = "l",
+                     notes = c("Note: Pre-treatment controls include gender, income, age, religion, marriage status, linguistic group, and education.",
+                         "Note: WLS by proportion of meeting attendees per barangay"))
+
+## Function to insert row to table
+table.1 <- as.data.frame(table.1)
+table.1$table.1 <- as.character(table.1$table.1)
+
+## We insert CACE results
+cace <- paste0(" CACE & ",
+               paste0(round(c(ivlist.wc.weight[[1]]$coefficients["treatment"],
+                              ivlist.wc.weight[[2]]$coefficients["treatment"],
+                              ivlist.wc.weight[[3]]$coefficients["treatment"],
+                              ivlist.wc.weight[[4]]$coefficients["treatment"]),
+                            3),
+                      collapse = " & "),
+               "\\\\")
+
+cace.p <- paste0(" & ",
+                 paste0(paste0("p = ",round(c(plistiv.wc.weight[[1]]["treatment"],
+                                              plistiv.wc.weight[[2]]["treatment"],
+                                              plistiv.wc.weight[[3]]["treatment"],
+                                              plistiv.wc.weight[[4]]["treatment"]),
+                                            3)),
+                        collapse = " & "),
+                 "\\\\")
+
+r <- 17
+table.1 <- insertrow(table.1,cace,r)
+table.1 <- insertrow(table.1,cace.p,r+1)
+
+r <- 21
+fe <- "{\\bf City FE} & Yes & Yes & Yes & Yes \\\\"
+pretreat <- "{\\bf Pre-treatment Vars.} & No & No & No & No \\\\"
+table.1 <- insertrow(table.1,fe,r)
+table.1 <- insertrow(table.1,pretreat,r+1)
+
+##Table F.1
+write.table(table.1,
+              file = paste0(output,
+                          "/table_itt_unweighted.txt"),
+            sep="",row.names= FALSE,na="", quote = FALSE, col.names = FALSE)
+
+```
+
+### `tables_figures_agg.R`
+```r
+load("data_agg.RData")
+
+ # Plot proportion of attendees
+
+data_agg <- data.all[data.all$treatment == 1,]
+
+## We plot the proportion of meeting attendees
+att.prop <- data_agg$att.prop
+att.prop <- att.prop[order(data_agg$att.prop)]
+mean.att <- mean(att.prop)
+att.prop.turn <- data_agg$att.prop.turn
+att.prop.turn <- att.prop.turn[order(data_agg$att.prop.turn)]
+mean.att.turn <- mean(att.prop.turn)
+names.bar <- data_agg$barangay
+names.bar <- names.bar[order(data_agg$att.prop)]
+names.bar.turn <- data_agg$barangay
+names.bar.turn <- names.bar.turn[order(data_agg$att.prop.turn)]
+
+
+##Figure 1 (left panel)
+pdf(paste(output,"/attendance_prop.pdf",sep=""))
+
+par(mar=c(5,8,4,2))
+barplot(att.prop,
+        main = "Proportion of Attendees out of Registered Voters",
+        xlab = "Proportion",
+        horiz = TRUE,
+        xlim = c(0, 0.25),
+        las = 1,
+        names.arg = names.bar,
+        cex.names = 0.6)
+
+abline (v = mean.att,
+        lty = 2,
+        col = "red")
+
+dev.off()
+
+##Figure 1 (right panel)
+pdf(paste(output,"/attendance_prop_turn.pdf",sep=""))
+
+par(mar=c(5,8,4,2))
+barplot(att.prop.turn,
+        main = "Proportion of Attendees out of Party-List Voters",
+        xlab = "Proportion",
+        horiz = TRUE,
+        xlim = c(0, 0.30),
+        las = 1,
+        names.arg = names.bar.turn,
+        cex.names = 0.6)
+abline (v = mean.att.turn, lty = 2, col = "red")
+
+dev.off()
+
+
+## Effect of treatment on outcomes
+
+## Outcome variables
+vars <- c("turnout.party",
+          "share.treated",
+          "share.akbayan",
+          "share.umalabka")
+
+
+## Randomization inference to estimate the ATE at the barangay level
+## We store the  output in the following lists
+reglist <- atelist  <- coeflist <- cacelist <- plist <- p_rilist <-  reghet <- reghet.iv <- vector( "list", length(vars))
+
+## We estimate the ATE of town hall meetings on each electoral return
+for (i in 1:length(vars)){
+
+    if (vars[i] %in% c("turnout.party",
+                       "share.treated")){
+        data.reg <- data.all[complete.cases(data.all[vars[i]]),]
+    } else {
+        if (vars[i] == "share.akbayan") {
+            data.reg <- data.all[complete.cases(data.all[vars[i]]) & data.all$partytreat == "akbayan",]
+        } else {
+            data.reg <- data.all[complete.cases(data.all[vars[i]]) & data.all$partytreat == "umalabka",]
+        }
+    }
+
+    assignment <- data.reg$assignment
+    treatment <- data.reg$treatment
+    att.prop <- data.reg$att.prop
+    att.prop.turn <- data.reg$att.prop.turn
+    outcome <- data.reg[,vars[i]]
+    cluster <- data.reg$barangay
+    block <- data.reg$city
+    X <- dummy("city", data.reg)[,-1]
+    ## Generate all possible permutations
+    set.seed(1983)
+    perms <- genperms(assignment,
+                      blockvar=block,
+                      clustvar=cluster,
+                      maxiter = 50000)
+
+    ## Compute probability of treatment
+    probs <- genprobexact(assignment,
+                          blockvar=block,
+                          clustvar=cluster)
+
+    weights <- assignment/probs + (1-assignment)/(1-probs)
+
+    ## Estimate the ATE
+    atelist[[i]] <- estate(outcome,
+                           assignment,
+                           X = X,
+                           prob=probs)
+
+
+    ## Estimate the CACE
+    cacelist[[i]] <- estlate(outcome,
+                             treatment,
+                             assignment,
+                             X = X,
+                             prob=probs)
+    ## Store results over these regressions
+    ## Regression results
+    reglist[[i]] <- lm(outcome ~ assignment + X,
+                       weights = weights)
+    coeflist[[i]] <- coef(reglist[[i]])
+    ## P-values for control group
+    plist[[i]] <- summary(reglist[[i]])$coefficients[,4]
+
+    ## Conduct Sharp Null Hypothesis Test of Zero Effect for Each Unit
+    Ys <- genouts(outcome,
+                  assignment,
+                  ate=0)
+
+    Ys.ate <- genouts(outcome,
+                      assignment,
+                      ate= atelist[[i]])
+
+    ## Generate sampling dist. under sharp null
+    distout <- gendist(Ys,
+                       perms,
+                       X= X,
+                       prob=probs)
+
+    distout.ate <- gendist(Ys.ate,
+                           perms,
+                           X= X,
+                           prob=probs)
+
+    kernel.null <- density(distout)
+
+    ## Display characteristics of sampling dist. for inference
+    disp.out <- dispdist(distout,
+                         atelist[[i]],
+                         quantiles = c(0.025, 0.975),
+                         display.plot = FALSE)
+
+    ## P-values  for turnout (H_A: ATE != 0) vote shares (H_0:ATE=0, H_A:ATE>0)
+    if(vars[i] == "turnout.party"){
+        p_rilist[[i]] <- 2 * min(mean(atelist[[i]] <= distout),mean(atelist[[i]] >= distout))
+    } else {
+        p_rilist[[i]] <- mean(atelist[[i]] <= distout)
+    }
+
+    ## Figure C1
+    pdf(paste(output,"/perm_", gsub("[.]","_", vars[i]), ".pdf",sep=""))
+    plot(kernel.null,
+         xlim = c(min(kernel.null$x),
+                  max(kernel.null$x)),
+         ylim = c(min(kernel.null$y),
+                  max(kernel.null$y)),
+         main = "",
+         xlab = "Vote Share (%)",
+         ylab = "Frequency",
+         )
+    polygon(kernel.null,
+            col="blue",
+            border="blue")
+    abline(v=atelist[[i]],
+           lty = 2,
+           col = "red")
+    text(atelist[[i]] + 0.5,
+         max(kernel.null$y),
+         paste("ITT = ",
+               round(atelist[[i]],
+                     digits = 3),
+               sep = ""),
+         col = "red")
+    mtext(paste("p-value=",
+                round(p_rilist[[i]],
+                      4)),
+          3)
+    dev.off()
+
+    ## We estimate the control mean via the estimated intercept w/o fixed-effects
+    coeflist[[i]]["(Intercept)"] <-  coef(lm(outcome ~ assignment,
+                                             weights = weights))["(Intercept)"]
+    plist[[i]]["(Intercept)"] <- summary(lm(outcome ~ assignment,
+                                            weights = weights))$coefficients[1,4]
+
+    ## We substitute the ri ate and pvalue
+    coeflist[[i]]["assignment"] <- atelist[[i]]
+    plist[[i]]["assignment"] <- p_rilist[[i]]
+
+    ## Heterogenous effects by voting age population
+    range.pop <- seq(quantile(data.reg$reg.pop.thousand,.1), quantile(data.reg$reg.pop.thousand,.9), length.out = 100)
+
+    fit <-  lm(outcome ~
+                   assignment +
+                   data.reg$reg.pop.thousand +
+                   assignment * data.reg$reg.pop.thousand  +
+                   X,
+               weights = weights)
+
+    ## We compute the marginal effect conditional on voting age pop.
+    mg <- (coef(fit)["assignment"] +
+           (coef(fit)["assignment:data.reg$reg.pop.thousand"] * range.pop))
+
+    ## We compute the sd. of the interactive effect conditional on voting age pop.
+    mg.sd <- sqrt(vcov(fit)["assignment","assignment"] +
+                  (range.pop^2 * vcov(fit)["assignment:data.reg$reg.pop.thousand","assignment:data.reg$reg.pop.thousand"]) +
+                  2*range.pop*vcov(fit)["assignment","assignment:data.reg$reg.pop.thousand"])
+
+    ## We compute confidence intervals
+    mg.lower.95 <- mg - (qnorm(.975) * mg.sd)
+    mg.upper.95 <- mg + (qnorm(.975) * mg.sd)
+
+    mg.lower.90 <- mg - (qnorm(.95) * mg.sd)
+    mg.upper.90 <- mg + (qnorm(.95) * mg.sd)
+
+    ## Figure 2 and Figure C.2
+    pdf(paste(output,"/hetero_regpop",
+              gsub("[.]","_", vars[i]),
+              ".pdf",
+              sep=""))
+    plot(range.pop,
+         mg,
+         lwd = 2,
+         type = "l",
+         ylim = c(min(mg.lower.95) - 0.5,max(mg.upper.95) + 0.5),
+         xlab = "Registered Voters (1000's)",
+         ylab = "Electoral Returns")
+    lines(range.pop,
+          mg.lower.95,
+          lty = 2,
+          col = "black",
+          lwd = 3)
+    lines(range.pop,
+          mg.upper.95,
+          lty = 2,
+          col = "black",
+          lwd = 3)
+    lines(range.pop,
+          mg.lower.90,
+          lty = 2,
+          col = "black",
+          lwd = 2)
+    lines(range.pop,
+          mg.upper.90,
+          lty = 2, col = "black", lwd = 2)
+    rug(data.reg$reg.pop.thousand,
+        col = "black",
+        lwd = 1.5)
+    abline(h = 0,
+           col = "darkgray", lty = 2)
+    abline(h = atelist[[i]],
+           col = "red",
+           lty = 2)
+    text(19,
+         atelist[[i]] + 0.2,
+         paste0("ITT = ",round(atelist[[i]],2)),
+         col = "red")
+    legend("topleft",
+           c("90% CI", "95% CI"),
+           lty = c(2,3),
+           lwd = c(2,3),
+           bty = "n")
+    dev.off()
+
+
+    ## Heterogenous effects by attendance
+    fit.city <- lm(outcome ~ data.reg$city,
+                   weights = weights)
+
+    resid.city <- resid(fit.city)
+
+    fit <- lm(resid.city ~ att.prop,
+              weights = weights)
+    reghet[[i]] <- fit
+
+    fit.iv <- ivreg(resid.city ~ att.prop|.- att.prop + assignment,
+                    weights = weights)
+
+    reghet.iv[[i]] <- fit.iv
+
+    sims.iv <-  rmvnorm(n = 1000,
+                        coef(fit.iv),
+                        vcov(fit.iv))
+
+    newdata <- data.frame(att.prop = seq(min(att.prop), max(att.prop), length.out = 100))
+
+    ## Figure 2 and Figure C.2
+    pdf(paste(output,"/hetero_", gsub("[.]","_", vars[i]), ".pdf",sep=""))
+
+    ci.90 <- predict(fit,
+                     interval = "confidence",
+                     level = 0.90,
+                     newdata = newdata)
+    ci.95 <- predict(fit,
+                     interval = "confidence",
+                     level = 0.95,
+                     newdata = newdata)
+    plot(newdata$att.prop,
+         ci.90[,1],
+         lwd = 2,
+         type = "l",
+         ylim = c(min(ci.95[,2]) - 0.5,max(ci.95[,3]) + 0.5),
+         xlab = "Attendees / Voters",
+         ylab = "Electoral Returns")
+    lines(newdata$att.prop,
+          ci.90[,2],
+          lty = 2,
+          col = "black",
+          lwd = 2)
+    lines(newdata$att.prop,
+          ci.90[,3],
+          lty = 2,
+          col = "black",
+          lwd = 2)
+    lines(newdata$att.prop,
+          ci.95[,2],
+          lty = 3,
+          col = "black",
+          lwd = 3)
+    lines(newdata$att.prop,
+          ci.95[,3],
+          lty = 3,
+          col = "black",
+          lwd = 3)
+    rug(att.prop,
+        col = "black",
+        lwd = 1.5)
+    abline(h = atelist[[i]],
+           col = "red",
+           lty = 2)
+    abline(h = 0,
+           col = "darkgray",
+           lty = 2)
+    text(0.03,atelist[[i]] + 0.2,
+         paste0("ITT = ",round(atelist[[i]],2)),
+         col = "red")
+    legend("topleft",
+           c("90% CI", "95% CI"),
+           lty = c(2,3),
+           lwd = c(2,3),
+           bty = "n")
+    dev.off()
+
+}
+
+## List of estimated ATE's
+coef <- list(coeflist[[1]],
+            coeflist[[2]],
+            coeflist[[3]],
+            coeflist[[4]])
+
+
+
+p <- list(plist[[1]],
+         plist[[2]],
+         plist[[3]],
+         plist[[4]])
+
+## Table ITT effects and CACE
+caption <- "Intention-to-Treat Effect on Electoral Returns at the Barangay Level"
+label <- "res_official_all"
+
+## Latex table with vote shares
+table.agg <- stargazer(
+    reglist[[1]],
+    reglist[[2]],
+    reglist[[3]],
+    reglist[[4]],
+    coef = coef,
+    report = "vcp",
+    p = p,
+    title = caption,
+    no.space = TRUE,
+    dep.var.labels.include = FALSE,
+    covariate.labels = c("ITT",
+                         "Control"),
+    column.labels = c("Turnout",
+                      "Vote (Overall)",
+                      "Vote (Akbayan)",
+                      "Vote (Umalab-Ka)"),
+    omit.stat = c("f",
+                  "adj.rsq",
+                  "ser"),
+    omit = c("city"),
+    label = label,
+    notes.append = TRUE,
+    notes.align = "l",
+    notes = c("Inference for the ATE under randomization of the treatment",
+              "Permutation $p$-values for ATE"))
+table.agg <- as.data.frame(table.agg)
+table.agg$table.agg <- as.character(table.agg$table.agg)
+
+## Insert CACE values
+r.cace <- which(str_detect(table.agg$table.agg,
+                           pattern = "ITT")) + 1
+r.city <- which(str_detect(table.agg$table.agg,
+                pattern = "Observations"))
+cace <- paste0("CACE & ",
+               round(cacelist[[1]],3),
+               " & ",
+               round(cacelist[[2]],3),
+               " & ",
+               round(cacelist[[3]],3),
+               " & ",
+               round(cacelist[[4]],3),
+               "\\\\")
+
+city.fe <- "{\\bf City FE} & Yes & Yes & Yes & Yes\\\\"
+table.agg <- insertrow(table.agg,cace,r.cace)
+table.agg <- insertrow(table.agg,city.fe,r.city)
+
+## Table 1
+write.table(table.agg, paste0(output,"/table_agg.txt"), sep="",row.names= FALSE,na="", quote = FALSE, col.names = FALSE)
+
+## Within cluster ATE
+## Dependent variables
+vars.party <- vars[c("share.akbayan",
+                     "share.umalabka")]
+
+data.cluster <- as.tbl(data.all) %>% group_by(city, partytreat,assignment) %>%
+    summarise(itt = mean(share.treated),
+              nbar = length(barangay)) %>%
+    ungroup() %>%
+    group_by(city, partytreat) %>%
+    mutate(nbar = sum(nbar)) %>%
+    ungroup() %>%
+    spread(.,assignment, itt) %>%
+    dplyr::rename(Y0 = `0`,
+                  Y1 = `1`) %>%
+    mutate(itt = Y1 - Y0) %>%
+    arrange(partytreat)
+
+data.cluster.akbayan <- data.cluster %>% filter(partytreat == "akbayan") %>%
+    summarise_at(vars(Y0,Y1,itt),
+                 mean)
+
+data.cluster.umalabka <- data.cluster %>% filter(partytreat == "umalabka") %>%
+    summarise_at(vars(Y0,Y1,itt),
+                 mean)
+
+## Generate table
+
+table.cluster <- data.cluster %>% select(city,
+                                         Y0,
+                                         Y1,
+                                         itt)
+
+colnames(table.cluster) <- c("City",
+                             "Control",
+                             "Treatment",
+                             "ITT")
+
+xtable.cluster <- xtable(table.cluster,
+                         caption = "Treatment Effect on Electoral Returns by Municipality",
+                         digits = 2,
+                         align = "llccc")
+
+
+addtorow <- list()
+addtorow$pos <- list()
+addtorow$pos[[1]] <- 0
+addtorow$pos[[2]] <- 6
+addtorow$pos[[3]] <- 6
+addtorow$pos[[4]] <- 13
+addtorow$pos[[5]] <- 13
+
+addtorow$command <- c("& \\multirow{4}{Akbayan}",
+                      paste(paste("Mean",
+                            paste(round(data.cluster.akbayan,2),
+                                  collapse = " & "),
+                            sep =  " & "),
+                            "\\\\"),
+                      "& \\multirow{4}{Umalab Ka} \\\\ ",
+                       "\\hline \\\\",
+                      paste(paste("Mean",
+                            paste(round(data.cluster.umalabka,2),
+                                  collapse = " & "),
+                            sep =  " & "),
+                            "\\\\ "))
+
+## Table C.1
+print.xtable(xtable.cluster,
+             file = paste0(output,"/iit_cluster.txt"),
+             type = "latex",
+             caption.placement = "top",
+             add.to.row = addtorow,
+             sanitize.text.function = function(x){x},
+             include.rownames = FALSE,
+             hline.after = c(0,5,6,13))
+
+```
+
+### `corr_att.R`
+```r
+## Individual survey results
+load("survey_ind.RData")
+
+## Load aggregate survey data
+load("survey_agg.RData")
+
+## Load aggregate observed aggregate attendance
+load("../aggregate/data_agg.RData")
+
+## We calculate weights based on attendance at the aggregate level
+att.self <- survey.agg %>% filter(treatment == 1) %>%
+    select(barangay,
+           barangay.official,
+           city,
+           city.official,
+           attendance.agg)
+
+attendees <- as.tbl(data.all) %>% filter(treatment == 1) %>%
+    mutate(att.prop = att.prop * 100,
+           att.prop.turn = att.prop.turn * 100)
+
+data.agg.att <- left_join(att.self,
+                      attendees,
+                      by = c("city.official" = "city",
+                             "barangay.official" = "barangay")) %>%
+    mutate(weight.att = ifelse(attendance.agg > 0,
+                               att.prop / attendance.agg,
+                               1)) %>%
+               dplyr::select(city,
+                  barangay,
+                  weight.att)
+
+data <- survey_raw
+
+data <- left_join(data,
+                  data.agg.att,
+                  by = c("city",
+                         "barangay"))
+
+data <- data %>% mutate(weight.att = ifelse(treatment == 0,
+                                            1,
+                                            weight.att))
+
+## Determinants of attendance
+
+data.treat <- as.tbl(data) %>%
+    filter(treatment == 1) %>%
+    select(attendance,
+           gender,
+           income,
+           education,
+           religion,
+           age,
+           status,
+           linguistic,
+           info_all,
+           info_fam,
+           info_others,
+           weight.att,
+           barangay,
+           city)
+
+data.treat <- data.treat[complete.cases(data.treat),]
+
+reg.att.treat <- lm(attendance ~
+                      gender +
+                      income +
+                      education +
+                      religion +
+                      age +
+                      status +
+                      linguistic +
+                      info_all +
+                      info_fam +
+                      info_others +
+                      city,
+                  weights = weight.att,
+                  data = data.treat)
+vcov.cluster.treat <- varcov.cluster(as.data.frame(data.treat), reg.att.treat, cluster1= "barangay")
+coeftest(reg.att.treat, vcov.cluster.treat)
+
+## Plot of effects
+
+points <- coef(reg.att.treat)
+
+vars.plot <- c("gender",
+               "income",
+               "education",
+               "religion",
+               "age",
+               "status",
+               "linguistic",
+               "info_all",
+               "info_fam",
+               "info_others"
+               )
+
+points <- points[names(coef(reg.att.treat)) %in% vars.plot]
+
+names(points) <- vars.plot
+
+points.se <- sqrt(diag(vcov.cluster.treat))
+
+points.se <- points.se[names(sqrt(diag(vcov.cluster.treat))) %in% vars.plot]
+
+## compute quantiles
+
+d0 <- model.matrix(reg.att.treat)[,names(coef(reg.att.treat)) %in% vars.plot]
+
+lo <- apply(d0, 2, quantile, 0)   # calculate the minimum of the predictors
+md <- apply(d0, 2, quantile, .5)  # calculate the median of the predictors
+hi <- apply(d0, 2, quantile, 1)   # calculate the maximum of the predictors
+
+lo["info_all"] <- 5
+hi["info_all"] <- 12
+
+sims <-  rmvnorm(n = 1000,
+                 coef(reg.att.treat),
+                 vcov.cluster.treat)
+
+sims <- sims[,names(coef(reg.att.treat)) %in% vars.plot]
+q <- matrix(NA, length(points), 5)
+
+rownames(q) <- names(points)
+
+for (i in 1:(length(points))) {
+    x.lo <- md; x.lo[i] <- lo[i];           # Set the predictor of interest at its minimum and others at their median.
+    x.hi <- md; x.hi[i] <- hi[i];           # Set the predictor of interest at its maximum and others at their median.
+    sim.lo <- sims%*%x.lo       # Compute predicted values from simulations.
+    sim.hi <- sims%*%x.hi                                      # Compute predicted values from simulations.
+    sims.dif <- sim.hi - sim.lo                                # Compute the differences.
+    q[i,] <- quantile(sims.dif, c(.05, .25, .5, .75, .95))         # Find the quantiles of interest.
+}
+
+
+names <- c("Female",
+           "Income",
+           "Education",
+           "Religion",
+           "Age",
+           "Status",
+           "Linguistic",
+           "Political Info (News)",
+           "Political Info (Family)",
+           "Political Info (Others)")
+
+names(names) <- rownames(q)
+
+q0 <- q
+
+q <- q[order(q0[,3]),]
+
+names <- names[order(q0[,3])]
+
+## Figure G.1
+pdf(paste0(output,"/effects_att.pdf"),
+    width = 9, height = 7)
+
+par(
+    family = "serif",
+    oma = c(0,0,0,0),
+    mar = c(5,2,4,2)
+)
+
+                                        # create an empty plot for total customization
+plot(NULL,
+     xlim = c(-0.3,0.4),
+     ylim = c(.7, length(names) + .3),
+     axes = F, xlab = NA, ylab = NA)
+
+                                        # add the data
+for (i in 1:(nrow(q))) {
+    points(q[i,3], i, pch = 19, cex = 1.5)
+    lines(c(q[i,1], q[i,5]), c(i,i), col = "black", lty = 1, lwd = 2)
+    text(q[i,3], i, names[i], xpd = T, cex = .7, pos = 3)    # Add the variable names.
+}
+
+axis(side = 1)
+abline(v = 0, lty = 3, lwd = 2,col = "darkgrey")
+mtext(side = 1, "First Difference as a Variable\nMoves from Its 1th to Its 99th Percentile", line = 3)
+mtext(side = 3, expression("Linear Regression Model of" ~ ' Attendance'), line = 1)
+box()
+dev.off()
+
+
+## Different between attendance to town hall meetings and other events
+
+data.treat <- as.tbl(data) %>%
+    mutate(att.th = ifelse(attendance == 1 & treatment == 1,
+                           1,
+                    ifelse(attendance.rallies == 1 & treatment == 0,
+                           0,
+                           NA))) %>%
+    filter((attendance == 1 & treatment == 1) | (attendance.rallies == 1 & treatment == 0)) %>%
+    select(att.th,
+           gender,
+           income,
+           education,
+           religion,
+           age,
+           status,
+           linguistic,
+           info_all,
+           info_fam,
+           info_others,
+           weight.att,
+           barangay,
+           city)
+
+data.treat <- data.treat[complete.cases(data.treat),]
+
+reg.att.treat <- lm(att.th ~
+                      gender +
+                      income +
+                      education +
+                      religion +
+                      age +
+                      status +
+                      linguistic +
+                      info_all +
+                      info_fam +
+                      info_others +
+                      city,
+                  weights = weight.att,
+                  data = data.treat)
+vcov.cluster.treat <- varcov.cluster(as.data.frame(data.treat), reg.att.treat, cluster1= "barangay")
+coeftest(reg.att.treat, vcov.cluster.treat)
+
+## Plot of effects
+
+points <- coef(reg.att.treat)
+
+vars.plot <- c("gender",
+               "income",
+               "education",
+               "religion",
+               "age",
+               "status",
+               "linguistic",
+               "info_all",
+               "info_fam",
+               "info_others"
+               )
+
+points <- points[names(coef(reg.att.treat)) %in% vars.plot]
+
+names(points) <- vars.plot
+
+points.se <- sqrt(diag(vcov.cluster.treat))
+
+points.se <- points.se[names(sqrt(diag(vcov.cluster.treat))) %in% vars.plot]
+
+## compute quantiles
+
+d0 <- model.matrix(reg.att.treat)[,names(coef(reg.att.treat)) %in% vars.plot]
+
+lo <- apply(d0, 2, quantile, 0)   # calculate the minimum of the predictors
+md <- apply(d0, 2, quantile, .5)  # calculate the median of the predictors
+hi <- apply(d0, 2, quantile, 1)   # calculate the maximum of the predictors
+
+lo["info_all"] <- 5
+hi["info_all"] <- 12
+
+sims <-  rmvnorm(n = 1000,
+                 coef(reg.att.treat),
+                 vcov.cluster.treat)
+
+sims <- sims[,names(coef(reg.att.treat)) %in% vars.plot]
+q <- matrix(NA, length(points), 5)
+
+rownames(q) <- names(points)
+
+for (i in 1:(length(points))) {
+    x.lo <- md; x.lo[i] <- lo[i];           # Set the predictor of interest at its minimum and others at their median.
+    x.hi <- md; x.hi[i] <- hi[i];           # Set the predictor of interest at its maximum and others at their median.
+    sim.lo <- sims%*%x.lo       # Compute predicted values from simulations.
+    sim.hi <- sims%*%x.hi                                      # Compute predicted values from simulations.
+    sims.dif <- sim.hi - sim.lo                                # Compute the differences.
+    q[i,] <- quantile(sims.dif, c(.05, .25, .5, .75, .95))         # Find the quantiles of interest.
+}
+
+
+names <- c("Female",
+           "Income",
+           "Education",
+           "Religion",
+           "Age",
+           "Status",
+           "Linguistic",
+           "Political Info (News)",
+           "Political Info (Family)",
+           "Political Info (Others)")
+
+names(names) <- rownames(q)
+
+q0 <- q
+
+q <- q[order(q0[,3]),]
+
+names <- names[order(q0[,3])]
+
+## Figure G.1
+pdf(paste0(output,"/effects_att_th.pdf"),
+    width = 9, height = 7)
+
+par(
+    family = "serif",
+    oma = c(0,0,0,0),
+    mar = c(5,2,4,2)
+)
+
+                                        # create an empty plot for total customization
+plot(NULL,
+     xlim = c(-0.6,0.6),
+     ylim = c(.7, length(names) + .3),
+     axes = F, xlab = NA, ylab = NA)
+
+                                        # add the data
+for (i in 1:(nrow(q))) {
+    points(q[i,3], i, pch = 19, cex = 1.5)
+    lines(c(q[i,1], q[i,5]), c(i,i), col = "black", lty = 1, lwd = 2)
+    text(q[i,3], i, names[i], xpd = T, cex = .7, pos = 3)    # Add the variable names.
+}
+
+axis(side = 1)
+abline(v = 0, lty = 3, lwd = 2,col = "darkgrey")
+mtext(side = 1, "First Difference as a Variable\nMoves from Its 1th to Its 99th Percentile", line = 3)
+mtext(side = 3, expression("Linear Regression Model of" ~ ' Attendance'), line = 1)
+box()
+dev.off()
+
+```
+
+### `functions_agg.R`
+```r
+## User-defined functions
+
+## Function to insert row to table
+insertrow <- function(existingDF, newrow, r) {
+    existingDF[seq(r+1,nrow(existingDF)+1),] <- existingDF[seq(r,nrow(existingDF)),]
+    existingDF[r,] <- newrow
+    existingDF
+}
+
+
+## Absolute difference in variances
+abs.diff.var = function(treated, Y) {
+  abs( var(Y[treated]) - var(Y[!treated]) )
+}
+
+## Calculate p-value
+p.value <- function(observed.stat, perms, Y1, Y0) {
+    sims <- ncol(perms)
+  sim.stats <- numeric(sims)
+
+  for (i in 1:sims) {
+    t.sim <- perms[,i]  # Simulate random assignment
+    Y.sim <- t.sim * Y1  +  (1 - t.sim) * Y0
+    sim.stats[i] <- abs.diff.var(t.sim, Y.sim)
+  }
+
+  mean(sim.stats >= observed.stat)
+}
+
+```
+
+### `functions_ind.R`
+```r
+## User-defined functions
+
+## Function to insert row to table
+insertrow <- function(existingDF, newrow, r) {
+    existingDF[seq(r+1,nrow(existingDF)+1),] <- existingDF[seq(r,nrow(existingDF)),]
+    existingDF[r,] <- newrow
+    existingDF
+}
+
+
+## Absolute difference in variances
+abs.diff.var = function(treated, Y) {
+  abs( var(Y[treated]) - var(Y[!treated]) )
+}
+
+## Calculate p-value
+p.value <- function(observed.stat, perms, Y1, Y0) {
+    sims <- ncol(perms)
+  sim.stats <- numeric(sims)
+
+  for (i in 1:sims) {
+    t.sim <- perms[,i]  # Simulate random assignment
+    Y.sim <- t.sim * Y1  +  (1 - t.sim) * Y0
+    sim.stats[i] <- abs.diff.var(t.sim, Y.sim)
+  }
+
+  mean(sim.stats >= observed.stat)
+}
+
+# See: Thompson (2006), Cameron, Gelbach and Miller (2006) and Petersen (2010).
+# and Gow, Ormazabal, and Taylor (2010) for more discussion of this code
+# and two-way cluster-robust standard errors.
+
+# The arguments of the function are data, fitted model, cluster1 and cluster2
+# You need to install packages `sandwich' by Thomas Lumley and Achim Zeileis and
+# `lmtest' by Torsten Hothorn, Achim Zeileis, Giovanni Millo and David Mitchell.
+# (For example, type install.packages("sandwich") on the R console.)
+varcov.cluster <- function(data, fm, cluster1, cluster2=NULL) {
+
+  require(sandwich)
+  require(lmtest)
+
+  # Calculation shared by covariance estimates
+  est.fun <- estfun(fm)
+  # est.fun <- sweep(fm$model,MARGIN=2,fm$residuals,`*`)
+
+  # Need to identify observations used in the regression (i.e.,
+  # non-missing) values, as the cluster vectors come from the full
+  # data set and may not be in the regression model.
+  # I use complete.cases following a suggestion from
+                                        # Francois Cocquemas <francois.cocquemas@gmail.com>
+  names.nw <- names(fm$model)[-which(names(fm$model) == "(weights)")]
+  inc.obs <- complete.cases(data[,names.nw])
+  # inc.obs <- !is.na(est.fun[,1])
+  # est.fun <- est.fun[inc.obs,]
+
+  # Shared data for degrees-of-freedom corrections
+  N  <- dim(fm$model)[1]
+  NROW <- NROW(est.fun)
+  K  <- fm$rank
+
+  # Calculate the sandwich covariance estimate
+  cov <- function(cluster) {
+    cluster <- factor(cluster)
+
+    # Calculate the "meat" of the sandwich estimators
+    u <- apply(est.fun, 2, function(x) tapply(x, cluster, sum))
+    meat <- crossprod(u)/N
+
+    # Calculations for degrees-of-freedom corrections, followed
+    # by calculation of the variance-covariance estimate.
+    # NOTE: NROW/N is a kluge to address the fact that sandwich uses the
+    # wrong number of rows (includes rows omitted from the regression).
+    M <- length(levels(cluster))
+    dfc <- M/(M-1) * (N-1)/(N-K)
+    dfc * NROW/N * sandwich(fm, meat=meat)
+  }
+
+  # Calculate the covariance matrix estimate for the first cluster.
+  cluster1 <- data[inc.obs,cluster1]
+  cov1  <- cov(cluster1)
+
+  if(is.null(cluster2)) {
+    # If only one cluster supplied, return single cluster
+    # results
+    return(cov1)
+  } else {
+    # Otherwise do the calculations for the second cluster
+    # and the "intersection" cluster.
+    cluster2 <- data[inc.obs,cluster2]
+    cluster12 <- paste(cluster1,cluster2, sep="")
+
+    # Calculate the covariance matrices for cluster2, the "intersection"
+    # cluster, then then put all the pieces together.
+    cov2   <- cov(cluster2)
+    cov12  <- cov(cluster12)
+    covMCL <- (cov1 + cov2 - cov12)
+
+    # Return the output of coeftest using two-way cluster-robust
+    # standard errors.
+    return(covMCL)
+  }
+}
+
+```
+
+### `functions_survey.R`
+```r
+##Function to standardize variable
+standard <- function(var, treat){
+    y <- (var - mean(var, na.rm = TRUE)) / sd(var[treat == 0], na.rm = TRUE)
+    return(y)
+}
+
+## Function to generate weighted indeces
+wmean <- function(y, sigma, k){
+    one <- rep(1,k)
+    s <- solve(t(one) %*% solve(sigma) %*% one) %*% (t(one) %*% solve(sigma) %*% y)
+    return(s)
+}
+
+numextract <- function(string){
+  str_extract(string, "\\-*\\d+\\.*\\d*")
+}
+
+```
+
+### `survey_clean.R`
+```r
+load("survey_raw.RData")
+
+## Generate standardized indeces for gender variables
+## Generate an inverse-covariance weighted index
+survey_raw$femhouse.est <- standard(survey_raw$femhouse,survey_raw$treatment)
+survey_raw$fempol.est <- standard(survey_raw$fempol,survey_raw$treatment)
+survey_raw$equality.est <- standard(survey_raw$equality,survey_raw$treatment)
+survey_raw$discrimination.est <- standard(survey_raw$discrimination,survey_raw$treatment)
+survey_raw$harassment.est <- standard(survey_raw$harassment,survey_raw$treatment)
+
+## Generate the covariance matrix of the transformed outcomes
+outcomes <- cbind(survey_raw$femhouse.est, survey_raw$fempol.est, survey_raw$equality.est, survey_raw$discrimination.est, survey_raw$harassment.est)
+outcomes.complete <- outcomes[complete.cases(outcomes),]
+sigma.sexism <- cov(outcomes.complete)
+
+## We generate the new weighted measure
+s <- apply(outcomes.complete, 1, wmean, sigma.sexism, ncol(outcomes.complete))
+survey_raw$sexism <- NA
+survey_raw$sexism[complete.cases(outcomes)] <- s
+
+## Generate standardized indeces for poverty variables
+survey_raw$poverty.est <- standard(survey_raw$poverty, survey_raw$treatment)
+survey_raw$corruption.est <- standard(survey_raw$corruption, survey_raw$treatment)
+survey_raw$gap.est <- standard(survey_raw$gap, survey_raw$treatment)
+survey_raw$cct.est <- standard(survey_raw$cct, survey_raw$treatment)
+
+## Generate the covariance matrix of the transformed outcomes in audience.
+outcomes <- cbind(survey_raw$poverty.est, survey_raw$cct.est, survey_raw$gap.est, survey_raw$corruption.est)
+outcomes.complete <- outcomes[complete.cases(outcomes),]
+sigma.poverty.all <- cov(outcomes.complete)
+
+## We generate the new weighted audience measure
+s <- apply(outcomes.complete, 1, wmean, sigma.poverty.all, ncol(outcomes.complete))
+survey_raw$poverty.all <- NA
+survey_raw$poverty.all[complete.cases(outcomes)] <- s
+
+save(survey_raw,
+     file = paste0(main.dir,"/data/survey/survey_ind.RData"))
+
+## Generate aggregate data
+survey.table <- data.table(survey_raw)
+survey.table$partytreat <- as.factor(survey.table$partytreat)
+
+survey.agg <- survey.table[,list(obs = length(turnout_all),
+                             turnout_all = sum(turnout_all, na.rm = TRUE),
+                             turnout_pl = sum(turnout_pl, na.rm = TRUE),
+                             vote = sum(vote, na.rm = TRUE),
+                             vote.akbayan = sum(vote.akbayan, na.rm = TRUE),
+                             vote.umalabka = sum(vote.umalabka, na.rm = TRUE),
+                             attendance = sum(attendance, na.rm = TRUE),
+                             city = unique(city)),
+                       by = barangay]
+
+survey.agg$attendance.agg <- (survey.agg$attendance / survey.agg$obs) * 100
+survey.agg$turnout.agg <- (survey.agg$turnout_all / survey.agg$obs) * 100
+survey.agg$turnout_pl.agg <- (survey.agg$turnout_pl / survey.agg$obs) * 100
+survey.agg$vote.agg <- (survey.agg$vote / survey.agg$turnout_pl) * 100
+survey.agg$vote.akbayan.agg <- (survey.agg$vote.akbayan / survey.agg$turnout_pl) * 100
+survey.agg$vote.umalabka.agg <- (survey.agg$vote.umalabka / survey.agg$turnout_pl) * 100
+
+
+survey.agg$barangay.num <- as.numeric(numextract(survey.agg$barangay))
+survey.agg$barangay.num[is.na(survey.agg$barangay.num)] <- 0
+
+## Load official aggregated data
+##Names of barangays differ (merge with fastLink)
+
+load(paste0(main.dir,"/data/aggregate/data_agg.RData"))
+official <- data.all
+official$barangay.num <- as.numeric(numextract(official$barangay))
+official$barangay.num[official$barangay.num == 4] <- NA
+official$barangay.num[is.na(official$barangay.num)] <- 0
+link <- fastLink(survey.agg,
+                 official,
+                 varnames = c("city", "barangay", "barangay.num"),
+                 stringdist.match = c("city", "barangay"),
+                 numeric.match = c("barangay.num"),
+                 partial.match = c("city", "barangay"),
+                 cut.p = 0.8,
+                 threshold.match = 0.00001,
+                 return.all = T)
+
+survey.agg <- survey.agg[link$matches[,1],]
+survey.agg$barangay.official <- official$barangay[link$matches[,2]]
+survey.agg$city.official <- official$city[link$matches[,2]]
+
+survey.agg <- as.tbl(survey.agg) %>% select(barangay,
+                                        city,
+                                        barangay.official,
+                                        city.official,
+                                        turnout.agg,
+                                        attendance.agg,
+                                        turnout_pl.agg,
+                                        vote.agg,
+                                        vote.akbayan.agg,
+                                        vote.umalabka.agg)
+official <- as.tbl(official) %>% select(barangay,
+                                        city,
+                                        assignment,
+                                        treatment,
+                                        reg.num,
+                                        partytreat)
+
+survey.agg <- inner_join(survey.agg,
+                       official,
+                       by = c("barangay.official" = "barangay",
+                                        "city.official" = "city"))
+save(survey.agg,
+     file = paste0(main.dir,"/data/survey/survey_agg.RData"))
+
+```
+
+### `maps.R`
+```r
+###################################################
+### Philippines Experiment
+### Gabriel López-Moctezuma et al.
+### Philippines Maps
+###################################################
+
+rm(list = ls()) # Clear history
+
+##  Loading required packages
+list.packages <- c("maptools",
+                   "RColorBrewer",
+                   "classInt",
+                   "foreign")
+
+package.check <- lapply(
+    list.packages,
+    FUN = function(x) {
+        if (!require(x, character.only = TRUE)) {
+            install.packages(x, dependencies = TRUE)
+            library(x, character.only = TRUE)
+        }
+    }
+)
+
+
+main.dir <-  ""
+
+
+setwd(paste0(main.dir,"/data/maps"))
+output <- main.dir
+
+##Load Data frame
+frame.reg <- read.dbf(paste0("regions/Regions.dbf"))
+frame.reg$exp <- 1
+frame.reg$exp[frame.reg$REGION == "CALABARZON (Region IV-A)"] <- 2
+frame.reg$exp[frame.reg$REGION == "Metropolitan Manila"] <- 3
+
+#Select a colour palette and the number of colors
+colours <- brewer.pal(3,"Reds")
+colours[1] <-"gray"
+
+#Load new shapefile with
+phili <- readShapePoly("regions/Regions.shp")
+phili$ex <- frame.reg$exp
+
+
+#Figure A.1
+pdf(paste(output,"/philreg.pdf",sep=""))
+plot(phili, col = colours[phili$ex], axes = F)
+box()
+legend = c("Other", "Calabarzon", "NCR (Metro Manila)")
+legend("topleft", legend = legend, fill = colours, bty ="n")
+dev.off()
+
+##Load Data frame
+frame.city <- read.dbf("cities/MuniCities.dbf")
+frame.city <- frame.city[frame.city$REGION == "CALABARZON (Region IV-A)" | frame.city$REGION == "Metropolitan Manila",]
+
+data.barangay <- read.csv("cities/data_barangay.csv")
+city.akbayan <- as.character(unique(data.barangay$city[data.barangay$partytreat == "akbayan"]))
+
+city.akbayan[city.akbayan == "Malate"] <- "Manila"
+city.akbayan[city.akbayan == "Sta Maria"] <- "Santa Maria"
+
+city.umalabka <- as.character(unique(data.barangay$city[data.barangay$partytreat == "umalabka"]))
+city.umalabka[city.umalabka == "Los Banos"] <- "Los Ba\xf1os"
+city.umalabka[city.umalabka == "Paranaque"] <- "Para\xf1aque"
+city.umalabka[city.umalabka == "Pasay"] <- "Pasay City"
+
+frame.city$city <- 1
+frame.city$city[frame.city$NAME_2 %in% city.akbayan] <- 2
+frame.city$city[frame.city$NAME_2 %in% city.umalabka] <- 3
+
+#Select a colour palette and the number of colors
+colours <- brewer.pal(3,"Greens")
+colours[1] <-"gray"
+
+#Load new shapefile with
+phili <- readShapePoly("cities/MuniCities.shp")
+
+phili.reg <- phili[phili$REGION == "CALABARZON (Region IV-A)" | phili$REGION == "Metropolitan Manila",]
+phili.reg$city <- frame.city$city
+
+## Figure A.1
+pdf(paste(output,"/philregcity.pdf",sep=""))
+plot(phili.reg, col = colours[phili.reg$city], axes = F, xlim = c(120, 123), ylim = c(12.70, 15))
+box()
+legend = c("Other", "Akbayan!", "Umalab-Ka!")
+legend("bottomright", legend = legend, fill = colours, bty ="n")
+dev.off()
+
+```
+
+## How to run a script
+
+Write each script to a file under the output directory, then run it with
+exactly this command (the data directory is mounted read-only at its own
+path; nothing else from the host is visible; `$SCRIPT` is the absolute path of
+the script you wrote):
+
+    SCRIPT=<repo>/benchmark/reproductions/lopez-moctezuma-2022-policy-deliberation-philippines/seeded/2026-11-02-b/script.R   # or <repo>/benchmark/reproductions/lopez-moctezuma-2022-policy-deliberation-philippines/seeded/2026-11-02-b/attempt-<n>/script.R
+    docker run --rm --label retally.run=claude-code-lopez-moctezuma-2022-policy-deliberation-philippines-seeded-2026-11-02-b --network none --memory 4g --cpus 1.0 --read-only --tmpfs /tmp:size=256m --cap-drop ALL --security-opt no-new-privileges -v "$SCRIPT":/workspace/script.R:ro -v <repo>/benchmark/.cache/claude-code/lopez-moctezuma-2022-policy-deliberation-philippines/seeded/2026-11-02-b/mount/lopez_moctezuma_2022_policy_deliberation_philippines:<repo>/benchmark/.cache/claude-code/lopez-moctezuma-2022-policy-deliberation-philippines/seeded/2026-11-02-b/mount/lopez_moctezuma_2022_policy_deliberation_philippines:ro --workdir /workspace retally-sandbox-r:latest Rscript /workspace/script.R > "$(dirname "$SCRIPT")/stdout.txt" 2> "$(dirname "$SCRIPT")/stderr.txt"; echo "exit code: $?"
+
+The sandbox time limit is 300 seconds (memory 4g, 1.0 CPU).  Wrap the
+command in a timeout of that many seconds: prefix it with
+`perl -e 'alarm shift; exec @ARGV' 300` (or `gtimeout 300` if installed;
+macOS has no `timeout`).  If the timeout fires, stop the container with
+`docker ps -q --filter label=retally.run=claude-code-lopez-moctezuma-2022-policy-deliberation-philippines-seeded-2026-11-02-b | xargs docker kill` and treat the
+run as a crash (exit code 124).
+
+## Output contract
+
+The output directory `<repo>/benchmark/reproductions/lopez-moctezuma-2022-policy-deliberation-philippines/seeded/2026-11-02-b` already holds `render.json`; leave it
+there.  Add:
+
+```
+<repo>/benchmark/reproductions/lopez-moctezuma-2022-policy-deliberation-philippines/seeded/2026-11-02-b/
+  script.R  stdout.txt  stderr.txt      # the FINAL run: its RESULT: lines are what is scored
+  attempt-1/  attempt-2/  ...           # every execution BEFORE the final one, in order
+    script.R  stdout.txt  stderr.txt  feedback.txt   # feedback.txt when kind is not ""
+  reproduction.json                     # written LAST
+```
+
+- `attempt-<n>` directories are every execution before the final one, in
+  the order they ran; the final files at the top are the run whose
+  `RESULT:` lines are scored.  If you go back to an earlier attempt, copy
+  that attempt's files to the top level as the final run.
+- `feedback.txt` holds what you acted on before the next attempt: the error
+  you fixed (`kind: "error"`) or the `check_attempt` comparison
+  (`kind: "claim"`).
+- Exploratory runs (inspecting variables, counting rows, checking a filter;
+  no estimate of a listed quantity) are attempts with `kind: ""` and need no
+  `feedback.txt`.  They must NOT print any `RESULT:` line, not even a
+  placeholder: the first run that prints one is scored as your first scored
+  attempt.  Print `RESULT:` lines only from a script that estimates the
+  listed quantities, and `kind: "error"` only for a run that crashed or
+  that was meant to print them and did not.
+- Write `reproduction.json` last, in this schema:
+
+```
+reproduction.json (schema 1), written last by the agent into its run directory
+benchmark/reproductions/<entry_id>/<mode>/<run_id>/:
+
+{
+  "schema": 1,
+  "entry_id": "montero-2022-cooperative-property-rights",
+  "mode": "independent",
+  "run_id": "2026-10-22-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [],
+  "notes": "free text: what the agent did, what it could not do",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T10:00:00Z",
+  "finished_at": "2026-10-22T10:40:00Z"
+}
+
+* entry_id, mode and run_id must match the directory the file sits in.
+* final: the run that is scored -- script.R, stdout.txt, stderr.txt at the
+  run-dir root, and its exit code.  If the agent reverts to an earlier
+  attempt it copies that attempt's files there.
+* attempts: every execution before the final one, oldest first.  Each
+  attempt-<n>/ holds script.R, stdout.txt, stderr.txt, and feedback.txt
+  when kind is not "".  kind is the refinement that followed it:
+  "error" (it crashed or printed no RESULT: line; the agent repaired it),
+  "claim" (the agent compared its RESULT: values with the claimed values
+  and changed the script; never allowed in blind mode), or "" (neither).
+* All paths are relative to the run directory; absolute paths and ".."
+  are rejected.
+* deviations: free-text methodology changes, in addition to any
+  DEVIATION: lines in the final stdout.
+* The numbers scored are the RESULT: lines of the files, never anything
+  written in this JSON.
+```
+
+End your final message with the final run's `RESULT:` lines and a short
+note.  Nothing needed for scoring may live only in the message: the files
+are the record.
+
+Do not edit any file in the repository; your only writes are under `<repo>/benchmark/reproductions/lopez-moctezuma-2022-policy-deliberation-philippines/seeded/2026-11-02-b`.

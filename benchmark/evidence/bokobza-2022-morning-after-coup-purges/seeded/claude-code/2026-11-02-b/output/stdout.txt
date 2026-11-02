@@ -1,0 +1,172 @@
+                                        a1_base                      a1_main
+Dependent Var.:    replacement_rateadj_minister replacement_rateadj_minister
+                                                                            
+coupattempt_whogov            0.0985** (0.0327)            0.1055** (0.0323)
+L_gdp_cap_pwt_ln              -0.0361. (0.0192)             -0.0331 (0.0205)
+L_pop_pwt_ln                  -0.1139. (0.0656)            -0.1202. (0.0665)
+L_military_c                                                -0.0331 (0.0293)
+L_monarchy_c                                                 0.0308 (0.0211)
+L_party_c                                                  -0.0639* (0.0321)
+Fixed-Effects:     ---------------------------- ----------------------------
+COUNTRY_ID                                  Yes                          Yes
+YEAR_DATA                                   Yes                          Yes
+leader_cab_id                                No                           No
+__________________ ____________________________ ____________________________
+S.E.: Clustered                  by: COUNTRY_ID               by: COUNTRY_ID
+Observations                              3,714                        3,676
+R2                                      0.22384                      0.22852
+Within R2                               0.00622                      0.00898
+
+                                        a2_base                      a2_main
+Dependent Var.:    replacement_rateadj_minister replacement_rateadj_minister
+                                                                            
+coupattempt_whogov            0.0839** (0.0317)            0.0853** (0.0318)
+L_gdp_cap_pwt_ln              -0.0386. (0.0200)            -0.0381. (0.0193)
+L_pop_pwt_ln                  -0.1740* (0.0741)            -0.1825* (0.0732)
+L_military_c                                                 0.0412 (0.1266)
+L_monarchy_c                                                                
+L_party_c                                                   -0.0359 (0.0218)
+Fixed-Effects:     ---------------------------- ----------------------------
+COUNTRY_ID                                   No                           No
+YEAR_DATA                                   Yes                          Yes
+leader_cab_id                               Yes                          Yes
+__________________ ____________________________ ____________________________
+S.E.: Clustered                  by: COUNTRY_ID               by: COUNTRY_ID
+Observations                              3,282                        3,261
+R2                                      0.32810                      0.32721
+Within R2                               0.00645                      0.00692
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+                                                m_exp             m_aff
+Dependent Var.:                             purged_y1         purged_y1
+                                                                       
+experience_group2-3 years             0.0028 (0.0073)                  
+experience_group4-6 years             0.0126 (0.0091)                  
+experience_groupOver 6 years         -0.0097 (0.0095)                  
+fca                                0.1421*** (0.0419) 0.1742** (0.0561)
+gdp_cap_pwt_ln                       -0.0246 (0.0187)  -0.0210 (0.0189)
+pop_pwt_ln                          -0.1398* (0.0626) -0.1408* (0.0626)
+experience_group2-3 years x fca      -0.0503 (0.0420)                  
+experience_group4-6 years x fca      -0.0982 (0.0623)                  
+experience_groupOver 6 years x fca  -0.1029* (0.0518)                  
+party_groupindependent                                 0.0349* (0.0142)
+party_groupleader_party                                -0.0085 (0.0139)
+experience                                              0.0018 (0.0025)
+I(I(experience^2))                                     -0.0001 (0.0002)
+I(I(experience^3))                                     1.87e-6 (3.5e-6)
+party_groupindependent x fca                           -0.0649 (0.0734)
+party_groupleader_party x fca                         -0.1258* (0.0605)
+Fixed-Effects:                     ------------------ -----------------
+country_isocode                                   Yes               Yes
+year                                              Yes               Yes
+__________________________________ __________________ _________________
+S.E.: Clustered                    by: country_isoc.. by: country_iso..
+Observations                                   90,020            86,057
+R2                                            0.12560           0.12512
+Within R2                                     0.00269           0.00299
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+                                                                                       m_resp
+Dependent Var.:                                                                     purged_y1
+                                                                                             
+minister_typeMinister of Finance                                            0.0285** (0.0106)
+minister_typeMinister of Foreign Affairs                                     -0.0063 (0.0098)
+minister_typeMinister of Natural Resources                                  0.0352** (0.0111)
+minister_typeOther type of minister                                        0.0538*** (0.0085)
+fca                                                                         0.2025** (0.0660)
+gdp_cap_pwt_ln                                                               -0.0306 (0.0187)
+pop_pwt_ln                                                                  -0.1533* (0.0623)
+experience                                                                    0.0037 (0.0029)
+I(I(experience^2))                                                           -0.0003 (0.0002)
+I(I(experience^3))                                                         6.85e-6. (3.88e-6)
+minister_typeMinister of Finance x fca                                       -0.0848 (0.0663)
+minister_typeMinister of Foreign Affairs x fca                               -0.0392 (0.0695)
+minister_typeMinister of Natural Resources x fca                            -0.1832* (0.0826)
+minister_typeOther type of minister x fca                                   -0.1172* (0.0581)
+importance_factorJunior minister
+or other low-
+ranking post                                  
+importance_factorlow-ranking
+minister                                                        
+importance_factorMedium-ranking
+minister                                                     
+importance_factorVice president,
+deputy prime minister,
+top minister                         
+importance_factorJunior minister
+or other low-
+ranking post x fca                            
+importance_factorlow-ranking
+minister x fca                                                  
+importance_factorMedium-ranking
+minister x fca                                               
+importance_factorVice president,
+deputy prime minister,
+top minister x fca                   
+Fixed-Effects:                                                             ------------------
+country_isocode                                                                           Yes
+year                                                                                      Yes
+________________________________________                                   __________________
+S.E.: Clustered                                                            by: country_isoc..
+Observations                                                                           76,530
+R2                                                                                    0.13185
+Within R2                                                                             0.00379
+
+                                                                                        m_imp
+Dependent Var.:                                                                     purged_y1
+                                                                                             
+minister_typeMinister of Finance                                                             
+minister_typeMinister of Foreign Affairs                                                     
+minister_typeMinister of Natural Resources                                                   
+minister_typeOther type of minister                                                          
+fca                                                                        0.3702*** (0.0934)
+gdp_cap_pwt_ln                                                               -0.0252 (0.0187)
+pop_pwt_ln                                                                  -0.1420* (0.0628)
+experience                                                                   -0.0004 (0.0026)
+I(I(experience^2))                                                          -1.83e-5 (0.0002)
+I(I(experience^3))                                                          6.56e-7 (3.57e-6)
+minister_typeMinister of Finance x fca                                                       
+minister_typeMinister of Foreign Affairs x fca                                               
+minister_typeMinister of Natural Resources x fca                                             
+minister_typeOther type of minister x fca                                                    
+importance_factorJunior minister
+or other low-
+ranking post                  -0.0051 (0.0148)
+importance_factorlow-ranking
+minister                                        0.0274. (0.0142)
+importance_factorMedium-ranking
+minister                                      0.0127 (0.0132)
+importance_factorVice president,
+deputy prime minister,
+top minister         -0.0202 (0.0127)
+importance_factorJunior minister
+or other low-
+ranking post x fca          -0.2592** (0.0868)
+importance_factorlow-ranking
+minister x fca                                 -0.2646* (0.1199)
+importance_factorMedium-ranking
+minister x fca                             -0.2856** (0.0950)
+importance_factorVice president,
+deputy prime minister,
+top minister x fca -0.2566** (0.0946)
+Fixed-Effects:                                                             ------------------
+country_isocode                                                                           Yes
+year                                                                                      Yes
+________________________________________                                   __________________
+S.E.: Clustered                                                            by: country_isoc..
+Observations                                                                           90,014
+R2                                                                                    0.12626
+Within R2                                                                             0.00347
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RESULT:failed_coup_base_country_fe=0.098488
+RESULT:failed_coup_main_country_fe=0.105549
+RESULT:failed_coup_base_leader_fe=0.083868
+RESULT:failed_coup_main_leader_fe=0.085272
+RESULT:failed_coup_experience_model=0.142112
+RESULT:failed_coup_x_over_6_years_experience=-0.102939
+RESULT:failed_coup_affiliation_model=0.174175
+RESULT:failed_coup_x_leaders_party=-0.125832
+RESULT:failed_coup_responsibility_model=0.202499
+RESULT:failed_coup_x_natural_resources=-0.183205
+RESULT:failed_coup_importance_model=0.370185

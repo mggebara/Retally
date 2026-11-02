@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "arias-2022-changing-tides-climate-migration",
+  "mode": "seeded",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "cjoint is not installed: cjoint::read.qualtrics() was re-implemented (Qualtrics new-format CSV, F-task-attr / F-task-profile-attr columns, selected = chosen profile, NA choices dropped, respondent-major order) and cjoint::amce() was replaced by OLS via fixest::feols with SEs clustered by respondent (cjoint's small-sample SE adjustment may differ slightly; SEs are not claimed).",
+    "German model includes the Language x Origin interaction, which is what cjoint::amce adds for the restriction declared in conjoint_design_german2.dat; the Reason AMCE is the Reason coefficient from that regression. The US design's restriction names 'Country of Origin', which is not a design attribute, and the US data show no restriction, so the US model is additive. Alternatives are printed as diagnostics and differ by under 0.001."
+  ],
+  "notes": "Two exploratory runs (column layout, reshape, counts; no RESULT lines), then one estimating run, which is final. Follows Migration_Analysis_Final.R: US drops 'Unemployer' rows (none present) and the first 4 profile rows; baselines Economic opportunity / Wirtschaftliche Perspektive. All 12 claims reproduced at the reported precision: US AMCEs 0.035/0.037/0.040/0.076, German 0.080/0.086/0.060/0.162, 1086/1074 respondents, 18966/18862 profiles. No claim comparison changed the script, so no claim attempts are recorded.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T19:29:00Z",
+  "finished_at": "2026-11-02T19:42:00Z"
+}

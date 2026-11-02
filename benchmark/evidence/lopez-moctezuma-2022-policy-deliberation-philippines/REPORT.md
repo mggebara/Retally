@@ -39,7 +39,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [13/13](seeded/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a) | [9/13](independent/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[9/13](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) | [9/13](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[9/13](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) |
+| `claude-code` | [13/13](seeded/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [9/13](independent/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[9/13](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) | [9/13](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[9/13](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) |
 | `pipeline-desktop-opus` | [13/13](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) | [9/13](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) (20261023T064839Z) | [9/13](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) |
 | `pipeline-desktop-opus-run2` | [13/13](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [9/13](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [9/13](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
 
@@ -70,6 +70,10 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - ri::genprobexact / ri::estate are not installed; assignment probabilities computed as the within-city share of treated barangays (exact for this complete block-cluster randomization), and the ITT computed as the IPW-weighted OLS of the outcome on assignment plus city dummies, which is what ri::estate does when given X and prob. Randomization-inference p-values were not computed (not claimed).
   - survey_ind.RData and survey_agg.RData are not shipped; they were rebuilt from survey_raw.RData following survey_clean.R (control-group-standardized items, inverse-covariance weighted indices). The fastLink name match of survey to official barangays was replaced by an exact barangay-name merge on the 10 treated surveyed barangays (all 10 linked; only treated barangays enter the attendance weights).
   - Clustered SEs by barangay computed with sandwich::vcovCL (HC1) rather than the authors' varcov.cluster; only point estimates are scored.
+- [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) (13/13)
+  - survey_clean.R links survey barangays to official barangays with fastLink (not installed); replaced by an exact barangay-name match, which matches all 10 treated survey barangays (control weights are 1 regardless).
+  - ri::estate / ri::genprobexact replaced by direct computation: assignment probability = share of assigned barangays within each city; ITT = lm(y ~ assignment + city dummies) with weights Z/p + (1-Z)/(1-p). Randomization-inference p-values and clustered SEs were not computed (only coefficients and N are claimed).
+  - fastLink record linkage of survey to official barangays replaced by exact barangay-name match (treated barangays share names in both files); ri::estate/genprobexact computed directly.
 - [independent/claude-code/2026-10-22-a](independent/claude-code/2026-10-22-a/CELL.md) (9/13; failed: `itt_poverty_index_akbayan_tableC3`, `itt_poverty_index_umalabka_tableC3`, `itt_gender_index_akbayan_tableC4`, `itt_gender_index_umalabka_tableC4`)
   - Attendance-oversampling weights reconstructed from the paper's one-sentence description: in barangays with town-hall attendees (att.prop > 0 in data_agg), self-reported attendees get weight att.prop / (survey attendee share in that barangay), all other respondents weight 1. The exact weighting formula of the authors is not given in the paper text available; a two-sided IPW (non-attendees weighted (1-pa)/(1-ps)) was tried in attempts 2-3.
   - Anderson (2008) indices: items oriented so higher = more agreement with the problem statement for poverty/gap/corruption (6 - code), cct as coded; gender items oriented toward gender-egalitarian awareness (femhouse, fempol as coded; equality and harassment as coded, i.e. disagreement with sexist statements; discrimination reversed). Items standardized on the control group of each party's municipalities; inverse-covariance weights from the full-sample covariance of the standardized items; respondents with missing items use the available items; index re-standardized on the control group. Only five gender items exist in the data (the paper mentions six).
@@ -103,6 +107,10 @@ _None._
 ### seeded · claude-code · 2026-10-22-a
 
 [`seeded/claude-code/2026-10-22-a/CELL.md`](seeded/claude-code/2026-10-22-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-10-22T03:03:14Z; from `claude-code-6papers-all-modes-2026-10-22.json`; evidence complete.
+
+### seeded · claude-code · 2026-11-02-b
+
+[`seeded/claude-code/2026-11-02-b/CELL.md`](seeded/claude-code/2026-11-02-b/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-02T19:38:00Z; from `claude-code-run2-23papers-seeded-2026-11-02.json`; evidence complete.
 
 ### seeded · pipeline-desktop-opus · 20261023T063725Z
 

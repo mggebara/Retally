@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "entry_id": "leeson-2022-hobo-economicus",
+  "mode": "seeded",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [],
+  "deviations": [],
+  "notes": "Translated 1_dataprep.do and 2_analysis.do. Station-visit data merged by station name (equivalent to the scripts' per-file encode ids, since all files share the same 26 names); passersby merged by station-month-year; service/shuttle = walk <= 10 min; friendliness = station mean of each passerby's friendliest response (all-zero responses missing). Table 2: feols with date fixed effects (fixef.rm='none'), SEs clustered by station; subsample = alphabetical ids 9,10,14,17,18 (Farragut North, Farragut West, Gallery Place, McPherson Square, Metro Center). Table 3: car::leveneTest center=median (Stata robvar W50); Table 4: one-way ANOVA F via lm. Single run; no claim comparison followed by a script change; all values match the claims to their reported precision.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T19:34:39Z",
+  "finished_at": "2026-11-02T19:35:40Z"
+}

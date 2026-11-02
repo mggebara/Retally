@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "entry_id": "gagliarducci-2022-gender-cooperation-congress",
+  "mode": "seeded",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-3", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "rdbwselect_2014 (CCT 2014 bandwidth, uniform kernel, p=1, q=2, nn variance with 3 matches) is not in the installed R rdrobust (4.1.1), so it was re-implemented in R from the shipped rdbwselect_2014.ado and kconst.ado; the compiled rdvce .mo could not be read, so the nearest-neighbour variance follows the documented CCT rule (all observations within the 4th-smallest distance including self, Stata minindex tie handling). Bandwidths came out 13.06 (Rep, cosponsors) and 24.74 (Dem, pct opposite), matching the paper's 13 and 24.",
+    "Stata probit perfect-prediction behaviour emulated by hand: a regressor whose nonzero values predict the outcome perfectly is dropped together with those observations, and (as Stata's predict without 'rules') those observations get a missing propensity score and so drop out of the weighted regression."
+  ],
+  "notes": "Translated Table5.do into R (haven + fixest). Columns: (1) OLS with i.v2, i.minor, house_* committee dummies, sponsor and district characteristics, clustered by sponsor-Congress; (2) RD within the CCT bandwidth on the e(sample) of the mixed-gender full-control regression; (3) same plus inverse probit propensity weights from district chars within the bandwidth; (4)/(5) full-sample IPW with probit on district chars + |MV| (+ sponsor chars) at one row per sponsor-Congress. attempt-1 explored variables/package availability; attempt-2 matched all claims but rep_ipw_sponsor (3.354 vs 3.124) because the probit had quasi-separation (black, occ3 for Republicans); attempt-3 dropped perfect predictors but kept their predicted scores (3.713); attempt-4 explored the separation; the final run sets pscore to missing for rule-excluded observations as Stata does, which reproduces every claim (rep_rd_ipw also moved from 6.857 to 6.734 since v2==101 had no female Republicans within the bandwidth). All 13 claims reproduce to the reported precision.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T19:32:00Z",
+  "finished_at": "2026-11-02T19:41:00Z"
+}

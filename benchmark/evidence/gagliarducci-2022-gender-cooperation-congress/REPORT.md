@@ -38,7 +38,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [13/13](seeded/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a) | [13/13](independent/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) | [7/13](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[9/13](blind/claude-code/2026-10-22-b/CELL.md) (2026-10-22-b)<br>[9/13](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) |
+| `claude-code` | [13/13](seeded/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) | [7/13](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[9/13](blind/claude-code/2026-10-22-b/CELL.md) (2026-10-22-b)<br>[9/13](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a) |
 | `pipeline-desktop-opus` | [8/13](seeded/pipeline-desktop-opus/20261023T064839Z/CELL.md) (20261023T064839Z) | [13/13](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) (20261023T064839Z) | [12/13](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) |
 | `pipeline-desktop-opus-run2` | [12/13](seeded/pipeline-desktop-opus-run2/20261023T153400Z/CELL.md) (20261023T153400Z) | [13/13](independent/pipeline-desktop-opus-run2/20261023T152513Z/CELL.md) (20261023T152513Z) | [7/13](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
 
@@ -69,6 +69,9 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - rdbwselect_2014 (CCT 2014 bandwidth selector) is not available in the installed rdrobust 4.1.1; it was re-implemented in R from the shipped rdbwselect_2014.ado (p=1, q=2, uniform kernel, nearest-neighbour variance with 3 matches, regularisation on). Stata's compiled helper routines (.mo) could not be read, so the kernel weights and NN variance follow the CCT 2014 formulas, with ties in the matching handled as Stata's minindex() does (all observations at the 4 smallest distinct distances). The bandwidths obtained (e.g. 13.05 for Republicans/cosponsors, 24.53 for Democrats/percent opposite) agree with the paper's rounded values for most rows, and the RD samples match the paper's bill and sponsor counts (1,227/100 and 1,978/167).
   - Stata probit perfect-prediction handling was mimicked: a regressor x for which 'x != 0' perfectly predicts the outcome is dropped along with those observations, and their propensity scores are set to missing (Stata predict default), so those observations drop out of the weighted regressions. The base level of i.v2 is never checked. For Republicans in column 5 this drops black and occ3, which reproduces the paper's 23,818 bills and 1,953 sponsors.
   - Congress (v2) and minor-topic dummies are absorbed as fixed effects in fixest (fixef.rm='none'). The female-sponsor coefficient is identical to Stata reg with i.v2 i.minor; clustered SEs may differ slightly through small-sample corrections.
+- [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) (13/13)
+  - rdbwselect_2014 (CCT 2014 bandwidth, uniform kernel, p=1, q=2, nn variance with 3 matches) is not in the installed R rdrobust (4.1.1), so it was re-implemented in R from the shipped rdbwselect_2014.ado and kconst.ado; the compiled rdvce .mo could not be read, so the nearest-neighbour variance follows the documented CCT rule (all observations within the 4th-smallest distance including self, Stata minindex tie handling). Bandwidths came out 13.06 (Rep, cosponsors) and 24.74 (Dem, pct opposite), matching the paper's 13 and 24.
+  - Stata probit perfect-prediction behaviour emulated by hand: a regressor whose nonzero values predict the outcome perfectly is dropped together with those observations, and (as Stata's predict without 'rules') those observations get a missing propensity score and so drop out of the weighted regression.
 - [seeded/pipeline-desktop-opus-run2/20261023T153400Z](seeded/pipeline-desktop-opus-run2/20261023T153400Z/CELL.md) (12/13; failed: `female_sponsor_ncosponsors_rep_rd_ipw`)
   - Propensity scores are set to missing (as Stata's default predict after probit does) for observations excluded by perfect-prediction rules (dropped Congress levels or dropped covariates' nonzero values), so they get no IPW weight
   - RD-IPW propensity probit is estimated on one row per sponsor-Congress drawn from the RD estimation sample (mixed-gender races with complete data, within the bandwidth), rather than on the first row of each sponsor-Congress in the party subsample
@@ -119,14 +122,14 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
-- seeded: `female_sponsor_ncosponsors_rep_rd_ipw` — pipeline 0/2, agent 1/1
+- seeded: `female_sponsor_ncosponsors_rep_rd_ipw` — pipeline 0/2, agent 2/2
 
 Pass rates at least 50 points apart (not unanimous):
 
-- seeded: `female_sponsor_ncosponsors_all_ols` — pipeline 1/2, agent 1/1
-- seeded: `female_sponsor_ncosponsors_rep_ols` — pipeline 1/2, agent 1/1
-- seeded: `female_sponsor_pct_opposite_dem_ipw_sponsor` — pipeline 1/2, agent 1/1
-- seeded: `female_sponsor_pct_opposite_dem_ols` — pipeline 1/2, agent 1/1
+- seeded: `female_sponsor_ncosponsors_all_ols` — pipeline 1/2, agent 2/2
+- seeded: `female_sponsor_ncosponsors_rep_ols` — pipeline 1/2, agent 2/2
+- seeded: `female_sponsor_pct_opposite_dem_ipw_sponsor` — pipeline 1/2, agent 2/2
+- seeded: `female_sponsor_pct_opposite_dem_ols` — pipeline 1/2, agent 2/2
 - blind: `female_sponsor_pct_opposite_dem_ols` — pipeline 1/2, agent 0/3
 - blind: `female_sponsor_pct_opposite_dem_rd` — pipeline 1/2, agent 3/3
 - blind: `n_bills_pct_opposite_dem_ols` — pipeline 1/2, agent 0/3
@@ -137,6 +140,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### seeded · claude-code · 2026-10-22-a
 
 [`seeded/claude-code/2026-10-22-a/CELL.md`](seeded/claude-code/2026-10-22-a/CELL.md) — final 13/13, re-scored 13/13; first scored 11/13; executions 5; 2026-10-22T03:08:00Z; from `claude-code-6papers-all-modes-2026-10-22.json`; evidence complete.
+
+### seeded · claude-code · 2026-11-02-b
+
+[`seeded/claude-code/2026-11-02-b/CELL.md`](seeded/claude-code/2026-11-02-b/CELL.md) — final 13/13, re-scored 13/13; first scored 12/13; executions 5; 2026-11-02T19:41:00Z; from `claude-code-run2-23papers-seeded-2026-11-02.json`; evidence complete.
 
 ### seeded · pipeline-desktop-opus · 20261023T064839Z
 

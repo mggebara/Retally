@@ -1,0 +1,27 @@
+read full: 1992276 rows, 152 s
+DEVIATION: read only the 14 columns used by the Table 1 regressions from the CSV form of pisa_full_gps_final (column subsetting, all rows kept) to fit the sandbox time/memory limits
+T1 col3 N = 1992276  col5 N = 1751822 
+            Estimate Std. Error   t value     Pr(>|t|)
+patience    1.225926  0.1320491  9.283859 2.722559e-12
+risktaking -1.241304  0.1841879 -6.739332 1.846253e-08
+            Estimate Std. Error   t value     Pr(>|t|)
+patience    1.295826  0.1333735  9.715769 6.454249e-13
+risktaking -1.320344  0.1885393 -7.003019 7.275163e-09
+read imcoo: 80398 rows
+T2 col3 N = 80398 
+                 Estimate Std. Error   t value     Pr(>|t|)
+coo_patience    0.9306572  0.1164675  7.990702 7.121314e-11
+coo_risktaking -0.2939555  0.1215899 -2.417598 1.884384e-02
+RESULT:table1_col3_patience=1.225926
+RESULT:table1_col3_risk_taking=-1.241304
+RESULT:table1_col1_patience=0.917299
+RESULT:table1_col2_risk_taking=-0.481559
+RESULT:table1_col5_natives_patience=1.295826
+RESULT:table1_col5_natives_risk_taking=-1.320344
+RESULT:table1_col3_observations=1992276.000000
+RESULT:table2_col3_patience=0.930657
+RESULT:table2_col3_risk_taking=-0.293956
+RESULT:table2_col1_patience=0.778733
+RESULT:table2_col4_patience=1.032443
+RESULT:table2_col4_risk_taking=-0.448965
+RESULT:table2_col3_observations=80398.000000

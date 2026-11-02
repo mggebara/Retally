@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "mokyr-2022-wheels-of-change",
+  "mode": "seeded",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [],
+  "notes": "Translated main.do variable construction (per-capita mills/wrights over pcmean, wheat_suit = wheat_tmean<=5, riv_rug26count/1000, msuit26mean = wheat_suit*riv_rug26count, county_id from GAZ_CNTY) and the Tables.do Table 2 / Table 3 regressions into fixest feols with SEs clustered by county_id. Coefficients and N=298 matched from the first run. Attempt-1 computed the ivreg2 widstat (Kleibergen-Paap Wald F, equal to the squared first-stage t-stat with one instrument) with no small-sample adjustment; after comparing with the claims, the final run applies Stata's (N-1)/(N-K)*G/(G-1) cluster adjustment to the first-stage vcov, which reproduces 19.90 / 16.96 / 16.17.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T19:35:30Z",
+  "finished_at": "2026-11-02T19:38:40Z"
+}

@@ -39,7 +39,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [12/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[12/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) |
+| `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [12/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[12/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) |
 | `pipeline-desktop-opus` | [5/13](seeded/pipeline-desktop-opus/20261102T144245Z/CELL.md) (20261102T144245Z) | [13/13](independent/pipeline-desktop-opus/20261102T143152Z/CELL.md) (20261102T143152Z) | [12/13](blind/pipeline-desktop-opus/20261102T142733Z/CELL.md) (20261102T142733Z) |
 | `pipeline-desktop-opus-run2` | [6/13](seeded/pipeline-desktop-opus-run2/20261102T191457Z/CELL.md) (20261102T191457Z) | [13/13](independent/pipeline-desktop-opus-run2/20261102T153300Z/CELL.md) (20261102T153300Z) | [13/13](blind/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) (20261102T152052Z) |
 
@@ -68,6 +68,9 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 - [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) (13/13)
   - Hmisc/memisc 'labelled'/'.item' column classes were stripped to plain vectors (memisc is not installed); numeric memisc items such as diplome4 and taille_agglo therefore enter as numeric regressors.
+- [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) (13/13)
+  - memisc is not installed in the sandbox, so memisc 'item' columns (e.g. taxe_approbation, taxe_efficace, gilets_jaunes, diplome4, taille_agglo) and Hmisc 'labelled' classes were stripped to their underlying values: character items enter lm as factors, double items as numeric, and no values are recoded as missing. With this, the Table 4 column 1 sample is 757, the same as the paper.
+  - The control-variable vectors (variables_reg_effect_feedback, variables_reg_self_interest, variables_reg_ee) are taken from after_papier.RData, where papier.R stored them; the data frame s comes from after_preparation.RData, as papier.R loads it.
 - [seeded/pipeline-desktop-opus-run2/20261102T191457Z](seeded/pipeline-desktop-opus-run2/20261102T191457Z/CELL.md) (6/13; failed: `initial_acceptance_heterogeneity_table4_col3`, `yellow_vests_supporter_heterogeneity_table4_col3`, `winner_x_initial_acceptance_table4_col3`, `winner_x_yellow_vests_supporter_table4_col3`, `winner_x_initial_win_belief_table4_col3`, `predicted_winner_believes_wins_table4_col4`, `believes_effective_on_approval_iv_table8_col1`)
   - Yellow Vests supporter dummy defined as "supports" or "is part of" the movement; exact definition not given in the provided text
 - [independent/claude-code/2026-11-02-a](independent/claude-code/2026-11-02-a/CELL.md) (13/13)
@@ -105,18 +108,18 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
-- seeded: `believes_effective_on_approval_iv_table8_col1` — pipeline 0/2, agent 1/1
-- seeded: `initial_acceptance_heterogeneity_table4_col3` — pipeline 0/2, agent 1/1
-- seeded: `predicted_winner_believes_wins_table4_col4` — pipeline 0/2, agent 1/1
-- seeded: `winner_x_initial_acceptance_table4_col3` — pipeline 0/2, agent 1/1
-- seeded: `winner_x_initial_win_belief_table4_col3` — pipeline 0/2, agent 1/1
-- seeded: `winner_x_yellow_vests_supporter_table4_col3` — pipeline 0/2, agent 1/1
-- seeded: `yellow_vests_supporter_heterogeneity_table4_col3` — pipeline 0/2, agent 1/1
+- seeded: `believes_effective_on_approval_iv_table8_col1` — pipeline 0/2, agent 2/2
+- seeded: `initial_acceptance_heterogeneity_table4_col3` — pipeline 0/2, agent 2/2
+- seeded: `predicted_winner_believes_wins_table4_col4` — pipeline 0/2, agent 2/2
+- seeded: `winner_x_initial_acceptance_table4_col3` — pipeline 0/2, agent 2/2
+- seeded: `winner_x_initial_win_belief_table4_col3` — pipeline 0/2, agent 2/2
+- seeded: `winner_x_yellow_vests_supporter_table4_col3` — pipeline 0/2, agent 2/2
+- seeded: `yellow_vests_supporter_heterogeneity_table4_col3` — pipeline 0/2, agent 2/2
 - blind: `initial_acceptance_believes_not_lose_table4_col1` — pipeline 2/2, agent 0/2
 
 Pass rates at least 50 points apart (not unanimous):
 
-- seeded: `predicted_winner_heterogeneity_table4_col3` — pipeline 1/2, agent 1/1
+- seeded: `predicted_winner_heterogeneity_table4_col3` — pipeline 1/2, agent 2/2
 - blind: `believes_effective_on_approval_iv_table8_col1` — pipeline 1/2, agent 2/2
 
 ## Cells
@@ -124,6 +127,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### seeded · claude-code · 2026-11-02-a
 
 [`seeded/claude-code/2026-11-02-a/CELL.md`](seeded/claude-code/2026-11-02-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 4; 2026-11-02T10:08:00Z; from `claude-code-6papers-all-modes-2026-11-02.json`; evidence complete.
+
+### seeded · claude-code · 2026-11-02-b
+
+[`seeded/claude-code/2026-11-02-b/CELL.md`](seeded/claude-code/2026-11-02-b/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 5; 2026-11-02T19:52:00Z; from `claude-code-run2-23papers-seeded-2026-11-02.json`; evidence complete.
 
 ### seeded · pipeline-desktop-opus · 20261102T144245Z
 

@@ -1,0 +1,15 @@
+suppressPackageStartupMessages({library(data.table)})
+t0 <- Sys.time()
+D <- "<repo>/benchmark/.cache/claude-code/forsythe-2022-young-workers-recessions/seeded/2026-11-02-b/mount/forsythe_2022_young_workers_recessions/3 replication package/Data"
+cols <- c("peage","pesex","peeduca","race","prhspnon","pehspnon","pemlr","pwsswgt","v2hrmonth","v2hryear","v2gestfips","v2pemlr","v2puiodp1","v2peio1cow","v2peio1icd","v2peio1ocd","v2prernwa","v2pwsswgt","v2prwernal")
+cc <- setNames(rep("integer", length(cols)), cols); cc[c("pwsswgt","v2pwsswgt","v2prernwa")] <- "double"
+x <- fread(file.path(D,"yh_data.csv"), select=cc, nThread=1, showProgress=FALSE)
+cat("read secs", as.numeric(difftime(Sys.time(),t0,units="secs")), "rows", nrow(x), "\n")
+print(gc())
+for (v in names(x)) cat(v, "NA:", sum(is.na(x[[v]])), " min:", suppressWarnings(min(x[[v]],na.rm=TRUE)), " max:", suppressWarnings(max(x[[v]],na.rm=TRUE)), "\n")
+print(table(x$peeduca, useNA="ifany"))
+print(table(x$v2hryear, useNA="ifany"))
+print(table(x$v2peio1cow, useNA="ifany"))
+print(table(x$v2puiodp1, useNA="ifany"))
+cat("age>79:", sum(x$peage>79), "\n")
+cat("total secs", as.numeric(difftime(Sys.time(),t0,units="secs")), "\n")

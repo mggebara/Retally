@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "entry_id": "holman-2022-theresa-may-rally",
+  "mode": "seeded",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 1},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-3", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-4", "exit_code": 1, "kind": "error"}
+  ],
+  "deviations": [
+    "Table 4 (xtpcse, cor(psar1), independent) implemented by hand: OLS residuals, panel-specific rho from regressing e_t on e_{t-1} over consecutive quarters, truncated to [-1, 1]; Prais-Winsten transform with the sqrt(1 - rho^2) first-observation weight also applied to the first observation after an internal gap (195 such gaps in the estimation sample); panel-heteroskedastic PCSEs. Stata's exact handling of gaps and of rho > 1 (one panel, rho = 1.07) is not known; with rho truncated to 1 that country's dummy is aliased after the transform.",
+    "Table 2 (xtreg, default random effects) implemented by hand as Swamy-Arora GLS with the unbalanced-panel harmonic-mean T; wave dummies with the later collinear wave dummy omitted (Stata ordering), linear model also for the best-PM column as in the do-file."
+  ],
+  "notes": "Exploratory run confirmed the samples: Table 2 complete cases give exactly 143,499 (likeability) and 97,155 (best PM) respondent-waves; Table 4 complete cases give 4,328 country-quarters (44 panels). The three repairs fixed, in turn, rho > 1 (NaN first-observation weight), a zero country-dummy column after the transform, and an ill-conditioned X'X inversion. The final run then crashed on a further bug in the PCSE step (the per-panel variance vector w was a 1-d named array, so 'Xs * sqrt(w)' is non-conformable; as.numeric(w) would fix it). The task allows at most 3 error repairs, so I did not repair it again: the final run printed no RESULT lines. No claim comparisons were made.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T19:33:00Z",
+  "finished_at": "2026-11-02T19:40:00Z"
+}
