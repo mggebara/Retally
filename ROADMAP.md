@@ -1603,8 +1603,109 @@ the tables above should be read on its own.  Caveats: the oracle
 caveats of the first run apply; four cells' sample 1 came from the API
 at the pipeline's configured effort while sample 2 came from the
 desktop default, so for those four papers the two samples differ in
-route as well as draw; the agent still has one sample per cell except
-the five blind reruns in 3.4.
+route as well as draw; the agent had one sample per cell except the
+five blind reruns in 3.4 until its second sample below.
+
+**Agent second sample (2026-11-01, zero API spend): Claude Code again
+on all 13 evaluation papers in independent and blind mode** (run id
+`2026-11-01-a`, desktop Opus, label `claude-code`; 26 cells; file
+`benchmark/results/claude-code-run2-13papers-indep-blind-2026-11-01.json`,
+not folded into REPORT.md).  Produced as in 3.3–3.4: one Opus subagent
+per cell, `render_task` → agent → `runner --reproducer claude-code
+--no-cache`.  Seeded was not rerun (its pipeline gap is within noise in
+both pipeline samples).  Agent sample 1 is the 3.3 and 3.4 files
+(`claude-code-7papers-all-modes-2026-10-21.json` +
+`claude-code-6papers-all-modes-2026-10-22.json`).
+
+| Mode | Agent sample 1 | Agent sample 2 | Pipeline sample 1 | Pipeline sample 2 |
+|---|---|---|---|---|
+| independent | 148 / 154 | 147 / 154 | 129 / 154 | 128 / 154 |
+| blind | 135 / 154 | 132 / 154 | 92 / 154 | 82 / 154 |
+
+Cell level, agent sample 1 vs 2: independent 12 of 13 cells identical,
+mean absolute difference 0.08 claims, max 1 (Grier 10 → 9); blind 10
+of 13 identical, mean 0.54, max 4 (Montero 10 → 6; also Gagliarducci
+7 → 9, Adams 8 → 7).  The agent moves much less than the pipeline did
+between its two samples (8 and 6 of 13 cells identical in independent
+and blind).  With both agent samples against both pipeline samples the
+harness gap is **18–20 claims in independent mode and 40–53 in blind
+mode** (of 154); the blind range comes mostly from the pipeline's own
+spread (92 vs 82).  The headline survives resampling of both arms.
+
+Agent-side notes.  Every agent reported reading nothing outside its
+mount, with three exceptions, none of which the agent reported using to
+adjust a value: the Hanlon blind agent glimpsed one garbled table row
+of three integers while printing the paper text; the Grier independent
+agent read the harness's saved copy of its own `cat paper.txt` output;
+the Holman blind agent saw prose effect sizes while reading the method
+section.  The Altmann independent agent noted that `paper.txt` is an
+earlier working-paper version (564 subjects, no online study) and took
+the specifications from the claim descriptions.  Montero blind's IQR
+estimates were flagged fragile by its own agent (they flip sign
+without a survey-round fixed effect).  Adams independent used the
+one-sided four-seat rule (1,842 dyads), Adams blind the two-sided rule
+(1,525).  `n_refinements` is the agents' self-report, as before.
+
+**Memorisation probe (2026-11-01, zero API spend).**  `benchmark/probe.py`
+(PR #87; benchmark/README.md "Memorisation probe") on the 13 evaluation
+papers: one no-tools desktop Opus subagent per paper, given the title,
+authors, venue and each pinned claim's name, type and context only,
+asked for each number from memory with a `recalled | inferred | none`
+confidence per claim, and scored with the blind-mode comparator.  File:
+`benchmark/results/probe-desktop-opus-2026-11-01.json`.  The table is
+what `benchmark.probe score --compare` prints with the three agent
+files (sample 1 = the first two columns, sample 2 = the third), here
+rendered by `probe.markdown_table` from the results file's rows (the
+probe store under `benchmark/.cache/probe/` is not committed):
+
+| paper | claims | answered | within tol | within 2x | within 5x | median rel err | recalled / inferred / none / missing | blind: claude-code-7papers-all-modes-2026-10-21 | blind: claude-code-6papers-all-modes-2026-10-22 | blind: claude-code-run2-13papers-indep-blind-2026-11-01 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| acemoglu-2022-war-socialism-fascism | 12 | 7 | 5 | 5 | 6 | 21.6% | 0 / 7 / 5 / 0 | — | 12/12 | 12/12 |
+| adams-2023-women-mps-affective-polarization | 11 | 7 | 1 | 4 | 7 | 46.9% | 0 / 7 / 4 / 0 | 8/11 | — | 7/11 |
+| altmann-2022-cognitive-spillovers | 13 | 11 | 4 | 6 | 9 | 43.3% | 0 / 11 / 2 / 0 | — | 13/13 | 13/13 |
+| arias-2022-changing-tides-climate-migration | 12 | 12 | 2 | 5 | 8 | 38.3% | 0 / 12 / 0 / 0 | 12/12 | — | 12/12 |
+| dertwinkel-kalt-2022-concentration-bias | 13 | 3 | 0 | 0 | 2 | 68.8% | 0 / 3 / 10 / 0 | — | 13/13 | 13/13 |
+| gagliarducci-2022-gender-cooperation-congress | 13 | 13 | 6 | 7 | 8 | 28.3% | 0 / 13 / 0 / 0 | — | 7/13 | 9/13 |
+| grier-2023-sugar-roll-call-voting | 11 | 2 | 0 | 0 | 1 | 8.9% | 0 / 2 / 9 / 0 | 10/11 | — | 10/11 |
+| hanlon-2022-aircraft-ip-spillovers | 12 | 10 | 1 | 2 | 4 | 157.3% | 0 / 10 / 2 / 0 | 12/12 | — | 12/12 |
+| holman-2022-theresa-may-rally | 11 | 4 | 0 | 2 | 2 | 110.1% | 0 / 4 / 7 / 0 | — | 6/11 | 6/11 |
+| leeson-2022-hobo-economicus | 11 | 4 | 3 | 4 | 4 | 0.1% | 0 / 4 / 7 / 0 | 11/11 | — | 11/11 |
+| lopez-moctezuma-2022-policy-deliberation-philippines | 13 | 0 | 0 | 0 | 0 | — | 0 / 0 / 13 / 0 | — | 9/13 | 9/13 |
+| manekin-2022-effective-for-whom | 12 | 6 | 4 | 5 | 6 | 19.8% | 0 / 6 / 6 / 0 | 12/12 | — | 12/12 |
+| montero-2022-cooperative-property-rights | 10 | 0 | 0 | 0 | 0 | — | 0 / 0 / 10 / 0 | 10/10 | — | 6/10 |
+| **total** | 154 | 79 | 26 | 40 | 57 | 38.3% | 0 / 79 / 75 / 0 |  |  |  |
+
+Of the 154 claims, 79 were answered and 26 fall within the blind
+tolerance; none was rated `recalled` (0 / 79 / 75).  The 26 hits:
+
+- **3 are a context leak of derivable values.**  The Leeson Brown–Forsythe
+  W (donations per hour) and both ANOVA F statistics: the answering agent
+  said it back-computed them from the p-values and degrees of freedom the
+  claim contexts stated.  The values were not pinned in the contexts
+  (`tests/test_catalog_contexts.py` forbids only stated values), but they
+  were computable from them.  The same contexts were in every Leeson blind
+  prompt in this document, pipeline and agent alike; see Next (d).
+- **1 is a count within 1 %**: Gagliarducci's sponsor-terms count, 4,700
+  answered against 4,746.
+- **22 are coarse guesses**, mostly round numbers (0.1, 0.4, 0.5, 2.5,
+  4.0, …), all rated
+  `inferred`, landing inside ±1 SE bands whose relative half-width runs
+  from 12 % to 225 % (19 of the 22 at or below 65 %).
+
+Per paper the probe and the agent's blind result do not line up: the
+paper where memory scores most, Gagliarducci (6 of 13), is one of the
+agent's weakest in blind mode (7 and 9); the probe answered nothing on
+Montero and López-Moctezuma and hit nothing on Grier and Holman, where
+the agent's blind counts are 10 and 6, 9 and 9, 10 and 10, 6 and 6.
+**Conclusion: memory alone
+recovers about a sixth of the claims inside the blind band (26 of 154),
+none by stated recall, and three of those through a context leak; it
+cannot account for the agent's blind result (132–135 of 154).  It does
+not show the papers were unseen** — a model can have read a paper
+without retaining its third-decimal coefficients.  Caveat (from the
+answering agents): the answering model is the desktop app's Opus, the
+same as the agent rows; the probe prompt carries the same curated
+contexts the blind prompt does.
 
 **Next.**
 
@@ -1629,6 +1730,21 @@ the five blind reruns in 3.4.
   It measures the harness with a different answerer (desktop thinking
   defaults, not the API's `output_config`), so its rows sit beside the
   API rows rather than replacing them.
+- (d) ~~Free: derivable-value leaks in claim contexts~~ — done
+  (2026-11-01, with the probe write-up): a dedicated test,
+  `tests/test_catalog_contexts.py::test_claim_text_does_not_state_inputs_of_a_pinned_statistic`,
+  forbids any claim context, location or unit of an entry that pins a
+  test statistic from stating a p-value, degrees of freedom or a t / z
+  statistic, and the four Leeson test-statistic contexts were reworded
+  to pass it (test name and table kept; the removed p-values and degrees
+  of freedom moved to the entry's `notes`; no pinned value changed).
+  **The rewording post-dates every run in this document**: all Leeson
+  rows above, the blind rows included, were produced with the old
+  contexts.
+- (e) A third agent sample and an agent seeded rerun (free), and an
+  API-route second pipeline sample for the four API papers (paid),
+  would turn the two-sample ranges above into something nearer a
+  spread.
 
 ---
 

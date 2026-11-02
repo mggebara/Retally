@@ -56,6 +56,22 @@ AGENT_RERUN_FILES = ["claude-code-blind-rerun-2026-10-22.json", "claude-code-bli
 # only the ``variance_pipeline`` tables.
 PIPELINE_RUN2_FILE = "pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json"
 RUN2_LABEL = "desktop-opus-run2"
+# Second Claude Code sample on all 13 evaluation papers in independent and
+# blind mode (ROADMAP 3.5, "Variance pass"; run id ``2026-11-01-a``).  Kept
+# out of ``RAW`` for the same reason; it feeds only the ``variance_agent``
+# tables and the probe comparison.  Seeded was not rerun.
+AGENT_RUN2_FILE = "claude-code-run2-13papers-indep-blind-2026-11-01.json"
+AGENT_RUN2_MODES = ("independent", "blind")
+# Memorisation probe (ROADMAP 3.5, "Memorisation probe"; ``benchmark/probe.py``).
+PROBE_FILE = "probe-desktop-opus-2026-11-01.json"
+# Probe hits the answering agent said it back-computed from the p-value and
+# degrees of freedom the claim context stated (ROADMAP 3.5, "Memorisation
+# probe"): derivable from the prompt, not recalled.
+PROBE_DERIVABLE = {
+    "brown_forsythe_donations_per_hour",
+    "anova_f_donations_per_hour",
+    "anova_f_dollars_per_hour",
+}
 
 # Pipeline 4.7 variance on the dev papers (ROADMAP 1.8 and Phase 3): one
 # cache-on independent row plus three cache-off runs, at the pipeline state
@@ -212,6 +228,17 @@ for _r in load_rows(PIPELINE_RUN2_FILE):
     assert _key not in RUN2, f"duplicate run2 cell {_key}"
     RUN2[_key] = _r
 assert {e for e, _m in RUN2} == set(HOLDOUT) and len(RUN2) == len(HOLDOUT) * len(MODES)
+
+AGENT2: dict[tuple[str, str], dict[str, Any]] = {}
+for _r in load_rows(AGENT_RUN2_FILE):
+    assert metrics.reproducer_of(_r) == AGENT and not _r.get("skipped"), _r["entry_id"]
+    _key = (_r["entry_id"], metrics.mode_of(_r))
+    assert _key[1] in AGENT_RUN2_MODES and _key not in AGENT2, f"unexpected agent run2 cell {_key}"
+    AGENT2[_key] = _r
+assert {e for e, _m in AGENT2} == set(HOLDOUT) and len(AGENT2) == len(HOLDOUT) * len(AGENT_RUN2_MODES)
+
+PROBE_ROWS = sorted(load_rows(PROBE_FILE), key=lambda r: r["entry_id"])
+assert {r["entry_id"] for r in PROBE_ROWS} == set(HOLDOUT) and len(PROBE_ROWS) == len(HOLDOUT)
 
 
 def p55_cell(entry: str, mode: str) -> dict[str, Any] | None:
@@ -652,9 +679,9 @@ def t_variance() -> str:
     )
     return (
         "Earlier repeat runs: the pipeline on `claude-opus-4-7` on the three dev papers (independent "
-        "mode), and the agent's second samples in blind mode.\n\n"
+        "mode), and the agent's blind reruns of ROADMAP 3.4.\n\n"
         + t1
-        + "\nAgent blind second samples:\n\n"
+        + "\nAgent blind reruns (ROADMAP 3.4):\n\n"
         + t2
     )
 
@@ -691,7 +718,7 @@ def t_variance_pipeline() -> str:
         "Claims",
         "Sample 1",
         "Sample 2",
-        "Agent (one sample)",
+        "Agent (sample 1)",
         "Agent − sample 1",
         "Agent − sample 2",
         "Cells identical",
@@ -739,7 +766,7 @@ def t_variance_pipeline() -> str:
         "else in this report: the API run (`claude-opus-5-5`) for Grier, Leeson, Manekin and Montero "
         "and the first oracle run for the other nine.  *Sample 2* is a second oracle run on all 13 "
         f"(label `{RUN2_LABEL}`, `{PIPELINE_RUN2_FILE}`), so for the four API papers the two samples "
-        "differ in route as well as draw.  The agent column is its single sample.  *Cells identical*, "
+        "differ in route as well as draw.  The agent column is its first sample.  *Cells identical*, "
         "*mean* and *max abs. diff* compare the two pipeline samples cell by cell (paper × mode).\n\n"
         + table(hdr, out, ["l", "r", "r", "r", "r", "r", "r", "r", "r", "r"])
     )
@@ -768,8 +795,209 @@ def t_variance_pipeline_cells() -> str:
             )
     return (
         "Per paper and mode: final claims within tolerance in each pipeline sample, their absolute "
-        "difference (bold where non-zero), and the agent's single sample.\n\n"
+        "difference (bold where non-zero), and the agent's first sample.\n\n"
         + table(hdr, out, ["l", "l", "l", "r", "r", "r", "r", "r"])
+    )
+
+
+def _agent_variance_cells(mode: str) -> list[tuple[str, int, int, int, int, int]]:
+    """(entry, n, agent 1, agent 2, pipeline 1, pipeline 2) for one mode over the 13 evaluation papers."""
+    out = []
+    for e in HOLDOUT:
+        a1, a2, p1, p2 = cell(AGENT, e, mode), AGENT2[(e, mode)], p55_cell(e, mode), RUN2[(e, mode)]
+        assert a1 is not None and p1 is not None and total(a1) == total(a2) == total(p1) == total(p2), (
+            e,
+            mode,
+        )
+        out.append((e, total(a1), passed(a1), passed(a2), passed(p1), passed(p2)))
+    return out
+
+
+def _agent_variance_stats(mode: str) -> dict[str, Any]:
+    """Totals, agent cell agreement and the agent-minus-pipeline range for one mode."""
+    cells = _agent_variance_cells(mode)
+    diffs = [abs(c[2] - c[3]) for c in cells]
+    n, a1, a2, p1, p2 = (sum(c[i] for c in cells) for i in range(1, 6))
+    gaps = [a - p for a in (a1, a2) for p in (p1, p2)]
+    return {
+        "cells": len(cells),
+        "n": n,
+        "a1": a1,
+        "a2": a2,
+        "p1": p1,
+        "p2": p2,
+        "same": sum(1 for d in diffs if d == 0),
+        "mean": sum(diffs) / len(cells),
+        "max": max(diffs),
+        "gap_lo": min(gaps),
+        "gap_hi": max(gaps),
+    }
+
+
+def t_variance_agent() -> str:
+    hdr = [
+        "Mode",
+        "Claims",
+        "Agent sample 1",
+        "Agent sample 2",
+        "Pipeline sample 1",
+        "Pipeline sample 2",
+        "Agent cells identical",
+        "Agent mean abs. diff per cell",
+        "Agent max abs. diff",
+        "Agent − pipeline (four pairings)",
+    ]
+    out = []
+    for m in AGENT_RUN2_MODES:
+        s = _agent_variance_stats(m)
+        out.append(
+            [
+                m,
+                s["n"],
+                s["a1"],
+                s["a2"],
+                s["p1"],
+                s["p2"],
+                f"{s['same']} / {s['cells']}",
+                f"{s['mean']:.2f}",
+                s["max"],
+                f"{s['gap_lo']} to {s['gap_hi']}",
+            ]
+        )
+    return (
+        "Two samples of the agent and two of the pipeline on Opus 5.5 over the 13 evaluation papers, "
+        "in the two modes the agent was rerun in (claims within tolerance of the paper's printed "
+        "value).  *Agent sample 1* is the row used everywhere else in this report (ROADMAP 3.3–3.4); "
+        f"*agent sample 2* is a second Claude Code run on all 13 (`{AGENT_RUN2_FILE}`).  The pipeline "
+        "samples are those of the table above.  *Cells identical*, *mean* and *max abs. diff* compare "
+        "the two agent samples cell by cell; the last column is the smallest and largest of the four "
+        "agent-minus-pipeline differences (each agent sample against each pipeline sample).\n\n"
+        + table(hdr, out, ["l", "r", "r", "r", "r", "r", "r", "r", "r", "r"])
+    )
+
+
+def t_variance_agent_cells() -> str:
+    hdr = ["Paper", "Mode", "n", "Agent 1", "Agent 2", "Agent abs. diff", "Pipeline 1", "Pipeline 2"]
+    out = []
+    for e, n, a1, a2, p1, p2, m in (c + (m,) for m in AGENT_RUN2_MODES for c in _agent_variance_cells(m)):
+        d = abs(a1 - a2)
+        out.append([f"`{short(e)}`", m, n, a1, a2, f"**{d}**" if d else "0", p1, p2])
+    out.sort(key=lambda r: (r[0], AGENT_RUN2_MODES.index(r[1])))
+    return (
+        "Per paper, independent and blind mode: final claims within tolerance in each agent sample, "
+        "their absolute difference (bold where non-zero), and the two pipeline samples.\n\n"
+        + table(hdr, out, ["l", "l", "r", "r", "r", "r", "r", "r"])
+    )
+
+
+def _probe_hits() -> list[tuple[str, dict[str, Any]]]:
+    return [
+        (r["entry_id"], cd) for r in PROBE_ROWS for cd in r["claim_details"] if cd.get("within_tolerance")
+    ]
+
+
+def _probe_hit_class(cd: dict[str, Any]) -> str:
+    if cd["name"] in PROBE_DERIVABLE:
+        return "derivable from context"
+    if cd.get("tolerance_source") == "se_band":
+        return "inside ±1 SE band"
+    return f"within {cd.get('tolerance_source')} tolerance"
+
+
+def _probe_se_bands() -> tuple[float, float, int, int]:
+    """(narrowest, widest relative band, bands at or below 65 %, count) over the SE-band hits."""
+    bands = [cd["tolerance"] for _e, cd in _probe_hits() if _probe_hit_class(cd) == "inside ±1 SE band"]
+    return min(bands), max(bands), sum(1 for b in bands if b <= 0.65), len(bands)
+
+
+def _blind_total(get: Any) -> int:
+    return sum(passed(get(e)) for e in HOLDOUT)
+
+
+def t_probe() -> str:
+    from benchmark import probe
+
+    hdr = [
+        "Paper",
+        "Claims",
+        "Answered",
+        "Within tol.",
+        "Within 2×",
+        "Within 5×",
+        "Median rel. err",
+        "Recalled / inferred / none",
+        "Agent blind 1",
+        "Agent blind 2",
+        "Pipeline blind 1",
+        "Pipeline blind 2",
+    ]
+    getters = [
+        lambda e: cell(AGENT, e, "blind"),
+        lambda e: AGENT2[(e, "blind")],
+        lambda e: p55_cell(e, "blind"),
+        lambda e: RUN2[(e, "blind")],
+    ]
+
+    def line(name: str, s: dict[str, Any], extra: list[Any]) -> list[Any]:
+        c = s["conf"]
+        assert c["missing"] == 0, name
+        med = "—" if s["median"] is None else pct(s["median"])
+        return [
+            name,
+            s["n"],
+            s["answered"],
+            s["tol"],
+            s["x2"],
+            s["x5"],
+            med,
+            f"{c['recalled']} / {c['inferred']} / {c['none']}",
+            *extra,
+        ]
+
+    out = [
+        line(f"`{short(r['entry_id'])}`", probe._summary([r]), [passed(g(r["entry_id"])) for g in getters])
+        for r in PROBE_ROWS
+    ]
+    tot = probe._summary(PROBE_ROWS)
+    out.append(line("**total**", tot, [_blind_total(g) for g in getters]))
+    k = Counter(_probe_hit_class(cd) for _e, cd in _probe_hits())
+    lo, hi, n65, nb = _probe_se_bands()
+    return (
+        f"Memorization probe (`benchmark/probe.py`, `{PROBE_FILE}`): one no-tools desktop Opus "
+        "subagent per paper, shown the title, authors, venue and each pinned claim's name, type and "
+        "context, asked for each number from memory, scored with the blind-mode comparator.  *Within "
+        "2×* and *within 5×* count answers whose relative error is at most two or five times the "
+        "claim's tolerance.  The last four columns are the blind-mode counts of the two agent and two "
+        f"pipeline samples, for comparison.  Of the {tot['tol']} hits, {k['derivable from context']} "
+        f"are derivable from the claim context, {sum(v for c, v in k.items() if c.startswith('within '))} "
+        f"passes a relative tolerance, and {k['inside ±1 SE band']} land inside a ±1 SE band whose "
+        f"relative half-width is {pct(lo, 0)} to {pct(hi, 0)} ({n65} of {nb} at or below 65 %).\n\n"
+        + table(hdr, out, ["l", "r", "r", "r", "r", "r", "r", "l", "r", "r", "r", "r"])
+    )
+
+
+def t_probe_hits() -> str:
+    hdr = ["Paper", "Claim", "Printed", "Probe answer", "Band (rel.)", "Band source", "Confidence", "Class"]
+    out = [
+        [
+            f"`{short(e)}`",
+            f"`{cd['name']}`",
+            f"{cd['paper_value']:g}",
+            f"{cd['answered']:g}",
+            pct(cd["tolerance"]),
+            cd["tolerance_source"],
+            cd.get("confidence") or "—",
+            _probe_hit_class(cd),
+        ]
+        for e, cd in _probe_hits()
+    ]
+    n = sum(len(r["claim_details"]) for r in PROBE_ROWS)
+    return (
+        f"Every memorization-probe answer within tolerance ({len(out)} of {n} claims).  *Band* is the "
+        "comparator's relative tolerance for the claim; *derivable from context* marks the Leeson test "
+        "statistics the answering agent said it back-computed from the p-values and degrees of freedom "
+        "the claim contexts then stated (Section 6).\n\n"
+        + table(hdr, out, ["l", "l", "r", "r", "r", "l", "l", "l"])
     )
 
 
@@ -1203,6 +1431,88 @@ def _quoted_totals() -> list[tuple[str, str, str, str, str]]:
         )
     )
     q.append(("3.5 variance pass", "pipeline samples 1 vs 2", "max abs. diff", "5", str(_vs[6])))
+    # Agent second sample (ROADMAP 3.5, "Agent second sample").
+    for mode, a1, a2, same, mean, mx, gap in (
+        ("independent", 148, 147, "12 of 13", "0.08", "1", "18–20"),
+        ("blind", 135, 132, "10 of 13", "0.54", "4", "40–53"),
+    ):
+        st = _agent_variance_stats(mode)
+        sec, what = "3.5 agent second sample", f"agent samples 1 vs 2, {mode}"
+        q += [
+            (sec, what, "agent sample 1 final", str(a1), str(st["a1"])),
+            (sec, what, "agent sample 2 final", str(a2), str(st["a2"])),
+            (sec, what, "cells identical", same, f"{st['same']} of {st['cells']}"),
+            (sec, what, "mean abs. diff", mean, f"{st['mean']:.2f}"),
+            (sec, what, "max abs. diff", mx, str(st["max"])),
+            (sec, what, "harness gap range", gap, f"{st['gap_lo']}–{st['gap_hi']}"),
+        ]
+    for short_id, mode, a, b in (
+        ("grier-2023", "independent", 10, 9),
+        ("montero-2022", "blind", 10, 6),
+        ("gagliarducci-2022", "blind", 7, 9),
+        ("adams-2023", "blind", 8, 7),
+    ):
+        e = ENTRY_BY_SHORT[short_id]
+        q.append(
+            (
+                "3.5 agent second sample",
+                f"{short_id} {mode}",
+                "agent 1 → 2",
+                f"{a} → {b}",
+                f"{passed(cell(AGENT, e, mode) or {})} → {passed(AGENT2[(e, mode)])}",
+            )
+        )
+    for mode, same in (("independent", "8 of 13"), ("blind", "6 of 13")):
+        _pc = _variance_stats(_variance_cells(mode))
+        q.append(
+            (
+                "3.5 agent second sample",
+                "pipeline samples 1 vs 2",
+                f"{mode} cells identical",
+                same,
+                f"{_pc[4]} of 13",
+            )
+        )
+    # Memorisation probe (ROADMAP 3.5, "Memorisation probe").
+    from benchmark import probe
+
+    _ps = probe._summary(PROBE_ROWS)
+    _pk = Counter(_probe_hit_class(cd) for _e, cd in _probe_hits())
+    _lo, _hi, _n65, _nb = _probe_se_bands()
+    _gag = next(cd for _e, cd in _probe_hits() if cd["name"] == "n_sponsor_terms_ncosponsors_all_ols")
+    sec = "3.5 memorisation probe"
+    q += [
+        (sec, "probe", "claims", "154", str(_ps["n"])),
+        (sec, "probe", "answered", "79", str(_ps["answered"])),
+        (sec, "probe", "within tolerance", "26", str(_ps["tol"])),
+        (
+            sec,
+            "probe",
+            "recalled / inferred / none",
+            "0 / 79 / 75",
+            f"{_ps['conf']['recalled']} / {_ps['conf']['inferred']} / {_ps['conf']['none']}",
+        ),
+        (sec, "probe hits", "derivable from context", "3", str(_pk["derivable from context"])),
+        (sec, "probe hits", "inside ±1 SE band", "22", str(_pk["inside ±1 SE band"])),
+        (sec, "probe hits", "SE band range", "12 %–225 %", f"{pct(_lo, 0)}–{pct(_hi, 0)}"),
+        (sec, "probe hits", "SE bands at or below 65 %", "19 of 22", f"{_n65} of {_nb}"),
+        (
+            sec,
+            "probe hits",
+            "Gagliarducci count",
+            "4,700 vs 4,746",
+            f"{_gag['answered']:,.0f} vs {_gag['paper_value']:,.0f}",
+        ),
+        (
+            sec,
+            "probe",
+            "Gagliarducci hits",
+            "6",
+            str(
+                probe._summary([r for r in PROBE_ROWS if short(r["entry_id"]) == "gagliarducci-2022"])["tol"]
+            ),
+        ),
+    ]
     for mode, a in (("seeded", "0.3%"), ("independent", "4.9%"), ("blind", "22.3%")):
         c = metrics.closeness(rows_for(P47, SEVEN, mode))
         q.append(("3.2", "pipeline 4.7 median rel. error", mode, a, f"{c.median_rel_err * 100:.1f}%"))
@@ -1288,7 +1598,8 @@ def t_discrepancies() -> str:
     bad = [c for c in checks if c[3] != c[4]]
     rows = [[f"ROADMAP {sec}", what, item, quoted, recomputed] for sec, what, item, quoted, recomputed in bad]
     return (
-        f"{len(checks)} numbers quoted in ROADMAP 3.2–3.5 (including the 3.5 variance pass) were "
+        f"{len(checks)} numbers quoted in ROADMAP 3.2–3.5 (including the 3.5 variance pass, the "
+        "agent's second sample and the memorization probe) were "
         "recomputed from the results files; "
         f"{len(bad)} differ.\n\n"
         + (
@@ -1312,6 +1623,10 @@ TABLES = {
     "variance": t_variance,
     "variance_pipeline": t_variance_pipeline,
     "variance_pipeline_cells": t_variance_pipeline_cells,
+    "variance_agent": t_variance_agent,
+    "variance_agent_cells": t_variance_agent_cells,
+    "probe": t_probe,
+    "probe_hits": t_probe_hits,
     "cost": t_cost,
     "dates": t_dates,
     "taxonomy": t_taxonomy,

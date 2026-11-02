@@ -146,8 +146,8 @@ original_claims:
     location: "Table 3, Panel A: donations per hour, Brown-Forsythe W-statistic"
     context: >
       Table 3 ("Test of Equality of Variance in Panhandling Receipts
-      Across Metro Stations"), Panel A, Brown-Forsythe W-statistic
-      (p-value 0.706).  Brown-Forsythe test of equal variance of the
+      Across Metro Stations"), Panel A, Brown-Forsythe W-statistic.
+      Brown-Forsythe test of equal variance of the
       number of donations each panhandler received per hour (donations
       divided by minutes observed working, times 60) across the five
       subsample stations.  Observations are panhandlers observed in
@@ -159,7 +159,7 @@ original_claims:
     unit: Brown-Forsythe W statistic
     location: "Table 3, Panel B: dollars per hour, Brown-Forsythe W-statistic"
     context: >
-      Table 3, Panel B, Brown-Forsythe W-statistic (p-value 0.893).  Same
+      Table 3, Panel B, Brown-Forsythe W-statistic.  Same
       test for dollars received per hour (cash plus the market value of
       in-kind donations, divided by minutes observed working, times 60);
       67 observations, the panhandlers whose dollar receipts were counted.
@@ -171,9 +171,9 @@ original_claims:
     location: "Table 4, Panel A: donations per hour, ANOVA F-statistic"
     context: >
       Table 4 ("Test of Equality of Mean Panhandling Receipts Across Metro
-      Stations"), Panel A, ANOVA F-statistic (p-value 0.809).  One-way
-      analysis of variance of donations per hour across the five
-      subsample stations (4 and 75 degrees of freedom), 80 observations.
+      Stations"), Panel A, ANOVA F-statistic.  One-way analysis of
+      variance of donations per hour across the five subsample stations,
+      80 observations.
   - description: anova_f_dollars_per_hour
     value: 0.15
     claim_type: other
@@ -181,9 +181,9 @@ original_claims:
     unit: one-way ANOVA F statistic
     location: "Table 4, Panel B: dollars per hour, ANOVA F-statistic"
     context: >
-      Table 4, Panel B, ANOVA F-statistic (p-value 0.962).  One-way
-      analysis of variance of dollars per hour across the five subsample
-      stations (4 and 62 degrees of freedom), 67 observations.
+      Table 4, Panel B, ANOVA F-statistic.  One-way analysis of variance
+      of dollars per hour across the five subsample stations, 67
+      observations.
   - description: station_visits_full_sample
     value: 242
     claim_type: other
@@ -296,6 +296,17 @@ notes: >
   of squares (mislabelled in the paper), the Kruskal-Wallis statistics
   (2.506 / 3.170), the in-text standardized effects (0.53 / 0.40 SD) and
   the power calculations.
+
+  Context rewording (2026-11-01).  The contexts of the four test-statistic
+  claims used to state each test's p-value, and the two ANOVA contexts
+  its degrees of freedom; with the test named and the group count known,
+  those pin the statistic (the memorisation probe's answering agent
+  back-computed three of the four from them; ROADMAP 3.5, "Memorisation
+  probe").  Moved here: Table 3 Brown-Forsythe W p-values 0.706 (Panel A,
+  donations per hour) and 0.893 (Panel B, dollars per hour); Table 4 ANOVA
+  F p-values 0.809 (Panel A) and 0.962 (Panel B), on 4 and 75 and on 4
+  and 62 degrees of freedom.  Values are unchanged.  Every Leeson run in
+  ROADMAP up to and including 3.5 used the old contexts.
 
   What was read.  The published EJ PDF (Tables 1-5, text, footnotes);
   the Zenodo API metadata; the whole package (downloaded to a scratch
