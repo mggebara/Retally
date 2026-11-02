@@ -19,13 +19,17 @@ by file, what that copy leaves out.  Two layers:
      blocks, ``Signif. codes``) and Python console/statsmodels output.
    * Analysis code without a script suffix (a do-file, R or Python
      script saved as ``.txt``): most non-comment lines are commands.
-   * Regression tables: ``.tex`` (esttab fragments, stargazer, any
+   * Regression tables: ``.tex`` (esttab/estout fragments, stargazer, any
      tabular with ``Observations``/``R-squared``/standard-error rows),
      ``.html``, plain-text ``esttab``/``outreg2`` output, regression-shaped
      ``.csv`` (only with ``Observations``/``R-squared`` rows), and
      spreadsheets (``.xlsx`` and old binary ``.xls``) whose strings carry
      the same markers or hold a Stata ``export excel`` results matrix
      (``OLS_all`` / ``OLS_all_stars`` column pairs with ``***`` cells).
+     A LaTeX row labelled ``N`` or ``Clusters`` counts as the observations row.
+   * Result macros: a ``.tex`` (not a manuscript) made mostly of numeric
+     ``\\newcommand`` / ``\\def`` definitions, the in-text numbers a script
+     wrote for the paper.
 
    A file byte-identical to a file stripped by name is stripped too.
 
@@ -100,7 +104,7 @@ class StrippedFile:
     reason: str
     """``script-suffix``, ``transcript-name``, ``stata-log``, ``smcl``,
     ``r-transcript``, ``python-output``, ``script-content:stata|r|python``,
-    ``regression-table`` or ``duplicate-of-script``."""
+    ``regression-table``, ``result-macros`` or ``duplicate-of-script``."""
 
 
 def name_reason(path: Path) -> str | None:
@@ -251,7 +255,13 @@ def _code_reason(lines: list[str]) -> str | None:
 
 # Regression-table markers, each counted once.
 _TABLE_STAT_MARKERS = (
-    re.compile(r"\bObservations\b|\bNum\. obs\.|\bNo\. of obs|\bN\. of obs", re.I),
+    # A LaTeX row labelled ``N`` or ``Clusters`` (esttab's default ``N`` label) counts as the
+    # observations row.
+    re.compile(
+        r"\bObservations\b|\bNum\. obs\.|\bNo\. of obs|\bN\. of obs"
+        r"|(?m-i:^\s*(?:N|Clusters|Number of clusters)\s*&)",
+        re.I,
+    ),
     re.compile(
         r"R-squared|R-sq\b|Adj(?:usted)?\.? R2|\bR\^?\{?2\}?|R\$\^\{?2\}?\$|R<sup>2</sup>"
         r"|\\\(R\^\{2\}\\\)|\bR2\b"
@@ -285,11 +295,31 @@ def _is_regression_table(text: str, *, signature_suffices: bool = False) -> bool
     return (signature and (signature_suffices or n >= 1)) or n >= 3
 
 
+# ``\newcommand{\name}{1{,}126}`` / ``\def\name{(0.06, 0.07)}``: a macro whose body is a number.
+_MACRO_DEF = re.compile(
+    r"^\\(?:(?:re)?newcommand\*?\s*\{?\\[A-Za-z@]+\}?|def\s*\\[A-Za-z@]+)\s*\{(.*)\}\s*(?:%.*)?$"
+)
+_NUMERIC_BODY = re.compile(r"[\s$\\{}(),.%+\-\u2212\d]*\d[\s$\\{}(),.%+\-\u2212\d]*")
+
+
+def _result_macros(lines: list[str]) -> bool:
+    """Mostly numeric ``\\newcommand`` definitions: in-text results a script wrote for the paper."""
+    body = [s for s in (ln.strip() for ln in lines) if s and not s.startswith("%")]
+    numeric = 0
+    for ln in body:
+        m = _MACRO_DEF.match(ln)
+        if m and _NUMERIC_BODY.fullmatch(m.group(1)):
+            numeric += 1
+    return numeric >= 5 and 2 * numeric >= len(body)
+
+
 def _tex_reason(text: str) -> str | None:
     if "\\documentclass" in text:
         # A manuscript: strip only when one of its own tabulars is a regression table.
         blocks = re.findall(r"\\begin\{(tabular\*?|longtable)\}(.*?)\\end\{\1\}", text, re.S)
         return "regression-table" if any(_is_regression_table(body) for _, body in blocks) else None
+    if _result_macros(_lines(text)):
+        return "result-macros"
     is_table = (
         "\\begin{tabular" in text or "\\begin{longtable" in text or (text.count("&") >= 4 and "\\\\" in text)
     )

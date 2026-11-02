@@ -370,3 +370,63 @@ def test_manuscript_tex_with_an_inline_regression_table_is_stripped(tmp_path):
 def test_binary_files_are_not_content_tested(tmp_path):
     path = _write(tmp_path, "blob.bin", b"\x00\x01" + STATA_LOG.encode())
     assert content_reason(path) is None
+
+
+# estout with an ``N`` row and stars in their own column: no "Observations",
+# no R-squared, no table-tool signature (Carrera et al. 2022 ships its
+# Tables 3-4 this way).
+ESTOUT_N_TEX = r"""\begin{tabular}{l*{2}{r @{} l}}
+\hline
+                         &\multicolumn{2}{c}{(1)}&\multicolumn{2}{c}{(2)}\\
+\hline
+Treatment                &     --0.022&   &     --0.023&   \\
+                         &     (0.041)&   &     (0.041)&   \\
+Premium (z-score)        &            &   &       0.027&** \\
+                         &            &   &     (0.011)&   \\
+\hline Wave FEs          &         Yes&   &         Yes&   \\
+N                        &       2,824&   &       2,824&   \\
+Clusters                 &       1,126&   &       1,126&   \\
+\hline\hline
+\end{tabular}
+"""
+
+SUMMARY_N_TEX = r"""\begin{tabular}{lcccc}
+\hline
+ & Wave 1 & Wave 2 & Wave 3 & Overall \\
+Female & 0.66 & 0.61 & 0.57 & 0.61 \\
+ & (0.47) & (0.49) & (0.50) & (0.49) \\
+Age & 30.93 & 34.55 & 34.38 & 33.51 \\
+ & (12.61) & (15.29) & (15.70) & (14.82) \\
+N & 340 & 509 & 399 & 1,248 \\
+\hline
+\end{tabular}
+"""
+
+
+def test_estout_table_with_an_n_row_is_stripped_but_a_summary_table_is_kept(tmp_path):
+    assert content_reason(_write(tmp_path, "regs.tex", ESTOUT_N_TEX)) == "regression-table"
+    # An N row and parenthesised SDs alone (no numbered columns) stay: summary statistics.
+    assert content_reason(_write(tmp_path, "descriptive.tex", SUMMARY_N_TEX)) is None
+
+
+RESULT_MACROS_TEX = r"""\newcommand{\lowwtpobs}{32}
+\newcommand{\committwelveobs}{1{,}248}
+\newcommand{\actexpmean}{-4.17}
+\newcommand{\enhinfobcpcoeff}{1.36}
+\newcommand{\lambdaallCI}{(0.06, 0.07)}
+\newcommand{\pctfemale}{61}  % share female
+\def\attcoeffse{0.028}
+"""
+
+
+def test_numeric_newcommand_file_is_stripped_as_result_macros(tmp_path):
+    assert content_reason(_write(tmp_path, "numbers.tex", RESULT_MACROS_TEX)) == "result-macros"
+    # Text macros are not results.
+    words = "".join(rf"\newcommand{{\m{c}}}{{\textsf{{word}}}}" + "\n" for c in "abcdefg")
+    assert content_reason(_write(tmp_path, "macros.tex", words)) is None
+    # A few numeric macros inside a longer non-manuscript .tex stay.
+    prose = "Some sentence of text.\n" * 20
+    assert content_reason(_write(tmp_path, "section.tex", RESULT_MACROS_TEX + prose)) is None
+    # A manuscript that defines its numbers in the preamble takes the manuscript path.
+    doc = r"\documentclass{article}" + "\n" + RESULT_MACROS_TEX + r"\begin{document}x\end{document}"
+    assert content_reason(_write(tmp_path, "paper.tex", doc)) is None
