@@ -279,6 +279,35 @@ def test_ordinary_text_is_kept(tmp_path, content):
     assert content_reason(_write(tmp_path, "notes.txt", content)) is None
 
 
+def _knitr_html(n_chunks: int, cls: str = "r") -> str:
+    chunk = (
+        f'<pre class="{cls}"><code>df &lt;- read_rds("data.rds") %&gt;% filter(x == 0)</code></pre>\n'
+        "<pre><code>## filter: removed 3,784 rows (48%), 4,094 rows remaining</code></pre>\n"
+    )
+    return (
+        '<html><head><meta name="generator" content="pandoc" /></head><body>'
+        + chunk * n_chunks
+        + "</body></html>"
+    )
+
+
+def test_rendered_r_markdown_html_is_stripped(tmp_path):
+    # Bokobza 2022 ships its R script's knitted log as .html: code chunks plus their output.
+    assert content_reason(_write(tmp_path, "log.html", _knitr_html(6))) == "script-content:r"
+    assert content_reason(_write(tmp_path, "nb.html", _knitr_html(6, "highlight hl-ipython3"))) == (
+        "script-content:python"
+    )
+
+
+def test_html_with_a_few_code_snippets_is_kept(tmp_path):
+    # A codebook / README page showing how to load the data is documentation, not the script.
+    assert content_reason(_write(tmp_path, "readme.html", _knitr_html(2))) is None
+    assert (
+        content_reason(_write(tmp_path, "codebook.html", "<html><body><p>id: identifier</p></body></html>"))
+        is None
+    )
+
+
 def test_plain_data_csv_with_coef_columns_but_no_stat_rows_is_kept(tmp_path):
     # A meta-analysis dataset of estimates is data, not a results table.
     path = _write(

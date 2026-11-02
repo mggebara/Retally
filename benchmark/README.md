@@ -100,7 +100,10 @@ downloaded package (`benchmark/strip_rule.py`, applied by
   prompts, `Call:` + `Coefficients:`, `Signif. codes`) and Python/
   statsmodels output; analysis *code* saved under another name (a
   do-file as `.txt` — Leeson 2022 ships three — or R/Python source in a
-  `.md`): most non-comment lines are commands; regression tables —
+  `.md`): most non-comment lines are commands; a rendered script — an
+  `.html` export of an R Markdown / knitr / Jupyter run with five or
+  more language-tagged code chunks (`<pre class="r">`; Bokobza 2022
+  ships its R log this way); regression tables —
   `.tex` (esttab/estout fragments, stargazer, any tabular with `Observations`
   (or an `N` / `Clusters` row) / R² / standard-error rows), `.html`, plain-text esttab/outreg2 output,
   `.csv` only with `Observations`/`R-squared` row labels plus `(1)`/
