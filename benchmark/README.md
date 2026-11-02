@@ -290,7 +290,8 @@ A catalog entry can be cleanly skipped:
 
 Skips are never written to the result cache.  Neither are **transient
 errors**: a reproducer that raises because of a download / network / HTTP
-failure, or an Anthropic API problem with the account or the service, gets
+failure, an Anthropic API problem with the account or the service, or a
+Docker daemon that does not answer the harness's health check, gets
 a row with `retally_ran = false`, the message in `error`,
 `"transient": true` and an `error_kind`, and the runner logs `Not caching
 <id> (<mode>): transient <kind> error: ...` instead of saving it, so the
@@ -304,6 +305,7 @@ exception or anything on its cause chain must be one of:
 | `api_billing` | `anthropic.BadRequestError` whose message mentions "credit balance" or "Plans & Billing", or any exception whose text contains "credit balance is too low" |
 | `api_unavailable` | `anthropic.RateLimitError` (429), `APIConnectionError` / `APITimeoutError`, `InternalServerError` or any `APIStatusError` with status >= 500 |
 | `api_auth` | `anthropic.AuthenticationError` (401) / `PermissionDeniedError` (403) |
+| `docker_unavailable` | `benchmark.docker_health.DockerUnavailable`: the harness's daemon health check (`docker info`, 10 s timeout), run once before a pipeline reproduction and again before every sandbox execution, got no answer, a timeout, or a non-zero exit (daemon stopped or wedged) |
 
 Every other outcome — an ordinary 400 for a malformed request, a parse
 failure, a generated script that crashed inside the sandbox — gets

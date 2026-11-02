@@ -89,6 +89,14 @@ macOS has no `timeout`).  If the timeout fires, stop the container with
 `docker ps -q --filter label=${label} | xargs docker kill` and treat the
 run as a crash (exit code 124).
 
+If a `docker run` produces no output for more than ten minutes (no
+container output, no error, the command does not return), the Docker
+daemon is probably wedged.  Stop: kill the command, and do not restart
+Docker Desktop or the Docker daemon yourself.  The hung attempt is not
+counted: do not save it as an `attempt-<n>` directory or as the final run,
+and say in `notes` that it hung.  Report it in your final message (which
+step hung, and for how long) instead of retrying.
+
 ## Output contract
 
 The output directory `${output_dir}` already holds `render.json`; leave it

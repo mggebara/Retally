@@ -2451,9 +2451,14 @@ The caveats of 3.5 apply unchanged.
   specifications, Labandeira's sample filters, and Carrera's and
   Bokobza's sample-2 swings.  None is a harness bug the pipeline could
   be patched for without tuning on evaluation papers.
-- (d) Free, harness: a Docker health check before each cell in long
+- (d) ~~Free, harness: a Docker health check before each cell in long
   batches, and an explicit rule (in `task.md`) that a cell agent stops
-  and reports rather than restarting Docker.
+  and reports rather than restarting Docker.~~  Done (2026-11-02):
+  `benchmark/docker_health.py` runs `docker info` (10 s timeout)
+  before every pipeline sandbox execution and records a failure as the
+  transient `docker_unavailable` error kind; `claude_code_task.md`
+  tells the agent to stop and report a `docker run` silent for over
+  ten minutes, uncounted, without restarting Docker.
 - (e) Free: the Douenne seeded answering agent's own account of its
   specification choices should be written into the evidence bundle if
   it exists in the oracle store, so the "from memory" explanation can be
