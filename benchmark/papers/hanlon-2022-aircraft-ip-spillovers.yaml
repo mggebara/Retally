@@ -372,9 +372,24 @@ notes: >
   engine_data.dta has 85 U.S. / 123 U.S.+U.K. engines with
   ln_hp_per_lbs, matching every printed N.  Years run 1918-1935.  The
   unpacked directory contains the answers (tables/*.tex, the accepted
-  manuscript .tex/.pdf); script_free_copy keeps .tex and .pdf, so
-  independent and blind runs rely on the prompt's instruction not to
+  manuscript .tex/.pdf).  Up to 2026-11-01 script_free_copy kept the
+  four manuscript / online-appendix PDFs (1 paper/MS20201110_accepted.pdf,
+  _main.pdf, _online_appendix.pdf; 2 appendix/MS20201110_online_appendix.pdf),
+  so independent and blind runs relied on the prompt's instruction not to
   read them.
+
+  Strip-rule update (2026-11-01, with brouwer-2022-teaching-norms): PDFs
+  with a page that reads as a regression table are now withheld, so the
+  four PDFs above leave the independent / blind mount (MS20201110_main.tex
+  is withheld as a regression table on current main too).  Every earlier
+  independent / blind run of this entry, up to and including the
+  2026-11-01-a agent sample and the run2 oracle sample, had them on the
+  mount; the agents' own reports for those cells say they read only the
+  .dta files.  Still on the mount as of this change: the split esttab
+  fragments under 3 replication files/tables/ (Table1_R.tex, Table1_N.tex,
+  Table4_R.tex, ...: coefficient, SE and observation rows with no tabular
+  or Observations label), which print the pinned Table 1 and Table 4
+  values; no strip rule catches them yet.
 
   First run 2026-10-21 (Phase 3.2 evaluation pass; main 0492c17, after
   the content-aware strip rule and the printed-precision floor; Opus

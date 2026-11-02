@@ -110,13 +110,17 @@ downloaded package (`benchmark/strip_rule.py`, applied by
   coefficient/`(se)` columns, `.xlsx` whose strings read the same way;
   result macros — a `.tex` made mostly of numeric `\newcommand` / `\def`
   definitions (the in-text numbers a script wrote for the paper; Carrera
-  2022 ships four).
+  2022 ships four); a
+  `.pdf` with a page carrying three regression-table markers (the
+  accepted manuscript and online appendix EJ packages ship as
+  `1 paper/*_accepted.pdf`, `2 appendix/*.pdf`; README and codebook PDFs
+  stay).
 - **Byte copies** of a file stripped by name.
 
 Evidence must be strong (several independent markers) or the file
 stays.  Data formats (`.dta .RData .rds .sav .parquet`, shapefiles, …)
-are never stripped and never content-tested, binary files are not
-content-tested, a plain `.csv` (figure data included) is kept, and a
+are never stripped and never content-tested, other binary files
+(spreadsheets and PDFs aside) are not content-tested, a plain `.csv` (figure data included) is kept, and a
 `.tex` manuscript (`\documentclass`) stays unless one of its own
 tabulars is a regression table.  Directory names (`output/`, `tables/`)
 play no part.  Summary-statistics tables without regression markers

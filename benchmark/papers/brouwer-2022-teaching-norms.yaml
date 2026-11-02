@@ -1,0 +1,444 @@
+# Original paper: Brouwer, T., Galeotti, F., & Villeval, M. C. (2022).
+#   "Teaching Norms: Direct Evidence of Parental Transmission." The
+#   Economic Journal, 133(650), 872-887 (Advance Access 2022-10-04; print
+#   issue dated 2023).  doi:10.1093/ej/ueac074
+#
+# Reproduction report: Brun, M., De Vera, M., Kadriu, V., & Mierisch, F.
+#   (2024). "Reproduction of 'Teaching Norms: Direct Evidence of Parental
+#   Transmission'." I4R Discussion Paper No. 106 (March 2024; Vienna
+#   Replication Games; I4R First Meta Database team 83, rows 4164-4448).
+#   Verdict: computationally reproducible.  The meta-database records
+#   computational_reproduction = 1, perfect_reproduction = Yes,
+#   why_not_perfect_repro = "Perfect Reproduction".  DP 106 section 3:
+#   "We are generally capable of replicating the results of the authors
+#   when we use the vector of control variables used by the authors"; its
+#   Table 3 reprints Table 2 cell for cell from the package.  The minor
+#   issues it lists are about the package, not the numbers: variables not
+#   lower-cased or value-labelled, no variable-construction code at first
+#   (the authors sent it later), and controls that differ from the
+#   pre-registration (the paper adds Morning and Witness).  All 285 rows
+#   are robustness variants: pre-registered, extended or no controls,
+#   own-child-only samples, and the appendix tables A6/A7/A9/A10.
+#   DP 106 concludes that every result is "robust to our changes in the
+#   model specification".
+#
+# Why this paper:
+#   1. Small Stata package (4.6 MB zip, data 0.4 MB): one field-experiment
+#      file (601 rows) in .dta and .csv, one do-file, a codebook.
+#   2. The headline is one main table (Table 2: four linear probability
+#      models with school-clustered SEs) of simple dummy regressions, so a
+#      blind reproduction is testable from the paper's description alone.
+#   3. The open HAL text is the accepted manuscript: it is text-identical
+#      to the package's accepted PDF, and its Table 2 equals every I4R
+#      o_coeff / o_std_err for Table 2.
+#
+# What original_claims pins: the Child, VH and Child x VH coefficients of
+#   Table 2 with their clustered SEs (Child and Child x VH in all four
+#   columns; VH only in the controlled columns 2 and 4, since in columns 1
+#   and 3 it is a plain difference in rates), plus the observation counts
+#   of column 2 (one target with missing gender dropped) and column 3.
+#   The abstract states no numbers.
+#
+# Strip rule.  The package ships the accepted manuscript and online
+#   appendix as PDFs ("1 paper/EJ MS20210782_accepted.pdf", "2
+#   appendices/EJ_MS20210782_online_appendix.pdf").  The content-aware
+#   rule did not content-test PDFs, so both were left on the
+#   independent/blind mount with Table 2 printed in them.
+#   benchmark/strip_rule.py now strips a PDF that has a page reading as a
+#   regression table (added with this entry); see notes.
+
+id: brouwer-2022-teaching-norms
+i4r_report_url: https://www.econstor.eu/bitstream/10419/286490/1/I4R-DP106.pdf
+# Target language for regeneration (the original is Stata; Retally
+# generates R and reads master.dta / master.csv).
+language: r
+outcome_label: reproducible
+split: holdout
+# Contamination bookkeeping (checked 2026-11-01).
+#
+# Paper: first public text is the HAL preprint hal-03725575 (submitted
+# version dated 17 July 2022; HAL API submittedDate 2022-07-17).  HAL also
+# lists two earlier seminar notices, "Teaching Norms in the Street: An
+# Experimental Study" (halshs-02509758, GAEL Grenoble, 2019-12-20;
+# halshs-02509764, MPI Bonn, 2020-01-08).  Both are submitType "notice",
+# with no file, so they are not public texts.  No GATE, IZA or CESifo
+# working paper was found (web search).  EJ Advance Access 2022-10-04
+# (Crossref published-online); print EJ 133(650), 2023.
+#
+# Package: Zenodo record 7045559, created and published 2022-09-03
+# (Zenodo API created / publication_date).  It is the only version
+# (concept 7045558), so no version pin is needed.
+publication_date: "2022-07-17"
+package_release_date: "2022-09-03"
+
+paper:
+  # Accepted manuscript (19 August 2022), deposited on HAL by the authors
+  # as hal-03793652 (26 pp., main text only).  Checked 2026-11-01: 206
+  # application/pdf, %PDF magic.  Its pymupdf text equals the package's
+  # "EJ MS20210782_accepted.pdf" line for line, apart from one added
+  # "Forthcoming in The Economic Journal" line.  The July submitted version
+  # (https://cnrs.hal.science/hal-03725575v1/file/Teaching_Children__HAL_17July22.pdf,
+  # 57 pp. with appendices) prints the same Table 2.  OUP article-pdf
+  # returned 403.
+  source: https://hal.science/hal-03793652v1/document
+  title: "Teaching Norms: Direct Evidence of Parental Transmission"
+  authors:
+    - Thijs Brouwer
+    - Fabio Galeotti
+    - Marie Claire Villeval
+
+dataset:
+  source: https://zenodo.org/records/7045559
+  access_notes: >
+    Zenodo record 7045559, open access, one version: ONE file, "Data
+    Replication Package EJ MS20210782.zip" (4,558,540 bytes; the filename
+    has spaces).  The zip has a top folder "Data Replication Package EJ
+    MS20210782/" plus a macOS __MACOSX/ tree of "._*" AppleDouble stubs,
+    and there are no nested archives.  The top folder holds three
+    subfolders.
+    "1 paper/" is the LaTeX source of the accepted manuscript
+    (EJ_MS20210782_main.tex, _introduction/_design/_results/_conclusion
+    .tex, References.bib, Exhibits/EJ_MS20210782_table1.tex, _table2.tex,
+    lpm.tex, _figure1.tex, Figures/*.pdf|png), and the accepted manuscript
+    PDF "EJ MS20210782_accepted.pdf", 19 Aug 2022, which prints Table 2.
+    "2 appendices/" holds EJ_MS20210782_online_appendix.pdf.
+    "3 replication package/" holds ReadMe.pdf / ReadMe.docx, which list
+    the files and do not print results, and the folders below.
+    Data/: master.dta and master.csv, the field experiment, 601 rows, one
+    per targeted parent.  survey1 and survey2 (.dta / .csv) are the two
+    online vignette and video studies of the appendix.
+    Do/: Data_analysis_202208.do, one do-file for every table, and
+    variables_codebook.xlsx.  Log/Log_output.log is the full Stata log.
+    Results/: Table1.tex, Table2.tex and TableA2-A14.tex, all esttab
+    output, plus Figure1a/b.pdf.
+    Additional documentation/: design, instructions,
+    IRB, pre-registration (AsPredicted #24270) and eligibility PDFs.
+    The independent/blind script-free copy withholds the following.
+    By name: the do-file and the log.
+    As regression tables: Results/Table1, Table2, TableA4-A10.tex and
+    1 paper/Exhibits table1/table2/lpm.tex.
+    As regression-table PDFs, under the PDF rule added with this entry:
+    the accepted manuscript PDF and the online appendix PDF.
+    The copy keeps the data, codebook, ReadMe, documentation PDFs and the
+    figure PDFs (Figure 1 rates, also printed in the paper).  It also keeps
+    the LaTeX section files, the results prose the paper prints, and
+    Results/TableA2, A3, A11-A14.tex: appendix descriptive tables and
+    vignette/video-study tables with no regression markers, none carrying
+    a Table 2 number.
+
+code_repo:
+  url: https://zenodo.org/records/7045559
+
+original_claims:
+  - description: child_punishment_no_controls
+    value: 0.11
+    claim_type: coefficient
+    standard_error: 0.05
+    sample_size: 400
+    unit: probability of direct punishment (0-1)
+    location: "Table 2, column (1) Punishment, row Child"
+    context: >
+      Table 2 ("Determinants of Punishment Rate (Left) and Helping Rate
+      (Right)"), column (1), row Child.  Pooled OLS linear probability
+      model of Punishment, a dummy equal to 1 if the targeted parent
+      verbally and explicitly confronted the actor about the littering
+      violation, on a Child dummy (the parent was accompanying one or more
+      children, against walking alone), a VH dummy (the Violation + Help
+      scene, in which the actor also drops the contents of a bag after
+      littering) and their interaction, with no other controls.  The
+      sample is the targeted parents in the Violation and Violation + Help
+      scenes; the Help scene, which has no violation, is excluded.  Field
+      experiment near 30 public elementary schools in Lyon, May-June 2019.
+      Standard errors clustered at the school level.
+  - description: child_punishment_controls
+    value: 0.12
+    claim_type: coefficient
+    standard_error: 0.04
+    sample_size: 399
+    unit: probability of direct punishment (0-1)
+    location: "Table 2, column (2) Punishment, row Child"
+    context: >
+      Table 2, column (2), row Child.  Same punishment model and sample as
+      child_punishment_no_controls, adding the controls Male Target
+      (father targeted), Male Actor (the male actor played the scene),
+      Morning, Witness (another non-targeted adult was observing and able
+      to intervene), Rich area (the school's IRIS area median income is
+      above the city-wide median), Rain and Hot.  One observation is
+      dropped for missing data on the target's gender.  School-clustered
+      standard errors.
+  - description: child_helping_no_controls
+    value: 0.21
+    claim_type: coefficient
+    standard_error: 0.05
+    sample_size: 401
+    unit: probability of helping (0-1)
+    location: "Table 2, column (3) Helping, row Child"
+    context: >
+      Table 2, column (3), row Child.  Pooled OLS linear probability model
+      of Helping, a dummy equal to 1 if the targeted parent picked up at
+      least one of the dropped items (or asked the child to), on Child, VH
+      and Child x VH, with no other controls.  The sample is the parents in
+      the Help and Violation + Help scenes; the Violation scene, which has
+      no helping opportunity, is excluded.  School-clustered standard
+      errors.
+  - description: child_helping_controls
+    value: 0.22
+    claim_type: coefficient
+    standard_error: 0.06
+    sample_size: 400
+    unit: probability of helping (0-1)
+    location: "Table 2, column (4) Helping, row Child"
+    context: >
+      Table 2, column (4), row Child.  Same helping model and sample as
+      child_helping_no_controls, with the controls of
+      child_punishment_controls (Male Target, Male Actor, Morning, Witness,
+      Rich area, Rain, Hot).  The target with missing gender is dropped.
+      School-clustered standard errors.
+  - description: vh_punishment_controls
+    value: -0.04
+    claim_type: coefficient
+    standard_error: 0.03
+    sample_size: 399
+    unit: probability of direct punishment (0-1)
+    location: "Table 2, column (2) Punishment, row VH"
+    context: >
+      Table 2, column (2), row VH: the Violation + Help scene dummy in the
+      controlled punishment regression of child_punishment_controls.  It
+      is the change in the punishment rate of parents alone when a helping
+      opportunity follows the violation.
+  - description: vh_helping_controls
+    value: -0.10
+    claim_type: coefficient
+    standard_error: 0.04
+    sample_size: 400
+    unit: probability of helping (0-1)
+    location: "Table 2, column (4) Helping, row VH"
+    context: >
+      Table 2, column (4), row VH: the Violation + Help scene dummy in the
+      controlled helping regression of child_helping_controls.  It is the
+      change in the helping rate of parents alone when the actor littered
+      before dropping the items (indirect punishment).
+  - description: child_x_vh_punishment_no_controls
+    value: -0.13
+    claim_type: coefficient
+    standard_error: 0.04
+    sample_size: 400
+    unit: probability of direct punishment (0-1)
+    location: "Table 2, column (1) Punishment, row Child x VH"
+    context: >
+      Table 2, column (1), row Child x VH: the interaction of the Child and
+      Violation + Help dummies in the uncontrolled punishment regression of
+      child_punishment_no_controls.
+  - description: child_x_vh_punishment_controls
+    value: -0.12
+    claim_type: coefficient
+    standard_error: 0.04
+    sample_size: 399
+    unit: probability of direct punishment (0-1)
+    location: "Table 2, column (2) Punishment, row Child x VH"
+    context: >
+      Table 2, column (2), row Child x VH, in the controlled punishment
+      regression of child_punishment_controls.
+  - description: child_x_vh_helping_no_controls
+    value: -0.06
+    claim_type: coefficient
+    standard_error: 0.07
+    sample_size: 401
+    unit: probability of helping (0-1)
+    location: "Table 2, column (3) Helping, row Child x VH"
+    context: >
+      Table 2, column (3), row Child x VH, in the uncontrolled helping
+      regression of child_helping_no_controls.  This is the test of the
+      indirect-punishment conjecture (Result 3: not significant).
+  - description: child_x_vh_helping_controls
+    value: -0.07
+    claim_type: coefficient
+    standard_error: 0.08
+    sample_size: 400
+    unit: probability of helping (0-1)
+    location: "Table 2, column (4) Helping, row Child x VH"
+    context: >
+      Table 2, column (4), row Child x VH, in the controlled helping
+      regression of child_helping_controls.
+  - description: observations_punishment_controls
+    value: 399
+    claim_type: other
+    unit: targeted parents
+    location: "Table 2, column (2), Observations"
+    context: >
+      Observations in the controlled punishment regression (Table 2,
+      column 2): parents in the Violation and Violation + Help scenes with
+      non-missing controls.
+  - description: observations_helping_no_controls
+    value: 401
+    claim_type: other
+    unit: targeted parents
+    location: "Table 2, column (3), Observations"
+    context: >
+      Observations in the uncontrolled helping regression (Table 2,
+      column 3): parents in the Help and Violation + Help scenes.
+
+# DP 106 Table 3 ("Replication of Table 2") reprints the paper's Table 2
+# from the package, every coefficient, SE, N (400 / 399 / 401 / 400), the
+# clusters (30), R2 and F identical; the reproduced values below are its
+# cells.  The meta-database's 12 Table 2 rows (4174, 4203, 4223, 4296,
+# 4337, 4345, 4372, 4411, 4412, 4421, 4423, 4444) are all "Change
+# controls" robustness rows against columns 2 and 4.  Under the
+# pre-registered controls (DP 106 Tables 4-5): Child 0.11 / 0.21,
+# Child x VH -0.13 / -0.07, VH -0.03 / -0.10.  Under extended controls:
+# Child 0.12 / 0.25, Child x VH -0.13 / -0.10, VH -0.04 / -0.12.  These
+# are not reproductions of the printed cells, so they are not used as
+# reproduced_value (as in leeson-2022).
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: 0.11
+    outcome: matches
+    notes: DP 106 Table 3 col 1, Child 0.11 (0.05).
+  - claim_id: 1
+    reproduced_value: 0.12
+    outcome: matches
+    notes: DP 106 Table 3 col 2, Child 0.12 (0.04); meta-db robustness rows 0.11-0.12 under other controls.
+  - claim_id: 2
+    reproduced_value: 0.21
+    outcome: matches
+    notes: DP 106 Table 3 col 3, Child 0.21 (0.05).
+  - claim_id: 3
+    reproduced_value: 0.22
+    outcome: matches
+    notes: DP 106 Table 3 col 4, Child 0.22 (0.06); meta-db robustness rows 0.21-0.25 under other controls.
+  - claim_id: 4
+    reproduced_value: -0.04
+    outcome: matches
+    notes: DP 106 Table 3 col 2, VH -0.04 (0.03); meta-db robustness rows -0.03 / -0.04.
+  - claim_id: 5
+    reproduced_value: -0.10
+    outcome: matches
+    notes: DP 106 Table 3 col 4, VH -0.10 (0.04); meta-db robustness rows -0.10 / -0.12.
+  - claim_id: 6
+    reproduced_value: -0.13
+    outcome: matches
+    notes: DP 106 Table 3 col 1, Child x VH -0.13 (0.04).
+  - claim_id: 7
+    reproduced_value: -0.12
+    outcome: matches
+    notes: DP 106 Table 3 col 2, Child x VH -0.12 (0.04); meta-db robustness rows -0.13 under other controls.
+  - claim_id: 8
+    reproduced_value: -0.06
+    outcome: matches
+    notes: DP 106 Table 3 col 3, Child x VH -0.06 (0.07).
+  - claim_id: 9
+    reproduced_value: -0.07
+    outcome: matches
+    notes: DP 106 Table 3 col 4, Child x VH -0.07 (0.08); meta-db robustness rows -0.07 / -0.10.
+  - claim_id: 10
+    reproduced_value: 399
+    outcome: matches
+    notes: DP 106 Table 3 col 2, Observations 399.
+  - claim_id: 11
+    reproduced_value: 401
+    outcome: matches
+    notes: DP 106 Table 3 col 3, Observations 401.
+
+notes: >
+  Headline finding: in a natural field experiment near 30 Lyon elementary
+  schools (601 targeted parents, May-June 2019), parents walking with
+  their child are more likely to confront a litterer directly (Table 2
+  col 2: Child 0.12, SE 0.04; raw rates 22 vs 11 percent, Figure 1a) and
+  more likely to help a stranger who drops their belongings (col 4: Child
+  0.22, SE 0.06; 47 vs 26 percent).  They are not more likely to punish
+  indirectly by withholding help (col 4: Child x VH -0.07, SE 0.08, not
+  significant).  With a helping opportunity, direct punishment by parents
+  with children falls (Child x VH -0.12, SE 0.04, col 2), which the
+  authors read as greater fear of retaliation.
+
+  Curation pass (2026-11-01).  Pinned 12 claims, all from Table 2: Child
+  in columns 1-4, VH in columns 2 and 4, Child x VH in columns 1-4 (each
+  with its school-clustered SE in standard_error, printed to two
+  decimals, so the printed-precision floor is +/-0.005), and two
+  observation counts.  Column 2 (punishment, controls) has 399 and
+  column 3 (helping, no controls) has 401; columns 1 and 4 have 400, and
+  all four have 30 school clusters.  Columns 1 and 3 have no controls
+  and are saturated in Child x VH, so their coefficients are differences
+  in the Figure 1 rates printed in the paper (0.11, 0.22, 0.07, 0.05 and
+  0.26, 0.47, 0.16, 0.31).  A model that reads Figure 1 can derive them;
+  the controlled columns 2 and 4 are not derivable that way.  Left out:
+  the VH rows of columns 1 and 3 (also pure rate differences), the
+  control coefficients, constants, R2 (0.04 / 0.07 / 0.06 / 0.13) and F
+  (7.74 / 5.17 / 7.36 / 6.45), Table 1 summary statistics, the in-text
+  chi-squared tests (4.39, 9.82, 6.26, 12.37, 0.98), the witness
+  confidence intervals, and everything in the appendix (logit marginal
+  effects, Table A7 sample restrictions, A9/A10 heterogeneity, vignette
+  and video studies).
+
+  Paper version check (brief step 1).  Table 2 in the July 2022 submitted
+  version (hal-03725575) and in the August 2022 accepted manuscript
+  (hal-03793652, the paper.source) is identical.  Both equal the six
+  distinct Table 2 o_coeff / o_std_err pairs of the I4R meta-database:
+  0.12 (0.04), 0.22 (0.06), -0.04 (0.03), -0.10 (0.04), -0.12 (0.04),
+  -0.07 (0.08).  The OUP typeset version could not be fetched (403); the
+  accepted manuscript is what the EJ typeset.
+
+  Independent cross-check (not the package code: pandas / statsmodels OLS
+  with school-clustered SEs on master.csv).  Reproduces every pinned value
+  at the printed precision.  Col 1: Child 0.1100 (0.0481), VH -0.0400
+  (0.0312), Child x VH -0.1300 (0.0446), N 400.  Col 2: 0.1161 (0.0441),
+  -0.0386 (0.0285), -0.1223 (0.0429), N 399.  Col 3: 0.2126 (0.0546),
+  -0.0974 (0.0453), -0.0626 (0.0710), N 401.  Col 4: 0.2214 (0.0568),
+  -0.1035 (0.0436), -0.0677 (0.0772), N 400.  30 clusters throughout;
+  R2 0.043 / 0.068 / 0.060 / 0.131.
+
+  Package structure (package-only facts; never in contexts).  master.csv /
+  master.dta columns include School (30 school codes, e.g. "CB"), day,
+  Child (0/1), scene and Condition (strings), Violation, ViolationHelp,
+  Help (scene dummies), Punishment, Helping, HelpingParents, male (target
+  is a father; one missing), hugo (male actor), Morning, witness, rich,
+  Rain, Hot, inc_Q, povrate, response2, OwnChild, numkids and child-age
+  dummies.  Table 2 in the do-file: `reg Punishment
+  i.Child##i.ViolationHelp [$controls] if Help==0, cluster(School)` and
+  `reg Helping i.Child##i.ViolationHelp [$controls] if Violation==0,
+  cluster(School)`, with $controls = i.male i.hugo i.Morning i.witness
+  i.rich i.Rain i.Hot, written by esttab to Results/Table2.tex.  The
+  do-file sets a hard-coded global PATH with Windows backslash paths
+  ("$PATH\Data") and needs esttab (ssc).
+
+  Strip-rule change made with this entry.  benchmark/strip_rule.py now
+  content-tests .pdf files with pymupdf, the pipeline's own PDF parser.
+  A PDF is withheld as regression-table when one page carries three of
+  the five regression-table markers the .tex test counts: Observations,
+  an R2 row, a standard-errors note, a significance-star legend, and
+  three or more parenthesised SEs.  There is no table-tool shortcut, and
+  unreadable PDFs are kept.  Here it withholds the accepted manuscript
+  PDF and the online appendix PDF.  Over the 97 PDFs in the 18 locally
+  cached packages, every non-manuscript PDF (README, codebook, IRB,
+  instructions, pre-registration) scores 0 or 1 and is kept.  The
+  manuscript and appendix PDFs of dincecco-2022 (4) and hanlon-2022 (3)
+  are newly withheld too; hanlon-2022's notes recorded that leak.
+
+  What was read.  Both HAL PDFs (main text and Table 2; the July
+  version's appendix skimmed); I4R DP 106 (EconStor PDF, sections 2-4 and
+  Tables 3-5); the meta-database's 285 rows; Zenodo API metadata; the
+  whole package listing, the ReadMe PDF, the do-file's Table 2 block, the
+  master.csv header, and the kept Results/*.tex tables (to confirm none
+  carries a Table 2 number).
+
+  What could not be verified.  The OUP typeset PDF (403), though the
+  accepted manuscript is text-identical to the package's accepted PDF.
+  The do-file was not run.  DP 106 says the authors later sent I4R the
+  variable-construction code and "incorporated it into the replication
+  package".  Zenodo 7045559 has a single version (2022-09-03) without
+  that code, so the update, if any, lives elsewhere (perhaps the EJ's own
+  copy or I4R's Zenodo 8114738); it does not affect the analysis data.
+
+  Curation check (2026-11-01, zero cost).  `benchmark.runner --llm-oracle
+  curation-check --only brouwer-2022-teaching-norms`, run once in each
+  of --mode blind and --mode independent.  Both cells stopped as
+  llm_answer_pending on the first call, the methodology summary.  That
+  prompt embeds the paper text, Table 2 included, by design; it carried
+  no package script text, file names or claim tokens.  The project
+  downloader fetched Zenodo 7045559, and the script-free copy withholds
+  18 files (16 plus two __MACOSX stubs); no Table 2 cell occurs in what
+  it keeps.  The blind code-generation prompt for these claims is
+  checked by tests/test_blind_prompt.py (passes).
+
+  Original analysis in Stata (one do-file); language is r, the
+  reproduction target.
