@@ -40,6 +40,7 @@
 |---|---|---|---|
 | `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) |
 | `pipeline-desktop-opus` | [13/13](seeded/pipeline-desktop-opus/20261102T100356Z/CELL.md) (20261102T100356Z) | [13/13](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) (20261102T141403Z) | [13/13](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) (20261102T095147Z) |
+| `pipeline-desktop-opus-run2` | [13/13](seeded/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) (20261102T152052Z) | [13/13](independent/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) (20261102T151132Z) | [13/13](blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) (20261102T151132Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
 
@@ -51,16 +52,16 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 | Cell | Claim | Reproduced | Paper | Band | Error / band | Verdict |
 |---|---|---|---|---|---|---|
+| [independent/pipeline-desktop-opus-run2/20261102T151132Z](independent/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) | `excess_males_sum_tableC1_col5` | 1.62559 | 1.406 | ±0.463 (se_band) | 0.474 | PASS |
 | [independent/pipeline-desktop-opus/20261102T141403Z](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) | `excess_males_annual_tableC1_col6` | 1.36704 | 1.537 | ±0.412 (se_band) | 0.413 | PASS |
 | [independent/pipeline-desktop-opus/20261102T141403Z](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) | `n_obs_sum_tableC1_col5` | 9258 | 9282 | ±92.82 (relative) | 0.259 | PASS |
 | [independent/pipeline-desktop-opus/20261102T141403Z](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) | `n_obs_annual_tableC1_col6` | 27774 | 27846 | ±278.46 (relative) | 0.259 | PASS |
 | [independent/pipeline-desktop-opus/20261102T141403Z](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) | `excess_males_sum_tableC1_col5` | 1.30546 | 1.406 | ±0.463 (se_band) | 0.217 | PASS |
+| [independent/pipeline-desktop-opus-run2/20261102T151132Z](independent/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) | `mate_competition_table1_col6` | 0.157899 | 0.155 | ±0.019 (se_band) | 0.153 | PASS |
 | [blind/pipeline-desktop-opus/20261102T095147Z](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) | `mate_competition_table1_col6` | 0.157899 | 0.155 | ±0.019 (se_band) | 0.153 | PASS |
 | [independent/pipeline-desktop-opus/20261102T141403Z](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) | `mate_competition_table1_col6` | 0.157891 | 0.155 | ±0.019 (se_band) | 0.152 | PASS |
+| [blind/pipeline-desktop-opus-run2/20261102T151132Z](blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) | `mate_competition_table1_col6` | 0.157891 | 0.155 | ±0.019 (se_band) | 0.152 | PASS |
 | [blind/pipeline-desktop-opus/20261102T095147Z](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) | `excess_males_annual_tableC1_col6` | 1.48128 | 1.537 | ±0.412 (se_band) | 0.135 | PASS |
-| [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) | `mate_competition_table1_col6` | 0.157354 | 0.155 | ±0.019 (se_band) | 0.124 | PASS |
-| [blind/claude-code/2026-11-02-b](blind/claude-code/2026-11-02-b/CELL.md) | `mate_competition_table1_col6` | 0.157354 | 0.155 | ±0.019 (se_band) | 0.124 | PASS |
-| [independent/claude-code/2026-11-02-a](independent/claude-code/2026-11-02-a/CELL.md) | `mate_competition_table1_col6` | 0.157325 | 0.155 | ±0.019 (se_band) | 0.122 | PASS |
 
 ### Declared deviations
 
@@ -102,6 +103,10 @@ _None._
 
 [`seeded/pipeline-desktop-opus/20261102T100356Z/CELL.md`](seeded/pipeline-desktop-opus/20261102T100356Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-02T10:03:56Z; from `pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json`; evidence complete.
 
+### seeded · pipeline-desktop-opus-run2 · 20261102T152052Z
+
+[`seeded/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md`](seeded/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-02T15:20:52Z; from `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`; evidence complete.
+
 ### independent · claude-code · 2026-11-02-a
 
 [`independent/claude-code/2026-11-02-a/CELL.md`](independent/claude-code/2026-11-02-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-02T09:51:00Z; from `claude-code-6papers-all-modes-2026-11-02.json`; evidence complete.
@@ -114,6 +119,10 @@ _None._
 
 [`independent/pipeline-desktop-opus/20261102T141403Z/CELL.md`](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) — final 13/13, re-scored 13/13; first scored 11/13; executions 3; 2026-11-02T14:14:03Z; from `pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-run2 · 20261102T151132Z
+
+[`independent/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-02T15:11:32Z; from `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`; evidence complete.
+
 ### blind · claude-code · 2026-11-02-a
 
 [`blind/claude-code/2026-11-02-a/CELL.md`](blind/claude-code/2026-11-02-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 3; 2026-11-02T09:51:10Z; from `claude-code-6papers-all-modes-2026-11-02.json`; evidence complete.
@@ -125,4 +134,8 @@ _None._
 ### blind · pipeline-desktop-opus · 20261102T095147Z
 
 [`blind/pipeline-desktop-opus/20261102T095147Z/CELL.md`](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-02T09:51:47Z; from `pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-run2 · 20261102T151132Z
+
+[`blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md`](blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-02T15:11:32Z; from `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`; evidence complete.
 

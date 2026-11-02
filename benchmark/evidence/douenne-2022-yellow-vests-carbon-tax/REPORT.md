@@ -41,6 +41,7 @@
 |---|---|---|---|
 | `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [12/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[12/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) |
 | `pipeline-desktop-opus` | [5/13](seeded/pipeline-desktop-opus/20261102T144245Z/CELL.md) (20261102T144245Z) | [13/13](independent/pipeline-desktop-opus/20261102T143152Z/CELL.md) (20261102T143152Z) | [12/13](blind/pipeline-desktop-opus/20261102T142733Z/CELL.md) (20261102T142733Z) |
+| `pipeline-desktop-opus-run2` | [6/13](seeded/pipeline-desktop-opus-run2/20261102T191457Z/CELL.md) (20261102T191457Z) | [13/13](independent/pipeline-desktop-opus-run2/20261102T153300Z/CELL.md) (20261102T153300Z) | [13/13](blind/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) (20261102T152052Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
 
@@ -54,19 +55,21 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 |---|---|---|---|---|---|---|
 | [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) | `winner_x_initial_win_belief_table4_col3` | 0.15118 | 0.08 | ±0.079 (se_band) | 0.901 | PASS |
 | [seeded/pipeline-desktop-opus/20261102T144245Z](seeded/pipeline-desktop-opus/20261102T144245Z/CELL.md) | `predicted_winner_believes_wins_table4_col4` | 0.149585 | 0.153 | ±0.00306 (relative) | 1.116 | FAIL |
+| [seeded/pipeline-desktop-opus-run2/20261102T191457Z](seeded/pipeline-desktop-opus-run2/20261102T191457Z/CELL.md) | `predicted_winner_believes_wins_table4_col4` | 0.149585 | 0.153 | ±0.00306 (relative) | 1.116 | FAIL |
 | [blind/claude-code/2026-11-02-b](blind/claude-code/2026-11-02-b/CELL.md) | `initial_acceptance_believes_not_lose_table4_col1` | 0.231724 | 0.306 | ±0.066 (se_band) | 1.125 | FAIL |
+| [seeded/pipeline-desktop-opus-run2/20261102T191457Z](seeded/pipeline-desktop-opus-run2/20261102T191457Z/CELL.md) | `predicted_winner_heterogeneity_table4_col3` | 0.241792 | 0.246 | ±0.00492 (relative) | 0.855 | PASS |
 | [independent/claude-code/2026-11-02-a](independent/claude-code/2026-11-02-a/CELL.md) | `winner_x_initial_win_belief_table4_col3` | 0.146722 | 0.08 | ±0.079 (se_band) | 0.845 | PASS |
 | [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) | `initial_acceptance_believes_not_lose_table4_col1` | 0.227924 | 0.306 | ±0.066 (se_band) | 1.183 | FAIL |
 | [blind/claude-code/2026-11-02-b](blind/claude-code/2026-11-02-b/CELL.md) | `winner_x_initial_win_belief_table4_col3` | 0.140012 | 0.08 | ±0.079 (se_band) | 0.760 | PASS |
-| [independent/claude-code/2026-11-02-b](independent/claude-code/2026-11-02-b/CELL.md) | `predicted_winner_believes_not_lose_full_sample_table4_col2` | 0.231362 | 0.208 | ±0.035 (se_band) | 0.667 | PASS |
-| [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `initial_acceptance_heterogeneity_table4_col3` | 0.015333 | 0.015 | ±0.0005 (printed_precision) | 0.666 | PASS |
-| [seeded/pipeline-desktop-opus/20261102T144245Z](seeded/pipeline-desktop-opus/20261102T144245Z/CELL.md) | `predicted_winner_believes_not_lose_table4_col1` | 0.2725 | 0.269 | ±0.00538 (relative) | 0.651 | PASS |
-| [blind/pipeline-desktop-opus/20261102T142733Z](blind/pipeline-desktop-opus/20261102T142733Z/CELL.md) | `believes_effective_on_approval_iv_table8_col1` | 0.177377 | 0.416 | ±0.168 (se_band) | 1.420 | FAIL |
+| [independent/pipeline-desktop-opus-run2/20261102T153300Z](independent/pipeline-desktop-opus-run2/20261102T153300Z/CELL.md) | `predicted_winner_believes_not_lose_full_sample_table4_col2` | 0.232059 | 0.208 | ±0.035 (se_band) | 0.687 | PASS |
+| [independent/pipeline-desktop-opus-run2/20261102T153300Z](independent/pipeline-desktop-opus-run2/20261102T153300Z/CELL.md) | `initial_acceptance_heterogeneity_table4_col3` | 0.074335 | 0.015 | ±0.087 (se_band) | 0.682 | PASS |
 
 ### Declared deviations
 
 - [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) (13/13)
   - Hmisc/memisc 'labelled'/'.item' column classes were stripped to plain vectors (memisc is not installed); numeric memisc items such as diplome4 and taille_agglo therefore enter as numeric regressors.
+- [seeded/pipeline-desktop-opus-run2/20261102T191457Z](seeded/pipeline-desktop-opus-run2/20261102T191457Z/CELL.md) (6/13; failed: `initial_acceptance_heterogeneity_table4_col3`, `yellow_vests_supporter_heterogeneity_table4_col3`, `winner_x_initial_acceptance_table4_col3`, `winner_x_yellow_vests_supporter_table4_col3`, `winner_x_initial_win_belief_table4_col3`, `predicted_winner_believes_wins_table4_col4`, `believes_effective_on_approval_iv_table8_col1`)
+  - Yellow Vests supporter dummy defined as "supports" or "is part of" the movement; exact definition not given in the provided text
 - [independent/claude-code/2026-11-02-a](independent/claude-code/2026-11-02-a/CELL.md) (13/13)
   - Online-appendix control list unavailable; controls reconstructed from variable names: incomes = continuous piecewise-linear in both adults' income percentiles (kinks at 20 and 70); estimated gains = simule_gain and its square; sociodemographics = sex, age brackets, employment status, socio-professional category, region, education (4), town size, number of adults, household size, number aged 14+, smoker, main news source.
   - Other motives: Table 4 uses the progressivity belief (prog_na, with not-asked as a category); Table 6 uses effectiveness (Oui/Non/NSP) and progressivity beliefs; Table 8 uses the initial win/lose category (progressivity omitted because it was asked only of the apres_modifs half, collinear with the effectiveness-information instrument).
@@ -102,16 +105,19 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
-- seeded: `believes_effective_on_approval_iv_table8_col1` — pipeline 0/1, agent 1/1
-- seeded: `initial_acceptance_heterogeneity_table4_col3` — pipeline 0/1, agent 1/1
-- seeded: `predicted_winner_believes_wins_table4_col4` — pipeline 0/1, agent 1/1
-- seeded: `predicted_winner_heterogeneity_table4_col3` — pipeline 0/1, agent 1/1
-- seeded: `winner_x_initial_acceptance_table4_col3` — pipeline 0/1, agent 1/1
-- seeded: `winner_x_initial_win_belief_table4_col3` — pipeline 0/1, agent 1/1
-- seeded: `winner_x_yellow_vests_supporter_table4_col3` — pipeline 0/1, agent 1/1
-- seeded: `yellow_vests_supporter_heterogeneity_table4_col3` — pipeline 0/1, agent 1/1
-- blind: `believes_effective_on_approval_iv_table8_col1` — pipeline 0/1, agent 2/2
-- blind: `initial_acceptance_believes_not_lose_table4_col1` — pipeline 1/1, agent 0/2
+- seeded: `believes_effective_on_approval_iv_table8_col1` — pipeline 0/2, agent 1/1
+- seeded: `initial_acceptance_heterogeneity_table4_col3` — pipeline 0/2, agent 1/1
+- seeded: `predicted_winner_believes_wins_table4_col4` — pipeline 0/2, agent 1/1
+- seeded: `winner_x_initial_acceptance_table4_col3` — pipeline 0/2, agent 1/1
+- seeded: `winner_x_initial_win_belief_table4_col3` — pipeline 0/2, agent 1/1
+- seeded: `winner_x_yellow_vests_supporter_table4_col3` — pipeline 0/2, agent 1/1
+- seeded: `yellow_vests_supporter_heterogeneity_table4_col3` — pipeline 0/2, agent 1/1
+- blind: `initial_acceptance_believes_not_lose_table4_col1` — pipeline 2/2, agent 0/2
+
+Pass rates at least 50 points apart (not unanimous):
+
+- seeded: `predicted_winner_heterogeneity_table4_col3` — pipeline 1/2, agent 1/1
+- blind: `believes_effective_on_approval_iv_table8_col1` — pipeline 1/2, agent 2/2
 
 ## Cells
 
@@ -122,6 +128,10 @@ Claims where, in the same mode, one reproducer family passed in every run and th
 ### seeded · pipeline-desktop-opus · 20261102T144245Z
 
 [`seeded/pipeline-desktop-opus/20261102T144245Z/CELL.md`](seeded/pipeline-desktop-opus/20261102T144245Z/CELL.md) — final 5/13, re-scored 5/13; first scored 5/13; executions 5; 2026-11-02T14:42:45Z; from `pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json`; evidence complete.
+
+### seeded · pipeline-desktop-opus-run2 · 20261102T191457Z
+
+[`seeded/pipeline-desktop-opus-run2/20261102T191457Z/CELL.md`](seeded/pipeline-desktop-opus-run2/20261102T191457Z/CELL.md) — final 6/13, re-scored 6/13; first scored 5/13; executions 5; 2026-11-02T19:14:57Z; from `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`; evidence complete.
 
 ### independent · claude-code · 2026-11-02-a
 
@@ -135,6 +145,10 @@ Claims where, in the same mode, one reproducer family passed in every run and th
 
 [`independent/pipeline-desktop-opus/20261102T143152Z/CELL.md`](independent/pipeline-desktop-opus/20261102T143152Z/CELL.md) — final 13/13, re-scored 13/13; first scored 12/13; executions 3; 2026-11-02T14:31:52Z; from `pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-run2 · 20261102T153300Z
+
+[`independent/pipeline-desktop-opus-run2/20261102T153300Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261102T153300Z/CELL.md) — final 13/13, re-scored 13/13; first scored 12/13; executions 3; 2026-11-02T15:33:00Z; from `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`; evidence complete.
+
 ### blind · claude-code · 2026-11-02-a
 
 [`blind/claude-code/2026-11-02-a/CELL.md`](blind/claude-code/2026-11-02-a/CELL.md) — final 12/13, re-scored 12/13; first scored 12/13; executions 7; 2026-11-02T14:17:00Z; from `claude-code-6papers-all-modes-2026-11-02.json`; evidence complete.
@@ -146,4 +160,8 @@ Claims where, in the same mode, one reproducer family passed in every run and th
 ### blind · pipeline-desktop-opus · 20261102T142733Z
 
 [`blind/pipeline-desktop-opus/20261102T142733Z/CELL.md`](blind/pipeline-desktop-opus/20261102T142733Z/CELL.md) — final 12/13, re-scored 12/13; first scored 12/13; executions 2; 2026-11-02T14:27:33Z; from `pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-run2 · 20261102T152052Z
+
+[`blind/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md`](blind/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-02T15:20:52Z; from `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`; evidence complete.
 

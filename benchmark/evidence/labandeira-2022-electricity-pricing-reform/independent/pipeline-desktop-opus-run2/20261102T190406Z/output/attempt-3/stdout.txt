@@ -1,0 +1,62 @@
+Candidate expenditure/price variables: gh_elec TotExp ch_elec c_ele c_ele2 g_ele g_ele2 gelectrodom gastos1 gastos2 gastos3 gastos4 gastos5 gastos6 gastos7 gastos8 gastos9 gastos10 gastos11 gastos12 GASTOT GASTMON GASTNOM1 GASTNOM2 GASTNOM3 GASTNOM4 c_ELE c_ELE_ad c_ele_ad g_ELE g_ele_ad g_ELE_ad TotExp_ad lnTotExp_ad lnTotExp TotExp_nd gastmon p_kwh c_elem g_elem lnp_kwh lnc_ELE lnc_ele lng_ele lnc_elem lng_elem lnc_ELE_ad lnc_ele_ad lnTotExp_nd Wgastos1 Wgastos2 Wgastos3 Wgastos4 Wgastos5 Wgastos6 Wgastos7 Wgastos8 Wgastos9 Wgastos10 Wgastos11 Wgastos12 
+Instrument z1 raw coverage (all rows): 0.6738949 
+Instrument z2 raw coverage (all rows): 0.9662563 
+Instrument z3 raw coverage (all rows): 0.6711911 
+DEVIATION: Missing instrument unit values (potatoes, water, fuel) imputed with the region x year x quarter median unit value; the paper's estimation sample (20,872 obs) is far larger than the complete-case instrument sample, so some imputation must have been used
+Obs with T2 defined: 25775 
+Obs after id-year dedup: 25775 
+
+    0     1 
+20859  4916 
+Continuous controls: hhsize rooms surface elderly 
+Categorical controls: educ active tenure old tamamu urban caprov ccaa quarter 
+Missing share lnq : 0 
+Missing share lnp : 0 
+Missing share lny : 0.00628516 
+Missing share hhsize : 0 
+Missing share rooms : 0.0002327837 
+Missing share surface : 0.01792435 
+Missing share elderly : 0 
+Missing share educ : 0 
+Missing share active : 0.1724539 
+Missing share tenure : 0 
+Missing share old : 0.000271581 
+Missing share tamamu : 0 
+Missing share urban : 3.879728e-05 
+Missing share caprov : 0 
+Missing share ccaa : 0 
+Missing share quarter : 0 
+Estimation sample: 20872  households: 10729 
+           Estimate  Std. Error     t value     Pr(>|t|)
+reform -0.120754133 0.019714303  -6.1252043 9.374195e-10
+msr     0.001563079 0.006713073   0.2328411 8.158892e-01
+lnp    -1.039609383 0.024602691 -42.2559213 0.000000e+00
+          Estimate  Std. Error     t value     Pr(>|t|)
+reform -0.15019946 0.020724370  -7.2474799 4.555372e-13
+msr    -0.00131144 0.007137025  -0.1837517 8.542120e-01
+lnp    -1.03278257 0.025215384 -40.9584313 0.000000e+00
+           Estimate  Std. Error    t value     Pr(>|t|)
+reform -0.120754117 0.019714303 -6.1252034 9.374245e-10
+msr     0.001563075 0.006713073  0.2328405 8.158897e-01
+lnp    -0.039609413 0.024602692 -1.6099626 1.074354e-01
+          Estimate  Std. Error    t value     Pr(>|t|)
+reform -0.15019945 0.020724370 -7.2474798 4.555378e-13
+msr    -0.00131144 0.007137024 -0.1837517 8.542119e-01
+lnp    -0.03278259 0.025215384 -1.3001029 1.935953e-01
+iv2 kappa 1.000085 reform -0.06825621 se 0.04224912 lnp 0.4044643 
+iv4 kappa 1.000027 reform -0.1640829 se 0.07513433 lnp -1.237235 
+iv6 kappa 1.000085 reform -0.06825616 se 0.04224913 lnp 1.404465 
+iv8 kappa 1.000027 reform -0.1640829 se 0.07513433 lnp -0.2372343 
+DEVIATION: Used the replication file's constructed variables (lnc_ele, lng_ele, lnp_kwh, lny, lny2, lnp_papas/aguav/gascar, alqui, edif25, SITUACTHOG_j) and its treatment indicator T2 (which also defines the 25,775-obs analysis sample) instead of rebuilding them
+RESULT:reform_consumption_ols_col1=-0.120754
+RESULT:reform_consumption_iv_col2=-0.068256
+RESULT:reform_consumption_fe_col3=-0.150199
+RESULT:reform_consumption_fe_iv_col4=-0.164083
+RESULT:reform_expenditure_ols_col5=-0.120754
+RESULT:reform_expenditure_iv_col6=-0.068256
+RESULT:reform_expenditure_fe_col7=-0.150199
+RESULT:reform_expenditure_fe_iv_col8=-0.164083
+RESULT:price_elasticity_consumption_ols_col1=-1.039609
+RESULT:price_elasticity_consumption_fe_col3=-1.032783
+RESULT:n_obs_table2=20872.000000
+RESULT:n_households_table2=10729.000000

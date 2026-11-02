@@ -1,0 +1,357 @@
+You are refining R code that reproduces results from an econometrics paper.
+The code RAN SUCCESSFULLY but the reproduced values do not match the
+paper's claims within the allowed tolerance.  Identify what is causing
+the gap and adjust the code to close it.
+
+## Paper
+Title: Parties as Disciplinarians: Charisma and
+Methodology: - **Data and outcomes (cross-national analysis):** Party-level expert-survey data from the Democratic Accountability and Linkages Project (DALP, Kitschelt 2013; fielded 2009). *Programmaticness* is the average of two DALP items: how much the party stresses policy positions in campaigns, and how much it appeals to voters' partisan identification. *Personalism* is the single item on how much the party campaigns on its leader's charismatic personality. All items are on a 1–4 scale (1 = "not at all", 4 = "very strongly"). Outcomes stay on this raw 1–4 scale; the paper does not standardise them.
+- **Key regressors:** *Volatility* is the Pedersen Index (average change in party vote-share percentages between two elections), averaged over the four election pairs before 2009, or as many as exist, for each country. Group attachments are measured two ways. *Ethnic party* is binary: a majority of experts report ties to ethnic or linguistic organisations. *Ideological extremism* is continuous (about 0–6): the absolute distance of the party's DALP placement on the 10-point left–right scale from the country mean placement of all parties.
+- **Estimating equations (OLS, cross-section, party p in country i):** For H1, Eq. (4): Outcome_{i,p} = μ + β·Volatility_i + X_{i,p}γ + Z_iθ + u_{i,p}. For H2 and H3, add Group Attachments_{i,p} and Volatility_i × Group Attachments_{i,p}, estimating one model for ethnicity and one for extremism. The models are linear in levels, with no logs.
+- **Controls (preferred specification):** Party-level controls (X) are party size and links to unions, businesses and religious organisations. Country-level controls (Z) are electoral system (plurality / PR / mixed), ballot rules (open / closed / mixed), average district magnitude, political openness, length of democracy, separation of powers, economic development, inequality and ethnolinguistic cleavages (details in Tables C2–C3). There are no fixed effects, since the design is a cross-section.
+- **Inference, sample and reporting:** Standard errors are clustered by country. The estimation sample has 431 party observations from 75 countries, after dropping parties and countries with missing DALP or covariate data (the survey covers 80+ countries). Table 1 reports predicted Personalism and Programmaticness (1–4 scale) at low volatility (25th percentile) and high volatility (75th percentile), plus the differences. Coefficients are in Table D1. Headline results:
+  - Overall: Personalism 2.67 vs 2.97, difference 0.30 (SE 0.06, p<0.01); Programmaticness 3.08 vs 2.97, difference −0.11 (SE 0.05, p<0.05).
+  - Ethnicity, nonethnic vs ethnic parties: Personalism difference 0.35** vs 0.04; Programmaticness difference −0.15* vs 0.03.
+  - Ideology, moderate (distance = 0) vs extremist (distance = 3, about the 75th percentile): Personalism difference 0.53** vs 0.05; Programmaticness difference −0.30** vs 0.08.
+  - Ethnic-minus-nonethnic and extremist-minus-moderate gaps are also reported: Personalism at low volatility 0.31* and 0.15; Programmaticness at high volatility 0.20** and 0.44**.
+- **Robustness (cross-national):** Two- and three-dimensional extremism measures, a group-attachment index that adds union ties, more detailed institutional controls, and commodity terms of trade as a more exogenous volatility proxy (Table D6). These are in Supplemental Appendix Section D; the main text also shows raw scatterplots with linear fits (Figures 3–5).
+- **Brazil RD case study:** Sharp regression discontinuity on Brazilian mayoral elections, 1996–2012, reusing the Klašnja and Titiunik (2017) data. The running variable is the incumbent party's margin of victory at t (its vote share minus its strongest opponent's), with the cutoff at 0. Outcomes at t+1 are whether the party nominates a *Young* candidate, or a *Young and outsider* candidate (candidate-level charisma proxies). Estimation uses local linear polynomials with MSE-optimal bandwidths and robust bias-corrected inference via `rdrobust` (Calonico et al. 2017), defaults (triangular kernel).
+- **RD results (Table 2):**
+  - Young: τ = −0.084, p = 0.040, robust 95% CI [−0.185, −0.005], h = 13.491, b = 24.643, N+ = 527, N− = 559.
+  - Young and outsider: τ = −0.092, p = 0.015, CI [−0.185, −0.020], h = 12.280, b = 22.333, N+ = 501, N− = 523.
+  - Robust CIs with h = b: [−0.172, 0.043] for Young and [−0.194, −0.001] for Young and outsider.
+  - Figure 6 shows binned means with a second-order polynomial fit.
+
+
+## Current Code
+```r
+suppressPackageStartupMessages({
+  library(haven)
+  library(dplyr)
+  library(fixest)
+  library(rdrobust)
+})
+set.seed(42)
+
+base <- "<repo>/.cache/datasets/hollyer_2022_parties_as_disciplinarians.script-free"
+
+res <- list()
+emit <- function(name, val) {
+  if (!is.null(val) && length(val) == 1 && is.finite(val)) res[[name]] <<- val
+}
+
+## ---------------- Cross-national analysis ----------------
+cn <- tryCatch(as.data.frame(zap_labels(read_dta(file.path(base, "cross-national-data.dta")))),
+               error = function(e) NULL)
+
+if (!is.null(cn)) {
+  for (v in names(cn)) if (!is.numeric(cn[[v]])) suppressWarnings(cn[[v]] <- as.numeric(cn[[v]]))
+
+  cat("Summary of key variables:\n")
+  print(summary(cn[, intersect(c("personal", "programmatic", "programmatic2", "ev_total",
+                                 "ethnic", "extremist2", "erule", "cl", "system", "demsys"),
+                               names(cn))]))
+
+  # Programmaticness: average of two items (prefer programmatic2 if on 1-4 scale)
+  prog_var <- "programmatic2"
+  if (!("programmatic2" %in% names(cn)) ||
+      all(is.na(cn$programmatic2)) ||
+      max(cn$programmatic2, na.rm = TRUE) > 4.01 || min(cn$programmatic2, na.rm = TRUE) < 0.99) {
+    prog_var <- "programmatic"
+  }
+  cn$prog <- cn[[prog_var]]
+  cn$pers <- cn$personal
+
+  # Volatility rescaled to 0-1
+  cn$vol <- cn$ev_total
+  if (max(cn$vol, na.rm = TRUE) > 1.5) cn$vol <- cn$vol / 100
+
+  # Ethnic party binary
+  cn$eth <- cn$ethnic
+  if (!all(cn$eth[!is.na(cn$eth)] %in% c(0, 1))) cn$eth <- as.numeric(cn$eth > 0.5)
+
+  cn$ext <- cn$extremist2
+
+  ctrl <- c("partysize", "unions", "business", "religious",
+            "pluralty", "pr", "cl", "erule", "mdmh", "polity", "demsys",
+            "system", "gdppc", "gini", "ethfrac")
+  ctrl <- intersect(ctrl, names(cn))
+  # drop controls that are constant / entirely missing
+  ctrl <- ctrl[sapply(ctrl, function(v) sum(!is.na(cn[[v]])) > 0)]
+
+  need <- c("pers", "prog", "vol", "eth", "ext", "ccode", ctrl)
+  d <- cn[complete.cases(cn[, need]), ]
+  ctrl <- ctrl[sapply(ctrl, function(v) length(unique(d[[v]])) > 1)]
+  cat("N complete:", nrow(d), " countries:", length(unique(d$ccode)), "\n")
+
+  q25 <- as.numeric(quantile(d$vol, 0.25))
+  q75 <- as.numeric(quantile(d$vol, 0.75))
+  dq <- q75 - q25
+  cat("Volatility q25:", q25, " q75:", q75, "\n")
+
+  cs <- paste(ctrl, collapse = " + ")
+  fit <- function(y, extra) {
+    f <- as.formula(paste(y, "~", extra, "+", cs))
+    feols(f, data = d, cluster = ~ccode)
+  }
+
+  # Overall
+  m1 <- fit("pers", "vol")
+  m2 <- fit("prog", "vol")
+  print(summary(m1)); print(summary(m2))
+  emit("personalism_volatility_difference_overall", coef(m1)["vol"] * dq)
+  emit("programmaticness_volatility_difference_overall", coef(m2)["vol"] * dq)
+  emit("n_obs_table1", nobs(m1))
+
+  # Ethnicity
+  m3 <- fit("pers", "vol * eth")
+  m4 <- fit("prog", "vol * eth")
+  print(summary(m3)); print(summary(m4))
+  emit("personalism_volatility_difference_nonethnic", coef(m3)["vol"] * dq)
+  emit("programmaticness_volatility_difference_nonethnic", coef(m4)["vol"] * dq)
+  emit("personalism_ethnic_minus_nonethnic_low_volatility",
+       coef(m3)["eth"] + coef(m3)["vol:eth"] * q25)
+  emit("programmaticness_ethnic_minus_nonethnic_high_volatility",
+       coef(m4)["eth"] + coef(m4)["vol:eth"] * q75)
+
+  # Ideology (extremist at distance 3)
+  m5 <- fit("pers", "vol * ext")
+  m6 <- fit("prog", "vol * ext")
+  print(summary(m5)); print(summary(m6))
+  emit("personalism_volatility_difference_moderate", coef(m5)["vol"] * dq)
+  emit("programmaticness_volatility_difference_moderate", coef(m6)["vol"] * dq)
+  emit("personalism_extremist_minus_moderate_low_volatility",
+       3 * (coef(m5)["ext"] + coef(m5)["vol:ext"] * q25))
+  emit("programmaticness_extremist_minus_moderate_high_volatility",
+       3 * (coef(m6)["ext"] + coef(m6)["vol:ext"] * q75))
+}
+
+## ---------------- Brazil RD ----------------
+br <- tryCatch(as.data.frame(zap_labels(read_dta(file.path(base, "brazil-RD-data.dta")))),
+               error = function(e) NULL)
+
+if (!is.null(br)) {
+  for (v in names(br)) suppressWarnings(br[[v]] <- as.numeric(br[[v]]))
+  cat("dlameduck_runs table:\n"); print(table(br$dlameduck_runs, useNA = "ifany"))
+  cat("Range of running variable:\n"); print(summary(br$mv_incparty))
+
+  run_rd <- function(dd, y) {
+    ok <- !is.na(dd[[y]]) & !is.na(dd$mv_incparty)
+    if (sum(ok) < 50) return(NULL)
+    tryCatch(rdrobust(y = dd[[y]][ok], x = dd$mv_incparty[ok], c = 0),
+             error = function(e) NULL)
+  }
+
+  # Candidate subsets: target effective N (Young) = 527 + 559 = 1086
+  subsets <- list(all = br)
+  vals <- sort(unique(br$dlameduck_runs[!is.na(br$dlameduck_runs)]))
+  for (v in vals) subsets[[paste0("dl", v)]] <- br[!is.na(br$dlameduck_runs) & br$dlameduck_runs == v, ]
+
+  best <- NULL; best_gap <- Inf; best_name <- NA
+  for (nm in names(subsets)) {
+    r <- run_rd(subsets[[nm]], "youngF_inc_for1")
+    if (is.null(r)) next
+    neff <- sum(r$N_h)
+    cat("Subset", nm, ": tau =", r$coef[1], " h =", r$bws[1, 1], " Nh =", r$N_h, "\n")
+    gap <- abs(neff - 1086) + abs(r$bws[1, 1] - 13.491) * 10
+    if (gap < best_gap) { best_gap <- gap; best <- nm }
+  }
+  if (!is.null(best)) {
+    cat("Chosen subset:", best, "\n")
+    r1 <- run_rd(subsets[[best]], "youngF_inc_for1")
+    r2 <- run_rd(subsets[[best]], "outyg1F_inc_for1")
+    if (!is.null(r1)) { print(summary(r1)); emit("rd_effect_young", r1$coef[1]) }
+    if (!is.null(r2)) { print(summary(r2)); emit("rd_effect_young_outsider", r2$coef[1]) }
+  }
+}
+
+for (nm in names(res)) cat(sprintf("RESULT:%s=%.6f\n", nm, as.numeric(res[[nm]])))
+```
+
+## What the code produced
+  personalism_volatility_difference_overall = 0.283289
+  programmaticness_volatility_difference_overall = -0.172082
+  n_obs_table1 = 428.0
+  personalism_volatility_difference_nonethnic = 0.344765
+  programmaticness_volatility_difference_nonethnic = -0.222808
+  personalism_ethnic_minus_nonethnic_low_volatility = 0.346451
+  programmaticness_ethnic_minus_nonethnic_high_volatility = 0.128306
+  personalism_volatility_difference_moderate = 0.515874
+  programmaticness_volatility_difference_moderate = -0.330342
+  personalism_extremist_minus_moderate_low_volatility = 0.116474
+  programmaticness_extremist_minus_moderate_high_volatility = 0.474093
+  rd_effect_young = -0.08427
+  rd_effect_young_outsider = -0.092132
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+Summary of key variables:
+    personal      programmatic   programmatic2      ev_total     
+ Min.   :1.000   Min.   :1.425   Min.   :1.562   Min.   :0.0195  
+ 1st Qu.:2.302   1st Qu.:2.750   1st Qu.:2.833   1st Qu.:0.1510  
+ Median :2.811   Median :3.083   Median :3.200   Median :0.2655  
+ Mean   :2.842   Mean   :3.031   Mean   :3.150   Mean   :0.2866  
+ 3rd Qu.:3.455   3rd Qu.:3.352   3rd Qu.:3.515   3rd Qu.:0.4196  
+ Max.   :4.000   Max.   :3.958   Max.   :4.000   Max.   :0.6927  
+                                                 NAs    :42      
+     ethnic         extremist2          erule             cl       
+ Min.   :0.0000   Min.   :0.01204   Min.   :1.000   Min.   :1.000  
+ 1st Qu.:0.0000   1st Qu.:0.72858   1st Qu.:5.000   1st Qu.:1.000  
+ Median :0.0000   Median :1.58767   Median :5.000   Median :1.000  
+ Mean   :0.1806   Mean   :1.73376   Mean   :4.694   Mean   :1.607  
+ 3rd Qu.:0.0000   3rd Qu.:2.48738   3rd Qu.:5.000   3rd Qu.:2.000  
+ Max.   :1.0000   Max.   :6.28134   Max.   :7.000   Max.   :3.000  
+ NAs    :2        NAs    :1         NAs    :2                      
+     system        demsys     
+ Min.   :0.0   Min.   :0.000  
+ 1st Qu.:0.0   1st Qu.:2.773  
+ Median :2.0   Median :2.944  
+ Mean   :1.1   Mean   :3.087  
+ 3rd Qu.:2.0   3rd Qu.:3.989  
+ Max.   :2.0   Max.   :4.357  
+ NAs    :4     NAs    :33     
+N complete: 428  countries: 74 
+Volatility q25: 0.146475  q75: 0.42035 
+OLS estimation, Dep. Var.: pers
+Observations: 428
+Standard-errors: Clustered (ccode) 
+             Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)  2.947437   0.628551  4.689254 1.2451e-05 ***
+vol          1.034372   0.234219  4.416262 3.4185e-05 ***
+partysize    1.404005   0.215547  6.513680 8.1956e-09 ***
+unions      -0.101071   0.095596 -1.057273 2.9387e-01    
+business     0.213860   0.116003  1.843573 6.9304e-02 .  
+religious    0.103607   0.108484  0.955044 3.4271e-01    
+pluralty     0.985321   0.329658  2.988918 3.8128e-03 ** 
+pr           0.284709   0.137942  2.063972 4.2575e-02 *  
+cl          -0.252200   0.057206 -4.408611 3.5151e-05 ***
+erule        0.122002   0.059552  2.048657 4.4091e-02 *  
+mdmh        -0.002026   0.030369 -0.066720 9.4699e-01    
+polity       0.008958   0.020251  0.442360 6.5954e-01    
+demsys       0.017543   0.047237  0.371389 7.1142e-01    
+system       0.087947   0.038288  2.297006 2.4488e-02 *  
+gdppc       -0.168850   0.041242 -4.094172 1.0818e-04 ***
+gini         0.001579   0.004677  0.337666 7.3658e-01    
+ethfrac      0.150942   0.190864  0.790832 4.3160e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.619294   Adj. R2: 0.216118
+OLS estimation, Dep. Var.: prog
+Observations: 428
+Standard-errors: Clustered (ccode) 
+             Estimate Std. Error   t value  Pr(>|t|)    
+(Intercept)  2.084139   0.805531  2.587285 0.0116637 *  
+vol         -0.628325   0.276464 -2.272720 0.0259878 *  
+partysize    0.476899   0.194289  2.454580 0.0164890 *  
+unions       0.283001   0.088278  3.
+[... 6511 characters omitted ...]
+Subset dl0 : tau = -0.08427046  h = 13.49111  Nh = 527 559 
+Subset dl1 : tau = 0.1062269  h = 13.3791  Nh = 655 804 
+Chosen subset: dl0 
+Call: rdrobust
+
+Sharp RD estimates using local polynomial regression.
+
+Number of Obs.                 1788
+BW type                       mserd
+Kernel                   Triangular
+VCE method                       NN
+
+                               Left        Right
+Number of Obs.                  836          952
+Eff. Number of Obs.             527          559
+Order est. (p)                    1            1
+Order bias (q)                    2            2
+BW est. (h)                  13.491       13.491
+BW bias (b)                  24.643       24.643
+rho (h/b)                     0.547        0.547
+Unique Obs.                     835          921
+
+=====================================================================
+                   Point    Robust Inference
+                Estimate         z     P>|z|      [ 95% C.I. ]       
+---------------------------------------------------------------------
+     RD Effect    -0.084    -2.058     0.040    [-0.185 , -0.005]    
+=====================================================================
+Call: rdrobust
+
+Sharp RD estimates using local polynomial regression.
+
+Number of Obs.                 1788
+BW type                       mserd
+Kernel                   Triangular
+VCE method                       NN
+
+                               Left        Right
+Number of Obs.                  836          952
+Eff. Number of Obs.             501          523
+Order est. (p)                    1            1
+Order bias (q)                    2            2
+BW est. (h)                  12.280       12.280
+BW bias (b)                  22.333       22.333
+rho (h/b)                     0.550        0.550
+Unique Obs.                     835          921
+
+=====================================================================
+                   Point    Robust Inference
+                Estimate         z     P>|z|      [ 95% C.I. ]       
+---------------------------------------------------------------------
+     RD Effect    -0.092    -2.439     0.015    [-0.185 , -0.020]    
+=====================================================================
+RESULT:personalism_volatility_difference_overall=0.283289
+RESULT:programmaticness_volatility_difference_overall=-0.172082
+RESULT:n_obs_table1=428.000000
+RESULT:personalism_volatility_difference_nonethnic=0.344765
+RESULT:programmaticness_volatility_difference_nonethnic=-0.222808
+RESULT:personalism_ethnic_minus_nonethnic_low_volatility=0.346451
+RESULT:programmaticness_ethnic_minus_nonethnic_high_volatility=0.128306
+RESULT:personalism_volatility_difference_moderate=0.515874
+RESULT:programmaticness_volatility_difference_moderate=-0.330342
+RESULT:personalism_extremist_minus_moderate_low_volatility=0.116474
+RESULT:programmaticness_extremist_minus_moderate_high_volatility=0.474093
+RESULT:rd_effect_young=-0.084270
+RESULT:rd_effect_young_outsider=-0.092132
+```
+
+## Claims still failing
+1. programmaticness_volatility_difference_overall: paper claims -0.11 points on the 1-4 Programmaticness scale (coefficient), your code produced -0.172082, tolerance 0.4545, gap 56.44% relative
+2. programmaticness_volatility_difference_nonethnic: paper claims -0.15 points on the 1-4 Programmaticness scale (coefficient), your code produced -0.222808, tolerance 0.4, gap 48.54% relative
+3. programmaticness_ethnic_minus_nonethnic_high_volatility: paper claims 0.2 points on the 1-4 Programmaticness scale (coefficient), your code produced 0.128306, tolerance 0.3, gap 35.85% relative
+
+## Previous attempts (oldest first)
+  Attempt 1: personalism_volatility_difference_overall=0.283289, programmaticness_volatility_difference_overall=-0.172082, n_obs_table1=428.0, personalism_volatility_difference_nonethnic=0.344765, programmaticness_volatility_difference_nonethnic=-0.222808, personalism_ethnic_minus_nonethnic_low_volatility=0.346451, programmaticness_ethnic_minus_nonethnic_high_volatility=0.128306, personalism_volatility_difference_moderate=0.515874, programmaticness_volatility_difference_moderate=-0.330342, personalism_extremist_minus_moderate_low_volatility=0.116474, programmaticness_extremist_minus_moderate_high_volatility=0.474093, rd_effect_young=-0.08427, rd_effect_young_outsider=-0.092132
+
+These attempts have already been tried.  Do not repeat a strategy
+that has already produced the same values.
+
+## Task
+Adjust the code minimally to close the gap on the failing claims.
+Prefer changes that align more closely with the paper's stated methodology:
+re-read the methodology summary above and check the model specification,
+covariate selection, fixed effects, clustering, and seed against what the
+paper actually specifies.  In econometrics papers, common gap-closers are:
+  - getting the cluster-robust SE right (vcovCL / cluster_var argument)
+  - matching the paper's exact fixed-effects structure
+  - using the same sample-restriction filters the paper applied
+  - matching the paper's weighting scheme (weights= argument)
+
+## Deviation reporting
+If you must change something the paper did NOT specify in order to close
+the gap, emit a ``DEVIATION:`` line via cat() describing the change:
+
+    cat('DEVIATION: Used HC1 robust SE because the paper does not specify but the default did not converge\n')
+
+## When to give up
+If after re-reading the methodology and the previous attempts you judge
+the gap cannot be closed without unreasonable deviation, return the SAME
+R CODE you were given, BYTE-FOR-BYTE unchanged.  The pipeline will record
+the claim as unreproducible.
+
+## Output convention (unchanged)
+Emit every metric as ``cat('RESULT:<name>=<value>\n')``.
+The dataset is a directory tree at '<repo>/.cache/datasets/hollyer_2022_parties_as_disciplinarians.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+No network, no system().  set.seed(42).
+
+Output ONLY the R code — no explanation, no markdown fences.

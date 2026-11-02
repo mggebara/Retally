@@ -1,0 +1,54 @@
+N rows: 3002 
+simul : simule_gagnant, simule_gain_menage, simule_gain, simule_gain_repondant, simule_gain_cible, simule_gain_cible_sans_conjoint, simule_gain_interaction, simule_gagnant_interaction, simule_gain_inelastique, simule_gain_cible_interaction, simule_gain_cible_interaction_inelastique, simule_gain_elast_perso, Simule_gain, Simule_gain2, Simule_gain_cible, Simule_gain_cible2 
+gagn : gagnant_fuel_categorie, gagnant_chauffage_categorie, gagnant_categorie, taxe_gagnant_personne, taxe_gagnant_pauvres, taxe_gagnant_moyennes, taxe_gagnant_riches, taxe_gagnant_tous, taxe_gagnant_citadins, taxe_gagnant_certains, taxe_gagnant_NSP, gagnant_feedback_categorie, gagnant_progressif_categorie, gagnant__20_categorie, gagnant_20_30_categorie, gagnant_30_40_categorie, gagnant_40_50_categorie, gagnant_50_70_categorie, gagnant_70__categorie, simule_gagnant, gagnant_partielle_categorie, gagnant_info_categorie, gagnant_cible_categorie, simule_gagnant_interaction 
+winning : winning_category, winning_feedback_category 
+approb : taxe_approbation, taxe_feedback_approbation, taxe_progressif_approbation, taxe__20_approbation, taxe_20_30_approbation, taxe_30_40_approbation, taxe_40_50_approbation, taxe_50_70_approbation, taxe_70__approbation, schiste_approbation, taxe_info_approbation, taxe_cible_approbation 
+accept : tax_acceptance, tax_cible_acceptance 
+gilets : gilets_jaunes_dedans, gilets_jaunes_soutien, gilets_jaunes_compris, gilets_jaunes_oppose, gilets_jaunes_NSP, gilets_jaunes, Gilets_jaunes 
+cible : emission_cible, cible20, cible30, cible40, cible50, cible, gagnant_cible_categorie, taxe_cible_approbation, categorie_cible, traite_cible, traite_cible_conjoint, versement_cible, versement_cible_sans_conjoint, convaincu_cible, simule_gain_cible, simule_gain_cible_sans_conjoint, simule_gain_cible_interaction, simule_gain_cible_interaction_inelastique, tax_cible_acceptance, win_cible_category, Simule_gain_cible, Simule_gain_cible2 
+efficac : taxe_efficace, problemes_inefficace 
+modif : apres_modifs 
+info_ : premier_clic_info_PM, dernier_clic_info_PM, duree_info_PM, nombre_clics_info_PM, premier_clic_info_CC, dernier_clic_info_CC, duree_info_CC, nombre_clics_info_CC, premier_clic_info_CC_PM, dernier_clic_info_CC_PM, duree_info_CC_PM, nombre_clics_info_CC_PM, info_CC, info_PM, duree_info_courte, gagnant_info_categorie, taxe_info_approbation, info_progressivite 
+percentile : percentile_revenu, percentile_revenu_conjoint 
+weight : weight 
+feedback : gagnant_feedback_categorie, taxe_feedback_approbation, progressivite_feedback_avec_info, progressivite_feedback_sans_info, convaincu_feedback, feedback_confirme, feedback_infirme, feedback_confirme_large, feedback_infirme_large, winning_feedback_category 
+gain var: simule_gain 
+approval var: taxe_approbation 
+
+ Non  NSP  Oui 
+2134  567  301 
+acc0 mean: 0.2891406  nsp0 mean: 0.1888741  appr0 mean: 0.1002665 
+YV share: 0.3407728 
+controls: sexe + age + statut_emploi + csp + region + diplome4 + taille_menage + revenu + rev_tot + nb_14_et_plus + nb_adultes + fume + actualite + taille_agglo + uc + niveau_vie + age_18_24 + age_25_34 + age_35_49 + age_50_64 + age_65_plus + single + hausse_depenses_par_uc 
+feedback n: 1968  |gain|<50 n: 757 
+                 Estimate   Std. Error    t value     Pr(>|t|)
+(Intercept) -4.999038e-02 3.475431e-01 -0.1438394 8.856683e-01
+pwin         2.856654e-01 5.846854e-02  4.8857963 1.274796e-06
+acc0         3.221520e-01 4.054770e-02  7.9450131 7.648569e-15
+sg          -9.856805e-04 1.303505e-03 -0.7561768 4.497947e-01
+sg2          5.475156e-06 2.377797e-05  0.2302617 8.179549e-01
+RESULT:predicted_winner_believes_not_lose_table4_col1=0.285665
+RESULT:initial_acceptance_believes_not_lose_table4_col1=0.322152
+RESULT:n_obs_table4_col1=757.000000
+RESULT:predicted_winner_believes_not_lose_full_sample_table4_col2=0.232059
+               Estimate Std. Error    t value     Pr(>|t|)
+(Intercept)  0.10626741 0.32843226  0.3235596 7.463680e-01
+pwin         0.25851332 0.05956489  4.3400286 1.634337e-05
+acc0         0.07433549 0.09429920  0.7882940 4.307912e-01
+yv           0.01671521 0.04629533  0.3610561 7.181663e-01
+G            0.35464044 0.08453081  4.1953987 3.073758e-05
+pw_acc       0.15979851 0.08993792  1.7767646 7.604058e-02
+pw_yv       -0.16448591 0.05902996 -2.7864820 5.472458e-03
+pw_G         0.08155775 0.09225831  0.8840152 3.769911e-01
+RESULT:predicted_winner_heterogeneity_table4_col3=0.258513
+RESULT:initial_acceptance_heterogeneity_table4_col3=0.074335
+RESULT:yellow_vests_supporter_heterogeneity_table4_col3=0.016715
+RESULT:winner_x_initial_acceptance_table4_col3=0.159799
+RESULT:winner_x_yellow_vests_supporter_table4_col3=-0.164486
+RESULT:winner_x_initial_win_belief_table4_col3=0.081558
+RESULT:predicted_winner_believes_wins_table4_col4=0.162115
+targeted vars: taxe_cible_approbation gagnant_cible_categorie 
+Table6 n: 1969 
+RESULT:believes_not_lose_on_acceptance_iv_table6_col1=0.545843
+Table8 n: 3002 
+RESULT:believes_effective_on_approval_iv_table8_col1=0.373247

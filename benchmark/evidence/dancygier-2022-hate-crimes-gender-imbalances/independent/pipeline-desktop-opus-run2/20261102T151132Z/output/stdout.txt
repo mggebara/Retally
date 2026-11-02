@@ -1,0 +1,128 @@
+Survey columns: res_id, wave, east, hate_violence_means, hate_pol_message, hate_prevent_settlement, hate_polcondemn, hate_justified, MateComp.cont, JobComp.cont, LifeSatis.cont, pop_15_44_muni_gendergap_2015, age, singdivsep, age_group, gender, state, citizenship, marital, religion, eduyrs, occupation, income, household_size, self_econ, distance_ref, settle_ref, lrscale, afd, muslim_ind, afd_ind, contact_ind, refugee_ind, list, treatment_list, outcome_list, ref_integrating, ref_citizenship, ref_reduce, ref_moredone, ref_cultgiveup, ref_economy, ref_crime, ref_terror, ref_loc_services, ref_loc_economy, ref_loc_crime, ref_loc_culture, ref_loc_islam, ref_loc_schools, ref_loc_housing, ref_loc_wayoflife, women_role 
+Wave 4 rows: 3019 
+Socio numeric: age,eduyrs,income,household_size,self_econ  factor: gender,occupation,citizenship,religion,state 
+National: ref_integrating,ref_citizenship,ref_reduce,ref_moredone,ref_cultgiveup,ref_economy,ref_crime,ref_terror 
+Local: ref_loc_services,ref_loc_economy,ref_loc_crime,ref_loc_culture,ref_loc_islam,ref_loc_schools,ref_loc_housing,ref_loc_wayoflife 
+Additional: lrscale,afd,muslim_ind,afd_ind,contact_ind,refugee_ind 
+Col1 N = 3019 
+             Estimate Std. Error  t value      Pr(>|t|)
+(Intercept) 0.9323462 0.03301998 28.23582 7.640618e-156
+mate        0.4370199 0.01634833 26.73177 1.812269e-141
+              Estimate  Std. Error   t value     Pr(>|t|)
+(Intercept)  0.7886232 0.057849482 13.632330 4.150800e-41
+mate         0.2634374 0.020261323 13.001982 1.203246e-37
+job          0.2499558 0.018672456 13.386338 9.690904e-40
+life        -0.0147250 0.006291642 -2.340407 1.932764e-02
+N = 3008  mate = 0.23445  R2 = 0.2721153 
+N = 3008  mate = 0.2052953  R2 = 0.3574354 
+N = 3008  mate = 0.1856075  R2 = 0.3697783 
+N = 3008  mate = 0.1578986  R2 = 0.4319167 
+Context columns: ags_county, year, ags_muni, ags_state, Hate_all_muni, Physical_muni, pop_25_44_muni_gendergap_2015, pop_15_44_muni_gendergap_2015, population_muni_2015, popdens_muni_2015, log_unemp_all_muni_2015, unemp_gendergap_2015, d_pop1511_muni, vote_afd_2013_muni, log_ref_inflow_1514, pop_ref_2014, pc_ref_male, violence_percap_2015, pc_hidegree_all2011, pc_manufacturing_2015, d_manuf1115, east, Hate_all_muni_bin, Physical_muni_bin, log_population_muni_2015, log_popdens_muni_2015, log_pop_ref_2014, log_violence_percap_2015 
+Excess males var: pop_15_44_muni_gendergap_2015 
+Controls: pop_25_44_muni_gendergap_2015, population_muni_2015, popdens_muni_2015, log_unemp_all_muni_2015, unemp_gendergap_2015, d_pop1511_muni, vote_afd_2013_muni, log_ref_inflow_1514, pop_ref_2014, violence_percap_2015, pc_hidegree_all2011, pc_manufacturing_2015, d_manuf1115, log_population_muni_2015, log_popdens_muni_2015, log_pop_ref_2014, log_violence_percap_2015 
+Trim cutoffs: 0.8529412 1.454545 
+GLM estimation, family = binomial, Dep. Var.: y_ann
+Observations: 27,846
+Fixed-effects: state: 11,  year_n: 3
+Standard-errors: Clustered (county) 
+                                   Estimate   Std. Error   z value   Pr(>|z|)
+em                                 1.556437   0.78879607  1.973180 4.8475e-02
+c_pop_25_44_muni_gendergap_2015   -0.082681   0.68319611 -0.121021 9.0367e-01
+c_population_muni_2015            -0.000013   0.00000294 -4.462438 8.1032e-06
+c_popdens_muni_2015               -0.000094   0.00015526 -0.604744 5.4535e-01
+c_log_unemp_all_muni_2015          0.792651   0.13465689  5.886454 3.9457e-09
+c_unemp_gendergap_2015             0.857369   0.32089706  2.671790 7.5448e-03
+c_d_pop1511_muni                  -0.071289   0.55916014 -0.127493 8.9855e-01
+c_vote_afd_2013_muni               2.727860   2.81188629  0.970117 3.3199e-01
+c_log_ref_inflow_1514              0.748021   0.26438013  2.829338 4.6644e-03
+c_pop_ref_2014                     0.000017   0.00007589  0.228218 8.1948e-01
+c_violence_percap_2015          -458.075262 444.29137827 -1.031024 3.0253e-01
+c_pc_hidegree_all2011             -0.017059   0.01090592 -1.564209 1.1777e-01
+c_pc_manufacturing_2015           -0.342041   0.60666083 -0.563810 5.7288e-01
+c_d_manuf1115                      9.577952   3.26895058  2.929977 3.3899e-03
+c_log_population_muni_2015         1.499832   0.05325545 28.162974  < 2.2e-16
+c_log_popdens_muni_2015            0.042635   0.06819671  0.625175 5.3186e-01
+c_log_pop_ref_2014                -0.203455   0.12077251 -1.684615 9.2063e-02
+c_log_violence_percap_2015         0.639645   0.54276676  1.178489 2.3860e-01
+                                   
+em                              *  
+c_pop_25_44_muni_gendergap_2015    
+c_population_muni_2015          ***
+c_popdens_muni_2015                
+c_log_unemp_all_muni_2015       ***
+c_unemp_gendergap_2015          ** 
+c_d_pop1511_muni                   
+c_vote_afd_2013_muni               
+c_log_ref_inflow_1514           ** 
+c_pop_ref_2014                     
+c_violence_percap_2015             
+c_pc_hidegree_all2011              
+c_pc_manufacturing_2015            
+c_d_manuf1115                   ** 
+c_log_population_muni_2015      ***
+c_log_popdens_muni_2015            
+c_log_pop_ref_2014              .  
+c_log_violence_percap_2015         
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Log-Likelihood: -5,279.0   Adj. Pseudo R2: 0.324827
+           BIC: 10,875.2     Squared Cor.: 0.271386
+GLM estimation, family = binomial, Dep. Var.: y_sum
+Observations: 9,282
+Fixed-effects: state: 11
+Standard-errors: Clustered (county) 
+                                   Estimate   Std. Error   z value   Pr(>|z|)
+em                                 1.625590   0.89157694  1.823275 6.8262e-02
+c_pop_25_44_muni_gendergap_2015   -0.263177   0.81600775 -0.322517 7.4706e-01
+c_population_muni_2015            -0.000011   0.00000500 -2.154684 3.1187e-02
+c_popdens_muni_2015               -0.000153   0.00019777 -0.774639 4.3855e-01
+c_log_unemp_all_muni_2015          0.691217   0.15905820  4.345686 1.3884e-05
+c_unemp_gendergap_2015             0.927164   0.37143531  2.496167 1.2554e-02
+c_d_pop1511_muni                  -0.379731   0.87807498 -0.432458 6.6541e-01
+c_vote_afd_2013_muni               4.944302   3.47407362  1.423200 1.5468e-01
+c_log_ref_inflow_1514              0.901743   0.33434012  2.697082 6.9950e-03
+c_pop_ref_2014                    -0.000066   0.00011274 -0.582281 5.6038e-01
+c_violence_percap_2015          -173.634386 542.10193873 -0.320298 7.4874e-01
+c_pc_hidegree_all2011             -0.021355   0.01350370 -1.581383 1.1379e-01
+c_pc_manufacturing_2015            0.030554   0.74997998  0.040740 9.6750e-01
+c_d_manuf1115                      7.839581   4.12661765  1.899760 5.7465e-02
+c_log_population_muni_2015         1.592603   0.06938706 22.952449  < 2.2e-16
+c_log_popdens_muni_2015            0.074950   0.08969025  0.835650 4.0335e-01
+c_log_pop_ref_2014                -0.128813   0.15055121 -0.855610 3.9221e-01
+c_log_violence_percap_2015         0.371036   0.66496593  0.557977 5.7686e-01
+                                   
+em                              .  
+c_pop_25_44_muni_gendergap_2015    
+c_population_muni_2015          *  
+c_popdens_muni_2015                
+c_log_unemp_all_muni_2015       ***
+c_unemp_gendergap_2015          *  
+c_d_pop1511_muni                   
+c_vote_afd_2013_muni               
+c_log_ref_inflow_1514           ** 
+c_pop_ref_2014                     
+c_violence_percap_2015             
+c_pc_hidegree_all2011              
+c_pc_manufacturing_2015            
+c_d_manuf1115                   .  
+c_log_population_muni_2015      ***
+c_log_popdens_muni_2015            
+c_log_pop_ref_2014                 
+c_log_violence_percap_2015         
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Log-Likelihood: -2,773.6   Adj. Pseudo R2: 0.355725
+           BIC:  5,812.1     Squared Cor.: 0.370225
+RESULT:mate_competition_table1_col1=0.437020
+RESULT:mate_competition_table1_col2=0.263437
+RESULT:mate_competition_table1_col3=0.234450
+RESULT:mate_competition_table1_col4=0.205295
+RESULT:mate_competition_table1_col5=0.185607
+RESULT:mate_competition_table1_col6=0.157899
+RESULT:job_competition_table1_col2=0.249956
+RESULT:n_obs_table1_col1=3019.000000
+RESULT:n_obs_table1_col3=3008.000000
+RESULT:excess_males_sum_tableC1_col5=1.625590
+RESULT:excess_males_annual_tableC1_col6=1.556437
+RESULT:n_obs_sum_tableC1_col5=9282.000000
+RESULT:n_obs_annual_tableC1_col6=27846.000000

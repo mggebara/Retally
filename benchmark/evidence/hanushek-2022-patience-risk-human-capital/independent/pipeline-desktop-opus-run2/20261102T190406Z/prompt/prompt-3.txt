@@ -1,0 +1,282 @@
+You are refining R code that reproduces results from an econometrics paper.
+The code RAN SUCCESSFULLY but the reproduced values do not match the
+paper's claims within the allowed tolerance.  Identify what is causing
+the gap and adjust the code to close it.
+
+## Paper
+Title: The Economic Journal, 132 (August), 2290–2307 https://doi.org/10.1093/ej/ueab105 C⃝The Author(s) 2021. Published by Oxford University Press. All rights
+Methodology: - **Data and sample**: Student-level PISA data, 7 waves 2000–2018 (math, science, reading for 15-year-olds), merged with country-level Global Preference Survey (GPS, Falk et al. 2018; ~1,000 respondents per country, surveyed 2012). Baseline cross-country sample: 49 countries with both PISA and GPS data, 1,992,276 students, 263 country-by-wave observations. Migrant sample: waves 2003–2018 only (2000 dropped because country of origin is missing); students whose parents were both born abroad, with an identified origin country that has GPS data: 80,398 students from 58 origin countries in 48 residence countries (up to 145,506 under a wider definition).
+
+- **Preprocessing**: Each GPS preference measure (patience, risk-taking, plus positive reciprocity, negative reciprocity, altruism, trust) is z-standardised within the relevant analysis sample and collapsed to country means. So the preference regressors are in country-level SD units. The country-level correlation between patience and risk-taking is 0.358. PISA scores are divided by 100, so the outcome is in student-level SD units (the headline coefficients are SD of test score per 1 SD of preference; the outcome is not otherwise standardised). Migrants: first generation get their country of birth, second generation get their father's country of origin. Missing controls are imputed and flagged with imputation dummies. Item non-response is the share of unanswered student background questionnaire items.
+
+- **Baseline estimating equation (Eq. 1, Table 1)**: OLS of T_ict = β1·Patience_c + β2·Risk_c + α1·B_ict + μ_t + ε_ict, where T is the PISA math score/100. B contains student gender, age, migration status and imputation dummies; μ_t are wave fixed effects. The preferred specification is column 3, with both preferences entered: patience 1.226 (SE 0.132), risk-taking −1.241 (SE 0.184), R² 0.198, N = 1,992,276, 49 countries. Entered singly, the estimates are patience 0.917 (0.127) in column 1 and risk −0.482 (0.261) in column 2. Other columns:
+  - Column 4 adds the other four GPS preferences.
+  - Columns 5 and 6 split the sample into natives (N = 1,751,822: 1.296 / −1.320) and migrants (N = 192,736: 0.702 / −0.370). The natives−migrants differences are −0.594 for patience and 0.950 for risk-taking.
+  - Column 7 adds individual item non-response. Column 8 also adds the country-mean item non-response.
+
+- **Weighting and inference (baseline)**: Regressions are weighted by students' sampling probabilities within countries, rescaled so that each country gets equal weight. Standard errors are robust and clustered at the country level (49 clusters). At the country level, a regression of average math score on both preferences gives R² = 0.672; patience alone gives 0.409 and risk alone 0.062 (Fig. 1, added-variable plots).
+
+- **Migrant identification (Eq. 2, Table 2)**: OLS of T_ioct = δ1·Patience_o + δ2·Risk_o + γ1·B_ioct + θ_c×μ_t + ε_ioct. Preferences are those of the origin country. The specification includes 180 residence-country-by-wave fixed effects. Controls are gender, age, a dummy for an OECD origin country, and imputation dummies. Standard errors are clustered by country of origin (58 clusters). The preferred specification is column 3: patience 0.931 (0.116), risk −0.294 (0.122), R² 0.275, N = 80,398. Other columns:
+  - Column 4 adds the other four origin-country preferences: patience 1.032, risk −0.449.
+  - Columns 5–7 add item non-response controls (individual and origin-country mean).
+  - Columns 8 and 9 split by home language. Speaking the residence-country language at home: N = 48,556. Speaking another language: N = 24,520.
+
+- **Migrant robustness (Table 3)**: Each column adds one set of terms to the column-3 specification:
+  1. Continent-of-origin fixed effects.
+  2. Within-origin-country SDs of patience and risk (from individual GPS data, weighted).
+  3. Geographic distance in 1,000 km between the most populous cities (Mayer and Zignago, 2011).
+  4. and 5. Interactions with cultural distance (absolute difference between origin and residence preferences, demeaned), on a sample of N = 29,019.
+  5. and 7. Migrant schooling selectivity: the percentile of the origin-country education distribution that the average migrant comes from, on a sample of N = 39,725.
+
+  The online appendix adds further checks: science and reading outcomes, OECD vs non-OECD, first vs second generation, alternative migrant definitions, and WVS/Hofstede preference measures.
+
+- **Channels (Table 4)**: Country-level OLS (N = 49) of four aggregated proximate-input indices (family, school, institutional, residual productivity) on patience and risk-taking, with robust SEs. There are two versions:
+  - Upper bound: inputs aggregated without controlling for preferences. Family-input coefficients are 0.800 for patience and −0.500 for risk.
+  - Lower bound: the input aggregation also controls for preferences.
+
+- **Evaluation**: The paper reports coefficient magnitudes, clustered SEs with significance stars, R² and differences between subsamples. There is no train/test split or cross-validation; this is a pure regression and inference design.
+
+
+## Current Code
+```r
+suppressPackageStartupMessages({
+  library(haven)
+  library(fixest)
+  library(data.table)
+})
+set.seed(42)
+
+base <- "<repo>/.cache/datasets/hanushek_2022_patience_risk_human_capital.script-free/Replication/Data/Working"
+f_full <- file.path(base, "pisa_full_gps_final.dta")
+f_mig  <- file.path(base, "pisa_full_gps_final_imcoo.dta")
+
+get_names <- function(f) {
+  nm <- tryCatch(names(read_dta(f, n_max = 0)), error = function(e) NULL)
+  if (is.null(nm) || length(nm) == 0) nm <- names(read_dta(f, n_max = 1))
+  nm
+}
+
+find_weight <- function(nm) {
+  cands <- c("w_fstuwt", "W_FSTUWT", "stweight", "weight", "wgt", "w_fstuwt_orig")
+  hit <- cands[cands %in% nm]
+  if (length(hit)) return(hit[1])
+  pat <- nm[grepl("fstuwt", nm, ignore.case = TRUE)]
+  if (length(pat)) return(pat[1])
+  pat <- nm[grepl("weight|wgt|^wt", nm, ignore.case = TRUE) & !grepl("^w_fstr", nm, ignore.case = TRUE)]
+  if (length(pat)) return(pat[1])
+  NA_character_
+}
+
+clean <- function(dt) {
+  for (v in names(dt)) {
+    x <- dt[[v]]
+    if (inherits(x, "haven_labelled") || !is.null(attr(x, "labels"))) x <- zap_labels(x)
+    attr(x, "label") <- NULL; attr(x, "format.stata") <- NULL
+    set(dt, j = v, value = x)
+  }
+  dt
+}
+
+fill_na0 <- function(dt, vars) {
+  for (v in vars) {
+    x <- as.numeric(dt[[v]]); x[is.na(x)] <- 0
+    set(dt, j = v, value = x)
+  }
+  dt
+}
+
+g <- function(m, v) { cf <- coef(m); if (v %in% names(cf)) unname(cf[v]) else NA_real_ }
+out <- list()
+
+## ---------------- Table 1: cross-country ----------------
+nm <- get_names(f_full)
+wv <- find_weight(nm)
+migvars <- intersect(c("migra1", "migra2"), nm)
+if (length(migvars) == 0) migvars <- intersect(c("migra0"), nm)
+imvars <- nm[grepl("^im", nm) & grepl("female|age|migr|sex|gender", nm, ignore.case = TRUE)]
+imvars <- setdiff(imvars, c("immig"))
+ctrl_base <- intersect(c("female", "age"), nm)
+keep <- unique(c("country", "wave", "pv1math", "patience", "risktaking", "posrecip", "negrecip",
+                 "altruism", "trust", ctrl_base, migvars, "migra0", imvars, wv))
+keep <- intersect(keep[!is.na(keep)], nm)
+d <- as.data.table(read_dta(f_full, col_select = all_of(keep)))
+d <- clean(d)
+if (mean(d$pv1math, na.rm = TRUE) > 50) d[, pv1math := pv1math / 100]
+d <- d[!is.na(pv1math) & !is.na(patience) & !is.na(risktaking)]
+d <- fill_na0(d, c(ctrl_base, migvars, imvars))
+if (!is.na(wv)) {
+  d[, w0 := as.numeric(get(wv))]
+  d[is.na(w0) | w0 < 0, w0 := 0]
+} else d[, w0 := 1]
+d[, wt := w0 / sum(w0), by = country]
+d[, wt := wt * .N / sum(wt)]
+
+ctrl1 <- c(ctrl_base, migvars, imvars)
+mk <- function(pref, ctrl) as.formula(paste("pv1math ~", paste(c(pref, ctrl), collapse = " + "), "| wave"))
+
+m1 <- feols(mk("patience", ctrl1), data = d, weights = ~wt, cluster = ~country)
+m2 <- feols(mk("risktaking", ctrl1), data = d, weights = ~wt, cluster = ~country)
+m3 <- feols(mk(c("patience", "risktaking"), ctrl1), data = d, weights = ~wt, cluster = ~country)
+
+# natives: not migrants (migra0==1), excluding imputed migration status
+imm <- imvars[grepl("migr", imvars, ignore.case = TRUE)]
+dn <- d
+if ("migra0" %in% names(d)) {
+  dn <- d[!is.na(migra0) & migra0 == 1]
+} else if (all(c("migra1", "migra2") %in% names(d))) {
+  dn <- d[migra1 == 0 & migra2 == 0]
+}
+if (length(imm)) for (v in imm) dn <- dn[get(v) == 0]
+ctrl_n <- c(ctrl_base, setdiff(imvars, imm))
+ctrl_n <- ctrl_n[sapply(ctrl_n, function(v) length(unique(dn[[v]])) > 1)]
+m5 <- feols(mk(c("patience", "risktaking"), ctrl_n), data = dn, weights = ~wt, cluster = ~country)
+
+out$table1_col3_patience <- g(m3, "patience")
+out$table1_col3_risk_taking <- g(m3, "risktaking")
+out$table1_col1_patience <- g(m1, "patience")
+out$table1_col2_risk_taking <- g(m2, "risktaking")
+out$table1_col5_natives_patience <- g(m5, "patience")
+out$table1_col5_natives_risk_taking <- g(m5, "risktaking")
+out$table1_col3_observations <- nobs(m3)
+rm(d, dn); invisible(gc())
+
+## ---------------- Table 2: migrants ----------------
+nm2 <- get_names(f_mig)
+wv2 <- find_weight(nm2)
+im2 <- nm2[grepl("^im", nm2) & grepl("female|age|sex|gender", nm2, ignore.case = TRUE)]
+ctrl2b <- intersect(c("female", "age", "coo_oecd"), nm2)
+other4 <- intersect(c("coo_posrecip", "coo_negrecip", "coo_altruism", "coo_trust"), nm2)
+keep2 <- unique(c("country", "wave", "countrywave", "coo", "pv1math", "coo_patience", "coo_risktaking",
+                  other4, ctrl2b, im2, wv2))
+keep2 <- intersect(keep2[!is.na(keep2)], nm2)
+m <- as.data.table(read_dta(f_mig, col_select = all_of(keep2)))
+m <- clean(m)
+if (mean(m$pv1math, na.rm = TRUE) > 50) m[, pv1math := pv1math / 100]
+m <- m[!is.na(pv1math) & !is.na(coo_patience) & !is.na(coo_risktaking)]
+m <- fill_na0(m, c(ctrl2b, im2))
+if (!"countrywave" %in% names(m)) m[, countrywave := paste(country, wave)]
+
+# Standardise origin-country preferences across origin countries in the migrant
+# analysis sample (country-level SD units), per the paper's preprocessing.
+prefs2 <- c("coo_patience", "coo_risktaking", other4)
+for (v in prefs2) {
+  cm <- m[!is.na(get(v)), .(val = mean(as.numeric(get(v)))), by = coo]
+  mu <- mean(cm$val); s <- sd(cm$val)
+  cat(sprintf("NOTE: %s origin-country SD before standardisation = %.4f (%d countries)\n", v, s, nrow(cm)))
+  if (is.finite(s) && s > 0) set(m, j = v, value = (as.numeric(m[[v]]) - mu) / s)
+}
+
+if (!is.na(wv2)) {
+  m[, w0 := as.numeric(get(wv2))]
+  m[is.na(w0) | w0 < 0, w0 := 0]
+} else m[, w0 := 1]
+m[, wt := w0 / sum(w0), by = country]
+m[, wt := wt * .N / sum(wt)]
+
+ctrl2 <- c(ctrl2b, im2)
+mk2 <- function(pref, ctrl) as.formula(paste("pv1math ~", paste(c(pref, ctrl), collapse = " + "), "| countrywave"))
+t1 <- feols(mk2("coo_patience", ctrl2), data = m, weights = ~wt, cluster = ~coo)
+t3 <- feols(mk2(c("coo_patience", "coo_risktaking"), ctrl2), data = m, weights = ~wt, cluster = ~coo)
+t4 <- tryCatch(feols(mk2(c("coo_patience", "coo_risktaking", other4), ctrl2), data = m, weights = ~wt, cluster = ~coo),
+               error = function(e) NULL)
+
+out$table2_col3_patience <- g(t3, "coo_patience")
+out$table2_col3_risk_taking <- g(t3, "coo_risktaking")
+out$table2_col1_patience <- g(t1, "coo_patience")
+out$table2_col4_patience <- if (!is.null(t4)) g(t4, "coo_patience") else NA_real_
+out$table2_col4_risk_taking <- if (!is.null(t4)) g(t4, "coo_risktaking") else NA_real_
+out$table2_col3_observations <- nobs(t3)
+
+for (k in names(out)) cat(sprintf("RESULT:%s=%.6f\n", k, out[[k]]))
+```
+
+## What the code produced
+  table1_col3_patience = 1.220056
+  table1_col3_risk_taking = -1.231694
+  table1_col1_patience = 0.91326
+  table1_col2_risk_taking = -0.47415
+  table1_col5_natives_patience = 1.295826
+  table1_col5_natives_risk_taking = -1.320344
+  table1_col3_observations = 1992276.0
+  table2_col3_patience = 0.13021
+  table2_col3_risk_taking = -0.062939
+  table2_col1_patience = 0.101464
+  table2_col4_patience = 0.172735
+  table2_col4_risk_taking = -0.063314
+  table2_col3_observations = 80397.0
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+NOTE: coo_patience origin-country SD before standardisation = 0.3906 (58 countries)
+NOTE: coo_risktaking origin-country SD before standardisation = 0.2720 (58 countries)
+NOTE: coo_posrecip origin-country SD before standardisation = 0.3286 (58 countries)
+NOTE: coo_negrecip origin-country SD before standardisation = 0.2841 (58 countries)
+NOTE: coo_altruism origin-country SD before standardisation = 0.3544 (58 countries)
+NOTE: coo_trust origin-country SD before standardisation = 0.2452 (58 countries)
+RESULT:table1_col3_patience=1.220056
+RESULT:table1_col3_risk_taking=-1.231694
+RESULT:table1_col1_patience=0.913260
+RESULT:table1_col2_risk_taking=-0.474150
+RESULT:table1_col5_natives_patience=1.295826
+RESULT:table1_col5_natives_risk_taking=-1.320344
+RESULT:table1_col3_observations=1992276.000000
+RESULT:table2_col3_patience=0.130210
+RESULT:table2_col3_risk_taking=-0.062939
+RESULT:table2_col1_patience=0.101464
+RESULT:table2_col4_patience=0.172735
+RESULT:table2_col4_risk_taking=-0.063314
+RESULT:table2_col3_observations=80397.000000
+```
+
+## Last run's stderr (excerpt: first/last 3000 characters)
+```
+NOTE: 1 fixed-effect singleton was removed (1 observation).
+NOTE: 1 fixed-effect singleton was removed (1 observation).
+NOTE: 1 fixed-effect singleton was removed (1 observation).
+```
+
+## Claims still failing
+1. table2_col3_patience: paper claims 0.931 SD of PISA math score per SD of country-of-origin patience (coefficient), your code produced 0.13021, tolerance 0.1246, gap 86.01% relative
+2. table2_col3_risk_taking: paper claims -0.294 SD of PISA math score per SD of country-of-origin risk-taking (coefficient), your code produced -0.062939, tolerance 0.415, gap 78.59% relative
+3. table2_col1_patience: paper claims 0.779 SD of PISA math score per SD of country-of-origin patience (coefficient), your code produced 0.101464, tolerance 0.1476, gap 86.98% relative
+4. table2_col4_patience: paper claims 1.032 SD of PISA math score per SD of country-of-origin patience (coefficient), your code produced 0.172735, tolerance 0.1289, gap 83.26% relative
+5. table2_col4_risk_taking: paper claims -0.449 SD of PISA math score per SD of country-of-origin risk-taking (coefficient), your code produced -0.063314, tolerance 0.3118, gap 85.90% relative
+
+## Previous attempts (oldest first)
+  Attempt 1: table1_col3_patience=1.220056, table1_col3_risk_taking=-1.231694, table1_col1_patience=0.91326, table1_col2_risk_taking=-0.47415, table1_col5_natives_patience=1.295826, table1_col5_natives_risk_taking=-1.320344, table1_col3_observations=1992276.0, table2_col3_patience=0.333403, table2_col3_risk_taking=-0.231388, table2_col1_patience=0.259798, table2_col4_patience=0.442287, table2_col4_risk_taking=-0.232767, table2_col3_observations=80397.0
+  Attempt 2: table1_col3_patience=1.220056, table1_col3_risk_taking=-1.231694, table1_col1_patience=0.91326, table1_col2_risk_taking=-0.47415, table1_col5_natives_patience=1.295826, table1_col5_natives_risk_taking=-1.320344, table1_col3_observations=1992276.0, table2_col3_patience=0.13021, table2_col3_risk_taking=-0.062939, table2_col1_patience=0.101464, table2_col4_patience=0.172735, table2_col4_risk_taking=-0.063314, table2_col3_observations=80397.0
+
+These attempts have already been tried.  Do not repeat a strategy
+that has already produced the same values.
+
+## Task
+Adjust the code minimally to close the gap on the failing claims.
+Prefer changes that align more closely with the paper's stated methodology:
+re-read the methodology summary above and check the model specification,
+covariate selection, fixed effects, clustering, and seed against what the
+paper actually specifies.  In econometrics papers, common gap-closers are:
+  - getting the cluster-robust SE right (vcovCL / cluster_var argument)
+  - matching the paper's exact fixed-effects structure
+  - using the same sample-restriction filters the paper applied
+  - matching the paper's weighting scheme (weights= argument)
+
+## Deviation reporting
+If you must change something the paper did NOT specify in order to close
+the gap, emit a ``DEVIATION:`` line via cat() describing the change:
+
+    cat('DEVIATION: Used HC1 robust SE because the paper does not specify but the default did not converge\n')
+
+## When to give up
+If after re-reading the methodology and the previous attempts you judge
+the gap cannot be closed without unreasonable deviation, return the SAME
+R CODE you were given, BYTE-FOR-BYTE unchanged.  The pipeline will record
+the claim as unreproducible.
+
+## Output convention (unchanged)
+Emit every metric as ``cat('RESULT:<name>=<value>\n')``.
+The dataset is a directory tree at '<repo>/.cache/datasets/hanushek_2022_patience_risk_human_capital.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+No network, no system().  set.seed(42).
+
+Output ONLY the R code — no explanation, no markdown fences.
