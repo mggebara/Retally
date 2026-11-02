@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "entry_id": "carrera-2022-who-chooses-commitment",
+  "mode": "independent",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [],
+  "notes": "Participant-level file cleaned_commitment_study_data.dta. Sample: drop the 44 endogenous-assignment flags (flag_exclude_exog, flag_low_wtp) and the wave-3 threshold80_12 group -> 1126. Conservative BCP = per-participant mean over pairs (1,2),(2,3),(3,5),(5,7),(7,12) of (wtp_hi - wtp_lo)/(hi - lo) - (days_lo + days_hi)/2. Goal gap = goal - days_0; actual gap = visits - forecast under the assigned incentive; both (and the BCP in Table 4) z-scored over the 1126 sample. Table 3: OLS with wave FE, HC1 SEs. Table 4: long participant-by-threshold 'more' choices (8/12/16 in waves 1-2 from q169/chose_commit12/q295, 12 only in wave 3) -> 2824 rows; LPM with wave and threshold FE, SEs clustered by participant. Attempt-1 was exploratory (no RESULT lines). Attempt-2 coded q169/q295 == 1 as take-up; Table 3 matched but Table 4 was off, and the 8/16 take-up rates were the reverse of the paper's 64%/32%. Recoding take-up as == 2 reproduced all Table 4 claims. Final run: all 11 claims within tolerance.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T07:01:22Z",
+  "finished_at": "2026-11-02T07:04:30Z"
+}

@@ -1,0 +1,28 @@
+suppressMessages({library(haven); library(dplyr)})
+D <- "<repo>/benchmark/.cache/claude-code/bokobza-2022-morning-after-coup-purges/blind/2026-11-02-b/mount/bokobza_2022_morning_after_coup_purges"
+c <- read_dta(file.path(D, "morning_after_dataset_countrylevel.dta"))
+c <- c %>% arrange(COUNTRY_DATA, YEAR_DATA) %>% group_by(COUNTRY_DATA) %>%
+  mutate(gap = YEAR_DATA - lag(YEAR_DATA), ldem = lag(democracy1)) %>% ungroup()
+cat("gaps:\n"); print(table(c$gap, useNA="a"))
+cat("dup country-year:", sum(duplicated(c[,c("COUNTRY_DATA","YEAR_DATA")])), "\n")
+cat("lag dem bmr vs ldemocracy_br\n"); print(table(c$ldem, c$ldemocracy_br, useNA="a"))
+cat("month of coups:\n"); print(table(c$coupattempt_month_whogov[c$coupattempt_whogov==1], useNA="a"))
+cat("coupattempt_whogov_br vs whogov\n"); print(table(c$coupattempt_whogov, c$coupattempt_whogov_br, useNA="a"))
+s <- c %>% filter(ldem==0, YEAR_DATA>=1967, YEAR_DATA<=2016)
+cat("aut sample n:", nrow(s), " countries:", length(unique(s$COUNTRY_DATA)), " coups:", sum(s$coupattempt_whogov, na.rm=TRUE), "\n")
+i <- readRDS(file.path(D, "morning_after_dataset_individuallevel.rds"))
+for (v in c("minister_type","importance_factor","minister_classification","democracy_lag","leader","experience_group")) { cat("--", v, "\n"); print(table(i[[v]], useNA="a")) }
+cat("importance_numeric x importance_factor\n"); print(table(i$importance_numeric, i$importance_factor, useNA="a"))
+cat("purged_y1 mean by year\n"); print(round(tapply(i$purged_y1, i$year, mean),3))
+cat("experience_group x experience\n"); print(table(i$experience_group, pmin(i$experience,8)))
+cat("party_group x n_party\n"); print(table(i$party_group, pmin(i$n_party,3), useNA="a"))
+cat("dem lag x dem lag br\n"); print(table(i$democracy_lag, i$democracy_lag_br, useNA="a"))
+a <- i %>% filter(democracy_lag==0, year>=1967, year<=2016)
+cat("indiv aut n:", nrow(a), " persons(name-country):", nrow(distinct(a, name, country_name)), " countries:", length(unique(a$country_name)), "\n")
+a2 <- a %>% filter(leader==0, !is.na(gdp_cap_pwt_ln_lag), !is.na(pop_pwt_ln_lag), !is.na(coupattempt_presentyear))
+cat("indiv aut nonleader complete n:", nrow(a2), "\n"); print(table(a2$coupattempt_presentyear))
+cat("minister_type x prestige in a2\n"); print(table(a2$minister_type, a2$prestige_1, useNA="a"))
+cat("minister_type x importance in a2\n"); print(table(a2$minister_type, a2$importance_numeric, useNA="a"))
+# check country-level coup vs individual coup agreement
+ci <- a %>% distinct(country_name, year, coupattempt_presentyear)
+cat("country-year dup coup codes:", sum(duplicated(ci[,1:2])), "\n")

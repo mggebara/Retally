@@ -1,0 +1,53 @@
+Variable mapping:
+             id            year           month             bis              T2 
+           "id"          "year"         "month"           "BIS"            "T2" 
+              q               e              q2              e2            cpap 
+        "c_ele"         "g_ele"        "c_ele2"        "g_ele2"       "c_papas" 
+           gpap            cagu            gagu            ccar            gcar 
+      "g_papas"       "c_aguav"       "g_aguav"         "c_car"         "g_car" 
+            inc          totexp            size           rooms            surf 
+      "IMPEXAC"        "TotExp"        "NMIEMB"        "NHABIT"        "SUPERF" 
+            eld            educ             act          tenure            bage 
+"mayores_count"    "ESTUDREDSP"       "NUMACTI"        "REGTEN"       "ANNOCON" 
+           muni           urban             cap             reg 
+       "TAMAMU"         "urban"        "CAPROV"          "CCAA" 
+Rows in data: 203416 
+Rows in window: 56950 
+Share of window rows with 2 interviews per id: 0.5057419 
+Panel rows: 28802  households: 14401 
+Using T2: FALSE  mean T: 0.2058538 
+c_ele vs c_ele2 summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  448.4  2017.8  2948.4  3412.0  4242.0 13920.0 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+    6.0   455.4   859.2  1235.1  1539.6 29838.0   24065 
+Rows with core vars: 28627 
+Controls: size, rooms, surf, factor(elderly), factor(educ), factor(act3), factor(tenure), factor(bage), factor(muni), factor(urban), factor(cap), factor(reg) 
+Rows complete without instruments: 28100  with instruments: 13254 
+Instrument availability low: imputing missing instrument prices by region-year-quarter means
+Estimation sample: 28100  households: 14210 
+OLS col1:
+        Estimate Std. Error     t value     Pr(>|t|)
+lp  -1.068395219 0.02130770 -50.1412783 0.000000e+00
+Tr  -0.127217191 0.01615860  -7.8730316 3.710863e-15
+msr  0.001876615 0.00512765   0.3659795 7.143858e-01
+FE col3:
+        Estimate Std. Error     t value     Pr(>|t|)
+lp  -1.023406616 0.02185906 -46.8184099 0.000000e+00
+Tr  -0.143180257 0.01670811  -8.5695067 1.147852e-17
+msr -0.003150453 0.00532170  -0.5920013 5.538594e-01
+LIML col2 beta: 0.1676042  kappa: 1.000068  F: 5.58632 
+LIML col4 beta: -1.048012  kappa: 1.000007  F: 2.968984 
+LIML col6 beta: 1.167604  col8 beta: -0.04801213 
+RESULT:reform_consumption_ols_col1=-0.127217
+RESULT:reform_consumption_iv_col2=-0.051330
+RESULT:reform_consumption_fe_col3=-0.143180
+RESULT:reform_consumption_fe_iv_col4=-0.145524
+RESULT:reform_expenditure_ols_col5=-0.127217
+RESULT:reform_expenditure_iv_col6=-0.051330
+RESULT:reform_expenditure_fe_col7=-0.143180
+RESULT:reform_expenditure_fe_iv_col8=-0.145524
+RESULT:price_elasticity_consumption_ols_col1=-1.068395
+RESULT:price_elasticity_consumption_fe_col3=-1.023407
+RESULT:n_obs_table2=28100
+RESULT:n_households_table2=13890

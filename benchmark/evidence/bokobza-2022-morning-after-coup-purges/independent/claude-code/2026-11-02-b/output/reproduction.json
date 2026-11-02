@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "entry_id": "bokobza-2022-morning-after-coup-purges",
+  "mode": "independent",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-4", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [
+    "Country level: sample = country-years 1967-2016 with one-year-lagged Boix-Miller-Rosato democracy (democracy1) == 0; lags built within country only for consecutive years. N = 3,743 (country FE base) vs 3,715 reported; fixest keeps FE singletons, which Stata reghdfe drops (this explains most of the leader-FE N gap, 3,626 vs 3,332, but does not change point estimates).",
+    "Failed coup indicator taken as coupattempt_whogov (country level) and coupattempt_presentyear == 'Coup attempt' (individual level), assumed to already carry the July recoding.",
+    "Leader FE uses leader_cab_id; lagged monarchy is not fully collinear with leader FE in this construction and is kept (paper says it drops).",
+    "Individual level: the shipped pop_pwt_ln_lag column is identical to gdp_cap_pwt_ln_lag (correlation 1), so lagged log population was rebuilt by shifting the current-year pop_pwt_ln (and gdp_cap_pwt_ln) by one year within country.",
+    "Individual samples: autocracies (democracy_lag == 0), 1967-2016, leader excluded. Experience model drops rows with missing rank tier (importance_numeric NA), which matches the reported N (90,020) better than dropping the 'junior minister' tier; no cubic experience terms. Affiliation model drops unknown/missing party. Responsibility model uses minister_type (ref. Defense). Importance model uses tiers 0.5/1/2/3 vs ref. 4 (PM/President not leader), dropping the 6 rows coded 0."
+  ],
+  "notes": "Two exploratory runs (attempts 1-2, no RESULT lines) inspected variables and sample sizes. Attempt 3 was the first full estimate; check_attempt reported all claims within tolerance, but fixest dropped lagged population as collinear. Attempt 4 tried a tighter collinearity tolerance (no effect; recorded as a claim attempt to be conservative since claims had been compared). Diagnosing it showed that the shipped pop lag duplicates the GDP lag; the final run rebuilds both lags from the current-year columns. Final estimates: country FE 0.103 / 0.112; leader FE 0.062 / 0.064 (claimed 0.08 / 0.09, still the weakest match); individual-level coefficients 0.144, -0.101, 0.175, -0.124, 0.204, -0.182, 0.373. No script files from the dataset were opened (none were present in the mount).",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T07:01:22Z",
+  "finished_at": "2026-11-02T07:06:00Z"
+}

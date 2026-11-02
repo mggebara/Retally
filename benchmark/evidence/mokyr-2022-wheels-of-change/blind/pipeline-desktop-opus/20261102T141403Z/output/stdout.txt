@@ -1,0 +1,84 @@
+Columns:
+ [1] "local_government_area"  "district_id"            "smith"                 
+ [4] "joiner"                 "butcher"                "blacksmith"            
+ [7] "attorney"               "apothecary"             "surgeon"               
+[10] "wrights"                "draper"                 "trade_other"           
+[13] "GAZ_CNTY"               "ntextile0"              "all_weaver0"           
+[16] "worsted_w0"             "linen_w0"               "cotton_w0"             
+[19] "other_weaver0"          "pc0"                    "all_weaver1"           
+[22] "worsted_w1"             "linen_w1"               "cotton_w1"             
+[25] "other_weaver1"          "y1"                     "x1"                    
+[28] "lords_ploughs"          "total_ploughs"          "mills"                 
+[31] "ecclesiastical_holding" "king_holding"           "villcount"             
+[34] "pop_86"                 "pc1300_mean"            "pc1400_mea"            
+[37] "carbon"                 "riv_rug1020count"       "dist_rug_mean"         
+[40] "wheat_tmean"            "suitmean"               "riv_rug01count"        
+[43] "riv_rug13count"         "riv_rug14count"         "riv_rug15count"        
+[46] "riv_rug16count"         "riv_rug23count"         "riv_rug24count"        
+[49] "riv_rug25count"         "riv_rug26count"         "min_dist_to_roman_rds" 
+[52] "min_dist_2nav_rivers"   "min_harbor"             "dist_elevation_mean"   
+[55] "DIST_London"            "dist_grass_mean"        "area"                  
+[58] "latitude"               "longitude"              "temp_mean_dist"        
+[61] "precip_mean_dist"       "pcmean"                
+Population var: pcmean 
+wrights treated as counts -> per 10,000
+mills treated as already per capita
+Summary w_pc:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0       0    5225   37595   32365  859265 
+Summary m_pc:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+   0.00    1.00    7.00   19.54   24.93  393.70      27 
+Other wheat vars:  
+Constructed wheat dummy from wheat_tmean <= 5
+River vars: riv_rug1020count, riv_rug01count, riv_rug13count, riv_rug14count, riv_rug15count, riv_rug16count, riv_rug23count, riv_rug24count, riv_rug25count, riv_rug26count 
+River suitability var: riv_rug26count 
+N sample with mills: 298 
+
+== Table 2 c1 ==
+    Estimate   Std. Error      t value     Pr(>|t|) 
+1.437759e+03 4.894895e+02 2.937261e+00 5.906418e-03 
+nobs: 298 
+
+== Table 2 c2 ==
+    Estimate   Std. Error      t value     Pr(>|t|) 
+1.490219e+03 4.754613e+02 3.134259e+00 3.539165e-03 
+nobs: 298 
+
+== Table 2 c3 ==
+    Estimate   Std. Error      t value     Pr(>|t|) 
+1.453621e+03 4.929260e+02 2.948963e+00 5.731761e-03 
+nobs: 298 
+
+== Table 2 c4 ==
+    Estimate   Std. Error      t value     Pr(>|t|) 
+1.439881e+03 5.001733e+02 2.878763e+00 6.857166e-03 
+nobs: 298 
+
+== Table 2 c5 ==
+   Estimate  Std. Error     t value    Pr(>|t|) 
+848.2918501 522.1732187   1.6245411   0.1134963 
+nobs: 298 
+
+== Table 3 col5 OLS ==
+   Estimate  Std. Error     t value    Pr(>|t|) 
+770.5285721 517.7667727   1.4881769   0.1459214 
+
+IV coef: 1930.177  first-stage F (clustered Wald): 8.857482 
+
+IV coef: 1855.29  first-stage F (clustered Wald): 7.323771 
+
+IV coef: 2087.305  first-stage F (clustered Wald): 7.923968 
+RESULT:watermills_table2_col1=1437.75871
+RESULT:watermills_table2_col2=1490.219001
+RESULT:watermills_table2_col3=1453.620751
+RESULT:watermills_table2_col4=1439.880572
+RESULT:watermills_table2_col5=848.2918501
+RESULT:watermills_ols_table3_col5=770.5285721
+RESULT:watermills_iv_table3_col2=1930.176852
+RESULT:watermills_iv_table3_col4=1855.28963
+RESULT:watermills_iv_table3_col6=2087.305334
+RESULT:first_stage_f_table3_col2=8.857481867
+RESULT:first_stage_f_table3_col4=7.323770948
+RESULT:first_stage_f_table3_col6=7.923968491
+RESULT:n_districts_tables2_3=298

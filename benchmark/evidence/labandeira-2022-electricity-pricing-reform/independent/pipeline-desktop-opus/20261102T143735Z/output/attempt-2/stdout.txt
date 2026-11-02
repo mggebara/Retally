@@ -1,0 +1,52 @@
+Variable mapping:
+             id            year           month             bis              T2 
+           "id"          "year"         "month"           "BIS"            "T2" 
+              q               e              q2              e2            cpap 
+        "c_ele"         "g_ele"        "c_ele2"        "g_ele2"       "c_papas" 
+           gpap            cagu            gagu            ccar            gcar 
+      "g_papas"       "c_aguav"       "g_aguav"         "c_car"         "g_car" 
+            inc          totexp            size           rooms            surf 
+      "IMPEXAC"        "TotExp"        "NMIEMB"        "NHABIT"        "SUPERF" 
+            eld            educ             act          tenure            bage 
+"mayores_count"    "ESTUDREDSP"       "NUMACTI"        "REGTEN"       "ANNOCON" 
+           muni           urban             cap             reg              pv 
+       "TAMAMU"         "urban"        "CAPROV"          "CCAA"         "p_kwh" 
+Rows in data: 203416 
+Rows in window: 56950 
+Share of window rows with 2 interviews per id: 0.5057419 
+Panel rows: 28802  households: 14401 
+T2 mean: 0.1907274  NA share: 0.1050969 
+Using T2: FALSE  mean T: 0.2058538 
+Candidate price var p_kwh  corr with ln(e/q): 1 
+Instrument availability: pap 0.6754045  agu 0.9730574  car 0.6735643 
+Rows with core vars: 28627 
+Controls: size, rooms, surf, factor(elderly), factor(educ), factor(act3), factor(tenure), factor(bage), factor(muni), factor(urban), factor(cap), factor(reg) 
+Rows complete without instruments: 28100  with instruments: 13254 
+Estimation sample: 13254  households: 9021 
+DEVIATION: Expenditure OLS/LSDV columns estimated without ln(price) because ln(price)=ln(exp)-ln(kWh) makes the T coefficient mechanically identical to the consumption equation
+OLS col1:
+         Estimate  Std. Error      t value      Pr(>|t|)
+lp  -1.0652234818 0.030279395 -35.17981377 3.504520e-254
+Tr  -0.1275330734 0.023952353  -5.32444869  1.036961e-07
+msr  0.0007156916 0.007864237   0.09100585  9.274900e-01
+FE col3:
+      Estimate Std. Error    t value      Pr(>|t|)
+lp  -0.9904419 0.04165471 -23.777429 2.093009e-117
+Tr  -0.1428776 0.03153018  -4.531455  6.019439e-06
+msr -0.0162682 0.01049121  -1.550650  1.210605e-01
+OLS col5 Tr: -0.1231885  FE col7 Tr: -0.1437343 
+LIML col2 beta: -0.6179756  kappa: 1.000053  F: 7.428016 
+LIML col4 beta: -1.111985  kappa: 1.000444  F: 5.419484 
+LIML col6 beta: 0.3820244  col8 beta: -0.1119853 
+RESULT:reform_consumption_ols_col1=-0.127533
+RESULT:reform_consumption_iv_col2=-0.097742
+RESULT:reform_consumption_fe_col3=-0.142878
+RESULT:reform_consumption_fe_iv_col4=-0.153772
+RESULT:reform_expenditure_ols_col5=-0.123188
+RESULT:reform_expenditure_iv_col6=-0.097742
+RESULT:reform_expenditure_fe_col7=-0.143734
+RESULT:reform_expenditure_fe_iv_col8=-0.153772
+RESULT:price_elasticity_consumption_ols_col1=-1.065223
+RESULT:price_elasticity_consumption_fe_col3=-0.990442
+RESULT:n_obs_table2=8466
+RESULT:n_households_table2=4233

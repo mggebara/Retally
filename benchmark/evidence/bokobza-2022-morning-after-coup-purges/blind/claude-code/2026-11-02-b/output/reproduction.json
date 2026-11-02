@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "entry_id": "bokobza-2022-morning-after-coup-purges",
+  "mode": "blind",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Individual-level models: the provided pop_pwt_ln_lag column is an exact copy of gdp_cap_pwt_ln_lag (verified in the final script), so it was collinear and dropped in attempt-4. The final script rebuilds lagged ln population as the year-1 value of pop_pwt_ln within country from the same file, as the paper's method specifies. This was found from a data diagnostic (attempt-5), not by comparing with any reported value.",
+    "Affiliation model: party_group 'independent' is treated as 'no party affiliation'; 'unknown' and missing party_group are excluded (reference: other_party).",
+    "Experience model excludes the leader and importance tier 0.5 (junior minister or other low-ranking post); rows with missing importance are kept. Importance model keeps tiers 4 (reference), 3, 2, 1, 0.5 and drops tier 0 and missing values. Responsibility model drops rows with missing minister_type.",
+    "Country level: autocracy = lagged Boix-Miller-Rosato democracy1 == 0 (lag built by country and year-1 match), years 1967-2016; controls lagged one year the same way. In the leader-FE Main model the lagged monarchy dummy is not fully collinear with leader FE under this lag construction, so it stays in the model (the paper says it drops)."
+  ],
+  "notes": "Independent blind reproduction from the paper text only; no author scripts, logs, .tex or images were opened. Country level (Tables A1/A2): fixest OLS of replacement_rateadj_minister on coupattempt_whogov (failed coup attempt already recoded July-to-July in the data), with lagged ln GDP/cap and ln pop (Base), plus lagged monarchy/military/party dummies (Main), and country or leader (leader_cab_id) FE plus year FE; SEs clustered by country. N: 3743/3703 (country FE), 3626/3590 (leader FE). Individual level (Tables K1/K2): LPM of purged_y1 on the failed coup indicator (coupattempt_presentyear), category dummies and their interactions with it, lagged ln GDP/cap and ln pop, and a cubic in experience (not in the experience model); country and year FE; SEs clustered by country. Sample: lagged BMR democracy == 0, 1967-2016, leader excluded, giving 95,344 minister-years before the model-specific restrictions. attempt-1, attempt-2 and attempt-5 were exploratory (no RESULT lines). attempt-3 crashed because update() does not handle fixest's | syntax. attempt-4 printed RESULTs, but stderr showed the population lag dropped as collinear; that led to the attempt-5 diagnostic and the data fix in the final run. The fix changes only the individual-level coefficients, and only slightly.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T07:00:00Z",
+  "finished_at": "2026-11-02T07:07:00Z"
+}

@@ -1,0 +1,140 @@
+                                   m_a1_base                    m_a1_main
+Dependent Var.: replacement_rateadj_minister replacement_rateadj_minister
+                                                                         
+fca                        0.1026** (0.0326)           0.1120*** (0.0324)
+lgdp                       -0.0356. (0.0184)            -0.0330. (0.0195)
+lpop                       -0.1457* (0.0634)            -0.1429* (0.0632)
+lmon                                                      0.0153 (0.0221)
+lmil                                                    -0.0525. (0.0267)
+lparty                                                 -0.0792** (0.0287)
+Fixed-Effects:  ---------------------------- ----------------------------
+COUNTRY_ID                               Yes                          Yes
+YEAR_DATA                                Yes                          Yes
+leader_cab_id                             No                           No
+_______________ ____________________________ ____________________________
+S.E.: Clustered               by: COUNTRY_ID               by: COUNTRY_ID
+Observations                           3,743                        3,703
+R2                                   0.22392                      0.22901
+Within R2                            0.00725                      0.01199
+
+                                   m_a2_base                    m_a2_main
+Dependent Var.: replacement_rateadj_minister replacement_rateadj_minister
+                                                                         
+fca                         0.0615. (0.0324)             0.0638* (0.0320)
+lgdp                        -0.0244 (0.0251)             -0.0259 (0.0234)
+lpop                        -0.1344 (0.0884)            -0.1461. (0.0861)
+lmon                                                   0.5607*** (0.0376)
+lmil                                                      0.0687 (0.0706)
+lparty                                                    0.0815 (0.0936)
+Fixed-Effects:  ---------------------------- ----------------------------
+COUNTRY_ID                                No                           No
+YEAR_DATA                                Yes                          Yes
+leader_cab_id                            Yes                          Yes
+_______________ ____________________________ ____________________________
+S.E.: Clustered               by: COUNTRY_ID               by: COUNTRY_ID
+Observations                           3,626                        3,590
+R2                                   0.33530                      0.33828
+Within R2                            0.00257                      0.00841
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+within-country SD of lagged log population: 0.3582258 
+                                m_exp             m_aff              m_res
+Dependent Var.:             purged_y1         purged_y1          purged_y1
+                                                                          
+fca                0.1466*** (0.0418) 0.1760** (0.0526)  0.2061** (0.0658)
+e23                   0.0023 (0.0073)                                     
+e46                   0.0123 (0.0093)                                     
+e6p                  -0.0117 (0.0096)                                     
+lgdp                  0.0049 (0.0177)   0.0103 (0.0185)    0.0011 (0.0174)
+fca x e23            -0.0510 (0.0421)                                     
+fca x e46            -0.1004 (0.0611)                                     
+fca x e6p           -0.1002. (0.0510)                                     
+nopty                                  0.0330* (0.0143)                   
+ldpty                                  -0.0148 (0.0134)                   
+experience                              0.0016 (0.0026)    0.0031 (0.0030)
+I(I(experience^2))                     -0.0001 (0.0002)   -0.0002 (0.0002)
+I(I(experience^3))                    1.76e-6 (3.57e-6)  5.99e-6 (4.15e-6)
+fca x nopty                            -0.0654 (0.0705)                   
+fca x ldpty                           -0.1215* (0.0576)                   
+mfa                                                       -0.0077 (0.0096)
+mfin                                                     0.0279** (0.0106)
+moth                                                    0.0520*** (0.0082)
+mnat                                                     0.0341** (0.0109)
+fca x mfa                                                 -0.0389 (0.0696)
+fca x mfin                                                -0.0854 (0.0664)
+fca x moth                                               -0.1162* (0.0581)
+fca x mnat                                               -0.1804* (0.0830)
+top                                                                       
+med                                                                       
+low                                                                       
+jun                                                                       
+lpop                                                                      
+fca x top                                                                 
+fca x med                                                                 
+fca x low                                                                 
+fca x jun                                                                 
+Fixed-Effects:     ------------------ ----------------- ------------------
+country_isocode                   Yes               Yes                Yes
+year                              Yes               Yes                Yes
+__________________ __________________ _________________ __________________
+S.E.: Clustered    by: country_isoc.. by: country_iso.. by: country_isoc..
+Observations                   89,637            85,690             76,204
+R2                            0.12522           0.12483            0.13121
+Within R2                     0.00181           0.00218            0.00262
+
+                                m_imp
+Dependent Var.:             purged_y1
+                                     
+fca                0.3741*** (0.0932)
+e23                                  
+e46                                  
+e6p                                  
+lgdp                 -0.0008 (0.0198)
+fca x e23                            
+fca x e46                            
+fca x e6p                            
+nopty                                
+ldpty                                
+experience           -0.0007 (0.0026)
+I(I(experience^2))  -7.42e-6 (0.0002)
+I(I(experience^3))  4.97e-7 (3.62e-6)
+fca x nopty                          
+fca x ldpty                          
+mfa                                  
+mfin                                 
+moth                                 
+mnat                                 
+fca x mfa                            
+fca x mfin                           
+fca x moth                           
+fca x mnat                           
+top                  -0.0200 (0.0127)
+med                   0.0119 (0.0132)
+low                  0.0257. (0.0143)
+jun                  -0.0069 (0.0150)
+lpop                  0.0016 (0.0198)
+fca x top          -0.2558** (0.0942)
+fca x med          -0.2850** (0.0946)
+fca x low           -0.2652* (0.1195)
+fca x jun          -0.2604** (0.0871)
+Fixed-Effects:     ------------------
+country_isocode                   Yes
+year                              Yes
+__________________ __________________
+S.E.: Clustered    by: country_isoc..
+Observations                   89,631
+R2                            0.12581
+Within R2                     0.00250
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RESULT:failed_coup_base_country_fe=0.102553
+RESULT:failed_coup_main_country_fe=0.111954
+RESULT:failed_coup_base_leader_fe=0.061535
+RESULT:failed_coup_main_leader_fe=0.063813
+RESULT:failed_coup_experience_model=0.146604
+RESULT:failed_coup_x_over_6_years_experience=-0.100179
+RESULT:failed_coup_affiliation_model=0.175977
+RESULT:failed_coup_x_leaders_party=-0.121527
+RESULT:failed_coup_responsibility_model=0.206058
+RESULT:failed_coup_x_natural_resources=-0.180449
+RESULT:failed_coup_importance_model=0.374061

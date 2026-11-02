@@ -1,0 +1,3248 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: 1
+Abstract (first 500 chars): QUASI-EXPERIMENT Xavier Labandeira, José M. Labeaga, Jordi J. Teixidó* August 5, 2021 The global energy mix and cost structure of the power industry are experiencing a redefinition. Many countries are revamping electricity-pricing systems to guarantee fixed-cost recovery, often by raising the fixed charge of two-part tariff schemes.
+Methodology Summary: - **Design / identification:** A quasi-experimental difference-in-differences design built on the August 2013 Spanish electricity tariff reform. The fixed charge F rose 112% and the regulated volumetric charge f fell about 36%. Data come from the Spanish Household Budget Survey (HBS, INE). The HBS interviews 26 independently stratified two-week subsamples each year, and each household is interviewed twice, in the same two-week period of consecutive years. Treated households (D=1) have their first interview before the reform date R (1 Aug 2013) and their second after it (i1 < R < i2). Control households (D=0) have both interviews before R. The treatment variable T = 1 for interviews held after the reform. The estimated coefficient on T is δ, the DiD estimate of the average treatment effect. Because bills arrive with a lag, the effective response is counted from the first reformed bill (about one month after the reform).
+- **Sample:** Households interviewed between August 2011 and April 2014. The sample stops in April 2014 because a later regulatory change cut prices, and the window avoids other confounding events. The panel has 25,775 observations. The Table 2 estimation sample is 20,872 observations on 10,729 households. Electricity consumption (kWh) and expenditure (€) come from the last paid bill, covering the month before the interview, multiplied by the number of bills per year. The price is the household's effective price, ln(expenditure/kWh), including all taxes. Instrument prices can only be built for households that bought those goods in the period.
+- **Estimating equation (Eq. 4, log-log structural demand model):** ln(q_it) = α + β ln(p_it) + β ln(y_it) + γX_it + δT_it + θ_i + φ_t + ε_it. The dependent variable is ln(kWh); the same specification is re-run with ln(electricity expenditure) as the dependent variable. Income enters as ln(income) and ln(income)². The table also includes a "months since reform" variable. The coefficient on T reads as an approximate percentage change. Coefficients are in natural units (log points / elasticities). Nothing in the paper says they are standardised.
+- **Controls / fixed effects:** X contains household size; number of rooms and surface (m²); an elderly dummy; head's education (4 levels); household economic situation (number of active members, 3 levels); housing tenure (renting); building age >25 years; municipality size dummies (5 levels); an urban-area dummy; a province-capital dummy; and regional dummies. Quarterly dummies absorb seasonality and weather, together with the regional dummies. Year fixed effects are included in all columns. Household fixed effects are added in the LSDV/within columns (3, 4, 7, 8).
+- **Estimators (Table 2):** Columns 1 and 5 are OLS. Columns 2 and 6 are IV. Columns 3 and 7 are LSDV with household FE. Columns 4 and 8 are household-FE IV and are the preferred specifications. The IV is LIML, instrumenting ln(electricity price) with the effective unit prices (expenditure/quantity) of potatoes, water and fuel. With 3 instruments the model is over-identified with 2 degrees of freedom. Reported diagnostics are the first-stage F, the Kleibergen-Paap rk LM test, the Cragg-Donald Wald F (against the Stock-Yogo LIML 10% critical value), the Montiel Olea-Pflueger effective F, and the Sargan and Hansen J tests. Headline results: the reform coefficient on consumption is −0.154 (col 3) and −0.123 (col 4, SE 0.054); on expenditure it is −0.089 (col 8).
+- **Standard errors:** Robust and clustered at the household level for Table 2.
+- **Robustness (Table 3):** A cross-section restricted to 2013 only, which excludes households treated in 2014. It is estimated by OLS with and without controls, with N = 18,770 without controls and 14,894 with controls. SEs are clustered at the two-week interview period. Headline estimates: T = −0.096 for consumption and −0.078 for expenditure (with controls). Appendix Tables A2 and A3 report interactions of T with income and other variables.
+- **Distributional analysis:** Quantile regressions (Koenker-Bassett) on the 2013 sample (N = 14,894, controls included) at deciles q10–q90, for ln consumption (Table 4) and ln expenditure (Table 5). SEs are bootstrapped with 50 replications. Incidence is assessed with Suits and Kakwani progressivity indices, computed from Gini indices and concentration curves of electricity expenditure versus total expenditure for treated and control households. There is no train/test split or cross-validation; the paper uses in-sample regression inference only.
+
+
+## Claims to Reproduce
+1. reform_consumption_ols_col1: -0.178 (log points of annualised household electricity consumption (kWh)) [type: coefficient]
+   Location: Table 2, column (1), Reform (T)
+   Context: Table 2 ("Effect of the Reform on Residential Electricity Consumption and Expenditure (2011-2014)"), column (1), row Reform (T): the paper's difference-in-differences estimate of the August 2013 Spanish electricity pricing reform (fixed charge raised, regulated volumetric rate cut) on household electricity consumption, estimated by OLS. Data: Spanish Household Budget Survey households interviewed between August 2011 and April 2014, each interviewed twice, in the same two-week period of two consecutive years; the control group has both interviews before the reform, the treated group its second …
+2. reform_consumption_iv_col2: -0.123 (log points of annualised household electricity consumption (kWh)) [type: coefficient]
+   Location: Table 2, column (2), Reform (T)
+   Context: Table 2, column (2), row Reform (T): the column (1) consumption regression with the log electricity price instrumented by the households' effective prices (expenditure divided by quantity) of potatoes, water and fuel, estimated by limited-information maximum likelihood (LIML); year fixed effects and controls, no household fixed effects, standard errors clustered at the household level according to the table note.
+3. reform_consumption_fe_col3: -0.154 (log points of annualised household electricity consumption (kWh)) [type: coefficient]
+   Location: Table 2, column (3), Reform (T)
+   Context: Table 2, column (3), row Reform (T): the column (1) consumption regression estimated with household fixed effects (LSDV / within estimator), year fixed effects and the same controls; standard errors clustered at the household level. The paper's main estimate of the reform's effect on consumption once unobserved household heterogeneity is controlled for.
+4. reform_consumption_fe_iv_col4: -0.123 (log points of annualised household electricity consumption (kWh)) [type: coefficient]
+   Location: Table 2, column (4), Reform (T)
+   Context: Table 2, column (4), row Reform (T): the household fixed-effects consumption regression of column (3) with the log electricity price instrumented by the effective prices of potatoes, water and fuel (LIML), the paper's preferred specification. The table note states robust standard errors clustered at the household level.
+5. reform_expenditure_ols_col5: -0.156 (log points of annualised household electricity expenditure (EUR)) [type: coefficient]
+   Location: Table 2, column (5), Reform (T)
+   Context: Table 2, column (5), row Reform (T): the column (1) OLS specification (same sample, regressors, controls, quarterly dummies and year fixed effects, household-clustered standard errors) with the log of household electricity expenditure as the dependent variable.
+6. reform_expenditure_iv_col6: -0.09 (log points of annualised household electricity expenditure (EUR)) [type: coefficient]
+   Location: Table 2, column (6), Reform (T)
+   Context: Table 2, column (6), row Reform (T): the column (2) IV (LIML) specification, log price instrumented by the effective prices of potatoes, water and fuel, no household fixed effects, with log electricity expenditure as the dependent variable.
+7. reform_expenditure_fe_col7: -0.098 (log points of annualised household electricity expenditure (EUR)) [type: coefficient]
+   Location: Table 2, column (7), Reform (T)
+   Context: Table 2, column (7), row Reform (T): the column (3) household fixed-effects specification with log electricity expenditure as the dependent variable; household-clustered standard errors.
+8. reform_expenditure_fe_iv_col8: -0.089 (log points of annualised household electricity expenditure (EUR)) [type: coefficient]
+   Location: Table 2, column (8), Reform (T)
+   Context: Table 2, column (8), row Reform (T): the column (4) household fixed-effects IV (LIML) specification with log electricity expenditure as the dependent variable; the paper's preferred expenditure estimate (significant at the 10% level in the table).
+9. price_elasticity_consumption_ols_col1: -1.044 (elasticity of consumption with respect to the kWh price) [type: coefficient]
+   Location: Table 2, column (1), ln(price kWh)
+   Context: Table 2, column (1), row ln(price kWh): the coefficient on the log household price per kWh (all taxes included) in the OLS consumption regression of reform_consumption_ols_col1.
+10. price_elasticity_consumption_fe_col3: -1.026 (elasticity of consumption with respect to the kWh price) [type: coefficient]
+   Location: Table 2, column (3), ln(price kWh)
+   Context: Table 2, column (3), row ln(price kWh): the log-price coefficient in the household fixed-effects consumption regression of reform_consumption_fe_col3.
+11. n_obs_table2: 20872.0 (household-year observations) [type: other]
+   Location: Table 2, Observations
+   Context: Number of observations in the Table 2 regressions (the same in all eight columns): household-interview observations of the 2011-2014 panel with complete data on the regression variables.
+12. n_households_table2: 10729.0 (households) [type: other]
+   Location: Table 2, Number of id (columns 3, 4, 7, 8)
+   Context: Number of households (the "Number of id" row) in the household fixed-effects columns of Table 2.
+
+## Dataset Information
+Name: labandeira-2022-electricity-pricing-reform
+Local path: <repo>/.cache/datasets/labandeira_2022_electricity_pricing_reform
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- 3 Replication package/analysis data/data_to_run_DOFILE3.dta (276.3 MB) — 203416 rows, 403 columns: month, year, urban, mayores_count, T2, dup, time, id, BIS, BISEMANA, ANOENC, FACTOR, GH, GHE, gh, gm, gh_elec, TotExp, ch, ch_elec, c_ele, c_ele2, c_car, c_papas, c_aguav, g_ele, g_ele2, g_car, g5, g71, g82, g9, gelectrodom, gTVs, g5521, g_papas, g_aguav, gastos1, gastos2, gastos3, gastos4, gastos5, gastos6, gastos7, gastos8, gastos9, gastos10, gastos11, gastos12, CCAA, NUTS1, CAPROV, TAMAMU, DENSI, CLAVE, CLATEO, NMIEMB, TAMAÑO, NMIEMSD, NMIEMHU, NMIEMIN, NMIEM1, NMIEM2, NMI…
+- 3 Replication package/Readme.pdf (504.9 KB)
+- 3 Replication package/analysis data/Data_to run_DOFILE3.csv (313.0 MB) — columns: T2,dup,time,month,id,year,BIS,BISEMANA,ANOENC,FACTOR,GH,GHE,gh,gm,gh_elec,TotExp,ch,ch_elec,c_ele,c_ele2,c_car,c_papas,c_aguav,g_ele,g_ele2,g_car,g5,g71,g82,g9,gelectrodom,gTVs,g5521,g_papas,g_aguav,gastos1,gastos2,gastos3,gastos4,gastos5,g…
+- 3 Replication package/dofiles/1_Raw data.do (67.7 KB)
+- 3 Replication package/dofiles/2_Dataset.do (12.3 KB)
+- 3 Replication package/dofiles/3_ Results TABLES.do (23.2 KB)
+- 3 Replication package/raw data/Fichero de usuario de gastos a2006.txt (222.4 MB)
+- 3 Replication package/raw data/Fichero de usuario de gastos a2007.txt (282.1 MB)
+- 3 Replication package/raw data/Fichero de usuario de gastos a2008.txt (287.8 MB)
+- 3 Replication package/raw data/Fichero de usuario de gastos a2009.txt (288.7 MB)
+- 3 Replication package/raw data/Fichero de usuario de gastos a2010.txt (291.0 MB)
+- 3 Replication package/raw data/Fichero de usuario de gastos a2011.txt (282.7 MB)
+- 3 Replication package/raw data/Fichero de usuario de gastos a2012.txt (278.6 MB)
+- 3 Replication package/raw data/Fichero de usuario de gastos a2013.txt (271.1 MB)
+- 3 Replication package/raw data/Fichero de usuario de gastos a2014.txt (256.3 MB)
+- 3 Replication package/raw data/Fichero de usuario de gastos a2015.txt (258.2 MB)
+- 3 Replication package/raw data/Fichero de usuario de hogar a2006.txt (8.1 MB)
+- 3 Replication package/raw data/Fichero de usuario de hogar a2007.txt (9.0 MB)
+- 3 Replication package/raw data/Fichero de usuario de hogar a2008.txt (9.2 MB)
+- 3 Replication package/raw data/Fichero de usuario de hogar a2009.txt (9.4 MB)
+- 3 Replication package/raw data/Fichero de usuario de hogar a2010.txt (9.3 MB)
+- 3 Replication package/raw data/Fichero de usuario de hogar a2011.txt (9.8 MB)
+- 3 Replication package/raw data/Fichero de usuario de hogar a2012.txt (9.8 MB)
+- 3 Replication package/raw data/Fichero de usuario de hogar a2013.txt (9.9 MB)
+- 3 Replication package/raw data/Fichero de usuario de hogar a2014.txt (10.0 MB)
+- 3 Replication package/raw data/Fichero de usuario de hogar a2015.txt (10.0 MB)
+- 3 Replication package/raw data/enlace06_07.TXT (315.6 KB)
+- 3 Replication package/raw data/enlace07_08.TXT (323.4 KB)
+- 3 Replication package/raw data/enlace08_09.TXT (327.3 KB)
+- 3 Replication package/raw data/enlace09_10.TXT (325.2 KB)
+- 3 Replication package/raw data/enlace10_11.TXT (324.0 KB)
+- 3 Replication package/raw data/enlace11_12.TXT (319.5 KB)
+- 3 Replication package/raw data/enlace12_13.TXT (323.1 KB)
+- 3 Replication package/raw data/enlace13_14.TXT (324.4 KB)
+- 3 Replication package/raw data/enlace14_15.TXT (324.2 KB)
+- 3 Replication package/raw data/enlace2007.TXT (315.6 KB)
+- 3 Replication package/raw data/enlace2008.TXT (323.4 KB)
+- 3 Replication package/raw data/enlace2009.TXT (327.3 KB)
+- 3 Replication package/raw data/enlace2010.TXT (325.2 KB)
+- 3 Replication package/raw data/enlace2011.TXT (324.0 KB)
+- 3 Replication package/raw data/enlace2012.TXT (319.5 KB)
+- 3 Replication package/raw data/enlace2013.TXT (323.1 KB)
+- 3 Replication package/raw data/enlace2014.TXT (324.4 KB)
+- 3 Replication package/raw data/enlace2015.TXT (324.2 KB)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/labandeira_2022_electricity_pricing_reform' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Original Replication Scripts
+The replication package (the dataset directory) ships the authors' own analysis scripts, reproduced below.  These are the GROUND TRUTH for the exact estimating equation, variable names, sample restrictions, fixed effects, and standard-error clustering — follow them over anything reconstructed from the methodology summary, and prefer them over the paper's text where the two disagree.  Your job is to write R code that implements the SAME SPECIFICATION: translate what the scripts estimate, do not transliterate their syntax line by line (a Stata .do file's regression, e.g. `reghdfe y x controls, absorb(fe) cluster(cl)`, becomes the equivalent fixest::feols() call in R).  Keep only the parts that produce the specific claims being reproduced; skip figure construction and unrelated robustness checks.  The scripts' data-file paths refer to the package's internal layout — resolve them against the dataset directory listed under Dataset Information.
+
+Stata-to-fixest sample matching: feols() drops fixed-effect singletons by default, but Stata's `reg y x i.fe` / `xi:` dummies keep them.  Pass `fixef.rm = "none"` to every feols() call that has fixed effects, otherwise the observation count and the robust SEs drift from the paper's.  Stata's `, r` / `vce(robust)` is `vcov = "hetero"`.
+
+### `3 Replication package/dofiles/3_ Results TABLES.do`
+```stata
+clear
+cd "C:\Users\jordi\Desktop\SUBMISSION EJ\3 Replication package\raw data"
+use "data.dta",clear
+set more off
+
+*TABLES
+********************************************************************************
+
+*TABLE 1
+********************************************************************************
+univar 	T2 c_ele g_ele p_kwh   gastmon y  ///
+		iestud1 iestud2 iestud3 iestud4  ///
+		isitu1 isitu2 isitu3 NMIEMB mayores PENSIO ///
+		NHABIT SUPERF CAPROV alqui urban ///
+		itam1 itam2 itam3 itam4 itam5 ///
+		edif25 BISEMANA ///
+		if T2!=.
+univar  T2 c_ele g_ele p_kwh   gastmon y  ///
+		iestud1 iestud2 iestud3 iestud4  ///
+		isitu1 isitu2 isitu3 NMIEMB mayores PENSIO ///
+		NHABIT SUPERF CAPROV alqui urban ///
+		itam1 itam2 itam3 itam4 itam5 ///
+		edif25 BISEMANA ///
+		if T2!=. , by(Tm)
+		
+
+*TABLE 2
+********************************************************************************
+* to generate sample
+reg lnc_ele TT202   lnPRE lny ///
+c.lny#c.lny dist i.TAMAMU i.CCAA CAPROV NMIEMB NHABIT SUPERF i.ESTUDRED ///
+i.SITUACTHOG_j mayores alqui urban edif25 i.year i.trim, vce (cluster  id) 
+gen sample1 = e(sample)
+
+********************************************************************************
+keep if sample1 == 1
+* new variables:
+
+egen mlnc_ele      = mean(lnc_ele), by(id)
+egen mTT202        = mean(TT202), by(id)
+egen mlnPRE        = mean(lnPRE), by(id)
+egen mlnPRE_papas_ = mean(lnPRE_papas_), by(id)
+egen mlnPRE_aguav_ = mean(lnPRE_aguav_), by(id)
+egen mlnPRE_gascar_  = mean(lnPRE_gascar_), by(id)
+
+
+
+*
+egen mlny          = mean(lny), by(id)
+egen mlny2         = mean(lny2), by(id)
+egen mdist         = mean(dist), by(id)
+egen mNMIEMB       = mean(NMIEMB), by(id)
+egen miestud1      = mean(iestud1), by(id)
+egen miestud2      = mean(iestud2), by(id)
+egen miestud3      = mean(iestud3), by(id)
+egen misitu2       = mean(isitu2), by(id)
+egen misitu3       = mean(isitu3), by(id)
+egen mmayores      = mean(mayores), by(id)
+egen malqui        = mean(alqui), by(id)
+egen medif25       = mean(edif25), by(id)
+egen miyear7       = mean(iyear7), by(id)
+egen miyear8       = mean(iyear8), by(id)
+egen miyear9       = mean(iyear9), by(id)
+
+gen wlnc_ele      = lnc_ele - mlnc_ele
+gen wTT202        = TT202 - mTT202
+gen wlnPRE        = lnPRE - mlnPRE
+gen wlnPRE_papas_ = lnPRE_papas_ - mlnPRE_papas_ 
+gen wlnPRE_aguav_ = lnPRE_aguav_ - mlnPRE_aguav_
+gen wlnPRE_gascar_ = lnPRE_gascar_ - mlnPRE_gascar_
+
+* corr 
+
+*
+gen wlny          = lny - mlny
+gen wlny2         = lny2 - mlny2
+gen wdist         = dist - mdist
+gen wNMIEMB       = NMIEMB - mNMIEMB
+gen wiestud1      = iestud1 - miestud1
+gen wiestud2      = iestud2 - miestud2
+gen wiestud3      = iestud3 - miestud3
+gen wisitu2       = isitu2 - misitu2
+gen wisitu3       = isitu3 - misitu3
+gen wmayores      = mayores - mmayores
+gen walqui        = alqui - malqui
+gen wedif25       = edif25 - medif25
+gen wiyear7       = iyear7 - miyear7
+gen wiyear8       = iyear8 - miyear8
+gen wiyear9       = iyear9 - miyear9
+
+egen mlng_ele     = mean(lng_ele), by(id) 
+gen  wlng_ele     = lng_ele - mlng_ele
+
+********************************************************************************
+* Table 2
+********************************************************************************
+* CONSUMO 
+* column 1, OLS
+reg lnc_ele TT202 lnPRE lny ///
+    c.lny#c.lny dist i.TAMAMU i.CCAA CAPROV NMIEMB NHABIT SUPERF i.ESTUDRED ///
+    i.SITUACTHOG_j mayores alqui urban edif25 i.year i.trim, vce (cluster id) 
+	
+outreg2 using T2, excel dec(3) alpha(0.01, 0.05, 0.1) keep( TT202 lnPRE lny c.lny#c.lny dist)  ///
+ addt(Household FE, No, Year FE, Yes, Controls, Yes) replace
+
+* column 2 IV 
+ivreg2 lnc_ele TT202 (lnPRE =lnPRE_aguav_ lnPRE_papas_ lnPRE_gascar_ ) lny ///
+	lny2 dist itam2 itam3 itam4 itam5 iccaa2-iccaa19 CAPROV ///
+	NMIEMB NHABIT SUPERF iestud2 iestud3 iestud4 ///
+	isitu2 isitu3 mayores alqui urban edif25 iyear7 iyear8 iyear9 ///
+	if sample1==1,   first cluster(id) liml nocons 
+	weakivtest
+outreg2 using T2, excel dec(3) alpha(0.01, 0.05, 0.1) keep( TT202 lnPRE lny lny2 dist) ///
+ addstat(First stage F stat, e(widstat), ///
+ Kleibergen-Paap rk LM statistic, e(idstat), ///
+ df, e(iddf), /// 
+ Kleibergen-Paap p value, e(idp), ///
+ Kleibergen-Paap rk Wald F , e(rkf), ///
+ Cragg-Donald Wald F, e(cdf), ///
+ (Stock-Yogo Weak ID critical value), (6.46), ///  
+ Hansen, e(j), ///
+ Hansen p value, e(jp)) ///
+ addt(Household FE, No, Year FE, Yes, Controls, Yes) 	
+ 
+* column 3, fixed effects NO IV
+xtreg lnc_ele TT202 lnPRE lny ///
+      c.lny#c.lny dist i.TAMAMU i.CCAA CAPROV NMIEMB NHABIT SUPERF ///
+	  i.ESTUDRED i.SITUACTHOG_j mayores alqui urban edif25 i.year i.trim ///
+	  if sample==1, fe  vce (cluster id) 
+	  
+ outreg2 using T2, excel dec(3) alpha(0.01, 0.05, 0.1) keep( TT202 lnPRE lny c.lny#c.lny dist)  ///
+ addt(Household FE, No, Year FE, Yes, Controls, Yes) 
+
+
+* column 4, fixed effects IV
+ivreg2 wlnc_ele wTT202 (wlnPRE = wlnPRE_aguav_ wlnPRE_papas_ wlnPRE_gascar_ ) ///
+       wlny wlny2 wdist wNMIEMB wiestud1 wiestud2 wiestud3 wisitu2 wisitu3 ///
+	   wmayores walqui wedif25 wiyear7 wiyear8 wiyear9, r first liml nocons
+weakivtest
+outreg2 using T2, excel dec(3) alpha(0.01, 0.05, 0.1) keep( wTT202 wlnPRE wlny wlny2 wdist) ///
+ addstat(First stage F stat, e(widstat), ///
+ Kleibergen-Paap rk LM statistic, e(idstat), ///
+ df, e(iddf), /// 
+ Kleibergen-Paap p value, e(idp), ///
+ Kleibergen-Paap rk Wald F , e(rkf), ///
+ Cragg-Donald Wald F, e(cdf), ///
+ (Stock-Yogo Weak ID critical value), (6.46), ///  
+ Hansen, e(j), ///
+ Hansen p value, e(jp)) ///
+ addt(Household FE, No, Year FE, Yes, Controls, Yes) 		
+	   
+* GASTO
+* column 5, OLS 
+reg lng_ele TT202 lnPRE lny ///
+    c.lny#c.lny dist i.TAMAMU i.CCAA CAPROV NMIEMB NHABIT SUPERF i.ESTUDRED ///
+    i.SITUACTHOG_j mayores alqui urban edif25 i.year i.trim, vce (cluster id) 
+ outreg2 using T2, excel dec(3) alpha(0.01, 0.05, 0.1) keep( TT202 lnPRE lny c.lny#c.lny dist)  ///
+ addt(Household FE, No, Year FE, Yes, Controls, Yes) 
+	
+	
+* column 6 IV
+ivreg2 lng_ele TT202 (lnPRE =lnPRE_aguav_ lnPRE_papas_ lnPRE_gascar_ ) lny ///
+	lny2 dist itam2 itam3 itam4 itam5 iccaa2-iccaa19 CAPROV ///
+	NMIEMB NHABIT SUPERF iestud2 iestud3 iestud4 ///
+	isitu2 isitu3 mayores alqui urban edif25 iyear7 iyear8 iyear9 ///
+	if sample1==1,   first cluster(id) liml nocons 
+weakivtest
+outreg2 using T2, excel dec(3) alpha(0.01, 0.05, 0.1) keep( TT202 lnPRE lny lny2 dist) ///
+ addstat(First stage F stat, e(widstat), ///
+ Kleibergen-Paap rk LM statistic, e(idstat), ///
+ df, e(iddf), /// 
+ Kleibergen-Paap p value, e(idp), ///
+ Kleibergen-Paap rk Wald F , e(rkf), ///
+ Cragg-Donald Wald F, e(cdf), ///
+ (Stock-Yogo Weak ID critical value), (6.46), ///  
+ Hansen, e(j), ///
+ Hansen p value, e(jp)) ///
+ addt(Household FE, No, Year FE, Yes, Controls, Yes) 		
+	
+	
+* column 7, fixed effects NO IV
+xtreg lng_ele TT202 lnPRE lny ///
+      c.lny#c.lny dist i.TAMAMU i.CCAA CAPROV NMIEMB NHABIT SUPERF ///
+	  i.ESTUDRED i.SITUACTHOG_j mayores alqui urban edif25 i.year i.trim ///
+	  if sample==1, fe  vce (cluster id) 
+ outreg2 using T2, excel dec(3) alpha(0.01, 0.05, 0.1) keep( TT202 lnPRE lny c.lny#c.lny dist)  ///
+ addt(Household FE, No, Year FE, Yes, Controls, Yes) 
+
+	  
+* column 8, fixed effects IV
+ivreg2 wlng_ele wTT202 (wlnPRE = wlnPRE_aguav_ wlnPRE_papas_ wlnPRE_gascar_ ) ///
+       wlny wlny2 wdist wNMIEMB wiestud1 wiestud2 wiestud3 wisitu2 wisitu3 ///
+	   wmayores walqui wedif25 wiyear7 wiyear8 wiyear9, r first liml nocons
+weakivtest
+outreg2 using T2, excel dec(3) alpha(0.01, 0.05, 0.1) keep( wTT202 wlnPRE wlny wlny2 wdist) ///
+ addstat(First stage F stat, e(widstat), ///
+ Kleibergen-Paap rk LM statistic, e(idstat), ///
+ df, e(iddf), /// 
+ Kleibergen-Paap p value, e(idp), ///
+ Kleibergen-Paap rk Wald F , e(rkf), ///
+ Cragg-Donald Wald F, e(cdf), ///
+ (Stock-Yogo Weak ID critical value), (6.46), ///  
+ Hansen, e(j), ///
+ Hansen p value, e(jp)) ///
+ addt(Household FE, No, Year FE, Yes, Controls, Yes) 	
+
+ 
+ 
+*TABLE 3
+********************************************************************************
+** we get back to original sample (i.e. not limited to panel obs)
+use "data.dta",clear
+set more off
+ 
+ tabstat time month year if year==2013, by (time)
+
+*column 1
+	reg lnc_ele  TT202     ///
+	  if year==2013 , vce (cluster BIS) 
+		outreg2 using T3, excel dec(3) addt(Controls, no) alpha(0.001, 0.01, 0.05) ///
+		addstat(R2 adj. ,`e(r2_a)') keep ( TT202    lny lnPRE c.lny#c.lny  ) replace  
+
+*column 2
+	reg lnc_ele  TT202    lnPRE lny ///
+	c.lny#c.lny i.TAMAMU i.CCAA CAPROV NMIEMB NHABIT SUPERF i.ESTUDRED ///
+		i.SITUACTHOG_j mayores alqui urban edif25   if year==2013, vce (cluster BIS) 
+		outreg2 using T3, excel dec(3) addt(Controls, yes) alpha(0.001, 0.01, 0.05) ///
+		addstat(R2 adj. ,`e(r2_a)') keep ( TT202    lny lnPRE c.lny#c.lny  )  
+		
+		
+*column 3
+	reg lng_ele  TT202    ///
+	  if year==2013, vce (cluster BIS) 
+		outreg2 using T3, excel dec(3) addt(Controls, no) alpha(0.001, 0.01, 0.05) ///
+		addstat(R2 adj. ,`e(r2_a)') keep ( TT202    lny lnPRE c.lny#c.lny  )  
+
+*column 4
+	reg lng_ele  TT202   lnPRE lny ///
+	c.lny#c.lny i.TAMAMU i.CCAA CAPROV NMIEMB NHABIT SUPERF i.ESTUDRED ///
+		i.SITUACTHOG_j mayores alqui urban edif25   if year==2013, vce (cluster BIS) 
+		outreg2 using T3, excel dec(3) addt(Controls, yes) alpha(0.001, 0.01, 0.05) ///
+		addstat(R2 adj. ,`e(r2_a)') keep ( TT202    lny lnPRE c.lny#c.lny  )  
+
+		
+*TABLE 4
+*******************************************************************************
+sqreg lnc_ele TT202 lnPRE lny c.lny#c.lny ///
+	i.TAMAMU i.CCAA CAPROV NMIEMB NHABIT SUPERF i.ESTUDRED ///
+	i.SITUACTHOG_j mayores alqui urban edif25 if year==2013, ///	
+	quantile(.10 .20 .30 .40 .50 .60 .70 .80 .90) reps (50)
+	outreg2 using qq_q, excel dec(3) addt(Controls, YES) alpha(0.001, 0.01, 0.05) ///
+	keep (TT199 TT202 lnPRE lny c.lny#c.lny dist) replace
+
+*TABLE 5
+*******************************************************************************
+sqreg lng_ele TT202 lnPRE lny c.lny#c.lny ///
+	i.TAMAMU i.CCAA CAPROV NMIEMB NHABIT SUPERF i.ESTUDRED ///
+	i.SITUACTHOG_j mayores alqui urban edif25 if year==2013, ///	
+	quantile(.10 .20 .30 .40 .50 .60 .70 .80 .90) reps (50)
+	outreg2 using qq_g, excel dec(3) addt(Controls, YES) alpha(0.001, 0.01, 0.05) ///
+	keep (TT199 TT202 lnPRE lny c.lny#c.lny dist) replace
+	
+*We plot these coefficients using excel	
+		
+*TABLE 6 kAKWANY AND SUITS INDEX
+*******************************************************************************
+*gen TotExp_ad= TotExp/UC2
+gen X_PRE_E=.
+replace X_PRE_E= TotExp-g_ele
+gen  X_PRE_E_ad=X_PRE_E/UC2
+*(equivalent adult)	
+progres X_PRE_E_ad  TotExp_ad if TT202==0 & Tm==1 
+*Tm==1 is to compare households that will be treated in post-treatment
+progres X_PRE_E_ad  TotExp_ad if TT202==1 	
+		
+*TABLE 7
+*******************************************************************************
+*New variables are needed to run robustness checks in table 7:
+{
+
+	gen lngelectrodom= .
+	replace lngelectrodom= ln(gelectrodom)
+	gen lngTVs= .
+	replace lngTVs= ln(gTVs)
+	gen lnbulbs=.
+	replace lnbulbs=ln(g5521)
+	*real prices:
+	replace lngelectrodom= lngelectrodom-IP
+	replace lngTVs= lngTVs-IP
+	replace lnbulbs=lnbulbs-IP
+	
+	gen Apl=.
+	replace Apl= gelectrodom + gTVs 
+	gen lnApl=ln(Apl)
+	
+*AGUA CALIENTE/HOT WATER
+			replace FUENAGUA=. if FUENAGUA==-9 
+			sum AGUACALI, d
+			order id year AGUACALI FUENAGUA
+			sort AGUACALI
+			*(more than 99% have hot water)
+			replace FUENAGUA=0 if AGUACALI==6 
+			*(6 to 0 to detect any hh going from . to any energy source)		
+			sort id year  
+			bysort id: gen dFA = FUENAGUA-FUENAGUA[_n-1]
+			order dFA
+			sum dFA, d
+			*hh with dFA==0 means no change in 
+			*SOURCE of ENERGY to heat WATER
+			sort id year
+			bysort id: replace dFA = dFA[_n+1] if dup==1
+			
+			*Since this is only for one year, I can only know about change for
+			*second intervewees (i.e I cannot know whthere there was a change for
+			* 1st interviewees)
+			*dumy cambio 0-1
+
+			order FA
+			replace FA=0 if dFA==0 & dup==2
+			replace FA=1 if dFA!=0 & dup==2
+			
+*CALEFACCION/HEATING
+
+			replace FUENCALE=. if FUENCALE==-9 
+			sum CALEF, d
+			replace FUENCALE=0 if CALEF==6 
+			* (all hh do have hot water)
+			sort id year 
+			*drop dFC
+			bysort id: gen dFC = FUENCALE-FUENCALE[_n-1]
+			sum dFC, d
+			* hh with dFA==0 means no change in SOURCE of ENERGY to heat WATER
+			sort id year
+			bysort id: replace dFC = dFC[_n+1] if dup==1 
+			* dumy cambio 0-1: 1 means CHANGE
+			gen FC=.
+			order FC dFC id dup
+			replace FC=. if dup==1
+			replace FC=0 if dFC==0 & dup==2
+			replace FC=1 if dFC!=0 & dup==2
+	
+*******************************************************************************	
+egen mlnc_ele      = mean(lnc_ele), by(id)
+egen mTT202        = mean(TT202), by(id)
+egen mlnPRE        = mean(lnPRE), by(id)
+egen mlnPRE_papas_ = mean(lnPRE_papas_), by(id)
+egen mlnPRE_aguav_ = mean(lnPRE_aguav_), by(id)
+egen mlnPRE_gascar_  = mean(lnPRE_gascar_), by(id)
+
+
+
+*
+egen mlny          = mean(lny), by(id)
+egen mlny2         = mean(lny2), by(id)
+egen mdist         = mean(dist), by(id)
+egen mNMIEMB       = mean(NMIEMB), by(id)
+egen miestud1      = mean(iestud1), by(id)
+egen miestud2      = mean(iestud2), by(id)
+egen miestud3      = mean(iestud3), by(id)
+egen misitu2       = mean(isitu2), by(id)
+egen misitu3       = mean(isitu3), by(id)
+egen mmayores      = mean(mayores), by(id)
+egen malqui        = mean(alqui), by(id)
+egen medif25       = mean(edif25), by(id)
+egen miyear7       = mean(iyear7), by(id)
+egen miyear8       = mean(iyear8), by(id)
+egen miyear9       = mean(iyear9), by(id)
+
+gen wlnc_ele      = lnc_ele - mlnc_ele
+gen wTT202        = TT202 - mTT202
+gen wlnPRE        = lnPRE - mlnPRE
+gen wlnPRE_papas_ = lnPRE_papas_ - mlnPRE_papas_ 
+gen wlnPRE_aguav_ = lnPRE_aguav_ - mlnPRE_aguav_
+gen wlnPRE_gascar_ = lnPRE_gascar_ - mlnPRE_gascar_
+
+ 
+
+*
+gen wlny          = lny - mlny
+gen wlny2         = lny2 - mlny2
+gen wdist         = dist - mdist
+gen wNMIEMB       = NMIEMB - mNMIEMB
+gen wiestud1      = iestud1 - miestud1
+gen wiestud2      = iestud2 - miestud2
+gen wiestud3      = iestud3 - miestud3
+gen wisitu2       = isitu2 - misitu2
+gen wisitu3       = isitu3 - misitu3
+gen wmayores      = mayores - mmayores
+gen walqui        = alqui - malqui
+gen wedif25       = edif25 - medif25
+gen wiyear7       = iyear7 - miyear7
+gen wiyear8       = iyear8 - miyear8
+gen wiyear9       = iyear9 - miyear9
+
+egen mlng_ele     = mean(lng_ele), by(id) 
+gen  wlng_ele     = lng_ele - mlng_ele
+*or
+*use datos_EJ_3_T7.dta,clear
+}
+
+* Column 1				
+ivreg2 wlnc_ele wTT202 (wlnPRE = wlnPRE_aguav_ wlnPRE_papas_ wlnPRE_gascar_ ) ///
+       wlny wlny2 wdist wNMIEMB wiestud1 wiestud2 wiestud3 wisitu2 wisitu3 ///
+	   wmayores walqui wedif25 wiyear7 wiyear8 wiyear9 if lnApl==. | lnbulbs==. , r first liml nocons 
+				
+	
+outreg2 using T7, excel dec(3) alpha(0.01, 0.05, 0.1) keep( wTT202 wlnPRE wlny wlny2 ) ///
+ addstat(First stage F stat, e(widstat), ///
+ Kleibergen-Paap rk LM statistic, e(idstat), ///
+ df, e(iddf), /// 
+ Kleibergen-Paap p value, e(idp), ///
+ Kleibergen-Paap rk Wald F , e(rkf), ///
+ Cragg-Donald Wald F, e(cdf), ///
+ (Stock-Yogo Weak ID critical value), (6.46), ///  
+ Hansen, e(j), ///
+ Hansen p value, e(jp)) ///
+ addt(Household FE, Yes, Year FE, Yes, Controls, No) replace	
+	
+	
+*Column 2 
+ivreg2 lnc_ele TT202 (lnPRE = lnPRE_aguav_ lnPRE_papas_ lnPRE_gascar_) ///
+               lny lny2 lnApl lnbulbs FA FC if year==2013, ///
+			   r first liml nocons
+
+ 
+ outreg2 using T7, excel dec(3) alpha(0.01, 0.05, 0.1) keep( TT202 lnPRE lny lny2  lnApl lnbulbs FA FC) ///
+ addstat(R2, e(r2c), First stage F stat, e(widstat), ///
+ Kleibergen-Paap rk LM statistic, e(idstat), ///
+ df, e(iddf), /// 
+ Kleibergen-Paap p value, e(idp), ///
+ Kleibergen-Paap rk Wald F , e(rkf), ///
+ Cragg-Donald Wald F, e(cdf), ///
+ (Stock-Yogo Weak ID critical value), (6.46), ///  
+ Hansen, e(j), ///
+ Hansen p value, e(jp)) ///
+ addt(Household FE, No, Year FE, No, Controls, No) 	
+ 
+* column 3 
+ivreg2 wlnc_ele wTT202 (wlnPRE = wlnPRE_aguav_ wlnPRE_papas_ wlnPRE_gascar_) ///
+                wlny wlny2 wdist wNMIEMB  wiyear7 wiyear8 wiyear9 ///
+	            if FUENCAL!=1 & FUENAGUA!=1, ///
+			    r first liml nocons
+				
+				
+				
+ outreg2 using T7, excel dec(3) alpha(0.01, 0.05, 0.1) keep( wTT202 wlnPRE wlny wlny2) ///
+ addstat(R2, e(r2c), First stage F stat, e(widstat), ///
+ Kleibergen-Paap rk LM statistic, e(idstat), ///
+ df, e(iddf), /// 
+ Kleibergen-Paap p value, e(idp), ///
+ Kleibergen-Paap rk Wald F , e(rkf), ///
+ Cragg-Donald Wald F, e(cdf), ///
+ (Stock-Yogo Weak ID critical value), (6.46), ///  
+ Hansen, e(j), ///
+ Hansen p value, e(jp)) ///
+ addt(Household FE, Yes, Year FE, No, Controls, Yes*) 	
+ 
+ 
+* column 4 
+ ivreg2 wlnc_ele wTT202 (wlnPRE = wlnPRE_aguav_ wlnPRE_papas_ wlnPRE_gascar_) ///
+                wlny wlny2 wdist wNMIEMB wiyear7 wiyear8 wiyear9 ///
+				if month!=4 & month!=5 & month!=6 & month!=7 & month!=8, ///
+			    r first liml nocons
+					
+ outreg2 using T7, excel dec(3) alpha(0.01, 0.05, 0.1) keep( wTT202 wlnPRE wlny wlny2) ///
+ addstat(R2, e(r2c), First stage F stat, e(widstat), ///
+ Kleibergen-Paap rk LM statistic, e(idstat), ///
+ df, e(iddf), /// 
+ Kleibergen-Paap p value, e(idp), ///
+ Kleibergen-Paap rk Wald F , e(rkf), ///
+ Cragg-Donald Wald F, e(cdf), ///
+ (Stock-Yogo Weak ID critical value), (6.46), ///  
+ Hansen, e(j), ///
+ Hansen p value, e(jp)) ///
+ addt(Household FE, Yes, Year FE, No, Controls, Yes*) 	
+
+
+*TABLE 8 
+*******************************************************************************		
+
+	gen TT176=0 if  year>2009 & time<199
+	replace TT176=1 if time>176 & dup==2 & time<199
+replace TT176=. if time>176 & dup==1 & time<199
+
+*column 1
+		reg lnc_ele TT176 lnPRE lny c.lny#c.lny ///
+		i.TAMAMU i.CCAA CAPROV NMIEMB NHABIT SUPERF i.ESTUDRED ///
+		i.SITUACTHOG_j mayores alqui urban edif25 if year==2012, vce (cluster BIS)
+			outreg2 using T8, excel dec(3) alpha(0.001, 0.01, 0.05) ///
+			keep (TT176 lnPRE lny c.lny#c.lny) replace 
+*column 2	
+		reg lng_ele TT176 lnPRE lny c.lny#c.lny ///
+		i.TAMAMU i.CCAA CAPROV NMIEMB NHABIT SUPERF i.ESTUDRED ///
+		i.SITUACTHOG_j mayores alqui urban edif25 if year==2012, vce (cluster BIS)
+			outreg2 using T8, excel dec(3) alpha(0.001, 0.01, 0.05) ///
+			keep (TT176 lnPRE lny c.lny#c.lny) 
+*column 3	
+		reg lnc_ele TT202 lnPRE lny c.lny#c.lny ///
+		i.TAMAMU i.CCAA CAPROV NMIEMB NHABIT SUPERF i.ESTUDRED ///
+		i.SITUACTHOG_j mayores alqui urban edif25 if year==2013, vce(cluster BIS)
+			outreg2 using T8, excel dec(3) alpha(0.001, 0.01, 0.05) ///
+			keep (TT202 lnPRE lny c.lny#c.lny) 
+*column 4			
+		reg lng_ele TT202 lnPRE lny c.lny#c.lny ///
+		i.TAMAMU i.CCAA CAPROV NMIEMB NHABIT SUPERF i.ESTUDRED ///
+		i.SITUACTHOG_j mayores alqui urban edif25 if year==2013, vce(cluster BIS)
+			outreg2 using T8, excel dec(3) alpha(0.001, 0.01, 0.05) ///
+			keep (TT202 lnPRE lny c.lny#c.lny) 
+
+
+*TABLE 9 
+*******************************************************************************	
+*column 1
+	teffects nnmatch (lnc_ele dist lnPRE lny c.lny#c.lny c.lnp_kwh#i.TAMAMU ///
+	i.TAMAMU CAPROV c.NMIEMB##c.c.NMIEMB c.NHABIT##c.SUPERF i.ESTUDRED ///
+	i.SITUACTHOG_j mayores alqui urban edif25) (TT202) if year==2013, nn(10)  vce(iid) 
+*column 2
+
+	teffects nnmatch (lng_ele dist lnPRE lny c.lny#c.lny c.lnp_kwh#i.TAMAMU ///
+	i.TAMAMU CAPROV c.NMIEMB##c.c.NMIEMB c.NHABIT##c.SUPERF i.ESTUDRED ///
+	i.SITUACTHOG_j mayores alqui urban edif25) (TT202) if year==2013, nn(10)  vce(iid) 
+
+*column 3
+
+	teffects nnmatch (lnc_ele dist lnPRE lny c.lny#c.lny c.lnp_kwh#i.TAMAMU ///
+	i.TAMAMU CAPROV c.NMIEMB##c.NMIEMB c.NHABIT##c.SUPERF i.ESTUDRED ///
+	i.SITUACTHOG_j mayores alqui urban edif25) (TT176) if year==2012, nn(10)  vce(iid) 
+
+
+*column 4
+
+	teffects nnmatch (lng_ele dist lnPRE lny c.lny#c.lny c.lnp_kwh#i.TAMAMU ///
+	i.TAMAMU CAPROV c.NMIEMB##c.c.NMIEMB c.NHABIT##c.SUPERF i.ESTUDRED ///
+	i.SITUACTHOG_j mayores alqui urban edif25) (TT176) if year==2012, nn(10)  vce(iid) 
+
+*A4: 
+		univar TT202 c_ele g_ele lnPRE y TotExp ESTUDRED ///
+				SITUACTHOG_j SITSOCIRE NMIEMB mayores PENSIO NHABIT SUPERF CAPROV CCAA TAMAMU DENSI ///
+				alqui urban edif25 BISEMANA if year==2013 ///
+				& TT202!=.
+		univar TT176 c_ele g_ele lnPRE y TotExp ESTUDRED  ///
+				SITUACTHOG_j SITSOCIRE NMIEMB mayores PENSIO NHABIT SUPERF CAPROV CCAA TAMAMU DENSI ///
+				alqui urban edif25 BISEMANA if year==2012 ///
+				& TT176!=.
+
+				
+*FIGURES
+********************************************************************************
+
+*Figure 1
+*see attached excel			
+
+*Figure 2
+*see attached excel 			
+			
+*Figure 3
+*see attached image 			
+
+*Figure 4
+gen lnTotExp_1_preT= lnTotExp if Tm==1 & T2==0
+gen lnTotExp_0= lnTotExp if Tm==0
+qqplot lnTotExp_1_preT lnTotExp_0
+graph save qq1.gph, replace
+			
+gen lny_1_preT= lny if Tm==1 & T2==0
+gen lny_0= lny if Tm==0
+qqplot lny_1_preT lny_0,   
+	graph save qq2.gph, replace
+			
+gen lnc_ele_1_preT= lnc_ele if Tm==1 & T2==0
+gen lnc_ele_0= lnc_ele if Tm==0
+qqplot lnc_ele_1_preT lnc_ele_0 
+	graph save qq3.gph, replace
+graph combine qq1.gph qq2.gph qq3.gph, note("Comparison of covariates between Treated group before the reform (D=1 & T=0) and Control group (T=0)")
+
+
+*Figure 5
+*see attached excel 			
+
+
+*Figure 6
+xtile y06=  y_ad if year==2006, n(10)
+xtile y07=  y_ad if year==2007, n(10)
+xtile y08=  y_ad if year==2008, n(10)
+xtile y09=  y_ad if year==2009, n(10)
+xtile y10=  y_ad if year==2010, n(10)
+xtile y11=  y_ad if year==2011, n(10)
+xtile y12=  y_ad if year==2012, n(10)
+xtile y13=  y_ad if year==2013, n(10)
+xtile y14=  y_ad if year==2014, n(10)
+xtile y15=  y_ad if year==2015, n(10)
+gen DECILE=.
+replace DECILE= 1 if y06==1| y07==1| y08==1| y09==1| y10==1| y11==1| y12==1| y13==1| y14==1| y15==1
+replace DECILE= 2 if y06==2| y07==2| y08==2| y09==2| y10==2| y11==2| y12==2| y13==2| y14==2| y15==2
+replace DECILE= 3 if y06==3| y07==3| y08==3| y09==3| y10==3| y11==3| y12==3| y13==3| y14==3| y15==3
+replace DECILE= 4 if y06==4| y07==4| y08==4| y09==4| y10==4| y11==4| y12==4| y13==4| y14==4| y15==4
+replace DECILE= 5 if y06==5| y07==5| y08==5| y09==5| y10==5| y11==5| y12==5| y13==5| y14==5| y15==5
+replace DECILE= 6 if y06==6| y07==6| y08==6| y09==6| y10==6| y11==6| y12==6| y13==6| y14==6| y15==6
+replace DECILE= 7 if y06==7| y07==7| y08==7| y09==7| y10==7| y11==7| y12==7| y13==7| y14==7| y15==7
+replace DECILE= 8 if y06==8| y07==8| y08==8| y09==8| y10==8| y11==8| y12==8| y13==8| y14==8| y15==8
+replace DECILE= 9 if y06==9| y07==9| y08==9| y09==9| y10==9| y11==9| y12==9| y13==9| y14==9| y15==9
+replace DECILE= 10 if y06==10| y07==10| y08==10| y09==10| y10==10| y11==10| y12==10| y13==10| y14==10| y15==10
+
+gen elec_share=(g_ele_ad/TotExp_ad)*100 
+
+gr bar (median) elec_share if year==2012 , over (DECILE) subtitle(2012)
+gr save elecshareY12,replace
+gr bar (median) elec_share if year==2013 , over (DECILE) subtitle(2013)
+gr save elecshareY13,replace
+gr bar (median) elec_share if year==2014 , over (DECILE) subtitle(2014)
+gr save elecshareY14,replace
+gr combine elecshareY12.gph elecshareY13.gph elecshareY14.gph, ycom c(3) ///
+title(Electricity Expenditure as a share of hh Total expenditure) note(over income deciles)
+gr save elecSHARE_Y012-14, replace
+			
+*******************************************************************************				
+
+```
+
+### `3 Replication package/dofiles/1_Raw data.do`
+```stata
+*
+
+*1 datos hogar --H2006-2015.dta
+quietly{
+
+*change directory route:
+cd "C:\Users\jordi\Desktop\SUBMISSION EJ\3 Replication package\raw data"
+*cd "C:\Replicator..."
+*HOGAR
+clear
+infix  ANOENC 1-4 NUMERO 5-9	CCAA 10-11 NUTS1 12-12	CAPROV 13-13 TAMAMU 14-14 DENSI 15-15 CLAVE 16-16 CLATEO 17-17 ///
+ FACTOR 18-28 NMIEMB 29-30 TAMAÑO 31-31	NMIEMSD 32-33	NMIEMHU 34-35	NMIEMIN 36-37	NMIEM1 38-39	NMIEM2 40-41	///
+ NMIEM3 42-43	NMIEM4 44-45	NMIEM5 46-47	NMIEM6 48-49	NMIEM7 50-51	NMIEM8 52-53	NMIEM9 54-55 ///
+ NMIEM10 56-57	NMIEM11 58-59	NMIEM12 60-61	NMIEM13 62-63	NUMACTI 64-65	NUMINACTI 66-67	NUMOCU 68-69 ///
+ NUMNOCU 70-71	NUMESTU 72-73	NUMNOESTU 74-75	NNINOSD 76-77	NHIJOSD 78-79	UC1 80-82	UC2 83-85	PF2TEO 86-87 ///
+ PF2RECO 88-89	TIPHOGAR1 90-91	TIPHOGAR2 92-93	TIPHOGAR3 94-95	TIPHOGAR4 96-97	TIPHOGAR5 98-99	TIPHOGAR6 100-101 ///
+ TIPHOGAR7 102-103	TIPHOGAR8 104-105	TIPHOGAR9 106-107	TIPHOGAR10 108-109	TIPHOGAR11 110-111	SITUOCUHOG 112-113 ///
+ SITUACTHOG 114-115	NORDENSP 116-117	EDADSP 118-119	SEXOSP 120-121	PAISNACODSP 122-123	NACIONASP 124-125	PAISCODSP 126-127 ///
+ SITURESSP 128-129	ECIVILLEGALSP 130-131	NORDENCOSP 132-133	UNIONSP 134-135	CONVIVENCIASP 136-137	NORDENPASP 138-139 ///
+ PAISPADRESP 140-141	NORDENMASP 142-143	PAISMADRESP 144-145	ESTUDIOSSP 146-147	ESTUDREDSP 148-149	SITUACTSP 150-151 ///
+ SITUREDSP 152-153	OCUSP 154-155	JORNADASP 156-157	PERCEPSP 158-159	IMPEXACPSP 160-164	IMPUEXACPSP 165-165	INTERINPSP 166-167 ///
+ IMPUINTERPSP 168-168	TRABAJO 169-170	OCUPA 171-172	OCUPARED 173-174	ACTESTB 175-176	ACTESTBRED 177-178	SITPROF 179-180 ///
+ SECTOR 181-182	TIPOCONT 183-184	SITSOCI 185-186	SITSOCIRE 187-188	REGTEN 189-189	TIPOEDIF 190-191	ZONARES 192-193 ///
+ TIPOCASA 194-195	NHABIT 196-197	ANNOCON 198-199	SUPERF 200-202	AGUACALI 203-204	FUENAGUA 205-206	CALEF 207-208 ///
+ FUENCALE 209-210	DISPOSIOV 211-211	NUMOVD 212-212	REGTENV1 213-214	MESESV1 215-216	DIASV1 217-218	AGUACV1 219-220	///
+ FUENACV1 221-222	CALEFV1 223-224	FUENCAV1 225-226	REGTENV2 227-228	MESESV2 229-230	DIASV2 231-232	AGUACV2 233-234 ///
+ FUENACV2 235-236	CALEFV2 237-238	FUENCAV2 239-240	REGTENV3 241-242	MESESV3 243-244	DIASV3 245-246	AGUACV3 247-248	///
+ FUENACV3 249-250	CALEFV3 251-252	FUENCAV3 253-254	REGTENV4 255-256	MESESV4 257-258	DIASV4 259-260	AGUACV4 261-262	///
+ FUENACV4 263-264	CALEFV4 265-266	FUENCAV4 267-268	REGTENV5 269-270	MESESV5 271-272	DIASV5 273-274	AGUACV5 275-276 ///
+ FUENACV5 277-278	CALEFV5 279-280	FUENCAV5 281-282	REGTENV6 283-284	MESESV6 285-286	DIASV6 287-288	AGUACV6 289-290 ///
+ FUENACV6 291-292	CALEFV6 293-294	FUENCAV6 295-296	REGTENV7 297-298	MESESV7 299-300	DIASV7 301-302	AGUACV7 303-304 ///
+ FUENACV7 305-306	CALEFV7 307-308	FUENCAV7 309-310	REGTENV8 311-312	MESESV8 313-314	DIASV8 315-316	AGUACV8 317-318 ///
+ FUENACV8 319-320	CALEFV8 321-322	FUENCAV8 323-324	REGTENV9 325-326	MESESV9 327-328	DIASV9 329-330	AGUACV9 331-332 ///
+ FUENACV9 333-334	CALEFV9 335-336	FUENCAV9 337-338	GASTOT 339-354	IMPUTGAS 355-359	GASTMON 360-375	GASTNOM1 376-388 ///
+ GASTNOM2 389-401	GASTNOM3 402-414	GASTNOM4 415-427	CAPROP 428-429	CAJENA 430-431	PENSIO 432-433	DESEM 434-435 ///
+ OTRSUB 436-437	RENTAS 438-439	OTROIN 440-441	FUENPRIN 442-443	FUENPRINRED 444-445	IMPEXAC 446-450	IMPUEXAC 451-451 ///
+ INTERIN 452-453	IMPUINTER 454-454	NUMPERI 455-456	COMIMH 457-459	COMISD 460-462	COMIHU 463-465	COMIINV 466-468	COMITOT 469-471 ///
+using "Fichero de usuario de hogar a2015.txt"
+
+replace UC1=UC1/10
+replace UC2=UC2/10
+replace GASTOT= GASTOT /100
+replace IMPUTGAS= IMPUTGAS/100
+replace GASTMON= GASTMON/100
+replace GASTNOM1= GASTNOM1/100
+replace GASTNOM2=GASTNOM2/100
+replace GASTNOM3= GASTNOM3/100
+replace GASTNOM4=GASTNOM4/100
+replace FACTOR= FACTOR/1000000
+gen year=2015
+
+save H2015, replace
+clear
+
+
+*HOGAR
+clear
+infix  ANOENC 1-4 NUMERO 5-9	CCAA 10-11 NUTS1 12-12	CAPROV 13-13 TAMAMU 14-14 DENSI 15-15 CLAVE 16-16 CLATEO 17-17 ///
+ FACTOR 18-28 NMIEMB 29-30 TAMAÑO 31-31	NMIEMSD 32-33	NMIEMHU 34-35	NMIEMIN 36-37	NMIEM1 38-39	NMIEM2 40-41	///
+ NMIEM3 42-43	NMIEM4 44-45	NMIEM5 46-47	NMIEM6 48-49	NMIEM7 50-51	NMIEM8 52-53	NMIEM9 54-55 ///
+ NMIEM10 56-57	NMIEM11 58-59	NMIEM12 60-61	NMIEM13 62-63	NUMACTI 64-65	NUMINACTI 66-67	NUMOCU 68-69 ///
+ NUMNOCU 70-71	NUMESTU 72-73	NUMNOESTU 74-75	NNINOSD 76-77	NHIJOSD 78-79	UC1 80-82	UC2 83-85	PF2TEO 86-87 ///
+ PF2RECO 88-89	TIPHOGAR1 90-91	TIPHOGAR2 92-93	TIPHOGAR3 94-95	TIPHOGAR4 96-97	TIPHOGAR5 98-99	TIPHOGAR6 100-101 ///
+ TIPHOGAR7 102-103	TIPHOGAR8 104-105	TIPHOGAR9 106-107	TIPHOGAR10 108-109	TIPHOGAR11 110-111	SITUOCUHOG 112-113 ///
+ SITUACTHOG 114-115	NORDENSP 116-117	EDADSP 118-119	SEXOSP 120-121	PAISNACODSP 122-123	NACIONASP 124-125	PAISCODSP 126-127 ///
+ SITURESSP 128-129	ECIVILLEGALSP 130-131	NORDENCOSP 132-133	UNIONSP 134-135	CONVIVENCIASP 136-137	NORDENPASP 138-139 ///
+ PAISPADRESP 140-141	NORDENMASP 142-143	PAISMADRESP 144-145	ESTUDIOSSP 146-147	ESTUDREDSP 148-149	SITUACTSP 150-151 ///
+ SITUREDSP 152-153	OCUSP 154-155	JORNADASP 156-157	PERCEPSP 158-159	IMPEXACPSP 160-164	IMPUEXACPSP 165-165	INTERINPSP 166-167 ///
+ IMPUINTERPSP 168-168	TRABAJO 169-170	OCUPA 171-172	OCUPARED 173-174	ACTESTB 175-176	ACTESTBRED 177-178	SITPROF 179-180 ///
+ SECTOR 181-182	TIPOCONT 183-184	SITSOCI 185-186	SITSOCIRE 187-188	REGTEN 189-189	TIPOEDIF 190-191	ZONARES 192-193 ///
+ TIPOCASA 194-195	NHABIT 196-197	ANNOCON 198-199	SUPERF 200-202	AGUACALI 203-204	FUENAGUA 205-206	CALEF 207-208 ///
+ FUENCALE 209-210	DISPOSIOV 211-211	NUMOVD 212-212	REGTENV1 213-214	MESESV1 215-216	DIASV1 217-218	AGUACV1 219-220	///
+ FUENACV1 221-222	CALEFV1 223-224	FUENCAV1 225-226	REGTENV2 227-228	MESESV2 229-230	DIASV2 231-232	AGUACV2 233-234 ///
+ FUENACV2 235-236	CALEFV2 237-238	FUENCAV2 239-240	REGTENV3 241-242	MESESV3 243-244	DIASV3 245-246	AGUACV3 247-248	///
+ FUENACV3 249-250	CALEFV3 251-252	FUENCAV3 253-254	REGTENV4 255-256	MESESV4 257-258	DIASV4 259-260	AGUACV4 261-262	///
+ FUENACV4 263-264	CALEFV4 265-266	FUENCAV4 267-268	REGTENV5 269-270	MESESV5 271-272	DIASV5 273-274	AGUACV5 275-276 ///
+ FUENACV5 277-278	CALEFV5 279-280	FUENCAV5 281-282	REGTENV6 283-284	MESESV6 285-286	DIASV6 287-288	AGUACV6 289-290 ///
+ FUENACV6 291-292	CALEFV6 293-294	FUENCAV6 295-296	REGTENV7 297-298	MESESV7 299-300	DIASV7 301-302	AGUACV7 303-304 ///
+ FUENACV7 305-306	CALEFV7 307-308	FUENCAV7 309-310	REGTENV8 311-312	MESESV8 313-314	DIASV8 315-316	AGUACV8 317-318 ///
+ FUENACV8 319-320	CALEFV8 321-322	FUENCAV8 323-324	REGTENV9 325-326	MESESV9 327-328	DIASV9 329-330	AGUACV9 331-332 ///
+ FUENACV9 333-334	CALEFV9 335-336	FUENCAV9 337-338	GASTOT 339-354	IMPUTGAS 355-359	GASTMON 360-375	GASTNOM1 376-388 ///
+ GASTNOM2 389-401	GASTNOM3 402-414	GASTNOM4 415-427	CAPROP 428-429	CAJENA 430-431	PENSIO 432-433	DESEM 434-435 ///
+ OTRSUB 436-437	RENTAS 438-439	OTROIN 440-441	FUENPRIN 442-443	FUENPRINRED 444-445	IMPEXAC 446-450	IMPUEXAC 451-451 ///
+ INTERIN 452-453	IMPUINTER 454-454	NUMPERI 455-456	COMIMH 457-459	COMISD 460-462	COMIHU 463-465	COMIINV 466-468	COMITOT 469-471 ///
+using "Fichero de usuario de hogar a2014.txt"
+
+replace UC1=UC1/10
+replace UC2=UC2/10
+replace GASTOT= GASTOT /100
+replace IMPUTGAS= IMPUTGAS/100
+replace GASTMON= GASTMON/100
+replace GASTNOM1= GASTNOM1/100
+replace GASTNOM2=GASTNOM2/100
+replace GASTNOM3= GASTNOM3/100
+replace GASTNOM4=GASTNOM4/100
+replace FACTOR= FACTOR/1000000
+gen year=2014
+
+save H2014, replace
+clear
+
+
+*HOGAR
+clear
+infix  ANOENC 1-4 NUMERO 5-9	CCAA 10-11 NUTS1 12-12	CAPROV 13-13 TAMAMU 14-14 DENSI 15-15 CLAVE 16-16 CLATEO 17-17 ///
+ FACTOR 18-28 NMIEMB 29-30 TAMAÑO 31-31	NMIEMSD 32-33	NMIEMHU 34-35	NMIEMIN 36-37	NMIEM1 38-39	NMIEM2 40-41	///
+ NMIEM3 42-43	NMIEM4 44-45	NMIEM5 46-47	NMIEM6 48-49	NMIEM7 50-51	NMIEM8 52-53	NMIEM9 54-55 ///
+ NMIEM10 56-57	NMIEM11 58-59	NMIEM12 60-61	NMIEM13 62-63	NUMACTI 64-65	NUMINACTI 66-67	NUMOCU 68-69 ///
+ NUMNOCU 70-71	NUMESTU 72-73	NUMNOESTU 74-75	NNINOSD 76-77	NHIJOSD 78-79	UC1 80-82	UC2 83-85	PF2TEO 86-87 ///
+ PF2RECO 88-89	TIPHOGAR1 90-91	TIPHOGAR2 92-93	TIPHOGAR3 94-95	TIPHOGAR4 96-97	TIPHOGAR5 98-99	TIPHOGAR6 100-101 ///
+ TIPHOGAR7 102-103	TIPHOGAR8 104-105	TIPHOGAR9 106-107	TIPHOGAR10 108-109	TIPHOGAR11 110-111	SITUOCUHOG 112-113 ///
+ SITUACTHOG 114-115	NORDENSP 116-117	EDADSP 118-119	SEXOSP 120-121	PAISNACODSP 122-123	NACIONASP 124-125	PAISCODSP 126-127 ///
+ SITURESSP 128-129	ECIVILLEGALSP 130-131	NORDENCOSP 132-133	UNIONSP 134-135	CONVIVENCIASP 136-137	NORDENPASP 138-139 ///
+ PAISPADRESP 140-141	NORDENMASP 142-143	PAISMADRESP 144-145	ESTUDIOSSP 146-147	ESTUDREDSP 148-149	SITUACTSP 150-151 ///
+ SITUREDSP 152-153	OCUSP 154-155	JORNADASP 156-157	PERCEPSP 158-159	IMPEXACPSP 160-164	IMPUEXACPSP 165-165	INTERINPSP 166-167 ///
+ IMPUINTERPSP 168-168	TRABAJO 169-170	OCUPA 171-172	OCUPARED 173-174	ACTESTB 175-176	ACTESTBRED 177-178	SITPROF 179-180 ///
+ SECTOR 181-182	TIPOCONT 183-184	SITSOCI 185-186	SITSOCIRE 187-188	REGTEN 189-189	TIPOEDIF 190-191	ZONARES 192-193 ///
+ TIPOCASA 194-195	NHABIT 196-197	ANNOCON 198-199	SUPERF 200-202	AGUACALI 203-204	FUENAGUA 205-206	CALEF 207-208 ///
+ FUENCALE 209-210	DISPOSIOV 211-211	NUMOVD 212-212	REGTENV1 213-214	MESESV1 215-216	DIASV1 217-218	AGUACV1 219-220	///
+ FUENACV1 221-222	CALEFV1 223-224	FUENCAV1 225-226	REGTENV2 227-228	MESESV2 229-230	DIASV2 231-232	AGUACV2 233-234 ///
+ FUENACV2 235-236	CALEFV2 237-238	FUENCAV2 239-240	REGTENV3 241-242	MESESV3 243-244	DIASV3 245-246	AGUACV3 247-248	///
+ FUENACV3 249-250	CALEFV3 251-252	FUENCAV3 253-254	REGTENV4 255-256	MESESV4 257-258	DIASV4 259-260	AGUACV4 261-262	///
+ FUENACV4 263-264	CALEFV4 265-266	FUENCAV4 267-268	REGTENV5 269-270	MESESV5 271-272	DIASV5 273-274	AGUACV5 275-276 ///
+ FUENACV5 277-278	CALEFV5 279-280	FUENCAV5 281-282	REGTENV6 283-284	MESESV6 285-286	DIASV6 287-288	AGUACV6 289-290 ///
+ FUENACV6 291-292	CALEFV6 293-294	FUENCAV6 295-296	REGTENV7 297-298	MESESV7 299-300	DIASV7 301-302	AGUACV7 303-304 ///
+ FUENACV7 305-306	CALEFV7 307-308	FUENCAV7 309-310	REGTENV8 311-312	MESESV8 313-314	DIASV8 315-316	AGUACV8 317-318 ///
+ FUENACV8 319-320	CALEFV8 321-322	FUENCAV8 323-324	REGTENV9 325-326	MESESV9 327-328	DIASV9 329-330	AGUACV9 331-332 ///
+ FUENACV9 333-334	CALEFV9 335-336	FUENCAV9 337-338	GASTOT 339-354	IMPUTGAS 355-359	GASTMON 360-375	GASTNOM1 376-388 ///
+ GASTNOM2 389-401	GASTNOM3 402-414	GASTNOM4 415-427	CAPROP 428-429	CAJENA 430-431	PENSIO 432-433	DESEM 434-435 ///
+ OTRSUB 436-437	RENTAS 438-439	OTROIN 440-441	FUENPRIN 442-443	FUENPRINRED 444-445	IMPEXAC 446-450	IMPUEXAC 451-451 ///
+ INTERIN 452-453	IMPUINTER 454-454	NUMPERI 455-456	COMIMH 457-459	COMISD 460-462	COMIHU 463-465	COMIINV 466-468	COMITOT 469-471 ///
+using "Fichero de usuario de hogar a2013.txt"
+
+replace UC1=UC1/10
+replace UC2=UC2/10
+replace GASTOT= GASTOT /100
+replace IMPUTGAS= IMPUTGAS/100
+replace GASTMON= GASTMON/100
+replace GASTNOM1= GASTNOM1/100
+replace GASTNOM2=GASTNOM2/100
+replace GASTNOM3= GASTNOM3/100
+replace GASTNOM4=GASTNOM4/100
+replace FACTOR= FACTOR/1000000
+gen year=2013
+
+save H2013, replace
+clear
+
+
+*HOGAR
+clear
+infix  ANOENC 1-4 NUMERO 5-9	CCAA 10-11 NUTS1 12-12	CAPROV 13-13 TAMAMU 14-14 DENSI 15-15 CLAVE 16-16 CLATEO 17-17 ///
+ FACTOR 18-28 NMIEMB 29-30 TAMAÑO 31-31	NMIEMSD 32-33	NMIEMHU 34-35	NMIEMIN 36-37	NMIEM1 38-39	NMIEM2 40-41	///
+ NMIEM3 42-43	NMIEM4 44-45	NMIEM5 46-47	NMIEM6 48-49	NMIEM7 50-51	NMIEM8 52-53	NMIEM9 54-55 ///
+ NMIEM10 56-57	NMIEM11 58-59	NMIEM12 60-61	NMIEM13 62-63	NUMACTI 64-65	NUMINACTI 66-67	NUMOCU 68-69 ///
+ NUMNOCU 70-71	NUMESTU 72-73	NUMNOESTU 74-75	NNINOSD 76-77	NHIJOSD 78-79	UC1 80-82	UC2 83-85	PF2TEO 86-87 ///
+ PF2RECO 88-89	TIPHOGAR1 90-91	TIPHOGAR2 92-93	TIPHOGAR3 94-95	TIPHOGAR4 96-97	TIPHOGAR5 98-99	TIPHOGAR6 100-101 ///
+ TIPHOGAR7 102-103	TIPHOGAR8 104-105	TIPHOGAR9 106-107	TIPHOGAR10 108-109	TIPHOGAR11 110-111	SITUOCUHOG 112-113 ///
+ SITUACTHOG 114-115	NORDENSP 116-117	EDADSP 118-119	SEXOSP 120-121	PAISNACODSP 122-123	NACIONASP 124-125	PAISCODSP 126-127 ///
+ SITURESSP 128-129	ECIVILLEGALSP 130-131	NORDENCOSP 132-133	UNIONSP 134-135	CONVIVENCIASP 136-137	NORDENPASP 138-139 ///
+ PAISPADRESP 140-141	NORDENMASP 142-143	PAISMADRESP 144-145	ESTUDIOSSP 146-147	ESTUDREDSP 148-149	SITUACTSP 150-151 ///
+ SITUREDSP 152-153	OCUSP 154-155	JORNADASP 156-157	PERCEPSP 158-159	IMPEXACPSP 160-164	IMPUEXACPSP 165-165	INTERINPSP 166-167 ///
+ IMPUINTERPSP 168-168	TRABAJO 169-170	OCUPA 171-172	OCUPARED 173-174	ACTESTB 175-176	ACTESTBRED 177-178	SITPROF 179-180 ///
+ SECTOR 181-182	TIPOCONT 183-184	SITSOCI 185-186	SITSOCIRE 187-188	REGTEN 189-189	TIPOEDIF 190-191	ZONARES 192-193 ///
+ TIPOCASA 194-195	NHABIT 196-197	ANNOCON 198-199	SUPERF 200-202	AGUACALI 203-204	FUENAGUA 205-206	CALEF 207-208 ///
+ FUENCALE 209-210	DISPOSIOV 211-211	NUMOVD 212-212	REGTENV1 213-214	MESESV1 215-216	DIASV1 217-218	AGUACV1 219-220	///
+ FUENACV1 221-222	CALEFV1 223-224	FUENCAV1 225-226	REGTENV2 227-228	MESESV2 229-230	DIASV2 231-232	AGUACV2 233-234 ///
+ FUENACV2 235-236	CALEFV2 237-238	FUENCAV2 239-240	REGTENV3 241-242	MESESV3 243-244	DIASV3 245-246	AGUACV3 247-248	///
+ FUENACV3 249-250	CALEFV3 251-252	FUENCAV3 253-254	REGTENV4 255-256	MESESV4 257-258	DIASV4 259-260	AGUACV4 261-262	///
+ FUENACV4 263-264	CALEFV4 265-266	FUENCAV4 267-268	REGTENV5 269-270	MESESV5 271-272	DIASV5 273-274	AGUACV5 275-276 ///
+ FUENACV5 277-278	CALEFV5 279-280	FUENCAV5 281-282	REGTENV6 283-284	MESESV6 285-286	DIASV6 287-288	AGUACV6 289-290 ///
+ FUENACV6 291-292	CALEFV6 293-294	FUENCAV6 295-296	REGTENV7 297-298	MESESV7 299-300	DIASV7 301-302	AGUACV7 303-304 ///
+ FUENACV7 305-306	CALEFV7 307-308	FUENCAV7 309-310	REGTENV8 311-312	MESESV8 313-314	DIASV8 315-316	AGUACV8 317-318 ///
+ FUENACV8 319-320	CALEFV8 321-322	FUENCAV8 323-324	REGTENV9 325-326	MESESV9 327-328	DIASV9 329-330	AGUACV9 331-332 ///
+ FUENACV9 333-334	CALEFV9 335-336	FUENCAV9 337-338	GASTOT 339-354	IMPUTGAS 355-359	GASTMON 360-375	GASTNOM1 376-388 ///
+ GASTNOM2 389-401	GASTNOM3 402-414	GASTNOM4 415-427	CAPROP 428-429	CAJENA 430-431	PENSIO 432-433	DESEM 434-435 ///
+ OTRSUB 436-437	RENTAS 438-439	OTROIN 440-441	FUENPRIN 442-443	FUENPRINRED 444-445	IMPEXAC 446-450	IMPUEXAC 451-451 ///
+ INTERIN 452-453	IMPUINTER 454-454	NUMPERI 455-456	COMIMH 457-459	COMISD 460-462	COMIHU 463-465	COMIINV 466-468	COMITOT 469-471 ///
+using "Fichero de usuario de hogar a2012.txt"
+
+replace UC1=UC1/10
+replace UC2=UC2/10
+replace GASTOT= GASTOT /100
+replace IMPUTGAS= IMPUTGAS/100
+replace GASTMON= GASTMON/100
+replace GASTNOM1= GASTNOM1/100
+replace GASTNOM2=GASTNOM2/100
+replace GASTNOM3= GASTNOM3/100
+replace GASTNOM4=GASTNOM4/100
+replace FACTOR= FACTOR/1000000
+gen year=2012
+
+save H2012, replace
+clear
+
+
+*HOGAR
+clear
+infix  ANOENC 1-4 NUMERO 5-9	CCAA 10-11 NUTS1 12-12	CAPROV 13-13 TAMAMU 14-14 DENSI 15-15 CLAVE 16-16 CLATEO 17-17 ///
+ FACTOR 18-28 NMIEMB 29-30 TAMAÑO 31-31	NMIEMSD 32-33	NMIEMHU 34-35	NMIEMIN 36-37	NMIEM1 38-39	NMIEM2 40-41	///
+ NMIEM3 42-43	NMIEM4 44-45	NMIEM5 46-47	NMIEM6 48-49	NMIEM7 50-51	NMIEM8 52-53	NMIEM9 54-55 ///
+ NMIEM10 56-57	NMIEM11 58-59	NMIEM12 60-61	NMIEM13 62-63	NUMACTI 64-65	NUMINACTI 66-67	NUMOCU 68-69 ///
+ NUMNOCU 70-71	NUMESTU 72-73	NUMNOESTU 74-75	NNINOSD 76-77	NHIJOSD 78-79	UC1 80-82	UC2 83-85	PF2TEO 86-87 ///
+ PF2RECO 88-89	TIPHOGAR1 90-91	TIPHOGAR2 92-93	TIPHOGAR3 94-95	TIPHOGAR4 96-97	TIPHOGAR5 98-99	TIPHOGAR6 100-101 ///
+ TIPHOGAR7 102-103	TIPHOGAR8 104-105	TIPHOGAR9 106-107	TIPHOGAR10 108-109	TIPHOGAR11 110-111	SITUOCUHOG 112-113 ///
+ SITUACTHOG 114-115	NORDENSP 116-117	EDADSP 118-119	SEXOSP 120-121	PAISNACODSP 122-123	NACIONASP 124-125	PAISCODSP 126-127 ///
+ SITURESSP 128-129	ECIVILLEGALSP 130-131	NORDENCOSP 132-133	UNIONSP 134-135	CONVIVENCIASP 136-137	NORDENPASP 138-139 ///
+ PAISPADRESP 140-141	NORDENMASP 142-143	PAISMADRESP 144-145	ESTUDIOSSP 146-147	ESTUDREDSP 148-149	SITUACTSP 150-151 ///
+ SITUREDSP 152-153	OCUSP 154-155	JORNADASP 156-157	PERCEPSP 158-159	IMPEXACPSP 160-164	IMPUEXACPSP 165-165	INTERINPSP 166-167 ///
+ IMPUINTERPSP 168-168	TRABAJO 169-170	OCUPA 171-172	OCUPARED 173-174	ACTESTB 175-176	ACTESTBRED 177-178	SITPROF 179-180 ///
+ SECTOR 181-182	TIPOCONT 183-184	SITSOCI 185-186	SITSOCIRE 187-188	REGTEN 189-189	TIPOEDIF 190-191	ZONARES 192-193 ///
+ TIPOCASA 194-195	NHABIT 196-197	ANNOCON 198-199	SUPERF 200-202	AGUACALI 203-204	FUENAGUA 205-206	CALEF 207-208 ///
+ FUENCALE 209-210	DISPOSIOV 211-211	NUMOVD 212-212	REGTENV1 213-214	MESESV1 215-216	DIASV1 217-218	AGUACV1 219-220	///
+ FUENACV1 221-222	CALEFV1 223-224	FUENCAV1 225-226	REGTENV2 227-228	MESESV2 229-230	DIASV2 231-232	AGUACV2 233-234 ///
+ FUENACV2 235-236	CALEFV2 237-238	FUENCAV2 239-240	REGTENV3 241-242	MESESV3 243-244	DIASV3 245-246	AGUACV3 247-248	///
+ FUENACV3 249-250	CALEFV3 251-252	FUENCAV3 253-254	REGTENV4 255-256	MESESV4 257-258	DIASV4 259-260	AGUACV4 261-262	///
+ FUENACV4 263-264	CALEFV4 265-266	FUENCAV4 267-268	REGTENV5 269-270	MESESV5 271-272	DIASV5 273-274	AGUACV5 275-276 ///
+ FUENACV5 277-278	CALEFV5 279-280	FUENCAV5 281-282	REGTENV6 283-284	MESESV6 285-286	DIASV6 287-288	AGUACV6 289-290 ///
+ FUENACV6 291-292	CALEFV6 293-294	FUENCAV6 295-296	REGTENV7 297-298	MESESV7 299-300	DIASV7 301-302	AGUACV7 303-304 ///
+ FUENACV7 305-306	CALEFV7 307-308	FUENCAV7 309-310	REGTENV8 311-312	MESESV8 313-314	DIASV8 315-316	AGUACV8 317-318 ///
+ FUENACV8 319-320	CALEFV8 321-322	FUENCAV8 323-324	REGTENV9 325-326	MESESV9 327-328	DIASV9 329-330	AGUACV9 331-332 ///
+ FUENACV9 333-334	CALEFV9 335-336	FUENCAV9 337-338	GASTOT 339-354	IMPUTGAS 355-359	GASTMON 360-375	GASTNOM1 376-388 ///
+ GASTNOM2 389-401	GASTNOM3 402-414	GASTNOM4 415-427	CAPROP 428-429	CAJENA 430-431	PENSIO 432-433	DESEM 434-435 ///
+ OTRSUB 436-437	RENTAS 438-439	OTROIN 440-441	FUENPRIN 442-443	FUENPRINRED 444-445	IMPEXAC 446-450	IMPUEXAC 451-451 ///
+ INTERIN 452-453	IMPUINTER 454-454	NUMPERI 455-456	COMIMH 457-459	COMISD 460-462	COMIHU 463-465	COMIINV 466-468	COMITOT 469-471 ///
+using "Fichero de usuario de hogar a2011.txt"
+
+replace UC1=UC1/10
+replace UC2=UC2/10
+replace GASTOT= GASTOT /100
+replace IMPUTGAS= IMPUTGAS/100
+replace GASTMON= GASTMON/100
+replace GASTNOM1= GASTNOM1/100
+replace GASTNOM2=GASTNOM2/100
+replace GASTNOM3= GASTNOM3/100
+replace GASTNOM4=GASTNOM4/100
+replace FACTOR= FACTOR/1000000
+gen year=2011
+
+save H2011, replace
+clear
+
+
+*HOGAR
+clear
+infix  ANOENC	01-04	 /// 
+NUMERO	05-09	 /// 
+CCAA	10-11 /// 
+NUTS1	12	 /// 
+CAPROV	13	 /// 
+TAMAMU	14	 /// 
+DENSI 	15	 /// 
+CLAVE	16	 /// 
+CLATEO	17	 /// 
+FACTOR	18-28	 /// 
+NMIEMB	29-30	 /// 
+TAMAÑO	31	 /// 
+NMIEMSD	32-33	 /// 
+NMIEMHU	34-35	 /// 
+NMIEMIN	36-37	 /// 
+NMIEM1	38-39	 /// 
+NMIEM2	40-41	 /// 
+NMIEM3	42-43	 /// 
+NMIEM4	44-45	 /// 
+NMIEM5	46-47	 /// 
+NMIEM6	48-49	 /// 
+NMIEM7	50-51	 /// 
+NHIJOSD	52-53	 /// 
+UC1	54-56	 /// 
+UC2	57-59	 /// 
+PF2TEO	60-61	 /// 
+PF2RECO	62-63	 /// 
+TIPHOGAR1	64-65	 /// 
+TIPHOGAR2	66-67	 /// 
+TIPHOGAR3	68-69	 /// 
+TIPHOGAR4	70-71	 /// 
+TIPHOGAR5	72-73	 /// 
+TIPHOGAR6	74-75	 /// 
+TIPHOGAR7	76-77	 /// 
+TIPHOGAR8	78-79	 /// 
+TIPHOGAR9	80-81	 /// 
+TIPHOGAR10	82-83	 /// 
+TIPHOGAR11	84-85	 /// 
+NUMACTI	86-87	 /// 
+NUMOCUP	88-89	 /// 
+NUMESTU	90-91	 /// 
+SITUOCUHOG	92-93	 /// 
+SITUACTHOG	94-95	 /// 
+NORDENSP	96-97	 /// 
+EDADSP	98-99	 /// 
+SEXOSP	100-101	 /// 
+NACIONASP	102-103	 /// 
+PAISSP	104-105	 /// 
+SITURESSP	106-107	 /// 
+ECIVILSP	108-109	 /// 
+NORDENCOSP	110-111	 /// 
+NORDENPASP	112-113	 /// 
+NORDENMASP	114-115	 /// 
+ESTUDIOSSP	116-117	 /// 
+ESTUDREDSP	118-119	 /// 
+SITUACTSP	120-121	 /// 
+SITUREDSP	122-123	 /// 
+PERCEPSP	124-125	 /// 
+IMPEXACPSP	126-130	 /// 
+IMPUEXACPSP	131	 /// 
+INTERINPSP	132-133	 /// 
+IMPUINTERPSP	134	 /// 
+TRABAJO	135-136	 /// 
+OCUPA	137-138	 /// 
+OCUPARED	139-140	 /// 
+ACTESTB	141-142	 /// 
+ACTESTBRED	143-144	 /// 
+SITPROF	145-146	 /// 
+SECTOR	147-148	 /// 
+TIPOCONT	149-150	 /// 
+SITSOCI	151-152	 /// 
+SITSOCIRE	153-154	 /// 
+REGTEN	155	 /// 
+TIPOEDIF	156-157	 /// 
+ZONARES	158-159	 /// 
+TIPOCASA	160-161	 /// 
+NHABIT	162-163	 /// 
+ANNOCON	164-165	 /// 
+SUPERF	166-168	 /// 
+AGUACALI	169-170	 /// 
+FUENAGUA	171-172	 /// 
+CALEF	173-174	 /// 
+FUENCALE	175-176	 /// 
+DISPOSIOV	177	 /// 
+NUMOVD	178	 /// 
+REGTENV1	179-180	 /// 
+MESESV1	181-182	 /// 
+DIASV1	183-184	 /// 
+AGUACV1	185-186	 /// 
+FUENACV1	187-188	 /// 
+CALEFV1	189-190	 /// 
+FUENCAV1	191-192	 /// 
+REGTENV2	193-194	 /// 
+MESESV2	195-196	 /// 
+DIASV2	197-198	 /// 
+AGUACV2	199-200	 /// 
+FUENACV2	201-202	 /// 
+CALEFV2	203-204	 /// 
+FUENCAV2	205-206	 /// 
+REGTENV3	207-208	 /// 
+MESESV3	209-210	 /// 
+DIASV3	211-212	 /// 
+AGUACV3	213-214	 /// 
+FUENACV3	215-216	 /// 
+CALEFV3	217-218	 /// 
+FUENCAV3	219-220	 /// 
+REGTENV4	221-222	 /// 
+MESESV4	223-224	 /// 
+DIASV4	225-226	 /// 
+AGUACV4	227-228	 /// 
+FUENACV4	229-230	 /// 
+CALEFV4	231-232	 /// 
+FUENCAV4	233-234	 /// 
+REGTENV5	235-236	 /// 
+MESESV5	237-238	 /// 
+DIASV5	239-240	 /// 
+AGUACV5	241-242	 /// 
+FUENACV5	243-244	 /// 
+CALEFV5	245-456	 /// 
+FUENCAV5	247-248	 /// 
+REGTENV6	249-250	 /// 
+MESESV6	251-252	 /// 
+DIASV6	253-254	 /// 
+AGUACV6	255-256	 /// 
+FUENACV6	257-258	 /// 
+CALEFV6	259-260	 /// 
+FUENCAV6	261-262	 /// 
+REGTENV7	263-264	 /// 
+MESESV7	265-266	 /// 
+DIASV7	267-268	 /// 
+AGUACV7	269-270	 /// 
+FUENACV7	271-272	 /// 
+CALEFV7	273-274	 /// 
+FUENCAV7	275-276	 /// 
+REGTENV8	277-278	 /// 
+MESESV8	279-280	 /// 
+DIASV8	281-282	 /// 
+AGUACV8	283-284	 /// 
+FUENACV8	285-286	 /// 
+CALEFV8	287-288	 /// 
+FUENCAV8	289-290	 /// 
+REGTENV9	291-292	 /// 
+MESESV9	293-294	 /// 
+DIASV9	295-296	 /// 
+AGUACV9	297-298	 /// 
+FUENACV9	299-300	 /// 
+CALEFV9	301-302	 /// 
+FUENCAV9	303-304	 /// 
+GASTOT	305-320	 /// 
+IMPUTGAS	321-325	 /// 
+GASTMON	326-341	 /// 
+GASTNOM1	342-354	 /// 
+GASTNOM2	355-367	 /// 
+GASTNOM3	368-380	 /// 
+GASTNOM4	381-393	 /// 
+CAPROP	394-395	 /// 
+CAJENA	396-397	 /// 
+PENSIO	398-399	 /// 
+DESEM	400-401	 /// 
+OTRSUB	402-403	 /// 
+RENTAS	404-405	 /// 
+OTROIN	406-407	 /// 
+FUENPRIN	408-409	 /// 
+FUENPRINRED	410-411	 /// 
+IMPEXAC	412-416	 /// 
+IMPUEXAC	417	 /// 
+INTERIN	418-419	 /// 
+IMPUINTER	420	 /// 
+NUMPERI	421-422	 /// 
+COMIMH	423-425	 /// 
+COMISD	426-428	 /// 
+COMIHU	429-431	 /// 
+COMIINV	432-434	 /// 
+COMITOT	435-437	 ///
+using "Fichero de usuario de hogar a2010.txt"
+
+replace UC1=UC1/10
+replace UC2=UC2/10
+replace GASTOT= GASTOT /100
+replace IMPUTGAS= IMPUTGAS/100
+replace GASTMON= GASTMON/100
+replace GASTNOM1= GASTNOM1/100
+replace GASTNOM2=GASTNOM2/100
+replace GASTNOM3= GASTNOM3/100
+replace GASTNOM4=GASTNOM4/100
+replace FACTOR= FACTOR/1000000
+gen year=2010
+
+save H2010, replace
+clear
+
+
+*HOGAR
+clear
+infix  ANOENC	01-04	 /// 
+NUMERO	05-09	 /// 
+CCAA	10-11 /// 
+NUTS1	12	 /// 
+CAPROV	13	 /// 
+TAMAMU	14	 /// 
+DENSI 	15	 /// 
+CLAVE	16	 /// 
+CLATEO	17	 /// 
+FACTOR	18-28	 /// 
+NMIEMB	29-30	 /// 
+TAMAÑO	31	 /// 
+NMIEMSD	32-33	 /// 
+NMIEMHU	34-35	 /// 
+NMIEMIN	36-37	 /// 
+NMIEM1	38-39	 /// 
+NMIEM2	40-41	 /// 
+NMIEM3	42-43	 /// 
+NMIEM4	44-45	 /// 
+NMIEM5	46-47	 /// 
+NMIEM6	48-49	 /// 
+NMIEM7	50-51	 /// 
+NHIJOSD	52-53	 /// 
+UC1	54-56	 /// 
+UC2	57-59	 /// 
+PF2TEO	60-61	 /// 
+PF2RECO	62-63	 /// 
+TIPHOGAR1	64-65	 /// 
+TIPHOGAR2	66-67	 /// 
+TIPHOGAR3	68-69	 /// 
+TIPHOGAR4	70-71	 /// 
+TIPHOGAR5	72-73	 /// 
+TIPHOGAR6	74-75	 /// 
+TIPHOGAR7	76-77	 /// 
+TIPHOGAR8	78-79	 /// 
+TIPHOGAR9	80-81	 /// 
+TIPHOGAR10	82-83	 /// 
+TIPHOGAR11	84-85	 /// 
+NUMACTI	86-87	 /// 
+NUMOCUP	88-89	 /// 
+NUMESTU	90-91	 /// 
+SITUOCUHOG	92-93	 /// 
+SITUACTHOG	94-95	 /// 
+NORDENSP	96-97	 /// 
+EDADSP	98-99	 /// 
+SEXOSP	100-101	 /// 
+NACIONASP	102-103	 /// 
+PAISSP	104-105	 /// 
+SITURESSP	106-107	 /// 
+ECIVILSP	108-109	 /// 
+NORDENCOSP	110-111	 /// 
+NORDENPASP	112-113	 /// 
+NORDENMASP	114-115	 /// 
+ESTUDIOSSP	116-117	 /// 
+ESTUDREDSP	118-119	 /// 
+SITUACTSP	120-121	 /// 
+SITUREDSP	122-123	 /// 
+PERCEPSP	124-125	 /// 
+IMPEXACPSP	126-130	 /// 
+IMPUEXACPSP	131	 /// 
+INTERINPSP	132-133	 /// 
+IMPUINTERPSP	134	 /// 
+TRABAJO	135-136	 /// 
+OCUPA	137-138	 /// 
+OCUPARED	139-140	 /// 
+ACTESTB	141-142	 /// 
+ACTESTBRED	143-144	 /// 
+SITPROF	145-146	 /// 
+SECTOR	147-148	 /// 
+TIPOCONT	149-150	 /// 
+SITSOCI	151-152	 /// 
+SITSOCIRE	153-154	 /// 
+REGTEN	155	 /// 
+TIPOEDIF	156-157	 /// 
+ZONARES	158-159	 /// 
+TIPOCASA	160-161	 /// 
+NHABIT	162-163	 /// 
+ANNOCON	164-165	 /// 
+SUPERF	166-168	 /// 
+AGUACALI	169-170	 /// 
+FUENAGUA	171-172	 /// 
+CALEF	173-174	 /// 
+FUENCALE	175-176	 /// 
+DISPOSIOV	177	 /// 
+NUMOVD	178	 /// 
+REGTENV1	179-180	 /// 
+MESESV1	181-182	 /// 
+DIASV1	183-184	 /// 
+AGUACV1	185-186	 /// 
+FUENACV1	187-188	 /// 
+CALEFV1	189-190	 /// 
+FUENCAV1	191-192	 /// 
+REGTENV2	193-194	 /// 
+MESESV2	195-196	 /// 
+DIASV2	197-198	 /// 
+AGUACV2	199-200	 /// 
+FUENACV2	201-202	 /// 
+CALEFV2	203-204	 /// 
+FUENCAV2	205-206	 /// 
+REGTENV3	207-208	 /// 
+MESESV3	209-210	 /// 
+DIASV3	211-212	 /// 
+AGUACV3	213-214	 /// 
+FUENACV3	215-216	 /// 
+CALEFV3	217-218	 /// 
+FUENCAV3	219-220	 /// 
+REGTENV4	221-222	 /// 
+MESESV4	223-224	 /// 
+DIASV4	225-226	 /// 
+AGUACV4	227-228	 /// 
+FUENACV4	229-230	 /// 
+CALEFV4	231-232	 /// 
+FUENCAV4	233-234	 /// 
+REGTENV5	235-236	 /// 
+MESESV5	237-238	 /// 
+DIASV5	239-240	 /// 
+AGUACV5	241-242	 /// 
+FUENACV5	243-244	 /// 
+CALEFV5	245-456	 /// 
+FUENCAV5	247-248	 /// 
+REGTENV6	249-250	 /// 
+MESESV6	251-252	 /// 
+DIASV6	253-254	 /// 
+AGUACV6	255-256	 /// 
+FUENACV6	257-258	 /// 
+CALEFV6	259-260	 /// 
+FUENCAV6	261-262	 /// 
+REGTENV7	263-264	 /// 
+MESESV7	265-266	 /// 
+DIASV7	267-268	 /// 
+AGUACV7	269-270	 /// 
+FUENACV7	271-272	 /// 
+CALEFV7	273-274	 /// 
+FUENCAV7	275-276	 /// 
+REGTENV8	277-278	 /// 
+MESESV8	279-280	 /// 
+DIASV8	281-282	 /// 
+AGUACV8	283-284	 /// 
+FUENACV8	285-286	 /// 
+CALEFV8	287-288	 /// 
+FUENCAV8	289-290	 /// 
+REGTENV9	291-292	 /// 
+MESESV9	293-294	 /// 
+DIASV9	295-296	 /// 
+AGUACV9	297-298	 /// 
+FUENACV9	299-300	 /// 
+CALEFV9	301-302	 /// 
+FUENCAV9	303-304	 /// 
+GASTOT	305-320	 /// 
+IMPUTGAS	321-325	 /// 
+GASTMON	326-341	 /// 
+GASTNOM1	342-354	 /// 
+GASTNOM2	355-367	 /// 
+GASTNOM3	368-380	 /// 
+GASTNOM4	381-393	 /// 
+CAPROP	394-395	 /// 
+CAJENA	396-397	 /// 
+PENSIO	398-399	 /// 
+DESEM	400-401	 /// 
+OTRSUB	402-403	 /// 
+RENTAS	404-405	 /// 
+OTROIN	406-407	 /// 
+FUENPRIN	408-409	 /// 
+FUENPRINRED	410-411	 /// 
+IMPEXAC	412-416	 /// 
+IMPUEXAC	417	 /// 
+INTERIN	418-419	 /// 
+IMPUINTER	420	 /// 
+NUMPERI	421-422	 /// 
+COMIMH	423-425	 /// 
+COMISD	426-428	 /// 
+COMIHU	429-431	 /// 
+COMIINV	432-434	 /// 
+COMITOT	435-437	 ///
+using "Fichero de usuario de hogar a2009.txt"
+
+replace UC1=UC1/10
+replace UC2=UC2/10
+replace GASTOT= GASTOT /100
+replace IMPUTGAS= IMPUTGAS/100
+replace GASTMON= GASTMON/100
+replace GASTNOM1= GASTNOM1/100
+replace GASTNOM2=GASTNOM2/100
+replace GASTNOM3= GASTNOM3/100
+replace GASTNOM4=GASTNOM4/100
+replace FACTOR= FACTOR/1000000
+gen year=2009
+
+save H2009, replace
+clear
+
+
+*HOGAR
+clear
+infix  ANOENC	01-04	 /// 
+NUMERO	05-09	 /// 
+CCAA	10-11 /// 
+NUTS1	12	 /// 
+CAPROV	13	 /// 
+TAMAMU	14	 /// 
+DENSI 	15	 /// 
+CLAVE	16	 /// 
+CLATEO	17	 /// 
+FACTOR	18-28	 /// 
+NMIEMB	29-30	 /// 
+TAMAÑO	31	 /// 
+NMIEMSD	32-33	 /// 
+NMIEMHU	34-35	 /// 
+NMIEMIN	36-37	 /// 
+NMIEM1	38-39	 /// 
+NMIEM2	40-41	 /// 
+NMIEM3	42-43	 /// 
+NMIEM4	44-45	 /// 
+NMIEM5	46-47	 /// 
+NMIEM6	48-49	 /// 
+NMIEM7	50-51	 /// 
+NHIJOSD	52-53	 /// 
+UC1	54-56	 /// 
+UC2	57-59	 /// 
+PF2TEO	60-61	 /// 
+PF2RECO	62-63	 /// 
+TIPHOGAR1	64-65	 /// 
+TIPHOGAR2	66-67	 /// 
+TIPHOGAR3	68-69	 /// 
+TIPHOGAR4	70-71	 /// 
+TIPHOGAR5	72-73	 /// 
+TIPHOGAR6	74-75	 /// 
+TIPHOGAR7	76-77	 /// 
+TIPHOGAR8	78-79	 /// 
+TIPHOGAR9	80-81	 /// 
+TIPHOGAR10	82-83	 /// 
+TIPHOGAR11	84-85	 /// 
+NUMACTI	86-87	 /// 
+NUMOCUP	88-89	 /// 
+NUMESTU	90-91	 /// 
+SITUOCUHOG	92-93	 /// 
+SITUACTHOG	94-95	 /// 
+NORDENSP	96-97	 /// 
+EDADSP	98-99	 /// 
+SEXOSP	100-101	 /// 
+NACIONASP	102-103	 /// 
+PAISSP	104-105	 /// 
+SITURESSP	106-107	 /// 
+ECIVILSP	108-109	 /// 
+NORDENCOSP	110-111	 /// 
+NORDENPASP	112-113	 /// 
+NORDENMASP	114-115	 /// 
+ESTUDIOSSP	116-117	 /// 
+ESTUDREDSP	118-119	 /// 
+SITUACTSP	120-121	 /// 
+SITUREDSP	122-123	 /// 
+PERCEPSP	124-125	 /// 
+IMPEXACPSP	126-130	 /// 
+IMPUEXACPSP	131	 /// 
+INTERINPSP	132-133	 /// 
+IMPUINTERPSP	134	 /// 
+TRABAJO	135-136	 /// 
+OCUPA	137-138	 /// 
+OCUPARED	139-140	 /// 
+ACTESTB	141-142	 /// 
+ACTESTBRED	143-144	 /// 
+SITPROF	145-146	 /// 
+SECTOR	147-148	 /// 
+TIPOCONT	149-150	 /// 
+SITSOCI	151-152	 /// 
+SITSOCIRE	153-154	 /// 
+REGTEN	155	 /// 
+TIPOEDIF	156-157	 /// 
+ZONARES	158-159	 /// 
+TIPOCASA	160-161	 /// 
+NHABIT	162-163	 /// 
+ANNOCON	164-165	 /// 
+SUPERF	166-168	 /// 
+AGUACALI	169-170	 /// 
+FUENAGUA	171-172	 /// 
+CALEF	173-174	 /// 
+FUENCALE	175-176	 /// 
+DISPOSIOV	177	 /// 
+NUMOVD	178	 /// 
+REGTENV1	179-180	 /// 
+MESESV1	181-182	 /// 
+DIASV1	183-184	 /// 
+AGUACV1	185-186	 /// 
+FUENACV1	187-188	 /// 
+CALEFV1	189-190	 /// 
+FUENCAV1	191-192	 /// 
+REGTENV2	193-194	 /// 
+MESESV2	195-196	 /// 
+DIASV2	197-198	 /// 
+AGUACV2	199-200	 /// 
+FUENACV2	201-202	 /// 
+CALEFV2	203-204	 /// 
+FUENCAV2	205-206	 /// 
+REGTENV3	207-208	 /// 
+MESESV3	209-210	 /// 
+DIASV3	211-212	 /// 
+AGUACV3	213-214	 /// 
+FUENACV3	215-216	 /// 
+CALEFV3	217-218	 /// 
+FUENCAV3	219-220	 /// 
+REGTENV4	221-222	 /// 
+MESESV4	223-224	 /// 
+DIASV4	225-226	 /// 
+AGUACV4	227-228	 /// 
+FUENACV4	229-230	 /// 
+CALEFV4	231-232	 /// 
+FUENCAV4	233-234	 /// 
+REGTENV5	235-236	 /// 
+MESESV5	237-238	 /// 
+DIASV5	239-240	 /// 
+AGUACV5	241-242	 /// 
+FUENACV5	243-244	 /// 
+CALEFV5	245-456	 /// 
+FUENCAV5	247-248	 /// 
+REGTENV6	249-250	 /// 
+MESESV6	251-252	 /// 
+DIASV6	253-254	 /// 
+AGUACV6	255-256	 /// 
+FUENACV6	257-258	 /// 
+CALEFV6	259-260	 /// 
+FUENCAV6	261-262	 /// 
+REGTENV7	263-264	 /// 
+MESESV7	265-266	 /// 
+DIASV7	267-268	 /// 
+AGUACV7	269-270	 /// 
+FUENACV7	271-272	 /// 
+CALEFV7	273-274	 /// 
+FUENCAV7	275-276	 /// 
+REGTENV8	277-278	 /// 
+MESESV8	279-280	 /// 
+DIASV8	281-282	 /// 
+AGUACV8	283-284	 /// 
+FUENACV8	285-286	 /// 
+CALEFV8	287-288	 /// 
+FUENCAV8	289-290	 /// 
+REGTENV9	291-292	 /// 
+MESESV9	293-294	 /// 
+DIASV9	295-296	 /// 
+AGUACV9	297-298	 /// 
+FUENACV9	299-300	 /// 
+CALEFV9	301-302	 /// 
+FUENCAV9	303-304	 /// 
+GASTOT	305-320	 /// 
+IMPUTGAS	321-325	 /// 
+GASTMON	326-341	 /// 
+GASTNOM1	342-354	 /// 
+GASTNOM2	355-367	 /// 
+GASTNOM3	368-380	 /// 
+GASTNOM4	381-393	 /// 
+CAPROP	394-395	 /// 
+CAJENA	396-397	 /// 
+PENSIO	398-399	 /// 
+DESEM	400-401	 /// 
+OTRSUB	402-403	 /// 
+RENTAS	404-405	 /// 
+OTROIN	406-407	 /// 
+FUENPRIN	408-409	 /// 
+FUENPRINRED	410-411	 /// 
+IMPEXAC	412-416	 /// 
+IMPUEXAC	417	 /// 
+INTERIN	418-419	 /// 
+IMPUINTER	420	 /// 
+NUMPERI	421-422	 /// 
+COMIMH	423-425	 /// 
+COMISD	426-428	 /// 
+COMIHU	429-431	 /// 
+COMIINV	432-434	 /// 
+COMITOT	435-437	 ///
+using "Fichero de usuario de hogar a2008.txt"
+
+replace UC1=UC1/10
+replace UC2=UC2/10
+replace GASTOT= GASTOT /100
+replace IMPUTGAS= IMPUTGAS/100
+replace GASTMON= GASTMON/100
+replace GASTNOM1= GASTNOM1/100
+replace GASTNOM2=GASTNOM2/100
+replace GASTNOM3= GASTNOM3/100
+replace GASTNOM4=GASTNOM4/100
+replace FACTOR= FACTOR/1000000
+gen year=2008
+
+save H2008, replace
+clear
+
+
+*HOGAR
+clear
+infix  ANOENC	01-04	 /// 
+NUMERO	05-09	 /// 
+CCAA	10-11 /// 
+NUTS1	12	 /// 
+CAPROV	13	 /// 
+TAMAMU	14	 /// 
+DENSI 	15	 /// 
+CLAVE	16	 /// 
+CLATEO	17	 /// 
+FACTOR	18-28	 /// 
+NMIEMB	29-30	 /// 
+TAMAÑO	31	 /// 
+NMIEMSD	32-33	 /// 
+NMIEMHU	34-35	 /// 
+NMIEMIN	36-37	 /// 
+NMIEM1	38-39	 /// 
+NMIEM2	40-41	 /// 
+NMIEM3	42-43	 /// 
+NMIEM4	44-45	 /// 
+NMIEM5	46-47	 /// 
+NMIEM6	48-49	 /// 
+NMIEM7	50-51	 /// 
+NHIJOSD	52-53	 /// 
+UC1	54-56	 /// 
+UC2	57-59	 /// 
+PF2TEO	60-61	 /// 
+PF2RECO	62-63	 /// 
+TIPHOGAR1	64-65	 /// 
+TIPHOGAR2	66-67	 /// 
+TIPHOGAR3	68-69	 /// 
+TIPHOGAR4	70-71	 /// 
+TIPHOGAR5	72-73	 /// 
+TIPHOGAR6	74-75	 /// 
+TIPHOGAR7	76-77	 /// 
+TIPHOGAR8	78-79	 /// 
+TIPHOGAR9	80-81	 /// 
+TIPHOGAR10	82-83	 /// 
+TIPHOGAR11	84-85	 /// 
+NUMACTI	86-87	 /// 
+NUMOCUP	88-89	 /// 
+NUMESTU	90-91	 /// 
+SITUOCUHOG	92-93	 /// 
+SITUACTHOG	94-95	 /// 
+NORDENSP	96-97	 /// 
+EDADSP	98-99	 /// 
+SEXOSP	100-101	 /// 
+NACIONASP	102-103	 /// 
+PAISSP	104-105	 /// 
+SITURESSP	106-107	 /// 
+ECIVILSP	108-109	 /// 
+NORDENCOSP	110-111	 /// 
+NORDENPASP	112-113	 /// 
+NORDENMASP	114-115	 /// 
+ESTUDIOSSP	116-117	 /// 
+ESTUDREDSP	118-119	 /// 
+SITUACTSP	120-121	 /// 
+SITUREDSP	122-123	 /// 
+PERCEPSP	124-125	 /// 
+IMPEXACPSP	126-130	 /// 
+IMPUEXACPSP	131	 /// 
+INTERINPSP	132-133	 /// 
+IMPUINTERPSP	134	 /// 
+TRABAJO	135-136	 /// 
+OCUPA	137-138	 /// 
+OCUPARED	139-140	 /// 
+ACTESTB	141-142	 /// 
+ACTESTBRED	143-144	 /// 
+SITPROF	145-146	 /// 
+SECTOR	147-148	 /// 
+TIPOCONT	149-150	 /// 
+SITSOCI	151-152	 /// 
+SITSOCIRE	153-154	 /// 
+REGTEN	155	 /// 
+TIPOEDIF	156-157	 /// 
+ZONARES	158-159	 /// 
+TIPOCASA	160-161	 /// 
+NHABIT	162-163	 /// 
+ANNOCON	164-165	 /// 
+SUPERF	166-168	 /// 
+AGUACALI	169-170	 /// 
+FUENAGUA	171-172	 /// 
+CALEF	173-174	 /// 
+FUENCALE	175-176	 /// 
+DISPOSIOV	177	 /// 
+NUMOVD	178	 /// 
+REGTENV1	179-180	 /// 
+MESESV1	181-182	 /// 
+DIASV1	183-184	 /// 
+AGUACV1	185-186	 /// 
+FUENACV1	187-188	 /// 
+CALEFV1	189-190	 /// 
+FUENCAV1	191-192	 /// 
+REGTENV2	193-194	 /// 
+MESESV2	195-196	 /// 
+DIASV2	197-198	 /// 
+AGUACV2	199-200	 /// 
+FUENACV2	201-202	 /// 
+CALEFV2	203-204	 /// 
+FUENCAV2	205-206	 /// 
+REGTENV3	207-208	 /// 
+MESESV3	209-210	 /// 
+DIASV3	211-212	 /// 
+AGUACV3	213-214	 /// 
+FUENACV3	215-216	 /// 
+CALEFV3	217-218	 /// 
+FUENCAV3	219-220	 /// 
+REGTENV4	221-222	 /// 
+MESESV4	223-224	 /// 
+DIASV4	225-226	 /// 
+AGUACV4	227-228	 /// 
+FUENACV4	229-230	 /// 
+CALEFV4	231-232	 /// 
+FUENCAV4	233-234	 /// 
+REGTENV5	235-236	 /// 
+MESESV5	237-238	 /// 
+DIASV5	239-240	 /// 
+AGUACV5	241-242	 /// 
+FUENACV5	243-244	 /// 
+CALEFV5	245-456	 /// 
+FUENCAV5	247-248	 /// 
+REGTENV6	249-250	 /// 
+MESESV6	251-252	 /// 
+DIASV6	253-254	 /// 
+AGUACV6	255-256	 /// 
+FUENACV6	257-258	 /// 
+CALEFV6	259-260	 /// 
+FUENCAV6	261-262	 /// 
+REGTENV7	263-264	 /// 
+MESESV7	265-266	 /// 
+DIASV7	267-268	 /// 
+AGUACV7	269-270	 /// 
+FUENACV7	271-272	 /// 
+CALEFV7	273-274	 /// 
+FUENCAV7	275-276	 /// 
+REGTENV8	277-278	 /// 
+MESESV8	279-280	 /// 
+DIASV8	281-282	 /// 
+AGUACV8	283-284	 /// 
+FUENACV8	285-286	 /// 
+CALEFV8	287-288	 /// 
+FUENCAV8	289-290	 /// 
+REGTENV9	291-292	 /// 
+MESESV9	293-294	 /// 
+DIASV9	295-296	 /// 
+AGUACV9	297-298	 /// 
+FUENACV9	299-300	 /// 
+CALEFV9	301-302	 /// 
+FUENCAV9	303-304	 /// 
+GASTOT	305-320	 /// 
+IMPUTGAS	321-325	 /// 
+GASTMON	326-341	 /// 
+GASTNOM1	342-354	 /// 
+GASTNOM2	355-367	 /// 
+GASTNOM3	368-380	 /// 
+GASTNOM4	381-393	 /// 
+CAPROP	394-395	 /// 
+CAJENA	396-397	 /// 
+PENSIO	398-399	 /// 
+DESEM	400-401	 /// 
+OTRSUB	402-403	 /// 
+RENTAS	404-405	 /// 
+OTROIN	406-407	 /// 
+FUENPRIN	408-409	 /// 
+FUENPRINRED	410-411	 /// 
+IMPEXAC	412-416	 /// 
+IMPUEXAC	417	 /// 
+INTERIN	418-419	 /// 
+IMPUINTER	420	 /// 
+NUMPERI	421-422	 /// 
+COMIMH	423-425	 /// 
+COMISD	426-428	 /// 
+COMIHU	429-431	 /// 
+COMIINV	432-434	 /// 
+COMITOT	435-437	 ///
+using "Fichero de usuario de hogar a2007.txt"
+
+replace UC1=UC1/10
+replace UC2=UC2/10
+replace GASTOT= GASTOT /100
+replace IMPUTGAS= IMPUTGAS/100
+replace GASTMON= GASTMON/100
+replace GASTNOM1= GASTNOM1/100
+replace GASTNOM2=GASTNOM2/100
+replace GASTNOM3= GASTNOM3/100
+replace GASTNOM4=GASTNOM4/100
+replace FACTOR= FACTOR/1000000
+gen year=2007
+
+save H2007, replace
+clear
+
+
+*HOGAR
+clear
+infix  ANOENC	01-04	 /// 
+NUMERO	05-09	 /// 
+CCAA	10-11 /// 
+NUTS1	12	 /// 
+CAPROV	13	 /// 
+TAMAMU	14	 /// 
+DENSI 	15	 /// 
+CLAVE	16	 /// 
+CLATEO	17	 /// 
+FACTOR	18-28	 /// 
+NMIEMB	29-30	 /// 
+TAMAÑO	31	 /// 
+NMIEMSD	32-33	 /// 
+NMIEMHU	34-35	 /// 
+NMIEMIN	36-37	 /// 
+NMIEM1	38-39	 /// 
+NMIEM2	40-41	 /// 
+NMIEM3	42-43	 /// 
+NMIEM4	44-45	 /// 
+NMIEM5	46-47	 /// 
+NMIEM6	48-49	 /// 
+NMIEM7	50-51	 /// 
+NHIJOSD	52-53	 /// 
+UC1	54-56	 /// 
+UC2	57-59	 /// 
+PF2TEO	60-61	 /// 
+PF2RECO	62-63	 /// 
+TIPHOGAR1	64-65	 /// 
+TIPHOGAR2	66-67	 /// 
+TIPHOGAR3	68-69	 /// 
+TIPHOGAR4	70-71	 /// 
+TIPHOGAR5	72-73	 /// 
+TIPHOGAR6	74-75	 /// 
+TIPHOGAR7	76-77	 /// 
+TIPHOGAR8	78-79	 /// 
+TIPHOGAR9	80-81	 /// 
+TIPHOGAR10	82-83	 /// 
+TIPHOGAR11	84-85	 /// 
+NUMACTI	86-87	 /// 
+NUMOCUP	88-89	 /// 
+NUMESTU	90-91	 /// 
+SITUOCUHOG	92-93	 /// 
+SITUACTHOG	94-95	 /// 
+NORDENSP	96-97	 /// 
+EDADSP	98-99	 /// 
+SEXOSP	100-101	 /// 
+NACIONASP	102-103	 /// 
+PAISSP	104-105	 /// 
+SITURESSP	106-107	 /// 
+ECIVILSP	108-109	 /// 
+NORDENCOSP	110-111	 /// 
+NORDENPASP	112-113	 /// 
+NORDENMASP	114-115	 /// 
+ESTUDIOSSP	116-117	 /// 
+ESTUDREDSP	118-119	 /// 
+SITUACTSP	120-121	 /// 
+SITUREDSP	122-123	 /// 
+PERCEPSP	124-125	 /// 
+IMPEXACPSP	126-130	 /// 
+IMPUEXACPSP	131	 /// 
+INTERINPSP	132-133	 /// 
+IMPUINTERPSP	134	 /// 
+TRABAJO	135-136	 /// 
+OCUPA	137-138	 /// 
+OCUPARED	139-140	 /// 
+ACTESTB	141-142	 /// 
+ACTESTBRED	143-144	 /// 
+SITPROF	145-146	 /// 
+SECTOR	147-148	 /// 
+TIPOCONT	149-150	 /// 
+SITSOCI	151-152	 /// 
+SITSOCIRE	153-154	 /// 
+REGTEN	155	 /// 
+TIPOEDIF	156-157	 /// 
+ZONARES	158-159	 /// 
+TIPOCASA	160-161	 /// 
+NHABIT	162-163	 /// 
+ANNOCON	164-165	 /// 
+SUPERF	166-168	 /// 
+AGUACALI	169-170	 /// 
+FUENAGUA	171-172	 /// 
+CALEF	173-174	 /// 
+FUENCALE	175-176	 /// 
+DISPOSIOV	177	 /// 
+NUMOVD	178	 /// 
+REGTENV1	179-180	 /// 
+MESESV1	181-182	 /// 
+DIASV1	183-184	 /// 
+AGUACV1	185-186	 /// 
+FUENACV1	187-188	 /// 
+CALEFV1	189-190	 /// 
+FUENCAV1	191-192	 /// 
+REGTENV2	193-194	 /// 
+MESESV2	195-196	 /// 
+DIASV2	197-198	 /// 
+AGUACV2	199-200	 /// 
+FUENACV2	201-202	 /// 
+CALEFV2	203-204	 /// 
+FUENCAV2	205-206	 /// 
+REGTENV3	207-208	 /// 
+MESESV3	209-210	 /// 
+DIASV3	211-212	 /// 
+AGUACV3	213-214	 /// 
+FUENACV3	215-216	 /// 
+CALEFV3	217-218	 /// 
+FUENCAV3	219-220	 /// 
+REGTENV4	221-222	 /// 
+MESESV4	223-224	 /// 
+DIASV4	225-226	 /// 
+AGUACV4	227-228	 /// 
+FUENACV4	229-230	 /// 
+CALEFV4	231-232	 /// 
+FUENCAV4	233-234	 /// 
+REGTENV5	235-236	 /// 
+MESESV5	237-238	 /// 
+DIASV5	239-240	 /// 
+AGUACV5	241-242	 /// 
+FUENACV5	243-244	 /// 
+CALEFV5	245-456	 /// 
+FUENCAV5	247-248	 /// 
+REGTENV6	249-250	 /// 
+MESESV6	251-252	 /// 
+DIASV6	253-254	 /// 
+AGUACV6	255-256	 /// 
+FUENACV6	257-258	 /// 
+CALEFV6	259-260	 /// 
+FUENCAV6	261-262	 /// 
+REGTENV7	263-264	 /// 
+MESESV7	265-266	 /// 
+DIASV7	267-268	 /// 
+AGUACV7	269-270	 /// 
+FUENACV7	271-272	 /// 
+CALEFV7	273-274	 /// 
+FUENCAV7	275-276	 /// 
+REGTENV8	277-278	 /// 
+MESESV8	279-280	 /// 
+DIASV8	281-282	 /// 
+AGUACV8	283-284	 /// 
+FUENACV8	285-286	 /// 
+CALEFV8	287-288	 /// 
+FUENCAV8	289-290	 /// 
+REGTENV9	291-292	 /// 
+MESESV9	293-294	 /// 
+DIASV9	295-296	 /// 
+AGUACV9	297-298	 /// 
+FUENACV9	299-300	 /// 
+CALEFV9	301-302	 /// 
+FUENCAV9	303-304	 /// 
+GASTOT	305-320	 /// 
+IMPUTGAS	321-325	 /// 
+GASTMON	326-341	 /// 
+GASTNOM1	342-354	 /// 
+GASTNOM2	355-367	 /// 
+GASTNOM3	368-380	 /// 
+GASTNOM4	381-393	 /// 
+CAPROP	394-395	 /// 
+CAJENA	396-397	 /// 
+PENSIO	398-399	 /// 
+DESEM	400-401	 /// 
+OTRSUB	402-403	 /// 
+RENTAS	404-405	 /// 
+OTROIN	406-407	 /// 
+FUENPRIN	408-409	 /// 
+FUENPRINRED	410-411	 /// 
+IMPEXAC	412-416	 /// 
+IMPUEXAC	417	 /// 
+INTERIN	418-419	 /// 
+IMPUINTER	420	 /// 
+NUMPERI	421-422	 /// 
+COMIMH	423-425	 /// 
+COMISD	426-428	 /// 
+COMIHU	429-431	 /// 
+COMIINV	432-434	 /// 
+COMITOT	435-437	 ///
+using "Fichero de usuario de hogar a2006.txt"
+
+replace UC1=UC1/10
+replace UC2=UC2/10
+replace GASTOT= GASTOT /100
+replace IMPUTGAS= IMPUTGAS/100
+replace GASTMON= GASTMON/100
+replace GASTNOM1= GASTNOM1/100
+replace GASTNOM2=GASTNOM2/100
+replace GASTNOM3= GASTNOM3/100
+replace GASTNOM4=GASTNOM4/100
+replace FACTOR= FACTOR/1000000
+gen year=2006
+
+save H2006, replace
+
+*merge
+append using "H2007" "H2008" "H2009" "H2010" "H2011" "H2012" "H2013" "H2014" "H2015"
+
+**************************VARIABLES*********************************************
+gen guc1=.
+replace guc1=GASTOT/(UC1*FACTOR)
+gen guc2=.
+replace guc2=GASTOT/(UC2*FACTOR)
+gen gn=.
+replace gn=GASTOT/(NMIEMB*FACTOR)
+gen gh=.
+replace gh=GASTOT/(FACTOR)
+bysort year: sum guc1 guc2 gn gh
+gen yh= IMPEXAC*12
+bysort year:sum yh
+ 
+
+ 
+save H2006-2015, replace
+
+}
+
+
+
+
+
+
+
+
+
+
+
+*2 datos GASTO  -- G2006-2015.dta
+quietly{
+	*cd "C:\Users\Jordi-josep\Desktop\Stata dir"
+	*cd "C:\Users\jteixido\Desktop\INE DATA"
+	*cd "E:\AA NEW RESEARCH\INE Residential energy consumption\micro INE data"
+*cd "E:\AA NEW RESEARCH\INE Residential energy consumption\micro INE data\RAW DATA"
+cd "C:\Users\jordi\Desktop\SUBMISSION EJ\3 Replication package\raw data"
+
+	clear
+
+
+	***********************DATA*****************************************************
+
+	*GASTOS
+	clear
+	infix ANOENC 1-4 NUMERO 5-9 CODIGO 10-14 GASTO 15-29 PORCEN 30-34 CANTIDAD 35-46 ///
+	gastmon 47-61 gastnom1 62-74 gastnom2 75-87 gastnom3 88-100 gastnom4 101-113 gastnom5 114-126 FACTOR 127-137 ///
+	using "Fichero de usuario de gastos a2015.txt"
+	*decimals from microdatos
+	replace GASTO= GASTO/100
+	replace PORCEN= PORCEN/100
+	replace CANTIDAD= CANTIDAD/100
+	replace gastmon= gastmon/100
+	replace gastnom1= gastnom1/100
+	replace gastnom2=gastnom2/100
+	replace gastnom3= gastnom3/100
+	replace gastnom4=gastnom4/100
+	replace FACTOR= FACTOR/1000000
+	gen year=2015
+	save "G2015.dta", replace
+	clear
+
+	infix  ANOENC 1-4 NUMERO 5-9 CODIGO 10-14 GASTO 15-29 PORCEN 30-34 CANTIDAD 35-46 ///
+	gastmon 47-61 gastnom1 62-74 gastnom2 75-87 gastnom3 88-100 gastnom4 101-113 gastnom5 114-126 FACTOR 127-137 ///
+	using "Fichero de usuario de gastos a2014.txt"
+
+	*decimals from microdatos
+	replace GASTO= GASTO/100
+	replace PORCEN= PORCEN/100
+	replace CANTIDAD= CANTIDAD/100
+	replace gastmon= gastmon/100
+	replace gastnom1= gastnom1/100
+	replace gastnom2=gastnom2/100
+	replace gastnom3= gastnom3/100
+	replace gastnom4=gastnom4/100
+	replace FACTOR= FACTOR/1000000
+	gen year=2014
+	save "G2014.dta", replace
+	clear
+
+	infix  ANOENC 1-4 NUMERO 5-9 CODIGO 10-14 GASTO 15-29 PORCEN 30-34 CANTIDAD 35-46 ///
+	gastmon 47-61 gastnom1 62-74 gastnom2 75-87 gastnom3 88-100 gastnom4 101-113 gastnom5 114-126 FACTOR 127-137 ///
+	using "Fichero de usuario de gastos a2013.txt"
+	*decimals from microdatos
+	replace GASTO= GASTO/100
+	replace PORCEN= PORCEN/100
+	replace CANTIDAD= CANTIDAD/100
+	replace gastmon= gastmon/100
+	replace gastnom1= gastnom1/100
+	replace gastnom2=gastnom2/100
+	replace gastnom3= gastnom3/100
+	replace gastnom4=gastnom4/100
+	replace FACTOR= FACTOR/1000000
+	gen year=2013
+	save "G2013.dta", replace
+	clear
+
+	infix ANOENC 1-4 NUMERO 5-9 CODIGO 10-14 GASTO 15-29 PORCEN 30-34 CANTIDAD 35-46 ///
+	gastmon 47-61 gastnom1 62-74 gastnom2 75-87 gastnom3 88-100 gastnom4 101-113 gastnom5 114-126 FACTOR 127-137 ///
+	using "Fichero de usuario de gastos a2012.txt"
+	*decimals from microdatos
+	replace GASTO= GASTO/100
+	replace PORCEN= PORCEN/100
+	replace CANTIDAD= CANTIDAD/100
+	replace gastmon= gastmon/100
+	replace gastnom1= gastnom1/100
+	replace gastnom2=gastnom2/100
+	replace gastnom3= gastnom3/100
+	replace gastnom4=gastnom4/100
+	replace FACTOR= FACTOR/1000000
+	gen year=2012
+	save "G2012.dta", replace
+	clear
+
+	infix ANOENC 1-4 NUMERO 5-9 CODIGO 10-14 GASTO 15-29 PORCEN 30-34 CANTIDAD 35-46 ///
+	gastmon 47-61 gastnom1 62-74 gastnom2 75-87 gastnom3 88-100 gastnom4 101-113 gastnom5 114-126 FACTOR 127-137 ///
+	using "Fichero de usuario de gastos a2011.txt"
+	*decimals from microdatos
+	replace GASTO= GASTO/100
+	replace PORCEN= PORCEN/100
+	replace CANTIDAD= CANTIDAD/100
+	replace gastmon= gastmon/100
+	replace gastnom1= gastnom1/100
+	replace gastnom2=gastnom2/100
+	replace gastnom3= gastnom3/100
+	replace gastnom4=gastnom4/100
+	replace FACTOR= FACTOR/1000000
+	gen year=2011
+	save "G2011.dta", replace
+	clear
+
+	infix ANOENC 1-4 NUMERO 5-9 CODIGO 10-14 GASTO 15-29 PORCEN 30-34 CANTIDAD 35-46 ///
+	gastmon 47-61 gastnom1 62-74 gastnom2 75-87 gastnom3 88-100 gastnom4 101-113 gastnom5 114-126 FACTOR 127-137 ///
+	using "Fichero de usuario de gastos a2010.txt"
+	*decimals from microdatos
+	replace GASTO= GASTO/100
+	replace PORCEN= PORCEN/100
+	replace CANTIDAD= CANTIDAD/100
+	replace gastmon= gastmon/100
+	replace gastnom1= gastnom1/100
+	replace gastnom2=gastnom2/100
+	replace gastnom3= gastnom3/100
+	replace gastnom4=gastnom4/100
+	replace FACTOR= FACTOR/1000000
+	gen year=2010
+	save "G2010.dta", replace
+	clear
+
+	infix  ANOENC 1-4 NUMERO 5-9 CODIGO 10-14 GASTO 15-29 PORCEN 30-34 CANTIDAD 35-46 ///
+	gastmon 47-61 gastnom1 62-74 gastnom2 75-87 gastnom3 88-100 gastnom4 101-113 gastnom5 114-126 FACTOR 127-137 ///
+	using "Fichero de usuario de gastos a2009.txt"
+	*decimals from microdatos
+	replace GASTO= GASTO/100
+	replace PORCEN= PORCEN/100
+	replace CANTIDAD= CANTIDAD/100
+	replace gastmon= gastmon/100
+	replace gastnom1= gastnom1/100
+	replace gastnom2=gastnom2/100
+	replace gastnom3= gastnom3/100
+	replace gastnom4=gastnom4/100
+	replace FACTOR= FACTOR/1000000
+	gen year=2009
+	save "G2009.dta", replace
+	clear
+
+	infix  ANOENC 1-4 NUMERO 5-9 CODIGO 10-14 GASTO 15-29 PORCEN 30-34 CANTIDAD 35-46 ///
+	gastmon 47-61 gastnom1 62-74 gastnom2 75-87 gastnom3 88-100 gastnom4 101-113 gastnom5 114-126 FACTOR 127-137 ///
+	using "Fichero de usuario de gastos a2008.txt"
+	*decimals from microdatos
+	replace GASTO= GASTO/100
+	replace PORCEN= PORCEN/100
+	replace CANTIDAD= CANTIDAD/100
+	replace gastmon= gastmon/100
+	replace gastnom1= gastnom1/100
+	replace gastnom2=gastnom2/100
+	replace gastnom3= gastnom3/100
+	replace gastnom4=gastnom4/100
+	replace FACTOR= FACTOR/1000000
+	gen year=2008
+	save "G2008.dta", replace
+	clear
+
+	infix ANOENC 1-4 NUMERO 5-9 CODIGO 10-14 GASTO 15-29 PORCEN 30-34 CANTIDAD 35-46 ///
+	gastmon 47-61 gastnom1 62-74 gastnom2 75-87 gastnom3 88-100 gastnom4 101-113 gastnom5 114-126 FACTOR 127-137 ///
+	using "Fichero de usuario de gastos a2007.txt"
+	*decimals from microdatos
+	replace GASTO= GASTO/100
+	replace PORCEN= PORCEN/100
+	replace CANTIDAD= CANTIDAD/100
+	replace gastmon= gastmon/100
+	replace gastnom1= gastnom1/100
+	replace gastnom2=gastnom2/100
+	replace gastnom3= gastnom3/100
+	replace gastnom4=gastnom4/100
+	replace FACTOR= FACTOR/1000000
+	gen year=2007
+	save "G2007.dta", replace
+	clear
+
+	infix  ANOENC 1-4 NUMERO 5-9 CODIGO 10-14 GASTO 15-29 PORCEN 30-34 CANTIDAD 35-46 ///
+	gastmon 47-61 gastnom1 62-74 gastnom2 75-87 gastnom3 88-100 gastnom4 101-113 gastnom5 114-126 FACTOR 127-137 ///
+	using "Fichero de usuario de gastos a2006.txt"
+	*decimals from microdatos
+	replace GASTO= GASTO/100
+	replace PORCEN= PORCEN/100
+	replace CANTIDAD= CANTIDAD/100
+	replace gastmon= gastmon/100
+	replace gastnom1= gastnom1/100
+	replace gastnom2=gastnom2/100
+	replace gastnom3= gastnom3/100
+	replace gastnom4=gastnom4/100
+	replace FACTOR= FACTOR/1000000
+	gen year=2006
+	save "G2006.dta", replace
+
+	*merge
+	append using "G2007" "G2008" "G2009" "G2010" "G2011" "G2012" "G2013" "G2014" "G2015"
+
+
+********************************VARIABLES***************************************
+
+*TOTAL household expenditures in 2015
+bysort year:egen GH=total (GASTO)
+bysort year:egen GHE=total (GASTO) if CODIGO==04511
+
+*household expenditures unweighted
+*gasto unweighted per codigo
+gen gh=.
+replace gh=GASTO/FACTOR
+gen gm=.
+replace gm= gastmon/FACTOR
+gen gh_elec=.
+replace gh_elec= GASTO/FACTOR if CODIGO==4511
+
+bysort year: sum gh_elec
+
+* gh
+bysort NUMERO year: egen TotExp=total(gh)
+
+bysort year: sum TotExp
+
+*consumption unweighted.
+gen ch=.
+replace ch=CANTIDAD/FACTOR
+gen ch_elec=.
+replace ch_elec= CANTIDAD/FACTOR if CODIGO==4511
+
+bysort year: sum ch_elec
+
+save G2006_2015, replace
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+*3 merge HOGAR and GASTOS (and keep rellevant gastos)  -- g&c_model.dta
+quietly{
+
+	clear all
+	capture log close
+	set matsize 1000
+	set maxvar 8000
+	set more off
+						   
+
+*cd "C:\Users\Jordi-josep\Desktop\Stata dir"
+*cd "C:\Users\f.teixido\Desktop\STATA DIR\micro INE data"
+*cd "E:\AA NEW RESEARCH\INE Residential energy consumption\micro INE data"
+*cd "E:\AA NEW RESEARCH\INE Residential energy consumption\micro INE data\RAW DATA"
+cd "C:\Users\jordi\Desktop\SUBMISSION EJ\3 Replication package\raw data"
+
+use  G2006_2015,clear
+/*
+ENERGY CONSUMPTION ARE: CODIGO==04511 | CODIGO==04512 |CODIGO==04521 |CODIGO==04522 ///
+|CODIGO==04523 |CODIGO==04524 |CODIGO==04531 |CODIGO==04532 |CODIGO==04541 ///
+|CODIGO==04542 |CODIGO==7221
+*/
+
+**ENERGY EXPENDITURE
+gen tool=.
+replace tool=GASTO/FACTOR if CODIGO==04511
+bysort year: sum tool 
+bysort NUMERO year: egen g_ele= max(tool)
+drop tool
+
+gen tool=.
+replace tool=GASTO/FACTOR if CODIGO==04512
+bysort year: sum tool 
+bysort NUMERO year: egen g_ele2= max(tool)
+drop tool
+
+gen tool=.
+replace tool=GASTO/FACTOR if CODIGO==07221
+bysort year: sum tool 
+bysort NUMERO year: egen g_car= max(tool)
+drop tool
+
+
+/*
+gen tool=.
+replace tool=GASTO/FACTOR if CODIGO==04521
+bysort year: sum tool 
+bysort NUMERO year: egen g_gas= max(tool)
+drop tool
+
+gen tool=.
+replace tool=GASTO/FACTOR if CODIGO==04522
+bysort year: sum tool 
+bysort NUMERO year: egen g_gas2= max(tool)
+drop tool
+
+gen tool=.
+replace tool=GASTO/FACTOR if CODIGO==04523
+bysort year: sum tool 
+bysort NUMERO year: egen g_gasli= max(tool)
+drop tool
+
+gen tool=.
+replace tool=GASTO/FACTOR if CODIGO==04524
+bysort year: sum tool 
+bysort NUMERO year: egen g_gasli2= max(tool)
+drop tool
+
+gen tool=.
+replace tool=GASTO/FACTOR if CODIGO==04531
+bysort year: sum tool 
+bysort NUMERO year: egen g_combli= max(tool)
+drop tool
+
+gen tool=.
+replace tool=GASTO/FACTOR if CODIGO==04532
+bysort year: sum tool 
+bysort NUMERO year: egen g_combli2= max(tool)
+drop tool
+
+gen tool=.
+replace tool=GASTO/FACTOR if CODIGO==04541
+bysort year: sum tool 
+bysort NUMERO year: egen g_combso= max(tool)
+drop tool
+
+gen tool=.
+replace tool=GASTO/FACTOR if CODIGO==04542
+bysort year: sum tool 
+bysort NUMERO year: egen g_combso2= max(tool)
+drop tool
+*/
+
+** DURADEROS
+*5 muebles
+bysort NUMERO year: egen g_5= total(GASTO/FACTOR) if CODIGO>5000 & CODIGO<5512
+bysort NUMERO year: egen g5= max(g_5)
+drop g_5
+
+*7.1 Coches
+bysort NUMERO year: egen g_71= total(GASTO/FACTOR) if CODIGO>7000 & CODIGO<7132
+bysort NUMERO year: egen g71= max(g_71)
+drop g_71
+
+*8.2 Telf y fax
+bysort NUMERO year: egen g_82= total(GASTO/FACTOR) if CODIGO==8211
+bysort NUMERO year: egen g82= max(g_82)
+drop g_82
+
+* 9.1 (auido tv..)+ 9.2(otros pc..) +9.3(Otros equipos, jardines mascotas)
+bysort NUMERO year: egen g_91= total(GASTO/FACTOR) if CODIGO>9110 & CODIGO<9343
+bysort NUMERO year: egen g9= max(g_91)
+drop g_91
+
+**Electrodomestics
+bysort NUMERO year: egen g_electrodom= total(GASTO/FACTOR) if ///
+ CODIGO>5310 & CODIGO<5322
+ bysort NUMERO year: egen gelectrodom= max(g_electrodom)
+drop g_electrodom
+
+bysort NUMERO year: egen g_TVs= total(GASTO/FACTOR) if ///
+ CODIGO==9111 |  CODIGO==9112 | CODIGO==9131
+ bysort NUMERO year: egen gTVs= max(g_TVs)
+drop g_TVs
+
+*05.5.2.1		PEQUEÑOS ACCESORIOS ELÉCTRICOS
+bysort NUMERO year: egen g_5521= total(GASTO/FACTOR) if CODIGO==5521
+bysort NUMERO year: egen g5521= max(g_5521)
+drop g_5521
+
+*alimentos
+*patatas 01178
+gen tool=.
+	replace tool=GASTO/FACTOR if CODIGO==01178
+	bysort year: sum tool 
+	bysort NUMERO year: egen g_papas= max(tool)
+	drop tool
+*agua vivienda 04411
+gen tool=.
+	replace tool=GASTO/FACTOR if CODIGO==04411
+	bysort year: sum tool 
+	bysort NUMERO year: egen g_aguav= max(tool)
+	drop tool
+
+/*
+*agua mineral 01221
+gen tool=.
+	replace tool=GASTO/FACTOR if CODIGO==01221
+	bysort year: sum tool 
+	bysort NUMERO year: egen g_aguam= max(tool)
+	drop tool
+
+*OLI D'OLIVA
+gen tool=.
+	replace tool=GASTO/FACTOR if CODIGO==01153
+	bysort year: sum tool 
+	bysort NUMERO year: egen g_oli= max(tool)
+	drop tool
+
+*arroz:0111	
+gen tool=.
+	replace tool=GASTO/FACTOR if CODIGO==01111
+	bysort year: sum tool 
+	bysort NUMERO year: egen g_arroz= max(tool)
+	drop tool
+*pan:01112
+	gen tool=.
+	replace tool=GASTO/FACTOR if CODIGO==01112
+	bysort year: sum tool 
+	bysort NUMERO year: egen g_pan= max(tool)
+	drop tool
+*bovino 01121
+gen tool=.
+	replace tool=GASTO/FACTOR if CODIGO==01121
+	bysort year: sum tool 
+	bysort NUMERO year: egen g_bovi= max(tool)
+	drop tool
+*porcino 01122
+gen tool=.
+	replace tool=GASTO/FACTOR if CODIGO==01122
+	bysort year: sum tool 
+	bysort NUMERO year: egen g_porc= max(tool)
+	drop tool
+*ovino 01123
+gen tool=.
+	replace tool=GASTO/FACTOR if CODIGO==01123
+	bysort year: sum tool 
+	bysort NUMERO year: egen g_ovin= max(tool)
+	drop tool
+*ave 01124
+gen tool=.
+	replace tool=GASTO/FACTOR if CODIGO==01124
+	bysort year: sum tool 
+	bysort NUMERO year: egen g_ave= max(tool)
+	drop tool
+*charcuteria 01125
+gen tool=.
+	replace tool=GASTO/FACTOR if CODIGO==01125
+	bysort year: sum tool 
+	bysort NUMERO year: egen g_jamon= max(tool)
+	drop tool
+*pescado 01131
+gen tool=.
+	replace tool=GASTO/FACTOR if CODIGO==01131
+	bysort year: sum tool 
+	bysort NUMERO year: egen g_peix= max(tool)
+	drop tool
+*pescado congelados 01132
+gen tool=.
+	replace tool=GASTO/FACTOR if CODIGO==01132
+	bysort year: sum tool 
+	bysort NUMERO year: egen g_peixc= max(tool)
+	drop tool
+*leche entera 01141
+gen tool=.
+	replace tool=GASTO/FACTOR if CODIGO==01141
+	bysort year: sum tool 
+	bysort NUMERO year: egen g_llet= max(tool)
+	drop tool
+*leche semi o desc 01142
+gen tool=.
+	replace tool=GASTO/FACTOR if CODIGO==01142
+	bysort year: sum tool 
+	bysort NUMERO year: egen g_llets= max(tool)
+	drop tool
+*huevos 01147
+gen tool=.
+	replace tool=GASTO/FACTOR if CODIGO==01147
+	bysort year: sum tool 
+	bysort NUMERO year: egen g_ous= max(tool)
+	drop tool
+
+
+*/
+
+*GASTOS POR CATEGORIAS:
+{
+*hh expenditure per category of expenditure
+
+bysort NUMERO year: egen g_1= total(GASTO/FACTOR) if CODIGO>1 & CODIGO<1225
+bysort NUMERO year: egen gastos1= max(g_1)
+drop g_1
+
+bysort NUMERO year: egen g_2= total(GASTO/FACTOR) if CODIGO>1225 & CODIGO<2312
+bysort NUMERO year: egen gastos2= max(g_2)
+drop g_2
+
+bysort NUMERO year: egen g_3= total(GASTO/FACTOR) if CODIGO>2312 & CODIGO<3222
+bysort NUMERO year: egen gastos3= max(g_3)
+drop g_3
+
+bysort NUMERO year: egen g_4= total(GASTO/FACTOR) if CODIGO>3222 & CODIGO<4552
+bysort NUMERO year: egen gastos4= max(g_4)
+drop g_4
+
+bysort NUMERO year: egen g_5= total(GASTO/FACTOR) if CODIGO>4552 & CODIGO<5624
+bysort NUMERO year: egen gastos5= max(g_5)
+drop g_5
+
+bysort NUMERO year: egen g_6= total(GASTO/FACTOR) if CODIGO>5624 & CODIGO<6312
+bysort NUMERO year: egen gastos6= max(g_6)
+drop g_6
+
+
+bysort NUMERO year: egen g_7= total(GASTO/FACTOR) if CODIGO>6312 & CODIGO<7362
+bysort NUMERO year: egen gastos7= max(g_7)
+drop g_7
+
+bysort NUMERO year: egen g_8= total(GASTO/FACTOR) if CODIGO>7362 & CODIGO<8315
+bysort NUMERO year: egen gastos8= max(g_8)
+drop g_8
+
+bysort NUMERO year: egen g_9= total(GASTO/FACTOR) if CODIGO>8315 & CODIGO<9612
+bysort NUMERO year: egen gastos9= max(g_9)
+drop g_9
+
+bysort NUMERO year: egen g_10= total(GASTO/FACTOR) if CODIGO>9612 & CODIGO<10513
+bysort NUMERO year: egen gastos10= max(g_10)
+drop g_10
+
+bysort NUMERO year: egen g_11= total(GASTO/FACTOR) if CODIGO>10513 & CODIGO<11214
+bysort NUMERO year: egen gastos11= max(g_11)
+drop g_11
+
+bysort NUMERO year: egen g_12= total(GASTO/FACTOR) if CODIGO>11214 
+bysort NUMERO year: egen gastos12= max(g_12)
+drop g_12
+
+}
+*
+save g.dta, replace
+*
+bysort NUMERO year: gen seq=_n
+bysort NUMERO year: gen max=_N
+mark keep if seq==max
+
+keep if keep==1
+drop CODIGO seq max keep
+save g_1.dta, replace
+
+
+****************************
+use  G2006_2015,clear
+
+*
+**ENERGY CONSUMPTION
+gen tool=.
+replace tool=CANTIDAD/FACTOR if CODIGO==04511
+bysort year: sum tool 
+bysort NUMERO year: egen c_ele= max(tool)
+drop tool
+
+gen tool=.
+replace tool=CANTIDAD/FACTOR if CODIGO==04512
+bysort year: sum tool 
+bysort NUMERO year: egen c_ele2= max(tool)
+drop tool
+
+gen tool=.
+replace tool=CANTIDAD/FACTOR if CODIGO==07221
+bysort year: sum tool 
+bysort NUMERO year: egen c_car= max(tool)
+drop tool
+	
+*patatas 01178
+gen tool=.
+	replace tool=CANTIDAD/FACTOR if CODIGO==01178
+	bysort year: sum tool 
+	bysort NUMERO year: egen c_papas= max(tool)
+	drop tool
+*agua vivienda 04411
+gen tool=.
+	replace tool=CANTIDAD/FACTOR if CODIGO==04411
+	bysort year: sum tool 
+	bysort NUMERO year: egen c_aguav= max(tool)
+	drop tool
+
+
+/*
+gen tool=.
+replace tool=CANTIDAD/FACTOR if CODIGO==04521
+bysort year: sum tool 
+bysort NUMERO year: egen c_gas= max(tool)
+drop tool
+
+gen tool=.
+replace tool=CANTIDAD/FACTOR if CODIGO==04522
+bysort year: sum tool 
+bysort NUMERO year: egen c_gas2= max(tool)
+drop tool
+
+gen tool=.
+replace tool=CANTIDAD/FACTOR if CODIGO==04523
+bysort year: sum tool 
+bysort NUMERO year: egen c_gasli= max(tool)
+drop tool
+
+gen tool=.
+replace tool=CANTIDAD/FACTOR if CODIGO==04524
+bysort year: sum tool 
+bysort NUMERO year: egen c_gasli2= max(tool)
+drop tool
+
+gen tool=.
+replace tool=CANTIDAD/FACTOR if CODIGO==04531
+bysort year: sum tool 
+bysort NUMERO year: egen c_combli= max(tool)
+drop tool
+
+gen tool=.
+replace tool=CANTIDAD/FACTOR if CODIGO==04532
+bysort year: sum tool 
+bysort NUMERO year: egen c_combli2= max(tool)
+drop tool
+
+gen tool=.
+replace tool=CANTIDAD/FACTOR if CODIGO==04541
+bysort year: sum tool 
+bysort NUMERO year: egen c_combso= max(tool)
+drop tool
+
+gen tool=.
+replace tool=CANTIDAD/FACTOR if CODIGO==04542
+bysort year: sum tool 
+bysort NUMERO year: egen c_combso2= max(tool)
+drop tool
+
+*Oli doliva:01153
+gen tool=.
+replace tool=CANTIDAD/FACTOR if CODIGO==01153
+bysort year: sum tool 
+bysort NUMERO year: egen c_oli= max(tool)
+drop tool
+*arroz:0111	
+gen tool=.
+	replace tool=CANTIDAD/FACTOR if CODIGO==01111
+	bysort year: sum tool 
+	bysort NUMERO year: egen c_arroz= max(tool)
+	drop tool
+*pan:01112
+	gen tool=.
+	replace tool=CANTIDAD/FACTOR if CODIGO==01112
+	bysort year: sum tool 
+	bysort NUMERO year: egen c_pan= max(tool)
+	drop tool
+*bovino 01121
+gen tool=.
+	replace tool=CANTIDAD/FACTOR if CODIGO==01121
+	bysort year: sum tool 
+	bysort NUMERO year: egen c_bovi= max(tool)
+	drop tool
+*porcino 01122
+gen tool=.
+	replace tool=CANTIDAD/FACTOR if CODIGO==01122
+	bysort year: sum tool 
+	bysort NUMERO year: egen c_porc= max(tool)
+	drop tool
+*ovino 01123
+gen tool=.
+	replace tool=CANTIDAD/FACTOR if CODIGO==01123
+	bysort year: sum tool 
+	bysort NUMERO year: egen c_ovin= max(tool)
+	drop tool
+*ave 01124
+gen tool=.
+	replace tool=CANTIDAD/FACTOR if CODIGO==01124
+	bysort year: sum tool 
+	bysort NUMERO year: egen c_ave= max(tool)
+	drop tool
+*charcuteria 01125
+gen tool=.
+	replace tool=CANTIDAD/FACTOR if CODIGO==01125
+	bysort year: sum tool 
+	bysort NUMERO year: egen c_jamon= max(tool)
+	drop tool
+*pescado 01131
+gen tool=.
+	replace tool=CANTIDAD/FACTOR if CODIGO==01131
+	bysort year: sum tool 
+	bysort NUMERO year: egen c_peix= max(tool)
+	drop tool
+*pescado congelados 01132
+gen tool=.
+	replace tool=CANTIDAD/FACTOR if CODIGO==01132
+	bysort year: sum tool 
+	bysort NUMERO year: egen c_peixc= max(tool)
+	drop tool
+*leche entera 01141
+gen tool=.
+	replace tool=CANTIDAD/FACTOR if CODIGO==01141
+	bysort year: sum tool 
+	bysort NUMERO year: egen c_llet= max(tool)
+	drop tool
+*leche semi o desc 01142
+gen tool=.
+	replace tool=CANTIDAD/FACTOR if CODIGO==01142
+	bysort year: sum tool 
+	bysort NUMERO year: egen c_llets= max(tool)
+	drop tool
+*huevos 01147
+gen tool=.
+	replace tool=CANTIDAD/FACTOR if CODIGO==01147
+	bysort year: sum tool 
+	bysort NUMERO year: egen c_ous= max(tool)
+	drop tool
+*agua mineral 01221
+gen tool=.
+	replace tool=CANTIDAD/FACTOR if CODIGO==01221
+	bysort year: sum tool 
+	bysort NUMERO year: egen c_aguam= max(tool)
+	drop tool
+*/
+		
+		
+
+
+save c.dta,replace
+
+bysort NUMERO year: gen seq=_n
+bysort NUMERO year: gen max=_N
+mark keep if seq==max
+
+keep if keep==1
+drop CODIGO seq max keep
+save c_1.dta, replace
+
+
+
+                        ***
+
+
+*merge consumption (c.dta) and expenditure (g.dta). 
+**This is done this way becasue of CPU capacity (each dta had 20M obs)
+merge m:m ANOENC NUMERO using "g_1.dta"
+*I drop irrellevant vars as they may refer to different products (CODIGOS)
+drop GASTO PORCEN CANTIDAD gastmon gastnom1 gastnom2 gastnom3 gastnom4 gastnom5 
+
+save g&c_.dta, replace
+
+
+                        ***
+
+ 
+ 
+					********************************************************************************************
+drop _merge
+merge m:m ANOENC NUMERO using H2006-2015
+
+save g&c_model.dta, replace
+
+}
+
+
+
+*4 Linking households (panel)   -- ine06-15.dta
+	*THESE REQUIRES PURCHASE OF THE VARIABLE "ENLACE" THAT ALLOWS 
+	*LINKING HOUSEHOLDS OBSERVATION IN THE TWO PERIODS WHEN AVAILABLE 
+quietly{
+*cd "C:\Users\Jordi-josep\Desktop\Stata dir"
+*cd "C:\Users\f.teixido\Desktop\STATA DIR\micro INE data"
+*cd "E:\AA NEW RESEARCH\INE Residential energy consumption\micro INE data"
+*cd "E:\AA NEW RESEARCH\INE Residential energy consumption\micro INE data\RAW DATA"
+cd "C:\Users\jordi\Desktop\SUBMISSION EJ\3 Replication package\raw data"
+
+
+*Separating the general dataset in years
+use "g&c_model.dta" ,clear
+keep if year==2006
+drop _merge
+save ine2006,replace
+use "g&c_model.dta" ,clear
+keep if year==2007
+drop _merge
+save ine2007,replace
+use "g&c_model.dta" ,clear
+keep if year==2008
+drop _merge
+save ine2008,replace
+use "g&c_model.dta", clear
+keep if year==2009
+drop _merge
+save ine2009,replace
+use "g&c_model.dta", clear
+keep if year==2010
+drop _merge
+save ine2010,replace
+use "g&c_model.dta", clear
+keep if year==2011
+drop _merge
+save ine2011,replace
+use "g&c_model.dta", clear
+keep if year==2012
+drop _merge
+save ine2012,replace
+use "g&c_model.dta", clear
+
+... [truncated: 7,000 more bytes of this script omitted] ...
+
+```
+
+### `3 Replication package/dofiles/2_Dataset.do`
+```stata
+****
+* PREPARATION DATASET 
+cd "C:\Users\jordi\Desktop\SUBMISSION EJ\3 Replication package\raw data"
+use "ine2006_2015.dta", clear
+
+***************************************************
+*                                         new vars*
+***************************************************
+quietly {
+
+ 
+* socio-demo vars
+**************************
+	gen alqui=.
+	replace alqui= 0
+	replace alqui= 1 if REGTEN==3 | REGTEN==4
+
+	gen edif25=.
+	replace edif25= 0 if ANNOCON==1
+	replace edif25= 1 if ANNOCON==6
+
+	replace CAPROV=0 if CAPROV==6
+	replace TIPOEDIF= . if TIPOEDIF==-9
+	replace ZONARES= . if ZONARES==-9
+	gen urban=.
+	replace urban=1 if ZONARES==1|ZONARES==2 | ZONARES==3 | ZONARES==4
+	replace urban=0 if ZONARES==5|ZONARES==6 | ZONARES==7 
+
+	replace SUPERF=. if SUPERF==-9
+	replace NHABIT=. if NHABIT==-9
+	replace SITSOCIRE=. if SITSOCIRE==-9
+
+	***********************************
+	tab SITUACTHOG if year==2013, m
+	gen SITUACTHOG_j=.
+	*replace SITUACTHOG_j=. if SITUACTHOG==-9
+		*at least 2 members ACTIVE (1,2,3, 4):
+	replace SITUACTHOG_j=1 if SITUACTHOG==1 
+	replace SITUACTHOG_j=1 if SITUACTHOG==2 
+	replace SITUACTHOG_j=1 if SITUACTHOG==3 
+	replace SITUACTHOG_j=1 if SITUACTHOG==4
+	replace SITUACTHOG_j=1 if SITUACTHOG==7 
+		*no more than 1 ACTIVE member
+	replace SITUACTHOG_j=2 if SITUACTHOG==5 | SITUACTHOG==6 
+		*no ACTIVE members
+	replace SITUACTHOG_j=3 if SITUACTHOG==8
+	tab SITUACTHOG_j if year==2013, m
+
+	***********************************
+	gen SITSOCIRE_j=.
+		*hh head works
+	replace SITSOCIRE_j=1 if SITSOCIRE==1 | SITSOCIRE==2 | SITSOCIRE==3
+		* hh head unemployed
+	replace SITSOCIRE_j=2 if SITSOCIRE==4
+		* hh head retired
+	replace SITSOCIRE_j=3 if SITSOCIRE==5
+		* hh other inactive
+	replace SITSOCIRE_j=4 if SITSOCIRE==6
+	***********************************
+	*PENSIO
+	tab PENSIO,m 
+	replace PENSIO=0 if PENSIO==6
+	replace PENSIO=. if PENSIO==-9
+	tab PENSIO if year==2013,m
+
+	gen PENSIO_j=0
+	replace PENSIO_j=1 if PENSIO==1 & SITSOCIRE==5
+	replace PENSIO_j=. if PENSIO==.
+	replace PENSIO_j=. if SITSOCIRE==.
+	tab PENSIO_j if year==2013,m
+	* Mayores en el hogar:
+	tab NMIEM12, m
+	tab NMIEM13, m
+	gen mayores=.
+	replace mayores=0
+	replace mayores=1 if NMIEM12!=0
+	replace mayores=1 if NMIEM13!=0
+	replace mayores=. if NMIEM12==.
+	replace mayores=. if NMIEM13==.
+	tab mayores, m
+	***********************************
+	gen mayores_count=.
+	replace mayores_count=NMIEM12+NMIEM13
+	*ESTUDIOS REDUCIDA:
+	tab ESTUDRED, m
+
+		
+	
+	
+	
+* consumption vars (quantities)
+**************************
+	gen c_ELE=.
+	replace c_ELE= c_ele + c_ele2
+	label var c_ELE "c_ele + c_ele2"
+	gen c_ELE_ad= c_ELE/UC2
+	gen c_ele_ad= c_ele/UC2
+
+* economic vars
+**************************
+	gen y= IMPEXAC*12
+	gen y_ad= y/UC2
+gen lny2=.
+replace lny2=lny^2
+	gen g_ELE= g_ele+ g_ele2
+	gen g_ele_ad= g_ele/UC2
+	gen g_ELE_ad= g_ELE/UC2
+
+	gen TotExp_ad= TotExp/UC2
+	gen lnTotExp_ad=ln(TotExp_ad)
+	gen lnTotExp=ln(TotExp)
+
+	
+	* GASTO SIN DURADEROS:
+	* DURADEROS: 5 muebles/ 71 coches /82 telefonos /91 tvs, pcs jardines
+	gen Xdur=.
+	replace Xdur=g5+g71+g82+g9
+	replace Xdur=0 if Xdur==.
+
+	gen TotExp_nd=.
+	replace TotExp_nd=TotExp-Xdur
+	
+	gen gastmon=.
+	replace gastmon=GASTMON/FACTOR
+	*precios energeticos**********************************
+	gen p_kwh=.
+	replace p_kwh= g_ele/c_ele
+	gen p_gascar=.
+	replace p_gascar=g_car/c_car
+	*precios alimentos y aguas****************************
+	gen p_aguav=.
+	replace p_aguav=g_aguav/c_aguav
+	gen p_papas=.
+	replace p_papas=g_papas/c_papas
+
+	
+	***********************************
+	
+	gen c_elem=c_ele/12 
+	gen g_elem =g_ele/12
+	
+	*LOGS
+	foreach yvar in p_gascar  p_kwh c_ELE ///
+	c_ele g_ele c_elem g_elem c_ELE_ad c_ele_ad  ///
+	p_papas p_aguav ///
+	c_car y_ad y TotExp_nd  {
+	gen ln`yvar' =ln(`yvar')
+	}
+}
+*
+
+
+***************************************************
+*Data cleaning                                    *
+***************************************************
+quietly{
+***************************************************
+	univar TotExp y c_ele g_ele p_kwh  
+	sum c_ele, d
+		keep if inrange(c_ele, r(p1), r(p99)) 
+
+		sum p_kwh, d
+		keep if inrange(p_kwh, r(p1), r(p99))
+	 
+	sum y, d
+	replace y=. if y==0
+	tabstat y if year==2013, by (IMPUEXAC) s(n)
+
+***************************************************
+}
+
+
+
+***************************************************
+*                            Price consumer index *
+***************************************************
+quietly{
+*month identification
+	sort id year BISEMANA
+	gen BIS=BISEMANA
+	order id year BIS BISEMANA
+		by id: replace BIS = BISEMANA[_n+1] if BIS==. 		
+			
+	gen month=.
+	replace month=1  if BIS==1 | BIS==2 	
+	replace month=2  if BIS==3 | BIS==4
+	replace month=3  if BIS==5 | BIS==6	
+	replace month=4  if BIS==7 | BIS==8 | BIS==9	
+	replace month=5  if BIS==10 | BIS==11	
+	replace month=6  if BIS==12 | BIS==13	
+	replace month=7  if BIS==14 | BIS==15	
+	replace month=8  if BIS==16 | BIS==17	
+	replace month=9  if BIS==18 | BIS==19 | BIS==20	
+	replace month=10 if BIS==21 | BIS==22	
+	replace month=11 if BIS==23 | BIS==24	
+	replace month=12 if BIS==25 | BIS==26	
+	order month
+
+	gen trim=.
+	replace trim=1 if month<4
+	replace trim=2 if month>3 & month<7
+	replace trim=3 if month>6 & month<10
+	replace trim=4 if month>9
+
+**IPC(LABEAGA)
+
+*IP=SUMk[Wki(log(pk))]
+
+*log(pk) (log del indice de precios por categoria)
+	merge m:m year month using "E:\AA NEW RESEARCH\INE Residential energy consumption\micro INE data\indice precios_12.dta"
+	foreach yvar in  i00 i01 i02 i03 i04 i05 i06 i07 i08 i09 i10 i11 i12 {
+	gen ln`yvar' =ln(`yvar')
+	}
+
+*Wki (peso gasto por categoria)
+	foreach yvar in  gastos1 gastos2 gastos3 gastos4 gastos5 gastos6 gastos7 gastos8 gastos9 ///
+	gastos10 gastos11 gastos12  {
+	gen W`yvar' =(`yvar'/TotExp)
+	}
+
+*IP (Indice de precios individual)
+
+	bysort month year: egen Wm1=mean(Wgastos1)
+	bysort month year: egen Wm2=mean(Wgastos2)
+	bysort month year: egen Wm3=mean(Wgastos3)
+	bysort month year: egen Wm4=mean(Wgastos4)
+	bysort month year: egen Wm5=mean(Wgastos5)
+	bysort month year: egen Wm6=mean(Wgastos6)
+	bysort month year: egen Wm7=mean(Wgastos7)
+	bysort month year: egen Wm8=mean(Wgastos8)
+	bysort month year: egen Wm9=mean(Wgastos9)
+	bysort month year: egen Wm10=mean(Wgastos10)
+	bysort month year: egen Wm11=mean(Wgastos11)
+	bysort month year: egen Wm12=mean(Wgastos12)
+
+	gen x1=.
+	replace x1= Wm1*lni01
+	gen x2=.
+	replace x2= Wm2*lni02
+	gen x3=.
+	replace x3= Wm3*lni03
+	gen x4=.
+	replace x4= Wm4*lni04
+	gen x5=.
+	replace x5= Wm5*lni05
+	gen x6=.
+	replace x6= Wm6*lni06
+	gen x7=.
+	replace x7= Wm7*lni07
+	gen x8=.
+	replace x8= Wm8*lni08
+	gen x9=.
+	replace x9= Wm9*lni09
+	gen x10=.
+	replace x10= Wm10*lni10
+	gen x11=.
+	replace x11= Wm11*lni11
+	gen x12=.
+	replace x12= Wm12*lni12
+
+	egen IP=rowtotal(x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12)
+	drop x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12
+
+**PRE (precios relativos)
+	gen lnPRE=.
+	replace lnPRE= lnp_kwh - IP 
+
+	sum IP lnPRE lnp_kwh p_kwh if year==2013
+	
+	
+    gen lnPRE_gascar=.
+	replace lnPRE_gascar= lnp_gascar - IP
+	
+	gen lnPRE_papas=.
+	replace lnPRE_papas= lnp_papas - IP 
+	
+	gen lnPRE_aguav=.
+	replace lnPRE_aguav= lnp_aguav - IP 
+
+	
+
+egen LnPRE_M=mean(lnPRE), by (month CCAA)  
+	
+
+
+
+*deflactar renta/gasto total:
+	replace lny=lny-IP
+	sum lny
+	replace lnTotExp=lnTotExp-IP
+	sum lnTotExp
+		
+	gen we=g_ele/TotExp*100
+	sum we if year==2013
+	sum we if year==2015
+
+			
+bysort year month: egen lnaPRE_papas= mean(lnPRE_papas) 
+bysort year month: egen lnaPRE_aguav= mean(lnPRE_aguav) 
+bysort year month: egen lnaPRE_gascar= mean(lnPRE_gascar) 
+	
+	gen lnPRE_papas_=lnPRE_papas
+	replace lnPRE_papas_=lnaPRE_papas if lnPRE_papas==.			
+			
+	gen lnPRE_aguav_=lnPRE_aguav
+	replace lnPRE_aguav_=lnaPRE_aguav if lnPRE_aguav==.			
+
+	gen lnPRE_gascar_=lnPRE_gascar
+	replace lnPRE_gascar_=lnaPRE_gascar if lnPRE_gascar==.			
+
+}
+	
+
+
+
+	
+
+***************************************************
+*          VARIABLES TREATEMENT AND POSTTREATMENT *
+***************************************************
+{	
+	xtset id year
+
+		sort id year
+		egen time =group(year month BIS)
+		order time 
+		tab time month 
+		/*
+		2006 begins 1
+		2007 begins 27 
+		2008 begins 53
+		2009 begins 79
+		2010 begins 105
+		2011 begins 131
+		2012 begins 157
+		2013 begins 183(gen2013) to 209(gen2014)
+		2014 begins 209 to 235
+		*1st Arpil--> refrom change in aucttions CESUR (time 215/bisemana 7 2014)
+		2015 begins 235 to 260(des2015)*/ 
+
+		tabstat time month year if time>156 & year<2013, by (time)
+		tabstat month BISEMANA year if time>182 & time<217, by (time)
+		tabstat g_ele c_ele p_kwh, by (time)
+
+sort id year
+by id:  gen dup = cond(_N==1,0,_n)
+order dup
+* Tdummy is those that had a change in regulation (i.e. id's that 2012-2013)
+sort id year
+*from id>87792 (87491 is the last 2011-12 and 87793 is the 1st 12-13) 
+*and id<id 100750
+tabstat BIS month year if time>152 & time<217, by (time)
+
+*TREATMENT VARIABLE T2 (PRICE RAISED BY THE REFORM==1,)
+															 
+		*treated=1 are 2013_2 post17 and 2014_2_pre18
+		*control=0 are 2012_1 post17 and 2013_1_pre18
+		*drop T2
+		gen T2=.
+		order T2
+		*A
+		replace T2=0 if year==2011 & dup==1 & BIS>17
+		replace T2=0 if year==2012 & dup==2 & BIS>17
+		*B
+		replace T2=0 if year==2012 & dup==1 & BIS>17
+		replace T2=1 if year==2013 & dup==2 & BIS>17
+		*C
+	replace T2=0 if year==2013 & dup==1 & BIS<7
+	replace T2=1 if year==2014 & dup==2 & BIS<7
+		*D more controls
+		replace T2=0 if year==2012 & dup==1 & BIS<18
+		replace T2=0 if year==2013 & dup==2 & BIS<18
+******************************
+			*A
+			mean(c_ele) if  year==2011 & dup==1 & BIS>17
+			mean(c_ele) if  year==2012 & dup==2 & BIS>17
+			*B
+			mean(c_ele) if year==2012 & dup==1 & BIS>17
+			mean(c_ele) if year==2013 & dup==2 & BIS>17
+			**0:3338.122kw 1:2838.245kw// Dif: 499.877kwend mata
+			*D
+			mean(c_ele) if year==2012 & dup==1 & BIS<18
+			mean(c_ele) if year==2013 & dup==2 & BIS<18
+			*C
+			mean(c_ele) if year==2013 & dup==1 & BIS<18
+		mean(c_ele) if year==2014 & dup==2 & BIS<7
+			*closed to AGO13
+			mean(c_ele) if year==2012 & dup==1 & month==7
+			mean(c_ele) if year==2013 & dup==2 & month==7
+			*
+			mean(c_ele) if year==2012 & dup==1 & month==9
+			mean(c_ele) if year==2013 & dup==2 & month==9
+******************************
+*dist_T is the time distance from REGUALTION T2
+tab BISEMANA month if year==2013, m
+gen dist=.
+replace dist=0 if T2==0
+replace dist=1 if T2==1 & month==9  & year==2013
+replace dist=2 if T2==1 & month==10 & year==2013
+replace dist=3 if T2==1 & month==11 & year==2013
+replace dist=4 if T2==1 & month==12 & year==2013
+replace dist=5 if T2==1 & month==1  & year==2014
+replace dist=6 if T2==1 & month==2  & year==2014
+replace dist=7 if T2==1 & month==3  & year==2014
+replace dist=8 if T2==1 & month==4  & year==2014
+replace dist=9 if T2==1 & month==5  & year==2014
+replace dist=10 if T2==1 & month==6  & year==2014
+replace dist=11 if T2==1 & month==7  & year==2014
+replace dist=12 if T2==1 & month==8  & year==2014
+
+*TREATED SUBGROUP Tm (HAD A REFORM IN THEIR SECOND INTERVIEW==1, 0 OTHERWISE)
+gen Tm=.
+replace Tm=0 if year==2011 & dup==1 & BIS>17
+replace Tm=0 if year==2012 & dup==2 & BIS>17
+replace Tm=0 if year==2012 & dup==1 & BIS<18
+replace Tm=0 if year==2013 & dup==2 & BIS<18
+
+replace Tm=1 if year==2012 & dup==1 & BIS>17
+replace Tm=1 if year==2013 & dup==2 & BIS>17
+replace Tm=1 if year==2013 & dup==1 & BIS<7
+replace Tm=1 if year==2014 & dup==2 & BIS<7
+
+*****************
+			tabulate year, generate(iyear)
+			tabulate trim, generate(itrim)
+			tabulate TAMAMU, generate(itam)
+			tabulate CCAA, generate(iccaa)
+			tabulate ESTUDRED, generate(iestud)
+			tabulate SITUACTHOG_j , generate(isitu)
+			tabulate DENSI , generate(idensi)				
+			replace lny2= lny^2			
+
+****************
+}
+
+
+
+
+***************************************************
+* DiD variables                                   *
+***************************************************
+* TT199(sept) 
+gen TT199=0 if  year>2010 & time<215
+replace TT199=1 if time>199 & dup==2 & time<215
+replace TT199=. if time>199 & dup==1 & time<215
+* TT202 (oct)
+gen TT202=0 if  year>2010 & time<215
+replace TT202=1 if time>202 & dup==2 & time<215
+replace TT202=. if time>202 & dup==1 & time<215
+
+****************************
+
+save data.dta,replace
+
+```
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

@@ -1,0 +1,30 @@
+suppressPackageStartupMessages({library(haven); library(dplyr)})
+dir <- "<repo>/benchmark/.cache/claude-code/bokobza-2022-morning-after-coup-purges/independent/2026-11-02-b/mount/bokobza_2022_morning_after_coup_purges"
+c <- read_dta(file.path(dir, "morning_after_dataset_countrylevel.dta")) %>% arrange(COUNTRY_ID, YEAR_DATA)
+c <- c %>% group_by(COUNTRY_ID) %>% mutate(
+  gap1 = YEAR_DATA - lag(YEAR_DATA),
+  ldem = ifelse(gap1 == 1, lag(democracy1), NA),
+  lgdp = ifelse(gap1 == 1, lag(gdp_cap_pwt_ln), NA),
+  lpop = ifelse(gap1 == 1, lag(pop_pwt_ln), NA)) %>% ungroup()
+print(table(c$gap1, useNA="a"))
+s <- c %>% filter(ldem == 0, YEAR_DATA >= 1967, YEAR_DATA <= 2016)
+cat("autocracy rows", nrow(s), "\n")
+ss <- s %>% filter(!is.na(replacement_rateadj_minister), !is.na(coupattempt_whogov), !is.na(lgdp), !is.na(lpop))
+cat("complete", nrow(ss), "countries", length(unique(ss$COUNTRY_ID)), "coups", sum(ss$coupattempt_whogov), "\n")
+print(table(c$coupattempt_month_whogov[c$coupattempt_whogov==1]))
+print(with(c, table(coupattempt_whogov, coupattempt_month_whogov > 0)))
+print(table(c$coupattempt_whogov_type_br))
+i <- readRDS(file.path(dir, "morning_after_dataset_individuallevel.rds"))
+print(levels(i$coupattempt_presentyear)); print(table(i$coupattempt_presentyear, useNA="a"))
+print(levels(i$importance_factor)); print(table(i$importance_factor, i$importance_numeric, useNA="a"))
+print(table(i$minister_type, useNA="a")); print(levels(i$minister_classification)); print(table(i$minister_classification, useNA="a"))
+print(table(i$democracy_lag, useNA="a"))
+print(table(i$experience_group, cut(i$experience, c(0,1,3,6,100)), useNA="a"))
+print(table(i$hired, useNA="a"))
+a <- i %>% filter(democracy_lag == 0, year >= 1967, year <= 2016)
+cat("aut rows", nrow(a), "\n")
+a2 <- a %>% filter(leader == 0, !is.na(gdp_cap_pwt_ln_lag), !is.na(pop_pwt_ln_lag), !is.na(coupattempt_presentyear))
+cat("nonleader complete", nrow(a2), "countries", length(unique(a2$country_isocode)), "\n")
+cat("exp sample excl junior (importance 0.5):", sum(a2$importance_numeric != "0.5" | is.na(a2$importance_numeric)), "\n")
+print(table(a2$importance_numeric, useNA="a")); print(table(a2$party_group, useNA="a")); print(table(a2$minister_type, useNA="a"))
+print(table(a2$coupattempt_presentyear, a2$coupattempt_presentyear_br, useNA="a"))

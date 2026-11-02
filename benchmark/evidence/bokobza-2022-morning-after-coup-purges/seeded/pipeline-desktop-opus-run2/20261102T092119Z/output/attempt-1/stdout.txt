@@ -1,0 +1,318 @@
+Country-level columns: COUNTRY_DATA, COUNTRY_ID, YEAR_DATA, ccode, leader_cab_id, democracy1, independent, replacement_rateadj_minister, replacement_rateadj_minister_300, replacement_rateadj_minister_200, replacement_rateadj_minister_100, leaderexperience_continuous, coupattempt_whogov, coupattempt_month_whogov, gdp_cap_pwt_ln, pop_pwt_ln, military_c, monarchy_c, party_c, elec_all, t1_e_a, oil_valuepop_2014_ln, growth_pwt, onset1, nonvio_camp_2, mid_onset, war_onset, domestic3_10, coupattempt_whogov_br, polity2, lpolity2, democracy_br, ldemocracy_br, system_category, latent_personalism, coupattempt_whogov_type_br, type_num 
+Using coup: coupattempt_whogov  gdp: gdp_cap_pwt_ln  pop: pop_pwt_ln 
+Country-level autocratic sample N: 4081 
+OLS estimation, Dep. Var.: y
+Observations: 3,688
+Fixed-effects: cid: 113,  yr: 51
+Standard-errors: Clustered (cid) 
+      Estimate Std. Error  t value Pr(>|t|)    
+fca   0.079195   0.033055  2.39585 0.018239 *  
+lgdp -0.039681   0.019528 -2.03202 0.044518 *  
+lpop -0.118296   0.059128 -2.00070 0.047844 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.252009     Adj. R2: 0.189155
+                 Within R2: 0.005366
+OLS estimation, Dep. Var.: y
+Observations: 3,644
+Fixed-effects: cid: 113,  yr: 51
+Standard-errors: Clustered (cid) 
+      Estimate Std. Error  t value  Pr(>|t|)    
+fca   0.086943   0.032543  2.67163 0.0086741 ** 
+lgdp -0.034336   0.020510 -1.67407 0.0969070 .  
+lpop -0.121687   0.060534 -2.01022 0.0468113 *  
+lmil -0.039935   0.029505 -1.35351 0.1786175    
+lpar -0.066866   0.027973 -2.39035 0.0185008 *  
+lmon  0.037376   0.026022  1.43635 0.1536912    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.249564     Adj. R2: 0.193056
+                 Within R2: 0.008423
+OLS estimation, Dep. Var.: y
+Observations: 3,515
+Fixed-effects: leader_fe: 336,  yr: 51
+Standard-errors: Clustered (cid) 
+      Estimate Std. Error  t value Pr(>|t|)    
+fca   0.059360   0.035252  1.68389 0.094987 .  
+lgdp -0.031952   0.024565 -1.30073 0.196021    
+lpop -0.143462   0.085770 -1.67264 0.097189 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.218174     Adj. R2: 0.233984
+                 Within R2: 0.003016
+OLS estimation, Dep. Var.: y
+Observations: 3,480
+Fixed-effects: leader_fe: 331,  yr: 51
+Standard-errors: Clustered (cid) 
+      Estimate Std. Error  t value  Pr(>|t|)    
+fca   0.066651   0.034606  1.92596  0.056644 .  
+lgdp -0.024836   0.023153 -1.07271  0.285706    
+lpop -0.128232   0.085445 -1.50076  0.136231    
+lmil -0.139264   0.057570 -2.41905  0.017171 *  
+lpar -0.056692   0.051529 -1.10019  0.273606    
+lmon  0.565633   0.029694 19.04879 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.215815     Adj. R2: 0.236832
+                 Within R2: 0.00865 
+Individual-level columns: year, country_isocode, country_name, position, name, title, gender, birthyear, party, party_english, leader, classification, portfolio_1, prestige_1, prestige_numeric, importance_numeric, leader_party, party_group, experience, purged_y1, purged_y2, coupattempt_presentyear, coup_presentyear, coup_lastyear, coupattempt_presentyear_br, coup_presentyear_br, coup_lastyear_br, coupattempt_whogov_type_br, leaderexperience_continuous, democracy_lag_br, n_party, democracy_lag, gdp_cap_pwt_ln, pop_pwt_ln, polity2, gdp_cap_pwt_ln_lag, pop_pwt_ln_lag, lag_polity2, importance_factor, Group, minister_type, minister_classification, age, experience_group, hired 
+df_aut N: 98719 
+OLS estimation, Dep. Var.: purged_y1
+Observations: 76,530
+Fixed-effects: country_isocode: 115,  year: 51
+Standard-errors: Clustered (country_isocode) 
+                                                                      Estimate
+minister_typeMinister of Foreign Affairs                            0.03285135
+minister_typeMinister of Finance                                    0.11336570
+minister_typeOther type of minister                                 0.17094349
+minister_typeMinister of Natural Resources                          0.21839765
+coupattempt_presentyear                                             0.20249924
+gdp_cap_pwt_ln                                                     -0.03062618
+pop_pwt_ln                                                         -0.15334208
+experience                                                          0.00372977
+I(I(experience^2))                                                 -0.00028678
+I(I(experience^3))                                                  0.00000685
+minister_typeMinister of Foreign Affairs:coupattempt_presentyear   -0.03919965
+minister_typeMinister of Finance:coupattempt_presentyear           -0.08485490
+minister_typeOther type of minister:coupattempt_presentyear        -0.11717025
+minister_typeMinister of Natural Resources:coupattempt_presentyear -0.18320511
+                                                                   Std. Error
+minister_typeMinister of Foreign Affairs                           0.07084752
+minister_typeMinister of Finance                                   0.06909406
+minister_typeOther type of minister                                0.06075755
+minister_typeMinister of Natural Resources                         0.08526672
+coupattempt_presentyear                                            0.06598985
+gdp_cap_pwt_ln                                                     0.01866244
+pop_pwt_ln                                                         0.06231075
+experience                                                         0.00293138
+I(I(experience^2))                                                 0.00020930
+I(I(experience^3))                                                 0.00000388
+minister_typeMinister of Foreign Affairs:coupattempt_presentyear   0.06951138
+minister_typeMinister of Finance:coupattempt_presentyear           0.06633311
+minister_typeOther type of minister:coupattempt_presentyear        0.05807998
+minister_typeMinister of Natural Resources:coupattempt_presentyear 0.08259176
+                                                                     t value
+minister_typeMinister of Foreign Affairs                            0.463691
+minister_typeMinister of Finance                                    1.640745
+minister_typeOther type of minister                                 2.813535
+minister_typeMinister of Natural Resources                          2.561347
+coupattempt_presentyear                                             3.068642
+gdp_cap_pwt_ln                                                     -1.641059
+pop_pwt_ln                                                         -2.460925
+experience                                                          1.272358
+I(I(experience^2))                                                 -1.370176
+I(I(experience^3))                                                  1.768255
+minister_typeMinister of Foreign Affairs:coupattempt_presentyear   -0.563931
+minister_typeMinister of Finance:coupattempt_presentyear           -1.279224
+minister_typeOther type of minister:coupattempt_presentyear        -2.017395
+minister_typeMinister of Natural Resources:coupattempt_presentyear -2.218201
+                                                                    Pr(>|t|)
+minister_typeMinister of Foreign Affairs                           0.6437534
+minister_typeMinister of Finance                                   0.1036068
+minister_typeOther type of minister                                0.0057727
+minister_typeMinister of Natural Resources                         0.0117323
+coupattempt_presentyear                                            0.0026873
+gdp_cap_pwt_ln                                                     0.1035413
+pop_pwt_ln                                                         0.0153569
+experience                                                         0.2058351
+I(I(experience^2))                                                 0.1733244
+I(I(experience^3))                                                 0.0796933
+minister_typeMinister of Foreign Affairs:coupattempt_presentyear   0.5739085
+minister_typeMinister of Finance:coupattempt_presentyear           0.2034158
+minister_typeOther type of minister:coupattempt_presentyear        0.0460035
+minister_typeMinister of Natural Resources:coupattempt_presentyear 0.0285229
+                                                                      
+minister_typeMinister of Foreign Affairs                              
+minister_typeMinister of Finance                                      
+minister_typeOther type of minister                                ** 
+minister_typeMinister of Natural Resources                         *  
+coupattempt_presentyear                                            ** 
+gdp_cap_pwt_ln                                                        
+pop_pwt_ln                                                         *  
+experience                                                            
+I(I(experience^2))                                                    
+I(I(experience^3))                                                 .  
+minister_typeMinister of Foreign Affairs:coupattempt_presentyear      
+minister_typeMinister of Finance:coupattempt_presentyear              
+minister_typeOther type of minister:coupattempt_presentyear        *  
+minister_typeMinister of Natural Resources:coupattempt_presentyear *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.41277     Adj. R2: 0.129822
+                Within R2: 0.003793
+OLS estimation, Dep. Var.: purged_y1
+Observations: 86,057
+Fixed-effects: country_isocode: 115,  year: 51
+Standard-errors: Clustered (country_isocode) 
+                                                              Estimate
+party_groupNo party affiliation                             0.09979880
+party_groupFrom the leader's party                          0.11733126
+coupattempt_presentyear                                     0.17417549
+gdp_cap_pwt_ln                                             -0.02101456
+pop_pwt_ln                                                 -0.14081745
+experience                                                  0.00181159
+I(I(experience^2))                                         -0.00011809
+I(I(experience^3))                                          0.00000187
+party_groupNo party affiliation:coupattempt_presentyear    -0.06486466
+party_groupFrom the leader's party:coupattempt_presentyear -0.12583192
+                                                           Std. Error   t value
+party_groupNo party affiliation                            0.07919216  1.260211
+party_groupFrom the leader's party                         0.06451007  1.818805
+coupattempt_presentyear                                    0.05606910  3.106444
+gdp_cap_pwt_ln                                             0.01888178 -1.112954
+pop_pwt_ln                                                 0.06259585 -2.249629
+experience                                                 0.00254047  0.713092
+I(I(experience^2))                                         0.00018131 -0.651303
+I(I(experience^3))                                         0.00000350  0.534453
+party_groupNo party affiliation:coupattempt_presentyear    0.07341975 -0.883477
+party_groupFrom the leader's party:coupattempt_presentyear 0.06051910 -2.079210
+                                                           Pr(>|t|)    
+party_groupNo party affiliation                            0.210167    
+party_groupFrom the leader's party                         0.071566 .  
+coupattempt_presentyear                                    0.002390 ** 
+gdp_cap_pwt_ln                                             0.268069    
+pop_pwt_ln                                                 0.026392 *  
+experience                                                 0.477246    
+I(I(experience^2))                                         0.516161    
+I(I(experience^3))                                         0.594069    
+party_groupNo party affiliation:coupattempt_presentyear    0.378838    
+party_groupFrom the leader's party:coupattempt_presentyear 0.039841 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.409843     Adj. R2: 0.123345
+                 Within R2: 0.002995
+Importance levels: Prime minister/President
+(not leader) | Vice president,
+deputy prime minister,
+top minister | Medium-ranking
+minister | Junior minister
+or other low-
+ranking post | low-ranking
+minister 
+OLS estimation, Dep. Var.: purged_y1
+Observations: 90,014
+Fixed-effects: country_isocode: 115,  year: 51
+Standard-errors: Clustered (country_isocode) 
+                                                                                                   Estimate
+importance_factorVice president,\ndeputy prime minister,\ntop minister                          0.236386759
+importance_factorMedium-ranking\nminister                                                       0.298314981
+importance_factorJunior minister\nor other low-\nranking post                                   0.254139283
+importance_factorlow-ranking\nminister                                                          0.292008280
+coupattempt_presentyear                                                                         0.370184683
+gdp_cap_pwt_ln                                                                                 -0.025194156
+pop_pwt_ln                                                                                     -0.141961213
+experience                                                                                     -0.000351367
+I(I(experience^2))                                                                             -0.000018290
+I(I(experience^3))                                                                              0.000000656
+importance_factorVice president,\ndeputy prime minister,\ntop minister:coupattempt_presentyear -0.256573364
+importance_factorMedium-ranking\nminister:coupattempt_presentyear                              -0.285601669
+importance_factorJunior minister\nor other low-\nranking post:coupattempt_presentyear          -0.259235700
+importance_factorlow-ranking\nminister:coupattempt_presentyear                                 -0.264600522
+                                                                                               Std. Error
+importance_factorVice president,\ndeputy prime minister,\ntop minister                         0.09951341
+importance_factorMedium-ranking\nminister                                                      0.09984773
+importance_factorJunior minister\nor other low-\nranking post                                  0.09082818
+importance_factorlow-ranking\nminister                                                         0.12369673
+coupattempt_presentyear                                                                        0.09341618
+gdp_cap_pwt_ln                                                                                 0.01875319
+pop_pwt_ln                                                                                     0.06274537
+experience                                                                                     0.00256446
+I(I(experience^2))                                                                             0.00018311
+I(I(experience^3))                                                                             0.00000357
+importance_factorVice president,\ndeputy prime minister,\ntop minister:coupattempt_presentyear 0.09460313
+importance_factorMedium-ranking\nminister:coupattempt_presentyear                              0.09500949
+importance_factorJunior minister\nor other low-\nranking post:coupattempt_presentyear          0.08683452
+importance_factorlow-ranking\nminister:coupattempt_presentyear                                 0.11990844
+                                                                                                 t value
+importance_factorVice president,\ndeputy prime minister,\ntop minister                          2.375426
+importance_factorMedium-ranking\nminister                                                       2.987699
+importance_factorJunior minister\nor other low-\nranking post                                   2.798023
+importance_factorlow-ranking\nminister                                                          2.360679
+coupattempt_presentyear                                                                         3.962747
+gdp_cap_pwt_ln                                                                                 -1.343460
+pop_pwt_ln                                                                                     -2.262497
+experience                                                                                     -0.137014
+I(I(experience^2))                                                                             -0.099886
+I(I(experience^3))                                                                              0.183933
+importance_factorVice president,\ndeputy prime minister,\ntop minister:coupattempt_presentyear -2.712102
+importance_factorMedium-ranking\nminister:coupattempt_presentyear                              -3.006033
+importance_factorJunior minister\nor other low-\nranking post:coupattempt_presentyear          -2.985399
+importance_factorlow-ranking\nminister:coupattempt_presentyear                                 -2.206688
+                                                                                                 Pr(>|t|)
+importance_factorVice president,\ndeputy prime minister,\ntop minister                         0.01919743
+importance_factorMedium-ranking\nminister                                                      0.00344246
+importance_factorJunior minister\nor other low-\nranking post                                  0.00603823
+importance_factorlow-ranking\nminister                                                         0.01993976
+coupattempt_presentyear                                                                        0.00012956
+gdp_cap_pwt_ln                                                                                 0.18179139
+pop_pwt_ln                                                                                     0.02556115
+experience                                                                                     0.89126150
+I(I(experience^2))                                                                             0.92061036
+I(I(experience^3))                                                                             0.85439242
+importance_factorVice president,\ndeputy prime minister,\ntop minister:coupattempt_presentyear 0.00772170
+importance_factorMedium-ranking\nminister:coupattempt_presentyear                              0.00325600
+importance_factorJunior minister\nor other low-\nranking post:coupattempt_presentyear          0.00346654
+importance_factorlow-ranking\nminister:coupattempt_presentyear                                 0.02934007
+                                                                                                  
+importance_factorVice president,\ndeputy prime minister,\ntop minister                         *  
+importance_factorMedium-ranking\nminister                                                      ** 
+importance_factorJunior minister\nor other low-\nranking post                                  ** 
+importance_factorlow-ranking\nminister                                                         *  
+coupattempt_presentyear                                                                        ***
+gdp_cap_pwt_ln                                                                                    
+pop_pwt_ln                                                                                     *  
+experience                                                                                        
+I(I(experience^2))                                                                                
+I(I(experience^3))                                                                                
+importance_factorVice president,\ndeputy prime minister,\ntop minister:coupattempt_presentyear ** 
+importance_factorMedium-ranking\nminister:coupattempt_presentyear                              ** 
+importance_factorJunior minister\nor other low-\nranking post:coupattempt_presentyear          ** 
+importance_factorlow-ranking\nminister:coupattempt_presentyear                                 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.413095     Adj. R2: 0.124532
+                 Within R2: 0.003468
+Experience levels: 1year | 2-3 years | 4-6 years | Over 6 years 
+OLS estimation, Dep. Var.: purged_y1
+Observations: 90,020
+Fixed-effects: country_isocode: 115,  year: 51
+Standard-errors: Clustered (country_isocode) 
+                                                      Estimate Std. Error
+experience_group2-3 years                             0.053127   0.044728
+experience_group4-6 years                             0.110802   0.064484
+experience_groupOver 6 years                          0.093276   0.052986
+coupattempt_presentyear                               0.142112   0.041937
+gdp_cap_pwt_ln                                       -0.024617   0.018686
+pop_pwt_ln                                           -0.139836   0.062576
+experience_group2-3 years:coupattempt_presentyear    -0.050322   0.042042
+experience_group4-6 years:coupattempt_presentyear    -0.098205   0.062337
+experience_groupOver 6 years:coupattempt_presentyear -0.102939   0.051801
+                                                      t value   Pr(>|t|)    
+experience_group2-3 years                             1.18779 0.23738610    
+experience_group4-6 years                             1.71829 0.08845773 .  
+experience_groupOver 6 years                          1.76040 0.08102228 .  
+coupattempt_presentyear                               3.38868 0.00096507 ***
+gdp_cap_pwt_ln                                       -1.31738 0.19035373    
+pop_pwt_ln                                           -2.23466 0.02738894 *  
+experience_group2-3 years:coupattempt_presentyear    -1.19696 0.23380707    
+experience_group4-6 years:coupattempt_presentyear    -1.57539 0.11793822    
+experience_groupOver 6 years:coupattempt_presentyear -1.98720 0.04929792 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.413254     Adj. R2: 0.123916
+                 Within R2: 0.002694
+RESULT:failed_coup_base_country_fe=0.079195
+RESULT:failed_coup_main_country_fe=0.086943
+RESULT:failed_coup_base_leader_fe=0.059360
+RESULT:failed_coup_main_leader_fe=0.066651
+RESULT:failed_coup_base_country_fe_se=0.033055
+RESULT:failed_coup_main_country_fe_se=0.032543
+RESULT:failed_coup_base_leader_fe_se=0.035252
+RESULT:failed_coup_main_leader_fe_se=0.034606
+RESULT:failed_coup_responsibility_model=0.202499
+RESULT:failed_coup_x_natural_resources=-0.183205
+RESULT:failed_coup_affiliation_model=0.174175
+RESULT:failed_coup_x_leaders_party=-0.125832
+RESULT:failed_coup_importance_model=0.370185
+RESULT:failed_coup_experience_model=0.142112
+RESULT:failed_coup_x_over_6_years_experience=-0.102939

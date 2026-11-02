@@ -1,0 +1,676 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "reform_consumption_ols_col1",
+      "ground_truth": {
+        "value": -0.178,
+        "standard_error": 0.027,
+        "unit": "log points of annualised household electricity consumption (kWh)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (1), Reform (T)",
+        "context": "Table 2 (\"Effect of the Reform on Residential Electricity Consumption and Expenditure (2011-2014)\"), column (1), row Reform (T): the paper's difference-in-differences estimate of the August 2013 Spanish electricity pricing reform (fixed charge raised, regulated volumetric rate cut) on household electricity consumption, estimated by OLS.  Data: Spanish Household Budget Survey households interviewed between August 2011 and April 2014, each interviewed twice, in the same two-week period of two consecutive years; the control group has both interviews before the reform, the treated group its second interview after it.  T is the post-reform dummy for interviews whose electricity bill falls under the reform (the paper places the response one month after the reform, when households receive a reformed bill).  Dependent variable: log of electricity consumption in the month before the interview (kWh, annualised by the survey).  Regressors: T, log household price per kWh (expenditure divided by consumption), log income and its square, months since reform, and controls for household size, number of rooms, dwelling surface, elderly members, education of the household head, household economic situation (number of economically active members), renting, building older than 25 years, municipality-size dummies, urban area, province capital, regional dummies, quarterly dummies and year fixed effects.  No household fixed effects.  Standard errors clustered at the household level.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.178,
+        "outcome": "matches",
+        "notes": "Team 49 blanket verdict (code reproduces the paper's output); no meta-database row for column 1.",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.15168539325842698,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "reform_consumption_ols_col1",
+        "claim_type": "coefficient",
+        "claimed": -0.178,
+        "reproduced": -0.136669,
+        "tolerance": 0.15168539325842698,
+        "rel_err": 0.23219662921348302,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "reform_consumption_ols_col1",
+        "reproduced": -0.136669,
+        "band_source": "se_band",
+        "band_relative": 0.15168539325842698,
+        "band_absolute": 0.027,
+        "abs_err": 0.04133099999999998,
+        "rel_err": 0.23219662921348302,
+        "margin": 1.530777777777777,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=-0.136669 vs claimed=-0.178 (relative error 23.22%, tolerance 15.17%, the ±1·SE band with SE=0.027)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "reform_consumption_iv_col2",
+      "ground_truth": {
+        "value": -0.123,
+        "standard_error": 0.026,
+        "unit": "log points of annualised household electricity consumption (kWh)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (2), Reform (T)",
+        "context": "Table 2, column (2), row Reform (T): the column (1) consumption regression with the log electricity price instrumented by the households' effective prices (expenditure divided by quantity) of potatoes, water and fuel, estimated by limited-information maximum likelihood (LIML); year fixed effects and controls, no household fixed effects, standard errors clustered at the household level according to the table note.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.123,
+        "outcome": "matches",
+        "notes": "Team 49 blanket verdict; value is the paper's.  Variant rows: coding correction \"as described in the paper\", adding quarter fixed effects, -0.170 (0.027) (row 2243); adding a constant -0.127 (0.027) (row 2239); constant and quarter FE -0.075 (0.069) (row 2245).\n",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.2113821138211382,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "reform_consumption_iv_col2",
+        "claim_type": "coefficient",
+        "claimed": -0.123,
+        "reproduced": -0.078038,
+        "tolerance": 0.2113821138211382,
+        "rel_err": 0.3655447154471545,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "reform_consumption_iv_col2",
+        "reproduced": -0.078038,
+        "band_source": "se_band",
+        "band_relative": 0.2113821138211382,
+        "band_absolute": 0.026,
+        "abs_err": 0.044962,
+        "rel_err": 0.3655447154471545,
+        "margin": 1.7293076923076924,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=-0.078038 vs claimed=-0.123 (relative error 36.55%, tolerance 21.14%, the ±1·SE band with SE=0.026)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "reform_consumption_fe_col3",
+      "ground_truth": {
+        "value": -0.154,
+        "standard_error": 0.028,
+        "unit": "log points of annualised household electricity consumption (kWh)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (3), Reform (T)",
+        "context": "Table 2, column (3), row Reform (T): the column (1) consumption regression estimated with household fixed effects (LSDV / within estimator), year fixed effects and the same controls; standard errors clustered at the household level.  The paper's main estimate of the reform's effect on consumption once unobserved household heterogeneity is controlled for.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.154,
+        "outcome": "matches",
+        "notes": "Team 49 blanket verdict; value is the paper's.  Variant rows: region x year FE -0.153 (0.028); only reported controls -0.156 (0.028); quarter x year FE -0.252 (0.030); quarter x year x region FE -0.052 (0.110); no time-varying controls -0.059 (0.014); price controls -0.133 (0.013); months-before-reform recoded negative -0.133 (0.013).\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.18181818181818182,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "reform_consumption_fe_col3",
+        "claim_type": "coefficient",
+        "claimed": -0.154,
+        "reproduced": -0.138584,
+        "tolerance": 0.18181818181818182,
+        "rel_err": 0.10010389610389601,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "reform_consumption_fe_col3",
+        "reproduced": -0.138584,
+        "band_source": "se_band",
+        "band_relative": 0.18181818181818182,
+        "band_absolute": 0.028,
+        "abs_err": 0.015415999999999985,
+        "rel_err": 0.10010389610389601,
+        "margin": 0.550571428571428,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "reform_consumption_fe_iv_col4",
+      "ground_truth": {
+        "value": -0.123,
+        "standard_error": 0.054,
+        "unit": "log points of annualised household electricity consumption (kWh)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (4), Reform (T)",
+        "context": "Table 2, column (4), row Reform (T): the household fixed-effects consumption regression of column (3) with the log electricity price instrumented by the effective prices of potatoes, water and fuel (LIML), the paper's preferred specification.  The table note states robust standard errors clustered at the household level.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.123,
+        "outcome": "matches",
+        "notes": "Team 49 blanket verdict; value is the paper's.  Coding correction row 2231 (clustering at the household level, as the table note says): coefficient unchanged at -0.123, SE 0.076 instead of the printed 0.054, p = 0.108 (no longer significant at 5%).\n",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.43902439024390244,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "reform_consumption_fe_iv_col4",
+        "claim_type": "coefficient",
+        "claimed": -0.123,
+        "reproduced": -0.205008,
+        "tolerance": 0.43902439024390244,
+        "rel_err": 0.6667317073170732,
+        "passed": false,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "reform_consumption_fe_iv_col4",
+        "reproduced": -0.205008,
+        "band_source": "se_band",
+        "band_relative": 0.43902439024390244,
+        "band_absolute": 0.054,
+        "abs_err": 0.082008,
+        "rel_err": 0.6667317073170732,
+        "margin": 1.5186666666666666,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=-0.205008 vs claimed=-0.123 (relative error 66.67%, tolerance 43.90%, the ±1·SE band with SE=0.054)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "reform_expenditure_ols_col5",
+      "ground_truth": {
+        "value": -0.156,
+        "standard_error": 0.027,
+        "unit": "log points of annualised household electricity expenditure (EUR)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (5), Reform (T)",
+        "context": "Table 2, column (5), row Reform (T): the column (1) OLS specification (same sample, regressors, controls, quarterly dummies and year fixed effects, household-clustered standard errors) with the log of household electricity expenditure as the dependent variable.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.156,
+        "outcome": "matches",
+        "notes": "Team 49 blanket verdict; no meta-database row for column 5.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.17307692307692307,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "reform_expenditure_ols_col5",
+        "claim_type": "coefficient",
+        "claimed": -0.156,
+        "reproduced": -0.133036,
+        "tolerance": 0.17307692307692307,
+        "rel_err": 0.1472051282051283,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "reform_expenditure_ols_col5",
+        "reproduced": -0.133036,
+        "band_source": "se_band",
+        "band_relative": 0.17307692307692307,
+        "band_absolute": 0.027,
+        "abs_err": 0.022964000000000012,
+        "rel_err": 0.1472051282051283,
+        "margin": 0.850518518518519,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "reform_expenditure_iv_col6",
+      "ground_truth": {
+        "value": -0.09,
+        "standard_error": 0.027,
+        "unit": "log points of annualised household electricity expenditure (EUR)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (6), Reform (T)",
+        "context": "Table 2, column (6), row Reform (T): the column (2) IV (LIML) specification, log price instrumented by the effective prices of potatoes, water and fuel, no household fixed effects, with log electricity expenditure as the dependent variable.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.09,
+        "outcome": "matches",
+        "notes": "Team 49 blanket verdict; value is the paper's.  Variant rows: coding correction adding quarter fixed effects -0.204 (0.028) (row 2247); adding a constant -0.089 (0.027) (row 2238); constant and quarter FE -0.080 (0.066) (row 2244).\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.3,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "reform_expenditure_iv_col6",
+        "claim_type": "coefficient",
+        "claimed": -0.09,
+        "reproduced": -0.078038,
+        "tolerance": 0.3,
+        "rel_err": 0.13291111111111112,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "reform_expenditure_iv_col6",
+        "reproduced": -0.078038,
+        "band_source": "se_band",
+        "band_relative": 0.3,
+        "band_absolute": 0.027,
+        "abs_err": 0.011962,
+        "rel_err": 0.13291111111111112,
+        "margin": 0.44303703703703706,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "reform_expenditure_fe_col7",
+      "ground_truth": {
+        "value": -0.098,
+        "standard_error": 0.028,
+        "unit": "log points of annualised household electricity expenditure (EUR)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (7), Reform (T)",
+        "context": "Table 2, column (7), row Reform (T): the column (3) household fixed-effects specification with log electricity expenditure as the dependent variable; household-clustered standard errors.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.098,
+        "outcome": "matches",
+        "notes": "Team 49 blanket verdict; value is the paper's.  Variant rows: region x year FE -0.098 (0.028); only reported controls -0.100 (0.028); quarter x year FE -0.155 (0.030); quarter x year x region FE 0.056 (0.110); no time-varying controls -0.143 (0.013); price controls -0.145 (0.013); months-before-reform recoded negative -0.145 (0.013).\n",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.2857142857142857,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "reform_expenditure_fe_col7",
+        "claim_type": "coefficient",
+        "claimed": -0.098,
+        "reproduced": -0.137795,
+        "tolerance": 0.2857142857142857,
+        "rel_err": 0.4060714285714285,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "reform_expenditure_fe_col7",
+        "reproduced": -0.137795,
+        "band_source": "se_band",
+        "band_relative": 0.2857142857142857,
+        "band_absolute": 0.028,
+        "abs_err": 0.039795,
+        "rel_err": 0.4060714285714285,
+        "margin": 1.42125,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=-0.137795 vs claimed=-0.098 (relative error 40.61%, tolerance 28.57%, the ±1·SE band with SE=0.028)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "reform_expenditure_fe_iv_col8",
+      "ground_truth": {
+        "value": -0.089,
+        "standard_error": 0.053,
+        "unit": "log points of annualised household electricity expenditure (EUR)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (8), Reform (T)",
+        "context": "Table 2, column (8), row Reform (T): the column (4) household fixed-effects IV (LIML) specification with log electricity expenditure as the dependent variable; the paper's preferred expenditure estimate (significant at the 10% level in the table).\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.089,
+        "outcome": "matches",
+        "notes": "Team 49 blanket verdict; value is the paper's.  The meta-database records the original as -0.89 (a dropped zero; SE 0.053 and p 0.095 match the printed -0.089).  Coding correction row 2229 (household clustering): coefficient unchanged (recorded -0.89, i.e. -0.089), SE 0.075 instead of 0.053, p = 0.237.\n",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.5955056179775281,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "reform_expenditure_fe_iv_col8",
+        "claim_type": "coefficient",
+        "claimed": -0.089,
+        "reproduced": -0.205008,
+        "tolerance": 0.5955056179775281,
+        "rel_err": 1.3034606741573034,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "reform_expenditure_fe_iv_col8",
+        "reproduced": -0.205008,
+        "band_source": "se_band",
+        "band_relative": 0.5955056179775281,
+        "band_absolute": 0.053,
+        "abs_err": 0.116008,
+        "rel_err": 1.3034606741573034,
+        "margin": 2.1888301886792454,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=-0.205008 vs claimed=-0.089 (relative error 130.35%, tolerance 59.55%, the ±1·SE band with SE=0.053)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "price_elasticity_consumption_ols_col1",
+      "ground_truth": {
+        "value": -1.044,
+        "standard_error": 0.024,
+        "unit": "elasticity of consumption with respect to the kWh price",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (1), ln(price kWh)",
+        "context": "Table 2, column (1), row ln(price kWh): the coefficient on the log household price per kWh (all taxes included) in the OLS consumption regression of reform_consumption_ols_col1.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -1.044,
+        "outcome": "matches",
+        "notes": "Team 49 blanket verdict; no meta-database row for the price coefficients.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.022988505747126436,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "price_elasticity_consumption_ols_col1",
+        "claim_type": "coefficient",
+        "claimed": -1.044,
+        "reproduced": -1.063003,
+        "tolerance": 0.022988505747126436,
+        "rel_err": 0.01820210727969337,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "price_elasticity_consumption_ols_col1",
+        "reproduced": -1.063003,
+        "band_source": "se_band",
+        "band_relative": 0.022988505747126436,
+        "band_absolute": 0.024,
+        "abs_err": 0.01900299999999988,
+        "rel_err": 0.01820210727969337,
+        "margin": 0.7917916666666617,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "price_elasticity_consumption_fe_col3",
+      "ground_truth": {
+        "value": -1.026,
+        "standard_error": 0.025,
+        "unit": "elasticity of consumption with respect to the kWh price",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (3), ln(price kWh)",
+        "context": "Table 2, column (3), row ln(price kWh): the log-price coefficient in the household fixed-effects consumption regression of reform_consumption_fe_col3.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -1.026,
+        "outcome": "matches",
+        "notes": "Team 49 blanket verdict; no meta-database row for the price coefficients.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.02436647173489279,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "price_elasticity_consumption_fe_col3",
+        "claim_type": "coefficient",
+        "claimed": -1.026,
+        "reproduced": -1.010333,
+        "tolerance": 0.02436647173489279,
+        "rel_err": 0.015269980506822706,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "price_elasticity_consumption_fe_col3",
+        "reproduced": -1.010333,
+        "band_source": "se_band",
+        "band_relative": 0.02436647173489279,
+        "band_absolute": 0.025,
+        "abs_err": 0.015667000000000098,
+        "rel_err": 0.015269980506822706,
+        "margin": 0.6266800000000039,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_table2",
+      "ground_truth": {
+        "value": 20872.0,
+        "standard_error": null,
+        "unit": "household-year observations",
+        "claim_type": "other",
+        "location": "Table 2, Observations",
+        "context": "Number of observations in the Table 2 regressions (the same in all eight columns): household-interview observations of the 2011-2014 panel with complete data on the regression variables.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 20872.0,
+        "outcome": "matches",
+        "notes": "Team 49 blanket verdict; N not recorded in the rows.",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table2",
+        "claim_type": "other",
+        "claimed": 20872.0,
+        "reproduced": 21317.0,
+        "tolerance": 0.01,
+        "rel_err": 0.021320429283250286,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_table2",
+        "reproduced": 21317.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 208.72,
+        "abs_err": 445.0,
+        "rel_err": 0.021320429283250286,
+        "margin": 2.1320429283250286,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=21317.0 vs claimed=20872.0 (relative error 2.13%, tolerance 1.00%)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "n_households_table2",
+      "ground_truth": {
+        "value": 10729.0,
+        "standard_error": null,
+        "unit": "households",
+        "claim_type": "other",
+        "location": "Table 2, Number of id (columns 3, 4, 7, 8)",
+        "context": "Number of households (the \"Number of id\" row) in the household fixed-effects columns of Table 2.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 10729.0,
+        "outcome": "matches",
+        "notes": "Team 49 blanket verdict; household count not recorded in the rows.",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_households_table2",
+        "claim_type": "other",
+        "claimed": 10729.0,
+        "reproduced": 11852.0,
+        "tolerance": 0.01,
+        "rel_err": 0.10466958710038214,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_households_table2",
+        "reproduced": 11852.0,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 107.29,
+        "abs_err": 1123.0,
+        "rel_err": 0.10466958710038214,
+        "margin": 10.466958710038213,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=11852.0 vs claimed=10729.0 (relative error 10.47%, tolerance 1.00%)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 12,
+    "row_passed": 5,
+    "recomputed_passed": 5,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "labandeira-2022-electricity-pricing-reform",
+    "mode": "independent",
+    "reproducer": "pipeline",
+    "label": "pipeline-desktop-opus",
+    "model": "desktop-opus",
+    "oracle": true,
+    "run": "20261102T143735Z",
+    "results_file": "pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/labandeira-2022-electricity-pricing-reform/independent/pipeline/20261102T143735Z",
+    "run_dir": null,
+    "date": "2026-11-02T14:37:35Z",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 12,
+    "final": 5,
+    "first_scored": 3,
+    "first_scored_index": 0,
+    "first_attempt": 3,
+    "n_refinements": 3,
+    "n_error_refinements": 0,
+    "n_claim_refinements": 3,
+    "n_executions": 4,
+    "n_files_stripped": 3,
+    "agrees_with_i4r": false,
+    "deviations_manifest": [],
+    "deviations_stdout": [
+      "Instrument-availability rule for the Table 2 sample is not fully specified; chose rule 'agu_any' (N=21317, households=11852) as the one whose obs and household counts best match 20,872 / 10,729",
+      "Missing z_pap for non-buyers imputed with region x year x quarter median of buyers' unit prices in IV columns",
+      "Missing z_car for non-buyers imputed with region x year x quarter median of buyers' unit prices in IV columns",
+      "Pooled (non-FE) columns include the treated-group dummy D so T is a DiD interaction; absorbed by household FE in FE columns",
+      "Expenditure OLS/LSDV columns estimated without ln(price) because ln(price)=ln(exp)-ln(kWh) makes the T coefficient mechanically identical to the consumption equation"
+    ],
+    "notes": null,
+    "files_read_outside_mount": null,
+    "paper_text": null,
+    "complete": true,
+    "missing": []
+  }
+}

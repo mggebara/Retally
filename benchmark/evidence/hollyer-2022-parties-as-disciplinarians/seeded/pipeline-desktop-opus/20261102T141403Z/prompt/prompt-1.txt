@@ -1,0 +1,1603 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: Parties as Disciplinarians: Charisma and
+Abstract (first 500 chars): We study how parties balance the benefits of disciplined programmatic campaigning with the electoral appeal of
+charismatic but potentially unfaithful candidates. We incorporate the well-known collective action problem arising from
+candidates’ inability to fully internalize the fruits of programmatic brand building. Although parties may strategically
+use promotions to induce brand building efforts, we show that the party may be unable to commit to such a promotion
+scheme when the electoral return
+Methodology Summary: - **Design overview:** A formal OLG game-theoretic model (symmetric subgame perfect equilibria in pure strategies; uncommitted, committed and loyal equilibria) produces Hypotheses 1–4. These are tested with (i) a cross-national, cross-sectional OLS analysis of parties and (ii) a regression discontinuity (RD) case study of Brazilian mayoral elections, 1996–2012. Two qualitative case studies (Austria ÖVP, Spain PSOE) are in Supplemental Appendix F. There is no train/test split and no cross-validation. Inference is purely in-sample.
+- **Cross-national data and outcomes:** Party-level data from the 2009 Democratic Accountability and Linkages Project (DALP; Kitschelt 2013) expert survey. *Programmaticness* is the average of two 4-point items (1 = "not at all", 4 = "very strongly"): emphasis on policy positions in campaigning, and appeal to voters' partisan identification. *Personalism* is the single 4-point item on how much the party campaigns on the leader's charismatic personality. Both are in raw 1–4 scale units, not standardised.
+- **Key predictors:**
+  - *Volatility*: country-level Pedersen Index (average change in party vote-share percentages between consecutive elections), averaged over the four election pairs before 2009 (or as many as are available).
+  - *Group attachment*, measured two ways:
+    - *Ethnic party*: a binary DALP indicator of links with ethnic or linguistic organizations, coded 1 when a majority of experts report such ties.
+    - *Ideological extremism*: the absolute distance of the party's 10-point left-right placement from the country's average party placement. It is continuous, from 0 to about 6.
+- **Estimating equations (OLS):**
+  - H1: Outcome_{i,p} = μ + β·Volatility_i + X_{i,p}γ + Z_iθ + u_{i,p}, for country i and party p.
+  - H2/H3: the same equation plus Group Attachment_{i,p} and Volatility_i × Group Attachment_{i,p}.
+  - Party-level controls X: party size, and links to unions, businesses and religious organizations.
+  - Country-level controls Z: electoral system (plurality / PR / mixed), ballot rules (open / closed / mixed), average district magnitude, political openness, length of democracy, separation-of-powers rules, economic development, inequality, and ethnolinguistic cleavages (details in Table C2).
+  - There are no fixed effects.
+  - Standard errors are clustered by country.
+- **Cross-national sample and reporting:**
+  - The sample is 431 party observations from 75 countries. Countries and parties with missing data are dropped (Figure C1).
+  - Table 1 reports predicted outcomes at low volatility (25th percentile) and high volatility (75th percentile), plus their differences. These are shown overall, by ethnic vs. nonethnic party, and by moderate (distance 0) vs. extremist (distance 3, about the 75th percentile) party.
+  - Coefficient estimates are in Table D1.
+  - Headline result: Personalism is +0.30 higher at high volatility (SE 0.06, p<0.01) and Programmaticness is −0.11 lower (SE 0.05, p<0.05).
+- **Cross-national robustness checks:** commodity terms of trade as a more exogenous volatility measure (Table D6); 2D/3D extremism measures; a group-attachment index that includes union ties; more detailed institutional controls (Supplemental Appendix D/E).
+- **Brazil RD design:**
+  - Unit: party-municipality, re-using the data of Klašnja and Titiunik (2017).
+  - Running variable: the party's margin of victory at t (its vote share minus that of its strongest opponent), with the cutoff at 0.
+  - Treatment: an incumbent-party mayoral win, interpreted as a positive shock to λ.
+  - Outcomes: whether the party nominates a charismatic candidate at t+1, proxied by indicators for "Young" and "Young and outsider".
+- **RD estimation and results:**
+  - Method: local linear polynomial with MSE-optimal main bandwidth h and bias bandwidth b, robust bias-corrected inference, using rdrobust (Calonico et al. 2017).
+  - Reported quantities: the conventional point estimate τ_RD, the robust bias-corrected 95% CI, and the robust CI with h = b.
+  - Young: τ = −0.084, p = 0.040, CI [−0.185, −0.005], h = 13.491, b = 24.643, N+ = 527, N− = 559.
+  - Young and outsider: τ = −0.092, p = 0.015, CI [−0.185, −0.020], h = 12.280, b = 22.333, N+ = 501, N− = 523.
+  - Figure 6 uses binned means with a second-order polynomial fit for visual display only.
+
+
+## Claims to Reproduce
+1. personalism_volatility_difference_overall: 0.3 (points on the 1-4 Personalism scale) [type: coefficient]
+   Location: Table 1, Overall row, Personalism, Difference column
+   Context: Table 1 ("Electoral Volatility, Group Attachments, and Electoral Strategies"), upper panel. Party-level OLS regression (Democratic Accountability and Linkages Project expert survey, 2009) of Personalism, the party's reliance on its leader's charismatic personality on a 1-4 scale, on electoral volatility (the country's average Pedersen index over up to four election pairs before 2009, rescaled to 0-1), with party-level covariates (party size, links to unions, business and religious organisations) and country-level covariates (plurality and proportional-representation indicators, closed- and ope…
+2. programmaticness_volatility_difference_overall: -0.11 (points on the 1-4 Programmaticness scale) [type: coefficient]
+   Location: Table 1, Overall row, Programmaticness, Difference column
+   Context: Table 1, upper panel: the same regression and covariates with Programmaticness as the outcome (the average of two 1-4 expert items: how much the party mobilises support by emphasising its policy positions, and how much it appeals to voters' long-term partisan loyalty). High-volatility (75th percentile) minus low-volatility (25th percentile) predicted Programmaticness; country-clustered standard errors.
+3. personalism_volatility_difference_nonethnic: 0.35 (points on the 1-4 Personalism scale) [type: coefficient]
+   Location: Table 1, Ethnicity panel, Nonethnic party row, Personalism, Difference column
+   Context: Table 1, middle (Ethnicity) panel. The Personalism regression of the upper panel with an ethnic-party indicator (parties most of whose expert coders report strong linkages to ethnic or linguistic organisations) and its interaction with volatility added; same covariates, country-clustered SEs. Predicted Personalism for a nonethnic party at high (75th percentile) minus low (25th percentile) volatility.
+4. programmaticness_volatility_difference_nonethnic: -0.15 (points on the 1-4 Programmaticness scale) [type: coefficient]
+   Location: Table 1, Ethnicity panel, Nonethnic party row, Programmaticness, Difference column
+   Context: Table 1, Ethnicity panel: the Programmaticness regression with the ethnic-party indicator and its interaction with volatility; predicted Programmaticness for a nonethnic party at high minus low volatility.
+5. personalism_ethnic_minus_nonethnic_low_volatility: 0.31 (points on the 1-4 Personalism scale) [type: coefficient]
+   Location: Table 1, Ethnicity panel, Difference row, Personalism, Low volatility column
+   Context: Table 1, Ethnicity panel, bottom (Difference) row: predicted Personalism of an ethnic party minus that of a nonethnic party at low volatility (25th percentile), from the ethnic-interaction Personalism regression. One of the four Hypothesis 3 comparisons.
+6. programmaticness_ethnic_minus_nonethnic_high_volatility: 0.2 (points on the 1-4 Programmaticness scale) [type: coefficient]
+   Location: Table 1, Ethnicity panel, Difference row, Programmaticness, High volatility column
+   Context: Table 1, Ethnicity panel, Difference row: predicted Programmaticness of an ethnic party minus that of a nonethnic party at high volatility (75th percentile), from the ethnic-interaction Programmaticness regression. One of the four Hypothesis 3 comparisons.
+7. personalism_volatility_difference_moderate: 0.53 (points on the 1-4 Personalism scale) [type: coefficient]
+   Location: Table 1, Ideology panel, Moderate party row, Personalism, Difference column
+   Context: Table 1, lower (Ideology) panel. The Personalism regression with ideological extremism (the absolute distance of the party's 1-10 left-right placement from the country's mean party placement, continuous, roughly 0-6) and its interaction with volatility added; same covariates, country-clustered SEs. A moderate party sits at the country's average placement (distance zero). Predicted Personalism for a moderate party at high (75th percentile) minus low (25th percentile) volatility.
+8. programmaticness_volatility_difference_moderate: -0.3 (points on the 1-4 Programmaticness scale) [type: coefficient]
+   Location: Table 1, Ideology panel, Moderate party row, Programmaticness, Difference column
+   Context: Table 1, Ideology panel: the Programmaticness regression with ideological extremism and its interaction with volatility; predicted Programmaticness for a moderate party (distance zero) at high minus low volatility.
+9. personalism_extremist_minus_moderate_low_volatility: 0.15 (points on the 1-4 Personalism scale) [type: coefficient]
+   Location: Table 1, Ideology panel, Difference row, Personalism, Low volatility column
+   Context: Table 1, Ideology panel, Difference row: predicted Personalism of an extremist party minus that of a moderate party at low volatility (25th percentile), from the extremism-interaction Personalism regression. The paper places the extremist party at an absolute distance of 3 from the country mean on the 0-6 scale ("approximately the 75th percentile"). One of the four Hypothesis 3 comparisons; not significant in the paper.
+10. programmaticness_extremist_minus_moderate_high_volatility: 0.44 (points on the 1-4 Programmaticness scale) [type: coefficient]
+   Location: Table 1, Ideology panel, Difference row, Programmaticness, High volatility column
+   Context: Table 1, Ideology panel, Difference row: predicted Programmaticness of an extremist party (the paper: distance 3 from the country mean, "approximately the 75th percentile") minus that of a moderate party at high volatility (75th percentile), from the extremism-interaction Programmaticness regression. One of the four Hypothesis 3 comparisons.
+11. n_obs_table1: 431.0 (observations (parties)) [type: other]
+   Location: Table 1, note
+   Context: Number of party observations the Table 1 analyses are based on, as stated in the table note (parties in 75 countries with complete data on the outcomes, volatility and all covariates).
+12. rd_effect_young: -0.084 (change in the probability (0-1) of nominating a young candidate) [type: coefficient]
+   Location: Table 2, row Young, tau_RD
+   Context: Table 2 ("RD Effect of Incumbent Party's Victory at t on Nomination of Charismatic Candidate at t + 1"). Brazilian mayoral elections 1996-2012, restricted to elections where the winning candidate is not term-limited in the next election (open-seat sample; the incumbent mayor does not run for a second term). Running variable: the incumbent party's margin of victory at t (its vote share minus that of its strongest opponent), cutoff zero. Outcome: the party's mayoral candidate at t + 1 is young (younger than 35 the first time they run for mayor). Conventional RD point estimate from local linear p…
+13. rd_effect_young_outsider: -0.092 (change in the probability (0-1) of nominating a young outsider candidate) [type: coefficient]
+   Location: Table 2, row Young and outsider, tau_RD
+   Context: Table 2: the same RD design and estimator with the outcome that the party's candidate at t + 1 is both younger than 35 and an outsider the first time they run (neither an elected official nor a government employee of any kind). Conventional local linear RD point estimate, MSE-optimal main and bias bandwidths, rdrobust.
+
+## Dataset Information
+Name: hollyer-2022-parties-as-disciplinarians
+Local path: <repo>/.cache/datasets/hollyer_2022_parties_as_disciplinarians
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- cross-national-data.dta (153.4 KB) — 506 rows, 25 columns: unions, business, religious, system, polity, gini, personal, programmatic, ethnic, mdmh, ctot, erule, partysize, cl, ev_total, pluralty, programmatic2, extremist2, extremist2_2d, extremist2_3d, ccode, demsys, ethfrac, gdppc, pr
+- brazil-RD-data.dta (483.1 KB) — 27455 rows, 4 columns: mv_incparty, youngF_inc_for1, dlameduck_runs, outyg1F_inc_for1
+- brazil-receipts-candidates-data.dta (264.4 KB) — 16591 rows, 3 columns: ratio_receipts, sg_ue, year
+- brazil-validation-data.dta (651.5 KB) — 55385 rows, 3 columns: cand_youngF, err_mvparty, cand_outyg1F
+- 00-README.txt (1.7 KB)
+- Figure1.R (1.8 KB)
+- Figure2.R (3.2 KB)
+- Table-E2.do (1.2 KB)
+- brazil-RD-analysis.R (6.6 KB)
+- codebook.pdf (40.2 KB)
+- cross-national-analysis.do (38.9 KB)
+- cross-national-designate-controls.do (971 B)
+- metadata.json (607 B)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/hollyer_2022_parties_as_disciplinarians' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Original Replication Scripts
+The replication package (the dataset directory) ships the authors' own analysis scripts, reproduced below.  These are the GROUND TRUTH for the exact estimating equation, variable names, sample restrictions, fixed effects, and standard-error clustering — follow them over anything reconstructed from the methodology summary, and prefer them over the paper's text where the two disagree.  Your job is to write R code that implements the SAME SPECIFICATION: translate what the scripts estimate, do not transliterate their syntax line by line (a Stata .do file's regression, e.g. `reghdfe y x controls, absorb(fe) cluster(cl)`, becomes the equivalent fixest::feols() call in R).  Keep only the parts that produce the specific claims being reproduced; skip figure construction and unrelated robustness checks.  The scripts' data-file paths refer to the package's internal layout — resolve them against the dataset directory listed under Dataset Information.
+
+Stata-to-fixest sample matching: feols() drops fixed-effect singletons by default, but Stata's `reg y x i.fe` / `xi:` dummies keep them.  Pass `fixef.rm = "none"` to every feols() call that has fixed effects, otherwise the observation count and the robust SEs drift from the paper's.  Stata's `, r` / `vce(robust)` is `vcov = "hetero"`.
+
+### `Table-E2.do`
+```stata
+
+/*##################################################################
+# Partial replication files for "Parties as Disciplinarians: Charisma and Commitment Problems in Programmatic Campaigning" 
+#by James R. Hollyer, Marko Klasnja and Rocio Titiunik, forthcoming at AJPS in 2021.
+##################################################################*/
+
+
+/* This do-file replicates Table E2: Total Campaign Receipts Ratio, Mayoral vs. 
+	Local Council Candidates. 
+	
+	Data are from: https://www.tse.jus.br/hotsites/pesquisas-eleitorais/prestacao_contas.html 
+	
+	For the file to run, the following user-written programs are required: 
+	
+	-frmttable- (can be found by typing 'search sg97_5', then clicking on the package link 
+		and following the instructions to install). */
+	
+use "brazil-receipts-candidates-data", clear
+
+collapse (mean) mean=ratio (median) median=ratio (sd) sd=ratio, by(year)
+mkmat mean-sd, mat(ratio)
+
+frmttable, hlines(11{0}1) statfont(fs11) ///
+	statmat(ratio) substat(0) sdec(2) ///
+	rtitles("2004" \ "2008" \ "2012") ///
+	ctitles("Year","Mean","Median","S.D.") ///
+	title("\caption{Total Campaign Receipts Ratio, Mayoral vs. Local Council Candidates\label{tab:ratio}}\leavevmode") ///
+	titlfont(normalsize)
+
+
+```
+
+### `brazil-RD-analysis.R`
+```r
+##################################################################
+# Partial replication files for "Parties as Disciplinarians: Charisma and Commitment Problems in Programmatic Campaigning" 
+#by James R. Hollyer, Marko Klasnja and Rocio Titiunik, forthcoming at AJPS in 2021.
+##################################################################
+#install.packages('rdrobust')
+#install.packages('Hmisc')
+#install.packages('readstata13')
+
+library(Hmisc)
+r = function(x) round(x, digits=3)
+#######################
+#
+# RD analysis
+#
+########################
+library(rdrobust)
+library(readstata13)
+data = read.dta13("./brazil-RD-data.dta")
+names(data)
+
+###############################
+
+# Table 2
+
+###############################
+
+# ----------------------------- #
+# Now put results into a table to print to latex
+# ----------------------------- #
+outnm = c("Young", "Young and Outsider") 
+outvar = cbind(data$youngF_inc_for1, data$outyg1F_inc_for1)
+
+samplenm = c("Opn")
+samplevar = (data$dlameduck_runs==0)
+
+colnms = c("Outcome","Sample", "Effect", "Robust p-value",  "Robust 95 CI", "Bandwidth (h)", "Bandwidth (b)", "N right", "N left")
+res = matrix(data=NA, nrow=length(outnm), ncol=length(colnms), dimnames = list(NULL, colnms))
+
+# default rdrobust
+for(k in 1:length(outnm)) {
+    cat("Analyzing outcome ", outnm[k], " sample ", samplenm, "\n")
+    i = k
+    
+    indx = samplevar
+    y = outvar[indx,k]
+    x = data$mv_incparty[indx]
+    
+    rr = rdrobust(y=y, x=x)
+    
+    res[i,"Outcome"]        = outnm[k]
+    res[i, "Sample"]        = samplenm
+    res[i,"Effect"]         = r(rr$Estimate[1])
+    res[i,"Robust p-value"] = r(rr$pv[3])
+    res[i,"Robust 95 CI"]   = paste("[", r(rr$ci["Robust",1]), ",",  r(rr$ci["Robust",2]), "]", sep="")
+    res[i,"Bandwidth (h)"]  = r(rr$bws["h",1])
+    res[i,"Bandwidth (b)"]  = r(rr$bws["b",1])
+    res[i,"N right"]        = rr$N_h[1]
+    res[i,"N left"]         = rr$N_h[2]
+}
+
+res.hb = res
+
+# rdrobust with rho=1
+res = matrix(data=NA, nrow=length(outnm), ncol=length(colnms), dimnames = list(NULL, colnms))
+
+for(k in 1:length(outnm)) {
+    cat("Analyzing outcome ", outnm[k], " sample ", samplenm, "\n")
+    i = k
+    
+    indx = samplevar
+    y = outvar[indx,k]
+    x = data$mv_incparty[indx]
+    
+    rr = rdrobust(y=y, x=x, rho=1)
+    
+    res[i,"Outcome"]        = outnm[k]
+    res[i, "Sample"]        = samplenm
+    res[i,"Effect"]         = r(rr$Estimate[1])
+    res[i,"Robust p-value"] = r(rr$pv[3])
+    res[i,"Robust 95 CI"]   = paste("[", r(rr$ci["Robust",1]), ",",  r(rr$ci["Robust",2]), "]", sep="")
+    res[i,"Bandwidth (h)"]  = r(rr$bws["h",1])
+    res[i,"Bandwidth (b)"]  = r(rr$bws["b",1])
+    res[i,"N right"]        = rr$N_h[1]
+    res[i,"N left"]         = rr$N_h[2]
+    
+}
+
+res.rho1 = res
+
+# Default rdrobust specs
+print(res.hb)
+# Using h=b (rho=1)
+print(res.rho1)
+
+
+# Make table pretty and print
+# Young and Young outsider for Open seat sample only
+tab = rbind(res.hb[,c(-2)])
+colnames(tab)[2] = "$\\tau^\\mathtt{RD}$"
+colnames(tab)[3] = "$\\mathtt{p}$-$\\mathtt{value}$"
+colnames(tab)[4] = "$\\mathtt{95\\%\\;CI}$"
+colnames(tab)[5] = "$\\mathtt{h}$"
+colnames(tab)[6] = "$\\mathtt{b}$"
+colnames(tab)[7] = "$\\mathtt{N}_{+}$"
+colnames(tab)[8] = "$\\mathtt{N}_{-}$"
+# Add confidence interval for rho=1
+tab = cbind(tab,res.rho1[,"Robust 95 CI"])
+colnames(tab)[9] = "$\\mathtt{95\\%\\;CI\\; (h=b)}$"
+print(tab)
+
+h.y  = res.hb[1,6]
+b.y  = res.hb[1,7]
+t.y  = res.hb[1,3]
+ci.y=  res.hb[1,5]
+
+
+h.yo  = res.hb[2,6]
+b.yo  = res.hb[2,7]
+t.yo  = res.hb[2,3]
+ci.yo=  res.hb[2,5]
+
+
+#################
+
+# Figure 6
+
+##################
+
+##----------------------------#
+# youngF_inc_for1: Young indicator (35 or less)
+##----------------------------#
+outnm = "young"
+y=data$youngF_inc_for1
+x = data$mv_incparty
+indx = (data$dlameduck_runs==0)
+
+xpos = -25
+ypos = 0.5
+# only munis where lame-duck does *not* run 
+g = rdplot(y[indx], x[indx], subset = (abs(x[indx]) <= 50), p=2,
+       x.label="Incumbent party's margin of victory at t", y.label = "Incumbent party's candidate at t+1 young indicator (original report)", title="")
+annotation = data.frame( 
+  x = c(xpos, xpos, xpos, xpos),
+  y = c(ypos, ypos-0.03, ypos-0.06, ypos-0.09),
+  label = c(paste("Local linear RD effect = ",t.y,sep=""), paste("Robust 95% CI = ",ci.y,sep=""), paste("Main bandwidth = ", h.y, sep=""),
+            paste("Bias bandwidth = ", b.y, sep=""))
+)
+g$rdplot +  theme(axis.text=element_text(size=10),axis.title = element_text(size=15))
+
+##----------------------------#
+# outyg1F_inc_for1: Young outsider indicator (==0 is reserved for age>=35 and elected officials and government employees excluding military and police)
+##----------------------------#
+outnm = "out1young"
+y=data$outyg1F_inc_for1
+x = data$mv_incparty
+indx = (data$dlameduck_runs==0)
+
+# only munis where lame-duck does *not* run 
+g = rdplot(y[indx], x[indx], subset = (abs(x[indx]) <= 50), p=2,
+           x.label="Incumbent party's margin of victory at t", y.label = "Incumbent party's candidate at t+1 young and outsider", title="")
+annotation = data.frame( 
+  x = c(xpos, xpos, xpos, xpos),
+  y = c(ypos, ypos-0.03, ypos-0.06, ypos-0.09),
+  label = c(paste("Local linear RD effect = ",t.yo,sep=""), paste("Robust 95% CI = ",ci.yo,sep=""), paste("Main bandwidth = ", h.yo, sep=""),
+            paste("Bias bandwidth = ", b.yo, sep=""))
+)
+g$rdplot + theme(axis.text=element_text(size=10), axis.title = element_text(size=15))
+
+##########################################################
+#
+# Table E3
+#
+##########################################################
+data = read.dta13("./brazil-validation-data.dta")
+dim(data)
+
+outnm = c("Young Indicator", "Young and Outsider Indicator")
+outvar = cbind(data$cand_youngF, data$cand_outyg1F)
+
+colnms = c("Outcome", "Mean (I==1)", "Mean (I==0)",  "p-value", "N (I==1)", "N (I==0)")
+res = matrix(data=NA, nrow=length(outnm), ncol=length(colnms), dimnames = list(NULL, colnms))
+
+for(i in 1:length(outnm)) {
+  cat("Analyzing outcome ", outnm[i], "\n")
+  y = outvar[,i]
+  x = data$err_mvparty
+  
+  rr = t.test(x[y==1],  x[y==0])
+  
+  res[i,"Outcome"]        = outnm[i]
+  res[i,"Mean (I==1)"]    = r(mean(x[y==1], na.rm=T))
+  res[i,"Mean (I==0)"]    = r(mean(x[y==0], na.rm=T))
+  res[i,"p-value"]        = r(rr$p.value)
+  res[i,"N (I==1)"]       = sum(!is.na(x[y==1]))
+  res[i,"N (I==0)"]       = sum(!is.na(x[y==0]))
+}
+print(res)
+
+# Make table pretty and print
+# Young and Young outsider for Open seat sample only
+tab = res[1:2,]
+colnames(tab)[2] = "$\\mathtt{Mean}_1$"
+colnames(tab)[3] = "$\\mathtt{Mean}_0$"
+colnames(tab)[4] = "$\\mathtt{p}$-$\\mathtt{value}$"
+colnames(tab)[5] = "$\\mathtt{N}_1$"
+colnames(tab)[6] = "$\\mathtt{N}_0$"
+tab[1,1] = "Margin of victory: young vs. not"
+tab[2,1] = "Margin of victory: young \\& outsider vs. not"
+print(tab)
+
+
+```
+
+### `cross-national-analysis.do`
+```stata
+
+/*##################################################################
+# Partial replication files for "Parties as Disciplinarians: Charisma and Commitment Problems in Programmatic Campaigning" 
+#by James R. Hollyer, Marko Klasnja and Rocio Titiunik, forthcoming at AJPS in 2021.
+##################################################################*/
+
+/* This do-file replicates the cross-national results in the paper and the supplementary 
+	appendix that are based on the DALP data. 
+	
+	For the file to run, the following user-written programs are required: 
+	
+	-matmap- (can be installed by typing 'ssc install matmap')
+	-frmttable- (can be found by typing 'search sg97_5', then clicking on the package link 
+		and following the instructions to install). */
+	
+clear *
+	
+*** defining programs that will prep the data for analyses and format the results
+
+* inputting data and setting up covariates
+program def setup
+	use "cross-national-data", clear
+	do "cross-national-designate-controls.do"
+end
+
+* generating and formatting predicted values from models testing Hypothesis 1
+program define getmargins_overall
+	args x v /* x = volatility measure, v = dv number */
+	qui sum `x' if e(sample), d
+	local lov = r(p25)
+	local hiv = r(p75)
+	margins, at(ev_total = (`lov' `hiv')) post
+	mat tab = r(table)
+		mat res`v' = J(1,6,.)
+		mat pval`v' = J(1,6,1)
+		mat stars`v' = J(1,6,0)
+		* low volatility
+		mat res`v'[1,1] = tab[1,1]
+		mat res`v'[1,2] = tab[2,1]
+		* high volatility
+		mat res`v'[1,3] = tab[1,2]
+		mat res`v'[1,4] = tab[2,2]
+		* difference
+		lincom _b[2._at]-_b[1._at]
+		mat res`v'[1,5] = r(estimate)
+		mat res`v'[1,6] = r(se)
+		local df = r(df)
+		local est = r(estimate)
+		local se = r(se)
+		local pv = ttail(`df',abs(`est'/`se'))*2
+		mat pval`v'[1,5] = `pv'
+		local cols = colsof(pval`v')
+		local rows = rowsof(pval`v')
+		forval i = 1/`rows' {
+			forval j = 1/`cols' {
+				local pval = pval`v'[`i',`j']
+				if `pval' <= .10 & `pval' > .05 {
+					matrix stars`v'[`i',`j'] = 1
+					}
+				if `pval' <= .05 & `pval' > .01 {
+					matrix stars`v'[`i',`j'] = 2 
+					}
+				if `pval' <= .01 {
+					matrix stars`v'[`i',`j'] = 3
+				}
+			}
+		}
+end
+
+* generating and formatting predicted values from models testing Hypotheses 2 and 3
+program define getmargins
+	args x z v /* x = volatility measure, z = group attachment var, 
+				v = dv number */
+	qui sum `z' if e(sample), d
+	local hia = r(p90)
+	qui sum `x' if e(sample), d
+	local lov = r(p25)
+	local hiv = r(p75)
+	margins, at(`z' = (0 `hia') `x' = (`lov' `hiv')) post
+	mat tab = r(table)
+	mat res`v' = J(3,6,.)
+	mat pval`v' = J(3,6,1)
+	mat stars`v' = J(3,6,0)
+	* low-alpha party, low volatility
+	mat res`v'[1,1] = tab[1,1]
+	mat res`v'[1,2] = tab[2,1]
+	* low-alpha party, hi volatility
+	mat res`v'[1,3] = tab[1,2]
+	mat res`v'[1,4] = tab[2,2]
+	* high-alpha party, low volatility
+	mat res`v'[2,1] = tab[1,3]
+	mat res`v'[2,2] = tab[2,3]
+	* high-alpha party, hi volatility
+	mat res`v'[2,3] = tab[1,4]
+	mat res`v'[2,4] = tab[2,4]
+	* differences
+	* low-alpha parties, high vs. low volatility
+	lincom _b[2._at]-_b[1._at]
+	mat res`v'[1,5] = r(estimate)
+	mat res`v'[1,6] = r(se)
+	local df = r(df)
+	local est = r(estimate)
+	local se = r(se)
+	local pv = ttail(`df',abs(`est'/`se'))*2
+	mat pval`v'[1,5] = `pv'
+	* high-alpha parties, high vs. low volatility
+	lincom _b[4._at]-_b[3._at]
+	mat res`v'[2,5] = r(estimate)
+	mat res`v'[2,6] = r(se)
+	local df = r(df)
+	local est = r(estimate)
+	local se = r(se)
+	local pv = ttail(`df',abs(`est'/`se'))*2
+	mat pval`v'[2,5] = `pv'
+	* high- vs. low-alpha parties, low volatility
+	lincom _b[3._at]-_b[1._at]
+	mat res`v'[3,1] = r(estimate)
+	mat res`v'[3,2] = r(se)
+	mat pval`v'[3,1] = r(p)
+	* high- vs. low-alpha parties, high volatility
+	lincom _b[4._at]-_b[2._at]
+	mat res`v'[3,3] = r(estimate)
+	mat res`v'[3,4] = r(se)
+	mat pval`v'[3,3] = r(p)
+	* no need for diff-of-diff
+	local cols = colsof(pval`v')
+	local rows = rowsof(pval`v')
+	forval i = 1/`rows' {
+		forval j = 1/`cols' {
+			local pval = pval`v'[`i',`j']
+			if `pval' <= .10 & `pval' > .05 {
+				matrix stars`v'[`i',`j'] = 1
+				}
+			if `pval' <= .05 & `pval' > .01 {
+				matrix stars`v'[`i',`j'] = 2 
+				}
+			if `pval' <= .01 {
+				matrix stars`v'[`i',`j'] = 3
+			}
+		}
+	}
+end
+
+* collecting model coefficients for formatting
+program define getcoefs
+	args j /* j = dv number */
+	mat obs`j' = e(N)
+	* get number of countries
+	mat cn`j' = e(N_clust)
+	mat coef`j' = e(b)
+	mat var`j' = vecdiag(e(V))
+	matmap var`j' se`j', m(sqrt(@))
+	mat pval_`j' = r(table)
+	local C = colsof(pval_`j')
+	mat pval_`j' = pval_`j'[4..4,1..`C']
+	mat pval_`j' = pval_`j''
+	mat coef`j' = coef`j'', se`j''
+end
+
+* elements for creating tables of coefficients (main specifications)
+program define coeftable_main
+	args z w /* z = number of columns, w = 0/1 if first two columns
+				should have empty interaction term cells */
+	cap mat drop coef
+	if `z' == 1 {
+		mat coef = coef1
+		mat pval = pval_1
+		mat obs = obs1
+		mat cn = cn1
+		}
+	if `z' == 2 {
+		mat coef = coef1,coef2
+		mat pval = pval_1,pval_2
+		mat obs = obs1,obs2
+		mat cn = cn1,cn2
+		}
+	if `z' == 3 {
+		mat coef = coef1,coef2,coef3
+		mat pval = pval_1,pval_2,pval_3
+		mat obs = obs1,obs2,obs3
+		mat cn = cn1,cn2,cn3
+		}
+	if `z' == 4 {
+		mat coef = coef1,coef2,coef3,coef4
+		mat pval = pval_1,pval_2,pval_3,pval_4
+		mat obs = obs1,obs2,obs3,obs4
+		mat cn = cn1,cn2,cn3,cn4
+		}		
+	if `z' == 6 {
+		mat coef = coef1,coef2,coef3,coef4,coef5,coef6
+		mat pval = pval_1,pval_2,pval_3,pval_4,pval_5,pval_6
+		mat obs = obs1,obs2,obs3,obs4,obs5,obs6
+		mat cn = cn1,cn2,cn3,cn4,cn5,cn6
+		}
+	clear
+	svmat coef
+	svmat pval
+	gen names = ""
+	local names : rownames coef
+	local k = 1
+	foreach j of local names {
+		replace names = "`j'" in `k'
+		local k = `k' + 1
+		}
+	egen base = rowtotal(coef*)
+	drop if base == 0
+	drop base
+	local m 2 3 4 6 7 8 9 11 12 13 14 15 17 18 19 20 22 23 24 26
+	gen order = .
+	local k = 1
+	foreach j of local m {
+		replace order = `j' in `k'
+		local k = `k' + 1
+		}
+	local n = _N
+	local newn = `n'+6
+	set obs `newn'
+	local m 1 5 10 16 21 25
+	local k = 1
+	foreach j of local m {
+		local newn = `n'+`k'
+		replace order = `j' in `newn'
+		local k = `k' + 1
+		}
+	sort order
+	mkmat coef*, mat(coef)
+	if `w' == 1 & `z' > 3 {
+		forval i = 1/4 {
+			mat coef[3,`i'] = .
+			mat coef[4,`i'] = .
+			}
+		}
+	if `w' == 1 & `z' == 3 {
+		forval i = 1/2 {
+			mat coef[3,`i'] = .
+			mat coef[4,`i'] = .
+			}
+		}
+	forval i = 1/`z' {
+		gen empty`i' = .
+		order empty`i', after(pval`i')
+		}
+	mkmat pval1-empty`z', mat(pval)
+	local cols = colsof(pval)
+	local rows = rowsof(pval)
+	mat stars = J(`rows',`cols',0)
+	forval i = 1/`rows' {
+		forval j = 1/`cols' {
+			local pval = pval[`i',`j']
+		if `pval' <= .10 & `pval' > .05 {
+			matrix stars[`i',`j'] = 1
+			}
+		if `pval' <= .05 & `pval' > .01 {
+			matrix stars[`i',`j'] = 2 
+			}
+		if `pval' <= .01 {
+			matrix stars[`i',`j'] = 3
+			}
+		}
+	}
+end
+
+* elements for creating tables of coefficients (alternative specifications)
+program define coeftable_robust
+	clear
+	forval i = 1/5 {
+		scalar R = rowsof(coef`i')-1
+		mat coef`i' = coef`i'[1..R,1..2]
+		mat pval_`i' = pval_`i'[1..R,1..1]
+		}
+	forval i = 1/5 {
+		svmat coef`i'
+		}
+	forval i = 1/5 {
+		svmat pval_`i'
+		}
+	mat obs = obs1,obs2,obs3,obs4,obs5
+	mat cn = cn1,cn2,cn3,cn4,cn5
+	gen names = ""
+	local names : rownames coef5
+	local k = 1
+	foreach j of local names {
+		replace names = "`j'" in `k'
+		local k = `k' + 1
+		}
+	egen base = rowtotal(coef*)
+	drop if base == 0
+	drop base
+	local m 2 3 4 6 7 8 9 11 12 13 14 15 17 18 19 20 22 23 24
+	gen order = .
+	local k = 1
+	foreach j of local m {
+		replace order = `j' in `k'
+		local k = `k' + 1
+		}
+	local n = _N
+	local newn = `n'+5
+	set obs `newn'
+	local m 1 5 10 16 21
+	local k = 1
+	foreach j of local m {
+		local newn = `n'+`k'
+		replace order = `j' in `newn'
+		local k = `k' + 1
+		}
+	sort order
+	mkmat coef*, mat(coef)
+	forval i = 1/5 {
+		gen empty`i' = .
+		order empty`i', after(pval_`i')
+		}
+	mkmat pval_1-empty5, mat(pval)
+	local cols = colsof(pval)
+	local rows = rowsof(pval)
+	mat stars = J(`rows',`cols',0)
+	forval i = 1/`rows' {
+		forval j = 1/`cols' {
+			local pval = pval[`i',`j']
+		if `pval' <= .10 & `pval' > .05 {
+			matrix stars[`i',`j'] = 1
+			}
+		if `pval' <= .05 & `pval' > .01 {
+			matrix stars[`i',`j'] = 2 
+			}
+		if `pval' <= .01 {
+			matrix stars[`i',`j'] = 3
+			}
+		}
+	}
+end
+
+*----------------------------------------------------------------------------------------*/
+/****** Results in the paper ******/
+*----------------------------------------------------------------------------------------*/
+
+*----------------------------------------------------------------------------------------*/
+** Figure 3: Electoral Volatility, Personalism, and Programmaticness—Raw Correlations
+*----------------------------------------------------------------------------------------*/
+setup
+twoway (scatter personal ev_total, msymbol(o) mcolor(gs4%30)) ///
+	(lfit personal ev_total, lcolor(red)), ///
+	scheme(s1mono) yline(2.5, lwidth(thin)) xline(.4, lwidth(thin)) ylabel(1(.5)4) ///
+	legend(off) aspect(1) ytitle(Personalism Score) xtitle(Volatility Index) ///
+	title({bf:Personalism}) name(p1, replace) 
+twoway (scatter programmatic ev_total, msymbol(o) mcolor(gs4%30)) ///
+	(lfit programmatic ev_total, lcolor(red)), ///
+	scheme(s1mono) yline(2.5, lwidth(thin)) xline(.4, lwidth(thin)) ylabel(1(.5)4) ///
+	legend(off) aspect(1) ytitle(Programaticness Score) xtitle(Volatility Index) ///
+	title({bf:Programmaticness}) name(p2, replace)
+gr combine p1 p2, scheme(s1mono) rows(1) xsize(10) ysize(5) 
+
+*----------------------------------------------------------------------------------------*/
+** Figure 4: Electoral Volatility, Ethnic Parties, and Electoral Strategies—Raw Correlations
+*----------------------------------------------------------------------------------------*/
+twoway (scatter personal ev_total if ethnic == 0, msymbol(o) jitter(10) mcolor(gs4%30)) ///
+	(lfit personal ev_total if ethnic == 0, lcolor(red)), ///
+	scheme(s1mono) yline(2.5, lwidth(thin)) xline(.4, lwidth(thin)) ylabel(1(.5)4) ///
+	legend(off) aspect(1) ytitle(Personalism Score) xtitle(Volatility Index) ///
+	title({bf:Non-Ethnic Parties}) name(p1, replace) 
+twoway (scatter personal ev_total if ethnic == 1, msymbol(o) jitter(10) mcolor(gs4%30)) ///
+	(lfit personal ev_total if ethnic == 1, lcolor(red)), ///
+	scheme(s1mono) yline(2.5, lwidth(thin)) xline(.4, lwidth(thin)) ylabel(1(.5)4) ///
+	legend(off) aspect(1) ytitle(Personalism Score) xtitle(Volatility Index) ///
+	title({bf:Ethnic Parties}) name(p2, replace) 
+gr combine p1 p2, scheme(s1mono) rows(1) xcommon ycommon ///
+	title({bf:Personalism}, size(medium)) name(t1, replace)
+twoway (scatter programmatic ev_total if ethnic == 0, msymbol(o) jitter(10) mcolor(gs4%30)) ///
+	(lfit programmatic ev_total if ethnic == 0, lcolor(red)), ///
+	scheme(s1mono) yline(2.5, lwidth(thin)) xline(.4, lwidth(thin)) ylabel(1(.5)4) ///
+	legend(off) aspect(1) ytitle(Programmaticness Score) xtitle(Volatility Index) ///
+	title({bf:Non-Ethnic Parties}) name(p1, replace) 
+twoway (scatter programmatic ev_total if ethnic == 1, msymbol(o) jitter(10) mcolor(gs4%30)) ///
+	(lfit programmatic ev_total if ethnic == 1, lcolor(red)), ///
+	scheme(s1mono) yline(2.5, lwidth(thin)) xline(.4, lwidth(thin)) ylabel(1(.5)4) ///
+	legend(off) aspect(1) ytitle(Programmaticness Score) xtitle(Volatility Index) ///
+	title({bf:Ethnic Parties}) name(p2, replace) 
+gr combine p1 p2, scheme(s1mono) rows(1) xcommon ycommon ///
+	title({bf:Programmaticness}, size(medium)) name(t2, replace)
+gr combine t1 t2, scheme(s1mono) rows(2) xcommon xsize(10) ysize(11.5)
+
+*----------------------------------------------------------------------------------------*/
+** Figure 5: Electoral Volatility, Ideological Extremism, and Electoral Strategies—Raw Correlations
+*----------------------------------------------------------------------------------------*/
+gen xtrm = (extremist2 >= 3) if extremist2 ~= .
+* top panel
+twoway (scatter personal ev_total if xtrm == 0, msymbol(o) jitter(10) mcolor(gs4%30)) ///
+	(lfit personal ev_total if xtrm == 0, lcolor(red)), ///
+	scheme(s1mono) yline(2.5, lwidth(thin)) xline(.4, lwidth(thin)) ylabel(1(.5)4) ///
+	legend(off) aspect(1) ytitle(Personalism Score) xtitle(Volatility Index) ///
+	title({bf:Moderate Parties}) name(p1, replace) 
+twoway (scatter personal ev_total if xtrm == 1, msymbol(o) jitter(10) mcolor(gs4%30)) ///
+	(lfit personal ev_total if xtrm == 1, lcolor(red)), ///
+	scheme(s1mono) yline(2.5, lwidth(thin)) xline(.4, lwidth(thin)) ylabel(1(.5)4) ///
+	legend(off) aspect(1) ytitle(Personalism Score) xtitle(Volatility Index) ///
+	title({bf:Extreme Parties}) name(p2, replace) 
+gr combine p1 p2, scheme(s1mono) rows(1) xcommon ycommon ///
+	title({bf:Personalism}, size(medium)) name(t1, replace)
+* bottom panel
+twoway (scatter programmatic ev_total if xtrm == 0, msymbol(o) jitter(10) mcolor(gs4%30)) ///
+	(lfit programmatic ev_total if xtrm == 0, lcolor(red)), ///
+	scheme(s1mono) yline(2.5, lwidth(thin)) xline(.4, lwidth(thin)) ylabel(1(.5)4) ///
+	legend(off) aspect(1) ytitle(Programmaticness Score) xtitle(Volatility Index) ///
+	title({bf:Moderate Parties}) name(p1, replace) 
+twoway (scatter programmatic ev_total if xtrm == 1, msymbol(o) jitter(10) mcolor(gs4%30)) ///
+	(lfit programmatic ev_total if xtrm == 1, lcolor(red)), ///
+	scheme(s1mono) yline(2.5, lwidth(thin)) xline(.4, lwidth(thin)) ylabel(1(.5)4) ///
+	legend(off) aspect(1) ytitle(Programmaticness Score) xtitle(Volatility Index) ///
+	title({bf:Extreme Parties}) name(p2, replace) 
+gr combine p1 p2, scheme(s1mono) rows(1) xcommon ycommon ///
+	title({bf:Programmaticness}, size(medium)) name(t2, replace)
+gr combine t1 t2, scheme(s1mono) rows(2) xcommon xsize(10) ysize(11.5)
+
+*----------------------------------------------------------------------------------------*/
+** Table 1: Electoral Volatility, Group Attachments, and Electoral Strategies
+*----------------------------------------------------------------------------------------*/
+setup
+* top panel---overall
+reg personal ev_total $p_controls $controls, cluster(ccode)
+getmargins_overall ev_total 1
+reg programmatic ev_total $p_controls $controls, cluster(ccode)
+getmargins_overall ev_total 2
+* middle panel---ethnicity
+qui reg personal i.ethnic##c.ev_total $p_controls $controls, cluster(ccode)
+getmargins ev_total ethnic 3
+qui reg programmatic i.ethnic##c.ev_total $p_controls $controls, cluster(ccode)
+getmargins ev_total ethnic 4
+* bottom panel---ideology
+qui reg personal c.extremist2##c.ev_total $p_controls $controls, cluster(ccode)
+getmargins ev_total extremist2 5
+qui reg programmatic c.extremist2##c.ev_total $p_controls $controls, cluster(ccode)
+getmargins ev_total extremist2 6
+* formatting
+mat empty = J(1,12,.)
+mat rese0 = res1,res2
+mat rese1 = res3,res4
+mat rese1 = empty \ rese1
+mat rese2 = res5,res6
+mat rese2 = empty \ rese2
+mat rese = rese0 \ rese1 \ rese2
+mat emptys = J(1,12,0)
+mat starse0 = stars1,stars2
+mat starse1 = stars3,stars4
+mat starse1 = emptys \ starse1
+mat starse2 = stars5,stars6
+mat starse2 = emptys \ starse2
+mat starse = starse0 \ starse1 \ starse2
+frmttable, clear
+frmttable, statmat(rese) substat(1) sdec(2) annotate(starse) asymbol($^{\dagger}$,*,**) ///
+	rtitles("\hspace{1em} Overall" \ "" \ "\textbf{Ethnicity}" \ "" \ ///
+			"\hspace{1em} Non-ethnic party" \ "" \ "\hspace{1em} Ethnic party" \ "" \ ///
+			"\hspace{1em} Difference" \ "" \ ///
+			"\textbf{Ideology}" \ "" \ "\hspace{1em} Moderate party" \ "" \ ///
+			"\hspace{1em} Extremist party" \ "" \ "\hspace{1em} Difference" \ "") ///
+	ctitles("","\textbf{Personalism}","","","\textbf{Programmaticness}","","" \ ///
+		"","Volatility","","Difference","Volatility","","Difference" \ ///
+		"","Low","High","","Low","High","") ///
+	multicol(1,2,3;1,5,3;2,2,2;2,5,2) noblankrows ///
+	title("\caption{Electoral Volatility, Group Attachments, and Electoral Strategies\label{tab:margins}}\leavevmode") ///
+	titlfont(normalsize)
+	
+
+*----------------------------------------------------------------------------------------*/
+/****** Results in the appendix ******/
+*----------------------------------------------------------------------------------------*/
+
+*----------------------------------------------------------------------------------------*/
+** Figure C1: Patterns of missing observations
+*----------------------------------------------------------------------------------------*/
+setup
+misstable patterns programmatic personal ev_total ctot ethnic extremist2 $p_controls ///
+	pluralty pr cl mdmh system demsys polity gdppc gini ethfrac, asis replace clear
+egen sum = total(_freq)
+gen percent = round((_freq/sum)*100,.1)
+tostring percent, gen(pct) force
+replace pct = substr(pct,1,3)
+replace pct = substr(pct,1,2) if percent < 1
+gsort -percent
+forval i = 1/14 {
+    loc t`i' = pct in `i'
+}
+drop _freq sum percent pct pr
+foreach x in programmatic personal partysize polity {
+	gen `x' = 1
+}
+order personal programmatic, first
+order partysize, after(extremist2)
+order polity, after(demsys)
+gen n = _n
+local j = 1
+foreach v of varlist personal-ethfrac {
+    rename `v' v`j'
+	local j = `j'+1
+}
+reshape long v, i(n) j(j)
+label drop _all
+lab def n 1 `t1' 2 `t2' 3 `t3' 4 `t4' 5 `t5' 6 `t6' 7 `t7' 8 `t8' 9 `t9' 10 `t10' ///
+	11 `t11' 12 `t12' 13 `t13' 14 `t14' 
+lab val n n 
+twoway (scatter j n if v == 0, mcolor(red) msize(huge) msymbol(S)) ///
+  (scatter j n if v == 1, mcolor(green) msize(huge) msymbol(S)), ///
+  yscale(reverse range(1(1)16) lstyle(none)) xscale(range(1(1)14) lstyle(none) alt) ///
+  legend(off) xlabel(1(1)14, valuel noticks labgap(1.5) labsize(medsmall)) xtitle(Share of obs. (%)) ///
+  ylabel(1 "Personalism" 2 "Programmaticness" 3 "Volatility" 4 "Commodity ToT" ///
+		 5 "Ethnic party" 6 "Party extremism" 7 "Party size" 8 "Links w/ unions" ///
+		 9 "Links w/ business" 10 "Links w/ relig. orgs." 11 "Electoral rule" ///
+		 12 "District magnitude" 13 "Chief exec. system" 14 "System tenure" ///
+		 15 "Polity score" 16 "GDP per capita" 17 "Gini index" 18 "Ethnic fractionalization", ///
+		 angle(0) labsize(medsmall) noticks nogrid labgap(2)) ytitle("") ///
+		 graphregion(color(white))
+
+*----------------------------------------------------------------------------------------*/
+** Table C3: Summary statistics
+*----------------------------------------------------------------------------------------*/
+setup
+tab cl, gen(cl)
+gen mixed = (pluralty == 0 & pr == 0) if pluralty ~= . & pr ~= .
+tab system, gen(sys)
+mat sumstat = J(22,5,.)
+local j = 1
+foreach v in programmatic personal ev_total ctot ethnic extremist2 $p_controls ///
+	pluralty pr cl1 cl2 mdmh sys1 sys3 demsys polity gdppc gini ethfrac {
+		qui sum `v'
+		mat sumstat[`j',1] = r(mean)
+		mat sumstat[`j',2] = r(sd)
+		mat sumstat[`j',3] = r(min)
+		mat sumstat[`j',4] = r(max)
+		qui tab `v'
+		mat sumstat[`j',5] = r(r)
+		local j = `j' + 1
+	}
+frmttable, statmat(sumstat) substat(0) sdec(2,2,2,2,0) ///
+	rtitles("Programmaticness" \ "Personalism" \ "Electoral volatility" \ "Commodity terms of trade" \ ///
+		"Ethnic party" \ "Party extremism" \ "Party size" \ "Links w/ unions" \ "Links w/ business" \ ///
+		"Links w/ relig. orgs." \ "Plurality" \ "PR" \ "Open list" \ "Closed list" \ "District magnitude" \ ///
+		"Presidential system" \ "Parliamentary system" \ "System tenure" \ "Polity score" \ ///
+		 "GDP per capita" \ "Gini index" \ "Ethnic fractionalization") ///
+	ctitles("","Mean","St. dev.","Min.","Max.","No. values") ///
+	title("\caption{Summary statistics\label{tab:sumstat}}\leavevmode") ///
+	titlfont(normalsize)
+
+*----------------------------------------------------------------------------------------*/
+** Table D1: Electoral Volatility, Group Attachments, and Electoral Strategies—OLS Results
+*----------------------------------------------------------------------------------------*/
+setup
+reg personal c.ev_total##d $p_controls $controls, cluster(ccode)
+getcoefs 1
+reg programmatic c.ev_total##d $p_controls $controls, cluster(ccode)
+getcoefs 2
+reg personal c.ev_total##c.ethnic $p_controls $controls, cluster(ccode)
+getcoefs 3
+reg programmatic c.ev_total##c.ethnic $p_controls $controls, cluster(ccode)
+getcoefs 4
+reg personal c.ev_total##c.extremist2 $p_controls $controls, cluster(ccode)
+getcoefs 5
+reg programmatic c.ev_total##c.extremist2 $p_controls $controls, cluster(ccode)
+getcoefs 6
+coeftable_main 6 1
+frmttable, clear
+frmttable, statmat(coef) substat(1) sdec(2) annotate(stars) asymbol($^{\dagger}$,*,**) ///
+	rtitles("\textbf{Key variables}" \ "" \ "\hspace{1em} Electoral volatility" \ "" \ ///
+	"\hspace{1em} Group attachment" \ "" \ "\hspace{1em} Volatility $\times$ group attachment" \ "" \ ///
+	"\textbf{Party-level covariates}" \ "" \ "\hspace{1em} Party size (vote share in prev. elec.)" \ "" \ ///
+	"\hspace{1em} Links w/ unions" \ "" \ "\hspace{1em} Links w/ business" \ "" \ ///
+	"\hspace{1em} Links w/ religious orgs." \ "" \ "\textbf{Electoral system covariates}" \ "" \ ///
+	"\hspace{1em} Plurality" \ "" \ "\hspace{1em} Proportional representation" \ "" \ ///
+	"\hspace{1em} Closed list" \ "" \ "\hspace{1em} Open list" \ "" \ ///
+	"\hspace{1em} Average district magnitude (lower house)" \ "" \ "\textbf{Political system covariates}" \ "" \ ///
+	"\hspace{1em} Presidential system" \ "" \ "\hspace{1em} Parliamentary system" \ "" \ ///
+	"\hspace{1em} System tenure" \ "" \ "\hspace{1em} Polity score" \ "" \ "\textbf{Other country-level covariates}" \ "" \ ///
+	"\hspace{1em} GDP per capita, PPP (logged)" \ "" \ "\hspace{1em} Gini index" \ "" \ ///
+	"\hspace{1em} Ethnic fractionalization" \ "" \ "Constant" \ "")
+frmttable, statmat(obs) substat(0) sdec(0) rtitle("Observations") append
+frmttable, statfont(fs11) hlines(1001{0}11) vlines(000101{0}) ///
+	ctitles("","Baseline model","","Extended model","","","" \ ///
+			"","","","Ethnicity","","Ideology","" \ ///
+			"","Personalism","Programmaticness","Personalism","Programmaticness","Personalism"
+			"Programmaticness") ///
+	multicol(1,2,2;1,4,4;2,4,2;2,6,2) noblankrows ///
+	title("\caption{Electoral Volatility, Group Attachments, and Electoral Strategies---OLS Results\label{tab:coefs}}\leavevmode") ///
+	titlfont(normalsize)
+
+*----------------------------------------------------------------------------------------*/
+** Table D2: Electoral Volatility, Group Attachments, and Electoral Strategies—Alternative Programmaticness Measure
+*----------------------------------------------------------------------------------------*/
+setup
+reg programmatic2 c.ev_total##d $p_controls $controls, cluster(ccode)
+getcoefs 1
+reg programmatic2 c.ev_total##c.ethnic $p_controls $controls, cluster(ccode)
+getcoefs 2
+reg programmatic2 c.ev_total##c.extremist2 $p_controls $controls, cluster(ccode)
+getcoefs 3
+coeftable_main 3 1
+frmttable, clear
+frmttable, statmat(coef) substat(1) sdec(2) annotate(stars) asymbol($^{\dagger}$,*,**) ///
+	rtitles("\textbf{Key variables}" \ "" \ "\hspace{1em} Electoral volatility" \ "" \ ///
+	"\hspace{1em} Group attachment" \ "" \ "\hspace{1em} Volatility $\times$ group attachment" \ "" \ ///
+	"\textbf{Party-level covariates}" \ "" \ "\hspace{1em} Party size (vote share in prev. elec.)" \ "" \ ///
+	"\hspace{1em} Links w/ unions" \ "" \ "\hspace{1em} Links w/ business" \ "" \ ///
+	"\hspace{1em} Links w/ religious orgs." \ "" \ "\textbf{Electoral system covariates}" \ "" \ ///
+	"\hspace{1em} Plurality" \ "" \ "\hspace{1em} Proportional representation" \ "" \ ///
+	"\hspace{1em} Closed list" \ "" \ "\hspace{1em} Open list" \ "" \ ///
+	"\hspace{1em} Average district magnitude (lower house)" \ "" \ "\textbf{Political system covariates}" \ "" \ ///
+	"\hspace{1em} Presidential system" \ "" \ "\hspace{1em} Parliamentary system" \ "" \ ///
+	"\hspace{1em} System tenure" \ "" \ "\hspace{1em} Polity score" \ "" \ "\textbf{Other country-level covariates}" \ "" \ ///
+	"\hspace{1em} GDP per capita, PPP (logged)" \ "" \ "\hspace{1em} Gini index" \ "" \ ///
+	"\hspace{1em} Ethnic fractionalization" \ "" \ "Constant" \ "")
+frmttable, statmat(obs) substat(0) sdec(0) rtitle("Observations") append
+frmttable, statfont(fs11) hlines(101{0}11) vlines(011{0}) ///
+	ctitles("","Baseline model","Extended model","" \ "","","Ethnicity","Ideology") multicol(1,3,2) noblankrows ///
+	title("\caption{Electoral Volatility, Group Attachments, and Electoral Strategies---Alternative Programmaticness Measure\label{tab:prog2}}\leavevmode") ///
+	titlfont(normalsize)
+
+*----------------------------------------------------------------------------------------*/
+** Table D3: Electoral Volatility, Group Attachments, and Electoral Strategies—Combined Group Attachment Measure
+*----------------------------------------------------------------------------------------*/
+setup
+gen union = (unions > .5) if unions ~= .
+sum extremist2, d
+gen extremist2d = (extremist2 > r(p50)) if extremist2 ~= .
+gen ga = (ethnic == 1 | union == 1 | extremist2d == 1) if union ~= . & extremist2d ~= . & ethnic ~= .
+global p_controls partysize business religious
+reg personal c.ev_total##i.ga $p_controls $controls, cluster(ccode)
+getcoefs 1
+reg programmatic c.ev_total##i.ga $p_controls $controls, cluster(ccode)
+getcoefs 2
+mat coef = coef1,coef2
+mat pval = pval_1,pval_2
+mat obs = obs1,obs2
+clear
+svmat coef
+svmat pval
+gen names = ""
+local names : rownames coef
+local k = 1
+foreach j of local names {
+	replace names = "`j'" in `k'
+	local k = `k' + 1
+	}
+egen base = rowtotal(coef*)
+drop if base == 0
+drop base
+local m 2 3 4 6 7 8 10 11 12 13 14 16 17 18 19 21 22 23 25
+gen order = .
+local k = 1
+foreach j of local m {
+	replace order = `j' in `k'
+	local k = `k' + 1
+	}
+local n = _N
+local newn = `n'+6
+set obs `newn'
+local m 1 5 9 15 20 24
+local k = 1
+foreach j of local m {
+	local newn = `n'+`k'
+	replace order = `j' in `newn'
+	local k = `k' + 1
+	}
+sort order
+mkmat coef*, mat(coef)
+forval i = 1/2 {
+	gen empty`i' = .
+	order empty`i', after(pval`i')
+	}
+mkmat pval1-empty2, mat(pval)
+local cols = colsof(pval)
+local rows = rowsof(pval)
+mat stars = J(`rows',`cols',0)
+forval i = 1/`rows' {
+	forval j = 1/`cols' {
+		local pval = pval[`i',`j']
+	if `pval' <= .10 & `pval' > .05 {
+		matrix stars[`i',`j'] = 1
+		}
+	if `pval' <= .05 & `pval' > .01 {
+		matrix stars[`i',`j'] = 2 
+		}
+	if `pval' <= .01 {
+		matrix stars[`i',`j'] = 3
+		}
+	}
+}
+frmttable, clear
+frmttable, statmat(coef) substat(1) sdec(2) annotate(stars) asymbol($^{\dagger}$,*,**) ///
+	rtitles("\textbf{Key variables}" \ "" \ "\hspace{1em} Electoral volatility" \ "" \ ///
+	"\hspace{1em} Combined group attachment" \ "" \ "\hspace{1em} Volatility $\times$ combined group attachment" \ "" \ ///
+	"\textbf{Party-level covariates}" \ "" \ "\hspace{1em} Party size (vote share in prev. elec.)" \ "" \ ///
+	"\hspace{1em} Links w/ business" \ "" \ ///
+	"\hspace{1em} Links w/ religious orgs." \ "" \ "\textbf{Electoral system covariates}" \ "" \ ///
+	"\hspace{1em} Plurality" \ "" \ "\hspace{1em} Proportional representation" \ "" \ ///
+	"\hspace{1em} Closed list" \ "" \ "\hspace{1em} Open list" \ "" \ ///
+	"\hspace{1em} Average district magnitude (lower house)" \ "" \ "\textbf{Political system covariates}" \ "" \ ///
+	"\hspace{1em} Presidential system" \ "" \ "\hspace{1em} Parliamentary system" \ "" \ ///
+	"\hspace{1em} System tenure" \ "" \ "\hspace{1em} Polity score" \ "" \ "\textbf{Other country-level covariates}" \ "" \ ///
+	"\hspace{1em} GDP per capita, PPP (logged)" \ "" \ "\hspace{1em} Gini index" \ "" \ ///
+	"\hspace{1em} Ethnic fractionalization" \ "" \ "Constant" \ "")
+frmttable, statmat(obs) substat(0) sdec(0) rtitle("Observations") append
+frmttable, statfont(fs11) hlines(11{0}11) vlines(011{0}) ///
+	ctitles("","Personalism","Programmaticness") noblankrows ///
+	title("\caption{Electoral Volatility, Group Attachments, and Electoral Strategies---Combined Group Attachment Measure\label{tab:ga}}\leavevmode") ///
+	titlfont(normalsize)
+frmttable, clear
+
+*----------------------------------------------------------------------------------------*/
+** Table D4: Results with Multi-Dimensional Measures of Ideological Extremism
+*----------------------------------------------------------------------------------------*/
+setup
+reg personal c.ev_total##c.extremist2_2d $p_controls $controls, cluster(ccode)
+getcoefs 1
+reg programmatic c.ev_total##c.extremist2_2d $p_controls $controls, cluster(ccode)
+getcoefs 2
+reg personal c.ev_total##c.extremist2_3d $p_controls $controls, cluster(ccode)
+getcoefs 3
+reg programmatic c.ev_total##c.extremist2_3d $p_controls $controls, cluster(ccode)
+getcoefs 4
+coeftable_main 4 0
+frmttable, clear
+frmttable, statmat(coef) substat(1) sdec(2) annotate(stars) asymbol($^{\dagger}$,*,**) ///
+	rtitles("\textbf{Key variables}" \ "" \ "\hspace{1em} Electoral volatility" \ "" \ ///
+	"\hspace{1em} Ideological extremism" \ "" \ "\hspace{1em} Volatility $\times$ extremism" \ "" \ ///
+	"\textbf{Party-level covariates}" \ "" \ "\hspace{1em} Party size (vote share in prev. elec.)" \ "" \ ///
+	"\hspace{1em} Links w/ unions" \ "" \ "\hspace{1em} Links w/ business" \ "" \ ///
+	"\hspace{1em} Links w/ religious orgs." \ "" \ "\textbf{Electoral system covariates}" \ "" \ ///
+	"\hspace{1em} Plurality" \ "" \ "\hspace{1em} Proportional representation" \ "" \ ///
+	"\hspace{1em} Closed list" \ "" \ "\hspace{1em} Open list" \ "" \ ///
+	"\hspace{1em} Average district magnitude (lower house)" \ "" \ "\textbf{Political system covariates}" \ "" \ ///
+	"\hspace{1em} Presidential system" \ "" \ "\hspace{1em} Parliamentary system" \ "" \ ///
+	"\hspace{1em} System tenure" \ "" \ "\hspace{1em} Polity score" \ "" \ "\textbf{Other country-level covariates}" \ "" \ ///
+	"\hspace{1em} GDP per capita, PPP (logged)" \ "" \ "\hspace{1em} Gini index" \ "" \ ///
+	"\hspace{1em} Ethnic fractionalization" \ "" \ "Constant" \ "")
+frmttable, statmat(obs) substat(0) sdec(0) rtitle("Observations") append
+frmttable, statfont(fs11) hlines(101{0}11) vlines(0001{0}) ///
+	ctitles("","Economic and social left-right","","Economic, social left-right, and nationalism","" \ ///
+	"","Personalism","Programmaticness","Personalism","Programmaticness") ///
+	multicol(1,2,2;1,4,2) ///
+	title("\caption{Results with Multi-Dimensional Measures of Ideological Extremism\label{tab:multidim}}\leavevmode") ///
+	titlfont(normalsize)
+frmttable, clear
+
+*----------------------------------------------------------------------------------------*/
+** Table D5: Results with Detailed Electoral Rules Controls
+*----------------------------------------------------------------------------------------*/
+setup
+reg personal c.ev_total##d $p_controls $controls2 $controls3 ///
+	pluralty b3.cl mdmh b5.erule, cluster(ccode)
+getcoefs 1
+reg programmatic c.ev_total##d $p_controls $controls2 $controls3 ///
+	pluralty b3.cl mdmh b5.erule, cluster(ccode)
+getcoefs 2
+reg personal c.ev_total##c.ethnic $p_controls $controls2 $controls3 ///
+	pluralty b3.cl mdmh b5.erule, cluster(ccode)
+getcoefs 3
+reg programmatic c.ev_total##c.ethnic $p_controls $controls2 $controls3 ///
+	pluralty b3.cl mdmh b5.erule, cluster(ccode)
+getcoefs 4
+reg personal c.ev_total##c.extremist2 $p_controls $controls2 $controls3 ///
+	pluralty b3.cl mdmh b5.erule, cluster(ccode)
+getcoefs 5
+reg programmatic c.ev_total##c.extremist2 $p_controls $controls2 $controls3 ///
+	pluralty b3.cl mdmh b5.erule, cluster(ccode)
+getcoefs 6
+clear
+forval i = 1/6 {
+	scalar R = rowsof(coef`i')-1
+	mat coef`i' = coef`i'[1..R,1..2]
+	mat pval_`i' = pval_`i'[1..R,1..1]
+	}
+mat obs = obs1,obs2,obs3,obs4,obs5,obs6
+mat cn = cn1,cn2,cn3,cn4,cn5,cn6
+forval i = 1/6 {
+	svmat coef`i'
+	svmat pval_`i'
+	}
+forval i = 2/3 {
+	foreach x in 11 12 21 22 {
+		replace coef`x' = . in `i'
+		}
+	}
+gen names = ""
+local names : rownames coef3
+local k = 1
+foreach j of local names {
+	replace names = "`j'" in `k'
+	local k = `k' + 1
+	}
+gen order2 = _n
+* keep only the electoral rules variables
+keep if order2 < 4 | order2 > 15
+egen base = rowtotal(coef*)
+drop if base == 0
+drop base order2
+local m 2 3 4 6 7 8 9 10 11 12 13 14
+gen order = .
+local k = 1
+foreach j of local m {
+	replace order = `j' in `k'
+	local k = `k' + 1
+	}
+local n = _N
+local newn = `n'+2
+set obs `newn'
+local m 1 5 
+local k = 1
+foreach j of local m {
+	local newn = `n'+`k'
+	replace order = `j' in `newn'
+	local k = `k' + 1
+	}
+sort order
+order coef11 coef12 coef21 coef22 coef31 coef32 coef41 coef42 coef51 coef52 coef61 coef62 ///
+	pval_11 pval_21 pval_31 pval_41 pval_51 pval_61, first
+mkmat coef*, mat(coef)
+forval i = 1/6 {
+	gen empty`i' = .
+	order empty`i', after(pval_`i')
+	}
+mkmat pval_1-empty6, mat(pval)
+local cols = colsof(pval)
+local rows = rowsof(pval)
+mat stars = J(`rows',`cols',0)
+forval i = 1/`rows' {
+	forval j = 1/`cols' {
+		local pval = pval[`i',`j']
+		if `pval' <= .10 & `pval' > .05 {
+		matrix stars[`i',`j'] = 1
+		}
+		if `pval' <= .05 & `pval' > .01 {
+			matrix stars[`i',`j'] = 2 
+			}
+		if `pval' <= .01 {
+			matrix stars[`i',`j'] = 3
+			}
+		}
+	}
+frmttable, statmat(coef) substat(1) sdec(2) annotate(stars) asymbol($^{\dagger}$,*,**) ///
+	rtitles("\textbf{Key variables}" \ "" \ "\hspace{1em} Electoral volatility" \ "" \ ///
+	"\hspace{1em} Group attachment" \ "" \ "\hspace{1em} Volatility $\times$ group attachment" \ "" \ ///
+	"\textbf{Electoral system covariates}" \ "" \ ///
+	"\hspace{1em} Plurality" \ "" \ "\hspace{1em} Closed list" \ "" \ "\hspace{1em} Open list" \ "" \ ///
+	"\hspace{1em} Average district magnitude (lower house)" \ "" \ ///
+	"\hspace{1em} SMDP" \ "" \ "\hspace{1em} Two-round vote" \ "" \ "\hspace{1em} Alternative vote" \ "" \ ///
+	"\hspace{1em} STV" \ "" \ "\hspace{1em} Mixed system" \ "")
+frmttable, statmat(obs) substat(0) sdec(0) rtitle("Observations") append
+frmttable, statfont(fs11) hlines(1001{0}11) vlines(000101{0}) ///
+	ctitles("","Baseline model","","Extended model","","","" \ ///
+			"","","","Ethnicity","","Ideology","" \ ///
+			"","Personalism",,"Programmaticness","Personalism","Programmaticness","Personalism","Programmaticness") ///
+	multicol(1,2,2;1,4,4;2,4,2;2,6,2) noblankrows ///
+	title("\caption{Results with Detailed Electoral Rules Controls\label{tab:elecrules_robust_coefs}}\leavevmode") ///
+	titlfont(normalsize)
+
+*----------------------------------------------------------------------------------------*/
+** Table D6: Economic Shocks, Group Attachments, and Electoral Strategies
+*----------------------------------------------------------------------------------------*/
+setup
+reg personal c.ctot##d $p_controls $controls, cluster(ccode)
+getcoefs 1
+reg programmatic c.ctot##d $p_controls $controls, cluster(ccode)
+getcoefs 2
+reg personal c.ctot##c.ethnic $p_controls $controls, cluster(ccode)
+getcoefs 3
+reg programmatic c.ctot##c.ethnic $p_controls $controls, cluster(ccode)
+getcoefs 4
+reg personal c.ctot##c.extremist2 $p_controls $controls, cluster(ccode)
+getcoefs 5
+reg programmatic c.ctot##c.extremist2 $p_controls $controls, cluster(ccode)
+getcoefs 6
+coeftable_main 6 1
+frmttable, clear
+frmttable, statmat(coef) substat(1) sdec(2) annotate(stars) asymbol($^{\dagger}$,*,**) ///
+	rtitles("\textbf{Key variables}" \ "" \ "\hspace{1em} Commodity terms of trade" \ "" \ ///
+	"\hspace{1em} Group attachment" \ "" \ "\hspace{1em} Terms of trade $\times$ group attachment" \ "" \ ///
+	"\textbf{Party-level covariates}" \ "" \ "\hspace{1em} Party size (vote share in prev. elec.)" \ "" \ ///
+	"\hspace{1em} Links w/ unions" \ "" \ "\hspace{1em} Links w/ business" \ "" \ ///
+	"\hspace{1em} Links w/ religious orgs." \ "" \ "\textbf{Electoral system covariates}" \ "" \ ///
+	"\hspace{1em} Plurality" \ "" \ "\hspace{1em} Proportional representation" \ "" \ ///
+	"\hspace{1em} Closed list" \ "" \ "\hspace{1em} Open list" \ "" \ ///
+	"\hspace{1em} Average district magnitude (lower house)" \ "" \ "\textbf{Political system covariates}" \ "" \ ///
+	"\hspace{1em} Presidential system" \ "" \ "\hspace{1em} Parliamentary system" \ "" \ ///
+	"\hspace{1em} System tenure" \ "" \ "\hspace{1em} Polity score" \ "" \ "\textbf{Other country-level covariates}" \ "" \ ///
+	"\hspace{1em} GDP per capita, PPP (logged)" \ "" \ "\hspace{1em} Gini index" \ "" \ ///
+	"\hspace{1em} Ethnic fractionalization" \ "" \ "Constant" \ "")
+frmttable, statmat(obs) substat(0) sdec(0) rtitle("Observations") append
+frmttable, statfont(fs11) hlines(1001{0}11) vlines(000101{0}) ///
+	ctitles("","Baseline model","","Extended model","","","" \ ///
+			"","","","Ethnicity","","Ideology","" \ ///
+			"","Personalism","Programmaticness","Personalism","Programmaticness","Personalism","Programmaticness") ///
+	multicol(1,2,2;1,4,4;2,4,2;2,6,2) noblankrows ///
+	title("\caption{Economic Shocks, Group Attachments, and Electoral Strategies\label{tab:coefs_ctot}}\leavevmode") ///
+	titlfont(normalsize)
+
+*----------------------------------------------------------------------------------------*/
+** Table D7: Electoral Volatility and Commodity Terms of Trade Shocks
+*----------------------------------------------------------------------------------------*/
+setup
+reg ev_total ctot, cl(ccode)
+getcoefs 1
+local n1 = e(N)
+local cn1 = e(N_clust)
+reg ev_total ctot $p_controls $controls, cl(ccode)
+getcoefs 2
+local n2 = e(N)
+local cn2 = e(N_clust)
+mat obs = `n1',`n2'
+mat cn = `cn1',`cn2'
+loc c1 = coef1[2,1]
+loc c2 = coef1[2,2]
+loc p1 = pval_1[2,1]
+clear
+svmat coef1
+svmat coef2
+svmat pval_1 
+svmat pval_2
+loc n = _N
+replace coef11 = . in 2
+replace coef12 = . in 2
+replace coef11 = `c1' in `n'
+replace coef12 = `c2' in `n'
+replace pval_11 = . in 2
+replace pval_11 = `p1' in `n'
+gen names = ""
+local names : rownames coef2
+local k = 1
+foreach j of local names {
+	replace names = "`j'" in `k'
+	local k = `k' + 1
+	}
+egen base = rowtotal(coef*)
+drop if base == 0
+drop base
+mkmat coef*, mat(coef)
+forval i = 1/2 {
+	gen empty`i' = .
+	order empty`i', after(pval_`i')
+	}
+mkmat pval_1-empty2, mat(pval)
+local cols = colsof(pval)
+local rows = rowsof(pval)
+mat stars = J(`rows',`cols',0)
+forval i = 1/`rows' {
+	forval j = 1/`cols' {
+		local pval = pval[`i',`j']
+	if `pval' <= .10 & `pval' > .05 {
+		matrix stars[`i',`j'] = 1
+		}
+	if `pval' <= .05 & `pval' > .01 {
+		matrix stars[`i',`j'] = 2 
+		}
+	if `pval' <= .01 {
+		matrix stars[`i',`j'] = 3
+		}
+	}
+}
+frmttable, clear
+frmttable, statmat(coef) substat(1) sdec(2) annotate(stars) asymbol($^{\dagger}$,*,**) ///
+	rtitles("Terms of trade index" \ "" \ "Party size (vote share in prev. elec.)" \ "" \ ///
+	"Links w/ unions" \ "" \ "Links w/ business" \ "" \ "Links w/ religious orgs." \ "" \ ///
+	"Plurality" \ "" \ "Proportional representation" \ "" \ "Closed list" \ "" \ ///
+	"Open list" \ "" \ "Average district magnitude (lower house)" \ "" \ ///
+	"Presidential system" \ "" \ "Parliamentary system" \ "" \ "System tenure" \ "" \ ///
+	"Polity score" \ "" \ "GDP per capita, PPP (logged)" \ "" \ "Gini index" \ "" \ ///
+	"Ethnic fractionalization" \ "" \ "Constant" \ "")
+frmttable, statmat(obs) substat(0) sdec(0) rtitle("Observations") append
+frmttable, statfont(fs11) hlines(11{0}11) ///
+	ctitles("","(1)","(2)") ///
+	title("\caption{Electoral Volatility and Commodity Terms of Trade Shocks\label{tab:ctot-volatility}}\leavevmode") ///
+	titlfont(normalsize)
+
+```
+
+### `cross-national-designate-controls.do`
+```stata
+
+/*##################################################################
+# Partial replication files for "Parties as Disciplinarians: Charisma and Commitment Problems in Programmatic Campaigning" 
+#by James R. Hollyer, Marko Klasnja and Rocio Titiunik, forthcoming at AJPS in 2021.
+##################################################################*/
+
+
+/* This do-file sets up some of the variables for formatting of results, and also 
+	designates the covariates used in various cross-national analyses in the 
+	paper and the supplementary appendix. */
+	
+* create placeholder interaction term in cross-national regressions for easier formatting
+gen d = 1
+
+replace gini = gini/100
+
+* covariates
+global p_controls partysize unions business religious
+global controls pluralty i.pr b3.cl mdmh b1.system demsys polity gdppc gini ethfrac
+global controls1 pluralty i.pr b3.cl mdmh
+global controls2 b1.system demsys polity 
+global controls3 gdppc gini ethfrac
+
+```
+
+### `Figure1.R`
+```r
+#Name: Figure1.R
+#Author: James Hollyer, Marko Klasnja, and Rocio Titiunik
+##Purpose: To generate a graph of the comparative statics on p(.,\bar{nu})
+## for all values of psi
+#Date: 4/7/2021
+#install.packages('foreign')
+library(foreign)
+
+#Set parameter values
+
+NL <- 150
+NH <- 50
+N <- NL+NH
+w <- .3
+v <- 5
+L <- 12
+deltaI <- 0.5
+b <- 1.5
+B <- 10
+
+psi <- c(1:1000)
+psi <- psi/2000
+
+# Calculate the relevant incentive compatibilty constraints and thresholds in delta_p
+
+
+punderbar <- (N - L*psi)/(b*deltaI*(N*((2*L)/2) + NL*L*psi))
+
+deltahatp1 <- (B*v)/((NL+B*NH)*((L*NL)/N) - NL + B*v)
+deltahatp2 <- B*v*(NL*(w+punderbar-w*punderbar)-NH)/((NL+B*NH)*((L*psi*NL)/N)-NL)
+
+deltahatp <- matrix(,ncol=1,nrow=1000)
+
+##For lambda*psi<1, the relevant delta is always 1.  Otherwise we
+##have the deltas as usual
+
+Nthresh <- NL*(w+punderbar-w*punderbar)-NH
+
+for (i in 1:NROW(psi)){
+    if (L*psi[i]>=1){
+        if (Nthresh[i] >= 1){
+            deltahatp[i] <- deltahatp2[i]
+        }
+        else {
+            deltahatp[i] <- deltahatp1
+        }
+    }
+    else{
+        deltahatp[i] <- 1
+    }
+}
+##Set an acutal value of delta, something intermediate
+
+delta <- .2
+
+## Now define the probability high types are promoted
+
+pofnu <- matrix(,ncol=1,nrow=1000)
+
+for (i in 1:NROW(pofnu)){
+    if (delta>=deltahatp[i]){
+        pofnu[i] <- min((NH-punderbar[i]*NL)/(w*NL),1)
+    }
+    else{
+        pofnu[i] <- 1
+    }
+}
+
+##Obs. 462 denotes division between equilibria
+    
+
+pdf("PsiCompStat.pdf")
+plot(x=c(),y=c(), xlim=c(0,0.5), ylim=c(0,1), axes=F, xlab=expression(psi), ylab=expression(p(.,bar(nu))), main=expression(paste("Comparative Statics in ", psi)))
+axis(side=1, lwd=2, pos=0)
+axis(side=2, lwd=2, pos=0)
+lines(y=pofnu, x=psi)
+abline(v=psi[462], ylim=c(0,1), lty=2)
+text(x=.1, y=.6, "Uncommitted", pos=4)
+text(x=.35, y=.6, "Committed", pos=4)
+dev.off()
+
+
+
+```
+
+### `Figure2.R`
+```r
+#Name: Figure2.R
+#Author: James Hollyer, Marko Klasnja and Rocio Titiunik
+#Purpose: To generate a graph of the regions where various equilibria (ideologial, committed, uncommitted) exist #in alpha-delta space, for different realization of volatility.
+#Date: 4/7/2021
+#install.packages('foreign')
+library(foreign)
+
+# Set parameter values
+
+NL <- 150
+NH <- 50
+N <- NL+NH
+w <- .3
+v <- 5
+L <- 12
+deltaI <- 0.5
+b <- 1.5
+B <- 10
+psi <- 0.12
+
+baralpha <- (N-L*psi)/(L*psi*(N-1))
+
+alpha <- c(1:1000)
+alpha <- alpha/1000
+
+for (i in 1:1000){
+  if (alpha[i]>baralpha){
+    alpha[i] <- NA
+  }
+}
+
+punderbar <- (N - L*psi - alpha*(N-1)*L*psi)/(b*deltaI*((N*(2+L)/2) + NL*L*psi))
+
+deltahatp1 <- (B*v)/((NL+B*NH)*((L*NL)/N) - NL + B*v)
+deltahatp2 <- B*v*(NL*(w+punderbar-w*punderbar)-NH)/((NL+B*NH)*((L*psi*NL)/N)-NL)
+
+deltahatp <- matrix(,ncol=1,nrow=1000)
+
+##Compute relevant thresholds in delta
+
+Nthresh <- NL*(w+punderbar-w*punderbar)-NH
+
+for (i in 1:NROW(alpha)){
+    if (is.na(alpha[i])==F){
+        if (Nthresh[i] >= 1){
+            deltahatp[i] <- deltahatp2[i]
+        }
+        else {
+            deltahatp[i] <- deltahatp1
+        }
+    }
+}
+
+for (i in 1:NROW(deltahatp)){
+    if (is.na(deltahatp[i])==F){
+        if (deltahatp[i]>1){
+            deltahatp[i] <- 1
+        }
+    }
+}
+        
+
+## Plot leftmost (low psi) graph
+
+pdf("AlphaDeltaSpacePlotLowPsi.pdf")
+plot(x=c(),y=c(), xlim=c(0,1), ylim=c(0,1), axes=F, xlab=expression(alpha), ylab=expression(delta[p]), main=expression(paste("Low ", psi)))
+axis(side=1, lwd=2, pos=0)
+axis(side=2, lwd=2, pos=0)
+lines(y=deltahatp, x=alpha)
+abline(v=baralpha, ylim=c(0,1))
+text(x=.4, y=.8, "Committed", pos=4)
+text(x=.05, y=.2, "Uncommitted", pos=4)
+text(x=.82, y=.5, "Loyal", pos=4)
+text(x=0.05, y=deltahatp[200], expression(bar(delta[P])), pos=4)
+text(x=baralpha+.025, y=0, expression(bar(alpha)), pos=3)
+dev.off()
+
+## Now, repeat for higher values of psi, for rightmost graph
+
+psi <- .2
+
+baralpha <- (N-L*psi)/(L*psi*(N-1))
+
+alpha <- c(1:1000)
+alpha <- alpha/1000
+
+for (i in 1:1000){
+  if (alpha[i]>baralpha){
+    alpha[i] <- NA
+  }
+}
+
+punderbar <- (N - L*psi - alpha*(N-1)*L*psi)/(b*deltaI*((N*(2+L)/2) + NL*L*psi))
+
+deltahatp1 <- (B*v)/((NL+B*NH)*((L*NL)/N) - NL + B*v)
+deltahatp2 <- B*v*(NL*(w+punderbar-w*punderbar)-NH)/((NL+B*NH)*((L*psi*NL)/N)-NL)
+
+deltahatp <- matrix(,ncol=1,nrow=1000)
+
+
+Nthresh <- NL*(w+punderbar-w*punderbar)-NH
+
+for (i in 1:NROW(alpha)){
+    if (is.na(alpha[i])==F){
+        if (Nthresh[i] >= 1){
+            deltahatp[i] <- deltahatp2[i]
+        }
+        else {
+            deltahatp[i] <- deltahatp1
+        }
+    }
+}
+
+for (i in 1:NROW(deltahatp)){
+    if (is.na(deltahatp[i])==F){
+        if (deltahatp[i]>1){
+            deltahatp[i] <- 1
+        }
+    }
+}
+        
+
+
+pdf("AlphaDeltaSpacePlotHighPsi.pdf")
+plot(x=c(),y=c(), xlim=c(0,1), ylim=c(0,1), axes=F, xlab=expression(alpha), ylab=expression(delta[p]), main=expression(paste("High ", psi)))
+axis(side=1, lwd=2, pos=0)
+axis(side=2, lwd=2, pos=0)
+lines(y=deltahatp, x=alpha)
+abline(v=baralpha, ylim=c(0,1))
+text(x=.15, y=.8, "Committed", pos=4)
+text(x=.01, y=.1, "Uncommitted", pos=4)
+text(x=.6, y=.5, "Loyal", pos=4)
+text(x=0.05, y=deltahatp[100], expression(bar(delta[P])), pos=4)
+text(x=baralpha+.025, y=0, expression(bar(alpha)), pos=3)
+dev.off()
+
+```
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

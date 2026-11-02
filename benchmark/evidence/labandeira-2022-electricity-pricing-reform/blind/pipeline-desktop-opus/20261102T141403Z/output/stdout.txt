@@ -1,0 +1,79 @@
+Number of columns: 403 
+Income variable: IMPEXAC  (log already: FALSE )
+             id            year           month             bis           c_ele 
+           "id"          "year"         "month"      "BISEMANA"         "c_ele" 
+          g_ele          c_ele2          g_ele2           c_pap           g_pap 
+        "g_ele"        "c_ele2"        "g_ele2"       "c_papas"       "g_papas" 
+          c_agu           g_agu           c_car           g_car             inc 
+      "c_aguav"       "g_aguav"         "c_car"         "g_car"       "IMPEXAC" 
+         hhsize           rooms            surf             eld            educ 
+       "NMIEMB"        "NHABIT"        "SUPERF" "mayores_count"    "ESTUDREDSP" 
+           nact          tenure            bage          tamamu           urban 
+      "NUMACTI"        "REGTEN"       "ANNOCON"        "TAMAMU"         "urban" 
+         caprov            ccaa              T2            time             dup 
+       "CAPROV"          "CCAA"            "T2"          "time"           "dup" 
+Rows read: 203416 
+Year table:
+
+ 2006  2007  2008  2009  2010  2011  2012  2013  2014  2015 
+17977 20458 20967 20819 20701 20223 20411 20757 20647 20456 
+Month range: 1 12 
+Pair c_ele g_ele median price: 0.2262504  n: 54513 
+Pair c_ele2 g_ele2 median price: 0.2688172  n: 8633 
+Pair c_ele g_ele2 median price: 0.01979751  n: 16913 
+Pair c_ele2 g_ele median price: 0.7948992  n: 8633 
+Chosen electricity vars: c_ele g_ele 
+Obs in window: 54513 
+Interviews per id in window:
+
+    1     2 
+27737 26776 
+Full panel obs: 26776  households: 13388 
+T vs T2:
+   
+        0     1  <NA>
+  0 20358     0  1002
+  1   500  4916     0
+Price summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+0.09934 0.20823 0.22879 0.22838 0.25014 0.40023 
+Core complete: 12545 
+Control hhsize   NA share 0.000, unique 13
+Control rooms    NA share 0.000, unique 8
+Control surf     NA share 0.015, unique 196
+Control elderly  NA share 0.000, unique 2
+Control rent     NA share 0.000, unique 2
+Control urban    NA share 0.000, unique 2
+Control educ     NA share 0.000, unique 4
+Control nact     NA share 0.000, unique 8
+Control bage     NA share 0.000, unique 2
+Control tamamu   NA share 0.000, unique 5
+Control caprov   NA share 0.000, unique 2
+Control ccaa     NA share 0.000, unique 19
+Estimation sample: 12349  households: 8404 
+LIML lq fe=FALSE: kappa=1.0001, b_lp=-0.3145, first-stage F=7.84
+LIML lq fe=TRUE: kappa=1.0003, b_lp=-1.3763, first-stage F=9.63
+LIML lg fe=FALSE: kappa=1.0001, b_lp=0.6855, first-stage F=7.84
+LIML lg fe=TRUE: kappa=1.0003, b_lp=-0.3763, first-stage F=9.63
+OLS col1:
+     Estimate Std. Error    t value      Pr(>|t|)
+T  -0.1045291 0.02244885  -4.656321  3.268488e-06
+lp -1.0626210 0.03137661 -33.866662 8.625219e-236
+ly  0.3629045 0.14111402   2.571711  1.013676e-02
+FE col3:
+     Estimate Std. Error    t value      Pr(>|t|)
+T  -0.1247523 0.02755718  -4.527033  6.064102e-06
+lp -1.0027971 0.04250896 -23.590255 3.412064e-119
+ly  0.4148110 0.31752913   1.306371  1.914620e-01
+RESULT:reform_consumption_ols_col1=-0.104529
+RESULT:reform_consumption_iv_col2=-0.053251
+RESULT:reform_consumption_fe_col3=-0.124752
+RESULT:reform_consumption_fe_iv_col4=-0.144614
+RESULT:reform_expenditure_ols_col5=-0.104529
+RESULT:reform_expenditure_iv_col6=-0.053251
+RESULT:reform_expenditure_fe_col7=-0.124752
+RESULT:reform_expenditure_fe_iv_col8=-0.144614
+RESULT:price_elasticity_consumption_ols_col1=-1.062621
+RESULT:price_elasticity_consumption_fe_col3=-1.002797
+RESULT:n_obs_table2=12349
+RESULT:n_households_table2=8404

@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "brouwer-2022-teaching-norms",
+  "mode": "independent",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was exploratory: it tabulated scene/condition coding and missingness in master.csv and printed no RESULT lines. The final run estimates Table 2 as pooled OLS linear probability models (fixest::feols) of Punishment (Violation and Violation+Help scenes) and Helping (Help and Violation+Help scenes) on Child, VH (ViolationHelp), and Child x VH, with School-clustered SEs (30 clusters). Columns 2 and 4 add the controls male (Male Target), hugo (Male Actor, inferred from coding; its coefficients match the paper), Morning, witness, rich, Rain and Hot. Listwise deletion drops the one observation with missing male in each sample, giving N = 400/399/401/400. Every coefficient, constant and R2 matches Table 2 at the reported precision. The first scored run is the final one, and the script was not changed after the comparison.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T07:01:22Z",
+  "finished_at": "2026-11-02T07:03:00Z"
+}

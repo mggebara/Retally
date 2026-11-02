@@ -1,0 +1,1220 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: General Rights
+Abstract (first 500 chars): and it is a condition of accessing publications that users recognize and abide by the legal requirements associated with these rights. • Users may download and print one copy of any publication from the public portal for the purpose of private study or research. • You may not further distribute the material or use it for any profit-making activity or commercial gain. • You may freely distribute the URL identifying the publication in the public portal. If you believe that this document breaches c
+Methodology Summary: - **Data and sample restrictions:** The panel combines the WhoGov cabinet dataset (Nyrup and Bramwell 2020; CIA "Chiefs of State and Cabinet Members" directory, coded each July, 177 countries, 1966–2016) with failed-coup data from Powell and Thyne (2011). The sample is limited to autocratic country-years, defined as a **lagged (t−1) Boix–Miller–Rosato democracy score = 0**. This gives 115 autocracies, 1967–2016, with up to **3,715 country-years** and 95 failed coup attempts in the country-level models. The individual-level models use **23,655 ministers / 95,751 minister-years**, and Figure 3 reports up to 90,020. Some models lose observations because control variables have missing coverage. Ministers moved to another post within the cabinet are not counted as purged. In the experience and H4 analyses, "junior ministers or other low-ranking post" are excluded.
+- **Coup timing preprocessing:** The cabinet data are July snapshots, so a failed coup counts as 1 in year t only if it happened **before 1 July**. A failed coup on or after 1 July is assigned to year t+1. The paper says the results also hold with a conventional lagged independent variable.
+- **Country-level specification (H1):** The model is two-way fixed-effects TSCS OLS: P_it = φ·C_it + β·X_it + α_i + λ_t + ε_it. The dependent variable P_it is the **cabinet replacement rate**, the year-to-year share of ministers purged (0–1), computed as 1 − retention_rate_adj_minister, which adjusts for cabinet size. The key regressor C_it is a failed-coup-attempt dummy. The model is linear-linear and the coefficient is in raw units: the change in the replacement rate in percentage points, not standardised. The headline estimate in the Base model with country FE is about +0.10, and the range across specifications is 0.08–0.11.
+- **Fixed effects and controls:** All models include **country fixed effects plus a full set of year dummies**. Each model is also re-estimated with **leader fixed effects in place of country FE**. All controls are lagged one year:
+  - **Base:** log GDP per capita and log population (PWT 9.0).
+  - **Main (preferred):** Base plus military, party and monarchy dictatorship dummies (Anckar and Fredriksson 2019).
+  - **Electoral controls:** Main plus NELDA national elections and years since the last election.
+  - **Economic controls:** Main plus GDP per capita growth and Ross oil income.
+  - **Instability controls:** Main plus UCDP/PRIO civil war onset, NAVCO nonviolent campaigns, COW military dispute and interstate war onsets, and CNTS strikes.
+  - **Purges MAs:** Main plus 1-, 2- and 3-year moving averages of past replacement rates.
+  - **All controls:** every control above.
+- **Standard errors and inference:** Standard errors are **clustered by country**. Significance is judged with 95% confidence intervals (Figure 2; full tables in Appendix A).
+- **Placebo tests:** The failed-coup dummy is replaced, one at a time, with civil war onset, nonviolent campaign, military dispute onset, interstate war onset and strikes. Each is estimated with both country FE and leader FE.
+- **Individual-level specification (H2–H4):** These are linear probability models: F_ijt = φC + ζM + γ(C×M) + βX + α_i + λ_t + ε. F is 1 if the minister is purged, meaning absent from the cabinet the next year, and 0 if retained.
+  - **Controls:** the Base controls, country and year FE, and a **cubic polynomial in the minister's years in office (t, t², t³)** (Carter and Signorino). The polynomial is dropped when experience is the moderator.
+  - **Moderators M (one interaction at a time):**
+    - experience: years in cabinet at the time of the coup;
+    - party alignment: leader's party, other party, or unaffiliated;
+    - strategic portfolio type, e.g. defence, security, foreign affairs;
+    - a 5-tier importance ranking (Appendix Q).
+  - **H4:** ministers are split into four loyalty × responsibility groups:
+    - strong loyalty means same party as the leader and experience at or above the median for that leader-year;
+    - high responsibility means top minister, deputy PM, VP, PM, or a President who is not the leader.
+  - **Reporting:** the paper reports marginal effects of a failed coup for each minister type (Figures 3–4; Appendix K).
+- **Robustness:**
+  - Bjørnskov–Rode coup data and coup types (military, civilian, royal).
+  - Alternative autocracy measures: DD/Cheibub et al. and Polity IV < 6.
+  - Effects by month of the coup.
+  - Regime-type interactions.
+  - A personalism control.
+  - Dropping full cabinet turnovers (replacement rate = 1).
+  - Dropping a leader's first year.
+  - Core-member and unadjusted replacement-rate variants.
+  - Restricting to regimes with parties in government.
+- **Not applicable:** The paper uses no ML train/test split, cross-validation or hyperparameters.
+
+
+## Claims to Reproduce
+1. failed_coup_base_country_fe: 0.1 (change in the cabinet replacement rate (share of ministers, 0-1)) [type: coefficient]
+   Location: Table A1 (Tables for Figure 2), column Base Model, Failed coup attempt
+   Context: Table A1 ("Failed coup attempts. Country fixed effects: Country-level results"), Base Model column; plotted in the left panel of Figure 2. Time-series cross-sectional OLS of the year-to-year cabinet replacement rate (one minus the cabinet-size-adjusted retention rate of ministers, from WhoGov, July to July) on a failed coup attempt indicator (Powell and Thyne data; a failed coup before 1 July counts in that year, one after 1 July in the following year), with logged GDP per capita and logged population (Penn World Table 9.0) lagged one year, country fixed effects and year fixed effects. Sample:…
+2. failed_coup_main_country_fe: 0.11 (change in the cabinet replacement rate (share of ministers, 0-1)) [type: coefficient]
+   Location: Table A1, column Main Model, Failed coup attempt
+   Context: Table A1, Main Model column (Figure 2, left panel). Same specification as failed_coup_base_country_fe plus lagged dummies for monarchy, military regime and party regime (Anckar and Fredriksson 2019); country and year fixed effects, country-clustered standard errors.
+3. failed_coup_base_leader_fe: 0.08 (change in the cabinet replacement rate (share of ministers, 0-1)) [type: coefficient]
+   Location: Table A2 (Tables for Figure 2), column Base Model, Failed coup attempt
+   Context: Table A2 ("Failed coup attempts. Leader fixed effects: Country-level results"), Base Model column (Figure 2, left panel, leader fixed effects). Same regressors as failed_coup_base_country_fe (failed coup attempt, lagged logged GDP per capita and population, year fixed effects) with leader fixed effects instead of country fixed effects, so identification is within each autocrat's tenure. Standard errors clustered by country.
+4. failed_coup_main_leader_fe: 0.09 (change in the cabinet replacement rate (share of ministers, 0-1)) [type: coefficient]
+   Location: Table A2, column Main Model, Failed coup attempt
+   Context: Table A2, Main Model column: the Main Model controls (lagged GDP per capita, population, monarchy, military and party regime dummies) with leader and year fixed effects; the monarchy dummy drops out as collinear with the leader fixed effects. Country-clustered standard errors.
+5. failed_coup_experience_model: 0.14 (change in the probability of being purged next year) [type: coefficient]
+   Location: Table K1 (Table for Figure 3), column H2a: Experience, Failed coup attempt
+   Context: Table K1, column H2a: Experience; Figure 3 left panel. Linear probability model of whether a cabinet member is purged (absent from the cabinet the following year; reshuffles within the cabinet are not purges) on a failed coup attempt indicator, experience-group dummies (2-3, 4-6, over 6 years in cabinet; reference under 2 years), their interactions with the failed coup indicator, lagged logged GDP per capita and population, country and year fixed effects. Minister-years in autocracies 1967-2016, excluding the leader and junior ministers or other low-ranking posts; standard errors clustered by …
+6. failed_coup_x_over_6_years_experience: -0.1 (difference in the change in purge probability) [type: coefficient]
+   Location: Table K1, column H2a: Experience, FCA*Over 6 years of experience (Ref: <2 y)
+   Context: Table K1, column H2a: Experience: the interaction of the failed coup attempt indicator with having over six years of cabinet experience (reference: under two years), in the same linear probability model as failed_coup_experience_model.
+7. failed_coup_affiliation_model: 0.17 (change in the probability of being purged next year) [type: coefficient]
+   Location: Table K1, column H2b: Affiliation, Failed coup attempt
+   Context: Table K1, column H2b: Affiliation; Figure 3 right panel. Linear probability model of being purged next year on the failed coup attempt indicator, party affiliation dummies (no party affiliation; from the leader's party; reference: from another party than the leader's), their interactions with the failed coup indicator, cubic polynomials in the minister's years in office, lagged logged GDP per capita and population, country and year fixed effects, country-clustered standard errors. The failed coup coefficient is the effect for ministers from another party than the leader's.
+8. failed_coup_x_leaders_party: -0.13 (difference in the change in purge probability) [type: coefficient]
+   Location: Table K1, column H2b: Affiliation, FCA*From the leader's party (Ref: Other party)
+   Context: Table K1, column H2b: the interaction of the failed coup attempt indicator with being from the leader's party (reference: another party), in the same model as failed_coup_affiliation_model.
+9. failed_coup_responsibility_model: 0.2 (change in the probability of being purged next year) [type: coefficient]
+   Location: Table K2 (Table for Figure 4), column H3a: Responsibility, Failed coup attempt
+   Context: Table K2, column H3a: Responsibility; Figure 4 left panel. Linear probability model of being purged next year on the failed coup attempt indicator, portfolio dummies (Minister of Foreign Affairs, of Finance, of Natural Resources, other type of minister; reference: Minister of Defense), their interactions with the failed coup indicator, cubic polynomials in years in office, lagged logged GDP per capita and population, country and year fixed effects, country-clustered standard errors. The failed coup coefficient is the effect for ministers of defense.
+10. failed_coup_x_natural_resources: -0.18 (difference in the change in purge probability) [type: coefficient]
+   Location: Table K2, column H3a: Responsibility, FCA*Minister of Natural Resources (Ref: D)
+   Context: Table K2, column H3a: the interaction of the failed coup attempt indicator with being minister of natural resources (reference: minister of defense), in the same model as failed_coup_responsibility_model.
+11. failed_coup_importance_model: 0.37 (change in the probability of being purged next year) [type: coefficient]
+   Location: Table K2, column H3b: Importance, Failed coup attempt
+   Context: Table K2, column H3b: Importance; Figure 4 right panel. Linear probability model of being purged next year on the failed coup attempt indicator, rank-tier dummies (vice-president / deputy prime minister / top minister; medium-ranking; low-ranking; junior minister; reference: prime minister or president who is not the leader), their interactions with the failed coup indicator, cubic polynomials in years in office, lagged logged GDP per capita and population, country and year fixed effects, country-clustered standard errors. The failed coup coefficient is the effect for a prime minister or presi…
+
+## Dataset Information
+Name: bokobza-2022-morning-after-coup-purges
+Local path: <repo>/.cache/datasets/bokobza_2022_morning_after_coup_purges
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- morning_after_dataset_countrylevel.dta (1.7 MB) — 7878 rows, 37 columns: independent, growth_pwt, democracy1, military_c, monarchy_c, party_c, democracy_br, system_category, onset1, YEAR_DATA, elec_all, oil_valuepop_2014_ln, nonvio_camp_2, leader_cab_id, leaderexperience_continuous, coupattempt_month_whogov, ldemocracy_br, latent_personalism, COUNTRY_DATA, COUNTRY_ID, mid_onset, war_onset, polity2, lpolity2, replacement_rateadj_minister, replacement_rateadj_minister_300, replacement_rateadj_minister_200, replacement_rateadj_minister_100, coupattem…
+- morning_after_dataset_individuallevel.rds (91.8 MB) — data.frame, 205524 rows, 45 columns: year, party, leader, leader_party, party_group, experience, Group, experience_group, country_isocode, country_name, position, name, title, gender, birthyear, party_english, classification, portfolio_1, prestige_1, prestige_numeric, importance_numeric, purged_y1, purged_y2, coupattempt_presentyear, coup_presentyear, coup_lastyear, coupattempt_presentyear_br, coup_presentyear_br, coup_lastyear_br, coupattempt_whogov_type_br, leaderexperience_continuous, democracy_lag_br, n_part…
+- appendix_k1.tex (2.5 KB)
+- appendix_k2.tex (3.1 KB)
+- appendix_k3.tex (1.8 KB)
+- appendix_l1.jpg (101.1 KB)
+- appendix_l2.jpg (48.8 KB)
+- appendix_m1.jpg (121.1 KB)
+- appendix_m2.jpg (63.2 KB)
+- appendix_n1.jpg (101.9 KB)
+- appendix_n2.jpg (53.8 KB)
+- appendix_o1.jpg (60.6 KB)
+- appendix_p1.jpg (114.9 KB)
+- appendix_p2.jpg (52.4 KB)
+- appendix_r1.jpg (99.1 KB)
+- figure1.jpg (1.4 MB)
+- figure3.jpg (50.9 KB)
+- figure4.jpg (73.9 KB)
+- figure5.jpg (44.6 KB)
+- metadata.json (966 B)
+- morning_after_dofile_countrylevel.txt (48.7 KB)
+- morning_after_logfile_countrylevel.smcl (1.3 MB)
+- morning_after_logfile_individuallevel.html (858.7 KB)
+- morning_after_script_individuallevel.R (95.4 KB)
+- readme.txt (2.1 KB)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/bokobza_2022_morning_after_coup_purges' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Original Replication Scripts
+The replication package (the dataset directory) ships the authors' own analysis scripts, reproduced below.  These are the GROUND TRUTH for the exact estimating equation, variable names, sample restrictions, fixed effects, and standard-error clustering — follow them over anything reconstructed from the methodology summary, and prefer them over the paper's text where the two disagree.  Your job is to write R code that implements the SAME SPECIFICATION: translate what the scripts estimate, do not transliterate their syntax line by line (a Stata .do file's regression, e.g. `reghdfe y x controls, absorb(fe) cluster(cl)`, becomes the equivalent fixest::feols() call in R).  Keep only the parts that produce the specific claims being reproduced; skip figure construction and unrelated robustness checks.  The scripts' data-file paths refer to the package's internal layout — resolve them against the dataset directory listed under Dataset Information.
+
+### `morning_after_script_individuallevel.R`
+```r
+##############################
+#
+# Replication file for the individual analysis in:
+#
+# The Morning After:
+# Cabinet Instability and the Purging of Ministers after Failed Coup Attempts in Autocracies
+#
+# Published in the Journal of Politics
+#
+##################
+
+# Set-up
+
+windowsFonts(Times=windowsFont("Times New Roman"))
+
+pacman::p_load(tidyverse,texreg,haven,lfe)
+
+############
+# Figure 1 #
+############
+
+df_figure1 <- read_dta("morning_after_dataset_countrylevel.dta") %>% 
+              filter(democracy1==0 & independent==1 & !is.na(coupattempt_whogov) & !is.na(replacement_rateadj_minister)) %>%
+              mutate(coupattempt_whogov = as.factor(coupattempt_whogov),
+                     coupattempt_whogov = recode(coupattempt_whogov,"1" = "Failed coup attempt","0" = "No failed coup attempt")) %>% 
+              dplyr::select(coupattempt_whogov,replacement_rateadj_minister)
+# Plot
+
+figure_1 <- ggplot(df_figure1, aes(x=coupattempt_whogov, y=replacement_rateadj_minister)) + 
+  geom_violin(fill='#cccccc',alpha=0.8) + 
+  theme_bw() +
+  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),axis.title.y=element_text(size=16,angle=0,vjust=1),
+        axis.text=element_text(size=16),
+        text=element_text(family="Times")) +
+        ylab("Replacement\nrates") +
+        xlab("") +
+  geom_boxplot(width=0.1)
+
+# Data points
+
+mean_violin <- df_figure1 %>% group_by(coupattempt_whogov) %>% summarize(median = median(replacement_rateadj_minister,na.rm=TRUE),n = n())
+
+###
+# Print ---
+###
+
+ggsave(
+  'output/figure1.jpg',
+  figure_1,
+  width = 8,
+  height = 6,
+  dpi = 1200
+)
+
+#############################
+# Individual level analysis #
+#############################
+
+###
+## Load data ---
+###
+
+df_aut <- read_rds("morning_after_dataset_individuallevel.rds") %>% filter(democracy_lag == 0 & leader == 0 & !is.na(purged_y1) & !is.na(gdp_cap_pwt_ln) & !is.na(pop_pwt_ln))
+  
+##
+# Get Number of coup attempts ---
+##
+
+df_aut_n <- df_aut %>% filter(!is.na(coupattempt_presentyear))
+
+df_aut_names <- length(unique(df_aut_n$name))
+
+n_countries <-  length(unique(df_aut_n$country_isocode))
+
+table(df_aut_n$coupattempt_presentyear)
+
+####
+## Set up template for graphs ---
+####
+
+pd <- position_dodge(0.75)
+
+plot_canvas <- function(df=df,x=name,y=estimate,se=se){
+  ggplot(data = df, aes(y = estimate, x = name)) + 
+  geom_point(position = pd) + 
+  geom_errorbar(aes(ymin = estimate-1.96*se, ymax = estimate+1.96*se),
+                width = 0,
+                position = pd,
+                size = 1) +
+  coord_flip() +
+  ylim(-0.1,0.5) +
+  labs(x = "", 
+       y = "Marginal Effects",
+       color = "black") +
+  geom_hline(yintercept = 0,
+             linetype = "dashed") +
+  theme_bw() +
+  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+        legend.position = "",plot.title = element_text(size=14),
+        axis.text.y = element_text(colour = "black",size=14),
+        axis.text.x = element_text(colour = "black",size=14),
+        text=element_text(family="Times",size=14,color="black"))
+}
+
+###
+# Figure 3, 4, and 5 ---
+###
+
+# Responsibility ---
+
+responsibility_felm <- felm(purged_y1 ~ minister_type/coupattempt_presentyear +
+                              gdp_cap_pwt_ln + pop_pwt_ln + experience + I(experience^2) +
+                              I(experience^3) | country_isocode+year | 0 | country_isocode , data=df_aut) %>% summary()
+
+coef_responsibility <- tibble(name = c("Minister of Defense","Minister of Finance","Minister of Foreign Affairs",
+                                       "Minister of Natural Resources","Other type of minister"),
+                              estimate = c(responsibility_felm$coefficients[10],
+                                           responsibility_felm$coefficients[11],
+                                           responsibility_felm$coefficients[12],
+                                           responsibility_felm$coefficients[13],
+                                           responsibility_felm$coefficients[14]),
+                              se = c(responsibility_felm$coefficients[10,2],
+                                     responsibility_felm$coefficients[11,2],
+                                     responsibility_felm$coefficients[12,2],
+                                     responsibility_felm$coefficients[13,2],
+                                     responsibility_felm$coefficients[14,2]
+                              )) %>% mutate(name = fct_relevel(name,
+                                                               "Minister of Natural Resources",
+                                                               "Other type of minister",
+                                                               "Minister of Finance",
+                                                               "Minister of Foreign Affairs",
+                                                               "Minister of Defense"
+                              ))
+
+
+plot_resp <- plot_canvas(coef_responsibility) + ggtitle("H3a: Ministerial responsibility")
+
+# Affiliation ---
+
+df_party <- df_aut %>% filter(party_group != "unknown") %>% mutate(party_group = as.factor(recode(party_group,"independent"="No party affiliation","leader_party"="From the leader's party","other_party"="From another party")))
+
+affiliation_felm <- felm(purged_y1 ~ party_group/coupattempt_presentyear +
+                                 gdp_cap_pwt_ln + pop_pwt_ln + experience + I(experience^2) +
+                                 I(experience^3) | country_isocode+year | 0 | country_isocode , data=df_party) %>% summary()
+
+coef_affiliation <- tibble(name = c("From another party","From the leader's party","No party affiliation"),
+                              estimate = c(affiliation_felm$coefficients[8],
+                                           affiliation_felm$coefficients[9],
+                                           affiliation_felm$coefficients[10]),
+                              se = c(affiliation_felm$coefficients[8,2],
+                                     affiliation_felm$coefficients[9,2],
+                                     affiliation_felm$coefficients[10,2]
+                              )
+                              ) %>% mutate(name = fct_relevel(name,
+                                "From the leader's party",
+                                "No party affiliation",
+                                "From another party"))
+
+plot_affiliation <- plot_canvas(coef_affiliation) + ggtitle("H2b: Affiliation")
+
+# Importance ---
+
+df_importance <- df_aut %>% filter(importance_factor != "0" & !is.na(importance_factor))
+
+importance_felm <- felm(purged_y1 ~ importance_factor/coupattempt_presentyear +
+                           gdp_cap_pwt_ln + pop_pwt_ln + experience + I(experience^2) +
+                           I(experience^3) | country_isocode+year | 0 | country_isocode , data=df_importance) %>% summary()
+
+coef_importance <- tibble(name = c("Junior minister\nor other low-\nranking post","Low-ranking\nminister","Medium-ranking\nminister",
+                                    "Vice president,\ndeputy prime minister,\ntop minister","Prime minister/President\n(not leader)"),
+                           estimate = c(importance_felm$coefficients[10],
+                                        importance_felm$coefficients[11],
+                                        importance_felm$coefficients[12],
+                                        importance_felm$coefficients[13],
+                                        importance_felm$coefficients[14]),
+                           se = c(importance_felm$coefficients[10,2],
+                                  importance_felm$coefficients[11,2],
+                                  importance_felm$coefficients[12,2],
+                                  importance_felm$coefficients[13,2],
+                                  importance_felm$coefficients[14,2]
+                           )
+                           ) %>% mutate(name = fct_relevel(name,
+                                                           "Junior minister\nor other low-\nranking post","Low-ranking\nminister","Medium-ranking\nminister",
+                                                           "Vice president,\ndeputy prime minister,\ntop minister","Prime minister/President\n(not leader)"))
+
+
+plot_importance <- plot_canvas(coef_importance) + ggtitle("H3b: Importance in cabinet") + ylim(-0.1,0.6)
+
+# Experience ---
+
+df_experience <- df_aut %>% filter(importance_factor != "0.5")
+
+quantiles_experience <- df_aut %>% summarise(x = quantile(experience, c(0.25, 0.5, 0.75)), experience = c(0.25, 0.5, 0.75))
+
+experience_group <- felm(purged_y1 ~ as.factor(experience_group)/coupattempt_presentyear +
+                        gdp_cap_pwt_ln + pop_pwt_ln | country_isocode+year | 0 | country_isocode, data=df_experience) %>% summary()
+
+coef_experience_group <- tibble(name = c("Less than 2 years","2-3 years",
+                                    "4-6 years","Over 6 years"),
+                           estimate = c(experience_group$coefficients[6],
+                                        experience_group$coefficients[7],
+                                        experience_group$coefficients[8],
+                                        experience_group$coefficients[9]),
+                           se = c(experience_group$coefficients[6,2],
+                                  experience_group$coefficients[7,2],
+                                  experience_group$coefficients[8,2],
+                                  experience_group$coefficients[9,2]
+                           )) %>% mutate(name = fct_relevel(name,
+                                                            "Over 6 years","4-6 years",
+                                                            "2-3 years",
+                                                            "Less than 2 years"
+                                                            
+                           ))
+
+
+plot_expgroup <- plot_canvas(coef_experience_group) + ggtitle("H2a: Experience")
+
+# Combination (typology) ---
+
+medianbyyear <- df_experience %>% group_by(country_isocode,year) %>% summarize(experience_median = median(experience,na.rm=TRUE))
+
+df_combination <- df_experience %>% left_join(.,medianbyyear,by=c("country_isocode","year")) %>% filter(party_group != "unknown") %>%
+                                                                                                 mutate(experience_bin = ifelse(experience >= experience_median, 1,0),
+                                                                                                 important_bin = if_else(importance_numeric %in% c(3,4),1,0),
+                                                                                                 loyal_bin = if_else(experience_bin == 1 & party_group == "leader_party",1,0),
+                                                                                                 typology = case_when(important_bin == 0 & loyal_bin == 0 ~ 1,
+                                                                                                                      important_bin == 1 & loyal_bin == 0 ~ 2,
+                                                                                                                      important_bin == 0 & loyal_bin == 1 ~ 3,
+                                                                                                                      important_bin == 1 & loyal_bin == 1 ~ 4
+                                                                                                 )
+)
+
+combination_felm <- felm(purged_y1 ~ as.factor(typology)/coupattempt_presentyear +
+                              gdp_cap_pwt_ln + pop_pwt_ln | country_isocode+year | 0 | country_isocode , data=df_combination) %>% summary()
+
+coef_combination <- tibble(name = c("Low responsibility and weak signs of loyalty","High responsibility and weak signs of loyalty",
+                                    "Low responsibility and strong signs of loyalty","High responsibility and strong signs of loyalty"),
+                              estimate = c(combination_felm$coefficients[6],
+                                           combination_felm$coefficients[7],
+                                           combination_felm$coefficients[8],
+                                           combination_felm$coefficients[9]),
+                              se = c(combination_felm$coefficients[6,2],
+                                     combination_felm$coefficients[7,2],
+                                     combination_felm$coefficients[8,2],
+                                     combination_felm$coefficients[9,2]
+                              )) %>% mutate(name = fct_relevel(name,
+                                                               "High responsibility and strong signs of loyalty","Low responsibility and strong signs of loyalty",
+                                                               "High responsibility and weak signs of loyalty","Low responsibility and weak signs of loyalty"
+                                                               
+                              ))
+
+
+plot_combination <- plot_canvas(coef_combination) + ggtitle("H4: Combinations of traits")
+
+# Get N's
+
+n_exp <-  df_experience %>% filter(!is.na(coupattempt_presentyear)) %>% group_by(coupattempt_presentyear) %>% summarize(n = as.numeric(n())) %>% ungroup() %>%
+                             mutate(sum = sum(n))
+
+n_affliation <-  df_party %>% filter(!is.na(coupattempt_presentyear)) %>% group_by(coupattempt_presentyear) %>% summarize(n = as.numeric(n())) %>% ungroup() %>%
+  mutate(sum = sum(n))
+
+n_resp <-  df_aut %>% filter(!is.na(coupattempt_presentyear) & !is.na(minister_type)) %>% group_by(coupattempt_presentyear) %>% summarize(n = as.numeric(n())) %>% ungroup() %>%
+  mutate(sum = sum(n))
+
+n_importance <-  df_importance %>% filter(!is.na(coupattempt_presentyear)) %>% group_by(coupattempt_presentyear) %>% summarize(n = as.numeric(n())) %>% ungroup() %>%
+  mutate(sum = sum(n))
+
+n_comb <-  df_combination %>% filter(!is.na(coupattempt_presentyear)) %>% group_by(coupattempt_presentyear) %>% summarize(n = as.numeric(n())) %>% ungroup() %>%
+  mutate(sum = sum(n))
+
+# Print ---
+
+ggsave(
+  'output/figure3.jpg',
+  gridExtra::grid.arrange(plot_expgroup, plot_affiliation,ncol=2),
+  width = 13,
+  height = 6,
+  dpi = 120
+)
+
+ggsave(
+  'output/figure4.jpg',
+  gridExtra::grid.arrange(plot_resp, plot_importance,ncol=2),
+  width = 13,
+  height = 6,
+  dpi = 120
+)
+
+ggsave(
+  'output/figure5.jpg',
+  plot_combination,
+  width = 10,
+  height = 6,
+  dpi = 120
+)
+
+################
+## Appendix K ##
+################
+
+# Responsibility ---
+
+df_aut <- df_aut %>% mutate(minister_type = fct_relevel(minister_type,
+                                                      "Minister of Defense",
+                                                      "Minister of Foreign Affairs",
+                                                      "Minister of Finance",
+                                                      "Other type of minister",                                                      
+                                                      "Minister of Natural Resources"
+                                                      ))
+
+
+responsibility_felm <- felm(purged_y1 ~ minister_type*coupattempt_presentyear +
+                              gdp_cap_pwt_ln + pop_pwt_ln + experience + I(experience^2) +
+                              I(experience^3) | country_isocode+year | 0 | country_isocode, data=df_aut)
+
+
+# Party affiliation ---
+
+df_party <- df_party %>% mutate(party_group = fct_relevel(party_group,
+                                                          "From another party",
+                                                          "No party affiliation",
+                                                            "From the leader's party"
+))
+
+affiliation_felm <- felm(purged_y1 ~ party_group*coupattempt_presentyear +
+                           gdp_cap_pwt_ln + pop_pwt_ln + experience + I(experience^2) +
+                           I(experience^3) | country_isocode+year | 0 | country_isocode, data=df_party)
+
+# Importance ---
+
+df_importance <- df_importance %>% mutate(importance_factor = fct_relevel(importance_factor,
+                                                             "Prime minister/President\n(not leader)",
+                                                             "Vice president,\ndeputy prime minister,\ntop minister",
+                                                             "Medium-ranking\nminister",
+                                                             "Low-ranking\nminister",
+                                                             "Junior minister\nor other low-\nranking post"
+))
+
+importance_felm <- felm(purged_y1 ~ importance_factor*coupattempt_presentyear +
+                          gdp_cap_pwt_ln + pop_pwt_ln + experience + I(experience^2) +
+                          I(experience^3) | country_isocode+year | 0 | country_isocode, data=df_importance)
+
+# Experience ---
+
+experience_felm <- felm(purged_y1 ~ experience_group*coupattempt_presentyear +
+                           gdp_cap_pwt_ln + pop_pwt_ln | country_isocode+year | 0 | country_isocode, data=df_experience)
+
+
+# Combination ---
+
+combination_felm <- felm(purged_y1 ~ relevel(as.factor(typology),2)*coupattempt_presentyear +
+                           gdp_cap_pwt_ln + pop_pwt_ln | country_isocode+year | 0 | country_isocode , data=df_combination)
+
+
+# Tables ---
+
+# Table for Figure 3
+
+texreg(list(experience_felm,affiliation_felm),stars = c(0.05),
+       file="output/appendix_k1.tex",
+       custom.model.names=c("H2a: Experience","H2b: Affiliation"),
+       custom.coef.names=c("2-3 years of experience (Ref: <2 y)","4-6 years of experience (Ref: <2 y)","Over 6 years of experience (Ref: <2 y)",
+                           "Failed coup attempt", "Log of GDP per capita","Log of Population",
+                           "FCA*2-3 years of experience (Ref: <2 y)","FCA*4-6 years of experience (Ref: <2 y)","FCA*Over 6 years of experience (Ref: <2 y)",
+                           "No party affiliation (Ref: Other party)","From the leader's party (Ref: Other party)","Experience","Experience^2","Experience^3",
+                           "FCA*No party affiliation (Ref: Other party)",
+                           "FCA*From the leader's party (Ref: Other party)"),
+       reorder.coef=c(1,2,3,10,11,4,7,8,9,15,16,5,6,12,13,14),
+       label = "indtable",
+       single.row = TRUE,
+       caption ="Table for Figure 3",
+       caption.above=TRUE,
+       include.ci = FALSE,
+       include.adjrs = FALSE,
+       include.rmse = FALSE,
+       custom.note = ("\\parbox{\\linewidth}{\\vspace{2pt}%stars. Dependent variable: Purged next year. 
+                      All models include country and year fixed effects. Country-clustered standard errors in parentheses. 
+                      FCA = Failed coup attempt}"))
+
+# Table for Figure 4
+
+texreg(list(responsibility_felm,importance_felm),stars = c(0.05),
+       file="output/appendix_k2.tex",
+       custom.model.names=c("H3a: Responsibility","H3b: Importance"),
+       custom.coef.names=c("Minister of Foreign Affairs (Ref: D)","Minister of Finance (Ref: D)", "Other type of minister (Ref: D)",
+                            "Minister of Natural Resources (Ref: D)","Failed coup attempt","Log of GDP per capita","Log of Population",
+                            "Experience","Experience^2","Experience^3","FCA: Minister of Foreign Affairs (Ref: D)",
+                            "FCA*Minister of Finance (Ref: D)","FCA*Other type of minister (Ref: D)","FCA*Minister of Natural Resources (Ref: D)",
+                            "VP, DP, top minister (Ref: PMP)","Medium-ranking minister (Ref: PMP)","Low-ranking minister (Ref: PMP)",
+                           "Junior minister (Ref: PMP)","FCA*VP, DP, top minister (Ref: PMP)",
+                           "FCA*Medium-ranking minister (Ref: PMP)","FCA*Low-ranking minister (Ref: PMP)",
+                           "FCA*Junior minister (Ref: PMP)"),
+       reorder.coef=c(1,2,3,4,
+                      15,16,17,18,
+                      5,
+                      11,12,13,14,
+                      19,20,21,22,
+                      6,7,8,9,10),
+       label = "indtable2",
+       single.row = TRUE,
+       caption ="Table for Figure 4",
+       caption.above=TRUE,
+       include.ci = FALSE,
+       include.adjrs = FALSE,
+       include.rmse = FALSE,
+       custom.note = ("\\parbox{\\linewidth}{\\vspace{2pt}%stars. Dependent variable: Purged next year. 
+                      All models include country and year fixed effects. Country-clustered standard errors in parentheses.
+                      FCA = Failed coup attempt, D = Defense, PMP = Prime minister or President.}"))
+
+# Table for Figure 5
+
+texreg(list(combination_felm),stars = c(0.05),
+       file="output/appendix_k3.tex",
+       custom.model.names=c("Combination of traits"),
+       custom.coef.names=c("Low responsibility and weak signs of loyalty (Ref: HW)",
+                           "Low responsibility and strong signs of loyalty (Ref: HW)",
+                          "High responsibility and strong signs of loyalty (Ref: HW)",
+                          "Failed coup attempt","Log of GDP per capita","Log of Population",
+                          "FCA*High responsibility and weak signs of loyalt (Ref: HW)",
+                          "FCA*Low responsibility and strong signs of loyalty (Ref: HW)",
+                          "FCA*High responsibility and strong signs of loyalty (Ref: HW)"),
+       reorder.coef=c(1,2,3,4,
+                      7,8,9,
+                      6,5),
+       label = "indtable3",
+       single.row = TRUE,
+       caption ="Table for Figure 5",
+       caption.above=TRUE,
+       include.ci = FALSE,
+       include.adjrs = FALSE,
+       include.rmse = FALSE,
+       custom.note = ("\\parbox{\\linewidth}{\\vspace{2pt}%stars. Dependent variable: Purged next year. 
+                      All models include country and year fixed effects. Country-clustered standard errors in parentheses.
+                      FCA = Failed coup attempt, LW = High responsibility and weak signs of loyalty.}"))
+
+################
+## Appendix O ##
+################
+
+# Affiliation ---
+
+df_party_morethanone <- df_aut %>% filter(party_group != "unknown" & n_party > 0) %>% mutate(party_group = as.factor(recode(party_group,"independent"="No party affiliation","leader_party"="From the leader's party","other_party"="From another party")))
+
+affiliation_felm_morethanone <- felm(purged_y1 ~ party_group/coupattempt_presentyear +
+                           gdp_cap_pwt_ln + pop_pwt_ln + experience + I(experience^2) +
+                           I(experience^3) | country_isocode+year | 0 | country_isocode , data=df_party_morethanone) %>% summary()
+
+coef_affiliation_morethanone <- tibble(name = c("From another party","From the leader's party","No party affiliation"),
+                           estimate = c(affiliation_felm_morethanone$coefficients[8],
+                                        affiliation_felm_morethanone$coefficients[9],
+                                        affiliation_felm_morethanone$coefficients[10]),
+                           se = c(affiliation_felm_morethanone$coefficients[8,2],
+                                  affiliation_felm_morethanone$coefficients[9,2],
+                                  affiliation_felm_morethanone$coefficients[10,2]
+                           )
+) %>% mutate(name = fct_relevel(name,
+                                "From the leader's party",
+                                "No party affiliation",
+                                "From another party"))
+
+plot_affiliation_morethanon <- plot_canvas(coef_affiliation_morethanone) + ggtitle("H2b: Affiliation")
+
+# Combination (typology) ---
+
+df_combination_morethanone <- df_combination %>% filter(party_group != "unknown" & n_party > 0)
+
+combination_felm_morethanone <- felm(purged_y1 ~ as.factor(typology)/coupattempt_presentyear +
+                           gdp_cap_pwt_ln + pop_pwt_ln | country_isocode+year | 0 | country_isocode , data=df_combination_morethanone) %>% summary()
+
+coef_combination_morethanone <- tibble(name = c("Low responsibility and\nweak signs of loyalty","High responsibility and\nweak signs of loyalty",
+                                    "Low responsibility and\nstrong signs of loyalty","High responsibility and\nstrong signs of loyalty"),
+                           estimate = c(combination_felm_morethanone$coefficients[6],
+                                        combination_felm_morethanone$coefficients[7],
+                                        combination_felm_morethanone$coefficients[8],
+                                        combination_felm_morethanone$coefficients[9]),
+                           se = c(combination_felm_morethanone$coefficients[6,2],
+                                  combination_felm_morethanone$coefficients[7,2],
+                                  combination_felm_morethanone$coefficients[8,2],
+                                  combination_felm_morethanone$coefficients[9,2]
+                           )) %>% mutate(name = fct_relevel(name,
+                                                            "High responsibility and\nstrong signs of loyalty","Low responsibility and\nstrong signs of loyalty",
+                                                            "High responsibility and\nweak signs of loyalty","Low responsibility and\nweak signs of loyalty"
+                                                            
+                           ))
+
+
+plot_combination_morethanone <- plot_canvas(coef_combination_morethanone) + ggtitle("H4: Combinations of traits")
+
+# Get N's ---
+
+n_exp <-  df_party_morethanone %>% filter(!is.na(coupattempt_presentyear)) %>% group_by(coupattempt_presentyear) %>% summarize(n = as.numeric(n())) %>% ungroup() %>%
+  mutate(sum = sum(n))
+
+n_comb <-  df_combination_morethanone %>% filter(!is.na(coupattempt_presentyear)) %>% group_by(coupattempt_presentyear) %>% summarize(n = as.numeric(n())) %>% ungroup() %>%
+  mutate(sum = sum(n))
+
+###
+# Print ---
+###
+
+ggsave(
+  'output/appendix_o1.jpg',
+  gridExtra::grid.arrange(plot_affiliation_morethanon, plot_combination_morethanone,ncol=2),
+  width = 10,
+  height = 6,
+  dpi = 120
+)
+
+################
+## Appendix L ##
+################
+
+# Responsiblity ---
+
+responsibility_felm_br <- felm(purged_y1 ~ minister_type/coupattempt_presentyear_br +
+                              gdp_cap_pwt_ln + pop_pwt_ln + experience + I(experience^2) +
+                              I(experience^3) | country_isocode+year | 0 | country_isocode , data=df_aut) %>% summary()
+
+coef_responsibility_br <- tibble(name = c("Minister of Defense","Minister of Finance","Minister of Foreign Affairs",
+                                       "Minister of Natural Resources","Other type of minister"),
+                              estimate = c(responsibility_felm_br$coefficients[10],
+                                           responsibility_felm_br$coefficients[11],
+                                           responsibility_felm_br$coefficients[12],
+                                           responsibility_felm_br$coefficients[13],
+                                           responsibility_felm_br$coefficients[14]),
+                              se = c(responsibility_felm_br$coefficients[10,2],
+                                     responsibility_felm_br$coefficients[11,2],
+                                     responsibility_felm_br$coefficients[12,2],
+                                     responsibility_felm_br$coefficients[13,2],
+                                     responsibility_felm_br$coefficients[14,2]
+                              )) %>% mutate(name = fct_relevel(name,
+                                                               "Minister of Natural Resources",
+                                                               "Other type of minister",
+                                                               "Minister of Finance",
+                                                               "Minister of Foreign Affairs",
+                                                               "Minister of Defense"
+                              ))
+
+
+plot_resp_br <- plot_canvas(coef_responsibility_br) + ggtitle("H3a: Ministerial responsibility")
+
+# Affiliation ---
+
+df_party <- df_aut %>% filter(party_group != "unknown") %>% mutate(party_group = as.factor(recode(party_group,"independent"="No party affiliation","leader_party"="From the leader's party","other_party"="From another party")))
+
+affiliation_felm_br <- felm(purged_y1 ~ party_group/coupattempt_presentyear_br +
+                           gdp_cap_pwt_ln + pop_pwt_ln + experience + I(experience^2) +
+                           I(experience^3) | country_isocode+year | 0 | country_isocode , data=df_party) %>% summary()
+
+coef_affiliation_br <- tibble(name = c("From another party","From the leader's party","No party affiliation"),
+                           estimate = c(affiliation_felm_br$coefficients[8],
+                                        affiliation_felm_br$coefficients[9],
+                                        affiliation_felm_br$coefficients[10]),
+                           se = c(affiliation_felm_br$coefficients[8,2],
+                                  affiliation_felm_br$coefficients[9,2],
+                                  affiliation_felm_br$coefficients[10,2]
+                           )
+) %>% mutate(name = fct_relevel(name,
+                                "From the leader's party",
+                                "No party affiliation",
+                                "From another party"))
+
+plot_affiliation_br <- plot_canvas(coef_affiliation_br) + ggtitle("H2b: Affiliation")
+
+# Importance ---
+
+df_importance <- df_aut %>% filter(importance_factor != "0")
+
+importance_felm_br <- felm(purged_y1 ~ importance_factor/coupattempt_presentyear_br +
+                          gdp_cap_pwt_ln + pop_pwt_ln + experience + I(experience^2) +
+                          I(experience^3) | country_isocode+year | 0 | country_isocode , data=df_importance) %>% summary()
+
+coef_importance_br <- tibble(name = c("Junior minister\nor other low\nranking post","Low-ranking\nminister","Medium-ranking\nminister",
+                                   "Vice president,\ndeputy prime minister,\ntop minister","Prime minister/President\n(not leader)"),
+                          estimate = c(importance_felm_br$coefficients[10],
+                                       importance_felm_br$coefficients[11],
+                                       importance_felm_br$coefficients[12],
+                                       importance_felm_br$coefficients[13],
+                                       importance_felm_br$coefficients[14]),
+                          se = c(importance_felm_br$coefficients[10,2],
+                                 importance_felm_br$coefficients[11,2],
+                                 importance_felm_br$coefficients[12,2],
+                                 importance_felm_br$coefficients[13,2],
+                                 importance_felm_br$coefficients[14,2]
+                          )
+) %>% mutate(name = fct_relevel(name,
+                                "Junior minister\nor other low\nranking post","Low-ranking\nminister","Medium-ranking\nminister",
+                                "Vice president,\ndeputy prime minister,\ntop minister","Prime minister/President\n(not leader)"))
+
+
+plot_importance_br <- plot_canvas(coef_importance_br) + ggtitle("H3b: Importance in cabinet") + ylim(-0.1,0.6)
+
+# Experience ---
+
+experience_group_br <- felm(purged_y1 ~ as.factor(experience_group)/coupattempt_presentyear_br +
+                           gdp_cap_pwt_ln + pop_pwt_ln | country_isocode+year | 0 | country_isocode, data=df_experience) %>% summary()
+
+coef_experience_group <- tibble(name = c("Less than 2 years","2-3 years",
+                                         "4-6 years","Over 6 years"),
+                                estimate = c(experience_group_br$coefficients[6],
+                                             experience_group_br$coefficients[7],
+                                             experience_group_br$coefficients[8],
+                                             experience_group_br$coefficients[9]),
+                                se = c(experience_group_br$coefficients[6,2],
+                                       experience_group_br$coefficients[7,2],
+                                       experience_group_br$coefficients[8,2],
+                                       experience_group_br$coefficients[9,2]
+                                )) %>% mutate(name = fct_relevel(name,
+                                                                 "Over 6 years","4-6 years",
+                                                                 "2-3 years",
+                                                                 "Less than 2 years"
+                                                                 
+                                ))
+
+
+plot_expgroup_br <- plot_canvas(coef_experience_group) + ggtitle("H2a: Experience")
+
+# Combination ---
+
+combination_felm_br <- felm(purged_y1 ~ as.factor(typology)/coupattempt_presentyear_br +
+                           gdp_cap_pwt_ln + pop_pwt_ln | country_isocode+year | 0 | country_isocode , data=df_combination) %>% summary()
+
+coef_combination_br <- tibble(name = c("Low responsibility and weak signs of loyalty","High responsibility and weak signs of loyalty",
+                                    "Low responsibility and strong signs of loyalty","High responsibility and strong signs of loyalty"),
+                           estimate = c(combination_felm_br$coefficients[6],
+                                        combination_felm_br$coefficients[7],
+                                        combination_felm_br$coefficients[8],
+                                        combination_felm_br$coefficients[9]),
+                           se = c(combination_felm_br$coefficients[6,2],
+                                  combination_felm_br$coefficients[7,2],
+                                  combination_felm_br$coefficients[8,2],
+                                  combination_felm_br$coefficients[9,2]
+                           )) %>% mutate(name = fct_relevel(name,
+                                                            "High responsibility and strong signs of loyalty","Low responsibility and strong signs of loyalty",
+                                                            "High responsibility and weak signs of loyalty","Low responsibility and weak signs of loyalty"
+                                                            
+                           ))
+
+
+plot_combination_br <- plot_canvas(coef_combination_br) + ggtitle("H4: Combinations of traits")
+
+# Get N's ---
+
+n_exp <-  df_experience %>% filter(!is.na(coupattempt_presentyear_br)) %>% group_by(coupattempt_presentyear_br) %>% summarize(n = as.numeric(n())) %>% ungroup() %>%
+  mutate(sum = sum(n))
+
+n_affliation <-  df_party %>% filter(!is.na(coupattempt_presentyear_br)) %>% group_by(coupattempt_presentyear_br) %>% summarize(n = as.numeric(n())) %>% ungroup() %>%
+  mutate(sum = sum(n))
+
+n_resp <-  df_aut %>% filter(!is.na(coupattempt_presentyear_br) & !is.na(minister_type)) %>% group_by(coupattempt_presentyear_br) %>% summarize(n = as.numeric(n())) %>% ungroup() %>%
+  mutate(sum = sum(n))
+
+n_importance <-  df_importance %>% filter(!is.na(coupattempt_presentyear_br)) %>% group_by(coupattempt_presentyear_br) %>% summarize(n = as.numeric(n())) %>% ungroup() %>%
+  mutate(sum = sum(n))
+
+n_comb <-  df_combination %>% filter(!is.na(coupattempt_presentyear_br)) %>% group_by(coupattempt_presentyear_br) %>% summarize(n = as.numeric(n())) %>% ungroup() %>%
+  mutate(sum = sum(n))
+
+# Print ---
+
+ggsave(
+  'output/appendix_l1.jpg',
+  gridExtra::grid.arrange(plot_expgroup_br, plot_affiliation_br, plot_resp_br, plot_importance_br),
+  width = 10,
+  height = 9,
+  dpi = 120
+)
+
+ggsave(
+  'output/appendix_l2.jpg',
+  plot_combination_br,
+  width = 8,
+  height = 9,
+  dpi = 120
+)
+
+################
+## Appendix P ##
+################
+
+## Set up template ---
+
+pd <- position_dodge(0.75)
+
+plot_canvas_type <- function(df=df,x=name,y=estimate,se=se, group = group){
+    ggplot(data = df, aes(y = estimate, x = name, group = group, colour = group)) + 
+    geom_point(position = pd) + 
+    geom_errorbar(aes(ymin = estimate-1.96*se, ymax = estimate+1.96*se),
+                  width = 0,
+                  position = pd,
+                  size = 1) +
+    coord_flip() +
+    ylim(-0.2,0.5) +
+    labs(x = "", 
+         y = "Marginal Effects",
+         color = "black") +
+    geom_hline(yintercept = 0,
+               linetype = "dashed") +
+    theme_bw() +
+    theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+          legend.position = "bottom",plot.title = element_text(size=14),
+          axis.text.y = element_text(colour = "black",size=14),
+          axis.text.x = element_text(colour = "black",size=14),
+          text=element_text(family="Times",size=14,color="black")) +
+    scale_colour_manual(
+      name = "", 
+      breaks = c("Civilian coup","Military coup"),
+      labels = c("Civilian coup","Military coup"),
+      values = c("Grey", "Black"))
+}
+
+###
+# Marginal effects ---
+###
+
+# Responsiblity ---
+
+responsibility_felm_brtype <- felm(purged_y1 ~ minister_type/coupattempt_whogov_type_br +
+                                 gdp_cap_pwt_ln + pop_pwt_ln + experience + I(experience^2) +
+                                 I(experience^3) | country_isocode+year | 0 | country_isocode , data=df_aut) %>% summary()
+
+coef_responsibility_br_type <- tibble(name = c("Minister of Defense","Minister of Finance","Minister of Foreign Affairs",
+                                          "Minister of Natural Resources","Other type of minister",
+                                          "Minister of Defense","Minister of Finance","Minister of Foreign Affairs",
+                                          "Minister of Natural Resources","Other type of minister"),
+                                 estimate = c(responsibility_felm_brtype$coefficients[10],
+                                              responsibility_felm_brtype$coefficients[11],
+                                              responsibility_felm_brtype$coefficients[12],
+                                              responsibility_felm_brtype$coefficients[13],
+                                              responsibility_felm_brtype$coefficients[14],
+                                              responsibility_felm_brtype$coefficients[15],
+                                              responsibility_felm_brtype$coefficients[16],
+                                              responsibility_felm_brtype$coefficients[17],
+                                              responsibility_felm_brtype$coefficients[18],
+                                              responsibility_felm_brtype$coefficients[19]),
+                                 se = c(responsibility_felm_brtype$coefficients[10,2],
+                                        responsibility_felm_brtype$coefficients[11,2],
+                                        responsibility_felm_brtype$coefficients[12,2],
+                                        responsibility_felm_brtype$coefficients[13,2],
+                                        responsibility_felm_brtype$coefficients[14,2],
+                                        responsibility_felm_brtype$coefficients[15,2],
+                                        responsibility_felm_brtype$coefficients[16,2],
+                                        responsibility_felm_brtype$coefficients[17,2],
+                                        responsibility_felm_brtype$coefficients[18,2],
+                                        responsibility_felm_brtype$coefficients[19,2]),
+                                 group = c(rep("Civilian coup",5),rep("Military coup",5))) %>% 
+                                 mutate(name = fct_relevel(name,
+                                                                  "Minister of Natural Resources",
+                                                                  "Other type of minister",
+                                                                  "Minister of Finance",
+                                                                  "Minister of Foreign Affairs",
+                                                                  "Minister of Defense"
+                                 ),
+                                 group = fct_relevel(group,"Military coup","Civilian coup")
+                                 )
+
+
+plot_resp_br_type <- plot_canvas_type(coef_responsibility_br_type) + ggtitle("H3a: Ministerial responsibility")
+
+# Affiliation ---
+
+affiliation_felm_br <- felm(purged_y1 ~ party_group/coupattempt_whogov_type_br +
+                              gdp_cap_pwt_ln + pop_pwt_ln + experience + I(experience^2) +
+                              I(experience^3) | country_isocode+year | 0 | country_isocode , data=df_party) %>% summary()
+
+coef_affiliation_br_type <- tibble(name = c("From another party","From the leader's party","No party affiliation",
+                                       "From another party","From the leader's party","No party affiliation"),
+                              estimate = c(affiliation_felm_br$coefficients[8],
+                                           affiliation_felm_br$coefficients[9],
+                                           affiliation_felm_br$coefficients[10],
+                                           affiliation_felm_br$coefficients[11],
+                                           affiliation_felm_br$coefficients[12],
+                                           affiliation_felm_br$coefficients[13]),
+                              se = c(affiliation_felm_br$coefficients[8,2],
+                                     affiliation_felm_br$coefficients[9,2],
+                                     affiliation_felm_br$coefficients[10,2],
+                                     affiliation_felm_br$coefficients[11,2],
+                                     affiliation_felm_br$coefficients[12,2],
+                                     affiliation_felm_br$coefficients[13,2]),
+                                     group = c(rep("Civilian coup",3),rep("Military coup",3)
+                              )) %>% 
+              mutate(name = fct_relevel(name,
+                                "From the leader's party",
+                                "No party affiliation",
+                                "From another party"
+                                ),
+             group = fct_relevel(group,"Military coup","Civilian coup")
+             )
+
+plot_affiliation_br_type <- plot_canvas_type(coef_affiliation_br_type) + ggtitle("H2b: Affiliation")
+
+# Importance ---
+
+importance_felm_br <- felm(purged_y1 ~ importance_factor/coupattempt_whogov_type_br +
+                             gdp_cap_pwt_ln + pop_pwt_ln + experience + I(experience^2) +
+                             I(experience^3) | country_isocode+year | 0 | country_isocode , data=df_importance) %>% summary()
+
+coef_importance_br_type <- tibble(name = c("Junior minister\nor other low\nranking post","Low-ranking\nminister","Medium-ranking\nminister",
+                                      "Vice president,\ndeputy prime minister,\ntop minister","Prime minister/President\n(not leader)",
+                                      "Junior minister\nor other low\nranking post","Low-ranking\nminister","Medium-ranking\nminister",
+                                      "Vice president,\ndeputy prime minister,\ntop minister","Prime minister/President\n(not leader)"),
+                             estimate = c(importance_felm_br$coefficients[10],
+                                          importance_felm_br$coefficients[11],
+                                          importance_felm_br$coefficients[12],
+                                          importance_felm_br$coefficients[13],
+                                          importance_felm_br$coefficients[14],
+                                          importance_felm_br$coefficients[15],
+                                          importance_felm_br$coefficients[16],
+                                          importance_felm_br$coefficients[17],
+                                          importance_felm_br$coefficients[18],
+                                          importance_felm_br$coefficients[19]),
+                             se = c(importance_felm_br$coefficients[10,2],
+                                    importance_felm_br$coefficients[11,2],
+                                    importance_felm_br$coefficients[12,2],
+                                    importance_felm_br$coefficients[13,2],
+                                    importance_felm_br$coefficients[14,2],
+                                    importance_felm_br$coefficients[15,2],
+                                    importance_felm_br$coefficients[16,2],
+                                    importance_felm_br$coefficients[17,2],
+                                    importance_felm_br$coefficients[18,2],
+                                    importance_felm_br$coefficients[19,2]),
+                             group = c(rep("Civilian coup",5),rep("Military coup",5)
+                             )
+) %>% mutate(name = fct_relevel(name,
+                                "Junior minister\nor other low\nranking post","Low-ranking\nminister","Medium-ranking\nminister",
+                                "Vice president,\ndeputy prime minister,\ntop minister","Prime minister/President\n(not leader)"),
+             group = fct_relevel(group,"Military coup","Civilian coup"))
+
+
+plot_importance_br_type <- plot_canvas_type(coef_importance_br_type) + ggtitle("H3b: Importance in cabinet") + ylim(-0.2,0.6)
+
+# Experience ---
+
+experience_group_br <- felm(purged_y1 ~ as.factor(experience_group)/coupattempt_whogov_type_br +
+                              gdp_cap_pwt_ln + pop_pwt_ln | country_isocode+year | 0 | country_isocode, data=df_experience) %>% summary()
+
+coef_experience_group_type <- tibble(name = c("Less than 2 years","2-3 years",
+                                         "4-6 years","Over 6 years",
+                                         "Less than 2 years","2-3 years",
+                                         "4-6 years","Over 6 years"),
+                                estimate = c(experience_group_br$coefficients[6],
+                                             experience_group_br$coefficients[7],
+                                             experience_group_br$coefficients[8],
+                                             experience_group_br$coefficients[9],
+                                             experience_group_br$coefficients[10],
+                                             experience_group_br$coefficients[11],
+                                             experience_group_br$coefficients[12],
+                                             experience_group_br$coefficients[13]),
+                                se = c(experience_group_br$coefficients[6,2],
+                                       experience_group_br$coefficients[7,2],
+                                       experience_group_br$coefficients[8,2],
+                                       experience_group_br$coefficients[9,2],
+                                       experience_group_br$coefficients[10,2],
+                                       experience_group_br$coefficients[11,2],
+                                       experience_group_br$coefficients[12,2],
+                                       experience_group_br$coefficients[13,2]),
+                                group = c(rep("Civilian coup",4),rep("Military coup",4))) %>% 
+                                mutate(name = fct_relevel(name,
+                                                                 "Over 6 years","4-6 years",
+                                                                 "2-3 years",
+                                                                 "Less than 2 years"
+                                                                 
+                                ),
+                                group = fct_relevel(group,"Military coup","Civilian coup"))
+
+
+plot_expgroup_br_type <- plot_canvas_type(coef_experience_group_type) + ggtitle("H2a: Experience")
+
+# Combination ---
+
+combination_felm_br <- felm(purged_y1 ~ as.factor(typology)/coupattempt_whogov_type_br +
+                              gdp_cap_pwt_ln + pop_pwt_ln | country_isocode+year | 0 | country_isocode , data=df_combination) %>% summary()
+
+coef_combination_br_type <- tibble(name = c("Low responsibility and weak signs of loyalty","High responsibility and weak signs of loyalty",
+                                       "Low responsibility and strong signs of loyalty","High responsibility and strong signs of loyalty",
+                                       "Low responsibility and weak signs of loyalty","High responsibility and weak signs of loyalty",
+                                       "Low responsibility and strong signs of loyalty","High responsibility and strong signs of loyalty"),
+                              estimate = c(combination_felm_br$coefficients[6],
+                                           combination_felm_br$coefficients[7],
+                                           combination_felm_br$coefficients[8],
+                                           combination_felm_br$coefficients[9],
+                                           combination_felm_br$coefficients[10],
+                                           combination_felm_br$coefficients[11],
+                                           combination_felm_br$coefficients[12],
+                                           combination_felm_br$coefficients[13]),
+                              se = c(combination_felm_br$coefficients[6,2],
+                                     combination_felm_br$coefficients[7,2],
+                                     combination_felm_br$coefficients[8,2],
+                                     combination_felm_br$coefficients[9,2],
+                                     combination_felm_br$coefficients[10,2],
+                                     combination_felm_br$coefficients[11,2],
+                                     combination_felm_br$coefficients[12,2],
+                                     combination_felm_br$coefficients[13,2]),
+                              group = c(rep("Civilian coup",4),rep("Military coup",4))) %>% 
+                              mutate(name = fct_relevel(name,"High responsibility and strong signs of loyalty","Low responsibility and strong signs of loyalty",
+                                                             "High responsibility and weak signs of loyalty","Low responsibility and weak signs of loyalty"),
+                              group = fct_relevel(group,"Military coup","Civilian coup"))
+
+plot_combination_br_type <- plot_canvas_type(coef_combination_br_type) + ggtitle("H4: Combinations of traits")
+
+# Get N's ---
+
+n_exp <-  df_experience %>% filter(!is.na(coupattempt_whogov_type_br) & coupattempt_whogov_type_br !="Royal") %>% group_by(coupattempt_whogov_type_br) %>% summarize(n = as.numeric(n())) %>% ungroup() %>%
+  mutate(sum = sum(n))
+
+n_affliation <-  df_party %>% filter(!is.na(coupattempt_whogov_type_br) & coupattempt_whogov_type_br !="Royal") %>% group_by(coupattempt_whogov_type_br) %>% summarize(n = as.numeric(n())) %>% ungroup() %>%
+  mutate(sum = sum(n))
+
+n_resp <-  df_aut %>% filter(!is.na(coupattempt_whogov_type_br) & coupattempt_whogov_type_br !="Royal" & !is.na(minister_type)) %>% group_by(coupattempt_whogov_type_br) %>% summarize(n = as.numeric(n())) %>% ungroup() %>%
+  mutate(sum = sum(n))
+
+n_importance <-  df_importance %>% filter(!is.na(coupattempt_whogov_type_br) & coupattempt_whogov_type_br !="Royal") %>% group_by(coupattempt_whogov_type_br) %>% summarize(n = as.numeric(n())) %>% ungroup() %>%
+  mutate(sum = sum(n))
+
+n_comb <-  df_combination %>% filter(!is.na(coupattempt_whogov_type_br) & coupattempt_whogov_type_br !="Royal") %>% group_by(coupattempt_whogov_type_br) %>% summarize(n = as.numeric(n())) %>% ungroup() %>%
+  mutate(sum = sum(n))
+
+###
+# Print ---
+###
+
+ggsave(
+  'output/appendix_p1.jpg',
+  gridExtra::grid.arrange(plot_expgroup_br_type, plot_affiliation_br_type, plot_resp_br_type, plot_importance_br_type),
+  width = 10,
+  height = 9,
+  dpi = 120
+)
+
+ggsave(
+  'output/appendix_p2.jpg',
+  plot_combination_br_type,
+  width = 8,
+  height = 9,
+  dpi = 120
+)
+
+################
+## Appendix R ##
+################
+
+###
+# Marginal effects ---
+###
+
+# Gender
+
+df_aut_gender <- df_aut %>% filter(gender != "Unknown")
+
+hired_gender_felm <- felm(hired ~ gender/coup_lastyear +
+                              gdp_cap_pwt_ln + pop_pwt_ln | country_isocode+year | 0 | country_isocode , data=df_aut_gender) %>% summary()
+
+hired_gender <- tibble(name = c("Female","Male"),
+                           estimate = c(hired_gender_felm$coefficients[4],
+                                        hired_gender_felm$coefficients[5]),
+                           se = c(hired_gender_felm$coefficients[4],
+                                  hired_gender_felm$coefficients[5]
+                           )
+) %>% mutate(name = fct_relevel(name,
+                                "Female",
+                                "Male"))
+
+hired_plot_gender <- plot_canvas(hired_gender) + ggtitle("Gender") + ylim(-0.2,0.5)
+
+# Party affiliation
+
+hired_affiliation_felm <- felm(hired ~ party_group/coup_lastyear +
+                              gdp_cap_pwt_ln + pop_pwt_ln | country_isocode+year | 0 | country_isocode , data=df_party) %>% summary()
+
+hired_coef_affiliation <- tibble(name = c("From another party","From the leader's party","No party affiliation"),
+                           estimate = c(hired_affiliation_felm$coefficients[5],
+                                        hired_affiliation_felm$coefficients[6],
+                                        hired_affiliation_felm$coefficients[7]),
+                           se = c(hired_affiliation_felm$coefficients[5],
+                                  hired_affiliation_felm$coefficients[6],
+                                  hired_affiliation_felm$coefficients[7]
+                           )
+) %>% mutate(name = fct_relevel(name,
+                                "From the leader's party",
+                                "No party affiliation",
+                                "From another party"))
+
+hired_plot_affiliation <- plot_canvas(hired_coef_affiliation) + ggtitle("Affiliation") + ylim(-0.3,0.8)
+
+# Position
+
+responsibility_felm_hired <- felm(hired ~ minister_type/coup_lastyear +
+                              gdp_cap_pwt_ln + pop_pwt_ln | country_isocode+year | 0 | country_isocode , data=df_aut) %>% summary()
+
+coef_responsibility_hired <- tibble(name = c("Minister of Defense","Minister of Finance","Minister of Foreign Affairs",
+                                          "Minister of Natural Resources","Other type of minister"),
+                                 estimate = c(responsibility_felm_hired$coefficients[7],
+                                              responsibility_felm_hired$coefficients[8],
+                                              responsibility_felm_hired$coefficients[9],
+                                              responsibility_felm_hired$coefficients[10],
+                                              responsibility_felm_hired$coefficients[11]),
+                                 se = c(responsibility_felm_hired$coefficients[7],
+                                        responsibility_felm_hired$coefficients[8],
+                                        responsibility_felm_hired$coefficients[9],
+                                        responsibility_felm_hired$coefficients[10],
+                                        responsibility_felm_hired$coefficients[11]
+                                 )) %>% mutate(name = fct_relevel(name,
+                                                                  "Minister of Natural Resources",
+                                                                  "Other type of minister",
+                                                                  "Minister of Finance",
+                                                                  "Minister of Foreign Affairs",
+                                                                  "Minister of Defense"
+                                 ))
+
+
+hired_plot_resp <- plot_canvas(coef_responsibility_hired) + ggtitle("Ministerial responsibility") + ylim(-0.2,0.8)
+
+# Importance
+
+df_importance <- df_aut %>% filter(importance_factor != "0")
+
+importance_felm_hired <- felm(hired ~ importance_factor/coup_lastyear +
+                          gdp_cap_pwt_ln + pop_pwt_ln | country_isocode+year | 0 | country_isocode , data=df_importance) %>% summary()
+
+coef_importance_hired <- tibble(name = c("Junior minister\nor other low\nranking post","Low-ranking\nminister","Medium-ranking\nminister",
+                                   "Vice president,\ndeputy prime minister,\ntop minister","Prime minister/President\n(not leader)"),
+                          estimate = c(importance_felm_hired$coefficients[7],
+                                       importance_felm_hired$coefficients[8],
+                                       importance_felm_hired$coefficients[9],
+                                       importance_felm_hired$coefficients[10],
+                                       importance_felm_hired$coefficients[11]),
+                          se = c(importance_felm_hired$coefficients[7],
+                                 importance_felm_hired$coefficients[8],
+                                 importance_felm_hired$coefficients[9],
+                                 importance_felm_hired$coefficients[10],
+                                 importance_felm_hired$coefficients[11]
+                          )
+) %>% mutate(name = fct_relevel(name,
+                                "Junior minister\nor other low\nranking post","Low-ranking\nminister","Medium-ranking\nminister",
+                                "Vice president,\ndeputy prime minister,\ntop minister","Prime minister/President\n(not leader)"))
+
+
+hired_plot_importance <- plot_canvas(coef_importance_hired) + ggtitle("Importance in cabinet") + ylim(-0.2,0.6)
+
+# Get N's ---
+
+n_gender <-  df_aut_gender %>% filter(!is.na(coup_lastyear) & !is.na(gender)) %>% group_by(coup_lastyear) %>% summarize(n = as.numeric(n())) %>% ungroup() %>%
+  mutate(sum = sum(n))
+
+n_party <-  df_party %>% filter(!is.na(coup_lastyear) & !is.na(party_group)) %>% group_by(coup_lastyear) %>% summarize(n = as.numeric(n())) %>% ungroup() %>%
+  mutate(sum = sum(n))
+
+n_responsibility <-  df_aut %>% filter(!is.na(coup_lastyear) & !is.na(minister_type)) %>% group_by(coup_lastyear) %>% summarize(n = as.numeric(n())) %>% ungroup() %>%
+  mutate(sum = sum(n))
+
+n_importance <-  df_importance %>% filter(!is.na(coup_lastyear)) %>% group_by(coup_lastyear) %>% summarize(n = as.numeric(n())) %>% ungroup() %>%
+  mutate(sum = sum(n))
+
+###
+# Print ---
+###
+
+ggsave(
+  'output/appendix_r1.jpg',
+  gridExtra::grid.arrange(hired_plot_gender, hired_plot_affiliation,hired_plot_resp,hired_plot_importance,ncol=2),
+  width = 10,
+  height = 9,
+  dpi = 120
+)
+
+
+################
+## Appendix N ##
+################
+
+df_aut <- read_rds("morning_after_dataset_individuallevel.rds") %>% 
+          filter(democracy_lag == 0 & leader == 0 & !is.na(purged_y1) & !is.na(gdp_cap_pwt_ln) & !is.na(pop_pwt_ln) & leaderexperience_continuous > 1)
+
+###
+# Marginal effects ---
+###
+
+
+... [truncated: 35,983 more bytes of this script omitted] ...
+
+```
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

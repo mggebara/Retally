@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "brouwer-2022-teaching-norms",
+  "mode": "blind",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was exploratory (variable tabulations, no RESULT lines). Final: pooled OLS LPMs with fixest::feols, school-clustered SEs (30 clusters), on master.dta. Punishment models on the Violation + Violation+Help scenes (scene 2,3), Helping models on Help + Violation+Help scenes (scene 1,3); RHS Child, VH (scene==3, equal to ViolationHelp), Child x VH; controls male (Male Target), hugo (Male Actor), Morning, witness, rich, Rain, Hot. Outcome for helping is Helping (counts parent-stimulated child help, as in the paper's definition), not HelpingParents (the robustness variant). One observation dropped in controlled models for missing male. No author scripts, result tables, or tex/pdf files from the dataset directory were opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T07:01:20Z",
+  "finished_at": "2026-11-02T07:02:38Z"
+}
