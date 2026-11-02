@@ -27,6 +27,11 @@ by file, what that copy leaves out.  Two layers:
      the same markers or hold a Stata ``export excel`` results matrix
      (``OLS_all`` / ``OLS_all_stars`` column pairs with ``***`` cells).
      A LaTeX row labelled ``N`` or ``Clusters`` counts as the observations row.
+     A whole ``.tex`` table with two or more rows carrying a starred number
+     (``-1.43***``, or estout's stars column ``--0.005&***``) and two or more
+     with a parenthesised decimal is a regression table too, with no ``N``
+     row or ``(1) ... (2)`` columns needed (a one-column table); balance and
+     summary tables print no stars and stay.
    * Table fragments: a ``.tex`` / ``.txt`` made of bare table rows
      (``label & 0.013 & ... \\\\``, no tabular, no caption: esttab output split
      into per-row files, as Hanlon 2022 ships it) that prints estimates —
@@ -393,6 +398,27 @@ def _table_fragment(lines: list[str]) -> bool:
     return all(_FRAGMENT_STAT_LABEL.match(s.split("&", 1)[0]) for s in rows)
 
 
+# A starred estimate in a whole table: ``-1.43***``, ``0.074$^{**}$``, ``0.074\sym{**}``, or
+# estout's ``r @{} l`` layout that puts the stars in their own column (``--0.005&***``).
+_STARRED_CELL = re.compile(r"\d\s*(?:&\s*)?(?:\$?\^\{?|\\sym\{)?\s*\*{1,3}")
+
+
+def _starred_estimates_table(lines: list[str]) -> bool:
+    """Two or more rows with a starred number and two or more with a parenthesised decimal.
+
+    Catches a whole regression table that has no ``N`` row and only one
+    column (so no ``(1) ... (2)`` marker): Brouwer 2022's ``TableA14.tex``,
+    Carrera 2022's ``DailyAttIncr.tex``.  Summary and balance tables print
+    means and SDs without stars and stay.
+    """
+    rows = [
+        s for s in (ln.strip() for ln in lines) if s and not s.startswith("%") and _FRAGMENT_ROW.search(s)
+    ]
+    starred = sum(1 for s in rows if _STARRED_CELL.search(s))
+    se = sum(1 for s in rows if _SE_ROW.search(s))
+    return starred >= 2 and se >= 2
+
+
 def _tex_reason(text: str) -> str | None:
     if "\\documentclass" in text:
         # A manuscript: strip only when one of its own tabulars is a regression table.
@@ -403,7 +429,9 @@ def _tex_reason(text: str) -> str | None:
     is_table = (
         "\\begin{tabular" in text or "\\begin{longtable" in text or (text.count("&") >= 4 and "\\\\" in text)
     )
-    if is_table and _is_regression_table(text, signature_suffices=True):
+    if is_table and (
+        _is_regression_table(text, signature_suffices=True) or _starred_estimates_table(_lines(text))
+    ):
         return "regression-table"
     return "table-fragment" if _table_fragment(_lines(text)) else None
 

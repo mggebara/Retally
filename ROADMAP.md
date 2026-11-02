@@ -2458,6 +2458,13 @@ The caveats of 3.5 apply unchanged.
   specification choices should be written into the evidence bundle if
   it exists in the oracle store, so the "from memory" explanation can be
   checked rather than quoted.
+- ~~Free, harness: the PR #96 follow-up, two whole regression tables
+  still on the independent / blind mounts.~~  Done: a whole `.tex` table
+  with two or more starred rows and two or more `(0.xx)` rows is a
+  `regression-table`; Brouwer `TableA14.tex` and Carrera
+  `DailyAttIncr.tex` are now withheld, the two balance tables stay, and
+  the before/after sweep over the 26 cached packages changes nothing
+  else.
 
 ### 3.7.1 Pipeline second sample on the six newest papers (2026-11-02) — ✅ measured, no API spend
 
