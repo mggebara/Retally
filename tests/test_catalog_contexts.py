@@ -125,7 +125,8 @@ def test_rule_catches_a_stated_count_and_skips_references():
 # contexts) the coefficient is not computable from it.
 
 _STATISTIC = re.compile(
-    r"statistic|\b[ftzw][- ]?stat\b|\bF\b|\banova\b|brown.forsythe|levene|kruskal|wald|chi.?squared?|\bchi2\b",
+    r"statistic|\b[ftzw][- ]?stat\b|\bF\b|\banova\b|brown.forsythe|levene|kruskal|wald"
+    r"|chi.?squared?|\bchi2\b",
     re.IGNORECASE,
 )
 
