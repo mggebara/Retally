@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "dancygier-2022-hate-crimes-gender-imbalances",
+  "mode": "independent",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Employment status has no separate variable in survey.dta; the occupation factor (main activity) is used for both main economic activity and employment status.",
+    "Table 1 sociodemographic coding chosen from the codebook: age, eduyrs, household_size, self_econ, citizenship numeric; gender, income, occupation, religion, state as factors. R2 for columns 3-6 is ~0.01 below the paper, so the authors' coding of some controls likely differs.",
+    "Table C1: extreme Excess Males cutoffs (2.5th/97.5th percentiles) computed across municipalities (one row each) with non-missing Excess Males; logistic regressions with state dummies (plus year dummies in the annual model) fit with fixest::feglm, county-clustered SEs. Sum outcome = 1 if Hate_all_muni_bin is 1 in any of 2015-2017."
+  ],
+  "notes": "One exploratory run (attempt-1, variable inspection, no RESULT lines) then a single scored run, which is final. No comparison-driven changes (no claim attempts). Read the survey codebook PDF in the mount (via a small text extractor) to map variables: national battery = 8 ref_* items, local battery = 8 ref_loc_* items, additional controls = contact_ind, distance_ref, settle_ref, afd, afd_ind, lrscale, muslim_ind. Wave 4 OLS with conventional SEs. Results match claims closely: Table 1 Mate Competition 0.437/0.263/0.236/0.207/0.187/0.157, Job Competition 0.250, N 3019/3008; Table C1 Excess Males 1.406 (Sum, N 9282) and 1.537 (Annual, N 27846).",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T14:54:52Z",
+  "finished_at": "2026-11-02T14:58:00Z"
+}

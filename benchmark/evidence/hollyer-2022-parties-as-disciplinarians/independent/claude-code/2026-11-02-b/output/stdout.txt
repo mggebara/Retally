@@ -1,0 +1,75 @@
+Overall sample N = 431 countries = 75 
+Volatility p25/p75: 0.146475 0.42035 
+Ethnic sample N = 431 
+    non_diff      diff_lo      diff_hi 
+ 0.353671030  0.305322623 -0.008373165 
+   non_diff     diff_lo     diff_hi 
+-0.14818706  0.02951639  0.20352995 
+Ideology sample N = 430 
+  mod_diff    diff_lo    diff_hi 
+ 0.5301851  0.1263488 -0.2824282 
+   mod_diff     diff_lo     diff_hi 
+-0.29871912  0.05183359  0.37134909 
+Call: rdrobust
+
+Sharp RD estimates using local polynomial regression.
+
+Number of Obs.                 1788
+BW type                       mserd
+Kernel                   Triangular
+VCE method                       NN
+
+                               Left        Right
+Number of Obs.                  836          952
+Eff. Number of Obs.             527          559
+Order est. (p)                    1            1
+Order bias (q)                    2            2
+BW est. (h)                  13.491       13.491
+BW bias (b)                  24.643       24.643
+rho (h/b)                     0.547        0.547
+Unique Obs.                     835          921
+
+=====================================================================
+                   Point    Robust Inference
+                Estimate         z     P>|z|      [ 95% C.I. ]       
+---------------------------------------------------------------------
+     RD Effect    -0.084    -2.058     0.040    [-0.185 , -0.005]    
+=====================================================================
+Call: rdrobust
+
+Sharp RD estimates using local polynomial regression.
+
+Number of Obs.                 1788
+BW type                       mserd
+Kernel                   Triangular
+VCE method                       NN
+
+                               Left        Right
+Number of Obs.                  836          952
+Eff. Number of Obs.             501          523
+Order est. (p)                    1            1
+Order bias (q)                    2            2
+BW est. (h)                  12.280       12.280
+BW bias (b)                  22.333       22.333
+rho (h/b)                     0.550        0.550
+Unique Obs.                     835          921
+
+=====================================================================
+                   Point    Robust Inference
+                Estimate         z     P>|z|      [ 95% C.I. ]       
+---------------------------------------------------------------------
+     RD Effect    -0.092    -2.439     0.015    [-0.185 , -0.020]    
+=====================================================================
+RESULT:personalism_volatility_difference_overall=0.2966
+RESULT:programmaticness_volatility_difference_overall=-0.1117
+RESULT:personalism_volatility_difference_nonethnic=0.3537
+RESULT:programmaticness_volatility_difference_nonethnic=-0.1482
+RESULT:personalism_ethnic_minus_nonethnic_low_volatility=0.3053
+RESULT:programmaticness_ethnic_minus_nonethnic_high_volatility=0.2035
+RESULT:personalism_volatility_difference_moderate=0.5302
+RESULT:programmaticness_volatility_difference_moderate=-0.2987
+RESULT:personalism_extremist_minus_moderate_low_volatility=0.1263
+RESULT:programmaticness_extremist_minus_moderate_high_volatility=0.3713
+RESULT:n_obs_table1=431
+RESULT:rd_effect_young=-0.0843
+RESULT:rd_effect_young_outsider=-0.0921

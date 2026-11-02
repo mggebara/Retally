@@ -38,7 +38,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a) | [13/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a) |
+| `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) |
 | `pipeline-desktop-opus` | [13/13](seeded/pipeline-desktop-opus/20261102T100356Z/CELL.md) (20261102T100356Z) | [13/13](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) (20261102T141403Z) | [13/13](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) (20261102T095147Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
@@ -59,8 +59,8 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | [independent/pipeline-desktop-opus/20261102T141403Z](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) | `mate_competition_table1_col6` | 0.157891 | 0.155 | ±0.019 (se_band) | 0.152 | PASS |
 | [blind/pipeline-desktop-opus/20261102T095147Z](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) | `excess_males_annual_tableC1_col6` | 1.48128 | 1.537 | ±0.412 (se_band) | 0.135 | PASS |
 | [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) | `mate_competition_table1_col6` | 0.157354 | 0.155 | ±0.019 (se_band) | 0.124 | PASS |
+| [blind/claude-code/2026-11-02-b](blind/claude-code/2026-11-02-b/CELL.md) | `mate_competition_table1_col6` | 0.157354 | 0.155 | ±0.019 (se_band) | 0.124 | PASS |
 | [independent/claude-code/2026-11-02-a](independent/claude-code/2026-11-02-a/CELL.md) | `mate_competition_table1_col6` | 0.157325 | 0.155 | ±0.019 (se_band) | 0.122 | PASS |
-| [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `mate_competition_table1_col4` | 0.20644 | 0.206 | ±0.00412 (relative) | 0.107 | PASS |
 
 ### Declared deviations
 
@@ -71,11 +71,20 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Sociodemographic controls coded from survey.dta as: age (linear), gender, years of education (eduyrs, linear), income (factor incl. 'No answer'), occupation (factor; used for both 'main economic activity' and 'employment status' since only one variable exists), German citizenship, household size (linear), self-assessed social status (linear), religion (factor), state (factor). Column (3) R2 is 0.276 vs 0.288 reported, so the authors' coding of some controls (likely factor vs linear) differs slightly.
   - Additional controls (col 6) coded as contact_ind, distance_ref (factor incl. don't know), settle_ref (factor), afd (0-100 closeness), afd_ind, lrscale, muslim_ind.
   - SI Table C1 controls taken from footnote 24 using the log versions in context.dta (log population, log density, log unemployment rate, log refugee stock 2014, log refugee inflow, log violent crime per capita) plus population change, male/female unemployment ratio, % highly educated, % manufacturing, change in manufacturing, AfD 2013 vote share; state FE (plus year FE in the annual model); trimming of Excess Males at the 2.5/97.5 percentiles of the 2015 municipality cross-section; fixest::feglm logit, SE clustered by county.
+- [independent/claude-code/2026-11-02-b](independent/claude-code/2026-11-02-b/CELL.md) (13/13)
+  - Employment status has no separate variable in survey.dta; the occupation factor (main activity) is used for both main economic activity and employment status.
+  - Table 1 sociodemographic coding chosen from the codebook: age, eduyrs, household_size, self_econ, citizenship numeric; gender, income, occupation, religion, state as factors. R2 for columns 3-6 is ~0.01 below the paper, so the authors' coding of some controls likely differs.
+  - Table C1: extreme Excess Males cutoffs (2.5th/97.5th percentiles) computed across municipalities (one row each) with non-missing Excess Males; logistic regressions with state dummies (plus year dummies in the annual model) fit with fixest::feglm, county-clustered SEs. Sum outcome = 1 if Hate_all_muni_bin is 1 in any of 2015-2017.
 - [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) (13/13)
   - Table 1 sociodemographics coded as: age (years, linear), female dummy, eduyrs (years; 11 missing -> N drops to 3008), income as factor with 'No answer' kept as a category, occupation as a factor (the data has a single item covering both main economic activity and employment status), citizenship dummy, household size (numeric), self-assessed social status (0-10, numeric), religion factor, state factor.
   - National battery = the 8 ref_* items (integrating, citizenship, reduce, moredone, cultgiveup, economy, crime, terror) entered linearly; local battery = the 8 ref_loc_* items entered linearly.
   - Additional controls = contact_ind, distance_ref (factor, incl. don't know), settle_ref (factor), afd_ind, afd (0-100 closeness), lrscale, muslim_ind.
   - SI Table C1: Excess Males trimmed at the 2.5th/97.5th percentiles of the municipality-level (2015 cross-section) distribution; controls = log population, log pop density, pop change 2011-15, log unemployment rate, male/female unemployment ratio, log refugee stock 2014, log refugee inflow 2014-15, % highly educated, % manufacturing, change in % manufacturing, AfD 2013 vote share, log violent crime per capita; state FE (plus year FE in the annual model); fixest::feglm logit, SEs clustered by county; complete cases.
+- [blind/claude-code/2026-11-02-b](blind/claude-code/2026-11-02-b/CELL.md) (13/13)
+  - Table 1 'employment status' has no separate variable in survey.dta; the occupation factor (which mixes main activity and employment status, e.g. unemployed, retired, employee) is used for both.
+  - Table 1 ordinal controls: income, occupation, religion, state, gender entered as factors (income keeps its 'No answer' category); self-assessed status (self_econ, code 11 recoded to 0) and household size (code minus 1) entered linearly; education = eduyrs (years), whose 11 missing Wave 4 values set N for cols 3-6.
+  - Table 1 national/local batteries: the 8 ref_* and 8 ref_loc_* items entered linearly. Additional controls: contact_ind, distance_ref (factor incl. don't know), settle_ref (factor), afd, afd_ind, lrscale, muslim_ind.
+  - Table C1: controls use the log versions provided in context.dta for population, density, refugee stock and violent crime (log_unemp_all_muni_2015 for unemployment); state fixed effects (per task description; the main text mentions county FE), plus year FE in the annual model; SEs clustered by ags_county; trimming at the 2.5/97.5 percentiles of Excess Males (15-44) computed across all municipalities with non-missing values before listwise deletion. Sum outcome = any Hate_all_muni over 2015-2017.
 
 ### Pipeline and agent disagree
 
@@ -97,6 +106,10 @@ _None._
 
 [`independent/claude-code/2026-11-02-a/CELL.md`](independent/claude-code/2026-11-02-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-02T09:51:00Z; from `claude-code-6papers-all-modes-2026-11-02.json`; evidence complete.
 
+### independent · claude-code · 2026-11-02-b
+
+[`independent/claude-code/2026-11-02-b/CELL.md`](independent/claude-code/2026-11-02-b/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-02T14:58:00Z; from `claude-code-run2-6papers-indep-blind-2026-11-02.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus · 20261102T141403Z
 
 [`independent/pipeline-desktop-opus/20261102T141403Z/CELL.md`](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) — final 13/13, re-scored 13/13; first scored 11/13; executions 3; 2026-11-02T14:14:03Z; from `pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json`; evidence complete.
@@ -104,6 +117,10 @@ _None._
 ### blind · claude-code · 2026-11-02-a
 
 [`blind/claude-code/2026-11-02-a/CELL.md`](blind/claude-code/2026-11-02-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 3; 2026-11-02T09:51:10Z; from `claude-code-6papers-all-modes-2026-11-02.json`; evidence complete.
+
+### blind · claude-code · 2026-11-02-b
+
+[`blind/claude-code/2026-11-02-b/CELL.md`](blind/claude-code/2026-11-02-b/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-02T15:00:30Z; from `claude-code-run2-6papers-indep-blind-2026-11-02.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus · 20261102T095147Z
 

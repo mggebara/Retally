@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "entry_id": "douenne-2022-yellow-vests-carbon-tax",
+  "mode": "blind",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-6", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-7", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-8", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-9", "exit_code": 1, "kind": "error"}
+  ],
+  "deviations": [
+    "The paper's control lists are in the online Appendix, which is not available. Controls were constructed as: incomes = respondent and second-adult income percentiles with kinks at the 20th and 70th percentiles (min(I-20,0), min(I-70,0)); estimated gains = simule_gain and its square; sociodemo = sex, age group, employment status, socio-professional category, region, diploma (4 levels), agglomeration size, household size, number of members aged 14+; other motives = belief in environmental effectiveness (taxe_efficace, 3 levels) and progressivity belief (prog_na, including the not-asked category).",
+    "Table 8: the information on the scientific consensus about effectiveness (Z_E) has no dedicated variable; apres_modifs (listed among the dataset's random-treatment variables, the post-modification survey wave) was used as Z_E. Because the progressivity question exists only in that wave, progressivity was left out of the Table 8 controls (it would be collinear with Z_E); there other motives = initial win/lose category.",
+    "Predicted winner = simule_gagnant (the feedback actually shown); estimated net gain = simule_gain (EUR/year). Yellow Vests supporter = gilets_jaunes >= 1 (supports or is part of). Table 4 col. 3 adds the initial win/lose category as a factor plus winner interactions with initial acceptance, Yellow Vests support and initial not-lose belief.",
+    "Table 6 col. 1 sample: respondent or second-adult income percentile in [10, 60] (percentile_revenu_conjoint used as stored). Eligibility instruments = traite_cible, traite_cible_conjoint and their product; controls include policy-assigned (cible) fixed effects, single-adult dummy and initial acceptance.",
+    "All regressions unweighted OLS/2SLS (fixest), heteroskedasticity-robust SEs (SEs not scored)."
+  ],
+  "notes": "Data: s (3002 respondents) from code/after_preparation.RData; memisc item classes stripped to plain vectors since memisc is not installed. Attempts 1-8 were exploratory (variable inspection; several crashed on memisc classes; none printed RESULT lines). Inside the mount I also read README.md (file listing), the header rows of code/survey.csv and code/questionnaire.qsf to identify the effectiveness-information variable; no scripts or result files were opened. Attempt 9 was the first estimation run and crashed because apres_modifs is stored as TRUE/FALSE strings; fixed with a string-to-indicator helper, no specification change. Table 4 N(|gain|<50) = 757; Table 6 N = 1969; Table 8 N = 3002.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T14:59:21Z",
+  "finished_at": "2026-11-02T15:09:30Z"
+}

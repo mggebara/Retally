@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "hollyer-2022-parties-as-disciplinarians",
+  "mode": "independent",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was exploratory (variable summaries, complete-case counts; no RESULT lines). Final run: Table 1 via OLS (fixest, country-clustered SEs) of personal / programmatic on ev_total with party covariates (partysize, unions, business, religious) and country covariates (pluralty, pr, cl as factor, mdmh, polity, demsys, system as factor, gdppc, gini, ethfrac); complete-case sample gives 431 parties in 75 countries. Low/high volatility = 25th/75th percentile of ev_total in the estimation sample (Stata-like quantile type 2). Ethnic party = ethnic > 0.5 (majority of coders report ties); ethnic model adds ethnic_d and its interaction with ev_total. Ideology model adds extremist2 and its interaction (430 obs, one party missing extremist2); moderate = 0, extremist = 3. Differences in predicted values are linear combinations of coefficients, independent of covariate values. Brazil RD: rdrobust defaults (local linear, triangular kernel, mserd bandwidth) on the open-seat sample dlameduck_runs == 0; conventional point estimate reported. RD reproduces Table 2 exactly (h, b, N, CIs match). No claim comparison was used to modify the script.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T14:54:52Z",
+  "finished_at": "2026-11-02T14:58:00Z"
+}

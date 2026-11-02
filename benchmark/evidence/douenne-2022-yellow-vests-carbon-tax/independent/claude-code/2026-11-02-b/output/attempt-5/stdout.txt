@@ -1,0 +1,505 @@
+
+===== simule_gain | simule_gain: Gain net annuel simulé par UC pour le ménage du répondant suite à une hausse de taxe carbone compensée: (16.1 + pmin(2, nb_adultes) * 110 - hausse_depenses)/UC | class numeric  NA: 0 
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-2024.403    -4.505    49.547    36.117   103.346   247.259 
+
+===== simule_gagnant | simule_gagnant: Indicatrice sur la prédiction que le ménage serait gagnant avec la taxe compensée, d'après nos simulations | class character  NA: 0 
+y
+   0    1 
+ 744 2258 
+
+===== Simule_gain | simule_gain: Gain net annuel simulé par UC pour le ménage du répondant suite à une hausse de taxe carbone compensée: (16.1 + pmin(2, nb_adultes) * 110 - hausse_depenses)/UC | class numeric  NA: 0 
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-2.024403 -0.004505  0.049547  0.036117  0.103346  0.247259 
+
+===== Simule_gain2 | simule_gain: Gain net annuel simulé par UC pour le ménage du répondant suite à une hausse de taxe carbone compensée: (16.1 + pmin(2, nb_adultes) * 110 - hausse_depenses)/UC | class numeric  NA: 0 
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+0.0000000 0.0009128 0.0045820 0.0156122 0.0132514 4.0982090 
+
+===== simule_gain_interaction | simule_gain_interaction: Gain net par UC annuel simulé avec des termes d'interaction surface*fioul/gaz pour le ménage du répondant suite à une hausse de taxe carbone compensée: 9.1 + pmin(2, nb_adultes) * 110 - hausse_chauffage_interaction_inelastiqu | class numeric  NA: 0 
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-2036.6658    -0.1174    54.2569    34.8545   101.8170   229.1000 
+
+===== gain |  | class numeric  NA: 0 
+y
+-405.55 -224.25 -147.91  -92.83  -48.28  -13.72       0   10.39   30.36   49.96 
+    267     234     403     505     390     162     620     128     122      74 
+  69.72  106.89 
+     41      56 
+
+===== gagnant_categorie | gagnant_categorie: Ménage Gagnant/Non affecté/Perdant par hausse taxe carbone redistribuée à tous (+110€/an /adulte, +13/15% gaz/fioul, +0.11/13 €/L diesel/essence) - Q164 | class character  NA: 0 
+y
+    Gagnant Non affecté     Perdant 
+        421         620        1961 
+
+===== gagnant_feedback_categorie | gagnant_feedback_categorie: ~ info si le ménage est gagnant/perdant - Ménage Gagnant/Non affecté/Perdant par hausse taxe carbone redistribuée à tous (+110€/an /adulte, +13/15% gaz/fioul, +0.11/13 €/L diesel/essence) - Q63 | class character  NA: 1034 
+y
+    Gagnant Non affecté     Perdant        <NA> 
+        383         458        1127        1034 
+
+===== gagnant_info_categorie | gagnant_info_categorie: après info simule_gagnant et/ou progressivité: Ménage Gagnant/Non affecté/Perdant par hausse taxe carbone redistribuée à tous (+110€/an /adulte, +13/15% gaz/fioul, +0.11/13 €/L diesel/essence) | class character  NA: 0 
+y
+    Gagnant Non affecté     Perdant 
+        542         703        1757 
+
+===== gagnant_cible_categorie | gagnant_cible_categorie: Ménage Gagnant/Non affecté/Perdant avec hausse taxe carbone à recyclage ciblé (cible: 20/30/40/50% les plus modestes) | class character  NA: 0 
+y
+    Gagnant Non affecté     Perdant 
+        464         617        1921 
+
+===== winning_category | Winning category before feedback | class labelled  NA: 0 
+y
+    Winner Unaffected      Loser 
+       421        620       1961 
+
+===== winning_feedback_category | Winning category after feedback | class labelled  NA: 1034 
+y
+    Winner Unaffected      Loser       <NA> 
+       383        458       1127       1034 
+
+===== win_cible_category | win_cible_category: Le répondant s'estime non perdant suite à la hausse de la taxe carbone compensée par recyclage ciblé (cible: 20/30/40/50% les plus modestes): 1*(s$gagnant_cible_categorie!='Perdant') | class numeric  NA: 0 
+y
+   0    1 
+1921 1081 
+
+===== taxe_approbation |  | class character  NA: 0 
+y
+ Non  NSP  Oui 
+2134  567  301 
+
+===== taxe_feedback_approbation |  | class character  NA: 1034 
+y
+ Non  NSP  Oui <NA> 
+1258  390  320 1034 
+
+===== taxe_info_approbation |  | class character  NA: 0 
+y
+ Non  NSP  Oui 
+1951  569  482 
+
+===== taxe_cible_approbation | taxe_cible_approbation: Approbation d'une hausse de la taxe carbone compensée par recyclage ciblé (cible: 20/30/40/50% les plus modestes) | class character  NA: 0 
+y
+ Non  NSP  Oui 
+2055  473  474 
+
+===== tax_approval | tax_approval: Approbation initiale de la hausse de la taxe carbone compensée: taxe_approbation=='Oui' | class logical  NA: 0 
+y
+FALSE  TRUE 
+ 2701   301 
+
+===== tax_acceptance | tax_acceptance: Acceptation initiale de la hausse de la taxe carbone compensée: taxe_approbation!='Non' | class logical  NA: 0 
+y
+FALSE  TRUE 
+ 2134   868 
+
+===== tax_cible_acceptance | tax_cible_acceptance: Acceptation de la hausse de la taxe carbone compensée par recyclage ciblé (cible: 20/30/40/50% les plus modestes): 1*(taxe_cible_approbation!='Non') | class numeric  NA: 0 
+y
+   0    1 
+2055  947 
+
+===== gilets_jaunes |  | class numeric  NA: 0 
+y
+  -1 -0.1    0    1    2 
+ 762  256  961  892  131 
+
+===== Gilets_jaunes |  | class factor  NA: 0 
+y
+    oppose        NSP   comprend   soutient est_dedans 
+       762        256        961        892        131 
+
+===== gilets_jaunes_dedans | gilets_jaunes_dedans: Le répondant déclare faire partie des gilets jaunes - Q35 | class character  NA: 0 
+y
+FALSE  TRUE 
+ 2871   131 
+
+===== gilets_jaunes_soutien | gilets_jaunes_soutien: Le répondant soutient les gilets jaunes - Q35 | class character  NA: 0 
+y
+FALSE  TRUE 
+ 2056   946 
+
+===== variante_taxe_info | variante_taxe_info: (f/p) Variante aléatoire entre f: feedback (=simulation, 2/3) et p: progressivité (1/3), dans l'information donnée sur la taxe compensée avant de demander à nouveau le gain et l'approbation, ainsi que les bénéfices et problèmes | class character  NA: 0 
+y
+   f    p 
+1968 1034 
+
+===== info_CC | info_CC: Indicatrice aléatoire que l'information sur le changement climatique a été présentée (150k morts/an monde, tendance +5/+8°C en 2100/2250, +2°C techniquement possible, sinon extinctions, intensification catastrophes, +270 M subissant inondati | class character  NA: 0 
+y
+   0    1 
+1506 1496 
+
+===== info_PM | info_PM: Indicatrice aléatoire que l'information sur les particules fines a été présentée (48k morts/an en France, - 9 mois d'espérance vie, réduire conso fuel -> réduire pbs particules fines | class character  NA: 0 
+y
+   0    1 
+1549 1453 
+
+===== taxe_efficace |  | class character  NA: 0 
+y
+ Non  NSP  Oui 
+2000  523  479 
+
+===== cible | cible: Ciblage du recyclage de la hausse de la taxe carbone, attribué en fonction du revenu du répondant et de son ménage (20/30/40/50% les plus modestes) | class labelled  NA: 0 
+y
+  50   20   30   40 
+ 989 1069  456  488 
+
+===== categorie_cible | categorie_cible: Catégorie de revenu du répondant (et de son ménage) taxe à recyclage ciblé - Catégories: percentile <20/20-30/30-40/40-50/50-70/>70, sachant que revenu_conjoint détermine la catégorie quand percentile de revenu > 70 (780/1140/1430/16 | class character  NA: 0 
+y
+  _20 20_30 30_40 40_50 50_70   70_ 
+  854   342   458   416   725   207 
+
+===== traite_cible | traite_cible: Indicatrice de transfert reçu par le répondant lors de la hausse de la taxe carbone avec compensation ciblée. Montants: 550/360/270/220 €/an/adulte pour cible à 20/30/40/50 | class integer  NA: 0 
+y
+   0    1 
+1960 1042 
+
+===== traite_cible_conjoint | traite_cible_conjoint: Indicatrice de transfert reçu par le conjoint du répondant lors de la hausse de la taxe carbone avec compensation ciblée. Montants: 550/360/270/220 €/an/adulte pour cible à 20/30/40/50 | class integer  NA: 0 
+y
+   0    1 
+1730 1272 
+
+===== percentile_revenu |  | class numeric  NA: 0 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  6.051  30.792  51.115  51.075  73.057  99.993 
+
+===== percentile_revenu_conjoint |  | class numeric  NA: 0 
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+4.504e-03 6.051e+00 9.598e+00 2.747e+01 4.663e+01 1.000e+02 
+
+===== single | single: nb_adultes == 1 | class numeric  NA: 0 
+y
+   0    1 
+2189  813 
+
+===== Revenu |  | class numeric  NA: 0 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   0.00    1.10    1.60    1.77    2.20   83.33 
+
+===== Revenu2 |  | class numeric  NA: 0 
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+   0.000    1.210    2.560    6.759    4.840 6944.444 
+
+===== Revenu_conjoint |  | class numeric  NA: 0 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ -9.000   0.000   0.190   1.031   1.500 750.000 
+
+===== Revenu_conjoint2 |  | class numeric  NA: 0 
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+     0.00      0.00      0.18    189.46      2.40 562500.00 
+
+===== revenu |  | class numeric  NA: 0 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0    1100    1600    1770    2200   83333 
+
+===== revenu_conjoint |  | class numeric  NA: 0 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  -9000       0     190    1031    1500  750000 
+
+===== sexe | sexe: Sexe (Masculin/Féminin) - Q96 | class character  NA: 0 
+y
+ Féminin Masculin 
+    1578     1424 
+
+===== age |  | class numeric  NA: 0 
+y
+ 20.9 29.61 42.14 56.84 75.43 
+  333   333   734   792   810 
+
+===== csp | csp: Catégorie Socio-Professionnelle: Agriculteur/Indépendant: Artisan, commerçant.e/Cadre: Profession libérale, cadre/Intermédiaire: Profession intermédiaire/Employé/Ouvrier/Retraité/Inactif: Autres inactif/ve - Q98 | class character  NA: 0 
+y
+  Agriculteur         Cadre       Employé       Inactif   Indépendant 
+           23           266           484           334           106 
+Intermédiaire       Ouvrier      Retraité 
+          420           383           986 
+
+===== diplome4 |  | class numeric  NA: 0 
+y
+  1   2   3   4 
+733 795 546 928 
+
+===== taille_agglo |  | class numeric  NA: 0 
+y
+  1   2   3   4   5 
+721 544 403 885 449 
+
+===== region |  | class character  NA: 0 
+y
+   ARA  autre Centre    Est    IDF   Nord    Occ  Ouest   PACA     SO 
+   392      1    354    366    498    306    252    314    236    283 
+
+===== statut_emploi | statut_emploi: Statut d'emploi (Chômage/CDD/CDI/fonctionnaire/étudiant-e/retraité-e/précaire/autre actif/autre inactif) - Q35 | class character  NA: 0 
+y
+                     au chômage                     autre actif 
+                            145                             144 
+                            CDD                             CDI 
+                            103                             831 
+                     étudiant·e                   fonctionnaire 
+                            195                             226 
+                        inactif intérimaire ou contrat précaire 
+                            135                              71 
+                     retraité·e 
+                           1152 
+
+===== Gauche_droite |  | class factor  NA: 0 
+y
+ Extreme-left          Left        Center         Right Extreme-right 
+           66           604           390           498           255 
+Indeterminate 
+         1189 
+
+===== gauche_droite |  | class numeric  NA: 1189 
+y
+  -2   -1    0    1    2 <NA> 
+  66  604  390  498  255 1189 
+
+===== ecologiste | ecologiste: Le répondant se considère comme étant écologiste - Q34 | class character  NA: 0 
+y
+FALSE  TRUE 
+ 2556   446 
+
+===== progressivite | progressivite: ~ Une hausse de la taxe carbone compensée avantagerait les plus modestes (réunion des trois variante_progressivite: prog/fb_info/fb_no_info où seule fb_no_info est sans information préalable sur la progressivité) - Q206-208 | class character  NA: 1558 
+y
+ Non  NSP  Oui <NA> 
+ 872  298  274 1558 
+
+===== prog_na | prog_na: NA as 'NA' ~ Une hausse de la taxe carbone compensée avantagerait les plus modestes (réunion des trois variante_progressivite: prog/fb_info/fb_no_info où seule fb_no_info est sans information préalable sur la progressivité) - Q206-208 | class character  NA: 0 
+y
+  NA  Non  NSP  Oui 
+1558  872  298  274 
+
+===== prog_not_no | prog_not_no: Oui ou NSP (mais pas NA ni Non) à progressivite: Une hausse de la taxe carbone compensée avantagerait les plus modestes | class logical  NA: 0 
+y
+FALSE  TRUE 
+ 2430   572 
+
+===== uc |  | class numeric  NA: 0 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.000   1.300   1.500   1.615   2.000   5.500 
+
+===== nb_adultes | nb_adultes: Nombre de personnes majeures dans le ménage - Q149 | class numeric  NA: 0 
+y
+   1    2    3    4    5 
+ 813 1738  320  100   31 
+
+===== taille_menage | taille_menage: Taille du ménage #(vous, membres de votre famille vivant avec vous et personnes à votre charge) - Q29 | class numeric  NA: 0 
+y
+   1    2    3    4    5    6    7    8   10   12 
+ 710 1293  466  361  121   29    7    2    2   11 
+
+===== nb_14_et_plus | nb_14_et_plus: Nombre de personnes âgées d'au moins 14 ans dans le ménage - Q31 | class numeric  NA: 0 
+y
+   1    2    3    4    5    6    7    8   10 
+ 852 1599  350  146   45    6    1    1    2 
+
+===== fume | fume: Le répondant fume régulièrement (Oui/Non) - Q191 | class character  NA: 0 
+y
+ Non  Oui 
+2498  504 
+
+===== actualite | actualite: Le répondant se tient principalement informé de l'actualité via la télévision / la presse (écrite ou en ligne) / les réseaux sociaux / la radio - Q182 | class character  NA: 0 
+y
+                      Autre Presse (écrite ou en ligne) 
+                         90                         556 
+                      Radio             Réseaux sociaux 
+                        379                         278 
+                 Télévision 
+                       1699 
+
+===== interet_politique |  | class numeric  NA: 0 
+y
+   0    1    2 
+ 951 1406  645 
+
+===== retraites | retraites: statut_emploi == 'retraité·e' | class logical  NA: 0 
+y
+FALSE  TRUE 
+ 1850  1152 
+
+===== actifs | actifs: statut_emploi %in% c("autre actif", "CDD", "CDI", "fonctionnaire", "intérimaire ou contrat précaire") | class logical  NA: 0 
+y
+FALSE  TRUE 
+ 1627  1375 
+
+===== etudiants | etudiants: statut_emploi == 'étudiant·e' | class logical  NA: 0 
+y
+FALSE  TRUE 
+ 2807   195 
+
+===== inactif | inactif: statut_emploi %in% c("inactif", "au chômage") | class logical  NA: 0 
+y
+FALSE  TRUE 
+ 2722   280 
+
+===== weight |  | class numeric  NA: 0 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.4267  0.8240  0.9604  1.0000  1.1236  3.1590 
+
+===== sample |  | class character  NA: 0 
+y
+   e    f 
+  48 2954 
+
+===== feedback_confirme | feedback_confirme: Indicatrice de se penser et être simulé gagnant/perdant (gagnant_categorie, simule_gagnant) | class logical  NA: 0 
+y
+FALSE  TRUE 
+ 2056   946 
+
+===== variante_progressivite | variante_progressivite: prog/fb_info/fb_no_info Variante aléatoire du bloc de questions où figure 'progressivite'. prog: info sur la progressivité / fb: feedback sur le statut gagnant/perdant simulé, info/no_info: avec/sans info sur la progressivité  | class character  NA: 0 
+y
+   fb_info fb_no_info       prog 
+       478       1490       1034 
+
+===== info_progressivite | info_progressivite: Indicatrice qu'a été montrée l'information que la hausse de la taxe carbone compensée avantagerait les plus modestes | class logical  NA: 0 
+y
+FALSE  TRUE 
+ 1490  1512 
+
+===== apres_modifs | apres_modifs: Indicatrice de la seconde moitié de l'échantillon, avec une info sur l'efficacité contre la pollution et des questions et informations sur la progressivité (progressivite_feedback_avec/sans_info, progressivite_progressif), et une reform | class character  NA: 0 
+y
+FALSE  TRUE 
+ 1558  1444 
+
+===== variante_partielle | variante_partielle: Variante aléatoire (c/f) de la taxe partielle sur le chauffage ou les carburants (=fuel) | class character  NA: 0 
+y
+   c    f 
+1501 1501 
+
+===== variante_monetaire | variante_monetaire: Indicatrice aléatoire que les questions sur les perdant_/gagnant_ de la taxe portent sur le pouvoir d'achat ou non (0: quels seraient les gagnants-perdant/1: quelles catégories gagneraient-perdraient en pouvoir d'achat) | class character  NA: 0 
+y
+   0    1 
+1478 1524 
+
+===== hausse_depenses_par_uc | hausse_depenses_par_uc: Hausse des dépenses énergétiques par UC simulées avec les termes d'interaction, suite à la taxe (élasticité de 0.4/0.2 pour carburants/chauffage) | class numeric  NA: 0 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   0.00   26.49   69.58   92.91  125.18 2163.94 
+
+===== niveau_vie |  | class numeric  NA: 0 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0    1040    1533    1691    2000  259477 
+
+===== versement | versement: Versement annuel reçu par le ménage suite à une hausse de la taxe carbone compensée (110 * min(2, nb_adultes)) | class numeric  NA: 0 
+y
+ 110  220 
+ 813 2189 
+
+===== versement_cible | versement_cible: Versement annuel reçu par le ménage du répondant lors de la hausse de la taxe carbone avec compensation ciblée. Montants: 550/360/270/220 €/an/parent pour cible à 20/30/40/50 | class numeric  NA: 0 
+y
+   0  220  270  360  440  540  550  720 1100 
+1083  437  186  178   90  101  723   49  155 
+
+===== Mode_chauffage | mode_chauffage: Mode de chauffage du logement (individuel/collectif/NSP) - Q178 | class character  NA: 0 
+y
+ Chauffage collectif Chauffage individuel                  NSP 
+                 480                 2484                   38 
+
+===== Chauffage | chauffage: source d'énergie principale (Électricité/Gaz de ville/Butane, propane, gaz en citerne/Fioul, mazout, pétrole/Bois, solaire, géothermie, aérothermie (pompe à chaleur)/Autre/NSP) | class character  NA: 0 
+y
+                                                   Autre 
+                                                      60 
+Bois, solaire, géothermie, aérothermie (pompe à chaleur) 
+                                                     438 
+                         Butane, propane, gaz en citerne 
+                                                      50 
+                                             Électricité 
+                                                    1071 
+                                  Fioul, mazout, pétrole 
+                                                     263 
+                                            Gaz de ville 
+                                                    1020 
+                                                     NSP 
+                                                     100 
+
+===== diesel | diesel: Indicatrice de la possession d'un véhicule diesel par le ménage (fuel_1 ou fuel_2_1 ou fuel_2_2 = 'Diesel') | class logical  NA: 0 
+y
+FALSE  TRUE 
+ 1257  1745 
+
+===== essence | essence: Indicatrice de la possession d'un véhicule à essence par le ménage (fuel_1 ou fuel_2_1 ou fuel_2_2 = 'Essence') | class logical  NA: 0 
+y
+FALSE  TRUE 
+ 1623  1379 
+
+===== gaz |  | class logical  NA: 0 
+y
+FALSE  TRUE 
+ 1932  1070 
+
+===== fioul |  | class logical  NA: 0 
+y
+FALSE  TRUE 
+ 2739   263 
+
+===== nb_vehicules |  | class numeric  NA: 0 
+y
+   0    1    2 
+ 309 1424 1269 
+
+===== biais_sur | biais_sur: Certitude à 99% que le gain subjectif du répondant est biaisé à la baisse: abs(simule_gain - gain) > 110 | class logical  NA: 0 
+y
+FALSE  TRUE 
+ 1351  1651 
+
+===== conservateur | conservateur: Le répondant se considère comme étant conservateur - Q34 | class character  NA: 0 
+y
+FALSE  TRUE 
+ 2938    64 
+
+===== liberal | liberal: Le répondant se considère comme étant libéral - Q34 | class character  NA: 0 
+y
+FALSE  TRUE 
+ 2845   157 
+
+===== humaniste | humaniste: Le répondant se considère comme étant humaniste - Q34 | class character  NA: 0 
+y
+FALSE  TRUE 
+ 2675   327 
+
+===== patriote | patriote: Le répondant se considère comme étant patriote - Q34 | class character  NA: 0 
+y
+FALSE  TRUE 
+ 2765   237 
+
+===== apolitique | apolitique: Le répondant se considère comme étant apolitique - Q34 | class character  NA: 0 
+y
+FALSE  TRUE 
+ 2380   622 
+
+===== indeterminate |  | class logical  NA: 0 
+y
+FALSE  TRUE 
+ 1813  1189 
+
+===== gauche_droite_na |  | class numeric  NA: 0 
+y
+               -2                -1                 0 0.150027578599007 
+               66               604               390              1189 
+                1                 2 
+              498               255 
+
+===== hausse_depenses | hausse_carburant: Hausse des dépenses de carburants simulées pour le ménage, suite à la taxe (élasticité de 0.4) (hausse_diesel + hausse_essence) | class numeric  NA: 0 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ -53.55   46.31  130.62  154.70  209.71 3959.46 
+
+===== hausse_chauffage | surface: Surface du logement (en m²) - Q175 | class numeric  NA: 0 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-53.551  -1.214  42.319  71.146 127.767 492.984 
+
+===== hausse_carburants | hausse_carburant: Hausse des dépenses de carburants simulées pour le ménage, suite à la taxe (élasticité de 0.4) (hausse_diesel + hausse_essence) | class numeric  NA: 0 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   0.00   15.90   46.36   83.55   96.35 3973.88 
+
+feedback received:
+
+FALSE  TRUE 
+ 1968  1034 
+   
+    FALSE TRUE
+  f  1968    0
+  p     0 1034
+simule_gain abs<50 among feedback: 757 
+Simule_gain abs<50 among feedback: 1968 
+simule_gain_interaction abs<50 among feedback: 700 
+Simule_gain2 abs<50 among feedback: 1968 
+   
+    FALSE TRUE
+  0   742    2
+  1    54 2204

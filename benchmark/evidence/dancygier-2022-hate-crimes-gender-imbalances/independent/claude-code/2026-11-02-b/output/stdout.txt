@@ -1,0 +1,86 @@
+col1: mate=0.4370 se=0.0163 N=3019 R2=0.191
+col2: mate=0.2634 se=0.0203 N=3019 R2=0.240
+col3: mate=0.2364 se=0.0206 N=3008 R2=0.276
+col4: mate=0.2067 se=0.0196 N=3008 R2=0.361
+col5: mate=0.1866 se=0.0197 N=3008 R2=0.373
+col6: mate=0.1565 se=0.0189 N=3008 R2=0.432
+cutoffs: 0.8529412 1.454545 
+GLM estimation, family = binomial, Dep. Var.: sum_bin
+Observations: 9,282
+Standard-errors: Clustered (ags_county) 
+                                Estimate Std. Error   z value   Pr(>|z|)    
+(Intercept)                   -21.468168   2.804323 -7.655384 1.9273e-14 ***
+pop_15_44_muni_gendergap_2015   1.405543   0.463292  3.033817 2.4148e-03 ** 
+log_population_muni_2015        1.521872   0.054736 27.803960  < 2.2e-16 ***
+log_popdens_muni_2015           0.017112   0.065871  0.259779 7.9503e-01    
+d_pop1511_muni                 -0.298872   0.852381 -0.350632 7.2586e-01    
+log_unemp_all_muni_2015         0.633979   0.155800  4.069177 4.7179e-05 ***
+unemp_gendergap_2015            0.919745   0.371266  2.477318 1.3237e-02 *  
+log_pop_ref_2014               -0.209705   0.104042 -2.015573 4.3845e-02 *  
+log_ref_inflow_1514             0.856579   0.324756  2.637607 8.3493e-03 ** 
+pc_hidegree_all2011            -0.022295   0.013355 -1.669401 9.5038e-02 .  
+pc_manufacturing_2015           0.056721   0.750491  0.075578 9.3975e-01    
+d_manuf1115                     8.176516   4.066926  2.010491 4.4379e-02 *  
+vote_afd_2013_muni              5.357749   3.387764  1.581500 1.1376e-01    
+log_violence_percap_2015        0.135968   0.189730  0.716639 4.7360e-01    
+factor(ags_state)03            -0.446629   0.233905 -1.909446 5.6205e-02 .  
+factor(ags_state)05            -0.574814   0.240057 -2.394489 1.6644e-02 *  
+factor(ags_state)06            -0.980949   0.286275 -3.426595 6.1120e-04 ***
+factor(ags_state)07            -0.494354   0.206359 -2.395608 1.6593e-02 *  
+factor(ags_state)08            -0.390435   0.223728 -1.745133 8.0962e-02 .  
+factor(ags_state)09            -0.218730   0.212387 -1.029863 3.0307e-01    
+factor(ags_state)12            -0.140010   0.231905 -0.603737 5.4602e-01    
+factor(ags_state)14            -0.395043   0.276570 -1.428363 1.5319e-01    
+factor(ags_state)15            -0.791339   0.319923 -2.473534 1.3378e-02 *  
+factor(ags_state)16            -0.305206   0.278848 -1.094528 2.7372e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Log-Likelihood: -2,776.2   Adj. Pseudo R2: 0.356262
+           BIC:  5,771.8     Squared Cor.: 0.36977 
+GLM estimation, family = binomial, Dep. Var.: Hate_all_muni_bin
+Observations: 27,846
+Standard-errors: Clustered (ags_county) 
+                                Estimate Std. Error    z value   Pr(>|z|)    
+(Intercept)                   -22.077507   2.182300 -10.116624  < 2.2e-16 ***
+pop_15_44_muni_gendergap_2015   1.536554   0.412662   3.723515 1.9647e-04 ***
+log_population_muni_2015        1.371677   0.041893  32.742523  < 2.2e-16 ***
+log_popdens_muni_2015          -0.002150   0.049107  -0.043776 9.6508e-01    
+d_pop1511_muni                  0.020472   0.541358   0.037816 9.6983e-01    
+log_unemp_all_muni_2015         0.714824   0.130016   5.497950 3.8423e-08 ***
+unemp_gendergap_2015            0.846397   0.318649   2.656210 7.9024e-03 ** 
+log_pop_ref_2014               -0.191636   0.084455  -2.269084 2.3263e-02 *  
+log_ref_inflow_1514             0.733791   0.261004   2.811420 4.9323e-03 ** 
+pc_hidegree_all2011            -0.018475   0.010506  -1.758554 7.8653e-02 .  
+pc_manufacturing_2015          -0.306498   0.606687  -0.505199 6.1342e-01    
+d_manuf1115                     9.588127   3.168375   3.026197 2.4765e-03 ** 
+vote_afd_2013_muni              3.178375   2.719195   1.168866 2.4246e-01    
+log_violence_percap_2015        0.021677   0.151299   0.143274 8.8607e-01    
+factor(ags_state)03            -0.389069   0.180506  -2.155442 3.1127e-02 *  
+factor(ags_state)05            -0.568978   0.175337  -3.245060 1.1743e-03 ** 
+factor(ags_state)06            -0.786972   0.240820  -3.267885 1.0835e-03 ** 
+factor(ags_state)07            -0.361442   0.182164  -1.984158 4.7238e-02 *  
+factor(ags_state)08            -0.257726   0.172292  -1.495863 1.3469e-01    
+factor(ags_state)09            -0.089045   0.166864  -0.533636 5.9359e-01    
+factor(ags_state)12             0.114888   0.172607   0.665606 5.0566e-01    
+factor(ags_state)14            -0.030913   0.192289  -0.160762 8.7228e-01    
+factor(ags_state)15            -0.497107   0.225837  -2.201174 2.7724e-02 *  
+factor(ags_state)16            -0.047469   0.210437  -0.225571 8.2154e-01    
+factor(year)2016                1.242598   0.072913  17.042202  < 2.2e-16 ***
+factor(year)2017                0.296169   0.078737   3.761502 1.6890e-04 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Log-Likelihood: -5,290.7   Adj. Pseudo R2: 0.323965
+           BIC: 10,847.6     Squared Cor.: 0.269359
+RESULT:mate_competition_table1_col1=0.437020
+RESULT:mate_competition_table1_col2=0.263437
+RESULT:mate_competition_table1_col3=0.236373
+RESULT:mate_competition_table1_col4=0.206705
+RESULT:mate_competition_table1_col5=0.186639
+RESULT:mate_competition_table1_col6=0.156540
+RESULT:job_competition_table1_col2=0.249956
+RESULT:n_obs_table1_col1=3019
+RESULT:n_obs_table1_col3=3008
+RESULT:excess_males_sum_tableC1_col5=1.405543
+RESULT:excess_males_annual_tableC1_col6=1.536554
+RESULT:n_obs_sum_tableC1_col5=9282
+RESULT:n_obs_annual_tableC1_col6=27846

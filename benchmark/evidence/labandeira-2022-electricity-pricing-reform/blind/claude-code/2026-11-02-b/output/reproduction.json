@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "entry_id": "labandeira-2022-electricity-pricing-reform",
+  "mode": "blind",
+  "run_id": "2026-11-02-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Price, income and instruments taken in the dataset's CPI-deflated form (lnPRE, lny/lny2, lnPRE_papas_/lnPRE_aguav_/lnPRE_gascar_); the paper does not state whether prices are deflated. Income is only available deflated, so the price was kept in the same real terms.",
+    "Instruments use the dataset's imputed versions (missing household prices replaced by the period mean), so OLS and IV columns share one sample, as Table 2 reports identical N in all columns.",
+    "Retirement income (PENSIO_j) is not included as a control: it is in Table 1 but not in the control list of equation (4).",
+    "LIML implemented by hand (k-class with kappa = minimum eigenvalue); household-FE LIML estimated on within-demeaned data (FWL). Only point estimates are scored; cluster-robust SEs are printed as diagnostics.",
+    "Number of id counts all households in the estimation sample, including 586 that are left with a single observation after listwise deletion (fixest drops them from the FE fit; they do not affect the coefficients)."
+  ],
+  "notes": "Data: analysis data/data_to_run_DOFILE3.dta (read with haven). Sample: observations with the reform dummy T2 defined (Sept 2011-Mar 2014 interviews; 25,775 obs / 12,888 households, matching the paper's panel size), then listwise deletion on regression variables (mainly economic-situation missing for 4,445 obs and surface for 462) -> 20,872 obs, 10,729 households. Dependent variables lnc_ele and lng_ele (log annualised kWh and EUR). Regressors: T2, log real kWh price, log real income and its square, months since reform (dist), household size, rooms, m2, elderly, renting, building >25 yrs, urban, province capital, education (4), economic situation (3), municipality size (5), region (CCAA), quarter dummies, year dummies; household FE in cols 3/4/7/8; SEs clustered by household. Three exploratory runs (variable listing, tabulations, variable-definition checks) printed no RESULT lines. No author scripts or result files were opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-02T14:59:17Z",
+  "finished_at": "2026-11-02T15:05:31Z"
+}
