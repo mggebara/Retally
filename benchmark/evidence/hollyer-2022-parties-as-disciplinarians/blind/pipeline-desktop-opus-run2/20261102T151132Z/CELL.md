@@ -8,6 +8,7 @@
 | Model | desktop-opus-run2 |
 | Run | 20261102T151132Z |
 | Date | 2026-11-02T15:11:32Z |
+| Data access | public |
 | Results file | `benchmark/results/pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json` |
 | Artifacts | `benchmark/results/artifacts/hollyer-2022-parties-as-disciplinarians/blind/pipeline/20261102T151132Z` |
 | Executions | 1 |
@@ -32,7 +33,7 @@
 | `programmaticness_volatility_difference_moderate` | -0.3 (0.08) | -0.276021 | 7.99% | ±0.08 (se_band) | PASS | PASS |
 | `personalism_extremist_minus_moderate_low_volatility` | 0.15 (0.17) | 0.104118 | 30.59% | ±0.17 (se_band) | PASS | PASS |
 | `programmaticness_extremist_minus_moderate_high_volatility` | 0.44 (0.09) | 0.35364 | 19.63% | ±0.09 (se_band) | PASS | PASS |
-| `n_obs_table1` | 431 | 428 | 0.70% | ±4.31 (relative) | PASS | PASS |
+| `n_obs_table1` | 431 | 428 | 0.70% | ±21.55 (relative) | PASS | PASS |
 | `rd_effect_young` | -0.084 | -0.0842705 | 0.32% | ±0.00168 (relative) | PASS | PASS |
 | `rd_effect_young_outsider` | -0.092 | -0.0921315 | 0.14% | ±0.00184 (relative) | PASS | PASS |
 

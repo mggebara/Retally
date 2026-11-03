@@ -1,0 +1,112 @@
+Survey columns:
+ [1] "res_id"                        "wave"                         
+ [3] "east"                          "hate_violence_means"          
+ [5] "hate_pol_message"              "hate_prevent_settlement"      
+ [7] "hate_polcondemn"               "hate_justified"               
+ [9] "MateComp.cont"                 "JobComp.cont"                 
+[11] "LifeSatis.cont"                "pop_15_44_muni_gendergap_2015"
+[13] "age"                           "singdivsep"                   
+[15] "age_group"                     "gender"                       
+[17] "state"                         "citizenship"                  
+[19] "marital"                       "religion"                     
+[21] "eduyrs"                        "occupation"                   
+[23] "income"                        "household_size"               
+[25] "self_econ"                     "distance_ref"                 
+[27] "settle_ref"                    "lrscale"                      
+[29] "afd"                           "muslim_ind"                   
+[31] "afd_ind"                       "contact_ind"                  
+[33] "refugee_ind"                   "list"                         
+[35] "treatment_list"                "outcome_list"                 
+[37] "ref_integrating"               "ref_citizenship"              
+[39] "ref_reduce"                    "ref_moredone"                 
+[41] "ref_cultgiveup"                "ref_economy"                  
+[43] "ref_crime"                     "ref_terror"                   
+[45] "ref_loc_services"              "ref_loc_economy"              
+[47] "ref_loc_crime"                 "ref_loc_culture"              
+[49] "ref_loc_islam"                 "ref_loc_schools"              
+[51] "ref_loc_housing"               "ref_loc_wayoflife"            
+[53] "women_role"                   
+Wave 4 rows: 3019 
+Sociodemographic controls: age eduyrs income household_size self_econ gender occupation citizenship religion state 
+National: ref_integrating ref_citizenship ref_reduce ref_moredone ref_cultgiveup ref_economy ref_crime ref_terror women_role 
+Local: ref_loc_services ref_loc_economy ref_loc_crime ref_loc_culture ref_loc_islam ref_loc_schools ref_loc_housing ref_loc_wayoflife 
+Additional: contact_ind refugee_ind muslim_ind lrscale afd afd_ind distance_ref 
+N cols 3-6: 3008 3008 3008 3008 
+Context columns:
+ [1] "ags_county"                    "year"                         
+ [3] "ags_muni"                      "ags_state"                    
+ [5] "Hate_all_muni"                 "Physical_muni"                
+ [7] "pop_25_44_muni_gendergap_2015" "pop_15_44_muni_gendergap_2015"
+ [9] "population_muni_2015"          "popdens_muni_2015"            
+[11] "log_unemp_all_muni_2015"       "unemp_gendergap_2015"         
+[13] "d_pop1511_muni"                "vote_afd_2013_muni"           
+[15] "log_ref_inflow_1514"           "pop_ref_2014"                 
+[17] "pc_ref_male"                   "violence_percap_2015"         
+[19] "pc_hidegree_all2011"           "pc_manufacturing_2015"        
+[21] "d_manuf1115"                   "east"                         
+[23] "Hate_all_muni_bin"             "Physical_muni_bin"            
+[25] "log_population_muni_2015"      "log_popdens_muni_2015"        
+[27] "log_pop_ref_2014"              "log_violence_percap_2015"     
+ID: ags_muni  Excess: pop_15_44_muni_gendergap_2015  Outcome: Hate_all_muni 
+Controls: log_population_muni_2015 popdens_muni_2015 d_pop1511_muni log_unemp_all_muni_2015 unemp_gendergap_2015 pop_ref_2014 log_ref_inflow_1514 pc_hidegree_all2011 pc_manufacturing_2015 d_manuf1115 vote_afd_2013_muni violence_percap_2015 
+NA share per control:
+                      ex log_population_muni_2015        popdens_muni_2015 
+            8.868985e-03             8.781173e-05             3.784686e-02 
+          d_pop1511_muni  log_unemp_all_muni_2015     unemp_gendergap_2015 
+            3.600281e-03             1.343519e-02             3.863716e-03 
+            pop_ref_2014      log_ref_inflow_1514      pc_hidegree_all2011 
+            1.053741e-02             1.053741e-02             6.664910e-02 
+   pc_manufacturing_2015              d_manuf1115       vote_afd_2013_muni 
+            5.707763e-03             5.707763e-03             5.014050e-02 
+    violence_percap_2015 
+            3.863716e-03 
+Trim bounds: 0.8529412 1.454545 
+GLM estimation, family = binomial, Dep. Var.: y_any
+Observations: 27,774
+Fixed-effects: ags_county: 276,  year: 3
+Standard-errors: Clustered (ags_county) 
+                          Estimate Std. Error   z value   Pr(>|z|)    
+ex                        1.367038   0.440780  3.101403 1.9261e-03 ** 
+log_population_muni_2015  1.422474   0.043162 32.956416  < 2.2e-16 ***
+popdens_muni_2015        -0.000074   0.000134 -0.552355 5.8070e-01    
+d_pop1511_muni           -0.276820   0.654485 -0.422959 6.7233e-01    
+log_unemp_all_muni_2015   0.974958   0.151139  6.450731 1.1131e-10 ***
+vote_afd_2013_muni        5.858628   2.581205  2.269726 2.3224e-02 *  
+... 7 variables were removed because of collinearity
+(unemp_gendergap_2015, pop_ref_2014 and 5 others [full set in
+$collin.var])
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Log-Likelihood: -5,083.9   Adj. Pseudo R2: 0.316921
+           BIC: 13,073.7     Squared Cor.: 0.294792
+GLM estimation, family = binomial, Dep. Var.: y_sum
+Observations: 9,258
+Fixed-effects: ags_county: 276
+Standard-errors: Clustered (ags_county) 
+                            Estimate Std. Error   z value   Pr(>|z|)    
+ex                        1.30545720   0.515858  2.530650 1.1385e-02 *  
+log_population_muni_2015  1.65308304   0.057352 28.823317  < 2.2e-16 ***
+popdens_muni_2015         0.00000791   0.000176  0.044982 9.6412e-01    
+d_pop1511_muni           -0.63403803   1.050153 -0.603758 5.4600e-01    
+log_unemp_all_muni_2015   0.97070419   0.184283  5.267467 1.3832e-07 ***
+vote_afd_2013_muni        6.36194438   3.375168  1.884927 5.9440e-02 .  
+... 7 variables were removed because of collinearity
+(unemp_gendergap_2015, pop_ref_2014 and 5 others [full set in
+$collin.var])
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Log-Likelihood: -2,581.9   Adj. Pseudo R2: 0.340909
+           BIC:  7,739.4     Squared Cor.: 0.416969
+RESULT:mate_competition_table1_col1=0.437020
+RESULT:mate_competition_table1_col2=0.263437
+RESULT:job_competition_table1_col2=0.249956
+RESULT:n_obs_table1_col1=3019.000000
+RESULT:mate_competition_table1_col3=0.234450
+RESULT:mate_competition_table1_col4=0.192868
+RESULT:mate_competition_table1_col5=0.174966
+RESULT:mate_competition_table1_col6=0.151561
+RESULT:n_obs_table1_col3=3008.000000
+RESULT:excess_males_annual_tableC1_col6=1.367038
+RESULT:n_obs_annual_tableC1_col6=27774.000000
+RESULT:excess_males_sum_tableC1_col5=1.305457
+RESULT:n_obs_sum_tableC1_col5=9258.000000

@@ -8,6 +8,7 @@
 | Model | desktop-opus |
 | Run | 20261102T095147Z |
 | Date | 2026-11-02T09:51:47Z |
+| Data access | public |
 | Results file | `benchmark/results/pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json` |
 | Artifacts | `benchmark/results/artifacts/hanushek-2022-patience-risk-human-capital/blind/pipeline/20261102T095147Z` |
 | Executions | 1 |
@@ -28,13 +29,13 @@
 | `table1_col2_risk_taking` | -0.482 (0.261) | -0.0644497 | 86.63% | ±0.261 (se_band) | FAIL | FAIL |
 | `table1_col5_natives_patience` | 1.296 (0.133) | 1.2511 | 3.46% | ±0.133 (se_band) | PASS | PASS |
 | `table1_col5_natives_risk_taking` | -1.32 (0.189) | -1.19398 | 9.55% | ±0.189 (se_band) | PASS | PASS |
-| `table1_col3_observations` | 1.99228e+06 | 1.99228e+06 | 0.00% | ±19922.8 (relative) | PASS | PASS |
+| `table1_col3_observations` | 1.99228e+06 | 1.99228e+06 | 0.00% | ±99613.8 (relative) | PASS | PASS |
 | `table2_col3_patience` | 0.931 (0.116) | 0.930657 | 0.04% | ±0.116 (se_band) | PASS | PASS |
 | `table2_col3_risk_taking` | -0.294 (0.122) | -0.293956 | 0.02% | ±0.122 (se_band) | PASS | PASS |
 | `table2_col1_patience` | 0.779 (0.115) | 0.778733 | 0.03% | ±0.115 (se_band) | PASS | PASS |
 | `table2_col4_patience` | 1.032 (0.133) | 1.03244 | 0.04% | ±0.133 (se_band) | PASS | PASS |
 | `table2_col4_risk_taking` | -0.449 (0.14) | -0.448965 | 0.01% | ±0.14 (se_band) | PASS | PASS |
-| `table2_col3_observations` | 80398 | 80397 | 0.00% | ±803.98 (relative) | PASS | PASS |
+| `table2_col3_observations` | 80398 | 80397 | 0.00% | ±4019.9 (relative) | PASS | PASS |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 12/13 pass, which agrees with the row's 12/13.
 

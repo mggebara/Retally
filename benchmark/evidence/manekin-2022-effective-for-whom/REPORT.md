@@ -6,6 +6,7 @@
 - I4R report: https://www.econstor.eu/bitstream/10419/279959/1/I4R-DP086.pdf
 - I4R outcome label: reproducible; split: holdout
 - Catalog entry (ground truth): `benchmark/papers/manekin-2022-effective-for-whom.yaml`
+- Data access: public
 
 > Headline finding: nonviolent protest by ethnic minorities is perceived as more violent and as requiring more police action than identical protest by majorities (Study 1: U.S. Black protesters +0.235 / +0.268 on 0-10 scales; Israel Arab protesters +0.623 / +0.964, Ethiopian +0.425 / +0.181 n.s.), and Study 2 replicates it in June 2020 (U.S. Black protesters +0.347 / +0.429).
 > Original analysis in R (base lm() with stargazer output); language: r is the reproduction target and matches the original.
@@ -42,6 +43,7 @@
 | `pipeline-claude-opus-4-7` | [7/12](seeded/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [12/12](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [6/12](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) |
 | `pipeline-claude-opus-5-5` | [12/12](seeded/pipeline-claude-opus-5-5/20261022T044632Z/CELL.md) (20261022T044632Z) | [12/12](independent/pipeline-claude-opus-5-5/20261022T044632Z/CELL.md) (20261022T044632Z) | [12/12](blind/pipeline-claude-opus-5-5/20261022T044632Z/CELL.md) (20261022T044632Z) |
 | `pipeline-desktop-opus-run2` | [12/12](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [12/12](independent/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) | [9/12](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
+| `pipeline-desktop-opus-run3` | [12/12](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [12/12](independent/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) | [12/12](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
 
@@ -89,9 +91,9 @@ _None._
 
 Pass rates at least 50 points apart (not unanimous):
 
-- blind: `study1_israel_arab_perceived_violence` — pipeline 1/3, agent 3/3
-- blind: `study1_israel_arab_police_action` — pipeline 1/3, agent 3/3
-- blind: `study1_israel_ethiopian_police_action` — pipeline 1/3, agent 3/3
+- blind: `study1_israel_arab_perceived_violence` — pipeline 2/4, agent 3/3
+- blind: `study1_israel_arab_police_action` — pipeline 2/4, agent 3/3
+- blind: `study1_israel_ethiopian_police_action` — pipeline 2/4, agent 3/3
 
 ## Cells
 
@@ -114,6 +116,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### seeded · pipeline-desktop-opus-run2 · 20261023T151837Z
 
 [`seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md`](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-10-23T15:18:37Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
+
+### seeded · pipeline-desktop-opus-run3 · 20261103T010557Z
+
+[`seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md`](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-11-03T01:05:57Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 
 ### independent · claude-code · 2026-10-21-b
 
@@ -139,6 +145,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-10-23T15:08:32Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-run3 · 20261103T004800Z
+
+[`independent/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md`](independent/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-11-03T00:48:00Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
+
 ### blind · claude-code · 2026-10-21-b
 
 [`blind/claude-code/2026-10-21-b/CELL.md`](blind/claude-code/2026-10-21-b/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 3; 2026-10-22T02:25:00Z; from `claude-code-7papers-all-modes-2026-10-21.json`; evidence complete.
@@ -162,4 +172,8 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · pipeline-desktop-opus-run2 · 20261023T150832Z
 
 [`blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md`](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — final 9/12, re-scored 9/12; first scored 9/12; executions 1; 2026-10-23T15:08:32Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-run3 · 20261103T004800Z
+
+[`blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md`](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-11-03T00:48:00Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 

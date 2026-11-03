@@ -8,6 +8,7 @@
 | Model | — |
 | Run | 2026-11-02-b |
 | Date | 2026-11-02T19:52:00Z |
+| Data access | public |
 | Results file | `benchmark/results/claude-code-run2-23papers-seeded-2026-11-02.json` |
 | Artifacts | `benchmark/results/artifacts/douenne-2022-yellow-vests-carbon-tax/seeded/claude-code/20261102T194315Z` |
 | Run directory | `benchmark/reproductions/douenne-2022-yellow-vests-carbon-tax/seeded/2026-11-02-b` |
@@ -32,7 +33,7 @@
 | `winner_x_yellow_vests_supporter_table4_col3` | -0.151 (0.069) | -0.151474 | 0.31% | ±0.00302 (relative) | PASS | PASS |
 | `winner_x_initial_win_belief_table4_col3` | 0.08 (0.079) | 0.079694 | 0.38% | ±0.0016 (relative) | PASS | PASS |
 | `predicted_winner_believes_wins_table4_col4` | 0.153 (0.045) | 0.153068 | 0.04% | ±0.00306 (relative) | PASS | PASS |
-| `n_obs_table4_col1` | 757 | 757 | 0.00% | ±7.57 (relative) | PASS | PASS |
+| `n_obs_table4_col1` | 757 | 757 | 0.00% | ±37.85 (relative) | PASS | PASS |
 | `believes_not_lose_on_acceptance_iv_table6_col1` | 0.534 (0.132) | 0.534048 | 0.01% | ±0.01068 (relative) | PASS | PASS |
 | `believes_effective_on_approval_iv_table8_col1` | 0.416 (0.168) | 0.415553 | 0.11% | ±0.00832 (relative) | PASS | PASS |
 

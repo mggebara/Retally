@@ -8,6 +8,7 @@
 | Model | desktop-opus |
 | Run | 20261102T055735Z |
 | Date | 2026-11-02T05:57:35Z |
+| Data access | public |
 | Results file | `benchmark/results/pipeline-oracle-desktop-opus-4papers-all-modes-2026-11-02.json` |
 | Artifacts | `benchmark/results/artifacts/carrera-2022-who-chooses-commitment/blind/pipeline/20261102T055735Z` |
 | Executions | 1 |
@@ -26,13 +27,13 @@
 | `bcp_enhanced_info_treatment_col1` | 1.36 (0.57) | — | — | ±0.57 (se_band) | FAIL | FAIL |
 | `bcp_goal_minus_expected_attendance_col2` | 0.71 (0.29) | — | — | ±0.29 (se_band) | FAIL | FAIL |
 | `bcp_actual_minus_expected_attendance_col3` | 0.45 (0.22) | — | — | ±0.22 (se_band) | FAIL | FAIL |
-| `bcp_regression_observations` | 1126 | 0 | 100.00% | ±11.26 (relative) | FAIL | FAIL |
+| `bcp_regression_observations` | 1126 | 0 | 100.00% | ±56.3 (relative) | FAIL | FAIL |
 | `takeup_more_basic_info_treatment_col1` | -0.022 (0.041) | — | — | ±0.041 (se_band) | FAIL | FAIL |
 | `takeup_more_enhanced_info_treatment_col1` | -0.08 (0.031) | — | — | ±0.031 (se_band) | FAIL | FAIL |
 | `takeup_more_behavior_change_premium_col2` | 0.027 (0.011) | — | — | ±0.011 (se_band) | FAIL | FAIL |
 | `takeup_more_goal_minus_expected_attendance_col3` | 0.038 (0.013) | — | — | ±0.013 (se_band) | FAIL | FAIL |
 | `takeup_more_actual_minus_expected_attendance_col4` | -0.043 (0.013) | — | — | ±0.013 (se_band) | FAIL | FAIL |
-| `takeup_more_regression_observations` | 2824 | 0 | 100.00% | ±28.24 (relative) | FAIL | FAIL |
+| `takeup_more_regression_observations` | 2824 | 0 | 100.00% | ±141.2 (relative) | FAIL | FAIL |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 0/11 pass, which agrees with the row's 0/11.
 

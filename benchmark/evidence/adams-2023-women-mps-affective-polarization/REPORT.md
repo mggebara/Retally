@@ -6,6 +6,7 @@
 - I4R report: https://github.com/I4Replication/I4R-First-Meta-Paper
 - I4R outcome label: reproducible; split: holdout
 - Catalog entry (ground truth): `benchmark/papers/adams-2023-women-mps-affective-polarization.yaml`
+- Data access: public
 
 > Headline finding: partisans rate out-parties with more women MPs more warmly.  Moving an out-party's parliamentary delegation from no women to all women raises its mean 0-10 thermometer rating among other parties' partisans by 1.73 units (Table 1 col 2, p < 0.01; 1,842 directed party dyads, 125 parties, 20 Western democracies, 81 CSES surveys 1996-2017), and both women (2.10) and men (1.13) partisans show the bonus.
 > Original analysis in R (replication_code.R); language: r is the reproduction target.
@@ -40,6 +41,7 @@
 | `pipeline-claude-opus-4-7` | [11/11](seeded/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [7/11](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [1/11](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) |
 | `pipeline-desktop-opus` | [11/11](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) | [10/11](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) (20261023T064839Z) | [7/11](blind/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) |
 | `pipeline-desktop-opus-run2` | [11/11](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [8/11](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [2/11](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
+| `pipeline-desktop-opus-run3` | [11/11](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [11/11](independent/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md) (20261103T050517Z) | [8/11](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
 
@@ -53,14 +55,14 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 |---|---|---|---|---|---|---|
 | [independent/pipeline-desktop-opus/20261023T064839Z](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) | `women_mps_coef_men_partisans` | 1.69763 | 1.13 | ±0.5 (se_band) | 1.135 | FAIL |
 | [blind/pipeline-desktop-opus/20261023T063725Z](blind/pipeline-desktop-opus/20261023T063725Z/CELL.md) | `women_mps_coef_women_partisans` | 1.45509 | 2.1 | ±0.53 (se_band) | 1.217 | FAIL |
+| [independent/pipeline-desktop-opus-run3/20261103T050517Z](independent/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md) | `women_mps_coef_women_partisans` | 1.69044 | 2.1 | ±0.53 (se_band) | 0.773 | PASS |
 | [independent/pipeline-desktop-opus/20261023T064839Z](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) | `women_mps_coef_women_partisans` | 1.69263 | 2.1 | ±0.53 (se_band) | 0.769 | PASS |
+| [blind/claude-code/2026-11-01-a](blind/claude-code/2026-11-01-a/CELL.md) | `n_election_studies` | 76 | 81 | ±4.05 (relative) | 1.235 | FAIL |
 | [independent/pipeline-desktop-opus-run2/20261023T151837Z](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) | `women_mps_coef_women_partisans` | 1.71259 | 2.1 | ±0.53 (se_band) | 0.731 | PASS |
+| [blind/pipeline-desktop-opus-run3/20261103T004800Z](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) | `women_mps_coef_women_partisans` | 1.71259 | 2.1 | ±0.53 (se_band) | 0.731 | PASS |
 | [blind/pipeline-desktop-opus-run2/20261023T150832Z](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) | `women_mps_coef_women_partisans` | 1.71259 | 2.1 | ±0.53 (se_band) | 0.731 | PASS |
 | [independent/pipeline-desktop-opus-run2/20261023T151837Z](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) | `women_mps_coef_bivariate` | 1.60382 | 1.89 | ±0.43 (se_band) | 0.666 | PASS |
 | [blind/pipeline-desktop-opus/20261023T063725Z](blind/pipeline-desktop-opus/20261023T063725Z/CELL.md) | `women_mps_coef_bivariate` | 1.60382 | 1.89 | ±0.43 (se_band) | 0.666 | PASS |
-| [blind/pipeline-desktop-opus/20261023T063725Z](blind/pipeline-desktop-opus/20261023T063725Z/CELL.md) | `women_mps_coef_men_partisans` | 1.45694 | 1.13 | ±0.5 (se_band) | 0.654 | PASS |
-| [independent/pipeline-claude-opus-4-7/20261021T142909Z](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `coalition_partners_coef_full` | 1.07692 | 0.94 | ±0.25 (se_band) | 0.548 | PASS |
-| [blind/claude-code/2026-11-02-c](blind/claude-code/2026-11-02-c/CELL.md) | `coalition_partners_coef_full` | 1.07692 | 0.94 | ±0.25 (se_band) | 0.548 | PASS |
 
 ### Declared deviations
 
@@ -86,6 +88,8 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 - [independent/pipeline-desktop-opus/20261023T064839Z](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) (10/11; failed: `women_mps_coef_men_partisans`)
   - to_/from_mp_number are CMP party codes, not seat counts; the >=4 MPs restriction is applied to to_/from_prior_seats (seats in year before survey)
   - Party-size filter variant 'to4_drop' (handling of missing/999 seat codes, or which side is filtered) chosen as the one giving N closest to the paper's 1,842
+- [independent/pipeline-desktop-opus-run3/20261103T050517Z](independent/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md) (11/11)
+  - Sample restricted with additional filter 'from_ws_nonmiss' (women-share data completeness / MP threshold) to match the paper's dyad count; exact filter not stated in the paper
 - [blind/claude-code/2026-10-21-b](blind/claude-code/2026-10-21-b/CELL.md) (8/11; failed: `n_directed_dyads`, `n_obs_women_partisans`, `n_obs_men_partisans`)
   - Sample restriction applied literally as the paper states it: both parties i and j had >= 4 prior lower-chamber seats (from_prior_seats >= 4 & to_prior_seats >= 4), then listwise deletion on to_pfeml (44 rows), giving 1,535 dyads. Exploration (attempt-2) showed that filtering on the evaluated (to) party's seats only, with non-missing to_pfeml, yields 1,842 rows -- the dyad count quoted in the task context -- which suggests the authors' code may have applied the >=4-MP filter only to the out-party. This alternative was NOT adopted, because switching to it would be adjusting the specification toward a number given in the task.
   - Coalition/opposition-partner dummies use prior_coalition / prior_opposition (government status in the period before/at the time of the post-election survey), which the dataset codebook lists as the variables used in the analysis; govern_together / opposition_together are listed by the codebook as not used.
@@ -106,16 +110,16 @@ _None._
 
 Pass rates at least 50 points apart (not unanimous):
 
-- independent: `n_directed_dyads` — pipeline 1/3, agent 3/3
-- independent: `n_obs_men_partisans` — pipeline 1/3, agent 3/3
-- independent: `n_obs_women_partisans` — pipeline 1/3, agent 3/3
-- independent: `women_mps_coef_men_partisans` — pipeline 1/3, agent 3/3
-- blind: `coalition_partners_coef_full` — pipeline 1/3, agent 4/4
-- blind: `opposition_partners_coef_full` — pipeline 1/3, agent 4/4
-- blind: `right_left_distance_coef_full` — pipeline 1/3, agent 4/4
-- blind: `women_mps_coef_bivariate` — pipeline 1/3, agent 4/4
-- blind: `women_mps_coef_full` — pipeline 1/3, agent 4/4
-- blind: `women_mps_coef_women_partisans` — pipeline 1/3, agent 4/4
+- independent: `n_directed_dyads` — pipeline 2/4, agent 3/3
+- independent: `n_obs_men_partisans` — pipeline 2/4, agent 3/3
+- independent: `n_obs_women_partisans` — pipeline 2/4, agent 3/3
+- independent: `women_mps_coef_men_partisans` — pipeline 2/4, agent 3/3
+- blind: `coalition_partners_coef_full` — pipeline 2/4, agent 4/4
+- blind: `opposition_partners_coef_full` — pipeline 2/4, agent 4/4
+- blind: `right_left_distance_coef_full` — pipeline 2/4, agent 4/4
+- blind: `women_mps_coef_bivariate` — pipeline 2/4, agent 4/4
+- blind: `women_mps_coef_full` — pipeline 2/4, agent 4/4
+- blind: `women_mps_coef_women_partisans` — pipeline 2/4, agent 4/4
 
 ## Cells
 
@@ -138,6 +142,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### seeded · pipeline-desktop-opus-run2 · 20261023T151837Z
 
 [`seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md`](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — final 11/11, re-scored 11/11; first scored 11/11; executions 1; 2026-10-23T15:18:37Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
+
+### seeded · pipeline-desktop-opus-run3 · 20261103T010557Z
+
+[`seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md`](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — final 11/11, re-scored 11/11; first scored 11/11; executions 1; 2026-11-03T01:05:57Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 
 ### independent · claude-code · 2026-10-21-b
 
@@ -162,6 +170,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### independent · pipeline-desktop-opus-run2 · 20261023T151837Z
 
 [`independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — final 8/11, re-scored 8/11; first scored 8/11; executions 2; 2026-10-23T15:18:37Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
+
+### independent · pipeline-desktop-opus-run3 · 20261103T050517Z
+
+[`independent/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md`](independent/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md) — final 11/11, re-scored 11/11; first scored 2/11; executions 3; 2026-11-03T05:05:17Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 
 ### blind · claude-code · 2026-10-21-b
 
@@ -190,4 +202,8 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · pipeline-desktop-opus-run2 · 20261023T150832Z
 
 [`blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md`](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — final 2/11, re-scored 2/11; first scored 2/11; executions 1; 2026-10-23T15:08:32Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-run3 · 20261103T004800Z
+
+[`blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md`](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) — final 8/11, re-scored 8/11; first scored 8/11; executions 1; 2026-11-03T00:48:00Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 

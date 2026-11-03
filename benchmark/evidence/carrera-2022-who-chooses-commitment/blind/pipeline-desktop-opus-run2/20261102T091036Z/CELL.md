@@ -8,13 +8,14 @@
 | Model | desktop-opus-run2 |
 | Run | 20261102T091036Z |
 | Date | 2026-11-02T09:10:36Z |
+| Data access | public |
 | Results file | `benchmark/results/pipeline-oracle-desktop-opus-run2-4papers-all-modes-2026-11-02.json` |
 | Artifacts | `benchmark/results/artifacts/carrera-2022-who-chooses-commitment/blind/pipeline/20261102T091036Z` |
 | Executions | 2 |
 | Refinements | 1 (1 error + 0 claim) |
 | First attempt | 0/11 |
 | First scored | 6/11 (execution 2) |
-| Final | **6/11** |
+| Final | **7/11** |
 | Package files withheld | 28 |
 | Evidence | complete |
 
@@ -26,15 +27,15 @@
 | `bcp_enhanced_info_treatment_col1` | 1.36 (0.57) | 1.25885 | 7.44% | ±0.57 (se_band) | PASS | PASS |
 | `bcp_goal_minus_expected_attendance_col2` | 0.71 (0.29) | -0.0877375 | 112.36% | ±0.29 (se_band) | FAIL | FAIL |
 | `bcp_actual_minus_expected_attendance_col3` | 0.45 (0.22) | 0.486171 | 8.04% | ±0.22 (se_band) | PASS | PASS |
-| `bcp_regression_observations` | 1126 | 1152 | 2.31% | ±11.26 (relative) | FAIL | FAIL |
+| `bcp_regression_observations` | 1126 | 1152 | 2.31% | ±56.3 (relative) | PASS | FAIL |
 | `takeup_more_basic_info_treatment_col1` | -0.022 (0.041) | -0.0741149 | 236.89% | ±0.041 (se_band) | FAIL | FAIL |
 | `takeup_more_enhanced_info_treatment_col1` | -0.08 (0.031) | -0.07605 | 4.94% | ±0.031 (se_band) | PASS | PASS |
 | `takeup_more_behavior_change_premium_col2` | 0.027 (0.011) | 0.025385 | 5.98% | ±0.011 (se_band) | PASS | PASS |
 | `takeup_more_goal_minus_expected_attendance_col3` | 0.038 (0.013) | 0.0960554 | 152.78% | ±0.013 (se_band) | FAIL | FAIL |
 | `takeup_more_actual_minus_expected_attendance_col4` | -0.043 (0.013) | -0.0528401 | 22.88% | ±0.013 (se_band) | PASS | PASS |
-| `takeup_more_regression_observations` | 2824 | 1152 | 59.21% | ±28.24 (relative) | FAIL | FAIL |
+| `takeup_more_regression_observations` | 2824 | 1152 | 59.21% | ±141.2 (relative) | FAIL | FAIL |
 
-Re-scored from `output/stdout.txt` with the runner's comparator: 6/11 pass, which agrees with the row's 6/11.
+Re-scored from `output/stdout.txt` with the runner's comparator: 7/11 pass, which agrees with the row's 7/11.
 
 Per-claim ground truth, tolerance rule and errors: [`scoring.json`](scoring.json).
 

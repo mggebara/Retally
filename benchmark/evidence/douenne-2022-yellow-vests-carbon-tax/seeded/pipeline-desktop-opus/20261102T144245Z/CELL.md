@@ -8,6 +8,7 @@
 | Model | desktop-opus |
 | Run | 20261102T144245Z |
 | Date | 2026-11-02T14:42:45Z |
+| Data access | public |
 | Results file | `benchmark/results/pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json` |
 | Artifacts | `benchmark/results/artifacts/douenne-2022-yellow-vests-carbon-tax/seeded/pipeline/20261102T144245Z` |
 | Executions | 5 |
@@ -31,7 +32,7 @@
 | `winner_x_yellow_vests_supporter_table4_col3` | -0.151 (0.069) | -0.140325 | 7.07% | ±0.00302 (relative) | FAIL | FAIL |
 | `winner_x_initial_win_belief_table4_col3` | 0.08 (0.079) | 0.238755 | 198.44% | ±0.0016 (relative) | FAIL | FAIL |
 | `predicted_winner_believes_wins_table4_col4` | 0.153 (0.045) | 0.149585 | 2.23% | ±0.00306 (relative) | FAIL | FAIL |
-| `n_obs_table4_col1` | 757 | 757 | 0.00% | ±7.57 (relative) | PASS | PASS |
+| `n_obs_table4_col1` | 757 | 757 | 0.00% | ±37.85 (relative) | PASS | PASS |
 | `believes_not_lose_on_acceptance_iv_table6_col1` | 0.534 (0.132) | 0.536192 | 0.41% | ±0.01068 (relative) | PASS | PASS |
 | `believes_effective_on_approval_iv_table8_col1` | 0.416 (0.168) | 0.45953 | 10.46% | ±0.00832 (relative) | FAIL | FAIL |
 

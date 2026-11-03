@@ -8,6 +8,7 @@
 | Model | — |
 | Run | 2026-11-01-a |
 | Date | 2026-11-02T04:30:00Z |
+| Data access | public |
 | Results file | `benchmark/results/claude-code-run2-13papers-indep-blind-2026-11-01.json` |
 | Artifacts | `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/claude-code/20261102T043820Z` |
 | Run directory | `benchmark/reproductions/montero-2022-cooperative-property-rights/independent/2026-11-01-a` |
@@ -27,12 +28,12 @@
 | `earnings_level_above500_bw150` | 52.79 (40.61) | 71.8293 | 36.07% | ±40.61 (se_band) | PASS | PASS |
 | `earnings_iqr_above500_bw300` | -42.97 (17.82) | -56.4231 | 31.31% | ±17.82 (se_band) | PASS | PASS |
 | `earnings_iqr_above500_bw150` | -51.79 (24.79) | -63.7272 | 23.05% | ±24.79 (se_band) | PASS | PASS |
-| `n_obs_earnings_level_bw300` | 4770 | 4770 | 0.00% | ±47.7 (relative) | PASS | PASS |
-| `n_obs_earnings_level_bw150` | 1583 | 1583 | 0.00% | ±15.83 (relative) | PASS | PASS |
-| `n_obs_earnings_iqr_bw300` | 327 | 327 | 0.00% | ±3.27 (relative) | PASS | PASS |
-| `n_obs_earnings_iqr_bw150` | 118 | 118 | 0.00% | ±1.18 (relative) | PASS | PASS |
-| `n_clusters_bw300` | 98 | 98 | 0.00% | ±0.98 (relative) | PASS | PASS |
-| `n_clusters_bw150` | 36 | 36 | 0.00% | ±0.5 (printed_precision) | PASS | PASS |
+| `n_obs_earnings_level_bw300` | 4770 | 4770 | 0.00% | ±238.5 (relative) | PASS | PASS |
+| `n_obs_earnings_level_bw150` | 1583 | 1583 | 0.00% | ±79.15 (relative) | PASS | PASS |
+| `n_obs_earnings_iqr_bw300` | 327 | 327 | 0.00% | ±16.35 (relative) | PASS | PASS |
+| `n_obs_earnings_iqr_bw150` | 118 | 118 | 0.00% | ±5.9 (relative) | PASS | PASS |
+| `n_clusters_bw300` | 98 | 98 | 0.00% | ±4.9 (relative) | PASS | PASS |
+| `n_clusters_bw150` | 36 | 36 | 0.00% | ±1.8 (relative) | PASS | PASS |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 10/10 pass, which agrees with the row's 10/10.
 

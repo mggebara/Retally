@@ -1,0 +1,101 @@
+Rows in s: 3002 
+gain column: simule_gain 
+-- simule_gagnant --
+
+   0    1 
+ 744 2258 
+winner column: simule_gagnant  mean: 0.7521652  agreement with gain>0: 0.9813458 
+-- winning_feedback_category --
+
+     Loser Unaffected     Winner       <NA> 
+      1127        458        383       1034 
+-- winning_category --
+
+     Loser Unaffected     Winner 
+      1961        620        421 
+-- taxe_approbation --
+
+ Non  NSP  Oui 
+2134  567  301 
+mean acceptance 0.2891406  mean approval 0.1002665 
+mean YV supporter 0.3407728 
+-- taxe_efficace --
+
+ Non  NSP  Oui 
+2000  523  479 
+demo controls: sexe, age, statut_emploi, csp, region, diplome4, taille_menage, rev_tot, nb_14_et_plus, nb_adultes, fume, actualite, taille_agglo, uc, niveau_vie, age_18_24, age_25_34, age_35_49, age_50_64, age_65_plus 
+-- variante_taxe_info --
+
+   f    p 
+1968 1034 
+feedback sample size: 1968 
+                 Estimate   Std. Error    t value     Pr(>|t|)
+(Intercept) -2.819100e-01 2.534000e-01 -1.1125097 2.663015e-01
+winner       2.845848e-01 5.797469e-02  4.9087759 1.141630e-06
+acc          2.513221e-01 4.087709e-02  6.1482378 1.317030e-09
+gain        -1.148320e-04 1.005853e-03 -0.1141639 9.091407e-01
+gain2        8.837993e-06 2.351571e-05  0.3758336 7.071547e-01
+rev          6.117692e-02 5.655363e-02  1.0817505 2.797364e-01
+Table6 cols: taxe_cible_approbation gagnant_cible_categorie traite_cible traite_cible_conjoint cible 
+-- taxe_cible_approbation --
+
+ Non  NSP  Oui 
+2055  473  474 
+-- gagnant_cible_categorie --
+
+    Gagnant Non affecté     Perdant 
+        464         617        1921 
+-- traite_cible --
+
+   0    1 
+1960 1042 
+-- traite_cible_conjoint --
+
+   0    1 
+1730 1272 
+-- cible --
+
+  20   30   40   50 
+1069  456  488  989 
+TSLS estimation: Second stage
+|- D.V.   : yacc
+|- Endo.  : notlose
+|- Instr. : e1, e2, e12
+Dep. Var.: yacc
+Observations: 3,002
+Weights: w
+Standard-errors: IID 
+             Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)  0.023916   0.041813  0.571966 5.6739e-01    
+fit_notlose  0.534976   0.071123  7.521864 7.0989e-14 ***
+cible30     -0.010011   0.020116 -0.497671 6.1875e-01    
+cible40     -0.009840   0.020091 -0.489773 6.2433e-01    
+cible50     -0.000396   0.017569 -0.022544 9.8202e-01    
+single       0.025352   0.017036  1.488117 1.3683e-01    
+acc          0.370778   0.021855 16.965477  < 2.2e-16 ***
+rev         -0.016956   0.015194 -1.115961 2.6453e-01    
+rev2         0.002214   0.002157  1.026354 3.0481e-01    
+revc         0.008850   0.007253  1.220169 2.2250e-01    
+revc2       -0.000037   0.000026 -1.415102 1.5714e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.348626   Adj. R2: 0.26698
+F-test (1st stage), notlose: stat = 39.4031, p < 2.2e-16 , on 3 and 2,989 DoF.
+                 Wu-Hausman: stat =  1.4361, p = 0.23086 , on 1 and 2,990 DoF.
+                     Sargan: stat =  7.0573, p = 0.029345, on 2 DoF.
+Table8 instruments: apres_modifs info_CC 
+z means: 0.4810127 0.4983344 
+F-test (1st stage), eff: stat = 2.0270, p = 0.131918, on 2 and 2,943 DoF.
+RESULT:predicted_winner_believes_not_lose_table4_col1=0.284584767
+RESULT:initial_acceptance_believes_not_lose_table4_col1=0.251322095
+RESULT:predicted_winner_believes_not_lose_full_sample_table4_col2=0.2180995697
+RESULT:predicted_winner_heterogeneity_table4_col3=0.2413422607
+RESULT:initial_acceptance_heterogeneity_table4_col3=0.008666100491
+RESULT:yellow_vests_supporter_heterogeneity_table4_col3=0.03560890773
+RESULT:winner_x_initial_acceptance_table4_col3=0.1571383606
+RESULT:winner_x_yellow_vests_supporter_table4_col3=-0.166502925
+RESULT:winner_x_initial_win_belief_table4_col3=0.1165104604
+RESULT:predicted_winner_believes_wins_table4_col4=0.1579670344
+RESULT:n_obs_table4_col1=757
+RESULT:believes_not_lose_on_acceptance_iv_table6_col1=0.534976283
+RESULT:believes_effective_on_approval_iv_table8_col1=0.4061858442

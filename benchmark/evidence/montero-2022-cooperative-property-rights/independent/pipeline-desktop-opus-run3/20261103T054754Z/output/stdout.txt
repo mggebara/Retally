@@ -1,0 +1,63 @@
+Outcome NA count: 0  filled: 0 
+survey_year filled from year: 798 
+Rows where year differs from survey_year: 1027 
+Base N: 5060  with survey_year: 5060 
+DEVIATION: IQR computed at the property x survey-wave x interview-year level, keeping all cells (Stata collapse-style percentiles, IQR=0 for single-worker cells) since the paper's IQR unit (327 properties at bw300) exceeds the number of distinct properties and of property x survey-year cells
+OLS estimation, Dep. Var.: y
+Observations: 4,781
+Fixed-effects: survey_year: 8
+Standard-errors: Clustered (cl) 
+              Estimate Std. Error   t value Pr(>|t|)    
+Above500     82.545029  44.046985  1.874022 0.063906 .  
+run           0.058283   0.046357  1.257275 0.211642    
+Above500:run -0.181832   0.208868 -0.870560 0.386122    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 68.4     Adj. R2: 0.44333 
+             Within R2: 0.023376
+OLS estimation, Dep. Var.: y
+Observations: 1,583
+Fixed-effects: survey_year: 8
+Standard-errors: Clustered (cl) 
+              Estimate Std. Error  t value Pr(>|t|) 
+Above500     72.180888  55.994748 1.289065  0.20583 
+run           0.032171   0.117477 0.273851  0.78581 
+Above500:run  0.070609   0.410420 0.172042  0.86440 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 60.3     Adj. R2: 0.572266
+             Within R2: 0.048072
+OLS estimation, Dep. Var.: iqr
+Observations: 332
+Fixed-effects: survey_year: 8
+Standard-errors: Clustered (cl) 
+               Estimate Std. Error   t value Pr(>|t|)    
+Above500     -54.803677  23.737825 -2.308707 0.023061 *  
+run           -0.032965   0.048543 -0.679098 0.498676    
+Above500:run   0.286027   0.169033  1.692132 0.093798 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 70.5     Adj. R2: 0.179216
+             Within R2: 0.018628
+OLS estimation, Dep. Var.: iqr
+Observations: 118
+Fixed-effects: survey_year: 8
+Standard-errors: Clustered (cl) 
+               Estimate Std. Error   t value Pr(>|t|)    
+Above500     -63.227466  29.688962 -2.129662 0.040308 *  
+run           -0.049516   0.190432 -0.260021 0.796371    
+Above500:run   0.507371   0.385337  1.316694 0.196498    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 69.9     Adj. R2: 0.010871
+             Within R2: 0.031802
+RESULT:earnings_level_above500_bw300=82.5450
+RESULT:earnings_level_above500_bw150=72.1809
+RESULT:earnings_iqr_above500_bw300=-54.8037
+RESULT:earnings_iqr_above500_bw150=-63.2275
+RESULT:n_obs_earnings_level_bw300=4781
+RESULT:n_obs_earnings_level_bw150=1583
+RESULT:n_obs_earnings_iqr_bw300=332
+RESULT:n_obs_earnings_iqr_bw150=118
+RESULT:n_clusters_bw300=99
+RESULT:n_clusters_bw150=36

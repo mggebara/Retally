@@ -1,0 +1,82 @@
+global_approval columns:
+ [1] "country"          "qtr"              "rally_events"     "rally_kill"      
+ [5] "female_pres"      "execrlc"          "rally_event_any"  "country_code"    
+ [9] "ccode"            "election_qtr"     "lag_approval"     "rally_event_any2"
+[13] "growth"           "log_inflation"    "manchester"       "kill_16"         
+[17] "kill_18"          "kill_10"          "pres_15death"     "pres_20death"    
+[21] "kill_12"          "kill_14"          "kill_20"          "kill_08"         
+[25] "kill_06"          "kill_under5"      "kill_1_5"         "kill_3_5"        
+Attack variable: pres_15death  Woman exec variable: female_pres 
+Approval candidates:  
+Chosen Table 4 spec: 
+Table 4 error: attempt to select less than one element in get1index 
+did_data columns:
+ [1] "id"              "wave"            "wt_new_W12"      "starttimeW"     
+ [5] "endtimeW"        "likeMayW"        "likeCorbynW"     "likeSturgeonW"  
+ [9] "gender"          "post_bridge"     "dates_to_bomb"   "z_distance"     
+[13] "white"           "conservative"    "labour"          "party_other"    
+[17] "income"          "ideology"        "ideology2"       "ideo3"          
+[21] "may_bestpm"      "post_attack"     "likeMayW12a"     "likeMayW12b"    
+[25] "gender_roles"    "female_equality" "women_office"    "women_discrimin"
+[29] "women_jobs"      "likeFarronW"     "bestPMW"         "time"           
+[33] "treatment1"      "treatment2"     
+treatment1 : share ids with constant value = 1  mean = 0.1768804 
+Treatment variable: treatment1 
+Controls: white gender labour party_other income_r ideology_r 
+                   Estimate  Std. Error     t value      Pr(>|t|)
+(Intercept)     3.012565941 0.043772392   68.823424  0.000000e+00
+treat_v        -0.105036353 0.019692382   -5.333857  9.623487e-08
+time_v         -1.048065133 0.023620554  -44.370895  0.000000e+00
+wave_f::9      -0.821629455 0.023006717  -35.712590 1.368582e-278
+wave_f::10     -0.077465929 0.022482464   -3.445616  5.698576e-04
+wave_f::12      0.747541238 0.021902136   34.130975 1.051332e-254
+wave_f::13     -0.047200680 0.022148576   -2.131093  3.308248e-02
+wave_f::14      0.205790526 0.022039038    9.337546  9.939466e-21
+wave_f::15     -0.119374776 0.021456643   -5.563535  2.646454e-08
+white           0.292650032 0.016013420   18.275299  1.463068e-74
+gender          0.491369600 0.011023324   44.575448  0.000000e+00
+labour         -2.458059010 0.021406398 -114.828238  0.000000e+00
+party_other    -1.881782252 0.016255282 -115.764355  0.000000e+00
+income_r        0.004178252 0.002053934    2.034268  4.192567e-02
+ideology_r      0.514909307 0.003603867  142.876873  0.000000e+00
+treat_v:time_v -0.150165186 0.024505907   -6.127714  8.928869e-10
+attr(,"vcov_type")
+[1] "IID"
+                    Estimate  Std. Error       z value      Pr(>|z|)
+(Intercept)    -3.602393e+00 0.028986012 -1.242804e+02  0.000000e+00
+treat_v         1.249225e+00 0.008692170  1.437184e+02  0.000000e+00
+time_v          3.290034e-10 0.018346264  1.793299e-08  1.000000e+00
+wave_f::2       4.117635e-10 0.017808343  2.312194e-08  1.000000e+00
+wave_f::3       4.117557e-10 0.017808343  2.312151e-08  1.000000e+00
+wave_f::4       4.117462e-10 0.017808343  2.312097e-08  1.000000e+00
+wave_f::5       4.117513e-10 0.017808343  2.312126e-08  1.000000e+00
+wave_f::6       4.117445e-10 0.017808343  2.312088e-08  1.000000e+00
+wave_f::7       4.117072e-10 0.017808343  2.311878e-08  1.000000e+00
+wave_f::8       4.116074e-10 0.017808343  2.311318e-08  1.000000e+00
+wave_f::9       4.117601e-10 0.017808343  2.312175e-08  1.000000e+00
+wave_f::10      4.117324e-10 0.017808343  2.312020e-08  1.000000e+00
+wave_f::11      4.117474e-10 0.017808343  2.312104e-08  1.000000e+00
+wave_f::12      1.046950e-10 0.017808342  5.878988e-09  1.000000e+00
+wave_f::13      1.005508e-10 0.017808342  5.646276e-09  1.000000e+00
+wave_f::14      1.004444e-10 0.017808342  5.640300e-09  1.000000e+00
+wave_f::15      1.097211e-10 0.017808342  6.161222e-09  1.000000e+00
+white           1.700889e+00 0.010741125  1.583530e+02  0.000000e+00
+gender         -1.743011e-01 0.006331512 -2.752914e+01 7.867258e-167
+labour         -2.634428e+00 0.013652089 -1.929688e+02  0.000000e+00
+party_other    -3.648832e+00 0.010996955 -3.318038e+02  0.000000e+00
+income_r       -6.011176e-03 0.001155222 -5.203480e+00  1.955904e-07
+ideology_r      6.963557e-01 0.002789814  2.496065e+02  0.000000e+00
+treat_v:time_v -3.861581e-11 0.014870057 -2.596883e-09  1.000000e+00
+attr(,"vcov_type")
+[1] "IID"
+RESULT:intl_attack_table4=NA
+RESULT:intl_attack_x_woman_exec_table4=NA
+RESULT:n_obs_table4=NA
+RESULT:did_attack_x_time_like_may_table2=-0.1501651865
+RESULT:did_attack_like_may_table2=-0.105036353
+RESULT:did_time_like_may_table2=-1.048065133
+RESULT:did_attack_x_time_may_best_pm_table2=-3.861580574e-11
+RESULT:did_attack_may_best_pm_table2=1.249224992
+RESULT:did_time_may_best_pm_table2=3.290033602e-10
+RESULT:n_obs_did_like_may_table2=239919
+RESULT:n_obs_did_may_best_pm_table2=1481392

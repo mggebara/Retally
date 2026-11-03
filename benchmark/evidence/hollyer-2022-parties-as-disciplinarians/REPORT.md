@@ -6,6 +6,7 @@
 - I4R report: https://www.econstor.eu/bitstream/10419/274553/1/I4R-DP054.pdf
 - I4R outcome label: reproducible; split: holdout
 - Catalog entry (ground truth): `benchmark/papers/hollyer-2022-parties-as-disciplinarians.yaml`
+- Data access: public
 
 > Headline findings (as published): across DALP parties, higher electoral volatility goes with more Personalism and less Programmaticness (Hypothesis 1, Table 1 upper panel), but only for nonethnic and ideologically moderate parties; ethnic and extremist parties' strategies do not vary with volatility (Hypothesis 2), and in stable systems ethnic/extremist parties are more personalist while in volatile systems they are more programmatic (Hypothesis 3, three of four comparisons significant).  In Brazil, a party that barely wins a mayoral election is about 8-9 percentage points less likely to field a young (or young outsider) candidate next time (Table 2, local linear RD).  DP54 reproduces all of this except the extremist-party rows of Table 1.
 > Original analysis: Stata 16 (Table 1) and R 4.0.3 with rdrobust (Table 2); language: r is the reproduction target.
@@ -40,6 +41,7 @@
 | `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [13/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
 | `pipeline-desktop-opus` | [13/13](seeded/pipeline-desktop-opus/20261102T141403Z/CELL.md) (20261102T141403Z) | [13/13](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) (20261102T141403Z) | [10/13](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) (20261102T095147Z) |
 | `pipeline-desktop-opus-run2` | [13/13](seeded/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) (20261102T152052Z) | [13/13](independent/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) (20261102T152052Z) | [12/13](blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) (20261102T151132Z) |
+| `pipeline-desktop-opus-run3` | [13/13](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [12/13](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) (20261103T052626Z) | [10/13](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
 
@@ -51,16 +53,16 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 | Cell | Claim | Reproduced | Paper | Band | Error / band | Verdict |
 |---|---|---|---|---|---|---|
+| [independent/pipeline-desktop-opus-run3/20261103T052626Z](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) | `programmaticness_extremist_minus_moderate_high_volatility` | 0.347105 | 0.44 | ±0.09 (se_band) | 1.032 | FAIL |
+| [independent/pipeline-desktop-opus-run3/20261103T052626Z](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) | `programmaticness_volatility_difference_nonethnic` | -0.092345 | -0.15 | ±0.06 (se_band) | 0.961 | PASS |
 | [blind/pipeline-desktop-opus-run2/20261102T151132Z](blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) | `programmaticness_extremist_minus_moderate_high_volatility` | 0.35364 | 0.44 | ±0.09 (se_band) | 0.960 | PASS |
 | [blind/pipeline-desktop-opus-run2/20261102T151132Z](blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) | `personalism_volatility_difference_nonethnic` | 0.41266 | 0.35 | ±0.06 (se_band) | 1.044 | FAIL |
+| [blind/pipeline-desktop-opus-run3/20261103T004800Z](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) | `programmaticness_ethnic_minus_nonethnic_high_volatility` | 0.137021 | 0.2 | ±0.06 (se_band) | 1.050 | FAIL |
 | [blind/pipeline-desktop-opus/20261102T095147Z](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) | `programmaticness_volatility_difference_overall` | -0.163086 | -0.11 | ±0.05 (se_band) | 1.062 | FAIL |
 | [blind/pipeline-desktop-opus-run2/20261102T151132Z](blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) | `personalism_ethnic_minus_nonethnic_low_volatility` | 0.428185 | 0.31 | ±0.13 (se_band) | 0.909 | PASS |
 | [blind/pipeline-desktop-opus/20261102T095147Z](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) | `programmaticness_volatility_difference_nonethnic` | -0.218785 | -0.15 | ±0.06 (se_band) | 1.146 | FAIL |
 | [independent/pipeline-desktop-opus/20261102T141403Z](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) | `programmaticness_extremist_minus_moderate_high_volatility` | 0.364781 | 0.44 | ±0.09 (se_band) | 0.836 | PASS |
-| [blind/pipeline-desktop-opus-run2/20261102T151132Z](blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) | `personalism_volatility_difference_overall` | 0.348361 | 0.3 | ±0.06 (se_band) | 0.806 | PASS |
-| [independent/pipeline-desktop-opus-run2/20261102T152052Z](independent/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) | `programmaticness_extremist_minus_moderate_high_volatility` | 0.370113 | 0.44 | ±0.09 (se_band) | 0.777 | PASS |
-| [independent/claude-code/2026-11-02-a](independent/claude-code/2026-11-02-a/CELL.md) | `programmaticness_extremist_minus_moderate_high_volatility` | 0.3713 | 0.44 | ±0.09 (se_band) | 0.763 | PASS |
-| [independent/claude-code/2026-11-02-b](independent/claude-code/2026-11-02-b/CELL.md) | `programmaticness_extremist_minus_moderate_high_volatility` | 0.3713 | 0.44 | ±0.09 (se_band) | 0.763 | PASS |
+| [independent/pipeline-desktop-opus-run3/20261103T052626Z](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) | `programmaticness_ethnic_minus_nonethnic_high_volatility` | 0.150625 | 0.2 | ±0.06 (se_band) | 0.823 | PASS |
 
 ### Declared deviations
 
@@ -71,6 +73,9 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Table 1 covariate set reconstructed from the paper text and codebook: party size, union/business/religious links; plurality and PR indicators (mixed omitted), list type (cl: closed/open/non-list, factor), logged mean district magnitude, Polity, log democratic tenure, political system (factor), log GDP per capita, Gini, ethnic fractionalization. Sample = complete cases on outcomes, volatility, these covariates and the ethnic-links variable (431 parties, 75 countries); the extremism models lose one party with missing extremist2 (430).
   - Ethnic party = ethnic > 0.5 (majority of expert coders report ethnic/linguistic ties). Extremism = extremist2 (vote-weighted absolute left-right distance from country mean); extremist party evaluated at 3 as the paper states. Volatility p25/p75 taken over the party-level estimation sample. Predicted-value differences computed as linear contrasts of OLS coefficients; SEs clustered by country (HC1).
   - Table 2: rdrobust defaults (local linear, triangular kernel, mserd bandwidth, NN variance) on the open-seat sample dlameduck_runs == 0, cutoff 0 on mv_incparty.
+- [independent/pipeline-desktop-opus-run3/20261103T052626Z](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) (12/13; failed: `programmaticness_extremist_minus_moderate_high_volatility`)
+  - 25th/75th volatility percentiles computed using convention 'country' (full = all DALP parties with volatility data; country = country-level distribution)
+  - Political-openness controls used: polity
 - [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) (13/13)
   - Volatility 25th/75th percentiles taken over the party-level estimation sample (N=430) using Stata-style percentiles (R quantile type 2); the paper says only 'in the sample'.
   - Ethnic party coded as ethnic > 0.5 (strict majority of expert coders report ethnic/linguistic linkages).
@@ -91,10 +96,9 @@ _None._
 
 Pass rates at least 50 points apart (not unanimous):
 
-- blind: `personalism_volatility_difference_nonethnic` — pipeline 1/2, agent 3/3
-- blind: `programmaticness_ethnic_minus_nonethnic_high_volatility` — pipeline 1/2, agent 3/3
-- blind: `programmaticness_volatility_difference_nonethnic` — pipeline 1/2, agent 3/3
-- blind: `programmaticness_volatility_difference_overall` — pipeline 1/2, agent 3/3
+- blind: `programmaticness_ethnic_minus_nonethnic_high_volatility` — pipeline 1/3, agent 3/3
+- blind: `programmaticness_volatility_difference_nonethnic` — pipeline 1/3, agent 3/3
+- blind: `programmaticness_volatility_difference_overall` — pipeline 1/3, agent 3/3
 
 ## Cells
 
@@ -113,6 +117,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### seeded · pipeline-desktop-opus-run2 · 20261102T152052Z
 
 [`seeded/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md`](seeded/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-02T15:20:52Z; from `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`; evidence complete.
+
+### seeded · pipeline-desktop-opus-run3 · 20261103T010557Z
+
+[`seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md`](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-03T01:05:57Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 
 ### independent · claude-code · 2026-11-02-a
 
@@ -134,6 +142,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) — final 13/13, re-scored 13/13; first scored 10/13; executions 2; 2026-11-02T15:20:52Z; from `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-run3 · 20261103T052626Z
+
+[`independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md`](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) — final 12/13, re-scored 12/13; first scored 11/13; executions 4; 2026-11-03T05:26:26Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
+
 ### blind · claude-code · 2026-11-02-a
 
 [`blind/claude-code/2026-11-02-a/CELL.md`](blind/claude-code/2026-11-02-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 3; 2026-11-02T01:50:00Z; from `claude-code-6papers-all-modes-2026-11-02.json`; evidence complete.
@@ -153,4 +165,8 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · pipeline-desktop-opus-run2 · 20261102T151132Z
 
 [`blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md`](blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) — final 12/13, re-scored 12/13; first scored 12/13; executions 1; 2026-11-02T15:11:32Z; from `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-run3 · 20261103T004800Z
+
+[`blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md`](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) — final 10/13, re-scored 10/13; first scored 10/13; executions 1; 2026-11-03T00:48:00Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 

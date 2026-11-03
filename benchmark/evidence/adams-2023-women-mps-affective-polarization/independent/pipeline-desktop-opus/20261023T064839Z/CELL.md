@@ -8,6 +8,7 @@
 | Model | desktop-opus |
 | Run | 20261023T064839Z |
 | Date | 2026-10-23T06:48:39Z |
+| Data access | public |
 | Results file | `benchmark/results/pipeline-oracle-desktop-opus-9papers-all-modes-2026-10-23.json` |
 | Artifacts | `benchmark/results/artifacts/adams-2023-women-mps-affective-polarization/independent/pipeline/20261023T064839Z` |
 | Executions | 4 |
@@ -29,10 +30,10 @@
 | `right_left_distance_coef_full` | -0.6 (0.09) | -0.592612 | 1.23% | ±0.09 (se_band) | PASS | PASS |
 | `coalition_partners_coef_full` | 0.94 (0.25) | 0.951726 | 1.25% | ±0.25 (se_band) | PASS | PASS |
 | `opposition_partners_coef_full` | 0.37 (0.11) | 0.333888 | 9.76% | ±0.11 (se_band) | PASS | PASS |
-| `n_directed_dyads` | 1842 | 1842 | 0.00% | ±18.42 (relative) | PASS | FAIL |
-| `n_obs_women_partisans` | 1836 | 1839 | 0.16% | ±18.36 (relative) | PASS | FAIL |
-| `n_obs_men_partisans` | 1833 | 1836 | 0.16% | ±18.33 (relative) | PASS | FAIL |
-| `n_election_studies` | 81 | 81 | 0.00% | ±0.81 (relative) | PASS | PASS |
+| `n_directed_dyads` | 1842 | 1842 | 0.00% | ±92.1 (relative) | PASS | FAIL |
+| `n_obs_women_partisans` | 1836 | 1839 | 0.16% | ±91.8 (relative) | PASS | FAIL |
+| `n_obs_men_partisans` | 1833 | 1836 | 0.16% | ±91.65 (relative) | PASS | FAIL |
+| `n_election_studies` | 81 | 81 | 0.00% | ±4.05 (relative) | PASS | PASS |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 10/11 pass, which agrees with the row's 10/11.
 

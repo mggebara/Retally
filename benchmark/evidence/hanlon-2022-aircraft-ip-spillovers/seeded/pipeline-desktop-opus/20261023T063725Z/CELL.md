@@ -8,6 +8,7 @@
 | Model | desktop-opus |
 | Run | 20261023T063725Z |
 | Date | 2026-10-23T06:37:25Z |
+| Data access | public |
 | Results file | `benchmark/results/pipeline-oracle-desktop-opus-9papers-all-modes-2026-10-23.json` |
 | Artifacts | `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/seeded/pipeline/20261023T063725Z` |
 | Executions | 1 |
@@ -31,8 +32,8 @@
 | `airframe_maxspeed_trend_after_1926_us_vs_uk` | 0.031 (0.01) | 0.0305485 | 1.46% | ±0.00062 (relative) | PASS | PASS |
 | `engine_hp_per_weight_trend_before_1926_us` | 0.039 (0.009) | 0.039488 | 1.25% | ±0.00078 (relative) | PASS | PASS |
 | `engine_hp_per_weight_trend_after_1926_us` | -0.01 (0.005) | -0.0101684 | 1.68% | ±0.0005 (printed_precision) | PASS | PASS |
-| `observations_airframe_wingload_us` | 116 | 116 | 0.00% | ±1.16 (relative) | PASS | PASS |
-| `observations_engine_us` | 85 | 85 | 0.00% | ±0.85 (relative) | PASS | PASS |
+| `observations_airframe_wingload_us` | 116 | 116 | 0.00% | ±5.8 (relative) | PASS | PASS |
+| `observations_engine_us` | 85 | 85 | 0.00% | ±4.25 (relative) | PASS | PASS |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 12/12 pass, which agrees with the row's 12/12.
 

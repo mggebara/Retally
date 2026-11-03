@@ -1,0 +1,76 @@
+global_approval columns: country, qtr, rally_events, rally_kill, female_pres, execrlc, rally_event_any, country_code, ccode, election_qtr, lag_approval, rally_event_any2, growth, log_inflation, manchester, kill_16, kill_18, kill_10, pres_15death, pres_20death, kill_12, kill_14, kill_20, kill_08, kill_06, kill_under5, kill_1_5, kill_3_5 
+Using DV column: lag_approval (approval in the quarter following the attack quarter)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+  2.903  35.582  43.788  44.298  52.819  86.950     106 
+Attack variable: kill_16 
+Attack quarters: 60  under women: 9 
+OLS estimation, Dep. Var.: dv_
+Observations: 4,486
+Fixed-effects: cid_: 44
+Standard-errors: Clustered (cid_) 
+                  Estimate Std. Error   t value   Pr(>|t|)    
+attack         2.322088945  2.5338369  0.916432 3.6455e-01    
+woman         -2.937171666  2.7426029 -1.070943 2.9017e-01    
+growth        -0.000000446  0.0000003 -1.486391 1.4447e-01    
+log_inflation -0.804521191  0.7218780 -1.114484 2.7126e-01    
+execrlc        1.371258950  0.6218229  2.205224 3.2835e-02 *  
+election_qtr   3.986140083  0.5864403  6.797179 2.5323e-08 ***
+attack:woman  -3.828385836  6.3150906 -0.606228 5.4755e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 11.3     Adj. R2: 0.259304
+             Within R2: 0.031361
+did_data columns: id, wave, wt_new_W12, starttimeW, endtimeW, likeMayW, likeCorbynW, likeSturgeonW, gender, post_bridge, dates_to_bomb, z_distance, white, conservative, labour, party_other, income, ideology, ideology2, ideo3, may_bestpm, post_attack, likeMayW12a, likeMayW12b, gender_roles, female_equality, women_office, women_discrimin, women_jobs, likeFarronW, bestPMW, time, treatment1, treatment2 
+Rows: 1481408 
+wave x time:
+    
+         0     1
+  1  92588     0
+  2  92588     0
+  3  92588     0
+  4  92588     0
+  5  92588     0
+  6  92588     0
+  7  92588     0
+  8  92588     0
+  9  92588     0
+  10 92588     0
+  11 92588     0
+  12     0 92588
+  13     0 92588
+  14     0 92588
+  15     0 92588
+  16     0 92588
+Table of treatment1 :
+
+      0       1 
+1219376  262032 
+Table of treatment2 :
+
+      0       1 
+1117168  364240 
+Table of post_attack :
+
+      0       1 
+1219376  262032 
+Treatment variable: treatment2 
+DEVIATION: Used treatment2 (respondent-level wave-12 assignment) instead of treatment1 for the DiD treatment indicator
+bestPMW values:
+
+      0       1    <NA> 
+  79596   66207 1335605 
+     attack        time attack:time 
+-0.06263191 -0.41120886  0.33693084 
+      attack         time  attack:time 
+-0.007851809  0.171173388 -0.042959293 
+RESULT:intl_attack_table4=2.322089
+RESULT:intl_attack_x_woman_exec_table4=-3.828386
+RESULT:n_obs_table4=4486.000000
+RESULT:did_attack_x_time_like_may_table2=0.336931
+RESULT:did_attack_like_may_table2=-0.062632
+RESULT:did_time_like_may_table2=-0.411209
+RESULT:n_obs_did_like_may_table2=239919.000000
+RESULT:did_attack_x_time_may_best_pm_table2=-0.042959
+RESULT:did_attack_may_best_pm_table2=-0.007852
+RESULT:did_time_may_best_pm_table2=0.171173
+RESULT:n_obs_did_may_best_pm_table2=145803.000000

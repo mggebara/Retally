@@ -8,6 +8,7 @@
 | Model | — |
 | Run | 2026-10-22-a |
 | Date | 2026-10-22T02:45:54Z |
+| Data access | public |
 | Results file | `benchmark/results/claude-code-blind-rerun-2026-10-22.json` |
 | Artifacts | `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261022T024643Z` |
 | Run directory | `benchmark/reproductions/grier-2023-sugar-roll-call-voting/blind/2026-10-22-a` |
@@ -32,8 +33,8 @@
 | `sugar_contributions_calendar_year_incumbent_fe` | -0.0005 | -0.000314938 | 37.01% | ±5e-05 (printed_precision) | FAIL | FAIL |
 | `sugar_contributions_12_months_district_fe` | -0.0006 | -0.000571201 | 4.80% | ±5e-05 (printed_precision) | PASS | PASS |
 | `sugar_contributions_12_months_incumbent_fe` | -0.0003 | -0.000561285 | 87.09% | ±5e-05 (printed_precision) | FAIL | FAIL |
-| `observations_district_fe` | 186 | 186 | 0.00% | ±1.86 (relative) | PASS | PASS |
-| `observations_incumbent_fe` | 106 | 106 | 0.00% | ±1.06 (relative) | PASS | PASS |
+| `observations_district_fe` | 186 | 186 | 0.00% | ±9.3 (relative) | PASS | PASS |
+| `observations_incumbent_fe` | 106 | 106 | 0.00% | ±5.3 (relative) | PASS | PASS |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 9/11 pass, which agrees with the row's 9/11.
 

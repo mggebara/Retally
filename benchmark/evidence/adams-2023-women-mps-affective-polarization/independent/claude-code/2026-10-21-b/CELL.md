@@ -8,6 +8,7 @@
 | Model | — |
 | Run | 2026-10-21-b |
 | Date | 2026-10-22T02:08:30Z |
+| Data access | public |
 | Results file | `benchmark/results/claude-code-7papers-all-modes-2026-10-21.json` |
 | Artifacts | `benchmark/results/artifacts/adams-2023-women-mps-affective-polarization/independent/claude-code/20261022T021417Z` |
 | Run directory | `benchmark/reproductions/adams-2023-women-mps-affective-polarization/independent/2026-10-21-b` |
@@ -30,10 +31,10 @@
 | `right_left_distance_coef_full` | -0.6 (0.09) | -0.596712 | 0.55% | ±0.09 (se_band) | PASS | PASS |
 | `coalition_partners_coef_full` | 0.94 (0.25) | 0.951726 | 1.25% | ±0.25 (se_band) | PASS | PASS |
 | `opposition_partners_coef_full` | 0.37 (0.11) | 0.333888 | 9.76% | ±0.11 (se_band) | PASS | PASS |
-| `n_directed_dyads` | 1842 | 1842 | 0.00% | ±18.42 (relative) | PASS | PASS |
-| `n_obs_women_partisans` | 1836 | 1836 | 0.00% | ±18.36 (relative) | PASS | PASS |
-| `n_obs_men_partisans` | 1833 | 1833 | 0.00% | ±18.33 (relative) | PASS | PASS |
-| `n_election_studies` | 81 | 81 | 0.00% | ±0.81 (relative) | PASS | PASS |
+| `n_directed_dyads` | 1842 | 1842 | 0.00% | ±92.1 (relative) | PASS | PASS |
+| `n_obs_women_partisans` | 1836 | 1836 | 0.00% | ±91.8 (relative) | PASS | PASS |
+| `n_obs_men_partisans` | 1833 | 1833 | 0.00% | ±91.65 (relative) | PASS | PASS |
+| `n_election_studies` | 81 | 81 | 0.00% | ±4.05 (relative) | PASS | PASS |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 11/11 pass, which agrees with the row's 11/11.
 

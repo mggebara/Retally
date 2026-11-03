@@ -1,0 +1,88 @@
+Columns: tn, dispersed, age, study, mathgrade, disposable_income, raven_correct_answers, math_answers_correct, crt_answers_correct, session, treatment, average_ip, decision_number, utility_point, corner, chose_corner, indifference_point, pizza, control, main, id_stage2_upper, pap_sample, id_stage2, avg_id_stage2, qe_ard, qe_ard_lower, qe_ard_upper, qe_rad, qe_rad_lower, qe_rad_upper, rt_avg_stage_2, d_a0_main_tr, d_a1_main_tr, d_a2_main_tr, d_g0_main_tr, d_g1_main_tr, d_g2_main_tr, d_d1_main_tr, d_d2_main_tr, d_d3_main_tr, d_d4_main_tr, d_d5_main_tr, d_t1_main_tr, d_t2_main_tr, d_t3_main_tr, d_t4_main_tr, std_rt_2_main_tr, std_math_main_tr, std_crt_main_tr, std_raven_main_tr, std_start_row_main_tr, id_stage2_sign, cb_effect 
+Rows: 7254 
+Subjects: 806  rows/subject table:
+
+  9 
+806 
+--- decision_number 
+
+  1   2   3   4   5   6   7   8   9 
+806 806 806 806 806 806 806 806 806 
+--- dispersed 
+
+   0    1 <NA> 
+2574 2322 2358 
+--- id_stage2 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+ -63.00   -3.00    2.00   11.93   35.00   63.00    6485 
+--- corner 
+
+  -1    0    1 
+ 130 6223  901 
+--- chose_corner 
+
+   0    1 <NA> 
+ 607  199 6448 
+--- pizza 
+
+   0    1 
+2358 4896 
+--- control 
+
+   0    1 
+3591 3663 
+--- main 
+
+   0    1 <NA> 
+2322 2574 2358 
+--- treatment 
+
+   0    1 
+3663 3591 
+--- utility_point 
+
+   1    2    3    4    5    6    7    8 
+1057  806  806 1077  806  806  806 1090 
+Final row identified by: decision_number(max) 
+Balanced workday index from decision_number: TRUE 
+Groups (before exclusion):
+
+ DonC  DonT MainC MainT MechC MechT 
+  134   128   143   143   130   128 
+Summary of d:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ -63.00   -4.00    2.00   16.62   34.75  300.00 
+Manual-IP candidate scores:
+id_stage2_upper   avg_id_stage2    d_a0_main_tr    d_a1_main_tr    d_a2_main_tr 
+     0.55534685      0.55534685     -0.05259366     -0.05259366     -0.05259366 
+   d_g0_main_tr    d_g1_main_tr    d_g2_main_tr    d_d1_main_tr    d_d2_main_tr 
+    -0.05259366     -0.05259366     -0.05259366     -0.05259366     -0.05259366 
+Manual stated IP column: id_stage2_upper 
+Share of d > 62 (stated values already embedded): 0.1389578 
+Rule none              : MainT 143 MainC 143 MechT 128 MechC 130 DonT 128 DonC 134  score=335
+Rule chose_corner_bal  : MainT 100 MainC 103 MechT 102 MechC 101 DonT 100 DonC 101  score=7
+Rule chose_corner_all  : MainT 100 MainC 103 MechT 102 MechC 101 DonT 100 DonC 101  score=7
+Rule x_le0_ge125       : MainT 98 MainC 97 MechT 95 MechC 98 DonT 95 DonC 88  score=35
+Rule x_lt0_ge125       : MainT 106 MainC 110 MechT 106 MechC 105 DonT 105 DonC 105  score=55
+Rule x_le0_ge126       : MainT 98 MainC 97 MechT 95 MechC 98 DonT 95 DonC 88  score=35
+Rule x_lt0_gt125       : MainT 106 MainC 110 MechT 106 MechC 105 DonT 105 DonC 105  score=55
+Chosen exclusion rule: chose_corner_bal 
+Control repeated trade-off identified for 57 of 305 control subjects
+Mean x by workday (MainT): 41.8 40.9 39.7 39.7 36.3 36.6 37 35.4 
+Share upper corner MainT: 0.27 
+d lower/mid/upper: 31.37 37.475 43.58 
+rel lower/mid/upper: 0.1886026 0.2238739 0.2591452 
+Table3 consts: 0.07371558 -0.02829038 -0.02675294 -0.01724289  Ns: 202 201 203 203 
+RESULT:abs_concentration_bias_midpoint_table2_col2=37.475000
+RESULT:abs_concentration_bias_tobit_table2_col4=36.777463
+RESULT:rel_concentration_bias_lower_table2_col1=0.188603
+RESULT:rel_concentration_bias_midpoint_table2_col2=0.223874
+RESULT:rel_concentration_bias_upper_table2_col3=0.259145
+RESULT:n_obs_table2=100
+RESULT:rel_cb_mechanism_treatment_table3_col1=0.073716
+RESULT:diff_main_minus_mechanism_table3_col1=0.150158
+RESULT:rel_cb_donation_treatment_table3_col2=0.134129
+RESULT:diff_donation_treatment_minus_control_table3_col2=0.162419
+RESULT:diff_main_treatment_minus_control_table3_col3=0.250627
+RESULT:diff_mechanism_treatment_minus_control_table3_col4=0.090958
+RESULT:n_obs_table3=202

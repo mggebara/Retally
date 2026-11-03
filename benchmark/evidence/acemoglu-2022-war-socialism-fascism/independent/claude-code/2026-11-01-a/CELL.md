@@ -8,6 +8,7 @@
 | Model | — |
 | Run | 2026-11-01-a |
 | Date | 2026-11-02T04:31:00Z |
+| Data access | public |
 | Results file | `benchmark/results/claude-code-run2-13papers-indep-blind-2026-11-01.json` |
 | Artifacts | `benchmark/results/artifacts/acemoglu-2022-war-socialism-fascism/independent/claude-code/20261102T043820Z` |
 | Run directory | `benchmark/reproductions/acemoglu-2022-war-socialism-fascism/independent/2026-11-01-a` |
@@ -31,10 +32,10 @@
 | `iv_fascist_vote1921_table3_panelA_col6` | 0.34 (0.18) | 0.3369 | 0.91% | ±0.18 (se_band) | PASS | PASS |
 | `iv_fascist_vote1924_table3_panelC_col1` | 0.4 (0.17) | 0.3956 | 1.10% | ±0.17 (se_band) | PASS | PASS |
 | `iv_fascist_vote1924_table3_panelC_col6` | 0.51 (0.17) | 0.5126 | 0.51% | ±0.17 (se_band) | PASS | PASS |
-| `n_obs_main_sample` | 5775 | 5775 | 0.00% | ±57.75 (relative) | PASS | PASS |
-| `n_clusters_main_sample` | 181 | 181 | 0.00% | ±1.81 (relative) | PASS | FAIL |
-| `n_obs_fascist_vote1921` | 5358 | 5358 | 0.00% | ±53.58 (relative) | PASS | PASS |
-| `n_clusters_fascist_vote1921` | 175 | 175 | 0.00% | ±1.75 (relative) | PASS | FAIL |
+| `n_obs_main_sample` | 5775 | 5775 | 0.00% | ±288.75 (relative) | PASS | PASS |
+| `n_clusters_main_sample` | 181 | 181 | 0.00% | ±9.05 (relative) | PASS | FAIL |
+| `n_obs_fascist_vote1921` | 5358 | 5358 | 0.00% | ±267.9 (relative) | PASS | PASS |
+| `n_clusters_fascist_vote1921` | 175 | 175 | 0.00% | ±8.75 (relative) | PASS | FAIL |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 12/12 pass, which agrees with the row's 12/12.
 

@@ -8,13 +8,14 @@
 | Model | desktop-opus-run2 |
 | Run | 20261023T151837Z |
 | Date | 2026-10-23T15:18:37Z |
+| Data access | public |
 | Results file | `benchmark/results/pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json` |
 | Artifacts | `benchmark/results/artifacts/montero-2022-cooperative-property-rights/blind/pipeline/20261023T151837Z` |
 | Executions | 2 |
 | Refinements | 1 (1 error + 0 claim) |
 | First attempt | 0/10 |
 | First scored | 1/10 (execution 2) |
-| Final | **1/10** |
+| Final | **3/10** |
 | Package files withheld | 1 |
 | Evidence | complete |
 
@@ -26,14 +27,14 @@
 | `earnings_level_above500_bw150` | 52.79 (40.61) | 94.6765 | 79.35% | ±40.61 (se_band) | FAIL | FAIL |
 | `earnings_iqr_above500_bw300` | -42.97 (17.82) | 41.3073 | 196.13% | ±17.82 (se_band) | FAIL | FAIL |
 | `earnings_iqr_above500_bw150` | -51.79 (24.79) | 116.443 | 324.84% | ±24.79 (se_band) | FAIL | FAIL |
-| `n_obs_earnings_level_bw300` | 4770 | 3991 | 16.33% | ±47.7 (relative) | FAIL | FAIL |
-| `n_obs_earnings_level_bw150` | 1583 | 1513 | 4.42% | ±15.83 (relative) | FAIL | FAIL |
-| `n_obs_earnings_iqr_bw300` | 327 | 76 | 76.76% | ±3.27 (relative) | FAIL | FAIL |
-| `n_obs_earnings_iqr_bw150` | 118 | 28 | 76.27% | ±1.18 (relative) | FAIL | FAIL |
-| `n_clusters_bw300` | 98 | 99 | 1.02% | ±0.98 (relative) | FAIL | FAIL |
-| `n_clusters_bw150` | 36 | 36 | 0.00% | ±0.5 (printed_precision) | PASS | PASS |
+| `n_obs_earnings_level_bw300` | 4770 | 3991 | 16.33% | ±238.5 (relative) | FAIL | FAIL |
+| `n_obs_earnings_level_bw150` | 1583 | 1513 | 4.42% | ±79.15 (relative) | PASS | FAIL |
+| `n_obs_earnings_iqr_bw300` | 327 | 76 | 76.76% | ±16.35 (relative) | FAIL | FAIL |
+| `n_obs_earnings_iqr_bw150` | 118 | 28 | 76.27% | ±5.9 (relative) | FAIL | FAIL |
+| `n_clusters_bw300` | 98 | 99 | 1.02% | ±4.9 (relative) | PASS | FAIL |
+| `n_clusters_bw150` | 36 | 36 | 0.00% | ±1.8 (relative) | PASS | PASS |
 
-Re-scored from `output/stdout.txt` with the runner's comparator: 1/10 pass, which agrees with the row's 1/10.
+Re-scored from `output/stdout.txt` with the runner's comparator: 3/10 pass, which agrees with the row's 3/10.
 
 Per-claim ground truth, tolerance rule and errors: [`scoring.json`](scoring.json).
 

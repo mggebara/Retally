@@ -1,0 +1,111 @@
+Loaded rows: 325  cols: 62 
+Using river suitability column: riv_rug26count 
+DEVIATION: wrights variable treated as already per-capita (x 1e8); divided by 10,000 (no further division by population) to express wright apprentices per 10,000 people as the paper states
+Summary w_pc:
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+0.0000000 0.0000000 0.0002000 0.0005588 0.0006000 0.0340000 
+Summary m_pc:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+   0.00    1.00    7.00   19.54   24.93  393.70      27 
+Sample N: 298 
+                                  m1                  m2                   m3
+Dependent Var.:                 w_pc                w_pc                 w_pc
+                                                                             
+Constant           0.0004** (0.0001)    -0.0011 (0.0009)      0.0020 (0.0020)
+m_pc            9.34e-6*** (2.17e-6) 9.42e-6*** (1.7e-6) 1.04e-5*** (1.55e-6)
+lat                                   -1.22e-8 (7.23e-7)    -1.42e-6 (8.5e-7)
+lon                                   2.96e-6. (1.55e-6)     1.6e-6 (1.12e-6)
+rug                                      0.0002 (0.0002)      0.0003 (0.0003)
+elev                                    -0.0004 (0.0006)     -0.0007 (0.0007)
+suit                                                          0.0006 (0.0012)
+wheat_cont                                                    0.0003 (0.0004)
+grass                                                        -0.0005 (0.0004)
+prec                                                                         
+temp                                                                         
+popm                                                                         
+harb                                                                         
+lond                                                                         
+roman                                                                        
+nav                                                                          
+areav                                                                        
+riv                                                                          
+wheat                                                                        
+_______________ ____________________ ___________________ ____________________
+S.E.: Clustered               by: cl              by: cl               by: cl
+Observations                     298                 298                  298
+R2                           0.02457             0.04598              0.06302
+Adj. R2                      0.02127             0.02965              0.03708
+
+                                  m4                  m5                 m5r
+Dependent Var.:                 w_pc                w_pc                w_pc
+                                                                            
+Constant            -0.0074 (0.0111)    -0.0073 (0.0106)    -0.0087 (0.0123)
+m_pc            1.09e-5*** (1.91e-6) 7.43e-6** (2.16e-6) 6.23e-6*** (1.7e-6)
+lat                1.83e-6 (3.48e-6)   6.66e-6 (7.69e-6)   7.25e-6 (8.52e-6)
+lon                 1.5e-6 (1.08e-6)  -1.37e-6 (2.72e-6)  -1.31e-6 (2.74e-6)
+rug                  0.0003 (0.0003)     0.0004 (0.0004)     0.0004 (0.0004)
+elev                -0.0004 (0.0004)    -0.0008 (0.0008)    -0.0010 (0.0009)
+suit                 0.0007 (0.0013)     0.0013 (0.0019)     0.0014 (0.0019)
+wheat_cont          9.08e-5 (0.0002)   -0.0001 (7.92e-5)                    
+grass               -0.0006 (0.0005)    -0.0001 (0.0002)    -0.0001 (0.0002)
+prec                 0.0012 (0.0017)     0.0024 (0.0027)     0.0029 (0.0030)
+temp                 0.0010 (0.0011)     0.0006 (0.0007)     0.0006 (0.0008)
+popm                                   2.55e-5 (1.99e-5)   2.38e-5 (2.31e-5)
+harb                                     0.0005 (0.0004)     0.0004 (0.0004)
+lond                                    -0.0069 (0.0062)    -0.0070 (0.0063)
+roman                                   -0.0015 (0.0012)    -0.0007 (0.0009)
+nav                                     -0.0003 (0.0004)    -0.0002 (0.0004)
+areav                                   0.0005* (0.0002)    -0.0002 (0.0004)
+riv                                                            2e-6 (1.2e-6)
+wheat                                                        0.0003 (0.0002)
+_______________ ____________________ ___________________ ___________________
+S.E.: Clustered               by: cl              by: cl              by: cl
+Observations                     298                 298                 298
+R2                           0.06913             0.09235             0.10000
+Adj. R2                      0.03669             0.04067             0.04535
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+TSLS estimation: Second stage
+|- D.V.   : w_pc
+|- Endo.  : m_pc
+|- Instr. : riv_wheat
+Dep. Var.: w_pc
+Observations: 298
+Standard-errors: Clustered (cl) 
+               Estimate Std. Error   t value Pr(>|t|)    
+(Intercept) -0.00880757 0.01226290 -0.718229 0.477523    
+fit_m_pc     0.00000825 0.00000361  2.284226 0.028724 *  
+riv          0.00000189 0.00000131  1.446237 0.157267    
+wheat        0.00032779 0.00023055  1.421783 0.164198    
+lat          0.00000740 0.00000842  0.878991 0.385576    
+lon         -0.00000124 0.00000281 -0.441335 0.661765    
+rug          0.00037149 0.00039403  0.942789 0.352440    
+elev        -0.00095199 0.00087231 -1.091341 0.282796    
+suit         0.00132660 0.00192621  0.688713 0.495677    
+grass       -0.00010204 0.00024149 -0.422527 0.675301    
+prec         0.00294458 0.00299789  0.982218 0.332930    
+temp         0.00059854 0.00085806  0.697552 0.490200    
+popm         0.00002438 0.00002246  1.085761 0.285223    
+harb         0.00044142 0.00036091  1.223079 0.229710    
+lond        -0.00700887 0.00632231 -1.108593 0.275386    
+roman       -0.00042382 0.00102982 -0.411550 0.683252    
+nav         -0.00024292 0.00036451 -0.666430 0.509634    
+areav       -0.00021110 0.00037566 -0.561934 0.577847    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.001938   Adj. R2: 0.042398
+F-test (1st stage), m_pc: stat = 100.06803, p < 2.2e-16 , on 1 and 280 DoF.
+              Wu-Hausman: stat =   0.05990, p = 0.806841, on 1 and 279 DoF.
+RESULT:watermills_table2_col1=0.000009
+RESULT:watermills_table2_col2=0.000009
+RESULT:watermills_table2_col3=0.000010
+RESULT:watermills_table2_col4=0.000011
+RESULT:watermills_table2_col5=0.000007
+RESULT:watermills_ols_table3_col5=0.000006
+RESULT:watermills_iv_table3_col2=0.000017
+RESULT:watermills_iv_table3_col4=0.000013
+RESULT:watermills_iv_table3_col6=0.000008
+RESULT:first_stage_f_table3_col2=8.8575
+RESULT:first_stage_f_table3_col4=7.3238
+RESULT:first_stage_f_table3_col6=7.9240
+RESULT:n_districts_tables2_3=298

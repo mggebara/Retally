@@ -1,0 +1,168 @@
+Columns:
+  [1] "wave"                        "wavenum"                    
+  [3] "type_of_info"                "treatment"                  
+  [5] "incentive"                   "incentivetext"              
+  [7] "age_categories"              "income_categories"          
+  [9] "educ"                        "student_status"             
+ [11] "working_status"              "married"                    
+ [13] "children"                    "female"                     
+ [15] "risk_aversion"               "visits"                     
+ [17] "past4"                       "previsits1"                 
+ [19] "previsits2"                  "previsits3"                 
+ [21] "previsits4"                  "previsits5"                 
+ [23] "previsits6"                  "previsits7"                 
+ [25] "previsits8"                  "visits_100days"             
+ [27] "avevisits_20wks"             "visits_next4weeks"          
+ [29] "goal"                        "percent_goal"               
+ [31] "days_0"                      "days_1"                     
+ [33] "days_2"                      "days_3"                     
+ [35] "days_5"                      "days_7"                     
+ [37] "days_12"                     "wtp1v0_decision"            
+ [39] "wtp1v2_decision"             "wtp1v4_decision"            
+ [41] "wtp1v6_decision"             "wtp1v8_decision"            
+ [43] "wtp1v10_decision"            "wtp1v12_decision"           
+ [45] "wtp1v14_decision"            "wtp1v16_decision"           
+ [47] "wtp1v18_decision"            "wtp1v20_decision"           
+ [49] "wtp1v22_decision"            "wtp1v24_decision"           
+ [51] "wtp1v26_decision"            "wtp1v28_decision"           
+ [53] "wtp1v30_decision"            "wtp1v0_decision_2ndtry"     
+ [55] "wtp1v2_decision_2ndtry"      "wtp1v4_decision_2ndtry"     
+ [57] "wtp1v6_decision_2ndtry"      "wtp1v8_decision_2ndtry"     
+ [59] "wtp1v10_decision_2ndtry"     "wtp1v12_decision_2ndtry"    
+ [61] "wtp1v14_decision_2ndtry"     "wtp1v16_decision_2ndtry"    
+ [63] "wtp1v18_decision_2ndtry"     "wtp1v20_decision_2ndtry"    
+ [65] "wtp1v22_decision_2ndtry"     "wtp1v24_decision_2ndtry"    
+ [67] "wtp1v26_decision_2ndtry"     "wtp1v28_decision_2ndtry"    
+ [69] "wtp1v30_decision_2ndtry"     "wtp1"                       
+ [71] "wtp2"                        "wtp3"                       
+ [73] "wtp5"                        "wtp7"                       
+ [75] "wtp12"                       "maxwtp1"                    
+ [77] "maxwtp2"                     "maxwtp3"                    
+ [79] "maxwtp5"                     "maxwtp7"                    
+ [81] "maxwtp12"                    "q169"                       
+ [83] "q170"                        "chose_commit12"             
+ [85] "chose_anticommit11"          "q295"                       
+ [87] "q296"                        "past100days_went"           
+ [89] "past100days_should"          "sliderintro_wtp1"           
+ [91] "q137"                        "q138"                       
+ [93] "out_of_town_days"            "percent_meet_commit12"      
+ [95] "percent_meet_anticommit"     "typical_days_exer_elsewhere"
+ [97] "passed_attention_check"      "passed_1st_try"             
+ [99] "passed_comprehension_check"  "prefer20_to_0"              
+[101] "areyousure_prefer0_to_20"    "prefer80contingent_to_0"    
+[103] "areyousure_prefer0_to_80"    "flag_exclude_exog"          
+[105] "flag_low_wtp"                "flag_confusion"             
+Candidate forecast prefixes: days_ 
+Using forecast prefix: days_ 
+wave values:
+
+  fall spring winter 
+   350    414    528 
+wavenum values:
+
+  1   2   3 
+350 528 414 
+wave_n:
+
+  1   2   3 
+350 528 414 
+treatment values:
+
+       control        perday1        perday2        perday3        perday5 
+           427              1            305              2             77 
+       perday7 threshold80_12 
+           352            128 
+type_of_info values:
+
+     0-none 1-onlygraph 2-graphplus 
+        640         181         471 
+treat_n:
+   
+      1   2   3
+  0 106 177 144
+  1 244 351 270
+Excluded (endogenous): 12 
+Incentive values:
+
+   0    1    2    3    5    7 <NA> 
+ 427    1  305    2   77  352  128 
+Incentive text:
+itxt
+                                                
+                                            129 
+0 dollar per-day incentive (i.e., no incentive) 
+                                            430 
+           1 dollar per-day gym visit incentive 
+                                              1 
+          2 dollars per-day gym visit incentive 
+                                            301 
+          3 dollars per-day gym visit incentive 
+                                              2 
+          5 dollars per-day gym visit incentive 
+                                             77 
+          7 dollars per-day gym visit incentive 
+                                            352 
+Commitment-assigned: 0 
+Table 3 sample size: 1280 
+                              m1               m2               m3
+Dependent Var.:              bcp              bcp              bcp
+                                                                  
+basic           -0.3912 (0.5500) -0.3847 (0.5483)  0.1493 (0.5775)
+enh              0.2589 (0.4716)  0.2614 (0.4721)  0.7166 (0.5159)
+goal_z                           -0.1421 (0.2299)                 
+act_z                                             0.5648* (0.2300)
+Fixed-Effects:  ---------------- ---------------- ----------------
+wave_n                       Yes              Yes              Yes
+_______________ ________________ ________________ ________________
+S.E. type       Heterosked.-rob. Heterosked.-rob. Heterosked.-rob.
+Observations               1,280            1,280            1,152
+R2                       0.00349          0.00389          0.00876
+Within R2                0.00039          0.00079          0.00542
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+More-contract columns: chose_commit12 
+Table 4 obs: 1280 
+                              t1               t2                 t3
+Dependent Var.:             take             take               take
+                                                                    
+basic            0.0075 (0.0583)  0.0085 (0.0584)    0.0030 (0.0577)
+enh             -0.0301 (0.0345) -0.0308 (0.0345)   -0.0319 (0.0338)
+bcp_z                             0.0182 (0.0119)                   
+goal_z                                            0.0978*** (0.0137)
+act_z                                                               
+Fixed-Effects:  ---------------- ---------------- ------------------
+wave_n                       Yes              Yes                Yes
+_______________ ________________ ________________ __________________
+S.E.: Clustered          by: sid          by: sid            by: sid
+Observations               1,280            1,280              1,280
+R2                       0.00200          0.00332            0.04000
+Within R2                0.00061          0.00194            0.03867
+
+                               t4
+Dependent Var.:              take
+                                 
+basic            -0.0250 (0.0603)
+enh              -0.0512 (0.0387)
+bcp_z                            
+goal_z                           
+act_z           -0.0340* (0.0162)
+Fixed-Effects:  -----------------
+wave_n                        Yes
+_______________ _________________
+S.E.: Clustered           by: sid
+Observations                1,152
+R2                        0.00508
+Within R2                 0.00416
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RESULT:bcp_basic_info_treatment_col1=-0.391157
+RESULT:bcp_enhanced_info_treatment_col1=0.258863
+RESULT:bcp_goal_minus_expected_attendance_col2=-0.142052
+RESULT:bcp_actual_minus_expected_attendance_col3=0.564759
+RESULT:bcp_regression_observations=1280
+RESULT:takeup_more_basic_info_treatment_col1=0.007469
+RESULT:takeup_more_enhanced_info_treatment_col1=-0.030136
+RESULT:takeup_more_behavior_change_premium_col2=0.018246
+RESULT:takeup_more_goal_minus_expected_attendance_col3=0.097800
+RESULT:takeup_more_actual_minus_expected_attendance_col4=-0.033970
+RESULT:takeup_more_regression_observations=1280

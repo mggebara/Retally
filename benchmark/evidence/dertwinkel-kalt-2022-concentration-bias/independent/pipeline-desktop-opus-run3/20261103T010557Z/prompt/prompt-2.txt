@@ -1,0 +1,446 @@
+You are refining R code that reproduces results from an econometrics paper.
+The code RAN SUCCESSFULLY but the reproduced values do not match the
+paper's claims within the allowed tolerance.  Identify what is causing
+the gap and adjust the code to close it.
+
+## Paper
+Title: Funding by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under
+Methodology: - **Design / identification (consumption experiment, preregistered, AEA RCT-4446 and RCT-4341):** A within-subject lab experiment run in oTree with subjects recruited via ORSEE (sessions of 27–32, up to 75 min). Each subject first does 8 *balanced* trade-offs in random order. In trade-off j, extra real-effort tasks on a single workday j are traded against a raise r_j in a restaurant voucher redeemable on one later "restaurant day" (t = 9). This gives indifference points x̃ = (x̃1,…,x̃8). Then comes one *unbalanced* trade-off: x̃_t + d extra tasks on all 8 workdays against the total raise R = Σr_j (voucher raised from €7.50 to €38.80, i.e. a €31.30 raise). The elicited indifference point d̃ is the nonparametric, subject-level absolute measure of concentration bias. Standard discounting predicts d̃ = 0; the focusing model (Kőszegi & Szeidl 2013) predicts d̃ > 0.
+- **Parametrisation and elicitation:** Mandatory tasks e = (129,132,143,115,121,117,135,127). Raises r = (€2.90,2.70,3.10,2.70,3.20,2.90,3.10,3.20). Base voucher v1 = €7.50. Subjects pick 8 workdays from 20 business days and a restaurant day from 7 dates. The task is transcribing 6 numbers into letters, with 10 practice tasks first. Each trade-off has 126 binary choices (x ∈ {0,…,125} for balanced; d ∈ {−63,…,62} for unbalanced), resolved by an adaptive bisection procedure: the first choice is random, each later direct choice is the midpoint of the interval not yet covered, and there are at most about 9 direct choices. The indifference point is defined conservatively as the largest number of extra tasks accepted. Incentives follow Attema et al. (2016): 3 random subjects per session have a randomly chosen choice implemented (plus €100 lump sum). Everyone gets €10 plus earnings from the arithmetic task.
+- **Sample restrictions / preprocessing:** Preregistered exclusion of any subject with at least one corner choice in the 8 balanced trade-offs (robustness check in Online Appendix A.4). Upper-corner choosers in the unbalanced trade-off (always picking overtime; 27% of Main-Treatment, since 73% are interior) have d̃ proxied three ways: (i) lower bound d̃ = 62; (ii) upper bound = their un-incentivised, manually stated indifference point; (iii) the midpoint of (i) and (ii). The midpoint is the preferred version. Main-Treatment N = 100.
+- **Relative measure (headline outcome):** d̃_rel = (1/8) Σ_{t=1}^{8} d̃ / (e_t + x̃_t), i.e. extra tasks as a share of per-workday willingness to work (in proportion units, not standardised). Headline: d̃_rel = 0.224 (22.4%), using the midpoint d̃.
+- **Estimation (Table 2):** For each version of d̃ (lower, midpoint, upper bound), an OLS regression of d̃ and of d̃_rel on a constant only (i.e. the sample mean). Main-Treatment d̃ = 31.640 (2.685) / 37.610 (3.575) / 43.580 (4.683); d̃_rel = 0.190 (0.016) / 0.224 (0.021) / 0.259 (0.027). A Tobit on the lower-bound d̃, right-censored at 62, gives 37.094 (3.658). All have N = 100 and **robust (heteroskedasticity-robust) SEs**; no clustering and no fixed effects. Mean x̃ = (39.2,34.9,33.6,41.5,41.8,42.2,35.9,38.3). 88% of subjects have d̃_rel > 0, which a test shows is significantly greater than 50%.
+- **Between-condition comparisons (Table 3):** OLS of d̃_rel on a constant and a condition dummy, with N = 200 per column (100 per condition) and robust SEs. Mechanism-Treatment, where the raise is shown as a sum of parts: 0.075 (0.019); Main minus Mechanism = 0.149 (0.028). Donation-Treatment, where the benefit is a donation to LichtBlick Seniorenhilfe: 0.135 (0.021); difference from Donation-Control = 0.158 (0.022). Main-Control: −0.023 (0.008); Main-Treatment minus Main-Control = 0.247 (0.023). Mechanism-Control: −0.014 (0.010); difference = 0.090 (0.021). In the Control conditions, balanced trade-off j = 1, 4 or 8 is repeated in place of the unbalanced one, using the same d ∈ [−63, 62] deviation format. Within session, Treatment and Control are assigned at random by stratified pair matching: subjects are ranked by their mean balanced-choice tasks, and neighbouring pairs are split between the two conditions. Further comparisons: share with bias 70% vs 88% (p < 0.01); conditional magnitude 16% vs 26%.
+- **Covariates / heterogeneity:** Raven matrices, the CRT, an incentivised arithmetic test and demographics are collected. They are used as controls and for preregistered heterogeneity analyses (Online Appendix A.3): cognitive skills show no correlation, while response time is negatively correlated with bias. There are robustness checks with an alternative relative measure (A.5) and the absolute measure (A.6).
+- **Money experiment (Section 5 / Online Appendix C):** Convex time budget allocations à la Andreoni & Sprenger (2012), with a positive interest rate. Money-Main has n = 185 and Money-Mechanism n = 189. The outcome is the savings rate (share allocated to the later payoff). Balanced choices are compared with unbalanced ones, where the earlier or later payoff is dispersed over 2, 4 or 8 dates; all subjects face the same choices, with no individualisation. Results: −5.7 pp when the later payoff is dispersed and +6.8 pp when the earlier payoff is dispersed (both p < 0.01). The bias is 3.7 / 6.6 / 8.1 pp for 2 / 4 / 8 dates.
+
+
+## Current Code
+```r
+suppressPackageStartupMessages({
+  library(readr)
+  library(dplyr)
+  library(sandwich)
+  library(lmtest)
+  library(AER)
+})
+set.seed(42)
+
+path <- file.path("<repo>/.cache/datasets/dertwinkel_kalt_2022_concentration_bias.script-free",
+                  "Consumption Experiment", "Stata", "Consumption_Experiment.csv")
+df <- as.data.frame(read_csv(path, show_col_types = FALSE, guess_max = 100000))
+names(df) <- tolower(trimws(names(df)))
+cat("Columns:", paste(names(df), collapse = ", "), "\n")
+cat("Rows:", nrow(df), "\n")
+
+# convert numeric-like / logical columns
+for (v in names(df)) {
+  x <- df[[v]]
+  if (is.logical(x)) { df[[v]] <- as.numeric(x); next }
+  if (is.character(x)) {
+    nm <- !is.na(x) & trimws(x) != "" & trimws(x) != "."
+    num <- suppressWarnings(as.numeric(x))
+    if (sum(nm) > 0 && mean(!is.na(num[nm])) > 0.95) df[[v]] <- num
+    if (is.character(df[[v]])) {
+      lx <- tolower(trimws(x))
+      if (all(lx[nm] %in% c("true", "false"))) df[[v]] <- as.numeric(lx == "true")
+    }
+  }
+}
+
+is_bin <- function(x) is.numeric(x) && length(na.omit(x)) > 0 && all(na.omit(x) %in% c(0, 1))
+firstnn <- function(x) { y <- x[!is.na(x)]; if (length(y)) y[1] else NA }
+
+# ---------------- subject id ----------------
+if ("tn" %in% names(df)) {
+  cnt <- table(df$tn)
+  if (median(cnt) > 10 && "session" %in% names(df)) {
+    df$sid <- paste(df$session, df$tn, sep = "_")
+  } else df$sid <- as.character(df$tn)
+} else if ("id" %in% names(df)) {
+  df$sid <- as.character(df$id)
+} else df$sid <- as.character(seq_len(nrow(df)))
+cat("Subjects:", length(unique(df$sid)), " rows/subject table:\n"); print(table(table(df$sid)))
+df$rowi <- seq_len(nrow(df))
+
+for (v in intersect(c("decision_number", "dispersed", "id_stage2", "corner", "chose_corner",
+                      "pizza", "control", "main", "treatment", "utility_point"), names(df))) {
+  cat("---", v, "\n"); if (length(unique(df[[v]])) <= 30) print(table(df[[v]], useNA = "ifany")) else print(summary(df[[v]]))
+}
+
+# ---------------- identify the final (unbalanced / repeated) trade-off row ----------------
+df$final <- FALSE
+picked <- NULL
+for (cand in c("id_stage2", "stage2", "stage_2", "unbalanced", "dispersed", "final")) {
+  if (cand %in% names(df) && is_bin(df[[cand]])) {
+    s <- tapply(df[[cand]] %in% 1, df$sid, sum)
+    if (mean(s == 1) > 0.95) { df$final <- df[[cand]] %in% 1; picked <- cand; break }
+  }
+}
+if (is.null(picked)) {
+  if ("decision_number" %in% names(df)) {
+    df <- df %>% group_by(sid) %>%
+      mutate(.mx = suppressWarnings(max(decision_number, na.rm = TRUE)),
+             .cand = !is.na(decision_number) & decision_number == .mx,
+             final = .cand & rowi == max(rowi[.cand])) %>%
+      ungroup() %>% as.data.frame()
+    picked <- "decision_number(max)"
+  } else {
+    df <- df %>% group_by(sid) %>% mutate(final = rowi == max(rowi)) %>% ungroup() %>% as.data.frame()
+    picked <- "last row"
+  }
+}
+cat("Final row identified by:", picked, "\n")
+
+ipcol <- if ("indifference_point" %in% names(df)) "indifference_point" else "utility_point"
+df$ip <- df[[ipcol]]
+
+e_vec <- c(129, 132, 143, 115, 121, 117, 135, 127)
+
+bal <- df[!df$final, ]
+fin <- df[df$final, ]
+fin <- fin[!duplicated(fin$sid), ]
+
+# workday index for balanced rows
+bal <- bal %>% group_by(sid) %>% arrange(rowi, .by_group = TRUE) %>% mutate(ord = row_number()) %>% ungroup() %>% as.data.frame()
+use_dn <- FALSE
+if ("decision_number" %in% names(bal)) {
+  chk <- tapply(bal$decision_number, bal$sid, function(z) identical(sort(as.numeric(z)), as.numeric(1:8)))
+  chk0 <- tapply(bal$decision_number, bal$sid, function(z) identical(sort(as.numeric(z)), as.numeric(0:7)))
+  if (mean(chk, na.rm = TRUE) > 0.9) { bal$t <- bal$decision_number; use_dn <- TRUE }
+  else if (mean(chk0, na.rm = TRUE) > 0.9) { bal$t <- bal$decision_number + 1; use_dn <- TRUE }
+}
+if (!use_dn) bal$t <- bal$ord
+bal <- bal[bal$t %in% 1:8, ]
+cat("Balanced workday index from decision_number:", use_dn, "\n")
+
+X <- bal %>% select(sid, t, ip) %>% group_by(sid, t) %>% summarise(ip = first(ip), .groups = "drop")
+Xw <- reshape(as.data.frame(X), idvar = "sid", timevar = "t", direction = "wide")
+xcols <- paste0("ip.", 1:8)
+for (cc in xcols) if (!cc %in% names(Xw)) Xw[[cc]] <- NA
+
+# ---------------- subject-level conditions ----------------
+condvars <- intersect(c("pizza", "control", "main", "treatment", "dispersed", "session", "average_ip"), names(df))
+S <- df %>% group_by(sid) %>% summarise(across(all_of(condvars), firstnn), .groups = "drop") %>% as.data.frame()
+S <- merge(S, Xw, by = "sid", all.x = TRUE)
+
+fsel <- fin[, c("sid", "ip"), drop = FALSE]; names(fsel)[2] <- "d_raw"
+if ("decision_number" %in% names(fin)) fsel$fin_dn <- fin$decision_number
+if ("id_stage2" %in% names(fin)) fsel$fin_ids2 <- fin$id_stage2
+S <- merge(S, fsel, by = "sid", all.x = TRUE)
+
+# condition flags
+S$ctrl <- NA
+if ("control" %in% names(S) && is_bin(S$control)) S$ctrl <- S$control == 1
+if (all(is.na(S$ctrl)) && "treatment" %in% names(S) && is_bin(S$treatment)) S$ctrl <- S$treatment == 0
+if (all(is.na(S$ctrl)) && "dispersed" %in% names(S) && is_bin(S$dispersed)) S$ctrl <- S$dispersed == 0
+S$voucher <- TRUE
+if ("pizza" %in% names(S) && is_bin(S$pizza)) {
+  S$voucher <- S$pizza == 1
+  if (sum(S$voucher, na.rm = TRUE) < sum(!S$voucher, na.rm = TRUE)) { cat("Flipping pizza coding\n"); S$voucher <- !S$voucher }
+}
+S$mainc <- TRUE
+if ("main" %in% names(S) && is_bin(S$main)) S$mainc <- S$main == 1
+if ("treatment" %in% names(S) && is.character(S$treatment)) {
+  tl <- tolower(S$treatment)
+  if (!("main" %in% names(S) && is_bin(S$main))) S$mainc <- !grepl("mech", tl)
+  if (!("pizza" %in% names(S) && is_bin(S$pizza))) S$voucher <- !grepl("don", tl)
+  if (all(is.na(S$ctrl))) S$ctrl <- grepl("control", tl)
+}
+S$ctrl[is.na(S$ctrl)] <- FALSE
+S$mainc[is.na(S$mainc)] <- TRUE
+S$voucher[is.na(S$voucher)] <- TRUE
+S$group <- with(S, ifelse(!voucher, ifelse(ctrl, "DonC", "DonT"),
+                    ifelse(mainc, ifelse(ctrl, "MainC", "MainT"), ifelse(ctrl, "MechC", "MechT"))))
+cat("Groups (before exclusion):\n"); print(table(S$group))
+
+# ---------------- coding of final deviation ----------------
+S$d <- S$d_raw
+if (min(S$d_raw, na.rm = TRUE) >= 0 && max(S$d_raw, na.rm = TRUE) > 62) {
+  cat("Final IP coded 0..125: subtracting 63\n"); S$d <- S$d_raw - 63
+}
+cat("Summary of d:\n"); print(summary(S$d))
+S$upper_corner <- !is.na(S$d) & S$d >= 62
+
+# ---------------- manually stated indifference point ----------------
+known <- c("tn", "dispersed", "age", "study", "mathgrade", "disposable_income", "raven_correct_answers",
+           "math_answers_correct", "crt_answers_correct", "session", "treatment", "average_ip",
+           "decision_number", "utility_point", "corner", "chose_corner", "indifference_point", "pizza",
+           "control", "main", "id_stage2", "sid", "rowi", "final", "ip", ".mx", ".cand", "id", "ord", "t")
+numcols <- names(df)[sapply(df, is.numeric)]
+cands <- setdiff(numcols, known)
+subj_val <- function(v) {
+  a <- df %>% group_by(sid) %>% summarise(fv = firstnn(.data[[v]][final]), av = firstnn(.data[[v]]), .groups = "drop")
+  out <- ifelse(is.na(a$fv), a$av, a$fv); names(out) <- a$sid; out
+}
+manual_col <- NULL
+namecand <- cands[grepl("manual|stated|state|hypo|upper|open|own|self|max|willing|wtw|ip_|_ip", cands)]
+score_col <- function(v) {
+  val <- subj_val(v)[S$sid]
+  uc <- S$upper_corner
+  if (sum(uc) == 0) return(-Inf)
+  vu <- val[uc]
+  good <- mean(!is.na(vu) & vu > 62 & vu < 5000)
+  nonc <- mean(!is.na(val[!uc]) & val[!uc] != 0)
+  good - 0.5 * nonc
+}
+sc_list <- c()
+for (v in unique(c(namecand, cands))) sc_list[v] <- tryCatch(score_col(v), error = function(e) -Inf)
+if (length(sc_list)) {
+  cat("Manual-IP candidate scores:\n"); print(sort(sc_list, decreasing = TRUE)[1:min(10, length(sc_list))])
+  nc <- sc_list[names(sc_list) %in% namecand]
+  if (length(nc) && max(nc) > 0.4) manual_col <- names(nc)[which.max(nc)]
+  else if (max(sc_list) > 0.4) manual_col <- names(sc_list)[which.max(sc_list)]
+}
+cat("Manual stated IP column:", ifelse(is.null(manual_col), "NONE", manual_col), "\n")
+S$stated <- NA
+if (!is.null(manual_col)) S$stated <- subj_val(manual_col)[S$sid]
+# if stated appears to be total tasks per workday rather than deviation, leave as-is (cannot tell)
+S$d_lower <- S$d
+S$d_upper <- ifelse(S$upper_corner & !is.na(S$stated) & S$stated >= 62, S$stated, S$d)
+S$d_mid <- ifelse(S$upper_corner, (S$d_lower + S$d_upper) / 2, S$d)
+
+# ---------------- exclusion rules ----------------
+xm <- as.matrix(S[, xcols])
+rule <- list()
+rule$none <- rep(FALSE, nrow(S))
+bal_any <- function(v, set_rows = bal) {
+  if (!v %in% names(set_rows) || !is_bin(set_rows[[v]])) return(NULL)
+  a <- tapply(set_rows[[v]] %in% 1, set_rows$sid, any)
+  r <- a[S$sid]; r[is.na(r)] <- FALSE; as.vector(r)
+}
+if (!is.null(r <- bal_any("corner"))) rule$corner_bal <- r
+if (!is.null(r <- bal_any("chose_corner"))) rule$chose_corner_bal <- r
+if (!is.null(r <- bal_any("chose_corner", df))) rule$chose_corner_all <- r
+if (!is.null(r <- bal_any("corner", df))) rule$corner_all <- r
+rule$x_le0_ge125 <- apply(xm, 1, function(z) any(z <= 0 | z >= 125, na.rm = TRUE))
+rule$x_lt0_ge125 <- apply(xm, 1, function(z) any(z < 0 | z >= 125, na.rm = TRUE))
+rule$x_le0_ge126 <- apply(xm, 1, function(z) any(z <= 0 | z >= 126, na.rm = TRUE))
+rule$x_lt0_gt125 <- apply(xm, 1, function(z) any(z < 0 | z > 125, na.rm = TRUE))
+grp_names <- c("MainT", "MainC", "MechT", "MechC", "DonT", "DonC")
+best <- NULL; bestsc <- Inf
+for (rn in names(rule)) {
+  keep <- !rule[[rn]] & !is.na(S$d)
+  tb <- table(factor(S$group[keep], levels = grp_names))
+  sc <- 3 * abs(tb["MainT"] - 100) + sum(abs(tb - 100))
+  cat(sprintf("Rule %-18s: %s  score=%g\n", rn, paste(names(tb), tb, collapse = " "), sc))
+  if (sc < bestsc) { bestsc <- sc; best <- rn }
+}
+cat("Chosen exclusion rule:", best, "\n")
+S$keep <- !rule[[best]] & !is.na(S$d)
+M <- S[S$keep, ]
+
+# ---------------- relative measure ----------------
+den <- sweep(as.matrix(M[, xcols]), 2, e_vec, "+")
+M$j <- NA
+if ("fin_dn" %in% names(M)) M$j <- ifelse(M$ctrl & M$fin_dn %in% 1:8, M$fin_dn, NA)
+if ("fin_ids2" %in% names(M) && all(is.na(M$j[M$ctrl]))) M$j <- ifelse(M$ctrl & M$fin_ids2 %in% 1:8, M$fin_ids2, M$j)
+cat("Control repeated trade-off identified for", sum(!is.na(M$j)), "of", sum(M$ctrl), "control subjects\n")
+relfun <- function(dv) {
+  r <- rowMeans(dv / den, na.rm = TRUE)
+  jj <- which(!is.na(M$j))
+  if (length(jj)) r[jj] <- dv[jj] / den[cbind(jj, M$j[jj])]
+  r
+}
+M$rel_lower <- relfun(M$d_lower)
+M$rel_mid <- relfun(M$d_mid)
+M$rel_upper <- relfun(M$d_upper)
+
+MT <- M[M$group == "MainT", ]
+cat("Mean x by workday (MainT):", round(colMeans(MT[, xcols], na.rm = TRUE), 1), "\n")
+cat("Share upper corner MainT:", mean(MT$upper_corner), "\n")
+
+mean_rob <- function(y) {
+  m <- lm(y ~ 1); c(coef(m)[1], sqrt(diag(vcovHC(m, type = "HC1")))[1])
+}
+r_dmid <- mean_rob(MT$d_mid)
+r_rl <- mean_rob(MT$rel_lower); r_rm <- mean_rob(MT$rel_mid); r_ru <- mean_rob(MT$rel_upper)
+cat("d lower/mid/upper:", mean(MT$d_lower), mean(MT$d_mid), mean(MT$d_upper), "\n")
+cat("rel lower/mid/upper:", r_rl[1], r_rm[1], r_ru[1], "\n")
+
+tob_coef <- tryCatch({
+  lft <- min(-63, min(MT$d_lower, na.rm = TRUE))
+  tm <- AER::tobit(d_lower ~ 1, left = lft, right = 62, data = MT)
+  unname(coef(tm)[1])
+}, error = function(e) { cat("Tobit error:", conditionMessage(e), "\n"); NA })
+
+diffreg <- function(gT, gC) {
+  D <- M[M$group %in% c(gT, gC), ]
+  D$tr <- as.numeric(D$group == gT)
+  m <- lm(rel_mid ~ tr, data = D)
+  se <- sqrt(diag(vcovHC(m, type = "HC1")))
+  list(const = unname(coef(m)[1]), diff = unname(coef(m)[2]), n = nrow(D),
+       meanT = mean(D$rel_mid[D$tr == 1]), se = se)
+}
+c1 <- diffreg("MainT", "MechT")   # constant = Mechanism-Treatment
+c2 <- diffreg("DonT", "DonC")
+c3 <- diffreg("MainT", "MainC")
+c4 <- diffreg("MechT", "MechC")
+cat("Table3 consts:", c1$const, c2$const, c3$const, c4$const, " Ns:", c1$n, c2$n, c3$n, c4$n, "\n")
+
+cat(sprintf("RESULT:abs_concentration_bias_midpoint_table2_col2=%.6f\n", r_dmid[1]))
+cat(sprintf("RESULT:abs_concentration_bias_tobit_table2_col4=%.6f\n", tob_coef))
+cat(sprintf("RESULT:rel_concentration_bias_lower_table2_col1=%.6f\n", r_rl[1]))
+cat(sprintf("RESULT:rel_concentration_bias_midpoint_table2_col2=%.6f\n", r_rm[1]))
+cat(sprintf("RESULT:rel_concentration_bias_upper_table2_col3=%.6f\n", r_ru[1]))
+cat(sprintf("RESULT:n_obs_table2=%d\n", nrow(MT)))
+cat(sprintf("RESULT:rel_cb_mechanism_treatment_table3_col1=%.6f\n", c1$const))
+cat(sprintf("RESULT:diff_main_minus_mechanism_table3_col1=%.6f\n", c1$diff))
+cat(sprintf("RESULT:rel_cb_donation_treatment_table3_col2=%.6f\n", c2$meanT))
+cat(sprintf("RESULT:diff_donation_treatment_minus_control_table3_col2=%.6f\n", c2$diff))
+cat(sprintf("RESULT:diff_main_treatment_minus_control_table3_col3=%.6f\n", c3$diff))
+cat(sprintf("RESULT:diff_mechanism_treatment_minus_control_table3_col4=%.6f\n", c4$diff))
+cat(sprintf("RESULT:n_obs_table3=%d\n", c1$n))
+```
+
+## What the code produced
+  abs_concentration_bias_midpoint_table2_col2 = 43.58
+  abs_concentration_bias_tobit_table2_col4 = 36.777463
+  rel_concentration_bias_lower_table2_col1 = 0.259145
+  rel_concentration_bias_midpoint_table2_col2 = 0.259145
+  rel_concentration_bias_upper_table2_col3 = 0.259145
+  n_obs_table2 = 100.0
+  rel_cb_mechanism_treatment_table3_col1 = 0.080798
+  diff_main_minus_mechanism_table3_col1 = 0.178347
+  rel_cb_donation_treatment_table3_col2 = 0.15419
+  diff_donation_treatment_minus_control_table3_col2 = 0.18248
+  diff_main_treatment_minus_control_table3_col3 = 0.285898
+  diff_mechanism_treatment_minus_control_table3_col4 = 0.098041
+  n_obs_table3 = 202.0
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+Columns: tn, dispersed, age, study, mathgrade, disposable_income, raven_correct_answers, math_answers_correct, crt_answers_correct, session, treatment, average_ip, decision_number, utility_point, corner, chose_corner, indifference_point, pizza, control, main, id_stage2_upper, pap_sample, id_stage2, avg_id_stage2, qe_ard, qe_ard_lower, qe_ard_upper, qe_rad, qe_rad_lower, qe_rad_upper, rt_avg_stage_2, d_a0_main_tr, d_a1_main_tr, d_a2_main_tr, d_g0_main_tr, d_g1_main_tr, d_g2_main_tr, d_d1_main_tr, d_d2_main_tr, d_d3_main_tr, d_d4_main_tr, d_d5_main_tr, d_t1_main_tr, d_t2_main_tr, d_t3_main_tr, d_t4_main_tr, std_rt_2_main_tr, std_math_main_tr, std_crt_main_tr, std_raven_main_tr, std_start_row_main_tr, id_stage2_sign, cb_effect 
+Rows: 7254 
+Subjects: 806  rows/subject table:
+
+  9 
+806 
+--- decision_number 
+
+  1   2   3   4   5   6   7   8   9 
+806 806 806 806 806 806 806 806 806 
+--- dispersed 
+
+   0    1 <NA> 
+2574 2322 2358 
+--- id_stage2 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+ -63.00   -3.00    2.00   11.93   35.00   63.00    6485 
+--- corner 
+
+  -1    0    1 
+ 130 6223  901 
+--- chose_corner 
+
+   0    1 <NA> 
+ 607  199 6448 
+--- pizza 
+
+   0    1 
+2358 4896 
+--- control 
+
+   0    1 
+3591 3663 
+--- main 
+
+   0    1 <NA> 
+2322 2574 2358 
+--- treatment 
+
+   0    1 
+3663 3591 
+--- utility_point 
+
+   1    2    3    4    5    6    7    8 
+1057  806  806 1077  806  806  806 1090 
+Final row identified by: decision_number(max) 
+Balanced workday index from decision_number: TRUE 
+Groups (before exclusion):
+
+ DonC  DonT MainC MainT MechC MechT 
+  134   128   143   143   130   128 
+Summary of d:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ -63.00   -4.00    2.00   16.62   34.75  300.00 
+Manual-IP candidate scores:
+id_stage2_upper   avg_id_stage2    d_a0_main_tr    d_a1_main_tr    d_a2_main_tr 
+     0.55534685      0.55534685     -0.05259366     -0.05259366     -0.05259366 
+   d_g0_main_tr    d_g1_main_tr    d_g2_main_tr    d_d1_main_tr    d_d2_main_tr 
+    -0.05259366     -0.05259366     -0.05259366     -0.05259366     -0.05259366 
+Manual stated IP column: id_stage2_upper 
+Rule none              : MainT 143 MainC 143 MechT 128 MechC 130 DonT 128 DonC 134  score=335
+Rule chose_corner_bal  : MainT 100 MainC 103 MechT 102 MechC 101 DonT 100 DonC 101  score=7
+Rule chose_corner_all  : MainT 100 MainC 103 MechT 102 MechC 101 DonT 100 DonC 101  score=7
+Rule x_le0_ge125       : MainT 98 MainC 97 MechT 95 MechC 98 DonT 95 DonC 88  score=35
+Rule x_lt0_ge125       : MainT 106 MainC 110 MechT 106 MechC 105 DonT 105 DonC 105  score=55
+Rule x_le0_ge126       : MainT 98 MainC 97 MechT 95 MechC 98 DonT 95 DonC 88  score=35
+Rule x_lt0_gt125       : MainT 106 MainC 110 MechT 106 MechC 105 DonT 105 DonC 105  score=55
+Chosen exclusion rule: chose_corner_bal 
+Control repeated trade-off identified for 57 of 305 control subjects
+Mean x by workday (MainT): 41.8 40.9 39.7 39.7 36.3 36.6 37 35.4 
+Share upper corner MainT: 0.27 
+d lower/mid/upper: 43.58 43.58 43.58 
+rel lower/mid/upper: 0.2591452 0.2591452 0.2591452 
+Table3 consts: 0.08079807 -0.02829038 -0.02675294 -0.01724289  Ns: 202 201 203 203 
+RESULT:abs_concentration_bias_midpoint_table2_col2=43.580000
+RESULT:abs_concentration_bias_tobit_table2_col4=36.777463
+RESULT:rel_concentration_bias_lower_table2_col1=0.259145
+RESULT:rel_concentration_bias_midpoint_table2_col2=0.259145
+RESULT:rel_concentration_bias_upper_table2_col3=0.259145
+RESULT:n_obs_table2=100
+RESULT:rel_cb_mechanism_treatment_table3_col1=0.080798
+RESULT:diff_main_minus_mechanism_table3_col1=0.178347
+RESULT:rel_cb_donation_treatment_table3_col2=0.154190
+RESULT:diff_donation_treatment_minus_control_table3_col2=0.182480
+RESULT:diff_main_treatment_minus_control_table3_col3=0.285898
+RESULT:diff_mechanism_treatment_minus_control_table3_col4=0.098041
+RESULT:n_obs_table3=202
+```
+
+## Claims still failing
+1. abs_concentration_bias_midpoint_table2_col2: paper claims 37.61 additional real-effort tasks per workday (coefficient), your code produced 43.58, tolerance 0.09505, gap 15.87% relative
+2. rel_concentration_bias_lower_table2_col1: paper claims 0.19 share (relative increase in per-workday willingness to work) (coefficient), your code produced 0.259145, tolerance 0.08421, gap 36.39% relative
+3. rel_concentration_bias_midpoint_table2_col2: paper claims 0.224 share (relative increase in per-workday willingness to work) (coefficient), your code produced 0.259145, tolerance 0.09375, gap 15.69% relative
+4. diff_main_minus_mechanism_table3_col1: paper claims 0.149 share (difference in relative measure of concentration bias) (coefficient), your code produced 0.178347, tolerance 0.1879, gap 19.70% relative
+5. diff_donation_treatment_minus_control_table3_col2: paper claims 0.158 share (difference in relative measure of concentration bias) (coefficient), your code produced 0.18248, tolerance 0.1392, gap 15.49% relative
+6. diff_main_treatment_minus_control_table3_col3: paper claims 0.247 share (difference in relative measure of concentration bias) (coefficient), your code produced 0.285898, tolerance 0.09312, gap 15.75% relative
+
+## Previous attempts (oldest first)
+  Attempt 1: abs_concentration_bias_midpoint_table2_col2=43.58, abs_concentration_bias_tobit_table2_col4=36.777463, rel_concentration_bias_lower_table2_col1=0.259145, rel_concentration_bias_midpoint_table2_col2=0.259145, rel_concentration_bias_upper_table2_col3=0.259145, n_obs_table2=100.0, rel_cb_mechanism_treatment_table3_col1=0.080798, diff_main_minus_mechanism_table3_col1=0.178347, rel_cb_donation_treatment_table3_col2=0.15419, diff_donation_treatment_minus_control_table3_col2=0.18248, diff_main_treatment_minus_control_table3_col3=0.285898, diff_mechanism_treatment_minus_control_table3_col4=0.098041, n_obs_table3=202.0
+
+These attempts have already been tried.  Do not repeat a strategy
+that has already produced the same values.
+
+## Task
+Adjust the code minimally to close the gap on the failing claims.
+Prefer changes that align more closely with the paper's stated methodology:
+re-read the methodology summary above and check the model specification,
+covariate selection, fixed effects, clustering, and seed against what the
+paper actually specifies.  In econometrics papers, common gap-closers are:
+  - getting the cluster-robust SE right (vcovCL / cluster_var argument)
+  - matching the paper's exact fixed-effects structure
+  - using the same sample-restriction filters the paper applied
+  - matching the paper's weighting scheme (weights= argument)
+
+## Deviation reporting
+If you must change something the paper did NOT specify in order to close
+the gap, emit a ``DEVIATION:`` line via cat() describing the change:
+
+    cat('DEVIATION: Used HC1 robust SE because the paper does not specify but the default did not converge\n')
+
+## When to give up
+If after re-reading the methodology and the previous attempts you judge
+the gap cannot be closed without unreasonable deviation, return the SAME
+R CODE you were given, BYTE-FOR-BYTE unchanged.  The pipeline will record
+the claim as unreproducible.
+
+## Output convention (unchanged)
+Emit every metric as ``cat('RESULT:<name>=<value>\n')``.
+The dataset is a directory tree at '<repo>/.cache/datasets/dertwinkel_kalt_2022_concentration_bias.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+No network, no system().  set.seed(42).
+
+Output ONLY the R code — no explanation, no markdown fences.

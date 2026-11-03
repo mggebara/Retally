@@ -8,6 +8,7 @@
 | Model | desktop-opus-run2 |
 | Run | 20261023T150832Z |
 | Date | 2026-10-23T15:08:32Z |
+| Data access | public |
 | Results file | `benchmark/results/pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json` |
 | Artifacts | `benchmark/results/artifacts/altmann-2022-cognitive-spillovers/blind/pipeline/20261023T150832Z` |
 | Executions | 1 |
@@ -32,8 +33,8 @@
 | `background_quality_intervention_lab_t3_col2` | -0.038 (0.014) | -0.01869 | 50.82% | ±0.014 (se_band) | FAIL | FAIL |
 | `memory_intervention_online_t3_col5` | -0.114 (0.019) | -0.114252 | 0.22% | ±0.019 (se_band) | PASS | PASS |
 | `payoff_share_intervention_t4_col1` | 0.006 (0.013) | 0.006465 | 7.75% | ±0.013 (se_band) | PASS | PASS |
-| `n_obs_lab_tables_2_to_4` | 12160 | 17840 | 46.71% | ±121.6 (relative) | FAIL | FAIL |
-| `n_subjects_lab_tables_2_to_4` | 608 | 892 | 46.71% | ±6.08 (relative) | FAIL | FAIL |
+| `n_obs_lab_tables_2_to_4` | 12160 | 17840 | 46.71% | ±608 (relative) | FAIL | FAIL |
+| `n_subjects_lab_tables_2_to_4` | 608 | 892 | 46.71% | ±30.4 (relative) | FAIL | FAIL |
 | `memory_intervention_online_t3_col6` | -0.113 (0.017) | -0.113364 | 0.32% | ±0.017 (se_band) | PASS | PASS |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 4/13 pass, which agrees with the row's 4/13.

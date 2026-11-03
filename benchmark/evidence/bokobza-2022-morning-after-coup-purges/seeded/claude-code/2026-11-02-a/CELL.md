@@ -8,6 +8,7 @@
 | Model | — |
 | Run | 2026-11-02-a |
 | Date | 2026-11-02T06:10:00Z |
+| Data access | public |
 | Results file | `benchmark/results/claude-code-4papers-all-modes-2026-11-02.json` |
 | Artifacts | `benchmark/results/artifacts/bokobza-2022-morning-after-coup-purges/seeded/claude-code/20261102T061959Z` |
 | Run directory | `benchmark/reproductions/bokobza-2022-morning-after-coup-purges/seeded/2026-11-02-a` |

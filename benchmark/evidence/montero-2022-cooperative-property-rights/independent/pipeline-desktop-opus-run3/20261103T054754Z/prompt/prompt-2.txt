@@ -1,0 +1,253 @@
+You are fixing R code that was generated to reproduce results from an econometrics paper.
+
+## Original Code
+```r
+suppressPackageStartupMessages({
+  library(haven)
+  library(dplyr)
+  library(fixest)
+})
+set.seed(42)
+
+path <- "<repo>/.cache/datasets/montero_2022_cooperative_property_rights.script-free/ehpm_incomemodule_wreform.dta"
+raw <- haven::read_dta(path)
+df <- as.data.frame(haven::zap_labels(haven::zap_formats(raw)))
+nms <- names(df)
+cat("Columns:\n"); print(nms)
+
+num <- function(x) suppressWarnings(as.numeric(x))
+find_col <- function(patterns, exclude = NULL, numeric_only = TRUE) {
+  for (p in patterns) {
+    hits <- nms[grepl(p, nms, ignore.case = TRUE)]
+    if (!is.null(exclude)) hits <- hits[!grepl(exclude, hits, ignore.case = TRUE)]
+    if (numeric_only) hits <- hits[sapply(hits, function(h) is.numeric(df[[h]]))]
+    if (length(hits) > 0) return(hits[1])
+  }
+  NA_character_
+}
+
+# ---------- treatment ----------
+df$Above500 <- num(df$Above500)
+
+# ---------- running variable (former owner's cumulative holdings, centred at 500) ----------
+cands <- unique(c(
+  nms[grepl("own_amt", nms, ignore.case = TRUE)],
+  nms[grepl("norm_dist|dist_above|dist500|distance", nms, ignore.case = TRUE)],
+  nms[grepl("cum|total_hold|landhold|holding|own_size|owner_size|tot_ha", nms, ignore.case = TRUE)]
+))
+cands <- cands[sapply(cands, function(h) is.numeric(df[[h]]))]
+best <- NULL; best_score <- -Inf
+for (cc in cands) {
+  x <- num(df[[cc]])
+  ok <- !is.na(x) & !is.na(df$Above500)
+  if (sum(ok) < 50) next
+  # try centred at 500 or already centred at 0
+  for (shift in c(500, 0)) {
+    r <- x - shift
+    agree <- mean((r[ok] >= 0) == (df$Above500[ok] == 1))
+    plaus <- mean(abs(r[ok]) < 3000)
+    score <- agree + 0.2 * plaus + 0.001 * (cc == "own_amt")
+    if (score > best_score) { best_score <- score; best <- list(col = cc, shift = shift) }
+  }
+}
+if (is.null(best)) stop("No running variable found")
+cat("Running variable:", best$col, "shift", best$shift, "score", best_score, "\n")
+df$run <- num(df[[best$col]]) - best$shift
+# if variable is a normalised distance (small scale), rescale check
+if (best$col != "own_amt" && "own_amt" %in% nms) {
+  # prefer own_amt in hectares if it is consistent
+  x <- num(df$own_amt) - 500
+  ok <- !is.na(x) & !is.na(df$Above500)
+  if (sum(ok) > 50 && mean((x[ok] >= 0) == (df$Above500[ok] == 1)) > 0.9) df$run <- x
+}
+df$Above500 <- ifelse(is.na(df$Above500), as.numeric(df$run >= 0), df$Above500)
+
+# ---------- outcome: household earnings per capita ----------
+y_col <- find_col(c("^hh_?earn.*pc", "earn.*per.?cap", "earn.*_pc$", "inc.*per.?cap",
+                    "income_pc", "ingpe", "ing_pc", "percap", "per_cap", "_pc$", "pc_inc", "pc_earn",
+                    "ingper"), exclude = "pct|pctile")
+if (is.na(y_col)) {
+  hh_inc <- find_col(c("hh_?inc", "household_inc", "hh_?earn", "ingfa", "ing_hog", "total_inc", "tot_inc", "ingre"))
+  hh_sz  <- find_col(c("hh_?size", "household_size", "hhsize", "miembros", "num_mem", "members", "tam_hog", "nmiem"))
+  if (!is.na(hh_inc) && !is.na(hh_sz)) {
+    df$y <- num(df[[hh_inc]]) / num(df[[hh_sz]])
+    cat("Outcome constructed:", hh_inc, "/", hh_sz, "\n")
+  } else if (!is.na(hh_inc)) {
+    df$y <- num(df[[hh_inc]]); cat("Outcome:", hh_inc, "\n")
+  } else {
+    df$y <- num(df$Work_Income); cat("Outcome fallback: Work_Income\n")
+  }
+} else {
+  df$y <- num(df[[y_col]]); cat("Outcome:", y_col, "\n")
+}
+
+# ---------- cluster: former owner ----------
+cl_col <- NA_character_
+for (p in c("Expropretario_ISTA", "owner_id", "own_id", "^owner", "propiet", "expropiet", "exprop", "landlord", "owner")) {
+  hits <- nms[grepl(p, nms, ignore.case = TRUE)]
+  hits <- hits[!grepl("Land_Owner", hits)]
+  if (length(hits) > 0) { cl_col <- hits[1]; break }
+}
+if (!is.na(cl_col)) {
+  df$cl <- as.character(df[[cl_col]])
+  df$cl[df$cl == "" | df$cl == "NA"] <- NA
+} else df$cl <- NA
+# fallback: owners identified by their holdings size
+miss_cl <- is.na(df$cl)
+df$cl[miss_cl] <- paste0("amt_", round(df$run[miss_cl], 3))
+cat("Cluster var:", cl_col, "\n")
+
+# ---------- property id ----------
+pid <- rep(NA_character_, nrow(df))
+if ("match_id" %in% nms) { v <- as.character(df$match_id); v[v == ""] <- NA; pid <- v }
+if ("Reform_Coop_id" %in% nms) {
+  v <- as.character(df$Reform_Coop_id); v[v == "" | v == "0"] <- NA
+  pid <- ifelse(is.na(pid) & !is.na(v), paste0("C", v), pid)
+}
+if ("Hacienda_id" %in% nms) {
+  v <- as.character(df$Hacienda_id); v[v == "" | v == "0"] <- NA
+  pid <- ifelse(is.na(pid) & !is.na(v), paste0("H", v), pid)
+}
+pid[is.na(pid)] <- paste0("O", df$cl[is.na(pid)])
+df$pid <- pid
+
+df$survey_year <- num(df$survey_year)
+
+base <- df %>% filter(!is.na(y), !is.na(run), !is.na(Above500), !is.na(survey_year))
+cat("Base N:", nrow(base), "\n")
+
+run_level <- function(bw) {
+  d <- base %>% filter(abs(run) <= bw)
+  m <- feols(y ~ Above500 + run + run:Above500 | survey_year, data = d, cluster = ~cl)
+  print(summary(m))
+  list(b = unname(coef(m)["Above500"]), n = nobs(m), ncl = length(unique(d$cl[obs(m)])))
+}
+
+run_iqr <- function(bw) {
+  d <- base %>% filter(abs(run) <= bw) %>%
+    group_by(pid) %>%
+    summarise(n = n(),
+              iqr = as.numeric(quantile(y, 0.75, type = 2) - quantile(y, 0.25, type = 2)),
+              Above500 = first(Above500), run = first(run), cl = first(cl),
+              yr = as.numeric(names(sort(table(survey_year), decreasing = TRUE))[1]),
+              .groups = "drop") %>%
+    filter(n >= 5)
+  m <- tryCatch(feols(iqr ~ Above500 + run + run:Above500 | yr, data = d, cluster = ~cl),
+                error = function(e) feols(iqr ~ Above500 + run + run:Above500, data = d, cluster = ~cl))
+  print(summary(m))
+  list(b = unname(coef(m)["Above500"]), n = nobs(m), ncl = length(unique(d$cl)))
+}
+
+safe <- function(f, ...) tryCatch(f(...), error = function(e) { message(e$message); list(b = NA, n = NA, ncl = NA) })
+
+l300 <- safe(run_level, 300)
+l150 <- safe(run_level, 150)
+i300 <- safe(run_iqr, 300)
+i150 <- safe(run_iqr, 150)
+
+cat(sprintf("RESULT:earnings_level_above500_bw300=%.4f\n", l300$b))
+cat(sprintf("RESULT:earnings_level_above500_bw150=%.4f\n", l150$b))
+cat(sprintf("RESULT:earnings_iqr_above500_bw300=%.4f\n", i300$b))
+cat(sprintf("RESULT:earnings_iqr_above500_bw150=%.4f\n", i150$b))
+cat(sprintf("RESULT:n_obs_earnings_level_bw300=%s\n", l300$n))
+cat(sprintf("RESULT:n_obs_earnings_level_bw150=%s\n", l150$n))
+cat(sprintf("RESULT:n_obs_earnings_iqr_bw300=%s\n", i300$n))
+cat(sprintf("RESULT:n_obs_earnings_iqr_bw150=%s\n", i150$n))
+cat(sprintf("RESULT:n_clusters_bw300=%s\n", l300$ncl))
+cat(sprintf("RESULT:n_clusters_bw150=%s\n", l150$ncl))
+```
+
+## Error / Unexpected Output
+```
+Error in hits[sapply(hits, function(h) is.numeric(df[[h]]))] : 
+  invalid subscript type 'list'
+Calls: find_col
+Execution halted
+
+```
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+Columns:
+  [1] "hh_head_order"           "dept"                   
+  [3] "munic"                   "canton"                 
+  [5] "year"                    "survey_year"            
+  [7] "hh_income"               "hh_income_pc"           
+  [9] "gender"                  "age"                    
+ [11] "literate"                "educ_yrs"               
+ [13] "educ_level"              "Occupation_Type"        
+ [15] "Occupation_Size"         "Work_hrs"               
+ [17] "Work_days"               "Work_Income_Freq"       
+ [19] "Work_Income"             "Other_Income"           
+ [21] "Aguinaldo_Income"        "Dividends_Income"       
+ [23] "Arrendamiento_Income"    "Prev_Occuptation_Type"  
+ [25] "Prev_Occuptation_Size"   "Prev_Occuptation_Sector"
+ [27] "Prev_Occupation_WhyLeft" "Landholding_Type"       
+ [29] "Landholding_Type2"       "Land_Owner"             
+ [31] "Land_Size"               "Land_Size_ha"           
+ [33] "Land_revenue"            "Land_Costs"             
+ [35] "Land_Net_Income"         "dept_num_x"             
+ [37] "Land_Salaries"           "poverty_level"          
+ [39] "educ_expenses"           "Work_Amt"               
+ [41] "Land_Revenue"            "income_decile"          
+ [43] "Occupation_Sector_Code"  "DEPARTAMENTO"           
+ [45] "COD_DEPTO_first"         "MUNICIPIO"              
+ [47] "CANTON"                  "dept_num_y"             
+ [49] "canton_code_x"           "COD_DEPTO_first_x"      
+ [51] "COD_DEPTO_first_y"       "canton_code_y"          
+ [53] "dept_num"                "Coop_Member"            
+ [55] "Coop_Size"               "Coop_Size_Bin_x"        
+ [57] "mcode_x"                 "Reform_Coop_id"         
+ [59] "ID"                      "DEPID"                  
+ [61] "DEPDSC"                  "MUNID"                  
+ [63] "MUNDSC"                  "Coop_Name"              
+ [65] "AREA_HECTAREA"           "Total_Propretario"      
+ [67] "Total_Propretario2"      "NOM_CTON"               
+ [69] "CODIGO"                  "Expropretario_ISTA"     
+ [71] "No__SOCIOS"              "Area_mzs"               
+ [73] "Area_has"                "Matched"                
+ [75] "NOM_MUN"                 "NOM_DPTO"               
+ [77] "dm_code"                 "dist_perc"              
+ [79] "dup_mun"                 "reform"                 
+ [81] "Total_Empl"              "Empl_Men_Fixed"         
+ [83] "Empl_Men_Temp"           "Empl_Women_Fixed"       
+ [85] "Empl_Women_Temp"         "Num_Members_2008"       
+ [87] "Non_Coop_Member"         "Num_Workers"            
+ [89] "Num_Workers_Bin_x"       "Hacienda_id"            
+ [91] "Total_Workers"           "Above500"               
+ [93] "norm_dist"               "own_amt"                
+ [95] "Landholding_Type_Factor" "match_id"               
+ [97] "temp"                    "num_members"            
+ [99] "Work_Wage"               "Work_Income_Daily"      
+[101] "sex"                     "age2"                   
+[103] "i_year1"                 "i_year2"                
+[105] "i_year3"                 "i_year4"                
+[107] "i_year5"                 "i_year6"                
+[109] "i_year7"                 "i_year8"                
+[111] "i_year9"                 "i_year10"               
+[113] "i_year11"                "i_year12"               
+[115] "norm_dist_Above"         "ln_hh_inc_pc"           
+[117] "hh_inc_pc_real"          "ln_hh_inc_pc_real"      
+[119] "coop_size"              
+Running variable: own_amt shift 500 score 1.192423
+```
+
+## Task
+Fix specifically the identified problem above. Do not rewrite the entire approach unless necessary.
+
+## Reminder: Output Convention
+The fixed R code MUST emit each reproduced metric on its own line using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names.
+
+## Reminder: Constraints
+- The dataset is a directory tree at '<repo>/.cache/datasets/montero_2022_cooperative_property_rights.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+- Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+- Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+- Do NOT access the internet.
+- Do NOT call system() / system2().
+- Use set.seed(42) for reproducibility.
+- Print all RESULT: lines at the end via cat().
+
+Output ONLY the corrected R code — no explanation, no markdown fences.

@@ -8,6 +8,7 @@
 | Model | — |
 | Run | 2026-11-02-c |
 | Date | 2026-11-02T19:59:37Z |
+| Data access | public |
 | Results file | `benchmark/results/claude-code-run3-23papers-indep-blind-2026-11-02.json` |
 | Artifacts | `benchmark/results/artifacts/brouwer-2022-teaching-norms/independent/claude-code/20261102T202751Z` |
 | Run directory | `benchmark/reproductions/brouwer-2022-teaching-norms/independent/2026-11-02-c` |
@@ -33,8 +34,8 @@
 | `child_x_vh_punishment_controls` | -0.12 (0.04) | -0.12233 | 1.94% | ±0.04 (se_band) | PASS | PASS |
 | `child_x_vh_helping_no_controls` | -0.06 (0.07) | -0.062574 | 4.29% | ±0.07 (se_band) | PASS | PASS |
 | `child_x_vh_helping_controls` | -0.07 (0.08) | -0.067709 | 3.27% | ±0.08 (se_band) | PASS | PASS |
-| `observations_punishment_controls` | 399 | 399 | 0.00% | ±3.99 (relative) | PASS | PASS |
-| `observations_helping_no_controls` | 401 | 401 | 0.00% | ±4.01 (relative) | PASS | PASS |
+| `observations_punishment_controls` | 399 | 399 | 0.00% | ±19.95 (relative) | PASS | PASS |
+| `observations_helping_no_controls` | 401 | 401 | 0.00% | ±20.05 (relative) | PASS | PASS |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 12/12 pass, which agrees with the row's 12/12.
 

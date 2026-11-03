@@ -1,0 +1,390 @@
+You are refining R code that reproduces results from an econometrics paper.
+The code RAN SUCCESSFULLY but the reproduced values do not match the
+paper's claims within the allowed tolerance.  Identify what is causing
+the gap and adjust the code to close it.
+
+## Paper
+Title: Hate Crimes and Gender Imbalances: Fears over Mate
+Methodology: - **Ecological (municipality-level) analysis — estimation:** Logistic regression of a binary hate-crime indicator on *Excess Males*, with standard errors clustered at the county level (Figure 1; full results in SI Table C.1). Two specifications: (i) **Sum** — cross-section of municipalities, DV = 1 if the municipality recorded ≥1 anti-refugee hate crime over 2015–2017 combined (17% of municipalities), 0 otherwise; (ii) **Annual** — municipality-year panel, DV = 1 if ≥1 hate crime in that year (5.6% in 2015, 12.1% in 2016, 6.8% in 2017, out of 11,168 municipalities). County fixed effects and year fixed effects included. Robustness: linear probability model (SI C.3), negative binomial on incident counts (SI C.5), physical attacks only (SI C.4), East–West interactions (SI C.6), alternative age ranges (SI C.2), placebo (SI C.9).
+- **Key regressor and data:** *Excess Males* = number of men / number of women aged 15–44 in the municipality (a raw ratio, not standardised; 1 = balance, 1.2 ≈ 80th percentile). Hate-crime DV from the "Mut gegen rechte Gewalt" chronicle (Amadeu Antonio Foundation & PRO ASYL): arson on refugee housing, other attacks on refugee housing, physical attacks on refugees. Alternative mate-competition measure: *Male Disadvantage* = male / female unemployment rate (r = −0.048 with Excess Males; SI Figure C.8).
+- **Controls (preferred spec):** population, population density, population change, unemployment rate, ratio of male to female unemployment rate, number of refugees (stock, county level), change in refugee population (flow), percent highly educated, percent manufacturing, change in percent manufacturing, AfD vote share, violent crime per capita; plus county and year FE.
+- **Sample restriction:** municipalities with extreme Excess Males values (top and bottom 2.5 percentiles) are dropped — mostly very small municipalities (median population of excluded = 247); results stated to be insensitive to this.
+- **Ecological evaluation/quantity of interest:** predicted probability of ≥1 hate crime across the range of Excess Males, and first difference from Excess Males = 1 to 1.2: +2.60 percentage points (95% CI [0.88, 4.19]) and +1.71 points (95% CI [0.76, 2.55]) for the two models; also 20th→80th percentile comparisons vs. unemployment rate and share highly educated.
+- **Individual-level survey analysis:** Respondi online survey, 4 waves (Sept 2016–Dec 2017), each ~3,000 respondents, quota-representative on age (18+), gender, state. *Mate Competition* item (Wave 4, 1–4 scale). Figure 2: proportion agreeing (agree somewhat/strongly) by terciles of municipal Excess Males, for all respondents, men 18–44, men 30–40, with 95% CIs and p-values.
+- **Hate-crime support regressions (Table 1):** OLS, DV = *Only Means* (1 = disagree strongly … 4 = agree strongly), key regressor = *Mate Competition* (1–4, unstandardised); conventional OLS SEs (ordered logit gives similar results). Six nested columns: (1) Mate Competition only (coef 0.437, SE 0.016, N = 3,019); (2) + Job Competition (1–4) and Life Satisfaction (0–10) (0.263, N = 3,019); (3) + sociodemographics — age, gender, education, income, main economic activity, employment status, German citizenship, household size, self-assessed social status, religious affiliation, state of residence (0.236, N = 3,008); (4) + national attitudes toward refugees (0.206); (5) + local attitudes toward refugees (0.185); (6) + additional controls — public contact with refugees, closeness to refugee shelters, estimated number of refugees in town, views of/closeness to AfD, left-right placement, attitudes toward Muslims (0.155, SE 0.019, N = 3,008, R² = 0.459, adj. R² = 0.431). Figure 4 repeats column (6) for DVs Only Means, Justified, Message, Prevent, Condemn (reverse-coded), reporting one-unit effects with 95% CIs.
+- **List experiment (social-desirability check):** Wave 2 (also Wave 1 and pilot); 50% of sample split into control (3 non-sensitive items) and treatment (3 items + Only Means); difference in mean counts (2.09 − 1.94 ≈ 15%) compared with direct question (18%, among the 75% asked directly); difference insignificant. No train/test split or cross-validation is used (inferential, not predictive, analysis).
+
+
+## Current Code
+```r
+suppressPackageStartupMessages({
+  library(haven)
+  library(dplyr)
+  library(fixest)
+})
+set.seed(42)
+
+base <- "<repo>/.cache/datasets/dancygier_2022_hate_crimes_gender_imbalances.script-free"
+
+results <- list()
+emit <- function(name, val) {
+  if (!is.null(val) && length(val) == 1 && is.finite(val)) {
+    results[[name]] <<- val
+  }
+}
+
+num <- function(x) {
+  x <- suppressWarnings(as.numeric(haven::zap_labels(x)))
+  x[!is.na(x) & x < 0] <- NA
+  x
+}
+
+pick <- function(nms, patterns, exclude = NULL) {
+  for (p in patterns) {
+    m <- grep(p, nms, value = TRUE, ignore.case = TRUE)
+    if (!is.null(exclude)) m <- m[!grepl(exclude, m, ignore.case = TRUE)]
+    if (length(m) > 0) return(m[1])
+  }
+  NULL
+}
+
+## ------------------------------------------------------------------
+## Part 1: Survey, Table 1
+## ------------------------------------------------------------------
+tryCatch({
+  sv <- haven::read_dta(file.path(base, "survey.dta"))
+  nms <- names(sv)
+  cat("Survey columns:\n"); print(nms)
+
+  sv <- sv[num(sv$wave) == 4 & !is.na(num(sv$wave)), ]
+  cat("Wave 4 rows:", nrow(sv), "\n")
+
+  d <- data.frame(
+    y = num(sv$hate_violence_means),
+    mate = num(sv[["MateComp.cont"]]),
+    job = num(sv[["JobComp.cont"]]),
+    life = num(sv[["LifeSatis.cont"]])
+  )
+
+  m1 <- lm(y ~ mate, data = d)
+  m2 <- lm(y ~ mate + job + life, data = d)
+  emit("mate_competition_table1_col1", unname(coef(m1)["mate"]))
+  emit("mate_competition_table1_col2", unname(coef(m2)["mate"]))
+  emit("job_competition_table1_col2", unname(coef(m2)["job"]))
+  emit("n_obs_table1_col1", nobs(m2))
+
+  # sociodemographics
+  cat_vars <- c()
+  num_vars <- c()
+  addv <- function(v, type) {
+    if (is.null(v) || !(v %in% nms)) return(invisible())
+    if (type == "cat") cat_vars <<- unique(c(cat_vars, v)) else num_vars <<- unique(c(num_vars, v))
+  }
+  addv(pick(nms, c("^age$")), "num")
+  addv(pick(nms, c("^gender$", "^female$", "^sex$")), "cat")
+  addv(pick(nms, c("^eduyrs$", "^educ", "^edu")), "num")
+  addv(pick(nms, c("^income$")), "num")
+  addv(pick(nms, c("^occ", "econ_act", "activity")), "cat")
+  addv(pick(nms, c("employ", "emp_stat", "^empl")), "cat")
+  addv(pick(nms, c("^citizenship$")), "cat")
+  addv(pick(nms, c("^household_size$", "hhsize", "household")), "num")
+  addv(pick(nms, c("social_status", "soc_status", "status", "^self_econ$")), "num")
+  addv(pick(nms, c("^religion$", "relig")), "cat")
+  addv(pick(nms, c("^state$")), "cat")
+  socio <- c(num_vars, cat_vars)
+  cat("Sociodemographic controls:", socio, "\n")
+
+  national <- grep("^ref_", nms, value = TRUE)
+  national <- national[!grepl("^ref_loc", national)]
+  if ("women_role" %in% nms) national <- c(national, "women_role")
+  local <- grep("^ref_loc|loc_", nms, value = TRUE)
+  local <- setdiff(local, national)
+  additional <- unique(c(
+    intersect(c("contact_ind", "refugee_ind", "muslim_ind", "lrscale"), nms),
+    grep("afd", nms, value = TRUE, ignore.case = TRUE),
+    grep("shelter|close|dist|num_ref|nref|estim", nms, value = TRUE, ignore.case = TRUE)
+  ))
+  additional <- setdiff(additional, c(socio, national, local, "MateComp.cont", "JobComp.cont",
+                                      "LifeSatis.cont", "hate_violence_means"))
+  additional <- additional[!grepl("gendergap|muni|hate_|list", additional)]
+  cat("National:", national, "\nLocal:", local, "\nAdditional:", additional, "\n")
+
+  allv <- unique(c(socio, national, local, additional))
+  for (v in allv) {
+    if (v %in% cat_vars) {
+      d[[v]] <- factor(num(sv[[v]]))
+    } else {
+      d[[v]] <- num(sv[[v]])
+    }
+  }
+
+  fit <- function(vars) {
+    vars <- vars[vars %in% names(d)]
+    # drop variables with no variation
+    vars <- vars[sapply(vars, function(v) length(unique(na.omit(d[[v]]))) > 1)]
+    f <- as.formula(paste("y ~ mate + job + life", if (length(vars)) paste("+", paste(paste0("`", vars, "`"), collapse = " + ")) else ""))
+    lm(f, data = d)
+  }
+  m3 <- fit(socio)
+  m4 <- fit(c(socio, national))
+  m5 <- fit(c(socio, national, local))
+  m6 <- fit(c(socio, national, local, additional))
+  emit("mate_competition_table1_col3", unname(coef(m3)["mate"]))
+  emit("mate_competition_table1_col4", unname(coef(m4)["mate"]))
+  emit("mate_competition_table1_col5", unname(coef(m5)["mate"]))
+  emit("mate_competition_table1_col6", unname(coef(m6)["mate"]))
+  emit("n_obs_table1_col3", nobs(m3))
+  cat("N cols 3-6:", nobs(m3), nobs(m4), nobs(m5), nobs(m6), "\n")
+}, error = function(e) cat("Survey part error:", conditionMessage(e), "\n"))
+
+## ------------------------------------------------------------------
+## Part 2: Ecological, Table C1 cols 5-6
+## ------------------------------------------------------------------
+tryCatch({
+  cx <- haven::read_dta(file.path(base, "context.dta"))
+  nms <- names(cx)
+  cat("Context columns:\n"); print(nms)
+
+  idv <- pick(nms, c("^ags_muni$", "^ags_gem", "^ags$", "^ags_mun", "gemeinde", "^muni_id", "^id$"))
+  exv <- pick(nms, c("15_44.*gendergap", "gendergap.*15_44", "excess", "sexratio", "sex_ratio", "gendergap_muni"),
+              exclude = "unemp")
+  yv <- pick(nms, c("^Hate_all_muni$", "hate_all"))
+  cat("ID:", idv, " Excess:", exv, " Outcome:", yv, "\n")
+
+  ctrl <- c(
+    pick(nms, c("^log_pop.*muni", "^log_pop", "^population_muni_2015$", "^population_muni")),
+    pick(nms, c("dens")),
+    pick(nms, c("pop.*change", "change.*pop", "^d_pop", "pop_chg", "popchange", "pop_growth")),
+    pick(nms, c("^log_unemp_all_muni", "unemp_all_muni", "^unemp_all")),
+    pick(nms, c("^unemp_gendergap")),
+    pick(nms, c("^log_ref", "log_refugee", "ref_stock", "^log_ref$", "^refugees"), exclude = "inflow|male"),
+    pick(nms, c("log_ref_inflow", "inflow")),
+    pick(nms, c("high_degree", "highedu", "high_educ", "educ", "abitur", "degree")),
+    pick(nms, c("^pc_manufacturing")),
+    pick(nms, c("^d_manuf")),
+    pick(nms, c("afd")),
+    pick(nms, c("violence_percap", "violen", "crime"))
+  )
+  # PCRE lookahead fallback (grep default doesn't support it)
+  ctrl <- unique(ctrl[!is.na(ctrl)])
+  if (!any(grepl("^log_ref", ctrl) & !grepl("inflow", ctrl))) {
+    alt <- grep("^log_ref", nms, value = TRUE)
+    alt <- alt[!grepl("inflow", alt)]
+    if (length(alt)) ctrl <- unique(c(ctrl, alt[1]))
+  }
+  ctrl <- setdiff(ctrl, c(exv, yv, idv, "year", "ags_county", "ags_state"))
+  cat("Controls:", ctrl, "\n")
+
+  dd <- as.data.frame(lapply(cx[, unique(c("year", "ags_county", "ags_state", idv, exv, yv, ctrl))], num))
+  if (is.null(idv)) {
+    dd <- dd %>% group_by(year) %>% mutate(.mid = row_number()) %>% ungroup() %>% as.data.frame()
+    idv <- ".mid"
+  }
+  dd <- dd[dd$year %in% c(2015, 2016, 2017), ]
+  dd$ex <- dd[[exv]]
+  dd$hate <- dd[[yv]]
+
+  # trim extreme excess males (top/bottom 2.5%) at municipality level
+  mu <- dd %>% group_by(.data[[idv]]) %>% summarise(ex = first(ex[!is.na(ex)]), .groups = "drop")
+  q <- quantile(mu$ex, c(0.025, 0.975), na.rm = TRUE)
+  cat("Trim bounds:", q, "\n")
+  keep_ids <- mu[[idv]][!is.na(mu$ex) & mu$ex >= q[1] & mu$ex <= q[2]]
+  dd <- dd[dd[[idv]] %in% keep_ids, ]
+
+  rhs <- paste(c("ex", ctrl), collapse = " + ")
+
+  # Annual
+  dd$y_any <- as.integer(dd$hate > 0)
+  fa <- as.formula(paste("y_any ~", rhs, "| ags_state + year"))
+  ma <- feglm(fa, data = dd, family = binomial("logit"), cluster = ~ags_county)
+  print(summary(ma))
+  emit("excess_males_annual_tableC1_col6", unname(coef(ma)["ex"]))
+  emit("n_obs_annual_tableC1_col6", nobs(ma))
+
+  # Sum
+  ds <- dd %>% group_by(.data[[idv]]) %>%
+    summarise(hate_sum = sum(hate, na.rm = TRUE),
+              hate_nonmiss = sum(!is.na(hate)),
+              across(all_of(c("ex", ctrl, "ags_county", "ags_state")), ~ {
+                v <- .x[dd$year[cur_group_rows()] == 2015]
+                v <- v[!is.na(v)]
+                if (length(v)) v[1] else { w <- .x[!is.na(.x)]; if (length(w)) w[1] else NA_real_ }
+              }), .groups = "drop") %>% as.data.frame()
+  ds$y_sum <- ifelse(ds$hate_nonmiss > 0, as.integer(ds$hate_sum > 0), NA_integer_)
+  fs <- as.formula(paste("y_sum ~", rhs, "| ags_state"))
+  ms <- feglm(fs, data = ds, family = binomial("logit"), cluster = ~ags_county)
+  print(summary(ms))
+  emit("excess_males_sum_tableC1_col5", unname(coef(ms)["ex"]))
+  emit("n_obs_sum_tableC1_col5", nobs(ms))
+}, error = function(e) cat("Ecological part error:", conditionMessage(e), "\n"))
+
+for (n in names(results)) cat(sprintf("RESULT:%s=%.6f\n", n, results[[n]]))
+```
+
+## What the code produced
+  mate_competition_table1_col1 = 0.43702
+  mate_competition_table1_col2 = 0.263437
+  job_competition_table1_col2 = 0.249956
+  n_obs_table1_col1 = 3019.0
+  mate_competition_table1_col3 = 0.23445
+  mate_competition_table1_col4 = 0.192868
+  mate_competition_table1_col5 = 0.174966
+  mate_competition_table1_col6 = 0.151561
+  n_obs_table1_col3 = 3008.0
+  excess_males_annual_tableC1_col6 = 2.674356
+  n_obs_annual_tableC1_col6 = 7647.0
+  excess_males_sum_tableC1_col5 = 2.063357
+  n_obs_sum_tableC1_col5 = 2549.0
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+Survey columns:
+ [1] "res_id"                        "wave"                         
+ [3] "east"                          "hate_violence_means"          
+ [5] "hate_pol_message"              "hate_prevent_settlement"      
+ [7] "hate_polcondemn"               "hate_justified"               
+ [9] "MateComp.cont"                 "JobComp.cont"                 
+[11] "LifeSatis.cont"                "pop_15_44_muni_gendergap_2015"
+[13] "age"                           "singdivsep"                   
+[15] "age_group"                     "gender"                       
+[17] "state"                         "citizenship"                  
+[19] "marital"                       "religion"                     
+[21] "eduyrs"                        "occupation"                   
+[23] "income"                        "household_size"               
+[25] "self_econ"                     "distance_ref"                 
+[27] "settle_ref"                    "lrscale"                      
+[29] "afd"                           "muslim_ind"                   
+[31] "afd_ind"                       "contact_ind"                  
+[33] "refugee_ind"                   "list"                         
+[35] "treatment_list"                "outcome_list"                 
+[37] "ref_integrating"               "ref_citizenship"              
+[39] "ref_reduce"                    "ref_moredone"                 
+[41] "ref_cultgiveup"                "ref_economy"                  
+[43] "ref_crime"                     "ref_terror"                   
+[45] "ref_loc_services"              "ref_loc_economy"              
+[47] "ref_loc_crime"                 "ref_loc_culture"              
+[49] "ref_loc_islam"                 "ref_loc_schools"              
+[51] "ref_loc_housing"               "ref_loc_wayoflife"            
+[53] "women_role"                   
+Wave 4 rows: 3019 
+Sociodemographic controls: age eduyrs income household_size self_econ gender occupation citizenship religion state 
+National: ref_integrating ref_citizenship ref_reduce ref_moredone ref_cultgiveup ref_economy ref_crime ref_terror women_role 
+Local: ref_loc_services ref_loc_economy ref_loc_crime ref_loc_culture ref_loc_islam ref_loc_schools ref_loc_housing ref_loc_wayoflife 
+Additional: contact_ind refugee_ind muslim_ind lrscale afd afd_ind distance_ref 
+N cols 3-6: 3008 3008 3008 3008 
+Context columns:
+ [1] "ags_county"                    "year"                         
+ [3] "ags_muni"                      "ags_state"                    
+ [5] "Hate_all_muni"                 "Physical_muni"                
+ [7] "pop_25_44_muni_gendergap_2015" "pop_15_44_muni_gendergap_2015"
+ [9] "population_muni_2015"          "popdens_muni_2015"            
+[11] "log_unemp_all_muni_2015"       "unemp_gendergap_2015"         
+[13] "d_pop1511_muni"                "vote_afd_2013_muni"           
+[15] "log_ref_inflow_1514"           "pop_ref_2014"                 
+[17] "pc_ref_male"                   "violence_percap_2015"         
+[19] 
+[... 766 characters omitted ...]
+gs_state: 11,  year: 3
+Standard-errors: Clustered (ags_county) 
+                            Estimate Std. Error   z value   Pr(>|z|)    
+ex                          2.674356   0.626502  4.268711 1.9661e-05 ***
+log_population_muni_2015    1.360033   0.071169 19.110043  < 2.2e-16 ***
+popdens_muni_2015           0.000058   0.000230  0.250689 8.0205e-01    
+d_pop1511_muni             -0.757937   1.017247 -0.745086 4.5622e-01    
+log_unemp_all_muni_2015     0.754342   0.225191  3.349789 8.0873e-04 ***
+unemp_gendergap_2015        0.338426   0.465102  0.727639 4.6683e-01    
+log_ref_inflow_1514         0.867242   0.383119  2.263639 2.3596e-02 *  
+pc_hidegree_all2011        -0.026424   0.017458 -1.513557 1.3014e-01    
+pc_manufacturing_2015       0.553885   1.095186  0.505746 6.1304e-01    
+d_manuf1115                11.546257   6.681262  1.728155 8.3960e-02 .  
+vote_afd_2013_muni          7.972367   4.225530  1.886714 5.9199e-02 .  
+violence_percap_2015     -319.413940 236.568788 -1.350195 1.7695e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Log-Likelihood: -1,693.9   Adj. Pseudo R2: 0.315737
+           BIC:  3,611.4     Squared Cor.: 0.285708
+GLM estimation, family = binomial, Dep. Var.: y_sum
+Observations: 2,549
+Fixed-effects: ags_state: 11
+Standard-errors: Clustered (ags_county) 
+                            Estimate Std. Error   z value  Pr(>|z|)    
+ex                          2.063357   0.739560  2.789978 0.0052712 ** 
+log_population_muni_2015    1.498700   0.096182 15.581891 < 2.2e-16 ***
+popdens_muni_2015           0.000210   0.000356  0.591371 0.5542715    
+d_pop1511_muni             -0.254026   1.195824 -0.212428 0.8317734    
+log_unemp_all_muni_2015     0.568426   0.267886  2.121898 0.0338463 *  
+unemp_gendergap_2015        0.254736   0.504531  0.504897 0.6136313    
+log_ref_inflow_1514         1.165990   0.495080  2.355153 0.0185151 *  
+pc_hidegree_all2011        -0.048919   0.019324 -2.531578 0.0113551 *  
+pc_manufacturing_2015       1.230365   1.381826  0.890391 0.3732561    
+d_manuf1115                12.513765   7.803696  1.603569 0.1088091    
+vote_afd_2013_muni         11.920431   4.943309  2.411427 0.0158902 *  
+violence_percap_2015     -210.409717 311.241654 -0.676033 0.4990195    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Log-Likelihood:  -862.0   Adj. Pseudo R2: 0.33754 
+           BIC: 1,904.4     Squared Cor.: 0.380335
+RESULT:mate_competition_table1_col1=0.437020
+RESULT:mate_competition_table1_col2=0.263437
+RESULT:job_competition_table1_col2=0.249956
+RESULT:n_obs_table1_col1=3019.000000
+RESULT:mate_competition_table1_col3=0.234450
+RESULT:mate_competition_table1_col4=0.192868
+RESULT:mate_competition_table1_col5=0.174966
+RESULT:mate_competition_table1_col6=0.151561
+RESULT:n_obs_table1_col3=3008.000000
+RESULT:excess_males_annual_tableC1_col6=2.674356
+RESULT:n_obs_annual_tableC1_col6=7647.000000
+RESULT:excess_males_sum_tableC1_col5=2.063357
+RESULT:n_obs_sum_tableC1_col5=2549.000000
+```
+
+## Last run's stderr (excerpt: first/last 3000 characters)
+```
+NOTE: 24,534 observations removed because of NA values (RHS: 24,534).
+NOTE: 8,178 observations removed because of NA values (RHS: 8,178).
+```
+
+## Claims still failing
+1. excess_males_sum_tableC1_col5: paper claims 1.406 log-odds per unit of the male-to-female ratio (coefficient), your code produced 2.06336, tolerance 0.3293, gap 46.75% relative
+2. excess_males_annual_tableC1_col6: paper claims 1.537 log-odds per unit of the male-to-female ratio (coefficient), your code produced 2.67436, tolerance 0.2681, gap 74.00% relative
+3. n_obs_sum_tableC1_col5: paper claims 9282.0 municipalities (other), your code produced 2549, tolerance 0.01, gap 72.54% relative
+4. n_obs_annual_tableC1_col6: paper claims 27846.0 municipality-years (other), your code produced 7647, tolerance 0.01, gap 72.54% relative
+
+## Previous attempts (oldest first)
+  Attempt 1: mate_competition_table1_col1=0.43702, mate_competition_table1_col2=0.263437, job_competition_table1_col2=0.249956, n_obs_table1_col1=3019.0, mate_competition_table1_col3=0.23445, mate_competition_table1_col4=0.192868, mate_competition_table1_col5=0.174966, mate_competition_table1_col6=0.151561, n_obs_table1_col3=3008.0, excess_males_annual_tableC1_col6=2.674356, n_obs_annual_tableC1_col6=7647.0, excess_males_sum_tableC1_col5=2.063357, n_obs_sum_tableC1_col5=2549.0
+
+These attempts have already been tried.  Do not repeat a strategy
+that has already produced the same values.
+
+## Task
+Adjust the code minimally to close the gap on the failing claims.
+Prefer changes that align more closely with the paper's stated methodology:
+re-read the methodology summary above and check the model specification,
+covariate selection, fixed effects, clustering, and seed against what the
+paper actually specifies.  In econometrics papers, common gap-closers are:
+  - getting the cluster-robust SE right (vcovCL / cluster_var argument)
+  - matching the paper's exact fixed-effects structure
+  - using the same sample-restriction filters the paper applied
+  - matching the paper's weighting scheme (weights= argument)
+
+## Deviation reporting
+If you must change something the paper did NOT specify in order to close
+the gap, emit a ``DEVIATION:`` line via cat() describing the change:
+
+    cat('DEVIATION: Used HC1 robust SE because the paper does not specify but the default did not converge\n')
+
+## When to give up
+If after re-reading the methodology and the previous attempts you judge
+the gap cannot be closed without unreasonable deviation, return the SAME
+R CODE you were given, BYTE-FOR-BYTE unchanged.  The pipeline will record
+the claim as unreproducible.
+
+## Output convention (unchanged)
+Emit every metric as ``cat('RESULT:<name>=<value>\n')``.
+The dataset is a directory tree at '<repo>/.cache/datasets/dancygier_2022_hate_crimes_gender_imbalances.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+No network, no system().  set.seed(42).
+
+Output ONLY the R code — no explanation, no markdown fences.

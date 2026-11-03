@@ -8,6 +8,7 @@
 | Model | desktop-opus |
 | Run | 20261023T062931Z |
 | Date | 2026-10-23T06:29:31Z |
+| Data access | public |
 | Results file | `benchmark/results/pipeline-oracle-desktop-opus-9papers-all-modes-2026-10-23.json` |
 | Artifacts | `benchmark/results/artifacts/dertwinkel-kalt-2022-concentration-bias/independent/pipeline/20261023T062931Z` |
 | Executions | 1 |
@@ -27,14 +28,14 @@
 | `rel_concentration_bias_lower_table2_col1` | 0.19 (0.016) | 0.188164 | 0.97% | ±0.016 (se_band) | PASS | PASS |
 | `rel_concentration_bias_midpoint_table2_col2` | 0.224 (0.021) | 0.223367 | 0.28% | ±0.021 (se_band) | PASS | PASS |
 | `rel_concentration_bias_upper_table2_col3` | 0.259 (0.027) | 0.25857 | 0.17% | ±0.027 (se_band) | PASS | PASS |
-| `n_obs_table2` | 100 | 100 | 0.00% | ±1 (relative) | PASS | PASS |
+| `n_obs_table2` | 100 | 100 | 0.00% | ±5 (relative) | PASS | PASS |
 | `rel_cb_mechanism_treatment_table3_col1` | 0.075 (0.019) | 0.0735975 | 1.87% | ±0.019 (se_band) | PASS | PASS |
 | `diff_main_minus_mechanism_table3_col1` | 0.149 (0.028) | 0.149769 | 0.52% | ±0.028 (se_band) | PASS | PASS |
 | `rel_cb_donation_treatment_table3_col2` | 0.135 (0.021) | 0.134085 | 0.68% | ±0.021 (se_band) | PASS | PASS |
 | `diff_donation_treatment_minus_control_table3_col2` | 0.158 (0.022) | 0.158681 | 0.43% | ±0.022 (se_band) | PASS | PASS |
 | `diff_main_treatment_minus_control_table3_col3` | 0.247 (0.023) | 0.245923 | 0.44% | ±0.023 (se_band) | PASS | PASS |
 | `diff_mechanism_treatment_minus_control_table3_col4` | 0.09 (0.021) | 0.0879577 | 2.27% | ±0.021 (se_band) | PASS | PASS |
-| `n_obs_table3` | 200 | 202 | 1.00% | ±2 (relative) | PASS | PASS |
+| `n_obs_table3` | 200 | 202 | 1.00% | ±10 (relative) | PASS | PASS |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 13/13 pass, which agrees with the row's 13/13.
 

@@ -8,6 +8,7 @@
 | Model | desktop-opus |
 | Run | 20261023T062931Z |
 | Date | 2026-10-23T06:29:31Z |
+| Data access | public |
 | Results file | `benchmark/results/pipeline-oracle-desktop-opus-9papers-all-modes-2026-10-23.json` |
 | Artifacts | `benchmark/results/artifacts/gagliarducci-2022-gender-cooperation-congress/blind/pipeline/20261023T062931Z` |
 | Executions | 1 |
@@ -31,10 +32,10 @@
 | `female_sponsor_pct_opposite_dem_ipw_sponsor` | -1.208 (0.525) | -2.7332 | 126.26% | ±0.525 (se_band) | FAIL | FAIL |
 | `female_sponsor_pct_opposite_rep_ols` | 3.666 (0.916) | 4.17344 | 13.84% | ±0.916 (se_band) | PASS | PASS |
 | `female_sponsor_pct_opposite_rep_ipw_district` | 2.905 (0.82) | 2.31949 | 20.16% | ±0.82 (se_band) | PASS | PASS |
-| `n_bills_ncosponsors_all_ols` | 60670 | 60669 | 0.00% | ±606.7 (relative) | PASS | PASS |
-| `n_sponsor_terms_ncosponsors_all_ols` | 4746 | 4750 | 0.08% | ±47.46 (relative) | PASS | PASS |
-| `n_bills_pct_opposite_dem_ols` | 32846 | 32846 | 0.00% | ±328.46 (relative) | PASS | PASS |
-| `n_bills_pct_opposite_rep_ols` | 27669 | 27670 | 0.00% | ±276.69 (relative) | PASS | PASS |
+| `n_bills_ncosponsors_all_ols` | 60670 | 60669 | 0.00% | ±3033.5 (relative) | PASS | PASS |
+| `n_sponsor_terms_ncosponsors_all_ols` | 4746 | 4750 | 0.08% | ±237.3 (relative) | PASS | PASS |
+| `n_bills_pct_opposite_dem_ols` | 32846 | 32846 | 0.00% | ±1642.3 (relative) | PASS | PASS |
+| `n_bills_pct_opposite_rep_ols` | 27669 | 27670 | 0.00% | ±1383.45 (relative) | PASS | PASS |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 12/13 pass, which agrees with the row's 12/13.
 

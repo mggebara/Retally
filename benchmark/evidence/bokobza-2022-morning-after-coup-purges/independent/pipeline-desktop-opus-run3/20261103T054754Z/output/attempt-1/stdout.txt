@@ -1,0 +1,183 @@
+Country-level columns:
+ [1] "COUNTRY_DATA"                     "COUNTRY_ID"                      
+ [3] "YEAR_DATA"                        "ccode"                           
+ [5] "leader_cab_id"                    "democracy1"                      
+ [7] "independent"                      "replacement_rateadj_minister"    
+ [9] "replacement_rateadj_minister_300" "replacement_rateadj_minister_200"
+[11] "replacement_rateadj_minister_100" "leaderexperience_continuous"     
+[13] "coupattempt_whogov"               "coupattempt_month_whogov"        
+[15] "gdp_cap_pwt_ln"                   "pop_pwt_ln"                      
+[17] "military_c"                       "monarchy_c"                      
+[19] "party_c"                          "elec_all"                        
+[21] "t1_e_a"                           "oil_valuepop_2014_ln"            
+[23] "growth_pwt"                       "onset1"                          
+[25] "nonvio_camp_2"                    "mid_onset"                       
+[27] "war_onset"                        "domestic3_10"                    
+[29] "coupattempt_whogov_br"            "polity2"                         
+[31] "lpolity2"                         "democracy_br"                    
+[33] "ldemocracy_br"                    "system_category"                 
+[35] "latent_personalism"               "coupattempt_whogov_type_br"      
+[37] "type_num"                        
+Coup attempt var: coupattempt_whogov 
+Failed coups (all years): 136 
+Control for gdp from column gdp_cap_pwt_ln (lagged here)
+Control for pop from column pop_pwt_ln (lagged here)
+Autocracy country-years: 4263 
+OLS estimation, Dep. Var.: dv
+Observations: 3,688
+Fixed-effects: id_: 113,  yr_: 51
+Standard-errors: Clustered (id_) 
+      Estimate Std. Error  t value Pr(>|t|)    
+fca   0.079195   0.033055  2.39585 0.018239 *  
+lgdp -0.039681   0.019528 -2.03202 0.044518 *  
+lpop -0.118296   0.059128 -2.00070 0.047844 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.252009     Adj. R2: 0.189155
+                 Within R2: 0.005366
+OLS estimation, Dep. Var.: dv
+Observations: 3,644
+Fixed-effects: id_: 113,  yr_: 51
+Standard-errors: Clustered (id_) 
+              Estimate Std. Error  t value  Pr(>|t|)    
+fca           0.086943   0.032543  2.67163 0.0086741 ** 
+lgdp         -0.034336   0.020510 -1.67407 0.0969070 .  
+lpop         -0.121687   0.060534 -2.01022 0.0468113 *  
+l_military_c -0.039935   0.029505 -1.35351 0.1786175    
+l_party_c    -0.066866   0.027973 -2.39035 0.0185008 *  
+l_monarchy_c  0.037376   0.026022  1.43635 0.1536912    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.249564     Adj. R2: 0.193056
+                 Within R2: 0.008423
+OLS estimation, Dep. Var.: dv
+Observations: 3,515
+Fixed-effects: leader_cab_id: 336,  yr_: 51
+Standard-errors: Clustered (id_) 
+      Estimate Std. Error  t value Pr(>|t|)    
+fca   0.059360   0.035252  1.68389 0.094987 .  
+lgdp -0.031952   0.024565 -1.30073 0.196021    
+lpop -0.143462   0.085770 -1.67264 0.097189 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.218174     Adj. R2: 0.233984
+                 Within R2: 0.003016
+OLS estimation, Dep. Var.: dv
+Observations: 3,480
+Fixed-effects: leader_cab_id: 331,  yr_: 51
+Standard-errors: Clustered (id_) 
+              Estimate Std. Error  t value  Pr(>|t|)    
+fca           0.066651   0.034606  1.92596  0.056644 .  
+lgdp         -0.024836   0.023153 -1.07271  0.285706    
+lpop         -0.128232   0.085445 -1.50076  0.136231    
+l_military_c -0.139264   0.057570 -2.41905  0.017171 *  
+l_party_c    -0.056692   0.051529 -1.10019  0.273606    
+l_monarchy_c  0.565633   0.029694 19.04879 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.215815     Adj. R2: 0.236832
+                 Within R2: 0.00865 
+Individual-level columns:
+ [1] "year"                        "country_isocode"            
+ [3] "country_name"                "position"                   
+ [5] "name"                        "title"                      
+ [7] "gender"                      "birthyear"                  
+ [9] "party"                       "party_english"              
+[11] "leader"                      "classification"             
+[13] "portfolio_1"                 "prestige_1"                 
+[15] "prestige_numeric"            "importance_numeric"         
+[17] "leader_party"                "party_group"                
+[19] "experience"                  "purged_y1"                  
+[21] "purged_y2"                   "coupattempt_presentyear"    
+[23] "coup_presentyear"            "coup_lastyear"              
+[25] "coupattempt_presentyear_br"  "coup_presentyear_br"        
+[27] "coup_lastyear_br"            "coupattempt_whogov_type_br" 
+[29] "leaderexperience_continuous" "democracy_lag_br"           
+[31] "n_party"                     "democracy_lag"              
+[33] "gdp_cap_pwt_ln"              "pop_pwt_ln"                 
+[35] "polity2"                     "gdp_cap_pwt_ln_lag"         
+[37] "pop_pwt_ln_lag"              "lag_polity2"                
+[39] "importance_factor"           "Group"                      
+[41] "minister_type"               "minister_classification"    
+[43] "age"                         "experience_group"           
+[45] "hired"                      
+Levels of gender :
+
+ Female    Male Unknown    <NA> 
+  17500  187853     170       1 
+Levels of prestige_1 :
+
+  High    Low Medium   <NA> 
+ 37112  10109 112872  45431 
+Levels of importance_numeric :
+
+     0    0.5      1      2      3      4      5   <NA> 
+   383  21007  12983 114497  34862   3608   8059  10125 
+Levels of party_group :
+
+ independent leader_party  other_party      unknown         <NA> 
+       38333       114723        27938        12538        11992 
+Levels of coupattempt_presentyear :
+
+   Coup attempt No coup attempt            <NA> 
+           3055          189559           12910 
+Levels of coupattempt_whogov_type_br :
+
+     0    Civ    Mil  Royal   <NA> 
+190471   1299   2967     72  10715 
+Levels of democracy_lag_br :
+
+Autocracy Democracy      <NA> 
+   120984     81264      3276 
+Levels of importance_factor :
+
+                                                    0 
+                                                  383 
+                                                    5 
+                                                 8059 
+         Junior minister\nor other low-\nranking post 
+                                                21007 
+                                low-ranking\nminister 
+                                                12983 
+                             Medium-ranking\nminister 
+                                               114497 
+               Prime minister/President\n(not leader) 
+                                                 3608 
+Vice president,\ndeputy prime minister,\ntop minister 
+                                                34862 
+                                                 <NA> 
+                                                10125 
+Levels of Group :
+
+Prestige 
+  205524 
+Levels of minister_type :
+
+          Minister of Defense           Minister of Finance 
+                         6316                          7728 
+  Minister of Foreign Affairs Minister of Natural Resources 
+                         7675                          6133 
+       Other type of minister                          <NA> 
+                       125514                         52158 
+Levels of minister_classification :
+
+      1. Energy &\nNatural Resources      2. Public utility\n& provisions 
+                                6133                                48947 
+                3. Economic\naffairs 4. Administration\n&internal affairs 
+                               25904                                29622 
+                            5. Other     6. Communications &\nInformation 
+                               29172                                 8769 
+                  7. Foreign Affairs               8. Security &\nDefense 
+                               10075                                10440 
+                                <NA> 
+                               36462 
+Levels of experience_group :
+
+       1year    2-3 years    4-6 years Over 6 years 
+       50368        64168        47095        43893 
+Coup attempt var: coupattempt_presentyear  success var: coup_presentyear  overlap: 0 
+Control for gdp from pre-lagged column gdp_cap_pwt_ln_lag 
+Control for pop from pre-lagged column pop_pwt_ln_lag 
+Merge key: COUNTRY_DATA <-> country_name  overlap: 0.9044944 
+Leader rows: 8059 
+Individual sample (autocracy, non-leader): 0 

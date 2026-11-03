@@ -6,6 +6,7 @@
 - I4R report: https://github.com/I4Replication/I4R-First-Meta-Paper
 - I4R outcome label: reproducible; split: holdout
 - Catalog entry (ground truth): `benchmark/papers/dancygier-2022-hate-crimes-gender-imbalances.yaml`
+- Data access: public
 
 > Headline findings: German municipalities with more men than women aged 15-44 are more likely to see anti-refugee hate crime (Figure 1; SI Table C1 full models, Excess Males 1.406 (0.463) Sum and 1.537 (0.412) Annual, logit; in the text, moving from 1.0 to 1.2 raises the probability of at least one hate crime by 2.60 and 1.71 points), and survey respondents who agree that refugees make it harder for native men to find partners are more likely to support anti-refugee violence (Table 1: Mate Competition 0.437 (0.016) bivariate, 0.155 (0.019) with all controls; N 3,019 / 3,008).
 > Curation pass (2026-11-02).  Pinned 13 claims: Table 1's Mate Competition coefficient in all six columns and Job Competition in column 2, each with its SE; the two Table 1 Ns; SI Table C1 columns 5-6 Excess Males with SEs and their Ns (9,282 municipalities; 27,846 municipality-years).  Values exactly as printed in the published PDF and SI and identical to the package's table1.tex / table_C1.tex. Cross-check against the meta-database: Table 1 col 6 0.155 (0.019) and Table C1 col 6 1.537 (0.412) equal the rows' o_coeff / o_std_err; the other pinned values have no row.  Table C1 columns 5-6 are pinned although they sit in the SI because they are the "full results and specification" of main-text Figure 1 (the paper's municipality-level headline), not a robustness check; ContextAnalysis_Main.R fits exactly these two models for Figure 1.  Left out: Table 1's Job Competition in columns 3-6 and Life Satisfaction, R2 / adjusted R2 (0.191-0.459), Table C1 columns 1-4 and its other covariates, the Figure 1 effects (2.60 [0.88, 4.19] and 1.71 [0.76, 2.55] points; marginal effects from a custom function), Figure 2-4 quantities, the list experiment, the YouGov replication, and SI Tables C2-C9 and D (robustness).
@@ -41,6 +42,7 @@
 | `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [13/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
 | `pipeline-desktop-opus` | [13/13](seeded/pipeline-desktop-opus/20261102T100356Z/CELL.md) (20261102T100356Z) | [13/13](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) (20261102T141403Z) | [13/13](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) (20261102T095147Z) |
 | `pipeline-desktop-opus-run2` | [13/13](seeded/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) (20261102T152052Z) | [13/13](independent/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) (20261102T151132Z) | [13/13](blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) (20261102T151132Z) |
+| `pipeline-desktop-opus-run3` | [13/13](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [13/13](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [11/13](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
 
@@ -52,16 +54,16 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 | Cell | Claim | Reproduced | Paper | Band | Error / band | Verdict |
 |---|---|---|---|---|---|---|
+| [blind/pipeline-desktop-opus-run3/20261103T004800Z](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) | `n_obs_annual_tableC1_col6` | 29664 | 27846 | ±1392.3 (relative) | 1.306 | FAIL |
+| [blind/pipeline-desktop-opus-run3/20261103T004800Z](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) | `n_obs_sum_tableC1_col5` | 9888 | 9282 | ±464.1 (relative) | 1.306 | FAIL |
+| [independent/pipeline-desktop-opus-run3/20261103T010557Z](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) | `mate_competition_table1_col4` | 0.192868 | 0.206 | ±0.019 (se_band) | 0.691 | PASS |
+| [independent/pipeline-desktop-opus-run3/20261103T010557Z](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) | `mate_competition_table1_col5` | 0.174966 | 0.185 | ±0.019 (se_band) | 0.528 | PASS |
 | [independent/pipeline-desktop-opus-run2/20261102T151132Z](independent/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) | `excess_males_sum_tableC1_col5` | 1.62559 | 1.406 | ±0.463 (se_band) | 0.474 | PASS |
 | [independent/pipeline-desktop-opus/20261102T141403Z](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) | `excess_males_annual_tableC1_col6` | 1.36704 | 1.537 | ±0.412 (se_band) | 0.413 | PASS |
-| [independent/pipeline-desktop-opus/20261102T141403Z](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) | `n_obs_sum_tableC1_col5` | 9258 | 9282 | ±92.82 (relative) | 0.259 | PASS |
-| [independent/pipeline-desktop-opus/20261102T141403Z](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) | `n_obs_annual_tableC1_col6` | 27774 | 27846 | ±278.46 (relative) | 0.259 | PASS |
+| [independent/pipeline-desktop-opus-run3/20261103T010557Z](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) | `excess_males_annual_tableC1_col6` | 1.36704 | 1.537 | ±0.412 (se_band) | 0.413 | PASS |
+| [blind/pipeline-desktop-opus-run3/20261103T004800Z](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) | `excess_males_sum_tableC1_col5` | 1.52362 | 1.406 | ±0.463 (se_band) | 0.254 | PASS |
 | [independent/pipeline-desktop-opus/20261102T141403Z](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) | `excess_males_sum_tableC1_col5` | 1.30546 | 1.406 | ±0.463 (se_band) | 0.217 | PASS |
-| [independent/pipeline-desktop-opus-run2/20261102T151132Z](independent/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) | `mate_competition_table1_col6` | 0.157899 | 0.155 | ±0.019 (se_band) | 0.153 | PASS |
-| [blind/pipeline-desktop-opus/20261102T095147Z](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) | `mate_competition_table1_col6` | 0.157899 | 0.155 | ±0.019 (se_band) | 0.153 | PASS |
-| [independent/pipeline-desktop-opus/20261102T141403Z](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) | `mate_competition_table1_col6` | 0.157891 | 0.155 | ±0.019 (se_band) | 0.152 | PASS |
-| [blind/pipeline-desktop-opus-run2/20261102T151132Z](blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) | `mate_competition_table1_col6` | 0.157891 | 0.155 | ±0.019 (se_band) | 0.152 | PASS |
-| [blind/pipeline-desktop-opus/20261102T095147Z](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) | `excess_males_annual_tableC1_col6` | 1.48128 | 1.537 | ±0.412 (se_band) | 0.135 | PASS |
+| [independent/pipeline-desktop-opus-run3/20261103T010557Z](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) | `excess_males_sum_tableC1_col5` | 1.30546 | 1.406 | ±0.463 (se_band) | 0.217 | PASS |
 
 ### Declared deviations
 
@@ -119,6 +121,10 @@ _None._
 
 [`seeded/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md`](seeded/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-02T15:20:52Z; from `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`; evidence complete.
 
+### seeded · pipeline-desktop-opus-run3 · 20261103T010557Z
+
+[`seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md`](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-03T01:05:57Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
+
 ### independent · claude-code · 2026-11-02-a
 
 [`independent/claude-code/2026-11-02-a/CELL.md`](independent/claude-code/2026-11-02-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-02T09:51:00Z; from `claude-code-6papers-all-modes-2026-11-02.json`; evidence complete.
@@ -139,6 +145,10 @@ _None._
 
 [`independent/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-02T15:11:32Z; from `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-run3 · 20261103T010557Z
+
+[`independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md`](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — final 13/13, re-scored 13/13; first scored 9/13; executions 2; 2026-11-03T01:05:57Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
+
 ### blind · claude-code · 2026-11-02-a
 
 [`blind/claude-code/2026-11-02-a/CELL.md`](blind/claude-code/2026-11-02-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 3; 2026-11-02T09:51:10Z; from `claude-code-6papers-all-modes-2026-11-02.json`; evidence complete.
@@ -158,4 +168,8 @@ _None._
 ### blind · pipeline-desktop-opus-run2 · 20261102T151132Z
 
 [`blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md`](blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-02T15:11:32Z; from `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-run3 · 20261103T004800Z
+
+[`blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md`](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) — final 11/13, re-scored 11/13; first scored 11/13; executions 1; 2026-11-03T00:48:00Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 

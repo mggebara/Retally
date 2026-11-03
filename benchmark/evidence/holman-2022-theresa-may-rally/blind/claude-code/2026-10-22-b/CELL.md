@@ -8,6 +8,7 @@
 | Model | — |
 | Run | 2026-10-22-b |
 | Date | 2026-10-22T03:30:01Z |
+| Data access | public |
 | Results file | `benchmark/results/claude-code-blind-rerun-2026-10-22-b.json` |
 | Artifacts | `benchmark/results/artifacts/holman-2022-theresa-may-rally/blind/claude-code/20261022T033040Z` |
 | Run directory | `benchmark/reproductions/holman-2022-theresa-may-rally/blind/2026-10-22-b` |
@@ -15,7 +16,7 @@
 | Refinements | 0 (0 error + 0 claim) |
 | First attempt | 0/11 |
 | First scored | 5/11 (execution 3) |
-| Final | **5/11** |
+| Final | **6/11** |
 | Package files withheld | 1 |
 | Evidence | complete |
 
@@ -25,17 +26,17 @@
 |---|---|---|---|---|---|---|
 | `intl_attack_table4` | 3.112 (0.875) | 2.21565 | 28.80% | ±0.875 (se_band) | FAIL | FAIL |
 | `intl_attack_x_woman_exec_table4` | -4.333 (1.859) | -2.95667 | 31.76% | ±1.859 (se_band) | PASS | PASS |
-| `n_obs_table4` | 4328 | 4486 | 3.65% | ±43.28 (relative) | FAIL | FAIL |
+| `n_obs_table4` | 4328 | 4486 | 3.65% | ±216.4 (relative) | PASS | FAIL |
 | `did_attack_x_time_like_may_table2` | -0.1274 (0.0187) | -0.099607 | 21.82% | ±0.0187 (se_band) | FAIL | FAIL |
 | `did_attack_like_may_table2` | 0.0178 (0.0278) | 0.008807 | 50.52% | ±0.0278 (se_band) | PASS | PASS |
 | `did_time_like_may_table2` | -0.5007 (0.0229) | -0.451291 | 9.87% | ±0.0229 (se_band) | FAIL | FAIL |
 | `did_attack_x_time_may_best_pm_table2` | -0.0501 (0.0044) | -0.321537 | 541.79% | ±0.0044 (se_band) | FAIL | FAIL |
 | `did_attack_may_best_pm_table2` | -0.0002 (0.004) | -0.002315 | 1057.50% | ±0.004 (se_band) | PASS | PASS |
 | `did_time_may_best_pm_table2` | 0.2098 (0.0036) | 1.36411 | 550.20% | ±0.004196 (relative) | FAIL | FAIL |
-| `n_obs_did_like_may_table2` | 143499 | 143499 | 0.00% | ±1434.99 (relative) | PASS | PASS |
-| `n_obs_did_may_best_pm_table2` | 97155 | 97155 | 0.00% | ±971.55 (relative) | PASS | PASS |
+| `n_obs_did_like_may_table2` | 143499 | 143499 | 0.00% | ±7174.95 (relative) | PASS | PASS |
+| `n_obs_did_may_best_pm_table2` | 97155 | 97155 | 0.00% | ±4857.75 (relative) | PASS | PASS |
 
-Re-scored from `output/stdout.txt` with the runner's comparator: 5/11 pass, which agrees with the row's 5/11.
+Re-scored from `output/stdout.txt` with the runner's comparator: 6/11 pass, which agrees with the row's 6/11.
 
 Per-claim ground truth, tolerance rule and errors: [`scoring.json`](scoring.json).
 

@@ -1,0 +1,312 @@
+You are refining R code that reproduces results from an econometrics paper.
+The code RAN SUCCESSFULLY but the reproduced values do not match the
+paper's claims within the allowed tolerance.  Identify what is causing
+the gap and adjust the code to close it.
+
+## Paper
+Title: General Rights
+Methodology: - **Data and sample:** The cabinet data come from WhoGov (Nyrup and Bramwell 2020), which is built from the CIA *Chiefs of State and Cabinet Members* directory and coded each July. Failed coups come from Powell and Thyne (2011), with Bjørnskov and Rode (2020) used for robustness. The sample covers 115 autocracies, 1967–2016. It is restricted to country-years with a **lagged (t−1) Boix–Miller–Rosato democracy score of 0**. Appendices C/M use alternative autocracy definitions: lagged DD and lagged Polity IV < 6. Some models lose observations because control coverage is incomplete.
+- **Country-level estimating equation (H1):** TSCS OLS of P_it = φC_it + βX_it + α_i + λ_t + ε_it.
+  - **Dependent variable:** the year-to-year cabinet replacement rate P_it, in [0,1], equal to 1 − retention_rate adjusted for cabinet size (`retention_rateadj_minister`). It is a raw share, not standardised; coefficients are percentage-point changes.
+  - **Key regressor:** C_it, a failed-coup dummy (95 failed coups in the analyses). Because cabinets are coded each July, coups before 1 July count in year t and coups on or after 1 July count in t+1.
+  - **Fixed effects:** country FE plus a full set of year dummies. Every specification is also re-run with **leader FE instead of country FE**.
+  - **Standard errors and N:** SEs are clustered by country. There are up to 3,715 country-years.
+- **Control sets (all lagged one year):**
+  - "Base": log GDP per capita and log population (PWT 9.0).
+  - "Main" (preferred): Base plus dummies for military dictatorship, party dictatorship and monarchy (Anckar & Fredriksson 2019).
+  - Add-on models on top of Main:
+    - Electoral: NELDA national elections and years since the last election.
+    - Economic: GDP per capita growth and Ross oil income.
+    - Instability: UCDP civil war onset, NAVCO nonviolent campaigns, COW MID onset and interstate war onset, and CNTS strikes.
+    - "Purges MAs": 1-, 2- and 3-year moving averages of past replacement rates, effectively a lagged-DV model.
+    - "All controls": every control above together.
+- **Placebo tests and robustness:**
+  - Placebos replace C_it with onsets of civil war, nonviolent campaigns, MIDs, interstate war and strikes, under both country and leader FE.
+  - Robustness checks:
+    - a conventional lagged coup variable;
+    - effects by coup month;
+    - regime-type interactions;
+    - a personalism control;
+    - dropping full-turnover cabinets (rate = 1);
+    - dropping each leader's first year;
+    - coup types (military, civilian, royal) from Bjørnskov–Rode.
+- **Headline results:** The median replacement rate is 17.4% in non-coup years and 38.1% after a failed coup. The Base model with country FE gives about **+0.10**. Across all specifications the effect is **+0.08 to +0.11** and significant at 95%; full tables are in Appendix A.
+- **Individual-level linear probability model (H2–H4):** F_ijt = φC + ζM + γ(C×M) + βX + α_i + λ_t + ε.
+  - **Dependent variable:** F = 1 if the minister is purged, meaning absent from the dataset the next year. Reshuffles within the cabinet are not counted as purges.
+  - **Controls and FE:** the Base controls (log GDP per capita and log population, lagged), cubic polynomials in the minister's years in office (t, t², t³; dropped when experience is the moderator), country FE, year FE, and country-clustered SEs.
+  - **Sample:** 23,655 ministers and 95,751 minister-years, with up to 90,020 in the figures (88,094 non-coup and 1,926 coup minister-years).
+- **Moderators M, entered one at a time:**
+  - **Loyalty:**
+    - experience, measured as years in cabinet;
+    - party alignment: leader's party, another party, or unaffiliated.
+  - **Responsibility:**
+    - strategic portfolio type, such as defence or foreign affairs;
+    - five ordered importance tiers (Appendix Q), excluding the leader.
+  - **H4:** a four-group classification crossing loyalty with responsibility.
+    - *Strong loyalty* means the same party as the leader and experience at or above the median under that leader-year.
+    - *High responsibility* means a top minister, deputy PM, VP, PM, or a president who is not the leader.
+  - **Exclusion:** junior and low-ranking posts are excluded from the experience-based tests.
+  - **Reporting:** results are marginal effects of a failed coup by minister type, with 95% confidence intervals (Figures 3 and 4, Appendix K).
+
+
+## Current Code
+```r
+suppressPackageStartupMessages({
+  library(haven)
+  library(dplyr)
+  library(fixest)
+})
+set.seed(42)
+
+base_dir <- "<repo>/.cache/datasets/bokobza_2022_morning_after_coup_purges"
+
+emit <- function(name, val) {
+  if (is.null(val) || length(val) == 0 || is.na(val)) {
+    cat(sprintf("RESULT:%s=NA\n", name))
+  } else {
+    cat(sprintf("RESULT:%s=%.6f\n", name, as.numeric(val)))
+  }
+}
+
+safe <- function(expr) tryCatch(expr, error = function(e) { message("ERROR: ", conditionMessage(e)); NULL })
+
+###########################
+# Country-level analysis  #
+###########################
+
+cl <- safe(as.data.frame(zap_labels(read_dta(file.path(base_dir, "morning_after_dataset_countrylevel.dta")))))
+
+find_col <- function(df, candidates) {
+  for (c in candidates) if (c %in% names(df)) return(c)
+  NA_character_
+}
+
+lag_var <- function(df, var, id, time) {
+  df <- df[order(df[[id]], df[[time]]), ]
+  key <- paste(df[[id]], df[[time]])
+  prev <- paste(df[[id]], df[[time]] - 1)
+  df[[paste0("lag__", var)]] <- df[[var]][match(prev, key)]
+  df
+}
+
+if (!is.null(cl)) {
+  nms <- names(cl)
+  idv <- find_col(cl, c("COUNTRY_ID", "ccode", "country_id"))
+  tv <- find_col(cl, c("YEAR_DATA", "year"))
+  cl[[tv]] <- as.numeric(cl[[tv]])
+
+  # Get (lagged) control variable: prefer existing lagged version, else construct
+  get_lagged <- function(df, pats_lag, pats_raw) {
+    nm <- names(df)
+    for (p in pats_lag) { h <- nm[grepl(p, nm, ignore.case = TRUE)]; if (length(h)) return(list(df = df, v = h[1])) }
+    for (p in pats_raw) {
+      h <- nm[grepl(p, nm, ignore.case = TRUE)]
+      if (length(h)) { df <- lag_var(df, h[1], idv, tv); return(list(df = df, v = paste0("lag__", h[1]))) }
+    }
+    list(df = df, v = NA_character_)
+  }
+
+  r <- get_lagged(cl, c("^l_?gdp.*ln", "^l_?ln_?gdp", "gdp.*ln.*_l(ag)?$", "^lag_?gdp"), c("gdp.*pwt.*ln", "gdp.*ln", "ln.*gdp"))
+  cl <- r$df; gdpv <- r$v
+  r <- get_lagged(cl, c("^l_?pop.*ln", "^l_?ln_?pop", "pop.*ln.*_l(ag)?$", "^lag_?pop"), c("pop.*pwt.*ln", "pop.*ln", "ln.*pop"))
+  cl <- r$df; popv <- r$v
+
+  regv <- c()
+  for (base in c("military_c", "party_c", "monarchy_c")) {
+    lagn <- find_col(cl, c(paste0("l", base), paste0("l_", base), paste0(base, "_l"), paste0("lag_", base)))
+    if (!is.na(lagn)) { regv <- c(regv, lagn) } else if (base %in% names(cl)) {
+      cl <- lag_var(cl, base, idv, tv); regv <- c(regv, paste0("lag__", base))
+    }
+  }
+
+  coupv <- find_col(cl, c("coupattempt_whogov", grep("^coupattem", nms, value = TRUE)))
+  dv <- "replacement_rateadj_minister"
+  leadv <- find_col(cl, c("leader_cab_id", "leader_id"))
+
+  samp <- cl
+  if ("democracy1" %in% names(samp)) {
+    samp <- samp[!is.na(samp$democracy1) & samp$democracy1 == 0, ]
+  } else if ("ldemocracy_br" %in% names(samp)) {
+    samp <- samp[!is.na(samp$ldemocracy_br) & samp$ldemocracy_br == 0, ]
+  }
+  if ("independent" %in% names(samp)) samp <- samp[!is.na(samp$independent) & samp$independent == 1, ]
+
+  run_cl <- function(ctrls, fe) {
+    ctrls <- ctrls[!is.na(ctrls)]
+    f <- as.formula(paste0(dv, " ~ ", paste(c(coupv, ctrls), collapse = " + "), " | ", fe, " + ", tv))
+    m <- feols(f, data = samp, cluster = as.formula(paste0("~", idv)), warn = FALSE, notes = FALSE)
+    coef(m)[coupv]
+  }
+
+  base_ctrl <- c(gdpv, popv)
+  main_ctrl <- c(gdpv, popv, regv)
+  emit("failed_coup_base_country_fe", safe(run_cl(base_ctrl, idv)))
+  emit("failed_coup_main_country_fe", safe(run_cl(main_ctrl, idv)))
+  emit("failed_coup_base_leader_fe", safe(run_cl(base_ctrl, leadv)))
+  emit("failed_coup_main_leader_fe", safe(run_cl(main_ctrl, leadv)))
+} else {
+  for (n in c("failed_coup_base_country_fe", "failed_coup_main_country_fe",
+              "failed_coup_base_leader_fe", "failed_coup_main_leader_fe")) emit(n, NA)
+}
+
+##############################
+# Individual-level analysis  #
+##############################
+
+ind <- safe(readRDS(file.path(base_dir, "morning_after_dataset_individuallevel.rds")))
+
+if (!is.null(ind)) {
+  ind <- as.data.frame(ind)
+  for (v in c("minister_type", "importance_factor", "experience_group", "party_group"))
+    if (v %in% names(ind)) ind[[v]] <- as.character(ind[[v]])
+
+  df_aut <- ind %>% filter(democracy_lag == 0 & leader == 0 & !is.na(purged_y1) &
+                             !is.na(gdp_cap_pwt_ln) & !is.na(pop_pwt_ln))
+  df_aut$fca <- as.numeric(df_aut$coupattempt_presentyear)
+  df_aut$exp1 <- df_aut$experience
+  df_aut$exp2 <- df_aut$experience^2
+  df_aut$exp3 <- df_aut$experience^3
+
+  # Build dummies + interactions for factor 'fac' with reference 'ref'
+  run_int <- function(df, fac, ref, cubic) {
+    df <- df[!is.na(df[[fac]]), ]
+    lv <- setdiff(sort(unique(df[[fac]])), ref)
+    dnames <- character(0); inames <- character(0)
+    for (i in seq_along(lv)) {
+      d <- paste0("D", i); ii <- paste0("I", i)
+      df[[d]] <- as.numeric(df[[fac]] == lv[i])
+      df[[ii]] <- df[[d]] * df$fca
+      dnames <- c(dnames, d); inames <- c(inames, ii)
+    }
+    rhs <- c("fca", dnames, inames, "gdp_cap_pwt_ln", "pop_pwt_ln")
+    if (cubic) rhs <- c(rhs, "exp1", "exp2", "exp3")
+    f <- as.formula(paste0("purged_y1 ~ ", paste(rhs, collapse = " + "), " | country_isocode + year"))
+    m <- feols(f, data = df, cluster = ~country_isocode, warn = FALSE, notes = FALSE)
+    cf <- coef(m)
+    ints <- setNames(cf[inames], lv)
+    list(fca = cf["fca"], ints = ints, levels = lv)
+  }
+
+  pick <- function(lv, pat) { h <- lv[grepl(pat, lv, ignore.case = TRUE)]; if (length(h)) h[1] else NA_character_ }
+
+  # H2a: Experience
+  res <- safe({
+    df_experience <- df_aut %>% filter(importance_factor != "0.5")
+    lvs <- sort(unique(df_experience$experience_group[!is.na(df_experience$experience_group)]))
+    ref <- pick(lvs, "less|<|^0|^1")
+    if (is.na(ref)) ref <- lvs[1]
+    out <- run_int(df_experience, "experience_group", ref, cubic = FALSE)
+    over <- pick(out$levels, "over|>|\\+")
+    if (is.na(over)) over <- tail(out$levels, 1)
+    list(a = out$fca, b = out$ints[over])
+  })
+  emit("failed_coup_experience_model", res$a)
+  emit("failed_coup_x_over_6_years_experience", res$b)
+
+  # H2b: Affiliation
+  res <- safe({
+    df_party <- df_aut %>% filter(party_group != "unknown")
+    out <- run_int(df_party, "party_group", "other_party", cubic = TRUE)
+    list(a = out$fca, b = out$ints["leader_party"])
+  })
+  emit("failed_coup_affiliation_model", res$a)
+  emit("failed_coup_x_leaders_party", res$b)
+
+  # H3a: Responsibility
+  res <- safe({
+    lvs <- unique(df_aut$minister_type[!is.na(df_aut$minister_type)])
+    ref <- pick(lvs, "defen")
+    out <- run_int(df_aut, "minister_type", ref, cubic = TRUE)
+    nr <- pick(out$levels, "natural")
+    list(a = out$fca, b = out$ints[nr])
+  })
+  emit("failed_coup_responsibility_model", res$a)
+  emit("failed_coup_x_natural_resources", res$b)
+
+  # H3b: Importance
+  res <- safe({
+    df_importance <- df_aut %>% filter(importance_factor != "0" & !is.na(importance_factor))
+    lvs <- unique(df_importance$importance_factor)
+    ref <- pick(lvs, "^Prime minister")
+    if (is.na(ref)) ref <- pick(lvs, "prime minister/president")
+    out <- run_int(df_importance, "importance_factor", ref, cubic = TRUE)
+    list(a = out$fca)
+  })
+  emit("failed_coup_importance_model", res$a)
+} else {
+  for (n in c("failed_coup_experience_model", "failed_coup_x_over_6_years_experience",
+              "failed_coup_affiliation_model", "failed_coup_x_leaders_party",
+              "failed_coup_responsibility_model", "failed_coup_x_natural_resources",
+              "failed_coup_importance_model")) emit(n, NA)
+}
+```
+
+## What the code produced
+  failed_coup_base_country_fe = 0.098488
+  failed_coup_main_country_fe = 0.105549
+  failed_coup_base_leader_fe = 0.058653
+  failed_coup_main_leader_fe = 0.062218
+  failed_coup_experience_model = 0.142112
+  failed_coup_x_over_6_years_experience = -0.102939
+  failed_coup_affiliation_model = 0.174175
+  failed_coup_x_leaders_party = -0.125832
+  failed_coup_responsibility_model = 0.202499
+  failed_coup_x_natural_resources = -0.183205
+  failed_coup_importance_model = 0.370185
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+RESULT:failed_coup_base_country_fe=0.098488
+RESULT:failed_coup_main_country_fe=0.105549
+RESULT:failed_coup_base_leader_fe=0.058653
+RESULT:failed_coup_main_leader_fe=0.062218
+RESULT:failed_coup_experience_model=0.142112
+RESULT:failed_coup_x_over_6_years_experience=-0.102939
+RESULT:failed_coup_affiliation_model=0.174175
+RESULT:failed_coup_x_leaders_party=-0.125832
+RESULT:failed_coup_responsibility_model=0.202499
+RESULT:failed_coup_x_natural_resources=-0.183205
+RESULT:failed_coup_importance_model=0.370185
+```
+
+## Claims still failing
+1. failed_coup_base_leader_fe: paper claims 0.08 change in the cabinet replacement rate (share of ministers, 0-1) (coefficient), your code produced 0.058653, tolerance 0.0625, gap 26.68% relative
+2. failed_coup_main_leader_fe: paper claims 0.09 change in the cabinet replacement rate (share of ministers, 0-1) (coefficient), your code produced 0.062218, tolerance 0.05556, gap 30.87% relative
+
+## Previous attempts (oldest first)
+  Attempt 1: failed_coup_base_country_fe=0.098488, failed_coup_main_country_fe=0.105549, failed_coup_base_leader_fe=0.058653, failed_coup_main_leader_fe=0.062218, failed_coup_experience_model=0.142112, failed_coup_x_over_6_years_experience=-0.102939, failed_coup_affiliation_model=0.174175, failed_coup_x_leaders_party=-0.125832, failed_coup_responsibility_model=0.202499, failed_coup_x_natural_resources=-0.183205, failed_coup_importance_model=0.370185
+
+These attempts have already been tried.  Do not repeat a strategy
+that has already produced the same values.
+
+## Task
+Adjust the code minimally to close the gap on the failing claims.
+Prefer changes that align more closely with the paper's stated methodology:
+re-read the methodology summary above and check the model specification,
+covariate selection, fixed effects, clustering, and seed against what the
+paper actually specifies.  In econometrics papers, common gap-closers are:
+  - getting the cluster-robust SE right (vcovCL / cluster_var argument)
+  - matching the paper's exact fixed-effects structure
+  - using the same sample-restriction filters the paper applied
+  - matching the paper's weighting scheme (weights= argument)
+
+## Deviation reporting
+If you must change something the paper did NOT specify in order to close
+the gap, emit a ``DEVIATION:`` line via cat() describing the change:
+
+    cat('DEVIATION: Used HC1 robust SE because the paper does not specify but the default did not converge\n')
+
+## When to give up
+If after re-reading the methodology and the previous attempts you judge
+the gap cannot be closed without unreasonable deviation, return the SAME
+R CODE you were given, BYTE-FOR-BYTE unchanged.  The pipeline will record
+the claim as unreproducible.
+
+## Output convention (unchanged)
+Emit every metric as ``cat('RESULT:<name>=<value>\n')``.
+The dataset is a directory tree at '<repo>/.cache/datasets/bokobza_2022_morning_after_coup_purges' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+No network, no system().  set.seed(42).
+
+Output ONLY the R code — no explanation, no markdown fences.
