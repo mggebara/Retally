@@ -393,6 +393,14 @@ def _render_text(
         .replace("__SCRIPT__", '"$SCRIPT"')
         .replace(shlex.quote(f"{_RUN_LABEL_KEY}=__LABEL__"), shlex.quote(label))
     )
+    # The host-side time limit: run_sandbox kills the labelled container on
+    # timeout and records wall time (a perl alarm on ``docker run`` does
+    # neither; ROADMAP 3.7.3 item (h)).
+    sandbox_command = (
+        f"uv run --directory {shlex.quote(str(REPO_ROOT))} python -m benchmark.reproducers.run_sandbox"
+        f" --timeout {executor.timeout} --label {shlex.quote(label)}"
+        f' --run-dir "$(dirname "$SCRIPT")" -- {run_command}'
+    )
 
     values = {
         "entry_id": entry.id,
@@ -415,6 +423,7 @@ def _render_text(
         "code_requirements_block": _block(_prompt_section(prompt, "## Code Requirements")),
         "package_scripts_block": _block(scripts_section) or "_No analysis scripts were found._\n",
         "run_command": run_command,
+        "sandbox_command": sandbox_command,
         "timeout": str(executor.timeout),
         "memory": executor.memory_limit,
         "cpus": str(executor.cpu_count),

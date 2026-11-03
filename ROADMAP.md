@@ -3002,14 +3002,13 @@ directly comparable with these on the affected papers.
 **Next** (replaces 3.7.2's list): (g) agent side done for independent
 and blind mode, three samples each on all 23 papers; still open are a
 third pipeline sample in every mode and a third agent seeded sample.
-(h) Enforce the 300 s limit on the agent path host-side, as the
-pipeline does: render a wrapper (for example a small
-`benchmark.reproducers` entry point) that runs the `docker run` command
-under a subprocess timeout and kills the labelled container, or add
-`--init` to the run command so the alarm's signal reaches a process that
-dies on it, and record each execution's wall time in the evidence
-bundle so an over-limit run is visible.  Either changes the protocol for
-later samples only.  (i) A fourth blind agent sample under the new
+(h) Done: cells now run the sandbox through
+`benchmark.reproducers.run_sandbox`, which enforces the 300 s limit
+host-side (subprocess timeout, labelled container killed, exit 124) and
+records each execution's wall time in a `timing.json` beside its
+`stdout.txt`; for later samples only.  (`--init` alone would also have
+made the alarm fatal: SIGALRM sent to the client killed the container
+in 3 s with it, and was ignored for the full 12 s without it.)  (i) A fourth blind agent sample under the new
 redaction on the papers it changed most (Bokobza, Douenne, Hanlon), to
 measure what the redaction does to a blind count.  3.7's item (b)
 (openICPSR) stands.

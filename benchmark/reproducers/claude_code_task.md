@@ -80,14 +80,16 @@ path; nothing else from the host is visible; `$$SCRIPT` is the absolute path of
 the script you wrote):
 
     SCRIPT=${output_dir}/script.R   # or ${output_dir}/attempt-<n>/script.R
-    ${run_command} > "$$(dirname "$$SCRIPT")/stdout.txt" 2> "$$(dirname "$$SCRIPT")/stderr.txt"; echo "exit code: $$?"
+    ${sandbox_command}; echo "exit code: $$?"
 
-The sandbox time limit is ${timeout} seconds (memory ${memory}, ${cpus} CPU).  Wrap the
-command in a timeout of that many seconds: prefix it with
-`perl -e 'alarm shift; exec @ARGV' ${timeout}` (or `gtimeout ${timeout}` if installed;
-macOS has no `timeout`).  If the timeout fires, stop the container with
-`docker ps -q --filter label=${label} | xargs docker kill` and treat the
-run as a crash (exit code 124).
+The sandbox time limit is ${timeout} seconds (memory ${memory}, ${cpus} CPU).  The
+command enforces it: `run_sandbox` runs the `docker run` after `--`, writes
+its output to `stdout.txt` and `stderr.txt` next to the script, and writes
+`timing.json` there too (wall-clock seconds, and whether the limit was
+hit).  If the limit is hit it kills the container, appends a line saying
+so to `stderr.txt` and exits with code 124: treat the run as a crash.  Do
+not add your own timeout, do not redirect its output yourself, and do not
+delete `timing.json`; keep it with the run's other files.
 
 If a `docker run` produces no output for more than ten minutes (no
 container output, no error, the command does not return), the Docker
@@ -104,9 +106,9 @@ there.  Add:
 
 ```
 ${output_dir}/
-  script.R  stdout.txt  stderr.txt      # the FINAL run: its RESULT: lines are what is scored
+  script.R  stdout.txt  stderr.txt  timing.json   # the FINAL run: its RESULT: lines are what is scored
   attempt-1/  attempt-2/  ...           # every execution BEFORE the final one, in order
-    script.R  stdout.txt  stderr.txt  feedback.txt   # feedback.txt when kind is not ""
+    script.R  stdout.txt  stderr.txt  timing.json  feedback.txt   # feedback.txt when kind is not ""
   reproduction.json                     # written LAST
 ```
 
