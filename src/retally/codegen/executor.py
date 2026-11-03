@@ -25,6 +25,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import warnings
 from pathlib import Path
 
@@ -211,6 +212,7 @@ class CodeExecutor:
 
             # Step 3 & 4: run the script as a subprocess
             timed_out = False
+            started = time.monotonic()
             try:
                 result = subprocess.run(
                     [sys.executable, str(script_path)],
@@ -244,6 +246,7 @@ class CodeExecutor:
                 deviation_notes=deviation_notes,
                 sample_lines=parse_sample_lines(stdout),
                 timed_out=timed_out,
+                elapsed_seconds=time.monotonic() - started,
             )
         finally:
             # Clean up only temp dirs we created ourselves

@@ -150,6 +150,36 @@ def _missing_quantities(results: list[ClaimValidationResult], stdout: str) -> li
     return missing
 
 
+TIMEOUT_FEEDBACK_HEADER = "Timeout: the sandbox killed the script at its wall-clock limit"
+
+
+def _timeout_feedback(result: ExecutionResult, limit: float | None) -> str:
+    """Repair feedback for a run the sandbox killed at its time limit (attempt kind ``timeout-repair``)."""
+    limit_text = f"{limit:g} s" if isinstance(limit, (int, float)) else "its limit"
+    elapsed = result.elapsed_seconds
+    elapsed_text = f" after {elapsed:.0f} s" if isinstance(elapsed, (int, float)) else ""
+    printed = [line for line in (result.stdout or "").splitlines() if line.strip()]
+    last = (
+        f"The output stopped after this line:\n    {printed[-1].strip()}"
+        if printed
+        else ("The script printed nothing before it was killed.")
+    )
+    lines = [
+        f"{TIMEOUT_FEEDBACK_HEADER} ({limit_text}){elapsed_text}.",
+        "It did not crash: it ran out of time, and everything after the last printed line never ran.",
+        last,
+    ]
+    if (result.stderr or "").strip():
+        lines += ["stderr before the kill:", result.stderr.strip()[-2000:]]
+    lines.append(
+        "Fix this by cutting input work, not by adding printing: read only the columns the "
+        "analysis needs (column selection in the reader), avoid full-file reads and repeated "
+        "reads of the same file, filter and subset rows before merging or reshaping, and "
+        "aggregate early.  Keep the specification unchanged."
+    )
+    return "\n".join(lines)
+
+
 def _n_valued(results: list[ClaimValidationResult]) -> int:
     """How many claims got a usable value."""
     return sum(cr.reproduced_value is not None for cr in results)
@@ -241,7 +271,11 @@ class ValidationPipeline:
         the ``max_refinements`` error-repair budget (none is left: no
         repair), is recorded as attempt kind ``"completeness"``, and is
         kept only if it ran and printed at least as many usable values.
-        ``False`` reproduces the frozen (3.2–3.7) loop.
+        The same switch covers timed-out runs: an error repair after a run
+        the sandbox killed at its time limit is told so (the limit, the
+        elapsed time, the last printed line) and asked to cut input work,
+        recorded as attempt kind ``"timeout-repair"`` instead of
+        ``"error"``.  ``False`` reproduces the frozen (3.2–3.7) loop.
     """
 
     usage_tracker: UsageTracker | None = None
@@ -592,9 +626,16 @@ class ValidationPipeline:
         for _attempt in range(self.max_refinements):
             if result.exit_code == 0 and result.outputs:
                 break
-            error = result.stderr or "No RESULT: lines found in output"
+            if self.completeness_repair and result.timed_out:
+                # ROADMAP 3.8: say the sandbox killed the script, or the
+                # model only hears "no RESULT lines" and repeats the read.
+                error = _timeout_feedback(result, getattr(executor, "timeout", None))
+                kind = "timeout-repair"
+            else:
+                error = result.stderr or "No RESULT: lines found in output"
+                kind = "error"
             log[-1].feedback = error
-            log[-1].kind = "error"
+            log[-1].kind = kind
             exec_refinements += 1
             code = self.generator.refine(code, error, paper, dataset, stdout=result.stdout or "")
             result = executor.execute(code, dataset)

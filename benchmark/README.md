@@ -370,7 +370,7 @@ while the shared extraction calls replay across modes.
 Since ROADMAP 3.8 the pipeline runs with three fixes by default: a data
 inventory in the generation prompt, `SAMPLE:` lines with a sample-size
 gap in claim refinement, and a completeness repair for `NA` / missing
-`RESULT:` names.  `RETALLY_PIPELINE_FROZEN=1` switches all three off
+`RESULT:` names (including a timeout repair that tells the model the sandbox killed the script).  `RETALLY_PIPELINE_FROZEN=1` switches all three off
 and reproduces the frozen 3.2–3.7 pipeline; pipeline result-cache keys
 carry a `pipeline_fixes` tag unless it is set, so post-fix rows never
 reuse a frozen row and frozen runs keep their old keys.  Post-fix rows

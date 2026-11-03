@@ -56,6 +56,7 @@ class FakeExecutor:
     def __init__(self, runs: dict[str, ExecutionResult]) -> None:
         self.runs = runs
         self.scripts: list[str] = []
+        self.timeout = 300
 
     def execute(self, code: str, dataset: Dataset) -> ExecutionResult:
         self.scripts.append(code)
@@ -67,6 +68,8 @@ class FakeExecutor:
             exit_code=run.exit_code,
             outputs=dict(run.outputs),
             sample_lines=parse_sample_lines(run.stdout),
+            timed_out=run.timed_out,
+            elapsed_seconds=run.elapsed_seconds,
         )
 
 
@@ -376,3 +379,51 @@ def test_completeness_repair_uses_the_error_budget_and_reverts_a_broken_repair()
     )
     result = _run_validate(pipeline, ReproductionMode.BLIND)
     assert len(client.prompts) == 1 and result.n_completeness_refinements == 0
+
+
+# ── (C′) timeout repair ──────────────────────────────────────────────────
+
+
+def _timed_out(stdout: str) -> ExecutionResult:
+    run = _run(stdout, exit_code=-1)
+    run.timed_out = True
+    run.elapsed_seconds = 301.4
+    return run
+
+
+@pytest.mark.parametrize("mode", [ReproductionMode.SEEDED, ReproductionMode.BLIND])
+def test_a_timed_out_run_gets_a_timeout_repair_that_says_so(mode):
+    v1, v2 = "script_v1 <- 1", "script_v2 <- 2"
+    client = FakeLLM([v1, v2])
+    executor = FakeExecutor(
+        {
+            v1: _timed_out("loading\nmain data: 1000000 rows, 25 cols\n"),
+            v2: _run("RESULT:beta_main=0.5\nRESULT:beta_interaction=-0.2\n"),
+        }
+    )
+    result = _run_validate(_pipeline(client, executor, _claims()), mode)
+
+    repair = client.prompts[1]
+    assert "killed the script at its wall-clock limit (300 s) after 301 s" in repair
+    assert "main data: 1000000 rows, 25 cols" in repair
+    assert "cutting input work, not by adding printing" in repair
+    assert "No RESULT: lines found" not in repair
+    assert [a.kind for a in result.attempts] == ["timeout-repair"]
+    assert classify_feedback(result.attempts[0].feedback) == "timeout-repair"
+    assert (result.n_error_refinements, result.n_completeness_refinements) == (1, 0)
+
+
+def test_timeout_repair_switched_off_keeps_the_frozen_feedback():
+    v1, v2 = "script_v1 <- 1", "script_v2 <- 2"
+    client = FakeLLM([v1, v2])
+    executor = FakeExecutor(
+        {
+            v1: _timed_out("main data: 1000000 rows, 25 cols\n"),
+            v2: _run("RESULT:beta_main=0.5\nRESULT:beta_interaction=-0.2\n"),
+        }
+    )
+    pipeline = _pipeline(client, executor, _claims(), completeness_repair=False)
+    result = _run_validate(pipeline, ReproductionMode.INDEPENDENT)
+    assert "No RESULT: lines found in output" in client.prompts[1]
+    assert "wall-clock limit" not in client.prompts[1]
+    assert [a.kind for a in result.attempts] == ["error"]

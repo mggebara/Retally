@@ -360,7 +360,9 @@ class RefinementAttempt:
     kind: str = ""
     """Which refinement followed this execution: ``"error"`` (it crashed or
     printed no ``RESULT:`` lines and the model was sent the error),
-    ``"completeness"`` (it ran to completion but some required names were
+    ``"timeout-repair"`` (the sandbox killed it at the wall-clock limit and
+    the model was told so and asked to cut input work: ROADMAP 3.8, an
+    error repair), ``"completeness"`` (it ran to completion but some required names were
     missing or ``NA``, and the model was sent those names: ROADMAP 3.8,
     counted under the error-repair budget), ``"claim"`` (it ran and the
     model was told which claims were off target), or ``""`` when no
@@ -419,6 +421,10 @@ class ExecutionResult:
     here after execution so reports stay consistent."""
 
     timed_out: bool = False
+
+    elapsed_seconds: float | None = None
+    """Wall-clock seconds the execution took, as the executor measured it
+    (host side, including container start-up); None when not recorded."""
 
     attempts: list[RefinementAttempt] = field(default_factory=list)
     """Earlier executions superseded by this one, oldest first (see
