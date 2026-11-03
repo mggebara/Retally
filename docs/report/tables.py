@@ -78,6 +78,13 @@ RUN2_LABEL = "desktop-opus-run2"
 # claim-level consistency table.  The ROADMAP checks of 3.5-3.7.3 never read it.
 PIPELINE_RUN3_FILE = "pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json"
 RUN3_LABEL = "desktop-opus-run3"
+# Post-fix oracle sample (label ``desktop-opus-postfix``; ROADMAP 3.8.1): the pipeline after the
+# 3.8 unfreeze, independent and blind mode only, all 23 papers.  The fixes were designed after
+# reading the evaluation results, so this sample is post hoc: it is never pooled with the three
+# frozen samples above, never enters a pairing or gap range, and feeds only the ``postfix`` table.
+PIPELINE_POSTFIX_FILE = "pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json"
+POSTFIX_LABEL = "desktop-opus-postfix"
+POSTFIX_MODES = ("independent", "blind")
 # Second Claude Code sample in independent and blind mode: the 13 papers of
 # ROADMAP 3.5 ("Agent second sample"; run id ``2026-11-01-a``) and the four of
 # 3.6 (ROADMAP 3.7; run id ``2026-11-02-b``).  Kept out of ``RAW`` for the same
@@ -298,6 +305,15 @@ for _r in load_rows(PIPELINE_RUN3_FILE):
     assert _key not in RUN3, f"duplicate run3 cell {_key}"
     RUN3[_key] = _r
 assert {e for e, _m in RUN3} == set(HOLDOUT) and len(RUN3) == len(HOLDOUT) * len(MODES)
+
+POSTFIX: dict[tuple[str, str], dict[str, Any]] = {}
+for _r in load_rows(PIPELINE_POSTFIX_FILE):
+    assert metrics.reproducer_of(_r) == "pipeline" and metrics.model_of(_r) == POSTFIX_LABEL, _r["entry_id"]
+    assert not _r.get("skipped") and not _r.get("error"), _r["entry_id"]
+    _key = (_r["entry_id"], metrics.mode_of(_r))
+    assert _key[1] in POSTFIX_MODES and _key not in POSTFIX, f"unexpected post-fix cell {_key}"
+    POSTFIX[_key] = _r
+assert {e for e, _m in POSTFIX} == set(HOLDOUT) and len(POSTFIX) == len(HOLDOUT) * len(POSTFIX_MODES)
 
 AGENT2: dict[tuple[str, str], dict[str, Any]] = {}
 for _r in (
@@ -1013,6 +1029,79 @@ def t_variance_pipeline_cells() -> str:
         "Per paper and mode: final claims within tolerance in each of the three pipeline samples, "
         "their spread (largest minus smallest; bold where non-zero), and the agent's first sample.\n\n"
         + table(hdr, out, ["l", "l", "l", "r", "r", "r", "r", "r", "r"])
+    )
+
+
+def _frozen_counts(entry: str, mode: str) -> list[int]:
+    """Final counts of the three frozen pipeline samples in one cell."""
+    return [passed(p55_cell(entry, mode) or {}), passed(RUN2[(entry, mode)]), passed(RUN3[(entry, mode)])]
+
+
+def t_postfix() -> str:
+    """The post-fix sample (ROADMAP 3.8.1) beside the frozen samples' range, never pooled with them."""
+    tot_hdr = [
+        "Mode",
+        "Claims",
+        "Frozen sample 1",
+        "Frozen sample 2",
+        "Frozen sample 3",
+        "**Post-fix (one draw)**",
+        "Cells above frozen range",
+        "Cells within",
+        "Cells below",
+    ]
+    tot = []
+    for m in POSTFIX_MODES:
+        s = [sum(_frozen_counts(e, m)[i] for e in HOLDOUT) for i in range(3)]
+        pf = {e: passed(POSTFIX[(e, m)]) for e in HOLDOUT}
+        up = sum(1 for e in HOLDOUT if pf[e] > max(_frozen_counts(e, m)))
+        down = sum(1 for e in HOLDOUT if pf[e] < min(_frozen_counts(e, m)))
+        n = sum(total(POSTFIX[(e, m)]) for e in HOLDOUT)
+        tot.append([m, n, *s, f"**{sum(pf.values())}**", up, len(HOLDOUT) - up - down, down])
+    hdr = [
+        "Paper",
+        "Mode",
+        "n",
+        "Frozen 1",
+        "Frozen 2",
+        "Frozen 3",
+        "**Post-fix**",
+        "Post-fix first scored",
+        "Post-fix error / claim refinements",
+        "Against frozen range",
+    ]
+    out = []
+    for e in HOLDOUT:
+        for m in POSTFIX_MODES:
+            r, v = POSTFIX[(e, m)], _frozen_counts(e, m)
+            assert total(r) == total(RUN3[(e, m)]), (e, m)
+            p = passed(r)
+            where = "above" if p > max(v) else "below" if p < min(v) else "within"
+            out.append(
+                [
+                    f"`{short(e)}`",
+                    m,
+                    total(r),
+                    *v,
+                    f"**{p}**",
+                    fs(r),
+                    f"{r['n_error_refinements']} / {r['n_claim_refinements']}",
+                    f"**{where}**" if where != "within" else where,
+                ]
+            )
+    return (
+        "**Post-fix sample, not pooled.**  One oracle sample of the pipeline after the ROADMAP 3.8 "
+        f"unfreeze (label `{POSTFIX_LABEL}`; `{PIPELINE_POSTFIX_FILE}`; ROADMAP 3.8.1), independent and "
+        "blind mode on all 23 papers.  The three fixes were designed after reading the evaluation "
+        "results, so this row is post hoc: it is shown beside the three frozen samples of the tables "
+        "above, never pooled with them and never paired with the agent in a gap range.  One draw, no "
+        "standard error.  *Against frozen range* compares the post-fix count with the lowest and "
+        "highest of the three frozen samples in that cell.  The error-refinement count includes "
+        "completeness and timeout repairs, which share its budget; the rows do not carry "
+        "`n_completeness_refinements`.\n\n"
+        + table(tot_hdr, tot, ["l"] + ["r"] * 8)
+        + "\n"
+        + table(hdr, out, ["l", "l", "r", "r", "r", "r", "r", "r", "r", "l"])
     )
 
 
@@ -3040,6 +3129,7 @@ TABLES = {
     "variance_pipeline_cells": t_variance_pipeline_cells,
     "variance_agent": t_variance_agent,
     "variance_agent_cells": t_variance_agent_cells,
+    "postfix": t_postfix,
     "probe": t_probe,
     "probe_hits": t_probe_hits,
     "cost": t_cost,
