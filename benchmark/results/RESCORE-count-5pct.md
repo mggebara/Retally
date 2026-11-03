@@ -6,6 +6,8 @@ Fields updated per count claim: `claim_type`, `tolerance`, `tolerance_source`, `
 
 **56 claim verdicts flipped, all FAIL → PASS**, across 76 files (75 rewritten).
 
+**Added after the batch run:** `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json` (pipeline third sample, ROADMAP 3.7.4) was assembled after the batch rescore and was rescored when it was assembled, not by the `benchmark.rescore` batch run above; its top-level `rescored` key reads `{policy: count-5pct, date: 2026-11-03, flipped: 7}`.  Its rows below are marked *(rescored at assembly)*; the *before* figures are recomputed from its claim details (a passing `count` claim with a relative error above 1 % counted as a miss).  With it, 63 verdicts flipped across 77 files, all FAIL → PASS.
+
 ## Before / after per file and mode
 
 Matched claims (claims passed) summed over the file's rows; *claims* is the number of claim details.
@@ -130,6 +132,9 @@ Matched claims (claims passed) summed over the file's rows; *claims* is the numb
 | `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json` | blind | pipeline | 52 | 52 | 77 |
 | `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json` | independent | pipeline | 62 | 62 | 77 |
 | `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json` | seeded | pipeline | 70 | 70 | 77 |
+| `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json` (rescored at assembly) | blind | pipeline | 177 | **181** | 278 |
+| `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json` (rescored at assembly) | independent | pipeline | 224 | **227** | 278 |
+| `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json` (rescored at assembly) | seeded | pipeline | 254 | 254 | 278 |
 | `pre34-promptonly-both-run1-2026-10-19.json` | independent | pipeline | 0 | **1** | 13 |
 | `pre34-promptonly-both-run1-2026-10-19.json` | seeded | pipeline | 13 | 13 | 13 |
 | `pre34-promptonly-independent-run2-2026-10-19.json` | independent | pipeline | 0 | 0 | 13 |
@@ -197,6 +202,13 @@ Matched claims (claims passed) summed over the file's rows; *claims* is the numb
 | `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json` | `montero-2022-cooperative-property-rights` | blind | pipeline | `n_clusters_bw300` | 98 | 99 | 1.02 % | FAIL → PASS |
 | `pipeline-oracle-desktop-opus-run2-4papers-all-modes-2026-11-02.json` | `carrera-2022-who-chooses-commitment` | blind | pipeline | `bcp_regression_observations` | 1,126 | 1,152 | 2.31 % | FAIL → PASS |
 | `pipeline-oracle-desktop-opus-run2-4papers-all-modes-2026-11-02.json` | `forsythe-2022-young-workers-recessions` | independent | pipeline | `n_obs_full_sample` | 16,948,516 | 17,282,551 | 1.97 % | FAIL → PASS |
+| `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json` (rescored at assembly) | `acemoglu-2022-war-socialism-fascism` | blind | pipeline | `n_clusters_main_sample` | 181 | 178 | 1.66 % | FAIL → PASS |
+| `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json` (rescored at assembly) | `acemoglu-2022-war-socialism-fascism` | blind | pipeline | `n_clusters_fascist_vote1921` | 175 | 171 | 2.29 % | FAIL → PASS |
+| `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json` (rescored at assembly) | `arias-2022-changing-tides-climate-migration` | blind | pipeline | `choice_tasks_germany` | 18,862 | 19,078 | 1.15 % | FAIL → PASS |
+| `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json` (rescored at assembly) | `holman-2022-theresa-may-rally` | independent | pipeline | `n_obs_table4` | 4,328 | 4,486 | 3.65 % | FAIL → PASS |
+| `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json` (rescored at assembly) | `leeson-2022-hobo-economicus` | blind | pipeline | `station_visits_five_station_subsample` | 102 | 98 | 3.92 % | FAIL → PASS |
+| `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json` (rescored at assembly) | `montero-2022-cooperative-property-rights` | independent | pipeline | `n_obs_earnings_iqr_bw300` | 327 | 332 | 1.53 % | FAIL → PASS |
+| `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json` (rescored at assembly) | `montero-2022-cooperative-property-rights` | independent | pipeline | `n_clusters_bw300` | 98 | 99 | 1.02 % | FAIL → PASS |
 | `pre34-promptonly-both-run1-2026-10-19.json` | `dincecco-2022-india-warfare` | independent | pipeline | `sample_size_districts` | 660 | 640 | 3.03 % | FAIL → PASS |
 | `probe-desktop-opus-2026-11-01.json` | `grier-2023-sugar-roll-call-voting` | probe | memory-probe | `observations_incumbent_fe` | 106 | 110 | 3.77 % | FAIL → PASS |
 | `probe-desktop-opus-2026-11-02.json` | `grier-2023-sugar-roll-call-voting` | probe | memory-probe | `observations_incumbent_fe` | 106 | 110 | 3.77 % | FAIL → PASS |

@@ -3040,10 +3040,10 @@ PR #125; 69 rows, none skipped or errored).  Its runs are stamped
 05:58), so it is a frozen-pipeline sample, the pipeline half of 3.7.1's
 item (g), comparable with samples 1 and 2.  Like every
 later sample it stays out of REPORT.md and the single-sample tables.
-`docs/report/tables.py` does not take a file list (its inputs are
-module constants), so the report's variance tables do not include it
-yet; every figure below was recomputed from the results files for this
-section.  Since 3.7.3 every stored results file has also been rescored
+`docs/report/tables.py` now reads it as the pipeline's sample 3 (a
+module constant beside the first two samples' files), so the report's
+variance, probe and claim-level tables include it; every figure below
+was recomputed from the results files and agrees with those tables.  Since 3.7.3 every stored results file has also been rescored
 with sample-size claims at a 5 % band (below), so this section gives
 totals both ways.  Sample 1 is the model-matched row (the API run for
 Grier, Leeson, Manekin and Montero, the first oracle run for the other
@@ -3184,7 +3184,8 @@ values, no run repeated: 56 verdicts flipped across the 76 files then on
 main (75 rewritten), all FAIL → PASS
 (`benchmark/results/RESCORE-count-5pct.md`, per file and mode), and 7 more
 in the run-3 file, which was rescored when it landed (its `rescored` key
-says `count-5pct`, 7 flipped; it is not in the RESCORE table).
+says `count-5pct`, 7 flipped; its rows were appended to the RESCORE
+file afterwards, marked as rescored at assembly).
 First-scored and first-attempt fields were left as recorded, because a
 row stores only the final reproduced value, not the first-scored one:
 a recorded first-scored count miss may now be an undercount.  The headline
