@@ -42,6 +42,7 @@
 | `claude-code` | [12/12](seeded/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [12/12](independent/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[12/12](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [12/12](blind/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[12/12](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[12/12](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
 | `pipeline-claude-opus-4-7` | [4/12](seeded/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [4/12](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [5/12](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) |
 | `pipeline-desktop-opus` | [12/12](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) | [12/12](independent/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) | [12/12](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) |
+| `pipeline-desktop-opus-postfix` | — | [12/12](independent/pipeline-desktop-opus-postfix/20261103T062157Z/CELL.md) (20261103T062157Z) | [1/12](blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md) (20261103T062809Z) |
 | `pipeline-desktop-opus-run2` | [12/12](seeded/pipeline-desktop-opus-run2/20261023T152513Z/CELL.md) (20261023T152513Z) | [12/12](independent/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) | [12/12](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
 | `pipeline-desktop-opus-run3` | [12/12](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [12/12](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [7/12](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) |
 
@@ -57,6 +58,7 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 |---|---|---|---|---|---|---|
 | [independent/pipeline-claude-opus-4-7/20261021T142909Z](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `respondents_us` | 1033 | 1086 | ±54.3 (relative) | 0.976 | PASS |
 | [blind/pipeline-claude-opus-4-7/20261021T142909Z](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `respondents_us` | 1033 | 1086 | ±54.3 (relative) | 0.976 | PASS |
+| [blind/pipeline-desktop-opus-postfix/20261103T062809Z](blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md) | `respondents_us` | 1143 | 1086 | ±54.3 (relative) | 1.050 | FAIL |
 | [independent/pipeline-claude-opus-4-7/20261021T142909Z](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `respondents_germany` | 1029 | 1074 | ±53.7 (relative) | 0.838 | PASS |
 | [blind/pipeline-claude-opus-4-7/20261021T142909Z](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `respondents_germany` | 1029 | 1074 | ±53.7 (relative) | 0.838 | PASS |
 | [blind/pipeline-desktop-opus-run3/20261103T004800Z](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) | `respondents_germany` | 1143 | 1074 | ±53.7 (relative) | 1.285 | FAIL |
@@ -64,7 +66,6 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | [independent/pipeline-claude-opus-4-7/20261021T142909Z](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `choice_tasks_us` | 18578 | 18966 | ±948.3 (relative) | 0.409 | PASS |
 | [blind/pipeline-claude-opus-4-7/20261021T142909Z](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `choice_tasks_us` | 18594 | 18966 | ±948.3 (relative) | 0.392 | PASS |
 | [independent/pipeline-claude-opus-4-7/20261021T142909Z](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `choice_tasks_germany` | 18506 | 18862 | ±943.1 (relative) | 0.377 | PASS |
-| [blind/pipeline-claude-opus-4-7/20261021T142909Z](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `choice_tasks_germany` | 18522 | 18862 | ±943.1 (relative) | 0.361 | PASS |
 
 ### Declared deviations
 
@@ -84,6 +85,11 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Dropped Qualtrics survey-preview responses (Status = 1: 2 U.S., 3 German rows) before stacking; this leaves 1085 U.S. / 1072 German respondents and 18,952 / 18,826 profiles versus the paper's 1086 / 1074 and 18,966 / 18,862. Without that filter the raw counts are 1086 / 1074 respondents with at least one choice and 9485 / 9431 answered pairs.
 - [independent/pipeline-claude-opus-4-7/20261021T142909Z](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (4/12; failed: `amce_drought_us`, `amce_flooding_us`, `amce_wildfires_us`, `amce_persecution_us`, `amce_drought_germany`, `amce_flooding_germany`, `amce_wildfires_germany`, `amce_persecution_germany`)
   - The AMCE estimates do not match the paper despite correct attribute coding. The core issue appears to be that the choice variable detection is picking up wrong columns, inverting or scrambling the chosen indicator. Switching to more careful choice detection: for conjoint tasks, the choice should be the question asked after each pair, and we need to look at the specific pattern.
+- [independent/pipeline-desktop-opus-postfix/20261103T062157Z](independent/pipeline-desktop-opus-postfix/20261103T062157Z/CELL.md) (12/12)
+  - us respondents with conjoint answers = 1085 (paper: 1086)
+  - us estimation N = 18952 (paper: 18966)
+  - germany respondents with conjoint answers = 1072 (paper: 1074)
+  - germany estimation N = 18826 (paper: 18862)
 - [blind/claude-code/2026-10-21-b](blind/claude-code/2026-10-21-b/CELL.md) (12/12)
   - Language x Origin interaction included in the AMCE regression to respect the design-file restriction (Language None never paired with Origin 'Another region'); the restriction is enforced in the German data but not in the US data. An additive specification gives reason-for-migration AMCEs within 0.001 of the main-specification ones (printed in stdout as a check).
   - Sample: Qualtrics preview responses (DistributionChannel = 'preview') dropped; profiles whose forced-choice question was unanswered dropped; respondents are respondents with at least one answered choice task. Duplicate psid values (2 US, 8 DE) were kept as separate respondents (clustered on ResponseId).
@@ -104,9 +110,9 @@ _None._
 
 Pass rates at least 50 points apart (not unanimous):
 
-- blind: `amce_drought_germany` — pipeline 2/4, agent 4/4
-- blind: `amce_persecution_germany` — pipeline 2/4, agent 4/4
-- blind: `amce_wildfires_germany` — pipeline 2/4, agent 4/4
+- blind: `amce_drought_germany` — pipeline 2/5, agent 4/4
+- blind: `amce_persecution_germany` — pipeline 2/5, agent 4/4
+- blind: `amce_wildfires_germany` — pipeline 2/5, agent 4/4
 
 ## Cells
 
@@ -154,6 +160,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/pipeline-desktop-opus/20261023T062931Z/CELL.md`](independent/pipeline-desktop-opus/20261023T062931Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-10-23T06:29:31Z; from `pipeline-oracle-desktop-opus-9papers-all-modes-2026-10-23.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-postfix · 20261103T062157Z
+
+[`independent/pipeline-desktop-opus-postfix/20261103T062157Z/CELL.md`](independent/pipeline-desktop-opus-postfix/20261103T062157Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-11-03T06:21:57Z; from `pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus-run2 · 20261023T150832Z
 
 [`independent/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-10-23T15:08:32Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
@@ -185,6 +195,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · pipeline-desktop-opus · 20261023T062931Z
 
 [`blind/pipeline-desktop-opus/20261023T062931Z/CELL.md`](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-10-23T06:29:31Z; from `pipeline-oracle-desktop-opus-9papers-all-modes-2026-10-23.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-postfix · 20261103T062809Z
+
+[`blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md`](blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md) — final 1/12, re-scored 1/12; first scored 1/12; executions 1; 2026-11-03T06:28:09Z; from `pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus-run2 · 20261023T150832Z
 

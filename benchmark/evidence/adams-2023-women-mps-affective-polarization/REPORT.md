@@ -40,6 +40,7 @@
 | `claude-code` | [11/11](seeded/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[11/11](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [11/11](independent/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[11/11](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[11/11](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [8/11](blind/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[8/11](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[7/11](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[8/11](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
 | `pipeline-claude-opus-4-7` | [11/11](seeded/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [7/11](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [1/11](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) |
 | `pipeline-desktop-opus` | [11/11](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) | [10/11](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) (20261023T064839Z) | [7/11](blind/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) |
+| `pipeline-desktop-opus-postfix` | — | [7/11](independent/pipeline-desktop-opus-postfix/20261103T070149Z/CELL.md) (20261103T070149Z) | [8/11](blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md) (20261103T062809Z) |
 | `pipeline-desktop-opus-run2` | [11/11](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [8/11](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [2/11](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
 | `pipeline-desktop-opus-run3` | [11/11](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [11/11](independent/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md) (20261103T050517Z) | [8/11](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) |
 
@@ -54,15 +55,15 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | Cell | Claim | Reproduced | Paper | Band | Error / band | Verdict |
 |---|---|---|---|---|---|---|
 | [independent/pipeline-desktop-opus/20261023T064839Z](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) | `women_mps_coef_men_partisans` | 1.69763 | 1.13 | ±0.5 (se_band) | 1.135 | FAIL |
+| [independent/pipeline-desktop-opus-postfix/20261103T070149Z](independent/pipeline-desktop-opus-postfix/20261103T070149Z/CELL.md) | `women_mps_coef_women_partisans` | 1.45509 | 2.1 | ±0.53 (se_band) | 1.217 | FAIL |
 | [blind/pipeline-desktop-opus/20261023T063725Z](blind/pipeline-desktop-opus/20261023T063725Z/CELL.md) | `women_mps_coef_women_partisans` | 1.45509 | 2.1 | ±0.53 (se_band) | 1.217 | FAIL |
 | [independent/pipeline-desktop-opus-run3/20261103T050517Z](independent/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md) | `women_mps_coef_women_partisans` | 1.69044 | 2.1 | ±0.53 (se_band) | 0.773 | PASS |
 | [independent/pipeline-desktop-opus/20261023T064839Z](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) | `women_mps_coef_women_partisans` | 1.69263 | 2.1 | ±0.53 (se_band) | 0.769 | PASS |
 | [blind/claude-code/2026-11-01-a](blind/claude-code/2026-11-01-a/CELL.md) | `n_election_studies` | 76 | 81 | ±4.05 (relative) | 1.235 | FAIL |
 | [independent/pipeline-desktop-opus-run2/20261023T151837Z](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) | `women_mps_coef_women_partisans` | 1.71259 | 2.1 | ±0.53 (se_band) | 0.731 | PASS |
+| [blind/pipeline-desktop-opus-postfix/20261103T062809Z](blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md) | `women_mps_coef_women_partisans` | 1.71259 | 2.1 | ±0.53 (se_band) | 0.731 | PASS |
 | [blind/pipeline-desktop-opus-run3/20261103T004800Z](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) | `women_mps_coef_women_partisans` | 1.71259 | 2.1 | ±0.53 (se_band) | 0.731 | PASS |
 | [blind/pipeline-desktop-opus-run2/20261023T150832Z](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) | `women_mps_coef_women_partisans` | 1.71259 | 2.1 | ±0.53 (se_band) | 0.731 | PASS |
-| [independent/pipeline-desktop-opus-run2/20261023T151837Z](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) | `women_mps_coef_bivariate` | 1.60382 | 1.89 | ±0.43 (se_band) | 0.666 | PASS |
-| [blind/pipeline-desktop-opus/20261023T063725Z](blind/pipeline-desktop-opus/20261023T063725Z/CELL.md) | `women_mps_coef_bivariate` | 1.60382 | 1.89 | ±0.43 (se_band) | 0.666 | PASS |
 
 ### Declared deviations
 
@@ -110,16 +111,9 @@ _None._
 
 Pass rates at least 50 points apart (not unanimous):
 
-- independent: `n_directed_dyads` — pipeline 2/4, agent 3/3
-- independent: `n_obs_men_partisans` — pipeline 2/4, agent 3/3
-- independent: `n_obs_women_partisans` — pipeline 2/4, agent 3/3
-- independent: `women_mps_coef_men_partisans` — pipeline 2/4, agent 3/3
-- blind: `coalition_partners_coef_full` — pipeline 2/4, agent 4/4
-- blind: `opposition_partners_coef_full` — pipeline 2/4, agent 4/4
-- blind: `right_left_distance_coef_full` — pipeline 2/4, agent 4/4
-- blind: `women_mps_coef_bivariate` — pipeline 2/4, agent 4/4
-- blind: `women_mps_coef_full` — pipeline 2/4, agent 4/4
-- blind: `women_mps_coef_women_partisans` — pipeline 2/4, agent 4/4
+- independent: `n_directed_dyads` — pipeline 2/5, agent 3/3
+- independent: `n_obs_men_partisans` — pipeline 2/5, agent 3/3
+- independent: `n_obs_women_partisans` — pipeline 2/5, agent 3/3
 
 ## Cells
 
@@ -167,6 +161,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/pipeline-desktop-opus/20261023T064839Z/CELL.md`](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) — final 10/11, re-scored 10/11; first scored 6/11; executions 4; 2026-10-23T06:48:39Z; from `pipeline-oracle-desktop-opus-9papers-all-modes-2026-10-23.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-postfix · 20261103T070149Z
+
+[`independent/pipeline-desktop-opus-postfix/20261103T070149Z/CELL.md`](independent/pipeline-desktop-opus-postfix/20261103T070149Z/CELL.md) — final 7/11, re-scored 7/11; first scored 4/11; executions 3; 2026-11-03T07:01:49Z; from `pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus-run2 · 20261023T151837Z
 
 [`independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — final 8/11, re-scored 8/11; first scored 8/11; executions 2; 2026-10-23T15:18:37Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
@@ -198,6 +196,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · pipeline-desktop-opus · 20261023T063725Z
 
 [`blind/pipeline-desktop-opus/20261023T063725Z/CELL.md`](blind/pipeline-desktop-opus/20261023T063725Z/CELL.md) — final 7/11, re-scored 7/11; first scored 7/11; executions 2; 2026-10-23T06:37:25Z; from `pipeline-oracle-desktop-opus-9papers-all-modes-2026-10-23.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-postfix · 20261103T062809Z
+
+[`blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md`](blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md) — final 8/11, re-scored 8/11; first scored 8/11; executions 1; 2026-11-03T06:28:09Z; from `pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus-run2 · 20261023T150832Z
 

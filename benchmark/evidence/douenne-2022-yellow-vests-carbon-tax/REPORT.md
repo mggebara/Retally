@@ -42,6 +42,7 @@
 |---|---|---|---|
 | `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [12/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[12/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c)<br>[13/13](blind/claude-code/2026-11-03-a/CELL.md) (2026-11-03-a) |
 | `pipeline-desktop-opus` | [5/13](seeded/pipeline-desktop-opus/20261102T144245Z/CELL.md) (20261102T144245Z) | [13/13](independent/pipeline-desktop-opus/20261102T143152Z/CELL.md) (20261102T143152Z) | [12/13](blind/pipeline-desktop-opus/20261102T142733Z/CELL.md) (20261102T142733Z) |
+| `pipeline-desktop-opus-postfix` | — | [12/13](independent/pipeline-desktop-opus-postfix/20261103T104817Z/CELL.md) (20261103T104817Z) | [13/13](blind/pipeline-desktop-opus-postfix/20261103T064954Z/CELL.md) (20261103T064954Z) |
 | `pipeline-desktop-opus-run2` | [6/13](seeded/pipeline-desktop-opus-run2/20261102T191457Z/CELL.md) (20261102T191457Z) | [13/13](independent/pipeline-desktop-opus-run2/20261102T153300Z/CELL.md) (20261102T153300Z) | [13/13](blind/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) (20261102T152052Z) |
 | `pipeline-desktop-opus-run3` | [13/13](seeded/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md) (20261103T050517Z) | [13/13](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [13/13](blind/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md) (20261103T050517Z) |
 
@@ -63,8 +64,8 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | [blind/claude-code/2026-11-02-b](blind/claude-code/2026-11-02-b/CELL.md) | `initial_acceptance_believes_not_lose_table4_col1` | 0.231724 | 0.306 | ±0.066 (se_band) | 1.125 | FAIL |
 | [blind/claude-code/2026-11-02-c](blind/claude-code/2026-11-02-c/CELL.md) | `winner_x_initial_win_belief_table4_col3` | 0.148682 | 0.08 | ±0.079 (se_band) | 0.869 | PASS |
 | [seeded/pipeline-desktop-opus-run2/20261102T191457Z](seeded/pipeline-desktop-opus-run2/20261102T191457Z/CELL.md) | `predicted_winner_heterogeneity_table4_col3` | 0.241792 | 0.246 | ±0.00492 (relative) | 0.855 | PASS |
+| [blind/pipeline-desktop-opus-postfix/20261103T064954Z](blind/pipeline-desktop-opus-postfix/20261103T064954Z/CELL.md) | `predicted_winner_believes_not_lose_full_sample_table4_col2` | 0.237676 | 0.208 | ±0.035 (se_band) | 0.848 | PASS |
 | [independent/claude-code/2026-11-02-a](independent/claude-code/2026-11-02-a/CELL.md) | `winner_x_initial_win_belief_table4_col3` | 0.146722 | 0.08 | ±0.079 (se_band) | 0.845 | PASS |
-| [blind/pipeline-desktop-opus-run3/20261103T050517Z](blind/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md) | `initial_acceptance_believes_not_lose_table4_col1` | 0.251322 | 0.306 | ±0.066 (se_band) | 0.828 | PASS |
 
 ### Declared deviations
 
@@ -94,6 +95,11 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Effectiveness information treatment Z_E identified as the apres_modifs indicator (the random half-split whose first-stage effect on believing in effectiveness is about 6 p.p.).
 - [independent/pipeline-desktop-opus/20261102T143152Z](independent/pipeline-desktop-opus/20261102T143152Z/CELL.md) (13/13)
   - Table 4 col. 1 drops effectiveness/progressivity belief controls (control list not given in provided text)
+- [independent/pipeline-desktop-opus-postfix/20261103T104817Z](independent/pipeline-desktop-opus-postfix/20261103T104817Z/CELL.md) (12/13; failed: `believes_effective_on_approval_iv_table8_col1`)
+  - winning_feedback_category has codes 1,2,3 without usable labels; mapping lowest->winner, middle->unaffected, highest->loser (factor levels Gagnant < Non affecte < Perdant)
+  - winning_category has codes 1,2,3 without usable labels; mapping lowest->winner, middle->unaffected, highest->loser (factor levels Gagnant < Non affecte < Perdant)
+  - using gagnant_cible_categorie instead of win_cible_category for targeted winner category
+  - Table 8 endogenous belief coded as 'does not believe the tax is ineffective' (not No) and instrumented by the scientists-agree information and the climate-change information only
 - [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) (12/13; failed: `initial_acceptance_believes_not_lose_table4_col1`)
   - The online-appendix control lists are unavailable. Controls were rebuilt from the data. Sociodemographics: sex, age bracket, employment status, CSP, education (4 levels), agglomeration size, region, household size, number aged 14+, left-right placement, smoker, main news source. Other motives: belief in environmental effectiveness and in progressivity. Incomes: continuous piecewise-linear terms in both adults' income percentiles with kinks at p20 and p70. Estimated gains: quadratic in the estimated net gain per consumption unit.
   - Estimated net gain = simule_gain (EUR/yr per consumption unit). Predicted winner = simule_gagnant, the displayed feedback; it differs from 1{simule_gain>0} for 56 respondents, 52 of them inside the \|gain\|<50 band.
@@ -139,7 +145,7 @@ Pass rates at least 50 points apart (not unanimous):
 - seeded: `winner_x_initial_win_belief_table4_col3` — pipeline 1/3, agent 2/2
 - seeded: `winner_x_yellow_vests_supporter_table4_col3` — pipeline 1/3, agent 2/2
 - seeded: `yellow_vests_supporter_heterogeneity_table4_col3` — pipeline 1/3, agent 2/2
-- blind: `initial_acceptance_believes_not_lose_table4_col1` — pipeline 3/3, agent 2/4
+- blind: `initial_acceptance_believes_not_lose_table4_col1` — pipeline 4/4, agent 2/4
 
 ## Cells
 
@@ -179,6 +185,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/pipeline-desktop-opus/20261102T143152Z/CELL.md`](independent/pipeline-desktop-opus/20261102T143152Z/CELL.md) — final 13/13, re-scored 13/13; first scored 12/13; executions 3; 2026-11-02T14:31:52Z; from `pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-postfix · 20261103T104817Z
+
+[`independent/pipeline-desktop-opus-postfix/20261103T104817Z/CELL.md`](independent/pipeline-desktop-opus-postfix/20261103T104817Z/CELL.md) — final 12/13, re-scored 12/13; first scored 3/13; executions 7; 2026-11-03T10:48:17Z; from `pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus-run2 · 20261102T153300Z
 
 [`independent/pipeline-desktop-opus-run2/20261102T153300Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261102T153300Z/CELL.md) — final 13/13, re-scored 13/13; first scored 12/13; executions 3; 2026-11-02T15:33:00Z; from `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`; evidence complete.
@@ -206,6 +216,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · pipeline-desktop-opus · 20261102T142733Z
 
 [`blind/pipeline-desktop-opus/20261102T142733Z/CELL.md`](blind/pipeline-desktop-opus/20261102T142733Z/CELL.md) — final 12/13, re-scored 12/13; first scored 12/13; executions 2; 2026-11-02T14:27:33Z; from `pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-postfix · 20261103T064954Z
+
+[`blind/pipeline-desktop-opus-postfix/20261103T064954Z/CELL.md`](blind/pipeline-desktop-opus-postfix/20261103T064954Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-03T06:49:54Z; from `pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus-run2 · 20261102T152052Z
 

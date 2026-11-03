@@ -1,0 +1,47 @@
+SAMPLE:table3:loaded=1292
+SAMPLE:table4:loaded=1292
+# wave from column wavenum
+# wave values: 1:350,2:528,3:414
+SAMPLE:table3:exclude_endogenous_assignment=1280
+SAMPLE:table4:exclude_endogenous_assignment=1280
+# commit-assignment rule text keeps 1280
+# commit-assignment rule inc_na keeps 1152
+# commit-assignment rule inc_80 keeps 1280
+# commit-assignment rule inc_not07 keeps 1150
+DEVIATION: no wave-3 commitment-assignment rule gives exactly 1126; using rule 'inc_not07'
+SAMPLE:table3:exclude_wave3_commitment_assigned=1150
+SAMPLE:table4:exclude_wave3_commitment_assigned=1150
+# type_of_info class: character
+# type_of_info (text) by wave: 0-none/1/169,1-onlygraph/1/177,2-graphplus/1/  0,0-none/2/267,1-onlygraph/2/  0,2-graphplus/2/255,0-none/3/134,1-onlygraph/3/  0,2-graphplus/3/148
+# type_of_info: numeric codes parsed from text
+# info codes by order: control=0 basic=1 enhanced=2
+# basic_info=177 enhanced_info=403 of 1150
+# forecast columns: days_1,days_2,days_3,days_5,days_7,days_12
+# zero-incentive forecast column: days_0
+SAMPLE:table3:nonmissing_bcp=1150
+SAMPLE:table3:estimation=1150
+# table3 col2 nobs=1150, col3 nobs=1150
+# more-contract columns: NA,chose_commit12,NA
+SAMPLE:table4:participant_by_threshold_rows=1150
+SAMPLE:table4:nonmissing_choice=1150
+SAMPLE:table4:estimation=1150
+RESULT:bcp_basic_info_treatment_col1=0.203245
+RESULT:bcp_basic_info_treatment_col1_se=0.559266
+RESULT:bcp_enhanced_info_treatment_col1=1.247774
+RESULT:bcp_enhanced_info_treatment_col1_se=0.565409
+RESULT:bcp_goal_minus_expected_attendance_col2=0.767551
+RESULT:bcp_goal_minus_expected_attendance_col2_se=0.284933
+RESULT:bcp_actual_minus_expected_attendance_col3=0.482836
+RESULT:bcp_actual_minus_expected_attendance_col3_se=0.213021
+RESULT:bcp_regression_observations=1150
+RESULT:takeup_more_basic_info_treatment_col1=-0.074115
+RESULT:takeup_more_basic_info_treatment_col1_se=0.053694
+RESULT:takeup_more_enhanced_info_treatment_col1=-0.076303
+RESULT:takeup_more_enhanced_info_treatment_col1_se=0.035255
+RESULT:takeup_more_behavior_change_premium_col2=0.025520
+RESULT:takeup_more_behavior_change_premium_col2_se=0.012033
+RESULT:takeup_more_goal_minus_expected_attendance_col3=0.034235
+RESULT:takeup_more_goal_minus_expected_attendance_col3_se=0.014700
+RESULT:takeup_more_actual_minus_expected_attendance_col4=-0.052659
+RESULT:takeup_more_actual_minus_expected_attendance_col4_se=0.014955
+RESULT:takeup_more_regression_observations=1150

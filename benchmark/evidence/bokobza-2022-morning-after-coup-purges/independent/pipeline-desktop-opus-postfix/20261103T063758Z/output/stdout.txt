@@ -1,0 +1,57 @@
+SAMPLE:country_level:loaded=7878
+SAMPLE:country_level:lagged_bmr_democracy_eq_0=4262
+SAMPLE:country_level:years_1967_2016=4255
+SAMPLE:country_level:nonmissing_dv_coup=4119
+SAMPLE:base_country_fe:estimation=3743
+SAMPLE:main_country_fe:estimation=3703
+SAMPLE:base_leader_fe:estimation=3626
+SAMPLE:main_leader_fe:estimation=3590
+# diag purged_y1: class=integer; top values: 0=146576, 1=58948
+# diag coupattempt_presentyear: class=factor; top values: No coup attempt=189559, NA=12910, Coup attempt=3055
+# diag year: class=integer; top values: 2002=4940, 2001=4918, 2010=4908, 2012=4891, 2013=4869, 2009=4863, 2014=4855, 2016=4847
+# diag experience: class=integer; top values: 1=50368, 2=36861, 3=27307, 4=20638, 5=15334, 6=11123, 7=8559, 8=6806
+# diag democracy_lag: class=integer; top values: 0=120552, 1=81278, NA=3694
+# diag gdp_cap_pwt_ln_lag: class=numeric; top values: NA=24848, 7.227118=86, 7.272249=86, 7.336703=86, 8.77279949188232=86, 7.019475=85, 7.107571=85, 7.968645=85
+# diag pop_pwt_ln_lag: class=numeric; top values: NA=24848, 7.227118=86, 7.272249=86, 7.336703=86, 8.77279949188232=86, 7.019475=85, 7.107571=85, 7.968645=85
+# diag party_group: class=character; top values: leader_party=114723, independent=38333, other_party=27938, unknown=12538, NA=11992
+# diag importance_factor: class=factor; top values: Medium-ranking
+minister=114497, Vice president,
+deputy prime minister,
+top minister=34862, Junior minister
+or other low-
+ranking post=21007, low-ranking
+minister=12983, NA=10125, 5=8059, Prime minister/President
+(not leader)=3608, 0=383
+# diag nonmissing: purged=205524 fca=192614 yr=205524 exper=205524
+SAMPLE:individual:loaded=205524
+SAMPLE:individual:lagged_bmr_democracy_eq_0=120552
+SAMPLE:individual:years_1967_2016=119990
+SAMPLE:individual:exclude_leader=119990
+SAMPLE:individual:nonmissing_purge_coup=109706
+SAMPLE:h2a_experience:loaded=205524
+SAMPLE:h2a_experience:exclude_leader_junior_lowranking=92950
+SAMPLE:h2a_experience:estimation=83554
+# coef names h2a_experience: fca, eg_1, eg_2, eg_3, fcax_eg_1, fcax_eg_2, fcax_eg_3, gdpl
+SAMPLE:h2b_affiliation:loaded=205524
+SAMPLE:h2b_affiliation:exclude_leader_nonmissing_party=104440
+SAMPLE:h2b_affiliation:estimation=94582
+# coef names h2b_affiliation: fca, pg_1, pg_2, pg_3, fcax_pg_1, fcax_pg_2, fcax_pg_3, exper, exp2, exp3, gdpl
+SAMPLE:h3a_responsibility:loaded=205524
+SAMPLE:h3a_responsibility:exclude_leader_nonmissing_portfolio=83765
+SAMPLE:h3a_responsibility:estimation=76238
+# coef names h3a_responsibility: fca, pt_1, pt_2, pt_3, pt_4, fcax_pt_1, fcax_pt_2, fcax_pt_3, fcax_pt_4, exper, exp2, exp3, gdpl
+SAMPLE:h3b_importance:loaded=205524
+SAMPLE:h3b_importance:exclude_leader=103608
+SAMPLE:h3b_importance:estimation=93367
+# coef names h3b_importance: fca, im_1, im_2, im_3, im_4, im_5, im_6, fcax_im_1, fcax_im_2, fcax_im_3, fcax_im_4, fcax_im_5, fcax_im_6, exper, exp2, exp3, gdpl
+RESULT:failed_coup_base_country_fe=0.102553
+RESULT:failed_coup_main_country_fe=0.111954
+RESULT:failed_coup_base_leader_fe=0.061535
+RESULT:failed_coup_main_leader_fe=0.063813
+RESULT:failed_coup_experience_model=0.133099
+RESULT:failed_coup_x_over_6_years_experience=-0.082210
+RESULT:failed_coup_affiliation_model=0.174957
+RESULT:failed_coup_x_leaders_party=-0.127797
+RESULT:failed_coup_responsibility_model=0.199317
+RESULT:failed_coup_x_natural_resources=-0.173710
+RESULT:failed_coup_importance_model=0.374491

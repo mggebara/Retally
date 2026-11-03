@@ -42,6 +42,7 @@
 |---|---|---|---|
 | `claude-code` | [13/13](seeded/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [9/13](independent/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[9/13](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[9/13](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [9/13](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[9/13](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[9/13](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
 | `pipeline-desktop-opus` | [13/13](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) | [9/13](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) (20261023T064839Z) | [9/13](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) |
+| `pipeline-desktop-opus-postfix` | — | [9/13](independent/pipeline-desktop-opus-postfix/20261103T063758Z/CELL.md) (20261103T063758Z) | [9/13](blind/pipeline-desktop-opus-postfix/20261103T064954Z/CELL.md) (20261103T064954Z) |
 | `pipeline-desktop-opus-run2` | [13/13](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [9/13](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [9/13](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
 | `pipeline-desktop-opus-run3` | [13/13](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [9/13](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [9/13](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) |
 
@@ -59,12 +60,12 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | [independent/claude-code/2026-11-01-a](independent/claude-code/2026-11-01-a/CELL.md) | `itt_vote_overall_unweighted_tableF1_col2` | 23.5099 | 23.242 | ±0.46484 (relative) | 0.576 | PASS |
 | [independent/claude-code/2026-11-02-c](independent/claude-code/2026-11-02-c/CELL.md) | `itt_vote_overall_unweighted_tableF1_col2` | 23.5099 | 23.242 | ±0.46484 (relative) | 0.576 | PASS |
 | [independent/pipeline-desktop-opus/20261023T064839Z](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) | `itt_vote_overall_unweighted_tableF1_col2` | 23.5099 | 23.242 | ±0.46484 (relative) | 0.576 | PASS |
+| [independent/pipeline-desktop-opus-postfix/20261103T063758Z](independent/pipeline-desktop-opus-postfix/20261103T063758Z/CELL.md) | `itt_vote_overall_unweighted_tableF1_col2` | 23.5099 | 23.242 | ±0.46484 (relative) | 0.576 | PASS |
 | [independent/pipeline-desktop-opus-run2/20261023T151837Z](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) | `itt_vote_overall_unweighted_tableF1_col2` | 23.5099 | 23.242 | ±0.46484 (relative) | 0.576 | PASS |
 | [independent/pipeline-desktop-opus-run3/20261103T010557Z](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) | `itt_vote_overall_unweighted_tableF1_col2` | 23.5099 | 23.242 | ±0.46484 (relative) | 0.576 | PASS |
 | [blind/claude-code/2026-10-22-a](blind/claude-code/2026-10-22-a/CELL.md) | `itt_vote_overall_unweighted_tableF1_col2` | 23.5099 | 23.242 | ±0.46484 (relative) | 0.576 | PASS |
 | [blind/claude-code/2026-11-01-a](blind/claude-code/2026-11-01-a/CELL.md) | `itt_vote_overall_unweighted_tableF1_col2` | 23.5099 | 23.242 | ±0.46484 (relative) | 0.576 | PASS |
 | [blind/claude-code/2026-11-02-c](blind/claude-code/2026-11-02-c/CELL.md) | `itt_vote_overall_unweighted_tableF1_col2` | 23.5099 | 23.242 | ±0.46484 (relative) | 0.576 | PASS |
-| [blind/pipeline-desktop-opus/20261023T062931Z](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) | `itt_vote_overall_unweighted_tableF1_col2` | 23.5099 | 23.242 | ±0.46484 (relative) | 0.576 | PASS |
 
 ### Declared deviations
 
@@ -91,6 +92,8 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Index item orientation is my interpretation: poverty, gap, corruption reversed (higher = agrees the issue is a main problem), cct kept; gender items oriented toward awareness (femhouse, fempol, equality, harassment kept; discrimination reversed). Anderson index: items standardized on the within-panel control group (assignment == 0), inverse-covariance (pairwise) weights, available-item averaging, re-standardized on control s.d.
 - [independent/pipeline-desktop-opus/20261023T064839Z](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) (9/13; failed: `itt_poverty_index_akbayan_tableC3`, `itt_poverty_index_umalabka_tableC3`, `itt_gender_index_akbayan_tableC4`, `itt_gender_index_umalabka_tableC4`)
   - Index items located by name pattern (gender index has 6 items per paper); attitude items oriented via their value labels (higher = more agreement, DK/refused set to missing). Summary indices are constructed once on the pooled analysis sample (respondents with a valid turnout response in municipalities with both treatment and control samples; control-group mean/s.d. and inverse-covariance weights from the pooled control group) and then the ITT is estimated separately by party
+- [independent/pipeline-desktop-opus-postfix/20261103T063758Z](independent/pipeline-desktop-opus-postfix/20261103T063758Z/CELL.md) (9/13; failed: `itt_poverty_index_akbayan_tableC3`, `itt_poverty_index_umalabka_tableC3`, `itt_gender_index_akbayan_tableC4`, `itt_gender_index_umalabka_tableC4`)
+  - the stated N=1,082 matches the sample before excluding Imus/Pateros/Santa Maria; those municipalities have no within-city variation in assignment and do not affect the FE estimates
 - [blind/claude-code/2026-10-22-a](blind/claude-code/2026-10-22-a/CELL.md) (9/13; failed: `itt_poverty_index_akbayan_tableC3`, `itt_poverty_index_umalabka_tableC3`, `itt_gender_index_akbayan_tableC4`, `itt_gender_index_umalabka_tableC4`)
   - Attendance-oversampling weights reconstructed from the paper's description: in barangays with town-hall attendance, self-reported attendees get weight att.prop/s_j and non-attendees (1-att.prop)/(1-s_j), where s_j is the survey attendee share in the barangay and att.prop the attendance-sheet share of registered voters (data_agg); all other respondents weight 1. Respondents with missing attendance treated as non-attendees for the weights.
   - Anderson (2008) indices built on all survey respondents with a non-missing city/barangay (control group = assignment 0), item weights from the inverse of the pairwise covariance matrix of the control-standardized items, averaged over available items, then re-standardized on the control group. Item orientation: poverty, gap, corruption reversed (6 - x) so higher = more agreement the issue is a main problem; cct as coded. Gender: equality and harassment as coded (5 = strongly disagree with a sexist statement), discrimination reversed (higher = agrees women miss out due to discrimination), femhouse and fempol as coded.
@@ -153,6 +156,10 @@ _None._
 
 [`independent/pipeline-desktop-opus/20261023T064839Z/CELL.md`](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 4; 2026-10-23T06:48:39Z; from `pipeline-oracle-desktop-opus-9papers-all-modes-2026-10-23.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-postfix · 20261103T063758Z
+
+[`independent/pipeline-desktop-opus-postfix/20261103T063758Z/CELL.md`](independent/pipeline-desktop-opus-postfix/20261103T063758Z/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 2; 2026-11-03T06:37:58Z; from `pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus-run2 · 20261023T151837Z
 
 [`independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 2; 2026-10-23T15:18:37Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
@@ -176,6 +183,10 @@ _None._
 ### blind · pipeline-desktop-opus · 20261023T062931Z
 
 [`blind/pipeline-desktop-opus/20261023T062931Z/CELL.md`](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 1; 2026-10-23T06:29:31Z; from `pipeline-oracle-desktop-opus-9papers-all-modes-2026-10-23.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-postfix · 20261103T064954Z
+
+[`blind/pipeline-desktop-opus-postfix/20261103T064954Z/CELL.md`](blind/pipeline-desktop-opus-postfix/20261103T064954Z/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 2; 2026-11-03T06:49:54Z; from `pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus-run2 · 20261023T150832Z
 

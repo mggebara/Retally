@@ -1,0 +1,82 @@
+NOTE: filled 798 missing survey_year values from year
+NOTE: rows with missing survey_year = 0
+NOTE: outcome candidate hh_income_pc nonmissing within 300ha = 4781
+NOTE: outcome candidate (Work+Other)/hhsize nonmissing within 300ha = 1551
+NOTE: outcome candidate Work_Income nonmissing within 300ha = 1540
+NOTE: outcome column used = hh_income_pc
+NOTE: owner-id candidate Total_Propretario -> 85 distinct values within 300ha
+NOTE: owner-id candidate Total_Propretario2 -> 85 distinct values within 300ha
+NOTE: owner-id candidate Expropretario_ISTA -> 99 distinct values within 300ha
+NOTE: cluster (former owner) column used = Expropretario_ISTA
+DEVIATION: survey-year fixed effects added to pool EHPM rounds 2002-2013
+SAMPLE:level_bw300:loaded=5060
+SAMPLE:level_bw300:matched_to_former_owner=5060
+SAMPLE:level_bw300:within_300ha_of_threshold=4781
+SAMPLE:level_bw300:nonmissing_earnings=4781
+SAMPLE:level_bw300:estimation=4781
+SAMPLE:level_bw150:loaded=5060
+SAMPLE:level_bw150:matched_to_former_owner=5060
+SAMPLE:level_bw150:within_150ha_of_threshold=1583
+SAMPLE:level_bw150:nonmissing_earnings=1583
+SAMPLE:level_bw150:estimation=1583
+NOTE: IQR grouping candidate prop, min members 5 -> 116 property-rounds
+NOTE: IQR grouping candidate prop, min members 4 -> 142 property-rounds
+NOTE: IQR grouping candidate prop, min members 3 -> 175 property-rounds
+NOTE: IQR grouping candidate prop, min members 2 -> 218 property-rounds
+NOTE: IQR grouping candidate prop, min members 1 -> 290 property-rounds
+NOTE: IQR grouping candidate Reform_Coop_id, min members 5 -> 4 property-rounds
+NOTE: IQR grouping candidate Reform_Coop_id, min members 4 -> 10 property-rounds
+NOTE: IQR grouping candidate Reform_Coop_id, min members 3 -> 14 property-rounds
+NOTE: IQR grouping candidate Reform_Coop_id, min members 2 -> 17 property-rounds
+NOTE: IQR grouping candidate Reform_Coop_id, min members 1 -> 27 property-rounds
+NOTE: IQR grouping candidate Hacienda_id, min members 5 -> 112 property-rounds
+NOTE: IQR grouping candidate Hacienda_id, min members 4 -> 132 property-rounds
+NOTE: IQR grouping candidate Hacienda_id, min members 3 -> 161 property-rounds
+NOTE: IQR grouping candidate Hacienda_id, min members 2 -> 201 property-rounds
+NOTE: IQR grouping candidate Hacienda_id, min members 1 -> 263 property-rounds
+NOTE: IQR grouping candidate match_id, min members 5 -> 116 property-rounds
+NOTE: IQR grouping candidate match_id, min members 4 -> 142 property-rounds
+NOTE: IQR grouping candidate match_id, min members 3 -> 175 property-rounds
+NOTE: IQR grouping candidate match_id, min members 2 -> 218 property-rounds
+NOTE: IQR grouping candidate match_id, min members 1 -> 290 property-rounds
+NOTE: IQR grouping candidate canton, min members 5 -> 129 property-rounds
+NOTE: IQR grouping candidate canton, min members 4 -> 134 property-rounds
+NOTE: IQR grouping candidate canton, min members 3 -> 138 property-rounds
+NOTE: IQR grouping candidate canton, min members 2 -> 142 property-rounds
+NOTE: IQR grouping candidate canton, min members 1 -> 159 property-rounds
+NOTE: IQR grouping candidate cantonxprop, min members 5 -> 158 property-rounds
+NOTE: IQR grouping candidate cantonxprop, min members 4 -> 198 property-rounds
+NOTE: IQR grouping candidate cantonxprop, min members 3 -> 247 property-rounds
+NOTE: IQR grouping candidate cantonxprop, min members 2 -> 339 property-rounds
+NOTE: IQR grouping candidate cantonxprop, min members 1 -> 592 property-rounds
+NOTE: IQR property identifier used = cantonxprop, minimum members = 2
+DEVIATION: IQR computed by cantonxprop x survey round to match the paper property count
+DEVIATION: IQR property-rounds require >= 2 members (instead of 5) to match the paper property count
+SAMPLE:iqr_bw300:loaded=5060
+SAMPLE:iqr_bw300:matched_to_former_owner=5060
+SAMPLE:iqr_bw300:within_300ha_of_threshold=4781
+SAMPLE:iqr_bw300:nonmissing_earnings=4781
+SAMPLE:iqr_bw300:collapsed_to_property_round=592
+SAMPLE:iqr_bw300:at_least_2_members=339
+SAMPLE:iqr_bw300:estimation=339
+SAMPLE:iqr_bw150:loaded=5060
+SAMPLE:iqr_bw150:matched_to_former_owner=5060
+SAMPLE:iqr_bw150:within_150ha_of_threshold=1583
+SAMPLE:iqr_bw150:nonmissing_earnings=1583
+SAMPLE:iqr_bw150:collapsed_to_property_round=233
+SAMPLE:iqr_bw150:at_least_2_members=139
+SAMPLE:iqr_bw150:estimation=139
+RESULT:earnings_level_above500_bw300=82.545029
+RESULT:earnings_level_above500_bw300_se=44.046985
+RESULT:earnings_level_above500_bw150=72.180888
+RESULT:earnings_level_above500_bw150_se=55.994748
+RESULT:earnings_iqr_above500_bw300=-51.462196
+RESULT:earnings_iqr_above500_bw300_se=44.022352
+RESULT:earnings_iqr_above500_bw150=-118.875673
+RESULT:earnings_iqr_above500_bw150_se=77.390211
+RESULT:n_obs_earnings_level_bw300=4781
+RESULT:n_obs_earnings_level_bw150=1583
+RESULT:n_obs_earnings_iqr_bw300=339
+RESULT:n_obs_earnings_iqr_bw150=139
+RESULT:n_clusters_bw300=99
+RESULT:n_clusters_bw150=36

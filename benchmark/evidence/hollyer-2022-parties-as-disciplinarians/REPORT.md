@@ -40,6 +40,7 @@
 |---|---|---|---|
 | `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [13/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
 | `pipeline-desktop-opus` | [13/13](seeded/pipeline-desktop-opus/20261102T141403Z/CELL.md) (20261102T141403Z) | [13/13](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) (20261102T141403Z) | [10/13](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) (20261102T095147Z) |
+| `pipeline-desktop-opus-postfix` | — | [13/13](independent/pipeline-desktop-opus-postfix/20261103T062157Z/CELL.md) (20261103T062157Z) | [13/13](blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md) (20261103T062809Z) |
 | `pipeline-desktop-opus-run2` | [13/13](seeded/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) (20261102T152052Z) | [13/13](independent/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) (20261102T152052Z) | [12/13](blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) (20261102T151132Z) |
 | `pipeline-desktop-opus-run3` | [13/13](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [12/13](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) (20261103T052626Z) | [10/13](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) |
 
@@ -73,6 +74,8 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Table 1 covariate set reconstructed from the paper text and codebook: party size, union/business/religious links; plurality and PR indicators (mixed omitted), list type (cl: closed/open/non-list, factor), logged mean district magnitude, Polity, log democratic tenure, political system (factor), log GDP per capita, Gini, ethnic fractionalization. Sample = complete cases on outcomes, volatility, these covariates and the ethnic-links variable (431 parties, 75 countries); the extremism models lose one party with missing extremist2 (430).
   - Ethnic party = ethnic > 0.5 (majority of expert coders report ethnic/linguistic ties). Extremism = extremist2 (vote-weighted absolute left-right distance from country mean); extremist party evaluated at 3 as the paper states. Volatility p25/p75 taken over the party-level estimation sample. Predicted-value differences computed as linear contrasts of OLS coefficients; SEs clustered by country (HC1).
   - Table 2: rdrobust defaults (local linear, triangular kernel, mserd bandwidth, NN variance) on the open-seat sample dlameduck_runs == 0, cutoff 0 on mv_incparty.
+- [independent/pipeline-desktop-opus-postfix/20261103T062157Z](independent/pipeline-desktop-opus-postfix/20261103T062157Z/CELL.md) (13/13)
+  - complete-case sample has 430 parties, paper reports 431
 - [independent/pipeline-desktop-opus-run3/20261103T052626Z](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) (12/13; failed: `programmaticness_extremist_minus_moderate_high_volatility`)
   - 25th/75th volatility percentiles computed using convention 'country' (full = all DALP parties with volatility data; country = country-level distribution)
   - Political-openness controls used: polity
@@ -96,9 +99,9 @@ _None._
 
 Pass rates at least 50 points apart (not unanimous):
 
-- blind: `programmaticness_ethnic_minus_nonethnic_high_volatility` — pipeline 1/3, agent 3/3
-- blind: `programmaticness_volatility_difference_nonethnic` — pipeline 1/3, agent 3/3
-- blind: `programmaticness_volatility_difference_overall` — pipeline 1/3, agent 3/3
+- blind: `programmaticness_ethnic_minus_nonethnic_high_volatility` — pipeline 2/4, agent 3/3
+- blind: `programmaticness_volatility_difference_nonethnic` — pipeline 2/4, agent 3/3
+- blind: `programmaticness_volatility_difference_overall` — pipeline 2/4, agent 3/3
 
 ## Cells
 
@@ -138,6 +141,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/pipeline-desktop-opus/20261102T141403Z/CELL.md`](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) — final 13/13, re-scored 13/13; first scored 11/13; executions 2; 2026-11-02T14:14:03Z; from `pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-postfix · 20261103T062157Z
+
+[`independent/pipeline-desktop-opus-postfix/20261103T062157Z/CELL.md`](independent/pipeline-desktop-opus-postfix/20261103T062157Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-03T06:21:57Z; from `pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus-run2 · 20261102T152052Z
 
 [`independent/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) — final 13/13, re-scored 13/13; first scored 10/13; executions 2; 2026-11-02T15:20:52Z; from `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`; evidence complete.
@@ -161,6 +168,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · pipeline-desktop-opus · 20261102T095147Z
 
 [`blind/pipeline-desktop-opus/20261102T095147Z/CELL.md`](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) — final 10/13, re-scored 10/13; first scored 10/13; executions 1; 2026-11-02T09:51:47Z; from `pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-postfix · 20261103T062809Z
+
+[`blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md`](blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-03T06:28:09Z; from `pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus-run2 · 20261102T151132Z
 

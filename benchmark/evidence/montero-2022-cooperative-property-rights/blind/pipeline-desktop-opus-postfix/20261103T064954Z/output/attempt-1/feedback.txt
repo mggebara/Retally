@@ -1,0 +1,26 @@
+NOTE: 790 observations removed because of NA values (Fixed-effects: 790).
+NOTE: 70 observations removed because of NA values (Fixed-effects: 70).
+Error in `summarise()`:
+ℹ In argument: `year = as.numeric(names(sort(table(year), decreasing =
+  TRUE))[1])`.
+ℹ In group 2: `prop_id = "C_118"`.
+Caused by error:
+! `year` must be size 1, not 0.
+ℹ To return more or less than 1 row per group, use `reframe()`.
+Backtrace:
+     ▆
+  1. ├─global build_iqr(300, "iqr_bw300")
+  2. │ └─... %>% as.data.frame()
+  3. ├─base::as.data.frame(.)
+  4. ├─dplyr::summarise(...)
+  5. ├─dplyr:::summarise.grouped_df(...)
+  6. │ └─dplyr:::summarise_cols(.data, dplyr_quosures(...), by, "summarise")
+  7. │   └─base::withCallingHandlers(...)
+  8. ├─dplyr:::dplyr_internal_error(...)
+  9. │ └─rlang::abort(class = c(class, "dplyr:::internal_error"), dplyr_error_data = data)
+ 10. │   └─rlang:::signal_abort(cnd, .file)
+ 11. │     └─base::signalCondition(cnd)
+ 12. └─dplyr (local) `<fn>`(`<dpl:::__>`)
+ 13.   └─dplyr (local) handler(cnd)
+ 14.     └─rlang::abort(message, class = error_class, parent = parent, call = error_call)
+Execution halted

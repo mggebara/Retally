@@ -42,6 +42,7 @@
 |---|---|---|---|
 | `claude-code` | [12/12](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[12/12](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [12/12](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[12/12](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[12/12](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [12/12](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[12/12](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[12/12](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
 | `pipeline-desktop-opus` | [12/12](seeded/pipeline-desktop-opus/20261102T064502Z/CELL.md) (20261102T064502Z) | [12/12](independent/pipeline-desktop-opus/20261102T062442Z/CELL.md) (20261102T062442Z) | [12/12](blind/pipeline-desktop-opus/20261102T062442Z/CELL.md) (20261102T062442Z) |
+| `pipeline-desktop-opus-postfix` | — | [12/12](independent/pipeline-desktop-opus-postfix/20261103T062157Z/CELL.md) (20261103T062157Z) | [12/12](blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md) (20261103T062809Z) |
 | `pipeline-desktop-opus-run2` | [12/12](seeded/pipeline-desktop-opus-run2/20261102T091036Z/CELL.md) (20261102T091036Z) | [12/12](independent/pipeline-desktop-opus-run2/20261102T090216Z/CELL.md) (20261102T090216Z) | [12/12](blind/pipeline-desktop-opus-run2/20261102T090216Z/CELL.md) (20261102T090216Z) |
 | `pipeline-desktop-opus-run3` | [12/12](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [12/12](independent/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) | [12/12](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) |
 
@@ -114,6 +115,10 @@ _None._
 
 [`independent/pipeline-desktop-opus/20261102T062442Z/CELL.md`](independent/pipeline-desktop-opus/20261102T062442Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-11-02T06:24:42Z; from `pipeline-oracle-desktop-opus-4papers-all-modes-2026-11-02.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-postfix · 20261103T062157Z
+
+[`independent/pipeline-desktop-opus-postfix/20261103T062157Z/CELL.md`](independent/pipeline-desktop-opus-postfix/20261103T062157Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-11-03T06:21:57Z; from `pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus-run2 · 20261102T090216Z
 
 [`independent/pipeline-desktop-opus-run2/20261102T090216Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261102T090216Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-11-02T09:02:16Z; from `pipeline-oracle-desktop-opus-run2-4papers-all-modes-2026-11-02.json`; evidence complete.
@@ -137,6 +142,10 @@ _None._
 ### blind · pipeline-desktop-opus · 20261102T062442Z
 
 [`blind/pipeline-desktop-opus/20261102T062442Z/CELL.md`](blind/pipeline-desktop-opus/20261102T062442Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-11-02T06:24:42Z; from `pipeline-oracle-desktop-opus-4papers-all-modes-2026-11-02.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-postfix · 20261103T062809Z
+
+[`blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md`](blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-11-03T06:28:09Z; from `pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus-run2 · 20261102T090216Z
 

@@ -1,0 +1,81 @@
+DIAG: mean totalcont base=7985.52 cal=5392.04 12m=5394.05 sugcont=9087.34
+SAMPLE:table1_district_fe:loaded=862
+SAMPLE:table1_district_fe:voted=842
+SAMPLE:table1_district_fe:nonmissing_covariates=842
+SAMPLE:table1_district_fe:vote_switching_districts=172
+SAMPLE:table1_district_fe:estimation=172
+DEVIATION: district FE sample has 172 obs vs 186 in paper
+SAMPLE:table1_incumbent_fe:loaded=862
+SAMPLE:table1_incumbent_fe:voted=842
+SAMPLE:table1_incumbent_fe:nonmissing_covariates=842
+SAMPLE:table1_incumbent_fe:same_incumbent_both_votes=594
+SAMPLE:table1_incumbent_fe:vote_switching_incumbents=96
+SAMPLE:table1_incumbent_fe:estimation=96
+DEVIATION: incumbent FE sample has 96 obs vs 106 in paper
+SAMPLE:table3_calendar_district_fe:loaded=862
+SAMPLE:table3_calendar_district_fe:voted=842
+SAMPLE:table3_calendar_district_fe:nonmissing_covariates=840
+SAMPLE:table3_calendar_district_fe:vote_switching_districts=172
+SAMPLE:table3_calendar_district_fe:estimation=172
+SAMPLE:table3_calendar_incumbent_fe:loaded=862
+SAMPLE:table3_calendar_incumbent_fe:voted=842
+SAMPLE:table3_calendar_incumbent_fe:nonmissing_covariates=840
+SAMPLE:table3_calendar_incumbent_fe:same_incumbent_both_votes=590
+SAMPLE:table3_calendar_incumbent_fe:vote_switching_incumbents=96
+SAMPLE:table3_calendar_incumbent_fe:estimation=96
+SAMPLE:table3_12m_district_fe:loaded=862
+SAMPLE:table3_12m_district_fe:voted=842
+SAMPLE:table3_12m_district_fe:nonmissing_covariates=842
+SAMPLE:table3_12m_district_fe:vote_switching_districts=172
+SAMPLE:table3_12m_district_fe:estimation=172
+SAMPLE:table3_12m_incumbent_fe:loaded=862
+SAMPLE:table3_12m_incumbent_fe:voted=842
+SAMPLE:table3_12m_incumbent_fe:nonmissing_covariates=842
+SAMPLE:table3_12m_incumbent_fe:same_incumbent_both_votes=594
+SAMPLE:table3_12m_incumbent_fe:vote_switching_incumbents=96
+SAMPLE:table3_12m_incumbent_fe:estimation=96
+GLM estimation, family = binomial, Dep. Var.: vote
+Observations: 172
+Fixed-effects: dist_key: 86
+Standard-errors: Heteroskedasticity-robust 
+            Estimate Std. Error    z value   Pr(>|z|)    
+x_cont     -0.000600   0.000127  -4.717508 2.3875e-06 ***
+ncu         0.195478   0.066190   2.953287 3.1441e-03 ** 
+tenure     -0.298807   0.090006  -3.319863 9.0062e-04 ***
+poverty     2.139466   0.891316   2.400344 1.6380e-02 *  
+bach        1.207631   0.959185   1.259018 2.0802e-01    
+medincome   0.000125   0.000421   0.297939 7.6575e-01    
+over65     -1.751540   1.364495  -1.283654 1.9926e-01    
+agcom     -38.851851   1.812145 -21.439707  < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Log-Likelihood: -32.1   Adj. Pseudo R2: -0.048956
+           BIC: 548.0     Squared Cor.:  0.772836
+GLM estimation, family = binomial, Dep. Var.: vote
+Observations: 96
+Fixed-effects: inc_key: 48
+Standard-errors: Heteroskedasticity-robust 
+            Estimate Std. Error   z value   Pr(>|z|)    
+x_cont     -0.000373   0.000166 -2.248627 2.4536e-02 *  
+ncu         0.043302   0.138408  0.312857 7.5439e-01    
+tenure     -1.778780   0.766706 -2.320029 2.0339e-02 *  
+poverty     1.835078   1.254876  1.462359 1.4364e-01    
+bach        0.602404   0.767570  0.784820 4.3256e-01    
+medincome   0.000591   0.000698  0.846825 3.9709e-01    
+over65      0.948468   3.342430  0.283766 7.7659e-01    
+agcom     -40.637140   5.320893 -7.637278 2.2186e-14 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Log-Likelihood: -19.4   Adj. Pseudo R2: -0.117377
+           BIC: 294.3     Squared Cor.:  0.738149
+RESULT:sugar_contributions_district_fe=-0.00060040771
+RESULT:sugar_contributions_incumbent_fe=-0.00037268847
+RESULT:acu_ideology_district_fe=0.19547797
+RESULT:tenure_district_fe=-0.29880665
+RESULT:tenure_incumbent_fe=-1.77878
+RESULT:sugar_contributions_calendar_year_district_fe=-0.00052800734
+RESULT:sugar_contributions_calendar_year_incumbent_fe=-0.000556021
+RESULT:sugar_contributions_12_months_district_fe=-0.00056550815
+RESULT:sugar_contributions_12_months_incumbent_fe=-0.000301782
+RESULT:observations_district_fe=172
+RESULT:observations_incumbent_fe=96
