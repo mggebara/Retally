@@ -476,7 +476,15 @@ def pipeline_artifacts(report: Any, *, prompts: list[str] | None = None) -> dict
       from ``ExecutionResult.attempts``, oldest first, numbered from 1.
     * ``prompt-<n>.txt`` — the generator's prompts in call order
       (generation, then refinements), numbered from 1.
+    * ``samples.txt`` / ``attempt-<n>/samples.txt`` — the run's
+      ``SAMPLE:<label>=<rows>`` lines (ROADMAP 3.8), one per line, when
+      it printed any.
     """
+    from retally.codegen.executor import parse_sample_lines
+
+    def samples_text(stdout: str) -> str:
+        return "".join(f"{label}={rows:g}\n" for label, rows in parse_sample_lines(stdout))
+
     exec_result = getattr(report, "execution_result", None)
     artifacts: dict[str, str] = {}
     if exec_result is not None:
@@ -485,11 +493,15 @@ def pipeline_artifacts(report: Any, *, prompts: list[str] | None = None) -> dict
         artifacts[script] = str(getattr(exec_result, "generated_code", "") or "")
         artifacts["stdout.txt"] = str(getattr(exec_result, "stdout", "") or "")
         artifacts["stderr.txt"] = str(getattr(exec_result, "stderr", "") or "")
+        if samples := samples_text(artifacts["stdout.txt"]):
+            artifacts["samples.txt"] = samples
         for n, attempt in enumerate(getattr(exec_result, "attempts", None) or [], start=1):
             prefix = f"attempt-{n}/"
             artifacts[prefix + script] = str(getattr(attempt, "code", "") or "")
             artifacts[prefix + "stdout.txt"] = str(getattr(attempt, "stdout", "") or "")
             artifacts[prefix + "stderr.txt"] = str(getattr(attempt, "stderr", "") or "")
+            if samples := samples_text(artifacts[prefix + "stdout.txt"]):
+                artifacts[prefix + "samples.txt"] = samples
             feedback = str(getattr(attempt, "feedback", "") or "")
             if feedback:
                 artifacts[prefix + "feedback.txt"] = feedback

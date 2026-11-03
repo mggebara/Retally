@@ -378,7 +378,11 @@ def _render_text(
     from retally.codegen.generator import CodeGenerator
     from retally.models import Dataset, Language, Paper
 
-    gen = CodeGenerator(None)  # the constructor only stores the client; nothing here calls it
+    # The constructor only stores the client; nothing here calls it.  The
+    # agent's task keeps the frozen prompt blocks: the ROADMAP 3.8 pipeline
+    # fixes (data inventory, SAMPLE lines) are pipeline-only, so the agent
+    # rows stay comparable across the unfreeze.
+    gen = CodeGenerator(None, data_inventory=False, sample_reconciliation=False)
     paper = Paper(title=title, claims=claims, language=Language.R)
     dataset = Dataset(name=mount.name, source_url=source_url, local_path=mount, metadata=_metadata(mount))
     prompt = gen._build_generation_prompt_r(paper, dataset, [], None, mode)

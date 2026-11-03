@@ -27,6 +27,8 @@ import re
 from pathlib import Path
 from typing import TYPE_CHECKING, NamedTuple
 
+from retally.codegen.executor import parse_sample_lines
+from retally.codegen.inventory import build_inventory
 from retally.codegen.rdata import R_DATA_SUFFIXES, read_r_objects
 from retally.codegen.sandbox_packages import PYTHON_PACKAGES, R_PACKAGES
 from retally.llm import DEFAULT_GENERATION_EFFORT, DEFAULT_MODEL, request_options, response_text
@@ -87,6 +89,23 @@ class CodeGenerator:
         Defaults to ``retally.llm.DEFAULT_GENERATION_EFFORT``.
     max_refinements:
         Maximum number of refinement attempts before giving up.
+    data_inventory:
+        ROADMAP 3.8, default on.  Add a "Data inventory" block to the
+        generation prompt's dataset section: every data file's rows,
+        columns and Stata variable labels, profiled on the host, and for
+        files that share their columns which columns differ
+        (``retally.codegen.inventory``).  ``False`` reproduces the frozen
+        (3.2–3.7) prompt.
+    sample_reconciliation:
+        ROADMAP 3.8, default on.  The generation prompt asks the script to
+        print ``SAMPLE:<sample>:<step>=<rows>`` lines (rows after loading,
+        after each restriction the paper states, and at estimation) before
+        its ``RESULT:`` lines; error and completeness repairs are reminded
+        to keep them; and the claim-refinement prompt opens with the gap
+        between the paper's stated sample sizes and the script's, plus the
+        script's SAMPLE lines, as the first thing to fix.  In blind mode
+        the prompt never names a sample size.  ``False`` reproduces the
+        frozen prompts.
     """
 
     def __init__(
@@ -95,11 +114,15 @@ class CodeGenerator:
         model: str = DEFAULT_MODEL,
         max_refinements: int = 3,
         effort: str | None = DEFAULT_GENERATION_EFFORT,
+        data_inventory: bool = True,
+        sample_reconciliation: bool = True,
     ) -> None:
         self._client = anthropic_client
         self._model = model
         self._effort = effort
         self.max_refinements = max_refinements
+        self.data_inventory = data_inventory
+        self.sample_reconciliation = sample_reconciliation
         self.prompt_log: list[str] = []
         """Every prompt sent by this generator, in call order.  Callers that
         want the prompts of one run read the slice added during it."""
@@ -264,6 +287,28 @@ class CodeGenerator:
         response = self._call_claude(prompt)
         return self._extract_code_block(response)
 
+    def refine_for_completeness(
+        self,
+        code: str,
+        missing: list[tuple[str, str]],
+        exec_result: ExecutionResult,
+        paper: Paper,
+        dataset: Dataset,
+    ) -> str:
+        """Repair a script that ran to completion but printed no usable value for some names.
+
+        ROADMAP 3.8.  ``missing`` is ``[(RESULT name, what happened)]``,
+        e.g. ``("beta_x", "printed NA")`` or ``("beta_x", "no RESULT line")``.
+        The prompt shows the script, the names, and the run's log, and
+        asks for the narrowest fix: the printing, or the model that
+        produced ``NA``.  It never shows a claim value, so it is the same
+        in every mode, blind included.
+        """
+        _require_supported_language(paper, "refine_for_completeness")
+        prompt = self._build_completeness_prompt(code, missing, exec_result, paper, dataset)
+        response = self._call_claude(prompt)
+        return self._extract_code_block(response)
+
     # ------------------------------------------------------------------
     # Internal helpers
     # ------------------------------------------------------------------
@@ -296,7 +341,7 @@ class CodeGenerator:
         ]
         lines.extend(self._paper_section(paper))
         lines.extend(self._claims_section(paper.claims, reproduction_mode))
-        lines.extend(self._dataset_section(dataset, paper))
+        lines.extend(self._dataset_section(dataset, paper, reproduction_mode))
 
         lines.extend(
             [
@@ -307,6 +352,7 @@ class CodeGenerator:
                 "",
             ]
         )
+        lines.extend(self._sample_accounting_section(Language.PYTHON, reproduction_mode))
 
         lines.extend(
             [
@@ -384,6 +430,7 @@ class CodeGenerator:
             "- Do NOT use subprocess.",
             "- Use random_state=42 for reproducibility.",
             "- Print all RESULT: lines at the end.",
+            *self._sample_reminder(),
             "",
             "Output ONLY the corrected Python code — no explanation, no markdown fences.",
         ]
@@ -465,6 +512,7 @@ class CodeGenerator:
             outputs_block,
             "",
             *_execution_log_section(exec_result.stdout, exec_result.stderr),
+            *self._sample_gap_section(failed_claims, exec_result.stdout),
             "## Claims still failing",
             *claim_lines,
             "",
@@ -552,7 +600,7 @@ class CodeGenerator:
         ]
         lines.extend(self._paper_section(paper))
         lines.extend(self._claims_section(paper.claims, reproduction_mode))
-        lines.extend(self._dataset_section(dataset, paper))
+        lines.extend(self._dataset_section(dataset, paper, reproduction_mode))
 
         # Output convention — note R uses cat() to write to stdout.
         lines.extend(
@@ -565,6 +613,7 @@ class CodeGenerator:
                 "",
             ]
         )
+        lines.extend(self._sample_accounting_section(Language.R, reproduction_mode))
 
         # Code requirements: prefer the econometrics packages in the sandbox.
         lines.extend(
@@ -640,6 +689,7 @@ class CodeGenerator:
             "- Do NOT call system() / system2().",
             "- Use set.seed(42) for reproducibility.",
             "- Print all RESULT: lines at the end via cat().",
+            *self._sample_reminder(),
             "",
             "Output ONLY the corrected R code — no explanation, no markdown fences.",
         ]
@@ -709,6 +759,7 @@ class CodeGenerator:
             outputs_block,
             "",
             *_execution_log_section(exec_result.stdout, exec_result.stderr),
+            *self._sample_gap_section(failed_claims, exec_result.stdout),
             "## Claims still failing",
             *claim_lines,
             "",
@@ -821,7 +872,12 @@ class CodeGenerator:
         lines.append("")
         return lines
 
-    def _dataset_section(self, dataset: Dataset, paper: Paper | None = None) -> list[str]:
+    def _dataset_section(
+        self,
+        dataset: Dataset,
+        paper: Paper | None = None,
+        reproduction_mode: ReproductionMode = ReproductionMode.SEEDED,
+    ) -> list[str]:
         root = _prompt_dataset_root(dataset)
         lines = [
             "## Dataset Information",
@@ -842,6 +898,8 @@ class CodeGenerator:
         if tree:
             lines.append("Files in the dataset directory (paths relative to the local path above):")
             lines.extend(tree)
+        if getattr(self, "data_inventory", False):
+            lines.extend(_inventory_lines(root, paper, reproduction_mode))
         lines.append("")
         return lines
 
@@ -1032,6 +1090,172 @@ class CodeGenerator:
                 ]
             )
         return lines
+
+    # ------------------------------------------------------------------
+    # ROADMAP 3.8: sample accounting and completeness repair
+    # ------------------------------------------------------------------
+
+    def _sample_accounting_section(
+        self, language: Language, reproduction_mode: ReproductionMode
+    ) -> list[str]:
+        """The ``SAMPLE:`` line convention for generation prompts; ``[]`` when switched off.
+
+        Blind mode never invites comparison with a stated sample size (the
+        targets are withheld and the model must not tune toward any
+        number); it asks for the stated restrictions in order instead.
+        """
+        if not getattr(self, "sample_reconciliation", False):
+            return []
+        if language is Language.R:
+            example = "cat(sprintf('SAMPLE:main:loaded=%d\\n', nrow(df)))"
+            nobs = "nobs(model)"
+        else:
+            example = "print(f'SAMPLE:main:loaded={len(df)}')"
+            nobs = "the model's number of observations"
+        lines = [
+            "## Sample Accounting",
+            "Before the RESULT: lines, print how each estimation sample is built, one line per step,",
+            "using EXACTLY this format:",
+            "    SAMPLE:<sample_name>:<step>=<number_of_rows>",
+            f"For example:  {example}",
+            (
+                "Start each sample with step `loaded` (rows read from the data file), then print one "
+                "line after each sample restriction the paper states, in the order the paper states "
+                "them and named after the restriction, and end with step `estimation`: the number of "
+                f"observations the estimator actually used ({nobs}), after rows dropped for missing "
+                "values or singletons.  Use one <sample_name> per distinct estimation sample (one per "
+                "table, panel or subgroup)."
+            ),
+        ]
+        if reproduction_mode.withholds_targets:
+            lines.append(
+                "Apply every restriction the paper states, in order, before estimating.  A sample that "
+                "ends with 0 rows, or loses most of its rows at one step, means a restriction is "
+                "mis-coded: fix it rather than estimate on it."
+            )
+        else:
+            lines.append(
+                "Before estimating, compare each sample's count with any sample size the paper states "
+                "for it (in the claims or the text) and fix the restrictions until they agree.  If a "
+                "stated restriction cannot be applied, print a DEVIATION: line saying so."
+            )
+        lines.append("")
+        return lines
+
+    def _sample_reminder(self) -> list[str]:
+        """One constraint line for repair prompts so a fix keeps the SAMPLE lines."""
+        if not getattr(self, "sample_reconciliation", False):
+            return []
+        return ["- Keep the SAMPLE:<sample_name>:<step>=<rows> lines before the RESULT: lines."]
+
+    def _sample_gap_section(self, failed_claims: list[ClaimValidationResult], stdout: str) -> list[str]:
+        """Claim-refinement block: stated sample sizes the script missed, and its SAMPLE lines.
+
+        Only seeded and independent runs reach claim refinement (blind
+        mode skips it), and their prompt already shows every claim value,
+        so naming the stated N here adds no information the mode
+        withholds.  ``[]`` when switched off or when no failing claim is a
+        sample size.
+        """
+        if not getattr(self, "sample_reconciliation", False):
+            return []
+        gaps = [cr for cr in failed_claims if is_sample_size_claim(cr.claim)]
+        if not gaps:
+            return []
+        lines = [
+            "## Sample size check (fix this first)",
+            "The paper states these sample sizes and your script's do not match:",
+        ]
+        for cr in gaps:
+            stated = cr.claim.value
+            if cr.reproduced_value is None:
+                lines.append(
+                    f"  - {cr.claim.description}: paper states {stated:g}; your code printed no value"
+                )
+            else:
+                diff = cr.reproduced_value - stated
+                lines.append(
+                    f"  - {cr.claim.description}: paper states {stated:g}, your code produced "
+                    f"{cr.reproduced_value:g} ({diff:+g} rows)"
+                )
+        samples = parse_sample_lines(stdout)
+        if samples:
+            lines.append("Your script's SAMPLE lines from the last run:")
+            lines.extend(f"  SAMPLE:{label}={rows:g}" for label, rows in samples)
+        else:
+            lines.append("Your script printed no SAMPLE lines; add them (one per restriction step).")
+        lines += [
+            (
+                "Before changing the model, make each estimation sample match: walk the SAMPLE steps, "
+                "find the step where the count departs from what the paper's stated restrictions imply, "
+                "and correct that restriction (which rows or groups are kept, the period, missing-value "
+                "handling, singleton or duplicate dropping).  Coefficients estimated on a different "
+                "sample cannot be expected to match."
+            ),
+            "",
+        ]
+        return lines
+
+    def _build_completeness_prompt(
+        self,
+        code: str,
+        missing: list[tuple[str, str]],
+        exec_result: ExecutionResult,
+        paper: Paper,
+        dataset: Dataset,
+    ) -> str:
+        """Prompt for :meth:`refine_for_completeness` (both languages)."""
+        is_r = paper.language is Language.R
+        lang = "R" if is_r else "Python"
+        fence = "r" if is_r else "python"
+        if is_r:
+            lookup = (
+                "a coefficient looked up under a term name the model does not have (factor levels, "
+                "interactions, renamed or transformed variables) returns NA: print names(coef(model)) "
+                "and select the term that is there"
+            )
+        else:
+            lookup = (
+                "a coefficient looked up under a parameter name the model does not have (categorical "
+                "levels, interactions, renamed or transformed variables) is missing: print the model's "
+                "parameter names and select the one that is there"
+            )
+        lines = [
+            f"You are fixing {lang} code that reproduces results from a published paper.",
+            "The script RAN TO COMPLETION, but it did not print a usable number for every required",
+            "quantity.  Fix only that.",
+            "",
+            "## Current Code",
+            f"```{fence}",
+            code,
+            "```",
+            "",
+            "## Quantities with no usable value",
+            *(f"  - {name}: {what}" for name, what in missing),
+            "",
+            *_execution_log_section(exec_result.stdout, exec_result.stderr),
+            "## Task",
+            (
+                "For each name above, find why no number reached its RESULT line and fix that: "
+                "the RESULT name must match the name above exactly; "
+                f"{lookup}; a model that dropped the variable or could not be estimated (collinearity, "
+                "an empty or all-missing subsample, a filter that removed every row) must be fixed "
+                "where its data is built.  Use the log above to see which models ran and on how many rows."
+            ),
+            (
+                "Keep every quantity that already prints a number exactly as it is: do not change its "
+                "specification, sample or printing."
+            ),
+            "",
+            "## Reminder: Output Convention",
+            "Print every quantity as RESULT:<name>=<numeric_value>, using the names above exactly.",
+            self._load_instruction(dataset, paper.language),
+            _INSTALLED_R_LINE if is_r else _INSTALLED_PYTHON_LINE,
+            *self._sample_reminder(),
+            "",
+            f"Output ONLY the corrected {lang} code — no explanation, no markdown fences.",
+        ]
+        return "\n".join(lines)
 
     def _call_claude(self, prompt: str) -> str:
         """Send a prompt to the Claude API and return the response text."""
@@ -1259,6 +1483,55 @@ def _claim_detail_lines(claim) -> list[str]:
             context = context[:_CLAIM_CONTEXT_CHARS] + "…"
         lines.append(f"   Context: {context}")
     return lines
+
+
+# A claim is a stated sample size when it is a whole number of type
+# ``other`` and its name or unit says it counts rows, clusters or units
+# (``n_obs_...``, ``..._observations``, ``n_clusters_...``, unit
+# "respondents").  Generic words only; used to put the sample gap first in
+# claim refinement, never for scoring.
+_COUNT_WORDS = frozenset(
+    "obs nobs observation observations cluster clusters sample size respondents participants "
+    "subjects households individuals units count".split()
+)
+_COUNT_PREFIXES = frozenset({"n", "num", "number"})
+
+
+def is_sample_size_claim(claim) -> bool:
+    """Whether ``claim`` states a sample size (an N, a cluster count) rather than an estimate."""
+    if claim.claim_type is not ClaimType.OTHER:
+        return False
+    value = claim.value
+    if not isinstance(value, (int, float)) or value < 1 or float(value) != int(value):
+        return False
+    tokens = re.findall(r"[a-z]+", (claim.description or "").lower())
+    unit_tokens = set(re.findall(r"[a-z]+", (claim.unit or "").lower()))
+    return bool(
+        (tokens and tokens[0] in _COUNT_PREFIXES)
+        or _COUNT_WORDS.intersection(tokens)
+        or _COUNT_WORDS.intersection(unit_tokens)
+    )
+
+
+def _inventory_lines(root: Path, paper: Paper | None, reproduction_mode: ReproductionMode) -> list[str]:
+    """The prompt's "Data inventory" block (ROADMAP 3.8), or ``[]`` when there are no data files."""
+    hints = _Hints(_listing_hint_texts(paper))
+    lines = build_inventory(
+        root,
+        lambda names, labels: _prioritised_columns(names, labels, hints),
+        show_values=not reproduction_mode.withholds_targets,
+    )
+    if not lines:
+        return []
+    return [
+        "",
+        (
+            "Data inventory (every data file, profiled on the host before generation: rows, columns "
+            "with Stata variable labels in quotes, and which columns differ between files that share "
+            "their columns).  Use it to choose the file each analysis needs and to check row counts:"
+        ),
+        *lines,
+    ]
 
 
 def _fence_tag_for(relative_path: str) -> str:

@@ -367,9 +367,20 @@ errors are not cached (see "Skip categories" above).  The LLM cache keys on full
 prompt content, so the two modes' generation calls are distinct entries
 while the shared extraction calls replay across modes.
 
+Since ROADMAP 3.8 the pipeline runs with three fixes by default: a data
+inventory in the generation prompt, `SAMPLE:` lines with a sample-size
+gap in claim refinement, and a completeness repair for `NA` / missing
+`RESULT:` names.  `RETALLY_PIPELINE_FROZEN=1` switches all three off
+and reproduces the frozen 3.2–3.7 pipeline; pipeline result-cache keys
+carry a `pipeline_fixes` tag unless it is set, so post-fix rows never
+reuse a frozen row and frozen runs keep their old keys.  Post-fix rows
+are labelled post-fix and not pooled with the frozen samples.  The
+agent's task file keeps the frozen prompt blocks.
+
 ```bash
 make benchmark                       # cached re-run
 make benchmark-report                # just re-render from results.json
+RETALLY_PIPELINE_FROZEN=1 make benchmark   # the frozen (pre-3.8) pipeline
 ```
 
 ## Keeping iteration cheap

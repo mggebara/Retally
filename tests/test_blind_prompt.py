@@ -184,10 +184,15 @@ def _golden_paper() -> Paper:
 
 
 def test_blind_r_prompt_matches_golden():
-    """To regenerate deliberately: ``RETALLY_REGEN_GOLDEN=1 uv run pytest tests/test_blind_prompt.py``."""
+    """To regenerate deliberately: ``RETALLY_REGEN_GOLDEN=1 uv run pytest tests/test_blind_prompt.py``.
+
+    The golden is the frozen (ROADMAP 3.2–3.7) prompt: the 3.8 switches are
+    off here, which is also the proof that switching them off reproduces
+    the frozen prompt byte for byte.
+    """
     client = MagicMock()
     client.messages.create.return_value = MagicMock(content=[MagicMock(text="x <- 1")])
-    CodeGenerator(client).generate(
+    CodeGenerator(client, data_inventory=False, sample_reconciliation=False).generate(
         _golden_paper(),
         Dataset(name="wii-package", source_url="https://zenodo.org/records/1", local_path=PACKAGE_DIR),
         reproduction_mode=ReproductionMode.BLIND,

@@ -23,6 +23,10 @@ Workflow
   6. Execute the code (CodeExecutor / DockerExecutor)
       - Phase 1: on Python error or empty output, call
         ``CodeGenerator.refine`` up to ``max_refinements`` times.
+      - Phase 1b (ROADMAP 3.8, ``completeness_repair``): if the script
+        ran but some claims got no value (NA / no RESULT line), one
+        ``CodeGenerator.refine_for_completeness`` call from the same
+        budget.
       - Phase 2: if the code runs cleanly but any claim is outside
         tolerance, call ``CodeGenerator.refine_for_claims`` up to
         ``max_claim_refinements`` times to close the gap.  Stops early
@@ -120,6 +124,42 @@ def _claim_gap_feedback(failed: list[ClaimValidationResult]) -> str:
     )
 
 
+COMPLETENESS_FEEDBACK_HEADER = "Completeness check: these quantities have no usable value"
+
+
+def _norm_name(name: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_")
+
+
+def _missing_quantities(results: list[ClaimValidationResult], stdout: str) -> list[tuple[str, str]]:
+    """``[(claim name, what happened)]`` for every claim that got no value, in claim order.
+
+    "printed a non-numeric value (e.g. NA)" when a ``RESULT:`` line with
+    that name (compared as the comparator does: normalised, exact or
+    substring) is in ``stdout``, else "no RESULT line printed".
+    """
+    printed = [_norm_name(n) for n in _result_names(stdout)]
+    missing: list[tuple[str, str]] = []
+    for cr in results:
+        if cr.reproduced_value is not None:
+            continue
+        key = _norm_name(cr.claim.description)
+        seen = any(p == key or (key and (key in p or p in key)) for p in printed if p)
+        what = "printed a non-numeric value (e.g. NA)" if seen else "no RESULT line printed"
+        missing.append((cr.claim.description, what))
+    return missing
+
+
+def _n_valued(results: list[ClaimValidationResult]) -> int:
+    """How many claims got a usable value."""
+    return sum(cr.reproduced_value is not None for cr in results)
+
+
+def _completeness_feedback(missing: list[tuple[str, str]]) -> str:
+    """Feedback recorded on the run a completeness repair followed (attempt kind ``completeness``)."""
+    return COMPLETENESS_FEEDBACK_HEADER + ":\n" + "\n".join(f"{name}: {what}" for name, what in missing)
+
+
 def _outputs_close(
     a: dict[str, float],
     b: dict[str, float],
@@ -191,6 +231,17 @@ class ValidationPipeline:
     code_downloader:
         ``CodeDownloader`` instance.  A default one is constructed if
         omitted.  Injectable mainly for tests.
+    completeness_repair:
+        ROADMAP 3.8, default on.  After the execution-repair phase, if
+        the script ran to completion but some claims got no value (their
+        ``RESULT:`` line printed ``NA`` or was never printed), send one
+        targeted repair (``CodeGenerator.refine_for_completeness``: these
+        names are missing or NA, here is the log) before any claim
+        refinement, in every mode including blind.  It spends one slot of
+        the ``max_refinements`` error-repair budget (none is left: no
+        repair), is recorded as attempt kind ``"completeness"``, and is
+        kept only if it ran and printed at least as many usable values.
+        ``False`` reproduces the frozen (3.2–3.7) loop.
     """
 
     usage_tracker: UsageTracker | None = None
@@ -213,6 +264,7 @@ class ValidationPipeline:
         max_claim_refinements: int = 3,
         include_code_references: bool = True,
         code_downloader: CodeDownloader | None = None,
+        completeness_repair: bool = True,
     ) -> None:
         self.parser = parser
         self.extractor = extractor
@@ -230,6 +282,7 @@ class ValidationPipeline:
         self.max_claim_refinements = max_claim_refinements
         self.include_code_references = include_code_references
         self.code_downloader = code_downloader or CodeDownloader()
+        self.completeness_repair = completeness_repair
 
     def _executor_for(self, language: Language) -> AnyExecutor:
         """Return the executor for ``language``, raising if not configured.
@@ -547,8 +600,40 @@ class ValidationPipeline:
             result = executor.execute(code, dataset)
             log.append(_Execution(code, result))
 
-        # Compare once so we know what (if anything) needs Phase 2.
+        # Compare once so we know what (if anything) needs Phase 1b / Phase 2.
         claim_results = self.comparator.compare_all(paper.claims, result.outputs, mode=reproduction_mode)
+
+        # ── Phase 1b (ROADMAP 3.8): completeness repair ───────────────
+        # The script ran and printed something, but some claims got no
+        # value.  One cheap targeted repair, from the error budget, before
+        # any claim refinement (and in blind mode, which has none).
+        n_completeness = 0
+        missing = _missing_quantities(claim_results, result.stdout or "")
+        if (
+            self.completeness_repair
+            and missing
+            and result.exit_code == 0
+            and result.outputs
+            and exec_refinements < self.max_refinements
+        ):
+            log[-1].feedback = _completeness_feedback(missing)
+            log[-1].kind = "completeness"
+            exec_refinements += 1
+            n_completeness += 1
+            new_code = self.generator.refine_for_completeness(code, missing, result, paper, dataset)
+            if new_code.strip() != code.strip():
+                new_result = executor.execute(new_code, dataset)
+                log.append(_Execution(new_code, new_result))
+                new_claims = self.comparator.compare_all(
+                    paper.claims, new_result.outputs, mode=reproduction_mode
+                )
+                # Keep the repair only if it still runs and lost no value.
+                if (
+                    new_result.exit_code == 0
+                    and new_result.outputs
+                    and _n_valued(new_claims) >= _n_valued(claim_results)
+                ):
+                    code, result, claim_results = new_code, new_result, new_claims
 
         # ── Phase 2: close the gap on soft-failed claims ──────────────
         # Never in blind mode: its feedback ("paper claims X, your code
@@ -575,6 +660,7 @@ class ValidationPipeline:
         result.attempts = _superseded_attempts(log, result)
         result.final_execution_index = next(i for i, e in enumerate(log) if e.result is result)
         result.n_error_refinements = exec_refinements
+        result.n_completeness_refinements = n_completeness
         result.n_claim_refinements = claim_refinements[0]
         result.refinement_calls = exec_refinements + claim_refinements[0]
         return code, result, claim_results
@@ -716,6 +802,9 @@ class ValidationPipeline:
         llm_cache_dir: Path | None = None,
         model: str = DEFAULT_MODEL,
         client: Any | None = None,
+        data_inventory: bool = True,
+        sample_reconciliation: bool = True,
+        completeness_repair: bool = True,
     ) -> "ValidationPipeline":
         """Create a pipeline with default components.
 
@@ -772,6 +861,11 @@ class ValidationPipeline:
             answers must never land in the real LLM cache.  It is still
             wrapped in ``UsageTrackingClient``.  None (the default) builds
             the anthropic client from ``anthropic_api_key``.
+        data_inventory, sample_reconciliation:
+            Passed to ``CodeGenerator`` (ROADMAP 3.8; see its docstring).
+        completeness_repair:
+            Passed to the pipeline (ROADMAP 3.8; see the class docstring).
+            All three ``False`` reproduces the frozen 3.2–3.7 pipeline.
         """
         # Duck-typed: every component only calls ``client.messages.create``
         # and reads the response's text block (``retally.llm.response_text``),
@@ -844,11 +938,17 @@ class ValidationPipeline:
             extractor=ClaimExtractor(client, model=model),
             downloader=DatasetDownloader(),
             registry=registry,
-            generator=CodeGenerator(client, model=model),
+            generator=CodeGenerator(
+                client,
+                model=model,
+                data_inventory=data_inventory,
+                sample_reconciliation=sample_reconciliation,
+            ),
             executor=executor,
             r_executor=r_executor,
             comparator=ResultComparator(),
             reporter=ValidationReporter(),
+            completeness_repair=completeness_repair,
         )
         pipeline.usage_tracker = usage_tracker
         return pipeline
