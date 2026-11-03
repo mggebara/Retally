@@ -1,0 +1,298 @@
+tibble [793 × 24] (S3: tbl_df/tbl/data.frame)
+ $ year            : num [1:793] 1922 1922 1931 1928 1929 ...
+  ..- attr(*, "label")= chr "Year"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ country         : chr [1:793] "United States" "United States" "United States" "United States" ...
+  ..- attr(*, "label")= chr "Country"
+  ..- attr(*, "format.stata")= chr "%14s"
+ $ type            : chr [1:793] "fighter" "fighter" "trainer" "trainer" ...
+  ..- attr(*, "label")= chr "Type"
+  ..- attr(*, "format.stata")= chr "%9s"
+ $ enginehp        : num [1:793] NA NA NA NA 600 600 460 460 460 460 ...
+  ..- attr(*, "label")= chr "Engine Horsepower"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ maxspeed        : num [1:793] NA NA 111 NA 133 133 159 NA 159 NA ...
+  ..- attr(*, "label")= chr "Maximum Speed"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ grossweight     : num [1:793] NA NA 2423 NA 16500 ...
+  ..- attr(*, "label")= chr "Gross Weight"
+  ..- attr(*, "format.stata")= chr "%12.0g"
+ $ wing_area       : num [1:793] NA NA NA NA NA NA 260 NA NA NA ...
+  ..- attr(*, "label")= chr "Wing Area"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ cruise          : num [1:793] NA NA NA NA NA NA 142 NA NA NA ...
+  ..- attr(*, "label")= chr "Cruise Speed"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ climb_ft_per_min: num [1:793] NA NA NA NA NA NA 1630 NA NA NA ...
+  ..- attr(*, "label")= chr "Climb feet per minute"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ climb_to_10000  : num [1:793] NA NA NA NA NA NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "Climb to 10,000 feet"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ ceiling         : num [1:793] NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "Ceiling"
+  ..- attr(*, "format.stata")= chr "%12.0g"
+ $ range           : num [1:793] NA NA NA NA NA NA 390 NA NA NA ...
+  ..- attr(*, "label")= chr "Range"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ endurance       : num [1:793] NA NA NA NA NA NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "Endurance"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ count           : num [1:793] 2 2 4 577 12 12 10 2 30 2 ...
+  ..- attr(*, "label")= chr "Count"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ no_engines      : num [1:793] 1 1 1 1 2 2 1 1 1 1 ...
+  ..- attr(*, "label")= chr "Number of Engines"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ engine_maker    : chr [1:793] "Aeromarine" "Aeromarine" "Continental" "Continental" ...
+  ..- attr(*, "format.stata")= chr "%16s"
+ $ wingload        : num [1:793] NA NA NA NA NA ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ powerload       : num [1:793] NA NA NA NA 27.5 ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ ln_wingload     : num [1:793] NA NA NA NA NA ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ ln_maxspeed     : num [1:793] NA NA 4.71 NA 4.89 ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ ln_ceiling      : num [1:793] NA NA NA NA NA ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ ln_cruise       : num [1:793] NA NA NA NA NA ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ ln_powerload    : num [1:793] NA NA NA NA 3.31 ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ twoplusengines  : num [1:793] 0 0 0 0 1 1 0 0 0 0 ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+
+         Japan United Kingdom  United States           <NA> 
+           134            103            556              0 
+         
+          Japan United Kingdom United States <NA>
+  bomber     16             35           105    0
+  fighter    48             34           156    0
+  recon      49             19           192    0
+  trainer    21             15           103    0
+  <NA>        0              0             0    0
+      
+       Japan United Kingdom United States
+  1918     0             16            33
+  1919     1              1            17
+  1920     2              3            10
+  1921     3              1             3
+  1922     8              5            31
+  1923     3              6            27
+  1924     1              2            29
+  1925    11              8            26
+  1926     7              6            35
+  1927    10              7            37
+  1928     7              3            56
+  1929    10              3            49
+  1930     7              7            32
+  1931    10              5            27
+  1932    11              7            38
+  1933    21              6            47
+  1934    17              6            30
+  1935     5             11            29
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   1.00    3.00   25.00   78.51   66.00 7066.00 
+       country
+        Japan United Kingdom United States
+  FALSE   125             75           197
+  TRUE      9             28           359
+       country
+        Japan United Kingdom United States
+  FALSE   129             89           345
+  TRUE      5             14           211
+   year       country    type enginehp maxspeed grossweight wing_area cruise
+1  1922 United States fighter       NA       NA          NA        NA     NA
+2  1922 United States fighter       NA       NA          NA        NA     NA
+3  1931 United States trainer       NA      111        2423        NA     NA
+4  1928 United States trainer       NA       NA          NA        NA     NA
+5  1929 United States  bomber      600      133       16500        NA     NA
+6  1928 United States  bomber      600      133       16500        NA     NA
+7  1925 United States fighter      460      159        2835       260    142
+8  1925 United States fighter      460       NA          NA        NA     NA
+9  1925 United States fighter      460      159        3030        NA     NA
+10 1925 United States fighter      460       NA          NA        NA     NA
+   climb_ft_per_min climb_to_10000 ceiling range endurance count no_engines
+1                NA             NA      NA    NA        NA     2          1
+2                NA             NA      NA    NA        NA     2          1
+3                NA             NA      NA    NA        NA     4          1
+4                NA             NA      NA    NA        NA   577          1
+5                NA             NA      NA    NA        NA    12          2
+6                NA             NA      NA    NA        NA    12          2
+7              1630             NA   18925   390        NA    10          1
+8                NA             NA      NA    NA        NA     2          1
+9                NA             NA      NA    NA        NA    30          1
+10               NA             NA      NA    NA        NA     2          1
+   engine_maker wingload powerload ln_wingload ln_maxspeed ln_ceiling ln_cruise
+1    Aeromarine       NA        NA          NA          NA         NA        NA
+2    Aeromarine       NA        NA          NA          NA         NA        NA
+3   Continental       NA        NA          NA    4.709530         NA        NA
+4   Continental       NA        NA          NA          NA         NA        NA
+5       Curtiss       NA 27.500000          NA    4.890349         NA        NA
+6       Curtiss       NA 27.500000          NA    4.890349         NA        NA
+7       Curtiss 10.90385  6.163043    2.389116    5.068904   9.848239  4.955827
+8       Curtiss       NA        NA          NA          NA         NA        NA
+9       Curtiss       NA  6.586957          NA    5.068904         NA        NA
+10      Curtiss       NA        NA          NA          NA         NA        NA
+   ln_powerload twoplusengines
+1            NA              0
+2            NA              0
+3            NA              0
+4            NA              0
+5      3.314186              1
+6      3.314186              1
+7      1.818571              0
+8            NA              0
+9      1.885091              0
+10           NA              0
+$label
+[1] "Type"
+
+$format.stata
+[1] "%9s"
+
+$label
+[1] "Country"
+
+$format.stata
+[1] "%14s"
+
+tibble [278 × 8] (S3: tbl_df/tbl/data.frame)
+ $ country           : chr [1:278] "Germany" "Germany" "Germany" "Germany" ...
+  ..- attr(*, "label")= chr "Country"
+  ..- attr(*, "format.stata")= chr "%14s"
+ $ year              : num [1:278] 1920 1920 1920 1920 1920 1920 1920 1920 1920 1920 ...
+  ..- attr(*, "label")= chr "(min) firstyear"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ count             : num [1:278] NA NA NA NA NA NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "(sum) count"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ liquid_cooled     : num [1:278] 0 0 1 0 0 0 0 0 0 0 ...
+  ..- attr(*, "label")= chr "(max) liquid_cooled"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ ln_hp_per_disp    : num [1:278] 1.85 2.56 2.41 2.06 2.15 ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ ln_hp_per_lbs     : num [1:278] -0.998 -1.229 -1.355 -1.196 -1.384 ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ ln_hp_per_disp_rpm: num [1:278] -5.2 -4.94 -4.68 -4.99 -5.12 ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ ln_hp_per_frontal : num [1:278] NA NA NA NA NA NA NA NA NA NA ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+                
+                 1918 1919 1920 1922 1923 1924 1925 1926 1927 1928 1929 1930
+  Germany           0    0   16    0    2    0   10    3    1    6   11    4
+  Italy             0    0    8    0    0    0    3    4    2    9   14    5
+  United Kingdom    3    2    0    2    5    0    4    1    3    3    1    3
+  United States     5    0    0    5    0    3   15   13    8    0    1    0
+                
+                 1931 1932 1933 1934 1935
+  Germany           4    9    7    3    3
+  Italy             2   11    3    4   11
+  United Kingdom    5    0    1    2    3
+  United States    13   15    0    6    1
+       country
+        Germany Italy United Kingdom United States
+  FALSE      78    65             38            85
+  TRUE        1    11              0             0
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+    1.0     9.5    60.0   156.6   171.5  1995.0     155 
+      
+       Germany Italy United Kingdom United States <NA>
+  1          0     0              2            13    0
+  2          0     0              0             5    0
+  3          0     0              0             1    0
+  4          0     0              0             3    0
+  5          0     0              1             2    0
+  6          0     0              0             1    0
+  8          0     0              0             1    0
+  9          0     0              0             2    0
+  10         0     0              0             1    0
+  13         0     0              0             1    0
+  14         0     0              1             0    0
+  15         0     0              1             0    0
+  17         0     0              0             1    0
+  18         0     0              1             1    0
+  19         0     0              1             0    0
+  22         0     0              0             1    0
+  24         0     0              1             1    0
+  25         0     0              0             1    0
+  28         0     0              1             0    0
+  33         0     0              0             1    0
+  35         0     0              0             1    0
+  36         0     0              0             1    0
+  37         0     0              0             2    0
+  38         0     0              1             1    0
+  44         0     0              0             1    0
+  45         0     0              1             0    0
+  47         0     0              1             0    0
+  50         0     0              1             1    0
+  52         0     0              0             1    0
+  54         0     0              0             2    0
+  56         0     0              1             0    0
+  57         0     0              0             1    0
+  60         0     0              1             0    0
+  62         0     0              2             1    0
+  63         0     0              0             1    0
+  64         0     0              0             1    0
+  70         0     0              1             0    0
+  76         0     0              0             1    0
+  77         0     0              0             1    0
+  78         0     0              0             1    0
+  79         0     0              1             0    0
+  80         0     0              0             1    0
+  84         0     0              0             1    0
+  87         0     0              0             1    0
+  91         0     0              1             0    0
+  92         0     0              0             1    0
+  93         0     0              0             1    0
+  99         0     0              0             1    0
+  100        0     0              1             0    0
+  108        0     0              0             1    0
+  112        0     0              2             0    0
+  116        0     0              0             1    0
+  117        0     0              1             0    0
+  121        0     0              0             1    0
+  124        0     0              1             0    0
+  129        0     0              1             0    0
+  155        0     0              1             0    0
+  159        0     0              0             1    0
+  164        0     0              0             1    0
+  167        0     0              0             1    0
+  176        0     0              1             0    0
+  189        0     0              1             0    0
+  196        0     0              0             1    0
+  206        0     0              0             2    0
+  224        0     0              0             1    0
+  226        0     0              0             1    0
+  230        0     0              1             0    0
+  246        0     0              1             0    0
+  248        0     0              0             1    0
+  255        0     0              0             1    0
+  296        0     0              0             1    0
+  301        0     0              1             0    0
+  305        0     0              0             1    0
+  308        0     0              0             1    0
+  347        0     0              0             1    0
+  361        0     0              0             1    0
+  368        0     0              0             1    0
+  387        0     0              0             1    0
+  412        0     0              1             0    0
+  430        0     0              1             0    0
+  490        0     0              1             0    0
+  501        0     0              0             1    0
+  532        0     0              0             1    0
+  554        0     0              1             0    0
+  605        0     0              0             1    0
+  651        0     0              0             1    0
+  1134       0     0              1             0    0
+  1218       0     0              0             1    0
+  1500       0     0              1             0    0
+  1995       0     0              0             1    0
+  <NA>      79    76              0             0    0
+$label
+[1] "Country"
+
+$format.stata
+[1] "%14s"
+

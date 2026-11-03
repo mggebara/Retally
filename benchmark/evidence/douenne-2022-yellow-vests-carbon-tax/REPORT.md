@@ -39,7 +39,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [12/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[12/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
+| `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [12/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[12/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c)<br>[13/13](blind/claude-code/2026-11-03-a/CELL.md) (2026-11-03-a) |
 | `pipeline-desktop-opus` | [5/13](seeded/pipeline-desktop-opus/20261102T144245Z/CELL.md) (20261102T144245Z) | [13/13](independent/pipeline-desktop-opus/20261102T143152Z/CELL.md) (20261102T143152Z) | [12/13](blind/pipeline-desktop-opus/20261102T142733Z/CELL.md) (20261102T142733Z) |
 | `pipeline-desktop-opus-run2` | [6/13](seeded/pipeline-desktop-opus-run2/20261102T191457Z/CELL.md) (20261102T191457Z) | [13/13](independent/pipeline-desktop-opus-run2/20261102T153300Z/CELL.md) (20261102T153300Z) | [13/13](blind/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) (20261102T152052Z) |
 
@@ -114,6 +114,13 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Yellow Vests supporter = gilets_jaunes > 0 (is part of or supports the movement). Predicted winner = simule_gagnant (the feedback actually shown); running variable = simule_gain (EUR/yr per c.u.). Initial win/lose belief G = initial category not 'Perdant'; column 3 also controls for the 3-level initial category.
   - Table 6 [p10;p60] subsample: respondent percentile in [10,60], or a second adult (nb_adultes > 1) whose percentile is in [10,60]. Unweighted OLS/2SLS (fixest), heteroskedasticity-robust SEs (point estimates do not depend on this).
   - memisc is not installed, so the labelled/memisc item columns were turned into plain vectors by stripping their attributes. No author functions stored in the RData were called.
+- [blind/claude-code/2026-11-03-a](blind/claude-code/2026-11-03-a/CELL.md) (13/13)
+  - The paper's full control lists are in the online Appendix, which is not available. Controls were constructed as: sociodemographics = sex, age bracket, socio-professional category, education (4 levels), town size, region (factors), household size, number of members aged 14+; incomes = continuous piecewise-linear in income percentiles of respondent and second adult with kinks at p20 and p70 (paper eq. 4); estimated gains = simule_gain and its square; other motives = belief the tax is effective (not 'No') and belief it is progressive (prog_not_no). For Table 8 the other motives are progressivity belief and initial belief of not losing (effectiveness is the endogenous variable).
+  - All regressions use the survey weights (variable weight), since the paper states observations are weighted; heteroskedasticity-robust SEs.
+  - Predicted winner = simule_gagnant (the feedback actually displayed); running variable = simule_gain (estimated net gain per consumption unit); feedback sample = variante_taxe_info == 'f' (1,968). simule_gagnant disagrees with sign(simule_gain) for 56 respondents; used as is.
+  - Yellow Vests supporter = gilets_jaunes_soutien or gilets_jaunes_dedans. Table 4 col 3 controls for the 3-category initial win/lose belief (factor) and interacts the predicted-winner indicator with the binary initial not-lose belief.
+  - Table 6 col 1 subsample: respondent's or second adult's income percentile in [10, 60] (1,969 obs); instruments traite_cible, traite_cible_conjoint and their product; fixed effects for the assigned target (cible); controls single, initial acceptance, incomes, estimated gains, sociodemo, other motives.
+  - Table 8 col 1: info on effectiveness identified as apres_modifs (its label says the second half of the sample received the information on effectiveness against pollution); info on climate change = info_CC.
 
 ### Pipeline and agent disagree
 
@@ -130,8 +137,8 @@ Claims where, in the same mode, one reproducer family passed in every run and th
 Pass rates at least 50 points apart (not unanimous):
 
 - seeded: `predicted_winner_heterogeneity_table4_col3` — pipeline 1/2, agent 2/2
-- blind: `believes_effective_on_approval_iv_table8_col1` — pipeline 1/2, agent 3/3
-- blind: `initial_acceptance_believes_not_lose_table4_col1` — pipeline 2/2, agent 1/3
+- blind: `believes_effective_on_approval_iv_table8_col1` — pipeline 1/2, agent 4/4
+- blind: `initial_acceptance_believes_not_lose_table4_col1` — pipeline 2/2, agent 2/4
 
 ## Cells
 
@@ -182,6 +189,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · claude-code · 2026-11-02-c
 
 [`blind/claude-code/2026-11-02-c/CELL.md`](blind/claude-code/2026-11-02-c/CELL.md) — final 13/13, re-scored 13/13; first scored 12/13; executions 6; 2026-11-02T20:26:30Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
+
+### blind · claude-code · 2026-11-03-a
+
+[`blind/claude-code/2026-11-03-a/CELL.md`](blind/claude-code/2026-11-03-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 7; 2026-11-03T00:16:00Z; from `claude-code-run4-redaction-3papers-blind-2026-11-03.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus · 20261102T142733Z
 

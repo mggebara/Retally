@@ -37,7 +37,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [12/12](seeded/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [12/12](independent/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[12/12](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [12/12](blind/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[12/12](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
+| `claude-code` | [12/12](seeded/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [12/12](independent/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[12/12](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [12/12](blind/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[12/12](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c)<br>[12/12](blind/claude-code/2026-11-03-a/CELL.md) (2026-11-03-a) |
 | `pipeline-claude-opus-4-7` | [12/12](seeded/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [10/12](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [12/12](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) |
 | `pipeline-desktop-opus` | [12/12](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) | [12/12](independent/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) | [12/12](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) |
 | `pipeline-desktop-opus-run2` | [12/12](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [12/12](independent/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) | [12/12](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
@@ -71,6 +71,9 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Engine sample: engine_data.dta taken as the paper's fighter/bomber engine file (it carries airframe-matched counts); US rows with non-missing ln_hp_per_lbs used without further filtering (85 engines). The paper text does not spell out how the file was built.
   - Spline: continuous two-piece linear spline in Stata mkspline form, before = min(year,1926), after = max(year-1926,0), so 1926 belongs to the before segment and the coefficients are segment slopes, not slope changes.
   - Equation (5) parameterized as a constant, a US indicator, a baseline spline on all observations (the UK/comparison slope) and spline x US (US slope minus UK slope).
+- [blind/claude-code/2026-11-03-a](blind/claude-code/2026-11-03-a/CELL.md) (12/12)
+  - Pooled US-UK regressions (Table 1 cols 3-4) use a baseline year spline common to all observations plus the spline interacted with a US indicator (and a US indicator), so the US interaction coefficients are US-minus-UK slopes. The paper describes the baseline as a spline 'for the comparison country'; read literally as a UK-only spline, the US terms would just reproduce the US-only slopes, which contradicts the paper's description of them as relative to the UK.
+  - Engine sample is all United States rows of engine_data.dta with non-missing ln_hp_per_lbs (85). The file has no aircraft-type variable, so I assumed it already holds only engines used in fighters and bombers (every US row has a non-missing count from the airframe match).
 - [blind/pipeline-desktop-opus/20261023T062931Z](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) (12/12)
   - none; filtered to fighter/bomber types
 
@@ -137,6 +140,10 @@ _None._
 ### blind · claude-code · 2026-11-02-c
 
 [`blind/claude-code/2026-11-02-c/CELL.md`](blind/claude-code/2026-11-02-c/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 2; 2026-11-02T20:16:30Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
+
+### blind · claude-code · 2026-11-03-a
+
+[`blind/claude-code/2026-11-03-a/CELL.md`](blind/claude-code/2026-11-03-a/CELL.md) — final 12/12, re-scored 12/12; first scored 8/12; executions 3; 2026-11-03T00:13:00Z; from `claude-code-run4-redaction-3papers-blind-2026-11-03.json`; evidence complete.
 
 ### blind · pipeline-claude-opus-4-7 · 20261021T142909Z
 
