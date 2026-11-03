@@ -1,0 +1,59 @@
+INFO: estimated gain column = simule_gain 
+INFO: effectiveness column = taxe_efficace ; progressivity column = progressivite 
+INFO: controls = c_sexe, c_age, c_diplome, c_Diplome, c_csp, c_statut_emploi, c_taille_agglo, c_region, c_nb_adultes, c_nb_14_et_plus, c_taille_menage, c_single, c_revenu, c_revenu_conjoint, c_rev_tot, c_fume, c_diesel, c_essence, c_gauche_droite, c_Gauche_droite, c_ecologiste, c_conservateur, c_revenu2, c_revenu_conjoint2, m_eff, m_prog 
+SAMPLE:table4_col2:loaded=3002
+SAMPLE:table4_col2:received_feedback=1968
+SAMPLE:table4_col1:loaded=3002
+SAMPLE:table4_col1:received_feedback=1968
+SAMPLE:table4_col1:abs_gain_lt_50=757
+ERROR m1: in feols(fml("not_lose_post", rhs1), data = fb50, we...: 
+The dependent variable is a constant. The estimation cannot be done. If you
+really want to carry on, please remove the intercept first. 
+ERROR m2: in feols(fml("not_lose_post", rhs1), data = fb, weig...: 
+The dependent variable is a constant. The estimation cannot be done. If you
+really want to carry on, please remove the intercept first. 
+SAMPLE:table4_col3:loaded=3002
+SAMPLE:table4_col3:received_feedback=1968
+SAMPLE:table4_col3:abs_gain_lt_50=757
+ERROR m3: in feols(fml("not_lose_post", rhs3), data = fb50, we...: 
+The dependent variable is a constant. The estimation cannot be done. If you
+really want to carry on, please remove the intercept first. 
+SAMPLE:table4_col4:loaded=3002
+SAMPLE:table4_col4:received_feedback=1968
+SAMPLE:table4_col4:abs_gain_lt_50=757
+ERROR m4: in feols(fml("win_post", rhs1), data = fb50, weights...: 
+The dependent variable is a constant. The estimation cannot be done. If you
+really want to carry on, please remove the intercept first. 
+SAMPLE:table6_col1:loaded=3002
+SAMPLE:table6_col1:answered_targeted_tax=3002
+SAMPLE:table6_col1:income_percentile_10_60=1969
+OLS estimation, Dep. Var.: not_lose_cible
+Observations: 1,969
+Weights: w_
+Standard-errors: Heteroskedasticity-robust 
+                Estimate   Std. Error       t value  Pr(>|t|)    
+(Intercept)  1.00000e+00 3.243423e-14  3.083163e+13 < 2.2e-16 ***
+elig        -9.44915e-15 7.054280e-15 -1.339493e+00   0.18057    
+elig_c      -5.60950e-16 9.240530e-15 -6.070500e-02   0.95160    
+elig_x       1.33891e-15 8.910870e-15  1.502560e-01   0.88058    
+cible_fe2   -5.50831e-15 1.408541e-14 -3.910650e-01   0.69579    
+cible_fe3   -4.88865e-15 8.980270e-15 -5.443760e-01   0.58624    
+cible_fe4   -1.53093e-15 6.832540e-15 -2.240650e-01   0.82273    
+single_      1.94492e-15 1.000946e-14  1.943090e-01   0.84595    
+init_accept -7.31200e-17 4.607760e-15 -1.586800e-02   0.98734    
+pr          -8.00470e-16 9.415500e-16 -8.501680e-01   0.39534    
+pr2         -5.75000e-18 8.280000e-18 -6.944950e-01   0.48745    
+prc          2.05030e-16 3.782800e-16  5.420020e-01   0.58788    
+prc2        -1.35000e-18 3.710000e-18 -3.648310e-01   0.71528    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 8.903e-14   Adj. R2: NaNe+Inf
+ERROR table6: in feols(f6, data = t6, weights = ~w_, vcov = "heter...: 
+[IV error] The endogenous variable `not_lose_cible` is fully explained by
+the exogenous variables and the instruments. Please revise the model.
+For information, above are reported the results of the 1st stage estimation. 
+INFO: Table 8 instruments = apres_modifs info_CC 
+SAMPLE:table8_col1:loaded=3002
+SAMPLE:table8_col1:all_respondents=3002
+SAMPLE:table8_col1:estimation=3002
+ERROR table8: object 'results' not found 

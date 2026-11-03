@@ -1,0 +1,251 @@
+suppressPackageStartupMessages({
+  library(haven)
+  library(dplyr)
+  library(fixest)
+})
+set.seed(42)
+
+base_dir <- "<repo>/.cache/datasets/bokobza_2022_morning_after_coup_purges.script-free"
+
+pick_col <- function(nms, exact = character(0), pattern = NULL, exclude = NULL) {
+  for (e in exact) if (e %in% nms) return(e)
+  if (!is.null(pattern)) {
+    cand <- nms[grepl(pattern, nms, ignore.case = TRUE)]
+    if (!is.null(exclude)) cand <- cand[!grepl(exclude, cand, ignore.case = TRUE)]
+    if (length(cand) > 0) return(cand[1])
+  }
+  NA_character_
+}
+
+safe_coef <- function(m, nm) {
+  if (is.null(m)) return(NA_real_)
+  cf <- coef(m)
+  if (nm %in% names(cf)) return(unname(cf[nm]))
+  NA_real_
+}
+
+# Robust numeric conversion: handles haven_labelled, factors with text labels
+# (e.g. "No"/"Yes"), logicals, characters and plain numerics.
+num_of <- function(x) {
+  if (is.null(x)) return(NULL)
+  if (inherits(x, "haven_labelled")) return(as.numeric(haven::zap_labels(x)))
+  if (is.logical(x)) return(as.numeric(x))
+  if (is.numeric(x)) return(as.numeric(x))
+  s <- as.character(x)
+  y <- suppressWarnings(as.numeric(s))
+  nonmiss <- !is.na(s) & s != ""
+  if (any(nonmiss) && all(is.na(y[nonmiss]))) {
+    sl <- tolower(trimws(s))
+    y <- ifelse(grepl("^(no|none|false|not)\\b|^no ", sl) | sl %in% c("no", "none", "false", "0"), 0,
+         ifelse(grepl("^(yes|true)\\b|attempt|coup|purged|failed", sl), 1, NA_real_))
+    if (all(is.na(y[nonmiss])) && is.factor(x)) y <- as.numeric(x) - 1
+  }
+  y
+}
+
+# ------------------------------------------------------------------
+# Country-level data
+# ------------------------------------------------------------------
+cl <- as.data.frame(haven::zap_labels(haven::read_dta(file.path(base_dir, "morning_after_dataset_countrylevel.dta"))))
+nms <- names(cl)
+cat("Country-level columns:", paste(nms, collapse = ", "), "\n")
+
+dv_col <- pick_col(nms, c("replacement_rateadj_minister"))
+coup_col <- pick_col(nms, c("coupattempt_whogov", "coupattempt_presentyear", "coupattempt"),
+                     pattern = "^coupattempt", exclude = "month|_br|type|lag")
+cat("Using coup column:", coup_col, "\n")
+
+cl <- cl %>% arrange(COUNTRY_ID, YEAR_DATA)
+lag1 <- function(df, v) {
+  df %>% group_by(COUNTRY_ID) %>%
+    mutate(.tmp = ifelse(dplyr::lag(YEAR_DATA) == YEAR_DATA - 1, dplyr::lag(.data[[v]]), NA)) %>%
+    ungroup() %>% pull(.tmp)
+}
+
+# Lagged democracy (BMR)
+ldem_col <- pick_col(nms, c("ldemocracy1", "democracy1_lag", "lag_democracy1"))
+if (is.na(ldem_col)) {
+  cl$ldem_bmr <- lag1(cl, "democracy1")
+} else {
+  cl$ldem_bmr <- cl[[ldem_col]]
+}
+
+# Lagged GDP per capita and population
+gdp_lag_col <- pick_col(nms, c("gdp_cap_pwt_ln_lag", "lgdp_cap_pwt_ln", "l_gdp_cap_pwt_ln"),
+                        pattern = "gdp.*ln.*lag|^l.*gdp.*ln", exclude = "growth")
+pop_lag_col <- pick_col(nms, c("pop_pwt_ln_lag", "lpop_pwt_ln", "l_pop_pwt_ln"),
+                        pattern = "pop.*ln.*lag|^l.*pop.*ln")
+if (!is.na(gdp_lag_col)) {
+  cl$lgdp <- cl[[gdp_lag_col]]
+} else {
+  gcol <- pick_col(nms, c("gdp_cap_pwt_ln"), pattern = "gdp.*ln", exclude = "growth")
+  cl$lgdp <- lag1(cl, gcol)
+}
+if (!is.na(pop_lag_col)) {
+  cl$lpop <- cl[[pop_lag_col]]
+} else {
+  pcol <- pick_col(nms, c("pop_pwt_ln"), pattern = "pop.*ln")
+  cl$lpop <- lag1(cl, pcol)
+}
+cl$lmilitary <- lag1(cl, "military_c")
+cl$lmonarchy <- lag1(cl, "monarchy_c")
+cl$lparty <- lag1(cl, "party_c")
+
+cl$dv <- cl[[dv_col]]
+cl$fca <- as.numeric(cl[[coup_col]] > 0)
+
+cat(sprintf("SAMPLE:country:loaded=%d\n", nrow(cl)))
+cs <- cl %>% filter(!is.na(ldem_bmr) & ldem_bmr == 0)
+cat(sprintf("SAMPLE:country:autocracy_lagged_bmr=%d\n", nrow(cs)))
+cs <- cs %>% filter(YEAR_DATA >= 1967 & YEAR_DATA <= 2016)
+cat(sprintf("SAMPLE:country:years_1967_2016=%d\n", nrow(cs)))
+
+m_base_c <- feols(dv ~ fca + lgdp + lpop | COUNTRY_ID + YEAR_DATA, data = cs, cluster = ~COUNTRY_ID)
+m_main_c <- feols(dv ~ fca + lgdp + lpop + lmilitary + lmonarchy + lparty | COUNTRY_ID + YEAR_DATA,
+                  data = cs, cluster = ~COUNTRY_ID)
+m_base_l <- feols(dv ~ fca + lgdp + lpop | leader_cab_id + YEAR_DATA, data = cs, cluster = ~COUNTRY_ID)
+m_main_l <- feols(dv ~ fca + lgdp + lpop + lmilitary + lmonarchy + lparty | leader_cab_id + YEAR_DATA,
+                  data = cs, cluster = ~COUNTRY_ID)
+cat(sprintf("SAMPLE:country_base_cfe:estimation=%d\n", nobs(m_base_c)))
+cat(sprintf("SAMPLE:country_main_cfe:estimation=%d\n", nobs(m_main_c)))
+cat(sprintf("SAMPLE:country_base_lfe:estimation=%d\n", nobs(m_base_l)))
+cat(sprintf("SAMPLE:country_main_lfe:estimation=%d\n", nobs(m_main_l)))
+
+# ------------------------------------------------------------------
+# Individual-level data
+# ------------------------------------------------------------------
+il <- readRDS(file.path(base_dir, "morning_after_dataset_individuallevel.rds"))
+il <- as.data.frame(il)
+il_raw <- il  # keep raw (pre-factor) columns for numeric conversion
+for (v in names(il)) if (inherits(il[[v]], "haven_labelled")) il[[v]] <- haven::as_factor(il[[v]])
+
+tochr <- function(x) as.character(x)
+for (v in c("experience_group", "party_group", "minister_type", "importance_factor",
+            "coupattempt_presentyear", "purged_y1")) {
+  if (v %in% names(il)) {
+    cat("Levels of", v, ":\n"); print(head(table(tochr(il[[v]]), useNA = "ifany"), 20))
+  }
+}
+
+il$fca <- as.numeric(num_of(il_raw$coupattempt_presentyear) > 0)
+il$purged <- num_of(il_raw$purged_y1)
+il$exp_num <- num_of(il_raw$experience)
+il$exp2 <- il$exp_num^2
+il$exp3 <- il$exp_num^3
+il$year <- num_of(il_raw$year)
+il$lgdp <- num_of(il_raw$gdp_cap_pwt_ln_lag)
+il$lpop <- num_of(il_raw$pop_pwt_ln_lag)
+il$dem_lag_num <- num_of(il_raw$democracy_lag)
+for (v in c("fca", "purged", "exp_num", "year", "lgdp", "lpop", "dem_lag_num")) {
+  cat(sprintf("Non-missing %s: %d\n", v, sum(!is.na(il[[v]]))))
+}
+
+imp <- tolower(tochr(il$importance_factor))
+imp[is.na(imp)] <- ""
+is_leader_imp <- grepl("leader", imp) & !grepl("not|non|other", imp)
+is_leader_name <- !is.na(il$name) & !is.na(il$leader) & tochr(il$name) == tochr(il$leader)
+il$is_leader <- is_leader_imp | is_leader_name
+
+cat(sprintf("SAMPLE:individual:loaded=%d\n", nrow(il)))
+is0 <- il %>% filter(!is.na(dem_lag_num) & dem_lag_num == 0)
+cat(sprintf("SAMPLE:individual:autocracy_lagged_bmr=%d\n", nrow(is0)))
+is0 <- is0 %>% filter(year >= 1967 & year <= 2016)
+cat(sprintf("SAMPLE:individual:years_1967_2016=%d\n", nrow(is0)))
+is0 <- is0 %>% filter(!is_leader)
+cat(sprintf("SAMPLE:individual:exclude_leader=%d\n", nrow(is0)))
+
+# Helper: build dummies for a moderator with given reference level and interactions
+build_mod <- function(df, var, ref_level, prefix) {
+  x <- tochr(df[[var]])
+  levs <- sort(unique(x[!is.na(x)]))
+  others <- setdiff(levs, ref_level)
+  map <- list()
+  for (i in seq_along(others)) {
+    dn <- paste0(prefix, "_", i)
+    df[[dn]] <- as.numeric(x == others[i])
+    df[[paste0("fcaX", dn)]] <- df$fca * df[[dn]]
+    map[[others[i]]] <- dn
+  }
+  df <- df[!is.na(x), , drop = FALSE]
+  list(df = df, map = map)
+}
+find_level <- function(levs, pattern, exclude = NULL) {
+  l <- levs[grepl(pattern, levs, ignore.case = TRUE)]
+  if (!is.null(exclude)) l <- l[!grepl(exclude, l, ignore.case = TRUE)]
+  if (length(l) == 0) return(NA_character_)
+  l[1]
+}
+run_mod <- function(df, map, poly = TRUE) {
+  dn <- unlist(map)
+  rhs <- c("fca", dn, paste0("fcaX", dn), "lgdp", "lpop")
+  if (poly) rhs <- c(rhs, "exp_num", "exp2", "exp3")
+  # drop any regressor that is entirely missing in this sample
+  allna <- rhs[sapply(rhs, function(v) all(is.na(df[[v]])))]
+  if (length(allna) > 0) {
+    cat("Dropping all-NA regressors:", paste(allna, collapse = ", "), "\n")
+    rhs <- setdiff(rhs, allna)
+  }
+  f <- as.formula(paste("purged ~", paste(rhs, collapse = " + "), "| country_isocode + year"))
+  tryCatch(feols(f, data = df, cluster = ~country_isocode),
+           error = function(e) { cat("Model error:", conditionMessage(e), "\n"); NULL })
+}
+safe_nobs <- function(m) if (is.null(m)) NA_integer_ else nobs(m)
+
+# --- H2a Experience (exclude junior and low-ranking posts; no polynomial)
+ie <- is0[!grepl("junior|low", tochr(is0$importance_factor), ignore.case = TRUE), ]
+cat(sprintf("SAMPLE:h2a_experience:loaded=%d\n", nrow(il)))
+cat(sprintf("SAMPLE:h2a_experience:exclude_junior_low=%d\n", nrow(ie)))
+elevs <- sort(unique(tochr(ie$experience_group)))
+eref <- find_level(elevs, "<\\s*2|less|under|0-1|^0|^1")
+if (is.na(eref)) eref <- elevs[1]
+cat("Experience reference:", eref, "\n")
+b <- build_mod(ie, "experience_group", eref, "exp")
+m_exp <- run_mod(b$df, b$map, poly = FALSE)
+cat(sprintf("SAMPLE:h2a_experience:estimation=%d\n", safe_nobs(m_exp)))
+over6 <- find_level(names(b$map), ">\\s*6|over|more|6\\+|7")
+cat("Over 6 level:", over6, "\n")
+over6_nm <- if (!is.na(over6)) paste0("fcaX", b$map[[over6]]) else NA
+
+# --- H2b Affiliation
+plevs <- sort(unique(tochr(is0$party_group)))
+pref <- find_level(plevs, "other|another")
+if (is.na(pref)) pref <- plevs[1]
+cat("Party reference:", pref, "\n")
+b2 <- build_mod(is0, "party_group", pref, "pty")
+m_aff <- run_mod(b2$df, b2$map, poly = TRUE)
+cat(sprintf("SAMPLE:h2b_affiliation:estimation=%d\n", safe_nobs(m_aff)))
+lp <- find_level(names(b2$map), "leader|same|own", exclude = "^no|none|no party")
+lp_nm <- if (!is.na(lp)) paste0("fcaX", b2$map[[lp]]) else NA
+
+# --- H3a Responsibility
+mlevs <- sort(unique(tochr(is0$minister_type)))
+mref <- find_level(mlevs, "defen")
+if (is.na(mref)) mref <- mlevs[1]
+cat("Minister type reference:", mref, "\n")
+b3 <- build_mod(is0, "minister_type", mref, "mt")
+m_resp <- run_mod(b3$df, b3$map, poly = TRUE)
+cat(sprintf("SAMPLE:h3a_responsibility:estimation=%d\n", safe_nobs(m_resp)))
+nr <- find_level(names(b3$map), "natur|resourc|oil|mine|energ")
+nr_nm <- if (!is.na(nr)) paste0("fcaX", b3$map[[nr]]) else NA
+
+# --- H3b Importance
+ilevs <- sort(unique(tochr(is0$importance_factor)))
+iref <- find_level(ilevs, "prime|president|pm", exclude = "vice|deputy|top|vp")
+if (is.na(iref)) iref <- ilevs[1]
+cat("Importance reference:", iref, "\n")
+b4 <- build_mod(is0, "importance_factor", iref, "imp")
+m_imp <- run_mod(b4$df, b4$map, poly = TRUE)
+cat(sprintf("SAMPLE:h3b_importance:estimation=%d\n", safe_nobs(m_imp)))
+
+fmt <- function(x) ifelse(is.na(x), "NA", sprintf("%.6f", x))
+cat(sprintf("RESULT:failed_coup_base_country_fe=%s\n", fmt(safe_coef(m_base_c, "fca"))))
+cat(sprintf("RESULT:failed_coup_main_country_fe=%s\n", fmt(safe_coef(m_main_c, "fca"))))
+cat(sprintf("RESULT:failed_coup_base_leader_fe=%s\n", fmt(safe_coef(m_base_l, "fca"))))
+cat(sprintf("RESULT:failed_coup_main_leader_fe=%s\n", fmt(safe_coef(m_main_l, "fca"))))
+cat(sprintf("RESULT:failed_coup_experience_model=%s\n", fmt(safe_coef(m_exp, "fca"))))
+cat(sprintf("RESULT:failed_coup_x_over_6_years_experience=%s\n", fmt(if (is.na(over6_nm)) NA else safe_coef(m_exp, over6_nm))))
+cat(sprintf("RESULT:failed_coup_affiliation_model=%s\n", fmt(safe_coef(m_aff, "fca"))))
+cat(sprintf("RESULT:failed_coup_x_leaders_party=%s\n", fmt(if (is.na(lp_nm)) NA else safe_coef(m_aff, lp_nm))))
+cat(sprintf("RESULT:failed_coup_responsibility_model=%s\n", fmt(safe_coef(m_resp, "fca"))))
+cat(sprintf("RESULT:failed_coup_x_natural_resources=%s\n", fmt(if (is.na(nr_nm)) NA else safe_coef(m_resp, nr_nm))))
+cat(sprintf("RESULT:failed_coup_importance_model=%s\n", fmt(safe_coef(m_imp, "fca"))))

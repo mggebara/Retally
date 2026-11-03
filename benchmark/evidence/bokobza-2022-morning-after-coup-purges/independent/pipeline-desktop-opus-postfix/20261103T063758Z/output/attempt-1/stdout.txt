@@ -1,0 +1,37 @@
+SAMPLE:country_level:loaded=7878
+SAMPLE:country_level:lagged_bmr_democracy_eq_0=4262
+SAMPLE:country_level:years_1967_2016=4255
+SAMPLE:country_level:nonmissing_dv_coup=4119
+SAMPLE:base_country_fe:estimation=3743
+SAMPLE:main_country_fe:estimation=3703
+SAMPLE:base_leader_fe:estimation=3626
+SAMPLE:main_leader_fe:estimation=3590
+SAMPLE:individual:loaded=205524
+SAMPLE:individual:lagged_bmr_democracy_eq_0=120552
+SAMPLE:individual:years_1967_2016=119990
+SAMPLE:individual:exclude_leader=119990
+SAMPLE:individual:nonmissing_purge_coup=0
+SAMPLE:h2a_experience:loaded=205524
+SAMPLE:h2a_experience:exclude_leader_junior_lowranking=0
+# error  h2a_experience :  in feols(f, data = dt, cluster = ~cid): 
+The data set contains 0 observation: the estimation cannot be done. 
+DEVIATION: could not identify "other party" reference level in party_group
+SAMPLE:h3a_responsibility:loaded=205524
+SAMPLE:h3a_responsibility:exclude_leader_nonmissing_portfolio=0
+# error  h3a_responsibility :  in feols(f, data = dt, cluster = ~cid): 
+The data set contains 0 observation: the estimation cannot be done. 
+SAMPLE:h3b_importance:loaded=205524
+SAMPLE:h3b_importance:exclude_leader=0
+# error  h3b_importance :  in feols(f, data = dt, cluster = ~cid): 
+The data set contains 0 observation: the estimation cannot be done. 
+RESULT:failed_coup_base_country_fe=0.102553
+RESULT:failed_coup_main_country_fe=0.111954
+RESULT:failed_coup_base_leader_fe=0.061535
+RESULT:failed_coup_main_leader_fe=0.063813
+RESULT:failed_coup_experience_model=NA
+RESULT:failed_coup_x_over_6_years_experience=NA
+RESULT:failed_coup_affiliation_model=NA
+RESULT:failed_coup_x_leaders_party=NA
+RESULT:failed_coup_responsibility_model=NA
+RESULT:failed_coup_x_natural_resources=NA
+RESULT:failed_coup_importance_model=NA

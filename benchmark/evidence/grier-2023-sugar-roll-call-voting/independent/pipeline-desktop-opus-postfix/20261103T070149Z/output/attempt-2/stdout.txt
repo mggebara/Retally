@@ -1,0 +1,80 @@
+DIAG: mean totalcont base=7985.52 cal=5392.04 12m=5394.05 sugcont=9087.34
+DIAG: non-voting rows recoded to 0 = 20
+SAMPLE:table1_district_fe:loaded=862
+SAMPLE:table1_district_fe:voted=862
+SAMPLE:table1_district_fe:nonmissing_covariates=860
+SAMPLE:table1_district_fe:vote_switching_districts=186
+SAMPLE:table1_district_fe:estimation=186
+SAMPLE:table1_incumbent_fe:loaded=862
+SAMPLE:table1_incumbent_fe:voted=862
+SAMPLE:table1_incumbent_fe:nonmissing_covariates=860
+SAMPLE:table1_incumbent_fe:same_incumbent_both_votes=614
+SAMPLE:table1_incumbent_fe:vote_switching_incumbents=106
+SAMPLE:table1_incumbent_fe:estimation=106
+SAMPLE:table3_calendar_district_fe:loaded=862
+SAMPLE:table3_calendar_district_fe:voted=862
+SAMPLE:table3_calendar_district_fe:nonmissing_covariates=858
+SAMPLE:table3_calendar_district_fe:vote_switching_districts=186
+SAMPLE:table3_calendar_district_fe:estimation=186
+SAMPLE:table3_calendar_incumbent_fe:loaded=862
+SAMPLE:table3_calendar_incumbent_fe:voted=862
+SAMPLE:table3_calendar_incumbent_fe:nonmissing_covariates=858
+SAMPLE:table3_calendar_incumbent_fe:same_incumbent_both_votes=610
+SAMPLE:table3_calendar_incumbent_fe:vote_switching_incumbents=106
+SAMPLE:table3_calendar_incumbent_fe:estimation=106
+SAMPLE:table3_12m_district_fe:loaded=862
+SAMPLE:table3_12m_district_fe:voted=862
+SAMPLE:table3_12m_district_fe:nonmissing_covariates=860
+SAMPLE:table3_12m_district_fe:vote_switching_districts=186
+SAMPLE:table3_12m_district_fe:estimation=186
+SAMPLE:table3_12m_incumbent_fe:loaded=862
+SAMPLE:table3_12m_incumbent_fe:voted=862
+SAMPLE:table3_12m_incumbent_fe:nonmissing_covariates=860
+SAMPLE:table3_12m_incumbent_fe:same_incumbent_both_votes=614
+SAMPLE:table3_12m_incumbent_fe:vote_switching_incumbents=106
+SAMPLE:table3_12m_incumbent_fe:estimation=106
+GLM estimation, family = binomial, Dep. Var.: vote
+Observations: 186
+Fixed-effects: dist_key: 93
+Standard-errors: Heteroskedasticity-robust 
+            Estimate Std. Error    z value   Pr(>|z|)    
+x_cont     -0.000618   0.000125  -4.946438 7.5584e-07 ***
+ncu         0.200046   0.066956   2.987730 2.8106e-03 ** 
+tenure     -0.307727   0.089095  -3.453935 5.5247e-04 ***
+poverty     2.185210   0.852397   2.563607 1.0359e-02 *  
+bach        1.215905   0.943452   1.288783 1.9747e-01    
+medincome   0.000132   0.000431   0.305872 7.5970e-01    
+over65     -1.822251   1.348986  -1.350830 1.7675e-01    
+agcom     -38.955703   1.808857 -21.536085  < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Log-Likelihood: -32.4   Adj. Pseudo R2: -0.026736
+           BIC: 592.5     Squared Cor.:  0.790066
+GLM estimation, family = binomial, Dep. Var.: vote
+Observations: 106
+Fixed-effects: inc_key: 53
+Standard-errors: Heteroskedasticity-robust 
+            Estimate Std. Error   z value   Pr(>|z|)    
+x_cont     -0.000378   0.000172 -2.202771 2.7611e-02 *  
+ncu         0.056576   0.143721  0.393651 6.9384e-01    
+tenure     -1.444878   0.538182 -2.684738 7.2587e-03 ** 
+poverty     2.086635   1.402376  1.487929 1.3677e-01    
+bach        0.492624   0.701765  0.701978 4.8269e-01    
+medincome   0.000651   0.000741  0.878530 3.7966e-01    
+over65     -0.285024   2.745614 -0.103811 9.1732e-01    
+agcom     -41.969652   5.737379 -7.315126 2.5714e-13 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Log-Likelihood: -20.4   Adj. Pseudo R2: -0.09456 
+           BIC: 325.3     Squared Cor.:  0.761346
+RESULT:sugar_contributions_district_fe=-0.0006178918
+RESULT:sugar_contributions_incumbent_fe=-0.00037828278
+RESULT:acu_ideology_district_fe=0.20004588
+RESULT:tenure_district_fe=-0.3077266
+RESULT:tenure_incumbent_fe=-1.4448776
+RESULT:sugar_contributions_calendar_year_district_fe=-0.00055748876
+RESULT:sugar_contributions_calendar_year_incumbent_fe=-0.00054264738
+RESULT:sugar_contributions_12_months_district_fe=-0.00058970002
+RESULT:sugar_contributions_12_months_incumbent_fe=-0.0002991767
+RESULT:observations_district_fe=186
+RESULT:observations_incumbent_fe=106

@@ -1,0 +1,725 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "personalism_volatility_difference_overall",
+      "ground_truth": {
+        "value": 0.3,
+        "standard_error": 0.06,
+        "unit": "points on the 1-4 Personalism scale",
+        "claim_type": "coefficient",
+        "location": "Table 1, Overall row, Personalism, Difference column",
+        "context": "Table 1 (\"Electoral Volatility, Group Attachments, and Electoral Strategies\"), upper panel.  Party-level OLS regression (Democratic Accountability and Linkages Project expert survey, 2009) of Personalism, the party's reliance on its leader's charismatic personality on a 1-4 scale, on electoral volatility (the country's average Pedersen index over up to four election pairs before 2009, rescaled to 0-1), with party-level covariates (party size, links to unions, business and religious organisations) and country-level covariates (plurality and proportional-representation indicators, closed- and open-list indicators with non-list PR omitted, average lower-house district magnitude, presidential and parliamentary system indicators with assembly-elected presidential omitted, system tenure, Polity score, logged GDP per capita, Gini index and ethnic fractionalisation); standard errors clustered by country. The table reports predicted Personalism at low volatility (25th percentile of the sample) and high volatility (75th percentile); this claim is the high-minus-low difference.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.29,
+        "outcome": "matches",
+        "notes": "DP54 Table 4, Overall, Personalism difference 0.29 (SE 0.07) vs printed 0.30 (0.06); counted as reproduced by DP54.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.2,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "personalism_volatility_difference_overall",
+        "claim_type": "coefficient",
+        "claimed": 0.3,
+        "reproduced": 0.292232,
+        "tolerance": 0.2,
+        "rel_err": 0.025893333333333324,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "personalism_volatility_difference_overall",
+        "reproduced": 0.292232,
+        "band_source": "se_band",
+        "band_relative": 0.2,
+        "band_absolute": 0.06,
+        "abs_err": 0.007767999999999997,
+        "rel_err": 0.025893333333333324,
+        "margin": 0.12946666666666662,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "programmaticness_volatility_difference_overall",
+      "ground_truth": {
+        "value": -0.11,
+        "standard_error": 0.05,
+        "unit": "points on the 1-4 Programmaticness scale",
+        "claim_type": "coefficient",
+        "location": "Table 1, Overall row, Programmaticness, Difference column",
+        "context": "Table 1, upper panel: the same regression and covariates with Programmaticness as the outcome (the average of two 1-4 expert items: how much the party mobilises support by emphasising its policy positions, and how much it appeals to voters' long-term partisan loyalty).  High-volatility (75th percentile) minus low-volatility (25th percentile) predicted Programmaticness; country-clustered standard errors.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.11,
+        "outcome": "matches",
+        "notes": "DP54 Table 4, Overall, Programmaticness difference -0.11 (SE 0.06).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.4545454545454546,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "programmaticness_volatility_difference_overall",
+        "claim_type": "coefficient",
+        "claimed": -0.11,
+        "reproduced": -0.115558,
+        "tolerance": 0.4545454545454546,
+        "rel_err": 0.05052727272727267,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "programmaticness_volatility_difference_overall",
+        "reproduced": -0.115558,
+        "band_source": "se_band",
+        "band_relative": 0.4545454545454546,
+        "band_absolute": 0.05,
+        "abs_err": 0.0055579999999999935,
+        "rel_err": 0.05052727272727267,
+        "margin": 0.11115999999999987,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "personalism_volatility_difference_nonethnic",
+      "ground_truth": {
+        "value": 0.35,
+        "standard_error": 0.06,
+        "unit": "points on the 1-4 Personalism scale",
+        "claim_type": "coefficient",
+        "location": "Table 1, Ethnicity panel, Nonethnic party row, Personalism, Difference column",
+        "context": "Table 1, middle (Ethnicity) panel.  The Personalism regression of the upper panel with an ethnic-party indicator (parties most of whose expert coders report strong linkages to ethnic or linguistic organisations) and its interaction with volatility added; same covariates, country-clustered SEs.  Predicted Personalism for a nonethnic party at high (75th percentile) minus low (25th percentile) volatility.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.35,
+        "outcome": "matches",
+        "notes": "DP54 Table 4, Nonethnic, Personalism difference 0.35 (SE 0.07).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.17142857142857143,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "personalism_volatility_difference_nonethnic",
+        "claim_type": "coefficient",
+        "claimed": 0.35,
+        "reproduced": 0.352372,
+        "tolerance": 0.17142857142857143,
+        "rel_err": 0.006777142857142974,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "personalism_volatility_difference_nonethnic",
+        "reproduced": 0.352372,
+        "band_source": "se_band",
+        "band_relative": 0.17142857142857143,
+        "band_absolute": 0.06,
+        "abs_err": 0.0023720000000000407,
+        "rel_err": 0.006777142857142974,
+        "margin": 0.03953333333333402,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "programmaticness_volatility_difference_nonethnic",
+      "ground_truth": {
+        "value": -0.15,
+        "standard_error": 0.06,
+        "unit": "points on the 1-4 Programmaticness scale",
+        "claim_type": "coefficient",
+        "location": "Table 1, Ethnicity panel, Nonethnic party row, Programmaticness, Difference column",
+        "context": "Table 1, Ethnicity panel: the Programmaticness regression with the ethnic-party indicator and its interaction with volatility; predicted Programmaticness for a nonethnic party at high minus low volatility.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.15,
+        "outcome": "matches",
+        "notes": "DP54 Table 4, Nonethnic, Programmaticness difference -0.15 (SE 0.07).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.4,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "programmaticness_volatility_difference_nonethnic",
+        "claim_type": "coefficient",
+        "claimed": -0.15,
+        "reproduced": -0.148855,
+        "tolerance": 0.4,
+        "rel_err": 0.007633333333333381,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "programmaticness_volatility_difference_nonethnic",
+        "reproduced": -0.148855,
+        "band_source": "se_band",
+        "band_relative": 0.4,
+        "band_absolute": 0.06,
+        "abs_err": 0.0011450000000000071,
+        "rel_err": 0.007633333333333381,
+        "margin": 0.019083333333333452,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "personalism_ethnic_minus_nonethnic_low_volatility",
+      "ground_truth": {
+        "value": 0.31,
+        "standard_error": 0.13,
+        "unit": "points on the 1-4 Personalism scale",
+        "claim_type": "coefficient",
+        "location": "Table 1, Ethnicity panel, Difference row, Personalism, Low volatility column",
+        "context": "Table 1, Ethnicity panel, bottom (Difference) row: predicted Personalism of an ethnic party minus that of a nonethnic party at low volatility (25th percentile), from the ethnic-interaction Personalism regression.  One of the four Hypothesis 3 comparisons.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.3,
+        "outcome": "matches",
+        "notes": "DP54 Table 4, Differences.Ethnic, Personalism low volatility 0.30 (SE 0.13) vs printed 0.31 (0.13).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.41935483870967744,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "personalism_ethnic_minus_nonethnic_low_volatility",
+        "claim_type": "coefficient",
+        "claimed": 0.31,
+        "reproduced": 0.311271,
+        "tolerance": 0.41935483870967744,
+        "rel_err": 0.0041000000000000715,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "personalism_ethnic_minus_nonethnic_low_volatility",
+        "reproduced": 0.311271,
+        "band_source": "se_band",
+        "band_relative": 0.41935483870967744,
+        "band_absolute": 0.13,
+        "abs_err": 0.0012710000000000221,
+        "rel_err": 0.0041000000000000715,
+        "margin": 0.009776923076923247,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "programmaticness_ethnic_minus_nonethnic_high_volatility",
+      "ground_truth": {
+        "value": 0.2,
+        "standard_error": 0.06,
+        "unit": "points on the 1-4 Programmaticness scale",
+        "claim_type": "coefficient",
+        "location": "Table 1, Ethnicity panel, Difference row, Programmaticness, High volatility column",
+        "context": "Table 1, Ethnicity panel, Difference row: predicted Programmaticness of an ethnic party minus that of a nonethnic party at high volatility (75th percentile), from the ethnic-interaction Programmaticness regression.  One of the four Hypothesis 3 comparisons.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.2,
+        "outcome": "matches",
+        "notes": "DP54 Table 4, Differences.Ethnic, Programmaticness high volatility 0.20 (SE 0.06).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.3,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "programmaticness_ethnic_minus_nonethnic_high_volatility",
+        "claim_type": "coefficient",
+        "claimed": 0.2,
+        "reproduced": 0.195941,
+        "tolerance": 0.3,
+        "rel_err": 0.020295000000000035,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "programmaticness_ethnic_minus_nonethnic_high_volatility",
+        "reproduced": 0.195941,
+        "band_source": "se_band",
+        "band_relative": 0.3,
+        "band_absolute": 0.06,
+        "abs_err": 0.004059000000000007,
+        "rel_err": 0.020295000000000035,
+        "margin": 0.06765000000000013,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "personalism_volatility_difference_moderate",
+      "ground_truth": {
+        "value": 0.53,
+        "standard_error": 0.13,
+        "unit": "points on the 1-4 Personalism scale",
+        "claim_type": "coefficient",
+        "location": "Table 1, Ideology panel, Moderate party row, Personalism, Difference column",
+        "context": "Table 1, lower (Ideology) panel.  The Personalism regression with ideological extremism (the absolute distance of the party's 1-10 left-right placement from the country's mean party placement, continuous, roughly 0-6) and its interaction with volatility added; same covariates, country-clustered SEs.  A moderate party sits at the country's average placement (distance zero).  Predicted Personalism for a moderate party at high (75th percentile) minus low (25th percentile) volatility.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.52,
+        "outcome": "matches",
+        "notes": "DP54 Table 4, Moderate, Personalism difference 0.52 (SE 0.13) vs printed 0.53 (0.13).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.24528301886792453,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "personalism_volatility_difference_moderate",
+        "claim_type": "coefficient",
+        "claimed": 0.53,
+        "reproduced": 0.530185,
+        "tolerance": 0.24528301886792453,
+        "rel_err": 0.00034905660377356737,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "personalism_volatility_difference_moderate",
+        "reproduced": 0.530185,
+        "band_source": "se_band",
+        "band_relative": 0.24528301886792453,
+        "band_absolute": 0.13,
+        "abs_err": 0.00018499999999999073,
+        "rel_err": 0.00034905660377356737,
+        "margin": 0.0014230769230768516,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "programmaticness_volatility_difference_moderate",
+      "ground_truth": {
+        "value": -0.3,
+        "standard_error": 0.08,
+        "unit": "points on the 1-4 Programmaticness scale",
+        "claim_type": "coefficient",
+        "location": "Table 1, Ideology panel, Moderate party row, Programmaticness, Difference column",
+        "context": "Table 1, Ideology panel: the Programmaticness regression with ideological extremism and its interaction with volatility; predicted Programmaticness for a moderate party (distance zero) at high minus low volatility.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.29,
+        "outcome": "matches",
+        "notes": "DP54 Table 4, Moderate, Programmaticness difference -0.29 (SE 0.09) vs printed -0.30 (0.08).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.26666666666666666,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "programmaticness_volatility_difference_moderate",
+        "claim_type": "coefficient",
+        "claimed": -0.3,
+        "reproduced": -0.298719,
+        "tolerance": 0.26666666666666666,
+        "rel_err": 0.004269999999999922,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "programmaticness_volatility_difference_moderate",
+        "reproduced": -0.298719,
+        "band_source": "se_band",
+        "band_relative": 0.26666666666666666,
+        "band_absolute": 0.08,
+        "abs_err": 0.0012809999999999766,
+        "rel_err": 0.004269999999999922,
+        "margin": 0.016012499999999708,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "personalism_extremist_minus_moderate_low_volatility",
+      "ground_truth": {
+        "value": 0.15,
+        "standard_error": 0.17,
+        "unit": "points on the 1-4 Personalism scale",
+        "claim_type": "coefficient",
+        "location": "Table 1, Ideology panel, Difference row, Personalism, Low volatility column",
+        "context": "Table 1, Ideology panel, Difference row: predicted Personalism of an extremist party minus that of a moderate party at low volatility (25th percentile), from the extremism-interaction Personalism regression.  The paper places the extremist party at an absolute distance of 3 from the country mean on the 0-6 scale (\"approximately the 75th percentile\").  One of the four Hypothesis 3 comparisons; not significant in the paper.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.12,
+        "outcome": "does_not_match",
+        "notes": "DP54 Table 4, Differences.Ideo, Personalism low volatility 0.12 (SE 0.14) vs printed 0.15 (0.17); DP54 reports the extremist-party predictions as not reproduced.  DP54 placed the extremist party at distance 3, as the paper states; the do-file uses the 90th percentile of the extremism measure (see notes).\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 1.1333333333333335,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "personalism_extremist_minus_moderate_low_volatility",
+        "claim_type": "coefficient",
+        "claimed": 0.15,
+        "reproduced": 0.126349,
+        "tolerance": 1.1333333333333335,
+        "rel_err": 0.1576733333333334,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "personalism_extremist_minus_moderate_low_volatility",
+        "reproduced": 0.126349,
+        "band_source": "se_band",
+        "band_relative": 1.1333333333333335,
+        "band_absolute": 0.17,
+        "abs_err": 0.023651000000000005,
+        "rel_err": 0.1576733333333334,
+        "margin": 0.13912352941176473,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "programmaticness_extremist_minus_moderate_high_volatility",
+      "ground_truth": {
+        "value": 0.44,
+        "standard_error": 0.09,
+        "unit": "points on the 1-4 Programmaticness scale",
+        "claim_type": "coefficient",
+        "location": "Table 1, Ideology panel, Difference row, Programmaticness, High volatility column",
+        "context": "Table 1, Ideology panel, Difference row: predicted Programmaticness of an extremist party (the paper: distance 3 from the country mean, \"approximately the 75th percentile\") minus that of a moderate party at high volatility (75th percentile), from the extremism-interaction Programmaticness regression.  One of the four Hypothesis 3 comparisons.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.37,
+        "outcome": "does_not_match",
+        "notes": "DP54 Table 4, Differences.Ideo, Programmaticness high volatility 0.37 (SE 0.08) vs printed 0.44 (0.09); DP54's largest gap is the extremist-party high-volatility level (3.13 vs 3.20).  Same cause as claim 8.\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.20454545454545453,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "programmaticness_extremist_minus_moderate_high_volatility",
+        "claim_type": "coefficient",
+        "claimed": 0.44,
+        "reproduced": 0.371349,
+        "tolerance": 0.20454545454545453,
+        "rel_err": 0.15602500000000005,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "programmaticness_extremist_minus_moderate_high_volatility",
+        "reproduced": 0.371349,
+        "band_source": "se_band",
+        "band_relative": 0.20454545454545453,
+        "band_absolute": 0.09,
+        "abs_err": 0.06865100000000002,
+        "rel_err": 0.15602500000000005,
+        "margin": 0.7627888888888891,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_table1",
+      "ground_truth": {
+        "value": 431.0,
+        "standard_error": null,
+        "unit": "observations (parties)",
+        "claim_type": "count",
+        "location": "Table 1, note",
+        "context": "Number of party observations the Table 1 analyses are based on, as stated in the table note (parties in 75 countries with complete data on the outcomes, volatility and all covariates).\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 431.0,
+        "outcome": "matches",
+        "notes": "DP54 Table 2 (replication of appendix Table D1), Num. obs. 431 for the baseline and ethnic models (430 for the ideology models).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table1",
+        "claim_type": "count",
+        "claimed": 431.0,
+        "reproduced": 430.0,
+        "tolerance": 0.05,
+        "rel_err": 0.002320185614849188,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_table1",
+        "reproduced": 430.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 21.55,
+        "abs_err": 1.0,
+        "rel_err": 0.002320185614849188,
+        "margin": 0.04640371229698376,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "rd_effect_young",
+      "ground_truth": {
+        "value": -0.084,
+        "standard_error": null,
+        "unit": "change in the probability (0-1) of nominating a young candidate",
+        "claim_type": "coefficient",
+        "location": "Table 2, row Young, tau_RD",
+        "context": "Table 2 (\"RD Effect of Incumbent Party's Victory at t on Nomination of Charismatic Candidate at t + 1\").  Brazilian mayoral elections 1996-2012, restricted to elections where the winning candidate is not term-limited in the next election (open-seat sample; the incumbent mayor does not run for a second term).  Running variable: the incumbent party's margin of victory at t (its vote share minus that of its strongest opponent), cutoff zero.  Outcome: the party's mayoral candidate at t + 1 is young (younger than 35 the first time they run for mayor).  Conventional RD point estimate from local linear polynomial estimation with the MSE-optimal main bandwidth and a separate MSE-optimal bias bandwidth, with robust bias-corrected inference, implemented with rdrobust (Calonico et al. 2017).\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.084,
+        "outcome": "matches",
+        "notes": "DP54 Table 5, Young, tau -0.084 (p 0.040, h 13.491, b 24.643, N+ 527, N- 559), reproduced exactly.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "rd_effect_young",
+        "claim_type": "coefficient",
+        "claimed": -0.084,
+        "reproduced": -0.08427,
+        "tolerance": 0.02,
+        "rel_err": 0.0032142857142856245,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "rd_effect_young",
+        "reproduced": -0.08427,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.00168,
+        "abs_err": 0.00026999999999999247,
+        "rel_err": 0.0032142857142856245,
+        "margin": 0.16071428571428123,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "rd_effect_young_outsider",
+      "ground_truth": {
+        "value": -0.092,
+        "standard_error": null,
+        "unit": "change in the probability (0-1) of nominating a young outsider candidate",
+        "claim_type": "coefficient",
+        "location": "Table 2, row Young and outsider, tau_RD",
+        "context": "Table 2: the same RD design and estimator with the outcome that the party's candidate at t + 1 is both younger than 35 and an outsider the first time they run (neither an elected official nor a government employee of any kind).  Conventional local linear RD point estimate, MSE-optimal main and bias bandwidths, rdrobust.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.092,
+        "outcome": "matches",
+        "notes": "DP54 Table 5, Young and Outsider, tau -0.092 (p 0.015, h 12.280, b 22.333, N+ 501, N- 523), reproduced exactly.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "rd_effect_young_outsider",
+        "claim_type": "coefficient",
+        "claimed": -0.092,
+        "reproduced": -0.092132,
+        "tolerance": 0.02,
+        "rel_err": 0.0014347826086957296,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "rd_effect_young_outsider",
+        "reproduced": -0.092132,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.00184,
+        "abs_err": 0.0001320000000000071,
+        "rel_err": 0.0014347826086957296,
+        "margin": 0.07173913043478647,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 13,
+    "row_passed": 13,
+    "recomputed_passed": 13,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "hollyer-2022-parties-as-disciplinarians",
+    "mode": "independent",
+    "reproducer": "pipeline",
+    "label": "pipeline-desktop-opus-postfix",
+    "model": "desktop-opus-postfix",
+    "oracle": true,
+    "run": "20261103T062157Z",
+    "results_file": "pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/hollyer-2022-parties-as-disciplinarians/independent/pipeline/20261103T062157Z",
+    "run_dir": null,
+    "date": "2026-11-03T06:21:57Z",
+    "data_access": "public",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 13,
+    "final": 13,
+    "first_scored": 13,
+    "first_scored_index": 0,
+    "first_attempt": 13,
+    "n_refinements": 0,
+    "n_error_refinements": 0,
+    "n_claim_refinements": 0,
+    "n_executions": 1,
+    "n_files_stripped": 6,
+    "agrees_with_i4r": true,
+    "deviations_manifest": [],
+    "deviations_stdout": [
+      "complete-case sample has 430 parties, paper reports 431"
+    ],
+    "notes": null,
+    "files_read_outside_mount": null,
+    "paper_text": null,
+    "complete": true,
+    "missing": []
+  }
+}

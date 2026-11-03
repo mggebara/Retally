@@ -1,0 +1,24 @@
+SAMPLE:table3:loaded=1292
+SAMPLE:table4:loaded=1292
+# wave from column wavenum
+# wave values: 1:350,2:528,3:414
+SAMPLE:table3:exclude_endogenous_assignment=1280
+SAMPLE:table4:exclude_endogenous_assignment=1280
+# commit-assignment rule text keeps 1280
+# commit-assignment rule inc_na keeps 1152
+# commit-assignment rule inc_80 keeps 1280
+# commit-assignment rule inc_not07 keeps 1150
+DEVIATION: no wave-3 commitment-assignment rule gives exactly 1126; using rule 'inc_not07'
+SAMPLE:table3:exclude_wave3_commitment_assigned=1150
+SAMPLE:table4:exclude_wave3_commitment_assigned=1150
+# type_of_info class: character
+# type_of_info (text) by wave: 0-none/1/169,1-onlygraph/1/177,2-graphplus/1/  0,0-none/2/267,1-onlygraph/2/  0,2-graphplus/2/255,0-none/3/134,1-onlygraph/3/  0,2-graphplus/3/148
+# type_of_info: numeric codes parsed from text
+# info codes by order: control=0 basic=1 enhanced=2
+# basic_info=177 enhanced_info=403 of 1150
+# forecast columns: days_1,days_2,days_3,days_5,days_7,days_12
+# zero-incentive forecast column: days_0
+SAMPLE:table3:nonmissing_bcp=1150
+SAMPLE:table3:estimation=1150
+# table3 col2 nobs=1150, col3 nobs=1150
+# commitment-related columns: q169[chose >=8 visits contract] ; q170[chose <8 visits contract] ; chose_commit12[chose >=12 visits contract] ; chose_anticommit11[chose <12 visits contract] ; q295[chose >=16 visits contract] ; q296[chose <16 visits contract] ; percent_meet_commit12[subjective probability of satisfying >=12 visits contract (w] ; percent_meet_anticommit[subjective probability of satisfying <12 visits contract (wa] ; prefer80contingent_to_0[indicator for preferring $80 for 12 visits to $0 (initial, w] ; areyousure_prefer0_to_80[follow-up to verify preference for $0 over $80 for 12 visits]

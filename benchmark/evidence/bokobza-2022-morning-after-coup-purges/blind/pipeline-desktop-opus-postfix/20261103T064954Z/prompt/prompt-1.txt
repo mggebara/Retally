@@ -1,0 +1,144 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: General Rights
+Abstract (first 500 chars): and it is a condition of accessing publications that users recognize and abide by the legal requirements associated with these rights. • Users may download and print one copy of any publication from the public portal for the purpose of private study or research. • You may not further distribute the material or use it for any profit-making activity or commercial gain. • You may freely distribute the URL identifying the publication in the public portal. If you believe that this document breaches c
+Methodology Summary: - **Data and sample**: Failed coups come from Powell and Thyne (2011): illegal, overt attempts that did not "seize and hold power for at least seven days". There are 95 failed coup attempts in the analyses. Cabinet data come from WhoGov (Nyrup and Bramwell 2020), built from the CIA *Chiefs of State and Cabinet Members* directory and coded for July of each year. The sample is 115 autocracies, 1967–2016. Autocracy means a country-year with a **lagged (t−1) Boix–Miller–Rosato democracy score of 0**. Lagging the score keeps out coups in democracies that turned the regime autocratic in the same year. Robustness checks use lagged DD (Cheibub et al./Bjørnskov–Rode) and lagged Polity IV < 6 instead.
+- **Coup timing recode**: Cabinets are recorded each July, so a failed coup before 1 July is coded 1 in that year. A failed coup on or after 1 July is coded 1 in the following year (e.g. May 2004 → 2004, Sept 2004 → 2005). A conventional lagged-IV version is a robustness check.
+- **Country-level specification (H1)**: Time-series cross-sectional OLS, P_it = φ·FailedCoup_it + β·X_it + α_i + λ_t + ε_it.
+  - The DV is the year-to-year cabinet replacement rate (0–1), defined as 1 − retention_rate_adj_minister, adjusted for cabinet size. The rate is in raw shares, not standardised, so φ is a percentage-point change.
+  - The key regressor is a failed-coup dummy.
+  - Every model has country fixed effects plus a full set of year dummies. Each model is also re-run with leader fixed effects in place of country fixed effects.
+  - Up to 3,715 country-years. **Standard errors are clustered by country.**
+- **Control sets (all lagged one year)**:
+  - "Base": log GDP per capita and log population (Penn World Table 9.0).
+  - "Main" (preferred): Base plus military-dictatorship, party-dictatorship and monarchy dummies (Anckar and Fredriksson 2019).
+  - Extensions added to Main:
+    - Electoral: NELDA national elections, years since last election.
+    - Economic: GDP per capita growth, Ross oil income.
+    - Instability: UCDP/PRIO civil war onset, NAVCO nonviolent campaigns, COW military dispute onset and interstate war onset, CNTS strikes.
+    - "Purges MAs": 1-, 2- and 3-year moving averages of past replacement rates.
+    - "All controls": all of the above together.
+- **Placebo tests**: The failed-coup dummy is replaced in turn by civil war onset, nonviolent campaign, military dispute onset, interstate war onset and strikes. Each is run with country fixed effects and with leader fixed effects.
+- **Individual-level specification (H2–H4)**: A linear probability model at the minister-year level, F_ijt = φC + ζM + γ(C×M) + βX + α_i + λ_t + ε.
+  - The DV is 1 if the minister is purged, meaning absent from the dataset the next year. Moving to another post within the cabinet does not count as a purge.
+  - Controls are the Base controls plus a cubic polynomial (t, t², t³) in the minister's years in office. The polynomial is dropped when experience is the moderator.
+  - Country and year fixed effects.
+  - Sample: 23,655 ministers and 95,751 minister-years (up to about 90,020 in the plotted models).
+- **Moderators (M), each interacted with failed coup one at a time**:
+  - Experience: years in cabinet. Junior and low-ranking posts are excluded here.
+  - Partisan alignment: leader's party / other party / no party.
+  - Strategic portfolio: e.g. defence, security/interior, foreign affairs.
+  - Five-tier importance ranking, excluding the leader (Appendix Q).
+  - For H4, four loyalty × responsibility groups:
+    - "Strongly loyal" means same party as the leader and experience at or above the median for ministers under that leader in that year.
+    - "Highly responsible" means top minister, deputy PM, VP, PM, or a president who is not the leader.
+- **Evaluation and robustness**: Results are reported as coefficients or marginal effects of a failed coup for each minister type, with 95% CIs. Robustness checks:
+  - Bjørnskov–Rode coup data, including military, civilian and royal coup types.
+  - Interactions with regime type.
+  - A personalism control.
+  - Dropping replacement rates of 1.
+  - Dropping a leader's first year.
+  - Effects by month of the coup.
+  - Alternative replacement-rate measures: core or all members, unadjusted.
+
+
+## Quantities to Compute
+Compute each quantity below and print it under the given name.  The paper's reported values are deliberately not shown.
+1. failed_coup_base_country_fe [type: coefficient; unit: change in the cabinet replacement rate (share of ministers, 0-1)]
+   Location: Table A1 (Tables for Figure 2), column Base Model, Failed coup attempt
+   Context: Table A1 ("Failed coup attempts. Country fixed effects: Country-level results"), Base Model column; plotted in the left panel of Figure 2. Time-series cross-sectional OLS of the year-to-year cabinet replacement rate (one minus the cabinet-size-adjusted retention rate of ministers, from WhoGov, July to July) on a failed coup attempt indicator (Powell and Thyne data; a failed coup before 1 July counts in that year, one after 1 July in the following year), with logged GDP per capita and logged population (Penn World Table 9.0) lagged one year, country fixed effects and year fixed effects. Sample:…
+2. failed_coup_main_country_fe [type: coefficient; unit: change in the cabinet replacement rate (share of ministers, 0-1)]
+   Location: Table A1, column Main Model, Failed coup attempt
+   Context: Table A1, Main Model column (Figure 2, left panel). Same specification as failed_coup_base_country_fe plus lagged dummies for monarchy, military regime and party regime (Anckar and Fredriksson 2019); country and year fixed effects, country-clustered standard errors.
+3. failed_coup_base_leader_fe [type: coefficient; unit: change in the cabinet replacement rate (share of ministers, 0-1)]
+   Location: Table A2 (Tables for Figure 2), column Base Model, Failed coup attempt
+   Context: Table A2 ("Failed coup attempts. Leader fixed effects: Country-level results"), Base Model column (Figure 2, left panel, leader fixed effects). Same regressors as failed_coup_base_country_fe (failed coup attempt, lagged logged GDP per capita and population, year fixed effects) with leader fixed effects instead of country fixed effects, so identification is within each autocrat's tenure. Standard errors clustered by country.
+4. failed_coup_main_leader_fe [type: coefficient; unit: change in the cabinet replacement rate (share of ministers, 0-1)]
+   Location: Table A2, column Main Model, Failed coup attempt
+   Context: Table A2, Main Model column: the Main Model controls (lagged GDP per capita, population, monarchy, military and party regime dummies) with leader and year fixed effects; the monarchy dummy drops out as collinear with the leader fixed effects. Country-clustered standard errors.
+5. failed_coup_experience_model [type: coefficient; unit: change in the probability of being purged next year]
+   Location: Table K1 (Table for Figure 3), column H2a: Experience, Failed coup attempt
+   Context: Table K1, column H2a: Experience; Figure 3 left panel. Linear probability model of whether a cabinet member is purged (absent from the cabinet the following year; reshuffles within the cabinet are not purges) on a failed coup attempt indicator, experience-group dummies (2-3, 4-6, over 6 years in cabinet; reference under 2 years), their interactions with the failed coup indicator, lagged logged GDP per capita and population, country and year fixed effects. Minister-years in autocracies 1967-2016, excluding the leader and junior ministers or other low-ranking posts; standard errors clustered by …
+6. failed_coup_x_over_6_years_experience [type: coefficient; unit: difference in the change in purge probability]
+   Location: Table K1, column H2a: Experience, FCA*Over 6 years of experience (Ref: <2 y)
+   Context: Table K1, column H2a: Experience: the interaction of the failed coup attempt indicator with having over six years of cabinet experience (reference: under two years), in the same linear probability model as failed_coup_experience_model.
+7. failed_coup_affiliation_model [type: coefficient; unit: change in the probability of being purged next year]
+   Location: Table K1, column H2b: Affiliation, Failed coup attempt
+   Context: Table K1, column H2b: Affiliation; Figure 3 right panel. Linear probability model of being purged next year on the failed coup attempt indicator, party affiliation dummies (no party affiliation; from the leader's party; reference: from another party than the leader's), their interactions with the failed coup indicator, cubic polynomials in the minister's years in office, lagged logged GDP per capita and population, country and year fixed effects, country-clustered standard errors. The failed coup coefficient is the effect for ministers from another party than the leader's.
+8. failed_coup_x_leaders_party [type: coefficient; unit: difference in the change in purge probability]
+   Location: Table K1, column H2b: Affiliation, FCA*From the leader's party (Ref: Other party)
+   Context: Table K1, column H2b: the interaction of the failed coup attempt indicator with being from the leader's party (reference: another party), in the same model as failed_coup_affiliation_model.
+9. failed_coup_responsibility_model [type: coefficient; unit: change in the probability of being purged next year]
+   Location: Table K2 (Table for Figure 4), column H3a: Responsibility, Failed coup attempt
+   Context: Table K2, column H3a: Responsibility; Figure 4 left panel. Linear probability model of being purged next year on the failed coup attempt indicator, portfolio dummies (Minister of Foreign Affairs, of Finance, of Natural Resources, other type of minister; reference: Minister of Defense), their interactions with the failed coup indicator, cubic polynomials in years in office, lagged logged GDP per capita and population, country and year fixed effects, country-clustered standard errors. The failed coup coefficient is the effect for ministers of defense.
+10. failed_coup_x_natural_resources [type: coefficient; unit: difference in the change in purge probability]
+   Location: Table K2, column H3a: Responsibility, FCA*Minister of Natural Resources (Ref: D)
+   Context: Table K2, column H3a: the interaction of the failed coup attempt indicator with being minister of natural resources (reference: minister of defense), in the same model as failed_coup_responsibility_model.
+11. failed_coup_importance_model [type: coefficient; unit: change in the probability of being purged next year]
+   Location: Table K2, column H3b: Importance, Failed coup attempt
+   Context: Table K2, column H3b: Importance; Figure 4 right panel. Linear probability model of being purged next year on the failed coup attempt indicator, rank-tier dummies (vice-president / deputy prime minister / top minister; medium-ranking; low-ranking; junior minister; reference: prime minister or president who is not the leader), their interactions with the failed coup indicator, cubic polynomials in years in office, lagged logged GDP per capita and population, country and year fixed effects, country-clustered standard errors. The failed coup coefficient is the effect for a prime minister or presi…
+
+## Dataset Information
+Name: bokobza-2022-morning-after-coup-purges
+Local path: <repo>/.cache/datasets/bokobza_2022_morning_after_coup_purges.script-free
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- morning_after_dataset_countrylevel.dta (1.7 MB) — 7878 rows, 37 columns: independent, democracy1, military_c, monarchy_c, party_c, democracy_br, system_category, onset1, YEAR_DATA, elec_all, oil_valuepop_2014_ln, nonvio_camp_2, leader_cab_id, leaderexperience_continuous, coupattempt_month_whogov, growth_pwt, ldemocracy_br, latent_personalism, COUNTRY_DATA, COUNTRY_ID, mid_onset, war_onset, polity2, lpolity2, replacement_rateadj_minister, replacement_rateadj_minister_300, replacement_rateadj_minister_200, replacement_rateadj_minister_100, coupattem…
+- morning_after_dataset_individuallevel.rds (91.8 MB) — data.frame, 205524 rows, 45 columns: year, party, leader, leader_party, party_group, experience, Group, experience_group, country_isocode, country_name, position, name, title, gender, birthyear, party_english, classification, portfolio_1, prestige_1, prestige_numeric, importance_numeric, purged_y1, purged_y2, coupattempt_presentyear, coup_presentyear, coup_lastyear, coupattempt_presentyear_br, coup_presentyear_br, coup_lastyear_br, coupattempt_whogov_type_br, leaderexperience_continuous, democracy_lag_br, n_part…
+- appendix_l1.jpg (101.1 KB)
+- appendix_l2.jpg (48.8 KB)
+- appendix_m1.jpg (121.1 KB)
+- appendix_m2.jpg (63.2 KB)
+- appendix_n1.jpg (101.9 KB)
+- appendix_n2.jpg (53.8 KB)
+- appendix_o1.jpg (60.6 KB)
+- appendix_p1.jpg (114.9 KB)
+- appendix_p2.jpg (52.4 KB)
+- appendix_r1.jpg (99.1 KB)
+- figure1.jpg (1.4 MB)
+- figure3.jpg (50.9 KB)
+- figure4.jpg (73.9 KB)
+- figure5.jpg (44.6 KB)
+- metadata.json (966 B)
+- readme.txt (2.1 KB)
+
+Data inventory (every data file, profiled on the host before generation: rows, columns with Stata variable labels in quotes, and which columns differ between files that share their columns).  Use it to choose the file each analysis needs and to check row counts:
+- morning_after_dataset_countrylevel.dta (1.7 MB, dta): 7878 rows, 37 columns: independent, democracy1 "Boix, Miller and Rosato (2012)", military_c "Anckar and Fredriksson (2019)", monarchy_c "Anckar and Fredriksson (2019)", party_c "Anckar and Fredriksson (2019)", democracy_br "Bjørnskov and Rode (2020)", system_category "Bjørnskov and Rode (2020)", onset1 "UCDP/PRIO", YEAR_DATA "Year", elec_all "Nelda", oil_valuepop_2014_ln "Ross", nonvio_camp_2 "NAVCO", leader_cab_id "group(COUNTRY_DATA_leader_cap_spell)", leaderexperience_continuous, coupattempt_month_whogov, growth_pwt "GDP/cap growth (PWT)", ldemocracy_br, latent_personalism "GWF", COUNTRY_DATA "Country name", COUNTRY_ID "Country ID", mid_onset "COW", war_onset "COW", polity2, lpolity2, replacement_rateadj_minist…
+- morning_after_dataset_individuallevel.rds (91.8 MB, R): 205524 rows, 45 columns: year, party, leader, leader_party, party_group, experience, Group, experience_group, portfolio_1, coupattempt_whogov_type_br, leaderexperience_continuous, country_isocode, country_name, party_english, importance_numeric, purged_y1, purged_y2, democracy_lag_br, n_party, democracy_lag, polity2, lag_polity2, importance_factor, minister_type, minister_classification, coupattempt_presentyear, coupattempt_presentyear_br, coup_presentyear, coup_lastyear, coup_presentyear_br, coup_lastyear_br, position, name, title, gender, birthyear, classification, prestige_1, prestige_numeric, gdp_cap_pwt_ln, pop_pwt_ln, gdp_cap_pwt_ln_lag, pop_pwt_ln_lag, age, hired
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Sample Accounting
+Before the RESULT: lines, print how each estimation sample is built, one line per step,
+using EXACTLY this format:
+    SAMPLE:<sample_name>:<step>=<number_of_rows>
+For example:  cat(sprintf('SAMPLE:main:loaded=%d\n', nrow(df)))
+Start each sample with step `loaded` (rows read from the data file), then print one line after each sample restriction the paper states, in the order the paper states them and named after the restriction, and end with step `estimation`: the number of observations the estimator actually used (nobs(model)), after rows dropped for missing values or singletons.  Use one <sample_name> per distinct estimation sample (one per table, panel or subgroup).
+Apply every restriction the paper states, in order, before estimating.  A sample that ends with 0 rows, or loses most of its rows at one step, means a restriction is mis-coded: fix it rather than estimate on it.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/bokobza_2022_morning_after_coup_purges.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Independent Reproduction
+This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's description alone.  The authors' own analysis code is deliberately withheld.  Do NOT open, read, source, or execute any script files that may appear in the dataset directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, and similar) — load data files only.  Derive the estimating equation, sample restrictions, fixed effects, and standard-error clustering from the paper information and claims above.
+
+## Blind Reproduction
+This reproduction is also BLIND: the paper's reported values for the quantities above are deliberately withheld, and you will not be told how close your numbers are.  Compute each quantity as the paper's method defines it; do not tune the specification toward any number you expect.  Do NOT read result tables, logs, or output files that may appear in the dataset directory (.tex, .log, .pdf, .html, and similar) to recover the paper's numbers — compute everything from the data files.  Print a RESULT: line for every quantity listed, using its name exactly.
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

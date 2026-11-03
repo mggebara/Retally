@@ -39,6 +39,7 @@
 |---|---|---|---|
 | `claude-code` | [11/11](seeded/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[0/11](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [11/11](independent/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[11/11](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[8/11](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [7/11](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[6/11](blind/claude-code/2026-10-22-b/CELL.md) (2026-10-22-b)<br>[7/11](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[7/11](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
 | `pipeline-desktop-opus` | [11/11](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) | [4/11](independent/pipeline-desktop-opus/20261023T064318Z/CELL.md) (20261023T064318Z) | [0/11](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) |
+| `pipeline-desktop-opus-postfix` | — | [1/11](independent/pipeline-desktop-opus-postfix/20261103T063758Z/CELL.md) (20261103T063758Z) | [0/11](blind/pipeline-desktop-opus-postfix/20261103T064954Z/CELL.md) (20261103T064954Z) |
 | `pipeline-desktop-opus-run2` | [11/11](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [9/11](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) (20261023T153002Z) | [0/11](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
 | `pipeline-desktop-opus-run3` | [11/11](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [6/11](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) (20261103T052626Z) | [0/11](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) |
 
@@ -91,6 +92,11 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 - [independent/pipeline-desktop-opus/20261023T064318Z](independent/pipeline-desktop-opus/20261023T064318Z/CELL.md) (4/11; failed: `intl_attack_table4`, `intl_attack_x_woman_exec_table4`, `did_attack_x_time_like_may_table2`, `did_attack_like_may_table2`, `did_time_like_may_table2`, `did_time_may_best_pm_table2`, `n_obs_did_may_best_pm_table2`)
   - Table 2 likeability model restricted to BES waves 1-13 (window chosen to match the paper's reported N; paper does not list waves)
   - Table 2 best-PM model restricted to BES waves 9-12 (window chosen to match the paper's reported N; paper does not list waves)
+- [independent/pipeline-desktop-opus-postfix/20261103T063758Z](independent/pipeline-desktop-opus-postfix/20261103T063758Z/CELL.md) (1/11; failed: `intl_attack_table4`, `intl_attack_x_woman_exec_table4`, `did_attack_x_time_like_may_table2`, `did_attack_like_may_table2`, `did_time_like_may_table2`, `did_attack_x_time_may_best_pm_table2`, `did_attack_may_best_pm_table2`, `did_time_may_best_pm_table2`, `n_obs_did_like_may_table2`, `n_obs_did_may_best_pm_table2`)
+  - Table 4 N = 4423 differs from paper 4328
+  - like May DiD N = 239919 differs from paper 143499
+  - best PM DiD N = 1481392 differs from paper 97155
+  - best-PM DiD estimated as linear probability model (paper reports probability-scale coefficients)
 - [independent/pipeline-desktop-opus-run2/20261023T153002Z](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) (9/11; failed: `intl_attack_table4`, `intl_attack_x_woman_exec_table4`)
   - Table 4 DV timing/attack timing/lagged-DV/consecutive-approval sample variant built from lag_approval chosen by sample size closest to 4328: dvlead0\|attlag0\|ldv\|req3
   - Like-May DiD treatment/ideology/weight variant chosen among N-matching candidates by closeness of reported regressor coefficients: like\|treatment2\|raw\|ideo3\|none
@@ -120,12 +126,12 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
-- blind: `did_attack_like_may_table2` — pipeline 0/3, agent 4/4
-- blind: `did_attack_may_best_pm_table2` — pipeline 0/3, agent 4/4
-- blind: `intl_attack_x_woman_exec_table4` — pipeline 0/3, agent 4/4
-- blind: `n_obs_did_like_may_table2` — pipeline 0/3, agent 4/4
-- blind: `n_obs_did_may_best_pm_table2` — pipeline 0/3, agent 4/4
-- blind: `n_obs_table4` — pipeline 0/3, agent 4/4
+- blind: `did_attack_like_may_table2` — pipeline 0/4, agent 4/4
+- blind: `did_attack_may_best_pm_table2` — pipeline 0/4, agent 4/4
+- blind: `intl_attack_x_woman_exec_table4` — pipeline 0/4, agent 4/4
+- blind: `n_obs_did_like_may_table2` — pipeline 0/4, agent 4/4
+- blind: `n_obs_did_may_best_pm_table2` — pipeline 0/4, agent 4/4
+- blind: `n_obs_table4` — pipeline 0/4, agent 4/4
 
 Pass rates at least 50 points apart (not unanimous):
 
@@ -140,10 +146,12 @@ Pass rates at least 50 points apart (not unanimous):
 - seeded: `n_obs_did_like_may_table2` — pipeline 3/3, agent 1/2
 - seeded: `n_obs_did_may_best_pm_table2` — pipeline 3/3, agent 1/2
 - seeded: `n_obs_table4` — pipeline 3/3, agent 1/2
-- independent: `intl_attack_table4` — pipeline 1/3, agent 3/3
-- independent: `intl_attack_x_woman_exec_table4` — pipeline 1/3, agent 3/3
-- independent: `n_obs_did_may_best_pm_table2` — pipeline 1/3, agent 3/3
-- blind: `intl_attack_table4` — pipeline 0/3, agent 3/4
+- independent: `did_attack_like_may_table2` — pipeline 2/4, agent 3/3
+- independent: `intl_attack_table4` — pipeline 1/4, agent 3/3
+- independent: `intl_attack_x_woman_exec_table4` — pipeline 1/4, agent 3/3
+- independent: `n_obs_did_like_may_table2` — pipeline 2/4, agent 3/3
+- independent: `n_obs_did_may_best_pm_table2` — pipeline 1/4, agent 3/3
+- blind: `intl_attack_table4` — pipeline 0/4, agent 3/4
 
 ## Cells
 
@@ -183,6 +191,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/pipeline-desktop-opus/20261023T064318Z/CELL.md`](independent/pipeline-desktop-opus/20261023T064318Z/CELL.md) — final 4/11, re-scored 4/11; first scored 1/11; executions 3; 2026-10-23T06:43:18Z; from `pipeline-oracle-desktop-opus-9papers-all-modes-2026-10-23.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-postfix · 20261103T063758Z
+
+[`independent/pipeline-desktop-opus-postfix/20261103T063758Z/CELL.md`](independent/pipeline-desktop-opus-postfix/20261103T063758Z/CELL.md) — final 1/11, re-scored 1/11; first scored 1/11; executions 2; 2026-11-03T06:37:58Z; from `pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus-run2 · 20261023T153002Z
 
 [`independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) — final 9/11, re-scored 9/11; first scored 3/11; executions 4; 2026-10-23T15:30:02Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
@@ -210,6 +222,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · pipeline-desktop-opus · 20261023T062931Z
 
 [`blind/pipeline-desktop-opus/20261023T062931Z/CELL.md`](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) — final 0/11, re-scored 0/11; first scored 0/11; executions 1; 2026-10-23T06:29:31Z; from `pipeline-oracle-desktop-opus-9papers-all-modes-2026-10-23.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-postfix · 20261103T064954Z
+
+[`blind/pipeline-desktop-opus-postfix/20261103T064954Z/CELL.md`](blind/pipeline-desktop-opus-postfix/20261103T064954Z/CELL.md) — final 0/11, re-scored 0/11; first scored 0/11; executions 2; 2026-11-03T06:49:54Z; from `pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus-run2 · 20261023T150832Z
 

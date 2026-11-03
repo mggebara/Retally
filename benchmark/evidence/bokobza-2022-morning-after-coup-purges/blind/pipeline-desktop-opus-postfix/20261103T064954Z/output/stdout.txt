@@ -1,0 +1,85 @@
+Country-level columns: COUNTRY_DATA, COUNTRY_ID, YEAR_DATA, ccode, leader_cab_id, democracy1, independent, replacement_rateadj_minister, replacement_rateadj_minister_300, replacement_rateadj_minister_200, replacement_rateadj_minister_100, leaderexperience_continuous, coupattempt_whogov, coupattempt_month_whogov, gdp_cap_pwt_ln, pop_pwt_ln, military_c, monarchy_c, party_c, elec_all, t1_e_a, oil_valuepop_2014_ln, growth_pwt, onset1, nonvio_camp_2, mid_onset, war_onset, domestic3_10, coupattempt_whogov_br, polity2, lpolity2, democracy_br, ldemocracy_br, system_category, latent_personalism, coupattempt_whogov_type_br, type_num 
+Using coup column: coupattempt_whogov 
+SAMPLE:country:loaded=7878
+SAMPLE:country:autocracy_lagged_bmr=4262
+SAMPLE:country:years_1967_2016=4255
+SAMPLE:country_base_cfe:estimation=3743
+SAMPLE:country_main_cfe:estimation=3703
+SAMPLE:country_base_lfe:estimation=3626
+SAMPLE:country_main_lfe:estimation=3590
+Levels of experience_group :
+
+       1year    2-3 years    4-6 years Over 6 years 
+       50368        64168        47095        43893 
+Levels of party_group :
+
+ independent leader_party  other_party      unknown         <NA> 
+       38333       114723        27938        12538        11992 
+Levels of minister_type :
+
+          Minister of Defense           Minister of Finance 
+                         6316                          7728 
+  Minister of Foreign Affairs Minister of Natural Resources 
+                         7675                          6133 
+       Other type of minister                          <NA> 
+                       125514                         52158 
+Levels of importance_factor :
+
+                                                    0 
+                                                  383 
+                                                    5 
+                                                 8059 
+         Junior minister\nor other low-\nranking post 
+                                                21007 
+                                low-ranking\nminister 
+                                                12983 
+                             Medium-ranking\nminister 
+                                               114497 
+               Prime minister/President\n(not leader) 
+                                                 3608 
+Vice president,\ndeputy prime minister,\ntop minister 
+                                                34862 
+                                                 <NA> 
+                                                10125 
+Levels of coupattempt_presentyear :
+
+   Coup attempt No coup attempt            <NA> 
+           3055          189559           12910 
+Levels of purged_y1 :
+
+     0      1 
+146576  58948 
+Non-missing fca: 192614
+Non-missing purged: 205524
+Non-missing exp_num: 205524
+Non-missing year: 205524
+Non-missing lgdp: 180676
+Non-missing lpop: 180676
+Non-missing dem_lag_num: 201830
+SAMPLE:individual:loaded=205524
+SAMPLE:individual:autocracy_lagged_bmr=120552
+SAMPLE:individual:years_1967_2016=119990
+SAMPLE:individual:exclude_leader=119990
+SAMPLE:h2a_experience:loaded=205524
+SAMPLE:h2a_experience:exclude_junior_low=101944
+Experience reference: 1year 
+SAMPLE:h2a_experience:estimation=83554
+Over 6 level: Over 6 years 
+Party reference: other_party 
+SAMPLE:h2b_affiliation:estimation=94582
+Minister type reference: Minister of Defense 
+SAMPLE:h3a_responsibility:estimation=76238
+Importance reference: Prime minister/President
+(not leader) 
+SAMPLE:h3b_importance:estimation=93367
+RESULT:failed_coup_base_country_fe=0.102553
+RESULT:failed_coup_main_country_fe=0.111954
+RESULT:failed_coup_base_leader_fe=0.061535
+RESULT:failed_coup_main_leader_fe=0.063813
+RESULT:failed_coup_experience_model=0.133099
+RESULT:failed_coup_x_over_6_years_experience=-0.082210
+RESULT:failed_coup_affiliation_model=0.174957
+RESULT:failed_coup_x_leaders_party=-0.127797
+RESULT:failed_coup_responsibility_model=0.199317
+RESULT:failed_coup_x_natural_resources=-0.173710
+RESULT:failed_coup_importance_model=0.374491

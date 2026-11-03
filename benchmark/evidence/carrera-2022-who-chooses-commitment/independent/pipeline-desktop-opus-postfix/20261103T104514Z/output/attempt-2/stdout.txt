@@ -1,0 +1,17 @@
+SAMPLE:table3:loaded=1292
+SAMPLE:table4:loaded=1292
+# wave from column wavenum
+# wave values: 1:350,2:528,3:414
+SAMPLE:table3:exclude_endogenous_assignment=1280
+SAMPLE:table4:exclude_endogenous_assignment=1280
+# commit-assignment rule text keeps 1280
+# commit-assignment rule inc_na keeps 1152
+# commit-assignment rule inc_80 keeps 1280
+# commit-assignment rule inc_not07 keeps 1150
+DEVIATION: no wave-3 commitment-assignment rule gives exactly 1126; using rule 'inc_not07'
+SAMPLE:table3:exclude_wave3_commitment_assigned=1150
+SAMPLE:table4:exclude_wave3_commitment_assigned=1150
+DEVIATION: could not find a separate information-treatment indicator; using type_of_info directly
+# forecast columns: days_1,days_2,days_3,days_5,days_7,days_12
+# zero-incentive forecast column: days_0
+SAMPLE:table3:nonmissing_bcp=1150

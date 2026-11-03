@@ -42,6 +42,7 @@
 | `claude-code` | [12/12](seeded/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [12/12](independent/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[12/12](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [12/12](blind/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[12/12](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
 | `pipeline-claude-opus-4-7` | [7/12](seeded/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [12/12](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [6/12](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) |
 | `pipeline-claude-opus-5-5` | [12/12](seeded/pipeline-claude-opus-5-5/20261022T044632Z/CELL.md) (20261022T044632Z) | [12/12](independent/pipeline-claude-opus-5-5/20261022T044632Z/CELL.md) (20261022T044632Z) | [12/12](blind/pipeline-claude-opus-5-5/20261022T044632Z/CELL.md) (20261022T044632Z) |
+| `pipeline-desktop-opus-postfix` | — | [12/12](independent/pipeline-desktop-opus-postfix/20261103T062157Z/CELL.md) (20261103T062157Z) | [12/12](blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md) (20261103T062809Z) |
 | `pipeline-desktop-opus-run2` | [12/12](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [12/12](independent/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) | [9/12](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
 | `pipeline-desktop-opus-run3` | [12/12](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [12/12](independent/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) | [12/12](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) |
 
@@ -71,6 +72,8 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 - [independent/claude-code/2026-11-01-a](independent/claude-code/2026-11-01-a/CELL.md) (12/12)
   - Study 2 U.S. regressions are unweighted: us_survey_wave2 has no weight variable.
   - Study 2 US regressions are unweighted (no weight variable in us_survey_wave2).
+- [independent/pipeline-desktop-opus-postfix/20261103T062157Z](independent/pipeline-desktop-opus-postfix/20261103T062157Z/CELL.md) (12/12)
+  - no survey weight variable in Study 2 data; unweighted OLS
 - [blind/claude-code/2026-10-21-b](blind/claude-code/2026-10-21-b/CELL.md) (12/12)
   - Study 2 regressions (US and Israel) are unweighted: the Study 2 data files contain no weight variable. Study 1 regressions use the `weight` column, as the task context states.
   - The Israeli identity_protesters factor is unlabeled; codes taken as 0 = white Jews, 1 = Ethiopian Jews, 2 = Arabs, following the order the paper lists the conditions (in Study 2 code 0 has about half the cell count of the others, consistent with the two omitted white-protester conditions, which supports 0 = white; the 1 vs 2 assignment cannot be verified from the data).
@@ -88,12 +91,6 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
 _None._
-
-Pass rates at least 50 points apart (not unanimous):
-
-- blind: `study1_israel_arab_perceived_violence` — pipeline 2/4, agent 3/3
-- blind: `study1_israel_arab_police_action` — pipeline 2/4, agent 3/3
-- blind: `study1_israel_ethiopian_police_action` — pipeline 2/4, agent 3/3
 
 ## Cells
 
@@ -141,6 +138,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/pipeline-claude-opus-5-5/20261022T044632Z/CELL.md`](independent/pipeline-claude-opus-5-5/20261022T044632Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-10-22T04:46:32Z; from `pipeline-opus55-4papers-all-modes-2026-10-22.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-postfix · 20261103T062157Z
+
+[`independent/pipeline-desktop-opus-postfix/20261103T062157Z/CELL.md`](independent/pipeline-desktop-opus-postfix/20261103T062157Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-11-03T06:21:57Z; from `pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus-run2 · 20261023T150832Z
 
 [`independent/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-10-23T15:08:32Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
@@ -168,6 +169,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · pipeline-claude-opus-5-5 · 20261022T044632Z
 
 [`blind/pipeline-claude-opus-5-5/20261022T044632Z/CELL.md`](blind/pipeline-claude-opus-5-5/20261022T044632Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-10-22T04:46:32Z; from `pipeline-opus55-4papers-all-modes-2026-10-22.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-postfix · 20261103T062809Z
+
+[`blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md`](blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-11-03T06:28:09Z; from `pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus-run2 · 20261023T150832Z
 

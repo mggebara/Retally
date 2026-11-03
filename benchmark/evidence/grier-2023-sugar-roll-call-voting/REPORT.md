@@ -41,6 +41,7 @@
 | `claude-code` | [10/11](seeded/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[10/11](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [10/11](independent/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[9/11](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[9/11](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [10/11](blind/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[9/11](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[10/11](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[8/11](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
 | `pipeline-claude-opus-4-7` | [0/11](seeded/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [0/11](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [0/11](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) |
 | `pipeline-claude-opus-5-5` | [11/11](seeded/pipeline-claude-opus-5-5/20261022T043524Z/CELL.md) (20261022T043524Z) | [0/11](independent/pipeline-claude-opus-5-5/20261022T043524Z/CELL.md) (20261022T043524Z) | [0/11](blind/pipeline-claude-opus-5-5/20261022T043524Z/CELL.md) (20261022T043524Z) |
+| `pipeline-desktop-opus-postfix` | — | [10/11](independent/pipeline-desktop-opus-postfix/20261103T070149Z/CELL.md) (20261103T070149Z) | [2/11](blind/pipeline-desktop-opus-postfix/20261103T064954Z/CELL.md) (20261103T064954Z) |
 | `pipeline-desktop-opus-run2` | [10/11](seeded/pipeline-desktop-opus-run2/20261023T152513Z/CELL.md) (20261023T152513Z) | [2/11](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) (20261023T153002Z) | [0/11](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
 | `pipeline-desktop-opus-run3` | [10/11](seeded/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md) (20261103T050517Z) | [2/11](independent/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md) (20261103T050517Z) | [2/11](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) |
 
@@ -61,9 +62,9 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | [blind/claude-code/2026-11-02-c](blind/claude-code/2026-11-02-c/CELL.md) | `sugar_contributions_calendar_year_district_fe` | -0.000552102 | -0.0006 | ±5e-05 (printed_precision) | 0.958 | PASS |
 | [independent/claude-code/2026-11-02-c](independent/claude-code/2026-11-02-c/CELL.md) | `tenure_incumbent_fe` | -1.39958 | -1.43 | ±0.0286 (relative) | 1.063 | FAIL |
 | [independent/claude-code/2026-11-01-a](independent/claude-code/2026-11-01-a/CELL.md) | `sugar_contributions_calendar_year_incumbent_fe` | -0.000554504 | -0.0005 | ±5e-05 (printed_precision) | 1.090 | FAIL |
+| [independent/pipeline-desktop-opus-postfix/20261103T070149Z](independent/pipeline-desktop-opus-postfix/20261103T070149Z/CELL.md) | `sugar_contributions_calendar_year_incumbent_fe` | -0.000542647 | -0.0005 | ±5e-05 (printed_precision) | 0.853 | PASS |
+| [independent/pipeline-desktop-opus-postfix/20261103T070149Z](independent/pipeline-desktop-opus-postfix/20261103T070149Z/CELL.md) | `sugar_contributions_calendar_year_district_fe` | -0.000557489 | -0.0006 | ±5e-05 (printed_precision) | 0.850 | PASS |
 | [independent/claude-code/2026-11-02-c](independent/claude-code/2026-11-02-c/CELL.md) | `sugar_contributions_calendar_year_district_fe` | -0.00055749 | -0.0006 | ±5e-05 (printed_precision) | 0.850 | PASS |
-| [seeded/pipeline-claude-opus-5-5/20261022T043524Z](seeded/pipeline-claude-opus-5-5/20261022T043524Z/CELL.md) | `sugar_contributions_calendar_year_incumbent_fe` | -0.000540619 | -0.0005 | ±5e-05 (printed_precision) | 0.812 | PASS |
-| [independent/claude-code/2026-10-21-b](independent/claude-code/2026-10-21-b/CELL.md) | `sugar_contributions_calendar_year_incumbent_fe` | -0.00056128 | -0.0005 | ±5e-05 (printed_precision) | 1.226 | FAIL |
 
 ### Declared deviations
 
@@ -86,6 +87,8 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 - [independent/claude-code/2026-11-02-c](independent/claude-code/2026-11-02-c/CELL.md) (9/11; failed: `tenure_district_fe`, `tenure_incumbent_fe`)
   - Agriculture-committee coefficient is quasi-separated (R's glm drifts to about -57 rather than Stata's -36.3); not a scored claim.
   - Contributions variable taken to be totalcont as supplied (assumed already inflation-adjusted by the authors); no further deflation applied.
+- [independent/pipeline-desktop-opus-postfix/20261103T070149Z](independent/pipeline-desktop-opus-postfix/20261103T070149Z/CELL.md) (10/11; failed: `tenure_district_fe`)
+  - Table 1 col 1 estimated as dummy-variable logit via stats::glm (Stata logit i.district analogue, epsilon=1e-7) instead of fixest::feglm; point estimates only, robust SEs not used for any RESULT
 - [independent/pipeline-desktop-opus-run2/20261023T153002Z](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) (2/11; failed: `sugar_contributions_district_fe`, `sugar_contributions_incumbent_fe`, `acu_ideology_district_fe`, `tenure_district_fe`, `tenure_incumbent_fe`, `sugar_contributions_calendar_year_district_fe`, `sugar_contributions_calendar_year_incumbent_fe`, `sugar_contributions_12_months_district_fe`, `sugar_contributions_12_months_incumbent_fe`)
   - dataset holds nominal contributions; converted to real 2013 dollars with BLS CPI-U annual averages (2018 values x 232.957/251.107) since the paper's deflator/base year is not stated
   - alternative-window contributions taken from window-named variables if present, else from SugarReplicate_iter1.dta (calendar year) and SugarReplicate_iter2.dta (12 months)
@@ -120,29 +123,27 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
-- independent: `acu_ideology_district_fe` — pipeline 0/4, agent 3/3
-- independent: `sugar_contributions_12_months_district_fe` — pipeline 0/4, agent 3/3
-- independent: `sugar_contributions_12_months_incumbent_fe` — pipeline 0/4, agent 3/3
-- independent: `sugar_contributions_calendar_year_district_fe` — pipeline 0/4, agent 3/3
-- independent: `sugar_contributions_district_fe` — pipeline 0/4, agent 3/3
-- independent: `sugar_contributions_incumbent_fe` — pipeline 0/4, agent 3/3
-- blind: `acu_ideology_district_fe` — pipeline 0/4, agent 4/4
-- blind: `sugar_contributions_district_fe` — pipeline 0/4, agent 4/4
-- blind: `sugar_contributions_incumbent_fe` — pipeline 0/4, agent 4/4
-- blind: `tenure_district_fe` — pipeline 0/4, agent 4/4
-- blind: `tenure_incumbent_fe` — pipeline 0/4, agent 4/4
+- blind: `acu_ideology_district_fe` — pipeline 0/5, agent 4/4
+- blind: `sugar_contributions_district_fe` — pipeline 0/5, agent 4/4
+- blind: `sugar_contributions_incumbent_fe` — pipeline 0/5, agent 4/4
+- blind: `tenure_district_fe` — pipeline 0/5, agent 4/4
+- blind: `tenure_incumbent_fe` — pipeline 0/5, agent 4/4
 
 Pass rates at least 50 points apart (not unanimous):
 
-- independent: `observations_district_fe` — pipeline 2/4, agent 3/3
-- independent: `observations_incumbent_fe` — pipeline 2/4, agent 3/3
-- independent: `tenure_district_fe` — pipeline 0/4, agent 2/3
-- blind: `observations_district_fe` — pipeline 1/4, agent 4/4
-- blind: `observations_incumbent_fe` — pipeline 1/4, agent 4/4
-- blind: `sugar_contributions_12_months_district_fe` — pipeline 0/4, agent 3/4
-- blind: `sugar_contributions_12_months_incumbent_fe` — pipeline 0/4, agent 2/4
-- blind: `sugar_contributions_calendar_year_district_fe` — pipeline 0/4, agent 2/4
-- blind: `sugar_contributions_calendar_year_incumbent_fe` — pipeline 0/4, agent 2/4
+- independent: `acu_ideology_district_fe` — pipeline 1/5, agent 3/3
+- independent: `sugar_contributions_12_months_district_fe` — pipeline 1/5, agent 3/3
+- independent: `sugar_contributions_12_months_incumbent_fe` — pipeline 1/5, agent 3/3
+- independent: `sugar_contributions_calendar_year_district_fe` — pipeline 1/5, agent 3/3
+- independent: `sugar_contributions_district_fe` — pipeline 1/5, agent 3/3
+- independent: `sugar_contributions_incumbent_fe` — pipeline 1/5, agent 3/3
+- independent: `tenure_district_fe` — pipeline 0/5, agent 2/3
+- blind: `observations_district_fe` — pipeline 2/5, agent 4/4
+- blind: `observations_incumbent_fe` — pipeline 2/5, agent 4/4
+- blind: `sugar_contributions_12_months_district_fe` — pipeline 0/5, agent 3/4
+- blind: `sugar_contributions_12_months_incumbent_fe` — pipeline 0/5, agent 2/4
+- blind: `sugar_contributions_calendar_year_district_fe` — pipeline 0/5, agent 2/4
+- blind: `sugar_contributions_calendar_year_incumbent_fe` — pipeline 0/5, agent 2/4
 
 ## Cells
 
@@ -190,6 +191,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/pipeline-claude-opus-5-5/20261022T043524Z/CELL.md`](independent/pipeline-claude-opus-5-5/20261022T043524Z/CELL.md) — final 0/11, re-scored 0/11; first scored 0/11; executions 3; 2026-10-22T04:35:24Z; from `pipeline-opus55-4papers-all-modes-2026-10-22.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-postfix · 20261103T070149Z
+
+[`independent/pipeline-desktop-opus-postfix/20261103T070149Z/CELL.md`](independent/pipeline-desktop-opus-postfix/20261103T070149Z/CELL.md) — final 10/11, re-scored 10/11; first scored 6/11; executions 3; 2026-11-03T07:01:49Z; from `pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus-run2 · 20261023T153002Z
 
 [`independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) — final 2/11, re-scored 2/11; first scored 1/11; executions 4; 2026-10-23T15:30:02Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
@@ -221,6 +226,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · pipeline-claude-opus-5-5 · 20261022T043524Z
 
 [`blind/pipeline-claude-opus-5-5/20261022T043524Z/CELL.md`](blind/pipeline-claude-opus-5-5/20261022T043524Z/CELL.md) — final 0/11, re-scored 0/11; first scored 0/11; executions 1; 2026-10-22T04:35:24Z; from `pipeline-opus55-4papers-all-modes-2026-10-22.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-postfix · 20261103T064954Z
+
+[`blind/pipeline-desktop-opus-postfix/20261103T064954Z/CELL.md`](blind/pipeline-desktop-opus-postfix/20261103T064954Z/CELL.md) — final 2/11, re-scored 2/11; first scored 2/11; executions 2; 2026-11-03T06:49:54Z; from `pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus-run2 · 20261023T150832Z
 
