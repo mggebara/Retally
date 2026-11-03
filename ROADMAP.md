@@ -3452,6 +3452,23 @@ Section 4.8 and a limitations sentence.
 - (b) openICPSR downloads: the user's.
 - Nothing else new.
 
+### 3.8.2 Sample-size check: `count` claims (2026-11-03) — ✅ fixed, refrozen
+
+The sample reconciliation of 3.8 opens a claim-refinement prompt with the
+gap between the stated N and the script's N, but `is_sample_size_claim`
+accepted only claims typed `other`.  PR #123 had already retyped every
+catalog sample size as `count` (62 claims), so the check never fired: in
+the first post-fix sample (3.8.1) 12 refinement prompts in 8 independent
+cells went out without the "Sample size check (fix this first)" block,
+and the sample measured the data inventory, the SAMPLE lines and the
+completeness repair only.  The fix accepts `count` claims directly and
+keeps the keyword heuristics for the older `other` typing; a test covers
+both.  Nothing else in the loop or the prompts changed, so the first
+post-fix sample stands as recorded, labelled "check not firing".  The
+second post-fix sample (`desktop-opus-postfix2`) is run with the check
+firing and is reported as its own row.  The pipeline is refrozen at this
+PR's merge commit.
+
 ---
 
 ## Phase 4 — Corpus growth (4 → 20–30 papers)

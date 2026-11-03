@@ -1485,11 +1485,15 @@ def _claim_detail_lines(claim) -> list[str]:
     return lines
 
 
-# A claim is a stated sample size when it is a whole number of type
-# ``other`` and its name or unit says it counts rows, clusters or units
-# (``n_obs_...``, ``..._observations``, ``n_clusters_...``, unit
-# "respondents").  Generic words only; used to put the sample gap first in
-# claim refinement, never for scoring.
+# A claim is a stated sample size when it is typed ``count`` (PR #123's
+# type for observations, clusters and units), or, for the older ``other``
+# typing, when it is a whole number whose name or unit says it counts rows,
+# clusters or units (``n_obs_...``, ``..._observations``, ``n_clusters_...``,
+# unit "respondents").  Generic words only; used to put the sample gap first
+# in claim refinement, never for scoring.  The ``other``-only test shipped in
+# PR #124 while #123 had already retyped every catalog sample size as
+# ``count``, so the check never fired in the first post-fix sample
+# (ROADMAP 3.8.2).
 _COUNT_WORDS = frozenset(
     "obs nobs observation observations cluster clusters sample size respondents participants "
     "subjects households individuals units count".split()
@@ -1499,6 +1503,8 @@ _COUNT_PREFIXES = frozenset({"n", "num", "number"})
 
 def is_sample_size_claim(claim) -> bool:
     """Whether ``claim`` states a sample size (an N, a cluster count) rather than an estimate."""
+    if claim.claim_type is ClaimType.COUNT:
+        return True
     if claim.claim_type is not ClaimType.OTHER:
         return False
     value = claim.value
