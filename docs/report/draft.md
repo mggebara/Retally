@@ -8,7 +8,7 @@
 
 ## 1. Summary
 
-We built a benchmark that asks a language-model system to reproduce the headline numbers of published economics and political-science papers, scored against the papers' printed values and against the values that human replicators at the Institute for Replication (I4R) obtained.  Each paper is attempted in three modes: *seeded* (the authors' replication scripts are provided), *independent* (scripts withheld, target values shown) and *blind* (scripts and target values withheld).  Two systems sat the benchmark: a fixed pipeline that writes one R script and refines it, and a Claude Code agent with its own loop.  On twenty-three evaluation papers (278 pinned claims) the agent reproduced 277, 267 and 250 claims within tolerance of the paper's printed value in seeded, independent and blind mode; the pipeline, run on the same model family, reproduced 263, 235 and 170.  Those are first samples.  Second samples of both systems now exist on all twenty-three papers: the agent's second reproduced 266, 270 and 248, its seeded count 11 lower because one cell (Holman) crashed after its error repairs ran out, and the pipeline's second 265, 223 and 172.  On the seventeen papers measured first (201 claims) the agent reproduced 200, 194 and 180, then 189, 194 and 177, and the pipeline 194, 169 and 118, then 195, 161 and 120.  On the seven papers where an older model was also run, moving the pipeline from `claude-opus-4-7` to Opus 5.5 raised its blind count from 24 to 51 of 79, against the agent's 75.  The finding: with the authors' code in hand both systems are near the ceiling, and the loss when the code and the targets are withheld is mostly a property of the harness and of what the papers' methods sections leave unstated.  Over the twenty-three papers the first-sample gap is 14 claims seeded, 32 independent and 80 blind; on the six papers added last it is 8, 7 and 18, the seeded figure driven by one pipeline cell (Section 4.3).  The agent also has a third sample in independent and blind mode, 264 and 247.  Pairing each of the agent's samples with each of the pipeline's, the gap over all twenty-three papers is 29 to 47 claims in independent mode and 75 to 80 in blind mode (22 to 33 and 55 to 62 on the seventeen measured first, 15 to 20 and 38 to 53 on the thirteen); in seeded mode, with two agent samples, it is 1 to 14 claims (−6 to 6 on the seventeen): 12 to 14 with the agent's first seeded sample, more than half of that one inverted pipeline cell, Douenne seeded (Section 4.3), and 1 to 3 with its second, whose Holman cell crashed.  A memorization probe, asking the same model for each number from memory with no data, landed 41 of the 278 claims inside the blind tolerance, none by stated recall, so memory does not explain the agent's blind result.  The limitations: on all twenty-three papers the pipeline on Opus 5.5 has two samples per cell in every mode and the agent three in independent and blind mode and two seeded, and the older pipeline one; all twenty-three papers predate the models' training cutoffs; two or three samples show how much a cell moves but do not give a standard error, so none of these differences carries a measured uncertainty.
+We built a benchmark that asks a language-model system to reproduce the headline numbers of published economics and political-science papers, scored against the papers' printed values and against the values that human replicators at the Institute for Replication (I4R) obtained.  Each paper is attempted in three modes: *seeded* (the authors' replication scripts are provided), *independent* (scripts withheld, target values shown) and *blind* (scripts and target values withheld).  Two systems sat the benchmark: a fixed pipeline that writes one R script and refines it, and a Claude Code agent with its own loop.  On twenty-three evaluation papers (278 pinned claims) the agent reproduced 277, 268 and 252 claims within tolerance of the paper's printed value in seeded, independent and blind mode; the pipeline, run on the same model family, reproduced 263, 239 and 173.  Those are first samples, scored, like every count in this report, with sample-size claims at a 5 % band (Section 3; ROADMAP 3.7.4).  Second samples of both systems now exist on all twenty-three papers: the agent's second reproduced 266, 271 and 251, its seeded count 11 lower because one cell (Holman) crashed after its error repairs ran out, and the pipeline's second 265, 226 and 176; the pipeline's third reproduced 254, 227 and 181.  On the seventeen papers measured first (201 claims) the agent reproduced 200, 195 and 182, then 189, 195 and 180, and the pipeline 194, 172 and 121, then 195, 164 and 124.  On the seven papers where an older model was also run, moving the pipeline from `claude-opus-4-7` to Opus 5.5 raised its blind count from 29 to 52 of 79, against the agent's 75.  The finding: with the authors' code in hand both systems are near the ceiling, and the loss when the code and the targets are withheld is mostly a property of the harness and of what the papers' methods sections leave unstated.  Over the twenty-three papers the first-sample gap is 14 claims seeded, 29 independent and 79 blind; on the six papers added last it is 8, 6 and 18, the seeded figure driven by one pipeline cell (Section 4.3).  The agent also has a third sample in independent and blind mode, 265 and 250.  Pairing each of the agent's three samples with each of the pipeline's three, the gap over all twenty-three papers is 26 to 45 claims in independent mode and 69 to 79 in blind mode (20 to 31 and 51 to 61 on the seventeen measured first, 11 to 19 and 35 to 51 on the thirteen); in seeded mode, with two agent samples against three pipeline samples, it is 1 to 23 claims (−6 to 17 on the seventeen): 12 to 23 with the agent's first seeded sample and 1 to 12 with its second, whose Holman cell crashed; the top end is the pipeline's third seeded sample, whose Forsythe cell printed no results (ROADMAP 3.7.4), and Douenne seeded, the inverted pipeline cell of Section 4.3, accounts for more than half of the 12 to 14 that the first two pipeline samples give against the agent's first.  A memorization probe, asking the same model for each number from memory with no data, landed 44 of the 278 claims inside the blind tolerance, none by stated recall, so memory does not explain the agent's blind result.  The limitations: on all twenty-three papers the pipeline on Opus 5.5 has three samples per cell in every mode and the agent three in independent and blind mode and two seeded, and the older pipeline one; all twenty-three papers predate the models' training cutoffs; two or three samples show how much a cell moves but do not give a standard error, so none of these differences carries a measured uncertainty.
 
 ## 2. Introduction
 
@@ -109,7 +109,7 @@ In independent and blind mode the data directory is a *script-free copy*: script
 
 ### 3.4 Tolerance and scoring
 
-A claim *passes* when the reproduced value is within tolerance of the paper's printed value.  We report these as counts of claims, not as rates.  Seeded mode uses a strict relative band per claim type (2 % for coefficients, 5 % for standard errors, 1 % for other quantities such as sample sizes; `benchmark/README.md` and `src/retally/validation/comparator.py`), because translating the authors' code should land on their numbers.  Independent and blind mode accept a value within one standard error of the printed value when the claim pins a standard error, never narrower than the relative band, and use the relative band otherwise; rebuilding a specification from prose is not expected to hit the fourth decimal.  In every mode the band is never narrower than half a unit in the printed value's last decimal place, so a reproduction that rounds to the printed number always passes.  This floor matters for papers that print coefficients to one significant digit.
+A claim *passes* when the reproduced value is within tolerance of the paper's printed value.  We report these as counts of claims, not as rates.  Seeded mode uses a strict relative band per claim type (2 % for coefficients, 5 % for standard errors and for counts such as observations, clusters and respondents, 1 % for other quantities such as F statistics; `benchmark/README.md` and `src/retally/validation/comparator.py`), because translating the authors' code should land on their numbers.  Counts had the 1 % band until 2026-11-03, when 62 sample-size claims were relabelled `count` and every stored results file was rescored offline from its stored values; first-scored counts were left as recorded, because the first-scored value is not stored (ROADMAP 3.7.4).  Independent and blind mode accept a value within one standard error of the printed value when the claim pins a standard error, never narrower than the relative band, and use the relative band otherwise; rebuilding a specification from prose is not expected to hit the fourth decimal.  In every mode the band is never narrower than half a unit in the printed value's last decimal place, so a reproduction that rounds to the printed number always passes.  This floor matters for papers that print coefficients to one significant digit.
 
 The wider independent band is a real asymmetry.  A pass count in independent mode is not comparable with one in seeded mode on closeness, so we report median relative error and the share of claims within one, two and five times their tolerance beside every count (Section 4.6).
 
@@ -137,38 +137,38 @@ Every script, from either reproducer, runs in the same Docker image (`retally-sa
 
 ## 4. Results
 
-Read the modes separately.  Seeded numbers measure translation of the authors' code.  Independent numbers measure reconstruction from the text with the targets visible and a refinement loop chasing them.  Blind numbers are the only ones free of target-guided search.  Every cell in the tables of Sections 4.1–4.7 is one run; for the pipeline on Opus 5.5 that run is the first of two samples on every paper, and the second is in Section 4.8.  Rows marked 13 cover the evaluation papers of ROADMAP 3.2–3.5; rows marked 17 add the four papers of ROADMAP 3.6; rows marked 23 add the six papers of ROADMAP 3.7.
+Read the modes separately.  Seeded numbers measure translation of the authors' code.  Independent numbers measure reconstruction from the text with the targets visible and a refinement loop chasing them.  Blind numbers are the only ones free of target-guided search.  Every cell in the tables of Sections 4.1–4.7 is one run; for the pipeline on Opus 5.5 that run is the first of three samples on every paper, and the others are in Section 4.8.  Every count uses the 5 % band for sample-size claims (`count` claims, ROADMAP 3.7.4); ROADMAP sections before 3.7.4 quote the earlier 1 % band, so some of their figures are a claim or a few lower than the ones here.  Rows marked 13 cover the evaluation papers of ROADMAP 3.2–3.5; rows marked 17 add the four papers of ROADMAP 3.6; rows marked 23 add the six papers of ROADMAP 3.7.
 
 <!-- table:headline -->
 Claims within tolerance of the paper's printed value, summed over papers; first-scored count in parentheses.  One run per cell (the first sample of each system).  Rows marked 13 cover the evaluation papers of ROADMAP 3.2–3.5; rows marked 17 add the four papers of ROADMAP 3.6; rows marked 23 add the six papers of ROADMAP 3.7.
 
 | Reproducer | Papers | Seeded | Independent | Blind |
 |---|---|---:|---:|---:|
-| Pipeline, `claude-opus-4-7` | 7 evaluation (3.2) | 55 / 79 (46) | 41 / 79 (27) | 24 / 79 (24) |
-| Pipeline, `claude-opus-5-5` (API) | 4 evaluation (3.5, API) | 44 / 44 (43) | 33 / 44 (21) | 20 / 44 (20) |
-| Pipeline, desktop Opus (oracle) | 9 evaluation (3.5, oracle) | 105 / 110 (105) | 96 / 110 (68) | 72 / 110 (72) |
-| Pipeline, desktop Opus (oracle) | 4 evaluation (3.6, oracle) | 45 / 47 (45) | 40 / 47 (32) | 26 / 47 (26) |
-| Pipeline, desktop Opus (oracle) | 6 evaluation (3.7, oracle) | 69 / 77 (69) | 66 / 77 (47) | 52 / 77 (52) |
-| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 13 earlier evaluation (3.2–3.5) | 149 / 154 (148) | 129 / 154 (89) | 92 / 154 (92) |
-| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 17 evaluation (3.2–3.6) | 194 / 201 (193) | 169 / 201 (121) | 118 / 201 (118) |
-| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | all 23 evaluation | 263 / 278 (262) | 235 / 278 (168) | 170 / 278 (170) |
+| Pipeline, `claude-opus-4-7` | 7 evaluation (3.2) | 55 / 79 (46) | 47 / 79 (27) | 29 / 79 (24) |
+| Pipeline, `claude-opus-5-5` (API) | 4 evaluation (3.5, API) | 44 / 44 (43) | 33 / 44 (21) | 21 / 44 (20) |
+| Pipeline, desktop Opus (oracle) | 9 evaluation (3.5, oracle) | 105 / 110 (105) | 97 / 110 (68) | 74 / 110 (72) |
+| Pipeline, desktop Opus (oracle) | 4 evaluation (3.6, oracle) | 45 / 47 (45) | 42 / 47 (32) | 26 / 47 (26) |
+| Pipeline, desktop Opus (oracle) | 6 evaluation (3.7, oracle) | 69 / 77 (69) | 67 / 77 (47) | 52 / 77 (52) |
+| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 13 earlier evaluation (3.2–3.5) | 149 / 154 (148) | 130 / 154 (89) | 95 / 154 (92) |
+| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 17 evaluation (3.2–3.6) | 194 / 201 (193) | 172 / 201 (121) | 121 / 201 (118) |
+| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | all 23 evaluation | 263 / 278 (262) | 239 / 278 (168) | 173 / 278 (170) |
 | Agent (Claude Code, desktop Opus) | 7 evaluation (3.3) | 78 / 79 (78) | 78 / 79 (77) | 75 / 79 (70) |
-| Agent (Claude Code, desktop Opus) | 6 evaluation (3.4) | 75 / 75 (73) | 70 / 75 (69) | 60 / 75 (58) |
-| Agent (Claude Code, desktop Opus) | 4 evaluation (3.6) | 47 / 47 (43) | 46 / 47 (46) | 45 / 47 (45) |
+| Agent (Claude Code, desktop Opus) | 6 evaluation (3.4) | 75 / 75 (73) | 71 / 75 (69) | 61 / 75 (58) |
+| Agent (Claude Code, desktop Opus) | 4 evaluation (3.6) | 47 / 47 (43) | 46 / 47 (46) | 46 / 47 (45) |
 | Agent (Claude Code, desktop Opus) | 6 evaluation (3.7) | 77 / 77 (73) | 73 / 77 (60) | 70 / 77 (70) |
-| Agent (Claude Code, desktop Opus) | 13 earlier evaluation (3.3–3.4) | 153 / 154 (151) | 148 / 154 (146) | 135 / 154 (128) |
-| Agent (Claude Code, desktop Opus) | 17 evaluation (3.3–3.6) | 200 / 201 (194) | 194 / 201 (192) | 180 / 201 (173) |
-| Agent (Claude Code, desktop Opus) | all 23 evaluation | 277 / 278 (267) | 267 / 278 (252) | 250 / 278 (243) |
+| Agent (Claude Code, desktop Opus) | 13 earlier evaluation (3.3–3.4) | 153 / 154 (151) | 149 / 154 (146) | 136 / 154 (128) |
+| Agent (Claude Code, desktop Opus) | 17 evaluation (3.3–3.6) | 200 / 201 (194) | 195 / 201 (192) | 182 / 201 (173) |
+| Agent (Claude Code, desktop Opus) | all 23 evaluation | 277 / 278 (267) | 268 / 278 (252) | 252 / 278 (243) |
 | Pipeline, `claude-opus-4-7` | 3 dev | 30 / 35 (29) | 23 / 35 (17) | — |
 <!-- /table:headline -->
 
 ### 4.1 The pipeline on `claude-opus-4-7`
 
-On the seven evaluation papers measured first, the pipeline on `claude-opus-4-7` reproduced 55 of 79 claims seeded, 41 independent and 24 blind.  Its first-scored counts were 46, 27 and 24.  Seeded was not a ceiling.  Grier failed in every mode, including seeded, because the model estimated a conditional logit instead of the paper's logit with fixed-effect dummies, and Arias passed only its four counts seeded because the model re-estimated the conjoint effects with a linear model instead of translating the package's `cjoint::amce` call (ROADMAP 3.2).  Montero is the clearest single case.  I4R found duplicated rows behind the paper's Table 5 earnings results.  Seeded, the first script matched neither the paper nor the replicators; one claim-refinement round, told the gaps to the printed values, then reproduced the paper's printed numbers exactly.  Target-guided search converged on numbers the replicators had shown to be wrong (ROADMAP 3.2).
+On the seven evaluation papers measured first, the pipeline on `claude-opus-4-7` reproduced 55 of 79 claims seeded, 47 independent and 29 blind.  Its first-scored counts were 46, 27 and 24 (first-scored counts were not rescored when the count band widened, ROADMAP 3.7.4).  Seeded was not a ceiling.  Grier failed in every mode, including seeded, because the model estimated a conditional logit instead of the paper's logit with fixed-effect dummies, and Arias passed only its four counts seeded because the model re-estimated the conjoint effects with a linear model instead of translating the package's `cjoint::amce` call (ROADMAP 3.2).  Montero is the clearest single case.  I4R found duplicated rows behind the paper's Table 5 earnings results.  Seeded, the first script matched neither the paper nor the replicators; one claim-refinement round, told the gaps to the printed values, then reproduced the paper's printed numbers exactly.  Target-guided search converged on numbers the replicators had shown to be wrong (ROADMAP 3.2).
 
 ### 4.2 The agent on twenty-three papers
 
-Over all twenty-three evaluation papers the agent reproduced 277, 267 and 250 of 278 claims seeded, independent and blind, with first-scored counts of 267, 252 and 243.  On the seventeen papers of ROADMAP 3.2–3.6 it reproduced 200, 194 and 180 of 201 (first scored 194, 192 and 173), on the thirteen measured first 153, 148 and 135 of 154, on the six added last 77, 73 and 70 of 77, and on the seven papers above 78, 78 and 75 of 79.  Its misses are few and concentrated: in independent mode eleven claims on five papers, in blind mode twenty-eight on eight (Section 5).  On the four papers of ROADMAP 3.6 the three misses are all Forsythe's; on the six of ROADMAP 3.7 ten of its eleven misses are Labandeira's, its lowest independent and blind shares on any paper (8 and 6 of 12), and the agent matched every claim of Mokyr, Hollyer, Hanushek and Dancygier in every mode (ROADMAP 3.7).  Two caveats belong next to these numbers.  First, the agent's first execution is usually a data-inspection run that prints nothing, so its *first-attempt* count is meaningless; first scored is the comparable figure.  Second, its error and claim refinement counts are its own bookkeeping, and ROADMAP 3.3 records two re-runs steered by numbers stated in claim contexts that were not labeled as claim refinements, so those counts are a lower bound.
+Over all twenty-three evaluation papers the agent reproduced 277, 268 and 252 of 278 claims seeded, independent and blind, with first-scored counts of 267, 252 and 243.  On the seventeen papers of ROADMAP 3.2–3.6 it reproduced 200, 195 and 182 of 201 (first scored 194, 192 and 173), on the thirteen measured first 153, 149 and 136 of 154, on the six added last 77, 73 and 70 of 77, and on the seven papers above 78, 78 and 75 of 79.  Its misses are few and concentrated: in independent mode ten claims on four papers, in blind mode twenty-six on eight (Section 5).  On the four papers of ROADMAP 3.6 the two misses are both Forsythe's; on the six of ROADMAP 3.7 ten of its eleven misses are Labandeira's, its lowest independent and blind shares on any paper (8 and 6 of 12), and the agent matched every claim of Mokyr, Hollyer, Hanushek and Dancygier in every mode (ROADMAP 3.7).  Two caveats belong next to these numbers.  First, the agent's first execution is usually a data-inspection run that prints nothing, so its *first-attempt* count is meaningless; first scored is the comparable figure.  Second, its error and claim refinement counts are its own bookkeeping, and ROADMAP 3.3 records two re-runs steered by numbers stated in claim contexts that were not labeled as claim refinements, so those counts are a lower bound.
 
 ### 4.3 The model confound and its resolution
 
@@ -180,17 +180,17 @@ Same papers, same modes, three ways.  "Pipeline on Opus 5.5" is the API run (`cl
 | Papers | Mode | Pipeline 4.7 | Pipeline on Opus 5.5 | Agent |
 |---|---|---:|---:|---:|
 | 7 papers (3.2 set) | seeded | 55 / 79 (46) | 79 / 79 (78) | 78 / 79 (78) |
-| 7 papers (3.2 set) | independent | 41 / 79 (27) | 67 / 79 (51) | 78 / 79 (77) |
-| 7 papers (3.2 set) | blind | 24 / 79 (24) | 51 / 79 (51) | 75 / 79 (70) |
+| 7 papers (3.2 set) | independent | 47 / 79 (27) | 67 / 79 (51) | 78 / 79 (77) |
+| 7 papers (3.2 set) | blind | 29 / 79 (24) | 52 / 79 (51) | 75 / 79 (70) |
 | API route: grier-2023, leeson-2022, manekin-2022, montero-2022 | seeded | 28 / 44 (19) | 44 / 44 (43) | 43 / 44 (43) |
-| API route: grier-2023, leeson-2022, manekin-2022, montero-2022 | independent | 24 / 44 (17) | 33 / 44 (21) | 43 / 44 (42) |
-| API route: grier-2023, leeson-2022, manekin-2022, montero-2022 | blind | 10 / 44 (10) | 20 / 44 (20) | 43 / 44 (42) |
+| API route: grier-2023, leeson-2022, manekin-2022, montero-2022 | independent | 26 / 44 (17) | 33 / 44 (21) | 43 / 44 (42) |
+| API route: grier-2023, leeson-2022, manekin-2022, montero-2022 | blind | 11 / 44 (10) | 21 / 44 (20) | 43 / 44 (42) |
 | oracle route: adams-2023, arias-2022, hanlon-2022 | seeded | 27 / 35 (27) | 35 / 35 (35) | 35 / 35 (35) |
-| oracle route: adams-2023, arias-2022, hanlon-2022 | independent | 17 / 35 (10) | 34 / 35 (30) | 35 / 35 (35) |
-| oracle route: adams-2023, arias-2022, hanlon-2022 | blind | 14 / 35 (14) | 31 / 35 (31) | 32 / 35 (28) |
+| oracle route: adams-2023, arias-2022, hanlon-2022 | independent | 21 / 35 (10) | 34 / 35 (30) | 35 / 35 (35) |
+| oracle route: adams-2023, arias-2022, hanlon-2022 | blind | 18 / 35 (14) | 31 / 35 (31) | 32 / 35 (28) |
 <!-- /table:confound -->
 
-With the model held fixed, the seven-paper row reads 79, 67 and 51 of 79 for the pipeline against 78, 78 and 75 for the agent.  In seeded mode the pipeline on Opus 5.5 reached every claim, one more than the agent.[^seeded-gap]  The per-paper cells show where the remaining differences sit.
+With the model held fixed, the seven-paper row reads 79, 67 and 52 of 79 for the pipeline against 78, 78 and 75 for the agent.  In seeded mode the pipeline on Opus 5.5 reached every claim, one more than the agent.[^seeded-gap]  The per-paper cells show where the remaining differences sit.
 
 <!-- table:seven_per_paper -->
 Final count (first scored; error / claim refinements).  The agent's refinement counts are its own bookkeeping (ROADMAP 3.3).
@@ -202,19 +202,19 @@ Final count (first scored; error / claim refinements).  The agent's refinement c
 | `grier-2023` | API | blind | 11 | 0 (0; 2/0) | 0 (0; 0/0) | 10 (10; 0/0) |
 | `leeson-2022` | API | seeded | 11 | 11 (11; 0/0) | 11 (11; 0/0) | 11 (11; 0/0) |
 | `leeson-2022` | API | independent | 11 | 9 (9; 0/1) | 11 (8; 0/2) | 11 (10; 0/1) |
-| `leeson-2022` | API | blind | 11 | 4 (4; 0/0) | 8 (8; 0/0) | 11 (10; 0/0) |
+| `leeson-2022` | API | blind | 11 | 5 (4; 0/0) | 9 (8; 0/0) | 11 (10; 0/0) |
 | `manekin-2022` | API | seeded | 12 | 7 (8; 1/3) | 12 (12; 0/0) | 12 (12; 1/0) |
 | `manekin-2022` | API | independent | 12 | 12 (6; 1/1) | 12 (12; 0/0) | 12 (12; 0/0) |
 | `manekin-2022` | API | blind | 12 | 6 (6; 0/0) | 12 (12; 0/0) | 12 (12; 1/0) |
 | `montero-2022` | API | seeded | 10 | 10 (0; 0/1) | 10 (10; 0/0) | 10 (10; 0/0) |
-| `montero-2022` | API | independent | 10 | 3 (2; 2/3) | 10 (1; 2/1) | 10 (10; 0/0) |
+| `montero-2022` | API | independent | 10 | 5 (2; 2/3) | 10 (1; 2/1) | 10 (10; 0/0) |
 | `montero-2022` | API | blind | 10 | 0 (0; 0/0) | 0 (0; 0/0) | 10 (10; 0/0) |
 | `adams-2023` | oracle | seeded | 11 | 11 (11; 0/0) | 11 (11; 0/0) | 11 (11; 0/0) |
 | `adams-2023` | oracle | independent | 11 | 7 (0; 1/3) | 10 (6; 0/3) | 11 (11; 0/0) |
 | `adams-2023` | oracle | blind | 11 | 1 (1; 1/0) | 7 (7; 1/0) | 8 (8; 0/0) |
 | `arias-2022` | oracle | seeded | 12 | 4 (4; 1/1) | 12 (12; 0/0) | 12 (12; 0/0) |
-| `arias-2022` | oracle | independent | 12 | 0 (0; 3/3) | 12 (12; 0/0) | 12 (12; 0/0) |
-| `arias-2022` | oracle | blind | 12 | 1 (1; 1/0) | 12 (12; 0/0) | 12 (12; 0/0) |
+| `arias-2022` | oracle | independent | 12 | 4 (0; 3/3) | 12 (12; 0/0) | 12 (12; 0/0) |
+| `arias-2022` | oracle | blind | 12 | 5 (1; 1/0) | 12 (12; 0/0) | 12 (12; 0/0) |
 | `hanlon-2022` | oracle | seeded | 12 | 12 (12; 0/0) | 12 (12; 0/0) | 12 (12; 0/0) |
 | `hanlon-2022` | oracle | independent | 12 | 10 (10; 0/1) | 12 (12; 0/0) | 12 (12; 0/0) |
 | `hanlon-2022` | oracle | blind | 12 | 12 (12; 1/0) | 12 (12; 0/0) | 12 (8; 0/0) |
@@ -229,7 +229,7 @@ Final count (first scored; error / claim refinements); totals show final (first 
 |---|---|---:|---:|---:|---:|
 | `acemoglu-2022` | seeded | 12 | — | 12 (12; 0/0) | 12 (12; 0/0) |
 | `acemoglu-2022` | independent | 12 | — | 11 (4; 0/3) | 12 (12; 0/1) |
-| `acemoglu-2022` | blind | 12 | — | 4 (4; 0/0) | 12 (10; 0/0) |
+| `acemoglu-2022` | blind | 12 | — | 6 (4; 0/0) | 12 (10; 0/0) |
 | `adams-2023` | seeded | 11 | 11 (11; 0/0) | 11 (11; 0/0) | 11 (11; 0/0) |
 | `adams-2023` | independent | 11 | 7 (0; 1/3) | 10 (6; 0/3) | 11 (11; 0/0) |
 | `adams-2023` | blind | 11 | 1 (1; 1/0) | 7 (7; 1/0) | 8 (8; 0/0) |
@@ -237,8 +237,8 @@ Final count (first scored; error / claim refinements); totals show final (first 
 | `altmann-2022` | independent | 13 | — | 13 (4; 0/2) | 13 (13; 0/0) |
 | `altmann-2022` | blind | 13 | — | 4 (4; 0/0) | 13 (13; 0/0) |
 | `arias-2022` | seeded | 12 | 4 (4; 1/1) | 12 (12; 0/0) | 12 (12; 0/0) |
-| `arias-2022` | independent | 12 | 0 (0; 3/3) | 12 (12; 0/0) | 12 (12; 0/0) |
-| `arias-2022` | blind | 12 | 1 (1; 1/0) | 12 (12; 0/0) | 12 (12; 0/0) |
+| `arias-2022` | independent | 12 | 4 (0; 3/3) | 12 (12; 0/0) | 12 (12; 0/0) |
+| `arias-2022` | blind | 12 | 5 (1; 1/0) | 12 (12; 0/0) | 12 (12; 0/0) |
 | `dertwinkel-kalt-2022` | seeded | 13 | — | 13 (13; 0/0) | 13 (13; 0/0) |
 | `dertwinkel-kalt-2022` | independent | 13 | — | 13 (13; 0/0) | 13 (12; 0/1) |
 | `dertwinkel-kalt-2022` | blind | 13 | — | 12 (12; 0/0) | 13 (13; 0/0) |
@@ -249,14 +249,14 @@ Final count (first scored; error / claim refinements); totals show final (first 
 | `hanlon-2022` | independent | 12 | 10 (10; 0/1) | 12 (12; 0/0) | 12 (12; 0/0) |
 | `hanlon-2022` | blind | 12 | 12 (12; 1/0) | 12 (12; 0/0) | 12 (8; 0/0) |
 | `holman-2022` | seeded | 11 | — | 11 (11; 0/0) | 11 (11; 1/0) |
-| `holman-2022` | independent | 11 | — | 3 (1; 0/2) | 10 (10; 0/1) |
-| `holman-2022` | blind | 11 | — | 0 (0; 0/0) | 6 (6; 1/0) |
+| `holman-2022` | independent | 11 | — | 4 (1; 0/2) | 11 (10; 0/1) |
+| `holman-2022` | blind | 11 | — | 0 (0; 0/0) | 7 (6; 1/0) |
 | `lopez-moctezuma-2022` | seeded | 13 | — | 13 (13; 0/0) | 13 (13; 0/0) |
 | `lopez-moctezuma-2022` | independent | 13 | — | 9 (9; 0/3) | 9 (9; 0/2) |
 | `lopez-moctezuma-2022` | blind | 13 | — | 9 (9; 0/0) | 9 (9; 0/0) |
 | **Total, 9 papers** | seeded | 110 | — | **105 / 110 (105)** | **110 / 110 (108)** |
-| **Total, 9 papers** | independent | 110 | — | **96 / 110 (68)** | **105 / 110 (104)** |
-| **Total, 9 papers** | blind | 110 | — | **72 / 110 (72)** | **92 / 110 (86)** |
+| **Total, 9 papers** | independent | 110 | — | **97 / 110 (68)** | **106 / 110 (104)** |
+| **Total, 9 papers** | blind | 110 | — | **74 / 110 (72)** | **93 / 110 (86)** |
 <!-- /table:nine_oracle -->
 
 The four papers added in ROADMAP 3.6 were run through both systems the same way: the agent in a fresh Claude Code subagent per cell, the pipeline through the oracle.  The pipeline reproduced 45, 40 and 26 of 47 claims, against the agent's 47, 46 and 45.
@@ -273,14 +273,14 @@ The four papers added on 2026-11-02 (ROADMAP 3.6): the pipeline through the orac
 | `brouwer-2022` | independent | 12 | 12 (12; 0/0) | 12 (12; 0/0) |
 | `brouwer-2022` | blind | 12 | 12 (12; 0/0) | 12 (12; 0/0) |
 | `carrera-2022` | seeded | 11 | 11 (11; 0/0) | 11 (11; 0/0) |
-| `carrera-2022` | independent | 11 | 6 (4; 1/3) | 11 (11; 0/0) |
+| `carrera-2022` | independent | 11 | 7 (4; 1/3) | 11 (11; 0/0) |
 | `carrera-2022` | blind | 11 | 0 (0; 0/0) | 11 (11; 0/0) |
 | `forsythe-2022` | seeded | 13 | 13 (13; 1/0) | 13 (13; 0/0) |
-| `forsythe-2022` | independent | 13 | 11 (10; 1/2) | 12 (12; 0/0) |
-| `forsythe-2022` | blind | 13 | 10 (10; 2/0) | 11 (11; 0/0) |
+| `forsythe-2022` | independent | 13 | 12 (10; 1/2) | 12 (12; 0/0) |
+| `forsythe-2022` | blind | 13 | 10 (10; 2/0) | 12 (11; 0/0) |
 | **Total, 4 papers** | seeded | 47 | **45 / 47 (45)** | **47 / 47 (43)** |
-| **Total, 4 papers** | independent | 47 | **40 / 47 (32)** | **46 / 47 (46)** |
-| **Total, 4 papers** | blind | 47 | **26 / 47 (26)** | **45 / 47 (45)** |
+| **Total, 4 papers** | independent | 47 | **42 / 47 (32)** | **46 / 47 (46)** |
+| **Total, 4 papers** | blind | 47 | **26 / 47 (26)** | **46 / 47 (45)** |
 <!-- /table:four_new -->
 
 Two pipeline cells account for most of the difference.  Carrera blind printed nothing usable: its sample filter emptied the data, it printed zero observations and no coefficients, and blind mode has no claim refinement to recover.  Bokobza blind printed `NA` for all seven individual-level coefficients, for a reason the run does not record.  Bokobza seeded missed two coefficients because the country-level do-file ships as a `.txt` file that the seeded prompt lists but does not show as a script, so the model guessed the lag structure (ROADMAP 3.6).  With these four papers the model-matched pipeline over all seventeen papers reproduced 194, 169 and 118 of 201 claims, against the agent's 200, 194 and 180.
@@ -305,17 +305,17 @@ The six papers curated on 2026-11-02 (ROADMAP 3.7): the pipeline through the ora
 | `hollyer-2022` | independent | 13 | 13 (11; 0/1) | 13 (13; 0/0) |
 | `hollyer-2022` | blind | 13 | 10 (10; 0/0) | 13 (13; 1/0) |
 | `labandeira-2022` | seeded | 12 | 12 (12; 1/0) | 12 (12; 0/0) |
-| `labandeira-2022` | independent | 12 | 5 (3; 0/3) | 8 (7; 0/2) |
+| `labandeira-2022` | independent | 12 | 6 (3; 0/3) | 8 (7; 0/2) |
 | `labandeira-2022` | blind | 12 | 4 (4; 0/0) | 6 (6; 0/0) |
 | `mokyr-2022` | seeded | 13 | 13 (13; 0/0) | 13 (13; 0/0) |
 | `mokyr-2022` | independent | 13 | 13 (1; 0/1) | 13 (13; 0/0) |
 | `mokyr-2022` | blind | 13 | 1 (1; 0/0) | 13 (13; 0/0) |
 | **Total, 6 papers** | seeded | 77 | **69 / 77 (69)** | **77 / 77 (73)** |
-| **Total, 6 papers** | independent | 77 | **66 / 77 (47)** | **73 / 77 (60)** |
+| **Total, 6 papers** | independent | 77 | **67 / 77 (47)** | **73 / 77 (60)** |
 | **Total, 6 papers** | blind | 77 | **52 / 77 (52)** | **70 / 77 (70)** |
 <!-- /table:six_new -->
 
-Three pipeline cells carry most of the difference, and one of them runs the wrong way.  Mokyr blind reproduced only the district count: its script built the watermill and wright densities per 10,000 of a different population column, so every coefficient came out about 10,000 times too large and the first-stage F statistics about half, which a pure rescaling would not change.  Labandeira blind built a sample of 12,349 observations against 20,872.  And Douenne *seeded* reproduced 5 of 13 claims, against 13 of 13 independent and 12 blind: shown the authors' R code, the pipeline wrote its own Table 4 column 3 model and Table 8 instrument set, missed the same eight claims on its first scored run, and four refinements recovered none of them, while the seeded agent, shown the same scripts, matched all thirteen (ROADMAP 3.7).  This is the only cell in the project where a system did markedly worse with the scripts than without them, and it is why the six-paper seeded gap (8) exceeds the independent one (7).  With the six papers the model-matched pipeline over all twenty-three papers reproduced 263, 235 and 170 of 278 claims, against the agent's 277, 267 and 250.  In the pipeline's second sample (Section 4.8) Mokyr blind printed the same twelve wrong values, Labandeira blind again reproduced 4 of 12 on a different wrong sample, and Douenne seeded reproduced 6 of 13, so the inverted cell held (ROADMAP 3.7.1).
+Three pipeline cells carry most of the difference, and one of them runs the wrong way.  Mokyr blind reproduced only the district count: its script built the watermill and wright densities per 10,000 of a different population column, so every coefficient came out about 10,000 times too large and the first-stage F statistics about half, which a pure rescaling would not change.  Labandeira blind built a sample of 12,349 observations against 20,872.  And Douenne *seeded* reproduced 5 of 13 claims, against 13 of 13 independent and 12 blind: shown the authors' R code, the pipeline wrote its own Table 4 column 3 model and Table 8 instrument set, missed the same eight claims on its first scored run, and four refinements recovered none of them, while the seeded agent, shown the same scripts, matched all thirteen (ROADMAP 3.7).  This is the only cell in the project where a system did markedly worse with the scripts than without them, and it is why the six-paper seeded gap (8) exceeds the independent one (6).  With the six papers the model-matched pipeline over all twenty-three papers reproduced 263, 239 and 173 of 278 claims, against the agent's 277, 268 and 252.  In the pipeline's second sample (Section 4.8) Mokyr blind printed the same twelve wrong values, Labandeira blind again reproduced 4 of 12 on a different wrong sample, and Douenne seeded reproduced 6 of 13, so the inverted cell held (ROADMAP 3.7.1).  In its third sample Douenne seeded reproduced all thirteen, so the inversion appeared in two of three draws; Mokyr blind reproduced 7 and Labandeira blind 4 again (ROADMAP 3.7.4).
 
 Two oracle cells beat the agent: Gagliarducci blind (12 against 7) and the first-scored count on Hanlon blind (12 against 8).  The rest of the oracle's shortfall is concentrated in a few papers: Holman (3 and 0 of 11 in independent and blind), Altmann and Acemoglu blind (4 of 13 and 4 of 12).  Some of these single cells did not survive the second pipeline sample (Section 4.8): Gagliarducci blind fell from 12 to 7, level with the agent, Holman independent rose from 3 to 8, and Acemoglu blind from 4 to 6.  Altmann blind (4 both times) and Holman blind (0 both times) held.
 
@@ -329,32 +329,32 @@ Differences in claims within tolerance, summed over papers.  On the 3.2 set the 
 | Papers | Mode | Claims | Agent − pipeline 4.7 | Model effect (5.5 − 4.7) | Harness effect (agent − 5.5) |
 |---|---|---:|---:|---:|---:|
 | 7 papers (3.2 set) | seeded | 79 | +23 | +24 | -1 |
-| 7 papers (3.2 set) | independent | 79 | +37 | +26 | +11 |
-| 7 papers (3.2 set) | blind | 79 | +51 | +27 | +24 |
+| 7 papers (3.2 set) | independent | 79 | +31 | +20 | +11 |
+| 7 papers (3.2 set) | blind | 79 | +46 | +23 | +23 |
 | API route (4) | seeded | 44 | +15 | +16 | -1 |
-| API route (4) | independent | 44 | +19 | +9 | +10 |
-| API route (4) | blind | 44 | +33 | +10 | +23 |
+| API route (4) | independent | 44 | +17 | +7 | +10 |
+| API route (4) | blind | 44 | +32 | +10 | +22 |
 | oracle route (3) | seeded | 35 | +8 | +8 | +0 |
-| oracle route (3) | independent | 35 | +18 | +17 | +1 |
-| oracle route (3) | blind | 35 | +18 | +17 | +1 |
+| oracle route (3) | independent | 35 | +14 | +13 | +1 |
+| oracle route (3) | blind | 35 | +14 | +13 | +1 |
 | 6 papers (3.4 set) | seeded | 75 | — | — | +5 |
 | 6 papers (3.4 set) | independent | 75 | — | — | +8 |
-| 6 papers (3.4 set) | blind | 75 | — | — | +19 |
+| 6 papers (3.4 set) | blind | 75 | — | — | +18 |
 | 4 papers (3.6 set) | seeded | 47 | — | — | +2 |
-| 4 papers (3.6 set) | independent | 47 | — | — | +6 |
-| 4 papers (3.6 set) | blind | 47 | — | — | +19 |
+| 4 papers (3.6 set) | independent | 47 | — | — | +4 |
+| 4 papers (3.6 set) | blind | 47 | — | — | +20 |
 | 6 papers (3.7 set) | seeded | 77 | — | — | +8 |
-| 6 papers (3.7 set) | independent | 77 | — | — | +7 |
+| 6 papers (3.7 set) | independent | 77 | — | — | +6 |
 | 6 papers (3.7 set) | blind | 77 | — | — | +18 |
 | 13 earlier | seeded | 154 | — | — | +4 |
 | 13 earlier | independent | 154 | — | — | +19 |
-| 13 earlier | blind | 154 | — | — | +43 |
+| 13 earlier | blind | 154 | — | — | +41 |
 | 17 (3.2–3.6) | seeded | 201 | — | — | +6 |
-| 17 (3.2–3.6) | independent | 201 | — | — | +25 |
-| 17 (3.2–3.6) | blind | 201 | — | — | +62 |
+| 17 (3.2–3.6) | independent | 201 | — | — | +23 |
+| 17 (3.2–3.6) | blind | 201 | — | — | +61 |
 | all 23 | seeded | 278 | — | — | +14 |
-| all 23 | independent | 278 | — | — | +32 |
-| all 23 | blind | 278 | — | — | +80 |
+| all 23 | independent | 278 | — | — | +29 |
+| all 23 | blind | 278 | — | — | +79 |
 <!-- /table:gap_decomposition -->
 
 On the seven papers the model effect is roughly constant across modes (24, 26 and 27 claims), while the harness effect is about zero in seeded mode (−1) and grows as more is withheld (11 claims independent, 24 blind).  The reading in ROADMAP 3.5 follows from this: once the authors' code is gone, the agent's ability to look at the data and try alternatives is worth more, and more again once the targets are gone too.  On the six later papers, where only the harness effect exists, it is 5, 8 and 19 claims,[^six-gap] on the four papers of ROADMAP 3.6 it is 2, 6 and 19, and on the six of ROADMAP 3.7 it is 8, 7 and 18.  Over the seventeen papers of ROADMAP 3.2–3.6 it is 6, 25 and 62, and over all twenty-three, first samples only, 14, 32 and 80.
@@ -373,26 +373,26 @@ This decomposition should not be leaned on hard, for three reasons.  The four AP
 | Reproducer | Papers | Mode | Final | First scored | First attempt | Final − first scored | Error refinements | Claim refinements | Cells with a claim refinement |
 |---|---:|---|---:|---:|---:|---:|---:|---:|---:|
 | Pipeline, `claude-opus-4-7` | 7 | seeded | 55 / 79 | 46 | 34 | +9 | 2 | 6 | 4 / 7 |
-| Pipeline, `claude-opus-4-7` | 7 | independent | 41 / 79 | 27 | 19 | +14 | 10 | 12 | 6 / 7 |
-| Pipeline, `claude-opus-4-7` | 7 | blind | 24 / 79 | 24 | 10 | +0 | 5 | 0 | 0 / 7 |
+| Pipeline, `claude-opus-4-7` | 7 | independent | 47 / 79 | 27 | 19 | +20 | 10 | 12 | 6 / 7 |
+| Pipeline, `claude-opus-4-7` | 7 | blind | 29 / 79 | 24 | 10 | +5 | 5 | 0 | 0 / 7 |
 | Pipeline, `claude-opus-5-5` (API) | 4 | seeded | 44 / 44 | 43 | 43 | +1 | 0 | 3 | 1 / 4 |
 | Pipeline, `claude-opus-5-5` (API) | 4 | independent | 33 / 44 | 21 | 20 | +12 | 3 | 4 | 3 / 4 |
-| Pipeline, `claude-opus-5-5` (API) | 4 | blind | 20 / 44 | 20 | 20 | +0 | 0 | 0 | 0 / 4 |
+| Pipeline, `claude-opus-5-5` (API) | 4 | blind | 21 / 44 | 20 | 20 | +1 | 0 | 0 | 0 / 4 |
 | Pipeline, desktop Opus (oracle) | 9 | seeded | 105 / 110 | 105 | 105 | +0 | 0 | 2 | 1 / 9 |
-| Pipeline, desktop Opus (oracle) | 9 | independent | 96 / 110 | 68 | 68 | +28 | 0 | 16 | 6 / 9 |
-| Pipeline, desktop Opus (oracle) | 9 | blind | 72 / 110 | 72 | 65 | +0 | 1 | 0 | 0 / 9 |
+| Pipeline, desktop Opus (oracle) | 9 | independent | 97 / 110 | 68 | 68 | +29 | 0 | 16 | 6 / 9 |
+| Pipeline, desktop Opus (oracle) | 9 | blind | 74 / 110 | 72 | 65 | +2 | 1 | 0 | 0 / 9 |
 | Pipeline, desktop Opus (oracle) | 4 (3.6) | seeded | 45 / 47 | 45 | 32 | +0 | 1 | 1 | 1 / 4 |
-| Pipeline, desktop Opus (oracle) | 4 (3.6) | independent | 40 / 47 | 32 | 12 | +8 | 3 | 6 | 3 / 4 |
+| Pipeline, desktop Opus (oracle) | 4 (3.6) | independent | 42 / 47 | 32 | 12 | +10 | 3 | 6 | 3 / 4 |
 | Pipeline, desktop Opus (oracle) | 4 (3.6) | blind | 26 / 47 | 26 | 12 | +0 | 3 | 0 | 0 / 4 |
 | Pipeline, desktop Opus (oracle) | 6 (3.7) | seeded | 69 / 77 | 69 | 52 | +0 | 2 | 3 | 1 / 6 |
-| Pipeline, desktop Opus (oracle) | 6 (3.7) | independent | 66 / 77 | 47 | 35 | +19 | 1 | 9 | 6 / 6 |
+| Pipeline, desktop Opus (oracle) | 6 (3.7) | independent | 67 / 77 | 47 | 35 | +20 | 1 | 9 | 6 / 6 |
 | Pipeline, desktop Opus (oracle) | 6 (3.7) | blind | 52 / 77 | 52 | 40 | +0 | 1 | 0 | 0 / 6 |
 | Agent (Claude Code, desktop Opus) | 13 | seeded | 153 / 154 | 151 | n/a | +2 | 3 | 1 | 1 / 13 |
-| Agent (Claude Code, desktop Opus) | 13 | independent | 148 / 154 | 146 | n/a | +2 | 0 | 6 | 5 / 13 |
-| Agent (Claude Code, desktop Opus) | 13 | blind | 135 / 154 | 128 | n/a | +7 | 2 | 0 | 0 / 13 |
+| Agent (Claude Code, desktop Opus) | 13 | independent | 149 / 154 | 146 | n/a | +3 | 0 | 6 | 5 / 13 |
+| Agent (Claude Code, desktop Opus) | 13 | blind | 136 / 154 | 128 | n/a | +8 | 2 | 0 | 0 / 13 |
 | Agent (Claude Code, desktop Opus) | 4 (3.6) | seeded | 47 / 47 | 43 | n/a | +4 | 1 | 0 | 0 / 4 |
 | Agent (Claude Code, desktop Opus) | 4 (3.6) | independent | 46 / 47 | 46 | n/a | +0 | 0 | 1 | 1 / 4 |
-| Agent (Claude Code, desktop Opus) | 4 (3.6) | blind | 45 / 47 | 45 | n/a | +0 | 0 | 0 | 0 / 4 |
+| Agent (Claude Code, desktop Opus) | 4 (3.6) | blind | 46 / 47 | 45 | n/a | +1 | 0 | 0 | 0 / 4 |
 | Agent (Claude Code, desktop Opus) | 6 (3.7) | seeded | 77 / 77 | 73 | n/a | +4 | 1 | 2 | 1 / 6 |
 | Agent (Claude Code, desktop Opus) | 6 (3.7) | independent | 73 / 77 | 60 | n/a | +13 | 1 | 4 | 3 / 6 |
 | Agent (Claude Code, desktop Opus) | 6 (3.7) | blind | 70 / 77 | 70 | n/a | +0 | 3 | 0 | 0 / 6 |
@@ -408,32 +408,32 @@ From `benchmark.metrics.closeness`.  Relative error and the tolerance multiples 
 | Reproducer | Papers | Mode | Claims | Matched | Median rel. error | ≤1× tol | ≤2× tol | ≤5× tol |
 |---|---:|---|---:|---:|---:|---:|---:|---:|
 | Pipeline, `claude-opus-4-7` | 7 (3.2 set) | seeded | 79 | 99 % | 0.3 % | 71 % | 71 % | 74 % |
-| Pipeline, `claude-opus-4-7` | 7 (3.2 set) | independent | 79 | 85 % | 4.9 % | 61 % | 70 % | 85 % |
-| Pipeline, `claude-opus-4-7` | 7 (3.2 set) | blind | 79 | 90 % | 22.3 % | 34 % | 38 % | 51 % |
+| Pipeline, `claude-opus-4-7` | 7 (3.2 set) | independent | 79 | 85 % | 4.9 % | 70 % | 76 % | 91 % |
+| Pipeline, `claude-opus-4-7` | 7 (3.2 set) | blind | 79 | 90 % | 22.3 % | 41 % | 45 % | 59 % |
 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 7 (3.2 set) | seeded | 79 | 100 % | 0.1 % | 100 % | 100 % | 100 % |
-| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 7 (3.2 set) | independent | 79 | 100 % | 0.2 % | 85 % | 86 % | 90 % |
-| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 7 (3.2 set) | blind | 79 | 97 % | 1.3 % | 66 % | 68 % | 71 % |
+| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 7 (3.2 set) | independent | 79 | 100 % | 0.2 % | 85 % | 87 % | 92 % |
+| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 7 (3.2 set) | blind | 79 | 97 % | 1.3 % | 68 % | 75 % | 78 % |
 | Agent (Claude Code, desktop Opus) | 7 (3.2 set) | seeded | 79 | 100 % | 0.1 % | 99 % | 100 % | 100 % |
 | Agent (Claude Code, desktop Opus) | 7 (3.2 set) | independent | 79 | 100 % | 0.2 % | 99 % | 100 % | 100 % |
-| Agent (Claude Code, desktop Opus) | 7 (3.2 set) | blind | 79 | 100 % | 0.3 % | 95 % | 96 % | 96 % |
+| Agent (Claude Code, desktop Opus) | 7 (3.2 set) | blind | 79 | 100 % | 0.3 % | 95 % | 96 % | 100 % |
 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 13 | seeded | 154 | 100 % | 0.1 % | 97 % | 97 % | 97 % |
-| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 13 | independent | 154 | 100 % | 0.6 % | 84 % | 86 % | 90 % |
-| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 13 | blind | 154 | 95 % | 2.4 % | 63 % | 69 % | 76 % |
+| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 13 | independent | 154 | 100 % | 0.6 % | 84 % | 86 % | 92 % |
+| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 13 | blind | 154 | 95 % | 2.4 % | 65 % | 74 % | 79 % |
 | Agent (Claude Code, desktop Opus) | 13 | seeded | 154 | 100 % | 0.0 % | 99 % | 100 % | 100 % |
-| Agent (Claude Code, desktop Opus) | 13 | independent | 154 | 100 % | 0.2 % | 96 % | 97 % | 97 % |
-| Agent (Claude Code, desktop Opus) | 13 | blind | 154 | 100 % | 0.3 % | 88 % | 91 % | 93 % |
+| Agent (Claude Code, desktop Opus) | 13 | independent | 154 | 100 % | 0.2 % | 97 % | 97 % | 97 % |
+| Agent (Claude Code, desktop Opus) | 13 | blind | 154 | 100 % | 0.3 % | 88 % | 92 % | 95 % |
 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 17 | seeded | 201 | 100 % | 0.1 % | 97 % | 97 % | 98 % |
-| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 17 | independent | 201 | 100 % | 1.3 % | 84 % | 87 % | 92 % |
-| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 17 | blind | 201 | 88 % | 3.4 % | 67 % | 73 % | 79 % |
+| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 17 | independent | 201 | 100 % | 1.3 % | 86 % | 88 % | 94 % |
+| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 17 | blind | 201 | 88 % | 3.4 % | 68 % | 77 % | 82 % |
 | Agent (Claude Code, desktop Opus) | 17 | seeded | 201 | 100 % | 0.1 % | 100 % | 100 % | 100 % |
-| Agent (Claude Code, desktop Opus) | 17 | independent | 201 | 100 % | 0.3 % | 97 % | 97 % | 98 % |
-| Agent (Claude Code, desktop Opus) | 17 | blind | 201 | 100 % | 0.6 % | 90 % | 92 % | 95 % |
+| Agent (Claude Code, desktop Opus) | 17 | independent | 201 | 100 % | 0.3 % | 97 % | 98 % | 98 % |
+| Agent (Claude Code, desktop Opus) | 17 | blind | 201 | 100 % | 0.6 % | 91 % | 93 % | 96 % |
 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 23 | seeded | 278 | 100 % | 0.1 % | 95 % | 95 % | 96 % |
-| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 23 | independent | 278 | 100 % | 1.6 % | 85 % | 88 % | 93 % |
-| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 23 | blind | 278 | 91 % | 3.6 % | 67 % | 75 % | 80 % |
+| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 23 | independent | 278 | 100 % | 1.6 % | 86 % | 89 % | 95 % |
+| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 23 | blind | 278 | 91 % | 3.6 % | 68 % | 78 % | 82 % |
 | Agent (Claude Code, desktop Opus) | 23 | seeded | 278 | 100 % | 0.1 % | 100 % | 100 % | 100 % |
 | Agent (Claude Code, desktop Opus) | 23 | independent | 278 | 100 % | 0.5 % | 96 % | 98 % | 99 % |
-| Agent (Claude Code, desktop Opus) | 23 | blind | 278 | 100 % | 0.7 % | 90 % | 94 % | 96 % |
+| Agent (Claude Code, desktop Opus) | 23 | blind | 278 | 100 % | 0.7 % | 91 % | 94 % | 97 % |
 <!-- /table:closeness -->
 
 Pass counts saturate and hide how far off a miss is.  On the seven-paper set the pipeline on `claude-opus-4-7` had a median relative error of 22.3 % in blind mode, with only 51 % of matched claims within five times their tolerance; on Opus 5.5 the same papers give 1.3 % and 71 %, and the agent 0.3 % and 96 %.  Two cautions apply.  The independent and blind band is one standard error, which for imprecise estimates is wide: the agent's Montero independent and blind values pass at relative errors of 23–36 % (ROADMAP 3.3).  And "matched" means that a value was printed under the claim's name; claims printed as missing are excluded from the error statistics and counted in the match rate.
@@ -458,13 +458,13 @@ Paper-level verdicts.  `agrees_with_paper`: every pinned claim within tolerance 
 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 23 | independent | 23 | 12 | 2 | 0 | 8 | 1 |
 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 23 | blind | 23 | 5 | 0 | 1 | 16 | 1 |
 | Agent (Claude Code, desktop Opus) | 13 | seeded | 13 | 9 | 2 | 1 | 0 | 1 |
-| Agent (Claude Code, desktop Opus) | 13 | independent | 13 | 8 | 1 | 1 | 2 | 1 |
+| Agent (Claude Code, desktop Opus) | 13 | independent | 13 | 8 | 2 | 1 | 1 | 1 |
 | Agent (Claude Code, desktop Opus) | 13 | blind | 13 | 6 | 1 | 1 | 4 | 1 |
 | Agent (Claude Code, desktop Opus) | 17 | seeded | 17 | 12 | 3 | 1 | 0 | 1 |
-| Agent (Claude Code, desktop Opus) | 17 | independent | 17 | 11 | 1 | 1 | 3 | 1 |
+| Agent (Claude Code, desktop Opus) | 17 | independent | 17 | 11 | 2 | 2 | 1 | 1 |
 | Agent (Claude Code, desktop Opus) | 17 | blind | 17 | 9 | 1 | 1 | 5 | 1 |
 | Agent (Claude Code, desktop Opus) | 23 | seeded | 23 | 16 | 5 | 1 | 0 | 1 |
-| Agent (Claude Code, desktop Opus) | 23 | independent | 23 | 15 | 2 | 1 | 4 | 1 |
+| Agent (Claude Code, desktop Opus) | 23 | independent | 23 | 15 | 3 | 2 | 2 | 1 |
 | Agent (Claude Code, desktop Opus) | 23 | blind | 23 | 13 | 1 | 1 | 7 | 1 |
 
 
@@ -472,21 +472,21 @@ Per paper: `paper / I4R` verdicts (claims matching the paper / total; claims mat
 
 | Paper | I4R label | I4R values | Reproducer | Seeded | Independent | Blind |
 |---|---|---:|---|---|---|---|
-| `acemoglu-2022` | reproducible | 0 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / n/a (12/12; 0) | ✗ / n/a (11/12; 0) | ✗ / n/a (4/12; 0) |
+| `acemoglu-2022` | reproducible | 0 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / n/a (12/12; 0) | ✗ / n/a (11/12; 0) | ✗ / n/a (6/12; 0) |
 | `acemoglu-2022` | reproducible | 0 | Agent (Claude Code, desktop Opus) | ✓ / n/a (12/12; 0) | ✓ / n/a (12/12; 0) | ✓ / n/a (12/12; 0) |
 | `adams-2023` | reproducible | 11 | Pipeline, `claude-opus-4-7` | ✓ / ✓ (11/11; 11) | ✗ / ✗ (7/11; 7) | ✗ / ✗ (1/11; 1) |
 | `adams-2023` | reproducible | 11 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (11/11; 11) | ✗ / ✗ (10/11; 10) | ✗ / ✗ (7/11; 7) |
 | `adams-2023` | reproducible | 11 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (11/11; 11) | ✓ / ✓ (11/11; 11) | ✗ / ✗ (8/11; 8) |
 | `altmann-2022` | reproducible | 11 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (13/13; 11) | ✓ / ✓ (13/13; 11) | ✗ / ✗ (4/13; 4) |
 | `altmann-2022` | reproducible | 11 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (13/13; 11) | ✓ / ✓ (13/13; 11) | ✓ / ✓ (13/13; 11) |
-| `arias-2022` | reproducible | 12 | Pipeline, `claude-opus-4-7` | ✗ / ✗ (4/12; 4) | ✗ / ✗ (0/12; 0) | ✗ / ✗ (1/12; 1) |
+| `arias-2022` | reproducible | 12 | Pipeline, `claude-opus-4-7` | ✗ / ✗ (4/12; 4) | ✗ / ✗ (4/12; 4) | ✗ / ✗ (5/12; 5) |
 | `arias-2022` | reproducible | 12 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) |
 | `arias-2022` | reproducible | 12 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) |
 | `bokobza-2022` | reproducible | 11 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✗ / ✗ (9/11; 9) | ✓ / ✓ (11/11; 11) | ✗ / ✓ (4/11; 4) |
 | `bokobza-2022` | reproducible | 11 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (11/11; 11) | ✓ / ✓ (11/11; 11) | ✓ / ✓ (11/11; 11) |
 | `brouwer-2022` | reproducible | 12 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) |
 | `brouwer-2022` | reproducible | 12 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) |
-| `carrera-2022` | reproducible | 11 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (11/11; 11) | ✗ / ✗ (6/11; 6) | ✗ / ✗ (0/11; 0) |
+| `carrera-2022` | reproducible | 11 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (11/11; 11) | ✗ / ✗ (7/11; 7) | ✗ / ✗ (0/11; 0) |
 | `carrera-2022` | reproducible | 11 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (11/11; 11) | ✓ / ✓ (11/11; 11) | ✓ / ✓ (11/11; 11) |
 | `dancygier-2022` | reproducible | 13 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (13/13; 13) | ✓ / ✓ (13/13; 13) | ✓ / ✓ (13/13; 13) |
 | `dancygier-2022` | reproducible | 13 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (13/13; 13) | ✓ / ✓ (13/13; 13) | ✓ / ✓ (13/13; 13) |
@@ -494,8 +494,8 @@ Per paper: `paper / I4R` verdicts (claims matching the paper / total; claims mat
 | `dertwinkel-kalt-2022` | reproducible | 11 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (13/13; 11) | ✓ / ✓ (13/13; 11) | ✓ / ✓ (13/13; 11) |
 | `douenne-2022` | not_reproducible | 8 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✗ / ✗ (5/13; 1) | ✓ / ✗ (13/13; 7) | ✗ / ✗ (12/13; 7) |
 | `douenne-2022` | not_reproducible | 8 | Agent (Claude Code, desktop Opus) | ✓ / ✗ (13/13; 1) | ✓ / ✗ (13/13; 7) | ✗ / ✗ (12/13; 7) |
-| `forsythe-2022` | robust | 13 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✗ (13/13; 2) | ✗ / ✗ (11/13; 9) | ✗ / ✗ (10/13; 12) |
-| `forsythe-2022` | robust | 13 | Agent (Claude Code, desktop Opus) | ✓ / ✗ (13/13; 2) | ✗ / ✗ (12/13; 12) | ✗ / ✗ (11/13; 12) |
+| `forsythe-2022` | robust | 13 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✗ (13/13; 3) | ✗ / ✗ (12/13; 9) | ✗ / ✗ (10/13; 12) |
+| `forsythe-2022` | robust | 13 | Agent (Claude Code, desktop Opus) | ✓ / ✗ (13/13; 3) | ✗ / ✓ (12/13; 13) | ✗ / ✗ (12/13; 12) |
 | `gagliarducci-2022` | reproducible | 9 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✗ / ✗ (8/13; 4) | ✓ / ✓ (13/13; 9) | ✗ / ✗ (12/13; 8) |
 | `gagliarducci-2022` | reproducible | 9 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (13/13; 9) | ✓ / ✓ (13/13; 9) | ✗ / ✗ (7/13; 5) |
 | `grier-2023` | reproducible | 7 | Pipeline, `claude-opus-4-7` | ✗ / ✗ (0/11; 0) | ✗ / ✗ (0/11; 0) | ✗ / ✗ (0/11; 0) |
@@ -508,12 +508,12 @@ Per paper: `paper / I4R` verdicts (claims matching the paper / total; claims mat
 | `hanushek-2022` | reproducible | 13 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (13/13; 13) | ✓ / ✓ (13/13; 13) | ✓ / ✓ (13/13; 13) |
 | `hollyer-2022` | reproducible | 13 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✗ (13/13; 9) | ✓ / ✓ (13/13; 13) | ✗ / ✗ (10/13; 9) |
 | `hollyer-2022` | reproducible | 13 | Agent (Claude Code, desktop Opus) | ✓ / ✗ (13/13; 9) | ✓ / ✓ (13/13; 13) | ✓ / ✓ (13/13; 13) |
-| `holman-2022` | not_reproducible | 10 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✗ (11/11; 5) | ✗ / ✗ (3/11; 2) | ✗ / ✗ (0/11; 0) |
-| `holman-2022` | not_reproducible | 10 | Agent (Claude Code, desktop Opus) | ✓ / ✗ (11/11; 5) | ✗ / ✗ (10/11; 7) | ✗ / ✗ (6/11; 4) |
-| `labandeira-2022` | reproducible | 12 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (12/12; 12) | ✗ / ✗ (5/12; 5) | ✗ / ✗ (4/12; 4) |
+| `holman-2022` | not_reproducible | 10 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✗ (11/11; 6) | ✗ / ✗ (4/11; 4) | ✗ / ✗ (0/11; 0) |
+| `holman-2022` | not_reproducible | 10 | Agent (Claude Code, desktop Opus) | ✓ / ✗ (11/11; 6) | ✓ / ✗ (11/11; 8) | ✗ / ✗ (7/11; 5) |
+| `labandeira-2022` | reproducible | 12 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (12/12; 12) | ✗ / ✗ (6/12; 6) | ✗ / ✗ (4/12; 4) |
 | `labandeira-2022` | reproducible | 12 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (12/12; 12) | ✗ / ✗ (8/12; 8) | ✗ / ✗ (6/12; 6) |
-| `leeson-2022` | reproducible | 11 | Pipeline, `claude-opus-4-7` | ✓ / ✓ (11/11; 11) | ✗ / ✗ (9/11; 9) | ✗ / ✗ (4/11; 4) |
-| `leeson-2022` | reproducible | 11 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (11/11; 11) | ✓ / ✓ (11/11; 11) | ✗ / ✗ (8/11; 8) |
+| `leeson-2022` | reproducible | 11 | Pipeline, `claude-opus-4-7` | ✓ / ✓ (11/11; 11) | ✗ / ✗ (9/11; 9) | ✗ / ✗ (5/11; 5) |
+| `leeson-2022` | reproducible | 11 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (11/11; 11) | ✓ / ✓ (11/11; 11) | ✗ / ✗ (9/11; 9) |
 | `leeson-2022` | reproducible | 11 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (11/11; 11) | ✓ / ✓ (11/11; 11) | ✓ / ✓ (11/11; 11) |
 | `lopez-moctezuma-2022` | reproducible | 6 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (13/13; 6) | ✗ / ✗ (9/13; 2) | ✗ / ✗ (9/13; 2) |
 | `lopez-moctezuma-2022` | reproducible | 6 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (13/13; 6) | ✗ / ✗ (9/13; 2) | ✗ / ✗ (9/13; 2) |
@@ -522,9 +522,9 @@ Per paper: `paper / I4R` verdicts (claims matching the paper / total; claims mat
 | `manekin-2022` | reproducible | 12 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) |
 | `mokyr-2022` | reproducible | 13 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (13/13; 13) | ✓ / ✓ (13/13; 13) | ✗ / ✗ (1/13; 1) |
 | `mokyr-2022` | reproducible | 13 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (13/13; 13) | ✓ / ✓ (13/13; 13) | ✓ / ✓ (13/13; 13) |
-| `montero-2022` | not_reproducible | 10 | Pipeline, `claude-opus-4-7` | ✓ / ✗ (10/10; 3) | ✗ / ✗ (3/10; 0) | ✗ / ✗ (0/10; 0) |
-| `montero-2022` | not_reproducible | 10 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✗ (10/10; 3) | ✓ / ✗ (10/10; 4) | ✗ / ✗ (0/10; 0) |
-| `montero-2022` | not_reproducible | 10 | Agent (Claude Code, desktop Opus) | ✓ / ✗ (10/10; 3) | ✓ / ✗ (10/10; 5) | ✓ / ✗ (10/10; 5) |
+| `montero-2022` | not_reproducible | 10 | Pipeline, `claude-opus-4-7` | ✓ / ✗ (10/10; 4) | ✗ / ✗ (5/10; 2) | ✗ / ✗ (0/10; 1) |
+| `montero-2022` | not_reproducible | 10 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✗ (10/10; 4) | ✓ / ✗ (10/10; 5) | ✗ / ✗ (0/10; 0) |
+| `montero-2022` | not_reproducible | 10 | Agent (Claude Code, desktop Opus) | ✓ / ✗ (10/10; 4) | ✓ / ✗ (10/10; 6) | ✓ / ✗ (10/10; 6) |
 <!-- /table:three_way -->
 
 The cell the benchmark was designed to find, a reproduction that agrees with the replicators and not with the paper, did not occur in a substantive form.[^i4r-cell]  The table does show rows in that column, four on the thirteen earlier papers and a fifth in the seventeen-paper rows, but each is an artifact of how the I4R verdict is defined: it is computed over the claims that have an I4R value *and* a printed reproduction.  The agent's three Grier rows each miss one claim for which I4R recorded no value, and the Manekin blind row on `claude-opus-4-7` and the oracle pipeline's Bokobza blind row printed no value for the claims they missed.  The seeded Forsythe rows of both systems show the reverse, paper ✓ and I4R ✗, as expected: I4R rebuilt Forsythe's panel from IPUMS and reports a different sample, so its numbers are not the package's.
@@ -541,28 +541,28 @@ Two samples of the pipeline on Opus 5.5 over all 23 evaluation papers (claims wi
 | Papers | Mode | Claims | Sample 1 | Sample 2 | Agent (sample 1) | Agent − sample 1 | Agent − sample 2 | Cells identical | Mean abs. diff per cell | Max abs. diff |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | 13 earlier | seeded | 154 | 149 | 152 | 153 | +4 | +1 | 11 / 13 | 0.38 | 4 |
-| 13 earlier | independent | 154 | 129 | 128 | 148 | +19 | +20 | 8 / 13 | 1.15 | 5 |
-| 13 earlier | blind | 154 | 92 | 82 | 135 | +43 | +53 | 6 / 13 | 1.38 | 5 |
-| 13 earlier | **all modes** | 462 | 370 | 362 | 436 | — | — | **25 / 39** | **0.97** | **5** |
+| 13 earlier | independent | 154 | 130 | 130 | 149 | +19 | +19 | 8 / 13 | 1.08 | 5 |
+| 13 earlier | blind | 154 | 95 | 85 | 136 | +41 | +51 | 7 / 13 | 1.38 | 5 |
+| 13 earlier | **all modes** | 462 | 374 | 367 | 438 | — | — | **26 / 39** | **0.95** | **5** |
 | 4 (3.6 set) | seeded | 47 | 45 | 43 | 47 | +2 | +4 | 3 / 4 | 0.50 | 2 |
-| 4 (3.6 set) | independent | 47 | 40 | 33 | 46 | +6 | +13 | 2 / 4 | 1.75 | 6 |
-| 4 (3.6 set) | blind | 47 | 26 | 38 | 45 | +19 | +7 | 2 / 4 | 3.00 | 6 |
-| 4 (3.6 set) | **all modes** | 141 | 111 | 114 | 138 | — | — | **7 / 12** | **1.75** | **6** |
+| 4 (3.6 set) | independent | 47 | 42 | 34 | 46 | +4 | +12 | 2 / 4 | 2.00 | 7 |
+| 4 (3.6 set) | blind | 47 | 26 | 39 | 46 | +20 | +7 | 2 / 4 | 3.25 | 7 |
+| 4 (3.6 set) | **all modes** | 141 | 113 | 116 | 139 | — | — | **7 / 12** | **1.92** | **7** |
 | 17 | seeded | 201 | 194 | 195 | 200 | +6 | +5 | 14 / 17 | 0.41 | 4 |
-| 17 | independent | 201 | 169 | 161 | 194 | +25 | +33 | 10 / 17 | 1.29 | 6 |
-| 17 | blind | 201 | 118 | 120 | 180 | +62 | +60 | 8 / 17 | 1.76 | 6 |
-| 17 | **all modes** | 603 | 481 | 476 | 574 | — | — | **32 / 51** | **1.16** | **6** |
+| 17 | independent | 201 | 172 | 164 | 195 | +23 | +31 | 10 / 17 | 1.29 | 7 |
+| 17 | blind | 201 | 121 | 124 | 182 | +61 | +58 | 9 / 17 | 1.82 | 7 |
+| 17 | **all modes** | 603 | 487 | 483 | 577 | — | — | **33 / 51** | **1.18** | **7** |
 | 6 (3.7 set) | seeded | 77 | 69 | 70 | 77 | +8 | +7 | 5 / 6 | 0.17 | 1 |
-| 6 (3.7 set) | independent | 77 | 66 | 62 | 73 | +7 | +11 | 4 / 6 | 1.33 | 6 |
+| 6 (3.7 set) | independent | 77 | 67 | 62 | 73 | +6 | +11 | 4 / 6 | 1.17 | 6 |
 | 6 (3.7 set) | blind | 77 | 52 | 52 | 70 | +18 | +18 | 3 / 6 | 1.00 | 3 |
-| 6 (3.7 set) | **all modes** | 231 | 187 | 184 | 220 | — | — | **12 / 18** | **0.83** | **6** |
+| 6 (3.7 set) | **all modes** | 231 | 188 | 184 | 220 | — | — | **12 / 18** | **0.78** | **6** |
 | 23 | seeded | 278 | 263 | 265 | 277 | +14 | +12 | 19 / 23 | 0.35 | 4 |
-| 23 | independent | 278 | 235 | 223 | 267 | +32 | +44 | 14 / 23 | 1.30 | 6 |
-| 23 | blind | 278 | 170 | 172 | 250 | +80 | +78 | 11 / 23 | 1.57 | 6 |
-| 23 | **all modes** | 834 | 668 | 660 | 794 | — | — | **44 / 69** | **1.07** | **6** |
+| 23 | independent | 278 | 239 | 226 | 268 | +29 | +42 | 14 / 23 | 1.26 | 7 |
+| 23 | blind | 278 | 173 | 176 | 252 | +79 | +76 | 12 / 23 | 1.61 | 7 |
+| 23 | **all modes** | 834 | 675 | 667 | 797 | — | — | **45 / 69** | **1.07** | **7** |
 <!-- /table:variance_pipeline -->
 
-**What two pipeline samples show.**  The pipeline's mode totals moved from 149 to 152 seeded, from 129 to 128 independent and from 92 to 82 blind.  Against the agent's first sample (153, 148 and 135) the gap is 4 or 1 claims seeded, 19 or 20 independent and 43 or 53 blind.  The seeded gap is therefore within the spread between the two pipeline samples, which differ by 3 claims in that mode; the agent's own second seeded sample on these thirteen papers is 142, 11 lower, all of it Holman's crash (below).  The blind total itself moves by 10 between the pipeline samples.  Over all twenty-three papers the pipeline's totals are 263, 235 and 170 in sample 1 and 265, 223 and 172 in sample 2.
+**What two pipeline samples show.**  The pipeline's mode totals moved from 149 to 152 seeded, stayed at 130 independent and moved from 95 to 85 blind.  Against the agent's first sample (153, 149 and 136) the gap is 4 or 1 claims seeded, 19 in both independent and 41 or 51 blind.  The seeded gap is therefore within the spread between the two pipeline samples, which differ by 3 claims in that mode; the agent's own second seeded sample on these thirteen papers is 142, 11 lower, all of it Holman's crash (below).  The blind total itself moves by 10 between the pipeline samples.  Over all twenty-three papers the pipeline's totals are 263, 239 and 173 in sample 1 and 265, 226 and 176 in sample 2.  A third oracle sample on all twenty-three papers (ROADMAP 3.7.4; not yet in these tables, because `tables.py` reads a fixed list of files) reproduced 254, 227 and 181; on the thirteen papers 151, 134 and 97.
 
 **Cells.**  Of the 39 paper-by-mode cells, 25 came out identical in both samples; the mean absolute difference is 0.97 claims per cell and the largest is 5.  Blind mode moves most (6 of 13 cells identical, against 11 of 13 seeded).  The largest swings are Adams blind (7 to 2), Gagliarducci blind (12 to 7) and Holman independent (3 to 8), then Gagliarducci seeded (8 to 12).  A per-paper comparison of a few claims, between the pipeline and the agent or between two papers, is inside this noise, and the per-paper tables in Sections 4.3 and 4.7 should be read as descriptions of one draw.  The aggregates are steadier than the cells because swings in opposite directions partly cancel.  The four papers of ROADMAP 3.6 move more: 7 of their 12 cells repeat, and the two largest swings are both Carrera's, which printed nothing usable in blind mode in sample 1 and in independent mode in sample 2 (0 to 6 blind, 6 to 0 independent), with Bokobza blind going from 4 to 10.  Over all seventeen papers 32 of 51 cells repeat, with a mean absolute difference of 1.16 claims per cell and a largest of 6.  On the six papers of ROADMAP 3.7, 12 of 18 cells repeat (mean 0.83, largest 6).  The largest swing is Mokyr independent, 13 to 7: both samples first scored 1 of 13, and the refinement that recovered all thirteen in sample 1 fixed only the units in sample 2, leaving the first-stage F statistics at about half the printed values.  Hanushek blind fell from 12 to 9, and Hollyer blind rose from 10 to 12, Labandeira independent from 5 to 7, Douenne seeded from 5 to 6 and Douenne blind from 12 to 13 (ROADMAP 3.7.1).  Over all twenty-three papers 44 of 69 cells repeat, with a mean absolute difference of 1.07 claims per cell and a largest of 6.
 
@@ -573,7 +573,7 @@ Per paper and mode: final claims within tolerance in each pipeline sample, their
 |---|---|---|---:|---:|---:|---:|---:|
 | `acemoglu-2022` | oracle | seeded | 12 | 12 | 12 | 0 | 12 |
 | `acemoglu-2022` | oracle | independent | 12 | 11 | 11 | 0 | 12 |
-| `acemoglu-2022` | oracle | blind | 12 | 4 | 6 | **2** | 12 |
+| `acemoglu-2022` | oracle | blind | 12 | 6 | 6 | 0 | 12 |
 | `adams-2023` | oracle | seeded | 11 | 11 | 11 | 0 | 11 |
 | `adams-2023` | oracle | independent | 11 | 10 | 8 | **2** | 11 |
 | `adams-2023` | oracle | blind | 11 | 7 | 2 | **5** | 8 |
@@ -590,8 +590,8 @@ Per paper and mode: final claims within tolerance in each pipeline sample, their
 | `brouwer-2022` | oracle | independent | 12 | 12 | 12 | 0 | 12 |
 | `brouwer-2022` | oracle | blind | 12 | 12 | 12 | 0 | 12 |
 | `carrera-2022` | oracle | seeded | 11 | 11 | 11 | 0 | 11 |
-| `carrera-2022` | oracle | independent | 11 | 6 | 0 | **6** | 11 |
-| `carrera-2022` | oracle | blind | 11 | 0 | 6 | **6** | 11 |
+| `carrera-2022` | oracle | independent | 11 | 7 | 0 | **7** | 11 |
+| `carrera-2022` | oracle | blind | 11 | 0 | 7 | **7** | 11 |
 | `dancygier-2022` | oracle | seeded | 13 | 13 | 13 | 0 | 13 |
 | `dancygier-2022` | oracle | independent | 13 | 13 | 13 | 0 | 13 |
 | `dancygier-2022` | oracle | blind | 13 | 13 | 13 | 0 | 13 |
@@ -602,8 +602,8 @@ Per paper and mode: final claims within tolerance in each pipeline sample, their
 | `douenne-2022` | oracle | independent | 13 | 13 | 13 | 0 | 13 |
 | `douenne-2022` | oracle | blind | 13 | 12 | 13 | **1** | 12 |
 | `forsythe-2022` | oracle | seeded | 13 | 13 | 13 | 0 | 13 |
-| `forsythe-2022` | oracle | independent | 13 | 11 | 11 | 0 | 12 |
-| `forsythe-2022` | oracle | blind | 13 | 10 | 10 | 0 | 11 |
+| `forsythe-2022` | oracle | independent | 13 | 12 | 12 | 0 | 12 |
+| `forsythe-2022` | oracle | blind | 13 | 10 | 10 | 0 | 12 |
 | `gagliarducci-2022` | oracle | seeded | 13 | 8 | 12 | **4** | 13 |
 | `gagliarducci-2022` | oracle | independent | 13 | 13 | 13 | 0 | 13 |
 | `gagliarducci-2022` | oracle | blind | 13 | 12 | 7 | **5** | 7 |
@@ -620,14 +620,14 @@ Per paper and mode: final claims within tolerance in each pipeline sample, their
 | `hollyer-2022` | oracle | independent | 13 | 13 | 13 | 0 | 13 |
 | `hollyer-2022` | oracle | blind | 13 | 10 | 12 | **2** | 13 |
 | `holman-2022` | oracle | seeded | 11 | 11 | 11 | 0 | 11 |
-| `holman-2022` | oracle | independent | 11 | 3 | 8 | **5** | 10 |
-| `holman-2022` | oracle | blind | 11 | 0 | 0 | 0 | 6 |
+| `holman-2022` | oracle | independent | 11 | 4 | 9 | **5** | 11 |
+| `holman-2022` | oracle | blind | 11 | 0 | 0 | 0 | 7 |
 | `labandeira-2022` | oracle | seeded | 12 | 12 | 12 | 0 | 12 |
-| `labandeira-2022` | oracle | independent | 12 | 5 | 7 | **2** | 8 |
+| `labandeira-2022` | oracle | independent | 12 | 6 | 7 | **1** | 8 |
 | `labandeira-2022` | oracle | blind | 12 | 4 | 4 | 0 | 6 |
 | `leeson-2022` | API | seeded | 11 | 11 | 11 | 0 | 11 |
 | `leeson-2022` | API | independent | 11 | 11 | 8 | **3** | 11 |
-| `leeson-2022` | API | blind | 11 | 8 | 7 | **1** | 11 |
+| `leeson-2022` | API | blind | 11 | 9 | 8 | **1** | 11 |
 | `lopez-moctezuma-2022` | oracle | seeded | 13 | 13 | 13 | 0 | 13 |
 | `lopez-moctezuma-2022` | oracle | independent | 13 | 9 | 9 | 0 | 9 |
 | `lopez-moctezuma-2022` | oracle | blind | 13 | 9 | 9 | 0 | 9 |
@@ -638,8 +638,8 @@ Per paper and mode: final claims within tolerance in each pipeline sample, their
 | `mokyr-2022` | oracle | independent | 13 | 13 | 7 | **6** | 13 |
 | `mokyr-2022` | oracle | blind | 13 | 1 | 1 | 0 | 13 |
 | `montero-2022` | API | seeded | 10 | 10 | 10 | 0 | 10 |
-| `montero-2022` | API | independent | 10 | 10 | 7 | **3** | 10 |
-| `montero-2022` | API | blind | 10 | 0 | 1 | **1** | 10 |
+| `montero-2022` | API | independent | 10 | 10 | 8 | **2** | 10 |
+| `montero-2022` | API | blind | 10 | 0 | 3 | **3** | 10 |
 <!-- /table:variance_pipeline_cells -->
 
 Two qualifications.  For Grier, Leeson, Manekin and Montero, sample 1 came from the API at the pipeline's configured effort and sample 2 from the oracle at the desktop default, so those twelve cells differ in route as well as draw (ROADMAP 3.5).  And some misses are not noise at all: Grier blind printed the same coefficients in both samples and on `claude-opus-4-7` (Section 5), Holman blind printed the same values in both samples apart from two coefficients that are numerically zero in both (appendix table), and Altmann blind and López-Moctezuma independent and blind repeated their counts exactly.
@@ -652,27 +652,29 @@ Three samples of the agent in independent and blind mode and two in seeded mode,
 | Papers | Mode | Claims | Agent sample 1 | Agent sample 2 | Agent sample 3 | Pipeline sample 1 | Pipeline sample 2 | Agent cells identical (1, 2) | Agent mean abs. diff per cell (1, 2) | Agent max abs. diff (1, 2) | Agent cells identical (all samples) | Agent − pipeline (pairings) |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | 13 earlier | seeded | 154 | 153 | 142 | — | 149 | 152 | 12 / 13 | 0.85 | 11 | 12 / 13 | -10 to 4 (4) |
-| 13 earlier | independent | 154 | 148 | 147 | 144 | 129 | 128 | 12 / 13 | 0.08 | 1 | 11 / 13 | 15 to 20 (6) |
-| 13 earlier | blind | 154 | 135 | 132 | 130 | 92 | 82 | 10 / 13 | 0.54 | 4 | 9 / 13 | 38 to 53 (6) |
+| 13 earlier | independent | 154 | 149 | 148 | 145 | 130 | 130 | 12 / 13 | 0.08 | 1 | 11 / 13 | 15 to 19 (6) |
+| 13 earlier | blind | 154 | 136 | 134 | 132 | 95 | 85 | 10 / 13 | 0.46 | 3 | 9 / 13 | 37 to 51 (6) |
 | 4 (3.6 set) | seeded | 47 | 47 | 47 | — | 45 | 43 | 4 / 4 | 0.00 | 0 | 4 / 4 | 2 to 4 (4) |
-| 4 (3.6 set) | independent | 47 | 46 | 47 | 47 | 40 | 33 | 3 / 4 | 0.25 | 1 | 3 / 4 | 6 to 14 (6) |
-| 4 (3.6 set) | blind | 47 | 45 | 45 | 45 | 26 | 38 | 4 / 4 | 0.00 | 0 | 4 / 4 | 7 to 19 (6) |
+| 4 (3.6 set) | independent | 47 | 46 | 47 | 47 | 42 | 34 | 3 / 4 | 0.25 | 1 | 3 / 4 | 4 to 13 (6) |
+| 4 (3.6 set) | blind | 47 | 46 | 46 | 46 | 26 | 39 | 4 / 4 | 0.00 | 0 | 4 / 4 | 7 to 20 (6) |
 | 17 | seeded | 201 | 200 | 189 | — | 194 | 195 | 16 / 17 | 0.65 | 11 | 16 / 17 | -6 to 6 (4) |
-| 17 | independent | 201 | 194 | 194 | 191 | 169 | 161 | 15 / 17 | 0.12 | 1 | 14 / 17 | 22 to 33 (6) |
-| 17 | blind | 201 | 180 | 177 | 175 | 118 | 120 | 14 / 17 | 0.41 | 4 | 13 / 17 | 55 to 62 (6) |
+| 17 | independent | 201 | 195 | 195 | 192 | 172 | 164 | 15 / 17 | 0.12 | 1 | 14 / 17 | 20 to 31 (6) |
+| 17 | blind | 201 | 182 | 180 | 178 | 121 | 124 | 14 / 17 | 0.35 | 3 | 13 / 17 | 54 to 61 (6) |
 | 6 (3.7 set) | seeded | 77 | 77 | 77 | — | 69 | 70 | 6 / 6 | 0.00 | 0 | 6 / 6 | 7 to 8 (4) |
-| 6 (3.7 set) | independent | 77 | 73 | 76 | 73 | 66 | 62 | 5 / 6 | 0.50 | 3 | 5 / 6 | 7 to 14 (6) |
+| 6 (3.7 set) | independent | 77 | 73 | 76 | 73 | 67 | 62 | 5 / 6 | 0.50 | 3 | 5 / 6 | 6 to 14 (6) |
 | 6 (3.7 set) | blind | 77 | 70 | 71 | 72 | 52 | 52 | 5 / 6 | 0.17 | 1 | 4 / 6 | 18 to 20 (6) |
 | 23 | seeded | 278 | 277 | 266 | — | 263 | 265 | 22 / 23 | 0.48 | 11 | 22 / 23 | 1 to 14 (4) |
-| 23 | independent | 278 | 267 | 270 | 264 | 235 | 223 | 20 / 23 | 0.22 | 3 | 19 / 23 | 29 to 47 (6) |
-| 23 | blind | 278 | 250 | 248 | 247 | 170 | 172 | 19 / 23 | 0.35 | 4 | 17 / 23 | 75 to 80 (6) |
+| 23 | independent | 278 | 268 | 271 | 265 | 239 | 226 | 20 / 23 | 0.22 | 3 | 19 / 23 | 26 to 45 (6) |
+| 23 | blind | 278 | 252 | 251 | 250 | 173 | 176 | 19 / 23 | 0.30 | 3 | 17 / 23 | 74 to 79 (6) |
 <!-- /table:variance_agent -->
 
 The agent moves much less than the pipeline.  Its totals went from 148 to 147 in independent mode and from 135 to 132 in blind mode; 12 of 13 independent cells and 10 of 13 blind cells came out identical, against 8 and 6 for the pipeline, with mean absolute differences of 0.08 and 0.54 claims per cell.  The largest swing is Montero blind (10 to 6), whose own agent flagged its estimates as fragile, flipping sign without a survey-round fixed effect (ROADMAP 3.5).  The Adams pair shows how a cell can move on an unstated rule: the independent agent used a one-sided four-seat rule and built 1,842 dyads, the blind agent a two-sided rule and built 1,525.
 
-**What the four samples show.**  Taking each agent sample against each pipeline sample, the gap is 18 to 20 claims in independent mode and 40 to 53 in blind mode, out of 154.  The independent gap barely moves.  The blind range is wide, and most of its width comes from the pipeline, whose blind total moved by 10 while the agent's moved by 3.  So the headline holds under resampling of both systems: a gap of about 20 claims without the scripts, and of 40 to 53 when the targets are withheld as well.  Over the seventeen papers the ranges are 25 to 33 claims independent and 57 to 62 blind, out of 201; the agent's second sample on the four papers of ROADMAP 3.6 repeated seven of eight cells, and in the eighth (Forsythe independent) it passed the out-of-the-labour-force interaction that had missed in every first-sample independent and blind cell of both systems, at −0.500 against −0.49 with the full-sample count exact.  On the six papers of ROADMAP 3.7 the agent's second sample reproduced 76 and 71 of 77 against 73 and 70, with ten of twelve cells identical: Labandeira independent rose from 8 to 11 after the agent switched to the package's lagged treatment dummy once it had compared with the targets, still missing column 2, and the one Douenne blind miss repeated.  Over all twenty-three papers the agent's two samples are 267 and 270 independent and 250 and 248 blind, the pipeline's 235 and 223 independent and 170 and 172 blind, and the four-pairing gap is 32 to 47 claims independent and 76 to 80 blind, out of 278 (ROADMAP 3.7.1).  The independent range widened at the top because the pipeline's second sample lost 12 independent claims, 6 of them Mokyr's; the blind range moved by 2.  In seeded mode the agent's two samples are 277 and 266 of 278 and 22 of 23 cells repeat; the pipeline's seeded cells repeat in 19 of 23.  The one change is a failure, not a different answer: in Holman seeded the agent translated the do-file's panel-corrected standard errors by hand, the step crashed four times, the three error repairs the task allows each fixed one bug, the final run crashed on a fourth, and with no results printed all eleven claims count as missed (sample 1 reproduced all eleven).  Grier seeded missed the same claim in both samples (−0.000565 against −0.0005).  So the seeded four-pairing range over all twenty-three papers is 1 to 14 claims, where the agent's first seeded sample alone gave 12 or 14, and on the seventeen papers it straddles zero (−6 to 6); without the Holman crash it would be 12 to 14 again.  These are two draws per system, not a distribution, and we attach no standard error and no significance statement to any of them.
+**What the four samples show.**  Taking each agent sample against each pipeline sample, the gap is 18 to 19 claims in independent mode and 39 to 51 in blind mode, out of 154.  The independent gap barely moves.  The blind range is wide, and most of its width comes from the pipeline, whose blind total moved by 10 while the agent's moved by 2.  So the headline holds under resampling of both systems: a gap of about 19 claims without the scripts, and of 39 to 51 when the targets are withheld as well.  Over the seventeen papers the ranges are 23 to 31 claims independent and 56 to 61 blind, out of 201; the agent's second sample on the four papers of ROADMAP 3.6 repeated seven of eight cells, and in the eighth (Forsythe independent) it passed the out-of-the-labour-force interaction that had missed in every first-sample independent and blind cell of both systems, at −0.500 against −0.49 with the full-sample count exact.  On the six papers of ROADMAP 3.7 the agent's second sample reproduced 76 and 71 of 77 against 73 and 70, with ten of twelve cells identical: Labandeira independent rose from 8 to 11 after the agent switched to the package's lagged treatment dummy once it had compared with the targets, still missing column 2, and the one Douenne blind miss repeated.  Over all twenty-three papers the agent's two samples are 268 and 271 independent and 252 and 251 blind, the pipeline's 239 and 226 independent and 173 and 176 blind, and the four-pairing gap is 29 to 45 claims independent and 75 to 79 blind, out of 278 (ROADMAP 3.7.1 gives 32 to 47 and 76 to 80 under the 1 % count band).  The independent range is wide at the top because the pipeline's second sample lost 13 independent claims, 6 of them Mokyr's.  In seeded mode the agent's two samples are 277 and 266 of 278 and 22 of 23 cells repeat; the pipeline's seeded cells repeat in 19 of 23.  The one change is a failure, not a different answer: in Holman seeded the agent translated the do-file's panel-corrected standard errors by hand, the step crashed four times, the three error repairs the task allows each fixed one bug, the final run crashed on a fourth, and with no results printed all eleven claims count as missed (sample 1 reproduced all eleven).  Grier seeded missed the same claim in both samples (−0.000565 against −0.0005).  So the seeded four-pairing range over all twenty-three papers is 1 to 14 claims, where the agent's first seeded sample alone gave 12 or 14, and on the seventeen papers it straddles zero (−6 to 6); without the Holman crash it would be 12 to 14 again.  These are two draws per system, not a distribution, and we attach no standard error and no significance statement to any of them.
 
-**The agent's third sample.**  The figures above pair two agent samples with two pipeline samples.  The agent's third run in independent and blind mode (ROADMAP 3.7.3) reproduced 264 and 247 of 278, the lowest of its three totals in both modes (267, 270, 264 independent; 250, 248, 247 blind), so over six pairings the 23-paper gap is 29 to 47 claims independent and 75 to 80 blind: only the bottoms move.  On the seventeen papers it is 22 to 33 and 55 to 62, on the thirteen 15 to 20 and 38 to 53, and on the six of ROADMAP 3.7 7 to 14 and 18 to 20.  Nineteen of 23 independent cells and 17 of 23 blind cells have the same final count in all three samples.  The largest moves are Montero blind (10, 6, 5), where two of three samples applied the paper's at-least-five-members rule for the IQR columns and missed the counts the authors' code produces, and only the first, which set the rule aside, passed; Holman independent (10, 10, 7), whose third sample missed three Table 2 coefficients, two of them at the values every blind sample prints; and Labandeira independent (8, 11, 8), whose third sample printed the first sample's values claim for claim.  The ordering of the modes holds in every pairing.  Three draws of the agent and two of the pipeline still give no standard error.
+**The agent's third sample.**  The figures above pair two agent samples with two pipeline samples.  The agent's third run in independent and blind mode (ROADMAP 3.7.3) reproduced 265 and 250 of 278, the lowest of its three totals in both modes (268, 271, 265 independent; 252, 251, 250 blind), so over six pairings the 23-paper gap is 26 to 45 claims independent and 74 to 79 blind: only the bottoms move.  On the seventeen papers it is 20 to 31 and 54 to 61, on the thirteen 15 to 19 and 37 to 51, and on the six of ROADMAP 3.7 6 to 14 and 18 to 20.  Nineteen of 23 independent cells and 17 of 23 blind cells have the same final count in all three samples.  The largest moves are Montero blind (10, 6, 5), where two of three samples applied the paper's at-least-five-members rule for the IQR columns and missed the counts the authors' code produces, and only the first, which set the rule aside, passed; Holman independent (10, 10, 7), whose third sample missed three Table 2 coefficients, two of them at the values every blind sample prints; and Labandeira independent (8, 11, 8), whose third sample printed the first sample's values claim for claim.  The ordering of the modes holds in every pairing.  Three draws of the agent and two of the pipeline still give no standard error.
+
+**The pipeline's third sample.**  The pipeline was run a third time through the oracle on all twenty-three papers in every mode, on the frozen pipeline (label `desktop-opus-run3`; ROADMAP 3.7.4).  It reproduced 254, 227 and 181 of 278, against 263, 239 and 173 and 265, 226 and 176.  Its cells match samples 1 and 2 in 17 of 23 seeded, 10 of 23 independent and 6 of 23 blind cells.  Pairing each agent sample with each of the three pipeline samples (nine pairings in independent and blind mode, six in seeded), the 23-paper gap is 1 to 23 claims seeded, 26 to 45 independent and 69 to 79 blind.  The seeded top end is new: the third sample's Forsythe seeded and independent cells printed no results after four executions each, their output stopping partway through loading the 2 GB data file, and the frozen repair loop never told the model the script had been killed (ROADMAP 3.7.4 and 3.8); its Labandeira seeded cell reproduced 6 of 12 against 12 in both earlier samples.  The blind bottom moved down because the third sample's blind total is the pipeline's highest (Altmann 13 of 13 against 4 and 4, Mokyr 7 against 1 and 1).  The ordering of the modes holds in every pairing.  Three draws per system are still not a distribution: no standard error.
 
 <!-- table:variance_agent_cells -->
 Per paper and mode: final claims within tolerance in each agent sample (three in independent and blind mode, two in seeded), their spread (largest minus smallest; bold where non-zero), and the two pipeline samples.
@@ -681,7 +683,7 @@ Per paper and mode: final claims within tolerance in each agent sample (three in
 |---|---|---:|---:|---:|---:|---:|---:|---:|
 | `acemoglu-2022` | seeded | 12 | 12 | 12 | — | 0 | 12 | 12 |
 | `acemoglu-2022` | independent | 12 | 12 | 12 | 12 | 0 | 11 | 11 |
-| `acemoglu-2022` | blind | 12 | 12 | 12 | 12 | 0 | 4 | 6 |
+| `acemoglu-2022` | blind | 12 | 12 | 12 | 12 | 0 | 6 | 6 |
 | `adams-2023` | seeded | 11 | 11 | 11 | — | 0 | 11 | 11 |
 | `adams-2023` | independent | 11 | 11 | 11 | 11 | 0 | 10 | 8 |
 | `adams-2023` | blind | 11 | 8 | 7 | 8 | **1** | 7 | 2 |
@@ -698,8 +700,8 @@ Per paper and mode: final claims within tolerance in each agent sample (three in
 | `brouwer-2022` | independent | 12 | 12 | 12 | 12 | 0 | 12 | 12 |
 | `brouwer-2022` | blind | 12 | 12 | 12 | 12 | 0 | 12 | 12 |
 | `carrera-2022` | seeded | 11 | 11 | 11 | — | 0 | 11 | 11 |
-| `carrera-2022` | independent | 11 | 11 | 11 | 11 | 0 | 6 | 0 |
-| `carrera-2022` | blind | 11 | 11 | 11 | 11 | 0 | 0 | 6 |
+| `carrera-2022` | independent | 11 | 11 | 11 | 11 | 0 | 7 | 0 |
+| `carrera-2022` | blind | 11 | 11 | 11 | 11 | 0 | 0 | 7 |
 | `dancygier-2022` | seeded | 13 | 13 | 13 | — | 0 | 13 | 13 |
 | `dancygier-2022` | independent | 13 | 13 | 13 | 13 | 0 | 13 | 13 |
 | `dancygier-2022` | blind | 13 | 13 | 13 | 13 | 0 | 13 | 13 |
@@ -710,8 +712,8 @@ Per paper and mode: final claims within tolerance in each agent sample (three in
 | `douenne-2022` | independent | 13 | 13 | 13 | 13 | 0 | 13 | 13 |
 | `douenne-2022` | blind | 13 | 12 | 12 | 13 | **1** | 12 | 13 |
 | `forsythe-2022` | seeded | 13 | 13 | 13 | — | 0 | 13 | 13 |
-| `forsythe-2022` | independent | 13 | 12 | 13 | 13 | **1** | 11 | 11 |
-| `forsythe-2022` | blind | 13 | 11 | 11 | 11 | 0 | 10 | 10 |
+| `forsythe-2022` | independent | 13 | 12 | 13 | 13 | **1** | 12 | 12 |
+| `forsythe-2022` | blind | 13 | 12 | 12 | 12 | 0 | 10 | 10 |
 | `gagliarducci-2022` | seeded | 13 | 13 | 13 | — | 0 | 8 | 12 |
 | `gagliarducci-2022` | independent | 13 | 13 | 13 | 13 | 0 | 13 | 13 |
 | `gagliarducci-2022` | blind | 13 | 7 | 9 | 9 | **2** | 12 | 7 |
@@ -728,14 +730,14 @@ Per paper and mode: final claims within tolerance in each agent sample (three in
 | `hollyer-2022` | independent | 13 | 13 | 13 | 13 | 0 | 13 | 13 |
 | `hollyer-2022` | blind | 13 | 13 | 13 | 13 | 0 | 10 | 12 |
 | `holman-2022` | seeded | 11 | 11 | 0 | — | **11** | 11 | 11 |
-| `holman-2022` | independent | 11 | 10 | 10 | 7 | **3** | 3 | 8 |
-| `holman-2022` | blind | 11 | 6 | 6 | 6 | 0 | 0 | 0 |
+| `holman-2022` | independent | 11 | 11 | 11 | 8 | **3** | 4 | 9 |
+| `holman-2022` | blind | 11 | 7 | 7 | 7 | 0 | 0 | 0 |
 | `labandeira-2022` | seeded | 12 | 12 | 12 | — | 0 | 12 | 12 |
-| `labandeira-2022` | independent | 12 | 8 | 11 | 8 | **3** | 5 | 7 |
+| `labandeira-2022` | independent | 12 | 8 | 11 | 8 | **3** | 6 | 7 |
 | `labandeira-2022` | blind | 12 | 6 | 7 | 7 | **1** | 4 | 4 |
 | `leeson-2022` | seeded | 11 | 11 | 11 | — | 0 | 11 | 11 |
 | `leeson-2022` | independent | 11 | 11 | 11 | 11 | 0 | 11 | 8 |
-| `leeson-2022` | blind | 11 | 11 | 11 | 11 | 0 | 8 | 7 |
+| `leeson-2022` | blind | 11 | 11 | 11 | 11 | 0 | 9 | 8 |
 | `lopez-moctezuma-2022` | seeded | 13 | 13 | 13 | — | 0 | 13 | 13 |
 | `lopez-moctezuma-2022` | independent | 13 | 9 | 9 | 9 | 0 | 9 | 9 |
 | `lopez-moctezuma-2022` | blind | 13 | 9 | 9 | 9 | 0 | 9 | 9 |
@@ -746,11 +748,11 @@ Per paper and mode: final claims within tolerance in each agent sample (three in
 | `mokyr-2022` | independent | 13 | 13 | 13 | 13 | 0 | 13 | 7 |
 | `mokyr-2022` | blind | 13 | 13 | 13 | 13 | 0 | 1 | 1 |
 | `montero-2022` | seeded | 10 | 10 | 10 | — | 0 | 10 | 10 |
-| `montero-2022` | independent | 10 | 10 | 10 | 10 | 0 | 10 | 7 |
-| `montero-2022` | blind | 10 | 10 | 6 | 5 | **5** | 0 | 1 |
+| `montero-2022` | independent | 10 | 10 | 10 | 10 | 0 | 10 | 8 |
+| `montero-2022` | blind | 10 | 10 | 7 | 6 | **4** | 0 | 3 |
 <!-- /table:variance_agent_cells -->
 
-**What is still a single sample.**  The agent now has three samples per cell on every paper in independent and blind mode and two in seeded mode, with extra blind reruns on the five papers of ROADMAP 3.4 (table below).  The pipeline on Opus 5.5 has two samples on every paper in every mode.  Every agent row elsewhere in this report is its first sample.  The pipeline on `claude-opus-4-7` has one sample per cell on the evaluation papers.  The model decomposition of Section 4.4 and the verdict table of Section 4.7 use the first sample of each system only.  The second agent sample carries the same isolation caveats as the first: three agents reported glimpsing something outside the task (a garbled table row, a saved copy of their own printed paper text, prose effect sizes in the method section), and none reported adjusting toward a value (ROADMAP 3.5).  In the third sample five blind agents reported prose values that the redaction had left in their paper text, again without adjusting toward them; the redaction was widened afterwards (ROADMAP 3.7.3), and every blind sample in this report was rendered before that change.
+**What is still a single sample.**  The agent now has three samples per cell on every paper in independent and blind mode and two in seeded mode, with extra blind reruns on the five papers of ROADMAP 3.4 (table below).  The pipeline on Opus 5.5 has three samples on every paper in every mode (the third is described in Section 4.8 from ROADMAP 3.7.4 and is not yet in the generated tables).  Every agent row elsewhere in this report is its first sample.  The pipeline on `claude-opus-4-7` has one sample per cell on the evaluation papers.  The model decomposition of Section 4.4 and the verdict table of Section 4.7 use the first sample of each system only.  The second agent sample carries the same isolation caveats as the first: three agents reported glimpsing something outside the task (a garbled table row, a saved copy of their own printed paper text, prose effect sizes in the method section), and none reported adjusting toward a value (ROADMAP 3.5).  In the third sample five blind agents reported prose values that the redaction had left in their paper text, again without adjusting toward them; the redaction was widened afterwards (ROADMAP 3.7.3), and every blind sample in this report was rendered before that change.
 
 <!-- table:variance -->
 Earlier repeat runs: the pipeline on `claude-opus-4-7` on the three dev papers (independent mode), and the agent's blind reruns of ROADMAP 3.4.
@@ -758,7 +760,7 @@ Earlier repeat runs: the pipeline on `claude-opus-4-7` on the three dev papers (
 | Dev paper (independent, pipeline 4.7) | n | Cache on | Cache off 1 | Cache off 2 | Cache off 3 |
 |---|---:|---:|---:|---:|---:|
 | `dincecco-2022` | 13 | 11 | 13 | 13 | 13 |
-| `alesina-2022` | 11 | 7 | 0 | 6 | 5 |
+| `alesina-2022` | 11 | 7 | 0 | 7 | 5 |
 | `bisbee-2022` | 11 | 5 | 7 | 8 | 8 |
 
 Agent blind reruns (ROADMAP 3.4):
@@ -769,7 +771,7 @@ Agent blind reruns (ROADMAP 3.4):
 | `arias-2022` | 12 | 12 | 12 | `claude-code-blind-rerun-2026-10-22.json` |
 | `grier-2023` | 11 | 10 | 9 | `claude-code-blind-rerun-2026-10-22.json` |
 | `gagliarducci-2022` | 13 | 7 | 9 | `claude-code-blind-rerun-2026-10-22-b.json` |
-| `holman-2022` | 11 | 6 | 5 | `claude-code-blind-rerun-2026-10-22-b.json` |
+| `holman-2022` | 11 | 7 | 6 | `claude-code-blind-rerun-2026-10-22-b.json` |
 <!-- /table:variance -->
 
 Before the second pipeline sample, variance had been measured in two places.  On the dev papers the pipeline on `claude-opus-4-7` was run in independent mode once with the LLM call cache on and three times with it off.  The spread is wide where the paper is hard: Alesina ranged from 0 to 7 of 11 across four runs, Bisbee from 5 to 8; Dincecco, once its file-selection problem was fixed, was 13 of 13 in all three fresh runs.  The agent was re-run in blind mode on five papers.  Adams and Arias repeated exactly; Grier, Gagliarducci and Holman moved by one or two claims, and ROADMAP 3.4 reports that in each case the miss itself was stable (the same paper-versus-code issue both times) while borderline claims crossed the band.  The planned design (Phase 5) is three runs per paper per mode, for every configuration, on a frozen harness; until that exists, a difference of a few claims between two cells should be read as noise.
@@ -822,13 +824,13 @@ Pipeline 4.7: the seven 3.2 papers.  Pipeline 5.5: all twenty-three evaluation p
 |---|---:|---:|---:|---:|---:|---:|---:|
 | data-file resolution | 0 | 0 | 11 | 12 | 0 | 0 | 23 |
 | specification mismatch | 0 | 19 | 0 | 12 | 0 | 6 | 37 |
-| sample restriction | 5 | 11 | 7 | 40 | 0 | 1 | 64 |
+| sample restriction | 1 | 6 | 3 | 37 | 0 | 0 | 47 |
 | SE / cluster choice | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | tolerance artifact | 0 | 0 | 0 | 0 | 1 | 0 | 1 |
 | extraction error | 12 | 8 | 0 | 13 | 0 | 0 | 33 |
-| under-specified methods section | 3 | 8 | 4 | 7 | 6 | 18 | 46 |
-| unclassified | 18 | 9 | 21 | 24 | 4 | 3 | 79 |
-| **all misses** | 38 | 55 | 43 | 108 | 11 | 28 | 283 |
+| under-specified methods section | 3 | 8 | 4 | 7 | 5 | 17 | 44 |
+| unclassified | 16 | 9 | 21 | 24 | 4 | 3 | 77 |
+| **all misses** | 32 | 50 | 39 | 105 | 10 | 26 | 262 |
 | claims scored | 79 | 79 | 278 | 278 | 278 | 278 | 1270 |
 <!-- /table:taxonomy -->
 
@@ -908,43 +910,43 @@ We therefore cannot populate a pre-cutoff versus post-cutoff split, and we do no
 **Memorization probe.**  We asked the agent's model for every pinned number from memory (ROADMAP 3.5, "Memorisation probe").  One desktop Opus subagent per paper, with no tools, saw the title, authors, venue and each claim's name, type and curated context, which is what the blind prompt carries minus the paper and the data.  It gave each answer a confidence of *recalled*, *inferred* or *none*, and the answers were scored with the blind-mode comparator.
 
 <!-- table:probe -->
-Memorization probe (`benchmark/probe.py`, `probe-desktop-opus-2026-11-02.json`): one no-tools desktop Opus subagent per paper, shown the title, authors, venue and each pinned claim's name, type and context, asked for each number from memory, scored with the blind-mode comparator.  *Within 2×* and *within 5×* count answers whose relative error is at most two or five times the claim's tolerance.  The last four columns are the blind-mode counts of the two agent and two pipeline samples, for comparison (both systems' second samples cover all 23 papers).  Over all 23 papers, of the 41 hits, 3 are derivable from the claim context, 1 passes a relative tolerance, and 37 land inside a ±1 SE band whose relative half-width is 6 % to 225 % (34 of 37 at or below 65 %).
+Memorization probe (`benchmark/probe.py`, `probe-desktop-opus-2026-11-02.json`): one no-tools desktop Opus subagent per paper, shown the title, authors, venue and each pinned claim's name, type and context, asked for each number from memory, scored with the blind-mode comparator.  *Within 2×* and *within 5×* count answers whose relative error is at most two or five times the claim's tolerance.  The last four columns are the blind-mode counts of the two agent and two pipeline samples, for comparison (both systems' second samples cover all 23 papers).  Over all 23 papers, of the 44 hits, 3 are derivable from the claim context, 4 passes a relative tolerance, and 37 land inside a ±1 SE band whose relative half-width is 6 % to 225 % (34 of 37 at or below 65 %).
 
 | Paper | Claims | Answered | Within tol. | Within 2× | Within 5× | Median rel. err | Recalled / inferred / none | Agent blind 1 | Agent blind 2 | Pipeline blind 1 | Pipeline blind 2 |
 |---|---:|---:|---:|---:|---:|---:|---|---:|---:|---:|---:|
-| `acemoglu-2022` | 12 | 7 | 5 | 5 | 6 | 21.6 % | 0 / 7 / 5 | 12 | 12 | 4 | 6 |
+| `acemoglu-2022` | 12 | 7 | 5 | 5 | 6 | 21.6 % | 0 / 7 / 5 | 12 | 12 | 6 | 6 |
 | `adams-2023` | 11 | 7 | 1 | 4 | 7 | 46.9 % | 0 / 7 / 4 | 8 | 7 | 7 | 2 |
 | `altmann-2022` | 13 | 11 | 4 | 6 | 9 | 43.3 % | 0 / 11 / 2 | 13 | 13 | 4 | 4 |
 | `arias-2022` | 12 | 12 | 2 | 5 | 8 | 38.3 % | 0 / 12 / 0 | 12 | 12 | 12 | 12 |
 | `bokobza-2022` | 11 | 5 | 2 | 4 | 5 | 40.0 % | 0 / 5 / 6 | 11 | 11 | 4 | 10 |
 | `brouwer-2022` | 12 | 4 | 2 | 2 | 4 | 39.3 % | 0 / 4 / 8 | 12 | 12 | 12 | 12 |
-| `carrera-2022` | 11 | 3 | 2 | 2 | 3 | 25.9 % | 0 / 3 / 8 | 11 | 11 | 0 | 6 |
-| `dancygier-2022` | 13 | 11 | 0 | 4 | 7 | 17.5 % | 0 / 11 / 2 | 13 | 13 | 13 | 13 |
+| `carrera-2022` | 11 | 3 | 2 | 2 | 3 | 25.9 % | 0 / 3 / 8 | 11 | 11 | 0 | 7 |
+| `dancygier-2022` | 13 | 11 | 0 | 6 | 9 | 17.5 % | 0 / 11 / 2 | 13 | 13 | 13 | 13 |
 | `dertwinkel-kalt-2022` | 13 | 3 | 0 | 0 | 2 | 68.8 % | 0 / 3 / 10 | 13 | 13 | 12 | 13 |
 | `douenne-2022` | 13 | 6 | 3 | 4 | 6 | 30.3 % | 0 / 6 / 7 | 12 | 12 | 12 | 13 |
-| `forsythe-2022` | 13 | 13 | 4 | 6 | 9 | 40.7 % | 0 / 13 / 0 | 11 | 11 | 10 | 10 |
-| `gagliarducci-2022` | 13 | 13 | 6 | 7 | 8 | 28.3 % | 0 / 13 / 0 | 7 | 9 | 12 | 7 |
-| `grier-2023` | 11 | 2 | 0 | 0 | 1 | 8.9 % | 0 / 2 / 9 | 10 | 10 | 0 | 0 |
+| `forsythe-2022` | 13 | 13 | 4 | 6 | 10 | 40.7 % | 0 / 13 / 0 | 12 | 12 | 10 | 10 |
+| `gagliarducci-2022` | 13 | 13 | 6 | 8 | 10 | 28.3 % | 0 / 13 / 0 | 7 | 9 | 12 | 7 |
+| `grier-2023` | 11 | 2 | 1 | 1 | 2 | 8.9 % | 0 / 2 / 9 | 10 | 10 | 0 | 0 |
 | `hanlon-2022` | 12 | 10 | 1 | 2 | 4 | 157.3 % | 0 / 10 / 2 | 12 | 12 | 12 | 12 |
-| `hanushek-2022` | 13 | 13 | 0 | 1 | 8 | 71.8 % | 0 / 13 / 0 | 13 | 13 | 12 | 9 |
-| `hollyer-2022` | 13 | 8 | 1 | 4 | 6 | 38.1 % | 0 / 8 / 5 | 13 | 13 | 10 | 12 |
-| `holman-2022` | 11 | 4 | 0 | 2 | 2 | 110.1 % | 0 / 4 / 7 | 6 | 6 | 0 | 0 |
-| `labandeira-2022` | 12 | 7 | 1 | 1 | 4 | 42.5 % | 0 / 7 / 5 | 6 | 7 | 4 | 4 |
-| `leeson-2022` | 11 | 4 | 3 | 4 | 4 | 0.1 % | 0 / 4 / 7 | 11 | 11 | 8 | 7 |
+| `hanushek-2022` | 13 | 13 | 1 | 2 | 9 | 71.8 % | 0 / 13 / 0 | 13 | 13 | 12 | 9 |
+| `hollyer-2022` | 13 | 8 | 1 | 5 | 7 | 38.1 % | 0 / 8 / 5 | 13 | 13 | 10 | 12 |
+| `holman-2022` | 11 | 4 | 0 | 2 | 2 | 110.1 % | 0 / 4 / 7 | 7 | 7 | 0 | 0 |
+| `labandeira-2022` | 12 | 7 | 2 | 3 | 5 | 42.5 % | 0 / 7 / 5 | 6 | 7 | 4 | 4 |
+| `leeson-2022` | 11 | 4 | 3 | 4 | 4 | 0.1 % | 0 / 4 / 7 | 11 | 11 | 9 | 8 |
 | `lopez-moctezuma-2022` | 13 | 0 | 0 | 0 | 0 | — | 0 / 0 / 13 | 9 | 9 | 9 | 9 |
 | `manekin-2022` | 12 | 6 | 4 | 5 | 6 | 19.8 % | 0 / 6 / 6 | 12 | 12 | 12 | 9 |
-| `mokyr-2022` | 13 | 1 | 0 | 0 | 0 | 6.0 % | 0 / 1 / 12 | 13 | 13 | 1 | 1 |
-| `montero-2022` | 10 | 0 | 0 | 0 | 0 | — | 0 / 0 / 10 | 10 | 6 | 0 | 1 |
-| **total, 13 earlier papers** | 154 | 79 | 26 | 40 | 57 | 38.3 % | 0 / 79 / 75 | 135 | 132 | 92 | 82 |
-| **total, 17 papers (3.2–3.6)** | 201 | 104 | 36 | 54 | 78 | 38.5 % | 0 / 104 / 97 | 180 | 177 | 118 | 120 |
-| **total, 23 papers** | 278 | 150 | 41 | 68 | 109 | 38.7 % | 0 / 150 / 128 | 250 | 248 | 170 | 172 |
+| `mokyr-2022` | 13 | 1 | 0 | 1 | 1 | 6.0 % | 0 / 1 / 12 | 13 | 13 | 1 | 1 |
+| `montero-2022` | 10 | 0 | 0 | 0 | 0 | — | 0 / 0 / 10 | 10 | 7 | 0 | 3 |
+| **total, 13 earlier papers** | 154 | 79 | 27 | 42 | 60 | 38.3 % | 0 / 79 / 75 | 136 | 134 | 95 | 85 |
+| **total, 17 papers (3.2–3.6)** | 201 | 104 | 37 | 56 | 82 | 38.5 % | 0 / 104 / 97 | 182 | 180 | 121 | 124 |
+| **total, 23 papers** | 278 | 150 | 44 | 77 | 119 | 38.7 % | 0 / 150 / 128 | 252 | 251 | 173 | 176 |
 <!-- /table:probe -->
 
-Memory alone puts 41 of 278 claims inside the blind tolerance, about a seventh, and the answering model rated none of its 150 answers as recalled.  On the thirteen earlier papers the count is 26 of 154; the four papers of ROADMAP 3.6 add 10 and the six of ROADMAP 3.7 add 5.  The hits are weak evidence of memorization.  Thirty-seven are guesses, all rated *inferred*, inside one-standard-error bands that are mostly wide, though three of Forsythe's four are close (−0.35 against −0.335, 0.05 against 0.0496, −0.12 against −0.119), as are two of Douenne's three (0.52 against 0.534, 0.42 against 0.416).  One is a count that came within 1 % (Gagliarducci's sponsor-terms count, 4,700 answered against 4,746).  The remaining three are a leak of a kind the catalog's context test did not cover.  The Leeson Brown–Forsythe and ANOVA statistics were not stated in their claim contexts, but each context gave the test's p-value and, for the ANOVAs, its degrees of freedom.  The answering agent said it back-computed the statistics from those.  Those contexts were in every Leeson prompt in this report, blind mode included, for the pipeline and the agent alike.  They have since been reworded, and a test now forbids p-values, degrees of freedom and t-statistics in the contexts of any entry that pins a test statistic, but every Leeson row here was produced with the old text (ROADMAP 3.5, Next (d)).  Paper by paper, the probe does not track the agent: it answered nothing on Montero and López-Moctezuma and hit nothing on Grier and Holman, papers where the agent's blind counts are between 6 and 10, on the four papers of ROADMAP 3.6 it hit 2 to 4 claims where the agent's blind counts are 11 to 12, and on the six of ROADMAP 3.7 it hit 0 to 3 where the agent's are 6 to 13; the one Douenne claim the blind agent missed is one the probe landed inside its band.  So memory cannot account for the agent's blind result.  The probe does not show that the papers were unseen, because a model can have read a paper without retaining its coefficients, and the answering model is the same desktop Opus that produced the agent rows.  Every hit is listed in the appendix.
+Memory alone puts 44 of 278 claims inside the blind tolerance, about one in six, and the answering model rated none of its 150 answers as recalled.  On the thirteen earlier papers the count is 27 of 154; the four papers of ROADMAP 3.6 add 10 and the six of ROADMAP 3.7 add 7.  The hits are weak evidence of memorization.  Thirty-seven are guesses, all rated *inferred*, inside one-standard-error bands that are mostly wide, though three of Forsythe's four are close (−0.35 against −0.335, 0.05 against 0.0496, −0.12 against −0.119), as are two of Douenne's three (0.52 against 0.534, 0.42 against 0.416).  Four are counts inside their band: Gagliarducci's sponsor-terms count within 1 % (4,700 answered against 4,746), and, since the count band widened to 5 % (ROADMAP 3.7.4), Grier's 110 against 106, Hanushek's 1,900,000 against 1,992,276 and Labandeira's 20,000 against 20,872, all round-number answers.  The remaining three are a leak of a kind the catalog's context test did not cover.  The Leeson Brown–Forsythe and ANOVA statistics were not stated in their claim contexts, but each context gave the test's p-value and, for the ANOVAs, its degrees of freedom.  The answering agent said it back-computed the statistics from those.  Those contexts were in every Leeson prompt in this report, blind mode included, for the pipeline and the agent alike.  They have since been reworded, and a test now forbids p-values, degrees of freedom and t-statistics in the contexts of any entry that pins a test statistic, but every Leeson row here was produced with the old text (ROADMAP 3.5, Next (d)).  Paper by paper, the probe does not track the agent: it answered nothing on Montero and López-Moctezuma, hit nothing on Holman and only a rounded count on Grier, papers where the agent's blind counts are between 6 and 10, on the four papers of ROADMAP 3.6 it hit 2 to 4 claims where the agent's blind counts are 11 to 12, and on the six of ROADMAP 3.7 it hit 0 to 3 where the agent's are 6 to 13; the one Douenne claim the blind agent missed is one the probe landed inside its band.  So memory cannot account for the agent's blind result.  The probe does not show that the papers were unseen, because a model can have read a paper without retaining its coefficients, and the answering model is the same desktop Opus that produced the agent rows.  Every hit is listed in the appendix.
 
 **The oracle is not the API.**  Oracle answers come from desktop subagents at default effort, not at the effort the pipeline's request names; isolation is by instruction; and the extraction prompts truncate the paper text by design, which several answering agents noted (ROADMAP 3.5).  We present oracle rows beside the API rows, labeled, and never pool them in a table.  The "pipeline on Opus 5.5" aggregate in Sections 4.3–4.4 combines the two routes by paper, and its caveats are stated there.
 
-**Few runs per cell.**  The pipeline on Opus 5.5 has two samples per cell on all twenty-three papers; the agent has three in independent and blind mode and two seeded on all twenty-three (more in five blind cells); the pipeline on `claude-opus-4-7` has one on the evaluation papers.  Two or three samples bound nothing.  See Section 4.8.
+**Few runs per cell.**  The pipeline on Opus 5.5 has three samples per cell on all twenty-three papers (the third not yet in the generated tables); the agent has three in independent and blind mode and two seeded on all twenty-three (more in five blind cells); the pipeline on `claude-opus-4-7` has one on the evaluation papers.  Two or three samples bound nothing.  See Section 4.8.
 
 **Scope.**  Every reproduction is written in R.  Stata originals are included only because their claims can be scored without running Stata.  The corpus is twenty-three evaluation papers (278 claims), selected by availability of open data, open PDFs and an I4R verdict, not at random; seven of the twenty-three are from APSR or AJPS, and most methods are regressions on observational or experimental data.
 
@@ -964,7 +966,7 @@ The agent in this report used the file-system route: render a task per cell, let
 
 ## 8. Next steps
 
-Four pieces of work would most change what this report can claim.  A full variance pass, three runs per paper per mode on a frozen and tagged harness, would let the gaps carry uncertainty.  Part of it exists: the pipeline on Opus 5.5 has two samples on all twenty-three papers in every mode, and the agent three in independent and blind mode and two seeded (Section 4.8).  What is missing is a third pipeline sample in every mode, a third agent sample in seeded mode, and an API-route second sample for the four papers whose two pipeline samples came by different routes.  Corpus growth to the 20–30 papers the roadmap targets, with the open-data and open-PDF funnel recorded, would make the per-category counts in Section 5 mean something; the corpus is at twenty-three, and the third shortlist pass found the open pool exhausted: the next growth needs the 33 openICPSR packages placed by hand under a user's login, which is the user's decision (Section 3.1.1).  A small set of post-cutoff replications, if I4R publishes them in machine-readable form, would give the contamination control that the memorization probe (Section 6) cannot (ROADMAP Phase 5 treats it as a bonus that expires with the next model release).  The probe itself should be rerun after the Leeson context rewording and on every new entry.  And the pipeline freeze question needs an answer: the two Opus 5.5 pipeline misses that are harness rather than model (Grier's data file, with the reservations of Section 5, and Montero blind's) are concrete targets if tuning is unfrozen, but tuning on evaluation papers would end their use as evaluation papers.
+Four pieces of work would most change what this report can claim.  A full variance pass, three runs per paper per mode on a frozen and tagged harness, would let the gaps carry uncertainty.  Part of it exists: the pipeline on Opus 5.5 has three samples on all twenty-three papers in every mode, and the agent three in independent and blind mode and two seeded (Section 4.8).  What is missing is a third agent sample in seeded mode, the pipeline's third sample in the generated tables, and an API-route second sample for the four papers whose two pipeline samples came by different routes.  Corpus growth to the 20–30 papers the roadmap targets, with the open-data and open-PDF funnel recorded, would make the per-category counts in Section 5 mean something; the corpus is at twenty-three, and the third shortlist pass found the open pool exhausted: the next growth needs the 33 openICPSR packages placed by hand under a user's login, which is the user's decision (Section 3.1.1).  A small set of post-cutoff replications, if I4R publishes them in machine-readable form, would give the contamination control that the memorization probe (Section 6) cannot (ROADMAP Phase 5 treats it as a bonus that expires with the next model release).  The probe itself should be rerun after the Leeson context rewording and on every new entry.  And the pipeline freeze question needs an answer: the two Opus 5.5 pipeline misses that are harness rather than model (Grier's data file, with the reservations of Section 5, and Montero blind's) are concrete targets if tuning is unfrozen, but tuning on evaluation papers would end their use as evaluation papers.
 
 > **Editor's note:** Venue.  Options in ROADMAP Phase 5: an arXiv or SocArXiv preprint, the I4R discussion-paper series (I4R has run AI replication games and is the natural audience), or a methods journal.  The register of this draft fits the first two.
 >
@@ -976,18 +978,203 @@ Four pieces of work would most change what this report can claim.  A full varian
 
 [^seeded-gap]: ROADMAP 3.5 describes the seeded harness gap on the seven papers as zero; recomputed from the results files it is −1 (pipeline 79, agent 78).  This report uses the recomputed value.
 
-[^six-gap]: ROADMAP 3.5 gives the harness gap on the six later papers as 5, 9 and 20 claims; recomputed from the results files it is 5, 8 and 19 (agent 75, 70, 60; oracle pipeline 70, 62, 41).  This report uses the recomputed values.  The full comparison of ROADMAP-quoted numbers against recomputation is below.
+[^six-gap]: ROADMAP 3.5 gives the harness gap on the six later papers as 5, 9 and 20 claims; recomputed from the results files, rescored with the 5 % count band, it is 5, 8 and 18 (agent 75, 71, 61; oracle pipeline 70, 63, 43).  This report uses the recomputed values.  The full comparison of ROADMAP-quoted numbers against recomputation is below; most of its differences come from the count rescore of 2026-11-03, since ROADMAP 3.2–3.7.3 quote the 1 % band (ROADMAP 3.7.4), and before the rescore 3 numbers differed.
 
 [^i4r-cell]: ROADMAP 3.3 states that the "agrees with I4R, not with the paper" cell did not occur.  At the verdict level it does occur for the agent's three Grier rows (Section 4.7).  The ROADMAP statement is right in substance and wrong as a count.
 
 <!-- table:discrepancies -->
-1347 numbers quoted in ROADMAP 3.2–3.7.3 (including the 3.5 variance pass, the agent's second sample, the memorization probe, the four papers of 3.6, the six papers and two-sample ranges of 3.7, the pipeline's second sample and 23-paper ranges of 3.7.1, the agent's seeded second sample and four-pairing ranges of 3.7.2, and the agent's third independent and blind sample and six-pairing ranges of 3.7.3) were recomputed from the results files; 3 differ.
+1347 numbers quoted in ROADMAP 3.2–3.7.3 (including the 3.5 variance pass, the agent's second sample, the memorization probe, the four papers of 3.6, the six papers and two-sample ranges of 3.7, the pipeline's second sample and 23-paper ranges of 3.7.1, the agent's seeded second sample and four-pairing ranges of 3.7.2, and the agent's third independent and blind sample and six-pairing ranges of 3.7.3) were recomputed from the results files; 188 differ.
 
 | Source | What | Item | ROADMAP | Recomputed |
 |---|---|---|---:|---:|
+| ROADMAP 3.5 per-paper table | montero-2022 independent | pipeline 4.7 final | 3 | 5 |
+| ROADMAP 3.5 per-paper table | leeson-2022 blind | pipeline 4.7 final | 4 | 5 |
+| ROADMAP 3.5 per-paper table | leeson-2022 blind | pipeline 5.5 / oracle final | 8 | 9 |
+| ROADMAP 3.5 per-paper table | arias-2022 independent | pipeline 4.7 final | 0 | 4 |
+| ROADMAP 3.5 per-paper table | arias-2022 blind | pipeline 4.7 final | 1 | 5 |
+| ROADMAP 3.5 per-paper table | acemoglu-2022 blind | pipeline 5.5 / oracle final | 4 | 6 |
+| ROADMAP 3.5 per-paper table | holman-2022 independent | pipeline 5.5 / oracle final | 3 | 4 |
+| ROADMAP 3.5 per-paper table | holman-2022 independent | agent final | 10 | 11 |
+| ROADMAP 3.5 per-paper table | holman-2022 blind | agent final | 6 | 7 |
+| ROADMAP 3.2 | pipeline 4.7, 7 papers | independent final | 41 | 47 |
+| ROADMAP 3.2 | pipeline 4.7, 7 papers | blind final | 24 | 29 |
+| ROADMAP 3.4 | agent, 6 papers | independent final | 70 | 71 |
+| ROADMAP 3.4 | agent, 6 papers | blind final | 60 | 61 |
+| ROADMAP 3.4 | agent, 13 papers | independent final | 148 | 149 |
+| ROADMAP 3.4 | agent, 13 papers | blind final | 135 | 136 |
+| ROADMAP 3.5 | API 4 papers, pipeline 4.7 | independent final | 24 | 26 |
+| ROADMAP 3.5 | API 4 papers, pipeline 4.7 | blind final | 10 | 11 |
+| ROADMAP 3.5 | API 4 papers, pipeline 5.5 | blind final | 20 | 21 |
+| ROADMAP 3.5 | oracle 9 papers, oracle | independent final | 96 | 97 |
+| ROADMAP 3.5 | oracle 9 papers, agent | independent final | 105 | 106 |
+| ROADMAP 3.5 | oracle 9 papers, oracle | blind final | 72 | 74 |
+| ROADMAP 3.5 | oracle 9 papers, agent | blind final | 92 | 93 |
+| ROADMAP 3.5 | 7 papers, pipeline on Opus 5.5 | blind final | 51 | 52 |
 | ROADMAP 3.5 | harness gap, 7 papers | seeded | 0 | -1 |
+| ROADMAP 3.5 | harness gap, 7 papers | blind | 24 | 23 |
 | ROADMAP 3.5 | harness gap, 6 papers (3.4 set) | independent | 9 | 8 |
-| ROADMAP 3.5 | harness gap, 6 papers (3.4 set) | blind | 20 | 19 |
+| ROADMAP 3.5 | harness gap, 6 papers (3.4 set) | blind | 20 | 18 |
+| ROADMAP 3.5 variance pass | pipeline sample 1, 13 papers | independent final | 129 | 130 |
+| ROADMAP 3.5 variance pass | pipeline sample 2, 13 papers | independent final | 128 | 130 |
+| ROADMAP 3.5 variance pass | pipeline sample 1, 13 papers | blind final | 92 | 95 |
+| ROADMAP 3.5 variance pass | pipeline sample 2, 13 papers | blind final | 82 | 85 |
+| ROADMAP 3.5 variance pass | pipeline samples 1 vs 2 | cells identical | 25 of 39 | 26 of 39 |
+| ROADMAP 3.5 variance pass | pipeline samples 1 vs 2 | mean abs. diff | 0.97 | 0.95 |
+| ROADMAP 3.5 agent second sample | agent samples 1 vs 2, independent | agent sample 1 final | 148 | 149 |
+| ROADMAP 3.5 agent second sample | agent samples 1 vs 2, independent | agent sample 2 final | 147 | 148 |
+| ROADMAP 3.5 agent second sample | agent samples 1 vs 2, independent | harness gap range | 18–20 | 18–19 |
+| ROADMAP 3.5 agent second sample | agent samples 1 vs 2, blind | agent sample 1 final | 135 | 136 |
+| ROADMAP 3.5 agent second sample | agent samples 1 vs 2, blind | agent sample 2 final | 132 | 134 |
+| ROADMAP 3.5 agent second sample | agent samples 1 vs 2, blind | mean abs. diff | 0.54 | 0.46 |
+| ROADMAP 3.5 agent second sample | agent samples 1 vs 2, blind | max abs. diff | 4 | 3 |
+| ROADMAP 3.5 agent second sample | agent samples 1 vs 2, blind | harness gap range | 40–53 | 39–51 |
+| ROADMAP 3.5 agent second sample | montero-2022 blind | agent 1 → 2 | 10 → 6 | 10 → 7 |
+| ROADMAP 3.5 agent second sample | pipeline samples 1 vs 2 | blind cells identical | 6 of 13 | 7 of 13 |
+| ROADMAP 3.5 memorisation probe | probe | within tolerance | 26 | 27 |
+| ROADMAP 3.6 per-paper table | carrera-2022 independent | pipeline oracle final | 6 | 7 |
+| ROADMAP 3.6 per-paper table | forsythe-2022 independent | pipeline oracle final | 11 | 12 |
+| ROADMAP 3.6 per-paper table | forsythe-2022 blind | agent final | 11 | 12 |
+| ROADMAP 3.6 | pipeline oracle, 4 new papers | independent final | 40 | 42 |
+| ROADMAP 3.6 | agent, 17 papers | independent final | 194 | 195 |
+| ROADMAP 3.6 | pipeline on Opus 5.5, 17 papers | independent final | 169 | 172 |
+| ROADMAP 3.6 | harness gap, 4 new papers | independent | 6 | 4 |
+| ROADMAP 3.6 | harness gap, 17 papers | independent | 25 | 23 |
+| ROADMAP 3.6 | agent, 4 new papers | blind final | 45 | 46 |
+| ROADMAP 3.6 | agent, 17 papers | blind final | 180 | 182 |
+| ROADMAP 3.6 | pipeline on Opus 5.5, 17 papers | blind final | 118 | 121 |
+| ROADMAP 3.6 | harness gap, 4 new papers | blind | 19 | 20 |
+| ROADMAP 3.6 | harness gap, 13 earlier papers | blind | 43 | 41 |
+| ROADMAP 3.6 | harness gap, 17 papers | blind | 62 | 61 |
+| ROADMAP 3.6 memorisation probe | probe, 17 papers | within tolerance | 36 | 37 |
+| ROADMAP 3.7 per-paper table | labandeira-2022 independent | pipeline oracle final | 5 | 6 |
+| ROADMAP 3.7 | pipeline oracle, 6 new papers | independent final | 66 | 67 |
+| ROADMAP 3.7 | agent, 23 papers | independent final | 267 | 268 |
+| ROADMAP 3.7 | pipeline on Opus 5.5, 23 papers | independent final | 235 | 239 |
+| ROADMAP 3.7 | harness gap, 6 new papers | independent | 7 | 6 |
+| ROADMAP 3.7 | harness gap, 17 papers | independent | 25 | 23 |
+| ROADMAP 3.7 | harness gap, 23 papers | independent | 32 | 29 |
+| ROADMAP 3.7 | agent, 23 papers | blind final | 250 | 252 |
+| ROADMAP 3.7 | pipeline on Opus 5.5, 23 papers | blind final | 170 | 173 |
+| ROADMAP 3.7 | harness gap, 17 papers | blind | 62 | 61 |
+| ROADMAP 3.7 | harness gap, 23 papers | blind | 80 | 79 |
+| ROADMAP 3.7 two samples | pipeline sample 2, 4 papers | independent | 33 | 34 |
+| ROADMAP 3.7 two samples | agent sample 2, 4 papers | blind | 45 | 46 |
+| ROADMAP 3.7 two samples | pipeline sample 2, 4 papers | blind | 38 | 39 |
+| ROADMAP 3.7 two samples | carrera-2022 blind | pipeline 1 → 2 | 0 → 6 | 0 → 7 |
+| ROADMAP 3.7 two samples | carrera-2022 independent | pipeline 1 → 2 | 6 → 0 | 7 → 0 |
+| ROADMAP 3.7 two samples | 17 papers | independent agent 1 | 194 | 195 |
+| ROADMAP 3.7 two samples | 17 papers | independent pipeline 1 | 169 | 172 |
+| ROADMAP 3.7 two samples | 17 papers | independent pipeline 2 | 161 | 164 |
+| ROADMAP 3.7 two samples | 17 papers | independent agent 2 | 194 | 195 |
+| ROADMAP 3.7 two samples | gap range, 17 papers | independent | 25–33 | 23–31 |
+| ROADMAP 3.7 two samples | gap range, 13 papers | independent | 18–20 | 18–19 |
+| ROADMAP 3.7 two samples | gap range, 4 papers | independent | 6–14 | 4–13 |
+| ROADMAP 3.7 two samples | 17 papers | blind agent 1 | 180 | 182 |
+| ROADMAP 3.7 two samples | 17 papers | blind pipeline 1 | 118 | 121 |
+| ROADMAP 3.7 two samples | 17 papers | blind pipeline 2 | 120 | 124 |
+| ROADMAP 3.7 two samples | 17 papers | blind agent 2 | 177 | 180 |
+| ROADMAP 3.7 two samples | gap range, 17 papers | blind | 57–62 | 56–61 |
+| ROADMAP 3.7 two samples | gap range, 13 papers | blind | 40–53 | 39–51 |
+| ROADMAP 3.7 two samples | gap range, 4 papers | blind | 7–19 | 7–20 |
+| ROADMAP 3.7 two samples | pipeline cells identical, 17 papers | blind | 8 of 17 | 9 of 17 |
+| ROADMAP 3.7 two samples | pipeline samples 1 vs 2, 17 papers | cells identical | 32 of 51 | 33 of 51 |
+| ROADMAP 3.7 two samples | pipeline samples 1 vs 2, 17 papers | mean abs. diff | 1.16 | 1.18 |
+| ROADMAP 3.7 two samples | pipeline samples 1 vs 2, 17 papers | max abs. diff | 6 | 7 |
+| ROADMAP 3.7 two samples | agent, 23 papers | independent sample 1 | 267 | 268 |
+| ROADMAP 3.7 two samples | agent, 23 papers | independent sample 2 | 270 | 271 |
+| ROADMAP 3.7 two samples | gap range, 23 papers, against pipeline sample 1 (two pairings) | independent | 32–35 | 29–32 |
+| ROADMAP 3.7 two samples | agent, 23 papers | blind sample 1 | 250 | 252 |
+| ROADMAP 3.7 two samples | agent, 23 papers | blind sample 2 | 248 | 251 |
+| ROADMAP 3.7 two samples | gap range, 23 papers, against pipeline sample 1 (two pairings) | blind | 78–80 | 78–79 |
+| ROADMAP 3.7 memorisation probe | probe, 23 papers | within tolerance | 41 | 44 |
+| ROADMAP 3.7 memorisation probe | probe hits | hits on the 6 new papers | 5 | 7 |
+| ROADMAP 3.7 memorisation probe | probe hits | new-paper hits per paper (Dancygier, Douenne, Hanushek, Hollyer, Labandeira, Mokyr) | 0, 3, 0, 1, 1, 0 | 0, 3, 1, 1, 2, 0 |
+| ROADMAP 3.7 memorisation probe | probe row dancygier-2022 | claims / answered / tol / 2x / 5x | 13 / 11 / 0 / 4 / 7 | 13 / 11 / 0 / 6 / 9 |
+| ROADMAP 3.7 memorisation probe | probe row hanushek-2022 | claims / answered / tol / 2x / 5x | 13 / 13 / 0 / 1 / 8 | 13 / 13 / 1 / 2 / 9 |
+| ROADMAP 3.7 memorisation probe | probe row hollyer-2022 | claims / answered / tol / 2x / 5x | 13 / 8 / 1 / 4 / 6 | 13 / 8 / 1 / 5 / 7 |
+| ROADMAP 3.7 memorisation probe | probe row labandeira-2022 | claims / answered / tol / 2x / 5x | 12 / 7 / 1 / 1 / 4 | 12 / 7 / 2 / 3 / 5 |
+| ROADMAP 3.7 memorisation probe | probe row mokyr-2022 | claims / answered / tol / 2x / 5x | 13 / 1 / 0 / 0 / 0 | 13 / 1 / 0 / 1 / 1 |
+| ROADMAP 3.7.1 | labandeira-2022 independent | sample 1 final | 5 | 6 |
+| ROADMAP 3.7.1 | pipeline sample 1, 6 papers | independent final | 66 | 67 |
+| ROADMAP 3.7.1 | pipeline samples 1 vs 2, 6 papers | mean abs. diff | 0.83 | 0.78 |
+| ROADMAP 3.7.1 | 23 papers | independent agent 1 | 267 | 268 |
+| ROADMAP 3.7.1 | 23 papers | independent agent 2 | 270 | 271 |
+| ROADMAP 3.7.1 | 23 papers | independent pipeline 1 | 235 | 239 |
+| ROADMAP 3.7.1 | 23 papers | independent pipeline 2 | 223 | 226 |
+| ROADMAP 3.7.1 | gap range, 23 papers | independent | 32–47 | 29–45 |
+| ROADMAP 3.7.1 | gap range, 17 papers | independent | 25–33 | 23–31 |
+| ROADMAP 3.7.1 | gap range, 6 papers | independent | 7–14 | 6–14 |
+| ROADMAP 3.7.1 | 23 papers | blind agent 1 | 250 | 252 |
+| ROADMAP 3.7.1 | 23 papers | blind agent 2 | 248 | 251 |
+| ROADMAP 3.7.1 | 23 papers | blind pipeline 1 | 170 | 173 |
+| ROADMAP 3.7.1 | 23 papers | blind pipeline 2 | 172 | 176 |
+| ROADMAP 3.7.1 | gap range, 23 papers | blind | 76–80 | 75–79 |
+| ROADMAP 3.7.1 | gap range, 17 papers | blind | 57–62 | 56–61 |
+| ROADMAP 3.7.1 | pipeline cells identical, 23 papers | blind | 11 of 23 | 12 of 23 |
+| ROADMAP 3.7.1 | pipeline samples 1 vs 2, 23 papers | cells identical | 44 of 69 | 45 of 69 |
+| ROADMAP 3.7.1 | pipeline samples 1 vs 2, 23 papers | max abs. diff | 6 | 7 |
+| ROADMAP 3.7.2 | 23 papers | independent agent 1 | 267 | 268 |
+| ROADMAP 3.7.2 | 23 papers | independent agent 2 | 270 | 271 |
+| ROADMAP 3.7.2 | 23 papers | independent pipeline 1 | 235 | 239 |
+| ROADMAP 3.7.2 | 23 papers | independent pipeline 2 | 223 | 226 |
+| ROADMAP 3.7.2 | gap range, 23 papers (four pairings) | independent | 32 to 47 | 29 to 45 |
+| ROADMAP 3.7.2 | gap range, 17 papers (four pairings) | independent | 25 to 33 | 23 to 31 |
+| ROADMAP 3.7.2 | gap range, 6 papers (four pairings) | independent | 7 to 14 | 6 to 14 |
+| ROADMAP 3.7.2 | 23 papers | blind agent 1 | 250 | 252 |
+| ROADMAP 3.7.2 | 23 papers | blind agent 2 | 248 | 251 |
+| ROADMAP 3.7.2 | 23 papers | blind pipeline 1 | 170 | 173 |
+| ROADMAP 3.7.2 | 23 papers | blind pipeline 2 | 172 | 176 |
+| ROADMAP 3.7.2 | gap range, 23 papers (four pairings) | blind | 76 to 80 | 75 to 79 |
+| ROADMAP 3.7.2 | gap range, 17 papers (four pairings) | blind | 57 to 62 | 56 to 61 |
+| ROADMAP 3.7.3 | forsythe-2022 blind | sample 1 final | 11 | 12 |
+| ROADMAP 3.7.3 | forsythe-2022 blind | sample 2 final | 11 | 12 |
+| ROADMAP 3.7.3 | forsythe-2022 blind | sample 3 final | 11 | 12 |
+| ROADMAP 3.7.3 | holman-2022 independent | sample 1 final | 10 | 11 |
+| ROADMAP 3.7.3 | holman-2022 independent | sample 2 final | 10 | 11 |
+| ROADMAP 3.7.3 | holman-2022 independent | sample 3 final | 7 | 8 |
+| ROADMAP 3.7.3 | holman-2022 blind | sample 1 final | 6 | 7 |
+| ROADMAP 3.7.3 | holman-2022 blind | sample 2 final | 6 | 7 |
+| ROADMAP 3.7.3 | holman-2022 blind | sample 3 final | 6 | 7 |
+| ROADMAP 3.7.3 | montero-2022 blind | sample 2 final | 6 | 7 |
+| ROADMAP 3.7.3 | montero-2022 blind | sample 3 final | 5 | 6 |
+| ROADMAP 3.7.3 | agent independent, 23 papers | sample 1 final | 267 | 268 |
+| ROADMAP 3.7.3 | agent independent, 23 papers | sample 2 final | 270 | 271 |
+| ROADMAP 3.7.3 | agent independent, 23 papers | sample 3 final | 264 | 265 |
+| ROADMAP 3.7.3 | agent blind, 23 papers | sample 1 final | 250 | 252 |
+| ROADMAP 3.7.3 | agent blind, 23 papers | sample 2 final | 248 | 251 |
+| ROADMAP 3.7.3 | agent blind, 23 papers | sample 3 final | 247 | 250 |
+| ROADMAP 3.7.3 | largest spread in a cell | blind | 5 | 4 |
+| ROADMAP 3.7.3 | montero blind s1 / s2 / s3 | final | 10 / 6 / 5 | 10 / 7 / 6 |
+| ROADMAP 3.7.3 | 23 papers | independent agent 1 | 267 | 268 |
+| ROADMAP 3.7.3 | 23 papers | independent agent 2 | 270 | 271 |
+| ROADMAP 3.7.3 | 23 papers | independent agent 3 | 264 | 265 |
+| ROADMAP 3.7.3 | 23 papers | independent pipeline 1 | 235 | 239 |
+| ROADMAP 3.7.3 | 23 papers | independent pipeline 2 | 223 | 226 |
+| ROADMAP 3.7.3 | gap range, 23 papers (six pairings) | independent | 29 to 47 | 26 to 45 |
+| ROADMAP 3.7.3 | 23 papers | blind agent 1 | 250 | 252 |
+| ROADMAP 3.7.3 | 23 papers | blind agent 2 | 248 | 251 |
+| ROADMAP 3.7.3 | 23 papers | blind agent 3 | 247 | 250 |
+| ROADMAP 3.7.3 | 23 papers | blind pipeline 1 | 170 | 173 |
+| ROADMAP 3.7.3 | 23 papers | blind pipeline 2 | 172 | 176 |
+| ROADMAP 3.7.3 | gap range, 23 papers (six pairings) | blind | 75 to 80 | 74 to 79 |
+| ROADMAP 3.7.3 | agent range, 23 papers | independent | 264–270 | 265–271 |
+| ROADMAP 3.7.3 | gap range, 23 papers (six pairings) | independent | 29 to 47 | 26 to 45 |
+| ROADMAP 3.7.3 | agent range, 23 papers | blind | 247–250 | 250–252 |
+| ROADMAP 3.7.3 | gap range, 23 papers (six pairings) | blind | 75 to 80 | 74 to 79 |
+| ROADMAP 3.7.3 | agent range, 17 papers | independent | 191–194 | 192–195 |
+| ROADMAP 3.7.3 | gap range, 17 papers (six pairings) | independent | 22 to 33 | 20 to 31 |
+| ROADMAP 3.7.3 | agent range, 17 papers | blind | 175–180 | 178–182 |
+| ROADMAP 3.7.3 | gap range, 17 papers (six pairings) | blind | 55 to 62 | 54 to 61 |
+| ROADMAP 3.7.3 | gap range, 6 (3.7 set) papers (six pairings) | independent | 7 to 14 | 6 to 14 |
+| ROADMAP 3.7.3 | agent range, 13 earlier papers | independent | 144–148 | 145–149 |
+| ROADMAP 3.7.3 | gap range, 13 earlier papers (six pairings) | independent | 15 to 20 | 15 to 19 |
+| ROADMAP 3.7.3 | agent range, 13 earlier papers | blind | 130–135 | 132–136 |
+| ROADMAP 3.7.3 | gap range, 13 earlier papers (six pairings) | blind | 38 to 53 | 37 to 51 |
+| ROADMAP 3.7.3 | gap range, 4 (3.6 set) papers (six pairings) | independent | 6 to 14 | 4 to 13 |
+| ROADMAP 3.7.3 | agent range, 4 (3.6 set) papers | blind | 45–45 | 46–46 |
+| ROADMAP 3.7.3 | gap range, 4 (3.6 set) papers (six pairings) | blind | 7 to 19 | 7 to 20 |
+| ROADMAP 3.7.3 | 3.7.1 four-pairing range, 23 papers | independent | 32 to 47 | 29 to 45 |
+| ROADMAP 3.7.3 | 3.7.1 four-pairing range, 23 papers | blind | 76 to 80 | 75 to 79 |
 <!-- /table:discrepancies -->
 
 ### Appendix: every classified miss
@@ -1019,10 +1206,6 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | pipeline 4.7 | `arias-2022` | independent | `amce_flooding_germany` | 0.086 | 0.0142 | unclassified |
 | pipeline 4.7 | `arias-2022` | independent | `amce_wildfires_germany` | 0.06 | -0.0033 | unclassified |
 | pipeline 4.7 | `arias-2022` | independent | `amce_persecution_germany` | 0.162 | 0.0062 | unclassified |
-| pipeline 4.7 | `arias-2022` | independent | `respondents_us` | 1086 | 1033 | sample restriction |
-| pipeline 4.7 | `arias-2022` | independent | `respondents_germany` | 1074 | 1029 | sample restriction |
-| pipeline 4.7 | `arias-2022` | independent | `choice_tasks_us` | 18966 | 1.858e+04 | sample restriction |
-| pipeline 4.7 | `arias-2022` | independent | `choice_tasks_germany` | 18862 | 1.851e+04 | sample restriction |
 | pipeline 4.7 | `arias-2022` | blind | `amce_drought_us` | 0.035 | 0.07253 | specification mismatch |
 | pipeline 4.7 | `arias-2022` | blind | `amce_flooding_us` | 0.037 | 0.07474 | specification mismatch |
 | pipeline 4.7 | `arias-2022` | blind | `amce_wildfires_us` | 0.04 | 0.07086 | specification mismatch |
@@ -1030,10 +1213,6 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | pipeline 4.7 | `arias-2022` | blind | `amce_drought_germany` | 0.081 | 0.1535 | specification mismatch |
 | pipeline 4.7 | `arias-2022` | blind | `amce_wildfires_germany` | 0.06 | 0.1029 | specification mismatch |
 | pipeline 4.7 | `arias-2022` | blind | `amce_persecution_germany` | 0.162 | 0.2159 | specification mismatch |
-| pipeline 4.7 | `arias-2022` | blind | `respondents_us` | 1086 | 1033 | sample restriction |
-| pipeline 4.7 | `arias-2022` | blind | `respondents_germany` | 1074 | 1029 | sample restriction |
-| pipeline 4.7 | `arias-2022` | blind | `choice_tasks_us` | 18966 | 1.859e+04 | sample restriction |
-| pipeline 4.7 | `arias-2022` | blind | `choice_tasks_germany` | 18862 | 1.852e+04 | sample restriction |
 | pipeline 4.7 | `grier-2023` | independent | `sugar_contributions_district_fe` | -0.0006 | NA | extraction error |
 | pipeline 4.7 | `grier-2023` | independent | `sugar_contributions_incumbent_fe` | -0.0004 | NA | extraction error |
 | pipeline 4.7 | `grier-2023` | independent | `acu_ideology_district_fe` | 0.2 | NA | extraction error |
@@ -1065,7 +1244,6 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | pipeline 4.7 | `leeson-2022` | blind | `brown_forsythe_dollars_per_hour` | 0.276 | 0.205 | specification mismatch |
 | pipeline 4.7 | `leeson-2022` | blind | `anova_f_donations_per_hour` | 0.4 | 0.484 | specification mismatch |
 | pipeline 4.7 | `leeson-2022` | blind | `anova_f_dollars_per_hour` | 0.15 | 0.101 | specification mismatch |
-| pipeline 4.7 | `leeson-2022` | blind | `station_visits_full_sample` | 242 | 239 | sample restriction |
 | pipeline 4.7 | `leeson-2022` | blind | `station_visits_five_station_subsample` | 102 | 87 | sample restriction |
 | pipeline 4.7 | `manekin-2022` | blind | `study1_us_black_perceived_violence` | 0.235 | NA | extraction error |
 | pipeline 4.7 | `manekin-2022` | blind | `study1_us_black_police_action` | 0.268 | NA | extraction error |
@@ -1077,9 +1255,7 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | pipeline 4.7 | `montero-2022` | independent | `earnings_iqr_above500_bw300` | -42.97 | 20.32 | unclassified |
 | pipeline 4.7 | `montero-2022` | independent | `earnings_iqr_above500_bw150` | -51.79 | 11.76 | unclassified |
 | pipeline 4.7 | `montero-2022` | independent | `n_obs_earnings_iqr_bw300` | 327 | 182 | unclassified |
-| pipeline 4.7 | `montero-2022` | independent | `n_obs_earnings_iqr_bw150` | 118 | 113 | unclassified |
 | pipeline 4.7 | `montero-2022` | independent | `n_clusters_bw300` | 98 | 63 | unclassified |
-| pipeline 4.7 | `montero-2022` | independent | `n_clusters_bw150` | 36 | 35 | unclassified |
 | pipeline 4.7 | `montero-2022` | blind | `earnings_level_above500_bw300` | 60.49 | 215.7 | under-specified methods section |
 | pipeline 4.7 | `montero-2022` | blind | `earnings_level_above500_bw150` | 52.79 | 221.2 | under-specified methods section |
 | pipeline 4.7 | `montero-2022` | blind | `earnings_iqr_above500_bw300` | -42.97 | NA | extraction error |
@@ -1097,8 +1273,6 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | pipeline 5.5 | `acemoglu-2022` | blind | `iv_violence_table2_panelA_col6` | 0.5 | 0.2734 | sample restriction |
 | pipeline 5.5 | `acemoglu-2022` | blind | `iv_branches_table2_panelC_col6` | 0.5 | 0.1939 | sample restriction |
 | pipeline 5.5 | `acemoglu-2022` | blind | `iv_fascist_vote1924_table3_panelC_col6` | 0.51 | 0.1774 | sample restriction |
-| pipeline 5.5 | `acemoglu-2022` | blind | `n_clusters_main_sample` | 181 | 178 | sample restriction |
-| pipeline 5.5 | `acemoglu-2022` | blind | `n_clusters_fascist_vote1921` | 175 | 171 | sample restriction |
 | pipeline 5.5 | `adams-2023` | independent | `women_mps_coef_men_partisans` | 1.13 | 1.698 | unclassified |
 | pipeline 5.5 | `adams-2023` | blind | `women_mps_coef_women_partisans` | 2.1 | 1.455 | sample restriction |
 | pipeline 5.5 | `adams-2023` | blind | `n_directed_dyads` | 1842 | 2019 | sample restriction |
@@ -1124,7 +1298,6 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | pipeline 5.5 | `carrera-2022` | independent | `bcp_enhanced_info_treatment_col1` | 1.36 | 0.219 | unclassified |
 | pipeline 5.5 | `carrera-2022` | independent | `bcp_regression_observations` | 1126 | 1248 | sample restriction |
 | pipeline 5.5 | `carrera-2022` | independent | `takeup_more_enhanced_info_treatment_col1` | -0.08 | -0.01675 | unclassified |
-| pipeline 5.5 | `carrera-2022` | independent | `takeup_more_regression_observations` | 2824 | 2946 | sample restriction |
 | pipeline 5.5 | `carrera-2022` | blind | `bcp_basic_info_treatment_col1` | 0.3 | NA | sample restriction |
 | pipeline 5.5 | `carrera-2022` | blind | `bcp_enhanced_info_treatment_col1` | 1.36 | NA | sample restriction |
 | pipeline 5.5 | `carrera-2022` | blind | `bcp_goal_minus_expected_attendance_col2` | 0.71 | NA | sample restriction |
@@ -1139,7 +1312,6 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | pipeline 5.5 | `dertwinkel-kalt-2022` | blind | `rel_concentration_bias_lower_table2_col1` | 0.19 | 0.2591 | unclassified |
 | pipeline 5.5 | `douenne-2022` | blind | `believes_effective_on_approval_iv_table8_col1` | 0.416 | 0.1774 | unclassified |
 | pipeline 5.5 | `forsythe-2022` | independent | `young_x_unemp_rate_nilf` | -0.49 | -0.5944 | unclassified |
-| pipeline 5.5 | `forsythe-2022` | independent | `n_obs_full_sample` | 1.69485e+07 | 1.728e+07 | sample restriction |
 | pipeline 5.5 | `forsythe-2022` | blind | `young_x_unemp_rate_unemployed` | -1.928 | -1.741 | unclassified |
 | pipeline 5.5 | `forsythe-2022` | blind | `young_x_unemp_rate_nilf` | -0.49 | -0.5478 | unclassified |
 | pipeline 5.5 | `forsythe-2022` | blind | `n_obs_full_sample` | 1.69485e+07 | 1.43e+07 | sample restriction |
@@ -1180,7 +1352,6 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | pipeline 5.5 | `holman-2022` | independent | `did_attack_like_may_table2` | 0.0178 | -0.129 | unclassified |
 | pipeline 5.5 | `holman-2022` | independent | `did_time_like_may_table2` | -0.5007 | -0.3019 | unclassified |
 | pipeline 5.5 | `holman-2022` | independent | `did_time_may_best_pm_table2` | 0.2098 | 0.02336 | unclassified |
-| pipeline 5.5 | `holman-2022` | independent | `n_obs_did_like_may_table2` | 143499 | 1.45e+05 | sample restriction |
 | pipeline 5.5 | `holman-2022` | independent | `n_obs_did_may_best_pm_table2` | 97155 | 8.652e+04 | sample restriction |
 | pipeline 5.5 | `holman-2022` | blind | `intl_attack_table4` | 3.112 | NA | extraction error |
 | pipeline 5.5 | `holman-2022` | blind | `intl_attack_x_woman_exec_table4` | -4.333 | NA | extraction error |
@@ -1198,7 +1369,6 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | pipeline 5.5 | `labandeira-2022` | independent | `reform_consumption_fe_iv_col4` | -0.123 | -0.205 | unclassified |
 | pipeline 5.5 | `labandeira-2022` | independent | `reform_expenditure_fe_col7` | -0.098 | -0.1378 | unclassified |
 | pipeline 5.5 | `labandeira-2022` | independent | `reform_expenditure_fe_iv_col8` | -0.089 | -0.205 | unclassified |
-| pipeline 5.5 | `labandeira-2022` | independent | `n_obs_table2` | 20872 | 2.132e+04 | sample restriction |
 | pipeline 5.5 | `labandeira-2022` | independent | `n_households_table2` | 10729 | 1.185e+04 | sample restriction |
 | pipeline 5.5 | `labandeira-2022` | blind | `reform_consumption_ols_col1` | -0.178 | -0.1045 | sample restriction |
 | pipeline 5.5 | `labandeira-2022` | blind | `reform_consumption_iv_col2` | -0.123 | -0.05325 | sample restriction |
@@ -1210,7 +1380,6 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | pipeline 5.5 | `labandeira-2022` | blind | `n_households_table2` | 10729 | 8404 | sample restriction |
 | pipeline 5.5 | `leeson-2022` | blind | `brown_forsythe_dollars_per_hour` | 0.276 | 0.4663 | sample restriction |
 | pipeline 5.5 | `leeson-2022` | blind | `anova_f_dollars_per_hour` | 0.15 | 0.3125 | sample restriction |
-| pipeline 5.5 | `leeson-2022` | blind | `station_visits_five_station_subsample` | 102 | 98 | sample restriction |
 | pipeline 5.5 | `lopez-moctezuma-2022` | independent | `itt_poverty_index_akbayan_tableC3` | 0.496 | 0.16 | under-specified methods section |
 | pipeline 5.5 | `lopez-moctezuma-2022` | independent | `itt_poverty_index_umalabka_tableC3` | 0.126 | 0.1648 | under-specified methods section |
 | pipeline 5.5 | `lopez-moctezuma-2022` | independent | `itt_gender_index_akbayan_tableC4` | 0.45 | 0.6001 | under-specified methods section |
@@ -1247,7 +1416,6 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | agent | `douenne-2022` | blind | `initial_acceptance_believes_not_lose_table4_col1` | 0.306 | 0.2279 | unclassified |
 | agent | `forsythe-2022` | independent | `young_x_unemp_rate_nilf` | -0.49 | -0.5847 | unclassified |
 | agent | `forsythe-2022` | blind | `young_x_unemp_rate_nilf` | -0.49 | -0.594 | unclassified |
-| agent | `forsythe-2022` | blind | `n_obs_full_sample` | 1.69485e+07 | 1.736e+07 | sample restriction |
 | agent | `gagliarducci-2022` | blind | `female_sponsor_pct_opposite_dem_ols` | -1.505 | -2.431 | specification mismatch |
 | agent | `gagliarducci-2022` | blind | `female_sponsor_pct_opposite_dem_ipw_sponsor` | -1.208 | -2.082 | specification mismatch |
 | agent | `gagliarducci-2022` | blind | `female_sponsor_pct_opposite_rep_ols` | 3.666 | 4.777 | specification mismatch |
@@ -1256,8 +1424,6 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | agent | `gagliarducci-2022` | blind | `n_bills_pct_opposite_rep_ols` | 27669 | 1.869e+04 | specification mismatch |
 | agent | `grier-2023` | independent | `sugar_contributions_calendar_year_incumbent_fe` | -0.0005 | -0.0005613 | tolerance artifact |
 | agent | `grier-2023` | blind | `sugar_contributions_calendar_year_district_fe` | -0.0006 | -0.0005299 | under-specified methods section |
-| agent | `holman-2022` | independent | `n_obs_table4` | 4328 | 4486 | under-specified methods section |
-| agent | `holman-2022` | blind | `n_obs_table4` | 4328 | 4486 | under-specified methods section |
 | agent | `holman-2022` | blind | `did_attack_x_time_like_may_table2` | -0.1274 | -0.09961 | under-specified methods section |
 | agent | `holman-2022` | blind | `did_time_like_may_table2` | -0.5007 | -0.4513 | under-specified methods section |
 | agent | `holman-2022` | blind | `did_attack_x_time_may_best_pm_table2` | -0.0501 | -0.3215 | under-specified methods section |
@@ -1313,18 +1479,18 @@ Reproduced values (✓ = within tolerance) for the Grier and Holman cells discus
 | `grier-2023` | blind | `observations_incumbent_fe` | 106 | 604 | 96 | 96 | 106 ✓ |
 | `holman-2022` | independent | `intl_attack_table4` | 3.112 | — | 0.8906 | 1.583 | 2.322 ✓ |
 | `holman-2022` | independent | `intl_attack_x_woman_exec_table4` | -4.333 | — | -1.663 | -2.144 | -3.828 ✓ |
-| `holman-2022` | independent | `n_obs_table4` | 4328 | — | 4,369 ✓ | 4,380 | 4,486 |
+| `holman-2022` | independent | `n_obs_table4` | 4328 | — | 4,369 ✓ | 4,380 ✓ | 4,486 ✓ |
 | `holman-2022` | independent | `did_attack_x_time_like_may_table2` | -0.1274 | — | -0.0824 | -0.1147 ✓ | -0.1274 ✓ |
 | `holman-2022` | independent | `did_attack_like_may_table2` | 0.0178 | — | -0.129 | 0.03888 ✓ | 0.01778 ✓ |
 | `holman-2022` | independent | `did_time_like_may_table2` | -0.5007 | — | -0.3019 | -0.4782 ✓ | -0.5007 ✓ |
 | `holman-2022` | independent | `did_attack_x_time_may_best_pm_table2` | -0.0501 | — | -0.0522 ✓ | -0.0521 ✓ | -0.05007 ✓ |
 | `holman-2022` | independent | `did_attack_may_best_pm_table2` | -0.0002 | — | -0.001526 ✓ | -0.0004372 ✓ | -0.000171 ✓ |
 | `holman-2022` | independent | `did_time_may_best_pm_table2` | 0.2098 | — | 0.02336 | 0.2059 ✓ | 0.2098 ✓ |
-| `holman-2022` | independent | `n_obs_did_like_may_table2` | 143499 | — | 145,012 | 143,499 ✓ | 143,499 ✓ |
+| `holman-2022` | independent | `n_obs_did_like_may_table2` | 143499 | — | 145,012 ✓ | 143,499 ✓ | 143,499 ✓ |
 | `holman-2022` | independent | `n_obs_did_may_best_pm_table2` | 97155 | — | 86,517 | 97,155 ✓ | 97,155 ✓ |
 | `holman-2022` | blind | `intl_attack_table4` | 3.112 | — | NA | NA | 2.322 ✓ |
 | `holman-2022` | blind | `intl_attack_x_woman_exec_table4` | -4.333 | — | NA | NA | -3.828 ✓ |
-| `holman-2022` | blind | `n_obs_table4` | 4328 | — | NA | NA | 4,486 |
+| `holman-2022` | blind | `n_obs_table4` | 4328 | — | NA | NA | 4,486 ✓ |
 | `holman-2022` | blind | `did_attack_x_time_like_may_table2` | -0.1274 | — | -0.1502 | -0.1502 | -0.09961 |
 | `holman-2022` | blind | `did_attack_like_may_table2` | 0.0178 | — | -0.105 | -0.105 | 0.008807 ✓ |
 | `holman-2022` | blind | `did_time_like_may_table2` | -0.5007 | — | -0.2264 | -0.2264 | -0.4513 |
@@ -1338,7 +1504,7 @@ Reproduced values (✓ = within tolerance) for the Grier and Holman cells discus
 ### Appendix: memorization-probe hits
 
 <!-- table:probe_hits -->
-Every memorization-probe answer within tolerance (41 of 278 claims).  *Band* is the comparator's relative tolerance for the claim; *derivable from context* marks the Leeson test statistics the answering agent said it back-computed from the p-values and degrees of freedom the claim contexts then stated (Section 6).
+Every memorization-probe answer within tolerance (44 of 278 claims).  *Band* is the comparator's relative tolerance for the claim; *derivable from context* marks the Leeson test statistics the answering agent said it back-computed from the p-values and degrees of freedom the claim contexts then stated (Section 6).
 
 | Paper | Claim | Printed | Probe answer | Band (rel.) | Band source | Confidence | Class |
 |---|---|---:|---:|---:|---|---|---|
@@ -1372,10 +1538,13 @@ Every memorization-probe answer within tolerance (41 of 278 claims).  *Band* is 
 | `gagliarducci-2022` | `female_sponsor_ncosponsors_rep_rd_ipw` | 6.734 | 3 | 58.6 % | se_band | inferred | inside ±1 SE band |
 | `gagliarducci-2022` | `female_sponsor_ncosponsors_rep_ipw_sponsor` | 3.124 | 2.5 | 33.3 % | se_band | inferred | inside ±1 SE band |
 | `gagliarducci-2022` | `female_sponsor_pct_opposite_rep_ols` | 3.666 | 4 | 25.0 % | se_band | inferred | inside ±1 SE band |
-| `gagliarducci-2022` | `n_sponsor_terms_ncosponsors_all_ols` | 4746 | 4700 | 1.0 % | relative | inferred | within relative tolerance |
+| `gagliarducci-2022` | `n_sponsor_terms_ncosponsors_all_ols` | 4746 | 4700 | 5.0 % | relative | inferred | within relative tolerance |
+| `grier-2023` | `observations_incumbent_fe` | 106 | 110 | 5.0 % | relative | inferred | within relative tolerance |
 | `hanlon-2022` | `airframe_wingload_trend_before_1926_us_vs_uk` | 0.004 | 0.01 | 225.0 % | se_band | inferred | inside ±1 SE band |
+| `hanushek-2022` | `table1_col3_observations` | 1.99228e+06 | 1.9e+06 | 5.0 % | relative | inferred | within relative tolerance |
 | `hollyer-2022` | `programmaticness_volatility_difference_nonethnic` | -0.15 | -0.2 | 40.0 % | se_band | inferred | inside ±1 SE band |
 | `labandeira-2022` | `reform_consumption_fe_iv_col4` | -0.123 | -0.09 | 43.9 % | se_band | inferred | inside ±1 SE band |
+| `labandeira-2022` | `n_obs_table2` | 20872 | 20000 | 5.0 % | relative | inferred | within relative tolerance |
 | `leeson-2022` | `brown_forsythe_donations_per_hour` | 0.541 | 0.54 | 1.0 % | relative | inferred | derivable from context |
 | `leeson-2022` | `anova_f_donations_per_hour` | 0.4 | 0.4 | 1.2 % | printed_precision | inferred | derivable from context |
 | `leeson-2022` | `anova_f_dollars_per_hour` | 0.15 | 0.15 | 3.3 % | printed_precision | inferred | derivable from context |

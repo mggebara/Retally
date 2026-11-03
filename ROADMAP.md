@@ -2446,6 +2446,15 @@ The caveats of 3.5 apply unchanged.
   route of Phase 4 (a human downloads under their own account, the entry
   records `data_access: manual`) is the only way the corpus grows much
   past 23 from this source; without it the pool is exhausted.
+
+  Ready, waiting on the downloads (2026-11-03, 3.7.4).  PR #122 built
+  the placement path: an entry records `dataset.data_access: manual`
+  with a local `source` under `benchmark/manual-packages/<I4R tag>/`
+  (ignored by version control), and the runner skips it as
+  `manual_package_missing` until the file is there.
+  `benchmark/corpus/openicpsr-wanted.md` lists the 33 papers with
+  download steps.  The user has been told where to log in; no package
+  has been placed yet.
 - (c) Recorded, not fixed (the pipeline stays frozen): Mokyr blind's
   per-capita construction, Douenne seeded's own column 3 and Table 8
   specifications, Labandeira's sample filters, and Carrera's and
@@ -3019,6 +3028,204 @@ redaction removed the rounded prose forms and sample sizes without
 moving a single final count on these three papers; figure check: three
 rows in that file.  3.7's item (b)
 (openICPSR) stands.
+
+### 3.7.4 Pipeline third sample, count-claim band, manual placement (2026-11-03) — ✅ measured, no API spend
+
+The pipeline was run a third time through the oracle on all 23
+evaluation papers in all three modes, one desktop Opus subagent per
+prompt (label `desktop-opus-run3`, 297 answered calls, no API spend,
+`benchmark/results/pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`,
+PR #125; 69 rows, none skipped or errored).  Its runs are stamped
+00:48–05:57 UTC on 2026-11-03, before the 3.8 unfreeze merged (PR #124,
+05:58), so it is a frozen-pipeline sample, the pipeline half of 3.7.1's
+item (g), comparable with samples 1 and 2.  Like every
+later sample it stays out of REPORT.md and the single-sample tables.
+`docs/report/tables.py` does not take a file list (its inputs are
+module constants), so the report's variance tables do not include it
+yet; every figure below was recomputed from the results files for this
+section.  Since 3.7.3 every stored results file has also been rescored
+with sample-size claims at a 5 % band (below), so this section gives
+totals both ways.  Sample 1 is the model-matched row (the API run for
+Grier, Leeson, Manekin and Montero, the first oracle run for the other
+19), sample 2 the `desktop-opus-run2` files named in 3.7.1.
+
+**Totals, 23 papers, 278 claims**, final claims within tolerance under
+the original 1 % count band → after the count rescore:
+
+| Mode | Pipeline 1 | Pipeline 2 | Pipeline 3 | Agent 1 | Agent 2 | Agent 3 |
+|---|---|---|---|---|---|---|
+| seeded | 263 → 263 | 265 → 265 | 254 → 254 | 277 → 277 | 266 → 266 | — |
+| independent | 235 → **239** | 223 → **226** | 224 → **227** | 267 → **268** | 270 → **271** | 264 → **265** |
+| blind | 170 → **173** | 172 → **176** | 177 → **181** | 250 → **252** | 248 → **251** | 247 → **250** |
+
+No seeded verdict flipped in either system.  The pipeline's cells are
+identical in all three samples in 17 of 23 seeded, 10 of 23 independent
+and 6 of 23 blind cells (largest spread in one cell 13, 12 and 9
+claims), against 19, 14 and 12 of 23 for samples 1 and 2 alone after
+the rescore (19, 14 and 11 under the 1 % band, 3.7.1).
+
+**Nine-pairing ranges, 23 papers** (agent minus pipeline, rescored
+files; independent and blind take each of three agent samples against
+each of three pipeline samples, seeded each of two agent samples
+against each of three pipeline samples, six pairings):
+
+| Mode | **Rescored, all pairings** | Under the 1 % band, all pairings | Rescored, pipeline samples 1–2 only | 3.7.2 / 3.7.3 as written (1 % band) |
+|---|---|---|---|---|
+| seeded (6 pairings) | **1 to 23** | 1 to 23 | 1 to 14 | 1 to 14 |
+| independent (9) | **26 to 45** | 29 to 47 | 26 to 45 | 29 to 47 |
+| blind (9) | **69 to 79** | 70 to 80 | 74 to 79 | 75 to 80 |
+
+By paper set, rescored, all pairings: 17 papers −6 to 17 seeded, 20 to
+31 independent, 51 to 61 blind; 13 earlier papers −10 to 4, 11 to 19,
+35 to 51; the four of 3.6 2 to 15, 4 to 16, 7 to 20; the six of 3.7 6 to
+8, 6 to 14, 16 to 20.  What drives the width:
+
+- *Seeded, 1 to 23.*  The top is agent sample 1 (277) against pipeline
+  sample 3 (254), new in this section.  Sample 3's seeded total is 11
+  below sample 2's: Forsythe −13 (0 / 13) and Labandeira −6 (6 / 12),
+  partly offset by Douenne +7 (13 / 13) and Bokobza +2 (Gagliarducci −1).  The bottom is
+  still agent sample 2 against pipeline sample 2 (266 against 265), the
+  Holman crash of 3.7.2.  One cell of each system moves the range by
+  11 to 13 claims.
+- *Independent, 26 to 45.*  The bottom is agent sample 3 (265) against
+  pipeline sample 1 (239); the top agent sample 2 (271) against pipeline
+  sample 2 (226).  Pipeline sample 3 (227) sits beside sample 2, so it
+  moves neither end: against sample 2 its Forsythe −12, Holman −3 and
+  Labandeira −3 are offset by Carrera +8, Hanushek +4, Adams +3, Leeson
+  +3 and Montero +2, among others.
+- *Blind, 69 to 79.*  The bottom is agent sample 3 (250) against
+  pipeline sample 3 (181), the highest pipeline blind total of the
+  three; the top agent sample 1 (252) against pipeline sample 1 (173).
+  Against sample 2, sample 3 gained Altmann +9 (13 / 13, against 4 and
+  4), Adams +6 and Mokyr +6 (7 / 13, against 1 and 1), and lost Arias −5,
+  Forsythe −5, Carrera −3 and Montero −3, among others.
+
+The ordering of 3.5–3.7.3 holds in every pairing: seeded smallest,
+then independent, then blind.  Three draws per system (two for the
+agent seeded) are still not a distribution: no standard error.
+
+**Cells, from the results file, its artifacts under
+`benchmark/results/artifacts/` and the rebuilt
+`benchmark/evidence/<paper>/REPORT.md`** (final count, first-scored in
+brackets, rescored):
+
+- *Forsythe seeded and independent, 0 / 13 each* (13 and 13 in samples
+  1 and 2 seeded, 12 and 12 independent).  Each cell ran four
+  executions, three error repairs, and never printed a `RESULT:` line.
+  Seeded: the first two executions printed nothing at all (empty stdout
+  and stderr); the third and the final one printed only
+  `main data: 19836464 rows, 25 cols`.  Independent: each execution
+  printed its column map and got a little further (`N raw: 19836464`,
+  then `N after age/educ: 19467218`; the final script read the file in
+  eight chunks of up to 2.5 million rows and stopped after printing
+  `N raw`).  No stderr
+  holds an R error.  The rows and artifacts do not store the exit code,
+  `timed_out` or the elapsed time, so that these runs were killed at the
+  300 s limit is inferred from the output stopping mid-preparation with
+  no error, not read from the record.  On a kill the executor sets
+  `timed_out=True` and exit −1 (`_DockerExecutorBase.execute`), but the
+  frozen repair loop (`src/retally/pipeline.py`, line 542 at the run's
+  commit) built its feedback as `result.stderr or "No RESULT: lines
+  found in output"` and never consulted `timed_out`: the seeded cell's
+  first two repairs were told "No RESULT: lines found in output", its
+  third and the independent cell's three were shown the progress lines
+  from stderr, and none was told the script had been killed.  All six
+  run-3 scripts read `yh_data.csv` with a column-selected
+  `fread(select=)` over all rows, as samples 1 and 2 did, and samples 1
+  and 2 printed their results; what made run 3 slower is not in the
+  record.  This is the timeout sub-case that 3.8's timeout repair
+  addresses (PR #124).
+- *Labandeira seeded, 6 / 12 (1)*, against 12 / 12 in samples 1 and 2.
+  The first execution crashed (`1:max(eidx, na.rm = TRUE)`: result
+  would be too long a vector); one error repair and three claim
+  refinements followed, and the values moved between refinements (Table
+  2 column 1, −0.128, −0.098, −0.138, final −0.173 against −0.178).  The
+  final script passes the four expenditure columns and both counts
+  (20,872 and 10,729 exactly) and misses the four consumption columns and
+  both elasticities (−0.991 and −0.988 against −1.044 and −1.026), with
+  one declared deviation (it filled 172,361 missing log-consumption
+  values from `c_ele`).
+- *Holman blind 0 / 11*, as in samples 1 and 2, and *Montero blind
+  0 / 10*, as in sample 1 (3 in sample 2).  Holman, on one execution,
+  printed no Table 4 values and Table 2 samples of 239,919 and 1,481,392
+  against 143,499 and 97,155.  Montero printed no IQR effect or IQR
+  sample and worker-level samples of 3,907 and 1,472 against 4,770 and
+  1,583.
+- *Montero independent, 8 → 10 / 10 under the rescore* (first scored 0;
+  one error repair, three claim refinements): the two counts that
+  flipped are the 300 ha IQR observation count, 332 against 327
+  (1.53 %), and the 300 ha cluster count, 99 against 98 (1.02 %).
+- *Mokyr independent, 7 / 13 (1)*, as in sample 2 (13 in sample 1).
+  The three first-stage F statistics are 8.86, 7.32 and 7.92 against
+  19.9, 16.96 and 16.17, the values sample 2 printed; three claim
+  refinements did not move them.
+- *Douenne seeded, 13 / 13 (13)*, against 5 and 6 in samples 1 and 2
+  (one error repair, no claim refinement).  The inverted cell of 3.7 and
+  3.7.1 did not recur: with the scripts the pipeline now matched every
+  claim.  Why this draw differs was not examined for this section.
+- *Seeded, smaller misses:* Bokobza 9 / 11 (9 and 7 before), Gagliarducci
+  11 / 13 (8 and 12), Grier 10 / 11 (11 and 10).
+- *Blind, smaller counts:* Acemoglu 6 / 12 (4 under the 1 % band; 6 and 6
+  in samples 1 and 2 after the rescore), Carrera 4 / 11 (0 and 7), Grier
+  2 / 11 (0 and 0), Arias 7 / 12 (6 under the 1 % band; 12 and 12 before),
+  Forsythe 5 / 13 (10 and 10).
+- *Larger counts than samples 1 and 2:* Altmann blind 13 / 13 (4, 4),
+  Mokyr blind 7 / 13 (1, 1), Hanushek independent 13 / 13 (9, 9), Carrera
+  independent 8 / 11 (7, 0), Adams independent 11 / 11 (10, 8).  Not
+  examined beyond the counts.
+
+**Count claims at 5 %** (PR #123, user decision 2026-11-03).  Sample-size
+claims (observations, clusters, respondents, districts, bills) are a new
+`ClaimType.COUNT` with a 5 % band; 62 catalog claims across 25 papers
+were relabelled from `other` (1 %), and `other` claims (F statistics,
+ANOVA and Brown-Forsythe statistics, percentage points) keep 1 %.  Every
+stored results file was rescored offline from its stored `reproduced`
+values, no run repeated: 56 verdicts flipped across the 76 files then on
+main (75 rewritten), all FAIL → PASS
+(`benchmark/results/RESCORE-count-5pct.md`, per file and mode), and 7 more
+in the run-3 file, which was rescored when it landed (its `rescored` key
+says `count-5pct`, 7 flipped; it is not in the RESCORE table).
+First-scored and first-attempt fields were left as recorded, because a
+row stores only the final reproduced value, not the first-scored one:
+a recorded first-scored count miss may now be an undercount.  The headline
+totals before → after are in the table above; on the earlier sets the
+pipeline's first samples move from 41 to 47 independent and 24 to 29
+blind on the seven papers on `claude-opus-4-7` (3.2), and the API
+four-paper blind from 20 to 21.  Every pre-rescore figure quoted in
+3.2–3.7.3 stands as written; `docs/report/tables.py`'s ROADMAP check now
+reports 188 of 1,347 quoted numbers as different from the rescored files
+(3 before), and the report's tables, spliced into `docs/report/draft.md`
+in this PR, carry the rescored values.
+
+**Manual package placement** (PR #122).  A catalog entry can now record
+`dataset.data_access: manual` with a local `source` under
+`benchmark/manual-packages/<I4R tag>/` (git-ignored); the runner skips a
+manual entry whose file is missing (`manual_package_missing`).
+`benchmark/corpus/openicpsr-wanted.md` lists the 33 AEA papers, with
+download steps.  No package has been placed yet; 3.7's item (b) is
+ready and waits on the downloads.
+
+**Carrera `access_notes`** corrected (PR #125): the script-free copy
+withholds 29 files (8 scripts, 17 regression `.tex` tables, among them
+`DailyAttIncr.tex` since PR #113's whole-table rule, and 4 macro files).
+The notes are part of the catalog entry's serialised form, so Carrera's
+result-cache keys change from here on; no stored row is affected.
+
+**Evidence.**  `benchmark/evidence/` was rebuilt for all 23 papers from
+every results file: 420 cells in `INDEX.md`, 69 of them run 3.
+
+**Next** (replaces 3.7.3's list):
+
+- (b) openICPSR downloads: the user's.  The placement path is built
+  (above); curation follows once packages are under
+  `benchmark/manual-packages/`.
+- (g) Done for the pipeline: three samples in every mode on all 23
+  papers.  A third agent seeded sample is still open.
+- 3.8: the pipeline unfreeze (PR #124, merged) adds the timeout repair
+  that the Forsythe cells above lacked, among its fixes.
+- A post-fix oracle sample on the 23 papers (`desktop-opus-postfix`,
+  3.8's Next), labelled post-fix and not pooled with the three frozen
+  samples.
 
 ### 3.8 Pipeline unfreeze (2026-11-03) — built, not yet measured, no API spend
 
