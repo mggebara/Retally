@@ -1,0 +1,49 @@
+
+==== variante_taxe_info 
+ [ label ]  chr "variante_taxe_info: (f/p) Variante aléatoire entre f: feedback (=simulation, 2/3) et p: progressivité (1/3), dans l'information donnée sur la taxe compensée avant de demander à nouveau le gain et l'approbation, ainsi que les bénéfices et problèmes"
+
+==== variante_monetaire 
+ [ label ]  chr "variante_monetaire: Indicatrice aléatoire que les questions sur les perdant_/gagnant_ de la taxe portent sur le pouvoir d'achat ou non (0: quels seraient les gagnants-perdant/1: quelles catégories gagneraient-perdraient en pouvoir d'achat)"
+
+==== apres_modifs 
+ [ label ]  chr "apres_modifs: Indicatrice de la seconde moitié de l'échantillon, avec une info sur l'efficacité contre la pollution et des questions et informations sur la progressivité (progressivite_feedback_avec/sans_info, progressivite_progressif), et une reformulation des questions transferts_inter (aide publique au développement des Français)"
+
+==== info_CC 
+ [ label ]  chr "info_CC: Indicatrice aléatoire que l'information sur le changement climatique a été présentée (150k morts/an monde, tendance +5/+8°C en 2100/2250, +2°C techniquement possible, sinon extinctions, intensification catastrophes, +270 M subissant inondations en 2100, + de conflits et migrations)"
+
+==== info_PM 
+ [ label ]  chr "info_PM: Indicatrice aléatoire que l'information sur les particules fines a été présentée (48k morts/an en France, - 9 mois d'espérance vie, réduire conso fuel -> réduire pbs particules fines"
+
+==== variante_progressivite 
+ [ label ]  chr "variante_progressivite: prog/fb_info/fb_no_info Variante aléatoire du bloc de questions où figure 'progressivite'. prog: info sur la progressivité / fb: feedback sur le statut gagnant/perdant simulé, info/no_info: avec/sans info sur la progressivité de la mesure"
+
+==== info_progressivite 
+ [ label ]  chr "info_progressivite: Indicatrice qu'a été montrée l'information que la hausse de la taxe carbone compensée avantagerait les plus modestes"
+
+==== simule_gagnant 
+ [ label ]  chr "simule_gagnant: Indicatrice sur la prédiction que le ménage serait gagnant avec la taxe compensée, d'après nos simulations"
+
+==== simule_gain 
+ [ label ]  chr "simule_gain: Gain net annuel simulé par UC pour le ménage du répondant suite à une hausse de taxe carbone compensée: (16.1 + pmin(2, nb_adultes) * 110 - hausse_depenses)/UC"
+
+==== simule_gain_interaction 
+ [ label ]  chr "simule_gain_interaction: Gain net par UC annuel simulé avec des termes d'interaction surface*fioul/gaz pour le ménage du répondant suite à une hausse de taxe carbone compensée: 9.1 + pmin(2, nb_adultes) * 110 - hausse_chauffage_interaction_inelastique * 0.8 - hausse_carburants"
+
+==== simule_gain_inelastique 
+ [ label ]  chr "simule_gain_inelastique: Gain net par UC annuel simulé (avec interaction) avec une élasticité nulle, pour le ménage du répondant suite à une hausse de taxe carbone compensée:  nb_adultes * 110 - hausse_chauffage_interaction_inelastique - hausse_carburants / 0.6"
+
+==== simule_gain_cible 
+ [ label ]  chr "simule_gain_cible: Gain net par UC simulé pour le ménage du répondant suite à une hausse de taxe carbone avec compensation ciblée: versement_cible - hausse_depenses"
+
+==== traite_cible 
+ [ label ]  chr "traite_cible: Indicatrice de transfert reçu par le répondant lors de la hausse de la taxe carbone avec compensation ciblée. Montants: 550/360/270/220 €/an/adulte pour cible à 20/30/40/50"
+
+==== traite_cible_conjoint 
+ [ label ]  chr "traite_cible_conjoint: Indicatrice de transfert reçu par le conjoint du répondant lors de la hausse de la taxe carbone avec compensation ciblée. Montants: 550/360/270/220 €/an/adulte pour cible à 20/30/40/50"
+
+==== percentile_revenu 
+
+==== percentile_revenu_conjoint 
+
+==== gilets_jaunes 
+ [ value.labels ] 

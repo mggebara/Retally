@@ -36,7 +36,7 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [11/11](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [11/11](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[11/11](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [11/11](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[11/11](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
+| `claude-code` | [11/11](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [11/11](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[11/11](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [11/11](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[11/11](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c)<br>[11/11](blind/claude-code/2026-11-03-a/CELL.md) (2026-11-03-a) |
 | `pipeline-desktop-opus` | [9/11](seeded/pipeline-desktop-opus/20261102T062442Z/CELL.md) (20261102T062442Z) | [11/11](independent/pipeline-desktop-opus/20261102T062442Z/CELL.md) (20261102T062442Z) | [4/11](blind/pipeline-desktop-opus/20261102T060946Z/CELL.md) (20261102T060946Z) |
 | `pipeline-desktop-opus-run2` | [7/11](seeded/pipeline-desktop-opus-run2/20261102T092119Z/CELL.md) (20261102T092119Z) | [10/11](independent/pipeline-desktop-opus-run2/20261102T142444Z/CELL.md) (20261102T142444Z) | [10/11](blind/pipeline-desktop-opus-run2/20261102T091036Z/CELL.md) (20261102T091036Z) |
 
@@ -59,7 +59,7 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | [seeded/pipeline-desktop-opus/20261102T062442Z](seeded/pipeline-desktop-opus/20261102T062442Z/CELL.md) | `failed_coup_main_country_fe` | 0.105549 | 0.11 | ±0.005 (printed_precision) | 0.890 | PASS |
 | [independent/claude-code/2026-11-02-b](independent/claude-code/2026-11-02-b/CELL.md) | `failed_coup_main_leader_fe` | 0.063813 | 0.09 | ±0.03 (se_band) | 0.873 | PASS |
 | [blind/claude-code/2026-11-02-b](blind/claude-code/2026-11-02-b/CELL.md) | `failed_coup_main_leader_fe` | 0.063813 | 0.09 | ±0.03 (se_band) | 0.873 | PASS |
-| [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `failed_coup_affiliation_model` | 0.174175 | 0.17 | ±0.005 (printed_precision) | 0.835 | PASS |
+| [blind/claude-code/2026-11-03-a](blind/claude-code/2026-11-03-a/CELL.md) | `failed_coup_main_leader_fe` | 0.063937 | 0.09 | ±0.03 (se_band) | 0.869 | PASS |
 
 ### Declared deviations
 
@@ -106,6 +106,12 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - The country-level failed-coup variable coupattempt_whogov was taken as already recoded to the July-to-July WhoGov window (it lines up with the individual-level coupattempt_presentyear shifted one year, regardless of coup month); no further recoding applied. Individual level uses coupattempt_presentyear (Powell & Thyne); the _br variables (Bjørnskov-Rode) were not used.
   - fixest removes fixed-effect singletons (2 countries in country-FE, ~84 leaders in leader-FE models); this does not change point estimates.
   - Country-level sample: lagged Boix-Miller-Rosato democracy1 == 0 (lag within country), years 1967-2016. Individual-level sample: democracy_lag == 0, 1967-2016, leader == 0; affiliation drops 'unknown' party; responsibility uses minister_type (ref Defense); importance uses tiers 0.5-4 (ref 4 = PM/President not the leader). Individual samples are ~350-380 obs smaller than reported in every column, cause not identified.
+- [blind/claude-code/2026-11-03-a](blind/claude-code/2026-11-03-a/CELL.md) (11/11)
+  - Individual-level data: the supplied pop_pwt_ln_lag column is identical to gdp_cap_pwt_ln_lag, so lagged log GDP per capita and lagged log population were rebuilt from the country-year panel (value in the previous calendar year, missing if that year is absent).
+  - Country-level: lagged controls and the lagged BMR democracy filter (democracy1 at t-1 == 0) were built from the panel (previous calendar year only); years 1967-2016; failed coup = coupattempt_whogov (already July-recoded in the data).
+  - Leader-FE Main Model (Table A2): the lagged monarchy dummy is excluded explicitly, as in the paper, because in this data it varies within 5 leader spells and would otherwise not drop out. attempt-5 is the same script with monarchy kept (coefficient 0.0638 vs 0.0639).
+  - Affiliation model drops rows whose party_group is 'unknown' or missing (only the three categories named in the paper are used). Experience model drops junior ministers / other low-ranking posts (importance_numeric 0.5); other models keep them. Importance model drops importance code 0 and missing.
+  - fixest drops fixed-effect singletons (as reghdfe would); leader FE = leader_cab_id; country FE/cluster = COUNTRY_ID (country level) and country_isocode (individual level).
 
 ### Pipeline and agent disagree
 
@@ -113,19 +119,19 @@ Claims where, in the same mode, one reproducer family passed in every run and th
 
 - seeded: `failed_coup_base_leader_fe` — pipeline 0/2, agent 2/2
 - seeded: `failed_coup_main_leader_fe` — pipeline 0/2, agent 2/2
-- blind: `failed_coup_x_leaders_party` — pipeline 0/2, agent 3/3
+- blind: `failed_coup_x_leaders_party` — pipeline 0/2, agent 4/4
 
 Pass rates at least 50 points apart (not unanimous):
 
 - seeded: `failed_coup_base_country_fe` — pipeline 1/2, agent 2/2
 - seeded: `failed_coup_main_country_fe` — pipeline 1/2, agent 2/2
 - independent: `failed_coup_x_leaders_party` — pipeline 1/2, agent 3/3
-- blind: `failed_coup_affiliation_model` — pipeline 1/2, agent 3/3
-- blind: `failed_coup_experience_model` — pipeline 1/2, agent 3/3
-- blind: `failed_coup_importance_model` — pipeline 1/2, agent 3/3
-- blind: `failed_coup_responsibility_model` — pipeline 1/2, agent 3/3
-- blind: `failed_coup_x_natural_resources` — pipeline 1/2, agent 3/3
-- blind: `failed_coup_x_over_6_years_experience` — pipeline 1/2, agent 3/3
+- blind: `failed_coup_affiliation_model` — pipeline 1/2, agent 4/4
+- blind: `failed_coup_experience_model` — pipeline 1/2, agent 4/4
+- blind: `failed_coup_importance_model` — pipeline 1/2, agent 4/4
+- blind: `failed_coup_responsibility_model` — pipeline 1/2, agent 4/4
+- blind: `failed_coup_x_natural_resources` — pipeline 1/2, agent 4/4
+- blind: `failed_coup_x_over_6_years_experience` — pipeline 1/2, agent 4/4
 
 ## Cells
 
@@ -176,6 +182,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · claude-code · 2026-11-02-c
 
 [`blind/claude-code/2026-11-02-c/CELL.md`](blind/claude-code/2026-11-02-c/CELL.md) — final 11/11, re-scored 11/11; first scored 11/11; executions 8; 2026-11-02T20:18:30Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
+
+### blind · claude-code · 2026-11-03-a
+
+[`blind/claude-code/2026-11-03-a/CELL.md`](blind/claude-code/2026-11-03-a/CELL.md) — final 11/11, re-scored 11/11; first scored 11/11; executions 6; 2026-11-03T00:16:00Z; from `claude-code-run4-redaction-3papers-blind-2026-11-03.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus · 20261102T060946Z
 

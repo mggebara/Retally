@@ -3008,9 +3008,16 @@ host-side (subprocess timeout, labelled container killed, exit 124) and
 records each execution's wall time in a `timing.json` beside its
 `stdout.txt`; for later samples only.  (`--init` alone would also have
 made the alarm fatal: SIGALRM sent to the client killed the container
-in 3 s with it, and was ignored for the full 12 s without it.)  (i) A fourth blind agent sample under the new
+in 3 s with it, and was ignored for the full 12 s without it.)  (i)
+~~A fourth blind agent sample under the new
 redaction on the papers it changed most (Bokobza, Douenne, Hanlon), to
-measure what the redaction does to a blind count.  3.7's item (b)
+measure what the redaction does to a blind count.~~  Done 2026-11-03
+(run `2026-11-03-a`, `claude-code-run4-redaction-3papers-blind-2026-11-03.json`):
+Bokobza 11/11, Douenne 13/13, Hanlon 12/12 (first-scored 11, 13, 8),
+against 10–11, 12–13 and 12 in the three old-redaction samples.  The
+redaction removed the rounded prose forms and sample sizes without
+moving a single final count on these three papers; figure check: three
+rows in that file.  3.7's item (b)
 (openICPSR) stands.
 
 ---
