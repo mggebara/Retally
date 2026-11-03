@@ -4,19 +4,19 @@ Claims within tolerance of the paper's printed value, summed over papers; first-
 
 | Reproducer | Papers | Seeded | Independent | Blind |
 |---|---|---:|---:|---:|
-| Pipeline, `claude-opus-4-7` | 7 evaluation (3.2) | 55 / 79 (46) | 41 / 79 (27) | 24 / 79 (24) |
-| Pipeline, `claude-opus-5-5` (API) | 4 evaluation (3.5, API) | 44 / 44 (43) | 33 / 44 (21) | 20 / 44 (20) |
-| Pipeline, desktop Opus (oracle) | 9 evaluation (3.5, oracle) | 105 / 110 (105) | 96 / 110 (68) | 72 / 110 (72) |
-| Pipeline, desktop Opus (oracle) | 4 evaluation (3.6, oracle) | 45 / 47 (45) | 40 / 47 (32) | 26 / 47 (26) |
-| Pipeline, desktop Opus (oracle) | 6 evaluation (3.7, oracle) | 69 / 77 (69) | 66 / 77 (47) | 52 / 77 (52) |
-| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 13 earlier evaluation (3.2–3.5) | 149 / 154 (148) | 129 / 154 (89) | 92 / 154 (92) |
-| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 17 evaluation (3.2–3.6) | 194 / 201 (193) | 169 / 201 (121) | 118 / 201 (118) |
-| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | all 23 evaluation | 263 / 278 (262) | 235 / 278 (168) | 170 / 278 (170) |
+| Pipeline, `claude-opus-4-7` | 7 evaluation (3.2) | 55 / 79 (46) | 47 / 79 (27) | 29 / 79 (24) |
+| Pipeline, `claude-opus-5-5` (API) | 4 evaluation (3.5, API) | 44 / 44 (43) | 33 / 44 (21) | 21 / 44 (20) |
+| Pipeline, desktop Opus (oracle) | 9 evaluation (3.5, oracle) | 105 / 110 (105) | 97 / 110 (68) | 74 / 110 (72) |
+| Pipeline, desktop Opus (oracle) | 4 evaluation (3.6, oracle) | 45 / 47 (45) | 42 / 47 (32) | 26 / 47 (26) |
+| Pipeline, desktop Opus (oracle) | 6 evaluation (3.7, oracle) | 69 / 77 (69) | 67 / 77 (47) | 52 / 77 (52) |
+| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 13 earlier evaluation (3.2–3.5) | 149 / 154 (148) | 130 / 154 (89) | 95 / 154 (92) |
+| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 17 evaluation (3.2–3.6) | 194 / 201 (193) | 172 / 201 (121) | 121 / 201 (118) |
+| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | all 23 evaluation | 263 / 278 (262) | 239 / 278 (168) | 173 / 278 (170) |
 | Agent (Claude Code, desktop Opus) | 7 evaluation (3.3) | 78 / 79 (78) | 78 / 79 (77) | 75 / 79 (70) |
-| Agent (Claude Code, desktop Opus) | 6 evaluation (3.4) | 75 / 75 (73) | 70 / 75 (69) | 60 / 75 (58) |
-| Agent (Claude Code, desktop Opus) | 4 evaluation (3.6) | 47 / 47 (43) | 46 / 47 (46) | 45 / 47 (45) |
+| Agent (Claude Code, desktop Opus) | 6 evaluation (3.4) | 75 / 75 (73) | 71 / 75 (69) | 61 / 75 (58) |
+| Agent (Claude Code, desktop Opus) | 4 evaluation (3.6) | 47 / 47 (43) | 46 / 47 (46) | 46 / 47 (45) |
 | Agent (Claude Code, desktop Opus) | 6 evaluation (3.7) | 77 / 77 (73) | 73 / 77 (60) | 70 / 77 (70) |
-| Agent (Claude Code, desktop Opus) | 13 earlier evaluation (3.3–3.4) | 153 / 154 (151) | 148 / 154 (146) | 135 / 154 (128) |
-| Agent (Claude Code, desktop Opus) | 17 evaluation (3.3–3.6) | 200 / 201 (194) | 194 / 201 (192) | 180 / 201 (173) |
-| Agent (Claude Code, desktop Opus) | all 23 evaluation | 277 / 278 (267) | 267 / 278 (252) | 250 / 278 (243) |
+| Agent (Claude Code, desktop Opus) | 13 earlier evaluation (3.3–3.4) | 153 / 154 (151) | 149 / 154 (146) | 136 / 154 (128) |
+| Agent (Claude Code, desktop Opus) | 17 evaluation (3.3–3.6) | 200 / 201 (194) | 195 / 201 (192) | 182 / 201 (173) |
+| Agent (Claude Code, desktop Opus) | all 23 evaluation | 277 / 278 (267) | 268 / 278 (252) | 252 / 278 (243) |
 | Pipeline, `claude-opus-4-7` | 3 dev | 30 / 35 (29) | 23 / 35 (17) | — |

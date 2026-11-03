@@ -273,3 +273,30 @@ def test_blind_is_scored_exactly_like_independent():
             _coef(3.713, se=0.305), reproduced, mode=ReproductionMode.INDEPENDENT
         )
         assert (blind.passed, blind.tolerance) == (independent.passed, independent.tolerance)
+
+
+# ── COUNT: sample sizes at 5 % ──────────────────────────────────────────
+
+
+@pytest.mark.parametrize(
+    "mode", [ReproductionMode.SEEDED, ReproductionMode.INDEPENDENT, ReproductionMode.BLIND]
+)
+def test_count_tolerance_is_5_percent_in_every_mode(comparator, mode):
+    claim = Claim(description="n_obs", value=1000.0, claim_type=ClaimType.COUNT, decimals=0)
+    within = comparator.compare(claim, 1040.0, mode=mode)
+    assert within.passed
+    assert within.tolerance == pytest.approx(0.05)
+    assert within.tolerance_source == "relative"
+    assert not comparator.compare(claim, 1060.0, mode=mode).passed
+    assert not comparator.compare(claim, 940.0, mode=mode).passed
+
+
+def test_other_claims_keep_the_1_percent_band(comparator):
+    claim = Claim(description="first_stage_f", value=20.0, claim_type=ClaimType.OTHER)
+    assert comparator.compare(claim, 20.15).passed
+    assert not comparator.compare(claim, 20.4).passed
+
+
+def test_count_claim_type_serializes_to_count():
+    assert ClaimType.COUNT.value == "count"
+    assert ClaimType("count") is ClaimType.COUNT

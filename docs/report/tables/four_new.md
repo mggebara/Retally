@@ -11,11 +11,11 @@ The four papers added on 2026-11-02 (ROADMAP 3.6): the pipeline through the orac
 | `brouwer-2022` | independent | 12 | 12 (12; 0/0) | 12 (12; 0/0) |
 | `brouwer-2022` | blind | 12 | 12 (12; 0/0) | 12 (12; 0/0) |
 | `carrera-2022` | seeded | 11 | 11 (11; 0/0) | 11 (11; 0/0) |
-| `carrera-2022` | independent | 11 | 6 (4; 1/3) | 11 (11; 0/0) |
+| `carrera-2022` | independent | 11 | 7 (4; 1/3) | 11 (11; 0/0) |
 | `carrera-2022` | blind | 11 | 0 (0; 0/0) | 11 (11; 0/0) |
 | `forsythe-2022` | seeded | 13 | 13 (13; 1/0) | 13 (13; 0/0) |
-| `forsythe-2022` | independent | 13 | 11 (10; 1/2) | 12 (12; 0/0) |
-| `forsythe-2022` | blind | 13 | 10 (10; 2/0) | 11 (11; 0/0) |
+| `forsythe-2022` | independent | 13 | 12 (10; 1/2) | 12 (12; 0/0) |
+| `forsythe-2022` | blind | 13 | 10 (10; 2/0) | 12 (11; 0/0) |
 | **Total, 4 papers** | seeded | 47 | **45 / 47 (45)** | **47 / 47 (43)** |
-| **Total, 4 papers** | independent | 47 | **40 / 47 (32)** | **46 / 47 (46)** |
-| **Total, 4 papers** | blind | 47 | **26 / 47 (26)** | **45 / 47 (45)** |
+| **Total, 4 papers** | independent | 47 | **42 / 47 (32)** | **46 / 47 (46)** |
+| **Total, 4 papers** | blind | 47 | **26 / 47 (26)** | **46 / 47 (45)** |

@@ -17,13 +17,13 @@ Paper-level verdicts.  `agrees_with_paper`: every pinned claim within tolerance 
 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 23 | independent | 23 | 12 | 2 | 0 | 8 | 1 |
 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 23 | blind | 23 | 5 | 0 | 1 | 16 | 1 |
 | Agent (Claude Code, desktop Opus) | 13 | seeded | 13 | 9 | 2 | 1 | 0 | 1 |
-| Agent (Claude Code, desktop Opus) | 13 | independent | 13 | 8 | 1 | 1 | 2 | 1 |
+| Agent (Claude Code, desktop Opus) | 13 | independent | 13 | 8 | 2 | 1 | 1 | 1 |
 | Agent (Claude Code, desktop Opus) | 13 | blind | 13 | 6 | 1 | 1 | 4 | 1 |
 | Agent (Claude Code, desktop Opus) | 17 | seeded | 17 | 12 | 3 | 1 | 0 | 1 |
-| Agent (Claude Code, desktop Opus) | 17 | independent | 17 | 11 | 1 | 1 | 3 | 1 |
+| Agent (Claude Code, desktop Opus) | 17 | independent | 17 | 11 | 2 | 2 | 1 | 1 |
 | Agent (Claude Code, desktop Opus) | 17 | blind | 17 | 9 | 1 | 1 | 5 | 1 |
 | Agent (Claude Code, desktop Opus) | 23 | seeded | 23 | 16 | 5 | 1 | 0 | 1 |
-| Agent (Claude Code, desktop Opus) | 23 | independent | 23 | 15 | 2 | 1 | 4 | 1 |
+| Agent (Claude Code, desktop Opus) | 23 | independent | 23 | 15 | 3 | 2 | 2 | 1 |
 | Agent (Claude Code, desktop Opus) | 23 | blind | 23 | 13 | 1 | 1 | 7 | 1 |
 
 
@@ -31,21 +31,21 @@ Per paper: `paper / I4R` verdicts (claims matching the paper / total; claims mat
 
 | Paper | I4R label | I4R values | Reproducer | Seeded | Independent | Blind |
 |---|---|---:|---|---|---|---|
-| `acemoglu-2022` | reproducible | 0 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / n/a (12/12; 0) | ✗ / n/a (11/12; 0) | ✗ / n/a (4/12; 0) |
+| `acemoglu-2022` | reproducible | 0 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / n/a (12/12; 0) | ✗ / n/a (11/12; 0) | ✗ / n/a (6/12; 0) |
 | `acemoglu-2022` | reproducible | 0 | Agent (Claude Code, desktop Opus) | ✓ / n/a (12/12; 0) | ✓ / n/a (12/12; 0) | ✓ / n/a (12/12; 0) |
 | `adams-2023` | reproducible | 11 | Pipeline, `claude-opus-4-7` | ✓ / ✓ (11/11; 11) | ✗ / ✗ (7/11; 7) | ✗ / ✗ (1/11; 1) |
 | `adams-2023` | reproducible | 11 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (11/11; 11) | ✗ / ✗ (10/11; 10) | ✗ / ✗ (7/11; 7) |
 | `adams-2023` | reproducible | 11 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (11/11; 11) | ✓ / ✓ (11/11; 11) | ✗ / ✗ (8/11; 8) |
 | `altmann-2022` | reproducible | 11 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (13/13; 11) | ✓ / ✓ (13/13; 11) | ✗ / ✗ (4/13; 4) |
 | `altmann-2022` | reproducible | 11 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (13/13; 11) | ✓ / ✓ (13/13; 11) | ✓ / ✓ (13/13; 11) |
-| `arias-2022` | reproducible | 12 | Pipeline, `claude-opus-4-7` | ✗ / ✗ (4/12; 4) | ✗ / ✗ (0/12; 0) | ✗ / ✗ (1/12; 1) |
+| `arias-2022` | reproducible | 12 | Pipeline, `claude-opus-4-7` | ✗ / ✗ (4/12; 4) | ✗ / ✗ (4/12; 4) | ✗ / ✗ (5/12; 5) |
 | `arias-2022` | reproducible | 12 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) |
 | `arias-2022` | reproducible | 12 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) |
 | `bokobza-2022` | reproducible | 11 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✗ / ✗ (9/11; 9) | ✓ / ✓ (11/11; 11) | ✗ / ✓ (4/11; 4) |
 | `bokobza-2022` | reproducible | 11 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (11/11; 11) | ✓ / ✓ (11/11; 11) | ✓ / ✓ (11/11; 11) |
 | `brouwer-2022` | reproducible | 12 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) |
 | `brouwer-2022` | reproducible | 12 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) |
-| `carrera-2022` | reproducible | 11 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (11/11; 11) | ✗ / ✗ (6/11; 6) | ✗ / ✗ (0/11; 0) |
+| `carrera-2022` | reproducible | 11 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (11/11; 11) | ✗ / ✗ (7/11; 7) | ✗ / ✗ (0/11; 0) |
 | `carrera-2022` | reproducible | 11 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (11/11; 11) | ✓ / ✓ (11/11; 11) | ✓ / ✓ (11/11; 11) |
 | `dancygier-2022` | reproducible | 13 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (13/13; 13) | ✓ / ✓ (13/13; 13) | ✓ / ✓ (13/13; 13) |
 | `dancygier-2022` | reproducible | 13 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (13/13; 13) | ✓ / ✓ (13/13; 13) | ✓ / ✓ (13/13; 13) |
@@ -53,8 +53,8 @@ Per paper: `paper / I4R` verdicts (claims matching the paper / total; claims mat
 | `dertwinkel-kalt-2022` | reproducible | 11 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (13/13; 11) | ✓ / ✓ (13/13; 11) | ✓ / ✓ (13/13; 11) |
 | `douenne-2022` | not_reproducible | 8 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✗ / ✗ (5/13; 1) | ✓ / ✗ (13/13; 7) | ✗ / ✗ (12/13; 7) |
 | `douenne-2022` | not_reproducible | 8 | Agent (Claude Code, desktop Opus) | ✓ / ✗ (13/13; 1) | ✓ / ✗ (13/13; 7) | ✗ / ✗ (12/13; 7) |
-| `forsythe-2022` | robust | 13 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✗ (13/13; 2) | ✗ / ✗ (11/13; 9) | ✗ / ✗ (10/13; 12) |
-| `forsythe-2022` | robust | 13 | Agent (Claude Code, desktop Opus) | ✓ / ✗ (13/13; 2) | ✗ / ✗ (12/13; 12) | ✗ / ✗ (11/13; 12) |
+| `forsythe-2022` | robust | 13 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✗ (13/13; 3) | ✗ / ✗ (12/13; 9) | ✗ / ✗ (10/13; 12) |
+| `forsythe-2022` | robust | 13 | Agent (Claude Code, desktop Opus) | ✓ / ✗ (13/13; 3) | ✗ / ✓ (12/13; 13) | ✗ / ✗ (12/13; 12) |
 | `gagliarducci-2022` | reproducible | 9 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✗ / ✗ (8/13; 4) | ✓ / ✓ (13/13; 9) | ✗ / ✗ (12/13; 8) |
 | `gagliarducci-2022` | reproducible | 9 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (13/13; 9) | ✓ / ✓ (13/13; 9) | ✗ / ✗ (7/13; 5) |
 | `grier-2023` | reproducible | 7 | Pipeline, `claude-opus-4-7` | ✗ / ✗ (0/11; 0) | ✗ / ✗ (0/11; 0) | ✗ / ✗ (0/11; 0) |
@@ -67,12 +67,12 @@ Per paper: `paper / I4R` verdicts (claims matching the paper / total; claims mat
 | `hanushek-2022` | reproducible | 13 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (13/13; 13) | ✓ / ✓ (13/13; 13) | ✓ / ✓ (13/13; 13) |
 | `hollyer-2022` | reproducible | 13 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✗ (13/13; 9) | ✓ / ✓ (13/13; 13) | ✗ / ✗ (10/13; 9) |
 | `hollyer-2022` | reproducible | 13 | Agent (Claude Code, desktop Opus) | ✓ / ✗ (13/13; 9) | ✓ / ✓ (13/13; 13) | ✓ / ✓ (13/13; 13) |
-| `holman-2022` | not_reproducible | 10 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✗ (11/11; 5) | ✗ / ✗ (3/11; 2) | ✗ / ✗ (0/11; 0) |
-| `holman-2022` | not_reproducible | 10 | Agent (Claude Code, desktop Opus) | ✓ / ✗ (11/11; 5) | ✗ / ✗ (10/11; 7) | ✗ / ✗ (6/11; 4) |
-| `labandeira-2022` | reproducible | 12 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (12/12; 12) | ✗ / ✗ (5/12; 5) | ✗ / ✗ (4/12; 4) |
+| `holman-2022` | not_reproducible | 10 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✗ (11/11; 6) | ✗ / ✗ (4/11; 4) | ✗ / ✗ (0/11; 0) |
+| `holman-2022` | not_reproducible | 10 | Agent (Claude Code, desktop Opus) | ✓ / ✗ (11/11; 6) | ✓ / ✗ (11/11; 8) | ✗ / ✗ (7/11; 5) |
+| `labandeira-2022` | reproducible | 12 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (12/12; 12) | ✗ / ✗ (6/12; 6) | ✗ / ✗ (4/12; 4) |
 | `labandeira-2022` | reproducible | 12 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (12/12; 12) | ✗ / ✗ (8/12; 8) | ✗ / ✗ (6/12; 6) |
-| `leeson-2022` | reproducible | 11 | Pipeline, `claude-opus-4-7` | ✓ / ✓ (11/11; 11) | ✗ / ✗ (9/11; 9) | ✗ / ✗ (4/11; 4) |
-| `leeson-2022` | reproducible | 11 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (11/11; 11) | ✓ / ✓ (11/11; 11) | ✗ / ✗ (8/11; 8) |
+| `leeson-2022` | reproducible | 11 | Pipeline, `claude-opus-4-7` | ✓ / ✓ (11/11; 11) | ✗ / ✗ (9/11; 9) | ✗ / ✗ (5/11; 5) |
+| `leeson-2022` | reproducible | 11 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (11/11; 11) | ✓ / ✓ (11/11; 11) | ✗ / ✗ (9/11; 9) |
 | `leeson-2022` | reproducible | 11 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (11/11; 11) | ✓ / ✓ (11/11; 11) | ✓ / ✓ (11/11; 11) |
 | `lopez-moctezuma-2022` | reproducible | 6 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (13/13; 6) | ✗ / ✗ (9/13; 2) | ✗ / ✗ (9/13; 2) |
 | `lopez-moctezuma-2022` | reproducible | 6 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (13/13; 6) | ✗ / ✗ (9/13; 2) | ✗ / ✗ (9/13; 2) |
@@ -81,6 +81,6 @@ Per paper: `paper / I4R` verdicts (claims matching the paper / total; claims mat
 | `manekin-2022` | reproducible | 12 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) |
 | `mokyr-2022` | reproducible | 13 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (13/13; 13) | ✓ / ✓ (13/13; 13) | ✗ / ✗ (1/13; 1) |
 | `mokyr-2022` | reproducible | 13 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (13/13; 13) | ✓ / ✓ (13/13; 13) | ✓ / ✓ (13/13; 13) |
-| `montero-2022` | not_reproducible | 10 | Pipeline, `claude-opus-4-7` | ✓ / ✗ (10/10; 3) | ✗ / ✗ (3/10; 0) | ✗ / ✗ (0/10; 0) |
-| `montero-2022` | not_reproducible | 10 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✗ (10/10; 3) | ✓ / ✗ (10/10; 4) | ✗ / ✗ (0/10; 0) |
-| `montero-2022` | not_reproducible | 10 | Agent (Claude Code, desktop Opus) | ✓ / ✗ (10/10; 3) | ✓ / ✗ (10/10; 5) | ✓ / ✗ (10/10; 5) |
+| `montero-2022` | not_reproducible | 10 | Pipeline, `claude-opus-4-7` | ✓ / ✗ (10/10; 4) | ✗ / ✗ (5/10; 2) | ✗ / ✗ (0/10; 1) |
+| `montero-2022` | not_reproducible | 10 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✗ (10/10; 4) | ✓ / ✗ (10/10; 5) | ✗ / ✗ (0/10; 0) |
+| `montero-2022` | not_reproducible | 10 | Agent (Claude Code, desktop Opus) | ✓ / ✗ (10/10; 4) | ✓ / ✗ (10/10; 6) | ✓ / ✗ (10/10; 6) |

@@ -192,7 +192,8 @@ BOTH_BASELINE_INDEPENDENT_OUTPUTS = {
 def test_both_mode_baseline_rescores_without_borrowed_values():
     """Seeded row of the both-mode baseline still re-scores 13/13; the
     independent row's IV coefficients become unmatched (10 -> 7 matched),
-    still 0/13 passed."""
+    and only the district count (631 vs 660, 4.4 %) passes, under the 5 %
+    COUNT band (it failed the old 1 %)."""
     seeded, independent = json.loads(BOTH_BASELINE.read_text(encoding="utf-8"))
     entry = {e.id: e for e in bschema.load_catalog(runner.CATALOG_DIR)}[seeded["entry_id"]]
 
@@ -210,7 +211,8 @@ def test_both_mode_baseline_rescores_without_borrowed_values():
     assert sum(cd.reproduced is not None for cd in scored.claim_details) == 7
     for name in ("bivariate", "state_fe", "full_controls"):
         assert by_name[f"warfare_iv_coefficient_{name}"].reproduced is None
-    assert scored.n_claims_with_paper_match == 0
+    assert scored.n_claims_with_paper_match == 1
+    assert [cd.description for cd in scored.claim_details if cd.passed] == ["sample_size_districts"]
     # Every claim that did have a RESULT line keeps its recorded value.
     for cd in independent["claim_details"]:
         if cd["description"] in BOTH_BASELINE_INDEPENDENT_OUTPUTS:

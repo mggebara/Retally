@@ -5,29 +5,29 @@ Differences in claims within tolerance, summed over papers.  On the 3.2 set the 
 | Papers | Mode | Claims | Agent − pipeline 4.7 | Model effect (5.5 − 4.7) | Harness effect (agent − 5.5) |
 |---|---|---:|---:|---:|---:|
 | 7 papers (3.2 set) | seeded | 79 | +23 | +24 | -1 |
-| 7 papers (3.2 set) | independent | 79 | +37 | +26 | +11 |
-| 7 papers (3.2 set) | blind | 79 | +51 | +27 | +24 |
+| 7 papers (3.2 set) | independent | 79 | +31 | +20 | +11 |
+| 7 papers (3.2 set) | blind | 79 | +46 | +23 | +23 |
 | API route (4) | seeded | 44 | +15 | +16 | -1 |
-| API route (4) | independent | 44 | +19 | +9 | +10 |
-| API route (4) | blind | 44 | +33 | +10 | +23 |
+| API route (4) | independent | 44 | +17 | +7 | +10 |
+| API route (4) | blind | 44 | +32 | +10 | +22 |
 | oracle route (3) | seeded | 35 | +8 | +8 | +0 |
-| oracle route (3) | independent | 35 | +18 | +17 | +1 |
-| oracle route (3) | blind | 35 | +18 | +17 | +1 |
+| oracle route (3) | independent | 35 | +14 | +13 | +1 |
+| oracle route (3) | blind | 35 | +14 | +13 | +1 |
 | 6 papers (3.4 set) | seeded | 75 | — | — | +5 |
 | 6 papers (3.4 set) | independent | 75 | — | — | +8 |
-| 6 papers (3.4 set) | blind | 75 | — | — | +19 |
+| 6 papers (3.4 set) | blind | 75 | — | — | +18 |
 | 4 papers (3.6 set) | seeded | 47 | — | — | +2 |
-| 4 papers (3.6 set) | independent | 47 | — | — | +6 |
-| 4 papers (3.6 set) | blind | 47 | — | — | +19 |
+| 4 papers (3.6 set) | independent | 47 | — | — | +4 |
+| 4 papers (3.6 set) | blind | 47 | — | — | +20 |
 | 6 papers (3.7 set) | seeded | 77 | — | — | +8 |
-| 6 papers (3.7 set) | independent | 77 | — | — | +7 |
+| 6 papers (3.7 set) | independent | 77 | — | — | +6 |
 | 6 papers (3.7 set) | blind | 77 | — | — | +18 |
 | 13 earlier | seeded | 154 | — | — | +4 |
 | 13 earlier | independent | 154 | — | — | +19 |
-| 13 earlier | blind | 154 | — | — | +43 |
+| 13 earlier | blind | 154 | — | — | +41 |
 | 17 (3.2–3.6) | seeded | 201 | — | — | +6 |
-| 17 (3.2–3.6) | independent | 201 | — | — | +25 |
-| 17 (3.2–3.6) | blind | 201 | — | — | +62 |
+| 17 (3.2–3.6) | independent | 201 | — | — | +23 |
+| 17 (3.2–3.6) | blind | 201 | — | — | +61 |
 | all 23 | seeded | 278 | — | — | +14 |
-| all 23 | independent | 278 | — | — | +32 |
-| all 23 | blind | 278 | — | — | +80 |
+| all 23 | independent | 278 | — | — | +29 |
+| all 23 | blind | 278 | — | — | +79 |

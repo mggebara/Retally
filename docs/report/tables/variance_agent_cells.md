@@ -6,7 +6,7 @@ Per paper and mode: final claims within tolerance in each agent sample (three in
 |---|---|---:|---:|---:|---:|---:|---:|---:|
 | `acemoglu-2022` | seeded | 12 | 12 | 12 | — | 0 | 12 | 12 |
 | `acemoglu-2022` | independent | 12 | 12 | 12 | 12 | 0 | 11 | 11 |
-| `acemoglu-2022` | blind | 12 | 12 | 12 | 12 | 0 | 4 | 6 |
+| `acemoglu-2022` | blind | 12 | 12 | 12 | 12 | 0 | 6 | 6 |
 | `adams-2023` | seeded | 11 | 11 | 11 | — | 0 | 11 | 11 |
 | `adams-2023` | independent | 11 | 11 | 11 | 11 | 0 | 10 | 8 |
 | `adams-2023` | blind | 11 | 8 | 7 | 8 | **1** | 7 | 2 |
@@ -23,8 +23,8 @@ Per paper and mode: final claims within tolerance in each agent sample (three in
 | `brouwer-2022` | independent | 12 | 12 | 12 | 12 | 0 | 12 | 12 |
 | `brouwer-2022` | blind | 12 | 12 | 12 | 12 | 0 | 12 | 12 |
 | `carrera-2022` | seeded | 11 | 11 | 11 | — | 0 | 11 | 11 |
-| `carrera-2022` | independent | 11 | 11 | 11 | 11 | 0 | 6 | 0 |
-| `carrera-2022` | blind | 11 | 11 | 11 | 11 | 0 | 0 | 6 |
+| `carrera-2022` | independent | 11 | 11 | 11 | 11 | 0 | 7 | 0 |
+| `carrera-2022` | blind | 11 | 11 | 11 | 11 | 0 | 0 | 7 |
 | `dancygier-2022` | seeded | 13 | 13 | 13 | — | 0 | 13 | 13 |
 | `dancygier-2022` | independent | 13 | 13 | 13 | 13 | 0 | 13 | 13 |
 | `dancygier-2022` | blind | 13 | 13 | 13 | 13 | 0 | 13 | 13 |
@@ -35,8 +35,8 @@ Per paper and mode: final claims within tolerance in each agent sample (three in
 | `douenne-2022` | independent | 13 | 13 | 13 | 13 | 0 | 13 | 13 |
 | `douenne-2022` | blind | 13 | 12 | 12 | 13 | **1** | 12 | 13 |
 | `forsythe-2022` | seeded | 13 | 13 | 13 | — | 0 | 13 | 13 |
-| `forsythe-2022` | independent | 13 | 12 | 13 | 13 | **1** | 11 | 11 |
-| `forsythe-2022` | blind | 13 | 11 | 11 | 11 | 0 | 10 | 10 |
+| `forsythe-2022` | independent | 13 | 12 | 13 | 13 | **1** | 12 | 12 |
+| `forsythe-2022` | blind | 13 | 12 | 12 | 12 | 0 | 10 | 10 |
 | `gagliarducci-2022` | seeded | 13 | 13 | 13 | — | 0 | 8 | 12 |
 | `gagliarducci-2022` | independent | 13 | 13 | 13 | 13 | 0 | 13 | 13 |
 | `gagliarducci-2022` | blind | 13 | 7 | 9 | 9 | **2** | 12 | 7 |
@@ -53,14 +53,14 @@ Per paper and mode: final claims within tolerance in each agent sample (three in
 | `hollyer-2022` | independent | 13 | 13 | 13 | 13 | 0 | 13 | 13 |
 | `hollyer-2022` | blind | 13 | 13 | 13 | 13 | 0 | 10 | 12 |
 | `holman-2022` | seeded | 11 | 11 | 0 | — | **11** | 11 | 11 |
-| `holman-2022` | independent | 11 | 10 | 10 | 7 | **3** | 3 | 8 |
-| `holman-2022` | blind | 11 | 6 | 6 | 6 | 0 | 0 | 0 |
+| `holman-2022` | independent | 11 | 11 | 11 | 8 | **3** | 4 | 9 |
+| `holman-2022` | blind | 11 | 7 | 7 | 7 | 0 | 0 | 0 |
 | `labandeira-2022` | seeded | 12 | 12 | 12 | — | 0 | 12 | 12 |
-| `labandeira-2022` | independent | 12 | 8 | 11 | 8 | **3** | 5 | 7 |
+| `labandeira-2022` | independent | 12 | 8 | 11 | 8 | **3** | 6 | 7 |
 | `labandeira-2022` | blind | 12 | 6 | 7 | 7 | **1** | 4 | 4 |
 | `leeson-2022` | seeded | 11 | 11 | 11 | — | 0 | 11 | 11 |
 | `leeson-2022` | independent | 11 | 11 | 11 | 11 | 0 | 11 | 8 |
-| `leeson-2022` | blind | 11 | 11 | 11 | 11 | 0 | 8 | 7 |
+| `leeson-2022` | blind | 11 | 11 | 11 | 11 | 0 | 9 | 8 |
 | `lopez-moctezuma-2022` | seeded | 13 | 13 | 13 | — | 0 | 13 | 13 |
 | `lopez-moctezuma-2022` | independent | 13 | 9 | 9 | 9 | 0 | 9 | 9 |
 | `lopez-moctezuma-2022` | blind | 13 | 9 | 9 | 9 | 0 | 9 | 9 |
@@ -71,5 +71,5 @@ Per paper and mode: final claims within tolerance in each agent sample (three in
 | `mokyr-2022` | independent | 13 | 13 | 13 | 13 | 0 | 13 | 7 |
 | `mokyr-2022` | blind | 13 | 13 | 13 | 13 | 0 | 1 | 1 |
 | `montero-2022` | seeded | 10 | 10 | 10 | — | 0 | 10 | 10 |
-| `montero-2022` | independent | 10 | 10 | 10 | 10 | 0 | 10 | 7 |
-| `montero-2022` | blind | 10 | 10 | 6 | 5 | **5** | 0 | 1 |
+| `montero-2022` | independent | 10 | 10 | 10 | 10 | 0 | 10 | 8 |
+| `montero-2022` | blind | 10 | 10 | 7 | 6 | **4** | 0 | 3 |

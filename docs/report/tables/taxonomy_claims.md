@@ -26,10 +26,6 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | pipeline 4.7 | `arias-2022` | independent | `amce_flooding_germany` | 0.086 | 0.0142 | unclassified |
 | pipeline 4.7 | `arias-2022` | independent | `amce_wildfires_germany` | 0.06 | -0.0033 | unclassified |
 | pipeline 4.7 | `arias-2022` | independent | `amce_persecution_germany` | 0.162 | 0.0062 | unclassified |
-| pipeline 4.7 | `arias-2022` | independent | `respondents_us` | 1086 | 1033 | sample restriction |
-| pipeline 4.7 | `arias-2022` | independent | `respondents_germany` | 1074 | 1029 | sample restriction |
-| pipeline 4.7 | `arias-2022` | independent | `choice_tasks_us` | 18966 | 1.858e+04 | sample restriction |
-| pipeline 4.7 | `arias-2022` | independent | `choice_tasks_germany` | 18862 | 1.851e+04 | sample restriction |
 | pipeline 4.7 | `arias-2022` | blind | `amce_drought_us` | 0.035 | 0.07253 | specification mismatch |
 | pipeline 4.7 | `arias-2022` | blind | `amce_flooding_us` | 0.037 | 0.07474 | specification mismatch |
 | pipeline 4.7 | `arias-2022` | blind | `amce_wildfires_us` | 0.04 | 0.07086 | specification mismatch |
@@ -37,10 +33,6 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | pipeline 4.7 | `arias-2022` | blind | `amce_drought_germany` | 0.081 | 0.1535 | specification mismatch |
 | pipeline 4.7 | `arias-2022` | blind | `amce_wildfires_germany` | 0.06 | 0.1029 | specification mismatch |
 | pipeline 4.7 | `arias-2022` | blind | `amce_persecution_germany` | 0.162 | 0.2159 | specification mismatch |
-| pipeline 4.7 | `arias-2022` | blind | `respondents_us` | 1086 | 1033 | sample restriction |
-| pipeline 4.7 | `arias-2022` | blind | `respondents_germany` | 1074 | 1029 | sample restriction |
-| pipeline 4.7 | `arias-2022` | blind | `choice_tasks_us` | 18966 | 1.859e+04 | sample restriction |
-| pipeline 4.7 | `arias-2022` | blind | `choice_tasks_germany` | 18862 | 1.852e+04 | sample restriction |
 | pipeline 4.7 | `grier-2023` | independent | `sugar_contributions_district_fe` | -0.0006 | NA | extraction error |
 | pipeline 4.7 | `grier-2023` | independent | `sugar_contributions_incumbent_fe` | -0.0004 | NA | extraction error |
 | pipeline 4.7 | `grier-2023` | independent | `acu_ideology_district_fe` | 0.2 | NA | extraction error |
@@ -72,7 +64,6 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | pipeline 4.7 | `leeson-2022` | blind | `brown_forsythe_dollars_per_hour` | 0.276 | 0.205 | specification mismatch |
 | pipeline 4.7 | `leeson-2022` | blind | `anova_f_donations_per_hour` | 0.4 | 0.484 | specification mismatch |
 | pipeline 4.7 | `leeson-2022` | blind | `anova_f_dollars_per_hour` | 0.15 | 0.101 | specification mismatch |
-| pipeline 4.7 | `leeson-2022` | blind | `station_visits_full_sample` | 242 | 239 | sample restriction |
 | pipeline 4.7 | `leeson-2022` | blind | `station_visits_five_station_subsample` | 102 | 87 | sample restriction |
 | pipeline 4.7 | `manekin-2022` | blind | `study1_us_black_perceived_violence` | 0.235 | NA | extraction error |
 | pipeline 4.7 | `manekin-2022` | blind | `study1_us_black_police_action` | 0.268 | NA | extraction error |
@@ -84,9 +75,7 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | pipeline 4.7 | `montero-2022` | independent | `earnings_iqr_above500_bw300` | -42.97 | 20.32 | unclassified |
 | pipeline 4.7 | `montero-2022` | independent | `earnings_iqr_above500_bw150` | -51.79 | 11.76 | unclassified |
 | pipeline 4.7 | `montero-2022` | independent | `n_obs_earnings_iqr_bw300` | 327 | 182 | unclassified |
-| pipeline 4.7 | `montero-2022` | independent | `n_obs_earnings_iqr_bw150` | 118 | 113 | unclassified |
 | pipeline 4.7 | `montero-2022` | independent | `n_clusters_bw300` | 98 | 63 | unclassified |
-| pipeline 4.7 | `montero-2022` | independent | `n_clusters_bw150` | 36 | 35 | unclassified |
 | pipeline 4.7 | `montero-2022` | blind | `earnings_level_above500_bw300` | 60.49 | 215.7 | under-specified methods section |
 | pipeline 4.7 | `montero-2022` | blind | `earnings_level_above500_bw150` | 52.79 | 221.2 | under-specified methods section |
 | pipeline 4.7 | `montero-2022` | blind | `earnings_iqr_above500_bw300` | -42.97 | NA | extraction error |
@@ -104,8 +93,6 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | pipeline 5.5 | `acemoglu-2022` | blind | `iv_violence_table2_panelA_col6` | 0.5 | 0.2734 | sample restriction |
 | pipeline 5.5 | `acemoglu-2022` | blind | `iv_branches_table2_panelC_col6` | 0.5 | 0.1939 | sample restriction |
 | pipeline 5.5 | `acemoglu-2022` | blind | `iv_fascist_vote1924_table3_panelC_col6` | 0.51 | 0.1774 | sample restriction |
-| pipeline 5.5 | `acemoglu-2022` | blind | `n_clusters_main_sample` | 181 | 178 | sample restriction |
-| pipeline 5.5 | `acemoglu-2022` | blind | `n_clusters_fascist_vote1921` | 175 | 171 | sample restriction |
 | pipeline 5.5 | `adams-2023` | independent | `women_mps_coef_men_partisans` | 1.13 | 1.698 | unclassified |
 | pipeline 5.5 | `adams-2023` | blind | `women_mps_coef_women_partisans` | 2.1 | 1.455 | sample restriction |
 | pipeline 5.5 | `adams-2023` | blind | `n_directed_dyads` | 1842 | 2019 | sample restriction |
@@ -131,7 +118,6 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | pipeline 5.5 | `carrera-2022` | independent | `bcp_enhanced_info_treatment_col1` | 1.36 | 0.219 | unclassified |
 | pipeline 5.5 | `carrera-2022` | independent | `bcp_regression_observations` | 1126 | 1248 | sample restriction |
 | pipeline 5.5 | `carrera-2022` | independent | `takeup_more_enhanced_info_treatment_col1` | -0.08 | -0.01675 | unclassified |
-| pipeline 5.5 | `carrera-2022` | independent | `takeup_more_regression_observations` | 2824 | 2946 | sample restriction |
 | pipeline 5.5 | `carrera-2022` | blind | `bcp_basic_info_treatment_col1` | 0.3 | NA | sample restriction |
 | pipeline 5.5 | `carrera-2022` | blind | `bcp_enhanced_info_treatment_col1` | 1.36 | NA | sample restriction |
 | pipeline 5.5 | `carrera-2022` | blind | `bcp_goal_minus_expected_attendance_col2` | 0.71 | NA | sample restriction |
@@ -146,7 +132,6 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | pipeline 5.5 | `dertwinkel-kalt-2022` | blind | `rel_concentration_bias_lower_table2_col1` | 0.19 | 0.2591 | unclassified |
 | pipeline 5.5 | `douenne-2022` | blind | `believes_effective_on_approval_iv_table8_col1` | 0.416 | 0.1774 | unclassified |
 | pipeline 5.5 | `forsythe-2022` | independent | `young_x_unemp_rate_nilf` | -0.49 | -0.5944 | unclassified |
-| pipeline 5.5 | `forsythe-2022` | independent | `n_obs_full_sample` | 1.69485e+07 | 1.728e+07 | sample restriction |
 | pipeline 5.5 | `forsythe-2022` | blind | `young_x_unemp_rate_unemployed` | -1.928 | -1.741 | unclassified |
 | pipeline 5.5 | `forsythe-2022` | blind | `young_x_unemp_rate_nilf` | -0.49 | -0.5478 | unclassified |
 | pipeline 5.5 | `forsythe-2022` | blind | `n_obs_full_sample` | 1.69485e+07 | 1.43e+07 | sample restriction |
@@ -187,7 +172,6 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | pipeline 5.5 | `holman-2022` | independent | `did_attack_like_may_table2` | 0.0178 | -0.129 | unclassified |
 | pipeline 5.5 | `holman-2022` | independent | `did_time_like_may_table2` | -0.5007 | -0.3019 | unclassified |
 | pipeline 5.5 | `holman-2022` | independent | `did_time_may_best_pm_table2` | 0.2098 | 0.02336 | unclassified |
-| pipeline 5.5 | `holman-2022` | independent | `n_obs_did_like_may_table2` | 143499 | 1.45e+05 | sample restriction |
 | pipeline 5.5 | `holman-2022` | independent | `n_obs_did_may_best_pm_table2` | 97155 | 8.652e+04 | sample restriction |
 | pipeline 5.5 | `holman-2022` | blind | `intl_attack_table4` | 3.112 | NA | extraction error |
 | pipeline 5.5 | `holman-2022` | blind | `intl_attack_x_woman_exec_table4` | -4.333 | NA | extraction error |
@@ -205,7 +189,6 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | pipeline 5.5 | `labandeira-2022` | independent | `reform_consumption_fe_iv_col4` | -0.123 | -0.205 | unclassified |
 | pipeline 5.5 | `labandeira-2022` | independent | `reform_expenditure_fe_col7` | -0.098 | -0.1378 | unclassified |
 | pipeline 5.5 | `labandeira-2022` | independent | `reform_expenditure_fe_iv_col8` | -0.089 | -0.205 | unclassified |
-| pipeline 5.5 | `labandeira-2022` | independent | `n_obs_table2` | 20872 | 2.132e+04 | sample restriction |
 | pipeline 5.5 | `labandeira-2022` | independent | `n_households_table2` | 10729 | 1.185e+04 | sample restriction |
 | pipeline 5.5 | `labandeira-2022` | blind | `reform_consumption_ols_col1` | -0.178 | -0.1045 | sample restriction |
 | pipeline 5.5 | `labandeira-2022` | blind | `reform_consumption_iv_col2` | -0.123 | -0.05325 | sample restriction |
@@ -217,7 +200,6 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | pipeline 5.5 | `labandeira-2022` | blind | `n_households_table2` | 10729 | 8404 | sample restriction |
 | pipeline 5.5 | `leeson-2022` | blind | `brown_forsythe_dollars_per_hour` | 0.276 | 0.4663 | sample restriction |
 | pipeline 5.5 | `leeson-2022` | blind | `anova_f_dollars_per_hour` | 0.15 | 0.3125 | sample restriction |
-| pipeline 5.5 | `leeson-2022` | blind | `station_visits_five_station_subsample` | 102 | 98 | sample restriction |
 | pipeline 5.5 | `lopez-moctezuma-2022` | independent | `itt_poverty_index_akbayan_tableC3` | 0.496 | 0.16 | under-specified methods section |
 | pipeline 5.5 | `lopez-moctezuma-2022` | independent | `itt_poverty_index_umalabka_tableC3` | 0.126 | 0.1648 | under-specified methods section |
 | pipeline 5.5 | `lopez-moctezuma-2022` | independent | `itt_gender_index_akbayan_tableC4` | 0.45 | 0.6001 | under-specified methods section |
@@ -254,7 +236,6 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | agent | `douenne-2022` | blind | `initial_acceptance_believes_not_lose_table4_col1` | 0.306 | 0.2279 | unclassified |
 | agent | `forsythe-2022` | independent | `young_x_unemp_rate_nilf` | -0.49 | -0.5847 | unclassified |
 | agent | `forsythe-2022` | blind | `young_x_unemp_rate_nilf` | -0.49 | -0.594 | unclassified |
-| agent | `forsythe-2022` | blind | `n_obs_full_sample` | 1.69485e+07 | 1.736e+07 | sample restriction |
 | agent | `gagliarducci-2022` | blind | `female_sponsor_pct_opposite_dem_ols` | -1.505 | -2.431 | specification mismatch |
 | agent | `gagliarducci-2022` | blind | `female_sponsor_pct_opposite_dem_ipw_sponsor` | -1.208 | -2.082 | specification mismatch |
 | agent | `gagliarducci-2022` | blind | `female_sponsor_pct_opposite_rep_ols` | 3.666 | 4.777 | specification mismatch |
@@ -263,8 +244,6 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | agent | `gagliarducci-2022` | blind | `n_bills_pct_opposite_rep_ols` | 27669 | 1.869e+04 | specification mismatch |
 | agent | `grier-2023` | independent | `sugar_contributions_calendar_year_incumbent_fe` | -0.0005 | -0.0005613 | tolerance artifact |
 | agent | `grier-2023` | blind | `sugar_contributions_calendar_year_district_fe` | -0.0006 | -0.0005299 | under-specified methods section |
-| agent | `holman-2022` | independent | `n_obs_table4` | 4328 | 4486 | under-specified methods section |
-| agent | `holman-2022` | blind | `n_obs_table4` | 4328 | 4486 | under-specified methods section |
 | agent | `holman-2022` | blind | `did_attack_x_time_like_may_table2` | -0.1274 | -0.09961 | under-specified methods section |
 | agent | `holman-2022` | blind | `did_time_like_may_table2` | -0.5007 | -0.4513 | under-specified methods section |
 | agent | `holman-2022` | blind | `did_attack_x_time_may_best_pm_table2` | -0.0501 | -0.3215 | under-specified methods section |

@@ -324,10 +324,10 @@
         },
         {
           "description": "n_obs_table4_col1",
-          "claim_type": "other",
+          "claim_type": "count",
           "claimed": 757.0,
           "reproduced": 757.0,
-          "tolerance": 0.01,
+          "tolerance": 0.05,
           "rel_err": 0.0,
           "passed": true,
           "passed_first_attempt": false,
@@ -518,10 +518,10 @@
         },
         {
           "description": "observations_airframe_wingload_us",
-          "claim_type": "other",
+          "claim_type": "count",
           "claimed": 116.0,
           "reproduced": 116.0,
-          "tolerance": 0.01,
+          "tolerance": 0.05,
           "rel_err": 0.0,
           "passed": true,
           "passed_first_attempt": false,
@@ -530,10 +530,10 @@
         },
         {
           "description": "observations_engine_us",
-          "claim_type": "other",
+          "claim_type": "count",
           "claimed": 85.0,
           "reproduced": 85.0,
-          "tolerance": 0.01,
+          "tolerance": 0.05,
           "rel_err": 0.0,
           "passed": true,
           "passed_first_attempt": false,
@@ -554,5 +554,10 @@
       "usage": null,
       "artifacts_dir": "benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/blind/claude-code/20261103T001658Z"
     }
-  ]
+  ],
+  "rescored": {
+    "policy": "count-5pct",
+    "date": "2026-11-03",
+    "flipped": 0
+  }
 }

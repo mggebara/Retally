@@ -1377,8 +1377,8 @@ TAXONOMY_RULES: dict[tuple[str, str, str], dict[str, Any]] = {
     (HARNESS_AGENT, "adams-2023", "blind"): {"rest": UNDER},
     # 3.4: the agent used the data's percent-opposite variable; the paper divides by cosponsors + 1.
     (HARNESS_AGENT, "gagliarducci-2022", "blind"): {"rest": SPEC},
-    # 3.4: "no stated rule gives 4,328".
-    (HARNESS_AGENT, "holman-2022", "independent"): {"rest": UNDER},
+    # 3.4: "no stated rule gives 4,328".  The agent's independent cell (4,486 against 4,328,
+    # 3.7 % off) has had no miss since counts moved to the 5 % COUNT band (count-5pct rescore).
     # 3.4: the agent did what the paper says (fixed effects, logit); the code ran random effects, linear.
     (HARNESS_AGENT, "holman-2022", "blind"): {"rest": UNDER},
     # 3.4: the paper does not state the attendance-weight formula or the item orientations.

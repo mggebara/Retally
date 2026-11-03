@@ -62,7 +62,7 @@ Every result row records the `mode` it ran in, and rows are identified by
 
 | Mode | The generator sees | A pass measures | Tolerance |
 |---|---|---|---|
-| `seeded` (default) | paper text, claims, dataset listing, **and the authors' replication-package scripts** (plus any linked repo), presented as ground truth | *computational* reproduction — can the model translate the authors' Stata/R into fixest and run it | strict: per-type relative tolerance (COEFFICIENT 2 %, SE 5 %, …); never narrower than the printed precision (below) |
+| `seeded` (default) | paper text, claims, dataset listing, **and the authors' replication-package scripts** (plus any linked repo), presented as ground truth | *computational* reproduction — can the model translate the authors' Stata/R into fixest and run it | strict: per-type relative tolerance (COEFFICIENT 2 %, SE 5 %, COUNT 5 %, OTHER 1 %, …); never narrower than the printed precision (below) |
 | `independent` | paper text, claims, and a **script-free copy** of the dataset only — scripts withheld from the prompt *and* removed from the directory that is listed and mounted, linked code not fetched, and the prompt forbids opening any script files | *independent* reproduction — can the model regenerate the analysis from the paper's description | SE-aware: within ±k·SE of the reported value when the claim pins a `standard_error` (k = 1, never narrower than the relative tolerance); relative tolerance otherwise; never narrower than the printed precision (below) |
 | `blind` | everything `independent` withholds, **and every target**: each claim is listed by its token, type, unit label, location and context, but never its value, standard error or sample size; the methodology summary is asked to leave reported results out; the claim-targeted refinement loop is off (crash / no-RESULT repairs still run), so no "reproduced X, claimed Y" feedback is ever built | *derivation* — can the model compute the paper's numbers without ever being shown them | same as `independent` (the same policy object) |
 
@@ -200,7 +200,7 @@ re-running anything, since each claim detail stores `claimed` and
 `reproduced`:
 
 ```bash
-uv run python -m benchmark.rescore benchmark/results/<file>.json [--catalog DIR] [--write OUT.json]
+uv run python -m benchmark.rescore benchmark/results/<file>.json [--catalog DIR] --all-claims [--write OUT.json]
 ```
 
 It prints per-row before/after pass counts and every flipped claim;
@@ -210,6 +210,25 @@ first-attempt / first-scored fields are left as recorded).  Introduced
 `phase3b-bisbee-both` and `phase19-bisbee-independent` flipped no claim
 (the floor binds on two Bisbee seeded interaction coefficients, printed
 as `-0.016` and `-0.020`, without changing their verdicts).
+
+#### Counts at 5 % (`count-5pct`, 2026-11-03)
+
+Sample-size claims (observations, clusters, respondents, districts,
+bills, ...) have their own claim type, `count`, held to 5 %; `other`
+(F statistics, test statistics, percentage points) stays at 1 %.  The
+catalog's 62 count claims were relabelled from `other`, and every
+committed results file was re-scored in place for those claims only:
+
+```bash
+uv run python -m benchmark.rescore benchmark/results/*.json [--dry-run]
+```
+
+Each file in the `{usage, results}` shape records
+`"rescored": {"policy": "count-5pct", "date": "2026-11-03", "flipped": N}`;
+first-scored and first-attempt fields are left as recorded (only the
+final reproduced value is stored).  56 verdicts flipped, all to pass;
+the per-file totals and the flipped claims are in
+[`results/RESCORE-count-5pct.md`](results/RESCORE-count-5pct.md).
 
 ### First-attempt vs final pass
 

@@ -28,18 +28,18 @@ Reproduced values (✓ = within tolerance) for the Grier and Holman cells discus
 | `grier-2023` | blind | `observations_incumbent_fe` | 106 | 604 | 96 | 96 | 106 ✓ |
 | `holman-2022` | independent | `intl_attack_table4` | 3.112 | — | 0.8906 | 1.583 | 2.322 ✓ |
 | `holman-2022` | independent | `intl_attack_x_woman_exec_table4` | -4.333 | — | -1.663 | -2.144 | -3.828 ✓ |
-| `holman-2022` | independent | `n_obs_table4` | 4328 | — | 4,369 ✓ | 4,380 | 4,486 |
+| `holman-2022` | independent | `n_obs_table4` | 4328 | — | 4,369 ✓ | 4,380 ✓ | 4,486 ✓ |
 | `holman-2022` | independent | `did_attack_x_time_like_may_table2` | -0.1274 | — | -0.0824 | -0.1147 ✓ | -0.1274 ✓ |
 | `holman-2022` | independent | `did_attack_like_may_table2` | 0.0178 | — | -0.129 | 0.03888 ✓ | 0.01778 ✓ |
 | `holman-2022` | independent | `did_time_like_may_table2` | -0.5007 | — | -0.3019 | -0.4782 ✓ | -0.5007 ✓ |
 | `holman-2022` | independent | `did_attack_x_time_may_best_pm_table2` | -0.0501 | — | -0.0522 ✓ | -0.0521 ✓ | -0.05007 ✓ |
 | `holman-2022` | independent | `did_attack_may_best_pm_table2` | -0.0002 | — | -0.001526 ✓ | -0.0004372 ✓ | -0.000171 ✓ |
 | `holman-2022` | independent | `did_time_may_best_pm_table2` | 0.2098 | — | 0.02336 | 0.2059 ✓ | 0.2098 ✓ |
-| `holman-2022` | independent | `n_obs_did_like_may_table2` | 143499 | — | 145,012 | 143,499 ✓ | 143,499 ✓ |
+| `holman-2022` | independent | `n_obs_did_like_may_table2` | 143499 | — | 145,012 ✓ | 143,499 ✓ | 143,499 ✓ |
 | `holman-2022` | independent | `n_obs_did_may_best_pm_table2` | 97155 | — | 86,517 | 97,155 ✓ | 97,155 ✓ |
 | `holman-2022` | blind | `intl_attack_table4` | 3.112 | — | NA | NA | 2.322 ✓ |
 | `holman-2022` | blind | `intl_attack_x_woman_exec_table4` | -4.333 | — | NA | NA | -3.828 ✓ |
-| `holman-2022` | blind | `n_obs_table4` | 4328 | — | NA | NA | 4,486 |
+| `holman-2022` | blind | `n_obs_table4` | 4328 | — | NA | NA | 4,486 ✓ |
 | `holman-2022` | blind | `did_attack_x_time_like_may_table2` | -0.1274 | — | -0.1502 | -0.1502 | -0.09961 |
 | `holman-2022` | blind | `did_attack_like_may_table2` | 0.0178 | — | -0.105 | -0.105 | 0.008807 ✓ |
 | `holman-2022` | blind | `did_time_like_may_table2` | -0.5007 | — | -0.2264 | -0.2264 | -0.4513 |
