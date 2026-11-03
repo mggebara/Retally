@@ -3278,6 +3278,180 @@ blind, labelled `desktop-opus-postfix`.
 further change to `src/retally/` prompts or loop needs a new unfreeze
 decision and section.
 
+### 3.8.1 Post-fix oracle sample (2026-11-03) — ✅ measured, no API spend
+
+**What ran.**  One oracle sample of the post-fix pipeline (refrozen at
+41a4039, PR #124), on all 23 evaluation papers, independent and blind mode
+only (no seeded), label `desktop-opus-postfix`.  It ran through the desktop
+oracle, one Opus subagent per prompt, with no API spend:
+`benchmark/results/pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`
+(PR #127).  The file has 46 rows, none skipped or errored, and 188 answered
+calls.  Count claims are scored at 5 % by the live comparator, and the
+file's `rescored` key records `count-5pct` with 0 flipped.  Artifacts are
+stamped 06:21–10:48 UTC.  The extraction prompts were byte-identical to
+the frozen samples' prompts, and their stored answers were reused (46
+methodology, 23 hyperparameter).  The rows agree: each records exactly 2
+calls beyond its generation and refinement prompts (92 counted), which fits
+69 distinct prompts with the hyperparameter prompt shared across the two
+modes.  The reuse itself is not recorded in any committed file.  Every
+generation and refinement prompt (96 of them) was answered fresh.
+
+**Totals, 23 papers, 278 claims** (frozen samples after the count rescore,
+3.7.4):
+
+| Mode | Frozen 1 | Frozen 2 | Frozen 3 | **Post-fix** | Agent 1 / 2 / 3 | Post-fix cells above / within / below the frozen range |
+|---|---|---|---|---|---|---|
+| independent | 239 | 226 | 227 | **233** | 268 / 271 / 265 | 2 / 17 / 4 |
+| blind | 173 | 176 | 181 | **191** | 252 / 251 / 250 | 5 / 17 / 1 |
+
+Post-fix independent sits inside the frozen range (226–239).  Post-fix
+blind is 10 above the highest frozen blind total.  The cell-by-cell table is
+`docs/report/tables/postfix.md`.
+
+**Protocol.**  This is a post-hoc sample: the three fixes were designed
+after reading the evaluation results (3.8).  So the run is not pooled with
+the frozen samples and enters no gap-range or pairing table with them.
+`docs/report/tables.py` reads it only for its own `postfix` table, a
+separate row labelled post-fix.  One draw, no standard error.  Every
+comparison below is descriptive: post-fix against the frozen samples'
+range, per mode and per cell.  The frozen samples remain the pipeline's
+headline numbers.
+
+**Mechanisms, over the 46 rows** (from the git-ignored artifacts under
+`benchmark/results/artifacts/<paper>/<mode>/pipeline/<run>/`: prompts,
+`samples.txt`, and the first line of each attempt's `feedback.txt`):
+
+- *Data inventory:* in the first prompt of all 46 runs.
+- *SAMPLE lines:* printed by all 46 runs (a non-empty `samples.txt` in
+  every row).
+- *Completeness repair:* 5 cells.  Bokobza independent went from 4 usable
+  values to 11, Leeson independent from 10 to 11 and Leeson blind from 14
+  to 16.  Douenne independent got its repair at attempt 3,
+  adding the missing Table 6 IV value (12 to 13).  Holman blind's repair
+  ran, but the cell stayed at 0 / 11.
+- *Timeout repair:* 0 cells.  Forsythe blind's one error repair was told
+  "No RESULT: lines found in output", so no run was recorded as killed at
+  the limit.
+- *Error repairs:* 17 of the 46 rows have `n_error_refinements` > 0 (5 of
+  them completeness repairs, which share that budget).
+- *`n_completeness_refinements` is not on the rows.*  The pipeline sets it
+  on `ValidationResult` (`src/retally/pipeline.py`), but the harness never
+  copies it into a result row.  The completeness and timeout counts above
+  come from `feedback.txt`.
+- *The sample-size check never fired.*  No refinement prompt in the run
+  contains "## Sample size check (fix this first)".
+  `is_sample_size_claim` (`src/retally/codegen/generator.py`) returns False
+  for any claim whose type is not `ClaimType.OTHER`.  Since PR #123 the
+  catalog types its sample-size claims `count`, and the runner maps them to
+  `ClaimType.COUNT`.  So the 12 claim-refinement prompts (in 8 independent
+  cells) that listed a failing count claim did not get the block: Adams 2,
+  Altmann 1, Carrera 1, Forsythe 1, Grier 1, Holman 1, Labandeira 2,
+  Montero 3.  The SAMPLE half of the mechanism ran, but its refinement half
+  was inert in this sample.  The two PRs were written in parallel and
+  merged 2026-11-02 21:48 (#123) and 22:06 (#124).  Fixing this needs a new
+  unfreeze decision (3.8, "Refrozen").
+
+**Cells outside the frozen range** (post-fix, then frozen samples 1, 2
+and 3; first scored in brackets):
+
+- *Grier independent, 10 / 11 (6)*, against 0, 2 and 2.  The data
+  inventory is at work here.  The inventory reports that the three
+  `SugarReplicate*.dta` files differ only in `totalcont`, with per-file
+  means.  The script's comments repeat that finding, and it assigns the
+  three files to the baseline, calendar-year and 12-month windows.  Two
+  claim refinements followed, and both counts pass (186 and 106).  Grier
+  blind stayed at 2 / 11.
+- *Carrera independent, 9 / 11 (9)*, against 7, 0 and 8; *Carrera blind,
+  8 / 11 (8)*, against 0, 7 and 4.  Each cell had three ordinary error
+  repairs ("All observations contain NA values" and similar).  The SAMPLE
+  lines show the wave-3 restriction changing between attempts (blind: 1,152
+  rows, then 1,280 in the final run).  No completeness or timeout repair
+  ran, and the artifacts do not single out one fix.
+- *Bokobza blind, 11 / 11*, against 4, 10 and 9: one error repair (stderr
+  notes as feedback), after which every value printed.
+- *Mokyr blind, 13 / 13*, against 1, 1 and 7.  This is not attributable to
+  a fix.  The script read the same file, and its SAMPLE lines show the same
+  298 districts as every frozen sample.  No repair ran.  It built the
+  densities per head of `pcmean` without the ×10,000 of samples 1 and 2,
+  and it printed first-stage F statistics of 19.9, 16.96 and 16.17, against
+  8.86, 7.32 and 7.92 in all three frozen samples.
+- *Hollyer blind, 13 / 13*, against 10, 12 and 10, and *Acemoglu blind,
+  7 / 12*, against 6, 6 and 6.  Same files, no repair.  These are draw
+  differences.
+- *Below the range, independent:* Acemoglu 7 / 12 (11, 11, 11), with the
+  same counts as frozen and lower first-stage and IV coefficients, no
+  repair and two claim refinements.  Adams 7 / 11 (10, 8, 11): a sample
+  miss (2,019 dyads against 1,842), and both of its claim-refinement
+  prompts listed the failing counts without the sample-size check.  Douenne
+  12 / 13 (13, 13, 13), after six refinements (two error, one completeness,
+  three claim): it misses the Table 8 IV coefficient (0.037 against
+  0.416).  Holman 1 / 11 (4, 9, 6): its Table 2 samples are 239,919 and
+  1,481,392 against 143,499 and 97,155.  Its one claim refinement (no
+  sample-size check) broke the script and was reverted.
+- *Below the range, blind:* Arias, below.
+
+**Within the frozen range** (named in the brief for this section; post-fix,
+then frozen 1, 2 and 3): independent Mokyr 13 (13, 7, 7), Altmann 13
+(13, 13, 13; first scored 4), Gagliarducci 13 (13, 13, 12), Bokobza 11
+(11, 10, 11; completeness repair), Leeson 11 (11, 8, 11; completeness
+repair), Montero 8 (10, 8, 10; first scored 1), Forsythe 9 (12, 12, 0),
+Labandeira 4 (6, 7, 4), Hanushek 9 (9, 9, 13), López-Moctezuma 9 (9, 9, 9).
+Blind Dancygier 13 (13, 13, 11), Douenne 13 (12, 13, 13), Dertwinkel-Kalt
+13 (12, 13, 13), Forsythe 9 (10, 10, 5), Leeson 8 (9, 8, 8), Montero 3
+(0, 3, 0), Grier 2 (0, 0, 2), Holman 0 (0, 0, 0), Labandeira 4 (4, 4, 4),
+Gagliarducci 7 (12, 7, 7), Adams 8 (7, 2, 8), Hanushek 9 (12, 9, 9),
+López-Moctezuma 9 (9, 9, 9), and Altmann, below.  Forsythe's frozen
+sample-3 timeouts (3.7.4) did not recur: both post-fix Forsythe cells
+reached 9 / 13.
+
+**Arias blind, 1 / 12 (1)**, against 12, 12 and 7.  The script reads the
+same two conjoint files as every frozen sample.  Its choice-column
+detector excludes `force_choice` as metadata: the regex of survey
+bookkeeping columns lists it beside `SURVEY_HISTORY`, and the inventory
+prints it between `POL_INTEREST` and `SURVEY_HISTORY`.  Samples 1 and 2
+printed their nine choice columns as `force_choice, Q184, Q186, …,
+Q198`.  So `force_choice` is the first choice task, and without it the
+detector's nine-column window covers different columns.  Sample 3's
+script names no choice columns in its output.  The post-fix script does not
+print which columns it picked either, so the misalignment is inferred from
+the code and the result.  Every AMCE comes out near zero (US drought
+0.003 against 0.035), and the SAMPLE lines show 1,143 US respondents
+completing the conjoint against 1,086, and 16,384 and 16,682 profiles
+against 18,966 and 18,862.  This is a sample- and coding-construction miss.
+The blind prompt names no sample size, and blind mode has no claim
+refinement, so nothing in the loop could catch it.
+
+**Altmann blind, 4 / 13 (4)**, against 4, 4 and 13.  The post-fix cell
+estimates on the same sample as frozen samples 1 and 2: 17,840 lab rows
+and 892 subjects, against 12,160 and 608.  Its coefficients without
+controls are the same as theirs (0.08299, −0.1576, −0.09874, −0.2177), and
+it passes the same four claims.  Frozen sample 3's 13 / 13
+came from a fallback that restricted the sample to scarce resources as
+`Treatment_Incentives != Ample` (12,160 rows).  The post-fix script looks
+for the scarce-resource treatment by name patterns (`^Treatment_Load`,
+`^scarce`, `cognitive_load`, …), finds none and drops nothing.  Its SAMPLE
+lines show `lab:loaded=17840` and `lab:scarce_resources=17840`.  The
+inventory line for the lab file is cut off (`…`) before the
+`Treatment_Incentives*` columns.  The plain listing in the same prompt does
+show `Treatment_Incentives_Baseline_sc…`.  So this is a regression only
+against sample 3: the post-fix draw repeats the frozen pipeline's usual
+miss.
+
+**Report.**  `docs/report/tables.py` adds the `postfix` table (separate,
+labelled post-fix, never in the frozen pairings or gap ranges).
+`docs/report/draft.md` gets the spliced table, a post-fix paragraph in
+Section 4.8 and a limitations sentence.
+
+**Evidence.**  `benchmark/evidence/` was rebuilt with the post-fix cells
+(PR #127): 466 cells in `INDEX.md`, 46 of them `pipeline-desktop-opus-postfix`
+(420 before).
+
+**Next** (replaces 3.8's):
+
+- A second post-fix sample, if wanted, under the same protocol.
+- (b) openICPSR downloads: the user's.
+- Nothing else new.
+
 ---
 
 ## Phase 4 — Corpus growth (4 → 20–30 papers)
