@@ -30,6 +30,7 @@ per line.  No API calls; no network when ``--package-dir`` /
 from __future__ import annotations
 
 import json
+import math
 import os
 import re
 import shlex
@@ -38,6 +39,7 @@ import string
 import sys
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 from typing import Any
 
@@ -104,15 +106,117 @@ def claim_numbers(entry: bschema.BenchmarkEntry) -> list[float]:
     return numbers
 
 
-def redact_values(text: str, numbers: list[float]) -> tuple[str, int]:
+def claim_sample_sizes(entry: bschema.BenchmarkEntry) -> list[int]:
+    """The pinned claims' ``sample_size`` values, withheld from the blind paper as whole numbers."""
+    return sorted({int(oc.sample_size) for oc in entry.original_claims if oc.sample_size is not None})
+
+
+# Rounded forms are withheld only in a context that marks them as a
+# rounded statistic; a bare "43" is as often a footnote, page or table
+# number as a rounded 42.97.  A form of the value itself needs an
+# approximation word or a currency sign before it ("approximately $43").
+# An x100 form of a share needs a points unit after it ("8 percentage
+# points", "27 p.p."), or a percent sign after it AND an approximation
+# word before it ("about 15%"): a bare "10%" is as often a significance
+# level or a level share.  One-digit forms ("the 5% level", "$1
+# incentive") need the narrowest context: an approximation word for a
+# value form, "percentage points" / "p.p." / "pp" for a percent form.
+_APPROX = r"(?:(?:approximately|about|around|roughly|nearly|almost)\s+|[~≈]\s*)[-−–]?[$€£]?\s?"
+_CURRENCY = r"[$€£]\s?"
+_POINTS = r"\s?(?:percentage[-\s]+points?\b|p\.\s?p\.|pp\b)"
+_ANY_POINTS = rf"(?:{_POINTS}|\s?points?\b)"
+_PERCENT = r"\s?(?:%|percent\b|per\s+cent\b)"
+
+
+def _decimals(x: float) -> int:
+    """Decimals ``x`` is printed with: 3 for 0.084, 2 for 42.97, 0 for 30.0."""
+    text = repr(abs(float(x)))
+    if "e" in text or text.endswith(".0"):
+        return 0
+    return len(text.split(".")[1])
+
+
+def _round_half_up(x: float, k: int) -> str:
+    """``x`` printed with ``k`` decimals, rounding half up (42.97 to 0 decimals is "43")."""
+    return str(Decimal(repr(x)).quantize(Decimal(1).scaleb(-k), rounding=ROUND_HALF_UP))
+
+
+def rounded_forms(v: float) -> tuple[set[str], set[str]]:
+    """Shorter prints of ``v`` than :func:`value_strings` covers: ``(value forms, percent forms)``.
+
+    Value forms: ``|v|`` rounded to each precision with fewer decimals than
+    it is printed with, none coarser than its leading digit (42.97 as
+    "43.0" or "43"; 0.084 as "0.08", never "0.1").  Percent forms, for
+    ``0 < |v| < 1``: the same for ``100 |v|`` (-0.084 as "8"), plus the
+    exact x100 form when :func:`value_strings` drops it as too short (0.04
+    as "4").  Rounding is half up, so every form is within half a unit of
+    its last digit.  Zeros and forms already in :func:`value_strings` are
+    left out.
+    """
+    found: tuple[set[str], set[str]] = (set(), set())
+    bases = [(abs(float(v)), _decimals(v), 0)]
+    if 0 < abs(v) < 1:
+        pct = round(abs(float(v)) * 100, 9)
+        bases.append((pct, max(_decimals(v) - 2, 0), 1))
+        found[1].add(f"{pct:g}")
+    for x, d, slot in bases:
+        if x == 0:
+            continue
+        lead = -math.floor(math.log10(x))  # decimal place of the leading digit
+        for k in range(max(lead, 0), d):
+            found[slot].add(_round_half_up(x, k))
+    exact = value_strings(v)
+    value, percent = ({f for f in forms if float(f) > 0} - exact for forms in found)
+    return value, percent
+
+
+def _count_sums(numbers: list[float]) -> set[int]:
+    """Sums of two pinned counts of 100 or more: 1,086 + 1,074 respondents printed as "2160 respondents"."""
+    counts = sorted({int(abs(v)) for v in numbers if float(v).is_integer() and abs(v) >= 100})
+    return {a + b for i, a in enumerate(counts) for b in counts[i + 1 :]}
+
+
+def _whole_number(n: int) -> str:
+    """A regex for ``n`` as a whole number, plain or comma-grouped, not part of a longer number."""
+    forms = sorted({str(n), f"{n:,}"}, key=len, reverse=True)
+    return rf"(?<![\d.,])(?:{'|'.join(re.escape(f) for f in forms)})(?![\d]|[.,]\d)"
+
+
+def _rounded_pattern(form: str, percent: bool) -> str:
+    """The contexts in which a :func:`rounded_forms` form is withheld; groups ``pre`` / ``pre2`` are kept."""
+    number = rf"(?<![\d.,]){re.escape(form)}(?![\d]|[.,]\d)"
+    one_digit = len(form.replace(".", "").lstrip("0")) < 2
+    if percent:
+        if one_digit:
+            return rf"(?P<pre>){number}(?={_POINTS})"
+        return rf"(?P<pre>){number}(?={_ANY_POINTS})|(?P<pre2>{_APPROX}){number}(?={_PERCENT})"
+    # A currency sign marks a rounded amount only as a whole number ("$43");
+    # "€0.25 per task" is a price, not a rounded estimate.
+    before = _APPROX if one_digit or "." in form else rf"(?:{_APPROX}|{_CURRENCY})"
+    return rf"(?P<pre>{before}){number}"
+
+
+def _keep_prefix(m: re.Match[str]) -> str:
+    """A :func:`_rounded_pattern` match with its number withheld and its context kept."""
+    groups = m.groupdict()
+    return (groups.get("pre") or groups.get("pre2") or "") + REDACTED
+
+
+def redact_values(text: str, numbers: list[float], sample_sizes: list[int] | None = None) -> tuple[str, int]:
     """Replace every :func:`value_strings` form of ``numbers`` in ``text`` with ``[withheld]``.
 
     A plain substring replacement, longest form first: over-redaction is
     fine, and there is deliberately no boundary check on the left, because
     PDF extraction can glue a digit onto a value (Montero's minus sign
     extracts as "2": "242.97" for -42.97).  Two-digit integer values, too
-    short for :func:`value_strings`, are redacted as whole numbers.  Returns
-    ``(text, replacements)``.
+    short for :func:`value_strings`, are redacted as whole numbers.
+
+    Narrower passes follow, for forms the exact ones miss: sums of two
+    pinned counts ("2160 respondents" for 1,086 + 1,074) and the claims'
+    ``sample_sizes`` of 100 or more (a table's "observations" row), both as
+    whole numbers; then :func:`rounded_forms`, only in the contexts
+    :func:`_rounded_pattern` allows ("approximately $43", "about 9
+    percentage points").  Returns ``(text, replacements)``.
     """
     forms = sorted({f for v in numbers for f in value_strings(v)}, key=lambda f: (-len(f), f))
     n = 0
@@ -126,6 +230,14 @@ def redact_values(text: str, numbers: list[float]) -> tuple[str, int]:
     # page number containing the digits would go too.
     for short in sorted({str(int(abs(v))) for v in numbers if float(v).is_integer() and 10 <= abs(v) < 100}):
         text, count = re.subn(rf"(?<![\d.]){short}(?!\.?\d)", REDACTED, text)
+        n += count
+    whole = _count_sums(numbers) | {int(s) for s in sample_sizes or () if s >= 100}
+    for value in sorted(whole, reverse=True):
+        text, count = re.subn(_whole_number(value), REDACTED, text)
+        n += count
+    rounded = {(f, slot == 1) for v in numbers for slot, forms in enumerate(rounded_forms(v)) for f in forms}
+    for form, percent in sorted(rounded, key=lambda fp: (-len(fp[0]), fp)):
+        text, count = re.subn(_rounded_pattern(form, percent), _keep_prefix, text)
         n += count
     return text, n
 
@@ -202,7 +314,9 @@ def render_task(
     paper_body = f"{title}\n\n{paper_text}"
     paper_redactions: int | None = None
     if repro_mode.withholds_targets:
-        paper_body, paper_redactions = redact_values(paper_body, claim_numbers(entry))
+        paper_body, paper_redactions = redact_values(
+            paper_body, claim_numbers(entry), claim_sample_sizes(entry)
+        )
     paper_path = task_dir / "paper.txt"
     paper_path.write_text(paper_body, encoding="utf-8")
 

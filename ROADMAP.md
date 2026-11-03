@@ -2470,6 +2470,7 @@ The caveats of 3.5 apply unchanged.
   `DailyAttIncr.tex` are now withheld, the two balance tables stay, and
   the before/after sweep over the 26 cached packages changes nothing
   else.
+- ~~Free, harness: blind `paper.txt` gaps reported by the 2026-11-02-c agents (Hollyer "approximately 8 / about 9 percentage points" for the pinned -0.084 / -0.092; Arias "2160 respondents" = 1,086 + 1,074; Hanlon's Table 1 observations row 174 / 165 / 233, the claims' `sample_size`s; Montero "approximately $43" for -42.97).~~  Done: `redact_values` also withholds rounded forms of pinned values in a marked context (approximation word or whole-number currency before, points unit after, or approximation word plus %), sums of two pinned counts, and pinned sample sizes ≥ 100 as whole numbers; 19 of the 23 cached papers gain 1–24 redactions, no prose removed, none of the earlier cells re-run.
 
 ### 3.7.1 Pipeline second sample on the six newest papers (2026-11-02) — ✅ measured, no API spend
 

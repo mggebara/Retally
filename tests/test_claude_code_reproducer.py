@@ -546,6 +546,83 @@ def test_blind_paper_redacts_percentage_forms_of_sub_unit_values(tmp_path):
     assert rendered.render["paper_redactions"] == 2
 
 
+def test_redaction_withholds_rounded_points_forms_of_rd_estimates():
+    # Hollyer's Brazil method prose: -0.084 and -0.092 rounded to whole percentage points.
+    text = (
+        "we find a\ndecrease of approximately 8 percentage points for the\n"
+        "young measure (with a robust21 95% confidence interval\nbetween −0.185 and −0.005), and simi-\n"
+        "larly about 9 percentage points for the young/outsider\nmeasure; 8 of 10 mayors"
+    )
+    out, n = render_mod.redact_values(text, [-0.084, -0.092])
+    assert "approximately [withheld] percentage points" in out
+    assert "about [withheld] percentage points" in out
+    assert "−0.185 and −0.005" in out and "8 of 10 mayors" in out
+    assert n == 2
+
+
+def test_redaction_withholds_rounded_currency_forms_only_in_context():
+    # Montero: -42.97 and 60.49 as rounded dollar figures; footnote "43" and "$1" stay.
+    text = (
+        "interquartile range of cooperatives is approximately $43 per month lower\n"
+        "43 Columns 1 and 2 suggest that cooperative workers earn approximately $60 more per\n"
+        "a $1 incentive; Q.J.E. 134; 43 percent of land; 60 cooperatives; €43.5 per task"
+    )
+    out, n = render_mod.redact_values(text, [-42.97, 60.49])
+    assert "approximately $[withheld] per month" in out and "approximately $[withheld] more" in out
+    assert "\n43 Columns" in out
+    assert out.endswith("a $1 incentive; Q.J.E. 134; 43 percent of land; 60 cooperatives; €43.5 per task")
+    assert n == 2
+
+
+def test_redaction_withholds_sums_of_pinned_counts():
+    # Arias: 1,086 US + 1,074 German respondents = the abstract's "2160 respondents".
+    text = "of 2160 respondents in the U.S. and Germany; 2,160 in all; in 12160 rows; page 21600"
+    out, n = render_mod.redact_values(text, [1086.0, 1074.0, 0.035])
+    assert (
+        out
+        == "of [withheld] respondents in the U.S. and Germany; [withheld] in all; in 12160 rows; page 21600"
+    )
+    assert n == 2
+
+
+def test_redaction_withholds_pinned_sample_sizes_as_whole_numbers():
+    # Hanlon: Table 1's "observations" row prints the claims' sample sizes 174, 165, 233.
+    text = "observations\n116\n174\n165\n233\n140\n192\nNotes: 1174 airframes; 0.174 and 85"
+    out, n = render_mod.redact_values(text, [0.013], sample_sizes=[85, 116, 165, 174, 233])
+    assert out.split("\n")[1:7] == ["[withheld]"] * 4 + ["140", "192"]
+    assert "1174 airframes; 0.174 and 85" in out
+    assert n == 4
+
+
+def test_rounded_forms_shapes():
+    assert render_mod.rounded_forms(-0.084) == ({"0.08"}, {"8"})
+    assert render_mod.rounded_forms(-42.97) == ({"43", "43.0"}, set())
+    assert render_mod.rounded_forms(60.49) == ({"60"}, set())
+    assert render_mod.rounded_forms(0.04) == (set(), {"4"})  # "4" is too short for value_strings
+    assert render_mod.rounded_forms(1086.0) == (set(), set())
+
+
+def test_rounded_percent_forms_need_a_points_unit_or_an_approximation_word():
+    # Douenne: 0.269 printed as "27 p.p."; a bare "27%" share or "the 10% level" stays.
+    text = "winners are 27 p.p. more likely; 27% of respondents; about 27% higher; at the 10% level"
+    out, _ = render_mod.redact_values(text, [0.269, 0.1])
+    assert out == (
+        "winners are [withheld] p.p. more likely; 27% of respondents; about [withheld]% higher; "
+        "at the 10% level"
+    )
+
+
+def test_blind_render_passes_sample_sizes(tmp_path):
+    entry = _entry(
+        original_claims=[
+            bschema.OriginalClaim(description="slope", value=0.067, claim_type="coefficient", sample_size=174)
+        ]
+    )
+    rendered = _render(tmp_path, "blind", entry=entry, paper_text="observations\n174\nabout 6.7 percent\n")
+    paper = (rendered.task_file.parent / "paper.txt").read_text(encoding="utf-8")
+    assert "174" not in paper and "6.7" not in paper
+
+
 def test_catalog_has_pinned_claims_to_check():
     assert CATALOG
 
