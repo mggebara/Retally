@@ -8,6 +8,7 @@
 | Model | — |
 | Run | 2026-11-02-a |
 | Date | 2026-11-02T06:12:30Z |
+| Data access | public |
 | Results file | `benchmark/results/claude-code-4papers-all-modes-2026-11-02.json` |
 | Artifacts | `benchmark/results/artifacts/forsythe-2022-young-workers-recessions/independent/claude-code/20261102T062001Z` |
 | Run directory | `benchmark/reproductions/forsythe-2022-young-workers-recessions/independent/2026-11-02-a` |
@@ -35,7 +36,7 @@
 | `young_x_unemp_rate_nilf` | -0.49 (0.0332) | -0.584687 | 19.32% | ±0.0332 (se_band) | FAIL | FAIL |
 | `wage_young_x_unemp_rate_all_hires` | -0.0262 (0.0036) | -0.0251223 | 4.11% | ±0.0036 (se_band) | PASS | PASS |
 | `wage_experienced_x_unemp_rate_all_hires` | -0.0116 (0.00348) | -0.0103106 | 11.12% | ±0.00348 (se_band) | PASS | PASS |
-| `n_obs_full_sample` | 1.69485e+07 | 1.69644e+07 | 0.09% | ±169485 (relative) | PASS | PASS |
+| `n_obs_full_sample` | 1.69485e+07 | 1.69644e+07 | 0.09% | ±847426 (relative) | PASS | PASS |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 12/13 pass, which agrees with the row's 12/13.
 

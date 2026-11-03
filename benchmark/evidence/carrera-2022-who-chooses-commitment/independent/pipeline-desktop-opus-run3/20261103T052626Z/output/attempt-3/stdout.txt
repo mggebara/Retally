@@ -1,0 +1,201 @@
+Rows: 1292  Cols: 106 
+Column names:
+  [1] "wave"                        "wavenum"                    
+  [3] "type_of_info"                "treatment"                  
+  [5] "incentive"                   "incentivetext"              
+  [7] "age_categories"              "income_categories"          
+  [9] "educ"                        "student_status"             
+ [11] "working_status"              "married"                    
+ [13] "children"                    "female"                     
+ [15] "risk_aversion"               "visits"                     
+ [17] "past4"                       "previsits1"                 
+ [19] "previsits2"                  "previsits3"                 
+ [21] "previsits4"                  "previsits5"                 
+ [23] "previsits6"                  "previsits7"                 
+ [25] "previsits8"                  "visits_100days"             
+ [27] "avevisits_20wks"             "visits_next4weeks"          
+ [29] "goal"                        "percent_goal"               
+ [31] "days_0"                      "days_1"                     
+ [33] "days_2"                      "days_3"                     
+ [35] "days_5"                      "days_7"                     
+ [37] "days_12"                     "wtp1v0_decision"            
+ [39] "wtp1v2_decision"             "wtp1v4_decision"            
+ [41] "wtp1v6_decision"             "wtp1v8_decision"            
+ [43] "wtp1v10_decision"            "wtp1v12_decision"           
+ [45] "wtp1v14_decision"            "wtp1v16_decision"           
+ [47] "wtp1v18_decision"            "wtp1v20_decision"           
+ [49] "wtp1v22_decision"            "wtp1v24_decision"           
+ [51] "wtp1v26_decision"            "wtp1v28_decision"           
+ [53] "wtp1v30_decision"            "wtp1v0_decision_2ndtry"     
+ [55] "wtp1v2_decision_2ndtry"      "wtp1v4_decision_2ndtry"     
+ [57] "wtp1v6_decision_2ndtry"      "wtp1v8_decision_2ndtry"     
+ [59] "wtp1v10_decision_2ndtry"     "wtp1v12_decision_2ndtry"    
+ [61] "wtp1v14_decision_2ndtry"     "wtp1v16_decision_2ndtry"    
+ [63] "wtp1v18_decision_2ndtry"     "wtp1v20_decision_2ndtry"    
+ [65] "wtp1v22_decision_2ndtry"     "wtp1v24_decision_2ndtry"    
+ [67] "wtp1v26_decision_2ndtry"     "wtp1v28_decision_2ndtry"    
+ [69] "wtp1v30_decision_2ndtry"     "wtp1"                       
+ [71] "wtp2"                        "wtp3"                       
+ [73] "wtp5"                        "wtp7"                       
+ [75] "wtp12"                       "maxwtp1"                    
+ [77] "maxwtp2"                     "maxwtp3"                    
+ [79] "maxwtp5"                     "maxwtp7"                    
+ [81] "maxwtp12"                    "q169"                       
+ [83] "q170"                        "chose_commit12"             
+ [85] "chose_anticommit11"          "q295"                       
+ [87] "q296"                        "past100days_went"           
+ [89] "past100days_should"          "sliderintro_wtp1"           
+ [91] "q137"                        "q138"                       
+ [93] "out_of_town_days"            "percent_meet_commit12"      
+ [95] "percent_meet_anticommit"     "typical_days_exer_elsewhere"
+ [97] "passed_attention_check"      "passed_1st_try"             
+ [99] "passed_comprehension_check"  "prefer20_to_0"              
+[101] "areyousure_prefer0_to_20"    "prefer80contingent_to_0"    
+[103] "areyousure_prefer0_to_80"    "flag_exclude_exog"          
+[105] "flag_low_wtp"                "flag_confusion"             
+Wave table:
+wave
+  1   2   3 
+350 528 414 
+Daily agreement: visits = 0.995356  visits_next4weeks = 0.1369969 
+Actual attendance variable: visits 
+Mean WTP by rate: 17.92 31.92 47.47 85.59 118.38 212.03 
+Mean forecast by rate: 12.81 13.67 14.49 16.6 17.54 19.5  F0 mean: 11.42879 
+Mean BCP by pair: 5.8 0.758 1.46 3.518 -0.672 0.21 
+Treatment labels:
+
+       control        perday1        perday2        perday3        perday5 
+           427              1            305              2             77 
+       perday7 threshold80_12 
+           352            128 
+Treatment by wave:
+   wave
+tr    1   2   3
+  0 106 177 144
+  1 244 351 270
+Incentive table:
+       wave
+inc_num   1   2   3
+   0    106 177 144
+   1      0   1   0
+   2    116 189   0
+   3      1   1   0
+   5      1  74   2
+   7    126  86 140
+   <NA>   0   0 128
+Contract-assigned by wave:
+        wave
+contract   1   2   3
+   FALSE 350 528 286
+   TRUE    0   0 128
+Candidate flag variables: flag_low_wtp flag_confusion 
+   flag_low_wtp sum = 32 
+   flag_confusion sum = 117 
+Computed endogenous (WTP in (0,7) at assigned rate): 5 
+Candidate sample sizes:
+               rule1                rule2      rule1_endogcalc 
+                1152                 1280                 1147 
+       rule1_anyflag   rule1_flag_low_wtp rule1_flag_confusion 
+                1031                 1126                 1047 
+Chosen sample rule: rule1_flag_low_wtp 
+DEVIATION: Sample additionally excludes potentially endogenous assignments via rule rule1_flag_low_wtp chosen to match paper N=1126
+Mean BCP in sample: 1.991699 
+OLS estimation, Dep. Var.: bcp
+Observations: 1,126
+Fixed-effects: wave: 3
+Standard-errors: Heteroskedasticity-robust 
+          Estimate Std. Error   t value Pr(>|t|) 
+basic    -0.129858   0.504298 -0.257503  0.79684 
+enhanced  0.323250   0.476558  0.678302  0.49772 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 6.84561     Adj. R2: 0.001479
+                Within R2: 3.837e-4
+OLS estimation, Dep. Var.: bcp
+Observations: 1,126
+Fixed-effects: wave: 3
+Standard-errors: Heteroskedasticity-robust 
+          Estimate Std. Error   t value  Pr(>|t|)    
+basic    -0.183481   0.504989 -0.363336 0.7164226    
+enhanced  0.239320   0.467237  0.512203 0.6086096    
+z_goal    0.727662   0.270593  2.689144 0.0072699 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 6.8071     Adj. R2: 0.011801
+               Within R2: 0.011599
+OLS estimation, Dep. Var.: bcp
+Observations: 1,126
+Fixed-effects: wave: 3
+Standard-errors: Heteroskedasticity-robust 
+          Estimate Std. Error   t value Pr(>|t|) 
+basic    -0.100602   0.501990 -0.200407  0.84120 
+enhanced  0.309445   0.478287  0.646986  0.51777 
+z_act     0.300339   0.197452  1.521078  0.12852 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 6.83904     Adj. R2: 0.002505
+                Within R2: 0.002301
+More-contract columns: q169 chose_commit12 q170 
+DEVIATION: Unlabelled columns q169/q170 used as the >=8 and >=16 'more' contract choices
+Take-up at 8 : 0.6431095 
+Take-up at 12 : 0.4937833 
+Take-up at 16 : 0.3415783 
+Table 4 N: 2824 
+OLS estimation, Dep. Var.: y
+Observations: 2,824
+Fixed-effects: wave: 3,  th: 3
+Standard-errors: Clustered (id) 
+          Estimate Std. Error   t value Pr(>|t|) 
+basic    -0.027085   0.044202 -0.612768  0.54015 
+enhanced -0.024324   0.029821 -0.815650  0.41487 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.485902     Adj. R2: 0.053397
+                 Within R2: 6.012e-4
+OLS estimation, Dep. Var.: y
+Observations: 2,824
+Fixed-effects: wave: 3,  th: 3
+Standard-errors: Clustered (id) 
+          Estimate Std. Error   t value   Pr(>|t|)    
+basic    -0.026509   0.043922 -0.603535 0.54627479    
+enhanced -0.026027   0.029791 -0.873663 0.38248845    
+z_bcp     0.030501   0.008977  3.397809 0.00070305 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.484866     Adj. R2: 0.057093
+                 Within R2: 0.004857
+OLS estimation, Dep. Var.: y
+Observations: 2,824
+Fixed-effects: wave: 3,  th: 3
+Standard-errors: Clustered (id) 
+          Estimate Std. Error   t value Pr(>|t|)    
+basic    -0.029239   0.044130 -0.662563 0.507746    
+enhanced -0.027500   0.029885 -0.920201 0.357665    
+z_goal    0.029226   0.011872  2.461725 0.013976 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.485025     Adj. R2: 0.056476
+                 Within R2: 0.004206
+OLS estimation, Dep. Var.: y
+Observations: 2,824
+Fixed-effects: wave: 3,  th: 3
+Standard-errors: Clustered (id) 
+          Estimate Std. Error   t value  Pr(>|t|)    
+basic    -0.030281   0.044111 -0.686480 0.4925522    
+enhanced -0.024658   0.029531 -0.834976 0.4039087    
+z_act    -0.032806   0.012103 -2.710678 0.0068167 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.484821     Adj. R2: 0.057267
+                 Within R2: 0.00504 
+RESULT:bcp_basic_info_treatment_col1=-0.129858
+RESULT:bcp_enhanced_info_treatment_col1=0.323250
+RESULT:bcp_goal_minus_expected_attendance_col2=0.727662
+RESULT:bcp_actual_minus_expected_attendance_col3=0.300339
+RESULT:bcp_regression_observations=1126.000000
+RESULT:takeup_more_basic_info_treatment_col1=-0.027085
+RESULT:takeup_more_enhanced_info_treatment_col1=-0.024324
+RESULT:takeup_more_behavior_change_premium_col2=0.030501
+RESULT:takeup_more_goal_minus_expected_attendance_col3=0.029226
+RESULT:takeup_more_actual_minus_expected_attendance_col4=-0.032806
+RESULT:takeup_more_regression_observations=2824.000000

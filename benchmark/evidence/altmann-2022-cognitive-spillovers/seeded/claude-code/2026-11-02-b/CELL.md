@@ -8,6 +8,7 @@
 | Model | — |
 | Run | 2026-11-02-b |
 | Date | 2026-11-02T19:32:31Z |
+| Data access | public |
 | Results file | `benchmark/results/claude-code-run2-23papers-seeded-2026-11-02.json` |
 | Artifacts | `benchmark/results/artifacts/altmann-2022-cognitive-spillovers/seeded/claude-code/20261102T194315Z` |
 | Run directory | `benchmark/reproductions/altmann-2022-cognitive-spillovers/seeded/2026-11-02-b` |
@@ -32,8 +33,8 @@
 | `background_quality_intervention_lab_t3_col2` | -0.038 (0.014) | -0.037937 | 0.17% | ±0.00076 (relative) | PASS | PASS |
 | `memory_intervention_online_t3_col5` | -0.114 (0.019) | -0.114252 | 0.22% | ±0.00228 (relative) | PASS | PASS |
 | `payoff_share_intervention_t4_col1` | 0.006 (0.013) | 0.005834 | 2.77% | ±0.0005 (printed_precision) | PASS | PASS |
-| `n_obs_lab_tables_2_to_4` | 12160 | 12160 | 0.00% | ±121.6 (relative) | PASS | PASS |
-| `n_subjects_lab_tables_2_to_4` | 608 | 608 | 0.00% | ±6.08 (relative) | PASS | PASS |
+| `n_obs_lab_tables_2_to_4` | 12160 | 12160 | 0.00% | ±608 (relative) | PASS | PASS |
+| `n_subjects_lab_tables_2_to_4` | 608 | 608 | 0.00% | ±30.4 (relative) | PASS | PASS |
 | `memory_intervention_online_t3_col6` | -0.113 (0.017) | -0.113364 | 0.32% | ±0.00226 (relative) | PASS | PASS |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 13/13 pass, which agrees with the row's 13/13.

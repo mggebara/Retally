@@ -394,3 +394,44 @@ def test_malformed_date_fails_loudly(tmp_path):
     _write_yaml(p, _DATED_ENTRY.format(extra='publication_date: "May 2022"'))
     with pytest.raises(SchemaError, match="publication_date"):
         load_entry(p)
+
+
+# ── COUNT claims ────────────────────────────────────────────────────────
+
+
+def test_claim_type_count_loads(tmp_path):
+    p = tmp_path / "x.yaml"
+    _write_yaml(
+        p,
+        """
+id: foo
+i4r_report_url: https://example.org/foo
+language: r
+outcome_label: reproducible
+paper:
+  source: "raw paper text"
+original_claims:
+  - description: n_obs
+    value: 5775
+    unit: observations
+    claim_type: count
+""",
+    )
+    [claim] = load_entry(p).original_claims
+    assert claim.claim_type == "count"
+    assert claim.value == 5775.0
+    assert claim.decimals == 0
+
+
+def test_catalog_count_claims_are_integers():
+    """Every ``count`` claim in the catalog is a written integer (a number of units)."""
+    counts = [
+        (e.id, c)
+        for e in load_catalog(REPO_ROOT / "benchmark" / "papers")
+        for c in e.original_claims
+        if c.claim_type == "count"
+    ]
+    assert len(counts) == 62
+    for entry_id, c in counts:
+        assert float(c.value).is_integer() and c.decimals == 0, (entry_id, c.description)
+        assert c.standard_error is None, (entry_id, c.description)

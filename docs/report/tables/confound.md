@@ -5,11 +5,11 @@ Same papers, same modes, three ways.  "Pipeline on Opus 5.5" is the API run (`cl
 | Papers | Mode | Pipeline 4.7 | Pipeline on Opus 5.5 | Agent |
 |---|---|---:|---:|---:|
 | 7 papers (3.2 set) | seeded | 55 / 79 (46) | 79 / 79 (78) | 78 / 79 (78) |
-| 7 papers (3.2 set) | independent | 41 / 79 (27) | 67 / 79 (51) | 78 / 79 (77) |
-| 7 papers (3.2 set) | blind | 24 / 79 (24) | 51 / 79 (51) | 75 / 79 (70) |
+| 7 papers (3.2 set) | independent | 47 / 79 (27) | 67 / 79 (51) | 78 / 79 (77) |
+| 7 papers (3.2 set) | blind | 29 / 79 (24) | 52 / 79 (51) | 75 / 79 (70) |
 | API route: grier-2023, leeson-2022, manekin-2022, montero-2022 | seeded | 28 / 44 (19) | 44 / 44 (43) | 43 / 44 (43) |
-| API route: grier-2023, leeson-2022, manekin-2022, montero-2022 | independent | 24 / 44 (17) | 33 / 44 (21) | 43 / 44 (42) |
-| API route: grier-2023, leeson-2022, manekin-2022, montero-2022 | blind | 10 / 44 (10) | 20 / 44 (20) | 43 / 44 (42) |
+| API route: grier-2023, leeson-2022, manekin-2022, montero-2022 | independent | 26 / 44 (17) | 33 / 44 (21) | 43 / 44 (42) |
+| API route: grier-2023, leeson-2022, manekin-2022, montero-2022 | blind | 11 / 44 (10) | 21 / 44 (20) | 43 / 44 (42) |
 | oracle route: adams-2023, arias-2022, hanlon-2022 | seeded | 27 / 35 (27) | 35 / 35 (35) | 35 / 35 (35) |
-| oracle route: adams-2023, arias-2022, hanlon-2022 | independent | 17 / 35 (10) | 34 / 35 (30) | 35 / 35 (35) |
-| oracle route: adams-2023, arias-2022, hanlon-2022 | blind | 14 / 35 (14) | 31 / 35 (31) | 32 / 35 (28) |
+| oracle route: adams-2023, arias-2022, hanlon-2022 | independent | 21 / 35 (10) | 34 / 35 (30) | 35 / 35 (35) |
+| oracle route: adams-2023, arias-2022, hanlon-2022 | blind | 18 / 35 (14) | 31 / 35 (31) | 32 / 35 (28) |

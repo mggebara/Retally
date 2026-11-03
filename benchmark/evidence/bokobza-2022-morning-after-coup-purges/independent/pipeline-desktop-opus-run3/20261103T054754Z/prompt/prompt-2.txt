@@ -1,0 +1,529 @@
+You are fixing R code that was generated to reproduce results from an econometrics paper.
+
+## Original Code
+```r
+suppressPackageStartupMessages({
+  library(haven)
+  library(fixest)
+  library(dplyr)
+})
+set.seed(42)
+
+ddir <- "<repo>/.cache/datasets/bokobza_2022_morning_after_coup_purges.script-free"
+
+res <- list()
+put <- function(name, val) {
+  v <- suppressWarnings(as.numeric(val))
+  if (length(v) == 0) v <- NA_real_
+  res[[name]] <<- v[1]
+}
+
+lagv <- function(x, id, yr) {
+  key <- paste(id, yr)
+  lk <- paste(id, yr - 1)
+  x[match(lk, key)]
+}
+
+needs_log <- function(x, v) {
+  if (grepl("ln|log", v, ignore.case = TRUE)) return(FALSE)
+  x <- x[is.finite(x)]
+  if (!length(x)) return(FALSE)
+  if (min(x) <= 0) return(FALSE)
+  med <- median(x)
+  (med > 50) || (mean(x) / med > 1.5)
+}
+
+get_lagged_ctrl <- function(df, pat, excl, idv, yrv, prefer = NULL) {
+  nm <- names(df)
+  c <- nm[grepl(pat, nm, ignore.case = TRUE) & !grepl(excl, nm, ignore.case = TRUE)]
+  c <- c[sapply(c, function(v) is.numeric(df[[v]]))]
+  if (!length(c)) return(NULL)
+  score <- function(v) {
+    s <- mean(is.finite(df[[v]]))
+    if (!is.null(prefer) && grepl(prefer, v, ignore.case = TRUE)) s <- s + 1
+    s
+  }
+  lagged_name <- (grepl(paste0("^l(ag)?_?[a-z0-9_]*", pat), c, ignore.case = TRUE) &
+                    !grepl("^ln|^log", c, ignore.case = TRUE)) |
+    grepl("lag", c, ignore.case = TRUE)
+  if (any(lagged_name)) {
+    cc <- c[lagged_name]
+    v <- cc[which.max(sapply(cc, score))]
+    x <- df[[v]]
+    if (needs_log(x, v)) x <- log(ifelse(x > 0, x, NA))
+    cat("Control for", pat, "from pre-lagged column", v, "\n")
+    return(x)
+  }
+  v <- c[which.max(sapply(c, score))]
+  x <- df[[v]]
+  if (needs_log(x, v)) x <- log(ifelse(x > 0, x, NA))
+  cat("Control for", pat, "from column", v, "(lagged here)\n")
+  lagv(x, df[[idv]], df[[yrv]])
+}
+
+make_failed <- function(df, att_cands, coup_cands) {
+  att <- NULL
+  for (a in att_cands) if (a %in% names(df)) { att <- a; break }
+  if (is.null(att)) return(NULL)
+  x <- suppressWarnings(as.numeric(df[[att]]))
+  x <- ifelse(is.na(x), NA, as.numeric(x > 0))
+  cp <- NULL
+  for (a in coup_cands) if (a %in% names(df)) { cp <- a; break }
+  if (!is.null(cp)) {
+    y <- suppressWarnings(as.numeric(df[[cp]]))
+    ov <- sum(x == 1 & y > 0, na.rm = TRUE)
+    cat("Coup attempt var:", att, " success var:", cp, " overlap:", ov, "\n")
+    if (ov > 0) x <- ifelse(!is.na(y) & y > 0, 0, x)
+  } else cat("Coup attempt var:", att, "\n")
+  x
+}
+
+## ---------------------------------------------------------------- country level
+cl <- tryCatch(as.data.frame(zap_labels(read_dta(file.path(ddir, "morning_after_dataset_countrylevel.dta")))),
+               error = function(e) NULL)
+
+if (!is.null(cl)) {
+  cat("Country-level columns:\n"); print(names(cl))
+  idv <- if ("COUNTRY_ID" %in% names(cl)) "COUNTRY_ID" else grep("country", names(cl), ignore.case = TRUE, value = TRUE)[1]
+  yrv <- if ("YEAR_DATA" %in% names(cl)) "YEAR_DATA" else grep("year", names(cl), ignore.case = TRUE, value = TRUE)[1]
+  cl$id_ <- cl[[idv]]
+  cl$yr_ <- as.numeric(cl[[yrv]])
+
+  if ("replacement_rateadj_minister" %in% names(cl)) {
+    cl$dv <- cl$replacement_rateadj_minister
+  } else if ("retention_rateadj_minister" %in% names(cl)) {
+    cl$dv <- 1 - cl$retention_rateadj_minister
+  }
+
+  att_c <- grep("^coupattem", names(cl), value = TRUE)
+  att_c <- att_c[!grepl("month|_br|type|last|lag|^l", att_c, ignore.case = TRUE)]
+  att_c <- c(att_c[grepl("whogov", att_c)], att_c[!grepl("whogov", att_c)])
+  cp_c <- grep("^coup_", names(cl), value = TRUE)
+  cp_c <- cp_c[!grepl("month|_br|type|last|lag", cp_c, ignore.case = TRUE)]
+  cp_c <- c(cp_c[grepl("whogov", cp_c)], cp_c[!grepl("whogov", cp_c)])
+  cl$fca <- make_failed(cl, att_c, cp_c)
+  cat("Failed coups (all years):", sum(cl$fca, na.rm = TRUE), "\n")
+
+  if ("ldemocracy_br" %in% names(cl)) cl$ldem <- cl$ldemocracy_br else
+    cl$ldem <- lagv(cl$democracy_br, cl$id_, cl$yr_)
+
+  g <- get_lagged_ctrl(cl, "gdp", "grow", "id_", "yr_", prefer = "pc|cap|pop")
+  p <- get_lagged_ctrl(cl, "pop", "oil|valuepop|gdp", "id_", "yr_")
+  cl$lgdp <- if (is.null(g)) NA_real_ else g
+  cl$lpop <- if (is.null(p)) NA_real_ else p
+
+  for (v in c("military_c", "party_c", "monarchy_c")) {
+    nv <- paste0("l_", v)
+    if (paste0("l", v) %in% names(cl)) cl[[nv]] <- cl[[paste0("l", v)]]
+    else if (v %in% names(cl)) cl[[nv]] <- lagv(cl[[v]], cl$id_, cl$yr_)
+    else cl[[nv]] <- NA_real_
+  }
+
+  d <- cl[!is.na(cl$ldem) & cl$ldem == 0, ]
+  cat("Autocracy country-years:", nrow(d), "\n")
+  leadv <- if ("leader_cab_id" %in% names(d)) "leader_cab_id" else NULL
+
+  fit <- function(rhs, fe) {
+    f <- as.formula(paste("dv ~", rhs, "|", fe))
+    tryCatch(feols(f, data = d, cluster = ~id_), error = function(e) { cat("ERR:", conditionMessage(e), "\n"); NULL })
+  }
+  base_rhs <- "fca + lgdp + lpop"
+  main_rhs <- "fca + lgdp + lpop + l_military_c + l_party_c + l_monarchy_c"
+
+  m1 <- fit(base_rhs, "id_ + yr_")
+  m2 <- fit(main_rhs, "id_ + yr_")
+  if (!is.null(m1)) { print(summary(m1)); put("failed_coup_base_country_fe", coef(m1)["fca"]) }
+  if (!is.null(m2)) { print(summary(m2)); put("failed_coup_main_country_fe", coef(m2)["fca"]) }
+  if (!is.null(leadv)) {
+    m3 <- fit(base_rhs, paste(leadv, "+ yr_"))
+    m4 <- fit(main_rhs, paste(leadv, "+ yr_"))
+    if (!is.null(m3)) { print(summary(m3)); put("failed_coup_base_leader_fe", coef(m3)["fca"]) }
+    if (!is.null(m4)) { print(summary(m4)); put("failed_coup_main_leader_fe", coef(m4)["fca"]) }
+  }
+}
+
+## ---------------------------------------------------------------- individual level
+ind <- tryCatch(readRDS(file.path(ddir, "morning_after_dataset_individuallevel.rds")), error = function(e) NULL)
+
+if (!is.null(ind)) {
+  ind <- as.data.frame(zap_labels(as.data.frame(ind)))
+  for (v in names(ind)) if (is.factor(ind[[v]])) ind[[v]] <- as.character(ind[[v]])
+  cat("Individual-level columns:\n"); print(names(ind))
+  for (v in names(ind)) {
+    if (is.character(ind[[v]])) {
+      u <- unique(ind[[v]])
+      if (length(u) <= 15) { cat("Levels of", v, ":\n"); print(table(ind[[v]], useNA = "ifany")) }
+    }
+  }
+
+  ind$cid <- if ("country_isocode" %in% names(ind)) ind$country_isocode else ind$country_name
+  ind$yr <- as.numeric(ind$year)
+
+  # purged
+  pv <- ind$purged_y1
+  if (is.character(pv)) pv <- as.numeric(tolower(pv) %in% c("1", "yes", "true", "purged"))
+  ind$purged <- as.numeric(pv)
+
+  ind$fca <- make_failed(ind, c("coupattempt_presentyear"), c("coup_presentyear"))
+
+  # experience
+  ind$e1 <- suppressWarnings(as.numeric(ind$experience))
+  ind$e2 <- ind$e1^2
+  ind$e3 <- ind$e1^3
+
+  # country-year controls
+  gcand <- names(ind)[grepl("gdp", names(ind), ignore.case = TRUE)]
+  ind$lgdp <- NA_real_; ind$lpop <- NA_real_; ind$ldem <- NA_real_
+  ind_has_gdp <- length(gcand) > 0
+  if (ind_has_gdp) {
+    cy <- ind[!duplicated(paste(ind$cid, ind$yr)), ]
+    g <- get_lagged_ctrl(cy, "gdp", "grow", "cid", "yr", prefer = "pc|cap|pop")
+    p <- get_lagged_ctrl(cy, "pop", "oil|valuepop|gdp", "cid", "yr")
+    cy$lgdp_ <- if (is.null(g)) NA_real_ else g
+    cy$lpop_ <- if (is.null(p)) NA_real_ else p
+    k <- match(paste(ind$cid, ind$yr), paste(cy$cid, cy$yr))
+    ind$lgdp <- cy$lgdp_[k]; ind$lpop <- cy$lpop_[k]
+  }
+  if ("ldemocracy_br" %in% names(ind)) {
+    ind$ldem <- as.numeric(ind$ldemocracy_br)
+  } else if ("democracy_br" %in% names(ind)) {
+    cy <- ind[!duplicated(paste(ind$cid, ind$yr)), ]
+    cy$ld <- lagv(as.numeric(cy$democracy_br), cy$cid, cy$yr)
+    ind$ldem <- cy$ld[match(paste(ind$cid, ind$yr), paste(cy$cid, cy$yr))]
+  }
+
+  # merge from country-level data where needed
+  if (!is.null(cl) && (all(is.na(ind$lgdp)) || all(is.na(ind$ldem)))) {
+    best <- NULL; bestov <- 0; bestik <- NULL
+    for (col in names(cl)) {
+      x <- cl[[col]]
+      if (!(is.character(x) || is.numeric(x))) next
+      ux <- unique(as.character(x))
+      if (length(ux) < 20) next
+      for (ik in intersect(c("country_isocode", "country_name"), names(ind))) {
+        ov <- mean(unique(as.character(ind[[ik]])) %in% ux)
+        if (ov > bestov) { bestov <- ov; best <- col; bestik <- ik }
+      }
+    }
+    cat("Merge key:", best, "<->", bestik, " overlap:", bestov, "\n")
+    if (!is.null(best) && bestov > 0.3) {
+      key_c <- paste(as.character(cl[[best]]), cl$yr_)
+      key_i <- paste(as.character(ind[[bestik]]), ind$yr)
+      k <- match(key_i, key_c)
+      if (all(is.na(ind$lgdp))) { ind$lgdp <- cl$lgdp[k]; ind$lpop <- cl$lpop[k] }
+      if (all(is.na(ind$ldem))) ind$ldem <- cl$ldem[k]
+    }
+  }
+
+  # exclude the leader
+  is_leader <- rep(FALSE, nrow(ind))
+  if ("leader" %in% names(ind)) {
+    lv <- ind$leader
+    if (is.numeric(lv) || is.logical(lv)) {
+      is_leader <- !is.na(lv) & as.numeric(lv) == 1
+    } else if (all(unique(na.omit(lv)) %in% c("0", "1", "Yes", "No", "yes", "no", "TRUE", "FALSE"))) {
+      is_leader <- tolower(lv) %in% c("1", "yes", "true")
+    } else if ("name" %in% names(ind)) {
+      is_leader <- !is.na(lv) & !is.na(ind$name) & lv == ind$name
+    }
+  }
+  for (v in intersect(c("classification", "prestige_1", "minister_classification", "Group"), names(ind))) {
+    if (is.character(ind[[v]])) is_leader <- is_leader | (!is.na(ind[[v]]) & tolower(trimws(ind[[v]])) == "leader")
+  }
+  cat("Leader rows:", sum(is_leader), "\n")
+
+  S <- ind[!is_leader & !is.na(ind$ldem) & ind$ldem == 0 &
+             !is.na(ind$purged) & !is.na(ind$fca), ]
+  if (nrow(S) == 0) S <- ind[!is_leader & !is.na(ind$purged) & !is.na(ind$fca), ]
+  cat("Individual sample (autocracy, non-leader):", nrow(S), "\n")
+
+  find_cat <- function(df, regs, prefer) {
+    out <- c()
+    for (v in names(df)) {
+      x <- df[[v]]
+      if (!is.character(x)) next
+      u <- unique(x[!is.na(x)])
+      if (length(u) < 2 || length(u) > 40) next
+      if (all(sapply(regs, function(r) any(grepl(r, u, ignore.case = TRUE))))) out <- c(out, v)
+    }
+    if (!length(out)) return(NULL)
+    pr <- intersect(prefer, out)
+    if (length(pr)) pr[1] else out[1]
+  }
+
+  run_mod <- function(df, gvar, ref, cubic = TRUE) {
+    df$g_ <- gvar
+    df <- df[!is.na(df$g_), ]
+    lev <- setdiff(sort(unique(df$g_)), ref)
+    rhs <- "fca"
+    for (i in seq_along(lev)) {
+      df[[paste0("D", i)]] <- as.numeric(df$g_ == lev[i])
+      df[[paste0("FD", i)]] <- df$fca * df[[paste0("D", i)]]
+    }
+    rhs <- c("fca", paste0("D", seq_along(lev)), paste0("FD", seq_along(lev)))
+    if (cubic) rhs <- c(rhs, "e1", "e2", "e3")
+    rhs <- c(rhs, "lgdp", "lpop")
+    f <- as.formula(paste("purged ~", paste(rhs, collapse = " + "), "| cid + yr"))
+    m <- tryCatch(feols(f, data = df, cluster = ~cid), error = function(e) { cat("ERR:", conditionMessage(e), "\n"); NULL })
+    if (!is.null(m)) { cat("Reference:", ref, " levels:", paste(lev, collapse = " | "), "\n"); print(summary(m)) }
+    list(m = m, lev = lev)
+  }
+  getint <- function(r, L) {
+    if (is.null(r$m) || is.null(L) || !(L %in% r$lev)) return(NA)
+    coef(r$m)[paste0("FD", which(r$lev == L))]
+  }
+
+  # importance variable
+  impv <- find_cat(S, c("junior", "low"), c("prestige_1", "classification", "Group", "minister_classification"))
+  imp <- NULL; imp_ref <- NULL; drop_lowjr <- rep(FALSE, nrow(S))
+  if (!is.null(impv)) {
+    imp <- S[[impv]]
+    u <- unique(imp[!is.na(imp)])
+    refs <- u[grepl("prime|presid|\\bpm\\b", u, ignore.case = TRUE) &
+                !grepl("vice|deputy|leader|top", u, ignore.case = TRUE)]
+    if (length(refs) > 1) { imp[imp %in% refs] <- "REF_PM_PRES"; imp_ref <- "REF_PM_PRES" } else if (length(refs) == 1) imp_ref <- refs
+    drop_lowjr <- !is.na(imp) & grepl("junior|low", imp, ignore.case = TRUE)
+    cat("Importance var:", impv, " ref:", imp_ref, "\n")
+  } else if ("importance_numeric" %in% names(S)) {
+    iv <- suppressWarnings(as.numeric(S$importance_numeric))
+    tb <- table(iv)
+    lv <- as.numeric(names(tb))
+    lo <- min(lv); hi <- max(lv)
+    if (tb[as.character(lo)] < tb[as.character(hi)]) { refl <- lo; lowside <- sort(lv, decreasing = TRUE)[1:2] } else { refl <- hi; lowside <- sort(lv)[1:2] }
+    imp <- as.character(iv); imp_ref <- as.character(refl)
+    drop_lowjr <- !is.na(iv) & iv %in% lowside
+    cat("Importance numeric fallback, ref:", imp_ref, "\n")
+  }
+
+  # H2a experience
+  if ("experience_group" %in% names(S)) {
+    SE <- S[!drop_lowjr, ]
+    eg <- as.character(SE$experience_group)
+    mexp <- tapply(SE$e1, eg, mean, na.rm = TRUE)
+    if (all(is.na(mexp))) { lv <- sort(unique(na.omit(eg))); ref <- lv[1]; top <- lv[length(lv)] } else {
+      ref <- names(mexp)[which.min(mexp)]; top <- names(mexp)[which.max(mexp)]
+    }
+    r <- run_mod(SE, eg, ref, cubic = FALSE)
+    if (!is.null(r$m)) {
+      put("failed_coup_experience_model", coef(r$m)["fca"])
+      put("failed_coup_x_over_6_years_experience", getint(r, top))
+    }
+  }
+
+  # H2b affiliation
+  affv <- find_cat(S, c("other", "leader"), c("party_group", "leader_party", "party"))
+  if (!is.null(affv)) {
+    a <- S[[affv]]; u <- unique(a[!is.na(a)])
+    ref <- u[grepl("other", u, ignore.case = TRUE)][1]
+    lp <- u[grepl("leader", u, ignore.case = TRUE) & !grepl("other", u, ignore.case = TRUE)][1]
+    cat("Affiliation var:", affv, "\n")
+    r <- run_mod(S, a, ref, cubic = TRUE)
+    if (!is.null(r$m)) {
+      put("failed_coup_affiliation_model", coef(r$m)["fca"])
+      put("failed_coup_x_leaders_party", getint(r, lp))
+    }
+  }
+
+  # H3a responsibility
+  resv <- find_cat(S, c("defen", "natur|resour"), c("minister_classification", "classification", "Group", "portfolio_1"))
+  if (!is.null(resv)) {
+    a <- S[[resv]]; u <- unique(a[!is.na(a)])
+    ref <- u[grepl("defen", u, ignore.case = TRUE)][1]
+    nr <- u[grepl("natur|resour", u, ignore.case = TRUE)][1]
+    cat("Responsibility var:", resv, "\n")
+    r <- run_mod(S, a, ref, cubic = TRUE)
+    if (!is.null(r$m)) {
+      put("failed_coup_responsibility_model", coef(r$m)["fca"])
+      put("failed_coup_x_natural_resources", getint(r, nr))
+    }
+  }
+
+  # H3b importance
+  if (!is.null(imp) && !is.null(imp_ref)) {
+    r <- run_mod(S, imp, imp_ref, cubic = TRUE)
+    if (!is.null(r$m)) put("failed_coup_importance_model", coef(r$m)["fca"])
+  }
+}
+
+nms <- c("failed_coup_base_country_fe", "failed_coup_main_country_fe",
+         "failed_coup_base_leader_fe", "failed_coup_main_leader_fe",
+         "failed_coup_experience_model", "failed_coup_x_over_6_years_experience",
+         "failed_coup_affiliation_model", "failed_coup_x_leaders_party",
+         "failed_coup_responsibility_model", "failed_coup_x_natural_resources",
+         "failed_coup_importance_model")
+for (n in nms) {
+  v <- if (!is.null(res[[n]])) res[[n]] else NA
+  cat(sprintf("RESULT:%s=%s\n", n, ifelse(is.na(v), "NA", format(v, digits = 6))))
+}
+```
+
+## Error / Unexpected Output
+```
+NOTES: 573 observations removed because of NA values (LHS: 20, RHS: 562).
+       2/0 fixed-effect singletons were removed (2 observations).
+NOTES: 618 observations removed because of NA values (LHS: 20, RHS: 608).
+       1/0 fixed-effect singleton was removed (1 observation).
+NOTES: 573 observations removed because of NA values (LHS: 20, RHS: 562).
+       175/0 fixed-effect singletons were removed (175 observations).
+NOTES: 618 observations removed because of NA values (LHS: 20, RHS: 608).
+       165/0 fixed-effect singletons were removed (165 observations).
+Error in if (tb[as.character(lo)] < tb[as.character(hi)]) { : 
+  missing value where TRUE/FALSE needed
+In addition: Warning messages:
+1: In min(lv) : no non-missing arguments to min; returning Inf
+2: In max(lv) : no non-missing arguments to max; returning -Inf
+Execution halted
+
+```
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+Country-level columns:
+ [1] "COUNTRY_DATA"                     "COUNTRY_ID"                      
+ [3] "YEAR_DATA"                        "ccode"                           
+ [5] "leader_cab_id"                    "democracy1"                      
+ [7] "independent"                      "replacement_rateadj_minister"    
+ [9] "replacement_rateadj_minister_300" "replacement_rateadj_minister_200"
+[11] "replacement_rateadj_minister_100" "leaderexperience_continuous"     
+[13] "coupattempt_whogov"               "coupattempt_month_whogov"        
+[15] "gdp_cap_pwt_ln"                   "pop_pwt_ln"                      
+[17] "military_c"                       "monarchy_c"                      
+[19] "party_c"                          "elec_all"                        
+[21] "t1_e_a"                           "oil_valuepop_2014_ln"            
+[23] "growth_pwt"                       "onset1"                          
+[25] "nonvio_camp_2"                    "mid_onset"                       
+[27] "war_onset"                        "domestic3_10"                    
+[29] "coupattempt_whogov_br"            "polity2"                         
+[31] "lpolity2"                         "democracy_br"                    
+[33] "ldemocracy_br"                    "system_category"                 
+[35] "latent_personalism"               "coupattempt_whogov_type_br"      
+[37] "type_num"                        
+Coup attempt var: coupattempt_whogov 
+Failed coups (all years): 136 
+Control for gdp from column gdp_cap_pwt_ln (lagged here)
+Control for pop from column pop_pwt_ln (lagged here)
+Autocracy country-years: 4263 
+OLS estimation, Dep. Var.: dv
+Observations: 3,688
+Fixed-effects: id_: 113,  yr_: 51
+Standard-errors: Clustered (id_) 
+      Estimate Std. Error  t value Pr(>|t|)    
+fca   0.079195   0.033055  2.39585 0.018239 *  
+lgdp -0.039681   0.019528 -2.03202 0.044518 *  
+lpop -0.118296   0.059128 -2.00070 0.047844 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.252009     Adj. R2: 0.189155
+                 Within R2: 0.005366
+OLS estimation, Dep. Var.: dv
+Observations: 3,644
+Fixed-effects: id_: 113,  yr_: 51
+Standard-errors: Clustered (id_) 
+              Estimate Std. Error  t value  Pr(>|t|)    
+fca           0.086943   0.032543  2.67163 0.0086741 ** 
+lgdp         -0.034336   0.020510 -1.67407 0.0969070 .  
+lpop         -0.121687   0.060534 -2.01022 0.0468113 *  
+l_military_c -0.039935   0.029505 -1.35351 0.1786175    
+l_party_c    -0.066866   0.027973 -2.39035 0.0185008 *  
+l_monarchy_c  0.037376   0.026022  1.43635 0.1536912    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.249564     Adj. R2: 0.193056
+                 Within R2: 0.008423
+OLS estimation, Dep. Var.: dv
+Observations: 3,515
+Fixed-effects: leader_cab_id: 336,  yr_: 51
+Standard-errors: Clustered (id_) 
+      Estimate Std. Error  t value Pr(>|t|)    
+fca   0.059360   0.035252  1.68389 0.094987 .  
+lgdp -0.031952   0.024565 -1.30073 0.196021 
+[... 2679 characters omitted ...]
+ty_group :
+
+ independent leader_party  other_party      unknown         <NA> 
+       38333       114723        27938        12538        11992 
+Levels of coupattempt_presentyear :
+
+   Coup attempt No coup attempt            <NA> 
+           3055          189559           12910 
+Levels of coupattempt_whogov_type_br :
+
+     0    Civ    Mil  Royal   <NA> 
+190471   1299   2967     72  10715 
+Levels of democracy_lag_br :
+
+Autocracy Democracy      <NA> 
+   120984     81264      3276 
+Levels of importance_factor :
+
+                                                    0 
+                                                  383 
+                                                    5 
+                                                 8059 
+         Junior minister\nor other low-\nranking post 
+                                                21007 
+                                low-ranking\nminister 
+                                                12983 
+                             Medium-ranking\nminister 
+                                               114497 
+               Prime minister/President\n(not leader) 
+                                                 3608 
+Vice president,\ndeputy prime minister,\ntop minister 
+                                                34862 
+                                                 <NA> 
+                                                10125 
+Levels of Group :
+
+Prestige 
+  205524 
+Levels of minister_type :
+
+          Minister of Defense           Minister of Finance 
+                         6316                          7728 
+  Minister of Foreign Affairs Minister of Natural Resources 
+                         7675                          6133 
+       Other type of minister                          <NA> 
+                       125514                         52158 
+Levels of minister_classification :
+
+      1. Energy &\nNatural Resources      2. Public utility\n& provisions 
+                                6133                                48947 
+                3. Economic\naffairs 4. Administration\n&internal affairs 
+                               25904                                29622 
+                            5. Other     6. Communications &\nInformation 
+                               29172                                 8769 
+                  7. Foreign Affairs               8. Security &\nDefense 
+                               10075                                10440 
+                                <NA> 
+                               36462 
+Levels of experience_group :
+
+       1year    2-3 years    4-6 years Over 6 years 
+       50368        64168        47095        43893 
+Coup attempt var: coupattempt_presentyear  success var: coup_presentyear  overlap: 0 
+Control for gdp from pre-lagged column gdp_cap_pwt_ln_lag 
+Control for pop from pre-lagged column pop_pwt_ln_lag 
+Merge key: COUNTRY_DATA <-> country_name  overlap: 0.9044944 
+Leader rows: 8059 
+Individual sample (autocracy, non-leader): 0
+```
+
+## Task
+Fix specifically the identified problem above. Do not rewrite the entire approach unless necessary.
+
+## Reminder: Output Convention
+The fixed R code MUST emit each reproduced metric on its own line using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names.
+
+## Reminder: Constraints
+- The dataset is a directory tree at '<repo>/.cache/datasets/bokobza_2022_morning_after_coup_purges.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+- Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+- Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+- Do NOT access the internet.
+- Do NOT call system() / system2().
+- Use set.seed(42) for reproducibility.
+- Print all RESULT: lines at the end via cat().
+
+Output ONLY the corrected R code — no explanation, no markdown fences.

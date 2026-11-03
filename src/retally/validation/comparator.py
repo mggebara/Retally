@@ -25,6 +25,10 @@ Tolerance
 The default tolerance is 1 % relative error for most metrics.  Some metrics
 have tighter conventions (p-values should be exact) while others are looser
 (wall-clock times, memory usage).  Override per-metric via ``_default_tolerance``.
+Per type: accuracy, F1, AUC, precision, recall, R² and OTHER (F statistics,
+percentage points, ...) 1 %; correlation and coefficients 2 %; RMSE, MAE,
+effect sizes, standard errors and counts (``COUNT``: observations,
+clusters, respondents) 5 %; p-values 0.1 %.
 
 Per-mode tolerance policy
 -------------------------
@@ -61,9 +65,9 @@ tolerance.  When a claim records its printed precision
 where ``tolerance`` is whatever the mode's policy gave (per-type
 relative, or the SE band).  The floor never narrows a band; it applies
 identically in seeded, independent and blind modes, so a reproduction
-that rounds to the printed value always passes.  Written integers are
-exact (``decimals=0``: ±0.5, i.e. an exact match for a count) unless the
-catalog says otherwise with a negative ``decimals``.  Each result records
+that rounds to the printed value always passes.  Written integers get a
+floor of ±0.5 (``decimals=0``) unless the catalog says otherwise with a
+negative ``decimals``; for a ``COUNT`` above 10 the 5 % band is wider.  Each result records
 which bound was binding in ``tolerance_source`` (``"relative"``,
 ``"se_band"`` or ``"printed_precision"``).
 
@@ -361,6 +365,9 @@ class ResultComparator:
             replicators often see SE differences of 5-10 % from re-runs.
           - R_SQUARED → 0.01 (1 %).  Usually reported to 3 decimal
             places; 1 % matches typical precision.
+          - COUNT → 0.05 (5 %).  Sample sizes (observations, clusters,
+            respondents) shift by a few percent when a reproduction
+            applies the sample restrictions slightly differently.
 
         - OTHER → ``self.default_tolerance``
         """
@@ -378,6 +385,7 @@ class ResultComparator:
             ClaimType.COEFFICIENT: 0.02,
             ClaimType.STANDARD_ERROR: 0.05,
             ClaimType.R_SQUARED: 0.01,
+            ClaimType.COUNT: 0.05,
             ClaimType.OTHER: self.default_tolerance,
         }
         return mapping.get(claim.claim_type, self.default_tolerance)

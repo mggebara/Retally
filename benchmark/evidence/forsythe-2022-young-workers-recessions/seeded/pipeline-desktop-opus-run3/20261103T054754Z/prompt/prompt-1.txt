@@ -1,0 +1,1268 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: Why Don’t Firms Hire Young Workers During
+Abstract (first 500 chars): Recessions are known to be particularly damaging to young workers’ employment
+outcomes. I ﬁnd that during recessions the hiring rate falls faster for young workers
+than for more-experienced workers. I show this cannot be explained by the composition
+of jobs or workers’ labor supply decisions, and I conclude that ﬁrms preferentially hire
+experienced workers during periods of high unemployment. I develop a new model
+of cyclical upgrading that relaxes the classic assumptions of exogenous ﬁrm size a
+Methodology Summary: - **Data and sample:** Matched monthly CPS panel, January 1994 to September 2016. Consecutive months are linked with the Madrian and Lefgren (1999) method: administrative IDs, with matches confirmed on sex, race and age. The sample keeps civilians over 16 with non-missing age and education. Excluded: May–August 1995 (no longitudinal link ID) and month pairs that span the 8-month sampling break between months-in-sample 4 and 5. The result is about 16.9 million person-month observations (Table B.1). There is no train/test split or cross-validation; this is observational panel regression.
+- **Variables:** The outcome D^hired is 100 if the worker is hired in month t, otherwise 0, so coefficients are in percentage points. A hire is either non-employed at t−1 and employed at t, or employed at both and reporting a change of firm since last month. Moves into self-employment are not counted as hires. The key regressor is the monthly state unemployment rate (51 units including DC), in percentage points. Potential experience = age − years of education − 6. It enters as one-year bins (Figure 2) or as two groups: young (≤10 years) and experienced (>10 years) (Tables 1, 2).
+- **Main specification (Eq. 1):** A linear probability model, D^hired_ikst = α_s + δ_t + Σ_k [β_k D^PE_k + γ_k (D^PE_k × StateUnempRate_st)] + ε. The main effect of the unemployment rate is omitted and every experience-group interaction is included. γ_k is the cyclical hiring response for group k. The null hypothesis is equal γ across groups. Coefficients are unstandardised percentage points of hiring per one percentage point of state unemployment.
+- **Fixed effects and controls:** Table 1 adds fixed effects step by step. Column (1) has none. Column (2) adds state fixed effects. Column (3) adds non-parametric demographic fixed effects: full interactions of gender × race (white/non-white) × Hispanic × education in 7 categories (below high school, high school, some college, BA, MA, professional degree, PhD). Column (4), the preferred specification, adds month-year fixed effects as well. That gives young γ ≈ −0.25 (no-controls Column (1): −0.34 on a mean of 7.7%). Experienced γ turns small but positive and significant (no-controls Column (1): −0.04 on a mean of 2.5%). Panel A pools all workers (−0.1 pp on a 3.2% base, no fixed effects).
+- **Inference and weights:** Standard errors are clustered by state. Every regression is weighted by the average of the CPS sampling weights across the two matched months.
+- **Sample variants and robustness:** The preferred sample is all working-age individuals, whatever their status at t−1. Table 2 / Figure 2 split it by origin at t−1 (employed, unemployed, NILF). Table 3 covers other flows: exits from employment, employment-to-unemployment, job-to-job, and unemployment↔NILF. Table 4 splits separations into voluntary (quits) and involuntary. Table 9 / Figure 3 compare those with and without a college degree. Table 8 restricts to the available unemployed (sample about 14% smaller) and to NILF people not in school (about 20% smaller). Table 7 covers search intensity: the number of search methods used, following Shimer (2004), unemployed only.
+- **Job-composition test (Eq. 2, Table 5):** Among new hires, potential experience is regressed on the state unemployment rate. Fixed effects are state, month-year and demographics, then 508 occupation and 261 industry codes (crosswalked to consistent 2002 Census codes). The estimate is about +1.5 months of experience per pp of unemployment and barely moves when occupation and industry fixed effects are added. SEs are clustered by state and weighted. Table 6 runs state-month-year cell regressions on average potential experience (population, hires, and the ratio of hires to population) by labor-force status.
+- **Wage test (Table 10):** Outgoing-rotation months (MIS 4 and 8) only, new hires only. The outcome is non-allocated log weekly wages deflated to 1994 prices. Fixed effects are state, month-year, detailed industry, occupation and demographics, with SEs clustered by state. Panel A pools all hires: about −1.7% per pp of unemployment (from employment −0.8%, from unemployment −1.7%, from NILF −2.4%). Panel B splits young and experienced: −2.6% for young versus −1.2% for experienced. Figure 1 shows the descriptive series with an HP filter on annualized hiring rates.
+
+
+## Claims to Reproduce
+1. young_x_unemp_rate_no_controls: -0.335 (percentage points of the monthly hiring probability per percentage point of state unemployment) [type: coefficient]
+   Location: Table 1, Panel B, column (1), PE <= 10 x U. Rate
+   Context: Table 1 ("Hiring Over the Business Cycle: With and Without Controls"), Panel B, column (1), row PE <= 10 x U. Rate. Linear probability model (Equation 1 of the paper) of an indicator equal to 100 if the individual is hired in month t — begins a job at a new firm, either from non-employment in month t-1 or, if employed in t-1, reporting a change of employer since last month; new jobs classified as self-employment are not hires — on an indicator for potential experience (age minus years of education minus six) of at most ten years, and the state monthly unemployment rate interacted with each of …
+2. experienced_x_unemp_rate_no_controls: -0.0367 (percentage points of the monthly hiring probability per percentage point of state unemployment) [type: coefficient]
+   Location: Table 1, Panel B, column (1), PE > 10 x U. Rate
+   Context: Table 1, Panel B, column (1), row PE > 10 x U. Rate: the experienced workers' (more than ten years of potential experience) hiring response in the same regression as young_x_unemp_rate_no_controls (no fixed effects, CPS weights, state-clustered standard errors).
+3. young_x_unemp_rate_preferred: -0.253 (percentage points of the monthly hiring probability per percentage point of state unemployment) [type: coefficient]
+   Location: Table 1, Panel B, column (4), PE <= 10 x U. Rate (also Table 2, column (1))
+   Context: Table 1, Panel B, column (4) — the paper's preferred specification, reprinted as Table 2, column (1) (sample: All) — row PE <= 10 x U. Rate. Same regression as young_x_unemp_rate_no_controls with state fixed effects, demographic fixed effects (indicators for every combination of gender, white / non-white, Hispanic descent and seven education levels: less than high school, high school, some college, four-year college, master's, professional degree, PhD) and month-year fixed effects. CPS weights; standard errors clustered by state.
+4. experienced_x_unemp_rate_preferred: 0.0496 (percentage points of the monthly hiring probability per percentage point of state unemployment) [type: coefficient]
+   Location: Table 1, Panel B, column (4), PE > 10 x U. Rate (also Table 2, column (1))
+   Context: Table 1, Panel B, column (4) (= Table 2, column (1)), row PE > 10 x U. Rate: the experienced workers' hiring response in the preferred specification (state, demographic and month-year fixed effects), the same regression as young_x_unemp_rate_preferred. Positive and significant in the paper.
+5. aggregate_unemp_rate_no_controls: -0.119 (percentage points of the monthly hiring probability per percentage point of state unemployment) [type: coefficient]
+   Location: Table 1, Panel A, column (1), State Unemp. Rate
+   Context: Table 1, Panel A, column (1), row State Unemp. Rate. Regression of the hired indicator (times 100) on the state monthly unemployment rate alone, for all working-age individuals in the matched CPS panel, no fixed effects; CPS weights, standard errors clustered by state.
+6. aggregate_unemp_rate_month_year_fe: -0.0326 (percentage points of the monthly hiring probability per percentage point of state unemployment) [type: coefficient]
+   Location: Table 1, Panel A, column (4), State Unemp. Rate
+   Context: Table 1, Panel A, column (4), row State Unemp. Rate: the same single-regressor hiring regression as aggregate_unemp_rate_no_controls with state, demographic and month-year fixed effects.
+7. young_x_unemp_rate_employed: -0.168 (percentage points of the monthly hiring probability per percentage point of state unemployment) [type: coefficient]
+   Location: Table 2, column (2) Employed, PE <= 10 x U. Rate
+   Context: Table 2 ("Hiring Over the Business Cycle: Young and Experienced"), column (2), sample Employed: the preferred specification (potential experience main effect, both unemployment-rate interactions, state, demographic and month-year fixed effects, CPS weights, state-clustered standard errors) estimated on individuals employed in month t-1, so a hire is a move to a new employer. Row PE <= 10 x U. Rate.
+8. experienced_x_unemp_rate_employed: 0.0179 (percentage points of the monthly hiring probability per percentage point of state unemployment) [type: coefficient]
+   Location: Table 2, column (2) Employed, PE > 10 x U. Rate
+   Context: Table 2, column (2), sample Employed, row PE > 10 x U. Rate; same regression as young_x_unemp_rate_employed. Not statistically significant in the paper.
+9. young_x_unemp_rate_unemployed: -1.928 (percentage points of the monthly hiring probability per percentage point of state unemployment) [type: coefficient]
+   Location: Table 2, column (3) Unemployed, PE <= 10 x U. Rate
+   Context: Table 2, column (3), sample Unemployed: the preferred specification estimated on individuals unemployed in month t-1. Row PE <= 10 x U. Rate.
+10. young_x_unemp_rate_nilf: -0.49 (percentage points of the monthly hiring probability per percentage point of state unemployment) [type: coefficient]
+   Location: Table 2, column (4) NILF, PE <= 10 x U. Rate
+   Context: Table 2, column (4), sample NILF: the preferred specification estimated on individuals not in the labour force in month t-1. Row PE <= 10 x U. Rate.
+11. wage_young_x_unemp_rate_all_hires: -0.0262 (log points of the weekly wage per percentage point of state unemployment) [type: coefficient]
+   Location: Table 10, Panel B, column (1) All, PE <= 10 x U. Rate
+   Context: Table 10 ("Log Wages During Recessions for New Hires"), Panel B ("Disaggregated by Potential Experience"), column (1), sample All (all new hires, whatever their status in the previous month). Regression of the log weekly wage of newly hired workers (weekly wages that are not allocated / imputed by the Census, deflated to 1994 dollars) on the potential-experience-at-most-ten indicator and its interactions with the state unemployment rate, as in Equation 1, with a constant and state, demographic, month-year, occupation and industry fixed effects; CPS weights, standard errors clustered by state. …
+12. wage_experienced_x_unemp_rate_all_hires: -0.0116 (log points of the weekly wage per percentage point of state unemployment) [type: coefficient]
+   Location: Table 10, Panel B, column (1) All, PE > 10 x U. Rate
+   Context: Table 10, Panel B, column (1), sample All, row PE > 10 x U. Rate; same new-hire log-wage regression as wage_young_x_unemp_rate_all_hires.
+13. n_obs_full_sample: 16948516.0 (person-month observations (matched consecutive-month pairs)) [type: other]
+   Location: Table 1, N (all columns); Table 2, column (1)
+   Context: Number of observations in the full-sample hiring regressions of Table 1 (every column) and Table 2 column (1): matched consecutive-month CPS person observations, January 1994 to September 2016, after the sample restrictions described for young_x_unemp_rate_no_controls.
+
+## Dataset Information
+Name: forsythe-2022-young-workers-recessions
+Local path: <repo>/.cache/datasets/forsythe_2022_young_workers_recessions
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- 3 replication package/Data/ind_xwalk2002.csv (15.1 KB) — columns: v2peio1icd,v2ind_codeyear,v2censusind_2002recode
+- 3 replication package/Data/occ_xwalk2002.csv (21.8 KB) — columns: v2peio1ocd,v2censusocc_2002recode,v2occ_codeyear
+- 3 replication package/Data/v2unemp_smy.csv (180.0 KB) — columns: v2gestfips,v2unemp_smy,v2hryear,v2hrmonth
+- 3 replication package/Data/wage_deflation_1994_2016.csv (6.8 KB) — columns: year,month,cpi
+- 3 replication package/Data/yh_data.csv (2.0 GB) — columns: hrmonth,hryear,peage,pesex,peeduca,race,prhspnon,pemlr,pulk,pulkm2,pulkm3,pulkm4,pulkm5,pulkm6,pelkavl,pruntype,penlfact,peschft,pwsswgt,v2hrmonth,v2hryear,v2gestfips,v2pemlr,v2pehrusl1,v2pruntype,v2puiodp1,v2peio1cow,v2peio1icd,v2peio1ocd,…
+- 3 replication package/Dofiles/YH_appendix_figure.do (1.7 KB)
+- 3 replication package/Dofiles/YH_appendix_tables.do (7.1 KB)
+- 3 replication package/Dofiles/YH_data_init.do (12.9 KB)
+- 3 replication package/Dofiles/YH_figures.do (5.8 KB)
+- 3 replication package/Dofiles/YH_fileconversion.do (219 B)
+- 3 replication package/Dofiles/YH_master.do (683 B)
+- 3 replication package/Dofiles/YH_regs.do (13.0 KB)
+- 3 replication package/ReadMe.pdf (119.0 KB)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/forsythe_2022_young_workers_recessions' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Original Replication Scripts
+The replication package (the dataset directory) ships the authors' own analysis scripts, reproduced below.  These are the GROUND TRUTH for the exact estimating equation, variable names, sample restrictions, fixed effects, and standard-error clustering — follow them over anything reconstructed from the methodology summary, and prefer them over the paper's text where the two disagree.  Your job is to write R code that implements the SAME SPECIFICATION: translate what the scripts estimate, do not transliterate their syntax line by line (a Stata .do file's regression, e.g. `reghdfe y x controls, absorb(fe) cluster(cl)`, becomes the equivalent fixest::feols() call in R).  Keep only the parts that produce the specific claims being reproduced; skip figure construction and unrelated robustness checks.  The scripts' data-file paths refer to the package's internal layout — resolve them against the dataset directory listed under Dataset Information.
+
+Stata-to-fixest sample matching: feols() drops fixed-effect singletons by default, but Stata's `reg y x i.fe` / `xi:` dummies keep them.  Pass `fixef.rm = "none"` to every feols() call that has fixed effects, otherwise the observation count and the robust SEs drift from the paper's.  Stata's `, r` / `vce(robust)` is `vcov = "hetero"`.
+
+### `3 replication package/Dofiles/YH_appendix_tables.do`
+```stata
+*Appendix:
+
+*Table B1: data description
+*participation rate
+gen particip = pemlr >=1 & pemlr<=4 //parrticipation rate
+
+*employment rate
+gen emp_rate = (pemlr ==1 | pemlr==2)  //employment rate
+*hired per month
+
+*hired from employment per month
+gen hired2_emp = hired2 if pemlr ==1 | pemlr ==2
+*hired from unemployment per month
+gen hired2_unemp = hired2 if pemlr ==3 | pemlr ==4
+*hired from NILF per month
+gen hired2_nilf = hired2 if pemlr >=4
+*wage obs
+*real log weekly wage
+gen wage = v2logwagewkly_r if  exp<.  & v2prhernal == 0
+
+tab young if exp<.  & v2unemp <.
+local vars  exp peage yrsch female minority  hisp  particip emp_rate hired2 hired2_emp hired2_unemp hired2_nilf wage
+
+foreach var in `vars' {
+
+quietly sum `var'  if  exp<.  & v2unemp <. [aweight=weight]
+
+di "`var', all"
+di "mean:" r(mean)
+di "N:" r(N)
+
+quietly sum `var'  if  exp<10 &  exp<. & v2unemp <.  [aweight=weight]
+
+di "`var', young"
+di "mean:" r(mean)
+di "N:" r(N)
+
+quietly sum `var'  if  exp>=10  & exp<. & v2unemp <.  [aweight=weight]
+
+di "`var', old"
+di "mean:" r(mean)
+di "N:" r(N)
+
+}
+
+
+
+*Table B.2: Hiring over the Buisness Cyclce: Detailed Potential Experience Categories
+reg hired100 i.pe_cat1y5 ux1y5pe* i.demo2 i.v2gestfips i.date if   exp<. [aweight=weight], vce(cl v2gestfips) notable
+eststo reg1
+reg hired100 i.pe_cat1y5 ux1y5pe* i.demo2 i.v2gestfips i.date if (pemlr==1|pemlr==2)  & exp<. [aweight=weight], vce(cl v2gestfips) notable
+eststo reg2
+reg hired100 i.pe_cat1y5 ux1y5pe* i.demo2 i.v2gestfips i.date if (pemlr==3|pemlr==4) & exp<. [aweight=weight], vce(cl v2gestfips) notable
+eststo reg3
+reg hired100 i.pe_cat1y5 ux1y5pe* i.demo2 i.v2gestfips i.date if pemlr>4   & exp<. [aweight=weight], vce(cl v2gestfips) notable
+eststo reg4
+esttab reg1 reg2 reg3 reg4, keep(ux1y5pe*) se r2 star(* 0.05 ** 0.01 *** 0.001)
+
+
+*Table B.3: Alternative Specifications 
+
+reg hired100 young  youngurate oldurate i.demo2 i.v2gestfips i.date if   exp<. & age>=20 [aweight=weight], vce(cl v2gestfips) notable //excluding teens
+eststo reg1
+test youngurate= oldurate
+reg hireFT young  youngurate oldurate i.demo2 i.v2gestfips i.date if   exp<. [aweight=weight], vce(cl v2gestfips) notable //FT hires
+eststo reg2
+test youngurate= oldurate
+reg hireFT young  youngurate oldurate i.demo2 i.v2gestfips i.date if   exp<. &  peschft == -1 [aweight=weight], vce(cl v2gestfips) notable //FT hires for folks not in school
+eststo reg3
+test youngurate= oldurate
+reg hired100 young  youngurate oldurate i.demo2 i.v2gestfips i.date  i.v2gestfips#c.year if   exp<. [aweight=weight], vce(cl v2gestfips) notable //state specific time trends
+eststo reg4
+test youngurate= oldurate
+reg hired100 young  youngurate oldurate i.demo2 i.v2gestfips i.date  if   exp<. & pemlr == 3 [aweight=weight], vce(cl v2gestfips) notable //just those on layoff
+eststo reg5
+test youngurate= oldurate
+reg hired100 young  youngurate oldurate i.demo2 i.v2gestfips i.date  if   exp<. & pemlr == 4 [aweight=weight], vce(cl v2gestfips) notable //just unemp not on layoff
+eststo reg6
+test youngurate= oldurate
+reg hired100 v2unemp i.demo2 i.v2gestfips i.date if   exp<. &  young == 1 [aweight=weight], vce(cl v2gestfips) notable //just young
+eststo reg7
+reg hired100 v2unemp i.demo2 i.v2gestfips i.date if   exp<. & young == 0 [aweight=weight], vce(cl v2gestfips) notable //just experienced
+eststo reg8
+esttab reg1 reg2 reg3 reg4 reg5 reg6 reg7 reg8, keep(young  youngurate oldurate v2unemp _cons) se r2 star(* 0.05 ** 0.01 *** 0.001)
+
+*Table B.4: Average Potential Experience of Hires by Occupation
+forvalues i=1(1)10 {
+display "occ " `i'
+reg exp v2unemp  i.v2gestfips i.date i.demo2 if hired_occ`i'==100 & exp<. [aweight=weight], vce(cl v2gestfips) notable noheader
+eststo reg_PE_occ`i'
+}
+esttab reg_PE_occ*, keep(v2unemp _cons)  se r2   star(* 0.05 ** 0.01 *** 0.001)
+
+*Table B.5: Average Potential Experience of Hires by Industry
+ forvalues i=2(1)15 {
+ display "ind " `i'
+reg exp v2unemp  i.v2gestfips i.date i.demo2 if hired_ind`i'==100 & exp<. [aweight=weight], vce(cl v2gestfips) notable noheader
+eststo reg_PE_ind`i'
+}
+
+esttab reg_PE_ind*, keep(v2unemp _cons) se r2   star(* 0.05 ** 0.01 *** 0.001)
+
+
+*Table B.6: Hiring over the Business Cycle: Age versus Education
+
+reg hired100 under_30 under_30_col over_30_col under30_urate over30_urate under30_col_urate over_30_col_urate if exp<. [aweight=weight], vce(cl v2gestfips) notable noheader
+eststo reg1
+reg hired100 under_30 under_30_col over_30_col under30_urate over30_urate under30_col_urate over_30_col_urate i.v2gestfips if  exp<. [aweight=weight], vce(cl v2gestfips) notable noheader
+eststo reg2
+reg hired100 under_30 under_30_col over_30_col under30_urate over30_urate under30_col_urate over_30_col_urate i.demo3 i.v2gestfips if  exp<. [aweight=weight], vce(cl v2gestfips) notable noheader
+eststo reg3
+reg hired100 under_30 under_30_col over_30_col under30_urate over30_urate under30_col_urate over_30_col_urate i.date i.v2gestfips i.demo3 if  exp<. [aweight=weight], vce(cl v2gestfips) notable noheader
+eststo reg4
+esttab reg1 reg2 reg3 reg4, keep(under_30 under_30_col over_30_col under30_urate over30_urate under30_col_urate over_30_col_urate _cons) se r2 star(* 0.05 ** 0.01 *** 0.001)
+
+*Table B.7: Age versus Education, Alternative Specifications
+reg hired100  under_30 under_30_col over_30_col under30_urate over30_urate under30_col_urate over_30_col_urate  i.demo3 i.v2gestfips i.date if   exp<. & age>=20 [aweight=weight], vce(cl v2gestfips) notable //excluding teens
+eststo reg1
+reg hireFT under_30 under_30_col over_30_col under30_urate over30_urate under30_col_urate over_30_col_urate  i.demo3  i.v2gestfips i.date if   exp<. [aweight=weight], vce(cl v2gestfips) notable //FT hires
+eststo reg2
+reg hireFT under_30 under_30_col over_30_col under30_urate over30_urate under30_col_urate over_30_col_urate  i.demo3  i.v2gestfips i.date if   exp<. &  peschft == -1 [aweight=weight], vce(cl v2gestfips) notable //FT hires for folks not in school
+eststo reg3
+reg hired100 under_30 under_30_col over_30_col under30_urate over30_urate under30_col_urate over_30_col_urate  i.demo3  i.v2gestfips i.date  i.v2gestfips#c.year if   exp<. [aweight=weight], vce(cl v2gestfips) notable //state specific time trends
+eststo reg4
+esttab reg1 reg2 reg3 reg4, keep(under_30 under_30_col over_30_col under30_urate over30_urate under30_col_urate over_30_col_urate _cons) se r2 star(* 0.05 ** 0.01 *** 0.001)
+
+*/
+
+*Table C1: hiring and wages by occupation
+
+*hiring into occupations:
+forvalues i=0(1)10 {
+display "occ " `i'
+reg hired_occ`i' young youngurate oldurate i.v2gestfips i.date i.demo2 if  exp<. [aweight=weight], vce(cl v2gestfips) notable noheader
+ eststo reg_occ`i'
+ test youngurate = oldurate
+ parmest, saving($output/figureC_hiring_`i'.dta, replace) idnum(`i')
+}
+
+esttab reg_occ*, keep(young youngurate  oldurate _cons)  se r2   star(* 0.05 ** 0.01 *** 0.001)
+
+
+*wages
+forvalues i=1(1)10 {
+capture reg v2logwagewkly_r  young youngurate oldurate i.v2gestfips i.date i.demo2 if   exp<. & hired_occ`i'==100 & v2prwernal == 0 [aweight=weight], vce(cl v2gestfips) notable noheader
+ eststo reg_occ_wage`i'
+ test youngurate= oldurate
+  parmest, saving($output/figureC_wage_`i'.dta, replace) idnum(`i')
+
+}
+esttab reg_occ_wage*, keep(young youngurate  oldurate _cons)  se r2   star(* 0.05 ** 0.01 *** 0.001)
+
+
+
+
+
+
+
+```
+
+### `3 replication package/Dofiles/YH_master.do`
+```stata
+
+
+*clear all
+set more off
+set trace off
+prog drop _all
+mac drop _all
+set matsize 11000
+set maxvar 10000
+
+
+*Directories
+
+*set path
+*replace "" with the directory where the replication folder is saved
+							
+
+global dir = "<home>/replicationpackage"
+global do = "$dir/Dofiles"
+global data =  "$dir/Data"
+global output = "$dir/Output"
+
+global date: display %td_CCYYNNDD date(c(current_date), "DMY")
+
+log using "$output/log_$date.smcl", append
+
+
+*do "$do/YH_fileconversion.do" //turn on if data is in csv format
+do "$do/YH_data_init.do"
+do "$do/YH_regs.do"
+
+do "$do/YH_figures.do"
+
+
+clear
+
+do "$do/YH_data_init.do"
+do "$do/YH_appendix_tables.do"
+do "$do/YH_appendix_figure.do"
+
+
+```
+
+### `3 replication package/Dofiles/YH_data_init.do`
+```stata
+
+
+
+*load dataset:
+
+
+use  "$data/yh_data.dta"
+
+//note: yh_finaldata.dta already restricted to the following variables: 
+keep hryear v2hryear hrmonth v2hrmonth v2peio1ocd v2peio1icd v2gestfips peage peeduc ///
+race pesex pehspnon prhspnon v2pemlr pemlr v2puiodp1 v2peio1cow v2prernhly pulk pulkm*  ///
+pulkm2 pelkavl penlfact v2pehrusl1  v2pwsswgt pwsswgt peschft v2prhernal v2prernwa v2prwernal pruntype  v2pruntype
+
+*want to create a date variable
+replace hryear=1994 if hryear==94
+replace hryear=1995 if hryear==95
+replace hryear=1996 if hryear==96
+replace hryear=1997 if hryear==97
+replace v2hryear=1994 if v2hryear==94
+replace v2hryear=1995 if v2hryear==95
+replace v2hryear=1996 if v2hryear==96
+replace v2hryear=1997 if v2hryear==97
+
+
+*need to generate indicators for which version of the census occupational taxonomy to use
+gen v2occ_codeyear =1990 if v2hryear<2003
+replace  v2occ_codeyear = 2002 if v2hryear>=2003 & v2hryear<2011
+replace  v2occ_codeyear = 2010 if v2hryear>=2011
+
+capture drop _merge
+
+merge m:1 v2peio1ocd  v2occ_codeyear using "$data/occ_xwalk2002.dta" 
+tab v2peio1ocd if _merge==1
+*verify that the non-merged are missing occupation data
+drop _merge
+
+
+/*
+CODE CODE DESCRIPTION OCCUPATION CODE
+1 Management, business, and financial occupations 0010-0950
+2 Professional and related occupations 1000-3540
+3 Service occupations 3600-4650
+4 Sales and related occupations 4700-4960
+5 Office and administrative support occupations 5000-5930
+6 Farming, fishing, and forestry occupations 6000-6130
+7 Construction and extraction occupations 6200-6940
+8 Installation, maintenance, and repair occupations 7000-7620
+9 Production occupations 7700 -8960
+10 Transportation and material moving occupations 9000-9750
+11 Armed Forces 9840
+*/
+gen v2major_occ=0
+replace v2major_occ=1 if v2censusocc_2002recode>=10 & v2censusocc_2002recode<=950
+replace v2major_occ=2 if v2censusocc_2002recode>=1000 & v2censusocc_2002recode<=3540
+replace v2major_occ=3 if v2censusocc_2002recode>=3600 & v2censusocc_2002recode<= 4650
+replace v2major_occ=4 if v2censusocc_2002recode>=4700 & v2censusocc_2002recode<=4960
+replace v2major_occ=5 if v2censusocc_2002recode>= 5000 & v2censusocc_2002recode<=5930
+replace v2major_occ=6 if v2censusocc_2002recode>= 6000 & v2censusocc_2002recode<=6130
+replace v2major_occ=7 if v2censusocc_2002recode>=6200 & v2censusocc_2002recode<=6940
+replace v2major_occ=8 if v2censusocc_2002recode>=7000 & v2censusocc_2002recode<=7620
+replace v2major_occ=9 if v2censusocc_2002recode>=7700 & v2censusocc_2002recode<= 8960
+replace v2major_occ=10 if v2censusocc_2002recode>=9000 & v2censusocc_2002recode<=9750
+
+
+**merging in industry crosswalks:
+
+gen v2ind_codeyear=1990 if   v2hryear<2003
+replace  v2ind_codeyear=2002 if v2hryear>=2003 & v2hryear<2009
+replace  v2ind_codeyear=2007 if v2hryear>=2009 & v2hryear<2014
+replace  v2ind_codeyear=2012 if v2hryear>=2014
+
+
+merge m:1  v2peio1icd v2ind_codeyear using "$data/ind_xwalk2002.dta" 
+
+replace v2censusind_2002recode = v2peio1icd if v2peio1icd==6692 & _merge==1
+replace v2censusind_2002recode = 9890 if v2peio1icd==991 &  _merge==1
+replace v2censusind_2002recode = v2peio1icd if v2peio1icd ==9890 & _merge==1
+
+drop _merge
+
+***
+*major industry
+/*
+	1	Agriculture, forestry, fishing, and hunting	: 0170-0290
+	2	Mining						:0370-0490			
+	3	Construction					:0770					 
+	4	Manufacturing					:1070-3990	
+	4.1 durable goods                                       :2470-	3990
+	4.2 nondurable goods		                        :1070-2390
+	5	Wholesale and retail trade			:4070-5790				
+	6	Transportation and utilities			:6070-6390, 0570-0690	      
+	7	Information					:6470-6780				
+	8	Financial activities				:6870-7190			
+	9	Professional and business services		 :7270-7790			
+	10	Educational and health services			:7860-8470		
+	11	Leisure and hospitality				:8560-8690			
+	12	Other services					:8770-9290				
+13	Public administration					:9370-9590			
+14	Armed Forces
+*/
+gen v2majorind=0
+replace v2majorind=1 if v2censusind_2002recode>=0170 & v2censusind_2002recode<=0290
+replace  v2majorind=2 if v2censusind_2002recode>=0370 & v2censusind_2002recode<=0490
+replace  v2majorind=3 if v2censusind_2002recode==0770
+replace  v2majorind=41 if v2censusind_2002recode>=2470 & v2censusind_2002recode<=3990
+replace  v2majorind=42 if v2censusind_2002recode>=1070 & v2censusind_2002recode<=2390
+replace  v2majorind=5 if v2censusind_2002recode>=4070 & v2censusind_2002recode<=5790
+replace  v2majorind=6 if v2censusind_2002recode>=6070 & v2censusind_2002recode<=6390
+replace  v2majorind=6 if v2censusind_2002recode>=0570 & v2censusind_2002recode<=0690
+replace  v2majorind=7 if v2censusind_2002recode>=6470 & v2censusind_2002recode<=6780
+replace  v2majorind=8 if v2censusind_2002recode>=6870 & v2censusind_2002recode<=7190
+replace  v2majorind=9 if v2censusind_2002recode>=7270 & v2censusind_2002recode<=7790
+replace  v2majorind=10 if v2censusind_2002recode>=7860 & v2censusind_2002recode<=8470
+replace  v2majorind=11 if v2censusind_2002recode>=8560 & v2censusind_2002recode<=8690
+replace  v2majorind=12 if v2censusind_2002recode>=8770 & v2censusind_2002recode<=9290
+replace  v2majorind=13 if v2censusind_2002recode>=9370 & v2censusind_2002recode<=9590
+
+
+
+gen date=ym(v2hryear, v2hrmonth)
+
+*merging in state unemployment data (LAUS)
+
+sort v2hryear v2hrmonth v2gestfips
+merge m:1 v2hryear v2hrmonth v2gestfips using "$data/v2unemp_smy.dta"
+drop if _merge==2
+drop _merge
+
+rename v2unemp_smy v2unemp
+
+//#1 data-cleaning, variable definitions
+
+gen age=peage
+replace age =. if age>79
+
+gen yrsch=0
+replace yrsch=1 if peeduc==31
+replace yrsch=4 if peeduc==32
+replace yrsch=6 if peeduc==33
+replace yrsch=8 if peeduc==34
+replace yrsch=9 if peeduc==35
+replace yrsch=10 if peeduc==36
+replace yrsch=11 if peeduc==37
+replace yrsch=11.5 if peeduc==38
+replace yrsch=12 if peeduc==39
+replace yrsch=13 if peeduc==40
+replace yrsch=14 if peeduc==41
+replace yrsch=14 if peeduc==42
+replace yrsch=16 if peeduc==43
+replace yrsch=18 if peeduc==44
+replace yrsch=20 if peeduc==45
+replace yrsch=22 if peeduc==46
+
+*potential experience
+gen exp=.
+replace exp=age-yrsch-6
+
+
+*education
+gen educ=0 if peeduc>0 & peeduc<39 //no hs degree
+replace educ=1 if peeduc==39 //hs degree
+replace educ=2 if peeduc>39 & peeduc<43 //no 4 year college
+replace educ=3 if peeduc==43 //college degree
+replace educ=4 if peeduc==44 //masters
+replace educ=5 if peeduc==45 //prof deg
+replace educ=6 if peeduc==46 //phd
+
+*race, gender, hispanic
+gen minority=0
+replace minority=1 if race>1
+gen female=0
+replace female=1 if pesex>1
+
+//from 1994-2002, prhspnon, 2003- present pehspnon
+gen hisp = 0
+replace hisp = 1 if pehspnon ==1 | prhspnon ==1
+
+
+gen hired=0
+*individuals who are employed in the second month but don't report changing employers
+replace hired=1 if v2pemlr==1|v2pemlr==2
+replace hired=0 if v2puiodp1==1
+*if the data is missing on employer change, most likely didn't change employers so code as no
+replace hired=0 if (pemlr==1|pemlr==2) & v2puiodp1<0
+
+*hired2 is hired excluding individuals that are self-employed
+*want v2peio1cow<5, excluding self-employed and w/o pay
+gen hired2=hired
+replace hired2=0 if v2peio1cow>=5
+
+gen hired100=hired2*100
+
+gen young = 0
+replace young=1 if exp<=10
+
+gen oldurate=0
+replace oldurate=v2unemp if young==0 & exp>10
+
+
+gen youngurate=0
+replace youngurate=v2unemp if young==1
+
+
+gen v2unemployed=0
+replace v2unemployed = 100 if v2pemlr==3 | v2pemlr==4
+
+gen v2nilf=0
+replace v2nilf=100 if v2pemlr>4
+
+
+
+
+gen young_col = 0
+replace young_col = 1 if young == 1 & educ>2 & educ <.
+
+gen old_col = 0
+replace old_col = 1 if young == 0 & educ>2 & educ <.
+
+gen young_col_urate=0
+replace young_col_urate=v2unemp if young_col==1
+gen old_col_urate=0
+replace old_col_urate=v2unemp if old_col==1
+
+*alternative method: comparing folks by age
+
+gen under_30=0
+replace under_30 = 1 if peage<=30
+
+gen under_30_col=0
+replace under_30_col = 1 if  under_30 == 1 & educ>2 & educ <.
+
+gen over_30_col=0
+replace over_30_col = 1 if  under_30 ==0  & educ>2 & educ <.
+
+gen under30_urate = 0
+replace under30_urate = v2unemp if under_30==1
+
+gen over30_urate = 0
+replace over30_urate = v2unemp if under_30==0
+
+gen under30_col_urate = 0
+replace under30_col_urate = v2unemp if under_30_col==1
+
+gen over_30_col_urate = 0
+replace over_30_col_urate = v2unemp if over_30_col==1
+
+*and finally just college vs no college
+
+gen college = 0
+replace college = 1 if educ>2 & educ<.
+
+gen college_urate=0
+replace college_urate= v2unemp if college == 1
+
+gen nocollege_urate = 0
+replace nocollege_urate = v2unemp if college == 0
+
+
+*creating potential experience bins
+egen pe_cat=cut(exp), at(0(1)74)
+replace pe_cat=1001 if exp>=-1 & exp <0
+replace pe_cat=1002 if exp>=-2 & exp <-1
+replace pe_cat=1005 if exp<-2
+
+*cant have  negative categorical value in the regression so we'll handle these separately
+forvalues i=0(1)74 {
+quietly gen uxpe`i'=0
+quietly replace uxpe`i'=v2unemp if pe_cat==`i'
+}
+foreach i in 1001 1002 1005{
+quietly gen uxpe`i'=0
+quietly replace uxpe`i'=v2unemp if pe_cat==`i'
+}
+
+
+
+*last type of bin: single numbers up to 10, 5 years after 10
+egen pe_cat1y5=cut(exp),at(0(1)10)
+forvalues i=10(5)50 {
+replace pe_cat1y5=`i' if exp>=`i' & exp<`i'+5
+}
+replace pe_cat1y5=1002 if (exp>=-2 & exp<0)
+
+forvalues i=0(1)10 {
+quietly gen ux1y5pe`i'=0
+quietly replace ux1y5pe`i'=v2unemp if pe_cat1y5==`i'
+}
+
+forvalues i=15(5)50 {
+quietly gen ux1y5pe`i'=0
+quietly replace ux1y5pe`i'=v2unemp if pe_cat1y5==`i'
+}
+
+
+*creating the PE x unemployment categories: 
+
+*what to do with ends? collect them 
+replace pe_cat1y5=100 if exp>45
+gen ux1y5pe100=0
+replace ux1y5pe100=v2unemp if pe_cat1y5==100
+
+
+drop ux1y5pe50 
+
+drop ux1y5pe45
+
+
+*cant have a negative cat variable, so put the negative ones in 1005
+replace pe_cat1y5=1005 if exp<0
+gen ux1y5pen1=0
+replace ux1y5pen1=v2unemp if pe_cat1y5==1005
+
+
+*want to make an alternative nonparametric demographic variable, that also interacts with hispanic status
+egen demo2 = group(minority female hisp educ)
+
+*and a third demo var for robustness checks that does not incldue education 
+egen demo3 = group(minority female hisp)
+
+
+
+
+*deflating wages
+*wage deflation
+capture drop year
+capture drop month 
+gen year = v2hryear
+gen month = v2hrmonth
+merge m:1 year month using "$data/wage_deflation_1994_2016.dta"
+rename cpi v2cpi
+drop if _merge == 2
+drop _merge
+
+
+
+
+gen v2logwage_r = log(v2prernhly/v2cpi)
+
+gen v2logwagewkly_r= log(v2prernwa/v2cpi)
+
+
+*industry and occupational composition?
+gen v2occ=v2peio1ocd if v2peio1ocd>=0
+gen v2ind=v2peio1icd if v2peio1icd>=0
+
+*search intensity based on the number of methods used to search
+gen search_intensity=.
+replace search_intensity=0 if pulk==2
+replace search_intensity=1 if pulk==1 
+replace search_intensity= search_intensity+1 if pulkm2>0 & pulkm2!=12
+replace search_intensity= search_intensity+1 if pulkm3>0 & pulkm3!=12
+replace search_intensity= search_intensity+1 if pulkm4>0 & pulkm4!=12
+replace search_intensity= search_intensity+1 if pulkm5>0 & pulkm5!=12
+replace search_intensity= search_intensity+1 if pulkm6>0 & pulkm6!=12
+
+
+gen willing=0
+replace willing = 1 if pelkavl == 1
+
+
+gen gotoschool=0
+replace gotoschool= 100 if penlfact == 3
+
+
+
+forvalues i=0(1)11 {
+gen hired_occ`i'=0
+replace hired_occ`i'=100 if v2major_occ==`i' & hired100==100
+}
+
+*industry
+tab v2majorind, gen(v2major_indcat)
+
+forvalues i=1(1)15 {
+gen hired_ind`i'=0
+replace hired_ind`i'=100 if v2major_indcat`i'==1 & hired100==100
+}
+
+
+gen exit2 = 0 if (pemlr==1 | pemlr==2)
+replace exit2=100 if (pemlr==1 | pemlr==2) & (v2pemlr>2 | v2puiodp1==2)
+
+gen exit_to_u2=0 if (pemlr==1 | pemlr==2)
+replace exit_to_u2=100 if  (pemlr==1 | pemlr==2) & (v2pemlr==3 | v2pemlr==4)
+
+gen exit_to_emp2  = 0 if (pemlr==1 | pemlr==2)
+replace exit_to_emp2 =100 if (pemlr==1 | pemlr==2) & (v2puiodp1==2) & (v2pemlr==1| v2pemlr==2)
+
+gen exit_to_nilf2  = 0 if (pemlr==1 | pemlr==2)
+replace exit_to_nilf2 =100 if  (pemlr==1 | pemlr==2) & (v2pemlr>4)
+
+
+gen exp_hired = exp if hired2==1
+
+gen hired_emp = 0
+replace hired_emp = 1 if hired2==1 & (pemlr == 1 | pemlr==2)
+
+gen hired_unemp = 0
+replace hired_unemp = 1 if hired2==1 & (pemlr==3 | pemlr==4)
+
+gen hired_nilf = 0
+replace hired_nilf = 1 if hired2==1 & pemlr>4
+
+//want to know how many hiring events happened within the state by month by year cell
+egen hired_emp_total = total(hired_emp), by(v2gestfips date)
+egen hired_unemp_total = total(hired_unemp), by(v2gestfips date)
+egen hired_nilf_total = total(hired_nilf), by(v2gestfips date)
+
+//want to exclude the cells that didn't have at least one hire in all 3 categories in the cell
+
+gen missing_hires_cell = 0
+replace missing_hires_cell = 1 if (hired_emp_total == 0 | hired_unemp_total ==0 | hired_nilf_total==0)
+
+egen mhc=max(missing_hires_cell), by(v2gestfips date)
+
+
+gen hireFT = 0
+replace hireFT = hired100 if v2pehrusl1 >=35 &  v2pehrusl1 <.
+
+gen weight = (v2pwsswgt+pwsswgt)/2
+
+gen fired_to_u=0 if (pemlr==1 | pemlr==2)
+replace fired_to_u=100 if  (pemlr==1 | pemlr==2) & (v2pemlr==3 | v2pemlr==4) & (v2pruntype ==1 | v2pruntype == 2 | v2pruntype == 3)
+
+gen quit_to_u=0 if (pemlr==1 | pemlr==2)
+replace quit_to_u=100 if  (pemlr==1 | pemlr==2) & (v2pemlr==3 | v2pemlr==4) & (v2pruntype ==4)
+
+
+//restrict sample to individuals with non missing experience and unemployment rates
+keep if exp<. & v2unemp<.
+
+
+```
+
+### `3 replication package/Dofiles/YH_fileconversion.do`
+```stata
+*convert .csv data into .dta files
+
+
+local vars v2unemp_smy ind_xwalk2002  occ_xwalk2002 wage_deflation_1994_2016 yh_data
+
+foreach var in `vars' {
+import delimited $data/`var'.csv
+save $data/`var'.dta, replace
+clear
+}
+
+
+```
+
+### `3 replication package/Dofiles/YH_regs.do`
+```stata
+
+*Figure 1
+preserve
+keep hired100 young  date hrmonth hryear weight
+save "$output/figure1_data.dta", replace
+restore
+
+*Figure 2
+reg hired100 i.pe_cat uxpe* i.v2gestfips i.date i.demo2 if  exp<. [aweight=weight],  vce(cl v2gestfips) notable noheader
+parmest, saving($output/figure2a.dta, replace)
+reg hired100 i.pe_cat uxpe* i.v2gestfips i.date i.demo2 if (pemlr==1|pemlr==2)  & exp<. [aweight=weight],  vce(cl v2gestfips) notable noheader
+parmest, saving($output/figure2b.dta, replace)
+reg hired100 i.pe_cat uxpe* i.v2gestfips i.date i.demo2  if (pemlr==3|pemlr==4)   & exp<. [aweight=weight],  vce(cl v2gestfips) notable noheader
+parmest, saving($output/figure2c.dta, replace)
+reg hired100 i.pe_cat uxpe* i.v2gestfips i.date i.demo2  if pemlr>4 & exp<. [aweight=weight],  vce(cl v2gestfips) notable noheader
+parmest, saving($output/figure2d.dta, replace)
+
+*Figure 3:
+reg hired100 i.pe_cat uxpe* i.v2gestfips i.date  if  exp<. & college == 1 [aweight=weight],  vce(cl v2gestfips) notable noheader
+parmest, saving($output/figure3_college.dta, replace)
+reg hired100 i.pe_cat uxpe* i.v2gestfips i.date  if  exp<. & college == 0 [aweight=weight],  vce(cl v2gestfips) notable noheader
+parmest, saving($output/figure3_nocollege.dta, replace)
+
+
+
+*Table 1:  Hiring over the Business Cycle: With and Without Controls 
+*panel A: all hires
+reg hired100 v2unemp if  exp<. [aweight=weight], vce(cl v2gestfips) notable noheader
+eststo reg1
+reg hired100 v2unemp i.v2gestfips if  exp<. [aweight=weight], vce(cl v2gestfips) notable noheader
+eststo reg2
+reg hired100 v2unemp i.demo2 i.v2gestfips if exp<. [aweight=weight], vce(cl v2gestfips) notable noheader
+eststo reg3
+reg hired100 v2unemp i.date i.v2gestfips i.demo2 if  exp<. [aweight=weight], vce(cl v2gestfips) notable noheader
+eststo reg4
+esttab reg1 reg2 reg3 reg4, keep(v2unemp _cons) se r2 star(* 0.05 ** 0.01 *** 0.001)
+
+*panel B: broken out by young vs. old
+reg hired100 young youngurate oldurate if exp<. [aweight=weight], vce(cl v2gestfips) notable noheader
+eststo reg1
+reg hired100 young youngurate oldurate i.v2gestfips if  exp<. [aweight=weight], vce(cl v2gestfips) notable noheader
+eststo reg2
+reg hired100 young youngurate oldurate i.demo2 i.v2gestfips if  exp<. [aweight=weight], vce(cl v2gestfips) notable noheader
+eststo reg3
+reg hired100 young youngurate oldurate i.date i.v2gestfips i.demo2 if  exp<. [aweight=weight], vce(cl v2gestfips) notable noheader
+eststo reg4
+esttab reg1 reg2 reg3 reg4, keep(young youngurate oldurate _cons) se r2 star(* 0.05 ** 0.01 *** 0.001)
+
+
+*Table 2: Hiring Over the Business Cycle: Young and Experienced
+reg hired100 young  youngurate oldurate i.demo2 i.v2gestfips i.date if   exp<. [aweight=weight], vce(cl v2gestfips) notable
+eststo reg1
+test youngurate= oldurate
+reg hired100 young  youngurate oldurate i.demo2 i.v2gestfips i.date if (pemlr==1|pemlr==2)  & exp<. [aweight=weight], vce(cl v2gestfips) notable
+eststo reg2
+test youngurate= oldurate
+reg hired100 young  youngurate oldurate  i.demo2 i.v2gestfips i.date if (pemlr==3|pemlr==4) & exp<. [aweight=weight], vce(cl v2gestfips) notable
+eststo reg3
+test youngurate= oldurate
+reg hired100 young  youngurate oldurate  i.demo2 i.v2gestfips i.date if pemlr>4   & exp<. [aweight=weight], vce(cl v2gestfips) notable
+eststo reg4
+test youngurate= oldurate
+esttab reg1 reg2 reg3 reg4, keep(young  youngurate oldurate _cons) se r2 star(* 0.05 ** 0.01 *** 0.001)
+
+
+*Table 3: Exits and Other Flows
+reg exit2 young  youngurate oldurate i.demo2 i.v2gestfips i.date if   exp<. & (pemlr==1 | pemlr==2) [aweight=weight], vce(cl v2gestfips) notable
+eststo reg1
+test youngurate= oldurate
+reg exit_to_u2 young  youngurate oldurate i.demo2 i.v2gestfips i.date if  exp<. & (pemlr==1 | pemlr==2) [aweight=weight], vce(cl v2gestfips) notable
+eststo reg2
+test youngurate= oldurate
+reg exit_to_emp2 young  youngurate oldurate  i.demo2 i.v2gestfips i.date if  exp<. & (pemlr==1 | pemlr==2) [aweight=weight], vce(cl v2gestfips) notable
+eststo reg3
+test youngurate= oldurate
+reg exit_to_nilf2 young  youngurate oldurate  i.demo2 i.v2gestfips i.date if  exp<. & (pemlr==1 | pemlr==2) [aweight=weight], vce(cl v2gestfips) notable
+eststo reg4
+test youngurate= oldurate
+reg v2unemployed young  youngurate oldurate  i.demo2 i.v2gestfips i.date if (pemlr>4) & exp<. [aweight=weight], vce(cl v2gestfips) notable
+eststo reg5
+test youngurate= oldurate
+reg v2nilf young  youngurate oldurate  i.demo2 i.v2gestfips i.date if (pemlr==3 | pemlr==4)   & exp<. [aweight=weight], vce(cl v2gestfips) notable
+eststo reg6
+test youngurate= oldurate
+esttab reg1 reg2 reg3 reg4 reg5 reg6, keep(young  youngurate oldurate _cons) se r2 star(* 0.05 ** 0.01 *** 0.001)
+
+*Table 4: Involuntary and Voluntary Separations to Unemployment 
+reg fired_to_u young  youngurate oldurate i.demo2 i.v2gestfips i.date if  exp<. & (pemlr==1 | pemlr==2)  [aweight=weight], vce(cl v2gestfips) notable
+eststo reg1
+test youngurate= oldurate
+reg quit_to_u young  youngurate oldurate i.demo2 i.v2gestfips i.date if  exp<. & (pemlr==1 | pemlr==2)  [aweight=weight], vce(cl v2gestfips) notable
+eststo reg2
+test youngurate= oldurate
+esttab reg1 reg2 , keep(young youngurate  oldurate _cons)  se r2   star(* 0.05 ** 0.01 *** 0.001)
+
+*Table 5: Average Potential Experience of Hires 
+reg exp v2unemp  i.v2gestfips i.date i.demo2 if hired2==1 & exp<. [aweight=weight], vce(cl v2gestfips) notable
+eststo reg1
+reg exp v2unemp i.v2censusocc_2002recode i.v2censusind_2002recode  i.v2gestfips i.date i.demo2 if hired2==1 & exp<. [aweight=weight], vce(cl v2gestfips) notable
+eststo reg2
+esttab reg1 reg2, keep(v2unemp _cons) se r2  star(* 0.05 ** 0.01 *** 0.001)
+
+
+*Table 6: Potential Experience within Cells
+*Panel A: all individuals
+reg exp v2unemp i.v2gestfips i.date i.demo2 if  exp<. [aweight=weight], vce(cl v2gestfips) notable noheader
+eststo reg1
+reg exp v2unemp i.v2gestfips i.date i.demo2 if (pemlr==1|pemlr==2) & exp<. [aweight=weight], vce(cl v2gestfips) notable noheader
+eststo reg2
+reg exp v2unemp i.v2gestfips i.date i.demo2 if (pemlr==3|pemlr==4)  & exp<. [aweight=weight], vce(cl v2gestfips) notable noheader
+eststo reg3
+reg exp v2unemp i.v2gestfips i.date i.demo2 if pemlr>4  & exp<. [aweight=weight], vce(cl v2gestfips) notable noheader
+eststo reg4
+esttab reg1 reg2 reg3 reg4, keep(v2unemp _cons) se r2  star(* 0.05 ** 0.01 *** 0.001)
+*Panel B: newly hired
+reg exp v2unemp i.v2gestfips i.date i.demo2 if hired2==1 & exp<. [aweight=weight], vce(cl v2gestfips) notable
+eststo reg1
+reg exp v2unemp i.v2gestfips i.date i.demo2 if (pemlr==1|pemlr==2) & hired2==1 & exp<. [aweight=weight], vce(cl v2gestfips) notable
+eststo reg2
+reg exp v2unemp i.v2gestfips i.date i.demo2 if (pemlr==3|pemlr==4) &  hired2==1 & exp<. [aweight=weight], vce(cl v2gestfips) notable
+eststo reg3
+reg exp v2unemp i.v2gestfips i.date i.demo2 if pemlr>4 & hired2==1 & exp<. [aweight=weight], vce(cl v2gestfips) notable
+eststo reg4
+esttab reg1 reg2 reg3 reg4, keep(v2unemp _cons) se r2  star(* 0.05 ** 0.01 *** 0.001)
+
+
+*Panel C: ratio
+preserve
+drop if mhc==1 //want to drop state-month-year-cells that dont have hiring in all 3 categories
+
+keep v2unemp exp exp_hired  v2gestfips date mhc weight
+collapse v2unemp exp exp_hired [aweight=weight], by(v2gestfips date)
+
+gen exp_ratio = exp_hired/exp
+
+reg exp_ratio v2unemp i.v2gestfips i.date, vce(cl v2gestfips)
+eststo reg1
+esttab reg1, keep(v2unemp _cons) se r2 star(* 0.05 ** 0.01 *** 0.001)
+restore
+
+*want to also do this for subgroups
+
+*employed
+preserve
+keep if (pemlr==1|pemlr==2)
+drop if mhc==1 //want to drop state-month-year-cells that dont have hiring in all 3 categories
+
+keep v2unemp exp exp_hired  v2gestfips date weight
+collapse v2unemp exp exp_hired [aweight=weight] , by(v2gestfips date)
+
+gen exp_ratio = exp_hired/exp
+
+reg exp_ratio v2unemp i.v2gestfips i.date, vce(cl v2gestfips)
+eststo reg1
+esttab reg1, keep(v2unemp _cons) se r2 star(* 0.05 ** 0.01 *** 0.001)
+
+restore
+
+*unemployed
+preserve
+keep if (pemlr==3|pemlr==4)
+
+drop if mhc==1 //want to drop state-month-year-cells that dont have hiring in all 3 categories
+
+keep v2unemp exp exp_hired v2gestfips date weight
+
+collapse v2unemp exp exp_hired [aweight=weight], by(v2gestfips date)
+
+gen exp_ratio = exp_hired/exp
+
+reg exp_ratio v2unemp i.v2gestfips i.date, vce(cl v2gestfips)
+eststo reg1
+esttab reg1 , keep(v2unemp _cons) se r2 star(* 0.05 ** 0.01 *** 0.001)
+
+restore
+*NILF
+preserve
+keep if (pemlr>4)
+drop if mhc==1 //want to drop state-month-year-cells that dont have hiring in all 3 categoriess
+keep v2unemp exp exp_hired v2gestfips date  weight
+
+collapse v2unemp exp exp_hired [aweight=weight], by(v2gestfips date)
+
+gen exp_ratio = exp_hired/exp
+
+reg exp_ratio v2unemp i.v2gestfips i.date, vce(cl v2gestfips)
+eststo reg1
+esttab reg1, keep(v2unemp _cons) se r2 star(* 0.05 ** 0.01 *** 0.001)
+restore
+
+
+
+*Table 7: Search Intensity
+reg search_intensity young  youngurate oldurate i.v2gestfips i.date if (pemlr==3|pemlr==4)  & exp<. [aweight=weight], vce(cl v2gestfips)
+eststo reg1
+test youngurate= oldurate
+reg search_intensity young  youngurate oldurate i.demo2 i.v2gestfips i.date if (pemlr==3|pemlr==4) &  exp<. [aweight=weight], vce(cl v2gestfips)
+eststo reg2
+test youngurate= oldurate
+esttab reg1 reg2, keep(young oldurate youngurate  _cons) se r2  star(* 0.05 ** 0.01 *** 0.001)
+
+
+
+*Table 8: Hiring and Worker Availability
+reg hired100 young  youngurate oldurate i.demo2 i.v2gestfips i.date if (pemlr==3|pemlr==4)  & exp<. & willing== 1 [aweight=weight] , vce(cl v2gestfips) notable
+eststo reg1
+test youngurate= oldurate
+reg hired100 young  youngurate oldurate i.demo2 i.v2gestfips i.date if (pemlr==3|pemlr==4)  & exp<. [aweight=weight], vce(cl v2gestfips) notable
+eststo reg2
+test youngurate= oldurate
+reg hired100 young  youngurate oldurate  i.demo2 i.v2gestfips i.date if (pemlr>4)  & exp<. [aweight=weight] , vce(cl v2gestfips) notable
+eststo reg3
+test youngurate= oldurate
+reg hired100 young  youngurate oldurate  i.demo2 i.v2gestfips i.date if (pemlr>4)  & exp<. &  gotoschool == 0 [aweight=weight], vce(cl v2gestfips) notable
+eststo reg4
+test youngurate= oldurate
+
+esttab reg1 reg2 reg3 reg4, keep(young  youngurate oldurate _cons) se r2 star(* 0.05 ** 0.01 *** 0.001)
+
+*Table 9: Hiring over the Business Cycle: Age Versus Education
+reg hired100 college college_urate nocollege_urate if exp<. [aweight=weight], vce(cl v2gestfips) notable noheader
+eststo reg1
+reg hired100 college college_urate nocollege_urate i.v2gestfips if  exp<. [aweight=weight], vce(cl v2gestfips) notable noheader
+eststo reg2
+reg hired100 college college_urate nocollege_urate i.demo3 i.v2gestfips if  exp<. [aweight=weight], vce(cl v2gestfips) notable noheader
+eststo reg3
+reg hired100 college college_urate nocollege_urate i.date i.v2gestfips i.demo3 if  exp<. [aweight=weight], vce(cl v2gestfips) notable noheader
+eststo reg4
+esttab reg1 reg2 reg3 reg4, keep(college college_urate nocollege_urate _cons) se r2 star(* 0.05 ** 0.01 *** 0.001)
+
+*Table 10: Wages
+**panel A: Combine young and old together
+ reg v2logwagewkly_r v2unemp i.v2gestfips i.date i.demo2 i.v2censusocc_2002recode i.v2censusind_2002recode if  exp<. & hired2==1 & v2prwernal == 0 [aweight=weight], vce(cl v2gestfips) notable noheader
+ eststo reg_wage_comb_1
+ reg v2logwagewkly_r v2unemp i.v2gestfips i.date i.demo2 i.v2censusocc_2002recode i.v2censusind_2002recode  if  exp<. & hired2==1 & v2prwernal == 0 & (pemlr==1 | pemlr==2) [aweight=weight], vce(cl v2gestfips) notable noheader
+ eststo reg_wage_comb_2
+ reg v2logwagewkly_r v2unemp i.v2gestfips i.date i.demo2 i.v2censusocc_2002recode i.v2censusind_2002recode  if  exp<. & hired2==1 & v2prwernal == 0 & (pemlr==3 | pemlr==4) [aweight=weight], vce(cl v2gestfips) notable noheader
+ eststo reg_wage_comb_3
+ reg v2logwagewkly_r v2unemp i.v2gestfips i.date i.demo2 i.v2censusocc_2002recode i.v2censusind_2002recode  if  exp<. & hired2==1 & v2prwernal == 0 & (pemlr>4) [aweight=weight], vce(cl v2gestfips) notable noheader
+ eststo reg_wage_comb_4
+esttab reg_wage_comb*, keep(v2unemp _cons) se r2   star(* 0.05 ** 0.01 *** 0.001)
+
+
+**panel b: Disaggregated
+ reg v2logwagewkly_r young youngurate oldurate i.v2gestfips i.date i.demo2 i.v2censusocc_2002recode i.v2censusind_2002recode if  exp<. & hired2==1 & v2prwernal == 0 [aweight=weight], vce(cl v2gestfips) notable noheader
+ eststo reg_wage_disag_1
+test youngurate= oldurate
+ reg v2logwagewkly_r young youngurate oldurate i.v2gestfips i.date i.demo2 i.v2censusocc_2002recode i.v2censusind_2002recode  if  exp<. & hired2==1 & (pemlr==1 | pemlr==2) & v2prwernal == 0 [aweight=weight], vce(cl v2gestfips) notable noheader
+ eststo reg_wage_disag_2
+test youngurate= oldurate
+ reg v2logwagewkly_r young youngurate oldurate i.v2gestfips i.date i.demo2 i.v2censusocc_2002recode i.v2censusind_2002recode  if  exp<. & hired2==1 & (pemlr==3 | pemlr==4) & v2prwernal == 0 [aweight=weight], vce(cl v2gestfips) notable noheader
+ eststo reg_wage_disag_3
+test youngurate= oldurate
+ reg v2logwagewkly_r young youngurate oldurate i.v2gestfips i.date i.demo2 i.v2censusocc_2002recode i.v2censusind_2002recode  if  exp<. & hired2==1 & (pemlr>4) & v2prwernal == 0 [aweight=weight], vce(cl v2gestfips) notable noheader
+ eststo reg_wage_disag_4
+test youngurate= oldurate
+esttab reg_wage_disag_*, keep(young youngurate  oldurate _cons) se r2  star(* 0.05 ** 0.01 *** 0.001)
+
+
+
+
+```
+
+### `3 replication package/Dofiles/YH_appendix_figure.do`
+```stata
+clear
+
+*occupation figure
+forvalues i=0(1)10 {
+append using $output/figureC_hiring_`i'.dta
+}
+
+rename idnum occ
+
+
+
+label define occlabel 1 "Mgmt" 2 "Prof" 3 "Service" 4 "Sales" 5  "Admin" 6 "Farm" 7 "Const" 8 "Install" 9 "Prod" 10 "Transp"
+label values occ occlabel
+
+keep if parm == "youngurate" | parm == "oldurate"
+keep if occ !=0
+
+gen young = parm == "youngurate"
+
+twoway (rcap  min95 max95 occ if young == 1, lcolor(black) msize(medium) xlabel(1 2 3 4 5 6 7 8 9 10, valuelabel)) (rcap min95 max95  occ if young == 0, lcolor(gray) msize(medium)) ///
+(scatter estimate occ if young == 1, mcolor(black)) ///
+(scatter estimate occ if young == 0, mcolor(gray)) ///
+, xlabel(1(1)10) graphregion(color(white)) ylab(,nogrid) yline(0, lwidth(medium)) ///
+legend(off) ytitle("Change in Hiring Rate x 100") xtitle("") xsize(9)
+
+
+graph export "$output/figureC_hiring.pdf", as(pdf) replace
+
+clear
+
+*occupation figure
+forvalues i=1(1)10 {
+append using $output/figureC_wage_`i'.dta
+}
+
+rename idnum occ
+
+label define occlabel 1 "Mgmt" 2 "Prof" 3 "Service" 4 "Sales" 5  "Admin" 6 "Farm" 7 "Const" 8 "Install" 9 "Prod" 10 "Transp"
+label values occ occlabel
+
+
+
+keep if parm == "youngurate" | parm == "oldurate"
+keep if occ !=0
+
+gen young = parm == "youngurate"
+
+twoway (rcap  min95 max95 occ if young == 1, lcolor(black) msize(medium) xlabel(1 2 3 4 5 6 7 8 9 10, valuelabel)) (rcap min95 max95  occ if young == 0, lcolor(gray) msize(medium)) ///
+(scatter estimate occ if young == 1, mcolor(black)) ///
+(scatter estimate occ if young == 0, mcolor(gray)) ///
+, xlabel(1(1)10) graphregion(color(white)) ylab(,nogrid) yline(0, lwidth(medium)) ///
+legend(off) ytitle("Change in Real Log Wages") xtitle("") xsize(9)
+
+graph export "$output/figureC_wages.pdf", as(pdf) replace
+
+
+```
+
+### `3 replication package/Dofiles/YH_figures.do`
+```stata
+ *figure 1
+ 
+ use "$output/figure1_data.dta", clear
+
+gen young_hired = (hired100 == 100 & young == 1)
+gen old_hired = (hired100==100 & young == 0)
+gen old = young == 0
+
+collapse (sum) young_hired (sum) old_hired (sum) young (sum) old [aweight=weight], by(hryear)
+
+gen young_share=100*young_hired/(young)
+gen old_share=100*old_hired/(old)
+
+twoway (line young_share hryear) (line old_share hryear)
+
+tsset hryear
+
+
+twoway (scatteri 8 2000 8 2001, bcolor(gs12) recast(area)) ///
+(scatteri 8 2006 8 2009, bcolor(gs12) recast(area)) ///
+(line old_share hryear, lpattern(dash) lcolor(gray)) (line young_share  hryear,  lcolor(black)), xlabel(1995(3)2014) ylabel(0(2)8) ///
+legend(order(3 "Experienced Hires" 4 "Young Hires" 1 "NBER Recessions")) graphregion(color(white))  ylab(,nogrid) ytitle("Hiring Rate (%)")
+graph export "$output/hiring_figure.pdf", as(pdf) replace
+
+/* Doing fitler with smoother 6.25. young_share_hp is cycle; young_share_trend is cycle */
+tsfilter hp young_share_hp = young_share, smooth(6.25) trend(young_share_trend) 
+/* Doing fitler with smoother 6.25. old_share_hp is cycle; old_share_trend is cycle */ 
+tsfilter hp old_share_hp = old_share, smooth(6.25) t(old_share_trend) 
+
+
+twoway (scatteri 0.5 2000 0.5 2001, bcolor(gs12) recast(area)) ///
+(scatteri 0.5 2006 0.5 2009, bcolor(gs12) recast(area)) ///
+(scatteri -1 2000 -1 2001, bcolor(gs12) recast(area)) (scatteri -1 2006 -1 2009, bcolor(gs12) recast(area)) ///
+(line old_share_hp hryear, lpattern(dash) lcolor(gray)) (line young_share_hp  hryear,  lcolor(black)), xlabel(1995(3)2014)  ///
+legend(order(5 "Experienced Hires" 6 "Young Hires" 1 "NBER Recessions")) graphregion(color(white))   ylab( ,nogrid) ytitle("Detrended Hiring Rate (%)")
+
+
+graph export "$output/detrended_hiring.pdf", as(pdf) replace
+
+
+*figure 2
+
+*figure 2a
+ use "$output/figure2a.dta", clear
+ 
+ drop if regexm(parm,"uxpe"[0-9]*)==0
+*want to generate a running variable with the PE
+egen pexp=ends(parm), punct(e) last
+destring pexp, replace
+replace pexp=-1 if pexp==1001
+replace pexp=-2 if pexp==1002
+replace pexp=-2 if pexp==1003
+
+twoway line (estimate min95 max95 ) pexp if pexp>=0 & pexp<45, legend(off) ///
+xtitle("Potential Experience") ytitle("Change in Hiring Rate x 100") ///
+lpattern(solid dash dash) lcolor(black black black) graphregion(color(white)) ylab(,nogrid) yline(0, lwidth(medium))  
+
+graph export "$output/figure2_all.pdf", as(pdf) replace
+
+*figure 2b
+clear
+ use "$output/figure2b.dta", clear
+ 
+  drop if regexm(parm,"uxpe"[0-9]*)==0
+*want to generate a running variable with the PE
+egen pexp=ends(parm), punct(e) last
+destring pexp, replace
+replace pexp=-1 if pexp==1001
+replace pexp=-2 if pexp==1002
+replace pexp=-2 if pexp==1003
+
+twoway line (estimate min95 max95 ) pexp if pexp>=0 & pexp<45, legend(off) ///
+xtitle("Potential Experience") ytitle("Change in Hiring Rate x 100") ///
+lpattern(solid dash dash) lcolor(black black black) graphregion(color(white)) ylab(,nogrid) yline(0, lwidth(medium))  
+
+graph export "$output/figure2_ee.pdf", as(pdf) replace
+
+
+*figure 2c
+use "$output/figure2c.dta", clear
+*want to just keep the regression coefficients for the interaction
+*between potential experience and the state unemp rate
+drop if regexm(parm,"uxpe"[0-9]*)==0
+*want to generate a running variable with the PE
+egen pexp=ends(parm), punct(e) last
+destring pexp, replace
+replace pexp=-1 if pexp==1001
+replace pexp=-2 if pexp==1002
+replace pexp=-2 if pexp==1003
+
+twoway line (estimate min95 max95 ) pexp if pexp>=0 & pexp<45, legend(off) ///
+xtitle("Potential Experience") ytitle("Change in Hiring Rate x 100") ///
+lpattern(solid dash dash) lcolor(black black black) graphregion(color(white)) ylab(,nogrid) yline(0, lwidth(medium))  ylabel(-3(1)0.2)
+
+graph export "$output/figure2_ue.pdf", as(pdf) replace
+
+clear
+use "$output/figure2d.dta", clear
+
+drop if regexm(parm,"uxpe"[0-9]*)==0
+*want to generate a running variable with the PE
+egen pexp=ends(parm), punct(e) last
+destring pexp, replace
+replace pexp=-1 if pexp==1001
+replace pexp=-2 if pexp==1002
+replace pexp=-2 if pexp==1003
+*twoway line (estimate min95 max95) pexp if pexp>=0 & pexp<60
+
+
+
+
+twoway line (estimate min95 max95 ) pexp if pexp>=0 & pexp<45, legend(off) ///
+xtitle("Potential Experience") ytitle("Change in Hiring Rate x 100") ///
+lpattern(solid dash dash) lcolor(black black black) graphregion(color(white)) ylab(,nogrid) yline(0, lwidth(medium)) 
+
+graph export "$output/figure2_nilfe.pdf", as(pdf) replace
+
+*figure 3
+clear
+use "$output/figure3_nocollege.dta", clear
+
+
+
+drop if regexm(parm,"uxpe"[0-9]*)==0
+*want to generate a running variable with the PE
+egen pexp=ends(parm), punct(e) last
+destring pexp, replace
+replace pexp=-1 if pexp==1001
+replace pexp=-2 if pexp==1002
+replace pexp=-2 if pexp==1003
+gen min90 = estimate - 1.645*stderr
+gen max90 = estimate + 1.645*stderr
+
+save "$output/figure3_nocollegetemp.dta", replace
+
+use "$output/figure3_college.dta", clear
+
+drop if regexm(parm,"uxpe"[0-9]*)==0
+*want to generate a running variable with the PE
+egen pexp=ends(parm), punct(e) last
+destring pexp, replace
+replace pexp=-1 if pexp==1001
+replace pexp=-2 if pexp==1002
+replace pexp=-2 if pexp==1003
+gen min90 = estimate - 1.645*stderr
+gen max90 = estimate + 1.645*stderr
+
+
+rename estimate est_col 
+rename min90 min90_col
+rename max90 max90_col
+
+ merge 1:1 pexp using  "$output/figure3_nocollegetemp.dta"
+ drop _merge
+
+rename estimate est_nc 
+rename min90 min90_nc
+rename max90 max90_nc
+
+
+
+*final college no college graph:
+twoway (rarea max90_col min90_col pexp if pexp>=0 & pexp<45, color(gs12*.20)) ///
+(rarea max90_nc min90_nc pexp if pexp>=0 & pexp<45, color(gs6*.20) )  ///
+(line est_nc pexp if pexp>=0 & pexp<45, lcolor(black)) ///
+(line est_col pexp if pexp>=0 & pexp<45, lcolor(gray )) ///
+(pci 0 0 0 44, lcolor(red)), ///
+xtitle("Potential Experience") ytitle("Change in Hiring Rate x 100") ///
+graphregion(color(white)) ylab(,nogrid) legend(off)
+
+
+graph export "$output/gradient_college_nocol.pdf", as(pdf) replace
+
+
+```
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

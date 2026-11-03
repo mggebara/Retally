@@ -8,6 +8,7 @@
 | Model | desktop-opus-run2 |
 | Run | 20261102T151132Z |
 | Date | 2026-11-02T15:11:32Z |
+| Data access | public |
 | Results file | `benchmark/results/pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json` |
 | Artifacts | `benchmark/results/artifacts/labandeira-2022-electricity-pricing-reform/blind/pipeline/20261102T151132Z` |
 | Executions | 1 |
@@ -32,8 +33,8 @@
 | `reform_expenditure_fe_iv_col8` | -0.089 (0.053) | -0.136377 | 53.23% | ±0.053 (se_band) | PASS | PASS |
 | `price_elasticity_consumption_ols_col1` | -1.044 (0.024) | -1.08653 | 4.07% | ±0.024 (se_band) | FAIL | FAIL |
 | `price_elasticity_consumption_fe_col3` | -1.026 (0.025) | -1.02341 | 0.25% | ±0.025 (se_band) | PASS | PASS |
-| `n_obs_table2` | 20872 | 46206 | 121.38% | ±208.72 (relative) | FAIL | FAIL |
-| `n_households_table2` | 10729 | 32316 | 201.20% | ±107.29 (relative) | FAIL | FAIL |
+| `n_obs_table2` | 20872 | 46206 | 121.38% | ±1043.6 (relative) | FAIL | FAIL |
+| `n_households_table2` | 10729 | 32316 | 201.20% | ±536.45 (relative) | FAIL | FAIL |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 4/12 pass, which agrees with the row's 4/12.
 

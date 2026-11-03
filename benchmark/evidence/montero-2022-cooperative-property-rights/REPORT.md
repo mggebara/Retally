@@ -6,6 +6,7 @@
 - I4R report: https://www.econstor.eu/bitstream/10419/268943/1/I4R-DP020.pdf
 - I4R outcome label: not_reproducible; split: holdout
 - Catalog entry (ground truth): `benchmark/papers/montero-2022-cooperative-property-rights.yaml`
+- Data access: public
 
 > Headline finding (as published): an RD at El Salvador's 1980 500 ha land-reform threshold shows cooperatives grow fewer cash crops and more staple crops, are less productive in cash crops and more in staples (Tables 2-4), and that cooperative workers have higher earnings ($60 per month, Table 5 col 1) and a ~$43 lower within-property interquartile range of earnings (col 3).  The I4R comment (DP20 / JPE 2023) and the author's own note withdraw the Table 5 / Figure 6 earnings results; the productivity results stand (the meta-database's 20 "recoding in a different software" rows reproduce Tables 2-3 exactly, e.g. -.594 (.152), -.234 (.104), .439 (.194), 17.34 (7.236)).
 > Original analysis in Stata (Montero's code and the comment's Replication_file.do); language: r is the reproduction target.
@@ -36,10 +37,11 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [10/10](seeded/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[10/10](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [10/10](independent/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[10/10](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[10/10](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [10/10](blind/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[6/10](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[5/10](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
-| `pipeline-claude-opus-4-7` | [10/10](seeded/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [3/10](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [0/10](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) |
+| `claude-code` | [10/10](seeded/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[10/10](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [10/10](independent/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[10/10](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[10/10](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [10/10](blind/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[7/10](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[6/10](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
+| `pipeline-claude-opus-4-7` | [10/10](seeded/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [5/10](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [0/10](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) |
 | `pipeline-claude-opus-5-5` | [10/10](seeded/pipeline-claude-opus-5-5/20261022T044149Z/CELL.md) (20261022T044149Z) | [10/10](independent/pipeline-claude-opus-5-5/20261022T044149Z/CELL.md) (20261022T044149Z) | [0/10](blind/pipeline-claude-opus-5-5/20261022T044149Z/CELL.md) (20261022T044149Z) |
-| `pipeline-desktop-opus-run2` | [10/10](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [7/10](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) (20261023T153002Z) | [1/10](blind/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) |
+| `pipeline-desktop-opus-run2` | [10/10](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [8/10](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) (20261023T153002Z) | [3/10](blind/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) |
+| `pipeline-desktop-opus-run3` | [10/10](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [10/10](independent/pipeline-desktop-opus-run3/20261103T054754Z/CELL.md) (20261103T054754Z) | [0/10](blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
 
@@ -51,15 +53,15 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 | Cell | Claim | Reproduced | Paper | Band | Error / band | Verdict |
 |---|---|---|---|---|---|---|
-| [blind/claude-code/2026-11-01-a](blind/claude-code/2026-11-01-a/CELL.md) | `n_clusters_bw300` | 99 | 98 | ±0.98 (relative) | 1.020 | FAIL |
-| [blind/claude-code/2026-11-02-c](blind/claude-code/2026-11-02-c/CELL.md) | `n_clusters_bw300` | 99 | 98 | ±0.98 (relative) | 1.020 | FAIL |
-| [blind/pipeline-desktop-opus-run2/20261023T151837Z](blind/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) | `n_clusters_bw300` | 99 | 98 | ±0.98 (relative) | 1.020 | FAIL |
 | [blind/pipeline-desktop-opus-run2/20261023T151837Z](blind/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) | `earnings_level_above500_bw150` | 94.6765 | 52.79 | ±40.61 (se_band) | 1.031 | FAIL |
 | [independent/pipeline-claude-opus-4-7/20261021T142909Z](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `earnings_level_above500_bw150` | 95.7704 | 52.79 | ±40.61 (se_band) | 1.058 | FAIL |
+| [blind/pipeline-desktop-opus-run2/20261023T151837Z](blind/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) | `n_obs_earnings_level_bw150` | 1513 | 1583 | ±79.15 (relative) | 0.884 | PASS |
+| [independent/pipeline-claude-opus-4-7/20261021T142909Z](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `n_obs_earnings_iqr_bw150` | 113 | 118 | ±5.9 (relative) | 0.847 | PASS |
 | [independent/claude-code/2026-10-21-b](independent/claude-code/2026-10-21-b/CELL.md) | `earnings_iqr_above500_bw300` | -56.4231 | -42.97 | ±17.82 (se_band) | 0.755 | PASS |
 | [independent/claude-code/2026-11-01-a](independent/claude-code/2026-11-01-a/CELL.md) | `earnings_iqr_above500_bw300` | -56.4231 | -42.97 | ±17.82 (se_band) | 0.755 | PASS |
 | [blind/claude-code/2026-10-21-b](blind/claude-code/2026-10-21-b/CELL.md) | `earnings_iqr_above500_bw300` | -56.4231 | -42.97 | ±17.82 (se_band) | 0.755 | PASS |
 | [independent/claude-code/2026-11-02-c](independent/claude-code/2026-11-02-c/CELL.md) | `earnings_iqr_above500_bw300` | -56.4231 | -42.97 | ±17.82 (se_band) | 0.755 | PASS |
+| [independent/pipeline-desktop-opus-run3/20261103T054754Z](independent/pipeline-desktop-opus-run3/20261103T054754Z/CELL.md) | `earnings_level_above500_bw300` | 82.545 | 60.49 | ±31.03 (se_band) | 0.711 | PASS |
 | [independent/pipeline-desktop-opus-run2/20261023T153002Z](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) | `earnings_level_above500_bw300` | 82.5034 | 60.49 | ±31.03 (se_band) | 0.709 | PASS |
 
 ### Declared deviations
@@ -77,48 +79,50 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - The interquartile range is computed per property x survey round (match_id x year) over all such cells; the paper's 'at least five members represented' restriction is not applied, because the reported observation counts (327 and 118) equal the number of all property-round cells in the 300 and 150 ha samples (only 128 and 45 cells have five or more surveyed workers).
   - Percentiles use R quantile type 2 (Stata _pctile/egen pctile definition).
   - IQR computed per property x survey round (match_id x year) over all such cells; the 'at least five members' restriction is not applied because the reported observation counts (327/118) equal all property-round cells
-- [independent/pipeline-claude-opus-4-7/20261021T142909Z](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (3/10; failed: `earnings_level_above500_bw150`, `earnings_iqr_above500_bw300`, `earnings_iqr_above500_bw150`, `n_obs_earnings_iqr_bw300`, `n_obs_earnings_iqr_bw150`, `n_clusters_bw300`, `n_clusters_bw150`)
+- [independent/pipeline-claude-opus-4-7/20261021T142909Z](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (5/10; failed: `earnings_level_above500_bw150`, `earnings_iqr_above500_bw300`, `earnings_iqr_above500_bw150`, `n_obs_earnings_iqr_bw300`, `n_clusters_bw300`)
   - IQR aggregated at canton-year level to approximate paper 327/118 obs counts; outcome hh_inc_pc_real; running variable own_amt-500.
 - [independent/pipeline-claude-opus-5-5/20261022T044149Z](independent/pipeline-claude-opus-5-5/20261022T044149Z/CELL.md) (10/10)
   - Survey-round fixed effects included (Table 5 specification) although the baseline eq. (1) has none
   - IQR computed per property x survey year without a minimum-workers filter
-- [independent/pipeline-desktop-opus-run2/20261023T153002Z](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) (7/10; failed: `earnings_iqr_above500_bw300`, `earnings_iqr_above500_bw150`, `n_obs_earnings_iqr_bw150`)
+- [independent/pipeline-desktop-opus-run2/20261023T153002Z](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) (8/10; failed: `earnings_iqr_above500_bw300`, `earnings_iqr_above500_bw150`)
   - Bandwidth window applied with strict inequality \|x\| < bw (owners exactly at the window edge excluded), matching the stated 98 owner clusters
   - IQR of earnings computed per property (key=CANTON, by survey year=TRUE, min 3 obs, household-dedup=TRUE, positive income only=FALSE, Stata-style percentiles); property definition chosen to match the stated property counts
+- [independent/pipeline-desktop-opus-run3/20261103T054754Z](independent/pipeline-desktop-opus-run3/20261103T054754Z/CELL.md) (10/10)
+  - IQR computed at the property x survey-wave x interview-year level, keeping all cells (Stata collapse-style percentiles, IQR=0 for single-worker cells) since the paper's IQR unit (327 properties at bw300) exceeds the number of distinct properties and of property x survey-year cells
 - [blind/claude-code/2026-10-21-b](blind/claude-code/2026-10-21-b/CELL.md) (10/10)
   - IQR (columns 3-4) sample: every property x survey-round cell inside the bandwidth, with the IQR computed within the cell (single-worker cells get IQR 0). The paper says the sample is limited to properties with at least five members in the surveys, but applying that literally per cell (45 cells at 150 ha) or via the num_members variable (101) contradicts the property counts the paper reports for these columns (118 at 150 ha, 327 at 300 ha), which match all cells under a strict bandwidth. I followed the reported property counts.
   - Bandwidth inclusion is strict (\|landholdings - 500\| < bw). This only matters at 300 ha, where one property (match_id 540732174011, 11 workers in 5 survey rounds) sits exactly 300 ha from the cutoff and is dropped; strict inclusion matches the 327 properties the paper reports for column 3.
   - Percentiles use R quantile type 2, which matches Stata's summarize/egen percentile definition (the data are Stata files).
   - All survey years in the file (2000-2013) are used, although the text says 2002-2013; the 150 ha worker count (1,583) and cluster count (36) given in the task match the full file.
   - IQR sample uses every property-survey-round cell inside the bandwidth (the paper's 'at least five members' filter, applied literally per cell, would leave far fewer units than the properties the paper reports); bandwidth inclusion is strict (\|dist\| < bw).
-- [blind/claude-code/2026-11-01-a](blind/claude-code/2026-11-01-a/CELL.md) (6/10; failed: `earnings_iqr_above500_bw150`, `n_obs_earnings_iqr_bw300`, `n_obs_earnings_iqr_bw150`, `n_clusters_bw300`)
+- [blind/claude-code/2026-11-01-a](blind/claude-code/2026-11-01-a/CELL.md) (7/10; failed: `earnings_iqr_above500_bw150`, `n_obs_earnings_iqr_bw300`, `n_obs_earnings_iqr_bw150`)
   - Interquartile range computed per property pooling all survey rounds (Stata type-2 quantiles), properties with >=5 surveyed workers in the bandwidth sample; one observation per property. Because one observation per property cannot carry survey-round FE directly, columns 3-4 use FE for the property's modal survey round (fixest dropped 2 singletons at 150 ha, N=26 of 28 eligible properties).
   - All survey years in the provided file (2000-2013) kept, although the paper text says 2002-2013; the data file is the authors' constructed analysis sample.
   - IQR computed per property pooling all survey rounds (Stata-style type-2 quantiles); survey-round FE in columns 3-4 enter as the property's modal survey round
-- [blind/claude-code/2026-11-02-c](blind/claude-code/2026-11-02-c/CELL.md) (5/10; failed: `earnings_iqr_above500_bw300`, `earnings_iqr_above500_bw150`, `n_obs_earnings_iqr_bw300`, `n_obs_earnings_iqr_bw150`, `n_clusters_bw300`)
+- [blind/claude-code/2026-11-02-c](blind/claude-code/2026-11-02-c/CELL.md) (6/10; failed: `earnings_iqr_above500_bw300`, `earnings_iqr_above500_bw150`, `n_obs_earnings_iqr_bw300`, `n_obs_earnings_iqr_bw150`)
   - IQR regressions (one observation per property, IQR pooled across all of the property's surveyed workers): survey-round FE uses the survey year of each property's first row in the file, since the paper does not say how a round is assigned when a property's workers span several rounds.
   - All survey years in the data file (2000-2013) are kept, although the paper's text says 2002-2013; the file contains no 2002/2003 rounds, and no year restriction was applied.
   - Former-owner clusters are identified by Expropretario_ISTA; bandwidth samples are \|own_amt - 500\| <= bw (uniform kernel); percentiles use R quantile type 2 (Stata pctile convention).
   - survey-round FE in the one-observation-per-property IQR regressions use the survey year of each property's first row in the file (paper does not say how rounds are assigned when a property's workers span several rounds)
-- [blind/pipeline-desktop-opus-run2/20261023T151837Z](blind/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (1/10; failed: `earnings_level_above500_bw300`, `earnings_level_above500_bw150`, `earnings_iqr_above500_bw300`, `earnings_iqr_above500_bw150`, `n_obs_earnings_level_bw300`, `n_obs_earnings_level_bw150`, `n_obs_earnings_iqr_bw300`, `n_obs_earnings_iqr_bw150`, `n_clusters_bw300`)
+- [blind/pipeline-desktop-opus-run2/20261023T151837Z](blind/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (3/10; failed: `earnings_level_above500_bw300`, `earnings_level_above500_bw150`, `earnings_iqr_above500_bw300`, `earnings_iqr_above500_bw150`, `n_obs_earnings_level_bw300`, `n_obs_earnings_iqr_bw300`, `n_obs_earnings_iqr_bw150`)
   - IQR regressions use one observation per property; no survey-round FE (not identifiable with one obs per property)
 
 ### Pipeline and agent disagree
 
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
-- blind: `earnings_level_above500_bw150` — pipeline 0/3, agent 3/3
-- blind: `earnings_level_above500_bw300` — pipeline 0/3, agent 3/3
-- blind: `n_obs_earnings_level_bw150` — pipeline 0/3, agent 3/3
-- blind: `n_obs_earnings_level_bw300` — pipeline 0/3, agent 3/3
+- blind: `earnings_level_above500_bw150` — pipeline 0/4, agent 3/3
+- blind: `earnings_level_above500_bw300` — pipeline 0/4, agent 3/3
+- blind: `n_obs_earnings_level_bw300` — pipeline 0/4, agent 3/3
 
 Pass rates at least 50 points apart (not unanimous):
 
-- independent: `earnings_iqr_above500_bw150` — pipeline 1/3, agent 3/3
-- independent: `earnings_iqr_above500_bw300` — pipeline 1/3, agent 3/3
-- independent: `n_obs_earnings_iqr_bw150` — pipeline 1/3, agent 3/3
-- blind: `earnings_iqr_above500_bw300` — pipeline 0/3, agent 2/3
-- blind: `n_clusters_bw150` — pipeline 1/3, agent 3/3
+- independent: `earnings_iqr_above500_bw150` — pipeline 2/4, agent 3/3
+- independent: `earnings_iqr_above500_bw300` — pipeline 2/4, agent 3/3
+- blind: `earnings_iqr_above500_bw300` — pipeline 0/4, agent 2/3
+- blind: `n_clusters_bw150` — pipeline 1/4, agent 3/3
+- blind: `n_clusters_bw300` — pipeline 1/4, agent 3/3
+- blind: `n_obs_earnings_level_bw150` — pipeline 1/4, agent 3/3
 
 ## Cells
 
@@ -142,6 +146,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md`](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — final 10/10, re-scored 10/10; first scored 10/10; executions 1; 2026-10-23T15:18:37Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
 
+### seeded · pipeline-desktop-opus-run3 · 20261103T010557Z
+
+[`seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md`](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — final 10/10, re-scored 10/10; first scored 10/10; executions 1; 2026-11-03T01:05:57Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
+
 ### independent · claude-code · 2026-10-21-b
 
 [`independent/claude-code/2026-10-21-b/CELL.md`](independent/claude-code/2026-10-21-b/CELL.md) — final 10/10, re-scored 10/10; first scored 10/10; executions 4; 2026-10-22T02:09:00Z; from `claude-code-7papers-all-modes-2026-10-21.json`; evidence complete.
@@ -156,7 +164,7 @@ Pass rates at least 50 points apart (not unanimous):
 
 ### independent · pipeline-claude-opus-4-7 · 20261021T142909Z
 
-[`independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md`](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) — final 3/10, re-scored 3/10; first scored 2/10; executions 6; 2026-10-21T14:29:09Z; from `pipeline-10papers-all-modes-2026-10-21.json`; evidence complete.
+[`independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md`](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) — final 5/10, re-scored 5/10; first scored 2/10; executions 6; 2026-10-21T14:29:09Z; from `pipeline-10papers-all-modes-2026-10-21.json`; evidence complete.
 
 ### independent · pipeline-claude-opus-5-5 · 20261022T044149Z
 
@@ -164,7 +172,11 @@ Pass rates at least 50 points apart (not unanimous):
 
 ### independent · pipeline-desktop-opus-run2 · 20261023T153002Z
 
-[`independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) — final 7/10, re-scored 7/10; first scored 0/10; executions 4; 2026-10-23T15:30:02Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
+[`independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) — final 8/10, re-scored 8/10; first scored 0/10; executions 4; 2026-10-23T15:30:02Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
+
+### independent · pipeline-desktop-opus-run3 · 20261103T054754Z
+
+[`independent/pipeline-desktop-opus-run3/20261103T054754Z/CELL.md`](independent/pipeline-desktop-opus-run3/20261103T054754Z/CELL.md) — final 10/10, re-scored 10/10; first scored 0/10; executions 5; 2026-11-03T05:47:54Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 
 ### blind · claude-code · 2026-10-21-b
 
@@ -172,11 +184,11 @@ Pass rates at least 50 points apart (not unanimous):
 
 ### blind · claude-code · 2026-11-01-a
 
-[`blind/claude-code/2026-11-01-a/CELL.md`](blind/claude-code/2026-11-01-a/CELL.md) — final 6/10, re-scored 6/10; first scored 6/10; executions 3; 2026-11-02T04:21:30Z; from `claude-code-run2-13papers-indep-blind-2026-11-01.json`; evidence complete.
+[`blind/claude-code/2026-11-01-a/CELL.md`](blind/claude-code/2026-11-01-a/CELL.md) — final 7/10, re-scored 7/10; first scored 6/10; executions 3; 2026-11-02T04:21:30Z; from `claude-code-run2-13papers-indep-blind-2026-11-01.json`; evidence complete.
 
 ### blind · claude-code · 2026-11-02-c
 
-[`blind/claude-code/2026-11-02-c/CELL.md`](blind/claude-code/2026-11-02-c/CELL.md) — final 5/10, re-scored 5/10; first scored 5/10; executions 4; 2026-11-02T20:21:32Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
+[`blind/claude-code/2026-11-02-c/CELL.md`](blind/claude-code/2026-11-02-c/CELL.md) — final 6/10, re-scored 6/10; first scored 5/10; executions 4; 2026-11-02T20:21:32Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
 
 ### blind · pipeline-claude-opus-4-7 · 20261021T142909Z
 
@@ -188,5 +200,9 @@ Pass rates at least 50 points apart (not unanimous):
 
 ### blind · pipeline-desktop-opus-run2 · 20261023T151837Z
 
-[`blind/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md`](blind/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — final 1/10, re-scored 1/10; first scored 1/10; executions 2; 2026-10-23T15:18:37Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
+[`blind/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md`](blind/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — final 3/10, re-scored 3/10; first scored 1/10; executions 2; 2026-10-23T15:18:37Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-run3 · 20261103T010557Z
+
+[`blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md`](blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — final 0/10, re-scored 0/10; first scored 0/10; executions 2; 2026-11-03T01:05:57Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 

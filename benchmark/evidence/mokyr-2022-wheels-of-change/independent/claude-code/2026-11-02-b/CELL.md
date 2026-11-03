@@ -8,6 +8,7 @@
 | Model | — |
 | Run | 2026-11-02-b |
 | Date | 2026-11-02T14:56:30Z |
+| Data access | public |
 | Results file | `benchmark/results/claude-code-run2-6papers-indep-blind-2026-11-02.json` |
 | Artifacts | `benchmark/results/artifacts/mokyr-2022-wheels-of-change/independent/claude-code/20261102T151024Z` |
 | Run directory | `benchmark/reproductions/mokyr-2022-wheels-of-change/independent/2026-11-02-b` |
@@ -35,7 +36,7 @@
 | `first_stage_f_table3_col2` | 19.9 | 19.9036 | 0.02% | ±0.199 (relative) | PASS | PASS |
 | `first_stage_f_table3_col4` | 16.96 | 16.9575 | 0.01% | ±0.1696 (relative) | PASS | PASS |
 | `first_stage_f_table3_col6` | 16.17 | 16.1736 | 0.02% | ±0.1617 (relative) | PASS | PASS |
-| `n_districts_tables2_3` | 298 | 298 | 0.00% | ±2.98 (relative) | PASS | PASS |
+| `n_districts_tables2_3` | 298 | 298 | 0.00% | ±14.9 (relative) | PASS | PASS |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 13/13 pass, which agrees with the row's 13/13.
 

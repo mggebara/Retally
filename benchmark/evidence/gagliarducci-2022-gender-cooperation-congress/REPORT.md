@@ -6,6 +6,7 @@
 - I4R report: https://www.econstor.eu/bitstream/10419/278109/1/I4R-DP075.pdf
 - I4R outcome label: reproducible; split: holdout
 - Catalog entry (ground truth): `benchmark/papers/gagliarducci-2022-gender-cooperation-congress.yaml`
+- Data access: public
 
 > Headline finding: bill-level evidence from the 101st-111th U.S. House that, after addressing the selection of women into districts (close- election RD and inverse-propensity-score weighting), Democratic women recruit no more cosponsors than Democratic men but fewer from the opposite party, while Republican women recruit more cosponsors and more bipartisan support (Table 5).  DP75 reproduces the table exactly and finds it largely robust to amended controls and member-level clustering; extending to 2011-2020 removes the Republican bipartisanship gap and strengthens the overall gender gap in number of cosponsors.
 > Original analysis in Stata 16.1 (README: reghdfe 5.7.3, rdrobust 8.1.0, rddensity 2.3, DCdensity 2009, all vendored in Adofiles/); language: r is the reproduction target.
@@ -41,6 +42,7 @@
 | `claude-code` | [13/13](seeded/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[13/13](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [7/13](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[9/13](blind/claude-code/2026-10-22-b/CELL.md) (2026-10-22-b)<br>[9/13](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[9/13](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
 | `pipeline-desktop-opus` | [8/13](seeded/pipeline-desktop-opus/20261023T064839Z/CELL.md) (20261023T064839Z) | [13/13](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) (20261023T064839Z) | [12/13](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) |
 | `pipeline-desktop-opus-run2` | [12/13](seeded/pipeline-desktop-opus-run2/20261023T153400Z/CELL.md) (20261023T153400Z) | [13/13](independent/pipeline-desktop-opus-run2/20261023T152513Z/CELL.md) (20261023T152513Z) | [7/13](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
+| `pipeline-desktop-opus-run3` | [11/13](seeded/pipeline-desktop-opus-run3/20261103T054754Z/CELL.md) (20261103T054754Z) | [12/13](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) (20261103T052626Z) | [7/13](blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
 
@@ -60,8 +62,8 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | [blind/claude-code/2026-11-02-c](blind/claude-code/2026-11-02-c/CELL.md) | `female_sponsor_pct_opposite_dem_rd` | -5.13248 | -3.351 | ±1.91 (se_band) | 0.933 | PASS |
 | [independent/pipeline-desktop-opus/20261023T064839Z](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) | `female_sponsor_pct_opposite_dem_ols` | -1.89122 | -1.505 | ±0.419 (se_band) | 0.922 | PASS |
 | [seeded/claude-code/2026-10-22-a](seeded/claude-code/2026-10-22-a/CELL.md) | `female_sponsor_ncosponsors_rep_rd_ipw` | 6.85691 | 6.734 | ±0.13468 (relative) | 0.913 | PASS |
+| [seeded/pipeline-desktop-opus-run3/20261103T054754Z](seeded/pipeline-desktop-opus-run3/20261103T054754Z/CELL.md) | `female_sponsor_ncosponsors_rep_rd_ipw` | 6.85691 | 6.734 | ±0.13468 (relative) | 0.913 | PASS |
 | [blind/claude-code/2026-10-22-b](blind/claude-code/2026-10-22-b/CELL.md) | `female_sponsor_pct_opposite_rep_ols` | 4.47979 | 3.666 | ±0.916 (se_band) | 0.888 | PASS |
-| [independent/claude-code/2026-11-01-a](independent/claude-code/2026-11-01-a/CELL.md) | `female_sponsor_ncosponsors_rep_ipw_sponsor` | 2.2269 | 3.124 | ±1.04 (se_band) | 0.863 | PASS |
 
 ### Declared deviations
 
@@ -76,6 +78,10 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Propensity scores are set to missing (as Stata's default predict after probit does) for observations excluded by perfect-prediction rules (dropped Congress levels or dropped covariates' nonzero values), so they get no IPW weight
   - RD-IPW propensity probit is estimated on one row per sponsor-Congress drawn from the RD estimation sample (mixed-gender races with complete data, within the bandwidth), rather than on the first row of each sponsor-Congress in the party subsample
   - Propensity-score probit now mimics Stata's perfect-prediction handling for covariates (a regressor whose nonzero values perfectly predict sponsor gender is dropped along with those observations before fitting), not only for Congress dummies
+- [seeded/pipeline-desktop-opus-run3/20261103T054754Z](seeded/pipeline-desktop-opus-run3/20261103T054754Z/CELL.md) (11/13; failed: `female_sponsor_ncosponsors_rep_ipw_sponsor`, `female_sponsor_pct_opposite_dem_ipw_sponsor`)
+  - plain RD (col 2) uses a CCT/MSE bandwidth selected on all bills of the party subsample; RD+IPW keeps the bandwidth selected on the mixed-gender complete-case sample; the paper does not state this choice
+  - IPW (district + indiv + absMV) propensity score estimated once by probit on the pooled sponsor-level sample (both parties, incl. sponsor_democrat) and applied to each party subsample; the paper does not state the pscore estimation sample
+  - RD bandwidth (CCT/MSE) selected on the mixed-gender complete-case RD sample rather than on all bills of the party subsample; the paper does not state the bandwidth selection sample
 - [independent/claude-code/2026-10-22-a](independent/claude-code/2026-10-22-a/CELL.md) (13/13)
   - RD columns (2)-(3) use the optimal bandwidths reported in the paper (25/30/13 for number of cosponsors, 16/24/11 for percent opposite) rather than the bandwidths from rdrobust::rdbwselect (mserd, bill level), which the script also computes and prints (e.g. 17.8 for Republicans/number of cosponsors, 25.0 for Democrats/percent opposite).
   - Macro-area dummies were built from ICPSR state codes (Northeast 1-14, Midwest 21-37, South 40-56, West 61-82), since no region variable is in the data. Log population density = lnpop - lnarea.
@@ -100,6 +106,8 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Democratic sponsor-characteristics propensity score uses ATT weights (treated 1, controls p/(1-p)) as in matching on the treated; the paper text does not specify the weighting scheme
 - [independent/pipeline-desktop-opus-run2/20261023T152513Z](independent/pipeline-desktop-opus-run2/20261023T152513Z/CELL.md) (13/13)
   - Dem pct-opposite matching estimate uses ATT propensity-score reweighting (treated weight 1, controls p/(1-p)) with full OLS controls in the outcome equation; exact matching estimator not specified in the provided text
+- [independent/pipeline-desktop-opus-run3/20261103T052626Z](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) (12/13; failed: `female_sponsor_pct_opposite_dem_ipw_sponsor`)
+  - Dem sponsor-PS IPW uses ATT weights (controls ps/(1-ps)) and only the sponsor controls listed in the paper (drops black, borninstate); paper does not specify weighting scheme
 - [blind/claude-code/2026-10-22-a](blind/claude-code/2026-10-22-a/CELL.md) (7/13; failed: `female_sponsor_pct_opposite_dem_ols`, `female_sponsor_pct_opposite_dem_ipw_sponsor`, `female_sponsor_pct_opposite_rep_ols`, `female_sponsor_pct_opposite_rep_ipw_district`, `n_bills_pct_opposite_dem_ols`, `n_bills_pct_opposite_rep_ols`)
   - Data: AnalysisData/bills_analysis_101-111_replication.csv, restricted to public bills (private==0) with non-missing sponsor info; listwise deletion on all regressors.
   - Percent opposite-party cosponsors uses the dataset's pct_cosponsors_opposite (verified = opposite/number of cosponsors, missing when a bill has zero cosponsors) times 100, not opposite/(cosponsors+1) as described in the working-paper text.
@@ -136,18 +144,13 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
-- seeded: `female_sponsor_ncosponsors_rep_rd_ipw` — pipeline 0/2, agent 2/2
+_None._
 
 Pass rates at least 50 points apart (not unanimous):
 
-- seeded: `female_sponsor_ncosponsors_all_ols` — pipeline 1/2, agent 2/2
-- seeded: `female_sponsor_ncosponsors_rep_ols` — pipeline 1/2, agent 2/2
-- seeded: `female_sponsor_pct_opposite_dem_ipw_sponsor` — pipeline 1/2, agent 2/2
-- seeded: `female_sponsor_pct_opposite_dem_ols` — pipeline 1/2, agent 2/2
-- blind: `female_sponsor_pct_opposite_dem_ols` — pipeline 1/2, agent 0/4
-- blind: `female_sponsor_pct_opposite_dem_rd` — pipeline 1/2, agent 4/4
-- blind: `n_bills_pct_opposite_dem_ols` — pipeline 1/2, agent 0/4
-- blind: `n_bills_pct_opposite_rep_ols` — pipeline 1/2, agent 0/4
+- seeded: `female_sponsor_ncosponsors_rep_rd_ipw` — pipeline 1/3, agent 2/2
+- seeded: `female_sponsor_pct_opposite_dem_ipw_sponsor` — pipeline 1/3, agent 2/2
+- blind: `female_sponsor_pct_opposite_dem_rd` — pipeline 1/3, agent 4/4
 
 ## Cells
 
@@ -166,6 +169,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### seeded · pipeline-desktop-opus-run2 · 20261023T153400Z
 
 [`seeded/pipeline-desktop-opus-run2/20261023T153400Z/CELL.md`](seeded/pipeline-desktop-opus-run2/20261023T153400Z/CELL.md) — final 12/13, re-scored 12/13; first scored 11/13; executions 4; 2026-10-23T15:34:00Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
+
+### seeded · pipeline-desktop-opus-run3 · 20261103T054754Z
+
+[`seeded/pipeline-desktop-opus-run3/20261103T054754Z/CELL.md`](seeded/pipeline-desktop-opus-run3/20261103T054754Z/CELL.md) — final 11/13, re-scored 11/13; first scored 11/13; executions 4; 2026-11-03T05:47:54Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 
 ### independent · claude-code · 2026-10-22-a
 
@@ -186,6 +193,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### independent · pipeline-desktop-opus-run2 · 20261023T152513Z
 
 [`independent/pipeline-desktop-opus-run2/20261023T152513Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261023T152513Z/CELL.md) — final 13/13, re-scored 13/13; first scored 7/13; executions 3; 2026-10-23T15:25:13Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
+
+### independent · pipeline-desktop-opus-run3 · 20261103T052626Z
+
+[`independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md`](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) — final 12/13, re-scored 12/13; first scored 7/13; executions 4; 2026-11-03T05:26:26Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 
 ### blind · claude-code · 2026-10-22-a
 
@@ -210,4 +221,8 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · pipeline-desktop-opus-run2 · 20261023T150832Z
 
 [`blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md`](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — final 7/13, re-scored 7/13; first scored 7/13; executions 1; 2026-10-23T15:08:32Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-run3 · 20261103T010557Z
+
+[`blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md`](blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — final 7/13, re-scored 7/13; first scored 7/13; executions 2; 2026-11-03T01:05:57Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 

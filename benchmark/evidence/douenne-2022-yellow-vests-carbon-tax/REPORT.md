@@ -6,6 +6,7 @@
 - I4R report: https://www.econstor.eu/bitstream/10419/275821/1/I4R-DP058.pdf
 - I4R outcome label: not_reproducible; split: holdout
 - Catalog entry (ground truth): `benchmark/papers/douenne-2022-yellow-vests-carbon-tax.yaml`
+- Data access: public
 
 > Headline findings (as published): French respondents, surveyed after the Yellow Vests protests, largely reject a carbon tax with a uniform dividend, overestimate their losses, think it regressive and doubt its effectiveness.  The customized win/lose feedback moves beliefs only modestly (Table 4: a regression discontinuity at zero estimated net gain; the effect is larger for those who initially accepted the tax and smaller for Yellow Vests supporters), while believing one does not lose (Table 6) or that the tax is effective (Table 8) raises support substantially.  DP58 (Rivers, Woerman & Yassin) confirms the average feedback effect, finds 56 misclassified treatment indicators (column 1 falls to 0.216 when fixed) and argues the column 3 heterogeneity is misspecified; it does not examine Tables 5-8.
 > Original analysis in R 4.0.3 (stargazer tables; ivreg / ivmodel for diagnostics), with a Python 2.7 microsimulation upstream; language: r is the reproduction target.
@@ -42,6 +43,7 @@
 | `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [12/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[12/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c)<br>[13/13](blind/claude-code/2026-11-03-a/CELL.md) (2026-11-03-a) |
 | `pipeline-desktop-opus` | [5/13](seeded/pipeline-desktop-opus/20261102T144245Z/CELL.md) (20261102T144245Z) | [13/13](independent/pipeline-desktop-opus/20261102T143152Z/CELL.md) (20261102T143152Z) | [12/13](blind/pipeline-desktop-opus/20261102T142733Z/CELL.md) (20261102T142733Z) |
 | `pipeline-desktop-opus-run2` | [6/13](seeded/pipeline-desktop-opus-run2/20261102T191457Z/CELL.md) (20261102T191457Z) | [13/13](independent/pipeline-desktop-opus-run2/20261102T153300Z/CELL.md) (20261102T153300Z) | [13/13](blind/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) (20261102T152052Z) |
+| `pipeline-desktop-opus-run3` | [13/13](seeded/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md) (20261103T050517Z) | [13/13](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [13/13](blind/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md) (20261103T050517Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
 
@@ -62,7 +64,7 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | [blind/claude-code/2026-11-02-c](blind/claude-code/2026-11-02-c/CELL.md) | `winner_x_initial_win_belief_table4_col3` | 0.148682 | 0.08 | ±0.079 (se_band) | 0.869 | PASS |
 | [seeded/pipeline-desktop-opus-run2/20261102T191457Z](seeded/pipeline-desktop-opus-run2/20261102T191457Z/CELL.md) | `predicted_winner_heterogeneity_table4_col3` | 0.241792 | 0.246 | ±0.00492 (relative) | 0.855 | PASS |
 | [independent/claude-code/2026-11-02-a](independent/claude-code/2026-11-02-a/CELL.md) | `winner_x_initial_win_belief_table4_col3` | 0.146722 | 0.08 | ±0.079 (se_band) | 0.845 | PASS |
-| [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) | `initial_acceptance_believes_not_lose_table4_col1` | 0.227924 | 0.306 | ±0.066 (se_band) | 1.183 | FAIL |
+| [blind/pipeline-desktop-opus-run3/20261103T050517Z](blind/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md) | `initial_acceptance_believes_not_lose_table4_col1` | 0.251322 | 0.306 | ±0.066 (se_band) | 0.828 | PASS |
 
 ### Declared deviations
 
@@ -126,19 +128,18 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
-- seeded: `believes_effective_on_approval_iv_table8_col1` — pipeline 0/2, agent 2/2
-- seeded: `initial_acceptance_heterogeneity_table4_col3` — pipeline 0/2, agent 2/2
-- seeded: `predicted_winner_believes_wins_table4_col4` — pipeline 0/2, agent 2/2
-- seeded: `winner_x_initial_acceptance_table4_col3` — pipeline 0/2, agent 2/2
-- seeded: `winner_x_initial_win_belief_table4_col3` — pipeline 0/2, agent 2/2
-- seeded: `winner_x_yellow_vests_supporter_table4_col3` — pipeline 0/2, agent 2/2
-- seeded: `yellow_vests_supporter_heterogeneity_table4_col3` — pipeline 0/2, agent 2/2
+_None._
 
 Pass rates at least 50 points apart (not unanimous):
 
-- seeded: `predicted_winner_heterogeneity_table4_col3` — pipeline 1/2, agent 2/2
-- blind: `believes_effective_on_approval_iv_table8_col1` — pipeline 1/2, agent 4/4
-- blind: `initial_acceptance_believes_not_lose_table4_col1` — pipeline 2/2, agent 2/4
+- seeded: `believes_effective_on_approval_iv_table8_col1` — pipeline 1/3, agent 2/2
+- seeded: `initial_acceptance_heterogeneity_table4_col3` — pipeline 1/3, agent 2/2
+- seeded: `predicted_winner_believes_wins_table4_col4` — pipeline 1/3, agent 2/2
+- seeded: `winner_x_initial_acceptance_table4_col3` — pipeline 1/3, agent 2/2
+- seeded: `winner_x_initial_win_belief_table4_col3` — pipeline 1/3, agent 2/2
+- seeded: `winner_x_yellow_vests_supporter_table4_col3` — pipeline 1/3, agent 2/2
+- seeded: `yellow_vests_supporter_heterogeneity_table4_col3` — pipeline 1/3, agent 2/2
+- blind: `initial_acceptance_believes_not_lose_table4_col1` — pipeline 3/3, agent 2/4
 
 ## Cells
 
@@ -157,6 +158,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### seeded · pipeline-desktop-opus-run2 · 20261102T191457Z
 
 [`seeded/pipeline-desktop-opus-run2/20261102T191457Z/CELL.md`](seeded/pipeline-desktop-opus-run2/20261102T191457Z/CELL.md) — final 6/13, re-scored 6/13; first scored 5/13; executions 5; 2026-11-02T19:14:57Z; from `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`; evidence complete.
+
+### seeded · pipeline-desktop-opus-run3 · 20261103T050517Z
+
+[`seeded/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md`](seeded/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-03T05:05:17Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 
 ### independent · claude-code · 2026-11-02-a
 
@@ -177,6 +182,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### independent · pipeline-desktop-opus-run2 · 20261102T153300Z
 
 [`independent/pipeline-desktop-opus-run2/20261102T153300Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261102T153300Z/CELL.md) — final 13/13, re-scored 13/13; first scored 12/13; executions 3; 2026-11-02T15:33:00Z; from `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`; evidence complete.
+
+### independent · pipeline-desktop-opus-run3 · 20261103T010557Z
+
+[`independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md`](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-03T01:05:57Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 
 ### blind · claude-code · 2026-11-02-a
 
@@ -201,4 +210,8 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · pipeline-desktop-opus-run2 · 20261102T152052Z
 
 [`blind/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md`](blind/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-02T15:20:52Z; from `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-run3 · 20261103T050517Z
+
+[`blind/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md`](blind/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md) — final 13/13, re-scored 13/13; first scored 4/13; executions 3; 2026-11-03T05:05:17Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 

@@ -8,6 +8,7 @@
 | Model | desktop-opus-run2 |
 | Run | 20261023T153002Z |
 | Date | 2026-10-23T15:30:02Z |
+| Data access | public |
 | Results file | `benchmark/results/pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json` |
 | Artifacts | `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/pipeline/20261023T153002Z` |
 | Executions | 4 |
@@ -31,8 +32,8 @@
 | `sugar_contributions_calendar_year_incumbent_fe` | -0.0005 | -0.00217464 | 334.93% | ±5e-05 (printed_precision) | FAIL | FAIL |
 | `sugar_contributions_12_months_district_fe` | -0.0006 | -0.000398924 | 33.51% | ±5e-05 (printed_precision) | FAIL | FAIL |
 | `sugar_contributions_12_months_incumbent_fe` | -0.0003 | -0.00217464 | 624.88% | ±5e-05 (printed_precision) | FAIL | FAIL |
-| `observations_district_fe` | 186 | 186 | 0.00% | ±1.86 (relative) | PASS | PASS |
-| `observations_incumbent_fe` | 106 | 106 | 0.00% | ±1.06 (relative) | PASS | FAIL |
+| `observations_district_fe` | 186 | 186 | 0.00% | ±9.3 (relative) | PASS | PASS |
+| `observations_incumbent_fe` | 106 | 106 | 0.00% | ±5.3 (relative) | PASS | FAIL |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 2/11 pass, which agrees with the row's 2/11.
 

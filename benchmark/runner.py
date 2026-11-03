@@ -146,6 +146,9 @@ class SkipReason(Enum):
     Claude call with no installed answer: the client wrote the prompt under
     ``benchmark/.cache/llm-oracle/<label>/pending/`` and raised
     ``OracleAnswerPending``, whose message goes in ``error``.
+    ``MANUAL_PACKAGE_MISSING`` covers an entry with ``data_access: manual``
+    whose package file is not on disk yet; ``error`` says which file to place
+    where.
     """
 
     OUT_OF_SCOPE = "out_of_scope"
@@ -154,6 +157,7 @@ class SkipReason(Enum):
     REPRODUCER_INIT_FAILED = "reproducer_init_failed"
     REPRODUCTION_MISSING = "reproduction_missing"
     LLM_ANSWER_PENDING = "llm_answer_pending"
+    MANUAL_PACKAGE_MISSING = "manual_package_missing"
 
 
 @dataclass
@@ -296,6 +300,12 @@ class BenchmarkResult:
     split: str = "dev"
     """Evaluation split, stamped from the catalog entry at run time (so
     a cached result reflects the entry's *current* split assignment)."""
+
+    data_access: str = "public"
+    """How the entry's package reached the harness, stamped from the catalog
+    entry like ``split``: ``"public"`` (fetched by the downloader; also every
+    entry without a dataset block and rows from older files) or ``"manual"``
+    (downloaded by a human and placed on disk, ``dataset.data_access``)."""
 
     components: ComponentMetrics = field(default_factory=ComponentMetrics)
 
@@ -603,6 +613,7 @@ def _run_one(
     """Execute (or skip) a single catalog entry in ``mode`` and return its result."""
     # Skip paths come first — no reproducer build, no cache check.
     skip = _check_skip(entry)
+    data_access = _data_access(entry)
     if skip is not None:
         return BenchmarkResult(
             entry_id=entry.id,
@@ -610,7 +621,9 @@ def _run_one(
             reproducer=reproducer,
             skipped=True,
             skip_reason=skip,
+            error=manual_package_missing(entry) if skip is SkipReason.MANUAL_PACKAGE_MISSING else None,
             split=entry.split,
+            data_access=data_access,
         )
 
     cache_key = _cache_key(entry, mode, reproducer)
@@ -621,6 +634,7 @@ def _run_one(
         # entry's *current* assignment so moving a paper between splits
         # doesn't require invalidating its cached result.
         cached.split = entry.split
+        cached.data_access = data_access
         cached.mode = mode
         cached.reproducer = reproducer
         return cached
@@ -636,6 +650,8 @@ def _run_one(
             skipped=True,
             skip_reason=SkipReason.NO_API_KEY,
             error=str(exc),
+            split=entry.split,
+            data_access=data_access,
         )
     except Exception as exc:
         logger.warning("Reproducer construction failed for %s: %s", entry.id, exc)
@@ -646,12 +662,15 @@ def _run_one(
             skipped=True,
             skip_reason=SkipReason.REPRODUCER_INIT_FAILED,
             error=f"{type(exc).__name__}: {exc}",
+            split=entry.split,
+            data_access=data_access,
         )
 
     result, artifacts = _execute_with_reproducer(
         entry, agent, extracted_claims_dir=extracted_claims_dir, mode=mode
     )
     result.split = entry.split
+    result.data_access = data_access
     result.reproducer = reproducer
     if artifacts_root is not None and artifacts:
         out_dir = artifacts_root / entry.id / mode / _path_component(reproducer) / (run_id or new_run_id())
@@ -681,7 +700,42 @@ def _check_skip(entry: bschema.BenchmarkEntry) -> SkipReason | None:
         # else (UNKNOWN, or a future enum addition the runner doesn't yet
         # know about) is also a clean skip rather than a crash.
         return SkipReason.LANGUAGE_UNSUPPORTED
+    if manual_package_missing(entry) is not None:
+        return SkipReason.MANUAL_PACKAGE_MISSING
     return None
+
+
+def _data_access(entry: bschema.BenchmarkEntry) -> str:
+    dataset = getattr(entry, "dataset", None)
+    return getattr(dataset, "data_access", bschema.DATA_ACCESS_PUBLIC) if dataset is not None else "public"
+
+
+def _local_dataset_path(source: str) -> Path:
+    """A local ``dataset.source``: absolute as-is, else relative to the repo root."""
+    p = Path(source).expanduser()
+    return p if p.is_absolute() else REPO_ROOT / p
+
+
+def manual_package_missing(entry: bschema.BenchmarkEntry) -> str | None:
+    """Why a ``data_access: manual`` entry cannot run yet, or None when its package is on disk.
+
+    The message names the file to place and where, so the skip row and
+    ``render_task`` tell the user exactly what to download.
+    """
+    dataset = getattr(entry, "dataset", None)
+    if dataset is None or _data_access(entry) != bschema.DATA_ACCESS_MANUAL:
+        return None
+    if _local_dataset_path(dataset.source).exists():
+        return None
+    where = Path(dataset.source).parent
+    msg = (
+        f"manually placed package missing for {entry.id}: expected {dataset.source} (relative to the repo "
+        f"root). Download it by hand and save it unchanged at that path, with a SOURCE.txt beside it in "
+        f"{where}/ naming the repository id and version"
+    )
+    if dataset.access_notes:
+        msg += f" (access notes: {dataset.access_notes.strip()})"
+    return msg + "."
 
 
 def _execute_with_reproducer(
@@ -1031,6 +1085,7 @@ def score_reproduction(
         entry_id=entry.id,
         mode=mode,
         split=entry.split,
+        data_access=_data_access(entry),
         retally_ran=True,
         agrees_with_paper=bool(claim_results) and n_passed == len(claim_results),
         agrees_with_i4r=agrees_with_i4r,
@@ -1098,7 +1153,8 @@ def _claim_detail(cr: Any) -> ClaimDetail:
 
 # Host substrings mapped to the downloader's DatasetSource.  Anything
 # not matched here that still looks like an http(s) URL falls back to
-# DIRECT_URL; a non-URL identifier falls back to UNKNOWN.
+# DIRECT_URL; an existing local path (data_access: manual) maps to LOCAL;
+# any other non-URL identifier falls back to UNKNOWN.
 _DATASET_HOST_SOURCES = {
     "zenodo.org": "zenodo",
     "dataverse.harvard.edu": "harvard_dataverse",
@@ -1195,13 +1251,26 @@ def _dataset_reference_for(entry: bschema.BenchmarkEntry):
     from retally.models import DatasetReference, DatasetSource
 
     source_val = "unknown"
-    for host, mapped in _DATASET_HOST_SOURCES.items():
-        if host in dataset.source:
-            source_val = mapped
-            break
+    if not bschema.is_url(dataset.source) and (
+        dataset.data_access == bschema.DATA_ACCESS_MANUAL or bschema.looks_like_local_path(dataset.source)
+    ):
+        # A manually placed package (the loader guarantees a local-path
+        # source carries data_access: manual).  The path stays as written
+        # (relative to the repo root) so prompts never carry this machine's
+        # absolute paths; the downloader resolves it the same way.
+        missing = manual_package_missing(entry)
+        if missing is not None:
+            raise FileNotFoundError(missing)
+        if _local_dataset_path(dataset.source).exists():
+            source_val = "local"
     else:
-        if dataset.source.startswith("http://") or dataset.source.startswith("https://"):
-            source_val = "direct_url"
+        for host, mapped in _DATASET_HOST_SOURCES.items():
+            if host in dataset.source:
+                source_val = mapped
+                break
+        else:
+            if bschema.is_url(dataset.source):
+                source_val = "direct_url"
 
     return DatasetReference(
         name=dataset.registry_key or entry.id,
@@ -1273,8 +1342,8 @@ def _cache_key(
     *grouped* in reports, not what gets executed, so reassigning a
     paper between dev and holdout must not invalidate its (expensive)
     cached result — ``_run_one`` re-stamps the current split on cache
-    hits instead.  ``publication_date`` / ``package_release_date`` are
-    excluded for the same reason: they are curation metadata for the
+    hits instead.  ``publication_date`` / ``package_release_date`` and
+    ``dataset.data_access`` are excluded for the same reason: they are curation metadata for the
     contamination discussion and never reach the pipeline.
 
     The reproducer name joins the payload only when it is not the default
@@ -1302,6 +1371,11 @@ def _cache_key(
     entry_payload = _entry_to_jsonable(entry)
     for metadata_only in ("split", "publication_date", "package_release_date"):
         entry_payload.pop(metadata_only, None)
+    if isinstance(entry_payload.get("dataset"), dict):
+        # Provenance label, not an execution input (a manual entry's source
+        # path already differs from any public one); dropping it also keeps
+        # every key computed before the field existed valid.
+        entry_payload["dataset"].pop("data_access", None)
     key_payload: dict[str, Any] = {"entry": entry_payload, "retally_version": retally_version, "mode": mode}
     if reproducer != DEFAULT_REPRODUCER:
         key_payload["reproducer"] = reproducer
@@ -1380,6 +1454,7 @@ def _result_from_jsonable(d: dict[str, Any]) -> BenchmarkResult:
         # poisoning the whole load.
         claim_details=[ClaimDetail(**cd) for cd in d.get("claim_details", []) if isinstance(cd, dict)],
         split=str(d.get("split", "dev")),
+        data_access=str(d.get("data_access", "public")),
         components=ComponentMetrics(**d.get("components", {})),
         cached=bool(d.get("cached", False)),
         # Absent in files that predate cost accounting.

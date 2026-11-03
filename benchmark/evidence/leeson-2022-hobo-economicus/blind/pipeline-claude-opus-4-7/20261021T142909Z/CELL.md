@@ -8,13 +8,14 @@
 | Model | claude-opus-4-7 |
 | Run | 20261021T142909Z |
 | Date | 2026-10-21T14:29:09Z |
+| Data access | public |
 | Results file | `benchmark/results/pipeline-10papers-all-modes-2026-10-21.json` |
 | Artifacts | `benchmark/results/artifacts/leeson-2022-hobo-economicus/blind/pipeline/20261021T142909Z` |
 | Executions | 1 |
 | Refinements | 0 (0 error + 0 claim) |
 | First attempt | 4/11 |
 | First scored | 4/11 (execution 1) |
-| Final | **4/11** |
+| Final | **5/11** |
 | Package files withheld | 6 |
 | Evidence | complete |
 
@@ -31,10 +32,10 @@
 | `brown_forsythe_dollars_per_hour` | 0.276 | 0.204963 | 25.74% | ±0.00276 (relative) | FAIL | FAIL |
 | `anova_f_donations_per_hour` | 0.4 | 0.484024 | 21.01% | ±0.005 (printed_precision) | FAIL | FAIL |
 | `anova_f_dollars_per_hour` | 0.15 | 0.101006 | 32.66% | ±0.005 (printed_precision) | FAIL | FAIL |
-| `station_visits_full_sample` | 242 | 239 | 1.24% | ±2.42 (relative) | FAIL | FAIL |
-| `station_visits_five_station_subsample` | 102 | 87 | 14.71% | ±1.02 (relative) | FAIL | FAIL |
+| `station_visits_full_sample` | 242 | 239 | 1.24% | ±12.1 (relative) | PASS | FAIL |
+| `station_visits_five_station_subsample` | 102 | 87 | 14.71% | ±5.1 (relative) | FAIL | FAIL |
 
-Re-scored from `output/stdout.txt` with the runner's comparator: 4/11 pass, which agrees with the row's 4/11.
+Re-scored from `output/stdout.txt` with the runner's comparator: 5/11 pass, which agrees with the row's 5/11.
 
 Per-claim ground truth, tolerance rule and errors: [`scoring.json`](scoring.json).
 

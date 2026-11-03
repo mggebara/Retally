@@ -8,6 +8,7 @@
 | Model | claude-opus-4-7 |
 | Run | 20261021T142909Z |
 | Date | 2026-10-21T14:29:09Z |
+| Data access | public |
 | Results file | `benchmark/results/pipeline-10papers-all-modes-2026-10-21.json` |
 | Artifacts | `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/pipeline/20261021T142909Z` |
 | Executions | 3 |
@@ -31,8 +32,8 @@
 | `sugar_contributions_calendar_year_incumbent_fe` | -0.0005 | -0.00113656 | 127.31% | ±5e-05 (printed_precision) | FAIL | FAIL |
 | `sugar_contributions_12_months_district_fe` | -0.0006 | -0.000187737 | 68.71% | ±5e-05 (printed_precision) | FAIL | FAIL |
 | `sugar_contributions_12_months_incumbent_fe` | -0.0003 | -0.00113656 | 278.85% | ±5e-05 (printed_precision) | FAIL | FAIL |
-| `observations_district_fe` | 186 | 842 | 352.69% | ±1.86 (relative) | FAIL | FAIL |
-| `observations_incumbent_fe` | 106 | 604 | 469.81% | ±1.06 (relative) | FAIL | FAIL |
+| `observations_district_fe` | 186 | 842 | 352.69% | ±9.3 (relative) | FAIL | FAIL |
+| `observations_incumbent_fe` | 106 | 604 | 469.81% | ±5.3 (relative) | FAIL | FAIL |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 0/11 pass, which agrees with the row's 0/11.
 

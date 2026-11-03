@@ -6,6 +6,7 @@
 - I4R report: https://doi.org/10.48152/ssrp-3s2g-m694
 - I4R outcome label: reproducible; split: holdout
 - Catalog entry (ground truth): `benchmark/papers/acemoglu-2022-war-socialism-fascism.yaml`
+- Data access: public
 
 > Headline finding: across 5,775 Italian municipalities, World War I foot soldier casualties (relative to the 1911 male population over six) raised the Socialist vote share in 1919 (first stage, Table I: standardized 0.12 (0.02) with basic controls, 0.10 (0.01) with all, F = 41.68 to 50.59); instrumenting the 1919 socialist share with casualties, the socialist surge raised fascist violence in 1920-22 and the presence of fascist branches in 1921 (Table II Panels A and C, 0.38 to 0.53) and the fascist vote share in 1921 (Table III Panel A, 0.30 to 0.37, N = 5,358, 175 clusters) and 1924 (Panel C, 0.40 to 0.54) — the "red scare" mechanism.  OLS panels are near zero for the vote shares. 181 district clusters in the main sample.
 > Original analysis in Stata (ivreg2, outreg2); two appendix tables in R. language: r is the reproduction target.
@@ -39,8 +40,9 @@
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
 | `claude-code` | [12/12](seeded/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[12/12](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [12/12](independent/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[12/12](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[12/12](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [12/12](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[12/12](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[12/12](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
-| `pipeline-desktop-opus` | [12/12](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) | [11/12](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) (20261023T064839Z) | [4/12](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) |
+| `pipeline-desktop-opus` | [12/12](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) | [11/12](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) (20261023T064839Z) | [6/12](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) |
 | `pipeline-desktop-opus-run2` | [12/12](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [11/12](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) (20261023T153002Z) | [6/12](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
+| `pipeline-desktop-opus-run3` | [12/12](seeded/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md) (20261103T050517Z) | [11/12](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) (20261103T052626Z) | [6/12](blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
 
@@ -53,15 +55,15 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | Cell | Claim | Reproduced | Paper | Band | Error / band | Verdict |
 |---|---|---|---|---|---|---|
 | [blind/pipeline-desktop-opus-run2/20261023T150832Z](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) | `iv_fascist_vote1921_table3_panelA_col6` | 0.512978 | 0.34 | ±0.18 (se_band) | 0.961 | PASS |
+| [blind/pipeline-desktop-opus-run3/20261103T010557Z](blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) | `iv_violence_table2_panelA_col6` | 0.282361 | 0.5 | ±0.2 (se_band) | 1.088 | FAIL |
 | [blind/pipeline-desktop-opus/20261023T062931Z](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) | `iv_violence_table2_panelA_col6` | 0.27341 | 0.5 | ±0.2 (se_band) | 1.133 | FAIL |
+| [blind/pipeline-desktop-opus-run3/20261103T010557Z](blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) | `iv_branches_table2_panelC_col6` | 0.224453 | 0.5 | ±0.2 (se_band) | 1.378 | FAIL |
+| [blind/pipeline-desktop-opus-run3/20261103T010557Z](blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) | `iv_fascist_vote1921_table3_panelA_col6` | 0.228236 | 0.34 | ±0.18 (se_band) | 0.621 | PASS |
+| [independent/pipeline-desktop-opus-run3/20261103T052626Z](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) | `first_stage_casualties_table1_col6` | 0.094157 | 0.1 | ±0.01 (se_band) | 0.584 | PASS |
 | [blind/pipeline-desktop-opus/20261023T062931Z](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) | `iv_fascist_vote1921_table3_panelA_col6` | 0.236371 | 0.34 | ±0.18 (se_band) | 0.576 | PASS |
 | [seeded/claude-code/2026-10-22-a](seeded/claude-code/2026-10-22-a/CELL.md) | `iv_fascist_vote1924_table3_panelC_col1` | 0.395648 | 0.4 | ±0.008 (relative) | 0.544 | PASS |
 | [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `iv_fascist_vote1924_table3_panelC_col1` | 0.395648 | 0.4 | ±0.008 (relative) | 0.544 | PASS |
 | [seeded/pipeline-desktop-opus/20261023T063725Z](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) | `iv_fascist_vote1924_table3_panelC_col1` | 0.395648 | 0.4 | ±0.008 (relative) | 0.544 | PASS |
-| [seeded/pipeline-desktop-opus-run2/20261023T151837Z](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) | `iv_fascist_vote1924_table3_panelC_col1` | 0.395648 | 0.4 | ±0.008 (relative) | 0.544 | PASS |
-| [independent/pipeline-desktop-opus-run2/20261023T153002Z](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) | `first_stage_casualties_table1_col6` | 0.095048 | 0.1 | ±0.01 (se_band) | 0.495 | PASS |
-| [independent/pipeline-desktop-opus-run2/20261023T153002Z](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) | `iv_violence_table2_panelA_col6` | 0.402824 | 0.5 | ±0.2 (se_band) | 0.486 | PASS |
-| [blind/pipeline-desktop-opus/20261023T062931Z](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) | `iv_branches_table2_panelC_col6` | 0.193945 | 0.5 | ±0.2 (se_band) | 1.530 | FAIL |
 
 ### Declared deviations
 
@@ -80,7 +82,7 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 - [blind/claude-code/2026-11-02-c](blind/claude-code/2026-11-02-c/CELL.md) (12/12)
   - Standardization uses the mean and SD over the full database (5,775 municipalities) for every variable, including the 1921 fascist vote share regressions on the 5,358-municipality subsample, rather than re-standardizing within that subsample.
   - Cluster-robust F-statistic computed as the squared t-statistic of the instrument in the column (6) first stage with fixest's default small-sample adjustment (G/(G-1) and (N-1)/(N-K)); the paper's exact F-statistic convention is not stated.
-- [blind/pipeline-desktop-opus/20261023T062931Z](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) (4/12; failed: `first_stage_casualties_table1_col1`, `first_stage_casualties_table1_col6`, `first_stage_fstat_table1_col6`, `iv_violence_table2_panelA_col6`, `iv_branches_table2_panelC_col6`, `iv_fascist_vote1924_table3_panelC_col6`, `n_clusters_main_sample`, `n_clusters_fascist_vote1921`)
+- [blind/pipeline-desktop-opus/20261023T062931Z](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) (6/12; failed: `first_stage_casualties_table1_col1`, `first_stage_casualties_table1_col6`, `first_stage_fstat_table1_col6`, `iv_violence_table2_panelA_col6`, `iv_branches_table2_panelC_col6`, `iv_fascist_vote1924_table3_panelC_col6`)
   - variable for elevation main center not found; omitted
   - variable for high-mortality battle dummy not found; omitted
   - variable for landowner association not found; omitted
@@ -90,19 +92,16 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
-- independent: `first_stage_fstat_table1_col6` — pipeline 0/2, agent 3/3
-- blind: `first_stage_casualties_table1_col1` — pipeline 0/2, agent 3/3
-- blind: `first_stage_casualties_table1_col6` — pipeline 0/2, agent 3/3
-- blind: `first_stage_fstat_table1_col6` — pipeline 0/2, agent 3/3
-- blind: `iv_branches_table2_panelC_col6` — pipeline 0/2, agent 3/3
-- blind: `iv_fascist_vote1924_table3_panelC_col6` — pipeline 0/2, agent 3/3
+- independent: `first_stage_fstat_table1_col6` — pipeline 0/3, agent 3/3
+- blind: `first_stage_casualties_table1_col1` — pipeline 0/3, agent 3/3
+- blind: `first_stage_casualties_table1_col6` — pipeline 0/3, agent 3/3
+- blind: `first_stage_fstat_table1_col6` — pipeline 0/3, agent 3/3
+- blind: `iv_branches_table2_panelC_col6` — pipeline 0/3, agent 3/3
+- blind: `iv_fascist_vote1924_table3_panelC_col6` — pipeline 0/3, agent 3/3
 
 Pass rates at least 50 points apart (not unanimous):
 
-- blind: `iv_fascist_vote1924_table3_panelC_col1` — pipeline 1/2, agent 3/3
-- blind: `iv_violence_table2_panelA_col6` — pipeline 1/2, agent 3/3
-- blind: `n_clusters_fascist_vote1921` — pipeline 1/2, agent 3/3
-- blind: `n_clusters_main_sample` — pipeline 1/2, agent 3/3
+- blind: `iv_violence_table2_panelA_col6` — pipeline 1/3, agent 3/3
 
 ## Cells
 
@@ -121,6 +120,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### seeded · pipeline-desktop-opus-run2 · 20261023T151837Z
 
 [`seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md`](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-10-23T15:18:37Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
+
+### seeded · pipeline-desktop-opus-run3 · 20261103T050517Z
+
+[`seeded/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md`](seeded/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 2; 2026-11-03T05:05:17Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 
 ### independent · claude-code · 2026-10-22-a
 
@@ -142,6 +145,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) — final 11/12, re-scored 11/12; first scored 4/12; executions 4; 2026-10-23T15:30:02Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-run3 · 20261103T052626Z
+
+[`independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md`](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) — final 11/12, re-scored 11/12; first scored 5/12; executions 4; 2026-11-03T05:26:26Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
+
 ### blind · claude-code · 2026-10-22-a
 
 [`blind/claude-code/2026-10-22-a/CELL.md`](blind/claude-code/2026-10-22-a/CELL.md) — final 12/12, re-scored 12/12; first scored 10/12; executions 3; 2026-10-22T03:20:20Z; from `claude-code-6papers-all-modes-2026-10-22.json`; evidence complete.
@@ -156,9 +163,13 @@ Pass rates at least 50 points apart (not unanimous):
 
 ### blind · pipeline-desktop-opus · 20261023T062931Z
 
-[`blind/pipeline-desktop-opus/20261023T062931Z/CELL.md`](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) — final 4/12, re-scored 4/12; first scored 4/12; executions 1; 2026-10-23T06:29:31Z; from `pipeline-oracle-desktop-opus-9papers-all-modes-2026-10-23.json`; evidence complete.
+[`blind/pipeline-desktop-opus/20261023T062931Z/CELL.md`](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) — final 6/12, re-scored 6/12; first scored 4/12; executions 1; 2026-10-23T06:29:31Z; from `pipeline-oracle-desktop-opus-9papers-all-modes-2026-10-23.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus-run2 · 20261023T150832Z
 
 [`blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md`](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — final 6/12, re-scored 6/12; first scored 6/12; executions 1; 2026-10-23T15:08:32Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-run3 · 20261103T010557Z
+
+[`blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md`](blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — final 6/12, re-scored 6/12; first scored 4/12; executions 2; 2026-11-03T01:05:57Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 

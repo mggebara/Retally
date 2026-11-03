@@ -8,6 +8,7 @@
 | Model | — |
 | Run | 2026-11-02-b |
 | Date | 2026-11-02T14:58:00Z |
+| Data access | public |
 | Results file | `benchmark/results/claude-code-run2-6papers-indep-blind-2026-11-02.json` |
 | Artifacts | `benchmark/results/artifacts/hollyer-2022-parties-as-disciplinarians/independent/claude-code/20261102T151024Z` |
 | Run directory | `benchmark/reproductions/hollyer-2022-parties-as-disciplinarians/independent/2026-11-02-b` |
@@ -33,7 +34,7 @@
 | `programmaticness_volatility_difference_moderate` | -0.3 (0.08) | -0.2987 | 0.43% | ±0.08 (se_band) | PASS | PASS |
 | `personalism_extremist_minus_moderate_low_volatility` | 0.15 (0.17) | 0.1263 | 15.80% | ±0.17 (se_band) | PASS | PASS |
 | `programmaticness_extremist_minus_moderate_high_volatility` | 0.44 (0.09) | 0.3713 | 15.61% | ±0.09 (se_band) | PASS | PASS |
-| `n_obs_table1` | 431 | 431 | 0.00% | ±4.31 (relative) | PASS | PASS |
+| `n_obs_table1` | 431 | 431 | 0.00% | ±21.55 (relative) | PASS | PASS |
 | `rd_effect_young` | -0.084 | -0.0843 | 0.36% | ±0.00168 (relative) | PASS | PASS |
 | `rd_effect_young_outsider` | -0.092 | -0.0921 | 0.11% | ±0.00184 (relative) | PASS | PASS |
 

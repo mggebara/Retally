@@ -1,0 +1,369 @@
+You are fixing R code that was generated to reproduce results from an econometrics paper.
+
+## Original Code
+```r
+suppressPackageStartupMessages({
+  library(haven)
+  library(fixest)
+})
+set.seed(42)
+
+base <- "<repo>/.cache/datasets/altmann_2022_cognitive_spillovers.script-free"
+lab_path <- file.path(base, "ReplicationPackage/EmpiricalAnalysis/original_data/formatted_data_replication.dta")
+mt_path  <- file.path(base, "ReplicationPackage/EmpiricalAnalysis/original_data/formatted_data_long_mturk.dta")
+
+raw <- haven::read_dta(lab_path)
+cat("Lab data:", nrow(raw), "rows,", ncol(raw), "cols\n")
+cat("Columns:", paste(names(raw), collapse = ", "), "\n")
+
+get_labels <- function(x) {
+  l <- attr(x, "labels")
+  if (is.null(l)) return(NULL)
+  l
+}
+num <- function(x) as.numeric(haven::zap_labels(x))
+describe <- function(nm, x) {
+  u <- sort(unique(num(x)))
+  cat(sprintf("  %s: %d unique; ", nm, length(u)))
+  if (length(u) <= 12) cat("values:", paste(u, collapse = ","))
+  l <- get_labels(x)
+  if (!is.null(l)) cat(" | labels:", paste(paste0(l, "=", names(l)), collapse = "; "))
+  cat("\n")
+}
+for (nm in names(raw)) {
+  x <- raw[[nm]]
+  if (is.numeric(x) || inherits(x, "haven_labelled")) describe(nm, x)
+  else cat(sprintf("  %s: character, %d unique\n", nm, length(unique(x))))
+}
+
+nms <- names(raw)
+pick <- function(patterns, exclude = NULL) {
+  for (p in patterns) {
+    hit <- grep(p, nms, value = TRUE, ignore.case = TRUE)
+    if (!is.null(exclude)) hit <- hit[!grepl(exclude, hit, ignore.case = TRUE)]
+    if (length(hit) > 0) return(hit[1])
+  }
+  NA_character_
+}
+
+df <- raw
+
+# ---------------- cluster id ----------------
+sid <- num(df$subject_id)
+cl <- sid
+maxper <- max(table(sid))
+if (maxper > 20) {
+  sess <- pick(c("^session", "session"), exclude = "mean")
+  wv <- pick(c("^wave$", "wave"))
+  key <- as.character(sid)
+  if (!is.na(sess)) key <- paste(key, as.character(df[[sess]]))
+  if (!is.na(wv)) key <- paste(key, as.character(df[[wv]]))
+  cl <- as.numeric(factor(key))
+  cat("subject_id not unique; combined with session/wave. Max per id now:", max(table(cl)), "\n")
+}
+df$cl <- cl
+
+# ---------------- scarce resources indicator ----------------
+scarce_flag <- rep(TRUE, nrow(df))
+cand <- grep("load|scarce|resource|cogn|ample", nms, value = TRUE, ignore.case = TRUE)
+cand <- cand[!grepl("correct|ability|mean|time|entry", cand, ignore.case = TRUE)]
+cand <- cand[sapply(cand, function(v) { u <- unique(na.omit(df[[v]])); length(u) == 2 })]
+cat("Scarce-indicator candidates:", paste(cand, collapse = ", "), "\n")
+found_scarce <- FALSE
+if (length(cand) > 0) {
+  # prefer names with Treatment
+  pref <- cand[grepl("treat", cand, ignore.case = TRUE)]
+  v <- if (length(pref) > 0) pref[1] else cand[1]
+  x <- df[[v]]
+  if (is.character(x)) {
+    u <- unique(na.omit(x))
+    sv <- u[grepl("high|scarce|7|seven", u, ignore.case = TRUE)]
+    if (length(sv) == 0) sv <- u[!grepl("low|ample|2|two", u, ignore.case = TRUE)]
+    scarce_flag <- x %in% sv[1]
+  } else {
+    l <- get_labels(x)
+    xv <- num(x)
+    u <- sort(unique(na.omit(xv)))
+    sval <- NA
+    if (!is.null(l)) {
+      hi <- l[grepl("high|scarce|7|seven|demand", names(l), ignore.case = TRUE)]
+      lo <- l[grepl("low|ample|2|two|easy", names(l), ignore.case = TRUE)]
+      if (length(hi) > 0) sval <- as.numeric(hi[1])
+      else if (length(lo) > 0) sval <- setdiff(u, as.numeric(lo[1]))[1]
+    }
+    if (is.na(sval)) {
+      if (grepl("low|ample", v, ignore.case = TRUE)) sval <- u[1] else sval <- u[2]
+    }
+    scarce_flag <- !is.na(xv) & xv == sval
+  }
+  found_scarce <- TRUE
+  cat("Using", v, "as scarce indicator; scarce rows:", sum(scarce_flag), "\n")
+}
+
+# ---------------- environment ----------------
+env_raw <- df$Treatment_Environment
+int_raw <- df$Treatment_intervention
+env_n <- if (is.character(env_raw)) as.numeric(factor(env_raw)) else num(env_raw)
+env_lab <- NULL
+if (is.character(env_raw)) {
+  lv <- levels(factor(env_raw)); env_lab <- setNames(seq_along(lv), lv)
+} else env_lab <- get_labels(env_raw)
+
+# If environment labels encode load as well and no scarce var found
+if (!found_scarce && !is.null(env_lab) && any(grepl("scarce|high", names(env_lab), ignore.case = TRUE))) {
+  sv <- as.numeric(env_lab[grepl("scarce|high", names(env_lab), ignore.case = TRUE)])
+  scarce_flag <- env_n %in% sv
+  found_scarce <- TRUE
+  cat("Scarce identified from environment labels\n")
+}
+
+env_cat <- rep(NA_character_, nrow(df))
+if (!is.null(env_lab)) {
+  for (i in seq_along(env_lab)) {
+    nmx <- names(env_lab)[i]; val <- as.numeric(env_lab[i])
+    cat_i <- if (grepl("active|forced ch|forced_ch|no default|choice", nmx, ignore.case = TRUE)) "FC"
+      else if (grepl("base|endog", nmx, ignore.case = TRUE)) "B"
+      else if (grepl("direct|forced|attention", nmx, ignore.case = TRUE)) "DA" else NA
+    env_cat[env_n == val] <- cat_i
+  }
+}
+if (any(is.na(env_cat[!is.na(env_n)]))) {
+  # fall back: determine baseline via intervention, others by sorted order
+  int_n <- num(int_raw)
+  u <- sort(unique(na.omit(env_n)))
+  env_cat <- rep(NA_character_, nrow(df))
+  if (length(u) == 3) {
+    bval <- NA
+    if (length(unique(na.omit(int_n))) == 2) {
+      tb <- table(env_n[int_n == min(int_n, na.rm = TRUE)])
+      bval <- as.numeric(names(tb)[which.max(tb)])
+    }
+    if (is.na(bval)) bval <- u[1]
+    rest <- setdiff(u, bval)
+    env_cat[env_n == bval] <- "B"
+    env_cat[env_n == rest[1]] <- "DA"
+    env_cat[env_n == rest[2]] <- "FC"
+  }
+}
+cat("Environment mapping table:\n"); print(table(env_n, env_cat, useNA = "ifany"))
+
+# intervention
+int_n <- num(int_raw)
+if (length(unique(na.omit(int_n))) == 2) {
+  l <- get_labels(int_raw)
+  bval <- min(int_n, na.rm = TRUE)
+  if (!is.null(l)) {
+    b <- l[grepl("base|no int|control|none", names(l), ignore.case = TRUE)]
+    if (length(b) > 0) bval <- as.numeric(b[1])
+  }
+  df$interv <- as.numeric(int_n != bval)
+} else {
+  df$interv <- as.numeric(env_cat != "B")
+}
+if (all(!is.na(env_cat))) {
+  cat("Intervention vs env cat:\n"); print(table(df$interv, env_cat))
+}
+df$DA <- as.numeric(env_cat == "DA")
+df$FC <- as.numeric(env_cat == "FC")
+
+# ---------------- outcomes ----------------
+df$y_dec <- num(df$summation_correct)
+df$y_bg  <- num(df$load_correct)
+df$y_pay <- num(df$payoff_share)
+pv <- pick(c("^passive_choice$", "^passive$", "default_choice", "choice_default", "default_adher",
+             "chose_default", "stick", "passiv"), exclude = "mean|correct_choice")
+cat("Default adherence variable:", pv, "\n")
+df$y_def <- if (!is.na(pv)) num(df[[pv]]) else NA_real_
+if (!is.na(pv) && max(df$y_def, na.rm = TRUE) > 1) df$y_def <- as.numeric(df$y_def > 0)
+
+# ---------------- controls ----------------
+ctrl_terms <- character(0)
+add_num <- function(v, newname) {
+  if (is.na(v)) return(invisible(NULL))
+  df[[newname]] <<- num(df[[v]])
+  ctrl_terms <<- c(ctrl_terms, newname)
+}
+add_fac <- function(v, newname) {
+  if (is.na(v)) return(invisible(NULL))
+  x <- df[[v]]
+  df[[newname]] <<- if (is.character(x)) factor(ifelse(x == "", NA, x)) else factor(num(x))
+  ctrl_terms <<- c(ctrl_terms, paste0("factor(", newname, ")"))
+}
+v_age <- pick(c("^q_age$", "^age$", "_age$", "age"), exclude = "stage|page|percent|average|image|language")
+v_gen <- pick(c("^q_gender$", "gender", "female", "sex"))
+v_sub <- pick(c("^q_subject$", "subject_of_study", "field", "study"), exclude = "subject_id")
+v_abi <- pick(c("^q_abitur_grade$", "abitur", "gpa"))
+v_math <- pick(c("^q_math_grade$", "math_grade"), exclude = "cat")
+v_ml <- pick(c("^ability_load$"))
+v_mt <- pick(c("^ability_task$"))
+v_multi <- pick(c("multitask", "multi"))
+v_wave <- pick(c("^wave$", "wave", "experiment_part", "^part$"))
+cat("Controls found: age=", v_age, " gender=", v_gen, " subject=", v_sub, " abitur=", v_abi,
+    " math=", v_math, " abil_load=", v_ml, " abil_task=", v_mt, " multitask=", v_multi,
+    " wave=", v_wave, "\n")
+add_num(v_age, "c_age")
+if (!is.na(v_gen)) {
+  if (length(unique(na.omit(num(df[[v_gen]])))) > 2) add_fac(v_gen, "c_gender") else add_num(v_gen, "c_gender")
+}
+add_fac(v_sub, "c_subject")
+add_num(v_abi, "c_abitur")
+add_num(v_math, "c_math")
+add_num(v_ml, "c_abl")
+add_num(v_mt, "c_abt")
+add_num(v_multi, "c_multi")
+inc <- grep("^Treatment_Incentiv|incentiv|payoff_scheme|scheme", nms, value = TRUE, ignore.case = TRUE)
+cat("Incentive vars:", paste(inc, collapse = ", "), "\n")
+if (length(inc) == 1) {
+  add_fac(inc, "c_inc")
+} else if (length(inc) > 1) {
+  for (k in seq_along(inc)) add_num(inc[k], paste0("c_inc", k))
+}
+add_fac(v_wave, "c_wave")
+
+# ---------------- sample ----------------
+samp <- df[scarce_flag & !is.na(env_cat) & !is.na(df$interv), ]
+cat("Lab sample rows:", nrow(samp), " subjects:", length(unique(samp$cl)), "\n")
+# drop constant controls in sample
+keep <- sapply(ctrl_terms, function(t) {
+  v <- gsub("^factor\\((.*)\\)$", "\\1", t)
+  length(unique(na.omit(samp[[v]]))) > 1
+})
+ctrl_terms <- ctrl_terms[keep]
+ctrl_str <- paste(ctrl_terms, collapse = " + ")
+cat("Control terms:", ctrl_str, "\n")
+
+safe_coef <- function(fml, data, var) {
+  m <- tryCatch(feols(as.formula(fml), data = data, cluster = ~cl), error = function(e) { message(e$message); NULL })
+  if (is.null(m)) return(list(b = NA, se = NA, n = NA, g = NA))
+  b <- coef(m)[var]; se <- sqrt(diag(vcov(m)))[var]
+  list(b = unname(b), se = unname(se), n = nobs(m), g = length(unique(data$cl[obs(m)])))
+}
+
+r1 <- safe_coef("y_dec ~ interv", samp, "interv")
+r2 <- if (nchar(ctrl_str) > 0) safe_coef(paste("y_dec ~ interv +", ctrl_str), samp, "interv") else r1
+r5 <- safe_coef("y_def ~ interv", samp, "interv")
+r6 <- if (nchar(ctrl_str) > 0) safe_coef(paste("y_def ~ interv +", ctrl_str), samp, "interv") else r5
+r7d <- safe_coef("y_def ~ DA + FC", samp, "DA")
+r7f <- safe_coef("y_def ~ DA + FC", samp, "FC")
+b1 <- safe_coef("y_bg ~ interv", samp, "interv")
+b2 <- if (nchar(ctrl_str) > 0) safe_coef(paste("y_bg ~ interv +", ctrl_str), samp, "interv") else b1
+p1 <- safe_coef("y_pay ~ interv", samp, "interv")
+
+cat("N obs in col2 regression:", r2$n, "\n")
+
+# ---------------- online experiment ----------------
+mt <- haven::read_dta(mt_path)
+cat("MTurk data:", nrow(mt), "rows\n")
+for (nm in names(mt)) describe(nm, mt[[nm]])
+mt$cl <- num(mt$subject_id)
+mt$memory_n <- num(mt$memory)
+ti <- num(mt$Treatment_intervention)
+lb <- get_labels(mt$Treatment_intervention)
+bv <- min(ti, na.rm = TRUE)
+if (!is.null(lb)) {
+  b <- lb[grepl("base|no int|control|none", names(lb), ignore.case = TRUE)]
+  if (length(b) > 0) bv <- as.numeric(b[1])
+}
+mt$interv <- as.numeric(ti != bv)
+mt$age_n <- num(mt$age)
+mt$gender_n <- num(mt$gender)
+mt$wh <- num(mt$window_height1)
+mt$ww <- num(mt$window_width1)
+gfml <- if (length(unique(na.omit(mt$gender_n))) > 2) "factor(gender_n)" else "gender_n"
+o5 <- safe_coef("memory_n ~ interv", mt, "interv")
+o6 <- safe_coef(paste("memory_n ~ interv + age_n +", gfml, "+ wh + ww"), mt, "interv")
+
+out <- function(name, val) cat(sprintf("RESULT:%s=%s\n", name, format(val, digits = 10)))
+out("choice_quality_intervention_t2_col1", r1$b)
+out("choice_quality_intervention_t2_col2", r2$b)
+out("default_adherence_intervention_t2_col5", r5$b)
+out("default_adherence_intervention_t2_col6", r6$b)
+out("default_adherence_directed_attention_t2_col7", r7d$b)
+out("default_adherence_forced_choice_t2_col7", r7f$b)
+out("background_quality_intervention_lab_t3_col1", b1$b)
+out("background_quality_intervention_lab_t3_col2", b2$b)
+out("memory_intervention_online_t3_col5", o5$b)
+out("payoff_share_intervention_t4_col1", p1$b)
+out("n_obs_lab_tables_2_to_4", r1$n)
+out("n_subjects_lab_tables_2_to_4", r1$g)
+out("memory_intervention_online_t3_col6", o6$b)
+```
+
+## Error / Unexpected Output
+```
+Error in cand[sapply(cand, function(v) { : invalid subscript type 'list'
+Execution halted
+
+```
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+Lab data: 17840 rows, 46 cols
+Columns: payoff, Attention, load_correct, round, Treatment_Environment, default_followed, load_correct_mean, summation_correct_mean, summation_correct, default_followed_mean, attention_mean, attention_positive_mean, default_correct_choice, diff_choice_second, ability_load, ability_task, q_age, q_gender, q_subject, q_degree, q_abitur_year, q_abitur_grade, q_math_grade, perc_multitasking_1, perc_multitasking_2, risk, perc_multitasking_1_easy, raven_score, no_attention, subject_id, original_lab, Treatment_intervention, payoff_share_mean, payoff_share, default_followed_correct_mean, raven_score_quartiles, raven_score_median, high_task_difficulty, subject_cat, q_abitur_grade_quartile, q_abitur_grade_cat, q_math_grade_cat, Treatment_Incentives, Treatment_Incentives_Baseline_sc, Treatment_Incentives_Int_sc, economist 
+  payoff: 7 unique; values: 0,0.100000001490116,0.200000002980232,0.400000005960464,0.5,0.600000023841858,0.800000011920929
+  Attention: 3006 unique; 
+  load_correct: 2 unique; values: 0,1 | labels: 0=Not correct; 1=Load correct
+  round: 20 unique; 
+  Treatment_Environment: 3 unique; values: 1,2,3 | labels: 1=\textsc{Baseline}; 2=\textsc{Directed Attention}; 3=\textsc{Forced Choice}; 4=\textsc{Baseline-8}; 5=\textsc{High Qual.}
+  default_followed: 2 unique; values: 0,1 | labels: 0=Not Followed; 1=Followed Default
+  load_correct_mean: 21 unique; 
+  summation_correct_mean: 20 unique; 
+  summation_correct: 2 unique; values: 0,1 | labels: 0=Not correct; 1=Math task correct
+  default_followed_mean: 21 unique; 
+  attention_mean: 194 unique; 
+  attention_positive_mean: 19 unique; 
+  default_correct_choice: 2 unique; values: 0,1 | labels: 0=Default incorrect; 1=Default correct
+  diff_choice_second: 7 unique; values: 1,2,3,4,5,6,7
+  ability_load: 11 unique; values: 0,0.100000001490116,0.200000002980232,0.300000011920929,0.400000005960464,0.5,0.600000023841858,0.699999988079071,0.800000011920929,0.899999976158142,1
+  ability_task: 9 unique; values: 0.200000002980232,0.300000011920929,0.400000005960464,0.5,0.600000023841858,0.699999988079071,0.800000011920929,0.899999976158142,1
+  q_age: 34 unique; 
+  q_gender: 2 unique; values: 0,1 | labels: 0=Male; 1=Female
+  q_subject: character, 14 unique
+  q_degree: character, 4 unique
+  q_abitur_year: 30 unique; 
+  q_abitur_grade: 30 unique; 
+  q_math_grade: 10 unique; values: 1,1.29999995231628,1.70000004768372,2,2.29999995231628,2.70000004768372,3,3.29999995231628,4,5
+  perc_multitasking_1: 5 unique; values: 1,2,3,4,5
+  perc_multitasking_2: 86 unique; 
+  risk: 11 unique; values: 0,1,2,3,4,5,6,7,8,9,10
+  perc_multitasking_1_easy: 2 unique; values: 0,1 | labels: 0=Multitasking hard; 1=Multitasking Easy
+  raven_score: 11 unique; values: 0,1,2,3,4,5,6,7,8,9,10
+  no_attention: 2 unique; values: 0,1
+  subject_id: 892 unique; 
+  original_lab: 2 unique; values: 0,1 | labels: 0=Revision; 1=Original Lab
+  Treatment_intervention: 2 unique; values: 0,1 | labels: 0=Baseline; 1=\textsc{Intervention}
+  payoff_share_mean: 120 unique; 
+  payoff_share: 7 unique; values: 0,0.200000002980232,0.333333343267441,0.5,0.666666686534882,0.800000011920929,1
+  default_followed_correct_mean: 19 unique; 
+  raven_score_quartiles: 4 unique; values: 1,2,3,4 | labels: 1=Very Low Raven; 2=Low Raven; 3=High Raven; 4=Very High Raven
+  raven_score_median: 2 unique; values: 1,2 | labels: 1=Low Raven; 2=High Raven
+  high_task_difficulty: 2 unique; values: 0,1 | labels: 0=Low Difficulty; 1=High Difficulty
+  subject_cat: 4 unique; values: 0,1,2,3 | labels: 0=Others; 1=Law; 2=Economics; 3=Sciences
+  q_abitur_grade_quartile: 4 unique; values: 1,2,3,4
+  q_abitur_grade_cat: 5 unique; values: 1,2,3,4,5
+  q_math_grade_cat: 4 unique; values: 1,2,3,4
+  Treatment_Incentives: 4 unique; values: 1,2,3,4 | labels: 1=10; 2=20; 3=40; 4=Ample
+  Treatment_Incentives_Baseline_sc: 4 unique; values: 1,2,3,4 | labels: 1=\textsc{Baseline-10}; 2=\textsc{Baseline-20}; 3=\textsc{Baseline-40}; 4=\textsc{Baseline-Ample}
+  Treatment_Incentives_Int_sc: 4 unique; values: 1,2,3,4 | labels: 1=\textsc{Incentives-10}; 2=\textsc{Incentives-20}; 3=\textsc{Incentives-40}; 4=\textsc{Incentives-Ample}
+  economist: 2 unique; values: 0,1
+```
+
+## Task
+Fix specifically the identified problem above. Do not rewrite the entire approach unless necessary.
+
+## Reminder: Output Convention
+The fixed R code MUST emit each reproduced metric on its own line using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names.
+
+## Reminder: Constraints
+- The dataset is a directory tree at '<repo>/.cache/datasets/altmann_2022_cognitive_spillovers.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+- Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+- Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+- Do NOT access the internet.
+- Do NOT call system() / system2().
+- Use set.seed(42) for reproducibility.
+- Print all RESULT: lines at the end via cat().
+
+Output ONLY the corrected R code — no explanation, no markdown fences.

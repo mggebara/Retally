@@ -8,6 +8,7 @@
 | Model | — |
 | Run | 2026-11-02-a |
 | Date | 2026-11-02T10:08:30Z |
+| Data access | public |
 | Results file | `benchmark/results/claude-code-6papers-all-modes-2026-11-02.json` |
 | Artifacts | `benchmark/results/artifacts/hanushek-2022-patience-risk-human-capital/independent/claude-code/20261102T142247Z` |
 | Run directory | `benchmark/reproductions/hanushek-2022-patience-risk-human-capital/independent/2026-11-02-a` |
@@ -29,13 +30,13 @@
 | `table1_col2_risk_taking` | -0.482 (0.261) | -0.473507 | 1.76% | ±0.261 (se_band) | PASS | FAIL |
 | `table1_col5_natives_patience` | 1.296 (0.133) | 1.28951 | 0.50% | ±0.133 (se_band) | PASS | FAIL |
 | `table1_col5_natives_risk_taking` | -1.32 (0.189) | -1.31083 | 0.69% | ±0.189 (se_band) | PASS | FAIL |
-| `table1_col3_observations` | 1.99228e+06 | 1.99228e+06 | 0.00% | ±19922.8 (relative) | PASS | PASS |
+| `table1_col3_observations` | 1.99228e+06 | 1.99228e+06 | 0.00% | ±99613.8 (relative) | PASS | PASS |
 | `table2_col3_patience` | 0.931 (0.116) | 0.91222 | 2.02% | ±0.116 (se_band) | PASS | FAIL |
 | `table2_col3_risk_taking` | -0.294 (0.122) | -0.194001 | 34.01% | ±0.122 (se_band) | PASS | FAIL |
 | `table2_col1_patience` | 0.779 (0.115) | 0.8051 | 3.35% | ±0.115 (se_band) | PASS | FAIL |
 | `table2_col4_patience` | 1.032 (0.133) | 1.02709 | 0.48% | ±0.133 (se_band) | PASS | FAIL |
 | `table2_col4_risk_taking` | -0.449 (0.14) | -0.381868 | 14.95% | ±0.14 (se_band) | PASS | FAIL |
-| `table2_col3_observations` | 80398 | 80398 | 0.00% | ±803.98 (relative) | PASS | PASS |
+| `table2_col3_observations` | 80398 | 80398 | 0.00% | ±4019.9 (relative) | PASS | PASS |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 13/13 pass, which agrees with the row's 13/13.
 

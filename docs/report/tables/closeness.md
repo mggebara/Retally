@@ -5,29 +5,29 @@ From `benchmark.metrics.closeness`.  Relative error and the tolerance multiples 
 | Reproducer | Papers | Mode | Claims | Matched | Median rel. error | ≤1× tol | ≤2× tol | ≤5× tol |
 |---|---:|---|---:|---:|---:|---:|---:|---:|
 | Pipeline, `claude-opus-4-7` | 7 (3.2 set) | seeded | 79 | 99 % | 0.3 % | 71 % | 71 % | 74 % |
-| Pipeline, `claude-opus-4-7` | 7 (3.2 set) | independent | 79 | 85 % | 4.9 % | 61 % | 70 % | 85 % |
-| Pipeline, `claude-opus-4-7` | 7 (3.2 set) | blind | 79 | 90 % | 22.3 % | 34 % | 38 % | 51 % |
+| Pipeline, `claude-opus-4-7` | 7 (3.2 set) | independent | 79 | 85 % | 4.9 % | 70 % | 76 % | 91 % |
+| Pipeline, `claude-opus-4-7` | 7 (3.2 set) | blind | 79 | 90 % | 22.3 % | 41 % | 45 % | 59 % |
 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 7 (3.2 set) | seeded | 79 | 100 % | 0.1 % | 100 % | 100 % | 100 % |
-| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 7 (3.2 set) | independent | 79 | 100 % | 0.2 % | 85 % | 86 % | 90 % |
-| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 7 (3.2 set) | blind | 79 | 97 % | 1.3 % | 66 % | 68 % | 71 % |
+| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 7 (3.2 set) | independent | 79 | 100 % | 0.2 % | 85 % | 87 % | 92 % |
+| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 7 (3.2 set) | blind | 79 | 97 % | 1.3 % | 68 % | 75 % | 78 % |
 | Agent (Claude Code, desktop Opus) | 7 (3.2 set) | seeded | 79 | 100 % | 0.1 % | 99 % | 100 % | 100 % |
 | Agent (Claude Code, desktop Opus) | 7 (3.2 set) | independent | 79 | 100 % | 0.2 % | 99 % | 100 % | 100 % |
-| Agent (Claude Code, desktop Opus) | 7 (3.2 set) | blind | 79 | 100 % | 0.3 % | 95 % | 96 % | 96 % |
+| Agent (Claude Code, desktop Opus) | 7 (3.2 set) | blind | 79 | 100 % | 0.3 % | 95 % | 96 % | 100 % |
 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 13 | seeded | 154 | 100 % | 0.1 % | 97 % | 97 % | 97 % |
-| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 13 | independent | 154 | 100 % | 0.6 % | 84 % | 86 % | 90 % |
-| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 13 | blind | 154 | 95 % | 2.4 % | 63 % | 69 % | 76 % |
+| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 13 | independent | 154 | 100 % | 0.6 % | 84 % | 86 % | 92 % |
+| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 13 | blind | 154 | 95 % | 2.4 % | 65 % | 74 % | 79 % |
 | Agent (Claude Code, desktop Opus) | 13 | seeded | 154 | 100 % | 0.0 % | 99 % | 100 % | 100 % |
-| Agent (Claude Code, desktop Opus) | 13 | independent | 154 | 100 % | 0.2 % | 96 % | 97 % | 97 % |
-| Agent (Claude Code, desktop Opus) | 13 | blind | 154 | 100 % | 0.3 % | 88 % | 91 % | 93 % |
+| Agent (Claude Code, desktop Opus) | 13 | independent | 154 | 100 % | 0.2 % | 97 % | 97 % | 97 % |
+| Agent (Claude Code, desktop Opus) | 13 | blind | 154 | 100 % | 0.3 % | 88 % | 92 % | 95 % |
 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 17 | seeded | 201 | 100 % | 0.1 % | 97 % | 97 % | 98 % |
-| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 17 | independent | 201 | 100 % | 1.3 % | 84 % | 87 % | 92 % |
-| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 17 | blind | 201 | 88 % | 3.4 % | 67 % | 73 % | 79 % |
+| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 17 | independent | 201 | 100 % | 1.3 % | 86 % | 88 % | 94 % |
+| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 17 | blind | 201 | 88 % | 3.4 % | 68 % | 77 % | 82 % |
 | Agent (Claude Code, desktop Opus) | 17 | seeded | 201 | 100 % | 0.1 % | 100 % | 100 % | 100 % |
-| Agent (Claude Code, desktop Opus) | 17 | independent | 201 | 100 % | 0.3 % | 97 % | 97 % | 98 % |
-| Agent (Claude Code, desktop Opus) | 17 | blind | 201 | 100 % | 0.6 % | 90 % | 92 % | 95 % |
+| Agent (Claude Code, desktop Opus) | 17 | independent | 201 | 100 % | 0.3 % | 97 % | 98 % | 98 % |
+| Agent (Claude Code, desktop Opus) | 17 | blind | 201 | 100 % | 0.6 % | 91 % | 93 % | 96 % |
 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 23 | seeded | 278 | 100 % | 0.1 % | 95 % | 95 % | 96 % |
-| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 23 | independent | 278 | 100 % | 1.6 % | 85 % | 88 % | 93 % |
-| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 23 | blind | 278 | 91 % | 3.6 % | 67 % | 75 % | 80 % |
+| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 23 | independent | 278 | 100 % | 1.6 % | 86 % | 89 % | 95 % |
+| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 23 | blind | 278 | 91 % | 3.6 % | 68 % | 78 % | 82 % |
 | Agent (Claude Code, desktop Opus) | 23 | seeded | 278 | 100 % | 0.1 % | 100 % | 100 % | 100 % |
 | Agent (Claude Code, desktop Opus) | 23 | independent | 278 | 100 % | 0.5 % | 96 % | 98 % | 99 % |
-| Agent (Claude Code, desktop Opus) | 23 | blind | 278 | 100 % | 0.7 % | 90 % | 94 % | 96 % |
+| Agent (Claude Code, desktop Opus) | 23 | blind | 278 | 100 % | 0.7 % | 91 % | 94 % | 97 % |

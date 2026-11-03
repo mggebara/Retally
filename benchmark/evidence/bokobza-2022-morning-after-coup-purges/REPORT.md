@@ -6,6 +6,7 @@
 - I4R report: https://github.com/I4Replication/I4R-First-Meta-Paper
 - I4R outcome label: reproducible; split: holdout
 - Catalog entry (ground truth): `benchmark/papers/bokobza-2022-morning-after-coup-purges.yaml`
+- Data access: public
 
 > Headline findings: failed coup attempts raise the year-to-year cabinet replacement rate in autocracies by 8-11 percentage points (Figure 2; Tables A1-A2: 0.10 and 0.11 with country fixed effects, 0.08 and 0.09 with leader fixed effects, SE 0.03 throughout), while alternative instability events (civil war, nonviolent campaigns, military disputes, interstate war, strikes; Table A3) do not once leader fixed effects are included.  At the minister level, purges after failed coups target newcomers (0.14 for under two years' experience; interaction -0.10 for over six years), ministers from parties other than the leader's (0.17; -0.13 for the leader's party), defence ministers (0.20; natural resources -0.18 relative to defence) and non-leader prime ministers / presidents (0.37).
 > Curation pass (2026-11-01).  Pinned 11 claims: four A1/A2 failed-coup coefficients (Base and Main, country and leader fixed effects), four K1 coefficients (failed coup and the over-6-years and leader's-party interactions) and three K2 coefficients (failed coup in the responsibility and importance models, natural-resources interaction), each with its SE.  The A1 Base N (3,715) and the K1 experience-model N (90,020) were pinned in a first draft and dropped after the step-6 leak check: the main text states both ("up to 3,715 country-year observations"; Figure 3 note "Up to 90,020 minister-years"), so a blind run would read them in the paper.  sample_size: A1 Base 3,715, Main 3,676; A2 Base 3,332, Main 3,307; K1 experience 90,020, affiliation 86,057; K2 responsibility 76,530, importance 90,014.  All coefficients and SEs are printed to two decimals; the printed-precision floor (+-0.005) binds.  Full-precision values (Stata log; I4R o_coeff for K): A1 0.0985 (0.0327), 0.1055 (0.0323); A2 0.0839 (0.0317), 0.0853 (0.0318); K1 0.142112 (0.041926), interaction over 6 years -0.103 (0.052), 0.174175 (0.056053), leader's party -0.126 (0.061); K2 0.202499 (0.065968), natural resources -0.183 (0.083), 0.370185 (0.09339).  Note that A1 Main 0.1055 and A2 Main 0.0853 sit just inside their printed bands. Left out: the other A1/A2 columns (electoral, economic, instability, purges moving averages, all controls), the A3 placebos, K1 2-3 and 4-6 year interactions, K2 foreign/finance/other and importance-tier interactions, Table K3 (Figure 5), control coefficients, within R2s, the Figure 1 medians (17.4% / 38.1%) and all robustness appendices.
@@ -39,6 +40,7 @@
 | `claude-code` | [11/11](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [11/11](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[11/11](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [11/11](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[11/11](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c)<br>[11/11](blind/claude-code/2026-11-03-a/CELL.md) (2026-11-03-a) |
 | `pipeline-desktop-opus` | [9/11](seeded/pipeline-desktop-opus/20261102T062442Z/CELL.md) (20261102T062442Z) | [11/11](independent/pipeline-desktop-opus/20261102T062442Z/CELL.md) (20261102T062442Z) | [4/11](blind/pipeline-desktop-opus/20261102T060946Z/CELL.md) (20261102T060946Z) |
 | `pipeline-desktop-opus-run2` | [7/11](seeded/pipeline-desktop-opus-run2/20261102T092119Z/CELL.md) (20261102T092119Z) | [10/11](independent/pipeline-desktop-opus-run2/20261102T142444Z/CELL.md) (20261102T142444Z) | [10/11](blind/pipeline-desktop-opus-run2/20261102T091036Z/CELL.md) (20261102T091036Z) |
+| `pipeline-desktop-opus-run3` | [9/11](seeded/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md) (20261103T050517Z) | [11/11](independent/pipeline-desktop-opus-run3/20261103T054754Z/CELL.md) (20261103T054754Z) | [9/11](blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
 
@@ -54,12 +56,12 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `failed_coup_main_leader_fe` | 0.085272 | 0.09 | ±0.005 (printed_precision) | 0.946 | PASS |
 | [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `failed_coup_main_leader_fe` | 0.085272 | 0.09 | ±0.005 (printed_precision) | 0.946 | PASS |
 | [independent/pipeline-desktop-opus-run2/20261102T142444Z](independent/pipeline-desktop-opus-run2/20261102T142444Z/CELL.md) | `failed_coup_affiliation_model` | 0.113672 | 0.17 | ±0.06 (se_band) | 0.939 | PASS |
+| [blind/pipeline-desktop-opus-run3/20261103T010557Z](blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) | `failed_coup_affiliation_model` | 0.11602 | 0.17 | ±0.06 (se_band) | 0.900 | PASS |
 | [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `failed_coup_main_country_fe` | 0.105549 | 0.11 | ±0.005 (printed_precision) | 0.890 | PASS |
 | [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `failed_coup_main_country_fe` | 0.105549 | 0.11 | ±0.005 (printed_precision) | 0.890 | PASS |
 | [seeded/pipeline-desktop-opus/20261102T062442Z](seeded/pipeline-desktop-opus/20261102T062442Z/CELL.md) | `failed_coup_main_country_fe` | 0.105549 | 0.11 | ±0.005 (printed_precision) | 0.890 | PASS |
+| [seeded/pipeline-desktop-opus-run3/20261103T050517Z](seeded/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md) | `failed_coup_main_country_fe` | 0.105549 | 0.11 | ±0.005 (printed_precision) | 0.890 | PASS |
 | [independent/claude-code/2026-11-02-b](independent/claude-code/2026-11-02-b/CELL.md) | `failed_coup_main_leader_fe` | 0.063813 | 0.09 | ±0.03 (se_band) | 0.873 | PASS |
-| [blind/claude-code/2026-11-02-b](blind/claude-code/2026-11-02-b/CELL.md) | `failed_coup_main_leader_fe` | 0.063813 | 0.09 | ±0.03 (se_band) | 0.873 | PASS |
-| [blind/claude-code/2026-11-03-a](blind/claude-code/2026-11-03-a/CELL.md) | `failed_coup_main_leader_fe` | 0.063937 | 0.09 | ±0.03 (se_band) | 0.869 | PASS |
 
 ### Declared deviations
 
@@ -87,6 +89,8 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - In three of the four individual-level models fixest drops lagged log population as collinear with the country and year fixed effects even with collin.tol = 1e-14; the paper reports a coefficient for it. In the responsibility model, where it is kept, the failed-coup coefficients are unchanged from attempt 3, where it was dropped.
 - [independent/pipeline-desktop-opus-run2/20261102T142444Z](independent/pipeline-desktop-opus-run2/20261102T142444Z/CELL.md) (10/11; failed: `failed_coup_x_leaders_party`)
   - affiliation model uses ministers from another (non-leader) party as reference category (paper does not state the base level; unaffiliated reference did not match)
+- [independent/pipeline-desktop-opus-run3/20261103T054754Z](independent/pipeline-desktop-opus-run3/20261103T054754Z/CELL.md) (11/11)
+  - Affiliation model contrasts leader's-party ministers with all other ministers pooled (other party, unaffiliated, unknown); paper does not state the omitted category
 - [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) (11/11)
   - Individual-level data: the shipped pop_pwt_ln_lag column is an exact copy of gdp_cap_pwt_ln_lag (so fixest dropped it as collinear in attempt-3); the final script rebuilds lagged logged population from pop_pwt_ln (previous calendar year, within country).
   - Leader-FE country-level models (Table A2): lagged controls are taken within the leader spell (as with Stata L. after xtset on the leader id), so each leader's first year has no lagged controls. Chosen because the paper/task state that lagged monarchy is collinear with leader FE, which holds only under within-leader lags (with within-country lags it varies in 5 leader spells right after a monarchy ended). Country-FE models use within-country lags.
@@ -117,21 +121,13 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
-- seeded: `failed_coup_base_leader_fe` — pipeline 0/2, agent 2/2
-- seeded: `failed_coup_main_leader_fe` — pipeline 0/2, agent 2/2
-- blind: `failed_coup_x_leaders_party` — pipeline 0/2, agent 4/4
+- seeded: `failed_coup_base_leader_fe` — pipeline 0/3, agent 2/2
+- seeded: `failed_coup_main_leader_fe` — pipeline 0/3, agent 2/2
+- blind: `failed_coup_x_leaders_party` — pipeline 0/3, agent 4/4
 
 Pass rates at least 50 points apart (not unanimous):
 
-- seeded: `failed_coup_base_country_fe` — pipeline 1/2, agent 2/2
-- seeded: `failed_coup_main_country_fe` — pipeline 1/2, agent 2/2
-- independent: `failed_coup_x_leaders_party` — pipeline 1/2, agent 3/3
-- blind: `failed_coup_affiliation_model` — pipeline 1/2, agent 4/4
-- blind: `failed_coup_experience_model` — pipeline 1/2, agent 4/4
-- blind: `failed_coup_importance_model` — pipeline 1/2, agent 4/4
-- blind: `failed_coup_responsibility_model` — pipeline 1/2, agent 4/4
-- blind: `failed_coup_x_natural_resources` — pipeline 1/2, agent 4/4
-- blind: `failed_coup_x_over_6_years_experience` — pipeline 1/2, agent 4/4
+- blind: `failed_coup_importance_model` — pipeline 1/3, agent 4/4
 
 ## Cells
 
@@ -150,6 +146,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### seeded · pipeline-desktop-opus-run2 · 20261102T092119Z
 
 [`seeded/pipeline-desktop-opus-run2/20261102T092119Z/CELL.md`](seeded/pipeline-desktop-opus-run2/20261102T092119Z/CELL.md) — final 7/11, re-scored 7/11; first scored 7/11; executions 2; 2026-11-02T09:21:19Z; from `pipeline-oracle-desktop-opus-run2-4papers-all-modes-2026-11-02.json`; evidence complete.
+
+### seeded · pipeline-desktop-opus-run3 · 20261103T050517Z
+
+[`seeded/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md`](seeded/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md) — final 9/11, re-scored 9/11; first scored 9/11; executions 2; 2026-11-03T05:05:17Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 
 ### independent · claude-code · 2026-11-02-a
 
@@ -170,6 +170,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### independent · pipeline-desktop-opus-run2 · 20261102T142444Z
 
 [`independent/pipeline-desktop-opus-run2/20261102T142444Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261102T142444Z/CELL.md) — final 10/11, re-scored 10/11; first scored 4/11; executions 4; 2026-11-02T14:24:44Z; from `pipeline-oracle-desktop-opus-run2-4papers-all-modes-2026-11-02.json`; evidence complete.
+
+### independent · pipeline-desktop-opus-run3 · 20261103T054754Z
+
+[`independent/pipeline-desktop-opus-run3/20261103T054754Z/CELL.md`](independent/pipeline-desktop-opus-run3/20261103T054754Z/CELL.md) — final 11/11, re-scored 11/11; first scored 9/11; executions 5; 2026-11-03T05:47:54Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 
 ### blind · claude-code · 2026-11-02-a
 
@@ -194,4 +198,8 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · pipeline-desktop-opus-run2 · 20261102T091036Z
 
 [`blind/pipeline-desktop-opus-run2/20261102T091036Z/CELL.md`](blind/pipeline-desktop-opus-run2/20261102T091036Z/CELL.md) — final 10/11, re-scored 10/11; first scored 10/11; executions 2; 2026-11-02T09:10:36Z; from `pipeline-oracle-desktop-opus-run2-4papers-all-modes-2026-11-02.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-run3 · 20261103T010557Z
+
+[`blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md`](blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — final 9/11, re-scored 9/11; first scored 9/11; executions 2; 2026-11-03T01:05:57Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 

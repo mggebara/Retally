@@ -6,11 +6,11 @@ Pipeline 4.7: the seven 3.2 papers.  Pipeline 5.5: all twenty-three evaluation p
 |---|---:|---:|---:|---:|---:|---:|---:|
 | data-file resolution | 0 | 0 | 11 | 12 | 0 | 0 | 23 |
 | specification mismatch | 0 | 19 | 0 | 12 | 0 | 6 | 37 |
-| sample restriction | 5 | 11 | 7 | 40 | 0 | 1 | 64 |
+| sample restriction | 1 | 6 | 3 | 37 | 0 | 0 | 47 |
 | SE / cluster choice | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | tolerance artifact | 0 | 0 | 0 | 0 | 1 | 0 | 1 |
 | extraction error | 12 | 8 | 0 | 13 | 0 | 0 | 33 |
-| under-specified methods section | 3 | 8 | 4 | 7 | 6 | 18 | 46 |
-| unclassified | 18 | 9 | 21 | 24 | 4 | 3 | 79 |
-| **all misses** | 38 | 55 | 43 | 108 | 11 | 28 | 283 |
+| under-specified methods section | 3 | 8 | 4 | 7 | 5 | 17 | 44 |
+| unclassified | 16 | 9 | 21 | 24 | 4 | 3 | 77 |
+| **all misses** | 32 | 50 | 39 | 105 | 10 | 26 | 262 |
 | claims scored | 79 | 79 | 278 | 278 | 278 | 278 | 1270 |

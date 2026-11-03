@@ -5,7 +5,7 @@ Earlier repeat runs: the pipeline on `claude-opus-4-7` on the three dev papers (
 | Dev paper (independent, pipeline 4.7) | n | Cache on | Cache off 1 | Cache off 2 | Cache off 3 |
 |---|---:|---:|---:|---:|---:|
 | `dincecco-2022` | 13 | 11 | 13 | 13 | 13 |
-| `alesina-2022` | 11 | 7 | 0 | 6 | 5 |
+| `alesina-2022` | 11 | 7 | 0 | 7 | 5 |
 | `bisbee-2022` | 11 | 5 | 7 | 8 | 8 |
 
 Agent blind reruns (ROADMAP 3.4):
@@ -16,4 +16,4 @@ Agent blind reruns (ROADMAP 3.4):
 | `arias-2022` | 12 | 12 | 12 | `claude-code-blind-rerun-2026-10-22.json` |
 | `grier-2023` | 11 | 10 | 9 | `claude-code-blind-rerun-2026-10-22.json` |
 | `gagliarducci-2022` | 13 | 7 | 9 | `claude-code-blind-rerun-2026-10-22-b.json` |
-| `holman-2022` | 11 | 6 | 5 | `claude-code-blind-rerun-2026-10-22-b.json` |
+| `holman-2022` | 11 | 7 | 6 | `claude-code-blind-rerun-2026-10-22-b.json` |

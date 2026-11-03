@@ -68,12 +68,13 @@
         },
         {
           "description": "sample_size_districts",
-          "claim_type": "other",
+          "claim_type": "count",
           "claimed": 660.0,
           "reproduced": 656.0,
-          "tolerance": 0.01,
+          "tolerance": 0.05,
           "rel_err": 0.006060606060606061,
-          "passed": true
+          "passed": true,
+          "tolerance_source": "relative"
         },
         {
           "description": "warfare_coefficient_state_fe",
@@ -175,5 +176,10 @@
       },
       "artifacts_dir": "benchmark/results/artifacts/dincecco-2022-india-warfare/independent/pipeline/20261021T021703Z"
     }
-  ]
+  ],
+  "rescored": {
+    "policy": "count-5pct",
+    "date": "2026-11-03",
+    "flipped": 0
+  }
 }

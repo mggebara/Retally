@@ -8,6 +8,7 @@
 | Model | — |
 | Run | 2026-11-02-b |
 | Date | 2026-11-02T19:41:00Z |
+| Data access | public |
 | Results file | `benchmark/results/claude-code-run2-23papers-seeded-2026-11-02.json` |
 | Artifacts | `benchmark/results/artifacts/gagliarducci-2022-gender-cooperation-congress/seeded/claude-code/20261102T194315Z` |
 | Run directory | `benchmark/reproductions/gagliarducci-2022-gender-cooperation-congress/seeded/2026-11-02-b` |
@@ -31,10 +32,10 @@
 | `female_sponsor_pct_opposite_dem_ipw_sponsor` | -1.208 (0.525) | -1.20782 | 0.01% | ±0.02416 (relative) | PASS | PASS |
 | `female_sponsor_pct_opposite_rep_ols` | 3.666 (0.916) | 3.66566 | 0.01% | ±0.07332 (relative) | PASS | PASS |
 | `female_sponsor_pct_opposite_rep_ipw_district` | 2.905 (0.82) | 2.90498 | 0.00% | ±0.0581 (relative) | PASS | PASS |
-| `n_bills_ncosponsors_all_ols` | 60670 | 60670 | 0.00% | ±606.7 (relative) | PASS | PASS |
-| `n_sponsor_terms_ncosponsors_all_ols` | 4746 | 4746 | 0.00% | ±47.46 (relative) | PASS | PASS |
-| `n_bills_pct_opposite_dem_ols` | 32846 | 32846 | 0.00% | ±328.46 (relative) | PASS | PASS |
-| `n_bills_pct_opposite_rep_ols` | 27669 | 27669 | 0.00% | ±276.69 (relative) | PASS | PASS |
+| `n_bills_ncosponsors_all_ols` | 60670 | 60670 | 0.00% | ±3033.5 (relative) | PASS | PASS |
+| `n_sponsor_terms_ncosponsors_all_ols` | 4746 | 4746 | 0.00% | ±237.3 (relative) | PASS | PASS |
+| `n_bills_pct_opposite_dem_ols` | 32846 | 32846 | 0.00% | ±1642.3 (relative) | PASS | PASS |
+| `n_bills_pct_opposite_rep_ols` | 27669 | 27669 | 0.00% | ±1383.45 (relative) | PASS | PASS |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 13/13 pass, which agrees with the row's 13/13.
 

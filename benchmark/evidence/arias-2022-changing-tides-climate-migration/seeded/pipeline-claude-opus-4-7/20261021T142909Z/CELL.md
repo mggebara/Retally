@@ -8,6 +8,7 @@
 | Model | claude-opus-4-7 |
 | Run | 20261021T142909Z |
 | Date | 2026-10-21T14:29:09Z |
+| Data access | public |
 | Results file | `benchmark/results/pipeline-10papers-all-modes-2026-10-21.json` |
 | Artifacts | `benchmark/results/artifacts/arias-2022-changing-tides-climate-migration/seeded/pipeline/20261021T142909Z` |
 | Executions | 3 |
@@ -29,10 +30,10 @@
 | `amce_flooding_germany` | 0.086 (0.012) | — | — | ±0.00172 (relative) | FAIL | FAIL |
 | `amce_wildfires_germany` | 0.06 (0.012) | 0.1113 | 85.50% | ±0.0012 (relative) | FAIL | FAIL |
 | `amce_persecution_germany` | 0.162 (0.013) | 0.2047 | 26.36% | ±0.00324 (relative) | FAIL | FAIL |
-| `respondents_us` | 1086 | 1086 | 0.00% | ±10.86 (relative) | PASS | PASS |
-| `respondents_germany` | 1074 | 1074 | 0.00% | ±10.74 (relative) | PASS | PASS |
-| `choice_tasks_us` | 18966 | 18970 | 0.02% | ±189.66 (relative) | PASS | PASS |
-| `choice_tasks_germany` | 18862 | 18862 | 0.00% | ±188.62 (relative) | PASS | PASS |
+| `respondents_us` | 1086 | 1086 | 0.00% | ±54.3 (relative) | PASS | PASS |
+| `respondents_germany` | 1074 | 1074 | 0.00% | ±53.7 (relative) | PASS | PASS |
+| `choice_tasks_us` | 18966 | 18970 | 0.02% | ±948.3 (relative) | PASS | PASS |
+| `choice_tasks_germany` | 18862 | 18862 | 0.00% | ±943.1 (relative) | PASS | PASS |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 4/12 pass, which agrees with the row's 4/12.
 

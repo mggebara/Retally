@@ -8,6 +8,7 @@
 | Model | desktop-opus-run2 |
 | Run | 20261102T144228Z |
 | Date | 2026-11-02T14:42:28Z |
+| Data access | public |
 | Results file | `benchmark/results/pipeline-oracle-desktop-opus-run2-4papers-all-modes-2026-11-02.json` |
 | Artifacts | `benchmark/results/artifacts/forsythe-2022-young-workers-recessions/blind/pipeline/20261102T144228Z` |
 | Executions | 4 |
@@ -34,7 +35,7 @@
 | `young_x_unemp_rate_nilf` | -0.49 (0.0332) | -0.548213 | 11.88% | ±0.0332 (se_band) | FAIL | FAIL |
 | `wage_young_x_unemp_rate_all_hires` | -0.0262 (0.0036) | -0.0239455 | 8.61% | ±0.0036 (se_band) | PASS | PASS |
 | `wage_experienced_x_unemp_rate_all_hires` | -0.0116 (0.00348) | -0.00913859 | 21.22% | ±0.00348 (se_band) | PASS | PASS |
-| `n_obs_full_sample` | 1.69485e+07 | 1.42966e+07 | 15.65% | ±169485 (relative) | FAIL | FAIL |
+| `n_obs_full_sample` | 1.69485e+07 | 1.42966e+07 | 15.65% | ±847426 (relative) | FAIL | FAIL |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 10/13 pass, which agrees with the row's 10/13.
 

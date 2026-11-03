@@ -6,6 +6,7 @@
 - I4R report: https://github.com/I4Replication/I4R-First-Meta-Paper
 - I4R outcome label: reproducible; split: holdout
 - Catalog entry (ground truth): `benchmark/papers/hanlon-2022-aircraft-ip-spillovers.yaml`
+- Data access: public
 
 > Headline finding: after the 1926 change gave U.S. airframe producers property rights over new designs, U.S. fighter and bomber airframe performance grew much faster (wing load about 1.3% a year before 1926 vs 7.4% after; maximum speed -0.1% vs 6.7%), the acceleration survives a comparison with the U.K., and aero-engine performance growth slowed (U.S. horsepower per pound 3.9% a year before vs -1.0% after).
 > Original analysis in Stata (15.1 do-files); language: r is the reproduction target, as for alesina-2022 and dincecco-2022.
@@ -41,6 +42,7 @@
 | `pipeline-claude-opus-4-7` | [12/12](seeded/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [10/12](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [12/12](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) |
 | `pipeline-desktop-opus` | [12/12](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) | [12/12](independent/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) | [12/12](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) |
 | `pipeline-desktop-opus-run2` | [12/12](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [12/12](independent/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) | [12/12](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
+| `pipeline-desktop-opus-run3` | [12/12](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [12/12](independent/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) | [12/12](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
 
@@ -52,6 +54,7 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 | Cell | Claim | Reproduced | Paper | Band | Error / band | Verdict |
 |---|---|---|---|---|---|---|
+| [seeded/pipeline-desktop-opus-run3/20261103T010557Z](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) | `airframe_wingload_trend_before_1926_us` | 0.0134392 | 0.013 | ±0.0005 (printed_precision) | 0.878 | PASS |
 | [seeded/pipeline-desktop-opus/20261023T063725Z](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) | `airframe_wingload_trend_before_1926_us` | 0.0134392 | 0.013 | ±0.0005 (printed_precision) | 0.878 | PASS |
 | [seeded/claude-code/2026-10-21-b](seeded/claude-code/2026-10-21-b/CELL.md) | `airframe_wingload_trend_before_1926_us` | 0.013439 | 0.013 | ±0.0005 (printed_precision) | 0.878 | PASS |
 | [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `airframe_wingload_trend_before_1926_us` | 0.013439 | 0.013 | ±0.0005 (printed_precision) | 0.878 | PASS |
@@ -59,9 +62,8 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | [seeded/pipeline-desktop-opus-run2/20261023T151837Z](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) | `airframe_wingload_trend_before_1926_us` | 0.013439 | 0.013 | ±0.0005 (printed_precision) | 0.878 | PASS |
 | [independent/pipeline-claude-opus-4-7/20261021T142909Z](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `airframe_maxspeed_trend_before_1926_us` | -0.0082 | -0.001 | ±0.006 (se_band) | 1.200 | FAIL |
 | [seeded/pipeline-desktop-opus/20261023T063725Z](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) | `airframe_maxspeed_trend_after_1926_us_vs_uk` | 0.0305485 | 0.031 | ±0.00062 (relative) | 0.728 | PASS |
+| [seeded/pipeline-desktop-opus-run3/20261103T010557Z](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) | `airframe_maxspeed_trend_after_1926_us_vs_uk` | 0.0305485 | 0.031 | ±0.00062 (relative) | 0.728 | PASS |
 | [seeded/claude-code/2026-10-21-b](seeded/claude-code/2026-10-21-b/CELL.md) | `airframe_maxspeed_trend_after_1926_us_vs_uk` | 0.030549 | 0.031 | ±0.00062 (relative) | 0.727 | PASS |
-| [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `airframe_maxspeed_trend_after_1926_us_vs_uk` | 0.030549 | 0.031 | ±0.00062 (relative) | 0.727 | PASS |
-| [seeded/pipeline-claude-opus-4-7/20261021T142909Z](seeded/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `airframe_maxspeed_trend_after_1926_us_vs_uk` | 0.030549 | 0.031 | ±0.00062 (relative) | 0.727 | PASS |
 
 ### Declared deviations
 
@@ -105,6 +107,10 @@ _None._
 
 [`seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md`](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-10-23T15:18:37Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
 
+### seeded · pipeline-desktop-opus-run3 · 20261103T010557Z
+
+[`seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md`](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-11-03T01:05:57Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
+
 ### independent · claude-code · 2026-10-21-b
 
 [`independent/claude-code/2026-10-21-b/CELL.md`](independent/claude-code/2026-10-21-b/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 2; 2026-10-22T02:07:25Z; from `claude-code-7papers-all-modes-2026-10-21.json`; evidence complete.
@@ -128,6 +134,10 @@ _None._
 ### independent · pipeline-desktop-opus-run2 · 20261023T150832Z
 
 [`independent/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-10-23T15:08:32Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
+
+### independent · pipeline-desktop-opus-run3 · 20261103T004800Z
+
+[`independent/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md`](independent/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-11-03T00:48:00Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 
 ### blind · claude-code · 2026-10-21-b
 
@@ -156,4 +166,8 @@ _None._
 ### blind · pipeline-desktop-opus-run2 · 20261023T150832Z
 
 [`blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md`](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-10-23T15:08:32Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-run3 · 20261103T004800Z
+
+[`blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md`](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-11-03T00:48:00Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 

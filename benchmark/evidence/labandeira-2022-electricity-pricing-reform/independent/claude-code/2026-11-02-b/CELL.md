@@ -8,6 +8,7 @@
 | Model | — |
 | Run | 2026-11-02-b |
 | Date | 2026-11-02T15:10:30Z |
+| Data access | public |
 | Results file | `benchmark/results/claude-code-run2-6papers-indep-blind-2026-11-02.json` |
 | Artifacts | `benchmark/results/artifacts/labandeira-2022-electricity-pricing-reform/independent/claude-code/20261102T151024Z` |
 | Run directory | `benchmark/reproductions/labandeira-2022-electricity-pricing-reform/independent/2026-11-02-b` |
@@ -33,8 +34,8 @@
 | `reform_expenditure_fe_iv_col8` | -0.089 (0.053) | -0.0887 | 0.34% | ±0.053 (se_band) | PASS | FAIL |
 | `price_elasticity_consumption_ols_col1` | -1.044 (0.024) | -1.04449 | 0.05% | ±0.024 (se_band) | PASS | PASS |
 | `price_elasticity_consumption_fe_col3` | -1.026 (0.025) | -1.0262 | 0.02% | ±0.025 (se_band) | PASS | PASS |
-| `n_obs_table2` | 20872 | 20872 | 0.00% | ±208.72 (relative) | PASS | PASS |
-| `n_households_table2` | 10729 | 10729 | 0.00% | ±107.29 (relative) | PASS | PASS |
+| `n_obs_table2` | 20872 | 20872 | 0.00% | ±1043.6 (relative) | PASS | PASS |
+| `n_households_table2` | 10729 | 10729 | 0.00% | ±536.45 (relative) | PASS | PASS |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 11/12 pass, which agrees with the row's 11/12.
 

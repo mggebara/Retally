@@ -6,6 +6,7 @@
 - I4R report: https://www.socialsciencereproduction.org/reproductions/791/published/index
 - I4R outcome label: reproducible; split: holdout
 - Catalog entry (ground truth): `benchmark/papers/arias-2022-changing-tides-climate-migration.yaml`
+- Data access: public
 
 > Headline finding: climate migrants occupy an intermediate position in public preferences — more supported than economic migrants, less than refugees.  In the US conjoint, migrants displaced by droughts, floods, and wildfires are respectively ~3.5, 3.7, and 4.0 percentage points more likely to be preferred than economic migrants (AMCE; nationally representative US and German samples, N~2,160).
 > Promoted from the I4R First Meta Database (replication report team 12) via scripts/import_i4r_candidates.py.  On holdout: touched only to confirm that a dev-set prompt improvement generalises.
@@ -39,9 +40,10 @@
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
 | `claude-code` | [12/12](seeded/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [12/12](independent/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[12/12](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [12/12](blind/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[12/12](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[12/12](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[12/12](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
-| `pipeline-claude-opus-4-7` | [4/12](seeded/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [0/12](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [1/12](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) |
+| `pipeline-claude-opus-4-7` | [4/12](seeded/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [4/12](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [5/12](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) |
 | `pipeline-desktop-opus` | [12/12](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) | [12/12](independent/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) | [12/12](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) |
 | `pipeline-desktop-opus-run2` | [12/12](seeded/pipeline-desktop-opus-run2/20261023T152513Z/CELL.md) (20261023T152513Z) | [12/12](independent/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) | [12/12](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
+| `pipeline-desktop-opus-run3` | [12/12](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [12/12](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [7/12](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
 
@@ -53,16 +55,16 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 | Cell | Claim | Reproduced | Paper | Band | Error / band | Verdict |
 |---|---|---|---|---|---|---|
+| [independent/pipeline-claude-opus-4-7/20261021T142909Z](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `respondents_us` | 1033 | 1086 | ±54.3 (relative) | 0.976 | PASS |
+| [blind/pipeline-claude-opus-4-7/20261021T142909Z](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `respondents_us` | 1033 | 1086 | ±54.3 (relative) | 0.976 | PASS |
+| [independent/pipeline-claude-opus-4-7/20261021T142909Z](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `respondents_germany` | 1029 | 1074 | ±53.7 (relative) | 0.838 | PASS |
+| [blind/pipeline-claude-opus-4-7/20261021T142909Z](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `respondents_germany` | 1029 | 1074 | ±53.7 (relative) | 0.838 | PASS |
+| [blind/pipeline-desktop-opus-run3/20261103T004800Z](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) | `respondents_germany` | 1143 | 1074 | ±53.7 (relative) | 1.285 | FAIL |
 | [blind/pipeline-claude-opus-4-7/20261021T142909Z](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `amce_flooding_germany` | 0.091215 | 0.086 | ±0.012 (se_band) | 0.435 | PASS |
-| [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `amce_drought_germany` | 0.080475 | 0.081 | ±0.00162 (relative) | 0.324 | PASS |
-| [seeded/pipeline-desktop-opus-run2/20261023T152513Z](seeded/pipeline-desktop-opus-run2/20261023T152513Z/CELL.md) | `amce_drought_germany` | 0.080475 | 0.081 | ±0.00162 (relative) | 0.324 | PASS |
-| [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `amce_flooding_germany` | 0.086466 | 0.086 | ±0.00172 (relative) | 0.271 | PASS |
-| [seeded/pipeline-desktop-opus-run2/20261023T152513Z](seeded/pipeline-desktop-opus-run2/20261023T152513Z/CELL.md) | `amce_flooding_germany` | 0.086466 | 0.086 | ±0.00172 (relative) | 0.271 | PASS |
-| [seeded/claude-code/2026-10-21-b](seeded/claude-code/2026-10-21-b/CELL.md) | `amce_flooding_germany` | 0.086457 | 0.086 | ±0.00172 (relative) | 0.266 | PASS |
-| [seeded/pipeline-desktop-opus/20261023T063725Z](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) | `amce_flooding_germany` | 0.086457 | 0.086 | ±0.00172 (relative) | 0.266 | PASS |
-| [seeded/claude-code/2026-10-21-b](seeded/claude-code/2026-10-21-b/CELL.md) | `amce_persecution_us` | 0.07568 | 0.076 | ±0.00152 (relative) | 0.211 | PASS |
-| [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `amce_persecution_us` | 0.07568 | 0.076 | ±0.00152 (relative) | 0.211 | PASS |
-| [seeded/pipeline-desktop-opus/20261023T063725Z](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) | `amce_persecution_us` | 0.07568 | 0.076 | ±0.00152 (relative) | 0.211 | PASS |
+| [independent/pipeline-claude-opus-4-7/20261021T142909Z](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `choice_tasks_us` | 18578 | 18966 | ±948.3 (relative) | 0.409 | PASS |
+| [blind/pipeline-claude-opus-4-7/20261021T142909Z](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `choice_tasks_us` | 18594 | 18966 | ±948.3 (relative) | 0.392 | PASS |
+| [independent/pipeline-claude-opus-4-7/20261021T142909Z](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `choice_tasks_germany` | 18506 | 18862 | ±943.1 (relative) | 0.377 | PASS |
+| [blind/pipeline-claude-opus-4-7/20261021T142909Z](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `choice_tasks_germany` | 18522 | 18862 | ±943.1 (relative) | 0.361 | PASS |
 
 ### Declared deviations
 
@@ -80,7 +82,7 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Language x Origin interaction included to mirror the design-file restriction (cjoint-style); the additive model gives Reason coefficients within 0.0006 (printed in stdout). In the US data the restriction was evidently not enforced (1274 None-fluency/Another-region profiles).
 - [independent/claude-code/2026-11-02-c](independent/claude-code/2026-11-02-c/CELL.md) (12/12)
   - Dropped Qualtrics survey-preview responses (Status = 1: 2 U.S., 3 German rows) before stacking; this leaves 1085 U.S. / 1072 German respondents and 18,952 / 18,826 profiles versus the paper's 1086 / 1074 and 18,966 / 18,862. Without that filter the raw counts are 1086 / 1074 respondents with at least one choice and 9485 / 9431 answered pairs.
-- [independent/pipeline-claude-opus-4-7/20261021T142909Z](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (0/12; failed: `amce_drought_us`, `amce_flooding_us`, `amce_wildfires_us`, `amce_persecution_us`, `amce_drought_germany`, `amce_flooding_germany`, `amce_wildfires_germany`, `amce_persecution_germany`, `respondents_us`, `respondents_germany`, `choice_tasks_us`, `choice_tasks_germany`)
+- [independent/pipeline-claude-opus-4-7/20261021T142909Z](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (4/12; failed: `amce_drought_us`, `amce_flooding_us`, `amce_wildfires_us`, `amce_persecution_us`, `amce_drought_germany`, `amce_flooding_germany`, `amce_wildfires_germany`, `amce_persecution_germany`)
   - The AMCE estimates do not match the paper despite correct attribute coding. The core issue appears to be that the choice variable detection is picking up wrong columns, inverting or scrambling the chosen indicator. Switching to more careful choice detection: for conjoint tasks, the choice should be the question asked after each pair, and we need to look at the specific pattern.
 - [blind/claude-code/2026-10-21-b](blind/claude-code/2026-10-21-b/CELL.md) (12/12)
   - Language x Origin interaction included in the AMCE regression to respect the design-file restriction (Language None never paired with Origin 'Another region'); the restriction is enforced in the German data but not in the US data. An additive specification gives reason-for-migration AMCEs within 0.001 of the main-specification ones (printed in stdout as a check).
@@ -99,6 +101,12 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
 _None._
+
+Pass rates at least 50 points apart (not unanimous):
+
+- blind: `amce_drought_germany` — pipeline 2/4, agent 4/4
+- blind: `amce_persecution_germany` — pipeline 2/4, agent 4/4
+- blind: `amce_wildfires_germany` — pipeline 2/4, agent 4/4
 
 ## Cells
 
@@ -122,6 +130,10 @@ _None._
 
 [`seeded/pipeline-desktop-opus-run2/20261023T152513Z/CELL.md`](seeded/pipeline-desktop-opus-run2/20261023T152513Z/CELL.md) — final 12/12, re-scored 12/12; first scored 4/12; executions 2; 2026-10-23T15:25:13Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
 
+### seeded · pipeline-desktop-opus-run3 · 20261103T010557Z
+
+[`seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md`](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-11-03T01:05:57Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
+
 ### independent · claude-code · 2026-10-21-b
 
 [`independent/claude-code/2026-10-21-b/CELL.md`](independent/claude-code/2026-10-21-b/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 2; 2026-10-22T02:09:00Z; from `claude-code-7papers-all-modes-2026-10-21.json`; evidence complete.
@@ -136,7 +148,7 @@ _None._
 
 ### independent · pipeline-claude-opus-4-7 · 20261021T142909Z
 
-[`independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md`](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) — final 0/12, re-scored 0/12; first scored 0/12; executions 7; 2026-10-21T14:29:09Z; from `pipeline-10papers-all-modes-2026-10-21.json`; evidence complete.
+[`independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md`](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) — final 4/12, re-scored 4/12; first scored 0/12; executions 7; 2026-10-21T14:29:09Z; from `pipeline-10papers-all-modes-2026-10-21.json`; evidence complete.
 
 ### independent · pipeline-desktop-opus · 20261023T062931Z
 
@@ -145,6 +157,10 @@ _None._
 ### independent · pipeline-desktop-opus-run2 · 20261023T150832Z
 
 [`independent/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-10-23T15:08:32Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
+
+### independent · pipeline-desktop-opus-run3 · 20261103T010557Z
+
+[`independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md`](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 2; 2026-11-03T01:05:57Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 
 ### blind · claude-code · 2026-10-21-b
 
@@ -164,7 +180,7 @@ _None._
 
 ### blind · pipeline-claude-opus-4-7 · 20261021T142909Z
 
-[`blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md`](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) — final 1/12, re-scored 1/12; first scored 1/12; executions 2; 2026-10-21T14:29:09Z; from `pipeline-10papers-all-modes-2026-10-21.json`; evidence complete.
+[`blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md`](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) — final 5/12, re-scored 5/12; first scored 1/12; executions 2; 2026-10-21T14:29:09Z; from `pipeline-10papers-all-modes-2026-10-21.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus · 20261023T062931Z
 
@@ -173,4 +189,8 @@ _None._
 ### blind · pipeline-desktop-opus-run2 · 20261023T150832Z
 
 [`blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md`](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-10-23T15:08:32Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-run3 · 20261103T004800Z
+
+[`blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md`](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) — final 7/12, re-scored 7/12; first scored 6/12; executions 1; 2026-11-03T00:48:00Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 

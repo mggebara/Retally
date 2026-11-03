@@ -8,6 +8,7 @@
 | Model | claude-opus-5-5 |
 | Run | 20261022T044632Z |
 | Date | 2026-10-22T04:46:32Z |
+| Data access | public |
 | Results file | `benchmark/results/pipeline-opus55-4papers-all-modes-2026-10-22.json` |
 | Artifacts | `benchmark/results/artifacts/manekin-2022-effective-for-whom/seeded/pipeline/20261022T044632Z` |
 | Executions | 1 |
@@ -29,10 +30,10 @@
 | `study1_israel_arab_police_action` | 0.964 (0.119) | 0.9642 | 0.02% | ±0.01928 (relative) | PASS | PASS |
 | `study2_us_black_perceived_violence` | 0.347 (0.115) | 0.346652 | 0.10% | ±0.00694 (relative) | PASS | PASS |
 | `study2_us_black_police_action` | 0.429 (0.114) | 0.42873 | 0.06% | ±0.00858 (relative) | PASS | PASS |
-| `respondents_study1_us` | 2269 | 2269 | 0.00% | ±22.69 (relative) | PASS | PASS |
-| `respondents_study1_israel` | 3063 | 3063 | 0.00% | ±30.63 (relative) | PASS | PASS |
-| `respondents_study2_us` | 3013 | 3013 | 0.00% | ±30.13 (relative) | PASS | PASS |
-| `respondents_study2_israel` | 3465 | 3465 | 0.00% | ±34.65 (relative) | PASS | PASS |
+| `respondents_study1_us` | 2269 | 2269 | 0.00% | ±113.45 (relative) | PASS | PASS |
+| `respondents_study1_israel` | 3063 | 3063 | 0.00% | ±153.15 (relative) | PASS | PASS |
+| `respondents_study2_us` | 3013 | 3013 | 0.00% | ±150.65 (relative) | PASS | PASS |
+| `respondents_study2_israel` | 3465 | 3465 | 0.00% | ±173.25 (relative) | PASS | PASS |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 12/12 pass, which agrees with the row's 12/12.
 

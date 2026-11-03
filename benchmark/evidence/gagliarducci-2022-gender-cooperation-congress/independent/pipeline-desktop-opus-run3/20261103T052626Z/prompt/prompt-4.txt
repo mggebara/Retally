@@ -1,0 +1,315 @@
+You are refining R code that reproduces results from an econometrics paper.
+The code RAN SUCCESSFULLY but the reproduced values do not match the
+paper's claims within the allowed tolerance.  Identify what is causing
+the gap and adjust the code to close it.
+
+## Paper
+Title: NBER WORKING PAPER SERIES
+Methodology: - **Data and unit of analysis**: The unit is the bill. The sample covers all House public bills (simple, concurrent and joint resolutions and private bills are excluded) from the 101st Congress (elected 1988) to the 111th (elected 2008). Bills come from THOMAS and are cross-checked against Adler–Wilkerson's Congressional Bills Project and Fowler's cosponsorship data, which also supply the topic and passage outcomes. The bills are linked to sponsor biographies (ICPSR up to the 104th Congress, then the Biographical Directory), to House Clerk election returns and to Census district characteristics.
+- **Outcome variables**: There are two cooperation measures. (a) Coalition building: the total number of cosponsors on a bill, in levels; the paper does not say it is logged or standardised. (b) Bipartisanship: the percent of cosponsors from the opposite party, out of the number of cosponsors plus 1 (the sponsor), so that bills with zero cosponsors are kept. The paper says results are robust to dividing by the number of cosponsors alone, or to using the count of opposite-party cosponsors with the number of cosponsors as a control.
+- **Baseline OLS specification (eq. 4, Table 3)**: Y_ijkt = α + β·Female_i + c_t + Bill_j + Spons_it + Distr_kt + ε_ijkt. It is estimated for the pooled sample and separately for Democrats and Republicans. The columns build up step by step: (1) Congress (time) fixed effects only; (2) adds bill-category dummies, i.e. 226 minor-topic dummies (Adler–Wilkerson classification) and dummies for the 33 committees of referral; (3) adds sponsor controls instead: tenure, a rookie dummy, age, a committee chair or ranking member dummy, an Ivy League dummy, 5 previous-occupation dummies and the total number of bills sponsored; (4) adds district controls only: 3 macro-region dummies, % black, % urban, % foreign-born, % over 65, log median income and log population density; (5) the preferred specification, with all bill, individual and district controls. Coefficients are unstandardised: a difference in the number of cosponsors, or in percentage points of opposite-party cosponsors.
+- **Supporting regressions**: Table 1 regresses the probability that a bill passes the House on the number of cosponsors, the % of opposite-party cosponsors and their interaction. Column 2 adds interactions with a female dummy; the joint test that all three interactions are zero gives p = 0.12. Figure 1's predicted Republican vote share comes from an OLS regression of the actual Republican vote share on the district controls. Specifications with district fixed effects were tried but gave imprecise estimates because gender varies little within districts. The paper also reports that 10 more cosponsors raise the probability of passing the House by 0.67 percentage points and of becoming law by 0.19 percentage points.
+- **Regression discontinuity (eq. 5)**: The RD sample is limited to representatives elected in mixed-gender (male vs female) races. The specification is Y = α + β·Female + Female×f(MV) + f(MV) + c_t + ε, where MV is the female candidate's margin of victory over the male candidate, with separate polynomials on each side of the cutoff at 0. It is run pooled and by party. A McCrary density test does not reject continuity in the pooled sample, but there is a strong discontinuity for Republicans, with male winners much more common, so the authors caution that the party-specific RD rests on stronger assumptions.
+- **Matching**: Matching is also used as a robustness approach to selection of women into districts. Its details (bandwidth or polynomial order for the RD, the matching covariates, the inference method) are not in the text provided.
+- **Inference and standard errors**: The text provided does not say how standard errors are computed (robust or clustered, and on what). Significance is reported at conventional levels. Since there are many bills per sponsor, clustering by Congress member is likely but is not stated.
+- **Additional analyses** (described in the introduction): gender of the cosponsors (women attract more female cosponsors); seniority, status and influence of the cosponsors; heterogeneity by sponsor seniority; and heterogeneity by bill topic (women's-issues bills).
+
+
+## Current Code
+```r
+suppressPackageStartupMessages({
+  library(haven)
+  library(dplyr)
+  library(fixest)
+})
+set.seed(42)
+
+base <- "<repo>/.cache/datasets/gagliarducci_2022_gender_cooperation_congress.script-free"
+f_dta <- file.path(base, "3 replication package/Data/AnalysisData/bills_analysis_101-111_replication.dta")
+f_csv <- file.path(base, "3 replication package/Data/AnalysisData/bills_analysis_101-111_replication.csv")
+
+d <- tryCatch(read_dta(f_dta), error = function(e) NULL)
+if (is.null(d)) d <- readr::read_csv(f_csv, show_col_types = FALSE, guess_max = 100000)
+d <- as.data.frame(d)
+
+# party coding (before zapping labels)
+pty_raw <- d$sponsor_party
+if (inherits(pty_raw, "haven_labelled")) {
+  pty_lab <- as.character(haven::as_factor(pty_raw, levels = "default"))
+} else pty_lab <- as.character(pty_raw)
+pty_num <- suppressWarnings(as.numeric(as.character(haven::zap_labels(pty_raw))))
+pl <- tolower(pty_lab)
+is_dem <- grepl("^d|democ", pl) | (!is.na(pty_num) & pty_num == 100)
+is_rep <- grepl("^r|repub", pl) | (!is.na(pty_num) & pty_num == 200)
+d$party_grp <- ifelse(is_dem, "D", ifelse(is_rep, "R", "O"))
+
+d <- haven::zap_labels(d)
+d <- as.data.frame(lapply(d, function(x) if (inherits(x, "haven_labelled")) as.vector(x) else x))
+nm <- names(d)
+message("Columns: ", paste(nm, collapse = ", "))
+message("Party table: "); print(table(d$party_grp, useNA = "ifany"))
+
+findcol <- function(pats, exclude = character(0)) {
+  for (p in pats) {
+    h <- grep(p, nm, ignore.case = TRUE, value = TRUE)
+    h <- setdiff(h, exclude)
+    if (length(h) > 0) return(h[1])
+  }
+  NULL
+}
+isnum01 <- function(x) is.numeric(x) && all(na.omit(unique(x)) %in% c(0, 1))
+
+# sample: public bills
+if ("private" %in% nm) d <- d[is.na(d$private) | d$private == 0, ]
+d$female <- as.numeric(d$sponsor_female)
+d$v2 <- as.numeric(d$v2)
+
+# cluster: sponsor x Congress
+idcols <- intersect(c("sponsor_name", "sponsor_state_abbrev", "sponsor_district"), nm)
+d$clus <- do.call(paste, c(d[idcols], list(d$v2, sep = "_")))
+
+# outcomes
+d$ncosp <- as.numeric(d$numb_cosponsors)
+# paper: percent of cosponsors from the opposite party out of (cosponsors + 1),
+# so bills with zero cosponsors are kept (value 0)
+nopp <- as.numeric(d$numb_cosponsors_opposite)
+nopp[is.na(nopp) & !is.na(d$ncosp) & d$ncosp == 0] <- 0
+d$pctopp <- 100 * nopp / (d$ncosp + 1)
+
+# bill characteristics: committee dummies + minor topic FE
+comm <- grep("^house_", nm, value = TRUE)
+comm <- comm[sapply(comm, function(v) isnum01(d[[v]]))]
+for (v in comm) d[[v]][is.na(d[[v]])] <- 0
+d$minor_f <- as.character(d$minor)
+message("Committee dummies: ", length(comm))
+
+# sponsor characteristics
+spons <- c()
+age <- findcol(c("^sponsor_age$")); if (!is.null(age)) spons <- c(spons, age)
+ten <- findcol(c("^sponsor_tenure_run$", "tenure")); if (!is.null(ten)) spons <- c(spons, ten)
+rk <- findcol(c("rookie", "freshman"))
+if (is.null(rk) && !is.null(ten)) {
+  d$rookie_gen <- as.numeric(d[[ten]] == min(d[[ten]], na.rm = TRUE)); rk <- "rookie_gen"
+}
+if (!is.null(rk)) spons <- c(spons, rk)
+for (v in c("comc", "comr", "black", "ivycoll", "borninstate")) if (v %in% nm) spons <- c(spons, v)
+lead <- findcol(c("leader", "chair_rank", "comleader"))
+if (!is.null(lead) && !all(c("comc", "comr") %in% nm)) spons <- c(spons, lead)
+occ <- grep("^occ[0-9]+$", nm, value = TRUE); spons <- c(spons, occ)
+nb <- findcol(c("nbills", "numb_bills", "bills_spons", "tot.*bills", "total_bills"))
+if (is.null(nb)) {
+  d <- d %>% group_by(clus) %>% mutate(nbills_gen = n()) %>% ungroup() %>% as.data.frame()
+  nb <- "nbills_gen"
+}
+spons <- unique(c(spons, nb))
+message("Sponsor controls: ", paste(spons, collapse = ", "))
+
+# district characteristics
+distr <- c()
+reg <- findcol(c("^region$", "census_region", "region"))
+if (!is.null(reg)) {
+  d$region_f <- as.character(d[[reg]])
+}
+for (v in c("pct_black", "pct_urban", "pct_for_born")) if (v %in% nm) distr <- c(distr, v)
+o65 <- findcol(c("65", "over65", "elder", "old")); if (!is.null(o65)) distr <- c(distr, o65)
+inc <- findcol(c("ln.*inc", "log.*inc", "income")); if (!is.null(inc)) distr <- c(distr, inc)
+den <- findcol(c("ln.*dens", "log.*dens", "dens")); if (!is.null(den)) distr <- c(distr, den)
+distr <- unique(distr)
+message("District controls: ", paste(distr, collapse = ", "), " region: ", ifelse(is.null(reg), "none", reg))
+distr_terms <- c(distr, if (!is.null(reg)) "factor(region_f)")
+
+ff <- function(y, x, fe) as.formula(paste(y, "~", paste(x, collapse = " + "), "|", paste(fe, collapse = " + ")))
+
+out <- list()
+put <- function(k, v) { if (!is.null(v) && length(v) == 1 && is.finite(v)) out[[k]] <<- v }
+
+run_ols <- function(y, sub, party_dummy = FALSE) {
+  x <- c("female", comm, spons, distr_terms)
+  if (party_dummy) x <- c(x, "factor(party_grp)")
+  feols(ff(y, x, c("v2", "minor_f")), data = sub, cluster = ~clus)
+}
+nclus <- function(m, sub) length(unique(sub$clus[obs(m)]))
+
+dD <- d[d$party_grp == "D", ]; dR <- d[d$party_grp == "R", ]
+
+tryCatch({
+  m <- run_ols("ncosp", d, TRUE)
+  put("female_sponsor_ncosponsors_all_ols", coef(m)["female"])
+  put("n_bills_ncosponsors_all_ols", nobs(m))
+  put("n_sponsor_terms_ncosponsors_all_ols", nclus(m, d))
+}, error = function(e) message("all ols: ", e$message))
+tryCatch({
+  m <- run_ols("ncosp", dR)
+  put("female_sponsor_ncosponsors_rep_ols", coef(m)["female"])
+}, error = function(e) message("rep ols: ", e$message))
+tryCatch({
+  m <- run_ols("pctopp", dD)
+  put("female_sponsor_pct_opposite_dem_ols", coef(m)["female"])
+  put("n_bills_pct_opposite_dem_ols", nobs(m))
+}, error = function(e) message("dem pct ols: ", e$message))
+tryCatch({
+  m <- run_ols("pctopp", dR)
+  put("female_sponsor_pct_opposite_rep_ols", coef(m)["female"])
+  put("n_bills_pct_opposite_rep_ols", nobs(m))
+}, error = function(e) message("rep pct ols: ", e$message))
+
+# ---------- propensity scores (sponsor-Congress level) ----------
+mvw <- findcol(c("^MV1$", "^MV$", "margin", "winmargin"), exclude = c("MV1_female", "MV1_democrat"))
+if (is.null(mvw)) { d$mv_win <- abs(as.numeric(d$MV1_democrat)) } else d$mv_win <- abs(as.numeric(d[[mvw]]))
+dD <- d[d$party_grp == "D", ]; dR <- d[d$party_grp == "R", ]
+
+ps_weights <- function(sub, covs) {
+  sp <- sub[!duplicated(sub$clus), c("clus", "female", setdiff(c(covs, if (!is.null(reg)) "region_f"), character(0))), drop = FALSE]
+  sp <- sp[complete.cases(sp), ]
+  rhs <- c(covs, if (!is.null(reg) && length(unique(sp$region_f)) > 1) "factor(region_f)")
+  g <- glm(as.formula(paste("female ~", paste(rhs, collapse = " + "))), data = sp, family = binomial())
+  sp$ps <- predict(g, type = "response")
+  sp$w <- ifelse(sp$female == 1, 1 / sp$ps, 1 / (1 - sp$ps))
+  sub$w <- sp$w[match(sub$clus, sp$clus)]
+  sub[!is.na(sub$w), ]
+}
+run_ipw <- function(y, sub) {
+  feols(ff(y, c("female", comm), c("v2", "minor_f")), data = sub, weights = ~w, cluster = ~clus)
+}
+tryCatch({
+  s <- ps_weights(dR, c(distr, "mv_win", spons))
+  m <- run_ipw("ncosp", s)
+  put("female_sponsor_ncosponsors_rep_ipw_sponsor", coef(m)["female"])
+}, error = function(e) message("rep ipw sponsor: ", e$message))
+tryCatch({
+  # sponsor-characteristics propensity score: sponsor controls only
+  s <- ps_weights(dD, spons)
+  m <- run_ipw("pctopp", s)
+  put("female_sponsor_pct_opposite_dem_ipw_sponsor", coef(m)["female"])
+}, error = function(e) message("dem ipw sponsor: ", e$message))
+tryCatch({
+  s <- ps_weights(dR, c(distr, "mv_win"))
+  m <- run_ipw("pctopp", s)
+  put("female_sponsor_pct_opposite_rep_ipw_district", coef(m)["female"])
+}, error = function(e) message("rep ipw district: ", e$message))
+
+# ---------- RD ----------
+d$MV <- as.numeric(d$MV1_female)
+mvmax <- max(abs(d$MV), na.rm = TRUE)
+sc <- if (mvmax <= 1.5) 0.01 else 1
+rdbase <- d[!is.na(d$MV) & (if ("mixed_gender_election" %in% nm) d$mixed_gender_election == 1 else TRUE), ]
+rdbase <- rdbase[!is.na(rdbase$mixed_gender_election) | !("mixed_gender_election" %in% nm), ]
+tryCatch({
+  h <- 24 * sc
+  s <- rdbase[rdbase$party_grp == "D" & abs(rdbase$MV) <= h, ]
+  m <- feols(pctopp ~ female + MV + female:MV | v2, data = s, cluster = ~clus)
+  put("female_sponsor_pct_opposite_dem_rd", coef(m)["female"])
+}, error = function(e) message("dem rd: ", e$message))
+tryCatch({
+  h <- 13 * sc
+  s <- rdbase[rdbase$party_grp == "R" & abs(rdbase$MV) <= h, ]
+  s <- ps_weights(s, distr)
+  m <- feols(ff("ncosp", c("female", "MV", "female:MV", comm), c("v2", "minor_f")),
+             data = s, weights = ~w, cluster = ~clus)
+  put("female_sponsor_ncosponsors_rep_rd_ipw", coef(m)["female"])
+}, error = function(e) message("rep rd ipw: ", e$message))
+
+for (k in names(out)) cat(sprintf("RESULT:%s=%.6f\n", k, out[[k]]))
+```
+
+## What the code produced
+  female_sponsor_ncosponsors_all_ols = 1.582238
+  n_bills_ncosponsors_all_ols = 60684.0
+  n_sponsor_terms_ncosponsors_all_ols = 4742.0
+  female_sponsor_ncosponsors_rep_ols = 2.960471
+  female_sponsor_pct_opposite_dem_ols = -1.675624
+  n_bills_pct_opposite_dem_ols = 32846.0
+  female_sponsor_pct_opposite_rep_ols = 4.019367
+  n_bills_pct_opposite_rep_ols = 27670.0
+  female_sponsor_ncosponsors_rep_ipw_sponsor = 3.227031
+  female_sponsor_pct_opposite_dem_ipw_sponsor = -2.079819
+  female_sponsor_pct_opposite_rep_ipw_district = 2.890774
+  female_sponsor_pct_opposite_dem_rd = -2.73582
+  female_sponsor_ncosponsors_rep_rd_ipw = 7.96516
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+D     O     R 
+33043  2734 28118 
+RESULT:female_sponsor_ncosponsors_all_ols=1.582238
+RESULT:n_bills_ncosponsors_all_ols=60684.000000
+RESULT:n_sponsor_terms_ncosponsors_all_ols=4742.000000
+RESULT:female_sponsor_ncosponsors_rep_ols=2.960471
+RESULT:female_sponsor_pct_opposite_dem_ols=-1.675624
+RESULT:n_bills_pct_opposite_dem_ols=32846.000000
+RESULT:female_sponsor_pct_opposite_rep_ols=4.019367
+RESULT:n_bills_pct_opposite_rep_ols=27670.000000
+RESULT:female_sponsor_ncosponsors_rep_ipw_sponsor=3.227031
+RESULT:female_sponsor_pct_opposite_dem_ipw_sponsor=-2.079819
+RESULT:female_sponsor_pct_opposite_rep_ipw_district=2.890774
+RESULT:female_sponsor_pct_opposite_dem_rd=-2.735820
+RESULT:female_sponsor_ncosponsors_rep_rd_ipw=7.965160
+```
+
+## Last run's stderr (excerpt: first/last 3000 characters)
+```
+Columns: private, v2, HRnumber, sponsor_state_abbrev, sponsor_district, sponsor_term_served, sponsor_name, sponsor_female, sponsor_party, sponsor_age, sponsor_tenure_run, sponsor_state_icpsr, agestart, comc, comr, anycoll, ivycoll, black, occ0, occ1, occ2, occ3, occ4, occ5, occ6, borninstate, dwnom1, DSpndPct, mixed_gender_election, MV1_democrat, MV1_female, femaleXMV1_female, lag_demshare1, lnpop, lnarea, lninc, pct_black, pct_urban, pct_for_born, pct_age_over65, numb_cosponsors, numb_cosponsors_opposite, pct_cosponsors_opposite, plaw_cbp, passh, women_friend1, women_friend3, minor, house_administration, house_agriculture, house_appropriations, house_armedservices, house_budget, house_dc, house_educlabor, house_energycommerce, house_foreignaffairs, house_governmentop, house_intelligence, house_interior, house_judiciary, house_mmf, house_pocs, house_pwt, house_rules, house_sst, house_smallbusi, house_soc, house_veterans, house_waysandmeans, house_naturalresources, house_bfs, house_eeo, house_govreform, house_ir, house_natsecur, house_oversight, house_resources, house_science, house_transp, house_homeland, numb_cosponsors_tenure_59, numb_cosponsors_tenure_10plus, numb_cosponsors_fem, numb_cosponsors_leader, var_cosp_dwnom1_spons, m_betweenness_w_spons, party_grp
+Party table: 
+Committee dummies: 33
+Sponsor controls: sponsor_age, sponsor_tenure_run, rookie_gen, comc, comr, black, ivycoll, borninstate, occ0, occ1, occ2, occ3, occ4, occ5, occ6, nbills_gen
+District controls: pct_black, pct_urban, pct_for_born, pct_age_over65, lninc region: none
+NOTES: 3,210 observations removed because of NA values (LHS: 2,561, RHS: 3,210, Fixed-effects: 1,546).
+       0/1 fixed-effect singleton was removed (1 observation).
+The variable 'occ6' has been removed because of collinearity (see $collin.var).
+NOTES: 447 observations removed because of NA values (RHS: 447).
+       0/1 fixed-effect singleton was removed (1 observation).
+The variable 'occ6' has been removed because of collinearity (see $collin.var).
+NOTES: 196 observations removed because of NA values (RHS: 196).
+       0/1 fixed-effect singleton was removed (1 observation).
+The variable 'occ6' has been removed because of collinearity (see $collin.var).
+NOTES: 447 observations removed because of NA values (RHS: 447).
+       0/1 fixed-effect singleton was removed (1 observation).
+The variable 'occ6' has been removed because of collinearity (see $collin.var).
+NOTE: 0/1 fixed-effect singleton was removed (1 observation).
+NOTE: 0/1 fixed-effect singleton was removed (1 observation).
+NOTE: 0/1 fixed-effect singleton was removed (1 observation).
+NOTE: 0/40 fixed-effect singletons were removed (40 observations).
+```
+
+## Claims still failing
+1. female_sponsor_pct_opposite_dem_ipw_sponsor: paper claims -1.208 percentage points (percent of cosponsors from the opposite party) (coefficient), your code produced -2.07982, tolerance 0.4346, gap 72.17% relative
+
+## Previous attempts (oldest first)
+  Attempt 1: female_sponsor_ncosponsors_all_ols=1.582238, n_bills_ncosponsors_all_ols=60684.0, n_sponsor_terms_ncosponsors_all_ols=4742.0, female_sponsor_ncosponsors_rep_ols=2.960471, female_sponsor_pct_opposite_dem_ols=-0.027059, n_bills_pct_opposite_dem_ols=22712.0, female_sponsor_pct_opposite_rep_ols=0.058578, n_bills_pct_opposite_rep_ols=18691.0, female_sponsor_ncosponsors_rep_ipw_sponsor=3.227031, female_sponsor_pct_opposite_dem_ipw_sponsor=-0.029937, female_sponsor_pct_opposite_rep_ipw_district=0.033793, female_sponsor_pct_opposite_dem_rd=-0.051325, female_sponsor_ncosponsors_rep_rd_ipw=7.96516
+  Attempt 2: female_sponsor_ncosponsors_all_ols=1.582238, n_bills_ncosponsors_all_ols=60684.0, n_sponsor_terms_ncosponsors_all_ols=4742.0, female_sponsor_ncosponsors_rep_ols=2.960471, female_sponsor_pct_opposite_dem_ols=-1.675624, n_bills_pct_opposite_dem_ols=32846.0, female_sponsor_pct_opposite_rep_ols=4.019367, n_bills_pct_opposite_rep_ols=27670.0, female_sponsor_ncosponsors_rep_ipw_sponsor=3.227031, female_sponsor_pct_opposite_dem_ipw_sponsor=-1.858668, female_sponsor_pct_opposite_rep_ipw_district=2.890774, female_sponsor_pct_opposite_dem_rd=-2.73582, female_sponsor_ncosponsors_rep_rd_ipw=7.96516
+  Attempt 3: female_sponsor_ncosponsors_all_ols=1.582238, n_bills_ncosponsors_all_ols=60684.0, n_sponsor_terms_ncosponsors_all_ols=4742.0, female_sponsor_ncosponsors_rep_ols=2.960471, female_sponsor_pct_opposite_dem_ols=-1.675624, n_bills_pct_opposite_dem_ols=32846.0, female_sponsor_pct_opposite_rep_ols=4.019367, n_bills_pct_opposite_rep_ols=27670.0, female_sponsor_ncosponsors_rep_ipw_sponsor=3.227031, female_sponsor_pct_opposite_dem_ipw_sponsor=-2.079819, female_sponsor_pct_opposite_rep_ipw_district=2.890774, female_sponsor_pct_opposite_dem_rd=-2.73582, female_sponsor_ncosponsors_rep_rd_ipw=7.96516
+
+These attempts have already been tried.  Do not repeat a strategy
+that has already produced the same values.
+
+## Task
+Adjust the code minimally to close the gap on the failing claims.
+Prefer changes that align more closely with the paper's stated methodology:
+re-read the methodology summary above and check the model specification,
+covariate selection, fixed effects, clustering, and seed against what the
+paper actually specifies.  In econometrics papers, common gap-closers are:
+  - getting the cluster-robust SE right (vcovCL / cluster_var argument)
+  - matching the paper's exact fixed-effects structure
+  - using the same sample-restriction filters the paper applied
+  - matching the paper's weighting scheme (weights= argument)
+
+## Deviation reporting
+If you must change something the paper did NOT specify in order to close
+the gap, emit a ``DEVIATION:`` line via cat() describing the change:
+
+    cat('DEVIATION: Used HC1 robust SE because the paper does not specify but the default did not converge\n')
+
+## When to give up
+If after re-reading the methodology and the previous attempts you judge
+the gap cannot be closed without unreasonable deviation, return the SAME
+R CODE you were given, BYTE-FOR-BYTE unchanged.  The pipeline will record
+the claim as unreproducible.
+
+## Output convention (unchanged)
+Emit every metric as ``cat('RESULT:<name>=<value>\n')``.
+The dataset is a directory tree at '<repo>/.cache/datasets/gagliarducci_2022_gender_cooperation_congress.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+No network, no system().  set.seed(42).
+
+Output ONLY the R code — no explanation, no markdown fences.

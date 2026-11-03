@@ -1,0 +1,315 @@
+You are fixing R code that was generated to reproduce results from an econometrics paper.
+
+## Original Code
+```r
+suppressPackageStartupMessages({
+  library(data.table)
+  library(fixest)
+})
+set.seed(42)
+setDTthreads(0)
+
+base <- "<repo>/.cache/datasets/forsythe_2022_young_workers_recessions.script-free"
+ddir <- file.path(base, "3 replication package", "Data")
+f_main <- file.path(ddir, "yh_data.csv")
+f_unemp <- file.path(ddir, "v2unemp_smy.csv")
+f_cpi <- file.path(ddir, "wage_deflation_1994_2016.csv")
+
+hdr <- names(fread(f_main, nrows = 0))
+message("Columns: ", paste(hdr, collapse = ","))
+hdr_l <- tolower(hdr)
+pick <- function(cands) {
+  for (cc in tolower(cands)) {
+    i <- which(hdr_l == cc)
+    if (length(i)) return(hdr[i[1]])
+  }
+  NA_character_
+}
+pick_re <- function(re, exclude = NULL) {
+  i <- grep(re, hdr_l)
+  if (!is.null(exclude)) i <- i[!grepl(exclude, hdr_l[i])]
+  if (length(i)) hdr[i[1]] else NA_character_
+}
+
+cmap <- list(
+  mon0 = pick(c("hrmonth")),
+  yr0 = pick(c("hryear4", "hryear")),
+  age = pick(c("peage", "prtage")),
+  sex = pick(c("pesex")),
+  educ = pick(c("peeduca")),
+  race = pick(c("race", "ptdtrace", "perace", "prdtrace")),
+  hisp = pick(c("prhspnon", "pehspnon")),
+  lfs0 = pick(c("pemlr")),
+  w0 = pick(c("pwsswgt")),
+  mon1 = pick(c("v2hrmonth")),
+  yr1 = pick(c("v2hryear4", "v2hryear")),
+  st = pick(c("v2gestfips", "gestfips")),
+  lfs1 = pick(c("v2pemlr")),
+  iodp = pick(c("v2puiodp1")),
+  cow = pick(c("v2peio1cow")),
+  ind = pick(c("v2peio1icd")),
+  occ = pick(c("v2peio1ocd")),
+  w1 = pick(c("v2pwsswgt")),
+  u = pick(c("v2unemp_smy", "unemp_smy")),
+  hire = pick(c("hired", "hire", "d_hired", "dhired")),
+  earn = pick(c("v2prernwa", "v2pternwa")),
+  alloc = pick_re("^v2(prwernal|pxernwa)"),
+  mis1 = pick(c("v2hrmis")),
+  mis0 = pick(c("hrmis"))
+)
+if (is.na(cmap$earn)) cmap$earn <- pick_re("^v2.*ernwa", exclude = "al$|^v2px")
+cmap <- cmap[!is.na(unlist(cmap))]
+message("Using: ", paste(names(cmap), unlist(cmap), sep = "=", collapse = "; "))
+
+num <- function(x) {
+  if (is.numeric(x)) return(as.numeric(x))
+  if (is.factor(x)) x <- as.character(x)
+  suppressWarnings(as.numeric(sub("^\\s*(-?[0-9]+(\\.[0-9]+)?).*$", "\\1", x)))
+}
+fixyr <- function(y) { i <- which(!is.na(y) & y < 100); y[i] <- ifelse(y[i] >= 50, 1900 + y[i], 2000 + y[i]); y }
+monnum <- function(x) {
+  y <- num(x)
+  if (all(is.na(y)) && !is.numeric(x)) {
+    y <- match(substr(tolower(trimws(x)), 1, 3), tolower(month.abb))
+  }
+  as.numeric(y)
+}
+lfs_code <- function(x) {
+  y <- num(x)
+  if (!is.numeric(x) && mean(is.na(y)) > 0.5) {
+    s <- tolower(as.character(x))
+    y <- rep(NA_real_, length(s))
+    y[grepl("other|nilf|not in", s)] <- 7
+    y[grepl("disab", s)] <- 6
+    y[grepl("retired", s)] <- 5
+    y[grepl("employed", s)] <- 1
+    y[grepl("absent", s)] <- 2
+    y[grepl("unemployed|looking", s)] <- 4
+    y[grepl("layoff", s)] <- 3
+  }
+  y
+}
+
+# Read only needed columns; convert and filter progressively to limit memory use
+dt <- fread(f_main, select = unname(unlist(cmap)), showProgress = FALSE)
+setnames(dt, unname(unlist(cmap)), names(cmap))
+invisible(gc())
+message("N raw: ", nrow(dt))
+
+set(dt, j = "age", value = num(dt$age))
+dt <- dt[!is.na(age) & age >= 16]
+set(dt, j = "educ", value = num(dt$educ))
+dt <- dt[!is.na(educ) & educ >= 31 & educ <= 46]
+invisible(gc())
+set(dt, j = "lfs0", value = lfs_code(dt$lfs0))
+set(dt, j = "lfs1", value = lfs_code(dt$lfs1))
+dt <- dt[lfs0 %in% 1:7 & lfs1 %in% 1:7]
+invisible(gc())
+set(dt, j = "mon0", value = monnum(dt$mon0))
+set(dt, j = "mon1", value = monnum(dt$mon1))
+set(dt, j = "yr0", value = fixyr(num(dt$yr0)))
+set(dt, j = "yr1", value = fixyr(num(dt$yr1)))
+dt <- dt[!(yr1 == 1995 & mon1 %in% 5:8) & !(yr0 == 1995 & mon0 %in% 5:8)]
+dt <- dt[(yr1 * 12 + mon1) <= (2016 * 12 + 9) & (yr0 * 12 + mon0) >= (1994 * 12 + 1)]
+set(dt, j = "st", value = num(dt$st))
+dt <- dt[!is.na(st)]
+invisible(gc())
+message("N after early filters: ", nrow(dt))
+
+# sex
+if (is.numeric(dt$sex)) dt[, male := as.integer(sex == 1)] else
+  dt[, male := as.integer(grepl("^m|^1", tolower(trimws(sex))))]
+dt[, sex := NULL]
+# race white / non-white
+if (is.numeric(dt$race)) dt[, white := as.integer(race == 1)] else
+  dt[, white := as.integer(grepl("^white|^1$|^1[^0-9]", tolower(trimws(race))))]
+dt[, race := NULL]
+# hispanic
+if ("hisp" %in% names(dt)) {
+  if (is.numeric(dt$hisp)) dt[, hispanic := as.integer(hisp == 1)] else
+    dt[, hispanic := as.integer(grepl("^hisp|^1$|^1[^0-9]", tolower(trimws(hisp))))]
+  dt[, hisp := NULL]
+} else dt[, hispanic := 0L]
+invisible(gc())
+
+# weights: average across the two matched months
+set(dt, j = "w0", value = num(dt$w0))
+if ("w1" %in% names(dt)) {
+  set(dt, j = "w1", value = num(dt$w1))
+  dt[, wt := w0]
+  dt[!is.na(w1) & w1 > 0, wt := (w0 + w1) / 2]
+  dt[, w1 := NULL]
+} else dt[, wt := w0]
+dt[, w0 := NULL]
+dt <- dt[!is.na(wt) & wt > 0]
+
+# unemployment rate (join by reference, no copy)
+if (!("u" %in% names(dt))) {
+  un <- fread(f_unemp, showProgress = FALSE)
+  setnames(un, tolower(names(un)))
+  un <- un[, .(st = num(v2gestfips), yr1 = fixyr(num(v2hryear)), mon1 = monnum(v2hrmonth), u = num(v2unemp_smy))]
+  un <- unique(un, by = c("st", "yr1", "mon1"))
+  dt[un, u := i.u, on = c("st", "yr1", "mon1")]
+  rm(un)
+} else set(dt, j = "u", value = num(dt$u))
+if (max(dt$u, na.rm = TRUE) < 1) dt[, u := 100 * u]
+dt <- dt[!is.na(u)]
+invisible(gc())
+
+# hire indicator
+if ("hire" %in% names(dt)) {
+  dt[, hired := num(hire)]
+  if (max(dt$hired, na.rm = TRUE) <= 1) dt[, hired := 100 * hired]
+  dt[, hire := NULL]
+} else {
+  if ("cow" %in% names(dt)) {
+    if (is.numeric(dt$cow)) dt[, selfemp := cow %in% c(6, 7)] else
+      dt[, selfemp := grepl("self", tolower(cow)) | num(cow) %in% c(6, 7)]
+    dt[, cow := NULL]
+  } else dt[, selfemp := FALSE]
+  if (is.numeric(dt$iodp)) dt[, newfirm := !is.na(iodp) & iodp == 2] else
+    dt[, newfirm := grepl("^\\s*no|^\\s*2", tolower(as.character(iodp)))]
+  dt[, iodp := NULL]
+  dt[, hired := 100 * as.numeric(((lfs0 > 2 & lfs1 %in% 1:2) | (lfs0 %in% 1:2 & lfs1 %in% 1:2 & newfirm)) & !selfemp)]
+  dt[, c("selfemp", "newfirm") := NULL]
+}
+dt <- dt[!is.na(hired)]
+
+# education
+dt[, yrs_educ := c(0, 2.5, 5.5, 7.5, 9, 10, 11, 12, 12, 13, 14, 14, 16, 18, 20, 20)[educ - 30]]
+dt[, educ7 := fifelse(educ <= 38, 1L, fifelse(educ == 39, 2L, fifelse(educ <= 42, 3L,
+               fifelse(educ == 43, 4L, fifelse(educ == 44, 5L, fifelse(educ == 45, 6L, 7L))))))]
+dt[, pe := age - yrs_educ - 6]
+
+if ("mis1" %in% names(dt)) {
+  set(dt, j = "mis1", value = num(dt$mis1))
+  dt <- dt[is.na(mis1) | mis1 != 5]
+}
+
+dt[, young := as.numeric(pe <= 10)]
+dt[, yU := young * u]
+dt[, oU := (1 - young) * u]
+dt[, demo := as.integer(factor(paste(male, white, hispanic, educ7, sep = "_")))]
+dt[, my := yr1 * 100 + mon1]
+dt[, state := st]
+dt[, c("yrs_educ", "pe") := NULL]
+invisible(gc())
+message("N sample: ", nrow(dt))
+
+res <- list()
+safe <- function(expr) tryCatch(expr, error = function(e) { message("ERR: ", conditionMessage(e)); NULL })
+
+m1 <- safe(feols(hired ~ young + yU + oU, data = dt, weights = ~wt, cluster = ~state, lean = TRUE))
+if (!is.null(m1)) {
+  res$young_x_unemp_rate_no_controls <- coef(m1)["yU"]
+  res$experienced_x_unemp_rate_no_controls <- coef(m1)["oU"]
+  res$n_obs_full_sample <- nobs(m1)
+  message("SE col1: ", paste(round(se(m1)[c("yU", "oU")], 4), collapse = ", "))
+}
+rm(m1); invisible(gc())
+
+m4 <- safe(feols(hired ~ young + yU + oU | state + demo + my, data = dt, weights = ~wt, cluster = ~state, lean = TRUE))
+if (!is.null(m4)) {
+  res$young_x_unemp_rate_preferred <- coef(m4)["yU"]
+  res$experienced_x_unemp_rate_preferred <- coef(m4)["oU"]
+  message("SE col4: ", paste(round(se(m4)[c("yU", "oU")], 4), collapse = ", "))
+}
+rm(m4); invisible(gc())
+
+a1 <- safe(feols(hired ~ u, data = dt, weights = ~wt, cluster = ~state, lean = TRUE))
+if (!is.null(a1)) res$aggregate_unemp_rate_no_controls <- coef(a1)["u"]
+rm(a1); invisible(gc())
+
+a4 <- safe(feols(hired ~ u | state + demo + my, data = dt, weights = ~wt, cluster = ~state, lean = TRUE))
+if (!is.null(a4)) res$aggregate_unemp_rate_month_year_fe <- coef(a4)["u"]
+rm(a4); invisible(gc())
+
+me <- safe(feols(hired ~ young + yU + oU | state + demo + my, data = dt[lfs0 %in% 1:2],
+                 weights = ~wt, cluster = ~state, lean = TRUE))
+if (!is.null(me)) {
+  res$young_x_unemp_rate_employed <- coef(me)["yU"]
+  res$experienced_x_unemp_rate_employed <- coef(me)["oU"]
+}
+rm(me); invisible(gc())
+
+mu <- safe(feols(hired ~ young + yU + oU | state + demo + my, data = dt[lfs0 %in% 3:4],
+                 weights = ~wt, cluster = ~state, lean = TRUE))
+if (!is.null(mu)) res$young_x_unemp_rate_unemployed <- coef(mu)["yU"]
+rm(mu); invisible(gc())
+
+mn <- safe(feols(hired ~ young + yU + oU | state + demo + my, data = dt[lfs0 %in% 5:7],
+                 weights = ~wt, cluster = ~state, lean = TRUE))
+if (!is.null(mn)) res$young_x_unemp_rate_nilf <- coef(mn)["yU"]
+rm(mn); invisible(gc())
+
+# wage regression for new hires
+if ("earn" %in% names(dt)) {
+  safe({
+    wd <- dt[hired == 100]
+    rm(dt); invisible(gc())
+    wd[, earn := num(earn)]
+    wd <- wd[!is.na(earn) & earn > 0]
+    if ("mis1" %in% names(wd)) {
+      if (any(wd$mis1 %in% c(4, 8))) wd <- wd[mis1 %in% c(4, 8)]
+    } else if ("mis0" %in% names(wd)) {
+      wd[, mis0 := num(mis0)]
+      if (any(wd$mis0 %in% c(3, 7))) wd <- wd[mis0 %in% c(3, 7)]
+    }
+    if ("alloc" %in% names(wd)) {
+      wd[, alloc := num(alloc)]
+      an <- tolower(cmap$alloc)
+      if (grepl("wernal", an)) wd <- wd[is.na(alloc) | alloc != 1] else wd <- wd[is.na(alloc) | alloc < 10]
+    }
+    cpi <- fread(f_cpi, showProgress = FALSE)
+    setnames(cpi, tolower(names(cpi)))
+    cpi <- cpi[, .(yr1 = fixyr(num(year)), mon1 = monnum(month), cpi = num(cpi))]
+    cpi <- unique(cpi, by = c("yr1", "mon1"))
+    wd[cpi, cpi := i.cpi, on = c("yr1", "mon1")]
+    wd <- wd[!is.na(cpi) & cpi > 0]
+    wd[, logw := log(earn) - log(cpi)]
+    wd[, period := fifelse(yr1 <= 2002, 1L, fifelse(yr1 <= 2008, 2L, fifelse(yr1 <= 2010, 3L,
+                    fifelse(yr1 <= 2013, 4L, 5L))))]
+    fes <- "state + demo + my"
+    if ("occ" %in% names(wd)) { wd[, occfe := paste(num(occ), period)]; fes <- paste(fes, "+ occfe") }
+    if ("ind" %in% names(wd)) { wd[, indfe := paste(num(ind), period)]; fes <- paste(fes, "+ indfe") }
+    message("Wage N: ", nrow(wd))
+    mw <- feols(as.formula(paste("logw ~ young + yU + oU |", fes)), data = wd,
+                weights = ~wt, cluster = ~state, lean = TRUE)
+    res$wage_young_x_unemp_rate_all_hires <- coef(mw)["yU"]
+    res$wage_experienced_x_unemp_rate_all_hires <- coef(mw)["oU"]
+    NULL
+  })
+}
+
+for (nm in names(res)) {
+  cat(sprintf("RESULT:%s=%s\n", nm, format(unname(as.numeric(res[[nm]])), digits = 8, scientific = FALSE)))
+}
+```
+
+## Error / Unexpected Output
+```
+Columns: hrmonth,hryear,peage,pesex,peeduca,race,prhspnon,pemlr,pulk,pulkm2,pulkm3,pulkm4,pulkm5,pulkm6,pelkavl,pruntype,penlfact,peschft,pwsswgt,v2hrmonth,v2hryear,v2gestfips,v2pemlr,v2pehrusl1,v2pruntype,v2puiodp1,v2peio1cow,v2peio1icd,v2peio1ocd,v2prernhly,v2prernwa,v2pwsswgt,v2prwernal,v2prhernal,pehspnon
+Using: mon0=hrmonth; yr0=hryear; age=peage; sex=pesex; educ=peeduca; race=race; hisp=prhspnon; lfs0=pemlr; w0=pwsswgt; mon1=v2hrmonth; yr1=v2hryear; st=v2gestfips; lfs1=v2pemlr; iodp=v2puiodp1; cow=v2peio1cow; ind=v2peio1icd; occ=v2peio1ocd; w1=v2pwsswgt; earn=v2prernwa; alloc=v2prwernal
+N raw: 19836464
+
+```
+
+## Task
+Fix specifically the identified problem above. Do not rewrite the entire approach unless necessary.
+
+## Reminder: Output Convention
+The fixed R code MUST emit each reproduced metric on its own line using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names.
+
+## Reminder: Constraints
+- The dataset is a directory tree at '<repo>/.cache/datasets/forsythe_2022_young_workers_recessions.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+- Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+- Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+- Do NOT access the internet.
+- Do NOT call system() / system2().
+- Use set.seed(42) for reproducibility.
+- Print all RESULT: lines at the end via cat().
+
+Output ONLY the corrected R code — no explanation, no markdown fences.

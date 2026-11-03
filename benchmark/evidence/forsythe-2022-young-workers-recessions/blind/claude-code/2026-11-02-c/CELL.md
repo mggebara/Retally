@@ -8,6 +8,7 @@
 | Model | — |
 | Run | 2026-11-02-c |
 | Date | 2026-11-02T20:24:00Z |
+| Data access | public |
 | Results file | `benchmark/results/claude-code-run3-23papers-indep-blind-2026-11-02.json` |
 | Artifacts | `benchmark/results/artifacts/forsythe-2022-young-workers-recessions/blind/claude-code/20261102T202753Z` |
 | Run directory | `benchmark/reproductions/forsythe-2022-young-workers-recessions/blind/2026-11-02-c` |
@@ -15,7 +16,7 @@
 | Refinements | 0 (0 error + 0 claim) |
 | First attempt | 0/13 |
 | First scored | 11/13 (execution 2) |
-| Final | **11/13** |
+| Final | **12/13** |
 | Package files withheld | 7 |
 | Evidence | complete |
 
@@ -35,9 +36,9 @@
 | `young_x_unemp_rate_nilf` | -0.49 (0.0332) | -0.593998 | 21.22% | ±0.0332 (se_band) | FAIL | FAIL |
 | `wage_young_x_unemp_rate_all_hires` | -0.0262 (0.0036) | -0.025102 | 4.19% | ±0.0036 (se_band) | PASS | PASS |
 | `wage_experienced_x_unemp_rate_all_hires` | -0.0116 (0.00348) | -0.010221 | 11.89% | ±0.00348 (se_band) | PASS | PASS |
-| `n_obs_full_sample` | 1.69485e+07 | 1.73573e+07 | 2.41% | ±169485 (relative) | FAIL | FAIL |
+| `n_obs_full_sample` | 1.69485e+07 | 1.73573e+07 | 2.41% | ±847426 (relative) | PASS | FAIL |
 
-Re-scored from `output/stdout.txt` with the runner's comparator: 11/13 pass, which agrees with the row's 11/13.
+Re-scored from `output/stdout.txt` with the runner's comparator: 12/13 pass, which agrees with the row's 12/13.
 
 Per-claim ground truth, tolerance rule and errors: [`scoring.json`](scoring.json).
 

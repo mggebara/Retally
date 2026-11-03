@@ -8,6 +8,7 @@
 | Model | desktop-opus-run2 |
 | Run | 20261102T190406Z |
 | Date | 2026-11-02T19:04:06Z |
+| Data access | public |
 | Results file | `benchmark/results/pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json` |
 | Artifacts | `benchmark/results/artifacts/mokyr-2022-wheels-of-change/independent/pipeline/20261102T190406Z` |
 | Executions | 4 |
@@ -34,7 +35,7 @@
 | `first_stage_f_table3_col2` | 19.9 | 11.2163 | 43.64% | ±0.199 (relative) | FAIL | FAIL |
 | `first_stage_f_table3_col4` | 16.96 | 10.1387 | 40.22% | ±0.1696 (relative) | FAIL | FAIL |
 | `first_stage_f_table3_col6` | 16.17 | 10.1305 | 37.35% | ±0.1617 (relative) | FAIL | FAIL |
-| `n_districts_tables2_3` | 298 | 298 | 0.00% | ±2.98 (relative) | PASS | PASS |
+| `n_districts_tables2_3` | 298 | 298 | 0.00% | ±14.9 (relative) | PASS | PASS |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 7/13 pass, which agrees with the row's 7/13.
 

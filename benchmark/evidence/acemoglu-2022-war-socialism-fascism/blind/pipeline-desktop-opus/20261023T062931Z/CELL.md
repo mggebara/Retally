@@ -8,13 +8,14 @@
 | Model | desktop-opus |
 | Run | 20261023T062931Z |
 | Date | 2026-10-23T06:29:31Z |
+| Data access | public |
 | Results file | `benchmark/results/pipeline-oracle-desktop-opus-9papers-all-modes-2026-10-23.json` |
 | Artifacts | `benchmark/results/artifacts/acemoglu-2022-war-socialism-fascism/blind/pipeline/20261023T062931Z` |
 | Executions | 1 |
 | Refinements | 0 (0 error + 0 claim) |
 | First attempt | 4/12 |
 | First scored | 4/12 (execution 1) |
-| Final | **4/12** |
+| Final | **6/12** |
 | Package files withheld | 21 |
 | Evidence | complete |
 
@@ -30,12 +31,12 @@
 | `iv_fascist_vote1921_table3_panelA_col6` | 0.34 (0.18) | 0.236371 | 30.48% | ±0.18 (se_band) | PASS | PASS |
 | `iv_fascist_vote1924_table3_panelC_col1` | 0.4 (0.17) | 0.329434 | 17.64% | ±0.17 (se_band) | PASS | PASS |
 | `iv_fascist_vote1924_table3_panelC_col6` | 0.51 (0.17) | 0.177379 | 65.22% | ±0.17 (se_band) | FAIL | FAIL |
-| `n_obs_main_sample` | 5775 | 5772 | 0.05% | ±57.75 (relative) | PASS | PASS |
-| `n_clusters_main_sample` | 181 | 178 | 1.66% | ±1.81 (relative) | FAIL | FAIL |
-| `n_obs_fascist_vote1921` | 5358 | 5354 | 0.07% | ±53.58 (relative) | PASS | PASS |
-| `n_clusters_fascist_vote1921` | 175 | 171 | 2.29% | ±1.75 (relative) | FAIL | FAIL |
+| `n_obs_main_sample` | 5775 | 5772 | 0.05% | ±288.75 (relative) | PASS | PASS |
+| `n_clusters_main_sample` | 181 | 178 | 1.66% | ±9.05 (relative) | PASS | FAIL |
+| `n_obs_fascist_vote1921` | 5358 | 5354 | 0.07% | ±267.9 (relative) | PASS | PASS |
+| `n_clusters_fascist_vote1921` | 175 | 171 | 2.29% | ±8.75 (relative) | PASS | FAIL |
 
-Re-scored from `output/stdout.txt` with the runner's comparator: 4/12 pass, which agrees with the row's 4/12.
+Re-scored from `output/stdout.txt` with the runner's comparator: 6/12 pass, which agrees with the row's 6/12.
 
 Per-claim ground truth, tolerance rule and errors: [`scoring.json`](scoring.json).
 

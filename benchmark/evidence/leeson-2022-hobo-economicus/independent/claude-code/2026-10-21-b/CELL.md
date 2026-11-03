@@ -8,6 +8,7 @@
 | Model | — |
 | Run | 2026-10-21-b |
 | Date | 2026-10-22T02:07:52Z |
+| Data access | public |
 | Results file | `benchmark/results/claude-code-7papers-all-modes-2026-10-21.json` |
 | Artifacts | `benchmark/results/artifacts/leeson-2022-hobo-economicus/independent/claude-code/20261022T021417Z` |
 | Run directory | `benchmark/reproductions/leeson-2022-hobo-economicus/independent/2026-10-21-b` |
@@ -32,8 +33,8 @@
 | `brown_forsythe_dollars_per_hour` | 0.276 | 0.275802 | 0.07% | ±0.00276 (relative) | PASS | PASS |
 | `anova_f_donations_per_hour` | 0.4 | 0.398434 | 0.39% | ±0.005 (printed_precision) | PASS | PASS |
 | `anova_f_dollars_per_hour` | 0.15 | 0.150879 | 0.59% | ±0.005 (printed_precision) | PASS | PASS |
-| `station_visits_full_sample` | 242 | 242 | 0.00% | ±2.42 (relative) | PASS | PASS |
-| `station_visits_five_station_subsample` | 102 | 102 | 0.00% | ±1.02 (relative) | PASS | FAIL |
+| `station_visits_full_sample` | 242 | 242 | 0.00% | ±12.1 (relative) | PASS | PASS |
+| `station_visits_five_station_subsample` | 102 | 102 | 0.00% | ±5.1 (relative) | PASS | FAIL |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 11/11 pass, which agrees with the row's 11/11.
 

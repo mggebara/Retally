@@ -6,6 +6,7 @@
 - I4R report: https://github.com/I4Replication/I4R-First-Meta-Paper
 - I4R outcome label: reproducible; split: holdout
 - Catalog entry (ground truth): `benchmark/papers/lopez-moctezuma-2022-policy-deliberation-philippines.yaml`
+- Data access: public
 
 > Headline finding: in a cluster-randomised experiment in the May 2013 Philippine party-list election (13 municipalities, one treated and two control barangays each, 39 barangays), assignment of town-hall (deliberative) campaigns raised the treating party list's official vote share by 1.096 percentage points over a control mean of 2.397 (Table 1 col 2, permutation p = .048), with no turnout effect (-4.544, p = .404); in the post-election survey the effect is driven by women (Akbayan) and low-income / less-educated voters (Umalab Ka), and town halls moved attitudes on gender (index +0.45 s.d.) and, less, poverty.
 > Original analysis in R 3.6.2 (base lm, AER::ivreg, ri for randomization inference, stargazer / xtable output); language: r is the reproduction target and matches the original.
@@ -42,6 +43,7 @@
 | `claude-code` | [13/13](seeded/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [9/13](independent/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[9/13](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[9/13](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [9/13](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[9/13](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[9/13](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
 | `pipeline-desktop-opus` | [13/13](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) | [9/13](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) (20261023T064839Z) | [9/13](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) |
 | `pipeline-desktop-opus-run2` | [13/13](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [9/13](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [9/13](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
+| `pipeline-desktop-opus-run3` | [13/13](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [9/13](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [9/13](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
 
@@ -58,11 +60,11 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | [independent/claude-code/2026-11-02-c](independent/claude-code/2026-11-02-c/CELL.md) | `itt_vote_overall_unweighted_tableF1_col2` | 23.5099 | 23.242 | ±0.46484 (relative) | 0.576 | PASS |
 | [independent/pipeline-desktop-opus/20261023T064839Z](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) | `itt_vote_overall_unweighted_tableF1_col2` | 23.5099 | 23.242 | ±0.46484 (relative) | 0.576 | PASS |
 | [independent/pipeline-desktop-opus-run2/20261023T151837Z](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) | `itt_vote_overall_unweighted_tableF1_col2` | 23.5099 | 23.242 | ±0.46484 (relative) | 0.576 | PASS |
+| [independent/pipeline-desktop-opus-run3/20261103T010557Z](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) | `itt_vote_overall_unweighted_tableF1_col2` | 23.5099 | 23.242 | ±0.46484 (relative) | 0.576 | PASS |
 | [blind/claude-code/2026-10-22-a](blind/claude-code/2026-10-22-a/CELL.md) | `itt_vote_overall_unweighted_tableF1_col2` | 23.5099 | 23.242 | ±0.46484 (relative) | 0.576 | PASS |
 | [blind/claude-code/2026-11-01-a](blind/claude-code/2026-11-01-a/CELL.md) | `itt_vote_overall_unweighted_tableF1_col2` | 23.5099 | 23.242 | ±0.46484 (relative) | 0.576 | PASS |
 | [blind/claude-code/2026-11-02-c](blind/claude-code/2026-11-02-c/CELL.md) | `itt_vote_overall_unweighted_tableF1_col2` | 23.5099 | 23.242 | ±0.46484 (relative) | 0.576 | PASS |
 | [blind/pipeline-desktop-opus/20261023T062931Z](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) | `itt_vote_overall_unweighted_tableF1_col2` | 23.5099 | 23.242 | ±0.46484 (relative) | 0.576 | PASS |
-| [blind/pipeline-desktop-opus-run2/20261023T150832Z](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) | `itt_vote_overall_unweighted_tableF1_col2` | 23.5099 | 23.242 | ±0.46484 (relative) | 0.576 | PASS |
 
 ### Declared deviations
 
@@ -131,6 +133,10 @@ _None._
 
 [`seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md`](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-10-23T15:18:37Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
 
+### seeded · pipeline-desktop-opus-run3 · 20261103T010557Z
+
+[`seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md`](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-03T01:05:57Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
+
 ### independent · claude-code · 2026-10-22-a
 
 [`independent/claude-code/2026-10-22-a/CELL.md`](independent/claude-code/2026-10-22-a/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 5; 2026-10-22T03:15:00Z; from `claude-code-6papers-all-modes-2026-10-22.json`; evidence complete.
@@ -151,6 +157,10 @@ _None._
 
 [`independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 2; 2026-10-23T15:18:37Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-run3 · 20261103T010557Z
+
+[`independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md`](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 2; 2026-11-03T01:05:57Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
+
 ### blind · claude-code · 2026-10-22-a
 
 [`blind/claude-code/2026-10-22-a/CELL.md`](blind/claude-code/2026-10-22-a/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 2; 2026-10-22T03:20:33Z; from `claude-code-6papers-all-modes-2026-10-22.json`; evidence complete.
@@ -170,4 +180,8 @@ _None._
 ### blind · pipeline-desktop-opus-run2 · 20261023T150832Z
 
 [`blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md`](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 1; 2026-10-23T15:08:32Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-run3 · 20261103T004800Z
+
+[`blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md`](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 1; 2026-11-03T00:48:00Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 

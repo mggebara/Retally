@@ -8,6 +8,7 @@
 | Model | — |
 | Run | 2026-11-02-b |
 | Date | 2026-11-02T19:41:30Z |
+| Data access | public |
 | Results file | `benchmark/results/claude-code-run2-23papers-seeded-2026-11-02.json` |
 | Artifacts | `benchmark/results/artifacts/dancygier-2022-hate-crimes-gender-imbalances/seeded/claude-code/20261102T194315Z` |
 | Run directory | `benchmark/reproductions/dancygier-2022-hate-crimes-gender-imbalances/seeded/2026-11-02-b` |
@@ -29,12 +30,12 @@
 | `mate_competition_table1_col5` | 0.185 (0.019) | 0.184842 | 0.09% | ±0.0037 (relative) | PASS | PASS |
 | `mate_competition_table1_col6` | 0.155 (0.019) | 0.155023 | 0.01% | ±0.0031 (relative) | PASS | PASS |
 | `job_competition_table1_col2` | 0.25 (0.019) | 0.249956 | 0.02% | ±0.005 (relative) | PASS | PASS |
-| `n_obs_table1_col1` | 3019 | 3019 | 0.00% | ±30.19 (relative) | PASS | PASS |
-| `n_obs_table1_col3` | 3008 | 3008 | 0.00% | ±30.08 (relative) | PASS | PASS |
+| `n_obs_table1_col1` | 3019 | 3019 | 0.00% | ±150.95 (relative) | PASS | PASS |
+| `n_obs_table1_col3` | 3008 | 3008 | 0.00% | ±150.4 (relative) | PASS | PASS |
 | `excess_males_sum_tableC1_col5` | 1.406 (0.463) | 1.40554 | 0.03% | ±0.02812 (relative) | PASS | PASS |
 | `excess_males_annual_tableC1_col6` | 1.537 (0.412) | 1.53655 | 0.03% | ±0.03074 (relative) | PASS | PASS |
-| `n_obs_sum_tableC1_col5` | 9282 | 9282 | 0.00% | ±92.82 (relative) | PASS | PASS |
-| `n_obs_annual_tableC1_col6` | 27846 | 27846 | 0.00% | ±278.46 (relative) | PASS | PASS |
+| `n_obs_sum_tableC1_col5` | 9282 | 9282 | 0.00% | ±464.1 (relative) | PASS | PASS |
+| `n_obs_annual_tableC1_col6` | 27846 | 27846 | 0.00% | ±1392.3 (relative) | PASS | PASS |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 13/13 pass, which agrees with the row's 13/13.
 

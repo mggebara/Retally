@@ -8,6 +8,7 @@
 | Model | — |
 | Run | 2026-11-02-b |
 | Date | 2026-11-02T19:42:00Z |
+| Data access | public |
 | Results file | `benchmark/results/claude-code-run2-23papers-seeded-2026-11-02.json` |
 | Artifacts | `benchmark/results/artifacts/arias-2022-changing-tides-climate-migration/seeded/claude-code/20261102T194315Z` |
 | Run directory | `benchmark/reproductions/arias-2022-changing-tides-climate-migration/seeded/2026-11-02-b` |
@@ -30,10 +31,10 @@
 | `amce_flooding_germany` | 0.086 (0.012) | 0.086466 | 0.54% | ±0.00172 (relative) | PASS | PASS |
 | `amce_wildfires_germany` | 0.06 (0.012) | 0.059767 | 0.39% | ±0.0012 (relative) | PASS | PASS |
 | `amce_persecution_germany` | 0.162 (0.013) | 0.161689 | 0.19% | ±0.00324 (relative) | PASS | PASS |
-| `respondents_us` | 1086 | 1086 | 0.00% | ±10.86 (relative) | PASS | PASS |
-| `respondents_germany` | 1074 | 1074 | 0.00% | ±10.74 (relative) | PASS | PASS |
-| `choice_tasks_us` | 18966 | 18966 | 0.00% | ±189.66 (relative) | PASS | PASS |
-| `choice_tasks_germany` | 18862 | 18862 | 0.00% | ±188.62 (relative) | PASS | PASS |
+| `respondents_us` | 1086 | 1086 | 0.00% | ±54.3 (relative) | PASS | PASS |
+| `respondents_germany` | 1074 | 1074 | 0.00% | ±53.7 (relative) | PASS | PASS |
+| `choice_tasks_us` | 18966 | 18966 | 0.00% | ±948.3 (relative) | PASS | PASS |
+| `choice_tasks_germany` | 18862 | 18862 | 0.00% | ±943.1 (relative) | PASS | PASS |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 12/12 pass, which agrees with the row's 12/12.
 
