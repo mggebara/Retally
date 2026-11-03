@@ -8,6 +8,7 @@
 | Model | desktop-opus |
 | Run | 20261023T064839Z |
 | Date | 2026-10-23T06:48:39Z |
+| Data access | public |
 | Results file | `benchmark/results/pipeline-oracle-desktop-opus-9papers-all-modes-2026-10-23.json` |
 | Artifacts | `benchmark/results/artifacts/lopez-moctezuma-2022-policy-deliberation-philippines/independent/pipeline/20261023T064839Z` |
 | Executions | 4 |
@@ -26,9 +27,9 @@
 | `itt_vote_overall_barangay_table1_col2` | 1.096 | 1.09626 | 0.02% | ±0.02192 (relative) | PASS | PASS |
 | `itt_vote_akbayan_barangay_table1_col3` | 1.955 | 1.95486 | 0.01% | ±0.0391 (relative) | PASS | PASS |
 | `itt_vote_umalabka_barangay_table1_col4` | 0.36 | 0.360326 | 0.09% | ±0.0072 (relative) | PASS | PASS |
-| `n_obs_barangay_table1_cols1_2` | 39 | 39 | 0.00% | ±0.5 (printed_precision) | PASS | PASS |
-| `n_obs_barangay_akbayan_table1_col3` | 18 | 18 | 0.00% | ±0.5 (printed_precision) | PASS | PASS |
-| `n_obs_barangay_umalabka_table1_col4` | 21 | 21 | 0.00% | ±0.5 (printed_precision) | PASS | PASS |
+| `n_obs_barangay_table1_cols1_2` | 39 | 39 | 0.00% | ±1.95 (relative) | PASS | PASS |
+| `n_obs_barangay_akbayan_table1_col3` | 18 | 18 | 0.00% | ±0.9 (relative) | PASS | PASS |
+| `n_obs_barangay_umalabka_table1_col4` | 21 | 21 | 0.00% | ±1.05 (relative) | PASS | PASS |
 | `itt_poverty_index_akbayan_tableC3` | 0.496 | 0.160011 | 67.74% | ±0.00992 (relative) | FAIL | FAIL |
 | `itt_poverty_index_umalabka_tableC3` | 0.126 | 0.164835 | 30.82% | ±0.00252 (relative) | FAIL | FAIL |
 | `itt_gender_index_akbayan_tableC4` | 0.45 | 0.600095 | 33.35% | ±0.009 (relative) | FAIL | FAIL |

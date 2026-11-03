@@ -1,0 +1,33 @@
+Country-level columns: COUNTRY_DATA, COUNTRY_ID, YEAR_DATA, ccode, leader_cab_id, democracy1, independent, replacement_rateadj_minister, replacement_rateadj_minister_300, replacement_rateadj_minister_200, replacement_rateadj_minister_100, leaderexperience_continuous, coupattempt_whogov, coupattempt_month_whogov, gdp_cap_pwt_ln, pop_pwt_ln, military_c, monarchy_c, party_c, elec_all, t1_e_a, oil_valuepop_2014_ln, growth_pwt, onset1, nonvio_camp_2, mid_onset, war_onset, domestic3_10, coupattempt_whogov_br, polity2, lpolity2, democracy_br, ldemocracy_br, system_category, latent_personalism, coupattempt_whogov_type_br, type_num
+Failed coup var (country): coupattempt_whogov
+GDP candidates: gdp_cap_pwt_ln -> gdp_cap_pwt_ln lagged=FALSE
+Pop candidates: pop_pwt_ln -> pop_pwt_ln lagged=FALSE
+Country sample rows: 4074
+NOTES: 388 observations removed because of NA values (RHS: 388).
+       2/0 fixed-effect singletons were removed (2 observations).
+NOTES: 433 observations removed because of NA values (RHS: 433).
+       1/0 fixed-effect singleton was removed (1 observation).
+NOTES: 388 observations removed because of NA values (RHS: 388).
+       175/0 fixed-effect singletons were removed (175 observations).
+NOTES: 433 observations removed because of NA values (RHS: 433).
+       165/0 fixed-effect singletons were removed (165 observations).
+Individual-level columns: year, country_isocode, country_name, position, name, title, gender, birthyear, party, party_english, leader, classification, portfolio_1, prestige_1, prestige_numeric, importance_numeric, leader_party, party_group, experience, purged_y1, purged_y2, coupattempt_presentyear, coup_presentyear, coup_lastyear, coupattempt_presentyear_br, coup_presentyear_br, coup_lastyear_br, coupattempt_whogov_type_br, leaderexperience_continuous, democracy_lag_br, n_party, democracy_lag, gdp_cap_pwt_ln, pop_pwt_ln, polity2, gdp_cap_pwt_ln_lag, pop_pwt_ln_lag, lag_polity2, importance_factor, Group, minister_type, minister_classification, age, experience_group, hired
+Var year class: integer
+Var purged_y1 class: integer
+Var coupattempt_presentyear class: factor
+Var democracy_lag_br class: character
+Var experience class: integer
+Autocracy rows: 120984; purged non-NA: 205524; fca non-NA: 192614; yr in range: 200430
+Ind GDP: gdp_cap_pwt_ln,gdp_cap_pwt_ln_lag -> gdp_cap_pwt_ln_lag lagged=TRUE
+Ind Pop: pop_pwt_ln,pop_pwt_ln_lag -> pop_pwt_ln_lag lagged=TRUE
+Leader rows: 8059
+Tiers from prestige_1: 2
+Individual base rows: 105766
+NOTE: 10,542 observations removed because of NA values (RHS: 10,542).
+The variable 'lpop' has been removed because of collinearity (see $collin.var).
+NOTE: 19,649 observations removed because of NA values (RHS: 19,649).
+The variable 'lpop' has been removed because of collinearity (see $collin.var).
+NOTE: 22,012 observations removed because of NA values (RHS: 22,012).
+The variable 'lpop' has been removed because of collinearity (see $collin.var).
+NOTE: 10,135 observations removed because of NA values (RHS: 10,135).
+The variable 'lpop' has been removed because of collinearity (see $collin.var).

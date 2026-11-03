@@ -8,6 +8,7 @@
 | Model | desktop-opus |
 | Run | 20261102T143152Z |
 | Date | 2026-11-02T14:31:52Z |
+| Data access | public |
 | Results file | `benchmark/results/pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json` |
 | Artifacts | `benchmark/results/artifacts/labandeira-2022-electricity-pricing-reform/seeded/pipeline/20261102T143152Z` |
 | Executions | 2 |
@@ -31,8 +32,8 @@
 | `reform_expenditure_fe_iv_col8` | -0.089 (0.053) | -0.088351 | 0.73% | ±0.00178 (relative) | PASS | PASS |
 | `price_elasticity_consumption_ols_col1` | -1.044 (0.024) | -1.04408 | 0.01% | ±0.02088 (relative) | PASS | PASS |
 | `price_elasticity_consumption_fe_col3` | -1.026 (0.025) | -1.02637 | 0.04% | ±0.02052 (relative) | PASS | PASS |
-| `n_obs_table2` | 20872 | 20872 | 0.00% | ±208.72 (relative) | PASS | PASS |
-| `n_households_table2` | 10729 | 10729 | 0.00% | ±107.29 (relative) | PASS | PASS |
+| `n_obs_table2` | 20872 | 20872 | 0.00% | ±1043.6 (relative) | PASS | PASS |
+| `n_households_table2` | 10729 | 10729 | 0.00% | ±536.45 (relative) | PASS | PASS |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 12/12 pass, which agrees with the row's 12/12.
 

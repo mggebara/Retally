@@ -6,6 +6,7 @@
 - I4R report: https://github.com/I4Replication/I4R-First-Meta-Paper
 - I4R outcome label: reproducible; split: holdout
 - Catalog entry (ground truth): `benchmark/papers/mokyr-2022-wheels-of-change.yaml`
+- Data access: public
 
 > Headline finding: English districts with more watermills in the Domesday Book (1086) had more apprentices to wrights (millwrights) in 1710-50, conditional on geography, agriculture, climate and trade access (Table 2: 0.15 unconditional, 0.12 (SE 0.03) with all controls), and the relation survives instrumenting Domesday mills with river x wheat suitability (Table 3 IV 0.16 / 0.15 / 0.16, first-stage F 19.90 / 16.96 / 16.17).  N = 298 districts in every column.
 > Curation pass (2026-11-02).  Pinned 13 claims from the two core tables of Section 4.1: Table 2's watermills coefficient in all five columns, Table 3's column (5) OLS and the three IV columns, each with its SE in standard_error; the three first-stage F-statistics; and N.  The tables print two decimals; I4R records three for the three originals it examines (0.120 (0.028), 0.117 (0.028), 0.159 (0.037)), all of which round to the printed values.  The abstract states no numbers; the intro restates Table 2 col 3-4 (0.14).  Left out: Table 2 control coefficients and adjusted R2s, Table 3 columns (1) and (3) (column 1 is Table 2 column 1 again; column 3 is an OLS without the river and wheat controls), the river/wheat suitability coefficients, Table 1 summary statistics, Table 4 (Hampshire mill counts), Table 5 (the Black Death interaction; its note calls the evidence "suggestive"), Tables 6-9 (drapers, industrial vs other occupations, mediation, worsteds) and the online appendix.  Description tokens are distinct under substring matching (no col1 / col10 clash).
@@ -41,6 +42,7 @@
 | `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [13/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
 | `pipeline-desktop-opus` | [13/13](seeded/pipeline-desktop-opus/20261102T142733Z/CELL.md) (20261102T142733Z) | [13/13](independent/pipeline-desktop-opus/20261102T142733Z/CELL.md) (20261102T142733Z) | [1/13](blind/pipeline-desktop-opus/20261102T141403Z/CELL.md) (20261102T141403Z) |
 | `pipeline-desktop-opus-run2` | [13/13](seeded/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) (20261102T152052Z) | [7/13](independent/pipeline-desktop-opus-run2/20261102T190406Z/CELL.md) (20261102T190406Z) | [1/13](blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) (20261102T151132Z) |
+| `pipeline-desktop-opus-run3` | [13/13](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [7/13](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) (20261103T052626Z) | [7/13](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
 
@@ -53,15 +55,15 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | Cell | Claim | Reproduced | Paper | Band | Error / band | Verdict |
 |---|---|---|---|---|---|---|
 | [independent/pipeline-desktop-opus-run2/20261102T190406Z](independent/pipeline-desktop-opus-run2/20261102T190406Z/CELL.md) | `watermills_iv_table3_col4` | 0.189695 | 0.15 | ±0.04 (se_band) | 0.992 | PASS |
+| [independent/pipeline-desktop-opus-run3/20261103T052626Z](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) | `watermills_iv_table3_col4` | 0.185529 | 0.15 | ±0.04 (se_band) | 0.888 | PASS |
+| [blind/pipeline-desktop-opus-run3/20261103T004800Z](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) | `watermills_iv_table3_col4` | 0.185529 | 0.15 | ±0.04 (se_band) | 0.888 | PASS |
+| [blind/pipeline-desktop-opus-run3/20261103T004800Z](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) | `watermills_table2_col5` | 0.0848292 | 0.12 | ±0.03 (se_band) | 1.172 | FAIL |
 | [independent/pipeline-desktop-opus-run2/20261102T190406Z](independent/pipeline-desktop-opus-run2/20261102T190406Z/CELL.md) | `watermills_iv_table3_col2` | 0.193018 | 0.16 | ±0.04 (se_band) | 0.825 | PASS |
+| [independent/pipeline-desktop-opus-run3/20261103T052626Z](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) | `watermills_iv_table3_col2` | 0.193018 | 0.16 | ±0.04 (se_band) | 0.825 | PASS |
+| [blind/pipeline-desktop-opus-run3/20261103T004800Z](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) | `watermills_iv_table3_col2` | 0.193018 | 0.16 | ±0.04 (se_band) | 0.825 | PASS |
 | [independent/pipeline-desktop-opus-run2/20261102T190406Z](independent/pipeline-desktop-opus-run2/20261102T190406Z/CELL.md) | `watermills_table2_col5` | 0.084349 | 0.12 | ±0.03 (se_band) | 1.188 | FAIL |
 | [independent/pipeline-desktop-opus-run2/20261102T190406Z](independent/pipeline-desktop-opus-run2/20261102T190406Z/CELL.md) | `watermills_ols_table3_col5` | 0.084349 | 0.12 | ±0.03 (se_band) | 1.188 | FAIL |
-| [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `watermills_table2_col1` | 0.146106 | 0.15 | ±0.005 (printed_precision) | 0.779 | PASS |
-| [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `watermills_table2_col1` | 0.146106 | 0.15 | ±0.005 (printed_precision) | 0.779 | PASS |
-| [seeded/pipeline-desktop-opus/20261102T142733Z](seeded/pipeline-desktop-opus/20261102T142733Z/CELL.md) | `watermills_table2_col1` | 0.146106 | 0.15 | ±0.005 (printed_precision) | 0.779 | PASS |
-| [seeded/pipeline-desktop-opus-run2/20261102T152052Z](seeded/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) | `watermills_table2_col1` | 0.146106 | 0.15 | ±0.005 (printed_precision) | 0.779 | PASS |
-| [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `watermills_table2_col2` | 0.143814 | 0.14 | ±0.005 (printed_precision) | 0.763 | PASS |
-| [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `watermills_table2_col2` | 0.143814 | 0.14 | ±0.005 (printed_precision) | 0.763 | PASS |
+| [independent/pipeline-desktop-opus-run3/20261103T052626Z](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) | `watermills_table2_col5` | 0.084349 | 0.12 | ±0.03 (se_band) | 1.188 | FAIL |
 
 ### Declared deviations
 
@@ -69,6 +71,8 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - First-stage F reported as an R translation of ivreg2's Kleibergen-Paap rk Wald F for one endogenous regressor and one excluded instrument: first-stage Wald statistic on msuit26mean with the unadjusted cluster (county_id) VCE, scaled by (N-K)/N*(G-1)/G. The squared cluster t-statistic with Stata's small-sample adjustment is printed as a diagnostic (not a RESULT).
 - [independent/pipeline-desktop-opus-run2/20261102T190406Z](independent/pipeline-desktop-opus-run2/20261102T190406Z/CELL.md) (7/13; failed: `watermills_table2_col5`, `watermills_ols_table3_col5`, `watermills_iv_table3_col6`, `first_stage_f_table3_col2`, `first_stage_f_table3_col4`, `first_stage_f_table3_col6`)
   - First-stage F reported as heteroskedasticity-robust (HC1) Wald F on the excluded instrument rather than county-clustered, since the clustered F was roughly half the paper's values
+- [independent/pipeline-desktop-opus-run3/20261103T052626Z](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) (7/13; failed: `watermills_table2_col5`, `watermills_ols_table3_col5`, `watermills_iv_table3_col6`, `first_stage_f_table3_col2`, `first_stage_f_table3_col4`, `first_stage_f_table3_col6`)
+  - wrights counts divided by mean population 1710-50 (pcmean, which is in units of 10,000 people) without an extra x10,000 factor, giving wright apprentices per 10,000 people
 - [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) (13/13)
   - First-stage F reported as the county-clustered Wald F on the single excluded instrument (fixest ivwald1), consistent with the paper's statement that all regressions cluster at the county level; Table 3 notes mention heteroscedasticity-robust SEs, and the paper's exact F definition (e.g. Stata ivreg2 KP F with its small-sample corrections) is not stated.
 - [blind/claude-code/2026-11-02-b](blind/claude-code/2026-11-02-b/CELL.md) (13/13)
@@ -85,27 +89,27 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
-- blind: `first_stage_f_table3_col2` — pipeline 0/2, agent 3/3
-- blind: `first_stage_f_table3_col4` — pipeline 0/2, agent 3/3
-- blind: `first_stage_f_table3_col6` — pipeline 0/2, agent 3/3
-- blind: `watermills_iv_table3_col2` — pipeline 0/2, agent 3/3
-- blind: `watermills_iv_table3_col4` — pipeline 0/2, agent 3/3
-- blind: `watermills_iv_table3_col6` — pipeline 0/2, agent 3/3
-- blind: `watermills_ols_table3_col5` — pipeline 0/2, agent 3/3
-- blind: `watermills_table2_col1` — pipeline 0/2, agent 3/3
-- blind: `watermills_table2_col2` — pipeline 0/2, agent 3/3
-- blind: `watermills_table2_col3` — pipeline 0/2, agent 3/3
-- blind: `watermills_table2_col4` — pipeline 0/2, agent 3/3
-- blind: `watermills_table2_col5` — pipeline 0/2, agent 3/3
+- blind: `first_stage_f_table3_col2` — pipeline 0/3, agent 3/3
+- blind: `first_stage_f_table3_col4` — pipeline 0/3, agent 3/3
+- blind: `first_stage_f_table3_col6` — pipeline 0/3, agent 3/3
+- blind: `watermills_iv_table3_col6` — pipeline 0/3, agent 3/3
+- blind: `watermills_ols_table3_col5` — pipeline 0/3, agent 3/3
+- blind: `watermills_table2_col5` — pipeline 0/3, agent 3/3
 
 Pass rates at least 50 points apart (not unanimous):
 
-- independent: `first_stage_f_table3_col2` — pipeline 1/2, agent 3/3
-- independent: `first_stage_f_table3_col4` — pipeline 1/2, agent 3/3
-- independent: `first_stage_f_table3_col6` — pipeline 1/2, agent 3/3
-- independent: `watermills_iv_table3_col6` — pipeline 1/2, agent 3/3
-- independent: `watermills_ols_table3_col5` — pipeline 1/2, agent 3/3
-- independent: `watermills_table2_col5` — pipeline 1/2, agent 3/3
+- independent: `first_stage_f_table3_col2` — pipeline 1/3, agent 3/3
+- independent: `first_stage_f_table3_col4` — pipeline 1/3, agent 3/3
+- independent: `first_stage_f_table3_col6` — pipeline 1/3, agent 3/3
+- independent: `watermills_iv_table3_col6` — pipeline 1/3, agent 3/3
+- independent: `watermills_ols_table3_col5` — pipeline 1/3, agent 3/3
+- independent: `watermills_table2_col5` — pipeline 1/3, agent 3/3
+- blind: `watermills_iv_table3_col2` — pipeline 1/3, agent 3/3
+- blind: `watermills_iv_table3_col4` — pipeline 1/3, agent 3/3
+- blind: `watermills_table2_col1` — pipeline 1/3, agent 3/3
+- blind: `watermills_table2_col2` — pipeline 1/3, agent 3/3
+- blind: `watermills_table2_col3` — pipeline 1/3, agent 3/3
+- blind: `watermills_table2_col4` — pipeline 1/3, agent 3/3
 
 ## Cells
 
@@ -124,6 +128,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### seeded · pipeline-desktop-opus-run2 · 20261102T152052Z
 
 [`seeded/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md`](seeded/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-02T15:20:52Z; from `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`; evidence complete.
+
+### seeded · pipeline-desktop-opus-run3 · 20261103T010557Z
+
+[`seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md`](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-03T01:05:57Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 
 ### independent · claude-code · 2026-11-02-a
 
@@ -145,6 +153,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/pipeline-desktop-opus-run2/20261102T190406Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261102T190406Z/CELL.md) — final 7/13, re-scored 7/13; first scored 1/13; executions 4; 2026-11-02T19:04:06Z; from `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-run3 · 20261103T052626Z
+
+[`independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md`](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) — final 7/13, re-scored 7/13; first scored 1/13; executions 4; 2026-11-03T05:26:26Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
+
 ### blind · claude-code · 2026-11-02-a
 
 [`blind/claude-code/2026-11-02-a/CELL.md`](blind/claude-code/2026-11-02-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-02T00:30:00Z; from `claude-code-6papers-all-modes-2026-11-02.json`; evidence complete.
@@ -164,4 +176,8 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · pipeline-desktop-opus-run2 · 20261102T151132Z
 
 [`blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md`](blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) — final 1/13, re-scored 1/13; first scored 1/13; executions 1; 2026-11-02T15:11:32Z; from `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-run3 · 20261103T004800Z
+
+[`blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md`](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) — final 7/13, re-scored 7/13; first scored 7/13; executions 1; 2026-11-03T00:48:00Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 

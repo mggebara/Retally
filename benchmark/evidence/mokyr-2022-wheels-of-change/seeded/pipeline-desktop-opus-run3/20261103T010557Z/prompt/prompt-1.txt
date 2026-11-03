@@ -1,0 +1,810 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: The Economic Journal, 1–33 https://doi.org/10.1093/ej/ueab102 C⃝The Author(s) 2021. Published by Oxford University Press. All rights reserved. For
+Abstract (first 500 chars): THE WHEELS OF CHANGE: TECHNOLOGY ADOPTION, MILLWRIGHTS AND THE PERSISTENCE IN BRITAIN’S INDUSTRIALISATION ∗ Joel Mokyr, Assaf Sarid and Karine van der Beek This paper examines the effect of the early adoption of technology on the evolution of human capital and industrialisation. We argue that mechanical skills and competence were a main determinant of the location of
+Methodology Summary: - **Data / unit of observation**: Cross-section of England's government-area districts, 1710–50 (326 districts; Isles of Scilly dropped for missing HYDE population → 325). Apprentice counts come from the Apprenticeship Stamp Tax registers (IR 1). Masters' locations are matched to TownsList (apprentices found in 10,201 of 36,144 locations; all other locations set to zero) and summed to the district. Domesday Book (1086) mills are geolocated to districts. The Domesday survey leaves out London, Winchester, Bristol, Tamworth, Durham and Northumberland, and covers Cumberland, Westmorland and Lancashire only partly, so every regression using mills has **N = 298 districts**.
+- **Variable construction (units)**: The dependent variable w_i is wright apprentices (millwrights, wheelwrights and "wrights") per capita. The key regressor is Domesday watermills per capita. Both are normalised per 10,000 people using mean district population in 1710–50 (HYDE). These are raw per-10,000 counts, not standardised. Headline coefficient: 0.15 unconditional, 0.14 with geographic, agricultural and climatic controls, 0.12 in the full specification. That is, one more 1086 mill per 10,000 people goes with about 0.12–0.14 more wright apprentices per 10,000 in 1710–50. Drapers/clothiers apprentices (4,359 people) and weaver apprentices per capita proxy for textile activity in later regressions.
+- **Estimating equation (Eq. 1, OLS, levels-on-levels)**: w_i = β·mills_i + X′γ + ε_i, with a constant. Table 2 adds controls step by step: (1) no controls; (2) latitude, longitude, mean ruggedness, mean elevation; (3) adds agricultural suitability, wheat suitability and mean pasture suitability; (4) adds mean precipitation and temperature; (5) is the preferred full specification. Column (5) adds mean population 1710–50, minimum distance to an important harbour, distance to London, minimum distance to a Roman road, minimum distance to a navigable river, and district area. No fixed effects. Adjusted R² runs from 0.57 to 0.61. Figure 1 plots the partial correlation for column (5).
+- **IV / 2SLS (Table 3)**: Domesday mills are instrumented with a grinding-mill suitability measure. This is the length of rivers in the district running through moderate terrain ruggedness (TRI between 2 and 6), interacted with an indicator for high wheat suitability (mean GAEZ wheat-suitability category ≤ 5, where lower is more suitable). The main effects "River suitability" and "Wheat suitability" enter as controls. There are three paired OLS/IV specifications: no controls (cols 1–2), main geographic + agricultural + climatic controls (cols 3–4), and those plus other geographic controls (cols 5–6). IV coefficients are 0.16, 0.15 and 0.16. First-stage F-statistics are 19.90, 16.96 and 16.17. First stage and reduced form are in Online Appendix Table E.4.
+- **Black Death extension (Eq. 2, OLS)**: w_i = δ1·mills_i + δ2·dpop1300–1400_i + δ3·(dpop1300–1400_i × mills_i) + X′γ + ω_i. Here dpop is the (negative) HYDE population growth from 1300 to 1400, and δ3 (expected positive) is the coefficient of interest. A Winchester-district (Hampshire) case study compares the River Meon with the River Itchen, using Domesday mills, Taylor's 1759 map, and wrights within 5 miles of each river.
+- **Inference**: Heteroscedasticity-robust standard errors **clustered at the (historical) county level** in all regressions. Significance is two-sided at 10/5/1%.
+- **Further analyses / robustness**: Domesday mills are used to predict drapers, weavers and iron-making apprentices, with placebo regressions for industries that did not use water power. Other checks: a horserace between mills and wrights; a mediation analysis attributing 30–70% of the mills→industrialisation effect to wrights; worsted-weaver relocation between 1710–50 and 1750–1800; and tests for bias from unobservables (Section 5.4). This is a cross-sectional regression design with no train/test split or cross-validation, and no ML hyperparameters.
+
+
+## Claims to Reproduce
+1. watermills_table2_col1: 0.15 (wright apprentices per capita per Domesday watermill per capita) [type: coefficient]
+   Location: Table 2, column (1), Watermills (per capita)
+   Context: Table 2 ("Number of Wright Apprentices per Capita and Domesday Book Mills per Capita"), column (1). Cross-section of English (government area) districts covered by the Domesday Book. OLS regression of the number of apprentices to wrights in 1710-50 (from the Apprentice Tax Registers) per capita on the number of watermills recorded in the Domesday Book (1086) per capita, with a constant and no controls; both counts are converted to per capita terms using the district's mean population in 1710-50 (the text reads the coefficient as wright apprentices per mill per 10,000 people). The table note sa…
+2. watermills_table2_col2: 0.14 (wright apprentices per capita per Domesday watermill per capita) [type: coefficient]
+   Location: Table 2, column (2), Watermills (per capita)
+   Context: Table 2, column (2): the column (1) regression adding the main geographic controls — latitude and longitude of the district's centroid, mean ruggedness and mean elevation. Same sample, SEs clustered at the historical county level.
+3. watermills_table2_col3: 0.14 (wright apprentices per capita per Domesday watermill per capita) [type: coefficient]
+   Location: Table 2, column (3), Watermills (per capita)
+   Context: Table 2, column (3): column (2) plus agricultural suitability, wheat suitability and mean pasture suitability. Wheat suitability is the paper's high-wheat-suitability indicator (mean wheat suitability category of the district lower than or equal to 5, the lower the more suitable).
+4. watermills_table2_col4: 0.14 (wright apprentices per capita per Domesday watermill per capita) [type: coefficient]
+   Location: Table 2, column (4), Watermills (per capita)
+   Context: Table 2, column (4): column (3) plus the climatic controls, mean precipitation and mean temperature.
+5. watermills_table2_col5: 0.12 (wright apprentices per capita per Domesday watermill per capita) [type: coefficient]
+   Location: Table 2, column (5), Watermills (per capita)
+   Context: Table 2, column (5), the paper's preferred OLS specification (Figure 1 plots its partial correlation): column (4) plus mean population in 1710-50, minimal distance to an important harbour, distance to London, minimal distance to a Roman road, minimal distance to a navigable river, and the district's area. SEs clustered at the historical county level.
+6. watermills_ols_table3_col5: 0.12 (wright apprentices per capita per Domesday watermill per capita) [type: coefficient]
+   Location: Table 3, column (5) OLS, Watermills (per capita)
+   Context: Table 3 ("Wright Apprentices per Capita and the Number of Domesday Mills per Capita"), column (5), OLS: the Table 2 column (5) specification (main geographic, agricultural, climatic and other geographic controls, population) with river suitability added as a control, i.e. the OLS counterpart of the column (6) IV. River suitability is the length of rivers in the district running through terrain of moderate ruggedness (ruggedness between 2 and 6). The Table 3 note reports heteroscedasticity robust standard errors; the paper states (Section 4.2) that in all regressions observations are clustered …
+7. watermills_iv_table3_col2: 0.16 (wright apprentices per capita per Domesday watermill per capita) [type: coefficient]
+   Location: Table 3, column (2) IV, Watermills (per capita)
+   Context: Table 3, column (2), IV (two-stage least squares): Domesday watermills per capita instrumented with the paper's geographic suitability for grain-grinding watermills, the length of rivers in the district with moderate ruggedness (between 2 and 6) interacted with the high-wheat-suitability indicator (mean wheat suitability category of 5 or lower). The two components, river suitability and wheat suitability, enter as controls; no other controls. Dependent variable: wright apprentices per capita, 1710-50. Standard errors as for column (5).
+8. watermills_iv_table3_col4: 0.15 (wright apprentices per capita per Domesday watermill per capita) [type: coefficient]
+   Location: Table 3, column (4) IV, Watermills (per capita)
+   Context: Table 3, column (4), IV: the column (2) model adding the main geographic controls (longitude, latitude, mean ruggedness, mean elevation), the agricultural controls (agricultural and pasture suitability besides wheat suitability) and the climatic controls (mean precipitation and temperature).
+9. watermills_iv_table3_col6: 0.16 (wright apprentices per capita per Domesday watermill per capita) [type: coefficient]
+   Location: Table 3, column (6) IV, Watermills (per capita)
+   Context: Table 3, column (6), the full IV specification: column (4) plus the other geographic controls (distance to London, to the main eighteenth-century harbours, to a historical Roman road and to a navigable river, and the district's area) and the district's mean population in 1710-50.
+10. first_stage_f_table3_col2: 19.9 (first-stage F-statistic) [type: other]
+   Location: Table 3, column (2), First-stage F-statistic
+   Context: Table 3, column (2): the first-stage F-statistic for the excluded instrument (river suitability x wheat suitability) in the IV with river suitability and wheat suitability as the only controls.
+11. first_stage_f_table3_col4: 16.96 (first-stage F-statistic) [type: other]
+   Location: Table 3, column (4), First-stage F-statistic
+   Context: Table 3, column (4): first-stage F-statistic of the IV with main geographic, agricultural and climatic controls.
+12. first_stage_f_table3_col6: 16.17 (first-stage F-statistic) [type: other]
+   Location: Table 3, column (6), First-stage F-statistic
+   Context: Table 3, column (6): first-stage F-statistic of the full IV specification.
+13. n_districts_tables2_3: 298.0 (districts) [type: other]
+   Location: Tables 2 and 3, Observations
+   Context: Number of district observations in the Table 2 and Table 3 regressions (the same in every column): districts with Domesday Book watermill data.
+
+## Dataset Information
+Name: mokyr-2022-wheels-of-change
+Local path: <repo>/.cache/datasets/mokyr_2022_wheels_of_change
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- 3 replication package/Replication files/Data/replication_data.dta (288.0 KB) — 325 rows, 62 columns: wrights, mills, area, latitude, longitude, min_dist_to_roman_rds, wheat_tmean, min_dist_2nav_rivers, min_harbor, dist_grass_mean, district_id, dist_rug_mean, suitmean, DIST_London, precip_mean_dist, worsted_w0, pc0, worsted_w1, pcmean, dist_elevation_mean, temp_mean_dist, GAZ_CNTY, local_government_area, blacksmith, draper, ntextile0, pc1300_mean, all_weaver0, other_weaver0, all_weaver1, other_weaver1, riv_rug1020count, riv_rug01count, riv_rug13count, riv_rug14count, riv_rug1…
+- 1 paper/MS20200480_accepted.pdf (1.3 MB)
+- 1 paper/MS20200480_figures.docx (169.3 KB)
+- 1 paper/MS20200480_main.docx (1.1 MB)
+- 1 paper/MS20200480_tables_image.docx (892.7 KB)
+- 1 paper/MS20200480_tables_ocr.docx (1014.4 KB)
+- 2 appendix/MS20200480_online_appendix_nov1.pdf (2.4 MB)
+- 3 replication package/MS20200480_README.docx (40.5 KB)
+- 3 replication package/MS20200480_README.pdf (285.1 KB)
+- 3 replication package/Replication files/Appendix/EJAppendixFigB2.png (561.6 KB)
+- 3 replication package/Replication files/Appendix/EJAppendixFigB4.png (558.7 KB)
+- 3 replication package/Replication files/Data/replication section 5.3.xlsx (23.8 KB)
+- 3 replication package/Replication files/Data/replication_data.csv (123.6 KB) — columns: local_government_area,district_id,smith,joiner,butcher,blacksmith,attorney,apothecary,surgeon,wrights,draper,trade_other,GAZ_CNTY,ntextile0,all_weaver0,worsted_w0,linen_w0,cotton_w0,other_weaver0,pc0,all_weaver1,worsted_w1,linen_w1,cotton_w…
+- 3 replication package/Replication files/do_files/Figures.do (428 B)
+- 3 replication package/Replication files/do_files/Tables.do (23.3 KB)
+- 3 replication package/Replication files/do_files/appendix_replication.do (99.6 KB)
+- 3 replication package/Replication files/do_files/main.do (5.0 KB)
+- 3 replication package/Replication files/do_files/mypsacalc.ado (5.4 KB)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/mokyr_2022_wheels_of_change' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Original Replication Scripts
+The replication package (the dataset directory) ships the authors' own analysis scripts, reproduced below.  These are the GROUND TRUTH for the exact estimating equation, variable names, sample restrictions, fixed effects, and standard-error clustering — follow them over anything reconstructed from the methodology summary, and prefer them over the paper's text where the two disagree.  Your job is to write R code that implements the SAME SPECIFICATION: translate what the scripts estimate, do not transliterate their syntax line by line (a Stata .do file's regression, e.g. `reghdfe y x controls, absorb(fe) cluster(cl)`, becomes the equivalent fixest::feols() call in R).  Keep only the parts that produce the specific claims being reproduced; skip figure construction and unrelated robustness checks.  The scripts' data-file paths refer to the package's internal layout — resolve them against the dataset directory listed under Dataset Information.
+
+Stata-to-fixest sample matching: feols() drops fixed-effect singletons by default, but Stata's `reg y x i.fe` / `xi:` dummies keep them.  Pass `fixef.rm = "none"` to every feols() call that has fixed effects, otherwise the observation count and the robust SEs drift from the paper's.  Stata's `, r` / `vce(robust)` is `vcov = "hetero"`.
+
+### `3 replication package/Replication files/do_files/Tables.do`
+```stata
+*** Please run first the do file called "main.do"
+
+***********************************
+*** Table 1: Summary statistics ***
+***********************************
+sutex mills_pc wrights_pc draper_pc weaver_pc smith_pc blacksmith_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean precip_mean_dist temp_mean_dist min_dist_to_roman_rds min_dist_2nav_rivers min_harbor DIST_London area pcmean pc0 popchange pop86thousand worsted_w1_pc worsted_w0_pc woolll1 woolll0 ntextile0 carbon nonfull_dist lord_share king_lh_share eccles_lh_share , minmax labels
+
+***************************************************
+*** Table 2: Basic results of wrights and mills ***
+***************************************************
+eststo clear
+eststo: reg wrights_pc mills_pc, cluster(county_id)
+eststo: reg wrights_pc mills_pc latitude longitude dist_rug_mean dist_elevation_mean if e(sample)==1, cluster(county_id)
+eststo: reg wrights_pc mills_pc latitude longitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean, cluster(county_id)
+eststo: reg wrights_pc mills_pc latitude longitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist, cluster(county_id)
+eststo: reg wrights_pc mills_pc latitude longitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist pcmean min_harbor DIST_London min_dist* area, cluster(county_id)
+esttab using "./Tables/EJtable2.tex",se collabels(none) mlabels(none) prehead("\begin{table}[htb!]\centering" "\footnotesize" "\renewcommand{\tabcolsep}{0.1cm}" "\renewcommand{\arraystretch}{1.25}" "\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}" "\caption{@title}" "\begin{tabular}{l*{@M}{l}}" "\toprule\toprule" "\FPeval\result{clip(@span-1)}\setcounter{mycols}{\result}" "&\multicolumn{\themycols}{c}{No. of Wright Apprentices per Capita}\\\cmidrule(lr){2-@span}") mgroups(none) booktabs stats(r2_a N, fmt(%9.2f %9.0f) labels( "Adjusted-$ R^2$" "Observations")) title(Number of Wright Apprentices per Capita and Domesday Book Mills per Capita \label{tab-wrightmills-pc-OLS}) starlevels(* .1 ** .05 *** .01) cells(b(star fmt(%9.2f)) se(par fmt(%9.2f)))  label replace style(tex) nocon postfoot("\bottomrule" "\multicolumn{@span}{p{0.65\textwidth}}{\scriptsize }" "\end{tabular}" "\end{table}") 
+
+*****************************
+*** Table 3: IV Estimates ***
+*****************************
+eststo clear
+eststo: reg wrights_pc mills_pc if mills_pc~=., cluster(county_id)
+eststo: ivreg2 wrights_pc (mills_pc = msuit26mean) riv_rug26count wheat_suit, cluster(county_id) first savefirst savefprefix(first)
+estadd scalar fstat=e(widstat)
+eststo: reg wrights_pc mills_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean precip_mean_dist temp_mean_dist, cluster(county_id)
+eststo: ivreg2 wrights_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean precip_mean_dist temp_mean_dist, cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: reg wrights_pc mills_pc wheat_suit riv_rug26count longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area , r  cluster(county_id)
+eststo: ivreg2 wrights_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area, r  cluster(county_id)
+estadd scalar fstat=e(widstat)
+esttab using "./Tables/EJTable3.tex",se collabels(none) mlabels(none) prehead("\begin{table}[htb!]\centering" "\footnotesize" "\renewcommand{\tabcolsep}{0.1cm}" "\renewcommand{\arraystretch}{1.25}" "\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}" "\caption{@title}" "\begin{tabular}{l*{@M}{l}}" "\toprule\toprule" "\FPeval\result{clip(@span-1)}\setcounter{mycols}{\result}" "&\multicolumn{\themycols}{c}{No. of Wright Apprentices per capita}\\\cmidrule(lr){2-@span}") mgroups("OLS" "IV" "OLS" "IV" "OLS" "IV", pattern (1 1 1 1 1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span}) ) booktabs indicate ("Main geographic controls = longitude latitude dist_rug_mean dist_elevation_mean  " "Agricultural controls = suitmean dist_grass_mean" "Climatic controls = precip_mean_dist temp_mean_dist" "Other geographic controls = min_harbor DIST_London min_dist* pcmean area") stats(fstat r2_a N, fmt(%9.2f %9.2f %9.0f) labels("First-stage F-statistic" "Adjusted-$ R^2$" "Observations")) title(Wright Apprentices per Capita and the Number of Domesday Mills per Capita\label{tab-wrights-mills-rivers--iv}) starlevels(* .1 ** .05 *** .01) cells(b(star fmt(%9.2f)) se(par fmt(%9.2f)))  label replace style(tex) nocon postfoot("\bottomrule" "\multicolumn{@span}{p{0.6\textwidth}}{\scriptsize }" "\end{tabular}" "\end{table}")
+
+*************************************
+*** Table 5: Black Death Analysis ***
+*************************************
+eststo clear
+eststo: reg wrights_pc mills_pc latitude longitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist pcmean min_harbor DIST_London min_dist* area, cluster(county_id)
+eststo: reg wrights_pc c.mills_pc##c.popchange latitude longitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist pcmean min_harbor DIST_London min_dist* area, cluster(county_id)
+eststo: reg wrights_pc c.mills_pc##c.popchange  latitude longitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist pcmean min_harbor DIST_London min_dist* area if popchange <=-1.97, cluster(county_id)
+eststo: reg wrights_pc c.mills_pc##c.popchange  latitude longitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist pcmean min_harbor DIST_London min_dist* area if popchange >-1.97, cluster(county_id)
+esttab using "./Tables/EJTable5.tex",se collabels(none) mlabels(none) prehead("\begin{table}[htb!]\centering" "\footnotesize" "\renewcommand{\tabcolsep}{0.1cm}" "\renewcommand{\arraystretch}{1.25}" "\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}" "\caption{@title}" "\begin{tabular}{l*{@M}{l}}" "\toprule\toprule" "\FPeval\result{clip(@span-1)}\setcounter{mycols}{\result}" "&\multicolumn{\themycols}{c}{No. of Wright Apprentices (per capita)}\\") mgroups("Mills" "Mills and Pop Change" "Larger pop. Decline" "Small pop. changes" , pattern (1 1 1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span}) ) booktabs indicate ("Geographical controls = longitude latitude dist_rug_mean dist_elevation_mean" "Agricultural controls = suitmean dist_grass_mean" "Climatic controls = precip_mean_dist temp_mean_dist" "Other Geographic controls = min_harbor DIST_London min_dist* area") stats(r2_a N, fmt(%9.2f %9.0f) labels("Adjusted-$ R^2$" "Observations")) title(The Black Death and the Number of Wrights: OLS \label{tab-bd-wrights}) starlevels(* .1 ** .05 *** .01) cells(b(star fmt(%9.2f)) se(par fmt(%9.2f))) order(c.mills_pc#c.popchange mills_pc popchange) label replace style(tex) drop( wheat_suit pcmean _cons) postfoot("\bottomrule" "\multicolumn{@span}{p{0.65\textwidth}}{\scriptsize }" "\end{tabular}" "\end{table}") 
+
+****************************************
+*** Table 6: Wrights and Drapers OLS ***
+****************************************
+eststo clear
+eststo: reg draper_pc wrights_pc, cluster(county_id)
+eststo: reg draper_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean, cluster(county_id)
+eststo: reg draper_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean, cluster(county_id)
+eststo: reg draper_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist, cluster(county_id)
+eststo: reg draper_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area, cluster(county_id)
+eststo: reg draper_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills~=., r cluster(county_id)
+esttab using "./Tables/EJTable6.tex",se collabels(none) mlabels(none) prehead("\begin{table}[htb!]\centering" "\footnotesize" "\renewcommand{\tabcolsep}{0.1cm}" "\renewcommand{\arraystretch}{1.25}" "\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}" "\caption{@title}" "\begin{tabular}{l*{@M}{l}}" "\toprule\toprule" "\FPeval\result{clip(@span-1)}\setcounter{mycols}{\result}" "&\multicolumn{\themycols}{c}{No. of Draper Apprentices per Capita}\\\cmidrule(lr){2-@span}") mgroups("All Sample" "DB Sample", pattern (1 0 0 0 0 1) prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span}) ) booktabs indicate ("Geographical controls = longitude latitude dist_rug_mean dist_elevation_mean " "Agricultural controls = suitmean dist_grass_mean wheat_suit" "Climatic controls = precip_mean_dist temp_mean_dist  " "Other economic controls = min_harbor DIST_London min_dist* pcmean area ") stats(r2_a N, fmt(%9.2f %9.0f) labels( "Adjusted-$ R^2$" "Observations")) title(Number of Draper Apprentices per Capita and Wright Apprentices per Capita \label{tab-draperwrights-pc-OLS}) starlevels(* .1 ** .05 *** .01) cells(b(star fmt(%9.2f)) se(par fmt(%9.2f)))  label replace style(tex) nocon postfoot("\bottomrule" "\multicolumn{@span}{p{0.67\textwidth}}{\scriptsize }" "\end{tabular}" "\end{table}") 
+
+**************************************************************
+*** TAble 7: Industrial vs. Other occupations and DB Mills ***
+**************************************************************
+eststo clear
+eststo: ivreg2 draper_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area , cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 weaver_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area , cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 smith_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area , cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 blacksmith_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area , cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 joiner_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area , cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 trade_other (mills_pc = msuit26mean) wheat_suit riv_rug26count longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area , cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 butcher_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area , cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 attorney_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area , cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 surgeon_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area , cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 apothecary_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area , cluster(county_id)
+estadd scalar fstat=e(widstat)
+esttab using "./Tables/EJTable7.tex",se collabels(none) mlabels(none) prehead("\begin{table}[htb!]\centering" "\footnotesize" "\renewcommand{\tabcolsep}{0.1cm}" "\renewcommand{\arraystretch}{1.25}" "\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}" "\caption{@title}" "\begin{tabular}{l*{@M}{l}}" "\toprule\toprule" "\FPeval\result{clip(@span-1)}\setcounter{mycols}{\result}" "&\multicolumn{\themycols}{c}{No. of Apprentices per capita}\\\cmidrule(lr){2-@span}") mgroups("Draper" "Weaver" "Smith" "Blacksmith" "Joiner" "Trader" "Butcher" "Attorney" "Surgeon" "Apothecary" , pattern (1 1 1 1 1 1 1 1 1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span}) ) booktabs indicate ("Geographical controls = longitude latitude dist_rug_mean dist_elevation_mean" "Agricultural controls = suitmean dist_grass_mean" "Climatic controls = precip_mean_dist temp_mean_dist" "Other Geographic controls = min_harbor DIST_London min_dist* area") stats(fstat r2_a N, fmt(%9.2f %9.2f %9.0f) labels("First-stage F-statistic" "Adjusted-$ R^2$" "Observations")) title(Industrial vs. Other Apprentices and DB Mills\label{tab-placebo-mills-IV}) starlevels(* .1 ** .05 *** .01) cells(b(star fmt(%9.2f)) se(par fmt(%9.2f)))  label replace style(tex) drop(_cons pcmean) postfoot("\bottomrule" "\multicolumn{@span}{p{1.02\textwidth}}{\scriptsize }" "\end{tabular}" "\end{table}") 
+
+***********************************
+*** Table 8: Mediation Analysis ***
+***********************************
+eststo clear
+eststo: reg draper_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills~=., r cluster(county_id)
+eststo: reg draper_pc mills_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills~=., r cluster(county_id)
+eststo: reg draper_pc mills_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills~=., r cluster(county_id)
+medeff (regress wrights_pc mills_pc latitude longitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_* DIST_London pcmean area) (regress draper_pc wrights_pc mills_pc latitude longitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_* DIST_London pcmean area), mediate(wrights_pc) treat(mills_pc) sims(1000) vce(cluster county_id)
+estadd scalar medi = r(delta0) / r(tau): est3
+eststo: reg weaver_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills~=., r cluster(county_id)
+eststo: reg weaver_pc mills_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills~=., r cluster(county_id)
+eststo: reg weaver_pc mills_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills~=., r cluster(county_id)
+medeff (regress wrights_pc mills_pc latitude longitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_* DIST_London pcmean area) (regress weaver_pc wrights_pc mills_pc latitude longitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_* DIST_London pcmean area), mediate(wrights_pc) treat(mills_pc) sims(1000) vce(cluster county_id)
+estadd scalar medi = r(delta0) / r(tau): est6
+eststo: reg smith_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills~=., r cluster(county_id)
+eststo: reg smith_pc mills_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills~=., r cluster(county_id)
+eststo: reg smith_pc mills_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills~=., r cluster(county_id)
+medeff (regress wrights_pc mills_pc latitude longitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_* DIST_London pcmean area) (regress smith_pc wrights_pc mills_pc latitude longitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_* DIST_London pcmean area), mediate(wrights_pc) treat(mills_pc) sims(1000) vce(cluster county_id)
+estadd scalar medi = r(delta0) / r(tau): est9
+eststo: reg blacksmith_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills~=., r cluster(county_id)
+eststo: reg blacksmith_pc mills_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills~=., r cluster(county_id)
+eststo: reg blacksmith_pc mills_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills~=., r cluster(county_id)
+medeff (regress wrights_pc mills_pc latitude longitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_* DIST_London pcmean area) (regress blacksmith_pc wrights_pc mills_pc latitude longitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_* DIST_London pcmean area), mediate(wrights_pc) treat(mills_pc) sims(1000) vce(cluster county_id)
+estadd scalar medi = r(delta0) / r(tau): est12
+esttab using "./Tables/EJTable8.tex",se collabels(none) mlabels(none) prehead("\begin{table}[htb!]\centering" "\footnotesize" "\renewcommand{\tabcolsep}{0.1cm}" "\renewcommand{\arraystretch}{1.25}" "\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}" "\caption{@title}" "\begin{tabular}{l*{@M}{l}}" "\toprule\toprule" "\FPeval\result{clip(@span-1)}\setcounter{mycols}{\result}" "&\multicolumn{\themycols}{c}{No. of Apprentices per Capita}\\\cmidrule(lr){2-@span}") mgroups("Drapers" "Weavers" "Smiths" "Blacksmiths"  , pattern (1 0 0 1 0 0 1 0 0 1 0 0) prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span}) ) booktabs indicate ("Geographical controls = longitude latitude dist_rug_mean dist_elevation_mean" "Agricultural controls = suitmean dist_grass_mean wheat_suit " "Climatic controls = precip_mean_dist temp_mean_dist" "Other Geographic controls = min_harbor DIST_London min_dist* area pcmean ") stats(medi r2_a N, fmt(%9.2f %9.2f %9.0f) labels("Mediation Percentage" "Adjusted-$ R^2$" "Observations")) title(Wright Apprentices and DB Mills \\ Mediation Analysis\label{tab-medi}) starlevels(* .1 ** .05 *** .01) cells(b(star fmt(%9.2f)) se(par fmt(%9.2f))) order(wrights_pc mills_pc)  label replace style(tex) nocon postfoot("\bottomrule" "\multicolumn{@span}{p{0.67\textwidth}}{\scriptsize }" "\end{tabular}" "\end{table}") 
+
+********************************
+*** Table 9: Worsted weavers ***
+********************************
+eststo clear
+eststo: ivreg2 woolll1 (mills_pc = msuit26mean ) riv_rug26count wheat_suit area longitude latitude dist_rug_mean dist_elevation_mean  suitmean dist_grass_mean precip_mean_dist temp_mean_dist min_* DIST_London pcmean , r cluster(county_id) first savefirst
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 worsted_w1_pc (mills_pc = msuit26mean ) riv_rug26count wheat_suit area longitude latitude dist_rug_mean dist_elevation_mean  suitmean dist_grass_mean precip_mean_dist temp_mean_dist min_* DIST_London pcmean , r cluster(county_id) first savefirst
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 woolll0 (mills_pc = msuit26mean ) riv_rug26count wheat_suit area latitude longitude dist_rug_mean dist_elevation_mean  suitmean dist_grass_mean precip_mean_dist temp_mean_dist min_* DIST_London pc0 , r cluster(county_id) first savefirst
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 worsted_w0_pc (mills_pc = msuit26mean ) riv_rug26count wheat_suit area latitude longitude dist_rug_mean dist_elevation_mean  suitmean dist_grass_mean precip_mean_dist temp_mean_dist min_* DIST_London pc0 , r cluster(county_id) first savefirst
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 worsted_w0_pc (mills_pc = msuit26mean ) riv_rug26count wheat_suit area latitude longitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean precip_mean_dist temp_mean_dist min_* DIST_London pc0 nonfull_dist carbon ntextile0, r cluster(county_id) first savefirst
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 worsted_w0_pc (wrights_pc = msuit26mean ) riv_rug26count wheat_suit area latitude longitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean precip_mean_dist temp_mean_dist min_* DIST_London pc0 nonfull_dist carbon ntextile0, r cluster(county_id) first savefirst
+estadd scalar fstat=e(widstat)
+esttab using "./Tables/EJTable9.tex",se collabels(none) mlabels(none) prehead("\begin{table}[htb!]\centering" "\footnotesize" "\renewcommand{\tabcolsep}{0.1cm}" "\renewcommand{\arraystretch}{1.25}" "\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}" "\caption{@title}" "\begin{tabular}{l*{@M}{l}}" "\toprule\toprule" "\FPeval\result{clip(@span-1)}\setcounter{mycols}{\result}" "&\multicolumn{\themycols}{c}{No. Weaver Apprentices per Capita}\\\cmidrule(lr){2-@span}") mgroups("1710-1750" "1750-1800"  , pattern (1 0 1 0 0 0) prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span}) ) booktabs indicate ("Geographical controls = longitude latitude dist_rug_mean dist_elevation_mean" "Agricultural controls = suitmean dist_grass_mean " "Climatic controls = precip_mean_dist temp_mean_dist" "Other Geographic controls = min_harbor DIST_London min_dist* area ") stats(fstat r2_a N, fmt(%9.2f %9.2f %9.0f) labels("First-stage F-statistic" "Adjusted-$ R^2$" "Observations")) title(Worsted vs. Woollen Weaver Apprentics\label{tab-Boomshanka}) starlevels(* .1 ** .05 *** .01) cells(b(star fmt(%9.2f)) se(par fmt(%9.2f))) order(mills_pc wrights_pc nonfull_dist carbon ntextile0 riv_rug26count wheat_suit)  label replace style(tex) nocon drop(pcmean pc0 _cons) postfoot("\bottomrule" "\multicolumn{@span}{p{0.67\textwidth}}{\scriptsize }" "\end{tabular}" "\end{table}") 
+
+```
+
+### `3 replication package/Replication files/do_files/appendix_replication.do`
+```stata
+clear all
+
+set maxvar 32000
+set matsize 11000
+
+use "./Data/replication_data.dta", clear
+
+encode GAZ_CNTY, gen(county_id)
+
+gen pop86thousand = pop_86 / 1000
+
+*Generating variables in per capita terms, 1710-1750
+foreach var of varlist mills smith joiner butcher blacksmith attorney apothecary surgeon wrights draper trade_other all_weaver1 worsted_w1  linen_w1 cotton_w1 other_weaver1 {
+	gen `var'_pc=`var'/pcmean
+	label variable `var'_pc "`var' (per capita)"
+	}
+
+gen weaver_pc = all_weaver1_pc - other_weaver1_pc 
+gen woolll1 = all_weaver1_pc - linen_w1_pc  - cotton_w1_pc - worsted_w1_pc - other_weaver1_pc
+*Generating variables in per capita terms, 1750-1800
+foreach var of varlist other_weaver0 all_weaver0 worsted_w0 linen_w0 cotton_w0 {
+	gen `var'_pc =`var' / pc0*10
+	label variable `var'_pc "`var' (per capita, 1750-1800)"
+	}
+
+gen woolll0 = all_weaver0_pc - linen_w0_pc - cotton_w0_pc - worsted_w0_pc - other_weaver0_pc
+
+*Generating population change, 1300-1400
+gen popchange = (pc1400_mea - pc1300_mean ) / 100
+label var popchange "Pop. change"
+
+gen worsted_dist=1 if local_government_area =="Leeds District"|local_government_area =="Calderdale District"|local_government_area =="Craven District"|local_government_area =="West Devon District"|local_government_area =="South Hams District"|local_government_area =="North Devon District"|local_government_area =="Breckland District"|local_government_area =="South Norfolk District"|local_government_area =="Suffolk Coastal District"|local_government_area =="Maldon District "|local_government_area =="Norwich District"|local_government_area =="Babergh District" |local_government_area =="Colchester District" |local_government_area =="Braintree District" |local_government_area =="Exeter District" |local_government_area =="Mid Devon District" |local_government_area =="Kirklees District" |local_government_area =="Bradford District"
+replace worsted_dist=0 if worsted_dist==.
+
+gen linen_dist=1 if local_government_area =="Stockton-on-Tees"|local_government_area =="Darlington"|local_government_area =="East Riding of Yorkshire"|local_government_area =="West Lindsey District"|local_government_area =="Hambleton District"|local_government_area =="Harrogate District"|local_government_area =="North Warwickshire District"|local_government_area =="New Forest District"|local_government_area =="Rushcliffe District"|local_government_area =="Solihull District"|local_government_area =="West Dorset District"|local_government_area =="West Berkshire"
+replace linen_dist=0 if linen_dist==.
+
+gen cotton_dist=1 if local_government_area =="City of London"|local_government_area =="City of Nottingham" |local_government_area =="Oldham District"|local_government_area =="Manchester District"|local_government_area =="Rochdale District" |local_government_area =="Blackburn with Darwen" |local_government_area =="South Ribble District" |local_government_area =="Bolton District" |local_government_area =="Leeds District"|local_government_area =="Hyndburn District" |local_government_area =="Bury District"|local_government_area =="Salford District"|local_government_area =="Rochdale District"|local_government_area =="Amber Valley District"|local_government_area =="Stockport District"|local_government_area =="Tameside District"|local_government_area =="Mansfield District"|local_government_area =="Ashfield District" 
+replace cotton_dist=0 if cotton_dist==.
+
+gen nonfull_dist=1 if worsted_dist==1|linen_dist==1|cotton_dist==1
+replace nonfull_dist=0 if nonfull_dist==.
+
+*Geographic variables
+gen wheat_suit = wheat_tmean<=5 if wheat_tmean~=.
+foreach var of varlist  riv_rug*count{
+	gen `var'1 = `var' / 1000
+	drop `var'
+	rename `var'1 `var'
+	label variable `var' "River Suitability"
+}
+
+gen msuit13mean = wheat_suit*riv_rug13count
+gen msuit23mean = wheat_suit*riv_rug23count
+gen msuit24mean = wheat_suit*riv_rug24count
+gen msuit25mean = wheat_suit*riv_rug25count
+gen msuit14mean = wheat_suit*riv_rug14count
+gen msuit15mean = wheat_suit*riv_rug15count
+gen msuit26mean = wheat_suit*riv_rug26count
+gen msuit16mean = wheat_suit*riv_rug16count
+gen msuit01mean = wheat_suit*riv_rug01count
+foreach var of varlist  msuit*mean{
+		label variable `var' "DB Mill Suitability"
+}
+
+gen msuit1020   = wheat_suit*riv_rug1020count
+label var msuit1020 "High Flows Suitability"
+label var riv_rug1020count "High River Suitability"
+*Domesday Book variables
+gen lord_share=lords_ploughs/total_ploughs
+replace lord_share = 0 if lord_share == . & total_ploughs==0
+gen king_lh_share=king_holding/villcount
+gen eccles_lh_share=ecclesiastical_holding/villcount
+gen mills_pc86=mills/pop86thousand
+replace mills_pc86 = 0 if mills_pc86==.&mills==0
+
+*** Different levels of wheat suitability for robustness
+gen wheat_suit1 = wheat_tmean<=3 if wheat_tmean~=.
+gen wheat_suit2 = wheat_tmean<=4 if wheat_tmean~=.
+gen wheat_suit3 = wheat_tmean<=4.5 if wheat_tmean~=.
+gen wheat_suit4 = wheat_tmean<=4.8 if wheat_tmean~=.
+gen wheat_suit6 = wheat_tmean<=5.3 if wheat_tmean~=.
+gen wheat_suit7 = wheat_tmean<=5.9 if wheat_tmean~=.
+gen wheat_suit8 = wheat_tmean<=6 if wheat_tmean~=.
+gen wheat_suit9 = wheat_tmean<=7 if wheat_tmean~=.
+gen msuitwheat1 = wheat_suit1 * riv_rug26count
+gen msuitwheat2 = wheat_suit2 * riv_rug26count
+gen msuitwheat3 = wheat_suit3 * riv_rug26count
+gen msuitwheat4 = wheat_suit4 * riv_rug26count
+gen msuitwheat6 = wheat_suit6 * riv_rug26count
+gen msuitwheat7 = wheat_suit7 * riv_rug26count
+gen msuitwheat8 = wheat_suit8 * riv_rug26count
+gen msuitwheat9 = wheat_suit9 * riv_rug26count
+
+foreach var of varlist wheat_suit*{
+		label variable `var' "Wheat suitability"
+}
+
+foreach var of varlist msuitwheat*{
+		label variable `var' "DB Mill suitability"
+}
+
+label var lord_share "Lord's Share of Arable Land"
+label var king_lh_share "King's Vill Share"
+label var eccles_lh_share "Ecclesiastical Vill Share"
+label var mills_pc86 "Mills per 1086 population"
+label var woolll1 "Woollen"
+label var woolll0 "Woollen"
+label var worsted_w1_pc "Worsted"
+label var worsted_w0_pc "Worsted"
+label var ntextile0 "Textile Usage of Engines"
+label var nonfull_dist "Non-fulling District"
+label var draper "Draper Apprentices (1710-1750)"
+label var pop86thousand "Population (1086)"
+label var suitmean "Agricultural Suitability"
+label var wrights_pc "Wrights (per capita)"
+label var draper_pc "Drapers (per capita)"
+label var mills_pc "Watermills (per capita)"
+label var wheat_suit "Wheat suitability"
+
+******************
+*** Appendix A ***
+******************
+*Table A.1: Negative Correlation between 1700-1750 population and DB Population
+eststo clear
+eststo: reg pcmean pop86thousand, cluster(county_id)
+eststo: reg pcmean pop86thousand longitude latitude dist_rug_mean dist_elevation_mean, cluster(county_id)
+eststo: reg pcmean pop86thousand longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean, cluster(county_id)
+eststo: reg pcmean pop86thousand longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist  , cluster(county_id)
+eststo: reg pcmean pop86thousand longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist   min_harbor DIST_London min_dist* area, cluster(county_id)
+esttab using "./Appendix/EJAppendixA1.tex",se collabels(none) mlabels(none) prehead("\begin{table}[htb!]\centering" "\footnotesize" "\renewcommand{\tabcolsep}{0.1cm}" "\renewcommand{\arraystretch}{1.25}" "\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}" "\caption{@title}" "\begin{tabular}{l*{@M}{l}}" "\toprule\toprule" "\FPeval\result{clip(@span-1)}\setcounter{mycols}{\result}" "&\multicolumn{\themycols}{c}{Mean Population 1710-1750 (thousand)}\\\cmidrule(lr){2-@span}") mgroups(none) booktabs indicate ("Main geographic controls = longitude latitude dist_rug_mean dist_elevation_mean  " "Agricultural controls = suitmean dist_grass_mean wheat_suit" "Climatic controls = precip_mean_dist temp_mean_dist" "Other geographic controls = min_harbor DIST_London min_dist* area ") stats(r2_a N, fmt(%9.2f %9.0f) labels( "Adjusted-$ R^2$" "Observations")) title(Early 18th Century Population and DB Population \label{tab-population-OLS}) starlevels(* .1 ** .05 *** .01) cells(b(star fmt(%9.2f)) se(par fmt(%9.2f)))  label replace style(tex) nocon postfoot("\bottomrule" "\multicolumn{@span}{p{0.57\textwidth}}{\scriptsize}" "\end{tabular}" "\end{table}") 
+
+*Table A.2: DB mills and DB population 
+eststo clear
+eststo: reg mills_pc86 lord_share, cluster(county_id)
+eststo: reg mills_pc86 lord_share longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* area, cluster(county_id)
+eststo: reg mills_pc86 king_lh_share, cluster(county_id)
+eststo: reg mills_pc86 king_lh_share longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* area, cluster(county_id)
+eststo: reg mills_pc86 eccles_lh_share, cluster(county_id)
+eststo: reg mills_pc86 eccles_lh_share longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* area, cluster(county_id)
+esttab using "./Appendix/EJAppendixA2.tex",se collabels(none) mlabels(none) prehead("\begin{table}[htb!]\centering" "\footnotesize" "\renewcommand{\tabcolsep}{0.1cm}" "\renewcommand{\arraystretch}{1.25}" "\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}" "\caption{@title}" "\begin{tabular}{l*{@M}{l}}" "\toprule\toprule" "\FPeval\result{clip(@span-1)}\setcounter{mycols}{\result}" "&\multicolumn{\themycols}{c}{No. of DB mills per 1086 capita}\\\cmidrule(lr){2-@span}") mgroups() booktabs indicate ("Main geographic controls = longitude latitude dist_rug_mean dist_elevation_mean  " "Agricultural controls = suitmean dist_grass_mean" "Climatic controls = precip_mean_dist temp_mean_dist" "Other geographic controls = min_harbor DIST_London min_dist* area") stats(r2_a N, fmt(%9.2f %9.0f) labels("Adjusted-$ R^2$" "Observations")) title(Number of DB Mills and DB Institutions \label{tab-mills-dbinst}) starlevels(* .1 ** .05 *** .01) cells(b(star fmt(%9.2f)) se(par fmt(%9.2f)))  label replace style(tex) nocon drop(_cons wheat_suit) postfoot("\bottomrule" "\multicolumn{@span}{p{0.6\textwidth}}{\scriptsize }" "\end{tabular}" "\end{table}") 
+
+******************
+*** Appendix B ***
+******************
+*Table B.1: Calculating Moran's I
+*Mills per capita
+preserve
+keep if mills~=.
+spatwmat, name(mymat) xcoord(longitude) ycoord(latitude ) band(0 450) 
+spatgsa mills_pc, weights(mymat) moran
+restore
+*Wrights per capita and drapers per capita
+spatwmat, name(mymat) xcoord(longitude) ycoord(latitude ) band(0 450) 
+spatgsa wrights_pc, weights(mymat) moran
+spatgsa draper_pc, weights(mymat) moran
+
+
+*** Table B.2: Correction to spatial auto-correlation of wrights and mills, conley et al. (1999)
+preserve
+keep if mills_pc~=.
+eststo clear
+eststo: acreg wrights_pc mills_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills_pc~=., latitude(y1) longitude(x1) dist(20) spatial
+estadd scalar rstat = e(r2)
+eststo: acreg wrights_pc mills_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills_pc~=., latitude(y1) longitude(x1) dist(40) spatial
+estadd scalar rstat = e(r2)
+eststo: acreg wrights_pc mills_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills_pc~=., latitude(y1) longitude(x1) dist(60) spatial
+estadd scalar rstat = e(r2)
+eststo: acreg wrights_pc mills_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills_pc~=., latitude(y1) longitude(x1) dist(80) spatial
+estadd scalar rstat = e(r2)
+eststo: acreg wrights_pc mills_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills_pc~=., latitude(y1) longitude(x1) dist(100) spatial
+estadd scalar rstat = e(r2)
+esttab using "./Appendix/EJAppendixB2.tex",se collabels(none) mlabels(none) prehead("\begin{table}[htb!]\centering" "\footnotesize" "\renewcommand{\tabcolsep}{0.1cm}" "\renewcommand{\arraystretch}{1.25}" "\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}" "\caption{@title}" "\begin{tabular}{l*{@M}{l}}" "\toprule\toprule" "\FPeval\result{clip(@span-1)}\setcounter{mycols}{\result}" "&\multicolumn{\themycols}{c}{No. of Wright Apprentices}\\\cmidrule(lr){2-@span}") mgroups("20km" "40 km" "60 km" "80 km" "100 km"  , pattern (1 1 1 1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span}) ) booktabs indicate ("Geographical controls = longitude latitude dist_rug_mean dist_elevation_mean wheat_suit" "Agricultural controls = suitmean dist_grass_mean" "Climatic controls = precip_mean_dist temp_mean_dist" "Other geographic controls = min_harbor DIST_London min_dist* pcmean area") stats( rstat N, fmt(%9.2f %9.0f) labels( "Centered-$ R^2$" "Observations")) title(Wright Apprentices and DB Mills \\ Robustness to Spatial Autocorrelation (Conley, 1999) \label{tab-conley}) starlevels(* .1 ** .05 *** .01) cells(b(star fmt(%9.2f)) se(par fmt(%9.2f)))  label replace style(tex) nocon postfoot("\bottomrule" "\multicolumn{@span}{p{0.55\textwidth}}{\scriptsize }" "\end{tabular}" "\end{table}") 
+restore
+
+*** Table B.3: Correction to spatial auto-correlation of wrights and mills, colella et al. (2019)
+preserve
+keep if mills_pc~=.
+eststo clear
+eststo: acreg wrights_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count area longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean if mills_pc~=., latitude(y1) longitude(x1) dist(30) spatial
+estadd scalar fstat = e(widstat)
+estadd scalar rstat = e(r2)
+eststo: acreg wrights_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count area longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean, latitude(y1) longitude(x1) dist(60) spatial
+estadd scalar fstat = e(widstat)
+estadd scalar rstat = e(r2)
+eststo: acreg wrights_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count area longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean, latitude(y1) longitude(x1) dist(90) spatial
+estadd scalar fstat = e(widstat)
+estadd scalar rstat = e(r2)
+eststo: acreg wrights_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count area longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean, latitude(y1) longitude(x1) dist(120) spatial
+estadd scalar fstat = e(widstat)
+estadd scalar rstat = e(r2)
+eststo: acreg wrights_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count area longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean, latitude(y1) longitude(x1) dist(150) spatial
+estadd scalar fstat = e(widstat)
+estadd scalar rstat = e(r2)
+eststo: acreg wrights_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count area longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean, latitude(y1) longitude(x1) dist(180) spatial
+estadd scalar fstat = e(widstat)
+estadd scalar rstat = e(r2)
+esttab using "./Appendix/EJAppendixB3.tex",se collabels(none) mlabels(none) prehead("\begin{table}[htb!]\centering" "\footnotesize" "\renewcommand{\tabcolsep}{0.1cm}" "\renewcommand{\arraystretch}{1.25}" "\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}" "\caption{@title}" "\begin{tabular}{l*{@M}{l}}" "\toprule\toprule" "\FPeval\result{clip(@span-1)}\setcounter{mycols}{\result}" "&\multicolumn{\themycols}{c}{No. of Wright Apprentices}\\\cmidrule(lr){2-@span}") mgroups("30km" "60 km" "90 km" "120 km" "150 km" "180 km" , pattern (1 1 1 1 1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span}) ) booktabs indicate ("Geographical controls = longitude latitude dist_rug_mean dist_elevation_mean wheat_suit riv_rug26count" "Agricultural controls = suitmean dist_grass_mean" "Climatic controls = precip_mean_dist temp_mean_dist" "Other geographic controls = min_harbor DIST_London min_dist* pcmean area") stats(fstat rstat N, fmt(%9.2f %9.2f %9.0f) labels("First-stage F-statistic" "Centered-$ R^2$" "Observations")) title(Wright Apprentices and DB Mills \\ Robustness to Spatial Autocorrelation (Colella et al., 2019) \label{tab-colella}) starlevels(* .1 ** .05 *** .01) cells(b(star fmt(%9.2f)) se(par fmt(%9.2f)))  label replace style(tex) nocon postfoot("\bottomrule" "\multicolumn{@span}{p{0.65\textwidth}}{\scriptsize }" "\end{tabular}" "\end{table}") 
+restore
+
+*** Table B.4: Correction for spatial auto-correlation of drapers and wrights, conley et al. (1999)
+preserve
+keep if wrights_pc ~=.
+eststo clear
+eststo: acreg draper_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills_pc~=., latitude(y1) longitude(x1) dist(20) spatial
+estadd scalar rstat = e(r2)
+eststo: acreg draper_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills_pc~=., latitude(y1) longitude(x1) dist(45) spatial
+estadd scalar rstat = e(r2)
+eststo: acreg draper_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills_pc~=., latitude(y1) longitude(x1) dist(75) spatial
+estadd scalar rstat = e(r2)
+eststo: acreg draper_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills_pc~=., latitude(y1) longitude(x1) dist(90) spatial
+estadd scalar rstat = e(r2)
+eststo: acreg draper_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills_pc~=., latitude(y1) longitude(x1) dist(100) spatial
+estadd scalar rstat = e(r2)
+esttab using "./Appendix/EJAppendixB4.tex",se collabels(none) mlabels(none) prehead("\begin{table}[htb!]\centering" "\footnotesize" "\renewcommand{\tabcolsep}{0.1cm}" "\renewcommand{\arraystretch}{1.25}" "\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}" "\caption{@title}" "\begin{tabular}{l*{@M}{l}}" "\toprule\toprule" "\FPeval\result{clip(@span-1)}\setcounter{mycols}{\result}" "&\multicolumn{\themycols}{c}{No. of Draper Apprentices per capita}\\\cmidrule(lr){2-@span}") mgroups("20km" "45 km" "75 km" "90 km" "100 km"  , pattern (1 1 1 1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span}) ) booktabs indicate ("Geographical controls = longitude latitude dist_rug_mean dist_elevation_mean wheat_suit" "Agricultural controls = suitmean dist_grass_mean" "Climatic controls = precip_mean_dist temp_mean_dist" "Other geographic controls = min_harbor DIST_London min_dist* pcmean area") stats( rstat N, fmt(%9.2f %9.0f) labels( "Centered-$ R^2$" "Observations")) title(Draper Apprentices and Wright Apprentices \\ Robustness to Spatial Autocorrelation (Conley, 1999) \label{tab-conley-draper}) starlevels(* .1 ** .05 *** .01) cells(b(star fmt(%9.2f)) se(par fmt(%9.2f)))  label replace style(tex) nocon postfoot("\bottomrule" "\multicolumn{@span}{p{0.55\textwidth}}{\scriptsize }" "\end{tabular}" "\end{table}") 
+restore
+
+*** Table B.5: Correction for spatial auto-correlation of weavers and wrights, conley et al. (1999) 
+preserve
+keep if wrights_pc ~=.
+eststo clear
+eststo: acreg weaver_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills_pc~=., latitude(y1) longitude(x1) dist(20) spatial
+estadd scalar rstat = e(r2)
+eststo: acreg weaver_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills_pc~=., latitude(y1) longitude(x1) dist(45) spatial
+estadd scalar rstat = e(r2)
+eststo: acreg weaver_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills_pc~=., latitude(y1) longitude(x1) dist(75) spatial
+estadd scalar rstat = e(r2)
+eststo: acreg weaver_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills_pc~=., latitude(y1) longitude(x1) dist(90) spatial
+estadd scalar rstat = e(r2)
+eststo: acreg weaver_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills_pc~=., latitude(y1) longitude(x1) dist(100) spatial
+estadd scalar rstat = e(r2)
+esttab using "./Appendix/EJAppendixB5.tex",se collabels(none) mlabels(none) prehead("\begin{table}[htb!]\centering" "\footnotesize" "\renewcommand{\tabcolsep}{0.1cm}" "\renewcommand{\arraystretch}{1.25}" "\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}" "\caption{@title}" "\begin{tabular}{l*{@M}{l}}" "\toprule\toprule" "\FPeval\result{clip(@span-1)}\setcounter{mycols}{\result}" "&\multicolumn{\themycols}{c}{No. of Weaver Apprentices per capita}\\\cmidrule(lr){2-@span}") mgroups("20km" "45 km" "75 km" "90 km" "100 km"  , pattern (1 1 1 1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span}) ) booktabs indicate ("Geographical controls = longitude latitude dist_rug_mean dist_elevation_mean wheat_suit" "Agricultural controls = suitmean dist_grass_mean" "Climatic controls = precip_mean_dist temp_mean_dist" "Other geographic controls = min_harbor DIST_London min_dist* pcmean area") stats( rstat N, fmt(%9.2f %9.0f) labels( "Centered-$ R^2$" "Observations")) title(Weaver Apprentices and Wright Apprentices \\ Robustness to Spatial Autocorrelation (Conley, 1999) \label{tab-conleydraper}) starlevels(* .1 ** .05 *** .01) cells(b(star fmt(%9.2f)) se(par fmt(%9.2f)))  label replace style(tex) nocon postfoot("\bottomrule" "\multicolumn{@span}{p{0.55\textwidth}}{\scriptsize }" "\end{tabular}" "\end{table}") 
+restore
+
+*** Table B.6: Correction for spatial auto-correlation of smiths and wrights, conley et al. (1999) 
+preserve
+keep if wrights_pc ~=.
+eststo clear
+eststo: acreg smith_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills_pc~=., latitude(y1) longitude(x1) dist(20) spatial
+estadd scalar rstat = e(r2)
+eststo: acreg smith_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills_pc~=., latitude(y1) longitude(x1) dist(45) spatial
+estadd scalar rstat = e(r2)
+eststo: acreg smith_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills_pc~=., latitude(y1) longitude(x1) dist(75) spatial
+estadd scalar rstat = e(r2)
+eststo: acreg smith_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills_pc~=., latitude(y1) longitude(x1) dist(90) spatial
+estadd scalar rstat = e(r2)
+eststo: acreg smith_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills_pc~=., latitude(y1) longitude(x1) dist(100) spatial
+estadd scalar rstat = e(r2)
+esttab using "./Appendix/EJAppendixB6.tex",se collabels(none) mlabels(none) prehead("\begin{table}[htb!]\centering" "\footnotesize" "\renewcommand{\tabcolsep}{0.1cm}" "\renewcommand{\arraystretch}{1.25}" "\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}" "\caption{@title}" "\begin{tabular}{l*{@M}{l}}" "\toprule\toprule" "\FPeval\result{clip(@span-1)}\setcounter{mycols}{\result}" "&\multicolumn{\themycols}{c}{No. of Smith Apprentices per capita}\\\cmidrule(lr){2-@span}") mgroups("20km" "45 km" "75 km" "90 km" "100 km"  , pattern (1 1 1 1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span}) ) booktabs indicate ("Geographical controls = longitude latitude dist_rug_mean dist_elevation_mean wheat_suit" "Agricultural controls = suitmean dist_grass_mean" "Climatic controls = precip_mean_dist temp_mean_dist" "Other geographic controls = min_harbor DIST_London min_dist* pcmean area") stats( rstat N, fmt(%9.2f %9.0f) labels( "Centered-$ R^2$" "Observations")) title(Smith Apprentices and Wright Apprentices \\ Robustness to Spatial Autocorrelation (Conley, 1999) \label{tab-conleydraper}) starlevels(* .1 ** .05 *** .01) cells(b(star fmt(%9.2f)) se(par fmt(%9.2f)))  label replace style(tex) nocon postfoot("\bottomrule" "\multicolumn{@span}{p{0.55\textwidth}}{\scriptsize }" "\end{tabular}" "\end{table}") 
+restore
+
+*** Table B.7: Correction for spatial auto-correlation of blacksmiths and wrights, conley et al. (1999) 
+preserve
+keep if wrights_pc ~=.
+eststo clear
+eststo: acreg blacksmith_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills_pc~=., latitude(y1) longitude(x1) dist(20) spatial
+estadd scalar rstat = e(r2)
+eststo: acreg blacksmith_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills_pc~=., latitude(y1) longitude(x1) dist(45) spatial
+estadd scalar rstat = e(r2)
+eststo: acreg blacksmith_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills_pc~=., latitude(y1) longitude(x1) dist(75) spatial
+estadd scalar rstat = e(r2)
+eststo: acreg blacksmith_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills_pc~=., latitude(y1) longitude(x1) dist(90) spatial
+estadd scalar rstat = e(r2)
+eststo: acreg blacksmith_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills_pc~=., latitude(y1) longitude(x1) dist(100) spatial
+estadd scalar rstat = e(r2)
+esttab using "./Appendix/EJAppendixB7.tex",se collabels(none) mlabels(none) prehead("\begin{table}[htb!]\centering" "\footnotesize" "\renewcommand{\tabcolsep}{0.1cm}" "\renewcommand{\arraystretch}{1.25}" "\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}" "\caption{@title}" "\begin{tabular}{l*{@M}{l}}" "\toprule\toprule" "\FPeval\result{clip(@span-1)}\setcounter{mycols}{\result}" "&\multicolumn{\themycols}{c}{No. of Blacksmith Apprentices per capita}\\\cmidrule(lr){2-@span}") mgroups("20km" "45 km" "75 km" "90 km" "100 km"  , pattern (1 1 1 1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span}) ) booktabs indicate ("Geographical controls = longitude latitude dist_rug_mean dist_elevation_mean wheat_suit" "Agricultural controls = suitmean dist_grass_mean" "Climatic controls = precip_mean_dist temp_mean_dist" "Other geographic controls = min_harbor DIST_London min_dist* pcmean area") stats( rstat N, fmt(%9.2f %9.0f) labels( "Centered-$ R^2$" "Observations")) title(blacksmith Apprentices and Wright Apprentices \\ Robustness to Spatial Autocorrelation (Conley, 1999) \label{tab-conleydraper}) starlevels(* .1 ** .05 *** .01) cells(b(star fmt(%9.2f)) se(par fmt(%9.2f)))  label replace style(tex) nocon postfoot("\bottomrule" "\multicolumn{@span}{p{0.55\textwidth}}{\scriptsize }" "\end{tabular}" "\end{table}") 
+restore
+
+***********************************************
+*** Appendix C: Omitting the City of London ***
+***********************************************
+*** Table C1: Replicating Table 3 without London
+eststo clear
+eststo: reg wrights_pc mills_pc if mills_pc~=.&local_government_area~="City of London", cluster(county_id)
+eststo: ivreg2 wrights_pc (mills_pc = msuit26mean) riv_rug26count wheat_suit if local_government_area~="City of London", cluster(county_id) first savefirst savefprefix(first)
+estadd scalar fstat=e(widstat)
+eststo: reg wrights_pc mills_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean precip_mean_dist temp_mean_dist   if local_government_area~="City of London", cluster(county_id)
+eststo: ivreg2 wrights_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean precip_mean_dist temp_mean_dist   if local_government_area~="City of London", cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: reg wrights_pc mills_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if local_government_area~="City of London" , cluster(county_id)
+eststo: ivreg2 wrights_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if local_government_area~="City of London", cluster(county_id)
+estadd scalar fstat=e(widstat)
+esttab using "./Appendix/EJAppendixC1.tex",se collabels(none) mlabels(none) prehead("\begin{table}[htb!]\centering" "\footnotesize" "\renewcommand{\tabcolsep}{0.1cm}" "\renewcommand{\arraystretch}{1.25}" "\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}" "\caption{@title}" "\begin{tabular}{l*{@M}{l}}" "\toprule\toprule" "\FPeval\result{clip(@span-1)}\setcounter{mycols}{\result}" "&\multicolumn{\themycols}{c}{No. of Wright Apprentices per capita}\\\cmidrule(lr){2-@span}") mgroups("OLS" "IV" "OLS" "IV" "OLS" "IV", pattern (1 1 1 1 1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span}) ) booktabs indicate ("Main geographic controls = longitude latitude dist_rug_mean dist_elevation_mean  " "Agricultural controls = suitmean dist_grass_mean" "Climatic controls = precip_mean_dist temp_mean_dist" "Other geographic controls = min_harbor DIST_London min_dist* pcmean area") stats(fstat r2_a N, fmt(%9.2f %9.2f %9.0f) labels("First-stage F-statistic" "Adjusted-$ R^2$" "Observations")) title(Wright Apprentices per Capita and the Number of Domesday Mills per Capita \\ Omitting London \label{tab-wrights-mills-rivers-iv-no-london}) starlevels(* .1 ** .05 *** .01) cells(b(star fmt(%9.2f)) se(par fmt(%9.2f)))  label replace style(tex) nocon postfoot("\bottomrule" "\multicolumn{@span}{p{0.6\textwidth}}{\scriptsize }" "\end{tabular}" "\end{table}") 
+
+*Table C2: Replicating Table 7 without London
+eststo clear
+eststo: ivreg2 draper_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count area longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean   if local_government_area~="City of London" , r  cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 weaver_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count area longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean   if local_government_area~="City of London", r  cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 smith_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count area longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean   if local_government_area~="City of London", r  cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 blacksmith_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count area longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean   if local_government_area~="City of London", r  cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 joiner_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count area longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean   if local_government_area~="City of London", r  cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 trade_other (mills_pc = msuit26mean) wheat_suit riv_rug26count area longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean   if local_government_area~="City of London", r  cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 butcher_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count area longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean   if local_government_area~="City of London", r  cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 attorney_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count area longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean   if local_government_area~="City of London", r  cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 surgeon_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count area longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean   if local_government_area~="City of London", r  cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 apothecary_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count area longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean   if local_government_area~="City of London", r  cluster(county_id)
+estadd scalar fstat=e(widstat)
+esttab using "./Appendix/EJAppendixC2.tex",se collabels(none) mlabels(none) prehead("\begin{table}[htb!]\centering" "\footnotesize" "\renewcommand{\tabcolsep}{0.1cm}" "\renewcommand{\arraystretch}{1.25}" "\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}" "\caption{@title}" "\begin{tabular}{l*{@M}{l}}" "\toprule\toprule" "\FPeval\result{clip(@span-1)}\setcounter{mycols}{\result}" "&\multicolumn{\themycols}{c}{No. of Apprentices}\\\cmidrule(lr){2-@span}") mgroups("Draper" "Weaver" "Smith" "Blacksmith" "Joiner" "Trader" "Butcher" "Attorney" "Surgeon" "Apothecary" , pattern (1 1 1 1 1 1 1 1 1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span}) ) booktabs indicate ("Geographical controls = longitude latitude dist_rug_mean dist_elevation_mean" "Agricultural controls = suitmean dist_grass_mean" "Climatic controls = precip_mean_dist temp_mean_dist" "Other Geographic controls = min_harbor DIST_London min_dist* area") stats(fstat r2_a N, fmt(%9.2f %9.2f %9.0f) labels("First-stage F-statistic" "Adjusted-$ R^2$" "Observations")) title(Industrial vs. Other Apprentices and DB Mills \\ Omitting the City of London \label{tab-placebo-mills-IV}) starlevels(* .1 ** .05 *** .01) cells(b(star fmt(%9.2f)) se(par fmt(%9.2f)))  label replace style(tex) drop(_cons pcmean) postfoot("\bottomrule" "\multicolumn{@span}{p{1\textwidth}}{\scriptsize }" "\end{tabular}" "\end{table}") 
+
+*Table C3: Replicating Table 8 without London
+eststo clear
+eststo: reg draper_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills~=.&local_government_area~="City of London", r cluster(county_id)
+eststo: reg draper_pc mills_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills~=. &local_government_area~="City of London", r cluster(county_id)
+eststo: reg draper_pc mills_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills~=.&local_government_area~="City of London", r cluster(county_id)
+medeff (regress wrights_pc mills_pc latitude longitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_* DIST_London pcmean area) (regress draper_pc wrights_pc mills_pc latitude longitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_* DIST_London pcmean area) if mills~=.&local_government_area~="City of London", mediate(wrights_pc) treat(mills_pc) sims(1000) vce(cluster county_id)
+estadd scalar medi = r(delta0) / r(tau): est3
+eststo: reg weaver_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills~=.&local_government_area~="City of London", r cluster(county_id)
+eststo: reg weaver_pc mills_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills~=.&local_government_area~="City of London", r cluster(county_id)
+eststo: reg weaver_pc mills_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills~=.&local_government_area~="City of London", r cluster(county_id)
+medeff (regress wrights_pc mills_pc latitude longitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_* DIST_London pcmean area) (regress weaver_pc wrights_pc mills_pc latitude longitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_* DIST_London pcmean area) if mills~=.&local_government_area~="City of London", mediate(wrights_pc) treat(mills_pc) sims(1000) vce(cluster county_id)
+estadd scalar medi = r(delta0) / r(tau): est6
+eststo: reg smith_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills~=.&local_government_area~="City of London", r cluster(county_id)
+eststo: reg smith_pc mills_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills~=.&local_government_area~="City of London", r cluster(county_id)
+eststo: reg smith_pc mills_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills~=.&local_government_area~="City of London", r cluster(county_id)
+medeff (regress wrights_pc mills_pc latitude longitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_* DIST_London pcmean area) (regress smith_pc wrights_pc mills_pc latitude longitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_* DIST_London pcmean area) if mills~=.&local_government_area~="City of London", mediate(wrights_pc) treat(mills_pc) sims(1000) vce(cluster county_id)
+estadd scalar medi = r(delta0) / r(tau): est9
+eststo: reg blacksmith_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills~=.&local_government_area~="City of London", r cluster(county_id)
+eststo: reg blacksmith_pc mills_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills~=.&local_government_area~="City of London", r cluster(county_id)
+eststo: reg blacksmith_pc mills_pc wrights_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills~=.&local_government_area~="City of London", r cluster(county_id)
+medeff (regress wrights_pc mills_pc latitude longitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_* DIST_London pcmean area) (regress blacksmith_pc wrights_pc mills_pc latitude longitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean wheat_suit precip_mean_dist temp_mean_dist min_* DIST_London pcmean area) if mills~=.&local_government_area~="City of London", mediate(wrights_pc) treat(mills_pc) sims(1000) vce(cluster county_id)
+estadd scalar medi = r(delta0) / r(tau): est12
+esttab using "./Appendix/EJAppendixC3.tex",se collabels(none) mlabels(none) prehead("\begin{table}[htb!]\centering" "\footnotesize" "\renewcommand{\tabcolsep}{0.1cm}" "\renewcommand{\arraystretch}{1.25}" "\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}" "\caption{@title}" "\begin{tabular}{l*{@M}{l}}" "\toprule\toprule" "\FPeval\result{clip(@span-1)}\setcounter{mycols}{\result}" "&\multicolumn{\themycols}{c}{No. of Apprentices per Capita}\\\cmidrule(lr){2-@span}") mgroups("Drapers" "Weavers" "Smiths" "Blacksmiths"  , pattern (1 0 0 1 0 0 1 0 0 1 0 0) prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span}) ) booktabs indicate ("Geographical controls = longitude latitude dist_rug_mean dist_elevation_mean" "Agricultural controls = suitmean dist_grass_mean wheat_suit " "Climatic controls = precip_mean_dist temp_mean_dist" "Other Geographic controls = min_harbor DIST_London min_dist* area pcmean ") stats(medi r2_a N, fmt(%9.2f %9.2f %9.0f) labels("Mediation Percentage" "Adjusted-$ R^2$" "Observations")) title(Wright Apprentices and DB Mills \\ Mediation Analysis\label{tab-medi}) starlevels(* .1 ** .05 *** .01) cells(b(star fmt(%9.2f)) se(par fmt(%9.2f))) order(wrights_pc mills_pc)  label replace style(tex) nocon postfoot("\bottomrule" "\multicolumn{@span}{p{0.67\textwidth}}{\scriptsize }" "\end{tabular}" "\end{table}") 
+
+*******************************************************
+***Appendix D: Controlling for carboniferous strata ***
+*******************************************************
+
+*Table D1: Replicating Table 2 controlling for carboniferous strata
+eststo clear
+eststo: reg wrights_pc mills_pc carbon if mills_pc~=., cluster(county_id)
+eststo: ivreg2 wrights_pc (mills_pc = msuit26mean) riv_rug26count wheat_suit carbon , cluster(county_id) first savefirst savefprefix(first)
+estadd scalar fstat=e(widstat)
+eststo: reg wrights_pc mills_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean precip_mean_dist temp_mean_dist   carbon , cluster(county_id)
+eststo: ivreg2 wrights_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean precip_mean_dist temp_mean_dist    carbon, cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: reg wrights_pc mills_pc longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean precip_mean_dist temp_mean_dist   min_harbor DIST_London min_dist* pcmean carbon area, r  cluster(county_id)
+eststo: ivreg2 wrights_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean carbon area , r  cluster(county_id)
+estadd scalar fstat=e(widstat)
+esttab using "./Appendix/EJAppendixD1.tex",se collabels(none) mlabels(none) prehead("\begin{table}[htb!]\centering" "\footnotesize" "\renewcommand{\tabcolsep}{0.1cm}" "\renewcommand{\arraystretch}{1.25}" "\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}" "\caption{@title}" "\begin{tabular}{l*{@M}{l}}" "\toprule\toprule" "\FPeval\result{clip(@span-1)}\setcounter{mycols}{\result}" "&\multicolumn{\themycols}{c}{No. of Wright Apprentices per capita}\\\cmidrule(lr){2-@span}") mgroups("OLS" "IV" "OLS" "IV" "OLS" "IV", pattern (1 1 1 1 1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span}) ) booktabs indicate ("Main geographic controls = longitude latitude dist_rug_mean dist_elevation_mean  " "Agricultural controls = suitmean dist_grass_mean" "Climatic controls = precip_mean_dist temp_mean_dist" "Other geographic controls = min_harbor DIST_London min_dist* area pcmean") stats(fstat r2_a N, fmt(%9.2f %9.2f %9.0f) labels("First-stage F-statistic" "Adjusted-$ R^2$" "Observations")) title(Wright Apprentices per Capita and the Number of Domesday Mills per Capita \\ Robustness to Carboniferous Strata \label{tab-wrights-mills-rivers-iv-carbon}) starlevels(* .1 ** .05 *** .01) cells(b(star fmt(%9.2f)) se(par fmt(%9.2f))) label replace style(tex) nocon postfoot("\bottomrule" "\multicolumn{@span}{p{0.6\textwidth}}{\scriptsize }" "\end{tabular}" "\end{table}") 
+
+*Table D2: Replicating Table 6 controlling fir carboniferous strata
+eststo clear
+eststo: reg draper_pc wrights_pc carbon, cluster(county_id)
+eststo: reg draper_pc wrights_pc carbon longitude latitude dist_rug_mean dist_elevation_mean, cluster(county_id)
+eststo: reg draper_pc wrights_pc carbon longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean, cluster(county_id)
+eststo: reg draper_pc wrights_pc carbon longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist, cluster(county_id)
+eststo: reg draper_pc wrights_pc carbon longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area, cluster(county_id)
+eststo: reg draper_pc wrights_pc carbon longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area if mills~=., r cluster(county_id)
+esttab using "./Appendix/EJAppendixD2.tex",se collabels(none) mlabels(none) prehead("\begin{table}[htb!]\centering" "\footnotesize" "\renewcommand{\tabcolsep}{0.1cm}" "\renewcommand{\arraystretch}{1.25}" "\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}" "\caption{@title}" "\begin{tabular}{l*{@M}{l}}" "\toprule\toprule" "\FPeval\result{clip(@span-1)}\setcounter{mycols}{\result}" "&\multicolumn{\themycols}{c}{No. of Draper Apprentices per Capita}\\\cmidrule(lr){2-@span}") mgroups("All Sample" "DB Sample", pattern (1 0 0 0 0 1) prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span}) ) booktabs indicate ("Geographical controls = longitude latitude dist_rug_mean dist_elevation_mean " "Agricultural controls = suitmean dist_grass_mean wheat_suit" "Climatic controls = precip_mean_dist temp_mean_dist  " "Other economic controls = min_harbor DIST_London min_dist* pcmean area ") stats(r2_a N, fmt(%9.2f %9.0f) labels( "Adjusted-$ R^2$" "Observations")) title(Number of Draper Apprentices per Capita and Wright Apprentices per Capita \label{tab-draperwrights-pc-OLS}) starlevels(* .1 ** .05 *** .01) cells(b(star fmt(%9.2f)) se(par fmt(%9.2f)))  label replace style(tex) nocon postfoot("\bottomrule" "\multicolumn{@span}{p{0.67\textwidth}}{\scriptsize }" "\end{tabular}" "\end{table}") 
+
+*Table D3: Replicating Table 7 controlling for carboniferous strata
+eststo clear
+eststo: ivreg2 draper_pc (mills_pc = msuit26mean) carbon wheat_suit riv_rug26count longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area , cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 weaver_pc (mills_pc = msuit26mean) carbon wheat_suit riv_rug26count longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area , cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 smith_pc (mills_pc = msuit26mean) carbon wheat_suit riv_rug26count longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area , cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 blacksmith_pc (mills_pc = msuit26mean) carbon wheat_suit riv_rug26count longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area , cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 joiner_pc (mills_pc = msuit26mean) carbon wheat_suit riv_rug26count longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area , cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 trade_other (mills_pc = msuit26mean) carbon wheat_suit riv_rug26count longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area , cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 butcher_pc (mills_pc = msuit26mean) carbon wheat_suit riv_rug26count longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area , cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 attorney_pc (mills_pc = msuit26mean) carbon wheat_suit riv_rug26count longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area , cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 surgeon_pc (mills_pc = msuit26mean) carbon wheat_suit riv_rug26count longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area , cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 apothecary_pc (mills_pc = msuit26mean) carbon wheat_suit riv_rug26count longitude latitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean area , cluster(county_id)
+estadd scalar fstat=e(widstat)
+esttab using "./Appendix/EJAppendixD3.tex",se collabels(none) mlabels(none) prehead("\begin{table}[htb!]\centering" "\footnotesize" "\renewcommand{\tabcolsep}{0.1cm}" "\renewcommand{\arraystretch}{1.25}" "\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}" "\caption{@title}" "\begin{tabular}{l*{@M}{l}}" "\toprule\toprule" "\FPeval\result{clip(@span-1)}\setcounter{mycols}{\result}" "&\multicolumn{\themycols}{c}{No. of Apprentices per capita}\\\cmidrule(lr){2-@span}") mgroups("Draper" "Weaver" "Smith" "Blacksmith" "Joiner" "Trader" "Butcher" "Attorney" "Surgeon" "Apothecary" , pattern (1 1 1 1 1 1 1 1 1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span}) ) booktabs indicate ("Geographical controls = longitude latitude dist_rug_mean dist_elevation_mean" "Agricultural controls = suitmean dist_grass_mean" "Climatic controls = precip_mean_dist temp_mean_dist" "Other Geographic controls = min_harbor DIST_London min_dist* pcmean area") stats(fstat r2_a N, fmt(%9.2f %9.2f %9.0f) labels("First-stage F-statistic" "Adjusted-$ R^2$" "Observations")) title(Industrial vs. Other Apprentices and DB Mills \\ Robustness to the Existence of Carboniferous Strata\label{tab-placebo-mills-IV-carbon}) starlevels(* .1 ** .05 *** .01) cells(b(star fmt(%9.2f)) se(par fmt(%9.2f)))  label replace style(tex) nocon postfoot("\bottomrule" "\multicolumn{@span}{p{1.02\textwidth}}{\scriptsize }" "\end{tabular}" "\end{table}") 
+
+****************************************
+*** Appendix E: Robustness of the IV ***
+****************************************
+preserve
+rename dist_elevation_mean elev1
+rename min_dist_to_roman_rds roman
+rename min_dist_2nav_rivers rivers
+
+keep if mills~=.
+set seed 12345
+rwolf longitude latitude dist_rug_mean elev1 suitmean precip_mean_dist temp_mean_dist min_harbor roman rivers DIST_London pcmean area king_lh_share eccles_lh_share lord_share , indepvar(msuit26mean ) controls(riv_rug26count wheat_suit) reps(10000)
+mat rwolff = e(RW)
+set seed 12345
+wyoung longitude latitude dist_rug_mean elev1 suitmean precip_mean_dist temp_mean_dist min_harbor roman rivers DIST_London pcmean area king_lh_share eccles_lh_share lord_share ,  cmd(reg OUTCOMEVAR msuit26mean riv_rug26count wheat_suit) familyp(msuit26mean ) bootstraps(10000) seed(20)
+mat wyang = r(table)
+
+eststo clear
+eststo: reg longitude msuit26mean wheat_suit riv_rug26count if mills~=., cluster(county_id)
+estadd scalar wyang = wyang[1,4]: est1
+estadd scalar rwol  = rwolff[1,3]: est1
+eststo: reg latitude msuit26mean wheat_suit riv_rug26count if mills~=., cluster(county_id)
+estadd scalar wyang = wyang[2,4]: est2
+estadd scalar rwol  = rwolff[2,3]: est2
+eststo: reg dist_rug_mean msuit26mean wheat_suit riv_rug26count if mills~=., cluster(county_id)
+estadd scalar wyang = wyang[3,4]: est3
+estadd scalar rwol  = rwolff[3,3]: est3
+eststo: reg elev1 msuit26mean wheat_suit riv_rug26count if mills~=., cluster(county_id)
+estadd scalar wyang = wyang[4,4]: est4
+estadd scalar rwol  = rwolff[4,3]: est4
+eststo: reg suitmean msuit26mean wheat_suit riv_rug26count if mills~=., cluster(county_id)
+estadd scalar wyang = wyang[5,4]: est5
+estadd scalar rwol  = rwolff[5,3]: est5
+eststo: reg precip_mean_dist msuit26mean wheat_suit riv_rug26count if mills~=., cluster(county_id)
+estadd scalar wyang = wyang[6,4]: est6
+estadd scalar rwol  = rwolff[6,3]: est6
+eststo: reg temp_mean_dist msuit26mean wheat_suit riv_rug26count if mills~=., cluster(county_id)
+estadd scalar wyang = wyang[7,4]: est7
+estadd scalar rwol  = rwolff[7,3]: est7
+eststo: reg min_harbor msuit26mean wheat_suit riv_rug26count if mills~=., cluster(county_id)
+estadd scalar wyang = wyang[8,4]: est8
+estadd scalar rwol  = rwolff[8,3]: est8
+eststo: reg roman msuit26mean wheat_suit riv_rug26count if mills~=., cluster(county_id)
+estadd scalar wyang = wyang[9,4]: est9
+estadd scalar rwol  = rwolff[9,3]: est9
+eststo: reg rivers msuit26mean wheat_suit riv_rug26count if mills~=., cluster(county_id)
+estadd scalar wyang = wyang[10,4]: est10
+estadd scalar rwol  = rwolff[10,3]: est10
+eststo: reg DIST_London msuit26mean wheat_suit riv_rug26count if mills~=., cluster(county_id)
+estadd scalar wyang = wyang[11,4]: est11
+estadd scalar rwol  = rwolff[11,3]: est11
+eststo: reg pcmean msuit26mean wheat_suit riv_rug26count if mills~=., cluster(county_id)
+estadd scalar wyang = wyang[12,4]: est12
+estadd scalar rwol  = rwolff[12,3]: est12
+eststo: reg area msuit26mean wheat_suit riv_rug26count if mills~=., cluster(county_id)
+estadd scalar wyang = wyang[13,4]: est13
+estadd scalar rwol  = rwolff[13,3]: est13
+eststo: reg king_lh_share msuit26mean wheat_suit riv_rug26count if mills~=., cluster(county_id)
+estadd scalar wyang = wyang[14,4]: est14
+estadd scalar rwol  = rwolff[14,3]: est14
+eststo: reg eccles_lh_share msuit26mean wheat_suit riv_rug26count if mills~=., cluster(county_id)
+estadd scalar wyang = wyang[15,4]: est15
+estadd scalar rwol  = rwolff[15,3]: est15
+eststo: reg lord_share msuit26mean wheat_suit riv_rug26count if mills~=., cluster(county_id)
+estadd scalar wyang = wyang[16,4]: est16
+estadd scalar rwol  = rwolff[16,3]: est16
+esttab using "./Appendix/EJAppendixE1.tex",se collabels(none) mlabels(none) prehead("\begin{table}[htb!]\centering" "\footnotesize" "\renewcommand{\tabcolsep}{0.1cm}" "\renewcommand{\arraystretch}{1.25}" "\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}" "\caption{@title}" "\begin{tabular}{l*{@M}{l}}" "\toprule\toprule" "\FPeval\result{clip(@span-1)}\setcounter{mycols}{\result}" "&\multicolumn{\themycols}{c}{}\\\cmidrule(lr){2-@span}") mgroups("Long." "Lat." "Rug." "Elev." "Agr. Suit." "Precip." "Temp." "Harbor" "Roman Rd." "River" "London" "Pop." "Area" "King's" "Eccels." "Lords" , pattern (1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 ) prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span}) ) booktabs indicate ("IV Components = riv_rug26count wheat_suit" ) stats(wyang rwol r2_a N, fmt(%9.2f %9.2f %9.2f %9.0f) labels("W \& Y P-value" "R \& W P-value" "Adjusted-$ R^2$" "Observations")) title(Balance of the Instrument \\ Correcting for Multiple Hypotheses Testing  \label{tab-multiple}) starlevels(* .1 ** .05 *** .01) cells(b(star fmt(%9.2f)) se(par fmt(%9.2f)) wyang(fmt(%9.2f) par("[" "]")) rwol(fmt(%9.2f) par("{" "}"))) label replace style(tex) nocon postfoot("\bottomrule" "\multicolumn{@span}{p{1.25\textwidth}}{\scriptsize Notes: ~*** denotes statistical significance at the 1\% level, ~** at the 5\% level, and ~* at the 10\% level, all for two-sided hypothesis tests; All regressions include a constant.}" "\end{tabular}" "\end{table}") 
+restore
+
+*Table E2: Sensitivity of the IV to different levels of river suitability
+eststo clear
+eststo: ivreg2 wrights_pc (mills_pc = msuit26mean) wheat_suit riv_rug26count area longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean, cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 wrights_pc (mills_pc = msuit01mean) wheat_suit riv_rug01count area longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean, cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 wrights_pc (mills_pc = msuit13mean) wheat_suit riv_rug13count area longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean, cluster(county_id)
+estadd scalar fstat=e(widstat)
+eststo: ivreg2 wrights_pc (mills_pc = msuit14mean) wheat_suit riv_rug14count area longitude latitude dist_rug_mean dist_elevation_mean suitmean dist_grass_mean precip_mean_dist temp_mean_dist min_harbor DIST_London min_dist* pcmean, cluster(county_id)
+estadd scalar fstat=e(widstat)
+
+... [truncated: 42,089 more bytes of this script omitted] ...
+
+```
+
+### `3 replication package/Replication files/do_files/main.do`
+```stata
+clear all
+
+set maxvar 32000
+set matsize 11000
+
+cd "your_directory"
+
+use "./Data/replication_data.dta", clear
+
+encode GAZ_CNTY, gen(county_id)
+
+gen pop86thousand = pop_86 / 1000
+
+*Generating variables in per capita terms, 1710-1750
+foreach var of varlist mills smith joiner butcher blacksmith attorney apothecary surgeon wrights draper trade_other all_weaver1 worsted_w1  linen_w1 cotton_w1 other_weaver1 {
+	gen `var'_pc=`var'/pcmean
+	label variable `var'_pc "`var' (per capita)"
+	}
+
+gen weaver_pc = all_weaver1_pc - other_weaver1_pc 
+gen woolll1 = all_weaver1_pc - linen_w1_pc  - cotton_w1_pc - worsted_w1_pc - other_weaver1_pc
+*Generating variables in per capita terms, 1750-1800
+foreach var of varlist other_weaver0 all_weaver0 worsted_w0 linen_w0 cotton_w0 {
+	gen `var'_pc =`var' / pc0*10
+	label variable `var'_pc "`var' (per capita, 1750-1800)"
+	}
+
+gen woolll0 = all_weaver0_pc - linen_w0_pc - cotton_w0_pc - worsted_w0_pc - other_weaver0_pc
+
+*Generating population change, 1300-1400
+gen popchange = (pc1400_mea - pc1300_mean ) / 100
+label var popchange "Pop. change"
+
+gen worsted_dist=1 if local_government_area =="Leeds District"|local_government_area =="Calderdale District"|local_government_area =="Craven District"|local_government_area =="West Devon District"|local_government_area =="South Hams District"|local_government_area =="North Devon District"|local_government_area =="Breckland District"|local_government_area =="South Norfolk District"|local_government_area =="Suffolk Coastal District"|local_government_area =="Maldon District "|local_government_area =="Norwich District"|local_government_area =="Babergh District" |local_government_area =="Colchester District" |local_government_area =="Braintree District" |local_government_area =="Exeter District" |local_government_area =="Mid Devon District" |local_government_area =="Kirklees District" |local_government_area =="Bradford District"
+replace worsted_dist=0 if worsted_dist==.
+
+gen linen_dist=1 if local_government_area =="Stockton-on-Tees"|local_government_area =="Darlington"|local_government_area =="East Riding of Yorkshire"|local_government_area =="West Lindsey District"|local_government_area =="Hambleton District"|local_government_area =="Harrogate District"|local_government_area =="North Warwickshire District"|local_government_area =="New Forest District"|local_government_area =="Rushcliffe District"|local_government_area =="Solihull District"|local_government_area =="West Dorset District"|local_government_area =="West Berkshire"
+replace linen_dist=0 if linen_dist==.
+
+gen cotton_dist=1 if local_government_area =="City of London"|local_government_area =="City of Nottingham" |local_government_area =="Oldham District"|local_government_area =="Manchester District"|local_government_area =="Rochdale District" |local_government_area =="Blackburn with Darwen" |local_government_area =="South Ribble District" |local_government_area =="Bolton District" |local_government_area =="Leeds District"|local_government_area =="Hyndburn District" |local_government_area =="Bury District"|local_government_area =="Salford District"|local_government_area =="Rochdale District"|local_government_area =="Amber Valley District"|local_government_area =="Stockport District"|local_government_area =="Tameside District"|local_government_area =="Mansfield District"|local_government_area =="Ashfield District" 
+replace cotton_dist=0 if cotton_dist==.
+
+gen nonfull_dist=1 if worsted_dist==1|linen_dist==1|cotton_dist==1
+replace nonfull_dist=0 if nonfull_dist==.
+
+*Geographic variables
+gen wheat_suit = wheat_tmean<=5 if wheat_tmean~=.
+foreach var of varlist  riv_rug*count{
+	gen `var'1 = `var' / 1000
+	drop `var'
+	rename `var'1 `var'
+	label variable `var' "River Suitability"
+}
+
+gen msuit13mean = wheat_suit*riv_rug13count
+gen msuit24mean = wheat_suit*riv_rug24count
+gen msuit25mean = wheat_suit*riv_rug25count
+gen msuit14mean = wheat_suit*riv_rug14count
+gen msuit15mean = wheat_suit*riv_rug15count
+gen msuit26mean = wheat_suit*riv_rug26count
+gen msuit16mean = wheat_suit*riv_rug16count
+gen msuit01mean = wheat_suit*riv_rug01count
+foreach var of varlist  msuit*mean{
+		label variable `var' "DB Mill Suitability"
+}
+
+*Domesday Book variables
+gen lord_share=lords_ploughs/total_ploughs
+replace lord_share = 0 if lord_share == . & total_ploughs==0
+gen king_lh_share=king_holding/villcount
+gen eccles_lh_share=ecclesiastical_holding/villcount
+gen mills_pc86=mills/pop86thousand
+
+label var lord_share "Lord's Share of Arable Land"
+label var king_lh_share "King's Vill Share"
+label var eccles_lh_share "Ecclesiastical Vill Share"
+label var mills_pc86 "Mills per 1086 population"
+label var woolll1 "Woollen"
+label var woolll0 "Woollen"
+label var worsted_w1_pc "Worsted"
+label var worsted_w0_pc "Worsted"
+label var ntextile0 "Textile Usage of Engines"
+label var nonfull_dist "Non-fulling District"
+label var draper "Draper Apprentices (1710-1750)"
+label var pop86thousand "Population (1086)"
+label var suitmean "Agricultural Suitability"
+label var wrights_pc "Wrights (per capita)"
+label var draper_pc "Drapers (per capita)"
+label var mills_pc "Watermills (per capita)"
+label var wheat_suit "Wheat suitability"
+```
+
+### `3 replication package/Replication files/do_files/Figures.do`
+```stata
+*** Please run first the do file called "main.do"
+
+***************
+*** Figures ***
+***************
+*Figure 1: Partial correlation between mills and wrights
+reg wrights_pc mills_pc latitude longitude dist_rug_mean dist_elevation_mean suitmean wheat_suit dist_grass_mean precip_mean_dist temp_mean_dist pcmean min_harbor DIST_London min_dist* area, cluster(county_id)
+
+avplot mills_pc
+graph export  "./Figures/EJfig1.png", replace
+```
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

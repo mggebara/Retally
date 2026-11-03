@@ -8,6 +8,7 @@
 | Model | desktop-opus-run2 |
 | Run | 20261023T153002Z |
 | Date | 2026-10-23T15:30:02Z |
+| Data access | public |
 | Results file | `benchmark/results/pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json` |
 | Artifacts | `benchmark/results/artifacts/leeson-2022-hobo-economicus/independent/pipeline/20261023T153002Z` |
 | Executions | 4 |
@@ -31,8 +32,8 @@
 | `brown_forsythe_dollars_per_hour` | 0.276 | 0.933392 | 238.19% | ±0.00276 (relative) | FAIL | FAIL |
 | `anova_f_donations_per_hour` | 0.4 | 0.398434 | 0.39% | ±0.005 (printed_precision) | PASS | PASS |
 | `anova_f_dollars_per_hour` | 0.15 | 0.826411 | 450.94% | ±0.005 (printed_precision) | FAIL | FAIL |
-| `station_visits_full_sample` | 242 | 242 | 0.00% | ±2.42 (relative) | PASS | PASS |
-| `station_visits_five_station_subsample` | 102 | 102 | 0.00% | ±1.02 (relative) | PASS | FAIL |
+| `station_visits_full_sample` | 242 | 242 | 0.00% | ±12.1 (relative) | PASS | PASS |
+| `station_visits_five_station_subsample` | 102 | 102 | 0.00% | ±5.1 (relative) | PASS | FAIL |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 8/11 pass, which agrees with the row's 8/11.
 

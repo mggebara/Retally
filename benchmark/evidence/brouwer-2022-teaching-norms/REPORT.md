@@ -6,6 +6,7 @@
 - I4R report: https://www.econstor.eu/bitstream/10419/286490/1/I4R-DP106.pdf
 - I4R outcome label: reproducible; split: holdout
 - Catalog entry (ground truth): `benchmark/papers/brouwer-2022-teaching-norms.yaml`
+- Data access: public
 
 > Headline finding: in a natural field experiment near 30 Lyon elementary schools (601 targeted parents, May-June 2019), parents walking with their child are more likely to confront a litterer directly (Table 2 col 2: Child 0.12, SE 0.04; raw rates 22 vs 11 percent, Figure 1a) and more likely to help a stranger who drops their belongings (col 4: Child 0.22, SE 0.06; 47 vs 26 percent).  They are not more likely to punish indirectly by withholding help (col 4: Child x VH -0.07, SE 0.08, not significant).  With a helping opportunity, direct punishment by parents with children falls (Child x VH -0.12, SE 0.04, col 2), which the authors read as greater fear of retaliation.
 > Curation pass (2026-11-01).  Pinned 12 claims, all from Table 2: Child in columns 1-4, VH in columns 2 and 4, Child x VH in columns 1-4 (each with its school-clustered SE in standard_error, printed to two decimals, so the printed-precision floor is +/-0.005), and two observation counts.  Column 2 (punishment, controls) has 399 and column 3 (helping, no controls) has 401; columns 1 and 4 have 400, and all four have 30 school clusters.  Columns 1 and 3 have no controls and are saturated in Child x VH, so their coefficients are differences in the Figure 1 rates printed in the paper (0.11, 0.22, 0.07, 0.05 and 0.26, 0.47, 0.16, 0.31).  A model that reads Figure 1 can derive them; the controlled columns 2 and 4 are not derivable that way.  Left out: the VH rows of columns 1 and 3 (also pure rate differences), the control coefficients, constants, R2 (0.04 / 0.07 / 0.06 / 0.13) and F (7.74 / 5.17 / 7.36 / 6.45), Table 1 summary statistics, the in-text chi-squared tests (4.39, 9.82, 6.26, 12.37, 0.98), the witness confidence intervals, and everything in the appendix (logit marginal effects, Table A7 sample restrictions, A9/A10 heterogeneity, vignette and video studies).
@@ -42,6 +43,7 @@
 | `claude-code` | [12/12](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[12/12](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [12/12](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[12/12](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[12/12](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [12/12](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[12/12](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[12/12](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
 | `pipeline-desktop-opus` | [12/12](seeded/pipeline-desktop-opus/20261102T064502Z/CELL.md) (20261102T064502Z) | [12/12](independent/pipeline-desktop-opus/20261102T062442Z/CELL.md) (20261102T062442Z) | [12/12](blind/pipeline-desktop-opus/20261102T062442Z/CELL.md) (20261102T062442Z) |
 | `pipeline-desktop-opus-run2` | [12/12](seeded/pipeline-desktop-opus-run2/20261102T091036Z/CELL.md) (20261102T091036Z) | [12/12](independent/pipeline-desktop-opus-run2/20261102T090216Z/CELL.md) (20261102T090216Z) | [12/12](blind/pipeline-desktop-opus-run2/20261102T090216Z/CELL.md) (20261102T090216Z) |
+| `pipeline-desktop-opus-run3` | [12/12](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [12/12](independent/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) | [12/12](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
 
@@ -57,12 +59,12 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `child_punishment_controls` | 0.116104 | 0.12 | ±0.005 (printed_precision) | 0.779 | PASS |
 | [seeded/pipeline-desktop-opus/20261102T064502Z](seeded/pipeline-desktop-opus/20261102T064502Z/CELL.md) | `child_punishment_controls` | 0.116104 | 0.12 | ±0.005 (printed_precision) | 0.779 | PASS |
 | [seeded/pipeline-desktop-opus-run2/20261102T091036Z](seeded/pipeline-desktop-opus-run2/20261102T091036Z/CELL.md) | `child_punishment_controls` | 0.116104 | 0.12 | ±0.005 (printed_precision) | 0.779 | PASS |
+| [seeded/pipeline-desktop-opus-run3/20261103T010557Z](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) | `child_punishment_controls` | 0.116104 | 0.12 | ±0.005 (printed_precision) | 0.779 | PASS |
 | [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `vh_helping_controls` | -0.103548 | -0.1 | ±0.005 (printed_precision) | 0.710 | PASS |
 | [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `vh_helping_controls` | -0.103548 | -0.1 | ±0.005 (printed_precision) | 0.710 | PASS |
 | [seeded/pipeline-desktop-opus/20261102T064502Z](seeded/pipeline-desktop-opus/20261102T064502Z/CELL.md) | `vh_helping_controls` | -0.103548 | -0.1 | ±0.005 (printed_precision) | 0.710 | PASS |
 | [seeded/pipeline-desktop-opus-run2/20261102T091036Z](seeded/pipeline-desktop-opus-run2/20261102T091036Z/CELL.md) | `vh_helping_controls` | -0.103548 | -0.1 | ±0.005 (printed_precision) | 0.710 | PASS |
-| [seeded/claude-code/2026-11-02-a](seeded/claude-code/2026-11-02-a/CELL.md) | `child_helping_no_controls` | 0.212574 | 0.21 | ±0.005 (printed_precision) | 0.515 | PASS |
-| [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `child_helping_no_controls` | 0.212574 | 0.21 | ±0.005 (printed_precision) | 0.515 | PASS |
+| [seeded/pipeline-desktop-opus-run3/20261103T010557Z](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) | `vh_helping_controls` | -0.103548 | -0.1 | ±0.005 (printed_precision) | 0.710 | PASS |
 
 ### Declared deviations
 
@@ -92,6 +94,10 @@ _None._
 
 [`seeded/pipeline-desktop-opus-run2/20261102T091036Z/CELL.md`](seeded/pipeline-desktop-opus-run2/20261102T091036Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-11-02T09:10:36Z; from `pipeline-oracle-desktop-opus-run2-4papers-all-modes-2026-11-02.json`; evidence complete.
 
+### seeded · pipeline-desktop-opus-run3 · 20261103T010557Z
+
+[`seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md`](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-11-03T01:05:57Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
+
 ### independent · claude-code · 2026-11-02-a
 
 [`independent/claude-code/2026-11-02-a/CELL.md`](independent/claude-code/2026-11-02-a/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 2; 2026-11-02T06:02:00Z; from `claude-code-4papers-all-modes-2026-11-02.json`; evidence complete.
@@ -112,6 +118,10 @@ _None._
 
 [`independent/pipeline-desktop-opus-run2/20261102T090216Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261102T090216Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-11-02T09:02:16Z; from `pipeline-oracle-desktop-opus-run2-4papers-all-modes-2026-11-02.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-run3 · 20261103T004800Z
+
+[`independent/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md`](independent/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-11-03T00:48:00Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
+
 ### blind · claude-code · 2026-11-02-a
 
 [`blind/claude-code/2026-11-02-a/CELL.md`](blind/claude-code/2026-11-02-a/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 2; 2026-11-02T06:05:00Z; from `claude-code-4papers-all-modes-2026-11-02.json`; evidence complete.
@@ -131,4 +141,8 @@ _None._
 ### blind · pipeline-desktop-opus-run2 · 20261102T090216Z
 
 [`blind/pipeline-desktop-opus-run2/20261102T090216Z/CELL.md`](blind/pipeline-desktop-opus-run2/20261102T090216Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-11-02T09:02:16Z; from `pipeline-oracle-desktop-opus-run2-4papers-all-modes-2026-11-02.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-run3 · 20261103T004800Z
+
+[`blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md`](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-11-03T00:48:00Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 

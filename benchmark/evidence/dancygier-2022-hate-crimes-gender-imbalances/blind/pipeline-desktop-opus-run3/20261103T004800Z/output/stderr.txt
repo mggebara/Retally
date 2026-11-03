@@ -1,0 +1,28 @@
+Survey columns: res_id, wave, east, hate_violence_means, hate_pol_message, hate_prevent_settlement, hate_polcondemn, hate_justified, MateComp.cont, JobComp.cont, LifeSatis.cont, pop_15_44_muni_gendergap_2015, age, singdivsep, age_group, gender, state, citizenship, marital, religion, eduyrs, occupation, income, household_size, self_econ, distance_ref, settle_ref, lrscale, afd, muslim_ind, afd_ind, contact_ind, refugee_ind, list, treatment_list, outcome_list, ref_integrating, ref_citizenship, ref_reduce, ref_moredone, ref_cultgiveup, ref_economy, ref_crime, ref_terror, ref_loc_services, ref_loc_economy, ref_loc_crime, ref_loc_culture, ref_loc_islam, ref_loc_schools, ref_loc_housing, ref_loc_wayoflife, women_role
+Wave 4 rows: 3019
+socio age -> age
+socio gender -> gender
+socio educ -> eduyrs
+socio income -> income
+socio citizen -> citizenship
+socio hh -> household_size
+socio status -> self_econ
+socio(factor) activity -> occupation
+socio(factor) religion -> religion
+socio(factor) state -> state
+national: ref_integrating, ref_citizenship, ref_reduce, ref_moredone, ref_cultgiveup, ref_economy, ref_crime, ref_terror
+local: ref_loc_services, ref_loc_economy, ref_loc_crime, ref_loc_culture, ref_loc_islam, ref_loc_schools, ref_loc_housing, ref_loc_wayoflife
+additional: contact_ind, refugee_ind, afd, afd_ind, lrscale, muslim_ind
+N col4-6: 3008 3008 3008
+Context columns: ags_county, year, ags_muni, ags_state, Hate_all_muni, Physical_muni, pop_25_44_muni_gendergap_2015, pop_15_44_muni_gendergap_2015, population_muni_2015, popdens_muni_2015, log_unemp_all_muni_2015, unemp_gendergap_2015, d_pop1511_muni, vote_afd_2013_muni, log_ref_inflow_1514, pop_ref_2014, pc_ref_male, violence_percap_2015, pc_hidegree_all2011, pc_manufacturing_2015, d_manuf1115, east, Hate_all_muni_bin, Physical_muni_bin, log_population_muni_2015, log_popdens_muni_2015, log_pop_ref_2014, log_violence_percap_2015
+id=ags_muni em=pop_15_44_muni_gendergap_2015 hate=Hate_all_muni
+Controls: c_pop=log_population_muni_2015; c_dens=popdens_muni_2015; c_popch=d_pop1511_muni; c_unemp=log_unemp_all_muni_2015; c_unempratio=unemp_gendergap_2015; c_refstock=pop_ref_2014; c_refflow=log_ref_inflow_1514; c_manuf=pc_manufacturing_2015; c_dmanuf=d_manuf1115; c_afd=vote_afd_2013_muni; c_viol=violence_percap_2015
+Unused context columns: ags_county, year, ags_state, Physical_muni, pop_25_44_muni_gendergap_2015, population_muni_2015, pc_ref_male, pc_hidegree_all2011, east, Hate_all_muni_bin, Physical_muni_bin, log_popdens_muni_2015, log_pop_ref_2014, log_violence_percap_2015
+Munis total: 11388; after trimming: 10727
+NOTE: 839 observations removed because of NA values (RHS: 839).
+NOTE: 2,517 observations removed because of NA values (RHS: 2,517).
+NOTES: 839 observations removed because of NA values (RHS: 839).
+       1 fixed-effect (24 observations) removed because of only 0 or only 1 outcomes or singletons.
+The variables 'c_unempratio', 'c_refstock', 'c_refflow', 'c_manuf', 'c_dmanuf'
+and 'c_viol' have been removed because of collinearity (see $collin.var).
+County-FE sum: coef=1.46492947045465 N=9864

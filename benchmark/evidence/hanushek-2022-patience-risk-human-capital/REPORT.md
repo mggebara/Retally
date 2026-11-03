@@ -6,6 +6,7 @@
 - I4R report: https://www.econstor.eu/bitstream/10419/273433/1/I4R-DP048.pdf
 - I4R outcome label: reproducible; split: holdout
 - Catalog entry (ground truth): `benchmark/papers/hanushek-2022-patience-risk-human-capital.yaml`
+- Data access: public
 
 > Pinned values (kept out of every context): Table 1 col 3 patience 1.226 (0.132) and risk-taking -1.241 (0.184); col 1 patience 0.917 (0.127); col 2 risk-taking -0.482 (0.261); col 5 natives 1.296 (0.133) and -1.320 (0.189), N 1,751,822; full-sample N 1,992,276.  Table 2 col 3 patience 0.931 (0.116) and risk-taking -0.294 (0.122); col 1 patience 0.779 (0.115); col 4 patience 1.032 (0.133) and risk-taking -0.449 (0.140); migrant N 80,398.  All are printed to three decimals.  Left out: Table 1 cols 4 and 6-8 and Table 2 cols 2 and 5-9 (other preferences, migrants-only and effort controls, language subsamples), the subsample-difference rows, R2s, Tables 3-4, the country-level R2 of Figure 1 (0.672, from a figure), and the appendix.
 > Dropped claim: Table 1 col 6 (migrants) patience 0.702 (0.172).  The independent cross-check below gives 0.698 (0.169) and risk-taking -0.371 (0.221) against the printed -0.370 (0.225), with the same N (192,736).  That is within one SE but outside the 2 % band.  The cause was not traced (possibly weight precision in the CSV export, or collinearity handling of the migration flags).  DP 48 reports the Stata run reproduces it.
@@ -41,6 +42,7 @@
 | `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [13/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
 | `pipeline-desktop-opus` | [13/13](seeded/pipeline-desktop-opus/20261102T141403Z/CELL.md) (20261102T141403Z) | [9/13](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) (20261102T141403Z) | [12/13](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) (20261102T095147Z) |
 | `pipeline-desktop-opus-run2` | [13/13](seeded/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) (20261102T152052Z) | [9/13](independent/pipeline-desktop-opus-run2/20261102T190406Z/CELL.md) (20261102T190406Z) | [9/13](blind/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) (20261102T152052Z) |
+| `pipeline-desktop-opus-run3` | [13/13](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [13/13](independent/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) | [9/13](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
 
@@ -56,12 +58,12 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | [independent/claude-code/2026-11-02-b](independent/claude-code/2026-11-02-b/CELL.md) | `table2_col3_risk_taking` | -0.194 | -0.294 | ±0.122 (se_band) | 0.820 | PASS |
 | [independent/claude-code/2026-11-02-c](independent/claude-code/2026-11-02-c/CELL.md) | `table2_col3_risk_taking` | -0.194 | -0.294 | ±0.122 (se_band) | 0.820 | PASS |
 | [blind/claude-code/2026-11-02-c](blind/claude-code/2026-11-02-c/CELL.md) | `table2_col3_risk_taking` | -0.194001 | -0.294 | ±0.122 (se_band) | 0.820 | PASS |
+| [independent/pipeline-desktop-opus-run3/20261103T004800Z](independent/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) | `table2_col3_risk_taking` | -0.194001 | -0.294 | ±0.122 (se_band) | 0.820 | PASS |
 | [independent/claude-code/2026-11-02-a](independent/claude-code/2026-11-02-a/CELL.md) | `table2_col3_risk_taking` | -0.194001 | -0.294 | ±0.122 (se_band) | 0.820 | PASS |
 | [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) | `table2_col3_risk_taking` | -0.194001 | -0.294 | ±0.122 (se_band) | 0.820 | PASS |
 | [blind/pipeline-desktop-opus-run2/20261102T152052Z](blind/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) | `table2_col3_risk_taking` | -0.205689 | -0.294 | ±0.122 (se_band) | 0.724 | PASS |
 | [blind/pipeline-desktop-opus/20261102T095147Z](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) | `table1_col5_natives_risk_taking` | -1.19398 | -1.32 | ±0.189 (se_band) | 0.667 | PASS |
 | [independent/pipeline-desktop-opus/20261102T141403Z](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) | `table2_col3_risk_taking` | -0.231388 | -0.294 | ±0.122 (se_band) | 0.513 | PASS |
-| [independent/pipeline-desktop-opus-run2/20261102T190406Z](independent/pipeline-desktop-opus-run2/20261102T190406Z/CELL.md) | `table2_col3_risk_taking` | -0.231388 | -0.294 | ±0.122 (se_band) | 0.513 | PASS |
 
 ### Declared deviations
 
@@ -134,18 +136,18 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
-- independent: `table2_col1_patience` — pipeline 0/2, agent 3/3
-- independent: `table2_col3_patience` — pipeline 0/2, agent 3/3
-- independent: `table2_col4_patience` — pipeline 0/2, agent 3/3
-- independent: `table2_col4_risk_taking` — pipeline 0/2, agent 3/3
+_None._
 
 Pass rates at least 50 points apart (not unanimous):
 
-- blind: `table1_col2_risk_taking` — pipeline 1/2, agent 3/3
-- blind: `table2_col1_patience` — pipeline 1/2, agent 3/3
-- blind: `table2_col3_patience` — pipeline 1/2, agent 3/3
-- blind: `table2_col4_patience` — pipeline 1/2, agent 3/3
-- blind: `table2_col4_risk_taking` — pipeline 1/2, agent 3/3
+- independent: `table2_col1_patience` — pipeline 1/3, agent 3/3
+- independent: `table2_col3_patience` — pipeline 1/3, agent 3/3
+- independent: `table2_col4_patience` — pipeline 1/3, agent 3/3
+- independent: `table2_col4_risk_taking` — pipeline 1/3, agent 3/3
+- blind: `table2_col1_patience` — pipeline 1/3, agent 3/3
+- blind: `table2_col3_patience` — pipeline 1/3, agent 3/3
+- blind: `table2_col4_patience` — pipeline 1/3, agent 3/3
+- blind: `table2_col4_risk_taking` — pipeline 1/3, agent 3/3
 
 ## Cells
 
@@ -164,6 +166,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### seeded · pipeline-desktop-opus-run2 · 20261102T152052Z
 
 [`seeded/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md`](seeded/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-02T15:20:52Z; from `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`; evidence complete.
+
+### seeded · pipeline-desktop-opus-run3 · 20261103T010557Z
+
+[`seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md`](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-03T01:05:57Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 
 ### independent · claude-code · 2026-11-02-a
 
@@ -185,6 +191,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/pipeline-desktop-opus-run2/20261102T190406Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261102T190406Z/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 4; 2026-11-02T19:04:06Z; from `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-run3 · 20261103T004800Z
+
+[`independent/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md`](independent/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-03T00:48:00Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
+
 ### blind · claude-code · 2026-11-02-a
 
 [`blind/claude-code/2026-11-02-a/CELL.md`](blind/claude-code/2026-11-02-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 10; 2026-11-02T14:17:44Z; from `claude-code-6papers-all-modes-2026-11-02.json`; evidence complete.
@@ -204,4 +214,8 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · pipeline-desktop-opus-run2 · 20261102T152052Z
 
 [`blind/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md`](blind/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 2; 2026-11-02T15:20:52Z; from `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-run3 · 20261103T004800Z
+
+[`blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md`](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 1; 2026-11-03T00:48:00Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 

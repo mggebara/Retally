@@ -1,0 +1,106 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: Policy Deliberation and Voter Persuasion:
+Abstract (first 500 chars): In a randomized experiment in cooperation with two national parties competing in a congressional election
+in the Philippines, we estimate the causal effect on voting behavior of a town-hall style campaign in which candidates
+discuss their campaign platform with small groups of citizens. Keeping the parties’ platform fixed, we find that town-hall
+meetings have a positive effect on parties’ vote shares compared to the status quo, in which voters play a passive role.
+Consistent with the parties’ ad
+Methodology Summary: - **Design / sample:** Clustered field experiment around the May 13, 2013 Philippine party-list election, run with two party lists (Akbayan, with a feminist platform, and Umalab Ka, with a pro-urban-poor platform). Sampling had two stages: 7 of 17 NCR municipalities and 6 of 90 Calabarzon municipalities were drawn at random (13 municipalities). In each, 3 barangays were drawn (39 barangays in total): 1 was assigned to treatment (2–3 town-hall meetings of about 40 participants each) and 2 to control ("business-as-usual" one-way campaigning). A barangay was redrawn whenever any two selected barangays were less than 1.5 km apart. Municipalities were then randomly assigned to one of the two party lists. Non-compliance: in Marikina and Valenzuela, treatment was swapped to an originally assigned control barangay. In Louisiana, the treatment barangay San Roque was replaced by San Diego and San Antonio.
+- **Barangay-level outcomes (official COMELEC precinct returns aggregated to barangay):** (i) party-list turnout as a percentage of registered voters; (ii) the collaborating party's vote share as a percentage of total party-list votes. Vote share is analysed pooled (N=39) and by party list (Akbayan N=18, Umalab Ka N=21; Table 1, cols 1–4). The outcome is in levels (percentage points). Nothing is standardised.
+- **Barangay-level estimating equations:** ITT is estimated by OLS, Y_jk = δ_k + β·Z_jk + ε_jk, where Z is the assignment dummy and δ_k are municipality ("city") fixed effects. There are no other controls. CACE comes from IV/2SLS, Y_jk = λ_k + α·T_jk + υ_jk, with actual implementation T instrumented by assignment Z. The non-complier barangays (Concepcion Dos, Isla, San Roque) count as assigned but untreated. Inference uses a nonparametric randomization/permutation test: treatment is permuted within municipality to build the null distribution of no effect and give p-values. The report also gives the control-group mean and R².
+- **Barangay-level heterogeneity:** (a) ITT interacted linearly with the number of registered voters, with municipality FE (marginal effects in Figure 2, left panel). (b) Vote share regressed on the proportion of town-hall attendees (from attendance sheets, as a share of registered or party-list voters), with municipality FE. Attendance proportion is instrumented by assignment (Figure 2, right panel).
+- **Individual-level data:** A post-election survey run by CPE two weeks after the election. Sampling was a random walk plus quota (target 40 respondents per barangay; every 5th household; start at the barangay hall in control and at the meeting site in treatment). There are 1,314 respondents. Three municipalities (Imus, Pateros, Santa Maria) are excluded because they lack both treatment and control samples. The estimation sample is 1,082, after dropping respondents without a valid turnout answer. Outcomes are binary self-reported turnout and vote for the collaborating party (pooled and by party).
+- **Individual-level specifications:** Linear probability models. ITT: Y_ijk = δ_k + β·Z_jk + ε, with municipality (city) FE. CACE: IV with Z instrumenting T. Standard errors are clustered at the barangay level (the assignment level). All estimates are inverse-probability weighted to correct oversampling of meeting attendees. In treatment barangays the weight is based on the ratio of self-reported survey attendees to actual attendees from attendance sheets. Unweighted results are a robustness check, with inference by a permutation test respecting the two-stage cluster design. Robustness checks also add pretreatment covariates (SI App. D) and use multiple imputation (SI App. E).
+- **Heterogeneous effects (Eq. 5):** Y = γ_k + β1·Z + β2·X + β3·(Z×X) + ξ, with municipality FE and barangay-clustered SEs. X is a pretreatment indicator for income (low vs above 10,000 pesos), education (at most primary vs high school or more) or gender (female). A differential CACE comes from the same model with T instrumented by Z (interactions instrumented accordingly). Estimation is separate for Akbayan and Umalab Ka (Figure 4).
+- **Mechanisms (attitudes, Figure 5):** Following Anderson (2008), each item is oriented so that positive means more agreement, then demeaned and standardised by the control-group mean and SD. Items are combined into a standardised inverse-covariance-weighted summary index. The gender index uses the gender-discrimination/sexism items (Female Rep., Female Pol., Equality, Discrimination, Harassment). The poverty index uses Poverty, GAP, CCT and Corruption. ITT and CACE on the indices and on each component are estimated separately by party list, with city FE and barangay-clustered SEs. Effects are in control-group SD units.
+
+
+## Quantities to Compute
+Compute each quantity below and print it under the given name.  The paper's reported values are deliberately not shown.
+1. itt_turnout_barangay_table1_col1 [type: coefficient; unit: percentage points (party-list turnout, % of registered voters)]
+   Location: Table 1, column 1 (Turnout), ITT row
+   Context: Table 1 ("Intention-to-Treat Effect on Electoral Returns at the Barangay Level"), column 1. Intention-to-treat effect of random assignment of a town-hall (deliberative) campaign by either party list (Akbayan or Umalab Ka) on party-list turnout, as a percentage of registered voters, from official COMELEC returns of the May 2013 party-list election, across all experimental barangays (one assigned treatment and two controls per selected municipality). Regression of the electoral return on the assignment dummy with municipality (city) fixed effects (equation 1); inference under randomization of th…
+2. itt_vote_overall_barangay_table1_col2 [type: coefficient; unit: percentage points (vote share of the treating party list)]
+   Location: Table 1, column 2 (Vote (overall)), ITT row
+   Context: Table 1, column 2: intention-to-treat effect of town-hall-meeting assignment on the vote share (% of total party-list votes) of the party list campaigning in the barangay, Akbayan and Umalab Ka pooled; all experimental barangays; same specification as column 1 (assignment dummy, municipality fixed effects, randomization inference, permutation p = .048). The paper's headline result.
+3. itt_vote_akbayan_barangay_table1_col3 [type: coefficient; unit: percentage points (Akbayan vote share)]
+   Location: Table 1, column 3 (Vote (Akbayan)), ITT row
+   Context: Table 1, column 3: intention-to-treat effect on Akbayan's vote share (% of party-list votes), barangays of the municipalities randomly assigned to Akbayan only; assignment dummy with municipality fixed effects, randomization inference (permutation p = .087).
+4. itt_vote_umalabka_barangay_table1_col4 [type: coefficient; unit: percentage points (Umalab Ka vote share)]
+   Location: Table 1, column 4 (Vote (Umalab Ka)), ITT row
+   Context: Table 1, column 4: intention-to-treat effect on Umalab Ka's vote share (% of party-list votes), barangays of the municipalities randomly assigned to Umalab Ka only; assignment dummy with municipality fixed effects, randomization inference (permutation p = .141). Not significant.
+5. n_obs_barangay_table1_cols1_2 [type: other; unit: observations (barangays)]
+   Location: Table 1, Observations, columns 1 and 2
+   Context: Number of barangays (all experimental barangays, both party lists) in the turnout and pooled vote-share regressions of Table 1, columns 1 and 2.
+6. n_obs_barangay_akbayan_table1_col3 [type: other; unit: observations (barangays)]
+   Location: Table 1, Observations, column 3
+   Context: Number of barangays in the Akbayan vote-share regression, Table 1 column 3 (barangays of the Akbayan municipalities).
+7. n_obs_barangay_umalabka_table1_col4 [type: other; unit: observations (barangays)]
+   Location: Table 1, Observations, column 4
+   Context: Number of barangays in the Umalab Ka vote-share regression, Table 1 column 4 (barangays of the Umalab Ka municipalities).
+8. itt_poverty_index_akbayan_tableC3 [type: coefficient; unit: standard deviations (summary index, control-group s.d.)]
+   Location: SI Table C.3, Akbayan Treatment panel, column 1 (Index), ITT row
+   Context: Supporting-information Table C.3 ("Intention to Treat Effect on Attitudes on Poverty"), upper panel (Akbayan treatment), column 1. Post-election survey respondents in the Akbayan municipalities. Outcome: the summary index of poverty-related attitudes (Anderson 2008: the four items Poverty, Gap, CCT and Corruption, each oriented so higher means more agreement, standardized with respect to the control group's mean and s.d., combined as an inverse-covariance weighted average). Linear regression on treatment assignment with city fixed effects (equation 3), weighted to adjust for the oversampling o…
+9. itt_poverty_index_umalabka_tableC3 [type: coefficient; unit: standard deviations (summary index, control-group s.d.)]
+   Location: SI Table C.3, Umalab Ka Treatment panel, column 1 (Index), ITT row
+   Context: SI Table C.3, lower panel (Umalab Ka treatment), column 1: the same poverty-attitudes summary index and specification as the Akbayan panel (assignment, city fixed effects, attendance weights, clustering by barangay), respondents in the Umalab Ka municipalities (p = 0.048). The text reports it as "a small, but significant ITT" on the poverty index (Figure 5, lower panel).
+10. itt_gender_index_akbayan_tableC4 [type: coefficient; unit: standard deviations (summary index, control-group s.d.)]
+   Location: SI Table C.4, Akbayan Treatment panel, column 1 (Index), ITT row
+   Context: SI Table C.4 ("ITT Effect and CACE on Attitudes on Gender"), Akbayan treatment panel, column 1. Outcome: the summary index of attitudes on gender discrimination and sexism built from the five gender items (Female Rep., Female Pol., Equality, Discrimination, Harassment), oriented, standardized on the control group and inverse-covariance weighted as above. Respondents in the Akbayan municipalities; assignment with city fixed effects, attendance weights, standard errors clustered by barangay (p = 0.032). The main text reports this as the town-hall effect on awareness of gender-related issues (Fig…
+11. itt_gender_index_umalabka_tableC4 [type: coefficient; unit: standard deviations (summary index, control-group s.d.)]
+   Location: SI Table C.4, Umalab Ka Treatment panel, column 1 (Index), ITT row
+   Context: SI Table C.4, Umalab Ka treatment panel, column 1: the gender- attitudes summary index of the Akbayan panel, respondents in the Umalab Ka municipalities, same specification (p = 0.079).
+12. itt_vote_overall_unweighted_tableF1_col2 [type: coefficient; unit: percentage points (probability of voting for the treating party list)]
+   Location: SI Table F.1, column 2 (Vote (Overall)), ITT row
+   Context: SI Table F.1 ("ITT Effect and CACE on Electoral Returns at the Individual Level (Unweighted Results)"), column 2: the robustness version of the individual-level vote-choice ITT WITHOUT the attendance-oversampling adjustment (so self-reported attendees are overrepresented). Outcome: survey respondent reports voting for the party list that campaigned in their municipality, in percent, among respondents who turned out, both party lists pooled. Linear probability model on treatment assignment with city fixed effects; inference for the ITT under randomization of the treatment (permutation p = 0.000…
+13. itt_vote_akbayan_unweighted_tableF1_col3 [type: coefficient; unit: percentage points (probability of voting for Akbayan)]
+   Location: SI Table F.1, column 3 (Vote (Akbyan)), ITT row
+   Context: SI Table F.1, column 3: unweighted individual-level ITT on reporting a vote for Akbayan, in percent, respondents in the Akbayan municipalities who turned out; assignment with city fixed effects, permutation inference (p = 0.00000).
+
+## Dataset Information
+Name: lopez-moctezuma-2022-policy-deliberation-philippines
+Local path: <repo>/.cache/datasets/lopez_moctezuma_2022_policy_deliberation_philippines.script-free
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- survey_raw.RData (15.1 KB) — objects: survey_raw (tbl_df, 1314 rows, 37 columns: city, barangay, assignment, treatment, treat.akbayan, treat.umalabka, vote.akbayan, vote.umalabka, vote, attendance, gender, income, education, status, equality, discrimination, harassment, poverty, corruption, id, region, turnout_all, turnout_pl, partytreat, assign.akbayan, assign.umalabka, attendance.rallies, age, religion, linguistic, info_all, info_fam, info_others, femhouse, fempol, gap, cct)
+- data_agg.RData (3.4 KB) — objects: data.all (data.frame, 39 rows, 21 columns: barangay, city, assignment, treatment, turnout.party, votes.akbayan, votes.umalabka, share.akbayan, share.umalabka, urban, region, partytreat, reg.num, vote.num, vote.num.party, turnout.general, share.treated, reg.pop.thousand, female.pop, att.prop, att.prop.turn)
+- Codebook_aggregate_dataset.pdf (88.5 KB)
+- Codebook_individual_dataset.pdf (55.8 KB)
+- MuniCities.dbf (1.7 MB)
+- MuniCities.shp (12.0 MB)
+- MuniCities.shx (13.0 KB)
+- Regions.dbf (4.3 KB)
+- Regions.shp (9.0 MB)
+- Regions.shx (236 B)
+- data_barangay.csv (1.5 KB) — columns: barangay,city,region,treatment,partytreat
+- readme.txt (5.2 KB)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/lopez_moctezuma_2022_policy_deliberation_philippines.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Independent Reproduction
+This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's description alone.  The authors' own analysis code is deliberately withheld.  Do NOT open, read, source, or execute any script files that may appear in the dataset directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, and similar) — load data files only.  Derive the estimating equation, sample restrictions, fixed effects, and standard-error clustering from the paper information and claims above.
+
+## Blind Reproduction
+This reproduction is also BLIND: the paper's reported values for the quantities above are deliberately withheld, and you will not be told how close your numbers are.  Compute each quantity as the paper's method defines it; do not tune the specification toward any number you expect.  Do NOT read result tables, logs, or output files that may appear in the dataset directory (.tex, .log, .pdf, .html, and similar) to recover the paper's numbers — compute everything from the data files.  Print a RESULT: line for every quantity listed, using its name exactly.
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

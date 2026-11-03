@@ -8,6 +8,7 @@
 | Model | — |
 | Run | 2026-11-02-b |
 | Date | 2026-11-02T19:35:30Z |
+| Data access | public |
 | Results file | `benchmark/results/claude-code-run2-23papers-seeded-2026-11-02.json` |
 | Artifacts | `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/seeded/claude-code/20261102T194315Z` |
 | Run directory | `benchmark/reproductions/hanlon-2022-aircraft-ip-spillovers/seeded/2026-11-02-b` |
@@ -32,8 +33,8 @@
 | `airframe_maxspeed_trend_after_1926_us_vs_uk` | 0.031 (0.01) | 0.030549 | 1.45% | ±0.00062 (relative) | PASS | PASS |
 | `engine_hp_per_weight_trend_before_1926_us` | 0.039 (0.009) | 0.039488 | 1.25% | ±0.00078 (relative) | PASS | PASS |
 | `engine_hp_per_weight_trend_after_1926_us` | -0.01 (0.005) | -0.010168 | 1.68% | ±0.0005 (printed_precision) | PASS | PASS |
-| `observations_airframe_wingload_us` | 116 | 116 | 0.00% | ±1.16 (relative) | PASS | PASS |
-| `observations_engine_us` | 85 | 85 | 0.00% | ±0.85 (relative) | PASS | PASS |
+| `observations_airframe_wingload_us` | 116 | 116 | 0.00% | ±5.8 (relative) | PASS | PASS |
+| `observations_engine_us` | 85 | 85 | 0.00% | ±4.25 (relative) | PASS | PASS |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 12/12 pass, which agrees with the row's 12/12.
 

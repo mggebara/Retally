@@ -1,0 +1,62 @@
+Outcome NA count: 0  filled: 0 
+survey_year filled from year: 798 
+Base N: 5060  with survey_year: 5060 
+DEVIATION: IQR computed at the property x survey-year level (min 2 workers) since the paper's IQR unit (327 properties at bw300) exceeds the number of distinct properties
+OLS estimation, Dep. Var.: y
+Observations: 4,781
+Fixed-effects: survey_year: 8
+Standard-errors: Clustered (cl) 
+              Estimate Std. Error   t value Pr(>|t|)    
+Above500     82.545029  44.046985  1.874022 0.063906 .  
+run           0.058283   0.046357  1.257275 0.211642    
+Above500:run -0.181832   0.208868 -0.870560 0.386122    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 68.4     Adj. R2: 0.44333 
+             Within R2: 0.023376
+OLS estimation, Dep. Var.: y
+Observations: 1,583
+Fixed-effects: survey_year: 8
+Standard-errors: Clustered (cl) 
+              Estimate Std. Error  t value Pr(>|t|) 
+Above500     72.180888  55.994748 1.289065  0.20583 
+run           0.032171   0.117477 0.273851  0.78581 
+Above500:run  0.070609   0.410420 0.172042  0.86440 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 60.3     Adj. R2: 0.572266
+             Within R2: 0.048072
+OLS estimation, Dep. Var.: iqr
+Observations: 218
+Fixed-effects: survey_year: 8
+Standard-errors: Clustered (cl) 
+               Estimate Std. Error   t value Pr(>|t|)    
+Above500     -78.623492  39.996511 -1.965759 0.052479 .  
+run           -0.041369   0.056216 -0.735890 0.463755    
+Above500:run   0.374043   0.241634  1.547975 0.125217    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 63.6     Adj. R2: 0.229738
+             Within R2: 0.032464
+OLS estimation, Dep. Var.: iqr
+Observations: 80
+Fixed-effects: survey_year: 8
+Standard-errors: Clustered (cl) 
+                Estimate Std. Error   t value Pr(>|t|)    
+Above500     -139.397780  67.272829 -2.072126 0.046660 *  
+run            -0.202447   0.232004 -0.872602 0.389589    
+Above500:run    1.510719   0.709371  2.129660 0.041245 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 74.8     Adj. R2: 0.051346
+             Within R2: 0.074264
+RESULT:earnings_level_above500_bw300=82.5450
+RESULT:earnings_level_above500_bw150=72.1809
+RESULT:earnings_iqr_above500_bw300=-78.6235
+RESULT:earnings_iqr_above500_bw150=-139.3978
+RESULT:n_obs_earnings_level_bw300=4781
+RESULT:n_obs_earnings_level_bw150=1583
+RESULT:n_obs_earnings_iqr_bw300=218
+RESULT:n_obs_earnings_iqr_bw150=80
+RESULT:n_clusters_bw300=99
+RESULT:n_clusters_bw150=36

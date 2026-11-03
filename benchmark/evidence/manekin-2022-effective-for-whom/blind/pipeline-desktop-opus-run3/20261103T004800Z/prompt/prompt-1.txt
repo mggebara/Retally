@@ -1,0 +1,119 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: American Political Science Review (2022) 116, 1, 161–20
+Abstract (first 500 chars): © The Author(s), 2021. Published by Cambridge University Press on behalf of the American Political Science Association. This is an Open Access article, distributed under the terms of the Creative Commons Attribution licence (https:// creativecommons.org/licenses/by/4.0/), which permits unrestricted re-use, distribution, and reproduction in any medium, provided the original work is properly cited. Effective for Whom? Ethnic Identity and Nonviolent Resistance DEVORAH MANEKIN
+Methodology Summary: - **Motivating observational analysis (Figure 1):** Replicates the Chenoweth and Lewis (2013) campaign-outcome model using NAVCO 2.0 merged with the Ethnic Power Relations (EPR) dataset (combined by Thurber 2018). It adds an ethnic-identity indicator and interacts it with campaign tactic (violent vs. nonviolent). Ethnic identity is measured in two alternative ways: political status (included/dominant vs. excluded/disadvantaged, Panel A) and group size (majority vs. minority, Panel B). The outcome is campaign success, defined as achieving all stated goals within a year of the campaign's peak. Coverage is 220 groups in 110 countries, 1946–2006. Results are shown as predicted Pr(success); the full specification is in SI Section 2.
+- **Study 1 design (randomized survey experiment):** Online vignette experiment using simulated news articles. US: fielded in 3 waves, Nov 2018–Jan 2019, N = 2,269, a 2×3 factorial design. Protester identity is white vs. Black, signalled by the names Charlie vs. Tyrone plus a crowd photo. Tactic has three levels: march in streets / shut down traffic / destroy police cars. Israel: fielded in 2 waves, Feb–Mar 2019, N = 3,063, a 3×3 design. Identity is white Jews / Ethiopian Jews / Arab Israelis, named in the article title. Tactics are march / shut down traffic / destroy garbage cans. Balance on demographic covariates is checked (SI 3.4).
+- **Study 2 design:** Fielded June 2020, during the George Floyd protests, with nondisruptive tactics only (marching). US: N = 3,013, a 2×2×2 factorial design: identity (white/Black) × goal (general = protesting layoffs vs. minority-group goal = racism/police brutality) × explicit commitment to nonviolence (yes/no). Israel: N = 3,465, a 3×2×2 design with 2 cells dropped (white Jews protesting for minority goals, with and without commitment), giving 10 conditions.
+- **Outcomes (identical in both studies):** (1) Perceived degree of violence, on a 0–10 scale (0 = completely nonviolent, 10 = extremely violent). (2) Recall violence, a binary indicator asked after the other outcomes. It is coded 1 if the respondent checked any of: damaging police cars, looting local stores, throwing rocks at police. It is coded 0 if they checked only marching and/or blocking traffic. (3) Police action required, on a 0–10 scale. All are used in raw units in Tables 1–2. The interaction and conditional-effect figures (Figs 3, 6, 7) report coefficients in standard-deviation units.
+- **Estimating equations (Tables 1 and 2):** OLS regression of each outcome on treatment dummies only, with no covariates in the headline models. Pretreatment covariates are added only as a robustness check (SI 3.5). Table 1 regresses each outcome on the minority-identity dummies (Black; or Ethiopian and Arab) plus tactic dummies (shut down traffic; destroy property). The baseline is white protesters marching in the streets. Table 2 regresses each outcome on the identity dummies plus a minority-group-goal dummy and a commitment-to-nonviolence dummy. The baseline is white protesters with the generic goal and no commitment. No fixed effects. Effects are also expressed as a percentage change relative to the intercept (coefficient divided by intercept). Conventional OLS standard errors are reported; no robust or clustered SEs are mentioned. Significance thresholds are 0.10, 0.05 and 0.01.
+- **Heterogeneity/interaction analyses:** Identity × tactic interactions in Study 1 (Fig 3), with the dominant group as baseline. Subgroup analysis by respondent ethnicity within the march-in-streets condition: white vs. Black respondents in the US, white Jewish vs. Arab respondents in Israel; Ethiopian respondents were too few to sample (Fig 4). In Study 2: identity × goal (US only, Fig 6) and identity × commitment (Fig 7).
+- **Samples:** Full samples, with no restrictions noted, apart from minor missingness in one US Study 2 outcome (police action, N = 3,008).
+- **Mechanism / text analysis:** Respondents gave an open-ended explanation of their approval or disapproval of the protesters. Responses to nonviolent-protest conditions from both studies are pooled. These are analysed qualitatively and with a structural topic model (STM) using 10 topics. Protester ethnicity in the vignette (minority vs. majority) is the prevalence covariate. The reported quantity is the change in topic proportion from moving from white to Black protesters (US), together with each topic's top words.
+
+
+## Quantities to Compute
+Compute each quantity below and print it under the given name.  The paper's reported values are deliberately not shown.
+1. study1_us_black_perceived_violence [type: coefficient; unit: points on a 0-10 scale]
+   Location: Table 1, Panel (A) US Sample, Black protesters, Perceived degree of violence
+   Context: Table 1 ("Group Identity and Protest Tactic"), Panel (A) U.S. sample, row Black protesters, column Perceived degree of violence. Study 1 online survey experiment (U.S., three waves, November 2018-January 2019): respondents read a simulated news article about a protest with the protesters' identity randomized (white vs Black, signaled by names and a photo) and the tactic randomized (marching in streets, shutting down traffic, destroying police cars), a 2 x 3 factorial design. Outcome: how violent the respondent would say the protest was, 0 (completely nonviolent) to 10 (extremely violent). OLS …
+2. study1_us_black_police_action [type: coefficient; unit: points on a 0-10 scale]
+   Location: Table 1, Panel (A) US Sample, Black protesters, Police action required
+   Context: Table 1, Panel (A) U.S. sample, row Black protesters, column Police action required. Same Study 1 U.S. design and OLS specification as study1_us_black_perceived_violence (Black protester indicator plus tactic indicators; base white protesters marching in the streets; weighted), with the outcome the respondent's view, 0-10, of the extent to which police action is required to address the protest.
+3. study1_israel_ethiopian_perceived_violence [type: coefficient; unit: points on a 0-10 scale]
+   Location: Table 1, Panel (B) Israel Sample, Ethiopian protesters, Perceived degree of violence
+   Context: Table 1, Panel (B) Israel sample, row Ethiopian protesters, column Perceived degree of violence. Study 1 Israeli survey (two waves, February-March 2019): protester identity randomized among white Jews (majority), Ethiopian Jews and Israeli Arabs (minorities), noted in the article title, and tactic among marching in streets, shutting down traffic and destroying garbage cans (3 x 3 design). Outcome: perceived violence of the protest, 0-10. OLS on indicators for Ethiopian and Arab protesters and the two more intense tactics; base white protesters marching in the streets; weighted (see study1_us_b…
+4. study1_israel_ethiopian_police_action [type: coefficient; unit: points on a 0-10 scale]
+   Location: Table 1, Panel (B) Israel Sample, Ethiopian protesters, Police action required
+   Context: Table 1, Panel (B) Israel sample, row Ethiopian protesters, column Police action required (0-10). Same Study 1 Israeli specification as study1_israel_ethiopian_perceived_violence.
+5. study1_israel_arab_perceived_violence [type: coefficient; unit: points on a 0-10 scale]
+   Location: Table 1, Panel (B) Israel Sample, Arab protesters, Perceived degree of violence
+   Context: Table 1, Panel (B) Israel sample, row Arab protesters, column Perceived degree of violence (0-10). Same Study 1 Israeli specification as study1_israel_ethiopian_perceived_violence; this is the coefficient on the Arab protester indicator.
+6. study1_israel_arab_police_action [type: coefficient; unit: points on a 0-10 scale]
+   Location: Table 1, Panel (B) Israel Sample, Arab protesters, Police action required
+   Context: Table 1, Panel (B) Israel sample, row Arab protesters, column Police action required (0-10). Same Study 1 Israeli specification as study1_israel_ethiopian_perceived_violence.
+7. study2_us_black_perceived_violence [type: coefficient; unit: points on a 0-10 scale]
+   Location: Table 2, Panel (A) US Sample, Black protesters, Perceived degree of violence
+   Context: Table 2 ("Group Identity, Protest Goal, and Commitment to Nonviolence"), Panel (A) U.S. sample, row Black protesters, column Perceived degree of violence. Study 2 online survey experiment (U.S., June 2020): a 2 x 2 x 2 factorial vignette design randomizing protester identity (white vs Black), protest goal (general: protesting layoffs; group-based: protesting racial prejudice and police brutality) and whether protesters explicitly stated a commitment to nonviolence. Outcome: perceived violence, 0-10. OLS of the outcome on indicators for Black protesters, minority group goal and commitment to no…
+8. study2_us_black_police_action [type: coefficient; unit: points on a 0-10 scale]
+   Location: Table 2, Panel (A) US Sample, Black protesters, Police action required
+   Context: Table 2, Panel (A) U.S. sample, row Black protesters, column Police action required (0-10). Same Study 2 U.S. specification as study2_us_black_perceived_violence; Table 2 reports slightly fewer observations for this column than for the other two (respondents missing this outcome are dropped).
+9. respondents_study1_us [type: other; unit: respondents]
+   Location: Research Design (text); Table 1, Panel (A), Observations
+   Context: Study 1 U.S. sample size: respondents to the U.S. survey experiment, the observations in each Table 1 Panel (A) regression.
+10. respondents_study1_israel [type: other; unit: respondents]
+   Location: Research Design (text); Table 1, Panel (B), Observations
+   Context: Study 1 Israeli sample size: respondents to the Israeli survey experiment, the observations in each Table 1 Panel (B) regression.
+11. respondents_study2_us [type: other; unit: respondents]
+   Location: Research Design (text); Table 2, Panel (A), Observations
+   Context: Study 2 U.S. sample size: respondents to the June 2020 U.S. survey experiment, the observations in the Table 2 Panel (A) perceived violence and recall regressions.
+12. respondents_study2_israel [type: other; unit: respondents]
+   Location: Research Design (text); Table 2, Panel (B), Observations
+   Context: Study 2 Israeli sample size: respondents to the June 2020 Israeli survey experiment, the observations in each Table 2 Panel (B) regression.
+
+## Dataset Information
+Name: manekin-2022-effective-for-whom
+Local path: <repo>/.cache/datasets/manekin_2022_effective_for_whom.script-free
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- Replication/Data/isr_survey_wave1.rdata (79.3 KB) — objects: isr_survey_wave1 (data.frame, 3063 rows, 20 columns: degree_violence, police_action_required, recall_violence, recall_violence2, identity_protesters, tactic, survey, ethnicity, ResponseId, approve_protest_scale, age, female, education, income, ideology, partyID, interest_news, religiosity, weight, nv_tactic_scale)
+- Replication/Data/isr_survey_wave2.rdata (90.6 KB) — objects: isr_survey_wave2 (data.frame, 3465 rows, 20 columns: ethnicity, degree_violence, police_action_required, recall_violence2, identity_protesters, commitment, group_goal, ResponseId, age, female, religiosity, education, income, partyID, ideology, approve_protest_dummy, interest_news, degree_violence_std, police_action_required_std, recall_violence_std)
+- Replication/Data/us_survey_wave1.rdata (46.4 KB) — objects: us_survey_wave1 (data.frame, 2269 rows, 21 columns: identity_protesters, tactic, degree_violence, police_action_required, recall_violence2, survey, caseid, wave, weight, race, age, female, education, income, partyID, ideology, interest_politics, interest_news, approve_protest_scale, approve_protest_dummy, nv_tactic_scale)
+- Replication/Data/us_survey_wave2.rdata (92.2 KB) — objects: us_survey_wave2 (data.frame, 3013 rows, 21 columns: degree_violence, police_action_required, recall_violence2, black, commitment, group_goal, ResponseId, age, female, education, income, race, partyID, pol_views, interest_politics, interest_news, identity_protesters_fac, approve_protest_dummy…)
+- Replication/Data/EBCR_EPR_NAVCO2.rdata (48.0 KB) — objects: EBCR_EPR_NAVCO2 (data.frame, 2628 rows, 59 columns: YEAR, CAMPAIGN, EPR_STATUS, success, NAVCO2ID, EPR_ID, LOCATION, LCCODE, TARGET, TCCODE, CAMP_GOALS, PRIM_METHOD, NAVCO1, CDIVERS_ETHNIC, EPR_GROUP.x, PARTICIPATION.x, INITIATION.x, MOVEMENT, CLAIM.x, RULE, SOURCES, NOTES, X, GW_COUNTRY_ID,…)
+- Replication/Data/NAVCO2_EPR.rdata (8.3 KB) — objects: NAVCO2_EPR (data.frame, 212 rows, 13 columns: campaign, year, EPR_STATUS, success, id, location, cyear, lccode, target, tccode, navco1designation, EPR_ID, EPR_STATUS_EXCL)
+- Replication/Data/NAVCO2.rdata (28.2 KB) — objects: NAVCO2 (data.frame, 1726 rows, 57 columns: campaign, year, success, location, cyear, lccode, target, tccode, navco1designation, camp_orgs, camp_size, camp_size_est, camp_conf_intensity, rad_flank, resis_meth, cdivers_gender, cdivers_age, cdivers_class, cdivers_urbrural, cdivers_ideo…)
+- Replication/Data/isr_survey_text_analysis_arab.rdata (772.6 KB) — objects: isr_survey_text_analysis_arab (list)
+- Replication/Data/isr_survey_text_analysis_eth.rdata (824.8 KB) — objects: isr_survey_text_analysis_eth (list)
+- Replication/Data/us_survey_text_analysis.rdata (670.9 KB) — objects: us_survey_text_analysis (list)
+- Replication/Figures/fig_1.pdf (5.5 KB)
+- Replication/Figures/fig_10.pdf (5.6 KB)
+- Replication/Figures/fig_3.pdf (6.7 KB)
+- Replication/Figures/fig_4.pdf (6.6 KB)
+- Replication/Figures/fig_6.pdf (5.3 KB)
+- Replication/Figures/fig_7.pdf (5.3 KB)
+- Replication/Figures/fig_8.pdf (5.7 KB)
+- Replication/Figures/fig_9.pdf (5.6 KB)
+- Replication/Figures/fig_A1.pdf (7.3 KB)
+- Replication/Figures/fig_A10.pdf (5.2 KB)
+- Replication/Figures/fig_A11.pdf (5.2 KB)
+- Replication/Figures/fig_A12.pdf (6.3 KB)
+- Replication/Figures/fig_A2.pdf (4.9 KB)
+- Replication/Figures/fig_A3.pdf (24.8 KB)
+- Replication/Figures/fig_A6.pdf (8.8 KB)
+- Replication/Figures/fig_A7.pdf (12.8 KB)
+- Replication/Figures/fig_A8.pdf (9.8 KB)
+- Replication/Figures/fig_A9.pdf (11.8 KB)
+- Replication/Tables/table_A14.tex (2.1 KB)
+- Replication/Tables/table_A16.tex (1010 B)
+- Replication/Tables/table_A2.tex (355 B)
+- Replication/Tables/table_A5.tex (792 B)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/manekin_2022_effective_for_whom.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Independent Reproduction
+This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's description alone.  The authors' own analysis code is deliberately withheld.  Do NOT open, read, source, or execute any script files that may appear in the dataset directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, and similar) — load data files only.  Derive the estimating equation, sample restrictions, fixed effects, and standard-error clustering from the paper information and claims above.
+
+## Blind Reproduction
+This reproduction is also BLIND: the paper's reported values for the quantities above are deliberately withheld, and you will not be told how close your numbers are.  Compute each quantity as the paper's method defines it; do not tune the specification toward any number you expect.  Do NOT read result tables, logs, or output files that may appear in the dataset directory (.tex, .log, .pdf, .html, and similar) to recover the paper's numbers — compute everything from the data files.  Print a RESULT: line for every quantity listed, using its name exactly.
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

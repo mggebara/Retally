@@ -1,0 +1,69 @@
+Lab data: 17840 rows, 46 cols
+Subjects in lab data: 892 
+high_task_difficulty table (rows):
+
+High Difficulty  Low Difficulty 
+           9812            8028 
+Subjects with high_task_difficulty = 1: 892 
+Subject-constant candidate columns: Treatment_Environment, q_gender, q_degree, perc_multitasking_1, perc_multitasking_1_easy, original_lab, Treatment_intervention, raven_score_quartiles, raven_score_median, subject_cat, q_abitur_grade_quartile, q_abitur_grade_cat, q_math_grade_cat, Treatment_Incentives, Treatment_Incentives_Baseline_sc, Treatment_Incentives_Int_sc, economist 
+Candidate samples with 608 subjects:
+   Treatment_Incentives in {10,20,40} 
+   Treatment_Incentives_Baseline_sc in {\textsc{Baseline-10},\textsc{Baseline-20},\textsc{Baseline-40}} 
+   Treatment_Incentives_Int_sc in {\textsc{Incentives-10},\textsc{Incentives-20},\textsc{Incentives-40}} 
+DEVIATION: Scarce sample identified by subject count match: Treatment_Incentives in {10,20,40} 
+Scarce sample: 12160 rows, 608 subjects
+Environment levels:
+env
+          \\textsc{baseline} \\textsc{directed attention} 
+                        4080                         4120 
+     \\textsc{forced choice} 
+                        3960 
+Baseline: \textsc{baseline} | Directed: \textsc{directed attention} | Forced choice: \textsc{forced choice} 
+Controls: c_age + c_gender + c_field + c_gpa_miss + c_gpa + c_math + c_abl + c_abt + c_multi + c_inc1 + c_inc2 + c_inc3 
+
+--- Table 2 (a) col1 ---
+             Estimate Std. Error  t value     Pr(>|t|)
+intervention 0.106921 0.01779604 6.008134 3.236103e-09
+
+--- Table 2 (a) col2 ---
+              Estimate Std. Error  t value     Pr(>|t|)
+intervention 0.1068662 0.01647318 6.487284 1.814622e-10
+
+--- Table 2 (b) col5 ---
+               Estimate Std. Error   t value     Pr(>|t|)
+intervention -0.2168317  0.0222495 -9.745462 6.017446e-21
+
+--- Table 2 (b) col6 ---
+               Estimate Std. Error   t value     Pr(>|t|)
+intervention -0.2195722 0.02150046 -10.21244 1.056468e-22
+
+--- Table 2 (b) col7 ---
+           Estimate Std. Error    t value     Pr(>|t|)
+directed -0.1370146 0.02563817  -5.344163 1.287006e-07
+forced   -0.2998737 0.02108708 -14.220730 8.076524e-40
+
+--- Table 3 col1 ---
+                Estimate Std. Error   t value   Pr(>|t|)
+intervention -0.02824452 0.01712522 -1.649293 0.09960495
+
+--- Table 3 col2 ---
+                Estimate Std. Error   t value Pr(>|t|)
+intervention -0.03386795 0.01482868 -2.283949 0.022719
+
+--- Table 4 col1 ---
+                Estimate Std. Error   t value  Pr(>|t|)
+intervention 0.005834141 0.01324192 0.4405811 0.6596731
+
+RESULT:choice_quality_intervention_t2_col1=0.106921
+RESULT:choice_quality_intervention_t2_col2=0.106866
+RESULT:default_adherence_intervention_t2_col5=-0.216832
+RESULT:default_adherence_intervention_t2_col6=-0.219572
+RESULT:default_adherence_directed_attention_t2_col7=-0.137015
+RESULT:default_adherence_forced_choice_t2_col7=-0.299874
+RESULT:background_quality_intervention_lab_t3_col1=-0.028245
+RESULT:background_quality_intervention_lab_t3_col2=-0.033868
+RESULT:payoff_share_intervention_t4_col1=0.005834
+RESULT:n_obs_lab_tables_2_to_4=12160.000000
+RESULT:n_subjects_lab_tables_2_to_4=608.000000
+RESULT:memory_intervention_online_t3_col5=-0.114252
+RESULT:memory_intervention_online_t3_col6=-0.113364

@@ -6,6 +6,7 @@
 - I4R report: https://www.econstor.eu/bitstream/10419/272845/1/I4R-DP043.pdf
 - I4R outcome label: reproducible; split: holdout
 - Catalog entry (ground truth): `benchmark/papers/altmann-2022-cognitive-spillovers.yaml`
+- Data access: public
 
 > Headline finding (as published): policies that steer attention to a decision (Directed Attention) or force an active choice (Forced Choice) raise decision-task choice quality by about 11 percentage points and cut default adherence (Table 2), but lower performance in the simultaneous background task — a negative cognitive spillover, in the lab and in an online Memory-game experiment (Table 3) — so that overall payoffs do not change (Table 4).
 > Original analysis in Stata 15 (README: "code was last run with version 15"); the experiment itself ran in oTree 3.3.11 / Python 3.7. language: r is the reproduction target.
@@ -42,6 +43,7 @@
 | `claude-code` | [13/13](seeded/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[13/13](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [13/13](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[13/13](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
 | `pipeline-desktop-opus` | [13/13](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) | [13/13](independent/pipeline-desktop-opus/20261023T064318Z/CELL.md) (20261023T064318Z) | [4/13](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) |
 | `pipeline-desktop-opus-run2` | [13/13](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [13/13](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [4/13](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
+| `pipeline-desktop-opus-run3` | [13/13](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [13/13](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [13/13](blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
 
@@ -74,6 +76,8 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Controls coding is my choice: field of study as subject_cat dummies, high-school GPA as q_abitur_grade_cat dummies (the category for missing GPA keeps N=12160), last math grade as q_math_grade_cat quartile dummies, perceived multitasking as both perc_multitasking_1 (Likert) and perc_multitasking_2 (relative), payoff scheme as Treatment_Incentives dummies, wave as original_lab. Online controls are age, gender dummies, and window_height1 and window_width1 for screen size.
 - [independent/pipeline-desktop-opus-run2/20261023T151837Z](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (13/13)
   - Sample for Tables 2-4 identified by searching subject-level variables for the definition yielding 608 subjects ( Treatment_Incentives!=Ample )
+- [independent/pipeline-desktop-opus-run3/20261103T010557Z](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (13/13)
+  - Scarce sample identified by subject count match: Treatment_Incentives in {10,20,40}
 - [blind/claude-code/2026-10-22-a](blind/claude-code/2026-10-22-a/CELL.md) (13/13)
   - Paper text supplied is the 2019 IZA working-paper version (no regression tables, no online experiment, 'Active Choice' instead of 'Forced Choice'); specifications were taken from the task descriptions of the published Tables 2-4 plus the data's variable labels.
   - Control set mapping (choice of codings is mine): age = q_age; gender = q_gender (female dummy); field of study = subject_cat factor (4 categories); high school GPA = q_abitur_grade_cat factor (quartiles plus a 5th category for missing GPA, so no observations are dropped); last math grade = q_math_grade_cat factor (quartiles); ability = ability_load and ability_task; perceived multitasking ability = perc_multitasking_1 (Likert); payoff-scheme indicators = Treatment_Incentives factor (10/20/40); wave = original_lab factor.
@@ -96,15 +100,19 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
-- blind: `background_quality_intervention_lab_t3_col2` — pipeline 0/2, agent 3/3
-- blind: `choice_quality_intervention_t2_col1` — pipeline 0/2, agent 3/3
-- blind: `choice_quality_intervention_t2_col2` — pipeline 0/2, agent 3/3
-- blind: `default_adherence_directed_attention_t2_col7` — pipeline 0/2, agent 3/3
-- blind: `default_adherence_forced_choice_t2_col7` — pipeline 0/2, agent 3/3
-- blind: `default_adherence_intervention_t2_col5` — pipeline 0/2, agent 3/3
-- blind: `default_adherence_intervention_t2_col6` — pipeline 0/2, agent 3/3
-- blind: `n_obs_lab_tables_2_to_4` — pipeline 0/2, agent 3/3
-- blind: `n_subjects_lab_tables_2_to_4` — pipeline 0/2, agent 3/3
+_None._
+
+Pass rates at least 50 points apart (not unanimous):
+
+- blind: `background_quality_intervention_lab_t3_col2` — pipeline 1/3, agent 3/3
+- blind: `choice_quality_intervention_t2_col1` — pipeline 1/3, agent 3/3
+- blind: `choice_quality_intervention_t2_col2` — pipeline 1/3, agent 3/3
+- blind: `default_adherence_directed_attention_t2_col7` — pipeline 1/3, agent 3/3
+- blind: `default_adherence_forced_choice_t2_col7` — pipeline 1/3, agent 3/3
+- blind: `default_adherence_intervention_t2_col5` — pipeline 1/3, agent 3/3
+- blind: `default_adherence_intervention_t2_col6` — pipeline 1/3, agent 3/3
+- blind: `n_obs_lab_tables_2_to_4` — pipeline 1/3, agent 3/3
+- blind: `n_subjects_lab_tables_2_to_4` — pipeline 1/3, agent 3/3
 
 ## Cells
 
@@ -123,6 +131,10 @@ Claims where, in the same mode, one reproducer family passed in every run and th
 ### seeded · pipeline-desktop-opus-run2 · 20261023T151837Z
 
 [`seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md`](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-10-23T15:18:37Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
+
+### seeded · pipeline-desktop-opus-run3 · 20261103T010557Z
+
+[`seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md`](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-03T01:05:57Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 
 ### independent · claude-code · 2026-10-22-a
 
@@ -144,6 +156,10 @@ Claims where, in the same mode, one reproducer family passed in every run and th
 
 [`independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — final 13/13, re-scored 13/13; first scored 4/13; executions 2; 2026-10-23T15:18:37Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-run3 · 20261103T010557Z
+
+[`independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md`](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — final 13/13, re-scored 13/13; first scored 4/13; executions 2; 2026-11-03T01:05:57Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
+
 ### blind · claude-code · 2026-10-22-a
 
 [`blind/claude-code/2026-10-22-a/CELL.md`](blind/claude-code/2026-10-22-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-10-22T03:19:07Z; from `claude-code-6papers-all-modes-2026-10-22.json`; evidence complete.
@@ -163,4 +179,8 @@ Claims where, in the same mode, one reproducer family passed in every run and th
 ### blind · pipeline-desktop-opus-run2 · 20261023T150832Z
 
 [`blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md`](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — final 4/13, re-scored 4/13; first scored 4/13; executions 1; 2026-10-23T15:08:32Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-run3 · 20261103T010557Z
+
+[`blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md`](blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-03T01:05:57Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 

@@ -1,0 +1,93 @@
+Lab data: 17840 rows, 46 cols
+Columns: payoff, Attention, load_correct, round, Treatment_Environment, default_followed, load_correct_mean, summation_correct_mean, summation_correct, default_followed_mean, attention_mean, attention_positive_mean, default_correct_choice, diff_choice_second, ability_load, ability_task, q_age, q_gender, q_subject, q_degree, q_abitur_year, q_abitur_grade, q_math_grade, perc_multitasking_1, perc_multitasking_2, risk, perc_multitasking_1_easy, raven_score, no_attention, subject_id, original_lab, Treatment_intervention, payoff_share_mean, payoff_share, default_followed_correct_mean, raven_score_quartiles, raven_score_median, high_task_difficulty, subject_cat, q_abitur_grade_quartile, q_abitur_grade_cat, q_math_grade_cat, Treatment_Incentives, Treatment_Incentives_Baseline_sc, Treatment_Incentives_Int_sc, economist 
+  payoff: 7 unique; values: 0,0.100000001490116,0.200000002980232,0.400000005960464,0.5,0.600000023841858,0.800000011920929
+  Attention: 3006 unique; 
+  load_correct: 2 unique; values: 0,1 | labels: 0=Not correct; 1=Load correct
+  round: 20 unique; 
+  Treatment_Environment: 3 unique; values: 1,2,3 | labels: 1=\textsc{Baseline}; 2=\textsc{Directed Attention}; 3=\textsc{Forced Choice}; 4=\textsc{Baseline-8}; 5=\textsc{High Qual.}
+  default_followed: 2 unique; values: 0,1 | labels: 0=Not Followed; 1=Followed Default
+  load_correct_mean: 21 unique; 
+  summation_correct_mean: 20 unique; 
+  summation_correct: 2 unique; values: 0,1 | labels: 0=Not correct; 1=Math task correct
+  default_followed_mean: 21 unique; 
+  attention_mean: 194 unique; 
+  attention_positive_mean: 19 unique; 
+  default_correct_choice: 2 unique; values: 0,1 | labels: 0=Default incorrect; 1=Default correct
+  diff_choice_second: 7 unique; values: 1,2,3,4,5,6,7
+  ability_load: 11 unique; values: 0,0.100000001490116,0.200000002980232,0.300000011920929,0.400000005960464,0.5,0.600000023841858,0.699999988079071,0.800000011920929,0.899999976158142,1
+  ability_task: 9 unique; values: 0.200000002980232,0.300000011920929,0.400000005960464,0.5,0.600000023841858,0.699999988079071,0.800000011920929,0.899999976158142,1
+  q_age: 34 unique; 
+  q_gender: 2 unique; values: 0,1 | labels: 0=Male; 1=Female
+  q_subject: character, 14 unique
+  q_degree: character, 4 unique
+  q_abitur_year: 30 unique; 
+  q_abitur_grade: 30 unique; 
+  q_math_grade: 10 unique; values: 1,1.29999995231628,1.70000004768372,2,2.29999995231628,2.70000004768372,3,3.29999995231628,4,5
+  perc_multitasking_1: 5 unique; values: 1,2,3,4,5
+  perc_multitasking_2: 86 unique; 
+  risk: 11 unique; values: 0,1,2,3,4,5,6,7,8,9,10
+  perc_multitasking_1_easy: 2 unique; values: 0,1 | labels: 0=Multitasking hard; 1=Multitasking Easy
+  raven_score: 11 unique; values: 0,1,2,3,4,5,6,7,8,9,10
+  no_attention: 2 unique; values: 0,1
+  subject_id: 892 unique; 
+  original_lab: 2 unique; values: 0,1 | labels: 0=Revision; 1=Original Lab
+  Treatment_intervention: 2 unique; values: 0,1 | labels: 0=Baseline; 1=\textsc{Intervention}
+  payoff_share_mean: 120 unique; 
+  payoff_share: 7 unique; values: 0,0.200000002980232,0.333333343267441,0.5,0.666666686534882,0.800000011920929,1
+  default_followed_correct_mean: 19 unique; 
+  raven_score_quartiles: 4 unique; values: 1,2,3,4 | labels: 1=Very Low Raven; 2=Low Raven; 3=High Raven; 4=Very High Raven
+  raven_score_median: 2 unique; values: 1,2 | labels: 1=Low Raven; 2=High Raven
+  high_task_difficulty: 2 unique; values: 0,1 | labels: 0=Low Difficulty; 1=High Difficulty
+  subject_cat: 4 unique; values: 0,1,2,3 | labels: 0=Others; 1=Law; 2=Economics; 3=Sciences
+  q_abitur_grade_quartile: 4 unique; values: 1,2,3,4
+  q_abitur_grade_cat: 5 unique; values: 1,2,3,4,5
+  q_math_grade_cat: 4 unique; values: 1,2,3,4
+  Treatment_Incentives: 4 unique; values: 1,2,3,4 | labels: 1=10; 2=20; 3=40; 4=Ample
+  Treatment_Incentives_Baseline_sc: 4 unique; values: 1,2,3,4 | labels: 1=\textsc{Baseline-10}; 2=\textsc{Baseline-20}; 3=\textsc{Baseline-40}; 4=\textsc{Baseline-Ample}
+  Treatment_Incentives_Int_sc: 4 unique; values: 1,2,3,4 | labels: 1=\textsc{Incentives-10}; 2=\textsc{Incentives-20}; 3=\textsc{Incentives-40}; 4=\textsc{Incentives-Ample}
+  economist: 2 unique; values: 0,1
+Scarce-indicator candidates:  
+Scarce identified as Treatment_Incentives != Ample; scarce rows: 12160 
+Environment mapping table:
+     env_cat
+env_n    B   DA   FC
+    1 5960    0    0
+    2    0 6000    0
+    3    0    0 5880
+Intervention vs env cat:
+   env_cat
+       B   DA   FC
+  0 5960    0    0
+  1    0 6000 5880
+Default adherence variable: default_followed 
+Controls found: age= q_age  gender= q_gender  subject= q_subject  abitur= q_abitur_grade  math= q_math_grade  abil_load= ability_load  abil_task= ability_task  multitask= perc_multitasking_1  wave= NA 
+Incentive vars: Treatment_Incentives, Treatment_Incentives_Baseline_sc, Treatment_Incentives_Int_sc 
+Lab sample rows: 12160  subjects: 608 
+Control terms: c_age + c_gender + factor(c_subject) + c_abitur + c_math + c_abl + c_abt + c_multi + c_inc1 + c_inc2 + c_inc3 
+N obs in col2 regression: 11920 
+MTurk data: 5472 rows
+  round: 9 unique; values: 1,2,3,4,5,6,7,8,9
+  age: 53 unique; 
+  window_height1: 239 unique; 
+  window_width1: 184 unique; 
+  math_task_correct: 2 unique; values: 0,1
+  memory: 11 unique; values: 0,0.100000001490116,0.200000002980232,0.300000011920929,0.400000005960464,0.5,0.600000023841858,0.699999988079071,0.800000011920929,0.899999976158142,1
+  math_time: 4289 unique; 
+  subject_id: 608 unique;  | labels: 1=082j64es; 2=09gpjhc6; 3=0a0v3mmq; 4=0b3ercnd; 5=0bu9j92c; 6=0bwcom4x; 7=0cd0s6i3; 8=0d139p1q; 9=0hmkmjmv; 10=0hus0t8l; 11=0kx4nzay; 12=0ltyaff9; 13=0lz0e96i; 14=0n9iyjbg; 15=0naaj6ib; 16=0serm4rv; 17=0sj9lpaf; 18=0uq84sdy; 19=0xhl756u; 20=0y2cvdtm; 21=0yepa6al; 22=11vcoiof; 23=15l0xrux; 24=15tittro; 25=1aigg02s; 26=1avk0bip; 27=1diebvem; 28=1e9gdc4i; 29=1g38flaz; 30=1gwy7p1z; 31=1iopn2sg; 32=1kdlwpwh; 33=1li89ek5; 34=1msen4c5; 35=1nzn4fau; 36=1odp6r0q; 37=1omrpu6x; 38=1rrye8se; 39=1wk2951v; 40=1zsmnd8l; 41=21zxz09e; 42=221e9vrk; 43=22snkt7z; 44=24epqy5a; 45=24zfwcnt; 46=26x6tjr7; 47=29bzducg; 48=2in8np8l; 49=2ipijdq5; 50=2kigpvw1; 51=2lm3gu56; 52=2moacg6w; 53=2qxv20md; 54=2w42r5o4; 55=2znpfbb5; 56=30az0vzm; 57=30l7mgxl; 58=31dlj9rz; 59=31lz86o0; 60=336p3iz8; 61=33emae3b; 62=34181xdu; 63=34bxl0pw; 64=3e90h4we; 65=3fteam15; 66=3g1mioqa; 67=3hvrjt2p; 68=3inrkazb; 69=3jddqw6v; 70=3me8wyvi; 71=3oxsjpwc; 72=3vzi6r4w; 73=3wr15e8w; 74=3ywoo1hv; 75=3zemc5n9; 76=41p10t24; 77=45jk5kzj; 78=4aa5bf6q; 79=4ekvvr1r; 80=4eqaxiis; 81=4fl81gd1; 82=4g465kfl; 83=4hya0yii; 84=4jvxmch3; 85=4k78c24d; 86=4lh40tax; 87=4o0vayb5; 88=4os49lhd; 89=4qnfo58g; 90=4r5o0ih6; 91=4ri1qi6u; 92=4sf1xwo1; 93=4slg0p76; 94=4u4h8xlo; 95=4ubbkkv0; 96=4x2aaeou; 97=508sq11l; 98=52skcuyq; 99=53zqnzfa; 100=54o334ng; 101=57h11qzl; 102=5hqj6eir; 103=5i9dfy8h; 104=5is9560p; 105=5khhv4kp; 106=5ku0pr7m; 107=5ljblxgg; 108=5omfy0ni; 109=5q3eoimj; 110=5y5892ko; 111=5yu6l0ux; 112=64xh0s8a; 113=66vv4n3k; 114=66xwgehl; 115=67byo0uu; 116=68uuh8ya; 117=6addl19d; 118=6bfpw2oc; 119=6creqqm6; 120=6kbl0ymf; 121=6kky5ksh; 122=6l4xy813; 123=6l8l8o1y; 124=6vu3vxl1; 125=6woo43kg; 126=6xzh3eek; 127=70vs0wih; 128=75iwht21; 129=78f158xi; 130=79w3h8d7; 131=7cu9sdyh; 132=7em7j5ka; 133=7fimkr36; 134=7hcr9ifl; 135=7m7y7tmw; 136=7ngv34g4; 137=7nmjn2uu; 138=7p6r5jcw; 139=7prflygn; 140=7pvjxj41; 141=7sewhp1v; 142=7so8eanz; 143=7xy67suz; 144=7zzi41cr; 145=8373srdj; 146=83vbe1uk; 147=85ar4ar7; 148=85mis6o3; 149=8ahx3g97; 150=8azc9690; 151=8dasa09f; 152=8eb9nl8l; 153=8gdsorbd; 154=8hjyd2fz; 155=8j1jmy3v; 156=8ko5io9h; 157=8ov6bx8y; 158=8r5yydv7; 159=8vo5bpf8; 160=90eq0tn2; 161=90z38gmt; 162=91wx72b8; 163=920vqzhu; 164=940r87f1; 165=96gnmeyz; 166=96sbjruf; 167=9c5ctczz; 168=9c6ist8p; 169=9flhyk3t; 170=9j0z6cw0; 171=9n4xba3v; 172=9ny6ah2s; 173=9pmbbado; 174=9pr7ibve; 175=9sl8mgj6; 176=9sqthj3p; 177=9t9umlr6; 178=9uaq81o2; 179=9vtrg384; 180=9ymv8195; 181=a09ccks0; 182=a1wcjswc; 183=a2a2y0gg; 184=a33thyfs; 185=a38twv5n; 186=ac6ljwwh; 187=ada2yurl; 188=adwqq0nz; 189=aeykhpts; 190=af6ep74z; 191=agg233we; 192=aj6smqt3; 193=ajr58iev; 194=alzjlbrh; 195=arr5c4fe; 196=av2hx9ec; 197=ay8bsug2; 198=ayfhmlys; 199=b0uodzoi; 200=b1sxlt7q; 201=b5b97ond; 202=b5qz9oyj; 203=baav8ug9; 204=bbw8qn9w; 205=bef6c5m8; 206=bf4zu0rm; 207=bfp3b6ql; 208=bfsga5yp; 209=bkq9qo43; 210=bo8xvkjc; 211=bqcar4gd; 212=bqra4ee7; 213=bqzt7byx; 214=bs0u78c4; 215=bs9gcxdd; 216=bu8s4gl9; 217=bxcqbnar; 218=bzkw8sj5; 219=bzxaffnq; 220=c0sl1m79; 221=c0unmwd9; 222=c53thaix; 223=c5699bkd; 224=c7l299yv; 225=cbws32ax; 226=ceee7uof; 227=cf3ab5th; 228=cl48b86p; 229=cm1e1y2f; 230=cn1cjex9; 231=cnh51d08; 232=cnxgv40f; 233=comuguko; 234=cq8hdsrq; 235=cs5iz9o2; 236=cueyena1; 237=cvi0hgv9; 238=cxo5ou4j; 239=d3v5kv20; 240=d5v8eek9; 241=d5zxcf1b; 242=d6po1xr6; 243=da5ocmxm; 244=dfhi0ej4; 245=dgz7xt3d; 246=dk720duj; 247=dl9fs8wq; 248=dnr98g43; 249=do4lu8tq; 250=dpgb0vtb; 251=ds4xv8im; 252=dsiqrk7l; 253=dusw607f; 254=dw2drttj; 255=dwqedeo4; 256=e4qkws4n; 257=eacv9pzh; 258=eay6jzan; 259=ed5cetc8; 260=edvkc1rg; 261=edznime1; 262=ee85frmi; 263=eez5d1z8; 264=ej80hf40; 265=emnmlrmq; 266=en30acm8; 267=en32vk01; 268=eqm8zn8x; 269=es9fd2iw; 270=et51ctbk; 271=etmk94h3; 272=eu0s3xgu; 273=ew2ikgej; 274=f02gijcy; 275=f0rfripf; 276=f1rpdpqt; 277=f4kvuv7s; 278=f5ynidvp; 279=faxwah9j; 280=fb6gdatv; 281=fd3erjoi; 282=ff16aakd; 283=fg12yrcd; 284=fh33kvsc; 285=fmpcjadv; 286=fp5ndsnm; 287=fq2npt3c; 288=ftmj5ac3; 289=g5naxhmy; 290=g5vw91gh; 291=g8zdz23h; 292=ge8rvwcg; 293=gfol3r3r; 294=ghz2gc1o; 295=gkaylsjl; 296=gluvmtwg; 297=gn2jxc2a; 298=gova2t7y; 299=gpsb7fpu; 300=gqdtwv68; 301=gqh5u3cx; 302=gycb0q9d; 303=h0yqv3g8; 304=h1gcfkhz; 305=h3utoovv; 306=h6ukpgz3; 307=h96xnul1; 308=hc7x873c; 309=hdzm9tth; 310=herositl; 311=hfecmj0e; 312=hfooh37z; 313=hixqt95b; 314=hj90xw6b; 315=hk6dl7u2; 316=hmyw0xov; 317=hwhcdbcx; 318=hwsj8tp2; 319=hyotgaqp; 320=hypgnwsg; 321=hzknucz3; 322=i15fmhpa; 323=i3y076na; 324=i40ijra2; 325=i93q8g88; 326=idrnwzlx; 327=igsf3i5i; 328=iiek6bge; 329=il7kvxy9; 330=illwataw; 331=illyqbkm; 332=iq90o5gp; 333=iqijp4qs; 334=ir7y3qus; 335=j3sekxaf; 336=j78hxnye; 337=j829lx02; 338=jatop1vc; 339=jb2b2y9v; 340=jel915nx; 341=jkojw6cz; 342=jkpi01rh; 343=jmld4tct; 344=jnckt597; 345=jtgiml9d; 346=juuld906; 347=jxczx3dh; 348=jxe3ulb8; 349=jzp0kg0j; 350=k2a4vwdr; 351=k8elo7fx; 352=k8n6n1di; 353=kbwewugi; 354=kggueyvi; 355=kk0jcpj4; 356=kkocikua; 357=kmc46ix8; 358=kpx4ncjx; 359=kqekdhnq; 360=ktivtvmq; 361=ku8l2pbf; 362=kynnzbs8; 363=l07htr84; 364=l0ma2yo6; 365=l2j8le0b; 366=l4w2zd0i; 367=l5ig4d1q; 368=l5pvll7a; 369=l78djclr; 370=l92b4pb5; 371=lc5chlgb; 372=lcklnkr6; 373=lcpdc5h9; 374=le009pao; 375=li13wj9r; 376=ll02fqdj; 377=lnnmxccp; 378=lny72sbd; 379=lnyicmqg; 380=lpc3liwl; 381=lu8ibg9h; 382=luf9om84; 383=lvnrbm1g; 384=lvwr0cot; 385=ly9sal09; 386=m05w14te; 387=m2siqesg; 388=m5wh998c; 389=m6l0dmrc; 390=m7tykrwa; 391=mbsawwjw; 392=mdb6sn81; 393=mhfqgcml; 394=mjnuksy6; 395=ml4p0jfh; 396=mll191hy; 397=mnh0ltn3; 398=mrm1z0ow; 399=mrv4z3p4; 400=mv7qlak6; 401=my4vlyv0; 402=n78l29sj; 403=n9936si6; 404=n99tpnmr; 405=nln9r02k; 406=nrxkxg54; 407=nu06gfvb; 408=o5dy147w; 409=o5v61xzb; 410=o653d5lj; 411=o7slms15; 412=o8opzjle; 413=oa0vbf2s; 414=oam2jvb2; 415=oat1vssp; 416=ofgckwvw; 417=ofhyzpws; 418=og0u0ovq; 419=oijyoh64; 420=ojp19j1r; 421=ojvsrthw; 422=okghdwo5; 423=ombhqugi; 424=oq5s2jq6; 425=ostcv2l9; 426=ozf300k0; 427=p4dtyh3v; 428=p6byvk6d; 429=p7bkp61o; 430=p9e6vzv4; 431=papm27k6; 432=pat73znq; 433=pbwv8uto; 434=pcelz6qj; 435=pf2qnr43; 436=pgnvguiw; 437=phz0viqf; 438=pimy5eql; 439=pjw4fyhq; 440=pl3jokc0; 441=pmijpo3d; 442=pq66yzx3; 443=prhdnuts; 444=proz5zma; 445=pte0rjup; 446=pv3g6ehm; 447=pw5jqdgd; 448=pwz4auy9; 449=q2xl5mjg; 450=q42epbn3; 451=q6wguus7; 452=q83uqeb5; 453=q8bwbl4f; 454=qa48z2w8; 455=qb7xpib1; 456=qcg3jzav; 457=qg8kmomg; 458=qgrdfstc; 459=qhkz0y2x; 460=ql6flp0v; 461=qllxk1jq; 462=qlt5dxxb; 463=qozk506j; 464=qpcsttqw; 465=qrtpbfix; 466=qvip03tp; 467=r257a9ij; 468=r5ra3j9c; 469=rbbpm4p2; 470=rccfx0du; 471=rdjvgbc4; 472=rgve3glh; 473=rirumxfc; 474=rm0wfnhf; 475=rn4e8chs; 476=rnporx2e; 477=rorh8cl9; 478=rr50vzfq; 479=rwegx65a; 480=s0wvhien; 481=s2dyszkh; 482=s3stl6w1; 483=s3xhw5f1; 484=s4ksksno; 485=s4y9rqd0; 486=s6ni1sv8; 487=s7lifc9t; 488=s7sol7gs; 489=sa8zqtij; 490=sbcotrea; 491=se91z2ik; 492=shrgd6v7; 493=sjcbch11; 494=slpxxtqb; 495=smwsb0sh; 496=sr3pi980; 497=ss5zqxr9; 498=sytcfy18; 499=sztfab6q; 500=t11vkt2x; 501=t1rsgzsv; 502=t2jxd2lx; 503=t3sn9sv2; 504=t7iz8bjg; 505=t847qrl0; 506=tapzfoks; 507=tcn85m7i; 508=tieg0f6k; 509=tkf6rw42; 510=tleuu8lc; 511=toglv3nt; 512=tozhzlko; 513=tqv4d4no; 514=ttjxbg3k; 515=tu85c3hi; 516=txdtgvk5; 517=tylzk9wr; 518=uas00udd; 519=uc3wevly; 520=ucgsp6rc; 521=uds2i6yw; 522=uem9c7l0; 523=ufyuerpr; 524=ug5x1tzo; 525=uihqd1ti; 526=ujzpx5rp; 527=ulucusdu; 528=unj469hu; 529=uo6ybd17; 530=usnbpgvx; 531=uzsvvu0j; 532=uzxoqxbj; 533=v2zstneh; 534=vcp3ubf2; 535=vdxp38u4; 536=vh5lv88b; 537=vim0qwkj; 538=vjtfgdfn; 539=vkmkemez; 540=vrsuw0kl; 541=vs6k203a; 542=vt93aliz; 543=vy58jfyc; 544=vylcniq7; 545=vzkk8hzm; 546=w5r8k6yi; 547=w76206ty; 548=w7bxxgho; 549=wc3unsxb; 550=wcc164di; 551=wft2vkj3; 552=wnh7qcfx; 553=wu6b2xxi; 554=wug55fm4; 555=wvmhnyis; 556=wyf42lxb; 557=wysdm6u2; 558=wzx5beg5; 559=x2tqb2kv; 560=x40pg4os; 561=x7cebn7x; 562=x7k3itmx; 563=x7ynhotn; 564=x9153tty; 565=x9au90v0; 566=xc7fcgke; 567=xeflur3a; 568=xifw942k; 569=xiyqw94n; 570=xly1nj10; 571=xlyr9uru; 572=xq7r4hko; 573=xqqc7zjk; 574=xzyqa8ah; 575=y0mb53om; 576=y0o87vlt; 577=y51euod9; 578=y5g5ucx8; 579=y6zyowh0; 580=yaes3hfc; 581=yaitxcgf; 582=ybl68nxk; 583=yhjq802f; 584=yhy05t76; 585=ynzknov8; 586=yohjv823; 587=yoixbziq; 588=ypn3miht; 589=yreymy8n; 590=ytmza114; 591=yv2gylru; 592=yx5a608q; 593=yyqea63i; 594=z0w2qnhp; 595=z2qxpana; 596=z75ke838; 597=zeqz5w63; 598=zgabnly5; 599=zjeh10sm; 600=zly9xpbc; 601=zqtm0the; 602=zs5n8vqz; 603=zxblbx19; 604=zxpqc0fr; 605=zxw12qa3; 606=zxz4j4y7; 607=zy0avizh; 608=zy4fl62e
+  gender: 3 unique; values: 1,2,3 | labels: 1=Female; 2=Male; 3=Other
+  Treatment_intervention: 2 unique; values: 0,1 | labels: 0=Baseline; 1=\textsc{Intervention}
+  passive_choice: 2 unique; values: 0,1
+  payoff_share: 16 unique; 
+RESULT:choice_quality_intervention_t2_col1=0.1069209862
+RESULT:choice_quality_intervention_t2_col2=0.1127832786
+RESULT:default_adherence_intervention_t2_col5=-0.2168316832
+RESULT:default_adherence_intervention_t2_col6=-0.224242714
+RESULT:default_adherence_directed_attention_t2_col7=-0.1370145631
+RESULT:default_adherence_forced_choice_t2_col7=-0.2998737374
+RESULT:background_quality_intervention_lab_t3_col1=-0.02824451563
+RESULT:background_quality_intervention_lab_t3_col2=-0.0366539841
+RESULT:memory_intervention_online_t3_col5=-0.1142516852
+RESULT:payoff_share_intervention_t4_col1=0.005834140935
+RESULT:n_obs_lab_tables_2_to_4=12160
+RESULT:n_subjects_lab_tables_2_to_4=608
+RESULT:memory_intervention_online_t3_col6=-0.1133638374

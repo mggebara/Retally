@@ -1,0 +1,132 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: The Economic Journal, 132 (August), 2290–2307 https://doi.org/10.1093/ej/ueab105 C⃝The Author(s) 2021. Published by Oxford University Press. All rights
+Abstract (first 500 chars): Advance Access Publication Date: 31 December 2021 PATIENCE, RISK-TAKING, AND HUMAN CAPITAL INVESTMENT ACROSS COUNTRIES∗ Eric A. Hanushek, Lavinia Kinne, Philipp Lergetporer and Ludger Woessmann Patience and risk-taking—two preference components that steer intertemporal decision-making—are fun- damental to human capital investment decisions. To understand how they contribute to international skill
+Methodology Summary: - **Data and samples:** Student-level PISA data (math, science and reading for 15-year-olds) from 7 waves, 2000–2018 (2000, 2003, 2006, 2009, 2012, 2015, 2018), merged with country-level Global Preference Survey (GPS; Falk et al., 2018; about 1,000 respondents per country, surveyed in 2012). The baseline cross-country sample is the 49 countries covered by both PISA and the GPS: 1,992,276 students in 263 country-by-wave cells. The migrant sample covers waves 2003–2018 (the 2000 wave is dropped because it lacks country of origin). It contains 80,398 migrant students from 58 origin countries with GPS data, living in 48 residence countries (up to 145,506 under a wider migrant definition).
+- **Preprocessing:** Each GPS preference measure (patience, risk-taking, and also positive reciprocity, negative reciprocity, altruism and trust) is z-standardised at the individual level within the analysis sample, then collapsed to country means. PISA scores are divided by 100, so the outcome is in international SD units; the dependent variable is in levels and is not standardised. Imputation dummies are used for missing controls. Test-taking effort is proxied by item non-response: the share of unanswered questions in the student background questionnaire that follows the test. It is built for every wave, at the individual level and as a country (or country-of-origin) mean. Migrants are students whose parents were both born abroad. First-generation migrants are assigned their own country of birth; second-generation migrants get their father's country of origin.
+- **Baseline cross-country specification (Eq. 1, Table 1):** Pooled student-level OLS: T_ict = β1·Patience_c + β2·Risk_c + α1·B_ict + μ_t + ε_ict. T is the PISA math score divided by 100. Patience and risk-taking are country-level GPS z-scores, in SD units, and are entered jointly (preferred spec, col. 3). Controls B are student gender, age and migration status, plus imputation dummies and wave fixed effects μ_t; there are no country fixed effects. Variants:
+  - patience alone (col. 1) and risk-taking alone (col. 2);
+  - adding the four other GPS preferences (col. 4);
+  - natives only (col. 5) and migrants only (col. 6), with the difference between them tested;
+  - adding individual item non-response (col. 7), then also the country-mean item non-response (col. 8).
+- **Weighting and inference (baseline):** Regressions are weighted by students' sampling probabilities within countries, rescaled so each country gets equal weight. Standard errors are robust and clustered at the country level throughout (49 clusters). Fit is reported as R². Figure 1 adds country-level bivariate and added-variable plots of mean math score (pooled across waves) on patience and risk-taking, with the country-level R² shown.
+- **Migrant (epidemiological) specification (Eq. 2, Tables 2–3):** OLS on migrant students only: T_ioct = δ1·Patience_o + δ2·Risk_o + γ1·B_ioct + θ_c×μ_t + ε_ioct. Preferences are those of the origin country o. The model has 180 residence-country-by-wave fixed effects, so identification comes only from variation within residence country and wave. Controls are gender, age, a dummy for OECD country of origin, and imputation dummies. Standard errors are clustered at the country-of-origin level. Table 2 variants:
+  - patience alone (col. 1), risk-taking alone (col. 2), both together (col. 3, preferred), and adding the other four origin-country GPS preferences (col. 4);
+  - controls for item non-response (cols. 5–7: individual, origin-country mean, and both);
+  - split by whether the student speaks the residence-country language at home (cols. 8 and 9), with the difference tested.
+- **Migrant selectivity checks (Table 3):** All columns keep the residence-country-by-wave fixed effects and the controls. They add, in turn:
+  - continent-of-origin fixed effects (col. 1);
+  - within-origin-country SDs of patience and risk-taking from the individual GPS data, weighted by sampling probability (col. 2);
+  - geographic distance between the most populous cities of origin and residence country, in 1,000 km (CEPII; col. 3);
+  - preferences interacted with the absolute patience and risk-taking gaps between origin and residence country, all variables demeaned (col. 5; col. 4 is the same reduced sample without the interactions);
+  - migrant educational selectivity, measured as the percentile of the origin-country schooling distribution that the average migrant in each residence country comes from (col. 7; col. 6 is the matching reduced sample).
+  The online appendix also covers OECD/non-OECD splits, science and reading, girls and boys, migrant generation and age at migration, alternative migrant definitions, and WVS/Hofstede measures in place of the GPS.
+- **Channels analysis (Table 4):** Country-level OLS on 49 countries, with robust standard errors. Each of four aggregated proximate-input indices (family, school, institutional, and a residual or productivity term) is regressed on patience and risk-taking. Upper-bound estimates build the input aggregation without the preferences; lower-bound estimates build it while controlling for them. This analysis is described as descriptive, not causal mediation.
+- **No ML-style validation:** There is no train/test split, no cross-validation and no hyperparameters. Evaluation is based on coefficient significance with clustered standard errors, R², and tests of differences between subsamples.
+
+
+## Quantities to Compute
+Compute each quantity below and print it under the given name.  The paper's reported values are deliberately not shown.
+1. table1_col3_patience [type: coefficient; unit: SD of PISA math score per SD of national patience]
+   Location: Table 1, column (3) Full sample, Patience
+   Context: Table 1 ("National Preferences and Student Achievement across Countries: The Intertwined Roles of Patience and Risk-taking"), column (3), row Patience. Student-level least squares regression of the PISA math test score (original PISA scores divided by 100, so a unit is one standard deviation), pooled over all PISA waves 2000-2018, on the country's Global Preference Survey patience and risk-taking entered together. Each preference is z-standardised in the analytical sample and collapsed to the country level. Controls: student gender, age and migration status, imputation dummies, and test-wave f…
+2. table1_col3_risk_taking [type: coefficient; unit: SD of PISA math score per SD of national risk-taking]
+   Location: Table 1, column (3) Full sample, Risk-taking
+   Context: Table 1, column (3), row Risk-taking. Same regression as table1_col3_patience (patience and risk-taking entered together).
+3. table1_col1_patience [type: coefficient; unit: SD of PISA math score per SD of national patience]
+   Location: Table 1, column (1) Full sample, Patience
+   Context: Table 1, column (1), row Patience. Same specification as table1_col3_patience but with patience as the only preference measure (risk-taking omitted).
+4. table1_col2_risk_taking [type: coefficient; unit: SD of PISA math score per SD of national risk-taking]
+   Location: Table 1, column (2) Full sample, Risk-taking
+   Context: Table 1, column (2), row Risk-taking. Same specification as table1_col3_patience but with risk-taking as the only preference measure (patience omitted).
+5. table1_col5_natives_patience [type: coefficient; unit: SD of PISA math score per SD of national patience]
+   Location: Table 1, column (5) Natives, Patience
+   Context: Table 1, column (5) Natives, row Patience. The column (3) regression (patience and risk-taking together, same weighting, wave fixed effects and country-clustered SEs) estimated on native students only. Students are migrants if both parents were born abroad; natives are the rest. The migration-status controls drop out within this subsample.
+6. table1_col5_natives_risk_taking [type: coefficient; unit: SD of PISA math score per SD of national risk-taking]
+   Location: Table 1, column (5) Natives, Risk-taking
+   Context: Table 1, column (5) Natives, row Risk-taking. Same regression as table1_col5_natives_patience.
+7. table1_col3_observations [type: other; unit: students]
+   Location: Table 1, column (3), Observations
+   Context: Observations in the Table 1 column (3) regression: students in all PISA waves 2000-2018 in the 49 countries with GPS data (the full-sample N shared by columns 1-4, 7 and 8).
+8. table2_col3_patience [type: coefficient; unit: SD of PISA math score per SD of country-of-origin patience]
+   Location: Table 2, column (3) Full sample, Patience (country-of-origin)
+   Context: Table 2 ("Patience, Risk-taking, and Student Achievement: Migrant Analysis"), column (3), row Patience (country-of-origin). Least squares regression of the PISA math score (divided by 100), PISA waves 2003-2018, on the GPS patience and risk-taking of the student's country of origin, entered together. Sample: migrant students, both of whose parents were born outside the country where the student attends school, with an identified origin country that has GPS data. First-generation migrants are assigned their country of birth, second-generation migrants their father's country of origin. The sampl…
+9. table2_col3_risk_taking [type: coefficient; unit: SD of PISA math score per SD of country-of-origin risk-taking]
+   Location: Table 2, column (3) Full sample, Risk-taking (country-of-origin)
+   Context: Table 2, column (3), row Risk-taking (country-of-origin). Same regression as table2_col3_patience.
+10. table2_col1_patience [type: coefficient; unit: SD of PISA math score per SD of country-of-origin patience]
+   Location: Table 2, column (1) Full sample, Patience (country-of-origin)
+   Context: Table 2, column (1), row Patience (country-of-origin). Same specification as table2_col3_patience but with country-of-origin patience as the only preference measure.
+11. table2_col4_patience [type: coefficient; unit: SD of PISA math score per SD of country-of-origin patience]
+   Location: Table 2, column (4) Full sample, Patience (country-of-origin)
+   Context: Table 2, column (4), row Patience (country-of-origin). The column (3) regression plus the four other GPS preferences of the country of origin (positive reciprocity, negative reciprocity, altruism, trust) as controls.
+12. table2_col4_risk_taking [type: coefficient; unit: SD of PISA math score per SD of country-of-origin risk-taking]
+   Location: Table 2, column (4) Full sample, Risk-taking (country-of-origin)
+   Context: Table 2, column (4), row Risk-taking (country-of-origin). Same regression as table2_col4_patience.
+13. table2_col3_observations [type: other; unit: migrant students]
+   Location: Table 2, column (3), Observations
+   Context: Observations in the Table 2 column (3) regression: first- and second-generation migrant students, PISA waves 2003-2018 (the full-sample N shared by columns 1-5).
+
+## Dataset Information
+Name: hanushek-2022-patience-risk-human-capital
+Local path: <repo>/.cache/datasets/hanushek_2022_patience_risk_human_capital.script-free
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- Replication/Data/Working/pisa_full_gps_final_imcoo.dta (104.7 MB) — 80398 rows, 236 columns: country, wave, oecd, patience, patience_sd, coo_oecd, coo_risktaking, migage, coo, pv1math, coo_posrecip_orig, coo_negrecip_orig, smctry, coo_patience, coo_altruism, coo_trust, pv1scie, pv1read, coo_continent, coo_patience_orig, coo_altruism_orig, coo_trust_orig, schoolid, countrywave, imcomp_home, comp_home, coo_wvs_important_risk_orig, coo_wvs_important_risk, risktaking, migra0, migra1, migra2, risktaking_sd, coo_risktaking_orig, coo_hofstede_lto_orig, coo_hofstede_uai_orig…
+- Replication/Data/Working/pisa_full_gps_final_cooavg.dta (22.8 MB) — 145506 rows, 28 columns: country, wave, coof_risktaking, coo_oecd, coof, coo_risktaking, coof_patience, coo, pv1math, coo_patience, pv1scie, pv1read, coom_patience, coom_risktaking, countrywave, isocode, pv1readorig, pv1scieorig, pv1mathorig, stubrncnt, fatbrncnt, motbrncnt, coom, coo_isocode, image, age, imfemale, female
+- Replication/Data/Working/pisa_full_gps_final_imcooavg.dta (13.3 MB) — 83798 rows, 28 columns: country, wave, coof_risktaking, coo_oecd, coof, coo_risktaking, coof_patience, coo, pv1math, coo_patience, pv1scie, pv1read, coom_patience, coom_risktaking, countrywave, isocode, pv1readorig, pv1scieorig, pv1mathorig, stubrncnt, fatbrncnt, motbrncnt, coom, coo_isocode, image, age, imfemale, female
+- Replication/Data/Working/pisa_full_gps_final.dta (2.3 GB) — 1992276 rows, 208 columns: wave, oecd, patience, altruism, trust, country, risktaking, pv1math, pv1scie, pv1read, wvs_important_risk, imcomp_home, comp_home, hofstede_lto, hofstede_uai, schoolid, mmschoolbudgetgov, imschoolbudgetgov, migra0, migra1, migra2, pv2math_o…
+- Replication/Data/Working/pisa_full_gps_final_coo.dta (16.6 MB) — 141155 rows, 22 columns: country, wave, coo_oecd, coo_risktaking, coo, pv1math, coo_patience, pv1scie, pv1read, countrywave, isocode, pv1readorig, pv1scieorig, pv1mathorig, stubrncnt, fatbrncnt, motbrncnt, coo_isocode, image, age, imfemale, female
+- Replication/Data/Working/pisa_full_gps_final_coobothm.dta (16.6 MB) — 140951 rows, 22 columns: country, wave, coo_oecd, coo_risktaking, coo, pv1math, coo_patience, pv1scie, pv1read, countrywave, isocode, pv1readorig, pv1scieorig, pv1mathorig, stubrncnt, fatbrncnt, motbrncnt, coo_isocode, image, age, imfemale, female
+- Replication/Data/Working/pisa_full_gps_final_imcoobothm.dta (9.6 MB) — 80194 rows, 22 columns: country, wave, coo_oecd, coo_risktaking, coo, pv1math, coo_patience, pv1scie, pv1read, countrywave, isocode, pv1readorig, pv1scieorig, pv1mathorig, stubrncnt, fatbrncnt, motbrncnt, coo_isocode, image, age, imfemale, female
+- Replication/Data/Orig/Other/dist_cepii.dta (1.8 MB) — 50176 rows, 14 columns: smctry, iso_o, iso_d, contig, comlang_off, comlang_ethno, colony, comcol, curcol, col45, dist, distcap, distw, distwces
+- Replication/Data/CSV/dist_cepii.csv (3.8 MB) — columns: iso_o,iso_d,contig,comlang_off,comlang_ethno,colony,comcol,curcol,col45,smctry,dist,distcap,distw,distwces
+- Replication/Data/CSV/pisa_full_gps_final.csv (2.8 GB) — columns: schoolid,isocode,studid,pv1readorig,w_fstr1,w_fstr2,w_fstr3,w_fstr4,w_fstr5,w_fstr6,w_fstr7,w_fstr8,w_fstr9,w_fstr10,w_fstr11,w_fstr12,w_fstr13,w_fstr14,w_fstr15,w_fstr16,w_fstr17,w_fstr18,w_fstr19,w_fstr20,w_fstr21,w_fstr22,w_fstr23,w_fstr…
+- Replication/Data/CSV/pisa_full_gps_final_coo.csv (18.2 MB) — columns: country,isocode,pv1readorig,pv1scieorig,pv1mathorig,stubrncnt,fatbrncnt,motbrncnt,wave,coo,coo_isocode,coo_patience,coo_risktaking,coo_oecd,image,age,imfemale,female,countrywave,pv1math,pv1scie,pv1read
+- Replication/Data/CSV/pisa_full_gps_final_cooavg.csv (25.5 MB) — columns: country,isocode,pv1readorig,pv1scieorig,pv1mathorig,stubrncnt,fatbrncnt,motbrncnt,wave,coom,coof,coof_patience,coof_risktaking,coom_patience,coom_risktaking,coo_patience,coo_risktaking,coo,coo_isocode,coo_oecd,image,age,imfemale,female,coun…
+- Replication/Data/CSV/pisa_full_gps_final_coobothm.csv (18.1 MB) — columns: country,isocode,pv1readorig,pv1scieorig,pv1mathorig,stubrncnt,fatbrncnt,motbrncnt,wave,coo,coo_isocode,coo_patience,coo_risktaking,coo_oecd,image,age,imfemale,female,countrywave,pv1math,pv1scie,pv1read
+- Replication/Data/CSV/pisa_full_gps_final_imcoo.csv (117.8 MB) — columns: country,schoolid,isocode,studid,pv1readorig,w_fstr1,w_fstr2,w_fstr3,w_fstr4,w_fstr5,w_fstr6,w_fstr7,w_fstr8,w_fstr9,w_fstr10,w_fstr11,w_fstr12,w_fstr13,w_fstr14,w_fstr15,w_fstr16,w_fstr17,w_fstr18,w_fstr19,w_fstr20,w_fstr21,w_fstr22,w_fstr2…
+- Replication/Data/CSV/pisa_full_gps_final_imcooavg.csv (15.3 MB) — columns: country,isocode,pv1readorig,pv1scieorig,pv1mathorig,stubrncnt,fatbrncnt,motbrncnt,wave,coom,coof,coom_patience,coom_risktaking,coof_patience,coof_risktaking,coo_patience,coo_risktaking,coo,coo_isocode,coo_oecd,image,age,imfemale,female,coun…
+- Replication/Data/CSV/pisa_full_gps_final_imcoobothm.csv (10.3 MB) — columns: country,isocode,pv1readorig,pv1scieorig,pv1mathorig,stubrncnt,fatbrncnt,motbrncnt,wave,coo,coo_isocode,coo_patience,coo_risktaking,coo_oecd,image,age,imfemale,female,countrywave,pv1math,pv1scie,pv1read
+- Replication/Data/Orig/Other/Continents.xlsx (11.2 KB)
+- Replication/Data/Orig/Other/GDPpc_2000-2018_long.xlsx (38.2 KB)
+- Replication/Data/Orig/Other/cee.xlsx (16.6 KB)
+- Replication/Data/Orig/Other/hc_data.xlsx (43.7 KB)
+- Replication/Data/Orig/Other/migsel.xlsx (667.1 KB)
+- Replication/Data/Orig/Other/oecd.xlsx (9.3 KB)
+- Replication/Data/Orig/PISA/2000/Thumbs.db (126.0 KB)
+- Replication/Data/Orig/PISA/2003/Thumbs.db (121.0 KB)
+- Replication/Data/Orig/PISA/2006/Thumbs.db (105.0 KB)
+- Replication/Data/Orig/PISA/2009/Thumbs.db (70.5 KB)
+- Replication/Data/Orig/PISA/2012/Thumbs.db (55.0 KB)
+- Replication/README.docx (24.0 KB)
+- metadata.json (296 B)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/hanushek_2022_patience_risk_human_capital.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Independent Reproduction
+This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's description alone.  The authors' own analysis code is deliberately withheld.  Do NOT open, read, source, or execute any script files that may appear in the dataset directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, and similar) — load data files only.  Derive the estimating equation, sample restrictions, fixed effects, and standard-error clustering from the paper information and claims above.
+
+## Blind Reproduction
+This reproduction is also BLIND: the paper's reported values for the quantities above are deliberately withheld, and you will not be told how close your numbers are.  Compute each quantity as the paper's method defines it; do not tune the specification toward any number you expect.  Do NOT read result tables, logs, or output files that may appear in the dataset directory (.tex, .log, .pdf, .html, and similar) to recover the paper's numbers — compute everything from the data files.  Print a RESULT: line for every quantity listed, using its name exactly.
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

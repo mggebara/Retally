@@ -1,0 +1,135 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: HAL Id: hal-03793652
+Abstract (first 500 chars): We examine the educative role played by parents in social norm transmission. Using
+a field experiment, we study whether parents enforce and comply more with norms
+when their children are present compared to when they are not. We compare similar
+parents when or after they bring or pick up their children at school. We find that
+parents accompanying children, in contrast to parents alone, are more likely to
+punish norm violators and to provide help to strangers when there is no violation.
+They also
+Methodology Summary: - **Design**: Natural field experiment (pre-registered, AsPredicted #24270) with a 3×2 between-subject design, run near 30 randomly selected public elementary schools in Lyon on 30 days in May–June 2019 (N = 601 parents: 301 Alone, 300 Child). Scene treatments, played by one of two trained actors (male/female): "Violation" (actor throws a plastic bag with a banana peel to the side of the street), "Help" (actor seemingly accidentally drops the folders and pens from a bag), "Violation + Help" (both). Condition is the naturally occurring presence of a child: Child (parent bringing the child to school in the morning, 7:45–9:00, or just after pick-up in the afternoon, 16:15–18:00) vs. Alone (parent after drop-off or on the way to pick-up). About 100 observations per scene × condition cell.
+- **Targeting / sample restrictions**: Only single adults walking alone or with one or more children. Excluded: parents visibly in a rush, on the phone, pushing a stroller, riding a bike, walking a dog, holding something in both hands, or accompanying disabled children. Also dropped: targets who did not observe the violation, and targets who said in the post-scene survey (RA2) that they had no child at the school. Each school was visited on at most one day. One observation is missing the target's gender, so the models with controls lose one observation (399/400).
+- **Outcomes (binary)**: Punishment = 1 if the parent verbally and explicitly confronts the actor about the littering, else 0. Helping = 1 if the parent picks up at least one item or asks the child to pick one up, else 0; a child helping without the parent prompting does not count.
+- **Estimation**: Pooled OLS linear probability models (Table 2). Punishment is estimated on the Violation and Violation + Help scenes only (Help scene dropped; ~400 obs). Helping is estimated on the Help and Violation + Help scenes only (Violation scene dropped; ~401 obs). Specification: Y = β0 + β1·Child + β2·VH + β3·Child×VH (+ controls) + ε, where VH is a dummy for the Violation + Help scene. Coefficients are in raw probability units, not standardised. Columns (1) and (3) have no controls; columns (2) and (4) are the full specification.
+- **Controls (columns 2 and 4)**: Male Target (father), Male Actor, Morning, Witness (RA1 judged that another non-targeted adult was watching and able to intervene), Rich IRIS (school's IRIS-area median income is above the city median), Rain, Hot. Survey Response is not used as a control. There are no fixed effects.
+- **Inference**: Standard errors clustered at the school level (30 clusters). Treatment comparisons also use χ² tests on rates: Child vs. Alone within a scene, and Violation vs. Violation + Help within a condition. Balance checks are two-sided t-tests of equal means (Table 1). Conjecture 2 (indirect punishment, meaning help withheld after a violation) is tested with the Child×VH coefficient in the Helping model. Conjecture 1 is tested with the Child coefficient in the Punishment model and Conjecture 3 with the Child coefficient in the Helping model.
+- **Robustness and extensions**: Logit models instead of LPM. Child×Witness interactions, and Witness treated as a treatment within the Alone condition. Alternative sample restrictions and definitions (e.g., not counting a child prompted to help as helping). Heterogeneity by number, gender and age of children, actor and parent gender, and IRIS income (exploratory). Timing-slot effects. Two separate online norm-elicitation studies (Krupka–Weber vignette coordination game; a video study) check whether perceived norms change when a child is present.
+
+
+## Quantities to Compute
+Compute each quantity below and print it under the given name.  The paper's reported values are deliberately not shown.
+1. child_punishment_no_controls [type: coefficient; unit: probability of direct punishment (0-1)]
+   Location: Table 2, column (1) Punishment, row Child
+   Context: Table 2 ("Determinants of Punishment Rate (Left) and Helping Rate (Right)"), column (1), row Child. Pooled OLS linear probability model of Punishment, a dummy equal to 1 if the targeted parent verbally and explicitly confronted the actor about the littering violation, on a Child dummy (the parent was accompanying one or more children, against walking alone), a VH dummy (the Violation + Help scene, in which the actor also drops the contents of a bag after littering) and their interaction, with no other controls. The sample is the targeted parents in the Violation and Violation + Help scenes; th…
+2. child_punishment_controls [type: coefficient; unit: probability of direct punishment (0-1)]
+   Location: Table 2, column (2) Punishment, row Child
+   Context: Table 2, column (2), row Child. Same punishment model and sample as child_punishment_no_controls, adding the controls Male Target (father targeted), Male Actor (the male actor played the scene), Morning, Witness (another non-targeted adult was observing and able to intervene), Rich area (the school's IRIS area median income is above the city-wide median), Rain and Hot. One observation is dropped for missing data on the target's gender. School-clustered standard errors.
+3. child_helping_no_controls [type: coefficient; unit: probability of helping (0-1)]
+   Location: Table 2, column (3) Helping, row Child
+   Context: Table 2, column (3), row Child. Pooled OLS linear probability model of Helping, a dummy equal to 1 if the targeted parent picked up at least one of the dropped items (or asked the child to), on Child, VH and Child x VH, with no other controls. The sample is the parents in the Help and Violation + Help scenes; the Violation scene, which has no helping opportunity, is excluded. School-clustered standard errors.
+4. child_helping_controls [type: coefficient; unit: probability of helping (0-1)]
+   Location: Table 2, column (4) Helping, row Child
+   Context: Table 2, column (4), row Child. Same helping model and sample as child_helping_no_controls, with the controls of child_punishment_controls (Male Target, Male Actor, Morning, Witness, Rich area, Rain, Hot). The target with missing gender is dropped. School-clustered standard errors.
+5. vh_punishment_controls [type: coefficient; unit: probability of direct punishment (0-1)]
+   Location: Table 2, column (2) Punishment, row VH
+   Context: Table 2, column (2), row VH: the Violation + Help scene dummy in the controlled punishment regression of child_punishment_controls. It is the change in the punishment rate of parents alone when a helping opportunity follows the violation.
+6. vh_helping_controls [type: coefficient; unit: probability of helping (0-1)]
+   Location: Table 2, column (4) Helping, row VH
+   Context: Table 2, column (4), row VH: the Violation + Help scene dummy in the controlled helping regression of child_helping_controls. It is the change in the helping rate of parents alone when the actor littered before dropping the items (indirect punishment).
+7. child_x_vh_punishment_no_controls [type: coefficient; unit: probability of direct punishment (0-1)]
+   Location: Table 2, column (1) Punishment, row Child x VH
+   Context: Table 2, column (1), row Child x VH: the interaction of the Child and Violation + Help dummies in the uncontrolled punishment regression of child_punishment_no_controls.
+8. child_x_vh_punishment_controls [type: coefficient; unit: probability of direct punishment (0-1)]
+   Location: Table 2, column (2) Punishment, row Child x VH
+   Context: Table 2, column (2), row Child x VH, in the controlled punishment regression of child_punishment_controls.
+9. child_x_vh_helping_no_controls [type: coefficient; unit: probability of helping (0-1)]
+   Location: Table 2, column (3) Helping, row Child x VH
+   Context: Table 2, column (3), row Child x VH, in the uncontrolled helping regression of child_helping_no_controls. This is the test of the indirect-punishment conjecture (Result 3: not significant).
+10. child_x_vh_helping_controls [type: coefficient; unit: probability of helping (0-1)]
+   Location: Table 2, column (4) Helping, row Child x VH
+   Context: Table 2, column (4), row Child x VH, in the controlled helping regression of child_helping_controls.
+11. observations_punishment_controls [type: other; unit: targeted parents]
+   Location: Table 2, column (2), Observations
+   Context: Observations in the controlled punishment regression (Table 2, column 2): parents in the Violation and Violation + Help scenes with non-missing controls.
+12. observations_helping_no_controls [type: other; unit: targeted parents]
+   Location: Table 2, column (3), Observations
+   Context: Observations in the uncontrolled helping regression (Table 2, column 3): parents in the Help and Violation + Help scenes.
+
+## Dataset Information
+Name: brouwer-2022-teaching-norms
+Local path: <repo>/.cache/datasets/brouwer_2022_teaching_norms.script-free
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- Data Replication Package EJ MS20210782/3 replication package/Data/master.dta (128.8 KB) — 601 rows, 44 columns: School, Child, children, scene, Condition, Violation, Help, Punishment, Helping, male, Morning, witness, rich, Rain, children3, Hot, ViolationHelp, hugo, numkids, children2, HelpingParents, response2, OwnChild, childage2, childage3, childage4, childage5, childage6, childage7, childage8, childage9, childage10, childage11, childage12, obs, wobs, day, kidshelped, inc_Q, povrate, TIME, T10, boy, girl
+- Data Replication Package EJ MS20210782/3 replication package/Data/survey2.dta (74.4 KB) — 243 rows, 29 columns: gender, children, male, image, traitement, reasonimage, obs, normlitter, normenforc, normperslitter, normpersenforc, region, reasonteaching, reasonnorm, reasonother, reasonotherprecision, reasonno, reason1, reason2, reason3, reason4, age, belgium, earning, typecity, emotion, environment_ecology, civism, others
+- Data Replication Package EJ MS20210782/3 replication package/Data/survey1.dta (36.0 KB) — 506 rows, 14 columns: Children, Child, Male, Income, obs, BirthYear, Arron, OrderHV, Educ, V, DP, H, VH, risk
+- Data Replication Package EJ MS20210782/1 paper/EJ_MS20210782_conclusion.tex (5.1 KB)
+- Data Replication Package EJ MS20210782/1 paper/EJ_MS20210782_design.tex (12.7 KB)
+- Data Replication Package EJ MS20210782/1 paper/EJ_MS20210782_introduction.tex (10.9 KB)
+- Data Replication Package EJ MS20210782/1 paper/EJ_MS20210782_main.tex (8.3 KB)
+- Data Replication Package EJ MS20210782/1 paper/EJ_MS20210782_results.tex (15.1 KB)
+- Data Replication Package EJ MS20210782/1 paper/Exhibits/EJ_MS20210782_figure1.tex (563 B)
+- Data Replication Package EJ MS20210782/1 paper/Figures/EJ_MS20210782_figure1a.pdf (54.1 KB)
+- Data Replication Package EJ MS20210782/1 paper/Figures/EJ_MS20210782_figure1b.pdf (52.9 KB)
+- Data Replication Package EJ MS20210782/1 paper/Figures/Materials.png (288.3 KB)
+- Data Replication Package EJ MS20210782/1 paper/Figures/Materials_2.png (60.3 KB)
+- Data Replication Package EJ MS20210782/1 paper/References.bib (109.8 KB)
+- Data Replication Package EJ MS20210782/1 paper/bst/ejbib.bst (31.7 KB)
+- Data Replication Package EJ MS20210782/1 paper/latexmkrc (49 B)
+- Data Replication Package EJ MS20210782/3 replication package/Additional documentation/Design/EJ MS20210782_Design.pdf (252.2 KB)
+- Data Replication Package EJ MS20210782/3 replication package/Additional documentation/IRB/EJ MS20210782_CEEI_2019-077_Avis 19-592_Projet X 627.pdf (817.3 KB)
+- Data Replication Package EJ MS20210782/3 replication package/Additional documentation/Instructions/EJ MS20210782_instructions.pdf (603.9 KB)
+- Data Replication Package EJ MS20210782/3 replication package/Additional documentation/Instructions/EJ MS20210782_instructions_VideoSurvey.pdf (250.5 KB)
+- Data Replication Package EJ MS20210782/3 replication package/Additional documentation/Instructions/EJ MS20210782_instructions_VideoSurvey_FR.pdf (157.5 KB)
+- Data Replication Package EJ MS20210782/3 replication package/Additional documentation/Instructions/EJ MS20210782_instructions_Vignette_study.pdf (235.5 KB)
+- Data Replication Package EJ MS20210782/3 replication package/Additional documentation/Instructions/EJ MS20210782_instructions_Vignette_study_FR.pdf (102.1 KB)
+- Data Replication Package EJ MS20210782/3 replication package/Additional documentation/Pre-registration/Pre-Registration_d9288.pdf (181.2 KB)
+- Data Replication Package EJ MS20210782/3 replication package/Additional documentation/Selection and eligibility of participants/Selection and eligibility of participants.pdf (69.3 KB)
+- Data Replication Package EJ MS20210782/3 replication package/Data/master.csv (74.3 KB) — columns: obs,wobs,School,day,Child,children,children2,children3,scene,Condition,Violation,ViolationHelp,Help,Punishment,Helping,HelpingParents,kidshelped,male,hugo,Morning,witness,rich,Rain,Hot,inc_Q,povrate,response2,OwnChild,TIME,T10,boy,girl,numk…
+- Data Replication Package EJ MS20210782/3 replication package/Data/survey1.csv (42.0 KB) — columns: obs,BirthYear,Children,Arron,Child,OrderHV,Male,Educ,Income,V,DP,H,VH,risk
+- Data Replication Package EJ MS20210782/3 replication package/Data/survey2.csv (40.8 KB) — columns: obs,traitement,normlitter,normenforc,normperslitter,normpersenforc,gender,children,region,reasonteaching,reasonimage,reasonnorm,reasonother,reasonotherprecision,reasonno,reason1,reason2,reason3,reason4,male,age,belgium,earning,typecity,emot…
+- Data Replication Package EJ MS20210782/3 replication package/Do/variables_codebook.xlsx (15.2 KB)
+- Data Replication Package EJ MS20210782/3 replication package/ReadMe.docx (33.8 KB)
+- Data Replication Package EJ MS20210782/3 replication package/ReadMe.pdf (192.0 KB)
+- Data Replication Package EJ MS20210782/3 replication package/Results/Figure1a.pdf (54.1 KB)
+- Data Replication Package EJ MS20210782/3 replication package/Results/Figure1b.pdf (52.9 KB)
+- Data Replication Package EJ MS20210782/3 replication package/Results/TableA11_A.tex (2.0 KB)
+- Data Replication Package EJ MS20210782/3 replication package/Results/TableA11_B.tex (1.9 KB)
+- Data Replication Package EJ MS20210782/3 replication package/Results/TableA11_C.tex (2.0 KB)
+- Data Replication Package EJ MS20210782/3 replication package/Results/TableA12_A.tex (842 B)
+- Data Replication Package EJ MS20210782/3 replication package/Results/TableA12_B.tex (842 B)
+- Data Replication Package EJ MS20210782/3 replication package/Results/TableA12_C.tex (842 B)
+- Data Replication Package EJ MS20210782/3 replication package/Results/TableA12_D.tex (458 B)
+- Data Replication Package EJ MS20210782/3 replication package/Results/TableA13.tex (556 B)
+- Data Replication Package EJ MS20210782/3 replication package/Results/TableA2.tex (1.3 KB)
+- Data Replication Package EJ MS20210782/3 replication package/Results/TableA3.tex (2.5 KB)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/brouwer_2022_teaching_norms.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Independent Reproduction
+This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's description alone.  The authors' own analysis code is deliberately withheld.  Do NOT open, read, source, or execute any script files that may appear in the dataset directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, and similar) — load data files only.  Derive the estimating equation, sample restrictions, fixed effects, and standard-error clustering from the paper information and claims above.
+
+## Blind Reproduction
+This reproduction is also BLIND: the paper's reported values for the quantities above are deliberately withheld, and you will not be told how close your numbers are.  Compute each quantity as the paper's method defines it; do not tune the specification toward any number you expect.  Do NOT read result tables, logs, or output files that may appear in the dataset directory (.tex, .log, .pdf, .html, and similar) to recover the paper's numbers — compute everything from the data files.  Print a RESULT: line for every quantity listed, using its name exactly.
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

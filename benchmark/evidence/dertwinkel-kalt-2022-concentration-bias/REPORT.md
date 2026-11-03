@@ -6,6 +6,7 @@
 - I4R report: https://www.econstor.eu/bitstream/10419/272844/1/I4R-DP042.pdf
 - I4R outcome label: reproducible; split: holdout
 - Catalog entry (ground truth): `benchmark/papers/dertwinkel-kalt-2022-concentration-bias.yaml`
+- Data access: public
 
 > Headline finding: in a lab experiment where subjects trade extra real-effort tasks on eight future workdays against a larger restaurant voucher, the indifference point in an unbalanced trade-off (extra tasks on all eight days for the summed voucher raise) exceeds what the eight balanced trade-offs imply: concentration bias raises the per-workday willingness to work by 22.4% (Table 2).  Table 3 shows the effect is smaller when the voucher raise is framed as a sum of parts (Mechanism-Treatment), present with donations, and absent in the Control conditions that repeat a balanced trade-off.
 > Original analysis in Stata (do-files last run in Stata 17); R is used in the package only for the Section 4 / Appendix C calibration exercise (Calibration Exercise.R), which produces no pinned number. language: r is the reproduction target.
@@ -41,6 +42,7 @@
 | `claude-code` | [13/13](seeded/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[13/13](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [13/13](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[13/13](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
 | `pipeline-desktop-opus` | [13/13](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) | [13/13](independent/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) | [12/13](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) |
 | `pipeline-desktop-opus-run2` | [13/13](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [13/13](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [13/13](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
+| `pipeline-desktop-opus-run3` | [13/13](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [13/13](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [13/13](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
 
@@ -52,16 +54,16 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 | Cell | Claim | Reproduced | Paper | Band | Error / band | Verdict |
 |---|---|---|---|---|---|---|
-| [independent/pipeline-desktop-opus/20261023T062931Z](independent/pipeline-desktop-opus/20261023T062931Z/CELL.md) | `n_obs_table3` | 202 | 200 | ±2 (relative) | 1.000 | PASS |
-| [independent/pipeline-desktop-opus-run2/20261023T151837Z](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) | `n_obs_table3` | 202 | 200 | ±2 (relative) | 1.000 | PASS |
-| [blind/pipeline-desktop-opus/20261023T062931Z](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) | `n_obs_table3` | 202 | 200 | ±2 (relative) | 1.000 | PASS |
-| [blind/pipeline-desktop-opus-run2/20261023T150832Z](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) | `n_obs_table3` | 202 | 200 | ±2 (relative) | 1.000 | PASS |
 | [seeded/pipeline-desktop-opus/20261023T063725Z](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) | `rel_cb_mechanism_treatment_table3_col1` | 0.0754251 | 0.075 | ±0.0015 (relative) | 0.283 | PASS |
 | [seeded/pipeline-desktop-opus-run2/20261023T151837Z](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) | `rel_cb_mechanism_treatment_table3_col1` | 0.0754251 | 0.075 | ±0.0015 (relative) | 0.283 | PASS |
 | [seeded/claude-code/2026-10-22-a](seeded/claude-code/2026-10-22-a/CELL.md) | `rel_cb_mechanism_treatment_table3_col1` | 0.075425 | 0.075 | ±0.0015 (relative) | 0.283 | PASS |
 | [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `rel_cb_mechanism_treatment_table3_col1` | 0.075425 | 0.075 | ±0.0015 (relative) | 0.283 | PASS |
+| [seeded/pipeline-desktop-opus-run3/20261103T010557Z](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) | `rel_cb_mechanism_treatment_table3_col1` | 0.075425 | 0.075 | ±0.0015 (relative) | 0.283 | PASS |
+| [blind/pipeline-desktop-opus-run3/20261103T004800Z](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) | `diff_donation_treatment_minus_control_table3_col2` | 0.162912 | 0.158 | ±0.022 (se_band) | 0.223 | PASS |
 | [independent/pipeline-desktop-opus-run2/20261023T151837Z](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) | `diff_donation_treatment_minus_control_table3_col2` | 0.1625 | 0.158 | ±0.022 (se_band) | 0.205 | PASS |
 | [blind/pipeline-desktop-opus-run2/20261023T150832Z](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) | `diff_donation_treatment_minus_control_table3_col2` | 0.162486 | 0.158 | ±0.022 (se_band) | 0.204 | PASS |
+| [blind/pipeline-desktop-opus/20261023T062931Z](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) | `diff_donation_treatment_minus_control_table3_col2` | 0.162486 | 0.158 | ±0.022 (se_band) | 0.204 | PASS |
+| [independent/pipeline-desktop-opus-run3/20261103T010557Z](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) | `diff_donation_treatment_minus_control_table3_col2` | 0.162419 | 0.158 | ±0.022 (se_band) | 0.201 | PASS |
 
 ### Declared deviations
 
@@ -98,10 +100,6 @@ Claims where, in the same mode, one reproducer family passed in every run and th
 
 _None._
 
-Pass rates at least 50 points apart (not unanimous):
-
-- blind: `rel_concentration_bias_lower_table2_col1` — pipeline 1/2, agent 3/3
-
 ## Cells
 
 ### seeded · claude-code · 2026-10-22-a
@@ -119,6 +117,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### seeded · pipeline-desktop-opus-run2 · 20261023T151837Z
 
 [`seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md`](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-10-23T15:18:37Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
+
+### seeded · pipeline-desktop-opus-run3 · 20261103T010557Z
+
+[`seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md`](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-03T01:05:57Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 
 ### independent · claude-code · 2026-10-22-a
 
@@ -140,6 +142,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-10-23T15:18:37Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-run3 · 20261103T010557Z
+
+[`independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md`](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — final 13/13, re-scored 13/13; first scored 7/13; executions 2; 2026-11-03T01:05:57Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
+
 ### blind · claude-code · 2026-10-22-a
 
 [`blind/claude-code/2026-10-22-a/CELL.md`](blind/claude-code/2026-10-22-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 4; 2026-10-22T03:21:00Z; from `claude-code-6papers-all-modes-2026-10-22.json`; evidence complete.
@@ -159,4 +165,8 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · pipeline-desktop-opus-run2 · 20261023T150832Z
 
 [`blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md`](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-10-23T15:08:32Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-run3 · 20261103T004800Z
+
+[`blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md`](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-03T00:48:00Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 

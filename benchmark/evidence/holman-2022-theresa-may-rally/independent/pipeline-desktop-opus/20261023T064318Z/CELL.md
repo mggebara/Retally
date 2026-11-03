@@ -8,13 +8,14 @@
 | Model | desktop-opus |
 | Run | 20261023T064318Z |
 | Date | 2026-10-23T06:43:18Z |
+| Data access | public |
 | Results file | `benchmark/results/pipeline-oracle-desktop-opus-9papers-all-modes-2026-10-23.json` |
 | Artifacts | `benchmark/results/artifacts/holman-2022-theresa-may-rally/independent/pipeline/20261023T064318Z` |
 | Executions | 3 |
 | Refinements | 2 (0 error + 2 claim) |
 | First attempt | 1/11 |
 | First scored | 1/11 (execution 1) |
-| Final | **3/11** |
+| Final | **4/11** |
 | Package files withheld | 1 |
 | Evidence | complete |
 
@@ -24,17 +25,17 @@
 |---|---|---|---|---|---|---|
 | `intl_attack_table4` | 3.112 (0.875) | 0.890628 | 71.38% | ±0.875 (se_band) | FAIL | FAIL |
 | `intl_attack_x_woman_exec_table4` | -4.333 (1.859) | -1.66283 | 61.62% | ±1.859 (se_band) | FAIL | FAIL |
-| `n_obs_table4` | 4328 | 4369 | 0.95% | ±43.28 (relative) | PASS | PASS |
+| `n_obs_table4` | 4328 | 4369 | 0.95% | ±216.4 (relative) | PASS | PASS |
 | `did_attack_x_time_like_may_table2` | -0.1274 (0.0187) | -0.082396 | 35.32% | ±0.0187 (se_band) | FAIL | FAIL |
 | `did_attack_like_may_table2` | 0.0178 (0.0278) | -0.129012 | 824.79% | ±0.0278 (se_band) | FAIL | FAIL |
 | `did_time_like_may_table2` | -0.5007 (0.0229) | -0.301854 | 39.71% | ±0.0229 (se_band) | FAIL | FAIL |
 | `did_attack_x_time_may_best_pm_table2` | -0.0501 (0.0044) | -0.052204 | 4.20% | ±0.0044 (se_band) | PASS | FAIL |
 | `did_attack_may_best_pm_table2` | -0.0002 (0.004) | -0.001526 | 663.00% | ±0.004 (se_band) | PASS | FAIL |
 | `did_time_may_best_pm_table2` | 0.2098 (0.0036) | 0.023356 | 88.87% | ±0.004196 (relative) | FAIL | FAIL |
-| `n_obs_did_like_may_table2` | 143499 | 145012 | 1.05% | ±1434.99 (relative) | FAIL | FAIL |
-| `n_obs_did_may_best_pm_table2` | 97155 | 86517 | 10.95% | ±971.55 (relative) | FAIL | FAIL |
+| `n_obs_did_like_may_table2` | 143499 | 145012 | 1.05% | ±7174.95 (relative) | PASS | FAIL |
+| `n_obs_did_may_best_pm_table2` | 97155 | 86517 | 10.95% | ±4857.75 (relative) | FAIL | FAIL |
 
-Re-scored from `output/stdout.txt` with the runner's comparator: 3/11 pass, which agrees with the row's 3/11.
+Re-scored from `output/stdout.txt` with the runner's comparator: 4/11 pass, which agrees with the row's 4/11.
 
 Per-claim ground truth, tolerance rule and errors: [`scoring.json`](scoring.json).
 

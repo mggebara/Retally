@@ -1,0 +1,144 @@
+suppressPackageStartupMessages({
+  library(fixest)
+  library(dplyr)
+})
+set.seed(42)
+
+base <- "<repo>/.cache/datasets/adams_2023_women_mps_affective_polarization.script-free"
+
+emit <- function(name, val) {
+  if (is.null(val) || length(val) == 0 || is.na(val)) {
+    cat(sprintf("RESULT:%s=NA\n", name))
+  } else {
+    cat(sprintf("RESULT:%s=%.6f\n", name, as.numeric(val)))
+  }
+}
+
+to_num <- function(x) {
+  if (is.logical(x)) return(as.numeric(x))
+  if (is.factor(x)) x <- as.character(x)
+  if (is.character(x)) {
+    xl <- tolower(trimws(x))
+    if (all(xl %in% c("yes", "no", "true", "false", NA, ""))) {
+      return(ifelse(xl %in% c("yes", "true"), 1, ifelse(xl %in% c("no", "false"), 0, NA)))
+    }
+    return(suppressWarnings(as.numeric(x)))
+  }
+  as.numeric(x)
+}
+
+## ---------------- load data ----------------
+e1 <- new.env()
+load(file.path(base, "dyadic_data_1-4-22.Rdata"), envir = e1)
+dy <- as.data.frame(e1$updated_data)
+gd <- tryCatch(as.data.frame(readRDS(file.path(base, "gender_disagregated_8-8-21.rds"))),
+               error = function(e) NULL)
+
+cat("Dyadic columns:\n"); print(names(dy))
+if (!is.null(gd)) { cat("Gender columns:\n"); print(names(gd)) }
+
+## Women share of out-party j's MPs: to_pfeml (proportion/percent female MPs of the "to" party).
+## The previous automatic search picked diff_femlead (a leader-gender difference), which is wrong.
+make_ws <- function(x) {
+  x <- to_num(x)
+  if (max(x, na.rm = TRUE) > 1.0001 && max(x, na.rm = TRUE) <= 100) x <- x / 100
+  x
+}
+cat("to_pfeml summary:\n"); print(summary(to_num(dy$to_pfeml)))
+
+## ---------------- prepare main dyadic data ----------------
+prep <- function(d, dvname) {
+  cat("DV:", dvname, " | women share: to_pfeml\n")
+  out <- d
+  out$dv <- as.numeric(d[[dvname]])
+  out$ws <- make_ws(d$to_pfeml)
+  out$rl_raw <- abs(to_num(d$rile_distance))
+  out$coal <- to_num(d$govern_together)
+  out$opp <- to_num(d$opposition_together)
+  out$to_mp <- to_num(d$to_mp_number)
+  out$from_mp <- to_num(d$from_mp_number)
+  out$cy <- paste(d$country, d$year, sep = "_")
+  out
+}
+
+dd <- prep(dy, "party_like")
+
+restrict <- function(d) {
+  d %>% filter(!is.na(to_mp), !is.na(from_mp), to_mp >= 4, from_mp >= 4,
+               !is.na(dv), !is.na(ws), !is.na(rl_raw), !is.na(coal), !is.na(opp))
+}
+
+s <- restrict(dd)
+rl_sd <- sd(s$rl_raw)
+s$rl <- s$rl_raw / rl_sd
+cat("Sample N:", nrow(s), " elections:", length(unique(s$cy)), " rl raw mean/sd:",
+    mean(s$rl_raw), rl_sd, " ws mean/sd:", mean(s$ws), sd(s$ws), "\n")
+
+m2 <- feols(dv ~ ws + rl + coal + opp | cy, data = s, cluster = ~cy)
+
+## orientation check: CSES thermometer is 0 = dislike, 10 = like (coalition partners rate each other higher).
+flip <- FALSE
+if (coef(m2)["coal"] < 0) {
+  cat("DV appears reverse-coded; using 10 - DV\n")
+  flip <- TRUE
+  s$dv <- 10 - s$dv
+  m2 <- feols(dv ~ ws + rl + coal + opp | cy, data = s, cluster = ~cy)
+}
+m1 <- feols(dv ~ ws | cy, data = s, cluster = ~cy)
+
+print(summary(m1)); print(summary(m2))
+cat("Adj R2 m1:", r2(m1, "ar2"), " m2:", r2(m2, "ar2"), "\n")
+
+## ---------------- gender-disaggregated models ----------------
+gw <- NULL; gm <- NULL
+tryCatch({
+  if (is.null(gd)) stop("no gender data")
+  g <- gd
+  if (!("to_pfeml" %in% names(g))) {
+    key <- intersect(c("country", "year", "party_from", "party_to"), names(g))
+    add <- dy[, c(key, "to_pfeml")]
+    add <- add[!duplicated(add[, key]), ]
+    g <- left_join(g, add, by = key)
+  }
+  gdv <- if ("dislike" %in% names(g)) "dislike" else "party_like"
+  gp <- prep(g, gdv)
+  if (all(is.na(gp$dv))) stop("no gender DV")
+  gv <- g$gender
+  if (is.factor(gv)) gv <- as.character(gv)
+  if (is.character(gv)) {
+    fem <- grepl("^f|wom|^2$", trimws(gv), ignore.case = TRUE)
+    male <- grepl("^m(?!.*wom)|^men|^1$", trimws(gv), ignore.case = TRUE, perl = TRUE) & !fem
+  } else {
+    gvn <- as.numeric(gv)
+    u <- sort(unique(gvn[!is.na(gvn)]))
+    if (all(u %in% c(1, 2))) { fem <- gvn == 2; male <- gvn == 1 }
+    else { fem <- gvn == 1; male <- gvn == 0 }
+  }
+  fem[is.na(fem)] <- FALSE; male[is.na(male)] <- FALSE
+  cat("Gender table:\n"); print(table(gv, useNA = "ifany"))
+  gw_d <- restrict(gp[fem, ]); gw_d$rl <- gw_d$rl_raw / rl_sd
+  gm_d <- restrict(gp[male, ]); gm_d$rl <- gm_d$rl_raw / rl_sd
+  ## orientation check for the gender file separately (its DV is named "dislike")
+  chk <- feols(dv ~ rl + coal + opp | cy, data = rbind(gw_d, gm_d))
+  if (coef(chk)["coal"] < 0) {
+    cat("Gender DV appears reverse-coded (dislike); using 10 - DV\n")
+    gw_d$dv <- 10 - gw_d$dv
+    gm_d$dv <- 10 - gm_d$dv
+  }
+  gw <- feols(dv ~ ws + rl + coal + opp | cy, data = gw_d, cluster = ~cy)
+  gm <- feols(dv ~ ws + rl + coal + opp | cy, data = gm_d, cluster = ~cy)
+  print(summary(gw)); print(summary(gm))
+}, error = function(e) cat("Gender models failed:", conditionMessage(e), "\n"))
+
+## ---------------- output ----------------
+emit("women_mps_coef_bivariate", coef(m1)["ws"])
+emit("women_mps_coef_full", coef(m2)["ws"])
+emit("women_mps_coef_women_partisans", if (!is.null(gw)) coef(gw)["ws"] else NA)
+emit("women_mps_coef_men_partisans", if (!is.null(gm)) coef(gm)["ws"] else NA)
+emit("right_left_distance_coef_full", coef(m2)["rl"])
+emit("coalition_partners_coef_full", coef(m2)["coal"])
+emit("opposition_partners_coef_full", coef(m2)["opp"])
+emit("n_directed_dyads", nobs(m2))
+emit("n_obs_women_partisans", if (!is.null(gw)) nobs(gw) else NA)
+emit("n_obs_men_partisans", if (!is.null(gm)) nobs(gm) else NA)
+emit("n_election_studies", length(unique(s$cy)))

@@ -1,0 +1,990 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: American Political Science Review (2022) 116, 1, 161–20
+Abstract (first 500 chars): © The Author(s), 2021. Published by Cambridge University Press on behalf of the American Political Science Association. This is an Open Access article, distributed under the terms of the Creative Commons Attribution licence (https:// creativecommons.org/licenses/by/4.0/), which permits unrestricted re-use, distribution, and reproduction in any medium, provided the original work is properly cited. Effective for Whom? Ethnic Identity and Nonviolent Resistance DEVORAH MANEKIN
+Methodology Summary: - **Motivating observational analysis (Figure 1):** The authors replicate Chenoweth and Lewis (2013) using NAVCO 2.0 merged with Ethnic Power Relations (EPR), as combined by Thurber (2018). The data cover 220 groups in 110 countries, 1946–2006. The outcome is campaign success, coded 1 if the campaign achieved all of its stated goals within a year of its peak. They add ethnic group identity and interact it with tactic (violent vs. nonviolent). Ethnic identity is measured two ways: political status (included/dominant vs. excluded/disadvantaged, Panel A) and group size (majority vs. minority, Panel B). Predicted Pr(success) is plotted by tactic and group. The full specification is in SI Section 2 and is not reported in the main text.
+- **Study 1 design (survey experiment):** Respondents read simulated news-article vignettes.
+  - US: 2×3 factorial, N = 2,269, three waves from Nov 2018 to Jan 2019. Protester identity is white or Black, signalled by the names Charlie/Tyrone plus a crowd photo.
+  - Israel: 3×3 factorial, N = 3,063, two waves in Feb–Mar 2019. Protesters are white Jews, Ethiopian Jews or Arab Israelis, with identity given in the article title.
+  - Tactic has three levels: march in streets (base), shut down traffic, and destroy property (police cars in the US, garbage cans in Israel).
+  - Balance tests are in SI 3.4.
+- **Study 2 design (June 2020, during the George Floyd protests):** Protests are marching only.
+  - US: 2×2×2 factorial, N = 3,013. Factors are identity (white/Black), goal (general: layoffs vs. group-based: racism and police brutality) and explicit commitment to nonviolence (no/yes).
+  - Israel: 3×2×2 factorial with the two "white Jews protesting minority-group goals" cells dropped, leaving 10 conditions, N = 3,465.
+- **Outcomes (identical in both studies):**
+  1. Perceived degree of violence, on a 0–10 scale (0 = completely nonviolent, 10 = extremely violent).
+  2. Recall violence: a binary taken from a later check-all-that-apply list of tactics. It is 1 if the respondent recalled damaging police cars, looting stores or throwing rocks, and 0 if they recalled only marching and/or blocking traffic.
+  3. Police action required, on a 0–10 scale.
+- **Estimation:** OLS of each outcome on treatment dummies, main effects only, with no covariates in the headline models. Coefficients are in raw scale units, not standardised. Adding pretreatment covariates does not change the results (SI 3.5).
+  - Table 1 base category: white protesters marching in streets. Table 2 base category: white protesters, generic (layoffs) goal, no commitment. The intercept is the baseline mean.
+  - Effects are reported as percent changes relative to the intercept. Examples: US Black protesters on perceived violence, 0.235/2.774 = 8.5%; recall violence, 0.039/0.052 = 75%.
+  - Standard errors are conventional OLS standard errors. No clustering or robust correction is mentioned.
+  - Significance stars: * p<0.10, ** p<0.05, *** p<0.01.
+  - Table 1: N = 2,269 (US) and 3,063 (Israel) for all outcomes.
+  - Table 2: N = 3,013 for US violence and recall, 3,008 for US police action, and 3,465 for every Israel outcome.
+- **Headline estimates:**
+  - Table 1 US, Black protesters: 0.235 (SE 0.117) perceived violence, 0.039 (0.018) recall, 0.268 (0.127) police. R² = 0.235, 0.322 and 0.160.
+  - Table 1 Israel, Ethiopian protesters: 0.425 (0.107) perceived violence, 0.085 (0.023) recall, 0.181 (0.118, not significant) police.
+  - Table 1 Israel, Arab protesters: 0.623 (0.108), 0.047 (0.023) and 0.964 (0.119).
+  - Table 2 US, Black protesters: 0.347 (0.115), 0.044 (0.028) and 0.429 (0.114). Minority goal: 0.628, 0.168 and 0.547. Commitment: −0.243, −0.021 and −0.212.
+  - Table 2 Israel, Ethiopian protesters: 0.950, 0.285 and 0.732. Arab protesters: 0.587, 0.062 and 0.802. Minority goal: 0.628, 0.119 and 0.574. Commitment: −0.309, 0.004 and −0.151.
+- **Heterogeneity and interaction analyses:**
+  - Figure 3: conditional effects of identity by tactic, from identity × tactic interactions.
+  - Figure 6: identity × goal (US).
+  - Figure 7: identity × commitment.
+  - Figures 3, 6 and 7 report coefficients in standard-deviation units.
+  - Figure 4: subgroup means for the "march in streets" condition, by respondent group (white vs. Black in the US; Jewish vs. Arab in Israel; there were too few Ethiopian respondents to include).
+- **Mechanism (text analysis):** Open-ended explanations of approval or disapproval of nonviolent protests are pooled across both studies. They are analysed qualitatively and with a structural topic model (STM). The STM uses 10 topics, with protester identity (minority vs. majority) as a topic-prevalence covariate. Results are reported as the change in topic proportion from white to Black protesters, about 0.01 against a base proportion of about 0.1, i.e. roughly 10%. Approval rates for nonviolent protests: US 59% (white) vs. 55% (Black); Israel 87% (white) vs. 83% (Ethiopian) and 48% (Arab).
+
+
+## Claims to Reproduce
+1. study1_us_black_perceived_violence: 0.235 (points on a 0-10 scale) [type: coefficient]
+   Location: Table 1, Panel (A) US Sample, Black protesters, Perceived degree of violence
+   Context: Table 1 ("Group Identity and Protest Tactic"), Panel (A) U.S. sample, row Black protesters, column Perceived degree of violence. Study 1 online survey experiment (U.S., three waves, November 2018-January 2019): respondents read a simulated news article about a protest with the protesters' identity randomized (white vs Black, signaled by names and a photo) and the tactic randomized (marching in streets, shutting down traffic, destroying police cars), a 2 x 3 factorial design. Outcome: how violent the respondent would say the protest was, 0 (completely nonviolent) to 10 (extremely violent). OLS …
+2. study1_us_black_police_action: 0.268 (points on a 0-10 scale) [type: coefficient]
+   Location: Table 1, Panel (A) US Sample, Black protesters, Police action required
+   Context: Table 1, Panel (A) U.S. sample, row Black protesters, column Police action required. Same Study 1 U.S. design and OLS specification as study1_us_black_perceived_violence (Black protester indicator plus tactic indicators; base white protesters marching in the streets; weighted), with the outcome the respondent's view, 0-10, of the extent to which police action is required to address the protest.
+3. study1_israel_ethiopian_perceived_violence: 0.425 (points on a 0-10 scale) [type: coefficient]
+   Location: Table 1, Panel (B) Israel Sample, Ethiopian protesters, Perceived degree of violence
+   Context: Table 1, Panel (B) Israel sample, row Ethiopian protesters, column Perceived degree of violence. Study 1 Israeli survey (two waves, February-March 2019): protester identity randomized among white Jews (majority), Ethiopian Jews and Israeli Arabs (minorities), noted in the article title, and tactic among marching in streets, shutting down traffic and destroying garbage cans (3 x 3 design). Outcome: perceived violence of the protest, 0-10. OLS on indicators for Ethiopian and Arab protesters and the two more intense tactics; base white protesters marching in the streets; weighted (see study1_us_b…
+4. study1_israel_ethiopian_police_action: 0.181 (points on a 0-10 scale) [type: coefficient]
+   Location: Table 1, Panel (B) Israel Sample, Ethiopian protesters, Police action required
+   Context: Table 1, Panel (B) Israel sample, row Ethiopian protesters, column Police action required (0-10). Same Study 1 Israeli specification as study1_israel_ethiopian_perceived_violence.
+5. study1_israel_arab_perceived_violence: 0.623 (points on a 0-10 scale) [type: coefficient]
+   Location: Table 1, Panel (B) Israel Sample, Arab protesters, Perceived degree of violence
+   Context: Table 1, Panel (B) Israel sample, row Arab protesters, column Perceived degree of violence (0-10). Same Study 1 Israeli specification as study1_israel_ethiopian_perceived_violence; this is the coefficient on the Arab protester indicator.
+6. study1_israel_arab_police_action: 0.964 (points on a 0-10 scale) [type: coefficient]
+   Location: Table 1, Panel (B) Israel Sample, Arab protesters, Police action required
+   Context: Table 1, Panel (B) Israel sample, row Arab protesters, column Police action required (0-10). Same Study 1 Israeli specification as study1_israel_ethiopian_perceived_violence.
+7. study2_us_black_perceived_violence: 0.347 (points on a 0-10 scale) [type: coefficient]
+   Location: Table 2, Panel (A) US Sample, Black protesters, Perceived degree of violence
+   Context: Table 2 ("Group Identity, Protest Goal, and Commitment to Nonviolence"), Panel (A) U.S. sample, row Black protesters, column Perceived degree of violence. Study 2 online survey experiment (U.S., June 2020): a 2 x 2 x 2 factorial vignette design randomizing protester identity (white vs Black), protest goal (general: protesting layoffs; group-based: protesting racial prejudice and police brutality) and whether protesters explicitly stated a commitment to nonviolence. Outcome: perceived violence, 0-10. OLS of the outcome on indicators for Black protesters, minority group goal and commitment to no…
+8. study2_us_black_police_action: 0.429 (points on a 0-10 scale) [type: coefficient]
+   Location: Table 2, Panel (A) US Sample, Black protesters, Police action required
+   Context: Table 2, Panel (A) U.S. sample, row Black protesters, column Police action required (0-10). Same Study 2 U.S. specification as study2_us_black_perceived_violence; Table 2 reports slightly fewer observations for this column than for the other two (respondents missing this outcome are dropped).
+9. respondents_study1_us: 2269.0 (respondents) [type: other]
+   Location: Research Design (text); Table 1, Panel (A), Observations
+   Context: Study 1 U.S. sample size: respondents to the U.S. survey experiment, the observations in each Table 1 Panel (A) regression.
+10. respondents_study1_israel: 3063.0 (respondents) [type: other]
+   Location: Research Design (text); Table 1, Panel (B), Observations
+   Context: Study 1 Israeli sample size: respondents to the Israeli survey experiment, the observations in each Table 1 Panel (B) regression.
+11. respondents_study2_us: 3013.0 (respondents) [type: other]
+   Location: Research Design (text); Table 2, Panel (A), Observations
+   Context: Study 2 U.S. sample size: respondents to the June 2020 U.S. survey experiment, the observations in the Table 2 Panel (A) perceived violence and recall regressions.
+12. respondents_study2_israel: 3465.0 (respondents) [type: other]
+   Location: Research Design (text); Table 2, Panel (B), Observations
+   Context: Study 2 Israeli sample size: respondents to the June 2020 Israeli survey experiment, the observations in each Table 2 Panel (B) regression.
+
+## Dataset Information
+Name: manekin-2022-effective-for-whom
+Local path: <repo>/.cache/datasets/manekin_2022_effective_for_whom
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- Replication/Data/isr_survey_wave1.rdata (79.3 KB) — objects: isr_survey_wave1 (data.frame, 3063 rows, 20 columns: degree_violence, police_action_required, recall_violence, recall_violence2, identity_protesters, tactic, survey, ResponseId, approve_protest_scale, age, female, education, income, ideology, partyID, interest_news, religiosity, ethnicity, weight, nv_tactic_scale)
+- Replication/Data/us_survey_wave1.rdata (46.4 KB) — objects: us_survey_wave1 (data.frame, 2269 rows, 21 columns: identity_protesters, tactic, degree_violence, police_action_required, recall_violence2, survey, caseid, wave, weight, race, age, female, education, income, partyID, ideology, interest_politics, interest_news, approve_protest_scale, approve_protest_dummy, nv_tactic_scale)
+- Replication/Data/us_survey_wave2.rdata (92.2 KB) — objects: us_survey_wave2 (data.frame, 3013 rows, 21 columns: degree_violence, police_action_required, recall_violence2, black, commitment, group_goal, ResponseId, age, female, education, income, race, partyID, pol_views, interest_politics, interest_news, identity_protesters_fac, approve_protest_dummy, degree_violence_std, police_action_required_std, recall_violence_std)
+- Replication/Data/isr_survey_wave2.rdata (90.6 KB) — objects: isr_survey_wave2 (data.frame, 3465 rows, 20 columns: degree_violence, police_action_required, recall_violence2, identity_protesters, commitment, group_goal, ResponseId, age, female, religiosity, ethnicity, education, income, partyID, ideology, approve_protest_dummy, interest_news, degree_viol…)
+- Replication/Data/EBCR_EPR_NAVCO2.rdata (48.0 KB) — objects: EBCR_EPR_NAVCO2 (data.frame, 2628 rows, 59 columns: YEAR, CAMPAIGN, EPR_STATUS, success, NAVCO2ID, EPR_ID, LOCATION, LCCODE, TARGET, TCCODE, CAMP_GOALS, PRIM_METHOD, NAVCO1, CDIVERS_ETHNIC, EPR_GROUP.x, PARTICIPATION.x, INITIATION.x, MOVEMENT, CLAIM.x, RULE, SOURCES, NOTES, X, GW_COUNTRY_ID,…)
+- Replication/Data/NAVCO2_EPR.rdata (8.3 KB) — objects: NAVCO2_EPR (data.frame, 212 rows, 13 columns: campaign, year, EPR_STATUS, success, id, location, cyear, lccode, target, tccode, navco1designation, EPR_ID, EPR_STATUS_EXCL)
+- Replication/Data/NAVCO2.rdata (28.2 KB) — objects: NAVCO2 (data.frame, 1726 rows, 57 columns: campaign, year, success, location, cyear, lccode, target, tccode, navco1designation, camp_orgs, camp_size, camp_size_est, camp_conf_intensity, rad_flank, resis_meth, cdivers_gender, cdivers_age, cdivers_class, cdivers_urbrural, cdivers_ideo…)
+- Replication/Data/isr_survey_text_analysis_arab.rdata (772.6 KB) — objects: isr_survey_text_analysis_arab (list)
+- Replication/Data/isr_survey_text_analysis_eth.rdata (824.8 KB) — objects: isr_survey_text_analysis_eth (list)
+- Replication/Data/us_survey_text_analysis.rdata (670.9 KB) — objects: us_survey_text_analysis (list)
+- Replication/Code/Manekin_Mitts_Effective_for_Whom_Replication.R (3.1 KB)
+- Replication/Code/replicate_fig_1.R (3.7 KB)
+- Replication/Code/replicate_fig_10.R (1.8 KB)
+- Replication/Code/replicate_fig_3.R (13.7 KB)
+- Replication/Code/replicate_fig_4.R (5.7 KB)
+- Replication/Code/replicate_fig_6.R (4.7 KB)
+- Replication/Code/replicate_fig_7.R (4.6 KB)
+- Replication/Code/replicate_fig_8.R (1.8 KB)
+- Replication/Code/replicate_fig_9.R (1.8 KB)
+- Replication/Code/replicate_fig_A1.R (1.5 KB)
+- Replication/Code/replicate_fig_A10.R (4.3 KB)
+- Replication/Code/replicate_fig_A11.R (4.7 KB)
+- Replication/Code/replicate_fig_A12.R (3.9 KB)
+- Replication/Code/replicate_fig_A2.R (4.0 KB)
+- Replication/Code/replicate_fig_A3.R (522 B)
+- Replication/Code/replicate_fig_A6.R (7.6 KB)
+- Replication/Code/replicate_fig_A7.R (9.4 KB)
+- Replication/Code/replicate_fig_A8.R (10.8 KB)
+- Replication/Code/replicate_fig_A9.R (12.2 KB)
+- Replication/Code/replicate_table_1.R (1.5 KB)
+- Replication/Code/replicate_table_4.R (1.2 KB)
+- Replication/Code/replicate_table_A1.R (1.0 KB)
+- Replication/Code/replicate_table_A10.R (581 B)
+- Replication/Code/replicate_table_A11.R (594 B)
+- Replication/Code/replicate_table_A13.R (1.2 KB)
+- Replication/Code/replicate_table_A14.R (13.2 KB)
+- Replication/Code/replicate_table_A15.R (1.6 KB)
+- Replication/Code/replicate_table_A16.R (7.9 KB)
+- Replication/Code/replicate_table_A17.R (1.2 KB)
+- Replication/Code/replicate_table_A18.R (774 B)
+- Replication/Code/replicate_table_A2.R (767 B)
+- Replication/Code/replicate_table_A3.R (2.1 KB)
+- Replication/Code/replicate_table_A4.R (1.3 KB)
+- Replication/Code/replicate_table_A5.R (2.8 KB)
+- Replication/Code/replicate_table_A6.R (454 B)
+- Replication/Code/replicate_table_A7.R (526 B)
+- Replication/Code/replicate_table_A8.R (710 B)
+- Replication/Code/replicate_table_A9.R (698 B)
+- Replication/Figures/fig_1.pdf (5.5 KB)
+- Replication/Figures/fig_10.pdf (5.6 KB)
+- Replication/Figures/fig_3.pdf (6.7 KB)
+- Replication/Figures/fig_4.pdf (6.6 KB)
+- Replication/Figures/fig_6.pdf (5.3 KB)
+- Replication/Figures/fig_7.pdf (5.3 KB)
+- Replication/Figures/fig_8.pdf (5.7 KB)
+- Replication/Figures/fig_9.pdf (5.6 KB)
+- Replication/Figures/fig_A1.pdf (7.3 KB)
+- Replication/Figures/fig_A10.pdf (5.2 KB)
+- Replication/Figures/fig_A11.pdf (5.2 KB)
+- Replication/Figures/fig_A12.pdf (6.3 KB)
+- Replication/Figures/fig_A2.pdf (4.9 KB)
+- Replication/Figures/fig_A3.pdf (24.8 KB)
+- Replication/Figures/fig_A6.pdf (8.8 KB)
+- Replication/Figures/fig_A7.pdf (12.8 KB)
+- Replication/Figures/fig_A8.pdf (9.8 KB)
+- Replication/Figures/fig_A9.pdf (11.8 KB)
+- Replication/Tables/table_1_panel_A.tex (1.4 KB)
+- Replication/Tables/table_1_panel_B.tex (1.5 KB)
+- Replication/Tables/table_4_panel_A.tex (1.5 KB)
+- Replication/Tables/table_4_panel_B.tex (1.5 KB)
+- Replication/Tables/table_A1.tex (1.9 KB)
+- Replication/Tables/table_A10.tex (2.9 KB)
+- Replication/Tables/table_A11.tex (2.9 KB)
+- Replication/Tables/table_A13_panel_A.tex (4.7 KB)
+- Replication/Tables/table_A13_panel_B.tex (3.2 KB)
+- Replication/Tables/table_A14.tex (2.1 KB)
+- Replication/Tables/table_A15_panel_A.tex (1.6 KB)
+- Replication/Tables/table_A15_panel_B.tex (2.0 KB)
+- Replication/Tables/table_A16.tex (1010 B)
+- Replication/Tables/table_A17_panel_A.tex (3.9 KB)
+- … and 10 more files (listing truncated)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/manekin_2022_effective_for_whom' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Original Replication Scripts
+The replication package (the dataset directory) ships the authors' own analysis scripts, reproduced below.  These are the GROUND TRUTH for the exact estimating equation, variable names, sample restrictions, fixed effects, and standard-error clustering — follow them over anything reconstructed from the methodology summary, and prefer them over the paper's text where the two disagree.  Your job is to write R code that implements the SAME SPECIFICATION: translate what the scripts estimate, do not transliterate their syntax line by line (a Stata .do file's regression, e.g. `reghdfe y x controls, absorb(fe) cluster(cl)`, becomes the equivalent fixest::feols() call in R).  Keep only the parts that produce the specific claims being reproduced; skip figure construction and unrelated robustness checks.  The scripts' data-file paths refer to the package's internal layout — resolve them against the dataset directory listed under Dataset Information.
+
+### `Replication/Code/Manekin_Mitts_Effective_for_Whom_Replication.R`
+```r
+# ----------------------------------------------------------------------
+# Replication for "Effective for Whom? Ethnic Identity and Nonviolent Resistance"
+# Devorah Manekin and Tamar Mitts
+# American Political Science Review (2021)
+# ----------------------------------------------------------------------
+# This code replicates the tables figures in the article and the appendix.
+# It requires the packages listed below. If not already installed, 
+# use the function install.packages() to install them.
+# ----------------------------------------------------------------------
+
+rm(list=ls())
+
+library(lemon)
+library(stargazer)
+library(xtable)
+library(fastDummies)
+library(tidyr)
+library(gridExtra)
+library(stm)
+library(quanteda)
+library(ggplot2)
+library(dotwhisker)
+library(ggeffects)
+library(estimatr)
+library(corrplot)
+
+# SET WORKING DIRECTORY
+setwd("<home>/Dropbox (Mitts)/Projects/Non-violence/Replication/")
+
+# LOAD DATASETS
+load("Data/EBCR_EPR_NAVCO2.rdata")
+load("Data/NAVCO2_EPR.rdata")
+load("Data/NAVCO2.rdata")
+load("Data/us_survey_wave1.rdata")
+load("Data/isr_survey_wave1.rdata")
+load("Data/us_survey_wave2.rdata")
+load("Data/isr_survey_wave2.rdata")
+load("Data/us_survey_text_analysis.rdata")
+load("Data/isr_survey_text_analysis_eth.rdata")
+load("Data/isr_survey_text_analysis_arab.rdata")
+
+##--##--##--##
+## Manuscript
+##--##--##--##
+
+# Figure 1
+source("Code/replicate_fig_1.R")
+# Figure 3
+source("Code/replicate_fig_3.R")
+# Figure 4
+source("Code/replicate_fig_4.R")
+# Figure 6
+source("Code/replicate_fig_6.R")
+# Figure 7
+source("Code/replicate_fig_7.R")
+# Figure 8
+source("Code/replicate_fig_8.R")
+# Figure 9
+source("Code/replicate_fig_9.R")
+# Figure 10
+source("Code/replicate_fig_10.R")
+
+# Table 1
+source("Code/replicate_table_1.R")
+# Table 4
+source("Code/replicate_table_4.R")
+
+##--##--##--##
+## Appendix
+##--##--##--##
+
+# Figure A1
+source("Code/replicate_fig_A1.R")
+# Figure A2
+source("Code/replicate_fig_A2.R")
+# Figure A3
+source("Code/replicate_fig_A3.R")
+# Figure A6
+source("Code/replicate_fig_A6.R")
+# Figure A7
+source("Code/replicate_fig_A7.R")
+# Figure A8
+source("Code/replicate_fig_A8.R")
+# Figure A9
+source("Code/replicate_fig_A9.R")
+# Figure A10
+source("Code/replicate_fig_A10.R")
+# Figure A11
+source("Code/replicate_fig_A11.R")
+# Figure A11
+source("Code/replicate_fig_A12.R")
+
+# Table A1
+source("Code/replicate_table_A1.R")
+# Table A2
+source("Code/replicate_table_A2.R")
+# Table A3
+source("Code/replicate_table_A3.R")
+# Table A4
+source("Code/replicate_table_A4.R")
+# Table A5
+source("Code/replicate_table_A5.R")
+# Table A6
+source("Code/replicate_table_A6.R")
+# Table A7
+source("Code/replicate_table_A7.R")
+# Table A8
+source("Code/replicate_table_A8.R")
+# Table A9
+source("Code/replicate_table_A9.R")
+# Table A10
+source("Code/replicate_table_A10.R")
+# Table A10
+source("Code/replicate_table_A11.R")
+# Table A13
+source("Code/replicate_table_A13.R")
+# Table A14
+source("Code/replicate_table_A14.R")
+# Table A15
+source("Code/replicate_table_A15.R")
+# Table A16
+source("Code/replicate_table_A16.R")
+# Table A17
+source("Code/replicate_table_A17.R")
+# Table A18
+source("Code/replicate_table_A18.R")
+
+## END
+```
+
+### `Replication/Code/replicate_table_1.R`
+```r
+##--##--##--##
+## Table 1
+##--##--##--##
+
+## A. U.S
+degv_yg = lm(degree_violence ~ identity_protesters + tactic  , data=us_survey_wave1, weights=weight)
+police_yg = lm(police_action_required ~ identity_protesters + tactic  , data=us_survey_wave1, weights=weight)
+recall_violence_yg = lm(recall_violence2 ~ identity_protesters + tactic  , data=us_survey_wave1, weights=weight)
+approve_protest_yg = lm(approve_protest_scale ~ identity_protesters + tactic  , data=us_survey_wave1, weights=weight)
+stargazer(degv_yg, recall_violence_yg, police_yg, 
+          covariate.labels = c("Black protesters", "Shut down traffic", 
+                               "Destroy police cars", "Intercept: White protesters, March in streets"),
+          out = "Tables/table_1_panel_A.tex")
+
+## B. Israel
+degv_isr = lm(degree_violence ~ identity_protesters + tactic  , data=isr_survey_wave1, weights=weight)
+police_isr = lm(police_action_required ~ identity_protesters + tactic  , data=isr_survey_wave1, weights=weight)
+recall_violence_isr = lm(recall_violence2 ~ identity_protesters + tactic  , data=isr_survey_wave1, weights=weight)
+approve_protest_isr = lm(approve_protest_scale ~ identity_protesters + tactic  , data=isr_survey_wave1, weights=weight)
+stargazer(degv_isr, recall_violence_isr, police_isr,
+          covariate.labels = c("Ethiopian protesters", "Arab protesters",
+                               "Shut down traffic", "Destroy garbage cans",
+                               "Intercept: White protesters, March in streets"),
+          out = "Tables/table_1_panel_B.tex")
+
+```
+
+### `Replication/Code/replicate_table_4.R`
+```r
+##--##--##--##
+## Table 4
+##--##--##--##
+
+## A. U.S. sample
+mod1 = lm(degree_violence ~ black + group_goal + commitment , data=us_survey_wave2)
+mod2 = lm(recall_violence2 ~ black + group_goal + commitment, data=us_survey_wave2)
+mod3 = lm(police_action_required ~ black + group_goal + commitment, data=us_survey_wave2)
+stargazer(mod1, mod2, mod3, 
+          covariate.labels = c("Black protesters", "Minority group goal",
+                               "Commitment to nonviolence", "Intercept: White protesters, generic goal, no commitment"),
+          out = "Tables/table_4_panel_A.tex")
+
+## B. Israel sample
+mod1_israel = lm(degree_violence ~ identity_protesters + group_goal + commitment, data=isr_survey_wave2)
+mod2_israel = lm(recall_violence2 ~ identity_protesters + group_goal + commitment, data=isr_survey_wave2)
+mod3_israel = lm(police_action_required ~ identity_protesters + group_goal + commitment, data=isr_survey_wave2)
+stargazer(mod1_israel, mod2_israel, mod3_israel,
+          covariate.labels = c("Ethiopian protesters", "Arab protesters",
+                               "Minority group goal", "Commitment to nonviolence",
+                               "Intercept: White protesters, generic goal, no commitment"),
+          out = "Tables/table_4_panel_B.tex")
+
+```
+
+### `Replication/Code/replicate_table_A1.R`
+```r
+##--##--##--##--##--##--##
+## Appendix: Table A1
+##--##--##--##--##--##--##
+
+stargazer(EBCR_EPR_NAVCO2[,c("YEAR", "success", "INIT_NV_ONSET", "EPR_GROUPSIZE", "EPR_STATUS_ORD",
+                             "EPR_STATUS_EXCL", "POP_LOG_LAG_EXT", "GDPPC_LOG_LAG_EXT",
+                             "PASTNV", "PASTV", "VDEM_POLYARCHY_LAG", "VDEM_PHYSINT_LAG", 
+                             "EPR_TEK_EGIP", "EPR_DOWNGRADED5", "HORIZ_INEQ", "NVYEARS",
+                             "VYEARS")],
+          covariate.labels = c("Year", "Campaign success", "NV campaign", "EPR group size", "EPR status",
+                               "EPR Status: excluded", "Country population (logged)", "Country GDP per capita (logged)", "Prior participation in nonviolence", "Prior participation in violence",
+                               "Level of democracy", "Physical integrity index", "Neighboring kin in power",
+                               "Downgraded", "Horizontal inequality", "Nonviolent years", "Violent years"),
+          out="Tables/table_A1.tex")
+
+
+```
+
+### `Replication/Code/replicate_table_A10.R`
+```r
+##--##--##--##--##--##--##
+## Appendix: Table A10
+##--##--##--##--##--##--##
+
+us_wave2_sumstats = us_survey_wave2[,c("age", "female", "education", "income", "partyID", "pol_views", "interest_politics",
+                                       "degree_violence", "police_action_required", "recall_violence2", "race")]
+us_wave2_sumstats = dummy_cols(us_wave2_sumstats, select_columns = c("age", "education", "income", "partyID", "pol_views", "race"))
+table_a10 = stargazer(us_wave2_sumstats, omit.summary.stat=c("p25", "p75"))
+cat(table_a10, sep = '\n', file = "Tables/table_A10.tex")
+
+```
+
+### `Replication/Code/replicate_table_A11.R`
+```r
+##--##--##--##--##--##--##
+## Appendix: Table A11
+##--##--##--##--##--##--##
+
+isr_wave2_sumstats = isr_survey_wave2[,c("age", "female", "religiosity", "ethnicity", "education", "income", "partyID", "ideology", 
+                                         "degree_violence", "police_action_required", "recall_violence2")]
+isr_wave2_sumstats = dummy_cols(isr_wave2_sumstats, select_columns = c("age", "religiosity", "ethnicity", "education", "income", "partyID"))
+table_a11 = stargazer(isr_wave2_sumstats, omit.summary.stat=c("p25", "p75"))
+cat(table_a11, sep = '\n', file = "Tables/table_A11.tex")
+
+```
+
+### `Replication/Code/replicate_table_A13.R`
+```r
+##--##--##--##--##--##--##
+## Appendix: Table A13
+##--##--##--##--##--##--##
+
+## A. U.S. sample
+degv_yg = lm(degree_violence ~ identity_protesters + tactic + age +female + education + income  + ideology + race, data=us_survey_wave1, weights=weight)
+police_yg = lm(police_action_required ~ identity_protesters + tactic  + age +female + education + income  + ideology + race, data=us_survey_wave1, weights=weight)
+recall_violence_yg = lm(recall_violence2 ~ identity_protesters + tactic  + age +female + education + income  + ideology + race, data=us_survey_wave1, weights=weight)
+stargazer(degv_yg, recall_violence_yg, police_yg, out = "Tables/table_A13_panel_A.tex")
+
+## B. Israel sample
+degv_ip = lm(degree_violence ~ identity_protesters + tactic + age +female + education + income  + ideology + ethnicity, data=isr_survey_wave1, weights=weight)
+police_ip = lm(police_action_required ~ identity_protesters + tactic  + age +female + education + income  + ideology + ethnicity , data=isr_survey_wave1, weights=weight)
+recall_violence_ip = lm(recall_violence2 ~ identity_protesters + tactic  + age +female + education + income + ideology  + ethnicity , data=isr_survey_wave1, weights=weight)
+stargazer(degv_ip, recall_violence_ip, police_ip, out = "Tables/table_A13_panel_B.tex")
+
+```
+
+### `Replication/Code/replicate_table_A14.R`
+```r
+##--##--##--##
+## Table A14
+##--##--##--##
+
+us_survey_wave1$identity_protesters_fac = as.factor(us_survey_wave1$identity_protesters)
+levels(us_survey_wave1$identity_protesters_fac) = c("White", "Black")
+us_survey_wave1$tactic_fac = as.factor(us_survey_wave1$tactic)
+levels(us_survey_wave1$tactic_fac) = c("March in streets", "Shut down traffic", "Destroy police cars")
+
+isr_survey_wave1$identity_protesters_fac = as.factor(isr_survey_wave1$identity_protesters)
+levels(isr_survey_wave1$identity_protesters_fac) = c("White", "Ethiopian", "Arab")
+isr_survey_wave1$tactic_fac = as.factor(isr_survey_wave1$tactic)
+levels(isr_survey_wave1$tactic_fac) = c("March in streets", "Shut down traffic", "Destroy garbage cans")
+
+
+## US sample
+us_survey_wave1$degree_violence_std = scale(us_survey_wave1$degree_violence)
+us_survey_wave1$police_action_required_std = scale(us_survey_wave1$police_action_required)
+us_survey_wave1$recall_violence2_std = scale(us_survey_wave1$recall_violence2)
+
+march1 = lm_robust(degree_violence_std ~ identity_protesters_fac, data=us_survey_wave1[us_survey_wave1$tactic==0,], weights=weight)
+shut1 = lm_robust(degree_violence_std ~ identity_protesters_fac, data=us_survey_wave1[us_survey_wave1$tactic==1,], weights=weight)
+destroy1 = lm_robust(degree_violence_std ~ identity_protesters_fac , data=us_survey_wave1[us_survey_wave1$tactic==2,], weights=weight)
+
+march2 = lm_robust(police_action_required_std ~ identity_protesters_fac, data=us_survey_wave1[us_survey_wave1$tactic==0,], weights=weight)
+shut2 = lm_robust(police_action_required_std ~ identity_protesters_fac, data=us_survey_wave1[us_survey_wave1$tactic==1,], weights=weight)
+destroy2 = lm_robust(police_action_required_std ~ identity_protesters_fac, data=us_survey_wave1[us_survey_wave1$tactic==2,], weights=weight)
+
+march3 = lm_robust(recall_violence2_std ~ identity_protesters_fac, data=us_survey_wave1[us_survey_wave1$tactic==0,], weights=weight)
+shut3 = lm_robust(recall_violence2_std ~ identity_protesters_fac, data=us_survey_wave1[us_survey_wave1$tactic==1,], weights=weight)
+destroy3 = lm_robust(recall_violence2_std ~ identity_protesters_fac , data=us_survey_wave1[us_survey_wave1$tactic==2,], weights=weight)
+
+# Plot differences
+
+term_degree_violence = c(march1$coefficients[2], shut1$coefficients[2], destroy1$coefficients[2])
+se_degree_violence = c(march1$std.error[2], shut1$std.error[2], destroy1$std.error[2])
+statistic_degree_violence = c(march1$statistic[2], shut1$statistic[2], destroy1$statistic[2])
+pval_degree_violence = c(march1$p.value[2], shut1$p.value[2], destroy1$p.value[2])
+term = c("1) Minority: March in streets", "2) Minority: Shut down traffic", "3) Minority: Destroy police cars / garbage cans")
+degree_violence = as.data.frame(cbind(term_degree_violence, se_degree_violence, statistic_degree_violence, pval_degree_violence))
+degree_violence = cbind(degree_violence, term)
+colnames(degree_violence) = c("estimate", "std.error", "statistic", "p.value", "term")
+rownames(degree_violence) = term
+degree_violence$model = "Perceived degree of violence"
+
+term_police_action_required = c(march2$coefficients[2], shut2$coefficients[2], destroy2$coefficients[2])
+se_police_action_required = c(march2$std.error[2], shut2$std.error[2], destroy2$std.error[2])
+statistic_police_action_required = c(march2$statistic[2], shut2$statistic[2], destroy2$statistic[2])
+pval_police_action_required = c(march2$p.value[2], shut2$p.value[2], destroy2$p.value[2])
+term = c("1) Minority: March in streets", "2) Minority: Shut down traffic", "3) Minority: Destroy police cars / garbage cans")
+police_action_required = as.data.frame(cbind(term_police_action_required, se_police_action_required, statistic_police_action_required, pval_police_action_required))
+police_action_required = cbind(police_action_required, term)
+colnames(police_action_required) = c("estimate", "std.error", "statistic", "p.value", "term")
+rownames(police_action_required) = term
+police_action_required$model = "Police action required"
+
+term_recall_violence = c(march3$coefficients[2], shut3$coefficients[2], destroy3$coefficients[2])
+se_recall_violence = c(march3$std.error[2], shut3$std.error[2], destroy3$std.error[2])
+statistic_recall_violence = c(march3$statistic[2], shut3$statistic[2], destroy3$statistic[2])
+pval_recall_violence = c(march3$p.value[2], shut3$p.value[2], destroy3$p.value[2])
+term = c("1) Minority: March in streets", "2) Minority: Shut down traffic", "3) Minority: Destroy police cars / garbage cans")
+recall_violence = as.data.frame(cbind(term_recall_violence, se_recall_violence, statistic_recall_violence, pval_recall_violence))
+recall_violence = cbind(recall_violence, term)
+colnames(recall_violence) = c("estimate", "std.error", "statistic", "p.value", "term")
+rownames(recall_violence) = term
+recall_violence$model = "Recall violence"
+
+differences_us = rbind(degree_violence, police_action_required, recall_violence)
+
+
+## Israel respondents
+isr_survey_wave1$degree_violence_std = scale(isr_survey_wave1$degree_violence)
+isr_survey_wave1$police_action_required_std = scale(isr_survey_wave1$police_action_required)
+isr_survey_wave1$recall_violence2_std = scale(isr_survey_wave1$recall_violence2)
+
+march1 = lm_robust(degree_violence_std ~ identity_protesters_fac, data=isr_survey_wave1[isr_survey_wave1$tactic==0,], weights=weight)
+shut1 = lm_robust(degree_violence_std ~ identity_protesters_fac, data=isr_survey_wave1[isr_survey_wave1$tactic==1,], weights=weight)
+destroy1 = lm_robust(degree_violence_std ~ identity_protesters_fac , data=isr_survey_wave1[isr_survey_wave1$tactic==2,], weights=weight)
+
+march2 = lm_robust(police_action_required_std ~ identity_protesters_fac, data=isr_survey_wave1[isr_survey_wave1$tactic==0,], weights=weight)
+shut2 = lm_robust(police_action_required_std ~ identity_protesters_fac, data=isr_survey_wave1[isr_survey_wave1$tactic==1,], weights=weight)
+destroy2 = lm_robust(police_action_required_std ~ identity_protesters_fac, data=isr_survey_wave1[isr_survey_wave1$tactic==2,], weights=weight)
+
+march3 = lm_robust(recall_violence2_std ~ identity_protesters_fac, data=isr_survey_wave1[isr_survey_wave1$tactic==0,], weights=weight)
+shut3 = lm_robust(recall_violence2_std ~ identity_protesters_fac, data=isr_survey_wave1[isr_survey_wave1$tactic==1,], weights=weight)
+destroy3 = lm_robust(recall_violence2_std ~ identity_protesters_fac , data=isr_survey_wave1[isr_survey_wave1$tactic==2,], weights=weight)
+
+
+# Ethiopian protesters
+term_degree_violence = c(march1$coefficients[2], shut1$coefficients[2], destroy1$coefficients[2])
+se_degree_violence = c(march1$std.error[2], shut1$std.error[2], destroy1$std.error[2])
+statistic_degree_violence = c(march1$statistic[2], shut1$statistic[2], destroy1$statistic[2])
+pval_degree_violence = c(march1$p.value[2], shut1$p.value[2], destroy1$p.value[2])
+term = c("1) Minority: March in streets", "2) Minority: Shut down traffic", "3) Minority: Destroy police cars / garbage cans")
+degree_violence = as.data.frame(cbind(term_degree_violence, se_degree_violence, statistic_degree_violence, pval_degree_violence))
+degree_violence = cbind(degree_violence, term)
+colnames(degree_violence) = c("estimate", "std.error", "statistic", "p.value", "term")
+rownames(degree_violence) = term
+degree_violence$model = "Perceived degree of violence"
+
+term_police_action_required = c(march2$coefficients[2], shut2$coefficients[2], destroy2$coefficients[2])
+se_police_action_required = c(march2$std.error[2], shut2$std.error[2], destroy2$std.error[2])
+statistic_police_action_required = c(march2$statistic[2], shut2$statistic[2], destroy2$statistic[2])
+pval_police_action_required = c(march2$p.value[2], shut2$p.value[2], destroy2$p.value[2])
+term = c("1) Minority: March in streets", "2) Minority: Shut down traffic", "3) Minority: Destroy police cars / garbage cans")
+police_action_required = as.data.frame(cbind(term_police_action_required, se_police_action_required, statistic_police_action_required, pval_police_action_required))
+police_action_required = cbind(police_action_required, term)
+colnames(police_action_required) = c("estimate", "std.error", "statistic", "p.value", "term")
+rownames(police_action_required) = term
+police_action_required$model = "Police action required"
+
+term_recall_violence = c(march3$coefficients[2], shut3$coefficients[2], destroy3$coefficients[2])
+se_recall_violence = c(march3$std.error[2], shut3$std.error[2], destroy3$std.error[2])
+statistic_recall_violence = c(march3$statistic[2], shut3$statistic[2], destroy3$statistic[2])
+pval_recall_violence = c(march3$p.value[2], shut3$p.value[2], destroy3$p.value[2])
+term = c("1) Minority: March in streets", "2) Minority: Shut down traffic", "3) Minority: Destroy police cars / garbage cans")
+recall_violence = as.data.frame(cbind(term_recall_violence, se_recall_violence, statistic_recall_violence, pval_recall_violence))
+recall_violence = cbind(recall_violence, term)
+colnames(recall_violence) = c("estimate", "std.error", "statistic", "p.value", "term")
+rownames(recall_violence) = term
+recall_violence$model = "Recall violence"
+
+differences_isr_black = rbind(degree_violence, police_action_required, recall_violence)
+
+term_degree_violence = c(march1$coefficients[3], shut1$coefficients[3], destroy1$coefficients[3])
+se_degree_violence = c(march1$std.error[3], shut1$std.error[3], destroy1$std.error[3])
+statistic_degree_violence = c(march1$statistic[3], shut1$statistic[3], destroy1$statistic[3])
+pval_degree_violence = c(march1$p.value[3], shut1$p.value[3], destroy1$p.value[3])
+term = c("1) Minority: March in streets", "2) Minority: Shut down traffic", "3) Minority: Destroy police cars / garbage cans")
+degree_violence = as.data.frame(cbind(term_degree_violence, se_degree_violence, statistic_degree_violence, pval_degree_violence))
+degree_violence = cbind(degree_violence, term)
+colnames(degree_violence) = c("estimate", "std.error", "statistic", "p.value", "term")
+rownames(degree_violence) = term
+degree_violence$model = "Perceived degree of violence"
+
+term_police_action_required = c(march2$coefficients[3], shut2$coefficients[3], destroy2$coefficients[3])
+se_police_action_required = c(march2$std.error[3], shut2$std.error[3], destroy2$std.error[3])
+statistic_police_action_required = c(march2$statistic[3], shut2$statistic[3], destroy2$statistic[3])
+pval_police_action_required = c(march2$p.value[3], shut2$p.value[3], destroy2$p.value[3])
+term = c("1) Minority: March in streets", "2) Minority: Shut down traffic", "3) Minority: Destroy police cars / garbage cans")
+police_action_required = as.data.frame(cbind(term_police_action_required, se_police_action_required, statistic_police_action_required, pval_police_action_required))
+police_action_required = cbind(police_action_required, term)
+colnames(police_action_required) = c("estimate", "std.error", "statistic", "p.value", "term")
+rownames(police_action_required) = term
+police_action_required$model = "Police action required"
+
+term_recall_violence = c(march3$coefficients[3], shut3$coefficients[3], destroy3$coefficients[3])
+se_recall_violence = c(march3$std.error[3], shut3$std.error[3], destroy3$std.error[3])
+statistic_recall_violence = c(march3$statistic[3], shut3$statistic[3], destroy3$statistic[3])
+pval_recall_violence = c(march3$p.value[3], shut3$p.value[3], destroy3$p.value[3])
+term = c("1) Minority: March in streets", "2) Minority: Shut down traffic", "3) Minority: Destroy police cars / garbage cans")
+recall_violence = as.data.frame(cbind(term_recall_violence, se_recall_violence, statistic_recall_violence, pval_recall_violence))
+recall_violence = cbind(recall_violence, term)
+colnames(recall_violence) = c("estimate", "std.error", "statistic", "p.value", "term")
+rownames(recall_violence) = term
+recall_violence$model = "Recall violence"
+
+differences_isr_arab = rbind(degree_violence, police_action_required, recall_violence)
+
+## Result tables for plot
+differences_us2 = differences_us
+differences_us2$submodel = differences_us2$term
+differences_us2$term = "Perception of Blacks \n(United States)"
+
+differences_isr_black2 = differences_isr_black
+differences_isr_black2$submodel = differences_isr_black2$term
+differences_isr_black2$term = "Perception of Ethiopians \n(Israel)"
+
+differences_isr_arab2 = differences_isr_arab
+differences_isr_arab2$submodel = differences_isr_arab2$term
+differences_isr_arab2$term = "Perception of Arabs \n(Israel)"
+
+diffs_sm = rbind(differences_us2, differences_isr_arab2, differences_isr_black2)
+rownames(diffs_sm) = 1:nrow(diffs_sm)
+
+results_df <- data.frame(term = diffs_sm$term,
+                         estimate = diffs_sm$estimate,
+                         std.error = diffs_sm$std.error,
+                         model = diffs_sm$model,
+                         submodel = as.character(diffs_sm$submodel),
+                         stringsAsFactors = FALSE)
+
+results_df$submodel[results_df$submodel=="1) Minority: March in streets"] = "March in streets"
+results_df$submodel[results_df$submodel=="2) Minority: Shut down traffic"] = "Shut down traffic"
+results_df$submodel[results_df$submodel=="3) Minority: Destroy police cars / garbage cans"] = "Destroy property"
+
+results_df$model[results_df$model=="Perceived degree of violence"] = "1. Perceived degree \nof violence"
+results_df$model[results_df$model=="Police action required"] = "3. Police action \nrequired"
+results_df$model[results_df$model=="Recall violence"] = "2. Recall \nviolence"
+
+
+table_a14 = xtable(results_df[,-1], digits=2)
+print(table_a14, file="Tables/table_A14.tex")
+
+
+```
+
+### `Replication/Code/replicate_table_A15.R`
+```r
+##--##--##--##--##--##--##
+## Appendix: Table A15
+##--##--##--##--##--##--##
+
+## A. U.S. sample
+degv_yg = lm(degree_violence ~ identity_protesters * tactic  , data=us_survey_wave1, weights=weight)
+police_yg = lm(police_action_required ~ identity_protesters * tactic  , data=us_survey_wave1, weights=weight)
+recall_violence_yg = lm(recall_violence2 ~ identity_protesters * tactic  , data=us_survey_wave1, weights=weight)
+stargazer(degv_yg, recall_violence_yg, police_yg, 
+          covariate.labels = c("Black protesters", "Shut down traffic", "Destroy police cars",
+                               "Black protesters x Shut down traffic", 
+                               "Black protesters x Destroy police cars", "Intercept"),
+          out = "Tables/table_A15_panel_A.tex")
+
+## B. Israel sample
+degv_isr = lm(degree_violence ~ identity_protesters * tactic  , data=isr_survey_wave1, weights=weight)
+police_isr = lm(police_action_required ~ identity_protesters * tactic  , data=isr_survey_wave1, weights=weight)
+recall_violence_isr = lm(recall_violence2 ~ identity_protesters * tactic  , data=isr_survey_wave1, weights=weight)
+stargazer(degv_isr, recall_violence_isr, police_isr,
+          covariate.labels = c("Ethiopian protesters", "Arab protesters", "Shut down traffic",
+                               "Destroy garbage cans", "Ethiopian protesters x Shut down traffic",
+                               "Arab protesters x Shut down traffic", "Ethiopian protesters x Destroy garbage cans",
+                               "Arab protesters x Destroy garbage cans", "Intercept"),
+          out = "Tables/table_A15_panel_B.tex")
+
+
+```
+
+### `Replication/Code/replicate_table_A16.R`
+```r
+##--##--##--##--##--##--##
+## Appendix: Table A16
+##--##--##--##--##--##--##
+
+## A. U.S. 
+degv_yg_nv_maj = lm_robust(degree_violence ~ identity_protesters  , data=us_survey_wave1[us_survey_wave1$tactic==0 & us_survey_wave1$race=="White",], weights=weight)
+police_yg_nv_maj = lm_robust(police_action_required ~ identity_protesters  , data=us_survey_wave1[us_survey_wave1$tactic==0 & us_survey_wave1$race == "White",], weights=weight)
+degv_yg_nv_min = lm_robust(degree_violence ~ identity_protesters  , data=us_survey_wave1[us_survey_wave1$tactic==0 & us_survey_wave1$race=="Black",], weights=weight)
+police_yg_nv_min = lm_robust(police_action_required ~ identity_protesters  , data=us_survey_wave1[us_survey_wave1$tactic==0 & us_survey_wave1$race == "Black",], weights=weight)
+
+# Majority perceptions
+us_mean_degv_maj_white = degv_yg_nv_maj$coefficients[1]
+us_mean_degv_maj_black = degv_yg_nv_maj$coefficients[1] + degv_yg_nv_maj$coefficients[2] 
+us_diff_degv_maj = degv_yg_nv_maj$coefficients[2]
+us_pval_diff_degv_maj = degv_yg_nv_maj$p.value[2]
+us_pct_change_degv_maj = (degv_yg_nv_maj$coefficients[2] /us_mean_degv_maj_white)*100
+us_mean_police_maj_white = police_yg_nv_maj$coefficients[1]
+us_mean_police_maj_black = police_yg_nv_maj$coefficients[1] + police_yg_nv_maj$coefficients[2] 
+us_diff_police_maj = police_yg_nv_maj$coefficients[2]
+us_pval_diff_police_maj = police_yg_nv_maj$p.value[2]
+us_pct_change_police_maj = (police_yg_nv_maj$coefficients[2] /us_mean_police_maj_white)*100
+
+# Minority perceptions
+us_mean_degv_min_white = degv_yg_nv_min$coefficients[1]
+us_mean_degv_min_black = degv_yg_nv_min$coefficients[1] + degv_yg_nv_min$coefficients[2] 
+us_diff_degv_min = degv_yg_nv_min$coefficients[2]
+us_pval_diff_degv_min = degv_yg_nv_min$p.value[2]
+us_pct_change_degv_min = (degv_yg_nv_min$coefficients[2] /us_mean_degv_min_white)*100
+us_mean_police_min_white = police_yg_nv_min$coefficients[1]
+us_mean_police_min_black = police_yg_nv_min$coefficients[1] + police_yg_nv_min$coefficients[2] 
+us_diff_police_min = police_yg_nv_min$coefficients[2]
+us_pval_diff_police_min = police_yg_nv_min$p.value[2]
+us_pct_change_police_min = (police_yg_nv_min$coefficients[2] /us_mean_police_min_white)*100
+
+
+## B. ISRAEL
+degv_isr_nv_maj = lm_robust(degree_violence ~ identity_protesters  , data=isr_survey_wave1[isr_survey_wave1$survey=="isr" & isr_survey_wave1$tactic==0 &  isr_survey_wave1$ethnicity!= "Ethiopia",])
+police_isr_nv_maj = lm_robust(police_action_required ~ identity_protesters  , data=isr_survey_wave1[isr_survey_wave1$survey=="isr" & isr_survey_wave1$tactic==0 & isr_survey_wave1$ethnicity!= "Ethiopia",])
+degv_isr_nv_min = lm_robust(degree_violence ~ identity_protesters  , data=isr_survey_wave1[isr_survey_wave1$survey=="isr_ar" & isr_survey_wave1$tactic==0,])
+police_isr_nv_min = lm_robust(police_action_required ~ identity_protesters  , data=isr_survey_wave1[isr_survey_wave1$survey=="isr_ar" & isr_survey_wave1$tactic==0,])
+
+# Majority perceptions
+israel_mean_degv_maj_whitejew = degv_isr_nv_maj$coefficients[1]
+isr_mean_degv_maj_eth = degv_isr_nv_maj$coefficients[1] + degv_isr_nv_maj$coefficients[2] 
+isr_mean_degv_maj_arab = degv_isr_nv_maj$coefficients[1] + degv_isr_nv_maj$coefficients[3] 
+isr_diff_degv_maj_eth = degv_isr_nv_maj$coefficients[2]
+isr_diff_degv_maj_arab = degv_isr_nv_maj$coefficients[3]
+isr_pval_diff_degv_maj_eth = degv_isr_nv_maj$p.value[2]
+isr_pval_diff_degv_maj_arab = degv_isr_nv_maj$p.value[3]
+isr_pct_change_degv_maj_eth = (degv_isr_nv_maj$coefficients[2] /israel_mean_degv_maj_whitejew)*100
+isr_pct_change_degv_maj_arab = (degv_isr_nv_maj$coefficients[3] /israel_mean_degv_maj_whitejew)*100
+israel_mean_police_maj_whitejew = police_isr_nv_maj$coefficients[1]
+isr_mean_police_maj_eth = police_isr_nv_maj$coefficients[1] + police_isr_nv_maj$coefficients[2] 
+isr_mean_police_maj_arab = police_isr_nv_maj$coefficients[1] + police_isr_nv_maj$coefficients[3] 
+isr_diff_police_maj_eth = police_isr_nv_maj$coefficients[2]
+isr_diff_police_maj_arab = police_isr_nv_maj$coefficients[3]
+isr_pval_diff_police_maj_eth = police_isr_nv_maj$p.value[2]
+isr_pval_diff_police_maj_arab = police_isr_nv_maj$p.value[3]
+isr_pct_change_police_maj_eth = (police_isr_nv_maj$coefficients[2] /israel_mean_police_maj_whitejew)*100
+isr_pct_change_police_maj_arab = (police_isr_nv_maj$coefficients[3] /israel_mean_police_maj_whitejew)*100
+
+## Minority perceptions
+israel_mean_degv_min_whitejew = degv_isr_nv_min$coefficients[1]
+isr_mean_degv_min_eth = degv_isr_nv_min$coefficients[1] + degv_isr_nv_min$coefficients[2] 
+isr_mean_degv_min_arab = degv_isr_nv_min$coefficients[1] + degv_isr_nv_min$coefficients[3] 
+isr_diff_degv_min_eth = degv_isr_nv_min$coefficients[2]
+isr_diff_degv_min_arab = degv_isr_nv_min$coefficients[3]
+isr_pval_diff_degv_min_eth = degv_isr_nv_min$p.value[2]
+isr_pval_diff_degv_min_arab = degv_isr_nv_min$p.value[3]
+isr_pct_change_degv_min_eth = (degv_isr_nv_min$coefficients[2] /israel_mean_degv_min_whitejew)*100
+isr_pct_change_degv_min_arab = (degv_isr_nv_min$coefficients[3] /israel_mean_degv_min_whitejew)*100
+israel_mean_police_min_whitejew = police_isr_nv_min$coefficients[1]
+isr_mean_police_min_eth = police_isr_nv_min$coefficients[1] + police_isr_nv_min$coefficients[2] 
+isr_mean_police_min_arab = police_isr_nv_min$coefficients[1] + police_isr_nv_min$coefficients[3] 
+isr_diff_police_min_eth = police_isr_nv_min$coefficients[2]
+isr_diff_police_min_arab = police_isr_nv_min$coefficients[3]
+isr_pval_diff_police_min_eth = police_isr_nv_min$p.value[2]
+isr_pval_diff_police_min_arab = police_isr_nv_min$p.value[3]
+isr_pct_change_police_min_eth = (police_isr_nv_min$coefficients[2] /israel_mean_police_min_whitejew)*100
+isr_pct_change_police_min_arab = (police_isr_nv_min$coefficients[3] /israel_mean_police_min_whitejew)*100
+
+us_degv_maj = c(us_mean_degv_maj_white, us_mean_degv_maj_black, us_diff_degv_maj, us_pval_diff_degv_maj, us_pct_change_degv_maj)
+us_degv_min = c(us_mean_degv_min_white, us_mean_degv_min_black, us_diff_degv_min, us_pval_diff_degv_min, us_pct_change_degv_min)
+us_police_maj = c(us_mean_police_maj_white, us_mean_police_maj_black, us_diff_police_maj, us_pval_diff_police_maj, us_pct_change_police_maj)
+us_police_min = c(us_mean_police_min_white, us_mean_police_min_black, us_diff_police_min, us_pval_diff_police_min, us_pct_change_police_min)
+
+isr_degv_maj_eth = c(israel_mean_degv_maj_whitejew, isr_mean_degv_maj_eth, isr_diff_degv_maj_eth, isr_pval_diff_degv_maj_eth, isr_pct_change_degv_maj_eth)
+isr_degv_maj_arab = c(israel_mean_degv_maj_whitejew, isr_mean_degv_maj_arab, isr_diff_degv_maj_arab, isr_pval_diff_degv_maj_arab, isr_pct_change_degv_maj_arab)
+isr_degv_min_eth = c(israel_mean_degv_min_whitejew, isr_mean_degv_min_eth, isr_diff_degv_min_eth, isr_pval_diff_degv_min_eth, isr_pct_change_degv_min_eth)
+isr_degv_min_arab = c(israel_mean_degv_min_whitejew, isr_mean_degv_min_arab, isr_diff_degv_min_arab, isr_pval_diff_degv_min_arab, isr_pct_change_degv_min_arab)
+isr_police_maj_eth = c(israel_mean_police_maj_whitejew, isr_mean_police_maj_eth, isr_diff_police_maj_eth, isr_pval_diff_police_maj_eth, isr_pct_change_police_maj_eth)
+isr_police_maj_arab = c(israel_mean_police_maj_whitejew, isr_mean_police_maj_arab, isr_diff_police_maj_arab, isr_pval_diff_police_maj_arab, isr_pct_change_police_maj_arab)
+isr_police_min_eth = c(israel_mean_police_min_whitejew, isr_mean_police_min_eth, isr_diff_police_min_eth, isr_pval_diff_police_min_eth, isr_pct_change_police_min_eth)
+isr_police_min_arab = c(israel_mean_police_min_whitejew, isr_mean_police_min_arab, isr_diff_police_min_arab, isr_pval_diff_police_min_arab, isr_pct_change_police_min_arab)
+
+pct_change_tab = rbind(us_degv_maj, us_degv_min, us_police_maj, us_police_min, 
+                       isr_degv_maj_arab, isr_degv_min_arab, isr_police_maj_arab, isr_police_min_arab,
+                       isr_degv_maj_eth, isr_degv_min_eth, isr_police_maj_eth, isr_police_min_eth) 
+colnames(pct_change_tab) = c("Mean (majority)", "Mean (minority)", "Difference", "P-value", "Percent change")
+
+table_a15 = xtable(pct_change_tab, digits=2)
+print(table_a15, file="Tables/table_A16.tex")
+
+```
+
+### `Replication/Code/replicate_table_A17.R`
+```r
+##--##--##--##--##--##--##
+## Appendix: Table A17
+##--##--##--##--##--##--##
+
+## A. U.S. sample
+mod1 = lm(degree_violence ~ black + group_goal + commitment + age + female +education + income + pol_views + race, data=us_survey_wave2)
+mod2 = lm(recall_violence2 ~ black + group_goal + commitment + age + female +education + income + pol_views + race, data=us_survey_wave2)
+mod3 = lm(police_action_required ~ black + group_goal + commitment + age + female +education + income + pol_views + race, data=us_survey_wave2)
+stargazer(mod1, mod2, mod3, out="Tables/table_A17_panel_A.tex")
+
+## B. Israel sample
+mod1_israel = lm(degree_violence ~ identity_protesters + group_goal + commitment + age + female +education + income + ideology + ethnicity, data=isr_survey_wave2)
+mod2_israel = lm(recall_violence2 ~ identity_protesters + group_goal + commitment + age + female +education + income + ideology + ethnicity, data=isr_survey_wave2)
+mod3_israel = lm(police_action_required ~ identity_protesters + group_goal + commitment + age + female +education + income + ideology + ethnicity, data=isr_survey_wave2)
+stargazer(mod1_israel, mod2_israel, mod3_israel, out="Tables/table_A17_panel_B.tex")
+
+```
+
+### `Replication/Code/replicate_table_A18.R`
+```r
+##--##--##--##--##--##--##
+## Appendix: Table A18
+##--##--##--##--##--##--##
+
+generic_goal_dv = lm(degree_violence ~ identity_protesters + commitment , data=isr_survey_wave2[isr_survey_wave2$group_goal==0,])
+generic_goal_rv = lm(recall_violence2 ~ identity_protesters + commitment , data=isr_survey_wave2[isr_survey_wave2$group_goal==0,])
+generic_goal_paq = lm(police_action_required ~ identity_protesters + commitment , data=isr_survey_wave2[isr_survey_wave2$group_goal==0,])
+stargazer(generic_goal_dv, generic_goal_rv, generic_goal_paq,
+          covariate.labels = c("Ethiopian protesters", "Arab protesters",
+                               "Commitment to nonviolence", "Intercept: White protesters, generic goal, no commitment"),
+          out = "Tables/table_A18.tex")
+
+```
+
+### `Replication/Code/replicate_table_A2.R`
+```r
+##--##--##--##--##--##--##
+## Appendix: Table A2
+##--##--##--##--##--##--##
+
+nv_majority = prop.table(table(NAVCO2_EPR$success[NAVCO2_EPR$navco1designation==1 & NAVCO2_EPR$EPR_STATUS_EXCL==0]))
+v_majority = prop.table(table(NAVCO2_EPR$success[NAVCO2_EPR$navco1designation==0 & NAVCO2_EPR$EPR_STATUS_EXCL==0]))
+nv_minority = prop.table(table(NAVCO2_EPR$success[NAVCO2_EPR$navco1designation==1 & NAVCO2_EPR$EPR_STATUS_EXCL==1]))
+v_minority = prop.table(table(NAVCO2_EPR$success[NAVCO2_EPR$navco1designation==0 & NAVCO2_EPR$EPR_STATUS_EXCL==1]))
+
+navco_table = cbind(nv_majority, v_majority, nv_minority, v_minority)
+rownames(navco_table) = c("Campaign failure",   "Campaign success")
+
+table_a2 = xtable(navco_table, digits=2)
+print(table_a2, file="Tables/table_A2.tex")
+```
+
+### `Replication/Code/replicate_table_A3.R`
+```r
+##--##--##--##--##--##--##
+## Appendix: Table A3
+##--##--##--##--##--##--##
+
+tab1 = lm(success ~  EPR_STATUS_EXCL* INIT_NV_ONSET , data= EBCR_EPR_NAVCO2) 
+tab2 = lm(success ~  EPR_STATUS_EXCL *  INIT_NV_ONSET + EPR_GROUPSIZE + POP_LOG_LAG_EXT + GDPPC_LOG_LAG_EXT + PASTNV + PASTV + VDEM_POLYARCHY_LAG + VDEM_PHYSINT_LAG + NVYEARS +I(NVYEARS^2) + I(NVYEARS^3) + VYEARS + I(VYEARS^2) + I(VYEARS^3), data= EBCR_EPR_NAVCO2) 
+tab3 = lm(success ~  EPR_STATUS_EXCL *  INIT_NV_ONSET + EPR_GROUPSIZE + POP_LOG_LAG_EXT + GDPPC_LOG_LAG_EXT + PASTNV + PASTV + VDEM_POLYARCHY_LAG + VDEM_PHYSINT_LAG + EPR_TEK_EGIP + EPR_DOWNGRADED5 + HORIZ_INEQ + NVYEARS + I(NVYEARS^2) + I(NVYEARS^3) + VYEARS + I(VYEARS^2) + I(VYEARS^3) , data= EBCR_EPR_NAVCO2)  
+tab4 = lm(success ~  EPR_STATUS_ORD* INIT_NV_ONSET , data= EBCR_EPR_NAVCO2) 
+tab5 = lm(success ~  EPR_STATUS_ORD *  INIT_NV_ONSET + EPR_GROUPSIZE + POP_LOG_LAG_EXT + GDPPC_LOG_LAG_EXT + PASTNV + PASTV + VDEM_POLYARCHY_LAG + VDEM_PHYSINT_LAG + NVYEARS +I(NVYEARS^2) + I(NVYEARS^3) + VYEARS + I(VYEARS^2) + I(VYEARS^3), data= EBCR_EPR_NAVCO2) 
+tab6 = lm(success ~  EPR_STATUS_ORD *  INIT_NV_ONSET + EPR_GROUPSIZE + POP_LOG_LAG_EXT + GDPPC_LOG_LAG_EXT + PASTNV + PASTV + VDEM_POLYARCHY_LAG + VDEM_PHYSINT_LAG + EPR_TEK_EGIP + EPR_DOWNGRADED5 + HORIZ_INEQ + NVYEARS + I(NVYEARS^2) + I(NVYEARS^3) + VYEARS + I(VYEARS^2) + I(VYEARS^3) , data= EBCR_EPR_NAVCO2)  
+
+stargazer(tab4, tab5, tab6, tab1, tab2, tab3, table.placement="H", order = c(3,1,20, 2, 21),
+          covariate.labels = c("NV campaign", "EPR Status", "EPR Status × NV Campaign",
+                               "EPR Status: Excluded", "EPR Status: Excluded × NV Campaign",
+                               "EPR group size", "Country population", "Country GDP per capita",
+                               "Prior participation in NV", "Prior participation in V",
+                               "Level of democracy", "Physical integrity index", "Neighboring kin in power",
+                               "Group status downgraded", "Horizontal inequality"),
+          omit = c("VYEARS", "NVYEARS"),
+          out="Tables/table_A3.tex")
+
+```
+
+### `Replication/Code/replicate_table_A4.R`
+```r
+##--##--##--##--##--##--##
+## Appendix: Table A4
+##--##--##--##--##--##--##
+
+tab7 = lm(success ~  EPR_GROUPSIZE* INIT_NV_ONSET , data= EBCR_EPR_NAVCO2) 
+tab8 = lm(success ~  EPR_GROUPSIZE *  INIT_NV_ONSET  + POP_LOG_LAG_EXT + GDPPC_LOG_LAG_EXT + PASTNV + PASTV + VDEM_POLYARCHY_LAG + VDEM_PHYSINT_LAG + NVYEARS +I(NVYEARS^2) + I(NVYEARS^3) + VYEARS + I(VYEARS^2) + I(VYEARS^3), data= EBCR_EPR_NAVCO2) 
+tab9 = lm(success ~  EPR_GROUPSIZE *  INIT_NV_ONSET  + POP_LOG_LAG_EXT + GDPPC_LOG_LAG_EXT + PASTNV + PASTV + VDEM_POLYARCHY_LAG + VDEM_PHYSINT_LAG + EPR_TEK_EGIP + EPR_DOWNGRADED5 + HORIZ_INEQ + NVYEARS + I(NVYEARS^2) + I(NVYEARS^3) + VYEARS + I(VYEARS^2) + I(VYEARS^3) , data= EBCR_EPR_NAVCO2)  
+
+stargazer(tab7, tab8, tab9, table.placement="H", order = c(2,1,18),
+          covariate.labels = c("NV campaign", "EPR group size", "EPR group size × NV campaign",
+                               "Country population", "Country GDP per capita",
+                               "Prior participation in NV", "Prior participation in V",
+                               "Level of democracy", "Physical integrity index", 
+                               "Neighboring kin in power", "Group status downgraded",
+                               "Horizontal inequality"),
+          omit = c("VYEARS", "NVYEARS"),
+          out="Tables/table_A4.tex")
+```
+
+### `Replication/Code/replicate_table_A5.R`
+```r
+##--##--##--##--##--##--##
+## Appendix: Table A5
+##--##--##--##--##--##--##
+
+# Status (excluded, not excluded)
+
+nv_status = lm(success ~  EPR_STATUS_EXCL + EPR_GROUPSIZE + POP_LOG_LAG_EXT + GDPPC_LOG_LAG_EXT + PASTNV + PASTV + VDEM_POLYARCHY_LAG + VDEM_PHYSINT_LAG + EPR_TEK_EGIP + EPR_DOWNGRADED5 + HORIZ_INEQ + NVYEARS + I(NVYEARS^2) + I(NVYEARS^3) + VYEARS + I(VYEARS^2) + I(VYEARS^3) , data= EBCR_EPR_NAVCO2[EBCR_EPR_NAVCO2$INIT_NV_ONSET==1,])  
+v_status = lm(success ~  EPR_STATUS_EXCL + EPR_GROUPSIZE + POP_LOG_LAG_EXT + GDPPC_LOG_LAG_EXT + PASTNV + PASTV + VDEM_POLYARCHY_LAG + VDEM_PHYSINT_LAG + EPR_TEK_EGIP + EPR_DOWNGRADED5 + HORIZ_INEQ + NVYEARS + I(NVYEARS^2) + I(NVYEARS^3) + VYEARS + I(VYEARS^2) + I(VYEARS^3) , data= EBCR_EPR_NAVCO2[EBCR_EPR_NAVCO2$INIT_V_ONSET==1,])  
+
+preds_nv = ggpredict(nv_status, terms = c("EPR_STATUS_EXCL"))
+preds_nv$tactic = "Non-violent"
+preds_v = ggpredict(v_status, terms = c("EPR_STATUS_EXCL"))
+preds_v$tactic = "Violent"
+
+preds_status = rbind(preds_nv, preds_v)
+preds_status$tactic <- factor(preds_status$tactic, levels = c("Violent", "Non-violent"))
+preds_status$Status = "Excluded"
+preds_status$Status[preds$x==0] = "Not excluded"
+preds_status$type = "status"
+
+## Size (above and below the mean of the distribution)
+
+EBCR_EPR_NAVCO2$small_size = NA
+EBCR_EPR_NAVCO2$small_size[EBCR_EPR_NAVCO2$EPR_GROUPSIZE < mean(EBCR_EPR_NAVCO2$EPR_GROUPSIZE, na.rm=T)] = 1
+EBCR_EPR_NAVCO2$small_size[EBCR_EPR_NAVCO2$EPR_GROUPSIZE >= mean(EBCR_EPR_NAVCO2$EPR_GROUPSIZE, na.rm=T)] = 0
+
+nv_size = lm(success ~  small_size  + POP_LOG_LAG_EXT + GDPPC_LOG_LAG_EXT + PASTNV + PASTV + VDEM_POLYARCHY_LAG + VDEM_PHYSINT_LAG + EPR_TEK_EGIP + EPR_DOWNGRADED5 + HORIZ_INEQ + NVYEARS + I(NVYEARS^2) + I(NVYEARS^3) + VYEARS + I(VYEARS^2) + I(VYEARS^3) , data= EBCR_EPR_NAVCO2[EBCR_EPR_NAVCO2$INIT_NV_ONSET==1,])  
+v_size = lm(success ~  small_size  + POP_LOG_LAG_EXT + GDPPC_LOG_LAG_EXT + PASTNV + PASTV + VDEM_POLYARCHY_LAG + VDEM_PHYSINT_LAG + EPR_TEK_EGIP + EPR_DOWNGRADED5 + HORIZ_INEQ + NVYEARS + I(NVYEARS^2) + I(NVYEARS^3) + VYEARS + I(VYEARS^2) + I(VYEARS^3) , data= EBCR_EPR_NAVCO2[EBCR_EPR_NAVCO2$INIT_V_ONSET==1,])  
+
+preds_nv = ggpredict(nv_size, terms = c("small_size"))
+preds_nv$tactic = "Non-violent"
+preds_v = ggpredict(v_size, terms = c("small_size"))
+preds_v$tactic = "Violent"
+
+preds_size = rbind(preds_nv, preds_v)
+preds_size$tactic <- factor(preds_size$tactic, levels = c("Violent", "Non-violent"))
+preds_size$Status = "Group size < mean"
+preds_size$Status[preds_size$x==0] = "Group size >= mean"
+preds_size$type = "size"
+
+preds_all = as.data.frame(rbind(preds_status, preds_size))
+preds_all = preds_all[,c("predicted", "std.error", "conf.low", "conf.high",
+                         "tactic", "Status")]
+table_a5 = xtable(preds_all, digits=2)
+print(table_a5, file="Tables/table_A5.tex")
+
+```
+
+### `Replication/Code/replicate_table_A6.R`
+```r
+##--##--##--##--##--##--##
+## Appendix: Table A6
+##--##--##--##--##--##--##
+
+pol_irr1 = lm(success ~  navco1designation , 
+              data= NAVCO2[!(NAVCO2$id %in% NAVCO2_EPR$id),])
+pol_irr2 = lm(success ~  navco1designation , 
+              data= NAVCO2[NAVCO2$id %in% NAVCO2_EPR$id[NAVCO2_EPR$EPR_STATUS == "IRRELEVANT"],])
+
+stargazer(pol_irr1, pol_irr2, covariate.labels = c("Nonviolent campaign", "Constant"),
+          out="Tables/table_A6.tex")
+
+```
+
+### `Replication/Code/replicate_table_A7.R`
+```r
+##--##--##--##--##--##--##
+## Appendix: Table A7
+##--##--##--##--##--##--##
+
+us_wave1_sumstats = us_survey_wave1[,c("age", "female", "education", "income", "partyID", "ideology", "interest_politics",
+                                      "degree_violence", "police_action_required", "recall_violence2", "race")]
+us_wave1_sumstats = dummy_cols(us_wave1_sumstats, select_columns = c("education", "income", "partyID", "ideology", "race"))
+stargazer(us_wave1_sumstats, omit.summary.stat=c("p25", "p75"), out="Tables/table_A7.tex")
+```
+
+### `Replication/Code/replicate_table_A8.R`
+```r
+##--##--##--##--##--##--##
+## Appendix: Table A8
+##--##--##--##--##--##--##
+
+isr_wave1_jewish = isr_survey_wave1[isr_survey_wave1$survey=="isr",]
+isr_wave1_jewish_sumstats = isr_wave1_jewish[,c("age", "female", "religiosity", "ethnicity", "education", "income", "partyID", "ideology", "interest_news",
+                                                "degree_violence", "police_action_required", "recall_violence2")]
+isr_wave1_jewish_sumstats = dummy_cols(isr_wave1_jewish_sumstats, select_columns = c("age", "religiosity", "ethnicity", "education", "income", "partyID"))
+table_a8 = stargazer(isr_wave1_jewish_sumstats, omit.summary.stat=c("p25", "p75"))
+cat(table_a8, sep = '\n', file = "Tables/table_A8.tex")
+
+```
+
+### `Replication/Code/replicate_table_A9.R`
+```r
+##--##--##--##--##--##--##
+## Appendix: Table A9
+##--##--##--##--##--##--##
+
+isr_wave1_arab = isr_survey_wave1[isr_survey_wave1$survey=="isr_ar",]
+isr_wave1_arab_sumstats = isr_wave1_arab[,c("age", "female", "religiosity", "ethnicity", "education", "income", "partyID", "ideology", "interest_news",
+                                            "degree_violence", "police_action_required", "recall_violence2")]
+isr_wave1_arab_sumstats = dummy_cols(isr_wave1_arab_sumstats, select_columns = c("age", "religiosity", "ethnicity", "education", "income", "partyID"))
+table_a9 = stargazer(isr_wave1_arab_sumstats, omit.summary.stat=c("p25", "p75"))
+cat(table_a9, sep = '\n', file = "Tables/table_A9.tex")
+
+
+```
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

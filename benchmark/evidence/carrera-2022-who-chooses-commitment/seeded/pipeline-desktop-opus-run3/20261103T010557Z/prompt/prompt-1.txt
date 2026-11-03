@@ -1,0 +1,3264 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: NBER WORKING PAPER SERIES
+Abstract (first 500 chars): This paper investigates whether offers of commitment contracts, in the form of self-imposed 
+choice-set restrictions and penalties with no financial upside, are well-targeted tools for 
+addressing self-control problems. In an experiment on gym attendance (N= 1;248), we examine 
+take-up of commitment contracts, and also introduce a separate elicitation task to identify actual 
+and perceived time inconsistency. There is high take-up of commitment contracts for greater gym 
+attendance, resulting in
+Methodology Summary: - **Design / sample:** Randomized field experiment with N = 1,248 members of a university-affiliated fitness facility in a Midwest U.S. city (aged 18+, members for the past 8 weeks). It ran in three waves between Oct 2015 and Mar 2016 (350, 528 and 414 enrolled). Participants completed an online elicitation, and then their gym attendance (card swipes) was observed for the 4 weeks starting the following Monday. Rewards were paid by mailed check after the 4 weeks.
+- **Randomized information treatment (50% probability, assigned before any elicitation):** In wave 1 it was a graph of the participant's weekly visits over the past 20 weeks. In waves 2–3 it was enhanced: participants entered their own estimate of past weekly visits and were told that prior participants overestimated by about 4 visits over 4 weeks. The treatment is used to identify the causal effect of sophistication on beliefs, on the behavior change premium and on commitment take-up.
+- **Elicitations:**
+  - Forecast visits (0–28) and a goal for the next 4 weeks.
+  - For six piece-rate incentives ($1, $2, $3, $5, $7 and $12 per visit, shown in random order): forecasted attendance and willingness to pay (WTP), elicited with an incentive-compatible BDM slider ($0 up to 30× the rate, with a fill-in box at the maximum).
+  - Binary choices between $80 unconditional and $80 conditional on attending ≥8, ≥12 or ≥16 times ("more" contracts), or ≤7, ≤11 or ≤15 times ("less" contracts), in waves 1–2. Wave 3 offered only ≥12 and ≤11, plus the participant's believed probability of meeting each threshold.
+- **Random assignment of actual incentives:** One question was drawn per person, and the BDM fixed payment came from a mixture: U[$0,$7] with weight 0.99 and U[full slider range] with weight 0.01.
+  - Wave 1: $0, $2 and $7 per visit, each with probability 0.33.
+  - Wave 2: $0 (33%), $2 (33%), $5 (16.5%) and $7 (16.5%).
+  - Wave 3: $0, $7 per visit, and $80 for 12+ visits, each 33%.
+  - In every wave the remaining 1% was spread over all other questions.
+- **Sample restriction:** 44 observations where assignment could be endogenous are excluded throughout. These are 12 whose fixed-payment draw was above $7 and 32 whose WTP fell inside the $0–$7 range.
+- **Reduced-form estimation:**
+  - Behavior change premium: BCP(p,Δ) = [w(p+Δ) − w(p)]/Δ − [α̃(p+Δ) + α̃(p)]/2, built from adjacent incentive levels and expressed per $1 of incentive. Its headline mean is $1.78 per visit.
+  - Effects of the randomized incentives on actual visits are estimated by comparing assigned groups. Headline: +3.51 visits for the $80/12+ contract.
+  - Take-up rates of the "more" contracts (64%, 49% and 32%) and the "less" contracts (27–34%).
+  - Correlation between "more" and "less" take-up, and the association of take-up with the BCP and other sophistication proxies.
+  - Effect of the information treatment on forecasts, BCP and take-up.
+- **Structural estimation (Section 7):** A quasi-hyperbolic (β–δ, with δ = 1) model with partial naivete (β̃), following O'Donoghue–Rabin (2001), with stochastic costs and quasilinear utility. It is fit to forecasted attendance, WTP and actual attendance at the randomized piece rates. Contract take-up is modelled with mean-zero stochastic valuation errors (logit, "imperfect perception").
+  - Estimates: β = 0.55, β̃ = 0.84 (0.86 in control vs 0.78 under information), b = $9.66 per visit, internality (1−β)b = $4.39.
+  - The model is validated with out-of-sample tests.
+  - It is used to compute consumer surplus from the contracts under the long-run criterion: −$7.91, −$18.69 and −$10.51 per taker for 8+, 12+ and 16+. It also compares the social efficiency of the contracts with linear per-visit subsidies scaled to produce the same average attendance change.
+- **Not available in the supplied text:** The paper text is cut off at the start of Section 4 (Data). The exact regression specifications, control sets, fixed effects and standard-error clustering therefore cannot be reported. There is no ML train/test split or cross-validation.
+
+
+## Claims to Reproduce
+1. bcp_basic_info_treatment_col1: 0.3 (dollars of behavior change premium per $1 of incentive) [type: coefficient]
+   Location: Table 3, column (1), Basic info. treatment
+   Context: Table 3 ("Association between the behavior change premium and proxies for sophistication"), column (1), row Basic info. treatment. OLS regression of the participant's behavior change premium on indicators for the basic information treatment (wave 1) and the enhanced information treatment (waves 2-3), with wave fixed effects. The behavior change premium is the conservative measure: for each pair of adjacent piece-rate incentives above $1/day ($1-$2, $2-$3, $3-$5, $5-$7, $7-$12), the increase in willingness to pay per dollar of incentive increase minus the average of the forecasted attendance at…
+2. bcp_enhanced_info_treatment_col1: 1.36 (dollars of behavior change premium per $1 of incentive) [type: coefficient]
+   Location: Table 3, column (1), Enhanced info. treatment
+   Context: Table 3, column (1), row Enhanced info. treatment. Same regression as bcp_basic_info_treatment_col1.
+3. bcp_goal_minus_expected_attendance_col2: 0.71 (dollars of behavior change premium per SD) [type: coefficient]
+   Location: Table 3, column (2), Goal - exp. attend. (z-score)
+   Context: Table 3, column (2), row Goal - exp. attend. (z-score). Same regression as column (1) adding the standardized (z-score over the regression sample) difference between the participant's goal attendance and their expected attendance in the absence of incentives. Robust SEs, wave fixed effects.
+4. bcp_actual_minus_expected_attendance_col3: 0.45 (dollars of behavior change premium per SD) [type: coefficient]
+   Location: Table 3, column (3), Actual - exp. attend. (z-score)
+   Context: Table 3, column (3), row Actual - exp. attend. (z-score). Same regression as column (1) adding the standardized difference between the participant's actual attendance and their expected attendance under the incentive they were assigned. Robust SEs, wave fixed effects.
+5. bcp_regression_observations: 1126.0 (participants) [type: other]
+   Location: Table 3, N
+   Context: Observations in the Table 3 regressions (same in all three columns): participants with an exogenously assigned incentive, excluding the wave 3 participants assigned a commitment contract.
+6. takeup_more_basic_info_treatment_col1: -0.022 (probability of take-up) [type: coefficient]
+   Location: Table 4, column (1), Basic info. treatment
+   Context: Table 4 ("Association between take-up of 'more' commitment contracts and proxies for sophistication"), column (1), row Basic info. treatment. Linear probability model of choosing the "more" visits commitment contract ($80 only if visiting the gym at least the threshold number of days in four weeks, over an $80 fixed payment), pooling each participant's choices across the contract thresholds offered (8, 12 and 16 visits in waves 1-2; 12 visits only in wave 3), on the basic and enhanced information treatment indicators with wave fixed effects and contract-threshold fixed effects. Same participan…
+7. takeup_more_enhanced_info_treatment_col1: -0.08 (probability of take-up) [type: coefficient]
+   Location: Table 4, column (1), Enhanced info. treatment
+   Context: Table 4, column (1), row Enhanced info. treatment. Same regression as takeup_more_basic_info_treatment_col1.
+8. takeup_more_behavior_change_premium_col2: 0.027 (probability of take-up per SD) [type: coefficient]
+   Location: Table 4, column (2), Behavior change premium (z-score)
+   Context: Table 4, column (2), row Behavior change premium (z-score). Same regression as column (1) adding the behavior change premium of Table 3, standardized over the participant-level regression sample. Wave and contract-threshold fixed effects, SEs clustered by subject.
+9. takeup_more_goal_minus_expected_attendance_col3: 0.038 (probability of take-up per SD) [type: coefficient]
+   Location: Table 4, column (3), Goal - exp. attend. (z-score)
+   Context: Table 4, column (3), row Goal - exp. attend. (z-score). Same regression as column (1) adding the standardized goal minus expected attendance gap defined as in Table 3.
+10. takeup_more_actual_minus_expected_attendance_col4: -0.043 (probability of take-up per SD) [type: coefficient]
+   Location: Table 4, column (4), Actual - exp. attend. (z-score)
+   Context: Table 4, column (4), row Actual - exp. attend. (z-score). Same regression as column (1) adding the standardized actual minus expected attendance gap defined as in Table 3.
+11. takeup_more_regression_observations: 2824.0 (participant-by-contract choices) [type: other]
+   Location: Table 4, N
+   Context: Observations in the Table 4 regressions (same in all four columns): participant-by-threshold "more" contract choices for the Table 3 participant sample.
+
+## Dataset Information
+Name: carrera-2022-who-chooses-commitment
+Local path: <repo>/.cache/datasets/carrera_2022_who_chooses_commitment
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- Who_Chooses_Commitment_Replication/Data/cleaned_commitment_study_daily_data.dta (13.9 MB) — 36176 rows, 109 columns: wave, treatment, incentive, visits, visits_100days, visits_next4weeks, goal, past100days_should, type_of_info, past4, wtp1, wtp2, wtp3, wtp5, wtp7, wtp12, day, attended, incentivetext, working_status, percent_goal, past100days_went, sliderintro_wtp1, flag_exclude_exog, chose_commit12, percent_meet_commit12, passed_attention_check, passed_comprehension_check, previsits1, previsits2, previsits3, previsits4, previsits5, previsits6, previsits7, previsits8, avevisits_20wks, days_0…
+- Who_Chooses_Commitment_Replication/Data/cleaned_commitment_study_data.dta (559.7 KB) — 1292 rows, 106 columns: wave, treatment, incentive, visits, visits_100days, visits_next4weeks, goal, past100days_should, type_of_info, past4, wtp1, wtp2, wtp3, wtp5, wtp7, wtp12, incentivetext, working_status, percent_goal, past100days_went, sliderintro_wtp1, flag_exclude_exog, chose_commit12, percent_meet_commit12, passed_attention_check, passed_comprehension_check, previsits1, previsits2, previsits3, previsits4, previsits5, previsits6, previsits7, previsits8, avevisits_20wks, days_0, days_1, days_…
+- Who_Chooses_Commitment_Replication/Code/MATLAB/compute_efficiency.m (7.4 KB)
+- Who_Chooses_Commitment_Replication/Code/MATLAB/gymGame.m (13.6 KB)
+- Who_Chooses_Commitment_Replication/Code/Stata/Appendix.do (28.4 KB)
+- Who_Chooses_Commitment_Replication/Code/Stata/Figures.do (16.3 KB)
+- Who_Chooses_Commitment_Replication/Code/Stata/Parameter estimates.do (54.9 KB)
+- Who_Chooses_Commitment_Replication/Code/Stata/Tables.do (26.7 KB)
+- Who_Chooses_Commitment_Replication/Code/master_do_file_for_analysis.do (1.5 KB)
+- Who_Chooses_Commitment_Replication/Code/run_simulations.m (56.4 KB)
+- Who_Chooses_Commitment_Replication/Experimental Materials/Study Instructions Appendix.pdf (7.2 MB)
+- Who_Chooses_Commitment_Replication/Experimental Materials/Who_Chooses_Commitment.qsf (365.8 KB)
+- Who_Chooses_Commitment_Replication/LICENSE.txt (9.1 KB)
+- Who_Chooses_Commitment_Replication/Other/Images/appendix_survey_waves.PNG (43.0 KB)
+- Who_Chooses_Commitment_Replication/Other/Images/theory_graph.pdf (45.9 KB)
+- Who_Chooses_Commitment_Replication/Other/commitment.bib (78.4 KB)
+- Who_Chooses_Commitment_Replication/Other/econ-aea.bst (84.7 KB)
+- Who_Chooses_Commitment_Replication/Output/CCBeliefs2.tex (964 B)
+- Who_Chooses_Commitment_Replication/Output/CCcorrelates.tex (782 B)
+- Who_Chooses_Commitment_Replication/Output/CCtakeupVbeliefs.tex (1.2 KB)
+- Who_Chooses_Commitment_Replication/Output/DailyAttIncr.tex (524 B)
+- Who_Chooses_Commitment_Replication/Output/Formatted output/CCBeliefs2.tex (961 B)
+- Who_Chooses_Commitment_Replication/Output/Formatted output/CC_literature_table.tex (3.8 KB)
+- Who_Chooses_Commitment_Replication/Output/Formatted output/CCcorrelates.tex (775 B)
+- Who_Chooses_Commitment_Replication/Output/Formatted output/CCtable.tex (1.3 KB)
+- Who_Chooses_Commitment_Replication/Output/Formatted output/CCtable_control.tex (1.3 KB)
+- Who_Chooses_Commitment_Replication/Output/Formatted output/CCtable_treatment.tex (1.3 KB)
+- Who_Chooses_Commitment_Replication/Output/Formatted output/CCtakeupVbeliefs.tex (1.2 KB)
+- Who_Chooses_Commitment_Replication/Output/Formatted output/Exp_Corr.tex (1.3 KB)
+- Who_Chooses_Commitment_Replication/Output/Formatted output/Exp_Rates.tex (1.4 KB)
+- Who_Chooses_Commitment_Replication/Output/Formatted output/uniformrange.pdf (63.2 KB)
+- Who_Chooses_Commitment_Replication/Output/appendix_descriptive_stats.tex (2.1 KB)
+- Who_Chooses_Commitment_Replication/Output/bcp_on_behavior_change.tex (694 B)
+- Who_Chooses_Commitment_Replication/Output/bcp_on_risk_aversion.tex (938 B)
+- Who_Chooses_Commitment_Replication/Output/commit_delta.tex (1.2 KB)
+- Who_Chooses_Commitment_Replication/Output/commit_delta_control.tex (1.2 KB)
+- Who_Chooses_Commitment_Replication/Output/commit_delta_info.tex (1.2 KB)
+- Who_Chooses_Commitment_Replication/Output/daily_att_likelihood.pdf (61.1 KB)
+- Who_Chooses_Commitment_Replication/Output/daily_att_prob_commit12.pdf (2.8 KB)
+- Who_Chooses_Commitment_Replication/Output/deltas.pdf (54.0 KB)
+- Who_Chooses_Commitment_Replication/Output/exp_actual_under_incentive.pdf (58.3 KB)
+- Who_Chooses_Commitment_Replication/Output/numbers.tex (3.9 KB)
+- Who_Chooses_Commitment_Replication/Output/numbers_struct.tex (8.2 KB)
+- Who_Chooses_Commitment_Replication/Output/numbers_struct_appx.tex (16.7 KB)
+- Who_Chooses_Commitment_Replication/Output/overconfidence.pdf (57.0 KB)
+- Who_Chooses_Commitment_Replication/Output/overconfidence_estimates.pdf (93.3 KB)
+- Who_Chooses_Commitment_Replication/Output/overconfidence_estimatesV.pdf (93.3 KB)
+- Who_Chooses_Commitment_Replication/Output/overconfidence_estimatesX.pdf (93.4 KB)
+- Who_Chooses_Commitment_Replication/Output/overconfidence_estimates_commit12.pdf (94.2 KB)
+- Who_Chooses_Commitment_Replication/Output/overconfidence_estimates_past4_info_het.pdf (93.4 KB)
+- Who_Chooses_Commitment_Replication/Output/overconfidence_estimates_past4_info_hetV.pdf (93.3 KB)
+- Who_Chooses_Commitment_Replication/Output/overconfidence_estimates_past4_info_hetX.pdf (93.5 KB)
+- Who_Chooses_Commitment_Replication/Output/overconfidence_treatment_wave1.pdf (60.2 KB)
+- Who_Chooses_Commitment_Replication/Output/overconfidence_treatment_wave23.pdf (60.2 KB)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amcommit.csv (76 B) — columns: lambda,beta,betatilde,b,prop
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amcommitV.csv (76 B) — columns: lambda,beta,betatilde,b,prop
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amcommitX.csv (76 B) — columns: lambda,beta,betatilde,b,prop
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amcommite.csv (75 B) — columns: lambda,beta,betatilde,b,prop
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amcommiteV.csv (75 B) — columns: lambda,beta,betatilde,b,prop
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amcommiteX.csv (73 B) — columns: lambda,beta,betatilde,b,prop
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amcommits.csv (76 B) — columns: lambda,beta,betatilde,b,prop
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amcommitsV.csv (75 B) — columns: lambda,beta,betatilde,b,prop
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amcommitsX.csv (75 B) — columns: lambda,beta,betatilde,b,prop
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlcommit.csv (76 B) — columns: lambda,beta,betatilde,b,prop
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlcommitV.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlcommitX.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlcommite.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlcommiteV.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlcommiteX.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlcommits.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlcommitsV.csv (75 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlcommitsX.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlnocommit.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlnocommitV.csv (75 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlnocommitX.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlnocommite.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlnocommiteV.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlnocommiteX.csv (73 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlnocommits.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlnocommitsV.csv (74 B)
+- … and 207 more files (listing truncated)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/carrera_2022_who_chooses_commitment' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Original Replication Scripts
+The replication package (the dataset directory) ships the authors' own analysis scripts, reproduced below.  These are the GROUND TRUTH for the exact estimating equation, variable names, sample restrictions, fixed effects, and standard-error clustering — follow them over anything reconstructed from the methodology summary, and prefer them over the paper's text where the two disagree.  Your job is to write R code that implements the SAME SPECIFICATION: translate what the scripts estimate, do not transliterate their syntax line by line (a Stata .do file's regression, e.g. `reghdfe y x controls, absorb(fe) cluster(cl)`, becomes the equivalent fixest::feols() call in R).  Keep only the parts that produce the specific claims being reproduced; skip figure construction and unrelated robustness checks.  The scripts' data-file paths refer to the package's internal layout — resolve them against the dataset directory listed under Dataset Information.
+
+Stata-to-fixest sample matching: feols() drops fixed-effect singletons by default, but Stata's `reg y x i.fe` / `xi:` dummies keep them.  Pass `fixef.rm = "none"` to every feols() call that has fixed effects, otherwise the observation count and the robust SEs drift from the paper's.  Stata's `, r` / `vce(robust)` is `vcov = "hetero"`.
+
+### `Who_Chooses_Commitment_Replication/Code/master_do_file_for_analysis.do`
+```stata
+*** MASTER ANALYSIS FILE FOR Carrera, Royer, Stehr, Sydnor, and Taubinsky (2021)
+*******************************************************************************
+
+** Initial set-up **
+clear all
+set more off
+
+** Set main directory to location of replication folder **
+cd ..
+global main "`c(pwd)'"
+// NOTE: If you start a new Stata session by opening this do file, your working
+// directory will typically default to the Code subfolder. The code above will 
+// then correctly set the main directory. If that is not the case, then please
+// uncomment and edit the code below to manually choose the correct location.
+// if "`c(os)'" == "MacOSX" global main "<home>/Downloads/Who_Chooses_Commitment_Replication"
+// else global main "C:<home>/Downloads/Who_Chooses_Commitment_Replication"
+
+** Install necessary packages **
+foreach pkg in eststo binscatter coefplot{
+	cap which `pkg'
+	if _rc ssc install `pkg'
+	}
+
+** Create a program to write commands to latex files **
+cap program drop latex_write
+program define latex_write
+	if "`c(os)'" == "MacOSX" local command '\newcommand{\\`1'}{`2'}'
+	else local command \newcommand{\\`1'}{`2'}
+	! echo `command'  >> "`3'.tex"
+end
+
+** Remove old versions of files **
+cap rm "$main/Output/numbers.tex"
+cap rm "$main/Output/numbers_struct.tex" 
+cap rm "$main/Output/numbers_struct_appx.tex"
+
+** Run analysis files **
+do "$main/Code/Stata/Tables"
+do "$main/Code/Stata/Figures"
+do "$main/Code/Stata/Appendix"
+do "$main/Code/Stata/Parameter estimates"
+
+```
+
+### `Who_Chooses_Commitment_Replication/Code/Stata/Parameter estimates.do`
+```stata
+*** PARAMETER ESTIMATES FOR Carrera, Royer, Stehr, Sydnor, and Taubinsky (2021)
+*******************************************************************************
+
+*** Initial set-up ***
+clear
+set more off
+
+*** Set directories for data and output ***
+cd "$main/Output"
+/* Note: outputs to the working directory. Uses a program from 
+   master_do_file_for_analysis.do */
+
+
+*** Load and clean experimental data ******************************************
+
+*** Load dataset ***
+use "$main/Data/cleaned_commitment_study_data", clear
+
+*** Variable Creation & Cleaning Steps ***
+*** Create an ID variable for use when reshaping long 
+gen id = _n
+
+*** Generate info treatment indicators
+gen first_info = type_of_info=="1-onlygraph" 
+gen new_info = type_of_info=="2-graphplus" 
+gen control_info = (new_info == 0 & first_info == 0) 
+
+*** Generate wave indicators
+gen wave1 = (wave == "fall") 
+gen wave2 = (wave == "winter")
+gen wave3 = (wave == "spring")
+
+*** Define anticommitment/commitment variables for each threshold
+gen anticommit8 = q170 ==2 if q170<.
+gen commit8 = q169 ==2 if q169<.
+gen anticommit12 = chose_anticommit11
+gen commit12 = chose_commit12
+gen anticommit16 = q296==2 if q296<.
+gen commit16 = q295 ==2 if q295<.
+
+*** Generate additional variables ***
+/*** These variables are the amounts, per attendance, by which a person 
+"overpays" for the increase in incentive. Second-order approximation */
+gen delta1=(wtp1) - (days_1+days_0)/2
+gen delta2 = (wtp2-wtp1) - (days_2+days_1)/2
+gen delta3=(wtp3-wtp2) - (days_3+days_2)/2
+gen delta5=(wtp5-wtp3)/(5-3) - (days_5+days_3)/2
+gen delta7=(wtp7-wtp5)/(7-5) - (days_7+days_5)/2
+gen delta12=(wtp12-wtp7)/(12-7) - (days_12+days_7)/2
+
+gen avg_delta = (delta1 + delta2+delta3 + delta5 + delta7 + delta12)/6
+gen avg_delta_ex1 = (delta2+delta3 + delta5 + delta7 + delta12)/5
+
+*** Change in days by incentive
+gen diffa1=(days_1-days_0)
+gen diffa2=(days_2-days_1)
+gen diffa3=(days_3-days_2)
+gen diffa5=(days_5-days_3)/2
+gen diffa7=(days_7-days_5)/2
+gen diffa12=(days_12-days_7)/5
+gen avg_diffa=(diffa1+diffa2+diffa3+diffa5+diffa7+diffa12)/6
+gen avg_diffa_ex1=(diffa2+diffa3+diffa5+diffa7+diffa12)/5
+
+*** Indicator for rejecting 12+ visits contract
+gen nocommit12 = !commit12
+
+*** Generate estimates for graphing below ***
+foreach k in 0 1 2 3 5 7 12{
+
+	foreach cdtn in "" "&commit12==1" "&first_info!=1" "&commit12==1&first_info!=1"{
+	
+		if "`cdtn'" == "" loc n ""
+		else if "`cdtn'" == "&commit12==1" loc n "_c12"
+		else if "`cdtn'" == "&first_info!=1" loc n "_inf"
+		else loc n "_infc12"
+
+		ci means days_`k' if flag_exclude_exog==0&flag_low_wtp==0 `cdtn'
+		* Store estimates in unique variables
+		local mean = r(mean)
+		local ub = r(ub)
+		local lb = r(lb)
+		gen mean_days`n'_`k' = `mean'
+		gen ub_days`n'_`k' = `ub'
+		gen lb_days`n'_`k' = `lb'
+		
+
+		if `k' != 1 & `k' != 3 & `k' != 12{
+			ci means visits if incentive == `k' &flag_exclude_exog==0& ///
+				flag_low_wtp==0 `cdtn'
+			* Store estimates in unique variables
+			local mean = r(mean)
+			local ub = r(ub)
+			local lb = r(lb)
+			gen mean_visits`n'_`k' = `mean'
+			gen ub_visits`n'_`k' = `ub'
+			gen lb_visits`n'_`k' = `lb'
+			
+			if "`n'" == "_inf"{
+				* Store number of observations
+				if `k' == 0 loc num "zero"
+				else if `k' == 2 loc num "two"
+				else if `k' == 5 loc num "five"
+				else loc num "seven"
+				latex_write incentive`num'infobs `r(N)' numbers
+				}
+			}
+		}
+	}
+	
+*For heterogeneity analysis
+sum commit12 if flag_low_wtp==0&flag_exclude_exog==0&incentive!=.
+loc totalobs = r(N)
+sum commit12 if flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&(control_info==1|new_info==1)
+loc obs : di %5.0fc `r(N)'
+latex_write minfoavgobspe `obs' numbers
+loc obs : di %5.0fc `totalobs'-`r(N)'
+latex_write infodropobs `obs' numbers
+sum commit12 if flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&(control_info==1|new_info==1)&flag_confusion!=1
+loc obs : di %5.0fc `r(N)'
+latex_write minfoavgnoconfusedobspe `obs' numbers
+
+*** Reshape data and generate additional variables ***
+preserve
+reshape long days_ mean_days_ ub_days_ lb_days_ ///
+	mean_visits_ ub_visits_ lb_visits_ ///
+	mean_days_c12_ ub_days_c12_ lb_days_c12_ ///
+	mean_visits_c12_ ub_visits_c12_ lb_visits_c12_ ///
+	mean_days_inf_ ub_days_inf_ lb_days_inf_ ///
+	mean_visits_inf_ ub_visits_inf_ lb_visits_inf_ ///
+	mean_days_infc12_ ub_days_infc12_ lb_days_infc12_ ///
+	mean_visits_infc12_ ub_visits_infc12_ lb_visits_infc12_, i(id) j(prize)
+rename days_ days
+gen prize2=prize^2
+gen incentivesq=incentive^2
+
+gen visits12=visits>=12
+gen getcommit=treatment=="threshold80_12"
+
+** Create programs to write to latex file **
+** NOTE: these are specific to the commands run below **
+cap program drop latex_write_gmm latex_write_nlcom 
+
+program define latex_write_gmm
+loc obs : di %5.0fc `e(N_clust)'
+latex_write `1'obspe `obs' `2'
+loc k = 1 // lambda is in the first position
+foreach param in lambda betatilde b beta {
+	if `k' == 1 loc fig : di %4.3f [`param']_cons
+	else loc fig : di %4.2f [`param']_cons // store estimate
+	latex_write `param'`1' `fig' `2'
+	matrix temp = e(V)
+	loc lb : di %4.2f [`param']_cons - invnormal(0.975)*sqrt(el(temp,`k',`k'))
+	loc ub : di %4.2f [`param']_cons + invnormal(0.975)*sqrt(el(temp,`k',`k'))
+	loc ci : di "(`lb', `ub')"
+	latex_write `param'`1'CI "`ci'" `2'
+	loc ++k
+	}
+end
+
+program define latex_write_nlcom
+	matrix tempb = r(b)
+	matrix tempv = r(V)
+	loc fig : di %4.2f tempb[1,1]
+	loc lb : di %4.2f tempb[1,1] - invnormal(0.975)*sqrt(tempv[1,1])
+	loc ub : di %4.2f tempb[1,1] + invnormal(0.975)*sqrt(tempv[1,1])
+	loc ci : di "(`lb', `ub')"
+	latex_write `1' `fig' `2'
+	latex_write `1'CI "`ci'" `2'
+end
+
+
+********** Structural estimates ***********************************************
+
+foreach v in "" "+5" "-10" "+0"{ // minimal cost draws of 0, -5, and 10
+
+*declare locals for naming different versions & storing results
+if "`v'" == ""{
+	loc o ""
+	loc lx "numbers_struct"
+	}
+else if "`v'" == "+5"{
+	loc o "V"
+	loc lx "numbers_struct_appx"
+	}
+else if "`v'" == "-10"{
+	loc o "X"
+	loc lx "numbers_struct_appx"
+	}
+else{
+	loc o "noconfused"
+	loc lx "numbers_struct_appx"
+	drop if flag_confusion==1 // dropping those flagged for possible confusion
+	}
+
+********* Overall estimates ***************************************************
+gmm (eq1:28*(1-exp(-{lambda}*({betatilde}*({b}+prize)`v')))-days) ///
+(eq2: 28*(1-exp(-{lambda}*({beta}*({b}+incentive)`v')))-visits) ///
+(eq3: (1-{betatilde})*diffa2*({b}+(1+2)/2)-delta2) ///
+(eq4: (1-{betatilde})*diffa3*({b}+(2+3)/2)-delta3) ///
+(eq5: (1-{betatilde})*diffa5*({b}+(3+5)/2)-delta5) ///
+(eq6: (1-{betatilde})*diffa7*({b}+(5+7)/2)-delta7) ///
+(eq7: (1-{betatilde})*diffa12*({b}+(7+12)/2)-delta12) ///
+if flag_low_wtp==0&flag_exclude_exog==0&incentive!=., ///
+instruments (eq1: prize prize2) instruments(eq2:incentive incentivesq) ///
+from (b 8 lambda 0.06 beta 0.5 betatilde 0.8) vce(cluster id) winitial(identity) nolog
+latex_write_gmm all`o' `lx' // store estimates
+
+*actual internality:
+nlcom (1-[beta]_cons)*[b]_cons
+latex_write_nlcom aintall`o' `lx' // store estimates
+
+*naivete statistic:
+nlcom (1-[betatilde]_cons)/(1-[beta]_cons)
+latex_write_nlcom naiveall`o' `lx' // store estimates
+
+*expected cost
+nlcom 1/[lambda]_cons
+latex_write_nlcom expcostall`o' `lx' // store estimate
+
+
+if "`v'" == ""{ // only for baseline
+*compute approx. error in behavior change premium from assumptions
+foreach p in 1 2 3 5 7{ // baseline incentive level
+
+	*increase in incentive
+	if `p' == 1 | `p' == 2 loc delta = 1
+	else if `p' == 3 | `p' == 5 loc delta = 2
+	else loc delta = 5
+	
+	* compute error numerator
+	loc error_numerator = ///
+		`delta' - ( ( exp(-[lambda]_cons*[betatilde]_cons*([b]_cons + `p')) / ([lambda]_cons*[betatilde]_cons) ) * (1 - exp(-[lambda]_cons*[betatilde]_cons*`delta')) ) - ///
+		( `delta' * ( 1 - ( exp(-[lambda]_cons*[betatilde]_cons*([b]_cons + `p')) * ( (1 + exp(-[lambda]_cons*[betatilde]_cons*`delta')) / 2 ) ) ) )
+		
+	* compute error denominator
+	loc error_denominator = ///
+		( (1 - [betatilde]_cons) * ( [b]_cons*exp(-[lambda]_cons*[betatilde]_cons*([b]_cons + `p')) ) * (1 - exp(-[lambda]_cons*[betatilde]_cons*`delta')) ) + ///
+		( (1 - [betatilde]_cons) * exp(-[lambda]_cons*[betatilde]_cons*[b]_cons) * ( `p' + ( (1/([lambda]_cons*[betatilde]_cons)) * (1 - (1 + ([lambda]_cons*[betatilde]_cons*`delta'))*exp(-[lambda]_cons*[betatilde]_cons*`delta') ) ) ) )
+		
+	*compute the error in percentage terms
+	loc error : di %4.2f abs(`error_numerator'/`error_denominator')*100
+	
+	* export error
+	if `p' == 1 & `delta' == 1 loc errorname "poneDone"
+	else if `p' == 2 & `delta' == 1 loc errorname "ptwoDone"
+	else if `p' == 3 & `delta' == 2 loc errorname "pthreeDtwo"
+	else if `p' == 5 & `delta' == 2 loc errorname "pfiveDtwo"
+	else loc errorname "psevenDfive"
+	latex_write `errorname'error `error' numbers_struct 
+	
+	}
+}
+
+*generate 95% CIs for model values 
+if "`v'" == ""{ // generate plotting variable in the first loop only
+	global obs = _N
+	loc num = _N+241
+	set obs `num'
+	gen plot_incentive = .
+	forval i = 0(.05)12.05{
+		qui replace plot_incentive = `i' if _n == $obs + (`i'*20) + 1
+		}
+	}
+if "`v'" != "+0"{
+	predictnl mean_days_pred`o' = 28*(1-exp(-[lambda]_cons*([betatilde]_cons*([b]_cons+plot_incentive)`v'))) ///
+		if _n > $obs, ci(lb_days_pred`o' ub_days_pred`o') level(95)
+	predictnl mean_visits_pred`o' = 28*(1-exp(-[lambda]_cons*([beta]_cons*([b]_cons+plot_incentive)`v'))) ///
+		if _n > $obs, ci(lb_visits_pred`o' ub_visits_pred`o') level(95)
+
+	*plot model with actual data
+	twoway (conn mean_days_pred`o' plot_incentive, lcolor(black) m(none)) ///
+		(conn ub_days_pred`o' plot_incentive, lc(black) lp(shortdash) m(none)) ///
+		(conn lb_days_pred`o' plot_incentive, lc(black) lp(shortdash) m(none)) ///
+		(sc mean_days_ prize, msize(small) color(black)) ///
+		(rcap ub_days_ lb_days_ prize, lcolor(black) lwidth(medium) lpattern(dash)) ///
+		(conn mean_visits_pred`o' plot_incentive, lcolor(red) m(none)) ///
+		(conn ub_visits_pred`o' plot_incentive, lc(red) lp(shortdash) m(none)) ///
+		(conn lb_visits_pred`o' plot_incentive, lc(red) lp(shortdash) m(none)) ///
+		(sc mean_visits_ prize, m(square) msize(small) color(red)) ///
+		(rcap ub_visits_ lb_visits_ prize, lcolor(red) lwidth(medium) lpattern(dash)), ///
+		xlab(0(1)12) ylabel(0(5)22, angle(0)) ///
+		xtitle("Per-visit incentive ($)", height(6)) ytitle("Visits", height(6)) ///
+		graphregion(color(white)) plotregion(margin(sides)) ///
+		legend(order(1 2 6 7 4 9) label(1 "Predicted expected visits") label(2 "Prediction 95% CI") label(4 "Average expected visits") label(6 "Predicted realized visits") label(7 "Prediction 95% CI") label(9 "Average realized visits")) legend(rows(3))	
+	graph export overconfidence_estimates`o'.pdf, replace
+	}
+
+
+********* Waves exclusions ****************************************************
+if "`v'" == ""{ // only for baseline
+
+	foreach i in 1 3{ // loop through wave number to be excluded
+	
+		if `i' == 1 loc wname "wtwothree"
+		else loc wname "wonetwo"
+	
+		gmm (eq1:28*(1-exp(-{lambda}*({betatilde}*({b}+prize)`v')))-days) ///
+		(eq2: 28*(1-exp(-{lambda}*({beta}*({b}+incentive)`v')))-visits) ///
+		(eq3: (1-{betatilde})*diffa2*({b}+(1+2)/2)-delta2) ///
+		(eq4: (1-{betatilde})*diffa3*({b}+(2+3)/2)-delta3) ///
+		(eq5: (1-{betatilde})*diffa5*({b}+(3+5)/2)-delta5) ///
+		(eq6: (1-{betatilde})*diffa7*({b}+(5+7)/2)-delta7) ///
+		(eq7: (1-{betatilde})*diffa12*({b}+(7+12)/2)-delta12) ///
+		if flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&wave`i'==0, ///
+		instruments (eq1: prize prize2) instruments(eq2:incentive incentivesq) ///
+		from (b 8 lambda 0.06 beta 0.5 betatilde 0.8) vce(cluster id) winitial(identity) nolog
+		latex_write_gmm `wname' `lx' // store estimates
+
+		*actual internality:
+		nlcom (1-[beta]_cons)*[b]_cons
+		latex_write_nlcom aint`wname' `lx' // store estimates
+
+		*naivete statistic:
+		nlcom (1-[betatilde]_cons)/(1-[beta]_cons)
+		latex_write_nlcom naive`wname' `lx' // store estimates
+
+		*expected cost
+		nlcom 1/[lambda]_cons
+		latex_write_nlcom expcost`wname' `lx' // store estimate
+		
+		}
+	}
+
+	
+********** Information ********************************************************
+* information control group
+gmm (eq1:28*(1-exp(-{lambda}*({betatilde}*({b}+prize)`v')))-days) ///
+(eq2: 28*(1-exp(-{lambda}*({beta}*({b}+incentive)`v')))-visits) ///
+(eq3: (1-{betatilde})*diffa2*({b}+(1+2)/2)-delta2) ///
+(eq4: (1-{betatilde})*diffa3*({b}+(2+3)/2)-delta3) ///
+(eq5: (1-{betatilde})*diffa5*({b}+(3+5)/2)-delta5) ///
+(eq6: (1-{betatilde})*diffa7*({b}+(5+7)/2)-delta7) ///
+(eq7: (1-{betatilde})*diffa12*({b}+(7+12)/2)-delta12) ///
+if flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&control_info==1, ///
+instruments (eq1: prize prize2) instruments(eq2:incentive incentivesq) ///
+from (b 8 lambda 0.06 beta 0.5 betatilde 0.8) vce(cluster id) winitial(identity) nolog
+latex_write_gmm control`o' `lx'
+
+*actual internality:
+nlcom (1-[beta]_cons)*[b]_cons
+latex_write_nlcom aintcontrol`o' `lx'
+
+*naivete statistic:
+nlcom (1-[betatilde]_cons)/(1-[beta]_cons)
+latex_write_nlcom naivecontrol`o' `lx'
+
+*expected cost
+nlcom 1/[lambda]_cons
+latex_write_nlcom expcostcontrol`o' `lx' // store estimate
+
+* enhanced information treatment group
+gmm (eq1:28*(1-exp(-{lambda}*({betatilde}*({b}+prize)`v')))-days) ///
+(eq2: 28*(1-exp(-{lambda}*({beta}*({b}+incentive)`v')))-visits) ///
+(eq3: (1-{betatilde})*diffa2*({b}+(1+2)/2)-delta2) ///
+(eq4: (1-{betatilde})*diffa3*({b}+(2+3)/2)-delta3) ///
+(eq5: (1-{betatilde})*diffa5*({b}+(3+5)/2)-delta5) ///
+(eq6: (1-{betatilde})*diffa7*({b}+(5+7)/2)-delta7) ///
+(eq7: (1-{betatilde})*diffa12*({b}+(7+12)/2)-delta12) ///
+if flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&new_info==1, ///
+instruments (eq1: prize prize2) instruments(eq2:incentive incentivesq) ///
+from (b 8 lambda 0.06 beta 0.5 betatilde 0.8) vce(cluster id) winitial(identity) nolog
+latex_write_gmm treat`o' `lx'
+
+*actual internality:
+nlcom (1-[beta]_cons)*[b]_cons
+latex_write_nlcom ainttreat`o' `lx'
+
+*naivete statistic:
+nlcom (1-[betatilde]_cons)/(1-[beta]_cons)
+latex_write_nlcom naivetreat`o' `lx'
+
+*expected cost
+nlcom 1/[lambda]_cons
+latex_write_nlcom expcosttreat`o' `lx'
+
+
+********** Past attendance ****************************************************
+if "`v'" == ""{ // generate in first loop only
+sum past4 if flag_low_wtp==0&flag_exclude_exog==0&incentive!=.,d
+loc q1past4=r(p25)
+loc medpast4=r(p50)
+loc q3past4=r(p75)
+gen abovemedpast4=past4>=`medpast4'
+gen belowmedpast4=past4<`medpast4'
+gen qpast4=1 if past4<`q1past4'
+replace qpast4=2 if past4>=`q1past4'&past4<`medpast4'
+replace qpast4=3 if past4>=`medpast4'&past4<`q3past4'
+replace qpast4=4 if past4>=`q3past4'
+}
+
+*by median
+foreach r in "0" "1"{
+
+if "`r'"=="0" loc name "bm"
+else loc name "am"
+
+gmm (eq1:28*(1-exp(-{lambda}*({betatilde}*({b}+prize)`v')))-days) ///
+(eq2: 28*(1-exp(-{lambda}*({beta}*({b}+incentive)`v')))-visits) ///
+(eq3: (1-{betatilde})*diffa2*({b}+(1+2)/2)-delta2) ///
+(eq4: (1-{betatilde})*diffa3*({b}+(2+3)/2)-delta3) ///
+(eq5: (1-{betatilde})*diffa5*({b}+(3+5)/2)-delta5) ///
+(eq6: (1-{betatilde})*diffa7*({b}+(5+7)/2)-delta7) ///
+(eq7: (1-{betatilde})*diffa12*({b}+(7+12)/2)-delta12) ///
+if flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&abovemedpast4==`r', ///
+instruments (eq1: prize prize2) instruments(eq2:incentive incentivesq) ///
+from (b 8 lambda 0.06 beta 0.5 betatilde 0.8) vce(cluster id) winitial(identity) nolog
+latex_write_gmm `name'`o' `lx'
+
+*actual internality:
+nlcom (1-[beta]_cons)*[b]_cons
+latex_write_nlcom aint`name'`o' `lx'
+
+*naivete statistic:
+nlcom (1-[betatilde]_cons)/(1-[beta]_cons)
+latex_write_nlcom naive`name'`o' `lx'
+
+*expected cost
+nlcom 1/[lambda]_cons
+latex_write_nlcom expcost`name'`o' `lx'
+
+}	
+
+
+*by median, info treatment, and take-up of 12+ contract - averages with CIs
+loc name "het`o'"
+
+*share in each group
+sum commit12 if first_info!=1&flag_low_wtp==0&flag_exclude_exog==0&incentive!=. 
+loc propcommit12het = r(mean)
+sum abovemedpast4 if flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&commit12==1
+loc meanam = r(mean)
+sum control_info if first_info!=1&flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&commit12==1&abovemedpast4==1
+loc propamctrlcommit`o' = `meanam'*r(mean)*`propcommit12het'
+loc propaminfocommit`o' = `meanam'*(1 - r(mean))*`propcommit12het'
+sum control_info if first_info!=1&flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&commit12==1&abovemedpast4==0
+loc propbmctrlcommit`o' = (1 - `meanam')*r(mean)*`propcommit12het'
+loc propbminfocommit`o' = (1 - `meanam')*(1 - r(mean))*`propcommit12het'
+sum abovemedpast4 if flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&commit12==0
+loc meanam = r(mean)
+sum control_info if first_info!=1&flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&commit12==0&abovemedpast4==1
+loc propamctrlnocommit`o' = `meanam'*r(mean)*(1 - `propcommit12het')
+loc propaminfonocommit`o' = `meanam'*(1 - r(mean))*(1 - `propcommit12het')
+sum control_info if first_info!=1&flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&commit12==0&abovemedpast4==0
+loc propbmctrlnocommit`o' = (1 - `meanam')*r(mean)*(1 - `propcommit12het')
+loc propbminfonocommit`o' = (1 - `meanam')*(1 - r(mean))*(1 - `propcommit12het')
+
+gmm (eq1:28*(1-exp(-{lambda0}*({betatilde0}*({b0}+prize)`v')))*control_info*abovemedpast4*commit12-days*control_info*abovemedpast4*commit12) ///
+(eq2: 28*(1-exp(-{lambda0}*({beta0}*({b0}+incentive)`v')))*control_info*abovemedpast4*commit12-visits*control_info*abovemedpast4*commit12) ///
+(eq3: (1-{betatilde0})*diffa2*({b0}+(1+2)/2)*control_info*abovemedpast4*commit12-delta2*control_info*abovemedpast4*commit12) ///
+(eq4: (1-{betatilde0})*diffa3*({b0}+(2+3)/2)*control_info*abovemedpast4*commit12-delta3*control_info*abovemedpast4*commit12) ///
+(eq5: (1-{betatilde0})*diffa5*({b0}+(3+5)/2)*control_info*abovemedpast4*commit12-delta5*control_info*abovemedpast4*commit12) ///
+(eq6: (1-{betatilde0})*diffa7*({b0}+(5+7)/2)*control_info*abovemedpast4*commit12-delta7*control_info*abovemedpast4*commit12) ///
+(eq7: (1-{betatilde0})*diffa12*({b0}+(7+12)/2)*control_info*abovemedpast4*commit12-delta12*control_info*abovemedpast4*commit12) ///
+(eq1b:28*(1-exp(-{lambda1}*({betatilde1}*({b1}+prize)`v')))*new_info*abovemedpast4*commit12-days*new_info*abovemedpast4*commit12) ///
+(eq2b: 28*(1-exp(-{lambda1}*({beta1}*({b1}+incentive)`v')))*new_info*abovemedpast4*commit12-visits*new_info*abovemedpast4*commit12) ///
+(eq3b: (1-{betatilde1})*diffa2*({b1}+(1+2)/2)*new_info*abovemedpast4*commit12-delta2*new_info*abovemedpast4*commit12) ///
+(eq4b: (1-{betatilde1})*diffa3*({b1}+(2+3)/2)*new_info*abovemedpast4*commit12-delta3*new_info*abovemedpast4*commit12) ///
+(eq5b: (1-{betatilde1})*diffa5*({b1}+(3+5)/2)*new_info*abovemedpast4*commit12-delta5*new_info*abovemedpast4*commit12) ///
+(eq6b: (1-{betatilde1})*diffa7*({b1}+(5+7)/2)*new_info*abovemedpast4*commit12-delta7*new_info*abovemedpast4*commit12) ///
+(eq7b: (1-{betatilde1})*diffa12*({b1}+(7+12)/2)*new_info*abovemedpast4*commit12-delta12*new_info*abovemedpast4*commit12) ///
+(eq1c:28*(1-exp(-{lambda2}*({betatilde2}*({b2}+prize)`v')))*control_info*belowmedpast4*commit12-days*control_info*belowmedpast4*commit12) ///
+(eq2c: 28*(1-exp(-{lambda2}*({beta2}*({b2}+incentive)`v')))*control_info*belowmedpast4*commit12-visits*control_info*belowmedpast4*commit12) ///
+(eq3c: (1-{betatilde2})*diffa2*({b2}+(1+2)/2)*control_info*belowmedpast4*commit12-delta2*control_info*belowmedpast4*commit12) ///
+(eq4c: (1-{betatilde2})*diffa3*({b2}+(2+3)/2)*control_info*belowmedpast4*commit12-delta3*control_info*belowmedpast4*commit12) ///
+(eq5c: (1-{betatilde2})*diffa5*({b2}+(3+5)/2)*control_info*belowmedpast4*commit12-delta5*control_info*belowmedpast4*commit12) ///
+(eq6c: (1-{betatilde2})*diffa7*({b2}+(5+7)/2)*control_info*belowmedpast4*commit12-delta7*control_info*belowmedpast4*commit12) ///
+(eq7c: (1-{betatilde2})*diffa12*({b2}+(7+12)/2)*control_info*belowmedpast4*commit12-delta12*control_info*belowmedpast4*commit12) ///
+(eq1d:28*(1-exp(-{lambda3}*({betatilde3}*({b3}+prize)`v')))*new_info*belowmedpast4*commit12-days*new_info*belowmedpast4*commit12) ///
+(eq2d: 28*(1-exp(-{lambda3}*({beta3}*({b3}+incentive)`v')))*new_info*belowmedpast4*commit12-visits*new_info*belowmedpast4*commit12) ///
+(eq3d: (1-{betatilde3})*diffa2*({b3}+(1+2)/2)*new_info*belowmedpast4*commit12-delta2*new_info*belowmedpast4*commit12) ///
+(eq4d: (1-{betatilde3})*diffa3*({b3}+(2+3)/2)*new_info*belowmedpast4*commit12-delta3*new_info*belowmedpast4*commit12) ///
+(eq5d: (1-{betatilde3})*diffa5*({b3}+(3+5)/2)*new_info*belowmedpast4*commit12-delta5*new_info*belowmedpast4*commit12) ///
+(eq6d: (1-{betatilde3})*diffa7*({b3}+(5+7)/2)*new_info*belowmedpast4*commit12-delta7*new_info*belowmedpast4*commit12) ///
+(eq7d: (1-{betatilde3})*diffa12*({b3}+(7+12)/2)*new_info*belowmedpast4*commit12-delta12*new_info*belowmedpast4*commit12) ///
+(eq1e:28*(1-exp(-{lambda4}*({betatilde4}*({b4}+prize)`v')))*control_info*abovemedpast4*nocommit12-days*control_info*abovemedpast4*nocommit12) ///
+(eq2e: 28*(1-exp(-{lambda4}*({beta4}*({b4}+incentive)`v')))*control_info*abovemedpast4*nocommit12-visits*control_info*abovemedpast4*nocommit12) ///
+(eq3e: (1-{betatilde4})*diffa2*({b4}+(1+2)/2)*control_info*abovemedpast4*nocommit12-delta2*control_info*abovemedpast4*nocommit12) ///
+(eq4e: (1-{betatilde4})*diffa3*({b4}+(2+3)/2)*control_info*abovemedpast4*nocommit12-delta3*control_info*abovemedpast4*nocommit12) ///
+(eq5e: (1-{betatilde4})*diffa5*({b4}+(3+5)/2)*control_info*abovemedpast4*nocommit12-delta5*control_info*abovemedpast4*nocommit12) ///
+(eq6e: (1-{betatilde4})*diffa7*({b4}+(5+7)/2)*control_info*abovemedpast4*nocommit12-delta7*control_info*abovemedpast4*nocommit12) ///
+(eq7e: (1-{betatilde4})*diffa12*({b4}+(7+12)/2)*control_info*abovemedpast4*nocommit12-delta12*control_info*abovemedpast4*nocommit12) ///
+(eq1f:28*(1-exp(-{lambda5}*({betatilde5}*({b5}+prize)`v')))*new_info*abovemedpast4*nocommit12-days*new_info*abovemedpast4*nocommit12) ///
+(eq2f: 28*(1-exp(-{lambda5}*({beta5}*({b5}+incentive)`v')))*new_info*abovemedpast4*nocommit12-visits*new_info*abovemedpast4*nocommit12) ///
+(eq3f: (1-{betatilde5})*diffa2*({b5}+(1+2)/2)*new_info*abovemedpast4*nocommit12-delta2*new_info*abovemedpast4*nocommit12) ///
+(eq4f: (1-{betatilde5})*diffa3*({b5}+(2+3)/2)*new_info*abovemedpast4*nocommit12-delta3*new_info*abovemedpast4*nocommit12) ///
+(eq5f: (1-{betatilde5})*diffa5*({b5}+(3+5)/2)*new_info*abovemedpast4*nocommit12-delta5*new_info*abovemedpast4*nocommit12) ///
+(eq6f: (1-{betatilde5})*diffa7*({b5}+(5+7)/2)*new_info*abovemedpast4*nocommit12-delta7*new_info*abovemedpast4*nocommit12) ///
+(eq7f: (1-{betatilde5})*diffa12*({b5}+(7+12)/2)*new_info*abovemedpast4*nocommit12-delta12*new_info*abovemedpast4*nocommit12) ///
+(eq1g:28*(1-exp(-{lambda6}*({betatilde6}*({b6}+prize)`v')))*control_info*belowmedpast4*nocommit12-days*control_info*belowmedpast4*nocommit12) ///
+(eq2g: 28*(1-exp(-{lambda6}*({beta6}*({b6}+incentive)`v')))*control_info*belowmedpast4*nocommit12-visits*control_info*belowmedpast4*nocommit12) ///
+(eq3g: (1-{betatilde6})*diffa2*({b6}+(1+2)/2)*control_info*belowmedpast4*nocommit12-delta2*control_info*belowmedpast4*nocommit12) ///
+(eq4g: (1-{betatilde6})*diffa3*({b6}+(2+3)/2)*control_info*belowmedpast4*nocommit12-delta3*control_info*belowmedpast4*nocommit12) ///
+(eq5g: (1-{betatilde6})*diffa5*({b6}+(3+5)/2)*control_info*belowmedpast4*nocommit12-delta5*control_info*belowmedpast4*nocommit12) ///
+(eq6g: (1-{betatilde6})*diffa7*({b6}+(5+7)/2)*control_info*belowmedpast4*nocommit12-delta7*control_info*belowmedpast4*nocommit12) ///
+(eq7g: (1-{betatilde6})*diffa12*({b6}+(7+12)/2)*control_info*belowmedpast4*nocommit12-delta12*control_info*belowmedpast4*nocommit12) ///
+(eq1h:28*(1-exp(-{lambda7}*({betatilde7}*({b7}+prize)`v')))*new_info*belowmedpast4*nocommit12-days*new_info*belowmedpast4*nocommit12) ///
+(eq2h: 28*(1-exp(-{lambda7}*({beta7}*({b7}+incentive)`v')))*new_info*belowmedpast4*nocommit12-visits*new_info*belowmedpast4*nocommit12) ///
+(eq3h: (1-{betatilde7})*diffa2*({b7}+(1+2)/2)*new_info*belowmedpast4*nocommit12-delta2*new_info*belowmedpast4*nocommit12) ///
+(eq4h: (1-{betatilde7})*diffa3*({b7}+(2+3)/2)*new_info*belowmedpast4*nocommit12-delta3*new_info*belowmedpast4*nocommit12) ///
+(eq5h: (1-{betatilde7})*diffa5*({b7}+(3+5)/2)*new_info*belowmedpast4*nocommit12-delta5*new_info*belowmedpast4*nocommit12) ///
+(eq6h: (1-{betatilde7})*diffa7*({b7}+(5+7)/2)*new_info*belowmedpast4*nocommit12-delta7*new_info*belowmedpast4*nocommit12) ///
+(eq7h: (1-{betatilde7})*diffa12*({b7}+(7+12)/2)*new_info*belowmedpast4*nocommit12-delta12*new_info*belowmedpast4*nocommit12) ///
+if flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&(control_info==1|new_info==1), ///
+instruments(eq1: prize prize2) instruments(eq2:incentive incentivesq) ///
+instruments(eq1b: prize prize2) instruments(eq2b:incentive incentivesq) ///
+instruments(eq1c: prize prize2) instruments(eq2c:incentive incentivesq) ///
+instruments(eq1d: prize prize2) instruments(eq2d:incentive incentivesq) ///
+instruments(eq1e: prize prize2) instruments(eq2e:incentive incentivesq) ///
+instruments(eq1f: prize prize2) instruments(eq2f:incentive incentivesq) ///
+instruments(eq1g: prize prize2) instruments(eq2g:incentive incentivesq) ///
+instruments(eq1h: prize prize2) instruments(eq2h:incentive incentivesq) ///
+from (b7 8 b6 8 b5 8 b4 8 b3 8 b2 8 b1 8 b0 8 lambda7 0.06 lambda6 0.06 lambda5 0.06 lambda4 0.06 lambda3 0.06 lambda2 0.06 lambda1 0.06 lambda0 0.06 beta7 0.5 beta6 0.5 beta5 0.5 beta4 0.5 beta3 0.5 beta2 0.5 beta1 0.5 beta0 0.5 betatilde7 0.8 betatilde6 0.8 betatilde5 0.8 betatilde4 0.8 betatilde3 0.8 betatilde2 0.8 betatilde1 0.8 betatilde0 0.8) ///
+ vce(cluster id) winitial(identity)
+foreach p in b lambda beta betatilde{
+	nlcom [`p'0]_cons*`propamctrlcommit`o'' + ///
+		[`p'1]_cons*`propaminfocommit`o'' + ///
+		[`p'2]_cons*`propbmctrlcommit`o'' + ///
+		[`p'3]_cons*`propbminfocommit`o'' + ///
+		[`p'4]_cons*`propamctrlnocommit`o'' + ///
+		[`p'5]_cons*`propaminfonocommit`o'' + ///
+		[`p'6]_cons*`propbmctrlnocommit`o'' + ///
+		[`p'7]_cons*`propbminfonocommit`o''
+	latex_write_nlcom `p'minfoavg`name' `lx'
+	}
+
+*actual internality:
+nlcom (1-[beta0]_cons)*[b0]_cons*`propamctrlcommit`o'' + ///
+	(1-[beta1]_cons)*[b1]_cons*`propaminfocommit`o'' + ///
+	(1-[beta2]_cons)*[b2]_cons*`propbmctrlcommit`o'' + ///
+	(1-[beta3]_cons)*[b3]_cons*`propbminfocommit`o'' + ///
+	(1-[beta4]_cons)*[b4]_cons*`propamctrlnocommit`o'' + ///
+	(1-[beta5]_cons)*[b5]_cons*`propaminfonocommit`o'' + ///
+	(1-[beta6]_cons)*[b6]_cons*`propbmctrlnocommit`o'' + ///
+	(1-[beta7]_cons)*[b7]_cons*`propbminfonocommit`o''
+latex_write_nlcom aintminfoavg`name' `lx'
+
+*naivete statistic:
+nlcom (1-[betatilde0]_cons)/(1-[beta0]_cons)*`propamctrlcommit`o'' + ///
+	(1-[betatilde1]_cons)/(1-[beta1]_cons)*`propaminfocommit`o'' + ///
+	(1-[betatilde2]_cons)/(1-[beta2]_cons)*`propbmctrlcommit`o'' + ///
+	(1-[betatilde3]_cons)/(1-[beta3]_cons)*`propbminfocommit`o'' + ///
+	(1-[betatilde4]_cons)/(1-[beta4]_cons)*`propamctrlnocommit`o'' + ///
+	(1-[betatilde5]_cons)/(1-[beta5]_cons)*`propaminfonocommit`o'' + ///
+	(1-[betatilde6]_cons)/(1-[beta6]_cons)*`propbmctrlnocommit`o'' + ///
+	(1-[betatilde7]_cons)/(1-[beta7]_cons)*`propbminfonocommit`o''
+latex_write_nlcom naiveminfoavg`name' `lx'
+
+*expected cost
+nlcom (1/[lambda0]_cons)*`propamctrlcommit`o'' + ///
+	(1/[lambda1]_cons)*`propaminfocommit`o'' + ///
+	(1/[lambda2]_cons)*`propbmctrlcommit`o'' + ///
+	(1/[lambda3]_cons)*`propbminfocommit`o'' + ///
+	(1/[lambda4]_cons)*`propamctrlnocommit`o'' + ///
+	(1/[lambda5]_cons)*`propaminfonocommit`o'' + ///
+	(1/[lambda6]_cons)*`propbmctrlnocommit`o'' + ///
+	(1/[lambda7]_cons)*`propbminfonocommit`o''
+latex_write_nlcom expcostminfoavg`name' `lx'
+
+if "`v'" != "+0"{
+	*generate 95% CIs for model values
+	predictnl mean_days_minfo`name'_pred = ///
+		28*((1-exp(-[lambda0]_cons*([betatilde0]_cons*([b0]_cons+plot_incentive)`v')))*`propamctrlcommit`o'' + ///
+			(1-exp(-[lambda1]_cons*([betatilde1]_cons*([b1]_cons+plot_incentive)`v')))*`propaminfocommit`o'' + ///
+			(1-exp(-[lambda2]_cons*([betatilde2]_cons*([b2]_cons+plot_incentive)`v')))*`propbmctrlcommit`o'' + ///
+			(1-exp(-[lambda3]_cons*([betatilde3]_cons*([b3]_cons+plot_incentive)`v')))*`propbminfocommit`o'' + ///
+			(1-exp(-[lambda4]_cons*([betatilde4]_cons*([b4]_cons+plot_incentive)`v')))*`propamctrlnocommit`o'' + ///
+			(1-exp(-[lambda5]_cons*([betatilde5]_cons*([b5]_cons+plot_incentive)`v')))*`propaminfonocommit`o'' + ///
+			(1-exp(-[lambda6]_cons*([betatilde6]_cons*([b6]_cons+plot_incentive)`v')))*`propbmctrlnocommit`o'' + ///
+			(1-exp(-[lambda7]_cons*([betatilde7]_cons*([b7]_cons+plot_incentive)`v')))*`propbminfonocommit`o'') ///
+		if _n > $obs, ci(lb_days_minfo`name'_pred ub_days_minfo`name'_pred) level(95)
+	predictnl mean_visits_minfo`name'_pred = ///
+		28*((1-exp(-[lambda0]_cons*([beta0]_cons*([b0]_cons+plot_incentive)`v')))*`propamctrlcommit`o'' + ///
+			(1-exp(-[lambda1]_cons*([beta1]_cons*([b1]_cons+plot_incentive)`v')))*`propaminfocommit`o'' + ///
+			(1-exp(-[lambda2]_cons*([beta2]_cons*([b2]_cons+plot_incentive)`v')))*`propbmctrlcommit`o'' + ///
+			(1-exp(-[lambda3]_cons*([beta3]_cons*([b3]_cons+plot_incentive)`v')))*`propbminfocommit`o'' + ///
+			(1-exp(-[lambda4]_cons*([beta4]_cons*([b4]_cons+plot_incentive)`v')))*`propamctrlnocommit`o'' + ///
+			(1-exp(-[lambda5]_cons*([beta5]_cons*([b5]_cons+plot_incentive)`v')))*`propaminfonocommit`o'' + ///
+			(1-exp(-[lambda6]_cons*([beta6]_cons*([b6]_cons+plot_incentive)`v')))*`propbmctrlnocommit`o'' + ///
+			(1-exp(-[lambda7]_cons*([beta7]_cons*([b7]_cons+plot_incentive)`v')))*`propbminfonocommit`o'')	///
+		if _n > $obs, ci(lb_visits_minfo`name'_pred ub_visits_minfo`name'_pred) level(95)
+
+	*plot model with actual data
+	twoway (conn mean_days_minfo`name'_pred plot_incentive, lcolor(black) m(none)) ///
+		(conn ub_days_minfo`name'_pred plot_incentive, lc(black) lp(shortdash) m(none)) ///
+		(conn lb_days_minfo`name'_pred plot_incentive, lc(black) lp(shortdash) m(none)) ///
+		(sc mean_days_inf_ prize, msize(small) color(black)) ///
+		(rcap ub_days_inf_ lb_days_inf_ prize, lcolor(black) lwidth(medium) lpattern(dash)) ///
+		(conn mean_visits_minfo`name'_pred plot_incentive, lcolor(red) m(none)) ///
+		(conn ub_visits_minfo`name'_pred plot_incentive, lc(red) lp(shortdash) m(none)) ///
+		(conn lb_visits_minfo`name'_pred plot_incentive, lc(red) lp(shortdash) m(none)) ///
+		(sc mean_visits_inf_ prize, m(square) msize(small) color(red)) ///
+		(rcap ub_visits_inf_ lb_visits_inf_ prize, lcolor(red) lwidth(medium) lpattern(dash)), ///
+		xlab(0(1)12) ylabel(0(5)22, angle(0)) ///
+		xtitle("Per-visit incentive ($)", height(6)) ytitle("Visits", height(6)) ///
+		graphregion(color(white)) plotregion(margin(sides)) ///
+		legend(order(1 2 6 7 4 9) label(1 "Predicted expected visits") label(2 "Prediction 95% CI") label(4 "Average expected visits") label(6 "Predicted realized visits") label(7 "Prediction 95% CI") label(9 "Average realized visits")) legend(rows(3))		
+	graph export overconfidence_estimates_past4_info_`name'.pdf, replace
+
+	*by median and take-up of commitment contract
+	forval j = 8(4)16{
+
+		if `j' == 8 loc x "e"
+		else if `j' == 12 loc x ""
+		else loc x "s"
+
+		foreach r in "0&commit`j'==1" "1&commit`j'==1" "0&commit`j'==0" "1&commit`j'==0"{
+
+		if "`r'"=="0&commit`j'==1" loc name "bmcommit`x'`o'"
+		else if "`r'"=="1&commit`j'==1" loc name "amcommit`x'`o'"
+		else if "`r'"=="0&commit`j'==0" loc name "bmnocommit`x'`o'"
+		else loc name "amnocommit`x'`o'"
+
+		gmm (eq1:28*(1-exp(-{lambda}*({betatilde}*({b}+prize)`v')))-days) ///
+		(eq2: 28*(1-exp(-{lambda}*({beta}*({b}+incentive)`v')))-visits) ///
+		(eq3: (1-{betatilde})*diffa2*({b}+(1+2)/2)-delta2) ///
+		(eq4: (1-{betatilde})*diffa3*({b}+(2+3)/2)-delta3) ///
+		(eq5: (1-{betatilde})*diffa5*({b}+(3+5)/2)-delta5) ///
+		(eq6: (1-{betatilde})*diffa7*({b}+(5+7)/2)-delta7) ///
+		(eq7: (1-{betatilde})*diffa12*({b}+(7+12)/2)-delta12) ///
+		if flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&abovemedpast4==`r', ///
+		instruments (eq1: prize prize2) instruments(eq2:incentive incentivesq) ///
+		from (b 8 lambda 0.06 beta 0.5 betatilde 0.8) vce(cluster id) winitial(identity) nolog
+		foreach p in b lambda beta betatilde{
+			loc `p'`name' = [`p']_cons
+			}
+		}
+
+		*share in each group
+		sum abovemedpast4 if flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&commit`j'==1
+		loc propamcommit`x'`o' = r(mean)
+		loc propbmcommit`x'`o' = 1 - r(mean)
+		loc propmavgcommit`x'`o' = 1
+		sum abovemedpast4 if flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&commit`j'==0
+		loc propamnocommit`x'`o' = r(mean)
+		loc propbmnocommit`x'`o' = 1 - r(mean)
+
+	}
+
+	*by quartile of past attendance and take-up of commitment contract (for export)
+	forval j = 8(4)16{
+
+		if `j' == 8 loc x "e"
+		else if `j' == 12 loc x ""
+		else loc x "s"
+
+		foreach r in "1&commit`j'==1" "2&commit`j'==1" "3&commit`j'==1" "4&commit`j'==1" "1&commit`j'==0" "2&commit`j'==0" "3&commit`j'==0" "4&commit`j'==0"{
+
+		if "`r'"=="1&commit`j'==1" loc name "qfstcommit`x'`o'"
+		else if "`r'"=="2&commit`j'==1" loc name "qsndcommit`x'`o'"
+		else if "`r'"=="3&commit`j'==1" loc name "qthdcommit`x'`o'"
+		else if "`r'"=="4&commit`j'==1" loc name "qfthcommit`x'`o'"
+		else if "`r'"=="1&commit`j'==0" loc name "qfstnocommit`x'`o'"
+		else if "`r'"=="2&commit`j'==0" loc name "qsndnocommit`x'`o'"
+		else if "`r'"=="3&commit`j'==0" loc name "qthdnocommit`x'`o'"
+		else loc name "qfthnocommit`x'`o'"
+
+		gmm (eq1:28*(1-exp(-{lambda}*({betatilde}*({b}+prize)`v')))-days) ///
+		(eq2: 28*(1-exp(-{lambda}*({beta}*({b}+incentive)`v')))-visits) ///
+		(eq3: (1-{betatilde})*diffa2*({b}+(1+2)/2)-delta2) ///
+		(eq4: (1-{betatilde})*diffa3*({b}+(2+3)/2)-delta3) ///
+		(eq5: (1-{betatilde})*diffa5*({b}+(3+5)/2)-delta5) ///
+		(eq6: (1-{betatilde})*diffa7*({b}+(5+7)/2)-delta7) ///
+		(eq7: (1-{betatilde})*diffa12*({b}+(7+12)/2)-delta12) ///
+		if flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&qpast4==`r', ///
+		instruments (eq1: prize prize2) instruments(eq2:incentive incentivesq) ///
+		from (b 8 lambda 0.06 beta 0.5 betatilde 0.8) vce(cluster id) winitial(identity) nolog
+		foreach p in b lambda beta betatilde{
+			loc `p'`name' = [`p']_cons
+			}
+		}
+
+		*share in each group
+		sum qpast4 if abovemedpast4==0&flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&commit`j'==1
+		loc propqfstcommit`x'`o' = (2 - r(mean))*`propbmcommit`x'`o''
+		loc propqsndcommit`x'`o' = (1 - (2 - r(mean)))*`propbmcommit`x'`o''
+		sum qpast4 if abovemedpast4==1&flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&commit`j'==1
+		loc propqthdcommit`x'`o' = (4 - r(mean))*`propamcommit`x'`o''
+		loc propqfthcommit`x'`o' = (1 - (4 - r(mean)))*`propamcommit`x'`o''
+		sum qpast4 if abovemedpast4==0&flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&commit`j'==0
+		loc propqfstnocommit`x'`o' = (2 - r(mean))*`propbmnocommit`x'`o''
+		loc propqsndnocommit`x'`o' = (1 - (2 - r(mean)))*`propbmnocommit`x'`o''
+		sum qpast4 if abovemedpast4==1&flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&commit`j'==0
+		loc propqthdnocommit`x'`o' = (4 - r(mean))*`propamnocommit`x'`o''
+		loc propqfthnocommit`x'`o' = (1 - (4 - r(mean)))*`propamnocommit`x'`o''
+		
+	}
+
+	*by median, info treatment, & take-up of each commitment contract
+	forval j = 8(4)16{
+
+		if `j' == 8 loc x "e"
+		else if `j' == 12 loc x ""
+		else loc x "s"
+		
+		foreach r in "0&control_info==1&commit`j'==1" "0&new_info==1&commit`j'==1" "1&control_info==1&commit`j'==1" "1&new_info==1&commit`j'==1" "0&control_info==1&commit`j'==0" "0&new_info==1&commit`j'==0" "1&control_info==1&commit`j'==0" "1&new_info==1&commit`j'==0" {
+
+		if "`r'"=="0&control_info==1&commit`j'==1" loc name "bmctrlcommit`x'`o'"
+		else if "`r'"=="0&new_info==1&commit`j'==1" loc name "bminfocommit`x'`o'"
+		else if "`r'"=="1&control_info==1&commit`j'==1" loc name "amctrlcommit`x'`o'"
+		else if "`r'"=="1&new_info==1&commit`j'==1" loc name "aminfocommit`x'`o'"
+		else if "`r'"=="0&control_info==1&commit`j'==0" loc name "bmctrlnocommit`x'`o'"
+		else if "`r'"=="0&new_info==1&commit`j'==0" loc name "bminfonocommit`x'`o'"
+		else if "`r'"=="1&control_info==1&commit`j'==0" loc name "amctrlnocommit`x'`o'"
+		else loc name "aminfonocommit`x'`o'"
+
+		gmm (eq1:28*(1-exp(-{lambda}*({betatilde}*({b}+prize)`v')))-days) ///
+		(eq2: 28*(1-exp(-{lambda}*({beta}*({b}+incentive)`v')))-visits) ///
+		(eq3: (1-{betatilde})*diffa2*({b}+(1+2)/2)-delta2) ///
+		(eq4: (1-{betatilde})*diffa3*({b}+(2+3)/2)-delta3) ///
+		(eq5: (1-{betatilde})*diffa5*({b}+(3+5)/2)-delta5) ///
+		(eq6: (1-{betatilde})*diffa7*({b}+(5+7)/2)-delta7) ///
+		(eq7: (1-{betatilde})*diffa12*({b}+(7+12)/2)-delta12) ///
+		if flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&abovemedpast4==`r', ///
+		instruments (eq1: prize prize2) instruments(eq2:incentive incentivesq) ///
+		from (b 8 lambda 0.06 beta 0.5 betatilde 0.8) vce(cluster id) winitial(identity) nolog
+		foreach p in b lambda beta betatilde{
+			loc `p'`name' = [`p']_cons
+			}
+		}
+
+		*share in each group
+		sum commit`j' if flag_low_wtp==0&flag_exclude_exog==0&incentive!=.
+		loc propcommit
+		sum abovemedpast4 if flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&commit`j'==1
+		loc meanam = r(mean)
+		sum control_info if first_info!=1&flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&commit`j'==1&abovemedpast4==1
+		loc propamctrlcommit`x'`o' = `meanam'*r(mean)
+		loc propaminfocommit`x'`o' = `meanam'*(1 - r(mean))
+		sum control_info if first_info!=1&flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&commit`j'==1&abovemedpast4==0
+		loc propbmctrlcommit`x'`o' = (1 - `meanam')*r(mean)
+		loc propbminfocommit`x'`o' = (1 - `meanam')*(1 - r(mean))
+		sum abovemedpast4 if flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&commit`j'==0
+		loc meanam = r(mean)
+		sum control_info if first_info!=1&flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&commit`j'==0&abovemedpast4==1
+		loc propamctrlnocommit`x'`o' = `meanam'*r(mean)
+		loc propaminfonocommit`x'`o' = `meanam'*(1 - r(mean))
+		sum control_info if first_info!=1&flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&commit`j'==0&abovemedpast4==0	
+		loc propbmctrlnocommit`x'`o' = (1 - `meanam')*r(mean)
+		loc propbminfonocommit`x'`o' = (1 - `meanam')*(1 - r(mean))
+		
+		}
+		
+	*by quartile, info treatment, & take-up of 12 visit commitment contract	
+	loc j = 12 // for 12+ visits contract only
+	loc x ""
+	foreach r in "1&commit`j'==1&control_info==1" "2&commit`j'==1&control_info==1" "3&commit`j'==1&control_info==1" "4&commit`j'==1&control_info==1" "1&commit`j'==1&new_info==1" "2&commit`j'==1&new_info==1" "3&commit`j'==1&new_info==1" "4&commit`j'==1&new_info==1" {
+
+		if "`r'"=="1&commit`j'==1&control_info==1" loc name "qfstctrlcommit`x'`o'"
+		else if "`r'"=="2&commit`j'==1&control_info==1" loc name "qsndctrlcommit`x'`o'"
+		else if "`r'"=="3&commit`j'==1&control_info==1" loc name "qthdctrlcommit`x'`o'"
+		else if "`r'"=="4&commit`j'==1&control_info==1" loc name "qfthctrlcommit`x'`o'"
+		else if "`r'"=="1&commit`j'==0&control_info==1" loc name "qfstctrlnocommit`x'`o'"
+		else if "`r'"=="2&commit`j'==0&control_info==1" loc name "qsndctrlnocommit`x'`o'"
+		else if "`r'"=="3&commit`j'==0&control_info==1" loc name "qthdctrlnocommit`x'`o'"
+		else if "`r'"=="4&commit`j'==0&control_info==1" loc name "qfthctrlnocommit`x'`o'"
+		else if "`r'"=="1&commit`j'==1&new_info==1" loc name "qfstinfocommit`x'`o'"
+		else if "`r'"=="2&commit`j'==1&new_info==1" loc name "qsndinfocommit`x'`o'"
+		else if "`r'"=="3&commit`j'==1&new_info==1" loc name "qthdinfocommit`x'`o'"
+		else if "`r'"=="4&commit`j'==1&new_info==1" loc name "qfthinfocommit`x'`o'"
+		else if "`r'"=="1&commit`j'==0&new_info==1" loc name "qfstinfonocommit`x'`o'"
+		else if "`r'"=="2&commit`j'==0&new_info==1" loc name "qsndinfonocommit`x'`o'"
+		else if "`r'"=="3&commit`j'==0&new_info==1" loc name "qthdinfonocommit`x'`o'"
+		else loc name "qfthinfonocommit`x'`o'"
+
+		gmm (eq1:28*(1-exp(-{lambda}*({betatilde}*({b}+prize)`v')))-days) ///
+		(eq2: 28*(1-exp(-{lambda}*({beta}*({b}+incentive)`v')))-visits) ///
+		(eq3: (1-{betatilde})*diffa2*({b}+(1+2)/2)-delta2) ///
+		(eq4: (1-{betatilde})*diffa3*({b}+(2+3)/2)-delta3) ///
+		(eq5: (1-{betatilde})*diffa5*({b}+(3+5)/2)-delta5) ///
+		(eq6: (1-{betatilde})*diffa7*({b}+(5+7)/2)-delta7) ///
+		(eq7: (1-{betatilde})*diffa12*({b}+(7+12)/2)-delta12) ///
+		if flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&qpast4==`r', ///
+		instruments (eq1: prize prize2) instruments(eq2:incentive incentivesq) ///
+		from (b 8 lambda 0.06 beta 0.5 betatilde 0.8) vce(cluster id) winitial(identity) nolog
+		foreach p in b lambda beta betatilde{
+			loc `p'`name' = [`p']_cons
+			}
+		}
+
+	*share in each group
+	forval k = 1/4{
+		sum control_info if first_info!=1&flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&commit`j'==0&qpast4==`k'
+		loc propctrlq`k' = r(mean)
+		}
+	sum qpast4 if abovemedpast4==0&flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&commit`j'==1
+	loc propqfstctrlcommit`x'`o' = (2 - r(mean))*`propbmcommit`x'`o''*`propctrlq1'
+	loc propqfstinfocommit`x'`o' = (2 - r(mean))*`propbmcommit`x'`o''*(1 - `propctrlq1')
+	loc propqsndctrlcommit`x'`o' = (1 - (2 - r(mean)))*`propbmcommit`x'`o''*`propctrlq2'
+	loc propqsndinfocommit`x'`o' = (1 - (2 - r(mean)))*`propbmcommit`x'`o''*(1 - `propctrlq2')
+	sum qpast4 if abovemedpast4==1&flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&commit`j'==1
+	loc propqthdctrlcommit`x'`o' = (4 - r(mean))*`propamcommit`x'`o''*`propctrlq3'
+	loc propqthdinfocommit`x'`o' = (4 - r(mean))*`propamcommit`x'`o''*(1 - `propctrlq3')
+	loc propqfthctrlcommit`x'`o' = (1 - (4 - r(mean)))*`propamcommit`x'`o''*`propctrlq4'
+	loc propqfthinfocommit`x'`o' = (1 - (4 - r(mean)))*`propamcommit`x'`o''*(1 - `propctrlq4')
+	sum qpast4 if abovemedpast4==0&flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&commit`j'==0
+	loc propqfstctrlnocommit`x'`o' = (2 - r(mean))*`propbmnocommit`x'`o''*`propctrlq1'
+	loc propqfstinfonocommit`x'`o' = (2 - r(mean))*`propbmnocommit`x'`o''*(1 - `propctrlq1')
+	loc propqsndctrlnocommit`x'`o' = (1 - (2 - r(mean)))*`propbmnocommit`x'`o''*`propctrlq2'
+	loc propqsndinfonocommit`x'`o' = (1 - (2 - r(mean)))*`propbmnocommit`x'`o''*(1 - `propctrlq2')
+	sum qpast4 if abovemedpast4==1&flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&commit`j'==0
+	loc propqthdctrlnocommit`x'`o' = (4 - r(mean))*`propamnocommit`x'`o''*`propctrlq3'
+	loc propqthdinfonocommit`x'`o' = (4 - r(mean))*`propamnocommit`x'`o''*(1 - `propctrlq3')
+	loc propqfthctrlnocommit`x'`o' = (1 - (4 - r(mean)))*`propamnocommit`x'`o''*`propctrlq4'
+	loc propqfthinfonocommit`x'`o' = (1 - (4 - r(mean)))*`propamnocommit`x'`o''*(1 - `propctrlq4')
+
+	}
+
+
+********** Commitment contract - 12 visits ************************************
+
+gmm (eq1:28*(1-exp(-{lambda}*({betatilde}*({b}+prize)`v')))-days) ///
+(eq2: 28*(1-exp(-{lambda}*({beta}*({b}+incentive)`v')))-visits) ///
+(eq3: (1-{betatilde})*diffa2*({b}+(1+2)/2)-delta2) ///
+(eq4: (1-{betatilde})*diffa3*({b}+(2+3)/2)-delta3) ///
+(eq5: (1-{betatilde})*diffa5*({b}+(3+5)/2)-delta5) ///
+(eq6: (1-{betatilde})*diffa7*({b}+(5+7)/2)-delta7) ///
+(eq7: (1-{betatilde})*diffa12*({b}+(7+12)/2)-delta12) ///
+if flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&commit12==1, ///
+instruments (eq1: prize prize2) instruments(eq2:incentive incentivesq) ///
+from (b 8 lambda 0.06 beta 0.5 betatilde 0.8) vce(cluster id) winitial(identity) nolog
+latex_write_gmm twelve`o' `lx'
+
+*for export
+foreach param in lambda betatilde b beta {
+	loc `param'commit12`o' = [`param']_cons
+	}
+
+*actual internality:
+nlcom (1-[beta]_cons)*[b]_cons
+latex_write_nlcom ainttwelve`o' `lx'
+
+*naivete statistic:
+nlcom (1-[betatilde]_cons)/(1-[beta]_cons)
+latex_write_nlcom naivetwelve`o' `lx'
+
+*expected cost
+nlcom 1/[lambda]_cons
+latex_write_nlcom expcosttwelve`o' `lx'
+
+*take-up rate
+sum commit12 if flag_low_wtp==0&flag_exclude_exog==0&incentive!=. 
+loc propcommit12`o' = r(mean)
+loc propnocommit12`o' = 1 - r(mean) 
+
+if "`v'" == ""{ // baseline only
+
+	*generate 95% CIs for model values
+	predictnl mean_days_c12_pred = ///
+		28*(1-exp(-[lambda]_cons*[betatilde]_cons*([b]_cons+plot_incentive))) ///
+		if _n > $obs, ci(lb_days_c12_pred ub_days_c12_pred) level(95)
+	predictnl mean_visits_c12_pred = ///
+		28*(1-exp(-[lambda]_cons*[beta]_cons*([b]_cons+plot_incentive))) ///
+		if _n > $obs, ci(lb_visits_c12_pred ub_visits_c12_pred) level(95)
+
+	*plot model with actual data
+	twoway (conn mean_days_c12_pred plot_incentive, lcolor(black) m(none)) ///
+		(conn ub_days_c12_pred plot_incentive, lc(black) lp(shortdash) m(none)) ///
+		(conn lb_days_c12_pred plot_incentive, lc(black) lp(shortdash) m(none)) ///
+		(sc mean_days_c12_ prize, msize(small) color(black)) ///
+		(rcap ub_days_c12_ lb_days_c12_ prize, lcolor(black) lwidth(medium) lpattern(dash)) ///
+		(conn mean_visits_c12_pred plot_incentive, lcolor(red) m(none)) ///
+		(conn ub_visits_c12_pred plot_incentive, lc(red) lp(shortdash) m(none)) ///
+		(conn lb_visits_c12_pred plot_incentive, lc(red) lp(shortdash) m(none)) ///
+		(sc mean_visits_c12_ prize, m(square) msize(small) color(red)) ///
+		(rcap ub_visits_c12_ lb_visits_c12_ prize, lcolor(red) lwidth(medium) lpattern(dash)), ///
+		xlab(0(1)12) ylabel(0(5)22, angle(0)) ///
+		xtitle("Per-visit incentive ($)", height(6)) ytitle("Visits", height(6)) ///
+		graphregion(color(white)) plotregion(margin(sides)) ///
+		legend(order(1 2 6 7 4 9) label(1 "Predicted expected visits") label(2 "Prediction 95% CI") label(4 "Average expected visits") label(6 "Predicted realized visits") label(7 "Prediction 95% CI") label(9 "Average realized visits")) legend(rows(3))	
+	graph export overconfidence_estimates_commit12.pdf, replace
+
+	**lower bound on how bad commitment contracts are:
+	loc internalityC12=(1-[beta]_cons)*[b]_cons
+	* impact on visits
+	reg visits getcommit if wave3==1&(getcommit==1|incentive==0)&commit12==1
+	loc internalityBenefit=_b[getcommit]*`internalityC12'
+	di `internalityBenefit'
+	* financial loss
+	qui sum visits12 if commit12==1&getcommit==1
+	loc lose=1-r(mean)
+	loc dollarslost=`lose'*80
+	di `dollarslost'
+	* net loss:
+	di `dollarslost'-`internalityBenefit'
+
+}
+
+*rejected contract
+if "`v'" != "+0"{
+	gmm (eq1:28*(1-exp(-{lambda}*({betatilde}*({b}+prize)`v')))-days) ///
+	(eq2: 28*(1-exp(-{lambda}*({beta}*({b}+incentive)`v')))-visits) ///
+	(eq3: (1-{betatilde})*diffa2*({b}+(1+2)/2)-delta2) ///
+	(eq4: (1-{betatilde})*diffa3*({b}+(2+3)/2)-delta3) ///
+	(eq5: (1-{betatilde})*diffa5*({b}+(3+5)/2)-delta5) ///
+	(eq6: (1-{betatilde})*diffa7*({b}+(5+7)/2)-delta7) ///
+	(eq7: (1-{betatilde})*diffa12*({b}+(7+12)/2)-delta12) ///
+	if flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&commit12==0, ///
+	instruments (eq1: prize prize2) instruments(eq2:incentive incentivesq) ///
+	from (b 8 lambda 0.06 beta 0.5 betatilde 0.8) vce(cluster id) winitial(identity) nolog
+	if "`v'" == "" latex_write_gmm notwelve `lx' // baseline only
+
+	*for export
+	foreach param in lambda betatilde b beta {
+		loc `param'nocommit12`o' = [`param']_cons
+		}
+
+	if "`v'" == ""{ // baseline only
+		*actual internality:
+		nlcom (1-[beta]_cons)*[b]_cons
+		latex_write_nlcom aintnotwelve `lx'
+
+		*naivete statistic:
+		nlcom (1-[betatilde]_cons)/(1-[beta]_cons)
+		latex_write_nlcom naivenotwelve `lx'
+
+		*expected cost
+		nlcom 1/[lambda]_cons
+		latex_write_nlcom expcostnotwelve `lx'
+		}
+	}
+
+
+********** Commitment contract - 8 visits *************************************
+
+gmm (eq1:28*(1-exp(-{lambda}*({betatilde}*({b}+prize)`v')))-days) ///
+(eq2: 28*(1-exp(-{lambda}*({beta}*({b}+incentive)`v')))-visits) ///
+(eq3: (1-{betatilde})*diffa2*({b}+(1+2)/2)-delta2) ///
+(eq4: (1-{betatilde})*diffa3*({b}+(2+3)/2)-delta3) ///
+(eq5: (1-{betatilde})*diffa5*({b}+(3+5)/2)-delta5) ///
+(eq6: (1-{betatilde})*diffa7*({b}+(5+7)/2)-delta7) ///
+(eq7: (1-{betatilde})*diffa12*({b}+(7+12)/2)-delta12) ///
+if flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&commit8==1, ///
+instruments (eq1: prize prize2) instruments(eq2:incentive incentivesq) ///
+from (b 8 lambda 0.06 beta 0.5 betatilde 0.8) vce(cluster id) winitial(identity) nolog
+latex_write_gmm eight`o' `lx'
+
+*for export
+foreach param in lambda betatilde b beta {
+	loc `param'commit8`o' = [`param']_cons
+	}
+
+*actual internality:
+nlcom (1-[beta]_cons)*[b]_cons
+latex_write_nlcom ainteight`o' `lx'
+
+*naivete statistic:
+nlcom (1-[betatilde]_cons)/(1-[beta]_cons)
+latex_write_nlcom naiveeight`o' `lx'
+
+*expected cost
+nlcom 1/[lambda]_cons
+latex_write_nlcom expcosteight`o' `lx'
+
+*take-up rate
+sum commit8 if flag_low_wtp==0&flag_exclude_exog==0&incentive!=. 
+loc propcommit8`o' = r(mean)
+loc propnocommit8`o' = 1 -r(mean)
+
+
+* rejected contract
+if "`v'" != "+0"{
+	gmm (eq1:28*(1-exp(-{lambda}*({betatilde}*({b}+prize)`v')))-days) ///
+	(eq2: 28*(1-exp(-{lambda}*({beta}*({b}+incentive)`v')))-visits) ///
+	(eq3: (1-{betatilde})*diffa2*({b}+(1+2)/2)-delta2) ///
+	(eq4: (1-{betatilde})*diffa3*({b}+(2+3)/2)-delta3) ///
+	(eq5: (1-{betatilde})*diffa5*({b}+(3+5)/2)-delta5) ///
+	(eq6: (1-{betatilde})*diffa7*({b}+(5+7)/2)-delta7) ///
+	(eq7: (1-{betatilde})*diffa12*({b}+(7+12)/2)-delta12) ///
+	if flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&commit8==0, ///
+	instruments (eq1: prize prize2) instruments(eq2:incentive incentivesq) ///
+	from (b 8 lambda 0.06 beta 0.5 betatilde 0.8) vce(cluster id) winitial(identity) nolog
+	if "`v'" == "" latex_write_gmm noeight `lx' // baseline only
+
+	*for export
+	foreach param in lambda betatilde b beta {
+		loc `param'nocommit8`o' = [`param']_cons
+		}
+
+	if "`v'" == ""{ // baseline only
+		*actual internality:
+		nlcom (1-[beta]_cons)*[b]_cons
+		latex_write_nlcom aintnoeight `lx'
+
+		*naivete statistic:
+		nlcom (1-[betatilde]_cons)/(1-[beta]_cons)
+		latex_write_nlcom naivenoeight `lx'
+
+		*expected cost
+		nlcom 1/[lambda]_cons
+		latex_write_nlcom expcostnoeight `lx'
+		}
+	}
+
+
+********** Commitment contract - 16 visits ************************************
+
+gmm (eq1:28*(1-exp(-{lambda}*({betatilde}*({b}+prize)`v')))-days) ///
+(eq2: 28*(1-exp(-{lambda}*({beta}*({b}+incentive)`v')))-visits) ///
+(eq3: (1-{betatilde})*diffa2*({b}+(1+2)/2)-delta2) ///
+(eq4: (1-{betatilde})*diffa3*({b}+(2+3)/2)-delta3) ///
+(eq5: (1-{betatilde})*diffa5*({b}+(3+5)/2)-delta5) ///
+(eq6: (1-{betatilde})*diffa7*({b}+(5+7)/2)-delta7) ///
+(eq7: (1-{betatilde})*diffa12*({b}+(7+12)/2)-delta12) ///
+if flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&commit16==1, ///
+instruments (eq1: prize prize2) instruments(eq2:incentive incentivesq) ///
+from (b 8 lambda 0.06 beta 0.5 betatilde 0.8) vce(cluster id) winitial(identity) nolog
+latex_write_gmm sixteen`o' `lx'
+
+*for export
+foreach param in lambda betatilde b beta {
+	loc `param'commit16`o' = [`param']_cons
+	}
+
+*actual internality:
+nlcom (1-[beta]_cons)*[b]_cons
+latex_write_nlcom aintsixteen`o' `lx'
+
+*naivete statistic:
+nlcom (1-[betatilde]_cons)/(1-[beta]_cons)
+latex_write_nlcom naivesixteen`o' `lx'
+
+*expected cost
+nlcom 1/[lambda]_cons
+latex_write_nlcom expcostsixteen`o' `lx'
+
+*take-up rate
+sum commit16 if flag_low_wtp==0&flag_exclude_exog==0&incentive!=. 
+loc propcommit16`o' = r(mean)
+loc propnocommit16`o' = 1 -r(mean)
+
+
+* rejected contract
+if "`v'" != "+0"{
+	gmm (eq1:28*(1-exp(-{lambda}*({betatilde}*({b}+prize)`v')))-days) ///
+	(eq2: 28*(1-exp(-{lambda}*({beta}*({b}+incentive)`v')))-visits) ///
+	(eq3: (1-{betatilde})*diffa2*({b}+(1+2)/2)-delta2) ///
+	(eq4: (1-{betatilde})*diffa3*({b}+(2+3)/2)-delta3) ///
+	(eq5: (1-{betatilde})*diffa5*({b}+(3+5)/2)-delta5) ///
+	(eq6: (1-{betatilde})*diffa7*({b}+(5+7)/2)-delta7) ///
+	(eq7: (1-{betatilde})*diffa12*({b}+(7+12)/2)-delta12) ///
+	if flag_low_wtp==0&flag_exclude_exog==0&incentive!=.&commit16==0, ///
+	instruments (eq1: prize prize2) instruments(eq2:incentive incentivesq) ///
+	from (b 8 lambda 0.06 beta 0.5 betatilde 0.8) vce(cluster id) winitial(identity) nolog
+	if "`v'" == "" latex_write_gmm nosixteen `lx' // baseline only
+
+	*for export
+	foreach param in lambda betatilde b beta {
+		loc `param'nocommit16`o' = [`param']_cons
+		}
+
+	if "`v'" == ""{ // baseline only
+		*actual internality:
+		nlcom (1-[beta]_cons)*[b]_cons
+		latex_write_nlcom aintnosixteen `lx'
+
+		*naivete statistic:
+		nlcom (1-[betatilde]_cons)/(1-[beta]_cons)
+		latex_write_nlcom naivenosixteen `lx'
+
+		*expected cost
+		nlcom 1/[lambda]_cons
+		latex_write_nlcom expcostnosixteen `lx'
+		}
+	}
+
+}
+	
+restore
+
+
+********** Export estimates from each subsample to a file *********************
+
+foreach o in "" "V" "X"{
+
+	foreach f in bmcommit`o' amcommit`o' bmnocommit`o' amnocommit`o' ///
+		bmcommite`o' amcommite`o' bmnocommite`o' amnocommite`o' ///
+		bmcommits`o' amcommits`o' bmnocommits`o' amnocommits`o' ///
+		qfstcommit`o' qsndcommit`o' qthdcommit`o' qfthcommit`o' ///
+		qfstnocommit`o' qsndnocommit`o' qthdnocommit`o' qfthnocommit`o' ///
+		qfstcommite`o' qsndcommite`o' qthdcommite`o' qfthcommite`o' ///
+		qfstnocommite`o' qsndnocommite`o' qthdnocommite`o' qfthnocommite`o' ///
+		qfstcommits`o' qsndcommits`o' qthdcommits`o' qfthcommits`o' ///
+		qfstnocommits`o' qsndnocommits`o' qthdnocommits`o' qfthnocommits`o' ///
+		qfstctrlcommit`o' qsndctrlcommit`o' qthdctrlcommit`o' qfthctrlcommit`o' ///
+		qfstinfocommit`o' qsndinfocommit`o' qthdinfocommit`o' qfthinfocommit`o' ///
+		bmctrlcommit`o' bminfocommit`o' amctrlcommit`o' aminfocommit`o' ///
+		bmctrlnocommit`o' bminfonocommit`o' amctrlnocommit`o' aminfonocommit`o' ///
+		bmctrlcommite`o' bminfocommite`o' amctrlcommite`o' aminfocommite`o' ///
+		bmctrlnocommite`o' bminfonocommite`o' amctrlnocommite`o' aminfonocommite`o' ///
+		bmctrlcommits`o' bminfocommits`o' amctrlcommits`o' aminfocommits`o' ///
+		bmctrlnocommits`o' bminfonocommits`o' amctrlnocommits`o' aminfonocommits`o' ///
+		commit12`o' nocommit12`o' commit8`o' nocommit8`o' commit16`o' nocommit16`o'{
+
+		preserve
+		clear
+		set obs 1
+		foreach p in lambda beta betatilde b prop{
+			gen `p' = ``p'`f''
+			}
+		outsheet using "parameter_estimates/`f'.csv", comma replace
+		restore
+		}
+		
+	}
+	
+	
+********** Empirical moments **************************************************
+
+preserve
+* restrict sample
+keep if flag_low_wtp==0&flag_exclude_exog==0
+
+*generate variables
+gen got_contract = 1 if treatment == "threshold80_12"
+replace got_contract = 0 if treatment == "control"
+gen success = visits >= 12
+
+*change in attendance due to contract
+reg visits got_contract wave? if commit12==1
+matrix temp = r(table)'
+loc b : di %4.2f temp[1,1]
+loc lb : di %4.2f temp[1,5]
+loc ub : di %4.2f temp[1,6]
+loc ci : di "(`lb', `ub')"
+latex_write empirDaC `b' numbers
+latex_write empirDaCCI "`ci'" numbers
+
+*probability of meeting threshold (with and w/out the contract)
+reg success wave? if commit12==1&treatment=="control"
+matrix temp = r(table)'
+loc b : di %4.2f temp[4,1]
+loc lb : di %4.2f temp[4,5]
+loc ub : di %4.2f temp[4,6]
+loc ci : di "(`lb', `ub')"
+latex_write empirctrlPmeet `b' numbers
+latex_write empirctrlPmeetCI "`ci'" numbers
+
+reg success if commit12==1&treatment=="threshold80_12"
+matrix temp = r(table)'
+loc b : di %4.2f temp[1,1]
+loc lb : di %4.2f temp[1,5]
+loc ub : di %4.2f temp[1,6]
+loc ci : di "(`lb', `ub')"
+latex_write empirtreatPmeet `b' numbers
+latex_write empirtreatPmeetCI "`ci'" numbers
+
+*change in probability of meeting threshold
+reg success got_contract wave? if commit12==1
+matrix temp = r(table)'
+loc b : di %4.2f temp[1,1]
+loc lb : di %4.2f temp[1,5]
+loc ub : di %4.2f temp[1,6]
+loc ci : di "(`lb', `ub')"
+latex_write empirDmeet `b' numbers
+latex_write empirDmeetCI "`ci'" numbers
+restore
+
+```
+
+### `Who_Chooses_Commitment_Replication/Code/Stata/Tables.do`
+```stata
+*** TABLES FOR Carrera, Royer, Stehr, Sydnor, and Taubinsky (2021) ************
+*******************************************************************************
+
+*** Initial set-up ***
+clear
+eststo clear
+set more off
+
+*** Set directory for output ***
+cd "$main/Output"
+/* Note: all tables will output to the working directory. Uses a program from
+   master_do_file_for_analysis.do */
+
+
+*** Load and clean experimental data ******************************************
+
+*** Load dataset ***
+use "$main/Data/cleaned_commitment_study_data", clear
+
+*** Variable Creation & Cleaning Steps ***
+*** Create an ID variable for use when reshaping long 
+gen id = _n
+
+*** Generate info treatment indicators
+gen first_info = type_of_info=="1-onlygraph" 
+gen new_info = type_of_info=="2-graphplus" 
+gen control_info = (new_info == 0 & first_info == 0) 
+
+*** Generate wave indicators
+gen wave1 = (wave == "fall") 
+gen wave2 = (wave == "winter")
+gen wave3 = (wave == "spring")
+
+*** Define anticommitment/commitment variables for each threshold
+gen anticommit8 = q170 ==2 if q170<.
+gen commit8 = q169 ==2 if q169<.
+gen anticommit12 = chose_anticommit11
+gen commit12 = chose_commit12
+gen anticommit16 = q296==2 if q296<.
+gen commit16 = q295 ==2 if q295<.
+
+*** Rescale percent variable
+foreach var of varlist percent*{
+	replace `var' = `var'/100
+	}
+	
+*** Store number of observations in exclusions
+sum flag_low_wtp
+loc lowwtp `r(sum)'
+latex_write lowwtpobs `lowwtp' numbers
+sum flag_exclude_exog
+loc endog `r(sum)'
+latex_write nexogobs `endog' numbers
+loc totalexcl = `lowwtp' + `endog'
+latex_write excludeobs `totalexcl' numbers
+
+* Wave 3
+sum flag_low_wtp if wave3 == 1
+latex_write lowwtpobswthree `r(sum)' numbers
+sum flag_exclude_exog if wave3 == 1
+latex_write nexogobswthree `r(sum)' numbers
+
+*** Store number of participants in each wave before exclusions
+forval i = 1/3{
+
+	if `i' == 1 loc wname "wone"
+	else if `i' == 2 loc wname "wtwo"
+	else loc wname "wthree"
+
+	sum wave`i' if wave`i' == 1
+	loc obs = r(N)
+	latex_write `wname'obs `obs' numbers
+	}
+
+*** Store share of participants who prefer nothing to contingent $80
+sum prefer80contingent_to_0
+loc pctpreferzero : di %2.1f (1-r(mean))*100
+latex_write pctpreferzero `pctpreferzero' numbers
+	
+*** Restrict sample to those exogenously assigned incentives
+keep if flag_low_wtp == 0 & flag_exclude_exog == 0
+
+
+*** Descriptive Statistics (appendix_descriptive_stats.tex) *******************
+
+*** Generate variables and labels for the table ***
+gen ft_student = student==1 if student<.
+gen ft_working = working==1 if working<.
+gen fpt_working = working<3 if working<.
+gen advanced_degree = educ==5
+replace married = married==1 if married<.
+recode age  (1 = 24) (2=35.5 ) (3=45.5) (4=57.5) (5=70) , gen(imp_age)
+recode income_cat  (1 = 18000) (2=37500 ) (3=75500) (4=150000) (5=.) , gen(imp_inc)
+
+label var female "Female" 
+label var imp_inc "Household income$^a$"
+label var married "Married"
+label var ft_student "Student, full-time"
+label var fpt_working "Working, full- or part-time"
+label var advanced "Advanced degree$^b$"
+label var imp_age "Age$^a$"
+label var past4 "Visits in the past 4 weeks, recorded"
+label var visits_100 "$\hspace{0.5cm}$ Visits, recorded"
+label var past100days_went "$\hspace{0.5cm}$ Visits, self-recollection"
+label var past100days_should "Days that \textit{I should have gone, but didn't}"
+label var days_0 "Best guess of days I will attend in next 4 weeks"
+label var goal "Goal for visits in next 4 weeks"
+
+gen wave_num = "Wave 1" if wave=="fall"
+replace wave_num="Wave 2" if wave=="winter"
+replace wave_num="Wave 3" if wave=="spring"
+tab wave_num // N = 1248 (340 in Wave 1, 509 in Wave 2, 399 in Wave 3)
+
+*** Produce statistics for the table ***
+estpost tabstat female imp_age ft_student fpt_working married advanced_degree imp_inc past4, by(wave_num)  statistics(mean sd) columns(statistics)
+
+*** Export table
+#delimit;
+estout . using `"appendix_descriptive_stats.tex"' ,
+cells(mean(fmt(%3.2fc %3.2fc %3.2fc %3.2fc %3.2fc %3.2fc %8.0gc %3.2fc) star) 
+sd(fmt(%3.2fc %3.2fc %3.2fc %3.2fc %3.2fc %3.2fc %8.0gc %3.2fc) par))
+starlevels(\sym{*} 0.05 \sym{**} 0.01 \sym{***} 0.001, label(" \(p<@\)"))
+varwidth(20) modelwidth(12) unstack delimiter(&) end(\\)
+prehead(`"{"' `"\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}"' `"\begin{tabular}{l*{@E}{c}}"' `"\hline"') posthead("\hline")
+postfoot(`"\hline"' `"\addlinespace"' `"N & 340 & 509 & 399 & 1,248 \\"'  `"\hline\hline"' `"\end{tabular}"' `"}"' )
+label varlabels(_cons Constant, end("" [1em]) nolast) mlabels(none) nonumbers
+collabels(none) substitute(_ \_ "\_cons " \_cons "Total" "Overall")
+interaction(" $\times$ ") notype level(95) style(tex) replace;
+
+#delimit cr
+
+
+*** (CCtable.tex) *************************************************************
+*** This table was created by hand, so no tex output is produced for it *******
+
+local commitlist "8 12 16"
+
+*** Summarize take-up of commitment contracts ***
+foreach X of local commitlist {
+  * Declare local for labeling
+  if `X' == 8 loc num "eight"
+  else if `X' == 12 loc num "twelve"
+  else loc num "sixteen"
+  * Chose "more" contract
+  summarize commit`X'
+  * Store mean and number of observations
+  loc takeup = round(r(mean)*100)
+  loc takeup : di %2.0f `takeup'
+  latex_write commit`num'rate `takeup' numbers
+  local obsnum : di %5.0fc `r(N)'
+  if r(N) > 1000 loc obsnum = subinstr("`obsnum'",",","{,}",.)
+  latex_write commit`num'obs `obsnum' numbers
+  * Chose "fewer" contract
+  summarize anticommit`X'
+  * Chose "more" given chose "fewer"
+  summarize commit`X' if anticommit`X'==1
+  * Chose "fewer" given chose "more"
+  summarize anticommit`X' if commit`X'==1
+  * Difference between "more" and "more" given chose "fewer" means
+  gen commit`X'_cdtn = commit`X' if anticommit`X'==1
+  ttest commit`X'_cdtn = commit`X', unpaired
+  * Difference between "fewer" and "fewer" given chose "more" means
+  gen anticommit`X'_cdtn = anticommit`X' if commit`X'==1
+  ttest anticommit`X'_cdtn = anticommit`X', unpaired
+}  
+
+
+*** (CCBeliefs2.tex) **********************************************************
+
+*** Regress expected days vs. probability of meeting threshold, all participants
+reg days_0 percent_meet_commit12, robust
+est store est11
+
+reg days_0 percent_meet_anticommit, robust
+est store est12
+
+reg days_0 percent_meet_commit12 percent_meet_anticommit, robust
+est store est13
+
+* Difference of coefficients ("More"-"Fewer")
+nlcom diff: _b[percent_meet_commit12]-_b[percent_meet_anticommit], post
+
+* Store differences
+local b : di %4.2f _b[diff]
+local se : di %4.2f _se[diff]
+estadd local diffb "`b'***" : est13 // know significance level via inspection
+estadd local diffse "(`se')" : est13
+
+*** Regress expected days vs. probability of meeting threshold, chose commit & anticommit
+reg days_0 percent_meet_commit12 percent_meet_anticommit ///
+	if commit12 == 1 & anticommit12 == 1, robust
+est store est14
+
+* Difference of coefficients ("More"-"Fewer")
+nlcom diff: _b[percent_meet_commit12]-_b[percent_meet_anticommit], post
+
+* Store differences
+local b : di %4.2f _b[diff]
+local se : di %4.2f _se[diff]
+estadd local diffb "`b'***" : est14 // know significance level via inspection
+estadd local diffse "(`se')" : est14
+
+*** Export table
+estout est11 est12 est13 est14 using CCBeliefs2.tex, style(tex) margin replace eqlabels(none) ///
+cells(b(star fmt(%9.2f))  se(par fmt(%9.2f)) ) msign(--) starlevels(* 0.1 ** 0.05 *** 0.01) stardetach ///
+keep(percent_meet_commit12 percent_meet_anticommit) wrap varwidth(25) ///
+order(percent_meet_commit12 percent_meet_anticommit) ///
+mgroups("Subjective expected attendance without incentives", pattern(1 0 0 0) ///
+span prefix(\multicolumn{@span}{c}{) suffix(})) ///
+stats(N diffb diffse, l("N" "\hline \`\`More'' $-$ \`\`Fewer''" " ") fmt(%8.0fc %8.0fc %8.0fc)) ///
+varlabels(percent_meet_commit12 "Subj. prob. succeed in \lq\lq more\rq\rq\, contract" percent_meet_anticommit "Subj. prob. succeed in \lq\lq fewer\rq\rq\, contract") ///
+collabels(,none) mlabels("(1)" "(2)" "(3)" "(4)") ///
+prehead( "\begin{tabular}{l*{@M}{r @{} l}}" "\hline") ///
+posthead("\hline") prefoot() postfoot("\hline\hline" "\end{tabular}")
+
+
+*** (regs_{avg_delta_ex_1,commit}_all.tex) ************************************
+	
+*** Generate variable for expected attendace w/incentive given
+gen days_exp = .
+foreach i in 0 1 2 3 5 7{
+	replace days_exp = days_`i' if incentive == `i'
+	}
+	
+*** Generate variables for gaps between goal, past, expected, & actual attendance
+gen gap_goal_exp = goal - days_0 // under no incentive
+gen gap_goal_past = goal - past4
+gen gap_actual_exp = visits - days_exp
+
+
+*** Generate behavior change premium variables (second-order approximation)
+gen delta1=(wtp1) - (days_1+days_0)/2
+gen delta2 = (wtp2-wtp1) - (days_2+days_1)/2
+gen delta3=(wtp3-wtp2) - (days_3+days_2)/2
+gen delta5=(wtp5-wtp3)/(5-3) - (days_5+days_3)/2
+gen delta7=(wtp7-wtp5)/(7-5) - (days_7+days_5)/2
+gen delta12=(wtp12-wtp7)/(12-7) - (days_12+days_7)/2
+gen avg_delta_ex1 = (delta2 + delta3 + delta5 + delta7 + delta12)/5
+	
+
+** Store number of observations without an incentive
+gen got_contract = (incentive == .)
+sum got_contract
+latex_write gotcontractobs `r(sum)' numbers
+
+
+*** Perform series of analyses for whole sample
+
+* Declare restriction for following analysis
+loc restrict "!missing(incentive)"
+	
+* Store means and standard deviations
+foreach v in gap_goal_exp gap_actual_exp{
+	if "`v'" == "gap_goal_exp" loc name "goalexp"
+	else loc name "actexp"
+	sum `v' if `restrict'
+	loc mean : di %4.2f r(mean)
+	loc sd : di %4.2f r(sd)
+	latex_write `name'mean `mean' numbers
+	latex_write `name'sd `sd' numbers
+	}
+	
+* Generate z-scores for variables with constant restriction
+foreach dvar in gap_goal_exp gap_actual_exp avg_delta_ex1{
+	sum `dvar' if `restrict'
+	gen z_`dvar' = (`dvar' - r(mean)) / r(sd) if `restrict'
+	}
+	
+* Run regressions of behavior change premium with regressors & constant restriction
+eststo clear
+loc k = 1
+foreach controls in "" "female i.income_cat married ft_student fpt_working advanced i.age_cat"{
+	foreach covar in "first_info new_info" "first_info new_info z_gap_goal_exp" "first_info new_info z_gap_actual_exp"{
+
+		* Run regression
+		reg avg_delta_ex1 wave2 wave3 `covar' `controls' if `restrict', r
+		eststo spec_`k'
+		
+		* Store coefficients from certain regressions
+		if `k' == 1{
+			loc coeff : di %4.2f _b[new_info]
+			latex_write enhinfobcpcoeff `coeff' numbers
+			}
+		else if `k' == 2{
+			loc coeff : di %4.2f _b[z_gap_goal_exp]
+			latex_write goalexpbcpcoeff `coeff' numbers
+			}
+		else if `k' == 3{
+			loc coeff : di %4.2f _b[z_gap_actual_exp]
+			latex_write actualexpbcpcoeff `coeff' numbers
+			}
+		
+		* Store dependent variable mean
+		ci means avg_delta_ex1 if `restrict' & !missing(gap_actual_exp)
+		local m : di %4.2f r(mean)
+		local se : di %4.2f r(se)
+		estadd local dvmean `m'
+		estadd local dvse "(`se')"
+		ci means avg_delta_ex1 if `restrict' & !missing(gap_actual_exp) & ///
+			control_info == 1
+		local mcontrol : di %4.2f r(mean)
+		local secontrol : di %4.2f r(se)
+		estadd local dvmeancontrol `mcontrol'
+		if `k' == 1 latex_write bcpinfoctrlmean `mcontrol' numbers
+		estadd local dvsecontrol "(`secontrol')"
+		estadd local wavefe "Yes"
+		if `k' == 1 latex_write bcpregmean `m' numbers
+		if "`controls'" != "" estadd local ctrl "Yes"
+		
+		loc ++k
+		}
+	}
+			
+* Export regression output
+estout spec_1 spec_2 spec_3 using "regs_avg_delta_ex1_all.tex", style(tex) margin replace eqlabels(none) ///
+	keep(first_info new_info z_gap_goal_exp z_gap_actual_exp) wrap varwidth(25) ///
+	order(first_info new_info z_gap_goal_exp z_gap_actual_exp) ///
+	mgroups("\shortstack{Behavior change premium}", pattern(1 0 0) span prefix(\multicolumn{@span}{c}{) suffix(})) ///
+	mlabels("(1)" "(2)" "(3)" "(4)",span prefix(\multicolumn{@span}{c}{) suffix(})) ///
+	varlabels(z_gap_goal_exp "Goal $-$ exp. attend. (z-score)" z_gap_actual_exp "Actual $-$ exp. attend. (z-score)" first_info "Basic info. treatment" new_info "Enhanced info. treatment" _cons "Constant") ///
+	cells(b(star fmt(%9.2f))  se(par fmt(%9.2f))) msign(--) starlevels(* 0.1 ** 0.05 *** 0.01) stardetach ///
+	stats(dvmean dvse dvmeancontrol dvsecontrol wavefe N, l("Dep. var. mean:" " " "Dep. var. mean," "info. control group:" "\hline Wave FEs" "N") fmt(%8.0fc %8.0fc %8.0fc %8.0fc %8.0fc %8.0fc)) ///
+	collabels(,none) prehead( "\begin{tabular}{l*{@M}{r @{} l}}" "\hline") ///
+	posthead("\hline") prefoot("\hline") postfoot("\hline\hline" "\end{tabular}")
+	
+* Export regression output with demographic controls
+estout spec_4 spec_5 spec_6 using "regs_avg_delta_ex1_all_demo.tex", style(tex) margin replace eqlabels(none) ///
+	keep(first_info new_info z_gap_goal_exp z_gap_actual_exp) ///
+	wrap varwidth(25) order(first_info new_info z_gap_goal_exp z_gap_actual_exp) ///
+	mgroups("\shortstack{Behavior change premium}", pattern(1 0 0) span prefix(\multicolumn{@span}{c}{) suffix(})) ///
+	mlabels("(1)" "(2)" "(3)" "(4)",span prefix(\multicolumn{@span}{c}{) suffix(})) ///
+	varlabels(z_gap_goal_exp "Goal $-$ exp. attend. (z-score)" z_gap_actual_exp "Actual $-$ exp. attend. (z-score)" first_info "Basic info. treatment" new_info "Enhanced info. treatment" _cons "Constant") ///
+	cells(b(star fmt(%9.2f))  se(par fmt(%9.2f))) msign(--) starlevels(* 0.1 ** 0.05 *** 0.01) stardetach ///
+	stats(dvmean dvse dvmeancontrol dvsecontrol ctrl wavefe N, l("Dep. var. mean:" " " "Dep. var. mean," "info. control group:" "\hline Demographic controls" "Wave FEs" "N") fmt(%8.0fc %8.0fc %8.0fc %8.0fc %8.0fc %8.0fc %8.0fc)) ///
+	collabels(,none) prehead( "\begin{tabular}{l*{@M}{r @{} l}}" "\hline") ///
+	posthead("\hline") prefoot("\hline") postfoot("\hline\hline" "\end{tabular}")
+
+		
+* Run regressions of contract take-up on regressors with a constant restriction
+preserve
+
+* Reshape to pool contracts
+reshape long commit, i(id) j(t)
+
+* Run regressions with constant restriction
+eststo clear
+loc k = 1
+foreach controls in "" "female i.income_cat married ft_student fpt_working  advanced i.age_cat"{
+	foreach covar in "first_info new_info" "z_avg_delta_ex1 first_info new_info" "z_gap_goal_exp first_info new_info" "z_gap_actual_exp first_info new_info"{
+		
+		* Run regression
+		reg commit i.t wave2 wave3 `covar' `controls' if `restrict', vce(cluster id)
+		eststo spec_commit`k'
+		
+		* Store coefficients from certain regressions
+		if `k' == 1{
+			loc coeff : di %2.1f abs(_b[new_info]*100)
+			latex_write enhinfoMCcoeff `coeff' numbers
+			}
+		else if `k' == 2{
+			loc coeff : di %2.0f _b[z_avg_delta_ex1]*100
+			latex_write bcpMCcoeff `coeff' numbers
+			}
+		else if `k' == 3{
+			loc coeff : di %2.1f _b[z_gap_goal_exp]*100
+			latex_write goalexpMCcoeff `coeff' numbers
+			}
+		
+		* Store dependent variable mean
+		ci means commit if `restrict'
+		local m : di %4.2f r(mean)
+		local mpct : di %4.0f r(mean)*100
+		local se : di %4.2f r(se)
+		estadd local dvmean `m'
+		estadd local dvse "(`se')"
+		ci means commit if `restrict' & control_info == 1
+		local mcontrol : di %4.2f r(mean)
+		local secontrol : di %4.2f r(se)
+		estadd local dvmeancontrol `mcontrol'
+		estadd local dvsecontrol "(`secontrol')"
+		estadd local wavefe "Yes"
+		estadd local ccfe "Yes"
+		if `k' == 1{
+			latex_write MCregmean `m' numbers
+			latex_write MCregmeanPCT `mpct' numbers
+			}
+		if "`controls'" != "" estadd local ctrl "Yes"
+		
+		loc ++k
+		}
+	}
+	
+* Export regression output
+estout spec_commit1 spec_commit2 spec_commit3 spec_commit4 using "regs_commit_pooled_all.tex", ///
+	style(tex) margin replace eqlabels(none) wrap varwidth(25) ///
+	keep(first_info new_info z_avg_delta_ex1 z_gap_goal_exp z_gap_actual_exp) ///
+	order(first_info new_info z_avg_delta_ex1 z_gap_goal_exp z_gap_actual_exp) ///
+	mgroups("\shortstack{Take-up of \`\`more'' visits contracts}", pattern(1 0 0 0) span prefix(\multicolumn{@span}{c}{) suffix(})) ///
+	mlabels("(1)" "(2)" "(3)" "(4)",span prefix(\multicolumn{@span}{c}{) suffix(})) ///
+	varlabels(z_avg_delta_ex1 "Behavior change premium (z-score)" z_gap_goal_exp "Goal $-$ exp. attend. (z-score)" z_gap_actual_exp "Actual $-$ exp. attend. (z-score)" first_info "Basic info. treatment" new_info "Enhanced info. treatment" _cons "Constant") ///
+	cells(b(star fmt(%9.3f))  se(par fmt(%9.3f))) msign(--) starlevels(* 0.1 ** 0.05 *** 0.01) stardetach ///
+	stats(dvmean dvse dvmeancontrol dvsecontrol wavefe ccfe N N_clust, l("Dep. var. mean:" " " "Dep. var. mean," "info. control group:" "\hline Wave FEs" "Contract FEs" "N" "Clusters") fmt(%8.0fc %8.0fc %8.0fc %8.0fc %8.0fc %8.0fc %8.0fc %8.0fc)) ///
+	collabels(,none) prehead( "\begin{tabular}{l*{@M}{r @{} l}}" "\hline") ///
+	posthead("\hline") prefoot("\hline") postfoot("\hline\hline" "\end{tabular}")
+	
+* Export regression output with demographic controls
+estout spec_commit5 spec_commit6 spec_commit7 spec_commit8 using "regs_commit_pooled_all_demo.tex", ///
+	style(tex) margin replace eqlabels(none) wrap varwidth(25) ///
+	keep(first_info new_info z_avg_delta_ex1 z_gap_goal_exp z_gap_actual_exp) ///
+	order(first_info new_info z_avg_delta_ex1 z_gap_goal_exp z_gap_actual_exp) ///
+	mgroups("\shortstack{Take-up of \`\`more'' visits contracts}", pattern(1 0 0 0) span prefix(\multicolumn{@span}{c}{) suffix(})) ///
+	mlabels("(1)" "(2)" "(3)" "(4)",span prefix(\multicolumn{@span}{c}{) suffix(})) ///
+	varlabels(z_avg_delta_ex1 "Behavior change premium (z-score)" z_gap_goal_exp "Goal $-$ exp. attend. (z-score)" z_gap_actual_exp "Actual $-$ exp. attend. (z-score)" first_info "Basic info. treatment" new_info "Enhanced info. treatment" _cons "Constant") ///
+	cells(b(star fmt(%9.3f))  se(par fmt(%9.3f))) msign(--) starlevels(* 0.1 ** 0.05 *** 0.01) stardetach ///
+	stats(dvmean dvse dvmeancontrol dvsecontrol ctrl wavefe ccfe N N_clust, l("Dep. var. mean:" " " "Dep. var. mean," "info. control group:" "\hline Demographic controls" "Wave FEs" "Contract FEs" "N" "Clusters") fmt(%8.0fc %8.0fc %8.0fc %8.0fc %8.0fc %8.0fc %8.0fc %8.0fc %8.0fc)) ///
+	collabels(,none) prehead( "\begin{tabular}{l*{@M}{r @{} l}}" "\hline") ///
+	posthead("\hline") prefoot("\hline") postfoot("\hline\hline" "\end{tabular}")
+
+restore
+
+	
+*** additions to numbers.tex **************************************************
+
+*** Change in visits due to 12-visit contract assignment ***
+* Generate variable for comparing treatment with control
+gen gotcontract = 1 if treatment == "threshold80_12"
+replace gotcontract = 0 if treatment == "control"
+
+* Test for difference and store mean difference by take-up of contract
+ttest visits if wave3 == 1 & commit12 == 1, by(gotcontract)
+loc takeup : di %3.2f r(mu_2)-r(mu_1)
+latex_write wantgottwelvediff `takeup' numbers
+
+ttest visits if wave3 == 1 & commit12 == 0, by(gotcontract)
+loc takeup : di %3.2f r(mu_2)-r(mu_1)
+latex_write rejectgottwelvediff `takeup' numbers
+
+* Store percentage of those who took up & got the contract who met the threshold
+gen wantedgot12visits = visits if treatment == "threshold80_12" & commit12 == 1
+gen under12 = wantedgot12visits < 12 if !missing(wantedgot12visits)
+sum under12
+loc pctunder : di %2.0f round(r(mean)*100)
+latex_write pctundertwelve `pctunder' numbers
+
+
+*** Statistics about WTPs at the slider maximum ***
+* Reshape data for one observation per participant per incentive
+preserve
+keep wtp* maxwtp* id
+reshape long wtp maxwtp, i(id) j(incentive)
+
+* Generate a variable for the maximum slider value
+gen maxval = incentive*30
+
+* Store percentage of participants who maxed out slider
+gen slidermaxed = !missing(maxwtp)
+sum slidermaxed
+loc pctmaxed : di %2.1f r(mean)*100
+latex_write pctmaxed `pctmaxed' numbers
+
+* Generate variables for fill-in-blank answers relation to maximum slider value
+gen overmaxval = maxwtp > maxval if !missing(maxwtp)
+gen atmaxval = maxwtp == maxval if !missing(maxwtp)
+gen belowmaxval = maxwtp < maxval if !missing(maxwtp)
+
+* Store percent of participants in each category
+foreach relation in over at below{
+	sum `relation'maxval
+	loc pct`relation'max : di %2.0f r(mean)*100
+	latex_write pct`relation'max `pct`relation'max' numbers
+	}
+restore
+
+
+*** Share of individual behavior change value measures that are negative ***
+* Reshape data for one observation per participant per incentive increase
+preserve
+keep delta* id
+reshape long delta, i(id) j(inc)
+
+* Estimate and store relevant statistic
+gen delta_negative = delta < 0
+sum delta_negative
+loc pctdeltaneg : di %2.0f r(mean)*100
+latex_write pctdeltaneg `pctdeltaneg' numbers
+restore
+
+
+*** Additional summary statistics ***
+* Percent female and male
+sum female
+loc pctfemale : di %2.0f r(mean)*100
+loc pctfemalealt : di %2.1f r(mean)*100
+loc pctmalealt : di %2.1f (1 - r(mean))*100
+loc fracfemale : di %4.3f r(mean)
+loc fracmale : di %4.3f (1 - r(mean))
+foreach stat in pctfemale pctfemalealt pctmalealt fracfemale fracmale{
+	latex_write `stat' ``stat'' numbers 
+	}
+
+* Mean imputed age
+sum imp_age
+loc meanage : di %2.0f r(mean)
+latex_write meanage `meanage' numbers
+
+* Percent students
+sum ft_student
+loc pctstudent : di %2.0f r(mean)*100
+latex_write pctstudent `pctstudent' numbers
+
+* Percent working
+sum fpt_working
+loc pctworking : di %2.0f r(mean)*100
+latex_write pctworking `pctworking' numbers
+
+* Percent married
+sum married
+loc pctmarried : di %2.0f r(mean)*100
+latex_write pctmarried `pctmarried' numbers
+
+* Mean visits recorded in past 100 days
+sum visits_100
+loc meanpastvisits : di %2.0f r(mean)
+latex_write meanpastvisits `meanpastvisits' numbers
+
+* Mean visits recalled in past 100 days
+sum past100days_went
+loc meanpastvisitsrecall : di %2.0f r(mean)
+latex_write meanpastvisitsrecall `meanpastvisitsrecall' numbers
+
+* Attention check 
+gen failed_attention = passed_attention_check == 0
+sum failed
+loc pctfailed : di %2.1f r(mean)*100
+latex_write pctfailedac `pctfailed' numbers
+
+* Chose dominated option
+sum areyousure_prefer0_to_20
+loc dom20 = r(N)
+sum areyousure_prefer0_to_80
+loc dom80 = r(N)
+sum id
+loc pctdominated : di %2.1f ((`dom20' + `dom80')/r(N))*100
+latex_write pctchosedom `pctdominated' numbers
+
+* Comprehension check
+gen failed_cc = passed_comprehension_check == 0
+sum failed_cc
+loc pctfailed : di %2.1f r(mean)*100
+latex_write pctfailedcc `pctfailed' numbers
+
+* Numeracy check
+gen passed_nc = 1 if !missing(q137) & !missing(q138)
+replace passed_nc = 0 if (q138 == "133" | q138 == "133333" | q138 == "200000" | ///
+ q138 == "2500" | q138 == "40,000" | q138 == "40,000.00" | ///
+ q138 == "$400,00.00" | q138 == "400" | q138 == "400,00" | q138 == "40000" | ///
+ q138 == "4000000" | q138 == "500,000" | q138 == "50000" | q138 == "800000" | ///
+ q138 == "four") & !missing(passed_nc)
+replace passed_nc = 0 if q137 != 100 & !missing(passed_nc)
+sum passed_nc
+loc pctpassed : di %2.1f r(mean)*100
+latex_write passednumeracy `pctpassed' numbers
+
+* Take-up of contract for fewer visits with & without exclusions above
+preserve
+reshape long commit anticommit, i(id) j(t)
+sum anticommit
+loc takeup : di %2.0f r(mean)*100
+latex_write anticommitrate `takeup' numbers
+
+sum anticommit if passed_comprehension_check == 1 ///
+	& passed_attention_check == 1 & missing(areyousure_prefer0_to_20) ///
+	& missing(areyousure_prefer0_to_80)
+loc takeup : di %2.0f r(mean)*100
+latex_write anticommitrateexcl `takeup' numbers
+restore
+
+* Range of percent take-up of contracts for fewer visits
+loc anticommitpctmin = 1 // initialize for contract with lowest take-up
+loc anticommitpctmax = 0 // initialize for contract with highest take-up
+forval i = 8(4)16{
+	sum anticommit`i'
+	if r(mean) > `anticommitpctmax' loc anticommitpctmax = r(mean)
+	if r(mean) < `anticommitpctmin' loc anticommitpctmin = r(mean)
+	}
+foreach stat in min max{
+	loc anticommitpct`stat' : di %4.0f `anticommitpct`stat''*100
+	latex_write anticommitpct`stat' `anticommitpct`stat'' numbers
+	}
+
+* Number of participants in waves 2 & 3
+gen wave23 = (wave2 | wave3)
+sum wave23
+loc obs = r(mean)*r(N)
+latex_write wtwothreeobs `obs' numbers
+
+* Average expected visits for different incentives
+sum days_0
+loc avgzero : di %2.1f r(mean)
+latex_write avgexpnoinc `avgzero' numbers
+sum days_7
+loc avgseven : di %2.1f r(mean)
+latex_write avgexpseveninc `avgseven' numbers
+loc diff : di %2.1f `avgseven'-`avgzero'
+latex_write avgexpdiffseven `diff' numbers
+
+* Average actual visits for different incentives
+sum visits if incentive==0
+loc avgzero : di %2.1f r(mean)
+latex_write avgactnoinc `avgzero' numbers
+sum visits if incentive==7
+loc avgseven : di %2.1f r(mean)
+latex_write avgactseveninc `avgseven' numbers
+loc diff : di %2.1f `avgseven'-`avgzero'
+latex_write avgactdiffseven `diff' numbers
+
+* Regression of attendance on average past attendance
+reg visits past4
+matrix temp = r(table)'
+loc b : di %4.3f temp[1,1]
+loc se : di %4.3f temp[1,2]
+latex_write attcoeff `b' numbers
+latex_write attcoeffse `se' numbers
+
+* Effect of $2 piece-rate incentive
+gen got_2 = 1 if incentive == 2
+replace got_2 = 0 if treatment == "control"
+* On expectations
+ttest days_2 == days_0
+* On realized attendance
+ttest visits, by(got_2) unpaired
+
+
+*** Generate pairwise correlation estimates with bootstrapping ***
+* Pairwise correlation of behavior change premium at each incentive level
+capture program drop avg_pwcorr_bcp
+program define avg_pwcorr_bcp, rclass
+
+	* Initialize values
+	loc m = 0
+	loc agg_corr = 0
+	
+	* Loop through each incentive level
+	foreach j in 1 2 3 5 7 {
+		foreach k in 2 3 5 7 12 {
+			if `j' < `k'{
+				pwcorr delta`j' delta`k'
+				loc agg_corr = `agg_corr' + r(rho)
+				loc ++m
+				}
+			}
+		}
+		
+	* Average pairwise correlation
+	return scalar avg_pwcorr = `agg_corr'/`m'
+	
+end
+
+* Generate estimates with bootstrapping
+bootstrap avg_pwcorr_bcp = r(avg_pwcorr), reps(1000) cluster(id) seed(12345) ///
+	nodrop level(95): avg_pwcorr_bcp
+estat bootstrap, all
+
+* Store estimates
+matrix temp_b = e(b)
+loc avg : di %3.2f temp_b[1,1]
+latex_write avgbcpcorr `avg' numbers
+matrix temp_se = e(se)
+loc stderr : di %3.2f temp_se[1,1]
+latex_write avgbcpcorrse `stderr' numbers
+
+
+* Pairwise correlation of take-up of each more-visits contract
+capture program drop avg_pwcorr_mc
+program define avg_pwcorr_mc, rclass
+
+	* Initialize values
+	loc m = 0
+	loc agg_corr = 0
+	
+	* Loop through each more-visits contract
+	foreach j in 8 12 {
+		foreach k in 12 16 {
+			if `j' < `k'{
+				pwcorr commit`j' commit`k'
+				loc agg_corr = `agg_corr' + r(rho)
+				loc ++m
+				}
+			}
+		}
+		
+	* Average pairwise correlation
+	return scalar avg_pwcorr = `agg_corr'/`m'
+	
+end
+
+* Generate estimates with bootstrapping
+bootstrap avg_pwcorr_mc = r(avg_pwcorr), reps(1000) cluster(id) seed(12345) ///
+	nodrop level(95): avg_pwcorr_mc
+estat bootstrap, all
+	
+* Store estimates
+matrix temp_b = e(b)
+loc avg : di %3.2f temp_b[1,1]
+latex_write avgMCcorr `avg' numbers
+matrix temp_se = e(se)
+loc stderr : di %3.2f temp_se[1,1]
+latex_write avgMCcorrse `stderr' numbers
+
+```
+
+### `Who_Chooses_Commitment_Replication/Code/Stata/Appendix.do`
+```stata
+*** APPENDIX TABLES FOR Carrera, Royer, Stehr, Sydnor, and Taubinsky (2021) ***
+*******************************************************************************
+
+*** Initial set-up ***
+clear
+set more off
+
+*** Set directories for data and output ***
+cd "$main/Output"
+/* Note: all tables will output to the working directory. Uses a program from
+   master_do_file_for_analysis.do */
+   
+
+*** Load and clean experimental data ******************************************
+
+*** Load dataset ***
+use "$main/Data/cleaned_commitment_study_data", clear
+
+*** Variable Creation & Cleaning Steps ***
+*** Create an ID variable for use when reshaping long 
+gen id = _n
+
+*** Generate info treatment indicators
+gen first_info = type_of_info=="1-onlygraph" 
+gen new_info = type_of_info=="2-graphplus" 
+gen control_info = (new_info == 0 & first_info == 0) 
+
+*** Generate wave indicators
+gen wave1 = (wave == "fall") 
+gen wave2 = (wave == "winter")
+gen wave3 = (wave == "spring")
+
+*** Define anticommitment/commitment variables for each threshold
+gen anticommit8 = q170 ==2 if q170<.
+gen commit8 = q169 ==2 if q169<.
+gen anticommit12 = chose_anticommit11
+gen commit12 = chose_commit12
+gen anticommit16 = q296==2 if q296<.
+gen commit16 = q295 ==2 if q295<.
+
+*** Rescale percent variable
+foreach var of varlist percent*{
+	replace `var' = `var'/100
+	}
+	
+*** Restrict sample to those exogenously assigned incentives
+keep if flag_low_wtp == 0 & flag_exclude_exog == 0
+
+
+*** Descriptive Statistics (table_descriptive.tex) *****************************
+
+*** Generate variables and labels for the table ***
+gen ft_student = student==1 if student<.
+gen ft_working = working==1 if working<.
+gen fpt_working = working<3 if working<.
+gen advanced_degree = educ==5
+replace married = married==1 if married<.
+recode age  (1 = 24) (2=35.5 ) (3=45.5) (4=57.5) (5=70) , gen(imp_age)
+recode income_cat  (1 = 18000) (2=37500 ) (3=75500) (4=150000) (5=.) , gen(imp_inc)
+
+label var female "Female" 
+label var imp_inc "Household income$^a$"
+label var married "Married"
+label var ft_student "Student, full-time"
+label var fpt_working "Working, full- or part-time"
+label var advanced "Advanced degree$^b$"
+label var imp_age "Age$^a$"
+label var past4 "Visits in the past 4 weeks, recorded"
+label var visits_100 "Visits, recorded"
+label var past100days_went "Visits, self-recollection"
+label var past100days_should "Days that \textit{I should have gone, but didn't}"
+label var days_0 "Best guess of days I will attend in next 4 weeks"
+label var goal "Goal for visits"
+label var flag_confusion "Indicator for inattention during survey"
+
+gen any_info = 0 
+replace any_info=1 if first_info==1 | new_info==1
+gen rowvar = .
+
+*** Produce statistics for the table ***
+local counter=0
+eststo clear
+foreach var of varlist female imp_age ft_student fpt_working married advanced_degree imp_inc past4{
+local counter=`counter'+1
+local varlabel: var label `var'
+label var rowvar "`varlabel'"
+replace rowvar=1
+
+eststo model0, title(""): xi: reg `var' rowvar, noconst
+replace rowvar = any_info
+*estadd matrix p = (.), replace
+
+eststo model1, title(""): xi: reg `var' rowvar if wave1==1, robust
+
+reg `var' rowvar if wave1==0, robust
+eststo model2, title("")
+
+*** Export table
+if `counter'==1 {
+ estout model0 model1 model2 using  "table_descriptive.tex", style(tex) label cells((b( fmt(%9.3f) label("\shortstack{Wave 1 \\ (2)}") pattern(0 1 0)) b( fmt(%9.3f) label("\shortstack{Waves 2-3 \\ (4)}") pattern(0 0 1))  b( fmt(%9.3f) label("\shortstack{Waves 1-3 \\ (1)}") pattern(1 0 0)) p(fmt(%9.2f) pattern(0 1 0) label("\shortstack{P-value \\ (3)}")) p(fmt(%9.2f) pattern(0 0 1) label("\shortstack{P-value \\ (5)}")))) drop(_cons ) margin replace  ///
+title(Descriptive Statistics) mgroups("\shortstack{ \\ Overall mean}" "\shortstack{ \\ Difference in means:\\ Treatment $-$ control}" , pattern(1 1 0) ///
+span prefix(\multicolumn{@span}{c}{) suffix(}))  /// 
+mlabels("" "" "") msign(--) starlevels(* 0.1 ** 0.05 *** 0.01)   ///
+prehead( "\begin{tabular}{l*{6}{c}}" "\hline" "\addlinespace")   ///
+posthead("\hline" "\addlinespace") substitute(_ \_)
+	}
+	
+	else if `counter'==7 {
+ estout model0 model1 model2 using  "table_descriptive.tex", style(tex) mlabels("" "" "") label cells((b( fmt(%9.0fc))  p(fmt(%9.2f) pattern(0 1 1)))) drop(_cons) margin append eqlabels(none)  ///
+ msign(--) starlevels(* 0.1 ** 0.05 *** 0.01)  collabels(,none) prefoot() substitute(_ \_)
+	}
+	
+	else if `counter'==8 {
+ estout model0 model1 model2 using  "table_descriptive.tex", style(tex) mlabels("" "" "") label cells((b( fmt(%9.2f))  p(pattern(0 1 1)))) drop(_cons) margin append eqlabels(none)  ///
+ msign(--) starlevels(* 0.1 ** 0.05 *** 0.01)  collabels(,none) prefoot() substitute(_ \_) ///
+postfoot("\hline" "\addlinespace" "N & 1,248 &  \multicolumn{2}{c}{\shortstack{166 control \\ 174 treated}}  & \multicolumn{2}{c}{\shortstack{456 control \\ 452 treated}} \\ "  "\hline\hline" "\end{tabular}")
+	}
+	else if `counter'>=3 & `counter'<=6{
+ estout model0 model1 model2 using  "table_descriptive.tex", style(tex) mlabels("" "" "") label cells((b( fmt(%9.3f)) p(fmt(%9.2f) pattern(0 1 1)))) drop(_cons) margin append eqlabels(none)  ///
+ msign(--) starlevels(* 0.1 ** 0.05 *** 0.01)  collabels(,none) substitute(_ \_)  
+}
+else {
+ estout model0 model1 model2 using  "table_descriptive.tex", style(tex) mlabels("" "" "") label cells((b( fmt(%9.2f)) p(pattern(0 1 1)))) drop(_cons) margin append eqlabels(none)  ///
+ msign(--) starlevels(* 0.1 ** 0.05 *** 0.01)  collabels(,none) substitute(_ \_)  
+}
+}
+.
+/* Note: the number of observations was manually entered; N = 1,248;
+Wave 1: 166 Control and 174 Treated; and Waves 2-3: 456 Control and 452 Treated */
+
+
+*** (commit_delta{,_info,_control}.tex) ***************************************
+
+*** Generate additional variables and reshape data ***
+/*** These variables are the amounts, per attendance, by which a person 
+"overpays" for the increase in incentive. Second-order approximation */
+gen delta1=(wtp1) - (days_1+days_0)/2
+gen delta2 = (wtp2-wtp1) - (days_2+days_1)/2
+gen delta3=(wtp3-wtp2) - (days_3+days_2)/2
+gen delta5=(wtp5-wtp3)/(5-3) - (days_5+days_3)/2
+gen delta7=(wtp7-wtp5)/(7-5) - (days_7+days_5)/2
+gen delta12=(wtp12-wtp7)/(12-7) - (days_12+days_7)/2
+gen avg_delta_ex1 = (delta2 + delta3 + delta5 + delta7 + delta12)/5
+
+*** Change in days of expected attendance by incentive
+gen diffa1=(days_1-days_0)
+gen diffa2=(days_2-days_1)
+gen diffa3=(days_3-days_2)
+gen diffa5=(days_5-days_3)/2
+gen diffa7=(days_7-days_5)/2
+gen diffa12=(days_12-days_7)/5
+
+*** Generate z-score and mean ***	
+quietly sum avg_delta_ex1
+gen z_avg_delta_ex1 = (avg_delta_ex1 - r(mean))/r(sd)
+loc mean : di %4.2f r(mean)
+loc sd : di %4.2f r(sd)
+latex_write wtpbcmean `mean' numbers
+latex_write wtpbcsd `sd' numbers
+
+*** Regress behavior change premium on commitment contract take-up ***
+loc k = 1
+foreach restriction in "" "if new_info == 1" "if control_info == 1"{
+
+	forval j = 8(4)16{
+	
+		* Run regression under treatment restriction
+		regress commit`j' z_avg_delta_ex1 wave2 wave3 `restriction', ///
+			vce(cluster id)
+		est store est_cd_`k'
+		loc ++k
+
+		* Store mean & fixed effects information
+		ci means commit`j' if e(sample)
+		local m : di %4.2f r(mean)
+		local se : di %4.2f r(se)
+		estadd local dvmean `m'
+		estadd local dvse "(`se')"
+		estadd local wavefe "Yes"
+		estadd local ccfe "No"
+	
+		}
+		
+	}
+
+preserve
+
+* Reshape data and run regressions
+reshape long commit commitnotanti, i(id) j(t)
+foreach restriction in "" "if new_info == 1" "if control_info == 1"{
+
+	* Run regression under treatment restriction
+	regress commit z_avg_delta_ex1 i.t wave2 wave3 `restriction', ///
+		vce(cluster id)
+	est store est_cd_`k'
+	loc ++k
+
+	* Store mean & fixed effects information
+	ci means commit if e(sample)
+	local m : di %4.2f r(mean)
+	local se : di %4.2f r(se)
+	estadd local dvmean `m'
+	estadd local dvse "(`se')"
+	estadd local wavefe "Yes"
+	estadd local ccfe "Yes"
+	
+	}
+
+restore
+
+*** Export tables
+estout est_cd_1 est_cd_2 est_cd_3 est_cd_10 using "commit_delta.tex", style(tex) margin replace eqlabels(none) ///
+order(z_avg_delta_ex1) keep(z_avg_delta_ex1) wrap varwidth(25) ///
+mgroups("\shortstack{Take-up of \`\`more'' visits contract}" , pattern(1 0 0 0) span prefix(\multicolumn{@span}{c}{) suffix(})) ///
+mlabels("\shortstack{8+ visits \\ (1)}" "\shortstack{12+ visits \\ (2)}" "\shortstack{16+ visits \\ (3)}" "\shortstack{Pooled \\ (4)}",span prefix(\multicolumn{@span}{c}{) suffix(})) ///
+varlabels(z_avg_delta_ex1 "Behavior change premium (z-score)") ///
+cells(b(star fmt(%9.3f))  se(par fmt(%9.3f))) msign(--) starlevels(* 0.1 ** 0.05 *** 0.01) stardetach ///
+stats(dvmean dvse wavefe ccfe N N_clust, l("Dep. var. mean:" " " "\hline  Wave FEs" "Contract FEs" "N" "Clusters") fmt(%8.0fc %8.0fc %8.0fc %8.0fc %8.0fc)) ///
+collabels(,none) prehead( "\begin{tabular}{l*{@M}{r @{} l}}" "\hline") ///
+posthead("\hline") prefoot("\hline") postfoot("\hline\hline" "\end{tabular}")
+
+estout est_cd_4 est_cd_5 est_cd_6 est_cd_11 using "commit_delta_info.tex", style(tex) margin replace eqlabels(none) ///
+order(z_avg_delta_ex1) keep(z_avg_delta_ex1) wrap varwidth(25) ///
+mgroups("\shortstack{Take-up of \`\`more'' visits contract}" , pattern(1 0 0 0) span prefix(\multicolumn{@span}{c}{) suffix(})) ///
+mlabels("\shortstack{8+ visits \\ (1)}" "\shortstack{12+ visits \\ (2)}" "\shortstack{16+ visits \\ (3)}" "\shortstack{Pooled \\ (4)}",span prefix(\multicolumn{@span}{c}{) suffix(})) ///
+varlabels(z_avg_delta_ex1 "Behavior change premium (z-score)") ///
+cells(b(star fmt(%9.3f))  se(par fmt(%9.3f))) msign(--) starlevels(* 0.1 ** 0.05 *** 0.01) stardetach ///
+stats(dvmean dvse wavefe ccfe N N_clust, l("Dep. var. mean:" " " "\hline  Wave FEs" "Contract FEs" "N" "Clusters") fmt(%8.0fc %8.0fc %8.0fc %8.0fc %8.0fc)) ///
+collabels(,none) prehead( "\begin{tabular}{l*{@M}{r @{} l}}" "\hline") ///
+posthead("\hline") prefoot("\hline") postfoot("\hline\hline" "\end{tabular}")
+
+estout est_cd_7 est_cd_8 est_cd_9 est_cd_12 using "commit_delta_control.tex", style(tex) margin replace eqlabels(none) ///
+order(z_avg_delta_ex1) keep(z_avg_delta_ex1) wrap varwidth(25) ///
+mgroups("\shortstack{Take-up of \`\`more'' visits contract}" , pattern(1 0 0 0) span prefix(\multicolumn{@span}{c}{) suffix(})) ///
+mlabels("\shortstack{8+ visits \\ (1)}" "\shortstack{12+ visits \\ (2)}" "\shortstack{16+ visits \\ (3)}" "\shortstack{Pooled \\ (4)}",span prefix(\multicolumn{@span}{c}{) suffix(})) ///
+varlabels(z_avg_delta_ex1 "Behavior change premium (z-score)") ///
+cells(b(star fmt(%9.3f))  se(par fmt(%9.3f))) msign(--) starlevels(* 0.1 ** 0.05 *** 0.01) stardetach ///
+stats(dvmean dvse wavefe ccfe N N_clust, l("Dep. var. mean:" " " "\hline  Wave FEs" "Contract FEs" "N" "Clusters") fmt(%8.0fc %8.0fc %8.0fc %8.0fc %8.0fc)) ///
+collabels(,none) prehead( "\begin{tabular}{l*{@M}{r @{} l}}" "\hline") ///
+posthead("\hline") prefoot("\hline") postfoot("\hline\hline" "\end{tabular}")
+
+
+*** (regs_commitnotanti_pooled.tex) *******************************************
+
+* Generate variable for expected attendace w/incentive given
+gen days_exp = .
+foreach i in 0 1 2 3 5 7{
+	replace days_exp = days_`i' if incentive == `i'
+	}
+	
+* Generate variables for gaps between goal, past, expected, & actual attendance
+gen gap_goal_exp = goal - days_0 // under no incentive
+gen gap_goal_past = goal - past4
+gen gap_actual_exp = visits - days_exp
+
+* Declare restriction for following analysis
+loc restrict "!missing(incentive)"
+		
+* Generate z-scores for variables with constant restriction
+drop z_avg_delta_ex1
+foreach dvar in gap_goal_exp gap_actual_exp avg_delta_ex1{
+	sum `dvar' if `restrict'
+	gen z_`dvar' = (`dvar' - r(mean)) / r(sd) if `restrict'
+	}	
+	
+*** Generate indicators for take-up of the more & not fewer contract ***
+forval i = 8(4)16{
+	gen commitnotanti`i' = (commit`i' == 1 & anticommit`i' == 0) ///
+		if !missing(commit`i')
+	}
+		
+*** Run regressions of take-up of a more but not fewer visits contract ***
+preserve
+
+* Reshape to pool contracts
+reshape long commitnotanti, i(id) j(t)
+
+* Run regressions with constant restriction
+eststo clear
+loc k = 1
+foreach covar in "first_info new_info" "z_avg_delta_ex1 first_info new_info" "z_gap_goal_exp first_info new_info" "z_gap_actual_exp first_info new_info"{
+	reg commitnotanti i.t wave2 wave3 `covar' if `restrict', vce(cluster id)
+	eststo spec_`k'
+	
+	* Store dependent variable mean
+	ci means commitnotanti if `restrict'
+	local m : di %4.2f r(mean)
+	local mpct : di %4.0f r(mean)*100
+	local se : di %4.2f r(se)
+	estadd local dvmean `m'
+	estadd local dvse "(`se')"
+	ci means commitnotanti if `restrict' & control_info == 1
+	local mcontrol : di %4.2f r(mean)
+	local secontrol : di %4.2f r(se)
+	estadd local dvmeancontrol `mcontrol'
+	estadd local dvsecontrol "(`secontrol')"
+	estadd local wavefe "Yes"
+	estadd local ccfe "Yes"
+	
+	loc ++k
+	}
+	
+* Export regression output
+estout spec* using "regs_commitnotanti_pooled.tex", style(tex) margin replace eqlabels(none) ///
+	drop(8.t 12.t 16.t wave2 wave3 _cons) wrap varwidth(25)  ///
+	order(first_info new_info z_avg_delta_ex1 z_gap_goal_exp z_gap_actual_exp ) ///
+	mgroups("\shortstack{Take-up of \`\`more'' but not \`\`fewer'' \\ visits contracts}", pattern(1 0 0 0) span prefix(\multicolumn{@span}{c}{) suffix(})) ///
+	mlabels("(1)" "(2)" "(3)" "(4)",span prefix(\multicolumn{@span}{c}{) suffix(})) ///
+	varlabels(z_avg_delta_ex1 "Behavior change premium (z-score)" z_gap_goal_exp "Goal $-$ exp. attend. (z-score)" z_gap_actual_exp "Actual $-$ exp. attend. (z-score)" first_info "Basic info. treatment" new_info "Enhanced info. treatment" _cons "Constant") ///
+	cells(b(star fmt(%9.3f))  se(par fmt(%9.3f))) msign(--) starlevels(* 0.1 ** 0.05 *** 0.01) stardetach ///
+	stats(dvmean dvse dvmeancontrol dvsecontrol wavefe ccfe N N_clust, l("Dep. var. mean:" " " "Dep. var. mean," "info. control group:" "\hline Wave FEs" "Contract FEs" "N" "Clusters") fmt(%8.0fc %8.0fc %8.0fc %8.0fc %8.0fc)) ///
+	collabels(,none) prehead( "\begin{tabular}{l*{@M}{r @{} l}}" "\hline") ///
+	posthead("\hline") prefoot("\hline") postfoot("\hline\hline" "\end{tabular}")
+
+restore
+
+
+*** (CCtable_{control,treatment}.tex) *****************************************
+*** This table was created by hand, so no tex output is produced for it *******
+
+foreach restriction in "new_info==1" "control_info==1"{
+	preserve
+	*** Keep either the treatment or control group ***
+	keep if `restriction'
+	
+	if "`restriction'" == "new_info==1" loc name "enhancedtreat"
+	else loc name "control"
+
+	*** Summarize take-up of commitment contracts ***
+	forval X = 8(4)16 {
+		  * Chose "more" contract
+		  summarize commit`X'
+		  * Store number of observations
+		  if `X' == 12 latex_write `name'obs `r(N)' numbers
+		  * Chose "fewer" contract
+		  summarize anticommit`X'
+		  * Chose "more" given chose "fewer"
+		  summarize commit`X' if anticommit`X'==1
+		  * Chose "fewer" given chose "more"
+		  summarize anticommit`X' if commit`X'==1
+		  * Difference between "more" and "more" given chose "fewer" means
+		  gen commit`X'_cdtn = commit`X' if anticommit`X'==1
+		  ttest commit`X'_cdtn = commit`X', unpaired
+		  * Difference between "fewer" and "fewer" given chose "more" means
+		  gen anticommit`X'_cdtn = anticommit`X' if commit`X'==1
+		  ttest anticommit`X'_cdtn = anticommit`X', unpaired
+		}  
+	restore
+	}
+	
+	
+*** (CCtakeupVbeliefs.tex) ****************************************************
+
+*** Regress probability of meeting threshold vs. take-up, all participants ***
+*** Probability of meeting "more" threshold
+reg percent_meet_commit12 commit12, robust
+est store est21
+
+reg percent_meet_commit12 anticommit12, robust
+est store est22
+
+reg percent_meet_commit12 commit12 anticommit12, robust
+est store est23
+
+* Difference of coefficients ("More"-"Fewer")
+test _b[commit]=_b[anticommit]
+nlcom diff: _b[commit]-_b[anticommit], post
+
+* Store differences
+local b : di %4.2f _b[diff]
+local se : di %4.2f _se[diff]
+estadd local diffb "`b'***" : est23 // know significance level via inspection
+estadd local diffse "(`se')" : est23
+
+*** Probability of meeting "fewer" threshold
+reg percent_meet_anticommit commit12, robust
+est store est24
+
+reg percent_meet_anticommit anticommit12, robust
+est store est25
+
+reg percent_meet_anticommit commit12 anticommit12, robust
+est store est26
+
+* Difference of coefficients ("More"-"Fewer")
+test _b[commit]=_b[anticommit]
+nlcom diff: _b[commit]-_b[anticommit], post
+
+* Store differences
+local b : di %4.2f _b[diff]
+local se : di %4.2f _se[diff]
+estadd local diffb "`b'***" : est26 // know significance level via inspection
+estadd local diffse "(`se')" : est26
+
+*** Export table
+estout est21 est22 est23 est24 est25 est26 using CCtakeupVbeliefs.tex, ///
+style(tex) margin replace eqlabels(none) ///
+cells(b(star fmt(%9.2f))  se(par fmt(%9.2f)) ) msign(--) starlevels(* 0.1 ** 0.05 *** 0.01) stardetach ///
+keep(commit12 anticommit12) order(commit12 anticommit12) ///
+stats(N diffb diffse, l("N" "\hline \`\`More'' $-$ \`\`Fewer''" " ") fmt(%8.0fc %8.0fc %8.0fc)) ///
+varlabels(commit12 "Commit to \`\`more''" anticommit12 "Commit to \`\`fewer''") ///
+collabels(,none) mlabels("(1)" "(2)" "(3)" "(4)" "(5)" "(6)",span prefix(\multicolumn{@span}{c}{) suffix(})) ///
+mgroups("\shortstack{Subj. prob. succeed in \\ \`\`more'' contract}" "\shortstack{Subj. prob. succeed in \\ \`\`fewer'' contract}", pattern(1 0 0 1 0 0) ///
+span prefix(\multicolumn{@span}{c}{) suffix(})) ///
+prehead( "\begin{tabular}{l*{@M}{r @{} l}}" "\hline") ///
+posthead("\hline") prefoot() postfoot("\hline\hline" "\end{tabular}")
+	
+	
+*** (CCcorrelates.tex) ********************************************************
+
+preserve
+*** Reshape data ***
+reshape long commit anticommit, i(id) j(threshold)
+
+*** Further correlates of take-up ***
+* Regress expected attendance on contract take-up
+reg days_0 commit anticommit, robust
+est store est31
+
+* Difference of coefficients ("More"-"Fewer")
+nlcom diff: _b[commit]-_b[anticommit], post
+
+* Store differences
+local b : di %4.2f _b[diff]
+local se : di %4.2f _se[diff]
+estadd local diffb "`b'***" : est31 // know significance level via inspection
+estadd local diffse "(`se')" : est31
+
+
+* Regress past attendance on contract take-up
+reg past4 commit anticommit, robust
+est store est32
+
+* Difference of coefficients ("More"-"Fewer")
+nlcom diff: _b[commit]-_b[anticommit], post
+
+* Store differences
+local b : di %4.2f _b[diff]
+local se : di %4.2f _se[diff]
+estadd local diffb "`b'***" : est32 // know significance level via inspection
+estadd local diffse "(`se')" : est32
+
+
+* Regress goal attendance on contract take-up
+reg goal commit anticommit, robust
+est store est33
+
+* Difference of coefficients ("More"-"Fewer")
+nlcom diff: _b[commit]-_b[anticommit], post
+
+* Store differences
+local b : di %4.2f _b[diff]
+local se : di %4.2f _se[diff]
+estadd local diffb "`b'***" : est33 // know significance level via inspection
+estadd local diffse "(`se')" : est33
+
+
+*** Export table
+estout est31 est32 est33 using CCcorrelates.tex, style(tex) margin replace eqlabels(none) ///
+cells(b(star fmt(%9.2f))  se(par fmt(%9.2f)) ) msign(--) starlevels(* 0.1 ** 0.05 *** 0.01) stardetach ///
+keep(commit anticommit) order(commit anticommit) ///
+mgroups("Expected attendance" "Past attendance" "Goal attendance", pattern(1 1 1) ///
+span prefix(\multicolumn{@span}{c}{) suffix(})) ///
+stats(N diffb diffse, l("N" "\hline \`\`More'' $-$ \`\`Fewer''" " ") fmt(%8.0fc %8.0fc %8.0fc)) ///
+varlabels(commit "Chose \`\`more contract''" anticommit "Chose \`\`fewer'' contract") ///
+collabels(,none) mlabels("(1)" "(2)" "(3)") ///
+prehead( "\begin{tabular}{l*{@M}{r @{} l}}" "\hline") ///
+posthead("\hline") prefoot() postfoot("\hline\hline" "\end{tabular}")
+	
+restore
+
+
+*** (Exp_{Rates,Corr}.tex) ****************************************************
+*** These tables were created by hand, so no tex output is produced for them **
+
+* Note: Attendance in the following tables is in the absence of incentives
+ 
+cap program drop rate_table corr_table
+*** Create program for table of rates of contract take-up ***
+program rate_table
+    syntax, attendance(string) // for expected vs. actual attendance
+	
+		if "`attendance'" == "expected" local attendance "days_0"
+		else if "`attendance'" == "actual" local attendance "incentive == 0 & visits"
+		else confirm "`attendance'" == "actual" | "`attendance'" == "expected"
+	
+		* Summarize take-up of commitment contracts
+		forval i = 8(4)16 {
+			* (1) Chose "more" contract
+			di("(1) Chose more: `i' visits")
+			summarize commit`i'
+			* (2) Chose "more" given attendance no more than target - 2
+			di("(2) Chose more | att. <= `i' - 2, `i' visits")
+			summarize commit`i' if `attendance' <= `i' - 2
+			* (3) Chose "more" given attendance no more than target - 4
+			di("(3) Chose more | att. <= `i' - 4, `i' visits")
+			summarize commit`i' if `attendance' <= `i' - 4
+			* (4) Chose "fewer" contract
+			di("(4) Chose fewer, `i' visits")
+			summarize anticommit`i'
+			* (5) Chose "fewer" given attendance at least target + 1
+			di("(5) Chose fewer | att. >= `i' + 1, `i' visits")
+			summarize anticommit`i' if `attendance' >= `i' + 1
+			* (6) Chose "fewer" given attendance at least target + 3
+			di("(6) Chose fewer | att. >= `i' + 3, `i' visits")
+			summarize anticommit`i' if `attendance' >= `i' + 3
+			}
+end
+
+* Obtain take-up rates for table
+rate_table, attendance(expected)
+
+*** Create program for table of contract take-up correlations ***
+program corr_table
+    syntax, attendance(string) // for expected vs. actual attendance
+	
+		if "`attendance'" == "expected" local attendance "days_0"
+		else if "`attendance'" == "actual" local attendance "incentive == 0 & visits"
+	
+		* Summarize correlation between take-up more- & fewer-visit contracts
+		forval i = 8(4)16 {
+			* (1) Correlation
+			di("(1) `i' visits")
+			pwcorr commit`i' anticommit`i', sig
+			* (2) Correlation given attendance no more than target - 2
+			di("(2) att. <= `i' - 2, `i' visits")
+			pwcorr commit`i' anticommit`i' if `attendance' <= `i' - 2, sig
+			* (3) Correlation given attendance no more than target - 4
+			di("(3) att. <= `i' - 4, `i' visits")
+			pwcorr commit`i' anticommit`i' if `attendance' <= `i' - 4, sig
+			* (4) Correlation given attendance at least target + 1
+			di("(4) att. >= `i' + 1, `i' visits")
+			pwcorr commit`i' anticommit`i' if `attendance' >= `i' + 1, sig
+			* (5) Correlation given attendance at least target + 3
+			di("(5) att. >= `i' + 3,`i' visits")
+			pwcorr commit`i' anticommit`i' if `attendance' >= `i' + 3, sig
+			* (6) Correlation given attendance no more than 6
+			di("(6) att. <= 6, `i' visits")
+			pwcorr commit`i' anticommit`i' if `attendance' <= 6, sig
+			* (7) Correlation given attendance at least 17
+			di("(7) att. >= 17, `i' visits")
+			pwcorr commit`i' anticommit`i' if `attendance' >= 17, sig
+			}
+end
+	
+* Obtain correlations for table
+corr_table, attendance(expected)
+
+
+*** (bcp_on_behavior_change.tex) **********************************************
+
+preserve
+*** Reshape to long format
+reshape long delta diffa, i(id) j(index)
+
+*** Run regression of behavior change premium on behavior change, excl. $1
+* Without wave fixed effects
+reg delta diffa if index > 1, cluster(id)
+est store bcpbc1
+
+* Store mean & fixed effects information
+estadd local wavefe "No"
+ci means delta if e(sample)
+local m : di %4.2f r(mean)
+loc se : di %4.2f r(se)
+estadd local dvmean `m'
+estadd local dvse "(`se')"
+
+* With wave fixed effects
+reg delta diffa wave? if index > 1, cluster(id) nocons
+est store bcpbc2
+
+* Store mean & fixed effects information
+estadd local wavefe "Yes"
+ci means delta if e(sample)
+local m : di %4.2f r(mean)
+loc se : di %4.2f r(se)
+estadd local dvmean `m'
+estadd local dvse "(`se')"
+
+*** Export table
+estout bcpbc* using "bcp_on_behavior_change.tex", ///
+style(tex) margin replace eqlabels(none) drop(wave*) ///
+mgroups("\shortstack{Behavior change \\ premium}", pattern(1) span prefix(\multicolumn{@span}{c}{) suffix(})) ///
+mlabels("(1)" "(2)", span prefix(\multicolumn{@span}{c}{) suffix(})) ///
+varlabels(diffa "Expected behavior change" _cons "Constant") ///
+cells(b(star fmt(%9.2f))  se(par fmt(%9.2f))) msign(--) starlevels(* 0.1 ** 0.05 *** 0.01) stardetach ///
+stats(dvmean dvse wavefe N N_clust, l("Dep. var. mean:" " " "\hline Wave FEs" "N" "Clusters") fmt(%8.0fc %8.0fc %8.0fc)) ///
+collabels(,none) prehead( "\begin{tabular}{l*{@M}{r @{} l}}" "\hline") ///
+posthead("\hline") prefoot("\hline") postfoot("\hline\hline" "\end{tabular}")
+
+restore
+
+
+*** (bcp_on_risk_aversion.tex) *************************************************
+
+/* Note: this table is not included in the paper, but the results are
+   referenced in footnote 12. */
+
+*** Generate risk aversion variables
+* Generate indicator for not choosing options with more risk but no addtl. return
+gen risk_averse = risk_aversion <= 5
+
+* Generate indicator for above median risk aversion
+sum risk_aversion, d
+gen abovemed_risk_aversion = risk_aversion <= r(p50)
+
+*** Run regressions on a range of risk aversion variables
+eststo clear
+loc k = 1
+foreach covar in "risk_aversion" "abovemed_risk_aversion" "risk_averse" {
+
+	reg avg_delta_ex1 `covar' wave2 wave3, r
+	eststo spec_`k'
+	loc ++k
+
+	* Store mean & fixed effects information
+	estadd local wavefe "Yes"
+	ci means avg_delta_ex1 if e(sample)
+	local m : di %4.2f r(mean)
+	loc se : di %4.2f r(se)
+	estadd local dvmean `m'
+	estadd local dvse "(`se')"
+	
+	}
+	
+*** Export table
+estout spec* using "bcp_on_risk_aversion.tex", ///
+style(tex) margin replace eqlabels(none) drop(wave* _cons) ///
+mgroups("\shortstack{Behavior change premium}", pattern(1 0 0) span prefix(\multicolumn{@span}{c}{) suffix(})) ///
+mlabels("(1)" "(2)" "(3)", span prefix(\multicolumn{@span}{c}{) suffix(})) ///
+varlabels(risk_aversion "Risk aversion" abovemed_risk_aversion "Above median risk aversion" risk_averse "Risk averse") ///
+cells(b(star fmt(%9.3f))  se(par fmt(%9.3f))) msign(--) starlevels(* 0.1 ** 0.05 *** 0.01) stardetach ///
+stats(dvmean dvse wavefe N, l("Dep. var. mean:" " " "\hline Wave FEs" "N") fmt(%8.0fc %8.0fc %8.0fc %8.0fc)) ///
+collabels(,none) prehead( "\begin{tabular}{l*{@M}{r @{} l}}" "\hline") ///
+posthead("\hline") prefoot("\hline") postfoot("\hline\hline" "\end{tabular}")
+
+	
+*** Load and clean daily experimental data ************************************
+
+*** Load dataset ***
+use "$main/Data/cleaned_commitment_study_daily_data", clear
+
+*** Variable Creation & Cleaning Steps ***
+*** Generate info treatment indicators
+gen first_info = type_of_info=="1-onlygraph" 
+gen new_info = type_of_info=="2-graphplus" 
+gen control_info = (new_info == 0 & first_info == 0) 
+
+*** Generate wave indicators
+gen wave1 = (wave == "fall") 
+gen wave2 = (wave == "winter")
+gen wave3 = (wave == "spring")
+
+*** Define anticommitment/commitment variables for each threshold
+gen anticommit8 = q170 ==2 if q170<.
+gen commit8 = q169 ==2 if q169<.
+gen anticommit12 = chose_anticommit11
+gen commit12 = chose_commit12
+gen anticommit16 = q296==2 if q296<.
+gen commit16 = q295 ==2 if q295<.
+
+*** Restrict sample to those exogenously assigned incentives
+keep if flag_low_wtp == 0 & flag_exclude_exog == 0	
+
+
+*** (DailyAttIncr.tex) ********************************************************
+
+preserve
+keep if commit12 == 1
+gen got_incentive = 1 if treatment == "threshold80_12"
+replace got_incentive = 0 if treatment == "control"
+tab got_incentive
+keep if !missing(got_incentive)
+gen incentive_day = day*got_incentive
+
+* Run regression of attendance on assignment to contract and day
+reg attended day got_incentive incentive_day wave2 wave3, clus(id)
+est store estday
+estadd local wavefe "Yes"
+restore
+
+* Export regression output
+estout estday using "DailyAttIncr.tex", style(tex) margin replace eqlabels(none) ///
+order(day got_incentive incentive_day _cons) ///
+drop(wave2 wave3 _cons) ///
+mgroups("\shortstack{Attendance \\ likelihood}", pattern(1) span prefix(\multicolumn{@span}{c}{) suffix(})) ///
+mlabels("(1)",span prefix(\multicolumn{@span}{c}{) suffix(})) ///
+varlabels(day "Day" got_incentive "12+ visits contract" incentive_day "Day $\times$ 12+ visits contract") ///
+cells(b(star fmt(%9.3f))  se(par fmt(%9.3f))) msign(--) starlevels(* 0.1 ** 0.05 *** 0.01) stardetach ///
+stats(wavefe N N_clust, l("Wave FEs" "N" "Clusters") fmt(%8.0fc %8.0fc)) ///
+collabels(,none) ///
+prehead( "\begin{tabular}{l*{@M}{r @{} l}}" "\hline") ///
+posthead("\hline") ///
+prefoot("\hline") ///
+postfoot("\hline\hline" "\end{tabular}")
+
+```
+
+### `Who_Chooses_Commitment_Replication/Code/Stata/Figures.do`
+```stata
+*** FIGURES FOR Carrera, Royer, Stehr, Sydnor, and Taubinsky (2021) ***********
+*******************************************************************************
+
+*** Initial set-up ***
+clear
+set more off
+
+*** Set directories for data and output ***
+cd "$main/Output"
+/* Note: all figures will output to the working directory. Uses a program from
+   master_do_file_for_analysis.do */
+
+
+*** (uniform_range.pdf) *******************************************************
+
+set obs 500
+
+*** Generate benefit values ***
+gen b = _n/500
+
+*** Generate commitment contract demand regions for each beta ***
+forvalues beta = 1(1)500 {
+	local B = `beta'/500
+	gen bindingcommit`beta' = ( ((2*b-1)/(2*(b^2))) > `B'*(1-.5*`B') )
+}
+
+*** Reshape data for graphing ***
+reshape long bindingcommit, i(b) j(B)
+replace B = B/500
+
+*** Produce Figure 1 ***
+twoway contour bindingcommit B b if B >= .75 & B <= .95, levels(2) /*
+*/ ccolors(red blue) xlabel(0(.1)1) ylabel(.75(.05).95) /*
+*/ xtitle("Benefit (share of time beneficial)") ytitle("Perceived short-run discount factor") /*
+*/ graphr(color(white) fcolor(white)) bgcolor(white) plotregion(margin(zero)) clegend(off)
+
+*** Export figure
+graph export uniformrange.pdf, replace
+* with descriptive text superimposed in the paper
+
+
+*** Load and clean experimental data ******************************************
+
+*** Load dataset ***
+use "$main/Data/cleaned_commitment_study_data", clear
+
+*** Variable Creation & Cleaning Steps ***
+*** Create an ID variable for use when reshaping long 
+gen id = _n
+
+*** Generate info treatment indicators
+gen first_info = type_of_info=="1-onlygraph" 
+gen new_info = type_of_info=="2-graphplus" 
+gen control_info = (new_info == 0 & first_info == 0) 
+
+*** Generate wave indicators
+gen wave1 = (wave == "fall") 
+gen wave2 = (wave == "winter")
+gen wave3 = (wave == "spring")
+
+*** Define anticommitment/commitment variables for each threshold
+gen anticommit8 = q170 ==2 if q170<.
+gen commit8 = q169 ==2 if q169<.
+gen anticommit12 = chose_anticommit11
+gen commit12 = chose_commit12
+gen anticommit16 = q296==2 if q296<.
+gen commit16 = q295 ==2 if q295<.
+
+*** Restrict sample to those exogenously assigned incentives
+keep if flag_low_wtp == 0 & flag_exclude_exog == 0
+
+
+*** (wtp_ev_tcbench.pdf) ******************************************************
+
+*** Generate additional variables 
+*** Expected value of earnings based on subjective "days" estimate for frequency of visits
+gen ev1 = days_1
+gen ev2 = days_2*2
+gen ev3 = days_3*3
+gen ev5 = days_5*5
+gen ev7 = days_7*7
+gen ev12 = days_12*12
+	
+*** Generate values for the $0 incentive
+gen wtp0 = 0
+gen ev0 = 0
+
+*** Estimate means with 95% confidence intervals
+mat data = J(7, 7, .) // initialize matrix for storing values
+loc row = 1
+foreach p in 0 1 2 3 5 7 12 {
+
+	* Input incentive in first column
+	mat data[`row', 1] = `p'
+	
+	* Input means & CI bounds of WTP in next three columns
+	ci means wtp`p'
+	mat data[`row', 2] = r(mean)
+	mat data[`row', 3] = r(lb)
+	mat data[`row', 4] = r(ub)
+	
+	* Input means & CI bounds of expected earnings in last three columns
+	ci mean ev`p'
+	mat data[`row', 5] = r(mean)
+	mat data[`row', 6] = r(lb)
+	mat data[`row', 7] = r(ub)
+	
+	loc ++row // increment row
+	}
+
+*** Use data stored in matrix
+preserve
+clear
+svmat data
+ren (data*) (incentive wtp wtplb wtpub ev evlb evub)
+
+*** Store certain statistics ***
+* Average expected earnings under $1 incentive
+sum ev if incentive == 1 // EV equals exp. visits under this incentive
+loc avgexp : di %4.2f r(mean)
+latex_write avgexpincone `avgexp' numbers
+* Average WTP for $1 incentive
+sum wtp if incentive == 1
+loc avgwtp : di %4.2f r(mean)
+latex_write avgwtpincone `avgwtp' numbers
+* Difference
+loc diff : di %4.2f `avgwtp'-`avgexp'
+latex_write avgdiffincone `diff' numbers
+
+*** Produce figure ***
+graph twoway (connected ev incentive, lc(black) msymbol(none) mc(none) lp(dash)) /*
+*/ (rcap evub evlb incentive, lc(black) lw(*.5) msize(*2.25)) /*
+*/ (connected wtp incentive, lc(cranberry) mlc(cranberry) mc(none) msymbol(circle) msize(vsmall)) /*
+*/ (rcap wtpub wtplb incentive, lc(cranberry) lw(*.5) msize(*2.25)), /*
+*/ xtitle("Per-visit incentive ($)", height(6)) ylabel(0(25)225, angle(0)) xlabel(1(1)12) /*
+*/ graphr(color(white) fcolor(white)) bgcolor(white) plotregion(margin(zero)) /*
+*/ ytitle("$", height(6)) legend(order(1 3) label(1 "Avg. subjective expected earnings") label(3 "Avg. WTP for that incentive") rows(3)) 
+
+*** Export figure
+graph export wtp_ev_tcbench.pdf, replace
+restore
+
+
+*** (deltas.pdf) **************************************************************
+
+*** Generate additional variables ***
+preserve
+*** Better measures of Commitment as per proposition
+/*** These are the amounts, per attendance, by which a person "overpays" for 
+the increase in incentive. Second-order approximation */
+gen delta1=(wtp1) - (days_1+days_0)/2
+gen delta2 = (wtp2-wtp1) - (days_2+days_1)/2
+gen delta3=(wtp3-wtp2) - (days_3+days_2)/2
+gen delta5=(wtp5-wtp3)/(5-3) - (days_5+days_3)/2
+gen delta7=(wtp7-wtp5)/(7-5) - (days_7+days_5)/2
+gen delta12=(wtp12-wtp7)/(12-7) - (days_12+days_7)/2
+
+gen avg_delta = (delta1 + delta2+delta3 + delta5 + delta7 + delta12)/6
+gen avg_delta_ex1 = (delta2+delta3 + delta5 + delta7 + delta12)/5
+
+// DELTA MEASURES DIFFERENCES FROM TC BENCHMARK
+*** Run the regressions and store results with model names
+quietly reg avg_delta, robust
+est store m1
+loc avgbcp = _b[_cons]
+loc avg : di %4.2f `avgbcp'
+latex_write avgbcp `avg' numbers
+
+quietly reg avg_delta_ex1, robust
+est store m2
+loc avgbcpex1 = _b[_cons]
+loc avg : di %4.2f `avgbcpex1'
+latex_write avgbcpexone `avg' numbers
+
+*** Produce figure: average delta with CI's for the info-control group ***
+coefplot (m1, aseq(Average across incentives))/*
+*/ (m2, aseq(Average excluding $1 incentive)) /*
+*/, xline(0) xlabel(-1(.5)2.5) legend(off) mc(black) offset(0) ciopts(lc(black) /*
+*/ recast(rcap) lp(dash)) grid(none) aseq swap graphr(fcolor(white) color(white)) /*
+*/ xtitle("Behavior change premium ($)", height(6)) plotregion(margin(zero))
+
+*** Export figure
+graph export deltas.pdf, replace
+restore
+
+
+*** (overconfidence.pdf) **********************************************
+
+*** Obtain coefficients for plot ***
+* Generate placeholder
+forval k = 0/12 {
+	gen var`k' = .
+	label variable var`k' `k'
+	}
+
+* Generate estimates
+forval k = 0(1)12 {
+	
+	replace var`k' = 10
+	reg var`k' var`k', nocons
+	eststo m_v_`k'
+
+	if `k' != 4 & `k' != 6 & `k' != 8 & `k' != 9 & `k' != 10 & `k' != 11{
+		replace var`k' = (flag_exclude_exog==0&flag_low_wtp==0)
+		reg days_`k' var`k', robust nocons
+		est store m_days`k'_all
+		}
+
+	if `k' != 1 & `k' != 3 & `k' != 12 & `k' != 4 & `k' != 6 & `k' != 8 & `k' != 9 & `k' != 10 & `k' != 11{
+		replace var`k' = (incentive == `k' &flag_exclude_exog==0 ///
+				&flag_low_wtp==0)
+		reg visits var`k' if incentive == `k', robust nocons
+		est store m_visits`k'_given
+
+		* Store number of observations
+		if `k' == 0 loc num "zero"
+		else if `k' == 2 loc num "two"
+		else if `k' == 5 loc num "five"
+		else loc num "seven"
+		latex_write incentive`num'obs `e(N)' numbers
+		}
+}
+
+*** Produce figure: Overconfidence ***
+*** Beliefs vs reality
+coefplot (m_v_*, offset(0) m(none) lp(none)) /*
+*/ (m_days0_all m_days1_all m_days2_all m_days3_all m_days5_all m_days7_all m_days12_all, offset(0) recast(connected) msize(small) mc(black) lp(dash) lc(black) ciopts(lc(black) recast(rcap) lp(solid)) )/*
+*/ (m_visits0_given m_visits2_given m_visits5_given m_visits7_given, offset(0) recast(connected) msize(small) m(square) mc(red) lc(red) ciopts(lc(red) recast(rcap) lp(dash)) ) /*
+*/, vertical plotregion(margin(zero)) xlabel(1 "0" 2 "1" 3 "2" 4 "3" 5 "4" 6 "5" 7 "6" 8 "7" 9 "8" 10 "9" 11 "10" 12 "11" 13 "12") /*
+*/ graphr(color(white) fcolor(white)) bgcolor(white) xtitle("Per-visit incentive ($)", height(6)) ytitle("Visits", height(6))/*
+*/ ylabel(0(5)22, angle(0)) legend(order(4 6) label(4 "Average expected visits") label(6 "Average realized visits"))  legend(rows(2))
+
+*** Export figure
+graph export overconfidence.pdf, replace
+
+
+*** (overconfidence_treatment.pdf) ********************************************
+
+*** Obtain coefficients for plots ***
+foreach cdtn in "wave1 == 1" "(wave2 == 1 | wave3 == 1)"{
+
+	if "`cdtn'" == "wave1 == 1"{
+		loc treat "first_info"
+		loc name "1"
+		loc tlab "basic"
+		loc excl "5"
+		loc result5_c ""
+		loc result5_t ""
+		}
+	else{
+		loc treat "new_info"
+		loc name "23"
+		loc tlab "enhanced"
+		loc excl "100" 
+		loc result5_c "m_visits5_given_c"
+		loc result5_t "m_visits5_given_t"
+		}
+
+	* Generate estimates
+	forval k = 0(1)12 {
+		
+		replace var`k' = 10
+		reg var`k' var`k', nocons
+		eststo m_v_`k'
+
+		* Information treatment
+		if `k' != 4 & `k' != 6 & `k' != 8 & `k' != 9 & `k' != 10 & `k' != 11{
+			replace var`k' = (flag_exclude_exog==0&flag_low_wtp==0& ///
+				`cdtn'&`treat'==1)
+			reg days_`k' var`k' if `cdtn'&`treat'==1, robust nocons
+			est store m_days`k'_all_t
+			}
+
+		if `k' != 1 & `k' != 3 & `k' != 4 & `k' != 6 & `k' != 8 & `k' != 9 & `k' != 10 & `k' != 11 & `k' != 12 & `k' != `excl'{
+			replace var`k' = (incentive == `k' &flag_exclude_exog==0 ///
+					&flag_low_wtp==0&`cdtn'&`treat'==1)
+			reg visits var`k' if incentive == `k' & `cdtn'&`treat'==1, ///
+				robust nocons
+			est store m_visits`k'_given_t
+			
+			* Store number of observations
+			loc treatobs = e(N)
+			
+			}
+			
+		* Information control
+		if `k' != 4 & `k' != 6 & `k' != 8 & `k' != 9 & `k' != 10 & `k' != 11{
+			replace var`k' = (flag_exclude_exog==0&flag_low_wtp==0& ///
+				`cdtn'&`treat'!=1)
+			reg days_`k' var`k' if `cdtn'&`treat'!=1, robust nocons
+			est store m_days`k'_all_c
+			}
+
+		if `k' != 1 & `k' != 3 & `k' != 4 & `k' != 6 & `k' != 8 & `k' != 9 & `k' != 10 & `k' != 11 & `k' != 12 & `k' != `excl'{
+			replace var`k' = (incentive == `k' &flag_exclude_exog==0 ///
+					&flag_low_wtp==0&`cdtn'&`treat'!=1)
+			reg visits var`k' if incentive == `k' & `cdtn'&`treat'!=1, ///
+				robust nocons
+			est store m_visits`k'_given_c
+			
+			* Store number of observations
+			if `k' == 0 loc num "zero"
+			else if `k' == 2 loc num "two"
+			else if `k' == 5 loc num "five"
+			else loc num "seven"
+			loc bothobs = e(N) + `treatobs'
+			latex_write incentive`num'obs`tlab' `bothobs' numbers
+			
+			}
+			
+		}
+		
+	* Store total observations used
+	sum var0 if `cdtn'&`treat'==1
+	latex_write obs`tlab'treat `r(N)' numbers
+	sum var0 if `cdtn'&`treat'!=1
+	latex_write obs`tlab'control `r(N)' numbers
+		
+	*** Produce figure: Overconfidence ***
+	local jig = .1
+	*** Beliefs vs reality
+	coefplot (m_v_*, offset(0) m(none) lp(none)) /*
+	*/ (m_days0_all_c m_days1_all_c m_days2_all_c m_days3_all_c m_days5_all_c m_days7_all_c m_days12_all_c, offset(-`jig') recast(connected) msize(small) mc(black) lp(dash) lc(black) ciopts(lc(black) recast(rcap) lp(solid)) )/*
+	*/ (m_visits0_given_c m_visits2_given_c `result5_c' m_visits7_given_c, offset(-`jig') recast(connected) msize(small) m(square) mc(black) lc(black) lp(solid) ciopts(lc(black) recast(rcap) lp(dash)) ) /*
+	*/ (m_days0_all_t m_days1_all_t m_days2_all_t m_days3_all_t m_days5_all_t m_days7_all_t m_days12_all_t, offset(`jig') recast(connected) m(Oh) msize(small) mc(blue) lp(dash) lc(blue) ciopts(lc(blue) recast(rcap) lp(solid)) )/*
+	*/ (m_visits0_given_t m_visits2_given_t `result5_t' m_visits7_given_t, offset(`jig') recast(connected) msize(small) m(Sh) mc(blue) lc(blue) lp(solid) ciopts(lc(blue) recast(rcap) lp(dash)) ) /*
+	*/, vertical plotregion(margin(zero)) xlabel(1 "0" 2 "1" 3 "2" 4 "3" 5 "4" 6 "5" 7 "6" 8 "7" 9 "8" 10 "9" 11 "10" 12 "11" 13 "12") /*
+	*/ graphr(color(white) fcolor(white)) bgcolor(white) xtitle("Per-visit incentive ($)", height(6)) ytitle("Visits", height(6))/*
+	*/ ylabel(0(5)22, angle(0)) legend(order(4 6 8 10) label(4 "Average expected visits, information control") label(6 "Average realized visits, information control") label(8 "Average expected visits, `tlab' information treatment") label(10 "Average realized visits, `tlab' information treatment"))  legend(rows(4))
+
+	*** Export figure
+	graph export overconfidence_treatment_wave`name'.pdf, replace
+	eststo clear
+			
+	}
+
+
+*** (exp_actual_under_incentive.pdf) ******************************************
+
+*** Expected attendance w/incentive given vs. actual attendance w/incentive
+* Generate variable for expected attendace w/incentive given
+gen days_exp = .
+foreach i in 0 1 2 3 5 7{
+	replace days_exp = days_`i' if incentive == `i'
+	}	
+
+* Plot with 45-degree line
+preserve
+binscatter visits days_exp, ///
+	ytitle(Actual attendance, height(6)) ///
+	xtitle(Expected attendance under assigned incentive, height(6)) ///
+	xlab(0(5)30) ylab(0(5)30, angle(0)) plotregion(margin(zero)) ///
+	graphregion(color(white)) savedata(binned) replace
+clear
+do binned
+graph addplot function y = x, range(0 30) lpattern(dash) lcolor(gs13) ///
+	xlab(0(5)30) ylab(0(5)30, angle(0)) plotregion(margin(zero))
+graph export "exp_actual_under_incentive.pdf", replace
+restore
+
+* Remove temporary files
+cap erase "binned.csv"
+cap erase "binned.do" 
+	
+
+*** (wtp_exp_attendance.pdf) **************************************************
+
+preserve
+* Reshape to graph each incentive level separately
+reshape long wtp days_, i(id) j(incentive_level)
+
+* Store average increase in attendance per dollar of incentive
+reg days_ incentive_level, clus(id)
+loc incr = _b[incentive_level]
+loc avg : di %4.2f `incr'
+latex_write incrattinc `avg' numbers
+loc stderr : di %4.3f _se[incentive_level]
+latex_write incrattincse `stderr' numbers
+
+* Store behavior change premium per dollar of incentive
+loc bcpinc : di %4.2f `avgbcp'/`incr'
+latex_write avgbcpinc `bcpinc' numbers
+loc bcpincex1 : di %4.2f `avgbcpex1'/`incr'
+latex_write avgbcpexoneinc `bcpincex1' numbers
+
+* Produce plot
+binscatter wtp days_ if incentive_level != 0, by(incentive_level) ///
+	ytitle(WTP for incentive ($), height(6)) ///
+	xtitle(Expected attendance, height(6)) ///
+	xlab(0(5)30) ylab(0(50)300, angle(0)) ///
+	legend(order(1 "1" 2 "2" 3 "3" 4 "5" 5 "7" 6 "12") subtitle(Per-visit incentive ($), size(medsmall)) rows(1)) ///
+	graphregion(color(white)) plotregion(margin(zero))
+	graph export "wtp_exp_attendance.pdf", replace
+	
+restore
+
+
+*** Load and clean daily experimental data ************************************
+
+*** Load dataset ***
+use "$main/Data/cleaned_commitment_study_daily_data", clear
+
+*** Variable Creation & Cleaning Steps ***
+*** Generate info treatment indicators
+gen first_info = type_of_info=="1-onlygraph" 
+gen new_info = type_of_info=="2-graphplus" 
+gen control_info = (new_info == 0 & first_info == 0) 
+
+*** Generate wave indicators
+gen wave1 = (wave == "fall") 
+gen wave2 = (wave == "winter")
+gen wave3 = (wave == "spring")
+
+*** Define anticommitment/commitment variables for each threshold
+gen anticommit8 = q170 ==2 if q170<.
+gen commit8 = q169 ==2 if q169<.
+gen anticommit12 = chose_anticommit11
+gen commit12 = chose_commit12
+gen anticommit16 = q296==2 if q296<.
+gen commit16 = q295 ==2 if q295<.
+
+*** Restrict sample to those exogenously assigned incentives
+keep if flag_low_wtp == 0 & flag_exclude_exog == 0	
+
+
+*** (daily_att_likelihood.pdf) ************************************************
+		
+preserve
+
+* Generate variables and restrict data
+keep if commit12 == 1
+gen got_incentive = 1 if treatment == "threshold80_12"
+replace got_incentive = 0 if treatment == "control"
+keep if !missing(got_incentive)
+gen incentive_day = day*got_incentive
+
+* For trendline of increase in likelihood of attendance
+reg attended day got_incentive incentive_day wave2 wave3, clus(id)
+loc slope = _b[incentive_day]
+loc intercept = _b[got_incentive]
+
+* Average increase in likelihood of attendance from the contract each day
+reg attended ibn.day ibn.day#c.got_incentive, clus(id) nocons
+
+* Produce plot
+coefplot, nolabel vertical keep(*#c.got_incentive) yline(0) omitted baselevels ///
+	ciopts(recast(rcap) lp(dash) lw(thin)) xlab(0(2)28) xtitle("Day", height(6)) ///
+	ylab(-.2(.1).5, angle(0)) ytitle("Change in likelihood of going to the gym", height(4)) ///
+	graphregion(color(white)) bgcolor(white) plotregion(margin(zero))
+graph addplot function y = `slope'*x + `intercept', range(1 28) ///
+	lw(medthick) lp(longdash) lcolor(ebblue*.7) ///
+	xlab(0(2)28) ylab(-.2(.1).5, angle(0)) plotregion(margin(zero))
+	graph export "daily_att_likelihood.pdf", replace	
+
+restore
+
+```
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

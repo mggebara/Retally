@@ -8,6 +8,7 @@
 | Model | desktop-opus |
 | Run | 20261102T062442Z |
 | Date | 2026-11-02T06:24:42Z |
+| Data access | public |
 | Results file | `benchmark/results/pipeline-oracle-desktop-opus-4papers-all-modes-2026-11-02.json` |
 | Artifacts | `benchmark/results/artifacts/bokobza-2022-morning-after-coup-purges/independent/pipeline/20261102T062442Z` |
 | Executions | 3 |

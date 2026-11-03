@@ -8,6 +8,7 @@
 | Model | — |
 | Run | 2026-10-22-a |
 | Date | 2026-10-22T02:45:01Z |
+| Data access | public |
 | Results file | `benchmark/results/claude-code-blind-rerun-2026-10-22.json` |
 | Artifacts | `benchmark/results/artifacts/adams-2023-women-mps-affective-polarization/blind/claude-code/20261022T024643Z` |
 | Run directory | `benchmark/reproductions/adams-2023-women-mps-affective-polarization/blind/2026-10-22-a` |
@@ -30,10 +31,10 @@
 | `right_left_distance_coef_full` | -0.6 (0.09) | -0.578241 | 3.63% | ±0.09 (se_band) | PASS | PASS |
 | `coalition_partners_coef_full` | 0.94 (0.25) | 1.0484 | 11.53% | ±0.25 (se_band) | PASS | PASS |
 | `opposition_partners_coef_full` | 0.37 (0.11) | 0.38918 | 5.18% | ±0.11 (se_band) | PASS | PASS |
-| `n_directed_dyads` | 1842 | 1535 | 16.67% | ±18.42 (relative) | FAIL | FAIL |
-| `n_obs_women_partisans` | 1836 | 1535 | 16.39% | ±18.36 (relative) | FAIL | FAIL |
-| `n_obs_men_partisans` | 1833 | 1529 | 16.58% | ±18.33 (relative) | FAIL | FAIL |
-| `n_election_studies` | 81 | 81 | 0.00% | ±0.81 (relative) | PASS | PASS |
+| `n_directed_dyads` | 1842 | 1535 | 16.67% | ±92.1 (relative) | FAIL | FAIL |
+| `n_obs_women_partisans` | 1836 | 1535 | 16.39% | ±91.8 (relative) | FAIL | FAIL |
+| `n_obs_men_partisans` | 1833 | 1529 | 16.58% | ±91.65 (relative) | FAIL | FAIL |
+| `n_election_studies` | 81 | 81 | 0.00% | ±4.05 (relative) | PASS | PASS |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 8/11 pass, which agrees with the row's 8/11.
 

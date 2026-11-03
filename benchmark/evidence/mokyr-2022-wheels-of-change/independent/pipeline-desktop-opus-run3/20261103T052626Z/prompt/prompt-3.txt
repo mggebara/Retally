@@ -1,0 +1,357 @@
+You are refining R code that reproduces results from an econometrics paper.
+The code RAN SUCCESSFULLY but the reproduced values do not match the
+paper's claims within the allowed tolerance.  Identify what is causing
+the gap and adjust the code to close it.
+
+## Paper
+Title: The Economic Journal, 1–33 https://doi.org/10.1093/ej/ueab102 C⃝The Author(s) 2021. Published by Oxford University Press. All rights reserved. For
+Methodology: - **Data / unit of observation**: Cross-section of England's government-area districts, 1710–50 (326 districts; Isles of Scilly dropped for missing HYDE population → 325). Apprentice counts come from the Apprenticeship Stamp Tax registers (IR 1). Masters' locations are matched to TownsList (apprentices found in 10,201 of 36,144 locations; all other locations set to zero) and summed to the district. Domesday Book (1086) mills are geolocated to districts. The Domesday survey leaves out London, Winchester, Bristol, Tamworth, Durham and Northumberland, and covers Cumberland, Westmorland and Lancashire only partly, so every regression using mills has **N = 298 districts**.
+- **Variable construction (units)**: The dependent variable w_i is wright apprentices (millwrights, wheelwrights and "wrights") per capita. The key regressor is Domesday watermills per capita. Both are normalised per 10,000 people using mean district population in 1710–50 (HYDE). These are raw per-10,000 counts, not standardised. Headline coefficient: 0.15 unconditional, 0.14 with geographic, agricultural and climatic controls, 0.12 in the full specification. That is, one more 1086 mill per 10,000 people goes with about 0.12–0.14 more wright apprentices per 10,000 in 1710–50. Drapers/clothiers apprentices (4,359 people) and weaver apprentices per capita proxy for textile activity in later regressions.
+- **Estimating equation (Eq. 1, OLS, levels-on-levels)**: w_i = β·mills_i + X′γ + ε_i, with a constant. Table 2 adds controls step by step: (1) no controls; (2) latitude, longitude, mean ruggedness, mean elevation; (3) adds agricultural suitability, wheat suitability and mean pasture suitability; (4) adds mean precipitation and temperature; (5) is the preferred full specification. Column (5) adds mean population 1710–50, minimum distance to an important harbour, distance to London, minimum distance to a Roman road, minimum distance to a navigable river, and district area. No fixed effects. Adjusted R² runs from 0.57 to 0.61. Figure 1 plots the partial correlation for column (5).
+- **IV / 2SLS (Table 3)**: Domesday mills are instrumented with a grinding-mill suitability measure. This is the length of rivers in the district running through moderate terrain ruggedness (TRI between 2 and 6), interacted with an indicator for high wheat suitability (mean GAEZ wheat-suitability category ≤ 5, where lower is more suitable). The main effects "River suitability" and "Wheat suitability" enter as controls. There are three paired OLS/IV specifications: no controls (cols 1–2), main geographic + agricultural + climatic controls (cols 3–4), and those plus other geographic controls (cols 5–6). IV coefficients are 0.16, 0.15 and 0.16. First-stage F-statistics are 19.90, 16.96 and 16.17. First stage and reduced form are in Online Appendix Table E.4.
+- **Black Death extension (Eq. 2, OLS)**: w_i = δ1·mills_i + δ2·dpop1300–1400_i + δ3·(dpop1300–1400_i × mills_i) + X′γ + ω_i. Here dpop is the (negative) HYDE population growth from 1300 to 1400, and δ3 (expected positive) is the coefficient of interest. A Winchester-district (Hampshire) case study compares the River Meon with the River Itchen, using Domesday mills, Taylor's 1759 map, and wrights within 5 miles of each river.
+- **Inference**: Heteroscedasticity-robust standard errors **clustered at the (historical) county level** in all regressions. Significance is two-sided at 10/5/1%.
+- **Further analyses / robustness**: Domesday mills are used to predict drapers, weavers and iron-making apprentices, with placebo regressions for industries that did not use water power. Other checks: a horserace between mills and wrights; a mediation analysis attributing 30–70% of the mills→industrialisation effect to wrights; worsted-weaver relocation between 1710–50 and 1750–1800; and tests for bias from unobservables (Section 5.4). This is a cross-sectional regression design with no train/test split or cross-validation, and no ML hyperparameters.
+
+
+## Current Code
+```r
+suppressPackageStartupMessages({
+  library(haven)
+  library(readr)
+  library(fixest)
+})
+set.seed(42)
+
+base <- "<repo>/.cache/datasets/mokyr_2022_wheels_of_change.script-free/3 replication package/Replication files/Data"
+dta_path <- file.path(base, "replication_data.dta")
+csv_path <- file.path(base, "replication_data.csv")
+
+df <- tryCatch({
+  d <- haven::read_dta(dta_path)
+  d <- haven::zap_labels(d)
+  as.data.frame(d)
+}, error = function(e) {
+  as.data.frame(readr::read_csv(csv_path, show_col_types = FALSE))
+})
+cat("Loaded rows:", nrow(df), " cols:", ncol(df), "\n")
+
+nm <- names(df)
+pick <- function(cands, regex = NULL, required = TRUE) {
+  for (c in cands) {
+    hit <- nm[tolower(nm) == tolower(c)]
+    if (length(hit) > 0) return(hit[1])
+  }
+  if (!is.null(regex)) {
+    hit <- nm[grepl(regex, nm, ignore.case = TRUE)]
+    if (length(hit) > 0) return(hit[1])
+  }
+  if (required) stop(paste("Column not found:", paste(cands, collapse = "/")))
+  NA_character_
+}
+
+v_wr   <- pick(c("wrights"))
+v_mill <- pick(c("mills", "watermills"))
+v_pop  <- pick(c("pcmean", "pop_mean", "popmean"), regex = "^pc.*mean$")
+v_lat  <- pick(c("latitude", "lat"))
+v_lon  <- pick(c("longitude", "lon"))
+v_rug  <- pick(c("dist_rug_mean", "rug_mean"))
+v_elev <- pick(c("dist_elevation_mean", "elevation_mean"))
+v_suit <- pick(c("suitmean", "agri_suit"))
+v_wheat_raw <- pick(c("wheat_tmean", "wheat_mean"))
+v_grass <- pick(c("dist_grass_mean", "grass_mean", "pasture_mean"))
+v_prec <- pick(c("precip_mean_dist", "precip_mean"))
+v_temp <- pick(c("temp_mean_dist", "temp_mean"))
+v_harb <- pick(c("min_harbor", "min_harbour"))
+v_lond <- pick(c("DIST_London", "dist_london"))
+v_roman <- pick(c("min_dist_to_roman_rds"), regex = "roman")
+v_nav  <- pick(c("min_dist_2nav_rivers"), regex = "nav")
+v_area <- pick(c("area"))
+v_cl   <- pick(c("GAZ_CNTY", "county"))
+v_riv  <- pick(c("riv_rug26count"), regex = "^riv_rug26")
+cat("Using river suitability column:", v_riv, "\n")
+
+num <- function(x) suppressWarnings(as.numeric(x))
+
+pop <- num(df[[v_pop]])
+wr_raw <- num(df[[v_wr]])
+mi_raw <- num(df[[v_mill]])
+is_count <- function(x) { x <- x[!is.na(x)]; length(x) > 0 && all(abs(x - round(x)) < 1e-8) }
+
+# Wrights in the data file are already per-capita but stored on a 1e8 (per person x 1e8)
+# scale (mean ~37,600 => ~3.76 per 10,000). Rescale to per 10,000 people as in the paper.
+if (is_count(wr_raw)) {
+  df$w_pc <- wr_raw / pop * 10000
+} else {
+  df$w_pc <- wr_raw / 10000
+  cat("DEVIATION: wrights variable is stored as per-capita x 1e8; divided by 10,000 to express wright apprentices per 10,000 people as the paper states\n")
+}
+if (is_count(mi_raw)) {
+  df$m_pc <- mi_raw / pop * 10000
+} else {
+  df$m_pc <- mi_raw
+}
+cat("Summary w_pc:\n"); print(summary(df$w_pc))
+cat("Summary m_pc:\n"); print(summary(df$m_pc))
+
+df$lat <- num(df[[v_lat]]); df$lon <- num(df[[v_lon]])
+df$rug <- num(df[[v_rug]]); df$elev <- num(df[[v_elev]])
+df$suit <- num(df[[v_suit]])
+df$wheat_cont <- num(df[[v_wheat_raw]])
+df$wheat <- as.numeric(df$wheat_cont <= 5)
+df$grass <- num(df[[v_grass]])
+df$prec <- num(df[[v_prec]]); df$temp <- num(df[[v_temp]])
+df$popm <- pop
+df$harb <- num(df[[v_harb]]); df$lond <- num(df[[v_lond]])
+df$roman <- num(df[[v_roman]]); df$nav <- num(df[[v_nav]])
+df$areav <- num(df[[v_area]])
+df$cl <- df[[v_cl]]
+df$riv <- num(df[[v_riv]])
+df$riv_wheat <- df$riv * df$wheat
+
+geo <- c("lat", "lon", "rug", "elev")
+# Table 2: wheat suitability enters as the mean GAEZ wheat suitability (continuous)
+agr_t2 <- c("suit", "wheat_cont", "grass")
+# Table 3: agricultural controls with wheat main effect entering separately (dummy)
+agr <- c("suit", "grass")
+clim <- c("prec", "temp")
+oth <- c("popm", "harb", "lond", "roman", "nav", "areav")
+
+allv <- c("w_pc", "m_pc", geo, "suit", "wheat_cont", "grass", clim, oth, "riv", "riv_wheat", "cl")
+samp <- df[complete.cases(df[, allv]) & is.finite(df$w_pc) & is.finite(df$m_pc), ]
+cat("Sample N:", nrow(samp), "\n")
+
+ols <- function(ctrl) {
+  rhs <- paste(c("m_pc", ctrl), collapse = " + ")
+  feols(as.formula(paste("w_pc ~", rhs)), data = samp, cluster = ~cl)
+}
+
+m1 <- ols(character(0))
+m2 <- ols(geo)
+m3 <- ols(c(geo, agr_t2))
+m4 <- ols(c(geo, agr_t2, clim))
+m5 <- ols(c(geo, agr_t2, clim, oth))
+m5r <- ols(c("riv", "wheat", geo, agr, clim, oth))
+
+ivfit <- function(ctrl) {
+  ctrl <- unique(c("riv", "wheat", ctrl))
+  rhs <- paste(ctrl, collapse = " + ")
+  f <- as.formula(paste("w_pc ~", rhs, "| m_pc ~ riv_wheat"))
+  iv <- feols(f, data = samp, cluster = ~cl)
+  fs <- feols(as.formula(paste("m_pc ~ riv_wheat +", rhs)), data = samp, cluster = ~cl)
+  tt <- coef(fs)["riv_wheat"] / sqrt(diag(vcov(fs)))["riv_wheat"]
+  list(iv = iv, F = unname(tt^2))
+}
+
+iv2 <- ivfit(character(0))
+iv4 <- ivfit(c(geo, agr, clim))
+iv6 <- ivfit(c(geo, agr, clim, oth))
+
+print(etable(m1, m2, m3, m4, m5, m5r))
+print(summary(iv6$iv))
+
+b <- function(m) unname(coef(m)["m_pc"])
+b_iv <- function(m) unname(coef(m)["fit_m_pc"])
+
+cat(sprintf("RESULT:watermills_table2_col1=%.6f\n", b(m1)))
+cat(sprintf("RESULT:watermills_table2_col2=%.6f\n", b(m2)))
+cat(sprintf("RESULT:watermills_table2_col3=%.6f\n", b(m3)))
+cat(sprintf("RESULT:watermills_table2_col4=%.6f\n", b(m4)))
+cat(sprintf("RESULT:watermills_table2_col5=%.6f\n", b(m5)))
+cat(sprintf("RESULT:watermills_ols_table3_col5=%.6f\n", b(m5r)))
+cat(sprintf("RESULT:watermills_iv_table3_col2=%.6f\n", b_iv(iv2$iv)))
+cat(sprintf("RESULT:watermills_iv_table3_col4=%.6f\n", b_iv(iv4$iv)))
+cat(sprintf("RESULT:watermills_iv_table3_col6=%.6f\n", b_iv(iv6$iv)))
+cat(sprintf("RESULT:first_stage_f_table3_col2=%.4f\n", iv2$F))
+cat(sprintf("RESULT:first_stage_f_table3_col4=%.4f\n", iv4$F))
+cat(sprintf("RESULT:first_stage_f_table3_col6=%.4f\n", iv6$F))
+cat(sprintf("RESULT:n_districts_tables2_3=%d\n", nobs(m1)))
+```
+
+## What the code produced
+  watermills_table2_col1 = 1437.75871
+  watermills_table2_col2 = 1490.219001
+  watermills_table2_col3 = 1440.957311
+  watermills_table2_col4 = 1444.818743
+  watermills_table2_col5 = 843.485762
+  watermills_ols_table3_col5 = 770.528572
+  watermills_iv_table3_col2 = 1930.176852
+  watermills_iv_table3_col4 = 1855.28963
+  watermills_iv_table3_col6 = 2087.305334
+  first_stage_f_table3_col2 = 8.8575
+  first_stage_f_table3_col4 = 7.3238
+  first_stage_f_table3_col6 = 7.924
+  n_districts_tables2_3 = 298.0
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+Loaded rows: 325  cols: 62 
+Using river suitability column: riv_rug26count 
+Summary w_pc:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0       0    5225   37595   32365  859265 
+Summary m_pc:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+   0.00    1.00    7.00   19.54   24.93  393.70      27 
+Sample N: 298 
+                                 m1                     m2
+Dependent Var.:                w_pc                   w_pc
+                                                          
+Constant        11,596.8. (6,149.6) -135,747.8. (77,131.5)
+m_pc              1,437.8** (489.5)      1,490.2** (475.5)
+lat                                         157.2. (79.49)
+lon                                         217.8. (123.9)
+rug                                      4,733.2 (5,732.3)
+elev                                  -10,019.3 (16,596.2)
+suit                                                      
+wheat_cont                                                
+grass                                                     
+prec                                                      
+temp                                                      
+popm                                                      
+harb                                                      
+lond                                                      
+roman                                                     
+nav                                                       
+areav                                                     
+riv                                                       
+wheat                                                     
+_______________ ___________________ ______________________
+S.E.: Clustered              by: cl                 by: cl
+Observations                    298                    298
+R2                          0.27789                0.33172
+Adj. R2                     0.27545                0.32028
+
+                                    m3                     m4
+Dependent Var.:                   w_pc                   w_pc
+                                                             
+Constant        -145,885.2 (265,364.3) -127,581.8 (546,060.9)
+m_pc                 1,441.0** (475.2)      1,444.8** (489.9)
+lat                      172.7 (129.8)          135.8 (204.7)
+lon                      256.9 (177.5)          289.2 (202.3)
+rug                  1,596.8 (4,727.7)       -282.0 (5,821.8)
+elev               -4,985.0 (15,720.7)   -15,080.1 (18,745.6)
+suit              -49,486.8 (35,703.5)   -34,485.5 (34,349.7)
+wheat_cont        -11,144.8. (5,693.9)   -10,512.0 (10,003.2)
+grass              11,493.3 (23,191.6)     6,400.4 (18,669.8)
+prec                                     94,348.8 (153,433.3)
+temp                                      -4,205.5 (33,609.9)
+popm                                                         
+harb                                                         
+lond                                                         
+roman                
+[... 1441 characters omitted ...]
+.1)    40,053.1 (26,357.5)
+popm                    -59.75 (448.8)         -376.3 (364.1)
+harb              58,668.9* (24,528.3)   57,293.5* (24,073.1)
+lond             -69,751.5 (237,364.4)  -85,016.2 (233,554.0)
+roman           -192,747.0. (97,710.0) -155,066.9. (88,853.5)
+nav                10,312.6 (18,139.2)    16,101.0 (17,784.0)
+areav             72,689.5* (29,180.8)    17,635.4 (38,052.9)
+riv                                             169.4 (109.3)
+wheat                                      13,639.0 (9,634.3)
+_______________ ______________________ ______________________
+S.E.: Clustered                 by: cl                 by: cl
+Observations                       298                    298
+R2                             0.45338                0.46883
+Adj. R2                        0.42226                0.43658
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+TSLS estimation: Second stage
+|- D.V.   : w_pc
+|- Endo.  : m_pc
+|- Instr. : riv_wheat
+Dep. Var.: w_pc
+Observations: 298
+Standard-errors: Clustered (cl) 
+                 Estimate Std. Error   t value  Pr(>|t|)    
+(Intercept) -779029.21437 405854.783 -1.919478 0.0633479 .  
+fit_m_pc       2087.30533   1003.520  2.079983 0.0451358 *  
+riv             101.51318    102.954  0.986003 0.3310969    
+wheat          4597.17551  10650.196  0.431652 0.6687195    
+lat             391.54174    264.032  1.482931 0.1473037    
+lon             353.09952    185.662  1.901841 0.0656924 .  
+rug            1580.26892   6489.943  0.243495 0.8090851    
+elev          -8080.57180  20237.119 -0.399295 0.6921733    
+suit         -65840.32315  31920.619 -2.062627 0.0468539 *  
+grass         13411.48354  29696.764  0.451614 0.6544146    
+prec         134513.57073 109448.489  1.229013 0.2275055    
+temp          35935.11880  25974.550  1.383474 0.1755366    
+popm              5.14797    382.415  0.013462 0.9893381    
+harb          63084.58091  21496.588  2.934632 0.0059463 ** 
+lond         -63200.22048 242971.690 -0.260114 0.7963450    
+roman         23816.08514 147457.143  0.161512 0.8726462    
+nav            6771.18938  16617.334  0.407477 0.6862117    
+areav        -18552.31942  46863.119 -0.395883 0.6946646    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 74,874.3   Adj. R2: 0.473875
+F-test (1st stage), m_pc: stat = 100.068, p < 2.2e-16, on 1 and 280 DoF.
+              Wu-Hausman: stat =  22.333, p = 3.64e-6, on 1 and 279 DoF.
+RESULT:watermills_table2_col1=1437.758710
+RESULT:watermills_table2_col2=1490.219001
+RESULT:watermills_table2_col3=1440.957311
+RESULT:watermills_table2_col4=1444.818743
+RESULT:watermills_table2_col5=843.485762
+RESULT:watermills_ols_table3_col5=770.528572
+RESULT:watermills_iv_table3_col2=1930.176852
+RESULT:watermills_iv_table3_col4=1855.289630
+RESULT:watermills_iv_table3_col6=2087.305334
+RESULT:first_stage_f_table3_col2=8.8575
+RESULT:first_stage_f_table3_col4=7.3238
+RESULT:first_stage_f_table3_col6=7.9240
+RESULT:n_districts_tables2_3=298
+```
+
+## Claims still failing
+1. watermills_table2_col1: paper claims 0.15 wright apprentices per capita per Domesday watermill per capita (coefficient), your code produced 1437.76, tolerance 0.1333, gap 958405.81% relative
+2. watermills_table2_col2: paper claims 0.14 wright apprentices per capita per Domesday watermill per capita (coefficient), your code produced 1490.22, tolerance 0.1429, gap 1064342.14% relative
+3. watermills_table2_col3: paper claims 0.14 wright apprentices per capita per Domesday watermill per capita (coefficient), your code produced 1440.96, tolerance 0.1429, gap 1029155.22% relative
+4. watermills_table2_col4: paper claims 0.14 wright apprentices per capita per Domesday watermill per capita (coefficient), your code produced 1444.82, tolerance 0.1429, gap 1031913.39% relative
+5. watermills_table2_col5: paper claims 0.12 wright apprentices per capita per Domesday watermill per capita (coefficient), your code produced 843.486, tolerance 0.25, gap 702804.80% relative
+6. watermills_ols_table3_col5: paper claims 0.12 wright apprentices per capita per Domesday watermill per capita (coefficient), your code produced 770.529, tolerance 0.25, gap 642007.14% relative
+7. watermills_iv_table3_col2: paper claims 0.16 wright apprentices per capita per Domesday watermill per capita (coefficient), your code produced 1930.18, tolerance 0.25, gap 1206260.53% relative
+8. watermills_iv_table3_col4: paper claims 0.15 wright apprentices per capita per Domesday watermill per capita (coefficient), your code produced 1855.29, tolerance 0.2667, gap 1236759.75% relative
+9. watermills_iv_table3_col6: paper claims 0.16 wright apprentices per capita per Domesday watermill per capita (coefficient), your code produced 2087.31, tolerance 0.25, gap 1304465.83% relative
+10. first_stage_f_table3_col2: paper claims 19.9 first-stage F-statistic (other), your code produced 8.8575, tolerance 0.01, gap 55.49% relative
+11. first_stage_f_table3_col4: paper claims 16.96 first-stage F-statistic (other), your code produced 7.3238, tolerance 0.01, gap 56.82% relative
+12. first_stage_f_table3_col6: paper claims 16.17 first-stage F-statistic (other), your code produced 7.924, tolerance 0.01, gap 51.00% relative
+
+## Previous attempts (oldest first)
+  Attempt 1: watermills_table2_col1=1437.75871, watermills_table2_col2=1490.219001, watermills_table2_col3=1453.620751, watermills_table2_col4=1439.880572, watermills_table2_col5=848.29185, watermills_ols_table3_col5=770.528572, watermills_iv_table3_col2=1930.176852, watermills_iv_table3_col4=1855.28963, watermills_iv_table3_col6=2087.305334, first_stage_f_table3_col2=8.8575, first_stage_f_table3_col4=7.3238, first_stage_f_table3_col6=7.924, n_districts_tables2_3=298.0
+  Attempt 2: watermills_table2_col1=1437.75871, watermills_table2_col2=1490.219001, watermills_table2_col3=1440.957311, watermills_table2_col4=1444.818743, watermills_table2_col5=843.485762, watermills_ols_table3_col5=770.528572, watermills_iv_table3_col2=1930.176852, watermills_iv_table3_col4=1855.28963, watermills_iv_table3_col6=2087.305334, first_stage_f_table3_col2=8.8575, first_stage_f_table3_col4=7.3238, first_stage_f_table3_col6=7.924, n_districts_tables2_3=298.0
+
+These attempts have already been tried.  Do not repeat a strategy
+that has already produced the same values.
+
+## Task
+Adjust the code minimally to close the gap on the failing claims.
+Prefer changes that align more closely with the paper's stated methodology:
+re-read the methodology summary above and check the model specification,
+covariate selection, fixed effects, clustering, and seed against what the
+paper actually specifies.  In econometrics papers, common gap-closers are:
+  - getting the cluster-robust SE right (vcovCL / cluster_var argument)
+  - matching the paper's exact fixed-effects structure
+  - using the same sample-restriction filters the paper applied
+  - matching the paper's weighting scheme (weights= argument)
+
+## Deviation reporting
+If you must change something the paper did NOT specify in order to close
+the gap, emit a ``DEVIATION:`` line via cat() describing the change:
+
+    cat('DEVIATION: Used HC1 robust SE because the paper does not specify but the default did not converge\n')
+
+## When to give up
+If after re-reading the methodology and the previous attempts you judge
+the gap cannot be closed without unreasonable deviation, return the SAME
+R CODE you were given, BYTE-FOR-BYTE unchanged.  The pipeline will record
+the claim as unreproducible.
+
+## Output convention (unchanged)
+Emit every metric as ``cat('RESULT:<name>=<value>\n')``.
+The dataset is a directory tree at '<repo>/.cache/datasets/mokyr_2022_wheels_of_change.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+No network, no system().  set.seed(42).
+
+Output ONLY the R code — no explanation, no markdown fences.

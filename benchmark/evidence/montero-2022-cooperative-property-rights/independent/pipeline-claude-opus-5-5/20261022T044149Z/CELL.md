@@ -8,6 +8,7 @@
 | Model | claude-opus-5-5 |
 | Run | 20261022T044149Z |
 | Date | 2026-10-22T04:41:49Z |
+| Data access | public |
 | Results file | `benchmark/results/pipeline-opus55-4papers-all-modes-2026-10-22.json` |
 | Artifacts | `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/pipeline/20261022T044149Z` |
 | Executions | 4 |
@@ -26,12 +27,12 @@
 | `earnings_level_above500_bw150` | 52.79 (40.61) | 50.8662 | 3.64% | ±40.61 (se_band) | PASS | FAIL |
 | `earnings_iqr_above500_bw300` | -42.97 (17.82) | -36.2658 | 15.60% | ±17.82 (se_band) | PASS | FAIL |
 | `earnings_iqr_above500_bw150` | -51.79 (24.79) | -43.0555 | 16.87% | ±24.79 (se_band) | PASS | PASS |
-| `n_obs_earnings_level_bw300` | 4770 | 4770 | 0.00% | ±47.7 (relative) | PASS | FAIL |
-| `n_obs_earnings_level_bw150` | 1583 | 1583 | 0.00% | ±15.83 (relative) | PASS | FAIL |
-| `n_obs_earnings_iqr_bw300` | 327 | 327 | 0.00% | ±3.27 (relative) | PASS | FAIL |
-| `n_obs_earnings_iqr_bw150` | 118 | 118 | 0.00% | ±1.18 (relative) | PASS | FAIL |
-| `n_clusters_bw300` | 98 | 98 | 0.00% | ±0.98 (relative) | PASS | FAIL |
-| `n_clusters_bw150` | 36 | 36 | 0.00% | ±0.5 (printed_precision) | PASS | FAIL |
+| `n_obs_earnings_level_bw300` | 4770 | 4770 | 0.00% | ±238.5 (relative) | PASS | FAIL |
+| `n_obs_earnings_level_bw150` | 1583 | 1583 | 0.00% | ±79.15 (relative) | PASS | FAIL |
+| `n_obs_earnings_iqr_bw300` | 327 | 327 | 0.00% | ±16.35 (relative) | PASS | FAIL |
+| `n_obs_earnings_iqr_bw150` | 118 | 118 | 0.00% | ±5.9 (relative) | PASS | FAIL |
+| `n_clusters_bw300` | 98 | 98 | 0.00% | ±4.9 (relative) | PASS | FAIL |
+| `n_clusters_bw150` | 36 | 36 | 0.00% | ±1.8 (relative) | PASS | FAIL |
 
 Re-scored from `output/stdout.txt` with the runner's comparator: 10/10 pass, which agrees with the row's 10/10.
 
