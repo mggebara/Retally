@@ -2768,6 +2768,252 @@ Two draws per system, not a distribution: no standard error.
 stand.  Holman's crash is recorded, not fixed: raising the repair
 budget for one cell would change the protocol after seeing the result.
 
+### 3.7.3 Agent third sample, independent and blind, on all 23 papers (2026-11-02) — ✅ measured, no API spend
+
+The agent was run a third time in independent and blind mode on all 23
+evaluation papers, one desktop Opus subagent per cell as before (run id
+`2026-11-02-c`, 46 cells, none skipped,
+`benchmark/results/claude-code-run3-23papers-indep-blind-2026-11-02.json`,
+PR #117).  This is the agent half of 3.7.1's item (g) for those two
+modes.  Seeded mode has no third agent sample, and the pipeline still
+has two samples per cell.  Like every later sample the file stays out
+of REPORT.md and the single-sample tables (REPORT.md's header says
+nothing about later samples, so it is unchanged); it feeds the report's
+agent variance tables (Section 4.8), which gain a third-sample column.
+As in 3.5–3.7.2, every figure below is recomputed from the results
+files by `docs/report/tables.py` (its discrepancies table).  Sample 1
+and sample 2 are the files named in 3.7.2 and 3.7: sample 1 the
+independent and blind rows of the four first-sample agent files, sample
+2 `claude-code-run2-13papers-indep-blind-2026-11-01.json`,
+`claude-code-run2-4papers-indep-blind-2026-11-02.json` and
+`claude-code-run2-6papers-indep-blind-2026-11-02.json`.
+
+Per paper, sample 1 → sample 2 → sample 3, final claims within
+tolerance with the first-scored count in brackets:
+
+| Paper | n | independent (1 → 2 → 3) | blind (1 → 2 → 3) |
+|---|---|---|---|
+| Acemoglu | 12 | 12 (12) → 12 (10) → 12 (10) | 12 (10) → 12 (12) → 12 (12) |
+| Adams | 11 | 11 (11) → 11 (11) → 11 (7) | 8 (8) → 7 (7) → 8 (8) |
+| Altmann | 13 | 13 (13) → 13 (13) → 13 (13) | 13 (13) → 13 (13) → 13 (13) |
+| Arias | 12 | 12 (12) → 12 (12) → 12 (12) | 12 (12) → 12 (12) → 12 (12) |
+| Bokobza | 11 | 11 (11) → 11 (11) → 11 (11) | 11 (11) → 11 (11) → 11 (11) |
+| Brouwer | 12 | 12 (12) → 12 (12) → 12 (12) | 12 (12) → 12 (12) → 12 (12) |
+| Carrera | 11 | 11 (11) → 11 (7) → 11 (11) | 11 (11) → 11 (11) → 11 (11) |
+| Dancygier | 13 | 13 (13) → 13 (13) → 13 (13) | 13 (13) → 13 (13) → 13 (13) |
+| Dertwinkel-Kalt | 13 | 13 (12) → 13 (13) → 13 (13) | 13 (13) → 13 (13) → 13 (13) |
+| Douenne | 13 | 13 (12) → 13 (13) → 13 (13) | 12 (12) → 12 (12) → 13 (12) |
+| Forsythe | 13 | 12 (12) → 13 (13) → 13 (13) | 11 (11) → 11 (11) → 11 (11) |
+| Gagliarducci | 13 | 13 (13) → 13 (13) → 13 (13) | 7 (7) → 9 (9) → 9 (9) |
+| Grier | 11 | 10 (10) → 9 (9) → 9 (9) | 10 (10) → 10 (10) → 8 (8) |
+| Hanlon | 12 | 12 (12) → 12 (12) → 12 (12) | 12 (8) → 12 (12) → 12 (12) |
+| Hanushek | 13 | 13 (2) → 13 (2) → 13 (13) | 13 (13) → 13 (13) → 13 (13) |
+| Hollyer | 13 | 13 (13) → 13 (13) → 13 (13) | 13 (13) → 13 (13) → 13 (13) |
+| Holman | 11 | 10 (10) → 10 (6) → 7 (7) | 6 (6) → 6 (6) → 6 (6) |
+| Labandeira | 12 | 8 (7) → 11 (7) → 8 (7) | 6 (6) → 7 (7) → 7 (7) |
+| Leeson | 11 | 11 (10) → 11 (10) → 11 (10) | 11 (10) → 11 (10) → 11 (10) |
+| López-Moctezuma | 13 | 9 (9) → 9 (9) → 9 (9) | 9 (9) → 9 (9) → 9 (9) |
+| Manekin | 12 | 12 (12) → 12 (12) → 12 (12) | 12 (12) → 12 (12) → 12 (12) |
+| Mokyr | 13 | 13 (13) → 13 (13) → 13 (13) | 13 (13) → 13 (13) → 13 (13) |
+| Montero | 10 | 10 (10) → 10 (10) → 10 (10) | 10 (10) → 6 (6) → 5 (5) |
+| **Total, 23 papers** | 278 | **267** (252) → **270** (244) → **264** (256) | **250** (243) → **248** (247) → **247** (245) |
+
+Nineteen of the 23 independent cells and 17 of the 23 blind cells have
+the same final count in all three samples; the largest spread in a cell
+is 3 independent (Holman, Labandeira) and 5 blind (Montero).  Sample 3
+had the most first-scored passes of the three in independent mode (256,
+against 252 and 244), with fewer claim refinements doing the work.
+
+**Cells that changed across samples, and why** (from the results files
+and the evidence bundles under `benchmark/evidence/`):
+
+- *Holman independent, 10 → 10 → 7* (1 error and 1 claim refinement).
+  Three Table 2 difference-in-differences claims missed: the
+  like-May interaction −0.0996 against −0.1274 and the like-May time
+  coefficient −0.451 against −0.501 (the same values every blind
+  sample prints), and the best-PM time coefficient 0.2055 against
+  0.2098 under the relative tolerance (the blind samples miss that
+  claim too, at 1.364).  The notes say two exploratory Table 2 variants
+  after the claim comparison were no better justified by the paper, so
+  the final run repeats the first scored script.  The Table 4 N, 4,486
+  against 4,328 with 44 usable countries in the posted file, misses in
+  every sample of both modes.
+- *Labandeira independent, 8 → 11 → 8* (first scored 7 each time).
+  Sample 3 printed sample 1's values claim for claim; sample 2's 11 came
+  from its own refinements (3.7).  Blind, 6 → 7 → 7: sample 3 printed
+  sample 2's values claim for claim.
+- *Grier independent, 10 → 9 → 9.*  Sample 3 missed the two tenure
+  coefficients under the relative tolerance (−0.3077 against −0.30 and
+  −1.3996 against −1.43) and passed all four contribution coefficients,
+  with contributions used undeflated (assumed already adjusted by the
+  authors).  *Grier blind, 10 → 10 → 8:* sample 3 deflated
+  contributions to 2018 dollars with CPI-U and mapped the two window
+  files the other way round from the independent cell (iter1 the
+  12-month window, iter2 the calendar year), both inferences the notes
+  declare.  Its 12-month district coefficient (−0.000530) is the value
+  samples 1 and 2 printed for the calendar-year district claim, which is
+  what the swapped mapping predicts.
+- *Montero blind, 10 → 6 → 5* (below).
+- *Douenne blind, 12 → 12 → 13* (first scored 12).  The Table 4 column 1
+  initial-acceptance coefficient passed at 0.246 against 0.306 (samples
+  1 and 2 missed it at 0.228 and 0.232), and the Table 8 IV passed after
+  the first scored run, at 0.435 against 0.416, once the script dropped a
+  progressivity control that was asked only in the instrument's
+  treatment half (no claim comparison in blind mode; declared).
+- *Forsythe independent, 12 → 13 → 13.*  Samples 2 and 3 both passed the
+  out-of-the-labour-force interaction that sample 1 missed.  Blind, 11
+  in all three samples, with the same two misses: that interaction
+  (−0.594 against −0.49) and N, 17,357,345 against 16,948,516.  Sample
+  3's blind notes say the state code is missing from mid-2014 and the
+  state unemployment file ends in May 2014, so its sample also ends
+  there; the independent cell's notes say dropping pairs without a state
+  unemployment rate *and* restricting to age below 80 reproduce the
+  printed N exactly.
+- *Gagliarducci blind, 7 → 9 → 9.*  Sample 3 missed the same four claims
+  as sample 2 (the two Democratic opposite-party coefficients and the two
+  opposite-party bill counts, 22,712 and 18,691 against 32,846 and
+  27,669).
+- *Adams.*  Independent, first scored 11 → 11 → 7: one claim refinement
+  replaced the both-party seat filter with an out-party-only one, which
+  gives 1,842 / 1,836 / 1,833 exactly.  Blind, 8 → 7 → 8: sample 3
+  printed sample 1's counts (1,535 / 1,535 / 1,529).
+- *First scored only.*  Hanushek independent first scored 13 with no
+  refinements, against 2 in samples 1 and 2; Acemoglu independent first
+  scored 10 with one claim refinement for the two cluster counts, as in
+  sample 2; Carrera independent first scored 11, as in sample 1.
+- *López-Moctezuma, 9 / 13 in all six cells.*  The four Appendix C.3 /
+  C.4 attitude-index effects miss in every sample of both modes because
+  the paper states neither the attendance-weight formula nor the item
+  directions; sample 3 independent printed sample 2's values.
+
+**Three-sample ranges.**  Agent totals, with the pipeline's two
+samples, 23 papers:
+
+| Mode | Agent 1 | Agent 2 | Agent 3 | Pipeline 1 | Pipeline 2 | **Gap range, 23 papers (six pairings)** |
+|---|---|---|---|---|---|---|
+| independent | 267 | 270 | 264 | 235 | 223 | **29 to 47** |
+| blind | 250 | 248 | 247 | 170 | 172 | **75 to 80** |
+
+Each range takes six pairings (each of three agent samples against each
+of two pipeline samples).  By paper set:
+
+| Papers | Independent agent range | Independent gap | Blind agent range | Blind gap |
+|---|---|---|---|---|
+| 23 | 264–270 | 29 to 47 | 247–250 | 75 to 80 |
+| 17 | 191–194 | 22 to 33 | 175–180 | 55 to 62 |
+| 6 (3.7 set) | 73–76 | 7 to 14 | 70–72 | 18 to 20 |
+| 13 earlier | 144–148 | 15 to 20 | 130–135 | 38 to 53 |
+| 4 (3.6 set) | 46–47 | 6 to 14 | 45–45 | 7 to 19 |
+
+On 23 papers the independent range moves from 3.7.1's four-pairing 32
+to 47 to 29 to 47 and the blind range from 76 to 80 to 75 to 80: the
+third sample is the lowest agent total in both modes, so only the
+bottoms move.  The ordering of 3.5–3.7.2 holds in every pairing.
+Seeded mode has no third agent sample; its ranges stay as in 3.7.2.
+Three draws of the agent and two of the pipeline, not a distribution:
+no standard error.
+
+**Montero blind: paper against code, made visible by following the
+text.**  The paper says the IQR columns use properties with at least
+five members in the surveys.  Sample 3 (5 / 10) applied that rule, with
+the survey year of each property's first row as the round fixed effect
+and singleton groups kept: N 76 and 28 against 327 and 118, and the IQR
+effects changed sign (+24.50 and +52.65 against −42.97 and −51.79).  It
+also missed the cluster count (99 against 98); its worker-level N, 4,781
+against 4,770, passes.  Sample 2 (run `2026-11-01-a`, 6 / 10) also
+applied the rule (N 76 and 26) but used each property's modal survey
+round as the fixed effect: −48.56 passed at 300 ha and −202.0 missed at
+150 ha, and its notes say the sign flips without the modal-round fixed
+effect.  Sample 1 (run `2026-10-21-b`, 10 / 10) did not apply the rule:
+it used every property-by-round cell, matched 327 and 118 and passed on
+the SE band.  Its notes say it chose that sample because the literal
+rule contradicted the property counts the paper reports for those
+columns, so its pass came from matching the code's sample rather than
+the paper's stated one (and from counts in the text it was given; see
+the disclosures below).  Two of three blind samples followed the text
+and only sample 1 set it aside, so this cell is classified as a
+paper-versus-code discrepancy that following the text exposes, not as
+draw-to-draw noise.
+
+**Infrastructure: the agent's 300 s limit is not enforced.**  The
+Forsythe independent cell's notes say the final run's own timer showed
+314 s (280 s of it the CSV read), that "the 300 s perl alarm wrapper did
+not fire", and that the container exited 0.  On the agent path nothing
+in the harness enforces the limit.
+`benchmark/reproducers/claude_code_task.md` tells the agent to prefix
+the rendered `docker run` command (`RDockerExecutor._build_run_cmd` in
+`src/retally/codegen/docker_executor.py`, via
+`benchmark/reproducers/render_task.py`) with
+`perl -e 'alarm shift; exec @ARGV' 300` and to `docker kill` the run's
+label itself if it fires; neither `check_attempt` nor the results
+adapter records or checks elapsed time.  The alarm is set before
+`exec`, so it covers the whole `docker run` client, container creation
+and start-up included, and with 314 s timed inside the script it was
+due before the script finished.  It most likely did fire and was
+absorbed: an attached `docker run` forwards the signals it receives to
+the container (`--sig-proxy` defaults to true), the command passes no
+`--init`, so the container's PID 1 is `Rscript` itself, which installs
+no SIGALRM handler, and the kernel drops a signal with default
+disposition sent to a PID-namespace init.  The client therefore never
+died, and the run exited 0.  (Inferred from the code and Docker's
+documented behaviour; no Docker was run for this section.)  The
+pipeline is not affected: `_DockerExecutorBase.execute` runs the same
+command under `subprocess.run(timeout=300)`, which kills the client and
+then kills the labelled container, start-up included.  Forsythe's 14
+extra seconds changed no claim, but an agent cell can exceed the limit
+without anyone seeing it.
+
+**Blind-mode disclosures and the redaction follow-up.**  Several blind
+agents reported seeing values in `paper.txt` that were not withheld and
+said they did not tune toward them: Hollyer (Table 2 RD estimates and
+confidence intervals in the method prose), Arias (method-section values:
+U.S. wildfires about 4 points, German about 6, and two Table 2
+vulnerability rows), Forsythe (the Table 2 subsample Ns for employed,
+unemployed and out of the labour force), Montero (a dollar figure for
+the IQR difference in prose) and Hanushek (some Table 2 values in
+prose).  Hanlon's agent disclosed nothing in its bundle (3.7's list nonetheless counts Hanlon among the reported leftovers).  The Hollyer, Forsythe and
+Montero disclosures are in their evidence bundles' notes; the Arias and
+Hanushek ones were in the agents' final messages only.  The follow-up
+is done (PR #118, recorded in 3.7's list): every reported leftover was
+real (Hollyer "approximately 8 / about 9 percentage points" for the
+pinned −0.084 / −0.092; Arias's abstract "2160 respondents", which is
+1,086 + 1,074, and "4 / 6 percentage points" for 0.04 / 0.06; Hanlon's
+174 / 165 / 233, the pinned claims' sample sizes in Table 1's
+observations row; Montero "approximately $43" for −42.97 and a footnote
+"$60" for 60.49).  `benchmark/reproducers/render_task.py` now adds three
+narrow redaction passes: sums of two pinned counts of at least 100,
+claim sample sizes of at least 100, and half-up rounded forms only where
+an approximation word, a currency sign or a points unit marks them as
+rounded.  New redactions per paper: Bokobza 24 (sample sizes and "10 /
+11 / 20 percentage points"), Douenne 12 ("27 / 53 / 42 / 15 p.p." for
+the pinned 0.269 / 0.534 / 0.416 / 0.153, which no agent reported),
+Hanlon 6, Brouwer 5, Acemoglu 4, Forsythe 4, Arias 3, Labandeira 3,
+Manekin 3, two each for Dertwinkel-Kalt, Hollyer, Mokyr and Montero,
+one each for Altmann, Carrera, Dancygier, Gagliarducci, Hanushek and
+Holman; Adams, Grier, Leeson and López-Moctezuma are unchanged.  The
+known over-redactions remove numbers only (for example Brouwer's "(16
+vs. 10 percentage points)" and Labandeira's "about 10% of Spanish
+households").  All three blind agent samples and both pipeline blind
+samples were rendered under the old redaction, so they are consistent
+with one another and the blind figures in this section stand as
+measured.  Any later blind sample uses the new redaction and is not
+directly comparable with these on the affected papers.
+
+**Next** (replaces 3.7.2's list): (g) agent side done for independent
+and blind mode, three samples each on all 23 papers; still open are a
+third pipeline sample in every mode and a third agent seeded sample.
+(h) Enforce the 300 s limit on the agent path host-side, as the
+pipeline does: render a wrapper (for example a small
+`benchmark.reproducers` entry point) that runs the `docker run` command
+under a subprocess timeout and kills the labelled container, or add
+`--init` to the run command so the alarm's signal reaches a process that
+dies on it, and record each execution's wall time in the evidence
+bundle so an over-limit run is visible.  Either changes the protocol for
+later samples only.  (i) A fourth blind agent sample under the new
+redaction on the papers it changed most (Bokobza, Douenne, Hanlon), to
+measure what the redaction does to a blind count.  3.7's item (b)
+(openICPSR) stands.
+
 ---
 
 ## Phase 4 — Corpus growth (4 → 20–30 papers)
