@@ -3042,7 +3042,7 @@ runnable. Growth is therefore a curation grind — budget it as such.
     the entry at a local path; the runner records `data_access: manual` so
     provenance stays honest. This single change likely doubles the
     reachable pool (AEA journals dominate the corpus).
-    **✅ Escape hatch built (2026-11-02, PR_LINK).** A zip saved
+    **✅ Escape hatch built (2026-11-02, [PR #122](https://github.com/mggebara/Retally/pull/122)).** A zip saved
     unchanged under `benchmark/manual-packages/<I4R tag>/` (git-ignored,
     with a `SOURCE.txt` naming the openICPSR id and version) is referenced
     by `dataset.source: <that path>` plus `data_access: manual`; the
