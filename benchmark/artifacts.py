@@ -145,17 +145,29 @@ _ATTEMPT_DIR = re.compile(r"^attempt-(\d+)$")
 # One line of the pipeline's claim-gap feedback (``_claim_gap_feedback``):
 # ``<description>: reproduced <value>, claimed <value> (tolerance <tol>)``.
 _CLAIM_FEEDBACK_LINE = re.compile(r": reproduced \S+, claimed \S+")
+# The pipeline's completeness-repair feedback (ROADMAP 3.8,
+# ``retally.pipeline.COMPLETENESS_FEEDBACK_HEADER``) starts with this.
+_COMPLETENESS_HEADER = "Completeness check:"
+# ... and its timeout-repair feedback (``retally.pipeline.TIMEOUT_FEEDBACK_HEADER``) with this.
+_TIMEOUT_HEADER = "Timeout: the sandbox killed the script"
 
 
 def classify_feedback(text: str) -> str:
-    """``"claim"`` for claim-gap feedback, ``"error"`` for anything else non-empty, ``""`` for none.
+    """``"claim"`` for claim-gap feedback, ``"completeness"`` for a completeness repair,
+    ``"timeout-repair"`` for a repair after a sandbox timeout (ROADMAP 3.8),
+    ``"error"`` for anything else non-empty, ``""`` for none.
 
     Claim feedback is the pipeline's "<claim>: reproduced X, claimed Y"
-    list; execution-error feedback is the sandbox's stderr or "No RESULT:
+    list; completeness feedback starts "Completeness check:" (ROADMAP
+    3.8); execution-error feedback is the sandbox's stderr or "No RESULT:
     lines found in output".
     """
     if not text.strip():
         return ""
+    if text.startswith(_COMPLETENESS_HEADER):
+        return "completeness"
+    if text.startswith(_TIMEOUT_HEADER):
+        return "timeout-repair"
     if "reproduced" in text and "claimed" in text and _CLAIM_FEEDBACK_LINE.search(text):
         return "claim"
     return "error"
@@ -223,7 +235,8 @@ def rescore_row(row: dict[str, Any], entry: Any, art: Path) -> dict[str, Any]:
         attempt_outputs=outputs,
         attempt_kinds=kinds,
         n_executions=len(outputs),
-        n_error_refinements=kinds.count("error"),
+        # Completeness repairs share the error-repair budget (ROADMAP 3.8).
+        n_error_refinements=sum(kinds.count(k) for k in ("error", "completeness", "timeout-repair")),
         n_claim_refinements=kinds.count("claim"),
     )
     mode = str(row.get("mode", "seeded"))

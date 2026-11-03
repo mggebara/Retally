@@ -274,8 +274,10 @@ def test_claim_refinement_reverts_when_refinement_breaks_code():
 def test_claim_refinement_targets_claims_with_no_value():
     """Phase 1.7: a claim printed as NA (or with no RESULT line) is a failing
     claim the refinement loop targets -- on Dincecco the IV claims were NA
-    because the script had loaded the wrong data file."""
+    because the script had loaded the wrong data file.  (The frozen loop:
+    since ROADMAP 3.8 a completeness repair runs first by default.)"""
     pipeline, _ = _make_pipeline()
+    pipeline.completeness_repair = False
     pipeline.executor.execute.return_value = _exec_ok("ok", other=0.80)
     pipeline.comparator.compare_all.return_value = [_claim_result(0.95, reproduced=None, passed=False)]
     pipeline.generator.refine_for_claims.return_value = "ok"  # unchanged code: model gives up

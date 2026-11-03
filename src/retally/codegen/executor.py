@@ -25,6 +25,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import warnings
 from pathlib import Path
 
@@ -102,6 +103,34 @@ def parse_outputs(stdout: str) -> dict[str, float]:
         except ValueError:
             warnings.warn(f"Could not parse float from RESULT line: {line!r}", stacklevel=2)
     return outputs
+
+
+_SAMPLE_PREFIX = "SAMPLE:"
+
+
+def parse_sample_lines(stdout: str) -> list[tuple[str, float]]:
+    """``SAMPLE:<label>=<rows>`` lines from stdout, in order, as ``(label, rows)``.
+
+    ROADMAP 3.8: the generated script reports its estimation samples'
+    row counts after each stated restriction (``<label>`` is usually
+    ``<sample>:<step>``).  Informational only -- the scorer reads
+    ``RESULT:`` lines, never these.  Lines without ``=`` or a numeric
+    value are skipped; a label is everything before the last ``=``.
+    """
+    samples: list[tuple[str, float]] = []
+    for line in (stdout or "").splitlines():
+        line = line.strip()
+        if not line.startswith(_SAMPLE_PREFIX):
+            continue
+        label, sep, value = line[len(_SAMPLE_PREFIX) :].rpartition("=")
+        label = label.strip()
+        if not sep or not label:
+            continue
+        try:
+            samples.append((label, float(value.strip())))
+        except ValueError:
+            continue
+    return samples
 
 
 def parse_deviation_notes(stdout: str) -> list[str]:
@@ -183,6 +212,7 @@ class CodeExecutor:
 
             # Step 3 & 4: run the script as a subprocess
             timed_out = False
+            started = time.monotonic()
             try:
                 result = subprocess.run(
                     [sys.executable, str(script_path)],
@@ -214,7 +244,9 @@ class CodeExecutor:
                 exit_code=exit_code,
                 outputs=outputs,
                 deviation_notes=deviation_notes,
+                sample_lines=parse_sample_lines(stdout),
                 timed_out=timed_out,
+                elapsed_seconds=time.monotonic() - started,
             )
         finally:
             # Clean up only temp dirs we created ourselves

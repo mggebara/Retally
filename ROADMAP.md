@@ -3020,6 +3020,56 @@ moving a single final count on these three papers; figure check: three
 rows in that file.  3.7's item (b)
 (openICPSR) stands.
 
+### 3.8 Pipeline unfreeze (2026-11-03) — built, not yet measured, no API spend
+
+**Decision.**  The pipeline (`src/retally/`) had been frozen since 3.2
+so that no evaluation number was tuned on an evaluation paper.  The
+user decided on 2026-11-03: "unfreeze to fix the largest pipeline
+failures, then refreeze."  The fixes are general mechanisms, not
+paper patches: no file name, variable name, sample rule or number from
+any catalog paper is in the code or the prompts.
+
+**Protocol.**  These fixes were made *after* seeing the evaluation
+results (the report's Section 5 taxonomy), so they are post hoc.  Every
+later pipeline measurement is labelled post-fix and is not pooled with
+the frozen samples; the frozen samples of 3.2–3.7 stand unchanged and
+remain the pipeline's headline numbers.  The agent's task file keeps
+the frozen prompt blocks, so agent rows stay comparable across the
+unfreeze.
+
+**The mechanisms** (three plus a timeout sub-case of the third; first-sample misses of the pipeline on Opus
+5.5, independent + blind, 278 claims on 23 papers; draft Section 5):
+
+| Mechanism | Misses (indep. + blind) | Change | Switch (default on) |
+|---|---:|---|---|
+| Sample restriction | 7 + 40 | **Sample reconciliation.**  The generation prompt asks for `SAMPLE:<sample>:<step>=<rows>` lines before the `RESULT:` lines: rows after loading, after each restriction the paper states (in its order), and at estimation.  Seeded and independent prompts ask the script to compare each sample with any stated sample size before estimating; the blind prompt only asks for the stated restrictions in order and names no sample size.  In claim refinement (seeded and independent only), a failing sample-size claim opens the prompt as "Sample size check (fix this first)" with the stated N, the script's N, the gap and the script's SAMPLE lines.  `RESULT:` parsing is unchanged; SAMPLE lines are parsed into `ExecutionResult.sample_lines` and written to `samples.txt` in the run artifacts. | `CodeGenerator(sample_reconciliation=...)` |
+| Data-file resolution | 11 + 12 | **Data inventory.**  Before generation, no model call: every data file in the mount (`.csv`/`.tsv`, `.dta`, `.rds`/`.RData`/`.rda`, `.xlsx`; `.parquet`/`.sav` and others listed as "not profiled") gets rows, columns, leading column names and Stata variable labels, profiled on the host in Python (pandas header reads, the existing R-serialisation walker, the workbook XML).  Bounds are by size, not time, so the prompt stays deterministic; a CSV over 50 MB gets an approximate (`~`) row count and over 1 GB "rows unknown", never skipped.  Files that share their columns are compared and the columns that differ are named (with per-file means except in blind mode).  Capped at 30 files and ~16k characters, beside the existing listing. | `CodeGenerator(data_inventory=...)` |
+| Extraction error | 0 + 13 (12 + 8 on 4.7) | **Completeness repair.**  After the execution-repair phase, if the script ran to completion but some claims got no value (`NA` or no `RESULT:` line), one targeted repair ("these names are missing or NA; here is the log; fix the printing or the model that produced NA") runs before any claim refinement, in every mode including blind.  It spends one slot of the existing error-repair budget, is recorded as attempt kind `completeness` (feedback starts "Completeness check:"), counts in `n_error_refinements` and in `n_completeness_refinements`, and is kept only if it still runs and prints at least as many usable values. | `ValidationPipeline(completeness_repair=...)` |
+| Extraction error, timeout sub-case (found in the third oracle sample, not in the taxonomy counts: Forsythe seeded and independent at 0 / 13 after four executions, each printing only its first data-load line) | **Timeout repair.**  When the sandbox kills a run at its wall-clock limit (`timed_out`), the error repair is no longer told only "No RESULT: lines found in output": its feedback says the script was killed at the limit (the limit and the executor's measured elapsed time, now recorded as `ExecutionResult.elapsed_seconds`), quotes the last printed line, and says the fix must cut input work (only the needed columns, no full-file or repeated reads, subset before merging), not add printing.  An error repair in the same budget, recorded as attempt kind `timeout-repair` (feedback starts "Timeout: the sandbox killed the script"). | same switch, `completeness_repair` |
+
+All three switches off (`ValidationPipeline.default(data_inventory=False,
+sample_reconciliation=False, completeness_repair=False)`, or
+`RETALLY_PIPELINE_FROZEN=1` for the benchmark runner) reproduces the
+frozen pipeline: the seeded and blind golden prompts are byte-identical
+with the switches off.  Pipeline result-cache keys carry a
+`pipeline_fixes` tag unless `RETALLY_PIPELINE_FROZEN=1`, so a post-fix
+run is never served a frozen row.
+
+What the evidence showed that the taxonomy does not: Montero blind's
+script-free mount holds a single data file (5,060 rows, 119 columns,
+already listed with its columns), and the script read it; its 130 rows
+come from its own filters, so that cell is a sample-construction miss
+more than a file-resolution one.  Grier's three files share 27 columns
+and 862 rows and differ only in one contribution column, which the
+listing could not show and the inventory now names.
+
+**Next:** a post-fix oracle sample on the 23 papers, independent and
+blind, labelled `desktop-opus-postfix`.
+
+**Refrozen.**  The pipeline is refrozen at this PR's merge commit; any
+further change to `src/retally/` prompts or loop needs a new unfreeze
+decision and section.
+
 ---
 
 ## Phase 4 — Corpus growth (4 → 20–30 papers)

@@ -639,11 +639,38 @@ def _pre_protocol_cache_key(entry, mode):
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]
 
 
-def test_seeded_pipeline_cache_keys_follow_the_documented_formula():
-    """A plain ``make benchmark`` keys on entry + version + mode + model, nothing else."""
+def test_seeded_pipeline_cache_keys_follow_the_documented_formula(monkeypatch):
+    """The frozen pipeline keys on entry + version + mode + model, nothing else (ROADMAP 3.2–3.7)."""
     entry = _entry()
+    monkeypatch.setenv(runner.PIPELINE_FROZEN_ENV, "1")
     assert runner._cache_key(entry, "seeded") == _pre_protocol_cache_key(entry, "seeded")
     assert runner._cache_key(entry, "seeded", "pipeline") == _pre_protocol_cache_key(entry, "seeded")
+
+
+def test_post_fix_pipeline_cache_keys_never_hit_frozen_rows(monkeypatch):
+    """ROADMAP 3.8: the post-fix pipeline (the default) gets new keys in every mode.
+
+    Agents' keys do not move."""
+    entry = _entry()
+    monkeypatch.delenv(runner.PIPELINE_FROZEN_ENV, raising=False)
+    post = {mode: runner._cache_key(entry, mode) for mode in runner.MODES}
+    agent_post = runner._cache_key(entry, "seeded", "claude-code")
+    monkeypatch.setenv(runner.PIPELINE_FROZEN_ENV, "1")
+    frozen = {mode: runner._cache_key(entry, mode) for mode in runner.MODES}
+    for mode in runner.MODES:
+        assert post[mode] != frozen[mode]
+    assert runner._cache_key(entry, "seeded", "claude-code") == agent_post
+
+
+def test_pipeline_switches_follow_the_frozen_env(monkeypatch):
+    monkeypatch.delenv(runner.PIPELINE_FROZEN_ENV, raising=False)
+    assert runner._pipeline_switches() == {
+        "data_inventory": True,
+        "sample_reconciliation": True,
+        "completeness_repair": True,
+    }
+    monkeypatch.setenv(runner.PIPELINE_FROZEN_ENV, "1")
+    assert not any(runner._pipeline_switches().values())
 
 
 def test_independent_cache_keys_move_to_the_script_free_contract():

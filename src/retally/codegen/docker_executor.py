@@ -48,10 +48,16 @@ import logging
 import shutil
 import subprocess
 import tempfile
+import time
 import uuid
 from pathlib import Path
 
-from retally.codegen.executor import parse_deviation_notes, parse_outputs, preflight_check
+from retally.codegen.executor import (
+    parse_deviation_notes,
+    parse_outputs,
+    parse_sample_lines,
+    preflight_check,
+)
 from retally.models import Dataset, ExecutionResult
 
 logger = logging.getLogger(__name__)
@@ -133,6 +139,7 @@ class _DockerExecutorBase:
             cmd = self._build_run_cmd(script_path, dataset, run_id=run_id)
 
             timed_out = False
+            started = time.monotonic()
             try:
                 proc = subprocess.run(
                     cmd,
@@ -162,7 +169,9 @@ class _DockerExecutorBase:
                 exit_code=exit_code,
                 outputs=outputs,
                 deviation_notes=deviation_notes,
+                sample_lines=parse_sample_lines(stdout),
                 timed_out=timed_out,
+                elapsed_seconds=time.monotonic() - started,
             )
         finally:
             shutil.rmtree(work_dir, ignore_errors=True)

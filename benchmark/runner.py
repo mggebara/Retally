@@ -1362,6 +1362,10 @@ def _cache_key(
     ``benchmark/results/`` as composites, not in the cache.  Other
     reproducers choose their own model (the claude-code agent runs on
     whatever the desktop session runs on), so their keys do not carry it.
+
+    The pipeline key also carries ``PIPELINE_FIXES`` (ROADMAP 3.8) unless
+    ``$RETALLY_PIPELINE_FROZEN=1``: post-fix rows get new keys, and a
+    frozen run keeps exactly the keys the 3.2–3.7 rows were cached under.
     """
     retally_version = _retally_version()
     entry_payload = _entry_to_jsonable(entry)
@@ -1377,6 +1381,8 @@ def _cache_key(
         key_payload["reproducer"] = reproducer
     else:
         key_payload["model"] = pipeline_model()
+        if not pipeline_frozen():
+            key_payload["pipeline_fixes"] = PIPELINE_FIXES
     if mode in SCRIPT_FREE_MODES:
         key_payload["independent_dataset"] = "script-free"
     payload = json.dumps(key_payload, sort_keys=True, default=str)
@@ -1509,6 +1515,28 @@ def oracle_label() -> str | None:
     return os.environ.get(LLM_ORACLE_ENV) or None
 
 
+PIPELINE_FROZEN_ENV = "RETALLY_PIPELINE_FROZEN"
+"""Set to ``1`` to run the pipeline as frozen in ROADMAP 3.2–3.7: the three
+ROADMAP 3.8 fixes (data inventory, sample reconciliation, completeness
+repair) switched off.  Unset (the default) runs the post-fix pipeline."""
+
+PIPELINE_FIXES = "3.8"
+"""Cache-key tag of the post-fix pipeline (ROADMAP 3.8).  Joined to every
+pipeline result-cache key unless ``$RETALLY_PIPELINE_FROZEN`` is set, so a
+post-fix run is never served a frozen row and frozen runs keep their keys."""
+
+
+def pipeline_frozen() -> bool:
+    """Whether ``$RETALLY_PIPELINE_FROZEN`` asks for the frozen (pre-3.8) pipeline."""
+    return os.environ.get(PIPELINE_FROZEN_ENV, "") == "1"
+
+
+def _pipeline_switches() -> dict[str, bool]:
+    """The ROADMAP 3.8 switches for ``ValidationPipeline.default()``: all on, or all off when frozen."""
+    on = not pipeline_frozen()
+    return {"data_inventory": on, "sample_reconciliation": on, "completeness_repair": on}
+
+
 def pipeline_model() -> str:
     """The model the pipeline reproducer runs (and is cache-keyed) on.
 
@@ -1544,7 +1572,9 @@ def _default_pipeline_factory():
         from retally.pipeline import ValidationPipeline
 
         client = OracleLLMClient(CACHE_DIR / "llm-oracle" / label, label)
-        return ValidationPipeline.default(client=client, llm_cache_dir=None, model=DEFAULT_MODEL)
+        return ValidationPipeline.default(
+            client=client, llm_cache_dir=None, model=DEFAULT_MODEL, **_pipeline_switches()
+        )
     if not os.environ.get("ANTHROPIC_API_KEY"):
         raise MissingAPIKeyError("ANTHROPIC_API_KEY is not set")
     from retally.pipeline import ValidationPipeline
@@ -1552,7 +1582,9 @@ def _default_pipeline_factory():
     llm_cache_dir: Path | None = CACHE_DIR / "llm"
     if os.environ.get("RETALLY_LLM_CACHE", "1") == "0":
         llm_cache_dir = None
-    return ValidationPipeline.default(llm_cache_dir=llm_cache_dir, model=pipeline_model())
+    return ValidationPipeline.default(
+        llm_cache_dir=llm_cache_dir, model=pipeline_model(), **_pipeline_switches()
+    )
 
 
 def _pipeline_reproducer_factory(pipeline_factory: Callable[[], Any]) -> Callable[[], Reproducer]:

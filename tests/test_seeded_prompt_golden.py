@@ -72,7 +72,9 @@ def _captured_prompt(language: Language, **generate_kwargs) -> str:
     """Drive the public ``generate()`` with a mocked client and return the prompt it sent."""
     client = MagicMock()
     client.messages.create.return_value = MagicMock(content=[MagicMock(text="x <- 1")])
-    gen = CodeGenerator(client)
+    # The goldens are the frozen (ROADMAP 3.2–3.7) prompts: with the 3.8
+    # switches off the prompt must not move a byte.
+    gen = CodeGenerator(client, data_inventory=False, sample_reconciliation=False)
     gen.generate(
         _paper(language),
         _dataset(),

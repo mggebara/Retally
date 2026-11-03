@@ -371,8 +371,13 @@ class RefinementAttempt:
     kind: str = ""
     """Which refinement followed this execution: ``"error"`` (it crashed or
     printed no ``RESULT:`` lines and the model was sent the error),
-    ``"claim"`` (it ran and the model was told which claims were off
-    target), or ``""`` when no feedback followed."""
+    ``"timeout-repair"`` (the sandbox killed it at the wall-clock limit and
+    the model was told so and asked to cut input work: ROADMAP 3.8, an
+    error repair), ``"completeness"`` (it ran to completion but some required names were
+    missing or ``NA``, and the model was sent those names: ROADMAP 3.8,
+    counted under the error-repair budget), ``"claim"`` (it ran and the
+    model was told which claims were off target), or ``""`` when no
+    feedback followed."""
 
 
 @dataclass
@@ -403,6 +408,11 @@ class ExecutionResult:
     whether a claim was reproduced as-stated or with caveats.
     """
 
+    sample_lines: list[tuple[str, float]] = field(default_factory=list)
+    """``SAMPLE:<label>=<rows>`` lines from stdout, in order (ROADMAP 3.8,
+    ``retally.codegen.executor.parse_sample_lines``): the script's own
+    account of its estimation samples.  Informational; never scored."""
+
     claim_refinement_attempts: int = 0
     """Number of claim-targeted refinement passes the pipeline ran after the
     initial code first executed cleanly.  Distinct from the exec-error
@@ -422,6 +432,10 @@ class ExecutionResult:
     here after execution so reports stay consistent."""
 
     timed_out: bool = False
+
+    elapsed_seconds: float | None = None
+    """Wall-clock seconds the execution took, as the executor measured it
+    (host side, including container start-up); None when not recorded."""
 
     attempts: list[RefinementAttempt] = field(default_factory=list)
     """Earlier executions superseded by this one, oldest first (see
@@ -445,7 +459,14 @@ class ExecutionResult:
     n_error_refinements: int = 0
     """Execution-error refinement calls (``refine``): the script crashed or
     printed no ``RESULT:`` lines and the model was sent the error.  Crash
-    repairs, not target-guided search."""
+    repairs, not target-guided search.  Includes the completeness repairs
+    (``n_completeness_refinements``), which share this budget."""
+
+    n_completeness_refinements: int = 0
+    """Completeness repairs (``refine_for_completeness``, ROADMAP 3.8): the
+    script ran to completion but printed no usable value for some required
+    names, and the model was sent those names.  A subset of
+    ``n_error_refinements``; 0 when the repair is switched off."""
 
     n_claim_refinements: int = 0
     """Claim-targeted refinement calls (``refine_for_claims``): the model was
