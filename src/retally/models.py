@@ -64,6 +64,11 @@ class DatasetSource(Enum):
     HARVARD_DATAVERSE = "harvard_dataverse"
     FIGSHARE = "figshare"
     OPENML = "openml"
+    LOCAL = "local"
+    """A package a human downloaded and placed on disk (a zip / tar archive or
+    a directory); ``DatasetReference.url`` holds its path, absolute or relative
+    to the repo root.  For repositories the harness cannot fetch itself (e.g.
+    openICPSR, which needs a login and a terms click-through)."""
     UNKNOWN = "unknown"
 
 

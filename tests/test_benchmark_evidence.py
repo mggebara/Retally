@@ -187,6 +187,7 @@ def test_build_writes_one_cell_per_non_skipped_row(tmp_path: Path) -> None:
     assert (agent / "output/reproduction.json").is_file()
     cell_md = (agent / "CELL.md").read_text(encoding="utf-8")
     assert "no weights" in cell_md and "used HC1" in cell_md
+    assert "| Data access | public |" in cell_md  # rows without the field are public
 
 
 def test_scoring_verdicts_equal_the_rows(tmp_path: Path) -> None:
@@ -268,6 +269,32 @@ def test_report_renders(tmp_path: Path) -> None:
     assert "no weights" in report_md
     index = (out / "INDEX.md").read_text(encoding="utf-8")
     assert f"{ENTRY}/REPORT.md" in index
+    assert "- Data access: public" in report_md
+
+
+def test_manual_data_access_is_printed_per_cell_and_per_paper(tmp_path: Path) -> None:
+    root, catalog, results = _setup(tmp_path)
+    yaml_path = catalog / f"{ENTRY}.yaml"
+    yaml_path.write_text(
+        yaml_path.read_text(encoding="utf-8")
+        + "dataset:\n  source: benchmark/manual-packages/T1/1-V1.zip\n  data_access: manual\n"
+        + "  access_notes: openICPSR project 1, version V1\n",
+        encoding="utf-8",
+    )
+    data = json.loads(results.read_text(encoding="utf-8"))
+    for row in data["results"]:
+        row["data_access"] = "manual"
+    results.write_text(json.dumps(data), encoding="utf-8")
+    out = tmp_path / "evidence"
+    evidence.build([results], out_root=out, source_root=root, catalog_dir=catalog)
+    cell_md = (out / ENTRY / "independent/claude-code/2026-01-02-a/CELL.md").read_text(encoding="utf-8")
+    assert "| Data access | manual (package downloaded by hand and placed on disk) |" in cell_md
+    evidence.report(out, catalog_dir=catalog)
+    report_md = (out / ENTRY / "REPORT.md").read_text(encoding="utf-8")
+    assert (
+        "- Data access: manual (package downloaded by hand and placed at "
+        "`benchmark/manual-packages/T1/1-V1.zip`; openICPSR project 1, version V1)"
+    ) in report_md
 
 
 def test_normalise_paths_rewrites_repo_worktree_and_scratch() -> None:

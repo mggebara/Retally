@@ -14,6 +14,16 @@ Supported sources:
   - Harvard Dataverse   (REST API)
   - FigShare            (REST API)
   - OpenML              (openml Python package)
+  - Local               (a package a human placed on disk; see below)
+
+Local packages: ``DatasetSource.LOCAL`` takes a path (absolute, or relative to
+the repo root) to an archive or a directory a human downloaded by hand.  An
+archive is extracted into the destination exactly like a downloaded one (the
+placed file itself is left untouched); a directory is copied.
+``metadata.json`` records the path as given, its size and its sha256, so the
+evidence can state which file was used.  The cache is keyed on the reference
+name like every source: after replacing a placed package, delete its
+``.cache/datasets/<name>`` directory.
 
 Harvard Dataverse originals: Dataverse ingests tabular uploads (``.csv``,
 ``.dta``, ``.sav``, ...) and serves them as ``.tab`` by default, which breaks
@@ -36,9 +46,12 @@ archive's tree at ``_MAX_EXTRACTED_BYTES``; a refused archive stays as-is.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import logging
+import os
 import re
+import shutil
 import tarfile
 import zipfile
 from pathlib import Path
@@ -59,6 +72,11 @@ logger = logging.getLogger(__name__)
 _COMPLETE_SENTINEL = ".retally-download-complete"
 
 _ARCHIVE_SUFFIXES = (".zip", ".tar.gz", ".tgz", ".tar")
+
+# Relative ``DatasetSource.LOCAL`` paths resolve against the repo root (the
+# directory holding pyproject.toml above this file); outside a source checkout
+# they resolve against the working directory.
+_REPO_ROOT = Path(__file__).resolve().parents[3]
 _TAR_SUFFIXES = (".tar.gz", ".tgz", ".tar")
 
 # Nested archives (an archive inside a downloaded archive) are extracted up
@@ -67,6 +85,24 @@ _TAR_SUFFIXES = (".tar.gz", ".tgz", ".tar")
 # (uncompressed bytes) as a guard against archive bombs.
 _MAX_NESTED_DEPTH = 2
 _MAX_EXTRACTED_BYTES = 20 * 1024**3
+
+
+def _file_sha256(path: Path) -> str:
+    h = hashlib.sha256()
+    with open(path, "rb") as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _tree_size_and_sha256(root: Path) -> tuple[int, str]:
+    """Total file bytes under ``root`` and a sha256 over its sorted (relative path, file sha256) pairs."""
+    h = hashlib.sha256()
+    total = 0
+    for p in sorted(q for q in root.rglob("*") if q.is_file()):
+        total += p.stat().st_size
+        h.update(p.relative_to(root).as_posix().encode("utf-8") + b"\0" + _file_sha256(p).encode() + b"\n")
+    return total, h.hexdigest()
 
 
 def _strip_archive_suffix(name: str) -> str:
@@ -188,6 +224,12 @@ class DatasetDownloader:
                 self._download_harvard_dataverse(url, dest)
             elif source == DatasetSource.FIGSHARE:
                 self._download_figshare(url, dest)
+            elif source == DatasetSource.LOCAL:
+                if not url:
+                    raise ValueError(
+                        f"DatasetReference '{reference.name}' has source=LOCAL but no path was provided."
+                    )
+                self._download_local(url, dest)
             elif source == DatasetSource.DIRECT_URL:
                 if not url:
                     raise ValueError(
@@ -364,6 +406,79 @@ class DatasetDownloader:
             self._stream_to_file(url, dest, filename)
         except requests.RequestException as exc:
             raise RuntimeError(f"HTTP request failed for {url}: {exc}") from exc
+        return dest
+
+    @staticmethod
+    def resolve_local_path(path: str) -> Path:
+        """Resolve a ``DatasetSource.LOCAL`` path: absolute as-is, else relative to the repo root."""
+        p = Path(path).expanduser()
+        if p.is_absolute():
+            return p
+        root = _REPO_ROOT if (_REPO_ROOT / "pyproject.toml").is_file() else Path.cwd()
+        return root / p
+
+    def _download_local(self, path: str, dest: Path) -> Path:
+        """Bring a manually placed package into ``dest``.
+
+        ``path`` is absolute or relative to the repo root.  A zip / tar /
+        tar.gz / tgz is extracted into ``dest`` by the same helper (with the
+        same zip-slip and size guards) a downloaded archive goes through; the
+        placed file itself is never modified (a hard link or copy of it is
+        what gets extracted and deleted).  A directory is copied into
+        ``dest``.  ``metadata.json`` records the path as given, the size and
+        the sha256 (of the archive; for a directory, of its sorted relative
+        paths and file hashes), unless the package ships its own
+        ``metadata.json``, which is left alone (and the provenance logged).
+        """
+        src = self.resolve_local_path(path)
+        if not src.exists():
+            raise FileNotFoundError(f"manually placed package not found: {src}")
+        dest.mkdir(parents=True, exist_ok=True)
+
+        if src.is_dir():
+            shutil.copytree(src, dest, dirs_exist_ok=True)
+            size, digest = _tree_size_and_sha256(src)
+            kind = "directory"
+        elif src.name.lower().endswith(_ARCHIVE_SUFFIXES):
+            size, digest = src.stat().st_size, _file_sha256(src)
+            staged = dest / src.name
+            try:
+                os.link(src, staged)
+            except OSError:
+                shutil.copy2(src, staged)
+            self._extract_archive(staged, dest)
+            if staged.exists():
+                # Extraction was refused or failed (already logged): the
+                # placement is unusable, so fail rather than mark it complete.
+                staged.unlink()
+                raise RuntimeError(f"could not extract manually placed archive {src} (see the log)")
+            kind = "archive"
+        else:
+            raise ValueError(
+                f"manually placed package {src} is neither a directory nor a "
+                f"{' / '.join(_ARCHIVE_SUFFIXES)} archive"
+            )
+
+        meta_path = dest / "metadata.json"
+        if meta_path.exists():
+            logger.warning(
+                "%s ships its own metadata.json; provenance not written (path %s, %d bytes, sha256 %s)",
+                src.name,
+                path,
+                size,
+                digest,
+            )
+            return dest
+        metadata: dict[str, Any] = {
+            "source": "local",
+            "data_access": "manual",
+            "source_path": path,
+            "kind": kind,
+            "size_bytes": size,
+            "sha256": digest,
+        }
+        with open(meta_path, "w", encoding="utf-8") as fh:
+            json.dump(metadata, fh, indent=2)
         return dest
 
     def _download_kaggle(self, slug: str, dest: Path) -> Path:

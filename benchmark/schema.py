@@ -219,6 +219,16 @@ class DatasetRef:
     """Free text — useful for noting "OpenICPSR registered access required"
     or "embargoed until 2026" without making those a structured concern."""
 
+    data_access: str = "public"
+    """How the package reaches the harness: ``"public"`` (default; the
+    downloader fetches ``source``) or ``"manual"`` (a human downloaded it
+    under their own account and placed it on disk; ``source`` is that local
+    path, absolute or relative to the repo root, conventionally
+    ``benchmark/manual-packages/<I4R tag>/<file>.zip``).  The loader rejects a
+    local-path ``source`` without ``manual`` and ``manual`` with an http(s)
+    ``source``; the runner skips a manual entry whose file is not on disk
+    (``manual_package_missing``) and stamps the value onto every result row."""
+
 
 @dataclass
 class CodeRepoRef:
@@ -426,6 +436,39 @@ def _paper_ref(d: Any) -> PaperRef:
     )
 
 
+DATA_ACCESS_PUBLIC = "public"
+DATA_ACCESS_MANUAL = "manual"
+_VALID_DATA_ACCESS = frozenset({DATA_ACCESS_PUBLIC, DATA_ACCESS_MANUAL})
+
+MANUAL_PACKAGES_DIR = "benchmark/manual-packages"
+"""Where manually downloaded packages go, one folder per paper named after
+its I4R tag (git-ignored)."""
+
+_LOCAL_SUFFIXES = (".zip", ".tar.gz", ".tgz", ".tar")
+_DOI = re.compile(r"^(doi:)?10\.\d{4,9}/", re.IGNORECASE)
+
+
+def is_url(source: str) -> bool:
+    return source.startswith(("http://", "https://"))
+
+
+def looks_like_local_path(source: str) -> bool:
+    """Whether a ``dataset.source`` reads as a filesystem path rather than a URL or registry id.
+
+    Path-like means: not an http(s) URL, not a DOI, and either starting with
+    ``/``, ``~``, ``./``, ``../`` or the manual-packages directory, or a
+    single token (no whitespace) that contains a ``/`` or ends in an archive
+    suffix.  A bare registry id (``iris``) and free text (a ``TODO: ...``
+    placeholder) are not paths.
+    """
+    s = source.strip()
+    if not s or is_url(s) or _DOI.match(s):
+        return False
+    if s.startswith(("/", "~", "./", "../", MANUAL_PACKAGES_DIR)):
+        return True
+    return not any(c.isspace() for c in s) and ("/" in s or s.lower().endswith(_LOCAL_SUFFIXES))
+
+
 def _dataset_ref(d: Any) -> DatasetRef | None:
     if d is None:
         return None
@@ -433,10 +476,26 @@ def _dataset_ref(d: Any) -> DatasetRef | None:
         raise TypeError(f"dataset must be a mapping, got {type(d).__name__}")
     if "source" not in d:
         raise KeyError("dataset.source is required")
+    source = str(d["source"])
+    access = str(d.get("data_access", DATA_ACCESS_PUBLIC))
+    if access not in _VALID_DATA_ACCESS:
+        raise ValueError(f"dataset.data_access must be one of {sorted(_VALID_DATA_ACCESS)}, got {access!r}")
+    if access == DATA_ACCESS_MANUAL and is_url(source):
+        raise ValueError(
+            f"dataset.data_access is 'manual' but dataset.source is a URL ({source}); a manually placed "
+            f"package's source is its local path, e.g. {MANUAL_PACKAGES_DIR}/<I4R tag>/<file>.zip "
+            "(put the repository id and version in access_notes)"
+        )
+    if access == DATA_ACCESS_PUBLIC and looks_like_local_path(source):
+        raise ValueError(
+            f"dataset.source {source!r} is a local path; a manually placed package needs "
+            "'data_access: manual' so its provenance is recorded"
+        )
     return DatasetRef(
-        source=str(d["source"]),
+        source=source,
         registry_key=_optional_str(d.get("registry_key")),
         access_notes=str(d.get("access_notes", "")),
+        data_access=access,
     )
 
 
