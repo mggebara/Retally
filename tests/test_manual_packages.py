@@ -268,12 +268,26 @@ def test_every_row_carries_data_access(tmp_path):
     assert runner._result_from_jsonable({"entry_id": "x"}).data_access == "public"
 
 
-def test_data_access_is_not_part_of_the_cache_key():
+def test_data_access_is_not_part_of_the_cache_key(monkeypatch):
+    """A manual package and a public one, otherwise identical, share a cache key in every pipeline state."""
     public = _entry(dataset=bschema.DatasetRef(source="https://zenodo.org/records/1"))
     relabelled = _entry(
         dataset=bschema.DatasetRef(source="https://zenodo.org/records/1", data_access="manual")
     )
-    assert runner._cache_key(public) == runner._cache_key(relabelled)
+    monkeypatch.delenv(runner.PIPELINE_FROZEN_ENV, raising=False)
+    post_fix = runner._cache_key(public)
+    assert post_fix == runner._cache_key(relabelled)
+    monkeypatch.setenv(runner.PIPELINE_FROZEN_ENV, "1")
+    frozen = runner._cache_key(public)
+    assert frozen == runner._cache_key(relabelled)
+    # The pipeline marker (ROADMAP 3.8) does move the key.
+    assert frozen != post_fix
+
+
+def test_frozen_cache_key_is_the_key_from_before_data_access(monkeypatch):
+    """With the pipeline frozen, the key is exactly the pre-``data_access`` formula (PR 122's guarantee)."""
+    monkeypatch.setenv(runner.PIPELINE_FROZEN_ENV, "1")
+    public = _entry(dataset=bschema.DatasetRef(source="https://zenodo.org/records/1"))
     payload = runner._entry_to_jsonable(public)
     payload["dataset"].pop("data_access")
     for k in ("split", "publication_date", "package_release_date"):
@@ -288,7 +302,6 @@ def test_data_access_is_not_part_of_the_cache_key():
         sort_keys=True,
         default=str,
     )
-    # Same key as before the field existed.
     assert runner._cache_key(public) == hashlib.sha256(expected.encode("utf-8")).hexdigest()[:16]
 
 
