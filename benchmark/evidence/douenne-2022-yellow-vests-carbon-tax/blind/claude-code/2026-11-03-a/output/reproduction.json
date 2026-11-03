@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "entry_id": "douenne-2022-yellow-vests-carbon-tax",
+  "mode": "blind",
+  "run_id": "2026-11-03-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-6", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "The paper's full control lists are in the online Appendix, which is not available. Controls were constructed as: sociodemographics = sex, age bracket, socio-professional category, education (4 levels), town size, region (factors), household size, number of members aged 14+; incomes = continuous piecewise-linear in income percentiles of respondent and second adult with kinks at p20 and p70 (paper eq. 4); estimated gains = simule_gain and its square; other motives = belief the tax is effective (not 'No') and belief it is progressive (prog_not_no). For Table 8 the other motives are progressivity belief and initial belief of not losing (effectiveness is the endogenous variable).",
+    "All regressions use the survey weights (variable weight), since the paper states observations are weighted; heteroskedasticity-robust SEs.",
+    "Predicted winner = simule_gagnant (the feedback actually displayed); running variable = simule_gain (estimated net gain per consumption unit); feedback sample = variante_taxe_info == 'f' (1,968). simule_gagnant disagrees with sign(simule_gain) for 56 respondents; used as is.",
+    "Yellow Vests supporter = gilets_jaunes_soutien or gilets_jaunes_dedans. Table 4 col 3 controls for the 3-category initial win/lose belief (factor) and interacts the predicted-winner indicator with the binary initial not-lose belief.",
+    "Table 6 col 1 subsample: respondent's or second adult's income percentile in [10, 60] (1,969 obs); instruments traite_cible, traite_cible_conjoint and their product; fixed effects for the assigned target (cible); controls single, initial acceptance, incomes, estimated gains, sociodemo, other motives.",
+    "Table 8 col 1: info on effectiveness identified as apres_modifs (its label says the second half of the sample received the information on effectiveness against pollution); info on climate change = info_CC."
+  ],
+  "notes": "Independent, blind reproduction from paper text and after_preparation.RData (object s). Exploratory runs attempt-1..6 printed no RESULT lines (attempt-2, 3, 5 crashed because memisc is not installed and memisc item classes had to be stripped; they were exploratory, not repairs). Single scored run (top-level). Caveat: in the Table 8 first stage my effectiveness-information instrument (apres_modifs) is weak (coef ~0.009, joint first-stage F ~2.8), suggesting the variable or control set may differ from the authors'; I did not change the specification after seeing this, per blind-mode rules. While exploring the RData (attempt-1) the listing printed the bodies of some utility functions stored in the RData (plotting/formatting helpers, weighting_s, piece.formula); none of the paper's analysis code was read. No docker hang.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-03T00:10:54Z",
+  "finished_at": "2026-11-03T00:16:00Z"
+}

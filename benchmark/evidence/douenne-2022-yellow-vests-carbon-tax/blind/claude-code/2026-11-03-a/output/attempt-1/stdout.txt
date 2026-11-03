@@ -1,0 +1,1266 @@
+## barres function 1 
+function (data, vars, file, title = "", labels, color = c(), 
+    rev_color = FALSE, hover = legend, nsp = TRUE, sort = TRUE, 
+    legend = hover, showLegend = T, margin_r = 0, margin_l = NA, 
+    online = FALSE, display_values = T, thin = T, legend_x = NA, 
+    show_ticks = T, xrange = NA, save = FALSE, df = e, miss = T, 
+    weights = T, fr = T, rev = T, grouped = F) 
+{
+    if (missing(vars) & missing(legend) & missing(hover)) 
+        warning("hover or legend must be given")
+    if (!missing(miss)) 
+        nsp <- miss
+    if (missing(data) & !missing(vars)) {
+        data <- dataKN(vars, data = df, miss = miss, weights = weights, 
+            return = "", fr = fr, rev = rev)
+        if (missing(legend) & missing(hover)) {
+            if (is.logical(df[[vars[1]]])) 
+                hover <- legend <- labels
+            else hover <- legend <- dataN(var = vars[1], data = df, 
+                miss = miss, weights = weights, return = "legend", 
+                fr = fr, rev_legend = rev)
+        }
+    }
+    if (length(color) == 0) 
+        color <- color(data, nsp, rev_color = rev_color)
+    margin_t <- 0 + 25 * (!(thin))
+    if (title != "") {
+        margin_t <- 100
+    }
+    if (grepl("<br>", title)) {
+        margin_t <- 150
+## CImedian function 1 
+function (vec) 
+{
+    res <- tryCatch(unlist(ci.median(vec[!is.na(vec) & vec != 
+        -1])), error = function(e) {
+        print("NA")
+    })
+    return(paste(res[paste("ci.lower")], res[paste("ci.median")], 
+        res[paste("ci.upper")], length(which(!is.na(vec) & vec != 
+            -1))))
+}
+## clean_number function 1 
+function (vec, high_numbers = "") 
+{
+    numeric_vec <- as.numeric(gsub(",", ".", gsub("[[:alpha:]  !#$%&')?/(@:;€_-]", 
+        "", vec)))
+    if (high_numbers == "remove") {
+        is.na(numeric_vec) <- numeric_vec > 10000
+    }
+    else if (high_numbers == "divide") {
+        numeric_vec[numeric_vec > 10000 & !is.na(numeric_vec)] <- numeric_vec[numeric_vec > 
+            10000 & !is.na(numeric_vec)]/12
+    }
+    else if (high_numbers == "divide&remove") {
+        numeric_vec[numeric_vec > 10000 & !is.na(numeric_vec)] <- numeric_vec[numeric_vec > 
+            10000 & !is.na(numeric_vec)]/12
+        is.na(numeric_vec) <- numeric_vec > 6000
+    }
+    return(numeric_vec)
+}
+## color function 1 
+function (v, grey = FALSE, grey_replaces_last = T, rev_color = FALSE, 
+    theme = "RdBu") 
+{
+    if (is.matrix(v)) 
+        n <- nrow(v)
+    else if (length(v) > 1) 
+        n <- length(v)
+    else n <- v
+    if (grey & grey_replaces_last & n > 1) 
+        n <- n - 1
+    if (theme == "rainbow") {
+        if (n == 1) 
+            cols <- c("#66B3B3")
+        else if (n == 2) 
+            cols <- c("#66B3B3", "#A52A2A")
+        else if (n == 3) 
+            cols <- color5[c(1, 3, 5)]
+        else if (n == 4) 
+            cols <- c(rainbow(4, end = 4/15)[1:3], "#228B22")
+        else if (n == 5) 
+            cols <- c(rainbow(4, end = 4/15)[1:3], "#00FF00", 
+                "#228B22")
+        else if (n == 6) 
+            cols <- rainbow(6)
+        else if (n == 7) 
+            cols <- c("#000000", rainbow(7)[c(1:3, 5:7)])
+        else cols <- rainbow(n)
+    }
+    else {
+        cols <- rev(brewer.pal(max(n, 3), theme))
+## color5 character 5 
+[1] "#FF0000" "#FF8800" "#EEFF00" "#00FF00" "#228B22"
+## convert_s function 1 
+function (only_finished = T) 
+{
+    s$csp[grepl("cadre", s$csp)] <<- "Cadre"
+    s$csp[grepl("Artisan", s$csp)] <<- "Indépendant"
+    s$csp[grepl("iaire", s$csp)] <<- "Intermédiaire"
+    s$csp[grepl("etrait", s$csp)] <<- "Retraité"
+    s$csp[grepl("Employ", s$csp)] <<- "Employé"
+    s$csp[grepl("Agricul", s$csp)] <<- "Agriculteur"
+    s$csp[grepl("Ouvrier", s$csp)] <<- "Ouvrier"
+    s$csp[grepl("Inactif", s$csp)] <<- "Inactif"
+    for (i in 1:length(s)) {
+        s[[i]][s[[i]] == "NSP (Ne sais pas, ne se prononce pas)"] <<- "NSP"
+        s[[i]][s[[i]] == "NSP (Ne sait pas, ne se prononce pas)"] <<- "NSP"
+        s[[i]][s[[i]] == "NSP (Ne sais pas, ne se prononce pas)."] <<- "NSP"
+        s[[i]][s[[i]] == "NSP (Ne sait pas, ne se prononce pas)."] <<- "NSP"
+        s[[i]][s[[i]] == "NSP (Ne sais pas, ne souhaite pas répondre)"] <<- "NSP"
+        s[[i]][s[[i]] == "NSP (Ne sait pas, ne veut pas répondre)"] <<- "NSP"
+        s[[i]][s[[i]] == "NSP (Ne veut pas répondre)"] <<- "NSP"
+    }
+    s$variante_transferts_inter[!is.na(s$transferts_inter_a) | 
+        !is.na(s$transferts_inter_a_info)] <<- "a"
+    s$transferts_inter <<- NA
+    s$transferts_inter_info[!is.na(s$transferts_inter_a_info)] <<- TRUE
+    s$transferts_inter_info[!is.na(s$transferts_inter_a)] <<- FALSE
+    s$transferts_inter[!is.na(s$transferts_inter_a_info)] <<- s$transferts_inter_a_info[!is.na(s$transferts_inter_a_info)]
+    s$transferts_inter[!is.na(s$transferts_inter_a)] <<- s$transferts_inter_a[!is.na(s$transferts_inter_a)]
+    label(s$variante_transferts_inter) <<- "variante_transferts_inter: Variante dans la formulation de transferts_inter; s/i/c/a: simple/intermédiaire/complète/approbation: (argument pauvreté,esponsabilité climatique des pays riches)/complète (i+ argument colonisation, esclavage)/pour ou contre un transfert de 5% des revenus des pays riches vers les pays pauvres (seulement en vague 2); Vague 1: curseur/NSP, Vague 2: champ de saisie (quelques données manquantes) - Q5,Q6,Q78"
+    label(s$transferts_inter) <<- "transferts_inter: Approbation d'un transfert de 5% des revenus des pays riches vers les pays pauvres"
+    s$mauvaise_qualite <<- 0
+    s$mauvaise_qualite[n(s$revenu) > n(s$rev_tot)] <<- 1 + s$mauvaise_qualite[n(s$revenu) > 
+## Crosstab function 1 
+function (..., dec.places = NULL, type = NULL, style = "wide", 
+    row.vars = NULL, col.vars = NULL, percentages = TRUE, addmargins = TRUE, 
+    subtotals = TRUE) 
+{
+    mk.pcnt.tbl <- function(tbl, type) {
+        a <- length(row.vars)
+        b <- length(col.vars)
+        mrgn <- switch(type, column.pct = c(row.vars[-a], col.vars), 
+            row.pct = c(row.vars, col.vars[-b]), joint.pct = c(row.vars[-a], 
+                col.vars[-b]), total.pct = NULL)
+        tbl <- prop.table(tbl, mrgn)
+        if (percentages) {
+            tbl <- tbl * 100
+        }
+        tbl
+    }
+    n.row.vars <- length(row.vars)
+    n.col.vars <- length(col.vars)
+    n.vars <- n.row.vars + n.col.vars
+    stopifnot(as.integer(dec.places) == dec.places, dec.places > 
+        -1)
+    stopifnot(is.character(style))
+    stopifnot(is.logical(percentages))
+    stopifnot(is.logical(addmargins))
+    stopifnot(is.logical(subtotals))
+    stopifnot(n.vars >= 1)
+    types <- NULL
+    choices <- c("frequency", "row.pct", "column.pct", "joint.pct", 
+        "total.pct")
+    for (tp in type) types <- c(types, match.arg(tp, choices))
+## data1 function 1 
+function (vars, data = e, weights = T) 
+{
+    res <- c()
+    for (var in vars) {
+        if (weights) {
+            res <- c(res, sum(data[["weight"]][which(data[[var]] == 
+                TRUE)])/sum(data[["weight"]][which(data[[var]] == 
+                TRUE | data[[var]] == FALSE)]))
+        }
+        else {
+            res <- c(res, length(which(data[[var]] == T))/length(which(data[[var]] == 
+                T | data[[var]] == FALSE)))
+        }
+    }
+    return(matrix(res, ncol = length(vars)))
+}
+## data5 function 1 
+function (vars, data = s, miss = T, weights = T, rev = FALSE) 
+{
+    matrice <- c()
+    colors <- c(rainbow(4, end = 4/15), "forestgreen")
+    for (var in vars) {
+        if (miss) {
+            if (is.null(annotation(data[[var]]))) {
+                mat <- c(length(which(n(data[[var]]) == -2))/length(which(!is.missing(n(data[[var]])))), 
+                  length(which(n(data[[var]]) == -1))/length(which(!is.missing(n(data[[var]])))), 
+                  length(which(n(data[[var]]) == 0))/length(which(!is.missing(n(data[[var]])))), 
+                  length(which(n(data[[var]]) == 1))/length(which(!is.missing(n(data[[var]])))), 
+                  length(which(n(data[[var]]) == 2))/length(which(!is.missing(n(data[[var]])))), 
+                  length(which(is.na(data[[var]])))/length(which(!is.missing(n(data[[var]])))))
+                if (weights) {
+                  mat <- c(sum(data[["weight"]][which(n(data[[var]]) == 
+                    -2)])/sum(data[["weight"]][!is.missing(n(data[[var]]))]), 
+                    sum(data[["weight"]][which(n(data[[var]]) == 
+                      -1)])/sum(data[["weight"]][!is.missing(n(data[[var]]))]), 
+                    sum(data[["weight"]][which(n(data[[var]]) == 
+                      0)])/sum(data[["weight"]][!is.missing(n(data[[var]]))]), 
+                    sum(data[["weight"]][which(n(data[[var]]) == 
+                      1)])/sum(data[["weight"]][!is.missing(n(data[[var]]))]), 
+                    sum(data[["weight"]][which(n(data[[var]]) == 
+                      2)])/sum(data[["weight"]][!is.missing(n(data[[var]]))]), 
+                    sum(data[["weight"]][which(is.na(data[[var]]))])/sum(data[["weight"]][!is.missing(n(data[[var]]))]))
+                }
+            }
+            else {
+                mat <- c(length(which(n(data[[var]]) == -2))/length(which(!is.missing(n(data[[var]])))), 
+                  length(which(n(data[[var]]) == -1))/length(which(!is.missing(n(data[[var]])))), 
+## dataKN function 1 
+function (vars, data = e, miss = T, weights = T, return = "", 
+    fr = T, rev = FALSE) 
+{
+    if (is.logical(data[[vars[1]]])) 
+        return(data1(vars, data, weights))
+    else {
+        res <- c()
+        for (var in vars) res <- c(res, dataN(var, data, miss, 
+            weights, return, fr, rev))
+        return(matrix(res, ncol = length(vars)))
+    }
+}
+## dataN function 1 
+function (var, data = e, miss = T, weights = T, return = "", 
+    fr = T, rev = FALSE, rev_legend = FALSE) 
+{
+    if (is.null(data[["weight"]])) 
+        weights <- F
+    mat <- c()
+    if (is.character(data[[var]]) | (is.numeric(data[[var]]) & 
+        !grepl("item", class(data[[var]])))) 
+        v <- as.factor(data[[var]])
+    else v <- data[[var]]
+    if (is.null(annotation(v))) 
+        levels <- levels(v)
+    else levels <- labels(v)@.Data
+    levels <- levels[!(levels %in% c("NSP", "PNR", "Non concernÃ©Â·e"))]
+    if (rev_legend) 
+        levels <- rev(levels)
+    for (val in levels) {
+        if (weights) 
+            mat <- c(mat, sum(data[["weight"]][which(v == val)])/sum(data[["weight"]][!is.missing(v) & 
+                (!(v %in% c("NSP", "Non concernÃ©Â·e")))]))
+        else mat <- c(mat, length(which(v == val))/length(which(!is.missing(v) & 
+            (!(v %in% c("NSP", "Non concernÃ©Â·e"))))))
+    }
+    if (rev) 
+        mat <- rev(mat)
+    if (miss) {
+        if (is.null(annotation(v))) {
+            if (weights) 
+                mat <- c(mat, sum(data[["weight"]][which(is.na(v) | 
+                  v %in% c("NSP", "Non concernÃ©Â·e"))])/sum(data[["weight"]][!is.missing(v) & 
+## dataN2 function 1 
+function (var, df = list(c, e), miss = T, weights = T, fr = T, 
+    rev = FALSE, return = "") 
+{
+    if (return %in% c("levels", "legend")) 
+        return(dataN(var, df[[1]], miss = miss, weights = weights, 
+            fr = fr, rev = rev, return = return))
+    else return(cbind(dataN(var, df[[1]], miss = miss, weights = weights, 
+        fr = fr, rev = rev), dataN(var, df[[2]], miss = miss, 
+        weights = weights, fr = fr, rev = rev)))
+}
+## decrit function 1 
+function (variable, miss = FALSE, weights = NULL, numbers = FALSE) 
+{
+    if (length(annotation(variable)) > 0 & !numbers) {
+        if (!miss) {
+            if (length(which(!is.na(suppressWarnings(as.numeric(levels(as.factor(variable))))))) == 
+                0) {
+                describe(as.factor(variable[variable != ""]), 
+                  weights = weights[variable != ""], descript = Label(variable))
+            }
+            else {
+                describe(as.numeric(as.vector(variable[variable != 
+                  ""])), weights = weights[variable != ""], descript = Label(variable))
+            }
+        }
+        else {
+            if (length(which(suppressWarnings(!is.na(as.numeric(levels(as.factor(variable))))))) > 
+                10) 
+                describe(include.missings(variable[variable != 
+                  "" & !is.na(variable)]), weights = weights[variable != 
+                  "" & !is.na(variable)], descript = Label(variable))
+            else describe(as.factor(include.missings(variable[variable != 
+                "" & !is.na(variable)])), weights = weights[variable != 
+                "" & !is.na(variable)], descript = Label(variable))
+        }
+    }
+    else {
+        if (length(annotation(variable)) > 0) {
+            if (miss) 
+                describe(variable[variable != ""], weights = weights[variable != 
+                  ""], descript = Label(variable))
+## entd data.frame 30162x10 
+## fit data.frame 10258x39 
+## fit_2 data.frame 10258x39 
+## fit_housing_2 data.frame 26729x10 
+## irpp function 1 
+function (rev, nb_adultes, nb_pers) 
+{
+    income <- 0.9334 * rev/quotient(nb_pers, nb_adultes)
+    ir <- 0
+    ir <- ir + (income - 12815.25 * 12) * 0.45 * (income > 12815.25 * 
+        12)
+    ir <- ir + (pmin(income, 12676 * 12) - 6051.42 * 12) * 0.41 * 
+        (income > 6051.42 * 12)
+    ir <- ir + (pmin(income, 6051.42 * 12) - 2257.17 * 12) * 
+        0.3 * (income > 2257.17 * 12)
+    ir <- ir + (pmin(income, 2257.17 * 12) - 817.25 * 12) * 0.14 * 
+        (income > 817.25 * 12)
+    ir <- quotient(nb_pers, nb_adultes) * ir
+    seuil_decote <- (nb_adultes > 1) * 2585/12 + (nb_adultes <= 
+        1) * 1569/12
+    decote <- (ir < seuil_decote) * 0.75 * (seuil_decote - ir)
+    return(pmax((ir - decote), 0))
+}
+## Label function 1 
+function (var) 
+{
+    if (length(annotation(var)) == 1) {
+        annotation(var)[1]
+    }
+    else {
+        label(var)
+    }
+}
+## n function 1 
+function (var) 
+{
+    as.numeric(as.vector(var))
+}
+## nsps function 1 
+function (id) 
+{
+    length(v(id)[v(id) == "NSP (Je ne veux pas rÃ©pondre)"])/length(v(id))
+}
+## NSPs function 1 
+function (QID) 
+{
+    length(V(QID)[V(QID) == "NSP (Je ne veux pas rÃ©pondre)"])/length(V(QID))
+}
+## objective_gains data.frame 10342x8 
+## objective_gains_inelastic data.frame 10342x7 
+## oui_non function 1 
+function (vars, file, labels = vars, data = s, display_value = T, 
+    sort = T, colors = color(2), weights = T, margin_r = 0, margin_l = NA, 
+    title = "", en = FALSE, NSP = FALSE) 
+{
+    margin_t <- 30
+    if (title != "") {
+        margin_t <- 80
+    }
+    if (grepl("<br>", title)) {
+        margin_t <- 130
+    }
+    if (is.na(margin_l)) {
+        margin_l <- 4.7 * max(nchar(labels)/(1 + str_count(labels, 
+            "<br>")))
+    }
+    oui <- non <- nsp <- c()
+    for (var in vars) {
+        if (weights) {
+            oui <- c(oui, sum(data[["weight"]][which(data[[var]] == 
+                T | data[[var]] == "Oui" | data[[var]] == "Pour" | 
+                data[[var]] == "Taxer davantage le capital" | 
+                data[[var]] == "quotient")])/sum(data[["weight"]][which(data[[var]] == 
+                T | data[[var]] == FALSE | data[[var]] == "Oui" | 
+                data[[var]] == "Non" | data[[var]] == "NSP" | 
+                data[[var]] == "Pour" | data[[var]] == "Contre" | 
+                data[[var]] == "Taxer davantage le capital" | 
+                data[[var]] == "Taxer davantage le travail" | 
+                data[[var]] == "quotient" | data[[var]] == "indiv")]))
+            non <- c(non, sum(data[["weight"]][which(data[[var]] == 
+                FALSE | data[[var]] == "Non" | data[[var]] == 
+## oui_non5 character 5 
+[1] "Non, pas du tout"   "Non, pas vraiment"  "IndiffÃ©rent-e/NSP"
+[4] "Oui, plutÃ´t"       "Oui, tout Ã  fait" 
+## package function 1 
+function (p) 
+{
+    if (!is.element(p, installed.packages()[, 1])) {
+        install.packages(p)
+    }
+    library(p, character.only = TRUE)
+}
+## percentiles_revenu ecdf 1 
+structure(function (v) 
+.approxfun(x, y, v, method, yleft, yright, f, na.rm), class = c("ecdf", 
+"stepfun", "function"), call = ecdf(rev_i_erfs2014$x))
+## piece.formula function 1 
+function (var.names, knots, vector = F) 
+{
+    formula.sign <- rep(" - ", length(knots))
+    formula.sign[knots < 0] <- " + "
+    formulas <- c()
+    for (v in var.names) formulas <- c(formulas, paste(v, "+", 
+        paste("I(pmin(", v, formula.sign, abs(knots), ", 0))", 
+            collapse = " + ", sep = "")))
+    formula <- paste(formulas, collapse = " + ")
+    if (vector) 
+        return(strsplit(formula, " + ", fixed = T)[[1]])
+    else return(formula)
+}
+## prepare_s function 1 
+function (exclude_speeder = TRUE, exclude_screened = TRUE, only_finished = TRUE, 
+    exclude_more_speeder = F, exclude_even_more = F, only_known_agglo = T, 
+    only_quality = F) 
+{
+    s <<- read_csv("survey.csv")
+    for (i in 1:length(s)) {
+        label(s[[i]]) <<- toString(s[i][[1]][1])
+    }
+    s <<- s[-c(1, 2), c(1:91, 94:115, 117:235, 241, 247:310, 
+        313:319, 92, 93, 116, 311, 312, 236:240, 242:246)]
+    relabel_and_rename_s()
+    print(paste(length(which(s$exclu == "QuotaMet")), "QuotaMet"))
+    s$fini[s$exclu == "QuotaMet" | is.na(s$revenu)] <<- "False"
+    if (exclude_screened) {
+        s <<- s[is.na(s$exclu), ]
+    }
+    if (exclude_speeder) {
+        s <<- s[as.numeric(as.vector(s$duree)) > 420 + 240 * 
+            exclude_more_speeder + 420 * exclude_even_more, ]
+    }
+    if (only_finished) {
+        s <<- s[s$fini == "True", ]
+    }
+    else {
+        s <<- s[!is.na(s$gagnant_categorie), ]
+    }
+    agglos <- read.csv2("agglos.csv")
+    names(agglos) <- c("id", "taille_agglo2")
+    s <<- merge(s, agglos, by = "id", all.x = T)
+    s$taille_agglo[is.na(s$taille_agglo)] <<- s$taille_agglo2[is.na(s$taille_agglo)]
+## print.Crosstab function 1 
+function (x, dec.places = x$dec.places, subtotals = x$subtotals, 
+    ...) 
+{
+    row.vars <- x$row.vars
+    col.vars <- x$col.vars
+    n.row.vars <- length(row.vars)
+    n.col.vars <- length(col.vars)
+    n.vars <- n.row.vars + n.col.vars
+    if (length(x$type) > 1) {
+        z <- length(names(dimnames(x$Crosstab)))
+        if (x$style == "long") {
+            row.vars <- c(row.vars, z)
+        }
+        else {
+            col.vars <- c(z, col.vars)
+        }
+    }
+    if (n.vars == 1) {
+        if (length(x$type) == 1) {
+            tmp <- data.frame(round(x$Crosstab, x$dec.places))
+            colnames(tmp)[2] <- ifelse(x$type == "frequency", 
+                "Count", "%")
+            print(tmp, row.names = FALSE)
+        }
+        else {
+            print(round(x$Crosstab, x$dec.places))
+        }
+    }
+    if ((n.vars == 2) | ((subtotals == TRUE) & (n.vars > 2))) {
+        tbl <- ftable(x$Crosstab, row.vars = row.vars, col.vars = col.vars)
+## quotient function 1 
+function (nb_pers, nb_adultes) 
+{
+    return((nb_pers == 1) + (nb_pers == 2) * 2 + (nb_pers == 
+        3) * 2.5 + (nb_pers == 4) * 3 + (nb_pers > 4) * pmin(6, 
+        nb_pers - 1) + (nb_adultes == 1) * (nb_pers > 3) * 0.5)
+}
+## relabel_and_rename_s function 1 
+function () 
+{
+    names(s)[1] <<- "date"
+    label(s[[1]]) <<- "date: Date de commencement du sondage"
+    names(s)[2] <<- "endDate"
+    label(s[[2]]) <<- "endDate: Date de fin"
+    names(s)[3] <<- "status"
+    label(s[[3]]) <<- "status: 'IP Address'"
+    names(s)[4] <<- "ip"
+    label(s[[4]]) <<- "ip: Adresse IP"
+    names(s)[5] <<- "progress"
+    label(s[[5]]) <<- "progress: Progrès"
+    names(s)[6] <<- "duree2"
+    label(s[[6]]) <<- "duree2: Durée de complétion du questionnaire (pn secondes)"
+    names(s)[7] <<- "fini"
+    label(s[[7]]) <<- "fini: Terminé"
+    names(s)[8] <<- "recordedDate"
+    label(s[[8]]) <<- "recordedDate: Date enregistrée"
+    names(s)[9] <<- "X_recordId"
+    label(s[[9]]) <<- "X_recordId: ID de réponse"
+    names(s)[10] <<- "recipientLastName"
+    label(s[[10]]) <<- "recipientLastName: Nom du destinataire"
+    names(s)[11] <<- "recipientFirstName"
+    label(s[[11]]) <<- "recipientFirstName: Prénom du destinataire"
+    names(s)[12] <<- "recipientEmail"
+    label(s[[12]]) <<- "recipientEmail: Adresse e-mail du destinataire"
+    names(s)[13] <<- "externalDataReference"
+    label(s[[13]]) <<- "externalDataReference: Référence externe"
+    names(s)[14] <<- "locationLatitude"
+    label(s[[14]]) <<- "locationLatitude: LocationLatitude - Latitude de l'emplacement"
+## rev_i_erfs2014 data.frame 88814x2 
+## s data.frame 3002x437 
+## sa data.frame 3395x437 
+## save_plotly function 1 
+function (plot, filename = deparse(substitute(plot)), folder = "../images/", 
+    width = dev.size("px")[1], height = dev.size("px")[2], method = "orca", 
+    trim = T, transparent = F) 
+{
+    file <- paste(folder, filename, ".png", sep = "")
+    if (grepl("webshot", method)) {
+        saveWidget(politiques_1, "temp.html")
+        webshot("temp.html", file, delay = 0.1, vwidth = width, 
+            vheight = height)
+        file.remove("temp.html")
+    }
+    else orca(plot, file = file, width = width, height = height)
+    if (trim) 
+        image_write(image_trim(image_read(file)), file)
+    if (transparent) 
+        image_write(image_transparent(image_read(file), "white"), 
+            file)
+}
+## sl data.frame 2777x437 
+## sq data.frame 2729x437 
+## ss data.frame 3165x425 
+## stack_bars function 1 
+function (vars, data = s, miss = T, labels = NA, title = NA, 
+    accord = FALSE, en = FALSE, margin = c(2.5, 17, 0, 3), cex = 1, 
+    width = 0.77/length(vars), weights = FALSE) 
+{
+    matrice <- c()
+    colors <- c(rainbow(4, end = 4/15)[1:3], "green", "forestgreen")
+    for (var in vars) {
+        if (miss) {
+            mat <- c(length(which(data[[var]] == -2))/length(which(!is.missing(data[[var]]))), 
+                length(which(data[[var]] == -1))/length(which(!is.missing(data[[var]]))), 
+                length(which(data[[var]] == 0))/length(which(!is.missing(data[[var]]))), 
+                length(which(data[[var]] == 1))/length(which(!is.missing(data[[var]]))), 
+                length(which(data[[var]] == 2))/length(which(!is.missing(data[[var]]))), 
+                length(which(is.missing(data[[var]]) & !is.na(data[[var]])))/length(which(!is.missing(data[[var]]) & 
+                  !is.na(data[[var]]))))
+            if (weights) {
+                mat <- c(sum(data[["weight"]][which(data[[var]] == 
+                  -2)])/sum(data[["weight"]][!is.missing(data[[var]])]), 
+                  sum(data[["weight"]][which(data[[var]] == -1)])/sum(data[["weight"]][!is.missing(data[[var]])]), 
+                  sum(data[["weight"]][which(data[[var]] == 0)])/sum(data[["weight"]][!is.missing(data[[var]])]), 
+                  sum(data[["weight"]][which(data[[var]] == 1)])/sum(data[["weight"]][!is.missing(data[[var]])]), 
+                  sum(data[["weight"]][which(data[[var]] == 2)])/sum(data[["weight"]][!is.missing(data[[var]])]), 
+                  sum(data[["weight"]][which(is.missing(data[[var]]) & 
+                    !is.na(data[[var]]))])/sum(data[["weight"]][!is.missing(data[[var]])]))
+            }
+            colors <- c(colors, "lightgrey")
+        }
+        else {
+            mat <- c(length(which(data[[var]] == -2))/length(which(!is.missing(data[[var]]))), 
+                length(which(data[[var]] == -1))/length(which(!is.missing(data[[var]]))), 
+## subjective_gains data.frame 10000x7 
+## uc function 1 
+function (nb_pers, nb_14_et_plus) 
+{
+    return(1 + 0.5 * pmax(0, nb_14_et_plus - 1) + 0.3 * pmax(0, 
+        nb_pers - nb_14_et_plus))
+}
+## variables_aleatoires character 9 
+[1] "info_CC"                "info_PM"                "variante_monetaire"    
+[4] "apres_modifs"           "variante_taxe_info"     "variante_progressivite"
+[7] "info_progressivite"     "cible"                  "categorie_cible"       
+## variables_approbation character 3 
+[1] "taxe_approbation"       "taxe_info_approbation"  "taxe_cible_approbation"
+## variables_avis_CC character 18 
+ [1] "parle_CC"                "effets_CC"              
+ [3] "generation_CC_1960"      "generation_CC_1990"     
+ [5] "generation_CC_2020"      "generation_CC_2050"     
+ [7] "generation_CC_aucune"    "responsable_CC_chacun"  
+ [9] "responsable_CC_riches"   "responsable_CC_govts"   
+[11] "responsable_CC_etranger" "responsable_CC_passe"   
+[13] "responsable_CC_nature"   "enfant_CC"              
+[15] "enfant_CC_pour_lui"      "enfant_CC_pour_CC"      
+[17] "generation_CC_min"       "generation_CC_max"      
+## variables_benefices character 11 
+ [1] "nb_benefices"           "benefices_CC"           "benefices_sante"       
+ [4] "benefices_circulation"  "benefices_revenu"       "benefices_pauvres"     
+ [7] "benefices_independance" "benefices_enjeu"        "benefices_aucun"       
+[10] "benefices_autre_choix"  "benefices_autre"       
+## variables_comportement_CC character 9 
+[1] "mode_vie_ecolo"        "changer_si_politiques" "changer_si_moyens"    
+[4] "changer_si_tous"       "changer_non_riches"    "changer_non_interet"  
+[7] "changer_non_negation"  "changer_deja_fait"     "changer_essaie"       
+## variables_connaissances_CC character 12 
+ [1] "Cause_CC"           "ges_CO2"            "ges_CH4"           
+ [4] "ges_O2"             "ges_pm"             "ges_boeuf"         
+ [7] "ges_nucleaire"      "ges_avion"          "region_CC"         
+[10] "emission_cible"     "score_ges"          "score_climate_call"
+## variables_demo character 21 
+ [1] "sexe"          "age"           "statut_emploi" "csp"          
+ [5] "region"        "diplome4"      "taille_menage" "revenu"       
+ [9] "rev_tot"       "nb_14_et_plus" "nb_adultes"    "fume"         
+[13] "actualite"     "taille_agglo"  "uc"            "niveau_vie"   
+[17] "age_18_24"     "age_25_34"     "age_35_49"     "age_50_64"    
+[21] "age_65_plus"  
+## variables_depenses_publiques character 28 
+ [1] "depenses_confiant"       "Compris_depenses"       
+ [3] "duree_depenses"          "nombre_clics_depenses"  
+ [5] "depense_totale"          "depense_sante"          
+ [7] "depense_retraites"       "depense_protection"     
+ [9] "depense_education"       "depense_recherche"      
+[11] "depense_loisirs"         "depense_infrastructures"
+[13] "depense_justice"         "depense_armee"          
+[15] "depense_securite"        "depense_aide"           
+[17] "recette_totale"          "en_position_0"          
+[19] "en_position_1"           "en_position_2"          
+[21] "en_position_3"           "en_position_4"          
+[23] "en_position_5"           "en_position_6"          
+[25] "en_position_7"           "en_position_8"          
+[27] "en_position_9"           "en_position_10"         
+## variables_elasticite character 2 
+[1] "elasticite_partielle"       "elasticite_partielle_perso"
+## variables_Elasticite character 2 
+[1] "Elasticite_partielle"       "Elasticite_partielle_perso"
+## variables_energie character 15 
+ [1] "surface"          "Mode_chauffage"   "Chauffage"        "km"              
+ [5] "conso"            "diesel"           "essence"          "nb_vehicules"    
+ [9] "gaz"              "fioul"            "hausse_chauffage" "hausse_diesel"   
+[13] "hausse_essence"   "hausse_depenses"  "simule_gain"     
+## variables_gains_subjectifs character 10 
+ [1] "perte_relative_tva"          "perte_relative_partielle"   
+ [3] "gagnant_partielle_categorie" "gain_partielle"             
+ [5] "gagnant_categorie"           "gain"                       
+ [7] "gagnant_info_categorie"      "gagnant_cible_categorie"    
+ [9] "gain_echelle"                "gain_partielle_echelle"     
+## variables_gilets_jaunes character 5 
+[1] "gilets_jaunes_dedans"  "gilets_jaunes_soutien" "gilets_jaunes_compris"
+[4] "gilets_jaunes_oppose"  "gilets_jaunes_NSP"    
+## variables_mobilite character 3 
+[1] "transports_avis"      "transports_frequence" "transports_travail"  
+## variables_politiques character 8 
+[1] "interet_politique" "conservateur"      "liberal"          
+[4] "humaniste"         "patriote"          "apolitique"       
+[7] "ecologiste"        "Gauche_droite"    
+## variables_politiques_environnementales character 8 
+[1] "taxe_kerosene"          "taxe_viande"            "normes_isolation"      
+[4] "normes_vehicules"       "controle_technique"     "interdiction_polluants"
+[7] "peages_urbains"         "fonds_mondial"         
+## variables_problemes character 11 
+ [1] "nb_problemes"           "problemes_inefficace"   "problemes_alternatives"
+ [4] "problemes_ruraux"       "problemes_revenu"       "problemes_pauvres"     
+ [7] "problemes_economie"     "problemes_pretexte"     "problemes_aucun"       
+[10] "problemes_autre_choix"  "problemes_autre"       
+## variables_qualite character 3 
+[1] "duree"             "duree_info"        "duree_champ_libre"
+## variables_schiste character 4 
+[1] "schiste_approbation" "schiste_avantage"    "Schiste_CC"         
+[4] "schiste_traite"     
+## variables_taxe_condition character 9 
+[1] "si_pauvres"        "si_compensee"      "si_contraints"    
+[4] "si_baisse_cotsoc"  "si_baisse_tva"     "si_baisse_deficit"
+[7] "si_renovation"     "si_renouvelables"  "si_transports"    
+## variables_taxe_croyances character 18 
+ [1] "taxe_efficace"         "taxe_gagnant_personne" "taxe_gagnant_pauvres" 
+ [4] "taxe_gagnant_moyennes" "taxe_gagnant_riches"   "taxe_gagnant_tous"    
+ [7] "taxe_gagnant_citadins" "taxe_gagnant_certains" "taxe_gagnant_NSP"     
+[10] "taxe_perdant_personne" "taxe_perdant_pauvres"  "taxe_perdant_moyennes"
+[13] "taxe_perdant_riches"   "taxe_perdant_tous"     "taxe_perdant_ruraux"  
+[16] "taxe_perdant_certains" "taxe_perdant_NSP"      "progressivite"        
+## variables_taxe_gagnant character 8 
+[1] "taxe_gagnant_personne" "taxe_gagnant_pauvres"  "taxe_gagnant_moyennes"
+[4] "taxe_gagnant_riches"   "taxe_gagnant_tous"     "taxe_gagnant_citadins"
+[7] "taxe_gagnant_certains" "taxe_gagnant_NSP"     
+## variables_taxe_perdant character 8 
+[1] "taxe_perdant_personne" "taxe_perdant_pauvres"  "taxe_perdant_moyennes"
+[4] "taxe_perdant_riches"   "taxe_perdant_tous"     "taxe_perdant_ruraux"  
+[7] "taxe_perdant_certains" "taxe_perdant_NSP"     
+## variables_toutes character 221 
+  [1] "taxe_approbation"                "taxe_info_approbation"          
+  [3] "taxe_cible_approbation"          "duree"                          
+  [5] "duree_info"                      "duree_champ_libre"              
+  [7] "info_CC"                         "info_PM"                        
+  [9] "variante_monetaire"              "apres_modifs"                   
+ [11] "variante_taxe_info"              "variante_progressivite"         
+ [13] "info_progressivite"              "cible"                          
+ [15] "categorie_cible"                 "sexe"                           
+ [17] "age"                             "statut_emploi"                  
+ [19] "csp"                             "region"                         
+ [21] "diplome4"                        "taille_menage"                  
+ [23] "revenu"                          "rev_tot"                        
+ [25] "nb_14_et_plus"                   "nb_adultes"                     
+ [27] "fume"                            "actualite"                      
+ [29] "taille_agglo"                    "uc"                             
+ [31] "niveau_vie"                      "age_18_24"                      
+ [33] "age_25_34"                       "age_35_49"                      
+ [35] "age_50_64"                       "age_65_plus"                    
+ [37] "versement_cible"                 "surface"                        
+ [39] "Mode_chauffage"                  "Chauffage"                      
+ [41] "km"                              "conso"                          
+ [43] "diesel"                          "essence"                        
+ [45] "nb_vehicules"                    "gaz"                            
+ [47] "fioul"                           "hausse_chauffage"               
+ [49] "hausse_diesel"                   "hausse_essence"                 
+ [51] "hausse_depenses"                 "simule_gain"                    
+ [53] "simule_gagnant"                  "simule_gain_cible"              
+ [55] "simule_gain_cible_sans_conjoint" "simule_gain_repondant"          
+ [57] "Transports_distance"             "transports_frequence"           
+ [59] "transports_avis"                 "transports_travail"             
+ [61] "transports_courses"              "transports_loisirs"             
+ [63] "Transports_travail_commun"       "Transports_travail_actif"       
+ [65] "interet_politique"               "conservateur"                   
+ [67] "liberal"                         "humaniste"                      
+ [69] "patriote"                        "apolitique"                     
+ [71] "ecologiste"                      "Gauche_droite"                  
+ [73] "gilets_jaunes_dedans"            "gilets_jaunes_soutien"          
+ [75] "gilets_jaunes_compris"           "gilets_jaunes_oppose"           
+ [77] "gilets_jaunes_NSP"               "gilets_jaunes"                  
+ [79] "perte_relative_tva"              "perte_relative_partielle"       
+ [81] "gagnant_partielle_categorie"     "gain_partielle"                 
+ [83] "gagnant_categorie"               "gain"                           
+ [85] "gagnant_info_categorie"          "gagnant_cible_categorie"        
+ [87] "gain_echelle"                    "gain_partielle_echelle"         
+ [89] "Elasticite_partielle"            "Elasticite_partielle_perso"     
+ [91] "elasticite_partielle"            "elasticite_partielle_perso"     
+ [93] "taxe_efficace"                   "taxe_gagnant_personne"          
+ [95] "taxe_gagnant_pauvres"            "taxe_gagnant_moyennes"          
+ [97] "taxe_gagnant_riches"             "taxe_gagnant_tous"              
+ [99] "taxe_gagnant_citadins"           "taxe_gagnant_certains"          
+[101] "taxe_gagnant_NSP"                "taxe_perdant_personne"          
+[103] "taxe_perdant_pauvres"            "taxe_perdant_moyennes"          
+[105] "taxe_perdant_riches"             "taxe_perdant_tous"              
+[107] "taxe_perdant_ruraux"             "taxe_perdant_certains"          
+[109] "taxe_perdant_NSP"                "progressivite"                  
+[111] "nb_benefices"                    "benefices_CC"                   
+[113] "benefices_sante"                 "benefices_circulation"          
+[115] "benefices_revenu"                "benefices_pauvres"              
+[117] "benefices_independance"          "benefices_enjeu"                
+[119] "benefices_aucun"                 "benefices_autre_choix"          
+[121] "benefices_autre"                 "nb_problemes"                   
+[123] "problemes_inefficace"            "problemes_alternatives"         
+[125] "problemes_ruraux"                "problemes_revenu"               
+[127] "problemes_pauvres"               "problemes_economie"             
+[129] "problemes_pretexte"              "problemes_aucun"                
+[131] "problemes_autre_choix"           "problemes_autre"                
+[133] "si_pauvres"                      "si_compensee"                   
+[135] "si_contraints"                   "si_baisse_cotsoc"               
+[137] "si_baisse_tva"                   "si_baisse_deficit"              
+[139] "si_renovation"                   "si_renouvelables"               
+[141] "si_transports"                   "taxe_kerosene"                  
+[143] "taxe_viande"                     "normes_isolation"               
+[145] "normes_vehicules"                "controle_technique"             
+[147] "interdiction_polluants"          "peages_urbains"                 
+[149] "fonds_mondial"                   "rattrapage_diesel"              
+[151] "Cause_CC"                        "ges_CO2"                        
+[153] "ges_CH4"                         "ges_O2"                         
+[155] "ges_pm"                          "ges_boeuf"                      
+[157] "ges_nucleaire"                   "ges_avion"                      
+[159] "region_CC"                       "emission_cible"                 
+[161] "score_ges"                       "score_climate_call"             
+[163] "parle_CC"                        "effets_CC"                      
+[165] "generation_CC_1960"              "generation_CC_1990"             
+[167] "generation_CC_2020"              "generation_CC_2050"             
+[169] "generation_CC_aucune"            "responsable_CC_chacun"          
+[171] "responsable_CC_riches"           "responsable_CC_govts"           
+[173] "responsable_CC_etranger"         "responsable_CC_passe"           
+[175] "responsable_CC_nature"           "enfant_CC"                      
+[177] "enfant_CC_pour_lui"              "enfant_CC_pour_CC"              
+[179] "generation_CC_min"               "generation_CC_max"              
+[181] "mode_vie_ecolo"                  "changer_si_politiques"          
+[183] "changer_si_moyens"               "changer_si_tous"                
+[185] "changer_non_riches"              "changer_non_interet"            
+[187] "changer_non_negation"            "changer_deja_fait"              
+[189] "changer_essaie"                  "schiste_approbation"            
+[191] "schiste_avantage"                "Schiste_CC"                     
+[193] "schiste_traite"                  "depenses_confiant"              
+[195] "Compris_depenses"                "duree_depenses"                 
+[197] "nombre_clics_depenses"           "depense_totale"                 
+[199] "depense_sante"                   "depense_retraites"              
+[201] "depense_protection"              "depense_education"              
+[203] "depense_recherche"               "depense_loisirs"                
+[205] "depense_infrastructures"         "depense_justice"                
+[207] "depense_armee"                   "depense_securite"               
+[209] "depense_aide"                    "recette_totale"                 
+[211] "en_position_0"                   "en_position_1"                  
+[213] "en_position_2"                   "en_position_3"                  
+[215] "en_position_4"                   "en_position_5"                  
+[217] "en_position_6"                   "en_position_7"                  
+[219] "en_position_8"                   "en_position_9"                  
+[221] "en_position_10"                 
+## variables_transferts_inter character 9 
+[1] "transferts_inter"      "aide_2p"               "transferts_inter_info"
+[4] "aide_non_autonomie"    "aide_non_priorite"     "aide_non_etats"       
+[7] "aide_non_global"       "aide_non_trop"         "aide_non_autonomie"   
+## variables_transport character 8 
+[1] "Transports_distance"       "transports_frequence"     
+[3] "transports_avis"           "transports_travail"       
+[5] "transports_courses"        "transports_loisirs"       
+[7] "Transports_travail_commun" "Transports_travail_actif" 
+## weighting_s function 1 
+function (data, printWeights = T) 
+{
+    d <- data
+    d$region[is.na(d$region)] <- "autre"
+    d$taille_agglo <- as.numeric(d$taille_agglo)
+    unweigthed <- svydesign(ids = ~1, data = d)
+    sexe <- data.frame(sexe = c("Féminin", "Masculin"), Freq = nrow(d) * 
+        c(0.516, 0.484))
+    csp <- data.frame(csp = c("Inactif", "Ouvrier", "Cadre", 
+        "Indépendant", "Intermédiaire", "Retraité", "Employé", 
+        "Agriculteur"), Freq = nrow(d) * c(0.1244, 0.1214, 0.0943, 
+        0.0341, 0.1364, 0.3279, 0.1535, 0.008))
+    region <- data.frame(region = c("autre", "ARA", "Est", "Nord", 
+        "IDF", "Ouest", "SO", "Occ", "Centre", "PACA"), Freq = nrow(d) * 
+        c(0.001, 0.124, 0.129, 0.093, 0.189, 0.103, 0.093, 0.091, 
+            0.099, 0.078))
+    age <- data.frame(age = c("18-24", "25-34", "35-49", "50-64", 
+        "65+"), Freq = nrow(d) * c(0.117, 0.147, 0.242, 0.242, 
+        0.252))
+    taille_agglo <- data.frame(taille_agglo = c(1:5), Freq = nrow(d) * 
+        c(0.2166, 0.171, 0.1408, 0.3083, 0.1633))
+    diplome4 <- data.frame(diplome4 = c("Aucun diplôme ou brevet", 
+        "CAP ou BEP", "Baccalauréat", "Supérieur"), Freq = nrow(d) * 
+        c(0.301, 0.246, 0.168, 0.285))
+    if (length(which(is.na(d$taille_agglo))) > 0) 
+        raked <- rake(design = unweigthed, sample.margins = list(~sexe, 
+            ~diplome4, ~region, ~csp, ~age), population.margins = list(sexe, 
+            diplome4, region, csp, age))
+    else raked <- rake(design = unweigthed, sample.margins = list(~sexe, 
+        ~diplome4, ~taille_agglo, ~region, ~csp, ~age), population.margins = list(sexe, 
+## yes_no5 character 5 
+[1] "Not at all"      "Not really"      "Indifferent/PNR" "Rather yes"     
+[5] "Yes, completely"
+
+### columns of s
+  [1] "id"                                       
+  [2] "date"                                     
+  [3] "endDate"                                  
+  [4] "fini"                                     
+  [5] "duree_no_info"                            
+  [6] "nombre_clics_no_info"                     
+  [7] "premier_clic_info_PM"                     
+  [8] "dernier_clic_info_PM"                     
+  [9] "duree_info_PM"                            
+ [10] "nombre_clics_info_PM"                     
+ [11] "premier_clic_info_CC"                     
+ [12] "dernier_clic_info_CC"                     
+ [13] "duree_info_CC"                            
+ [14] "nombre_clics_info_CC"                     
+ [15] "premier_clic_info_CC_PM"                  
+ [16] "dernier_clic_info_CC_PM"                  
+ [17] "duree_info_CC_PM"                         
+ [18] "nombre_clics_info_CC_PM"                  
+ [19] "code_postal"                              
+ [20] "sexe"                                     
+ [21] "age"                                      
+ [22] "statut_emploi"                            
+ [23] "csp"                                      
+ [24] "diplome"                                  
+ [25] "taille_menage"                            
+ [26] "revenu"                                   
+ [27] "rev_tot"                                  
+ [28] "nb_14_et_plus"                            
+ [29] "nb_adultes"                               
+ [30] "surface"                                  
+ [31] "mode_chauffage"                           
+ [32] "chauffage"                                
+ [33] "nb_vehicules_texte"                       
+ [34] "km_0"                                     
+ [35] "fuel_1"                                   
+ [36] "conso_1"                                  
+ [37] "km_1"                                     
+ [38] "fuel_2_1"                                 
+ [39] "fuel_2_2"                                 
+ [40] "conso_2"                                  
+ [41] "km_2"                                     
+ [42] "perte_relative_tva"                       
+ [43] "perte_relative_fuel"                      
+ [44] "gagnant_fuel_categorie"                   
+ [45] "gain_taxe_fuel_hausse"                    
+ [46] "gain_taxe_fuel_baisse"                    
+ [47] "elasticite_fuel_perso"                    
+ [48] "elasticite_fuel"                          
+ [49] "perte_relative_chauffage"                 
+ [50] "gagnant_chauffage_categorie"              
+ [51] "gain_taxe_chauffage_hausse"               
+ [52] "gain_taxe_chauffage_baisse"               
+ [53] "elasticite_chauffage_perso"               
+ [54] "elasticite_chauffage"                     
+ [55] "gagnant_categorie"                        
+ [56] "gain_taxe_hausse"                         
+ [57] "gain_taxe_baisse"                         
+ [58] "taxe_efficace"                            
+ [59] "taxe_perdant_personne"                    
+ [60] "taxe_perdant_pauvres"                     
+ [61] "taxe_perdant_moyennes"                    
+ [62] "taxe_perdant_riches"                      
+ [63] "taxe_perdant_tous"                        
+ [64] "taxe_perdant_ruraux"                      
+ [65] "taxe_perdant_certains"                    
+ [66] "taxe_perdant_NSP"                         
+ [67] "taxe_gagnant_personne"                    
+ [68] "taxe_gagnant_pauvres"                     
+ [69] "taxe_gagnant_moyennes"                    
+ [70] "taxe_gagnant_riches"                      
+ [71] "taxe_gagnant_tous"                        
+ [72] "taxe_gagnant_citadins"                    
+ [73] "taxe_gagnant_certains"                    
+ [74] "taxe_gagnant_NSP"                         
+ [75] "taxe_approbation"                         
+ [76] "gagnant_feedback_categorie"               
+ [77] "taxe_feedback_approbation"                
+ [78] "gagnant_progressif_categorie"             
+ [79] "taxe_progressif_approbation"              
+ [80] "gagnant__20_categorie"                    
+ [81] "taxe__20_approbation"                     
+ [82] "gagnant_20_30_categorie"                  
+ [83] "taxe_20_30_approbation"                   
+ [84] "gagnant_30_40_categorie"                  
+ [85] "taxe_30_40_approbation"                   
+ [86] "gagnant_40_50_categorie"                  
+ [87] "taxe_40_50_approbation"                   
+ [88] "gagnant_50_70_categorie"                  
+ [89] "taxe_50_70_approbation"                   
+ [90] "gagnant_70__categorie"                    
+ [91] "taxe_70__approbation"                     
+ [92] "si_pauvres"                               
+ [93] "si_compensee"                             
+ [94] "si_contraints"                            
+ [95] "si_baisse_cotsoc"                         
+ [96] "si_baisse_tva"                            
+ [97] "si_baisse_deficit"                        
+ [98] "si_renovation"                            
+ [99] "si_renouvelables"                         
+[100] "si_transports"                            
+[101] "test_qualite"                             
+[102] "taxe_kerosene"                            
+[103] "taxe_viande"                              
+[104] "normes_isolation"                         
+[105] "normes_vehicules"                         
+[106] "controle_technique"                       
+[107] "interdiction_polluants"                   
+[108] "peages_urbains"                           
+[109] "fonds_mondial"                            
+[110] "rattrapage_diesel"                        
+[111] "parle_CC"                                 
+[112] "cause_CC"                                 
+[113] "ges_CO2"                                  
+[114] "ges_CH4"                                  
+[115] "ges_O2"                                   
+[116] "ges_pm"                                   
+[117] "ges_boeuf"                                
+[118] "ges_nucleaire"                            
+[119] "ges_avion"                                
+[120] "effets_CC"                                
+[121] "region_CC"                                
+[122] "generation_CC_1960"                       
+[123] "generation_CC_1990"                       
+[124] "generation_CC_2020"                       
+[125] "generation_CC_2050"                       
+[126] "generation_CC_aucune"                     
+[127] "responsable_CC_chacun"                    
+[128] "responsable_CC_riches"                    
+[129] "responsable_CC_govts"                     
+[130] "responsable_CC_etranger"                  
+[131] "responsable_CC_passe"                     
+[132] "responsable_CC_nature"                    
+[133] "emission_cible"                           
+[134] "enfant_CC"                                
+[135] "enfant_CC_pour_lui"                       
+[136] "enfant_CC_pour_CC"                        
+[137] "changer_si_politiques"                    
+[138] "changer_si_moyens"                        
+[139] "changer_si_tous"                          
+[140] "changer_non_riches"                       
+[141] "changer_non_interet"                      
+[142] "changer_non_negation"                     
+[143] "changer_deja_fait"                        
+[144] "changer_essaie"                           
+[145] "mode_vie_ecolo"                           
+[146] "fume"                                     
+[147] "schiste_approbation"                      
+[148] "schiste_avantage"                         
+[149] "schiste_CC"                               
+[150] "transports_distance_choix"                
+[151] "transports_distance"                      
+[152] "transports_frequence"                     
+[153] "transports_avis"                          
+[154] "transports_travail"                       
+[155] "transports_courses"                       
+[156] "transports_loisirs"                       
+[157] "transports_travail_commun"                
+[158] "transports_travail_actif"                 
+[159] "interet_politique"                        
+[160] "extr_gauche"                              
+[161] "gauche"                                   
+[162] "centre"                                   
+[163] "droite"                                   
+[164] "extr_droite"                              
+[165] "conservateur"                             
+[166] "liberal"                                  
+[167] "humaniste"                                
+[168] "patriote"                                 
+[169] "apolitique"                               
+[170] "ecologiste"                               
+[171] "actualite"                                
+[172] "gilets_jaunes_dedans"                     
+[173] "gilets_jaunes_soutien"                    
+[174] "gilets_jaunes_compris"                    
+[175] "gilets_jaunes_oppose"                     
+[176] "gilets_jaunes_NSP"                        
+[177] "transferts_inter_a"                       
+[178] "transferts_inter_a_info"                  
+[179] "premier_clic_depenses"                    
+[180] "dernier_clic_depenses"                    
+[181] "duree_depenses"                           
+[182] "nombre_clics_depenses"                    
+[183] "depenses_confiant"                        
+[184] "compris_depenses"                         
+[185] "premier_clic_champ_libre"                 
+[186] "dernier_clic_champ_libre"                 
+[187] "duree_champ_libre"                        
+[188] "nombre_clics_champ_libre"                 
+[189] "champ_libre"                              
+[190] "depense_totale"                           
+[191] "depense_sante"                            
+[192] "depense_retraites"                        
+[193] "depense_protection"                       
+[194] "depense_education"                        
+[195] "depense_recherche"                        
+[196] "depense_loisirs"                          
+[197] "depense_infrastructures"                  
+[198] "depense_justice"                          
+[199] "depense_armee"                            
+[200] "depense_securite"                         
+[201] "depense_aide"                             
+[202] "variation_totale"                         
+[203] "variation_sante"                          
+[204] "variation_retraites"                      
+[205] "variation_protection"                     
+[206] "variation_education"                      
+[207] "variation_recherche"                      
+[208] "variation_loisirs"                        
+[209] "variation_infrastructures"                
+[210] "variation_justice"                        
+[211] "variation_armee"                          
+[212] "variation_securite"                       
+[213] "variation_aide"                           
+[214] "recette_totale"                           
+[215] "variation_recette"                        
+[216] "budget_equilibre"                         
+[217] "regle_or"                                 
+[218] "duree"                                    
+[219] "exclu"                                    
+[220] "taille_agglo"                             
+[221] "region"                                   
+[222] "schiste_traite"                           
+[223] "gaz"                                      
+[224] "fioul"                                    
+[225] "nb_vehicules"                             
+[226] "hausse_depenses"                          
+[227] "simule_gagnant"                           
+[228] "hausse_chauffage"                         
+[229] "hausse_diesel"                            
+[230] "hausse_essence"                           
+[231] "en_position_0"                            
+[232] "en_position_1"                            
+[233] "en_position_2"                            
+[234] "en_position_3"                            
+[235] "en_position_4"                            
+[236] "en_position_5"                            
+[237] "en_position_6"                            
+[238] "en_position_7"                            
+[239] "en_position_8"                            
+[240] "en_position_9"                            
+[241] "en_position_10"                           
+[242] "info_CC"                                  
+[243] "info_PM"                                  
+[244] "variante_monetaire"                       
+[245] "cible20"                                  
+[246] "cible30"                                  
+[247] "cible40"                                  
+[248] "cible50"                                  
+[249] "progressivite_feedback_avec_info"         
+[250] "progressivite_feedback_sans_info"         
+[251] "progressivite_progressif"                 
+[252] "apres_modifs"                             
+[253] "aide_2p"                                  
+[254] "variante_transferts_inter"                
+[255] "transferts_inter"                         
+[256] "transferts_inter_info"                    
+[257] "mauvaise_qualite"                         
+[258] "duree_info_courte"                        
+[259] "Mode_chauffage"                           
+[260] "Chauffage"                                
+[261] "Cause_CC"                                 
+[262] "Schiste_CC"                               
+[263] "Transports_travail_commun"                
+[264] "Transports_travail_actif"                 
+[265] "Transports_distance"                      
+[266] "Diplome"                                  
+[267] "diplome4"                                 
+[268] "Compris_depenses"                         
+[269] "gauche_droite"                            
+[270] "Gauche_droite"                            
+[271] "indeterminate"                            
+[272] "gauche_droite_na"                         
+[273] "gilets_jaunes"                            
+[274] "Gilets_jaunes"                            
+[275] "revenu_conjoint"                          
+[276] "revdisp"                                  
+[277] "uc"                                       
+[278] "niveau_vie"                               
+[279] "variante_partielle"                       
+[280] "perte_relative_partielle"                 
+[281] "gain_fuel"                                
+[282] "gain_chauffage"                           
+[283] "gagnant_partielle_categorie"              
+[284] "gain"                                     
+[285] "gain_echelle"                             
+[286] "gain_fuel_echelle"                        
+[287] "gain_chauffage_echelle"                   
+[288] "gain_partielle_echelle"                   
+[289] "gain_min"                                 
+[290] "gain_max"                                 
+[291] "gain_fuel_min"                            
+[292] "gain_fuel_max"                            
+[293] "gain_chauffage_min"                       
+[294] "gain_chauffage_max"                       
+[295] "gain_partielle"                           
+[296] "Elasticite_chauffage"                     
+[297] "Elasticite_chauffage_perso"               
+[298] "Elasticite_fuel"                          
+[299] "Elasticite_fuel_perso"                    
+[300] "elasticite_partielle"                     
+[301] "Elasticite_partielle"                     
+[302] "elasticite_partielle_perso"               
+[303] "Elasticite_partielle_perso"               
+[304] "variante_taxe_info"                       
+[305] "nb_benefices"                             
+[306] "nb_problemes"                             
+[307] "benefices_CC"                             
+[308] "benefices_sante"                          
+[309] "benefices_circulation"                    
+[310] "benefices_revenu"                         
+[311] "benefices_pauvres"                        
+[312] "benefices_independance"                   
+[313] "benefices_enjeu"                          
+[314] "benefices_aucun"                          
+[315] "benefices_autre_choix"                    
+[316] "benefices_autre"                          
+[317] "problemes_inefficace"                     
+[318] "problemes_alternatives"                   
+[319] "problemes_ruraux"                         
+[320] "problemes_revenu"                         
+[321] "problemes_pauvres"                        
+[322] "problemes_economie"                       
+[323] "problemes_pretexte"                       
+[324] "problemes_aucun"                          
+[325] "problemes_autre_choix"                    
+[326] "problemes_autre"                          
+[327] "gagnant_info_categorie"                   
+[328] "taxe_info_approbation"                    
+[329] "cible"                                    
+[330] "gagnant_cible_categorie"                  
+[331] "taxe_cible_approbation"                   
+[332] "categorie_cible"                          
+[333] "traite_cible"                             
+[334] "traite_cible_conjoint"                    
+[335] "versement_cible"                          
+[336] "versement_cible_sans_conjoint"            
+[337] "versement"                                
+[338] "convaincu_cible"                          
+[339] "convaincu_feedback"                       
+[340] "km"                                       
+[341] "conso"                                    
+[342] "km_original"                              
+[343] "conso_original"                           
+[344] "surface_original"                         
+[345] "hausse_carburants"                        
+[346] "depense_carburants"                       
+[347] "diesel"                                   
+[348] "essence"                                  
+[349] "simule_gain_menage"                       
+[350] "simule_gain"                              
+[351] "simule_gain_repondant"                    
+[352] "simule_gain_cible"                        
+[353] "simule_gain_cible_sans_conjoint"          
+[354] "hausse_chauffage_interaction_inelastique" 
+[355] "depense_chauffage"                        
+[356] "hausse_depenses_interaction"              
+[357] "hausse_depenses_interaction_inelastique"  
+[358] "simule_gain_interaction"                  
+[359] "simule_gagnant_interaction"               
+[360] "simule_gain_inelastique"                  
+[361] "simule_gain_cible_interaction"            
+[362] "simule_gain_cible_interaction_inelastique"
+[363] "simule_gain_elast_perso"                  
+[364] "progressivite"                            
+[365] "prog_na"                                  
+[366] "variante_progressivite"                   
+[367] "info_progressivite"                       
+[368] "age_18_24"                                
+[369] "age_25_34"                                
+[370] "age_35_49"                                
+[371] "age_50_64"                                
+[372] "age_65_plus"                              
+[373] "score_ges"                                
+[374] "score_climate_call"                       
+[375] "generation_CC_min"                        
+[376] "generation_CC_max"                        
+[377] "nb_generation_CC"                         
+[378] "duree_info"                               
+[379] "aide_non_autonomie"                       
+[380] "aide_non_priorite"                        
+[381] "aide_non_etats"                           
+[382] "aide_non_global"                          
+[383] "aide_non_trop"                            
+[384] "revenu_decile"                            
+[385] "revenu_quintile"                          
+[386] "tax_approval"                             
+[387] "tax_acceptance"                           
+[388] "tax_cible_acceptance"                     
+[389] "win_cible_category"                       
+[390] "update_correct"                           
+[391] "update_correct_large"                     
+[392] "feedback_confirme"                        
+[393] "feedback_infirme"                         
+[394] "feedback_confirme_large"                  
+[395] "feedback_infirme_large"                   
+[396] "winning_category"                         
+[397] "winning_feedback_category"                
+[398] "Revenu"                                   
+[399] "Revenu_conjoint"                          
+[400] "percentile_revenu"                        
+[401] "percentile_revenu_conjoint"               
+[402] "Simule_gain"                              
+[403] "Revenu2"                                  
+[404] "Revenu_conjoint2"                         
+[405] "Simule_gain2"                             
+[406] "Simule_gain_cible"                        
+[407] "Simule_gain_cible2"                       
+[408] "biais_sur"                                
+[409] "prog_not_no"                              
+[410] "retraites"                                
+[411] "actifs"                                   
+[412] "etudiants"                                
+[413] "inactif"                                  
+[414] "single"                                   
+[415] "hausse_depenses_par_uc"                   
+[416] "ges_correct_avion"                        
+[417] "ges_correct_boeuf"                        
+[418] "ges_correct_nucleaire"                    
+[419] "ges_correct_CO2"                          
+[420] "ges_correct_CH4"                          
+[421] "ges_correct_O2"                           
+[422] "ges_correct_pm"                           
+[423] "connaissances_CC"                         
+[424] "nb_politiques_env"                        
+[425] "dep_0_en_position"                        
+[426] "dep_1_en_position"                        
+[427] "dep_2_en_position"                        
+[428] "dep_3_en_position"                        
+[429] "dep_4_en_position"                        
+[430] "dep_5_en_position"                        
+[431] "dep_6_en_position"                        
+[432] "dep_7_en_position"                        
+[433] "dep_8_en_position"                        
+[434] "dep_9_en_position"                        
+[435] "dep_10_en_position"                       
+[436] "sample"                                   
+[437] "weight"                                   

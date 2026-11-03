@@ -92,6 +92,7 @@ Built by `python -m benchmark.evidence`; see `benchmark/README.md` ("Evidence bu
 - [blind · claude-code · 2026-11-02-a](bokobza-2022-morning-after-coup-purges/blind/claude-code/2026-11-02-a/CELL.md) — 11/11
 - [blind · claude-code · 2026-11-02-b](bokobza-2022-morning-after-coup-purges/blind/claude-code/2026-11-02-b/CELL.md) — 11/11
 - [blind · claude-code · 2026-11-02-c](bokobza-2022-morning-after-coup-purges/blind/claude-code/2026-11-02-c/CELL.md) — 11/11
+- [blind · claude-code · 2026-11-03-a](bokobza-2022-morning-after-coup-purges/blind/claude-code/2026-11-03-a/CELL.md) — 11/11
 - [blind · pipeline-desktop-opus · 20261102T060946Z](bokobza-2022-morning-after-coup-purges/blind/pipeline-desktop-opus/20261102T060946Z/CELL.md) — 4/11
 - [blind · pipeline-desktop-opus-run2 · 20261102T091036Z](bokobza-2022-morning-after-coup-purges/blind/pipeline-desktop-opus-run2/20261102T091036Z/CELL.md) — 10/11
 
@@ -177,6 +178,7 @@ Built by `python -m benchmark.evidence`; see `benchmark/README.md` ("Evidence bu
 - [blind · claude-code · 2026-11-02-a](douenne-2022-yellow-vests-carbon-tax/blind/claude-code/2026-11-02-a/CELL.md) — 12/13
 - [blind · claude-code · 2026-11-02-b](douenne-2022-yellow-vests-carbon-tax/blind/claude-code/2026-11-02-b/CELL.md) — 12/13
 - [blind · claude-code · 2026-11-02-c](douenne-2022-yellow-vests-carbon-tax/blind/claude-code/2026-11-02-c/CELL.md) — 13/13
+- [blind · claude-code · 2026-11-03-a](douenne-2022-yellow-vests-carbon-tax/blind/claude-code/2026-11-03-a/CELL.md) — 13/13
 - [blind · pipeline-desktop-opus · 20261102T142733Z](douenne-2022-yellow-vests-carbon-tax/blind/pipeline-desktop-opus/20261102T142733Z/CELL.md) — 12/13
 - [blind · pipeline-desktop-opus-run2 · 20261102T152052Z](douenne-2022-yellow-vests-carbon-tax/blind/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) — 13/13
 
@@ -252,6 +254,7 @@ Built by `python -m benchmark.evidence`; see `benchmark/README.md` ("Evidence bu
 - [blind · claude-code · 2026-10-21-b](hanlon-2022-aircraft-ip-spillovers/blind/claude-code/2026-10-21-b/CELL.md) — 12/12
 - [blind · claude-code · 2026-11-01-a](hanlon-2022-aircraft-ip-spillovers/blind/claude-code/2026-11-01-a/CELL.md) — 12/12
 - [blind · claude-code · 2026-11-02-c](hanlon-2022-aircraft-ip-spillovers/blind/claude-code/2026-11-02-c/CELL.md) — 12/12
+- [blind · claude-code · 2026-11-03-a](hanlon-2022-aircraft-ip-spillovers/blind/claude-code/2026-11-03-a/CELL.md) — 12/12
 - [blind · pipeline-claude-opus-4-7 · 20261021T142909Z](hanlon-2022-aircraft-ip-spillovers/blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) — 12/12
 - [blind · pipeline-desktop-opus · 20261023T062931Z](hanlon-2022-aircraft-ip-spillovers/blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) — 12/12
 - [blind · pipeline-desktop-opus-run2 · 20261023T150832Z](hanlon-2022-aircraft-ip-spillovers/blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) — 12/12

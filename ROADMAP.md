@@ -3009,9 +3009,15 @@ under a subprocess timeout and kills the labelled container, or add
 `--init` to the run command so the alarm's signal reaches a process that
 dies on it, and record each execution's wall time in the evidence
 bundle so an over-limit run is visible.  Either changes the protocol for
-later samples only.  (i) A fourth blind agent sample under the new
+later samples only.  (i) ~~A fourth blind agent sample under the new
 redaction on the papers it changed most (Bokobza, Douenne, Hanlon), to
-measure what the redaction does to a blind count.  3.7's item (b)
+measure what the redaction does to a blind count.~~  Done 2026-11-03
+(run `2026-11-03-a`, `claude-code-run4-redaction-3papers-blind-2026-11-03.json`):
+Bokobza 11/11, Douenne 13/13, Hanlon 12/12 (first-scored 11, 13, 8),
+against 10–11, 12–13 and 12 in the three old-redaction samples.  The
+redaction removed the rounded prose forms and sample sizes without
+moving a single final count on these three papers; figure check: three
+rows in that file.  3.7's item (b)
 (openICPSR) stands.
 
 ---

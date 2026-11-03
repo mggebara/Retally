@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "hanlon-2022-aircraft-ip-spillovers",
+  "mode": "blind",
+  "run_id": "2026-11-03-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Pooled US-UK regressions (Table 1 cols 3-4) use a baseline year spline common to all observations plus the spline interacted with a US indicator (and a US indicator), so the US interaction coefficients are US-minus-UK slopes. The paper describes the baseline as a spline 'for the comparison country'; read literally as a UK-only spline, the US terms would just reproduce the US-only slopes, which contradicts the paper's description of them as relative to the UK.",
+    "Engine sample is all United States rows of engine_data.dta with non-missing ln_hp_per_lbs (85). The file has no aircraft-type variable, so I assumed it already holds only engines used in fighters and bombers (every US row has a non-missing count from the airframe match)."
+  ],
+  "notes": "Airframe sample: airframe_data.dta, type fighter or bomber, years 1918-1935, US (cols 1-2) or US+UK (cols 3-4), non-missing outcome. Continuous two-piece spline with each coefficient equal to its segment's slope: pre = min(year,1926)-1926, post = max(year,1926)-1926. OLS with heteroskedasticity-robust SEs (fixest). Engine regression adds a liquid-cooled indicator. attempt-1 was exploratory (data inspection, no RESULT lines). attempt-2 was the first scored run; its pooled spec used separate US and UK splines, so its 'vs UK' coefficients were the US-only slopes rather than relative slopes. I fixed that from the paper's text (no claimed values were seen or compared), and the result is the final run. No Docker hangs.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-03T00:10:56Z",
+  "finished_at": "2026-11-03T00:13:00Z"
+}

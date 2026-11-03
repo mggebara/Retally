@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "entry_id": "bokobza-2022-morning-after-coup-purges",
+  "mode": "blind",
+  "run_id": "2026-11-03-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Individual-level data: the supplied pop_pwt_ln_lag column is identical to gdp_cap_pwt_ln_lag, so lagged log GDP per capita and lagged log population were rebuilt from the country-year panel (value in the previous calendar year, missing if that year is absent).",
+    "Country-level: lagged controls and the lagged BMR democracy filter (democracy1 at t-1 == 0) were built from the panel (previous calendar year only); years 1967-2016; failed coup = coupattempt_whogov (already July-recoded in the data).",
+    "Leader-FE Main Model (Table A2): the lagged monarchy dummy is excluded explicitly, as in the paper, because in this data it varies within 5 leader spells and would otherwise not drop out. attempt-5 is the same script with monarchy kept (coefficient 0.0638 vs 0.0639).",
+    "Affiliation model drops rows whose party_group is 'unknown' or missing (only the three categories named in the paper are used). Experience model drops junior ministers / other low-ranking posts (importance_numeric 0.5); other models keep them. Importance model drops importance code 0 and missing.",
+    "fixest drops fixed-effect singletons (as reghdfe would); leader FE = leader_cab_id; country FE/cluster = COUNTRY_ID (country level) and country_isocode (individual level)."
+  ],
+  "notes": "Attempts 1-4 were exploratory (variable inspection, sample counts; attempt-3 crashed on a table subscript in exploratory code and was rerun as attempt-4); none printed RESULT lines. attempt-5 was the first full estimation run; the final run differs only by excluding monarchy from the leader-FE Main Model. Individual sample: minister-years in autocracies (democracy_lag == 0), 1967-2016, leader excluded, outcome purged_y1, failed coup = coupattempt_presentyear (never coincides with a successful coup in the data), country and year FE, country-clustered SEs; 115 countries. Note that 2016 has purged_y1 mean ~0.91 in the data (next-year cabinet data largely missing); kept because the paper's sample runs to 2016. No paper values were consulted; no image, log or script files in the dataset directory were opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-03T00:10:54Z",
+  "finished_at": "2026-11-03T00:16:00Z"
+}
