@@ -188,6 +188,14 @@ def _n_claim(value: float = 1000) -> Claim:
 def test_sample_size_claims_are_recognised_generically():
     assert is_sample_size_claim(_n_claim())
     assert is_sample_size_claim(Claim(description="n_clusters_main", value=40, claim_type=ClaimType.OTHER))
+    # PR #123 types every catalog sample size as ``count``; the check must accept it as is.
+    assert is_sample_size_claim(
+        Claim(description="table1_col3_observations", value=1992276, claim_type=ClaimType.COUNT)
+    )
+    assert is_sample_size_claim(Claim(description="respondents_us", value=1086, claim_type=ClaimType.COUNT))
+    assert not is_sample_size_claim(
+        Claim(description="n_obs_main", value=500, claim_type=ClaimType.COEFFICIENT)
+    )
     assert is_sample_size_claim(
         Claim(description="table_total", value=40, claim_type=ClaimType.OTHER, unit="respondents")
     )
