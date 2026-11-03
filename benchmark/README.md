@@ -305,6 +305,7 @@ A catalog entry can be cleanly skipped:
 | `no_api_key` | `ANTHROPIC_API_KEY` not in env (the reproducer factory raised `MissingAPIKeyError`) |
 | `reproducer_init_failed` | The reproducer factory raised anything else (e.g. Docker not running, sandbox image not built); the message is in `error` |
 | `reproduction_missing` | The reproducer scores work done elsewhere and this (entry, mode) cell has not been done: `reproduce` raised `ReproductionMissingError` (e.g. `--reproducer claude-code` with no `benchmark/reproductions/<entry>/<mode>/<run_id>/reproduction.json`); where it looked is in `error` |
+| `manual_package_missing` | The entry has `data_access: manual` and its package file is not on disk yet; `error` names the file to place and where (see "Manually placed packages" below) |
 | `llm_answer_pending` | LLM-oracle mode (`--llm-oracle LABEL`) reached a Claude call with no installed answer: the prompt was written under `benchmark/.cache/llm-oracle/<label>/pending/<key>/` and the client raised `OracleAnswerPending`; the message is in `error` (see "Running the pipeline on plan usage" below) |
 
 Skips are never written to the result cache.  Neither are **transient
@@ -930,6 +931,61 @@ repository quirks so the files match the names the authors' scripts use:
   and then deleted.  An archive with a member that would land outside its
   destination (zip-slip, escaping tar links) is refused and left in place, as
   is one that would push the tree past a 20 GiB uncompressed-size cap.
+
+### Manually placed packages
+
+Some packages sit behind a login and a terms click-through (openICPSR, where
+most AEA packages live), so the downloader cannot fetch them.  A human
+downloads them under their own account instead; the list of wanted packages
+and the download steps are in `benchmark/corpus/openicpsr-wanted.md`.
+
+**Convention.**  Save each zip unchanged under
+`benchmark/manual-packages/<I4R tag>/` (one folder per paper, e.g.
+`benchmark/manual-packages/T73/149882-V1.zip`), with a `SOURCE.txt` beside it
+naming the openICPSR project id and version.  The folder is in `.gitignore`:
+packages are never committed.
+
+**Catalog entry.**  Point `dataset.source` at the file and mark it manual:
+
+```yaml
+dataset:
+  source: benchmark/manual-packages/T73/149882-V1.zip
+  data_access: manual
+  access_notes: openICPSR project 149882, version V1 (login + terms; downloaded by hand)
+```
+
+`source` is a path relative to the repo root (or absolute) to a `.zip` /
+`.tar` / `.tar.gz` / `.tgz` or a directory.  `data_access` is `public`
+(default) or `manual`.  The runner maps an existing local path to the
+downloader's `DatasetSource.LOCAL`, which extracts the archive into
+`.cache/datasets/<slug>/` exactly as it would a downloaded one (same nested
+extraction and zip-slip / size guards; the placed file itself is never
+modified) or copies a directory, and writes `metadata.json` with the path as
+given, its size and its sha256.  From there the strip rule, the mount and the
+agent task files treat it like any other package.  Every result row carries
+`data_access` (`public` for public entries and for rows from older files),
+and the evidence CELL.md / REPORT.md print it.  `data_access` is not part of
+the cache key.  After replacing a placed file, delete its
+`.cache/datasets/<slug>/` directory: the cache is keyed on the name, not on
+the file's hash.
+
+**Errors.**
+
+- A local path without `data_access: manual` is rejected when the catalog
+  loads: `dataset.source '<path>' is a local path; a manually placed package
+  needs 'data_access: manual' so its provenance is recorded`.
+- `data_access: manual` with an http(s) source is rejected too:
+  `dataset.data_access is 'manual' but dataset.source is a URL (...); a
+  manually placed package's source is its local path, ...`.
+- A manual entry whose file is not on disk is skipped as
+  `manual_package_missing`, with `error` reading `manually placed package
+  missing for <id>: expected <path> (relative to the repo root). Download it
+  by hand and save it unchanged at that path, with a SOURCE.txt beside it in
+  <folder>/ naming the repository id and version (access notes: ...)`.
+  `render_task` raises `FileNotFoundError` with the same message.
+- An archive the extractor refuses (zip-slip, size cap, corrupt) fails the
+  download with `could not extract manually placed archive <path>` instead
+  of mounting the unextracted zip.
 
 ## Caveats
 

@@ -841,6 +841,7 @@ def cell_header(cell: Cell, files: CellFiles) -> dict[str, Any]:
         if cell.rep_dir is None
         else f"benchmark/reproductions/{cell.entry_id}/{cell.mode}/{cell.run}",
         "date": _cell_date(cell),
+        "data_access": str(row.get("data_access") or "public"),
         "retally_ran": row.get("retally_ran"),
         "error": row.get("error"),
         "n_claims": len(row.get("claim_details") or []),
@@ -922,6 +923,9 @@ def render_cell_md(cell: Cell, scoring: dict[str, Any], files: CellFiles) -> str
         f"| Model | {_fmt(cell.model)} |",
         f"| Run | {cell.run} |",
         f"| Date | {_fmt(h['date'])} |",
+        f"| Data access | {h['data_access']}"
+        + (" (package downloaded by hand and placed on disk)" if h["data_access"] == "manual" else "")
+        + " |",
         f"| Results file | `benchmark/results/{cell.results_file}`"
         + (f" (also in {', '.join(f'`{f}`' for f in cell.also_in)})" if cell.also_in else "")
         + " |",
@@ -1104,6 +1108,16 @@ def render_report(entry_id: str, cells: list[dict[str, Any]], entry: Any = None)
             f"split: {entry.split}",
             f"- Catalog entry (ground truth): `benchmark/papers/{entry_id}.yaml`",
         ]
+        dataset = getattr(entry, "dataset", None)
+        access = getattr(dataset, "data_access", "public") if dataset is not None else "public"
+        if access == "manual":
+            lines.append(
+                f"- Data access: manual (package downloaded by hand and placed at `{dataset.source}`"
+                + (f"; {dataset.access_notes.strip()}" if dataset.access_notes.strip() else "")
+                + ")"
+            )
+        else:
+            lines.append("- Data access: public")
         if entry.notes:
             lines += ["", "> " + entry.notes.strip().replace("\n", "\n> ")]
         lines += ["", "## Pinned claims", ""]

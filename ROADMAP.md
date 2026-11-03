@@ -3042,6 +3042,18 @@ runnable. Growth is therefore a curation grind — budget it as such.
     the entry at a local path; the runner records `data_access: manual` so
     provenance stays honest. This single change likely doubles the
     reachable pool (AEA journals dominate the corpus).
+    **✅ Escape hatch built (2026-11-02, [PR #122](https://github.com/mggebara/Retally/pull/122)).** A zip saved
+    unchanged under `benchmark/manual-packages/<I4R tag>/` (git-ignored,
+    with a `SOURCE.txt` naming the openICPSR id and version) is referenced
+    by `dataset.source: <that path>` plus `data_access: manual`; the
+    downloader's new `DatasetSource.LOCAL` extracts it like a downloaded
+    archive and records its path, size and sha256 in `metadata.json`; every
+    result row and the evidence CELL.md / REPORT.md carry `data_access`. A
+    local path without `manual` is a load-time schema error; a manual entry
+    whose file is absent is a `manual_package_missing` skip naming the file
+    to place. No package has been placed yet; the 33 wanted are listed in
+    `benchmark/corpus/openicpsr-wanted.md`. See `benchmark/README.md`,
+    "Manually placed packages".
   - *Report-URL recovery:* the I4R discussion-paper index can be searched
     by paper title by a human; `replicator_team` IDs can't be mapped
     mechanically, so treat this as part of promotion research, not
