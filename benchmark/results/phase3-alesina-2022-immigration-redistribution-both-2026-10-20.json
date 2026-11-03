@@ -86,12 +86,13 @@
         },
         {
           "description": "sample_size_table4",
-          "claim_type": "other",
+          "claim_type": "count",
           "claimed": 19765.0,
           "reproduced": 19704.0,
-          "tolerance": 0.01,
+          "tolerance": 0.05,
           "rel_err": 0.003086263597267898,
-          "passed": true
+          "passed": true,
+          "tolerance_source": "relative"
         },
         {
           "description": "share_treatment_effect_misperception_share",
@@ -227,12 +228,13 @@
         },
         {
           "description": "sample_size_table4",
-          "claim_type": "other",
+          "claim_type": "count",
           "claimed": 19765.0,
           "reproduced": 5532.0,
-          "tolerance": 0.01,
+          "tolerance": 0.05,
           "rel_err": 0.7201113078674425,
-          "passed": false
+          "passed": false,
+          "tolerance_source": "relative"
         },
         {
           "description": "share_treatment_effect_misperception_share",
@@ -298,5 +300,10 @@
       },
       "artifacts_dir": "benchmark/results/artifacts/alesina-2022-immigration-redistribution/independent/pipeline/20261021T030614Z"
     }
-  ]
+  ],
+  "rescored": {
+    "policy": "count-5pct",
+    "date": "2026-11-03",
+    "flipped": 0
+  }
 }

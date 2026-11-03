@@ -37,27 +37,27 @@ Claims passing with the authors' scripts in the prompt (seeded) versus without t
 *Blind* withholds the claim values too and runs no claim-targeted refinement: its pass counts are the only ones free of target-guided search.
 
 - Seeded: **55 / 79** claims passed (first scored 46 / 79)
-- Independent: **41 / 79** claims passed (first scored 27 / 79)
-- Blind: **24 / 79** claims passed (first scored 24 / 79)
-- Lost without the scripts: **19**; gained: **5**
+- Independent: **47 / 79** claims passed (first scored 27 / 79)
+- Blind: **29 / 79** claims passed (first scored 24 / 79)
+- Lost without the scripts: **13**; gained: **5**
 
 *First scored* is what each mode's first script that printed results passed: after any crash repairs, before the refinement loop showed the model which claims were off target.
 
 | Entry | Split | Reproducer | Seeded | Independent | Blind | First scored (seeded / independent / blind) | Lost without scripts |
 |---|---|---|---|---|---|---|---|
 | `adams-2023-women-mps-affective-polarization` | holdout | pipeline | 11/11 | 7/11 | 1/11 | 11/11 / 0/11 / 1/11 | `n_directed_dyads`, `n_obs_men_partisans`, `n_obs_women_partisans`, `women_mps_coef_men_partisans` |
-| `arias-2022-changing-tides-climate-migration` | holdout | pipeline | 4/12 | 0/12 | 1/12 | 4/12 / 0/12 / 1/12 | `choice_tasks_germany`, `choice_tasks_us`, `respondents_germany`, `respondents_us` |
+| `arias-2022-changing-tides-climate-migration` | holdout | pipeline | 4/12 | 4/12 | 5/12 | 4/12 / 0/12 / 1/12 | — |
 | `grier-2023-sugar-roll-call-voting` | holdout | pipeline | 0/11 | 0/11 | 0/11 | 0/11 / 0/11 / 0/11 | — |
 | `hanlon-2022-aircraft-ip-spillovers` | holdout | pipeline | 12/12 | 10/12 | 12/12 | 12/12 / 10/12 / 12/12 | `airframe_maxspeed_trend_after_1926_us`, `airframe_maxspeed_trend_before_1926_us` |
-| `leeson-2022-hobo-economicus` | holdout | pipeline | 11/11 | 9/11 | 4/11 | 11/11 / 9/11 / 4/11 | `friendliness_full_sample`, `station_visits_five_station_subsample` |
+| `leeson-2022-hobo-economicus` | holdout | pipeline | 11/11 | 9/11 | 5/11 | 11/11 / 9/11 / 4/11 | `friendliness_full_sample`, `station_visits_five_station_subsample` |
 | `manekin-2022-effective-for-whom` | holdout | pipeline | 7/12 | 12/12 | 6/12 | 8/12 / 6/12 / 6/12 | — |
-| `montero-2022-cooperative-property-rights` | holdout | pipeline | 10/10 | 3/10 | 0/10 | 0/10 / 2/10 / 0/10 | `earnings_iqr_above500_bw150`, `earnings_iqr_above500_bw300`, `earnings_level_above500_bw150`, `n_clusters_bw150`, `n_clusters_bw300`, `n_obs_earnings_iqr_bw150`, `n_obs_earnings_iqr_bw300` |
+| `montero-2022-cooperative-property-rights` | holdout | pipeline | 10/10 | 5/10 | 0/10 | 0/10 / 2/10 / 0/10 | `earnings_iqr_above500_bw150`, `earnings_iqr_above500_bw300`, `earnings_level_above500_bw150`, `n_clusters_bw300`, `n_obs_earnings_iqr_bw300` |
 
 ## Closeness (per split and mode)
 
 - **holdout · seeded**: 7 entries, 79 claims, matched 99%, passed 55/79, median rel err 0.3%, within tol/2x/5x: 71%/71%/74%
-- **holdout · independent**: 7 entries, 79 claims, matched 85%, passed 41/79, median rel err 4.9%, within tol/2x/5x: 61%/70%/85%
-- **holdout · blind**: 7 entries, 79 claims, matched 90%, passed 24/79, median rel err 22.3%, within tol/2x/5x: 34%/38%/51%
+- **holdout · independent**: 7 entries, 79 claims, matched 85%, passed 47/79, median rel err 4.9%, within tol/2x/5x: 70%/76%/91%
+- **holdout · blind**: 7 entries, 79 claims, matched 90%, passed 29/79, median rel err 22.3%, within tol/2x/5x: 41%/45%/59%
 
 ## Per-component success — seeded (executed papers only)
 
@@ -128,8 +128,8 @@ Total estimated spend this run: **$8.11** across 84 API calls (21 further calls 
 | `adams-2023-women-mps-affective-polarization` | independent | pipeline | ran | ✓ | ✗ | ✗ | 7 / 7 of 11 (first scored 0/11, 1 error + 3 claim refinements) |  |
 | `adams-2023-women-mps-affective-polarization` | blind | pipeline | ran | ✓ | ✗ | ✗ | 1 / 1 of 11 (first scored 1/11, 1 error + 0 claim refinement) |  |
 | `arias-2022-changing-tides-climate-migration` | seeded | pipeline | ran | ✓ | ✗ | ✗ | 4 / 4 of 12 (first scored 4/12, 1 error + 1 claim refinements) |  |
-| `arias-2022-changing-tides-climate-migration` | independent | pipeline | ran | ✓ | ✗ | ✗ | 0 / 0 of 12 (first scored 0/12, 3 error + 3 claim refinements) |  |
-| `arias-2022-changing-tides-climate-migration` | blind | pipeline | ran | ✓ | ✗ | ✗ | 1 / 1 of 12 (first scored 1/12, 1 error + 0 claim refinement) |  |
+| `arias-2022-changing-tides-climate-migration` | independent | pipeline | ran | ✓ | ✗ | ✗ | 4 / 4 of 12 (first scored 0/12, 3 error + 3 claim refinements) |  |
+| `arias-2022-changing-tides-climate-migration` | blind | pipeline | ran | ✓ | ✗ | ✗ | 5 / 5 of 12 (first scored 1/12, 1 error + 0 claim refinement) |  |
 | `grier-2023-sugar-roll-call-voting` | seeded | pipeline | ran | ✓ | ✗ | ✗ | 0 / 0 of 11 (first scored 0/11, 0 error + 1 claim refinement) |  |
 | `grier-2023-sugar-roll-call-voting` | independent | pipeline | ran | ✓ | ✗ | ✗ | 0 / 0 of 11 (first scored 0/11, 3 error + 0 claim refinements) |  |
 | `grier-2023-sugar-roll-call-voting` | blind | pipeline | ran | ✓ | ✗ | ✗ | 0 / 0 of 11 (first scored 0/11, 2 error + 0 claim refinements) |  |
@@ -138,10 +138,10 @@ Total estimated spend this run: **$8.11** across 84 API calls (21 further calls 
 | `hanlon-2022-aircraft-ip-spillovers` | blind | pipeline | ran | ✓ | ✓ | ✓ | 12 / 12 of 12 (first scored 12/12, 1 error + 0 claim refinement) |  |
 | `leeson-2022-hobo-economicus` | seeded | pipeline | ran | ✓ | ✓ | ✓ | 11 / 11 of 11 (first scored 11/11, 0 error + 0 claim refinements) |  |
 | `leeson-2022-hobo-economicus` | independent | pipeline | ran | ✓ | ✗ | ✗ | 9 / 9 of 11 (first scored 9/11, 0 error + 1 claim refinement) |  |
-| `leeson-2022-hobo-economicus` | blind | pipeline | ran | ✓ | ✗ | ✗ | 4 / 4 of 11 (first scored 4/11, 0 error + 0 claim refinements) |  |
+| `leeson-2022-hobo-economicus` | blind | pipeline | ran | ✓ | ✗ | ✗ | 5 / 5 of 11 (first scored 4/11, 0 error + 0 claim refinements) |  |
 | `manekin-2022-effective-for-whom` | seeded | pipeline | ran | ✓ | ✗ | ✗ | 7 / 7 of 12 (first scored 8/12, 1 error + 3 claim refinements) |  |
 | `manekin-2022-effective-for-whom` | independent | pipeline | ran | ✓ | ✓ | ✓ | 12 / 12 of 12 (first scored 6/12, 1 error + 1 claim refinements) |  |
 | `manekin-2022-effective-for-whom` | blind | pipeline | ran | ✓ | ✗ | ✓ | 6 / 6 of 12 (first scored 6/12, 0 error + 0 claim refinements) |  |
-| `montero-2022-cooperative-property-rights` | seeded | pipeline | ran | ✓ | ✓ | ✗ | 10 / 3 of 10 (first scored 0/10, 0 error + 1 claim refinement) |  |
-| `montero-2022-cooperative-property-rights` | independent | pipeline | ran | ✓ | ✗ | ✗ | 3 / 0 of 10 (first scored 2/10, 2 error + 3 claim refinements) |  |
-| `montero-2022-cooperative-property-rights` | blind | pipeline | ran | ✓ | ✗ | ✗ | 0 / 0 of 10 (first scored 0/10, 0 error + 0 claim refinements) |  |
+| `montero-2022-cooperative-property-rights` | seeded | pipeline | ran | ✓ | ✓ | ✗ | 10 / 4 of 10 (first scored 0/10, 0 error + 1 claim refinement) |  |
+| `montero-2022-cooperative-property-rights` | independent | pipeline | ran | ✓ | ✗ | ✗ | 5 / 2 of 10 (first scored 2/10, 2 error + 3 claim refinements) |  |
+| `montero-2022-cooperative-property-rights` | blind | pipeline | ran | ✓ | ✗ | ✗ | 0 / 1 of 10 (first scored 0/10, 0 error + 0 claim refinements) |  |

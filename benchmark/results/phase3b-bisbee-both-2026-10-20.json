@@ -84,25 +84,27 @@
         },
         {
           "description": "sample_size_full",
-          "claim_type": "other",
+          "claim_type": "count",
           "claimed": 1882.0,
           "reproduced": 1882.0,
-          "tolerance": 0.01,
+          "tolerance": 0.05,
           "rel_err": 0.0,
           "passed": true,
           "passed_first_attempt": false,
-          "passed_first_scored": true
+          "passed_first_scored": true,
+          "tolerance_source": "relative"
         },
         {
           "description": "sample_size_march",
-          "claim_type": "other",
+          "claim_type": "count",
           "claimed": 1710.0,
           "reproduced": 1710.0,
-          "tolerance": 0.01,
+          "tolerance": 0.05,
           "rel_err": 0.0,
           "passed": true,
           "passed_first_attempt": false,
-          "passed_first_scored": true
+          "passed_first_scored": true,
+          "tolerance_source": "relative"
         },
         {
           "description": "anxiety_prime_effect_bivariate",
@@ -236,5 +238,10 @@
       },
       "artifacts_dir": null
     }
-  ]
+  ],
+  "rescored": {
+    "policy": "count-5pct",
+    "date": "2026-11-03",
+    "flipped": 0
+  }
 }

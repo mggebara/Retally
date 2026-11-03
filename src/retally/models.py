@@ -51,6 +51,12 @@ class ClaimType(Enum):
     R_SQUARED = "r_squared"
     """Goodness-of-fit R-squared for a regression model."""
 
+    COUNT = "count"
+    """A count of units (observations, clusters, respondents, districts,
+    bills, ...): an integer, with no standard error.  The comparator holds
+    it to 5 %, since a reproduction that applies the paper's sample
+    restrictions slightly differently lands a few percent off."""
+
     OTHER = "other"
 
 

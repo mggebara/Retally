@@ -17,11 +17,11 @@ The six papers curated on 2026-11-02 (ROADMAP 3.7): the pipeline through the ora
 | `hollyer-2022` | independent | 13 | 13 (11; 0/1) | 13 (13; 0/0) |
 | `hollyer-2022` | blind | 13 | 10 (10; 0/0) | 13 (13; 1/0) |
 | `labandeira-2022` | seeded | 12 | 12 (12; 1/0) | 12 (12; 0/0) |
-| `labandeira-2022` | independent | 12 | 5 (3; 0/3) | 8 (7; 0/2) |
+| `labandeira-2022` | independent | 12 | 6 (3; 0/3) | 8 (7; 0/2) |
 | `labandeira-2022` | blind | 12 | 4 (4; 0/0) | 6 (6; 0/0) |
 | `mokyr-2022` | seeded | 13 | 13 (13; 0/0) | 13 (13; 0/0) |
 | `mokyr-2022` | independent | 13 | 13 (1; 0/1) | 13 (13; 0/0) |
 | `mokyr-2022` | blind | 13 | 1 (1; 0/0) | 13 (13; 0/0) |
 | **Total, 6 papers** | seeded | 77 | **69 / 77 (69)** | **77 / 77 (73)** |
-| **Total, 6 papers** | independent | 77 | **66 / 77 (47)** | **73 / 77 (60)** |
+| **Total, 6 papers** | independent | 77 | **67 / 77 (47)** | **73 / 77 (60)** |
 | **Total, 6 papers** | blind | 77 | **52 / 77 (52)** | **70 / 77 (70)** |

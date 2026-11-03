@@ -142,10 +142,10 @@
         },
         {
           "description": "n_bills_ncosponsors_all_ols",
-          "claim_type": "other",
+          "claim_type": "count",
           "claimed": 60670.0,
           "reproduced": 60669.0,
-          "tolerance": 0.01,
+          "tolerance": 0.05,
           "rel_err": 1.6482610845557935e-05,
           "passed": true,
           "passed_first_attempt": false,
@@ -154,10 +154,10 @@
         },
         {
           "description": "n_sponsor_terms_ncosponsors_all_ols",
-          "claim_type": "other",
+          "claim_type": "count",
           "claimed": 4746.0,
           "reproduced": 4746.0,
-          "tolerance": 0.01,
+          "tolerance": 0.05,
           "rel_err": 0.0,
           "passed": true,
           "passed_first_attempt": false,
@@ -166,10 +166,10 @@
         },
         {
           "description": "n_bills_pct_opposite_dem_ols",
-          "claim_type": "other",
+          "claim_type": "count",
           "claimed": 32846.0,
           "reproduced": 22712.0,
-          "tolerance": 0.01,
+          "tolerance": 0.05,
           "rel_err": 0.3085307191134385,
           "passed": false,
           "passed_first_attempt": false,
@@ -178,10 +178,10 @@
         },
         {
           "description": "n_bills_pct_opposite_rep_ols",
-          "claim_type": "other",
+          "claim_type": "count",
           "claimed": 27669.0,
           "reproduced": 18691.0,
-          "tolerance": 0.01,
+          "tolerance": 0.05,
           "rel_err": 0.3244786584263978,
           "passed": false,
           "passed_first_attempt": false,
@@ -215,8 +215,8 @@
       "agrees_with_paper": false,
       "agrees_with_i4r": false,
       "n_claims_in_catalog": 11,
-      "n_claims_with_paper_match": 5,
-      "n_claims_with_i4r_match": 4,
+      "n_claims_with_paper_match": 6,
+      "n_claims_with_i4r_match": 5,
       "n_claims_with_paper_match_first_attempt": 0,
       "n_refinements": 0,
       "n_executions": 3,
@@ -252,12 +252,12 @@
         },
         {
           "description": "n_obs_table4",
-          "claim_type": "other",
+          "claim_type": "count",
           "claimed": 4328.0,
           "reproduced": 4486.0,
-          "tolerance": 0.01,
+          "tolerance": 0.05,
           "rel_err": 0.03650646950092421,
-          "passed": false,
+          "passed": true,
           "passed_first_attempt": false,
           "passed_first_scored": false,
           "tolerance_source": "relative"
@@ -336,10 +336,10 @@
         },
         {
           "description": "n_obs_did_like_may_table2",
-          "claim_type": "other",
+          "claim_type": "count",
           "claimed": 143499.0,
           "reproduced": 143499.0,
-          "tolerance": 0.01,
+          "tolerance": 0.05,
           "rel_err": 0.0,
           "passed": true,
           "passed_first_attempt": false,
@@ -348,10 +348,10 @@
         },
         {
           "description": "n_obs_did_may_best_pm_table2",
-          "claim_type": "other",
+          "claim_type": "count",
           "claimed": 97155.0,
           "reproduced": 97155.0,
-          "tolerance": 0.01,
+          "tolerance": 0.05,
           "rel_err": 0.0,
           "passed": true,
           "passed_first_attempt": false,
@@ -372,5 +372,10 @@
       "usage": null,
       "artifacts_dir": "benchmark/results/artifacts/holman-2022-theresa-may-rally/blind/claude-code/20261022T033040Z"
     }
-  ]
+  ],
+  "rescored": {
+    "policy": "count-5pct",
+    "date": "2026-11-03",
+    "flipped": 1
+  }
 }

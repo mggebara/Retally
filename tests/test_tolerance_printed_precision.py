@@ -288,7 +288,7 @@ def _results_fixture(tmp_path: Path) -> tuple[Path, Path]:
 def test_rescore_cli_reports_flips_without_touching_the_file(tmp_path, capsys):
     results, catalog = _results_fixture(tmp_path)
     before = results.read_bytes()
-    assert rescore.main([str(results), "--catalog", str(catalog)]) == 0
+    assert rescore.main([str(results), "--all-claims", "--catalog", str(catalog)]) == 0
     out = capsys.readouterr().out
     assert "paper1 [seeded, pipeline]: 1/2 -> 2/2 passed (1 flipped" in out
     assert "FAIL -> PASS  tiny: claimed -0.0006, reproduced -0.000618" in out
@@ -302,7 +302,9 @@ def test_rescore_cli_reports_flips_without_touching_the_file(tmp_path, capsys):
 def test_rescore_cli_write_updates_the_verdicts(tmp_path, capsys):
     results, catalog = _results_fixture(tmp_path)
     out_path = tmp_path / "rescored.json"
-    assert rescore.main([str(results), "--catalog", str(catalog), "--write", str(out_path)]) == 0
+    assert (
+        rescore.main([str(results), "--all-claims", "--catalog", str(catalog), "--write", str(out_path)]) == 0
+    )
     row = json.loads(out_path.read_text(encoding="utf-8"))["results"][0]
     assert row["agrees_with_paper"] is True
     assert row["n_claims_with_paper_match"] == 2
@@ -317,4 +319,157 @@ def test_rescore_cli_write_updates_the_verdicts(tmp_path, capsys):
 
 def test_rescore_cli_refuses_to_overwrite_its_input(tmp_path):
     results, catalog = _results_fixture(tmp_path)
-    assert rescore.main([str(results), "--catalog", str(catalog), "--write", str(results)]) == 2
+    assert (
+        rescore.main([str(results), "--all-claims", "--catalog", str(catalog), "--write", str(results)]) == 2
+    )
+
+
+# ── Count policy (count-5pct): in place, count claims only ─────────────
+
+
+_COUNT_CATALOG = """\
+id: paper2
+i4r_report_url: https://example.org/r
+language: r
+outcome_label: reproducible
+paper:
+  source: raw paper text
+original_claims:
+  - description: n_obs
+    value: 1000
+    claim_type: count
+  - description: beta
+    value: 0.5
+    claim_type: coefficient
+  - description: fstat
+    value: 20.00
+    claim_type: other
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: 1000
+    outcome: matches
+"""
+
+
+def _count_row(mode: str, n_obs: float) -> dict:
+    return {
+        "entry_id": "paper2",
+        "mode": mode,
+        "agrees_with_paper": False,
+        "n_claims_with_paper_match": 1,
+        "n_claims_with_i4r_match": 0,
+        "agrees_with_i4r": False,
+        "n_claims_with_paper_match_first_scored": 0,
+        "claim_details": [
+            {
+                "description": "n_obs",
+                "claim_type": "other",
+                "claimed": 1000.0,
+                "reproduced": n_obs,
+                "tolerance": 0.01,
+                "rel_err": abs(n_obs - 1000) / 1000,
+                "passed": False,
+                "passed_first_scored": False,
+                "tolerance_source": "relative",
+            },
+            {
+                "description": "beta",
+                "claim_type": "coefficient",
+                "claimed": 0.5,
+                "reproduced": 0.5,
+                "tolerance": 0.02,
+                "rel_err": 0.0,
+                "passed": True,
+                "passed_first_scored": False,
+                "tolerance_source": "relative",
+            },
+            {
+                # 3 % off and failing at 1 %: an OTHER claim keeps its verdict.
+                "description": "fstat",
+                "claim_type": "other",
+                "claimed": 20.0,
+                "reproduced": 20.6,
+                "tolerance": 0.01,
+                "rel_err": 0.03,
+                "passed": False,
+                "tolerance_source": "relative",
+            },
+        ],
+    }
+
+
+def _count_fixture(tmp_path: Path, rows: list[dict], *, bare_list: bool = False) -> tuple[Path, Path]:
+    catalog = tmp_path / "papers"
+    catalog.mkdir(exist_ok=True)
+    (catalog / "paper2.yaml").write_text(_COUNT_CATALOG, encoding="utf-8")
+    results = tmp_path / "results.json"
+    payload = rows if bare_list else {"usage": {}, "results": rows}
+    results.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    return results, catalog
+
+
+def test_count_policy_rescores_count_claims_in_place(tmp_path, capsys):
+    rows = [
+        _count_row("seeded", 1040.0),  # 4 %: passes at 5 %
+        _count_row("blind", 1060.0),  # 6 %: still fails
+        {"entry_id": "paper2", "mode": "independent", "skipped": True, "claim_details": []},
+    ]
+    results, catalog = _count_fixture(tmp_path, rows)
+    assert rescore.main([str(results), "--catalog", str(catalog)]) == 0
+    assert "1 count claim verdict(s) flipped" in capsys.readouterr().out
+
+    text = results.read_text(encoding="utf-8")
+    assert not text.endswith("\n")  # written the way it was read
+    payload = json.loads(text)
+    assert payload["rescored"] == {"policy": "count-5pct", "date": "2026-11-03", "flipped": 1}
+    flipped, kept, skipped = payload["results"]
+    n_obs, beta, fstat = flipped["claim_details"]
+    assert n_obs["passed"] is True and n_obs["claim_type"] == "count"
+    assert n_obs["tolerance"] == pytest.approx(0.05) and n_obs["tolerance_source"] == "relative"
+    assert flipped["n_claims_with_paper_match"] == 2
+    assert flipped["agrees_with_paper"] is False  # fstat still fails
+    # The first-scored value is not stored, so first-scored fields stay as recorded.
+    assert n_obs["passed_first_scored"] is False
+    assert flipped["n_claims_with_paper_match_first_scored"] == 0
+    # Non-count claims are untouched, verdicts and all.
+    assert beta == rows[0]["claim_details"][1] and fstat == rows[0]["claim_details"][2]
+    # 1040 vs the I4R 1000 is now within 5 %.
+    assert flipped["n_claims_with_i4r_match"] == 1 and flipped["agrees_with_i4r"] is True
+    assert kept["claim_details"][0]["passed"] is False
+    assert kept["claim_details"][0]["tolerance"] == pytest.approx(0.05)
+    assert kept["n_claims_with_paper_match"] == 1
+    assert skipped == rows[2]
+
+
+def test_count_policy_is_idempotent_and_dry_run_writes_nothing(tmp_path):
+    results, catalog = _count_fixture(tmp_path, [_count_row("independent", 1040.0)])
+    before = results.read_bytes()
+    assert rescore.main([str(results), "--catalog", str(catalog), "--dry-run"]) == 0
+    assert results.read_bytes() == before
+    assert rescore.main([str(results), "--catalog", str(catalog)]) == 0
+    once = results.read_bytes()
+    assert once != before
+    assert rescore.main([str(results), "--catalog", str(catalog)]) == 0
+    assert results.read_bytes() == once
+    assert json.loads(once)["rescored"]["flipped"] == 1
+
+
+def test_count_policy_keeps_a_bare_list_file_a_list(tmp_path):
+    results, catalog = _count_fixture(tmp_path, [_count_row("seeded", 1040.0)], bare_list=True)
+    assert rescore.main([str(results), "--catalog", str(catalog)]) == 0
+    payload = json.loads(results.read_text(encoding="utf-8"))
+    assert isinstance(payload, list)
+    assert payload[0]["claim_details"][0]["passed"] is True
+
+
+def test_count_policy_rejects_write(tmp_path):
+    results, catalog = _count_fixture(tmp_path, [_count_row("seeded", 1040.0)])
+    out = tmp_path / "out.json"
+    assert rescore.main([str(results), "--catalog", str(catalog), "--write", str(out)]) == 2
+
+
+def test_catalog_count_label_maps_to_the_count_claim_type(tmp_path):
+    _results, catalog = _count_fixture(tmp_path, [])
+    [entry] = bschema.load_catalog(catalog)
+    claims = runner._claims_override_for(entry)
+    assert [c.claim_type for c in claims] == [ClaimType.COUNT, ClaimType.COEFFICIENT, ClaimType.OTHER]

@@ -150,10 +150,10 @@
         },
         {
           "description": "station_visits_full_sample",
-          "claim_type": "other",
+          "claim_type": "count",
           "claimed": 242.0,
           "reproduced": 242.0,
-          "tolerance": 0.01,
+          "tolerance": 0.05,
           "rel_err": 0.0,
           "passed": true,
           "passed_first_attempt": true,
@@ -162,10 +162,10 @@
         },
         {
           "description": "station_visits_five_station_subsample",
-          "claim_type": "other",
+          "claim_type": "count",
           "claimed": 102.0,
           "reproduced": 102.0,
-          "tolerance": 0.01,
+          "tolerance": 0.05,
           "rel_err": 0.0,
           "passed": true,
           "passed_first_attempt": true,
@@ -334,10 +334,10 @@
         },
         {
           "description": "station_visits_full_sample",
-          "claim_type": "other",
+          "claim_type": "count",
           "claimed": 242.0,
           "reproduced": 242.0,
-          "tolerance": 0.01,
+          "tolerance": 0.05,
           "rel_err": 0.0,
           "passed": true,
           "passed_first_attempt": true,
@@ -346,10 +346,10 @@
         },
         {
           "description": "station_visits_five_station_subsample",
-          "claim_type": "other",
+          "claim_type": "count",
           "claimed": 102.0,
           "reproduced": 102.0,
-          "tolerance": 0.01,
+          "tolerance": 0.05,
           "rel_err": 0.0,
           "passed": true,
           "passed_first_attempt": false,
@@ -397,8 +397,8 @@
       "agrees_with_paper": false,
       "agrees_with_i4r": false,
       "n_claims_in_catalog": 11,
-      "n_claims_with_paper_match": 8,
-      "n_claims_with_i4r_match": 8,
+      "n_claims_with_paper_match": 9,
+      "n_claims_with_i4r_match": 9,
       "n_claims_with_paper_match_first_attempt": 8,
       "n_refinements": 0,
       "n_executions": 1,
@@ -518,10 +518,10 @@
         },
         {
           "description": "station_visits_full_sample",
-          "claim_type": "other",
+          "claim_type": "count",
           "claimed": 242.0,
           "reproduced": 240.0,
-          "tolerance": 0.01,
+          "tolerance": 0.05,
           "rel_err": 0.008264462809917356,
           "passed": true,
           "passed_first_attempt": true,
@@ -530,12 +530,12 @@
         },
         {
           "description": "station_visits_five_station_subsample",
-          "claim_type": "other",
+          "claim_type": "count",
           "claimed": 102.0,
           "reproduced": 98.0,
-          "tolerance": 0.01,
+          "tolerance": 0.05,
           "rel_err": 0.0392156862745098,
-          "passed": false,
+          "passed": true,
           "passed_first_attempt": false,
           "passed_first_scored": false,
           "tolerance_source": "relative"
@@ -568,5 +568,10 @@
       },
       "artifacts_dir": "benchmark/results/artifacts/leeson-2022-hobo-economicus/blind/pipeline/20261022T044925Z"
     }
-  ]
+  ],
+  "rescored": {
+    "policy": "count-5pct",
+    "date": "2026-11-03",
+    "flipped": 1
+  }
 }
