@@ -3596,6 +3596,19 @@ cell" limitation.
 **Next:** nothing new on the pipeline; (b) openICPSR downloads remain
 the user's.
 
+**Harness note — execution metadata recorded (2026-11-06).**  Each
+pipeline run's artifacts now carry `execution.json` for the final
+execution and every `attempt-<n>/` (exit code, sandbox kill at the
+wall-clock limit, elapsed seconds, refinement kind, `RESULT:` values
+parsed), and each evidence `CELL.md` shows them in an "Executions" table;
+cells built from older artifacts (all 512 in the committed tree) say
+"Execution metadata not recorded".  It would have settled two cases this
+section could only infer: Forsythe seeded/independent 0/13 in frozen
+sample 3 (a 300 s kill, inferred), and a Douenne independent final
+execution whose container was seen running 18 minutes against the 300 s
+limit (results complete, kill status unknown).  Harness only; the
+pipeline is unchanged.
+
 ---
 
 ## Phase 4 — Corpus growth (4 → 20–30 papers)

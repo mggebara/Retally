@@ -396,3 +396,73 @@ def test_describe_row_shows_the_refinement_split_and_first_scored_execution():
     assert "refinements: 5 (2 error + 3 claim) (6 executions)" in out
     assert "claims: 1/1 pass (first scored 1/1 at execution 3, first attempt 0/1)" in out
     assert "[first scored PASS] [first attempt FAIL]" in out
+
+
+# ── execution.json: how each execution ended ────────────────────────────
+
+
+def test_pipeline_artifacts_record_execution_metadata():
+    from types import SimpleNamespace
+
+    from retally.models import RefinementAttempt
+
+    final = ExecutionResult(
+        generated_code="print(1)",
+        stdout="RESULT:beta=0.5\nRESULT:n_obs=660\nSAMPLE:main=660\n",
+        exit_code=-9,
+        outputs={"beta": 0.5, "n_obs": 660.0},
+        timed_out=True,
+        elapsed_seconds=300.4,
+        attempts=[
+            RefinementAttempt(code="a", stdout="", exit_code=137, kind="timeout-repair", feedback="killed"),
+            RefinementAttempt(code="b", stdout="RESULT:beta=0.9\nRESULT:bad=x\n", exit_code=0, kind="claim"),
+        ],
+    )
+    arts = reproducer_mod.pipeline_artifacts(SimpleNamespace(execution_result=final))
+    assert arts["execution.json"].endswith("}\n")
+    meta = json.loads(arts["execution.json"])
+    assert list(meta) == sorted(meta)
+    assert meta == {
+        "exit_code": -9,
+        "timed_out": True,
+        "elapsed_seconds": 300.4,
+        "n_outputs": 2,
+        "n_sample_lines": 1,
+    }
+    # RefinementAttempt carries neither timed_out nor elapsed_seconds: the keys are omitted.
+    assert json.loads(arts["attempt-1/execution.json"]) == {
+        "exit_code": 137,
+        "kind": "timeout-repair",
+        "n_outputs": 0,
+        "n_sample_lines": 0,
+    }
+    assert json.loads(arts["attempt-2/execution.json"]) == {
+        "exit_code": 0,
+        "kind": "claim",
+        "n_outputs": 1,
+        "n_sample_lines": 0,
+    }
+
+
+def test_pipeline_artifacts_execution_metadata_tolerates_fakes():
+    from types import SimpleNamespace
+
+    fake_attempt = SimpleNamespace(stdout="RESULT:x=1\n", timed_out=True, elapsed_seconds=12)
+    fake = SimpleNamespace(stdout="", attempts=[fake_attempt])
+    arts = reproducer_mod.pipeline_artifacts(SimpleNamespace(execution_result=fake))
+    assert json.loads(arts["execution.json"]) == {
+        "exit_code": -1,
+        "timed_out": False,
+        "elapsed_seconds": None,
+        "n_outputs": 0,
+        "n_sample_lines": 0,
+    }
+    # An attempt that does carry timing keeps it.
+    assert json.loads(arts["attempt-1/execution.json"]) == {
+        "exit_code": -1,
+        "kind": "",
+        "timed_out": True,
+        "elapsed_seconds": 12.0,
+        "n_outputs": 1,
+        "n_sample_lines": 0,
+    }
