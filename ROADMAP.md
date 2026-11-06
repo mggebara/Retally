@@ -3469,6 +3469,21 @@ second post-fix sample (`desktop-opus-postfix2`) is run with the check
 firing and is reported as its own row.  The pipeline is refrozen at this
 PR's merge commit.
 
+**Harness note — paper downloads are now cached (2026-11-05).**  The
+second post-fix sample never converged on Douenne: its extraction prompt
+came back with a new hash every round.  The paper is served by UvA-DARE
+with a cover sheet that stamps `Download date:DD Mon YYYY`, and the
+pipeline's `parse_url` streams the PDF to a temp file and discards it, so
+a loop spanning midnight parsed a different text each day, and the oracle
+(whose request ids hash the prompt) raised a fresh pending prompt for the
+same cell.  `PipelineReproducer` now keeps the first download of every
+`http(s)` paper at `benchmark/.cache/papers/<sha256(url)[:16]>.pdf` and
+hands the pipeline that path (`cached_paper_source`); non-PDF responses
+pass through.  Pipeline code and the result-cache key are untouched.
+Frozen samples are unaffected in substance (each cell parsed one
+download, stamped with its own day), but the paper text in Douenne's
+evidence folders differs by that cover line between samples.
+
 ---
 
 ## Phase 4 — Corpus growth (4 → 20–30 papers)
