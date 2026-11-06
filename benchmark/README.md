@@ -689,7 +689,11 @@ benchmark/evidence/
   `pipeline-oracle-desktop-opus-…` files), built in one call with one
   `--entry` per holdout paper and `--source-root` the main checkout; then
   `report` regenerates every `REPORT.md` and `INDEX.md`.  Dev papers are
-  left out.
+  left out.  Later rebuilds added the post-fix oracle samples
+  (`pipeline-oracle-desktop-opus-postfix-…`, label `desktop-opus-postfix`,
+  ROADMAP 3.8.1; `pipeline-oracle-desktop-opus-postfix2-…`, label
+  `desktop-opus-postfix2`, ROADMAP 3.8.3); `INDEX.md` now lists 512 cells
+  on the 23 evaluation papers.
 
 ## Plugging in another agent
 

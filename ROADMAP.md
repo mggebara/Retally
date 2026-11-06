@@ -3484,6 +3484,118 @@ Frozen samples are unaffected in substance (each cell parsed one
 download, stamped with its own day), but the paper text in Douenne's
 evidence folders differs by that cover line between samples.
 
+### 3.8.3 Second post-fix oracle sample (2026-11-05) — ✅ measured, no API spend
+
+**What ran.**  A second oracle sample of the post-fix pipeline, now
+refrozen at 38faba7 (PR #129, the sample-size check fix of 3.8.2), on
+all 23 evaluation papers, independent and blind mode only, label
+`desktop-opus-postfix2`.  Same protocol as 3.8.1: one Opus subagent per
+prompt at the desktop default effort, isolated by instruction (it reads
+one prompt and writes one answer), no API spend.  File:
+`benchmark/results/pipeline-oracle-desktop-opus-postfix2-23papers-indep-blind-2026-11-05.json`
+(PR #131).  46 rows, none skipped or errored, `cached` false on every
+row, 183 answered calls; the `rescored` key records `count-5pct` with 0
+flipped.  Artifacts are stamped 2026-11-03 11:03 to 2026-11-06 05:07
+UTC.  Extraction answers (methodology and hyperparameter) for 22 papers
+were reused from earlier labels by prompt-hash id, since the prompts
+were identical; this reuse is not recorded in any committed file.
+Every generation and refinement prompt got a fresh agent, and nothing
+from the first post-fix sample's generation answers was reused.
+
+**Totals, 23 papers, 278 claims** (frozen samples after the count
+rescore, 3.7.4):
+
+| Mode | Frozen 1 | Frozen 2 | Frozen 3 | Post-fix 1 (check not firing) | **Post-fix 2 (check firing)** | Post-fix 2 cells above / within / below the frozen range |
+|---|---|---|---|---|---|---|
+| independent | 239 | 226 | 227 | 233 | **231** | 2 / 19 / 2 |
+| blind | 173 | 176 | 181 | 191 | **182** | 4 / 16 / 3 |
+
+Post-fix 2 independent is inside the frozen range (226–239); blind is
+1 above the highest frozen total.
+Against post-fix 1 it is 2 lower independent and 9 lower blind.  The
+cell-by-cell table (both post-fix samples side by side) is
+`docs/report/tables/postfix.md`.
+
+**Where the check fired.**  Counted from the complete oracle prompts in
+the evidence tree (`grep -rl 'Sample size check'
+benchmark/evidence/*/*/pipeline-desktop-opus-postfix2/`): 13 refinement
+prompts in 9 independent cells, none in blind (blind has no
+claim-targeted refinement, by design).  Post-fix 1 has none.  Per cell
+(prompts with the block; first scored → final; what the named count
+claims did):
+
+- *Adams* (1; 7 → 10): 2,019 dyads against 1,842; all three named
+  counts pass (1,826, 1,823, 1,820).  No other claim moved.
+- *Altmann* (1; 4 → 4): 17,840 rows and 892 subjects against 12,160 and
+  608; both still fail.  The script finds no scarce-resource flag, the
+  same miss as Altmann blind in 3.8.1.
+- *Arias* (1; 2 → 12): 16,798 and 16,714 choice tasks against 18,966 and
+  18,862; both pass, and all eight AMCEs with them.
+- *Forsythe* (1; 9 → 9): 14.3 M against 16.9 M rows; still fails.
+- *Gagliarducci* (1; 7 → 13): both bill counts pass, and four
+  coefficients with them.
+- *Grier* (1, in the second claim refinement; 0 → 10): both counts pass,
+  and eight coefficients with them.
+- *Holman* (2; 1 → 4): the like-May count passes; the best-PM count
+  (named in both prompts, first too high, then too low) still fails.
+  Two coefficients pass.
+- *Labandeira* (2; 4 → 6): the household count still fails; the
+  observation count, which passed when first scored, fails at the end.
+  Three coefficients pass.
+- *Montero* (3; 3 → 7): two of three named counts pass; the bandwidth-150
+  IQR count still fails.  Two coefficients pass.
+
+Of 19 distinct count claims named, 12 passed at the end, 6 still failed
+and 1 went from pass to fail.  The same refinements moved 27 other
+claims from fail to pass.  The refinement prompt also lists every other
+failing claim, so the check's effect cannot be separated from the rest
+of the refinement.  The nine cells went 37 first scored → 75 final,
+against 51 → 77 in post-fix 1 and 80 / 84 / 70 in the frozen samples;
+the other fourteen independent cells reproduced 156 in both post-fix
+samples.  So the check repaired sample sizes where it fired, but the
+first drafts were worse and the independent total did not rise.
+
+**Cells outside the frozen range** (post-fix 2, then frozen 1, 2 and 3):
+independent above, Acemoglu 12 (11, 11, 11) and Grier 10 (0, 2, 2;
+Grier was 10 in post-fix 1 too); independent below, Altmann 4 (13, 13,
+13) and Montero 7 (10, 8, 10).  Blind above, Carrera 9 (0, 7, 4),
+Hollyer 13 (10, 12, 10), Holman 1 (0, 0, 0) and Mokyr 13 (1, 1, 7);
+blind below, Arias 2 (12, 12, 7; its script again excludes
+`force_choice` as metadata, as in 3.8.1), Gagliarducci 6 (12, 7, 7) and
+Labandeira 3 (4, 4, 4).  Hollyer, Mokyr and Carrera blind were above the
+range in post-fix 1 too; Arias blind was below it.
+
+**Douenne.**  The loop did not converge on Douenne until 2026-11-05: the
+publisher's cover sheet stamps the download date, so a loop spanning
+midnight parsed a new paper text and raised a new extraction prompt
+each day (harness note under 3.8.2, PR #130).  With the download cached,
+its chain was answered fresh (independent first scored 3 → final 13,
+blind 6 → 12), and its paper text in the evidence folders differs from
+earlier samples by that one cover line.
+
+**Procedural note.**  For one Douenne blind completeness-repair prompt
+(`7d58…`) two answering agents wrote an answer: the first hung for about
+80 minutes, a replacement was launched, and the first then overwrote the
+replacement's file.  The installed answer is the first agent's.  One
+draw either way.
+
+**Protocol and caveats.**  Post hoc, as 3.8.1: not pooled with the frozen
+samples or with post-fix 1, in no gap range or pairing; `tables.py`
+reads it only for the `postfix` table.  One draw per post-fix sample, no
+standard error.  Post-fix 1 stays labelled "check not firing".  The
+frozen samples remain the pipeline's headline numbers.
+
+**Report.**  `docs/report/tables.py` loads both post-fix files and the
+`postfix` table shows them side by side; `docs/report/draft.md` gets a
+second post-fix paragraph in Section 4.8 and an updated "Few runs per
+cell" limitation.
+
+**Evidence.**  Rebuilt in PR #131 with every results file: 512 cells,
+46 of them `pipeline-desktop-opus-postfix2`.
+
+**Next:** nothing new on the pipeline; (b) openICPSR downloads remain
+the user's.
+
 ---
 
 ## Phase 4 — Corpus growth (4 → 20–30 papers)

@@ -752,64 +752,66 @@ Per paper and mode: final claims within tolerance in each agent sample (three in
 | `montero-2022` | blind | 10 | 10 | 7 | 6 | **4** | 0 | 3 | 0 |
 <!-- /table:variance_agent_cells -->
 
-**The post-fix sample.**  After the pipeline unfreeze of ROADMAP 3.8 (data inventory, sample reconciliation, and completeness and timeout repair), the pipeline was run once more through the oracle on all twenty-three papers in independent and blind mode (label `desktop-opus-postfix`; ROADMAP 3.8.1).  The fixes were designed after reading the results in this report, so this sample is post hoc.  It is reported on its own, never pooled with the three frozen samples and never paired with the agent in a gap range.  It reproduced 233 of 278 claims independent and 191 blind, against frozen totals of 239, 226 and 227 independent and 173, 176 and 181 blind.  So it is inside the frozen independent range and 10 above the highest frozen blind total.  Cell by cell, 6 independent cells fall outside their frozen range (2 above, 4 below), and so do 6 blind cells (5 above, 1 below).  The artifacts show which mechanisms ran.  Every one of the 46 runs had the data inventory in its prompt and printed SAMPLE lines.  Five got a completeness repair and none a timeout repair.  The refinement half of sample reconciliation never fired.  Its sample-size test accepts only claims typed `other`, and since the count relabel (ROADMAP 3.7.4) the catalog types its sample sizes `count`.  As a result, the 12 claim-refinement prompts (in 8 independent cells) that listed a failing count all went without the "Sample size check" block.  The inventory is visibly at work in Grier independent, 10 of 11 against 0, 2 and 2: the inventory names the one column that differs between the three files, and the script uses that difference to match each file to its contribution window.  The completeness repair recovered seven claims that had printed NA in Bokobza independent (first scored 4, final 11).  Two blind cells went the other way.  Arias blind reproduced 1 of 12 (frozen 12, 12 and 7).  Its script treats `force_choice` as survey metadata, but that is the first of the nine choice columns that frozen samples 1 and 2 used.  Without it the choices no longer line up with the profiles, and every effect comes out near zero.  Altmann blind reproduced 4 of 13, on the same 892-subject sample as frozen samples 1 and 2 and passing the same four claims.  Sample 3 got 13 by restricting the sample to the scarce-resource treatment through `Treatment_Incentives`, a column the post-fix script never looked at.  One draw gives no standard error, and the frozen samples remain the pipeline's numbers everywhere else in this report.
+**The post-fix samples.**  After the pipeline unfreeze of ROADMAP 3.8 (data inventory, sample reconciliation, and completeness and timeout repair), the pipeline was run through the oracle on all twenty-three papers in independent and blind mode (label `desktop-opus-postfix`; ROADMAP 3.8.1).  The fixes were designed after reading the results in this report, so this sample, and the second one below, are post hoc.  Each is reported on its own, never pooled with the three frozen samples or with the other, and never paired with the agent in a gap range.  The first post-fix sample reproduced 233 of 278 claims independent and 191 blind, against frozen totals of 239, 226 and 227 independent and 173, 176 and 181 blind.  So it is inside the frozen independent range and 10 above the highest frozen blind total.  Cell by cell, 6 independent cells fall outside their frozen range (2 above, 4 below), and so do 6 blind cells (5 above, 1 below).  The artifacts show which mechanisms ran.  Every one of the 46 runs had the data inventory in its prompt and printed SAMPLE lines.  Five got a completeness repair and none a timeout repair.  The refinement half of sample reconciliation never fired.  Its sample-size test accepts only claims typed `other`, and since the count relabel (ROADMAP 3.7.4) the catalog types its sample sizes `count`.  As a result, the 12 claim-refinement prompts (in 8 independent cells) that listed a failing count all went without the "Sample size check" block.  The inventory is visibly at work in Grier independent, 10 of 11 against 0, 2 and 2: the inventory names the one column that differs between the three files, and the script uses that difference to match each file to its contribution window.  The completeness repair recovered seven claims that had printed NA in Bokobza independent (first scored 4, final 11).  Two blind cells went the other way.  Arias blind reproduced 1 of 12 (frozen 12, 12 and 7).  Its script treats `force_choice` as survey metadata, but that is the first of the nine choice columns that frozen samples 1 and 2 used.  Without it the choices no longer line up with the profiles, and every effect comes out near zero.  Altmann blind reproduced 4 of 13, on the same 892-subject sample as frozen samples 1 and 2 and passing the same four claims.  Sample 3 got 13 by restricting the sample to the scarce-resource treatment through `Treatment_Incentives`, a column the post-fix script never looked at.
+
+The sample-size test was then fixed (ROADMAP 3.8.2), and a second post-fix sample was run with the check firing (label `desktop-opus-postfix2`; ROADMAP 3.8.3).  It reproduced 231 of 278 claims independent and 182 blind: inside both frozen ranges, 2 and 9 below the first post-fix sample.  Cell by cell, 4 independent cells fall outside their frozen range (2 above, 2 below) and 7 blind cells (4 above, 3 below).  The check fired in 13 claim-refinement prompts across 9 independent cells, and in no blind cell, since blind mode has no claim refinement.  In those cells it named 19 failing count claims.  At the end 12 of them passed, 6 still failed, and 1 that had passed when first scored failed.  The same refinements also moved 27 other claims in those cells from fail to pass, for example all eight conjoint effects in Arias independent (first scored 2, final 12).  The refinement prompt lists every failing claim, so the check cannot be separated from the rest of the refinement.  The nine cells went from 37 claims first scored to 75 final, against 77 final in the first post-fix sample, and the other fourteen independent cells reproduced 156 claims in both samples.  So the check repaired sample sizes where it fired, but the independent total did not rise.  Where it did not repair them, the script could not find the restriction behind the gap: Altmann independent fell to 4 of 13 (frozen 13, 13 and 13), still on 892 subjects against the stated 608 after the check named the gap, the same miss as Altmann blind above.  Arias blind again dropped `force_choice` and reproduced 2 of 12.  Douenne had to be answered on a fixed paper text: its publisher stamps the download date on a cover sheet, so a loop that ran past midnight saw a new paper and a new extraction prompt each day.  The harness now caches the first download (ROADMAP 3.8.2), and Douenne's paper text differs by that one line between the samples.  Two post-hoc draws give no standard error, and the frozen samples remain the pipeline's numbers everywhere else in this report.
 
 <!-- table:postfix -->
-**Post-fix sample, not pooled.**  One oracle sample of the pipeline after the ROADMAP 3.8 unfreeze (label `desktop-opus-postfix`; `pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`; ROADMAP 3.8.1), independent and blind mode on all 23 papers.  The three fixes were designed after reading the evaluation results, so this row is post hoc: it is shown beside the three frozen samples of the tables above, never pooled with them and never paired with the agent in a gap range.  One draw, no standard error.  *Against frozen range* compares the post-fix count with the lowest and highest of the three frozen samples in that cell.  The error-refinement count includes completeness and timeout repairs, which share its budget; the rows do not carry `n_completeness_refinements`.
+**Post-fix samples, not pooled.**  Two oracle samples of the pipeline after the ROADMAP 3.8 unfreeze, independent and blind mode on all 23 papers: post-fix 1 (label `desktop-opus-postfix`; `pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`; ROADMAP 3.8.1), in which the sample-size check never fired, and post-fix 2 (label `desktop-opus-postfix2`; `pipeline-oracle-desktop-opus-postfix2-23papers-indep-blind-2026-11-05.json`; ROADMAP 3.8.3), run after the fix of ROADMAP 3.8.2, in which it fires.  The fixes were designed after reading the evaluation results, so both rows are post hoc: they are shown beside the three frozen samples of the tables above, never pooled with them or with each other, and never paired with the agent in a gap range.  One draw each, no standard error.  *Against frozen range* compares a post-fix count with the lowest and highest of the three frozen samples in that cell.  The error-refinement count includes completeness and timeout repairs, which share its budget; the rows do not carry `n_completeness_refinements`.
 
-| Mode | Claims | Frozen sample 1 | Frozen sample 2 | Frozen sample 3 | **Post-fix (one draw)** | Cells above frozen range | Cells within | Cells below |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| independent | 278 | 239 | 226 | 227 | **233** | 2 | 17 | 4 |
-| blind | 278 | 173 | 176 | 181 | **191** | 5 | 17 | 1 |
+| Mode | Claims | Frozen sample 1 | Frozen sample 2 | Frozen sample 3 | **Post-fix 1 (check not firing)** | **Post-fix 2 (check firing)** | Post-fix 1 cells above / within / below frozen range | Post-fix 2 cells above / within / below frozen range |
+|---|---:|---:|---:|---:|---:|---:|---|---|
+| independent | 278 | 239 | 226 | 227 | **233** | **231** | 2 / 17 / 4 | 2 / 19 / 2 |
+| blind | 278 | 173 | 176 | 181 | **191** | **182** | 5 / 17 / 1 | 4 / 16 / 3 |
 
-| Paper | Mode | n | Frozen 1 | Frozen 2 | Frozen 3 | **Post-fix** | Post-fix first scored | Post-fix error / claim refinements | Against frozen range |
-|---|---|---:|---:|---:|---:|---:|---:|---:|---|
-| `acemoglu-2022` | independent | 12 | 11 | 11 | 11 | **7** | 7 | 0 / 2 | **below** |
-| `acemoglu-2022` | blind | 12 | 6 | 6 | 6 | **7** | 7 | 0 / 0 | **above** |
-| `adams-2023` | independent | 11 | 10 | 8 | 11 | **7** | 4 | 0 / 2 | **below** |
-| `adams-2023` | blind | 11 | 7 | 2 | 8 | **8** | 8 | 0 / 0 | within |
-| `altmann-2022` | independent | 13 | 13 | 13 | 13 | **13** | 4 | 0 / 1 | within |
-| `altmann-2022` | blind | 13 | 4 | 4 | 13 | **4** | 4 | 0 / 0 | within |
-| `arias-2022` | independent | 12 | 12 | 12 | 12 | **12** | 12 | 0 / 0 | within |
-| `arias-2022` | blind | 12 | 12 | 12 | 7 | **1** | 1 | 0 / 0 | **below** |
-| `bokobza-2022` | independent | 11 | 11 | 10 | 11 | **11** | 4 | 1 / 0 | within |
-| `bokobza-2022` | blind | 11 | 4 | 10 | 9 | **11** | 11 | 1 / 0 | **above** |
-| `brouwer-2022` | independent | 12 | 12 | 12 | 12 | **12** | 12 | 0 / 0 | within |
-| `brouwer-2022` | blind | 12 | 12 | 12 | 12 | **12** | 12 | 0 / 0 | within |
-| `carrera-2022` | independent | 11 | 7 | 0 | 8 | **9** | 9 | 3 / 1 | **above** |
-| `carrera-2022` | blind | 11 | 0 | 7 | 4 | **8** | 8 | 3 / 0 | **above** |
-| `dancygier-2022` | independent | 13 | 13 | 13 | 13 | **13** | 13 | 0 / 0 | within |
-| `dancygier-2022` | blind | 13 | 13 | 13 | 11 | **13** | 13 | 0 / 0 | within |
-| `dertwinkel-kalt-2022` | independent | 13 | 13 | 13 | 13 | **13** | 11 | 0 / 2 | within |
-| `dertwinkel-kalt-2022` | blind | 13 | 12 | 13 | 13 | **13** | 13 | 0 / 0 | within |
-| `douenne-2022` | independent | 13 | 13 | 13 | 13 | **12** | 3 | 3 / 3 | **below** |
-| `douenne-2022` | blind | 13 | 12 | 13 | 13 | **13** | 13 | 1 / 0 | within |
-| `forsythe-2022` | independent | 13 | 12 | 12 | 0 | **9** | 9 | 1 / 1 | within |
-| `forsythe-2022` | blind | 13 | 10 | 10 | 5 | **9** | 9 | 1 / 0 | within |
-| `gagliarducci-2022` | independent | 13 | 13 | 13 | 12 | **13** | 10 | 0 / 2 | within |
-| `gagliarducci-2022` | blind | 13 | 12 | 7 | 7 | **7** | 7 | 0 / 0 | within |
-| `grier-2023` | independent | 11 | 0 | 2 | 2 | **10** | 6 | 0 / 2 | **above** |
-| `grier-2023` | blind | 11 | 0 | 0 | 2 | **2** | 2 | 1 / 0 | within |
-| `hanlon-2022` | independent | 12 | 12 | 12 | 12 | **12** | 12 | 0 / 0 | within |
-| `hanlon-2022` | blind | 12 | 12 | 12 | 12 | **12** | 12 | 0 / 0 | within |
-| `hanushek-2022` | independent | 13 | 9 | 9 | 13 | **9** | 9 | 0 / 1 | within |
-| `hanushek-2022` | blind | 13 | 12 | 9 | 9 | **9** | 9 | 0 / 0 | within |
-| `hollyer-2022` | independent | 13 | 13 | 13 | 12 | **13** | 13 | 0 / 0 | within |
-| `hollyer-2022` | blind | 13 | 10 | 12 | 10 | **13** | 13 | 0 / 0 | **above** |
-| `holman-2022` | independent | 11 | 4 | 9 | 6 | **1** | 1 | 0 / 1 | **below** |
-| `holman-2022` | blind | 11 | 0 | 0 | 0 | **0** | 0 | 1 / 0 | within |
-| `labandeira-2022` | independent | 12 | 6 | 7 | 4 | **4** | 4 | 1 / 2 | within |
-| `labandeira-2022` | blind | 12 | 4 | 4 | 4 | **4** | 4 | 1 / 0 | within |
-| `leeson-2022` | independent | 11 | 11 | 8 | 11 | **11** | 8 | 1 / 3 | within |
-| `leeson-2022` | blind | 11 | 9 | 8 | 8 | **8** | 8 | 1 / 0 | within |
-| `lopez-moctezuma-2022` | independent | 13 | 9 | 9 | 9 | **9** | 9 | 0 / 1 | within |
-| `lopez-moctezuma-2022` | blind | 13 | 9 | 9 | 9 | **9** | 9 | 1 / 0 | within |
-| `manekin-2022` | independent | 12 | 12 | 12 | 12 | **12** | 12 | 0 / 0 | within |
-| `manekin-2022` | blind | 12 | 12 | 9 | 12 | **12** | 12 | 0 / 0 | within |
-| `mokyr-2022` | independent | 13 | 13 | 7 | 7 | **13** | 13 | 0 / 0 | within |
-| `mokyr-2022` | blind | 13 | 1 | 1 | 7 | **13** | 13 | 0 / 0 | **above** |
-| `montero-2022` | independent | 10 | 10 | 8 | 10 | **8** | 1 | 1 / 3 | within |
-| `montero-2022` | blind | 10 | 0 | 3 | 0 | **3** | 3 | 1 / 0 | within |
+| Paper | Mode | n | Frozen 1 | Frozen 2 | Frozen 3 | **Post-fix 1** | PF1 first scored | PF1 error / claim refinements | PF1 against frozen range | **Post-fix 2** | PF2 first scored | PF2 error / claim refinements | PF2 against frozen range |
+|---|---|---:|---:|---:|---:|---:|---:|---:|---|---:|---:|---:|---|
+| `acemoglu-2022` | independent | 12 | 11 | 11 | 11 | **7** | 7 | 0 / 2 | **below** | **12** | 8 | 1 / 1 | **above** |
+| `acemoglu-2022` | blind | 12 | 6 | 6 | 6 | **7** | 7 | 0 / 0 | **above** | **6** | 6 | 1 / 0 | within |
+| `adams-2023` | independent | 11 | 10 | 8 | 11 | **7** | 4 | 0 / 2 | **below** | **10** | 7 | 0 / 2 | within |
+| `adams-2023` | blind | 11 | 7 | 2 | 8 | **8** | 8 | 0 / 0 | within | **8** | 8 | 1 / 0 | within |
+| `altmann-2022` | independent | 13 | 13 | 13 | 13 | **13** | 4 | 0 / 1 | within | **4** | 4 | 1 / 1 | **below** |
+| `altmann-2022` | blind | 13 | 4 | 4 | 13 | **4** | 4 | 0 / 0 | within | **4** | 4 | 0 / 0 | within |
+| `arias-2022` | independent | 12 | 12 | 12 | 12 | **12** | 12 | 0 / 0 | within | **12** | 2 | 0 / 1 | within |
+| `arias-2022` | blind | 12 | 12 | 12 | 7 | **1** | 1 | 0 / 0 | **below** | **2** | 2 | 0 / 0 | **below** |
+| `bokobza-2022` | independent | 11 | 11 | 10 | 11 | **11** | 4 | 1 / 0 | within | **11** | 11 | 0 / 0 | within |
+| `bokobza-2022` | blind | 11 | 4 | 10 | 9 | **11** | 11 | 1 / 0 | **above** | **4** | 4 | 1 / 0 | within |
+| `brouwer-2022` | independent | 12 | 12 | 12 | 12 | **12** | 12 | 0 / 0 | within | **12** | 12 | 0 / 0 | within |
+| `brouwer-2022` | blind | 12 | 12 | 12 | 12 | **12** | 12 | 0 / 0 | within | **12** | 12 | 0 / 0 | within |
+| `carrera-2022` | independent | 11 | 7 | 0 | 8 | **9** | 9 | 3 / 1 | **above** | **0** | 0 | 3 / 0 | within |
+| `carrera-2022` | blind | 11 | 0 | 7 | 4 | **8** | 8 | 3 / 0 | **above** | **9** | 9 | 1 / 0 | **above** |
+| `dancygier-2022` | independent | 13 | 13 | 13 | 13 | **13** | 13 | 0 / 0 | within | **13** | 13 | 0 / 0 | within |
+| `dancygier-2022` | blind | 13 | 13 | 13 | 11 | **13** | 13 | 0 / 0 | within | **13** | 13 | 0 / 0 | within |
+| `dertwinkel-kalt-2022` | independent | 13 | 13 | 13 | 13 | **13** | 11 | 0 / 2 | within | **13** | 13 | 0 / 0 | within |
+| `dertwinkel-kalt-2022` | blind | 13 | 12 | 13 | 13 | **13** | 13 | 0 / 0 | within | **13** | 13 | 0 / 0 | within |
+| `douenne-2022` | independent | 13 | 13 | 13 | 13 | **12** | 3 | 3 / 3 | **below** | **13** | 3 | 2 / 1 | within |
+| `douenne-2022` | blind | 13 | 12 | 13 | 13 | **13** | 13 | 1 / 0 | within | **12** | 6 | 2 / 0 | within |
+| `forsythe-2022` | independent | 13 | 12 | 12 | 0 | **9** | 9 | 1 / 1 | within | **9** | 9 | 0 / 1 | within |
+| `forsythe-2022` | blind | 13 | 10 | 10 | 5 | **9** | 9 | 1 / 0 | within | **9** | 9 | 2 / 0 | within |
+| `gagliarducci-2022` | independent | 13 | 13 | 13 | 12 | **13** | 10 | 0 / 2 | within | **13** | 7 | 0 / 2 | within |
+| `gagliarducci-2022` | blind | 13 | 12 | 7 | 7 | **7** | 7 | 0 / 0 | within | **6** | 6 | 0 / 0 | **below** |
+| `grier-2023` | independent | 11 | 0 | 2 | 2 | **10** | 6 | 0 / 2 | **above** | **10** | 0 | 1 / 2 | **above** |
+| `grier-2023` | blind | 11 | 0 | 0 | 2 | **2** | 2 | 1 / 0 | within | **2** | 2 | 1 / 0 | within |
+| `hanlon-2022` | independent | 12 | 12 | 12 | 12 | **12** | 12 | 0 / 0 | within | **12** | 12 | 0 / 0 | within |
+| `hanlon-2022` | blind | 12 | 12 | 12 | 12 | **12** | 12 | 0 / 0 | within | **12** | 12 | 0 / 0 | within |
+| `hanushek-2022` | independent | 13 | 9 | 9 | 13 | **9** | 9 | 0 / 1 | within | **12** | 12 | 0 / 1 | within |
+| `hanushek-2022` | blind | 13 | 12 | 9 | 9 | **9** | 9 | 0 / 0 | within | **9** | 9 | 0 / 0 | within |
+| `hollyer-2022` | independent | 13 | 13 | 13 | 12 | **13** | 13 | 0 / 0 | within | **13** | 13 | 0 / 0 | within |
+| `hollyer-2022` | blind | 13 | 10 | 12 | 10 | **13** | 13 | 0 / 0 | **above** | **13** | 13 | 0 / 0 | **above** |
+| `holman-2022` | independent | 11 | 4 | 9 | 6 | **1** | 1 | 0 / 1 | **below** | **4** | 1 | 0 / 2 | within |
+| `holman-2022` | blind | 11 | 0 | 0 | 0 | **0** | 0 | 1 / 0 | within | **1** | 1 | 1 / 0 | **above** |
+| `labandeira-2022` | independent | 12 | 6 | 7 | 4 | **4** | 4 | 1 / 2 | within | **6** | 4 | 0 / 2 | within |
+| `labandeira-2022` | blind | 12 | 4 | 4 | 4 | **4** | 4 | 1 / 0 | within | **3** | 3 | 1 / 0 | **below** |
+| `leeson-2022` | independent | 11 | 11 | 8 | 11 | **11** | 8 | 1 / 3 | within | **11** | 8 | 1 / 2 | within |
+| `leeson-2022` | blind | 11 | 9 | 8 | 8 | **8** | 8 | 1 / 0 | within | **8** | 8 | 1 / 0 | within |
+| `lopez-moctezuma-2022` | independent | 13 | 9 | 9 | 9 | **9** | 9 | 0 / 1 | within | **9** | 9 | 0 / 1 | within |
+| `lopez-moctezuma-2022` | blind | 13 | 9 | 9 | 9 | **9** | 9 | 1 / 0 | within | **9** | 9 | 0 / 0 | within |
+| `manekin-2022` | independent | 12 | 12 | 12 | 12 | **12** | 12 | 0 / 0 | within | **12** | 8 | 1 / 0 | within |
+| `manekin-2022` | blind | 12 | 12 | 9 | 12 | **12** | 12 | 0 / 0 | within | **12** | 12 | 0 / 0 | within |
+| `mokyr-2022` | independent | 13 | 13 | 7 | 7 | **13** | 13 | 0 / 0 | within | **13** | 13 | 0 / 0 | within |
+| `mokyr-2022` | blind | 13 | 1 | 1 | 7 | **13** | 13 | 0 / 0 | **above** | **13** | 13 | 0 / 0 | **above** |
+| `montero-2022` | independent | 10 | 10 | 8 | 10 | **8** | 1 | 1 / 3 | within | **7** | 3 | 1 / 3 | **below** |
+| `montero-2022` | blind | 10 | 0 | 3 | 0 | **3** | 3 | 1 / 0 | within | **2** | 2 | 0 / 0 | within |
 <!-- /table:postfix -->
 
 **What is still a single sample.**  The agent now has three samples per cell on every paper in independent and blind mode and two in seeded mode, with extra blind reruns on the five papers of ROADMAP 3.4 (table below).  The pipeline on Opus 5.5 has three samples on every paper in every mode (the third, ROADMAP 3.7.4, is in the Section 4.8 tables).  Every agent row elsewhere in this report is its first sample.  The pipeline on `claude-opus-4-7` has one sample per cell on the evaluation papers.  The model decomposition of Section 4.4 and the verdict table of Section 4.7 use the first sample of each system only.  The second agent sample carries the same isolation caveats as the first: three agents reported glimpsing something outside the task (a garbled table row, a saved copy of their own printed paper text, prose effect sizes in the method section), and none reported adjusting toward a value (ROADMAP 3.5).  In the third sample five blind agents reported prose values that the redaction had left in their paper text, again without adjusting toward them; the redaction was widened afterwards (ROADMAP 3.7.3), and every blind sample in this report was rendered before that change.
@@ -1006,7 +1008,7 @@ Memory alone puts 44 of 278 claims inside the blind tolerance, about one in six,
 
 **The oracle is not the API.**  Oracle answers come from desktop subagents at default effort, not at the effort the pipeline's request names; isolation is by instruction; and the extraction prompts truncate the paper text by design, which several answering agents noted (ROADMAP 3.5).  We present oracle rows beside the API rows, labeled, and never pool them in a table.  The "pipeline on Opus 5.5" aggregate in Sections 4.3–4.4 combines the two routes by paper, and its caveats are stated there.
 
-**Few runs per cell.**  The pipeline on Opus 5.5 has three samples per cell on all twenty-three papers; the agent has three in independent and blind mode and two seeded on all twenty-three (more in five blind cells); the pipeline on `claude-opus-4-7` has one on the evaluation papers.  Two or three samples bound nothing.  The post-fix pipeline (ROADMAP 3.8.1) has a single sample, in independent and blind mode only.  Because its fixes were chosen after seeing these results, it is post hoc and is not pooled with the frozen samples.  See Section 4.8.
+**Few runs per cell.**  The pipeline on Opus 5.5 has three samples per cell on all twenty-three papers; the agent has three in independent and blind mode and two seeded on all twenty-three (more in five blind cells); the pipeline on `claude-opus-4-7` has one on the evaluation papers.  Two or three samples bound nothing.  The post-fix pipeline has two samples, in independent and blind mode only: one in which the sample-size check never fired (ROADMAP 3.8.1) and one in which it fired (ROADMAP 3.8.3).  Because its fixes were chosen after seeing these results, both are post hoc and neither is pooled with the frozen samples or with the other.  See Section 4.8.
 
 **Scope.**  Every reproduction is written in R.  Stata originals are included only because their claims can be scored without running Stata.  The corpus is twenty-three evaluation papers (278 claims), selected by availability of open data, open PDFs and an I4R verdict, not at random; seven of the twenty-three are from APSR or AJPS, and most methods are regressions on observational or experimental data.
 
