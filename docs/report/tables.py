@@ -84,6 +84,11 @@ RUN3_LABEL = "desktop-opus-run3"
 # frozen samples above, never enters a pairing or gap range, and feeds only the ``postfix`` table.
 PIPELINE_POSTFIX_FILE = "pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json"
 POSTFIX_LABEL = "desktop-opus-postfix"
+# Second post-fix oracle sample (label ``desktop-opus-postfix2``; ROADMAP 3.8.3), run after the
+# sample-size check fix of 3.8.2 (#129), so the check fires in it; in the first post-fix sample it
+# never did.  Post hoc like the first: never pooled, feeds only the ``postfix`` table.
+PIPELINE_POSTFIX2_FILE = "pipeline-oracle-desktop-opus-postfix2-23papers-indep-blind-2026-11-05.json"
+POSTFIX2_LABEL = "desktop-opus-postfix2"
 POSTFIX_MODES = ("independent", "blind")
 # Second Claude Code sample in independent and blind mode: the 13 papers of
 # ROADMAP 3.5 ("Agent second sample"; run id ``2026-11-01-a``) and the four of
@@ -306,14 +311,22 @@ for _r in load_rows(PIPELINE_RUN3_FILE):
     RUN3[_key] = _r
 assert {e for e, _m in RUN3} == set(HOLDOUT) and len(RUN3) == len(HOLDOUT) * len(MODES)
 
-POSTFIX: dict[tuple[str, str], dict[str, Any]] = {}
-for _r in load_rows(PIPELINE_POSTFIX_FILE):
-    assert metrics.reproducer_of(_r) == "pipeline" and metrics.model_of(_r) == POSTFIX_LABEL, _r["entry_id"]
-    assert not _r.get("skipped") and not _r.get("error"), _r["entry_id"]
-    _key = (_r["entry_id"], metrics.mode_of(_r))
-    assert _key[1] in POSTFIX_MODES and _key not in POSTFIX, f"unexpected post-fix cell {_key}"
-    POSTFIX[_key] = _r
-assert {e for e, _m in POSTFIX} == set(HOLDOUT) and len(POSTFIX) == len(HOLDOUT) * len(POSTFIX_MODES)
+
+def _load_postfix(name: str, label: str) -> dict[tuple[str, str], dict[str, Any]]:
+    """One post-fix sample's rows by (entry, mode): independent and blind on every holdout paper."""
+    cells: dict[tuple[str, str], dict[str, Any]] = {}
+    for r in load_rows(name):
+        assert metrics.reproducer_of(r) == "pipeline" and metrics.model_of(r) == label, r["entry_id"]
+        assert not r.get("skipped") and not r.get("error"), r["entry_id"]
+        key = (r["entry_id"], metrics.mode_of(r))
+        assert key[1] in POSTFIX_MODES and key not in cells, f"unexpected post-fix cell {key}"
+        cells[key] = r
+    assert {e for e, _m in cells} == set(HOLDOUT) and len(cells) == len(HOLDOUT) * len(POSTFIX_MODES)
+    return cells
+
+
+POSTFIX = _load_postfix(PIPELINE_POSTFIX_FILE, POSTFIX_LABEL)
+POSTFIX2 = _load_postfix(PIPELINE_POSTFIX2_FILE, POSTFIX2_LABEL)
 
 AGENT2: dict[tuple[str, str], dict[str, Any]] = {}
 for _r in (
@@ -1037,27 +1050,35 @@ def _frozen_counts(entry: str, mode: str) -> list[int]:
     return [passed(p55_cell(entry, mode) or {}), passed(RUN2[(entry, mode)]), passed(RUN3[(entry, mode)])]
 
 
+def _against(p: int, frozen: list[int]) -> str:
+    """Where a post-fix count falls against the frozen samples' range in its cell."""
+    return "above" if p > max(frozen) else "below" if p < min(frozen) else "within"
+
+
 def t_postfix() -> str:
-    """The post-fix sample (ROADMAP 3.8.1) beside the frozen samples' range, never pooled with them."""
+    """The two post-fix samples (ROADMAP 3.8.1, 3.8.3) beside the frozen samples' range, never pooled."""
+    samples = (POSTFIX, POSTFIX2)
     tot_hdr = [
         "Mode",
         "Claims",
         "Frozen sample 1",
         "Frozen sample 2",
         "Frozen sample 3",
-        "**Post-fix (one draw)**",
-        "Cells above frozen range",
-        "Cells within",
-        "Cells below",
+        "**Post-fix 1 (check not firing)**",
+        "**Post-fix 2 (check firing)**",
+        "Post-fix 1 cells above / within / below frozen range",
+        "Post-fix 2 cells above / within / below frozen range",
     ]
     tot = []
     for m in POSTFIX_MODES:
         s = [sum(_frozen_counts(e, m)[i] for e in HOLDOUT) for i in range(3)]
-        pf = {e: passed(POSTFIX[(e, m)]) for e in HOLDOUT}
-        up = sum(1 for e in HOLDOUT if pf[e] > max(_frozen_counts(e, m)))
-        down = sum(1 for e in HOLDOUT if pf[e] < min(_frozen_counts(e, m)))
         n = sum(total(POSTFIX[(e, m)]) for e in HOLDOUT)
-        tot.append([m, n, *s, f"**{sum(pf.values())}**", up, len(HOLDOUT) - up - down, down])
+        sums, splits = [], []
+        for cells in samples:
+            where = Counter(_against(passed(cells[(e, m)]), _frozen_counts(e, m)) for e in HOLDOUT)
+            sums.append(f"**{sum(passed(cells[(e, m)]) for e in HOLDOUT)}**")
+            splits.append(f"{where['above']} / {where['within']} / {where['below']}")
+        tot.append([m, n, *s, *sums, *splits])
     hdr = [
         "Paper",
         "Mode",
@@ -1065,43 +1086,47 @@ def t_postfix() -> str:
         "Frozen 1",
         "Frozen 2",
         "Frozen 3",
-        "**Post-fix**",
-        "Post-fix first scored",
-        "Post-fix error / claim refinements",
-        "Against frozen range",
+        "**Post-fix 1**",
+        "PF1 first scored",
+        "PF1 error / claim refinements",
+        "PF1 against frozen range",
+        "**Post-fix 2**",
+        "PF2 first scored",
+        "PF2 error / claim refinements",
+        "PF2 against frozen range",
     ]
     out = []
     for e in HOLDOUT:
         for m in POSTFIX_MODES:
-            r, v = POSTFIX[(e, m)], _frozen_counts(e, m)
-            assert total(r) == total(RUN3[(e, m)]), (e, m)
-            p = passed(r)
-            where = "above" if p > max(v) else "below" if p < min(v) else "within"
-            out.append(
-                [
-                    f"`{short(e)}`",
-                    m,
-                    total(r),
-                    *v,
+            v = _frozen_counts(e, m)
+            row: list[Any] = [f"`{short(e)}`", m, total(RUN3[(e, m)]), *v]
+            for cells in samples:
+                r = cells[(e, m)]
+                assert total(r) == total(RUN3[(e, m)]), (e, m)
+                p = passed(r)
+                where = _against(p, v)
+                row += [
                     f"**{p}**",
                     fs(r),
                     f"{r['n_error_refinements']} / {r['n_claim_refinements']}",
                     f"**{where}**" if where != "within" else where,
                 ]
-            )
+            out.append(row)
     return (
-        "**Post-fix sample, not pooled.**  One oracle sample of the pipeline after the ROADMAP 3.8 "
-        f"unfreeze (label `{POSTFIX_LABEL}`; `{PIPELINE_POSTFIX_FILE}`; ROADMAP 3.8.1), independent and "
-        "blind mode on all 23 papers.  The three fixes were designed after reading the evaluation "
-        "results, so this row is post hoc: it is shown beside the three frozen samples of the tables "
-        "above, never pooled with them and never paired with the agent in a gap range.  One draw, no "
-        "standard error.  *Against frozen range* compares the post-fix count with the lowest and "
-        "highest of the three frozen samples in that cell.  The error-refinement count includes "
-        "completeness and timeout repairs, which share its budget; the rows do not carry "
-        "`n_completeness_refinements`.\n\n"
-        + table(tot_hdr, tot, ["l"] + ["r"] * 8)
+        "**Post-fix samples, not pooled.**  Two oracle samples of the pipeline after the ROADMAP 3.8 "
+        f"unfreeze, independent and blind mode on all 23 papers: post-fix 1 (label `{POSTFIX_LABEL}`; "
+        f"`{PIPELINE_POSTFIX_FILE}`; ROADMAP 3.8.1), in which the sample-size check never fired, and "
+        f"post-fix 2 (label `{POSTFIX2_LABEL}`; `{PIPELINE_POSTFIX2_FILE}`; ROADMAP 3.8.3), run after "
+        "the fix of ROADMAP 3.8.2, in which it fires.  The fixes were designed after reading the "
+        "evaluation results, so both rows are post hoc: they are shown beside the three frozen samples "
+        "of the tables above, never pooled with them or with each other, and never paired with the "
+        "agent in a gap range.  One draw each, no standard error.  *Against frozen range* compares a "
+        "post-fix count with the lowest and highest of the three frozen samples in that cell.  The "
+        "error-refinement count includes completeness and timeout repairs, which share its budget; the "
+        "rows do not carry `n_completeness_refinements`.\n\n"
+        + table(tot_hdr, tot, ["l"] + ["r"] * 6 + ["l", "l"])
         + "\n"
-        + table(hdr, out, ["l", "l", "r", "r", "r", "r", "r", "r", "r", "l"])
+        + table(hdr, out, ["l", "l", "r", "r", "r", "r", "r", "r", "r", "l", "r", "r", "r", "l"])
     )
 
 
