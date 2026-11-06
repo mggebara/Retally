@@ -1,0 +1,106 @@
+INFO: dyadic columns: country, year, to_mp_number, from_mp_number, party_number, party_from, party_to, to_partyname, to_parfam, from_partyname, from_parfam, from_senior_partner, to_senior_partner, to_in_gov, from_in_gov, govern_together, opposition_together, from_left_bloc, from_right_bloc, to_left_bloc, to_right_bloc, same_bloc, from_parlgov_id, to_parlgov_id, from_nationalism, from_rile, from_planeco, from_markeco, to_nationalism, to_rile, to_planeco, to_markeco, elecdate, sat_together_10years, sat_together_15years, sat_together_20years, to_galtan, to_lrecon, from_galtan, from_lrecon, nationalism_distance, rile_distance, galtan_distance, lrecon_distamce, govern_together_10, govern_together_15, govern_together_20, rile_distance_s, nationalism_distance_s, lrecon_distance_s, galtan_distance_s, from_multiculturalism, to_multiculturalism, from_immigrate_policy, to_immigrate_policy, from_society, from_economy, to_society, to_economy, from_rrparty, to_rrparty, econ_distance, econ_distance_s, soc_distance, society_distance_s, from_femaleleader, from_pfeml, from_complete, to_femaleleader, to_pfeml, to_complete, nat_avg, diff_pfeml, diff_femlead, from_prior_cab, from_prior_seats, to_prior_cab, to_prior_seats, prior_coalition, prior_opposition, cntryyr, party_like, party_dislike, DM, logDM 
+INFO: women-share candidates: to_pfeml 
+INFO: using women-share variable: to_pfeml 
+INFO: to MP-count candidates: to_mp_number, to_prior_seats
+INFO: from MP-count candidates: from_mp_number, from_prior_seats
+INFO: MP-count vars used: to=to_mp_number from=from_mp_number
+SAMPLE:main:loaded=2266
+INFO: main to_mps range: 11110-72701; from_mps range: 11110-72701
+SAMPLE:main:both_parties_at_least_4_mps=2266
+SAMPLE:main:nonmissing_cmp_positions=2266
+SAMPLE:main:nonmissing_partisan_ratings=2266
+SAMPLE:main:nonmissing_women_share_controls=2019
+SAMPLE:main:inparty_women_share_observed=1826
+DEVIATION: main dropped 193 dyads whose in-party lacks women-MP data (from_pfeml)
+INFO: rl distance mean=-0.017 sd=0.988
+SAMPLE:main:estimation=1826
+OLS estimation, Dep. Var.: dv
+Observations: 1,826
+Fixed-effects: election: 81
+Standard-errors: Clustered (election) 
+            Estimate Std. Error t value   Pr(>|t|)    
+women_share  1.61285   0.306344 5.26483 1.1525e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.36886     Adj. R2: 0.142584
+                Within R2: 0.033288
+OLS estimation, Dep. Var.: dv
+Observations: 1,826
+Fixed-effects: election: 81
+Standard-errors: Clustered (election) 
+             Estimate Std. Error  t value   Pr(>|t|)    
+women_share  1.518671   0.316216  4.80264 7.1850e-06 ***
+rl          -0.576437   0.074249 -7.76361 2.3456e-11 ***
+coal         0.959197   0.182007  5.27010 1.1282e-06 ***
+opp          0.363849   0.118268  3.07649 2.8670e-03 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.24749     Adj. R2: 0.286663
+                Within R2: 0.197115
+INFO: gender-data columns: country, year, party_from, party_to, dislike, gender, to_mp_number, from_mp_number, party_number, to_partyname, to_parfam, from_partyname, from_parfam, from_senior_partner, to_senior_partner, to_in_gov, from_in_gov, govern_together, opposition_together, from_left_bloc, from_right_bloc, to_left_bloc, to_right_bloc, same_bloc, from_parlgov_id, to_parlgov_id, from_nationalism, from_rile, from_planeco, from_markeco, to_nationalism, to_rile, to_planeco, to_markeco, elecdate, sat_together_10years, sat_together_15years, sat_together_20years, to_galtan, to_lrecon, from_galtan, from_lrecon, nationalism_distance, rile_distance, galtan_distance, lrecon_distamce, govern_together_10, govern_together_15, govern_together_20, rile_distance_s, nationalism_distance_s, lrecon_distance_s, galtan_distance_s, from_multiculturalism, to_multiculturalism, from_immigrate_policy, to_immigrate_policy, from_society, from_economy, to_society, to_economy, from_rrparty, to_rrparty, econ_distance, econ_distance_s, soc_distance, society_distance_s, from_femaleleader, from_pfeml, from_complete, to_femaleleader, to_pfeml, to_complete, nat_avg, diff_pfeml, diff_femlead, from_prior_cab, from_prior_seats, to_prior_cab, to_prior_seats, prior_coalition, prior_opposition, cntryyr, party_like, party_dislike 
+INFO: gender-data rating candidates: party_like 
+INFO: share of dyads where rating differs by gender: party_like=0 
+INFO: gender-specific DV used: party_like 
+INFO: to MP-count candidates: to_mp_number, to_prior_seats
+INFO: from MP-count candidates: from_mp_number, from_prior_seats
+INFO: MP-count vars used: to=to_mp_number from=from_mp_number
+INFO: gender values: 1=2260; 2=2262 
+SAMPLE:women_partisans:loaded=2262
+INFO: women_partisans to_mps range: 11110-72701; from_mps range: 11110-72701
+SAMPLE:women_partisans:both_parties_at_least_4_mps=2262
+SAMPLE:women_partisans:nonmissing_cmp_positions=2262
+SAMPLE:women_partisans:nonmissing_partisan_ratings=2262
+SAMPLE:women_partisans:nonmissing_women_share_controls=2016
+SAMPLE:women_partisans:inparty_women_share_observed=1823
+DEVIATION: women_partisans dropped 193 dyads whose in-party lacks women-MP data (from_pfeml)
+SAMPLE:women_partisans:estimation=1823
+OLS estimation, Dep. Var.: dv
+Observations: 1,823
+Fixed-effects: election: 80
+Standard-errors: Clustered (election) 
+             Estimate Std. Error  t value   Pr(>|t|)    
+women_share  1.483991   0.316514  4.68854 1.1321e-05 ***
+rl          -0.576145   0.075230 -7.65840 4.0227e-11 ***
+coal         0.953985   0.181898  5.24461 1.2778e-06 ***
+opp          0.347093   0.117595  2.95160 4.1602e-03 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.24816     Adj. R2: 0.284783
+                Within R2: 0.192719
+SAMPLE:men_partisans:loaded=2260
+INFO: men_partisans to_mps range: 11110-72701; from_mps range: 11110-72701
+SAMPLE:men_partisans:both_parties_at_least_4_mps=2260
+SAMPLE:men_partisans:nonmissing_cmp_positions=2260
+SAMPLE:men_partisans:nonmissing_partisan_ratings=2260
+SAMPLE:men_partisans:nonmissing_women_share_controls=2013
+SAMPLE:men_partisans:inparty_women_share_observed=1820
+DEVIATION: men_partisans dropped 193 dyads whose in-party lacks women-MP data (from_pfeml)
+SAMPLE:men_partisans:estimation=1820
+OLS estimation, Dep. Var.: dv
+Observations: 1,820
+Fixed-effects: election: 80
+Standard-errors: Clustered (election) 
+             Estimate Std. Error  t value   Pr(>|t|)    
+women_share  1.486328   0.316722  4.69284 1.1136e-05 ***
+rl          -0.576804   0.075308 -7.65929 4.0069e-11 ***
+coal         0.955782   0.183001  5.22283 1.3946e-06 ***
+opp          0.349264   0.117800  2.96489 4.0021e-03 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.24585     Adj. R2: 0.285736
+                Within R2: 0.193937
+RESULT:women_mps_coef_bivariate=1.612848
+RESULT:women_mps_se_bivariate=0.306344
+RESULT:women_mps_coef_full=1.518671
+RESULT:women_mps_se_full=0.316216
+RESULT:women_mps_coef_women_partisans=1.483991
+RESULT:women_mps_se_women_partisans=0.316514
+RESULT:women_mps_coef_men_partisans=1.486328
+RESULT:women_mps_se_men_partisans=0.316722
+RESULT:right_left_distance_coef_full=-0.576437
+RESULT:coalition_partners_coef_full=0.959197
+RESULT:opposition_partners_coef_full=0.363849
+RESULT:n_directed_dyads=1826
+RESULT:n_obs_women_partisans=1823
+RESULT:n_obs_men_partisans=1820
+RESULT:n_election_studies=81

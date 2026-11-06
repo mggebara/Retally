@@ -1,0 +1,208 @@
+suppressPackageStartupMessages({
+  library(haven)
+  library(fixest)
+  library(dplyr)
+})
+set.seed(42)
+
+path <- "<repo>/.cache/datasets/acemoglu_2022_war_socialism_fascism.script-free/fascism_db.dta"
+raw <- haven::read_dta(path)
+df <- as.data.frame(lapply(raw, function(x) { if (inherits(x, "haven_labelled")) as.numeric(zap_labels(x)) else x }), stringsAsFactors = FALSE)
+names(df) <- names(raw)
+nm <- names(df)
+
+find_col <- function(cands, required = FALSE, label = "") {
+  for (p in cands) {
+    if (p %in% nm) return(p)
+  }
+  for (p in cands) {
+    hit <- grep(p, nm, value = TRUE, ignore.case = TRUE)
+    if (length(hit) > 0) return(hit[1])
+  }
+  if (required) stop(paste("Could not find column for", label))
+  message("WARNING: no column found for ", label)
+  NA_character_
+}
+
+is_binary <- function(x) {
+  if (!is.numeric(x)) return(FALSE)
+  u <- unique(x[!is.na(x)])
+  length(u) <= 2 && all(u %in% c(0, 1))
+}
+
+# safe logical filter (sapply on an empty vector returns list())
+lfilter <- function(v, fun) {
+  if (length(v) == 0) return(character(0))
+  v[vapply(v, fun, logical(1))]
+}
+
+# ---------------- Core variables ----------------
+y_soc19   <- "psu1919_vv"
+instr     <- "foots_pop6m"
+y_viol    <- "fascist_violence"
+y_branch  <- "fascist_branch"
+y_f21     <- "fascist1921_vv"
+y_f24     <- "fascist1924_vv"
+clus      <- "circondario1921"
+prov <- find_col(c("province1921", "provincia1921", "prov1921", "province", "provincia", "prov_1921",
+                   "^prov.*1921$", "^prov"), required = TRUE, label = "province")
+
+# ---------------- Demographic controls ----------------
+lpop <- find_col(c("lpop1911", "lpop_1911", "ln_pop1911", "log_pop1911", "lpop", "^lpop.*1911", "^l.*pop.*1911$"),
+                 label = "log population 1911")
+if (is.na(lpop)) {
+  pop <- find_col(c("pop1911", "pop_1911", "population1911", "^pop.*1911$"), required = TRUE, label = "population 1911")
+  df$lpop_q1 <- log(df[[pop]])
+} else {
+  v <- df[[lpop]]
+  # If it looks like a level rather than a log, take logs
+  if (max(v, na.rm = TRUE) > 100) v <- log(v)
+  df$lpop_q1 <- v
+}
+df$lpop_q2 <- df$lpop_q1^2
+df$lpop_q3 <- df$lpop_q1^3
+df$lpop_q4 <- df$lpop_q1^4
+demo <- c("lpop_q1", "lpop_q2", "lpop_q3", "lpop_q4", "sh_pop_1911_be6")
+
+# ---------------- Regiment dummies ----------------
+excl_prefix <- "^(army_suppliers_d|fascist|psu|z_|prov|circ)"
+reg_cands <- grep("^(reg|regg|rgt|regiment|reggimento|d_reg|reg_d|dreg)[_a-zA-Z]*[0-9]+$", nm, value = TRUE, ignore.case = TRUE)
+reg_cands <- reg_cands[!grepl(excl_prefix, reg_cands)]
+reg_cands <- lfilter(reg_cands, function(v) is_binary(df[[v]]))
+if (length(reg_cands) < 10) {
+  # fallback: largest group of binary columns sharing a prefix and numeric suffix
+  numsuf <- grep("[0-9]+$", nm, value = TRUE)
+  numsuf <- numsuf[!grepl(excl_prefix, numsuf)]
+  numsuf <- lfilter(numsuf, function(v) is_binary(df[[v]]))
+  pref <- sub("[0-9]+$", "", numsuf)
+  tab <- if (length(pref) > 0) sort(table(pref), decreasing = TRUE) else integer(0)
+  if (length(tab) > 0 && tab[1] >= 20) {
+    reg_cands <- numsuf[pref == names(tab)[1]]
+  } else {
+    reg_cands <- character(0)
+  }
+}
+# drop constant dummies
+reg_cands <- lfilter(reg_cands, function(v) length(unique(df[[v]][!is.na(df[[v]])])) > 1)
+message("Regiment dummies found: ", length(reg_cands))
+regd <- reg_cands
+
+# If no dummy set exists, look for a categorical regiment identifier to use as a fixed effect
+reg_fe <- NA_character_
+if (length(regd) == 0) {
+  for (p in c("regiment", "reggimento", "regiment_id", "reg_id", "regiment1915", "regiment_code")) {
+    if (p %in% nm) { reg_fe <- p; break }
+  }
+  if (!is.na(reg_fe)) message("Using regiment identifier as fixed effect: ", reg_fe)
+  else message("WARNING: no regiment controls found")
+}
+
+# ---------------- Additional controls ----------------
+geo <- c("larea", "centre_alt", "max_alt")
+soc13 <- "psu1913_vv"
+vets <- grep("^veterans", nm, value = TRUE)
+vets <- vets[!grepl("_[0-9]+$", vets) | length(vets) <= 2]
+if (length(vets) > 2) vets <- vets[1:2]
+battle <- find_col(c("highmort_d", "high_mort_d", "big_battles_d", "battles_d", "battle1000_d", "battle",
+                     "highmort", "high_mort", "mort1000", "d1000", "1000"), label = "highest-mortality battles dummy")
+mil <- c(vets, "ard_vol_pop6m", "army_suppliers_d", battle)
+shcr <- find_col(c("shcr", "sharecroppers", "sharecr", "mezzadri", "mezzadr", "share_cropp", "scropp"),
+                 label = "sharecroppers")
+landown <- find_col(c("agrarian_assoc", "landowner_assoc", "agr_assoc", "agrar", "landown", "assoc"),
+                    label = "landowner association")
+agr <- c("dlab", shcr, landown)
+urb <- c("ind_workers", "ind_firms", "literacy", "elites", "bourgeoisie")
+
+clean <- function(v) { v <- v[!is.na(v)]; v <- v[v %in% nm]; unique(v) }
+ctrl_sets <- list(
+  c1 = clean(demo),
+  c6 = clean(c(demo, geo, soc13, mil, agr, urb))
+)
+
+# ---------------- Helpers ----------------
+bt <- function(v) if (length(v) == 0) character(0) else paste0("`", v, "`")
+zs <- function(x) (x - mean(x)) / sd(x)
+
+fe_vars <- clean(c(prov, reg_fe))
+fe_part <- paste(bt(fe_vars), collapse = " + ")
+
+build_sample <- function(name, yvar, ctrls) {
+  d <- df
+  cat(sprintf("SAMPLE:%s:loaded=%d\n", name, nrow(d)))
+  need <- unique(c(yvar, y_soc19, instr, fe_vars, clus, ctrls, regd))
+  if (!is.null(yvar) && yvar == y_f21) {
+    d <- d[!is.na(d[[y_f21]]), ]
+    cat(sprintf("SAMPLE:%s:nonmissing_fascist_vote1921=%d\n", name, nrow(d)))
+  }
+  cc <- complete.cases(d[, need, drop = FALSE])
+  d <- d[cc, ]
+  cat(sprintf("SAMPLE:%s:complete_cases=%d\n", name, nrow(d)))
+  # standardize LHS and RHS variables of interest on the estimation sample
+  for (v in unique(c(yvar, y_soc19, instr))) d[[v]] <- zs(d[[v]])
+  for (v in ctrls) if (sd(d[[v]]) > 0) d[[v]] <- zs(d[[v]])
+  d
+}
+
+rhs_exog <- function(ctrls) {
+  # regiment dummies constant within sample handled by fixest collinearity removal
+  terms <- c(bt(ctrls), bt(regd))
+  if (length(terms) == 0) "1" else paste(terms, collapse = " + ")
+}
+
+run_fs <- function(name, ctrls) {
+  d <- build_sample(name, NULL, ctrls)
+  f <- as.formula(paste0(bt(y_soc19), " ~ ", bt(instr), " + ", rhs_exog(ctrls), " | ", fe_part))
+  m <- feols(f, data = d, cluster = as.formula(paste0("~", bt(clus))))
+  cat(sprintf("SAMPLE:%s:estimation=%d\n", name, nobs(m)))
+  list(model = m, data = d)
+}
+
+run_iv <- function(name, yvar, ctrls) {
+  d <- build_sample(name, yvar, ctrls)
+  f <- as.formula(paste0(bt(yvar), " ~ ", rhs_exog(ctrls), " | ", fe_part, " | ",
+                         bt(y_soc19), " ~ ", bt(instr)))
+  m <- feols(f, data = d, cluster = as.formula(paste0("~", bt(clus))))
+  cat(sprintf("SAMPLE:%s:estimation=%d\n", name, nobs(m)))
+  list(model = m, data = d)
+}
+
+# ---------------- Estimation ----------------
+fs1r <- run_fs("table1_col1", ctrl_sets$c1)
+fs6r <- run_fs("table1_col6", ctrl_sets$c6)
+fs1 <- fs1r$model
+fs6 <- fs6r$model
+
+b_fs1 <- unname(coef(fs1)[instr])
+b_fs6 <- unname(coef(fs6)[instr])
+t_fs6 <- unname(coef(fs6)[instr] / sqrt(diag(vcov(fs6)))[instr])
+F_fs6 <- t_fs6^2
+
+iv_viol6   <- run_iv("table2_panelA_col6_violence", y_viol, ctrl_sets$c6)
+iv_branch6 <- run_iv("table2_panelC_col6_branches", y_branch, ctrl_sets$c6)
+iv_f21_6   <- run_iv("table3_panelA_col6_fascist1921", y_f21, ctrl_sets$c6)
+iv_f24_1   <- run_iv("table3_panelC_col1_fascist1924", y_f24, ctrl_sets$c1)
+iv_f24_6   <- run_iv("table3_panelC_col6_fascist1924", y_f24, ctrl_sets$c6)
+
+getb <- function(r) unname(coef(r$model)[paste0("fit_", y_soc19)])
+ncl <- function(m, d) {
+  o <- obs(m)
+  length(unique(d[[clus]][o]))
+}
+
+n_main <- nobs(fs6)
+ncl_main <- ncl(fs6, fs6r$data)
+n_f21 <- nobs(iv_f21_6$model)
+ncl_f21 <- ncl(iv_f21_6$model, iv_f21_6$data)
+
+cat(sprintf("RESULT:first_stage_casualties_table1_col1=%.6f\n", b_fs1))
+cat(sprintf("RESULT:first_stage_casualties_table1_col6=%.6f\n", b_fs6))
+cat(sprintf("RESULT:first_stage_fstat_table1_col6=%.6f\n", F_fs6))
+cat(sprintf("RESULT:iv_violence_table2_panelA_col6=%.6f\n", getb(iv_viol6)))
+cat(sprintf("RESULT:iv_branches_table2_panelC_col6=%.6f\n", getb(iv_branch6)))
+cat(sprintf("RESULT:iv_fascist_vote1921_table3_panelA_col6=%.6f\n", getb(iv_f21_6)))
+cat(sprintf("RESULT:iv_fascist_vote1924_table3_panelC_col1=%.6f\n", getb(iv_f24_1)))
+cat(sprintf("RESULT:iv_fascist_vote1924_table3_panelC_col6=%.6f\n", getb(iv_f24_6)))
+cat(sprintf("RESULT:n_obs_main_sample=%d\n", as.integer(n_main)))
+cat(sprintf("RESULT:n_clusters_main_sample=%d\n", as.integer(ncl_main)))
+cat(sprintf("RESULT:n_obs_fascist_vote1921=%d\n", as.integer(n_f21)))
+cat(sprintf("RESULT:n_clusters_fascist_vote1921=%d\n", as.integer(ncl_f21)))

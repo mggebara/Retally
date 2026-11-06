@@ -1,0 +1,612 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "failed_coup_base_country_fe",
+      "ground_truth": {
+        "value": 0.1,
+        "standard_error": 0.03,
+        "unit": "change in the cabinet replacement rate (share of ministers, 0-1)",
+        "claim_type": "coefficient",
+        "location": "Table A1 (Tables for Figure 2), column Base Model, Failed coup attempt",
+        "context": "Table A1 (\"Failed coup attempts. Country fixed effects: Country-level results\"), Base Model column; plotted in the left panel of Figure 2. Time-series cross-sectional OLS of the year-to-year cabinet replacement rate (one minus the cabinet-size-adjusted retention rate of ministers, from WhoGov, July to July) on a failed coup attempt indicator (Powell and Thyne data; a failed coup before 1 July counts in that year, one after 1 July in the following year), with logged GDP per capita and logged population (Penn World Table 9.0) lagged one year, country fixed effects and year fixed effects.  Sample: country-years of independent countries with a lagged Boix-Miller- Rosato democracy score of 0, 115 autocracies, 1967-2016.  Standard errors clustered by country.\n",
+        "decimals": 2,
+        "sample_size": 3715
+      },
+      "i4r": {
+        "reproduced_value": 0.1,
+        "outcome": "matches",
+        "notes": "Blanket verdict (perfect reproduction).  R re-coding rows with o_coeff 0.10 (Table A1 Base or Purges MAs, which share the rounded value): 0.102 (0.031) and 0.129 (0.031).  Stata log: 0.0985 (0.0327).\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.3,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "failed_coup_base_country_fe",
+        "claim_type": "coefficient",
+        "claimed": 0.1,
+        "reproduced": 0.10255253,
+        "tolerance": 0.3,
+        "rel_err": 0.025525299999999973,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "failed_coup_base_country_fe",
+        "reproduced": 0.10255253,
+        "band_source": "se_band",
+        "band_relative": 0.3,
+        "band_absolute": 0.03,
+        "abs_err": 0.0025525299999999973,
+        "rel_err": 0.025525299999999973,
+        "margin": 0.08508433333333325,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "failed_coup_main_country_fe",
+      "ground_truth": {
+        "value": 0.11,
+        "standard_error": 0.03,
+        "unit": "change in the cabinet replacement rate (share of ministers, 0-1)",
+        "claim_type": "coefficient",
+        "location": "Table A1, column Main Model, Failed coup attempt",
+        "context": "Table A1, Main Model column (Figure 2, left panel).  Same specification as failed_coup_base_country_fe plus lagged dummies for monarchy, military regime and party regime (Anckar and Fredriksson 2019); country and year fixed effects, country-clustered standard errors.\n",
+        "decimals": 2,
+        "sample_size": 3676
+      },
+      "i4r": {
+        "reproduced_value": 0.11,
+        "outcome": "matches",
+        "notes": "Blanket verdict (perfect reproduction).  The one R re-coding row with o_coeff 0.11 (Table A1 Main Model): 0.121 (0.030); with country random effects 0.121 (0.029).  Stata log: 0.1055 (0.0323).\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.2727272727272727,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "failed_coup_main_country_fe",
+        "claim_type": "coefficient",
+        "claimed": 0.11,
+        "reproduced": 0.11195416,
+        "tolerance": 0.2727272727272727,
+        "rel_err": 0.017765090909090876,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "failed_coup_main_country_fe",
+        "reproduced": 0.11195416,
+        "band_source": "se_band",
+        "band_relative": 0.2727272727272727,
+        "band_absolute": 0.03,
+        "abs_err": 0.0019541599999999965,
+        "rel_err": 0.017765090909090876,
+        "margin": 0.06513866666666655,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "failed_coup_base_leader_fe",
+      "ground_truth": {
+        "value": 0.08,
+        "standard_error": 0.03,
+        "unit": "change in the cabinet replacement rate (share of ministers, 0-1)",
+        "claim_type": "coefficient",
+        "location": "Table A2 (Tables for Figure 2), column Base Model, Failed coup attempt",
+        "context": "Table A2 (\"Failed coup attempts. Leader fixed effects: Country-level results\"), Base Model column (Figure 2, left panel, leader fixed effects).  Same regressors as failed_coup_base_country_fe (failed coup attempt, lagged logged GDP per capita and population, year fixed effects) with leader fixed effects instead of country fixed effects, so identification is within each autocrat's tenure. Standard errors clustered by country.\n",
+        "decimals": 2,
+        "sample_size": 3332
+      },
+      "i4r": {
+        "reproduced_value": 0.08,
+        "outcome": "matches",
+        "notes": "Blanket verdict (perfect reproduction).  Five Table A2 columns print 0.08; the five R re-coding rows give 0.065-0.079 (SE 0.030-0.034).  Stata log: 0.0839 (0.0317).\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.375,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "failed_coup_base_leader_fe",
+        "claim_type": "coefficient",
+        "claimed": 0.08,
+        "reproduced": 0.06153496,
+        "tolerance": 0.375,
+        "rel_err": 0.23081300000000002,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "failed_coup_base_leader_fe",
+        "reproduced": 0.06153496,
+        "band_source": "se_band",
+        "band_relative": 0.375,
+        "band_absolute": 0.03,
+        "abs_err": 0.018465040000000002,
+        "rel_err": 0.23081300000000002,
+        "margin": 0.6155013333333335,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "failed_coup_main_leader_fe",
+      "ground_truth": {
+        "value": 0.09,
+        "standard_error": 0.03,
+        "unit": "change in the cabinet replacement rate (share of ministers, 0-1)",
+        "claim_type": "coefficient",
+        "location": "Table A2, column Main Model, Failed coup attempt",
+        "context": "Table A2, Main Model column: the Main Model controls (lagged GDP per capita, population, monarchy, military and party regime dummies) with leader and year fixed effects; the monarchy dummy drops out as collinear with the leader fixed effects.  Country-clustered standard errors.\n",
+        "decimals": 2,
+        "sample_size": 3307
+      },
+      "i4r": {
+        "reproduced_value": 0.09,
+        "outcome": "matches",
+        "notes": "Blanket verdict (perfect reproduction).  Two Table A2 columns print 0.09 (Main Model, Purges MAs); the R re-coding rows give 0.071 (0.030) and 0.081 (0.031).  Stata log: 0.0853 (0.0318).\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.3333333333333333,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "failed_coup_main_leader_fe",
+        "claim_type": "coefficient",
+        "claimed": 0.09,
+        "reproduced": 0.06381329,
+        "tolerance": 0.3333333333333333,
+        "rel_err": 0.2909634444444445,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "failed_coup_main_leader_fe",
+        "reproduced": 0.06381329,
+        "band_source": "se_band",
+        "band_relative": 0.3333333333333333,
+        "band_absolute": 0.03,
+        "abs_err": 0.026186710000000002,
+        "rel_err": 0.2909634444444445,
+        "margin": 0.8728903333333334,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "failed_coup_experience_model",
+      "ground_truth": {
+        "value": 0.14,
+        "standard_error": 0.04,
+        "unit": "change in the probability of being purged next year",
+        "claim_type": "coefficient",
+        "location": "Table K1 (Table for Figure 3), column H2a: Experience, Failed coup attempt",
+        "context": "Table K1, column H2a: Experience; Figure 3 left panel.  Linear probability model of whether a cabinet member is purged (absent from the cabinet the following year; reshuffles within the cabinet are not purges) on a failed coup attempt indicator, experience-group dummies (2-3, 4-6, over 6 years in cabinet; reference under 2 years), their interactions with the failed coup indicator, lagged logged GDP per capita and population, country and year fixed effects.  Minister-years in autocracies 1967-2016, excluding the leader and junior ministers or other low-ranking posts; standard errors clustered by country.  The failed coup coefficient is the effect for ministers with under two years of experience.\n",
+        "decimals": 2,
+        "sample_size": 90020
+      },
+      "i4r": {
+        "reproduced_value": 0.142112,
+        "outcome": "matches",
+        "notes": "Meta-database row 5633 (table k1 experience, felm to fixest) 0.142112 (0.043907); o_coeff 0.142112 (0.041926)."
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.2857142857142857,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "failed_coup_experience_model",
+        "claim_type": "coefficient",
+        "claimed": 0.14,
+        "reproduced": null,
+        "tolerance": 0.2857142857142857,
+        "rel_err": null,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": null,
+        "reproduced": null,
+        "band_source": "se_band",
+        "band_relative": 0.2857142857142857,
+        "band_absolute": 0.04,
+        "abs_err": null,
+        "rel_err": null,
+        "margin": null,
+        "passed": false,
+        "notes": "No reproduced value available."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "failed_coup_x_over_6_years_experience",
+      "ground_truth": {
+        "value": -0.1,
+        "standard_error": 0.05,
+        "unit": "difference in the change in purge probability",
+        "claim_type": "coefficient",
+        "location": "Table K1, column H2a: Experience, FCA*Over 6 years of experience (Ref: <2 y)",
+        "context": "Table K1, column H2a: Experience: the interaction of the failed coup attempt indicator with having over six years of cabinet experience (reference: under two years), in the same linear probability model as failed_coup_experience_model.\n",
+        "decimals": 2,
+        "sample_size": 90020
+      },
+      "i4r": {
+        "reproduced_value": -0.102939,
+        "outcome": "matches",
+        "notes": "Derived from the fixest marginal effects: over-6-years 0.039173 (row 5665) minus under-2-years 0.142112 (row 5633).  The figure 3a logit row records the original interaction as -0.103 (0.052).\n"
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.5,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "failed_coup_x_over_6_years_experience",
+        "claim_type": "coefficient",
+        "claimed": -0.1,
+        "reproduced": null,
+        "tolerance": 0.5,
+        "rel_err": null,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": null,
+        "reproduced": null,
+        "band_source": "se_band",
+        "band_relative": 0.5,
+        "band_absolute": 0.05,
+        "abs_err": null,
+        "rel_err": null,
+        "margin": null,
+        "passed": false,
+        "notes": "No reproduced value available."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "failed_coup_affiliation_model",
+      "ground_truth": {
+        "value": 0.17,
+        "standard_error": 0.06,
+        "unit": "change in the probability of being purged next year",
+        "claim_type": "coefficient",
+        "location": "Table K1, column H2b: Affiliation, Failed coup attempt",
+        "context": "Table K1, column H2b: Affiliation; Figure 3 right panel.  Linear probability model of being purged next year on the failed coup attempt indicator, party affiliation dummies (no party affiliation; from the leader's party; reference: from another party than the leader's), their interactions with the failed coup indicator, cubic polynomials in the minister's years in office, lagged logged GDP per capita and population, country and year fixed effects, country-clustered standard errors.  The failed coup coefficient is the effect for ministers from another party than the leader's.\n",
+        "decimals": 2,
+        "sample_size": 86057
+      },
+      "i4r": {
+        "reproduced_value": 0.174175,
+        "outcome": "matches",
+        "notes": "Meta-database row 5640 (table k1 affiliation, felm to fixest) 0.174175 (0.056069); o_coeff 0.174175 (0.056053)."
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.3529411764705882,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "failed_coup_affiliation_model",
+        "claim_type": "coefficient",
+        "claimed": 0.17,
+        "reproduced": null,
+        "tolerance": 0.3529411764705882,
+        "rel_err": null,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": null,
+        "reproduced": null,
+        "band_source": "se_band",
+        "band_relative": 0.3529411764705882,
+        "band_absolute": 0.06,
+        "abs_err": null,
+        "rel_err": null,
+        "margin": null,
+        "passed": false,
+        "notes": "No reproduced value available."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "failed_coup_x_leaders_party",
+      "ground_truth": {
+        "value": -0.13,
+        "standard_error": 0.06,
+        "unit": "difference in the change in purge probability",
+        "claim_type": "coefficient",
+        "location": "Table K1, column H2b: Affiliation, FCA*From the leader's party (Ref: Other party)",
+        "context": "Table K1, column H2b: the interaction of the failed coup attempt indicator with being from the leader's party (reference: another party), in the same model as failed_coup_affiliation_model.\n",
+        "decimals": 2,
+        "sample_size": 86057
+      },
+      "i4r": {
+        "reproduced_value": -0.125831,
+        "outcome": "matches",
+        "notes": "Derived from the fixest marginal effects: leader's party 0.048344 (row 5660) minus other party 0.174175 (row 5640).  The figure 3b logit row records the original interaction as -0.126 (0.061).\n"
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.4615384615384615,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "failed_coup_x_leaders_party",
+        "claim_type": "coefficient",
+        "claimed": -0.13,
+        "reproduced": null,
+        "tolerance": 0.4615384615384615,
+        "rel_err": null,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": null,
+        "reproduced": null,
+        "band_source": "se_band",
+        "band_relative": 0.4615384615384615,
+        "band_absolute": 0.06,
+        "abs_err": null,
+        "rel_err": null,
+        "margin": null,
+        "passed": false,
+        "notes": "No reproduced value available."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "failed_coup_responsibility_model",
+      "ground_truth": {
+        "value": 0.2,
+        "standard_error": 0.07,
+        "unit": "change in the probability of being purged next year",
+        "claim_type": "coefficient",
+        "location": "Table K2 (Table for Figure 4), column H3a: Responsibility, Failed coup attempt",
+        "context": "Table K2, column H3a: Responsibility; Figure 4 left panel.  Linear probability model of being purged next year on the failed coup attempt indicator, portfolio dummies (Minister of Foreign Affairs, of Finance, of Natural Resources, other type of minister; reference: Minister of Defense), their interactions with the failed coup indicator, cubic polynomials in years in office, lagged logged GDP per capita and population, country and year fixed effects, country-clustered standard errors.  The failed coup coefficient is the effect for ministers of defense.\n",
+        "decimals": 2,
+        "sample_size": 76530
+      },
+      "i4r": {
+        "reproduced_value": 0.202499,
+        "outcome": "matches",
+        "notes": "Meta-database row 5657 (table k2, felm to fixest) 0.202499 (0.06599); o_coeff 0.202499 (0.065968)."
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.35000000000000003,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "failed_coup_responsibility_model",
+        "claim_type": "coefficient",
+        "claimed": 0.2,
+        "reproduced": null,
+        "tolerance": 0.35000000000000003,
+        "rel_err": null,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": null,
+        "reproduced": null,
+        "band_source": "se_band",
+        "band_relative": 0.35000000000000003,
+        "band_absolute": 0.07,
+        "abs_err": null,
+        "rel_err": null,
+        "margin": null,
+        "passed": false,
+        "notes": "No reproduced value available."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "failed_coup_x_natural_resources",
+      "ground_truth": {
+        "value": -0.18,
+        "standard_error": 0.08,
+        "unit": "difference in the change in purge probability",
+        "claim_type": "coefficient",
+        "location": "Table K2, column H3a: Responsibility, FCA*Minister of Natural Resources (Ref: D)",
+        "context": "Table K2, column H3a: the interaction of the failed coup attempt indicator with being minister of natural resources (reference: minister of defense), in the same model as failed_coup_responsibility_model.\n",
+        "decimals": 2,
+        "sample_size": 76530
+      },
+      "i4r": {
+        "reproduced_value": -0.183205,
+        "outcome": "matches",
+        "notes": "Derived from the fixest marginal effects: natural resources 0.019294 (row 5658) minus defense 0.202499 (row 5657).  The figure 4a logit row records the original interaction as -0.183 (0.083).\n"
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.4444444444444445,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "failed_coup_x_natural_resources",
+        "claim_type": "coefficient",
+        "claimed": -0.18,
+        "reproduced": null,
+        "tolerance": 0.4444444444444445,
+        "rel_err": null,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": null,
+        "reproduced": null,
+        "band_source": "se_band",
+        "band_relative": 0.4444444444444445,
+        "band_absolute": 0.08,
+        "abs_err": null,
+        "rel_err": null,
+        "margin": null,
+        "passed": false,
+        "notes": "No reproduced value available."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "failed_coup_importance_model",
+      "ground_truth": {
+        "value": 0.37,
+        "standard_error": 0.09,
+        "unit": "change in the probability of being purged next year",
+        "claim_type": "coefficient",
+        "location": "Table K2, column H3b: Importance, Failed coup attempt",
+        "context": "Table K2, column H3b: Importance; Figure 4 right panel.  Linear probability model of being purged next year on the failed coup attempt indicator, rank-tier dummies (vice-president / deputy prime minister / top minister; medium-ranking; low-ranking; junior minister; reference: prime minister or president who is not the leader), their interactions with the failed coup indicator, cubic polynomials in years in office, lagged logged GDP per capita and population, country and year fixed effects, country-clustered standard errors.  The failed coup coefficient is the effect for a prime minister or president who is not the leader.\n",
+        "decimals": 2,
+        "sample_size": 90014
+      },
+      "i4r": {
+        "reproduced_value": 0.370185,
+        "outcome": "matches",
+        "notes": "Meta-database row 5743 (table k3 [K2 importance column], felm to fixest) 0.370185 (0.093416); o_coeff 0.370185 (0.09339)."
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.24324324324324323,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "failed_coup_importance_model",
+        "claim_type": "coefficient",
+        "claimed": 0.37,
+        "reproduced": null,
+        "tolerance": 0.24324324324324323,
+        "rel_err": null,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": null,
+        "reproduced": null,
+        "band_source": "se_band",
+        "band_relative": 0.24324324324324323,
+        "band_absolute": 0.09,
+        "abs_err": null,
+        "rel_err": null,
+        "margin": null,
+        "passed": false,
+        "notes": "No reproduced value available."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 11,
+    "row_passed": 4,
+    "recomputed_passed": 4,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "bokobza-2022-morning-after-coup-purges",
+    "mode": "blind",
+    "reproducer": "pipeline",
+    "label": "pipeline-desktop-opus-postfix2",
+    "model": "desktop-opus-postfix2",
+    "oracle": true,
+    "run": "20261103T114859Z",
+    "results_file": "pipeline-oracle-desktop-opus-postfix2-23papers-indep-blind-2026-11-05.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/bokobza-2022-morning-after-coup-purges/blind/pipeline/20261103T114859Z",
+    "run_dir": null,
+    "date": "2026-11-03T11:48:59Z",
+    "data_access": "public",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 11,
+    "final": 4,
+    "first_scored": 4,
+    "first_scored_index": 0,
+    "first_attempt": 4,
+    "n_refinements": 1,
+    "n_error_refinements": 1,
+    "n_claim_refinements": 0,
+    "n_executions": 2,
+    "n_files_stripped": 8,
+    "agrees_with_i4r": true,
+    "deviations_manifest": [],
+    "deviations_stdout": [],
+    "notes": null,
+    "files_read_outside_mount": null,
+    "paper_text": null,
+    "complete": true,
+    "missing": []
+  }
+}

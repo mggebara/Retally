@@ -1,0 +1,318 @@
+You are refining R code that reproduces results from an econometrics paper.
+The code RAN SUCCESSFULLY but the reproduced values do not match the
+paper's claims within the allowed tolerance.  Identify what is causing
+the gap and adjust the code to close it.
+
+## Paper
+Title: American Political Science Review (2022) 116, 1, 249–264
+Methodology: - **Design / data (main analysis):** Natural experiment using an Unexpected Event during Survey Design (UESD). The data are British Election Study (BES) internet panel Wave 12 (YouGov, rolling daily fieldwork May 5–June 7, 2017). Respondents surveyed before the May 22, 2017 Manchester Arena bombing are the control group (n = 16,377) and those surveyed after it are the treated group (n = 16,972). Treatment = "Surveyed after Manchester attack" (0/1). Balance check: a regression of treatment assignment on demographics (App. B, Table B1). Only Labour Party membership predicts assignment, so every individual-level model controls for Labour membership.
+- **Outcomes:** (1) *Like May*: "How much do you like or dislike…" on an 11-point scale, 0 = strongly dislike to 10 = strongly like, in raw scale points (not standardised). (2) *May best PM*: binary, 1 = May and 0 = Corbyn. The same like/dislike scale is also used for Corbyn, Farron and Sturgeon (Table 3).
+- **Table 1 specifications:** Favorability is estimated by OLS and May-best-PM by logit. Each outcome is run (a) with only the Labour-membership control and (b) with full controls: ethnically British identity, gender, Labour party membership, other party membership, income, and ideology. Missing income and ideology are recoded to the scale midpoint. Standard errors are clustered on the day of the survey. Headline coefficients on post-attack: favorability −0.332 (SE 0.054; N = 32,642) and −0.351 (0.043; N = 26,506, R² = 0.442). Best PM logit: −0.204 (0.038; N = 34,394) and −0.333 (0.042; N = 27,844, pseudo-R² = 0.329). The full-control logit implies a drop of about 5 percentage points in the probability of preferring May as PM. Table 3 runs OLS with survey weights, full controls and day-clustered SEs for each leader: May −0.351, Corbyn +0.398, Farron 0.059 (not significant), Sturgeon +0.115.
+- **Difference-in-differences (Table 2):** Uses the BES panel across waves. The model includes the treatment indicator (surveyed after the attack), a Time indicator (0 = waves before the attack, 1 = wave 12 onward), their interaction, wave fixed effects and full controls. The key coefficient is Manchester attack × time: −0.1274 (SE 0.0187) for likeability by OLS (N = 143,499) and −0.0501 (0.0044) for best PM (N = 97,155). The note calls the best-PM model logistic, but the coefficients are on a probability scale.
+- **Mechanism:** A "negative views of women" index built from 5 items asked in earlier waves (traditional gender roles, opposition to equality / more women in office, women's unfair advantage at work, discrimination in favor of women). Each item is rescaled to 0–1 with higher values meaning more negative, and the items are averaged (α = 0.71; mean 0.39, SD 0.2). The index is interacted with the post-attack indicator, and predicted marginal effects are plotted in Fig. 1 (App. C, Table C1). Robustness adds party × attack and ideology × attack interactions plus triple interactions with the index. Subgroup models: Conservatives vs. Labour (Fig. 2), gender, and ideology.
+- **Robustness / falsification:** Models with no controls, OLS versions, and controls added one by one (Tables A1–A3). Placebo outcome: keeping nuclear submarines. Pre- and post-wave views of May by assignment group. A split of the control group at its median date. Extra controls for the daily GBP/EUR exchange rate and Brexit "Leave" vote intention. Narrowed bandwidths of ±10 days and ±4 days around the attack (Fig. 3, Table E2). Multilevel model with survey day as level 2, ARIMA models, and the June 3 London Bridge attack as an alternative event (Table A6).
+- **Constituency-level vote analysis:** OLS on English constituencies only. DV = change in Conservative vote share 2015→2017; the placebo DV is the 2010→2015 change. Key regressor: standardised distance from Manchester to the constituency midpoint. Controls: population, Brexit vote share, and shares ethnically British, aged 65+, UK-born, Christian, and unemployed (App. G, Table G1). The distance coefficient is positive with a one-tailed p = 0.079; the placebo is not significant.
+- **Cross-national test:** TSCS panel of quarterly executive approval (Carlin, Carreras & Love 2020) for 66 countries, 1975–2017 (4,359 country-quarters; 20 countries had a woman leader). Attack dummy = an international terrorist attack (GTD definition) with more than 15 deaths, giving 60 country-quarters, 9 of them under women leaders. DV = percent approving of the executive in the quarter *following* the attack. The attack dummy is interacted with a woman-executive indicator. Country fixed effects are included, with controls for GDP growth, log inflation, executive left-right ideology, and an election-year dummy. Results: about +3.1 points of approval for men leaders and about −4.3 points for women leaders (Table 4).
+- **Supplementary experiment (2012, N = 992 UK adults):** Respondents were randomly assigned to a terror-threat news story or a control condition and then rated leaders on a 0–100 feeling thermometer. May, then Home Secretary, scored about 7 points higher under threat (p = 0.003), a boost comparable to the one other leaders received.
+
+
+## Current Code
+```r
+suppressPackageStartupMessages({
+  library(haven)
+  library(dplyr)
+  library(fixest)
+})
+set.seed(42)
+
+base <- "<repo>/.cache/datasets/holman_2022_theresa_may_rally.script-free"
+
+num <- function(x) as.numeric(haven::zap_labels(x))
+results <- list()
+add_result <- function(name, val) results[[name]] <<- val
+
+# ------------------------------------------------------------------
+# Table 4: cross-national TSCS of executive approval
+# ------------------------------------------------------------------
+ga <- read_dta(file.path(base, "global_approval.dta"))
+cat(sprintf("SAMPLE:table4:loaded=%d\n", nrow(ga)))
+nm <- names(ga)
+
+# attack indicator: international attack with more than 15 deaths (16+)
+attack_var <- if ("kill_16" %in% nm) "kill_16" else if ("kill_15" %in% nm) "kill_15" else "pres_15death"
+fe_var <- if ("country" %in% nm) "country" else if ("ccode" %in% nm) "ccode" else "country_code"
+unit_var <- if ("country_code" %in% nm) "country_code" else fe_var
+
+ga2 <- ga
+for (v in nm) {
+  if (!is.character(ga2[[v]])) ga2[[v]] <- num(ga2[[v]])
+}
+ga2$qtr_n <- as.numeric(ga2$qtr)
+ga2$unit <- as.character(ga2[[unit_var]])
+if (any(duplicated(ga2[, c("unit", "qtr_n")]))) {
+  ga2$unit <- as.character(ga2[[fe_var]])
+}
+ga2$attack <- ga2[[attack_var]]
+ga2$woman <- ga2$female_pres
+ga2$fe <- as.character(ga2[[fe_var]])
+
+# candidate approval variables
+appr_cands <- nm[grepl("approv", nm, ignore.case = TRUE) & !grepl("^lag", nm, ignore.case = TRUE)]
+lead_cands <- appr_cands[grepl("lead|^f_|^f[A-Z]|next|fwd|forward", appr_cands, ignore.case = TRUE)]
+level_cands <- setdiff(appr_cands, lead_cands)
+
+# construct lead of approval within unit (exact next quarter)
+ga2 <- ga2 %>% arrange(unit, qtr_n)
+make_lead <- function(df, v) {
+  key <- paste(df$unit, df$qtr_n)
+  nxt <- paste(df$unit, df$qtr_n + 1)
+  df[[v]][match(nxt, key)]
+}
+dv_options <- list()
+for (v in level_cands) {
+  ga2[[paste0("lead_", v)]] <- make_lead(ga2, v)
+  dv_options[[length(dv_options) + 1]] <- list(dv = paste0("lead_", v), desc = paste0("lead of ", v))
+}
+for (v in lead_cands) dv_options[[length(dv_options) + 1]] <- list(dv = v, desc = v)
+if ("lag_approval" %in% nm) {
+  # approval(t+1) recovered from lag_approval(t+2)
+  ga2$lag_approval_lead2 <- {
+    key <- paste(ga2$unit, ga2$qtr_n); nxt <- paste(ga2$unit, ga2$qtr_n + 2)
+    ga2$lag_approval[match(nxt, key)]
+  }
+  dv_options[[length(dv_options) + 1]] <- list(dv = "lag_approval_lead2", desc = "lag_approval two quarters ahead")
+}
+for (v in level_cands) dv_options[[length(dv_options) + 1]] <- list(dv = v, desc = paste0(v, " (contemporaneous)"))
+
+target_n4 <- 4328
+fit4 <- function(dv) {
+  f <- as.formula(paste0(dv, " ~ attack * woman + growth + log_inflation + execrlc + election_qtr | fe"))
+  tryCatch(feols(f, data = ga2, vcov = "iid", warn = FALSE, notes = FALSE), error = function(e) NULL)
+}
+best4 <- NULL; best_gap <- Inf; best_desc <- NA
+for (o in dv_options) {
+  m <- fit4(o$dv)
+  if (is.null(m)) next
+  gap <- abs(nobs(m) - target_n4)
+  cat(sprintf("# table4 candidate DV %s: N=%d\n", o$desc, nobs(m)))
+  if (gap < best_gap) { best_gap <- gap; best4 <- m; best_desc <- o$desc; best_dv <- o$dv }
+}
+
+if (!is.null(best4)) {
+  cat(sprintf("# table4 chosen DV: %s, attack var: %s, FE: %s\n", best_desc, attack_var, fe_var))
+  s4 <- ga2 %>% filter(!is.na(.data[[best_dv]]))
+  cat(sprintf("SAMPLE:table4:approval_next_quarter_nonmissing=%d\n", nrow(s4)))
+  s4 <- s4 %>% filter(!is.na(attack), !is.na(woman), !is.na(growth), !is.na(log_inflation),
+                      !is.na(execrlc), !is.na(election_qtr))
+  cat(sprintf("SAMPLE:table4:controls_nonmissing=%d\n", nrow(s4)))
+  cat(sprintf("SAMPLE:table4:estimation=%d\n", nobs(best4)))
+  if (nobs(best4) != target_n4) {
+    cat(sprintf("DEVIATION: table4 estimation N=%d differs from the paper's 4328\n", nobs(best4)))
+  }
+  cat("DEVIATION: panel-corrected standard errors not available in fixest; coefficients unaffected\n")
+  cf4 <- coef(best4)
+  add_result("intl_attack_table4", unname(cf4["attack"]))
+  add_result("intl_attack_x_woman_exec_table4", unname(cf4["attack:woman"]))
+  add_result("n_obs_table4", nobs(best4))
+}
+
+# ------------------------------------------------------------------
+# Table 2: difference-in-differences on the BES panel
+# ------------------------------------------------------------------
+dd <- read_dta(file.path(base, "did_data.dta"),
+               col_select = any_of(c("id", "wave", "treatment1", "time", "likeMayW", "bestPMW",
+                                     "may_bestpm", "white", "gender", "labour", "party_other",
+                                     "income", "ideology", "post_attack")))
+cat(sprintf("SAMPLE:did_like_may:loaded=%d\n", nrow(dd)))
+cat(sprintf("SAMPLE:did_may_best_pm:loaded=%d\n", nrow(dd)))
+
+# best-PM coding: 1 = May, 0 = Corbyn
+bp_raw <- dd$bestPMW
+bp_labs <- attr(bp_raw, "labels")
+bp <- num(bp_raw)
+may_code <- NA; cor_code <- NA
+if (!is.null(bp_labs)) {
+  may_code <- unname(bp_labs[grepl("May", names(bp_labs))])[1]
+  cor_code <- unname(bp_labs[grepl("Corbyn", names(bp_labs))])[1]
+}
+if (is.na(may_code)) may_code <- 1
+if (is.na(cor_code)) cor_code <- 2
+if (all(bp[!is.na(bp)] %in% c(0, 1))) {
+  bestpm <- bp
+} else {
+  bestpm <- ifelse(bp == may_code, 1, ifelse(bp == cor_code, 0, NA))
+}
+
+dd <- dd %>% mutate(across(everything(), num))
+dd$bestpm01 <- bestpm
+dd$likeMayW[dd$likeMayW < 0 | dd$likeMayW > 10] <- NA
+
+# controls: missing income and ideology recoded to scale midpoints
+clean_scale <- function(x, lo, hi) { x[x < lo | x > hi] <- NA; x }
+dd$ideology <- clean_scale(dd$ideology, 0, 10)
+inc_obs <- dd$income[!is.na(dd$income) & dd$income >= 0 & dd$income < 50]
+inc_lo <- min(inc_obs); inc_hi <- max(inc_obs)
+if (inc_hi > 15) inc_hi <- 15
+dd$income <- clean_scale(dd$income, inc_lo, inc_hi)
+dd$income_c <- ifelse(is.na(dd$income), (inc_lo + inc_hi) / 2, dd$income)
+dd$ideology_c <- ifelse(is.na(dd$ideology), 5, dd$ideology)
+dd$treat <- dd$treatment1
+dd$wave_f <- factor(dd$wave)
+
+ctrl <- "white + gender + labour + party_other + income_c + ideology_c"
+
+run_did <- function(dv, sname, target) {
+  s <- dd %>% filter(!is.na(.data[[dv]]))
+  cat(sprintf("SAMPLE:%s:outcome_nonmissing=%d\n", sname, nrow(s)))
+  s <- s %>% filter(!is.na(treat), !is.na(time))
+  cat(sprintf("SAMPLE:%s:treatment_time_nonmissing=%d\n", sname, nrow(s)))
+  f <- as.formula(paste0(dv, " ~ treat + time + treat:time + ", ctrl, " | wave_f"))
+  m <- feols(f, data = s, cluster = ~id, warn = FALSE, notes = FALSE)
+  cf <- coef(m)
+  if (!all(c("treat", "time", "treat:time") %in% names(cf))) {
+    cat(sprintf("DEVIATION: %s: time indicator collinear with wave fixed effects; missing terms taken from pooled OLS without wave FE\n", sname))
+    f2 <- as.formula(paste0(dv, " ~ treat + time + treat:time + ", ctrl))
+    m2 <- feols(f2, data = s, cluster = ~id, warn = FALSE, notes = FALSE)
+    cf2 <- coef(m2)
+    for (k in c("treat", "time", "treat:time")) if (!(k %in% names(cf))) cf[k] <- cf2[k]
+  }
+  cat(sprintf("SAMPLE:%s:estimation=%d\n", sname, nobs(m)))
+  if (nobs(m) != target) cat(sprintf("DEVIATION: %s estimation N=%d differs from the paper's %d\n", sname, nobs(m), target))
+  list(cf = cf, n = nobs(m))
+}
+
+r_like <- run_did("likeMayW", "did_like_may", 143499)
+r_pm <- run_did("bestpm01", "did_may_best_pm", 97155)
+cat("DEVIATION: best-PM DiD estimated as a linear probability model (paper's coefficients are on the probability scale)\n")
+
+add_result("did_attack_x_time_like_may_table2", unname(r_like$cf["treat:time"]))
+add_result("did_attack_like_may_table2", unname(r_like$cf["treat"]))
+add_result("did_time_like_may_table2", unname(r_like$cf["time"]))
+add_result("did_attack_x_time_may_best_pm_table2", unname(r_pm$cf["treat:time"]))
+add_result("did_attack_may_best_pm_table2", unname(r_pm$cf["treat"]))
+add_result("did_time_may_best_pm_table2", unname(r_pm$cf["time"]))
+add_result("n_obs_did_like_may_table2", r_like$n)
+add_result("n_obs_did_may_best_pm_table2", r_pm$n)
+
+for (k in names(results)) {
+  cat(sprintf("RESULT:%s=%s\n", k, format(results[[k]], digits = 8)))
+}
+```
+
+## What the code produced
+  intl_attack_table4 = 0.83842696
+  intl_attack_x_woman_exec_table4 = -1.6131215
+  n_obs_table4 = 4423.0
+  did_attack_x_time_like_may_table2 = -0.15016519
+  did_attack_like_may_table2 = -0.10503635
+  did_time_like_may_table2 = -0.61463018
+  did_attack_x_time_may_best_pm_table2 = -0.039815977
+  did_attack_may_best_pm_table2 = -0.014790306
+  did_time_may_best_pm_table2 = 0.10150165
+  n_obs_did_like_may_table2 = 239919.0
+  n_obs_did_may_best_pm_table2 = 145803.0
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+SAMPLE:table4:loaded=5469
+# table4 candidate DV lag_approval two quarters ahead: N=4423
+# table4 chosen DV: lag_approval two quarters ahead, attack var: kill_16, FE: country
+SAMPLE:table4:approval_next_quarter_nonmissing=5279
+SAMPLE:table4:controls_nonmissing=4423
+SAMPLE:table4:estimation=4423
+DEVIATION: table4 estimation N=4423 differs from the paper's 4328
+DEVIATION: panel-corrected standard errors not available in fixest; coefficients unaffected
+SAMPLE:did_like_may:loaded=1481408
+SAMPLE:did_may_best_pm:loaded=1481408
+SAMPLE:did_like_may:outcome_nonmissing=239919
+SAMPLE:did_like_may:treatment_time_nonmissing=239919
+DEVIATION: did_like_may: time indicator collinear with wave fixed effects; missing terms taken from pooled OLS without wave FE
+SAMPLE:did_like_may:estimation=239919
+DEVIATION: did_like_may estimation N=239919 differs from the paper's 143499
+SAMPLE:did_may_best_pm:outcome_nonmissing=145803
+SAMPLE:did_may_best_pm:treatment_time_nonmissing=145803
+DEVIATION: did_may_best_pm: time indicator collinear with wave fixed effects; missing terms taken from pooled OLS without wave FE
+SAMPLE:did_may_best_pm:estimation=145803
+DEVIATION: did_may_best_pm estimation N=145803 differs from the paper's 97155
+DEVIATION: best-PM DiD estimated as a linear probability model (paper's coefficients are on the probability scale)
+RESULT:intl_attack_table4=0.83842696
+RESULT:intl_attack_x_woman_exec_table4=-1.6131215
+RESULT:n_obs_table4=4423
+RESULT:did_attack_x_time_like_may_table2=-0.15016519
+RESULT:did_attack_like_may_table2=-0.10503635
+RESULT:did_time_like_may_table2=-0.61463018
+RESULT:did_attack_x_time_may_best_pm_table2=-0.039815977
+RESULT:did_attack_may_best_pm_table2=-0.014790306
+RESULT:did_time_may_best_pm_table2=0.10150165
+RESULT:n_obs_did_like_may_table2=239919
+RESULT:n_obs_did_may_best_pm_table2=145803
+```
+
+## Sample size check (fix this first)
+The paper states these sample sizes and your script's do not match:
+  - n_obs_did_like_may_table2: paper states 143499, your code produced 239919 (+96420 rows)
+  - n_obs_did_may_best_pm_table2: paper states 97155, your code produced 145803 (+48648 rows)
+Your script's SAMPLE lines from the last run:
+  SAMPLE:table4:loaded=5469
+  SAMPLE:table4:approval_next_quarter_nonmissing=5279
+  SAMPLE:table4:controls_nonmissing=4423
+  SAMPLE:table4:estimation=4423
+  SAMPLE:did_like_may:loaded=1.48141e+06
+  SAMPLE:did_may_best_pm:loaded=1.48141e+06
+  SAMPLE:did_like_may:outcome_nonmissing=239919
+  SAMPLE:did_like_may:treatment_time_nonmissing=239919
+  SAMPLE:did_like_may:estimation=239919
+  SAMPLE:did_may_best_pm:outcome_nonmissing=145803
+  SAMPLE:did_may_best_pm:treatment_time_nonmissing=145803
+  SAMPLE:did_may_best_pm:estimation=145803
+Before changing the model, make each estimation sample match: walk the SAMPLE steps, find the step where the count departs from what the paper's stated restrictions imply, and correct that restriction (which rows or groups are kept, the period, missing-value handling, singleton or duplicate dropping).  Coefficients estimated on a different sample cannot be expected to match.
+
+## Claims still failing
+1. intl_attack_table4: paper claims 3.112 percentage points of executive approval (coefficient), your code produced 0.838427, tolerance 0.2812, gap 73.06% relative
+2. intl_attack_x_woman_exec_table4: paper claims -4.333 percentage points of executive approval (coefficient), your code produced -1.61312, tolerance 0.429, gap 62.77% relative
+3. did_attack_x_time_like_may_table2: paper claims -0.1274 points on the 0-10 like/dislike scale (coefficient), your code produced -0.150165, tolerance 0.1468, gap 17.87% relative
+4. did_attack_like_may_table2: paper claims 0.0178 points on the 0-10 like/dislike scale (coefficient), your code produced -0.105036, tolerance 1.562, gap 690.09% relative
+5. did_time_like_may_table2: paper claims -0.5007 points on the 0-10 like/dislike scale (coefficient), your code produced -0.61463, tolerance 0.04574, gap 22.75% relative
+6. did_attack_x_time_may_best_pm_table2: paper claims -0.0501 change in the May-best-PM outcome (0/1) (coefficient), your code produced -0.039816, tolerance 0.08782, gap 20.53% relative
+7. did_attack_may_best_pm_table2: paper claims -0.0002 change in the May-best-PM outcome (0/1) (coefficient), your code produced -0.0147903, tolerance 20, gap 7295.15% relative
+8. did_time_may_best_pm_table2: paper claims 0.2098 change in the May-best-PM outcome (0/1) (coefficient), your code produced 0.101502, tolerance 0.02, gap 51.62% relative
+9. n_obs_did_like_may_table2: paper claims 143499.0 observations (respondent-waves) (count), your code produced 239919, tolerance 0.05, gap 67.19% relative
+10. n_obs_did_may_best_pm_table2: paper claims 97155.0 observations (respondent-waves) (count), your code produced 145803, tolerance 0.05, gap 50.07% relative
+
+## Previous attempts (oldest first)
+  Attempt 1: intl_attack_table4=0.83842696, intl_attack_x_woman_exec_table4=-1.6131215, n_obs_table4=4423.0, did_attack_x_time_like_may_table2=-0.15016519, did_attack_like_may_table2=-0.10503635, did_time_like_may_table2=-0.61463018, did_attack_x_time_may_best_pm_table2=-0.039815977, did_attack_may_best_pm_table2=-0.014790306, did_time_may_best_pm_table2=0.10150165, n_obs_did_like_may_table2=239919.0, n_obs_did_may_best_pm_table2=145803.0
+
+These attempts have already been tried.  Do not repeat a strategy
+that has already produced the same values.
+
+## Task
+Adjust the code minimally to close the gap on the failing claims.
+Prefer changes that align more closely with the paper's stated methodology:
+re-read the methodology summary above and check the model specification,
+covariate selection, fixed effects, clustering, and seed against what the
+paper actually specifies.  In econometrics papers, common gap-closers are:
+  - getting the cluster-robust SE right (vcovCL / cluster_var argument)
+  - matching the paper's exact fixed-effects structure
+  - using the same sample-restriction filters the paper applied
+  - matching the paper's weighting scheme (weights= argument)
+
+## Deviation reporting
+If you must change something the paper did NOT specify in order to close
+the gap, emit a ``DEVIATION:`` line via cat() describing the change:
+
+    cat('DEVIATION: Used HC1 robust SE because the paper does not specify but the default did not converge\n')
+
+## When to give up
+If after re-reading the methodology and the previous attempts you judge
+the gap cannot be closed without unreasonable deviation, return the SAME
+R CODE you were given, BYTE-FOR-BYTE unchanged.  The pipeline will record
+the claim as unreproducible.
+
+## Output convention (unchanged)
+Emit every metric as ``cat('RESULT:<name>=<value>\n')``.
+The dataset is a directory tree at '<repo>/.cache/datasets/holman_2022_theresa_may_rally.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+No network, no system().  set.seed(42).
+
+Output ONLY the R code — no explanation, no markdown fences.

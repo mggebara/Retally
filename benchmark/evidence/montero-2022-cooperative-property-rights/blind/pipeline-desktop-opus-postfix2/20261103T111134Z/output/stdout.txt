@@ -1,0 +1,85 @@
+NOTE: outcome column = hh_income_pc
+SAMPLE:level_bw300:loaded=5060
+SAMPLE:level_bw300:matched_to_coop_or_hacienda=5060
+SAMPLE:level_bw300:nonmissing_landholdings=5060
+SAMPLE:level_bw300:within_300ha=4781
+SAMPLE:level_bw300:estimation=3991
+SAMPLE:level_bw150:loaded=5060
+SAMPLE:level_bw150:matched_to_coop_or_hacienda=5060
+SAMPLE:level_bw150:nonmissing_landholdings=5060
+SAMPLE:level_bw150:within_150ha=1583
+SAMPLE:level_bw150:estimation=1513
+SAMPLE:iqr_bw300:loaded=5060
+SAMPLE:iqr_bw300:matched_to_coop_or_hacienda=5060
+SAMPLE:iqr_bw300:nonmissing_landholdings=5060
+SAMPLE:iqr_bw300:within_300ha=4781
+SAMPLE:iqr_bw300:collapsed_to_property=105
+SAMPLE:iqr_bw300:at_least_5_members=76
+SAMPLE:iqr_bw300:estimation=76
+SAMPLE:iqr_bw150:loaded=5060
+SAMPLE:iqr_bw150:matched_to_coop_or_hacienda=5060
+SAMPLE:iqr_bw150:nonmissing_landholdings=5060
+SAMPLE:iqr_bw150:within_150ha=1583
+SAMPLE:iqr_bw150:collapsed_to_property=39
+SAMPLE:iqr_bw150:at_least_5_members=28
+SAMPLE:iqr_bw150:estimation=28
+OLS estimation, Dep. Var.: y
+Observations: 3,991
+Fixed-effects: round: 7
+Standard-errors: Clustered (owner) 
+                Estimate Std. Error   t value Pr(>|t|)    
+Above500      101.434901  56.346706  1.800192 0.075038 .  
+dist            0.052177   0.048988  1.065081 0.289567    
+Above500:dist  -0.249104   0.257535 -0.967262 0.335895    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 74.1     Adj. R2: 0.433026
+             Within R2: 0.024258
+OLS estimation, Dep. Var.: y
+Observations: 1,513
+Fixed-effects: round: 7
+Standard-errors: Clustered (owner) 
+               Estimate Std. Error   t value Pr(>|t|) 
+Above500      94.676467  67.870256  1.394963  0.17235 
+dist           0.033764   0.118365  0.285252  0.77723 
+Above500:dist -0.009130   0.470017 -0.019425  0.98462 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 60.6     Adj. R2: 0.58245
+             Within R2: 0.05729
+OLS estimation, Dep. Var.: iqr
+Observations: 76
+Standard-errors: Clustered (owner) 
+               Estimate Std. Error   t value  Pr(>|t|)    
+(Intercept)   54.716039  19.634762  2.786692 0.0068481 ** 
+Above500      44.900866  67.869284  0.661579 0.5104133    
+dist          -0.009703   0.092481 -0.104922 0.9167374    
+Above500:dist  0.488129   0.407807  1.196960 0.2353600    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 75.7   Adj. R2: 0.144131
+OLS estimation, Dep. Var.: iqr
+Observations: 28
+Standard-errors: Clustered (owner) 
+               Estimate Std. Error   t value Pr(>|t|) 
+(Intercept)   12.302479  32.741495  0.375746  0.71041 
+Above500      95.652647  70.090607  1.364700  0.18501 
+dist          -0.506294   0.413096 -1.225610  0.23224 
+Above500:dist  1.168939   0.816632  1.431415  0.16521 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 92.9   Adj. R2: 0.069109
+RESULT:earnings_level_above500_bw300=101.434901
+RESULT:earnings_level_above500_bw300_se=56.346706
+RESULT:earnings_level_above500_bw150=94.676467
+RESULT:earnings_level_above500_bw150_se=67.870256
+RESULT:earnings_iqr_above500_bw300=44.900866
+RESULT:earnings_iqr_above500_bw300_se=67.869284
+RESULT:earnings_iqr_above500_bw150=95.652647
+RESULT:earnings_iqr_above500_bw150_se=70.090607
+RESULT:n_obs_earnings_level_bw300=3991
+RESULT:n_obs_earnings_level_bw150=1513
+RESULT:n_obs_earnings_iqr_bw300=76
+RESULT:n_obs_earnings_iqr_bw150=28
+RESULT:n_clusters_bw300=95
+RESULT:n_clusters_bw150=34

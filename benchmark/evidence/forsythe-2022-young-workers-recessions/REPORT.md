@@ -43,6 +43,7 @@
 | `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [12/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [12/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[12/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[12/13](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
 | `pipeline-desktop-opus` | [13/13](seeded/pipeline-desktop-opus/20261102T062442Z/CELL.md) (20261102T062442Z) | [12/13](independent/pipeline-desktop-opus/20261102T064502Z/CELL.md) (20261102T064502Z) | [10/13](blind/pipeline-desktop-opus/20261102T062442Z/CELL.md) (20261102T062442Z) |
 | `pipeline-desktop-opus-postfix` | — | [9/13](independent/pipeline-desktop-opus-postfix/20261103T070149Z/CELL.md) (20261103T070149Z) | [9/13](blind/pipeline-desktop-opus-postfix/20261103T064954Z/CELL.md) (20261103T064954Z) |
+| `pipeline-desktop-opus-postfix2` | — | [9/13](independent/pipeline-desktop-opus-postfix2/20261103T113209Z/CELL.md) (20261103T113209Z) | [9/13](blind/pipeline-desktop-opus-postfix2/20261103T120039Z/CELL.md) (20261103T120039Z) |
 | `pipeline-desktop-opus-run2` | [13/13](seeded/pipeline-desktop-opus-run2/20261102T092119Z/CELL.md) (20261102T092119Z) | [12/13](independent/pipeline-desktop-opus-run2/20261102T142444Z/CELL.md) (20261102T142444Z) | [10/13](blind/pipeline-desktop-opus-run2/20261102T144228Z/CELL.md) (20261102T144228Z) |
 | `pipeline-desktop-opus-run3` | [0/13](seeded/pipeline-desktop-opus-run3/20261103T054754Z/CELL.md) (20261103T054754Z) | [0/13](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) (20261103T052626Z) | [5/13](blind/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md) (20261103T050517Z) |
 
@@ -59,13 +60,13 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | [blind/pipeline-desktop-opus/20261102T062442Z](blind/pipeline-desktop-opus/20261102T062442Z/CELL.md) | `aggregate_unemp_rate_month_year_fe` | -0.020142 | -0.0326 | ±0.0132 (se_band) | 0.944 | PASS |
 | [blind/pipeline-desktop-opus-run2/20261102T144228Z](blind/pipeline-desktop-opus-run2/20261102T144228Z/CELL.md) | `aggregate_unemp_rate_month_year_fe` | -0.020142 | -0.0326 | ±0.0132 (se_band) | 0.944 | PASS |
 | [independent/pipeline-desktop-opus-postfix/20261103T070149Z](independent/pipeline-desktop-opus-postfix/20261103T070149Z/CELL.md) | `young_x_unemp_rate_unemployed` | -1.75081 | -1.928 | ±0.167 (se_band) | 1.061 | FAIL |
+| [independent/pipeline-desktop-opus-postfix2/20261103T113209Z](independent/pipeline-desktop-opus-postfix2/20261103T113209Z/CELL.md) | `young_x_unemp_rate_unemployed` | -1.74396 | -1.928 | ±0.167 (se_band) | 1.102 | FAIL |
 | [blind/pipeline-desktop-opus-postfix/20261103T064954Z](blind/pipeline-desktop-opus-postfix/20261103T064954Z/CELL.md) | `young_x_unemp_rate_unemployed` | -1.74396 | -1.928 | ±0.167 (se_band) | 1.102 | FAIL |
+| [blind/pipeline-desktop-opus-postfix2/20261103T120039Z](blind/pipeline-desktop-opus-postfix2/20261103T120039Z/CELL.md) | `young_x_unemp_rate_unemployed` | -1.74381 | -1.928 | ±0.167 (se_band) | 1.103 | FAIL |
 | [independent/pipeline-desktop-opus-postfix/20261103T070149Z](independent/pipeline-desktop-opus-postfix/20261103T070149Z/CELL.md) | `wage_young_x_unemp_rate_all_hires` | -0.0230259 | -0.0262 | ±0.0036 (se_band) | 0.882 | PASS |
 | [blind/pipeline-desktop-opus/20261102T062442Z](blind/pipeline-desktop-opus/20261102T062442Z/CELL.md) | `young_x_unemp_rate_unemployed` | -1.7407 | -1.928 | ±0.167 (se_band) | 1.122 | FAIL |
 | [blind/pipeline-desktop-opus-run2/20261102T144228Z](blind/pipeline-desktop-opus-run2/20261102T144228Z/CELL.md) | `young_x_unemp_rate_unemployed` | -1.74044 | -1.928 | ±0.167 (se_band) | 1.123 | FAIL |
 | [blind/pipeline-desktop-opus-run3/20261103T050517Z](blind/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md) | `experienced_x_unemp_rate_employed` | 0.0265571 | 0.0179 | ±0.0101 (se_band) | 0.857 | PASS |
-| [blind/pipeline-desktop-opus-postfix/20261103T064954Z](blind/pipeline-desktop-opus-postfix/20261103T064954Z/CELL.md) | `wage_young_x_unemp_rate_all_hires` | -0.023181 | -0.0262 | ±0.0036 (se_band) | 0.839 | PASS |
-| [blind/pipeline-desktop-opus-postfix/20261103T064954Z](blind/pipeline-desktop-opus-postfix/20261103T064954Z/CELL.md) | `aggregate_unemp_rate_month_year_fe` | -0.017014 | -0.0326 | ±0.0132 (se_band) | 1.181 | FAIL |
 
 ### Declared deviations
 
@@ -105,6 +106,10 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - yh_data.csv (2 GB) read with data.table::fread(select=) for only the needed columns, to fit the sandbox memory/time limits
 - [independent/pipeline-desktop-opus-postfix/20261103T070149Z](independent/pipeline-desktop-opus-postfix/20261103T070149Z/CELL.md) (9/13; failed: `aggregate_unemp_rate_month_year_fe`, `young_x_unemp_rate_unemployed`, `young_x_unemp_rate_nilf`, `n_obs_full_sample`)
   - no month-in-sample variable in the data; the 8-month MIS 4->5 break and Madrian-Lefgren matching are assumed already applied in the matched file.
+- [independent/pipeline-desktop-opus-postfix2/20261103T113209Z](independent/pipeline-desktop-opus-postfix2/20261103T113209Z/CELL.md) (9/13; failed: `aggregate_unemp_rate_month_year_fe`, `young_x_unemp_rate_unemployed`, `young_x_unemp_rate_nilf`, `n_obs_full_sample`)
+  - 2035872 person-months had no match in v2unemp_smy.csv; their state unemployment rate is filled with the CPS-weighted state-month rate (level-adjusted per state) so the sample matches the paper's N.
+  - full sample has 14296610 rows vs 16948516 stated in the paper (Table 1 N).
+  - month-in-sample is not in the data; outgoing-rotation months are identified by non-missing weekly earnings.
 - [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) (12/13; failed: `young_x_unemp_rate_nilf`)
   - Sample restriction follows the paper's explicit statement only: civilians aged 16+ (peage>=16) with valid education and labour-force status in both months, month t from Feb 1994 to Sep 2016; no upper age bound was imposed (the paper says 'working-age' but gives no cap). Matches were taken as supplied (the file has no second-month sex/race/age to re-confirm matches).
   - Years of schooling mapped from peeduca: 31:0, 32:2.5, 33:5.5, 34:7.5, 35:9, 36:10, 37:11, 38:12, 39:12, 40:13, 41:14, 42:14, 43:16, 44:18, 45:20, 46:20; potential experience = age - years - 6, young = PE <= 10.
@@ -138,16 +143,16 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
-- blind: `n_obs_full_sample` — pipeline 0/4, agent 3/3
-- blind: `young_x_unemp_rate_unemployed` — pipeline 0/4, agent 3/3
+- blind: `n_obs_full_sample` — pipeline 0/5, agent 3/3
+- blind: `young_x_unemp_rate_unemployed` — pipeline 0/5, agent 3/3
 
 Pass rates at least 50 points apart (not unanimous):
 
-- independent: `aggregate_unemp_rate_month_year_fe` — pipeline 2/4, agent 3/3
-- independent: `n_obs_full_sample` — pipeline 2/4, agent 3/3
-- independent: `young_x_unemp_rate_nilf` — pipeline 0/4, agent 2/3
-- independent: `young_x_unemp_rate_unemployed` — pipeline 2/4, agent 3/3
-- blind: `aggregate_unemp_rate_month_year_fe` — pipeline 2/4, agent 3/3
+- independent: `aggregate_unemp_rate_month_year_fe` — pipeline 2/5, agent 3/3
+- independent: `n_obs_full_sample` — pipeline 2/5, agent 3/3
+- independent: `young_x_unemp_rate_nilf` — pipeline 0/5, agent 2/3
+- independent: `young_x_unemp_rate_unemployed` — pipeline 2/5, agent 3/3
+- blind: `aggregate_unemp_rate_month_year_fe` — pipeline 2/5, agent 3/3
 
 ## Cells
 
@@ -191,6 +196,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/pipeline-desktop-opus-postfix/20261103T070149Z/CELL.md`](independent/pipeline-desktop-opus-postfix/20261103T070149Z/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 3; 2026-11-03T07:01:49Z; from `pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-postfix2 · 20261103T113209Z
+
+[`independent/pipeline-desktop-opus-postfix2/20261103T113209Z/CELL.md`](independent/pipeline-desktop-opus-postfix2/20261103T113209Z/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 2; 2026-11-03T11:32:09Z; from `pipeline-oracle-desktop-opus-postfix2-23papers-indep-blind-2026-11-05.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus-run2 · 20261102T142444Z
 
 [`independent/pipeline-desktop-opus-run2/20261102T142444Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261102T142444Z/CELL.md) — final 12/13, re-scored 12/13; first scored 6/13; executions 4; 2026-11-02T14:24:44Z; from `pipeline-oracle-desktop-opus-run2-4papers-all-modes-2026-11-02.json`; evidence complete.
@@ -218,6 +227,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · pipeline-desktop-opus-postfix · 20261103T064954Z
 
 [`blind/pipeline-desktop-opus-postfix/20261103T064954Z/CELL.md`](blind/pipeline-desktop-opus-postfix/20261103T064954Z/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 2; 2026-11-03T06:49:54Z; from `pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-postfix2 · 20261103T120039Z
+
+[`blind/pipeline-desktop-opus-postfix2/20261103T120039Z/CELL.md`](blind/pipeline-desktop-opus-postfix2/20261103T120039Z/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 3; 2026-11-03T12:00:39Z; from `pipeline-oracle-desktop-opus-postfix2-23papers-indep-blind-2026-11-05.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus-run2 · 20261102T144228Z
 

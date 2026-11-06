@@ -43,6 +43,7 @@
 | `pipeline-claude-opus-4-7` | [11/11](seeded/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [9/11](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [5/11](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) |
 | `pipeline-claude-opus-5-5` | [11/11](seeded/pipeline-claude-opus-5-5/20261022T044925Z/CELL.md) (20261022T044925Z) | [11/11](independent/pipeline-claude-opus-5-5/20261022T044925Z/CELL.md) (20261022T044925Z) | [9/11](blind/pipeline-claude-opus-5-5/20261022T044925Z/CELL.md) (20261022T044925Z) |
 | `pipeline-desktop-opus-postfix` | — | [11/11](independent/pipeline-desktop-opus-postfix/20261103T104514Z/CELL.md) (20261103T104514Z) | [8/11](blind/pipeline-desktop-opus-postfix/20261103T064954Z/CELL.md) (20261103T064954Z) |
+| `pipeline-desktop-opus-postfix2` | — | [11/11](independent/pipeline-desktop-opus-postfix2/20261105T212407Z/CELL.md) (20261105T212407Z) | [8/11](blind/pipeline-desktop-opus-postfix2/20261103T114859Z/CELL.md) (20261103T114859Z) |
 | `pipeline-desktop-opus-run2` | [11/11](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [8/11](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) (20261023T153002Z) | [8/11](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
 | `pipeline-desktop-opus-run3` | [11/11](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [11/11](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) (20261103T052626Z) | [8/11](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) |
 
@@ -59,13 +60,13 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | [independent/pipeline-claude-opus-4-7/20261021T142909Z](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `passersby_five_station_subsample` | 0.007827 | 0.006 | ±0.002 (se_band) | 0.914 | PASS |
 | [blind/pipeline-claude-opus-4-7/20261021T142909Z](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `passersby_full_sample` | 0.004102 | 0.005 | ±0.001 (se_band) | 0.898 | PASS |
 | [independent/pipeline-desktop-opus-postfix/20261103T104514Z](independent/pipeline-desktop-opus-postfix/20261103T104514Z/CELL.md) | `station_visits_five_station_subsample` | 98 | 102 | ±5.1 (relative) | 0.784 | PASS |
+| [independent/pipeline-desktop-opus-postfix2/20261105T212407Z](independent/pipeline-desktop-opus-postfix2/20261105T212407Z/CELL.md) | `station_visits_five_station_subsample` | 98 | 102 | ±5.1 (relative) | 0.784 | PASS |
 | [blind/pipeline-claude-opus-5-5/20261022T044925Z](blind/pipeline-claude-opus-5-5/20261022T044925Z/CELL.md) | `station_visits_five_station_subsample` | 98 | 102 | ±5.1 (relative) | 0.784 | PASS |
 | [blind/pipeline-desktop-opus-postfix/20261103T064954Z](blind/pipeline-desktop-opus-postfix/20261103T064954Z/CELL.md) | `station_visits_five_station_subsample` | 98 | 102 | ±5.1 (relative) | 0.784 | PASS |
+| [blind/pipeline-desktop-opus-postfix2/20261103T114859Z](blind/pipeline-desktop-opus-postfix2/20261103T114859Z/CELL.md) | `station_visits_five_station_subsample` | 98 | 102 | ±5.1 (relative) | 0.784 | PASS |
 | [blind/pipeline-desktop-opus-run2/20261023T150832Z](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) | `station_visits_five_station_subsample` | 98 | 102 | ±5.1 (relative) | 0.784 | PASS |
 | [blind/pipeline-desktop-opus-run3/20261103T004800Z](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) | `station_visits_five_station_subsample` | 98 | 102 | ±5.1 (relative) | 0.784 | PASS |
 | [independent/pipeline-claude-opus-4-7/20261021T142909Z](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) | `shuttle_stop_five_station_subsample` | 1.05492 | 0.89 | ±0.227 (se_band) | 0.727 | PASS |
-| [independent/pipeline-desktop-opus-run2/20261023T153002Z](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) | `passersby_full_sample` | 0.00435164 | 0.005 | ±0.001 (se_band) | 0.648 | PASS |
-| [blind/pipeline-desktop-opus-postfix/20261103T064954Z](blind/pipeline-desktop-opus-postfix/20261103T064954Z/CELL.md) | `shuttle_stop_full_sample` | 0.674967 | 0.781 | ±0.182 (se_band) | 0.583 | PASS |
 
 ### Declared deviations
 
@@ -77,6 +78,8 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - full-sample regression uses 240 obs rather than 242 (missing covariates or singleton date FE)
   - five-station regression uses 98 obs rather than 102
   - dollars sample restricted using rule 'inkind_obs' (offer explicitly accepted / valid count) to match the 67 counted panhandlers
+- [independent/pipeline-desktop-opus-postfix2/20261105T212407Z](independent/pipeline-desktop-opus-postfix2/20261105T212407Z/CELL.md) (11/11)
+  - dollars/hour sample restricted by rule 'cash_and_inkind' to match the paper's N=67
 - [independent/pipeline-desktop-opus-run3/20261103T052626Z](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) (11/11)
   - Friendliness built from passerby-level max of response cells (long format); 0/1 indicator columns passresp1-5 decoded as response level k
   - Dollars/hour sample/definition chosen as 'nonmiss_cash_inkind\|cash_plus_inkind' to match the paper's documented N=67 and station Ns
@@ -91,12 +94,12 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
-- blind: `anova_f_dollars_per_hour` — pipeline 0/5, agent 3/3
-- blind: `brown_forsythe_dollars_per_hour` — pipeline 0/5, agent 3/3
+- blind: `anova_f_dollars_per_hour` — pipeline 0/6, agent 3/3
+- blind: `brown_forsythe_dollars_per_hour` — pipeline 0/6, agent 3/3
 
 Pass rates at least 50 points apart (not unanimous):
 
-- blind: `friendliness_full_sample` — pipeline 1/5, agent 3/3
+- blind: `friendliness_full_sample` — pipeline 1/6, agent 3/3
 
 ## Cells
 
@@ -148,6 +151,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/pipeline-desktop-opus-postfix/20261103T104514Z/CELL.md`](independent/pipeline-desktop-opus-postfix/20261103T104514Z/CELL.md) — final 11/11, re-scored 11/11; first scored 8/11; executions 5; 2026-11-03T10:45:14Z; from `pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-postfix2 · 20261105T212407Z
+
+[`independent/pipeline-desktop-opus-postfix2/20261105T212407Z/CELL.md`](independent/pipeline-desktop-opus-postfix2/20261105T212407Z/CELL.md) — final 11/11, re-scored 11/11; first scored 8/11; executions 4; 2026-11-05T21:24:07Z; from `pipeline-oracle-desktop-opus-postfix2-23papers-indep-blind-2026-11-05.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus-run2 · 20261023T153002Z
 
 [`independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) — final 8/11, re-scored 8/11; first scored 7/11; executions 4; 2026-10-23T15:30:02Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
@@ -179,6 +186,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · pipeline-desktop-opus-postfix · 20261103T064954Z
 
 [`blind/pipeline-desktop-opus-postfix/20261103T064954Z/CELL.md`](blind/pipeline-desktop-opus-postfix/20261103T064954Z/CELL.md) — final 8/11, re-scored 8/11; first scored 8/11; executions 2; 2026-11-03T06:49:54Z; from `pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-postfix2 · 20261103T114859Z
+
+[`blind/pipeline-desktop-opus-postfix2/20261103T114859Z/CELL.md`](blind/pipeline-desktop-opus-postfix2/20261103T114859Z/CELL.md) — final 8/11, re-scored 8/11; first scored 8/11; executions 2; 2026-11-03T11:48:59Z; from `pipeline-oracle-desktop-opus-postfix2-23papers-indep-blind-2026-11-05.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus-run2 · 20261023T150832Z
 

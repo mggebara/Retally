@@ -1,0 +1,153 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: Hate Crimes and Gender Imbalances: Fears over Mate
+Abstract (first 500 chars): As the number of refugees rises across the world, anti-refugee violence has become a pressing concern. What ex-
+plains the incidence and support of such hate crime? We argue that fears among native men that refugees pose a threat in
+the competition for female partners are a critical but understudied factor driving hate crime. Employing a comprehensive
+data set on the incidence of hate crime across Germany, we first demonstrate that hate crime rises where men face disad-
+vantages in local mating 
+Methodology Summary: - **Ecological (municipality-level) analysis — estimation:** Logistic regression of a binary hate-crime indicator on *Excess Males*, with standard errors clustered at the county level (Figure 1; full results in SI Table C.1). Two specifications: (i) **Sum** — cross-section of municipalities, DV = 1 if the municipality recorded ≥1 anti-refugee hate crime over 2015–2017 combined (17% of municipalities), 0 otherwise; (ii) **Annual** — municipality-year panel, DV = 1 if ≥1 hate crime in that year (5.6% in 2015, 12.1% in 2016, 6.8% in 2017, out of 11,168 municipalities). County fixed effects and year fixed effects included. Robustness: linear probability model (SI C.3), negative binomial on incident counts (SI C.5), physical attacks only (SI C.4), East–West interactions (SI C.6), alternative age ranges (SI C.2), placebo (SI C.9).
+- **Key regressor and data:** *Excess Males* = number of men / number of women aged 15–44 in the municipality (a raw ratio, not standardised; 1 = balance, 1.2 ≈ 80th percentile). Hate-crime DV from the "Mut gegen rechte Gewalt" chronicle (Amadeu Antonio Foundation & PRO ASYL): arson on refugee housing, other attacks on refugee housing, physical attacks on refugees. Alternative mate-competition measure: *Male Disadvantage* = male / female unemployment rate (r = −0.048 with Excess Males; SI Figure C.8).
+- **Controls (preferred spec):** population, population density, population change, unemployment rate, ratio of male to female unemployment rate, number of refugees (stock, county level), change in refugee population (flow), percent highly educated, percent manufacturing, change in percent manufacturing, AfD vote share, violent crime per capita; plus county and year FE.
+- **Sample restriction:** municipalities with extreme Excess Males values (top and bottom 2.5 percentiles) are dropped — mostly very small municipalities (median population of excluded = 247); results stated to be insensitive to this.
+- **Ecological evaluation/quantity of interest:** predicted probability of ≥1 hate crime across the range of Excess Males, and first difference from Excess Males = 1 to 1.2: +2.60 percentage points (95% CI [0.88, 4.19]) and +1.71 points (95% CI [0.76, 2.55]) for the two models; also 20th→80th percentile comparisons vs. unemployment rate and share highly educated.
+- **Individual-level survey analysis:** Respondi online survey, 4 waves (Sept 2016–Dec 2017), each ~3,000 respondents, quota-representative on age (18+), gender, state. *Mate Competition* item (Wave 4, 1–4 scale). Figure 2: proportion agreeing (agree somewhat/strongly) by terciles of municipal Excess Males, for all respondents, men 18–44, men 30–40, with 95% CIs and p-values.
+- **Hate-crime support regressions (Table 1):** OLS, DV = *Only Means* (1 = disagree strongly … 4 = agree strongly), key regressor = *Mate Competition* (1–4, unstandardised); conventional OLS SEs (ordered logit gives similar results). Six nested columns: (1) Mate Competition only (coef 0.437, SE 0.016, N = 3,019); (2) + Job Competition (1–4) and Life Satisfaction (0–10) (0.263, N = 3,019); (3) + sociodemographics — age, gender, education, income, main economic activity, employment status, German citizenship, household size, self-assessed social status, religious affiliation, state of residence (0.236, N = 3,008); (4) + national attitudes toward refugees (0.206); (5) + local attitudes toward refugees (0.185); (6) + additional controls — public contact with refugees, closeness to refugee shelters, estimated number of refugees in town, views of/closeness to AfD, left-right placement, attitudes toward Muslims (0.155, SE 0.019, N = 3,008, R² = 0.459, adj. R² = 0.431). Figure 4 repeats column (6) for DVs Only Means, Justified, Message, Prevent, Condemn (reverse-coded), reporting one-unit effects with 95% CIs.
+- **List experiment (social-desirability check):** Wave 2 (also Wave 1 and pilot); 50% of sample split into control (3 non-sensitive items) and treatment (3 items + Only Means); difference in mean counts (2.09 − 1.94 ≈ 15%) compared with direct question (18%, among the 75% asked directly); difference insignificant. No train/test split or cross-validation is used (inferential, not predictive, analysis).
+
+
+## Claims to Reproduce
+1. mate_competition_table1_col1: 0.437 (points on the 1-4 Only Means scale per point of Mate Competition (1-4)) [type: coefficient]
+   Location: Table 1, column (1), Mate competition
+   Context: Table 1 ("Mate Competition Predicts Support for Hate Crime"), column (1). OLS of support for hate crime, the Only Means item ("When it comes to the refugee problem, violence is sometimes the only means that citizens have to get the attention of German politicians"; 1 = disagree strongly to 4 = agree strongly), on Mate Competition ("The inflow of refugees makes it more difficult for native men to find female partners"; same 1-4 scale), with no other regressors. Respondents of Wave 4 (December 2017) of the authors' online panel survey of German residents fielded by Respondi. Conventional OLS sta…
+2. mate_competition_table1_col2: 0.263 (points on the 1-4 Only Means scale per point of Mate Competition (1-4)) [type: coefficient]
+   Location: Table 1, column (2), Mate competition
+   Context: Table 1, column (2): the same OLS of Only Means on Mate Competition, adding Job Competition ("the inflow of young male refugees makes it more difficult for young native men to find apprenticeships and jobs", 4-point scale) and Life Satisfaction (0-10). Wave 4 respondents; conventional OLS standard errors.
+3. mate_competition_table1_col3: 0.236 (points on the 1-4 Only Means scale per point of Mate Competition (1-4)) [type: coefficient]
+   Location: Table 1, column (3), Mate competition
+   Context: Table 1, column (3): column (2) plus the sociodemographic controls (age, gender, education, income, main economic activity, employment status, German citizenship, household size, self-assessed social status, religious affiliation, state of residence). Wave 4 respondents; conventional OLS standard errors.
+4. mate_competition_table1_col4: 0.206 (points on the 1-4 Only Means scale per point of Mate Competition (1-4)) [type: coefficient]
+   Location: Table 1, column (4), Mate competition
+   Context: Table 1, column (4): column (3) plus the battery of attitudes toward refugees at the national level (respondents' views of the economic, cultural, political and social consequences and desirability of refugees for Germany as a whole; SI Table D.7). Wave 4 respondents; conventional OLS standard errors.
+5. mate_competition_table1_col5: 0.185 (points on the 1-4 Only Means scale per point of Mate Competition (1-4)) [type: coefficient]
+   Location: Table 1, column (5), Mate competition
+   Context: Table 1, column (5): column (4) plus the battery of attitudes toward refugees in the respondent's own municipality (local consequences of refugees; SI Table D.7). The text says adding the national and local batteries reduces the Mate Competition coefficient by about one fifth. Wave 4 respondents; conventional OLS standard errors.
+6. mate_competition_table1_col6: 0.155 (points on the 1-4 Only Means scale per point of Mate Competition (1-4)) [type: coefficient]
+   Location: Table 1, column (6), Mate competition
+   Context: Table 1, column (6), the paper's fullest specification: column (5) plus the additional controls (self-reported public contact with refugees, estimated closeness to refugee shelters, estimated number of refugees living in town, views about and closeness to the AfD, left-right ideological placement, and attitudes toward Muslims). Wave 4 respondents; conventional OLS standard errors. Figure 4 repeats this specification for the other hate-crime items.
+7. job_competition_table1_col2: 0.25 (points on the 1-4 Only Means scale per point of Job Competition (1-4)) [type: coefficient]
+   Location: Table 1, column (2), Job competition
+   Context: Table 1, column (2): the Job Competition coefficient in the OLS of Only Means on Mate Competition, Job Competition and Life Satisfaction. Wave 4 respondents; conventional OLS standard errors.
+8. n_obs_table1_col1: 3019.0 (survey respondents) [type: count]
+   Location: Table 1, columns (1)-(2), Observations
+   Context: Number of Wave 4 respondents in the Table 1 regressions without sociodemographic controls (columns 1 and 2): respondents with non-missing Only Means, Mate Competition, Job Competition and Life Satisfaction.
+9. n_obs_table1_col3: 3008.0 (survey respondents) [type: count]
+   Location: Table 1, columns (3)-(6), Observations
+   Context: Number of Wave 4 respondents in the Table 1 regressions with sociodemographic controls (columns 3 to 6).
+10. excess_males_sum_tableC1_col5: 1.406 (log-odds per unit of the male-to-female ratio) [type: coefficient]
+   Location: SI Table C1, column (5) Sum, Excess Males (Age 15 - 44)
+   Context: SI Appendix C.1, Table C1 ("The Effect of Excess Males on the Probability of Observing at least One Hate Crime"), column (5), the Sum model plotted in main-text Figure 1. Logistic regression across German municipalities of an indicator equal to one if the municipality saw at least one anti-refugee hate crime (arson or other attacks on refugee housing, or physical attacks on refugees, from the "Mut gegen rechte Gewalt" chronicle of the Amadeu Antonio Foundation and PRO ASYL) over 2015-2017, on Excess Males (the number of men divided by the number of women aged 15-44 in the municipality, 2015), …
+11. excess_males_annual_tableC1_col6: 1.537 (log-odds per unit of the male-to-female ratio) [type: coefficient]
+   Location: SI Table C1, column (6) Annual, Excess Males (Age 15 - 44)
+   Context: SI Table C1, column (6), the Annual model plotted in main-text Figure 1: the same logistic regression and controls as excess_males_sum_tableC1_col5, on municipality-years 2015, 2016 and 2017, with the outcome equal to one if the municipality saw at least one anti-refugee hate crime in that year, and state and year fixed effects. Same exclusion of extreme Excess Males values; standard errors clustered by county.
+12. n_obs_sum_tableC1_col5: 9282.0 (municipalities) [type: count]
+   Location: SI Table C1, column (5), Observations
+   Context: Number of municipalities in the SI Table C1 column (5) Sum model (complete cases after excluding the extreme Excess Males values).
+13. n_obs_annual_tableC1_col6: 27846.0 (municipality-years) [type: count]
+   Location: SI Table C1, column (6), Observations
+   Context: Number of municipality-year observations in the SI Table C1 column (6) Annual model.
+
+## Dataset Information
+Name: dancygier-2022-hate-crimes-gender-imbalances
+Local path: <repo>/.cache/datasets/dancygier_2022_hate_crimes_gender_imbalances.script-free
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- pop_gemeinde_2008_2018.dta (73.6 MB) — 150403 rows, 59 columns: year, pop_mf_0_2, pop_mf_3_5, pop_mf_6_9, pop_mf_15_17, pop_mf_18_19, pop_mf_40_44, pop_m_0_2, pop_m_3_5, pop_m_6_9, pop_m_15_17, pop_m_18_19, pop_m_40_44, pop_f_0_2, pop_f_3_5, pop_f_6_9, pop_f_15_17, pop_f_18_19, pop_f_40_44, ags_county, ags_state, ags_muni, location, pop_mf_10_14, pop_mf_20_24, pop_mf_25_29, pop_mf_30_34, pop_mf_35_39, pop_mf_45_49, pop_mf_50_54, pop_mf_55_59, pop_mf_60_64, pop_mf_65_74, pop_mf_75_more, pop_mf_total, pop_m_10_14, pop_m_20_24, pop_m_25_29, …
+- merged_context_2.dta (1.3 MB) — 4305 rows, 52 columns: year, population, refugees, unemp_gendergap, unemp_nonger, unemp_female, pc_ref_male, unemp_all, all_male0_3, all_male3_6, all_male6_15, all_male15_18, all_male30_40, all_male40_50, county_sectors_2009_2015, ags_county, no_processing, no_public_educ_health, pop15_high_degree2011, pop15_high_extra_degree2011, no_manufacturing, pc_manufacturing, all_male18_25, all_male25_30, all_male50_65, all_male65_75, all_male75_up, ref_male, no_unemp_nonger, no_unemp_disabled, no_unemp_15_1…
+- survey.dta (4.5 MB) — 12595 rows, 53 columns: wave, east, hate_violence_means, hate_justified, gender, state, citizenship, income, household_size, list, treatment_list, outcome_list, hate_pol_message, hate_prevent_settlement, hate_polcondemn, pop_15_44_muni_gendergap_2015, self_econ, lrscale, muslim_ind, contact_ind, refugee_ind, ref_citizenship, ref_reduce, ref_loc_housing, women_role, ref_crime, ref_loc_crime, res_id, MateComp.cont, JobComp.cont, LifeSatis.cont, age, singdivsep, age_group, marital, religion, eduyrs, oc…
+- refugee_gender.dta (124.8 KB) — 2874 rows, 15 columns: year, refugees, all_male0_3, all_male3_6, all_male6_15, all_male15_18, all_male30_40, all_male40_50, all_male18_25, all_male25_30, all_male50_65, all_male65_75, all_male75_up, ags_dist, all_totref
+- merged_context_1.dta (235.9 KB) — 2365 rows, 17 columns: year, unemp_gendergap, unemp_nonger, unemp_female, unemp_all, ags_county, no_unemp_nonger, no_unemp_disabled, no_unemp_15_19, no_unemp_15_24, no_unemp_55_64, no_unemp_longterm, unemp_civil, unemp_men, unemp_15_24_yearold, no_unemployed, pc_…
+- unemployment.dta (226.0 KB) — 2365 rows, 16 columns: year, unemp_nonger, unemp_female, unemp_all, no_unemp_nonger, no_unemp_disabled, no_unemp_15_19, no_unemp_15_24, no_unemp_55_64, no_unemp_longterm, unemp_civil, unemp_men, unemp_15_24_yearold, ags_dist, no_unemployed, pc_unemplongterm
+- refugees_2008_2017.dta (1.3 MB) — 4052 rows, 45 columns: year, population, east, ags_county, ags_state, num_state, reject_syr_high, reject_afg_high, empty_house, empty_house_2013, popshare, popshare_kss, popshare_de, pop_for, pop_ref, sh_syr_go, sh_afg_go, largest_for, largest_ref, diversity, div…
+- context.dta (7.1 MB) — 34164 rows, 28 columns: year, east, ags_county, ags_state, vote_afd_2013_muni, log_ref_inflow_1514, pc_ref_male, Hate_all_muni, Physical_muni, population_muni_2015, log_unemp_all_muni_2015, unemp_gendergap_2015, violence_percap_2015, pc_manufacturing_2015, d_manuf…
+- sectors.dta (476.9 KB) — 3808 rows, 11 columns: year, county_sectors_2009_2015, no_manufacturing, no_processing, no_public_educ_health, ags_dist, no_employed, no_agriculture, no_construction, no_retail_hotel_transport_inform, no_finance_service_retail
+- pop_kreise_2015_2017.dta (25.9 KB) — 1206 rows, 3 columns: year, population, ags_county
+- 1-ReadMe.txt (6.9 KB)
+- YouGov.dta (207.1 KB)
+- area_mun.dta (747.4 KB)
+- base.dta (824.3 KB)
+- base_pl.dta (678.4 KB)
+- codebook_YouGov.pdf (136.2 KB)
+- codebook_context.pdf (137.5 KB)
+- codebook_context_placebo.pdf (161.0 KB)
+- codebook_survey.pdf (143.3 KB)
+- context_placebo.dta (3.9 MB)
+- crime.dta (21.2 KB)
+- education.dta (38.7 KB)
+- hate.dta (2.0 MB)
+- metadata.json (1.5 KB)
+- out_count_table.rdata (10.4 MB)
+- population.dta (45.9 KB)
+- source_context.pdf (153.7 KB)
+- source_context_placebo.pdf (176.8 KB)
+- unempl_gemeinde_2008_2017.dta (7.7 MB)
+- voting.dta (1.6 MB)
+
+Data inventory (every data file, profiled on the host before generation: rows, columns with Stata variable labels in quotes, and which columns differ between files that share their columns).  Use it to choose the file each analysis needs and to check row counts:
+- pop_gemeinde_2008_2018.dta (73.6 MB, dta): 150403 rows, 59 columns: year, pop_mf_0_2 "population size, male and female, aged between 0 and 2", pop_mf_3_5 "population size, male and female, aged between 3 and 5", pop_mf_6_9 "population size, male and female, aged between 6 and 9", pop_mf_15_17 "population size, male and female, aged between 15 and 17", pop_mf_18_19 "population size, male and female, aged between 18 and 19", pop_mf_40_44 "population size, male and female, aged between 40 and 44", pop_m_0_2 "population size, male, aged between 0 and 2", pop_m_3_5 "population size, male, aged between 3 and 5", pop_m_6_9 "population size, male, aged between 6 and 9", pop_m_15_17 "population size, male, aged between 15 and 17", pop_m_18_19 "population size, male, …
+- merged_context_2.dta (1.3 MB, dta): 4305 rows, 52 columns: year, population, refugees "total number of refugees", unemp_gendergap "male unemployment rate / female unemployment rate", unemp_nonger "non-German unemployment rate", unemp_female "female unemployment rate", pc_ref_male "% male refugees, of all refugees", unemp_all "unemployment rate", all_male0_3 "(mean) all_male0_3", all_male3_6 "(mean) all_male3_6", all_male6_15 "(mean) all_male6_15", all_male15_18 "(mean) all_male15_18", all_male30_40 "(mean) all_male30_40", all_male40_50 "(mean) all_male40_50", county_sectors_2009_2015 "county", ags_county "Identifier for County", no_processing, no_public_educ_health, pop15_high_degree2011 "high_degree pop15_", pop15_high_extra_degree2011 "high_extra_…
+- survey.dta (4.5 MB, dta): 12595 rows, 53 columns: wave, east, hate_violence_means, hate_justified, gender, state, citizenship, income, household_size, list, treatment_list, outcome_list, hate_pol_message, hate_prevent_settlement, hate_polcondemn, pop_15_44_muni_gendergap_2015, self_econ, lrscale, muslim_ind, contact_ind, refugee_ind, ref_citizenship, ref_reduce, ref_loc_housing, women_role, ref_crime, ref_loc_crime, res_id, MateComp.cont, JobComp.cont, LifeSatis.cont, age, singdivsep, age_group, marital, religion, eduyrs, occupation, distance_ref, settle_ref, afd, afd_ind, ref_integrating, ref_moredone, ref_cultgiveup, ref_economy, ref_terror, ref_loc_services, ref_loc_economy, ref_loc_culture, ref_loc_islam, ref_loc_schools, ref_loc_wayofl…
+- refugee_gender.dta (124.8 KB, dta): 2874 rows, 15 columns: year, refugees "total number of refugees", all_male0_3 "(mean) all_male0_3", all_male3_6 "(mean) all_male3_6", all_male6_15 "(mean) all_male6_15", all_male15_18 "(mean) all_male15_18", all_male30_40 "(mean) all_male30_40", all_male40_50 "(mean) all_male40_50", all_male18_25 "(mean) all_male18_25", all_male25_30 "(mean) all_male25_30", all_male50_65 "(mean) all_male50_65", all_male65_75 "(mean) all_male65_75", all_male75_up "(mean) all_male75_up", ags_dist "county identifyier", all_totref "(mean) all_totref"
+- merged_context_1.dta (235.9 KB, dta): 2365 rows, 17 columns: year, unemp_gendergap "male unemployment rate / female unemployment rate", unemp_nonger "non-German unemployment rate", unemp_female "female unemployment rate", unemp_all "unemployment rate", ags_county "Identifier for County", no_unemp_nonger, no_unemp_disabled, no_unemp_15_19, no_unemp_15_24, no_unemp_55_64, no_unemp_longterm "number of long-term unemployed", unemp_civil, unemp_men "male unemplpyment rate", unemp_15_24_yearold "youth unemployment rate", no_unemployed "number unemployed", pc_unemplongterm "% long-term unemployed among unemployed"
+- unemployment.dta (226.0 KB, dta): 2365 rows, 16 columns: year, unemp_nonger "non-German unemployment rate", unemp_female "female unemployment rate", unemp_all "unemployment rate", no_unemp_nonger, no_unemp_disabled, no_unemp_15_19, no_unemp_15_24, no_unemp_55_64, no_unemp_longterm "number of long-term unemployed", unemp_civil, unemp_men "male unemplpyment rate", unemp_15_24_yearold "youth unemployment rate", ags_dist "unique district identifier", no_unemployed "number unemployed", pc_unemplongterm "% long-term unemployed among unemployed"
+- refugees_2008_2017.dta (1.3 MB, dta): 4052 rows, 45 columns: year, population "total population", east "=1 if Federal State is former GDR, incl Berlin", ags_county "unique county/district identifyer", ags_state "unique state identifier", num_state "Federal States (numerical)", reject_syr_high "Rejection of Syrian refugees > German average", reject_afg_high "Rejection of Afghan refugees > German average", empty_house "# empty housing units", empty_house_2013 "# empty housing units", popshare "share pop.(county) / pop. (state)", popshare_kss "popshare (county/state) weighted by KSS", popshare_de "share pop. (county)/ pop. (Germany)", pop_for "total foreign population", pop_ref "total refugee population", sh_syr_go "share of Syrian asylum claims rejected…
+- context.dta (7.1 MB, dta): 34164 rows, 28 columns: year, east, ags_county, ags_state, vote_afd_2013_muni, log_ref_inflow_1514, pc_ref_male, Hate_all_muni, Physical_muni, population_muni_2015, log_unemp_all_muni_2015, unemp_gendergap_2015, violence_percap_2015, pc_manufacturing_2015, d_manuf1115, Hate_all_muni_bin, Physical_muni_bin, log_population_muni_2015, log_violence_percap_2015, pop_25_44_muni_gendergap_2015, pop_15_44_muni_gendergap_2015, ags_muni, popdens_muni_2015, d_pop1511_muni, pop_ref_2014, pc_hidegree_all2011, log_popdens_muni_2015, log_pop_ref_2014
+- sectors.dta (476.9 KB, dta): 3808 rows, 11 columns: year, county_sectors_2009_2015 "county", no_manufacturing, no_processing, no_public_educ_health, ags_dist "unique district identifier", no_employed, no_agriculture, no_construction, no_retail_hotel_transport_inform "no_retail_hotel_transport_information", no_finance_service_retail
+- population.dta (45.9 KB, dta): 3733 rows, 3 columns: year, population, ags_dist "ags_county"
+- pop_kreise_2015_2017.dta (25.9 KB, dta): 1206 rows, 3 columns: year, population, ags_county
+- unempl_gemeinde_2008_2017.dta (7.7 MB, dta): 102282 rows, 8 columns: year, ags_state, unempl_all_male_total, unempl_all_total, unempl_all_fem_total, ags, ags_dist, location
+- context_placebo.dta (3.9 MB, dta): 26299 rows, 20 columns: year, ags_county, ags_state, population_muni_anu, vote_afd_2013_muni, log_ref_inflow_anu, violence_percap_anu, Hate_all_muni, log_unemp_all_muni_anu, unemp_gendergap_anu, pc_manufacturing_2015, d_manuf1115, Hate_all_muni_bin, pop_15_44_muni_gendergap_anu, pop_15_44_muni_gendergap_future, ags_muni, popdens_muni_anu, d_pop_muni_anu, pop_ref_anu, pc_hidegree_all2011
+- hate.dta (2.0 MB, dta): 34164 rows, 8 columns: year, Arson_muni, Demonstration_muni, Other_muni, Physical_muni, ags_county, ags_muni, Murder_muni
+- voting.dta (1.6 MB, dta): 13357 rows, 13 columns: Left, vote_afd_2013_muni, ags_muni, name, Voters, turnout, valid.second.votes, CDU.CSU, SPD, Green, FDP, AfD, Others
+- base.dta (824.3 KB, dta): 34164 rows, 4 columns: year, ags_county, ags_state, ags_muni
+- base_pl.dta (678.4 KB, dta): 26299 rows, 4 columns: year, ags_county, ags_state, ags_muni
+- YouGov.dta (207.1 KB, dta): 1527 rows, 28 columns: gender, hate_cont, mate_compete, pol_leftright, angry_mean, ref_loc_crime, ref_local_job, ref_loc_housing, int_marriage, age, sta, mstat, reli, educ_aggr_rec, hinc, housz, ref_loc_services, ref_loc_economy, ref_loc_culture, ref_loc_islam, ref_loc_schools, ref_loc_wayoflife, see_ref_road, see_ref_store, see_ref_center, see_ref_school, see_ref_work, afd.score
+- education.dta (38.7 KB, dta): 476 rows, 10 columns: year, pop15_high_degree2011 "high_degree pop15_", pop15_high_extra_degree2011 "high_extra_degree pop15_", ags_dist "county identifyier", pop15_low_degree2011 "low_degree pop15_", pop15_med_degree2011 "med_degree pop15_", pop15_medhigh_degree2011 "medhigh_degree pop15_", pop15_no_degree2011 "no_degree pop15_", pop15_still_in_school2011 "still_in_school pop15_", pop15_total2011 "total pop15_"
+- crime.dta (21.2 KB, dta): 1206 rows, 3 columns: year, ags_county, violence_num_cases
+- out_count_table.rdata (10.4 MB, R): other objects: out_count_table
+- area_mun.dta (747.4 KB, dta): 11549 rows, 3 columns: location_test "location", area_sqk, ags "unique municipality identifier"
+- Same columns in 2 files: base.dta, base_pl.dta. Rows: 34164 rows | 26299 rows. They differ in 4 column(s) -- values per file, in the order listed: year (mean 2016, 34164 non-missing | mean 2015.99, 26299 non-missing); ags_muni (mean 5694.5, 34164 non-missing | mean 5503.94, 26299 non-missing); ags_county (402 distinct, 34164 non-missing | 277 distinct, 26299 non-missing); ags_state (16 distinct, 34164 non-missing | 11 distinct, 26299 non-missing).  The other 0 columns are identical.  Decide from the paper which file each analysis uses; do not assume one file serves them all.
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Sample Accounting
+Before the RESULT: lines, print how each estimation sample is built, one line per step,
+using EXACTLY this format:
+    SAMPLE:<sample_name>:<step>=<number_of_rows>
+For example:  cat(sprintf('SAMPLE:main:loaded=%d\n', nrow(df)))
+Start each sample with step `loaded` (rows read from the data file), then print one line after each sample restriction the paper states, in the order the paper states them and named after the restriction, and end with step `estimation`: the number of observations the estimator actually used (nobs(model)), after rows dropped for missing values or singletons.  Use one <sample_name> per distinct estimation sample (one per table, panel or subgroup).
+Before estimating, compare each sample's count with any sample size the paper states for it (in the claims or the text) and fix the restrictions until they agree.  If a stated restriction cannot be applied, print a DEVIATION: line saying so.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/dancygier_2022_hate_crimes_gender_imbalances.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Independent Reproduction
+This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's description alone.  The authors' own analysis code is deliberately withheld.  Do NOT open, read, source, or execute any script files that may appear in the dataset directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, and similar) — load data files only.  Derive the estimating equation, sample restrictions, fixed effects, and standard-error clustering from the paper information and claims above.
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

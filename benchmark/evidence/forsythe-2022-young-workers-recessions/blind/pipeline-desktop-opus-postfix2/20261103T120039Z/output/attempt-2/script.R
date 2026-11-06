@@ -1,0 +1,332 @@
+suppressPackageStartupMessages({
+  library(data.table)
+  library(fixest)
+})
+set.seed(42)
+setFixest_nthreads(max(1, min(4, parallel::detectCores())))
+
+base <- "<repo>/.cache/datasets/forsythe_2022_young_workers_recessions.script-free/3 replication package/Data"
+f_main  <- file.path(base, "yh_data.csv")
+f_unemp <- file.path(base, "v2unemp_smy.csv")
+f_cpi   <- file.path(base, "wage_deflation_1994_2016.csv")
+f_occ   <- file.path(base, "occ_xwalk2002.csv")
+f_ind   <- file.path(base, "ind_xwalk2002.csv")
+
+# ---------------------------------------------------------------- helpers
+parse_num <- function(x) {
+  if (is.numeric(x)) return(as.numeric(x))
+  y <- suppressWarnings(as.numeric(x))
+  if (sum(!is.na(y)) < 0.5 * sum(!is.na(x) & x != "")) {
+    y2 <- suppressWarnings(as.numeric(sub("^\\s*(-?[0-9.]+).*$", "\\1", x)))
+    if (sum(!is.na(y2)) > sum(!is.na(y))) y <- y2
+  }
+  y
+}
+mostly_numeric <- function(x) {
+  if (is.numeric(x)) return(TRUE)
+  y <- suppressWarnings(as.numeric(x))
+  sum(!is.na(y)) >= 0.5 * sum(!is.na(x) & x != "")
+}
+# apply a mapping function on unique values only (saves memory/time on 20M rows)
+umap <- function(x, f) {
+  if (is.numeric(x)) return(f(x))
+  u <- unique(x)
+  fu <- f(u)
+  fu[match(x, u)]
+}
+map_mlr <- function(x) {
+  if (mostly_numeric(x)) return(parse_num(x))
+  s <- tolower(x); o <- rep(NA_real_, length(s))
+  o[grepl("at work", s)] <- 1
+  o[is.na(o) & grepl("absent", s)] <- 2
+  o[is.na(o) & grepl("layoff", s)] <- 3
+  o[is.na(o) & grepl("looking", s)] <- 4
+  o[is.na(o) & grepl("retired", s)] <- 5
+  o[is.na(o) & grepl("disab", s)] <- 6
+  o[is.na(o) & grepl("other|nilf|not in labor", s)] <- 7
+  o
+}
+map_educ <- function(x) {
+  if (mostly_numeric(x)) return(parse_num(x))
+  s <- tolower(x); o <- rep(NA_real_, length(s))
+  rules <- list(
+    c("less than 1st", 31), c("1st|2nd|3rd|4th", 32), c("5th|6th", 33),
+    c("7th|8th", 34), c("9th", 35), c("10th", 36), c("11th", 37),
+    c("12th", 38), c("high school grad|diploma or equiv|ged", 39),
+    c("some college", 40), c("vocational", 41), c("academic", 42),
+    c("bachelor", 43), c("master", 44), c("professional", 45),
+    c("doctor", 46))
+  for (r in rules) o[is.na(o) & grepl(r[1], s)] <- as.numeric(r[2])
+  o
+}
+map_sex <- function(x) {
+  if (mostly_numeric(x)) return(parse_num(x))
+  s <- tolower(x); o <- rep(NA_real_, length(s))
+  o[grepl("female", s)] <- 2; o[is.na(o) & grepl("male", s)] <- 1; o
+}
+map_race <- function(x) {
+  if (mostly_numeric(x)) return(parse_num(x))
+  s <- trimws(tolower(x)); o <- rep(2, length(s))
+  o[s %in% c("white", "white only")] <- 1
+  o[is.na(x) | s == ""] <- NA_real_; o
+}
+map_hisp <- function(x) {
+  if (mostly_numeric(x)) return(parse_num(x))
+  s <- tolower(x); o <- rep(NA_real_, length(s))
+  o[grepl("non|not", s)] <- 2; o[is.na(o) & grepl("hispanic", s)] <- 1; o
+}
+map_yesno <- function(x) {
+  if (mostly_numeric(x)) return(parse_num(x))
+  s <- trimws(tolower(x)); o <- rep(NA_real_, length(s))
+  o[s == "yes" | grepl("^yes", s)] <- 1; o[s == "no" | grepl("^no", s)] <- 2; o
+}
+map_cow <- function(x) {
+  if (mostly_numeric(x)) return(parse_num(x))
+  s <- tolower(x); o <- rep(NA_real_, length(s))
+  o[grepl("self", s) & grepl("incorp", s) & !grepl("not|uninc", s)] <- 6
+  o[is.na(o) & grepl("self", s)] <- 7
+  o[is.na(o) & grepl("without pay", s)] <- 8
+  o[is.na(o) & !is.na(x) & x != ""] <- 4
+  o
+}
+map_month <- function(x) {
+  if (mostly_numeric(x)) return(parse_num(x))
+  s <- substr(tolower(trimws(x)), 1, 3)
+  match(s, c("jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"))
+}
+map_alloc <- function(x) {
+  if (mostly_numeric(x)) return(parse_num(x))
+  s <- tolower(x); o <- rep(NA_real_, length(s))
+  o[grepl("not|no ", s) | s == "no"] <- 0; o[is.na(o) & !is.na(x) & x != ""] <- 1; o
+}
+state_key <- function(x) {
+  if (mostly_numeric(x)) return(as.character(as.integer(parse_num(x))))
+  trimws(tolower(as.character(x)))
+}
+samp <- function(name, step, n) cat(sprintf("SAMPLE:%s:%s=%d\n", name, step, as.integer(n)))
+
+# memory-light row filter: builds the subset column by column, freeing the
+# source columns as it goes (avoids holding two full copies of a 20M-row table)
+filt <- function(d, keep) {
+  idx <- which(keep)
+  rm(keep)
+  nms <- names(d)
+  out <- vector("list", length(nms)); names(out) <- nms
+  for (n in nms) {
+    out[[n]] <- d[[n]][idx]
+    set(d, j = n, value = NULL)
+  }
+  rm(d); invisible(gc())
+  setDT(out)
+  out
+}
+to_int <- function(x) as.integer(round(x))
+
+# ---------------------------------------------------------------- load
+hdr <- names(fread(f_main, nrows = 0))
+want <- c("hrmonth", "hryear", "peage", "pesex", "peeduca", "race", "prhspnon", "pehspnon",
+          "pemlr", "pwsswgt", "v2hrmonth", "v2hryear", "v2gestfips", "v2pemlr",
+          "v2puiodp1", "v2peio1cow", "v2peio1icd", "v2peio1ocd", "v2prernwa",
+          "v2pwsswgt", "v2prwernal")
+sel <- intersect(want, hdr)
+dt <- fread(f_main, select = sel, showProgress = FALSE)
+samp("main", "loaded", nrow(dt))
+
+dt[, hrmonth := to_int(umap(hrmonth, map_month))]
+dt[, v2hrmonth := to_int(umap(v2hrmonth, map_month))]
+dt[, hryear := to_int(umap(hryear, parse_num))]
+dt[, v2hryear := to_int(umap(v2hryear, parse_num))]
+dt[, pemlr := to_int(umap(pemlr, map_mlr))]
+dt[, v2pemlr := to_int(umap(v2pemlr, map_mlr))]
+dt[, peage := to_int(umap(peage, parse_num))]
+dt[, peeduca := to_int(umap(peeduca, map_educ))]
+
+# ---------------------------------------------------------------- sample restrictions
+# civilians: valid labor-force status (not armed forces / out of universe) in both months
+dt <- filt(dt, dt$pemlr %in% 1:7 & dt$v2pemlr %in% 1:7)
+samp("main", "civilian", nrow(dt))
+dt <- filt(dt, !is.na(dt$peage) & dt$peage >= 16)
+samp("main", "age_over_16", nrow(dt))
+dt <- filt(dt, !is.na(dt$peeduca) & dt$peeduca >= 31 & dt$peeduca <= 46)
+samp("main", "nonmissing_age_education", nrow(dt))
+
+dt[, t1 := hryear * 12L + hrmonth]
+dt[, t2 := v2hryear * 12L + v2hrmonth]
+dt <- filt(dt, !is.na(dt$t1) & !is.na(dt$t2) & dt$t1 >= 1994L * 12L + 1L & dt$t2 <= 2016L * 12L + 9L)
+samp("main", "jan1994_sep2016", nrow(dt))
+dt <- filt(dt, !((dt$hryear == 1995L & dt$hrmonth %in% 5:8) | (dt$v2hryear == 1995L & dt$v2hrmonth %in% 5:8)))
+samp("main", "exclude_may_aug_1995", nrow(dt))
+dt <- filt(dt, dt$t2 - dt$t1 == 1L)
+samp("main", "consecutive_months_no_8month_break", nrow(dt))
+
+# remaining recodes on the reduced sample
+dt[, pesex := to_int(umap(pesex, map_sex))]
+dt[, race := to_int(umap(race, map_race))]
+h1 <- if ("prhspnon" %in% names(dt)) umap(dt$prhspnon, map_hisp) else rep(NA_real_, nrow(dt))
+h2 <- if ("pehspnon" %in% names(dt)) umap(dt$pehspnon, map_hisp) else rep(NA_real_, nrow(dt))
+h1[!(h1 %in% c(1, 2))] <- NA; h2[!(h2 %in% c(1, 2))] <- NA
+dt[, hisp := to_int(fifelse(!is.na(h1), h1, h2))]
+rm(h1, h2)
+suppressWarnings(dt[, c("prhspnon", "pehspnon") := NULL])
+dt[, v2puiodp1 := to_int(umap(v2puiodp1, map_yesno))]
+dt[, v2peio1cow := to_int(umap(v2peio1cow, map_cow))]
+dt[, pwsswgt := parse_num(pwsswgt)]
+dt[, v2pwsswgt := parse_num(v2pwsswgt)]
+dt[, v2prernwa := parse_num(v2prernwa)]
+if ("v2prwernal" %in% names(dt)) dt[, v2prwernal := to_int(umap(v2prwernal, map_alloc))]
+dt[, state := umap(v2gestfips, state_key)]
+dt[, v2gestfips := NULL]
+invisible(gc())
+
+# unemployment rate (month t)
+ur <- fread(f_unemp, showProgress = FALSE)
+ur[, state := state_key(v2gestfips)]
+ur[, v2hryear := to_int(parse_num(v2hryear))]
+ur[, v2hrmonth := to_int(map_month(v2hrmonth))]
+ur[, urate := parse_num(v2unemp_smy)]
+if (max(ur$urate, na.rm = TRUE) < 1) ur[, urate := urate * 100]
+ur <- unique(ur[, .(state, v2hryear, v2hrmonth, urate)], by = c("state", "v2hryear", "v2hrmonth"))
+dt[ur, urate := i.urate, on = c("state", "v2hryear", "v2hrmonth")]
+rm(ur)
+dt <- filt(dt, !is.na(dt$urate))
+samp("main", "merged_state_unemp_rate", nrow(dt))
+
+dt[, wgt := (pwsswgt + v2pwsswgt) / 2]
+dt[, c("pwsswgt", "v2pwsswgt") := NULL]
+dt <- filt(dt, !is.na(dt$wgt) & dt$wgt > 0)
+samp("main", "positive_weight", nrow(dt))
+
+# ---------------------------------------------------------------- variables
+educ_years <- c(`31` = 0, `32` = 2.5, `33` = 5.5, `34` = 7.5, `35` = 9, `36` = 10,
+                `37` = 11, `38` = 12, `39` = 12, `40` = 13, `41` = 14, `42` = 14,
+                `43` = 16, `44` = 18, `45` = 19, `46` = 20)
+dt[, yrs_educ := unname(educ_years[as.character(peeduca)])]
+dt[, pe := peage - yrs_educ - 6]
+dt[, young := as.integer(pe <= 10)]
+dt[, ur_young := urate * young]
+dt[, ur_old := urate * (1L - young)]
+dt[, educ7 := fcase(peeduca <= 38, 1L, peeduca == 39, 2L, peeduca <= 42, 3L,
+                    peeduca == 43, 4L, peeduca == 44, 5L, peeduca == 45, 6L,
+                    peeduca == 46, 7L)]
+dt[, white := as.integer(race == 1)]
+dt[, demo := paste(pesex, white, hisp, educ7, sep = "_")]
+dt[, ym := t2]
+
+emp_prev <- dt$pemlr %in% 1:2
+emp_now  <- dt$v2pemlr %in% 1:2
+self_now <- dt$v2peio1cow %in% 6:7
+new_emp  <- !is.na(dt$v2puiodp1) & dt$v2puiodp1 == 2
+dt[, hired := 100 * as.numeric(((!emp_prev & emp_now) | (emp_prev & emp_now & new_emp)) & !self_now)]
+rm(emp_prev, emp_now, self_now, new_emp)
+dt[, prev_status := fcase(pemlr %in% 1:2, "E", pemlr %in% 3:4, "U", pemlr %in% 5:7, "N")]
+drop_cols <- intersect(c("t1", "hryear", "hrmonth", "peage", "yrs_educ", "pe", "pesex",
+                         "race", "hisp", "educ7", "white", "v2puiodp1", "v2peio1cow"), names(dt))
+dt[, (drop_cols) := NULL]
+invisible(gc())
+
+# ---------------------------------------------------------------- Table 1
+f1 <- hired ~ young + ur_young + ur_old
+m1 <- feols(f1, data = dt, weights = ~wgt, cluster = ~state, lean = TRUE)
+m4 <- feols(hired ~ young + ur_young + ur_old | state + demo + ym, data = dt,
+            weights = ~wgt, cluster = ~state, lean = TRUE)
+a1 <- feols(hired ~ urate, data = dt, weights = ~wgt, cluster = ~state, lean = TRUE)
+a4 <- feols(hired ~ urate | state + demo + ym, data = dt, weights = ~wgt, cluster = ~state, lean = TRUE)
+samp("main", "estimation", nobs(m1))
+samp("table1_col4", "loaded", nrow(dt))
+samp("table1_col4", "estimation", nobs(m4))
+invisible(gc())
+
+# ---------------------------------------------------------------- Table 2 subsamples
+est_cols <- c("hired", "young", "ur_young", "ur_old", "state", "demo", "ym", "wgt")
+sub_est <- function(code, name) {
+  d <- dt[prev_status == code, ..est_cols]
+  samp(name, "loaded", nrow(dt))
+  samp(name, paste0("status_t_minus_1_", code), nrow(d))
+  m <- feols(hired ~ young + ur_young + ur_old | state + demo + ym, data = d,
+             weights = ~wgt, cluster = ~state, lean = TRUE)
+  samp(name, "estimation", nobs(m))
+  rm(d); invisible(gc())
+  m
+}
+mE <- sub_est("E", "table2_employed")
+mU <- sub_est("U", "table2_unemployed")
+mN <- sub_est("N", "table2_nilf")
+
+# ---------------------------------------------------------------- Table 10 wages
+w <- dt[hired == 100]
+samp("table10_wage", "loaded", nrow(dt))
+samp("table10_wage", "new_hires", nrow(w))
+w <- w[!is.na(v2prernwa) & v2prernwa > 0]
+samp("table10_wage", "outgoing_rotation_wage_reported", nrow(w))
+if ("v2prwernal" %in% names(w) && sum(!is.na(w$v2prwernal)) > 0) {
+  w <- w[!is.na(v2prwernal) & v2prwernal == 0]
+}
+samp("table10_wage", "non_allocated_wage", nrow(w))
+
+cpi <- fread(f_cpi, showProgress = FALSE)
+cpi[, year := to_int(parse_num(year))]; cpi[, month := to_int(map_month(month))]; cpi[, cpi := parse_num(cpi)]
+cpi_base <- mean(cpi[year == 1994, cpi], na.rm = TRUE)
+w <- merge(w, cpi[, .(v2hryear = year, v2hrmonth = month, cpi)],
+           by = c("v2hryear", "v2hrmonth"), all.x = FALSE)
+w[, logw := log(v2prernwa * cpi_base / cpi)]
+samp("table10_wage", "deflated_1994", nrow(w))
+
+assign_xwalk <- function(w, xw, code_col, rec_col, cy_col, prefix) {
+  xw <- copy(xw)
+  setnames(xw, c(code_col, rec_col, cy_col), c("code", "rec", "cy"))
+  xw[, code := parse_num(code)]; xw[, cy := parse_num(cy)]
+  xw <- unique(xw[!is.na(code) & !is.na(cy)], by = c("code", "cy"))
+  cys <- sort(unique(xw$cy))
+  w[, code := parse_num(get(paste0("v2peio1", prefix)))]
+  yrs <- sort(unique(w$v2hryear))
+  ymap <- rbindlist(lapply(yrs, function(y) {
+    codes <- w[v2hryear == y & !is.na(code), code]
+    if (length(codes) == 0) return(data.table(v2hryear = y, cy_use = cys[1]))
+    share <- sapply(cys, function(cc) mean(codes %in% xw[cy == cc, code]))
+    prior <- if (all(cys > 1900 & cys < 2100)) as.numeric(cys <= y) else rep(0, length(cys))
+    score <- share + 1e-6 * prior + 1e-9 * cys * prior
+    data.table(v2hryear = y, cy_use = cys[which.max(score)])
+  }))
+  w <- merge(w, ymap, by = "v2hryear", all.x = TRUE)
+  w <- merge(w, xw[, .(code, cy_use = cy, rec)], by = c("code", "cy_use"), all.x = TRUE)
+  newcol <- paste0(prefix, "_fe")
+  w[, (newcol) := fifelse(!is.na(rec) & as.character(rec) != "",
+                          paste0("x", as.character(rec)),
+                          paste0("raw_", cy_use, "_", code))]
+  w[is.na(code), (newcol) := NA_character_]
+  w[, c("rec", "cy_use", "code") := NULL]
+  w
+}
+occx <- fread(f_occ, showProgress = FALSE)
+indx <- fread(f_ind, showProgress = FALSE)
+w <- assign_xwalk(w, occx, "v2peio1ocd", "v2censusocc_2002recode", "v2occ_codeyear", "ocd")
+w <- assign_xwalk(w, indx, "v2peio1icd", "v2censusind_2002recode", "v2ind_codeyear", "icd")
+w <- w[!is.na(ocd_fe) & !is.na(icd_fe)]
+samp("table10_wage", "nonmissing_occupation_industry", nrow(w))
+
+mw <- feols(logw ~ young + ur_young + ur_old | state + demo + ym + ocd_fe + icd_fe,
+            data = w, weights = ~wgt, cluster = ~state, lean = TRUE)
+samp("table10_wage", "estimation", nobs(mw))
+
+# ---------------------------------------------------------------- results
+g <- function(m, v) unname(coef(m)[v])
+s <- function(m, v) unname(se(m)[v])
+out <- list(
+  young_x_unemp_rate_no_controls = c(g(m1, "ur_young"), s(m1, "ur_young")),
+  experienced_x_unemp_rate_no_controls = c(g(m1, "ur_old"), s(m1, "ur_old")),
+  young_x_unemp_rate_preferred = c(g(m4, "ur_young"), s(m4, "ur_young")),
+  experienced_x_unemp_rate_preferred = c(g(m4, "ur_old"), s(m4, "ur_old")),
+  aggregate_unemp_rate_no_controls = c(g(a1, "urate"), s(a1, "urate")),
+  aggregate_unemp_rate_month_year_fe = c(g(a4, "urate"), s(a4, "urate")),
+  young_x_unemp_rate_employed = c(g(mE, "ur_young"), s(mE, "ur_young")),
+  experienced_x_unemp_rate_employed = c(g(mE, "ur_old"), s(mE, "ur_old")),
+  young_x_unemp_rate_unemployed = c(g(mU, "ur_young"), s(mU, "ur_young")),
+  young_x_unemp_rate_nilf = c(g(mN, "ur_young"), s(mN, "ur_young")),
+  wage_young_x_unemp_rate_all_hires = c(g(mw, "ur_young"), s(mw, "ur_young")),
+  wage_experienced_x_unemp_rate_all_hires = c(g(mw, "ur_old"), s(mw, "ur_old"))
+)
+for (nm in names(out)) {
+  cat(sprintf("RESULT:%s=%.6f\n", nm, out[[nm]][1]))
+  cat(sprintf("RESULT:%s_se=%.6f\n", nm, out[[nm]][2]))
+}
+cat(sprintf("RESULT:n_obs_full_sample=%d\n", as.integer(nobs(m1))))

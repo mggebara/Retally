@@ -1,0 +1,32 @@
+SAMPLE:table4:loaded=5469
+# table4 candidate DV lag_approval two quarters ahead: N=4423
+# table4 chosen DV: lag_approval two quarters ahead, attack var: kill_16, FE: country
+SAMPLE:table4:approval_next_quarter_nonmissing=5279
+SAMPLE:table4:controls_nonmissing=4423
+SAMPLE:table4:estimation=4423
+DEVIATION: table4 estimation N=4423 differs from the paper's 4328
+DEVIATION: panel-corrected standard errors not available in fixest; coefficients unaffected
+SAMPLE:did_like_may:loaded=1481408
+SAMPLE:did_may_best_pm:loaded=1481408
+SAMPLE:did_like_may:outcome_nonmissing=239919
+SAMPLE:did_like_may:treatment_time_nonmissing=239919
+DEVIATION: did_like_may: time indicator collinear with wave fixed effects; missing terms taken from pooled OLS without wave FE
+SAMPLE:did_like_may:estimation=239919
+DEVIATION: did_like_may estimation N=239919 differs from the paper's 143499
+SAMPLE:did_may_best_pm:outcome_nonmissing=145803
+SAMPLE:did_may_best_pm:treatment_time_nonmissing=145803
+DEVIATION: did_may_best_pm: time indicator collinear with wave fixed effects; missing terms taken from pooled OLS without wave FE
+SAMPLE:did_may_best_pm:estimation=145803
+DEVIATION: did_may_best_pm estimation N=145803 differs from the paper's 97155
+DEVIATION: best-PM DiD estimated as a linear probability model (paper's coefficients are on the probability scale)
+RESULT:intl_attack_table4=0.83842696
+RESULT:intl_attack_x_woman_exec_table4=-1.6131215
+RESULT:n_obs_table4=4423
+RESULT:did_attack_x_time_like_may_table2=-0.15016519
+RESULT:did_attack_like_may_table2=-0.10503635
+RESULT:did_time_like_may_table2=-0.61463018
+RESULT:did_attack_x_time_may_best_pm_table2=-0.039815977
+RESULT:did_attack_may_best_pm_table2=-0.014790306
+RESULT:did_time_may_best_pm_table2=0.10150165
+RESULT:n_obs_did_like_may_table2=239919
+RESULT:n_obs_did_may_best_pm_table2=145803

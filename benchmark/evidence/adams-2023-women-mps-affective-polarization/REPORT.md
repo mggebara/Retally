@@ -41,6 +41,7 @@
 | `pipeline-claude-opus-4-7` | [11/11](seeded/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [7/11](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [1/11](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) |
 | `pipeline-desktop-opus` | [11/11](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) | [10/11](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) (20261023T064839Z) | [7/11](blind/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) |
 | `pipeline-desktop-opus-postfix` | — | [7/11](independent/pipeline-desktop-opus-postfix/20261103T070149Z/CELL.md) (20261103T070149Z) | [8/11](blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md) (20261103T062809Z) |
+| `pipeline-desktop-opus-postfix2` | — | [10/11](independent/pipeline-desktop-opus-postfix2/20261103T115702Z/CELL.md) (20261103T115702Z) | [8/11](blind/pipeline-desktop-opus-postfix2/20261103T114859Z/CELL.md) (20261103T114859Z) |
 | `pipeline-desktop-opus-run2` | [11/11](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [8/11](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [2/11](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
 | `pipeline-desktop-opus-run3` | [11/11](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [11/11](independent/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md) (20261103T050517Z) | [8/11](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) |
 
@@ -55,6 +56,7 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | Cell | Claim | Reproduced | Paper | Band | Error / band | Verdict |
 |---|---|---|---|---|---|---|
 | [independent/pipeline-desktop-opus/20261023T064839Z](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) | `women_mps_coef_men_partisans` | 1.69763 | 1.13 | ±0.5 (se_band) | 1.135 | FAIL |
+| [independent/pipeline-desktop-opus-postfix2/20261103T115702Z](independent/pipeline-desktop-opus-postfix2/20261103T115702Z/CELL.md) | `women_mps_coef_women_partisans` | 1.48399 | 2.1 | ±0.53 (se_band) | 1.162 | FAIL |
 | [independent/pipeline-desktop-opus-postfix/20261103T070149Z](independent/pipeline-desktop-opus-postfix/20261103T070149Z/CELL.md) | `women_mps_coef_women_partisans` | 1.45509 | 2.1 | ±0.53 (se_band) | 1.217 | FAIL |
 | [blind/pipeline-desktop-opus/20261023T063725Z](blind/pipeline-desktop-opus/20261023T063725Z/CELL.md) | `women_mps_coef_women_partisans` | 1.45509 | 2.1 | ±0.53 (se_band) | 1.217 | FAIL |
 | [independent/pipeline-desktop-opus-run3/20261103T050517Z](independent/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md) | `women_mps_coef_women_partisans` | 1.69044 | 2.1 | ±0.53 (se_band) | 0.773 | PASS |
@@ -62,8 +64,7 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | [blind/claude-code/2026-11-01-a](blind/claude-code/2026-11-01-a/CELL.md) | `n_election_studies` | 76 | 81 | ±4.05 (relative) | 1.235 | FAIL |
 | [independent/pipeline-desktop-opus-run2/20261023T151837Z](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) | `women_mps_coef_women_partisans` | 1.71259 | 2.1 | ±0.53 (se_band) | 0.731 | PASS |
 | [blind/pipeline-desktop-opus-postfix/20261103T062809Z](blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md) | `women_mps_coef_women_partisans` | 1.71259 | 2.1 | ±0.53 (se_band) | 0.731 | PASS |
-| [blind/pipeline-desktop-opus-run3/20261103T004800Z](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) | `women_mps_coef_women_partisans` | 1.71259 | 2.1 | ±0.53 (se_band) | 0.731 | PASS |
-| [blind/pipeline-desktop-opus-run2/20261023T150832Z](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) | `women_mps_coef_women_partisans` | 1.71259 | 2.1 | ±0.53 (se_band) | 0.731 | PASS |
+| [blind/pipeline-desktop-opus-postfix2/20261103T114859Z](blind/pipeline-desktop-opus-postfix2/20261103T114859Z/CELL.md) | `women_mps_coef_women_partisans` | 1.71259 | 2.1 | ±0.53 (se_band) | 0.731 | PASS |
 
 ### Declared deviations
 
@@ -89,6 +90,10 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 - [independent/pipeline-desktop-opus/20261023T064839Z](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) (10/11; failed: `women_mps_coef_men_partisans`)
   - to_/from_mp_number are CMP party codes, not seat counts; the >=4 MPs restriction is applied to to_/from_prior_seats (seats in year before survey)
   - Party-size filter variant 'to4_drop' (handling of missing/999 seat codes, or which side is filtered) chosen as the one giving N closest to the paper's 1,842
+- [independent/pipeline-desktop-opus-postfix2/20261103T115702Z](independent/pipeline-desktop-opus-postfix2/20261103T115702Z/CELL.md) (10/11; failed: `women_mps_coef_women_partisans`)
+  - main dropped 193 dyads whose in-party lacks women-MP data (from_pfeml)
+  - women_partisans dropped 193 dyads whose in-party lacks women-MP data (from_pfeml)
+  - men_partisans dropped 193 dyads whose in-party lacks women-MP data (from_pfeml)
 - [independent/pipeline-desktop-opus-run3/20261103T050517Z](independent/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md) (11/11)
   - Sample restricted with additional filter 'from_ws_nonmiss' (women-share data completeness / MP threshold) to match the paper's dyad count; exact filter not stated in the paper
 - [blind/claude-code/2026-10-21-b](blind/claude-code/2026-10-21-b/CELL.md) (8/11; failed: `n_directed_dyads`, `n_obs_women_partisans`, `n_obs_men_partisans`)
@@ -111,9 +116,9 @@ _None._
 
 Pass rates at least 50 points apart (not unanimous):
 
-- independent: `n_directed_dyads` — pipeline 2/5, agent 3/3
-- independent: `n_obs_men_partisans` — pipeline 2/5, agent 3/3
-- independent: `n_obs_women_partisans` — pipeline 2/5, agent 3/3
+- independent: `n_directed_dyads` — pipeline 3/6, agent 3/3
+- independent: `n_obs_men_partisans` — pipeline 3/6, agent 3/3
+- independent: `n_obs_women_partisans` — pipeline 3/6, agent 3/3
 
 ## Cells
 
@@ -165,6 +170,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/pipeline-desktop-opus-postfix/20261103T070149Z/CELL.md`](independent/pipeline-desktop-opus-postfix/20261103T070149Z/CELL.md) — final 7/11, re-scored 7/11; first scored 4/11; executions 3; 2026-11-03T07:01:49Z; from `pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-postfix2 · 20261103T115702Z
+
+[`independent/pipeline-desktop-opus-postfix2/20261103T115702Z/CELL.md`](independent/pipeline-desktop-opus-postfix2/20261103T115702Z/CELL.md) — final 10/11, re-scored 10/11; first scored 7/11; executions 3; 2026-11-03T11:57:02Z; from `pipeline-oracle-desktop-opus-postfix2-23papers-indep-blind-2026-11-05.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus-run2 · 20261023T151837Z
 
 [`independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — final 8/11, re-scored 8/11; first scored 8/11; executions 2; 2026-10-23T15:18:37Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
@@ -200,6 +209,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · pipeline-desktop-opus-postfix · 20261103T062809Z
 
 [`blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md`](blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md) — final 8/11, re-scored 8/11; first scored 8/11; executions 1; 2026-11-03T06:28:09Z; from `pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-postfix2 · 20261103T114859Z
+
+[`blind/pipeline-desktop-opus-postfix2/20261103T114859Z/CELL.md`](blind/pipeline-desktop-opus-postfix2/20261103T114859Z/CELL.md) — final 8/11, re-scored 8/11; first scored 8/11; executions 2; 2026-11-03T11:48:59Z; from `pipeline-oracle-desktop-opus-postfix2-23papers-indep-blind-2026-11-05.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus-run2 · 20261023T150832Z
 

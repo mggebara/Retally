@@ -1,0 +1,32 @@
+SAMPLE:table2:loaded=203416
+SAMPLE:table2:interviewed_aug2011_apr2014=56950
+SAMPLE:table2:unique_household_year=56950
+SAMPLE:table2:panel_two_interviews=28802
+SAMPLE:table2:first_interview_pre_reform=28802
+NOTE: lp_pap missing before imputation = 9349
+NOTE: lp_agu missing before imputation = 776
+NOTE: lp_car missing before imputation = 9402
+DEVIATION: missing instrument prices (non-purchasers) imputed with region x year x quarter median
+NOTE: income variable used = IMPEXAC
+SAMPLE:table2:complete_regression_variables=28100
+DEVIATION: Table 2 sample is 28100, paper reports 20872
+DEVIATION: IV columns estimated by 2SLS (fixest) rather than LIML
+DEVIATION: expenditure models (cols 5-8) omit ln(price), which otherwise makes the T coefficient mechanically identical to cols 1-4; IV/FE-IV expenditure columns therefore coincide with OLS/FE
+SAMPLE:table2:estimation=28100
+SAMPLE:table2_fe:estimation=28100
+RESULT:reform_consumption_ols_col1=-0.120676
+RESULT:reform_consumption_ols_col1_se=0.014394
+RESULT:reform_consumption_iv_col2=-0.034433
+RESULT:reform_consumption_iv_col2_se=0.073255
+RESULT:reform_consumption_fe_col3=-0.127805
+RESULT:reform_consumption_fe_col3_se=0.014434
+RESULT:reform_consumption_fe_iv_col4=-0.135022
+RESULT:reform_consumption_fe_iv_col4_se=0.086434
+RESULT:reform_expenditure_ols_col5=-0.115117
+RESULT:reform_expenditure_iv_col6=-0.115117
+RESULT:reform_expenditure_fe_col7=-0.125850
+RESULT:reform_expenditure_fe_iv_col8=-0.125850
+RESULT:price_elasticity_consumption_ols_col1=-1.074164
+RESULT:price_elasticity_consumption_fe_col3=-1.024279
+RESULT:n_obs_table2=28100
+RESULT:n_households_table2=14210

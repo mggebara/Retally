@@ -1,0 +1,639 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "first_stage_casualties_table1_col1",
+      "ground_truth": {
+        "value": 0.12,
+        "standard_error": 0.02,
+        "unit": "standardized coefficient (standard deviations of the 1919 socialist vote share per standard deviation of casualties)",
+        "claim_type": "coefficient",
+        "location": "Table I, column (1), Share of foot soldier casualties",
+        "context": "Table I (\"The Impact of Foot Soldier Casualties in World War I on the Socialist Vote Share in 1919\"), column (1), the first stage. OLS across Italian municipalities of the socialist vote share in the 1919 election on the share of foot soldier casualties (the count of World War I foot soldier casualties from the municipality divided by the total male population over the age of six in 1911), with regiment fixed effects (dummies for any deaths from the municipality in a given regiment), province fixed effects and demographic controls (a quartic in log population and the share of the population below the age of six in 1911).  Standardized coefficients; standard errors clustered at the district (circondario) level.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": null,
+        "outcome": "not_attempted",
+        "notes": "Rows matching Table I col 1 (o_coeff 0.119, o_std_err 0.018): row 6195, add-controls variant, r = 0.116 (0.017); row 6162, municipality fixed-effects panel variant, r = 0.095 (0.022).\n"
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.16666666666666669,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "first_stage_casualties_table1_col1",
+        "claim_type": "coefficient",
+        "claimed": 0.12,
+        "reproduced": 0.067071,
+        "tolerance": 0.16666666666666669,
+        "rel_err": 0.44107499999999994,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "first_stage_casualties_table1_col1",
+        "reproduced": 0.067071,
+        "band_source": "se_band",
+        "band_relative": 0.16666666666666669,
+        "band_absolute": 0.02,
+        "abs_err": 0.05292899999999999,
+        "rel_err": 0.44107499999999994,
+        "margin": 2.6464499999999993,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=0.067071 vs claimed=0.12 (relative error 44.11%, tolerance 16.67%, the ±1·SE band with SE=0.02)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "first_stage_casualties_table1_col6",
+      "ground_truth": {
+        "value": 0.1,
+        "standard_error": 0.01,
+        "unit": "standardized coefficient",
+        "claim_type": "coefficient",
+        "location": "Table I, column (6), Share of foot soldier casualties",
+        "context": "Table I, column (6): the first stage with the full control set — column (1)'s regiment and province fixed effects and demographic controls plus geographic controls (log area, elevation of the main center, maximum elevation), the socialist vote share in 1913, military controls (veterans from the classes 1874-95 and 1896-1900, casualties among special assault troops and volunteers as a share of the male population above six in 1911, a dummy for army-supplying production plants, a dummy for any casualties in the highest-mortality battles), agricultural controls (share of day laborers, share of sharecroppers, a dummy for local agrarian associations) and urban controls (industry workers and industrial firms over male population in 1911, literacy rate in 1911, share of entrepreneurs and rentiers, share of the bourgeoisie). Standardized coefficients; district-clustered standard errors.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": null,
+        "outcome": "not_attempted",
+        "notes": "Table I col 6 (published 0.0979, SE 0.0138; col 5 is 0.0976, SE 0.0136, so the database's 0.098 rows do not separate cols 5 and 6): row 6202, add-controls variant, r = 0.097 (0.014); rows 6159 / 6161 (o_std_err 0.013), municipality fixed-effects variants, r = 0.054 (0.025) / 0.057 (0.024).\n"
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.09999999999999999,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "first_stage_casualties_table1_col6",
+        "claim_type": "coefficient",
+        "claimed": 0.1,
+        "reproduced": 0.075689,
+        "tolerance": 0.09999999999999999,
+        "rel_err": 0.24311,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "first_stage_casualties_table1_col6",
+        "reproduced": 0.075689,
+        "band_source": "se_band",
+        "band_relative": 0.09999999999999999,
+        "band_absolute": 0.01,
+        "abs_err": 0.024311,
+        "rel_err": 0.24311,
+        "margin": 2.4311,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=0.075689 vs claimed=0.1 (relative error 24.31%, tolerance 10.00%, the ±1·SE band with SE=0.01)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "first_stage_fstat_table1_col6",
+      "ground_truth": {
+        "value": 50.59,
+        "standard_error": null,
+        "unit": "F-statistic",
+        "claim_type": "other",
+        "location": "Table I, column (6), F-stat.",
+        "context": "The F-statistic for the excluded instrument (share of foot soldier casualties) reported at the bottom of Table I, column (6): the test of the casualty coefficient in the full-controls first stage, with district-clustered standard errors.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "first_stage_fstat_table1_col6",
+        "claim_type": "other",
+        "claimed": 50.59,
+        "reproduced": 37.055823,
+        "tolerance": 0.01,
+        "rel_err": 0.26752672464914024,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "first_stage_fstat_table1_col6",
+        "reproduced": 37.055823,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 0.5059,
+        "abs_err": 13.534177000000007,
+        "rel_err": 0.26752672464914024,
+        "margin": 26.752672464914028,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=37.055823 vs claimed=50.59 (relative error 26.75%, tolerance 1.00%)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "iv_violence_table2_panelA_col6",
+      "ground_truth": {
+        "value": 0.5,
+        "standard_error": 0.2,
+        "unit": "standardized coefficient (SDs of fascist violence per SD of the 1919 socialist vote share)",
+        "claim_type": "coefficient",
+        "location": "Table II, Panel A (2SLS), column (6), Socialist vote share in 1919",
+        "context": "Table II, Panel A, column (6).  2SLS of fascist violence in 1920-22 (episodes of fascist political violence per 1,000 inhabitants) on the socialist vote share in 1919, instrumented by the share of foot soldier casualties, with the full control set of Table I column (6) (regiment and province fixed effects; demographic, geographic, 1913 socialist share, military, agricultural and urban controls). Standardized coefficients; standard errors clustered at the district level.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": null,
+        "outcome": "not_attempted",
+        "notes": "Table II Panel A col 6 (o_coeff 0.500, o_std_err 0.204): row 6154, add-controls variant, r = 0.506 (0.206); row 6213, railroad-distance instrument, r = 0.706 (0.630).  (The database labels five Panel A change-instrument rows, o_coeff 0.379-0.533, \"table 1\".)\n"
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.4,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "iv_violence_table2_panelA_col6",
+        "claim_type": "coefficient",
+        "claimed": 0.5,
+        "reproduced": 0.290438,
+        "tolerance": 0.4,
+        "rel_err": 0.41912400000000005,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "iv_violence_table2_panelA_col6",
+        "reproduced": 0.290438,
+        "band_source": "se_band",
+        "band_relative": 0.4,
+        "band_absolute": 0.2,
+        "abs_err": 0.20956200000000003,
+        "rel_err": 0.41912400000000005,
+        "margin": 1.0478100000000001,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=0.290438 vs claimed=0.5 (relative error 41.91%, tolerance 40.00%, the ±1·SE band with SE=0.2)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "iv_branches_table2_panelC_col6",
+      "ground_truth": {
+        "value": 0.5,
+        "standard_error": 0.2,
+        "unit": "standardized coefficient",
+        "claim_type": "coefficient",
+        "location": "Table II, Panel C (2SLS), column (6), Socialist vote share in 1919",
+        "context": "Table II, Panel C, column (6).  2SLS of the presence of local branches of the Fascist Party in fall 1921 (from prefect reports) on the socialist vote share in 1919, instrumented by the share of foot soldier casualties, full control set as in Table I column (6). Standardized coefficients; district-clustered standard errors.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": null,
+        "outcome": "not_attempted",
+        "notes": "Table II Panel C col 6 (o_coeff 0.498, o_std_err 0.203): row 6192, add-controls variant, r = 0.477 (0.204); row 6158, railroad-distance instrument, r = 0.795 (0.782).\n"
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.4,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "iv_branches_table2_panelC_col6",
+        "claim_type": "coefficient",
+        "claimed": 0.5,
+        "reproduced": -0.070305,
+        "tolerance": 0.4,
+        "rel_err": 1.1406100000000001,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "iv_branches_table2_panelC_col6",
+        "reproduced": -0.070305,
+        "band_source": "se_band",
+        "band_relative": 0.4,
+        "band_absolute": 0.2,
+        "abs_err": 0.5703050000000001,
+        "rel_err": 1.1406100000000001,
+        "margin": 2.851525,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=-0.070305 vs claimed=0.5 (relative error 114.06%, tolerance 40.00%, the ±1·SE band with SE=0.2)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "iv_fascist_vote1921_table3_panelA_col6",
+      "ground_truth": {
+        "value": 0.34,
+        "standard_error": 0.18,
+        "unit": "standardized coefficient",
+        "claim_type": "coefficient",
+        "location": "Table III, Panel A (2SLS), column (6), Socialist vote share in 1919",
+        "context": "Table III, Panel A, column (6).  2SLS of the fascist vote share in the 1921 election (fascist lists plus the fascist candidates' share of the National Bloc lists, imputed from district, province or electoral-district candidate data where municipality data are missing) on the socialist vote share in 1919, instrumented by the share of foot soldier casualties, full control set as in Table I column (6).  The 1921 sample is smaller than the 1919/1924 sample. Standardized coefficients; district-clustered standard errors.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": null,
+        "outcome": "not_attempted",
+        "notes": "Table III Panel A col 6 (o_coeff 0.337, o_std_err 0.184): row 6168, add-controls variant, r = 0.334 (0.182); row 6169, railroad-distance instrument, r = 0.692 (0.688).\n"
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.5294117647058822,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "iv_fascist_vote1921_table3_panelA_col6",
+        "claim_type": "coefficient",
+        "claimed": 0.34,
+        "reproduced": 0.327852,
+        "tolerance": 0.5294117647058822,
+        "rel_err": 0.03572941176470602,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "iv_fascist_vote1921_table3_panelA_col6",
+        "reproduced": 0.327852,
+        "band_source": "se_band",
+        "band_relative": 0.5294117647058822,
+        "band_absolute": 0.17999999999999997,
+        "abs_err": 0.012148000000000048,
+        "rel_err": 0.03572941176470602,
+        "margin": 0.06748888888888917,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "iv_fascist_vote1924_table3_panelC_col1",
+      "ground_truth": {
+        "value": 0.4,
+        "standard_error": 0.17,
+        "unit": "standardized coefficient",
+        "claim_type": "coefficient",
+        "location": "Table III, Panel C (2SLS), column (1), Socialist vote share in 1919",
+        "context": "Table III, Panel C, column (1).  2SLS of the fascist vote share in the 1924 election on the socialist vote share in 1919, instrumented by the share of foot soldier casualties, with only regiment and province fixed effects and demographic controls (the most parsimonious specification).  Standardized coefficients; district-clustered standard errors.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": null,
+        "outcome": "not_attempted",
+        "notes": "Table III Panel C col 1 (o_coeff 0.396, o_std_err 0.171): row 6157, add-controls variant, r = 0.414 (0.172); row 6212, railroad-distance instrument, r = -0.534 (0.208).\n"
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.425,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "iv_fascist_vote1924_table3_panelC_col1",
+        "claim_type": "coefficient",
+        "claimed": 0.4,
+        "reproduced": 0.757689,
+        "tolerance": 0.425,
+        "rel_err": 0.8942224999999998,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "iv_fascist_vote1924_table3_panelC_col1",
+        "reproduced": 0.757689,
+        "band_source": "se_band",
+        "band_relative": 0.425,
+        "band_absolute": 0.17,
+        "abs_err": 0.3576889999999999,
+        "rel_err": 0.8942224999999998,
+        "margin": 2.10405294117647,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=0.757689 vs claimed=0.4 (relative error 89.42%, tolerance 42.50%, the ±1·SE band with SE=0.17)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "iv_fascist_vote1924_table3_panelC_col6",
+      "ground_truth": {
+        "value": 0.51,
+        "standard_error": 0.17,
+        "unit": "standardized coefficient",
+        "claim_type": "coefficient",
+        "location": "Table III, Panel C (2SLS), column (6), Socialist vote share in 1919",
+        "context": "Table III, Panel C, column (6).  2SLS of the fascist vote share in the 1924 election on the socialist vote share in 1919, instrumented by the share of foot soldier casualties, with the full control set of Table I column (6).  Standardized coefficients; district-clustered standard errors.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": null,
+        "outcome": "not_attempted",
+        "notes": "Table III Panel C col 6 (o_coeff 0.513, o_std_err 0.166): row 6164, add-controls variant, r = 0.524 (0.168); row 6171, railroad-distance instrument, r = -0.817 (0.652).\n"
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.33333333333333337,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "iv_fascist_vote1924_table3_panelC_col6",
+        "claim_type": "coefficient",
+        "claimed": 0.51,
+        "reproduced": 0.380804,
+        "tolerance": 0.33333333333333337,
+        "rel_err": 0.2533254901960785,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "iv_fascist_vote1924_table3_panelC_col6",
+        "reproduced": 0.380804,
+        "band_source": "se_band",
+        "band_relative": 0.33333333333333337,
+        "band_absolute": 0.17,
+        "abs_err": 0.12919600000000003,
+        "rel_err": 0.2533254901960785,
+        "margin": 0.7599764705882355,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_main_sample",
+      "ground_truth": {
+        "value": 5775.0,
+        "standard_error": null,
+        "unit": "observations (municipalities)",
+        "claim_type": "count",
+        "location": "Table I, Observations (all columns); also Table II and Table III Panels C-D",
+        "context": "Number of municipalities in the estimation sample of the first stage (Table I), the fascist violence and branch regressions (Table II) and the 1924 fascist vote share regressions (Table III, Panels C and D).\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_main_sample",
+        "claim_type": "count",
+        "claimed": 5775.0,
+        "reproduced": 5772.0,
+        "tolerance": 0.05,
+        "rel_err": 0.0005194805194805195,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_main_sample",
+        "reproduced": 5772.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 288.75,
+        "abs_err": 3.0,
+        "rel_err": 0.0005194805194805195,
+        "margin": 0.01038961038961039,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_clusters_main_sample",
+      "ground_truth": {
+        "value": 181.0,
+        "standard_error": null,
+        "unit": "clusters (districts)",
+        "claim_type": "count",
+        "location": "Table I, Number of clusters (all columns); also Table II and Table III Panels C-D",
+        "context": "Number of district (circondario) clusters in the main estimation sample (Table I, Table II, Table III Panels C and D).\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_clusters_main_sample",
+        "claim_type": "count",
+        "claimed": 181.0,
+        "reproduced": 178.0,
+        "tolerance": 0.05,
+        "rel_err": 0.016574585635359115,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_clusters_main_sample",
+        "reproduced": 178.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 9.05,
+        "abs_err": 3.0,
+        "rel_err": 0.016574585635359115,
+        "margin": 0.3314917127071823,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_fascist_vote1921",
+      "ground_truth": {
+        "value": 5358.0,
+        "standard_error": null,
+        "unit": "observations (municipalities)",
+        "claim_type": "count",
+        "location": "Table III, Panels A-B, Observations",
+        "context": "Number of municipalities in the 1921 fascist vote share regressions (Table III, Panels A and B, all columns).\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_fascist_vote1921",
+        "claim_type": "count",
+        "claimed": 5358.0,
+        "reproduced": 5354.0,
+        "tolerance": 0.05,
+        "rel_err": 0.0007465472191116088,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_fascist_vote1921",
+        "reproduced": 5354.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 267.90000000000003,
+        "abs_err": 4.0,
+        "rel_err": 0.0007465472191116088,
+        "margin": 0.014930944382232175,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_clusters_fascist_vote1921",
+      "ground_truth": {
+        "value": 175.0,
+        "standard_error": null,
+        "unit": "clusters (districts)",
+        "claim_type": "count",
+        "location": "Table III, Panels A-B, Number of clusters",
+        "context": "Number of district clusters in the 1921 fascist vote share regressions (Table III, Panels A and B).\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_clusters_fascist_vote1921",
+        "claim_type": "count",
+        "claimed": 175.0,
+        "reproduced": 171.0,
+        "tolerance": 0.05,
+        "rel_err": 0.022857142857142857,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_clusters_fascist_vote1921",
+        "reproduced": 171.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 8.75,
+        "abs_err": 4.0,
+        "rel_err": 0.022857142857142857,
+        "margin": 0.45714285714285713,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 12,
+    "row_passed": 6,
+    "recomputed_passed": 6,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "acemoglu-2022-war-socialism-fascism",
+    "mode": "blind",
+    "reproducer": "pipeline",
+    "label": "pipeline-desktop-opus-postfix2",
+    "model": "desktop-opus-postfix2",
+    "oracle": true,
+    "run": "20261103T114859Z",
+    "results_file": "pipeline-oracle-desktop-opus-postfix2-23papers-indep-blind-2026-11-05.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/acemoglu-2022-war-socialism-fascism/blind/pipeline/20261103T114859Z",
+    "run_dir": null,
+    "date": "2026-11-03T11:48:59Z",
+    "data_access": "public",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 12,
+    "final": 6,
+    "first_scored": 6,
+    "first_scored_index": 1,
+    "first_attempt": 0,
+    "n_refinements": 1,
+    "n_error_refinements": 1,
+    "n_claim_refinements": 0,
+    "n_executions": 2,
+    "n_files_stripped": 21,
+    "agrees_with_i4r": null,
+    "deviations_manifest": [],
+    "deviations_stdout": [],
+    "notes": null,
+    "files_read_outside_mount": null,
+    "paper_text": null,
+    "complete": true,
+    "missing": []
+  }
+}
