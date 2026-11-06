@@ -1,0 +1,149 @@
+{
+ "generated": "2026-11-06",
+ "source": "I4R First Meta Database (benchmark/corpus/i4r_first_meta_database.csv.gz)",
+ "verdict_mapping": {
+  "reproducible": "perfect_reproduction=Yes (or, where both fields are blank, best_describe_compreprod = 'Analysis and cleaning code produce the same output as presented in the paper', as for Dancygier on 2026-11-02)",
+  "minor discrepancies": "perfect_reproduction=No and computational_reproduction=1",
+  "not reproducible": "computational_reproduction=0"
+ },
+ "user_agent": "Retally-curation/0.1 (+https://github.com/mggebara/Retally)",
+ "widening_rules": {
+  "1": "package size up to 1 GB (note files over 500 MB)",
+  "2": "archives .zip/.tar.gz/.tgz/.tar only",
+  "3": "no I4R DP needed if >=8 paired o_coeff_dbl/r_coeff_dbl rows",
+  "4": "open text via author homepages, university repositories, WP series (tables spot-checked)",
+  "5": "any meta-database journal 2021-2024",
+  "6": "Python originals acceptable with plain-file data",
+  "7": "a report qualifies with >=6 paired rows if the paper itself prints >=8 headline claims to pin (new 2026-11-06)"
+ },
+ "text_check": "Full PDF fetched; every paired o_coeff_dbl (and o_std_err_dbl) searched in the extracted text at the DB's precision (with/without leading zero, unicode minus normalised), then at the paper's printed precision (DB value rounded to the printed places); contexts read for every hit",
+ "papers": [
+  {
+   "rank": 1,
+   "id": "molina-garzon-2022-decentralization-cooperation",
+   "i4r_team": 17,
+   "tag": "T17",
+   "db_row_index": "855-862",
+   "title": "Decentralization Can Increase Cooperation among Public Officials",
+   "authors": [
+    "Adriana Molina-Garzón",
+    "Tara Grillos",
+    "Alan Zarychta",
+    "Krister P. Andersson"
+   ],
+   "journal": "American Journal of Political Science",
+   "year": 2022,
+   "doi": "10.1111/ajps.12606",
+   "widening_rules": [
+    4,
+    7
+   ],
+   "paper_pdf_url": "https://par.nsf.gov/servlets/purl/10228422",
+   "paper_pdf_check": "200 application/pdf, %PDF-1.4 magic, 16 pp., 658,678 bytes; NSF Public Access Repository record 10228422 (accepted-manuscript slot). The file is the Wiley typeset Early View article (AJPS, doi 10.1111/ajps.12606) printed from the Wiley e-reader by co-author Andersson on 2021-05-05 (page footer 'Printed by [Krister Andersson - University Of Colorado Libraries ...] at [05/05/2021]'), pages numbered 1-16 rather than the issue's 554-569. OpenAlex lists the article as closed; Wiley refuses scripts; the record 10226517 named by web search now returns 'Not Found' and its purl 500.",
+   "text_match": "7/7 paired rows match the published tables at the printed 2-decimal precision (exact 3-decimal search: 1/7, by chance). Table 2 col (1) Decentralized 0.83 (0.23) vs DB 0.826 (0.226); Communication 2.54 (0.21) vs 2.541 (0.214); col (2) Decentralized 0.41 (0.30) vs 0.409 (0.302); Communication 2.02 (0.32) vs 2.023 (0.317); Decentralized x Communication 0.76 (0.38) vs 0.762 (0.380); Table 3 Full Model All Ties 0.24 (0.14) vs 0.240 (0.144); Full Model Strong Ties 1.07 (0.31) vs 1.074 (0.314). Re-estimating from the package data (statsmodels) gives the DB's 3-decimal values.",
+   "package_source_url": "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/ZLHYSZ",
+   "package_api_check": {
+    "status": 200,
+    "size_mb": 0.6,
+    "bytes": 603690,
+    "files": 7,
+    "restricted": 0,
+    "versions": [
+     "1.0 2021-01-08",
+     "1.1 2022-11-22"
+    ],
+    "versions_identical_files": true,
+    "file_fetch": "206 on /api/access/datafile/4203124 (and ?format=original on 4063001)",
+    "largest_file": "publicgoodgame_dataAug27.tab 0.36 MB (Stata 14 original 0.33 MB)",
+    "file_types": {
+     ".dta (ingested)": 2,
+     ".csv (ingested)": 1,
+     ".R": 1,
+     ".do": 1,
+     ".pdf": 2
+    },
+    "note": "A second, earlier deposit by the authors, doi:10.7910/DVN/KDJD27 (2020-09-10, CC0, 'Forthcoming' in the title), holds the August 2020 versions of the same files (the two .dta have the same md5; the network .csv has the same size but a different md5; the R script, do-file, README and codebook differ). The AJPS verification deposit cited in the article is ZLHYSZ."
+   },
+   "software": "Stata (Table 2) + R (Tables 1, 3)",
+   "data_formats": [
+    ".dta",
+    ".csv"
+   ],
+   "i4r_verdict": "reproducible (computational_reproduction and perfect_reproduction blank; best_describe_compreprod = 'Analysis and cleaning code produce the same output as presented in the paper'; run time under 1 hour; team used R)",
+   "i4r_report_ref": "none in DP series",
+   "i4r_rows": {
+    "total": 8,
+    "r_coeff": 7,
+    "distinct_original_values": 7,
+    "main_tables": "Table 2 cols (1)-(2), Table 3 cols (2) and (4)",
+    "row_kind": "all 7 are robustness variants (Table 2: controls dropped, larger sample; Table 3: OLS on a proportion instead of Poisson)"
+   },
+   "headline_claims_printed": "13 candidates in the main text: Table 2 Decentralized / Communication (cols 1-2), interaction (col 2), N; Table 3 Decentralized in all four columns, the two Ns",
+   "method_summary": "Lab-in-the-field public goods game with Honduran health officials across decentralized vs centrally administered municipalities (quasi-experiment, propensity-score matching weights); weighted OLS (Table 2) and weighted Poisson with offset (Table 3)",
+   "reasons": [
+    "Smallest package of any pass (0.6 MB): two .dta, one .csv, one R script, one do-file",
+    "Published (Early View) typeset text open via NSF PAR; every paired row matches at printed precision",
+    "Prints 13 headline numbers in two main tables, enough to pin without appendix rows"
+   ],
+   "risks": [
+    "Printed at 2 decimals; pin as printed",
+    "No I4R per-row reproductions: the 7 rows are robustness variants, so findings carry the blanket verdict",
+    "The game dataset ships fitted values and CI bounds of the main models (outcome_ols_*, highconf_*, lowconf_*, standarderror_ols): a data-format leak surface the strip rule does not touch",
+    "Table 2 note says robust SEs; the do-file clusters by individual (220 participants)",
+    "The NSF PAR file is the Early View print, not the issue PDF (pages 1-16 vs 554-569)",
+    "Two Dataverse versions with identical files; pin 1.0"
+   ]
+  }
+ ],
+ "failed": [
+  {
+   "tag": "T19",
+   "paper": "Allcott, Gentzkow & Song, Digital Addiction",
+   "journal": "AER 2022",
+   "package": "code on openICPSR only (E163822); data also on Harvard Dataverse (GN636M), no code",
+   "failing_requirement": "Package (code). The AEA package is openICPSR 163822 (code) plus 167841 (data), both behind a login; openicpsr.org answered 403 (Cloudflare challenge). Harvard Dataverse doi:10.7910/DVN/GN636M ('Data for: Digital Addiction', v1.0 2023-03-20, v2.0 2024-01-12; 4 files, 30.4 MB: final_data_sample.dta, final_data_sample_updated.dta, codebook.xlsx, README.md) is a data-only deposit; its README says the 'updated' file revises some FITSBY usage values. The other Dataverse hits (doi:10.3886/E163822*, E167841*) are 'ICPSR Harvested Dataverse' metadata records (API 401 to guests). Zenodo (title, DOI 10.1257/aer.20210867, author+title) and GitHub (title, DOI, author keywords): nothing. Not R7-checked further."
+  },
+  {
+   "tag": "T35",
+   "paper": "Williams, Historical Lynchings and the Contemporary Voting Behavior of Blacks",
+   "journal": "AEJ: Applied 2022",
+   "package": "openICPSR only (E136741)",
+   "failing_requirement": "Package (login and terms). Harvard Dataverse title and DOI (10.1257/app.20190549) searches return only 'ICPSR Harvested Dataverse' records of openICPSR 136741 (API 401 to guests; openicpsr.org 403, Cloudflare challenge). Zenodo (title, DOI, author) and GitHub (title, DOI, keywords): no original; GitHub 'historical lynchings' hits are unrelated lynching-data projects. I4R DP 32 exists; verdict reproducible."
+  },
+  {
+   "tag": "T57",
+   "paper": "Laffitte & Toubal, Multinationals' Sales and Profit Shifting in Tax Havens",
+   "journal": "AEJ: Economic Policy 2022",
+   "package": "openICPSR only (E148301)",
+   "failing_requirement": "Package (login and terms). Harvard Dataverse title and DOI (10.1257/pol.20200203) searches return only 'ICPSR Harvested Dataverse' records of openICPSR 148301 (API 401; openicpsr.org 403). Zenodo (title, DOI, both author names) and GitHub (title, DOI, author names): nothing."
+  }
+ ],
+ "excluded_by_r7": [
+  {
+   "tag": "T51",
+   "paper": "Bauer, Lakdawala & Mueller, Market-Based Monetary Policy Uncertainty",
+   "journal": "EJ 2022",
+   "paired_rows": 3
+  },
+  {
+   "tag": "T61",
+   "paper": "Donno, Morrison & Savun, Not All Elections Are Created Equal: Election Quality and Civil Conflict",
+   "journal": "JOP 2022",
+   "paired_rows": 3
+  },
+  {
+   "tag": "T69",
+   "paper": "Rogowski, Gerring, Maguire & Cojocaru, Public Infrastructure and Economic Development: Evidence from Postal Systems",
+   "journal": "AJPS 2022",
+   "paired_rows": 1
+  }
+ ],
+ "not_rechecked": [
+  "T64 Bosquet: .7z archive (rule 2)",
+  "T43 Grosjean: package has no data",
+  "Reports with 0 paired rows",
+  "Everything checked on 2026-11-02 (pool of >=8 paired rows): unchanged"
+ ],
+ "total_checked": 4,
+ "pool": "4 uncatalogued reports with 6 or 7 paired rows (R7); 3 more with 1-3 paired rows listed as excluded"
+}
