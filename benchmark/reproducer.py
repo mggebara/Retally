@@ -540,6 +540,11 @@ def pipeline_artifacts(report: Any, *, prompts: list[str] | None = None) -> dict
     * ``samples.txt`` / ``attempt-<n>/samples.txt`` — the run's
       ``SAMPLE:<label>=<rows>`` lines (ROADMAP 3.8), one per line, when
       it printed any.
+    * ``execution.json`` / ``attempt-<n>/execution.json`` — how the run
+      ended (:func:`_execution_metadata`): exit code, whether the sandbox
+      killed it at the wall-clock limit, elapsed seconds, the refinement
+      kind that followed it (attempts), and how many ``RESULT:`` values and
+      ``SAMPLE:`` lines it printed.
     """
     from retally.codegen.executor import parse_sample_lines
 
@@ -556,6 +561,7 @@ def pipeline_artifacts(report: Any, *, prompts: list[str] | None = None) -> dict
         artifacts["stderr.txt"] = str(getattr(exec_result, "stderr", "") or "")
         if samples := samples_text(artifacts["stdout.txt"]):
             artifacts["samples.txt"] = samples
+        artifacts["execution.json"] = _execution_metadata(exec_result, final=True)
         for n, attempt in enumerate(getattr(exec_result, "attempts", None) or [], start=1):
             prefix = f"attempt-{n}/"
             artifacts[prefix + script] = str(getattr(attempt, "code", "") or "")
@@ -566,9 +572,53 @@ def pipeline_artifacts(report: Any, *, prompts: list[str] | None = None) -> dict
             feedback = str(getattr(attempt, "feedback", "") or "")
             if feedback:
                 artifacts[prefix + "feedback.txt"] = feedback
+            artifacts[prefix + "execution.json"] = _execution_metadata(attempt, final=False)
     for n, prompt in enumerate(prompts or [], start=1):
         artifacts[f"prompt-{n}.txt"] = prompt
     return artifacts
+
+
+_ABSENT = object()
+
+
+def _execution_metadata(run: Any, *, final: bool) -> str:
+    """``execution.json`` for one execution (an ``ExecutionResult`` or a ``RefinementAttempt``).
+
+    ``exit_code``, ``n_outputs`` (``RESULT:`` values parsed: the final run's
+    ``outputs``, an attempt's stdout re-parsed) and ``n_sample_lines``
+    always; ``timed_out`` and ``elapsed_seconds`` for the final run, and for
+    an attempt only when the attempt carries them (``RefinementAttempt``
+    does not today, so the keys are omitted rather than guessed); ``kind``
+    (the refinement that followed) for attempts.  ``getattr`` throughout so
+    fakes and older reports still serialise.  Sorted keys, trailing newline.
+    """
+    import warnings
+
+    from retally.codegen.executor import parse_outputs, parse_sample_lines
+
+    stdout = str(getattr(run, "stdout", "") or "")
+    outputs = getattr(run, "outputs", None) if final else None
+    if not isinstance(outputs, dict):
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            outputs = parse_outputs(stdout)
+    exit_code = getattr(run, "exit_code", -1)
+    meta: dict[str, Any] = {
+        "exit_code": exit_code if isinstance(exit_code, int) else -1,
+        "n_outputs": len(outputs),
+        "n_sample_lines": len(parse_sample_lines(stdout)),
+    }
+    timed_out = getattr(run, "timed_out", False if final else _ABSENT)
+    if timed_out is not _ABSENT:
+        meta["timed_out"] = bool(timed_out)
+    elapsed = getattr(run, "elapsed_seconds", None if final else _ABSENT)
+    if elapsed is not _ABSENT:
+        meta["elapsed_seconds"] = (
+            float(elapsed) if isinstance(elapsed, (int, float)) and not isinstance(elapsed, bool) else None
+        )
+    if not final:
+        meta["kind"] = str(getattr(run, "kind", "") or "")
+    return json.dumps(meta, sort_keys=True) + "\n"
 
 
 def reproduction_from_report(report: Any) -> Reproduction:

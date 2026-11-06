@@ -577,10 +577,18 @@ produced them.  Every executed row's artifacts are written to
 benchmark/results/artifacts/<entry_id>/<mode>/<reproducer>/<run_id>/
   script.R | script.py        # the final generated script
   stdout.txt  stderr.txt      # its sandbox output
+  execution.json              # exit_code, timed_out, elapsed_seconds, n_outputs, n_sample_lines
   attempt-<n>/                # each superseded refinement attempt, oldest first:
     script.*  stdout.txt  stderr.txt  feedback.txt   # feedback = what was sent back to the model
+    execution.json            # exit_code, kind, n_outputs, n_sample_lines
   prompt-<n>.txt              # every code-generation/refinement prompt, in order
 ```
+
+`execution.json` (sorted keys) records how each execution ended; an
+attempt carries `timed_out` / `elapsed_seconds` only when the pipeline's
+`RefinementAttempt` does (it does not today).  Artifacts written before
+2026-11-06 have no `execution.json`; their evidence `CELL.md` says
+"Execution metadata not recorded".
 
 `run_id` is the run's UTC start time (`20261020T183012Z`), so cache-off
 variance runs (`RETALLY_LLM_CACHE=0`) never overwrite each other.  The

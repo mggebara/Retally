@@ -342,3 +342,46 @@ def test_built_tree_has_no_absolute_source_paths(tmp_path: Path) -> None:
             text = path.read_text(encoding="utf-8")
             assert root not in text, path
             assert str(tmp_path) not in text, path
+
+
+def test_cell_md_renders_execution_metadata_when_recorded(tmp_path: Path) -> None:
+    root, catalog, results = _setup(tmp_path)
+    art_p = root / "benchmark/results/artifacts" / ENTRY / "independent/pipeline/20260101T000000Z"
+    (art_p / "attempt-1" / "execution.json").write_text(
+        json.dumps({"exit_code": 137, "kind": "timeout-repair", "n_outputs": 0, "n_sample_lines": 0}) + "\n",
+        encoding="utf-8",
+    )
+    (art_p / "execution.json").write_text(
+        json.dumps(
+            {
+                "exit_code": -9,
+                "timed_out": True,
+                "elapsed_seconds": 300.4,
+                "n_outputs": 2,
+                "n_sample_lines": 0,
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    out = tmp_path / "evidence"
+    evidence.build([results], out_root=out, source_root=root, catalog_dir=catalog)
+    pipe = out / ENTRY / "independent/pipeline-oracle-x/20260101T000000Z"
+    cell_md = (pipe / "CELL.md").read_text(encoding="utf-8")
+    assert cell_md.index("## What it produced") < cell_md.index("## Executions")
+    assert "| Execution | Kind | Exit code | Timed out | Elapsed (s) | Outputs parsed |" in cell_md
+    assert "| attempt-1 | timeout-repair | 137 | — | — | 0 |" in cell_md
+    assert "| final | final | -9 | yes | 300.4 | 2 |" in cell_md
+    assert cell_md.index("| attempt-1 |") < cell_md.index("| final |")
+    assert (pipe / "output/execution.json").is_file()
+    assert "not recorded" not in cell_md
+
+
+def test_cell_md_says_execution_metadata_not_recorded_for_old_cells(tmp_path: Path) -> None:
+    out, _ = _build(tmp_path)
+    pipe = (out / ENTRY / "independent/pipeline-oracle-x/20260101T000000Z/CELL.md").read_text(
+        encoding="utf-8"
+    )
+    pr = evidence.EXECUTION_METADATA_PR
+    assert f"## Executions\n\nExecution metadata not recorded (cell built before {pr})." in pipe
+    assert "| Execution | Kind |" not in pipe

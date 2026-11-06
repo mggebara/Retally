@@ -1023,6 +1023,8 @@ def render_cell_md(cell: Cell, scoring: dict[str, Any], files: CellFiles) -> str
     lines += _file_list(files.prompts) or ["_Nothing on disk._"]
     lines += ["", "## What it produced", ""]
     lines += _file_list(files.outputs) or ["_Nothing on disk._"]
+    lines += ["", "## Executions", ""]
+    lines += _executions_md(cell)
     if files.refused:
         lines += ["", "## Not copied", ""] + [f"- {r}" for r in files.refused]
     if files.notes:
@@ -1030,6 +1032,55 @@ def render_cell_md(cell: Cell, scoring: dict[str, Any], files: CellFiles) -> str
     if files.missing:
         lines += ["", "## Missing", ""] + [f"- {m}" for m in files.missing]
     return "\n".join(lines) + "\n"
+
+
+EXECUTION_METADATA_PR = "#133"
+"""The PR that started writing ``execution.json``; cells built from older artifacts lack it."""
+
+
+def _executions(cell: Cell) -> list[tuple[str, dict[str, Any]]]:
+    """``(label, execution.json)`` per execution in the cell's artifacts: attempt 1..n, then final.
+
+    Only executions whose ``execution.json`` is on disk; empty for cells
+    whose artifacts predate it (or agent cells, whose harness never wrote it).
+    """
+    art = cell.art if cell.art is not None and cell.art.is_dir() else None
+    if art is None:
+        return []
+    found: list[tuple[str, dict[str, Any]]] = []
+    attempts = sorted(
+        (p for p in art.iterdir() if p.is_dir() and _ATTEMPT_DIR.match(p.name)),
+        key=lambda p: _natural(p.name),
+    )
+    for d in attempts:
+        meta = _read_json(d / "execution.json")
+        if meta is not None:
+            found.append((d.name, meta))
+    meta = _read_json(art / "execution.json")
+    if meta is not None:
+        found.append(("final", meta))
+    return found
+
+
+def _executions_md(cell: Cell) -> list[str]:
+    runs = _executions(cell)
+    if not runs:
+        if cell.is_agent:
+            return ["Execution metadata not recorded (the agent harness does not write `execution.json`)."]
+        return [f"Execution metadata not recorded (cell built before {EXECUTION_METADATA_PR})."]
+    lines = [
+        "| Execution | Kind | Exit code | Timed out | Elapsed (s) | Outputs parsed |",
+        "|---|---|---|---|---|---|",
+    ]
+    for label, meta in runs:
+        kind = "final" if label == "final" else (meta.get("kind") or "—")
+        elapsed = meta.get("elapsed_seconds")
+        lines.append(
+            f"| {label} | {_md(kind)} | {_fmt(meta.get('exit_code'))} | {_fmt(meta.get('timed_out'))} "
+            f"| {'—' if not isinstance(elapsed, (int, float)) else f'{elapsed:.1f}'} "
+            f"| {_fmt(meta.get('n_outputs'))} |"
+        )
+    return lines
 
 
 def _file_list(items: list[Copied]) -> list[str]:
