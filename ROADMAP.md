@@ -2060,6 +2060,34 @@ Without that login the pool of uncatalogued I4R reports with at least 8
 paired rows is effectively exhausted.  The catalog now has 28 entries,
 26 in scope, 23 of them evaluation papers (`split: holdout`).
 
+**Funnel, pass 4.**  Pass 4 (`benchmark/corpus/candidates-2026-11-06.md`)
+checks the reports that pass 3 skipped because they had fewer than 8
+paired rows.  It adds one rule, R7: a report qualifies with at least 6
+paired rows if the paper itself prints at least 8 headline claims to
+pin.  The R7 pool is four reports, and all four were checked.
+
+- **Molina Garzón et al.** (T17, AJPS 2022, 7 paired rows) passed and
+  was curated as `molina-garzon-2022-decentralization-cooperation`.
+  - Package: Dataverse ZLHYSZ v1.0, 0.6 MB, Stata + R.
+  - Text: the Wiley Early View print on NSF PAR.  All 7 rows match the
+    printed 2-decimal values.
+  - Claims: 12, from Tables 2–3.
+  - Verdict: reproducible, the blanket survey answer; all 7 rows are
+    robustness variants and there is no DP.
+- **Three AEA papers fail on the package.**
+  - Allcott et al. (T19, AER): code on openICPSR only.  Its analysis
+    data are on Harvard Dataverse (GN636M) without code.
+  - Williams (T35, AEJ: Applied, DP 32) and Laffitte & Toubal (T57,
+    AEJ: Policy): openICPSR only.  Their Dataverse hits are harvested
+    openICPSR records.
+- **T51, T61 and T69** (3, 3 and 1 paired rows) fail R7 and are listed
+  only.
+
+With this pass every uncatalogued report with at least 6 paired rows
+has been checked.  What remains is gated by the openICPSR login or by
+closed text.  The catalog now has 29 entries, 27 in scope, 24 of them
+evaluation papers.
+
 **The six entries** (caveats in each YAML header):
 
 - **Hollyer** (AJPS 2022): 13 claims (ten Table 1 predicted-value

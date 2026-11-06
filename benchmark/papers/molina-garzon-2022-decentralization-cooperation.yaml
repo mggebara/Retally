@@ -1,0 +1,373 @@
+# Original paper: Molina-Garzón, A., Grillos, T., Zarychta, A., &
+#   Andersson, K. P. (2022). "Decentralization Can Increase Cooperation
+#   among Public Officials." American Journal of Political Science,
+#   66(3), 554-569.  doi:10.1111/ajps.12606 (first published online
+#   2021-05-04, Wiley Early View; print issue July 2022).
+#
+# Reproduction report: I4R First Meta Database replication team 17
+#   (database rows 855-862, entered 2023-10-06).  No I4R discussion paper
+#   was published for this report (IDEAS / web search 2026-11-06).
+#   Verdict: reproducible — the team's survey answer is "Analysis and
+#   cleaning code produce the same output as presented in the paper"
+#   (best_describe_compreprod), the run took under an hour, and the team
+#   worked in R.  The database's computational_reproduction /
+#   perfect_reproduction fields are blank for this report (as for
+#   Dancygier 2022, team 34).  All 7 rows with both an original and a
+#   replicator coefficient are ROBUSTNESS variants, not plain
+#   reproductions: five against Table 2 ("removing controls ... and thus
+#   increases number of observations") and two against Table 3
+#   ("changing estimator to OLS from poisson and dependent variable to a
+#   proportion").
+#
+# Why this paper:
+#   1. The smallest package in the catalog (0.6 MB): two Stata datasets,
+#      one CSV, one do-file (Table 2) and one R script (Tables 1 and 3).
+#   2. Two estimators in one short paper: a weighted linear regression on
+#      a lab-in-the-field public goods game panel (Table 2) and a weighted
+#      Poisson regression with an exposure offset and municipality-
+#      clustered SEs (Table 3).
+#   3. First candidate admitted under corpus rule R7 (at least 6 paired
+#      I4R rows, at least 8 printed headline claims; candidates-2026-11-06).
+#
+# What original_claims pins: Table 2's Decentralized and Communication
+#   coefficients in both columns, the column (2) interaction and the
+#   Table 2 N; Table 3's Decentralized coefficient in all four columns and
+#   the two Table 3 Ns.  12 claims, all from the two main-text regression
+#   tables, every coefficient with its SE, values exactly as printed (2
+#   decimals).
+
+id: molina-garzon-2022-decentralization-cooperation
+i4r_report_url: https://github.com/I4Replication/I4R-First-Meta-Paper
+# Target language for regeneration (the original is Stata 15 for Table 2
+# and R 3.6.1 for Tables 1 and 3).
+language: r
+outcome_label: reproducible
+# Pipeline tuning is frozen; this is an evaluation paper.
+split: holdout
+# Contamination bookkeeping.  publication_date is Wiley's online-first
+# date (Crossref published-online 2021-05-04; the open PDF is that Early
+# View version, printed 2021-05-05).  An earlier version titled "Can
+# Decentralization Increase Social Capital among Bureaucrats?" was on the
+# APPAM 2018 programme (web search 2026-11-06; the confex page did not
+# resolve from this environment, so whether a paper with numbers was
+# posted there is unverified).  package_release_date is the FIRST public
+# deposit of the replication files: Harvard Dataverse doi:10.7910/DVN/KDJD27
+# (released 2020-09-10, "Forthcoming" in its title), which carries the
+# same two .dta files byte for byte.  The pinned AJPS deposit ZLHYSZ was
+# released 2021-01-08 (Dataverse API releaseTime).
+publication_date: "2021-05-04"
+package_release_date: "2020-09-10"
+
+paper:
+  # NSF Public Access Repository record 10228422 (purl below); checked
+  # 2026-11-06: 200 application/pdf, %PDF-1.4 magic, 16 pp., 658,678
+  # bytes.  It is the Wiley typeset Early View article printed from the
+  # Wiley e-reader by co-author Andersson on 2021-05-05 (each page
+  # footer), numbered 1-16 rather than the issue's 554-569.  OpenAlex
+  # lists the article as closed and Wiley answers 403 to scripts.
+  source: https://par.nsf.gov/servlets/purl/10228422
+  title: "Decentralization Can Increase Cooperation among Public Officials"
+  authors:
+    - Adriana Molina-Garzón
+    - Tara Grillos
+    - Alan Zarychta
+    - Krister P. Andersson
+
+dataset:
+  source: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/ZLHYSZ&version=1.0
+  access_notes: >
+    Harvard Dataverse (doi:10.7910/DVN/ZLHYSZ), the AJPS verification
+    deposit cited in the article, VERSION 1.0 (2021-01-08), pinned with
+    &version=1.0.  Version 1.1 (2022-11-22) has the same 7 files with
+    identical sizes and md5 checksums (Dataverse API, compared
+    2026-11-06), so it is a metadata-only bump; team 17's replication is
+    undated (rows entered 2023-10-06), and either version serves the same
+    bytes.  No licence; the terms ask users to contact the authors (the
+    local cache is not redistributed).  7 files, none restricted, 0.6 MB
+    as stored.  Ingested and fetched as originals via ?format=original:
+    publicgoodgame_dataAug27.dta (Stata 14, 0.33 MB; individual-by-round
+    public goods game panel, the Table 2 data), healthperception_Aug2020.dta
+    (6 kB; municipality-level, appendix only) and
+    clanalysis_anondata_vNov16.csv (24 kB; one row per participant with
+    the cross-level tie counts, the Table 1 and Table 3 data).  Not
+    ingested: clanalysis_replication_vNov16.R (Tables 1 and 3, appendix
+    network tables), "Molina-Garzon et al.2020_Nov16.do" (Table 2,
+    Figure 3, appendix game tables), README_MolinaGarzon et al.2020_Nov16.pdf
+    (compute environment, file-to-table map, no numbers) and
+    Codebook_Nov16.pdf (variable definitions, no estimates).  No archives,
+    logs or table output.  The script-free copy (independent / blind)
+    withholds the two scripts by suffix; the README and codebook PDFs
+    stay (no page with regression-table markers), checked 2026-11-06.
+    An earlier deposit by the authors, doi:10.7910/DVN/KDJD27
+    (2020-09-10, CC0), holds August 2020 versions of the same files (both
+    .dta byte-identical; the network CSV the same size with a different
+    md5; scripts, README and codebook differ); it is not the one the
+    article cites.
+
+code_repo:
+  url: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/ZLHYSZ&version=1.0
+
+original_claims:
+  # ---- Table 2: decentralization and public goods game contributions ----
+  - description: decentralized_table2_col1
+    value: 0.83
+    claim_type: coefficient
+    standard_error: 0.23
+    unit: lempiras contributed per round (0-10 scale)
+    location: "Table 2, column (1), Decentralized"
+    context: >
+      Table 2 ("Decentralization and Cooperation among Public Servants"),
+      column (1).  Linear regression (OLS) of a participant's contribution
+      to the group fund in each round of a ten-round public goods game
+      (0-10 lempiras) on an indicator for working in a decentralized
+      (rather than centrally administered) Honduran municipality.
+      Controls: an indicator for the communication rounds (the last five
+      rounds, when players could talk before deciding), player-type
+      dummies (health center, administrative intermediary, regional
+      office; the mayor's office representative is the reference), the
+      round number, the group's total contribution in the previous round,
+      the number of players in the session, the number of other
+      participants the player knew, female, age, education, years in the
+      health sector and general trust.  Observations are participant-
+      rounds of the health officials who played the game in the 31
+      sampled municipalities, weighted by the municipal-level propensity-
+      score matching weights (full sample).  The paper reports robust
+      standard errors in parentheses.
+  - description: communication_table2_col1
+    value: 2.54
+    claim_type: coefficient
+    standard_error: 0.21
+    unit: lempiras contributed per round (0-10 scale)
+    location: "Table 2, column (1), Communication"
+    context: >
+      Table 2, column (1): the coefficient on the communication-round
+      indicator in the same weighted OLS of per-round contributions as
+      decentralized_table2_col1.
+  - description: decentralized_table2_col2
+    value: 0.41
+    claim_type: coefficient
+    standard_error: 0.30
+    unit: lempiras contributed per round (0-10 scale)
+    location: "Table 2, column (2), Decentralized"
+    context: >
+      Table 2, column (2): the column (1) weighted OLS of per-round
+      contributions with an added interaction between the decentralized
+      indicator and the communication-round indicator; this is the
+      Decentralized main effect (the difference in rounds without
+      communication).  Same controls, sample, weights and standard
+      errors as column (1).
+  - description: communication_table2_col2
+    value: 2.02
+    claim_type: coefficient
+    standard_error: 0.32
+    unit: lempiras contributed per round (0-10 scale)
+    location: "Table 2, column (2), Communication"
+    context: >
+      Table 2, column (2): the communication-round main effect (for
+      centrally administered municipalities) in the model with the
+      Decentralized x Communication interaction.
+  - description: decentralized_x_communication_table2_col2
+    value: 0.76
+    claim_type: coefficient
+    standard_error: 0.38
+    unit: lempiras contributed per round (0-10 scale)
+    location: "Table 2, column (2), Decentralized X Communication"
+    context: >
+      Table 2, column (2): the interaction between the decentralized
+      indicator and the communication-round indicator, the paper's
+      headline estimate (officials in decentralized municipalities
+      contribute more once they can communicate; plotted in Figure 3).
+  - description: n_obs_table2
+    value: 1980
+    claim_type: count
+    unit: participant-round observations
+    location: "Table 2, Observations"
+    context: >
+      Number of participant-round observations in both Table 2 models
+      (the same sample in columns 1 and 2): rounds with a recorded
+      contribution, a previous-round group contribution and the
+      individual controls.
+
+  # ---- Table 3: decentralization and cross-level ties (Poisson) ----
+  - description: decentralized_table3_allties_base
+    value: 0.22
+    claim_type: coefficient
+    standard_error: 0.12
+    unit: log of the expected count of realized cross-level ties
+    location: "Table 3, All Ties (Prop. Known), Base Model, Decentralized"
+    context: >
+      Table 3 ("How Decentralization Influences Cross-Level Network
+      Capital"), All Ties, Base Model.  Weighted Poisson regression, one
+      observation per workshop participant, of the number of cross-level
+      ties the participant reported having before the workshop (other
+      participants at a different level of the health service hierarchy
+      whom they knew, as a colleague or otherwise), with an offset for
+      the log of the total possible cross-level ties among the
+      participants present, on the decentralized indicator alone.
+      Weighted by the municipal-level propensity-score matching weights;
+      standard errors clustered by municipality.
+  - description: decentralized_table3_allties_full
+    value: 0.24
+    claim_type: coefficient
+    standard_error: 0.14
+    unit: log of the expected count of realized cross-level ties
+    location: "Table 3, All Ties (Prop. Known), Full Model, Decentralized"
+    context: >
+      Table 3, All Ties, Full Model: the Base Model plus female,
+      education, age, years in the health sector, generalized trust and
+      player-type dummies (health center, administrative intermediary,
+      regional office; the mayor's office representative is the
+      reference).  Same offset, weights and municipality-clustered
+      standard errors; participants with complete controls.
+  - description: decentralized_table3_strongties_base
+    value: 0.61
+    claim_type: coefficient
+    standard_error: 0.28
+    unit: log of the expected count of realized strong cross-level ties
+    location: "Table 3, Strong Ties (Prop. Friends), Base Model, Decentralized"
+    context: >
+      Table 3, Strong Ties, Base Model: the weighted Poisson regression
+      of the number of cross-level ties the participant characterized as
+      friendships, with an offset for the log of the total possible
+      cross-level friendship ties, on the decentralized indicator alone.
+      Municipality-clustered standard errors.
+  - description: decentralized_table3_strongties_full
+    value: 1.07
+    claim_type: coefficient
+    standard_error: 0.31
+    unit: log of the expected count of realized strong cross-level ties
+    location: "Table 3, Strong Ties (Prop. Friends), Full Model, Decentralized"
+    context: >
+      Table 3, Strong Ties, Full Model: the Strong Ties Base Model plus
+      the Full Model controls (female, education, age, years in the
+      health sector, generalized trust, player-type dummies).  The paper
+      translates it into Figure 4's predicted proportions of strong
+      cross-level ties for a typical public servant.  Municipality-
+      clustered standard errors.
+  - description: n_obs_table3_base
+    value: 231
+    claim_type: count
+    unit: workshop participants
+    location: "Table 3, N (Base Models)"
+    context: >
+      Number of participants in the two Table 3 Base Models (the same
+      in both).
+  - description: n_obs_table3_full
+    value: 226
+    claim_type: count
+    unit: workshop participants
+    location: "Table 3, N (Full Models)"
+    context: >
+      Number of participants in the two Table 3 Full Models (complete
+      cases on the controls).
+
+# The meta-database's 7 paired rows for this paper (team 17) are all
+# robustness variants, so none is a reproduction of a pinned number.  As
+# in dancygier-2022, each finding records the paper's own value under
+# the team's blanket verdict ("Analysis and cleaning code produce the same
+# output as presented in the paper") and quotes the robustness value in
+# the note.  The other five claims have no row and carry no finding; they
+# are scored against the paper.
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: 0.83
+    outcome: matches
+    notes: Blanket I4R verdict (team 17); the row (o 0.826 (0.226)) drops the individual controls, 0.517 (0.217).
+  - claim_id: 1
+    reproduced_value: 2.54
+    outcome: matches
+    notes: Blanket I4R verdict; the row (o 2.541 (0.214)) drops the individual controls, 2.578 (0.213).
+  - claim_id: 2
+    reproduced_value: 0.41
+    outcome: matches
+    notes: Blanket I4R verdict; the row (o 0.409 (0.302)) drops the individual controls, 0.169 (0.282).
+  - claim_id: 3
+    reproduced_value: 2.02
+    outcome: matches
+    notes: Blanket I4R verdict; the row (o 2.023 (0.317)) drops the individual controls, 2.152 (0.320).
+  - claim_id: 4
+    reproduced_value: 0.76
+    outcome: matches
+    notes: Blanket I4R verdict; the row (o 0.762 (0.380)) drops the individual controls, 0.637 (0.376).
+  - claim_id: 7
+    reproduced_value: 0.24
+    outcome: matches
+    notes: Blanket I4R verdict; the row (o 0.240 (0.144)) refits as OLS on the proportion, 0.130 (0.080).
+  - claim_id: 9
+    reproduced_value: 1.07
+    outcome: matches
+    notes: Blanket I4R verdict; the row (o 1.074 (0.314)) refits as OLS on the proportion, 0.146 (0.043).
+
+notes: >
+  Headline findings: in the communication rounds of a public goods game,
+  health officials in decentralized Honduran municipalities contribute
+  more than those in centrally administered ones (Table 2 col 2
+  interaction 0.76 (0.38); col 1 Decentralized 0.83 (0.23); N 1,980
+  participant-rounds), and decentralization is associated with more
+  cross-level ties, especially friendships (Table 3 Strong Ties Full
+  Model 1.07 (0.31); N 231 base, 226 full).
+
+  Curation pass (2026-11-06).  Pinned 12 claims: Table 2 Decentralized
+  and Communication in both columns, the column 2 interaction and N;
+  Table 3 Decentralized in all four columns with SEs, and the two Ns.
+  Values exactly as printed in the Early View PDF (2 decimals).
+  Cross-check against the meta-database: the seven paired rows'
+  o_coeff / o_std_err round to the printed values (0.826 (0.226), 2.541
+  (0.214), 0.409 (0.302), 2.023 (0.317), 0.762 (0.380), 0.240 (0.144),
+  1.074 (0.314)).  Left out: Table 1 (weighted descriptive statistics),
+  the Table 2 controls, R-squared and AIC, the Table 3 controls,
+  constants and BIC, the text's raw communication-round means (7.9 vs
+  6.7 lempiras), Figure 3-4 predictions and every SI table.
+
+  Paper vs package.  Table 2's note says "robust standard errors"; the
+  do-file runs reg with [pweight = weights_games_full_scaled],
+  vce(cluster publicid), i.e. SEs clustered by participant (220
+  clusters in the estimation sample).  Heteroskedasticity-robust SEs
+  without clustering would differ; the contexts repeat the paper's
+  wording.  Table 3's printed "0.22 = †" in the All Ties Base column is
+  a typesetting artefact (the coefficient is 0.22, significant at 10 %).
+
+  Package-only facts (never in contexts).  Table 2 (do-file):
+  publicgoodgame_dataAug27.dta; contribution on decentralized i.p_type
+  communication round lag_groupcontribution num_players knownpeople
+  Q2_female Q1_Edad Q2_Educacion Q3_YrsSalud Q5_Trust1Base, column 2
+  with i.decentralized##i.communication; pweights
+  weights_games_full_scaled; clustered by publicid.  p_type is numeric
+  1-4 with the mayor's office (A / M) as base.  The file has 2,257 rows
+  (some contribution codes negative, dropped by the R script's Table 1
+  code; the regression's listwise deletion and the lag drop round 1).
+  Table 3 (R): clanalysis_anondata_vNov16.csv; glm(family = poisson,
+  weights = weights_games_full_scaled) of net_crosslevel_propnumknown /
+  net_crosslevel_propnumfriends with offset(log(net_crosslevel_propdenom*)),
+  full models adding Mujer, Q2_Educacion, Q1_Edad, Q3_YrsSalud,
+  gen_trust, Participant_C, Participant_G, Participant_R; SEs from the
+  script's clse.f (CR1 clustered by publicid_muni), passed to texreg.
+  LEAK SURFACE: the game .dta also ships the authors' fitted values and
+  CI bounds from the Table 2 models (outcome_ols_1, standarderror_ols,
+  highconf_1, lowconf_1, outcome_ols_2, highconf_ols_2, lowconf_ols_2;
+  documented in the codebook).  They are data columns, which the strip
+  rule never touches; regressing outcome_ols_1 on the regressors would
+  recover the column 1 coefficients but not the SEs or the column 2
+  interaction.  Recorded, not fixed.
+
+  What was read.  The Early View PDF (all 16 pp.); the package README
+  and codebook; the do-file in full; the R script's Table 1 and Table 3
+  sections; the Dataverse API metadata for both versions and for
+  KDJD27; the meta-database's 8 team-17 rows.
+
+  Independent cross-check (2026-11-06; not the package code: pandas /
+  statsmodels on the downloaded files).  Table 2 col 1: Decentralized
+  0.826 (0.226), Communication 2.541 (0.214), N 1,980, R2 0.263; col 2:
+  Decentralized 0.409 (0.302), Communication 2.023 (0.317), interaction
+  0.762 (0.380), R2 0.266 (WLS with participant-clustered SEs).  Table
+  3: All Ties base 0.218 (0.124), full 0.240 (0.144); Strong Ties base
+  0.607 (0.279), full 1.074 (0.314); N 231 / 226.  All round to the
+  printed values.
+
+  What could not be verified.  The authors' Stata and R code was not
+  run.  Whether the issue PDF (pp. 554-569) differs from the Early View
+  print in any number was not checked (the issue PDF is not open); the
+  seven DB rows, entered from the published article, agree with it.
+
+  Original analysis in Stata 15 (Table 2) and R 3.6.1 (Tables 1 and 3);
+  language: r is the reproduction target.
