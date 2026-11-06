@@ -1,0 +1,313 @@
+suppressPackageStartupMessages({
+  library(haven)
+  library(dplyr)
+  library(fixest)
+})
+set.seed(42)
+
+base <- '<repo>/.cache/datasets/altmann_2022_cognitive_spillovers.script-free'
+lab_path <- file.path(base, 'ReplicationPackage/EmpiricalAnalysis/original_data/formatted_data_replication.dta')
+mt_path  <- file.path(base, 'ReplicationPackage/EmpiricalAnalysis/original_data/formatted_data_long_mturk.dta')
+
+find_col <- function(df, patterns, exclude = character(0)) {
+  nms <- names(df)
+  for (p in patterns) {
+    hit <- nms[grepl(p, nms, ignore.case = TRUE)]
+    hit <- setdiff(hit, exclude)
+    if (length(hit) > 0) return(hit[1])
+  }
+  NA_character_
+}
+
+get_label <- function(x) {
+  l <- attr(x, 'label')
+  if (is.null(l)) '' else as.character(l)
+}
+
+to_num <- function(x) as.numeric(zap_labels(x))
+
+emit <- function(name, val) {
+  if (length(val) == 1 && is.finite(val)) cat(sprintf('RESULT:%s=%.6f\n', name, val))
+  else cat(sprintf('RESULT:%s=NA\n', name))
+}
+
+safe_coef <- function(m, v) {
+  if (is.null(m)) return(NA_real_)
+  cf <- coef(m)
+  if (v %in% names(cf)) unname(cf[v]) else NA_real_
+}
+
+# ---------------------------------------------------------------- lab data
+lab <- read_dta(lab_path)
+n_loaded <- nrow(lab)
+
+# subject identifier
+id_col <- find_col(lab, c('^subject_id$', '^id_subject$', '^participant_id$', '^participant_code$',
+                          '^participant', '^subject$', '^subj', '^id$', '_id$', 'code'))
+if (!is.na(id_col)) {
+  lab$sid <- as.character(lab[[id_col]])
+} else {
+  cat('DEVIATION: no subject id column found; subjects reconstructed from row order (round resets)\n')
+  lab$sid <- as.character(cumsum(to_num(lab$round) == min(to_num(lab$round), na.rm = TRUE)))
+}
+
+# cognitive load (scarce vs ample) treatment
+cat(sprintf('INFO: all lab columns: %s\n', paste(names(lab), collapse = ', ')))
+excl_load <- c('load_correct', 'load_correct_mean', 'ability_load', 'sid', 'round')
+load_col <- find_col(lab, c('^Treatment_Load', 'Treatment.*Load', 'high_load', 'scarc', 'Load_Treatment',
+                            'cognitive_load', 'load_high', '^load$', 'Treatment_Resources', 'resource',
+                            'Treatment_Cogn', 'cogn', 'Treatment_Scar', 'digit', 'Treatment_Memory'),
+                     exclude = c(excl_load, names(lab)[grepl('Incentive|correct|mean', names(lab), ignore.case = TRUE)]))
+if (is.na(load_col)) {
+  # search variable labels
+  for (nm in names(lab)) {
+    if (nm %in% excl_load) next
+    if (grepl('scarce|high load|cognitive load|resources|7-digit|seven', get_label(lab[[nm]]), ignore.case = TRUE)) {
+      load_col <- nm; break
+    }
+  }
+}
+
+scarce_flag <- rep(TRUE, nrow(lab))
+if (!is.na(load_col)) {
+  cat(sprintf('INFO: cognitive-load treatment column: %s\n', load_col))
+  x <- lab[[load_col]]
+  labs <- attr(x, 'labels')
+  xn <- suppressWarnings(to_num(x))
+  vals <- sort(unique(xn[!is.na(xn)]))
+  scarce_val <- NA
+  if (!is.null(labs)) {
+    hit <- labs[grepl('high|scarce|7', names(labs), ignore.case = TRUE)]
+    if (length(hit) > 0) scarce_val <- unname(hit[1])
+  }
+  if (is.na(scarce_val)) {
+    if (is.character(x) && all(is.na(xn))) {
+      sv <- unique(x[grepl('high|scarce|7', x, ignore.case = TRUE)])
+      scarce_flag <- x %in% sv
+    } else {
+      scarce_val <- max(vals)
+      if (grepl('ample|low', load_col, ignore.case = TRUE)) scarce_val <- min(vals)
+    }
+  }
+  if (!is.na(scarce_val)) scarce_flag <- !is.na(xn) & xn == scarce_val
+  n_s <- length(unique(lab$sid[scarce_flag]))
+  n_a <- length(unique(lab$sid[!scarce_flag]))
+  if (n_s != 608 && n_a == 608) scarce_flag <- !scarce_flag
+}
+if (is.na(load_col) || length(unique(lab$sid[scarce_flag])) == length(unique(lab$sid))) {
+  # fallback: subject-level treatment indicator among Treatment_* style columns
+  cand <- names(lab)[grepl('Treatment|load|scarc|cogn|resourc|digit|condition|group|treat', names(lab), ignore.case = TRUE)]
+  cand <- setdiff(cand, c(excl_load, 'Treatment_intervention', 'Treatment_Environment'))
+  cand <- cand[!grepl('correct|mean|payoff|ability', cand, ignore.case = TRUE)]
+  found <- FALSE
+  for (nm in cand) {
+    xn <- suppressWarnings(to_num(lab[[nm]]))
+    if (all(is.na(xn))) xn <- as.numeric(factor(as.character(lab[[nm]])))
+    u <- sort(unique(xn[!is.na(xn)]))
+    if (length(u) < 2 || length(u) > 10) next
+    for (v in u) {
+      fl <- !is.na(xn) & xn == v
+      if (length(unique(lab$sid[fl])) == 608 && sum(fl) == 12160) {
+        scarce_flag <- fl; found <- TRUE
+        cat(sprintf('DEVIATION: scarce-cognitive-resources sample identified as %s == %s (subject-level indicator giving 608 subjects)\n', nm, v))
+        break
+      }
+    }
+    if (found) break
+  }
+  if (!found) cat('DEVIATION: no cognitive-load treatment column found; scarce restriction not applied\n')
+}
+
+# environment
+env_raw <- lab$Treatment_Environment
+env_labs <- attr(env_raw, 'labels')
+env_num <- to_num(env_raw)
+interv <- to_num(lab$Treatment_intervention)
+env_name <- rep(NA_character_, nrow(lab))
+if (!is.null(env_labs)) {
+  nm <- names(env_labs)[match(env_num, env_labs)]
+  env_name <- nm
+} else if (is.character(env_raw)) {
+  env_name <- env_raw
+}
+is_directed <- grepl('direct|attention', env_name, ignore.case = TRUE) & !grepl('endog|baseline', env_name, ignore.case = TRUE)
+is_forced   <- grepl('forced|active|choice', env_name, ignore.case = TRUE) & !grepl('baseline', env_name, ignore.case = TRUE)
+if (all(is.na(env_name)) || sum(is_directed) == 0 || sum(is_forced) == 0) {
+  # fallback: non-baseline environments ordered by code
+  nb_vals <- sort(unique(env_num[!is.na(interv) & interv == 1]))
+  is_directed <- !is.na(env_num) & env_num == nb_vals[1]
+  is_forced   <- !is.na(env_num) & env_num == nb_vals[length(nb_vals)]
+}
+lab$directed <- as.numeric(is_directed)
+lab$forced   <- as.numeric(is_forced)
+lab$intervention <- interv
+
+# outcomes
+dq_col <- find_col(lab, c('^summation_correct$', '^task_correct$', 'decision_correct', 'choice_correct'))
+lab$choice_correct <- to_num(lab[[dq_col]])
+lab$bg_correct <- to_num(lab$load_correct)
+lab$payoff_share_v <- to_num(lab$payoff_share)
+
+# ---- default adherence: locate or construct
+cat(sprintf('INFO: columns mentioning default/passive/stick: %s\n',
+            paste(names(lab)[grepl('default|passive|stick|adher|keep|switch|change', names(lab), ignore.case = TRUE)],
+                  collapse = ', ')))
+usable01 <- function(v) {
+  v <- suppressWarnings(to_num(v))
+  u <- unique(v[!is.na(v)])
+  length(u) == 2 && all(u %in% c(0, 1))
+}
+lab$default_adh <- NA_real_
+pc_col <- NA_character_
+cand_pats <- c('^passive_choice$', 'passive', 'default_chosen', 'chose_default', 'choose_default',
+               'default_choice$', 'default_adher', 'adher', 'stick', 'default_kept', 'keep_default',
+               'kept_default', 'accept_default', 'default_accept', 'followed_default', 'follow_default',
+               'default_taken', 'took_default', 'in_default', 'is_default', '^default$')
+excl_def <- c('default_correct_choice')
+for (p in cand_pats) {
+  hits <- setdiff(names(lab)[grepl(p, names(lab), ignore.case = TRUE)], excl_def)
+  hits <- hits[vapply(hits, function(h) usable01(lab[[h]]), logical(1))]
+  if (length(hits) > 0) { pc_col <- hits[1]; break }
+}
+if (is.na(pc_col)) {
+  for (nm in setdiff(names(lab), excl_def)) {
+    if (grepl('default', get_label(lab[[nm]]), ignore.case = TRUE) &&
+        grepl('chose|choose|chosen|adher|kept|keep|stick|accept|follow|passive|stay', get_label(lab[[nm]]), ignore.case = TRUE) &&
+        usable01(lab[[nm]])) { pc_col <- nm; break }
+  }
+}
+if (!is.na(pc_col)) {
+  cat(sprintf('INFO: default adherence taken from column %s\n', pc_col))
+  lab$default_adh <- to_num(lab[[pc_col]])
+} else {
+  # construct: chosen option equals default option
+  ch_col <- find_col(lab, c('^choice$', '^decision$', '^chosen$', '^chosen_option$', '^choice_option$',
+                            '^option_chosen$', '^answer$', '^summation_choice$', '^task_choice$', '_choice$'),
+                     exclude = c('default_correct_choice', 'passive_choice'))
+  df_col <- find_col(lab, c('^default$', '^default_option$', '^default_value$', '^option_default$',
+                            '^default_answer$', 'default_opt', '^defaultoption$', '^def_option$'),
+                     exclude = c('default_correct_choice'))
+  constructed <- FALSE
+  if (!is.na(ch_col) && !is.na(df_col)) {
+    a <- suppressWarnings(to_num(lab[[ch_col]])); b <- suppressWarnings(to_num(lab[[df_col]]))
+    if (all(is.na(a)) || all(is.na(b))) { a <- as.character(lab[[ch_col]]); b <- as.character(lab[[df_col]]) }
+    v <- ifelse(is.na(a) | is.na(b), NA_real_, as.numeric(a == b))
+    if (sum(!is.na(v)) > 0 && length(unique(na.omit(v))) > 1) {
+      lab$default_adh <- v; constructed <- TRUE
+      cat(sprintf('DEVIATION: default adherence constructed as %s == %s\n', ch_col, df_col))
+    }
+  }
+  if (!constructed && 'default_correct_choice' %in% names(lab)) {
+    # binary choice: choosing the default means choosing correctly iff the default is the correct option
+    dc <- to_num(lab$default_correct_choice)
+    cc <- lab$choice_correct
+    v <- ifelse(is.na(dc) | is.na(cc), NA_real_, as.numeric(cc == dc))
+    if (sum(!is.na(v)) > 0 && length(unique(na.omit(v))) > 1) {
+      lab$default_adh <- v; constructed <- TRUE
+      cat('DEVIATION: default adherence constructed as (choice correct == default correct), assuming binary choice\n')
+    }
+  }
+  if (!constructed) cat('DEVIATION: no default-adherence column found and none could be constructed\n')
+}
+
+# sample construction
+cat(sprintf('SAMPLE:lab:loaded=%d\n', n_loaded))
+lab_s <- lab[scarce_flag, ]
+cat(sprintf('SAMPLE:lab:scarce_cognitive_resources=%d\n', nrow(lab_s)))
+lab_s <- lab_s[!is.na(lab_s$intervention), ]
+cat(sprintf('SAMPLE:lab:three_decision_environments=%d\n', nrow(lab_s)))
+cat(sprintf('SAMPLE:lab:subjects=%d\n', length(unique(lab_s$sid))))
+if (nrow(lab_s) != 12160) cat(sprintf('DEVIATION: lab sample has %d rows vs 12160 stated\n', nrow(lab_s)))
+
+# controls
+ctrl_specs <- list(
+  age      = list(p = c('^q_age$', 'age'), fac = FALSE),
+  gender   = list(p = c('^q_gender$', 'gender', 'female', 'male'), fac = TRUE),
+  field    = list(p = c('^q_subject$', 'field', 'study'), fac = TRUE),
+  gpa      = list(p = c('^q_abitur_grade$', 'abitur', 'gpa'), fac = FALSE),
+  math     = list(p = c('^q_math_grade$', 'math_grade'), fac = FALSE),
+  ab_load  = list(p = c('^ability_load$'), fac = FALSE),
+  ab_task  = list(p = c('^ability_task$'), fac = FALSE),
+  multi    = list(p = c('multitask', 'multi_task', 'q_multi'), fac = FALSE),
+  wave     = list(p = c('wave', 'experiment_round', 'sample_wave'), fac = TRUE)
+)
+ctrl_terms <- character(0)
+for (k in names(ctrl_specs)) {
+  cc <- find_col(lab_s, ctrl_specs[[k]]$p, exclude = c('q_math_grade_cat'))
+  if (is.na(cc)) { cat(sprintf('DEVIATION: control %s not found\n', k)); next }
+  nv <- paste0('c_', k)
+  if (ctrl_specs[[k]]$fac) {
+    lab_s[[nv]] <- factor(as.character(to_num(lab_s[[cc]])))
+  } else {
+    lab_s[[nv]] <- to_num(lab_s[[cc]])
+  }
+  if (length(unique(na.omit(lab_s[[nv]]))) > 1) ctrl_terms <- c(ctrl_terms, nv)
+}
+inc_cols <- names(lab_s)[grepl('^Treatment_Incentives', names(lab_s))]
+for (ic in inc_cols) {
+  nv <- paste0('c_inc_', ic)
+  lab_s[[nv]] <- to_num(lab_s[[ic]])
+  if (length(unique(na.omit(lab_s[[nv]]))) > 1) ctrl_terms <- c(ctrl_terms, nv)
+}
+ctrl_rhs <- if (length(ctrl_terms) > 0) paste(ctrl_terms, collapse = ' + ') else '1'
+
+fit <- function(y, rhs, data) {
+  f <- as.formula(paste(y, '~', rhs))
+  tryCatch(feols(f, data = data, cluster = ~sid), error = function(e) { message(e$message); NULL })
+}
+
+m1 <- fit('choice_correct', 'intervention', lab_s)
+m2 <- fit('choice_correct', paste('intervention +', ctrl_rhs), lab_s)
+m5 <- fit('default_adh', 'intervention', lab_s)
+m6 <- fit('default_adh', paste('intervention +', ctrl_rhs), lab_s)
+m7 <- fit('default_adh', 'directed + forced', lab_s)
+b1 <- fit('bg_correct', 'intervention', lab_s)
+b2 <- fit('bg_correct', paste('intervention +', ctrl_rhs), lab_s)
+p1 <- fit('payoff_share_v', 'intervention', lab_s)
+if (!is.null(m7)) cat(sprintf('INFO: m7 terms: %s\n', paste(names(coef(m7)), collapse = ', ')))
+
+nob <- function(m) if (is.null(m)) NA_integer_ else as.integer(nobs(m))
+cat(sprintf('SAMPLE:t2_choice_quality_col1:loaded=%d\n', n_loaded))
+cat(sprintf('SAMPLE:t2_choice_quality_col1:estimation=%d\n', nob(m1)))
+cat(sprintf('SAMPLE:t2_choice_quality_col2:estimation=%d\n', nob(m2)))
+cat(sprintf('SAMPLE:t2_default_col5:estimation=%d\n', nob(m5)))
+cat(sprintf('SAMPLE:t2_default_col6:estimation=%d\n', nob(m6)))
+cat(sprintf('SAMPLE:t2_default_col7:estimation=%d\n', nob(m7)))
+cat(sprintf('SAMPLE:t3_lab_col1:estimation=%d\n', nob(b1)))
+cat(sprintf('SAMPLE:t3_lab_col2:estimation=%d\n', nob(b2)))
+cat(sprintf('SAMPLE:t4_payoff_col1:estimation=%d\n', nob(p1)))
+
+# ---------------------------------------------------------------- online data
+mt <- read_dta(mt_path)
+cat(sprintf('SAMPLE:online:loaded=%d\n', nrow(mt)))
+mt$memory_v <- to_num(mt$memory)
+if (max(mt$memory_v, na.rm = TRUE) > 1) {
+  cat('DEVIATION: memory points rescaled to fraction of pairs by dividing by the maximum observed points\n')
+  mt$memory_v <- mt$memory_v / max(mt$memory_v, na.rm = TRUE)
+}
+mt$intervention <- to_num(mt$Treatment_intervention)
+mt$age_v <- to_num(mt$age)
+mt$gender_v <- factor(as.character(to_num(mt$gender)))
+mt$wh <- to_num(mt$window_height1)
+mt$ww <- to_num(mt$window_width1)
+mt$sid <- as.character(mt$subject_id)
+o5 <- tryCatch(feols(memory_v ~ intervention, data = mt, cluster = ~sid), error = function(e) NULL)
+o6 <- tryCatch(feols(memory_v ~ intervention + age_v + gender_v + wh + ww, data = mt, cluster = ~sid),
+               error = function(e) NULL)
+cat(sprintf('SAMPLE:online_col5:estimation=%d\n', nob(o5)))
+cat(sprintf('SAMPLE:online_col6:estimation=%d\n', nob(o6)))
+
+# ---------------------------------------------------------------- results
+emit('choice_quality_intervention_t2_col1', safe_coef(m1, 'intervention'))
+emit('choice_quality_intervention_t2_col2', safe_coef(m2, 'intervention'))
+emit('default_adherence_intervention_t2_col5', safe_coef(m5, 'intervention'))
+emit('default_adherence_intervention_t2_col6', safe_coef(m6, 'intervention'))
+emit('default_adherence_directed_attention_t2_col7', safe_coef(m7, 'directed'))
+emit('default_adherence_forced_choice_t2_col7', safe_coef(m7, 'forced'))
+emit('background_quality_intervention_lab_t3_col1', safe_coef(b1, 'intervention'))
+emit('background_quality_intervention_lab_t3_col2', safe_coef(b2, 'intervention'))
+emit('memory_intervention_online_t3_col5', safe_coef(o5, 'intervention'))
+emit('payoff_share_intervention_t4_col1', safe_coef(p1, 'intervention'))
+emit('n_obs_lab_tables_2_to_4', as.numeric(nob(m1)))
+emit('n_subjects_lab_tables_2_to_4', as.numeric(length(unique(lab_s$sid[!is.na(lab_s$choice_correct)]))))
+emit('memory_intervention_online_t3_col6', safe_coef(o6, 'intervention'))

@@ -42,6 +42,7 @@
 | `claude-code` | [13/13](seeded/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[13/13](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [7/13](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[9/13](blind/claude-code/2026-10-22-b/CELL.md) (2026-10-22-b)<br>[9/13](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[9/13](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
 | `pipeline-desktop-opus` | [8/13](seeded/pipeline-desktop-opus/20261023T064839Z/CELL.md) (20261023T064839Z) | [13/13](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) (20261023T064839Z) | [12/13](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) |
 | `pipeline-desktop-opus-postfix` | — | [13/13](independent/pipeline-desktop-opus-postfix/20261103T070149Z/CELL.md) (20261103T070149Z) | [7/13](blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md) (20261103T062809Z) |
+| `pipeline-desktop-opus-postfix2` | — | [13/13](independent/pipeline-desktop-opus-postfix2/20261103T115702Z/CELL.md) (20261103T115702Z) | [6/13](blind/pipeline-desktop-opus-postfix2/20261103T111134Z/CELL.md) (20261103T111134Z) |
 | `pipeline-desktop-opus-run2` | [12/13](seeded/pipeline-desktop-opus-run2/20261023T153400Z/CELL.md) (20261023T153400Z) | [13/13](independent/pipeline-desktop-opus-run2/20261023T152513Z/CELL.md) (20261023T152513Z) | [7/13](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
 | `pipeline-desktop-opus-run3` | [11/13](seeded/pipeline-desktop-opus-run3/20261103T054754Z/CELL.md) (20261103T054754Z) | [12/13](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) (20261103T052626Z) | [7/13](blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) |
 
@@ -57,6 +58,7 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 |---|---|---|---|---|---|---|
 | [blind/claude-code/2026-10-22-b](blind/claude-code/2026-10-22-b/CELL.md) | `female_sponsor_pct_opposite_dem_ipw_sponsor` | -1.75153 | -1.208 | ±0.525 (se_band) | 1.035 | FAIL |
 | [seeded/pipeline-desktop-opus/20261023T064839Z](seeded/pipeline-desktop-opus/20261023T064839Z/CELL.md) | `female_sponsor_ncosponsors_rep_ipw_sponsor` | 3.06373 | 3.124 | ±0.06248 (relative) | 0.965 | PASS |
+| [independent/pipeline-desktop-opus-postfix2/20261103T115702Z](independent/pipeline-desktop-opus-postfix2/20261103T115702Z/CELL.md) | `female_sponsor_pct_opposite_dem_ols` | -1.90377 | -1.505 | ±0.419 (se_band) | 0.952 | PASS |
 | [blind/claude-code/2026-11-01-a](blind/claude-code/2026-11-01-a/CELL.md) | `female_sponsor_pct_opposite_dem_rd` | -5.13248 | -3.351 | ±1.91 (se_band) | 0.933 | PASS |
 | [blind/claude-code/2026-10-22-a](blind/claude-code/2026-10-22-a/CELL.md) | `female_sponsor_pct_opposite_dem_rd` | -5.13248 | -3.351 | ±1.91 (se_band) | 0.933 | PASS |
 | [blind/claude-code/2026-10-22-b](blind/claude-code/2026-10-22-b/CELL.md) | `female_sponsor_pct_opposite_dem_rd` | -5.13248 | -3.351 | ±1.91 (se_band) | 0.933 | PASS |
@@ -64,7 +66,6 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | [independent/pipeline-desktop-opus/20261023T064839Z](independent/pipeline-desktop-opus/20261023T064839Z/CELL.md) | `female_sponsor_pct_opposite_dem_ols` | -1.89122 | -1.505 | ±0.419 (se_band) | 0.922 | PASS |
 | [seeded/claude-code/2026-10-22-a](seeded/claude-code/2026-10-22-a/CELL.md) | `female_sponsor_ncosponsors_rep_rd_ipw` | 6.85691 | 6.734 | ±0.13468 (relative) | 0.913 | PASS |
 | [seeded/pipeline-desktop-opus-run3/20261103T054754Z](seeded/pipeline-desktop-opus-run3/20261103T054754Z/CELL.md) | `female_sponsor_ncosponsors_rep_rd_ipw` | 6.85691 | 6.734 | ±0.13468 (relative) | 0.913 | PASS |
-| [independent/pipeline-desktop-opus-postfix/20261103T070149Z](independent/pipeline-desktop-opus-postfix/20261103T070149Z/CELL.md) | `female_sponsor_pct_opposite_dem_ols` | -1.88656 | -1.505 | ±0.419 (se_band) | 0.911 | PASS |
 
 ### Declared deviations
 
@@ -107,6 +108,10 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Democratic sponsor-characteristics propensity score uses ATT weights (treated 1, controls p/(1-p)) as in matching on the treated; the paper text does not specify the weighting scheme
 - [independent/pipeline-desktop-opus-postfix/20261103T070149Z](independent/pipeline-desktop-opus-postfix/20261103T070149Z/CELL.md) (13/13)
   - dem IPW pct outcome capped at 100 (1 rows above 100)
+- [independent/pipeline-desktop-opus-postfix2/20261103T115702Z](independent/pipeline-desktop-opus-postfix2/20261103T115702Z/CELL.md) (13/13)
+  - median income not found in data
+  - population density not found in data
+  - Democratic sponsor-control IPW uses ATT weights (treated=1, controls=p/(1-p)); weighting scheme not specified in text
 - [independent/pipeline-desktop-opus-run2/20261023T152513Z](independent/pipeline-desktop-opus-run2/20261023T152513Z/CELL.md) (13/13)
   - Dem pct-opposite matching estimate uses ATT propensity-score reweighting (treated weight 1, controls p/(1-p)) with full OLS controls in the outcome equation; exact matching estimator not specified in the provided text
 - [independent/pipeline-desktop-opus-run3/20261103T052626Z](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) (12/13; failed: `female_sponsor_pct_opposite_dem_ipw_sponsor`)
@@ -153,8 +158,8 @@ Pass rates at least 50 points apart (not unanimous):
 
 - seeded: `female_sponsor_ncosponsors_rep_rd_ipw` — pipeline 1/3, agent 2/2
 - seeded: `female_sponsor_pct_opposite_dem_ipw_sponsor` — pipeline 1/3, agent 2/2
-- blind: `female_sponsor_pct_opposite_dem_rd` — pipeline 1/4, agent 4/4
-- blind: `female_sponsor_pct_opposite_rep_ols` — pipeline 1/4, agent 3/4
+- blind: `female_sponsor_pct_opposite_dem_rd` — pipeline 1/5, agent 4/4
+- blind: `female_sponsor_pct_opposite_rep_ols` — pipeline 1/5, agent 3/4
 
 ## Cells
 
@@ -198,6 +203,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/pipeline-desktop-opus-postfix/20261103T070149Z/CELL.md`](independent/pipeline-desktop-opus-postfix/20261103T070149Z/CELL.md) — final 13/13, re-scored 13/13; first scored 10/13; executions 3; 2026-11-03T07:01:49Z; from `pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-postfix2 · 20261103T115702Z
+
+[`independent/pipeline-desktop-opus-postfix2/20261103T115702Z/CELL.md`](independent/pipeline-desktop-opus-postfix2/20261103T115702Z/CELL.md) — final 13/13, re-scored 13/13; first scored 7/13; executions 3; 2026-11-03T11:57:02Z; from `pipeline-oracle-desktop-opus-postfix2-23papers-indep-blind-2026-11-05.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus-run2 · 20261023T152513Z
 
 [`independent/pipeline-desktop-opus-run2/20261023T152513Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261023T152513Z/CELL.md) — final 13/13, re-scored 13/13; first scored 7/13; executions 3; 2026-10-23T15:25:13Z; from `pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json`; evidence complete.
@@ -229,6 +238,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · pipeline-desktop-opus-postfix · 20261103T062809Z
 
 [`blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md`](blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md) — final 7/13, re-scored 7/13; first scored 7/13; executions 1; 2026-11-03T06:28:09Z; from `pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-postfix2 · 20261103T111134Z
+
+[`blind/pipeline-desktop-opus-postfix2/20261103T111134Z/CELL.md`](blind/pipeline-desktop-opus-postfix2/20261103T111134Z/CELL.md) — final 6/13, re-scored 6/13; first scored 6/13; executions 1; 2026-11-03T11:11:34Z; from `pipeline-oracle-desktop-opus-postfix2-23papers-indep-blind-2026-11-05.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus-run2 · 20261023T150832Z
 

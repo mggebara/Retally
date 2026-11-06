@@ -1,0 +1,713 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "abs_concentration_bias_midpoint_table2_col2",
+      "ground_truth": {
+        "value": 37.61,
+        "standard_error": 3.575,
+        "unit": "additional real-effort tasks per workday",
+        "claim_type": "coefficient",
+        "location": "Table 2, column 2 (OLS, Midpoint), row 'd~ in Main-Treatment'",
+        "context": "Table 2 (\"Absolute and relative concentration bias in Main-Treatment\"), column 2.  The average absolute measure of concentration bias, d~: the number of additional per-workday real-effort tasks a subject is willing to complete in the unbalanced trade-off beyond the indifference points elicited in the eight balanced trade-offs.  Subjects with an upper corner choice in the unbalanced trade-off are assigned the midpoint between the lower bound (62) and their manually stated indifference point.  Estimated by OLS of d~ on a constant (the sample mean); robust standard errors.  Sample: all Main-Treatment subjects in the main sample, i.e. excluding the preregistered exclusions (subjects with at least one corner choice in the balanced trade-offs).\n",
+        "decimals": 3,
+        "sample_size": 100
+      },
+      "i4r": {
+        "reproduced_value": 37.61,
+        "outcome": "matches",
+        "notes": "Database row 646 (table 2, 37.610 / 3.575 -> 37.610 / 3.575); DP42 Table 1 Panel B col 2.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.09505450678011168,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "abs_concentration_bias_midpoint_table2_col2",
+        "claim_type": "coefficient",
+        "claimed": 37.61,
+        "reproduced": 37.475,
+        "tolerance": 0.09505450678011168,
+        "rel_err": 0.0035894708854027654,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "abs_concentration_bias_midpoint_table2_col2",
+        "reproduced": 37.475,
+        "band_source": "se_band",
+        "band_relative": 0.09505450678011168,
+        "band_absolute": 3.575,
+        "abs_err": 0.134999999999998,
+        "rel_err": 0.0035894708854027654,
+        "margin": 0.0377622377622372,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "abs_concentration_bias_tobit_table2_col4",
+      "ground_truth": {
+        "value": 37.094,
+        "standard_error": 3.658,
+        "unit": "additional real-effort tasks per workday",
+        "claim_type": "coefficient",
+        "location": "Table 2, column 4 (Tobit), row 'd~ in Main-Treatment'",
+        "context": "Table 2, column 4: a Tobit regression of the absolute measure d~ on a constant, based on the lower-bound measure (upper-corner subjects assigned the upper end of the elicitation range) and treating the ends of the elicitation range as censoring points.  Same Main-Treatment main sample as column 2.\n",
+        "decimals": 3,
+        "sample_size": 100
+      },
+      "i4r": {
+        "reproduced_value": 37.094,
+        "outcome": "matches",
+        "notes": "Database row 649 (table 2, Tobit, 37.094 / 3.658 -> 37.094 / 3.658); DP42 Table 1 Panel B col 4.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.09861433115867795,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "abs_concentration_bias_tobit_table2_col4",
+        "claim_type": "coefficient",
+        "claimed": 37.094,
+        "reproduced": 36.777463,
+        "tolerance": 0.09861433115867795,
+        "rel_err": 0.008533374669758016,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "abs_concentration_bias_tobit_table2_col4",
+        "reproduced": 36.777463,
+        "band_source": "se_band",
+        "band_relative": 0.09861433115867795,
+        "band_absolute": 3.658,
+        "abs_err": 0.31653700000000384,
+        "rel_err": 0.008533374669758016,
+        "margin": 0.08653280481137339,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "rel_concentration_bias_lower_table2_col1",
+      "ground_truth": {
+        "value": 0.19,
+        "standard_error": 0.016,
+        "unit": "share (relative increase in per-workday willingness to work)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column 1 (OLS, Lower bound), row 'd~rel in Main-Treatment'",
+        "context": "Table 2, column 1, second row: the average relative measure of concentration bias, d~rel = (1/8) sum over workdays t of d~ / (e_t + x~_t), where e_t is the mandatory number of tasks on workday t and x~_t the indifference point elicited in balanced trade-off t; upper-corner subjects' d~ set to the lower bound.  OLS on a constant, robust standard errors, Main-Treatment main sample.\n",
+        "decimals": 3,
+        "sample_size": 100
+      },
+      "i4r": {
+        "reproduced_value": 0.19,
+        "outcome": "matches",
+        "notes": "Database row 623 (table 2, 0.190 / 0.016 -> 0.190 / 0.016); DP42 Table 1 Panel B col 1.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.08421052631578947,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "rel_concentration_bias_lower_table2_col1",
+        "claim_type": "coefficient",
+        "claimed": 0.19,
+        "reproduced": 0.188391,
+        "tolerance": 0.08421052631578947,
+        "rel_err": 0.008468421052631575,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "rel_concentration_bias_lower_table2_col1",
+        "reproduced": 0.188391,
+        "band_source": "se_band",
+        "band_relative": 0.08421052631578947,
+        "band_absolute": 0.016,
+        "abs_err": 0.0016089999999999993,
+        "rel_err": 0.008468421052631575,
+        "margin": 0.10056249999999996,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "rel_concentration_bias_midpoint_table2_col2",
+      "ground_truth": {
+        "value": 0.224,
+        "standard_error": 0.021,
+        "unit": "share (relative increase in per-workday willingness to work)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column 2 (OLS, Midpoint), row 'd~rel in Main-Treatment'",
+        "context": "Table 2, column 2, second row: the paper's headline measure (Result 1) — the average relative measure of concentration bias d~rel, with upper-corner subjects' d~ set to the midpoint between the lower bound and their manually stated indifference point.  OLS on a constant, robust standard errors, Main-Treatment main sample.\n",
+        "decimals": 3,
+        "sample_size": 100
+      },
+      "i4r": {
+        "reproduced_value": 0.224,
+        "outcome": "matches",
+        "notes": "Database row 625 (table 2, 0.224 / 0.021 -> 0.224 / 0.021); DP42 Table 1 Panel B col 2.  Recomputing d~rel from the choice data (row 636, \"Computing alternative value of outcome variable AND in R\"; DP42 Table 1 Panel B col 5) gives 0.223 (0.021).\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.09375,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "rel_concentration_bias_midpoint_table2_col2",
+        "claim_type": "coefficient",
+        "claimed": 0.224,
+        "reproduced": 0.223245,
+        "tolerance": 0.09375,
+        "rel_err": 0.0033705357142857395,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "rel_concentration_bias_midpoint_table2_col2",
+        "reproduced": 0.223245,
+        "band_source": "se_band",
+        "band_relative": 0.09375,
+        "band_absolute": 0.021,
+        "abs_err": 0.0007550000000000057,
+        "rel_err": 0.0033705357142857395,
+        "margin": 0.03595238095238122,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "rel_concentration_bias_upper_table2_col3",
+      "ground_truth": {
+        "value": 0.259,
+        "standard_error": 0.027,
+        "unit": "share (relative increase in per-workday willingness to work)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column 3 (OLS, Upper bound), row 'd~rel in Main-Treatment'",
+        "context": "Table 2, column 3, second row: the average relative measure d~rel with upper-corner subjects' d~ set to their manually stated indifference point (upper bound).  OLS on a constant, robust standard errors, Main-Treatment main sample.\n",
+        "decimals": 3,
+        "sample_size": 100
+      },
+      "i4r": {
+        "reproduced_value": 0.259,
+        "outcome": "matches",
+        "notes": "Database row 645 (table 2, 0.259 / 0.027 -> 0.259 / 0.027); DP42 Table 1 Panel B col 3.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.10424710424710425,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "rel_concentration_bias_upper_table2_col3",
+        "claim_type": "coefficient",
+        "claimed": 0.259,
+        "reproduced": 0.256742,
+        "tolerance": 0.10424710424710425,
+        "rel_err": 0.00871814671814665,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "rel_concentration_bias_upper_table2_col3",
+        "reproduced": 0.256742,
+        "band_source": "se_band",
+        "band_relative": 0.10424710424710425,
+        "band_absolute": 0.027,
+        "abs_err": 0.0022579999999999822,
+        "rel_err": 0.00871814671814665,
+        "margin": 0.08362962962962897,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_table2",
+      "ground_truth": {
+        "value": 100.0,
+        "standard_error": null,
+        "unit": "observations (subjects)",
+        "claim_type": "count",
+        "location": "Table 2, Observations (all four columns)",
+        "context": "Number of observations (subjects) in each column of Table 2: the Main-Treatment subjects remaining after the preregistered exclusion of subjects with a corner choice in any balanced trade-off.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table2",
+        "claim_type": "count",
+        "claimed": 100.0,
+        "reproduced": 100.0,
+        "tolerance": 0.05,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_table2",
+        "reproduced": 100.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 5.0,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "rel_cb_mechanism_treatment_table3_col1",
+      "ground_truth": {
+        "value": 0.075,
+        "standard_error": 0.019,
+        "unit": "share (relative measure of concentration bias)",
+        "claim_type": "coefficient",
+        "location": "Table 3, column 1, row 'd~rel in Mechanism-Treatment'",
+        "context": "Table 3 (\"Average relative measure of concentration bias (d~rel) across conditions\"), column 1: OLS of the midpoint-based relative measure d~rel on a constant and an indicator for Main-Treatment, estimated on the pooled Main-Treatment and Mechanism-Treatment main samples (between-subjects); this row is the constant, i.e. average d~rel in Mechanism-Treatment (raise in the voucher shown as a sum of its parts).  Robust standard errors.\n",
+        "decimals": 3,
+        "sample_size": 200
+      },
+      "i4r": {
+        "reproduced_value": 0.075,
+        "outcome": "matches",
+        "notes": "Database row 626 (table 3, 0.075 / 0.019 -> 0.075 / 0.019); DP42 Table 2 Panel B col 1.  Recomputed d~rel (row 648, Panel C): 0.075.\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.25333333333333335,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "rel_cb_mechanism_treatment_table3_col1",
+        "claim_type": "coefficient",
+        "claimed": 0.075,
+        "reproduced": 0.075105,
+        "tolerance": 0.25333333333333335,
+        "rel_err": 0.001400000000000105,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "rel_cb_mechanism_treatment_table3_col1",
+        "reproduced": 0.075105,
+        "band_source": "se_band",
+        "band_relative": 0.25333333333333335,
+        "band_absolute": 0.019,
+        "abs_err": 0.00010500000000000786,
+        "rel_err": 0.001400000000000105,
+        "margin": 0.0055263157894740985,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "diff_main_minus_mechanism_table3_col1",
+      "ground_truth": {
+        "value": 0.149,
+        "standard_error": 0.028,
+        "unit": "share (difference in relative measure of concentration bias)",
+        "claim_type": "coefficient",
+        "location": "Table 3, column 1, row 'Difference: Main-Treatment - Mechanism-Treatment'",
+        "context": "Table 3, column 1: the coefficient on the Main-Treatment indicator in the column 1 regression — the difference in average d~rel, Main-Treatment minus Mechanism-Treatment (Result 2).  Robust standard errors.\n",
+        "decimals": 3,
+        "sample_size": 200
+      },
+      "i4r": {
+        "reproduced_value": 0.149,
+        "outcome": "matches",
+        "notes": "Database row 620 (table 3, 0.149 / 0.028 -> 0.149 / 0.028); DP42 Table 2 Panel B col 1.  Recomputed d~rel (row 644): 0.148.\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.18791946308724833,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "diff_main_minus_mechanism_table3_col1",
+        "claim_type": "coefficient",
+        "claimed": 0.149,
+        "reproduced": 0.14814,
+        "tolerance": 0.18791946308724833,
+        "rel_err": 0.005771812080536911,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "diff_main_minus_mechanism_table3_col1",
+        "reproduced": 0.14814,
+        "band_source": "se_band",
+        "band_relative": 0.18791946308724833,
+        "band_absolute": 0.028,
+        "abs_err": 0.0008599999999999997,
+        "rel_err": 0.005771812080536911,
+        "margin": 0.0307142857142857,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "rel_cb_donation_treatment_table3_col2",
+      "ground_truth": {
+        "value": 0.135,
+        "standard_error": 0.021,
+        "unit": "share (relative measure of concentration bias)",
+        "claim_type": "coefficient",
+        "location": "Table 3, column 2, row 'd~rel in Donation-Treatment'",
+        "context": "Table 3, column 2: OLS of d~rel on a constant and a condition indicator on the pooled Donation-Treatment and Donation-Control main samples (the benefit of working is a donation to a charity instead of a restaurant voucher); this row is average d~rel in Donation-Treatment (Result 3).  Robust standard errors.\n",
+        "decimals": 3,
+        "sample_size": 200
+      },
+      "i4r": {
+        "reproduced_value": 0.135,
+        "outcome": "matches",
+        "notes": "Database row 621 (table 3, 0.135 / 0.021 -> 0.135 / 0.021); DP42 Table 2 Panel B col 2.  Recomputed d~rel (row 633): 0.133.\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.15555555555555556,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "rel_cb_donation_treatment_table3_col2",
+        "claim_type": "coefficient",
+        "claimed": 0.135,
+        "reproduced": 0.133784,
+        "tolerance": 0.15555555555555556,
+        "rel_err": 0.009007407407407575,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "rel_cb_donation_treatment_table3_col2",
+        "reproduced": 0.133784,
+        "band_source": "se_band",
+        "band_relative": 0.15555555555555556,
+        "band_absolute": 0.021,
+        "abs_err": 0.0012160000000000226,
+        "rel_err": 0.009007407407407575,
+        "margin": 0.05790476190476298,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "diff_donation_treatment_minus_control_table3_col2",
+      "ground_truth": {
+        "value": 0.158,
+        "standard_error": 0.022,
+        "unit": "share (difference in relative measure of concentration bias)",
+        "claim_type": "coefficient",
+        "location": "Table 3, column 2, row 'Difference: Donation-Treatment - Donation-Control'",
+        "context": "Table 3, column 2: the difference in average d~rel between Donation-Treatment and Donation-Control, reported as Donation-Treatment minus Donation-Control.  In the Control conditions the final trade-off repeats a balanced trade-off (j = 1, 4 or 8) with the same deviation range as the unbalanced trade-off, so the \"placebo\" deviation should be zero.  Robust standard errors.\n",
+        "decimals": 3,
+        "sample_size": 200
+      },
+      "i4r": {
+        "reproduced_value": 0.158,
+        "outcome": "matches",
+        "notes": "Database row 624 records o_coeff = r_coeff = -0.158 (SE 0.022): the Stata/R coefficient on the Donation-Control indicator, i.e. Control minus Treatment.  The paper prints the difference as Donation-Treatment minus Donation-Control = 0.158, and the authors' do-file says so explicitly; reproduced_value is given in the paper's sign convention.  Exact match in magnitude and SE. Recomputed d~rel (row 632): -0.159.\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.13924050632911392,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "diff_donation_treatment_minus_control_table3_col2",
+        "claim_type": "coefficient",
+        "claimed": 0.158,
+        "reproduced": 0.158287,
+        "tolerance": 0.13924050632911392,
+        "rel_err": 0.0018164556962025915,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "diff_donation_treatment_minus_control_table3_col2",
+        "reproduced": 0.158287,
+        "band_source": "se_band",
+        "band_relative": 0.13924050632911392,
+        "band_absolute": 0.022,
+        "abs_err": 0.00028700000000000947,
+        "rel_err": 0.0018164556962025915,
+        "margin": 0.013045454545454976,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "diff_main_treatment_minus_control_table3_col3",
+      "ground_truth": {
+        "value": 0.247,
+        "standard_error": 0.023,
+        "unit": "share (difference in relative measure of concentration bias)",
+        "claim_type": "coefficient",
+        "location": "Table 3, column 3, row 'Difference: Main-Treatment - Main-Control'",
+        "context": "Table 3, column 3: OLS of d~rel on a constant and a Treatment indicator on the pooled Main-Treatment and Main-Control main samples; this row is the Treatment coefficient, the difference in average d~rel, Main-Treatment minus Main-Control (the constant, reported in the row above, is average d~rel in Main-Control).  Robust standard errors.\n",
+        "decimals": 3,
+        "sample_size": 200
+      },
+      "i4r": {
+        "reproduced_value": 0.247,
+        "outcome": "matches",
+        "notes": "Database row 635 records o_coeff = r_coeff = -0.247 (SE 0.023), and DP42 Table 2 Panel A transcribes the published row as \"-0.247\".  The authors' Stata log gives +0.2467 on the Treatment indicator (Main-Control constant -0.0226; -0.023 + 0.247 = 0.224, the Main-Treatment mean), and the DP prints 0.247: the database sign is a transcription/convention artefact, the replicators' magnitude and SE match exactly.  reproduced_value in the paper's sign convention.  Recomputed d~rel (row 641): -0.249 in the same reversed convention.\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.0931174089068826,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "diff_main_treatment_minus_control_table3_col3",
+        "claim_type": "coefficient",
+        "claimed": 0.247,
+        "reproduced": 0.247784,
+        "tolerance": 0.0931174089068826,
+        "rel_err": 0.003174089068825939,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "diff_main_treatment_minus_control_table3_col3",
+        "reproduced": 0.247784,
+        "band_source": "se_band",
+        "band_relative": 0.0931174089068826,
+        "band_absolute": 0.023,
+        "abs_err": 0.0007840000000000069,
+        "rel_err": 0.003174089068825939,
+        "margin": 0.03408695652173943,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "diff_mechanism_treatment_minus_control_table3_col4",
+      "ground_truth": {
+        "value": 0.09,
+        "standard_error": 0.021,
+        "unit": "share (difference in relative measure of concentration bias)",
+        "claim_type": "coefficient",
+        "location": "Table 3, column 4, row 'Difference: Mechanism-Treatment - Mechanism-Control'",
+        "context": "Table 3, column 4: OLS of d~rel on a constant and a Treatment indicator on the pooled Mechanism-Treatment and Mechanism-Control main samples; this row is the Treatment coefficient, the difference in average d~rel, Mechanism-Treatment minus Mechanism-Control. Robust standard errors.\n",
+        "decimals": 3,
+        "sample_size": 200
+      },
+      "i4r": {
+        "reproduced_value": 0.09,
+        "outcome": "matches",
+        "notes": "Database row 640 (table 3, 0.090 / 0.021 -> 0.090 / 0.021); DP42 Table 2 Panel B col 4.  Recomputed d~rel (row 619): 0.092.\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.23333333333333336,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "diff_mechanism_treatment_minus_control_table3_col4",
+        "claim_type": "coefficient",
+        "claimed": 0.09,
+        "reproduced": 0.090887,
+        "tolerance": 0.23333333333333336,
+        "rel_err": 0.009855555555555544,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "diff_mechanism_treatment_minus_control_table3_col4",
+        "reproduced": 0.090887,
+        "band_source": "se_band",
+        "band_relative": 0.23333333333333336,
+        "band_absolute": 0.021,
+        "abs_err": 0.0008869999999999989,
+        "rel_err": 0.009855555555555544,
+        "margin": 0.042238095238095186,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_table3",
+      "ground_truth": {
+        "value": 200.0,
+        "standard_error": null,
+        "unit": "observations (subjects, two conditions pooled)",
+        "claim_type": "count",
+        "location": "Table 3, Observations (all four columns)",
+        "context": "Number of observations in each column of Table 3: the main samples of the two between-subjects conditions compared in that column, after the preregistered exclusions.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table3",
+        "claim_type": "count",
+        "claimed": 200.0,
+        "reproduced": 200.0,
+        "tolerance": 0.05,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_table3",
+        "reproduced": 200.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 10.0,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 13,
+    "row_passed": 13,
+    "recomputed_passed": 13,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "dertwinkel-kalt-2022-concentration-bias",
+    "mode": "independent",
+    "reproducer": "pipeline",
+    "label": "pipeline-desktop-opus-postfix2",
+    "model": "desktop-opus-postfix2",
+    "oracle": true,
+    "run": "20261103T110326Z",
+    "results_file": "pipeline-oracle-desktop-opus-postfix2-23papers-indep-blind-2026-11-05.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/dertwinkel-kalt-2022-concentration-bias/independent/pipeline/20261103T110326Z",
+    "run_dir": null,
+    "date": "2026-11-03T11:03:26Z",
+    "data_access": "public",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 13,
+    "final": 13,
+    "first_scored": 13,
+    "first_scored_index": 0,
+    "first_attempt": 13,
+    "n_refinements": 0,
+    "n_error_refinements": 0,
+    "n_claim_refinements": 0,
+    "n_executions": 1,
+    "n_files_stripped": 53,
+    "agrees_with_i4r": true,
+    "deviations_manifest": [],
+    "deviations_stdout": [],
+    "notes": null,
+    "files_read_outside_mount": null,
+    "paper_text": null,
+    "complete": true,
+    "missing": []
+  }
+}

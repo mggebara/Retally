@@ -42,6 +42,7 @@
 | `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [13/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
 | `pipeline-desktop-opus` | [13/13](seeded/pipeline-desktop-opus/20261102T141403Z/CELL.md) (20261102T141403Z) | [9/13](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) (20261102T141403Z) | [12/13](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) (20261102T095147Z) |
 | `pipeline-desktop-opus-postfix` | — | [9/13](independent/pipeline-desktop-opus-postfix/20261103T063758Z/CELL.md) (20261103T063758Z) | [9/13](blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md) (20261103T062809Z) |
+| `pipeline-desktop-opus-postfix2` | — | [12/13](independent/pipeline-desktop-opus-postfix2/20261103T113209Z/CELL.md) (20261103T113209Z) | [9/13](blind/pipeline-desktop-opus-postfix2/20261103T111134Z/CELL.md) (20261103T111134Z) |
 | `pipeline-desktop-opus-run2` | [13/13](seeded/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) (20261102T152052Z) | [9/13](independent/pipeline-desktop-opus-run2/20261102T190406Z/CELL.md) (20261102T190406Z) | [9/13](blind/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) (20261102T152052Z) |
 | `pipeline-desktop-opus-run3` | [13/13](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [13/13](independent/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) | [9/13](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) |
 
@@ -61,10 +62,10 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | [blind/claude-code/2026-11-02-c](blind/claude-code/2026-11-02-c/CELL.md) | `table2_col3_risk_taking` | -0.194001 | -0.294 | ±0.122 (se_band) | 0.820 | PASS |
 | [independent/pipeline-desktop-opus-run3/20261103T004800Z](independent/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) | `table2_col3_risk_taking` | -0.194001 | -0.294 | ±0.122 (se_band) | 0.820 | PASS |
 | [independent/claude-code/2026-11-02-a](independent/claude-code/2026-11-02-a/CELL.md) | `table2_col3_risk_taking` | -0.194001 | -0.294 | ±0.122 (se_band) | 0.820 | PASS |
+| [independent/pipeline-desktop-opus-postfix2/20261103T113209Z](independent/pipeline-desktop-opus-postfix2/20261103T113209Z/CELL.md) | `table2_col3_risk_taking` | -0.194001 | -0.294 | ±0.122 (se_band) | 0.820 | PASS |
 | [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) | `table2_col3_risk_taking` | -0.194001 | -0.294 | ±0.122 (se_band) | 0.820 | PASS |
-| [blind/pipeline-desktop-opus-run2/20261102T152052Z](blind/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) | `table2_col3_risk_taking` | -0.205689 | -0.294 | ±0.122 (se_band) | 0.724 | PASS |
-| [blind/pipeline-desktop-opus/20261102T095147Z](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) | `table1_col5_natives_risk_taking` | -1.19398 | -1.32 | ±0.189 (se_band) | 0.667 | PASS |
-| [independent/pipeline-desktop-opus/20261102T141403Z](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) | `table2_col3_risk_taking` | -0.231388 | -0.294 | ±0.122 (se_band) | 0.513 | PASS |
+| [independent/pipeline-desktop-opus-postfix2/20261103T113209Z](independent/pipeline-desktop-opus-postfix2/20261103T113209Z/CELL.md) | `table1_col3_risk_taking` | -1.09318 | -1.241 | ±0.184 (se_band) | 0.803 | PASS |
+| [independent/pipeline-desktop-opus-postfix2/20261103T113209Z](independent/pipeline-desktop-opus-postfix2/20261103T113209Z/CELL.md) | `table1_col5_natives_risk_taking` | -1.1797 | -1.32 | ±0.189 (se_band) | 0.742 | PASS |
 
 ### Declared deviations
 
@@ -101,6 +102,9 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - first plausible value (pv1math, already /100) only; GPS preference variables used as provided in the data files (country-level, standardised as shipped)
 - [independent/pipeline-desktop-opus/20261102T141403Z](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) (9/13; failed: `table2_col3_patience`, `table2_col1_patience`, `table2_col4_patience`, `table2_col4_risk_taking`)
   - Migrant regressions weight students by sampling weights scaled to give each residence country equal total weight in the full PISA sample (not re-equalised within the migrant subsample)
+- [independent/pipeline-desktop-opus-postfix2/20261103T113209Z](independent/pipeline-desktop-opus-postfix2/20261103T113209Z/CELL.md) (12/13; failed: `table1_col2_risk_taking`)
+  - Table 1 weights rescaled to equal total weight per country within each wave (senate weights), interpreting the paper's equal-country weighting at the country-by-wave level
+  - Table 2 N is 80397, paper reports 80,398
 - [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) (13/13)
   - Full PISA file pisa_full_gps_final.dta (1,992,276 rows, 2.5 GB) cannot be read through the mount within the 300 s sandbox limit (~5-10 MB/s; a full CSV fread and a full chunked read both timed out in exploration). Table 1 is estimated on a systematic 50% subsample: 3000-row blocks every 6000 rows (all 333 blocks read; every country hit, 49 countries, 253 of the country-waves), read with haven::read_dta(col_select, skip, n_max) so only needed columns are kept. wgtc weights are renormalised within country-wave so every country keeps equal total weight and equal weight per wave.
   - table1_col3_observations = full-file row count (from the .dta header) times the complete-case share of loaded rows; exploratory reads of all 1,992,276 rows (attempts 5 and 6) found no missing values in any regression variable. — names `table1_col3_observations`
@@ -141,14 +145,14 @@ _None._
 
 Pass rates at least 50 points apart (not unanimous):
 
-- independent: `table2_col1_patience` — pipeline 1/4, agent 3/3
-- independent: `table2_col3_patience` — pipeline 1/4, agent 3/3
-- independent: `table2_col4_patience` — pipeline 1/4, agent 3/3
-- independent: `table2_col4_risk_taking` — pipeline 1/4, agent 3/3
-- blind: `table2_col1_patience` — pipeline 1/4, agent 3/3
-- blind: `table2_col3_patience` — pipeline 1/4, agent 3/3
-- blind: `table2_col4_patience` — pipeline 1/4, agent 3/3
-- blind: `table2_col4_risk_taking` — pipeline 1/4, agent 3/3
+- independent: `table2_col1_patience` — pipeline 2/5, agent 3/3
+- independent: `table2_col3_patience` — pipeline 2/5, agent 3/3
+- independent: `table2_col4_patience` — pipeline 2/5, agent 3/3
+- independent: `table2_col4_risk_taking` — pipeline 2/5, agent 3/3
+- blind: `table2_col1_patience` — pipeline 1/5, agent 3/3
+- blind: `table2_col3_patience` — pipeline 1/5, agent 3/3
+- blind: `table2_col4_patience` — pipeline 1/5, agent 3/3
+- blind: `table2_col4_risk_taking` — pipeline 1/5, agent 3/3
 
 ## Cells
 
@@ -192,6 +196,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/pipeline-desktop-opus-postfix/20261103T063758Z/CELL.md`](independent/pipeline-desktop-opus-postfix/20261103T063758Z/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 2; 2026-11-03T06:37:58Z; from `pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-postfix2 · 20261103T113209Z
+
+[`independent/pipeline-desktop-opus-postfix2/20261103T113209Z/CELL.md`](independent/pipeline-desktop-opus-postfix2/20261103T113209Z/CELL.md) — final 12/13, re-scored 12/13; first scored 12/13; executions 2; 2026-11-03T11:32:09Z; from `pipeline-oracle-desktop-opus-postfix2-23papers-indep-blind-2026-11-05.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus-run2 · 20261102T190406Z
 
 [`independent/pipeline-desktop-opus-run2/20261102T190406Z/CELL.md`](independent/pipeline-desktop-opus-run2/20261102T190406Z/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 4; 2026-11-02T19:04:06Z; from `pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json`; evidence complete.
@@ -219,6 +227,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · pipeline-desktop-opus-postfix · 20261103T062809Z
 
 [`blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md`](blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 1; 2026-11-03T06:28:09Z; from `pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-postfix2 · 20261103T111134Z
+
+[`blind/pipeline-desktop-opus-postfix2/20261103T111134Z/CELL.md`](blind/pipeline-desktop-opus-postfix2/20261103T111134Z/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 1; 2026-11-03T11:11:34Z; from `pipeline-oracle-desktop-opus-postfix2-23papers-indep-blind-2026-11-05.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus-run2 · 20261102T152052Z
 

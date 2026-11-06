@@ -1,0 +1,52 @@
+SAMPLE:t4_col1:loaded=3002
+SAMPLE:t4_col1:received_feedback=1968
+SAMPLE:t4_col1:abs_gain_lt_50=757
+SAMPLE:t4_col1:estimation=757
+SAMPLE:t4_col2:loaded=3002
+SAMPLE:t4_col2:received_feedback=1968
+SAMPLE:t4_col2:estimation=1968
+SAMPLE:t4_col3:loaded=3002
+SAMPLE:t4_col3:received_feedback=1968
+SAMPLE:t4_col3:abs_gain_lt_50=757
+SAMPLE:t4_col3:estimation=0
+SAMPLE:t4_col4:loaded=3002
+SAMPLE:t4_col4:received_feedback=1968
+SAMPLE:t4_col4:abs_gain_lt_50=757
+SAMPLE:t4_col4:estimation=757
+SAMPLE:t6_col1:loaded=3002
+SAMPLE:t6_col1:targeted_variant_answered=3002
+OLS estimation, Dep. Var.: notlose_cible
+Observations: 3,002
+Weights: w
+Fixed-effects: cible_f: 4
+Standard-errors: IID 
+            Estimate Std. Error t value Pr(>|t|) 
+elig               0      1e-08       0        1 
+elig_c             0      1e-08       0        1 
+elig_x             0      1e-08       0        1 
+single01           0      1e-08       0        1 
+init_accept        0      1e-08       0        1 
+pr                 0      1e-08       0        1 
+I(I(pr^2))         0      1e-08       0        1 
+prc                0      1e-08       0        1 
+I(I(prc^2))        0      1e-08       0        1 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0              
+                     
+SAMPLE:t6_col1:estimation=0
+SAMPLE:t8_col1:loaded=3002
+SAMPLE:t8_col1:estimation=1444
+RESULT:predicted_winner_believes_not_lose_table4_col1=0.212887
+RESULT:initial_acceptance_believes_not_lose_table4_col1=0.333242
+RESULT:predicted_winner_believes_not_lose_full_sample_table4_col2=0.187265
+RESULT:predicted_winner_heterogeneity_table4_col3=NA
+RESULT:initial_acceptance_heterogeneity_table4_col3=NA
+RESULT:yellow_vests_supporter_heterogeneity_table4_col3=NA
+RESULT:winner_x_initial_acceptance_table4_col3=NA
+RESULT:winner_x_yellow_vests_supporter_table4_col3=NA
+RESULT:winner_x_initial_win_belief_table4_col3=NA
+RESULT:predicted_winner_believes_wins_table4_col4=0.150551
+RESULT:n_obs_table4_col1=757
+RESULT:believes_not_lose_on_acceptance_iv_table6_col1=NA
+RESULT:believes_effective_on_approval_iv_table8_col1=0.340161

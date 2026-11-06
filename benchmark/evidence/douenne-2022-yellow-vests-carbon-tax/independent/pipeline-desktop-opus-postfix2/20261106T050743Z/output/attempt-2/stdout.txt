@@ -1,0 +1,41 @@
+SAMPLE:all:loaded=3002
+NOTE:estimated_gain_var=simule_gain
+NOTE:initial_belief_var=gagnant_categorie; feedback_belief_var=gagnant_feedback_categorie
+NOTE:controls=revenu,rev_tot,Revenu,Revenu_conjoint,Revenu2,Revenu_conjoint2,sexe,age,statut_emploi,csp,diplome,taille_agglo,region,taille_menage,nb_14_et_plus,nb_adultes,surface,chauffage,taxe_efficace,Gauche_droite,interet_politique,ecologiste,conservateur,liberal,humaniste,patriote,apolitique
+SAMPLE:table4_col2:loaded=3002
+SAMPLE:table4_col2:received_feedback=1968
+SAMPLE:table4_col1:loaded=3002
+SAMPLE:table4_col1:received_feedback=1968
+SAMPLE:table4_col1:abs_gain_below_50=757
+SAMPLE:table4_col1:estimation=757
+SAMPLE:table4_col2:estimation=1968
+SAMPLE:table4_col3:loaded=3002
+SAMPLE:table4_col3:received_feedback=1968
+SAMPLE:table4_col3:abs_gain_below_50=757
+SAMPLE:table4_col3:estimation=757
+SAMPLE:table4_col4:loaded=3002
+SAMPLE:table4_col4:received_feedback=1968
+SAMPLE:table4_col4:abs_gain_below_50=757
+SAMPLE:table4_col4:estimation=757
+NOTE:table6_vars acc=tax_cible_acceptance belief=win_cible_category el1=traite_cible el2=traite_cible_conjoint cible=cible
+SAMPLE:table6_col1:loaded=3002
+DEVIATION: Table 6 income-percentile window not stated; using all respondents with percentile polynomials as controls
+NOTE:error6  in feols(f6, data = d6, weights = ~w__, vcov = "hete...: 
+The dependent variable is a constant. The estimation with fixed-effects
+cannot be done. 
+NOTE:table8_vars eff=taxe_efficace sci=apres_modifs cc=info_CC
+SAMPLE:table8_col1:loaded=3002
+SAMPLE:table8_col1:estimation=3002
+RESULT:predicted_winner_believes_not_lose_table4_col1=NA
+RESULT:initial_acceptance_believes_not_lose_table4_col1=0.278011
+RESULT:predicted_winner_believes_not_lose_full_sample_table4_col2=NA
+RESULT:predicted_winner_heterogeneity_table4_col3=NA
+RESULT:initial_acceptance_heterogeneity_table4_col3=0.158165
+RESULT:yellow_vests_supporter_heterogeneity_table4_col3=-0.042982
+RESULT:winner_x_initial_acceptance_table4_col3=NA
+RESULT:winner_x_yellow_vests_supporter_table4_col3=NA
+RESULT:winner_x_initial_win_belief_table4_col3=NA
+RESULT:predicted_winner_believes_wins_table4_col4=NA
+RESULT:n_obs_table4_col1=757
+RESULT:believes_not_lose_on_acceptance_iv_table6_col1=NA
+RESULT:believes_effective_on_approval_iv_table8_col1=0.395879

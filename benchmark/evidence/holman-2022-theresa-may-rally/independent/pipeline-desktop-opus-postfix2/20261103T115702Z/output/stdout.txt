@@ -1,0 +1,51 @@
+SAMPLE:table4:loaded=5469
+# table4 candidate DV lag_approval two quarters ahead: N=4423
+# table4 chosen DV: lag_approval two quarters ahead, attack var: kill_16, FE: country
+SAMPLE:table4:approval_next_quarter_nonmissing=5279
+SAMPLE:table4:controls_nonmissing=4423
+SAMPLE:table4:estimation=4423
+DEVIATION: table4 estimation N=4423 differs from the paper's 4328
+DEVIATION: panel-corrected standard errors not available in fixest; coefficients unaffected
+SAMPLE:did_like_may:loaded=1481408
+SAMPLE:did_may_best_pm:loaded=1481408
+SAMPLE:did_like_may:outcome_nonmissing=239919
+SAMPLE:did_like_may:treatment_time_nonmissing=239919
+# did_like_may waves with outcome: 9,10,11,12,13,14,15,16
+# did_like_may wave 9: n=25554
+# did_like_may wave 10: n=27884
+# did_like_may wave 11: n=29091
+# did_like_may wave 12: n=32642
+# did_like_may wave 13: n=29841
+# did_like_may wave 14: n=29425
+# did_like_may wave 15: n=29491
+# did_like_may wave 16: n=35991
+# did_like_may chosen window: waves 9-13, wave-12 respondents only=FALSE, n=145012
+SAMPLE:did_like_may:wave_window=145012
+DEVIATION: did_like_may: panel restricted to waves 9-13 (paper does not list waves; chosen to match its N)
+SAMPLE:did_like_may:estimation=145012
+DEVIATION: did_like_may estimation N=145012 differs from the paper's 143499
+SAMPLE:did_may_best_pm:outcome_nonmissing=145803
+SAMPLE:did_may_best_pm:treatment_time_nonmissing=145803
+# did_may_best_pm waves with outcome: 7,8,10,11,12
+# did_may_best_pm wave 7: n=28360
+# did_may_best_pm wave 8: n=30926
+# did_may_best_pm wave 10: n=27094
+# did_may_best_pm wave 11: n=28146
+# did_may_best_pm wave 12: n=31277
+# did_may_best_pm chosen window: waves 8-12, wave-12 respondents only=TRUE, n=91727
+SAMPLE:did_may_best_pm:wave_window=91727
+DEVIATION: did_may_best_pm: panel restricted to waves 8-12 and to wave-12 respondents (paper does not list waves; chosen to match its N)
+SAMPLE:did_may_best_pm:estimation=91727
+DEVIATION: did_may_best_pm estimation N=91727 differs from the paper's 97155
+DEVIATION: best-PM DiD estimated as a linear probability model (paper's coefficients are on the probability scale)
+RESULT:intl_attack_table4=0.83842696
+RESULT:intl_attack_x_woman_exec_table4=-1.6131215
+RESULT:n_obs_table4=4423
+RESULT:did_attack_x_time_like_may_table2=-0.082395754
+RESULT:did_attack_like_may_table2=-0.12901174
+RESULT:did_time_like_may_table2=-0.3018544
+RESULT:did_attack_x_time_may_best_pm_table2=-0.05249674
+RESULT:did_attack_may_best_pm_table2=-0.0019854051
+RESULT:did_time_may_best_pm_table2=0.22938932
+RESULT:n_obs_did_like_may_table2=145012
+RESULT:n_obs_did_may_best_pm_table2=91727

@@ -1,0 +1,723 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "watermills_table2_col1",
+      "ground_truth": {
+        "value": 0.15,
+        "standard_error": 0.02,
+        "unit": "wright apprentices per capita per Domesday watermill per capita",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (1), Watermills (per capita)",
+        "context": "Table 2 (\"Number of Wright Apprentices per Capita and Domesday Book Mills per Capita\"), column (1).  Cross-section of English (government area) districts covered by the Domesday Book.  OLS regression of the number of apprentices to wrights in 1710-50 (from the Apprentice Tax Registers) per capita on the number of watermills recorded in the Domesday Book (1086) per capita, with a constant and no controls; both counts are converted to per capita terms using the district's mean population in 1710-50 (the text reads the coefficient as wright apprentices per mill per 10,000 people).  The table note says observations are clustered at the historical county level and heteroscedasticity robust standard errors are reported.\n",
+        "decimals": 2,
+        "sample_size": 298
+      },
+      "i4r": {
+        "reproduced_value": 0.15,
+        "outcome": "matches",
+        "notes": "Meta-database row 5900 blanket verdict (perfect reproduction); value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.13333333333333333,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "watermills_table2_col1",
+        "claim_type": "coefficient",
+        "claimed": 0.15,
+        "reproduced": 0.1461060315,
+        "tolerance": 0.13333333333333333,
+        "rel_err": 0.025959789999999892,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "watermills_table2_col1",
+        "reproduced": 0.1461060315,
+        "band_source": "se_band",
+        "band_relative": 0.13333333333333333,
+        "band_absolute": 0.02,
+        "abs_err": 0.0038939684999999835,
+        "rel_err": 0.025959789999999892,
+        "margin": 0.19469842499999918,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "watermills_table2_col2",
+      "ground_truth": {
+        "value": 0.14,
+        "standard_error": 0.02,
+        "unit": "wright apprentices per capita per Domesday watermill per capita",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (2), Watermills (per capita)",
+        "context": "Table 2, column (2): the column (1) regression adding the main geographic controls — latitude and longitude of the district's centroid, mean ruggedness and mean elevation.  Same sample, SEs clustered at the historical county level.\n",
+        "decimals": 2,
+        "sample_size": 298
+      },
+      "i4r": {
+        "reproduced_value": 0.14,
+        "outcome": "matches",
+        "notes": "Meta-database row 5900 blanket verdict; value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.14285714285714285,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "watermills_table2_col2",
+        "claim_type": "coefficient",
+        "claimed": 0.14,
+        "reproduced": 0.1438144133,
+        "tolerance": 0.14285714285714285,
+        "rel_err": 0.02724580928571418,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "watermills_table2_col2",
+        "reproduced": 0.1438144133,
+        "band_source": "se_band",
+        "band_relative": 0.14285714285714285,
+        "band_absolute": 0.02,
+        "abs_err": 0.003814413299999986,
+        "rel_err": 0.02724580928571418,
+        "margin": 0.1907206649999993,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "watermills_table2_col3",
+      "ground_truth": {
+        "value": 0.14,
+        "standard_error": 0.02,
+        "unit": "wright apprentices per capita per Domesday watermill per capita",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (3), Watermills (per capita)",
+        "context": "Table 2, column (3): column (2) plus agricultural suitability, wheat suitability and mean pasture suitability.  Wheat suitability is the paper's high-wheat-suitability indicator (mean wheat suitability category of the district lower than or equal to 5, the lower the more suitable).\n",
+        "decimals": 2,
+        "sample_size": 298
+      },
+      "i4r": {
+        "reproduced_value": 0.14,
+        "outcome": "matches",
+        "notes": "Meta-database row 5900 blanket verdict; value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.14285714285714285,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "watermills_table2_col3",
+        "claim_type": "coefficient",
+        "claimed": 0.14,
+        "reproduced": 0.1416137025,
+        "tolerance": 0.14285714285714285,
+        "rel_err": 0.011526446428571289,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "watermills_table2_col3",
+        "reproduced": 0.1416137025,
+        "band_source": "se_band",
+        "band_relative": 0.14285714285714285,
+        "band_absolute": 0.02,
+        "abs_err": 0.0016137024999999805,
+        "rel_err": 0.011526446428571289,
+        "margin": 0.08068512499999902,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "watermills_table2_col4",
+      "ground_truth": {
+        "value": 0.14,
+        "standard_error": 0.02,
+        "unit": "wright apprentices per capita per Domesday watermill per capita",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (4), Watermills (per capita)",
+        "context": "Table 2, column (4): column (3) plus the climatic controls, mean precipitation and mean temperature.\n",
+        "decimals": 2,
+        "sample_size": 298
+      },
+      "i4r": {
+        "reproduced_value": 0.14,
+        "outcome": "matches",
+        "notes": "Meta-database row 5900 blanket verdict; value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.14285714285714285,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "watermills_table2_col4",
+        "claim_type": "coefficient",
+        "claimed": 0.14,
+        "reproduced": 0.1406891109,
+        "tolerance": 0.14285714285714285,
+        "rel_err": 0.004922220714285599,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "watermills_table2_col4",
+        "reproduced": 0.1406891109,
+        "band_source": "se_band",
+        "band_relative": 0.14285714285714285,
+        "band_absolute": 0.02,
+        "abs_err": 0.000689110899999984,
+        "rel_err": 0.004922220714285599,
+        "margin": 0.0344555449999992,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "watermills_table2_col5",
+      "ground_truth": {
+        "value": 0.12,
+        "standard_error": 0.03,
+        "unit": "wright apprentices per capita per Domesday watermill per capita",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (5), Watermills (per capita)",
+        "context": "Table 2, column (5), the paper's preferred OLS specification (Figure 1 plots its partial correlation): column (4) plus mean population in 1710-50, minimal distance to an important harbour, distance to London, minimal distance to a Roman road, minimal distance to a navigable river, and the district's area.  SEs clustered at the historical county level.\n",
+        "decimals": 2,
+        "sample_size": 298
+      },
+      "i4r": {
+        "reproduced_value": 0.12,
+        "outcome": "matches",
+        "notes": "Row 5900 blanket verdict; the meta-database records the original as 0.12 (0.028) and its eight Table 2 col 5 rows are robustness variants only (0.023-0.179), none a plain re-run.\n",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.25,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "watermills_table2_col5",
+        "claim_type": "coefficient",
+        "claimed": 0.12,
+        "reproduced": 0.1199017443,
+        "tolerance": 0.25,
+        "rel_err": 0.0008187974999999497,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "watermills_table2_col5",
+        "reproduced": 0.1199017443,
+        "band_source": "se_band",
+        "band_relative": 0.25,
+        "band_absolute": 0.03,
+        "abs_err": 9.825569999999395e-05,
+        "rel_err": 0.0008187974999999497,
+        "margin": 0.0032751899999997986,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "watermills_ols_table3_col5",
+      "ground_truth": {
+        "value": 0.12,
+        "standard_error": 0.03,
+        "unit": "wright apprentices per capita per Domesday watermill per capita",
+        "claim_type": "coefficient",
+        "location": "Table 3, column (5) OLS, Watermills (per capita)",
+        "context": "Table 3 (\"Wright Apprentices per Capita and the Number of Domesday Mills per Capita\"), column (5), OLS: the Table 2 column (5) specification (main geographic, agricultural, climatic and other geographic controls, population) with river suitability added as a control, i.e. the OLS counterpart of the column (6) IV.  River suitability is the length of rivers in the district running through terrain of moderate ruggedness (ruggedness between 2 and 6).  The Table 3 note reports heteroscedasticity robust standard errors; the paper states (Section 4.2) that in all regressions observations are clustered at the county level.\n",
+        "decimals": 2,
+        "sample_size": 298
+      },
+      "i4r": {
+        "reproduced_value": 0.117,
+        "outcome": "matches",
+        "notes": "Meta-database row 5905 (Table 3 col 5, bootstrap SEs for 35 clusters) — 0.117 (0.028), as the original.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.25,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "watermills_ols_table3_col5",
+        "claim_type": "coefficient",
+        "claimed": 0.12,
+        "reproduced": 0.1167582261,
+        "tolerance": 0.25,
+        "rel_err": 0.027014782499999956,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "watermills_ols_table3_col5",
+        "reproduced": 0.1167582261,
+        "band_source": "se_band",
+        "band_relative": 0.25,
+        "band_absolute": 0.03,
+        "abs_err": 0.0032417738999999945,
+        "rel_err": 0.027014782499999956,
+        "margin": 0.10805912999999982,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "watermills_iv_table3_col2",
+      "ground_truth": {
+        "value": 0.16,
+        "standard_error": 0.04,
+        "unit": "wright apprentices per capita per Domesday watermill per capita",
+        "claim_type": "coefficient",
+        "location": "Table 3, column (2) IV, Watermills (per capita)",
+        "context": "Table 3, column (2), IV (two-stage least squares): Domesday watermills per capita instrumented with the paper's geographic suitability for grain-grinding watermills, the length of rivers in the district with moderate ruggedness (between 2 and 6) interacted with the high-wheat-suitability indicator (mean wheat suitability category of 5 or lower).  The two components, river suitability and wheat suitability, enter as controls; no other controls.  Dependent variable: wright apprentices per capita, 1710-50.  Standard errors as for column (5).\n",
+        "decimals": 2,
+        "sample_size": 298
+      },
+      "i4r": {
+        "reproduced_value": 0.16,
+        "outcome": "matches",
+        "notes": "Meta-database row 5900 blanket verdict; value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.25,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "watermills_iv_table3_col2",
+        "claim_type": "coefficient",
+        "claimed": 0.16,
+        "reproduced": 0.1591289467,
+        "tolerance": 0.25,
+        "rel_err": 0.005444083125000047,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "watermills_iv_table3_col2",
+        "reproduced": 0.1591289467,
+        "band_source": "se_band",
+        "band_relative": 0.25,
+        "band_absolute": 0.04,
+        "abs_err": 0.0008710533000000076,
+        "rel_err": 0.005444083125000047,
+        "margin": 0.02177633250000019,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "watermills_iv_table3_col4",
+      "ground_truth": {
+        "value": 0.15,
+        "standard_error": 0.04,
+        "unit": "wright apprentices per capita per Domesday watermill per capita",
+        "claim_type": "coefficient",
+        "location": "Table 3, column (4) IV, Watermills (per capita)",
+        "context": "Table 3, column (4), IV: the column (2) model adding the main geographic controls (longitude, latitude, mean ruggedness, mean elevation), the agricultural controls (agricultural and pasture suitability besides wheat suitability) and the climatic controls (mean precipitation and temperature).\n",
+        "decimals": 2,
+        "sample_size": 298
+      },
+      "i4r": {
+        "reproduced_value": 0.15,
+        "outcome": "matches",
+        "notes": "Meta-database row 5900 blanket verdict; value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.26666666666666666,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "watermills_iv_table3_col4",
+        "claim_type": "coefficient",
+        "claimed": 0.15,
+        "reproduced": 0.152248592,
+        "tolerance": 0.26666666666666666,
+        "rel_err": 0.014990613333333291,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "watermills_iv_table3_col4",
+        "reproduced": 0.152248592,
+        "band_source": "se_band",
+        "band_relative": 0.26666666666666666,
+        "band_absolute": 0.04,
+        "abs_err": 0.0022485919999999937,
+        "rel_err": 0.014990613333333291,
+        "margin": 0.05621479999999984,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "watermills_iv_table3_col6",
+      "ground_truth": {
+        "value": 0.16,
+        "standard_error": 0.04,
+        "unit": "wright apprentices per capita per Domesday watermill per capita",
+        "claim_type": "coefficient",
+        "location": "Table 3, column (6) IV, Watermills (per capita)",
+        "context": "Table 3, column (6), the full IV specification: column (4) plus the other geographic controls (distance to London, to the main eighteenth-century harbours, to a historical Roman road and to a navigable river, and the district's area) and the district's mean population in 1710-50.\n",
+        "decimals": 2,
+        "sample_size": 298
+      },
+      "i4r": {
+        "reproduced_value": 0.159,
+        "outcome": "matches",
+        "notes": "Meta-database row 5908 (Table 3 col 6, bootstrap SEs for 35 clusters) — 0.159 (0.037), as the original.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.25,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "watermills_iv_table3_col6",
+        "claim_type": "coefficient",
+        "claimed": 0.16,
+        "reproduced": 0.159158337,
+        "tolerance": 0.25,
+        "rel_err": 0.005260393749999953,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "watermills_iv_table3_col6",
+        "reproduced": 0.159158337,
+        "band_source": "se_band",
+        "band_relative": 0.25,
+        "band_absolute": 0.04,
+        "abs_err": 0.0008416629999999925,
+        "rel_err": 0.005260393749999953,
+        "margin": 0.021041574999999813,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "first_stage_f_table3_col2",
+      "ground_truth": {
+        "value": 19.9,
+        "standard_error": null,
+        "unit": "first-stage F-statistic",
+        "claim_type": "other",
+        "location": "Table 3, column (2), First-stage F-statistic",
+        "context": "Table 3, column (2): the first-stage F-statistic for the excluded instrument (river suitability x wheat suitability) in the IV with river suitability and wheat suitability as the only controls.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 19.9,
+        "outcome": "matches",
+        "notes": "Meta-database row 5900 blanket verdict; value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "first_stage_f_table3_col2",
+        "claim_type": "other",
+        "claimed": 19.9,
+        "reproduced": 19.90364781,
+        "tolerance": 0.01,
+        "rel_err": 0.0001833070351758976,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "first_stage_f_table3_col2",
+        "reproduced": 19.90364781,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 0.19899999999999998,
+        "abs_err": 0.003647810000000362,
+        "rel_err": 0.0001833070351758976,
+        "margin": 0.01833070351758976,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "first_stage_f_table3_col4",
+      "ground_truth": {
+        "value": 16.96,
+        "standard_error": null,
+        "unit": "first-stage F-statistic",
+        "claim_type": "other",
+        "location": "Table 3, column (4), First-stage F-statistic",
+        "context": "Table 3, column (4): first-stage F-statistic of the IV with main geographic, agricultural and climatic controls.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 16.96,
+        "outcome": "matches",
+        "notes": "Meta-database row 5900 blanket verdict; value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "first_stage_f_table3_col4",
+        "claim_type": "other",
+        "claimed": 16.96,
+        "reproduced": 16.95747308,
+        "tolerance": 0.01,
+        "rel_err": 0.00014899292452836662,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "first_stage_f_table3_col4",
+        "reproduced": 16.95747308,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 0.1696,
+        "abs_err": 0.0025269200000010983,
+        "rel_err": 0.00014899292452836662,
+        "margin": 0.014899292452836664,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "first_stage_f_table3_col6",
+      "ground_truth": {
+        "value": 16.17,
+        "standard_error": null,
+        "unit": "first-stage F-statistic",
+        "claim_type": "other",
+        "location": "Table 3, column (6), First-stage F-statistic",
+        "context": "Table 3, column (6): first-stage F-statistic of the full IV specification.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 16.17,
+        "outcome": "matches",
+        "notes": "Meta-database row 5900 blanket verdict; value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "first_stage_f_table3_col6",
+        "claim_type": "other",
+        "claimed": 16.17,
+        "reproduced": 16.17356162,
+        "tolerance": 0.01,
+        "rel_err": 0.00022026097711807456,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "first_stage_f_table3_col6",
+        "reproduced": 16.17356162,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 0.1617,
+        "abs_err": 0.003561619999999266,
+        "rel_err": 0.00022026097711807456,
+        "margin": 0.022026097711807455,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_districts_tables2_3",
+      "ground_truth": {
+        "value": 298.0,
+        "standard_error": null,
+        "unit": "districts",
+        "claim_type": "count",
+        "location": "Tables 2 and 3, Observations",
+        "context": "Number of district observations in the Table 2 and Table 3 regressions (the same in every column): districts with Domesday Book watermill data.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 298.0,
+        "outcome": "matches",
+        "notes": "Meta-database row 5900 blanket verdict; value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_districts_tables2_3",
+        "claim_type": "count",
+        "claimed": 298.0,
+        "reproduced": 298.0,
+        "tolerance": 0.05,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_districts_tables2_3",
+        "reproduced": 298.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 14.9,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 13,
+    "row_passed": 13,
+    "recomputed_passed": 13,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "mokyr-2022-wheels-of-change",
+    "mode": "blind",
+    "reproducer": "pipeline",
+    "label": "pipeline-desktop-opus-postfix2",
+    "model": "desktop-opus-postfix2",
+    "oracle": true,
+    "run": "20261103T111134Z",
+    "results_file": "pipeline-oracle-desktop-opus-postfix2-23papers-indep-blind-2026-11-05.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/mokyr-2022-wheels-of-change/blind/pipeline/20261103T111134Z",
+    "run_dir": null,
+    "date": "2026-11-03T11:11:34Z",
+    "data_access": "public",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 13,
+    "final": 13,
+    "first_scored": 13,
+    "first_scored_index": 0,
+    "first_attempt": 13,
+    "n_refinements": 0,
+    "n_error_refinements": 0,
+    "n_claim_refinements": 0,
+    "n_executions": 1,
+    "n_files_stripped": 17,
+    "agrees_with_i4r": true,
+    "deviations_manifest": [],
+    "deviations_stdout": [],
+    "notes": null,
+    "files_read_outside_mount": null,
+    "paper_text": null,
+    "complete": true,
+    "missing": []
+  }
+}

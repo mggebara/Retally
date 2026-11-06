@@ -1,0 +1,115 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: Parties as Disciplinarians: Charisma and
+Abstract (first 500 chars): We study how parties balance the benefits of disciplined programmatic campaigning with the electoral appeal of
+charismatic but potentially unfaithful candidates. We incorporate the well-known collective action problem arising from
+candidates’ inability to fully internalize the fruits of programmatic brand building. Although parties may strategically
+use promotions to induce brand building efforts, we show that the party may be unable to commit to such a promotion
+scheme when the electoral return
+Methodology Summary: - **Data and unit of analysis (cross-national):** Party-level, cross-sectional data from the 2009 Democratic Accountability and Linkages Project (DALP, Kitschelt 2013) expert survey, merged with country-level data. Parties or countries with missing data are dropped (fewer than the 80+ DALP countries remain; see Fig. C1). The estimation sample is 431 party observations from 75 countries (Table 1 note).
+- **Outcomes (both on DALP's 1–4 scale, 1 = "not at all", 4 = "very strongly"):** *Programmaticness* is the average of two DALP items: how much a party stresses policy positions in campaigning, and how much it draws on voters' partisan identification. *Personalism* is the single DALP item on how much a party's campaign relies on the leader's charismatic personality. Both are used in raw units, with no standardisation.
+- **Key regressors:** *Volatility* is the country average of the Pedersen index (average change in party vote-share percentages between two elections) over the four election pairs before 2009, or as many as are available. There are two group-attachment measures. (i) *Ethnic party* is a binary dummy, coded 1 if most experts report DALP ties to ethnic or linguistic organisations. (ii) *Ideological extremism* is continuous, roughly 0–6: the absolute distance of the party's DALP 10-point left-right placement from the country's ideological centre (the mean placement of all parties in that country).
+- **Estimating equations (OLS, linear levels):** For H1: Outcome_{i,p} = μ + β·Volatility_i + X_{i,p}γ + Z_iθ + u_{i,p} (country i, party p). For H2/H3, a group-attachment measure and its interaction with Volatility are added: β1·Volatility + β2·GroupAttach + β3·Volatility×GroupAttach + controls. Each group measure (ethnic, extremism) goes in its own model. There are no fixed effects (cross-section).
+- **Controls:** Party level (X): party size, and links to unions, businesses and religious organisations. Country level (Z): electoral system (plurality / PR / mixed), ballot rules (open / closed / mixed), average district magnitude, political openness, length of democracy, separation-of-powers rules, economic development, inequality, and ethnolinguistic cleavages. Definitions and omitted categories are in Table C2. Standard errors are **clustered by country**.
+- **Reporting / evaluation (Table 1):** The headline numbers are predicted values of each outcome on the 1–4 scale, not raw coefficients (coefficients are in Table D1). Low volatility = 25th percentile of the sample, high volatility = 75th percentile; differences come with clustered SEs. For ideology, a "moderate" party sits at distance 0 from the country mean and an "extremist" party at distance 3 (about the 75th percentile). Predictions are compared across party types at low and at high volatility. Robustness checks: commodity terms of trade as an alternative, more exogenous volatility measure (Table D6); two- or three-dimensional extremism measures; a group-attachment index that includes union ties; more detailed institutional controls (Section D).
+- **Brazil RD case study:** Mayoral elections, 1996–2012, reanalysing the Klašnja and Titiunik (2017) data. The running variable is the incumbent party's margin of victory at t (its vote share minus that of its strongest opponent), with cutoff 0. Outcomes at t+1 are whether the party nominates a charismatic candidate, proxied by indicators for (a) a young candidate and (b) a young outsider. Estimation is local linear with MSE-optimal main bandwidth h and bias bandwidth b, and robust bias-corrected 95% CIs, via `rdrobust` (Calonico et al. 2017). The table also reports a robust CI with h = b and effective sample sizes N+ and N− inside the bandwidth. Figure 6 shows binned means with a second-order polynomial fit.
+- **No ML components:** There is no train/test split, cross-validation or hyperparameter tuning. Inference comes from cluster-robust OLS (cross-national) and RD robust inference (Brazil).
+
+
+## Quantities to Compute
+Compute each quantity below and print it under the given name.  The paper's reported values are deliberately not shown.
+1. personalism_volatility_difference_overall [type: coefficient; unit: points on the 1-4 Personalism scale]
+   Location: Table 1, Overall row, Personalism, Difference column
+   Context: Table 1 ("Electoral Volatility, Group Attachments, and Electoral Strategies"), upper panel. Party-level OLS regression (Democratic Accountability and Linkages Project expert survey, 2009) of Personalism, the party's reliance on its leader's charismatic personality on a 1-4 scale, on electoral volatility (the country's average Pedersen index over up to four election pairs before 2009, rescaled to 0-1), with party-level covariates (party size, links to unions, business and religious organisations) and country-level covariates (plurality and proportional-representation indicators, closed- and ope…
+2. programmaticness_volatility_difference_overall [type: coefficient; unit: points on the 1-4 Programmaticness scale]
+   Location: Table 1, Overall row, Programmaticness, Difference column
+   Context: Table 1, upper panel: the same regression and covariates with Programmaticness as the outcome (the average of two 1-4 expert items: how much the party mobilises support by emphasising its policy positions, and how much it appeals to voters' long-term partisan loyalty). High-volatility (75th percentile) minus low-volatility (25th percentile) predicted Programmaticness; country-clustered standard errors.
+3. personalism_volatility_difference_nonethnic [type: coefficient; unit: points on the 1-4 Personalism scale]
+   Location: Table 1, Ethnicity panel, Nonethnic party row, Personalism, Difference column
+   Context: Table 1, middle (Ethnicity) panel. The Personalism regression of the upper panel with an ethnic-party indicator (parties most of whose expert coders report strong linkages to ethnic or linguistic organisations) and its interaction with volatility added; same covariates, country-clustered SEs. Predicted Personalism for a nonethnic party at high (75th percentile) minus low (25th percentile) volatility.
+4. programmaticness_volatility_difference_nonethnic [type: coefficient; unit: points on the 1-4 Programmaticness scale]
+   Location: Table 1, Ethnicity panel, Nonethnic party row, Programmaticness, Difference column
+   Context: Table 1, Ethnicity panel: the Programmaticness regression with the ethnic-party indicator and its interaction with volatility; predicted Programmaticness for a nonethnic party at high minus low volatility.
+5. personalism_ethnic_minus_nonethnic_low_volatility [type: coefficient; unit: points on the 1-4 Personalism scale]
+   Location: Table 1, Ethnicity panel, Difference row, Personalism, Low volatility column
+   Context: Table 1, Ethnicity panel, bottom (Difference) row: predicted Personalism of an ethnic party minus that of a nonethnic party at low volatility (25th percentile), from the ethnic-interaction Personalism regression. One of the four Hypothesis 3 comparisons.
+6. programmaticness_ethnic_minus_nonethnic_high_volatility [type: coefficient; unit: points on the 1-4 Programmaticness scale]
+   Location: Table 1, Ethnicity panel, Difference row, Programmaticness, High volatility column
+   Context: Table 1, Ethnicity panel, Difference row: predicted Programmaticness of an ethnic party minus that of a nonethnic party at high volatility (75th percentile), from the ethnic-interaction Programmaticness regression. One of the four Hypothesis 3 comparisons.
+7. personalism_volatility_difference_moderate [type: coefficient; unit: points on the 1-4 Personalism scale]
+   Location: Table 1, Ideology panel, Moderate party row, Personalism, Difference column
+   Context: Table 1, lower (Ideology) panel. The Personalism regression with ideological extremism (the absolute distance of the party's 1-10 left-right placement from the country's mean party placement, continuous, roughly 0-6) and its interaction with volatility added; same covariates, country-clustered SEs. A moderate party sits at the country's average placement (distance zero). Predicted Personalism for a moderate party at high (75th percentile) minus low (25th percentile) volatility.
+8. programmaticness_volatility_difference_moderate [type: coefficient; unit: points on the 1-4 Programmaticness scale]
+   Location: Table 1, Ideology panel, Moderate party row, Programmaticness, Difference column
+   Context: Table 1, Ideology panel: the Programmaticness regression with ideological extremism and its interaction with volatility; predicted Programmaticness for a moderate party (distance zero) at high minus low volatility.
+9. personalism_extremist_minus_moderate_low_volatility [type: coefficient; unit: points on the 1-4 Personalism scale]
+   Location: Table 1, Ideology panel, Difference row, Personalism, Low volatility column
+   Context: Table 1, Ideology panel, Difference row: predicted Personalism of an extremist party minus that of a moderate party at low volatility (25th percentile), from the extremism-interaction Personalism regression. The paper places the extremist party at an absolute distance of 3 from the country mean on the 0-6 scale ("approximately the 75th percentile"). One of the four Hypothesis 3 comparisons; not significant in the paper.
+10. programmaticness_extremist_minus_moderate_high_volatility [type: coefficient; unit: points on the 1-4 Programmaticness scale]
+   Location: Table 1, Ideology panel, Difference row, Programmaticness, High volatility column
+   Context: Table 1, Ideology panel, Difference row: predicted Programmaticness of an extremist party (the paper: distance 3 from the country mean, "approximately the 75th percentile") minus that of a moderate party at high volatility (75th percentile), from the extremism-interaction Programmaticness regression. One of the four Hypothesis 3 comparisons.
+11. n_obs_table1 [type: count; unit: observations (parties)]
+   Location: Table 1, note
+   Context: Number of party observations the Table 1 analyses are based on, as stated in the table note (parties in 75 countries with complete data on the outcomes, volatility and all covariates).
+12. rd_effect_young [type: coefficient; unit: change in the probability (0-1) of nominating a young candidate]
+   Location: Table 2, row Young, tau_RD
+   Context: Table 2 ("RD Effect of Incumbent Party's Victory at t on Nomination of Charismatic Candidate at t + 1"). Brazilian mayoral elections 1996-2012, restricted to elections where the winning candidate is not term-limited in the next election (open-seat sample; the incumbent mayor does not run for a second term). Running variable: the incumbent party's margin of victory at t (its vote share minus that of its strongest opponent), cutoff zero. Outcome: the party's mayoral candidate at t + 1 is young (younger than 35 the first time they run for mayor). Conventional RD point estimate from local linear p…
+13. rd_effect_young_outsider [type: coefficient; unit: change in the probability (0-1) of nominating a young outsider candidate]
+   Location: Table 2, row Young and outsider, tau_RD
+   Context: Table 2: the same RD design and estimator with the outcome that the party's candidate at t + 1 is both younger than 35 and an outsider the first time they run (neither an elected official nor a government employee of any kind). Conventional local linear RD point estimate, MSE-optimal main and bias bandwidths, rdrobust.
+
+## Dataset Information
+Name: hollyer-2022-parties-as-disciplinarians
+Local path: <repo>/.cache/datasets/hollyer_2022_parties_as_disciplinarians.script-free
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- cross-national-data.dta (153.4 KB) — 506 rows, 25 columns: unions, business, religious, system, polity, gini, personal, programmatic, ethnic, mdmh, ctot, erule, partysize, cl, programmatic2, ev_total, pluralty, extremist2, extremist2_2d, extremist2_3d, ccode, demsys, ethfrac, gdppc, pr
+- brazil-RD-data.dta (483.1 KB) — 27455 rows, 4 columns: mv_incparty, youngF_inc_for1, dlameduck_runs, outyg1F_inc_for1
+- brazil-receipts-candidates-data.dta (264.4 KB) — 16591 rows, 3 columns: ratio_receipts, sg_ue, year
+- brazil-validation-data.dta (651.5 KB) — 55385 rows, 3 columns: cand_youngF, err_mvparty, cand_outyg1F
+- 00-README.txt (1.7 KB)
+- codebook.pdf (40.2 KB)
+- metadata.json (607 B)
+
+Data inventory (every data file, profiled on the host before generation: rows, columns with Stata variable labels in quotes, and which columns differ between files that share their columns).  Use it to choose the file each analysis needs and to check row counts:
+- cross-national-data.dta (153.4 KB, dta): 506 rows, 25 columns: unions "Linkages: unions", business "Linkages: business", religious "Linkages: religious org's", system "Political System", polity "Polity score", gini "GINI index (World Bank estimate)", personal "Personalistic", programmatic "Programmatic", ethnic "Linkages: ethnic", mdmh "Mean district magnitude (lower house, logged)", ctot "Commodity terms of trade", erule "Detailed electoral rules", partysize "Party size", cl "Closed List", programmatic2 "Programmatic (alternative)", ev_total "Volatility", pluralty "Plurality", extremist2 "Extremism, overall left-right (weighted by size)", extremist2_2d "Extremism 2D, city block (weighted by size)", extremist2_3d "Extremism 3D, city block (weighted by s…
+- brazil-validation-data.dta (651.5 KB, dta): 55385 rows, 3 columns: cand_youngF "=1 if party's candidate is 35 years old or younger", err_mvparty "Error from prediction of candidate vote share using nation- …", cand_outyg1F "=1 if party's candidate is 35 years old or younger and outsi…"
+- brazil-RD-data.dta (483.1 KB, dta): 27455 rows, 4 columns: mv_incparty "Incumbent party at t (party that won at t-1)", youngF_inc_for1 "=1 if incumbent party's candidate at t+1 is 35 years old or …", dlameduck_runs "=1 if incumbent mayor runs for second term at t", outyg1F_inc_for1 "=1 if incumbent party's candidate at t+1 is 35 years old or …"
+- brazil-receipts-candidates-data.dta (264.4 KB, dta): 16591 rows, 3 columns: ratio_receipts "Campaign receipts ratio, mayoral vs. council candidates", sg_ue "Municipality code", year "Election year"
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Sample Accounting
+Before the RESULT: lines, print how each estimation sample is built, one line per step,
+using EXACTLY this format:
+    SAMPLE:<sample_name>:<step>=<number_of_rows>
+For example:  cat(sprintf('SAMPLE:main:loaded=%d\n', nrow(df)))
+Start each sample with step `loaded` (rows read from the data file), then print one line after each sample restriction the paper states, in the order the paper states them and named after the restriction, and end with step `estimation`: the number of observations the estimator actually used (nobs(model)), after rows dropped for missing values or singletons.  Use one <sample_name> per distinct estimation sample (one per table, panel or subgroup).
+Apply every restriction the paper states, in order, before estimating.  A sample that ends with 0 rows, or loses most of its rows at one step, means a restriction is mis-coded: fix it rather than estimate on it.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/hollyer_2022_parties_as_disciplinarians.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Independent Reproduction
+This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's description alone.  The authors' own analysis code is deliberately withheld.  Do NOT open, read, source, or execute any script files that may appear in the dataset directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, and similar) — load data files only.  Derive the estimating equation, sample restrictions, fixed effects, and standard-error clustering from the paper information and claims above.
+
+## Blind Reproduction
+This reproduction is also BLIND: the paper's reported values for the quantities above are deliberately withheld, and you will not be told how close your numbers are.  Compute each quantity as the paper's method defines it; do not tune the specification toward any number you expect.  Do NOT read result tables, logs, or output files that may appear in the dataset directory (.tex, .log, .pdf, .html, and similar) to recover the paper's numbers — compute everything from the data files.  Print a RESULT: line for every quantity listed, using its name exactly.
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

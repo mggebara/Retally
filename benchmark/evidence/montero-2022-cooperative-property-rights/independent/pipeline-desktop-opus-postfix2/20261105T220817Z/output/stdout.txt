@@ -1,0 +1,41 @@
+NOTE: outcome column chosen = ln_hh_inc_pc (filter = none; zero_fill = FALSE; survey FE = FALSE; n300=4776, n150=1583)
+DEVIATION: survey-round fixed effects (survey_year) not included, since the paper's equation (1) has none and requiring a non-missing round drops workers from the paper's sample
+NOTE: IQR computed on exp(ln_hh_inc_pc) (dollars per month)
+NOTE: owner cluster column chosen = Expropretario_ISTA
+SAMPLE:earnings_level_bw300:loaded=5060
+SAMPLE:earnings_level_bw300:matched_former_owner_landholdings=5060
+SAMPLE:earnings_level_bw300:within_300ha_of_500=4781
+SAMPLE:earnings_level_bw300:nonmissing_earnings=4776
+SAMPLE:earnings_level_bw300:estimation=4776
+SAMPLE:earnings_level_bw150:loaded=5060
+SAMPLE:earnings_level_bw150:matched_former_owner_landholdings=5060
+SAMPLE:earnings_level_bw150:within_150ha_of_500=1583
+SAMPLE:earnings_level_bw150:nonmissing_earnings=1583
+SAMPLE:earnings_level_bw150:estimation=1583
+NOTE: property id = munic+CANTON, property-by-survey-year = TRUE, min members = 4 (count distance = 19)
+DEVIATION: minimum workers per property for IQR set to 4 (instead of 5) to match the paper's property counts
+DEVIATION: property identified jointly by munic+CANTON to match the paper's property counts
+SAMPLE:earnings_iqr_bw300:loaded=5060
+SAMPLE:earnings_iqr_bw300:within_300ha_of_500_workers=4772
+SAMPLE:earnings_iqr_bw300:collapsed_to_property=821
+SAMPLE:earnings_iqr_bw300:at_least_4_members=319
+SAMPLE:earnings_iqr_bw300:estimation=319
+SAMPLE:earnings_iqr_bw150:loaded=5060
+SAMPLE:earnings_iqr_bw150:within_150ha_of_500_workers=1579
+SAMPLE:earnings_iqr_bw150:collapsed_to_property=351
+SAMPLE:earnings_iqr_bw150:at_least_4_members=107
+SAMPLE:earnings_iqr_bw150:estimation=107
+RESULT:earnings_level_above500_bw300=0.8847
+RESULT:earnings_level_above500_bw300_se=0.3748
+RESULT:earnings_level_above500_bw150=0.8568
+RESULT:earnings_level_above500_bw150_se=0.4354
+RESULT:earnings_iqr_above500_bw300=23.1384
+RESULT:earnings_iqr_above500_bw300_se=66.2054
+RESULT:earnings_iqr_above500_bw150=-9.5028
+RESULT:earnings_iqr_above500_bw150_se=41.4609
+RESULT:n_obs_earnings_level_bw300=4776
+RESULT:n_obs_earnings_level_bw150=1583
+RESULT:n_obs_earnings_iqr_bw300=319
+RESULT:n_obs_earnings_iqr_bw150=107
+RESULT:n_clusters_bw300=98
+RESULT:n_clusters_bw150=36

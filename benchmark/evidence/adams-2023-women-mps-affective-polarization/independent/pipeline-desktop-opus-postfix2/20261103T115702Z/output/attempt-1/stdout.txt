@@ -1,0 +1,86 @@
+INFO: women-share candidates: to_pfeml 
+INFO: using women-share variable: to_pfeml 
+SAMPLE:main:loaded=2266
+SAMPLE:main:both_parties_at_least_4_mps=2266
+SAMPLE:main:nonmissing_cmp_positions=2266
+SAMPLE:main:nonmissing_partisan_ratings=2266
+SAMPLE:main:nonmissing_women_share_controls=2019
+INFO: rl distance mean=-0.005 sd=0.995
+SAMPLE:main:estimation=2019
+OLS estimation, Dep. Var.: dv
+Observations: 2,019
+Fixed-effects: election: 81
+Standard-errors: Clustered (election) 
+            Estimate Std. Error t value   Pr(>|t|)    
+women_share  1.60382   0.290567 5.51961 4.0759e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.36402     Adj. R2: 0.15216 
+                Within R2: 0.032662
+OLS estimation, Dep. Var.: dv
+Observations: 2,019
+Fixed-effects: election: 81
+Standard-errors: Clustered (election) 
+             Estimate Std. Error  t value   Pr(>|t|)    
+women_share  1.486938   0.302989  4.90757 4.7746e-06 ***
+rl          -0.583628   0.068231 -8.55375 6.6204e-13 ***
+coal         0.937359   0.175058  5.35456 8.0105e-07 ***
+opp          0.313668   0.105366  2.97692 3.8510e-03 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.24038     Adj. R2: 0.297801
+                Within R2: 0.200071
+INFO: gender values: 1=2260; 2=2262 
+SAMPLE:women_partisans:loaded=2262
+SAMPLE:women_partisans:both_parties_at_least_4_mps=2262
+SAMPLE:women_partisans:nonmissing_cmp_positions=2262
+SAMPLE:women_partisans:nonmissing_partisan_ratings=2262
+SAMPLE:women_partisans:nonmissing_women_share_controls=2016
+SAMPLE:women_partisans:estimation=2016
+OLS estimation, Dep. Var.: dv
+Observations: 2,016
+Fixed-effects: election: 80
+Standard-errors: Clustered (election) 
+             Estimate Std. Error  t value   Pr(>|t|)    
+women_share  1.455092   0.303062  4.80130 7.3410e-06 ***
+rl          -0.583131   0.069056 -8.44430 1.1847e-12 ***
+coal         0.932213   0.174930  5.32905 9.0900e-07 ***
+opp          0.298972   0.104826  2.85208 5.5410e-03 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.24084     Adj. R2: 0.296285
+                Within R2: 0.196275
+SAMPLE:men_partisans:loaded=2260
+SAMPLE:men_partisans:both_parties_at_least_4_mps=2260
+SAMPLE:men_partisans:nonmissing_cmp_positions=2260
+SAMPLE:men_partisans:nonmissing_partisan_ratings=2260
+SAMPLE:men_partisans:nonmissing_women_share_controls=2013
+SAMPLE:men_partisans:estimation=2013
+OLS estimation, Dep. Var.: dv
+Observations: 2,013
+Fixed-effects: election: 80
+Standard-errors: Clustered (election) 
+             Estimate Std. Error  t value   Pr(>|t|)    
+women_share  1.456938   0.303253  4.80436 7.2549e-06 ***
+rl          -0.583600   0.069109 -8.44459 1.1832e-12 ***
+coal         0.934043   0.176024  5.30635 9.9638e-07 ***
+opp          0.300890   0.105035  2.86466 5.3457e-03 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1.23876     Adj. R2: 0.297138
+                Within R2: 0.197356
+RESULT:women_mps_coef_bivariate=1.603816
+RESULT:women_mps_se_bivariate=0.290567
+RESULT:women_mps_coef_full=1.486938
+RESULT:women_mps_se_full=0.302989
+RESULT:women_mps_coef_women_partisans=1.455092
+RESULT:women_mps_se_women_partisans=0.303062
+RESULT:women_mps_coef_men_partisans=1.456938
+RESULT:women_mps_se_men_partisans=0.303253
+RESULT:right_left_distance_coef_full=-0.583628
+RESULT:coalition_partners_coef_full=0.937359
+RESULT:opposition_partners_coef_full=0.313668
+RESULT:n_directed_dyads=2019
+RESULT:n_obs_women_partisans=2016
+RESULT:n_obs_men_partisans=2013
+RESULT:n_election_studies=81
