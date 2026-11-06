@@ -70,6 +70,9 @@ Per paper and mode: final claims within tolerance in each of the three pipeline 
 | `mokyr-2022` | oracle | seeded | 13 | 13 | 13 | 13 | 0 | 13 |
 | `mokyr-2022` | oracle | independent | 13 | 13 | 7 | 7 | **6** | 13 |
 | `mokyr-2022` | oracle | blind | 13 | 1 | 1 | 7 | **6** | 13 |
+| `molina-garzon-2022` | oracle | seeded | 12 | 12 | 12 | 12 | 0 | 12 |
+| `molina-garzon-2022` | oracle | independent | 12 | 12 | 12 | 6 | **6** | 12 |
+| `molina-garzon-2022` | oracle | blind | 12 | 6 | 6 | 12 | **6** | 12 |
 | `montero-2022` | API | seeded | 10 | 10 | 10 | 10 | 0 | 10 |
 | `montero-2022` | API | independent | 10 | 10 | 8 | 10 | **2** | 10 |
 | `montero-2022` | API | blind | 10 | 0 | 3 | 0 | **3** | 10 |

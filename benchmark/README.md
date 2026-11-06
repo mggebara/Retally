@@ -700,8 +700,9 @@ benchmark/evidence/
   left out.  Later rebuilds added the post-fix oracle samples
   (`pipeline-oracle-desktop-opus-postfix-…`, label `desktop-opus-postfix`,
   ROADMAP 3.8.1; `pipeline-oracle-desktop-opus-postfix2-…`, label
-  `desktop-opus-postfix2`, ROADMAP 3.8.3); `INDEX.md` now lists 512 cells
-  on the 23 evaluation papers.
+  `desktop-opus-postfix2`, ROADMAP 3.8.3); and the 24th evaluation paper
+  (`molina-garzon-2022-decentralization-cooperation`, ROADMAP 3.9, 17
+  cells); `INDEX.md` now lists 529 cells on the 24 evaluation papers.
 
 ## Plugging in another agent
 

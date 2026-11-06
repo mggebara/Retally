@@ -25,9 +25,9 @@ From `benchmark.metrics.closeness`.  Relative error and the tolerance multiples 
 | Agent (Claude Code, desktop Opus) | 17 | seeded | 201 | 100 % | 0.1 % | 100 % | 100 % | 100 % |
 | Agent (Claude Code, desktop Opus) | 17 | independent | 201 | 100 % | 0.3 % | 97 % | 98 % | 98 % |
 | Agent (Claude Code, desktop Opus) | 17 | blind | 201 | 100 % | 0.6 % | 91 % | 93 % | 96 % |
-| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 23 | seeded | 278 | 100 % | 0.1 % | 95 % | 95 % | 96 % |
-| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 23 | independent | 278 | 100 % | 1.6 % | 86 % | 89 % | 95 % |
-| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 23 | blind | 278 | 91 % | 3.6 % | 68 % | 78 % | 82 % |
-| Agent (Claude Code, desktop Opus) | 23 | seeded | 278 | 100 % | 0.1 % | 100 % | 100 % | 100 % |
-| Agent (Claude Code, desktop Opus) | 23 | independent | 278 | 100 % | 0.5 % | 96 % | 98 % | 99 % |
-| Agent (Claude Code, desktop Opus) | 23 | blind | 278 | 100 % | 0.7 % | 91 % | 94 % | 97 % |
+| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 24 | seeded | 290 | 100 % | 0.1 % | 95 % | 96 % | 97 % |
+| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 24 | independent | 290 | 100 % | 1.5 % | 87 % | 90 % | 95 % |
+| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 24 | blind | 290 | 90 % | 3.6 % | 69 % | 78 % | 83 % |
+| Agent (Claude Code, desktop Opus) | 24 | seeded | 290 | 100 % | 0.1 % | 100 % | 100 % | 100 % |
+| Agent (Claude Code, desktop Opus) | 24 | independent | 290 | 100 % | 0.5 % | 97 % | 98 % | 99 % |
+| Agent (Claude Code, desktop Opus) | 24 | blind | 290 | 100 % | 0.6 % | 91 % | 94 % | 97 % |
