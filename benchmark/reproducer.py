@@ -32,6 +32,7 @@ their agent is given.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import shutil
@@ -51,6 +52,7 @@ from benchmark.strip_rule import (  # SCRIPT_* re-exported for existing callers
     name_reason,
 )
 from retally.codegen.docker_executor import DockerExecutor, RDockerExecutor
+from retally.http_retry import http_get, with_retries
 from retally.models import Claim, Dataset, DatasetReference, Language, ReproductionMode
 from retally.usage import UsageTracker
 
@@ -364,6 +366,55 @@ class _ScriptFreeDownloader:
         return getattr(self._inner, name)
 
 
+PAPER_CACHE_DIR = Path(__file__).resolve().parent / ".cache" / "papers"
+"""Where :func:`cached_paper_source` keeps the first download of each paper PDF."""
+
+
+def cached_paper_source(paper_source: str, *, cache_dir: Path = PAPER_CACHE_DIR) -> str:
+    """A stable local copy of an ``http(s)`` paper PDF; every other source passes through.
+
+    Some repositories stamp every download: UvA-DARE's cover sheet carries
+    ``Download date:DD Mon YYYY``, so the same URL fetched on two days
+    yields two different texts, two different extraction prompts and —
+    under the LLM oracle, whose request ids hash the prompt — two
+    different pending prompts for one cell.  A run that spans midnight
+    never converges on that paper.
+
+    The first fetch of a URL is kept at ``<cache_dir>/<sha256(url)[:16]>.pdf``
+    and later calls return that path (``ValidationPipeline._parse_paper``
+    reads a ``.pdf`` path with ``parse_pdf``, exactly what ``parse_url``
+    does with the bytes it streams).  A response that is not a PDF — an
+    HTML landing page — is not cached and the URL is returned unchanged.
+
+    This is harness plumbing: the pipeline's parsing is untouched, and
+    the runner's result-cache key still serialises the catalog URL.
+    """
+    if not paper_source.startswith(("http://", "https://")):
+        return paper_source
+    key = hashlib.sha256(paper_source.encode("utf-8")).hexdigest()[:16]
+    cached = cache_dir / f"{key}.pdf"
+    if cached.is_file():
+        return str(cached)
+
+    def _fetch() -> bytes | None:
+        response = http_get(paper_source, stream=True, timeout=60)
+        response.raise_for_status()
+        content_type = response.headers.get("Content-Type", "").lower()
+        body = response.content
+        if "application/pdf" in content_type or body.startswith(b"%PDF"):
+            return body
+        return None
+
+    body = with_retries(_fetch, what=f"GET {paper_source}")
+    if body is None:
+        return paper_source
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    partial = cached.with_name(cached.name + ".part")
+    partial.write_bytes(body)
+    partial.replace(cached)
+    return str(cached)
+
+
 class PipelineReproducer:
     """``ValidationPipeline`` as a :class:`Reproducer` — the reference agent.
 
@@ -387,6 +438,11 @@ class PipelineReproducer:
     for the duration of the call.  A failed check raises
     ``DockerUnavailable``, which the runner records as the transient
     ``docker_unavailable`` error kind.
+
+    An ``http(s)`` paper source is replaced by its cached first download
+    (:func:`cached_paper_source`) before the pipeline sees it, so a paper
+    whose repository stamps each download parses identically on every
+    run.  ``paper_cache_dir=None`` hands the URL through untouched.
     """
 
     name = "pipeline"
@@ -397,11 +453,14 @@ class PipelineReproducer:
         *,
         isolate_independent_scripts: bool = True,
         docker_check: Any = check_docker_daemon,
+        paper_cache_dir: Path | None = PAPER_CACHE_DIR,
     ) -> None:
         self.pipeline = pipeline
         self.isolate_independent_scripts = isolate_independent_scripts
         self.docker_check = docker_check
         """Zero-arg callable raising ``DockerUnavailable`` when the daemon does not answer."""
+        self.paper_cache_dir = paper_cache_dir
+        """Where downloaded paper PDFs are kept between runs; ``None`` disables the cache."""
         self.last_usage: dict[str, Any] | None = None
         """Usage of the most recent ``reproduce`` call (set even when it raised)."""
 
@@ -426,6 +485,8 @@ class PipelineReproducer:
         docker_attrs = self._docker_executor_attrs()
         if docker_attrs:
             self.docker_check()  # fail fast, before any API call is paid for
+        if self.paper_cache_dir is not None:
+            paper_source = cached_paper_source(paper_source, cache_dir=self.paper_cache_dir)
         isolate = self.isolate_independent_scripts and reproduction_mode.withholds_code
         original_downloader = getattr(self.pipeline, "downloader", None)
         wrapper: _ScriptFreeDownloader | None = None

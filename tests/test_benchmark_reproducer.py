@@ -1048,3 +1048,95 @@ def test_pipeline_reproduction_places_the_final_kind_at_its_index():
     assert rep.attempt_outputs == [_ON_TARGET, ""]
     assert rep.attempt_kinds == ["", ""]
     assert (rep.n_error_refinements, rep.n_claim_refinements) == (0, 1)
+
+
+# ── Paper download cache: one fetch per URL, stable text across days ────────
+
+
+class _FakeResponse:
+    def __init__(self, body: bytes, content_type: str) -> None:
+        self.content = body
+        self.headers = {"Content-Type": content_type}
+
+    def raise_for_status(self) -> None:
+        pass
+
+
+def _fake_http_get(monkeypatch, body: bytes, content_type: str) -> list[str]:
+    calls: list[str] = []
+
+    def fake(url, **kwargs):
+        calls.append(url)
+        return _FakeResponse(body, content_type)
+
+    monkeypatch.setattr(reproducer_mod, "http_get", fake)
+    return calls
+
+
+def test_cached_paper_source_fetches_a_pdf_once(tmp_path, monkeypatch):
+    calls = _fake_http_get(monkeypatch, b"%PDF-1.4 day one", "application/pdf")
+    url = "https://pure.example.org/files/1/paper.pdf"
+
+    first = reproducer_mod.cached_paper_source(url, cache_dir=tmp_path)
+    assert first.endswith(".pdf") and Path(first).parent == tmp_path
+    assert Path(first).read_bytes() == b"%PDF-1.4 day one"
+    assert calls == [url]
+
+    # The repository stamps every download; the second day never reaches it.
+    _fake_http_get(monkeypatch, b"%PDF-1.4 day two", "application/pdf")
+    second = reproducer_mod.cached_paper_source(url, cache_dir=tmp_path)
+    assert second == first
+    assert Path(second).read_bytes() == b"%PDF-1.4 day one"
+
+
+def test_cached_paper_source_keys_by_url(tmp_path, monkeypatch):
+    _fake_http_get(monkeypatch, b"%PDF-1.4", "application/octet-stream")
+    a = reproducer_mod.cached_paper_source("https://x.org/a.pdf", cache_dir=tmp_path)
+    b = reproducer_mod.cached_paper_source("https://x.org/b.pdf", cache_dir=tmp_path)
+    assert a != b
+    # A PDF served as octet-stream is recognised by its magic bytes, as parse_url does.
+    assert Path(a).is_file() and Path(b).is_file()
+    assert not list(tmp_path.glob("*.part"))
+
+
+def test_cached_paper_source_passes_non_pdf_and_non_url_sources_through(tmp_path, monkeypatch):
+    calls = _fake_http_get(monkeypatch, b"<html>landing page</html>", "text/html")
+    url = "https://x.org/landing"
+    assert reproducer_mod.cached_paper_source(url, cache_dir=tmp_path) == url
+    assert calls == [url]
+    assert list(tmp_path.iterdir()) == []
+    for source in ("raw paper text", "10.1000/xyz", "2301.00001", "/tmp/p.pdf"):
+        assert reproducer_mod.cached_paper_source(source, cache_dir=tmp_path) == source
+    assert calls == [url]
+
+
+def test_pipeline_reproducer_hands_the_pipeline_the_cached_pdf(tmp_path, monkeypatch):
+    calls = _fake_http_get(monkeypatch, b"%PDF-1.4", "application/pdf")
+    pipeline = MagicMock()
+    pipeline.executor = None
+    pipeline.r_executor = None
+    beta = Claim(description="beta", value=0.5)
+    pipeline.validate.return_value = ValidationReport(
+        paper=Paper(title="t", claims=[beta]),
+        dataset=Dataset(name="d", source_url="", local_path=tmp_path),
+        execution_result=ExecutionResult(generated_code="x", exit_code=0, outputs={"beta": 0.5}),
+        claim_results=[ClaimValidationResult(claim=beta, reproduced_value=0.5, passed=True)],
+        overall_passed=True,
+    )
+    url = "https://x.org/paper.pdf"
+    kwargs = dict(
+        language=Language.PYTHON,
+        dataset_reference=None,
+        claims=[beta],
+        reproduction_mode=ReproductionMode.SEEDED,
+    )
+
+    PipelineReproducer(pipeline, paper_cache_dir=tmp_path).reproduce(url, **kwargs)
+    (seen,) = [c.args[0] for c in pipeline.validate.call_args_list]
+    assert seen.endswith(".pdf") and Path(seen).parent == tmp_path
+    assert calls == [url]
+
+    # Disabled: the URL reaches the pipeline untouched and nothing is fetched here.
+    PipelineReproducer(pipeline, paper_cache_dir=None).reproduce(url, **kwargs)
+    assert pipeline.validate.call_args_list[-1].args[0] == url
+    assert calls == [url]
