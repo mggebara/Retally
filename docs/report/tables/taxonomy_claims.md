@@ -220,6 +220,12 @@ Every non-matching evaluation-paper claim in independent and blind mode, with it
 | pipeline 5.5 | `mokyr-2022` | blind | `first_stage_f_table3_col2` | 19.9 | 8.857 | specification mismatch |
 | pipeline 5.5 | `mokyr-2022` | blind | `first_stage_f_table3_col4` | 16.96 | 7.324 | specification mismatch |
 | pipeline 5.5 | `mokyr-2022` | blind | `first_stage_f_table3_col6` | 16.17 | 7.924 | specification mismatch |
+| pipeline 5.5 | `molina-garzon-2022` | blind | `decentralized_table3_allties_base` | 0.22 | NA | data-file resolution |
+| pipeline 5.5 | `molina-garzon-2022` | blind | `decentralized_table3_allties_full` | 0.24 | NA | data-file resolution |
+| pipeline 5.5 | `molina-garzon-2022` | blind | `decentralized_table3_strongties_base` | 0.61 | NA | data-file resolution |
+| pipeline 5.5 | `molina-garzon-2022` | blind | `decentralized_table3_strongties_full` | 1.07 | NA | data-file resolution |
+| pipeline 5.5 | `molina-garzon-2022` | blind | `n_obs_table3_base` | 231 | NA | data-file resolution |
+| pipeline 5.5 | `molina-garzon-2022` | blind | `n_obs_table3_full` | 226 | NA | data-file resolution |
 | pipeline 5.5 | `montero-2022` | blind | `earnings_level_above500_bw300` | 60.49 | 196.8 | data-file resolution |
 | pipeline 5.5 | `montero-2022` | blind | `earnings_level_above500_bw150` | 52.79 | 196.8 | data-file resolution |
 | pipeline 5.5 | `montero-2022` | blind | `earnings_iqr_above500_bw300` | -42.97 | NA | data-file resolution |

@@ -26,7 +26,8 @@ Estimated API cost per paper and mode (`benchmark/pricing.py` list prices: `clau
 | `lopez-moctezuma-2022` | — | — | 4 / 6 / 3 |
 | `manekin-2022` | $0.59 / $0.25 / $0.24 | $0.33 / $0.11 / $0.23 | — |
 | `mokyr-2022` | — | — | 4 / 4 / 3 |
+| `molina-garzon-2022` | — | — | 4 / 4 / 3 |
 | `montero-2022` | $0.37 / $0.50 / $0.24 | $0.27 / $0.43 / $0.22 | — |
-| **Total** | **$8.11** | **$3.54** | **239** |
+| **Total** | **$8.11** | **$3.54** | **250** |
 
 Same twelve API-route cells on `claude-opus-4-7`: $3.62 (output tokens 77,671); on `claude-opus-5-5`: $3.54 (input 336,894, output 109,612).  The three dev papers' pipeline 4.7 rows in the REPORT composite: $3.86.

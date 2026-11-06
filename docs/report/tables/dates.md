@@ -29,4 +29,5 @@ First public version of the paper: 2015-08 to 2022-07-17.  Package release: 2020
 | `lopez-moctezuma-2022` | 2015-08 | 2020-08-27 |
 | `manekin-2022` | 2021-09-14 | 2021-09-14 |
 | `mokyr-2022` | 2019-11 | 2021-11-27 |
+| `molina-garzon-2022` | 2021-05-04 | 2020-09-10 |
 | `montero-2022` | 2017-12 | 2023-03-31 |

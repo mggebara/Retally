@@ -3637,6 +3637,156 @@ execution whose container was seen running 18 minutes against the 300 s
 limit (results complete, kill status unknown).  Harness only; the
 pipeline is unchanged.
 
+### 3.9 A 24th evaluation paper under rule R7 (2026-11-06) — ✅ measured, no API spend
+
+**What ran.**  `molina-garzon-2022-decentralization-cooperation` (AJPS
+2022; corpus pass 4, rule R7, PR #134; 12 claims, 7 I4R rows, verdict
+reproducible; 0.6 MB Dataverse package) was run three times by each
+system, the same way as the other 23.  The pipeline ran frozen through
+the desktop oracle (`RETALLY_PIPELINE_FROZEN=1`), labels `desktop-opus`,
+`desktop-opus-run2` and `desktop-opus-run3`, all modes.  The agent ran as
+Claude Code cells: run ids `2026-11-06-a` and `-b` in all modes,
+`2026-11-06-c` in independent and blind.  No API spend.  Six files
+(PR #135), each rescored under the count policy with 0 flips:
+
+- `benchmark/results/pipeline-oracle-desktop-opus-1paper-all-modes-2026-11-06.json`
+- `benchmark/results/pipeline-oracle-desktop-opus-run2-1paper-all-modes-2026-11-06.json`
+- `benchmark/results/pipeline-oracle-desktop-opus-run3-1paper-all-modes-2026-11-06.json`
+- `benchmark/results/claude-code-1paper-all-modes-2026-11-06.json`
+- `benchmark/results/claude-code-run2-1paper-all-modes-2026-11-06.json`
+- `benchmark/results/claude-code-run3-1paper-indep-blind-2026-11-06.json`
+
+**Counts, 12 claims** (final, first scored in brackets):
+
+| Sample | Pipeline seeded | Pipeline independent | Pipeline blind | Agent seeded | Agent independent | Agent blind |
+|---|---|---|---|---|---|---|
+| 1 | 12 (12) | 12 (6) | 6 (6) | 12 (12) | 12 (12) | 12 (12) |
+| 2 | 12 (12) | 12 (6) | 6 (6) | 12 (12) | 12 (12) | 12 (12) |
+| 3 | 12 (12) | 6 (6) | 12 (12) | — | 12 (12) | 12 (12) |
+
+Each pipeline independent cell ran one claim refinement; in sample 3 it
+did not help.  The agent logged one error repair in run b blind and one
+in run c independent, both its own tooling slip: Docker started before
+the script file existed (the shell refused the heredoc in b, the copy
+was refused in c), so Docker bind-mounted an empty directory and nothing
+ran.  Both are recorded in the cells' `reproduction.json`.
+
+**Why the pipeline missed Table 3.**  Every pipeline miss is the same
+six claims: Table 3's four Poisson coefficients and its two Ns, printed
+`NA`.  Table 2 (weighted OLS on the game panel) passed in all nine
+cells.  From the evidence cells (`CELL.md`, `output/script.R`,
+`output/stdout.txt`, `prompt/`), the three failing cells failed the same
+way:
+
+- The prompt's data inventory lists the network CSV's columns but cuts
+  the list off at `…,Participant_G,Partic…`.  The columns that hold the
+  answer, `net_crosslevel_propnumknown` / `propnumfriends` (the tie
+  counts) and `net_crosslevel_propdenomknown` / `propdenomfriends` (the
+  possible ties, whose log is the offset), come after the cut.
+- Each script therefore searched the CSV for count columns at run time.
+  Its patterns skipped them (they exclude names containing `prop`, read
+  as proportions; sample 2 blind's even classed some as denominators)
+  and fell back to building per-participant tie counts from
+  `Participant_A/C/G/R`, read as dyadic tie columns.  Those are the
+  player-type dummies (the YAML's package notes; the authors' full model
+  uses `Participant_C/G/R` as controls).
+- Every constructed count was 0.  `fepois` stopped on "the dependent
+  variable is a constant" in samples 1 and 2 blind (all four models) and
+  on "0 observations" in sample 3 independent, and each script's
+  `tryCatch` printed `NA`.  The weights (`weights_games_full_scaled`,
+  present in the CSV), the offset and the municipality cluster were
+  coded correctly and never reached.
+- In independent mode all three samples first scored 6 this way.  In
+  samples 1 and 2 the first script printed the CSV's column names, the
+  claim-refinement prompt carried that stdout, and the corrected script
+  used `propnum*` / `propdenom*` and passed 12.  In sample 3 the first
+  script crashed (`object 'fit' not found`) before printing them, the
+  refinement prompt never named the `net_crosslevel` columns, and the
+  second script rebuilt the counts from the dummies again (0 observations).
+- Blind mode has no claim refinement.  Sample 3 blind passed because its
+  pattern found `net_crosslevel_hoursrcknown` / `hoursrcfriends` as the
+  counts with `propdenomknown` as the offset: not the authors' variables,
+  but inside every ±1 SE band (0.193, 0.174, 0.574, 1.029 against 0.22,
+  0.24, 0.61, 1.07; Ns 231 / 226 exact).
+- Seeded, the authors' R script names the columns; all three samples
+  passed 12 with the authors' values (0.218, 0.240, 0.607, 1.074).
+
+So it is one failure, reached three times: a truncated inventory plus a
+column-name heuristic, not the second dataset's estimator.  The
+taxonomy counts the six first-sample blind misses as data-file
+resolution (the right file, the wrong columns).  The truncation is a
+pipeline prompt property; the pipeline stays frozen and this is
+recorded, not fixed.
+
+**Agent deviations** (from `reproduction.json`; none changes a scored
+value): the blind run a agent inferred the `p_type` coding (1 = A ...
+4 = R) from counts; several agents used `gen_trust` as coded in the CSV
+(1/2, the codebook says 0/1), which moves only the intercept; for
+Table 2's SEs the run b independent agent used HC1 and the run c
+independent agent clustered by municipality, where the do-file clusters
+by participant (coefficients unaffected); the one participant without a
+matching weight is dropped (232 → 231), as the authors' weighted model
+does.
+
+**I4R rows.**  All 7 paired rows are robustness variants (five Table 2
+rows drop the individual controls; two Table 3 rows refit as OLS on the
+proportion), so the entry records the paper's printed value under the
+team's blanket verdict ("same output") as `i4r_replicator_findings`.
+"Agrees with I4R" on this paper therefore means agreeing with the paper
+on those 7 claims.  `n_claims_with_i4r_match` is 7 in every cell that
+passes 12; in the three pipeline cells with Table 3 `NA` it is 5, and
+`agrees_with_i4r` is still true because the I4R comparison skips claims
+with no reproduced value (the same artifact as Bokobza blind, report
+Section 4.7).
+
+**Caveats.**  (1) Leak path noted in the YAML: the game `.dta` ships the
+authors' fitted values and CI bounds from the Table 2 models
+(`outcome_ols_1`, `standarderror_ols`, `highconf_1`, `lowconf_1`,
+`outcome_ols_2`, …); the strip rule never touches data files, and
+regressing `outcome_ols_1` on the regressors would recover the column 1
+coefficients, not the SEs or the column 2 interaction.  The run c blind
+agent says it dropped those columns unread; no cell reports using them.
+(2) Table 2's note says robust SEs; the do-file clusters by participant.
+Only coefficients and Ns are pinned with SE bands, so the band is the
+printed SE either way.  (3) The open text is the Wiley Early View print
+(NSF PAR); whether the issue PDF (pp. 554-569) differs was not checked.
+
+**Totals, 24 papers, 290 claims** (recomputed the way
+`docs/report/tables.py` does; the 23-paper figures in brackets):
+
+| Mode | Pipeline 1 | Pipeline 2 | Pipeline 3 | Agent 1 | Agent 2 | Agent 3 | Gap range (pairings) |
+|---|---|---|---|---|---|---|---|
+| seeded | 275 (263) | 277 (265) | 266 (254) | 289 (277) | 278 (266) | — | 1 to 23 (6) [1 to 23] |
+| independent | 251 (239) | 238 (226) | 233 (227) | 280 (268) | 283 (271) | 277 (265) | 26 to 50 (9) [26 to 45] |
+| blind | 179 (173) | 182 (176) | 193 (181) | 264 (252) | 263 (251) | 262 (250) | 69 to 85 (9) [69 to 79] |
+
+First-sample gap: 14 / 29 / 85 (14 / 29 / 79 on the 23).  The
+independent top end moves to 50 because pipeline sample 3 lost six
+claims on this paper; the blind top end to 85 because sample 1 did.
+Cells identical in all three pipeline samples: 18 / 10 / 6 of 24; in
+all agent samples: 23 / 20 / 18 of 24.
+
+**What stays 23-paper.**  The memorization probe
+(`probe-desktop-opus-2026-11-02.json`) was not run on this paper, so the
+probe tables stay 23-paper.  The post-fix samples (3.8.1, 3.8.3) predate
+it and stay 23-paper, never pooled.  The ROADMAP checks of 3.5-3.7.3 in
+the discrepancy table recompute over the same 23 papers (`TWENTY_THREE`
+in `tables.py`), so that table is unchanged.
+
+**Report.**  `docs/report/tables.py` reads the six files (first samples
+into the pooled rows, the others into the variance tables), derives 24
+evaluation papers from the catalog, and adds 1-paper (3.9) and
+23-paper rows beside the 24-paper rows; `docs/report/draft.md` gets a
+seventh pass (title "twenty-four", pass 4 in Section 3.1.1, the Table 3
+paragraph in Section 4.8, the taxonomy and limitations updates).
+`benchmark/results/REPORT.md` is re-rendered with the first-sample files.
+
+**Evidence.**  `benchmark/evidence/molina-garzon-2022-decentralization-cooperation/`
+has 17 cells (9 pipeline, 8 agent); the tree has 529 (512 + 17).
+
+**Next:** nothing on the pipeline (frozen); the openICPSR packages remain
+the user's call.
+
 ---
 
 ## Phase 4 — Corpus growth (4 → 20–30 papers)

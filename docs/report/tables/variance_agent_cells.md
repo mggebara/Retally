@@ -70,6 +70,9 @@ Per paper and mode: final claims within tolerance in each agent sample (three in
 | `mokyr-2022` | seeded | 13 | 13 | 13 | — | 0 | 13 | 13 | 13 |
 | `mokyr-2022` | independent | 13 | 13 | 13 | 13 | 0 | 13 | 7 | 7 |
 | `mokyr-2022` | blind | 13 | 13 | 13 | 13 | 0 | 1 | 1 | 7 |
+| `molina-garzon-2022` | seeded | 12 | 12 | 12 | — | 0 | 12 | 12 | 12 |
+| `molina-garzon-2022` | independent | 12 | 12 | 12 | 12 | 0 | 12 | 12 | 6 |
+| `molina-garzon-2022` | blind | 12 | 12 | 12 | 12 | 0 | 6 | 6 | 12 |
 | `montero-2022` | seeded | 10 | 10 | 10 | — | 0 | 10 | 10 | 10 |
 | `montero-2022` | independent | 10 | 10 | 10 | 10 | 0 | 10 | 8 | 10 |
 | `montero-2022` | blind | 10 | 10 | 7 | 6 | **4** | 0 | 3 | 0 |

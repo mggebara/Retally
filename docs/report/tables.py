@@ -7,7 +7,8 @@ Run from the repository root::
 It reads only committed inputs -- the results files under
 ``benchmark/results/``, the catalog YAMLs under ``benchmark/papers/``,
 ``benchmark/corpus/candidates-2026-10-21.json``,
-``candidates-2026-11-01.json`` and ``candidates-2026-11-02.json``, and
+``candidates-2026-11-01.json``, ``candidates-2026-11-02.json`` and
+``candidates-2026-11-06.json``, and
 ``ROADMAP.md`` (for the discrepancy check) -- and writes one Markdown file per
 table to ``docs/report/tables/``.
 It then copies each table into ``draft.md`` between its
@@ -56,11 +57,17 @@ AGENT_NEW_FILE = "claude-code-4papers-all-modes-2026-11-02.json"
 # the pipeline through the oracle (label ``desktop-opus``) and the agent (run ``2026-11-02-a``).
 PIPELINE_ORACLE_SIX_FILE = "pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json"
 AGENT_SIX_FILE = "claude-code-6papers-all-modes-2026-11-02.json"
+# The paper curated on 2026-11-06 under corpus rule R7 (ROADMAP 3.7, "Funnel, pass 4"; measured in
+# ROADMAP 3.9), first sample of each system: the pipeline through the oracle (label ``desktop-opus``)
+# and the agent (run ``2026-11-06-a``).
+PIPELINE_ORACLE_R7_FILE = "pipeline-oracle-desktop-opus-1paper-all-modes-2026-11-06.json"
+AGENT_R7_FILE = "claude-code-1paper-all-modes-2026-11-06.json"
 AGENT_FILES = [
     "claude-code-7papers-all-modes-2026-10-21.json",
     "claude-code-6papers-all-modes-2026-10-22.json",
     AGENT_NEW_FILE,
     AGENT_SIX_FILE,
+    AGENT_R7_FILE,
 ]
 AGENT_RERUN_FILES = ["claude-code-blind-rerun-2026-10-22.json", "claude-code-blind-rerun-2026-10-22-b.json"]
 # Second complete pipeline sample, through the oracle (label ``desktop-opus-run2``):
@@ -71,17 +78,22 @@ AGENT_RERUN_FILES = ["claude-code-blind-rerun-2026-10-22.json", "claude-code-bli
 PIPELINE_RUN2_FILE = "pipeline-oracle-desktop-opus-run2-13papers-all-modes-2026-10-23.json"
 PIPELINE_RUN2_NEW_FILE = "pipeline-oracle-desktop-opus-run2-4papers-all-modes-2026-11-02.json"
 PIPELINE_RUN2_SIX_FILE = "pipeline-oracle-desktop-opus-run2-6papers-all-modes-2026-11-02.json"
+# ... and the R7 paper of ROADMAP 3.9, so the pipeline has two samples on all 24.
+PIPELINE_RUN2_R7_FILE = "pipeline-oracle-desktop-opus-run2-1paper-all-modes-2026-11-06.json"
 RUN2_LABEL = "desktop-opus-run2"
 # Third complete pipeline sample, through the oracle on the frozen pipeline (label
 # ``desktop-opus-run3``; ROADMAP 3.7.4), all 23 papers in all three modes in one file.  Kept out
 # of ``RAW`` like the second sample; it feeds the variance tables, the probe comparison and the
 # claim-level consistency table.  The ROADMAP checks of 3.5-3.7.3 never read it.
 PIPELINE_RUN3_FILE = "pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json"
+# ... and the R7 paper of ROADMAP 3.9 (same label, frozen pipeline), so three samples on all 24.
+PIPELINE_RUN3_R7_FILE = "pipeline-oracle-desktop-opus-run3-1paper-all-modes-2026-11-06.json"
 RUN3_LABEL = "desktop-opus-run3"
 # Post-fix oracle sample (label ``desktop-opus-postfix``; ROADMAP 3.8.1): the pipeline after the
 # 3.8 unfreeze, independent and blind mode only, all 23 papers.  The fixes were designed after
 # reading the evaluation results, so this sample is post hoc: it is never pooled with the three
 # frozen samples above, never enters a pairing or gap range, and feeds only the ``postfix`` table.
+# Both post-fix samples predate the R7 paper of ROADMAP 3.9 and cover the 23 earlier papers only.
 PIPELINE_POSTFIX_FILE = "pipeline-oracle-desktop-opus-postfix-23papers-indep-blind-2026-11-03.json"
 POSTFIX_LABEL = "desktop-opus-postfix"
 # Second post-fix oracle sample (label ``desktop-opus-postfix2``; ROADMAP 3.8.3), run after the
@@ -101,18 +113,23 @@ AGENT_RUN2_SIX_FILE = "claude-code-run2-6papers-indep-blind-2026-11-02.json"
 # Seeded mode on all 23 papers (ROADMAP 3.7.2; run id ``2026-11-02-b``), so the agent,
 # like the pipeline, has two samples of every cell.
 AGENT_RUN2_SEEDED_FILE = "claude-code-run2-23papers-seeded-2026-11-02.json"
+# The R7 paper of ROADMAP 3.9, all three modes (run id ``2026-11-06-b``).
+AGENT_RUN2_R7_FILE = "claude-code-run2-1paper-all-modes-2026-11-06.json"
 AGENT_RUN2_MODES = ("seeded", "independent", "blind")
 # Third Claude Code sample in independent and blind mode on all 23 papers (ROADMAP 3.7.3; run id
 # ``2026-11-02-c``).  Kept out of ``RAW`` like the second samples; it feeds only the
 # ``variance_agent`` tables and the 3.7.3 checks.  Seeded mode has no third sample.
 AGENT_RUN3_FILE = "claude-code-run3-23papers-indep-blind-2026-11-02.json"
+# ... and the R7 paper of ROADMAP 3.9 (run id ``2026-11-06-c``), so three samples on all 24.
+AGENT_RUN3_R7_FILE = "claude-code-run3-1paper-indep-blind-2026-11-06.json"
 AGENT_RUN3_MODES = ("independent", "blind")
 # The modes with two agent samples when ROADMAP 3.7 and 3.7.1 were written (their checks quote "—"
 # for the agent's seeded sample 2).
 AGENT_RUN2_MODES_37 = ("independent", "blind")
 # Memorisation probe (ROADMAP 3.5, "Memorisation probe"; ``benchmark/probe.py``),
-# re-scored over all 23 evaluation papers (ROADMAP 3.6, 3.7).  Its rows for the
-# earlier papers are identical to the earlier files'.
+# re-scored over the 23 evaluation papers of ROADMAP 3.2-3.7.  Its rows for the
+# earlier papers are identical to the earlier files'.  It was not run on the R7 paper of
+# ROADMAP 3.9, so every probe table stays 23-paper.
 PROBE_FILE = "probe-desktop-opus-2026-11-02.json"
 # Probe hits the answering agent said it back-computed from the p-value and
 # degrees of freedom the claim context stated (ROADMAP 3.5, "Memorisation
@@ -182,6 +199,8 @@ ORIGINAL_SOFTWARE = {
     # candidates-2026-11-02.json lists Douenne as "Python + R (original)"; the entry
     # header calls it an R original, with Python 2 only for the tax microsimulation.
     "douenne-2022-yellow-vests-carbon-tax": "R (+ Python)",
+    # candidates-2026-11-06.json: "Stata (Table 2) + R (Tables 1, 3)".
+    "molina-garzon-2022-decentralization-cooperation": "Stata + R",
 }
 
 JOURNALS = {
@@ -251,7 +270,12 @@ def pct(v: float | None, digits: int = 1) -> str:
 CATALOG = {e.id: e for e in load_catalog(REPO / "benchmark" / "papers")}
 CANDIDATES = {
     p["id"]: p
-    for name in ("candidates-2026-10-21.json", "candidates-2026-11-01.json", "candidates-2026-11-02.json")
+    for name in (
+        "candidates-2026-10-21.json",
+        "candidates-2026-11-01.json",
+        "candidates-2026-11-02.json",
+        "candidates-2026-11-06.json",
+    )
     for p in json.loads((REPO / "benchmark" / "corpus" / name).read_text())["papers"]
 }
 
@@ -261,6 +285,7 @@ RAW = (
     + load_rows(PIPELINE_ORACLE_FILE)
     + load_rows(PIPELINE_ORACLE_NEW_FILE)
     + load_rows(PIPELINE_ORACLE_SIX_FILE)
+    + load_rows(PIPELINE_ORACLE_R7_FILE)
     + [r for f in AGENT_FILES for r in load_rows(f)]
 )
 ROWS = [r for r in metrics.disambiguate_reproducers(RAW) if not r.get("skipped")]
@@ -288,12 +313,22 @@ SIX_NEW = sorted(set(THIRTEEN) - set(SEVEN))
 SEVENTEEN = sorted(set(THIRTEEN) | set(NEW_FOUR))
 assert not set(API_FOUR) & set(ORACLE_NINE) and not set(THIRTEEN) & set(NEW_FOUR)
 assert not set(SEVENTEEN) & set(NEW_SIX)
-assert set(SEVENTEEN) | set(NEW_SIX) == set(HOLDOUT) and len(HOLDOUT) == 23
+# The 23 papers of ROADMAP 3.2-3.7: the probe, both post-fix samples and every ROADMAP check of
+# 3.5-3.7.3 cover exactly these.
+TWENTY_THREE = sorted(set(SEVENTEEN) | set(NEW_SIX))
+# The paper curated under rule R7 (ROADMAP 3.9).
+NEW_R7 = sorted({r["entry_id"] for r in load_rows(PIPELINE_ORACLE_R7_FILE)})
+assert sorted({r["entry_id"] for r in load_rows(AGENT_R7_FILE)}) == NEW_R7 and len(NEW_R7) == 1
+assert not set(TWENTY_THREE) & set(NEW_R7) and len(TWENTY_THREE) == 23
+assert set(TWENTY_THREE) | set(NEW_R7) == set(HOLDOUT) and len(HOLDOUT) == 24
 
 
 RUN2: dict[tuple[str, str], dict[str, Any]] = {}
 for _r in (
-    load_rows(PIPELINE_RUN2_FILE) + load_rows(PIPELINE_RUN2_NEW_FILE) + load_rows(PIPELINE_RUN2_SIX_FILE)
+    load_rows(PIPELINE_RUN2_FILE)
+    + load_rows(PIPELINE_RUN2_NEW_FILE)
+    + load_rows(PIPELINE_RUN2_SIX_FILE)
+    + load_rows(PIPELINE_RUN2_R7_FILE)
 ):
     assert metrics.reproducer_of(_r) == "pipeline" and metrics.model_of(_r) == RUN2_LABEL, _r["entry_id"]
     assert not _r.get("skipped"), _r["entry_id"]
@@ -303,7 +338,7 @@ for _r in (
 assert {e for e, _m in RUN2} == set(HOLDOUT) and len(RUN2) == len(HOLDOUT) * len(MODES)
 
 RUN3: dict[tuple[str, str], dict[str, Any]] = {}
-for _r in load_rows(PIPELINE_RUN3_FILE):
+for _r in load_rows(PIPELINE_RUN3_FILE) + load_rows(PIPELINE_RUN3_R7_FILE):
     assert metrics.reproducer_of(_r) == "pipeline" and metrics.model_of(_r) == RUN3_LABEL, _r["entry_id"]
     assert not _r.get("skipped"), _r["entry_id"]
     _key = (_r["entry_id"], metrics.mode_of(_r))
@@ -313,7 +348,7 @@ assert {e for e, _m in RUN3} == set(HOLDOUT) and len(RUN3) == len(HOLDOUT) * len
 
 
 def _load_postfix(name: str, label: str) -> dict[tuple[str, str], dict[str, Any]]:
-    """One post-fix sample's rows by (entry, mode): independent and blind on every holdout paper."""
+    """One post-fix sample's rows by (entry, mode): independent and blind on the 23 earlier papers."""
     cells: dict[tuple[str, str], dict[str, Any]] = {}
     for r in load_rows(name):
         assert metrics.reproducer_of(r) == "pipeline" and metrics.model_of(r) == label, r["entry_id"]
@@ -321,7 +356,9 @@ def _load_postfix(name: str, label: str) -> dict[tuple[str, str], dict[str, Any]
         key = (r["entry_id"], metrics.mode_of(r))
         assert key[1] in POSTFIX_MODES and key not in cells, f"unexpected post-fix cell {key}"
         cells[key] = r
-    assert {e for e, _m in cells} == set(HOLDOUT) and len(cells) == len(HOLDOUT) * len(POSTFIX_MODES)
+    assert {e for e, _m in cells} == set(TWENTY_THREE) and len(cells) == len(TWENTY_THREE) * len(
+        POSTFIX_MODES
+    )
     return cells
 
 
@@ -334,6 +371,7 @@ for _r in (
     + load_rows(AGENT_RUN2_NEW_FILE)
     + load_rows(AGENT_RUN2_SIX_FILE)
     + load_rows(AGENT_RUN2_SEEDED_FILE)
+    + load_rows(AGENT_RUN2_R7_FILE)
 ):
     assert metrics.reproducer_of(_r) == AGENT and not _r.get("skipped"), _r["entry_id"]
     _key = (_r["entry_id"], metrics.mode_of(_r))
@@ -342,7 +380,7 @@ for _r in (
 assert {e for e, _m in AGENT2} == set(HOLDOUT) and len(AGENT2) == len(HOLDOUT) * len(AGENT_RUN2_MODES)
 
 AGENT3: dict[tuple[str, str], dict[str, Any]] = {}
-for _r in load_rows(AGENT_RUN3_FILE):
+for _r in load_rows(AGENT_RUN3_FILE) + load_rows(AGENT_RUN3_R7_FILE):
     assert metrics.reproducer_of(_r) == AGENT and not _r.get("skipped"), _r["entry_id"]
     _key = (_r["entry_id"], metrics.mode_of(_r))
     assert _key[1] in AGENT_RUN3_MODES and _key not in AGENT3, f"unexpected agent run3 cell {_key}"
@@ -350,7 +388,7 @@ for _r in load_rows(AGENT_RUN3_FILE):
 assert {e for e, _m in AGENT3} == set(HOLDOUT) and len(AGENT3) == len(HOLDOUT) * len(AGENT_RUN3_MODES)
 
 PROBE_ROWS = sorted(load_rows(PROBE_FILE), key=lambda r: r["entry_id"])
-assert {r["entry_id"] for r in PROBE_ROWS} == set(HOLDOUT) and len(PROBE_ROWS) == len(HOLDOUT)
+assert {r["entry_id"] for r in PROBE_ROWS} == set(TWENTY_THREE) and len(PROBE_ROWS) == len(TWENTY_THREE)
 PROBE_ROWS_13 = [r for r in PROBE_ROWS if r["entry_id"] in THIRTEEN]
 PROBE_ROWS_17 = [r for r in PROBE_ROWS if r["entry_id"] in SEVENTEEN]
 
@@ -469,16 +507,20 @@ def t_headline() -> str:
         (ORC, ORACLE_NINE, "9 evaluation (3.5, oracle)"),
         (ORC, NEW_FOUR, "4 evaluation (3.6, oracle)"),
         (ORC, NEW_SIX, "6 evaluation (3.7, oracle)"),
+        (ORC, NEW_R7, "1 evaluation (3.9, oracle)"),
         (P55_ALL, THIRTEEN, "13 earlier evaluation (3.2–3.5)"),
         (P55_ALL, SEVENTEEN, "17 evaluation (3.2–3.6)"),
-        (P55_ALL, HOLDOUT, "all 23 evaluation"),
+        (P55_ALL, TWENTY_THREE, "23 evaluation (3.2–3.7)"),
+        (P55_ALL, HOLDOUT, "all 24 evaluation"),
         (AGENT, SEVEN, "7 evaluation (3.3)"),
         (AGENT, SIX_NEW, "6 evaluation (3.4)"),
         (AGENT, NEW_FOUR, "4 evaluation (3.6)"),
         (AGENT, NEW_SIX, "6 evaluation (3.7)"),
+        (AGENT, NEW_R7, "1 evaluation (3.9)"),
         (AGENT, THIRTEEN, "13 earlier evaluation (3.3–3.4)"),
         (AGENT, SEVENTEEN, "17 evaluation (3.3–3.6)"),
-        (AGENT, HOLDOUT, "all 23 evaluation"),
+        (AGENT, TWENTY_THREE, "23 evaluation (3.3–3.7)"),
+        (AGENT, HOLDOUT, "all 24 evaluation"),
         (P47, DEV, "3 dev"),
     ]
     for rep, entries, label in groups:
@@ -487,8 +529,8 @@ def t_headline() -> str:
         "Claims within tolerance of the paper's printed value, summed over papers; first-scored "
         "count in parentheses.  One run per cell (the first sample of each system).  Rows marked 13 "
         "cover the evaluation papers of ROADMAP 3.2–3.5; rows marked 17 add the four papers of "
-        "ROADMAP 3.6; rows marked 23 add the six papers of ROADMAP 3.7.\n\n"
-        + table(hdr, out, ["l", "l", "r", "r", "r"])
+        "ROADMAP 3.6; rows marked 23 add the six papers of ROADMAP 3.7; rows marked 24 add the paper "
+        "curated under rule R7 (ROADMAP 3.9).\n\n" + table(hdr, out, ["l", "l", "r", "r", "r"])
     )
 
 
@@ -658,9 +700,11 @@ def t_gap() -> str:
         ("6 papers (3.4 set)", SIX_NEW),
         ("4 papers (3.6 set)", NEW_FOUR),
         ("6 papers (3.7 set)", NEW_SIX),
+        ("1 paper (3.9, R7)", NEW_R7),
         ("13 earlier", THIRTEEN),
         ("17 (3.2–3.6)", SEVENTEEN),
-        ("all 23", HOLDOUT),
+        ("23 (3.2–3.7)", TWENTY_THREE),
+        ("all 24", HOLDOUT),
     ]:
         for m in MODES:
             a, n, _ = sum_passed(AGENT, entries, m)
@@ -670,7 +714,8 @@ def t_gap() -> str:
         "Differences in claims within tolerance, summed over papers.  On the 3.2 set the total "
         "agent-over-pipeline-4.7 difference splits exactly into a model effect (pipeline on Opus 5.5 "
         "minus pipeline on 4.7) and a harness effect (agent minus pipeline on Opus 5.5).  The 3.4, "
-        "3.6 and 3.7 papers have no 4.7 rows, so only the harness effect exists there.  One run per cell; no "
+        "3.6, 3.7 and 3.9 papers have no 4.7 rows, so only the harness effect exists there.  "
+        "One run per cell; no "
         "uncertainty is attached to any difference.\n\n" + table(hdr, out, ["l", "l", "r", "r", "r", "r"])
     )
 
@@ -695,9 +740,11 @@ def t_refinement() -> str:
         (ORC, ORACLE_NINE, "9"),
         (ORC, NEW_FOUR, "4 (3.6)"),
         (ORC, NEW_SIX, "6 (3.7)"),
+        (ORC, NEW_R7, "1 (3.9)"),
         (AGENT, THIRTEEN, "13"),
         (AGENT, NEW_FOUR, "4 (3.6)"),
         (AGENT, NEW_SIX, "6 (3.7)"),
+        (AGENT, NEW_R7, "1 (3.9)"),
     ]:
         for m in MODES:
             rs = rows_for(rep, entries, m)
@@ -751,8 +798,8 @@ def t_closeness() -> str:
         (AGENT, THIRTEEN, "13"),
         (P55_ALL, SEVENTEEN, "17"),
         (AGENT, SEVENTEEN, "17"),
-        (P55_ALL, HOLDOUT, "23"),
-        (AGENT, HOLDOUT, "23"),
+        (P55_ALL, HOLDOUT, "24"),
+        (AGENT, HOLDOUT, "24"),
     ]:
         for m in MODES:
             c = metrics.closeness(rows_for(rep, entries, m))
@@ -803,10 +850,10 @@ def t_three_way() -> str:
         (P47, SEVEN, "7"),
         (P55_ALL, THIRTEEN, "13"),
         (P55_ALL, SEVENTEEN, "17"),
-        (P55_ALL, HOLDOUT, "23"),
+        (P55_ALL, HOLDOUT, "24"),
         (AGENT, THIRTEEN, "13"),
         (AGENT, SEVENTEEN, "17"),
-        (AGENT, HOLDOUT, "23"),
+        (AGENT, HOLDOUT, "24"),
     ]:
         for m in MODES:
             rs = rows_for(rep, entries, m)
@@ -950,7 +997,9 @@ def t_variance_pipeline() -> str:
         ("4 (3.6 set)", NEW_FOUR),
         ("17", SEVENTEEN),
         ("6 (3.7 set)", NEW_SIX),
-        ("23", HOLDOUT),
+        ("23 (3.2–3.7)", TWENTY_THREE),
+        ("1 (3.9, R7)", NEW_R7),
+        ("24", HOLDOUT),
     ):
         every: list[tuple[str, int, int, int, int]] = []
         for m in MODES:
@@ -999,15 +1048,17 @@ def t_variance_pipeline() -> str:
             ]
         )
     return (
-        "Three samples of the pipeline on Opus 5.5 over all 23 evaluation papers (claims within "
+        "Three samples of the pipeline on Opus 5.5 over all 24 evaluation papers (claims within "
         "tolerance of the paper's printed value).  *Sample 1* is the model-matched row used everywhere "
         "else in this report: the API run (`claude-opus-5-5`) for Grier, Leeson, Manekin and Montero "
-        "and the first oracle run for the other nineteen.  *Sample 2* is a second oracle run "
+        "and the first oracle run for the other twenty.  *Sample 2* is a second oracle run "
         f"(label `{RUN2_LABEL}`; `{PIPELINE_RUN2_FILE}` for the 13 earlier papers, "
         f"`{PIPELINE_RUN2_NEW_FILE}` for the four of ROADMAP 3.6, `{PIPELINE_RUN2_SIX_FILE}` for the six "
-        "of ROADMAP 3.7), so for the four API papers the samples differ in route as well as draw.  "
+        f"of ROADMAP 3.7, `{PIPELINE_RUN2_R7_FILE}` for the R7 paper of ROADMAP 3.9), so for the four "
+        "API papers the samples differ in route as well as draw.  "
         f"*Sample 3* is a third oracle run on the frozen pipeline (label `{RUN3_LABEL}`; "
-        f"`{PIPELINE_RUN3_FILE}` for all 23, ROADMAP 3.7.4).  The agent column is its first sample.  "
+        f"`{PIPELINE_RUN3_FILE}` for the 23 earlier papers, ROADMAP 3.7.4; `{PIPELINE_RUN3_R7_FILE}` for the "
+        "R7 paper, ROADMAP 3.9).  The agent column is its first sample.  "
         "The columns marked (1, 2) compare pipeline samples 1 and 2 cell by cell (paper × mode); "
         "*cells identical (1, 2, 3)* counts the cells with the same final count in all three samples "
         "and *max spread* is the largest difference between a cell's highest and lowest sample.\n\n"
@@ -1071,12 +1122,12 @@ def t_postfix() -> str:
     ]
     tot = []
     for m in POSTFIX_MODES:
-        s = [sum(_frozen_counts(e, m)[i] for e in HOLDOUT) for i in range(3)]
-        n = sum(total(POSTFIX[(e, m)]) for e in HOLDOUT)
+        s = [sum(_frozen_counts(e, m)[i] for e in TWENTY_THREE) for i in range(3)]
+        n = sum(total(POSTFIX[(e, m)]) for e in TWENTY_THREE)
         sums, splits = [], []
         for cells in samples:
-            where = Counter(_against(passed(cells[(e, m)]), _frozen_counts(e, m)) for e in HOLDOUT)
-            sums.append(f"**{sum(passed(cells[(e, m)]) for e in HOLDOUT)}**")
+            where = Counter(_against(passed(cells[(e, m)]), _frozen_counts(e, m)) for e in TWENTY_THREE)
+            sums.append(f"**{sum(passed(cells[(e, m)]) for e in TWENTY_THREE)}**")
             splits.append(f"{where['above']} / {where['within']} / {where['below']}")
         tot.append([m, n, *s, *sums, *splits])
     hdr = [
@@ -1096,7 +1147,7 @@ def t_postfix() -> str:
         "PF2 against frozen range",
     ]
     out = []
-    for e in HOLDOUT:
+    for e in TWENTY_THREE:
         for m in POSTFIX_MODES:
             v = _frozen_counts(e, m)
             row: list[Any] = [f"`{short(e)}`", m, total(RUN3[(e, m)]), *v]
@@ -1114,7 +1165,8 @@ def t_postfix() -> str:
             out.append(row)
     return (
         "**Post-fix samples, not pooled.**  Two oracle samples of the pipeline after the ROADMAP 3.8 "
-        f"unfreeze, independent and blind mode on all 23 papers: post-fix 1 (label `{POSTFIX_LABEL}`; "
+        f"unfreeze, independent and blind mode on the 23 papers of ROADMAP 3.2–3.7 (both predate the R7 "
+        f"paper of ROADMAP 3.9, so this table stays 23-paper): post-fix 1 (label `{POSTFIX_LABEL}`; "
         f"`{PIPELINE_POSTFIX_FILE}`; ROADMAP 3.8.1), in which the sample-size check never fired, and "
         f"post-fix 2 (label `{POSTFIX2_LABEL}`; `{PIPELINE_POSTFIX2_FILE}`; ROADMAP 3.8.3), run after "
         "the fix of ROADMAP 3.8.2, in which it fires.  The fixes were designed after reading the "
@@ -1216,7 +1268,9 @@ def t_variance_agent() -> str:
             ("4 (3.6 set)", NEW_FOUR),
             ("17", SEVENTEEN),
             ("6 (3.7 set)", NEW_SIX),
-            ("23", HOLDOUT),
+            ("23 (3.2–3.7)", TWENTY_THREE),
+            ("1 (3.9, R7)", NEW_R7),
+            ("24", HOLDOUT),
         )
         for m in AGENT_RUN2_MODES
     ):
@@ -1240,22 +1294,23 @@ def t_variance_agent() -> str:
             ]
         )
     return (
-        "Three samples of the agent in independent and blind mode and two in seeded mode, over all 23 "
-        "evaluation papers, against the pipeline on Opus 5.5, which has three samples on all 23 (claims "
+        "Three samples of the agent in independent and blind mode and two in seeded mode, over all 24 "
+        "evaluation papers, against the pipeline on Opus 5.5, which has three samples on all 24 (claims "
         "within tolerance of the paper's printed value).  "
-        "*Agent sample 1* is the row used everywhere else in this report (ROADMAP 3.3, 3.4, 3.6, 3.7); "
+        "*Agent sample 1* is the row used everywhere else in this report (ROADMAP 3.3, 3.4, 3.6, 3.7, 3.9); "
         "*agent sample 2* is a second Claude Code run: in independent and blind mode "
         f"`{AGENT_RUN2_FILE}` for the 13 earlier papers, `{AGENT_RUN2_NEW_FILE}` for the four of "
         f"ROADMAP 3.6 and `{AGENT_RUN2_SIX_FILE}` for the six of ROADMAP 3.7; in seeded mode "
-        f"`{AGENT_RUN2_SEEDED_FILE}` for all 23 (ROADMAP 3.7.2).  *Agent sample 3* is a third run in "
-        f"independent and blind mode, `{AGENT_RUN3_FILE}` for all 23 (ROADMAP 3.7.3); seeded mode has "
-        "none.  The pipeline samples are those of the table above.  The three columns marked (1, 2) "
+        f"`{AGENT_RUN2_SEEDED_FILE}` for the 23 earlier papers (ROADMAP 3.7.2); and "
+        f"`{AGENT_RUN2_R7_FILE}` in all three modes for the R7 paper (ROADMAP 3.9).  *Agent sample 3* is a "
+        f"third run in independent and blind mode, `{AGENT_RUN3_FILE}` for the 23 earlier papers "
+        f"(ROADMAP 3.7.3) and `{AGENT_RUN3_R7_FILE}` for the R7 paper; seeded mode has none.  "
+        "The pipeline samples are those of the table above.  The three columns marked (1, 2) "
         "compare agent samples 1 and 2 cell by cell; *identical (all samples)* counts the cells whose "
         "final count is the same in every agent sample of that mode.  The last column is the smallest "
         "and largest of the agent-minus-pipeline differences over every pairing of an agent sample "
         "with a pipeline sample, with the number of pairings in brackets (nine in independent and blind "
-        "mode, six in seeded).\n\n"
-        + table(hdr, out, ["l", "l"] + ["r"] * 12)
+        "mode, six in seeded).\n\n" + table(hdr, out, ["l", "l"] + ["r"] * 12)
     )
 
 
@@ -1392,7 +1447,7 @@ def t_probe() -> str:
             [_blind_total(g, SEVENTEEN) for g in getters],
         )
     )
-    out.append(line("**total, 23 papers**", tot, [_blind_total(g, HOLDOUT) for g in getters]))
+    out.append(line("**total, 23 papers**", tot, [_blind_total(g, TWENTY_THREE) for g in getters]))
     k = Counter(_probe_hit_class(cd) for _e, cd in _probe_hits())
     lo, hi, n65, nb = _probe_se_bands()
     return (
@@ -1402,7 +1457,8 @@ def t_probe() -> str:
         "2×* and *within 5×* count answers whose relative error is at most two or five times the "
         "claim's tolerance.  The last five columns are the blind-mode counts of the first two agent "
         "samples and the three pipeline samples, for comparison.  Over all "
-        f"23 papers, of the {tot['tol']} hits, {k['derivable from context']} "
+        f"23 papers (the probe was not run on the R7 paper of ROADMAP 3.9, so this table stays "
+        f"23-paper), of the {tot['tol']} hits, {k['derivable from context']} "
         f"are derivable from the claim context, {sum(v for c, v in k.items() if c.startswith('within '))} "
         f"pass a relative tolerance, and {k['inside ±1 SE band']} land inside a ±1 SE band whose "
         f"relative half-width is {pct(lo, 0)} to {pct(hi, 0)} ({n65} of {nb} at or below 65 %).\n\n"
@@ -1714,6 +1770,11 @@ TAXONOMY_RULES: dict[tuple[str, str, str], dict[str, Any]] = {
     # Same four index claims as the agent (3.4): weights and orientations unstated.
     (HARNESS_55, "lopez-moctezuma-2022", "independent"): {"rest": UNDER},
     (HARNESS_55, "lopez-moctezuma-2022", "blind"): {"rest": UNDER},
+    # 3.9: the right CSV, the wrong columns.  The prompt's data inventory cuts the CSV header off
+    # before the ``net_crosslevel_propnum*`` / ``propdenom*`` count columns; the script built tie
+    # counts from the ``Participant_A/C/G/R`` player-type dummies, every count was 0, and all four
+    # Poisson fits stopped on a constant outcome (the six Table 3 claims NA).
+    (HARNESS_55, "molina-garzon-2022", "blind"): {"rest": DATA_FILE},
 }
 
 
@@ -1774,9 +1835,9 @@ def t_taxonomy() -> str:
     rows.append(["claims scored"] + [n_claims[c] for c in cols] + [sum(n_claims.values())])
     main = table(hdr, rows, ["l"] + ["r"] * (len(hdr) - 1))
     papers = (
-        "Pipeline 4.7: the seven 3.2 papers.  Pipeline 5.5: all twenty-three evaluation papers "
-        "(API rows for Grier, Leeson, Manekin and Montero; oracle rows for the other nineteen).  "
-        "Agent: all twenty-three.  First sample of each system.\n\n"
+        "Pipeline 4.7: the seven 3.2 papers.  Pipeline 5.5: all twenty-four evaluation papers "
+        "(API rows for Grier, Leeson, Manekin and Montero; oracle rows for the other twenty).  "
+        "Agent: all twenty-four.  First sample of each system.\n\n"
     )
     detail = table(
         ["Harness", "Paper", "Mode", "Claim", "Claimed", "Reproduced", "Category"],
@@ -1830,6 +1891,7 @@ ROADMAP_NAMES = {
     "hollyer": "hollyer-2022",
     "hanushek": "hanushek-2022",
     "dancygier": "dancygier-2022",
+    "molina-garzón": "molina-garzon-2022",
 }
 ENTRY_BY_SHORT = {short(e): e for e in HOLDOUT}
 # Display names as ROADMAP's tables print them (``holman-2022`` -> ``Holman``).
@@ -2036,19 +2098,25 @@ def _roadmap_37_checks() -> list[tuple[str, str, str, str, str]]:
             (sec_t, "agent, 6 new papers", f"{mode} first scored", str(a6f), f(AGENT, NEW_SIX, mode)),
             (sec_t, "pipeline oracle, 6 new papers", f"{mode} final", str(p6), s(ORC, NEW_SIX, mode)),
             (sec_t, "pipeline oracle, 6 new papers", f"{mode} first scored", str(p6f), f(ORC, NEW_SIX, mode)),
-            (sec_t, "agent, 23 papers", f"{mode} final", str(a23), s(AGENT, HOLDOUT, mode)),
-            (sec_t, "agent, 23 papers", f"{mode} first scored", str(a23f), f(AGENT, HOLDOUT, mode)),
-            (sec_t, "pipeline on Opus 5.5, 23 papers", f"{mode} final", str(p23), s(P55_ALL, HOLDOUT, mode)),
+            (sec_t, "agent, 23 papers", f"{mode} final", str(a23), s(AGENT, TWENTY_THREE, mode)),
+            (sec_t, "agent, 23 papers", f"{mode} first scored", str(a23f), f(AGENT, TWENTY_THREE, mode)),
+            (
+                sec_t,
+                "pipeline on Opus 5.5, 23 papers",
+                f"{mode} final",
+                str(p23),
+                s(P55_ALL, TWENTY_THREE, mode),
+            ),
             (
                 sec_t,
                 "pipeline on Opus 5.5, 23 papers",
                 f"{mode} first scored",
                 str(p23f),
-                f(P55_ALL, HOLDOUT, mode),
+                f(P55_ALL, TWENTY_THREE, mode),
             ),
             (sec_t, "harness gap, 6 new papers", mode, str(g6), gap(NEW_SIX, mode)),
             (sec_t, "harness gap, 17 papers", mode, str(g17), gap(SEVENTEEN, mode)),
-            (sec_t, "harness gap, 23 papers", mode, str(g23), gap(HOLDOUT, mode)),
+            (sec_t, "harness gap, 23 papers", mode, str(g23), gap(TWENTY_THREE, mode)),
         ]
 
     # Two samples: the four 3.6 papers and the 17-paper table.
@@ -2198,7 +2266,7 @@ def _roadmap_37_checks() -> list[tuple[str, str, str, str, str]]:
         ("independent", 267, 270, "20 of 23", "32–35"),
         ("blind", 250, 248, "19 of 23", "78–80"),
     ):
-        st = _agent_variance_stats(mode, HOLDOUT)
+        st = _agent_variance_stats(mode, TWENTY_THREE)
         # 3.7 paired both agent samples with the pipeline's first sample only (3.7.1 has all four).
         g1 = [st["a1"] - st["p1"], st["a2"] - st["p1"]]
         out += [
@@ -2355,10 +2423,10 @@ def _roadmap_371_checks() -> list[tuple[str, str, str, str, str]]:
             continue
         n_modes += 1
         mode = m.group(1)
-        p1 = sum(passed(cell(P55_ALL, e, mode) or {}) for e in HOLDOUT)
-        p2 = sum(passed(RUN2[(e, mode)]) for e in HOLDOUT)
-        a1 = sum_passed(AGENT, HOLDOUT, mode)[0]
-        a2 = sum(passed(AGENT2[(e, mode)]) for e in HOLDOUT) if mode in AGENT_RUN2_MODES_37 else None
+        p1 = sum(passed(cell(P55_ALL, e, mode) or {}) for e in TWENTY_THREE)
+        p2 = sum(passed(RUN2[(e, mode)]) for e in TWENTY_THREE)
+        a1 = sum_passed(AGENT, TWENTY_THREE, mode)[0]
+        a2 = sum(passed(AGENT2[(e, mode)]) for e in TWENTY_THREE) if mode in AGENT_RUN2_MODES_37 else None
         out += [
             (src, "23 papers", f"{mode} agent 1", m.group(2), str(a1)),
             (src, "23 papers", f"{mode} agent 2", m.group(3), "—" if a2 is None else str(a2)),
@@ -2366,7 +2434,7 @@ def _roadmap_371_checks() -> list[tuple[str, str, str, str, str]]:
             (src, "23 papers", f"{mode} pipeline 2", m.group(5), str(p2)),
         ]
         for label, entries, lo, hi in (
-            ("23", HOLDOUT, m.group(6), m.group(7)),
+            ("23", TWENTY_THREE, m.group(6), m.group(7)),
             ("17", SEVENTEEN, m.group(8), m.group(9)),
             ("6", NEW_SIX, m.group(10), m.group(11)),
         ):
@@ -2384,12 +2452,14 @@ def _roadmap_371_checks() -> list[tuple[str, str, str, str, str]]:
     assert n_modes == len(MODES), n_modes
 
     for mode, same in (("seeded", "19 of 23"), ("independent", "14 of 23"), ("blind", "11 of 23")):
-        pc = _variance_stats(_variance_cells(mode, HOLDOUT))
-        out.append((src, "pipeline cells identical, 23 papers", mode, same, f"{pc[4]} of {len(HOLDOUT)}"))
+        pc = _variance_stats(_variance_cells(mode, TWENTY_THREE))
+        out.append(
+            (src, "pipeline cells identical, 23 papers", mode, same, f"{pc[4]} of {len(TWENTY_THREE)}")
+        )
     for mode, same in (("independent", "20 of 23"), ("blind", "19 of 23")):
-        st = _agent_variance_stats(mode, HOLDOUT)
+        st = _agent_variance_stats(mode, TWENTY_THREE)
         out.append((src, "agent cells identical, 23 papers", mode, same, f"{st['same']} of {st['cells']}"))
-    _all = [c for m in MODES for c in _variance_cells(m, HOLDOUT)]
+    _all = [c for m in MODES for c in _variance_cells(m, TWENTY_THREE)]
     _vs = _variance_stats(_all)
     out += [
         (
@@ -2434,10 +2504,10 @@ def _roadmap_372_checks() -> list[tuple[str, str, str, str, str]]:
             ("sample 2 first scored", m.group(6), str(fs(a2))),
         ):
             out.append((src, f"{short(e)} seeded", what, q, rc))
-    assert n_rows == len(HOLDOUT), n_rows
+    assert n_rows == len(TWENTY_THREE), n_rows
 
-    s1 = sum_passed(AGENT, HOLDOUT, mode)
-    rs2 = [AGENT2[(e, mode)] for e in HOLDOUT]
+    s1 = sum_passed(AGENT, TWENTY_THREE, mode)
+    rs2 = [AGENT2[(e, mode)] for e in TWENTY_THREE]
     tm = re.search(
         r"\| \*\*Total, 23 papers\*\* \| (\d+) \| \*\*(\d+)\*\* \((\d+)\) → \*\*(\d+)\*\* \((\d+)\) \|", sec
     )
@@ -2455,9 +2525,9 @@ def _roadmap_372_checks() -> list[tuple[str, str, str, str, str]]:
             str(sum(fs(r) or 0 for r in rs2)),
         ),
     ]
-    st = _agent_variance_stats(mode, HOLDOUT)
-    pc = _variance_stats(_variance_cells(mode, HOLDOUT))
-    moved = sum(1 for e in HOLDOUT if fs(cell(AGENT, e, mode) or {}) != fs(AGENT2[(e, mode)]))
+    st = _agent_variance_stats(mode, TWENTY_THREE)
+    pc = _variance_stats(_variance_cells(mode, TWENTY_THREE))
+    moved = sum(1 for e in TWENTY_THREE if fs(cell(AGENT, e, mode) or {}) != fs(AGENT2[(e, mode)]))
     out += [
         (
             src,
@@ -2473,7 +2543,7 @@ def _roadmap_372_checks() -> list[tuple[str, str, str, str, str]]:
             "pipeline seeded cells identical, 23 papers",
             "final",
             "19 of 23",
-            f"{pc[4]} of {len(HOLDOUT)}",
+            f"{pc[4]} of {len(TWENTY_THREE)}",
         ),
         (src, "agent seeded, first scored moved", "cells", "5", str(moved)),
     ]
@@ -2511,7 +2581,7 @@ def _roadmap_372_checks() -> list[tuple[str, str, str, str, str]]:
             continue
         n_modes += 1
         md = m.group(1)
-        sv = _agent_variance_stats(md, HOLDOUT)
+        sv = _agent_variance_stats(md, TWENTY_THREE)
         for what, q, rc in (
             ("agent 1", m.group(2), sv["a1"]),
             ("agent 2", m.group(3), sv["a2"]),
@@ -2519,7 +2589,7 @@ def _roadmap_372_checks() -> list[tuple[str, str, str, str, str]]:
             ("pipeline 2", m.group(5), sv["p2"]),
         ):
             out.append((src, "23 papers", f"{md} {what}", q, str(rc)))
-        for label, entries, g in (("23", HOLDOUT, 6), ("17", SEVENTEEN, 8), ("6", NEW_SIX, 10)):
+        for label, entries, g in (("23", TWENTY_THREE, 6), ("17", SEVENTEEN, 8), ("6", NEW_SIX, 10)):
             sv = _agent_variance_stats(md, entries)
             quoted = f"{m.group(g)} to {m.group(g + 1)}"
             out.append(
@@ -2576,7 +2646,7 @@ def _roadmap_373_checks() -> list[tuple[str, str, str, str, str]]:
                 out.append(
                     (src, f"{short(e)} {mode}", f"sample {k + 1} first scored", m.group(g + 1), str(fs(r)))
                 )
-    assert n_rows == len(HOLDOUT), n_rows
+    assert n_rows == len(TWENTY_THREE), n_rows
 
     b = r"\*\*(\d+)\*\* \((\d+)\)"
     tm = re.search(rf"\| \*\*Total, 23 papers\*\* \| (\d+) \| {b} → {b} → {b} \| {b} → {b} → {b} \|", sec)
@@ -2587,12 +2657,12 @@ def _roadmap_373_checks() -> list[tuple[str, str, str, str, str]]:
             "agent, 23 papers",
             "claims",
             tm.group(1),
-            str(sum(total(AGENT3[(e, "blind")]) for e in HOLDOUT)),
+            str(sum(total(AGENT3[(e, "blind")]) for e in TWENTY_THREE)),
         )
     )
     for i, mode in enumerate(modes):
         for k in range(3):
-            rs = [samples(e, mode)[k] for e in HOLDOUT]
+            rs = [samples(e, mode)[k] for e in TWENTY_THREE]
             g = 2 + 6 * i + 2 * k
             out.append(
                 (
@@ -2613,7 +2683,7 @@ def _roadmap_373_checks() -> list[tuple[str, str, str, str, str]]:
                 )
             )
 
-    st = {mode: _agent_variance_stats(mode, HOLDOUT) for mode in modes}
+    st = {mode: _agent_variance_stats(mode, TWENTY_THREE) for mode in modes}
     out += [
         (
             src,
@@ -2634,7 +2704,7 @@ def _roadmap_373_checks() -> list[tuple[str, str, str, str, str]]:
     ]
     spread3 = sorted(
         ROADMAP_NAMES_INV[short(e)]
-        for e in HOLDOUT
+        for e in TWENTY_THREE
         if max(passed(r) for r in samples(e, "independent"))
         - min(passed(r) for r in samples(e, "independent"))
         == 3
@@ -2810,7 +2880,7 @@ def _roadmap_373_checks() -> list[tuple[str, str, str, str, str]]:
 
     # The paper-set range table.
     sets = {
-        "23": HOLDOUT,
+        "23": TWENTY_THREE,
         "17": SEVENTEEN,
         "6 (3.7 set)": NEW_SIX,
         "13 earlier": THIRTEEN,
