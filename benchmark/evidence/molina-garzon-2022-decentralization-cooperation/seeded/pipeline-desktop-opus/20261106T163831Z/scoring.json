@@ -1,0 +1,646 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "decentralized_table2_col1",
+      "ground_truth": {
+        "value": 0.83,
+        "standard_error": 0.23,
+        "unit": "lempiras contributed per round (0-10 scale)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (1), Decentralized",
+        "context": "Table 2 (\"Decentralization and Cooperation among Public Servants\"), column (1).  Linear regression (OLS) of a participant's contribution to the group fund in each round of a ten-round public goods game (0-10 lempiras) on an indicator for working in a decentralized (rather than centrally administered) Honduran municipality. Controls: an indicator for the communication rounds (the last five rounds, when players could talk before deciding), player-type dummies (health center, administrative intermediary, regional office; the mayor's office representative is the reference), the round number, the group's total contribution in the previous round, the number of players in the session, the number of other participants the player knew, female, age, education, years in the health sector and general trust.  Observations are participant- rounds of the health officials who played the game in the 31 sampled municipalities, weighted by the municipal-level propensity- score matching weights (full sample).  The paper reports robust standard errors in parentheses.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.83,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict (team 17); the row (o 0.826 (0.226)) drops the individual controls, 0.517 (0.217).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "decentralized_table2_col1",
+        "claim_type": "coefficient",
+        "claimed": 0.83,
+        "reproduced": 0.8258204253,
+        "tolerance": 0.02,
+        "rel_err": 0.005035632168674658,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "decentralized_table2_col1",
+        "reproduced": 0.8258204253,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.0166,
+        "abs_err": 0.004179574699999966,
+        "rel_err": 0.005035632168674658,
+        "margin": 0.2517816084337329,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "communication_table2_col1",
+      "ground_truth": {
+        "value": 2.54,
+        "standard_error": 0.21,
+        "unit": "lempiras contributed per round (0-10 scale)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (1), Communication",
+        "context": "Table 2, column (1): the coefficient on the communication-round indicator in the same weighted OLS of per-round contributions as decentralized_table2_col1.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 2.54,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; the row (o 2.541 (0.214)) drops the individual controls, 2.578 (0.213).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "communication_table2_col1",
+        "claim_type": "coefficient",
+        "claimed": 2.54,
+        "reproduced": 2.540726019,
+        "tolerance": 0.02,
+        "rel_err": 0.0002858342519685127,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "communication_table2_col1",
+        "reproduced": 2.540726019,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.050800000000000005,
+        "abs_err": 0.0007260190000000222,
+        "rel_err": 0.0002858342519685127,
+        "margin": 0.014291712598425632,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "decentralized_table2_col2",
+      "ground_truth": {
+        "value": 0.41,
+        "standard_error": 0.3,
+        "unit": "lempiras contributed per round (0-10 scale)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (2), Decentralized",
+        "context": "Table 2, column (2): the column (1) weighted OLS of per-round contributions with an added interaction between the decentralized indicator and the communication-round indicator; this is the Decentralized main effect (the difference in rounds without communication).  Same controls, sample, weights and standard errors as column (1).\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.41,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; the row (o 0.409 (0.302)) drops the individual controls, 0.169 (0.282).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "decentralized_table2_col2",
+        "claim_type": "coefficient",
+        "claimed": 0.41,
+        "reproduced": 0.4092362908,
+        "tolerance": 0.02,
+        "rel_err": 0.0018627053658535667,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "decentralized_table2_col2",
+        "reproduced": 0.4092362908,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.008199999999999999,
+        "abs_err": 0.0007637091999999623,
+        "rel_err": 0.0018627053658535667,
+        "margin": 0.09313526829267835,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "communication_table2_col2",
+      "ground_truth": {
+        "value": 2.02,
+        "standard_error": 0.32,
+        "unit": "lempiras contributed per round (0-10 scale)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (2), Communication",
+        "context": "Table 2, column (2): the communication-round main effect (for centrally administered municipalities) in the model with the Decentralized x Communication interaction.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 2.02,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; the row (o 2.023 (0.317)) drops the individual controls, 2.152 (0.320).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "communication_table2_col2",
+        "claim_type": "coefficient",
+        "claimed": 2.02,
+        "reproduced": 2.023108291,
+        "tolerance": 0.02,
+        "rel_err": 0.001538757920791962,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "communication_table2_col2",
+        "reproduced": 2.023108291,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.0404,
+        "abs_err": 0.003108290999999763,
+        "rel_err": 0.001538757920791962,
+        "margin": 0.07693789603959811,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "decentralized_x_communication_table2_col2",
+      "ground_truth": {
+        "value": 0.76,
+        "standard_error": 0.38,
+        "unit": "lempiras contributed per round (0-10 scale)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (2), Decentralized X Communication",
+        "context": "Table 2, column (2): the interaction between the decentralized indicator and the communication-round indicator, the paper's headline estimate (officials in decentralized municipalities contribute more once they can communicate; plotted in Figure 3).\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.76,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; the row (o 0.762 (0.380)) drops the individual controls, 0.637 (0.376).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "decentralized_x_communication_table2_col2",
+        "claim_type": "coefficient",
+        "claimed": 0.76,
+        "reproduced": 0.7617561541,
+        "tolerance": 0.02,
+        "rel_err": 0.0023107290789473192,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "decentralized_x_communication_table2_col2",
+        "reproduced": 0.7617561541,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.0152,
+        "abs_err": 0.0017561540999999625,
+        "rel_err": 0.0023107290789473192,
+        "margin": 0.11553645394736596,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_table2",
+      "ground_truth": {
+        "value": 1980.0,
+        "standard_error": null,
+        "unit": "participant-round observations",
+        "claim_type": "count",
+        "location": "Table 2, Observations",
+        "context": "Number of participant-round observations in both Table 2 models (the same sample in columns 1 and 2): rounds with a recorded contribution, a previous-round group contribution and the individual controls.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table2",
+        "claim_type": "count",
+        "claimed": 1980.0,
+        "reproduced": 1980.0,
+        "tolerance": 0.05,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_table2",
+        "reproduced": 1980.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 99.0,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "decentralized_table3_allties_base",
+      "ground_truth": {
+        "value": 0.22,
+        "standard_error": 0.12,
+        "unit": "log of the expected count of realized cross-level ties",
+        "claim_type": "coefficient",
+        "location": "Table 3, All Ties (Prop. Known), Base Model, Decentralized",
+        "context": "Table 3 (\"How Decentralization Influences Cross-Level Network Capital\"), All Ties, Base Model.  Weighted Poisson regression, one observation per workshop participant, of the number of cross-level ties the participant reported having before the workshop (other participants at a different level of the health service hierarchy whom they knew, as a colleague or otherwise), with an offset for the log of the total possible cross-level ties among the participants present, on the decentralized indicator alone. Weighted by the municipal-level propensity-score matching weights; standard errors clustered by municipality.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "decentralized_table3_allties_base",
+        "claim_type": "coefficient",
+        "claimed": 0.22,
+        "reproduced": 0.2176467051,
+        "tolerance": 0.022727272727272728,
+        "rel_err": 0.010696794999999986,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "printed_precision"
+      },
+      "recomputed": {
+        "result_name": "decentralized_table3_allties_base",
+        "reproduced": 0.2176467051,
+        "band_source": "printed_precision",
+        "band_relative": 0.022727272727272728,
+        "band_absolute": 0.005,
+        "abs_err": 0.002353294899999997,
+        "rel_err": 0.010696794999999986,
+        "margin": 0.4706589799999994,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "decentralized_table3_allties_full",
+      "ground_truth": {
+        "value": 0.24,
+        "standard_error": 0.14,
+        "unit": "log of the expected count of realized cross-level ties",
+        "claim_type": "coefficient",
+        "location": "Table 3, All Ties (Prop. Known), Full Model, Decentralized",
+        "context": "Table 3, All Ties, Full Model: the Base Model plus female, education, age, years in the health sector, generalized trust and player-type dummies (health center, administrative intermediary, regional office; the mayor's office representative is the reference).  Same offset, weights and municipality-clustered standard errors; participants with complete controls.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.24,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; the row (o 0.240 (0.144)) refits as OLS on the proportion, 0.130 (0.080).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "decentralized_table3_allties_full",
+        "claim_type": "coefficient",
+        "claimed": 0.24,
+        "reproduced": 0.239523861,
+        "tolerance": 0.020833333333333336,
+        "rel_err": 0.0019839124999999442,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "printed_precision"
+      },
+      "recomputed": {
+        "result_name": "decentralized_table3_allties_full",
+        "reproduced": 0.239523861,
+        "band_source": "printed_precision",
+        "band_relative": 0.020833333333333336,
+        "band_absolute": 0.005,
+        "abs_err": 0.00047613899999998655,
+        "rel_err": 0.0019839124999999442,
+        "margin": 0.09522779999999731,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "decentralized_table3_strongties_base",
+      "ground_truth": {
+        "value": 0.61,
+        "standard_error": 0.28,
+        "unit": "log of the expected count of realized strong cross-level ties",
+        "claim_type": "coefficient",
+        "location": "Table 3, Strong Ties (Prop. Friends), Base Model, Decentralized",
+        "context": "Table 3, Strong Ties, Base Model: the weighted Poisson regression of the number of cross-level ties the participant characterized as friendships, with an offset for the log of the total possible cross-level friendship ties, on the decentralized indicator alone. Municipality-clustered standard errors.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "decentralized_table3_strongties_base",
+        "claim_type": "coefficient",
+        "claimed": 0.61,
+        "reproduced": 0.6072080503,
+        "tolerance": 0.02,
+        "rel_err": 0.004576966721311414,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "decentralized_table3_strongties_base",
+        "reproduced": 0.6072080503,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.0122,
+        "abs_err": 0.0027919496999999627,
+        "rel_err": 0.004576966721311414,
+        "margin": 0.2288483360655707,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "decentralized_table3_strongties_full",
+      "ground_truth": {
+        "value": 1.07,
+        "standard_error": 0.31,
+        "unit": "log of the expected count of realized strong cross-level ties",
+        "claim_type": "coefficient",
+        "location": "Table 3, Strong Ties (Prop. Friends), Full Model, Decentralized",
+        "context": "Table 3, Strong Ties, Full Model: the Strong Ties Base Model plus the Full Model controls (female, education, age, years in the health sector, generalized trust, player-type dummies).  The paper translates it into Figure 4's predicted proportions of strong cross-level ties for a typical public servant.  Municipality- clustered standard errors.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 1.07,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; the row (o 1.074 (0.314)) refits as OLS on the proportion, 0.146 (0.043).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "decentralized_table3_strongties_full",
+        "claim_type": "coefficient",
+        "claimed": 1.07,
+        "reproduced": 1.07410759,
+        "tolerance": 0.02,
+        "rel_err": 0.0038388691588783436,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "decentralized_table3_strongties_full",
+        "reproduced": 1.07410759,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.021400000000000002,
+        "abs_err": 0.004107589999999828,
+        "rel_err": 0.0038388691588783436,
+        "margin": 0.19194345794391715,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_table3_base",
+      "ground_truth": {
+        "value": 231.0,
+        "standard_error": null,
+        "unit": "workshop participants",
+        "claim_type": "count",
+        "location": "Table 3, N (Base Models)",
+        "context": "Number of participants in the two Table 3 Base Models (the same in both).\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table3_base",
+        "claim_type": "count",
+        "claimed": 231.0,
+        "reproduced": 231.0,
+        "tolerance": 0.05,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_table3_base",
+        "reproduced": 231.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 11.55,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_table3_full",
+      "ground_truth": {
+        "value": 226.0,
+        "standard_error": null,
+        "unit": "workshop participants",
+        "claim_type": "count",
+        "location": "Table 3, N (Full Models)",
+        "context": "Number of participants in the two Table 3 Full Models (complete cases on the controls).\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "seeded",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": null,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table3_full",
+        "claim_type": "count",
+        "claimed": 226.0,
+        "reproduced": 226.0,
+        "tolerance": 0.05,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_table3_full",
+        "reproduced": 226.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 11.3,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 12,
+    "row_passed": 12,
+    "recomputed_passed": 12,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "molina-garzon-2022-decentralization-cooperation",
+    "mode": "seeded",
+    "reproducer": "pipeline",
+    "label": "pipeline-desktop-opus",
+    "model": "desktop-opus",
+    "oracle": true,
+    "run": "20261106T163831Z",
+    "results_file": "pipeline-oracle-desktop-opus-1paper-all-modes-2026-11-06.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/molina-garzon-2022-decentralization-cooperation/seeded/pipeline/20261106T163831Z",
+    "run_dir": null,
+    "date": "2026-11-06T16:38:31Z",
+    "data_access": "public",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 12,
+    "final": 12,
+    "first_scored": 12,
+    "first_scored_index": 0,
+    "first_attempt": 12,
+    "n_refinements": 0,
+    "n_error_refinements": 0,
+    "n_claim_refinements": 0,
+    "n_executions": 1,
+    "n_files_stripped": null,
+    "agrees_with_i4r": true,
+    "deviations_manifest": [],
+    "deviations_stdout": [],
+    "notes": null,
+    "files_read_outside_mount": null,
+    "paper_text": null,
+    "complete": true,
+    "missing": []
+  }
+}

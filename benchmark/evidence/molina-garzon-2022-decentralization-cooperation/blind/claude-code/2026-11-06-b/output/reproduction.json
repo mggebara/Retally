@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "molina-garzon-2022-decentralization-cooperation",
+  "mode": "blind",
+  "run_id": "2026-11-06-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "error"}
+  ],
+  "deviations": [
+    "Table 3: gen_trust enters as coded in the CSV (values 1/2, not 0/1 as the codebook states); this shifts only the intercept, not the Decentralized coefficient.",
+    "Table 3 Base N: the one participant with a missing matching weight is dropped (weighted models cannot use it)."
+  ],
+  "notes": "Table 2: lm() of contribution on decentralized, communication, player-type dummies (C/G/R vs A = mayor's office), round, lag_groupcontribution, num_players, knownpeople, Q2_female, Q1_Edad, Q2_Educacion, Q3_YrsSalud, Q5_Trust1Base, weighted by weights_games_full_scaled (full-sample matching weights); col 2 adds decentralized:communication. Complete cases (round 1 drops for lagged group contribution, plus missing education/age) give 1980 obs. Coefficients do not depend on SE choice; HC1 and municipality-clustered SEs printed for reference. Table 3: glm Poisson (log link) of net_crosslevel_propnumknown / net_crosslevel_propnumfriends with offset log(net_crosslevel_propdenom*), weights weights_games_full_scaled, municipality-clustered SEs (sandwich::vcovCL); full model adds Mujer, Q2_Educacion, Q1_Edad, Q3_YrsSalud, gen_trust, Participant_C/G/R. Attempt-1 was exploratory (data inspection, no RESULT lines). Attempt-2 was a harness slip: the shell refused the heredoc that should have written script.R, so docker bind-mounted a non-existent path (creating an empty script.R directory) and nothing ran; fixed by writing the script first. Codebook and README PDFs in the mount were read for variable definitions only. No author scripts were present or opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-06T17:37:46Z",
+  "finished_at": "2026-11-06T17:48:30Z"
+}

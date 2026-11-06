@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "entry_id": "molina-garzon-2022-decentralization-cooperation",
+  "mode": "blind",
+  "run_id": "2026-11-06-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Table 3: participants with a missing matching weight (1 row in the network CSV) are dropped; the paper does not state its N handling explicitly.",
+    "Table 3 clustered SEs use sandwich::vcovCL (HC0); only coefficients and Ns are scored."
+  ],
+  "notes": "attempt-1 was exploratory (variable inspection, missingness; no RESULT lines). Final script: Table 2 = weighted OLS (weights_games_full_scaled) of per-round contribution on decentralized, communication, player-type dummies (mayor's office = reference), round, lagged group contribution, number of players, people known, female, age, education (linear), years in health sector, generalized trust; column 2 adds decentralized x communication; complete cases (round 1 drops for lack of lagged group contribution, plus missing education/age and 7 late-arrival rows) give 1980 obs; HC1 robust SEs printed. Table 3 = weighted Poisson glm of net_crosslevel_propnumknown / net_crosslevel_propnumfriends with offset log(net_crosslevel_propdenom*), base on decentralized only, full adds Mujer, Q2_Educacion, Q1_Edad, Q3_YrsSalud, gen_trust, Participant_C/G/R; SEs clustered by publicid_muni. Precomputed prediction columns in the game data (outcome_ols_*, *conf*) were dropped unread. Codebook PDF in the mount was read for variable definitions; README PDF and author scripts were not opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-06T17:48:43Z",
+  "finished_at": "2026-11-06T17:50:40Z"
+}

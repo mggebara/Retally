@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "molina-garzon-2022-decentralization-cooperation",
+  "mode": "independent",
+  "run_id": "2026-11-06-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was exploratory: it inspected the variables and missingness and printed no RESULT lines. Final run: Table 2 is a weighted OLS (lm, weights_games_full_scaled) of contribution on decentralized, communication, player-type dummies (reference: A, the mayor's office), round, lag_groupcontribution, num_players, knownpeople, Q2_female, Q1_Edad, Q2_Educacion, Q3_YrsSalud and Q5_Trust1Base. Column 2 adds decentralized:communication. Complete cases give N=1980. SEs are HC1 robust, which does not affect the point estimates. Table 3 is a weighted Poisson glm on the clanalysis csv: the count of cross-level ties known (propnumknown) or friends (propnumfriends), with offset log(propdenom*), weights_games_full_scaled and municipality-clustered SEs (sandwich::vcovCL). The one row with a missing weight was dropped, giving N=231. The full models add Mujer, Q2_Educacion, Q1_Edad, Q3_YrsSalud, gen_trust (as coded, 1/2) and ParticipantType dummies (reference A); complete cases give N=226. All 12 claims reproduced on the first scored run. No claim-feedback iterations. The codebook and README PDFs in the mount were read; no author scripts were opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-06T16:28:00Z",
+  "finished_at": "2026-11-06T16:34:30Z"
+}

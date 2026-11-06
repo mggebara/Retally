@@ -1,0 +1,277 @@
+tibble [2,257 × 21] (S3: tbl_df/tbl/data.frame)
+ $ p_type                      : dbl+lbl [1:2257] 3, 4, 2, 2, 4, 2, 3, 1, 4, 2, 3, 3, 4, 4, 1, 3, 2, 2,...
+   ..@ label       : chr "assigned player letter"
+   ..@ format.stata: chr "%8.0g"
+   ..@ labels      : Named num [1:4] 1 2 3 4
+   .. ..- attr(*, "names")= chr [1:4] "A" "C" "G" "R"
+ $ publicid_muni               : num [1:2257] 39404 97609 4980 47501 43210 ...
+  ..- attr(*, "label")= chr "public municipality id"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ publicid                    : num [1:2257] 31267 4422 93671 66149 87123 ...
+  ..- attr(*, "label")= chr "public individual id"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ round                       : num [1:2257] 1 1 1 1 1 1 1 1 1 1 ...
+  ..- attr(*, "label")= chr "Round (1-10)"
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ contribution                : num [1:2257] 8 6 8 3 7 5 6 7 0 5 ...
+  ..- attr(*, "label")= chr "Indiv.contribution to the PGG"
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ num_players                 : num [1:2257] 9 8 7 7 7 9 7 8 9 9 ...
+  ..- attr(*, "label")= chr "Number of players in the group"
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ decentralized               : dbl+lbl [1:2257] 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,...
+   ..@ label       : chr "Decentralized"
+   ..@ format.stata: chr "%31.0g"
+   ..@ labels      : Named num [1:2] 0 1
+   .. ..- attr(*, "names")= chr [1:2] "Centrally-admin. municipalities" "Decentralized municipalities"
+ $ averagecont                 : num [1:2257] 5.77 5.77 5.77 5.77 5.77 ...
+  ..- attr(*, "label")= chr "Average contribution to the PGG"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ communication               : num [1:2257] 0 0 0 0 0 0 0 0 0 0 ...
+  ..- attr(*, "label")= chr "Communication"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ player_type                 : dbl+lbl [1:2257]  8, 12,  2,  5, 11,  6,  8,  1, 11,  5,  8,  8, 11, 1...
+   ..@ label       : chr "Player assigned code"
+   ..@ format.stata: chr "%8.0g"
+   ..@ labels      : Named num [1:12] 1 2 3 4 5 6 7 8 9 10 ...
+   .. ..- attr(*, "names")= chr [1:12] "A1" "C1" "C2" "C3" ...
+ $ Q3_YrsSalud                 : num [1:2257] 9 2 17 7 9 18 16 5 20 0 ...
+  ..- attr(*, "label")= chr "Yrs in Health-sector"
+  ..- attr(*, "format.stata")= chr "%12.0g"
+ $ Q4_YrsCurrentJob            : num [1:2257] 1 2 2 7 2 1 16 5 20 0 ...
+  ..- attr(*, "label")= chr "Yrs in current job"
+  ..- attr(*, "format.stata")= chr "%12.0g"
+ $ Q5_Trust1Base               : dbl+lbl [1:2257] 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0,...
+   ..@ label       : chr "General Trust"
+   ..@ format.stata: chr "%55.0g"
+   ..@ labels      : Named num [1:2] 0 1
+   .. ..- attr(*, "names")= chr [1:2] "a) No se puede ser tan confiado al tratar con la gente." "b) Se puede confiar en la mayor�a de las personas."
+ $ Q1_Edad                     : num [1:2257] 30 27 40 30 30 47 34 37 52 28 ...
+  ..- attr(*, "label")= chr "Age"
+  ..- attr(*, "format.stata")= chr "%12.0g"
+ $ Q2_Educacion                : dbl+lbl [1:2257] NA,  5,  4,  4,  5,  5,  5,  4,  5,  5,  5,  5,  5,  ...
+   ..@ label       : chr "Education"
+   ..@ format.stata: chr "%12.0g"
+   ..@ labels      : Named num [1:6] 1 2 3 4 5 6
+   .. ..- attr(*, "names")= chr [1:6] "Ninguno" "Escuela primaria" "Escuela secundaria" "Bachillerato" ...
+ $ lag_groupcontribution       : num [1:2257] NA NA NA NA NA NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "Lagged group contribution"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ knownpeople                 : num [1:2257] 8 6 5 6 4 7 7 6 3 5 ...
+  ..- attr(*, "label")= chr "People known"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ Q2_female                   : num [1:2257] 1 1 1 1 1 1 1 0 1 1 ...
+  ..- attr(*, "label")= chr "Female"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ weights_games_full_scaled   : num [1:2257] 0.0353 0.2183 0.2948 0.1134 0.068 ...
+  ..- attr(*, "label")= chr "weight from matching full sample"
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ weights_games_reduced_scaled: num [1:2257] 0.0529 0.119 0.2041 0.1701 0.102 ...
+  ..- attr(*, "label")= chr "weight from matching reduced sample"
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ dec_orgtype                 : dbl+lbl [1:2257] 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,...
+   ..@ label       : chr "Intermediary org.type numeric form"
+   ..@ format.stata: chr "%10.0g"
+   ..@ labels      : Named num [1:4] 1 2 3 4
+   .. ..- attr(*, "names")= chr [1:4] "centralgov" "man" "muni" "ngo"
+     p_type      publicid_muni      publicid         round     
+ Min.   :1.000   Min.   : 2909   Min.   :  256   Min.   : 1.0  
+ 1st Qu.:2.000   1st Qu.:17994   1st Qu.:30283   1st Qu.: 3.0  
+ Median :2.000   Median :39404   Median :50777   Median : 5.5  
+ Mean   :2.352   Mean   :42107   Mean   :52600   Mean   : 5.5  
+ 3rd Qu.:3.000   3rd Qu.:63364   3rd Qu.:76184   3rd Qu.: 8.0  
+ Max.   :4.000   Max.   :97609   Max.   :99353   Max.   :10.0  
+                                                 NAs    :7     
+  contribution     num_players  decentralized     averagecont    communication
+ Min.   : 0.000   Min.   :5.0   Min.   :0.0000   Min.   :4.610   Min.   :0.0  
+ 1st Qu.: 4.000   1st Qu.:7.0   1st Qu.:0.0000   1st Qu.:5.130   1st Qu.:0.0  
+ Median : 6.000   Median :7.0   Median :1.0000   Median :6.123   Median :0.5  
+ Mean   : 6.326   Mean   :7.4   Mean   :0.6588   Mean   :6.326   Mean   :0.5  
+ 3rd Qu.: 9.000   3rd Qu.:8.0   3rd Qu.:1.0000   3rd Qu.:7.837   3rd Qu.:1.0  
+ Max.   :10.000   Max.   :9.0   Max.   :1.0000   Max.   :8.152   Max.   :1.0  
+ NAs    :7        NAs    :7                      NAs    :7       NAs    :7    
+  player_type      Q3_YrsSalud     Q4_YrsCurrentJob Q5_Trust1Base   
+ Min.   : 1.000   Min.   : 0.000   Min.   : 0.000   Min.   :0.0000  
+ 1st Qu.: 3.000   1st Qu.: 2.000   1st Qu.: 1.000   1st Qu.:0.0000  
+ Median : 4.000   Median : 6.000   Median : 4.000   Median :0.0000  
+ Mean   : 5.229   Mean   : 8.508   Mean   : 6.175   Mean   :0.4165  
+ 3rd Qu.: 8.000   3rd Qu.:13.000   3rd Qu.: 8.000   3rd Qu.:1.0000  
+ Max.   :12.000   Max.   :38.000   Max.   :38.000   Max.   :1.0000  
+                                                                    
+    Q1_Edad       Q2_Educacion   lag_groupcontribution  knownpeople   
+ Min.   :20.00   Min.   :1.000   Min.   :16.00         Min.   :1.000  
+ 1st Qu.:28.00   1st Qu.:4.000   1st Qu.:35.00         1st Qu.:5.000  
+ Median :34.00   Median :5.000   Median :43.00         Median :6.000  
+ Mean   :36.75   Mean   :4.539   Mean   :45.69         Mean   :5.607  
+ 3rd Qu.:45.00   3rd Qu.:5.000   3rd Qu.:54.00         3rd Qu.:7.000  
+ Max.   :64.00   Max.   :5.000   Max.   :90.00         Max.   :9.000  
+ NAs    :10      NAs    :40      NAs    :232                          
+   Q2_female     weights_games_full_scaled weights_games_reduced_scaled
+ Min.   :0.000   Min.   :0.03527           Min.   :0.00000             
+ 1st Qu.:0.000   1st Qu.:0.11111           1st Qu.:0.05291             
+ Median :1.000   Median :0.12500           Median :0.12500             
+ Mean   :0.685   Mean   :0.13381           Mean   :0.10492             
+ 3rd Qu.:1.000   3rd Qu.:0.14286           3rd Qu.:0.14286             
+ Max.   :1.000   Max.   :0.29478           Max.   :0.20408             
+                 NAs    :7                 NAs    :7                   
+  dec_orgtype   
+ Min.   :1.000  
+ 1st Qu.:1.000  
+ Median :2.000  
+ Mean   :2.328  
+ 3rd Qu.:4.000  
+ Max.   :4.000  
+                
+
+   1    2    3    4 <NA> 
+ 251 1262  442  302    0 
+      
+         0   1 <NA>
+  1    225   0    0
+  2    225   0    0
+  3    225   0    0
+  4    225   0    0
+  5    225   0    0
+  6      0 225    0
+  7      0 225    0
+  8      0 225    0
+  9      0 225    0
+  10     0 225    0
+  <NA>   0   0    7
+       
+          1   2   3   4   5   6   7   8   9  10
+  FALSE   0 225 225 225 225 225 225 225 225 225
+  TRUE  225   0   0   0   0   0   0   0   0   0
+[1] 232
+[1] 31
+             contribution             decentralized             communication 
+                        7                         0                         7 
+                   p_type                     round     lag_groupcontribution 
+                        0                         7                       232 
+              num_players               knownpeople                 Q2_female 
+                        7                         0                         0 
+                  Q1_Edad              Q2_Educacion               Q3_YrsSalud 
+                       10                        40                         0 
+            Q5_Trust1Base weights_games_full_scaled 
+                        0                         7 
+[1] 1980
+   round contribution lag_groupcontribution averagecont num_players
+1      1            8                    NA    5.766234           9
+2      2            6                    59    5.077922           9
+3      3            9                    43    4.915585           9
+4      4            5                    58    5.129870           9
+5      5            6                    52    4.610390           9
+6      6            8                    45    7.077922           9
+7      7            7                    63    6.870130           9
+8      8            9                    70    6.480519           9
+9      9            8                    77    7.038961           9
+10    10            9                    68    6.571429           9
+   publicid_muni  w          m d
+1           2909  0 0.12500000 1
+2           2975  0 0.12500000 1
+3           3067  0 0.04535147 0
+4           4980  0 0.29478458 0
+5           8772 NA         NA 1
+6           8781  0 0.14285714 1
+7          13882 NA         NA 1
+8          16599  0 0.14285714 1
+9          17994 NA         NA 1
+10         20907  0 0.16666667 1
+11         24040  0 0.11111111 1
+12         25147  0 0.12500000 1
+13         26133  0 0.14285714 1
+14         35997  0 0.14285714 1
+15         36297  0 0.11111111 1
+16         39404  0 0.03527337 0
+17         43210  0 0.06802721 0
+18         45276  0 0.16666667 1
+19         45660  0 0.16666667 1
+20         47415 NA         NA 1
+21         47501  0 0.11337869 0
+22         54166  0 0.13605442 0
+23         58287  0 0.09920635 0
+24         63364  0 0.05952381 0
+25         66786  0 0.16666667 1
+26         76784 NA         NA 1
+27         77293  0 0.16666667 1
+28         91989  0 0.22927690 0
+29         92301  0 0.12500000 1
+30         92602  0 0.12500000 1
+31         97609  0 0.21825397 0
+'data.frame':	232 obs. of  36 variables:
+ $ publicid_muni                      : int  77293 77293 77293 77293 77293 77293 47415 47415 47415 47415 ...
+ $ publicid                           : int  36102 24479 59874 27611 42802 82871 79956 95955 52847 30097 ...
+ $ ParticipantCode                    : chr  "A1" "C1" "C2" "C3" ...
+ $ decentralized                      : int  1 1 1 1 1 1 1 1 1 1 ...
+ $ Mujer                              : int  1 1 1 1 1 0 0 1 1 0 ...
+ $ Q2_Educacion                       : int  4 5 5 4 4 4 1 5 5 5 ...
+ $ Q1_Edad                            : int  20 28 44 24 33 32 59 24 31 47 ...
+ $ Q3_YrsSalud                        : int  0 2 15 4 9 4 3 0 2 6 ...
+ $ gen_trust                          : int  1 2 2 2 2 2 2 2 1 1 ...
+ $ ParticipantType                    : chr  "A" "C" "C" "C" ...
+ $ CargoAdministrador                 : int  0 0 0 0 0 1 0 0 0 0 ...
+ $ CargoMedico                        : int  0 1 1 0 0 0 0 0 1 1 ...
+ $ CargoEnfermero                     : int  0 0 0 1 1 0 0 1 0 0 ...
+ $ CargoAlcaldia                      : int  1 0 0 0 0 0 1 0 0 0 ...
+ $ CargoPromotor                      : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ Participant_A                      : int  1 0 0 0 0 0 1 0 0 0 ...
+ $ Participant_C                      : int  0 1 1 1 1 0 0 1 1 1 ...
+ $ Participant_G                      : int  0 0 0 0 0 1 0 0 0 0 ...
+ $ Participant_R                      : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ net_crosslevel_propknown           : num  0 1 1 1 1 0 0 0.5 0.5 1 ...
+ $ net_crosslevel_propfriends         : num  0 0 0 0 0 0 0 0 0 0.5 ...
+ $ net_crosslevel_propdenomknown      : int  1 1 1 1 1 5 2 2 2 2 ...
+ $ net_crosslevel_propdenomfriends    : int  1 1 1 1 1 5 2 2 2 2 ...
+ $ net_crosslevel_propnumknown        : int  0 1 1 1 1 0 0 1 1 2 ...
+ $ net_crosslevel_propnumfriends      : int  0 0 0 0 0 0 0 0 0 1 ...
+ $ net_crosslevel_hoursrcknown        : int  0 2 2 2 2 0 0 1 1 2 ...
+ $ net_crosslevel_hoursrcfriends      : int  0 0 0 0 0 0 0 0 0 1 ...
+ $ net_crosslevel_propknown_col       : num  0 1 1 1 1 0 0 0.5 0.5 1 ...
+ $ net_crosslevel_propfriends_col     : num  0 0 0 0 0 0 0 0 0 0.5 ...
+ $ net_crosslevel_propdenomknown_col  : int  1 1 1 1 1 5 2 2 2 2 ...
+ $ net_crosslevel_propdenomfriends_col: int  1 1 1 1 1 5 2 2 2 2 ...
+ $ net_crosslevel_propnumknown_col    : int  0 1 1 1 1 0 0 1 1 2 ...
+ $ net_crosslevel_propnumfriends_col  : int  0 0 0 0 0 0 0 0 0 1 ...
+ $ net_crosslevel_hoursrcknown_col    : int  0 2 2 2 2 0 0 1 1 2 ...
+ $ net_crosslevel_hoursrcfriends_col  : int  0 0 0 0 0 0 0 0 0 1 ...
+ $ weights_games_full_scaled          : num  0.167 0.167 0.167 0.167 0.167 ...
+                      publicid_muni                            publicid 
+                                  0                                   0 
+                    ParticipantCode                       decentralized 
+                                  0                                   0 
+                              Mujer                        Q2_Educacion 
+                                  0                                   4 
+                            Q1_Edad                         Q3_YrsSalud 
+                                  1                                   0 
+                          gen_trust                     ParticipantType 
+                                  0                                   0 
+                 CargoAdministrador                         CargoMedico 
+                                  0                                   0 
+                     CargoEnfermero                       CargoAlcaldia 
+                                  0                                   0 
+                      CargoPromotor                       Participant_A 
+                                  0                                   0 
+                      Participant_C                       Participant_G 
+                                  0                                   0 
+                      Participant_R            net_crosslevel_propknown 
+                                  0                                   0 
+         net_crosslevel_propfriends       net_crosslevel_propdenomknown 
+                                  0                                   0 
+    net_crosslevel_propdenomfriends         net_crosslevel_propnumknown 
+                                  0                                   0 
+      net_crosslevel_propnumfriends         net_crosslevel_hoursrcknown 
+                                  0                                   0 
+      net_crosslevel_hoursrcfriends        net_crosslevel_propknown_col 
+                                  0                                   0 
+     net_crosslevel_propfriends_col   net_crosslevel_propdenomknown_col 
+                                  0                                   0 
+net_crosslevel_propdenomfriends_col     net_crosslevel_propnumknown_col 
+                                  0                                   0 
+  net_crosslevel_propnumfriends_col     net_crosslevel_hoursrcknown_col 
+                                  0                                   0 
+  net_crosslevel_hoursrcfriends_col           weights_games_full_scaled 
+                                  0                                   1 
+
+   A    C    G    R <NA> 
+  26  127   47   32    0 
+[1] 232

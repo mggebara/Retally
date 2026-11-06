@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "entry_id": "molina-garzon-2022-decentralization-cooperation",
+  "mode": "seeded",
+  "run_id": "2026-11-06-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [],
+  "deviations": [],
+  "notes": "Single run, no attempts. Table 2: translated the .do file's `reg contribution $xlistfinal(2) [pweight=weights_games_full_scaled], vce(cluster publicid)` into fixest::feols with weights and publicid-clustered SEs, p_type as factor dummies, no extra sample filter (Stata listwise deletion gives N=1980). Table 3: followed clanalysis_replication_vNov16.R, weighted Poisson glm with log offsets on clanalysis_anondata_vNov16.csv, municipality-clustered CR1 SEs via sandwich::vcovCL (HC1, cadjust), matching clse.f. All 12 claimed values reproduced at the reported rounding.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-06T17:37:30Z",
+  "finished_at": "2026-11-06T17:40:40Z"
+}

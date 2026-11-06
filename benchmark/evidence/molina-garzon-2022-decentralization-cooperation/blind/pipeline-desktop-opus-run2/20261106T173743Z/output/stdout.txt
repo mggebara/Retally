@@ -1,0 +1,78 @@
+PGG columns: p_type, publicid_muni, publicid, round, contribution, num_players, decentralized, averagecont, communication, player_type, Q3_YrsSalud, Q4_YrsCurrentJob, Q5_Trust1Base, Q1_Edad, Q2_Educacion, lag_groupcontribution, knownpeople, Q2_female, weights_games_full_scaled, weights_games_reduced_scaled, dec_orgtype, outcome_ols_1, standarderror_ols, highconf_1, lowconf_1, outcome_ols_2, highconf_ols_2, lowconf_ols_2 
+Player type candidates (n levels): player_type 12; p_type 4 
+Player type levels (ref first): A, C, G, R 
+OLS estimation, Dep. Var.: contribution
+Observations: 1,980
+Weights: w
+Standard-errors: Clustered (muni) 
+                       Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)            3.738091   1.357038  2.754596 9.8889e-03 ** 
+decentralized          0.825820   0.202714  4.073816 3.1161e-04 ***
+communication          2.540726   0.280645  9.053172 4.4008e-10 ***
+ptypeC                -0.594107   0.319193 -1.861279 7.2530e-02 .  
+ptypeG                -0.864395   0.481259 -1.796114 8.2554e-02 .  
+ptypeR                -1.169761   0.429932 -2.720805 1.0732e-02 *  
+round                 -0.193005   0.053589 -3.601620 1.1263e-03 ** 
+lag_groupcontribution  0.061331   0.009507  6.450892 3.9827e-07 ***
+num_players           -0.292946   0.086955 -3.368923 2.0872e-03 ** 
+knownpeople           -0.081937   0.068168 -1.201987 2.3877e-01    
+female                 0.101542   0.256373  0.396072 6.9485e-01    
+age                    0.011111   0.012722  0.873321 3.8943e-01    
+educ                   0.342240   0.157034  2.179395 3.7286e-02 *  
+yrs_health             0.034491   0.025057  1.376475 1.7886e-01    
+trust                  0.045360   0.202514  0.223983 8.2429e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 2.63287   Adj. R2: 0.257922
+OLS estimation, Dep. Var.: contribution
+Observations: 1,980
+Weights: w
+Standard-errors: Clustered (muni) 
+                       Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)            4.004266   1.361756  2.940517 6.2562e-03 ** 
+decentralized          0.409236   0.234116  1.748004 9.0692e-02 .  
+communication          2.023108   0.264829  7.639289 1.6076e-08 ***
+dec_comm               0.761756   0.382419  1.991940 5.5548e-02 .  
+ptypeC                -0.595800   0.319599 -1.864210 7.2104e-02 .  
+ptypeG                -0.867380   0.482202 -1.798792 8.2120e-02 .  
+ptypeR                -1.174104   0.431034 -2.723925 1.0652e-02 *  
+round                 -0.188795   0.052539 -3.593407 1.1513e-03 ** 
+lag_groupcontribution  0.059982   0.009815  6.110949 1.0229e-06 ***
+num_players           -0.285211   0.087962 -3.242443 2.9023e-03 ** 
+knownpeople           -0.083083   0.068508 -1.212742 2.3469e-01    
+female                 0.101355   0.257051  0.394300 6.9615e-01    
+age                    0.011100   0.012754  0.870342 3.9102e-01    
+educ                   0.342811   0.157434  2.177494 3.7441e-02 *  
+yrs_health             0.034639   0.025057  1.382425 1.7705e-01    
+trust                  0.047375   0.203723  0.232544 8.1770e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 2.62698   Adj. R2: 0.260863
+CL columns: publicid_muni, publicid, ParticipantCode, decentralized, Mujer, Q2_Educacion, Q1_Edad, Q3_YrsSalud, gen_trust, ParticipantType, CargoAdministrador, CargoMedico, CargoEnfermero, CargoAlcaldia, CargoPromotor, Participant_A, Participant_C, Participant_G, Participant_R, net_crosslevel_propknown, net_crosslevel_propfriends, net_crosslevel_propdenomknown, net_crosslevel_propdenomfriends, net_crosslevel_propnumknown, net_crosslevel_propnumfriends, net_crosslevel_hoursrcknown, net_crosslevel_hoursrcfriends, net_crosslevel_propknown_col, net_crosslevel_propfriends_col, net_crosslevel_propdenomknown_col, net_crosslevel_propdenomfriends_col, net_crosslevel_propnumknown_col, net_crosslevel_propnumfriends_col, net_crosslevel_hoursrcknown_col, net_crosslevel_hoursrcfriends_col, weights_games_full_scaled 
+ParticipantType levels (ref first): A, C, G, R 
+Precomputed candidates: known=   friend=   denoms= net_crosslevel_propdenomknown,net_crosslevel_propdenomfriends,net_crosslevel_propknown_col,net_crosslevel_propdenomknown_col,net_crosslevel_propdenomfriends_col,net_crosslevel_propnumknown_col,net_crosslevel_hoursrcknown_col 
+Dyadic prefixes: Participant 
+Summary of constructed Table 3 variables:
+    y_known     y_friend   den_known       den_friend          w          
+ Min.   :0   Min.   :0   Min.   :1.000   Min.   :1.000   Min.   :0.03527  
+ 1st Qu.:0   1st Qu.:0   1st Qu.:2.000   1st Qu.:2.000   1st Qu.:0.11338  
+ Median :0   Median :0   Median :3.000   Median :3.000   Median :0.12500  
+ Mean   :0   Mean   :0   Mean   :3.603   Mean   :3.603   Mean   :0.13366  
+ 3rd Qu.:0   3rd Qu.:0   3rd Qu.:5.000   3rd Qu.:5.000   3rd Qu.:0.14286  
+ Max.   :0   Max.   :0   Max.   :8.000   Max.   :8.000   Max.   :0.29478  
+                                                         NAs    :1        
+Table 3 error: in fepois(as.formula(paste(y, "~", rhs)), data = dd,...: 
+The dependent variable is a constant. The estimation cannot be done. If you
+really want to carry on, please remove the intercept first. 
+RESULT:decentralized_table2_col1=0.8258204253
+RESULT:communication_table2_col1=2.540726019
+RESULT:decentralized_table2_col2=0.4092362908
+RESULT:communication_table2_col2=2.023108291
+RESULT:decentralized_x_communication_table2_col2=0.7617561541
+RESULT:n_obs_table2=1980
+RESULT:decentralized_table3_allties_base=NA
+RESULT:decentralized_table3_allties_full=NA
+RESULT:decentralized_table3_strongties_base=NA
+RESULT:decentralized_table3_strongties_full=NA
+RESULT:n_obs_table3_base=NA
+RESULT:n_obs_table3_full=NA

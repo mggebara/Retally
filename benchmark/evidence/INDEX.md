@@ -556,6 +556,26 @@ Built by `python -m benchmark.evidence`; see `benchmark/README.md` ("Evidence bu
 - [blind · pipeline-desktop-opus-run2 · 20261102T151132Z](mokyr-2022-wheels-of-change/blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) — 1/13
 - [blind · pipeline-desktop-opus-run3 · 20261103T004800Z](mokyr-2022-wheels-of-change/blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) — 7/13
 
+## [molina-garzon-2022-decentralization-cooperation](molina-garzon-2022-decentralization-cooperation/REPORT.md)
+
+- [seeded · claude-code · 2026-11-06-a](molina-garzon-2022-decentralization-cooperation/seeded/claude-code/2026-11-06-a/CELL.md) — 12/12
+- [seeded · claude-code · 2026-11-06-b](molina-garzon-2022-decentralization-cooperation/seeded/claude-code/2026-11-06-b/CELL.md) — 12/12
+- [seeded · pipeline-desktop-opus · 20261106T163831Z](molina-garzon-2022-decentralization-cooperation/seeded/pipeline-desktop-opus/20261106T163831Z/CELL.md) — 12/12
+- [seeded · pipeline-desktop-opus-run2 · 20261106T174031Z](molina-garzon-2022-decentralization-cooperation/seeded/pipeline-desktop-opus-run2/20261106T174031Z/CELL.md) — 12/12
+- [seeded · pipeline-desktop-opus-run3 · 20261106T174057Z](molina-garzon-2022-decentralization-cooperation/seeded/pipeline-desktop-opus-run3/20261106T174057Z/CELL.md) — 12/12
+- [independent · claude-code · 2026-11-06-a](molina-garzon-2022-decentralization-cooperation/independent/claude-code/2026-11-06-a/CELL.md) — 12/12
+- [independent · claude-code · 2026-11-06-b](molina-garzon-2022-decentralization-cooperation/independent/claude-code/2026-11-06-b/CELL.md) — 12/12
+- [independent · claude-code · 2026-11-06-c](molina-garzon-2022-decentralization-cooperation/independent/claude-code/2026-11-06-c/CELL.md) — 12/12
+- [independent · pipeline-desktop-opus · 20261106T165825Z](molina-garzon-2022-decentralization-cooperation/independent/pipeline-desktop-opus/20261106T165825Z/CELL.md) — 12/12
+- [independent · pipeline-desktop-opus-run2 · 20261106T174031Z](molina-garzon-2022-decentralization-cooperation/independent/pipeline-desktop-opus-run2/20261106T174031Z/CELL.md) — 12/12
+- [independent · pipeline-desktop-opus-run3 · 20261106T174057Z](molina-garzon-2022-decentralization-cooperation/independent/pipeline-desktop-opus-run3/20261106T174057Z/CELL.md) — 6/12
+- [blind · claude-code · 2026-11-06-a](molina-garzon-2022-decentralization-cooperation/blind/claude-code/2026-11-06-a/CELL.md) — 12/12
+- [blind · claude-code · 2026-11-06-b](molina-garzon-2022-decentralization-cooperation/blind/claude-code/2026-11-06-b/CELL.md) — 12/12
+- [blind · claude-code · 2026-11-06-c](molina-garzon-2022-decentralization-cooperation/blind/claude-code/2026-11-06-c/CELL.md) — 12/12
+- [blind · pipeline-desktop-opus · 20261106T163912Z](molina-garzon-2022-decentralization-cooperation/blind/pipeline-desktop-opus/20261106T163912Z/CELL.md) — 6/12
+- [blind · pipeline-desktop-opus-run2 · 20261106T173743Z](molina-garzon-2022-decentralization-cooperation/blind/pipeline-desktop-opus-run2/20261106T173743Z/CELL.md) — 6/12
+- [blind · pipeline-desktop-opus-run3 · 20261106T174057Z](molina-garzon-2022-decentralization-cooperation/blind/pipeline-desktop-opus-run3/20261106T174057Z/CELL.md) — 12/12
+
 ## [montero-2022-cooperative-property-rights](montero-2022-cooperative-property-rights/REPORT.md)
 
 - [seeded · claude-code · 2026-10-21-b](montero-2022-cooperative-property-rights/seeded/claude-code/2026-10-21-b/CELL.md) — 10/10

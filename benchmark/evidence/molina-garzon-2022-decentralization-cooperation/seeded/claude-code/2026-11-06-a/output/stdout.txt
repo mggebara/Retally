@@ -1,0 +1,112 @@
+OLS estimation, Dep. Var.: contribution
+Observations: 1,980
+Weights: weights_games_full_scaled
+Standard-errors: Clustered (publicid) 
+                       Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)            3.738091   1.325777  2.819547 5.2501e-03 ** 
+decentralized          0.825820   0.225607  3.660433 3.1562e-04 ***
+communication          2.540726   0.214132 11.865224  < 2.2e-16 ***
+p_type::2             -0.594107   0.331609 -1.791586 7.4580e-02 .  
+p_type::3             -0.864395   0.429662 -2.011805 4.5466e-02 *  
+p_type::4             -1.169761   0.428608 -2.729211 6.8646e-03 ** 
+round                 -0.193005   0.046750 -4.128434 5.1937e-05 ***
+lag_groupcontribution  0.061331   0.005751 10.664058  < 2.2e-16 ***
+num_players           -0.292946   0.094607 -3.096462 2.2143e-03 ** 
+knownpeople           -0.081937   0.065333 -1.254151 2.1112e-01    
+Q2_female              0.101542   0.225733  0.449833 6.5328e-01    
+Q1_Edad                0.011111   0.014258  0.779242 4.3668e-01    
+Q2_Educacion           0.342240   0.164671  2.078332 3.8844e-02 *  
+Q3_YrsSalud            0.034491   0.019085  1.807238 7.2097e-02 .  
+Q5_Trust1Base          0.045360   0.203105  0.223332 8.2349e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 2.63287   Adj. R2: 0.257922
+OLS estimation, Dep. Var.: contribution
+Observations: 1,980
+Weights: weights_games_full_scaled
+Standard-errors: Clustered (publicid) 
+                             Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)                  4.004266   1.328450  3.014239 2.8800e-03 ** 
+decentralized                0.409236   0.302461  1.353023 1.7744e-01    
+communication                2.023108   0.316890  6.384251 1.0154e-09 ***
+p_type::2                   -0.595800   0.332698 -1.790814 7.4704e-02 .  
+p_type::3                   -0.867380   0.430833 -2.013262 4.5311e-02 *  
+p_type::4                   -1.174104   0.429180 -2.735688 6.7354e-03 ** 
+round                       -0.188795   0.046273 -4.080007 6.3083e-05 ***
+lag_groupcontribution        0.059982   0.005915 10.141331  < 2.2e-16 ***
+num_players                 -0.285211   0.095256 -2.994141 3.0685e-03 ** 
+knownpeople                 -0.083083   0.065565 -1.267193 2.0643e-01    
+Q2_female                    0.101355   0.226442  0.447598 6.5489e-01    
+Q1_Edad                      0.011100   0.014290  0.776803 4.3811e-01    
+Q2_Educacion                 0.342811   0.165292  2.073970 3.9251e-02 *  
+Q3_YrsSalud                  0.034639   0.019104  1.813197 7.1170e-02 .  
+Q5_Trust1Base                0.047375   0.203693  0.232578 8.1631e-01    
+decentralized:communication  0.761756   0.380447  2.002264 4.6490e-02 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 2.62698   Adj. R2: 0.260863
+
+z test of coefficients:
+
+              Estimate Std. Error z value  Pr(>|z|)    
+(Intercept)   -0.59504    0.11481 -5.1827 2.187e-07 ***
+decentralized  0.21765    0.12351  1.7622   0.07804 .  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+z test of coefficients:
+
+                Estimate Std. Error z value  Pr(>|z|)    
+(Intercept)   -2.0508252  0.3878840 -5.2872 1.242e-07 ***
+decentralized  0.2395239  0.1435132  1.6690  0.095117 .  
+Mujer          0.0640194  0.0847738  0.7552  0.450142    
+Q2_Educacion   0.1351362  0.0584876  2.3105  0.020860 *  
+Q1_Edad        0.0048441  0.0056769  0.8533  0.393500    
+Q3_YrsSalud   -0.0031948  0.0057848 -0.5523  0.580764    
+gen_trust      0.0185351  0.0629747  0.2943  0.768508    
+Participant_C  0.7327251  0.2426602  3.0196  0.002531 ** 
+Participant_G  0.7007746  0.2503383  2.7993  0.005121 ** 
+Participant_R  0.1996726  0.3256977  0.6131  0.539836    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+z test of coefficients:
+
+              Estimate Std. Error  z value Pr(>|z|)    
+(Intercept)   -2.27418    0.22472 -10.1200  < 2e-16 ***
+decentralized  0.60721    0.27939   2.1733  0.02976 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+z test of coefficients:
+
+               Estimate Std. Error z value  Pr(>|z|)    
+(Intercept)   -3.859255   1.028088 -3.7538 0.0001742 ***
+decentralized  1.074108   0.314131  3.4193 0.0006278 ***
+Mujer         -0.042262   0.228264 -0.1851 0.8531153    
+Q2_Educacion   0.199815   0.139694  1.4304 0.1526084    
+Q1_Edad        0.010145   0.018047  0.5621 0.5740224    
+Q3_YrsSalud    0.048524   0.019047  2.5476 0.0108464 *  
+gen_trust      0.187488   0.281895  0.6651 0.5059874    
+Participant_C -0.717669   0.330821 -2.1694 0.0300555 *  
+Participant_G -0.781222   0.392325 -1.9913 0.0464517 *  
+Participant_R -1.639421   0.532930 -3.0762 0.0020963 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+N table2 col2 = 1980; N table3 strong base = 231, strong full = 226
+RESULT:decentralized_table2_col1=0.825820
+RESULT:communication_table2_col1=2.540726
+RESULT:decentralized_table2_col2=0.409236
+RESULT:communication_table2_col2=2.023108
+RESULT:decentralized_x_communication_table2_col2=0.761756
+RESULT:n_obs_table2=1980.000000
+RESULT:decentralized_table3_allties_base=0.217647
+RESULT:decentralized_table3_allties_full=0.239524
+RESULT:decentralized_table3_strongties_base=0.607208
+RESULT:decentralized_table3_strongties_full=1.074108
+RESULT:n_obs_table3_base=231.000000
+RESULT:n_obs_table3_full=226.000000

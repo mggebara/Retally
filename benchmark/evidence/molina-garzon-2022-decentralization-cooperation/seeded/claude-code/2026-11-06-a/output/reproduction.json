@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "entry_id": "molina-garzon-2022-decentralization-cooperation",
+  "mode": "seeded",
+  "run_id": "2026-11-06-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [],
+  "deviations": [],
+  "notes": "Single run, no attempts. Table 2: translated the authors' Stata reg with pweight=weights_games_full_scaled and vce(cluster publicid) into fixest::feols (weights, cluster=~publicid, p_type as factor), full sample of publicgoodgame_dataAug27.dta with listwise deletion (N=1980). Table 3: the authors' weighted Poisson glm with log-denominator offset on clanalysis_anondata_vNov16.csv, base and full (player-type) models, CR1 municipality-clustered SEs as in clse.f; N=231/226. All reproduced values match the paper at reported precision.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-06T16:16:28Z",
+  "finished_at": "2026-11-06T16:32:00Z"
+}
