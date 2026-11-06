@@ -1,0 +1,117 @@
+PGG dims: 2257 28 
+Player types:
+ptype
+ A1  C1  C2  C3  C4  C5  C6  G1  G2  G3  R1  R2 
+251 310 310 310 281  41  10 310 122  10 262  40 
+Table 2 sample N: 1980 
+OLS estimation, Dep. Var.: contribution
+Observations: 1,980
+Weights: w
+Standard-errors: Clustered (pid) 
+               Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)    3.862297   1.387273  2.784093 0.00583736 ** 
+decentralized  0.844014   0.227636  3.707737 0.00026501 ***
+communication  2.540802   0.214625 11.838335  < 2.2e-16 ***
+ptype_fC1     -0.552379   0.387295 -1.426248 0.15522067    
+ptype_fC2     -0.676118   0.411404 -1.643439 0.10172691    
+ptype_fC3     -0.830048   0.394905 -2.101891 0.03670571 *  
+ptype_fC4     -0.412138   0.412232 -0.999771 0.31852451    
+ptype_fC5      0.062014   0.422470  0.146790 0.88343312    
+ptype_fC6     -0.263676   0.418715 -0.629726 0.52953032    
+ptype_fG1     -0.939855   0.437223 -2.149602 0.03268304 *  
+ptype_fG2     -0.709531   0.628645 -1.128667 0.26027301    
+ptype_fG3     -0.447192   0.478176 -0.935205 0.35071288    
+ptype_fR1     -1.266536   0.429087 -2.951696 0.00350445 ** 
+ptype_fR2     -0.562290   0.712429 -0.789258 0.43081463    
+round         -0.193273   0.046828 -4.127327 0.00005217 ***
+lag_gc         0.061417   0.005639 10.891886  < 2.2e-16 ***
+num_players   -0.318935   0.099666 -3.200022 0.00157803 ** 
+knownpeople   -0.085137   0.063651 -1.337558 0.18242810    
+female         0.088649   0.229700  0.385932 0.69992132    
+age            0.012530   0.014367  0.872174 0.38406881    
+educ           0.345031   0.167428  2.060766 0.04050682 *  
+yrs_health     0.035909   0.019185  1.871713 0.06257942 .  
+trust          0.045428   0.214589  0.211699 0.83253888    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 2.62707   Adj. R2: 0.258166
+OLS estimation, Dep. Var.: contribution
+Observations: 1,980
+Weights: w
+Standard-errors: Clustered (pid) 
+                             Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)                  4.127246   1.392869  2.963126 3.3818e-03 ** 
+decentralized                0.427787   0.308582  1.386298 1.6707e-01    
+communication                2.023459   0.317503  6.373032 1.0800e-09 ***
+ptype_fC1                   -0.553001   0.388728 -1.422591 1.5628e-01    
+ptype_fC2                   -0.678237   0.412611 -1.643771 1.0166e-01    
+ptype_fC3                   -0.832185   0.396115 -2.100867 3.6796e-02 *  
+ptype_fC4                   -0.414091   0.413594 -1.001200 3.1784e-01    
+ptype_fC5                    0.062631   0.425107  0.147330 8.8301e-01    
+ptype_fC6                   -0.259252   0.420665 -0.616289 5.3834e-01    
+ptype_fG1                   -0.940758   0.438553 -2.145142 3.3042e-02 *  
+ptype_fG2                   -0.717251   0.630233 -1.138074 2.5633e-01    
+ptype_fG3                   -0.448683   0.480128 -0.934509 3.5107e-01    
+ptype_fR1                   -1.270984   0.430045 -2.955466 3.4636e-03 ** 
+ptype_fR2                   -0.568862   0.711455 -0.799575 4.2482e-01    
+round                       -0.189035   0.046336 -4.079633 6.3177e-05 ***
+lag_gc                       0.060059   0.005797 10.361116  < 2.2e-16 ***
+num_players                 -0.310961   0.100186 -3.103828 2.1622e-03 ** 
+knownpeople                 -0.086588   0.063872 -1.355663 1.7660e-01    
+female                       0.088409   0.230444  0.383646 7.0161e-01    
+age                          0.012517   0.014402  0.869076 3.8576e-01    
+educ                         0.345881   0.168086  2.057771 4.0796e-02 *  
+yrs_health                   0.036061   0.019211  1.877091 6.1835e-02 .  
+trust                        0.047330   0.215266  0.219868 8.2618e-01    
+decentralized:communication  0.761339   0.380768  1.999481 4.6792e-02 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 2.62118   Adj. R2: 0.261114
+CL dims: 232 36 
+CL columns:
+ [1] "publicid_muni"                       "publicid"                           
+ [3] "ParticipantCode"                     "decentralized"                      
+ [5] "Mujer"                               "Q2_Educacion"                       
+ [7] "Q1_Edad"                             "Q3_YrsSalud"                        
+ [9] "gen_trust"                           "ParticipantType"                    
+[11] "CargoAdministrador"                  "CargoMedico"                        
+[13] "CargoEnfermero"                      "CargoAlcaldia"                      
+[15] "CargoPromotor"                       "Participant_A"                      
+[17] "Participant_C"                       "Participant_G"                      
+[19] "Participant_R"                       "net_crosslevel_propknown"           
+[21] "net_crosslevel_propfriends"          "net_crosslevel_propdenomknown"      
+[23] "net_crosslevel_propdenomfriends"     "net_crosslevel_propnumknown"        
+[25] "net_crosslevel_propnumfriends"       "net_crosslevel_hoursrcknown"        
+[27] "net_crosslevel_hoursrcfriends"       "net_crosslevel_propknown_col"       
+[29] "net_crosslevel_propfriends_col"      "net_crosslevel_propdenomknown_col"  
+[31] "net_crosslevel_propdenomfriends_col" "net_crosslevel_propnumknown_col"    
+[33] "net_crosslevel_propnumfriends_col"   "net_crosslevel_hoursrcknown_col"    
+[35] "net_crosslevel_hoursrcfriends_col"   "weights_games_full_scaled"          
+Participant columns: Participant_A Participant_C Participant_G Participant_R 
+Own letters:
+own
+  A   C   G   R 
+ 26 127  47  32 
+Tie value table:
+allvals
+  0   1 
+696 232 
+Possible ties summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.000   3.000   4.000   4.672   6.000   8.000 
+Known ties summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0       0       0       0       0       0 
+Friend ties summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+     NA      NA      NA     NaN      NA      NA     232 
+Missing weights: 0 
+Table 3 error: in fepois(fml, data = dat, offset = ~log(possible), ...: 
+The dependent variable is a constant. The estimation cannot be done. If you
+really want to carry on, please remove the intercept first. 
+RESULT:decentralized_table2_col1=0.844014
+RESULT:communication_table2_col1=2.540802
+RESULT:decentralized_table2_col2=0.427787
+RESULT:communication_table2_col2=2.023459
+RESULT:decentralized_x_communication_table2_col2=0.761339
+RESULT:n_obs_table2=1980.000000

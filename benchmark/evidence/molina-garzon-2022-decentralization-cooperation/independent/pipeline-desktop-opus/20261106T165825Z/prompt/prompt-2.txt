@@ -1,0 +1,430 @@
+You are refining R code that reproduces results from an econometrics paper.
+The code RAN SUCCESSFULLY but the reproduced values do not match the
+paper's claims within the allowed tolerance.  Identify what is causing
+the gap and adjust the code to close it.
+
+## Paper
+Title: Decentralization Can Increase Cooperation among
+Methodology: - **Design / sample**: Quasi-experiment on the staggered Honduran health-sector decentralization. Propensity score matching on all available pre-decentralization municipal data (iterative propensity score specification following Imbens & Rubin 2015; details in Zarychta et al. 2019b, Table A4) selected 31 municipalities: 21 decentralized (treated) and 10 matched centrally-administered (control). Mean propensity of being targeted is 0.64 for treated and 0.58 for controls. Robustness uses a reduced sample of 24 municipalities that drops six treated municipalities with weaker matches (propensities 0.47 vs 0.49; SI Table SA1).
+- **Data collection**: In 2017, 31 daylong lab-in-the-field workshops ran with 232 public servants (about 8 per workshop). Roles were regional health authority (R), administrative intermediary (AI), 4 health-center doctors/nurses (HC) and a mayor's-office official (M). Each workshop had a pre-survey, a 10-round public goods game (PGG) and a post-survey with social-network prompts. Seven late arrivals are excluded from the cooperation data, leaving 225 players × 10 rounds = 2,250 observations. The Table 2 regressions use N = 1,980; the lagged group contribution regressor drops round 1, and covariates are missing for some players.
+- **Outcome (cooperation)**: Individual contribution to the group fund in each round, from 0 to 10 lempiras (unstandardised, in lempiras). Game design follows Isaac & Walker (1988): each player gets a 10-lempira endowment per round, and the group fund is doubled and split equally. Decisions are private, and the group total is revealed after each round. Rounds 1–5 have no communication; rounds 6–10 allow communication before decisions.
+- **Main estimating equation (Table 2)**: Weighted OLS with weights from the municipal-level propensity scores. Contribution_it is regressed on Decentralized (1 = decentralized, 0 = centrally administered). Model (1) is main effects only. The preferred Model (2) adds Decentralized × Communication; its interaction is 0.76 (SE 0.38, p<.05) and its Decentralized main effect is 0.41 (SE 0.30). Model (1) gives Decentralized = 0.83 (SE 0.23, p<.01). The controls are the same in both models:
+  - Communication dummy (rounds 6–10)
+  - Player-type dummies HC, AI and R (reference M)
+  - Round (1–10), as a linear trend
+  - Lagged group contribution
+  - Number of players in the session
+  - People known in the room
+  - Female, Age, Education and Years in health sector
+  - General trust
+
+  There are no fixed effects. Fit statistics are R² 0.26 / 0.27 and AIC 9483 / 9476.
+- **Standard errors**: The Table 2 note says "robust standard errors". The text says the OLS accounts "for the clustered characteristics of the observations", meaning repeated rounds within individuals within municipalities. Table 1 balance tests use weighted OLS with SEs clustered by municipality. Robustness uses a multilevel Tobit model (censoring at 0/10, with random variance at the individual and municipality levels; SI Table SA3).
+- **Descriptives (Table 1)**: Propensity-score-weighted means (SD) by administration type for 77 control and 148 treated individuals. It reports p-values for differences from weighted OLS with municipality-clustered SEs, plus standardized mean differences.
+- **Mechanism analysis (Table 3)**: Weighted Poisson regression of the number of realized cross-level ties per individual, with an offset for the log of total possible cross-level ties with the other workshop participants. There are two outcomes: "all ties" (knew the person as a colleague) and "strong ties" (friend). Each is run as a base model (Decentralized only, N = 231) and a full model (N = 226). The full model adds Female, Education, Age, Years in health sector, Generalized trust and player-type dummies HC/AI/R (reference M). SEs are clustered by municipality, and models are compared by BIC. The key estimates for Decentralized are:
+
+  | Model | All ties | Strong ties |
+  |---|---|---|
+  | Base | 0.22† | 0.61* |
+  | Full | 0.24† | 1.07** |
+
+  For the strong-ties full model, this is a predicted rise from about 0.07 to 0.21 in the proportion of strong cross-level ties.
+- **Evaluation / inference**: Significance is judged by conventional p-value thresholds († p<.1, * p<.05, ** p<.01). Substantive effects are shown as predicted contributions by round and administration type (Fig. 3). Raw mean contributions in the communication rounds are 7.9 (decentralized) vs 6.7 (centralized) lempiras, and 7.9 vs 6.6 in the last round. A supplementary pairwise correlation links average PGG contribution with perceived health-system improvement (0.37, p = .04). There is no train/test split or cross-validation.
+
+
+## Current Code
+```r
+suppressPackageStartupMessages({
+  library(haven)
+  library(dplyr)
+  library(readr)
+  library(fixest)
+})
+set.seed(42)
+
+base_dir <- "<repo>/.cache/datasets/molina_garzon_2022_decentralization_cooperation.script-free"
+results <- list()
+
+emit <- function(name, val) {
+  if (!is.null(val) && length(val) == 1 && is.finite(val)) {
+    results[[name]] <<- as.numeric(val)
+  }
+}
+
+to_num <- function(x) {
+  if (inherits(x, "haven_labelled")) x <- as.numeric(zap_labels(x))
+  if (is.factor(x)) x <- as.character(x)
+  if (is.character(x)) x <- suppressWarnings(as.numeric(x))
+  as.numeric(x)
+}
+
+## ---------------------------------------------------------------
+## Table 2: weighted OLS of per-round contributions
+## ---------------------------------------------------------------
+pgg <- read_dta(file.path(base_dir, "publicgoodgame_dataAug27.dta"))
+cat("PGG dims:", dim(pgg), "\n")
+
+ptype_raw <- pgg$player_type
+if (inherits(ptype_raw, "haven_labelled")) {
+  ptype <- as.character(as_factor(ptype_raw))
+} else {
+  ptype <- as.character(ptype_raw)
+}
+if (all(is.na(ptype)) && "p_type" %in% names(pgg)) {
+  ptype <- as.character(if (inherits(pgg$p_type, "haven_labelled")) as_factor(pgg$p_type) else pgg$p_type)
+}
+cat("Player types:\n"); print(table(ptype, useNA = "ifany"))
+
+d2 <- data.frame(
+  contribution = to_num(pgg$contribution),
+  decentralized = to_num(pgg$decentralized),
+  communication = to_num(pgg$communication),
+  round = to_num(pgg$round),
+  lag_gc = to_num(pgg$lag_groupcontribution),
+  num_players = to_num(pgg$num_players),
+  knownpeople = to_num(pgg$knownpeople),
+  female = to_num(pgg$Q2_female),
+  age = to_num(pgg$Q1_Edad),
+  educ = to_num(pgg$Q2_Educacion),
+  yrs_health = to_num(pgg$Q3_YrsSalud),
+  trust = to_num(pgg$Q5_Trust1Base),
+  w = to_num(pgg$weights_games_full_scaled),
+  muni = to_num(pgg$publicid_muni),
+  pid = to_num(pgg$publicid),
+  ptype = ptype,
+  stringsAsFactors = FALSE
+)
+
+# reference category: mayor's office
+lv <- sort(unique(na.omit(d2$ptype)))
+mref <- lv[grepl("^m$|^m[^a-z]|mayor|alcald|munic", tolower(lv))]
+d2$ptype_f <- factor(d2$ptype)
+if (length(mref) >= 1) d2$ptype_f <- relevel(d2$ptype_f, ref = mref[1])
+
+d2c <- d2 %>%
+  filter(!is.na(contribution), !is.na(decentralized), !is.na(communication),
+         !is.na(round), !is.na(lag_gc), !is.na(num_players), !is.na(knownpeople),
+         !is.na(female), !is.na(age), !is.na(educ), !is.na(yrs_health),
+         !is.na(trust), !is.na(w), !is.na(ptype_f))
+cat("Table 2 sample N:", nrow(d2c), "\n")
+
+m1 <- feols(contribution ~ decentralized + communication + ptype_f + round + lag_gc +
+              num_players + knownpeople + female + age + educ + yrs_health + trust,
+            data = d2c, weights = ~w, cluster = ~pid)
+m2 <- feols(contribution ~ decentralized * communication + ptype_f + round + lag_gc +
+              num_players + knownpeople + female + age + educ + yrs_health + trust,
+            data = d2c, weights = ~w, cluster = ~pid)
+print(summary(m1)); print(summary(m2))
+
+emit("decentralized_table2_col1", coef(m1)["decentralized"])
+emit("communication_table2_col1", coef(m1)["communication"])
+emit("decentralized_table2_col2", coef(m2)["decentralized"])
+emit("communication_table2_col2", coef(m2)["communication"])
+emit("decentralized_x_communication_table2_col2", coef(m2)["decentralized:communication"])
+emit("n_obs_table2", nobs(m1))
+
+## municipal weights for Table 3
+muni_w <- d2 %>% filter(!is.na(w), !is.na(muni)) %>%
+  group_by(muni) %>% summarise(w_muni = mean(w), .groups = "drop")
+pid_w <- d2 %>% filter(!is.na(w), !is.na(pid)) %>%
+  group_by(pid) %>% summarise(w_pid = mean(w), .groups = "drop")
+
+## ---------------------------------------------------------------
+## Table 3: weighted Poisson of cross-level ties
+## ---------------------------------------------------------------
+tryCatch({
+  cl <- read_csv(file.path(base_dir, "clanalysis_anondata_vNov16.csv"), show_col_types = FALSE)
+  cat("CL dims:", dim(cl), "\n")
+  cat("CL columns:\n"); print(names(cl))
+
+  pcols <- grep("^Participant_[A-Za-z0-9]+$", names(cl), value = TRUE)
+  pletters <- sub("^Participant_", "", pcols)
+  cat("Participant columns:", pcols, "\n")
+
+  # respondent's own letter
+  pc <- as.character(cl$ParticipantCode)
+  own <- sub("^.*?([A-Za-z]+)$", "\\1", pc)
+  if (!any(own %in% pletters)) {
+    num <- suppressWarnings(as.integer(pc))
+    if (any(!is.na(num))) own <- LETTERS[num]
+  }
+  if (!any(own %in% pletters)) {
+    own <- toupper(substr(gsub("[^A-Za-z]", "", pc), nchar(gsub("[^A-Za-z]", "", pc)), nchar(gsub("[^A-Za-z]", "", pc))))
+  }
+  cat("Own letters:\n"); print(table(own, useNA = "ifany"))
+
+  # decode tie values
+  allvals <- unlist(lapply(pcols, function(cc) as.character(cl[[cc]])))
+  cat("Tie value table:\n"); print(table(allvals, useNA = "ifany"))
+  numvals <- suppressWarnings(as.numeric(allvals))
+  is_numeric_coding <- all(is.na(allvals) | allvals == "" | !is.na(numvals))
+
+  decode <- function(x) {
+    x <- as.character(x)
+    if (is_numeric_coding) {
+      v <- suppressWarnings(as.numeric(x))
+      vv <- numvals[!is.na(numvals)]
+      mn <- min(vv); mx <- max(vv)
+      if (mn == 0) {
+        known <- !is.na(v) & v > 0
+        friend <- if (mx >= 2) (!is.na(v) & v == mx) else rep(NA, length(v))
+      } else if (mn == 1 && mx >= 3) {
+        known <- !is.na(v) & v > 1
+        friend <- !is.na(v) & v == mx
+      } else {
+        known <- !is.na(v) & v == mx
+        friend <- rep(NA, length(v))
+      }
+    } else {
+      lx <- tolower(trimws(x))
+      nonresp <- is.na(lx) | lx == "" | lx == "na"
+      neg <- grepl("^no|no conoc|no lo|desconoc|ningun|nada|never|don.?t|not", lx)
+      known <- !nonresp & !neg
+      friend <- !nonresp & grepl("amig|friend", lx)
+    }
+    list(known = known, friend = friend)
+  }
+
+  ctype <- as.character(cl$ParticipantType)
+  muni <- cl$publicid_muni
+  n <- nrow(cl)
+  possible <- known_ct <- friend_ct <- rep(NA_real_, n)
+  for (i in seq_len(n)) {
+    others <- which(muni == muni[i] & seq_len(n) != i)
+    others <- others[!is.na(ctype[others]) & !is.na(ctype[i]) & ctype[others] != ctype[i]]
+    others <- others[own[others] %in% pletters]
+    possible[i] <- length(others)
+    if (length(others) == 0) { known_ct[i] <- 0; friend_ct[i] <- 0; next }
+    vals <- sapply(own[others], function(L) as.character(cl[[paste0("Participant_", L)]][i]))
+    dd <- decode(vals)
+    known_ct[i] <- sum(dd$known, na.rm = TRUE)
+    friend_ct[i] <- if (all(is.na(dd$friend))) NA else sum(dd$friend, na.rm = TRUE)
+  }
+
+  t3 <- data.frame(
+    muni = to_num(cl$publicid_muni),
+    pid = to_num(cl$publicid),
+    decentralized = to_num(cl$decentralized),
+    female = to_num(cl$Mujer),
+    educ = to_num(cl$Q2_Educacion),
+    age = to_num(cl$Q1_Edad),
+    yrs_health = to_num(cl$Q3_YrsSalud),
+    trust = to_num(cl$gen_trust),
+    ptype = factor(ctype),
+    possible = possible, known = known_ct, friend = friend_ct
+  )
+  lvc <- levels(t3$ptype)
+  mref3 <- lvc[grepl("^m$|^m[^a-z]|mayor|alcald|munic", tolower(lvc))]
+  if (length(mref3) >= 1) t3$ptype <- relevel(t3$ptype, ref = mref3[1])
+
+  t3 <- t3 %>% left_join(muni_w, by = "muni") %>% left_join(pid_w, by = "pid")
+  t3$w <- ifelse(!is.na(t3$w_muni), t3$w_muni, t3$w_pid)
+  cat("Possible ties summary:\n"); print(summary(t3$possible))
+  cat("Known ties summary:\n"); print(summary(t3$known))
+  cat("Friend ties summary:\n"); print(summary(t3$friend))
+  cat("Missing weights:", sum(is.na(t3$w)), "\n")
+
+  t3b <- t3 %>% filter(possible > 0, !is.na(decentralized), !is.na(w))
+  t3f <- t3b %>% filter(!is.na(female), !is.na(educ), !is.na(age), !is.na(yrs_health),
+                        !is.na(trust), !is.na(ptype))
+
+  fit_pois <- function(fml, dat) {
+    fepois(fml, data = dat, offset = ~log(possible), weights = ~w, cluster = ~muni)
+  }
+
+  a_b <- fit_pois(known ~ decentralized, t3b)
+  a_f <- fit_pois(known ~ decentralized + female + educ + age + yrs_health + trust + ptype, t3f)
+  print(summary(a_b)); print(summary(a_f))
+  emit("decentralized_table3_allties_base", coef(a_b)["decentralized"])
+  emit("decentralized_table3_allties_full", coef(a_f)["decentralized"])
+  emit("n_obs_table3_base", nobs(a_b))
+  emit("n_obs_table3_full", nobs(a_f))
+
+  if (!all(is.na(t3b$friend))) {
+    s_b <- fit_pois(friend ~ decentralized, t3b %>% filter(!is.na(friend)))
+    s_f <- fit_pois(friend ~ decentralized + female + educ + age + yrs_health + trust + ptype,
+                    t3f %>% filter(!is.na(friend)))
+    print(summary(s_b)); print(summary(s_f))
+    emit("decentralized_table3_strongties_base", coef(s_b)["decentralized"])
+    emit("decentralized_table3_strongties_full", coef(s_f)["decentralized"])
+  }
+}, error = function(e) {
+  cat("Table 3 error:", conditionMessage(e), "\n")
+})
+
+for (nm in names(results)) {
+  cat(sprintf("RESULT:%s=%.6f\n", nm, results[[nm]]))
+}
+```
+
+## What the code produced
+  decentralized_table2_col1 = 0.844014
+  communication_table2_col1 = 2.540802
+  decentralized_table2_col2 = 0.427787
+  communication_table2_col2 = 2.023459
+  decentralized_x_communication_table2_col2 = 0.761339
+  n_obs_table2 = 1980.0
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+PGG dims: 2257 28 
+Player types:
+ptype
+ A1  C1  C2  C3  C4  C5  C6  G1  G2  G3  R1  R2 
+251 310 310 310 281  41  10 310 122  10 262  40 
+Table 2 sample N: 1980 
+OLS estimation, Dep. Var.: contribution
+Observations: 1,980
+Weights: w
+Standard-errors: Clustered (pid) 
+               Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)    3.862297   1.387273  2.784093 0.00583736 ** 
+decentralized  0.844014   0.227636  3.707737 0.00026501 ***
+communication  2.540802   0.214625 11.838335  < 2.2e-16 ***
+ptype_fC1     -0.552379   0.387295 -1.426248 0.15522067    
+ptype_fC2     -0.676118   0.411404 -1.643439 0.10172691    
+ptype_fC3     -0.830048   0.394905 -2.101891 0.03670571 *  
+ptype_fC4     -0.412138   0.412232 -0.999771 0.31852451    
+ptype_fC5      0.062014   0.422470  0.146790 0.88343312    
+ptype_fC6     -0.263676   0.418715 -0.629726 0.52953032    
+ptype_fG1     -0.939855   0.437223 -2.149602 0.03268304 *  
+ptype_fG2     -0.709531   0.628645 -1.128667 0.26027301    
+ptype_fG3     -0.447192   0.478176 -0.935205 0.35071288    
+ptype_fR1     -1.266536   0.429087 -2.951696 0.00350445 ** 
+ptype_fR2     -0.562290   0.712429 -0.789258 0.43081463    
+round         -0.193273   0.046828 -4.127327 0.00005217 ***
+lag_gc         0.061417   0.005639 10.891886  < 2.2e-16 ***
+num_players   -0.318935   0.099666 -3.200022 0.00157803 ** 
+knownpeople   -0.085137   0.063651 -1.337558 0.18242810    
+female         0.088649   0.229700  0.385932 0.69992132    
+age            0.012530   0.014367  0.872174 0.38406881    
+educ           0.345031   0.167428  2.060766 0.04050682 *  
+yrs_health     0.035909   0.019185  1.871713 0.06257942 .  
+trust          0.045428   0.214589  0.211699 0.83253888    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 2.62707   Adj. R2: 0.258166
+OLS estimation, Dep. Var.: contribution
+Observations: 1,980
+Weights: w
+Standard-errors: Clustered (pid) 
+                             Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)                  4.127246   1.392869  2.963126 3.3818e-03 ** 
+decentralized                0.427787   0.308582  1.386298 1.6707e-01    
+communication                2.023459   0.317503  6.373032 1.0800e-09 ***
+ptype_fC1                   -0.553001   0.388728 -1.422591 1.5628e-01    
+ptype_fC2                   -0.678237   0.412611 -1.643771 1.0166e-01    
+ptype_fC3                   -0.832185   0.396115 -2.100867 3.6796e-02 *  
+ptype_fC4                   -0.414091   0.413594 -1.001200 3.1784e-01    
+ptype_fC5                    0.062631   0.425107  0.147330 8.8301e-01    
+ptype_fC6                   -0.259252   0.420665 -0.616289 5.3834e-01    
+ptype_fG1                   -0.940758   0.438553 -2.145142 3.3042e-02 *  
+ptype_fG2                   -0.717251   0.630233 -1.138074 2.5633e-01    
+ptype_fG3                   -0.448683   0.480128 -0.934509 3.5107e-01    
+ptype_fR1                   -1.270984   0.430045 -2.955466 3.4636e-03 ** 
+ptype_fR2                   -0.568862   0.711455 -0.
+[... 383 characters omitted ...]
+e-01    
+age                          0.012517   0.014402  0.869076 3.8576e-01    
+educ                         0.345881   0.168086  2.057771 4.0796e-02 *  
+yrs_health                   0.036061   0.019211  1.877091 6.1835e-02 .  
+trust                        0.047330   0.215266  0.219868 8.2618e-01    
+decentralized:communication  0.761339   0.380768  1.999481 4.6792e-02 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 2.62118   Adj. R2: 0.261114
+CL dims: 232 36 
+CL columns:
+ [1] "publicid_muni"                       "publicid"                           
+ [3] "ParticipantCode"                     "decentralized"                      
+ [5] "Mujer"                               "Q2_Educacion"                       
+ [7] "Q1_Edad"                             "Q3_YrsSalud"                        
+ [9] "gen_trust"                           "ParticipantType"                    
+[11] "CargoAdministrador"                  "CargoMedico"                        
+[13] "CargoEnfermero"                      "CargoAlcaldia"                      
+[15] "CargoPromotor"                       "Participant_A"                      
+[17] "Participant_C"                       "Participant_G"                      
+[19] "Participant_R"                       "net_crosslevel_propknown"           
+[21] "net_crosslevel_propfriends"          "net_crosslevel_propdenomknown"      
+[23] "net_crosslevel_propdenomfriends"     "net_crosslevel_propnumknown"        
+[25] "net_crosslevel_propnumfriends"       "net_crosslevel_hoursrcknown"        
+[27] "net_crosslevel_hoursrcfriends"       "net_crosslevel_propknown_col"       
+[29] "net_crosslevel_propfriends_col"      "net_crosslevel_propdenomknown_col"  
+[31] "net_crosslevel_propdenomfriends_col" "net_crosslevel_propnumknown_col"    
+[33] "net_crosslevel_propnumfriends_col"   "net_crosslevel_hoursrcknown_col"    
+[35] "net_crosslevel_hoursrcfriends_col"   "weights_games_full_scaled"          
+Participant columns: Participant_A Participant_C Participant_G Participant_R 
+Own letters:
+own
+  A   C   G   R 
+ 26 127  47  32 
+Tie value table:
+allvals
+  0   1 
+696 232 
+Possible ties summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.000   3.000   4.000   4.672   6.000   8.000 
+Known ties summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0       0       0       0       0       0 
+Friend ties summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+     NA      NA      NA     NaN      NA      NA     232 
+Missing weights: 0 
+Table 3 error: in fepois(fml, data = dat, offset = ~log(possible), ...: 
+The dependent variable is a constant. The estimation cannot be done. If you
+really want to carry on, please remove the intercept first. 
+RESULT:decentralized_table2_col1=0.844014
+RESULT:communication_table2_col1=2.540802
+RESULT:decentralized_table2_col2=0.427787
+RESULT:communication_table2_col2=2.023459
+RESULT:decentralized_x_communication_table2_col2=0.761339
+RESULT:n_obs_table2=1980.000000
+```
+
+## Claims still failing
+1. decentralized_table3_allties_base: paper claims 0.22 log of the expected count of realized cross-level ties (coefficient), your code produced N/A, tolerance 0.5455
+2. decentralized_table3_allties_full: paper claims 0.24 log of the expected count of realized cross-level ties (coefficient), your code produced N/A, tolerance 0.5833
+3. decentralized_table3_strongties_base: paper claims 0.61 log of the expected count of realized strong cross-level ties (coefficient), your code produced N/A, tolerance 0.459
+4. decentralized_table3_strongties_full: paper claims 1.07 log of the expected count of realized strong cross-level ties (coefficient), your code produced N/A, tolerance 0.2897
+5. n_obs_table3_base: paper claims 231.0 workshop participants (count), your code produced N/A, tolerance 0.05
+6. n_obs_table3_full: paper claims 226.0 workshop participants (count), your code produced N/A, tolerance 0.05
+
+## Previous attempts (oldest first)
+  Attempt 1: decentralized_table2_col1=0.844014, communication_table2_col1=2.540802, decentralized_table2_col2=0.427787, communication_table2_col2=2.023459, decentralized_x_communication_table2_col2=0.761339, n_obs_table2=1980.0
+
+These attempts have already been tried.  Do not repeat a strategy
+that has already produced the same values.
+
+## Task
+Adjust the code minimally to close the gap on the failing claims.
+Prefer changes that align more closely with the paper's stated methodology:
+re-read the methodology summary above and check the model specification,
+covariate selection, fixed effects, clustering, and seed against what the
+paper actually specifies.  In econometrics papers, common gap-closers are:
+  - getting the cluster-robust SE right (vcovCL / cluster_var argument)
+  - matching the paper's exact fixed-effects structure
+  - using the same sample-restriction filters the paper applied
+  - matching the paper's weighting scheme (weights= argument)
+
+## Deviation reporting
+If you must change something the paper did NOT specify in order to close
+the gap, emit a ``DEVIATION:`` line via cat() describing the change:
+
+    cat('DEVIATION: Used HC1 robust SE because the paper does not specify but the default did not converge\n')
+
+## When to give up
+If after re-reading the methodology and the previous attempts you judge
+the gap cannot be closed without unreasonable deviation, return the SAME
+R CODE you were given, BYTE-FOR-BYTE unchanged.  The pipeline will record
+the claim as unreproducible.
+
+## Output convention (unchanged)
+Emit every metric as ``cat('RESULT:<name>=<value>\n')``.
+The dataset is a directory tree at '<repo>/.cache/datasets/molina_garzon_2022_decentralization_cooperation.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+No network, no system().  set.seed(42).
+
+Output ONLY the R code — no explanation, no markdown fences.

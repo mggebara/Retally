@@ -1,0 +1,98 @@
+Player type levels (fallback): A1, C1, C2, C3, C4, C5, C6, G1, G2, G3, R1, R2 
+Player-type distribution (PGG):
+
+  AI   HC    M    R 
+ 310  310  251 1386 
+OLS estimation, Dep. Var.: contribution
+Observations: 1,980
+Weights: w
+Standard-errors: Clustered (muni) 
+               Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)    4.283604   1.225040  3.496705 1.4898e-03 ** 
+decentralized  0.781731   0.198652  3.935172 4.5617e-04 ***
+communication  2.541156   0.280117  9.071774 4.2046e-10 ***
+HC            -0.521234   0.407699 -1.278479 2.1088e-01    
+AI            -0.650500   0.450581 -1.443692 1.5919e-01    
+R             -0.711095   0.349290 -2.035831 5.0682e-02 .  
+round         -0.194518   0.053054 -3.666406 9.4651e-04 ***
+lag_group      0.061816   0.009489  6.514513 3.3417e-07 ***
+num_players   -0.310637   0.086935 -3.573222 1.2152e-03 ** 
+knownpeople   -0.069849   0.066414 -1.051729 3.0132e-01    
+female         0.050872   0.241459  0.210684 8.3456e-01    
+age            0.008569   0.013390  0.639952 5.2706e-01    
+educ           0.263063   0.151962  1.731114 9.3706e-02 .  
+yrs_health     0.031516   0.025358  1.242839 2.2355e-01    
+trust          0.022315   0.205297  0.108697 9.1417e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 2.63784   Adj. R2: 0.255118
+OLS estimation, Dep. Var.: contribution
+Observations: 1,980
+Weights: w
+Standard-errors: Clustered (muni) 
+               Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)    4.551143   1.217051  3.739484 7.7713e-04 ***
+decentralized  0.366411   0.210654  1.739399 9.2217e-02 .  
+communication  2.025346   0.264061  7.669981 1.4828e-08 ***
+dec_comm       0.759098   0.380716  1.993871 5.5326e-02 .  
+HC            -0.521990   0.408085 -1.279119 2.1066e-01    
+AI            -0.652540   0.450609 -1.448129 1.5795e-01    
+R             -0.713426   0.350189 -2.037257 5.0530e-02 .  
+round         -0.190328   0.051994 -3.660598 9.6141e-04 ***
+lag_group      0.060473   0.009793  6.175093 8.5554e-07 ***
+num_players   -0.302987   0.088012 -3.442576 1.7194e-03 ** 
+knownpeople   -0.070971   0.066648 -1.064872 2.9543e-01    
+female         0.050409   0.242275  0.208067 8.3658e-01    
+age            0.008549   0.013420  0.637029 5.2894e-01    
+educ           0.263306   0.152324  1.728590 9.4163e-02 .  
+yrs_health     0.031650   0.025366  1.247736 2.2178e-01    
+trust          0.024270   0.206347  0.117618 9.0715e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 2.632   Adj. R2: 0.258034
+clanalysis columns:
+ [1] "publicid_muni"                       "publicid"                           
+ [3] "ParticipantCode"                     "decentralized"                      
+ [5] "Mujer"                               "Q2_Educacion"                       
+ [7] "Q1_Edad"                             "Q3_YrsSalud"                        
+ [9] "gen_trust"                           "ParticipantType"                    
+[11] "CargoAdministrador"                  "CargoMedico"                        
+[13] "CargoEnfermero"                      "CargoAlcaldia"                      
+[15] "CargoPromotor"                       "Participant_A"                      
+[17] "Participant_C"                       "Participant_G"                      
+[19] "Participant_R"                       "net_crosslevel_propknown"           
+[21] "net_crosslevel_propfriends"          "net_crosslevel_propdenomknown"      
+[23] "net_crosslevel_propdenomfriends"     "net_crosslevel_propnumknown"        
+[25] "net_crosslevel_propnumfriends"       "net_crosslevel_hoursrcknown"        
+[27] "net_crosslevel_hoursrcfriends"       "net_crosslevel_propknown_col"       
+[29] "net_crosslevel_propfriends_col"      "net_crosslevel_propdenomknown_col"  
+[31] "net_crosslevel_propdenomfriends_col" "net_crosslevel_propnumknown_col"    
+[33] "net_crosslevel_propnumfriends_col"   "net_crosslevel_hoursrcknown_col"    
+[35] "net_crosslevel_hoursrcfriends_col"   "weights_games_full_scaled"          
+Player type levels (fallback): A, C, G, R 
+Constructed tie counts from per-alter columns.
+Player type levels (fallback): A, C, G, R 
+<simpleError: in fepois(fml, data = d, offset = as.formula(paste("...: 
+The dependent variable is a constant. The estimation cannot be done. If you
+really want to carry on, please remove the intercept first.>
+<simpleError: in fepois(fml, data = d, offset = as.formula(paste("...: 
+The dependent variable is a constant. The estimation cannot be done. If you
+really want to carry on, please remove the intercept first.>
+<simpleError: in fepois(fml, data = d, offset = as.formula(paste("...: 
+The dependent variable is a constant. The estimation cannot be done. If you
+really want to carry on, please remove the intercept first.>
+<simpleError: in fepois(fml, data = d, offset = as.formula(paste("...: 
+The dependent variable is a constant. The estimation cannot be done. If you
+really want to carry on, please remove the intercept first.>
+RESULT:decentralized_table2_col1=0.781731
+RESULT:communication_table2_col1=2.541156
+RESULT:decentralized_table2_col2=0.366411
+RESULT:communication_table2_col2=2.025346
+RESULT:decentralized_x_communication_table2_col2=0.759098
+RESULT:n_obs_table2=1980.000000
+RESULT:decentralized_table3_allties_base=NA
+RESULT:decentralized_table3_allties_full=NA
+RESULT:decentralized_table3_strongties_base=NA
+RESULT:decentralized_table3_strongties_full=NA
+RESULT:n_obs_table3_base=NA
+RESULT:n_obs_table3_full=NA

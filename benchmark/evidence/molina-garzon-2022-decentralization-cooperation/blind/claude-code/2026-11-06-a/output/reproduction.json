@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "molina-garzon-2022-decentralization-cooperation",
+  "mode": "blind",
+  "run_id": "2026-11-06-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was exploratory (missingness, p_type coding 1=A/2=C/3=G/4=R inferred from counts matching the CSV, weights; no RESULT lines). Table 2: lm of contribution on decentralized, communication, player-type dummies (C=health center, G=admin intermediary, R=regional; A=mayor's office reference), round, lag_groupcontribution, num_players, knownpeople, Q2_female, Q1_Edad, Q2_Educacion, Q3_YrsSalud, Q5_Trust1Base, weighted by weights_games_full_scaled, complete cases (N=1980; round 1 drops for lack of a lagged group contribution); col 2 adds decentralized:communication. HC1 robust and municipality-clustered SEs printed for reference only. Table 3: fixest::fepois weighted by weights_games_full_scaled with offset log(net_crosslevel_propdenom*), counts net_crosslevel_propnumknown / propnumfriends, clustered by publicid_muni; base N=231 (one participant lacks a weight), full adds Mujer, Q2_Educacion, Q1_Edad, Q3_YrsSalud, gen_trust (coded 1/2 in the CSV, used as-is; linear recoding does not change other coefficients) and player-type dummies, N=226 complete cases. glm quasipoisson cross-check gives identical point estimates. Codebook_Nov16.pdf (inside the mount) was read for variable definitions. No specification was tuned toward any paper number; the paper's non-withheld control coefficients were visible in paper.txt but were not used to choose the specification.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-06T16:16:23Z",
+  "finished_at": "2026-11-06T16:30:00Z"
+}

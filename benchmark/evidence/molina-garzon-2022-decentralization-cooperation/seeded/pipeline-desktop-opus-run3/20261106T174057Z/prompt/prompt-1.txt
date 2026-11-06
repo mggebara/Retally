@@ -1,0 +1,1152 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: Decentralization Can Increase Cooperation among
+Abstract (first 500 chars): Collective action among public officials is necessar y for the effective delivery of many s ocial services, but relatively
+little is known about how it can be fostered through policy reforms. In this article, we compare cooperation among public
+officials within decentralized versus centrally-administered municipalities in Honduras. Leverag ing a quasi-experiment in
+health sector reform, coupled with behavioral games and social network surveys, we find that decentralization is associated
+with gre
+Methodology Summary: - **Design / sample**: Quasi-experiment on the staggered Honduran health-sector decentralization. Propensity score matching on all available pre-decentralization municipal data (iterative propensity score specification following Imbens & Rubin 2015; details in Zarychta et al. 2019b, Table A4) selected 31 municipalities: 21 decentralized (treated) and 10 matched centrally-administered (control). Mean propensity of being targeted is 0.64 for treated and 0.58 for controls. Robustness uses a reduced sample of 24 municipalities that drops six treated municipalities with weaker matches (propensities 0.47 vs 0.49; SI Table SA1).
+- **Data collection**: In 2017, 31 daylong lab-in-the-field workshops ran with 232 public servants (about 8 per workshop). Roles were regional health authority (R), administrative intermediary (AI), 4 health-center doctors/nurses (HC) and a mayor's-office official (M). Each workshop had a pre-survey, a 10-round public goods game (PGG) and a post-survey with social-network prompts. Seven late arrivals are excluded from the cooperation data, leaving 225 players × 10 rounds = 2,250 observations. The Table 2 regressions use N = 1,980; the lagged group contribution regressor drops round 1, and covariates are missing for some players.
+- **Outcome (cooperation)**: Individual contribution to the group fund in each round, from 0 to 10 lempiras (unstandardised, in lempiras). Game design follows Isaac & Walker (1988): each player gets a 10-lempira endowment per round, and the group fund is doubled and split equally. Decisions are private, and the group total is revealed after each round. Rounds 1–5 have no communication; rounds 6–10 allow communication before decisions.
+- **Main estimating equation (Table 2)**: Weighted OLS with weights from the municipal-level propensity scores. Contribution_it is regressed on Decentralized (1 = decentralized, 0 = centrally administered). Model (1) is main effects only. The preferred Model (2) adds Decentralized × Communication; its interaction is 0.76 (SE 0.38, p<.05) and its Decentralized main effect is 0.41 (SE 0.30). Model (1) gives Decentralized = 0.83 (SE 0.23, p<.01). The controls are the same in both models:
+  - Communication dummy (rounds 6–10)
+  - Player-type dummies HC, AI and R (reference M)
+  - Round (1–10), as a linear trend
+  - Lagged group contribution
+  - Number of players in the session
+  - People known in the room
+  - Female, Age, Education and Years in health sector
+  - General trust
+
+  There are no fixed effects. Fit statistics are R² 0.26 / 0.27 and AIC 9483 / 9476.
+- **Standard errors**: The Table 2 note says "robust standard errors". The text says the OLS accounts "for the clustered characteristics of the observations", meaning repeated rounds within individuals within municipalities. Table 1 balance tests use weighted OLS with SEs clustered by municipality. Robustness uses a multilevel Tobit model (censoring at 0/10, with random variance at the individual and municipality levels; SI Table SA3).
+- **Descriptives (Table 1)**: Propensity-score-weighted means (SD) by administration type for 77 control and 148 treated individuals. It reports p-values for differences from weighted OLS with municipality-clustered SEs, plus standardized mean differences.
+- **Mechanism analysis (Table 3)**: Weighted Poisson regression of the number of realized cross-level ties per individual, with an offset for the log of total possible cross-level ties with the other workshop participants. There are two outcomes: "all ties" (knew the person as a colleague) and "strong ties" (friend). Each is run as a base model (Decentralized only, N = 231) and a full model (N = 226). The full model adds Female, Education, Age, Years in health sector, Generalized trust and player-type dummies HC/AI/R (reference M). SEs are clustered by municipality, and models are compared by BIC. The key estimates for Decentralized are:
+
+  | Model | All ties | Strong ties |
+  |---|---|---|
+  | Base | 0.22† | 0.61* |
+  | Full | 0.24† | 1.07** |
+
+  For the strong-ties full model, this is a predicted rise from about 0.07 to 0.21 in the proportion of strong cross-level ties.
+- **Evaluation / inference**: Significance is judged by conventional p-value thresholds († p<.1, * p<.05, ** p<.01). Substantive effects are shown as predicted contributions by round and administration type (Fig. 3). Raw mean contributions in the communication rounds are 7.9 (decentralized) vs 6.7 (centralized) lempiras, and 7.9 vs 6.6 in the last round. A supplementary pairwise correlation links average PGG contribution with perceived health-system improvement (0.37, p = .04). There is no train/test split or cross-validation.
+
+
+## Claims to Reproduce
+1. decentralized_table2_col1: 0.83 (lempiras contributed per round (0-10 scale)) [type: coefficient]
+   Location: Table 2, column (1), Decentralized
+   Context: Table 2 ("Decentralization and Cooperation among Public Servants"), column (1). Linear regression (OLS) of a participant's contribution to the group fund in each round of a ten-round public goods game (0-10 lempiras) on an indicator for working in a decentralized (rather than centrally administered) Honduran municipality. Controls: an indicator for the communication rounds (the last five rounds, when players could talk before deciding), player-type dummies (health center, administrative intermediary, regional office; the mayor's office representative is the reference), the round number, the gr…
+2. communication_table2_col1: 2.54 (lempiras contributed per round (0-10 scale)) [type: coefficient]
+   Location: Table 2, column (1), Communication
+   Context: Table 2, column (1): the coefficient on the communication-round indicator in the same weighted OLS of per-round contributions as decentralized_table2_col1.
+3. decentralized_table2_col2: 0.41 (lempiras contributed per round (0-10 scale)) [type: coefficient]
+   Location: Table 2, column (2), Decentralized
+   Context: Table 2, column (2): the column (1) weighted OLS of per-round contributions with an added interaction between the decentralized indicator and the communication-round indicator; this is the Decentralized main effect (the difference in rounds without communication). Same controls, sample, weights and standard errors as column (1).
+4. communication_table2_col2: 2.02 (lempiras contributed per round (0-10 scale)) [type: coefficient]
+   Location: Table 2, column (2), Communication
+   Context: Table 2, column (2): the communication-round main effect (for centrally administered municipalities) in the model with the Decentralized x Communication interaction.
+5. decentralized_x_communication_table2_col2: 0.76 (lempiras contributed per round (0-10 scale)) [type: coefficient]
+   Location: Table 2, column (2), Decentralized X Communication
+   Context: Table 2, column (2): the interaction between the decentralized indicator and the communication-round indicator, the paper's headline estimate (officials in decentralized municipalities contribute more once they can communicate; plotted in Figure 3).
+6. n_obs_table2: 1980.0 (participant-round observations) [type: count]
+   Location: Table 2, Observations
+   Context: Number of participant-round observations in both Table 2 models (the same sample in columns 1 and 2): rounds with a recorded contribution, a previous-round group contribution and the individual controls.
+7. decentralized_table3_allties_base: 0.22 (log of the expected count of realized cross-level ties) [type: coefficient]
+   Location: Table 3, All Ties (Prop. Known), Base Model, Decentralized
+   Context: Table 3 ("How Decentralization Influences Cross-Level Network Capital"), All Ties, Base Model. Weighted Poisson regression, one observation per workshop participant, of the number of cross-level ties the participant reported having before the workshop (other participants at a different level of the health service hierarchy whom they knew, as a colleague or otherwise), with an offset for the log of the total possible cross-level ties among the participants present, on the decentralized indicator alone. Weighted by the municipal-level propensity-score matching weights; standard errors clustered …
+8. decentralized_table3_allties_full: 0.24 (log of the expected count of realized cross-level ties) [type: coefficient]
+   Location: Table 3, All Ties (Prop. Known), Full Model, Decentralized
+   Context: Table 3, All Ties, Full Model: the Base Model plus female, education, age, years in the health sector, generalized trust and player-type dummies (health center, administrative intermediary, regional office; the mayor's office representative is the reference). Same offset, weights and municipality-clustered standard errors; participants with complete controls.
+9. decentralized_table3_strongties_base: 0.61 (log of the expected count of realized strong cross-level ties) [type: coefficient]
+   Location: Table 3, Strong Ties (Prop. Friends), Base Model, Decentralized
+   Context: Table 3, Strong Ties, Base Model: the weighted Poisson regression of the number of cross-level ties the participant characterized as friendships, with an offset for the log of the total possible cross-level friendship ties, on the decentralized indicator alone. Municipality-clustered standard errors.
+10. decentralized_table3_strongties_full: 1.07 (log of the expected count of realized strong cross-level ties) [type: coefficient]
+   Location: Table 3, Strong Ties (Prop. Friends), Full Model, Decentralized
+   Context: Table 3, Strong Ties, Full Model: the Strong Ties Base Model plus the Full Model controls (female, education, age, years in the health sector, generalized trust, player-type dummies). The paper translates it into Figure 4's predicted proportions of strong cross-level ties for a typical public servant. Municipality- clustered standard errors.
+11. n_obs_table3_base: 231.0 (workshop participants) [type: count]
+   Location: Table 3, N (Base Models)
+   Context: Number of participants in the two Table 3 Base Models (the same in both).
+12. n_obs_table3_full: 226.0 (workshop participants) [type: count]
+   Location: Table 3, N (Full Models)
+   Context: Number of participants in the two Table 3 Full Models (complete cases on the controls).
+
+## Dataset Information
+Name: molina-garzon-2022-decentralization-cooperation
+Local path: <repo>/.cache/datasets/molina_garzon_2022_decentralization_cooperation
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- publicgoodgame_dataAug27.dta (326.1 KB) — 2257 rows, 28 columns: round, contribution, decentralized, communication, outcome_ols_1, outcome_ols_2, lag_groupcontribution, num_players, averagecont, Q5_Trust1Base, knownpeople, publicid_muni, publicid, Q2_Educacion, Q2_female, player_type, weights_games_full_scaled, weights_games_reduced_scaled, p_type, Q3_YrsSalud, Q4_YrsCurrentJob, Q1_Edad, dec_orgtype, standarderror_ols, highconf_1, lowconf_1, highconf_ols_2, lowconf_ols_2
+- healthperception_Aug2020.dta (6.3 KB) — 31 rows, 7 columns: contribution, decentralized, weights_games_full_scaled, publicid_muni, HealthChange_Mun, HealthChange_Mun0, HealthChange_Mun1
+- Codebook_Nov16.pdf (111.2 KB)
+- Molina-Garzon et al.2020_Nov16.do (7.6 KB)
+- README_MolinaGarzon et al.2020_Nov16.pdf (49.2 KB)
+- clanalysis_anondata_vNov16.csv (23.4 KB) — columns: publicid_muni,publicid,ParticipantCode,decentralized,Mujer,Q2_Educacion,Q1_Edad,Q3_YrsSalud,gen_trust,ParticipantType,CargoAdministrador,CargoMedico,CargoEnfermero,CargoAlcaldia,CargoPromotor,Participant_A,Participant_C,Participant_G,Partic…
+- clanalysis_replication_vNov16.R (41.2 KB)
+- metadata.json (537 B)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/molina_garzon_2022_decentralization_cooperation' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Original Replication Scripts
+The replication package (the dataset directory) ships the authors' own analysis scripts, reproduced below.  These are the GROUND TRUTH for the exact estimating equation, variable names, sample restrictions, fixed effects, and standard-error clustering — follow them over anything reconstructed from the methodology summary, and prefer them over the paper's text where the two disagree.  Your job is to write R code that implements the SAME SPECIFICATION: translate what the scripts estimate, do not transliterate their syntax line by line (a Stata .do file's regression, e.g. `reghdfe y x controls, absorb(fe) cluster(cl)`, becomes the equivalent fixest::feols() call in R).  Keep only the parts that produce the specific claims being reproduced; skip figure construction and unrelated robustness checks.  The scripts' data-file paths refer to the package's internal layout — resolve them against the dataset directory listed under Dataset Information.
+
+Stata-to-fixest sample matching: feols() drops fixed-effect singletons by default, but Stata's `reg y x i.fe` / `xi:` dummies keep them.  Pass `fixef.rm = "none"` to every feols() call that has fixed effects, otherwise the observation count and the robust SEs drift from the paper's.  Stata's `, r` / `vce(robust)` is `vcov = "hetero"`.
+
+### `clanalysis_replication_vNov16.R`
+```r
+#####Replication File for cross-level ties analysis in,  "Decentralization can Increase Cooperation Among Public Officials"
+
+#Adriana Molina-Garz?n, University of Colorado Boulder, adriana.molinagarzon@colorado.edu
+#Tara Grillos, Purdue University, tgrillos@purdue.edu
+#Alan Zarychta, University of Chicago, azarychta@uchicago.edu
+#Krister P. Andersson, University of Colorado Boulder, Institute of Behavioral Science, krister.andersson@colorado.edu
+
+
+
+
+
+#Suggested citation for replication data:
+
+#Molina-Garz?n A., Grillos T., Zarychta A., and Andersson K.P., 2020, "Replication Data for: Decentralization can Increase Cooperation Among Public Officials", https://doi.org/10.7910/DVN/ZLHYSZ .  
+
+
+#Suggested citations for study design and full original data collection:
+
+#Zarychta, A., Andersson, K.P., Root, E. D., Menken, J., & Grillos, T. (2019a). Assessing the impacts of governance reforms on health services delivery: A quasi-experimental, multi-method, and participatory approach. Health Services and Outcomes Research Methodology, 19(4), 241-258. https://doi.org/10.1007/s10742-019-00201-8
+
+#Zarychta, A, Andersson, KP, Root, ED, Menken J, Grillos T. (2019b). Supplemental Appendix for "Assessing the impacts of governance reforms on health services delivery: a quasi-experimental, multi-method, and participatory approach." Health Services and Outcomes Research Methodology, 19(4), https://static-content.springer.com/esm/art%3A10.1007%2Fs10742-019-00201-8/MediaObjects/10742_2019_201_MOESM1_ESM.docx
+
+
+
+
+
+##### Computing Environment
+
+##R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+##Copyright (C) 2019 The R Foundation for Statistical Computing
+##Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+
+
+
+
+##### Packages Needed
+
+install.packages("PACKAGE NAME HERE") #to download packages if needed
+
+library(sandwich)
+library(lmtest)
+library(zoo)
+library(texreg)
+library(multiwayvcov)
+library(MASS)
+library(plyr)
+library(Hmisc)
+library(reporttools)
+library(readstata13)
+library(plyr)
+library(survey)
+library(tableone)
+
+
+
+
+
+##### Additional Functions
+
+
+#clustered standard errors
+
+clse.f <- function(dat,fm, cluster){  
+  require(sandwich) 
+  require(lmtest)  
+  not <- attr(fm$model,"na.action") 
+  if( ! is.null(not)){   
+    cluster <- cluster[-not]    
+    dat <- dat[-not,]   
+  }
+  
+  with(dat,{   
+    M <- length(unique(cluster))   
+    N <- length(cluster)  
+    K <- fm$rank  
+    dfc <- (M/(M-1))*((N-1)/(N-K))  
+    uj <- apply(estfun(fm),2, function(x) tapply(x, cluster, sum));   
+    vcovCL <- dfc*sandwich(fm, meat=crossprod(uj)/N)  
+    coeftest(fm, vcovCL)   
+  }       
+  )  
+}
+
+
+#CIs for bar graphs
+
+error.bar <- function(x, y, upper, lower, length=0.1,...){
+  if(length(x) != length(y) | length(y) !=length(lower) | length(lower) != length(upper))
+    stop("vectors must be same length")
+  arrows(x,y+upper, x, y-lower, angle=90, code=3, length=length, ...)
+}
+
+
+
+
+
+##### Global Options
+
+options(scipen=999)
+options(digits=6)
+setwd("C:/FOLDER LOCATION WHERE DATA FILE IS SAVED GOES HERE/...")
+
+
+
+
+
+##### Load data file
+
+data <- read.csv("clanalysis_anondata_vNov16.csv")
+names(data)
+
+
+
+
+
+##### Main Paper
+
+
+
+
+
+##### Table 1:  Weighted descriptive statistics by administration form for all participants
+
+data.pg <- read.dta13("publicgoodgame_dataAug27.dta")
+data.pg <- data.pg[which(data.pg$contribution>=0), ]
+
+
+#collapse individual-round data to individual
+
+data.agg <- aggregate(data.pg[c("num_players", "knownpeople", "Q5_Trust1Base")], by=list(data.pg$publicid), FUN=mean)
+names(data.agg)[names(data.agg)=="Group.1"] <- "publicid"
+
+data.mrg <- merge(data, data.agg, by="publicid", all.y=FALSE)
+
+
+#collapse individual data to municipality
+
+data.mun <- aggregate(data.mrg[c("decentralized", "num_players")], by=list(data.mrg$publicid_muni), FUN=max)
+names(data.mun)[names(data.mun)=="Group.1"] <- "publicid_muni"
+
+data.munw <- aggregate(data.mrg[c("weights_games_full_scaled")], by=list(data.mrg$publicid_muni), FUN=sum)
+names(data.munw)[names(data.munw)=="Group.1"] <- "publicid_muni"
+
+data.mun <- merge(data.mun, data.munw, by="publicid_muni", all.y=FALSE)
+
+
+#make table
+
+
+#rows 1 and 2 of the table
+
+table(data.mun$decentralized)
+table(data.mrg$decentralized)
+
+
+#remaining rows of the table (excluding p-value column)
+
+vars <- c("Mujer", "Q2_Educacion", "Q1_Edad", "Q3_YrsSalud", "CargoAdministrador", "CargoMedico" , "CargoEnfermero" , "CargoPromotor" , "CargoAlcaldia", "num_players" , "knownpeople" , "Q5_Trust1Base")
+
+names(data.mrg)
+data.test <- svydesign(ids = ~ 1, data = data.mrg, weights = ~ data.mrg$weights_games_full_scaled)
+tab.test <- svyCreateTableOne(vars = vars, strata = "decentralized", data = data.test, test = FALSE)
+addmargins(table(ExtractSmd(tab.test) > 0.25))
+tab.test <- print(tab.test, smd = TRUE)
+tab.test <- tab.test[-1,]
+xtable(tab.test, caption=c("Weighted All Participants Sample Balance Table by Decentralized"))
+
+
+#p-value column for all relevant rows of the table
+
+diffmeans.mujer <- lm(Mujer~decentralized, data=data.mrg, weights=weights_games_full_scaled)
+summary(diffmeans.mujer)
+diffmeans.mujer.cse <- clse.f(data.mrg, diffmeans.mujer, data.mrg$publicid_muni)
+diffmeans.mujer.cse
+diffmeans.mujer.cse[2,4] #pvalue on decentralized
+
+
+diffmeans.educ <- lm(Q2_Educacion~decentralized, data=data.mrg, weights=weights_games_full_scaled)
+summary(diffmeans.educ)
+diffmeans.educ.cse <- clse.f(data.mrg, diffmeans.educ, data.mrg$publicid_muni)
+diffmeans.educ.cse
+diffmeans.educ.cse[2,4] #pvalue on decentralized
+
+
+diffmeans.edad <- lm(Q1_Edad~decentralized, data=data.mrg, weights=weights_games_full_scaled)
+summary(diffmeans.edad)
+diffmeans.edad.cse <- clse.f(data.mrg, diffmeans.edad, data.mrg$publicid_muni)
+diffmeans.edad.cse
+diffmeans.edad.cse[2,4] #pvalue on decentralized
+
+
+diffmeans.yrssalud <- lm(Q3_YrsSalud~decentralized, data=data.mrg, weights=weights_games_full_scaled)
+summary(diffmeans.yrssalud)
+diffmeans.yrssalud.cse <- clse.f(data.mrg, diffmeans.yrssalud, data.mrg$publicid_muni)
+diffmeans.yrssalud.cse
+diffmeans.yrssalud.cse[2,4] #pvalue on decentralized
+
+
+diffmeans.tab <- lm(CargoAdministrador~decentralized, data=data.mrg, weights=weights_games_full_scaled)
+summary(diffmeans.tab)
+diffmeans.tab.cse <- clse.f(data.mrg, diffmeans.tab, data.mrg$publicid_muni)
+diffmeans.tab.cse
+diffmeans.tab.cse[2,4] #pvalue on decentralized
+
+
+diffmeans.tab <- lm(CargoMedico~decentralized, data=data.mrg, weights=weights_games_full_scaled)
+summary(diffmeans.tab)
+diffmeans.tab.cse <- clse.f(data.mrg, diffmeans.tab, data.mrg$publicid_muni)
+diffmeans.tab.cse
+diffmeans.tab.cse[2,4] #pvalue on decentralized
+
+
+diffmeans.tab <- lm(CargoEnfermero~decentralized, data=data.mrg, weights=weights_games_full_scaled)
+summary(diffmeans.tab)
+diffmeans.tab.cse <- clse.f(data.mrg, diffmeans.tab, data.mrg$publicid_muni)
+diffmeans.tab.cse
+diffmeans.tab.cse[2,4] #pvalue on decentralized
+
+
+diffmeans.tab <- lm(CargoPromotor~decentralized, data=data.mrg, weights=weights_games_full_scaled)
+summary(diffmeans.tab)
+diffmeans.tab.cse <- clse.f(data.mrg, diffmeans.tab, data.mrg$publicid_muni)
+diffmeans.tab.cse
+diffmeans.tab.cse[2,4] #pvalue on decentralized
+
+
+diffmeans.tab <- lm(CargoAlcaldia~decentralized, data=data.mrg, weights=weights_games_full_scaled)
+summary(diffmeans.tab)
+diffmeans.tab.cse <- clse.f(data.mrg, diffmeans.tab, data.mrg$publicid_muni)
+diffmeans.tab.cse
+diffmeans.tab.cse[2,4] #pvalue on decentralized
+
+
+diffmeans.num <- lm(num_players~decentralized, data=data.mun, weights=weights_games_full_scaled)
+summary(diffmeans.num)
+diffmeans.num.sum <- summary(diffmeans.num)
+diffmeans.num.sum[[5]][2,4] #pvalue on decentralized
+
+
+diffmeans.known <- lm(knownpeople~decentralized, data=data.mrg, weights=weights_games_full_scaled)
+summary(diffmeans.known)
+diffmeans.known.cse <- clse.f(data.mrg, diffmeans.known, data.mrg$publicid_muni)
+diffmeans.known.cse
+diffmeans.known.cse[2,4] #pvalue on decentralized
+
+
+diffmeans.trust <- lm(Q5_Trust1Base~decentralized, data=data.mrg, weights=weights_games_full_scaled)
+summary(diffmeans.trust)
+diffmeans.trust.cse <- clse.f(data.mrg, diffmeans.trust, data.mrg$publicid_muni)
+diffmeans.trust.cse
+diffmeans.trust.cse[2,4] #pvalue on decentralized
+
+
+
+
+
+##### Table 3. How Decentralization Influences Cross-level Network Capital
+
+
+## model proportions by decentralized alone
+
+mod.crosslevel.propknown.base <- glm(net_crosslevel_propnumknown ~ decentralized + offset(log(net_crosslevel_propdenomknown)), family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.propknown.base)
+mod.crosslevel.propknown.base.cse <- clse.f(data, mod.crosslevel.propknown.base, data$publicid_muni)
+mod.crosslevel.propknown.base.cse 
+
+mod.crosslevel.propfriends.base <- glm(net_crosslevel_propnumfriends ~ decentralized + offset(log(net_crosslevel_propdenomfriends)), family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.propfriends.base)
+mod.crosslevel.propfriends.base.cse <- clse.f(data, mod.crosslevel.propfriends.base, data$publicid_muni)
+mod.crosslevel.propfriends.base.cse
+
+
+## model proportions by decentralized plus individual characteristics with participant types
+
+mod.crosslevel.propknown.fullpt <- glm(net_crosslevel_propnumknown ~ decentralized + Mujer + Q2_Educacion + Q1_Edad + Q3_YrsSalud + gen_trust + Participant_C + Participant_G + Participant_R + offset(log(net_crosslevel_propdenomknown)), family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.propknown.fullpt)
+mod.crosslevel.propknown.fullpt.cse <- clse.f(data, mod.crosslevel.propknown.fullpt, data$publicid_muni)
+mod.crosslevel.propknown.fullpt.cse
+
+mod.crosslevel.propfriends.fullpt <- glm(net_crosslevel_propnumfriends ~ decentralized + Mujer + Q2_Educacion + Q1_Edad + Q3_YrsSalud + gen_trust + Participant_C + Participant_G + Participant_R + offset(log(net_crosslevel_propdenomfriends)), family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.propfriends.fullpt)
+mod.crosslevel.propfriends.fullpt.cse <- clse.f(data, mod.crosslevel.propfriends.fullpt, data$publicid_muni)
+mod.crosslevel.propfriends.fullpt.cse
+
+
+#crosslevel ties, binary, player type controls table
+
+texreg(list(mod.crosslevel.propknown.base,
+            mod.crosslevel.propknown.fullpt,
+            mod.crosslevel.propfriends.base,
+            mod.crosslevel.propfriends.fullpt), 
+       stars=c(0.01, 0.05, 0.10),
+       caption="Explaining Cross-level Network Capital (Prop. Known) by Decentralization",
+       dcolumn=FALSE,
+       custom.model.names=c("Prop. Known Base", "Prop. Known Fullpt", "Prop. Friends Base", "Prop. Friends Fullpt"),
+       custom.coef.names=c("Constant", "Decentralized", "Female", "Education", "Age", "Years Working in Health", "Generalized Trust", "Player HC (Ref: Player M)", "Player AI (Ref: Player M)", "Player R (Ref: Player M)"),
+       override.se=list(mod.crosslevel.propknown.base.cse[,2],
+                        mod.crosslevel.propknown.fullpt.cse[,2],
+                        mod.crosslevel.propfriends.base.cse[,2],
+                        mod.crosslevel.propfriends.fullpt.cse[,2]),
+       override.pval=list(mod.crosslevel.propknown.base.cse[,4],
+                          mod.crosslevel.propknown.fullpt.cse[,4],
+                          mod.crosslevel.propfriends.base.cse[,4],
+                          mod.crosslevel.propfriends.fullpt.cse[,4]),
+       reorder.coef=c(2,3,4,5,6,7,8,9,10,1),
+       caption.above=TRUE)
+
+
+
+
+
+##### Figure 4. Expected Proportion of Strong Cross-level Ties Realized for a Typical Public Servant, Centrally-Administered versus Decentralized Systems
+
+
+## decent_propfriends_fullpt, full strong ties model from Table 4
+
+mod.crosslevel.propfriends.fullpt <- glm(net_crosslevel_propnumfriends ~ decentralized + Mujer + Q2_Educacion + Q1_Edad + Q3_YrsSalud + gen_trust + Participant_C + Participant_G + Participant_R + offset(log(net_crosslevel_propdenomfriends)), family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.propfriends.fullpt)
+mod.crosslevel.propfriends.fullpt.cse <- clse.f(data, mod.crosslevel.propfriends.fullpt, data$publicid_muni)
+mod.crosslevel.propfriends.fullpt.cse
+
+
+## Simulate Coefficients ##
+# Seed and number of repetitions
+set.seed(19850824)
+m <- 100000
+
+
+# Simulate coefficients from a multivariate normal
+betas <- mod.crosslevel.propfriends.fullpt$coef
+vcv <- cluster.vcov(mod.crosslevel.propfriends.fullpt, data$publicid_muni)
+sim.betas <- mvrnorm(m, betas, vcv)
+
+
+# Compare simulated coefficients with real results
+round(mod.crosslevel.propfriends.fullpt$coef, digits = 2)
+round(head(sim.betas, 10), digits = 2)
+data.frame(sim.means = apply(sim.betas, 2, mean), betas = betas, sim.sd = apply(sim.betas, 2, sd), se = sqrt(diag(vcv)))   
+
+
+# Create hypothetical independent variable profiles
+decent.data <- data.frame(intercept=1, decentralized=1, Mujer = median(na.omit(data$Mujer)), Q2_Educacion = mean(na.omit(data$Q2_Educacion)), Q1_Edad = mean(na.omit(data$Q1_Edad)), Q3_YrsSalud = mean(na.omit(data$Q3_YrsSalud)), gen_trust = mean(na.omit(data$gen_trust)), Participant_C=1, Participant_G=0, Participant_R=0)
+
+centadmin.data <- data.frame(intercept=1, decentralized=0, Mujer = median(na.omit(data$Mujer)), Q2_Educacion = mean(na.omit(data$Q2_Educacion)), Q1_Edad = mean(na.omit(data$Q1_Edad)), Q3_YrsSalud = mean(na.omit(data$Q3_YrsSalud)), gen_trust = mean(na.omit(data$gen_trust)), Participant_C=1, Participant_G=0, Participant_R=0)
+
+
+# Compute the expected counts and confidence intervals using the simulated coefficients
+ec.sim <- matrix(NA, nrow = m, ncol = 1)
+
+for(i in 1:m){
+  ec.sim[i, ] <- exp(as.matrix(decent.data)%*%sim.betas[i, ])
+}
+
+pe.decent <- apply(ec.sim, 2, mean)
+lo.decent <- apply(ec.sim, 2, quantile, prob = .025)
+hi.decent <- apply(ec.sim, 2, quantile, prob = .975)
+
+
+ec.sim <- matrix(NA, nrow = m, ncol = 1)
+
+for(i in 1:m){
+  ec.sim[i, ] <- exp(as.matrix(centadmin.data)%*%sim.betas[i, ])
+}
+
+pe.centadmin <- apply(ec.sim, 2, mean)
+lo.centadmin <- apply(ec.sim, 2, quantile, prob = .025)
+hi.centadmin <- apply(ec.sim, 2, quantile, prob = .975)
+
+
+# Expected values for central admin and decent
+
+pe.decent
+pe.centadmin
+
+admin.pe <- matrix(c(pe.centadmin, pe.decent),2,1,byrow=TRUE)
+
+admin.lo <- matrix(c(lo.centadmin, lo.decent),2,1,byrow=TRUE)
+admin.hi <- matrix(c(hi.centadmin, hi.decent),2,1, byrow=TRUE)
+
+admin.lower <- admin.pe-admin.lo
+admin.upper <- admin.hi-admin.pe
+
+
+# Make barplot
+
+par(mar = c(2.3, 4.3, 1, .1))
+
+bplot.admin <- barplot(admin.pe, beside=TRUE, space=0.3, ylim=c(0,0.4), ylab="Expected Prop. of Strong Cross-level Ties Realized", names.arg=c("Centrally-Admin.", "Decentralized"), cex.lab=1.1, cex.names=1.2, col=c("gray75","gray45"), border=c("gray75","gray45"), args.legend=list(x="top", bty="n", horiz=TRUE, border=c(c("gray75","gray45"))))
+
+error.bar(bplot.admin, admin.pe, admin.upper, admin.lower)
+
+
+dev.off()
+
+
+
+
+
+##### Supplemental Appendix
+
+
+
+
+
+##### Table SA2.  Descriptive Statistics for the Sample of Public Servants Participating in the Public Goods Game
+
+
+#row 1 of the table
+descripvars.cont <- c("contribution")
+tableContinuous(vars=data.pg[descripvars.cont], cap="Descriptive Statisitics, All Participants", prec=2, longtable=FALSE)
+
+
+#all remaining rows except "Number players"
+
+descripvars.mrg <- c("Mujer", "Q2_Educacion", "Q1_Edad", "Q3_YrsSalud", "CargoAdministrador", "CargoMedico" , "CargoEnfermero" , "CargoPromotor" , "CargoAlcaldia", "knownpeople", "Q5_Trust1Base")
+tableContinuous(vars=data.mrg[descripvars.mrg], cap="Descriptive Statisitics, All Participants", prec=2, longtable=FALSE)
+
+
+#"Number players" row
+
+descripvars.mun <- c("num_players")
+tableContinuous(vars=data.mun[descripvars.mun], cap="Descriptive Statisitics, All Participants", prec=2, longtable=FALSE)
+
+
+
+
+
+##### Table SA4.  Descriptive Statistics for Cross-level Network Variables (all levels)
+
+descripvars <- c("net_crosslevel_propknown", "net_crosslevel_propfriends", "net_crosslevel_propnumknown", "net_crosslevel_propnumfriends", "net_crosslevel_hoursrcknown", "net_crosslevel_hoursrcfriends")
+
+tableContinuous(vars=data[descripvars], cap="Descriptive Statisitics for Cross-level Network Variables (all levels)", prec=2, longtable=FALSE)
+
+
+
+
+
+##### Figure SA2.  Histograms of the Cross-level Relational Capital Dependent Variables (all levels)
+
+par(mar = c(4.1, 4, 0, 0.2))
+hist(data$net_crosslevel_propknown, breaks=30, xlab="Proportion of Possible Cross-level Ties Realized", main=NULL)
+
+par(mar = c(4.1, 4, 0, 0.2))
+hist(data$net_crosslevel_propfriends, breaks=30, xlab="Proportion of Possible Cross-level Ties Realized as Strong Ties", main=NULL)
+
+
+
+
+
+##### Table SA5.  Averages of Cross-level Network Variables (all levels)
+
+round(ddply(data, .(decentralized), function(x) data.frame(net_crosslevel_propknown=wtd.mean(x$net_crosslevel_propknown, x$weights_games_full_scaled, na.rm=TRUE))), 2)
+
+round(ddply(data, .(decentralized), function(x) data.frame(net_crosslevel_propfriends=wtd.mean(x$net_crosslevel_propfriends, x$weights_games_full_scaled, na.rm=TRUE))),2)
+
+
+
+
+
+##### Table SA6.  How Decentralization Influences Cross-level Network Capital, Hours, Player Type Controls
+
+
+## model HOURS RC by decentralization alone
+
+mod.crosslevel.hoursrcknown.base <- glm(net_crosslevel_hoursrcknown ~ decentralized, family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.hoursrcknown.base)
+mod.crosslevel.hoursrcknown.base.cse <- clse.f(data, mod.crosslevel.hoursrcknown.base, data$publicid_muni)
+mod.crosslevel.hoursrcknown.base.cse
+
+mod.crosslevel.hoursrcfriends.base <- glm(net_crosslevel_hoursrcfriends ~ decentralized, family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.hoursrcfriends.base)
+mod.crosslevel.hoursrcfriends.base.cse <- clse.f(data, mod.crosslevel.hoursrcfriends.base, data$publicid_muni)
+mod.crosslevel.hoursrcfriends.base.cse
+
+
+## model HOURS RC by decentralized plus individual characteristics with participant types
+
+mod.crosslevel.hoursrcknown.fullpt <- glm(net_crosslevel_hoursrcknown ~ decentralized + Mujer + Q2_Educacion + Q1_Edad + Q3_YrsSalud + gen_trust + Participant_C + Participant_G + Participant_R, family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.hoursrcknown.fullpt)
+mod.crosslevel.hoursrcknown.fullpt.cse <- clse.f(data, mod.crosslevel.hoursrcknown.fullpt, data$publicid_muni)
+mod.crosslevel.hoursrcknown.fullpt.cse 
+
+mod.crosslevel.hoursrcfriends.fullpt <- glm(net_crosslevel_hoursrcfriends ~ decentralized + Mujer + Q2_Educacion + Q1_Edad + Q3_YrsSalud + gen_trust + Participant_C + Participant_G + Participant_R, family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.hoursrcfriends.fullpt)
+mod.crosslevel.hoursrcfriends.fullpt.cse <- clse.f(data, mod.crosslevel.hoursrcfriends.fullpt, data$publicid_muni)
+mod.crosslevel.hoursrcfriends.fullpt.cse 
+
+
+#crosslevel ties, hours, player type controls table
+
+texreg(list(mod.crosslevel.hoursrcknown.base,
+            mod.crosslevel.hoursrcknown.fullpt,
+            mod.crosslevel.hoursrcfriends.base,
+            mod.crosslevel.hoursrcfriends.fullpt), 
+       stars=c(0.01, 0.05, 0.10),
+       caption="Explaining Cross-level Network Capital (Hours) by Decentralization",
+       dcolumn=FALSE,
+       custom.model.names=c("Hours RC Known Base", "Hours RC Known Full", "Hours RC Friends Base", "Hours RC Friends Full"),
+       custom.coef.names=c("Constant", "Decentralized", "Female", "Education", "Age", "Years Working in Health", "Generalized Trust", "Player HC (Ref: Player M)", "Player AI (Ref: Player M)", "Player R (Ref: Player M)"),
+       override.se=list(mod.crosslevel.hoursrcknown.base.cse[,2],
+                        mod.crosslevel.hoursrcknown.fullpt.cse[,2],
+                        mod.crosslevel.hoursrcfriends.base.cse[,2],
+                        mod.crosslevel.hoursrcfriends.fullpt.cse[,2]),
+       override.pval=list(mod.crosslevel.hoursrcknown.base.cse[,4],
+                          mod.crosslevel.hoursrcknown.fullpt.cse[,4],
+                          mod.crosslevel.hoursrcfriends.base.cse[,4],
+                          mod.crosslevel.hoursrcfriends.fullpt.cse[,4]),
+       reorder.coef=c(2,3,4,5,6,7,8,9,10,1),
+       caption.above=TRUE)
+
+
+
+
+
+##### Table SA7.  How Decentralization Influences Cross-level Network Capital, Binary, Role Type Controls
+
+
+## model proportions by decentralized alone
+
+mod.crosslevel.propknown.base <- glm(net_crosslevel_propnumknown ~ decentralized + offset(log(net_crosslevel_propdenomknown)), family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.propknown.base)
+mod.crosslevel.propknown.base.cse <- clse.f(data, mod.crosslevel.propknown.base, data$publicid_muni)
+mod.crosslevel.propknown.base.cse 
+
+mod.crosslevel.propfriends.base <- glm(net_crosslevel_propnumfriends ~ decentralized + offset(log(net_crosslevel_propdenomfriends)), family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.propfriends.base)
+mod.crosslevel.propfriends.base.cse <- clse.f(data, mod.crosslevel.propfriends.base, data$publicid_muni)
+mod.crosslevel.propfriends.base.cse
+
+
+## model proportions by decentralized plus individual characteristics
+
+mod.crosslevel.propknown.full <- glm(net_crosslevel_propnumknown ~ decentralized + Mujer + Q2_Educacion + Q1_Edad + Q3_YrsSalud + gen_trust + CargoMedico + CargoEnfermero + CargoAlcaldia + CargoPromotor + offset(log(net_crosslevel_propdenomknown)), family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.propknown.full)
+mod.crosslevel.propknown.full.cse <- clse.f(data, mod.crosslevel.propknown.full, data$publicid_muni)
+mod.crosslevel.propknown.full.cse
+
+mod.crosslevel.propfriends.full <- glm(net_crosslevel_propnumfriends ~ decentralized + Mujer + Q2_Educacion + Q1_Edad + Q3_YrsSalud + gen_trust + CargoMedico + CargoEnfermero + CargoAlcaldia + CargoPromotor + offset(log(net_crosslevel_propdenomfriends)), family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.propfriends.full)
+mod.crosslevel.propfriends.full.cse <- clse.f(data, mod.crosslevel.propfriends.full, data$publicid_muni)
+mod.crosslevel.propfriends.full.cse
+
+
+#crosslevel ties, binary, role type controls table
+
+texreg(list(mod.crosslevel.propknown.base,
+            mod.crosslevel.propknown.full,
+            mod.crosslevel.propfriends.base,
+            mod.crosslevel.propfriends.full), 
+       stars=c(0.01, 0.05, 0.10),
+       caption="Explaining Cross-level Network Capital (Prop. Known) by Decentralization",
+       dcolumn=FALSE,
+       custom.model.names=c("Prop. Known Base", "Prop. Known Full", "Prop. Friends Base", "Prop. Friends Full"),
+       custom.coef.names=c("Constant", "Decentralized", "Female", "Education", "Age", "Years Working in Health", "Generalized Trust", "Doctor", "Nurse", "Municipal Official", "Social Worker"),
+       override.se=list(mod.crosslevel.propknown.base.cse[,2],
+                        mod.crosslevel.propknown.full.cse[,2],
+                        mod.crosslevel.propfriends.base.cse[,2],
+                        mod.crosslevel.propfriends.full.cse[,2]),
+       override.pval=list(mod.crosslevel.propknown.base.cse[,4],
+                          mod.crosslevel.propknown.full.cse[,4],
+                          mod.crosslevel.propfriends.base.cse[,4],
+                          mod.crosslevel.propfriends.full.cse[,4]),
+       reorder.coef=c(2,3,4,5,6,7,8,9,10,11,1),
+       caption.above=TRUE)
+
+
+
+
+
+##### Table SA8.  How Decentralization Influences Cross-level Network Capital, Hours, Role Type Controls
+
+
+## model proportions by decentralized alone
+
+mod.crosslevel.hoursrcknown.base <- glm(net_crosslevel_hoursrcknown ~ decentralized, family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.hoursrcknown.base)
+mod.crosslevel.hoursrcknown.base.cse <- clse.f(data, mod.crosslevel.hoursrcknown.base, data$publicid_muni)
+mod.crosslevel.hoursrcknown.base.cse
+
+mod.crosslevel.hoursrcfriends.base <- glm(net_crosslevel_hoursrcfriends ~ decentralized, family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.hoursrcfriends.base)
+mod.crosslevel.hoursrcfriends.base.cse <- clse.f(data, mod.crosslevel.hoursrcfriends.base, data$publicid_muni)
+mod.crosslevel.hoursrcfriends.base.cse
+
+
+## model HOURS RC by decentralized plus individual characteristics
+
+mod.crosslevel.hoursrcknown.full <- glm(net_crosslevel_hoursrcknown ~ decentralized + Mujer + Q2_Educacion + Q1_Edad + Q3_YrsSalud + gen_trust + CargoMedico + CargoEnfermero + CargoAlcaldia + CargoPromotor, family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.hoursrcknown.full)
+mod.crosslevel.hoursrcknown.full.cse <- clse.f(data, mod.crosslevel.hoursrcknown.full, data$publicid_muni)
+mod.crosslevel.hoursrcknown.full.cse 
+
+mod.crosslevel.hoursrcfriends.full <- glm(net_crosslevel_hoursrcfriends ~ decentralized + Mujer + Q2_Educacion + Q1_Edad + Q3_YrsSalud + gen_trust + CargoMedico + CargoEnfermero + CargoAlcaldia + CargoPromotor, family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.hoursrcfriends.full)
+mod.crosslevel.hoursrcfriends.full.cse <- clse.f(data, mod.crosslevel.hoursrcfriends.full, data$publicid_muni)
+mod.crosslevel.hoursrcfriends.full.cse 
+
+
+#crosslevel ties, hours, role type controls table
+
+texreg(list(mod.crosslevel.hoursrcknown.base,
+            mod.crosslevel.hoursrcknown.full,
+            mod.crosslevel.hoursrcfriends.base,
+            mod.crosslevel.hoursrcfriends.full), 
+       stars=c(0.01, 0.05, 0.10),
+       caption="Explaining Cross-level Network Capital (Hours) by Decentralization",
+       dcolumn=FALSE,
+       custom.model.names=c("Hours RC Known Base", "Hours RC Known Full", "Hours RC Friends Base", "Hours RC Friends Full"),
+       custom.coef.names=c("Constant", "Decentralized", "Female", "Education", "Age", "Years Working in Health", "Generalized Trust", "Doctor", "Nurse", "Municipal Official", "Social Worker"),
+       override.se=list(mod.crosslevel.hoursrcknown.base.cse[,2],
+                        mod.crosslevel.hoursrcknown.full.cse[,2],
+                        mod.crosslevel.hoursrcfriends.base.cse[,2],
+                        mod.crosslevel.hoursrcfriends.full.cse[,2]),
+       override.pval=list(mod.crosslevel.hoursrcknown.base.cse[,4],
+                          mod.crosslevel.hoursrcknown.full.cse[,4],
+                          mod.crosslevel.hoursrcfriends.base.cse[,4],
+                          mod.crosslevel.hoursrcfriends.full.cse[,4]),
+       reorder.coef=c(2,3,4,5,6,7,8,9,10,11,1),
+       caption.above=TRUE)
+
+
+
+
+
+##### Table SA9.  Descriptive Statistics for Cross-level Network Variables (collapsed levels)
+
+descripvars.col <- c("net_crosslevel_propknown_col", "net_crosslevel_propfriends_col", "net_crosslevel_propnumknown_col", "net_crosslevel_propnumfriends_col", "net_crosslevel_hoursrcknown_col", "net_crosslevel_hoursrcfriends_col")
+
+tableContinuous(vars=data[descripvars.col], cap="Descriptive Statisitics for Cross-level Network Variables (collapsed levels)", prec=2, longtable=FALSE)
+
+
+
+
+
+##### Figure SA3.  Histograms of the Cross-level Relational Capital Dependent Variables (collapsed levels)
+
+par(mar = c(4.1, 4, 0, 0.2))
+hist(data$net_crosslevel_propknown_col, breaks=30, xlab="Proportion of Possible Cross-level Ties Realized (Levels Collapsed)", main=NULL)
+
+par(mar = c(4.1, 4, 0, 0.2))
+hist(data$net_crosslevel_propfriends_col, breaks=30, xlab="Proportion of Possible Cross-level Ties Realized as Strong Ties (Levels Collapsed)", main=NULL)
+
+
+
+
+
+##### Table SA 10.  Averages of Cross-level Network Variables (collapsed levels)
+
+round(ddply(data, .(decentralized), function(x) data.frame(net_crosslevel_propknown_col=wtd.mean(x$net_crosslevel_propknown_col, x$weights_games_full_scaled, na.rm=TRUE))), 2)
+
+round(ddply(data, .(decentralized), function(x) data.frame(net_crosslevel_propfriends_col=wtd.mean(x$net_crosslevel_propfriends_col, x$weights_games_full_scaled, na.rm=TRUE))),2)
+
+
+
+
+
+##### Table SA 11.  How Decentralization Influences Cross-level Network Capital (collapsed levels), Binary, Player Type Controls
+
+
+## model proportions by decentralized alone
+
+mod.crosslevel.propknown.base <- glm(net_crosslevel_propnumknown_col ~ decentralized + offset(log(net_crosslevel_propdenomknown_col)), family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.propknown.base)
+mod.crosslevel.propknown.base.cse <- clse.f(data, mod.crosslevel.propknown.base, data$publicid_muni)
+mod.crosslevel.propknown.base.cse 
+
+mod.crosslevel.propfriends.base <- glm(net_crosslevel_propnumfriends_col ~ decentralized + offset(log(net_crosslevel_propdenomfriends_col)), family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.propfriends.base)
+mod.crosslevel.propfriends.base.cse <- clse.f(data, mod.crosslevel.propfriends.base, data$publicid_muni)
+mod.crosslevel.propfriends.base.cse
+
+
+## model proportions by decentralized plus individual characteristics with participant types
+
+mod.crosslevel.propknown.fullpt <- glm(net_crosslevel_propnumknown_col ~ decentralized + Mujer + Q2_Educacion + Q1_Edad + Q3_YrsSalud + gen_trust + Participant_C + Participant_G + Participant_R + offset(log(net_crosslevel_propdenomknown_col)), family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.propknown.fullpt)
+mod.crosslevel.propknown.fullpt.cse <- clse.f(data, mod.crosslevel.propknown.fullpt, data$publicid_muni)
+mod.crosslevel.propknown.fullpt.cse
+
+mod.crosslevel.propfriends.fullpt <- glm(net_crosslevel_propnumfriends_col ~ decentralized + Mujer + Q2_Educacion + Q1_Edad + Q3_YrsSalud + gen_trust + Participant_C + Participant_G + Participant_R + offset(log(net_crosslevel_propdenomfriends_col)), family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.propfriends.fullpt)
+mod.crosslevel.propfriends.fullpt.cse <- clse.f(data, mod.crosslevel.propfriends.fullpt, data$publicid_muni)
+mod.crosslevel.propfriends.fullpt.cse
+
+
+#crosslevel ties, binary, player type controls table, collapsed levels
+
+texreg(list(mod.crosslevel.propknown.base,
+            mod.crosslevel.propknown.fullpt,
+            mod.crosslevel.propfriends.base,
+            mod.crosslevel.propfriends.fullpt), 
+       stars=c(0.01, 0.05, 0.10),
+       caption="Explaining Cross-level Network Capital (Prop. Known), Collapsed Levels, by Decentralization",
+       dcolumn=FALSE,
+       custom.model.names=c("Prop. Known Base", "Prop. Known Fullpt", "Prop. Friends Base", "Prop. Friends Fullpt"),
+       custom.coef.names=c("Constant", "Decentralized", "Female", "Education", "Age", "Years Working in Health", "Generalized Trust", "Player HC (Ref: Player M)", "Player AI (Ref: Player M)", "Player R (Ref: Player M)"),
+       override.se=list(mod.crosslevel.propknown.base.cse[,2],
+                        mod.crosslevel.propknown.fullpt.cse[,2],
+                        mod.crosslevel.propfriends.base.cse[,2],
+                        mod.crosslevel.propfriends.fullpt.cse[,2]),
+       override.pval=list(mod.crosslevel.propknown.base.cse[,4],
+                          mod.crosslevel.propknown.fullpt.cse[,4],
+                          mod.crosslevel.propfriends.base.cse[,4],
+                          mod.crosslevel.propfriends.fullpt.cse[,4]),
+       reorder.coef=c(2,3,4,5,6,7,8,9,10,1),
+       caption.above=TRUE)
+
+
+
+
+
+##### Table SA 12.  How Decentralization Influences Cross-level Network Capital (collapsed levels), Hours, Player Type Controls 
+
+
+## model HOURS RC by decentralization alone
+
+mod.crosslevel.hoursrcknown.base <- glm(net_crosslevel_hoursrcknown_col ~ decentralized, family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.hoursrcknown.base)
+mod.crosslevel.hoursrcknown.base.cse <- clse.f(data, mod.crosslevel.hoursrcknown.base, data$publicid_muni)
+mod.crosslevel.hoursrcknown.base.cse
+
+mod.crosslevel.hoursrcfriends.base <- glm(net_crosslevel_hoursrcfriends_col ~ decentralized, family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.hoursrcfriends.base)
+mod.crosslevel.hoursrcfriends.base.cse <- clse.f(data, mod.crosslevel.hoursrcfriends.base, data$publicid_muni)
+mod.crosslevel.hoursrcfriends.base.cse
+
+
+## model HOURS RC by decentralized plus individual characteristics with participant types
+
+mod.crosslevel.hoursrcknown.fullpt <- glm(net_crosslevel_hoursrcknown_col ~ decentralized + Mujer + Q2_Educacion + Q1_Edad + Q3_YrsSalud + gen_trust + Participant_C + Participant_G + Participant_R, family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.hoursrcknown.fullpt)
+mod.crosslevel.hoursrcknown.fullpt.cse <- clse.f(data, mod.crosslevel.hoursrcknown.fullpt, data$publicid_muni)
+mod.crosslevel.hoursrcknown.fullpt.cse 
+
+mod.crosslevel.hoursrcfriends.fullpt <- glm(net_crosslevel_hoursrcfriends_col ~ decentralized + Mujer + Q2_Educacion + Q1_Edad + Q3_YrsSalud + gen_trust + Participant_C + Participant_G + Participant_R, family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.hoursrcfriends.fullpt)
+mod.crosslevel.hoursrcfriends.fullpt.cse <- clse.f(data, mod.crosslevel.hoursrcfriends.fullpt, data$publicid_muni)
+mod.crosslevel.hoursrcfriends.fullpt.cse 
+
+
+#crosslevel ties, hours, player type controls table, collapsed levels
+
+texreg(list(mod.crosslevel.hoursrcknown.base,
+            mod.crosslevel.hoursrcknown.fullpt,
+            mod.crosslevel.hoursrcfriends.base,
+            mod.crosslevel.hoursrcfriends.fullpt), 
+       stars=c(0.01, 0.05, 0.10),
+       caption="Explaining Cross-level Network Capital (Hours), Collapsed Levels, by Decentralization",
+       dcolumn=FALSE,
+       custom.model.names=c("Hours RC Known Base", "Hours RC Known Full", "Hours RC Friends Base", "Hours RC Friends Full"),
+       custom.coef.names=c("Constant", "Decentralized", "Female", "Education", "Age", "Years Working in Health", "Generalized Trust", "Player HC (Ref: Player M)", "Player AI (Ref: Player M)", "Player R (Ref: Player M)"),
+       override.se=list(mod.crosslevel.hoursrcknown.base.cse[,2],
+                        mod.crosslevel.hoursrcknown.fullpt.cse[,2],
+                        mod.crosslevel.hoursrcfriends.base.cse[,2],
+                        mod.crosslevel.hoursrcfriends.fullpt.cse[,2]),
+       override.pval=list(mod.crosslevel.hoursrcknown.base.cse[,4],
+                          mod.crosslevel.hoursrcknown.fullpt.cse[,4],
+                          mod.crosslevel.hoursrcfriends.base.cse[,4],
+                          mod.crosslevel.hoursrcfriends.fullpt.cse[,4]),
+       reorder.coef=c(2,3,4,5,6,7,8,9,10,1),
+       caption.above=TRUE)
+
+
+
+
+
+##### Table SA 13.  How Decentralization Influences Cross-level Network Capital (collapsed levels), Binary, Role Type Controls
+
+
+## model proportions by decentralized alone
+
+mod.crosslevel.propknown.base <- glm(net_crosslevel_propnumknown_col ~ decentralized + offset(log(net_crosslevel_propdenomknown_col)), family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.propknown.base)
+mod.crosslevel.propknown.base.cse <- clse.f(data, mod.crosslevel.propknown.base, data$publicid_muni)
+mod.crosslevel.propknown.base.cse 
+
+mod.crosslevel.propfriends.base <- glm(net_crosslevel_propnumfriends_col ~ decentralized + offset(log(net_crosslevel_propdenomfriends_col)), family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.propfriends.base)
+mod.crosslevel.propfriends.base.cse <- clse.f(data, mod.crosslevel.propfriends.base, data$publicid_muni)
+mod.crosslevel.propfriends.base.cse
+
+
+## model proportions by decentralized plus individual characteristics
+
+mod.crosslevel.propknown.full <- glm(net_crosslevel_propnumknown_col ~ decentralized + Mujer + Q2_Educacion + Q1_Edad + Q3_YrsSalud + gen_trust + CargoMedico + CargoEnfermero + CargoAlcaldia + CargoPromotor + offset(log(net_crosslevel_propdenomknown_col)), family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.propknown.full)
+mod.crosslevel.propknown.full.cse <- clse.f(data, mod.crosslevel.propknown.full, data$publicid_muni)
+mod.crosslevel.propknown.full.cse
+
+mod.crosslevel.propfriends.full <- glm(net_crosslevel_propnumfriends_col ~ decentralized + Mujer + Q2_Educacion + Q1_Edad + Q3_YrsSalud + gen_trust + CargoMedico + CargoEnfermero + CargoAlcaldia + CargoPromotor + offset(log(net_crosslevel_propdenomfriends_col)), family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.propfriends.full)
+mod.crosslevel.propfriends.full.cse <- clse.f(data, mod.crosslevel.propfriends.full, data$publicid_muni)
+mod.crosslevel.propfriends.full.cse
+
+
+#crosslevel ties, binary, role type controls table, collapsed levels
+
+texreg(list(mod.crosslevel.propknown.base,
+            mod.crosslevel.propknown.full,
+            mod.crosslevel.propfriends.base,
+            mod.crosslevel.propfriends.full), 
+       stars=c(0.01, 0.05, 0.10),
+       caption="Explaining Cross-level Network Capital (Prop. Known), Collapsed Levels, by Decentralization",
+       dcolumn=FALSE,
+       custom.model.names=c("Prop. Known Base", "Prop. Known Full", "Prop. Friends Base", "Prop. Friends Full"),
+       custom.coef.names=c("Constant", "Decentralized", "Female", "Education", "Age", "Years Working in Health", "Generalized Trust", "Doctor", "Nurse", "Municipal Official", "Social Worker"),
+       override.se=list(mod.crosslevel.propknown.base.cse[,2],
+                        mod.crosslevel.propknown.full.cse[,2],
+                        mod.crosslevel.propfriends.base.cse[,2],
+                        mod.crosslevel.propfriends.full.cse[,2]),
+       override.pval=list(mod.crosslevel.propknown.base.cse[,4],
+                          mod.crosslevel.propknown.full.cse[,4],
+                          mod.crosslevel.propfriends.base.cse[,4],
+                          mod.crosslevel.propfriends.full.cse[,4]),
+       reorder.coef=c(2,3,4,5,6,7,8,9,10,11,1),
+       caption.above=TRUE)
+
+
+
+
+
+##### Table SA 14.  How Decentralization Influences Cross-level Network Capital (collapsed levels), Hours, Player Type Controls
+
+
+## model proportions by decentralized alone
+
+mod.crosslevel.hoursrcknown.base <- glm(net_crosslevel_hoursrcknown_col ~ decentralized, family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.hoursrcknown.base)
+mod.crosslevel.hoursrcknown.base.cse <- clse.f(data, mod.crosslevel.hoursrcknown.base, data$publicid_muni)
+mod.crosslevel.hoursrcknown.base.cse
+
+mod.crosslevel.hoursrcfriends.base <- glm(net_crosslevel_hoursrcfriends_col ~ decentralized, family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.hoursrcfriends.base)
+mod.crosslevel.hoursrcfriends.base.cse <- clse.f(data, mod.crosslevel.hoursrcfriends.base, data$publicid_muni)
+mod.crosslevel.hoursrcfriends.base.cse
+
+
+## model HOURS RC by decentralized plus individual characteristics
+
+mod.crosslevel.hoursrcknown.full <- glm(net_crosslevel_hoursrcknown_col ~ decentralized + Mujer + Q2_Educacion + Q1_Edad + Q3_YrsSalud + gen_trust + CargoMedico + CargoEnfermero + CargoAlcaldia + CargoPromotor, family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.hoursrcknown.full)
+mod.crosslevel.hoursrcknown.full.cse <- clse.f(data, mod.crosslevel.hoursrcknown.full, data$publicid_muni)
+mod.crosslevel.hoursrcknown.full.cse 
+
+mod.crosslevel.hoursrcfriends.full <- glm(net_crosslevel_hoursrcfriends_col ~ decentralized + Mujer + Q2_Educacion + Q1_Edad + Q3_YrsSalud + gen_trust + CargoMedico + CargoEnfermero + CargoAlcaldia + CargoPromotor, family="poisson", weights=weights_games_full_scaled, data=data)
+summary(mod.crosslevel.hoursrcfriends.full)
+mod.crosslevel.hoursrcfriends.full.cse <- clse.f(data, mod.crosslevel.hoursrcfriends.full, data$publicid_muni)
+mod.crosslevel.hoursrcfriends.full.cse 
+
+
+#crosslevel ties, hours, role type controls table, collapsed levels
+
+texreg(list(mod.crosslevel.hoursrcknown.base,
+            mod.crosslevel.hoursrcknown.full,
+            mod.crosslevel.hoursrcfriends.base,
+            mod.crosslevel.hoursrcfriends.full), 
+       stars=c(0.01, 0.05, 0.10),
+       caption="Explaining Cross-level Network Capital (Hours), Collapsed Levels, by Decentralization",
+       dcolumn=FALSE,
+       custom.model.names=c("Hours RC Known Base", "Hours RC Known Full", "Hours RC Friends Base", "Hours RC Friends Full"),
+       custom.coef.names=c("Constant", "Decentralized", "Female", "Education", "Age", "Years Working in Health", "Generalized Trust", "Doctor", "Nurse", "Municipal Official", "Social Worker"),
+       override.se=list(mod.crosslevel.hoursrcknown.base.cse[,2],
+                        mod.crosslevel.hoursrcknown.full.cse[,2],
+                        mod.crosslevel.hoursrcfriends.base.cse[,2],
+                        mod.crosslevel.hoursrcfriends.full.cse[,2]),
+       override.pval=list(mod.crosslevel.hoursrcknown.base.cse[,4],
+                          mod.crosslevel.hoursrcknown.full.cse[,4],
+                          mod.crosslevel.hoursrcfriends.base.cse[,4],
+                          mod.crosslevel.hoursrcfriends.full.cse[,4]),
+       reorder.coef=c(2,3,4,5,6,7,8,9,10,11,1),
+       caption.above=TRUE)
+
+
+
+
+
+##### END
+
+
+
+
+
+```
+
+### `Molina-Garzon et al.2020_Nov16.do`
+```stata
+*************************************************************************************************
+********************************* Molina-Garzon, Grillos, Zarychta and Andersson  *********************
+***************************************  Public Good Game **************************************
+*************************************************************************************************
+
+** Table 2. Results with clustered standard errors by individual
+/* The following commands construct table 3. Names of the variables are adjusted manually 
+*/
+
+global yourlocation "<home>/Documents/CU-Boulder/2017-Fall/QualifierP/Data_Analysis"
+use `"${yourlocation}/publicgoodgame_dataAug27.dta"'
+
+global xlistfinal decentralized i.p_type communication round lag_groupcontribution num_players knownpeople Q2_female Q1_Edad Q2_Educacion Q3_YrsSalud Q5_Trust1Base
+global xlistfinal2 i.decentralized##i.communication i.p_type round lag_groupcontribution num_players knownpeople Q2_female Q1_Edad Q2_Educacion Q3_YrsSalud Q5_Trust1Base
+
+quiet reg contribution $xlistfinal [pweight = weights_games_full_scaled], vce(cluster publicid)
+quiet estat ic
+mat es_ic = r(S)
+local AIC : display %4.1f es_ic[1,5]
+outreg2 using `"${yourlocation}/table3.doc"', ctitle(Main Model) addstat(AIC, `AIC') replace
+quiet reg contribution $xlistfinal2 [pweight = weights_games_full_scaled], vce(cluster publicid)
+quiet estat ic
+mat es_ic = r(S)
+local AIC : display %4.1f es_ic[1,5]
+outreg2 using `"${yourlocation}/table3.doc"', ctitle(Model with Communication Interaction) addstat(AIC, `AIC') append
+
+
+** Figure 3. Decentralization is Associated with Increased Cooperation by Public Servants when they are able to Communicate with Each Other
+
+twoway (rcap highconf_ols_2 lowconf_ols_2 round if decentralized==1, lcolor(black) legend(label(1 "CI"))) (line outcome_ols_2 round if decentralized==1, xlabel(1(1)10) lpattern(solid) lcolor(black) legend(label(2 "Decentralized municipalities"))) ///
+(rcap highconf_ols_2 lowconf_ols_2 round if decentralized==0, lcolor(gray) legend(label(3 "CI"))) (line outcome_ols_2 round if decentralized==0, lpattern(dash) lcolor(gray) legend(label(4 "Centrally-admin. municipalities"))), ///
+graphregion(fcolor(white) ifcolor(white))
+
+graph save Graph `"${yourlocation}/Figure3_cooperation by admin type.gph"'
+
+
+***** Supplementary appendix
+
+*Table SA1. Main cooperation model with reduced sample weights
+quiet metobit contribution $xlistfinal [pweight = weights_games_reduced_scaled] || publicid_muni: || publicid:, ul(10) ll(0)
+quiet estat ic
+mat es_ic = r(S)
+local AIC : display %4.1f es_ic[1,5]
+outreg2 using `"${yourlocation}/tableSA3.doc"', ctitle(Model A) addstat(AIC, `AIC') replace 
+quiet metobit contribution $xlistfinal2 [pweight = weights_games_reduced_scaled] || publicid_muni: || publicid:, ul(10) ll(0)
+quiet estat ic
+mat es_ic = r(S)
+local AIC : display %4.1f es_ic[1,5]
+outreg2 using `"${yourlocation}/tableSA3.doc"', ctitle(Model B) addstat(AIC, `AIC') append
+quiet reg contribution $xlistfinal [pweight = weights_games_reduced_scaled], vce(cluster publicid)
+quiet estat ic
+mat es_ic = r(S)
+local AIC : display %4.1f es_ic[1,5]
+outreg2 using `"${yourlocation}/tableSA3.doc"', ctitle(Model C) addstat(AIC, `AIC') append
+quiet reg contribution $xlistfinal2 [pweight = weights_games_reduced_scaled], vce(cluster publicid)
+quiet estat ic
+mat es_ic = r(S)
+local AIC : display %4.1f es_ic[1,5]
+outreg2 using `"${yourlocation}/tableSA3.doc"', ctitle(Model D) addstat(AIC, `AIC') append
+
+
+*Table SA3. Alternative cooperation model, Multilevel Tobit specification
+
+quiet metobit contribution $xlistfinal [pweight = weights_games_full_scaled] || publicid_muni: || publicid:, ul(10) ll(0)
+quiet estat ic
+mat es_ic = r(S)
+local AIC : display %4.1f es_ic[1,5]
+outreg2 using `"${yourlocation}/tableSA5.doc"', ctitle(Model A) addstat(AIC, `AIC') replace 
+quiet metobit contribution $xlistfinal2 [pweight = weights_games_full_scaled] || publicid_muni: || publicid:, ul(10) ll(0)
+quiet estat ic
+mat es_ic = r(S)
+local AIC : display %4.1f es_ic[1,5]
+outreg2 using `"${yourlocation}/tableSA5.doc"', ctitle(Model B) addstat(AIC, `AIC') append
+
+
+* Figure SA1: Raw data distribution for public good game results
+sort decentralized round
+twoway (line averagecont round if decentralized==1, ylabel(0(1)10) xlabel(1(1)10) lcolor(black) lpattern(solid) legend(label(1 "Decentralized municipalities"))) (line averagecont round if decentralized==0, lcolor(gray) lpattern(dash) legend(label(2 "Centrally-admin. municipalities"))), /// 
+graphregion(fcolor(white) ifcolor(white))
+
+graph save Graph `"${yourlocation}/FigureSA3.gph"'
+
+* SA I- Table SA 15. Analysis by types of intermediary organizations
+
+global xlistfinal4 i.dec_orgtype i.p_type communication round lag_groupcontribution num_players knownpeople Q2_female Q1_Edad Q2_Educacion Q3_YrsSalud Q5_Trust1Base
+global xlistfinal5 i.dec_orgtype##i.communication i.p_type round lag_groupcontribution num_players knownpeople Q2_female Q1_Edad Q2_Educacion Q3_YrsSalud Q5_Trust1Base
+
+quiet metobit contribution $xlistfinal4 [pweight = weights_games_full_scaled] || publicid_muni: || publicid:, ul(10) ll(0)
+quiet estat ic
+mat es_ic = r(S)
+local AIC : display %4.1f es_ic[1,5]
+outreg2 using `"${yourlocation}/table-SA17.doc"', ctitle(Model A) addstat(AIC, `AIC') replace 
+quiet metobit contribution $xlistfinal5 [pweight = weights_games_full_scaled] || publicid_muni: || publicid:, ul(10) ll(0)
+quiet estat ic
+mat es_ic = r(S)
+local AIC : display %4.1f es_ic[1,5]
+outreg2 using `"${yourlocation}/table-SA17.doc"', ctitle(Model B) addstat(AIC, `AIC') append
+quiet reg contribution $xlistfinal4 [pweight = weights_games_full_scaled], vce(cluster publicid)
+quiet estat ic
+mat es_ic = r(S)
+local AIC : display %4.1f es_ic[1,5]
+outreg2 using `"${yourlocation}/table-SA17.doc"', ctitle(Model C) addstat(AIC, `AIC') append
+quiet reg contribution $xlistfinal5 [pweight = weights_games_full_scaled], vce(cluster publicid)
+quiet estat ic
+mat es_ic = r(S)
+local AIC : display %4.1f es_ic[1,5]
+outreg2 using `"${yourlocation}/table-SA17.doc"', ctitle(Model D) addstat(AIC, `AIC') append
+
+
+* Table SA 16. Regression analysis explaining perceived improvements in health outcomes
+* This table requires a different dataset
+
+clear
+
+global yourlocation "<home>/Documents/CU-Boulder/2017-Fall/QualifierP/Data_Analysis"
+use `"${yourlocation}/healthperception_Aug2020"'
+
+quiet reg HealthChange_Mun contribution [pweight = weights_games_full_scaled]
+quiet estat ic
+mat es_ic = r(S)
+local AIC : display %4.1f es_ic[1,5]
+outreg2 using `"${yourlocation}/tableSA18.doc"', ctitle(Model A) addstat(AIC, `AIC') replace 
+quiet reg HealthChange_Mun decentralized [pweight = weights_games_full_scaled]
+quiet estat ic
+mat es_ic = r(S)
+local AIC : display %4.1f es_ic[1,5]
+outreg2 using `"${yourlocation}/tableSA18.doc"', ctitle(Model B) addstat(AIC, `AIC') append 
+quiet reg HealthChange_Mun contribution decentralized [pweight = weights_games_full_scaled]
+quiet estat ic
+mat es_ic = r(S)
+local AIC : display %4.1f es_ic[1,5]
+outreg2 using `"${yourlocation}/tableSA18.doc"', ctitle(Model C) addstat(AIC, `AIC') append 
+
+* Figure SA 4. Contribution to the public good game and perception of change in the health provision during the past five years 
+
+set scheme s1mono
+twoway (scatter HealthChange_Mun0 contribution) (scatter HealthChange_Mun1 contribution) ///
+	(lfit HealthChange_Mun contribution), ///
+	ytitle(Health change in last 5 years) ///
+	legen(order(1 "Centralized admin." 2 "Decentralized admin." 3 "Fit line"))
+
+
+graph save Graph `"${yourlocation}/FigureSA6.gph"'
+
+
+
+
+```
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

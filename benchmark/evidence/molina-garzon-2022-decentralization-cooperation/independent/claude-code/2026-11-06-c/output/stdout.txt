@@ -1,0 +1,100 @@
+OLS estimation, Dep. Var.: contribution
+Observations: 1,980
+Weights: weights_games_full_scaled
+Standard-errors: Clustered (publicid_muni) 
+                       Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)            3.738091   1.357038  2.754596 9.8889e-03 ** 
+decentralized          0.825820   0.202714  4.073816 3.1161e-04 ***
+communication          2.540726   0.280645  9.053172 4.4008e-10 ***
+pt_HC                 -0.594107   0.319193 -1.861279 7.2530e-02 .  
+pt_AI                 -0.864395   0.481259 -1.796114 8.2554e-02 .  
+pt_R                  -1.169761   0.429932 -2.720805 1.0732e-02 *  
+round                 -0.193005   0.053589 -3.601620 1.1263e-03 ** 
+lag_groupcontribution  0.061331   0.009507  6.450892 3.9827e-07 ***
+num_players           -0.292946   0.086955 -3.368923 2.0872e-03 ** 
+knownpeople           -0.081937   0.068168 -1.201987 2.3877e-01    
+Q2_female              0.101542   0.256373  0.396072 6.9485e-01    
+Q1_Edad                0.011111   0.012722  0.873321 3.8943e-01    
+Q2_Educacion           0.342240   0.157034  2.179395 3.7286e-02 *  
+Q3_YrsSalud            0.034491   0.025057  1.376475 1.7886e-01    
+Q5_Trust1Base          0.045360   0.202514  0.223983 8.2429e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 2.63287   Adj. R2: 0.257922
+OLS estimation, Dep. Var.: contribution
+Observations: 1,980
+Weights: weights_games_full_scaled
+Standard-errors: Clustered (publicid_muni) 
+                             Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)                  4.004266   1.361756  2.940517 6.2562e-03 ** 
+decentralized                0.409236   0.234116  1.748004 9.0692e-02 .  
+communication                2.023108   0.264829  7.639289 1.6076e-08 ***
+pt_HC                       -0.595800   0.319599 -1.864210 7.2104e-02 .  
+pt_AI                       -0.867380   0.482202 -1.798792 8.2120e-02 .  
+pt_R                        -1.174104   0.431034 -2.723925 1.0652e-02 *  
+round                       -0.188795   0.052539 -3.593407 1.1513e-03 ** 
+lag_groupcontribution        0.059982   0.009815  6.110949 1.0229e-06 ***
+num_players                 -0.285211   0.087962 -3.242443 2.9023e-03 ** 
+knownpeople                 -0.083083   0.068508 -1.212742 2.3469e-01    
+Q2_female                    0.101355   0.257051  0.394300 6.9615e-01    
+Q1_Edad                      0.011100   0.012754  0.870342 3.9102e-01    
+Q2_Educacion                 0.342811   0.157434  2.177494 3.7441e-02 *  
+Q3_YrsSalud                  0.034639   0.025057  1.382425 1.7705e-01    
+Q5_Trust1Base                0.047375   0.203723  0.232544 8.1770e-01    
+decentralized:communication  0.761756   0.382419  1.991940 5.5548e-02 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 2.62698   Adj. R2: 0.260863
+                                        a_b                         a_f
+Dependent Var.: net_crosslevel_propnumknown net_crosslevel_propnumknown
+                                                                       
+Constant                -0.5950*** (0.1148)          -2.051*** (0.3879)
+decentralized              0.2176. (0.1235)            0.2395. (0.1435)
+Mujer                                                   0.0640 (0.0848)
+Q2_Educacion                                           0.1351* (0.0585)
+Q1_Edad                                                 0.0048 (0.0057)
+Q3_YrsSalud                                            -0.0032 (0.0058)
+gen_trust                                               0.0185 (0.0630)
+pt_HC                                                 0.7327** (0.2427)
+pt_AI                                                 0.7008** (0.2503)
+pt_R                                                    0.1997 (0.3257)
+_______________ ___________________________ ___________________________
+S.E.: Clustered           by: publicid_muni           by: publicid_muni
+Observations                            231                         226
+Squared Cor.                        0.40900                     0.53984
+Pseudo R2                           0.85665                     0.86272
+BIC                                  110.22                      147.40
+
+                                          s_b                           s_f
+Dependent Var.: net_crosslevel_propnumfriends net_crosslevel_propnumfriends
+                                                                           
+Constant                   -2.274*** (0.2247)             -3.859*** (1.028)
+decentralized                0.6072* (0.2794)             1.074*** (0.3141)
+Mujer                                                      -0.0423 (0.2283)
+Q2_Educacion                                                0.1998 (0.1397)
+Q1_Edad                                                     0.0101 (0.0181)
+Q3_YrsSalud                                                0.0485* (0.0191)
+gen_trust                                                   0.1875 (0.2819)
+pt_HC                                                     -0.7177* (0.3308)
+pt_AI                                                     -0.7812* (0.3923)
+pt_R                                                      -1.639** (0.5329)
+_______________ _____________________________ _____________________________
+S.E.: Clustered             by: publicid_muni             by: publicid_muni
+Observations                              231                           226
+Squared Cor.                          0.09205                       0.21524
+Pseudo R2                             0.60984                       0.64238
+BIC                                    75.167                        112.82
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RESULT:decentralized_table2_col1=0.825820
+RESULT:communication_table2_col1=2.540726
+RESULT:decentralized_table2_col2=0.409236
+RESULT:communication_table2_col2=2.023108
+RESULT:decentralized_x_communication_table2_col2=0.761756
+RESULT:n_obs_table2=1980.000000
+RESULT:decentralized_table3_allties_base=0.217647
+RESULT:decentralized_table3_allties_full=0.239524
+RESULT:decentralized_table3_strongties_base=0.607208
+RESULT:decentralized_table3_strongties_full=1.074108
+RESULT:n_obs_table3_base=231.000000
+RESULT:n_obs_table3_full=226.000000

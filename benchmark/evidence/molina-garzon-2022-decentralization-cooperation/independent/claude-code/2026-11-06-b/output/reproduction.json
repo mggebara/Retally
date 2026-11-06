@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "entry_id": "molina-garzon-2022-decentralization-cooperation",
+  "mode": "independent",
+  "run_id": "2026-11-06-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [],
+  "deviations": [
+    "Table 2 standard errors use heteroskedasticity-robust (HC1) SEs per the table note; they do not match the printed SEs exactly (e.g. Decentralized 0.18 vs 0.23), so the authors probably clustered or used another variant. Point estimates are unaffected.",
+    "Table 3 Poisson is fit with glm(quasipoisson) and the matching weights (non-integer weights), with log(total possible cross-level ties) as the offset and HC1 municipality-clustered SEs; one participant missing the matching weight is dropped (232 -> 231)."
+  ],
+  "notes": "Single run, no claim-driven iterations. Table 2: weighted OLS (weights_games_full_scaled) of per-round contribution on decentralized, communication, player-type dummies (ref = mayor's office A), round, lagged group contribution, number of players, people known, female, age, education, years in health sector, generalized trust; col 2 adds decentralized x communication; complete cases give N=1980. Table 3: weighted Poisson of net_crosslevel_propnumknown / propnumfriends with offset log(propdenom*), base = decentralized only (N=231), full adds Mujer, education, age, years in health, gen_trust, participant-type dummies (N=226). All 12 coefficients/counts match the paper at its reported precision; Table 3 clustered SEs also match. The codebook PDF in the mount was read for variable definitions; the author scripts were not opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-06T17:37:47Z",
+  "finished_at": "2026-11-06T17:40:50Z"
+}

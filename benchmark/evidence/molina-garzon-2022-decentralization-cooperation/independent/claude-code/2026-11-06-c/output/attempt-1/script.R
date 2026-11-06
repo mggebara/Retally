@@ -1,0 +1,10 @@
+library(haven)
+D="<repo>/benchmark/.cache/claude-code/molina-garzon-2022-decentralization-cooperation/independent/2026-11-06-c/mount/molina_garzon_2022_decentralization_cooperation"
+g <- read_dta(file.path(D,"publicgoodgame_dataAug27.dta"))
+print(str(g[,1:22]))
+print(summary(g[,1:22]))
+print(table(g$player_type, useNA="a")); print(table(g$p_type,useNA="a"))
+print(table(g$round,useNA="a"))
+cl <- read.csv(file.path(D,"clanalysis_anondata_vNov16.csv"))
+print(summary(cl))
+print(table(cl$ParticipantType))

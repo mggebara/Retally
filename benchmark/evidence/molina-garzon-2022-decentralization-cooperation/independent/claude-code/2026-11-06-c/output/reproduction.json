@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "entry_id": "molina-garzon-2022-decentralization-cooperation",
+  "mode": "independent",
+  "run_id": "2026-11-06-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "error"}
+  ],
+  "deviations": [
+    "Table 2 standard errors are clustered by municipality (fixest cluster=~publicid_muni); the paper's table note says 'robust standard errors', so reported SEs may differ slightly (e.g. 0.20 vs 0.23 on Decentralized, col. 1). Point estimates and N are unaffected."
+  ],
+  "notes": "attempt-1: exploratory variable inspection (no RESULT lines). attempt-2: the docker run started before script.R had been copied to the run dir (the copy command was refused by the tool sandbox), so Docker auto-created an empty directory at the mounted path and Rscript printed nothing; the empty directory was removed and attempt-2/script.R is a comment describing this. Final run: Table 2 = weighted OLS (weights_games_full_scaled) of per-round contribution on decentralized, communication (col. 2 adds their interaction), player-type dummies (p_type C/G/R vs A), round, lagged group contribution, number of players, people known, female, age, education, years in health sector, general trust; complete cases give N=1980. Table 3 = weighted Poisson (fepois) of cross-level known / friend tie counts with offset log(possible cross-level ties), weights_games_full_scaled, municipality-clustered SEs; base N=231 (non-missing weight), full N=226 (complete controls incl. ParticipantType C/G/R dummies vs A). All 12 RESULT values match the claims at the reported precision; no claim-driven changes were made, so check_attempt was not needed.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-06T17:48:41Z",
+  "finished_at": "2026-11-06T17:56:00Z"
+}

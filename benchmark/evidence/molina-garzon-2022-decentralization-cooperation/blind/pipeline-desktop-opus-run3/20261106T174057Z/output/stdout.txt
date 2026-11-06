@@ -1,0 +1,161 @@
+PGG columns: p_type, publicid_muni, publicid, round, contribution, num_players, decentralized, averagecont, communication, player_type, Q3_YrsSalud, Q4_YrsCurrentJob, Q5_Trust1Base, Q1_Edad, Q2_Educacion, lag_groupcontribution, knownpeople, Q2_female, weights_games_full_scaled, weights_games_reduced_scaled, dec_orgtype, outcome_ols_1, standarderror_ols, highconf_1, lowconf_1, outcome_ols_2, highconf_ols_2, lowconf_ols_2 
+player_type table:
+
+ A1  C1  C2  C3  C4  C5  C6  G1  G2  G3  R1  R2 
+251 310 310 310 281  41  10 310 122  10 262  40 
+Table 2 complete-case N: 1980 
+OLS estimation, Dep. Var.: contribution
+Observations: 1,980
+Weights: w
+Standard-errors: Clustered (muni) 
+               Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)    3.862297   1.450938  2.661931 1.2364e-02 *  
+decentralized  0.844014   0.212619  3.969612 4.1508e-04 ***
+communication  2.540802   0.281091  9.039059 4.5559e-10 ***
+ptypeC1       -0.552379   0.412006 -1.340706 1.9008e-01    
+ptypeC2       -0.676118   0.426479 -1.585350 1.2337e-01    
+ptypeC3       -0.830048   0.371645 -2.233442 3.3127e-02 *  
+ptypeC4       -0.412138   0.393195 -1.048175 3.0293e-01    
+ptypeC5        0.062014   0.435895  0.142269 8.8782e-01    
+ptypeC6       -0.263676   0.443525 -0.594500 5.5663e-01    
+ptypeG1       -0.939855   0.498466 -1.885495 6.9080e-02 .  
+ptypeG2       -0.709531   0.614696 -1.154279 2.5750e-01    
+ptypeG3       -0.447192   0.507241 -0.881617 3.8499e-01    
+ptypeR1       -1.266536   0.460341 -2.751299 9.9684e-03 ** 
+ptypeR2       -0.562290   0.640216 -0.878283 3.8677e-01    
+round         -0.193273   0.053196 -3.633209 1.0348e-03 ** 
+lag_gc         0.061417   0.009348  6.570392 2.8652e-07 ***
+num_players   -0.318935   0.090350 -3.529972 1.3637e-03 ** 
+knownpeople   -0.085137   0.071347 -1.193286 2.4211e-01    
+female         0.088649   0.254840  0.347860 7.3037e-01    
+age            0.012530   0.013109  0.955875 3.4678e-01    
+educ           0.345031   0.161465  2.136877 4.0880e-02 *  
+yrs_health     0.035909   0.024887  1.442836 1.5943e-01    
+trust          0.045428   0.222913  0.203794 8.3989e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 2.62707   Adj. R2: 0.258166
+OLS estimation, Dep. Var.: contribution
+Observations: 1,980
+Weights: w
+Standard-errors: Clustered (muni) 
+               Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)    4.127246   1.446554  2.853158 7.7699e-03 ** 
+decentralized  0.427787   0.226654  1.887400 6.8815e-02 .  
+communication  2.023459   0.265250  7.628499 1.6540e-08 ***
+dec_comm       0.761339   0.382938  1.988152 5.5987e-02 .  
+ptypeC1       -0.553001   0.412675 -1.340042 1.9029e-01    
+ptypeC2       -0.678237   0.426618 -1.589801 1.2236e-01    
+ptypeC3       -0.832185   0.372291 -2.235311 3.2991e-02 *  
+ptypeC4       -0.414091   0.394243 -1.050343 3.0195e-01    
+ptypeC5        0.062631   0.439371  0.142547 8.8760e-01    
+ptypeC6       -0.259252   0.447346 -0.579532 5.6656e-01    
+ptypeG1       -0.940758   0.499676 -1.882736 6.9466e-02 .  
+ptypeG2       -0.717251   0.616345 -1.163717 2.5371e-01    
+ptypeG3       -0.448683   0.510525 -0.878867 3.8646e-01    
+ptypeR1       -1.270984   0.462271 -2.749433 1.0014e-02 *  
+ptypeR2       -0.568862   0.637838 -0.891859 3.7957e-01    
+round         -0.189035   0.052125 -3.626548 1.0535e-03 ** 
+lag_gc         0.060059   0.009666  6.213196 7.6950e-07 ***
+num_players   -0.310961   0.091922 -3.382860 2.0123e-03 ** 
+knownpeople   -0.086588   0.071932 -1.203751 2.3810e-01    
+female         0.088409   0.255564  0.345936 7.3180e-01    
+age            0.012517   0.013146  0.952150 3.4863e-01    
+educ           0.345881   0.161974  2.135415 4.1008e-02 *  
+yrs_health     0.036061   0.024904  1.448014 1.5798e-01    
+trust          0.047330   0.224167  0.211138 8.3421e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 2.62118   Adj. R2: 0.261114
+Network CSV columns: publicid_muni, publicid, ParticipantCode, decentralized, Mujer, Q2_Educacion, Q1_Edad, Q3_YrsSalud, gen_trust, ParticipantType, CargoAdministrador, CargoMedico, CargoEnfermero, CargoAlcaldia, CargoPromotor, Participant_A, Participant_C, Participant_G, Participant_R, net_crosslevel_propknown, net_crosslevel_propfriends, net_crosslevel_propdenomknown, net_crosslevel_propdenomfriends, net_crosslevel_propnumknown, net_crosslevel_propnumfriends, net_crosslevel_hoursrcknown, net_crosslevel_hoursrcfriends, net_crosslevel_propknown_col, net_crosslevel_propfriends_col, net_crosslevel_propdenomknown_col, net_crosslevel_propdenomfriends_col, net_crosslevel_propnumknown_col, net_crosslevel_propnumfriends_col, net_crosslevel_hoursrcknown_col, net_crosslevel_hoursrcfriends_col, weights_games_full_scaled 
+Network CSV rows: 232 
+ParticipantType table:
+ptype_raw
+  A   C   G   R 
+ 26 127  47  32 
+Detected columns -> known: net_crosslevel_hoursrcknown  friend: net_crosslevel_hoursrcfriends  possible: net_crosslevel_propdenomknown  possible_friend: 
+Summary known:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  0.000   1.000   3.000   3.112   4.000  11.000 
+Summary friend:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  0.0000  0.0000  0.7371  1.0000  7.0000 
+Summary possible:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.000   2.000   3.000   3.603   5.000   8.000 
+Poisson estimation, Dep. Var.: known
+Observations: 231
+Offset: lposs
+Weights: w
+Standard-errors: Clustered (muni) 
+               Estimate Std. Error  z value  Pr(>|z|)    
+(Intercept)   -0.271625   0.092004 -2.95230 0.0031541 ** 
+decentralized  0.192737   0.106236  1.81423 0.0696419 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Log-Likelihood: -61.1   Adj. Pseudo R2: 0.898139
+           BIC: 133.0     Squared Cor.: 0.323569
+Poisson estimation, Dep. Var.: known
+Observations: 226
+Offset: lposs
+Weights: w
+Standard-errors: Clustered (muni) 
+               Estimate Std. Error   z value  Pr(>|z|)    
+(Intercept)   -1.663016   0.527486 -3.152722 0.0016176 ** 
+decentralized  0.173629   0.137363  1.264011 0.2062262    
+female         0.094178   0.105348  0.893974 0.3713356    
+educ           0.179619   0.078446  2.289712 0.0220380 *  
+age            0.000054   0.006686  0.008092 0.9935435    
+yrs_health    -0.000140   0.006911 -0.020227 0.9838626    
+trust          0.018146   0.066914  0.271189 0.7862457    
+ptypeC         0.634143   0.253151  2.505001 0.0122451 *  
+ptypeG         0.650687   0.270866  2.402245 0.0162948 *  
+ptypeR        -0.120407   0.339783 -0.354364 0.7230663    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Log-Likelihood: -55.6   Adj. Pseudo R2: 0.892626
+           BIC: 165.4     Squared Cor.: 0.514956
+Poisson estimation, Dep. Var.: friend
+Observations: 231
+Offset: lposs_fr
+Weights: w
+Standard-errors: Clustered (muni) 
+               Estimate Std. Error   z value  Pr(>|z|)    
+(Intercept)   -2.050320   0.149884 -13.67941 < 2.2e-16 ***
+decentralized  0.573736   0.213470   2.68767 0.0071952 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Log-Likelihood: -37.3   Adj. Pseudo R2: 0.662691
+           BIC:  85.4     Squared Cor.: 0.09405 
+Poisson estimation, Dep. Var.: friend
+Observations: 226
+Offset: lposs_fr
+Weights: w
+Standard-errors: Clustered (muni) 
+               Estimate Std. Error   z value   Pr(>|z|)    
+(Intercept)   -3.275042   0.839668 -3.900400 9.6034e-05 ***
+decentralized  1.028875   0.283929  3.623700 2.9042e-04 ***
+female        -0.011251   0.235371 -0.047802 9.6187e-01    
+educ           0.222414   0.154647  1.438207 1.5038e-01    
+age            0.002358   0.016051  0.146902 8.8321e-01    
+yrs_health     0.054543   0.019191  2.842169 4.4808e-03 ** 
+trust          0.174692   0.266704  0.655002 5.1247e-01    
+ptypeC        -0.979959   0.320933 -3.053463 2.2622e-03 ** 
+ptypeG        -1.003610   0.380451 -2.637947 8.3410e-03 ** 
+ptypeR        -1.931883   0.513682 -3.760857 1.6933e-04 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Log-Likelihood: -33.5   Adj. Pseudo R2: 0.620986
+           BIC: 121.2     Squared Cor.: 0.209991
+RESULT:decentralized_table2_col1=0.8440137688
+RESULT:communication_table2_col1=2.540802015
+RESULT:decentralized_table2_col2=0.4277866614
+RESULT:communication_table2_col2=2.023459244
+RESULT:decentralized_x_communication_table2_col2=0.7613393394
+RESULT:n_obs_table2=1980
+RESULT:decentralized_table3_allties_base=0.1927371921
+RESULT:decentralized_table3_allties_full=0.1736286268
+RESULT:decentralized_table3_strongties_base=0.5737364522
+RESULT:decentralized_table3_strongties_full=1.028875022
+RESULT:n_obs_table3_base=231
+RESULT:n_obs_table3_full=226
