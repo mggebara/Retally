@@ -55,6 +55,10 @@ _None declared._
 - [`output/stdout.txt`](output/stdout.txt) — 646 bytes, from `benchmark/results/artifacts/manekin-2022-effective-for-whom/blind/pipeline/20261021T142909Z/stdout.txt`
 - [`output/answer-1.md`](output/answer-1.md) — 5,463 bytes, from `benchmark/.cache/llm/0237dd27254b0b572b8ba26c.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM cache (request 0237dd27254b0b572b8ba26c: model claude-opus-4-7, max_tokens 8192, effort None)

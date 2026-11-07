@@ -76,3 +76,7 @@ Agent notes: Two exploratory runs (attempts 1-2, no RESULT lines) inspected vari
 - [`output/script.R`](output/script.R) — 5,913 bytes, from `benchmark/results/artifacts/bokobza-2022-morning-after-coup-purges/independent/claude-code/20261102T090910Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 848 bytes, from `benchmark/results/artifacts/bokobza-2022-morning-after-coup-purges/independent/claude-code/20261102T090910Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 8,321 bytes, from `benchmark/results/artifacts/bokobza-2022-morning-after-coup-purges/independent/claude-code/20261102T090910Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

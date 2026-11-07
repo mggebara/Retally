@@ -63,3 +63,7 @@ Agent notes: attempt-1 was exploratory (variable inspection, no RESULT lines). F
 - [`output/script.R`](output/script.R) — 3,000 bytes, from `benchmark/results/artifacts/manekin-2022-effective-for-whom/blind/claude-code/20261102T043821Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/manekin-2022-effective-for-whom/blind/claude-code/20261102T043821Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 5,980 bytes, from `benchmark/results/artifacts/manekin-2022-effective-for-whom/blind/claude-code/20261102T043821Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

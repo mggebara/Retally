@@ -74,3 +74,7 @@ Agent notes: Country level: OLS of replacement_rateadj_minister on coupattempt_w
 - [`output/script.R`](output/script.R) — 5,500 bytes, from `benchmark/results/artifacts/bokobza-2022-morning-after-coup-purges/independent/claude-code/20261102T062001Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 574 bytes, from `benchmark/results/artifacts/bokobza-2022-morning-after-coup-purges/independent/claude-code/20261102T062001Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 9,938 bytes, from `benchmark/results/artifacts/bokobza-2022-morning-after-coup-purges/independent/claude-code/20261102T062001Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

@@ -63,3 +63,7 @@ Agent notes: attempt-1 was exploratory (it printed variable structure and coding
 - [`output/script.R`](output/script.R) — 2,976 bytes, from `benchmark/results/artifacts/manekin-2022-effective-for-whom/independent/claude-code/20261102T043820Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/manekin-2022-effective-for-whom/independent/claude-code/20261102T043820Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 2,956 bytes, from `benchmark/results/artifacts/manekin-2022-effective-for-whom/independent/claude-code/20261102T043820Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

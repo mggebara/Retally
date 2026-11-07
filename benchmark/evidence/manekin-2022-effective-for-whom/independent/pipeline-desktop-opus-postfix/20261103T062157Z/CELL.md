@@ -56,6 +56,10 @@ Per-claim ground truth, tolerance rule and errors: [`scoring.json`](scoring.json
 - [`output/stdout.txt`](output/stdout.txt) — 3,234 bytes, from `benchmark/results/artifacts/manekin-2022-effective-for-whom/independent/pipeline/20261103T062157Z/stdout.txt`
 - [`output/answer-1.md`](output/answer-1.md) — 7,987 bytes, from `benchmark/.cache/llm-oracle/desktop-opus-postfix/answers/5d49784016853c2aba877fdd.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM oracle store desktop-opus-postfix (request 5d49784016853c2aba877fdd: model claude-opus-5-5, max_tokens 16384, effort high)

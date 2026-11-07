@@ -55,6 +55,10 @@ _None declared._
 - [`output/stdout.txt`](output/stdout.txt) — 554 bytes, from `benchmark/results/artifacts/manekin-2022-effective-for-whom/blind/pipeline/20261103T004800Z/stdout.txt`
 - [`output/answer-1.md`](output/answer-1.md) — 6,504 bytes, from `benchmark/.cache/llm-oracle/desktop-opus-run3/answers/c7430c92c00a3fce330c1871.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM oracle store desktop-opus-run3 (request c7430c92c00a3fce330c1871: model claude-opus-5-5, max_tokens 16384, effort high)

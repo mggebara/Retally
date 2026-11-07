@@ -74,3 +74,7 @@ Agent notes: Blind independent reproduction in R/fixest. Country level: OLS of r
 - [`output/script.R`](output/script.R) — 6,947 bytes, from `benchmark/results/artifacts/bokobza-2022-morning-after-coup-purges/blind/claude-code/20261102T062002Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 646 bytes, from `benchmark/results/artifacts/bokobza-2022-morning-after-coup-purges/blind/claude-code/20261102T062002Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 7,995 bytes, from `benchmark/results/artifacts/bokobza-2022-morning-after-coup-purges/blind/claude-code/20261102T062002Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

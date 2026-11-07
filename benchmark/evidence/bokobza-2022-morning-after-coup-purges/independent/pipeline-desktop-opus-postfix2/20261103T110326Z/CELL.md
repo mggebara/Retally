@@ -55,6 +55,10 @@ _None declared._
 - [`output/stdout.txt`](output/stdout.txt) — 1,484 bytes, from `benchmark/results/artifacts/bokobza-2022-morning-after-coup-purges/independent/pipeline/20261103T110326Z/stdout.txt`
 - [`output/answer-1.md`](output/answer-1.md) — 9,622 bytes, from `benchmark/.cache/llm-oracle/desktop-opus-postfix2/answers/358bc83a93948090c5b11bf5.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM oracle store desktop-opus-postfix2 (request 358bc83a93948090c5b11bf5: model claude-opus-5-5, max_tokens 16384, effort high)
