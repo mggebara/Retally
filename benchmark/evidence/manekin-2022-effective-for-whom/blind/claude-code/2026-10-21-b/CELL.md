@@ -69,3 +69,7 @@ Agent notes: attempt-1 inspected variables and counts (no RESULT lines). attempt
 - [`output/script.R`](output/script.R) — 3,294 bytes, from `benchmark/results/artifacts/manekin-2022-effective-for-whom/blind/claude-code/20261022T021417Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/manekin-2022-effective-for-whom/blind/claude-code/20261022T021417Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 5,828 bytes, from `benchmark/results/artifacts/manekin-2022-effective-for-whom/blind/claude-code/20261022T021417Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

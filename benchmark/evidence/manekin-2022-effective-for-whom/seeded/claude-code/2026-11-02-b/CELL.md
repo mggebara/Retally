@@ -58,3 +58,7 @@ Agent notes: Translated replicate_table_1.R (Study 1, weighted lm of outcome on 
 - [`output/script.R`](output/script.R) — 2,769 bytes, from `benchmark/results/artifacts/manekin-2022-effective-for-whom/seeded/claude-code/20261102T194315Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/manekin-2022-effective-for-whom/seeded/claude-code/20261102T194315Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 6,465 bytes, from `benchmark/results/artifacts/manekin-2022-effective-for-whom/seeded/claude-code/20261102T194315Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).
