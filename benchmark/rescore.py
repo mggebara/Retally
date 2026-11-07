@@ -30,6 +30,18 @@ shape and carries no marker).
 Idempotent: a second run changes nothing.  ``--dry-run`` prints the
 flips without writing.
 
+``--policy i4r-missing`` (2026-11-06): ``agrees_with_i4r`` now counts a
+claim the I4R replicator valued but Retally printed no value for as a
+miss (it used to be skipped, so such a cell could read as agreeing with
+I4R).  The rule only tightens the old one, so it is applied to the stored
+rows directly: a row recorded ``True`` with a valued claim whose stored
+``reproduced`` is null becomes ``False``; nothing else in the row (and no
+other row) changes, ``n_claims_with_i4r_match`` included.  A rewritten
+file gains a second top-level key,
+``"rescored_i4r_missing": {"policy": "i4r-missing", "date": "2026-11-06",
+"flipped": N}``, beside (never replacing) the count policy's ``rescored``;
+files with no flip are left untouched.  Idempotent; ``--dry-run`` works.
+
 ``--all-claims RESULTS.json [--write OUT.json]``: the original mode.
 Re-scores every claim of every row with today's ``ResultComparator``
 against the claim's current catalog metadata (claim type, standard
@@ -472,6 +484,149 @@ def render_counts(path: Path, summaries: list[CountRowSummary], changed: bool) -
     return "\n".join(lines)
 
 
+# ---------------------------------------------------------------------------
+# Policy rescore: I4R-valued claims with no Retally value (2026-11-06), in place
+# ---------------------------------------------------------------------------
+
+I4R_MISSING_POLICY = "i4r-missing"
+I4R_MISSING_POLICY_DATE = "2026-11-06"
+I4R_MISSING_MARKER = "rescored_i4r_missing"
+"""Top-level key stamped by the ``i4r-missing`` policy.  A second key, not
+the ``rescored`` one, so the ``count-5pct`` stamp is kept as written."""
+
+
+@dataclass
+class I4RMissingRow:
+    entry_id: str
+    mode: str
+    reproducer: str
+    n_valued: int
+    """Claims the I4R replicator recorded a value for."""
+    n_missing: int
+    """Of those, claims with no stored Retally ``reproduced`` value."""
+    n_i4r_match: int | None
+    before: bool | None
+    after: bool | None
+    notes: list[str] = field(default_factory=list)
+
+    @property
+    def flipped(self) -> bool:
+        return self.before != self.after
+
+
+def _i4r_missing_row(
+    row: dict[str, Any], entry: bschema.BenchmarkEntry | None
+) -> tuple[I4RMissingRow | None, dict[str, Any]]:
+    """Apply the missing-value rule to one row's ``agrees_with_i4r``.
+
+    The new rule only tightens the old one: a row the old rule called
+    ``True`` becomes ``False`` when a claim the replicator valued has no
+    stored ``reproduced`` value; every other row keeps its flag, and
+    ``n_claims_with_i4r_match`` is never touched.  Findings index the
+    catalog's pinned claims; the row's claim detail for a finding is the
+    one at that position when its description agrees, else the one with
+    the catalog claim's description.
+    """
+    from benchmark.runner import _claims_override_for
+
+    details = [cd for cd in row.get("claim_details") or [] if isinstance(cd, dict)]
+    if not details or entry is None:
+        return None, row
+    valued = [f for f in entry.i4r_replicator_findings if f.reproduced_value is not None]
+    if not valued:
+        return None, row
+    claims = _claims_override_for(entry) or []
+    by_description = {str(cd.get("description")): cd for cd in details}
+    summary = I4RMissingRow(
+        entry_id=str(row.get("entry_id")),
+        mode=str(row.get("mode") or "seeded"),
+        reproducer=reproducer_of(row),
+        n_valued=0,
+        n_missing=0,
+        n_i4r_match=row.get("n_claims_with_i4r_match"),
+        before=row.get("agrees_with_i4r"),
+        after=row.get("agrees_with_i4r"),
+    )
+    for f in valued:
+        if f.claim_id >= len(claims):
+            continue  # the runner skips out-of-range findings too
+        description = claims[f.claim_id].description
+        if f.claim_id < len(details) and str(details[f.claim_id].get("description")) == description:
+            cd = details[f.claim_id]
+        else:
+            cd = by_description.get(description)
+        if cd is None:
+            summary.notes.append(f"{description}: no claim detail in the row; left as recorded")
+            continue
+        summary.n_valued += 1
+        if cd.get("reproduced") is None:
+            summary.n_missing += 1
+    if summary.before is True and summary.n_missing:
+        summary.after = False
+        new_row = copy.deepcopy(row)
+        new_row["agrees_with_i4r"] = False
+        return summary, new_row
+    return summary, row
+
+
+def rescore_i4r_missing_file(
+    path: Path, catalog: list[bschema.BenchmarkEntry], *, dry_run: bool = False
+) -> tuple[list[I4RMissingRow], bool]:
+    """Apply the ``i4r-missing`` policy to one results file in place.
+
+    Only ``agrees_with_i4r`` on rows whose value changes is rewritten.  A
+    changed dict-shaped file gains (or updates) a top-level
+    ``"rescored_i4r_missing": {"policy", "date", "flipped"}``; the
+    ``rescored`` (count policy) key is left as it was.  Files with no flip
+    are not touched.  Idempotent: a second run finds nothing to flip.
+    """
+    original = path.read_text(encoding="utf-8")
+    payload = json.loads(original)
+    by_id = {e.id: e for e in catalog}
+    summaries: list[I4RMissingRow] = []
+    updated: list[dict[str, Any]] = []
+    for row in result_rows(payload):
+        summary, new_row = _i4r_missing_row(row, by_id.get(str(row.get("entry_id"))))
+        if summary is not None:
+            summaries.append(summary)
+        updated.append(new_row)
+    n_flips = sum(1 for s in summaries if s.flipped)
+    if not n_flips or dry_run:
+        return summaries, bool(n_flips)
+    if isinstance(payload, dict):
+        marker = payload.get(I4R_MISSING_MARKER)
+        prior = marker.get("flipped", 0) if isinstance(marker, dict) else 0
+        out: Any = dict(payload)
+        out["results"] = updated
+        out[I4R_MISSING_MARKER] = {
+            "policy": I4R_MISSING_POLICY,
+            "date": I4R_MISSING_POLICY_DATE,
+            "flipped": prior + n_flips,
+        }
+    else:
+        out = updated  # bare-list file: keeps its shape, carries no marker
+    text = _dump_like(out, original)
+    if text != original:
+        path.write_text(text, encoding="utf-8")
+        return summaries, True
+    return summaries, False
+
+
+def render_i4r_missing(path: Path, summaries: list[I4RMissingRow], changed: bool) -> str:
+    flips = [s for s in summaries if s.flipped]
+    lines = [f"{path}: {'re-scored' if changed else 'unchanged'} ({len(flips)} flipped)"]
+    for s in flips:
+        lines.append(
+            f"  {s.entry_id} [{s.mode}, {s.reproducer}]: agrees_with_i4r {s.before} -> {s.after} "
+            f"({s.n_missing} of {s.n_valued} I4R-valued claims missing; "
+            f"{s.n_i4r_match} matching, unchanged)"
+        )
+    for s in summaries:
+        for note in s.notes:
+            lines.append(f"  note: {s.entry_id} [{s.mode}]: {note}")
+    return "\n".join(lines)
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="python -m benchmark.rescore", description=__doc__.splitlines()[0])
     parser.add_argument("results", type=Path, nargs="+", help="results files written by benchmark.runner")
@@ -493,11 +648,34 @@ def main(argv: list[str] | None = None) -> int:
         metavar="OUT.json",
         help="with --all-claims: write the re-scored results here (the input file is never modified)",
     )
+    parser.add_argument(
+        "--policy",
+        choices=[COUNT_POLICY, I4R_MISSING_POLICY],
+        default=COUNT_POLICY,
+        help=f"in-place policy to apply (default {COUNT_POLICY})",
+    )
     args = parser.parse_args(argv)
 
     from benchmark.runner import CATALOG_DIR
 
     catalog = bschema.load_catalog(args.catalog or CATALOG_DIR)
+
+    if not args.all_claims and args.policy == I4R_MISSING_POLICY:
+        if args.write is not None:
+            print("--write goes with --all-claims; policies write in place", file=sys.stderr)
+            return 2
+        total = 0
+        for path in args.results:
+            try:
+                summaries, changed = rescore_i4r_missing_file(path, catalog, dry_run=args.dry_run)
+            except (OSError, json.JSONDecodeError) as exc:
+                print(f"cannot read {path}: {exc}", file=sys.stderr)
+                return 2
+            total += sum(1 for s in summaries if s.flipped)
+            print(render_i4r_missing(path, summaries, changed))
+        verb = "would flip" if args.dry_run else "flipped"
+        print(f"\n{total} agrees_with_i4r verdict(s) {verb} across {len(args.results)} file(s).")
+        return 0
 
     if not args.all_claims:
         if args.write is not None:

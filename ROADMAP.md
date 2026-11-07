@@ -3787,6 +3787,45 @@ has 17 cells (9 pipeline, 8 agent); the tree has 529 (512 + 17).
 **Next:** nothing on the pipeline (frozen); the openICPSR packages remain
 the user's call.
 
+#### Harness note — `agrees_with_i4r` and missing values (2026-11-06)
+
+**Before.**  `benchmark/runner.py::_score_against_i4r` skipped a claim the
+I4R replicator valued when Retally printed no value for it, and set
+`agrees_with_i4r` when every *remaining* claim matched.  A cell that
+printed NA for some replicator-valued claims could therefore read as
+"paper ✗, I4R ✓", the combination meant to say the replicators found a
+different number, when Retally had in fact produced nothing for those
+claims.  `agrees_with_paper` already counted a missing value as a miss.
+
+**Now.**  A replicator-valued claim with no Retally value counts as
+attempted and not matching, so `agrees_with_i4r` is False;
+`n_claims_with_i4r_match` is unchanged, and the flag is still None when
+no finding carries a value.  Harness-only: nothing under `src/retally/`
+changed, and no run was repeated.
+
+**Rescore.**  `uv run python -m benchmark.rescore --policy i4r-missing
+benchmark/results/*.json` applied the rule offline to the stored rows
+(only `True` → `False` is possible).  It stamps a second top-level key,
+`rescored_i4r_missing`, beside the count policy's `rescored`.  Eight rows
+in eight files flipped (`benchmark/results/RESCORE-i4r-missing.md`):
+the six expected (Manekin blind on `claude-opus-4-7`, 6 of 12 valued
+claims missing; Bokobza blind in the oracle 4-paper and post-fix2
+files, 7 of 11; Molina-Garzón blind in the oracle 1-paper sample 1 and 2
+files and independent in sample 3, 2 of 7), plus two more: the same
+Manekin blind cell in `pipeline-10papers-all-modes-2026-10-21.json` (the
+file the report reads for `claude-opus-4-7`), and the pre-3.4 Dincecco
+independent row in `pre34-promptonly-both-run1-2026-10-19.json` (12 of
+13; not read by the report).  In the report's
+verdict table the "paper ✗ I4R ✓" column now holds only the agent's
+three Grier rows (the claim missed has no I4R value) and its independent
+Forsythe row (a real value, −0.585 against the paper's −0.49 and I4R's
+−0.578; `docs/report/draft.md` Section 4.7).  `benchmark/results/REPORT.md`
+was re-rendered from the same first-sample files (I4R agreement 2 → 1 of 7
+on `claude-opus-4-7`, 6 → 4 of 19 on desktop Opus), and the
+`eval-7papers` report snapshot under `tests/fixtures/` was updated to
+match.  The evidence bundles of the three pipeline papers still show the
+old flag until they are rebuilt.
+
 ---
 
 ## Phase 4 — Corpus growth (4 → 20–30 papers)

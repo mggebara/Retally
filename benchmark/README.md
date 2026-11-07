@@ -34,12 +34,17 @@ The runner records three independent flags:
 |---|---|
 | `retally_ran` | The reproducer completed without raising. Distinct from "all claims passed" — we want to know whether the infrastructure works even when the science doesn't. |
 | `agrees_with_paper` | The reproduced values pass against the paper's stated values — every claim, at least one claim (the same rule as the pipeline's `overall_passed`, but computed by the harness). |
-| `agrees_with_i4r` | Retally's reproduced values pass against the *I4R replicator's* reproduced values (not the paper's). `None` when no I4R finding has a value to compare to. |
+| `agrees_with_i4r` | Retally's reproduced values pass against the *I4R replicator's* reproduced values (not the paper's): every claim the replicator valued has a Retally value within tolerance of it. A valued claim Retally printed no value for is a miss, as it is for `agrees_with_paper` (before 2026-11-06 it was skipped; stored rows were re-scored with `benchmark.rescore --policy i4r-missing`, see `results/RESCORE-i4r-missing.md`). `None` when no I4R finding has a value to compare to. |
 
 The three can disagree.  In particular, `ran ✓ / agrees_with_paper ✓ /
 agrees_with_i4r ✗` means Retally faithfully reproduced what the paper
 said, but the careful human replicators found a different number — the
-"non-robust" signal we want to surface, not collapse.
+"non-robust" signal we want to surface, not collapse.  The reverse,
+`agrees_with_paper ✗ / agrees_with_i4r ✓`, means every replicator-valued
+claim was reproduced and matched the replicator, so the misses against
+the paper are where the replicators also departed from it (or are claims
+the replicators did not value).  It never means Retally printed nothing
+for a claim the replicators valued: that is `agrees_with_i4r ✗`.
 
 **Who scores.**  Both agreement verdicts are computed by the harness
 (`runner.score_reproduction`), never by the reproducer.  The reproducer

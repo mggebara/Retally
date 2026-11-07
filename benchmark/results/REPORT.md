@@ -47,7 +47,7 @@ Reproducer: **claude-code**, **pipeline (claude-opus-4-7)**, **pipeline (claude-
 
 - Pipeline completed without crashing: **7 / 7**
 - Agrees with the paper's stated values: **1 / 7**
-- Agrees with the I4R replicator: **2 / 7** (of papers where I4R published a value to compare against)
+- Agrees with the I4R replicator: **1 / 7** (of papers where I4R published a value to compare against)
 
 ## Verdicts — seeded · pipeline (claude-opus-5-5) (among executed papers)
 
@@ -83,7 +83,7 @@ Reproducer: **claude-code**, **pipeline (claude-opus-4-7)**, **pipeline (claude-
 
 - Pipeline completed without crashing: **20 / 20**
 - Agrees with the paper's stated values: **4 / 20**
-- Agrees with the I4R replicator: **6 / 19** (of papers where I4R published a value to compare against)
+- Agrees with the I4R replicator: **4 / 19** (of papers where I4R published a value to compare against)
 
 ## Seeded vs independent vs blind
 
@@ -524,7 +524,7 @@ Total estimated spend this run: **$15.51** across 394 API calls (48 further call
 | `leeson-2022-hobo-economicus` | blind | pipeline (claude-opus-4-7) | ran | ✓ | ✗ | ✗ | 5 / 5 of 11 (first scored 4/11, 0 error + 0 claim refinements) |  |
 | `manekin-2022-effective-for-whom` | seeded | pipeline (claude-opus-4-7) | ran | ✓ | ✗ | ✗ | 7 / 7 of 12 (first scored 8/12, 1 error + 3 claim refinements) |  |
 | `manekin-2022-effective-for-whom` | independent | pipeline (claude-opus-4-7) | ran | ✓ | ✓ | ✓ | 12 / 12 of 12 (first scored 6/12, 1 error + 1 claim refinements) |  |
-| `manekin-2022-effective-for-whom` | blind | pipeline (claude-opus-4-7) | ran | ✓ | ✗ | ✓ | 6 / 6 of 12 (first scored 6/12, 0 error + 0 claim refinements) |  |
+| `manekin-2022-effective-for-whom` | blind | pipeline (claude-opus-4-7) | ran | ✓ | ✗ | ✗ | 6 / 6 of 12 (first scored 6/12, 0 error + 0 claim refinements) |  |
 | `montero-2022-cooperative-property-rights` | seeded | pipeline (claude-opus-4-7) | ran | ✓ | ✓ | ✗ | 10 / 4 of 10 (first scored 0/10, 0 error + 1 claim refinement) |  |
 | `montero-2022-cooperative-property-rights` | independent | pipeline (claude-opus-4-7) | ran | ✓ | ✗ | ✗ | 5 / 2 of 10 (first scored 2/10, 2 error + 3 claim refinements) |  |
 | `montero-2022-cooperative-property-rights` | blind | pipeline (claude-opus-4-7) | ran | ✓ | ✗ | ✗ | 0 / 1 of 10 (first scored 0/10, 0 error + 0 claim refinements) |  |
@@ -569,7 +569,7 @@ Total estimated spend this run: **$15.51** across 394 API calls (48 further call
 | `lopez-moctezuma-2022-policy-deliberation-philippines` | blind | pipeline (desktop-opus) | ran | ✓ | ✗ | ✗ | 9 / 2 of 13 (first scored 9/13, 0 error + 0 claim refinements) |  |
 | `bokobza-2022-morning-after-coup-purges` | seeded | pipeline (desktop-opus) | ran | ✓ | ✗ | ✗ | 9 / 9 of 11 (first scored 9/11, 0 error + 1 claim refinement) |  |
 | `bokobza-2022-morning-after-coup-purges` | independent | pipeline (desktop-opus) | ran | ✓ | ✓ | ✓ | 11 / 11 of 11 (first scored 6/11, 1 error + 1 claim refinements) |  |
-| `bokobza-2022-morning-after-coup-purges` | blind | pipeline (desktop-opus) | ran | ✓ | ✗ | ✓ | 4 / 4 of 11 (first scored 4/11, 1 error + 0 claim refinement) |  |
+| `bokobza-2022-morning-after-coup-purges` | blind | pipeline (desktop-opus) | ran | ✓ | ✗ | ✗ | 4 / 4 of 11 (first scored 4/11, 1 error + 0 claim refinement) |  |
 | `brouwer-2022-teaching-norms` | seeded | pipeline (desktop-opus) | ran | ✓ | ✓ | ✓ | 12 / 12 of 12 (first scored 12/12, 0 error + 0 claim refinements) |  |
 | `brouwer-2022-teaching-norms` | independent | pipeline (desktop-opus) | ran | ✓ | ✓ | ✓ | 12 / 12 of 12 (first scored 12/12, 0 error + 0 claim refinements) |  |
 | `brouwer-2022-teaching-norms` | blind | pipeline (desktop-opus) | ran | ✓ | ✓ | ✓ | 12 / 12 of 12 (first scored 12/12, 0 error + 0 claim refinements) |  |
@@ -599,7 +599,7 @@ Total estimated spend this run: **$15.51** across 394 API calls (48 further call
 | `mokyr-2022-wheels-of-change` | blind | pipeline (desktop-opus) | ran | ✓ | ✗ | ✗ | 1 / 1 of 13 (first scored 1/13, 0 error + 0 claim refinements) |  |
 | `molina-garzon-2022-decentralization-cooperation` | seeded | pipeline (desktop-opus) | ran | ✓ | ✓ | ✓ | 12 / 7 of 12 (first scored 12/12, 0 error + 0 claim refinements) |  |
 | `molina-garzon-2022-decentralization-cooperation` | independent | pipeline (desktop-opus) | ran | ✓ | ✓ | ✓ | 12 / 7 of 12 (first scored 6/12, 0 error + 1 claim refinement) |  |
-| `molina-garzon-2022-decentralization-cooperation` | blind | pipeline (desktop-opus) | ran | ✓ | ✗ | ✓ | 6 / 5 of 12 (first scored 6/12, 0 error + 0 claim refinements) |  |
+| `molina-garzon-2022-decentralization-cooperation` | blind | pipeline (desktop-opus) | ran | ✓ | ✗ | ✗ | 6 / 5 of 12 (first scored 6/12, 0 error + 0 claim refinements) |  |
 | `adams-2023-women-mps-affective-polarization` | seeded | claude-code | ran | ✓ | ✓ | ✓ | 11 / 11 of 11 (first scored 11/11, 0 error + 0 claim refinements) |  |
 | `adams-2023-women-mps-affective-polarization` | independent | claude-code | ran | ✓ | ✓ | ✓ | 11 / 11 of 11 (first scored 11/11, 0 error + 0 claim refinements) |  |
 | `adams-2023-women-mps-affective-polarization` | blind | claude-code | ran | ✓ | ✗ | ✗ | 8 / 8 of 11 (first scored 8/11, 0 error + 0 claim refinements) |  |

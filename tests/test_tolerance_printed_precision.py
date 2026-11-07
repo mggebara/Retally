@@ -398,6 +398,60 @@ def _count_row(mode: str, n_obs: float) -> dict:
     }
 
 
+_I4R_MISSING_CATALOG = (
+    _COUNT_CATALOG
+    + """\
+  - claim_id: 1
+    reproduced_value: 0.5
+    outcome: matches
+"""
+)
+
+
+def _i4r_row(mode: str, beta: float | None, *, agrees_with_i4r: bool | None = True) -> dict:
+    row = _count_row(mode, 1000.0)
+    row["claim_details"][1]["reproduced"] = beta
+    row["n_claims_with_i4r_match"] = 1 if beta is None else 2
+    row["agrees_with_i4r"] = agrees_with_i4r
+    return row
+
+
+def test_i4r_missing_policy_flips_only_rows_with_a_missing_valued_claim(tmp_path, capsys):
+    rows = [
+        _i4r_row("blind", None),
+        _i4r_row("seeded", 0.5),
+        _i4r_row("independent", None, agrees_with_i4r=False),
+    ]
+    results, catalog = _count_fixture(tmp_path, rows)
+    (catalog / "paper2.yaml").write_text(_I4R_MISSING_CATALOG, encoding="utf-8")
+    payload = json.loads(results.read_text(encoding="utf-8"))
+    payload["rescored"] = {"policy": "count-5pct", "date": "2026-11-03", "flipped": 3}
+    results.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    argv = [str(results), "--catalog", str(catalog), "--policy", "i4r-missing"]
+    before = results.read_bytes()
+    assert rescore.main([*argv, "--dry-run"]) == 0
+    assert results.read_bytes() == before
+    assert rescore.main(argv) == 0
+    assert "1 agrees_with_i4r verdict(s) flipped" in capsys.readouterr().out
+
+    out = json.loads(results.read_text(encoding="utf-8"))
+    # The count stamp is kept; the i4r-missing stamp is a second key.
+    assert out["rescored"] == {"policy": "count-5pct", "date": "2026-11-03", "flipped": 3}
+    assert out["rescored_i4r_missing"] == {"policy": "i4r-missing", "date": "2026-11-06", "flipped": 1}
+    flipped, present, already_false = out["results"]
+    assert flipped["agrees_with_i4r"] is False
+    assert flipped["n_claims_with_i4r_match"] == 1  # unchanged
+    assert {k: v for k, v in flipped.items() if k != "agrees_with_i4r"} == {
+        k: v for k, v in rows[0].items() if k != "agrees_with_i4r"
+    }
+    assert present == rows[1] and already_false == rows[2]
+
+    once = results.read_bytes()
+    assert rescore.main(argv) == 0
+    assert results.read_bytes() == once  # idempotent
+
+
 def _count_fixture(tmp_path: Path, rows: list[dict], *, bare_list: bool = False) -> tuple[Path, Path]:
     catalog = tmp_path / "papers"
     catalog.mkdir(exist_ok=True)
