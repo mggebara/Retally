@@ -2066,6 +2066,8 @@ paired rows.  It adds one rule, R7: a report qualifies with at least 6
 paired rows if the paper itself prints at least 8 headline claims to
 pin.  The R7 pool is four reports, and all four were checked.
 
+**Funnel, pass 5 (proposal).**  The fifth pass (`benchmark/corpus/candidates-2026-11-07.md`) checked all 36 AEA reports excluded for openICPSR-only packages for an open *data* deposit outside openICPSR, since independent and blind mode need data, not code (proposed rule R8, not adopted).  Two deposits exist: T19 Digital Addiction (Dataverse GN636M, data only; excluded because its only open text, the NBER working paper, matches 2 of 7 paired values) and T73 Dhar, Jain & Jayachandran (the authors' 3ie final-report package on the 3ie Impact Evaluation Dataverse, 27.5 MB, data and do-files, 2019; NBER working paper matches 53 of 69 paired values).  T73 is curated next under the ordinary rules, with the check that the 3ie data reproduce the published values; R8 itself is shelved with one candidate.
+
 - **Molina Garzón et al.** (T17, AJPS 2022, 7 paired rows) passed and
   was curated as `molina-garzon-2022-decentralization-cooperation`.
   - Package: Dataverse ZLHYSZ v1.0, 0.6 MB, Stata + R.
