@@ -236,6 +236,86 @@ def test_agrees_with_i4r_none_when_no_finding_has_a_value(tmp_path):
     assert result.agrees_with_i4r is None
 
 
+def _two_claim_i4r_entry():
+    return _entry(
+        original_claims=[
+            bschema.OriginalClaim(description="x", value=0.5, claim_type="coefficient"),
+            bschema.OriginalClaim(description="y", value=2.0, claim_type="coefficient"),
+        ],
+        i4r_replicator_findings=[
+            bschema.ReplicatorFinding(
+                claim_id=0, reproduced_value=0.5, outcome=bschema.FindingOutcome.MATCHES
+            ),
+            bschema.ReplicatorFinding(
+                claim_id=1, reproduced_value=2.0, outcome=bschema.FindingOutcome.MATCHES
+            ),
+        ],
+    )
+
+
+def test_disagrees_with_i4r_when_a_valued_claim_has_no_reproduced_value(tmp_path):
+    # Retally matched x but printed nothing for y, which the replicator valued:
+    # a missing value is a miss, not a skip (it fails agrees_with_paper too).
+    report = _fake_report(("x", 0.5, 0.5), ("y", 2.0, None))
+    [result] = runner.run_benchmark(
+        [_two_claim_i4r_entry()],
+        pipeline_factory=_pipeline_factory_returning(report),
+        cache_dir=tmp_path,
+    )
+    assert result.agrees_with_paper is False
+    assert result.agrees_with_i4r is False
+    assert result.n_claims_with_i4r_match == 1
+
+
+def test_disagrees_with_i4r_when_every_valued_claim_is_missing(tmp_path):
+    report = _fake_report(("x", 0.5, None), ("y", 2.0, None))
+    [result] = runner.run_benchmark(
+        [_two_claim_i4r_entry()],
+        pipeline_factory=_pipeline_factory_returning(report),
+        cache_dir=tmp_path,
+    )
+    assert result.agrees_with_i4r is False
+    assert result.n_claims_with_i4r_match == 0
+
+
+def test_agrees_with_i4r_when_every_valued_claim_is_present_and_matches(tmp_path):
+    report = _fake_report(("x", 0.5, 0.5), ("y", 2.0, 2.0))
+    [result] = runner.run_benchmark(
+        [_two_claim_i4r_entry()],
+        pipeline_factory=_pipeline_factory_returning(report),
+        cache_dir=tmp_path,
+    )
+    assert result.agrees_with_i4r is True
+    assert result.n_claims_with_i4r_match == 2
+
+
+def test_score_against_i4r_direct():
+    from retally.models import Claim, ClaimType, ClaimValidationResult
+
+    entry = _two_claim_i4r_entry()
+    claims = [
+        Claim(description=d, value=v, claim_type=ClaimType.COEFFICIENT) for d, v in (("x", 0.5), ("y", 2.0))
+    ]
+
+    def results(*values):
+        return [
+            ClaimValidationResult(claim=c, reproduced_value=v, tolerance=0.01)
+            for c, v in zip(claims, values, strict=True)
+        ]
+
+    assert runner._score_against_i4r(results(0.5, None), entry) == (1, False)
+    assert runner._score_against_i4r(results(0.5, 2.0), entry) == (2, True)
+    no_values = _entry(
+        original_claims=entry.original_claims,
+        i4r_replicator_findings=[
+            bschema.ReplicatorFinding(
+                claim_id=0, reproduced_value=None, outcome=bschema.FindingOutcome.NOT_ATTEMPTED
+            )
+        ],
+    )
+    assert runner._score_against_i4r(results(None, None), no_values) == (0, None)
+
+
 # ── Component metrics ──────────────────────────────────────────────────
 
 

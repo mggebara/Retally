@@ -29,7 +29,7 @@ Reproducer: **pipeline**.
 
 - Pipeline completed without crashing: **7 / 7**
 - Agrees with the paper's stated values: **1 / 7**
-- Agrees with the I4R replicator: **2 / 7** (of papers where I4R published a value to compare against)
+- Agrees with the I4R replicator: **1 / 7** (of papers where I4R published a value to compare against)
 
 ## Seeded vs independent vs blind
 
@@ -141,7 +141,7 @@ Total estimated spend this run: **$8.11** across 84 API calls (21 further calls 
 | `leeson-2022-hobo-economicus` | blind | pipeline | ran | ✓ | ✗ | ✗ | 5 / 5 of 11 (first scored 4/11, 0 error + 0 claim refinements) |  |
 | `manekin-2022-effective-for-whom` | seeded | pipeline | ran | ✓ | ✗ | ✗ | 7 / 7 of 12 (first scored 8/12, 1 error + 3 claim refinements) |  |
 | `manekin-2022-effective-for-whom` | independent | pipeline | ran | ✓ | ✓ | ✓ | 12 / 12 of 12 (first scored 6/12, 1 error + 1 claim refinements) |  |
-| `manekin-2022-effective-for-whom` | blind | pipeline | ran | ✓ | ✗ | ✓ | 6 / 6 of 12 (first scored 6/12, 0 error + 0 claim refinements) |  |
+| `manekin-2022-effective-for-whom` | blind | pipeline | ran | ✓ | ✗ | ✗ | 6 / 6 of 12 (first scored 6/12, 0 error + 0 claim refinements) |  |
 | `montero-2022-cooperative-property-rights` | seeded | pipeline | ran | ✓ | ✓ | ✗ | 10 / 4 of 10 (first scored 0/10, 0 error + 1 claim refinement) |  |
 | `montero-2022-cooperative-property-rights` | independent | pipeline | ran | ✓ | ✗ | ✗ | 5 / 2 of 10 (first scored 2/10, 2 error + 3 claim refinements) |  |
 | `montero-2022-cooperative-property-rights` | blind | pipeline | ran | ✓ | ✗ | ✗ | 0 / 1 of 10 (first scored 0/10, 0 error + 0 claim refinements) |  |

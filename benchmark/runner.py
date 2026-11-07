@@ -17,8 +17,13 @@ Three verdicts are recorded per paper:
   validates within the comparator's tolerance against the reproduced
   value.  Computed by the harness, from the reproducer's raw outputs.
 * ``agrees_with_i4r`` — for every claim where the I4R replicator
-  recorded a reproduced value, the reproduced value is within the
-  comparator's tolerance of THAT value (not the paper's claim).
+  recorded a reproduced value, Retally produced a value and it is
+  within the comparator's tolerance of THAT value (not the paper's
+  claim).  A claim the replicator valued but Retally printed nothing
+  for counts as a miss, as it does for ``agrees_with_paper`` (until
+  2026-11-06 such claims were skipped, so a cell missing values could
+  still read as agreeing with I4R; see ``benchmark.rescore --policy
+  i4r-missing``).  None when no I4R finding carries a value.
 
 The three can disagree in meaningful ways — e.g. *ran ✓, agrees with
 paper ✓, agrees with I4R ✗* means Retally faithfully reproduced what
@@ -1286,9 +1291,13 @@ def _score_against_i4r(claim_results: list, entry: bschema.BenchmarkEntry) -> tu
     ``claim_results`` are the harness's own comparisons, in claim order —
     a finding's ``claim_id`` indexes into them.
 
-    Returns ``(n_matching, all_attempted_match)``.  ``all_attempted_match``
-    is None when no I4R finding has a reproduced value (nothing to
-    compare against).
+    Returns ``(n_matching, all_match)``.  ``all_match`` is True only when
+    every claim the replicator valued has a Retally value within
+    tolerance of the replicator's: a valued claim Retally produced no
+    value for counts as attempted and not matching (as a missing value
+    fails ``agrees_with_paper``).  It is None when no I4R finding has a
+    reproduced value (nothing to compare against).  A finding whose
+    ``claim_id`` is past the end of ``claim_results`` is skipped.
     """
     findings_by_claim_id = {
         f.claim_id: f for f in entry.i4r_replicator_findings if f.reproduced_value is not None
@@ -1301,10 +1310,11 @@ def _score_against_i4r(claim_results: list, entry: bschema.BenchmarkEntry) -> tu
     for i, finding in findings_by_claim_id.items():
         if i >= len(claim_results):
             continue
+        n_attempted += 1
         retally_value = claim_results[i].reproduced_value
         if retally_value is None:
+            # Valued by the replicator, nothing from Retally: a miss.
             continue
-        n_attempted += 1
         # Same tolerance the harness used for the paper-claim comparison —
         # which, in independent mode, is the SE-aware band when the claim
         # pins a standard error.  Can tighten later if the data shows it

@@ -891,8 +891,10 @@ def t_three_way() -> str:
             )
     return (
         "Paper-level verdicts.  `agrees_with_paper`: every pinned claim within tolerance of the "
-        "paper's printed value.  `agrees_with_i4r`: every claim with an I4R replicator value within "
-        "tolerance of *that* value; n/a when the entry has no I4R value.\n\n"
+        "paper's printed value.  `agrees_with_i4r`: every claim with an I4R replicator value has a "
+        "reproduced value within tolerance of *that* value (a claim the replicator valued but the "
+        "reproducer printed nothing for is a miss, as it is against the paper); n/a when the entry "
+        "has no I4R value.\n\n"
         + summary
         + "\n\nPer paper: `paper / I4R` verdicts (claims matching the paper / total; claims matching "
         "the I4R value).\n\n" + table(per_paper_hdr, pp, ["l", "l", "r", "l", "l", "l", "l"])

@@ -116,7 +116,7 @@ A claim *passes* when the reproduced value is within tolerance of the paper's pr
 
 The wider independent band is a real asymmetry.  A pass count in independent mode is not comparable with one in seeded mode on closeness, so we report median relative error and the share of claims within one, two and five times their tolerance beside every count (Section 4.6).
 
-Scoring belongs to the harness, not the reproducer.  The reproducer returns raw `name = value` pairs printed by its final script; the harness matches them to the pinned claims and applies the mode's tolerance.  Three verdicts are recorded per paper and never collapsed into one: `retally_ran` (the reproducer finished), `agrees_with_paper` (every pinned claim within tolerance of the printed value) and `agrees_with_i4r` (every claim for which I4R recorded a value, and for which the reproducer printed a value, within tolerance of the *replicator's* value).  A reproduction that matches the paper but not the replicators is the case the benchmark exists to surface.
+Scoring belongs to the harness, not the reproducer.  The reproducer returns raw `name = value` pairs printed by its final script; the harness matches them to the pinned claims and applies the mode's tolerance.  Three verdicts are recorded per paper and never collapsed into one: `retally_ran` (the reproducer finished), `agrees_with_paper` (every pinned claim within tolerance of the printed value) and `agrees_with_i4r` (every claim for which I4R recorded a value within tolerance of the *replicator's* value; a claim the reproducer printed no value for is a miss, as it is against the paper).  A reproduction that matches the paper but not the replicators is the case the benchmark exists to surface.
 
 Each row also records a *first-scored* count: the claims passed by the first execution that printed a parsable result, after any crash repairs and before any claim-targeted feedback.  The difference between first scored and final is what target-guided refinement added.
 
@@ -460,22 +460,22 @@ Pass counts saturate and hide how far off a miss is.  On the seven-paper set the
 ### 4.7 Agreement with the I4R replicators
 
 <!-- table:three_way -->
-Paper-level verdicts.  `agrees_with_paper`: every pinned claim within tolerance of the paper's printed value.  `agrees_with_i4r`: every claim with an I4R replicator value within tolerance of *that* value; n/a when the entry has no I4R value.
+Paper-level verdicts.  `agrees_with_paper`: every pinned claim within tolerance of the paper's printed value.  `agrees_with_i4r`: every claim with an I4R replicator value has a reproduced value within tolerance of *that* value (a claim the replicator valued but the reproducer printed nothing for is a miss, as it is against the paper); n/a when the entry has no I4R value.
 
 | Reproducer | Set | Mode | Papers | paper ✓ I4R ✓ | paper ✓ I4R ✗ | paper ✗ I4R ✓ | paper ✗ I4R ✗ | I4R n/a |
 |---|---:|---|---:|---:|---:|---:|---:|---:|
 | Pipeline, `claude-opus-4-7` | 7 | seeded | 7 | 3 | 1 | 0 | 3 | 0 |
 | Pipeline, `claude-opus-4-7` | 7 | independent | 7 | 1 | 0 | 0 | 6 | 0 |
-| Pipeline, `claude-opus-4-7` | 7 | blind | 7 | 1 | 0 | 1 | 5 | 0 |
+| Pipeline, `claude-opus-4-7` | 7 | blind | 7 | 1 | 0 | 0 | 6 | 0 |
 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 13 | seeded | 13 | 9 | 2 | 0 | 1 | 1 |
 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 13 | independent | 13 | 7 | 1 | 0 | 4 | 1 |
 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 13 | blind | 13 | 3 | 0 | 0 | 9 | 1 |
 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 17 | seeded | 17 | 11 | 3 | 0 | 2 | 1 |
 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 17 | independent | 17 | 9 | 1 | 0 | 6 | 1 |
-| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 17 | blind | 17 | 4 | 0 | 1 | 11 | 1 |
+| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 17 | blind | 17 | 4 | 0 | 0 | 12 | 1 |
 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 24 | seeded | 24 | 16 | 4 | 0 | 3 | 1 |
 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 24 | independent | 24 | 13 | 2 | 0 | 8 | 1 |
-| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 24 | blind | 24 | 5 | 0 | 2 | 16 | 1 |
+| Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | 24 | blind | 24 | 5 | 0 | 0 | 18 | 1 |
 | Agent (Claude Code, desktop Opus) | 13 | seeded | 13 | 9 | 2 | 1 | 0 | 1 |
 | Agent (Claude Code, desktop Opus) | 13 | independent | 13 | 8 | 2 | 1 | 1 | 1 |
 | Agent (Claude Code, desktop Opus) | 13 | blind | 13 | 6 | 1 | 1 | 4 | 1 |
@@ -501,7 +501,7 @@ Per paper: `paper / I4R` verdicts (claims matching the paper / total; claims mat
 | `arias-2022` | reproducible | 12 | Pipeline, `claude-opus-4-7` | ✗ / ✗ (4/12; 4) | ✗ / ✗ (4/12; 4) | ✗ / ✗ (5/12; 5) |
 | `arias-2022` | reproducible | 12 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) |
 | `arias-2022` | reproducible | 12 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) |
-| `bokobza-2022` | reproducible | 11 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✗ / ✗ (9/11; 9) | ✓ / ✓ (11/11; 11) | ✗ / ✓ (4/11; 4) |
+| `bokobza-2022` | reproducible | 11 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✗ / ✗ (9/11; 9) | ✓ / ✓ (11/11; 11) | ✗ / ✗ (4/11; 4) |
 | `bokobza-2022` | reproducible | 11 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (11/11; 11) | ✓ / ✓ (11/11; 11) | ✓ / ✓ (11/11; 11) |
 | `brouwer-2022` | reproducible | 12 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) |
 | `brouwer-2022` | reproducible | 12 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) |
@@ -536,19 +536,19 @@ Per paper: `paper / I4R` verdicts (claims matching the paper / total; claims mat
 | `leeson-2022` | reproducible | 11 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (11/11; 11) | ✓ / ✓ (11/11; 11) | ✓ / ✓ (11/11; 11) |
 | `lopez-moctezuma-2022` | reproducible | 6 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (13/13; 6) | ✗ / ✗ (9/13; 2) | ✗ / ✗ (9/13; 2) |
 | `lopez-moctezuma-2022` | reproducible | 6 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (13/13; 6) | ✗ / ✗ (9/13; 2) | ✗ / ✗ (9/13; 2) |
-| `manekin-2022` | reproducible | 12 | Pipeline, `claude-opus-4-7` | ✗ / ✗ (7/12; 7) | ✓ / ✓ (12/12; 12) | ✗ / ✓ (6/12; 6) |
+| `manekin-2022` | reproducible | 12 | Pipeline, `claude-opus-4-7` | ✗ / ✗ (7/12; 7) | ✓ / ✓ (12/12; 12) | ✗ / ✗ (6/12; 6) |
 | `manekin-2022` | reproducible | 12 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) |
 | `manekin-2022` | reproducible | 12 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) | ✓ / ✓ (12/12; 12) |
 | `mokyr-2022` | reproducible | 13 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (13/13; 13) | ✓ / ✓ (13/13; 13) | ✗ / ✗ (1/13; 1) |
 | `mokyr-2022` | reproducible | 13 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (13/13; 13) | ✓ / ✓ (13/13; 13) | ✓ / ✓ (13/13; 13) |
-| `molina-garzon-2022` | reproducible | 7 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (12/12; 7) | ✓ / ✓ (12/12; 7) | ✗ / ✓ (6/12; 5) |
+| `molina-garzon-2022` | reproducible | 7 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✓ (12/12; 7) | ✓ / ✓ (12/12; 7) | ✗ / ✗ (6/12; 5) |
 | `molina-garzon-2022` | reproducible | 7 | Agent (Claude Code, desktop Opus) | ✓ / ✓ (12/12; 7) | ✓ / ✓ (12/12; 7) | ✓ / ✓ (12/12; 7) |
 | `montero-2022` | not_reproducible | 10 | Pipeline, `claude-opus-4-7` | ✓ / ✗ (10/10; 4) | ✗ / ✗ (5/10; 2) | ✗ / ✗ (0/10; 1) |
 | `montero-2022` | not_reproducible | 10 | Pipeline on Opus 5.5 (API for 4 papers, oracle for the rest) | ✓ / ✗ (10/10; 4) | ✓ / ✗ (10/10; 5) | ✗ / ✗ (0/10; 0) |
 | `montero-2022` | not_reproducible | 10 | Agent (Claude Code, desktop Opus) | ✓ / ✗ (10/10; 4) | ✓ / ✗ (10/10; 6) | ✓ / ✗ (10/10; 6) |
 <!-- /table:three_way -->
 
-The cell the benchmark was designed to find, a reproduction that agrees with the replicators and not with the paper, did not occur in a substantive form.[^i4r-cell]  The table does show rows in that column, four on the thirteen earlier papers, a fifth in the seventeen-paper rows and a sixth in the twenty-four-paper rows, but each is an artifact of how the I4R verdict is defined: it is computed over the claims that have an I4R value *and* a printed reproduction.  The agent's three Grier rows each miss one claim for which I4R recorded no value, and the Manekin blind row on `claude-opus-4-7` and the oracle pipeline's Bokobza and Molina-Garzón blind rows printed no value for the claims they missed.  On Molina-Garzón "agrees with I4R" means less than elsewhere: its seven paired rows are all robustness variants (controls removed; OLS on a proportion in place of the Poisson count model), so the entry records the paper's own printed value under the team's blanket "same output" verdict, and an I4R match there is a match to the paper on those seven claims (ROADMAP 3.9).  The seeded Forsythe rows of both systems show the reverse, paper ✓ and I4R ✗, as expected: I4R rebuilt Forsythe's panel from IPUMS and reports a different sample, so its numbers are not the package's.
+The cell the benchmark was designed to find, a reproduction that agrees with the replicators and not with the paper, occurred once, on one claim, and only weakly.[^i4r-cell]  The table shows three rows in that column on the thirteen earlier papers and a fourth in the seventeen- and twenty-four-paper rows.  The three are the agent's Grier rows, and they come from how the I4R verdict is defined: it is computed over the claims that have an I4R value, and each Grier row misses one claim for which I4R recorded none.  The fourth is the agent's independent Forsythe row.  It matches both the paper and the replicators on twelve claims and misses the paper's −0.49 on the out-of-the-labour-force interaction in Table 2 with −0.585, inside the band around the replicators' −0.578.  That claim lands near −0.59 in every first-sample independent and blind cell of both systems, and I4R rebuilt Forsythe's panel from IPUMS, so the agreement reflects a sample choice the paper leaves open rather than a finding the replicators overturned (Section 5, *Unclassified*).  Until 2026-11-06 the column also held the Manekin blind row on `claude-opus-4-7` and the oracle pipeline's Bokobza and Molina-Garzón blind rows, which printed no value for some of the claims the replicators valued: the verdict skipped such claims instead of counting them as misses, and the stored rows were re-scored when that was corrected (`benchmark/results/RESCORE-i4r-missing.md`; ROADMAP 3.9).  On Molina-Garzón "agrees with I4R" means less than elsewhere: its seven paired rows are all robustness variants (controls removed; OLS on a proportion in place of the Poisson count model), so the entry records the paper's own printed value under the team's blanket "same output" verdict, and an I4R match there is a match to the paper on those seven claims (ROADMAP 3.9).  The seeded Forsythe rows of both systems show the reverse, paper ✓ and I4R ✗, as expected: I4R rebuilt Forsythe's panel from IPUMS and reports a different sample, so its numbers are not the package's.
 
 The papers I4R rated not reproducible tell the more useful story.  On Montero, every configuration in seeded mode reproduced the paper's printed numbers, which the replicators showed are produced by duplicated rows; the seeded agent did so on its first script by following the do-file's "replicating original results" block (ROADMAP 3.3).  Seeded reproduction faithfully reproduces a package's error.  Independent and blind agents built a paper-faithful specification that matched neither the paper (except inside the wide band) nor the replicators.  Holman shows the same pattern: seeded runs follow the do-file, which estimates random effects and a linear model where the paper says fixed effects and a logit, and reproduce the printed numbers that I4R's report (DP41) corrected; the blind agent did what the paper says and reproduced neither (ROADMAP 3.4).  Douenne, the third paper I4R rated not reproducible, repeats the seeded half of the pattern: the seeded agent matched all thirteen printed values and only one of the eight values the replicators recomputed after correcting the treatment coding (ROADMAP 3.7).  Here independent mode agrees with the paper too, inside the one-standard-error band, for both systems.  Hollyer shows the band's other face: the seeded rows of both systems match the paper and miss four of the replicators' values, including the two extremist-party rows where the paper's text and the authors' code disagree, while every independent row, and the agent's blind row, passes those two claims against both the paper and the replicators, because one standard error is wide enough to cover the gap between them (ROADMAP 3.7).
 
@@ -1089,7 +1089,7 @@ Four pieces of work would most change what this report can claim.  A full varian
 
 [^six-gap]: ROADMAP 3.5 gives the harness gap on the six later papers as 5, 9 and 20 claims; recomputed from the results files, rescored with the 5 % count band, it is 5, 8 and 18 (agent 75, 71, 61; oracle pipeline 70, 63, 43).  This report uses the recomputed values.  The full comparison of ROADMAP-quoted numbers against recomputation is below; most of its differences come from the count rescore of 2026-11-03, since ROADMAP 3.2–3.7.3 quote the 1 % band (ROADMAP 3.7.4), and before the rescore 3 numbers differed.
 
-[^i4r-cell]: ROADMAP 3.3 states that the "agrees with I4R, not with the paper" cell did not occur.  At the verdict level it does occur for the agent's three Grier rows (Section 4.7).  The ROADMAP statement is right in substance and wrong as a count.
+[^i4r-cell]: ROADMAP 3.3 states that the "agrees with I4R, not with the paper" cell did not occur.  At the verdict level it does occur for the agent's three Grier rows and its independent Forsythe row (Section 4.7).  The ROADMAP statement is right in substance for the thirteen papers it covers and wrong as a count.
 
 <!-- table:discrepancies -->
 1347 numbers quoted in ROADMAP 3.2–3.7.3 (including the 3.5 variance pass, the agent's second sample, the memorization probe, the four papers of 3.6, the six papers and two-sample ranges of 3.7, the pipeline's second sample and 23-paper ranges of 3.7.1, the agent's seeded second sample and four-pairing ranges of 3.7.2, and the agent's third independent and blind sample and six-pairing ranges of 3.7.3) were recomputed from the results files; 188 differ.
