@@ -5,9 +5,7 @@
  "source": "benchmark/corpus/i4r_first_meta_database.csv.gz (replicator_team = tag)",
  "rule_r8_proposal": "A report qualifies for independent and blind mode when (a) its published text is open (publisher, author copy, NSF PAR, or a working paper whose main-table numbers equal the published values in the I4R rows) and (b) its analysis data is openly deposited outside openICPSR (Harvard Dataverse, Zenodo, OSF, GitHub, author site), fetchable, under 1 GB, even without code. Seeded mode needs the authors' scripts and is not applicable to a data-only deposit.",
  "method": "Crossref + OpenAlex for DOIs and OA locations; Harvard Dataverse search API (title, author keywords, DOI); Zenodo and OSF search (title, authors); GitHub repository search; AEA article pages for the replication-package DOI; candidate open texts fetched (PDF magic checked, PyMuPDF text) and every paired o_coeff_dbl / o_std_err_dbl searched at the database precision. Scripts kept outside the repository; User-Agent Retally-curation/0.1, rate-limited.",
- "r8_candidates": [
-  "T73"
- ],
+ "r8_candidates": [],
  "papers": [
   {
    "tag": "T3",
@@ -431,12 +429,12 @@
    "journal": "American Economic Review",
    "year": "2022",
    "paired": 220,
-   "text_url": "https://www.nber.org/system/files/working_papers/w25331/w25331.pdf",
-   "text_exact": 53,
-   "text_pairs": 69,
-   "text_verdict": "open: working paper, 53 of 69 paired values exact",
-   "data_verdict": "3ie Impact Evaluation Dataverse doi:10.7910/DVN/6DUTIC (27.5 MB): Data.zip: ready-for-analysis data, Stata do-files, codebooks and questionnaires of the 3ie final report (v1, 2019-07-25; authors Jayachandran, Jain, Dhar; no licence or terms fields); predates the AER version",
-   "overall": "R8 candidate (data and code; verify the 3ie package reproduces the published tables at curation)"
+   "text_url": "https://www.ipr.northwestern.edu/documents/working-papers/2019/wp-19-08-rev.pdf",
+   "text_exact": 81,
+   "text_pairs": 81,
+   "text_verdict": "open: IPR WP-19-08 revision (2021-08-03 draft) prints all 81 distinct published coefficient-SE pairs; NBER w25331 does not match Table 2",
+   "data_verdict": "3ie Impact Evaluation Dataverse doi:10.7910/DVN/6DUTIC (27.5 MB): Data.zip (ready-for-analysis data, Stata do-files, codebooks, questionnaires of the 3ie final report; v1 2019-07-25; md5 8c4a6015ccf8d2eb31a0ffe7edc21358); CC BY-NC-SA 4.0 + 3ie data usage agreement; download gated by a Dataverse guestbook (HTTP 400 without it); predates the AER version",
+   "overall": "blocked: Dataverse guestbook (personal data + terms acceptance) → manual placement, like openICPSR"
   },
   {
    "tag": "T19",
@@ -477,5 +475,8 @@
    "data_verdict": "none (Dataverse hits are other papers or harvested openICPSR records; Zenodo/OSF/GitHub hits unrelated)",
    "overall": "excluded: no data deposit outside openICPSR"
   }
+ ],
+ "manual_placement": [
+  "T73"
  ]
 }
