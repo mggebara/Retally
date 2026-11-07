@@ -45,11 +45,11 @@ no catalog entry is created here.
   requests to the same host. The scripts and raw results were kept outside
   the repository.
 
-## Result: one R8 candidate
+## Result: one package reachable only through a guestbook; no R8 candidate
 
 | Tag | Title | Journal | Paired rows | Open text | Data deposit outside openICPSR | Overall |
 |---|---|---|---|---|---|---|
-| T73 | Reshaping Adolescents' Gender Attitudes: Evidence from a School-Based Experiment in India | AER 2022 | 220 | open: working paper, 53 of 69 paired values exact ([link](https://www.nber.org/system/files/working_papers/w25331/w25331.pdf)) | 3ie Impact Evaluation Dataverse doi:10.7910/DVN/6DUTIC (27.5 MB): Data.zip: ready-for-analysis data, Stata do-files, codebooks and questionnaires of the 3ie final report (v1, 2019-07-25; authors Jayachandran, Jain, Dhar; no licence or terms fields); predates the AER version | **R8 candidate (data and code; verify the 3ie package reproduces the published tables at curation)** |
+| T73 | Reshaping Adolescents' Gender Attitudes: Evidence from a School-Based Experiment in India | AER 2022 | 220 | open: working paper, 53 of 69 paired values exact ([link](https://www.nber.org/system/files/working_papers/w25331/w25331.pdf)) | 3ie Impact Evaluation Dataverse doi:10.7910/DVN/6DUTIC (27.5 MB): Data.zip: ready-for-analysis data, Stata do-files, codebooks and questionnaires of the 3ie final report (v1, 2019-07-25; authors Jayachandran, Jain, Dhar; CC BY-NC-SA 4.0 plus the 3ie Dataverse data usage agreement, download gated by a Dataverse guestbook (HTTP 400 without it); predates the AER version | **blocked: guestbook (personal data + terms acceptance) → manual placement, like openICPSR** |
 | T19 | Digital Addiction | AER 2022 | 7 | open: working paper, 2 of 7 paired values exact ([link](https://www.nber.org/system/files/working_papers/w28936/w28936.pdf)) | Harvard Dataverse doi:10.7910/DVN/GN636M (30.4 MB): data only (final_data_sample.dta, updated copy, codebook, README); no code; non-redistribution licence | **excluded: open text fails (NBER WP matches 2 of 7); data-only deposit exists** |
 | T3 | Assortative Matching at the Top of the Distribution: Evidence from the World's Most Exclusive Marriage Market | AEJ: Applied Economics 2022 | 69 | unreadable (HTTP -1) ([link](https://nora.nb.no/handle/11250/3061780)) | none (Dataverse hits are other papers or harvested openICPSR records; Zenodo/OSF/GitHub hits unrelated) | **excluded: no data deposit outside openICPSR** |
 | T8 | Can Information Reduce Ethnic Discrimination? Evidence from Airbnb | AEJ: Applied Economics 2022 | 24 | open: author/repository copy, 2 of 3 paired values exact ([link](https://wrap.warwick.ac.uk/146995/1/WRAP-Can-information-reduce-ethnic-discrimination-evidence-Airbnb-2020.pdf)) | none (Dataverse hits are other papers or harvested openICPSR records; Zenodo/OSF/GitHub hits unrelated) | **excluded: no data deposit outside openICPSR** |
@@ -88,15 +88,31 @@ no catalog entry is created here.
 
 **T73 Dhar, Jain & Jayachandran, *Reshaping Adolescents' Gender Attitudes*
 (AER 2022).** The 3ie Impact Evaluation Dataverse holds the authors' package
-for the 3ie final report on the same experiment (deposited 2019-07-25,
-27.5 MB, open, Stata do-files plus ready-for-analysis data). The NBER
-working paper w25331 (2018) matches 53 of 69 distinct paired values at the
-database precision. Both predate the AER version, so curation must verify,
-table by table, that the 3ie data reproduce the published values the I4R
-rows record (220 paired rows, so the check is well powered) and pin only
-claims that do. If they do, this package also carries code, so the entry
-would run in all three modes under the ordinary rules; R8 would not be
-needed for it.
+for the 3ie final report on the same experiment (doi:10.7910/DVN/6DUTIC,
+one version, released 2019-07-25, `Data.zip`, 27,452,827 bytes, md5
+`8c4a6015ccf8d2eb31a0ffe7edc21358`, Stata do-files plus ready-for-analysis
+data). Curation (2026-11-07) found the file gated: Dataverse answers HTTP
+400 "You may not download this file without the required Guestbook
+response" to the project downloader and to plain requests, and the terms are
+CC BY-NC-SA 4.0 plus the 3ie data usage agreement, accepted by downloading.
+Filling the guestbook (name, email, institution) and accepting the terms is
+the user's decision, as the openICPSR login is, so the package joins the
+manual-placement list (`openicpsr-wanted.md`) rather than the catalog.
+
+Open text: the NBER working paper w25331 does **not** match the published
+main table (Table 2 prints 0.179, 0.027, 0.195 against the published 0.180,
+0.030, 0.196), but the IPR Northwestern working paper WP-19-08 revision
+("Version: August 3, 2021, DRAFT", 89 pp.,
+https://www.ipr.northwestern.edu/documents/working-papers/2019/wp-19-08-rev.pdf)
+prints every one of the 81 distinct published coefficient–SE pairs the I4R
+rows record (Tables 2–13). It carries "please do not quote or distribute
+without permission", which matters for `paper.source`. I4R team 73: 230
+rows, 220 paired, verdict "code produces the same output" with one wrong
+coefficient and one wrong p-value in Table 13 (`minor_discrepancies`); the
+paired rows inspected are robustness variants. Because the numbers moved
+between the 2018 and 2021 versions, whether the 2019 3ie data reproduce the
+published tables is an open question to settle at curation once the file is
+placed.
 
 **T19 Allcott, Gentzkow & Song, *Digital Addiction* (AER 2022).** Data on
 Harvard Dataverse GN636M (30.4 MB, no code, non-redistribution licence),
@@ -114,10 +130,10 @@ openICPSR.
 - A per-entry way to mark seeded mode not applicable (a schema field, a
   `seeded_not_applicable` skip reason in the runner, `tables.py` rows for
   two-mode papers kept out of seeded totals).
-- With one candidate, and that one possibly admissible under the existing
-  rules, R8 is not worth building yet. Revisit if more data-only deposits
-  turn up.
+- With no candidate left (T73 is gated, T19 fails on text), R8 is not worth
+  building. Revisit if more data-only deposits turn up.
 
-**Total checked today: 36 reports.** One R8 candidate (T73, 220 paired
-rows), one data-only deposit that fails on text (T19), 34 with no deposit
-outside openICPSR.
+**Total checked today: 36 reports.** No R8 candidate. One package reachable
+only through a Dataverse guestbook (T73, 220 paired rows; manual placement),
+one data-only deposit that fails on text (T19), 34 with no deposit outside
+openICPSR.

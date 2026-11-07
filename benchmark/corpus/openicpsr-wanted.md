@@ -56,3 +56,9 @@ T67, T72, T73, T82, T106), then the rest.
 | T102 | Vulnerability and Clientelism | American Economic Review | 2022 | — |
 | T103 | Wage Cyclicality and Labor Market Sorting | American Economic Review: Insights | 2022 | — |
 | T106 | When a Doctor Falls from the Sky: The Impact of Easing Doctor Supply Constraints on Mortality | American Economic Review | 2023 | https://www.econstor.eu/bitstream/10419/274552/1/I4R-DP053.pdf |
+
+## Also wanted: one Dataverse package behind a guestbook (added 2026-11-07)
+
+| Tag | Title | Journal | Year | Where | What to do |
+|---|---|---|---|---|---|
+| T73 | Reshaping Adolescents' Gender Attitudes: Evidence from a School-Based Experiment in India | American Economic Review | 2022 | the authors' 3ie final-report package: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/6DUTIC (one version, `Data.zip`, 27.5 MB) | click Download on `Data.zip`, fill in the guestbook (name, email, institution) and accept CC BY-NC-SA 4.0 and the 3ie data usage agreement, save the zip unchanged to `benchmark/manual-packages/T73/Data.zip` with a `SOURCE.txt` naming the DOI and version 1.0. Its md5 should be `8c4a6015ccf8d2eb31a0ffe7edc21358`. The AEA package for the same paper is on openICPSR (the row above); either one unblocks the paper, the openICPSR one matches the published tables by construction. |
