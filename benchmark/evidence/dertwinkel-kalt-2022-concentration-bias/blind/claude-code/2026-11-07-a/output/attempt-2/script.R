@@ -1,0 +1,23 @@
+suppressMessages(library(tidyverse))
+options(width=200)
+f <- "<repo>/benchmark/.cache/claude-code/dertwinkel-kalt-2022-concentration-bias/blind/2026-11-07-a/mount/dertwinkel_kalt_2022_concentration_bias/Consumption Experiment/Stata/Consumption_Experiment.csv"
+d <- read_csv(f, show_col_types=FALSE)
+b <- d %>% filter(decision_number <= 8)
+s <- d %>% filter(decision_number == 9)
+cat("balanced: corner x IP range\n")
+print(b %>% group_by(corner) %>% summarise(n=n(), mn=min(indifference_point), mx=max(indifference_point)))
+cat("stage2: corner x IP range\n")
+print(s %>% group_by(corner) %>% summarise(n=n(), mn=min(indifference_point), mx=max(indifference_point), mnid=min(id_stage2,na.rm=T), mxid=max(id_stage2,na.rm=T), nNAid=sum(is.na(id_stage2))))
+cat("stage2 noncorner IP tabulation tails\n")
+print(table(s$indifference_point[s$corner==0 & abs(s$indifference_point) >= 55]))
+cat("corner subj stage2 manual values\n"); print(sort(s$indifference_point[s$corner==1]))
+# subject-level balanced corner
+bc <- b %>% group_by(tn) %>% summarise(anycorner = any(corner != 0), anyup = any(corner==1), anylow=any(corner==-1), pap=first(pap_sample), pap_min=min(pap_sample), pap_max=max(pap_sample), napap=sum(is.na(pap_sample)))
+print(bc %>% count(anycorner, anyup, anylow, pap_min, pap_max, napap))
+sub <- s %>% left_join(bc, by="tn")
+sub <- sub %>% mutate(cond = case_when(pizza==1 & dispersed==0 ~ "Main", pizza==1 & dispersed==1 ~ "Mech", pizza==0 ~ "Don"),
+                      arm = ifelse(treatment==1,"T","C"))
+print(sub %>% count(cond, arm, anycorner, has_id = !is.na(id_stage2)))
+print(sub %>% count(cond, arm, pap_sample))
+cat("e by condition check via chose_corner/utility_point at stage 9\n")
+print(sub %>% count(cond, arm, utility_point))

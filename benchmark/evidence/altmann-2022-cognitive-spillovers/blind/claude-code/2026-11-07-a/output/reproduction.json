@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "altmann-2022-cognitive-spillovers",
+  "mode": "blind",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Paper text supplied is an earlier working-paper version (Active Choice, no online experiment, no regression tables); specifications follow the task's quantity descriptions plus the data's variable labels.",
+    "Control set (cols 2, 6, Table 3 col 2): q_age, q_gender, field of study as factor(subject_cat), high-school GPA as factor(q_abitur_grade_cat) (quartiles + missing category, keeps N fixed), last math grade as factor(q_math_grade_cat) (quartiles), ability_load, ability_task, perceived multitasking as perc_multitasking_1 (Likert, linear), factor(Treatment_Incentives) payoff scheme, factor(original_lab) wave. Exact coding of these controls in the original is a guess.",
+    "Online controls (Table 3 col 6): age, factor(gender), screen size entered as window_height1 and window_width1 linearly."
+  ],
+  "notes": "Lab sample: formatted_data_replication.dta with Ample condition (Treatment_Incentives==4) dropped -> 12160 subject-rounds, 608 subjects (Baseline, Directed Attention, Forced Choice; all payoff schemes, both waves). Outcomes: summation_correct (decision task correct), default_followed, load_correct (background task correct), payoff_share. Intervention = Treatment_intervention; col 7 uses Treatment_Environment==2/3 dummies vs Baseline. Online: formatted_data_long_mturk.dta, memory on Treatment_intervention (5472 obs, 608 subjects). All OLS via fixest::feols with SEs clustered by subject_id. attempt-1 was an exploratory variable inspection (no RESULT lines). README.md of the package was read for file descriptions only; no scripts, logs, .tex or figures were opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-07T17:26:45Z",
+  "finished_at": "2026-11-07T17:41:00Z"
+}

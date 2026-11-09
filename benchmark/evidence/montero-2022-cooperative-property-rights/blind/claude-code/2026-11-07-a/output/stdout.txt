@@ -1,0 +1,86 @@
+Rows 2002-2013: 3923 
+
+==== Levels, bandwidth 300 ====
+OLS estimation, Dep. Var.: hh_income_pc
+Observations: 3,778
+Fixed-effects: year: 10
+Standard-errors: Clustered (owner) 
+                    Estimate Std. Error   t value Pr(>|t|)    
+Above500           42.069601  19.741209  2.131055 0.035666 *  
+norm_dist           0.028941   0.036422  0.794602 0.428826    
+Above500:norm_dist -0.072310   0.117501 -0.615395 0.539765    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 33.3     Adj. R2: 0.082952
+             Within R2: 0.017429
+Mean dep var: 44.2147  Properties: 102  Clusters: 96 
+
+==== IQR, bandwidth 300 ====
+OLS estimation, Dep. Var.: iqr
+Observations: 64
+Standard-errors: Clustered (owner) 
+                     Estimate Std. Error   t value Pr(>|t|)    
+(Intercept)         27.611690  21.011419  1.314128 0.193890    
+Above500           -37.891281  40.024120 -0.946711 0.347647    
+norm_dist            0.015348   0.080096  0.191623 0.848695    
+sy_2012              5.619416  24.196311  0.232243 0.817153    
+sy_2005            -15.938698  21.043496 -0.757417 0.451815    
+sy_2013             92.443204  52.453924  1.762370 0.083186 .  
+sy_2004             -7.245519  21.065936 -0.343945 0.732111    
+sy_2007             48.663768  32.310629  1.506123 0.137371    
+sy_2008             36.534786  32.734829  1.116083 0.268912    
+sy_2011              2.460794  23.207878  0.106033 0.915916    
+sy_2006            -10.379499  15.907662 -0.652484 0.516623    
+Above500:norm_dist   0.338812   0.323558  1.047144 0.299304    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 34.4   Adj. R2: 0.060238
+Mean dep var: 38.79789  Properties: 64  Clusters: 60 
+
+==== Levels, bandwidth 150 ====
+OLS estimation, Dep. Var.: hh_income_pc
+Observations: 1,347
+Fixed-effects: year: 10
+Standard-errors: Clustered (owner) 
+                    Estimate Std. Error   t value Pr(>|t|) 
+Above500           15.287421  24.074323  0.635009  0.52967 
+norm_dist           0.138498   0.097190  1.425028  0.16326 
+Above500:norm_dist -0.037258   0.170846 -0.218076  0.82867 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 37.1     Adj. R2: 0.154879
+             Within R2: 0.047352
+Mean dep var: 46.82739  Properties: 38  Clusters: 35 
+
+==== IQR, bandwidth 150 ====
+OLS estimation, Dep. Var.: iqr
+Observations: 23
+Standard-errors: Clustered (owner) 
+                     Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)         -0.801325  14.653168 -0.054686 9.5693e-01    
+Above500           116.876258  92.736120  1.260310 2.2206e-01    
+norm_dist            0.057492   0.166003  0.346331 7.3271e-01    
+sy_2013            192.439588  68.496929  2.809463 1.0828e-02 *  
+sy_2010             27.731368  18.337279  1.512295 1.4610e-01    
+sy_2004             16.958796  20.407803  0.830996 4.1579e-01    
+sy_2006            -90.837599  97.487179 -0.931790 3.6256e-01    
+sy_2007            323.400714  61.527024  5.256238 3.8245e-05 ***
+sy_2008             98.916813  64.027950  1.544901 1.3805e-01    
+sy_2011             15.679710  11.563772  1.355934 1.9023e-01    
+sy_2012              5.254239  17.499543  0.300250 7.6709e-01    
+Above500:norm_dist  -1.389727   0.812935 -1.709518 1.0283e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 21.6   Adj. R2: 0.432981
+Mean dep var: 38.5037  Properties: 23  Clusters: 21 
+
+RESULT:earnings_level_above500_bw300=42.069601
+RESULT:earnings_level_above500_bw150=15.287421
+RESULT:earnings_iqr_above500_bw300=-37.891281
+RESULT:earnings_iqr_above500_bw150=116.876258
+RESULT:n_obs_earnings_level_bw300=3778
+RESULT:n_obs_earnings_level_bw150=1347
+RESULT:n_obs_earnings_iqr_bw300=64
+RESULT:n_obs_earnings_iqr_bw150=23
+RESULT:n_clusters_bw300=96
+RESULT:n_clusters_bw150=35

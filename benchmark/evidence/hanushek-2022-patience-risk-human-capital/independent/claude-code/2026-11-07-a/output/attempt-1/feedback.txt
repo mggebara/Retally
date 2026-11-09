@@ -1,0 +1,2 @@
+Run hit the 300 s sandbox limit (exit 124) while fread was parsing the 2.8 GB pisa_full_gps_final.csv for Table 1; no RESULT lines printed. Table 2 part had finished in ~25 s.
+Fix: read the needed columns from the Stata file pisa_full_gps_final.dta with haven::read_dta(col_select=...) instead (timed first in an exploratory run).

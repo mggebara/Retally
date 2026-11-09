@@ -72,3 +72,7 @@ Agent notes: Consumption_Experiment.csv only (806 subjects x 9 decisions). Decis
 - [`output/script.R`](output/script.R) — 5,302 bytes, from `benchmark/results/artifacts/dertwinkel-kalt-2022-concentration-bias/blind/claude-code/20261102T043821Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/dertwinkel-kalt-2022-concentration-bias/blind/claude-code/20261102T043821Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 2,800 bytes, from `benchmark/results/artifacts/dertwinkel-kalt-2022-concentration-bias/blind/claude-code/20261102T043821Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

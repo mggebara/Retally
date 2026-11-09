@@ -65,3 +65,7 @@ Agent notes: Two exploratory runs (column layout, reshape, counts; no RESULT lin
 - [`output/script.R`](output/script.R) — 6,421 bytes, from `benchmark/results/artifacts/arias-2022-changing-tides-climate-migration/seeded/claude-code/20261102T194315Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 107 bytes, from `benchmark/results/artifacts/arias-2022-changing-tides-climate-migration/seeded/claude-code/20261102T194315Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 3,491 bytes, from `benchmark/results/artifacts/arias-2022-changing-tides-climate-migration/seeded/claude-code/20261102T194315Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

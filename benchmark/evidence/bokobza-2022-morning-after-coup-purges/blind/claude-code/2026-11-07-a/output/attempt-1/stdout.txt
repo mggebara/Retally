@@ -1,0 +1,530 @@
+tibble [7,878 × 37] (S3: tbl_df/tbl/data.frame)
+ $ COUNTRY_DATA                    : chr [1:7878] "Afghanistan" "Afghanistan" "Afghanistan" "Afghanistan" ...
+ $ COUNTRY_ID                      : num [1:7878] 1 1 1 1 1 1 1 1 1 1 ...
+ $ YEAR_DATA                       : num [1:7878] 1966 1967 1968 1969 1970 ...
+ $ ccode                           : num [1:7878] 700 700 700 700 700 700 700 700 700 700 ...
+ $ leader_cab_id                   : num [1:7878] 1 1 3 3 3 4 4 5 5 5 ...
+ $ democracy1                      : num [1:7878] 0 0 0 0 0 0 0 0 0 0 ...
+ $ independent                     : num [1:7878] 1 1 1 1 1 1 1 1 1 1 ...
+ $ replacement_rateadj_minister    : num [1:7878] NA 0.154 0.615 0 0.733 ...
+ $ replacement_rateadj_minister_300: num [1:7878] NA NA 0.154 0.385 0.256 ...
+ $ replacement_rateadj_minister_200: num [1:7878] NA NA 0.154 0.385 0.308 ...
+ $ replacement_rateadj_minister_100: num [1:7878] NA NA 0.154 0.615 0 ...
+ $ leaderexperience_continuous     : num [1:7878] 1 2 1 2 3 1 2 1 2 3 ...
+ $ coupattempt_whogov              : num [1:7878] 0 0 0 0 0 0 0 0 0 0 ...
+ $ coupattempt_month_whogov        : num [1:7878] 0 0 0 0 0 0 0 0 0 0 ...
+ $ gdp_cap_pwt_ln                  : num [1:7878] NA NA NA NA NA NA NA NA NA NA ...
+ $ pop_pwt_ln                      : num [1:7878] NA NA NA NA NA NA NA NA NA NA ...
+ $ military_c                      : num [1:7878] 0 0 0 0 0 0 0 0 0 0 ...
+ $ monarchy_c                      : num [1:7878] 1 1 1 1 1 1 1 0 0 0 ...
+ $ party_c                         : num [1:7878] 0 0 0 0 0 0 0 0 0 0 ...
+ $ elec_all                        : num [1:7878] 0 0 0 1 0 0 0 0 0 0 ...
+ $ t1_e_a                          : num [1:7878] 2 3 4 1 2 3 4 5 6 7 ...
+ $ oil_valuepop_2014_ln            : num [1:7878] 0 0 0 0 0 0 0 0 0 0 ...
+ $ growth_pwt                      : num [1:7878] NA NA NA NA NA NA NA NA NA NA ...
+ $ onset1                          : num [1:7878] 0 0 0 0 0 0 0 0 0 0 ...
+ $ nonvio_camp_2                   : num [1:7878] 0 0 0 0 0 0 0 0 0 0 ...
+ $ mid_onset                       : num [1:7878] 0 0 0 0 0 0 0 0 0 0 ...
+ $ war_onset                       : num [1:7878] 0 0 0 0 0 0 0 0 0 0 ...
+ $ domestic3_10                    : num [1:7878] 0 0 0 0 0 0 0 0 0 0 ...
+ $ coupattempt_whogov_br           : num [1:7878] 0 0 0 0 0 0 0 0 0 0 ...
+ $ polity2                         : num [1:7878] -7 -7 -7 -7 -7 -7 -7 -7 -7 -7 ...
+ $ lpolity2                        : num [1:7878] NA -7 -7 -7 -7 -7 -7 -7 -7 -7 ...
+ $ democracy_br                    : num [1:7878] 0 0 0 0 0 0 0 0 0 0 ...
+ $ ldemocracy_br                   : num [1:7878] NA 0 0 0 0 0 0 0 0 0 ...
+ $ system_category                 : chr [1:7878] "Royal dictatorship" "Royal dictatorship" "Royal dictatorship" "Royal dictatorship" ...
+ $ latent_personalism              : num [1:7878] 0.248 0.248 0.248 0.248 0.248 ...
+ $ coupattempt_whogov_type_br      : chr [1:7878] "0" "0" "0" "0" ...
+ $ type_num                        : dbl+lbl [1:7878] 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,...
+   ..@ format.stata: chr "%8.0g"
+   ..@ labels      : Named num [1:4] 1 2 3 4
+COUNTRY_DATA : Country name 
+COUNTRY_ID : Country ID 
+YEAR_DATA : Year 
+leader_cab_id : group(COUNTRY_DATA_leader_cap_spell) 
+democracy1 : Boix, Miller and Rosato (2012) 
+replacement_rateadj_minister_300 : ma: x(t)= replacement_rateadj_minister: window(3 0 0) 
+replacement_rateadj_minister_200 : ma: x(t)= replacement_rateadj_minister: window(2 0 0) 
+replacement_rateadj_minister_100 : ma: x(t)= replacement_rateadj_minister: window(1 0 0) 
+gdp_cap_pwt_ln : GDP/Cap (PWT) (log) 
+pop_pwt_ln : (PWT) 
+military_c : Anckar and Fredriksson (2019) 
+monarchy_c : Anckar and Fredriksson (2019) 
+party_c : Anckar and Fredriksson (2019) 
+elec_all : Nelda 
+oil_valuepop_2014_ln : Ross 
+growth_pwt : GDP/cap growth (PWT) 
+onset1 : UCDP/PRIO 
+nonvio_camp_2 : NAVCO 
+mid_onset : COW 
+war_onset : COW 
+domestic3_10 : CNTS Archive 
+polity2 : polity2 
+democracy_br : Bjørnskov and Rode (2020) 
+system_category : Bjørnskov and Rode (2020) 
+latent_personalism : GWF 
+type_num : 1 2 3 4 
+    COUNTRY_DATA    COUNTRY_ID      YEAR_DATA        ccode       
+ Length   :7878   Min.   :  1.0   Min.   :1963   Min.   :     2  
+ N.unique : 171   1st Qu.: 56.0   1st Qu.:1980   1st Qu.:   310  
+ N.blank  :   0   Median :110.0   Median :1994   Median :   475  
+ Min.nchar:   4   Mean   :115.5   Mean   :1993   Mean   : 14470  
+ Max.nchar:  32   3rd Qu.:172.0   3rd Qu.:2005   3rd Qu.:   666  
+                  Max.   :245.0   Max.   :2017   Max.   :800241  
+                                                                 
+ leader_cab_id      democracy1      independent    
+ Min.   :   1.0   Min.   :0.0000   Min.   :0.0000  
+ 1st Qu.: 337.2   1st Qu.:0.0000   1st Qu.:1.0000  
+ Median : 706.0   Median :0.0000   Median :1.0000  
+ Mean   : 698.6   Mean   :0.4404   Mean   :0.9875  
+ 3rd Qu.:1045.0   3rd Qu.:1.0000   3rd Qu.:1.0000  
+ Max.   :1397.0   Max.   :1.0000   Max.   :1.0000  
+                  NAs    :142      NAs    :138     
+ replacement_rateadj_minister replacement_rateadj_minister_300
+ Min.   :0.00000              Min.   :0.0000                  
+ 1st Qu.:0.05263              1st Qu.:0.1439                  
+ Median :0.20000              Median :0.2754                  
+ Mean   :0.30787              Mean   :0.3087                  
+ 3rd Qu.:0.50000              3rd Qu.:0.4349                  
+ Max.   :1.00000              Max.   :1.0000                  
+ NAs    :196                  NAs    :352                     
+ replacement_rateadj_minister_200 replacement_rateadj_minister_100
+ Min.   :0.0000                   Min.   :0.00000                 
+ 1st Qu.:0.1149                   1st Qu.:0.05263                 
+ Median :0.2619                   Median :0.20000                 
+ Mean   :0.3088                   Mean   :0.30795                 
+ 3rd Qu.:0.4762                   3rd Qu.:0.50000                 
+ Max.   :1.0000                   Max.   :1.00000                 
+ NAs    :353                      NAs    :368                     
+ leaderexperience_continuous coupattempt_whogov coupattempt_month_whogov
+ Min.   : 1.000              Min.   :0.0000     Min.   : 0.000          
+ 1st Qu.: 2.000              1st Qu.:0.0000     1st Qu.: 0.000          
+ Median : 4.000              Median :0.0000     Median : 0.000          
+ Mean   : 6.867              Mean   :0.0179     Mean   : 0.113          
+ 3rd Qu.: 9.000              3rd Qu.:0.0000     3rd Qu.: 0.000          
+ Max.   :46.000              Max.   :1.0000     Max.   :12.000          
+                             NAs    :282        NAs    :282             
+ gdp_cap_pwt_ln     pop_pwt_ln        military_c      monarchy_c     
+ Min.   : 5.247   Min.   :0.07937   Min.   :0.000   Min.   :0.00000  
+ 1st Qu.: 7.856   1st Qu.:1.36257   1st Qu.:0.000   1st Qu.:0.00000  
+ Median : 8.833   Median :2.21877   Median :0.000   Median :0.00000  
+ Mean   : 8.817   Mean   :2.34739   Mean   :0.182   Mean   :0.07616  
+ 3rd Qu.: 9.788   3rd Qu.:3.21559   3rd Qu.:0.000   3rd Qu.:0.00000  
+ Max.   :12.308   Max.   :7.24744   Max.   :1.000   Max.   :1.00000  
+ NAs    :541      NAs    :541       NAs    :223     NAs    :223      
+    party_c          elec_all          t1_e_a       oil_valuepop_2014_ln
+ Min.   :0.0000   Min.   :0.0000   Min.   : 1.000   Min.   : 0.000      
+ 1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.: 1.000   1st Qu.: 0.000      
+ Median :0.0000   Median :0.0000   Median : 3.000   Median : 6.325      
+ Mean   :0.1489   Mean   :0.2527   Mean   : 3.619   Mean   : 5.913      
+ 3rd Qu.:0.0000   3rd Qu.:1.0000   3rd Qu.: 4.000   3rd Qu.:11.426      
+ Max.   :1.0000   Max.   :1.0000   Max.   :47.000   Max.   :18.272      
+ NAs    :223      NAs    :1274     NAs    :1632     NAs    :871         
+   growth_pwt           onset1       nonvio_camp_2       mid_onset     
+ Min.   :-67.0144   Min.   :0.0000   Min.   :0.00000   Min.   :0.0000  
+ 1st Qu.: -0.2334   1st Qu.:0.0000   1st Qu.:0.00000   1st Qu.:0.0000  
+ Median :  2.2104   Median :0.0000   Median :0.00000   Median :0.0000  
+ Mean   :  2.0108   Mean   :0.0472   Mean   :0.03691   Mean   :0.2559  
+ 3rd Qu.:  4.6400   3rd Qu.:0.0000   3rd Qu.:0.00000   3rd Qu.:1.0000  
+ Max.   : 94.1376   Max.   :1.0000   Max.   :1.00000   Max.   :1.0000  
+ NAs    :557        NAs    :251      NAs    :1944      NAs    :1075    
+   war_onset        domestic3_10      coupattempt_whogov_br    polity2       
+ Min.   :0.00000   Min.   : 0.00000   Min.   :0.00000       Min.   :-10.000  
+ 1st Qu.:0.00000   1st Qu.: 0.00000   1st Qu.:0.00000       1st Qu.: -7.000  
+ Median :0.00000   Median : 0.00000   Median :0.00000       Median :  3.000  
+ Mean   :0.01058   Mean   : 0.06209   Mean   :0.02524       Mean   :  1.173  
+ 3rd Qu.:0.00000   3rd Qu.: 0.00000   3rd Qu.:0.00000       3rd Qu.:  9.000  
+ Max.   :1.00000   Max.   :36.30000   Max.   :1.00000       Max.   : 10.000  
+ NAs    :1075      NAs    :146        NAs    :231           NAs    :447      
+    lpolity2        democracy_br    ldemocracy_br     system_category
+ Min.   :-10.000   Min.   :0.0000   Min.   :0.0000   Length   :7878  
+ 1st Qu.: -7.000   1st Qu.:0.0000   1st Qu.:0.0000   N.unique :  10  
+ Median :  2.000   Median :0.0000   Median :0.0000   N.blank  :   0  
+ Mean   :  1.106   Mean   :0.4496   Mean   :0.4467   Min.nchar:  12  
+ 3rd Qu.:  9.000   3rd Qu.:1.0000   3rd Qu.:1.0000   Max.nchar:  25  
+ Max.   : 10.000   Max.   :1.0000   Max.   :1.0000                   
+ NAs    :613                        NAs    :173                      
+ latent_personalism coupattempt_whogov_type_br    type_num    
+ Min.   :0.0000     Length   :7878             Min.   :1.000  
+ 1st Qu.:0.2492     N.unique :   5             1st Qu.:1.000  
+ Median :0.4499     N.blank  : 231             Median :1.000  
+ Mean   :0.4541     Min.nchar:   0             Mean   :1.043  
+ 3rd Qu.:0.6380     Max.nchar:   5             3rd Qu.:1.000  
+ Max.   :1.0000                                Max.   :4.000  
+ NAs    :4475                                  NAs    :231    
+table ldemocracy_br
+
+   0    1 <NA> 
+4263 3442  173 
+
+   0    1 <NA> 
+7454  193  231 
+
+   0    1 <NA> 
+7460  136  282 
+
+   0    1 <NA> 
+3958  143  335 
+[1] 1963 2017
+'data.frame':	205524 obs. of  45 variables:
+ $ year                       : int  1966 1966 1966 1966 1966 1966 1966 1966 1966 1966 ...
+ $ country_isocode            : chr  "AFG" "AFG" "AFG" "AFG" ...
+ $ country_name               : chr  "Afghanistan" "Afghanistan" "Afghanistan" "Afghanistan" ...
+ $ position                   : chr  "Prime Min." "Min. Of Finance" "Min. Of Foreign Affairs" "Min. Of Interior" ...
+ $ name                       : chr  "Maiwandwal Mohammed Hashim" "Abdullah Yaftali" "Nur Ahmed Etemadi" "Shalizi Abdus Sattar" ...
+ $ title                      : chr  NA NA NA NA ...
+ $ gender                     : chr  "Male" "Male" "Male" "Male" ...
+ $ birthyear                  : int  NA NA NA NA NA NA NA NA NA NA ...
+ $ party                      : chr  "pdpa" "independent" "independent" "independent" ...
+ $ party_english              : chr  "Progressive Democratic Party of Afghanistan" "independent" "independent" "independent" ...
+ $ leader                     : int  1 0 0 0 0 0 0 0 0 0 ...
+ $ classification             : chr  "Prime Minister" "Minister (Full Rank)" "Minister (Full Rank)" "Minister (Full Rank)" ...
+ $ portfolio_1                : chr  NA "Finance, Budget & Treasury" "Foreign Relations" "Government, Interior & Home Affairs" ...
+ $ prestige_1                 : chr  NA "High" "High" "High" ...
+ $ prestige_numeric           : int  NA 3 3 3 3 2 2 2 2 2 ...
+ $ importance_numeric         : Factor w/ 7 levels "0","0.5","1",..: 7 5 5 5 5 4 4 4 4 4 ...
+ $ leader_party               : chr  "pdpa" "pdpa" "pdpa" "pdpa" ...
+ $ party_group                : chr  "leader_party" "independent" "independent" "independent" ...
+ $ experience                 : int  1 1 1 1 1 1 1 1 1 1 ...
+ $ purged_y1                  : int  0 0 0 1 0 0 0 0 0 0 ...
+ $ purged_y2                  : int  1 0 0 1 0 0 0 1 1 1 ...
+ $ coupattempt_presentyear    : Factor w/ 2 levels "No coup attempt",..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ coup_presentyear           : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ coup_lastyear              : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ coupattempt_presentyear_br : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ coup_presentyear_br        : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ coup_lastyear_br           : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ coupattempt_whogov_type_br : chr  "0" "0" "0" "0" ...
+ $ leaderexperience_continuous: int  1 1 1 1 1 1 1 1 1 1 ...
+ $ democracy_lag_br           : chr  NA NA NA NA ...
+ $ n_party                    : int  2 2 2 2 2 2 2 2 2 2 ...
+ $ democracy_lag              : int  NA NA NA NA NA NA NA NA NA NA ...
+ $ gdp_cap_pwt_ln             : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ pop_pwt_ln                 : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ polity2                    : int  -7 -7 -7 -7 -7 -7 -7 -7 -7 -7 ...
+ $ gdp_cap_pwt_ln_lag         : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ pop_pwt_ln_lag             : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ lag_polity2                : int  NA NA NA NA NA NA NA NA NA NA ...
+ $ importance_factor          : Factor w/ 7 levels "0","Junior minister\nor other low-\nranking post",..: 7 5 5 5 5 4 4 4 4 4 ...
+ $ Group                      : chr  "Prestige" "Prestige" "Prestige" "Prestige" ...
+ $ minister_type              : chr  NA "Minister of Finance" "Minister of Foreign Affairs" "Other type of minister" ...
+ $ minister_classification    : Factor w/ 8 levels "1. Energy &\nNatural Resources",..: NA 3 7 4 8 2 3 6 2 4 ...
+ $ age                        : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ experience_group           : chr  "1year" "1year" "1year" "1year" ...
+ $ hired                      : num  1 1 1 1 1 1 1 1 1 1 ...
+== party_group 
+
+leader_party  independent  other_party      unknown         <NA> 
+      114723        38333        27938        12538        11992 
+== experience_group 
+
+   2-3 years        1year    4-6 years Over 6 years         <NA> 
+       64168        50368        47095        43893            0 
+== Group 
+
+Prestige     <NA> 
+  205524        0 
+== classification 
+
+                             Minister (Full Rank) 
+                                           152633 
+                                Minister (Junior) 
+                                             8485 
+                                        President 
+                                             6017 
+                             Member, Ruling Group 
+                                             4893 
+                          Governor (Central Bank) 
+                                             4527 
+                                   Prime Minister 
+                                             4107 
+                    Director of Government Agency 
+                                             3931 
+                  Ambassador to the United States 
+                                             3649 
+             Representative to the United Nations 
+                                             3338 
+                            Deputy Prime Minister 
+                                             3180 
+                                   Vice President 
+                                             2831 
+                                            Other 
+                                             2640 
+Attorney General, Chief Justice or Legal Official 
+                                             1209 
+                             Member, Royal Family 
+                                             1178 
+                                   Chief of State 
+                                              819 
+                                          Advisor 
+                                              636 
+                               Governor (General) 
+                                              383 
+                            Deputy Chief of State 
+                                              343 
+                                   Chief of Staff 
+                                              247 
+                                Governor (Region) 
+                                              145 
+             Deputy Director of Government Agency 
+                                              133 
+                              Governor (Military) 
+                                              130 
+                          Government Spokesperson 
+                                               22 
+                              Governor (Regional) 
+                                               20 
+                                   Deputy Speaker 
+                                               18 
+                                        STATEMENT 
+                                                8 
+                                   Prime minister 
+                                                2 
+                                             <NA> 
+                                                0 
+== prestige_1 
+
+Medium   <NA>   High    Low 
+112872  45431  37112  10109 
+== prestige_numeric 
+
+     2   <NA>      3      1 
+107743  60362  28553   8866 
+== importance_numeric 
+
+     2      3    0.5      1   <NA>      5      4      0 
+114497  34862  21007  12983  10125   8059   3608    383 
+== leader 
+
+     0      1   <NA> 
+197465   8059      0 
+== purged_y1 
+
+     0      1   <NA> 
+146576  58948      0 
+== purged_y2 
+
+     0      1   <NA> 
+108115  97409      0 
+== coupattempt_presentyear 
+
+No coup attempt            <NA>    Coup attempt 
+         189559           12910            3055 
+== coup_presentyear 
+
+     0   <NA>      1 
+189583  12910   3031 
+== coupattempt_presentyear_br 
+
+     0   <NA>      1 
+190471  10715   4338 
+== democracy_lag_br 
+
+Autocracy Democracy      <NA> 
+   120984     81264      3276 
+== position 
+
+                                   President 
+                                        5506 
+                     Min. Of Foreign Affairs 
+                                        4587 
+                             Min. Of Finance 
+                                        4387 
+                             Min. Of Justice 
+                                        3910 
+                        Ambassador To The Us 
+                                        3425 
+Permanent Representative To The Un, New York 
+                                        3292 
+                              Min. Of Health 
+                                        3217 
+                           Min. Of Education 
+                                        3201 
+                              Prime Minister 
+                                        3193 
+                             Min. Of Defense 
+                                        3083 
+                            Min. Of Interior 
+                                        2748 
+                         Min. Of Agriculture 
+                                        2307 
+                              Vice President 
+                                        1606 
+                               Min. Of Labor 
+                                        1473 
+                               Min. Of State 
+                                        1393 
+                      Min. Without Portfolio 
+                                        1367 
+                      Min. Of Communications 
+                                        1358 
+                             Min. Of Culture 
+                                        1355 
+                      Governor, Central Bank 
+                                        1348 
+                       Min. Of Public Health 
+                                        1132 
+                             Dep. Prime Min. 
+                                        1092 
+                        Min. Of Public Works 
+                                        1000 
+                    Min. Of National Defense 
+                                         984 
+                         Min. Of Information 
+                                         971 
+                             Min. Of Tourism 
+                                         902 
+                            Min. Of Commerce 
+                                         794 
+                            Attorney General 
+                                         771 
+                           Min. Of Transport 
+                                         753 
+                                  Prime Min. 
+                                         741 
+                         Min. Of Environment 
+                                         714 
+                        Min. Of Home Affairs 
+                                         706 
+                            Min. Of Industry 
+                                         706 
+                      Min. Of Youth & Sports 
+                                         678 
+                      Min. Of Transportation 
+                                         646 
+                                        King 
+                                         631 
+                         Dep. Prime Minister 
+                                         622 
+                    Min. Of Internal Affairs 
+                                         616 
+                             Min. Of Economy 
+                                         541 
+                      Min. Of Social Affairs 
+                                         519 
+                            Min. Of Planning 
+                                         507 
+                       Min. Of Foreign Trade 
+                                         504 
+                     President, Central Bank 
+                                         494 
+                              Min. Of Energy 
+                                         487 
+             Min. Of Labor & Social Security 
+                                         487 
+                 Min. Of Commerce & Industry 
+                                         481 
+== leader_party 
+
+independent        cpsu         cpc        dfrf         unc         pcc 
+      34741        2794        2601        2399        2259        2204 
+       dcvn        umno         nrm         npf     bdg pdg          lp 
+       1928        1774        1715        1701        1656        1613 
+         np         ndp         ppp         pnp         kmt          ps 
+       1513        1506        1470        1377        1364        1364 
+    unknown    ndpsdrcd        mpla        slfp         pct         ccm 
+       1315        1284        1271        1257        1236        1208 
+     zanupf         inc         pcr      golkar         man        lprp 
+       1186        1161        1131        1112        1104        1101 
+       kanu         hab         fln         sed         ldp         kpk 
+       1075        1074        1072        1070        1067        1052 
+    frelimo     pdcirda         apc         gpc         rpt         pap 
+       1049        1047        1024         997         986         941 
+       pdge         skj         pdp 
+        938         936         923 
+== party 
+
+independent     unknown        <NA>        cpsu        dfrf         cpc 
+      38333       12538       11516        2771        2724        2503 
+        pcc        dcvn         npf          lp     bdg pdg          np 
+       2138        1839        1673        1477        1414        1373 
+        kmt    ndpsdrcd         ndp         ppp     pdcirda         pcr 
+       1282        1231        1201        1159        1130        1128 
+        ccm         man         nrm        lprp         sed         hab 
+       1118        1110        1091        1072        1051        1049 
+         ps        mpla         ldp         inc      zanupf        rdpc 
+       1046        1038         994         980         973         970 
+    frelimo        kanu        umno         pap         fln         skj 
+        969         964         959         948         936         934 
+        pnp         pct         apc        pdge         bnp       paigc 
+        906         874         863         852         792         792 
+        unc         kpk        unip 
+        792         775         768 
+  year country_isocode country_name                position
+1 1966             AFG  Afghanistan              Prime Min.
+2 1966             AFG  Afghanistan         Min. Of Finance
+3 1966             AFG  Afghanistan Min. Of Foreign Affairs
+4 1966             AFG  Afghanistan        Min. Of Interior
+5 1966             AFG  Afghanistan         Min. Of Defense
+                        name title gender birthyear       party
+1 Maiwandwal Mohammed Hashim  <NA>   Male        NA        pdpa
+2           Abdullah Yaftali  <NA>   Male        NA independent
+3          Nur Ahmed Etemadi  <NA>   Male        NA independent
+4       Shalizi Abdus Sattar  <NA>   Male        NA independent
+5         Mohammed Khan Khan  Gen.   Male        NA     unknown
+                                party_english leader       classification
+1 Progressive Democratic Party of Afghanistan      1       Prime Minister
+2                                 independent      0 Minister (Full Rank)
+3                                 independent      0 Minister (Full Rank)
+4                                 independent      0 Minister (Full Rank)
+5                                        <NA>      0 Minister (Full Rank)
+                            portfolio_1 prestige_1 prestige_numeric
+1                                  <NA>       <NA>               NA
+2            Finance, Budget & Treasury       High                3
+3                     Foreign Relations       High                3
+4   Government, Interior & Home Affairs       High                3
+5 Defense, Military & National Security       High                3
+  importance_numeric leader_party  party_group experience purged_y1 purged_y2
+1                  5         pdpa leader_party          1         0         1
+2                  3         pdpa  independent          1         0         0
+3                  3         pdpa  independent          1         0         0
+4                  3         pdpa  independent          1         1         1
+5                  3         pdpa      unknown          1         0         0
+  coupattempt_presentyear coup_presentyear coup_lastyear
+1         No coup attempt                0             0
+2         No coup attempt                0             0
+3         No coup attempt                0             0
+4         No coup attempt                0             0
+5         No coup attempt                0             0
+  coupattempt_presentyear_br coup_presentyear_br coup_lastyear_br
+1                          0                   0                0
+2                          0                   0                0
+3                          0                   0                0
+4                          0                   0                0
+5                          0                   0                0
+  coupattempt_whogov_type_br leaderexperience_continuous democracy_lag_br
+1                          0                           1             <NA>
+2                          0                           1             <NA>
+3                          0                           1             <NA>
+4                          0                           1             <NA>
+5                          0                           1             <NA>
+  n_party democracy_lag gdp_cap_pwt_ln pop_pwt_ln polity2 gdp_cap_pwt_ln_lag
+1       2            NA             NA         NA      -7                 NA
+2       2            NA             NA         NA      -7                 NA
+3       2            NA             NA         NA      -7                 NA
+4       2            NA             NA         NA      -7                 NA
+5       2            NA             NA         NA      -7                 NA
+  pop_pwt_ln_lag lag_polity2
+1             NA          NA
+2             NA          NA
+3             NA          NA
+4             NA          NA
+5             NA          NA
+                                      importance_factor    Group
+1                                                     5 Prestige
+2 Vice president,\ndeputy prime minister,\ntop minister Prestige
+3 Vice president,\ndeputy prime minister,\ntop minister Prestige
+4 Vice president,\ndeputy prime minister,\ntop minister Prestige
+5 Vice president,\ndeputy prime minister,\ntop minister Prestige
+                minister_type              minister_classification age
+1                        <NA>                                 <NA>  NA
+2         Minister of Finance                 3. Economic\naffairs  NA
+3 Minister of Foreign Affairs                   7. Foreign Affairs  NA
+4      Other type of minister 4. Administration\n&internal affairs  NA
+5         Minister of Defense               8. Security &\nDefense  NA
+  experience_group hired
+1            1year     1
+2            1year     1
+3            1year     1
+4            1year     1
+5            1year     1

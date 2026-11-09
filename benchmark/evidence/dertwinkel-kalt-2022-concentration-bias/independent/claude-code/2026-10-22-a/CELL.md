@@ -68,3 +68,7 @@ Agent notes: Built d~ and d~rel from the raw per-decision rows of Consumption_Ex
 - [`output/script.R`](output/script.R) — 5,753 bytes, from `benchmark/results/artifacts/dertwinkel-kalt-2022-concentration-bias/independent/claude-code/20261022T032229Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/dertwinkel-kalt-2022-concentration-bias/independent/claude-code/20261022T032229Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 4,567 bytes, from `benchmark/results/artifacts/dertwinkel-kalt-2022-concentration-bias/independent/claude-code/20261022T032229Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

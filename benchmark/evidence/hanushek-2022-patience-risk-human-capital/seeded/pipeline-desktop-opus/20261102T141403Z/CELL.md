@@ -55,6 +55,10 @@ _None declared._
 - [`output/stdout.txt`](output/stdout.txt) — 4,282 bytes, from `benchmark/results/artifacts/hanushek-2022-patience-risk-human-capital/seeded/pipeline/20261102T141403Z/stdout.txt`
 - [`output/answer-1.md`](output/answer-1.md) — 5,449 bytes, from `benchmark/.cache/llm-oracle/desktop-opus/answers/3058a43c88d4c78ce9c93685.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM oracle store desktop-opus (request 3058a43c88d4c78ce9c93685: model claude-opus-5-5, max_tokens 16384, effort high)

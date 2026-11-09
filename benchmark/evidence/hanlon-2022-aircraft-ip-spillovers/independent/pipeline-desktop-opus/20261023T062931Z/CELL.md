@@ -55,6 +55,10 @@ _None declared._
 - [`output/stdout.txt`](output/stdout.txt) — 3,529 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/independent/pipeline/20261023T062931Z/stdout.txt`
 - [`output/answer-1.md`](output/answer-1.md) — 6,073 bytes, from `benchmark/.cache/llm-oracle/desktop-opus/answers/6bd2e00aa6f77f7a66e3becc.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM oracle store desktop-opus (request 6bd2e00aa6f77f7a66e3becc: model claude-opus-5-5, max_tokens 16384, effort high)

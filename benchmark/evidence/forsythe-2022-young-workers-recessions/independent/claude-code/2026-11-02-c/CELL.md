@@ -72,3 +72,7 @@ Agent notes: Two exploratory runs (attempt-1: variable inspection and read timin
 - [`output/script.R`](output/script.R) — 6,921 bytes, from `benchmark/results/artifacts/forsythe-2022-young-workers-recessions/independent/claude-code/20261102T202751Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/forsythe-2022-young-workers-recessions/independent/claude-code/20261102T202751Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 3,225 bytes, from `benchmark/results/artifacts/forsythe-2022-young-workers-recessions/independent/claude-code/20261102T202751Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

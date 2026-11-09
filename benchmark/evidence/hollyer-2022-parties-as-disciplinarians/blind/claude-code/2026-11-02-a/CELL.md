@@ -71,3 +71,7 @@ Agent notes: Table 1: OLS with country-clustered (HC1/CR1) SEs; the quantities a
 - [`output/script.R`](output/script.R) — 4,973 bytes, from `benchmark/results/artifacts/hollyer-2022-parties-as-disciplinarians/blind/claude-code/20261102T142249Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/hollyer-2022-parties-as-disciplinarians/blind/claude-code/20261102T142249Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 3,833 bytes, from `benchmark/results/artifacts/hollyer-2022-parties-as-disciplinarians/blind/claude-code/20261102T142249Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

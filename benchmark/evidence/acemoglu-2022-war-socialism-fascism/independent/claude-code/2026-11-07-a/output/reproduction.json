@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "entry_id": "acemoglu-2022-war-socialism-fascism",
+  "mode": "independent",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [],
+  "notes": "Data: fascism_db.dta only. attempt-1 was exploratory (variable names/labels, no RESULT lines). Specification from the paper text: OLS first stage of psu1919_vv on foots_pop6m and 2SLS of fascist outcomes on psu1919_vv instrumented by foots_pop6m (fixest feols), province FE (provincia1921, absorbed), all 359 d_reg* regiment dummies, demographic controls = quartic in lpop1911 (powers computed) + sh_pop_1911_be6; column 6 adds larea, centre_alt, max_alt; psu1913_vv; veterans74_95, veterans96_00, ard_vol_pop6m, army_suppliers_d, cruent_d; dlab, shcrop, landlord_ass; ind_workers, ind_firms, literacy, elites, bourgeoisie. SEs clustered by circondario1921 (fixest default small-sample adjustment). Standardized coefficients = b*sd(x)/sd(y) on the estimation sample. F-stat = squared clustered t of the instrument. 1921 vote-share regressions use fascist1921_vv (imputed sample; 417 NA dropped). attempt-2 (all claims within tolerance per check_attempt) dropped 3 province singletons via fixest's default, giving N=5772 and 178 clusters; final run keeps singletons (fixef.rm='none'), matching the paper's 5,775/181 and 5,358/175; coefficients unchanged, F 50.61 -> 50.59.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-07T17:16:43Z",
+  "finished_at": "2026-11-07T17:26:33Z"
+}

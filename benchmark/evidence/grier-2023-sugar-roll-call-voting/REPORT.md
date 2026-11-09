@@ -38,13 +38,14 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [10/11](seeded/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[10/11](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [10/11](independent/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[9/11](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[9/11](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [10/11](blind/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[9/11](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[10/11](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[8/11](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
+| `claude-code` | [10/11](seeded/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[10/11](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [10/11](independent/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[9/11](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[9/11](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c)<br>[10/11](independent/claude-code/2026-11-07-a/CELL.md) (2026-11-07-a) | [10/11](blind/claude-code/2026-10-21-b/CELL.md) (2026-10-21-b)<br>[9/11](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[10/11](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[8/11](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c)<br>[8/11](blind/claude-code/2026-11-07-a/CELL.md) (2026-11-07-a) |
 | `pipeline-claude-opus-4-7` | [0/11](seeded/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [0/11](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) | [0/11](blind/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) (20261021T142909Z) |
 | `pipeline-claude-opus-5-5` | [11/11](seeded/pipeline-claude-opus-5-5/20261022T043524Z/CELL.md) (20261022T043524Z) | [0/11](independent/pipeline-claude-opus-5-5/20261022T043524Z/CELL.md) (20261022T043524Z) | [0/11](blind/pipeline-claude-opus-5-5/20261022T043524Z/CELL.md) (20261022T043524Z) |
 | `pipeline-desktop-opus-postfix` | — | [10/11](independent/pipeline-desktop-opus-postfix/20261103T070149Z/CELL.md) (20261103T070149Z) | [2/11](blind/pipeline-desktop-opus-postfix/20261103T064954Z/CELL.md) (20261103T064954Z) |
 | `pipeline-desktop-opus-postfix2` | — | [10/11](independent/pipeline-desktop-opus-postfix2/20261105T212407Z/CELL.md) (20261105T212407Z) | [2/11](blind/pipeline-desktop-opus-postfix2/20261103T114859Z/CELL.md) (20261103T114859Z) |
 | `pipeline-desktop-opus-run2` | [10/11](seeded/pipeline-desktop-opus-run2/20261023T152513Z/CELL.md) (20261023T152513Z) | [2/11](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) (20261023T153002Z) | [0/11](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
 | `pipeline-desktop-opus-run3` | [10/11](seeded/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md) (20261103T050517Z) | [2/11](independent/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md) (20261103T050517Z) | [2/11](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) |
+| `pipeline-desktop-opus-run4` | — | [9/11](independent/pipeline-desktop-opus-run4/20261108T192145Z/CELL.md) (20261108T192145Z) | [2/11](blind/pipeline-desktop-opus-run4/20261107T184031Z/CELL.md) (20261107T184031Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
 
@@ -57,15 +58,15 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | Cell | Claim | Reproduced | Paper | Band | Error / band | Verdict |
 |---|---|---|---|---|---|---|
 | [seeded/pipeline-claude-opus-5-5/20261022T043524Z](seeded/pipeline-claude-opus-5-5/20261022T043524Z/CELL.md) | `sugar_contributions_calendar_year_district_fe` | -0.00055017 | -0.0006 | ±5e-05 (printed_precision) | 0.997 | PASS |
+| [independent/pipeline-desktop-opus-run4/20261108T192145Z](independent/pipeline-desktop-opus-run4/20261108T192145Z/CELL.md) | `sugar_contributions_calendar_year_incumbent_fe` | -0.000549175 | -0.0005 | ±5e-05 (printed_precision) | 0.983 | PASS |
 | [independent/claude-code/2026-11-02-c](independent/claude-code/2026-11-02-c/CELL.md) | `sugar_contributions_calendar_year_incumbent_fe` | -0.00054917 | -0.0005 | ±5e-05 (printed_precision) | 0.983 | PASS |
+| [independent/claude-code/2026-11-07-a](independent/claude-code/2026-11-07-a/CELL.md) | `sugar_contributions_12_months_district_fe` | -0.000552102 | -0.0006 | ±5e-05 (printed_precision) | 0.958 | PASS |
 | [blind/claude-code/2026-10-21-b](blind/claude-code/2026-10-21-b/CELL.md) | `sugar_contributions_12_months_district_fe` | -0.000552102 | -0.0006 | ±5e-05 (printed_precision) | 0.958 | PASS |
 | [blind/claude-code/2026-11-01-a](blind/claude-code/2026-11-01-a/CELL.md) | `sugar_contributions_12_months_district_fe` | -0.000552102 | -0.0006 | ±5e-05 (printed_precision) | 0.958 | PASS |
 | [blind/claude-code/2026-11-02-c](blind/claude-code/2026-11-02-c/CELL.md) | `sugar_contributions_calendar_year_district_fe` | -0.000552102 | -0.0006 | ±5e-05 (printed_precision) | 0.958 | PASS |
+| [blind/claude-code/2026-11-07-a](blind/claude-code/2026-11-07-a/CELL.md) | `sugar_contributions_calendar_year_district_fe` | -0.000552102 | -0.0006 | ±5e-05 (printed_precision) | 0.958 | PASS |
+| [independent/pipeline-desktop-opus-run4/20261108T192145Z](independent/pipeline-desktop-opus-run4/20261108T192145Z/CELL.md) | `tenure_incumbent_fe` | -1.39958 | -1.43 | ±0.0286 (relative) | 1.063 | FAIL |
 | [independent/claude-code/2026-11-02-c](independent/claude-code/2026-11-02-c/CELL.md) | `tenure_incumbent_fe` | -1.39958 | -1.43 | ±0.0286 (relative) | 1.063 | FAIL |
-| [independent/claude-code/2026-11-01-a](independent/claude-code/2026-11-01-a/CELL.md) | `sugar_contributions_calendar_year_incumbent_fe` | -0.000554504 | -0.0005 | ±5e-05 (printed_precision) | 1.090 | FAIL |
-| [independent/pipeline-desktop-opus-postfix2/20261105T212407Z](independent/pipeline-desktop-opus-postfix2/20261105T212407Z/CELL.md) | `sugar_contributions_calendar_year_incumbent_fe` | -0.00054265 | -0.0005 | ±5e-05 (printed_precision) | 0.853 | PASS |
-| [independent/pipeline-desktop-opus-postfix/20261103T070149Z](independent/pipeline-desktop-opus-postfix/20261103T070149Z/CELL.md) | `sugar_contributions_calendar_year_incumbent_fe` | -0.000542647 | -0.0005 | ±5e-05 (printed_precision) | 0.853 | PASS |
-| [independent/pipeline-desktop-opus-postfix/20261103T070149Z](independent/pipeline-desktop-opus-postfix/20261103T070149Z/CELL.md) | `sugar_contributions_calendar_year_district_fe` | -0.000557489 | -0.0006 | ±5e-05 (printed_precision) | 0.850 | PASS |
 
 ### Declared deviations
 
@@ -88,6 +89,9 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 - [independent/claude-code/2026-11-02-c](independent/claude-code/2026-11-02-c/CELL.md) (9/11; failed: `tenure_district_fe`, `tenure_incumbent_fe`)
   - Agriculture-committee coefficient is quasi-separated (R's glm drifts to about -57 rather than Stata's -36.3); not a scored claim.
   - Contributions variable taken to be totalcont as supplied (assumed already inflation-adjusted by the authors); no further deflation applied.
+- [independent/claude-code/2026-11-07-a](independent/claude-code/2026-11-07-a/CELL.md) (10/11; failed: `sugar_contributions_calendar_year_district_fe`)
+  - Inflation adjustment: totalcont is nominal (round dollar amounts); 2013 contributions were converted to 2018 dollars with CPI-U annual averages (232.957 for 2013, 251.107 for 2018). The paper does not state the deflator or base year.
+  - Window files: SugarReplicate.dta taken as the baseline window, SugarReplicate_iter1.dta as the calendar-year window and SugarReplicate_iter2.dta as the 12-months-before-vote window (order of the robustness section); the read-me does not map files to windows.
 - [independent/pipeline-desktop-opus-postfix/20261103T070149Z](independent/pipeline-desktop-opus-postfix/20261103T070149Z/CELL.md) (10/11; failed: `tenure_district_fe`)
   - Table 1 col 1 estimated as dummy-variable logit via stats::glm (Stata logit i.district analogue, epsilon=1e-7) instead of fixest::feglm; point estimates only, robust SEs not used for any RESULT
 - [independent/pipeline-desktop-opus-run2/20261023T153002Z](independent/pipeline-desktop-opus-run2/20261023T153002Z/CELL.md) (2/11; failed: `sugar_contributions_district_fe`, `sugar_contributions_incumbent_fe`, `acu_ideology_district_fe`, `tenure_district_fe`, `tenure_incumbent_fe`, `sugar_contributions_calendar_year_district_fe`, `sugar_contributions_calendar_year_incumbent_fe`, `sugar_contributions_12_months_district_fe`, `sugar_contributions_12_months_incumbent_fe`)
@@ -96,6 +100,8 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 - [independent/pipeline-desktop-opus-run3/20261103T050517Z](independent/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md) (2/11; failed: `sugar_contributions_district_fe`, `sugar_contributions_incumbent_fe`, `acu_ideology_district_fe`, `tenure_district_fe`, `tenure_incumbent_fe`, `sugar_contributions_calendar_year_district_fe`, `sugar_contributions_calendar_year_incumbent_fe`, `sugar_contributions_12_months_district_fe`, `sugar_contributions_12_months_incumbent_fe`)
   - Coded missing sugar contributions (1 rows) as $0 and missing Ag committee as 0, and coded non-aye votes (no / not voting) as 0, following the paper's 'aye = 1, 0 otherwise' DV definition
   - Contribution variable chosen by name heuristics (real-dollar / window-specific variable preferred when present, else sugcont)
+- [independent/pipeline-desktop-opus-run4/20261108T192145Z](independent/pipeline-desktop-opus-run4/20261108T192145Z/CELL.md) (9/11; failed: `tenure_district_fe`, `tenure_incumbent_fe`)
+  - Main-window contributions taken from totalcont (sugar PAC + individual sugar-industry contributions), the same variable that holds the window-specific contributions in the alternative-window files, instead of sugcont
 - [blind/claude-code/2026-10-21-b](blind/claude-code/2026-10-21-b/CELL.md) (10/11; failed: `sugar_contributions_calendar_year_district_fe`)
   - Inflation adjustment: totalcont is nominal; 2013 contributions converted to 2018 dollars with CPI-U annual averages (232.957 for 2013, 251.107 for 2018). The paper does not state the deflator or base year; a 2013-dollar base would scale the contribution coefficients by about 1.078.
   - Fixed-effects logit estimated as an unconditional logit with district (or incumbent) dummies plus a constant, as the paper's table reports a constant, restricted to vote-switching groups (the only groups that identify the FE logit). Robust (HC1) SEs printed but not scored.
@@ -119,32 +125,33 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Window-to-file mapping: SugarReplicate.dta = baseline window (it is the widest: its totalcont weakly exceeds the others for >99% of rows); SugarReplicate_iter1.dta = 12 months before the vote; SugarReplicate_iter2.dta = calendar year. The iter1/iter2 mapping is inferred from timing (iter1 has more 113th-Congress money, consistent with the late-2012 election season, and less 115th-Congress money than iter2, which contains the late-2018 season), not documented.
   - The contribution regressor is totalcont (it differs across the three window files); sugcont is identical across files and was taken to be the original election-cycle aggregate, so it is not used.
   - contributions deflated by the author of this script to 2018 dollars with CPI-U annual averages (the data hold nominal totals); iter1/iter2 window mapping inferred from contribution timing.
+- [blind/claude-code/2026-11-07-a](blind/claude-code/2026-11-07-a/CELL.md) (8/11; failed: `sugar_contributions_calendar_year_incumbent_fe`, `sugar_contributions_12_months_district_fe`, `sugar_contributions_12_months_incumbent_fe`)
+  - Inflation adjustment: the paper does not give its deflator; contributions (totalcont) are converted to 2018 dollars with CPI-U annual averages (2013 = 232.957, 2018 = 251.107), using the vote year's CPI for every window.
+  - Window-to-file mapping inferred from the data: SugarReplicate.dta = baseline window (largest totals, nests the others); SugarReplicate_iter2.dta = calendar year of the vote (larger 2018 total, smaller 2013 total, consistent with the fall-2012 and fall-2018 election-season giving); SugarReplicate_iter1.dta = 12 months before the vote. The variable sugcont is identical across files and is not used (taken to be the cycle-aggregated measure of the paper's Appendix A.3).
+  - Fixed-effects logit estimated as unconditional ML with fixed-effect dummies (fixest::feglm, binomial), which drops districts or incumbents whose vote did not change; heteroskedasticity-robust SEs. ACU score is the data's ncu variable.
+  - inflation adjustment uses CPI-U annual averages (2013=232.957, 2018=251.107), contributions in 2018 dollars; the paper does not state its deflator.
+  - window-to-file mapping (iter2=calendar year, iter1=12 months) inferred from election-year timing of contribution totals.
 
 ### Pipeline and agent disagree
 
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
-- blind: `acu_ideology_district_fe` — pipeline 0/6, agent 4/4
-- blind: `sugar_contributions_district_fe` — pipeline 0/6, agent 4/4
-- blind: `sugar_contributions_incumbent_fe` — pipeline 0/6, agent 4/4
-- blind: `tenure_district_fe` — pipeline 0/6, agent 4/4
-- blind: `tenure_incumbent_fe` — pipeline 0/6, agent 4/4
+- blind: `acu_ideology_district_fe` — pipeline 0/7, agent 5/5
+- blind: `sugar_contributions_district_fe` — pipeline 0/7, agent 5/5
+- blind: `sugar_contributions_incumbent_fe` — pipeline 0/7, agent 5/5
+- blind: `tenure_district_fe` — pipeline 0/7, agent 5/5
+- blind: `tenure_incumbent_fe` — pipeline 0/7, agent 5/5
 
 Pass rates at least 50 points apart (not unanimous):
 
-- independent: `acu_ideology_district_fe` — pipeline 2/6, agent 3/3
-- independent: `sugar_contributions_12_months_district_fe` — pipeline 2/6, agent 3/3
-- independent: `sugar_contributions_12_months_incumbent_fe` — pipeline 2/6, agent 3/3
-- independent: `sugar_contributions_calendar_year_district_fe` — pipeline 2/6, agent 3/3
-- independent: `sugar_contributions_district_fe` — pipeline 2/6, agent 3/3
-- independent: `sugar_contributions_incumbent_fe` — pipeline 2/6, agent 3/3
-- independent: `tenure_district_fe` — pipeline 0/6, agent 2/3
-- blind: `observations_district_fe` — pipeline 3/6, agent 4/4
-- blind: `observations_incumbent_fe` — pipeline 3/6, agent 4/4
-- blind: `sugar_contributions_12_months_district_fe` — pipeline 0/6, agent 3/4
-- blind: `sugar_contributions_12_months_incumbent_fe` — pipeline 0/6, agent 2/4
-- blind: `sugar_contributions_calendar_year_district_fe` — pipeline 0/6, agent 2/4
-- blind: `sugar_contributions_calendar_year_incumbent_fe` — pipeline 0/6, agent 2/4
+- independent: `acu_ideology_district_fe` — pipeline 3/7, agent 4/4
+- independent: `sugar_contributions_12_months_district_fe` — pipeline 3/7, agent 4/4
+- independent: `sugar_contributions_12_months_incumbent_fe` — pipeline 3/7, agent 4/4
+- independent: `sugar_contributions_district_fe` — pipeline 3/7, agent 4/4
+- independent: `sugar_contributions_incumbent_fe` — pipeline 3/7, agent 4/4
+- independent: `tenure_district_fe` — pipeline 0/7, agent 3/4
+- blind: `sugar_contributions_12_months_district_fe` — pipeline 0/7, agent 3/5
+- blind: `sugar_contributions_calendar_year_district_fe` — pipeline 0/7, agent 3/5
 
 ## Cells
 
@@ -184,6 +191,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/claude-code/2026-11-02-c/CELL.md`](independent/claude-code/2026-11-02-c/CELL.md) — final 9/11, re-scored 9/11; first scored 9/11; executions 3; 2026-11-02T20:03:14Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
 
+### independent · claude-code · 2026-11-07-a
+
+[`independent/claude-code/2026-11-07-a/CELL.md`](independent/claude-code/2026-11-07-a/CELL.md) — final 10/11, re-scored 10/11; first scored 9/11; executions 4; 2026-11-07T19:55:00Z; from `claude-code-run4-24papers-indep-blind-2026-11-08.json`; evidence complete.
+
 ### independent · pipeline-claude-opus-4-7 · 20261021T142909Z
 
 [`independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md`](independent/pipeline-claude-opus-4-7/20261021T142909Z/CELL.md) — final 0/11, re-scored 0/11; first scored 0/11; executions 4; 2026-10-21T14:29:09Z; from `pipeline-10papers-all-modes-2026-10-21.json`; evidence complete.
@@ -208,6 +219,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md`](independent/pipeline-desktop-opus-run3/20261103T050517Z/CELL.md) — final 2/11, re-scored 2/11; first scored 0/11; executions 3; 2026-11-03T05:05:17Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-run4 · 20261108T192145Z
+
+[`independent/pipeline-desktop-opus-run4/20261108T192145Z/CELL.md`](independent/pipeline-desktop-opus-run4/20261108T192145Z/CELL.md) — final 9/11, re-scored 9/11; first scored 0/11; executions 4; 2026-11-08T19:21:45Z; from `pipeline-oracle-desktop-opus-run4-24papers-indep-blind-2026-11-08.json`; evidence complete.
+
 ### blind · claude-code · 2026-10-21-b
 
 [`blind/claude-code/2026-10-21-b/CELL.md`](blind/claude-code/2026-10-21-b/CELL.md) — final 10/11, re-scored 10/11; first scored 10/11; executions 3; 2026-10-22T02:13:13Z; from `claude-code-7papers-all-modes-2026-10-21.json`; evidence complete.
@@ -223,6 +238,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · claude-code · 2026-11-02-c
 
 [`blind/claude-code/2026-11-02-c/CELL.md`](blind/claude-code/2026-11-02-c/CELL.md) — final 8/11, re-scored 8/11; first scored 8/11; executions 4; 2026-11-02T20:18:30Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
+
+### blind · claude-code · 2026-11-07-a
+
+[`blind/claude-code/2026-11-07-a/CELL.md`](blind/claude-code/2026-11-07-a/CELL.md) — final 8/11, re-scored 8/11; first scored 8/11; executions 4; 2026-11-07T20:03:00Z; from `claude-code-run4-24papers-indep-blind-2026-11-08.json`; evidence complete.
 
 ### blind · pipeline-claude-opus-4-7 · 20261021T142909Z
 
@@ -247,4 +266,8 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · pipeline-desktop-opus-run3 · 20261103T004800Z
 
 [`blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md`](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) — final 2/11, re-scored 2/11; first scored 2/11; executions 1; 2026-11-03T00:48:00Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-run4 · 20261107T184031Z
+
+[`blind/pipeline-desktop-opus-run4/20261107T184031Z/CELL.md`](blind/pipeline-desktop-opus-run4/20261107T184031Z/CELL.md) — final 2/11, re-scored 2/11; first scored 2/11; executions 1; 2026-11-07T18:40:31Z; from `pipeline-oracle-desktop-opus-run4-24papers-indep-blind-2026-11-08.json`; evidence complete.
 

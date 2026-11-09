@@ -54,6 +54,10 @@ _None declared._
 - [`output/stdout.txt`](output/stdout.txt) — 3,450 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/pipeline/20261022T043524Z/stdout.txt`
 - [`output/answer-1.md`](output/answer-1.md) — 4,912 bytes, from `benchmark/.cache/llm/91a0dfe4741f113d0c0866f4.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM cache (request 91a0dfe4741f113d0c0866f4: model claude-opus-5-5, max_tokens 16384, effort high)

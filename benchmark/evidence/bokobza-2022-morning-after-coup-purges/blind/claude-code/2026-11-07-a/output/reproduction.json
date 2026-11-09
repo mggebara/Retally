@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "entry_id": "bokobza-2022-morning-after-coup-purges",
+  "mode": "blind",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-6", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Individual-level models: the shipped column pop_pwt_ln_lag is an exact copy of gdp_cap_pwt_ln_lag (within-R2 = 1, so fixest dropped it as collinear in attempt-5). Lagged log population was rebuilt from pop_pwt_ln as the previous calendar year's value within country (missing if the prior year is absent).",
+    "Country-level autocracy filter: lagged Boix-Miller-Rosato democracy (democracy1, lagged one year within country) == 0, years 1967-2016, following the paper's text; the dataset's ldemocracy_br is labelled Bjornskov-Rode and was not used. This gives 115 clusters in the base model; the paper says 115 autocracies.",
+    "Main model with leader FE: lagged monarchy is not collinear with leader FE in this data, so it stays in the model, not dropped as Table A2 describes.",
+    "Individual-level sample: lagged democracy (the dataset's democracy_lag) == 0, 1967-2016, leader excluded, importance tier non-missing. Juniors/low-ranking posts excluded only in the experience model. 'No party affiliation' = party_group 'independent'; 'unknown' party dropped from the affiliation model. Responsibility model uses rows with a minister_type. The importance model excludes the 6 'Governor (General)' (tier 0) rows."
+  ],
+  "notes": "Independent blind reproduction in R/fixest. Country level: OLS of replacement_rateadj_minister on coupattempt_whogov (already July-recoded in the data) plus one-year-lagged log GDP per capita and log population (Base), and also lagged monarchy/military/party dummies (Main); country+year or leader(leader_cab_id)+year FE; SEs clustered by country. Individual level: LPM of purged_y1 on coupattempt_presentyear interacted with experience group / party group / minister type / importance tier, with lagged GDP and population and (except the experience model) a cubic in years in cabinet; country+year FE, country-clustered SEs. Attempts 1-4 and 6 were exploratory (no RESULT lines). Attempt 5 was the first full estimation; it printed RESULT lines but the population control was dropped because of the data bug described in deviations. The final run fixes that. No claimed values were seen or compared. No docker run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-07T17:41:32Z",
+  "finished_at": "2026-11-07T19:18:30Z"
+}

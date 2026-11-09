@@ -1,0 +1,91 @@
+global_approval columns: country, qtr, rally_events, rally_kill, female_pres, execrlc, rally_event_any, country_code, ccode, election_qtr, lag_approval, rally_event_any2, growth, log_inflation, manchester, kill_16, kill_18, kill_10, pres_15death, pres_20death, kill_12, kill_14, kill_20, kill_08, kill_06, kill_under5, kill_1_5, kill_3_5 
+Using approval outcome variable: lag_approval 
+DEVIATION: Outcome for Table 4 is lag_approval as deposited (no other approval variable exists in global_approval.dta)
+Attack variable: kill_16 
+OLS estimation, Dep. Var.: y_lead
+Observations: 4,486
+Fixed-effects: cfe: 43
+Standard-errors: IID 
+                  Estimate  Std. Error   t value   Pr(>|t|)    
+attack         2.322088945 1.864859412  1.245182 2.1313e-01    
+woman         -2.937171666 0.656382920 -4.474784 7.8405e-06 ***
+growth        -0.000000446 0.000000205 -2.169852 3.0071e-02 *  
+log_inflation -0.804521191 0.165739653 -4.854126 1.2507e-06 ***
+execrlc        1.371258950 0.192442359  7.125557 1.2042e-12 ***
+election_qtr   3.986140083 0.635786914  6.269616 3.9639e-10 ***
+attack:woman  -3.828385836 4.262111331 -0.898237 3.6911e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 11.3     Adj. R2: 0.259238
+             Within R2: 0.031352
+Diagnostic (lead of lag_approval):
+      attack attack:woman 
+    1.264236    -3.279315 
+N = 4453 
+did_data rows: 1481408 
+
+    1     2     3     4     5     6     7     8     9    10    11    12    13 
+92588 92588 92588 92588 92588 92588 92588 92588 92588 92588 92588 92588 92588 
+   14    15    16 
+92588 92588 92588 
+Treatment variable: treatment1 
+Rows after restricting to wave-12 respondents: 1481408 
+    
+         0     1
+  1  92588     0
+  2  92588     0
+  3  92588     0
+  4  92588     0
+  5  92588     0
+  6  92588     0
+  7  92588     0
+  8  92588     0
+  9  92588     0
+  10 92588     0
+  11 92588     0
+  12     0 92588
+  13     0 92588
+  14     0 92588
+  15     0 92588
+  16     0 92588
+bestPMW values:
+raw
+      0       1    <NA> 
+  79596   66207 1335605 
+                   Estimate  Std. Error     t value      Pr(>|t|)
+(Intercept)     2.190936486 0.043961448   49.837677  0.000000e+00
+attack         -0.105036353 0.019692382   -5.333857  9.623487e-08
+time           -0.226435678 0.023977171   -9.443803  3.625480e-21
+white           0.292650032 0.016013420   18.275299  1.463068e-74
+gender          0.491369600 0.011023324   44.575448  0.000000e+00
+labour         -2.458059010 0.021406398 -114.828238  0.000000e+00
+party_other    -1.881782252 0.016255282 -115.764355  0.000000e+00
+income          0.004178252 0.002053934    2.034268  4.192567e-02
+ideology        0.514909307 0.003603867  142.876873  0.000000e+00
+factor(wave)10  0.744163526 0.023215395   32.054743 5.659700e-225
+factor(wave)11  0.821629455 0.023006717   35.712590 1.368582e-278
+factor(wave)12  0.747541238 0.021902136   34.130975 1.051332e-254
+                    Estimate   Std. Error      t value      Pr(>|t|)
+(Intercept)     0.1626660171 0.0082022311   19.8319232  2.060260e-87
+attack         -0.0147903056 0.0026535817   -5.5737141  2.498041e-08
+time            0.1850090433 0.0041713466   44.3523547  0.000000e+00
+white           0.0876783588 0.0036150438   24.2537473 1.093174e-129
+gender         -0.0006499904 0.0021743044   -0.2989417  7.649849e-01
+labour         -0.4383514143 0.0040734647 -107.6114417  0.000000e+00
+party_other    -0.3047305514 0.0030953655  -98.4473579  0.000000e+00
+income          0.0090661012 0.0003736951   24.2606909 9.240824e-130
+ideology        0.0619360577 0.0006751196   91.7408655  0.000000e+00
+factor(wave)8  -0.0251567296 0.0033966755   -7.4062799  1.305876e-13
+factor(wave)10  0.1686095013 0.0035100437   48.0362972  0.000000e+00
+factor(wave)11  0.2130898676 0.0034845868   61.1521195  0.000000e+00
+RESULT:intl_attack_table4=2.322089
+RESULT:intl_attack_x_woman_exec_table4=-3.828386
+RESULT:n_obs_table4=4486.000000
+RESULT:did_attack_x_time_like_may_table2=-0.150165
+RESULT:did_attack_like_may_table2=-0.105036
+RESULT:did_time_like_may_table2=-0.226436
+RESULT:n_obs_did_like_may_table2=239919.000000
+RESULT:did_attack_x_time_may_best_pm_table2=-0.039816
+RESULT:did_attack_may_best_pm_table2=-0.014790
+RESULT:did_time_may_best_pm_table2=0.185009
+RESULT:n_obs_did_may_best_pm_table2=145803.000000

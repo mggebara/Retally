@@ -1,0 +1,13 @@
+suppressMessages({library(haven); library(dplyr)})
+d <- read_dta("<repo>/benchmark/.cache/claude-code/carrera-2022-who-chooses-commitment/blind/2026-11-07-a/mount/carrera_2022_who_chooses_commitment/Who_Chooses_Commitment_Replication/Data/cleaned_commitment_study_data.dta")
+print(table(d$wave, d$wavenum))
+print(table(exog=d$flag_exclude_exog, low=d$flag_low_wtp))
+print(table(d$treatment, flag=pmax(d$flag_exclude_exog, d$flag_low_wtp)))
+print(table(d$treatment, conf=d$flag_confusion))
+print(table(d$treatment, pref80=d$prefer80contingent_to_0, useNA="ifany"))
+w12 <- d$wavenum < 3
+print(table(q169=d$q169[w12], c12=d$chose_commit12[w12]))
+print(table(q295=d$q295[w12], c12=d$chose_commit12[w12]))
+print(table(q169=d$q169[w12], q170=d$q170[w12]))
+cat("mean chose_commit12:", mean(d$chose_commit12), "\n")
+print(attributes(d$q169)); print(attributes(d$chose_commit12))

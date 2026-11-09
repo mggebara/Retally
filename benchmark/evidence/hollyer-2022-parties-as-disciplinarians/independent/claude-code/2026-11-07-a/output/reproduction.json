@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "hollyer-2022-parties-as-disciplinarians",
+  "mode": "independent",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was an exploratory run that looked at the variables, missingness and complete-case counts, with no RESULT lines. The final script is the first scored run, and it was not changed after it ran. Table 1: party-level OLS of personal / programmatic on ev_total. Party covariates: partysize, unions, business, religious. Country covariates: pluralty and pr dummies (mixed omitted), cl as a factor (closed/open/non-list), mdmh, polity, demsys, system as a factor, gdppc, gini, ethfrac. SEs are clustered by country (ccode, HC1). Low and high volatility are the 25th and 75th percentiles of ev_total in the estimation sample. An ethnic party is one with ethnic > 0.5 (a majority of coders). Ideology models interact ev_total with extremist2; the moderate party is at 0 and the extremist party at 3. Sample: complete cases, N=431 in 75 countries; the ideology models have 430 because extremist2 is missing for one party. Table 2: rdrobust defaults (p=1, triangular kernel, mserd) on the open-seat sample (dlameduck_runs==0), running variable mv_incparty, cutoff 0; h, b, N and CIs match the paper. All cross-national quantities match the paper to two decimals except the two extremist-minus-moderate differences, 0.126 and 0.371 against 0.15 and 0.44. The moderate-party differences match exactly, so the gap probably comes from how the 'distance 3' extremist party is evaluated. The script was not tuned to close it.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-07T20:04:45Z",
+  "finished_at": "2026-11-07T20:46:58Z"
+}

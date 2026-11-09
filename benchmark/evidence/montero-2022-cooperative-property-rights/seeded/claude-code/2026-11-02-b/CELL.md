@@ -56,3 +56,7 @@ Agent notes: Translated Replication_file.do blocks T3c1/T3c2 (Table 5 cols 1-2: 
 - [`output/script.R`](output/script.R) — 2,741 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/seeded/claude-code/20261102T194315Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 360 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/seeded/claude-code/20261102T194315Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 415 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/seeded/claude-code/20261102T194315Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

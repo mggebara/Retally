@@ -65,3 +65,7 @@ Files read outside the mount: `<repo>/benchmark/.cache/claude-code/arias-2022-ch
 - [`output/script.R`](output/script.R) — 6,301 bytes, from `benchmark/results/artifacts/arias-2022-changing-tides-climate-migration/seeded/claude-code/20261022T021417Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 115 bytes, from `benchmark/results/artifacts/arias-2022-changing-tides-climate-migration/seeded/claude-code/20261022T021417Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 16,906 bytes, from `benchmark/results/artifacts/arias-2022-changing-tides-climate-migration/seeded/claude-code/20261022T021417Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

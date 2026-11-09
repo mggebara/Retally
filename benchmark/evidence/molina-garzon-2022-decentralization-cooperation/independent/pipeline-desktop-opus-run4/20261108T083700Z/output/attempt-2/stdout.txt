@@ -1,0 +1,129 @@
+PGG columns: p_type, publicid_muni, publicid, round, contribution, num_players, decentralized, averagecont, communication, player_type, Q3_YrsSalud, Q4_YrsCurrentJob, Q5_Trust1Base, Q1_Edad, Q2_Educacion, lag_groupcontribution, knownpeople, Q2_female, weights_games_full_scaled, weights_games_reduced_scaled, dec_orgtype, outcome_ols_1, standarderror_ols, highconf_1, lowconf_1, outcome_ols_2, highconf_ols_2, lowconf_ols_2 
+player_type table:
+pt
+ A1  C1  C2  C3  C4  C5  C6  G1  G2  G3  R1  R2 
+251 310 310 310 281  41  10 310 122  10 262  40 
+p_type table:
+
+   A    C    G    R 
+ 251 1262  442  302 
+Levels: HC= C  AI= A  R= R  M= G 
+Table 2 N: 1980 
+
+t test of coefficients:
+
+                Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)    2.8736959  1.5765178  1.8228 0.0684837 .  
+decentralized  0.8258204  0.2027142  4.0738 4.809e-05 ***
+communication  2.5407260  0.2806448  9.0532 < 2.2e-16 ***
+HC             0.2702889  0.3122199  0.8657 0.3867601    
+AI             0.8643955  0.4812586  1.7961 0.0726299 .  
+R             -0.3053653  0.4251456 -0.7183 0.4726821    
+round         -0.1930055  0.0535885 -3.6016 0.0003241 ***
+lag_gc         0.0613315  0.0095074  6.4509 1.396e-10 ***
+num_players   -0.2929461  0.0869554 -3.3689 0.0007692 ***
+knownpeople   -0.0819369  0.0681679 -1.2020 0.2295134    
+female         0.1015420  0.2563725  0.3961 0.6920947    
+age            0.0111106  0.0127223  0.8733 0.3825950    
+educ           0.3422400  0.1570344  2.1794 0.0294207 *  
+yrs_health     0.0344907  0.0250573  1.3765 0.1688313    
+trust          0.0453597  0.2025140  0.2240 0.8227938    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+                              Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)                  3.1368856  1.5956332  1.9659 0.0494486 *  
+decentralized                0.4092363  0.2341163  1.7480 0.0806196 .  
+communication                2.0231083  0.2648294  7.6393 3.390e-14 ***
+HC                           0.2715802  0.3124628  0.8692 0.3848658    
+AI                           0.8673803  0.4822015  1.7988 0.0722050 .  
+R                           -0.3067233  0.4264917 -0.7192 0.4721170    
+round                       -0.1887951  0.0525393 -3.5934 0.0003344 ***
+lag_gc                       0.0599819  0.0098155  6.1109 1.191e-09 ***
+num_players                 -0.2852107  0.0879617 -3.2424 0.0012050 ** 
+knownpeople                 -0.0830831  0.0685085 -1.2127 0.2253745    
+female                       0.1013551  0.2570507  0.3943 0.6934023    
+age                          0.0111003  0.0127539  0.8703 0.3842198    
+educ                         0.3428109  0.1574337  2.1775 0.0295624 *  
+yrs_health                   0.0346394  0.0250569  1.3824 0.1669983    
+trust                        0.0473746  0.2037234  0.2325 0.8161401    
+decentralized:communication  0.7617562  0.3824192  1.9919 0.0465159 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+R2: 0.2631718 0.2664652  AIC: 9641.947 9635.077 
+CL columns: publicid_muni, publicid, ParticipantCode, decentralized, Mujer, Q2_Educacion, Q1_Edad, Q3_YrsSalud, gen_trust, ParticipantType, CargoAdministrador, CargoMedico, CargoEnfermero, CargoAlcaldia, CargoPromotor, Participant_A, Participant_C, Participant_G, Participant_R, net_crosslevel_propknown, net_crosslevel_propfriends, net_crosslevel_propdenomknown, net_crosslevel_propdenomfriends, net_crosslevel_propnumknown, net_crosslevel_propnumfriends, net_crosslevel_hoursrcknown, net_crosslevel_hoursrcfriends, net_crosslevel_propknown_col, net_crosslevel_propfriends_col, net_crosslevel_propdenomknown_col, net_crosslevel_propdenomfriends_col, net_crosslevel_propnumknown_col, net_crosslevel_propnumfriends_col, net_crosslevel_hoursrcknown_col, net_crosslevel_hoursrcfriends_col, weights_games_full_scaled 
+Chosen: y_all= net_crosslevel_hoursrcknown  y_str= net_crosslevel_hoursrcfriends  e_all= NA  e_str= NA  w= weights_games_full_scaled 
+ParticipantType table:
+ptc
+  A   C   G   R 
+ 26 127  47  32 
+CL levels: HC= C  AI= A  R= R 
+Constructing cross-level ties from Participant_* columns
+
+z test of coefficients:
+
+               Estimate Std. Error  z value Pr(>|z|)    
+(Intercept)   -27.83690    0.39110 -71.1759   <2e-16 ***
+decentralized   0.14671    0.45273   0.3241   0.7459    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+z test of coefficients:
+
+                 Estimate  Std. Error  z value  Pr(>|z|)    
+(Intercept)   -2.8244e+01  7.2409e-01 -39.0071 < 2.2e-16 ***
+decentralized  1.3291e-01  4.4983e-01   0.2955    0.7676    
+female        -1.0250e-02  1.4585e-01  -0.0703    0.9440    
+educ           2.3999e-02  1.0909e-01   0.2200    0.8259    
+age            7.3791e-05  1.1210e-02   0.0066    0.9947    
+yrs_health     1.6493e-03  1.1077e-02   0.1489    0.8816    
+trust         -2.7985e-02  1.3730e-01  -0.2038    0.8385    
+HC             6.4553e-01  8.9858e-02   7.1839 6.775e-13 ***
+AI            -8.9768e-02  2.3065e-01  -0.3892    0.6971    
+R             -8.3685e-02  9.1031e-02  -0.9193    0.3579    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+z test of coefficients:
+
+               Estimate Std. Error  z value Pr(>|z|)    
+(Intercept)   -27.83690    0.39110 -71.1759   <2e-16 ***
+decentralized   0.14671    0.45273   0.3241   0.7459    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+z test of coefficients:
+
+                 Estimate  Std. Error  z value  Pr(>|z|)    
+(Intercept)   -2.8244e+01  7.2409e-01 -39.0071 < 2.2e-16 ***
+decentralized  1.3291e-01  4.4983e-01   0.2955    0.7676    
+female        -1.0250e-02  1.4585e-01  -0.0703    0.9440    
+educ           2.3999e-02  1.0909e-01   0.2200    0.8259    
+age            7.3791e-05  1.1210e-02   0.0066    0.9947    
+yrs_health     1.6493e-03  1.1077e-02   0.1489    0.8816    
+trust         -2.7985e-02  1.3730e-01  -0.2038    0.8385    
+HC             6.4553e-01  8.9858e-02   7.1839 6.775e-13 ***
+AI            -8.9768e-02  2.3065e-01  -0.3892    0.6971    
+R             -8.3685e-02  9.1031e-02  -0.9193    0.3579    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+RESULT:decentralized_table2_col1=0.82582043
+RESULT:communication_table2_col1=2.540726
+RESULT:decentralized_table2_col2=0.40923629
+RESULT:communication_table2_col2=2.0231083
+RESULT:decentralized_x_communication_table2_col2=0.76175615
+RESULT:n_obs_table2=1980
+RESULT:decentralized_table3_allties_base=0.14671453
+RESULT:decentralized_table3_allties_full=0.13290868
+RESULT:decentralized_table3_strongties_base=0.14671453
+RESULT:decentralized_table3_strongties_full=0.13290868
+RESULT:n_obs_table3_base=231
+RESULT:n_obs_table3_full=226

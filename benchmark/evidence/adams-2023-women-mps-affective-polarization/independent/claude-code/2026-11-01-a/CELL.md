@@ -70,3 +70,7 @@ Agent notes: Three exploratory runs (no RESULT lines) inspected variables and sa
 - [`output/script.R`](output/script.R) — 2,824 bytes, from `benchmark/results/artifacts/adams-2023-women-mps-affective-polarization/independent/claude-code/20261102T043820Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/adams-2023-women-mps-affective-polarization/independent/claude-code/20261102T043820Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 2,006 bytes, from `benchmark/results/artifacts/adams-2023-women-mps-affective-polarization/independent/claude-code/20261102T043820Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

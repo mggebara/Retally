@@ -65,3 +65,7 @@ Agent notes: Two exploratory runs (attempt-1: variable inspection and comparison
 - [`output/script.R`](output/script.R) — 3,463 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/claude-code/20261102T202751Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 52 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/claude-code/20261102T202751Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 4,703 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/claude-code/20261102T202751Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

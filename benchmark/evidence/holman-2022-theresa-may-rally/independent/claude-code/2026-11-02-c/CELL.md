@@ -92,3 +92,7 @@ Agent notes: Attempts 1-6 explored the data (readme docx text, variable structur
 - [`output/script.R`](output/script.R) — 4,736 bytes, from `benchmark/results/artifacts/holman-2022-theresa-may-rally/independent/claude-code/20261102T202751Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/holman-2022-theresa-may-rally/independent/claude-code/20261102T202751Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 1,792 bytes, from `benchmark/results/artifacts/holman-2022-theresa-may-rally/independent/claude-code/20261102T202751Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

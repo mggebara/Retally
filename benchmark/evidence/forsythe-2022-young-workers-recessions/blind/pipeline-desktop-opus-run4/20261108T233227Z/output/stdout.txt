@@ -1,0 +1,80 @@
+Columns in yh_data.csv:
+ [1] "hrmonth"    "hryear"     "peage"      "pesex"      "peeduca"   
+ [6] "race"       "prhspnon"   "pemlr"      "pulk"       "pulkm2"    
+[11] "pulkm3"     "pulkm4"     "pulkm5"     "pulkm6"     "pelkavl"   
+[16] "pruntype"   "penlfact"   "peschft"    "pwsswgt"    "v2hrmonth" 
+[21] "v2hryear"   "v2gestfips" "v2pemlr"    "v2pehrusl1" "v2pruntype"
+[26] "v2puiodp1"  "v2peio1cow" "v2peio1icd" "v2peio1ocd" "v2prernhly"
+[31] "v2prernwa"  "v2pwsswgt"  "v2prwernal" "v2prhernal" "pehspnon"  
+Rows read: 19836464 
+Year range (v2hryear): 1994 2016 
+Rows after restrictions: 19318423 
+Rows after unemployment merge: 17282551 
+Experience built
+Analysis sample: 17282551  mean hired: 3.392636 
+               Estimate Std. Error    t value     Pr(>|t|)
+(Intercept)  2.68876708 0.06915313  38.881351 4.908742e-39
+young        5.59676754 0.12002785  46.628907 7.073994e-43
+young_U     -0.34396138 0.01948603 -17.651687 3.984274e-23
+exp_U       -0.03918995 0.01199010  -3.268527 1.959089e-03
+attr(,"vcov_type")
+[1] "Clustered (state)"
+           Estimate Std. Error    t value     Pr(>|t|)
+young    5.51450265 0.12128391  45.467719 2.426010e-42
+young_U -0.26286358 0.02012519 -13.061422 9.722039e-18
+exp_U    0.04298603 0.01542957   2.785951 7.521199e-03
+attr(,"vcov_type")
+[1] "Clustered (state)"
+           Estimate Std. Error    t value     Pr(>|t|)
+young    2.81754718 0.10150743  27.757054 4.856137e-32
+young_U -0.17590837 0.01639784 -10.727530 1.435381e-14
+exp_U    0.02067689 0.01001400   2.064799 4.414743e-02
+attr(,"vcov_type")
+[1] "Clustered (state)"
+         Estimate Std. Error    t value     Pr(>|t|)
+young    6.507667  0.6665287   9.763521 3.574466e-13
+young_U -1.969636  0.1693598 -11.629893 7.863070e-16
+exp_U   -1.515703  0.1771761  -8.554779 2.334464e-11
+attr(,"vcov_type")
+[1] "Clustered (state)"
+            Estimate Std. Error      t value     Pr(>|t|)
+young   10.122702750 0.39088049  25.89718115 1.247977e-30
+young_U -0.594418749 0.04280093 -13.88798578 8.666135e-19
+exp_U    0.001857463 0.03687238   0.05037547 9.600239e-01
+attr(,"vcov_type")
+[1] "Clustered (state)"
+Intermediate results:
+         young_x_unemp_rate_no_controls    experienced_x_unemp_rate_no_controls 
+                          -3.439614e-01                           -3.918995e-02 
+           young_x_unemp_rate_preferred      experienced_x_unemp_rate_preferred 
+                          -2.628636e-01                            4.298603e-02 
+       aggregate_unemp_rate_no_controls      aggregate_unemp_rate_month_year_fe 
+                          -1.152543e-01                           -3.378225e-02 
+            young_x_unemp_rate_employed       experienced_x_unemp_rate_employed 
+                          -1.759084e-01                            2.067689e-02 
+          young_x_unemp_rate_unemployed                 young_x_unemp_rate_nilf 
+                          -1.969636e+00                           -5.944187e-01 
+      wage_young_x_unemp_rate_all_hires wage_experienced_x_unemp_rate_all_hires 
+                                     NA                                      NA 
+                      n_obs_full_sample 
+                           1.728255e+07 
+Wage sample: 131633 
+           Estimate  Std. Error   t value     Pr(>|t|)
+young   -0.12679194 0.013130454 -9.656326 5.145523e-13
+young_U -0.02593280 0.003887894 -6.670142 1.969759e-08
+exp_U   -0.01009674 0.004335256 -2.328984 2.394186e-02
+attr(,"vcov_type")
+[1] "Clustered (state)"
+RESULT:young_x_unemp_rate_no_controls=-0.343961
+RESULT:experienced_x_unemp_rate_no_controls=-0.039190
+RESULT:young_x_unemp_rate_preferred=-0.262864
+RESULT:experienced_x_unemp_rate_preferred=0.042986
+RESULT:aggregate_unemp_rate_no_controls=-0.115254
+RESULT:aggregate_unemp_rate_month_year_fe=-0.033782
+RESULT:young_x_unemp_rate_employed=-0.175908
+RESULT:experienced_x_unemp_rate_employed=0.020677
+RESULT:young_x_unemp_rate_unemployed=-1.969636
+RESULT:young_x_unemp_rate_nilf=-0.594419
+RESULT:wage_young_x_unemp_rate_all_hires=-0.025933
+RESULT:wage_experienced_x_unemp_rate_all_hires=-0.010097
+RESULT:n_obs_full_sample=17282551

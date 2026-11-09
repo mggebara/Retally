@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "leeson-2022-hobo-economicus",
+  "mode": "independent",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [],
+  "notes": "Table 2: OLS (fixest feols) of panhandlers per station-visit on WMATA monthly exits for the station in the visit month (passersby.csv, already has Georgetown rows), station mean of each passerby's friendliest response (highest category coded 1 among passresp1-5), shuttle indicator (shuttlemin <= 10), homeless-service indicator (servicemin <= 10), date fixed effects, SEs clustered by station. Five-station subsample = Farragut North/West, Gallery Place, McPherson Square, Metro Center. Tables 3-4: donations/minutes*60 and (cash+inkind)/minutes*60 by station; Brown-Forsythe = car::leveneTest(center=median), ANOVA = aov. Attempt-1 (compared with claims via check_attempt): dollars treated missing in-kind as 0 when cash was recorded, giving 70 dollar observations and off-target dollar statistics; also fixest dropped date-FE singletons (240/98 obs). Final: dollars = cash + inkind with missing propagated (67 obs, matching paper's N and per-station Ns) and fixef.rm='none' to keep singletons (242/102 obs). Final run matches all claimed coefficients, SEs, test statistics and Ns. The final docker run command took over 3 minutes of wall time to return (run_sandbox reported 5.9 s for the container); it did not hang.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-07T20:36:22Z",
+  "finished_at": "2026-11-07T21:24:10Z"
+}

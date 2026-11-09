@@ -68,3 +68,7 @@ Agent notes: Three exploratory runs (variable listing; sample/cluster/cell count
 - [`output/script.R`](output/script.R) — 2,725 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/claude-code/20261102T202751Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/claude-code/20261102T202751Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 829 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/claude-code/20261102T202751Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

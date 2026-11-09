@@ -72,3 +72,7 @@ Agent notes: Independent blind reproduction. Attempt-1 was exploratory (it looke
 - [`output/script.R`](output/script.R) — 5,036 bytes, from `benchmark/results/artifacts/hanushek-2022-patience-risk-human-capital/blind/claude-code/20261102T202753Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 180 bytes, from `benchmark/results/artifacts/hanushek-2022-patience-risk-human-capital/blind/claude-code/20261102T202753Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 5,267 bytes, from `benchmark/results/artifacts/hanushek-2022-patience-risk-human-capital/blind/claude-code/20261102T202753Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

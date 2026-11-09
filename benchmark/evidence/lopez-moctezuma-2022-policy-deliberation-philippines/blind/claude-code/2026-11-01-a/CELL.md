@@ -66,3 +66,7 @@ Agent notes: Table 1: OLS of turnout.party, share.treated, share.akbayan (Akbaya
 - [`output/script.R`](output/script.R) — 5,809 bytes, from `benchmark/results/artifacts/lopez-moctezuma-2022-policy-deliberation-philippines/blind/claude-code/20261102T043821Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 293 bytes, from `benchmark/results/artifacts/lopez-moctezuma-2022-policy-deliberation-philippines/blind/claude-code/20261102T043821Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 6,369 bytes, from `benchmark/results/artifacts/lopez-moctezuma-2022-policy-deliberation-philippines/blind/claude-code/20261102T043821Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

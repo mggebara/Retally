@@ -84,3 +84,7 @@ Agent notes: Loaded s (3002 respondents) from code/after_preparation.RData; memi
 - [`output/script.R`](output/script.R) — 5,253 bytes, from `benchmark/results/artifacts/douenne-2022-yellow-vests-carbon-tax/independent/claude-code/20261102T142247Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 446 bytes, from `benchmark/results/artifacts/douenne-2022-yellow-vests-carbon-tax/independent/claude-code/20261102T142247Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 862 bytes, from `benchmark/results/artifacts/douenne-2022-yellow-vests-carbon-tax/independent/claude-code/20261102T142247Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

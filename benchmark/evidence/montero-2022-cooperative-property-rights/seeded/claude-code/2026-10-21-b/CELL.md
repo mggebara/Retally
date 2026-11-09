@@ -59,3 +59,7 @@ Agent notes: Followed the 'Replicating original results' block of Replication_fi
 - [`output/script.R`](output/script.R) — 3,668 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/seeded/claude-code/20261022T021417Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/seeded/claude-code/20261022T021417Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 1,662 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/seeded/claude-code/20261022T021417Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

@@ -72,3 +72,7 @@ Agent notes: Table 1 barangay ITTs and Ns reproduce exactly (city FE OLS on assi
 - [`output/script.R`](output/script.R) — 6,032 bytes, from `benchmark/results/artifacts/lopez-moctezuma-2022-policy-deliberation-philippines/independent/claude-code/20261102T202751Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 244 bytes, from `benchmark/results/artifacts/lopez-moctezuma-2022-policy-deliberation-philippines/independent/claude-code/20261102T202751Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 1,109 bytes, from `benchmark/results/artifacts/lopez-moctezuma-2022-policy-deliberation-philippines/independent/claude-code/20261102T202751Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

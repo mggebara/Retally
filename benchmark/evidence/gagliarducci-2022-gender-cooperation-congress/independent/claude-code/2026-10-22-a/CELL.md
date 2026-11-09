@@ -68,3 +68,7 @@ Agent notes: Data: AnalysisData/bills_analysis_101-111_replication.dta only. Col
 - [`output/script.R`](output/script.R) — 6,799 bytes, from `benchmark/results/artifacts/gagliarducci-2022-gender-cooperation-congress/independent/claude-code/20261022T032229Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 2,716 bytes, from `benchmark/results/artifacts/gagliarducci-2022-gender-cooperation-congress/independent/claude-code/20261022T032229Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 2,408 bytes, from `benchmark/results/artifacts/gagliarducci-2022-gender-cooperation-congress/independent/claude-code/20261022T032229Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

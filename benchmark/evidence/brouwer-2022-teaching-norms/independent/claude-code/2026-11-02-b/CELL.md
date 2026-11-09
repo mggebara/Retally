@@ -62,3 +62,7 @@ Agent notes: attempt-1 was exploratory: it tabulated scene/condition coding and 
 - [`output/script.R`](output/script.R) — 1,732 bytes, from `benchmark/results/artifacts/brouwer-2022-teaching-norms/independent/claude-code/20261102T090910Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 118 bytes, from `benchmark/results/artifacts/brouwer-2022-teaching-norms/independent/claude-code/20261102T090910Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 2,677 bytes, from `benchmark/results/artifacts/brouwer-2022-teaching-norms/independent/claude-code/20261102T090910Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

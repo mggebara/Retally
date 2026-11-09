@@ -71,3 +71,7 @@ Agent notes: Two exploratory runs (no RESULT lines) checked coding and counts. T
 - [`output/script.R`](output/script.R) — 7,336 bytes, from `benchmark/results/artifacts/forsythe-2022-young-workers-recessions/independent/claude-code/20261102T090910Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 147 bytes, from `benchmark/results/artifacts/forsythe-2022-young-workers-recessions/independent/claude-code/20261102T090910Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 3,848 bytes, from `benchmark/results/artifacts/forsythe-2022-young-workers-recessions/independent/claude-code/20261102T090910Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

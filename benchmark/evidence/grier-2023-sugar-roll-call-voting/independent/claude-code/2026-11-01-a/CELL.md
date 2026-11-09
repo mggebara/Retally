@@ -74,3 +74,7 @@ Files read outside the mount: `<home>/.claude/projects/-Users-matthew-dev-Retall
 - [`output/script.R`](output/script.R) — 4,154 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/claude-code/20261102T043820Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 656 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/claude-code/20261102T043820Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 3,425 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/claude-code/20261102T043820Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

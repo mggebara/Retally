@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "entry_id": "gagliarducci-2022-gender-cooperation-congress",
+  "mode": "blind",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Percent of opposite-party cosponsors uses the dataset's pct_cosponsors_opposite (opposite / cosponsors, missing when a bill has zero cosponsors), times 100; paper footnote 11 describes a cosponsors+1 denominator, which the analysis file does not implement.",
+    "RD bandwidths: used the bandwidths stated in the task for these rows (13 for Republican number of cosponsors, 24 for Democratic percent opposite). The R rdrobust mserd bandwidth on bill-level observations gives 17.8 and 16.5 (printed in stdout); the paper used the 2014 CCT Stata implementation, not available in R.",
+    "Propensity scores estimated by probit (estimator truncated in the task text), ATE inverse-probability weights 1/p for women and 1/(1-p) for men, estimated at bill level separately by party; no Congress dummies in the propensity model.",
+    "Constructed controls: rookie = tenure 1; committee leader = chair or ranking member; 5 occupation dummies = occ1-occ5 (unknown and miscellaneous as base); total bills sponsored = count of public bills by sponsor-Congress in the file; 3 macro-area dummies = Census regions from ICPSR state codes (South omitted); log population density = lnpop - lnarea; margin of victory of the elected candidate = 100*|MV1_democrat|.",
+    "Within-party regressions drop the party dummy; missing covariates handled by listwise deletion; fixest drops fixed-effect singletons."
+  ],
+  "notes": "Sample: House public bills (private==0) in the bills_analysis_101-111_replication.dta file. Col 1 OLS: outcome on female, 33 committee-of-referral dummies, minor-topic FE, Congress FE, sponsor and district characteristics, SEs clustered by sponsor-Congress (state-district-term_served-Congress). Col 2 RD: mixed-gender races with |MV1_female| <= h, female, MV, female*MV, Congress FE, unweighted. Col 3: same within h plus committee dummies and minor-topic FE, weighted by inverse probit propensity score from district characteristics estimated within the bandwidth. Cols 4/5: all races, outcome on female + committee dummies + minor-topic FE + Congress FE, IPW from probit on district characteristics + winner's margin (col 4) plus sponsor characteristics (col 5). n_sponsor_terms is the number of sponsor-Congress clusters in the column-1 estimation sample. Two exploratory runs (attempt-1, attempt-2) inspected variables only and printed no RESULT lines; the final script was the first and only scored run.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-07T09:00:00Z",
+  "finished_at": "2026-11-07T09:30:00Z"
+}

@@ -1,0 +1,13 @@
+library(haven)
+D <- "<repo>/benchmark/.cache/claude-code/hollyer-2022-parties-as-disciplinarians/independent/2026-11-07-a/mount/hollyer_2022_parties_as_disciplinarians"
+x <- as.data.frame(read_dta(file.path(D, "cross-national-data.dta")))
+print(summary(x))
+for (v in c("system","cl","pluralty","pr","erule")) print(table(x[[v]], useNA="a"))
+vars <- c("personal","programmatic","ev_total","partysize","unions","business","religious","pluralty","pr","cl","mdmh","polity","demsys","system","gdppc","gini","ethfrac","ethnic","extremist2")
+cc <- complete.cases(x[,vars]); cat("complete", sum(cc), length(unique(x$ccode[cc])), "\n")
+for (v in vars) cat(v, sum(is.na(x[[v]])), "\n")
+print(quantile(x$ev_total[cc], c(.25,.75)))
+print(quantile(x$extremist2[cc], c(.25,.5,.75,1)))
+print(table(x$ethnic[cc] > 0.5))
+r <- as.data.frame(read_dta(file.path(D, "brazil-RD-data.dta")))
+print(summary(r)); print(table(r$dlameduck_runs, useNA="a"))

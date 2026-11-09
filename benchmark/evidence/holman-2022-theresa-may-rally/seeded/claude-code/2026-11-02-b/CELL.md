@@ -73,3 +73,7 @@ Agent notes: Exploratory run confirmed the samples: Table 2 complete cases give 
 - [`output/script.R`](output/script.R) — 6,652 bytes, from `benchmark/results/artifacts/holman-2022-theresa-may-rally/seeded/claude-code/20261102T194315Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 64 bytes, from `benchmark/results/artifacts/holman-2022-theresa-may-rally/seeded/claude-code/20261102T194315Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 206 bytes, from `benchmark/results/artifacts/holman-2022-theresa-may-rally/seeded/claude-code/20261102T194315Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

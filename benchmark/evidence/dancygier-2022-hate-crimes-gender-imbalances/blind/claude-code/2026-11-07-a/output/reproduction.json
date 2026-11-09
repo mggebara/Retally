@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "dancygier-2022-hate-crimes-gender-imbalances",
+  "mode": "blind",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Table 1 control coding is my reading of the paper: age (continuous), gender, years of education, income bracket (factor, 'No answer' kept as a level), occupation factor (used for both main economic activity and employment status; the data hold a single occupation variable), German citizenship, household size and 0-10 self-assessed status (numeric), religion factor and state factor. National battery = the 8 ref_* items, local battery = the 8 ref_loc_* items, entered linearly. Additional controls = contact_ind, distance_ref (factor, incl. Don't know), settle_ref (factor), afd (0-100), afd_ind, lrscale, muslim_ind.",
+    "Columns (3)-(6) estimated on one common complete-case sample (only eduyrs has missing values in Wave 4, 11 cases).",
+    "SI Table C1 controls use the logged versions supplied in context.dta (population, density, unemployment rate, refugee stock 2014, refugee inflow 2014-15, violent crime per capita) plus d_pop1511_muni, unemp_gendergap_2015, pc_hidegree_all2011, pc_manufacturing_2015, d_manuf1115, vote_afd_2013_muni. State fixed effects (plus year FE in the annual model), as the task states, though the main text mentions county fixed effects. Logit via fixest::feglm, SEs clustered by county.",
+    "Extreme Excess Males exclusion: municipalities below the 2.5th or above the 97.5th percentile (R quantile type 7) of the municipality-level distribution of pop_15_44_muni_gendergap_2015 dropped before complete-case selection; the same municipalities are dropped from the annual panel. The Sum outcome = 1 if Hate_all_muni_bin is 1 in any of 2015-2017."
+  ],
+  "notes": "One exploratory run (attempt-1, no RESULT lines) inspected survey.dta and context.dta; the final run is the only run that produced estimates and was not changed afterwards. Table 1 is plain OLS of hate_violence_means on MateComp.cont etc. in Wave 4 (N=3019 for cols 1-2, 3008 for cols 3-6). The C1 models keep only 11 states because vote_afd_2013_muni (and other covariates) are missing for the city-states/other areas; complete-case N = 9282 municipalities (Sum) and 27846 municipality-years (Annual). Read the codebooks codebook_survey.pdf and codebook_context.pdf (documentation inside the mount) for variable definitions only. While reading the paper's method text I saw the Table 1 R2 row and the Job competition entries for cols 3-5, which the redaction left in; I did not tune toward them.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-07T18:05:40Z",
+  "finished_at": "2026-11-07T19:18:30Z"
+}

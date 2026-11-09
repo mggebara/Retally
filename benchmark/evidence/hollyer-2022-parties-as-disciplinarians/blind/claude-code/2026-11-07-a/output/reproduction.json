@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "hollyer-2022-parties-as-disciplinarians",
+  "mode": "blind",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Volatility 25th/75th percentiles taken over the party-level estimation sample using Stata's _pctile definition (R quantile type 2); the paper says only 'in the sample'.",
+    "Separation-of-powers covariate entered as dummies for assembly-elected and parliamentary systems (presidential omitted); ballot rules as closed-list and open-list dummies (non-list omitted); electoral system as plurality and PR dummies (mixed omitted). Covariate set follows the paper text: party size, union/business/religious links, electoral system, ballot rules, logged mean district magnitude, polity, democratic tenure, political system, logged GDP pc, Gini, ethnic fractionalization.",
+    "Ethnic party = more than half of expert coders report ethnic/linguistic linkages (ethnic > 0.5). Ideological extremism = extremist2; extremist party evaluated at distance 3, moderate at 0.",
+    "Each Table 1 regression uses its own complete cases: 431 parties (75 countries) for the overall and ethnicity models, 430 for the ideology model (one party lacks extremist2). n_obs_table1 reports 431."
+  ],
+  "notes": "Table 1: OLS (fixest) of personal / programmatic on ev_total plus party- and country-level covariates, SEs clustered by country; the reported differences are linear combinations of the coefficients (high minus low volatility = beta*(p75-p25); group differences include the interaction evaluated at p25 or p75), so they do not depend on where the other covariates are held. Table 2: rdrobust, local linear, triangular kernel, mserd bandwidths, cutoff 0, running variable mv_incparty, open-seat sample dlameduck_runs==0; the conventional point estimate is reported. One exploratory run (attempt-1, no RESULT lines) inspected the variables; the final run is the first and only scored run. The mount held no author scripts; the codebook.pdf (variable definitions only) and 00-README.txt were read.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-07T20:04:47Z",
+  "finished_at": "2026-11-07T20:46:56Z"
+}

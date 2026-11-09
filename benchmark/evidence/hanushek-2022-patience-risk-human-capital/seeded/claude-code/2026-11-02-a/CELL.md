@@ -82,3 +82,7 @@ Agent notes: Seeded mode, following 3_analysis_crosscountry.do (Table 1: reg pv1
 - [`output/script.R`](output/script.R) — 8,201 bytes, from `benchmark/results/artifacts/hanushek-2022-patience-risk-human-capital/seeded/claude-code/20261102T142300Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 522 bytes, from `benchmark/results/artifacts/hanushek-2022-patience-risk-human-capital/seeded/claude-code/20261102T142300Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 1,298 bytes, from `benchmark/results/artifacts/hanushek-2022-patience-risk-human-capital/seeded/claude-code/20261102T142300Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

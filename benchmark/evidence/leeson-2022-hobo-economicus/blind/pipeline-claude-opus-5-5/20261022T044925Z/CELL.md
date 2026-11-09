@@ -54,6 +54,10 @@ _None declared._
 - [`output/stdout.txt`](output/stdout.txt) — 2,166 bytes, from `benchmark/results/artifacts/leeson-2022-hobo-economicus/blind/pipeline/20261022T044925Z/stdout.txt`
 - [`output/answer-1.md`](output/answer-1.md) — 7,356 bytes, from `benchmark/.cache/llm/798d8411a9bec575067f71d2.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM cache (request 798d8411a9bec575067f71d2: model claude-opus-5-5, max_tokens 16384, effort high)

@@ -1,0 +1,727 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "table1_col3_patience",
+      "ground_truth": {
+        "value": 1.226,
+        "standard_error": 0.132,
+        "unit": "SD of PISA math score per SD of national patience",
+        "claim_type": "coefficient",
+        "location": "Table 1, column (3) Full sample, Patience",
+        "context": "Table 1 (\"National Preferences and Student Achievement across Countries: The Intertwined Roles of Patience and Risk-taking\"), column (3), row Patience.  Student-level least squares regression of the PISA math test score (original PISA scores divided by 100, so a unit is one standard deviation), pooled over all PISA waves 2000-2018, on the country's Global Preference Survey patience and risk-taking entered together.  Each preference is z-standardised in the analytical sample and collapsed to the country level. Controls: student gender, age and migration status, imputation dummies, and test-wave fixed effects.  Weighted by students' sampling probabilities within countries, giving equal weight to each country.  Sample: all students in the 49 PISA countries with GPS data.  Robust standard errors clustered at the country level.\n",
+        "decimals": 3,
+        "sample_size": 1992276
+      },
+      "i4r": {
+        "reproduced_value": 1.226,
+        "outcome": "matches",
+        "notes": "DP 48 Table A1 baseline (bold) row, 1.226 (0.132).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.10766721044045678,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "table1_col3_patience",
+        "claim_type": "coefficient",
+        "claimed": 1.226,
+        "reproduced": 1.2201,
+        "tolerance": 0.10766721044045678,
+        "rel_err": 0.004812398042414369,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "table1_col3_patience",
+        "reproduced": 1.2201,
+        "band_source": "se_band",
+        "band_relative": 0.10766721044045678,
+        "band_absolute": 0.132,
+        "abs_err": 0.005900000000000016,
+        "rel_err": 0.004812398042414369,
+        "margin": 0.04469696969696982,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "table1_col3_risk_taking",
+      "ground_truth": {
+        "value": -1.241,
+        "standard_error": 0.184,
+        "unit": "SD of PISA math score per SD of national risk-taking",
+        "claim_type": "coefficient",
+        "location": "Table 1, column (3) Full sample, Risk-taking",
+        "context": "Table 1, column (3), row Risk-taking.  Same regression as table1_col3_patience (patience and risk-taking entered together).\n",
+        "decimals": 3,
+        "sample_size": 1992276
+      },
+      "i4r": {
+        "reproduced_value": -1.241,
+        "outcome": "matches",
+        "notes": "DP 48 Table A1 baseline (bold) row, -1.241 (0.184).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.1482675261885576,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "table1_col3_risk_taking",
+        "claim_type": "coefficient",
+        "claimed": -1.241,
+        "reproduced": -1.2317,
+        "tolerance": 0.1482675261885576,
+        "rel_err": 0.0074939564867043396,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "table1_col3_risk_taking",
+        "reproduced": -1.2317,
+        "band_source": "se_band",
+        "band_relative": 0.1482675261885576,
+        "band_absolute": 0.184,
+        "abs_err": 0.009300000000000086,
+        "rel_err": 0.0074939564867043396,
+        "margin": 0.05054347826087004,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "table1_col1_patience",
+      "ground_truth": {
+        "value": 0.917,
+        "standard_error": 0.127,
+        "unit": "SD of PISA math score per SD of national patience",
+        "claim_type": "coefficient",
+        "location": "Table 1, column (1) Full sample, Patience",
+        "context": "Table 1, column (1), row Patience.  Same specification as table1_col3_patience but with patience as the only preference measure (risk-taking omitted).\n",
+        "decimals": 3,
+        "sample_size": 1992276
+      },
+      "i4r": {
+        "reproduced_value": 0.917,
+        "outcome": "matches",
+        "notes": "DP 48 section 2 blanket verdict (Tables 1-4 identical); value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.13849509269356597,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "table1_col1_patience",
+        "claim_type": "coefficient",
+        "claimed": 0.917,
+        "reproduced": 0.9133,
+        "tolerance": 0.13849509269356597,
+        "rel_err": 0.004034896401308655,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "table1_col1_patience",
+        "reproduced": 0.9133,
+        "band_source": "se_band",
+        "band_relative": 0.13849509269356597,
+        "band_absolute": 0.127,
+        "abs_err": 0.0037000000000000366,
+        "rel_err": 0.004034896401308655,
+        "margin": 0.029133858267716823,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "table1_col2_risk_taking",
+      "ground_truth": {
+        "value": -0.482,
+        "standard_error": 0.261,
+        "unit": "SD of PISA math score per SD of national risk-taking",
+        "claim_type": "coefficient",
+        "location": "Table 1, column (2) Full sample, Risk-taking",
+        "context": "Table 1, column (2), row Risk-taking.  Same specification as table1_col3_patience but with risk-taking as the only preference measure (patience omitted).\n",
+        "decimals": 3,
+        "sample_size": 1992276
+      },
+      "i4r": {
+        "reproduced_value": -0.482,
+        "outcome": "matches",
+        "notes": "DP 48 section 2 blanket verdict; value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.54149377593361,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "table1_col2_risk_taking",
+        "claim_type": "coefficient",
+        "claimed": -0.482,
+        "reproduced": -0.4742,
+        "tolerance": 0.54149377593361,
+        "rel_err": 0.01618257261410783,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "table1_col2_risk_taking",
+        "reproduced": -0.4742,
+        "band_source": "se_band",
+        "band_relative": 0.54149377593361,
+        "band_absolute": 0.261,
+        "abs_err": 0.007799999999999974,
+        "rel_err": 0.01618257261410783,
+        "margin": 0.029885057471264267,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "table1_col5_natives_patience",
+      "ground_truth": {
+        "value": 1.296,
+        "standard_error": 0.133,
+        "unit": "SD of PISA math score per SD of national patience",
+        "claim_type": "coefficient",
+        "location": "Table 1, column (5) Natives, Patience",
+        "context": "Table 1, column (5) Natives, row Patience.  The column (3) regression (patience and risk-taking together, same weighting, wave fixed effects and country-clustered SEs) estimated on native students only.  Students are migrants if both parents were born abroad; natives are the rest.  The migration-status controls drop out within this subsample.\n",
+        "decimals": 3,
+        "sample_size": 1751822
+      },
+      "i4r": {
+        "reproduced_value": 1.296,
+        "outcome": "matches",
+        "notes": "DP 48 section 2 blanket verdict; value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.10262345679012345,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "table1_col5_natives_patience",
+        "claim_type": "coefficient",
+        "claimed": 1.296,
+        "reproduced": 1.2953,
+        "tolerance": 0.10262345679012345,
+        "rel_err": 0.0005401234567902353,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "table1_col5_natives_patience",
+        "reproduced": 1.2953,
+        "band_source": "se_band",
+        "band_relative": 0.10262345679012345,
+        "band_absolute": 0.133,
+        "abs_err": 0.000700000000000145,
+        "rel_err": 0.0005401234567902353,
+        "margin": 0.005263157894737931,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "table1_col5_natives_risk_taking",
+      "ground_truth": {
+        "value": -1.32,
+        "standard_error": 0.189,
+        "unit": "SD of PISA math score per SD of national risk-taking",
+        "claim_type": "coefficient",
+        "location": "Table 1, column (5) Natives, Risk-taking",
+        "context": "Table 1, column (5) Natives, row Risk-taking.  Same regression as table1_col5_natives_patience.\n",
+        "decimals": 3,
+        "sample_size": 1751822
+      },
+      "i4r": {
+        "reproduced_value": -1.32,
+        "outcome": "matches",
+        "notes": "DP 48 section 2 blanket verdict; value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.1431818181818182,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "table1_col5_natives_risk_taking",
+        "claim_type": "coefficient",
+        "claimed": -1.32,
+        "reproduced": -1.3182,
+        "tolerance": 0.1431818181818182,
+        "rel_err": 0.0013636363636363815,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "table1_col5_natives_risk_taking",
+        "reproduced": -1.3182,
+        "band_source": "se_band",
+        "band_relative": 0.1431818181818182,
+        "band_absolute": 0.18900000000000003,
+        "abs_err": 0.0018000000000000238,
+        "rel_err": 0.0013636363636363815,
+        "margin": 0.009523809523809648,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "table1_col3_observations",
+      "ground_truth": {
+        "value": 1992276.0,
+        "standard_error": null,
+        "unit": "students",
+        "claim_type": "count",
+        "location": "Table 1, column (3), Observations",
+        "context": "Observations in the Table 1 column (3) regression: students in all PISA waves 2000-2018 in the 49 countries with GPS data (the full-sample N shared by columns 1-4, 7 and 8).\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 1992276.0,
+        "outcome": "matches",
+        "notes": "DP 48 section 3.1 states the full sample N (1,992,276) when dropping imputed values.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "table1_col3_observations",
+        "claim_type": "count",
+        "claimed": 1992276.0,
+        "reproduced": 1992276.0,
+        "tolerance": 0.05,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "table1_col3_observations",
+        "reproduced": 1992276.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 99613.8,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "table2_col3_patience",
+      "ground_truth": {
+        "value": 0.931,
+        "standard_error": 0.116,
+        "unit": "SD of PISA math score per SD of country-of-origin patience",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (3) Full sample, Patience (country-of-origin)",
+        "context": "Table 2 (\"Patience, Risk-taking, and Student Achievement: Migrant Analysis\"), column (3), row Patience (country-of-origin). Least squares regression of the PISA math score (divided by 100), PISA waves 2003-2018, on the GPS patience and risk-taking of the student's country of origin, entered together.  Sample: migrant students, both of whose parents were born outside the country where the student attends school, with an identified origin country that has GPS data.  First-generation migrants are assigned their country of birth, second-generation migrants their father's country of origin.  The sample spans 58 countries of origin and 48 residence countries.  Includes the 180 residence- country-by-wave fixed effects.  Controls: student gender, age, a dummy for an OECD country of origin, and imputation dummies. Robust standard errors clustered at the country-of-origin level.\n",
+        "decimals": 3,
+        "sample_size": 80398
+      },
+      "i4r": {
+        "reproduced_value": 0.931,
+        "outcome": "matches",
+        "notes": "DP 48 Table A2 baseline (bold) row, 0.931 (0.116).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.12459720730397422,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "table2_col3_patience",
+        "claim_type": "coefficient",
+        "claimed": 0.931,
+        "reproduced": 0.9122,
+        "tolerance": 0.12459720730397422,
+        "rel_err": 0.020193340494092413,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "table2_col3_patience",
+        "reproduced": 0.9122,
+        "band_source": "se_band",
+        "band_relative": 0.12459720730397422,
+        "band_absolute": 0.116,
+        "abs_err": 0.01880000000000004,
+        "rel_err": 0.020193340494092413,
+        "margin": 0.1620689655172417,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "table2_col3_risk_taking",
+      "ground_truth": {
+        "value": -0.294,
+        "standard_error": 0.122,
+        "unit": "SD of PISA math score per SD of country-of-origin risk-taking",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (3) Full sample, Risk-taking (country-of-origin)",
+        "context": "Table 2, column (3), row Risk-taking (country-of-origin).  Same regression as table2_col3_patience.\n",
+        "decimals": 3,
+        "sample_size": 80398
+      },
+      "i4r": {
+        "reproduced_value": -0.294,
+        "outcome": "matches",
+        "notes": "DP 48 Table A2 baseline (bold) row, -0.294 (0.122).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.41496598639455784,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "table2_col3_risk_taking",
+        "claim_type": "coefficient",
+        "claimed": -0.294,
+        "reproduced": -0.194,
+        "tolerance": 0.41496598639455784,
+        "rel_err": 0.34013605442176864,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "table2_col3_risk_taking",
+        "reproduced": -0.194,
+        "band_source": "se_band",
+        "band_relative": 0.41496598639455784,
+        "band_absolute": 0.122,
+        "abs_err": 0.09999999999999998,
+        "rel_err": 0.34013605442176864,
+        "margin": 0.8196721311475408,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "table2_col1_patience",
+      "ground_truth": {
+        "value": 0.779,
+        "standard_error": 0.115,
+        "unit": "SD of PISA math score per SD of country-of-origin patience",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (1) Full sample, Patience (country-of-origin)",
+        "context": "Table 2, column (1), row Patience (country-of-origin).  Same specification as table2_col3_patience but with country-of-origin patience as the only preference measure.\n",
+        "decimals": 3,
+        "sample_size": 80398
+      },
+      "i4r": {
+        "reproduced_value": 0.779,
+        "outcome": "matches",
+        "notes": "DP 48 section 2 blanket verdict; value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.14762516046213095,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "table2_col1_patience",
+        "claim_type": "coefficient",
+        "claimed": 0.779,
+        "reproduced": 0.8051,
+        "tolerance": 0.14762516046213095,
+        "rel_err": 0.03350449293966625,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "table2_col1_patience",
+        "reproduced": 0.8051,
+        "band_source": "se_band",
+        "band_relative": 0.14762516046213095,
+        "band_absolute": 0.11500000000000002,
+        "abs_err": 0.026100000000000012,
+        "rel_err": 0.03350449293966625,
+        "margin": 0.2269565217391305,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "table2_col4_patience",
+      "ground_truth": {
+        "value": 1.032,
+        "standard_error": 0.133,
+        "unit": "SD of PISA math score per SD of country-of-origin patience",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (4) Full sample, Patience (country-of-origin)",
+        "context": "Table 2, column (4), row Patience (country-of-origin).  The column (3) regression plus the four other GPS preferences of the country of origin (positive reciprocity, negative reciprocity, altruism, trust) as controls.\n",
+        "decimals": 3,
+        "sample_size": 80398
+      },
+      "i4r": {
+        "reproduced_value": 1.032,
+        "outcome": "matches",
+        "notes": "DP 48 section 2 blanket verdict; value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.12887596899224807,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "table2_col4_patience",
+        "claim_type": "coefficient",
+        "claimed": 1.032,
+        "reproduced": 1.0271,
+        "tolerance": 0.12887596899224807,
+        "rel_err": 0.004748062015503998,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "table2_col4_patience",
+        "reproduced": 1.0271,
+        "band_source": "se_band",
+        "band_relative": 0.12887596899224807,
+        "band_absolute": 0.133,
+        "abs_err": 0.0049000000000001265,
+        "rel_err": 0.004748062015503998,
+        "margin": 0.03684210526315884,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "table2_col4_risk_taking",
+      "ground_truth": {
+        "value": -0.449,
+        "standard_error": 0.14,
+        "unit": "SD of PISA math score per SD of country-of-origin risk-taking",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (4) Full sample, Risk-taking (country-of-origin)",
+        "context": "Table 2, column (4), row Risk-taking (country-of-origin).  Same regression as table2_col4_patience.\n",
+        "decimals": 3,
+        "sample_size": 80398
+      },
+      "i4r": {
+        "reproduced_value": -0.449,
+        "outcome": "matches",
+        "notes": "DP 48 section 2 blanket verdict; value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.311804008908686,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "table2_col4_risk_taking",
+        "claim_type": "coefficient",
+        "claimed": -0.449,
+        "reproduced": -0.3819,
+        "tolerance": 0.311804008908686,
+        "rel_err": 0.14944320712694875,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "table2_col4_risk_taking",
+        "reproduced": -0.3819,
+        "band_source": "se_band",
+        "band_relative": 0.311804008908686,
+        "band_absolute": 0.14,
+        "abs_err": 0.06709999999999999,
+        "rel_err": 0.14944320712694875,
+        "margin": 0.4792857142857142,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "table2_col3_observations",
+      "ground_truth": {
+        "value": 80398.0,
+        "standard_error": null,
+        "unit": "migrant students",
+        "claim_type": "count",
+        "location": "Table 2, column (3), Observations",
+        "context": "Observations in the Table 2 column (3) regression: first- and second-generation migrant students, PISA waves 2003-2018 (the full-sample N shared by columns 1-5).\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 80398.0,
+        "outcome": "matches",
+        "notes": "DP 48 section 3.2 cites the 80,398 migrant observations.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "table2_col3_observations",
+        "claim_type": "count",
+        "claimed": 80398.0,
+        "reproduced": 80397.0,
+        "tolerance": 0.05,
+        "rel_err": 1.2438120351252519e-05,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "table2_col3_observations",
+        "reproduced": 80397.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 4019.9,
+        "abs_err": 1.0,
+        "rel_err": 1.2438120351252519e-05,
+        "margin": 0.00024876240702505036,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 13,
+    "row_passed": 13,
+    "recomputed_passed": 13,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "hanushek-2022-patience-risk-human-capital",
+    "mode": "independent",
+    "reproducer": "claude-code",
+    "label": "claude-code",
+    "model": null,
+    "oracle": false,
+    "run": "2026-11-07-a",
+    "results_file": "claude-code-run4-24papers-indep-blind-2026-11-08.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/hanushek-2022-patience-risk-human-capital/independent/claude-code/20261108T192144Z",
+    "run_dir": "benchmark/reproductions/hanushek-2022-patience-risk-human-capital/independent/2026-11-07-a",
+    "date": "2026-11-08T19:25:00Z",
+    "data_access": "public",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 13,
+    "final": 13,
+    "first_scored": 13,
+    "first_scored_index": 5,
+    "first_attempt": 0,
+    "n_refinements": 2,
+    "n_error_refinements": 2,
+    "n_claim_refinements": 0,
+    "n_executions": 6,
+    "n_files_stripped": 21,
+    "agrees_with_i4r": true,
+    "deviations_manifest": [
+      "Data are read with a small hand-written chunked reader for Stata .dta format 118 (large readBin blocks, vectorised column decoding, Stata missing codes to NA) instead of haven::read_dta / data.table::fread: both of those exceeded the 300 s sandbox limit on the 2.3 GB / 2.8 GB files because of slow per-row I/O through the Docker file share. The final script checks the reader against haven on the first 2,000 rows (max abs diff 0, country strings identical).",
+      "Table 1 migration-status controls are migra1 and migra2 (first/second generation, mean-imputed where missing in the working file) plus imputation dummies imfemale, image, immigra0, immigra1 and immigra2; natives in column 5 are all students not coded migra1==1 or migra2==1.",
+      "Table 2 controls are female, age, coo_oecd, imfemale and image, with residence-country-by-wave FE (countrywave), weights wgt, and SEs clustered by origin country; fixest drops 1 singleton FE observation, so N is 80,397 rather than 80,398."
+    ],
+    "deviations_stdout": [],
+    "notes": "Independent reproduction from the paper text. Table 1 (eq. 1): pv1math (PISA math/100) on the country-level GPS patience and/or risk-taking from pisa_full_gps_final.dta, with gender, age, migration status, imputation dummies and wave FE, weighted by wgtc (sampling weights giving each country equal weight), SEs clustered by country; N = 1,992,276 students, 49 countries, 263 country-waves, all as in the paper. Table 2 (eq. 2): migrant sample from pisa_full_gps_final_imcoo.dta, waves 2003-2018, 80,398 students, 58 origins, 180 residence-country-by-wave cells (as in the paper), regressed on origin-country GPS measures. The Table 1 coefficients are within about 0.01 of the paper. In Table 2, patience is close (0.912 vs 0.931; 1.027 vs 1.032) but risk-taking is smaller in magnitude (-0.194 vs -0.294; -0.382 vs -0.449). No claim-driven refinement was made; the final run is the first run that printed RESULT lines. Attempts 1 and 3 timed out while reading the large file (fread on the CSV, then haven on the .dta). Attempt 2 was an exploratory timing run. Attempt 4 (exploratory) showed that even a bare haven read of the full .dta exceeds 300 s. Attempt 5 (exploratory) validated the chunked reader: full file in about 43 s of CPU, 1,992,276 rows; it timed out afterwards in an extra haven read. The host was asleep for most of each hour, so each run took 40-100 min of wall-clock time; no run hung. Earlier scratch files from a previous session (an exploratory CSV script and its partial output) were reused for variable names and the Table 2 specification only.",
+    "files_read_outside_mount": [],
+    "paper_text": "paper.txt",
+    "complete": true,
+    "missing": []
+  }
+}

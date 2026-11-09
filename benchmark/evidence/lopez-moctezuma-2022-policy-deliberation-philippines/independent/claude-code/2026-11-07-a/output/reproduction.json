@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "entry_id": "lopez-moctezuma-2022-policy-deliberation-philippines",
+  "mode": "independent",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-3", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-6", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-7", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Attendance-oversampling weights are reconstructed from the paper's one-sentence description: in each treated barangay with surveyed attendees, attendees get att.prop/(survey attendee share) and non-attendees (1-att.prop)/(1-survey attendee share); all other respondents weight 1. Missing attendance is treated as non-attendance. The authors' exact weights are not described further and may differ.",
+    "Individual-level sample is the 'effective sample' of respondents with a valid party-list turnout answer (1,081 usable; one respondent lacks city/barangay). Vote outcomes use respondents who reported voting in the party-list race.",
+    "Anderson (2008) indices: items standardized by the control group (assignment==0) of each party-list subsample; weights = row sums of the inverse covariance matrix (pairwise-complete); index = weighted mean of available items, re-standardized by the control group. Poverty items poverty/gap/corruption reversed (6-x) so higher = more agreement, CCT as coded; gender items femhouse, fempol, equality, harassment as coded and discrimination reversed (higher = more gender-egalitarian awareness).",
+    "Table 1 vote(overall) outcome is the treating party's share (share.akbayan in Akbayan municipalities, share.umalabka in Umalab Ka ones), recomputed from partytreat. Permutation p-values (2000 within-municipality reshuffles) are printed for information only; they do not reproduce the paper's p-values."
+  ],
+  "notes": "Table 1 (barangay ITTs and N) reproduces exactly with feols(y ~ assignment | city). SI Table F.1 unweighted vote ITTs come out 23.51 and 32.01 vs claimed 23.24 and 31.73 (small sample difference, likely a few respondents). The four Anderson-index ITTs (Tables C.3/C.4) do not reproduce (0.341/0.311/0.352/-0.013 vs 0.496/0.126/0.45/0.095). After the one claim comparison (attempt-2), exploratory runs 3-7 (no RESULT lines) tried alternative weights (attendee-only, att.prop.turn, barangay-population inverse-probability weights), samples (full vs effective) and item orientations; none matched the claimed indices or the paper's text figures (13.5/16.7/6.6 pp weighted vote ITTs) consistently, so the attempt-2 specification was kept unchanged and rerun as the final run (script identical to attempt-2/script.R). attempt-5 crashed in an exploratory population-weight variant (barangay-name mismatch), fixed in attempt-6. The SI appendix is not in paper.txt, so SI table specifications were inferred from the main text and claim descriptions. Codebook PDFs in the mount were read as data documentation.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-08T01:54:28Z",
+  "finished_at": "2026-11-08T02:01:30Z"
+}

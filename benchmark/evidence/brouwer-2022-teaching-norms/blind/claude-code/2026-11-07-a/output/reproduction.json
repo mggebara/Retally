@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "brouwer-2022-teaching-norms",
+  "mode": "blind",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was exploratory (variable tabulations of master.dta, no RESULT lines). Final: OLS linear probability models (fixest::feols) with SEs clustered by School. Punishment models on scenes 2 (Violation) and 3 (Violation+Help), N=400 (399 with controls; one target with missing gender dropped). Helping models on scenes 1 (Help) and 3 (Violation+Help), N=401 (400 with controls). Regressors: Child, VH (=ViolationHelp), Child x VH; controls male (Male Target), hugo (Male Actor), Morning, witness, rich, Rain, Hot. Helping uses the 'Helping' variable (parent picked up or asked child to pick up), not 'HelpingParents'. Only master.dta and paper.txt were read; no scripts or result files from the package were opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-07T17:40:00Z",
+  "finished_at": "2026-11-07T17:56:00Z"
+}

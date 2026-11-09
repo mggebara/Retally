@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "manekin-2022-effective-for-whom",
+  "mode": "independent",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was exploratory: it printed the structure, factor levels, and summaries of the four survey data frames, with no RESULT lines. Final script: OLS via lm(). Study 1 (US wave 1, Israel wave 1) regresses each 0-10 outcome on protester-identity and tactic factors (base: white protesters marching in the streets), weighted by the supplied weight variable. Israeli identity coding was assumed to be 0=white Jews, 1=Ethiopian, 2=Arab. Study 2 (US and Israel wave 2) regresses on black (or the Israeli identity factor), group_goal, and commitment, unweighted because those data frames have no weight variable. The police-action model for Study 2 US drops 5 respondents with a missing outcome, giving 3008 observations. Coefficients, SEs, intercepts, and R2 all match the paper's Tables 1 and 2 as printed in paper.txt, on the first scored run, so no claim-driven changes were made.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-08T01:54:55Z",
+  "finished_at": "2026-11-08T01:55:53Z"
+}

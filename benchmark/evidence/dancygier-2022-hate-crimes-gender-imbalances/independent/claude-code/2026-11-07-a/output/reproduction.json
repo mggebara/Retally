@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "entry_id": "dancygier-2022-hate-crimes-gender-imbalances",
+  "mode": "independent",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Table 1 control coding is my reconstruction: age, eduyrs, household_size, self_econ (code 11 = '0 (BOTTOM)' recoded to 0), citizenship entered linearly; gender, income (incl. 'No answer'), occupation (stands in for both main activity and employment status), religion, state as factors. National battery = the 8 ref_* items, local battery = the 8 ref_loc_* items, all linear 1-4. Additional controls = contact_ind, distance_ref (factor, incl. Don't know), settle_ref (factor), afd (0-100), afd_ind, lrscale, muslim_ind. R2 in cols 4-6 is lower than the paper's (0.360/0.373/0.434 vs 0.394/0.410/0.459), so the authors probably coded the attitude batteries more flexibly (e.g. as factors); Mate Competition coefficients still match to within 0.002.",
+    "SI Table C1 models: feglm logit with state fixed effects (plus year FE in the annual model), SEs clustered by county. Controls follow footnote 24 using the logged variables from context.dta (log population, log density, population change, log unemployment, male/female unemployment ratio, log refugee stock 2014, log refugee inflow, % highly educated, manufacturing share, change in manufacturing share, AfD 2013 vote share, log violent crime per capita). Excess Males trimmed at the 2.5/97.5 percentiles of the 2015 municipality cross-section before taking complete cases."
+  ],
+  "notes": "One exploratory run (attempt-1, no RESULT lines) to inspect survey.dta and context.dta, then the final script, which ran once. I did not change the script after comparing results with the claims, so there are no claim attempts. Every count matches the paper exactly (3019, 3008, 9282, 27846). Coefficients for cols 1-3, job competition and both SI Table C1 logits match to 3 decimals. Cols 4-6 Mate Competition come out 0.207/0.187/0.157 against the claimed 0.206/0.185/0.155. Read the mount's 1-ReadMe.txt, codebook_survey.pdf and codebook_context.pdf (documentation inside the mount). No author scripts opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-07T18:05:39Z",
+  "finished_at": "2026-11-07T18:45:00Z"
+}

@@ -1,0 +1,58 @@
+Table 4: attack quarters in data: 60 ; in estimation sample: 50 ; under women: 9 
+Table 4 coefficients:
+            kill_16         female_pres kill_16:female_pres              growth 
+       2.322089e+00       -2.937172e+00       -3.828386e+00       -4.458494e-07 
+      log_inflation             execrlc        election_qtr 
+      -8.045212e-01        1.371259e+00        3.986140e+00 
+PCSE:
+            kill_16         female_pres              growth       log_inflation 
+       1.915344e+00        7.438452e-01        1.429337e-07        1.724996e-01 
+            execrlc        election_qtr kill_16:female_pres 
+       1.842773e-01        6.578744e-01        4.260006e+00 
+R2: 0.2675617  N: 4486 
+treatment1 == post_attack: TRUE 
+Like May (OLS):
+                    Estimate  Std. Error      t value      Pr(>|t|)
+(Intercept)      2.448654728 0.046630501   52.5118685  0.000000e+00
+treatment1       0.008807290 0.022123976    0.3980881  6.905659e-01
+time            -0.451290957 0.033801339  -13.3512746  1.231383e-40
+factor(wave)10   0.819599109 0.028218513   29.0447305 6.186084e-185
+factor(wave)11   0.915693092 0.027221920   33.6380789 4.302071e-247
+factor(wave)12   1.075957741 0.028111451   38.2747141 6.656645e-319
+factor(wave)13   0.261942411 0.029232226    8.9607410  3.262363e-19
+factor(wave)14   0.497586965 0.030607538   16.2570072  2.251928e-59
+factor(wave)15   0.043987629 0.031497937    1.3965241  1.625589e-01
+white            0.509319248 0.023925836   21.2874171 2.125397e-100
+female           0.488111664 0.013542610   36.0426594 3.356672e-283
+labour          -2.440353690 0.022265638 -109.6017865  0.000000e+00
+party_other     -2.031214996 0.018113019 -112.1411646  0.000000e+00
+income          -0.007858175 0.002183243   -3.5993128  3.191666e-04
+ideology2        0.518029066 0.003766617  137.5316443  0.000000e+00
+treatment1:time -0.099607240 0.027867187   -3.5743557  3.512065e-04
+May best PM (logit):
+                    Estimate  Std. Error    z value     Pr(>|z|)
+(Intercept)     -2.472938298 0.056700585 -43.613982 0.000000e+00
+treatment1      -0.002314519 0.019450724  -0.118994 9.052801e-01
+time             1.364110424 0.031515062  43.284396 0.000000e+00
+factor(wave)8   -0.206549054 0.029092086  -7.099837 1.249045e-12
+factor(wave)10   1.211580239 0.028349530  42.737225 0.000000e+00
+factor(wave)11   1.470678834 0.027570730  53.342034 0.000000e+00
+white            0.595546650 0.030017878  19.839732 1.351779e-87
+female           0.029644667 0.016668993   1.778432 7.533296e-02
+labour          -2.348711003 0.027635294 -84.989543 0.000000e+00
+party_other     -1.674405499 0.022366915 -74.860815 0.000000e+00
+income           0.044846285 0.002679131  16.739116 6.799032e-63
+ideology2        0.403151216 0.005019148  80.322636 0.000000e+00
+treatment1:time -0.321537303 0.037152596  -8.654504 4.950582e-18
+Aliased (like): factor(wave)16  (bestPM): factor(wave)12 
+RESULT:intl_attack_table4=2.322089
+RESULT:intl_attack_x_woman_exec_table4=-3.828386
+RESULT:n_obs_table4=4486.000000
+RESULT:did_attack_x_time_like_may_table2=-0.099607
+RESULT:did_attack_like_may_table2=0.008807
+RESULT:did_time_like_may_table2=-0.451291
+RESULT:did_attack_x_time_may_best_pm_table2=-0.321537
+RESULT:did_attack_may_best_pm_table2=-0.002315
+RESULT:did_time_may_best_pm_table2=1.364110
+RESULT:n_obs_did_like_may_table2=143499.000000
+RESULT:n_obs_did_may_best_pm_table2=97155.000000

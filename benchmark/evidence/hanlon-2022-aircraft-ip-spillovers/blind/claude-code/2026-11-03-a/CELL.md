@@ -66,3 +66,7 @@ Agent notes: Airframe sample: airframe_data.dta, type fighter or bomber, years 1
 - [`output/script.R`](output/script.R) — 2,897 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/blind/claude-code/20261103T001658Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 252 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/blind/claude-code/20261103T001658Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 2,657 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/blind/claude-code/20261103T001658Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

@@ -56,6 +56,10 @@ _None declared._
 - [`output/stdout.txt`](output/stdout.txt) — 6,609 bytes, from `benchmark/results/artifacts/dancygier-2022-hate-crimes-gender-imbalances/blind/pipeline/20261102T151132Z/stdout.txt`
 - [`output/answer-1.md`](output/answer-1.md) — 8,716 bytes, from `benchmark/.cache/llm-oracle/desktop-opus-run2/answers/38b33bf124f911304b7405c3.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM oracle store desktop-opus-run2 (request 38b33bf124f911304b7405c3: model claude-opus-5-5, max_tokens 16384, effort high)

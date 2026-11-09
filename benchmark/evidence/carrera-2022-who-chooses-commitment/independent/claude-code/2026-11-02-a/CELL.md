@@ -61,3 +61,7 @@ Agent notes: attempt-1 was exploratory: it printed variable names, labels and su
 - [`output/script.R`](output/script.R) — 4,128 bytes, from `benchmark/results/artifacts/carrera-2022-who-chooses-commitment/independent/claude-code/20261102T062001Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/carrera-2022-who-chooses-commitment/independent/claude-code/20261102T062001Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 3,696 bytes, from `benchmark/results/artifacts/carrera-2022-who-chooses-commitment/independent/claude-code/20261102T062001Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

@@ -1,0 +1,40 @@
+Columns in yh_data: hrmonth,hryear,peage,pesex,peeduca,race,prhspnon,pemlr,pulk,pulkm2,pulkm3,pulkm4,pulkm5,pulkm6,pelkavl,pruntype,penlfact,peschft,pwsswgt,v2hrmonth,v2hryear,v2gestfips,v2pemlr,v2pehrusl1,v2pruntype,v2puiodp1,v2peio1cow,v2peio1icd,v2peio1ocd,v2prernhly,v2prernwa,v2pwsswgt,v2prwernal,v2prhernal,pehspnon 
+Earnings candidates: v2prernwa 
+Allocation candidates: v2prwernal,v2prhernal 
+Rows read: 19836464 
+Year range (v2hryear): 1994-2016 
+Rows after restrictions: 19318423 
+DEVIATION: State unemployment-rate file provided only covers 1994 to mid-2014; person-months after that lack the cyclical regressor and are dropped from estimation
+Columns kept: v2hrmonth,v2hryear,v2gestfips,v2peio1icd,v2peio1ocd,v2prernwa,v2prwernal,v2prhernal,w,emp_prev,unemp_prev,nilf_prev,hired,young,demo 
+UR file columns: v2gestfips,v2unemp_smy,v2hryear,v2hrmonth 
+UR file rows: 12740 years: 1994-2014 
+Rows missing UR before drop: 2035872 
+   v2hryear      N
+      <int>  <int>
+1:     2014 519992
+2:     2015 868980
+3:     2016 646900
+N full sample: 17282551 
+              Estimate Std. Error   t value     Pr(>|t|)
+(Intercept)  4.0977154 0.07746762 52.895844 1.461654e-45
+ur          -0.1152543 0.01376499 -8.373007 4.430317e-11
+attr(,"vcov_type")
+[1] "Clustered (state)"
+      Estimate Std. Error   t value   Pr(>|t|)
+ur -0.03378225 0.01485671 -2.273872 0.02730036
+attr(,"vcov_type")
+[1] "Clustered (state)"
+               Estimate Std. Error    t value     Pr(>|t|)
+(Intercept)  2.68744701 0.06911214  38.885311 4.884590e-39
+young        5.58164666 0.11970295  46.629148 7.072205e-43
+ur_y        -0.34223092 0.01950146 -17.548988 5.126050e-23
+ur_o        -0.03941943 0.01197894  -3.290728 1.836507e-03
+attr(,"vcov_type")
+[1] "Clustered (state)"
+         Estimate Std. Error    t value     Pr(>|t|)
+young  5.50102880 0.12102533  45.453534 2.463264e-42
+ur_y  -0.26103966 0.02014388 -12.958760 1.320616e-17
+ur_o   0.04284761 0.01544630   2.773972 7.764732e-03
+attr(,"vcov_type")
+[1] "Clustered (state)"
+Table 1 done 

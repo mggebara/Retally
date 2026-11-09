@@ -1,0 +1,25 @@
+suppressMessages({library(haven); library(dplyr)})
+D <- "<repo>/benchmark/.cache/claude-code/holman-2022-theresa-may-rally/blind/2026-11-07-a/mount/holman_2022_theresa_may_rally"
+g <- read_dta(file.path(D,"global_approval.dta"))
+for (v in names(g)) { cat(v, ":", attr(g[[v]],"label"), class(g[[v]])[1], "\n") }
+print(summary(g))
+print(table(g$pres_15death, g$female_pres, useNA="ifany"))
+print(table(g$election_qtr, useNA="ifany")); print(table(g$execrlc, useNA="ifany"))
+print(head(unique(g$qtr), 20))
+uk <- g %>% filter(grepl("United Kingdom|Britain", country))
+print(as.data.frame(tail(uk[,c("country","qtr","lag_approval","pres_15death","rally_events","female_pres","manchester","kill_16","kill_14")],30)))
+cat("complete cases:", sum(complete.cases(g[,c("lag_approval","pres_15death","female_pres","growth","log_inflation","execrlc","election_qtr","country")])), "\n")
+cat("n countries:", length(unique(g$country)), "\n")
+d <- read_dta(file.path(D,"did_data.dta"))
+for (v in names(d)) { cat(v, ":", attr(d[[v]],"label"), class(d[[v]])[1], "\n") }
+cat("nrow", nrow(d), "\n")
+print(table(d$wave, useNA="ifany"))
+print(table(d$wave, d$time, useNA="ifany"))
+print(table(d$wave, d$treatment1, useNA="ifany"))
+print(table(d$wave, d$treatment2, useNA="ifany"))
+print(table(d$wave, d$post_attack, useNA="ifany"))
+print(table(d$wave, is.na(d$likeMayW)))
+print(table(d$wave, d$may_bestpm, useNA="ifany"))
+print(table(d$wave, d$bestPMW, useNA="ifany"))
+for (v in c("gender","labour","income","ideology","ideology2","ideo3","white","party_other","conservative","likeMayW")) {cat(v,"\n"); print(summary(d[[v]])); print(head(table(d[[v]],useNA="ifany"),20))}
+cat("uniq id", length(unique(d$id)), "\n")

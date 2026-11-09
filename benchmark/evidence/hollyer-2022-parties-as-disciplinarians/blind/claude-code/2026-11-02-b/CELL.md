@@ -63,3 +63,7 @@ Agent notes: attempt-1 was exploratory only (variable summaries, missingness, co
 - [`output/script.R`](output/script.R) — 4,480 bytes, from `benchmark/results/artifacts/hollyer-2022-parties-as-disciplinarians/blind/claude-code/20261102T151025Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/hollyer-2022-parties-as-disciplinarians/blind/claude-code/20261102T151025Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 1,563 bytes, from `benchmark/results/artifacts/hollyer-2022-parties-as-disciplinarians/blind/claude-code/20261102T151025Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "entry_id": "molina-garzon-2022-decentralization-cooperation",
+  "mode": "independent",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Table 2 standard errors are clustered by municipality (the text says the OLS accounts for clustering; the table note says 'robust'); only coefficients and N are reported as RESULT lines, so this does not affect scored values."
+  ],
+  "notes": "attempt-1 was exploratory (variable summaries, missingness, complete-case count; no RESULT lines). Final script: Table 2 = fixest feols of contribution on decentralized, communication (col 2 adds decentralized x communication), player-type dummies from p_type (1=A mayor's office reference, 2=C health center, 3=G admin intermediary, 4=R regional), round, lag_groupcontribution, num_players, knownpeople, Q2_female, Q1_Edad, Q2_Educacion, Q3_YrsSalud, Q5_Trust1Base; weights weights_games_full_scaled; complete cases give N=1980. Table 3 = fepois of net_crosslevel_propnumknown / propnumfriends with offset log(propdenom*), weights weights_games_full_scaled, municipality-clustered SEs; base model drops the one participant with missing weight (N=231); full model adds Mujer, Q2_Educacion, Q1_Edad, Q3_YrsSalud, gen_trust (coded 1/2 as in data) and Participant_C/G/R dummies, complete cases N=226. All coefficients, Ns and the Table 3 BICs match the paper to reported precision. I eyeballed the final run against the claims after it ran but made no change, so no claim attempt was recorded. Codebook and README PDFs in the mount were read; the authors' scripts were not present in the mount and were not read.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-08T01:55:26Z",
+  "finished_at": "2026-11-08T01:57:30Z"
+}

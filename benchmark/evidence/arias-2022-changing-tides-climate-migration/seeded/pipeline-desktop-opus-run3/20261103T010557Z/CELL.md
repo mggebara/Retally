@@ -54,6 +54,10 @@ _None declared._
 - [`output/stdout.txt`](output/stdout.txt) — 754 bytes, from `benchmark/results/artifacts/arias-2022-changing-tides-climate-migration/seeded/pipeline/20261103T010557Z/stdout.txt`
 - [`output/answer-1.md`](output/answer-1.md) — 8,448 bytes, from `benchmark/.cache/llm-oracle/desktop-opus-run3/answers/33e3d75ad62a27706208daef.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM oracle store desktop-opus-run3 (request 33e3d75ad62a27706208daef: model claude-opus-5-5, max_tokens 16384, effort high)

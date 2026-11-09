@@ -63,3 +63,7 @@ Agent notes: attempt-1 was exploratory (variable inspection, no RESULT lines). D
 - [`output/script.R`](output/script.R) — 4,237 bytes, from `benchmark/results/artifacts/mokyr-2022-wheels-of-change/blind/claude-code/20261102T142249Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/mokyr-2022-wheels-of-change/blind/claude-code/20261102T142249Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 1,142 bytes, from `benchmark/results/artifacts/mokyr-2022-wheels-of-change/blind/claude-code/20261102T142249Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

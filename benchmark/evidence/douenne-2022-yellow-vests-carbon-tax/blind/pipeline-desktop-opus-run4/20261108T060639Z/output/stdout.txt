@@ -1,0 +1,88 @@
+DIAG memisc-stripped columns with labels: 67 
+Rows in s: 3002  columns: 437 
+DIAG cols ~ gagn|win : gagnant_fuel_categorie, gagnant_chauffage_categorie, gagnant_categorie, taxe_gagnant_personne, taxe_gagnant_pauvres, taxe_gagnant_moyennes, taxe_gagnant_riches, taxe_gagnant_tous, taxe_gagnant_citadins, taxe_gagnant_certains, taxe_gagnant_NSP, gagnant_feedback_categorie, gagnant_progressif_categorie, gagnant__20_categorie, gagnant_20_30_categorie, gagnant_30_40_categorie, gagnant_40_50_categorie, gagnant_50_70_categorie, gagnant_70__categorie, simule_gagnant, gagnant_partielle_categorie, gagnant_info_categorie, gagnant_cible_categorie, simule_gagnant_interaction, win_cible_category, winning_category, winning_feedback_category 
+DIAG cols ~ simul|gain : gain_taxe_fuel_hausse, gain_taxe_fuel_baisse, gain_taxe_chauffage_hausse, gain_taxe_chauffage_baisse, gain_taxe_hausse, gain_taxe_baisse, simule_gagnant, gain_fuel, gain_chauffage, gain, gain_echelle, gain_fuel_echelle, gain_chauffage_echelle, gain_partielle_echelle, gain_min, gain_max, gain_fuel_min, gain_fuel_max, gain_chauffage_min, gain_chauffage_max, gain_partielle, simule_gain_menage, simule_gain, simule_gain_repondant, simule_gain_cible, simule_gain_cible_sans_conjoint, simule_gain_interaction, simule_gagnant_interaction, simule_gain_inelastique, simule_gain_cible_interaction, simule_gain_cible_interaction_inelastique, simule_gain_elast_perso, Simule_gain, Simule_gain2, Simule_gain_cible, Simule_gain_cible2 
+DIAG cols ~ cible|target : emission_cible, cible20, cible30, cible40, cible50, cible, gagnant_cible_categorie, taxe_cible_approbation, categorie_cible, traite_cible, traite_cible_conjoint, versement_cible, versement_cible_sans_conjoint, convaincu_cible, simule_gain_cible, simule_gain_cible_sans_conjoint, simule_gain_cible_interaction, simule_gain_cible_interaction_inelastique, tax_cible_acceptance, win_cible_category, Simule_gain_cible, Simule_gain_cible2 
+DIAG cols ~ approb|approv|accept : taxe_approbation, taxe_feedback_approbation, taxe_progressif_approbation, taxe__20_approbation, taxe_20_30_approbation, taxe_30_40_approbation, taxe_40_50_approbation, taxe_50_70_approbation, taxe_70__approbation, schiste_approbation, taxe_info_approbation, taxe_cible_approbation, tax_approval, tax_acceptance, tax_cible_acceptance 
+DIAG cols ~ gilet|yellow : gilets_jaunes_dedans, gilets_jaunes_soutien, gilets_jaunes_compris, gilets_jaunes_oppose, gilets_jaunes_NSP, gilets_jaunes, Gilets_jaunes 
+DIAG cols ~ efficac|effectiv : taxe_efficace, problemes_inefficace 
+DIAG cols ~ info|modif : duree_no_info, nombre_clics_no_info, premier_clic_info_PM, dernier_clic_info_PM, duree_info_PM, nombre_clics_info_PM, premier_clic_info_CC, dernier_clic_info_CC, duree_info_CC, nombre_clics_info_CC, premier_clic_info_CC_PM, dernier_clic_info_CC_PM, duree_info_CC_PM, nombre_clics_info_CC_PM, transferts_inter_a_info, info_CC, info_PM, progressivite_feedback_avec_info, progressivite_feedback_sans_info, apres_modifs, transferts_inter_info, duree_info_courte, variante_taxe_info, gagnant_info_categorie, taxe_info_approbation, info_progressivite, duree_info 
+DIAG cols ~ variant : variante_monetaire, variante_transferts_inter, variante_partielle, variante_taxe_info, variante_progressivite 
+DIAG cols ~ revenu|income : revenu, revenu_conjoint, benefices_revenu, problemes_revenu, revenu_decile, revenu_quintile, Revenu, Revenu_conjoint, percentile_revenu, percentile_revenu_conjoint, Revenu2, Revenu_conjoint2 
+DIAG cols ~ weight|poids : weight 
+DIAG cols ~ traite|treat : depense_retraites, variation_retraites, schiste_traite, traite_cible, traite_cible_conjoint, retraites 
+DIAG cols ~ single|conjoint|partner : revenu_conjoint, traite_cible_conjoint, versement_cible_sans_conjoint, simule_gain_cible_sans_conjoint, Revenu_conjoint, percentile_revenu_conjoint, Revenu_conjoint2, single 
+DIAG picked: weight= weight  gain= simule_gain  pwin= simule_gagnant  init_cat= winning_category  fb_cat= winning_feedback_category  approb= taxe_approbation  yv= Gilets_jaunes  eff= taxe_efficace  prog= progressivite  rev= revenu  revc= revenu_conjoint  single= single 
+DIAG table winning_category :
+
+    Winner Unaffected      Loser 
+       421        620       1961 
+DIAG table winning_feedback_category :
+
+    Winner Unaffected      Loser       <NA> 
+       383        458       1127       1034 
+DIAG table taxe_approbation :
+
+ Non  NSP  Oui 
+2134  567  301 
+DIAG labels taxe_approbation : =NA; Non=Non; NSP=NSP; Oui=Oui 
+DIAG table Gilets_jaunes :
+
+    oppose        NSP   comprend   soutient est_dedans 
+       762        256        961        892        131 
+DIAG table taxe_efficace :
+
+ Non  NSP  Oui 
+2000  523  479 
+DIAG labels taxe_efficace : =NA; Non=Non; NSP=NSP; Oui=Oui 
+DIAG table simule_gagnant :
+
+   0    1 
+ 744 2258 
+DIAG demo controls: sexe, age, diplome4, csp, statut_emploi, taille_agglo, region, taille_menage, nb_14_et_plus, fume, actualite 
+DIAG feedback N = 1968  within 50 N = 757 
+DIAG T6: approval= taxe_cible_approbation  cat= gagnant_cible_categorie  t1= traite_cible  t2= traite_cible_conjoint  cible= cible 
+DIAG table taxe_cible_approbation :
+
+ Non  NSP  Oui 
+2055  473  474 
+DIAG table gagnant_cible_categorie :
+
+    Gagnant Non affecté     Perdant 
+        464         617        1921 
+DIAG table traite_cible :
+
+   0    1 
+1960 1042 
+DIAG table traite_cible_conjoint :
+
+   0    1 
+1730 1272 
+DIAG table cible :
+
+  50   20   30   40 
+ 989 1069  456  488 
+DIAG T6 N = 3002 
+DIAG T8: info_eff= apres_modifs  info_cc= info_CC 
+DIAG table apres_modifs :
+
+FALSE  TRUE 
+ 1558  1444 
+DIAG table info_CC :
+
+   0    1 
+1506 1496 
+DIAG T8 N = 3002 
+RESULT:predicted_winner_believes_not_lose_table4_col1=0.2803337662
+RESULT:initial_acceptance_believes_not_lose_table4_col1=0.2302156444
+RESULT:predicted_winner_believes_not_lose_full_sample_table4_col2=0.2181233487
+RESULT:predicted_winner_heterogeneity_table4_col3=0.2446264172
+RESULT:initial_acceptance_heterogeneity_table4_col3=0.002797593575
+RESULT:yellow_vests_supporter_heterogeneity_table4_col3=0.03087357499
+RESULT:winner_x_initial_acceptance_table4_col3=0.1565489149
+RESULT:winner_x_yellow_vests_supporter_table4_col3=-0.1599823117
+RESULT:winner_x_initial_win_belief_table4_col3=0.09243866027
+RESULT:predicted_winner_believes_wins_table4_col4=0.1550893614
+RESULT:n_obs_table4_col1=757
+RESULT:believes_not_lose_on_acceptance_iv_table6_col1=0.5702313167
+RESULT:believes_effective_on_approval_iv_table8_col1=0.3957417134

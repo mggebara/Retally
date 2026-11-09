@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "manekin-2022-effective-for-whom",
+  "mode": "blind",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 1, "kind": "error"}
+  ],
+  "deviations": [
+    "Israeli protester identity coding assumed from the factor order: identity_protesters 0 = white Jews, 1 = Ethiopian Jews, 2 = Arab Israelis (order of mention in the paper; wave 2's smallest cell being 0 is consistent with white Jews appearing only with generic goals). The data carry no value labels.",
+    "Study 2 regressions are unweighted: neither Study 2 data file contains a weight variable. Study 1 regressions use the 'weight' column (lm weights)."
+  ],
+  "notes": "Data files are pre-cleaned analysis files; all rows used. Study 1: weighted OLS of degree_violence / police_action_required on minority-protester indicator(s) plus indicators for the two more intense tactics (base: white/majority protesters marching). Study 2 US: OLS on black, group_goal, commitment (police column drops 5 NA rows; respondents count taken from the perceived-violence regression, N=3013). Study 2 Israel: OLS on Ethiopian, Arab, group_goal, commitment, N=3465. Classical OLS SEs (only point estimates and N are scored). Attempt-1 inspected variables; attempt-2 was an exploratory look at the text-analysis lists (crashed: quanteda not installed; no estimates, so kind ''); attempt-3 crashed on lm weights scoping and was fixed. While reading the paper's method/table structure I unavoidably saw unredacted non-target entries of Tables 1-2 (intercepts, tactic/goal coefficients); the specification was derived from the paper's description and not adjusted toward any number.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-08T01:54:56Z",
+  "finished_at": "2026-11-08T02:10:00Z"
+}

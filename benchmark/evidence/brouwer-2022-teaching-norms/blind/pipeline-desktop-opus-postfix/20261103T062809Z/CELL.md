@@ -56,6 +56,10 @@ _None declared._
 - [`output/stdout.txt`](output/stdout.txt) — 3,702 bytes, from `benchmark/results/artifacts/brouwer-2022-teaching-norms/blind/pipeline/20261103T062809Z/stdout.txt`
 - [`output/answer-1.md`](output/answer-1.md) — 3,809 bytes, from `benchmark/.cache/llm-oracle/desktop-opus-postfix/answers/7469c4aa043a91a86cb8654a.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM oracle store desktop-opus-postfix (request 7469c4aa043a91a86cb8654a: model claude-opus-5-5, max_tokens 16384, effort high)

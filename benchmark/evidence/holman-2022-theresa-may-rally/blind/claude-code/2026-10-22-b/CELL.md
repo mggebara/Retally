@@ -66,3 +66,7 @@ Agent notes: Independent blind reproduction from paper text and data files only.
 - [`output/script.R`](output/script.R) — 6,400 bytes, from `benchmark/results/artifacts/holman-2022-theresa-may-rally/blind/claude-code/20261022T033040Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/holman-2022-theresa-may-rally/blind/claude-code/20261022T033040Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 1,453 bytes, from `benchmark/results/artifacts/holman-2022-theresa-may-rally/blind/claude-code/20261022T033040Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

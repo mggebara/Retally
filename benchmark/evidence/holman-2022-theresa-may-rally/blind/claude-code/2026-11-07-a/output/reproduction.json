@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "entry_id": "holman-2022-theresa-may-rally",
+  "mode": "blind",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Table 4: global_approval.dta holds a single approval series, 'lag_approval'; it is used as the outcome in the same row as the attack indicator (the file appears pre-aligned for the 'quarter following the attack' design). The >15-death international attack indicator is kill_16 (16+ deaths; 60 country-quarters, matching the paper's count). Country fixed effects use country_code (country x office; 66 units, matching the paper's N countries). execrlc entered linearly (0-3 DPI code), growth as given. Sample = complete cases (4,486). Beck-Katz PCSEs from plm::vcovBK are printed for reference only.",
+    "Table 2: OLS (like May, waves 9-16) and logit (best PM, waves 7,8,10,11,12), unweighted, regressors treatment1 (= post_attack), time (wave>=12), their interaction, wave dummies and controls white, female, labour, party_other, income, ideology2 (ideology with missing set to midpoint, per footnote 8). Time is collinear with the wave dummies; as Stata would, the last collinear wave dummy (wave 16 / wave 12) is dropped, so the Time coefficient depends on that normalisation. Conventional (non-clustered) SEs."
+  ],
+  "notes": "attempt-1 was exploratory (variable inspection, no RESULT lines). The final script estimates all 11 quantities in one run (67 s). Table 4 R2 from my model is 0.268, which suggests the authors' specification differs in some way (outcome alignment, the control set or the R2 definition). I did not tune anything toward it. The Readme docx was read as data documentation; no script files were opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-07T20:20:00Z",
+  "finished_at": "2026-11-07T21:40:00Z"
+}

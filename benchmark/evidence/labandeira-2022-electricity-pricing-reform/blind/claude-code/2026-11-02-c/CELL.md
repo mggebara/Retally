@@ -69,3 +69,7 @@ Agent notes: Two exploratory runs (variable listing; panel structure and variabl
 - [`output/script.R`](output/script.R) — 6,338 bytes, from `benchmark/results/artifacts/labandeira-2022-electricity-pricing-reform/blind/claude-code/20261102T202753Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 654 bytes, from `benchmark/results/artifacts/labandeira-2022-electricity-pricing-reform/blind/claude-code/20261102T202753Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 1,226 bytes, from `benchmark/results/artifacts/labandeira-2022-electricity-pricing-reform/blind/claude-code/20261102T202753Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

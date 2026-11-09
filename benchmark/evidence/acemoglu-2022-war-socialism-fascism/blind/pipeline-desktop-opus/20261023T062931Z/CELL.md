@@ -58,6 +58,10 @@ Per-claim ground truth, tolerance rule and errors: [`scoring.json`](scoring.json
 - [`output/stdout.txt`](output/stdout.txt) — 4,688 bytes, from `benchmark/results/artifacts/acemoglu-2022-war-socialism-fascism/blind/pipeline/20261023T062931Z/stdout.txt`
 - [`output/answer-1.md`](output/answer-1.md) — 8,581 bytes, from `benchmark/.cache/llm-oracle/desktop-opus/answers/5ca6c277a6e2282881e3bd80.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM oracle store desktop-opus (request 5ca6c277a6e2282881e3bd80: model claude-opus-5-5, max_tokens 16384, effort high)

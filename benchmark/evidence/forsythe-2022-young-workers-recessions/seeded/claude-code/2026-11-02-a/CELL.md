@@ -76,3 +76,7 @@ Agent notes: Seeded translation of YH_data_init.do and YH_regs.do: date harmonis
 - [`output/script.R`](output/script.R) — 9,204 bytes, from `benchmark/results/artifacts/forsythe-2022-young-workers-recessions/seeded/claude-code/20261102T061959Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/forsythe-2022-young-workers-recessions/seeded/claude-code/20261102T061959Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 1,729 bytes, from `benchmark/results/artifacts/forsythe-2022-young-workers-recessions/seeded/claude-code/20261102T061959Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

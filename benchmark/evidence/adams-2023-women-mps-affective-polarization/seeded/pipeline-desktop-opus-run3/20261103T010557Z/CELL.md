@@ -53,6 +53,10 @@ _None declared._
 - [`output/stdout.txt`](output/stdout.txt) — 631 bytes, from `benchmark/results/artifacts/adams-2023-women-mps-affective-polarization/seeded/pipeline/20261103T010557Z/stdout.txt`
 - [`output/answer-1.md`](output/answer-1.md) — 3,251 bytes, from `benchmark/.cache/llm-oracle/desktop-opus-run3/answers/82708907aabea903e6c5b467.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM oracle store desktop-opus-run3 (request 82708907aabea903e6c5b467: model claude-opus-5-5, max_tokens 16384, effort high)

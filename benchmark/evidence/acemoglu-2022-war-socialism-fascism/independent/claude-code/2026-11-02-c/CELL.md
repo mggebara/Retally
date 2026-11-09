@@ -66,3 +66,7 @@ Agent notes: attempt-1: exploratory listing of variables/labels in fascism_db.dt
 - [`output/script.R`](output/script.R) — 3,939 bytes, from `benchmark/results/artifacts/acemoglu-2022-war-socialism-fascism/independent/claude-code/20261102T202751Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 64 bytes, from `benchmark/results/artifacts/acemoglu-2022-war-socialism-fascism/independent/claude-code/20261102T202751Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 933 bytes, from `benchmark/results/artifacts/acemoglu-2022-war-socialism-fascism/independent/claude-code/20261102T202751Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

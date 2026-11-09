@@ -62,3 +62,7 @@ Agent notes: attempt-1 was exploratory (variable codings, missingness; no RESULT
 - [`output/script.R`](output/script.R) — 1,799 bytes, from `benchmark/results/artifacts/brouwer-2022-teaching-norms/blind/claude-code/20261102T062002Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 118 bytes, from `benchmark/results/artifacts/brouwer-2022-teaching-norms/blind/claude-code/20261102T062002Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 2,677 bytes, from `benchmark/results/artifacts/brouwer-2022-teaching-norms/blind/claude-code/20261102T062002Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

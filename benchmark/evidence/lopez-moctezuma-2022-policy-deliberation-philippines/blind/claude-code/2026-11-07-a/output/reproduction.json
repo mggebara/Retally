@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "entry_id": "lopez-moctezuma-2022-policy-deliberation-philippines",
+  "mode": "blind",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Gender items oriented substantively (higher = more pro-gender-equality): equality and harassment kept as coded (5 = disagree with sexist statement), discrimination reversed (6 - x, higher = agree women lose jobs to discrimination), femhouse and fempol kept as coded (1/0). The paper's 'positive direction implies more agreement' is ambiguous for the gender items.",
+    "Poverty items: poverty, gap, corruption reversed (6 - x) so higher = more agreement; cct kept as coded.",
+    "Attendance weights constructed from the paper's description: in barangays where meetings were held (treatment == 1), attendees weighted att.prop / survey attendance share and non-attendees (1 - att.prop) / (1 - survey share); all other respondents (and respondents with missing attendance) weight 1.",
+    "Anderson indices: items standardized on the (unweighted) control-assignment group of the party's municipalities, inverse-covariance weights from the pairwise-complete covariance of standardized items, index averaged over non-missing items and re-standardized on the control group.",
+    "Individual analyses restricted to the 1,082 respondents with a valid party-list turnout answer; vote outcomes among respondents who turned out (turnout_pl == 1).",
+    "Permutation p-values not computed (only point estimates and counts requested)."
+  ],
+  "notes": "Table 1: OLS of turnout.party / share.treated / share.akbayan / share.umalabka on assignment with city FE using all 39 barangay rows of data_agg (18 Akbayan, 21 Umalab Ka). Tables C.3/C.4: weighted OLS of Anderson summary index on assignment with city FE, clustered by barangay, by party list. Table F.1: unweighted LPM (x100) of vote / vote.akbayan on assignment with city FE among respondents who turned out. One exploratory run (attempt-1, no RESULT lines) inspected the data. Survey barangay names matched data_agg for every treated barangay present in the survey (Anabu II-F, San Rosario-Silangan, Tungkod have no survey respondents). No runs hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-08T01:54:36Z",
+  "finished_at": "2026-11-08T02:10:00Z"
+}

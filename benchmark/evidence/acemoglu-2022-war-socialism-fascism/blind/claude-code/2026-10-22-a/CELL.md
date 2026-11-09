@@ -66,3 +66,7 @@ Agent notes: Independent blind reproduction from paper text only. attempt-1: exp
 - [`output/script.R`](output/script.R) — 5,095 bytes, from `benchmark/results/artifacts/acemoglu-2022-war-socialism-fascism/blind/claude-code/20261022T032229Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/acemoglu-2022-war-socialism-fascism/blind/claude-code/20261022T032229Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 1,163 bytes, from `benchmark/results/artifacts/acemoglu-2022-war-socialism-fascism/blind/claude-code/20261022T032229Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

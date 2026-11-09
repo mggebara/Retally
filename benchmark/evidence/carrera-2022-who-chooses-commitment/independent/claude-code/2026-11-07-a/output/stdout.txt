@@ -1,0 +1,66 @@
+BCP mean: 1.167655  control mean: 0.6580714 
+                        model 1          model 2          model 3
+Dependent Var.:             bcp              bcp              bcp
+                                                                 
+basic           0.3008 (0.5605)  0.4520 (0.5675)  0.2759 (0.5580)
+enhanced        1.360* (0.5733)  1.409* (0.5815)  1.254* (0.5857)
+goal_z                          0.7076* (0.2858)                 
+act_z                                            0.4475* (0.2151)
+Fixed-Effects:  --------------- ---------------- ----------------
+wave                        Yes              Yes              Yes
+_______________ _______________ ________________ ________________
+S.E. type       Heteroske.-rob. Heterosked.-rob. Heterosked.-rob.
+Observations              1,126            1,126            1,126
+R2                      0.01015          0.01969          0.01396
+Within R2               0.00634          0.01592          0.01016
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Take-up by threshold:
+      c12       c16        c8 
+0.4937833 0.3239105 0.6431095 
+                          model 1            model 2           model 3
+Dependent Var.:            takeup             takeup            takeup
+                                                                      
+basic            -0.0215 (0.0408)   -0.0226 (0.0407)  -0.0134 (0.0407)
+enhanced        -0.0802* (0.0315) -0.0855** (0.0315) -0.0787* (0.0314)
+bcp_z                               0.0267* (0.0106)                  
+goal_z                                               0.0382** (0.0128)
+act_z                                                                 
+Fixed-Effects:  ----------------- ------------------ -----------------
+wave                          Yes                Yes               Yes
+threshold                     Yes                Yes               Yes
+_______________ _________________ __________________ _________________
+S.E.: Clustered            by: id             by: id            by: id
+Observations                2,824              2,824             2,824
+R2                        0.06817            0.07123           0.07398
+Within R2                 0.00456            0.00783           0.01077
+
+                           model 4
+Dependent Var.:             takeup
+                                  
+basic             -0.0191 (0.0408)
+enhanced         -0.0722* (0.0314)
+bcp_z                             
+goal_z                            
+act_z           -0.0428** (0.0135)
+Fixed-Effects:  ------------------
+wave                           Yes
+threshold                      Yes
+_______________ __________________
+S.E.: Clustered             by: id
+Observations                 2,824
+R2                         0.07526
+Within R2                  0.01214
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RESULT:bcp_basic_info_treatment_col1=0.300805
+RESULT:bcp_enhanced_info_treatment_col1=1.359677
+RESULT:bcp_goal_minus_expected_attendance_col2=0.707612
+RESULT:bcp_actual_minus_expected_attendance_col3=0.447487
+RESULT:bcp_regression_observations=1126.000000
+RESULT:takeup_more_basic_info_treatment_col1=-0.021511
+RESULT:takeup_more_enhanced_info_treatment_col1=-0.080176
+RESULT:takeup_more_behavior_change_premium_col2=0.026744
+RESULT:takeup_more_goal_minus_expected_attendance_col3=0.038210
+RESULT:takeup_more_actual_minus_expected_attendance_col4=-0.042759
+RESULT:takeup_more_regression_observations=2824.000000

@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "brouwer-2022-teaching-norms",
+  "mode": "independent",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was exploratory (tabulated scene/condition and control variables in master.csv; no RESULT lines). Final script: pooled OLS LPMs via fixest::feols, Punishment ~ Child*VH on Violation and Violation+Help scenes (n=400/399), Helping ~ Child*VH on Help and Violation+Help scenes (n=401/400), VH = ViolationHelp dummy, controls male (Male Target), hugo (Male Actor, inferred from Table 2 coefficient pattern / variable role), Morning, witness, rich, Rain, Hot; SEs clustered by School (30 clusters). The one missing-gender target is dropped by listwise deletion in the controlled models. The estimates matched every Table 2 coefficient, N and R2 at reported precision, so no claim-driven revisions were made.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-07T17:43:00Z",
+  "finished_at": "2026-11-07T17:50:00Z"
+}

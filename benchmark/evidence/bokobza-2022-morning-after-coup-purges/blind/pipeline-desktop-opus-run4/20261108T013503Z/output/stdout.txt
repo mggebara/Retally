@@ -1,0 +1,287 @@
+Country-level columns:
+ [1] "COUNTRY_DATA"                     "COUNTRY_ID"                      
+ [3] "YEAR_DATA"                        "ccode"                           
+ [5] "leader_cab_id"                    "democracy1"                      
+ [7] "independent"                      "replacement_rateadj_minister"    
+ [9] "replacement_rateadj_minister_300" "replacement_rateadj_minister_200"
+[11] "replacement_rateadj_minister_100" "leaderexperience_continuous"     
+[13] "coupattempt_whogov"               "coupattempt_month_whogov"        
+[15] "gdp_cap_pwt_ln"                   "pop_pwt_ln"                      
+[17] "military_c"                       "monarchy_c"                      
+[19] "party_c"                          "elec_all"                        
+[21] "t1_e_a"                           "oil_valuepop_2014_ln"            
+[23] "growth_pwt"                       "onset1"                          
+[25] "nonvio_camp_2"                    "mid_onset"                       
+[27] "war_onset"                        "domestic3_10"                    
+[29] "coupattempt_whogov_br"            "polity2"                         
+[31] "lpolity2"                         "democracy_br"                    
+[33] "ldemocracy_br"                    "system_category"                 
+[35] "latent_personalism"               "coupattempt_whogov_type_br"      
+[37] "type_num"                        
+Failed coup var: coupattempt_whogov 
+GDP var: gdp_cap_pwt_ln  Pop var: pop_pwt_ln 
+Country sample N: 4243  failed coups: 96 
+OLS estimation, Dep. Var.: replacement_rateadj_minister
+Observations: 3,688
+Fixed-effects: cid: 113,  yr: 51
+Standard-errors: Clustered (cid) 
+        Estimate Std. Error  t value Pr(>|t|)    
+fca     0.079195   0.033055  2.39585 0.018239 *  
+lgdp_c -0.039681   0.019528 -2.03202 0.044518 *  
+lpop_c -0.118296   0.059128 -2.00070 0.047844 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.252009     Adj. R2: 0.189155
+                 Within R2: 0.005366
+OLS estimation, Dep. Var.: replacement_rateadj_minister
+Observations: 3,644
+Fixed-effects: cid: 113,  yr: 51
+Standard-errors: Clustered (cid) 
+              Estimate Std. Error  t value  Pr(>|t|)    
+fca           0.086943   0.032543  2.67163 0.0086741 ** 
+lgdp_c       -0.034336   0.020510 -1.67407 0.0969070 .  
+lpop_c       -0.121687   0.060534 -2.01022 0.0468113 *  
+l_military_c -0.039935   0.029505 -1.35351 0.1786175    
+l_monarchy_c  0.037376   0.026022  1.43635 0.1536912    
+l_party_c    -0.066866   0.027973 -2.39035 0.0185008 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.249564     Adj. R2: 0.193056
+                 Within R2: 0.008423
+OLS estimation, Dep. Var.: replacement_rateadj_minister
+Observations: 3,515
+Fixed-effects: leader_cab_id: 336,  yr: 51
+Standard-errors: Clustered (cid) 
+        Estimate Std. Error  t value Pr(>|t|)    
+fca     0.059360   0.035252  1.68389 0.094987 .  
+lgdp_c -0.031952   0.024565 -1.30073 0.196021    
+lpop_c -0.143462   0.085770 -1.67264 0.097189 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.218174     Adj. R2: 0.233984
+                 Within R2: 0.003016
+OLS estimation, Dep. Var.: replacement_rateadj_minister
+Observations: 3,480
+Fixed-effects: leader_cab_id: 331,  yr: 51
+Standard-errors: Clustered (cid) 
+              Estimate Std. Error  t value  Pr(>|t|)    
+fca           0.066651   0.034606  1.92596  0.056644 .  
+lgdp_c       -0.024836   0.023153 -1.07271  0.285706    
+lpop_c       -0.128232   0.085445 -1.50076  0.136231    
+l_military_c -0.139264   0.057570 -2.41905  0.017171 *  
+l_monarchy_c  0.565633   0.029694 19.04879 < 2.2e-16 ***
+l_party_c    -0.056692   0.051529 -1.10019  0.273606    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.215815     Adj. R2: 0.236832
+                 Within R2: 0.00865 
+Individual-level columns:
+ [1] "year"                        "country_isocode"            
+ [3] "country_name"                "position"                   
+ [5] "name"                        "title"                      
+ [7] "gender"                      "birthyear"                  
+ [9] "party"                       "party_english"              
+[11] "leader"                      "classification"             
+[13] "portfolio_1"                 "prestige_1"                 
+[15] "prestige_numeric"            "importance_numeric"         
+[17] "leader_party"                "party_group"                
+[19] "experience"                  "purged_y1"                  
+[21] "purged_y2"                   "coupattempt_presentyear"    
+[23] "coup_presentyear"            "coup_lastyear"              
+[25] "coupattempt_presentyear_br"  "coup_presentyear_br"        
+[27] "coup_lastyear_br"            "coupattempt_whogov_type_br" 
+[29] "leaderexperience_continuous" "democracy_lag_br"           
+[31] "n_party"                     "democracy_lag"              
+[33] "gdp_cap_pwt_ln"              "pop_pwt_ln"                 
+[35] "polity2"                     "gdp_cap_pwt_ln_lag"         
+[37] "pop_pwt_ln_lag"              "lag_polity2"                
+[39] "importance_factor"           "Group"                      
+[41] "minister_type"               "minister_classification"    
+[43] "age"                         "experience_group"           
+[45] "hired"                      
+Table of experience_group :
+
+   2-3 years        1year    4-6 years Over 6 years 
+       64168        50368        47095        43893 
+Table of party_group :
+
+leader_party  independent  other_party      unknown         <NA> 
+      114723        38333        27938        12538        11992 
+Table of portfolio_1 :
+
+                                    <NA> 
+                                   36458 
+            Education, Training & Skills 
+                                   10882 
+Agriculture, Food, Fisheries & Livestock 
+                                   10085 
+                       Foreign Relations 
+                                   10075 
+              Finance, Budget & Treasury 
+                                    9565 
+   Defense, Military & National Security 
+                                    9300 
+                 Health & Social Welfare 
+                                    8983 
+                                   Other 
+                                    8969 
+            Communications & Information 
+                                    8769 
+     Government, Interior & Home Affairs 
+                                    8172 
+                             Environment 
+                                    6967 
+                 Justice & Legal Affairs 
+                                    6851 
+                     Industry & Commerce 
+                                    6693 
+             Construction & Public Works 
+                                    6298 
+                  Planning & Development 
+                                    6148 
+     Labor, Employment & Social Security 
+                                    5555 
+                                  Energy 
+                                    4793 
+              Foreign Economic Relations 
+                                    4097 
+                      Culture & Heritage 
+                                    3882 
+                General Economic Affairs 
+                                    3116 
+                               Transport 
+                                    2862 
+       Executive & Legislative Relations 
+                                    2579 
+       Enterprises, Companies & Business 
+                                    2215 
+                                 Housing 
+                                    2035 
+                                  Sports 
+                                    1931 
+                                Regional 
+                                    1873 
+                       Without Portfolio 
+                                    1820 
+                           Civil Service 
+                                    1769 
+          Science, Technology & Research 
+                                    1541 
+                       Natural Resources 
+                                    1340 
+                                 Tourism 
+                                    1337 
+                        Local Government 
+                                    1327 
+                                Religion 
+                                    1256 
+     Audit, Oversight & Internal Affairs 
+                                     953 
+                       Children & Family 
+                                     864 
+                Immigration & Emigration 
+                                     840 
+          Correctional Services & Police 
+                                     670 
+                                   Women 
+                                     613 
+                        Political Reform 
+                                     543 
+                                Veterans 
+                                     470 
+                                   Youth 
+                                     347 
+                              Minorities 
+                                     266 
+            Tax, Revenue & Fiscal Policy 
+                                     218 
+                  Properties & Buildings 
+                                     113 
+                        Ageing & Elderly 
+                                      80 
+                        Minority Affairs 
+                                       4 
+Table of prestige_1 :
+
+Medium   <NA>   High    Low 
+112872  45431  37112  10109 
+Table of importance_numeric :
+
+     2      3    0.5      1   <NA>      5      4      0 
+114497  34862  21007  12983  10125   8059   3608    383 
+Table of Group :
+Prestige 
+  205524 
+Table of classification :
+
+                             Minister (Full Rank) 
+                                           152633 
+                                Minister (Junior) 
+                                             8485 
+                                        President 
+                                             6017 
+                             Member, Ruling Group 
+                                             4893 
+                          Governor (Central Bank) 
+                                             4527 
+                                   Prime Minister 
+                                             4107 
+                    Director of Government Agency 
+                                             3931 
+                  Ambassador to the United States 
+                                             3649 
+             Representative to the United Nations 
+                                             3338 
+                            Deputy Prime Minister 
+                                             3180 
+                                   Vice President 
+                                             2831 
+                                            Other 
+                                             2640 
+Attorney General, Chief Justice or Legal Official 
+                                             1209 
+                             Member, Royal Family 
+                                             1178 
+                                   Chief of State 
+                                              819 
+                                          Advisor 
+                                              636 
+                               Governor (General) 
+                                              383 
+                            Deputy Chief of State 
+                                              343 
+                                   Chief of Staff 
+                                              247 
+                                Governor (Region) 
+                                              145 
+             Deputy Director of Government Agency 
+                                              133 
+                              Governor (Military) 
+                                              130 
+                          Government Spokesperson 
+                                               22 
+                              Governor (Regional) 
+                                               20 
+                                   Deputy Speaker 
+                                               18 
+                                        STATEMENT 
+                                                8 
+                                   Prime minister 
+                                                2 
+Table of leader :
+
+     0      1 
+197465   8059 
+Ind GDP var: gdp_cap_pwt_ln  Pop var: pop_pwt_ln 
+Individual sample N: 0 
+RESULT:failed_coup_base_country_fe=0.079194859
+RESULT:failed_coup_main_country_fe=0.086943092
+RESULT:failed_coup_base_leader_fe=0.059359953
+RESULT:failed_coup_main_leader_fe=0.066650536
+RESULT:failed_coup_experience_model=NA
+RESULT:failed_coup_x_over_6_years_experience=NA
+RESULT:failed_coup_affiliation_model=NA
+RESULT:failed_coup_x_leaders_party=NA
+RESULT:failed_coup_responsibility_model=NA
+RESULT:failed_coup_x_natural_resources=NA
+RESULT:failed_coup_importance_model=NA

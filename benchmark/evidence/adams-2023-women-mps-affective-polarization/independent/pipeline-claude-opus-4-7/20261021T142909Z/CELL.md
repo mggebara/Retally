@@ -78,6 +78,10 @@ Per-claim ground truth, tolerance rule and errors: [`scoring.json`](scoring.json
 - [`output/answer-4.md`](output/answer-4.md) — 6,719 bytes, from `benchmark/.cache/llm/50c203c707441809c5637491.json`
 - [`output/answer-5.md`](output/answer-5.md) — 7,303 bytes, from `benchmark/.cache/llm/74d167a6af6c54dc11c89c90.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM cache (request 4dfd798e6866eac112dc73ff: model claude-opus-4-7, max_tokens 8192, effort None)

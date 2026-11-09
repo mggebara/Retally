@@ -54,6 +54,10 @@ _None declared._
 - [`output/stdout.txt`](output/stdout.txt) — 3,480 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/pipeline/20261103T004800Z/stdout.txt`
 - [`output/answer-1.md`](output/answer-1.md) — 4,180 bytes, from `benchmark/.cache/llm-oracle/desktop-opus-run3/answers/348238a9e876252a6d696ca6.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM oracle store desktop-opus-run3 (request 348238a9e876252a6d696ca6: model claude-opus-5-5, max_tokens 16384, effort high)

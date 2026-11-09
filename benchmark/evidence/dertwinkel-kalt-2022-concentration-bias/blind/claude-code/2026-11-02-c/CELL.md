@@ -78,3 +78,7 @@ Agent notes: Five exploratory runs (no RESULT lines): inspecting the data struct
 - [`output/script.R`](output/script.R) — 5,358 bytes, from `benchmark/results/artifacts/dertwinkel-kalt-2022-concentration-bias/blind/claude-code/20261102T202753Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/dertwinkel-kalt-2022-concentration-bias/blind/claude-code/20261102T202753Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 4,377 bytes, from `benchmark/results/artifacts/dertwinkel-kalt-2022-concentration-bias/blind/claude-code/20261102T202753Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

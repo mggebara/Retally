@@ -1,0 +1,81 @@
+Columns in yh_data: hrmonth,hryear,peage,pesex,peeduca,race,prhspnon,pemlr,pulk,pulkm2,pulkm3,pulkm4,pulkm5,pulkm6,pelkavl,pruntype,penlfact,peschft,pwsswgt,v2hrmonth,v2hryear,v2gestfips,v2pemlr,v2pehrusl1,v2pruntype,v2puiodp1,v2peio1cow,v2peio1icd,v2peio1ocd,v2prernhly,v2prernwa,v2pwsswgt,v2prwernal,v2prhernal,pehspnon 
+Earnings candidates: v2prernwa 
+Allocation candidates: v2prwernal,v2prhernal 
+Rows read: 19836464 
+Year range (v2hryear): 1994-2016 
+Rows after restrictions: 15909531 
+DEVIATION: Restricted sample to working-age population (ages 16-64); paper says base is all working-age people but does not state the upper age bound
+Columns kept: v2hrmonth,v2hryear,v2gestfips,v2peio1icd,v2peio1ocd,v2prernwa,v2prwernal,v2prhernal,w,emp_prev,unemp_prev,nilf_prev,hired,young,demo 
+UR file columns: v2gestfips,v2unemp_smy,v2hryear,v2hrmonth 
+UR file rows: 12740 years: 1994-2014 
+Rows missing UR before drop: 1615207 
+   v2hryear      N
+      <int>  <int>
+1:     2014 415269
+2:     2015 690005
+3:     2016 509933
+N full sample: 14294324 
+              Estimate Std. Error   t value     Pr(>|t|)
+(Intercept)  4.6953880 0.08816595 53.256254 1.046920e-45
+ur          -0.1333992 0.01522329 -8.762837 1.125249e-11
+attr(,"vcov_type")
+[1] "Clustered (state)"
+      Estimate Std. Error   t value   Pr(>|t|)
+ur -0.03259167 0.01606194 -2.029124 0.04778644
+attr(,"vcov_type")
+[1] "Clustered (state)"
+               Estimate Std. Error    t value     Pr(>|t|)
+(Intercept)  3.15741612 0.08561918  36.877440 6.338826e-38
+young        5.11167755 0.11929203  42.850117 4.373566e-41
+ur_y        -0.34223092 0.01950146 -17.548988 5.126054e-23
+ur_o        -0.04515327 0.01426834  -3.164577 2.643138e-03
+attr(,"vcov_type")
+[1] "Clustered (state)"
+         Estimate Std. Error    t value     Pr(>|t|)
+young  4.98252427 0.11488685  43.368969 2.433310e-41
+ur_y  -0.24051053 0.02060897 -11.670189 6.923409e-16
+ur_o   0.05556803 0.01707621   3.254119 2.042738e-03
+attr(,"vcov_type")
+[1] "Clustered (state)"
+Table 1 done 
+         Estimate Std. Error    t value     Pr(>|t|)
+young  2.76805853 0.10067542  27.494879 7.584729e-32
+ur_y  -0.17212335 0.01637439 -10.511740 2.919022e-14
+ur_o   0.02105453 0.01047095   2.010757 4.975931e-02
+attr(,"vcov_type")
+[1] "Clustered (state)"
+       Estimate Std. Error    t value     Pr(>|t|)
+young  6.239918  0.6851991   9.106722 3.398712e-12
+ur_y  -1.995229  0.1724098 -11.572601 9.426114e-16
+ur_o  -1.554276  0.1862420  -8.345467 4.883091e-11
+attr(,"vcov_type")
+[1] "Clustered (state)"
+          Estimate Std. Error     t value     Pr(>|t|)
+young  8.039938074 0.35230037  22.8212596 4.279120e-28
+ur_y  -0.525165191 0.04802627 -10.9349566 7.295123e-15
+ur_o  -0.006262743 0.05963307  -0.1050213 9.167791e-01
+attr(,"vcov_type")
+[1] "Clustered (state)"
+Table 2 done 
+CPI file columns: year,month,cpi 
+Ind xwalk columns: v2peio1icd,v2ind_codeyear,v2censusind_2002recode 
+Occ xwalk columns: v2peio1ocd,v2censusocc_2002recode,v2occ_codeyear 
+          Estimate  Std. Error    t value     Pr(>|t|)
+young -0.168111645 0.013504963 -12.448138 6.181314e-17
+ur_y  -0.024437907 0.003529536  -6.923830 7.895884e-09
+ur_o  -0.009297854 0.003526771  -2.636365 1.113366e-02
+attr(,"vcov_type")
+[1] "Clustered (state)"
+RESULT:young_x_unemp_rate_no_controls=-0.342231
+RESULT:experienced_x_unemp_rate_no_controls=-0.0451533
+RESULT:young_x_unemp_rate_preferred=-0.240511
+RESULT:experienced_x_unemp_rate_preferred=0.055568
+RESULT:aggregate_unemp_rate_no_controls=-0.133399
+RESULT:aggregate_unemp_rate_month_year_fe=-0.0325917
+RESULT:young_x_unemp_rate_employed=-0.172123
+RESULT:experienced_x_unemp_rate_employed=0.0210545
+RESULT:young_x_unemp_rate_unemployed=-1.99523
+RESULT:young_x_unemp_rate_nilf=-0.525165
+RESULT:wage_young_x_unemp_rate_all_hires=-0.0244379
+RESULT:wage_experienced_x_unemp_rate_all_hires=-0.00929785
+RESULT:n_obs_full_sample=14294324

@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "entry_id": "mokyr-2022-wheels-of-change",
+  "mode": "blind",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "First-stage F reported as the squared county-clustered t-statistic of the excluded instrument (equivalent to the cluster-robust Kleibergen-Paap Wald F with one instrument, without Stata small-sample conventions beyond fixest defaults). The Table 3 note mentions heteroscedasticity-robust SEs while Section 4 says all regressions are clustered by county; HC1 and iid variants are printed (not as RESULT lines) for reference: col2 32.0/69.3, col4 24.1/55.4, col6 23.2/65.5."
+  ],
+  "notes": "attempt-1 was exploratory (variable listing, no RESULT lines). Data: replication_data.dta; sample = 298 districts with non-missing Domesday mills. Dependent variable wrights/pcmean, regressor mills/pcmean (pcmean = mean population 1710-50). Wheat suitability = 1(wheat_tmean <= 5); river suitability = riv_rug26count (river length with ruggedness 2-6); instrument = river_suit x wheat_suit. Main geographic controls: longitude, latitude (the dataset's labelled Longitude/Latitude variables, not x1/y1), dist_rug_mean, dist_elevation_mean; agricultural: suitmean, wheat_suit, dist_grass_mean; climatic: precip_mean_dist, temp_mean_dist; other: pcmean, min_harbor, DIST_London, min_dist_to_roman_rds, min_dist_2nav_rivers, area. OLS and 2SLS via fixest with SEs clustered by historical county (GAZ_CNTY, 35 clusters). Table 3 OLS col5 = Table 2 col5 + river_suit. IV cols 2/4/6 include river_suit and wheat_suit as controls. Coefficients do not depend on the per-capita scaling since both counts share the denominator.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-08T01:40:00Z",
+  "finished_at": "2026-11-08T01:57:00Z"
+}

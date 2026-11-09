@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "entry_id": "adams-2023-women-mps-affective-polarization",
+  "mode": "independent",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Sample restriction 'at least four MPs each' implemented as to_prior_seats >= 4 (evaluated party only): requiring both to_prior_seats and from_prior_seats >= 4 gives 1,535 dyads, while the to-party-only filter gives exactly the paper's 1,842 (and 1,836 / 1,833 in the gender data). US rows have prior_seats coded 999 and pass the filter.",
+    "Coalition/opposition dummies taken as prior_coalition / prior_opposition (the codebook lists these as used in the analysis and govern_together / opposition_together as unused), although the paper text describes them as measured at the time of the survey.",
+    "Gender-split DV computed as 10 - dislike (the gender file stores only the reversed thermometer); gender 2 = women, 1 = men per codebook."
+  ],
+  "notes": "Independent reproduction of Table 1 from the paper text and the codebooks only (authors' code not opened). Data: dyadic_data_1-4-22.Rdata (updated_data) for columns 1-2, gender_disagregated_8-8-21.rds for columns 3-4. Model: fixest::feols, DV party_like (mean 0-10 thermometer of i's partisans toward j), regressor to_pfeml, controls rile_distance_s (standardized CMP rile distance, supplied in data), prior_coalition, prior_opposition; country-election (cntryyr) fixed effects; SEs clustered by cntryyr. Three exploratory runs (variable inspection and row counts under alternative seat filters, no estimates) preceded a single scored run; no claim-comparison iterations were used. All 11 point estimates/counts match the paper at its reported precision (adj. R2 also matches: 0.15/0.31/0.31/0.30). Clustered SEs from fixest are smaller than the paper's (e.g. 0.36 vs 0.43 for col 1, 0.42 vs 0.52 for col 2); SEs are not among the scored claims.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-07T17:16:44Z",
+  "finished_at": "2026-11-07T17:25:30Z"
+}

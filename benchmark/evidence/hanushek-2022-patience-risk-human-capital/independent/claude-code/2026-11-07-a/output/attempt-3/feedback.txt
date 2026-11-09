@@ -1,0 +1,2 @@
+Run hit the 300 s sandbox limit (exit 124) while haven::read_dta was reading the 2.3 GB pisa_full_gps_final.dta for Table 1 (Table 2 had finished); no RESULT lines. Cause is slow cold file I/O through the Docker file share, not CPU.
+Fix: read the big file first (cache-warm) and nothing else heavy; test the full read in an exploratory run before the final run.

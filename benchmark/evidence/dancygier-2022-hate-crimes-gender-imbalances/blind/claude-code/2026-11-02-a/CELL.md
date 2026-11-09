@@ -70,3 +70,7 @@ Agent notes: Independent blind reproduction from paper text and codebooks only; 
 - [`output/script.R`](output/script.R) — 4,806 bytes, from `benchmark/results/artifacts/dancygier-2022-hate-crimes-gender-imbalances/blind/claude-code/20261102T142249Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 136 bytes, from `benchmark/results/artifacts/dancygier-2022-hate-crimes-gender-imbalances/blind/claude-code/20261102T142249Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 3,678 bytes, from `benchmark/results/artifacts/dancygier-2022-hate-crimes-gender-imbalances/blind/claude-code/20261102T142249Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

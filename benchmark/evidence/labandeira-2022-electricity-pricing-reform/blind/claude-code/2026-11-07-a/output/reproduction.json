@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "entry_id": "labandeira-2022-electricity-pricing-reform",
+  "mode": "blind",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Common estimation sample for all eight columns = the 25,775-row 2011-2014 panel (rows with non-missing T2) restricted to complete cases on all regression variables including the three instruments (household effective prices of potatoes, water and fuel, lnp_papas/lnp_aguav/lnp_gascar, which exist only when the household bought the good): 10,295 obs, 7,000 households. Singleton households (3,705) are kept in the sample count and household count; they do not affect within estimates (fixest drops them internally). Without singletons the FE sample would be 6,590 obs / 3,295 households.",
+    "LIML implemented by hand as a k-class estimator (fixest has no LIML); household FE models are estimated by within-demeaning all variables first. SEs clustered by household.",
+    "Controls: ln income and its square (lny, lny2 as supplied), months since reform (dist), household size, rooms, m2, elderly dummy, education (4 levels), economic situation (3 levels, SITUACTHOG_j), renting, building >25 yrs, urban, province capital, municipality-size dummies, region (CCAA) dummies, quarter dummies, year FE. Retirement-income dummy not included (not in the paper's control list).",
+    "Because the household price is defined as expenditure/consumption, ln(expenditure) = ln(consumption) + ln(price) identically in the data; with ln(price) on the right-hand side the expenditure regressions therefore give exactly the same Reform coefficient as the consumption regressions (price coefficient shifted by +1) under OLS, FE and LIML (LIML is invariant to this reparameterisation). Reported as computed; not adjusted.",
+    "Instruments are weak in this sample (first-stage F about 6 without FE, about 3 with FE)."
+  ],
+  "notes": "Data: analysis CSV 'Data_to run_DOFILE3.csv' (prepared variables used: lnc_ele, lng_ele, lnp_kwh, lnp_* instruments, T2 = post-reform interview dummy, Tm = treated group, dist = months since reform). Table 1 means on the T2 sample (25,775 obs: consumption 3,425 kWh, expenditure 754 EUR, T mean 0.19) confirmed the panel definition. Readme.pdf was not opened. attempt-1 and attempt-2 are exploratory runs (no RESULT lines). Process note: one sandbox invocation was launched by mistake before attempt-2's script.R existed (Docker mounted an empty directory in its place; it ran ~1 s with no output); its empty outputs were deleted and attempt-2 was then run properly with the script in place. No run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-08T19:39:55Z",
+  "finished_at": "2026-11-08T20:25:00Z"
+}

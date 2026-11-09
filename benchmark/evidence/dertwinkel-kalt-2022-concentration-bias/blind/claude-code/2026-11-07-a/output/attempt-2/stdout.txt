@@ -1,0 +1,94 @@
+balanced: corner x IP range
+# A tibble: 3 × 4
+  corner     n    mn    mx
+   <dbl> <int> <dbl> <dbl>
+1     -1   113     0     0
+2      0  5546     0   124
+3      1   789   126   884
+stage2: corner x IP range
+# A tibble: 3 × 7
+  corner     n    mn    mx  mnid  mxid nNAid
+   <dbl> <int> <dbl> <dbl> <dbl> <dbl> <int>
+1     -1    17   -63   -63   -63   -63     5
+2      0   677   -63    61   -63    61    29
+3      1   112    63   300    63    63     3
+stage2 noncorner IP tabulation tails
+
+-63 -62 -61 -60 -56 -55  55  56  57  58  59  60  61 
+  2   2   2   3   4   1   5   2   6   4   5   4   3 
+corner subj stage2 manual values
+  [1]  63  63  63  63  63  63  63  63  63  64  64  64  64  65  66  66  66  66  67  67  67  70  70  71  71  71  72  73  73  74  74  75  75  75  75  76  77  80  80  81  81  81  85  85  88  88  89  90
+ [49]  90  90  91  92  97  97  98  99 100 100 100 100 100 100 100 100 101 101 101 102 103 103 105 105 107 107 107 111 111 113 113 118 118 120 120 121 124 127 130 130 131 134 135 135 136 139 140 143
+ [97] 144 145 148 149 152 156 160 160 163 163 163 163 164 200 215 300
+# A tibble: 5 × 7
+  anycorner anyup anylow pap_min pap_max napap     n
+  <lgl>     <lgl> <lgl>    <dbl>   <dbl> <int> <int>
+1 FALSE     FALSE FALSE        0       0     0     7
+2 FALSE     FALSE FALSE        1       1     0   600
+3 TRUE      FALSE TRUE        NA      NA     8    30
+4 TRUE      TRUE  FALSE        0       0     0   162
+5 TRUE      TRUE  TRUE        NA      NA     8     7
+# A tibble: 18 × 5
+   cond  arm   anycorner has_id     n
+   <chr> <chr> <lgl>     <lgl>  <int>
+ 1 Don   C     FALSE     TRUE     101
+ 2 Don   C     TRUE      FALSE      6
+ 3 Don   C     TRUE      TRUE      27
+ 4 Don   T     FALSE     TRUE     100
+ 5 Don   T     TRUE      FALSE      6
+ 6 Don   T     TRUE      TRUE      22
+ 7 Main  C     FALSE     TRUE     103
+ 8 Main  C     TRUE      FALSE      8
+ 9 Main  C     TRUE      TRUE      32
+10 Main  T     FALSE     TRUE     100
+11 Main  T     TRUE      FALSE      7
+12 Main  T     TRUE      TRUE      36
+13 Mech  C     FALSE     TRUE     101
+14 Mech  C     TRUE      FALSE      5
+15 Mech  C     TRUE      TRUE      24
+16 Mech  T     FALSE     TRUE     102
+17 Mech  T     TRUE      FALSE      5
+18 Mech  T     TRUE      TRUE      21
+# A tibble: 18 × 4
+   cond  arm   pap_sample     n
+   <chr> <chr>      <dbl> <int>
+ 1 Don   C              0    28
+ 2 Don   C              1   100
+ 3 Don   C             NA     6
+ 4 Don   T              0    22
+ 5 Don   T              1   100
+ 6 Don   T             NA     6
+ 7 Main  C              0    35
+ 8 Main  C              1   100
+ 9 Main  C             NA     8
+10 Main  T              0    36
+11 Main  T              1   100
+12 Main  T             NA     7
+13 Mech  C              0    25
+14 Mech  C              1   100
+15 Mech  C             NA     5
+16 Mech  T              0    23
+17 Mech  T              1   100
+18 Mech  T             NA     5
+e by condition check via chose_corner/utility_point at stage 9
+# A tibble: 18 × 4
+   cond  arm   utility_point     n
+   <chr> <chr>         <dbl> <int>
+ 1 Don   C                 1    42
+ 2 Don   C                 4    48
+ 3 Don   C                 8    44
+ 4 Don   T                 1    37
+ 5 Don   T                 4    53
+ 6 Don   T                 8    38
+ 7 Main  C                 1    44
+ 8 Main  C                 4    42
+ 9 Main  C                 8    57
+10 Main  T                 1    44
+11 Main  T                 4    51
+12 Main  T                 8    48
+13 Mech  C                 1    36
+14 Mech  C                 4    41
+15 Mech  C                 8    53
+16 Mech  T                 1    48
+17 Mech  T                 4    36
+18 Mech  T                 8    44

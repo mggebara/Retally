@@ -38,12 +38,13 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [13/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
+| `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c)<br>[13/13](independent/claude-code/2026-11-07-a/CELL.md) (2026-11-07-a) | [13/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c)<br>[13/13](blind/claude-code/2026-11-07-a/CELL.md) (2026-11-07-a) |
 | `pipeline-desktop-opus` | [13/13](seeded/pipeline-desktop-opus/20261102T141403Z/CELL.md) (20261102T141403Z) | [13/13](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) (20261102T141403Z) | [10/13](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) (20261102T095147Z) |
 | `pipeline-desktop-opus-postfix` | — | [13/13](independent/pipeline-desktop-opus-postfix/20261103T062157Z/CELL.md) (20261103T062157Z) | [13/13](blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md) (20261103T062809Z) |
 | `pipeline-desktop-opus-postfix2` | — | [13/13](independent/pipeline-desktop-opus-postfix2/20261103T110326Z/CELL.md) (20261103T110326Z) | [13/13](blind/pipeline-desktop-opus-postfix2/20261103T111134Z/CELL.md) (20261103T111134Z) |
 | `pipeline-desktop-opus-run2` | [13/13](seeded/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) (20261102T152052Z) | [13/13](independent/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) (20261102T152052Z) | [12/13](blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) (20261102T151132Z) |
 | `pipeline-desktop-opus-run3` | [13/13](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [12/13](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) (20261103T052626Z) | [10/13](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) |
+| `pipeline-desktop-opus-run4` | — | [12/13](independent/pipeline-desktop-opus-run4/20261108T083700Z/CELL.md) (20261108T083700Z) | [13/13](blind/pipeline-desktop-opus-run4/20261107T184031Z/CELL.md) (20261107T184031Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
 
@@ -61,10 +62,10 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | [blind/pipeline-desktop-opus-run2/20261102T151132Z](blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) | `personalism_volatility_difference_nonethnic` | 0.41266 | 0.35 | ±0.06 (se_band) | 1.044 | FAIL |
 | [blind/pipeline-desktop-opus-run3/20261103T004800Z](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) | `programmaticness_ethnic_minus_nonethnic_high_volatility` | 0.137021 | 0.2 | ±0.06 (se_band) | 1.050 | FAIL |
 | [blind/pipeline-desktop-opus/20261102T095147Z](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) | `programmaticness_volatility_difference_overall` | -0.163086 | -0.11 | ±0.05 (se_band) | 1.062 | FAIL |
+| [independent/pipeline-desktop-opus-run4/20261108T083700Z](independent/pipeline-desktop-opus-run4/20261108T083700Z/CELL.md) | `programmaticness_volatility_difference_nonethnic` | -0.204731 | -0.15 | ±0.06 (se_band) | 0.912 | PASS |
 | [blind/pipeline-desktop-opus-run2/20261102T151132Z](blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) | `personalism_ethnic_minus_nonethnic_low_volatility` | 0.428185 | 0.31 | ±0.13 (se_band) | 0.909 | PASS |
 | [blind/pipeline-desktop-opus/20261102T095147Z](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) | `programmaticness_volatility_difference_nonethnic` | -0.218785 | -0.15 | ±0.06 (se_band) | 1.146 | FAIL |
 | [independent/pipeline-desktop-opus/20261102T141403Z](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) | `programmaticness_extremist_minus_moderate_high_volatility` | 0.364781 | 0.44 | ±0.09 (se_band) | 0.836 | PASS |
-| [independent/pipeline-desktop-opus-run3/20261103T052626Z](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) | `programmaticness_ethnic_minus_nonethnic_high_volatility` | 0.150625 | 0.2 | ±0.06 (se_band) | 0.823 | PASS |
 
 ### Declared deviations
 
@@ -80,6 +81,9 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 - [independent/pipeline-desktop-opus-run3/20261103T052626Z](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) (12/13; failed: `programmaticness_extremist_minus_moderate_high_volatility`)
   - 25th/75th volatility percentiles computed using convention 'country' (full = all DALP parties with volatility data; country = country-level distribution)
   - Political-openness controls used: polity
+- [independent/pipeline-desktop-opus-run4/20261108T083700Z](independent/pipeline-desktop-opus-run4/20261108T083700Z/CELL.md) (12/13; failed: `programmaticness_ethnic_minus_nonethnic_high_volatility`)
+  - Ballot-rule control (erule, 7 codes) entered as a set of category dummies; the paper does not state its exact coding
+  - Low/high volatility set at the 25th/75th percentiles of the country-level volatility distribution (one value per country) rather than across party observations
 - [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) (13/13)
   - Volatility 25th/75th percentiles taken over the party-level estimation sample (N=430) using Stata-style percentiles (R quantile type 2); the paper says only 'in the sample'.
   - Ethnic party coded as ethnic > 0.5 (strict majority of expert coders report ethnic/linguistic linkages).
@@ -91,6 +95,11 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Volatility 25th/75th percentiles computed on the party-level estimation sample with the Stata _pctile definition (R quantile type 2).
   - Extremism measure: extremist2 (overall left-right distance from country mean, labelled 'weighted by size'); extremist party set at distance 3. Ideology regressions use 430 parties (one missing extremism); n_obs_table1 reported from the common base sample (431 parties, 75 countries). — names `n_obs_table1`
   - Brazil RD sample: dlameduck_runs == 0 (incumbent mayor did not run for a second term at t, so the winner at t is not term-limited at t+1); rdrobust p=1, triangular kernel, mserd bandwidths, no clustering; conventional point estimate reported.
+- [blind/claude-code/2026-11-07-a](blind/claude-code/2026-11-07-a/CELL.md) (13/13)
+  - Volatility 25th/75th percentiles taken over the party-level estimation sample using Stata's _pctile definition (R quantile type 2); the paper says only 'in the sample'.
+  - Separation-of-powers covariate entered as dummies for assembly-elected and parliamentary systems (presidential omitted); ballot rules as closed-list and open-list dummies (non-list omitted); electoral system as plurality and PR dummies (mixed omitted). Covariate set follows the paper text: party size, union/business/religious links, electoral system, ballot rules, logged mean district magnitude, polity, democratic tenure, political system, logged GDP pc, Gini, ethnic fractionalization.
+  - Ethnic party = more than half of expert coders report ethnic/linguistic linkages (ethnic > 0.5). Ideological extremism = extremist2; extremist party evaluated at distance 3, moderate at 0.
+  - Each Table 1 regression uses its own complete cases: 431 parties (75 countries) for the overall and ethnicity models, 430 for the ideology model (one party lacks extremist2). n_obs_table1 reports 431. — names `n_obs_table1`
 
 ### Pipeline and agent disagree
 
@@ -132,6 +141,10 @@ _None._
 
 [`independent/claude-code/2026-11-02-c/CELL.md`](independent/claude-code/2026-11-02-c/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-02T20:09:00Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
 
+### independent · claude-code · 2026-11-07-a
+
+[`independent/claude-code/2026-11-07-a/CELL.md`](independent/claude-code/2026-11-07-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-07T20:46:58Z; from `claude-code-run4-24papers-indep-blind-2026-11-08.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus · 20261102T141403Z
 
 [`independent/pipeline-desktop-opus/20261102T141403Z/CELL.md`](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) — final 13/13, re-scored 13/13; first scored 11/13; executions 2; 2026-11-02T14:14:03Z; from `pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json`; evidence complete.
@@ -152,6 +165,10 @@ _None._
 
 [`independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md`](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) — final 12/13, re-scored 12/13; first scored 11/13; executions 4; 2026-11-03T05:26:26Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-run4 · 20261108T083700Z
+
+[`independent/pipeline-desktop-opus-run4/20261108T083700Z/CELL.md`](independent/pipeline-desktop-opus-run4/20261108T083700Z/CELL.md) — final 12/13, re-scored 12/13; first scored 12/13; executions 4; 2026-11-08T08:37:00Z; from `pipeline-oracle-desktop-opus-run4-24papers-indep-blind-2026-11-08.json`; evidence complete.
+
 ### blind · claude-code · 2026-11-02-a
 
 [`blind/claude-code/2026-11-02-a/CELL.md`](blind/claude-code/2026-11-02-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 3; 2026-11-02T01:50:00Z; from `claude-code-6papers-all-modes-2026-11-02.json`; evidence complete.
@@ -163,6 +180,10 @@ _None._
 ### blind · claude-code · 2026-11-02-c
 
 [`blind/claude-code/2026-11-02-c/CELL.md`](blind/claude-code/2026-11-02-c/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-02T20:22:33Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
+
+### blind · claude-code · 2026-11-07-a
+
+[`blind/claude-code/2026-11-07-a/CELL.md`](blind/claude-code/2026-11-07-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-07T20:46:56Z; from `claude-code-run4-24papers-indep-blind-2026-11-08.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus · 20261102T095147Z
 
@@ -183,4 +204,8 @@ _None._
 ### blind · pipeline-desktop-opus-run3 · 20261103T004800Z
 
 [`blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md`](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) — final 10/13, re-scored 10/13; first scored 10/13; executions 1; 2026-11-03T00:48:00Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-run4 · 20261107T184031Z
+
+[`blind/pipeline-desktop-opus-run4/20261107T184031Z/CELL.md`](blind/pipeline-desktop-opus-run4/20261107T184031Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-07T18:40:31Z; from `pipeline-oracle-desktop-opus-run4-24papers-indep-blind-2026-11-08.json`; evidence complete.
 

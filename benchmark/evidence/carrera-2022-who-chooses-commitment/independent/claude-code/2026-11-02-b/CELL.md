@@ -65,3 +65,7 @@ Agent notes: Participant-level file cleaned_commitment_study_data.dta. Sample: d
 - [`output/script.R`](output/script.R) — 4,455 bytes, from `benchmark/results/artifacts/carrera-2022-who-chooses-commitment/independent/claude-code/20261102T090910Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/carrera-2022-who-chooses-commitment/independent/claude-code/20261102T090910Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 3,716 bytes, from `benchmark/results/artifacts/carrera-2022-who-chooses-commitment/independent/claude-code/20261102T090910Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "hanlon-2022-aircraft-ip-spillovers",
+  "mode": "blind",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was an exploratory data inspection (no RESULT lines). Final script: airframe_data.dta restricted to type fighter or bomber, 1918-1935; continuous two-piece linear spline in year with knot at 1926 (yr_before = min(year,1926), yr_after = max(year-1926,0)); OLS with HC1 robust SEs. US-only columns: log wing load / log max speed on the spline plus constant. US-UK columns: pooled US+UK fighters/bombers with a common spline (the UK spline), a US indicator, and the spline interacted with the US indicator; the interaction coefficients are reported as the US-relative slopes. No engine controls. Engine column: engine_data.dta (Jane's, which appears already limited to engines used in fighters/bombers: US+UK rows = 123, matching the Table 4 pooled N), US only, log hp per lb on the spline, a liquid-cooled indicator and a constant. Observation counts are the regression Ns. No weights.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-07T19:56:54Z",
+  "finished_at": "2026-11-07T20:10:00Z"
+}

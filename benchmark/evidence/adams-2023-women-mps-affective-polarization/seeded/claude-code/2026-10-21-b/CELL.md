@@ -57,3 +57,7 @@ Agent notes: Translated Table 1 columns 1-4 from replication_code.R: dyadic_data
 - [`output/script.R`](output/script.R) — 2,257 bytes, from `benchmark/results/artifacts/adams-2023-women-mps-affective-polarization/seeded/claude-code/20261022T021417Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/adams-2023-women-mps-affective-polarization/seeded/claude-code/20261022T021417Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 2,159 bytes, from `benchmark/results/artifacts/adams-2023-women-mps-affective-polarization/seeded/claude-code/20261022T021417Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

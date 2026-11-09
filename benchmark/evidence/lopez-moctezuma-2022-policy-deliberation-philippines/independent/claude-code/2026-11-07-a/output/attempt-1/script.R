@@ -1,0 +1,12 @@
+D <- "<repo>/benchmark/.cache/claude-code/lopez-moctezuma-2022-policy-deliberation-philippines/independent/2026-11-07-a/mount/lopez_moctezuma_2022_policy_deliberation_philippines"
+load(file.path(D, "data_agg.RData")); load(file.path(D, "survey_raw.RData"))
+options(width = 200)
+print(data.all)
+s <- as.data.frame(survey_raw)
+str(s)
+print(summary(s))
+print(table(s$city, s$assignment, useNA = "ifany"))
+print(table(s$barangay, s$attendance, useNA = "ifany"))
+print(table(s$turnout_pl, s$turnout_all, useNA = "ifany"))
+print(table(is.na(s$vote), s$turnout_pl, useNA = "ifany"))
+print(table(s$partytreat, s$assignment, useNA = "ifany"))

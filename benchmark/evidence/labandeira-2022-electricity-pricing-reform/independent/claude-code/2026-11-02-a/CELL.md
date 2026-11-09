@@ -82,3 +82,7 @@ Agent notes: Sample: rows with non-missing T2 (the Aug 2011-Apr 2014 two-intervi
 - [`output/script.R`](output/script.R) — 4,378 bytes, from `benchmark/results/artifacts/labandeira-2022-electricity-pricing-reform/independent/claude-code/20261102T142247Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 428 bytes, from `benchmark/results/artifacts/labandeira-2022-electricity-pricing-reform/independent/claude-code/20261102T142247Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 1,388 bytes, from `benchmark/results/artifacts/labandeira-2022-electricity-pricing-reform/independent/claude-code/20261102T142247Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

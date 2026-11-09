@@ -1,0 +1,309 @@
+Lab columns:
+ [1] "payoff"                           "Attention"                       
+ [3] "load_correct"                     "round"                           
+ [5] "Treatment_Environment"            "default_followed"                
+ [7] "load_correct_mean"                "summation_correct_mean"          
+ [9] "summation_correct"                "default_followed_mean"           
+[11] "attention_mean"                   "attention_positive_mean"         
+[13] "default_correct_choice"           "diff_choice_second"              
+[15] "ability_load"                     "ability_task"                    
+[17] "q_age"                            "q_gender"                        
+[19] "q_subject"                        "q_degree"                        
+[21] "q_abitur_year"                    "q_abitur_grade"                  
+[23] "q_math_grade"                     "perc_multitasking_1"             
+[25] "perc_multitasking_2"              "risk"                            
+[27] "perc_multitasking_1_easy"         "raven_score"                     
+[29] "no_attention"                     "subject_id"                      
+[31] "original_lab"                     "Treatment_intervention"          
+[33] "payoff_share_mean"                "payoff_share"                    
+[35] "default_followed_correct_mean"    "raven_score_quartiles"           
+[37] "raven_score_median"               "high_task_difficulty"            
+[39] "subject_cat"                      "q_abitur_grade_quartile"         
+[41] "q_abitur_grade_cat"               "q_math_grade_cat"                
+[43] "Treatment_Incentives"             "Treatment_Incentives_Baseline_sc"
+[45] "Treatment_Incentives_Int_sc"      "economist"                       
+MTurk columns:
+ [1] "round"                  "age"                    "window_height1"        
+ [4] "window_width1"          "math_task_correct"      "memory"                
+ [7] "math_time"              "subject_id"             "gender"                
+[10] "Treatment_intervention" "passive_choice"         "payoff_share"          
+No resource-condition column found; assuming data contains only the scarce condition.
+Environment table:
+                              
+env_f                             0    1
+  \\textsc{Baseline}           5960    0
+  \\textsc{Directed Attention}    0 6000
+  \\textsc{Forced Choice}         0 5880
+  \\textsc{Baseline-8}            0    0
+  \\textsc{High Qual.}            0    0
+Environment classification:
+          
+env_cat       0    1
+  baseline 5960    0
+  directed    0 6000
+  forced      0 5880
+Outcome columns: summation_correct default_followed load_correct payoff_share 
+Control variables used: c_age, c_gender, c_field, c_gpa, c_math, c_abtask, c_abload, c_multi, c_inc1, c_inc2, c_inc3 
+Source columns: age= q_age  multitask= perc_multitasking_1  incentives= Treatment_Incentives;Treatment_Incentives_Baseline_sc;Treatment_Incentives_Int_sc  wave= NA 
+OLS estimation, Dep. Var.: y_quality
+Observations: 17,840
+Standard-errors: Clustered (cl) 
+             Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept)  0.673658   0.012874 52.32757  < 2.2e-16 ***
+intervention 0.082992   0.015077  5.50458 4.8399e-08 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.442788   Adj. R2: 0.007699
+OLS estimation, Dep. Var.: y_quality
+Observations: 17,440
+Standard-errors: Clustered (cl) 
+                                            Estimate Std. Error   t value
+(Intercept)                                 0.475414   0.061212  7.766683
+intervention                                0.085884   0.012558  6.839080
+c_age                                      -0.001584   0.001163 -1.361675
+c_gender1                                  -0.010290   0.012553 -0.819765
+c_fieldArgrawissenschaften                  0.029159   0.035716  0.816415
+c_fieldInformatik                           0.058483   0.032479  1.800620
+c_fieldkein Studium                         0.130699   0.031778  4.112852
+c_fieldMathematik                           0.040750   0.039210  1.039272
+c_fieldMedizin                              0.025273   0.031111  0.812331
+c_fieldNaturwissenschaften                  0.047446   0.021754  2.181051
+c_fieldPolitikwissenschaften                0.018311   0.040174  0.455801
+c_fieldPsychologie                          0.009772   0.033979  0.287597
+c_fieldRechtswissenschaft                   0.008637   0.018631  0.463590
+c_fieldSoziologie                           0.015215   0.087316  0.174247
+c_fieldSprach- und Literaturwissenschaften  0.021884   0.026378  0.829642
+c_fieldTheologie                            0.022441   0.043616  0.514512
+c_fieldVWL                                  0.021660   0.020722  1.045273
+c_gpa                                       0.014348   0.013186  1.088132
+c_math                                     -0.010690   0.007534 -1.418933
+c_abtask                                    0.219454   0.039129  5.608517
+c_abload                                    0.119839   0.031687  3.782005
+c_multi                                    -0.042191   0.007753 -5.441616
+c_inc12                                     0.042208   0.018824  2.242278
+c_inc13                                     0.114840   0.020746  5.535640
+c_inc14                                     0.167376   0.012657 13.224400
+                                             Pr(>|t|)    
+(Intercept)                                2.2608e-14 ***
+intervention                               1.4999e-11 ***
+c_age                                      1.7365e-01    
+c_gender1                                  4.1257e-01    
+c_fieldArgrawissenschaften                 4.1449e-01    
+c_fieldInformatik                          7.2109e-02 .  
+c_fieldkein Studium                        4.2782e-05 ***
+c_fieldMathematik                          2.9897e-01    
+c_fieldMedizin                             4.1682e-01    
+c_fieldNaturwissenschaften                 2.9446e-02 *  
+c_fieldPolitikwissenschaften               6.4865e-01    
+c_fieldPsychologie                         7.7372e-01    
+c_fieldRechtswissenschaft                  6.4306e-01    
+c_fieldSoziologie                          8.6171e-01    
+c_fieldSprach- und Literaturwissenschaften 4.0697e-01    
+c_fieldTheologie                           6.0702e-01    
+c_fieldVWL                                 2.9619e-01    
+c_gpa                                      2.7684e-01    
+c_math                                     1.5628e-01    
+c_abtask                                   2.7405e-08 ***
+c_abload                                   1.6619e-04 ***
+c_multi                                    6.8655e-08 ***
+c_inc12                                    2.5194e-02 *  
+c_inc13                                    4.1047e-08 ***
+c_inc14                                     < 2.2e-16 ***
+... 6 variables were removed because of collinearity (c_inc22, c_inc23
+and 4 others [full set in $collin.var])
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.427505   Adj. R2: 0.069629
+OLS estimation, Dep. Var.: y_default
+Observations: 17,840
+Standard-errors: Clustered (cl) 
+              Estimate Std. Error  t value  Pr(>|t|)    
+(Intercept)   0.485403   0.015758 30.80453 < 2.2e-16 ***
+intervention -0.157625   0.017209 -9.15931 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.479768   Adj. R2: 0.023396
+OLS estimation, Dep. Var.: y_default
+Observations: 17,440
+Standard-errors: Clustered (cl) 
+                                            Estimate Std. Error   t value
+(Intercept)                                 0.486298   0.073058  6.656353
+intervention                               -0.158605   0.015945 -9.947287
+c_age                                       0.001248   0.001476  0.845384
+c_gender1                                   0.000668   0.014368  0.046463
+c_fieldArgrawissenschaften                 -0.067096   0.039753 -1.687814
+c_fieldInformatik                          -0.065100   0.029025 -2.242873
+c_fieldkein Studium                        -0.070812   0.033157 -2.135632
+c_fieldMathematik                           0.026468   0.043344  0.610659
+c_fieldMedizin                             -0.009215   0.036072 -0.255467
+c_fieldNaturwissenschaften                 -0.036486   0.023858 -1.529283
+c_fieldPolitikwissenschaften                0.010681   0.053540  0.199503
+c_fieldPsychologie                         -0.008182   0.042146 -0.194132
+c_fieldRechtswissenschaft                  -0.016115   0.022400 -0.719418
+c_fieldSoziologie                           0.057380   0.109292  0.525020
+c_fieldSprach- und Literaturwissenschaften -0.038777   0.028690 -1.351565
+c_fieldTheologie                            0.023681   0.061713  0.383724
+c_fieldVWL                                 -0.017198   0.025517 -0.673976
+c_gpa                                      -0.014956   0.015901 -0.940538
+c_math                                      0.006238   0.009104  0.685224
+c_abtask                                   -0.069360   0.048513 -1.429712
+c_abload                                   -0.019207   0.040433 -0.475043
+c_multi                                     0.037666   0.009678  3.892057
+c_inc12                                     0.008835   0.024550  0.359889
+c_inc13                                    -0.070371   0.026134 -2.692722
+c_inc14                                    -0.099297   0.013445 -7.385557
+                                             Pr(>|t|)    
+(Intercept)                                4.9617e-11 ***
+intervention                                < 2.2e-16 ***
+c_age                                      3.9813e-01    
+c_gender1                                  9.6295e-01    
+c_fieldArgrawissenschaften                 9.1805e-02 .  
+c_fieldInformatik                          2.5156e-02 *  
+c_fieldkein Studium                        3.2988e-02 *  
+c_fieldMathematik                          5.4158e-01    
+c_fieldMedizin                             7.9842e-01    
+c_fieldNaturwissenschaften                 1.2656e-01    
+c_fieldPolitikwissenschaften               8.4192e-01    
+c_fieldPsychologie                         8.4612e-01    
+c_fieldRechtswissenschaft                  4.7208e-01    
+c_fieldSoziologie                          5.9970e-01    
+c_fieldSprach- und Literaturwissenschaften 1.7687e-01    
+c_fieldTheologie                           7.0128e-01    
+c_fieldVWL                                 5.0051e-01    
+c_gpa                                      3.4720e-01    
+c_math                                     4.9338e-01    
+c_abtask                                   1.5316e-01    
+c_abload                                   6.3488e-01    
+c_multi                                    1.0698e-04 ***
+c_inc12                                    7.1902e-01    
+c_inc13                                    7.2232e-03 ** 
+c_inc14                                    3.5522e-13 ***
+... 6 variables were removed because of collinearity (c_inc22, c_inc23
+and 4 others [full set in $collin.var])
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.474389   Adj. R2: 0.043642
+OLS estimation, Dep. Var.: y_default
+Observations: 17,840
+Standard-errors: Clustered (cl) 
+             Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)  0.485403   0.015758  30.80367  < 2.2e-16 ***
+directed    -0.098736   0.019723  -5.00608 6.6947e-07 ***
+forced      -0.217716   0.016518 -13.18043  < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.477306   Adj. R2: 0.03334
+OLS estimation, Dep. Var.: y_load
+Observations: 17,840
+Standard-errors: Clustered (cl) 
+              Estimate Std. Error  t value  Pr(>|t|)    
+(Intercept)   0.829195   0.011237 73.78846 < 2.2e-16 ***
+intervention -0.018673   0.014101 -1.32421   0.18577    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.386763   Adj. R2: 4.623e-4
+OLS estimation, Dep. Var.: y_load
+Observations: 17,440
+Standard-errors: Clustered (cl) 
+                                            Estimate Std. Error   t value
+(Intercept)                                 0.646155   0.057061 11.323852
+intervention                               -0.018690   0.010741 -1.740053
+c_age                                      -0.001275   0.001067 -1.194470
+c_gender1                                  -0.003549   0.011353 -0.312593
+c_fieldArgrawissenschaften                 -0.046820   0.025794 -1.815116
+c_fieldInformatik                           0.014990   0.033316  0.449941
+c_fieldkein Studium                        -0.080999   0.039911 -2.029463
+c_fieldMathematik                           0.070645   0.023920  2.953387
+c_fieldMedizin                             -0.046429   0.024961 -1.860043
+c_fieldNaturwissenschaften                 -0.035349   0.017725 -1.994272
+c_fieldPolitikwissenschaften               -0.051545   0.037347 -1.380167
+c_fieldPsychologie                         -0.041230   0.023515 -1.753313
+c_fieldRechtswissenschaft                  -0.023636   0.015524 -1.522553
+c_fieldSoziologie                          -0.040489   0.036579 -1.106915
+c_fieldSprach- und Literaturwissenschaften -0.037760   0.024681 -1.529963
+c_fieldTheologie                           -0.091126   0.073038 -1.247652
+c_fieldVWL                                 -0.014911   0.015994 -0.932287
+c_gpa                                      -0.019214   0.009821 -1.956428
+c_math                                      0.000521   0.006533  0.079732
+c_abtask                                   -0.027560   0.036468 -0.755736
+c_abload                                    0.400516   0.031822 12.585994
+c_multi                                    -0.022282   0.006916 -3.222038
+c_inc12                                     0.001529   0.016248  0.094116
+c_inc13                                    -0.084394   0.024293 -3.474068
+c_inc14                                     0.200703   0.010138 19.797020
+                                             Pr(>|t|)    
+(Intercept)                                 < 2.2e-16 ***
+intervention                               0.08220294 .  
+c_age                                      0.23261922    
+c_gender1                                  0.75466510    
+c_fieldArgrawissenschaften                 0.06984989 .  
+c_fieldInformatik                          0.65286512    
+c_fieldkein Studium                        0.04271475 *  
+c_fieldMathematik                          0.00322758 ** 
+c_fieldMedizin                             0.06321638 .  
+c_fieldNaturwissenschaften                 0.04643371 *  
+c_fieldPolitikwissenschaften               0.16788927    
+c_fieldPsychologie                         0.07989998 .  
+c_fieldRechtswissenschaft                  0.12823357    
+c_fieldSoziologie                          0.26863637    
+c_fieldSprach- und Literaturwissenschaften 0.12638889    
+c_fieldTheologie                           0.21249371    
+c_fieldVWL                                 0.35144649    
+c_gpa                                      0.05073396 .  
+c_math                                     0.93646884    
+c_abtask                                   0.45001208    
+c_abload                                    < 2.2e-16 ***
+c_multi                                    0.00132008 ** 
+c_inc12                                    0.92503873    
+c_inc13                                    0.00053791 ***
+c_inc14                                     < 2.2e-16 ***
+... 6 variables were removed because of collinearity (c_inc22, c_inc23
+and 4 others [full set in $collin.var])
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.359896   Adj. R2: 0.131736
+OLS estimation, Dep. Var.: y_pshare
+Observations: 17,840
+Standard-errors: Clustered (cl) 
+             Estimate Std. Error   t value  Pr(>|t|)    
+(Intercept)  0.796046   0.009633 82.633401 < 2.2e-16 ***
+intervention 0.006465   0.011953  0.540901   0.58871    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.317308   Adj. R2: 3.63e-5
+OLS estimation, Dep. Var.: memory_y
+Observations: 5,472
+Standard-errors: Clustered (cl) 
+              Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept)   0.733189   0.012437 58.95291  < 2.2e-16 ***
+intervention -0.114252   0.018804 -6.07602 2.1758e-09 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.320266   Adj. R2: 0.030655
+OLS estimation, Dep. Var.: memory_y
+Observations: 5,472
+Standard-errors: Clustered (cl) 
+              Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)   0.645764   0.059924 10.776425  < 2.2e-16 ***
+intervention -0.113364   0.017222 -6.582442 1.0019e-10 ***
+age_c        -0.005908   0.000807 -7.323134 7.7355e-13 ***
+gender_c2     0.014502   0.017565  0.825620 4.0934e-01    
+gender_c3     0.144616   0.075101  1.925621 5.4619e-02 .  
+win_w         0.000093   0.000037  2.526276 1.1781e-02 *  
+win_h         0.000221   0.000071  3.138267 1.7819e-03 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.305952   Adj. R2: 0.114558
+RESULT:choice_quality_intervention_t2_col1=0.08299211353
+RESULT:choice_quality_intervention_t2_col2=0.08588447072
+RESULT:default_adherence_intervention_t2_col5=-0.1576249068
+RESULT:default_adherence_intervention_t2_col6=-0.1586051059
+RESULT:default_adherence_directed_attention_t2_col7=-0.0987360179
+RESULT:default_adherence_forced_choice_t2_col7=-0.2177156097
+RESULT:background_quality_intervention_lab_t3_col1=-0.01867274535
+RESULT:background_quality_intervention_lab_t3_col2=-0.01869000766
+RESULT:memory_intervention_online_t3_col5=-0.1142516852
+RESULT:payoff_share_intervention_t4_col1=0.006465361013
+RESULT:n_obs_lab_tables_2_to_4=17840
+RESULT:n_subjects_lab_tables_2_to_4=892
+RESULT:memory_intervention_online_t3_col6=-0.1133638374

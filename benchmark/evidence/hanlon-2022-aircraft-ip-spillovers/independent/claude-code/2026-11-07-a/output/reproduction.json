@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "hanlon-2022-aircraft-ip-spillovers",
+  "mode": "independent",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was an exploratory run with no RESULT lines. It inspected airframe_data.dta and engine_data.dta: the fighter+bomber subset gives N=116 US wing-load models, 174 US max-speed models, 165 and 233 pooled US+UK models, and 85 US engines. The final script runs OLS on the precomputed log outcomes with a continuous two-piece linear spline in year (knot 1926: min(year,1926), max(year-1926,0)) and heteroskedasticity-robust (HC1) SEs. Table 1 cols 1-2 use US fighter and bomber models only. For cols 3-4 (eq. 5) the regressors are the common spline (the UK/comparison spline), a US indicator, and the US x spline interactions; the interactions give the US-relative slopes. Table 4 col 1 uses US engines from engine_data.dta (ln_hp_per_lbs) with the spline and liquid_cooled. All 12 values match the claims after rounding. The results were not compared with the claims before the final run, and there were no claim or error attempts.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-07T19:56:54Z",
+  "finished_at": "2026-11-07T20:10:00Z"
+}

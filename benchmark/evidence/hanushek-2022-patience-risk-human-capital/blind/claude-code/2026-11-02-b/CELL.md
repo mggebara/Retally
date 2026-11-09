@@ -75,3 +75,7 @@ Agent notes: Two exploratory runs (attempt-1: column summaries of the main CSV a
 - [`output/script.R`](output/script.R) — 4,198 bytes, from `benchmark/results/artifacts/hanushek-2022-patience-risk-human-capital/blind/claude-code/20261102T151025Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 301 bytes, from `benchmark/results/artifacts/hanushek-2022-patience-risk-human-capital/blind/claude-code/20261102T151025Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 5,193 bytes, from `benchmark/results/artifacts/hanushek-2022-patience-risk-human-capital/blind/claude-code/20261102T151025Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

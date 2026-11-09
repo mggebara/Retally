@@ -1,0 +1,67 @@
+# holman-2022-theresa-may-rally · blind · pipeline-desktop-opus-run4 · 20261108T013503Z
+
+| | |
+|---|---|
+| Paper | `holman-2022-theresa-may-rally` |
+| Mode | blind |
+| Reproducer | pipeline (LLM oracle) |
+| Model | desktop-opus-run4 |
+| Run | 20261108T013503Z |
+| Date | 2026-11-08T01:35:03Z |
+| Data access | public |
+| Results file | `benchmark/results/pipeline-oracle-desktop-opus-run4-24papers-indep-blind-2026-11-08.json` |
+| Artifacts | `benchmark/results/artifacts/holman-2022-theresa-may-rally/blind/pipeline/20261108T013503Z` |
+| Executions | 1 |
+| Refinements | 0 (0 error + 0 claim) |
+| First attempt | 0/11 |
+| First scored | 0/11 (execution 1) |
+| Final | **0/11** |
+| Package files withheld | 1 |
+| Evidence | complete |
+
+## Claims
+
+| Claim | Ground truth | Reproduced | Rel. err | Band | Verdict | First scored |
+|---|---|---|---|---|---|---|
+| `intl_attack_table4` | 3.112 (0.875) | — | — | ±0.875 (se_band) | FAIL | FAIL |
+| `intl_attack_x_woman_exec_table4` | -4.333 (1.859) | — | — | ±1.859 (se_band) | FAIL | FAIL |
+| `n_obs_table4` | 4328 | — | — | ±216.4 (relative) | FAIL | FAIL |
+| `did_attack_x_time_like_may_table2` | -0.1274 (0.0187) | -0.150165 | 17.87% | ±0.0187 (se_band) | FAIL | FAIL |
+| `did_attack_like_may_table2` | 0.0178 (0.0278) | -0.105036 | 690.09% | ±0.0278 (se_band) | FAIL | FAIL |
+| `did_time_like_may_table2` | -0.5007 (0.0229) | -0.226436 | 54.78% | ±0.0229 (se_band) | FAIL | FAIL |
+| `did_attack_x_time_may_best_pm_table2` | -0.0501 (0.0044) | -1.16472e-13 | 100.00% | ±0.0044 (se_band) | FAIL | FAIL |
+| `did_attack_may_best_pm_table2` | -0.0002 (0.004) | 1.24922 | 624712.50% | ±0.004 (se_band) | FAIL | FAIL |
+| `did_time_may_best_pm_table2` | 0.2098 (0.0036) | 3.14249e-13 | 100.00% | ±0.004196 (relative) | FAIL | FAIL |
+| `n_obs_did_like_may_table2` | 143499 | 239919 | 67.19% | ±7174.95 (relative) | FAIL | FAIL |
+| `n_obs_did_may_best_pm_table2` | 97155 | 1.48139e+06 | 1424.77% | ±4857.75 (relative) | FAIL | FAIL |
+
+Re-scored from `output/stdout.txt` with the runner's comparator: 0/11 pass, which agrees with the row's 0/11.
+
+Per-claim ground truth, tolerance rule and errors: [`scoring.json`](scoring.json).
+
+## Deviations declared
+
+_None declared._
+
+## What the model was given
+
+- [`prompt/prompt-1.txt`](prompt/prompt-1.txt) — 16,815 bytes, from `benchmark/results/artifacts/holman-2022-theresa-may-rally/blind/pipeline/20261108T013503Z/prompt-1.txt`
+
+## What it produced
+
+- [`output/execution.json`](output/execution.json) — 113 bytes, from `benchmark/results/artifacts/holman-2022-theresa-may-rally/blind/pipeline/20261108T013503Z/execution.json`
+- [`output/script.R`](output/script.R) — 5,527 bytes, from `benchmark/results/artifacts/holman-2022-theresa-may-rally/blind/pipeline/20261108T013503Z/script.R`
+- [`output/stderr.txt`](output/stderr.txt) — 475 bytes, from `benchmark/results/artifacts/holman-2022-theresa-may-rally/blind/pipeline/20261108T013503Z/stderr.txt`
+- [`output/stdout.txt`](output/stdout.txt) — 640 bytes, from `benchmark/results/artifacts/holman-2022-theresa-may-rally/blind/pipeline/20261108T013503Z/stdout.txt`
+- [`output/answer-1.md`](output/answer-1.md) — 5,528 bytes, from `benchmark/.cache/llm-oracle/desktop-opus-run4/answers/cbaf18163aee0c0546e18aec.json`
+
+## Executions
+
+| Execution | Kind | Exit code | Timed out | Elapsed (s) | Outputs parsed |
+|---|---|---|---|---|---|
+| final | final | 0 | no | 32.8 | 8 |
+
+## Notes
+
+- answer-1.md: reply to prompt-1.txt from the LLM oracle store desktop-opus-run4 (request cbaf18163aee0c0546e18aec: model claude-opus-5-5, max_tokens 16384, effort high)
+- usage records 3 model calls; 1 are code-generation prompts kept above, the other 2 (paper extraction) leave no prompt in the artifacts

@@ -76,3 +76,7 @@ Agent notes: Data are pre-matched consecutive-month pairs (unprefixed = t-1, v2 
 - [`output/script.R`](output/script.R) — 7,418 bytes, from `benchmark/results/artifacts/forsythe-2022-young-workers-recessions/independent/claude-code/20261102T062001Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 217 bytes, from `benchmark/results/artifacts/forsythe-2022-young-workers-recessions/independent/claude-code/20261102T062001Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 1,201 bytes, from `benchmark/results/artifacts/forsythe-2022-young-workers-recessions/independent/claude-code/20261102T062001Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

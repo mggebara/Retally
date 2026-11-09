@@ -1,0 +1,100 @@
+SugarReplicate.dta 
+$`113`
+        sum        mean      nonint      non100          na 
+3060960.000    7052.903       0.000       7.000       0.000 
+
+$`115`
+        sum        mean      nonint      non100          na 
+3822555.000    8931.203       0.000      33.000       0.000 
+
+$`113`
+non100 nonint 
+     9      0 
+
+$`115`
+non100 nonint 
+    34      0 
+
+SugarReplicate_iter1.dta 
+$`113`
+        sum        mean      nonint      non100          na 
+2223060.000    5134.088       0.000       5.000       1.000 
+
+$`115`
+        sum        mean      nonint      non100          na 
+2414096.000    5653.621       0.000       6.000       1.000 
+
+$`113`
+non100 nonint 
+     9      0 
+
+$`115`
+non100 nonint 
+    34      0 
+
+SugarReplicate_iter2.dta 
+$`113`
+        sum        mean      nonint      non100          na 
+2078510.000    4789.194       0.000       4.000       0.000 
+
+$`115`
+        sum        mean      nonint      non100          na 
+2571159.000    6007.381       0.000      29.000       0.000 
+
+$`113`
+non100 nonint 
+     9      0 
+
+$`115`
+non100 nonint 
+    34      0 
+
+SR==iter2 totalcont: FALSE 
+cor matrix totalcont/sugcont
+          t0        t1        t2         s
+t0 1.0000000 0.8629869 0.8765495 0.7757644
+t1 0.8629869 1.0000000 0.6444297 0.6413934
+t2 0.8765495 0.6444297 1.0000000 0.6831980
+s  0.7757644 0.6413934 0.6831980 1.0000000
+t1>=t0: 0.6  t0>=t1: 0.9965116 
+s>=t0: 0.8350755  s>=t1: 0.8766007 
+
+  1   2 
+  8 427 
+switching district (both congs, mean in (0,1)): 94 
+[1] id        cong      name      cid       vote      both      totalcont
+<0 rows> (or 0-length row.names)
+
+  1   2 
+  8 302 
+
+  1   2 
+308   2 
+switching incumbents: 52 
+
+           Aye        Aye/Aye         Aye/No Aye/Not Voting             No 
+             3             99             41              5              5 
+        No/Aye          No/No  No/Not Voting  Not Voting/No 
+             6            146              3              2 
+non-voting rows by both:
+            
+               0   1 <NA>
+  Aye         88 253    2
+  No         150 349    0
+  No Vote      1   0    0
+  Not Voting   9  10    0
+  <NA>         0   0    0
+[1] 1
+# A tibble: 4 × 7
+     id  cong name   vote        both tenure   ncu
+  <dbl> <dbl> <chr>  <chr>      <dbl>  <dbl> <dbl>
+1  2505   113 Markey Not Voting     0     NA    NA
+2  4207   113 Meehan Aye           NA      3    40
+3  3912   113 Tiberi Aye           NA     13    56
+4  4001   115 Hern   No Vote        0     NA    96
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  25801   47045   54412   58473   66841  134077 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   3.60   10.80   13.90   14.67   17.80   39.80 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   5.90   14.77   18.08   18.88   22.16   39.88 

@@ -64,3 +64,7 @@ Agent notes: Attempt-1 was exploratory (summaries, complete-case count = 431 par
 - [`output/script.R`](output/script.R) — 3,121 bytes, from `benchmark/results/artifacts/hollyer-2022-parties-as-disciplinarians/independent/claude-code/20261102T142247Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/hollyer-2022-parties-as-disciplinarians/independent/claude-code/20261102T142247Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 2,974 bytes, from `benchmark/results/artifacts/hollyer-2022-parties-as-disciplinarians/independent/claude-code/20261102T142247Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

@@ -58,3 +58,7 @@ Agent notes: Translated Table 1 (cols 1-4) and Table 4 (col 1) from 2-results-ma
 - [`output/script.R`](output/script.R) — 2,534 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/seeded/claude-code/20261102T194315Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 252 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/seeded/claude-code/20261102T194315Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 3,252 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/seeded/claude-code/20261102T194315Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).
