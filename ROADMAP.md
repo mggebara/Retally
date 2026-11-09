@@ -3828,6 +3828,184 @@ on `claude-opus-4-7`, 6 → 4 of 19 on desktop Opus), and the
 match.  The evidence bundles of the three pipeline papers still show the
 old flag until they are rebuilt.
 
+### 3.10 Fourth samples (independent and blind), 2026-11-08 — ✅ measured, no API spend
+
+**What ran.**  A fourth sample of each system in independent and blind
+mode on all 24 evaluation papers (48 cells each; no seeded sample).  The
+pipeline ran frozen through the desktop oracle
+(`RETALLY_PIPELINE_FROZEN=1`, code refrozen at 38faba7), label
+`desktop-opus-run4`, Opus 5.5 at the desktop default effort.  Extraction
+answers (methodology, hyperparameter and blind-extraction prompts) were
+reused by prompt hash from earlier labels, as in every oracle sample;
+every generation and refinement answer is a fresh draw.  The agent ran
+as Claude Code cells (Opus subagents in worktrees), run id
+`2026-11-07-a`.  No API spend.  Two files (PR #141), every row
+`cached=False`, 0 errors:
+
+- `benchmark/results/pipeline-oracle-desktop-opus-run4-24papers-indep-blind-2026-11-08.json`
+- `benchmark/results/claude-code-run4-24papers-indep-blind-2026-11-08.json`
+
+Both rescored with `benchmark.rescore` under the count policy
+(`count-5pct`) and under `--policy i4r-missing`: 0 flips each (a
+`--dry-run` of both policies on 2026-11-08 again gives 0; with no flip
+the i4r-missing pass leaves a file unstamped, so neither file carries
+`rescored_i4r_missing`).
+
+**Counts, 290 claims** (paper match; first scored in brackets):
+
+| | Independent | Blind |
+|---|---|---|
+| Pipeline, sample 4 | 255 (165) | 165 (165) |
+| Agent, sample 4 | 275 (271) | 256 (254) |
+
+I4R match: pipeline 207 and 137, agent 229 and 215.  Cells matching
+every claim: pipeline 12 and 3, agent 19 and 15.  Refinements: pipeline
+7 error and 44 claim refinements independent, 6 error blind; the agent
+logged 4 error and 11 claim repairs independent, 7 error blind.
+
+**Per-cell misses** (paper matches / claims):
+
+- Pipeline independent: Adams 7/11, Carrera 9/11, Forsythe 11/13,
+  Gagliarducci 11/13, Grier 9/11, Hanushek 8/13, Hollyer 12/13, Holman
+  6/11, Labandeira 7/12, Leeson 9/11, López-Moctezuma 9/13, Mokyr 12/13.
+- Pipeline blind: Acemoglu 6/12, Adams 7/11, Altmann 4/13, Arias 7/12,
+  Bokobza 4/11, Carrera 4/11, Dancygier 9/13, Dertwinkel-Kalt 11/13,
+  Douenne 12/13, Forsythe 12/13, Gagliarducci 7/13, Grier 2/11, Hanushek
+  5/13, Holman 0/11, Labandeira 5/12, Leeson 9/11, López-Moctezuma 8/13,
+  Manekin 7/12, Mokyr 1/13, Molina-Garzón 7/12, Montero 1/10.
+- Agent independent: Forsythe 12/13, Grier 10/11, Holman 6/11,
+  Labandeira 8/12, López-Moctezuma 9/13.
+- Agent blind: Adams 7/11, Douenne 12/13, Forsythe 12/13, Gagliarducci
+  9/13, Grier 8/11, Holman 7/11, Labandeira 4/12, López-Moctezuma 9/13,
+  Montero 5/10.
+
+**Totals, 24 papers, every sample** (recomputed the way
+`docs/report/tables.py` does; the 23-paper figures in brackets):
+
+| Mode | Pipeline 1 | Pipeline 2 | Pipeline 3 | Pipeline 4 | Agent 1 | Agent 2 | Agent 3 | Agent 4 | Gap range (pairings) |
+|---|---|---|---|---|---|---|---|---|---|
+| independent | 251 (239) | 238 (226) | 233 (227) | 255 (243) | 280 (268) | 283 (271) | 277 (265) | 275 (263) | 20 to 50 (16) [20 to 45] |
+| blind | 179 (173) | 182 (176) | 193 (181) | 165 (158) | 264 (252) | 263 (251) | 262 (250) | 256 (244) | 63 to 99 (16) [63 to 94] |
+
+Seeded is unchanged at 1 to 23 (6 pairings).  On the 17 papers measured
+first the 16-pairing ranges are 12 to 31 and 49 to 69; on the 13, 9 to 19
+and 33 to 55.  The pipeline's fourth independent total is its highest
+and its blind total its lowest, so its blind total spans 165 to 193
+across four samples; the agent's fourth totals are its lowest in both
+modes (275 to 283 independent, 256 to 264 blind).  The bottom of the
+independent range (275 − 255) and the top of the blind range
+(264 − 165) both use the pipeline's fourth sample.  Cells identical in
+all four pipeline samples: 9 / 24 independent, 4 / 24 blind (10 and 6
+over three); in all four agent samples 20 and 18 (unchanged).  Against
+the range of its first three samples, the pipeline's fourth falls
+outside in 6 independent cells (3 above: Acemoglu, Carrera, Grier;
+3 below: Adams, Gagliarducci, Hanushek) and 8 blind cells (3 above:
+Forsythe, Hollyer, Labandeira; 5 below: Dancygier, Dertwinkel-Kalt,
+Hanushek, López-Moctezuma, Manekin); the agent's in Holman independent
+(6 against 11, 11, 8) and Labandeira and Montero blind (4 against 6–7;
+5 against 6–10), all below.
+
+**Recurring cells.**
+
+- *Holman blind, pipeline 0 / 11 for the fourth time* (0, 0, 0, 0).
+  Table 4 printed `NA`; Table 2's coefficients and both Ns missed, two
+  coefficients numerically zero again (−1.2e-13, 3.1e-13).  The agent
+  reproduced 7 / 11 in all four samples, missing the same four Table 2
+  claims each time.
+- *Mokyr blind, pipeline 1 / 13* (1, 1, 7, 1): only the district count.
+  The per-capita construction failure recorded in 3.7 (the brief that
+  launched this pass called it density scaling; the variables are the
+  per-capita watermill and wright densities): the watermill coefficients
+  came out about 750 times the printed values (113.3 against 0.15 in
+  Table 2 column 1), a different scale from the ~10,000 of samples 1–2,
+  and the first-stage F statistics again about half (8.86, 7.32, 7.94
+  against 19.9, 16.96, 16.17).  The agent reproduced 13 in every sample.
+- *Montero blind, pipeline 1 / 10 against the agent's 5 / 10*
+  (pipeline 0, 3, 0, 1; agent 10, 7, 6, 5).  The pipeline passed only the
+  bandwidth-300 cluster count; the agent's fourth sample passed the
+  coefficients except the bandwidth-150 IQR one and missed all four Ns.
+- *Labandeira blind, 4–5 / 12 for both systems* (pipeline 4, 4, 4, 5;
+  agent 6, 7, 7, 4).  Both fourth-sample scripts print one Reform
+  coefficient for each consumption column and its expenditure
+  counterpart.  The agent's cell notes that the household price is
+  defined as expenditure / consumption, so log expenditure = log
+  consumption + log price by construction, and with log price on the
+  right-hand side the expenditure regressions give exactly the consumption
+  coefficients (OLS, FE and LIML alike); reported as computed.  The
+  printed table's paired columns differ, so on this data at most one of
+  each pair can pass.
+- *Altmann blind, pipeline 4 / 13 held* (4, 4, 13, 4); sample 3's 13
+  stays the exception.
+- *Douenne blind*: the agent missed the Table 4 column 1
+  initial-acceptance coefficient in three of four samples (12, 12, 13,
+  12); the pipeline's fourth sample missed the same claim (0.230 and
+  0.226 against 0.306).
+- *Grier independent, pipeline 9 / 11* (0, 2, 2, 9): the first pipeline
+  sample to estimate the three contribution windows separately; its
+  blind cell again printed one value for all three (2 / 11).
+
+**Harness notes (from the run log).**
+
+1. *Host sleep.*  The host Mac was asleep for most of each hour during
+   the run (dark-wakes of 30–60 s every 10–18 min, per `pmset -g log`).
+   Containers, timeouts and subagents advance only in wake windows, so
+   wall-clock times in this sample mean nothing; CPU time is unaffected.
+   Five agent cells (Forsythe blind, Hanushek independent and blind,
+   Holman independent, Labandeira blind) were first stopped by their
+   agents under the task's ten-minute-silence hang rule, which assumes an
+   awake host.  Their hung attempts were removed per the rule and the
+   cells rerun one at a time under an explicit sleep-aware rule (judge a
+   hang by CPU and memory activity, not wall-clock).  Forsythe blind was
+   stopped twice before it succeeded.  Not a pipeline or agent failure.
+2. *Docker I/O.*  Bind-mount read throughput on this host is about
+   8 MB/s (measured by the Forsythe blind agent), so reading Forsythe's
+   2 GB CSV takes 200–240 s of the 300 s sandbox limit, and haven/fread
+   on Hanushek's 2.3 GB `.dta` exceed it.  Both Hanushek agent cells
+   wrote a chunked `readBin` reader for the Stata 118 format (checked
+   against haven on the first rows); Forsythe blind collapsed to cells to
+   fit.  The pipeline's Forsythe cells needed several rounds
+   (independent: 2 error and 3 claim refinements; blind: 2 error
+   refinements).  The 300 s limit is partly an I/O limit on this host.
+3. *Oracle answers.*  One answering agent made a stray Bash call (prompt
+   50f7; recorded in the run notes), and for one prompt (94b6) both the
+   original and the guarded-retry answerer wrote an answer, the later
+   write being the one installed.  Both are independent Opus answers to
+   the same prompt; neither affects the scored sample beyond ordinary
+   draw-to-draw variation.
+4. *Agent cells, from `reproduction.json`.*  Molina-Garzón blind:
+   attempt 2 ran Docker before `script.R` existed (empty mount, no
+   output), logged by the agent as an error attempt.  Holman independent
+   chose its specification by matching published Ns and saw Table 4
+   coefficients during exploration without running `check_attempt`, so
+   it has no claim attempts; its `reproduction.json` says so.
+   López-Moctezuma independent left the attempt-2 script unchanged after
+   five exploratory variants failed to match the SI attitude indices.
+
+**Report.**  `docs/report/tables.py` reads both files (`RUN4`, `AGENT4`;
+24 papers × 2 modes asserted) into the variance tables only: sample-4
+columns in `variance_pipeline` and `variance_pipeline_cells`, agent and
+pipeline sample-4 columns in `variance_agent` and
+`variance_agent_cells`, all-sample spreads and 16-pairing gap ranges,
+and a sample-4 column in the Grier/Holman claim table.  The first-sample
+tables, the probe, the post-fix table and the ROADMAP 3.5–3.7.3 checks
+are unchanged.  `docs/report/draft.md` gets an eighth pass (abstract,
+Section 4.8 "The fourth samples", 4.3, 4.7, 5, 6, 8).
+`benchmark/results/REPORT.md` is rendered from the first-sample files
+only and is left as it is.
+
+**Evidence.**  Rebuilt for all 24 papers from all 31 results files: 625
+cells (529 + 96).
+
+**Limitations.**  Four samples per system in independent and blind mode
+show how far a total moves (the pipeline's blind total by 28 claims, the
+agent's by 8) but are still not a distribution: no standard error, and
+the gap ranges are min–max over pairings, not intervals.  Seeded mode
+stays at three pipeline and two agent samples.  The funnel is unchanged:
+24 evaluation papers, the open pool exhausted, the openICPSR packages
+the user's call.
+
+**Next:** nothing on the pipeline (frozen).
+
 ---
 
 ## Phase 4 — Corpus growth (4 → 20–30 papers)

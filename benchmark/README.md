@@ -707,7 +707,13 @@ benchmark/evidence/
   ROADMAP 3.8.1; `pipeline-oracle-desktop-opus-postfix2-…`, label
   `desktop-opus-postfix2`, ROADMAP 3.8.3); and the 24th evaluation paper
   (`molina-garzon-2022-decentralization-cooperation`, ROADMAP 3.9, 17
-  cells); `INDEX.md` now lists 529 cells on the 24 evaluation papers.
+  cells), bringing `INDEX.md` to 529 cells; and the fourth independent
+  and blind samples of both systems
+  (`pipeline-oracle-desktop-opus-run4-24papers-indep-blind-2026-11-08.json`,
+  label `desktop-opus-run4`, and
+  `claude-code-run4-24papers-indep-blind-2026-11-08.json`, run
+  `2026-11-07-a`; ROADMAP 3.10, 96 cells), rebuilt from all 31 results
+  files; `INDEX.md` now lists 625 cells on the 24 evaluation papers.
 
 ## Plugging in another agent
 
