@@ -101,6 +101,14 @@ POSTFIX_LABEL = "desktop-opus-postfix"
 # never did.  Post hoc like the first: never pooled, feeds only the ``postfix`` table.
 PIPELINE_POSTFIX2_FILE = "pipeline-oracle-desktop-opus-postfix2-23papers-indep-blind-2026-11-05.json"
 POSTFIX2_LABEL = "desktop-opus-postfix2"
+# Fourth frozen pipeline sample, through the oracle (label ``desktop-opus-run4``; ROADMAP 3.10),
+# independent and blind mode on all 24 papers in one file (``RETALLY_PIPELINE_FROZEN=1`` at the
+# 38faba7 refreeze, so the pre-3.8 pipeline like samples 1-3).  Kept out of ``RAW`` like samples 2
+# and 3; it feeds only the variance tables and the claim-level consistency table.  Seeded mode has
+# no fourth sample.
+PIPELINE_RUN4_FILE = "pipeline-oracle-desktop-opus-run4-24papers-indep-blind-2026-11-08.json"
+RUN4_LABEL = "desktop-opus-run4"
+RUN4_MODES = ("independent", "blind")
 POSTFIX_MODES = ("independent", "blind")
 # Second Claude Code sample in independent and blind mode: the 13 papers of
 # ROADMAP 3.5 ("Agent second sample"; run id ``2026-11-01-a``) and the four of
@@ -123,6 +131,12 @@ AGENT_RUN3_FILE = "claude-code-run3-23papers-indep-blind-2026-11-02.json"
 # ... and the R7 paper of ROADMAP 3.9 (run id ``2026-11-06-c``), so three samples on all 24.
 AGENT_RUN3_R7_FILE = "claude-code-run3-1paper-indep-blind-2026-11-06.json"
 AGENT_RUN3_MODES = ("independent", "blind")
+# Fourth Claude Code sample in independent and blind mode on all 24 papers (ROADMAP 3.10; run id
+# ``2026-11-07-a``).  Kept out of ``RAW`` like the second and third; it feeds only the variance
+# tables.  Seeded mode has no fourth sample.
+AGENT_RUN4_FILE = "claude-code-run4-24papers-indep-blind-2026-11-08.json"
+AGENT_RUN4_ID = "2026-11-07-a"
+AGENT_RUN4_MODES = ("independent", "blind")
 # The modes with two agent samples when ROADMAP 3.7 and 3.7.1 were written (their checks quote "—"
 # for the agent's seeded sample 2).
 AGENT_RUN2_MODES_37 = ("independent", "blind")
@@ -346,6 +360,15 @@ for _r in load_rows(PIPELINE_RUN3_FILE) + load_rows(PIPELINE_RUN3_R7_FILE):
     RUN3[_key] = _r
 assert {e for e, _m in RUN3} == set(HOLDOUT) and len(RUN3) == len(HOLDOUT) * len(MODES)
 
+RUN4: dict[tuple[str, str], dict[str, Any]] = {}
+for _r in load_rows(PIPELINE_RUN4_FILE):
+    assert metrics.reproducer_of(_r) == "pipeline" and metrics.model_of(_r) == RUN4_LABEL, _r["entry_id"]
+    assert not _r.get("skipped") and not _r.get("error"), _r["entry_id"]
+    _key = (_r["entry_id"], metrics.mode_of(_r))
+    assert _key[1] in RUN4_MODES and _key not in RUN4, f"unexpected run4 cell {_key}"
+    RUN4[_key] = _r
+assert {e for e, _m in RUN4} == set(HOLDOUT) and len(RUN4) == len(HOLDOUT) * len(RUN4_MODES)
+
 
 def _load_postfix(name: str, label: str) -> dict[tuple[str, str], dict[str, Any]]:
     """One post-fix sample's rows by (entry, mode): independent and blind on the 23 earlier papers."""
@@ -386,6 +409,15 @@ for _r in load_rows(AGENT_RUN3_FILE) + load_rows(AGENT_RUN3_R7_FILE):
     assert _key[1] in AGENT_RUN3_MODES and _key not in AGENT3, f"unexpected agent run3 cell {_key}"
     AGENT3[_key] = _r
 assert {e for e, _m in AGENT3} == set(HOLDOUT) and len(AGENT3) == len(HOLDOUT) * len(AGENT_RUN3_MODES)
+
+AGENT4: dict[tuple[str, str], dict[str, Any]] = {}
+for _r in load_rows(AGENT_RUN4_FILE):
+    assert metrics.reproducer_of(_r) == AGENT, _r["entry_id"]
+    assert not _r.get("skipped") and not _r.get("error"), _r["entry_id"]
+    _key = (_r["entry_id"], metrics.mode_of(_r))
+    assert _key[1] in AGENT_RUN4_MODES and _key not in AGENT4, f"unexpected agent run4 cell {_key}"
+    AGENT4[_key] = _r
+assert {e for e, _m in AGENT4} == set(HOLDOUT) and len(AGENT4) == len(HOLDOUT) * len(AGENT_RUN4_MODES)
 
 PROBE_ROWS = sorted(load_rows(PROBE_FILE), key=lambda r: r["entry_id"])
 assert {r["entry_id"] for r in PROBE_ROWS} == set(TWENTY_THREE) and len(PROBE_ROWS) == len(TWENTY_THREE)
@@ -973,17 +1005,31 @@ def t_variance_pipeline() -> str:
         "Sample 1",
         "Sample 2",
         "Sample 3",
+        "Sample 4",
         "Agent (sample 1)",
         "Agent − sample 1",
         "Agent − sample 2",
         "Agent − sample 3",
+        "Agent − sample 4",
         "Cells identical (1, 2)",
         "Mean abs. diff per cell (1, 2)",
         "Max abs. diff (1, 2)",
         "Cells identical (1, 2, 3)",
         "Max spread (1, 2, 3)",
+        "Cells identical (all samples)",
+        "Max spread (all samples)",
     ]
     out = []
+
+    def fourth(entries: list[str], modes: tuple[str, ...]) -> tuple[int | str, int, int]:
+        """(sample 4 total or "—", cells identical in every sample, largest spread over every sample)."""
+        keys = [(e, m) for m in modes for e in entries]
+        spreads = []
+        for e, m in keys:
+            v = _pipeline_counts(e, m)
+            spreads.append(max(v) - min(v))
+        s4: int | str = sum(passed(RUN4[k]) for k in keys) if all(m in RUN4_MODES for m in modes) else "—"
+        return s4, sum(1 for d in spreads if d == 0), max(spreads)
 
     def third(entries: list[str], modes: tuple[str, ...]) -> tuple[int, int, int]:
         """(sample 3 total, cells identical in all three samples, largest spread in a cell)."""
@@ -1009,6 +1055,7 @@ def t_variance_pipeline() -> str:
             every += cells
             n, s1, s2, a, same, sad, mx = _variance_stats(cells)
             s3, same3, sp3 = third(entries, (m,))
+            s4, same4, sp4 = fourth(entries, (m,))
             out.append(
                 [
                     label,
@@ -1017,19 +1064,24 @@ def t_variance_pipeline() -> str:
                     s1,
                     s2,
                     s3,
+                    s4,
                     a,
                     f"{a - s1:+d}",
                     f"{a - s2:+d}",
                     f"{a - s3:+d}",
+                    "—" if isinstance(s4, str) else f"{a - s4:+d}",
                     f"{same} / {len(cells)}",
                     f"{sad / len(cells):.2f}",
                     mx,
                     f"{same3} / {len(cells)}",
                     sp3,
+                    f"{same4} / {len(cells)}",
+                    sp4,
                 ]
             )
         n, s1, s2, a, same, sad, mx = _variance_stats(every)
         s3, same3, sp3 = third(entries, MODES)
+        _s4, same4, sp4 = fourth(entries, MODES)
         out.append(
             [
                 label,
@@ -1038,7 +1090,9 @@ def t_variance_pipeline() -> str:
                 s1,
                 s2,
                 s3,
+                "—",
                 a,
+                "—",
                 "—",
                 "—",
                 "—",
@@ -1047,10 +1101,13 @@ def t_variance_pipeline() -> str:
                 f"**{mx}**",
                 f"**{same3} / {len(every)}**",
                 f"**{sp3}**",
+                f"**{same4} / {len(every)}**",
+                f"**{sp4}**",
             ]
         )
     return (
-        "Three samples of the pipeline on Opus 5.5 over all 24 evaluation papers (claims within "
+        "Four samples of the pipeline on Opus 5.5 in independent and blind mode and three in seeded mode, "
+        "over all 24 evaluation papers (claims within "
         "tolerance of the paper's printed value).  *Sample 1* is the model-matched row used everywhere "
         "else in this report: the API run (`claude-opus-5-5`) for Grier, Leeson, Manekin and Montero "
         "and the first oracle run for the other twenty.  *Sample 2* is a second oracle run "
@@ -1060,23 +1117,40 @@ def t_variance_pipeline() -> str:
         "API papers the samples differ in route as well as draw.  "
         f"*Sample 3* is a third oracle run on the frozen pipeline (label `{RUN3_LABEL}`; "
         f"`{PIPELINE_RUN3_FILE}` for the 23 earlier papers, ROADMAP 3.7.4; `{PIPELINE_RUN3_R7_FILE}` for the "
-        "R7 paper, ROADMAP 3.9).  The agent column is its first sample.  "
+        "R7 paper, ROADMAP 3.9).  "
+        f"*Sample 4* is a fourth oracle run on the frozen pipeline in independent and blind mode only "
+        f"(label `{RUN4_LABEL}`; `{PIPELINE_RUN4_FILE}`, ROADMAP 3.10); seeded mode has none, so the "
+        "all-modes rows leave it out.  The agent column is its first sample.  "
         "The columns marked (1, 2) compare pipeline samples 1 and 2 cell by cell (paper × mode); "
-        "*cells identical (1, 2, 3)* counts the cells with the same final count in all three samples "
-        "and *max spread* is the largest difference between a cell's highest and lowest sample.\n\n"
-        + table(hdr, out, ["l", "l"] + ["r"] * 13)
+        "*cells identical (1, 2, 3)* counts the cells with the same final count in samples 1 to 3 "
+        "and *max spread (1, 2, 3)* is the largest difference between a cell's highest and lowest of "
+        "those three; the *all samples* columns do the same over every sample of the cell (four in "
+        "independent and blind mode, three in seeded).\n\n" + table(hdr, out, ["l", "l"] + ["r"] * 17)
     )
 
 
 def t_variance_pipeline_cells() -> str:
-    hdr = ["Paper", "Sample 1 route", "Mode", "n", "Sample 1", "Sample 2", "Sample 3", "Spread", "Agent"]
+    hdr = [
+        "Paper",
+        "Sample 1 route",
+        "Mode",
+        "n",
+        "Sample 1",
+        "Sample 2",
+        "Sample 3",
+        "Sample 4",
+        "Spread",
+        "Agent",
+    ]
     out = []
     for e in HOLDOUT:
         route = "API" if e in API_FOUR else "oracle"
         for m in MODES:
             s1, s2, s3, a = p55_cell(e, m), RUN2[(e, m)], RUN3[(e, m)], cell(AGENT, e, m)
+            s4 = RUN4.get((e, m))
             assert s1 is not None and a is not None and total(s3) == total(s1)
-            v = [passed(s1), passed(s2), passed(s3)]
+            assert s4 is None or total(s4) == total(s1), (e, m)
+            v = _pipeline_counts(e, m)
             d = max(v) - min(v)
             out.append(
                 [
@@ -1087,15 +1161,23 @@ def t_variance_pipeline_cells() -> str:
                     passed(s1),
                     passed(s2),
                     passed(s3),
+                    "—" if s4 is None else passed(s4),
                     f"**{d}**" if d else "0",
                     passed(a),
                 ]
             )
     return (
-        "Per paper and mode: final claims within tolerance in each of the three pipeline samples, "
-        "their spread (largest minus smallest; bold where non-zero), and the agent's first sample.\n\n"
-        + table(hdr, out, ["l", "l", "l", "r", "r", "r", "r", "r", "r"])
+        "Per paper and mode: final claims within tolerance in each pipeline sample (four in independent "
+        "and blind mode, three in seeded), their spread (largest minus smallest over every sample; bold "
+        "where non-zero), and the agent's first sample.\n\n"
+        + table(hdr, out, ["l", "l", "l", "r", "r", "r", "r", "r", "r", "r"])
     )
+
+
+def _pipeline_counts(entry: str, mode: str) -> list[int]:
+    """Final counts of every frozen pipeline sample of a cell: four independent and blind, three seeded."""
+    r4 = RUN4.get((entry, mode))
+    return _frozen_counts(entry, mode) + ([] if r4 is None else [passed(r4)])
 
 
 def _frozen_counts(entry: str, mode: str) -> list[int]:
@@ -1220,6 +1302,20 @@ def _agent_variance_stats(mode: str, entries: list[str] | None = None) -> dict[s
         max(v) - min(v)
         for v in ([c[2], c[3]] + ([passed(r)] if r is not None else []) for c, r in zip(cells, a3_cells))
     ]
+    # The fourth samples of both systems (ROADMAP 3.10), independent and blind only.  The keys above
+    # stay as 3.7.3 and 3.7.4 computed them; the ``*4`` keys pair every sample of each system.
+    a4_cells = [AGENT4.get((c[0], mode)) for c in cells]
+    a4 = sum(passed(r) for r in a4_cells if r is not None) if all(r is not None for r in a4_cells) else None
+    p4_cells = [RUN4.get((c[0], mode)) for c in cells]
+    p4 = sum(passed(r) for r in p4_cells if r is not None) if all(r is not None for r in p4_cells) else None
+    gaps4 = [a - p for a in (a1, a2, a3, a4) for p in (p1, p2, p3, p4) if a is not None and p is not None]
+    spread4 = [
+        max(v) - min(v)
+        for v in (
+            [c[2], c[3]] + [passed(r) for r in (r3, r4) if r is not None]
+            for c, r3, r4 in zip(cells, a3_cells, a4_cells)
+        )
+    ]
     return {
         "cells": len(cells),
         "n": n,
@@ -1242,6 +1338,13 @@ def _agent_variance_stats(mode: str, entries: list[str] | None = None) -> dict[s
         "pairings_all": len(gaps_all),
         "gap_all_lo": min(gaps_all),
         "gap_all_hi": max(gaps_all),
+        "a4": a4,
+        "p4": p4,
+        "pairings4": len(gaps4),
+        "gap4_lo": min(gaps4),
+        "gap4_hi": max(gaps4),
+        "same_all4": sum(1 for d in spread4 if d == 0),
+        "spread_max4": max(spread4),
     }
 
 
@@ -1253,9 +1356,11 @@ def t_variance_agent() -> str:
         "Agent sample 1",
         "Agent sample 2",
         "Agent sample 3",
+        "Agent sample 4",
         "Pipeline sample 1",
         "Pipeline sample 2",
         "Pipeline sample 3",
+        "Pipeline sample 4",
         "Agent cells identical (1, 2)",
         "Agent mean abs. diff per cell (1, 2)",
         "Agent max abs. diff (1, 2)",
@@ -1285,19 +1390,22 @@ def t_variance_agent() -> str:
                 s["a1"],
                 s["a2"],
                 "—" if s["a3"] is None else s["a3"],
+                "—" if s["a4"] is None else s["a4"],
                 s["p1"],
                 "—" if s["p2"] is None else s["p2"],
                 s["p3"],
+                "—" if s["p4"] is None else s["p4"],
                 f"{s['same']} / {s['cells']}",
                 f"{s['mean']:.2f}",
                 s["max"],
-                f"{s['same_all']} / {s['cells']}",
-                f"{s['gap_all_lo']} to {s['gap_all_hi']} ({s['pairings_all']})",
+                f"{s['same_all4']} / {s['cells']}",
+                f"{s['gap4_lo']} to {s['gap4_hi']} ({s['pairings4']})",
             ]
         )
     return (
-        "Three samples of the agent in independent and blind mode and two in seeded mode, over all 24 "
-        "evaluation papers, against the pipeline on Opus 5.5, which has three samples on all 24 (claims "
+        "Four samples of the agent in independent and blind mode and two in seeded mode, over all 24 "
+        "evaluation papers, against the pipeline on Opus 5.5, which has four samples on all 24 in "
+        "independent and blind mode and three in seeded (claims "
         "within tolerance of the paper's printed value).  "
         "*Agent sample 1* is the row used everywhere else in this report (ROADMAP 3.3, 3.4, 3.6, 3.7, 3.9); "
         "*agent sample 2* is a second Claude Code run: in independent and blind mode "
@@ -1307,12 +1415,14 @@ def t_variance_agent() -> str:
         f"`{AGENT_RUN2_R7_FILE}` in all three modes for the R7 paper (ROADMAP 3.9).  *Agent sample 3* is a "
         f"third run in independent and blind mode, `{AGENT_RUN3_FILE}` for the 23 earlier papers "
         f"(ROADMAP 3.7.3) and `{AGENT_RUN3_R7_FILE}` for the R7 paper; seeded mode has none.  "
+        f"*Agent sample 4* is a fourth run in independent and blind mode on all 24 papers "
+        f"(run id `{AGENT_RUN4_ID}`; `{AGENT_RUN4_FILE}`, ROADMAP 3.10); seeded mode has none.  "
         "The pipeline samples are those of the table above.  The three columns marked (1, 2) "
         "compare agent samples 1 and 2 cell by cell; *identical (all samples)* counts the cells whose "
         "final count is the same in every agent sample of that mode.  The last column is the smallest "
         "and largest of the agent-minus-pipeline differences over every pairing of an agent sample "
-        "with a pipeline sample, with the number of pairings in brackets (nine in independent and blind "
-        "mode, six in seeded).\n\n" + table(hdr, out, ["l", "l"] + ["r"] * 12)
+        "with a pipeline sample, with the number of pairings in brackets (sixteen in independent and "
+        "blind mode, six in seeded).\n\n" + table(hdr, out, ["l", "l"] + ["r"] * 14)
     )
 
 
@@ -1324,18 +1434,21 @@ def t_variance_agent_cells() -> str:
         "Agent 1",
         "Agent 2",
         "Agent 3",
+        "Agent 4",
         "Agent spread",
         "Pipeline 1",
         "Pipeline 2",
         "Pipeline 3",
+        "Pipeline 4",
     ]
     out = []
     for e, n, a1, a2, p1, p2, m in (
         c + (m,) for m in AGENT_RUN2_MODES for c in _agent_variance_cells(m, HOLDOUT)
     ):
-        r3 = AGENT3.get((e, m))
+        r3, r4, q4 = AGENT3.get((e, m)), AGENT4.get((e, m)), RUN4.get((e, m))
         a3 = None if r3 is None else passed(r3)
-        vals = [a1, a2] + ([] if a3 is None else [a3])
+        a4 = None if r4 is None else passed(r4)
+        vals = [a1, a2] + [v for v in (a3, a4) if v is not None]
         d = max(vals) - min(vals)
         out.append(
             [
@@ -1345,17 +1458,20 @@ def t_variance_agent_cells() -> str:
                 a1,
                 a2,
                 "—" if a3 is None else a3,
+                "—" if a4 is None else a4,
                 f"**{d}**" if d else "0",
                 p1,
                 "—" if p2 is None else p2,
                 passed(RUN3[(e, m)]),
+                "—" if q4 is None else passed(q4),
             ]
         )
     out.sort(key=lambda r: (r[0], AGENT_RUN2_MODES.index(r[1])))
     return (
-        "Per paper and mode: final claims within tolerance in each agent sample (three in independent "
+        "Per paper and mode: final claims within tolerance in each agent sample (four in independent "
         "and blind mode, two in seeded), their spread (largest minus smallest; bold where non-zero), "
-        "and the three pipeline samples.\n\n" + table(hdr, out, ["l", "l"] + ["r"] * 8)
+        "and the pipeline samples (four in independent and blind mode, three in seeded).\n\n"
+        + table(hdr, out, ["l", "l"] + ["r"] * 10)
     )
 
 
@@ -3150,12 +3266,13 @@ def t_consistency_claims() -> str:
         "Pipeline 5.5, sample 1",
         "Sample 2",
         "Sample 3",
+        "Sample 4",
         "Agent",
     ]
     out = []
     for short_id, m in CONSISTENCY_CELLS:
         e = ENTRY_BY_SHORT[short_id]
-        s1, s2, s3 = p55_cell(e, m), RUN2[(e, m)], RUN3[(e, m)]
+        s1, s2, s3, s4 = p55_cell(e, m), RUN2[(e, m)], RUN3[(e, m)], RUN4[(e, m)]
         r47, a = cell(P47, e, m), cell(AGENT, e, m)
         assert s1 is not None
         for cd in s1["claim_details"]:
@@ -3170,14 +3287,16 @@ def t_consistency_claims() -> str:
                     _claim_value(s1, c),
                     _claim_value(s2, c),
                     _claim_value(s3, c),
+                    _claim_value(s4, c),
                     _claim_value(a, c),
                 ]
             )
     return (
         "Reproduced values (✓ = within tolerance) for the Grier and Holman cells discussed in "
         "Section 5.  Sample 1 is the API row for Grier and the first oracle row for Holman; sample 2 "
-        "is the second oracle run and sample 3 the third (Section 4.8).  Pipeline 4.7 has no Holman "
-        "rows.\n\n" + table(hdr, out, ["l", "l", "l", "r", "r", "r", "r", "r", "r"])
+        "is the second oracle run, sample 3 the third and sample 4 the fourth (Section 4.8).  Pipeline "
+        "4.7 has no Holman rows.  The agent column is its first sample.\n\n"
+        + table(hdr, out, ["l", "l", "l", "r", "r", "r", "r", "r", "r", "r"])
     )
 
 
