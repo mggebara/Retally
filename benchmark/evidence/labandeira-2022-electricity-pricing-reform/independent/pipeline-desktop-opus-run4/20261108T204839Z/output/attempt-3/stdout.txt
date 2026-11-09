@@ -1,0 +1,120 @@
+Number of columns: 403 
+Variable mapping:
+   id -> id 
+   year -> year 
+   month -> month 
+   bis -> BISEMANA 
+   T2 -> T2 
+   Tm -> Tm 
+   c_ele -> c_ele 
+   g_ele -> g_ele 
+   lnc_ele_r -> lnc_ele 
+   lng_ele_r -> lng_ele 
+   lnp_kwh_r -> lnp_kwh 
+   lny_r -> lny 
+   lny2_r -> lny2 
+   pre_pap -> lnPRE_papas 
+   pre_agu -> lnPRE_aguav 
+   pre_car -> lnPRE_gascar 
+   hp_pap -> lnp_papas 
+   hp_agu -> lnp_aguav 
+   hp_car -> lnp_gascar 
+   income -> IMPEXAC 
+   hhsize -> NMIEMB 
+   rooms -> NHABIT 
+   surface -> SUPERF 
+   mayores -> mayores 
+   mayores_count -> mayores_count 
+   alqui -> alqui 
+   tenure -> REGTEN 
+   edif25 -> edif25 
+   bldage -> ANNOCON 
+   urban -> urban 
+   capital -> CAPROV 
+   region -> CCAA 
+   munsize -> TAMAMU 
+   nactive -> NUMACTI 
+   educ -> ESTUDREDSP 
+   trim -> trim 
+   iestud1 -> iestud1 
+   iestud2 -> iestud2 
+   iestud3 -> iestud3 
+   iestud4 -> iestud4 
+   isitu1 -> isitu1 
+   isitu2 -> isitu2 
+   isitu3 -> isitu3 
+   itam1 -> itam1 
+   itam2 -> itam2 
+   itam3 -> itam3 
+   itam4 -> itam4 
+   itam5 -> itam5 
+Missing from data:  
+Rows loaded: 203416 
+Non-missing T2 in full data: 25775 
+Obs in window Aug2011-Apr2014: 56950 
+Two-interview panel obs: 28802 
+Panel obs (paper: 25,775): 25775  households: 12888 
+Tm summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  0.0000  0.0000  0.3815  1.0000  1.0000 
+cor(msr, Tm): 0.5294561 
+Treated households: 4916  control: 7972 
+Check lne - lnq - lnp:
+      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-7.153e-07 -1.192e-07  0.000e+00  5.571e-09  2.384e-07  7.153e-07 
+Instruments: lnPRE_papas, lnPRE_aguav, lnPRE_gascar
+Instrument coverage: 17446 25053 17387 
+Numeric controls: hhsize, rooms, surface, elderly_d, alqui, edif25, urban 
+Categorical controls (as FE): year, quarter, educ_f, situ_f, tam_f, capital, region 
+  NA in id: 0
+  NA in lnq: 0
+  NA in lne: 0
+  NA in lnp: 0
+  NA in T: 0
+  NA in msr: 0
+  NA in lny: 162
+  NA in lny2: 162
+  NA in hhsize: 0
+  NA in rooms: 6
+  NA in surface: 462
+  NA in elderly_d: 0
+  NA in alqui: 0
+  NA in edif25: 7
+  NA in urban: 1
+  NA in year: 0
+  NA in quarter: 0
+  NA in educ_f: 0
+  NA in situ_f: 4445
+  NA in tam_f: 0
+  NA in capital: 0
+  NA in region: 0
+  NA in lp_pap: 8329
+  NA in lp_agu: 722
+  NA in lp_car: 8388
+Estimation sample (OLS/LSDV): 20872  households: 10729 
+IV estimation sample: 10295  households: 7000 
+DEVIATION: Expenditure OLS/LSDV columns (5, 7) exclude ln(price): since ln(exp) = ln(kWh) + ln(price) identically, including ln(price) would make the T coefficient identical to the consumption columns, which the paper's differing estimates rule out
+Col 1 OLS (lnq): T=-0.1208 (se 0.0197), lnp=-1.0396, N=20872
+Col 2 LIML (lnq): T=-0.0760, lnp=-0.1937, kappa=1.00006
+   (2SLS check: T=-0.0775, lnp=-0.2279)
+Col 3 OLS (lnq): T=-0.1502 (se 0.0207), lnp=-1.0328, N=20286
+Col 4 LIML (lnq): T=-0.1996, lnp=-1.8716, kappa=1.00067
+   (2SLS check: T=-0.1849, lnp=-1.6341)
+Col 5 OLS (lne): T=-0.1193 (se 0.0197), lnp=NA, N=20872
+Col 6 LIML (lne): T=-0.0760, lnp=0.8063, kappa=1.00006
+   (2SLS check: T=-0.0775, lnp=0.7721)
+Col 7 OLS (lne): T=-0.1480 (se 0.0206), lnp=NA, N=20286
+Col 8 LIML (lne): T=-0.1996, lnp=-0.8716, kappa=1.00067
+   (2SLS check: T=-0.1849, lnp=-0.6341)
+RESULT:reform_consumption_ols_col1=-0.120754
+RESULT:reform_consumption_iv_col2=-0.075982
+RESULT:reform_consumption_fe_col3=-0.150199
+RESULT:reform_consumption_fe_iv_col4=-0.199569
+RESULT:reform_expenditure_ols_col5=-0.119314
+RESULT:reform_expenditure_iv_col6=-0.075982
+RESULT:reform_expenditure_fe_col7=-0.147973
+RESULT:reform_expenditure_fe_iv_col8=-0.199569
+RESULT:price_elasticity_consumption_ols_col1=-1.039609
+RESULT:price_elasticity_consumption_fe_col3=-1.032783
+RESULT:n_obs_table2=20872
+RESULT:n_households_table2=10729

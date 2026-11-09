@@ -1,0 +1,12 @@
+suppressMessages({library(haven); library(dplyr)})
+d <- read_dta("<repo>/benchmark/.cache/claude-code/gagliarducci-2022-gender-cooperation-congress/blind/2026-11-07-a/mount/gagliarducci_2022_gender_cooperation_congress/3 replication package/Data/AnalysisData/bills_analysis_101-111_replication.dta")
+cat(dim(d), "\n")
+for (v in names(d)) { x <- d[[v]]; lab <- attr(x,"label"); cat(sprintf("%-32s %-10s NA=%6d uniq=%6d mean=%s | %s\n", v, class(x)[1], sum(is.na(x)), length(unique(x)), if(is.numeric(x)) format(mean(x,na.rm=TRUE),digits=4) else "", ifelse(is.null(lab),"",lab))) }
+print(table(d$private, useNA="a")); print(table(d$v2)); print(table(d$sponsor_party, useNA="a"))
+print(summary(d$MV1_female)); print(table(d$mixed_gender_election, useNA="a"))
+print(table(d$sponsor_tenure_run)); print(table(d$sponsor_state_icpsr))
+print(summary(d$pct_cosponsors_opposite)); print(summary(d$MV1_democrat)); print(table(d$comc)); print(table(d$comr))
+print(head(as.data.frame(d[,c("v2","sponsor_name","sponsor_female","MV1_female","femaleXMV1_female","MV1_democrat","lag_demshare1","sponsor_party")]),20))
+print(table(is.na(d$MV1_female), d$mixed_gender_election, useNA="a"))
+s <- read_dta("<repo>/benchmark/.cache/claude-code/gagliarducci-2022-gender-cooperation-congress/blind/2026-11-07-a/mount/gagliarducci_2022_gender_cooperation_congress/3 replication package/Data/AnalysisData/sponsors_analysis_101-111_replication.dta")
+print(names(s)); print(dim(s))

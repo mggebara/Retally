@@ -1,0 +1,103 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: WAR, SOCIALISM, AND THE RISE OF FASCISM:
+Abstract (first 500 chars): DARON ACEMOGLU GIUSEPPE DE FEO GIACOMO DE LUCA GIANLUCA RUSSO The recent ascent of right-wing populist movements in several countries has rekindled interest in understanding the causes of the rise of fascism in the in-
+Methodology Summary: - **Design and estimator:** This is a cross-sectional instrumental-variables (2SLS) study of 5,775 Italian municipalities (64 of 69 provinces, mapped to 1921 census boundaries; 181 administrative districts). The endogenous regressor is the Socialist vote share in 1919. The instrument is the *Share of foot soldier casualties*: WWI foot-soldier deaths from the military Roll of Honor (529,028 records, digitized by ISTORECO) divided by male population over age 6 in the 1911 census. The first stage is equation (1): Socialist vote share 1919_i = γ·Share of foot soldier casualties_i + X_i′β + ε_i, estimated by OLS in levels (shares, no logs). Second-stage outcomes measure fascist activity: a dummy for a local Fascist Party branch in Sept. 1921, *Fascist violence in 1920–22* (episodes per 1,000 inhabitants, from Franzinelli 2003), and the *Fascist vote share* in 1921 and 1924. Later sections also look at Jewish deportations in 1943–45 and postwar (1946–2018) vote shares.
+- **Units of the coefficients:** The paper says it reports **standardized coefficients in this and all subsequent regressions**, "computed after standardizing both left-hand-side and right-hand-side variables". So the headline estimates are standardized (beta) coefficients. In the headline first stage (Table I, col. 1) the casualty coefficient is 0.12 (SE 0.02, F = 41.68, R² = 0.60). That implies a socialist share 6.5 pp lower if casualties had been zero, against a mean of 31.6%. Across columns 2–6 the coefficient is 0.11 and then 0.10 (SE 0.01), with first-stage F between 42.29 and 56.39 and R² between 0.62 and 0.70.
+- **Fixed effects and controls (Table I, built up column by column):**
+  - Col. 1 has province FE and regiment FE (dummies for any deaths from the municipality in a given regiment), plus demographic controls: a quartic in log 1911 population and the share of population under age 6 in 1911. Province FE and demographic controls are in every specification.
+  - Col. 2 adds geographic controls: log area, elevation of the main center and maximum elevation.
+  - Col. 3 adds the Socialist vote share in 1913.
+  - Col. 4 adds military controls: veterans from classes 1874–95 and from classes 1896–1900 (both by military district, over males above 6), assault-troop and volunteer casualties as a share of males above 6, a dummy for army-supplying production plants, and a dummy for any casualties in the highest-mortality battles (days with more than 1,000 deaths).
+  - Col. 5 adds agricultural controls: share of day laborers, share of sharecroppers, and a dummy for a local landowner/agrarian association.
+  - Col. 6, the full specification, adds urban controls: industrial workers and industrial firms over male population in 1911, the 1911 literacy rate, the share of entrepreneurs and rentiers (elites), and the share of the bourgeoisie.
+- **Standard errors:** Heteroskedasticity-robust and clustered at the administrative-district level (181 clusters). Conley spatial standard errors are reported as a robustness check (Online Appendix Table A2). The authors use district clustering because it is more conservative for 2SLS and very similar for the first stage.
+- **Data construction and preprocessing:**
+  - Election returns for 1919, 1921 and 1924 were hand-collected from about 1,200 newspapers and state archives, extending the Corbetta–Piretti data, which cover only about 2,000 municipalities.
+  - The 1921 fascist share gives the Fascist Party a portion of National Bloc votes proportional to fascist candidates' share of candidate votes. A restricted, no-imputation sample of 2,188 municipalities uses municipality-level candidate votes. For the rest, the share is imputed from district, province or electoral-district data.
+  - The 1913 socialist share uses Avanti! candidate lists. For 1921 and 1924 the socialist share also includes the Communist and Unitary Socialist parties.
+  - Census class shares (day laborers, sharecroppers, elites, bourgeoisie) are measured for more than 700 agrarian zones and assigned to every municipality in the zone.
+  - The Jewish deportation ratio uses district-level 1911 Jewish population, split across non-capital municipalities by population and capped at 1.
+  - Relative rainfall for Dec 1918–May 1919 (against the 1915–79 average, from 427 weather stations) is interpolated to municipalities by inverse-distance weighting with a 30 km cutoff, then capped at 1.
+- **Sample restrictions:** The sample is the 5,775 municipalities, out of 8,355 in the 1921 census, for which 1919–24 electoral data could be recovered. Recently annexed Julian Venetia and Trentino are excluded, and parts of Calabria and Sicily are missing. Only foot-soldier casualties (over 70% of deaths) are used; navy, air force, special assault troops and volunteers are dropped because of selection. Alternative instruments use smaller samples: Spanish-flu excess mortality in 1918 is available for only 207 urban municipalities.
+- **Validation and robustness:**
+  - Balance checks show the instrument is unrelated to pre-1919 political, economic, social and demographic characteristics.
+  - Placebos: the instrument does not predict the Nationalist vote in 1919, WWI monuments by 1921, or volunteer and assault-troop casualties.
+  - Heterogeneity: there is no effect where the Socialist Party was weak; effects are larger with landowner associations and a larger share of elites.
+  - Alternative violence measures are fascist killings, all political violence, and non-fascist violence.
+  - Alternative instruments are drought (relative rainfall) and Spanish-flu excess mortality.
+  - There is no train/test split or cross-validation; inference rests on clustered standard errors and the first-stage F-statistic.
+
+
+## Claims to Reproduce
+1. first_stage_casualties_table1_col1: 0.12 (standardized coefficient (standard deviations of the 1919 socialist vote share per standard deviation of casualties)) [type: coefficient]
+   Location: Table I, column (1), Share of foot soldier casualties
+   Context: Table I ("The Impact of Foot Soldier Casualties in World War I on the Socialist Vote Share in 1919"), column (1), the first stage. OLS across Italian municipalities of the socialist vote share in the 1919 election on the share of foot soldier casualties (the count of World War I foot soldier casualties from the municipality divided by the total male population over the age of six in 1911), with regiment fixed effects (dummies for any deaths from the municipality in a given regiment), province fixed effects and demographic controls (a quartic in log population and the share of the population be…
+2. first_stage_casualties_table1_col6: 0.1 (standardized coefficient) [type: coefficient]
+   Location: Table I, column (6), Share of foot soldier casualties
+   Context: Table I, column (6): the first stage with the full control set — column (1)'s regiment and province fixed effects and demographic controls plus geographic controls (log area, elevation of the main center, maximum elevation), the socialist vote share in 1913, military controls (veterans from the classes 1874-95 and 1896-1900, casualties among special assault troops and volunteers as a share of the male population above six in 1911, a dummy for army-supplying production plants, a dummy for any casualties in the highest-mortality battles), agricultural controls (share of day laborers, share of sh…
+3. first_stage_fstat_table1_col6: 50.59 (F-statistic) [type: other]
+   Location: Table I, column (6), F-stat.
+   Context: The F-statistic for the excluded instrument (share of foot soldier casualties) reported at the bottom of Table I, column (6): the test of the casualty coefficient in the full-controls first stage, with district-clustered standard errors.
+4. iv_violence_table2_panelA_col6: 0.5 (standardized coefficient (SDs of fascist violence per SD of the 1919 socialist vote share)) [type: coefficient]
+   Location: Table II, Panel A (2SLS), column (6), Socialist vote share in 1919
+   Context: Table II, Panel A, column (6). 2SLS of fascist violence in 1920-22 (episodes of fascist political violence per 1,000 inhabitants) on the socialist vote share in 1919, instrumented by the share of foot soldier casualties, with the full control set of Table I column (6) (regiment and province fixed effects; demographic, geographic, 1913 socialist share, military, agricultural and urban controls). Standardized coefficients; standard errors clustered at the district level.
+5. iv_branches_table2_panelC_col6: 0.5 (standardized coefficient) [type: coefficient]
+   Location: Table II, Panel C (2SLS), column (6), Socialist vote share in 1919
+   Context: Table II, Panel C, column (6). 2SLS of the presence of local branches of the Fascist Party in fall 1921 (from prefect reports) on the socialist vote share in 1919, instrumented by the share of foot soldier casualties, full control set as in Table I column (6). Standardized coefficients; district-clustered standard errors.
+6. iv_fascist_vote1921_table3_panelA_col6: 0.34 (standardized coefficient) [type: coefficient]
+   Location: Table III, Panel A (2SLS), column (6), Socialist vote share in 1919
+   Context: Table III, Panel A, column (6). 2SLS of the fascist vote share in the 1921 election (fascist lists plus the fascist candidates' share of the National Bloc lists, imputed from district, province or electoral-district candidate data where municipality data are missing) on the socialist vote share in 1919, instrumented by the share of foot soldier casualties, full control set as in Table I column (6). The 1921 sample is smaller than the 1919/1924 sample. Standardized coefficients; district-clustered standard errors.
+7. iv_fascist_vote1924_table3_panelC_col1: 0.4 (standardized coefficient) [type: coefficient]
+   Location: Table III, Panel C (2SLS), column (1), Socialist vote share in 1919
+   Context: Table III, Panel C, column (1). 2SLS of the fascist vote share in the 1924 election on the socialist vote share in 1919, instrumented by the share of foot soldier casualties, with only regiment and province fixed effects and demographic controls (the most parsimonious specification). Standardized coefficients; district-clustered standard errors.
+8. iv_fascist_vote1924_table3_panelC_col6: 0.51 (standardized coefficient) [type: coefficient]
+   Location: Table III, Panel C (2SLS), column (6), Socialist vote share in 1919
+   Context: Table III, Panel C, column (6). 2SLS of the fascist vote share in the 1924 election on the socialist vote share in 1919, instrumented by the share of foot soldier casualties, with the full control set of Table I column (6). Standardized coefficients; district-clustered standard errors.
+9. n_obs_main_sample: 5775.0 (observations (municipalities)) [type: count]
+   Location: Table I, Observations (all columns); also Table II and Table III Panels C-D
+   Context: Number of municipalities in the estimation sample of the first stage (Table I), the fascist violence and branch regressions (Table II) and the 1924 fascist vote share regressions (Table III, Panels C and D).
+10. n_clusters_main_sample: 181.0 (clusters (districts)) [type: count]
+   Location: Table I, Number of clusters (all columns); also Table II and Table III Panels C-D
+   Context: Number of district (circondario) clusters in the main estimation sample (Table I, Table II, Table III Panels C and D).
+11. n_obs_fascist_vote1921: 5358.0 (observations (municipalities)) [type: count]
+   Location: Table III, Panels A-B, Observations
+   Context: Number of municipalities in the 1921 fascist vote share regressions (Table III, Panels A and B, all columns).
+12. n_clusters_fascist_vote1921: 175.0 (clusters (districts)) [type: count]
+   Location: Table III, Panels A-B, Number of clusters
+   Context: Number of district clusters in the 1921 fascist vote share regressions (Table III, Panels A and B).
+
+## Dataset Information
+Name: acemoglu-2022-war-socialism-fascism
+Local path: <repo>/.cache/datasets/acemoglu_2022_war_socialism_fascism.script-free
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- fascism_db.dta (29.8 MB) — 5775 rows, 1336 columns: fascist_violence, fascist_branch, literacy, elites, bourgeoisie, political_violence, foots_pop6m, fascist1921restr, sh_pop_1911_be6, ind_firms, army_suppliers_d, depo_pop_cap1, psu1921_vv, psu1924_vv, ind_workers, fascist1921_vv, fascist1924_vv, psu1913_vv, psu1919_vv, dlab, larea, excess_mf1918, max_alt, circondario1921, deportations_d, large_donors, nazi_occ_duration, nationalist1919_vv, casualties_pop6m, other_violence, jewish_pop1911, z_fascism_index, veterans74_95, veter…
+- fascism_mod_elections_db.dta (361.3 MB) — 109725 rows, 899 columns: election, left, literacy, elites, bourgeoisie, foots_pop6m, sh_pop_1911_be6, ind_firms, army_suppliers_d, ind_workers, fascist1924_vv, psu1913_vv, dlab, larea, max_alt, circondario1921, far_left, z_fascism_index, c_right, far_right, army_suppliers_d_1, army_suppliers_d_2, army_suppliers_d_3, army_suppliers_d_4, army_suppliers_d_5, army_suppliers_d_6, army_suppliers_d_7, army_suppliers_d_8, army_suppliers_d_9, army_suppliers_d_10, army_suppliers_d_11, army_suppliers_d_12, army…
+- desktop.ini (244 B)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/acemoglu_2022_war_socialism_fascism.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Independent Reproduction
+This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's description alone.  The authors' own analysis code is deliberately withheld.  Do NOT open, read, source, or execute any script files that may appear in the dataset directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, and similar) — load data files only.  Derive the estimating equation, sample restrictions, fixed effects, and standard-error clustering from the paper information and claims above.
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

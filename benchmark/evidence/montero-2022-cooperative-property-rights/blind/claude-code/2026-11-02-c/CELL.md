@@ -69,3 +69,7 @@ Agent notes: Two exploratory runs (attempt-1: variable listing; attempt-2: ident
 - [`output/script.R`](output/script.R) — 3,136 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/blind/claude-code/20261102T202753Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/blind/claude-code/20261102T202753Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 2,647 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/blind/claude-code/20261102T202753Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

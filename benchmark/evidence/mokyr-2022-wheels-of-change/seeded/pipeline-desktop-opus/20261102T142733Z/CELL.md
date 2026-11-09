@@ -55,6 +55,10 @@ _None declared._
 - [`output/stdout.txt`](output/stdout.txt) — 533 bytes, from `benchmark/results/artifacts/mokyr-2022-wheels-of-change/seeded/pipeline/20261102T142733Z/stdout.txt`
 - [`output/answer-1.md`](output/answer-1.md) — 3,692 bytes, from `benchmark/.cache/llm-oracle/desktop-opus/answers/9361f81fcd8c88d9774358a4.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM oracle store desktop-opus (request 9361f81fcd8c88d9774358a4: model claude-opus-5-5, max_tokens 16384, effort high)

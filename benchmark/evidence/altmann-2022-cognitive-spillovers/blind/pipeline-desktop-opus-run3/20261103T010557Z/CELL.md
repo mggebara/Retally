@@ -62,6 +62,10 @@ _None declared._
 - [`output/answer-1.md`](output/answer-1.md) — 11,430 bytes, from `benchmark/.cache/llm-oracle/desktop-opus-run3/answers/fae96afdbf82c26a0e280bb1.json`
 - [`output/answer-2.md`](output/answer-2.md) — 12,217 bytes, from `benchmark/.cache/llm-oracle/desktop-opus-run3/answers/dc6fec1d99fe24c75bc65584.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM oracle store desktop-opus-run3 (request fae96afdbf82c26a0e280bb1: model claude-opus-5-5, max_tokens 16384, effort high)

@@ -54,7 +54,7 @@ Agent notes: Unconditional fixed-effects logit (fixest::feglm, binomial, distric
 
 - [`prompt/task.md`](prompt/task.md) — 17,421 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261022T024643Z/task.md`
 - [`prompt/render.json`](prompt/render.json) — 1,063 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261022T024643Z/render.json`
-- [`prompt/paper.txt.ref`](prompt/paper.txt.ref) — 265 bytes, from `benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/blind/2026-10-22-a/paper.txt`
+- [`prompt/paper.txt.ref`](prompt/paper.txt.ref) — 278 bytes, from `benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/blind/2026-10-22-a/paper.txt`
 
 ## What it produced
 
@@ -71,3 +71,7 @@ Agent notes: Unconditional fixed-effects logit (fixest::feglm, binomial, distric
 - [`output/script.R`](output/script.R) — 4,396 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261022T024643Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 694 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261022T024643Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 4,940 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261022T024643Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

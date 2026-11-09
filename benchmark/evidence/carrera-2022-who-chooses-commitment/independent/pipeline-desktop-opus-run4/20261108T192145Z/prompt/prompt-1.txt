@@ -1,0 +1,166 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: NBER WORKING PAPER SERIES
+Abstract (first 500 chars): This paper investigates whether offers of commitment contracts, in the form of self-imposed 
+choice-set restrictions and penalties with no financial upside, are well-targeted tools for 
+addressing self-control problems. In an experiment on gym attendance (N= 1;248), we examine 
+take-up of commitment contracts, and also introduce a separate elicitation task to identify actual 
+and perceived time inconsistency. There is high take-up of commitment contracts for greater gym 
+attendance, resulting in
+Methodology Summary: - **Design / sample**: Field experiment with members (age 18+, members for the prior 8 weeks) of a university-affiliated fitness facility in a large Midwest US city; three recruitment waves Oct 2015–Mar 2016 (Wave 1 = 350, Wave 2 = 528, Wave 3 = 414 participants; analysis N = 1,248). An online elicitation was followed by 4 weeks of attendance observed through gym swipe records. Outcome: number of gym visits (days, 0–28) over the 4-week incentive period starting the Monday after the online component.
+- **Randomized information treatment (50% probability, assigned before any elicitation)**: Wave 1 showed a graph of the participant's own weekly visits over the past 20 weeks. Waves 2–3 used an enhanced version: participants also entered their estimate of average weekly past visits, and were told that prior-wave participants overestimated their attendance by 4 visits per 4 weeks (about 1 per week). Controls went straight to the elicitations.
+- **Elicitations**: (i) best-guess visits, a goal and the probability of meeting it; (ii) for 6 piece-rate incentives ($1, $2, $3, $5, $7, $12 per visit, shown in random order), forecasted visits α̃(p) and WTP on a slider from $0 to 30×p (a fill-in box if the slider was maxed; 7.4% of responses), elicited with BDM; (iii) binary commitment choices of $80 unconditional vs. $80 conditional. Waves 1–2 offered "8+, 12+, 16+" ("more") and "≤7, ≤11, ≤15" ("fewer") contracts; Wave 3 offered only "12+" and "≤11", plus subjective probabilities of meeting each.
+- **Random assignment of incentives**: BDM fixed payments came from a mixture distribution: U[$0,$7] with weight 0.99 and U[full slider range] with weight 0.01. Assignment probabilities: Wave 1 was 1/3 each for $0, $2 and $7 per visit (1% residual across all questions). Wave 2 was $0 33%, $2 33%, $5 16.5%, $7 16.5%. Wave 3 was 1/3 each for $0, $7 per visit, and $80 conditional on 12+ visits (given only to those who preferred it to $0). **Sample restriction**: 44 observations with endogenous incentive assignment are dropped throughout. These are 12 with a fixed-payment draw above $7 and 32 whose WTP fell inside the $0–$7 range.
+- **Reduced-form estimators**: The behavior change premium is BCP(p,Δ) = [w(p+Δ) − w(p)]/Δ − [α̃(p+Δ) + α̃(p)]/2. It is computed per individual from WTP differences across adjacent incentive levels and forecasts, then averaged; it is in dollars per visit, per $1 of incentive (headline mean ≈ $1.78). Treatment effects of the randomized incentives on visits are estimated by comparing assigned-incentive groups (e.g., $80 for 12+ raises visits by 3.51). Information-treatment effects on forecasts, BCP and take-up compare treatment and control. Commitment take-up rates are reported (64% / 49% / 32% for 8+/12+/16+; 27–34% for "fewer" contracts), along with correlations between "more" and "fewer" take-up at each threshold and associations of take-up with BCP and sophistication proxies. The exact regression specifications, controls, fixed effects and SE clustering are not stated in the provided text (it is truncated at the Data section). Results are presumably regressions of visits or take-up on treatment indicators with wave controls and robust SEs, but that is unconfirmed.
+- **Structural model**: Quasi-hyperbolic (β–δ) discounting with partial naivete (O'Donoghue–Rabin β̃), δ = 1, utility quasilinear in money, stochastic per-period attendance costs, and a long-run benefit b per visit. It is estimated from actual attendance under the randomized piece rates, forecasted attendance, and WTP moments, using Proposition 1: w′(p) = α̃(p) + (1−β̃)(b+p)α̃′(p). Estimates: β̂ = 0.55, β̃̂ = 0.84 (0.86 for control vs. 0.78 for information treatment), b̂ = $9.66 per visit, internality (1−β̂)b̂ = $4.39. The model is validated with out-of-sample tests.
+- **Take-up noise model and welfare evaluation**: An imperfect-perception (random-utility / two-stage Luce, logistic) model V̂ = V + σ(P)ε captures mean-zero valuation errors in take-up. Welfare is evaluated under the long-run criterion: consumer surplus from 8+/12+/16+ contracts is −$7.91, −$18.69 and −$10.51 per taker. Social efficiency is compared against linear per-visit subsidies scaled to produce the same mean attendance change.
+- **No ML-style train/test split or cross-validation**. Inference rests on randomized assignment, and structural validation uses out-of-sample prediction of behavior under incentive arms, including the commitment-contract arm.
+
+
+## Claims to Reproduce
+1. bcp_basic_info_treatment_col1: 0.3 (dollars of behavior change premium per $1 of incentive) [type: coefficient]
+   Location: Table 3, column (1), Basic info. treatment
+   Context: Table 3 ("Association between the behavior change premium and proxies for sophistication"), column (1), row Basic info. treatment. OLS regression of the participant's behavior change premium on indicators for the basic information treatment (wave 1) and the enhanced information treatment (waves 2-3), with wave fixed effects. The behavior change premium is the conservative measure: for each pair of adjacent piece-rate incentives above $1/day ($1-$2, $2-$3, $3-$5, $5-$7, $7-$12), the increase in willingness to pay per dollar of incentive increase minus the average of the forecasted attendance at…
+2. bcp_enhanced_info_treatment_col1: 1.36 (dollars of behavior change premium per $1 of incentive) [type: coefficient]
+   Location: Table 3, column (1), Enhanced info. treatment
+   Context: Table 3, column (1), row Enhanced info. treatment. Same regression as bcp_basic_info_treatment_col1.
+3. bcp_goal_minus_expected_attendance_col2: 0.71 (dollars of behavior change premium per SD) [type: coefficient]
+   Location: Table 3, column (2), Goal - exp. attend. (z-score)
+   Context: Table 3, column (2), row Goal - exp. attend. (z-score). Same regression as column (1) adding the standardized (z-score over the regression sample) difference between the participant's goal attendance and their expected attendance in the absence of incentives. Robust SEs, wave fixed effects.
+4. bcp_actual_minus_expected_attendance_col3: 0.45 (dollars of behavior change premium per SD) [type: coefficient]
+   Location: Table 3, column (3), Actual - exp. attend. (z-score)
+   Context: Table 3, column (3), row Actual - exp. attend. (z-score). Same regression as column (1) adding the standardized difference between the participant's actual attendance and their expected attendance under the incentive they were assigned. Robust SEs, wave fixed effects.
+5. bcp_regression_observations: 1126.0 (participants) [type: count]
+   Location: Table 3, N
+   Context: Observations in the Table 3 regressions (same in all three columns): participants with an exogenously assigned incentive, excluding the wave 3 participants assigned a commitment contract.
+6. takeup_more_basic_info_treatment_col1: -0.022 (probability of take-up) [type: coefficient]
+   Location: Table 4, column (1), Basic info. treatment
+   Context: Table 4 ("Association between take-up of 'more' commitment contracts and proxies for sophistication"), column (1), row Basic info. treatment. Linear probability model of choosing the "more" visits commitment contract ($80 only if visiting the gym at least the threshold number of days in four weeks, over an $80 fixed payment), pooling each participant's choices across the contract thresholds offered (8, 12 and 16 visits in waves 1-2; 12 visits only in wave 3), on the basic and enhanced information treatment indicators with wave fixed effects and contract-threshold fixed effects. Same participan…
+7. takeup_more_enhanced_info_treatment_col1: -0.08 (probability of take-up) [type: coefficient]
+   Location: Table 4, column (1), Enhanced info. treatment
+   Context: Table 4, column (1), row Enhanced info. treatment. Same regression as takeup_more_basic_info_treatment_col1.
+8. takeup_more_behavior_change_premium_col2: 0.027 (probability of take-up per SD) [type: coefficient]
+   Location: Table 4, column (2), Behavior change premium (z-score)
+   Context: Table 4, column (2), row Behavior change premium (z-score). Same regression as column (1) adding the behavior change premium of Table 3, standardized over the participant-level regression sample. Wave and contract-threshold fixed effects, SEs clustered by subject.
+9. takeup_more_goal_minus_expected_attendance_col3: 0.038 (probability of take-up per SD) [type: coefficient]
+   Location: Table 4, column (3), Goal - exp. attend. (z-score)
+   Context: Table 4, column (3), row Goal - exp. attend. (z-score). Same regression as column (1) adding the standardized goal minus expected attendance gap defined as in Table 3.
+10. takeup_more_actual_minus_expected_attendance_col4: -0.043 (probability of take-up per SD) [type: coefficient]
+   Location: Table 4, column (4), Actual - exp. attend. (z-score)
+   Context: Table 4, column (4), row Actual - exp. attend. (z-score). Same regression as column (1) adding the standardized actual minus expected attendance gap defined as in Table 3.
+11. takeup_more_regression_observations: 2824.0 (participant-by-contract choices) [type: count]
+   Location: Table 4, N
+   Context: Observations in the Table 4 regressions (same in all four columns): participant-by-threshold "more" contract choices for the Table 3 participant sample.
+
+## Dataset Information
+Name: carrera-2022-who-chooses-commitment
+Local path: <repo>/.cache/datasets/carrera_2022_who_chooses_commitment.script-free
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- Who_Chooses_Commitment_Replication/Data/cleaned_commitment_study_daily_data.dta (13.9 MB) — 36176 rows, 109 columns: wave, treatment, incentive, visits, visits_100days, goal, past100days_went, past100days_should, flag_low_wtp, previsits1, previsits2, previsits3, previsits4, previsits5, previsits6, previsits7, previsits8, type_of_info, past4, visits_next4weeks, wtp1, wtp2, wtp3, wtp5, wtp7, wtp12, flag_exclude_exog, day, attended, incentivetext, working_status, risk_aversion, avevisits_20wks, percent_goal, sliderintro_wtp1, chose_commit12, percent_meet_commit12, prefer20_to_0, areyousure_pre…
+- Who_Chooses_Commitment_Replication/Data/cleaned_commitment_study_data.dta (559.7 KB) — 1292 rows, 106 columns: wave, treatment, incentive, visits, visits_100days, goal, past100days_went, past100days_should, flag_low_wtp, previsits1, previsits2, previsits3, previsits4, previsits5, previsits6, previsits7, previsits8, type_of_info, past4, visits_next4weeks, wtp1, wtp2, wtp3, wtp5, wtp7, wtp12, flag_exclude_exog, incentivetext, working_status, risk_aversion, avevisits_20wks, percent_goal, sliderintro_wtp1, chose_commit12, percent_meet_commit12, prefer20_to_0, areyousure_prefer0_to_20, pre…
+- Who_Chooses_Commitment_Replication/Experimental Materials/Study Instructions Appendix.pdf (7.2 MB)
+- Who_Chooses_Commitment_Replication/Experimental Materials/Who_Chooses_Commitment.qsf (365.8 KB)
+- Who_Chooses_Commitment_Replication/LICENSE.txt (9.1 KB)
+- Who_Chooses_Commitment_Replication/Other/Images/appendix_survey_waves.PNG (43.0 KB)
+- Who_Chooses_Commitment_Replication/Other/Images/theory_graph.pdf (45.9 KB)
+- Who_Chooses_Commitment_Replication/Other/commitment.bib (78.4 KB)
+- Who_Chooses_Commitment_Replication/Other/econ-aea.bst (84.7 KB)
+- Who_Chooses_Commitment_Replication/Output/Formatted output/CC_literature_table.tex (3.8 KB)
+- Who_Chooses_Commitment_Replication/Output/Formatted output/CCtable.tex (1.3 KB)
+- Who_Chooses_Commitment_Replication/Output/Formatted output/CCtable_control.tex (1.3 KB)
+- Who_Chooses_Commitment_Replication/Output/Formatted output/CCtable_treatment.tex (1.3 KB)
+- Who_Chooses_Commitment_Replication/Output/Formatted output/Exp_Corr.tex (1.3 KB)
+- Who_Chooses_Commitment_Replication/Output/Formatted output/Exp_Rates.tex (1.4 KB)
+- Who_Chooses_Commitment_Replication/Output/Formatted output/uniformrange.pdf (63.2 KB)
+- Who_Chooses_Commitment_Replication/Output/appendix_descriptive_stats.tex (2.1 KB)
+- Who_Chooses_Commitment_Replication/Output/daily_att_likelihood.pdf (61.1 KB)
+- Who_Chooses_Commitment_Replication/Output/daily_att_prob_commit12.pdf (2.8 KB)
+- Who_Chooses_Commitment_Replication/Output/deltas.pdf (54.0 KB)
+- Who_Chooses_Commitment_Replication/Output/exp_actual_under_incentive.pdf (58.3 KB)
+- Who_Chooses_Commitment_Replication/Output/overconfidence.pdf (57.0 KB)
+- Who_Chooses_Commitment_Replication/Output/overconfidence_estimates.pdf (93.3 KB)
+- Who_Chooses_Commitment_Replication/Output/overconfidence_estimatesV.pdf (93.3 KB)
+- Who_Chooses_Commitment_Replication/Output/overconfidence_estimatesX.pdf (93.4 KB)
+- Who_Chooses_Commitment_Replication/Output/overconfidence_estimates_commit12.pdf (94.2 KB)
+- Who_Chooses_Commitment_Replication/Output/overconfidence_estimates_past4_info_het.pdf (93.4 KB)
+- Who_Chooses_Commitment_Replication/Output/overconfidence_estimates_past4_info_hetV.pdf (93.3 KB)
+- Who_Chooses_Commitment_Replication/Output/overconfidence_estimates_past4_info_hetX.pdf (93.5 KB)
+- Who_Chooses_Commitment_Replication/Output/overconfidence_treatment_wave1.pdf (60.2 KB)
+- Who_Chooses_Commitment_Replication/Output/overconfidence_treatment_wave23.pdf (60.2 KB)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amcommit.csv (76 B) — columns: lambda,beta,betatilde,b,prop
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amcommitV.csv (76 B) — columns: lambda,beta,betatilde,b,prop
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amcommitX.csv (76 B) — columns: lambda,beta,betatilde,b,prop
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amcommite.csv (75 B) — columns: lambda,beta,betatilde,b,prop
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amcommiteV.csv (75 B) — columns: lambda,beta,betatilde,b,prop
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amcommiteX.csv (73 B) — columns: lambda,beta,betatilde,b,prop
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amcommits.csv (76 B) — columns: lambda,beta,betatilde,b,prop
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amcommitsV.csv (75 B) — columns: lambda,beta,betatilde,b,prop
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amcommitsX.csv (75 B) — columns: lambda,beta,betatilde,b,prop
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlcommit.csv (76 B) — columns: lambda,beta,betatilde,b,prop
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlcommitV.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlcommitX.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlcommite.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlcommiteV.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlcommiteX.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlcommits.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlcommitsV.csv (75 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlcommitsX.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlnocommit.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlnocommitV.csv (75 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlnocommitX.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlnocommite.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlnocommiteV.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlnocommiteX.csv (73 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlnocommits.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlnocommitsV.csv (74 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amctrlnocommitsX.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/aminfocommit.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/aminfocommitV.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/aminfocommitX.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/aminfocommite.csv (75 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/aminfocommiteV.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/aminfocommiteX.csv (75 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/aminfocommits.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/aminfocommitsV.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/aminfocommitsX.csv (75 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/aminfonocommit.csv (75 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/aminfonocommitV.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/aminfonocommitX.csv (74 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/aminfonocommite.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/aminfonocommiteV.csv (74 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/aminfonocommiteX.csv (75 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/aminfonocommits.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/aminfonocommitsV.csv (75 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/aminfonocommitsX.csv (75 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amnocommit.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amnocommitV.csv (75 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amnocommitX.csv (76 B)
+- Who_Chooses_Commitment_Replication/Output/parameter_estimates/amnocommite.csv (75 B)
+- … and 178 more files (listing truncated)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/carrera_2022_who_chooses_commitment.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Independent Reproduction
+This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's description alone.  The authors' own analysis code is deliberately withheld.  Do NOT open, read, source, or execute any script files that may appear in the dataset directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, and similar) — load data files only.  Derive the estimating equation, sample restrictions, fixed effects, and standard-error clustering from the paper information and claims above.
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

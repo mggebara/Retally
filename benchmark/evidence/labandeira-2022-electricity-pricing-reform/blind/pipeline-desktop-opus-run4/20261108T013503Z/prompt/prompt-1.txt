@@ -1,0 +1,128 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: 1
+Abstract (first 500 chars): QUASI-EXPERIMENT Xavier Labandeira, José M. Labeaga, Jordi J. Teixidó* August 5, 2021 The global energy mix and cost structure of the power industry are experiencing a redefinition. Many countries are revamping electricity-pricing systems to guarantee fixed-cost recovery, often by raising the fixed charge of two-part tariff schemes.
+Methodology Summary: - **Data and sample restrictions:** Spanish Household Budget Survey (HBS, INE). The sample is limited to households interviewed between August 2011 and April 2014, chosen to avoid other regulatory events (a price change in April 2014). It is an unbalanced two-year rotating panel: each household is interviewed in the same two-week period (one of 26 per year) in two consecutive years, and only half of each cohort is invited back. The full panel has 25,775 observations; the main estimation sample is 20,872 observations on 10,729 households (Table 2). Electricity consumption (kWh) and expenditure (€) come from the last paid bill (the previous month) and are annualised by the number of bills per year. The household price is p = expenditure/consumption in €/kWh, including all taxes.
+- **Treatment definition (DiD via interview date):** The reform date is R = 1 August 2013 (fixed charge F up 112%, regulated volumetric charge f down about 36%). D = 1 if the first interview is before R and the second after R (treated). D = 0 if both interviews are before R (control). The treatment variable T = 1 for interviews held after R, so it switches on only at a treated household's post-reform interview. Identification rests on the HBS stratified design, under which the 26 two-week subsamples are comparable except for interview date. Pre-reform balance is checked with Table 1 summary statistics, QQ-plots (Fig. 4) and kernel densities.
+- **Estimating equation (Eq. 4, log-log structural demand):** ln(q_it) = α + β ln(p_it) + β ln(y_it) [+ ln(y)²] + γX_it + δT_it + θ_i + φ_t + ε_it. The dependent variable is ln electricity consumption (kWh), with ln electricity expenditure as a second outcome (Table 2 cols 5–8). δ is the DiD effect of the reform, read as an approximate percentage change. Coefficients are unstandardised and the price and income coefficients are elasticities. Table 2 also includes a "months since reform" term.
+- **Controls / fixed effects:** ln income and ln income squared. X contains household size, number of rooms, surface (m²), an elderly dummy, head's education (4 levels), household economic situation (number of active members, 3 levels), housing tenure (renting), building older than 25 years, municipality size dummies (5), urban area dummy, province capital dummy and regional dummies. Quarterly dummies absorb seasonality and weather, together with the regional dummies. Year fixed effects appear in all Table 2 models. Household fixed effects are added via LSDV in cols 3, 4, 7 and 8. The preferred specifications are col 4 (consumption) and col 8 (expenditure): household FE + year FE + controls + IV.
+- **Estimators / IV:** OLS (cols 1 and 5), IV without household FE (cols 2 and 6), LSDV household FE (cols 3 and 7), and FE-IV (cols 4 and 8). In the IV models, ln(electricity price) is the single endogenous regressor. It is instrumented with households' effective unit prices (expenditure/quantity) for three other goods: potatoes, water and fuel. That gives 2 overidentifying restrictions, and only households purchasing these goods can be used. All IV models are estimated by LIML. Diagnostics reported: first-stage F, Kleibergen-Paap rk LM underidentification test (df 3), Cragg-Donald Wald F against Stock-Yogo LIML 10% critical values, Montiel Olea–Pflueger effective F (LIML 10%/20% thresholds), and Sargan and Hansen J overidentification tests (df 2).
+- **Standard errors:** Panel models (Table 2) use robust standard errors clustered at the household level. The 2013 cross-section robustness models (Table 3) use robust standard errors clustered at the two-week interview period.
+- **Robustness / cross-section:** Table 3 restricts the sample to the reform year 2013 and compares households interviewed before and after August 2013 within the same year, so 2014-treated households are excluded. It reports the specification without controls (18,770 observations) and with controls (14,894 observations), for ln consumption and ln expenditure. Appendix tables add interactions of T, including with income groups.
+- **Distributional analysis:** Quantile regressions (Koenker–Bassett, Eq. 5–6) of ln consumption (Table 4) and ln expenditure (Table 5) on T, ln price, ln income, ln income squared and controls. They use the 2013 cross-section (14,894 observations) at the deciles q10–q90 and report bootstrapped standard errors with 50 replications. Incidence by income uses median electricity budget shares by income decile (2012–2014) and the Suits and Kakwani progressivity indices, computed from Gini indices and concentration curves of electricity expenditure versus total household expenditure for treated and control households.
+
+
+## Quantities to Compute
+Compute each quantity below and print it under the given name.  The paper's reported values are deliberately not shown.
+1. reform_consumption_ols_col1 [type: coefficient; unit: log points of annualised household electricity consumption (kWh)]
+   Location: Table 2, column (1), Reform (T)
+   Context: Table 2 ("Effect of the Reform on Residential Electricity Consumption and Expenditure (2011-2014)"), column (1), row Reform (T): the paper's difference-in-differences estimate of the August 2013 Spanish electricity pricing reform (fixed charge raised, regulated volumetric rate cut) on household electricity consumption, estimated by OLS. Data: Spanish Household Budget Survey households interviewed between August 2011 and April 2014, each interviewed twice, in the same two-week period of two consecutive years; the control group has both interviews before the reform, the treated group its second …
+2. reform_consumption_iv_col2 [type: coefficient; unit: log points of annualised household electricity consumption (kWh)]
+   Location: Table 2, column (2), Reform (T)
+   Context: Table 2, column (2), row Reform (T): the column (1) consumption regression with the log electricity price instrumented by the households' effective prices (expenditure divided by quantity) of potatoes, water and fuel, estimated by limited-information maximum likelihood (LIML); year fixed effects and controls, no household fixed effects, standard errors clustered at the household level according to the table note.
+3. reform_consumption_fe_col3 [type: coefficient; unit: log points of annualised household electricity consumption (kWh)]
+   Location: Table 2, column (3), Reform (T)
+   Context: Table 2, column (3), row Reform (T): the column (1) consumption regression estimated with household fixed effects (LSDV / within estimator), year fixed effects and the same controls; standard errors clustered at the household level. The paper's main estimate of the reform's effect on consumption once unobserved household heterogeneity is controlled for.
+4. reform_consumption_fe_iv_col4 [type: coefficient; unit: log points of annualised household electricity consumption (kWh)]
+   Location: Table 2, column (4), Reform (T)
+   Context: Table 2, column (4), row Reform (T): the household fixed-effects consumption regression of column (3) with the log electricity price instrumented by the effective prices of potatoes, water and fuel (LIML), the paper's preferred specification. The table note states robust standard errors clustered at the household level.
+5. reform_expenditure_ols_col5 [type: coefficient; unit: log points of annualised household electricity expenditure (EUR)]
+   Location: Table 2, column (5), Reform (T)
+   Context: Table 2, column (5), row Reform (T): the column (1) OLS specification (same sample, regressors, controls, quarterly dummies and year fixed effects, household-clustered standard errors) with the log of household electricity expenditure as the dependent variable.
+6. reform_expenditure_iv_col6 [type: coefficient; unit: log points of annualised household electricity expenditure (EUR)]
+   Location: Table 2, column (6), Reform (T)
+   Context: Table 2, column (6), row Reform (T): the column (2) IV (LIML) specification, log price instrumented by the effective prices of potatoes, water and fuel, no household fixed effects, with log electricity expenditure as the dependent variable.
+7. reform_expenditure_fe_col7 [type: coefficient; unit: log points of annualised household electricity expenditure (EUR)]
+   Location: Table 2, column (7), Reform (T)
+   Context: Table 2, column (7), row Reform (T): the column (3) household fixed-effects specification with log electricity expenditure as the dependent variable; household-clustered standard errors.
+8. reform_expenditure_fe_iv_col8 [type: coefficient; unit: log points of annualised household electricity expenditure (EUR)]
+   Location: Table 2, column (8), Reform (T)
+   Context: Table 2, column (8), row Reform (T): the column (4) household fixed-effects IV (LIML) specification with log electricity expenditure as the dependent variable; the paper's preferred expenditure estimate (significant at the 10% level in the table).
+9. price_elasticity_consumption_ols_col1 [type: coefficient; unit: elasticity of consumption with respect to the kWh price]
+   Location: Table 2, column (1), ln(price kWh)
+   Context: Table 2, column (1), row ln(price kWh): the coefficient on the log household price per kWh (all taxes included) in the OLS consumption regression of reform_consumption_ols_col1.
+10. price_elasticity_consumption_fe_col3 [type: coefficient; unit: elasticity of consumption with respect to the kWh price]
+   Location: Table 2, column (3), ln(price kWh)
+   Context: Table 2, column (3), row ln(price kWh): the log-price coefficient in the household fixed-effects consumption regression of reform_consumption_fe_col3.
+11. n_obs_table2 [type: count; unit: household-year observations]
+   Location: Table 2, Observations
+   Context: Number of observations in the Table 2 regressions (the same in all eight columns): household-interview observations of the 2011-2014 panel with complete data on the regression variables.
+12. n_households_table2 [type: count; unit: households]
+   Location: Table 2, Number of id (columns 3, 4, 7, 8)
+   Context: Number of households (the "Number of id" row) in the household fixed-effects columns of Table 2.
+
+## Dataset Information
+Name: labandeira-2022-electricity-pricing-reform
+Local path: <repo>/.cache/datasets/labandeira_2022_electricity_pricing_reform.script-free
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- 3 Replication package/analysis data/data_to_run_DOFILE3.dta (276.3 MB) — 203416 rows, 403 columns: month, year, urban, DENSI, mayores_count, T2, dup, time, id, BIS, BISEMANA, ANOENC, FACTOR, GH, GHE, gh, gm, gh_elec, TotExp, ch, ch_elec, c_ele, c_ele2, c_car, c_papas, c_aguav, g_ele, g_ele2, g_car, g5, g71, g82, g9, gelectrodom, gTVs, g5521, g_papas, g_aguav, gastos1, gastos2, gastos3, gastos4, gastos5, gastos6, gastos7, gastos8, gastos9, gastos10, gastos11, gastos12, CCAA, NUTS1, CAPROV, TAMAMU, CLAVE, CLATEO, NMIEMB, TAMAÑO, NMIEMSD, NMIEMHU, NMIEMIN, NMIEM1, NMIEM2, NMI…
+- 3 Replication package/Readme.pdf (504.9 KB)
+- 3 Replication package/analysis data/Data_to run_DOFILE3.csv (313.0 MB) — columns: T2,dup,time,month,id,year,BIS,BISEMANA,ANOENC,FACTOR,GH,GHE,gh,gm,gh_elec,TotExp,ch,ch_elec,c_ele,c_ele2,c_car,c_papas,c_aguav,g_ele,g_ele2,g_car,g5,g71,g82,g9,gelectrodom,gTVs,g5521,g_papas,g_aguav,gastos1,gastos2,gastos3,gastos4,gastos5,g…
+- 3 Replication package/raw data/Fichero de usuario de gastos a2006.txt (222.4 MB)
+- 3 Replication package/raw data/Fichero de usuario de gastos a2007.txt (282.1 MB)
+- 3 Replication package/raw data/Fichero de usuario de gastos a2008.txt (287.8 MB)
+- 3 Replication package/raw data/Fichero de usuario de gastos a2009.txt (288.7 MB)
+- 3 Replication package/raw data/Fichero de usuario de gastos a2010.txt (291.0 MB)
+- 3 Replication package/raw data/Fichero de usuario de gastos a2011.txt (282.7 MB)
+- 3 Replication package/raw data/Fichero de usuario de gastos a2012.txt (278.6 MB)
+- 3 Replication package/raw data/Fichero de usuario de gastos a2013.txt (271.1 MB)
+- 3 Replication package/raw data/Fichero de usuario de gastos a2014.txt (256.3 MB)
+- 3 Replication package/raw data/Fichero de usuario de gastos a2015.txt (258.2 MB)
+- 3 Replication package/raw data/Fichero de usuario de hogar a2006.txt (8.1 MB)
+- 3 Replication package/raw data/Fichero de usuario de hogar a2007.txt (9.0 MB)
+- 3 Replication package/raw data/Fichero de usuario de hogar a2008.txt (9.2 MB)
+- 3 Replication package/raw data/Fichero de usuario de hogar a2009.txt (9.4 MB)
+- 3 Replication package/raw data/Fichero de usuario de hogar a2010.txt (9.3 MB)
+- 3 Replication package/raw data/Fichero de usuario de hogar a2011.txt (9.8 MB)
+- 3 Replication package/raw data/Fichero de usuario de hogar a2012.txt (9.8 MB)
+- 3 Replication package/raw data/Fichero de usuario de hogar a2013.txt (9.9 MB)
+- 3 Replication package/raw data/Fichero de usuario de hogar a2014.txt (10.0 MB)
+- 3 Replication package/raw data/Fichero de usuario de hogar a2015.txt (10.0 MB)
+- 3 Replication package/raw data/enlace06_07.TXT (315.6 KB)
+- 3 Replication package/raw data/enlace07_08.TXT (323.4 KB)
+- 3 Replication package/raw data/enlace08_09.TXT (327.3 KB)
+- 3 Replication package/raw data/enlace09_10.TXT (325.2 KB)
+- 3 Replication package/raw data/enlace10_11.TXT (324.0 KB)
+- 3 Replication package/raw data/enlace11_12.TXT (319.5 KB)
+- 3 Replication package/raw data/enlace12_13.TXT (323.1 KB)
+- 3 Replication package/raw data/enlace13_14.TXT (324.4 KB)
+- 3 Replication package/raw data/enlace14_15.TXT (324.2 KB)
+- 3 Replication package/raw data/enlace2007.TXT (315.6 KB)
+- 3 Replication package/raw data/enlace2008.TXT (323.4 KB)
+- 3 Replication package/raw data/enlace2009.TXT (327.3 KB)
+- 3 Replication package/raw data/enlace2010.TXT (325.2 KB)
+- 3 Replication package/raw data/enlace2011.TXT (324.0 KB)
+- 3 Replication package/raw data/enlace2012.TXT (319.5 KB)
+- 3 Replication package/raw data/enlace2013.TXT (323.1 KB)
+- 3 Replication package/raw data/enlace2014.TXT (324.4 KB)
+- 3 Replication package/raw data/enlace2015.TXT (324.2 KB)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/labandeira_2022_electricity_pricing_reform.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Independent Reproduction
+This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's description alone.  The authors' own analysis code is deliberately withheld.  Do NOT open, read, source, or execute any script files that may appear in the dataset directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, and similar) — load data files only.  Derive the estimating equation, sample restrictions, fixed effects, and standard-error clustering from the paper information and claims above.
+
+## Blind Reproduction
+This reproduction is also BLIND: the paper's reported values for the quantities above are deliberately withheld, and you will not be told how close your numbers are.  Compute each quantity as the paper's method defines it; do not tune the specification toward any number you expect.  Do NOT read result tables, logs, or output files that may appear in the dataset directory (.tex, .log, .pdf, .html, and similar) to recover the paper's numbers — compute everything from the data files.  Print a RESULT: line for every quantity listed, using its name exactly.
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

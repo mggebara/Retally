@@ -67,3 +67,7 @@ Agent notes: Attempt-1 was an exploratory variable listing (no RESULT lines). La
 - [`output/script.R`](output/script.R) — 4,203 bytes, from `benchmark/results/artifacts/altmann-2022-cognitive-spillovers/blind/claude-code/20261102T202753Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/altmann-2022-cognitive-spillovers/blind/claude-code/20261102T202753Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 2,150 bytes, from `benchmark/results/artifacts/altmann-2022-cognitive-spillovers/blind/claude-code/20261102T202753Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

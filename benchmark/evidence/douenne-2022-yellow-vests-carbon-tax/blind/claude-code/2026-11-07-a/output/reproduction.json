@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "entry_id": "douenne-2022-yellow-vests-carbon-tax",
+  "mode": "blind",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "The control lists ('sociodemo', 'other motives') are in the online appendix, which is not available. Used as sociodemo: gender, age bracket, employment status, socio-professional category, region, education (4 levels), town size, household size, number aged 14+, number of adults, consumption units, smoker, main news source. Other motives: for the self-interest regressions (Tables 4 and 6), belief in environmental effectiveness (Yes/No/PNR) and perceived progressivity (Yes/No/PNR/not asked); for Table 8, initial win/lose category and perceived progressivity.",
+    "Incomes: continuous piecewise-linear terms in the income percentiles of the respondent and second adult, with kinks at the 20th and 70th percentiles (paper eq. for Table 5), used in every table. Estimated gains: simule_gain and its square, used in every table.",
+    "Initial tax acceptance (not 'No') is included in all four Table 4 columns, because the task describes cols 2 and 4 as the col 1 regression on a different sample or outcome.",
+    "Z_E (info on scientific consensus about effectiveness) was taken to be the variable apres_modifs, listed among the dataset's random variables (variables_aleatoires). It splits the sample by survey date rather than by visible randomisation, and it is the only variable besides info_CC with a first-stage effect on the effectiveness belief. variante_monetaire, the other candidate, has no effect on that belief. Our Table 8 first-stage F is only about 2, against the paper's effective F of 11, so this mapping may be wrong.",
+    "All regressions use the survey weight 'weight' with heteroskedasticity-robust SEs (fixest). Predicted winner = simule_gagnant, the feedback actually shown. The |gain|<50 window uses simule_gain; the two disagree in sign for 56 respondents.",
+    "Yellow Vests supporter = gilets_jaunes >= 1 (supports or is part of the movement). G = initial win/lose category not 'Perdant'. Table 6 subsample: respondent or second-adult income percentile in [10, 60], which gives 1,969 respondents as in the paper."
+  ],
+  "notes": "Data come from s in code/after_preparation.RData. The memisc column classes were stripped to base vectors, because memisc is not installed. Attempts 1-5 were exploratory only: listing variables and tabulating. Attempts 2-4 crashed on memisc classes or on cor() of a character vector; none printed RESULT lines. One botched launch happened before the current attempt-5: its script file had not been copied yet, so docker mounted an empty directory and nothing ran. Its empty output directory was deleted and attempt-5 was re-run properly. Table 4 col 1 N = 757, and Table 6 N = 1,969, as in the paper. The Table 6 first-stage F is 15.6, matching the range the paper reports. The Table 8 first stage is weak (F about 2), so that IV estimate is imprecise (SE about 0.38). No claimed values were seen or compared. The questionnaire.qsf in the mount was grepped briefly to find the effectiveness-info variable; this was not conclusive.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-07T19:25:15Z",
+  "finished_at": "2026-11-07T20:31:00Z"
+}

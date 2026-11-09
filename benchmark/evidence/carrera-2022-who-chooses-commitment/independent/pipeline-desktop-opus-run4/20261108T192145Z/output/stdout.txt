@@ -1,0 +1,91 @@
+DEVIATION: BCP averaged over adjacent elicited pairs ($1..$12), excluding a $0->$1 step; exact averaging not stated in provided text
+
+  1   2   3 
+350 528 414 
+tr_lab
+       control        perday1        perday2        perday3        perday5 
+           427              1            305              2             77 
+       perday7 threshold80_12 
+           352            128 
+DEVIATION: Dropped flag_exclude_exog==1, flag_low_wtp==1 (endogenous assignment) only; the $80-for-12+ arm is kept since BCP and take-up are elicited before incentive assignment (actual-minus-expected gap is missing for that arm)
+DEVIATION: Common regression sample restricted to observations with non-missing actual-minus-expected gap (drops the $80-for-12+ arm), matching the paper's N = 1,126
+                             m1               m2               m3
+Dependent Var.:             bcp              bcp              bcp
+                                                                 
+basic_info      0.3008 (0.5605)  0.2873 (0.5642)  0.2759 (0.5580)
+enhanced_info   1.360* (0.5733)  1.341* (0.5891)  1.254* (0.5857)
+goal_z                          -0.0576 (0.2265)                 
+act_z                                            0.4475* (0.2151)
+Fixed-Effects:  --------------- ---------------- ----------------
+wave                        Yes              Yes              Yes
+_______________ _______________ ________________ ________________
+S.E. type       Heteroske.-rob. Heterosked.-rob. Heterosked.-rob.
+Observations              1,126            1,126            1,126
+R2                      0.01015          0.01022          0.01396
+Within R2               0.00634          0.00641          0.01016
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+   
+    FALSE TRUE
+  1     0  340
+  2     0  509
+  3   277    0
+   
+    TRUE
+  1  340
+  2  509
+  3  277
+   
+    FALSE TRUE
+  1     0  340
+  2     0  509
+  3   277    0
+DEVIATION: Treated q169/q170 as the 8+/16+ 'more' commitment choices (waves 1-2), reverse-coded so take-up rates match the paper's 64%/32%; column names are unlabeled
+        8        12        16 
+0.6431095 0.4937833 0.3415783 
+                               t1                t2                 t3
+Dependent Var.:            takeup            takeup             takeup
+                                                                      
+basic_info       -0.0171 (0.0404)  -0.0181 (0.0403)   -0.0028 (0.0403)
+enhanced_info   -0.0653* (0.0284) -0.0699* (0.0286)   -0.0467 (0.0284)
+bcp_z                              0.0228* (0.0092)                   
+goal_z                                              0.0614*** (0.0119)
+act_z                                                                 
+Fixed-Effects:  ----------------- ----------------- ------------------
+wave                          Yes               Yes                Yes
+threshold                     Yes               Yes                Yes
+_______________ _________________ _________________ __________________
+S.E.: Clustered           by: sid           by: sid            by: sid
+Observations                2,824             2,824              2,824
+R2                        0.05767           0.05989            0.07212
+Within R2                 0.00299           0.00534            0.01828
+
+                               t4
+Dependent Var.:            takeup
+                                 
+basic_info       -0.0154 (0.0405)
+enhanced_info   -0.0596* (0.0283)
+bcp_z                            
+goal_z                           
+act_z           -0.0306* (0.0121)
+Fixed-Effects:  -----------------
+wave                          Yes
+threshold                     Yes
+_______________ _________________
+S.E.: Clustered           by: sid
+Observations                2,824
+R2                        0.06131
+Within R2                 0.00684
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RESULT:bcp_basic_info_treatment_col1=0.300805
+RESULT:bcp_enhanced_info_treatment_col1=1.359677
+RESULT:bcp_goal_minus_expected_attendance_col2=-0.057604
+RESULT:bcp_actual_minus_expected_attendance_col3=0.447487
+RESULT:bcp_regression_observations=1126
+RESULT:takeup_more_basic_info_treatment_col1=-0.017149
+RESULT:takeup_more_enhanced_info_treatment_col1=-0.065301
+RESULT:takeup_more_behavior_change_premium_col2=0.022769
+RESULT:takeup_more_goal_minus_expected_attendance_col3=0.061433
+RESULT:takeup_more_actual_minus_expected_attendance_col4=-0.030631
+RESULT:takeup_more_regression_observations=2824

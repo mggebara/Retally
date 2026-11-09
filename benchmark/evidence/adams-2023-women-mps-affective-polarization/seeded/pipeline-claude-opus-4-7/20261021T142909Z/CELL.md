@@ -53,6 +53,10 @@ _None declared._
 - [`output/stdout.txt`](output/stdout.txt) — 417 bytes, from `benchmark/results/artifacts/adams-2023-women-mps-affective-polarization/seeded/pipeline/20261021T142909Z/stdout.txt`
 - [`output/answer-1.md`](output/answer-1.md) — 2,847 bytes, from `benchmark/.cache/llm/64edd30e7bbdf7b525587d98.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM cache (request 64edd30e7bbdf7b525587d98: model claude-opus-4-7, max_tokens 8192, effort None)

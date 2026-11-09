@@ -83,3 +83,7 @@ Agent notes: Independent, blind reproduction from paper text and after_preparati
 - [`output/script.R`](output/script.R) — 5,967 bytes, from `benchmark/results/artifacts/douenne-2022-yellow-vests-carbon-tax/blind/claude-code/20261103T001658Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 456 bytes, from `benchmark/results/artifacts/douenne-2022-yellow-vests-carbon-tax/blind/claude-code/20261103T001658Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 17,329 bytes, from `benchmark/results/artifacts/douenne-2022-yellow-vests-carbon-tax/blind/claude-code/20261103T001658Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

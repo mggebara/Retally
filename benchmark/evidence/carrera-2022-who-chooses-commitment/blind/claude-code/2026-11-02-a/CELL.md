@@ -61,3 +61,7 @@ Agent notes: attempt-1 was exploratory (variable listing, no RESULT lines). Fina
 - [`output/script.R`](output/script.R) — 4,227 bytes, from `benchmark/results/artifacts/carrera-2022-who-chooses-commitment/blind/claude-code/20261102T062002Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/carrera-2022-who-chooses-commitment/blind/claude-code/20261102T062002Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 3,630 bytes, from `benchmark/results/artifacts/carrera-2022-who-chooses-commitment/blind/claude-code/20261102T062002Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

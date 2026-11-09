@@ -72,3 +72,7 @@ Files read outside the mount: `<repo>/benchmark/.cache/claude-code/holman-2022-t
 - [`output/script.R`](output/script.R) — 4,633 bytes, from `benchmark/results/artifacts/holman-2022-theresa-may-rally/blind/claude-code/20261022T032229Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/holman-2022-theresa-may-rally/blind/claude-code/20261022T032229Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 3,460 bytes, from `benchmark/results/artifacts/holman-2022-theresa-may-rally/blind/claude-code/20261022T032229Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

@@ -39,12 +39,13 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [13/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
+| `claude-code` | [13/13](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c)<br>[13/13](independent/claude-code/2026-11-07-a/CELL.md) (2026-11-07-a) | [13/13](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[13/13](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[13/13](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c)<br>[13/13](blind/claude-code/2026-11-07-a/CELL.md) (2026-11-07-a) |
 | `pipeline-desktop-opus` | [13/13](seeded/pipeline-desktop-opus/20261102T100356Z/CELL.md) (20261102T100356Z) | [13/13](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) (20261102T141403Z) | [13/13](blind/pipeline-desktop-opus/20261102T095147Z/CELL.md) (20261102T095147Z) |
 | `pipeline-desktop-opus-postfix` | — | [13/13](independent/pipeline-desktop-opus-postfix/20261103T062157Z/CELL.md) (20261103T062157Z) | [13/13](blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md) (20261103T062809Z) |
 | `pipeline-desktop-opus-postfix2` | — | [13/13](independent/pipeline-desktop-opus-postfix2/20261103T110326Z/CELL.md) (20261103T110326Z) | [13/13](blind/pipeline-desktop-opus-postfix2/20261103T111134Z/CELL.md) (20261103T111134Z) |
 | `pipeline-desktop-opus-run2` | [13/13](seeded/pipeline-desktop-opus-run2/20261102T152052Z/CELL.md) (20261102T152052Z) | [13/13](independent/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) (20261102T151132Z) | [13/13](blind/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) (20261102T151132Z) |
 | `pipeline-desktop-opus-run3` | [13/13](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [13/13](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [11/13](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) |
+| `pipeline-desktop-opus-run4` | — | [13/13](independent/pipeline-desktop-opus-run4/20261108T015935Z/CELL.md) (20261108T015935Z) | [9/13](blind/pipeline-desktop-opus-run4/20261108T013503Z/CELL.md) (20261108T013503Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
 
@@ -57,15 +58,15 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | Cell | Claim | Reproduced | Paper | Band | Error / band | Verdict |
 |---|---|---|---|---|---|---|
 | [blind/pipeline-desktop-opus-run3/20261103T004800Z](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) | `n_obs_annual_tableC1_col6` | 29664 | 27846 | ±1392.3 (relative) | 1.306 | FAIL |
+| [blind/pipeline-desktop-opus-run4/20261108T013503Z](blind/pipeline-desktop-opus-run4/20261108T013503Z/CELL.md) | `n_obs_annual_tableC1_col6` | 29664 | 27846 | ±1392.3 (relative) | 1.306 | FAIL |
 | [blind/pipeline-desktop-opus-run3/20261103T004800Z](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) | `n_obs_sum_tableC1_col5` | 9888 | 9282 | ±464.1 (relative) | 1.306 | FAIL |
+| [blind/pipeline-desktop-opus-run4/20261108T013503Z](blind/pipeline-desktop-opus-run4/20261108T013503Z/CELL.md) | `n_obs_sum_tableC1_col5` | 9888 | 9282 | ±464.1 (relative) | 1.306 | FAIL |
 | [independent/pipeline-desktop-opus-run3/20261103T010557Z](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) | `mate_competition_table1_col4` | 0.192868 | 0.206 | ±0.019 (se_band) | 0.691 | PASS |
 | [independent/pipeline-desktop-opus-run3/20261103T010557Z](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) | `mate_competition_table1_col5` | 0.174966 | 0.185 | ±0.019 (se_band) | 0.528 | PASS |
 | [independent/pipeline-desktop-opus-run2/20261102T151132Z](independent/pipeline-desktop-opus-run2/20261102T151132Z/CELL.md) | `excess_males_sum_tableC1_col5` | 1.62559 | 1.406 | ±0.463 (se_band) | 0.474 | PASS |
 | [independent/pipeline-desktop-opus/20261102T141403Z](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) | `excess_males_annual_tableC1_col6` | 1.36704 | 1.537 | ±0.412 (se_band) | 0.413 | PASS |
 | [independent/pipeline-desktop-opus-run3/20261103T010557Z](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) | `excess_males_annual_tableC1_col6` | 1.36704 | 1.537 | ±0.412 (se_band) | 0.413 | PASS |
-| [blind/pipeline-desktop-opus-run3/20261103T004800Z](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) | `excess_males_sum_tableC1_col5` | 1.52362 | 1.406 | ±0.463 (se_band) | 0.254 | PASS |
-| [independent/pipeline-desktop-opus/20261102T141403Z](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) | `excess_males_sum_tableC1_col5` | 1.30546 | 1.406 | ±0.463 (se_band) | 0.217 | PASS |
-| [independent/pipeline-desktop-opus-run3/20261103T010557Z](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) | `excess_males_sum_tableC1_col5` | 1.30546 | 1.406 | ±0.463 (se_band) | 0.217 | PASS |
+| [independent/pipeline-desktop-opus-run4/20261108T015935Z](independent/pipeline-desktop-opus-run4/20261108T015935Z/CELL.md) | `excess_males_annual_tableC1_col6` | 1.37778 | 1.537 | ±0.412 (se_band) | 0.386 | PASS |
 
 ### Declared deviations
 
@@ -83,6 +84,11 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 - [independent/claude-code/2026-11-02-c](independent/claude-code/2026-11-02-c/CELL.md) (13/13)
   - Table 1 controls coded from the paper and survey codebook without the authors' code: age (continuous), gender, years of education, income (12-category factor incl. 'No answer'), occupation/main activity (factor; covers both main activity and employment status), German citizenship, household size (numeric), self-assessed social status (numeric, 'bottom' code recoded to 0), religion (factor), state (factor). National battery = the 8 ref_* items; local battery = the 8 ref_loc_* items (all linear); additional controls = contact_ind, distance_ref (factor), settle_ref (factor), afd (0-100), afd_ind, lrscale, muslim_ind. R-squared in cols 3-6 is a little below the published values, so the exact coding of some controls likely differs.
   - SI Table C1 cols 5-6: logit with state fixed effects (plus year FE in the annual model), SEs clustered by county; controls log population, log population density, population change 2011-15, log unemployment rate, male/female unemployment ratio, log refugee stock 2014, log refugee inflow 2014-15, % highly educated, % manufacturing, change in manufacturing share, AfD vote share 2013, log violent crime per capita. Excess Males outside the 2.5th/97.5th percentiles (computed over 2015 municipality values) excluded before complete-case filtering.
+- [independent/claude-code/2026-11-07-a](independent/claude-code/2026-11-07-a/CELL.md) (13/13)
+  - Table 1 control coding is my reconstruction: age, eduyrs, household_size, self_econ (code 11 = '0 (BOTTOM)' recoded to 0), citizenship entered linearly; gender, income (incl. 'No answer'), occupation (stands in for both main activity and employment status), religion, state as factors. National battery = the 8 ref_* items, local battery = the 8 ref_loc_* items, all linear 1-4. Additional controls = contact_ind, distance_ref (factor, incl. Don't know), settle_ref (factor), afd (0-100), afd_ind, lrscale, muslim_ind. R2 in cols 4-6 is lower than the paper's (0.360/0.373/0.434 vs 0.394/0.410/0.459), so the authors probably coded the attitude batteries more flexibly (e.g. as factors); Mate Competition coefficients still match to within 0.002.
+  - SI Table C1 models: feglm logit with state fixed effects (plus year FE in the annual model), SEs clustered by county. Controls follow footnote 24 using the logged variables from context.dta (log population, log density, population change, log unemployment, male/female unemployment ratio, log refugee stock 2014, log refugee inflow, % highly educated, manufacturing share, change in manufacturing share, AfD 2013 vote share, log violent crime per capita). Excess Males trimmed at the 2.5/97.5 percentiles of the 2015 municipality cross-section before taking complete cases.
+- [independent/pipeline-desktop-opus-run4/20261108T015935Z](independent/pipeline-desktop-opus-run4/20261108T015935Z/CELL.md) (13/13)
+  - Filled year-specific NAs in time-invariant baseline controls (and Excess Males) with the municipality's non-missing baseline value so all 2015-2017 municipality-years enter the annual panel
 - [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) (13/13)
   - Table 1 sociodemographics coded as: age (years, linear), female dummy, eduyrs (years; 11 missing -> N drops to 3008), income as factor with 'No answer' kept as a category, occupation as a factor (the data has a single item covering both main economic activity and employment status), citizenship dummy, household size (numeric), self-assessed social status (0-10, numeric), religion factor, state factor.
   - National battery = the 8 ref_* items (integrating, citizenship, reduce, moredone, cultgiveup, economy, crime, terror) entered linearly; local battery = the 8 ref_loc_* items entered linearly.
@@ -98,6 +104,11 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Table 1 national battery = the 8 ref_* items; local battery = the 8 ref_loc_* items (entered linearly, 1-4). Additional controls = contact_ind, distance_ref (factor incl. Don't know), settle_ref (factor), afd (0-100 closeness), afd_ind (AfD views index), lrscale, muslim_ind. refugee_ind omitted as it is an index of the national items.
   - Columns (3)-(6) share one sample (complete sociodemographics; only eduyrs has missing values, 11 respondents).
   - SI Table C1: controls from footnote 24 using the log versions available in context.dta (log population, log population density, population change 2011-15, log unemployment rate, male/female unemployment ratio, log refugee stock 2014, log refugee inflow 2014-15, % highly educated, % manufacturing, change in manufacturing share, AfD 2013 vote share, log violent crime per capita). State fixed effects in both models (plus year FE in the annual model), logit via glm, county-clustered SEs. Sum outcome = any Hate_all_muni over 2015-2017. Excess Males trimmed at the 2.5th/97.5th percentiles computed across all municipalities with non-missing values (type-7 quantiles), then complete cases.
+- [blind/claude-code/2026-11-07-a](blind/claude-code/2026-11-07-a/CELL.md) (13/13)
+  - Table 1 control coding is my reading of the paper: age (continuous), gender, years of education, income bracket (factor, 'No answer' kept as a level), occupation factor (used for both main economic activity and employment status; the data hold a single occupation variable), German citizenship, household size and 0-10 self-assessed status (numeric), religion factor and state factor. National battery = the 8 ref_* items, local battery = the 8 ref_loc_* items, entered linearly. Additional controls = contact_ind, distance_ref (factor, incl. Don't know), settle_ref (factor), afd (0-100), afd_ind, lrscale, muslim_ind.
+  - Columns (3)-(6) estimated on one common complete-case sample (only eduyrs has missing values in Wave 4, 11 cases).
+  - SI Table C1 controls use the logged versions supplied in context.dta (population, density, unemployment rate, refugee stock 2014, refugee inflow 2014-15, violent crime per capita) plus d_pop1511_muni, unemp_gendergap_2015, pc_hidegree_all2011, pc_manufacturing_2015, d_manuf1115, vote_afd_2013_muni. State fixed effects (plus year FE in the annual model), as the task states, though the main text mentions county fixed effects. Logit via fixest::feglm, SEs clustered by county.
+  - Extreme Excess Males exclusion: municipalities below the 2.5th or above the 97.5th percentile (R quantile type 7) of the municipality-level distribution of pop_15_44_muni_gendergap_2015 dropped before complete-case selection; the same municipalities are dropped from the annual panel. The Sum outcome = 1 if Hate_all_muni_bin is 1 in any of 2015-2017.
 
 ### Pipeline and agent disagree
 
@@ -139,6 +150,10 @@ _None._
 
 [`independent/claude-code/2026-11-02-c/CELL.md`](independent/claude-code/2026-11-02-c/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-02T20:09:42Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
 
+### independent · claude-code · 2026-11-07-a
+
+[`independent/claude-code/2026-11-07-a/CELL.md`](independent/claude-code/2026-11-07-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-07T18:45:00Z; from `claude-code-run4-24papers-indep-blind-2026-11-08.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus · 20261102T141403Z
 
 [`independent/pipeline-desktop-opus/20261102T141403Z/CELL.md`](independent/pipeline-desktop-opus/20261102T141403Z/CELL.md) — final 13/13, re-scored 13/13; first scored 11/13; executions 3; 2026-11-02T14:14:03Z; from `pipeline-oracle-desktop-opus-6papers-all-modes-2026-11-02.json`; evidence complete.
@@ -159,6 +174,10 @@ _None._
 
 [`independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md`](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — final 13/13, re-scored 13/13; first scored 9/13; executions 2; 2026-11-03T01:05:57Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-run4 · 20261108T015935Z
+
+[`independent/pipeline-desktop-opus-run4/20261108T015935Z/CELL.md`](independent/pipeline-desktop-opus-run4/20261108T015935Z/CELL.md) — final 13/13, re-scored 13/13; first scored 12/13; executions 2; 2026-11-08T01:59:35Z; from `pipeline-oracle-desktop-opus-run4-24papers-indep-blind-2026-11-08.json`; evidence complete.
+
 ### blind · claude-code · 2026-11-02-a
 
 [`blind/claude-code/2026-11-02-a/CELL.md`](blind/claude-code/2026-11-02-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 3; 2026-11-02T09:51:10Z; from `claude-code-6papers-all-modes-2026-11-02.json`; evidence complete.
@@ -170,6 +189,10 @@ _None._
 ### blind · claude-code · 2026-11-02-c
 
 [`blind/claude-code/2026-11-02-c/CELL.md`](blind/claude-code/2026-11-02-c/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-02T20:25:00Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
+
+### blind · claude-code · 2026-11-07-a
+
+[`blind/claude-code/2026-11-07-a/CELL.md`](blind/claude-code/2026-11-07-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-07T19:18:30Z; from `claude-code-run4-24papers-indep-blind-2026-11-08.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus · 20261102T095147Z
 
@@ -190,4 +213,8 @@ _None._
 ### blind · pipeline-desktop-opus-run3 · 20261103T004800Z
 
 [`blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md`](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) — final 11/13, re-scored 11/13; first scored 11/13; executions 1; 2026-11-03T00:48:00Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-run4 · 20261108T013503Z
+
+[`blind/pipeline-desktop-opus-run4/20261108T013503Z/CELL.md`](blind/pipeline-desktop-opus-run4/20261108T013503Z/CELL.md) — final 9/13, re-scored 9/13; first scored 9/13; executions 1; 2026-11-08T01:35:03Z; from `pipeline-oracle-desktop-opus-run4-24papers-indep-blind-2026-11-08.json`; evidence complete.
 

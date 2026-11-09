@@ -69,3 +69,7 @@ Agent notes: Data: ehpm_incomemodule_wreform.dta only (README.pdf not opened). R
 - [`output/script.R`](output/script.R) — 2,863 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/claude-code/20261022T021417Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/claude-code/20261022T021417Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 1,047 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/independent/claude-code/20261022T021417Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

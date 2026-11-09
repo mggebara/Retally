@@ -1,0 +1,245 @@
+Survey columns:
+ [1] "res_id"                        "wave"                         
+ [3] "east"                          "hate_violence_means"          
+ [5] "hate_pol_message"              "hate_prevent_settlement"      
+ [7] "hate_polcondemn"               "hate_justified"               
+ [9] "MateComp.cont"                 "JobComp.cont"                 
+[11] "LifeSatis.cont"                "pop_15_44_muni_gendergap_2015"
+[13] "age"                           "singdivsep"                   
+[15] "age_group"                     "gender"                       
+[17] "state"                         "citizenship"                  
+[19] "marital"                       "religion"                     
+[21] "eduyrs"                        "occupation"                   
+[23] "income"                        "household_size"               
+[25] "self_econ"                     "distance_ref"                 
+[27] "settle_ref"                    "lrscale"                      
+[29] "afd"                           "muslim_ind"                   
+[31] "afd_ind"                       "contact_ind"                  
+[33] "refugee_ind"                   "list"                         
+[35] "treatment_list"                "outcome_list"                 
+[37] "ref_integrating"               "ref_citizenship"              
+[39] "ref_reduce"                    "ref_moredone"                 
+[41] "ref_cultgiveup"                "ref_economy"                  
+[43] "ref_crime"                     "ref_terror"                   
+[45] "ref_loc_services"              "ref_loc_economy"              
+[47] "ref_loc_crime"                 "ref_loc_culture"              
+[49] "ref_loc_islam"                 "ref_loc_schools"              
+[51] "ref_loc_housing"               "ref_loc_wayoflife"            
+[53] "women_role"                   
+Wave table:
+
+   1    2    3    4 
+3419 2883 3274 3019 
+Wave 4 rows with MateComp: 3019 
+Socio: age gender eduyrs income occupation citizenship household_size self_econ religion state 
+National: ref_integrating ref_reduce ref_moredone ref_cultgiveup ref_economy ref_crime ref_terror ref_citizenship 
+Local: ref_loc_services ref_loc_economy ref_loc_crime ref_loc_culture ref_loc_islam ref_loc_schools ref_loc_housing ref_loc_wayoflife 
+Additional: contact_ind refugee_ind muslim_ind lrscale afd afd_ind 
+Col 1: coef=0.4370 se=0.0163 N=3019 R2=0.191
+RESULT:mate_competition_table1_col1=0.437020
+RESULT:n_obs_table1_col1=3019.000000
+Col 2: coef=0.2634 se=0.0203 N=3019 R2=0.240
+RESULT:mate_competition_table1_col2=0.263437
+RESULT:job_competition_table1_col2=0.249956
+Col 3: coef=0.2344 se=0.0206 N=3008 R2=0.272
+RESULT:mate_competition_table1_col3=0.234450
+RESULT:n_obs_table1_col3=3008.000000
+Col 4: coef=0.2053 se=0.0195 N=3008 R2=0.357
+RESULT:mate_competition_table1_col4=0.205295
+Col 5: coef=0.1856 se=0.0196 N=3008 R2=0.370
+RESULT:mate_competition_table1_col5=0.185607
+Col 6: coef=0.1579 se=0.0187 N=3008 R2=0.432
+RESULT:mate_competition_table1_col6=0.157899
+Context columns:
+ [1] "ags_county"                    "year"                         
+ [3] "ags_muni"                      "ags_state"                    
+ [5] "Hate_all_muni"                 "Physical_muni"                
+ [7] "pop_25_44_muni_gendergap_2015" "pop_15_44_muni_gendergap_2015"
+ [9] "population_muni_2015"          "popdens_muni_2015"            
+[11] "log_unemp_all_muni_2015"       "unemp_gendergap_2015"         
+[13] "d_pop1511_muni"                "vote_afd_2013_muni"           
+[15] "log_ref_inflow_1514"           "pop_ref_2014"                 
+[17] "pc_ref_male"                   "violence_percap_2015"         
+[19] "pc_hidegree_all2011"           "pc_manufacturing_2015"        
+[21] "d_manuf1115"                   "east"                         
+[23] "Hate_all_muni_bin"             "Physical_muni_bin"            
+[25] "log_population_muni_2015"      "log_popdens_muni_2015"        
+[27] "log_pop_ref_2014"              "log_violence_percap_2015"     
+     ags_county         year         ags_muni         ags_state    
+ Length   :34164   Min.   :2015   Min.   :    1   Length   :34164  
+ N.unique :  402   1st Qu.:2015   1st Qu.: 2848   N.unique :   16  
+ N.blank  :    0   Median :2016   Median : 5694   N.blank  :    0  
+ Min.nchar:    5   Mean   :2016   Mean   : 5694   Min.nchar:    2  
+ Max.nchar:    5   3rd Qu.:2017   3rd Qu.: 8541   Max.nchar:    2  
+                   Max.   :2017   Max.   :11388                    
+                                                                   
+ Hate_all_muni      Physical_muni      pop_25_44_muni_gendergap_2015
+ Min.   :  0.0000   Min.   : 0.00000   Min.   :0.0000               
+ 1st Qu.:  0.0000   1st Qu.: 0.00000   1st Qu.:0.9836               
+ Median :  0.0000   Median : 0.00000   Median :1.0500               
+ Mean   :  0.2036   Mean   : 0.03343   Mean   :1.0709               
+ 3rd Qu.:  0.0000   3rd Qu.: 0.00000   3rd Qu.:1.1350               
+ Max.   :251.0000   Max.   :30.00000   Max.   :5.0000               
+                                       NAs    :48                   
+ pop_15_44_muni_gendergap_2015 population_muni_2015 popdens_muni_2015 
+ Min.   :0.000                 Min.   :      9      Min.   :   2.212  
+ 1st Qu.:1.020                 1st Qu.:    647      1st Qu.:  50.660  
+ Median :1.078                 Median :   1821      Median :  93.542  
+ Mean   :1.100                 Mean   :  12119      Mean   : 184.932  
+ 3rd Qu.:1.155                 3rd Qu.:   5882      3rd Qu.: 193.149  
+ Max.   :5.879                 Max.   :3520031      Max.   :4667.957  
+ NAs    :303                   NAs    :3            NAs    :1293      
+ log_unemp_all_muni_2015 unemp_gendergap_2015 d_pop1511_muni     
+ Min.   :0.000           Min.   :0.7368       Min.   :-0.320000  
+ 1st Qu.:1.173           1st Qu.:0.9722       1st Qu.:-0.024908  
+ Median :1.424           Median :1.0351       Median : 0.001187  
+ Mean   :1.473           Mean   :1.0515       Mean   : 0.003125  
+ 3rd Qu.:1.737           3rd Qu.:1.1250       3rd Qu.: 0.026601  
+ Max.   :3.059           Max.   :1.5172       Max.   : 4.560062  
+ NAs    :459             NAs    :132          NAs    :123        
+ vote_afd_2013_muni log_ref_inflow_1514  pop_ref_2014    pc_ref_male   
+ Min.   :0.003891   Min.   : 5.043      Min.   :  120   Min.   :50.57  
+ 1st Qu.:0.035380   1st Qu.: 7.482      1st Qu.:  555   1st Qu.:62.60  
+ Median :0.046230   Median : 7.591      Median :  925   Median :65.16  
+ Mean   :0.048661   Mean   : 7.641      Mean   : 1185   Mean   :65.86  
+ 3rd Qu.:0.058902   3rd Qu.: 7.738      3rd Qu.: 1455   3rd Qu.:68.03  
+ Max.   :0.277778   Max.   :10.235      Max.   :43975   Max.   :88.98  
+ NAs    :1713       NAs    :360         NAs    :360     NAs    :11737  
+ violence_percap_2015 pc_hidegree_all2011 pc_manufacturing_2015
+ Min.   :0.0004426    Min.   : 7.256      Min.   :0.03247      
+ 1st Qu.:0.0010565    1st Qu.:12.280      1st Qu.:0.15921      
+ Median :0.0013407    Median :13.768      Median :0.21053      
+ Mean   :0.0013829    Mean   :14.895      Mean   :0.21767      
+ 3rd Qu.:0.0016389    3rd Qu.:16.580      3rd Qu.:0.26688      
+ Max.   :0.0056583    Max.   :51.402      Max.   :0.51238      
+ NAs    :132          NAs    :2277        NAs    :195          
+  d_manuf1115              east        Hate_all_muni_bin Physical_muni_bin
+ Min.   :-0.0429084   Min.   :0.0000   Min.   :0.00000   Min.   :0.00000  
+ 1st Qu.:-0.0050269   1st Qu.:0.0000   1st Qu.:0.00000   1st Qu.:0.00000  
+ Median : 0.0006521   Median :0.0000   Median :0.00000   Median :0.00000  
+ Mean   : 0.0013509   Mean   :0.2396   Mean   :0.08146   Mean   :0.01721  
+ 3rd Qu.: 0.0064082   3rd Qu.:0.0000   3rd Qu.:0.00000   3rd Qu.:0.00000  
+ Max.   : 0.0411464   Max.   :1.0000   Max.   :1.00000   Max.   :1.00000  
+ NAs    :195                                                              
+ log_population_muni_2015 log_popdens_muni_2015 log_pop_ref_2014
+ Min.   : 2.197           Min.   :0.7941        Min.   : 4.787  
+ 1st Qu.: 6.472           1st Qu.:3.9251        1st Qu.: 6.319  
+ Median : 7.507           Median :4.5384        Median : 6.830  
+ Mean   : 7.647           Mean   :4.6245        Mean   : 6.791  
+ 3rd Qu.: 8.680           3rd Qu.:5.2635        3rd Qu.: 7.283  
+ Max.   :15.074           Max.   :8.4485        Max.   :10.691  
+ NAs    :3                NAs    :1293          NAs    :360     
+ log_violence_percap_2015
+ Min.   :-7.723          
+ 1st Qu.:-6.853          
+ Median :-6.615          
+ Mean   :-6.633          
+ 3rd Qu.:-6.414          
+ Max.   :-5.175          
+ NAs    :132             
+Muni id: ags_muni  Excess males: pop_15_44_muni_gendergap_2015 
+Controls: population_muni_2015 popdens_muni_2015 log_unemp_all_muni_2015 unemp_gendergap_2015 d_pop1511_muni vote_afd_2013_muni log_ref_inflow_1514 pop_ref_2014 pc_ref_male violence_percap_2015 pc_hidegree_all2011 pc_manufacturing_2015 d_manuf1115 log_population_muni_2015 log_popdens_muni_2015 log_pop_ref_2014 log_violence_percap_2015 
+NA counts of controls by year:
+Year 2015 :
+                      EM     population_muni_2015        popdens_muni_2015 
+                     101                        1                      431 
+ log_unemp_all_muni_2015     unemp_gendergap_2015           d_pop1511_muni 
+                     153                       44                       41 
+      vote_afd_2013_muni      log_ref_inflow_1514             pop_ref_2014 
+                     571                      120                      120 
+             pc_ref_male     violence_percap_2015      pc_hidegree_all2011 
+                     153                       44                      759 
+   pc_manufacturing_2015              d_manuf1115 log_population_muni_2015 
+                      65                       65                        1 
+   log_popdens_muni_2015         log_pop_ref_2014 log_violence_percap_2015 
+                     431                      120                       44 
+Year 2016 :
+                      EM     population_muni_2015        popdens_muni_2015 
+                     101                        1                      431 
+ log_unemp_all_muni_2015     unemp_gendergap_2015           d_pop1511_muni 
+                     153                       44                       41 
+      vote_afd_2013_muni      log_ref_inflow_1514             pop_ref_2014 
+                     571                      120                      120 
+             pc_ref_male     violence_percap_2015      pc_hidegree_all2011 
+                     196                       44                      759 
+   pc_manufacturing_2015              d_manuf1115 log_population_muni_2015 
+                      65                       65                        1 
+   log_popdens_muni_2015         log_pop_ref_2014 log_violence_percap_2015 
+                     431                      120                       44 
+Year 2017 :
+                      EM     population_muni_2015        popdens_muni_2015 
+                     101                        1                      431 
+ log_unemp_all_muni_2015     unemp_gendergap_2015           d_pop1511_muni 
+                     153                       44                       41 
+      vote_afd_2013_muni      log_ref_inflow_1514             pop_ref_2014 
+                     571                      120                      120 
+             pc_ref_male     violence_percap_2015      pc_hidegree_all2011 
+                   11388                       44                      759 
+   pc_manufacturing_2015              d_manuf1115 log_population_muni_2015 
+                      65                       65                        1 
+   log_popdens_muni_2015         log_pop_ref_2014 log_violence_percap_2015 
+                     431                      120                       44 
+DEVIATION: Filled year-specific NAs in time-invariant baseline controls (and Excess Males) with the municipality's non-missing baseline value so all 2015-2017 municipality-years enter the annual panel
+EM trim bounds: 0.8529412 1.454545 
+Trimmed rows by year:
+
+ 2015  2016  2017 
+10727 10727 10727 
+GLM estimation, family = binomial, Dep. Var.: hate_any
+Observations: 27,846
+Fixed-effects: ags_state: 11,  year: 3
+Standard-errors: Clustered (ags_county) 
+                            Estimate   Std. Error   z value   Pr(>|z|)    
+EM                          1.377780   0.42555363  3.237618 1.2053e-03 ** 
+population_muni_2015       -0.000013   0.00000231 -5.634264 1.7581e-08 ***
+popdens_muni_2015          -0.000084   0.00015770 -0.531217 5.9527e-01    
+log_unemp_all_muni_2015     0.805617   0.13373913  6.023794 1.7037e-09 ***
+unemp_gendergap_2015        0.804537   0.31932525  2.519491 1.1752e-02 *  
+d_pop1511_muni             -0.123949   0.56233980 -0.220417 8.2555e-01    
+vote_afd_2013_muni          2.374172   2.73757822  0.867253 3.8580e-01    
+log_ref_inflow_1514         0.720439   0.26208594  2.748865 5.9802e-03 ** 
+pop_ref_2014                0.000030   0.00007658  0.398170 6.9051e-01    
+pc_ref_male                 0.012425   0.00649259  1.913794 5.5646e-02 .  
+violence_percap_2015     -347.194146 438.03419701 -0.792619 4.2800e-01    
+pc_hidegree_all2011        -0.017572   0.01084970 -1.619627 1.0531e-01    
+pc_manufacturing_2015      -0.264862   0.61689970 -0.429344 6.6767e-01    
+d_manuf1115                 9.251580   3.18942793  2.900702 3.7233e-03 ** 
+log_population_muni_2015    1.498368   0.05317758 28.176694  < 2.2e-16 ***
+log_popdens_muni_2015       0.037837   0.06860346  0.551534 5.8127e-01    
+log_pop_ref_2014           -0.199157   0.12126647 -1.642305 1.0053e-01    
+log_violence_percap_2015    0.479544   0.54682653  0.876959 3.8051e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Log-Likelihood: -5,276.4   Adj. Pseudo R2: 0.325149
+           BIC: 10,870.1     Squared Cor.: 0.271664
+RESULT:excess_males_annual_tableC1_col6=1.377780
+RESULT:n_obs_annual_tableC1_col6=27846.000000
+GLM estimation, family = binomial, Dep. Var.: hate_sum
+Observations: 9,282
+Fixed-effects: ags_state: 11
+Standard-errors: Clustered (ags_county) 
+                            Estimate   Std. Error   z value   Pr(>|z|)    
+EM                          1.348237   0.47131048  2.860614 4.2282e-03 ** 
+population_muni_2015       -0.000011   0.00000372 -2.903866 3.6859e-03 ** 
+popdens_muni_2015          -0.000153   0.00019880 -0.768317 4.4230e-01    
+log_unemp_all_muni_2015     0.691246   0.15863381  4.357495 1.3156e-05 ***
+unemp_gendergap_2015        0.897615   0.37984853  2.363087 1.8123e-02 *  
+d_pop1511_muni             -0.411672   0.88001233 -0.467803 6.3993e-01    
+vote_afd_2013_muni          4.838319   3.45794001  1.399191 1.6176e-01    
+log_ref_inflow_1514         0.882640   0.33372841  2.644787 8.1742e-03 ** 
+pop_ref_2014               -0.000054   0.00011448 -0.471096 6.3757e-01    
+pc_ref_male                 0.005445   0.00822469  0.662050 5.0794e-01    
+violence_percap_2015     -122.647355 544.23538492 -0.225357 8.2170e-01    
+pc_hidegree_all2011        -0.021208   0.01345130 -1.576628 1.1488e-01    
+pc_manufacturing_2015       0.046735   0.74923411  0.062377 9.5026e-01    
+d_manuf1115                 7.676261   4.08698841  1.878219 6.0351e-02 .  
+log_population_muni_2015    1.591912   0.06936880 22.948535  < 2.2e-16 ***
+log_popdens_muni_2015       0.074912   0.09006404  0.831762 4.0554e-01    
+log_pop_ref_2014           -0.133182   0.15117220 -0.880994 3.7832e-01    
+log_violence_percap_2015    0.294999   0.67583439  0.436497 6.6248e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Log-Likelihood: -2,773.3   Adj. Pseudo R2: 0.355779
+           BIC:  5,811.6     Squared Cor.: 0.370274
+RESULT:excess_males_sum_tableC1_col5=1.348237
+RESULT:n_obs_sum_tableC1_col5=9282.000000

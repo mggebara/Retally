@@ -61,3 +61,7 @@ Files read outside the mount: `benchmark/.cache/claude-code/dertwinkel-kalt-2022
 - [`output/script.R`](output/script.R) — 2,465 bytes, from `benchmark/results/artifacts/dertwinkel-kalt-2022-concentration-bias/seeded/claude-code/20261022T032229Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 538 bytes, from `benchmark/results/artifacts/dertwinkel-kalt-2022-concentration-bias/seeded/claude-code/20261022T032229Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 3,508 bytes, from `benchmark/results/artifacts/dertwinkel-kalt-2022-concentration-bias/seeded/claude-code/20261022T032229Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

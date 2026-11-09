@@ -1,0 +1,12 @@
+suppressMessages({library(haven); library(dplyr)})
+D <- "<repo>/benchmark/.cache/claude-code/molina-garzon-2022-decentralization-cooperation/independent/2026-11-07-a/mount/molina_garzon_2022_decentralization_cooperation"
+g <- read_dta(file.path(D, "publicgoodgame_dataAug27.dta"))
+print(dim(g)); print(summary(zap_labels(g[,1:21])))
+print(table(g$p_type, useNA="a")); print(table(g$round, is.na(g$lag_groupcontribution)))
+cc <- c("contribution","decentralized","communication","p_type","round","lag_groupcontribution","num_players","knownpeople","Q2_female","Q1_Edad","Q2_Educacion","Q3_YrsSalud","Q5_Trust1Base","weights_games_full_scaled")
+print(sum(complete.cases(g[,cc])))
+for (v in cc) cat(v, sum(is.na(g[[v]])), "\n")
+print(length(unique(g$publicid_muni)))
+n <- read.csv(file.path(D, "clanalysis_anondata_vNov16.csv"))
+print(dim(n)); str(n)
+print(summary(n))

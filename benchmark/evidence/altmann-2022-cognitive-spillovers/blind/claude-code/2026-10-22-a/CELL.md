@@ -65,3 +65,7 @@ Agent notes: Lab sample: formatted_data_replication.dta restricted to Treatment_
 - [`output/script.R`](output/script.R) — 3,855 bytes, from `benchmark/results/artifacts/altmann-2022-cognitive-spillovers/blind/claude-code/20261022T032229Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 261 bytes, from `benchmark/results/artifacts/altmann-2022-cognitive-spillovers/blind/claude-code/20261022T032229Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 3,415 bytes, from `benchmark/results/artifacts/altmann-2022-cognitive-spillovers/blind/claude-code/20261022T032229Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

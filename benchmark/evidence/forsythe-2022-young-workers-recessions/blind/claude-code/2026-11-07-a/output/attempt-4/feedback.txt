@@ -1,0 +1,10 @@
+attempt-4 hit the sandbox's 300 s limit (exit 124) after printing only "read cpu 23.357 rows 19836464" and
+"N pairs kept 17357345", so no RESULT line was printed. fread's CPU time was ~23 s; the rest was I/O wait
+reading the 2 GB CSV through Docker's file sharing, with another (unrelated) container running at the same time.
+Two exploratory runs followed: attempt-5 tried a chunked readBin + fread(text=) read and also timed out; attempt-6
+measured raw sequential throughput at ~8 MB/s (~240 s for the file). attempt-7 code-tested the fix on 3M rows.
+Fix used in the final run: keep the single fread (memory-mapped) read, drop the raw columns once the variables are
+built, and collapse to cells (state x month-year x demographic cell x young x t-1 status) holding the weighted
+mean of the hired indicator and the summed weight. The hiring regressions run on these cells, which gives the
+same point estimates as the person-level WLS, since every regressor and fixed effect is constant within a cell.
+The new-hire wage regression stays person-level.

@@ -54,6 +54,10 @@ _None declared._
 - [`output/stdout.txt`](output/stdout.txt) — 4,998 bytes, from `benchmark/results/artifacts/holman-2022-theresa-may-rally/blind/pipeline/20261103T004800Z/stdout.txt`
 - [`output/answer-1.md`](output/answer-1.md) — 7,368 bytes, from `benchmark/.cache/llm-oracle/desktop-opus-run3/answers/a964d92685a695f9a4df384f.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM oracle store desktop-opus-run3 (request a964d92685a695f9a4df384f: model claude-opus-5-5, max_tokens 16384, effort high)

@@ -1,0 +1,15 @@
+D <- "<repo>/benchmark/.cache/claude-code/adams-2023-women-mps-affective-polarization/independent/2026-11-07-a/mount/adams_2023_women_mps_affective_polarization"
+suppressMessages(library(dplyr))
+load(file.path(D, "dyadic_data_1-4-22.Rdata"))
+d <- as.data.frame(updated_data)
+print(names(d))
+print(dim(d))
+for (v in c("to_prior_seats","from_prior_seats","party_like","party_dislike","to_pfeml","rile_distance","rile_distance_s","govern_together","opposition_together","prior_coalition","prior_opposition"))
+  if (v %in% names(d)) { cat(v,"\n"); print(summary(d[[v]])) }
+print(table(d$country))
+print(length(unique(paste(d$country,d$year))))
+print(with(d, table(govern_together, prior_coalition, useNA="a")))
+print(with(d, table(opposition_together, prior_opposition, useNA="a")))
+g <- readRDS(file.path(D, "gender_disagregated_8-8-21.rds"))
+print(names(g)); print(table(g$gender, useNA="a"))
+print(summary(g$dislike))

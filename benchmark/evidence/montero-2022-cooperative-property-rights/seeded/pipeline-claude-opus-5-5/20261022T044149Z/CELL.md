@@ -52,6 +52,10 @@ _None declared._
 - [`output/stdout.txt`](output/stdout.txt) — 632 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/seeded/pipeline/20261022T044149Z/stdout.txt`
 - [`output/answer-1.md`](output/answer-1.md) — 3,846 bytes, from `benchmark/.cache/llm/c53d2c8875fe961451990b10.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM cache (request c53d2c8875fe961451990b10: model claude-opus-5-5, max_tokens 16384, effort high)

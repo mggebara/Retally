@@ -54,6 +54,10 @@ _None declared._
 - [`output/stdout.txt`](output/stdout.txt) — 3,442 bytes, from `benchmark/results/artifacts/montero-2022-cooperative-property-rights/blind/pipeline/20261103T111134Z/stdout.txt`
 - [`output/answer-1.md`](output/answer-1.md) — 5,952 bytes, from `benchmark/.cache/llm-oracle/desktop-opus-postfix2/answers/bafadd20aefe14c4547b7256.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM oracle store desktop-opus-postfix2 (request bafadd20aefe14c4547b7256: model claude-opus-5-5, max_tokens 16384, effort high)

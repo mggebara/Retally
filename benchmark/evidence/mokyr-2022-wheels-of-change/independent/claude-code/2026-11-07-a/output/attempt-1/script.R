@@ -1,0 +1,11 @@
+library(haven)
+d <- read_dta("<repo>/benchmark/.cache/claude-code/mokyr-2022-wheels-of-change/independent/2026-11-07-a/mount/mokyr_2022_wheels_of_change/3 replication package/Replication files/Data/replication_data.dta")
+print(dim(d))
+for (v in names(d)) { lab <- attr(d[[v]], "label"); cat(v, "|", if (is.null(lab)) "" else lab, "|", class(d[[v]])[1], "\n") }
+vs <- intersect(c("wrights","mills","pcmean","pc0","pc1","pop_86","riv_rug26count","wheat_tmean","suitmean","dist_grass_mean","area","DIST_London","min_harbor","dist_rug_mean","dist_elevation_mean","temp_mean_dist","precip_mean_dist","min_dist_to_roman_rds","min_dist_2nav_rivers"), names(d))
+print(summary(as.data.frame(d)[, vs]))
+cat("nonmissing mills:", sum(!is.na(d$mills)), "\n")
+cat("n county:", length(unique(d$GAZ_CNTY)), "\n")
+print(head(as.data.frame(d)[, intersect(c("local_government_area","GAZ_CNTY","wrights","mills","pcmean","pc0","pc1","pop_86"), names(d))], 10))
+print(table(d$wheat_tmean <= 5, useNA = "ifany"))
+print(table(round(d$wheat_tmean, 1))[1:30])

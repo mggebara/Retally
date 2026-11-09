@@ -1,0 +1,400 @@
+country : Country character 
+qtr : Quarter numeric 
+rally_events : Rally terrorist events numeric 
+rally_kill : N deaths in rally terrorist events numeric 
+female_pres : Woman head of state numeric 
+execrlc : DPI Exec ideology haven_labelled 
+rally_event_any : Any rally terrorist event numeric 
+country_code : group(country type_office) numeric 
+ccode : numeric 
+election_qtr : numeric 
+lag_approval : Lagged approval numeric 
+rally_event_any2 : Any rally terrorist event* numeric 
+growth : Growth in real GDP numeric 
+log_inflation : Inflation logged numeric 
+manchester : Int'l terrorist attack 20 or more dead numeric 
+kill_16 : Int'l terrorist attack 16+ death numeric 
+kill_18 : Int'l terrorist attack, kill 18+ numeric 
+kill_10 : Int'l attack 10+ death numeric 
+pres_15death : Country w a 15+ death terrorist attack numeric 
+pres_20death : Country w a 20+ death terrorist attack numeric 
+kill_12 : Int'l terrorist attack, kill 12+ numeric 
+kill_14 : Int'l terrorist attack, kill 14+ numeric 
+kill_20 : Int'l terrorist attack, kill 20+ numeric 
+kill_08 : Int'l terrorist attack, kill 8+ numeric 
+kill_06 : Int'l terrorist attack, kill 6+ numeric 
+kill_under5 : Int'l terrorist attack, kill under 5 numeric 
+kill_1_5 : numeric 
+kill_3_5 : numeric 
+      country          qtr         rally_events        rally_kill      
+ Length   :5469   Min.   : 60.0   Min.   : 0.00000   Min.   :   0.000  
+ N.unique :  44   1st Qu.:134.0   1st Qu.: 0.00000   1st Qu.:   0.000  
+ N.blank  :   0   Median :169.0   Median : 0.00000   Median :   0.000  
+ Min.nchar:   4   Mean   :165.3   Mean   : 0.07314   Mean   :   1.544  
+ Max.nchar:  18   3rd Qu.:201.0   3rd Qu.: 0.00000   3rd Qu.:   0.000  
+                  Max.   :231.0   Max.   :34.00000   Max.   :3004.000  
+                                                                       
+  female_pres         execrlc      rally_event_any    country_code  
+ Min.   :0.00000   Min.   :0.000   Min.   :0.00000   Min.   : 1.00  
+ 1st Qu.:0.00000   1st Qu.:1.000   1st Qu.:0.00000   1st Qu.:13.00  
+ Median :0.00000   Median :1.000   Median :0.00000   Median :29.00  
+ Mean   :0.09817   Mean   :1.643   Mean   :0.03785   Mean   :29.82  
+ 3rd Qu.:0.00000   3rd Qu.:3.000   3rd Qu.:0.00000   3rd Qu.:41.00  
+ Max.   :1.00000   Max.   :3.000   Max.   :1.00000   Max.   :66.00  
+ NAs    :376       NAs    :60                                       
+     ccode        election_qtr      lag_approval    rally_event_any2 
+ Min.   : 1.00   Min.   :0.00000   Min.   : 2.903   Min.   :0.00000  
+ 1st Qu.:13.00   1st Qu.:0.00000   1st Qu.:35.582   1st Qu.:0.00000  
+ Median :29.00   Median :0.00000   Median :43.788   Median :0.00000  
+ Mean   :29.82   Mean   :0.08192   Mean   :44.298   Mean   :0.02519  
+ 3rd Qu.:41.00   3rd Qu.:0.00000   3rd Qu.:52.819   3rd Qu.:0.00000  
+ Max.   :66.00   Max.   :1.00000   Max.   :86.950   Max.   :1.00000  
+                                   NAs    :106      NAs    :71       
+     growth         log_inflation       manchester          kill_16       
+ Min.   :    7372   Min.   :-4.7907   Min.   :0.000000   Min.   :0.00000  
+ 1st Qu.:   81539   1st Qu.: 0.8225   1st Qu.:0.000000   1st Qu.:0.00000  
+ Median :  312652   Median : 1.4294   Median :0.000000   Median :0.00000  
+ Mean   : 1197870   Mean   : 1.5532   Mean   :0.007131   Mean   :0.01097  
+ 3rd Qu.: 1526325   3rd Qu.: 2.2026   3rd Qu.:0.000000   3rd Qu.:0.00000  
+ Max.   :19542980   Max.   : 8.9202   Max.   :1.000000   Max.   :1.00000  
+ NAs    :45         NAs    :473                                           
+    kill_18            kill_10         pres_15death     pres_20death   
+ Min.   :0.000000   Min.   :0.00000   Min.   : 0.000   Min.   :0.0000  
+ 1st Qu.:0.000000   1st Qu.:0.00000   1st Qu.: 0.000   1st Qu.:0.0000  
+ Median :0.000000   Median :0.00000   Median : 0.000   Median :0.0000  
+ Mean   :0.009325   Mean   :0.01499   Mean   : 1.326   Mean   :0.7967  
+ 3rd Qu.:0.000000   3rd Qu.:0.00000   3rd Qu.: 2.000   3rd Qu.:1.0000  
+ Max.   :1.000000   Max.   :1.00000   Max.   :14.000   Max.   :9.0000  
+                                                                       
+    kill_12           kill_14           kill_20            kill_08       
+ Min.   :0.00000   Min.   :0.00000   Min.   :0.000000   Min.   :0.00000  
+ 1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.:0.000000   1st Qu.:0.00000  
+ Median :0.00000   Median :0.00000   Median :0.000000   Median :0.00000  
+ Mean   :0.01317   Mean   :0.01152   Mean   :0.007862   Mean   :0.01774  
+ 3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:0.000000   3rd Qu.:0.00000  
+ Max.   :1.00000   Max.   :1.00000   Max.   :1.000000   Max.   :1.00000  
+                                                                         
+    kill_06         kill_under5        kill_1_5          kill_3_5      
+ Min.   :0.00000   Min.   :0.0000   Min.   :0.00000   Min.   :0.00000  
+ 1st Qu.:0.00000   1st Qu.:1.0000   1st Qu.:0.00000   1st Qu.:0.00000  
+ Median :0.00000   Median :1.0000   Median :0.00000   Median :0.00000  
+ Mean   :0.02267   Mean   :0.9773   Mean   :0.01518   Mean   :0.01518  
+ 3rd Qu.:0.00000   3rd Qu.:1.0000   3rd Qu.:0.00000   3rd Qu.:0.00000  
+ Max.   :1.00000   Max.   :1.0000   Max.   :1.00000   Max.   :1.00000  
+                                                                       
+    
+        0    1 <NA>
+  0  2908  345  193
+  1   614   23    0
+  2   660   17   58
+  3   170    0   50
+  7    64   63    0
+  9    57    0   75
+  14  120   52    0
+
+   0    1 
+5021  448 
+
+   0    1    2    3 <NA> 
+ 730 2250  649 1780   60 
+ [1]  95  96  97  98  99 100 101 102 103 104 105 106 107 108 109 110 111 112 113
+[20] 114
+          country qtr lag_approval pres_15death rally_events female_pres
+1  United Kingdom 202     42.02813           14            0           0
+2  United Kingdom 203     36.03703           14            0           0
+3  United Kingdom 204     37.68378           14            0           0
+4  United Kingdom 205     34.20867           14            0           0
+5  United Kingdom 206     34.91761           14            0           0
+6  United Kingdom 207     36.60798           14            0           0
+7  United Kingdom 208     30.48772           14            0           0
+8  United Kingdom 209     30.63388           14            0           0
+9  United Kingdom 210     31.58211           14            0           0
+10 United Kingdom 211     29.46488           14            0           0
+11 United Kingdom 212     29.96579           14            0           0
+12 United Kingdom 213     32.35801           14            0           0
+13 United Kingdom 214     33.27408           14            0           0
+14 United Kingdom 215     34.15580           14            0           0
+15 United Kingdom 216     34.71071           14            0           0
+16 United Kingdom 217     35.28785           14            0           0
+17 United Kingdom 218     34.44123           14            0           0
+18 United Kingdom 219     36.31321           14            0           0
+19 United Kingdom 220     40.63896           14            0           0
+20 United Kingdom 221     39.82898           14            0           0
+21 United Kingdom 222     37.72762           14            0           0
+22 United Kingdom 223     35.25738           14            0           0
+23 United Kingdom 224     32.41359           14            0           0
+24 United Kingdom 225     40.28224           14            0           0
+25 United Kingdom 226     42.91670           14            0           0
+26 United Kingdom 227     42.65178           14            0           1
+27 United Kingdom 228     43.50789           14            1           1
+28 United Kingdom 229     32.04080           14            2           1
+29 United Kingdom 230     30.10319           14            0           1
+30 United Kingdom 231           NA           14            0           1
+   manchester kill_16 kill_14
+1           0       0       0
+2           0       0       0
+3           0       0       0
+4           0       0       0
+5           0       0       0
+6           0       0       0
+7           0       0       0
+8           0       0       0
+9           0       0       0
+10          0       0       0
+11          0       0       0
+12          0       0       0
+13          0       0       0
+14          0       0       0
+15          0       0       0
+16          0       0       0
+17          0       0       0
+18          0       0       0
+19          0       0       0
+20          0       0       0
+21          0       0       0
+22          0       0       0
+23          0       0       0
+24          0       0       0
+25          0       0       0
+26          0       0       0
+27          0       0       0
+28          1       1       1
+29          0       0       0
+30          0       0       0
+complete cases: 4486 
+n countries: 44 
+id : ID numeric 
+wave : numeric 
+wt_new_W12 : numeric 
+starttimeW : POSIXct 
+endtimeW : POSIXct 
+likeMayW : 0 1 2 3 4 5 6 7 8 9 10 9999 haven_labelled 
+likeCorbynW : 0 1 2 3 4 5 6 7 8 9 10 9999 haven_labelled 
+likeSturgeonW : 0 1 2 3 4 5 6 7 8 9 10 9999 haven_labelled 
+gender : Gender haven_labelled 
+post_bridge : Surveyed after Bridge attack numeric 
+dates_to_bomb : dates_to_bomb numeric 
+z_distance : Distance to Manchester numeric 
+white : Ethnically British numeric 
+conservative : Conservative numeric 
+labour : Labour numeric 
+party_other : Other Party ID numeric 
+income : Income numeric 
+ideology : Ideology numeric 
+ideology2 : Ideology numeric 
+ideo3 : Ideology numeric 
+may_bestpm : Think May would be best Prime Minister numeric 
+post_attack : Surveyed after Manchester attack numeric 
+likeMayW12a : numeric 
+likeMayW12b : numeric 
+gender_roles : Endorse gender roles numeric 
+female_equality : Attempts to give women equal rights numeric 
+women_office : +/- women in office numeric 
+women_discrimin : How much discrim against women numeric 
+women_jobs : Women unfair advantage jobs numeric 
+likeFarronW : numeric 
+bestPMW : numeric 
+time : Time numeric 
+treatment1 : Manchester Attack numeric 
+treatment2 : numeric 
+nrow 1481408 
+
+    1     2     3     4     5     6     7     8     9    10    11    12    13 
+92588 92588 92588 92588 92588 92588 92588 92588 92588 92588 92588 92588 92588 
+   14    15    16 
+92588 92588 92588 
+    
+         0     1
+  1  92588     0
+  2  92588     0
+  3  92588     0
+  4  92588     0
+  5  92588     0
+  6  92588     0
+  7  92588     0
+  8  92588     0
+  9  92588     0
+  10 92588     0
+  11 92588     0
+  12     0 92588
+  13     0 92588
+  14     0 92588
+  15     0 92588
+  16     0 92588
+    
+         0     1
+  1  76211 16377
+  2  76211 16377
+  3  76211 16377
+  4  76211 16377
+  5  76211 16377
+  6  76211 16377
+  7  76211 16377
+  8  76211 16377
+  9  76211 16377
+  10 76211 16377
+  11 76211 16377
+  12 76211 16377
+  13 76211 16377
+  14 76211 16377
+  15 76211 16377
+  16 76211 16377
+    
+         0     1
+  1  88293  4295
+  2  88293  4295
+  3  88293  4295
+  4  88293  4295
+  5  88293  4295
+  6  88293  4295
+  7  88293  4295
+  8  88293  4295
+  9  88293  4295
+  10 88293  4295
+  11 88293  4295
+  12 29189 63399
+  13 29189 63399
+  14 29189 63399
+  15 29189 63399
+  16 29189 63399
+    
+         0     1
+  1  76211 16377
+  2  76211 16377
+  3  76211 16377
+  4  76211 16377
+  5  76211 16377
+  6  76211 16377
+  7  76211 16377
+  8  76211 16377
+  9  76211 16377
+  10 76211 16377
+  11 76211 16377
+  12 76211 16377
+  13 76211 16377
+  14 76211 16377
+  15 76211 16377
+  16 76211 16377
+    
+     FALSE  TRUE
+  1      0 92588
+  2      0 92588
+  3      0 92588
+  4      0 92588
+  5      0 92588
+  6      0 92588
+  7      0 92588
+  8      0 92588
+  9  25554 67034
+  10 27884 64704
+  11 29091 63497
+  12 32642 59946
+  13 29841 62747
+  14 29425 63163
+  15 29491 63097
+  16 35991 56597
+    
+         0     1
+  1  76112 16476
+  2  76112 16476
+  3  76112 16476
+  4  76112 16476
+  5  76112 16476
+  6  76112 16476
+  7  76112 16476
+  8  76112 16476
+  9  76112 16476
+  10 76112 16476
+  11 76112 16476
+  12 76112 16476
+  13 76112 16476
+  14 76112 16476
+  15 76112 16476
+  16 76112 16476
+    
+         0     1  <NA>
+  1      0     0 92588
+  2      0     0 92588
+  3      0     0 92588
+  4      0     0 92588
+  5      0     0 92588
+  6      0     0 92588
+  7  18597  9763 64228
+  8  20971  9955 61662
+  9      0     0 92588
+  10 13040 14054 65494
+  11 12187 15959 64442
+  12 14801 16476 61311
+  13     0     0 92588
+  14     0     0 92588
+  15     0     0 92588
+  16     0     0 92588
+gender 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+  1.000   1.000   2.000   1.548   2.000   2.000      16 
+
+     1      2   <NA> 
+669248 812144     16 
+labour 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  0.0000  0.0000  0.1039  0.0000  1.0000 
+
+      0       1 
+1327520  153888 
+income 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+  1.000   5.000   8.000   7.092   8.000  15.000  560592 
+
+     1      2      3      4      5      6      7      8      9     10     11 
+ 24896  48432  72944  71712  72688  67712  59920 289984  42848  34976  44704 
+    12     13     14     15   <NA> 
+ 30480  38480  14592   6448 560592 
+ideology 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+  0.000   3.000   5.000   4.995   7.000  10.000 1034848 
+
+      0       1       2       3       4       5       6       7       8       9 
+  18064   16144   44992   58656   43904   84160   44304   54688   48848   15328 
+     10    <NA> 
+  17472 1034848 
+ideology2 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+  0.000   3.000   5.000   4.996   6.000  10.000  931104 
+
+     0      1      2      3      4      5      6      7      8      9     10 
+ 18064  16144  44992  58656  43904 187904  44304  54688  48848  15328  17472 
+  <NA> 
+931104 
+ideo3 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+  1.000   1.000   2.000   1.997   2.000   3.000  931104 
+
+     1      2      3   <NA> 
+137856 276112 136336 931104 
+white 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  0.0000  1.0000  0.6933  1.0000  1.0000 
+
+      0       1 
+ 454320 1027088 
+party_other 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  1.0000  1.0000  0.7921  1.0000  1.0000 
+
+      0       1 
+ 307952 1173456 
+conservative 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  0.000   0.000   0.000   0.104   0.000   1.000 
+
+      0       1 
+1327344  154064 
+likeMayW 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+  0.000   1.000   5.000   4.291   7.000  10.000 1241489 
+
+      0       1       2       3       4       5       6       7       8       9 
+  50552   14797   17430   18036   16107   30586   21427   25581   21419   10458 
+     10    <NA> 
+  13526 1241489 
+uniq id 92588 

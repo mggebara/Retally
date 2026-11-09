@@ -55,6 +55,10 @@ _None declared._
 - [`output/stdout.txt`](output/stdout.txt) — 7,047 bytes, from `benchmark/results/artifacts/labandeira-2022-electricity-pricing-reform/blind/pipeline/20261103T004800Z/stdout.txt`
 - [`output/answer-1.md`](output/answer-1.md) — 12,904 bytes, from `benchmark/.cache/llm-oracle/desktop-opus-run3/answers/4e74e9ecd80fe6037c7c7731.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM oracle store desktop-opus-run3 (request 4e74e9ecd80fe6037c7c7731: model claude-opus-5-5, max_tokens 16384, effort high)

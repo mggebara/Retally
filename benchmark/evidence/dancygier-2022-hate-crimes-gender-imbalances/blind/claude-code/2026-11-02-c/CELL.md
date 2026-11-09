@@ -66,3 +66,7 @@ Agent notes: One exploratory run (attempt-1, no RESULT lines) inspected survey.d
 - [`output/script.R`](output/script.R) — 5,920 bytes, from `benchmark/results/artifacts/dancygier-2022-hate-crimes-gender-imbalances/blind/claude-code/20261102T202753Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/dancygier-2022-hate-crimes-gender-imbalances/blind/claude-code/20261102T202753Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 1,025 bytes, from `benchmark/results/artifacts/dancygier-2022-hate-crimes-gender-imbalances/blind/claude-code/20261102T202753Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

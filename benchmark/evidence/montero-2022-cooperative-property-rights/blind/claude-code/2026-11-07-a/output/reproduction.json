@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "montero-2022-cooperative-property-rights",
+  "mode": "blind",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "IQR regressions (cols 3-4) are one observation per property, so 'survey-round fixed effects' are implemented as the property's shares of surveyed workers in each survey round (collapsed year dummies), one round omitted; the paper does not say how survey FE enter a property-level regression.",
+    "Survey years restricted to 2002-2013 as the paper states; the data file also contains 2000 and 2001 rounds, which are dropped."
+  ],
+  "notes": "Attempts 1-3 were exploratory (variable listing, sample/ID structure); no RESULT lines. Final run is the first and only estimating run; no specification was changed after seeing estimates. Outcome: hh_income_pc (nominal household income per capita, $/month; the real version is zero for 2010). Running variable: norm_dist = own_amt - 500 (former owner's cumulative holdings). Local linear on each side (Above500 x norm_dist), bandwidth |norm_dist| <= 300 / 150. Levels: worker-level feols with year FE. IQR: per property (match_id), p75-p25 of hh_income_pc with Stata-style percentiles (R type 2), pooling all 2002-2013 workers, properties with >= 5 surveyed workers. SEs clustered by former owner Expropretario_ISTA (owner ID; own_amt is shared by several distinct owner IDs at the same holdings value so it was not used). All rows are treated as the matched cooperative/hacienda worker sample (35 coop-member rows with Above500=0 kept: Above500 is the treatment indicator). Cluster counts reported are from the levels regressions (cols 1-2); IQR samples have 60 (bw300) and 21 (bw150) clusters. The paper's mean dependent variables were not used to select the specification.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-08T01:55:37Z",
+  "finished_at": "2026-11-08T01:58:30Z"
+}

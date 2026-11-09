@@ -1,0 +1,51 @@
+Corner-rule exclusion vs data's preregistered-sample flag (pap_sample):
+               pap_sample
+corner_excluded   0   1 <NA>
+          FALSE   7 600    0
+          TRUE  162   0   37
+          <NA>    0   0    0
+Subjects in main sample by condition/control:
+      
+         0   1
+  Don  100 100
+  Main 100 100
+  Mech 100 100
+Table2 d_low: 31.6400 (2.6853)
+Table2 d_mid: 37.6100 (3.5753)
+Table2 d_up: 43.5800 (4.6835)
+Table2 rel_low: 0.1897 (0.0160)
+Table2 rel_mid: 0.2242 (0.0211)
+Table2 rel_up: 0.2586 (0.0275)
+Tobit: 37.0936 (3.6581)
+              Estimate Std. Error
+(Intercept) 0.07542508 0.01895031
+ind         0.14873371 0.02834543
+               Estimate  Std. Error
+(Intercept) -0.02292938 0.007412872
+ind          0.15755977 0.022026982
+               Estimate  Std. Error
+(Intercept) -0.02255043 0.008135539
+ind          0.24670921 0.022595053
+               Estimate Std. Error
+(Intercept) -0.01443669 0.01002853
+ind          0.08986177 0.02144028
+Diagnostic: control means with eq.(12) 8-day denominator:
+# A tibble: 3 × 2
+  cond        m
+  <chr>   <dbl>
+1 Don   -0.0266
+2 Main  -0.0268
+3 Mech  -0.0173
+RESULT:abs_concentration_bias_midpoint_table2_col2=37.6100
+RESULT:abs_concentration_bias_tobit_table2_col4=37.0936
+RESULT:rel_concentration_bias_lower_table2_col1=0.1897
+RESULT:rel_concentration_bias_midpoint_table2_col2=0.2242
+RESULT:rel_concentration_bias_upper_table2_col3=0.2586
+RESULT:n_obs_table2=100
+RESULT:rel_cb_mechanism_treatment_table3_col1=0.0754
+RESULT:diff_main_minus_mechanism_table3_col1=0.1487
+RESULT:rel_cb_donation_treatment_table3_col2=0.1346
+RESULT:diff_donation_treatment_minus_control_table3_col2=0.1576
+RESULT:diff_main_treatment_minus_control_table3_col3=0.2467
+RESULT:diff_mechanism_treatment_minus_control_table3_col4=0.0899
+RESULT:n_obs_table3=200

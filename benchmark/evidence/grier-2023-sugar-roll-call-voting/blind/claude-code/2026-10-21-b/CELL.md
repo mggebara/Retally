@@ -55,7 +55,7 @@ Agent notes: Outcome = 1 for Aye, 0 otherwise (No, Not Voting, No Vote). Control
 
 - [`prompt/task.md`](prompt/task.md) — 17,421 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261022T021417Z/task.md`
 - [`prompt/render.json`](prompt/render.json) — 1,063 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261022T021417Z/render.json`
-- [`prompt/paper.txt.ref`](prompt/paper.txt.ref) — 265 bytes, from `benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/blind/2026-10-21-b/paper.txt`
+- [`prompt/paper.txt.ref`](prompt/paper.txt.ref) — 278 bytes, from `benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/blind/2026-10-21-b/paper.txt`
 
 ## What it produced
 
@@ -69,3 +69,7 @@ Agent notes: Outcome = 1 for Aye, 0 otherwise (No, Not Voting, No Vote). Control
 - [`output/script.R`](output/script.R) — 4,676 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261022T021417Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 1,106 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261022T021417Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 5,554 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261022T021417Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

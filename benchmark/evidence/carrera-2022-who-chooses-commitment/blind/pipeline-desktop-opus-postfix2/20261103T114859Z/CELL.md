@@ -62,6 +62,10 @@ _None declared._
 - [`output/answer-1.md`](output/answer-1.md) — 7,351 bytes, from `benchmark/.cache/llm-oracle/desktop-opus-postfix2/answers/036219949b7d2f2dbe6e0cce.json`
 - [`output/answer-2.md`](output/answer-2.md) — 8,785 bytes, from `benchmark/.cache/llm-oracle/desktop-opus-postfix2/answers/1802efc3ff7d0174c645e0eb.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM oracle store desktop-opus-postfix2 (request 036219949b7d2f2dbe6e0cce: model claude-opus-5-5, max_tokens 16384, effort high)

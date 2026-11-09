@@ -59,3 +59,7 @@ Agent notes: Translated the authors' do-files (4_2_Interventions_targeted_domain
 - [`output/script.R`](output/script.R) — 3,381 bytes, from `benchmark/results/artifacts/altmann-2022-cognitive-spillovers/seeded/claude-code/20261102T194315Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/altmann-2022-cognitive-spillovers/seeded/claude-code/20261102T194315Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 1,009 bytes, from `benchmark/results/artifacts/altmann-2022-cognitive-spillovers/seeded/claude-code/20261102T194315Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

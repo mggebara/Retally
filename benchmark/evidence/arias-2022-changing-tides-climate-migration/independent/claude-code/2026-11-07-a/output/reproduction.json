@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "arias-2022-changing-tides-climate-migration",
+  "mode": "independent",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was an exploratory run (Qualtrics layout, choice columns force_choice/Q184..Q198, randomized attribute order in F-t-k / F-t-j-k, counts); it printed no RESULT lines. The final run reshapes both conjoint CSVs (USA, Germany; Qualtrics 2 extra header rows dropped) to one row per profile, keeps tasks with a forced choice of 1 or 2, maps randomized attribute positions to named attributes (German labels translated; Atheist treated as the Agnostic/Atheist baseline), and estimates OLS of chosen on all seven attribute factors (baselines: economic opportunity, no language, unemployed, female, agnostic/atheist, another region in your country, no vulnerability) with respondent-clustered SEs via fixest. No restriction-specific (Language None x internal origin) adjustment. All eight reason-for-migration AMCEs and both respondent counts match the paper; German profile count matches exactly (18862); U.S. profile count is 18970 vs the paper's 18966 (two extra pairs in the data relative to the paper; not investigated further, no comparison-driven changes made). No claim-comparison or error attempts.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-07T17:41:33Z",
+  "finished_at": "2026-11-07T17:49:30Z"
+}

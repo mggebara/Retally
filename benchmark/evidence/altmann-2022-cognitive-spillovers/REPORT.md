@@ -40,12 +40,13 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [13/13](seeded/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[13/13](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [13/13](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[13/13](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
+| `claude-code` | [13/13](seeded/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[13/13](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c)<br>[13/13](independent/claude-code/2026-11-07-a/CELL.md) (2026-11-07-a) | [13/13](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[13/13](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c)<br>[13/13](blind/claude-code/2026-11-07-a/CELL.md) (2026-11-07-a) |
 | `pipeline-desktop-opus` | [13/13](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) | [13/13](independent/pipeline-desktop-opus/20261023T064318Z/CELL.md) (20261023T064318Z) | [4/13](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) |
 | `pipeline-desktop-opus-postfix` | — | [13/13](independent/pipeline-desktop-opus-postfix/20261103T063758Z/CELL.md) (20261103T063758Z) | [4/13](blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md) (20261103T062809Z) |
 | `pipeline-desktop-opus-postfix2` | — | [4/13](independent/pipeline-desktop-opus-postfix2/20261103T115702Z/CELL.md) (20261103T115702Z) | [4/13](blind/pipeline-desktop-opus-postfix2/20261103T111134Z/CELL.md) (20261103T111134Z) |
 | `pipeline-desktop-opus-run2` | [13/13](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [13/13](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [4/13](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
 | `pipeline-desktop-opus-run3` | [13/13](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [13/13](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [13/13](blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) |
+| `pipeline-desktop-opus-run4` | — | [13/13](independent/pipeline-desktop-opus-run4/20261108T015935Z/CELL.md) (20261108T015935Z) | [4/13](blind/pipeline-desktop-opus-run4/20261108T060639Z/CELL.md) (20261108T060639Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
 
@@ -59,14 +60,14 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 |---|---|---|---|---|---|---|
 | [independent/pipeline-desktop-opus-postfix2/20261103T115702Z](independent/pipeline-desktop-opus-postfix2/20261103T115702Z/CELL.md) | `background_quality_intervention_lab_t3_col2` | -0.019821 | -0.038 | ±0.014 (se_band) | 1.298 | FAIL |
 | [blind/pipeline-desktop-opus/20261023T062931Z](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) | `choice_quality_intervention_t2_col1` | 0.0829921 | 0.107 | ±0.018 (se_band) | 1.334 | FAIL |
+| [blind/pipeline-desktop-opus-run4/20261108T060639Z](blind/pipeline-desktop-opus-run4/20261108T060639Z/CELL.md) | `choice_quality_intervention_t2_col1` | 0.0829921 | 0.107 | ±0.018 (se_band) | 1.334 | FAIL |
 | [independent/pipeline-desktop-opus-postfix2/20261103T115702Z](independent/pipeline-desktop-opus-postfix2/20261103T115702Z/CELL.md) | `choice_quality_intervention_t2_col1` | 0.082992 | 0.107 | ±0.018 (se_band) | 1.334 | FAIL |
 | [blind/pipeline-desktop-opus-postfix/20261103T062809Z](blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md) | `choice_quality_intervention_t2_col1` | 0.082992 | 0.107 | ±0.018 (se_band) | 1.334 | FAIL |
 | [blind/pipeline-desktop-opus-postfix2/20261103T111134Z](blind/pipeline-desktop-opus-postfix2/20261103T111134Z/CELL.md) | `choice_quality_intervention_t2_col1` | 0.082992 | 0.107 | ±0.018 (se_band) | 1.334 | FAIL |
 | [blind/pipeline-desktop-opus-run2/20261023T150832Z](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) | `choice_quality_intervention_t2_col1` | 0.082992 | 0.107 | ±0.018 (se_band) | 1.334 | FAIL |
 | [independent/pipeline-desktop-opus-postfix2/20261103T115702Z](independent/pipeline-desktop-opus-postfix2/20261103T115702Z/CELL.md) | `choice_quality_intervention_t2_col2` | 0.08681 | 0.11 | ±0.017 (se_band) | 1.364 | FAIL |
+| [blind/pipeline-desktop-opus-run4/20261108T060639Z](blind/pipeline-desktop-opus-run4/20261108T060639Z/CELL.md) | `background_quality_intervention_lab_t3_col2` | -0.01869 | -0.038 | ±0.014 (se_band) | 1.379 | FAIL |
 | [blind/pipeline-desktop-opus-run2/20261023T150832Z](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) | `background_quality_intervention_lab_t3_col2` | -0.01869 | -0.038 | ±0.014 (se_band) | 1.379 | FAIL |
-| [blind/pipeline-desktop-opus-postfix/20261103T062809Z](blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md) | `background_quality_intervention_lab_t3_col2` | -0.018447 | -0.038 | ±0.014 (se_band) | 1.397 | FAIL |
-| [blind/pipeline-desktop-opus-postfix2/20261103T111134Z](blind/pipeline-desktop-opus-postfix2/20261103T111134Z/CELL.md) | `background_quality_intervention_lab_t3_col2` | -0.018447 | -0.038 | ±0.014 (se_band) | 1.397 | FAIL |
 
 ### Declared deviations
 
@@ -76,6 +77,9 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 - [independent/claude-code/2026-11-02-c](independent/claude-code/2026-11-02-c/CELL.md) (13/13)
   - The supplied paper.txt is an earlier working-paper version (564 subjects, one wave, 'Active Choice' naming), so the specification was taken from the claim descriptions together with the data's variable labels.
   - Controls coding is my choice: field of study as subject_cat dummies, high-school GPA as q_abitur_grade_cat dummies (the category for missing GPA keeps N=12160), last math grade as q_math_grade_cat quartile dummies, perceived multitasking as both perc_multitasking_1 (Likert) and perc_multitasking_2 (relative), payoff scheme as Treatment_Incentives dummies, wave as original_lab. Online controls are age, gender dummies, and window_height1 and window_width1 for screen size.
+- [independent/claude-code/2026-11-07-a](independent/claude-code/2026-11-07-a/CELL.md) (13/13)
+  - Control set built from the dataset's prepared variables: q_age, female (q_gender), field of study (subject_cat factor), high-school GPA as quartile factor with a missing category (q_abitur_grade_cat) to keep all 12,160 observations, last math grade quartile factor (q_math_grade_cat), ability_load, ability_task, perceived multitasking as the 1-5 Likert item (perc_multitasking_1), payoff-scheme factor (Treatment_Incentives) and wave factor (original_lab). The exact coding the authors used is not stated in the paper text provided.
+  - Online experiment controls: age, gender factor (female/male/other), and screen size entered as window_height1 and window_width1 linearly.
 - [independent/pipeline-desktop-opus-postfix/20261103T063758Z](independent/pipeline-desktop-opus-postfix/20261103T063758Z/CELL.md) (13/13)
   - experiment wave indicator not found
 - [independent/pipeline-desktop-opus-postfix2/20261103T115702Z](independent/pipeline-desktop-opus-postfix2/20261103T115702Z/CELL.md) (4/13; failed: `choice_quality_intervention_t2_col1`, `choice_quality_intervention_t2_col2`, `default_adherence_intervention_t2_col5`, `default_adherence_intervention_t2_col6`, `default_adherence_directed_attention_t2_col7`, `default_adherence_forced_choice_t2_col7`, `background_quality_intervention_lab_t3_col2`, `n_obs_lab_tables_2_to_4`, `n_subjects_lab_tables_2_to_4`)
@@ -86,6 +90,9 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Sample for Tables 2-4 identified by searching subject-level variables for the definition yielding 608 subjects ( Treatment_Incentives!=Ample )
 - [independent/pipeline-desktop-opus-run3/20261103T010557Z](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (13/13)
   - Scarce sample identified by subject count match: Treatment_Incentives in {10,20,40}
+- [independent/pipeline-desktop-opus-run4/20261108T015935Z](independent/pipeline-desktop-opus-run4/20261108T015935Z/CELL.md) (13/13)
+  - Sample restriction chosen by matching the paper's reported N (608 subjects, 12160 obs): Treatment_Incentives!=Ample
+  - Control set for columns 2/6 inferred from available covariates (age, gender, field, GPA, math grade, ability tasks, multitasking); factors entered as dummies
 - [blind/claude-code/2026-10-22-a](blind/claude-code/2026-10-22-a/CELL.md) (13/13)
   - Paper text supplied is the 2019 IZA working-paper version (no regression tables, no online experiment, 'Active Choice' instead of 'Forced Choice'); specifications were taken from the task descriptions of the published Tables 2-4 plus the data's variable labels.
   - Control set mapping (choice of codings is mine): age = q_age; gender = q_gender (female dummy); field of study = subject_cat factor (4 categories); high school GPA = q_abitur_grade_cat factor (quartiles plus a 5th category for missing GPA, so no observations are dropped); last math grade = q_math_grade_cat factor (quartiles); ability = ability_load and ability_task; perceived multitasking ability = perc_multitasking_1 (Likert); payoff-scheme indicators = Treatment_Incentives factor (10/20/40); wave = original_lab factor.
@@ -101,6 +108,10 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Perceived multitasking ability entered as the Likert item perc_multitasking_1 only (not perc_multitasking_2).
   - Online controls: age, gender factor (female/male/other), and screen size as window_height1 and window_width1 (linear).
   - Clustered SEs use fixest's default small-sample correction; coefficients are unaffected.
+- [blind/claude-code/2026-11-07-a](blind/claude-code/2026-11-07-a/CELL.md) (13/13)
+  - Paper text supplied is an earlier working-paper version (Active Choice, no online experiment, no regression tables); specifications follow the task's quantity descriptions plus the data's variable labels.
+  - Control set (cols 2, 6, Table 3 col 2): q_age, q_gender, field of study as factor(subject_cat), high-school GPA as factor(q_abitur_grade_cat) (quartiles + missing category, keeps N fixed), last math grade as factor(q_math_grade_cat) (quartiles), ability_load, ability_task, perceived multitasking as perc_multitasking_1 (Likert, linear), factor(Treatment_Incentives) payoff scheme, factor(original_lab) wave. Exact coding of these controls in the original is a guess.
+  - Online controls (Table 3 col 6): age, factor(gender), screen size entered as window_height1 and window_width1 linearly.
 - [blind/pipeline-desktop-opus-run2/20261023T150832Z](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (4/13; failed: `choice_quality_intervention_t2_col1`, `choice_quality_intervention_t2_col2`, `default_adherence_intervention_t2_col5`, `default_adherence_intervention_t2_col6`, `default_adherence_directed_attention_t2_col7`, `default_adherence_forced_choice_t2_col7`, `background_quality_intervention_lab_t3_col2`, `n_obs_lab_tables_2_to_4`, `n_subjects_lab_tables_2_to_4`)
   - could not identify scarce indicator; using all observations
 
@@ -112,15 +123,15 @@ _None._
 
 Pass rates at least 50 points apart (not unanimous):
 
-- blind: `background_quality_intervention_lab_t3_col2` — pipeline 1/5, agent 3/3
-- blind: `choice_quality_intervention_t2_col1` — pipeline 1/5, agent 3/3
-- blind: `choice_quality_intervention_t2_col2` — pipeline 1/5, agent 3/3
-- blind: `default_adherence_directed_attention_t2_col7` — pipeline 1/5, agent 3/3
-- blind: `default_adherence_forced_choice_t2_col7` — pipeline 1/5, agent 3/3
-- blind: `default_adherence_intervention_t2_col5` — pipeline 1/5, agent 3/3
-- blind: `default_adherence_intervention_t2_col6` — pipeline 1/5, agent 3/3
-- blind: `n_obs_lab_tables_2_to_4` — pipeline 1/5, agent 3/3
-- blind: `n_subjects_lab_tables_2_to_4` — pipeline 1/5, agent 3/3
+- blind: `background_quality_intervention_lab_t3_col2` — pipeline 1/6, agent 4/4
+- blind: `choice_quality_intervention_t2_col1` — pipeline 1/6, agent 4/4
+- blind: `choice_quality_intervention_t2_col2` — pipeline 1/6, agent 4/4
+- blind: `default_adherence_directed_attention_t2_col7` — pipeline 1/6, agent 4/4
+- blind: `default_adherence_forced_choice_t2_col7` — pipeline 1/6, agent 4/4
+- blind: `default_adherence_intervention_t2_col5` — pipeline 1/6, agent 4/4
+- blind: `default_adherence_intervention_t2_col6` — pipeline 1/6, agent 4/4
+- blind: `n_obs_lab_tables_2_to_4` — pipeline 1/6, agent 4/4
+- blind: `n_subjects_lab_tables_2_to_4` — pipeline 1/6, agent 4/4
 
 ## Cells
 
@@ -156,6 +167,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/claude-code/2026-11-02-c/CELL.md`](independent/claude-code/2026-11-02-c/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-02T20:00:30Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
 
+### independent · claude-code · 2026-11-07-a
+
+[`independent/claude-code/2026-11-07-a/CELL.md`](independent/claude-code/2026-11-07-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-07T17:38:31Z; from `claude-code-run4-24papers-indep-blind-2026-11-08.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus · 20261023T064318Z
 
 [`independent/pipeline-desktop-opus/20261023T064318Z/CELL.md`](independent/pipeline-desktop-opus/20261023T064318Z/CELL.md) — final 13/13, re-scored 13/13; first scored 4/13; executions 3; 2026-10-23T06:43:18Z; from `pipeline-oracle-desktop-opus-9papers-all-modes-2026-10-23.json`; evidence complete.
@@ -176,6 +191,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md`](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — final 13/13, re-scored 13/13; first scored 4/13; executions 2; 2026-11-03T01:05:57Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-run4 · 20261108T015935Z
+
+[`independent/pipeline-desktop-opus-run4/20261108T015935Z/CELL.md`](independent/pipeline-desktop-opus-run4/20261108T015935Z/CELL.md) — final 13/13, re-scored 13/13; first scored 4/13; executions 2; 2026-11-08T01:59:35Z; from `pipeline-oracle-desktop-opus-run4-24papers-indep-blind-2026-11-08.json`; evidence complete.
+
 ### blind · claude-code · 2026-10-22-a
 
 [`blind/claude-code/2026-10-22-a/CELL.md`](blind/claude-code/2026-10-22-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-10-22T03:19:07Z; from `claude-code-6papers-all-modes-2026-10-22.json`; evidence complete.
@@ -187,6 +206,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · claude-code · 2026-11-02-c
 
 [`blind/claude-code/2026-11-02-c/CELL.md`](blind/claude-code/2026-11-02-c/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-02T20:11:57Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
+
+### blind · claude-code · 2026-11-07-a
+
+[`blind/claude-code/2026-11-07-a/CELL.md`](blind/claude-code/2026-11-07-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-07T17:41:00Z; from `claude-code-run4-24papers-indep-blind-2026-11-08.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus · 20261023T062931Z
 
@@ -207,4 +230,8 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · pipeline-desktop-opus-run3 · 20261103T010557Z
 
 [`blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md`](blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 2; 2026-11-03T01:05:57Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-run4 · 20261108T060639Z
+
+[`blind/pipeline-desktop-opus-run4/20261108T060639Z/CELL.md`](blind/pipeline-desktop-opus-run4/20261108T060639Z/CELL.md) — final 4/13, re-scored 4/13; first scored 4/13; executions 2; 2026-11-08T06:06:39Z; from `pipeline-oracle-desktop-opus-run4-24papers-indep-blind-2026-11-08.json`; evidence complete.
 

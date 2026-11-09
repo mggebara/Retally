@@ -69,3 +69,7 @@ Agent notes: Followed papier.R: Table 4 = reg_effect_feedback_1..4 (weighted lm,
 - [`output/script.R`](output/script.R) — 6,027 bytes, from `benchmark/results/artifacts/douenne-2022-yellow-vests-carbon-tax/seeded/claude-code/20261102T142251Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/douenne-2022-yellow-vests-carbon-tax/seeded/claude-code/20261102T142251Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 1,264 bytes, from `benchmark/results/artifacts/douenne-2022-yellow-vests-carbon-tax/seeded/claude-code/20261102T142251Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

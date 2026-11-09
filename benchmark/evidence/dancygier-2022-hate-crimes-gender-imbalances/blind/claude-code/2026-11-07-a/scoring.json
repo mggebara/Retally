@@ -1,0 +1,728 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "mate_competition_table1_col1",
+      "ground_truth": {
+        "value": 0.437,
+        "standard_error": 0.016,
+        "unit": "points on the 1-4 Only Means scale per point of Mate Competition (1-4)",
+        "claim_type": "coefficient",
+        "location": "Table 1, column (1), Mate competition",
+        "context": "Table 1 (\"Mate Competition Predicts Support for Hate Crime\"), column (1).  OLS of support for hate crime, the Only Means item (\"When it comes to the refugee problem, violence is sometimes the only means that citizens have to get the attention of German politicians\"; 1 = disagree strongly to 4 = agree strongly), on Mate Competition (\"The inflow of refugees makes it more difficult for native men to find female partners\"; same 1-4 scale), with no other regressors. Respondents of Wave 4 (December 2017) of the authors' online panel survey of German residents fielded by Respondi.  Conventional OLS standard errors in parentheses.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.437,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict (team 34, code reproduces the paper); no per-row entry for column 1.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.036613272311212815,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "mate_competition_table1_col1",
+        "claim_type": "coefficient",
+        "claimed": 0.437,
+        "reproduced": 0.43702,
+        "tolerance": 0.036613272311212815,
+        "rel_err": 4.576659038906179e-05,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "mate_competition_table1_col1",
+        "reproduced": 0.43702,
+        "band_source": "se_band",
+        "band_relative": 0.036613272311212815,
+        "band_absolute": 0.016,
+        "abs_err": 2.0000000000020002e-05,
+        "rel_err": 4.576659038906179e-05,
+        "margin": 0.0012500000000012501,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "mate_competition_table1_col2",
+      "ground_truth": {
+        "value": 0.263,
+        "standard_error": 0.02,
+        "unit": "points on the 1-4 Only Means scale per point of Mate Competition (1-4)",
+        "claim_type": "coefficient",
+        "location": "Table 1, column (2), Mate competition",
+        "context": "Table 1, column (2): the same OLS of Only Means on Mate Competition, adding Job Competition (\"the inflow of young male refugees makes it more difficult for young native men to find apprenticeships and jobs\", 4-point scale) and Life Satisfaction (0-10).  Wave 4 respondents; conventional OLS standard errors.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.263,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; no per-row entry for column 2.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.07604562737642585,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "mate_competition_table1_col2",
+        "claim_type": "coefficient",
+        "claimed": 0.263,
+        "reproduced": 0.263437,
+        "tolerance": 0.07604562737642585,
+        "rel_err": 0.0016615969581747726,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "mate_competition_table1_col2",
+        "reproduced": 0.263437,
+        "band_source": "se_band",
+        "band_relative": 0.07604562737642585,
+        "band_absolute": 0.02,
+        "abs_err": 0.0004369999999999652,
+        "rel_err": 0.0016615969581747726,
+        "margin": 0.02184999999999826,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "mate_competition_table1_col3",
+      "ground_truth": {
+        "value": 0.236,
+        "standard_error": 0.021,
+        "unit": "points on the 1-4 Only Means scale per point of Mate Competition (1-4)",
+        "claim_type": "coefficient",
+        "location": "Table 1, column (3), Mate competition",
+        "context": "Table 1, column (3): column (2) plus the sociodemographic controls (age, gender, education, income, main economic activity, employment status, German citizenship, household size, self-assessed social status, religious affiliation, state of residence).  Wave 4 respondents; conventional OLS standard errors.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.236,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; no per-row entry for column 3.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.08898305084745764,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "mate_competition_table1_col3",
+        "claim_type": "coefficient",
+        "claimed": 0.236,
+        "reproduced": 0.236317,
+        "tolerance": 0.08898305084745764,
+        "rel_err": 0.0013432203389831005,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "mate_competition_table1_col3",
+        "reproduced": 0.236317,
+        "band_source": "se_band",
+        "band_relative": 0.08898305084745764,
+        "band_absolute": 0.021,
+        "abs_err": 0.0003170000000000117,
+        "rel_err": 0.0013432203389831005,
+        "margin": 0.015095238095238652,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "mate_competition_table1_col4",
+      "ground_truth": {
+        "value": 0.206,
+        "standard_error": 0.019,
+        "unit": "points on the 1-4 Only Means scale per point of Mate Competition (1-4)",
+        "claim_type": "coefficient",
+        "location": "Table 1, column (4), Mate competition",
+        "context": "Table 1, column (4): column (3) plus the battery of attitudes toward refugees at the national level (respondents' views of the economic, cultural, political and social consequences and desirability of refugees for Germany as a whole; SI Table D.7).  Wave 4 respondents; conventional OLS standard errors.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.206,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; no per-row entry for column 4.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.09223300970873786,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "mate_competition_table1_col4",
+        "claim_type": "coefficient",
+        "claimed": 0.206,
+        "reproduced": 0.207114,
+        "tolerance": 0.09223300970873786,
+        "rel_err": 0.005407766990291281,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "mate_competition_table1_col4",
+        "reproduced": 0.207114,
+        "band_source": "se_band",
+        "band_relative": 0.09223300970873786,
+        "band_absolute": 0.019,
+        "abs_err": 0.0011140000000000039,
+        "rel_err": 0.005407766990291281,
+        "margin": 0.058631578947368625,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "mate_competition_table1_col5",
+      "ground_truth": {
+        "value": 0.185,
+        "standard_error": 0.019,
+        "unit": "points on the 1-4 Only Means scale per point of Mate Competition (1-4)",
+        "claim_type": "coefficient",
+        "location": "Table 1, column (5), Mate competition",
+        "context": "Table 1, column (5): column (4) plus the battery of attitudes toward refugees in the respondent's own municipality (local consequences of refugees; SI Table D.7).  The text says adding the national and local batteries reduces the Mate Competition coefficient by about one fifth.  Wave 4 respondents; conventional OLS standard errors.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.185,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; no per-row entry for column 5.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.1027027027027027,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "mate_competition_table1_col5",
+        "claim_type": "coefficient",
+        "claimed": 0.185,
+        "reproduced": 0.186929,
+        "tolerance": 0.1027027027027027,
+        "rel_err": 0.010427027027027103,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "mate_competition_table1_col5",
+        "reproduced": 0.186929,
+        "band_source": "se_band",
+        "band_relative": 0.1027027027027027,
+        "band_absolute": 0.019,
+        "abs_err": 0.001929000000000014,
+        "rel_err": 0.010427027027027103,
+        "margin": 0.10152631578947442,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "mate_competition_table1_col6",
+      "ground_truth": {
+        "value": 0.155,
+        "standard_error": 0.019,
+        "unit": "points on the 1-4 Only Means scale per point of Mate Competition (1-4)",
+        "claim_type": "coefficient",
+        "location": "Table 1, column (6), Mate competition",
+        "context": "Table 1, column (6), the paper's fullest specification: column (5) plus the additional controls (self-reported public contact with refugees, estimated closeness to refugee shelters, estimated number of refugees living in town, views about and closeness to the AfD, left-right ideological placement, and attitudes toward Muslims). Wave 4 respondents; conventional OLS standard errors.  Figure 4 repeats this specification for the other hate-crime items.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.155,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; the only per-row entry (o_coeff 0.155, o_se 0.019) is an add-one-control robustness variant, 0.153 (0.019).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.12258064516129032,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "mate_competition_table1_col6",
+        "claim_type": "coefficient",
+        "claimed": 0.155,
+        "reproduced": 0.157354,
+        "tolerance": 0.12258064516129032,
+        "rel_err": 0.015187096774193515,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "mate_competition_table1_col6",
+        "reproduced": 0.157354,
+        "band_source": "se_band",
+        "band_relative": 0.12258064516129032,
+        "band_absolute": 0.019,
+        "abs_err": 0.002353999999999995,
+        "rel_err": 0.015187096774193515,
+        "margin": 0.123894736842105,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "job_competition_table1_col2",
+      "ground_truth": {
+        "value": 0.25,
+        "standard_error": 0.019,
+        "unit": "points on the 1-4 Only Means scale per point of Job Competition (1-4)",
+        "claim_type": "coefficient",
+        "location": "Table 1, column (2), Job competition",
+        "context": "Table 1, column (2): the Job Competition coefficient in the OLS of Only Means on Mate Competition, Job Competition and Life Satisfaction.  Wave 4 respondents; conventional OLS standard errors.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.25,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; no per-row entry.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.076,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "job_competition_table1_col2",
+        "claim_type": "coefficient",
+        "claimed": 0.25,
+        "reproduced": 0.249956,
+        "tolerance": 0.076,
+        "rel_err": 0.00017599999999995397,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "job_competition_table1_col2",
+        "reproduced": 0.249956,
+        "band_source": "se_band",
+        "band_relative": 0.076,
+        "band_absolute": 0.019,
+        "abs_err": 4.399999999998849e-05,
+        "rel_err": 0.00017599999999995397,
+        "margin": 0.002315789473683605,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_table1_col1",
+      "ground_truth": {
+        "value": 3019.0,
+        "standard_error": null,
+        "unit": "survey respondents",
+        "claim_type": "count",
+        "location": "Table 1, columns (1)-(2), Observations",
+        "context": "Number of Wave 4 respondents in the Table 1 regressions without sociodemographic controls (columns 1 and 2): respondents with non-missing Only Means, Mate Competition, Job Competition and Life Satisfaction.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 3019.0,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table1_col1",
+        "claim_type": "count",
+        "claimed": 3019.0,
+        "reproduced": 3019.0,
+        "tolerance": 0.05,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_table1_col1",
+        "reproduced": 3019.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 150.95000000000002,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_table1_col3",
+      "ground_truth": {
+        "value": 3008.0,
+        "standard_error": null,
+        "unit": "survey respondents",
+        "claim_type": "count",
+        "location": "Table 1, columns (3)-(6), Observations",
+        "context": "Number of Wave 4 respondents in the Table 1 regressions with sociodemographic controls (columns 3 to 6).\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 3008.0,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table1_col3",
+        "claim_type": "count",
+        "claimed": 3008.0,
+        "reproduced": 3008.0,
+        "tolerance": 0.05,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_table1_col3",
+        "reproduced": 3008.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 150.4,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "excess_males_sum_tableC1_col5",
+      "ground_truth": {
+        "value": 1.406,
+        "standard_error": 0.463,
+        "unit": "log-odds per unit of the male-to-female ratio",
+        "claim_type": "coefficient",
+        "location": "SI Table C1, column (5) Sum, Excess Males (Age 15 - 44)",
+        "context": "SI Appendix C.1, Table C1 (\"The Effect of Excess Males on the Probability of Observing at least One Hate Crime\"), column (5), the Sum model plotted in main-text Figure 1.  Logistic regression across German municipalities of an indicator equal to one if the municipality saw at least one anti-refugee hate crime (arson or other attacks on refugee housing, or physical attacks on refugees, from the \"Mut gegen rechte Gewalt\" chronicle of the Amadeu Antonio Foundation and PRO ASYL) over 2015-2017, on Excess Males (the number of men divided by the number of women aged 15-44 in the municipality, 2015), controlling for log population, log population density, log unemployment rate, population change 2011-2015, AfD vote share 2013, and the county-level log refugee inflow (2014-2015), log refugee stock (2014), log general violence per capita, share highly educated, change in manufacturing share (2011-2015) and manufacturing share, plus Male Disadvantage (male over female unemployment rate), with state fixed effects. Municipalities in the top and bottom 2.5 percentiles of Excess Males are excluded.  Standard errors clustered by county.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 1.406,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; no per-row entry for Table C1 column 5.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.32930298719772405,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "excess_males_sum_tableC1_col5",
+        "claim_type": "coefficient",
+        "claimed": 1.406,
+        "reproduced": 1.405543,
+        "tolerance": 0.32930298719772405,
+        "rel_err": 0.00032503556187761713,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "excess_males_sum_tableC1_col5",
+        "reproduced": 1.405543,
+        "band_source": "se_band",
+        "band_relative": 0.32930298719772405,
+        "band_absolute": 0.46299999999999997,
+        "abs_err": 0.0004569999999999297,
+        "rel_err": 0.00032503556187761713,
+        "margin": 0.000987041036716911,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "excess_males_annual_tableC1_col6",
+      "ground_truth": {
+        "value": 1.537,
+        "standard_error": 0.412,
+        "unit": "log-odds per unit of the male-to-female ratio",
+        "claim_type": "coefficient",
+        "location": "SI Table C1, column (6) Annual, Excess Males (Age 15 - 44)",
+        "context": "SI Table C1, column (6), the Annual model plotted in main-text Figure 1: the same logistic regression and controls as excess_males_sum_tableC1_col5, on municipality-years 2015, 2016 and 2017, with the outcome equal to one if the municipality saw at least one anti-refugee hate crime in that year, and state and year fixed effects.  Same exclusion of extreme Excess Males values; standard errors clustered by county.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 1.537,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; the per-row entries (o_coeff 1.537, o_se 0.412) are municipality-FE-plus-controls robustness variants, 2.090 (3.512) and 3.821 (1.532).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.2680546519193234,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "excess_males_annual_tableC1_col6",
+        "claim_type": "coefficient",
+        "claimed": 1.537,
+        "reproduced": 1.536554,
+        "tolerance": 0.2680546519193234,
+        "rel_err": 0.0002901756668835045,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "excess_males_annual_tableC1_col6",
+        "reproduced": 1.536554,
+        "band_source": "se_band",
+        "band_relative": 0.2680546519193234,
+        "band_absolute": 0.412,
+        "abs_err": 0.00044599999999994644,
+        "rel_err": 0.0002901756668835045,
+        "margin": 0.0010825242718445302,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_sum_tableC1_col5",
+      "ground_truth": {
+        "value": 9282.0,
+        "standard_error": null,
+        "unit": "municipalities",
+        "claim_type": "count",
+        "location": "SI Table C1, column (5), Observations",
+        "context": "Number of municipalities in the SI Table C1 column (5) Sum model (complete cases after excluding the extreme Excess Males values).\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 9282.0,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_sum_tableC1_col5",
+        "claim_type": "count",
+        "claimed": 9282.0,
+        "reproduced": 9282.0,
+        "tolerance": 0.05,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_sum_tableC1_col5",
+        "reproduced": 9282.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 464.1,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_annual_tableC1_col6",
+      "ground_truth": {
+        "value": 27846.0,
+        "standard_error": null,
+        "unit": "municipality-years",
+        "claim_type": "count",
+        "location": "SI Table C1, column (6), Observations",
+        "context": "Number of municipality-year observations in the SI Table C1 column (6) Annual model.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 27846.0,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; value is the paper's.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_annual_tableC1_col6",
+        "claim_type": "count",
+        "claimed": 27846.0,
+        "reproduced": 27846.0,
+        "tolerance": 0.05,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_annual_tableC1_col6",
+        "reproduced": 27846.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 1392.3000000000002,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 13,
+    "row_passed": 13,
+    "recomputed_passed": 13,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "dancygier-2022-hate-crimes-gender-imbalances",
+    "mode": "blind",
+    "reproducer": "claude-code",
+    "label": "claude-code",
+    "model": null,
+    "oracle": false,
+    "run": "2026-11-07-a",
+    "results_file": "claude-code-run4-24papers-indep-blind-2026-11-08.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/dancygier-2022-hate-crimes-gender-imbalances/blind/claude-code/20261107T194827Z",
+    "run_dir": "benchmark/reproductions/dancygier-2022-hate-crimes-gender-imbalances/blind/2026-11-07-a",
+    "date": "2026-11-07T19:18:30Z",
+    "data_access": "public",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 13,
+    "final": 13,
+    "first_scored": 13,
+    "first_scored_index": 1,
+    "first_attempt": 0,
+    "n_refinements": 0,
+    "n_error_refinements": 0,
+    "n_claim_refinements": 0,
+    "n_executions": 2,
+    "n_files_stripped": 25,
+    "agrees_with_i4r": true,
+    "deviations_manifest": [
+      "Table 1 control coding is my reading of the paper: age (continuous), gender, years of education, income bracket (factor, 'No answer' kept as a level), occupation factor (used for both main economic activity and employment status; the data hold a single occupation variable), German citizenship, household size and 0-10 self-assessed status (numeric), religion factor and state factor. National battery = the 8 ref_* items, local battery = the 8 ref_loc_* items, entered linearly. Additional controls = contact_ind, distance_ref (factor, incl. Don't know), settle_ref (factor), afd (0-100), afd_ind, lrscale, muslim_ind.",
+      "Columns (3)-(6) estimated on one common complete-case sample (only eduyrs has missing values in Wave 4, 11 cases).",
+      "SI Table C1 controls use the logged versions supplied in context.dta (population, density, unemployment rate, refugee stock 2014, refugee inflow 2014-15, violent crime per capita) plus d_pop1511_muni, unemp_gendergap_2015, pc_hidegree_all2011, pc_manufacturing_2015, d_manuf1115, vote_afd_2013_muni. State fixed effects (plus year FE in the annual model), as the task states, though the main text mentions county fixed effects. Logit via fixest::feglm, SEs clustered by county.",
+      "Extreme Excess Males exclusion: municipalities below the 2.5th or above the 97.5th percentile (R quantile type 7) of the municipality-level distribution of pop_15_44_muni_gendergap_2015 dropped before complete-case selection; the same municipalities are dropped from the annual panel. The Sum outcome = 1 if Hate_all_muni_bin is 1 in any of 2015-2017."
+    ],
+    "deviations_stdout": [],
+    "notes": "One exploratory run (attempt-1, no RESULT lines) inspected survey.dta and context.dta; the final run is the only run that produced estimates and was not changed afterwards. Table 1 is plain OLS of hate_violence_means on MateComp.cont etc. in Wave 4 (N=3019 for cols 1-2, 3008 for cols 3-6). The C1 models keep only 11 states because vote_afd_2013_muni (and other covariates) are missing for the city-states/other areas; complete-case N = 9282 municipalities (Sum) and 27846 municipality-years (Annual). Read the codebooks codebook_survey.pdf and codebook_context.pdf (documentation inside the mount) for variable definitions only. While reading the paper's method text I saw the Table 1 R2 row and the Job competition entries for cols 3-5, which the redaction left in; I did not tune toward them.",
+    "files_read_outside_mount": [],
+    "paper_text": "paper.blind.e6a9d34e9218.txt",
+    "complete": true,
+    "missing": []
+  }
+}

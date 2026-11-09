@@ -65,3 +65,7 @@ Agent notes: Two exploratory runs (no RESULT lines) identified the data: id = di
 - [`output/script.R`](output/script.R) — 4,058 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/claude-code/20261022T021417Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 651 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/claude-code/20261022T021417Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 3,173 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/independent/claude-code/20261022T021417Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

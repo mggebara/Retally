@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "dertwinkel-kalt-2022-concentration-bias",
+  "mode": "blind",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Upper-corner subjects' lower bound for d~ is set to 63, the value the dataset itself uses for censored upper corners (id_stage2; interior values run only to 61), rather than the 62 stated in the paper text. Midpoint = (63 + manual)/2; Tobit right-censoring point 63, left -63.",
+    "Main sample taken as pap_sample == 1 (100 subjects per condition): this drops all subjects with any balanced corner choice plus 7 corner-free subjects beyond the preregistered 100 per condition that the dataset flags as outside the pre-analysis-plan sample."
+  ],
+  "notes": "Data: Consumption Experiment/Stata/Consumption_Experiment.csv (9 decisions per subject). x~_t taken from decisions 1-8 indexed by utility_point = workday t; e = (129,132,143,115,121,117,135,127) from paper fn. 3. d~ from decision 9. d~rel for Treatment conditions = (1/8) sum_t d~/(e_t+x~_t) (eq. 12); for Control conditions (repeat of balanced trade-off j in {1,4,8}) = d~/(e_j+x~_j). My computed midpoint d~rel matches the dataset's constructed column qe_ard to 4e-8 (used only as a check). Table 2: OLS on a constant with HC1 robust SEs; Tobit via AER::tobit on the lower-bound d~. Table 3: OLS of midpoint d~rel on constant + condition indicator, HC1 SEs; col 2 difference reported as Donation-Treatment minus Donation-Control. Attempts 1-2 were exploratory (no RESULT lines). No result tables/logs or author scripts were opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-07T19:18:16Z",
+  "finished_at": "2026-11-07T19:48:30Z"
+}

@@ -54,6 +54,10 @@ _None declared._
 - [`output/stdout.txt`](output/stdout.txt) — 4,565 bytes, from `benchmark/results/artifacts/carrera-2022-who-chooses-commitment/blind/pipeline/20261102T055735Z/stdout.txt`
 - [`output/answer-1.md`](output/answer-1.md) — 6,411 bytes, from `benchmark/.cache/llm-oracle/desktop-opus/answers/2e5b2dcebd231b614f3d9f60.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM oracle store desktop-opus (request 2e5b2dcebd231b614f3d9f60: model claude-opus-5-5, max_tokens 16384, effort high)

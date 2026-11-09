@@ -72,3 +72,7 @@ Agent notes: Follows papier.R exactly, using weighted lm. Table 4 columns 1-4 ar
 - [`output/script.R`](output/script.R) — 5,702 bytes, from `benchmark/results/artifacts/douenne-2022-yellow-vests-carbon-tax/seeded/claude-code/20261102T194315Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/douenne-2022-yellow-vests-carbon-tax/seeded/claude-code/20261102T194315Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 1,614 bytes, from `benchmark/results/artifacts/douenne-2022-yellow-vests-carbon-tax/seeded/claude-code/20261102T194315Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

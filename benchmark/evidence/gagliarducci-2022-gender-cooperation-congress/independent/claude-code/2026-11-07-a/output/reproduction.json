@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "entry_id": "gagliarducci-2022-gender-cooperation-congress",
+  "mode": "independent",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Percent of opposite-party cosponsors rebuilt as 100*numb_cosponsors_opposite/(numb_cosponsors+1) per paper fn. 11 (the stored pct_cosponsors_opposite is missing for zero-cosponsor bills); bills with more opposite-party cosponsors than cosponsors set to missing.",
+    "Sponsor characteristics: rookie = tenure 1; committee leader = comc or comr; 5 occupation dummies taken as occ1-occ5 (occ0 unknown and occ6 misc as reference); number of bills sponsored computed per sponsor-Congress from the bill file. District: 3 census-region dummies from ICPSR state codes, log density = lnpop - lnarea.",
+    "RD columns use the bandwidths reported in the paper (13 for Republican cosponsors, 24 for Democratic pct-opposite) on mixed-gender races with |MV1_female| <= h, uniform weights; the CCT mserd bandwidths computed with rdrobust on bill-level data (17.8 and 30.9) are printed as diagnostics only.",
+    "Propensity scores: bill-level logits of the female dummy; column 3 on district characteristics within the bandwidth; columns 4/5 on district characteristics plus |MV1_democrat| (margin of victory of the winner), plus sponsor characteristics in column 5; ATE weights 1/p and 1/(1-p).",
+    "fixest drops one singleton fixed-effect observation, so bill counts are 1-3 lower than the paper's."
+  ],
+  "notes": "Two exploratory runs (variable inspection, sample counts; no RESULT lines) then one estimating run, which is the final run. I compared it with the claims once using check_attempt, which reported all claims within tolerance, so the script was left unchanged and no claim attempt is recorded. Bill-level OLS/RD/IPW regressions with Congress FE (+ minor-topic FE and 33 committee-of-referral dummies where bill characteristics apply), SEs clustered by sponsor-Congress. Largest gaps from the printed values: Republican OLS cosponsors 2.40 vs 3.149, Republican col-5 IPW 2.75 vs 3.124, Democratic RD pct-opposite -2.74 vs -3.351. No hung docker runs.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-07T19:30:24Z",
+  "finished_at": "2026-11-07T20:01:30Z"
+}

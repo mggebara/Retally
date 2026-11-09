@@ -62,3 +62,7 @@ Agent notes: attempt-1 was exploratory: it inspected airframe_data.dta and engin
 - [`output/script.R`](output/script.R) — 2,194 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/independent/claude-code/20261022T021417Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 462 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/independent/claude-code/20261022T021417Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 3,266 bytes, from `benchmark/results/artifacts/hanlon-2022-aircraft-ip-spillovers/independent/claude-code/20261022T021417Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

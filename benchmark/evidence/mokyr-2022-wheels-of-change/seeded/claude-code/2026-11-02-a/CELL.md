@@ -61,3 +61,7 @@ Files read outside the mount: `<home>/.claude/projects/-Users-matthew-dev-Retall
 - [`output/script.R`](output/script.R) — 4,048 bytes, from `benchmark/results/artifacts/mokyr-2022-wheels-of-change/seeded/claude-code/20261102T142251Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/mokyr-2022-wheels-of-change/seeded/claude-code/20261102T142251Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 1,108 bytes, from `benchmark/results/artifacts/mokyr-2022-wheels-of-change/seeded/claude-code/20261102T142251Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

@@ -1,0 +1,1 @@
+Crash in the Table 3 helper: "Error in eval(call("model.frame", ...)) : object 'dat' not found" from sandwich::vcovCL(m, cluster = ~publicid_muni) inside a function (the formula is evaluated outside the function's frame). Fix: pass the cluster vector directly, cluster = dat$publicid_muni. No change to any specification.

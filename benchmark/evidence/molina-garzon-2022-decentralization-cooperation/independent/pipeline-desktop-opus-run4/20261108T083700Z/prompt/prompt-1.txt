@@ -1,0 +1,110 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: Decentralization Can Increase Cooperation among
+Abstract (first 500 chars): Collective action among public officials is necessar y for the effective delivery of many s ocial services, but relatively
+little is known about how it can be fostered through policy reforms. In this article, we compare cooperation among public
+officials within decentralized versus centrally-administered municipalities in Honduras. Leverag ing a quasi-experiment in
+health sector reform, coupled with behavioral games and social network surveys, we find that decentralization is associated
+with gre
+Methodology Summary: - **Design / sample**: Quasi-experiment on the staggered Honduran health-sector decentralization. Propensity score matching on all available pre-decentralization municipal data (iterative propensity score specification following Imbens & Rubin 2015; details in Zarychta et al. 2019b, Table A4) selected 31 municipalities: 21 decentralized (treated) and 10 matched centrally-administered (control). Mean propensity of being targeted is 0.64 for treated and 0.58 for controls. Robustness uses a reduced sample of 24 municipalities that drops six treated municipalities with weaker matches (propensities 0.47 vs 0.49; SI Table SA1).
+- **Data collection**: In 2017, 31 daylong lab-in-the-field workshops ran with 232 public servants (about 8 per workshop). Roles were regional health authority (R), administrative intermediary (AI), 4 health-center doctors/nurses (HC) and a mayor's-office official (M). Each workshop had a pre-survey, a 10-round public goods game (PGG) and a post-survey with social-network prompts. Seven late arrivals are excluded from the cooperation data, leaving 225 players × 10 rounds = 2,250 observations. The Table 2 regressions use N = 1,980; the lagged group contribution regressor drops round 1, and covariates are missing for some players.
+- **Outcome (cooperation)**: Individual contribution to the group fund in each round, from 0 to 10 lempiras (unstandardised, in lempiras). Game design follows Isaac & Walker (1988): each player gets a 10-lempira endowment per round, and the group fund is doubled and split equally. Decisions are private, and the group total is revealed after each round. Rounds 1–5 have no communication; rounds 6–10 allow communication before decisions.
+- **Main estimating equation (Table 2)**: Weighted OLS with weights from the municipal-level propensity scores. Contribution_it is regressed on Decentralized (1 = decentralized, 0 = centrally administered). Model (1) is main effects only. The preferred Model (2) adds Decentralized × Communication; its interaction is 0.76 (SE 0.38, p<.05) and its Decentralized main effect is 0.41 (SE 0.30). Model (1) gives Decentralized = 0.83 (SE 0.23, p<.01). The controls are the same in both models:
+  - Communication dummy (rounds 6–10)
+  - Player-type dummies HC, AI and R (reference M)
+  - Round (1–10), as a linear trend
+  - Lagged group contribution
+  - Number of players in the session
+  - People known in the room
+  - Female, Age, Education and Years in health sector
+  - General trust
+
+  There are no fixed effects. Fit statistics are R² 0.26 / 0.27 and AIC 9483 / 9476.
+- **Standard errors**: The Table 2 note says "robust standard errors". The text says the OLS accounts "for the clustered characteristics of the observations", meaning repeated rounds within individuals within municipalities. Table 1 balance tests use weighted OLS with SEs clustered by municipality. Robustness uses a multilevel Tobit model (censoring at 0/10, with random variance at the individual and municipality levels; SI Table SA3).
+- **Descriptives (Table 1)**: Propensity-score-weighted means (SD) by administration type for 77 control and 148 treated individuals. It reports p-values for differences from weighted OLS with municipality-clustered SEs, plus standardized mean differences.
+- **Mechanism analysis (Table 3)**: Weighted Poisson regression of the number of realized cross-level ties per individual, with an offset for the log of total possible cross-level ties with the other workshop participants. There are two outcomes: "all ties" (knew the person as a colleague) and "strong ties" (friend). Each is run as a base model (Decentralized only, N = 231) and a full model (N = 226). The full model adds Female, Education, Age, Years in health sector, Generalized trust and player-type dummies HC/AI/R (reference M). SEs are clustered by municipality, and models are compared by BIC. The key estimates for Decentralized are:
+
+  | Model | All ties | Strong ties |
+  |---|---|---|
+  | Base | 0.22† | 0.61* |
+  | Full | 0.24† | 1.07** |
+
+  For the strong-ties full model, this is a predicted rise from about 0.07 to 0.21 in the proportion of strong cross-level ties.
+- **Evaluation / inference**: Significance is judged by conventional p-value thresholds († p<.1, * p<.05, ** p<.01). Substantive effects are shown as predicted contributions by round and administration type (Fig. 3). Raw mean contributions in the communication rounds are 7.9 (decentralized) vs 6.7 (centralized) lempiras, and 7.9 vs 6.6 in the last round. A supplementary pairwise correlation links average PGG contribution with perceived health-system improvement (0.37, p = .04). There is no train/test split or cross-validation.
+
+
+## Claims to Reproduce
+1. decentralized_table2_col1: 0.83 (lempiras contributed per round (0-10 scale)) [type: coefficient]
+   Location: Table 2, column (1), Decentralized
+   Context: Table 2 ("Decentralization and Cooperation among Public Servants"), column (1). Linear regression (OLS) of a participant's contribution to the group fund in each round of a ten-round public goods game (0-10 lempiras) on an indicator for working in a decentralized (rather than centrally administered) Honduran municipality. Controls: an indicator for the communication rounds (the last five rounds, when players could talk before deciding), player-type dummies (health center, administrative intermediary, regional office; the mayor's office representative is the reference), the round number, the gr…
+2. communication_table2_col1: 2.54 (lempiras contributed per round (0-10 scale)) [type: coefficient]
+   Location: Table 2, column (1), Communication
+   Context: Table 2, column (1): the coefficient on the communication-round indicator in the same weighted OLS of per-round contributions as decentralized_table2_col1.
+3. decentralized_table2_col2: 0.41 (lempiras contributed per round (0-10 scale)) [type: coefficient]
+   Location: Table 2, column (2), Decentralized
+   Context: Table 2, column (2): the column (1) weighted OLS of per-round contributions with an added interaction between the decentralized indicator and the communication-round indicator; this is the Decentralized main effect (the difference in rounds without communication). Same controls, sample, weights and standard errors as column (1).
+4. communication_table2_col2: 2.02 (lempiras contributed per round (0-10 scale)) [type: coefficient]
+   Location: Table 2, column (2), Communication
+   Context: Table 2, column (2): the communication-round main effect (for centrally administered municipalities) in the model with the Decentralized x Communication interaction.
+5. decentralized_x_communication_table2_col2: 0.76 (lempiras contributed per round (0-10 scale)) [type: coefficient]
+   Location: Table 2, column (2), Decentralized X Communication
+   Context: Table 2, column (2): the interaction between the decentralized indicator and the communication-round indicator, the paper's headline estimate (officials in decentralized municipalities contribute more once they can communicate; plotted in Figure 3).
+6. n_obs_table2: 1980.0 (participant-round observations) [type: count]
+   Location: Table 2, Observations
+   Context: Number of participant-round observations in both Table 2 models (the same sample in columns 1 and 2): rounds with a recorded contribution, a previous-round group contribution and the individual controls.
+7. decentralized_table3_allties_base: 0.22 (log of the expected count of realized cross-level ties) [type: coefficient]
+   Location: Table 3, All Ties (Prop. Known), Base Model, Decentralized
+   Context: Table 3 ("How Decentralization Influences Cross-Level Network Capital"), All Ties, Base Model. Weighted Poisson regression, one observation per workshop participant, of the number of cross-level ties the participant reported having before the workshop (other participants at a different level of the health service hierarchy whom they knew, as a colleague or otherwise), with an offset for the log of the total possible cross-level ties among the participants present, on the decentralized indicator alone. Weighted by the municipal-level propensity-score matching weights; standard errors clustered …
+8. decentralized_table3_allties_full: 0.24 (log of the expected count of realized cross-level ties) [type: coefficient]
+   Location: Table 3, All Ties (Prop. Known), Full Model, Decentralized
+   Context: Table 3, All Ties, Full Model: the Base Model plus female, education, age, years in the health sector, generalized trust and player-type dummies (health center, administrative intermediary, regional office; the mayor's office representative is the reference). Same offset, weights and municipality-clustered standard errors; participants with complete controls.
+9. decentralized_table3_strongties_base: 0.61 (log of the expected count of realized strong cross-level ties) [type: coefficient]
+   Location: Table 3, Strong Ties (Prop. Friends), Base Model, Decentralized
+   Context: Table 3, Strong Ties, Base Model: the weighted Poisson regression of the number of cross-level ties the participant characterized as friendships, with an offset for the log of the total possible cross-level friendship ties, on the decentralized indicator alone. Municipality-clustered standard errors.
+10. decentralized_table3_strongties_full: 1.07 (log of the expected count of realized strong cross-level ties) [type: coefficient]
+   Location: Table 3, Strong Ties (Prop. Friends), Full Model, Decentralized
+   Context: Table 3, Strong Ties, Full Model: the Strong Ties Base Model plus the Full Model controls (female, education, age, years in the health sector, generalized trust, player-type dummies). The paper translates it into Figure 4's predicted proportions of strong cross-level ties for a typical public servant. Municipality- clustered standard errors.
+11. n_obs_table3_base: 231.0 (workshop participants) [type: count]
+   Location: Table 3, N (Base Models)
+   Context: Number of participants in the two Table 3 Base Models (the same in both).
+12. n_obs_table3_full: 226.0 (workshop participants) [type: count]
+   Location: Table 3, N (Full Models)
+   Context: Number of participants in the two Table 3 Full Models (complete cases on the controls).
+
+## Dataset Information
+Name: molina-garzon-2022-decentralization-cooperation
+Local path: <repo>/.cache/datasets/molina_garzon_2022_decentralization_cooperation.script-free
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- publicgoodgame_dataAug27.dta (326.1 KB) — 2257 rows, 28 columns: round, contribution, decentralized, communication, outcome_ols_1, outcome_ols_2, lag_groupcontribution, num_players, averagecont, Q5_Trust1Base, knownpeople, publicid_muni, publicid, Q2_Educacion, Q2_female, player_type, weights_games_full_scaled, weights_games_reduced_scaled, p_type, Q3_YrsSalud, Q4_YrsCurrentJob, Q1_Edad, dec_orgtype, standarderror_ols, highconf_1, lowconf_1, highconf_ols_2, lowconf_ols_2
+- healthperception_Aug2020.dta (6.3 KB) — 31 rows, 7 columns: contribution, decentralized, weights_games_full_scaled, publicid_muni, HealthChange_Mun, HealthChange_Mun0, HealthChange_Mun1
+- Codebook_Nov16.pdf (111.2 KB)
+- README_MolinaGarzon et al.2020_Nov16.pdf (49.2 KB)
+- clanalysis_anondata_vNov16.csv (23.4 KB) — columns: publicid_muni,publicid,ParticipantCode,decentralized,Mujer,Q2_Educacion,Q1_Edad,Q3_YrsSalud,gen_trust,ParticipantType,CargoAdministrador,CargoMedico,CargoEnfermero,CargoAlcaldia,CargoPromotor,Participant_A,Participant_C,Participant_G,Partic…
+- metadata.json (537 B)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/molina_garzon_2022_decentralization_cooperation.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Independent Reproduction
+This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's description alone.  The authors' own analysis code is deliberately withheld.  Do NOT open, read, source, or execute any script files that may appear in the dataset directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, and similar) — load data files only.  Derive the estimating equation, sample restrictions, fixed effects, and standard-error clustering from the paper information and claims above.
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

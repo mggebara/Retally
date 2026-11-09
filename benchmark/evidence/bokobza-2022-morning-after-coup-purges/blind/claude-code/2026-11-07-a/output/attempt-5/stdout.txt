@@ -1,0 +1,146 @@
+                         m_base_c           m_main_c         m_base_l
+Dependent Var.:                rr                 rr               rr
+                                                                     
+fca             0.1026** (0.0326) 0.1120*** (0.0324) 0.0615. (0.0324)
+l_gdp           -0.0356. (0.0184)  -0.0330. (0.0195) -0.0244 (0.0251)
+l_pop           -0.1457* (0.0634)  -0.1429* (0.0632) -0.1344 (0.0884)
+l_mon                                0.0153 (0.0221)                 
+l_mil                              -0.0525. (0.0267)                 
+l_par                             -0.0792** (0.0287)                 
+Fixed-Effects:  ----------------- ------------------ ----------------
+COUNTRY_ID                    Yes                Yes               No
+YEAR_DATA                     Yes                Yes              Yes
+leader_cab_id                  No                 No              Yes
+_______________ _________________ __________________ ________________
+S.E.: Clustered    by: COUNTRY_ID     by: COUNTRY_ID   by: COUNTRY_ID
+Observations                3,743              3,703            3,626
+R2                        0.22392            0.22901          0.33530
+Within R2                 0.00725            0.01199          0.00257
+
+                          m_main_l
+Dependent Var.:                 rr
+                                  
+fca               0.0638* (0.0320)
+l_gdp             -0.0259 (0.0234)
+l_pop            -0.1461. (0.0861)
+l_mon           0.5607*** (0.0376)
+l_mil              0.0687 (0.0706)
+l_par              0.0815 (0.0936)
+Fixed-Effects:  ------------------
+COUNTRY_ID                      No
+YEAR_DATA                      Yes
+leader_cab_id                  Yes
+_______________ __________________
+S.E.: Clustered     by: COUNTRY_ID
+Observations                 3,590
+R2                         0.33828
+Within R2                  0.00841
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+N = 3743  clusters = 115  coups = 93 
+N = 3703  clusters = 114  coups = 92 
+N = 3626  clusters = 114  coups = 88 
+N = 3590  clusters = 114  coups = 87 
+Individual base sample: 99498  no-coup: 97460  coup: 2038  countries: 123 
+                                                     mE                mA
+Dependent Var.:                               purged_y1         purged_y1
+                                                                         
+fca                                   0.1337** (0.0452) 0.1701** (0.0559)
+expg2-3 years                           0.0042 (0.0074)                  
+expg4-6 years                          0.0195* (0.0095)                  
+expgOver 6 years                       -0.0056 (0.0101)                  
+gdp_cap_pwt_ln_lag                     -0.0021 (0.0186)   0.0094 (0.0189)
+fca x expg2-3 years                    -0.0215 (0.0416)                  
+fca x expg4-6 years                    -0.0760 (0.0697)                  
+fca x expgOver 6 years                 -0.0812 (0.0543)                  
+affindependent                                           0.0352* (0.0146)
+affleader_party                                          -0.0138 (0.0139)
+exp1                                                      0.0012 (0.0026)
+exp2                                                    -8.38e-5 (0.0002)
+exp3                                                    1.16e-6 (3.69e-6)
+fca x affindependent                                     -0.0633 (0.0702)
+fca x affleader_party                                   -0.1125. (0.0603)
+mtMinister of Finance                                                    
+mtMinister of Foreign Affairs                                            
+mtMinister of Natural Resources                                          
+mtOther type of minister                                                 
+fca x mtMinister of Finance                                              
+fca x mtMinister of Foreign Affairs                                      
+fca x mtMinister of Natural Resources                                    
+fca x mtOther type of minister                                           
+tier3                                                                    
+tier2                                                                    
+tier1                                                                    
+tier0.5                                                                  
+fca x tier3                                                              
+fca x tier2                                                              
+fca x tier1                                                              
+fca x tier0.5                                                            
+Fixed-Effects:                        ----------------- -----------------
+country_isocode                                     Yes               Yes
+year                                                Yes               Yes
+_____________________________________ _________________ _________________
+S.E.: Clustered                       by: country_iso.. by: country_iso..
+Observations                                     80,004            80,311
+R2                                              0.12968           0.12613
+Within R2                                       0.00182           0.00223
+
+                                                      mR                 mI
+Dependent Var.:                                purged_y1          purged_y1
+                                                                           
+fca                                    0.2055** (0.0659) 0.3741*** (0.0931)
+expg2-3 years                                                              
+expg4-6 years                                                              
+expgOver 6 years                                                           
+gdp_cap_pwt_ln_lag                       0.0004 (0.0177)    0.0045 (0.0177)
+fca x expg2-3 years                                                        
+fca x expg4-6 years                                                        
+fca x expgOver 6 years                                                     
+affindependent                                                             
+affleader_party                                                            
+exp1                                     0.0028 (0.0031)   -0.0007 (0.0026)
+exp2                                    -0.0002 (0.0002)  -7.42e-6 (0.0002)
+exp3                                   5.95e-6 (4.45e-6)  4.97e-7 (3.62e-6)
+fca x affindependent                                                       
+fca x affleader_party                                                      
+mtMinister of Finance                   0.0274* (0.0106)                   
+mtMinister of Foreign Affairs           -0.0077 (0.0096)                   
+mtMinister of Natural Resources        0.0338** (0.0108)                   
+mtOther type of minister              0.0516*** (0.0082)                   
+fca x mtMinister of Finance             -0.0852 (0.0664)                   
+fca x mtMinister of Foreign Affairs     -0.0392 (0.0696)                   
+fca x mtMinister of Natural Resources  -0.1814* (0.0831)                   
+fca x mtOther type of minister         -0.1141* (0.0574)                   
+tier3                                                      -0.0200 (0.0127)
+tier2                                                       0.0119 (0.0132)
+tier1                                                      0.0257. (0.0143)
+tier0.5                                                    -0.0069 (0.0150)
+fca x tier3                                              -0.2558** (0.0941)
+fca x tier2                                              -0.2850** (0.0945)
+fca x tier1                                               -0.2652* (0.1195)
+fca x tier0.5                                            -0.2604** (0.0872)
+Fixed-Effects:                        ------------------ ------------------
+country_isocode                                      Yes                Yes
+year                                                 Yes                Yes
+_____________________________________ __________________ __________________
+S.E.: Clustered                       by: country_isoc.. by: country_isoc..
+Observations                                      71,872             89,631
+R2                                               0.13268            0.12582
+Within R2                                        0.00270            0.00251
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+N = 80004 
+N = 80311 
+N = 71872 
+N = 89631 
+RESULT:failed_coup_base_country_fe=0.102553
+RESULT:failed_coup_main_country_fe=0.111954
+RESULT:failed_coup_base_leader_fe=0.061535
+RESULT:failed_coup_main_leader_fe=0.063813
+RESULT:failed_coup_experience_model=0.133719
+RESULT:failed_coup_x_over_6_years_experience=-0.081236
+RESULT:failed_coup_affiliation_model=0.170141
+RESULT:failed_coup_x_leaders_party=-0.112516
+RESULT:failed_coup_responsibility_model=0.205466
+RESULT:failed_coup_x_natural_resources=-0.181437
+RESULT:failed_coup_importance_model=0.374061

@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "grier-2023-sugar-roll-call-voting",
+  "mode": "independent",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [
+    "Inflation adjustment: totalcont is nominal (round dollar amounts); 2013 contributions were converted to 2018 dollars with CPI-U annual averages (232.957 for 2013, 251.107 for 2018). The paper does not state the deflator or base year.",
+    "Window files: SugarReplicate.dta taken as the baseline window, SugarReplicate_iter1.dta as the calendar-year window and SugarReplicate_iter2.dta as the 12-months-before-vote window (order of the robustness section); the read-me does not map files to windows."
+  ],
+  "notes": "Fixed-effects logit estimated as LSDV logit (glm binomial with district dummies), as implied by Table 1 reporting a constant and a pseudo R2; robust (HC0 x n/(n-1)) SEs. Outcome = 1 if vote == 'Aye', 0 otherwise (No / Not Voting / No Vote). Controls: totalcont (real), ACU (ncu), tenure, poverty, bach, medincome, over65, agcom. Sample: districts (id) with two votes and a switched outcome: 93 districts / 186 obs, pseudo R2 0.746 (paper 0.745). Incumbent FE: districts whose member served at both votes (data flag both==1 in both rows), 53 / 106 obs, pseudo R2 0.721 (paper 0.721). Attempts 1-2 were data inspection. Attempt 3 defined the incumbent sample by identical cid, which gave 104 obs because Lamar Smith (TX-21) has different cid codes in the two Congresses; after comparing with the claims (check_attempt) I switched to the both flag. The calendar-year district-FE coefficient (-0.00053) remains below the claimed -0.0006 in magnitude; I did not tune for it. Conditional-logit (clogit) estimates are printed for comparison: they are about half the LSDV ones, the usual incidental-parameters result for T=2. The agriculture-committee coefficient is quasi-separated (large, with NaN/huge SE), as in the paper's -36. No run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-07T19:30:00Z",
+  "finished_at": "2026-11-07T19:55:00Z"
+}

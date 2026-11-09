@@ -1,0 +1,20 @@
+suppressPackageStartupMessages(library(data.table))
+f <- "<repo>/benchmark/.cache/claude-code/labandeira-2022-electricity-pricing-reform/blind/2026-11-07-a/mount/labandeira_2022_electricity_pricing_reform/3 Replication package/analysis data/Data_to run_DOFILE3.csv"
+cols <- c("T2","dup","time","month","id","year","BISEMANA","c_ele","g_ele","p_kwh","lnp_kwh","lnc_ele","lng_ele","lnp_papas","lnp_aguav","lnp_gascar","lny","lny2","y","IP","dist","Tm","trim","NMIEMB","NHABIT","SUPERF","mayores","ESTUDREDSP","SITUACTHOG_j","PENSIO_j","alqui","edif25","urban","CAPROV","CCAA","TAMAMU","lnPRE_papas_","lnPRE_aguav_","lnPRE_gascar_")
+d <- fread(f, select=cols)
+x <- d[!is.na(T2)]
+cat("N T2 sample", nrow(x), " ids", uniqueN(x$id), "\n")
+print(x[, .N, by=id][, table(N)])
+print(sapply(x, function(v) sum(is.na(v))))
+print(table(x$year, x$T2)); print(table(x$year, x$dup)); print(table(x$dist, x$T2))
+print(x[, .(m=mean(T2)), by=Tm])
+cat("means c_ele g_ele p_kwh y:", mean(x$c_ele), mean(x$g_ele), mean(x$p_kwh), mean(x$y), "\n")
+print(summary(x$lny - log(x$y)))
+print(summary(x$lny2 - x$lny^2))
+print(table(x$month, x$year))
+base <- c("lnc_ele","lng_ele","lnp_kwh","lny","lny2","dist","T2","NMIEMB","NHABIT","SUPERF","mayores","ESTUDREDSP","SITUACTHOG_j","alqui","edif25","urban","CAPROV","CCAA","TAMAMU","trim","year")
+cc1 <- complete.cases(x[, ..base])
+cc2 <- cc1 & complete.cases(x[, .(lnp_papas,lnp_aguav,lnp_gascar)])
+for (cc in list(cc1, cc2)) { s <- x[cc]; cat("N", nrow(s), "ids", uniqueN(s$id), "singletons", sum(s[,.N,by=id]$N==1), "\n") }
+y2 <- x[, .(n=.N, nb=uniqueN(BISEMANA), ny=uniqueN(year)), by=id][n==2]; print(table(y2$nb)); print(table(y2$ny))
+p <- x[id %in% x[T2==1]$id]; print(table(p$year,p$T2))

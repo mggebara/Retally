@@ -1,0 +1,169 @@
+cong : cong  class= numeric 
+cid : cid  class= character 
+totalcont : totalcont  class= numeric 
+id : id  class= numeric 
+name : name  class= character 
+pop : pop  class= numeric 
+over65 : over65  class= numeric 
+nohsgrad : nohsgrad  class= numeric 
+bach : bach  class= numeric 
+medearn : medearn  class= numeric 
+poverty : poverty  class= numeric 
+medincome : medincome  class= numeric 
+unemp : unemp  class= numeric 
+rural : rural  class= numeric 
+state : state  class= character 
+state_no : state_no  class= numeric 
+district : district  class= numeric 
+vote : vote  class= character 
+party : party  class= character 
+ncu : ncu  class= numeric 
+tenure : tenure  class= numeric 
+both : both  class= numeric 
+sugcont : sugcont  class= numeric 
+houselead : houselead  class= numeric 
+agcom : agcom  class= numeric 
+aglead : aglead  class= numeric 
+dwn : dwn  class= numeric 
+      cong            cid        totalcont           id              name    
+ Min.   :113   Length   :862   Min.   :-1000   Min.   : 101   Length   :862  
+ 1st Qu.:113   N.unique :555   1st Qu.:    0   1st Qu.:1221   N.unique :515  
+ Median :113   N.blank  :  0   Median : 5000   Median :2704   N.blank  :  0  
+ Mean   :114   Min.nchar:  2   Mean   : 7986   Mean   :2764   Min.nchar:  3  
+ 3rd Qu.:115   Max.nchar:  9   3rd Qu.:14088   3rd Qu.:4202   Max.nchar: 17  
+ Max.   :115                   Max.   :58400   Max.   :5600                  
+                                                                             
+      pop              over65         nohsgrad           bach      
+ Min.   : 520389   Min.   : 6.40   Min.   : 1.356   Min.   : 5.90  
+ 1st Qu.: 714306   1st Qu.:12.70   1st Qu.: 3.119   1st Qu.:14.77  
+ Median : 730244   Median :14.80   Median : 4.300   Median :18.08  
+ Mean   : 736306   Mean   :14.90   Mean   : 5.528   Mean   :18.88  
+ 3rd Qu.: 759352   3rd Qu.:16.72   3rd Qu.: 6.164   3rd Qu.:22.16  
+ Max.   :1050493   Max.   :36.25   Max.   :30.200   Max.   :39.88  
+                                                                   
+    medearn         poverty        medincome          unemp      
+ Min.   :21748   Min.   : 3.60   Min.   : 25801   Min.   : 2.60  
+ 1st Qu.:32022   1st Qu.:10.80   1st Qu.: 47045   1st Qu.: 4.90  
+ Median :36412   Median :13.90   Median : 54412   Median : 6.40  
+ Mean   :38022   Mean   :14.67   Mean   : 58473   Mean   : 6.96  
+ 3rd Qu.:41782   3rd Qu.:17.80   3rd Qu.: 66841   3rd Qu.: 8.60  
+ Max.   :80497   Max.   :39.80   Max.   :134077   Max.   :19.10  
+                                                                 
+     rural              state        state_no       district    
+ Min.   : 0.000   Length   :862   Min.   : 100   Min.   : 0.00  
+ 1st Qu.: 1.435   N.unique : 50   1st Qu.:1200   1st Qu.: 3.00  
+ Median :13.380   N.blank  :  0   Median :2700   Median : 6.00  
+ Mean   :19.316   Min.nchar:  2   Mean   :2754   Mean   :10.13  
+ 3rd Qu.:34.373   Max.nchar:  2   3rd Qu.:4200   3rd Qu.:13.00  
+ Max.   :76.492                   Max.   :5600   Max.   :53.00  
+                                                                
+        vote           party          ncu             tenure     
+ Length   :862   Length   :862   Min.   :  0.00   Min.   : 1.00  
+ N.unique :  4   N.unique :  2   1st Qu.: 12.00   1st Qu.: 3.00  
+ N.blank  :  0   N.blank  :  0   Median : 52.00   Median : 7.00  
+ Min.nchar:  2   Min.nchar:  8   Mean   : 46.88   Mean   :10.26  
+ Max.nchar: 10   Max.nchar: 10   3rd Qu.: 80.00   3rd Qu.:15.00  
+                                 Max.   :100.00   Max.   :59.00  
+                                 NAs    :1        NAs    :2      
+      both           sugcont        houselead          agcom       
+ Min.   :0.0000   Min.   :    0   Min.   :0.0000   Min.   :0.0000  
+ 1st Qu.:0.0000   1st Qu.:    0   1st Qu.:0.0000   1st Qu.:0.0000  
+ Median :1.0000   Median : 5000   Median :0.0000   Median :0.0000  
+ Mean   :0.7116   Mean   : 9087   Mean   :0.0116   Mean   :0.1044  
+ 3rd Qu.:1.0000   3rd Qu.:17000   3rd Qu.:0.0000   3rd Qu.:0.0000  
+ Max.   :1.0000   Max.   :60300   Max.   :1.0000   Max.   :1.0000  
+ NAs    :2        NAs    :1                                        
+     aglead              dwn          
+ Min.   :0.000000   Min.   :-0.69200  
+ 1st Qu.:0.000000   1st Qu.:-0.38100  
+ Median :0.000000   Median : 0.27000  
+ Mean   :0.008121   Mean   : 0.08766  
+ 3rd Qu.:0.000000   3rd Qu.: 0.51725  
+ Max.   :1.000000   Max.   : 0.93100  
+                                      
+      
+       Aye  No No Vote Not Voting <NA>
+  113  206 221       0          7    0
+  115  137 278       1         12    0
+  <NA>   0   0       0          0    0
+      
+       113 115 <NA>
+  0    126 122    0
+  1    306 306    0
+  <NA>   2   0    0
+   district cong        name   id       cid       vote sugcont totalcont ncu
+1         0  113      Carney 1000       A16        Aye       0         0  20
+2         0  113      Daines 3000       A22         No       0         0  80
+3         0  113       Welch 5000 N00000515         No   18000      7500  12
+4         0  115       Welch 5000 N00000515        Aye    5000      5000  12
+5         0  113      Cramer 3800 N00004614         No       0     30200  64
+6         0  115      Cramer 3800 N00004614         No    5250         0  78
+7         0  113       Young  200 N00007999         No    2000      5500  42
+8         0  115       Young  200 N00007999         No   24000     21000  54
+9         0  113      Lummis 5600 N00029788         No   17500      2000  88
+10        0  113        Noem 4600 N00032022         No   27500     24500  64
+11        0  115        Noem 4600 N00032022         No       0         0  82
+12        0  115      Cheney 5600 N00035504         No   10000     10000  77
+13        0  115   Rochester 1000 N00038414         No   20000      7000   8
+14        0  115   Gianforte 3000 N00040733         No   19000     19000  68
+15        1  113 Bridenstine 4001       A10        Aye       0         0  88
+16        1  113      Chabot 3901       A18        Aye       0         0  96
+17        1  115      Chabot 3901       A18        Aye       0         0  96
+18        1  113    Clay Jr. 2901       A19        Aye       0         0   8
+19        1  115    Clay Jr. 2901       A19 Not Voting       0         0   5
+20        1  113 Gohmert Jr. 4801       A34        Aye       0         0  96
+   tenure agcom both      party
+1       3     0    0   Democrat
+2       1     0    0 Republican
+3       7     0    1   Democrat
+4      12     0    1   Democrat
+5       1     0    1 Republican
+6       6     0    1 Republican
+7      41     0    1 Republican
+8      46     0    1 Republican
+9       5     0    0 Republican
+10      3     1    1 Republican
+11      8     0    1 Republican
+12      2     0    0 Republican
+13      2     1    0   Democrat
+14      2     0    0 Republican
+15      1     0    0 Republican
+16     17     0    1 Republican
+17     22     0    1 Republican
+18     13     0    1   Democrat
+19     18     0    1   Democrat
+20      9     0    1 Republican
+SugarReplicate_iter1.dta 
+ differs: totalcont 
+SugarReplicate_iter2.dta 
+ differs: totalcont 
+$`113`
+       mean         sum          na 
+   6712.516 2913232.000       0.000 
+
+$`115`
+     mean       sum        na 
+  11501.1 4910971.0       1.0 
+
+$`113`
+       mean         sum          na 
+   6712.516 2913232.000       0.000 
+
+$`115`
+     mean       sum        na 
+  11501.1 4910971.0       1.0 
+
+$`113`
+       mean         sum          na 
+   6712.516 2913232.000       0.000 
+
+$`115`
+     mean       sum        na 
+  11501.1 4910971.0       1.0 
+
+district type:
+ [1]  3  1  2 43 33 25 10 13  9  5  8 45  0 17 11 18 15 35  6  4
+[1] 54
+
+ 2  4  7  8 12 13 14 18 19 21 24 26 34 41 47 52 58 70 76 85 86 
+17  9  2  7  2  1  2  1  1  1  1  1  1  1  1  1  1  1  1  1  1 

@@ -1,0 +1,40 @@
+global_approval columns: country, qtr, rally_events, rally_kill, female_pres, execrlc, rally_event_any, country_code, ccode, election_qtr, lag_approval, rally_event_any2, growth, log_inflation, manchester, kill_16, kill_18, kill_10, pres_15death, pres_20death, kill_12, kill_14, kill_20, kill_08, kill_06, kill_under5, kill_1_5, kill_3_5 
+Using approval variable: NA (computing next-quarter lead)
+Attack variable: kill_16 
+Table 4 error: undefined columns selected 
+did_data rows: 1481408 
+Treatment variable: treatment1 
+                   Estimate  Std. Error     t value      Pr(>|t|)
+(Intercept)     2.190936486 0.043961448   49.837677  0.000000e+00
+attack         -0.105036353 0.019692382   -5.333857  9.623487e-08
+time           -0.226435678 0.023977171   -9.443803  3.625480e-21
+white           0.292650032 0.016013420   18.275299  1.463068e-74
+gender          0.491369600 0.011023324   44.575448  0.000000e+00
+labour         -2.458059010 0.021406398 -114.828238  0.000000e+00
+party_other    -1.881782252 0.016255282 -115.764355  0.000000e+00
+income          0.004178252 0.002053934    2.034268  4.192567e-02
+ideology        0.514909307 0.003603867  142.876873  0.000000e+00
+factor(wave)10  0.744163526 0.023215395   32.054743 5.659700e-225
+factor(wave)11  0.821629455 0.023006717   35.712590 1.368582e-278
+factor(wave)12  0.747541238 0.021902136   34.130975 1.051332e-254
+                   Estimate   Std. Error       t value      Pr(>|t|)
+(Intercept)    3.080421e-01 2.127542e-03  1.447878e+02  0.000000e+00
+attack         1.466896e-01 7.439161e-04  1.971856e+02  0.000000e+00
+time          -2.118161e-14 1.257612e-03 -1.684272e-11  1.000000e+00
+white          8.638096e-02 4.969206e-04  1.738325e+02  0.000000e+00
+gender        -1.490383e-02 4.415201e-04 -3.375572e+01 1.097561e-249
+labour        -4.838361e-01 1.198615e-03 -4.036627e+02  0.000000e+00
+party_other   -6.172619e-01 8.721937e-04 -7.077119e+02  0.000000e+00
+income        -7.161560e-04 8.799691e-05 -8.138423e+00  4.007654e-16
+ideology       7.035657e-02 1.998452e-04  3.520554e+02  0.000000e+00
+factor(wave)2 -8.398377e-14 1.238407e-03 -6.781599e-11  1.000000e+00
+factor(wave)3  2.333326e-15 1.238407e-03  1.884135e-12  1.000000e+00
+factor(wave)4 -1.414805e-14 1.238407e-03 -1.142440e-11  1.000000e+00
+RESULT:did_attack_x_time_like_may_table2=-0.150165
+RESULT:did_attack_like_may_table2=-0.105036
+RESULT:did_time_like_may_table2=-0.226436
+RESULT:n_obs_did_like_may_table2=239919.000000
+RESULT:did_attack_x_time_may_best_pm_table2=-0.000000
+RESULT:did_attack_may_best_pm_table2=0.146690
+RESULT:did_time_may_best_pm_table2=-0.000000
+RESULT:n_obs_did_may_best_pm_table2=1481392.000000

@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "entry_id": "douenne-2022-yellow-vests-carbon-tax",
+  "mode": "independent",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-6", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-7", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [
+    "The online-appendix list of controls is unavailable; controls were reconstructed: sociodemographics = sex, age bracket, employment status, CSP, region, education (4 levels), agglomeration size, household size, number aged 14+, smoker; incomes = respondent and second-adult income percentiles with slope changes at p20 and p70 (min(I-k,0)); estimated gains = simule_gain and its square; other motives = belief about progressivity (with 'not asked' as its own category) in Tables 4 and 6, progressivity belief plus initial win/lose category in Table 8.",
+    "Predicted winner = simule_gagnant (the feedback actually given), running variable = simule_gain; G^F = feedback-stage win/lose category not 'Loser'; Yellow Vests supporter = gilets_jaunes in {supports, is part of}; G = initial win/lose category not 'Loser'; column 3 also controls for the 3-level initial category.",
+    "Table 6 [p10;p60] subsample = respondent or second-adult income percentile in [10,60] (N=1,969, matches paper); cible fixed effects via fixest.",
+    "Table 8: Z_E taken as apres_modifs (the variable splitting the sample in two around the effectiveness-information display), Z_CC = info_CC; outcome tax_approval, endogenous taxe_efficace == 'Oui'. The first stage on apres_modifs (0.198) is much larger than the paper's 0.059, so this instrument mapping is uncertain even though the 2SLS coefficient is close.",
+    "Heteroskedasticity-robust SEs (not scored)."
+  ],
+  "notes": "Data from code/after_preparation.RData (object s); memisc/Hmisc labelled columns stripped without loading those packages. attempts 1-6 exploratory (variable inspection; 2 and 3 crashed on memisc S4 columns while printing, no estimates). attempt-7 was the first scored run; after comparing with claims (only Table 4 col1 initial-acceptance off, 0.232 vs 0.306) the effectiveness belief was dropped from 'other motives' in Tables 4/6, which raised it to 0.283; check_attempt reports all claims within tolerance for the final run. No author scripts were opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-07T19:18:14Z",
+  "finished_at": "2026-11-07T20:23:30Z"
+}

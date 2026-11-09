@@ -56,6 +56,10 @@ Per-claim ground truth, tolerance rule and errors: [`scoring.json`](scoring.json
 - [`output/stdout.txt`](output/stdout.txt) — 18,778 bytes, from `benchmark/results/artifacts/altmann-2022-cognitive-spillovers/blind/pipeline/20261023T150832Z/stdout.txt`
 - [`output/answer-1.md`](output/answer-1.md) — 11,232 bytes, from `benchmark/.cache/llm-oracle/desktop-opus-run2/answers/9a1e40a0bd4cd586b8ef19d3.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM oracle store desktop-opus-run2 (request 9a1e40a0bd4cd586b8ef19d3: model claude-opus-5-5, max_tokens 16384, effort high)

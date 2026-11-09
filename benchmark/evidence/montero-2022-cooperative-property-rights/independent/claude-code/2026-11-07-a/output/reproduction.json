@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "entry_id": "montero-2022-cooperative-property-rights",
+  "mode": "independent",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-4", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-5", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [
+    "Earnings measured with the deflated variable hh_inc_pc_real rather than nominal hh_income_pc (the paper's reported dependent-variable means, 73.59/74.81/38.63/37.52, match nominal hh_income_pc, but the coefficients match the deflated variable).",
+    "IQR sample is every property x survey-round cell within the bandwidth; the paper's 'at least five members' filter, applied literally to surveyed workers per property-round, gives N=128/41 instead of the reported 327/118, so it is not applied.",
+    "IQR uses Stata-style percentiles (R quantile type 2)."
+  ],
+  "notes": "Specification: OLS of outcome on Above500 + norm_dist + Above500:norm_dist (local linear, separate slopes on each side of 500 ha), survey-year (year) fixed effects, uniform kernel, sample |norm_dist| < bandwidth (strict inequality reproduces N exactly), SEs clustered by former owner (Expropretario_ISTA); property = match_id. IQR columns collapse to one observation per property x survey round. Attempts 1-2 inspected variables and counts. Attempts 3-5 printed diagnostics only (no RESULT: lines), but their estimates were compared by hand with the claimed values before changing the script, so they are recorded as kind 'claim' with manual feedback.txt (check_attempt had no RESULT: lines to parse). Attempt 3 (nominal earnings, uniform) matched all counts/clusters/means but not coefficients; attempt 4 tried polynomial/FE variants; attempt 5 tried kernels and the deflated outcome, which matches the IQR columns to the reported coefficient and SE exactly and the level columns closely (60.40 vs 60.49; 50.87 vs 52.79). The remaining level gap was not investigated further because the claim-attempt budget was used up. Scratch work was done in a private scratch directory and copied here.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-08T01:55:37Z",
+  "finished_at": "2026-11-08T01:59:30Z"
+}

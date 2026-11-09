@@ -53,6 +53,10 @@ _None declared._
 - [`output/stdout.txt`](output/stdout.txt) — 2,002 bytes, from `benchmark/results/artifacts/leeson-2022-hobo-economicus/seeded/pipeline/20261023T151837Z/stdout.txt`
 - [`output/answer-1.md`](output/answer-1.md) — 7,122 bytes, from `benchmark/.cache/llm-oracle/desktop-opus-run2/answers/cd5bd60e4ce983d2efb50e39.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM oracle store desktop-opus-run2 (request cd5bd60e4ce983d2efb50e39: model claude-opus-5-5, max_tokens 16384, effort high)

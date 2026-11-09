@@ -1,0 +1,7 @@
+# Manual comparison (kernel/outcome variants, diagnostics only, no RESULT: lines).
+# Triangular/Epanechnikov kernels do not match. Uniform kernel with the deflated outcome hh_inc_pc_real:
+earnings_level_above500_bw300: reproduced 60.397, claimed 60.49
+earnings_level_above500_bw150: reproduced 50.866, claimed 52.79
+earnings_iqr_above500_bw300: reproduced -42.967 (se 17.816), claimed -42.97 (se 17.82)
+earnings_iqr_above500_bw150: reproduced -51.785 (se 24.794), claimed -51.79 (se 24.79)
+# Acted on: final script uses hh_inc_pc_real, uniform kernel, separate linear slopes, survey-year FE, owner clusters.

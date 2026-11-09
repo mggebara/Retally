@@ -69,3 +69,7 @@ Agent notes: Independent, blind reproduction from paper.txt only. Attempt-1 was 
 - [`output/script.R`](output/script.R) — 6,689 bytes, from `benchmark/results/artifacts/forsythe-2022-young-workers-recessions/blind/claude-code/20261102T090911Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/forsythe-2022-young-workers-recessions/blind/claude-code/20261102T090911Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 3,331 bytes, from `benchmark/results/artifacts/forsythe-2022-young-workers-recessions/blind/claude-code/20261102T090911Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

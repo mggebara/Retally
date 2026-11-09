@@ -55,6 +55,10 @@ _None declared._
 - [`output/stdout.txt`](output/stdout.txt) — 702 bytes, from `benchmark/results/artifacts/altmann-2022-cognitive-spillovers/seeded/pipeline/20261023T151837Z/stdout.txt`
 - [`output/answer-1.md`](output/answer-1.md) — 4,778 bytes, from `benchmark/.cache/llm-oracle/desktop-opus-run2/answers/ec72063d0cbd1b387b138b9d.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM oracle store desktop-opus-run2 (request ec72063d0cbd1b387b138b9d: model claude-opus-5-5, max_tokens 16384, effort high)

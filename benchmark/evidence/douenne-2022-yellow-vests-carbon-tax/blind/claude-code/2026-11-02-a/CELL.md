@@ -86,3 +86,7 @@ Agent notes: Data: the object s (3,002 respondents) from code/after_preparation.
 - [`output/script.R`](output/script.R) — 6,738 bytes, from `benchmark/results/artifacts/douenne-2022-yellow-vests-carbon-tax/blind/claude-code/20261102T142249Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 456 bytes, from `benchmark/results/artifacts/douenne-2022-yellow-vests-carbon-tax/blind/claude-code/20261102T142249Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 3,028 bytes, from `benchmark/results/artifacts/douenne-2022-yellow-vests-carbon-tax/blind/claude-code/20261102T142249Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

@@ -72,3 +72,7 @@ Agent notes: Data: dyadic_data_1-4-22.Rdata (updated_data) for columns 1-2, gend
 - [`output/script.R`](output/script.R) — 2,582 bytes, from `benchmark/results/artifacts/adams-2023-women-mps-affective-polarization/independent/claude-code/20261102T202751Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 264 bytes, from `benchmark/results/artifacts/adams-2023-women-mps-affective-polarization/independent/claude-code/20261102T202751Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 2,234 bytes, from `benchmark/results/artifacts/adams-2023-women-mps-affective-polarization/independent/claude-code/20261102T202751Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

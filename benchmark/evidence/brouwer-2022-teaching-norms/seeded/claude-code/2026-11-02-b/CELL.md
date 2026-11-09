@@ -58,3 +58,7 @@ Agent notes: Translated the do-file's Table 2 regressions (reg y i.Child##i.Viol
 - [`output/script.R`](output/script.R) — 1,679 bytes, from `benchmark/results/artifacts/brouwer-2022-teaching-norms/seeded/claude-code/20261102T194315Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 118 bytes, from `benchmark/results/artifacts/brouwer-2022-teaching-norms/seeded/claude-code/20261102T194315Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 3,530 bytes, from `benchmark/results/artifacts/brouwer-2022-teaching-norms/seeded/claude-code/20261102T194315Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

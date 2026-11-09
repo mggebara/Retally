@@ -38,10 +38,11 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [12/12](seeded/claude-code/2026-11-06-a/CELL.md) (2026-11-06-a)<br>[12/12](seeded/claude-code/2026-11-06-b/CELL.md) (2026-11-06-b) | [12/12](independent/claude-code/2026-11-06-a/CELL.md) (2026-11-06-a)<br>[12/12](independent/claude-code/2026-11-06-b/CELL.md) (2026-11-06-b)<br>[12/12](independent/claude-code/2026-11-06-c/CELL.md) (2026-11-06-c) | [12/12](blind/claude-code/2026-11-06-a/CELL.md) (2026-11-06-a)<br>[12/12](blind/claude-code/2026-11-06-b/CELL.md) (2026-11-06-b)<br>[12/12](blind/claude-code/2026-11-06-c/CELL.md) (2026-11-06-c) |
+| `claude-code` | [12/12](seeded/claude-code/2026-11-06-a/CELL.md) (2026-11-06-a)<br>[12/12](seeded/claude-code/2026-11-06-b/CELL.md) (2026-11-06-b) | [12/12](independent/claude-code/2026-11-06-a/CELL.md) (2026-11-06-a)<br>[12/12](independent/claude-code/2026-11-06-b/CELL.md) (2026-11-06-b)<br>[12/12](independent/claude-code/2026-11-06-c/CELL.md) (2026-11-06-c)<br>[12/12](independent/claude-code/2026-11-07-a/CELL.md) (2026-11-07-a) | [12/12](blind/claude-code/2026-11-06-a/CELL.md) (2026-11-06-a)<br>[12/12](blind/claude-code/2026-11-06-b/CELL.md) (2026-11-06-b)<br>[12/12](blind/claude-code/2026-11-06-c/CELL.md) (2026-11-06-c)<br>[12/12](blind/claude-code/2026-11-07-a/CELL.md) (2026-11-07-a) |
 | `pipeline-desktop-opus` | [12/12](seeded/pipeline-desktop-opus/20261106T163831Z/CELL.md) (20261106T163831Z) | [12/12](independent/pipeline-desktop-opus/20261106T165825Z/CELL.md) (20261106T165825Z) | [6/12](blind/pipeline-desktop-opus/20261106T163912Z/CELL.md) (20261106T163912Z) |
 | `pipeline-desktop-opus-run2` | [12/12](seeded/pipeline-desktop-opus-run2/20261106T174031Z/CELL.md) (20261106T174031Z) | [12/12](independent/pipeline-desktop-opus-run2/20261106T174031Z/CELL.md) (20261106T174031Z) | [6/12](blind/pipeline-desktop-opus-run2/20261106T173743Z/CELL.md) (20261106T173743Z) |
 | `pipeline-desktop-opus-run3` | [12/12](seeded/pipeline-desktop-opus-run3/20261106T174057Z/CELL.md) (20261106T174057Z) | [6/12](independent/pipeline-desktop-opus-run3/20261106T174057Z/CELL.md) (20261106T174057Z) | [12/12](blind/pipeline-desktop-opus-run3/20261106T174057Z/CELL.md) (20261106T174057Z) |
+| `pipeline-desktop-opus-run4` | — | [12/12](independent/pipeline-desktop-opus-run4/20261108T083700Z/CELL.md) (20261108T083700Z) | [7/12](blind/pipeline-desktop-opus-run4/20261108T013503Z/CELL.md) (20261108T013503Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
 
@@ -53,16 +54,16 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 | Cell | Claim | Reproduced | Paper | Band | Error / band | Verdict |
 |---|---|---|---|---|---|---|
+| [blind/pipeline-desktop-opus-run4/20261108T013503Z](blind/pipeline-desktop-opus-run4/20261108T013503Z/CELL.md) | `decentralized_table3_allties_base` | 0.125852 | 0.22 | ±0.12 (se_band) | 0.785 | PASS |
 | [blind/pipeline-desktop-opus-run3/20261106T174057Z](blind/pipeline-desktop-opus-run3/20261106T174057Z/CELL.md) | `decentralized_table3_allties_full` | 0.173629 | 0.24 | ±0.14 (se_band) | 0.474 | PASS |
 | [seeded/pipeline-desktop-opus/20261106T163831Z](seeded/pipeline-desktop-opus/20261106T163831Z/CELL.md) | `decentralized_table3_allties_base` | 0.217647 | 0.22 | ±0.005 (printed_precision) | 0.471 | PASS |
 | [seeded/pipeline-desktop-opus-run3/20261106T174057Z](seeded/pipeline-desktop-opus-run3/20261106T174057Z/CELL.md) | `decentralized_table3_allties_base` | 0.217647 | 0.22 | ±0.005 (printed_precision) | 0.471 | PASS |
 | [seeded/claude-code/2026-11-06-a](seeded/claude-code/2026-11-06-a/CELL.md) | `decentralized_table3_allties_base` | 0.217647 | 0.22 | ±0.005 (printed_precision) | 0.471 | PASS |
 | [seeded/claude-code/2026-11-06-b](seeded/claude-code/2026-11-06-b/CELL.md) | `decentralized_table3_allties_base` | 0.217647 | 0.22 | ±0.005 (printed_precision) | 0.471 | PASS |
 | [seeded/pipeline-desktop-opus-run2/20261106T174031Z](seeded/pipeline-desktop-opus-run2/20261106T174031Z/CELL.md) | `decentralized_table3_allties_base` | 0.217647 | 0.22 | ±0.005 (printed_precision) | 0.471 | PASS |
+| [independent/pipeline-desktop-opus-run4/20261108T083700Z](independent/pipeline-desktop-opus-run4/20261108T083700Z/CELL.md) | `decentralized_table3_strongties_full` | 1.15451 | 1.07 | ±0.31 (se_band) | 0.273 | PASS |
+| [blind/pipeline-desktop-opus-run4/20261108T013503Z](blind/pipeline-desktop-opus-run4/20261108T013503Z/CELL.md) | `decentralized_table3_strongties_base` | 0.125852 | 0.61 | ±0.28 (se_band) | 1.729 | FAIL |
 | [seeded/claude-code/2026-11-06-a](seeded/claude-code/2026-11-06-a/CELL.md) | `decentralized_table2_col1` | 0.82582 | 0.83 | ±0.0166 (relative) | 0.252 | PASS |
-| [seeded/claude-code/2026-11-06-b](seeded/claude-code/2026-11-06-b/CELL.md) | `decentralized_table2_col1` | 0.82582 | 0.83 | ±0.0166 (relative) | 0.252 | PASS |
-| [seeded/pipeline-desktop-opus-run2/20261106T174031Z](seeded/pipeline-desktop-opus-run2/20261106T174031Z/CELL.md) | `decentralized_table2_col1` | 0.82582 | 0.83 | ±0.0166 (relative) | 0.252 | PASS |
-| [seeded/pipeline-desktop-opus/20261106T163831Z](seeded/pipeline-desktop-opus/20261106T163831Z/CELL.md) | `decentralized_table2_col1` | 0.82582 | 0.83 | ±0.0166 (relative) | 0.252 | PASS |
 
 ### Declared deviations
 
@@ -71,12 +72,18 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Table 3 Poisson is fit with glm(quasipoisson) and the matching weights (non-integer weights), with log(total possible cross-level ties) as the offset and HC1 municipality-clustered SEs; one participant missing the matching weight is dropped (232 -> 231).
 - [independent/claude-code/2026-11-06-c](independent/claude-code/2026-11-06-c/CELL.md) (12/12)
   - Table 2 standard errors are clustered by municipality (fixest cluster=~publicid_muni); the paper's table note says 'robust standard errors', so reported SEs may differ slightly (e.g. 0.20 vs 0.23 on Decentralized, col. 1). Point estimates and N are unaffected.
+- [independent/claude-code/2026-11-07-a](independent/claude-code/2026-11-07-a/CELL.md) (12/12)
+  - Table 2 standard errors are clustered by municipality (the text says the OLS accounts for clustering; the table note says 'robust'); only coefficients and N are reported as RESULT lines, so this does not affect scored values.
 - [blind/claude-code/2026-11-06-b](blind/claude-code/2026-11-06-b/CELL.md) (12/12)
   - Table 3: gen_trust enters as coded in the CSV (values 1/2, not 0/1 as the codebook states); this shifts only the intercept, not the Decentralized coefficient.
   - Table 3 Base N: the one participant with a missing matching weight is dropped (weighted models cannot use it).
 - [blind/claude-code/2026-11-06-c](blind/claude-code/2026-11-06-c/CELL.md) (12/12)
   - Table 3: participants with a missing matching weight (1 row in the network CSV) are dropped; the paper does not state its N handling explicitly.
   - Table 3 clustered SEs use sandwich::vcovCL (HC0); only coefficients and Ns are scored.
+- [blind/claude-code/2026-11-07-a](blind/claude-code/2026-11-07-a/CELL.md) (12/12)
+  - Table 2: the paper's note says 'robust standard errors' while the task context says municipality-clustered; SEs are municipality-clustered (CR1). Point estimates and N are unaffected.
+  - Table 2 player-type dummies built from the numeric p_type codes in the .dta, assuming 1=A (mayor's office, reference), 2=C, 3=G, 4=R (alphabetical order of the codebook letters; consistent with the row counts).
+  - Table 3: weighted Poisson fit with glm(family = quasipoisson) (identical point estimates to Poisson, avoids non-integer-weight warnings); generalized trust entered as coded in the CSV (1/2), which only shifts the intercept. Participants with a missing matching weight (1) dropped from all Table 3 models; full models additionally drop rows with missing education/age.
 
 ### Pipeline and agent disagree
 
@@ -86,12 +93,12 @@ _None._
 
 Pass rates at least 50 points apart (not unanimous):
 
-- blind: `decentralized_table3_allties_base` — pipeline 1/3, agent 3/3
-- blind: `decentralized_table3_allties_full` — pipeline 1/3, agent 3/3
-- blind: `decentralized_table3_strongties_base` — pipeline 1/3, agent 3/3
-- blind: `decentralized_table3_strongties_full` — pipeline 1/3, agent 3/3
-- blind: `n_obs_table3_base` — pipeline 1/3, agent 3/3
-- blind: `n_obs_table3_full` — pipeline 1/3, agent 3/3
+- blind: `decentralized_table3_allties_base` — pipeline 2/4, agent 4/4
+- blind: `decentralized_table3_allties_full` — pipeline 1/4, agent 4/4
+- blind: `decentralized_table3_strongties_base` — pipeline 1/4, agent 4/4
+- blind: `decentralized_table3_strongties_full` — pipeline 1/4, agent 4/4
+- blind: `n_obs_table3_base` — pipeline 1/4, agent 4/4
+- blind: `n_obs_table3_full` — pipeline 1/4, agent 4/4
 
 ## Cells
 
@@ -127,6 +134,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/claude-code/2026-11-06-c/CELL.md`](independent/claude-code/2026-11-06-c/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 3; 2026-11-06T17:56:00Z; from `claude-code-run3-1paper-indep-blind-2026-11-06.json`; evidence complete.
 
+### independent · claude-code · 2026-11-07-a
+
+[`independent/claude-code/2026-11-07-a/CELL.md`](independent/claude-code/2026-11-07-a/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 2; 2026-11-08T01:57:30Z; from `claude-code-run4-24papers-indep-blind-2026-11-08.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus · 20261106T165825Z
 
 [`independent/pipeline-desktop-opus/20261106T165825Z/CELL.md`](independent/pipeline-desktop-opus/20261106T165825Z/CELL.md) — final 12/12, re-scored 12/12; first scored 6/12; executions 2; 2026-11-06T16:58:25Z; from `pipeline-oracle-desktop-opus-1paper-all-modes-2026-11-06.json`; evidence complete.
@@ -138,6 +149,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### independent · pipeline-desktop-opus-run3 · 20261106T174057Z
 
 [`independent/pipeline-desktop-opus-run3/20261106T174057Z/CELL.md`](independent/pipeline-desktop-opus-run3/20261106T174057Z/CELL.md) — final 6/12, re-scored 6/12; first scored 6/12; executions 2; 2026-11-06T17:40:57Z; from `pipeline-oracle-desktop-opus-run3-1paper-all-modes-2026-11-06.json`; evidence complete.
+
+### independent · pipeline-desktop-opus-run4 · 20261108T083700Z
+
+[`independent/pipeline-desktop-opus-run4/20261108T083700Z/CELL.md`](independent/pipeline-desktop-opus-run4/20261108T083700Z/CELL.md) — final 12/12, re-scored 12/12; first scored 10/12; executions 3; 2026-11-08T08:37:00Z; from `pipeline-oracle-desktop-opus-run4-24papers-indep-blind-2026-11-08.json`; evidence complete.
 
 ### blind · claude-code · 2026-11-06-a
 
@@ -151,6 +166,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`blind/claude-code/2026-11-06-c/CELL.md`](blind/claude-code/2026-11-06-c/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 2; 2026-11-06T17:50:40Z; from `claude-code-run3-1paper-indep-blind-2026-11-06.json`; evidence complete.
 
+### blind · claude-code · 2026-11-07-a
+
+[`blind/claude-code/2026-11-07-a/CELL.md`](blind/claude-code/2026-11-07-a/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 4; 2026-11-08T01:58:30Z; from `claude-code-run4-24papers-indep-blind-2026-11-08.json`; evidence complete.
+
 ### blind · pipeline-desktop-opus · 20261106T163912Z
 
 [`blind/pipeline-desktop-opus/20261106T163912Z/CELL.md`](blind/pipeline-desktop-opus/20261106T163912Z/CELL.md) — final 6/12, re-scored 6/12; first scored 6/12; executions 1; 2026-11-06T16:39:12Z; from `pipeline-oracle-desktop-opus-1paper-all-modes-2026-11-06.json`; evidence complete.
@@ -162,4 +181,8 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · pipeline-desktop-opus-run3 · 20261106T174057Z
 
 [`blind/pipeline-desktop-opus-run3/20261106T174057Z/CELL.md`](blind/pipeline-desktop-opus-run3/20261106T174057Z/CELL.md) — final 12/12, re-scored 12/12; first scored 12/12; executions 1; 2026-11-06T17:40:57Z; from `pipeline-oracle-desktop-opus-run3-1paper-all-modes-2026-11-06.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-run4 · 20261108T013503Z
+
+[`blind/pipeline-desktop-opus-run4/20261108T013503Z/CELL.md`](blind/pipeline-desktop-opus-run4/20261108T013503Z/CELL.md) — final 7/12, re-scored 7/12; first scored 7/12; executions 1; 2026-11-08T01:35:03Z; from `pipeline-oracle-desktop-opus-run4-24papers-indep-blind-2026-11-08.json`; evidence complete.
 

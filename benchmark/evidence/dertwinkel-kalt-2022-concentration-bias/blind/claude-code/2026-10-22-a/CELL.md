@@ -72,3 +72,7 @@ Agent notes: Data: Consumption Experiment/Stata/Consumption_Experiment.csv (9 ro
 - [`output/script.R`](output/script.R) — 5,595 bytes, from `benchmark/results/artifacts/dertwinkel-kalt-2022-concentration-bias/blind/claude-code/20261022T032229Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/dertwinkel-kalt-2022-concentration-bias/blind/claude-code/20261022T032229Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 3,281 bytes, from `benchmark/results/artifacts/dertwinkel-kalt-2022-concentration-bias/blind/claude-code/20261022T032229Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

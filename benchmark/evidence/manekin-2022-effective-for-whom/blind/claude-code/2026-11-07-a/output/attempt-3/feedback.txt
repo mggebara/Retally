@@ -1,0 +1,1 @@
+Run crashed before printing RESULT lines: "Error in eval(extras, data, env) : object 'd' not found" -- lm() evaluates weights= in the data/formula environment, so `weights = d[[w]]` inside the helper failed. Fix: store the weight in a column (.w, 1 when unweighted) and pass weights = .w.

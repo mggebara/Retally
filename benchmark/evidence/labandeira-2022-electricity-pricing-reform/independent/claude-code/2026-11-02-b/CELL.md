@@ -90,3 +90,7 @@ Agent notes: Data: analysis file data_to_run_DOFILE3.dta, 2011-2014 panel (T2 no
 - [`output/script.R`](output/script.R) — 4,576 bytes, from `benchmark/results/artifacts/labandeira-2022-electricity-pricing-reform/independent/claude-code/20261102T151024Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 424 bytes, from `benchmark/results/artifacts/labandeira-2022-electricity-pricing-reform/independent/claude-code/20261102T151024Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 980 bytes, from `benchmark/results/artifacts/labandeira-2022-electricity-pricing-reform/independent/claude-code/20261102T151024Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

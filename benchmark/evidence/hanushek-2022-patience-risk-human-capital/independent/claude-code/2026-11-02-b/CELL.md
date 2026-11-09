@@ -70,3 +70,7 @@ Agent notes: Table 1: WLS of pv1math (score/100) on country GPS patience/risk-ta
 - [`output/script.R`](output/script.R) — 4,238 bytes, from `benchmark/results/artifacts/hanushek-2022-patience-risk-human-capital/independent/claude-code/20261102T151024Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 243 bytes, from `benchmark/results/artifacts/hanushek-2022-patience-risk-human-capital/independent/claude-code/20261102T151024Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 3,086 bytes, from `benchmark/results/artifacts/hanushek-2022-patience-risk-human-capital/independent/claude-code/20261102T151024Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

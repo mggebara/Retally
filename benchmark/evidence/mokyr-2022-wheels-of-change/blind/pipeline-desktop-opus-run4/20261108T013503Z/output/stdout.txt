@@ -1,0 +1,231 @@
+Columns:
+ [1] "local_government_area"  "district_id"            "smith"                 
+ [4] "joiner"                 "butcher"                "blacksmith"            
+ [7] "attorney"               "apothecary"             "surgeon"               
+[10] "wrights"                "draper"                 "trade_other"           
+[13] "GAZ_CNTY"               "ntextile0"              "all_weaver0"           
+[16] "worsted_w0"             "linen_w0"               "cotton_w0"             
+[19] "other_weaver0"          "pc0"                    "all_weaver1"           
+[22] "worsted_w1"             "linen_w1"               "cotton_w1"             
+[25] "other_weaver1"          "y1"                     "x1"                    
+[28] "lords_ploughs"          "total_ploughs"          "mills"                 
+[31] "ecclesiastical_holding" "king_holding"           "villcount"             
+[34] "pop_86"                 "pc1300_mean"            "pc1400_mea"            
+[37] "carbon"                 "riv_rug1020count"       "dist_rug_mean"         
+[40] "wheat_tmean"            "suitmean"               "riv_rug01count"        
+[43] "riv_rug13count"         "riv_rug14count"         "riv_rug15count"        
+[46] "riv_rug16count"         "riv_rug23count"         "riv_rug24count"        
+[49] "riv_rug25count"         "riv_rug26count"         "min_dist_to_roman_rds" 
+[52] "min_dist_2nav_rivers"   "min_harbor"             "dist_elevation_mean"   
+[55] "DIST_London"            "dist_grass_mean"        "area"                  
+[58] "latitude"               "longitude"              "temp_mean_dist"        
+[61] "precip_mean_dist"       "pcmean"                
+Rows: 325 
+Population variable used: pc0 
+wrights summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  0.000   0.000   2.000   5.588   6.000 340.000 
+mills summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+   0.00    1.00    7.00   19.54   24.93  393.70      27 
+pop summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.448  15.556  36.180 101.952  90.952 872.631 
+River-related columns:
+ [1] "riv_rug1020count"     "riv_rug01count"       "riv_rug13count"      
+ [4] "riv_rug14count"       "riv_rug15count"       "riv_rug16count"      
+ [7] "riv_rug23count"       "riv_rug24count"       "riv_rug25count"      
+[10] "riv_rug26count"       "min_dist_2nav_rivers"
+River suitability variable used: riv_rug26count 
+Sample size: 298 
+OLS estimation, Dep. Var.: w_pc
+Observations: 298
+Standard-errors: Clustered (cl) 
+            Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)  822.566   446.1346 1.84376 0.0739478 .  
+m_pc         113.287    35.5251 3.18892 0.0030628 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 5,832.0   Adj. R2: 0.304863
+OLS estimation, Dep. Var.: w_pc
+Observations: 298
+Standard-errors: Clustered (cl) 
+                       Estimate Std. Error   t value  Pr(>|t|)    
+(Intercept)         -10163.7055 5669.28017 -1.792768 0.0819113 .  
+m_pc                   117.0910   34.53005  3.390989 0.0017796 ** 
+latitude                11.3136    5.80289  1.949645 0.0595050 .  
+longitude               16.2583    9.09962  1.786703 0.0829052 .  
+dist_rug_mean          402.2591  421.40821  0.954559 0.3465386    
+dist_elevation_mean   -800.6303 1216.68320 -0.658043 0.5149415    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 5,615.2   Adj. R2: 0.346764
+OLS estimation, Dep. Var.: w_pc
+Observations: 298
+Standard-errors: Clustered (cl) 
+                       Estimate  Std. Error   t value  Pr(>|t|)    
+(Intercept)         -15354.9074 19854.59373 -0.773368 0.4446486    
+m_pc                   114.5319    35.78296  3.200738 0.0029681 ** 
+latitude                13.3576     9.40006  1.421013 0.1644203    
+longitude               19.0839    13.13251  1.453180 0.1553419    
+dist_rug_mean          252.6908   345.06059  0.732309 0.4689987    
+dist_elevation_mean   -521.8017  1121.37634 -0.465323 0.6446673    
+suitmean             -3811.1673  2625.86919 -1.451393 0.1558357    
+wheat_hi              1524.9010   654.74351  2.329005 0.0259377 *  
+dist_grass_mean        738.0328  1545.97616  0.477389 0.6361394    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 5,549.9   Adj. R2: 0.355241
+OLS estimation, Dep. Var.: w_pc
+Observations: 298
+Standard-errors: Clustered (cl) 
+                       Estimate Std. Error   t value  Pr(>|t|)    
+(Intercept)         -3362.54557 27685.8447 -0.121454 0.9040467    
+m_pc                  113.54996    36.3089  3.127332 0.0036043 ** 
+latitude                6.75054    10.5049  0.642606 0.5247898    
+longitude              22.18261    15.5171  1.429563 0.1619674    
+dist_rug_mean          65.19775   426.8123  0.152755 0.8794944    
+dist_elevation_mean -1771.12383  1281.4564 -1.382118 0.1759489    
+suitmean            -2574.79036  2539.2253 -1.014006 0.3177417    
+wheat_hi             1242.52266   742.7597  1.672846 0.1035361    
+dist_grass_mean       495.98638  1323.0476  0.374882 0.7100767    
+precip_mean_dist     7327.24261 10838.1789  0.676058 0.5035766    
+temp_mean_dist      -1374.72285  1224.8586 -1.122352 0.2695763    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 5,530.8   Adj. R2: 0.355203
+OLS estimation, Dep. Var.: w_pc
+Observations: 298
+Standard-errors: Clustered (cl) 
+                           Estimate  Std. Error   t value Pr(>|t|)    
+(Intercept)           -47363.973463 32316.59620 -1.465624 0.151938    
+m_pc                      68.866541    37.96424  1.813984 0.078514 .  
+latitude                  16.680832    14.99863  1.112157 0.273873    
+longitude                 24.694595    16.48550  1.497959 0.143372    
+dist_rug_mean           -211.375877   421.70005 -0.501247 0.619427    
+dist_elevation_mean      109.764651  1630.52684  0.067319 0.946722    
+suitmean               -4150.965569  1981.02161 -2.095366 0.043660 *  
+wheat_hi                1039.810045   760.10353  1.367985 0.180291    
+dist_grass_mean          201.950452  1646.27402  0.122671 0.903090    
+precip_mean_dist        7396.707201  8492.31257  0.870989 0.389869    
+temp_mean_dist          2738.970405  1875.71756  1.460225 0.153408    
+pop                       -0.966694     1.79352 -0.538993 0.593404    
+min_harbor              4062.369368  1826.38987  2.224262 0.032876 *  
+DIST_London             -896.403115 17535.83677 -0.051118 0.959530    
+min_dist_to_roman_rds -12876.178623  6705.26774 -1.920308 0.063239 .  
+min_dist_2nav_rivers    1000.276214  1213.33378  0.824403 0.415457    
+area                    5377.955403  2139.98288  2.513083 0.016873 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 5,067.8   Adj. R2: 0.447077
+OLS estimation, Dep. Var.: w_pc
+Observations: 298
+Standard-errors: Clustered (cl) 
+                          Estimate  Std. Error   t value Pr(>|t|)    
+(Intercept)           -51036.83633 32568.76291 -1.567049 0.126364    
+m_pc                      63.25949    37.66090  1.679713 0.102181    
+latitude                  20.08018    15.01739  1.337128 0.190059    
+longitude                 23.40386    15.58732  1.501468 0.142465    
+dist_rug_mean           -140.38699   427.75895 -0.328192 0.744779    
+dist_elevation_mean     -858.36413  1669.69426 -0.514085 0.610518    
+suitmean               -3528.65793  1837.33924 -1.920526 0.063211 .  
+wheat_hi                1003.58548   723.78924  1.386571 0.174598    
+dist_grass_mean          183.13873  1719.99249  0.106476 0.915830    
+precip_mean_dist        9641.33517  8594.11280  1.121853 0.269785    
+temp_mean_dist          3025.04238  1989.21371  1.520723 0.137576    
+pop                       -1.97503     1.91782 -1.029828 0.310362    
+min_harbor              4116.38137  1761.06794  2.337435 0.025441 *  
+DIST_London            -4623.77604 17635.04079 -0.262193 0.794755    
+min_dist_to_roman_rds -11664.61577  6725.95245 -1.734270 0.091930 .  
+min_dist_2nav_rivers    1165.46425  1295.21993  0.899820 0.374546    
+area                    1516.77957  2798.84370  0.541931 0.591400    
+riv_suit                  12.14866     8.02396  1.514048 0.139255    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 4,995.5   Adj. R2: 0.460827
+TSLS estimation: Second stage
+|- D.V.   : w_pc
+|- Endo.  : m_pc
+|- Instr. : instr
+Dep. Var.: w_pc
+Observations: 298
+Standard-errors: Clustered (cl) 
+              Estimate Std. Error   t value Pr(>|t|)    
+(Intercept) -404.33386  386.64233 -1.045757 0.303051    
+fit_m_pc     149.31284   69.44826  2.149987 0.038757 *  
+riv_suit       3.27109    2.60445  1.255960 0.217693    
+wheat_hi      77.83229 1101.53472  0.070658 0.944084    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 5,927.8   Adj. R2: 0.388828
+F-test (1st stage), m_pc: stat = 122.733, p < 2.2e-16 , on 1 and 294 DoF.
+              Wu-Hausman: stat =  18.299, p = 2.559e-5, on 1 and 293 DoF.
+TSLS estimation: Second stage
+|- D.V.   : w_pc
+|- Endo.  : m_pc
+|- Instr. : instr
+Dep. Var.: w_pc
+Observations: 298
+Standard-errors: Clustered (cl) 
+                        Estimate  Std. Error   t value Pr(>|t|)    
+(Intercept)         -32010.87077 30142.20157 -1.061995 0.295723    
+fit_m_pc               143.76906    72.48811  1.983347 0.055452 .  
+riv_suit                 5.88342     4.33434  1.357397 0.183598    
+latitude                15.08974    12.03716  1.253596 0.218541    
+longitude               26.70024    13.08725  2.040172 0.049162 *  
+dist_rug_mean         -150.61565   447.59911 -0.336497 0.738564    
+dist_elevation_mean  -1253.21359  1753.45542 -0.714711 0.479667    
+suitmean             -2553.81304  2321.03772 -1.100289 0.278936    
+wheat_hi               906.08127   870.68253  1.040656 0.305379    
+dist_grass_mean       1092.46686  1508.09300  0.724403 0.473774    
+precip_mean_dist     10211.12266  9251.32721  1.103747 0.277454    
+temp_mean_dist         374.03580  1548.59370  0.241533 0.810593    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 5,524.0   Adj. R2: 0.452589
+F-test (1st stage), m_pc: stat = 98.948, p < 2.2e-16 , on 1 and 286 DoF.
+              Wu-Hausman: stat = 15.191, p = 1.212e-4, on 1 and 285 DoF.
+TSLS estimation: Second stage
+|- D.V.   : w_pc
+|- Endo.  : m_pc
+|- Instr. : instr
+Dep. Var.: w_pc
+Observations: 298
+Standard-errors: Clustered (cl) 
+                           Estimate  Std. Error   t value  Pr(>|t|)    
+(Intercept)           -57011.613249 30211.68025 -1.887072 0.0677128 .  
+fit_m_pc                 161.580637    73.42327  2.200673 0.0346506 *  
+riv_suit                   7.037659     7.60428  0.925487 0.3612355    
+latitude                  27.125439    19.60041  1.383922 0.1754005    
+longitude                 27.063714    13.86105  1.952501 0.0591519 .  
+dist_rug_mean            132.422167   483.58159  0.273836 0.7858672    
+dist_elevation_mean     -570.996512  1511.48209 -0.377773 0.7079477    
+suitmean               -4934.436636  2352.35796 -2.097656 0.0434436 *  
+wheat_hi                 328.139834   802.73012  0.408780 0.6852647    
+dist_grass_mean          883.275750  2119.94100  0.416651 0.6795524    
+precip_mean_dist        9906.022274  7866.60771  1.259250 0.2165170    
+temp_mean_dist          2660.867535  1952.93491  1.362497 0.1819989    
+pop                        0.196022     2.09389  0.093616 0.9259637    
+min_harbor              4527.877228  1572.85585  2.878762 0.0068572 ** 
+DIST_London            -2757.598976 18238.63876 -0.151195 0.8807151    
+min_dist_to_roman_rds   1785.243129 11034.11737  0.161793 0.8724265    
+min_dist_2nav_rivers     477.245754  1223.34867  0.390114 0.6988854    
+area                   -1177.421218  3449.86360 -0.341295 0.7349818    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 5,506.8   Adj. R2: 0.495498
+F-test (1st stage), m_pc: stat = 100.401, p < 2.2e-16 , on 1 and 280 DoF.
+              Wu-Hausman: stat =  23.325, p = 2.259e-6, on 1 and 279 DoF.
+RESULT:watermills_table2_col1=113.286700
+RESULT:watermills_table2_col2=117.091021
+RESULT:watermills_table2_col3=114.531884
+RESULT:watermills_table2_col4=113.549956
+RESULT:watermills_table2_col5=68.866541
+RESULT:watermills_ols_table3_col5=63.259488
+RESULT:watermills_iv_table3_col2=149.312841
+RESULT:watermills_iv_table3_col4=143.769055
+RESULT:watermills_iv_table3_col6=161.580637
+RESULT:first_stage_f_table3_col2=8.857482
+RESULT:first_stage_f_table3_col4=7.323771
+RESULT:first_stage_f_table3_col6=7.941616
+RESULT:n_districts_tables2_3=298

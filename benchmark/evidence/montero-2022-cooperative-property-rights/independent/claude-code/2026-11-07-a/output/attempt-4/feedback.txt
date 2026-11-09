@@ -1,0 +1,7 @@
+# Manual comparison (specification grid, diagnostics only, no RESULT: lines). Baseline row (sep_fe):
+earnings_level_above500_bw300: reproduced 82.251, claimed 60.49
+earnings_level_above500_bw150: reproduced 71.829, claimed 52.79
+earnings_iqr_above500_bw300: reproduced -56.423, claimed -42.97
+earnings_iqr_above500_bw150: reproduced -63.727, claimed -51.79
+# No uniform-kernel variant (no FE, pooled slope, quadratic, survey_year FE, reform regressor) matched.
+# Ratio reproduced/claimed is ~0.735 for both level columns -> next: try triangular kernel weights (local linear RD, CCT default).

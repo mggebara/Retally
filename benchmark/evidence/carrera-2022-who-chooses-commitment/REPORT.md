@@ -35,12 +35,13 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [11/11](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [11/11](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[11/11](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [11/11](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[11/11](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
+| `claude-code` | [11/11](seeded/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [11/11](independent/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](independent/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[11/11](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c)<br>[11/11](independent/claude-code/2026-11-07-a/CELL.md) (2026-11-07-a) | [11/11](blind/claude-code/2026-11-02-a/CELL.md) (2026-11-02-a)<br>[11/11](blind/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b)<br>[11/11](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c)<br>[11/11](blind/claude-code/2026-11-07-a/CELL.md) (2026-11-07-a) |
 | `pipeline-desktop-opus` | [11/11](seeded/pipeline-desktop-opus/20261102T060946Z/CELL.md) (20261102T060946Z) | [7/11](independent/pipeline-desktop-opus/20261102T065825Z/CELL.md) (20261102T065825Z) | [0/11](blind/pipeline-desktop-opus/20261102T055735Z/CELL.md) (20261102T055735Z) |
 | `pipeline-desktop-opus-postfix` | — | [9/11](independent/pipeline-desktop-opus-postfix/20261103T104514Z/CELL.md) (20261103T104514Z) | [8/11](blind/pipeline-desktop-opus-postfix/20261103T071642Z/CELL.md) (20261103T071642Z) |
 | `pipeline-desktop-opus-postfix2` | — | [0/11](independent/pipeline-desktop-opus-postfix2/20261105T212407Z/CELL.md) (20261105T212407Z) | [9/11](blind/pipeline-desktop-opus-postfix2/20261103T114859Z/CELL.md) (20261103T114859Z) |
 | `pipeline-desktop-opus-run2` | [11/11](seeded/pipeline-desktop-opus-run2/20261102T091036Z/CELL.md) (20261102T091036Z) | [0/11](independent/pipeline-desktop-opus-run2/20261102T092119Z/CELL.md) (20261102T092119Z) | [7/11](blind/pipeline-desktop-opus-run2/20261102T091036Z/CELL.md) (20261102T091036Z) |
 | `pipeline-desktop-opus-run3` | [11/11](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [8/11](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) (20261103T052626Z) | [4/11](blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) |
+| `pipeline-desktop-opus-run4` | — | [9/11](independent/pipeline-desktop-opus-run4/20261108T192145Z/CELL.md) (20261108T192145Z) | [4/11](blind/pipeline-desktop-opus-run4/20261108T060639Z/CELL.md) (20261108T060639Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
 
@@ -59,9 +60,9 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 | [seeded/pipeline-desktop-opus-run3/20261103T010557Z](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) | `takeup_more_basic_info_treatment_col1` | -0.021511 | -0.022 | ±0.0005 (printed_precision) | 0.978 | PASS |
 | [independent/pipeline-desktop-opus/20261102T065825Z](independent/pipeline-desktop-opus/20261102T065825Z/CELL.md) | `bcp_basic_info_treatment_col1` | -0.273601 | 0.3 | ±0.56 (se_band) | 1.024 | FAIL |
 | [independent/pipeline-desktop-opus-run3/20261103T052626Z](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) | `bcp_basic_info_treatment_col1` | -0.273601 | 0.3 | ±0.56 (se_band) | 1.024 | FAIL |
+| [independent/pipeline-desktop-opus-run4/20261108T192145Z](independent/pipeline-desktop-opus-run4/20261108T192145Z/CELL.md) | `takeup_more_actual_minus_expected_attendance_col4` | -0.030631 | -0.043 | ±0.013 (se_band) | 0.951 | PASS |
 | [independent/pipeline-desktop-opus/20261102T065825Z](independent/pipeline-desktop-opus/20261102T065825Z/CELL.md) | `takeup_more_regression_observations` | 2946 | 2824 | ±141.2 (relative) | 0.864 | PASS |
 | [blind/pipeline-desktop-opus-run3/20261103T010557Z](blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) | `takeup_more_behavior_change_premium_col2` | 0.018246 | 0.027 | ±0.011 (se_band) | 0.796 | PASS |
-| [independent/pipeline-desktop-opus-run3/20261103T052626Z](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) | `takeup_more_actual_minus_expected_attendance_col4` | -0.032806 | -0.043 | ±0.013 (se_band) | 0.784 | PASS |
 
 ### Declared deviations
 
@@ -72,6 +73,11 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 - [independent/pipeline-desktop-opus-run3/20261103T052626Z](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) (8/11; failed: `bcp_basic_info_treatment_col1`, `bcp_enhanced_info_treatment_col1`, `takeup_more_enhanced_info_treatment_col1`)
   - Sample additionally excludes potentially endogenous assignments via rule rule1_flag_low_wtp chosen to match paper N=1126
   - Unlabelled columns q169/q170 used as the >=8 and >=16 'more' contract choices
+- [independent/pipeline-desktop-opus-run4/20261108T192145Z](independent/pipeline-desktop-opus-run4/20261108T192145Z/CELL.md) (9/11; failed: `bcp_goal_minus_expected_attendance_col2`, `takeup_more_goal_minus_expected_attendance_col3`)
+  - BCP averaged over adjacent elicited pairs ($1..$12), excluding a $0->$1 step; exact averaging not stated in provided text
+  - Dropped flag_exclude_exog==1, flag_low_wtp==1 (endogenous assignment) only; the $80-for-12+ arm is kept since BCP and take-up are elicited before incentive assignment (actual-minus-expected gap is missing for that arm)
+  - Common regression sample restricted to observations with non-missing actual-minus-expected gap (drops the $80-for-12+ arm), matching the paper's N = 1,126
+  - Treated q169/q170 as the 8+/16+ 'more' commitment choices (waves 1-2), reverse-coded so take-up rates match the paper's 64%/32%; column names are unlabeled
 - [blind/claude-code/2026-11-02-a](blind/claude-code/2026-11-02-a/CELL.md) (11/11)
   - Subject identifier for clustering in Table 4 is the participant row in cleaned_commitment_study_data.dta (one row per participant; no id column in that file).
 
@@ -79,20 +85,25 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 Claims where, in the same mode, one reproducer family passed in every run and the other failed in every run (pass counts per family).
 
-- blind: `takeup_more_regression_observations` — pipeline 0/5, agent 3/3
+- blind: `takeup_more_regression_observations` — pipeline 0/6, agent 4/4
 
 Pass rates at least 50 points apart (not unanimous):
 
-- independent: `bcp_basic_info_treatment_col1` — pipeline 1/5, agent 3/3
-- independent: `bcp_enhanced_info_treatment_col1` — pipeline 1/5, agent 3/3
-- independent: `bcp_regression_observations` — pipeline 2/5, agent 3/3
-- independent: `takeup_more_basic_info_treatment_col1` — pipeline 2/5, agent 3/3
-- independent: `takeup_more_enhanced_info_treatment_col1` — pipeline 1/5, agent 3/3
-- independent: `takeup_more_regression_observations` — pipeline 2/5, agent 3/3
-- blind: `bcp_goal_minus_expected_attendance_col2` — pipeline 2/5, agent 3/3
-- blind: `bcp_regression_observations` — pipeline 2/5, agent 3/3
-- blind: `takeup_more_basic_info_treatment_col1` — pipeline 1/5, agent 3/3
-- blind: `takeup_more_goal_minus_expected_attendance_col3` — pipeline 2/5, agent 3/3
+- independent: `bcp_basic_info_treatment_col1` — pipeline 2/6, agent 4/4
+- independent: `bcp_enhanced_info_treatment_col1` — pipeline 2/6, agent 4/4
+- independent: `bcp_goal_minus_expected_attendance_col2` — pipeline 3/6, agent 4/4
+- independent: `bcp_regression_observations` — pipeline 3/6, agent 4/4
+- independent: `takeup_more_basic_info_treatment_col1` — pipeline 3/6, agent 4/4
+- independent: `takeup_more_enhanced_info_treatment_col1` — pipeline 2/6, agent 4/4
+- independent: `takeup_more_goal_minus_expected_attendance_col3` — pipeline 3/6, agent 4/4
+- independent: `takeup_more_regression_observations` — pipeline 3/6, agent 4/4
+- blind: `bcp_basic_info_treatment_col1` — pipeline 3/6, agent 4/4
+- blind: `bcp_enhanced_info_treatment_col1` — pipeline 3/6, agent 4/4
+- blind: `bcp_goal_minus_expected_attendance_col2` — pipeline 2/6, agent 4/4
+- blind: `bcp_regression_observations` — pipeline 2/6, agent 4/4
+- blind: `takeup_more_basic_info_treatment_col1` — pipeline 2/6, agent 4/4
+- blind: `takeup_more_enhanced_info_treatment_col1` — pipeline 3/6, agent 4/4
+- blind: `takeup_more_goal_minus_expected_attendance_col3` — pipeline 2/6, agent 4/4
 
 ## Cells
 
@@ -128,6 +139,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/claude-code/2026-11-02-c/CELL.md`](independent/claude-code/2026-11-02-c/CELL.md) — final 11/11, re-scored 11/11; first scored 11/11; executions 2; 2026-11-02T20:10:00Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
 
+### independent · claude-code · 2026-11-07-a
+
+[`independent/claude-code/2026-11-07-a/CELL.md`](independent/claude-code/2026-11-07-a/CELL.md) — final 11/11, re-scored 11/11; first scored 11/11; executions 3; 2026-11-07T18:58:12Z; from `claude-code-run4-24papers-indep-blind-2026-11-08.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus · 20261102T065825Z
 
 [`independent/pipeline-desktop-opus/20261102T065825Z/CELL.md`](independent/pipeline-desktop-opus/20261102T065825Z/CELL.md) — final 7/11, re-scored 7/11; first scored 4/11; executions 5; 2026-11-02T06:58:25Z; from `pipeline-oracle-desktop-opus-4papers-all-modes-2026-11-02.json`; evidence complete.
@@ -148,6 +163,10 @@ Pass rates at least 50 points apart (not unanimous):
 
 [`independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md`](independent/pipeline-desktop-opus-run3/20261103T052626Z/CELL.md) — final 8/11, re-scored 8/11; first scored 0/11; executions 4; 2026-11-03T05:26:26Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-run4 · 20261108T192145Z
+
+[`independent/pipeline-desktop-opus-run4/20261108T192145Z/CELL.md`](independent/pipeline-desktop-opus-run4/20261108T192145Z/CELL.md) — final 9/11, re-scored 9/11; first scored 4/11; executions 5; 2026-11-08T19:21:45Z; from `pipeline-oracle-desktop-opus-run4-24papers-indep-blind-2026-11-08.json`; evidence complete.
+
 ### blind · claude-code · 2026-11-02-a
 
 [`blind/claude-code/2026-11-02-a/CELL.md`](blind/claude-code/2026-11-02-a/CELL.md) — final 11/11, re-scored 11/11; first scored 11/11; executions 2; 2026-11-02T05:52:30Z; from `claude-code-4papers-all-modes-2026-11-02.json`; evidence complete.
@@ -159,6 +178,10 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · claude-code · 2026-11-02-c
 
 [`blind/claude-code/2026-11-02-c/CELL.md`](blind/claude-code/2026-11-02-c/CELL.md) — final 11/11, re-scored 11/11; first scored 11/11; executions 3; 2026-11-02T20:15:00Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
+
+### blind · claude-code · 2026-11-07-a
+
+[`blind/claude-code/2026-11-07-a/CELL.md`](blind/claude-code/2026-11-07-a/CELL.md) — final 11/11, re-scored 11/11; first scored 11/11; executions 3; 2026-11-07T19:14:30Z; from `claude-code-run4-24papers-indep-blind-2026-11-08.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus · 20261102T055735Z
 
@@ -179,4 +202,8 @@ Pass rates at least 50 points apart (not unanimous):
 ### blind · pipeline-desktop-opus-run3 · 20261103T010557Z
 
 [`blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md`](blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — final 4/11, re-scored 4/11; first scored 4/11; executions 2; 2026-11-03T01:05:57Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-run4 · 20261108T060639Z
+
+[`blind/pipeline-desktop-opus-run4/20261108T060639Z/CELL.md`](blind/pipeline-desktop-opus-run4/20261108T060639Z/CELL.md) — final 4/11, re-scored 4/11; first scored 4/11; executions 3; 2026-11-08T06:06:39Z; from `pipeline-oracle-desktop-opus-run4-24papers-indep-blind-2026-11-08.json`; evidence complete.
 

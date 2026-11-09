@@ -57,3 +57,7 @@ Agent notes: Translated 1_dataprep.do and 2_analysis.do to R in a single run. me
 - [`output/script.R`](output/script.R) — 3,626 bytes, from `benchmark/results/artifacts/leeson-2022-hobo-economicus/seeded/claude-code/20261022T021417Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/leeson-2022-hobo-economicus/seeded/claude-code/20261022T021417Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 2,225 bytes, from `benchmark/results/artifacts/leeson-2022-hobo-economicus/seeded/claude-code/20261022T021417Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

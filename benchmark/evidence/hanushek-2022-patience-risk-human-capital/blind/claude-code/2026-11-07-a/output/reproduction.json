@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "entry_id": "hanushek-2022-patience-risk-human-capital",
+  "mode": "blind",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Table 2 observations reported as fixest's estimation N (80,397): fixest drops one singleton residence-country-by-wave cell (1 student); the migrant file has 80,398 rows. Coefficients are unaffected by the singleton.",
+    "Table 2 regressions weighted by the student sampling weight (wgt) following the paper's statement that all regressions are weighted by sampling probabilities; the Table 2 notes do not repeat the weighting statement.",
+    "Natives (Table 1 col 5) = all students with migra0 != 0 (migrants are migra0 == 0, both parents born abroad; students with imputed migration status are counted as natives). The migration-status controls and imputation dummies are kept in the formula; collinear ones are dropped by fixest.",
+    "Main 2.3 GB .dta read with a self-written chunked readBin Stata-118 reader (verified identical to haven::read_dta on the first 3000 rows of all 208 columns)."
+  ],
+  "notes": "Table 1: student-level WLS of pv1math (PISA math/100) on country GPS patience and/or risk-taking (country means of individually z-standardised GPS measures, as provided), controls female, age, migra1, migra2, imputation dummies (imfemale, image, immigra0-2), wave FE; weights wgtc (sampling weights summing to 1 per country = equal country weights); SEs clustered by country (49). Data: pisa_full_gps_final.dta, N=1,992,276. Table 2: pisa_full_gps_final_imcoo.dta (first/second-generation migrants, waves 2003-2018, 58 origin, 48 residence countries), pv1math on coo_patience/coo_risktaking (+ four other origin GPS preferences in col 4), controls female, age, coo_oecd, imfemale, image, residence-country-by-wave FE (180), weights wgt, SEs clustered by country of origin. Attempts 1-3 were exploratory (attempt 1 crashed in the header parser and was fixed). No run hung; final run took 162 s wall-clock (mostly file I/O). Only the main task paper text and mount data files (plus Replication/README.docx data documentation) were read; no scripts opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-08T19:20:08Z",
+  "finished_at": "2026-11-08T19:31:00Z"
+}

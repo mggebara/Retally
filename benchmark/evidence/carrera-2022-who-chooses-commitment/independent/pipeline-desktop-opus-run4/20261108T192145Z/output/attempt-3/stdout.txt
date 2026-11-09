@@ -1,0 +1,90 @@
+DEVIATION: BCP averaged over adjacent pairs including the $0->$1 step with w(0)=0; exact averaging not stated in provided text
+
+  1   2   3 
+350 528 414 
+tr_lab
+       control        perday1        perday2        perday3        perday5 
+           427              1            305              2             77 
+       perday7 threshold80_12 
+           352            128 
+DEVIATION: Dropped flag_exclude_exog==1, flag_low_wtp==1 (endogenous assignment) and the $80-for-12+ commitment arm
+                             m1              m2              m3
+Dependent Var.:             bcp             bcp             bcp
+                                                               
+basic_info      0.3387 (0.5258) 0.3493 (0.5305) 0.3242 (0.5247)
+enhanced_info   1.084* (0.5465) 1.099. (0.5602) 1.023. (0.5595)
+goal_z                          0.0453 (0.2227)                
+act_z                                           0.2599 (0.2028)
+Fixed-Effects:  --------------- --------------- ---------------
+wave                        Yes             Yes             Yes
+_______________ _______________ _______________ _______________
+S.E. type       Heteroske.-rob. Heteroske.-rob. Heteroske.-rob.
+Observations              1,126           1,126           1,126
+R2                      0.00918         0.00922         0.01060
+Within R2               0.00455         0.00460         0.00598
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+   
+    FALSE TRUE
+  1     0  340
+  2     0  509
+  3   277    0
+   
+    TRUE
+  1  340
+  2  509
+  3  277
+   
+    FALSE TRUE
+  1     0  340
+  2     0  509
+  3   277    0
+DEVIATION: Treated q169/q170 as the 8+/16+ 'more' commitment choices (waves 1-2); column names are unlabeled
+        8        12        16 
+0.3568905 0.4937833 0.6584217 
+                              t1               t2               t3
+Dependent Var.:           takeup           takeup           takeup
+                                                                  
+basic_info      -0.0370 (0.0275) -0.0371 (0.0275) -0.0330 (0.0274)
+enhanced_info   -0.0024 (0.0205) -0.0026 (0.0205)  0.0029 (0.0209)
+bcp_z                             0.0010 (0.0066)                 
+goal_z                                            0.0174* (0.0083)
+act_z                                                             
+Fixed-Effects:  ---------------- ---------------- ----------------
+wave                         Yes              Yes              Yes
+threshold                    Yes              Yes              Yes
+_______________ ________________ ________________ ________________
+S.E.: Clustered          by: sid          by: sid          by: sid
+Observations               2,824            2,824            2,824
+R2                       0.05566          0.05567          0.05682
+Within R2                0.00053          0.00053          0.00175
+
+                               t4
+Dependent Var.:            takeup
+                                 
+basic_info       -0.0363 (0.0274)
+enhanced_info     0.0002 (0.0206)
+bcp_z                            
+goal_z                           
+act_z           -0.0137. (0.0081)
+Fixed-Effects:  -----------------
+wave                          Yes
+threshold                     Yes
+_______________ _________________
+S.E.: Clustered           by: sid
+Observations                2,824
+R2                        0.05639
+Within R2                 0.00130
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RESULT:bcp_basic_info_treatment_col1=0.338666
+RESULT:bcp_enhanced_info_treatment_col1=1.084477
+RESULT:bcp_goal_minus_expected_attendance_col2=0.045296
+RESULT:bcp_actual_minus_expected_attendance_col3=0.259868
+RESULT:bcp_regression_observations=1126
+RESULT:takeup_more_basic_info_treatment_col1=-0.037045
+RESULT:takeup_more_enhanced_info_treatment_col1=-0.002388
+RESULT:takeup_more_behavior_change_premium_col2=0.001037
+RESULT:takeup_more_goal_minus_expected_attendance_col3=0.017396
+RESULT:takeup_more_actual_minus_expected_attendance_col4=-0.013690
+RESULT:takeup_more_regression_observations=2824

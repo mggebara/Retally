@@ -39,12 +39,13 @@
 
 | Reproducer | seeded | independent | blind |
 |---|---|---|---|
-| `claude-code` | [13/13](seeded/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[13/13](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) | [13/13](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[13/13](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c) |
+| `claude-code` | [13/13](seeded/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](seeded/claude-code/2026-11-02-b/CELL.md) (2026-11-02-b) | [13/13](independent/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](independent/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[13/13](independent/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c)<br>[13/13](independent/claude-code/2026-11-07-a/CELL.md) (2026-11-07-a) | [13/13](blind/claude-code/2026-10-22-a/CELL.md) (2026-10-22-a)<br>[13/13](blind/claude-code/2026-11-01-a/CELL.md) (2026-11-01-a)<br>[13/13](blind/claude-code/2026-11-02-c/CELL.md) (2026-11-02-c)<br>[13/13](blind/claude-code/2026-11-07-a/CELL.md) (2026-11-07-a) |
 | `pipeline-desktop-opus` | [13/13](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) (20261023T063725Z) | [13/13](independent/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) | [12/13](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) (20261023T062931Z) |
 | `pipeline-desktop-opus-postfix` | — | [13/13](independent/pipeline-desktop-opus-postfix/20261103T070149Z/CELL.md) (20261103T070149Z) | [13/13](blind/pipeline-desktop-opus-postfix/20261103T062809Z/CELL.md) (20261103T062809Z) |
 | `pipeline-desktop-opus-postfix2` | — | [13/13](independent/pipeline-desktop-opus-postfix2/20261103T110326Z/CELL.md) (20261103T110326Z) | [13/13](blind/pipeline-desktop-opus-postfix2/20261103T111134Z/CELL.md) (20261103T111134Z) |
 | `pipeline-desktop-opus-run2` | [13/13](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [13/13](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) (20261023T151837Z) | [13/13](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) (20261023T150832Z) |
 | `pipeline-desktop-opus-run3` | [13/13](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [13/13](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) (20261103T010557Z) | [13/13](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) (20261103T004800Z) |
+| `pipeline-desktop-opus-run4` | — | [13/13](independent/pipeline-desktop-opus-run4/20261108T015935Z/CELL.md) (20261108T015935Z) | [11/13](blind/pipeline-desktop-opus-run4/20261108T013503Z/CELL.md) (20261108T013503Z) |
 
 Final pass counts as recorded in the results row; * = partial evidence (see the cell).
 
@@ -56,16 +57,16 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 
 | Cell | Claim | Reproduced | Paper | Band | Error / band | Verdict |
 |---|---|---|---|---|---|---|
+| [blind/pipeline-desktop-opus-run4/20261108T013503Z](blind/pipeline-desktop-opus-run4/20261108T013503Z/CELL.md) | `n_obs_table2` | 106 | 100 | ±5 (relative) | 1.200 | FAIL |
+| [blind/pipeline-desktop-opus-run4/20261108T013503Z](blind/pipeline-desktop-opus-run4/20261108T013503Z/CELL.md) | `n_obs_table3` | 212 | 200 | ±10 (relative) | 1.200 | FAIL |
+| [blind/pipeline-desktop-opus-run4/20261108T013503Z](blind/pipeline-desktop-opus-run4/20261108T013503Z/CELL.md) | `rel_cb_donation_treatment_table3_col2` | 0.119699 | 0.135 | ±0.021 (se_band) | 0.729 | PASS |
+| [blind/pipeline-desktop-opus-run4/20261108T013503Z](blind/pipeline-desktop-opus-run4/20261108T013503Z/CELL.md) | `diff_main_treatment_minus_control_table3_col3` | 0.25991 | 0.247 | ±0.023 (se_band) | 0.561 | PASS |
+| [blind/pipeline-desktop-opus-run4/20261108T013503Z](blind/pipeline-desktop-opus-run4/20261108T013503Z/CELL.md) | `rel_cb_mechanism_treatment_table3_col1` | 0.066245 | 0.075 | ±0.019 (se_band) | 0.461 | PASS |
+| [blind/pipeline-desktop-opus-run4/20261108T013503Z](blind/pipeline-desktop-opus-run4/20261108T013503Z/CELL.md) | `diff_donation_treatment_minus_control_table3_col2` | 0.148085 | 0.158 | ±0.022 (se_band) | 0.451 | PASS |
+| [blind/pipeline-desktop-opus-run4/20261108T013503Z](blind/pipeline-desktop-opus-run4/20261108T013503Z/CELL.md) | `abs_concentration_bias_midpoint_table2_col2` | 36.4953 | 37.61 | ±3.575 (se_band) | 0.312 | PASS |
+| [blind/pipeline-desktop-opus-run4/20261108T013503Z](blind/pipeline-desktop-opus-run4/20261108T013503Z/CELL.md) | `rel_concentration_bias_lower_table2_col1` | 0.185271 | 0.19 | ±0.016 (se_band) | 0.296 | PASS |
 | [seeded/pipeline-desktop-opus/20261023T063725Z](seeded/pipeline-desktop-opus/20261023T063725Z/CELL.md) | `rel_cb_mechanism_treatment_table3_col1` | 0.0754251 | 0.075 | ±0.0015 (relative) | 0.283 | PASS |
 | [seeded/pipeline-desktop-opus-run2/20261023T151837Z](seeded/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) | `rel_cb_mechanism_treatment_table3_col1` | 0.0754251 | 0.075 | ±0.0015 (relative) | 0.283 | PASS |
-| [seeded/claude-code/2026-10-22-a](seeded/claude-code/2026-10-22-a/CELL.md) | `rel_cb_mechanism_treatment_table3_col1` | 0.075425 | 0.075 | ±0.0015 (relative) | 0.283 | PASS |
-| [seeded/claude-code/2026-11-02-b](seeded/claude-code/2026-11-02-b/CELL.md) | `rel_cb_mechanism_treatment_table3_col1` | 0.075425 | 0.075 | ±0.0015 (relative) | 0.283 | PASS |
-| [seeded/pipeline-desktop-opus-run3/20261103T010557Z](seeded/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) | `rel_cb_mechanism_treatment_table3_col1` | 0.075425 | 0.075 | ±0.0015 (relative) | 0.283 | PASS |
-| [blind/pipeline-desktop-opus-run3/20261103T004800Z](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) | `diff_donation_treatment_minus_control_table3_col2` | 0.162912 | 0.158 | ±0.022 (se_band) | 0.223 | PASS |
-| [independent/pipeline-desktop-opus-run2/20261023T151837Z](independent/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) | `diff_donation_treatment_minus_control_table3_col2` | 0.1625 | 0.158 | ±0.022 (se_band) | 0.205 | PASS |
-| [blind/pipeline-desktop-opus-run2/20261023T150832Z](blind/pipeline-desktop-opus-run2/20261023T150832Z/CELL.md) | `diff_donation_treatment_minus_control_table3_col2` | 0.162486 | 0.158 | ±0.022 (se_band) | 0.204 | PASS |
-| [blind/pipeline-desktop-opus/20261023T062931Z](blind/pipeline-desktop-opus/20261023T062931Z/CELL.md) | `diff_donation_treatment_minus_control_table3_col2` | 0.162486 | 0.158 | ±0.022 (se_band) | 0.204 | PASS |
-| [independent/pipeline-desktop-opus-run3/20261103T010557Z](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) | `diff_donation_treatment_minus_control_table3_col2` | 0.162419 | 0.158 | ±0.022 (se_band) | 0.201 | PASS |
 
 ### Declared deviations
 
@@ -80,6 +81,11 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
 - [independent/claude-code/2026-11-02-c](independent/claude-code/2026-11-02-c/CELL.md) (13/13)
   - Upper-corner subjects' lower bound uses the value coded in the data (63) rather than the 62 stated in the paper text; with 62 the absolute midpoint mean would be 37.475 (printed as a diagnostic).
   - Main sample built as: no corner choice in any balanced trade-off, then the first 100 eligible subjects per condition by subject number (preregistered sample size). This matches the data's pap_sample flag for 599 of 600 subjects (one Donation-Control subject differs).
+- [independent/claude-code/2026-11-07-a](independent/claude-code/2026-11-07-a/CELL.md) (13/13)
+  - Upper-corner lower bound set to 63 (the value coded in the data for upper-corner subjects) rather than 62 as written in Section 2.3.5; midpoint = (63 + stated indifference point)/2.
+  - Main sample = no corner choice in any balanced trade-off AND the data's preregistered-sample flag pap_sample==1; the corner rule alone keeps 7 additional subjects (attempt-3) whom the flag excludes for a reason the paper text does not state.
+  - Control conditions: relative measure computed as d~/(e_j + x~_j) for the repeated trade-off j only (the deviation falls on a single workday), instead of the 8-workday average of eq. (12) used for the Treatment conditions.
+  - Tobit (Table 2 col. 4): AER::tobit on the lower-bound d~ with censoring at -63 and 63; OLS columns use lm_robust HC1 robust SEs.
 - [blind/claude-code/2026-10-22-a](blind/claude-code/2026-10-22-a/CELL.md) (13/13)
   - Upper-corner choices in the unbalanced trade-off use a lower bound of 63, the value the dataset assigns to upper corners (interior values run to 61; stated indifference points start at 63), instead of the 62 given in the paper text. With 62, the Main-Treatment midpoint mean of d would be 37.475 instead of 37.61. This sensitivity is printed as a DEVIATION line.
   - Tobit (Table 2 col 4) uses censoring points -63 (lower corner) and 63 (upper corner, matching the coding above), via AER::tobit.
@@ -95,6 +101,9 @@ Ratio of the absolute error to the band closest to 1 (a pass at 0.98 or a fail a
   - Relative measure computed exactly as eq. (12), (1/8) sum_t d/(e_t + x_t), using e from footnote 3 and x_t = balanced-trade-off indifference point indexed by utility_point. The dataset's precomputed qe_rad differs slightly from this (about 0.5% in Treatment conditions, more in Control); the cause was not identified, and eq. (12) was applied to all conditions, Control included.
   - Main sample = pap_sample == 1 (preregistered sample, 100 per condition). All of these subjects have no corner in any balanced trade-off. Seven further subjects with no balanced corner (late sessions, none in Main-Treatment) are flagged pap_sample == 0 and excluded, on the reading that they exceed the preregistered sample size of 100.
   - Tobit: AER::tobit on the lower-bound d, left-censored at -63 and right-censored at 62. OLS standard errors are HC1 (Stata robust).
+- [blind/claude-code/2026-11-07-a](blind/claude-code/2026-11-07-a/CELL.md) (13/13)
+  - Upper-corner subjects' lower bound for d~ is set to 63, the value the dataset itself uses for censored upper corners (id_stage2; interior values run only to 61), rather than the 62 stated in the paper text. Midpoint = (63 + manual)/2; Tobit right-censoring point 63, left -63.
+  - Main sample taken as pap_sample == 1 (100 subjects per condition): this drops all subjects with any balanced corner choice plus 7 corner-free subjects beyond the preregistered 100 per condition that the dataset flags as outside the pre-analysis-plan sample.
 
 ### Pipeline and agent disagree
 
@@ -136,6 +145,10 @@ _None._
 
 [`independent/claude-code/2026-11-02-c/CELL.md`](independent/claude-code/2026-11-02-c/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 4; 2026-11-02T20:04:00Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
 
+### independent · claude-code · 2026-11-07-a
+
+[`independent/claude-code/2026-11-07-a/CELL.md`](independent/claude-code/2026-11-07-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 4; 2026-11-07T19:40:00Z; from `claude-code-run4-24papers-indep-blind-2026-11-08.json`; evidence complete.
+
 ### independent · pipeline-desktop-opus · 20261023T062931Z
 
 [`independent/pipeline-desktop-opus/20261023T062931Z/CELL.md`](independent/pipeline-desktop-opus/20261023T062931Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-10-23T06:29:31Z; from `pipeline-oracle-desktop-opus-9papers-all-modes-2026-10-23.json`; evidence complete.
@@ -156,6 +169,10 @@ _None._
 
 [`independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md`](independent/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — final 13/13, re-scored 13/13; first scored 7/13; executions 2; 2026-11-03T01:05:57Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
 
+### independent · pipeline-desktop-opus-run4 · 20261108T015935Z
+
+[`independent/pipeline-desktop-opus-run4/20261108T015935Z/CELL.md`](independent/pipeline-desktop-opus-run4/20261108T015935Z/CELL.md) — final 13/13, re-scored 13/13; first scored 7/13; executions 2; 2026-11-08T01:59:35Z; from `pipeline-oracle-desktop-opus-run4-24papers-indep-blind-2026-11-08.json`; evidence complete.
+
 ### blind · claude-code · 2026-10-22-a
 
 [`blind/claude-code/2026-10-22-a/CELL.md`](blind/claude-code/2026-10-22-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 4; 2026-10-22T03:21:00Z; from `claude-code-6papers-all-modes-2026-10-22.json`; evidence complete.
@@ -167,6 +184,10 @@ _None._
 ### blind · claude-code · 2026-11-02-c
 
 [`blind/claude-code/2026-11-02-c/CELL.md`](blind/claude-code/2026-11-02-c/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 6; 2026-11-02T20:19:10Z; from `claude-code-run3-23papers-indep-blind-2026-11-02.json`; evidence complete.
+
+### blind · claude-code · 2026-11-07-a
+
+[`blind/claude-code/2026-11-07-a/CELL.md`](blind/claude-code/2026-11-07-a/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 3; 2026-11-07T19:48:30Z; from `claude-code-run4-24papers-indep-blind-2026-11-08.json`; evidence complete.
 
 ### blind · pipeline-desktop-opus · 20261023T062931Z
 
@@ -187,4 +208,8 @@ _None._
 ### blind · pipeline-desktop-opus-run3 · 20261103T004800Z
 
 [`blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md`](blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) — final 13/13, re-scored 13/13; first scored 13/13; executions 1; 2026-11-03T00:48:00Z; from `pipeline-oracle-desktop-opus-run3-23papers-all-modes-2026-11-03.json`; evidence complete.
+
+### blind · pipeline-desktop-opus-run4 · 20261108T013503Z
+
+[`blind/pipeline-desktop-opus-run4/20261108T013503Z/CELL.md`](blind/pipeline-desktop-opus-run4/20261108T013503Z/CELL.md) — final 11/13, re-scored 11/13; first scored 11/13; executions 1; 2026-11-08T01:35:03Z; from `pipeline-oracle-desktop-opus-run4-24papers-indep-blind-2026-11-08.json`; evidence complete.
 

@@ -1,0 +1,11 @@
+suppressMessages({library(haven);library(dplyr)})
+d <- read_dta("<repo>/benchmark/.cache/claude-code/gagliarducci-2022-gender-cooperation-congress/independent/2026-11-07-a/mount/gagliarducci_2022_gender_cooperation_congress/3 replication package/Data/AnalysisData/bills_analysis_101-111_replication.dta")
+print(dim(d))
+for (v in names(d)) { x <- d[[v]]; lab <- attr(x,"label"); cat(sprintf("%-28s %-10s miss=%6d uniq=%6d mean=%s | %s\n", v, class(x)[1], sum(is.na(x)), length(unique(x)), if(is.numeric(x)) format(mean(x,na.rm=TRUE),digits=4) else "", ifelse(is.null(lab),"",lab))) }
+print(table(d$private, useNA="a")); print(table(d$v2)); print(table(d$sponsor_party, useNA="a"))
+print(summary(d$MV1_female)); print(summary(d$MV1_democrat)); print(table(d$mixed_gender_election,useNA="a"))
+print(table(d$sponsor_tenure_run)); print(table(d$sponsor_state_icpsr))
+print(summary(d$pct_cosponsors_opposite))
+print(as.data.frame(head(d[,c("sponsor_female","MV1_female","femaleXMV1_female","MV1_democrat","sponsor_party","mixed_gender_election","lag_demshare1")],20)))
+print(colSums(d[,paste0("occ",0:6)],na.rm=TRUE)); print(table(rowSums(d[,paste0("occ",0:6)])))
+print(table(d$women_friend1))

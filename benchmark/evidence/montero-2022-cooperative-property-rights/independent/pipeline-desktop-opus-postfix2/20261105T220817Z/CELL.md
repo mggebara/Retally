@@ -83,6 +83,10 @@ Per-claim ground truth, tolerance rule and errors: [`scoring.json`](scoring.json
 - [`output/answer-4.md`](output/answer-4.md) — 10,357 bytes, from `benchmark/.cache/llm-oracle/desktop-opus-postfix2/answers/ad91d0bc9c72298917c5e5e1.json`
 - [`output/answer-5.md`](output/answer-5.md) — 11,887 bytes, from `benchmark/.cache/llm-oracle/desktop-opus-postfix2/answers/72267ff67fd06d95aba8b96a.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM oracle store desktop-opus-postfix2 (request 03936da0d07e1861eb9abd60: model claude-opus-5-5, max_tokens 16384, effort high)

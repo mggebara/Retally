@@ -53,7 +53,7 @@ Agent notes: Three exploratory runs (no RESULT lines) inspected the data: variab
 
 - [`prompt/task.md`](prompt/task.md) — 17,870 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261102T202753Z/task.md`
 - [`prompt/render.json`](prompt/render.json) — 1,063 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261102T202753Z/render.json`
-- [`prompt/paper.txt.ref`](prompt/paper.txt.ref) — 278 bytes, from `benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/blind/2026-11-02-c/paper.txt`
+- [`prompt/paper.txt.ref`](prompt/paper.txt.ref) — 265 bytes, from `benchmark/.cache/claude-code/grier-2023-sugar-roll-call-voting/blind/2026-11-02-c/paper.txt`
 
 ## What it produced
 
@@ -70,3 +70,7 @@ Agent notes: Three exploratory runs (no RESULT lines) inspected the data: variab
 - [`output/script.R`](output/script.R) — 4,871 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261102T202753Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 52 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261102T202753Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 3,821 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/blind/claude-code/20261102T202753Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

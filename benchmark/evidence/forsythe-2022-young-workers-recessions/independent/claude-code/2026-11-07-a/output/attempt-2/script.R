@@ -1,0 +1,22 @@
+suppressMessages(library(data.table))
+t0 <- Sys.time()
+el <- function() round(as.numeric(Sys.time() - t0, units = "secs"), 1)
+P <- "<repo>/benchmark/.cache/claude-code/forsythe-2022-young-workers-recessions/independent/2026-11-07-a/mount/forsythe_2022_young_workers_recessions/3 replication package/Data/"
+f <- paste0(P, "yh_data.csv")
+d <- fread(f, nrows = 3e6, select = c("hrmonth","hryear","peage","peeduca","race","prhspnon","pehspnon","pemlr","v2hrmonth","v2hryear","v2gestfips","v2pemlr","v2puiodp1","v2peio1cow","v2prwernal","v2prhernal","v2prernwa","pwsswgt","v2pwsswgt"), nThread = 1, showProgress = FALSE)
+message("read 3e6 rows: ", el())
+print(sapply(d, function(x) sum(is.na(x))))
+print(d[, .N, by = .(hryear, v2hryear)])
+for (v in c("pemlr","v2pemlr","race","peeduca","prhspnon","pehspnon","v2puiodp1","v2peio1cow","v2prwernal","v2prhernal")) {cat(v, "\n"); print(table(d[[v]], useNA = "ifany"))}
+print(table(cons = ((d$v2hrmonth - d$hrmonth) %% 12) == 1))
+print(summary(d$peage)); print(summary(d$pwsswgt)); print(summary(d$v2prernwa))
+print(table(d$pemlr, d$v2pemlr))
+print(table(d[hryear %in% c(95, 1995), hrmonth]))
+print(table(d$v2puiodp1, d$pemlr))
+flush(stdout())
+message("tables done: ", el())
+x <- fread(f, select = c("hryear","v2gestfips","prhspnon","pehspnon"), nThread = 1, showProgress = FALSE)
+message("full read 4 cols: ", el(), " rows ", nrow(x))
+x[, yr := fifelse(hryear < 100L, hryear + 1900L, hryear)]
+print(x[, .(n = .N, nast = sum(is.na(v2gestfips)), nah1 = sum(is.na(prhspnon)), nah2 = sum(is.na(pehspnon))), by = yr][order(yr)])
+message("done: ", el())

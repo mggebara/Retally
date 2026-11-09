@@ -1,0 +1,11 @@
+suppressMessages({library(haven); library(dplyr)})
+d <- read_dta("<repo>/benchmark/.cache/claude-code/montero-2022-cooperative-property-rights/blind/2026-11-07-a/mount/montero_2022_cooperative_property_rights/ehpm_incomemodule_wreform.dta")
+d <- zap_labels(d)
+options(width=200, pillar.width=200)
+g <- d %>% group_by(own_amt) %>% filter(n_distinct(Expropretario_ISTA) > 1 | n_distinct(match_id) > 1) %>%
+  group_by(own_amt, Expropretario_ISTA, ID, match_id, Hacienda_id, Reform_Coop_id, Above500, AREA_HECTAREA) %>% summarise(n=n(), .groups="drop")
+print(as.data.frame(g))
+p <- d %>% group_by(match_id) %>% summarise(own=first(own_amt), A=first(Above500), coop=mean(Coop_Member), n=n(), n02=sum(year>=2002), ex=first(Expropretario_ISTA), hid=first(Hacienda_id), rid=first(Reform_Coop_id))
+print(as.data.frame(p %>% arrange(own)), digits=6)
+print(table(d$year, d$Above500))
+print(sum(is.na(d$hh_income_pc)))

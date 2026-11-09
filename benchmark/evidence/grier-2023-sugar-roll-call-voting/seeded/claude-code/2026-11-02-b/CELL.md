@@ -57,3 +57,7 @@ Agent notes: Followed APSR Replication Codes.do: yesvote = 1 if vote == 'Aye' (e
 - [`output/script.R`](output/script.R) — 1,466 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/claude-code/20261102T194315Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 866 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/claude-code/20261102T194315Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 4,152 bytes, from `benchmark/results/artifacts/grier-2023-sugar-roll-call-voting/seeded/claude-code/20261102T194315Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

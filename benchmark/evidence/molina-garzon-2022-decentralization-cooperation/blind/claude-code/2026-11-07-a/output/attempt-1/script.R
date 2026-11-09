@@ -1,0 +1,13 @@
+suppressMessages({library(haven); library(dplyr)})
+D <- "<repo>/benchmark/.cache/claude-code/molina-garzon-2022-decentralization-cooperation/blind/2026-11-07-a/mount/molina_garzon_2022_decentralization_cooperation"
+g <- read_dta(file.path(D, "publicgoodgame_dataAug27.dta"))
+g <- zap_labels(g)
+print(summary(g[, c("round","contribution","decentralized","communication","num_players","Q5_Trust1Base","Q2_Educacion","Q2_female","lag_groupcontribution","knownpeople","weights_games_full_scaled","Q3_YrsSalud","Q1_Edad")]))
+print(table(g$p_type, useNA="a")); print(table(g$round, g$communication, useNA="a"))
+print(sapply(g, function(x) sum(is.na(x))))
+print(length(unique(g$publicid))); print(length(unique(g$publicid_muni)))
+print(head(as.data.frame(g[order(g$publicid, g$round), c("publicid","publicid_muni","round","contribution","lag_groupcontribution","averagecont","num_players")]), 22))
+c <- read.csv(file.path(D, "clanalysis_anondata_vNov16.csv"))
+print(dim(c)); print(sapply(c, function(x) sum(is.na(x))))
+print(summary(c[, c("net_crosslevel_propnumknown","net_crosslevel_propdenomknown","net_crosslevel_propnumfriends","net_crosslevel_propdenomfriends","weights_games_full_scaled","gen_trust")]))
+print(table(c$ParticipantType)); print(sum(c$net_crosslevel_propdenomknown==0, na.rm=TRUE))

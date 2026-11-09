@@ -1,0 +1,8 @@
+attempt-2 crashed before any regression:
+  Error in subset_cols(x, keep) : attempt access index 10/10 in STRING_ELT
+The helper deleted columns with data.table::set(value = NULL) inside a function while looping over
+names(dt). Fix: do the column-wise subset at top level (build a list of subset columns, deleting each
+source column with x[, (nm) := NULL]) so memory is still released column by column.
+The same output showed the civilians-16+ sample already has 17,357,345 pairs (I had earlier misread
+the 2.1M rows without a state code as the under-16 count), so the extra 16-64 age cap added in
+attempt-2 is not needed. It is dropped, and the sample is the paper's stated restriction (civilians age 16+).

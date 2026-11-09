@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "entry_id": "carrera-2022-who-chooses-commitment",
+  "mode": "independent",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "Two exploratory runs (variable listing; flag counts, sample size, proxy means/SDs), then a single estimating run. Sample: cleaned_commitment_study_data.dta minus flag_exclude_exog==1 or flag_low_wtp==1 (44) minus treatment threshold80_12 (122) = 1126. BCP = mean over adjacent pairs (1,2),(2,3),(3,5),(5,7),(7,12) of (wtp_{k+1}-wtp_k)/dp - (days_k+days_{k+1})/2 (mean 1.17, control mean 0.66, as in the paper). Proxies: goal - days_0, and visits - days_<assigned incentive>; these and the BCP are z-scored over the 1126 sample (the unstandardized means and SDs match the table notes). Table 3: feols with wave FE and HC1 SEs. Table 4: long panel of 'more' choices (q169/q295 coded 2 = chose; chose_commit12), with wave and threshold FE and SEs clustered by participant, N = 2824. The coefficients and SEs match Tables 3 and 4 to the reported rounding. No claim comparison was done before the final run. The author scripts were not opened (the Code/ folders in the mount are empty).",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-07T18:05:38Z",
+  "finished_at": "2026-11-07T18:58:12Z"
+}

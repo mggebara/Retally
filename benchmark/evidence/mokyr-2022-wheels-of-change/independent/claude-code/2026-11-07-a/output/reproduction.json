@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "mokyr-2022-wheels-of-change",
+  "mode": "independent",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was an exploratory run (variable labels, missingness, county count), no RESULT lines. Final script: replication_data.dta, sample = 298 districts with non-missing Domesday mills. Wrights and mills divided by pcmean (mean population 1710-50). Wheat suitability = 1(wheat_tmean <= 5); river suitability = riv_rug26count; instrument = riv_rug26count x wheat dummy. OLS/2SLS with fixest, SEs clustered by GAZ_CNTY (37 counties). The reported first-stage F is fixest's ivwald1 (cluster-robust Wald F on the excluded instrument), which gives 19.90/16.96/16.17. The iid and heteroskedasticity-robust first-stage F values are also printed for reference. The Table 2 control coefficients printed by etable also match the paper's table. The River suitability coefficient is on a different scale from the paper's (0.0023 vs 2.28, a factor of 1000 from units), but this does not affect the mills coefficient. The script was run only once, so no claim-feedback iteration was needed.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-08T01:55:13Z",
+  "finished_at": "2026-11-08T02:05:00Z"
+}

@@ -58,6 +58,10 @@ _None declared._
 - [`output/answer-1.md`](output/answer-1.md) — 4,641 bytes, from `benchmark/.cache/llm/7badc75e9bde00325c64b896.json`
 - [`output/answer-2.md`](output/answer-2.md) — 4,304 bytes, from `benchmark/.cache/llm/f775ff76b67634095e72e316.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM cache (request 7badc75e9bde00325c64b896: model claude-opus-4-7, max_tokens 8192, effort None)

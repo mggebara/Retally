@@ -1,0 +1,23 @@
+suppressPackageStartupMessages(library(data.table))
+f <- "<repo>/benchmark/.cache/claude-code/labandeira-2022-electricity-pricing-reform/blind/2026-11-07-a/mount/labandeira_2022_electricity_pricing_reform/3 Replication package/analysis data/Data_to run_DOFILE3.csv"
+hdr <- names(fread(f, nrows=0))
+cols <- c("T2","dup","time","month","id","year","BIS","BISEMANA","ANOENC","c_ele","c_ele2","g_ele","g_ele2","c_ELE","g_ELE","c_papas","g_papas","c_aguav","g_aguav","c_car","g_car",
+ "p_kwh","p_gascar","p_aguav","p_papas","lnp_kwh","lnc_ELE","lnc_ele","lng_ele","lnp_papas","lnp_aguav","lnp_gascar","lny","lny2","y","yh","dist","Tm","trim","NMIEMB","NHABIT","SUPERF","mayores","ESTUDREDSP","ESTUDIOSSP","SITUACTHOG","SITUACTHOG_j","SITSOCIRE_j","PENSIO_j","alqui","edif25","urban","CAPROV","CCAA","TAMAMU","DENSI","REGTEN","ANNOCON","_merge","we","FACTOR","TT199","TT202","lnPRE_papas","lnPRE_aguav","lnPRE_gascar","lnaPRE_papas","lnPRE_papas_")
+d <- fread(f, select=intersect(cols,hdr))
+cat("nrow", nrow(d), "\n")
+print(table(d$year, useNA="ifany"))
+print(table(d$year, d$T2, useNA="ifany"))
+print(table(d$year, d$dup, useNA="ifany"))
+print(table(d$year, d$month, useNA="ifany"))
+print(table(d$Tm, useNA="ifany")); print(table(d$dist, useNA="ifany"))
+print(table(d$trim, d$year, useNA="ifany"))
+print(table(d$`_merge`, useNA="ifany"))
+x <- d[year>=2011 & year<=2014]
+print(summary(x))
+print(head(x[order(id,year)], 20))
+cat("ids with 2 obs:", sum(x[, .N, by=id]$N==2), " distinct ids:", uniqueN(x$id), "\n")
+print(x[, .N, by=.(id)][, table(N)])
+print(table(x$time, x$year, useNA="ifany"))
+print(x[, .(n=.N, nT2=sum(T2==1,na.rm=TRUE), nTm=sum(!is.na(Tm))), by=.(year,month)][order(year,month)])
+print(table(x$ESTUDREDSP, useNA="ifany")); print(table(x$SITUACTHOG_j, useNA="ifany")); print(table(x$TAMAMU, useNA="ifany")); print(table(x$CAPROV,useNA="ifany")); print(table(x$alqui, useNA="ifany")); print(table(x$mayores,useNA="ifany"))
+print(table(x$TT199,useNA="ifany")); print(table(x$TT202,useNA="ifany"))

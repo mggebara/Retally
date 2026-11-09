@@ -64,3 +64,7 @@ Agent notes: Data: replication_data.dta (325 English districts). Sample: 298 dis
 - [`output/script.R`](output/script.R) — 3,847 bytes, from `benchmark/results/artifacts/mokyr-2022-wheels-of-change/blind/claude-code/20261102T151025Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/mokyr-2022-wheels-of-change/blind/claude-code/20261102T151025Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 1,884 bytes, from `benchmark/results/artifacts/mokyr-2022-wheels-of-change/blind/claude-code/20261102T151025Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

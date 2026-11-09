@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "entry_id": "dertwinkel-kalt-2022-concentration-bias",
+  "mode": "independent",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [
+    "Upper-corner lower bound set to 63 (the value coded in the data for upper-corner subjects) rather than 62 as written in Section 2.3.5; midpoint = (63 + stated indifference point)/2.",
+    "Main sample = no corner choice in any balanced trade-off AND the data's preregistered-sample flag pap_sample==1; the corner rule alone keeps 7 additional subjects (attempt-3) whom the flag excludes for a reason the paper text does not state.",
+    "Control conditions: relative measure computed as d~/(e_j + x~_j) for the repeated trade-off j only (the deviation falls on a single workday), instead of the 8-workday average of eq. (12) used for the Treatment conditions.",
+    "Tobit (Table 2 col. 4): AER::tobit on the lower-bound d~ with censoring at -63 and 63; OLS columns use lm_robust HC1 robust SEs."
+  ],
+  "notes": "Data: Consumption Experiment/Stata/Consumption_Experiment.csv (9 rows per subject; decisions 1-8 balanced, 9 final). Conditions: pizza==1 & main==1 Main, pizza==1 & main==0 Mechanism, pizza==0 Donation; control==1 Control. x~_t indexed by utility_point; e_t from footnote 3. attempt-1 and attempt-2 were exploratory (variable coding, checking precomputed columns). attempt-3 used the corner rule only (N 202/203 in some Table 3 pairs); check_attempt reported all claims within tolerance, but the paper states 100 subjects per condition, so the final run restricts to pap_sample==1, giving exactly 100 per condition. All 13 claims reproduced to the reported precision; robust SEs also match Tables 2 and 3.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-07T19:14:07Z",
+  "finished_at": "2026-11-07T19:40:00Z"
+}

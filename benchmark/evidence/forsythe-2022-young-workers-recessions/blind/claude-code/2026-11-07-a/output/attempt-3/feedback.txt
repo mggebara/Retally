@@ -1,0 +1,6 @@
+attempt-3 crashed again in the column-wise subset, before any regression:
+  Error in for (nm in names(x)) { : attempt access index 10/10 in STRING_ELT
+names(x) of a data.table is shared by reference, so deleting columns with := NULL shrank the vector
+the loop was iterating over. Fix: iterate over a copy, nms <- copy(names(x)).
+Also: the read took most of the 300 s limit (wall 271.6 s to the crash), so the final script prints each
+RESULT line as soon as its model is estimated, in addition to keeping work minimal.

@@ -75,3 +75,7 @@ Agent notes: Translated Table5.do for both dependent variables, all 3 samples an
 - [`output/script.R`](output/script.R) — 11,492 bytes, from `benchmark/results/artifacts/gagliarducci-2022-gender-cooperation-congress/seeded/claude-code/20261022T032229Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/gagliarducci-2022-gender-cooperation-congress/seeded/claude-code/20261022T032229Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 4,040 bytes, from `benchmark/results/artifacts/gagliarducci-2022-gender-cooperation-congress/seeded/claude-code/20261022T032229Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

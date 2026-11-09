@@ -1,0 +1,21 @@
+library(haven)
+D <- "<repo>/benchmark/.cache/claude-code/holman-2022-theresa-may-rally/independent/2026-11-07-a/mount/holman_2022_theresa_may_rally"
+g <- read_dta(file.path(D,"global_approval.dta"))
+str(g, give.attr=FALSE)
+for (v in names(g)) { l <- attr(g[[v]],"label"); cat(v, ":", if(is.null(l)) "" else l, "\n") }
+print(summary(as.data.frame(lapply(g, function(x) if(is.numeric(x)) x else NA))))
+print(table(g$pres_15death, g$female_pres, useNA="ifany"))
+print(head(as.data.frame(g[g$country=="United Kingdom", ]), 10))
+d <- read_dta(file.path(D,"did_data.dta"), n_max=5)
+str(d, give.attr=FALSE)
+for (v in names(d)) { l <- attr(d[[v]],"label"); cat(v, ":", if(is.null(l)) "" else l, "\n") }
+dd <- read_dta(file.path(D,"did_data.dta"), col_select=c(wave,time,treatment1,treatment2,post_attack,likeMayW,bestPMW,may_bestpm,white,gender,labour,party_other,income,ideology,ideology2,id))
+print(table(dd$wave, useNA="ifany"))
+print(table(dd$wave, dd$time, useNA="ifany"))
+print(table(dd$wave, dd$treatment1, useNA="ifany"))
+print(table(dd$wave, dd$treatment2, useNA="ifany"))
+print(table(dd$wave, dd$post_attack, useNA="ifany"))
+print(table(dd$wave, !is.na(dd$likeMayW)))
+print(table(dd$wave, dd$may_bestpm, useNA="ifany"))
+print(table(dd$bestPMW, dd$may_bestpm, useNA="ifany"))
+print(summary(as.data.frame(dd)))

@@ -97,3 +97,7 @@ Agent notes: Blind independent reproduction in R (haven + data.table + fixest). 
 - [`output/script.R`](output/script.R) — 8,861 bytes, from `benchmark/results/artifacts/hanushek-2022-patience-risk-human-capital/blind/claude-code/20261102T142249Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 243 bytes, from `benchmark/results/artifacts/hanushek-2022-patience-risk-human-capital/blind/claude-code/20261102T142249Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 2,401 bytes, from `benchmark/results/artifacts/hanushek-2022-patience-risk-human-capital/blind/claude-code/20261102T142249Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

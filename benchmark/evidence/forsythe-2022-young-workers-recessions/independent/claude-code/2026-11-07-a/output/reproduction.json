@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "entry_id": "forsythe-2022-young-workers-recessions",
+  "mode": "independent",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 124, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 124, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 124, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 124, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-6", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Hiring regressions are estimated by WLS on cell means (state x month-year x demographic cell x young x prior labour-force status), weighted by the summed person weights (the average of the two months' CPS weights). Every regressor is constant within a cell, so the coefficients equal those of the person-level WLS. This was needed to fit the 300 s sandbox limit. Clustered SEs are not reported.",
+    "The supplied yh_data.csv has no state FIPS (v2gestfips) for pairs from mid-2014 onward, and v2unemp_smy.csv ends in May 2014. The estimation sample therefore ends in May 2014, not September 2016.",
+    "Education years from PEEDUCA: 31=0, 32=2.5, 33=5.5, 34=7.5, 35=9, 36=10, 37=11, 38=12, 39=12, 40=13, 41-42=14, 43=16, 44-45=18, 46=21. Potential experience = age - years of education - 6. The seven education FE levels are <HS (31-38), HS (39), some college (40-42), BA (43), MA (44), professional (45) and PhD (46). Demographic FE combine sex, white (race==1), Hispanic (prhspnon or pehspnon == 1) and education.",
+    "Hire = employed at t (PEMLR 1-2), not self-employed (PEIO1COW 6-7), and either non-employed at t-1 or employed at t-1 with PUIODP1=2 (different employer). Sample: age >= 16, valid education, PEMLR 1-7 in both months, state and unemployment rate non-missing. There is no explicit 1995 filter: the file holds only consecutive matched pairs. Prior status: employed = PEMLR 1-2, unemployed = 3-4, NILF = 5-7.",
+    "Wage regression: new hires with positive weekly earnings (PRERNWA) and PRWERNAL=0. Earnings are deflated by the supplied CPI series (1994=1) and logged. Occupation and industry are recoded to 2002 Census codes with the supplied crosswalks; code years by survey year are occupation 1990/2002/2010 and industry 1990/2002/2007/2012. Weights are the average of the two months' final weights."
+  ],
+  "notes": "Independent reproduction from the paper text only. I opened no author scripts; the Dofiles directory is empty. Attempts 1-4 were exploratory runs and all hit the 300 s limit: the host and Docker VM were heavily loaded, and reading the 2.2 GB CSV was slow. Attempt 4 was a raw I/O-throughput probe. Attempt 5 is the full estimation script and finished in 284 s. I compared its RESULT lines with the claims via check_attempt; the output is kept as attempt-5/feedback.txt. Only young_x_unemp_rate_nilf was outside tolerance (-0.594 vs -0.49). Attempt 6 was an exploratory tabulation: status counts, hiring rates, age/school/NILF-reason breakdowns and state missingness by year. It showed that state is missing for all pairs from mid-2014 on. I found no restriction described in the paper that explains the extra ~420k NILF observations, so I did not change the script; for that reason attempt 5 is recorded with kind \"\". Sample sizes, mine vs the paper: total 17.36M vs 16.95M, employed 10.81M vs 10.81M, unemployed 645k vs 653k, NILF 5.90M vs 5.48M. The final run is the attempt-5 execution, copied unchanged to the top level. No docker run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-07T19:25:18Z",
+  "finished_at": "2026-11-08T01:55:00Z"
+}

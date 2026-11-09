@@ -66,3 +66,7 @@ Agent notes: Data: 'Climate Migration 2_ Conjoint' USA and Germany Qualtrics exp
 - [`output/script.R`](output/script.R) — 5,456 bytes, from `benchmark/results/artifacts/arias-2022-changing-tides-climate-migration/independent/claude-code/20261102T043820Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 104 bytes, from `benchmark/results/artifacts/arias-2022-changing-tides-climate-migration/independent/claude-code/20261102T043820Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 2,033 bytes, from `benchmark/results/artifacts/arias-2022-changing-tides-climate-migration/independent/claude-code/20261102T043820Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

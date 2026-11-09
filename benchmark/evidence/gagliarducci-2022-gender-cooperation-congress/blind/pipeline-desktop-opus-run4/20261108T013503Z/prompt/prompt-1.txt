@@ -1,0 +1,186 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: NBER WORKING PAPER SERIES
+Abstract (first 500 chars): This paper uses data on bill sponsorship and cosponsorship in the U.S. House of Representatives 
+to estimate gender differences in cooperative behavior. We employ a number of econometric 
+methodologies to address the potential selection of female representatives into electoral districts 
+with distinct preferences for cooperativeness, including regression discontinuity and matching. 
+After accounting for selection, we find that among Democrats there is no significant gender gap 
+in the number of 
+Methodology Summary: - **Data and unit of analysis:** Each observation is one House public bill (simple, concurrent and joint resolutions and private bills are excluded) from the 101st to the 111th Congress (elected 1988 to 2008), taken from THOMAS and cross-checked against Adler and Wilkerson's Congressional Bills Project and the Fowler et al. cosponsorship data. These are linked to sponsor biographical data (ICPSR up to the 104th Congress, then the Biographical Directory), House Clerk election returns, and Census district demographics. Results are reported for all members pooled and separately for Democrats and Republicans.
+- **Dependent variables (two cooperativeness measures):** (a) the total number of cosponsors on the bill (coalition building), and (b) the percent of cosponsors from the opposite party, where the denominator is the number of cosponsors plus 1 (the sponsor) so that bills with zero cosponsors are kept (bipartisanship). Robustness checks divide by cosponsors only (zero-cosponsor bills become missing), or use the count of opposite-party cosponsors with the number of cosponsors as a regressor. Both outcomes are in levels, not logs, and not standardised.
+- **Baseline OLS specification (eq. 4, Table 3):** Y_ijkt = α + β·Female_i + Congress (time) fixed effects + bill controls + sponsor controls + district controls + ε. Controls are added step by step:
+  - (1) Congress fixed effects only.
+  - (2) adds bill-category dummies: 226 mutually exclusive minor topics (congressionalbills.org classification) and 33 committees of referral.
+  - (3) adds individual controls: tenure, a rookie dummy, age, a committee chair/ranking member dummy, an Ivy League dummy, five previous-occupation dummies, and the total number of bills the member sponsored.
+  - (4) adds district controls instead of individual ones: three macro-region dummies, % black, % urban, % foreign-born, % over 65, log median income, and log population density.
+  - (5) the preferred specification, with all bill, individual and district controls.
+  
+  District fixed effects were tried and dropped because they gave imprecise estimates.
+- **Regression discontinuity (eq. 5):** The sample is restricted to representatives elected in mixed-gender (male vs. female) races. The specification is Y = α + β·Female + Female·f(MV) + f(MV) + Congress fixed effects + ε, where MV is the female candidate's margin of victory over the male candidate and f(MV) is allowed to differ on each side of the zero threshold. It is run pooled and by party. Validity is checked with McCrary density tests of the running variable, pooled and by party (Figure 6). Within-party RD needs stronger assumptions because the races on each side of the threshold may come from different pools.
+- **Matching:** Matching estimators are used as a further way to address women's selection into particular districts. The details of this part of the method are not in the provided text.
+- **Auxiliary analyses:**
+  - Table 1 tests the model's assumptions with a regression of the probability that a bill passes the House on: the number of cosponsors, the % of opposite-party cosponsors, and their interaction. Column 2 interacts these terms with a female-sponsor dummy and runs a joint test that the three interactions are zero.
+  - The predicted Republican vote share comes from an OLS regression of the actual Republican vote share on the district controls listed above (Figure 1).
+  - Figures show the DW-NOMINATE first dimension and the Party Unity Score (the share of divisive roll calls in which the member votes with the party) by gender and party.
+  - Heterogeneity analyses cover the gender of cosponsors, sponsor seniority, and bills on women's issues.
+- **Inference:** The provided text does not say how standard errors are computed or clustered. The paper uses conventional significance levels and joint F/p-value tests.
+
+
+## Quantities to Compute
+Compute each quantity below and print it under the given name.  The paper's reported values are deliberately not shown.
+1. female_sponsor_ncosponsors_all_ols [type: coefficient; unit: cosponsors per bill]
+   Location: Table 5, Panel A (Number of Cosponsors), row All, column 1 (OLS - full sample)
+   Context: Table 5 ("RD and PS Matching Estimates"), Panel A, all sponsors, column 1. Bill-level OLS regression, U.S. House public bills of the 101st-111th Congresses; dependent variable: the number of cosponsors on the bill; regressor of interest: a dummy for a female sponsor (the table entry is its coefficient). Controls: Congress fixed effects; bill characteristics (dummies for the committee of referral and for the minor topic); sponsor characteristics (age, tenure in Congress, rookie, committee leader — chair or ranking member — black, party dummy, occupational dummies, Ivy League degree, born in the…
+2. female_sponsor_ncosponsors_rep_ols [type: coefficient; unit: cosponsors per bill]
+   Location: Table 5, Panel A (Number of Cosponsors), row Republicans, column 1 (OLS - full sample)
+   Context: Table 5, Panel A, column 1, restricted to bills with a Republican sponsor: the same OLS specification as for all sponsors (number of cosponsors on the female-sponsor dummy; Congress fixed effects; bill, sponsor and district characteristics; standard errors clustered by sponsor-Congress). Significant at 1%.
+3. female_sponsor_ncosponsors_rep_rd_ipw [type: coefficient; unit: cosponsors per bill]
+   Location: Table 5, Panel A (Number of Cosponsors), row Republicans, column 3 (RD - optimal bandwidth with inverse propensity score weighting)
+   Context: Table 5, Panel A, column 3, Republican sponsors. Regression discontinuity in mixed-gender House elections: the number of cosponsors regressed on the female-sponsor dummy, the margin of victory of the female candidate and its interaction with the female dummy (slopes differing on either side of the threshold), Congress fixed effects and bill characteristics, within the optimal bandwidth (Calonico, Cattaneo and Titiunik 2014; computed on bill-level observations; 13 percentage points for this row), with observations weighted by the inverse of a propensity score for electing a woman, estimated wit…
+4. female_sponsor_ncosponsors_rep_ipw_sponsor [type: coefficient; unit: cosponsors per bill]
+   Location: Table 5, Panel A (Number of Cosponsors), row Republicans, column 5 (PS weighting - full sample, district + margin of victory + sponsor characteristics)
+   Context: Table 5, Panel A, column 5, Republican sponsors. Full sample of electoral races (not only mixed-gender ones): weighted least squares of the number of cosponsors on the female-sponsor dummy, Congress fixed effects and bill characteristics, with observations weighted by the inverse of the estimated propensity score of electing a female representative, where the propensity score is a function of district characteristics, the margin of victory of the elected candidate and sponsor characteristics. Standard errors clustered by sponsor-Congress. Significant at 1%.
+5. female_sponsor_pct_opposite_dem_ols [type: coefficient; unit: percentage points (percent of cosponsors from the opposite party)]
+   Location: Table 5, Panel B (Percent Cosponsors of Opposite Party), row Democrats, column 1 (OLS - full sample)
+   Context: Table 5, Panel B, column 1, Democratic sponsors. The paper's main measure of bipartisanship: dependent variable is the percentage of the bill's cosponsors who belong to the opposite party. Same OLS specification as Panel A column 1 (female-sponsor dummy; Congress fixed effects; bill, sponsor and district characteristics; standard errors clustered by sponsor-Congress). Significant at 1%.
+6. female_sponsor_pct_opposite_dem_rd [type: coefficient; unit: percentage points (percent of cosponsors from the opposite party)]
+   Location: Table 5, Panel B (Percent Cosponsors of Opposite Party), row Democrats, column 2 (RD - optimal bandwidth)
+   Context: Table 5, Panel B, column 2, Democratic sponsors. Regression discontinuity in mixed-gender House elections: percent of cosponsors from the opposite party on the female-sponsor dummy, the margin of victory of the female candidate and its interaction with the female dummy, and Congress fixed effects, within the optimal bandwidth (Calonico, Cattaneo and Titiunik 2014, computed on bill-level observations; 24 percentage points for this row). No other controls, no weights. Standard errors clustered by sponsor-Congress. Significant at 10%.
+7. female_sponsor_pct_opposite_dem_ipw_sponsor [type: coefficient; unit: percentage points (percent of cosponsors from the opposite party)]
+   Location: Table 5, Panel B (Percent Cosponsors of Opposite Party), row Democrats, column 5 (PS weighting - full sample, district + margin of victory + sponsor characteristics)
+   Context: Table 5, Panel B, column 5, Democratic sponsors: the full-sample inverse-propensity-score-weighted regression (propensity score from district characteristics, the margin of victory and sponsor characteristics; Congress fixed effects and bill characteristics in the outcome regression; standard errors clustered by sponsor-Congress), with percent of cosponsors from the opposite party as the outcome. Significant at 5%.
+8. female_sponsor_pct_opposite_rep_ols [type: coefficient; unit: percentage points (percent of cosponsors from the opposite party)]
+   Location: Table 5, Panel B (Percent Cosponsors of Opposite Party), row Republicans, column 1 (OLS - full sample)
+   Context: Table 5, Panel B, column 1, Republican sponsors: percent of cosponsors from the opposite party on the female-sponsor dummy, OLS with Congress fixed effects and bill, sponsor and district characteristics, standard errors clustered by sponsor-Congress. Significant at 1%.
+9. female_sponsor_pct_opposite_rep_ipw_district [type: coefficient; unit: percentage points (percent of cosponsors from the opposite party)]
+   Location: Table 5, Panel B (Percent Cosponsors of Opposite Party), row Republicans, column 4 (PS weighting - full sample, district + margin of victory)
+   Context: Table 5, Panel B, column 4, Republican sponsors. Full sample of electoral races: percent of cosponsors from the opposite party on the female-sponsor dummy, Congress fixed effects and bill characteristics, weighted by the inverse of the propensity score of electing a female representative estimated from district characteristics and the margin of victory of the elected candidate (no sponsor characteristics). Standard errors clustered by sponsor-Congress. Significant at 1%.
+10. n_bills_ncosponsors_all_ols [type: count; unit: bills]
+   Location: Table 5, Panel A, row All, n. bills, column 1
+   Context: Number of bills (observations) in the all-sponsor OLS regression of the number of cosponsors, Table 5 Panel A column 1.
+11. n_sponsor_terms_ncosponsors_all_ols [type: count; unit: sponsors (individual-Congress clusters)]
+   Location: Table 5, Panel A, row All, n. sponsors, column 1
+   Context: Number of sponsors (individual-Congress units, the clustering level) in the all-sponsor OLS regression of the number of cosponsors, Table 5 Panel A column 1.
+12. n_bills_pct_opposite_dem_ols [type: count; unit: bills]
+   Location: Table 5, Panel B, row Democrats, n. bills, column 1
+   Context: Number of bills with a Democratic sponsor in the OLS regression of percent of cosponsors from the opposite party, Table 5 Panel B column 1.
+13. n_bills_pct_opposite_rep_ols [type: count; unit: bills]
+   Location: Table 5, Panel B, row Republicans, n. bills, column 1
+   Context: Number of bills with a Republican sponsor in the OLS regression of percent of cosponsors from the opposite party, Table 5 Panel B column 1.
+
+## Dataset Information
+Name: gagliarducci-2022-gender-cooperation-congress
+Local path: <repo>/.cache/datasets/gagliarducci_2022_gender_cooperation_congress.script-free
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- 3 replication package/Data/AnalysisData/bills_analysis_101-111_replication.dta (11.4 MB) — 63895 rows, 87 columns: private, sponsor_district, sponsor_female, sponsor_party, sponsor_state_icpsr, black, mixed_gender_election, MV1_female, minor, numb_cosponsors_tenure_10plus, numb_cosponsors_opposite, pct_cosponsors_opposite, MV1_democrat, femaleXMV1_female, sponsor_tenure_run, numb_cosponsors_fem, numb_cosponsors, HRnumber, sponsor_age, v2, sponsor_term_served, lag_demshare1, pct_black, pct_urban, pct_for_born, house_foreignaffairs, numb_cosponsors_tenure_59, numb_cosponsors_leader, sponsor…
+- 3 replication package/Data/RawData/votes_rollcall_analysis_102-111_clean.dta (8.7 MB) — 7804 rows, 210 columns: state, district, party, vote, roll, sponsor, female, state_icpsr, mixed_gender_election, MV1_female, MV1_female__2, MV1_female__3, MV1_female__4, b_MV1_female, b_republican, b_democratic, b_district, b_sponsor, b_state_icpsr, result, b_HRnumber, b_numb_cosponsors, b_numb_committees_master, b_party, b_mixed_gender_election, b_pct_black, b_pct_for_born, b_pct_urban, tag_supporter, tag_bill, pct_sponsors_fem_min, b_term_served, b_tenure_run, b_sample1, b_MV1_democrat, term_serve…
+- 3 replication package/Data/IntermediateData/bills_analysis_101-111_clean.dta (38.4 MB) — 63895 rows, 228 columns: sponsor, minor, private, black, republican, democratic, minor1_vote, mixed_gender_election, sponsor_party, sponsor_female, sponsor_state_icpsr, sponsor_district, MV1_female, MV1_female__2, MV1_female__3, MV1_female__4, v2, HRnumber, house_foreignaffairs, numb_committees_master, privatesec, mixed_gender_primary, sample1, MV1_democrat, pct_black, pct_for_born, pct_urban, minor_incumbent_cqq, sponsor_term_served, losing_candidate_clean_cqq, losing_candidate_gender, predicted_dem…
+- 3 replication package/Data/IntermediateData/sponsors_analysis_101-111_clean.dta (1.8 MB) — 4788 rows, 127 columns: sponsor, black, republican, democratic, minor1_vote, mixed_gender_election, sponsor_party, sponsor_female, sponsor_state_icpsr, sponsor_district, MV1_female, MV1_female__2, MV1_female__3, MV1_female__4, sponsor_total_cosponsors, v2, private…
+- 3 replication package/Data/RawData/IndividualCharacteristics_Clean.dta (1.8 MB) — 4881 rows, 90 columns: district, female, party, state_icpsr, tenure_total, state, black, dw1, mref, female_cbp, v1, leadcomm, v2, term_served, female_master, special_election, spell_count, firstname, name_common, class, memberid, privatesec, party_master, nvotes_…
+- 3 replication package/Data/RawData/DistrictCharacteristics_Clean.dta (1.5 MB) — 4785 rows, 70 columns: district, state_icpsr, republican, democratic, total, minor1_vote, minor2_vote, minor3_vote, minor4_vote, mixed_gender_election, minor1_share2, v2, republican_GE, total_GE, losing_candidate_gender, single_representative, election_type, pct_…
+- 3 replication package/Data/AnalysisData/cosponsors_analysis_101-111_replication.dta (1.3 MB) — 4877 rows, 72 columns: cosponsor_district, cosponsor_female, cosponsor_party, cosponsor_state_icpsr, cosp_MV1_female, cosp_MV1_democrat, cosp_mixed_gender_election, cosponsor_tenure_run, v2, cosponsor_term_served, femaleXcosp_MV1_female, cosp_pct_urban, cosp_pct_…
+- 3 replication package/Data/IntermediateData/cosponsors_analysis_101-111_clean.dta (7.2 MB) — 4877 rows, 406 columns: cosponsor_district, cosponsor, cosponsor_female, cosponsor_party, cosponsor_state_icpsr, cosp_MV1_female, v2, cosponsor_term_served, cosponsor_tenure_run, cosp_privatesec, cosp_mixed_gender_election, cosp_sample1, cosp_MV1_democrat, cosp_pc…
+- 3 replication package/Data/IntermediateData/CosponsorsWithInfo_Clean_v2.dta (357.3 MB) — 1057986 rows, 115 columns: cosponsor_district, cosponsor, cosponsor_female, cosponsor_party, cosponsor_state_icpsr, v2, numb_cosponsors2_orig, cosponsor_term_served, HRnumber, date_cosponsored, cosponsor_tenure_run, cosp_privatesec, cosp_mixed_gender_election, cosp_s…
+- 3 replication package/Data/RawData/BillCharacteristics_Clean.dta (26.9 MB) — 64021 rows, 79 columns: district, sponsor, minor, private, numb_cosponsors_cbp, reporth, v2, state_abbrev, term_served, numb_cosponsors, house_foreignaffairs, HRnumber, billnumber, numb_committees_master, numb_committees_cbp, house_administration, house_agricultur…
+- 3 replication package/Adofiles/rd_2021/rdbwdensity.sthlp (6.8 KB)
+- 3 replication package/Adofiles/rd_2021/rdbwselect.sthlp (18.1 KB)
+- 3 replication package/Adofiles/rd_2021/rdbwselect_2014.sthlp (7.5 KB)
+- 3 replication package/Adofiles/rd_2021/rdbwselect_2014_cvplot.mo (6.9 KB)
+- 3 replication package/Adofiles/rd_2021/rdbwselect_2014_kweight.mo (6.5 KB)
+- 3 replication package/Adofiles/rd_2021/rdbwselect_2014_rdvce.mo (9.2 KB)
+- 3 replication package/Adofiles/rd_2021/rdbwselect_2014_regconst.mo (6.6 KB)
+- 3 replication package/Adofiles/rd_2021/rddensity.sthlp (23.4 KB)
+- 3 replication package/Adofiles/rd_2021/rddensity_fv.mo (38.5 KB)
+- 3 replication package/Adofiles/rd_2021/rddensity_h.mo (4.6 KB)
+- 3 replication package/Adofiles/rd_2021/rddensity_quantile.mo (2.2 KB)
+- 3 replication package/Adofiles/rd_2021/rddensity_rep.mo (2.9 KB)
+- 3 replication package/Adofiles/rd_2021/rddensity_unique.mo (2.9 KB)
+- 3 replication package/Adofiles/rd_2021/rdplot.sthlp (12.5 KB)
+- 3 replication package/Adofiles/rd_2021/rdrobust.sthlp (20.0 KB)
+- 3 replication package/Adofiles/rd_2021/rdrobust_bw.mo (15.4 KB)
+- 3 replication package/Adofiles/rd_2021/rdrobust_kweight.mo (2.7 KB)
+- 3 replication package/Adofiles/rd_2021/rdrobust_res.mo (7.8 KB)
+- 3 replication package/Adofiles/rd_2021/rdrobust_vce.mo (5.2 KB)
+- 3 replication package/Adofiles/reghdfe_2019/reghdfe.sthlp (42.0 KB)
+- 3 replication package/Adofiles/reghdfe_2019/reghdfe_bipartite.mata (17.2 KB)
+- 3 replication package/Adofiles/reghdfe_2019/reghdfe_lsmr.mata (7.5 KB)
+- 3 replication package/Adofiles/reghdfe_2019/reghdfe_mata.sthlp (11.8 KB)
+- 3 replication package/Adofiles/reghdfe_2019/reghdfe_old.sthlp (47.0 KB)
+- 3 replication package/Adofiles/reghdfe_2019/reghdfe_transforms.mata (2.2 KB)
+- 3 replication package/Data/AnalysisData/bills_analysis_101-111_replication.csv (19.2 MB) — columns: private,v2,HRnumber,sponsor_state_abbrev,sponsor_district,sponsor_term_served,sponsor_name,sponsor_female,sponsor_party,sponsor_age,sponsor_tenure_run,sponsor_state_icpsr,agestart,comc,comr,anycoll,ivycoll,black,occ0,occ1,occ2,occ3,occ4,occ…
+- 3 replication package/Data/AnalysisData/cosponsors_analysis_101-111_replication.csv (2.0 MB) — columns: v2,cosponsor_state_abbrev,cosponsor_district,cosponsor_term_served,cosponsor_name,cosponsor_v1_fix,pctbills_cosponsored_opposite,nbills_cosponsored_opposite,nbills_cosponsored,cosponsor_female,cosponsor_party,cosponsor_age,cosponsor_tenure_…
+- 3 replication package/Data/AnalysisData/sponsors_analysis_101-111_replication.csv (313.1 KB) — columns: v2,sponsor_state_abbrev,sponsor_district,sponsor_term_served,sponsor_name,sponsor_female,sponsor_party,dwnom1,predicted_dem
+- 3 replication package/Data/AnalysisData/sponsors_analysis_101-111_replication.dta (279.0 KB)
+- 3 replication package/Data/IntermediateData/CosponsorsWithInfo_Clean_v2.csv (479.0 MB) — columns: v2,cosponsor_state_abbrev,cosponsor_district,cosponsor_term_served,HRnumber,cosponsor,date_cosponsored,withdrawn,date_withdrawn,numb_cosponsors2_orig,numb_cosponsors2_calc,numb_cosponsors2_calcnowd,numb_withdrawn,intro_date,cosp_name_clean,…
+- 3 replication package/Data/IntermediateData/bills_analysis_101-111_clean.csv (54.7 MB) — columns: v2,HRnumber,name_clean,sponsor,intro_date,numb_cosponsors,house_administration,house_agriculture,house_appropriations,house_armedservices,house_budget,house_dc,house_educlabor,house_energycommerce,house_foreignaffairs,house_governmentop,hou…
+- 3 replication package/Data/IntermediateData/cosponsors_analysis_101-111_clean.csv (9.8 MB) — columns: v2,cosponsor_state_abbrev,cosponsor_district,cosponsor_term_served,cosponsor,cosp_name_clean,cosponsor_female,cosponsor_party,cosponsor_age,cosponsor_state_icpsr,cosponsor_v1_fix,cosp_pus,cosponsor_tenure_run,cosp_comc,cosp_comr,cosp_dwnom1…
+- 3 replication package/Data/IntermediateData/cosponsors_names_101-111_clean.csv (10.6 MB) — columns: v2,cosponsor_state_abbrev2,cosponsor_district2,cosponsor_term_served2,cosponsor_state_abbrev,cosponsor_district,cosponsor_term_served
+- 3 replication package/Data/IntermediateData/cosponsors_names_101-111_clean.dta (5.7 MB)
+- 3 replication package/Data/IntermediateData/reached_floor_102-111_clean.csv (26.8 KB) — columns: v2,HRnumber,reached_floor
+- 3 replication package/Data/IntermediateData/reached_floor_102-111_clean.dta (23.2 KB)
+- 3 replication package/Data/IntermediateData/sponsors_analysis_101-111_clean.csv (2.4 MB) — columns: v2,name_clean,sponsor,pus,comc,comr,dwnom1,dwnom2,borninstate,agestart,privatesec,anycoll,namedcoll,ivycoll,statecoll,anygrad,jd,mba,phd,military,occ0,occ1,occ2,occ3,occ4,occ5,occ6,DSpndPct,DDonaPct,CQRating3,CQRating3_01,black,native,asian…
+- 3 replication package/Data/RawData/BillCharacteristics_Clean.csv (20.7 MB) — columns: v2,HRnumber,state_abbrev,district,term_served,name_clean,billnumber,title,sponsor,intro_date,numb_cosponsors,house_administration,house_agriculture,house_appropriations,house_armedservices,house_budget,house_dc,house_educlabor,house_energyc…
+- 3 replication package/Data/RawData/CentralityMeasures_all.csv (734.7 KB)
+- 3 replication package/Data/RawData/CentralityMeasures_all.dta (539.9 KB)
+- 3 replication package/Data/RawData/Committee_Clean.csv (590.6 KB)
+- 3 replication package/Data/RawData/Committee_Clean.dta (274.6 KB)
+- 3 replication package/Data/RawData/Cosponsors_Clean.csv (72.9 MB)
+- 3 replication package/Data/RawData/Cosponsors_Clean.dta (55.5 MB)
+- 3 replication package/Data/RawData/DistrictCharacteristics_Clean.csv (1.8 MB)
+- 3 replication package/Data/RawData/IndividualCharacteristics_Clean.csv (1.5 MB)
+- 3 replication package/Data/RawData/PrimaryElections.csv (77.4 KB)
+- 3 replication package/Data/RawData/PrimaryElections.dta (134.7 KB)
+- 3 replication package/Data/RawData/votes_rollcall_analysis_102-111_clean.csv (6.5 MB)
+- 3 replication package/Output/AppendixC_simulations_output/rd_simulations1.dta (329.9 KB)
+- 3 replication package/Output/AppendixC_simulations_output/rd_simulations2.dta (329.9 KB)
+- 3 replication package/Output/AppendixC_simulations_output/rd_simulations3.dta (329.9 KB)
+- 3 replication package/Output/AppendixC_simulations_output/rd_simulations4.dta (329.9 KB)
+- 3 replication package/Output/AppendixC_simulations_output/results_AppendixTableC1.tex (3.5 KB)
+- 3 replication package/Output/AppendixC_simulations_output/results_AppendixTableC2.tex (3.5 KB)
+- 3 replication package/Output/AppendixC_simulations_output/results_AppendixTableC3.tex (3.5 KB)
+- 3 replication package/Output/Figure1.eps (85.1 KB)
+- 3 replication package/Output/Figure1.gph (94.9 KB)
+- 3 replication package/Output/Figure2.eps (82.2 KB)
+- 3 replication package/Output/Figure2.gph (91.5 KB)
+- 3 replication package/Output/Figure3.eps (19.0 KB)
+- 3 replication package/Output/Figure3.gph (8.6 KB)
+- 3 replication package/Output/Figure4a.eps (20.5 KB)
+- 3 replication package/Output/Figure4a.gph (8.6 KB)
+- 3 replication package/Output/Figure4b.eps (19.9 KB)
+- 3 replication package/Output/Figure4b.gph (8.7 KB)
+- 3 replication package/Output/Figure5.eps (78.2 KB)
+- 3 replication package/Output/Figure5.gph (52.8 KB)
+- 3 replication package/Output/Figure5_McCraryDensityTest_PartyAll_bw15.gph (17.4 KB)
+- 3 replication package/Output/Figure5_McCraryDensityTest_PartyD_bw15.gph (17.4 KB)
+- … and 7 more files (listing truncated)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/gagliarducci_2022_gender_cooperation_congress.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Independent Reproduction
+This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's description alone.  The authors' own analysis code is deliberately withheld.  Do NOT open, read, source, or execute any script files that may appear in the dataset directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, and similar) — load data files only.  Derive the estimating equation, sample restrictions, fixed effects, and standard-error clustering from the paper information and claims above.
+
+## Blind Reproduction
+This reproduction is also BLIND: the paper's reported values for the quantities above are deliberately withheld, and you will not be told how close your numbers are.  Compute each quantity as the paper's method defines it; do not tune the specification toward any number you expect.  Do NOT read result tables, logs, or output files that may appear in the dataset directory (.tex, .log, .pdf, .html, and similar) to recover the paper's numbers — compute everything from the data files.  Print a RESULT: line for every quantity listed, using its name exactly.
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

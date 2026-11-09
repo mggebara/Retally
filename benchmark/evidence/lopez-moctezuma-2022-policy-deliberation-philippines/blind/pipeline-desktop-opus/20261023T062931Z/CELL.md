@@ -56,6 +56,10 @@ _None declared._
 - [`output/stdout.txt`](output/stdout.txt) — 682 bytes, from `benchmark/results/artifacts/lopez-moctezuma-2022-policy-deliberation-philippines/blind/pipeline/20261023T062931Z/stdout.txt`
 - [`output/answer-1.md`](output/answer-1.md) — 6,072 bytes, from `benchmark/.cache/llm-oracle/desktop-opus/answers/4798d00a16574854333734bb.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM oracle store desktop-opus (request 4798d00a16574854333734bb: model claude-opus-5-5, max_tokens 16384, effort high)

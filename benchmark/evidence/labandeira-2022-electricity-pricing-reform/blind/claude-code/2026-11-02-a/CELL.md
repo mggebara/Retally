@@ -67,3 +67,7 @@ Agent notes: Spec (eq. 4): ln y on Reform T (T2), ln(price kWh) (lnp_kwh), ln in
 - [`output/script.R`](output/script.R) — 4,396 bytes, from `benchmark/results/artifacts/labandeira-2022-electricity-pricing-reform/blind/claude-code/20261102T142249Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 2,057 bytes, from `benchmark/results/artifacts/labandeira-2022-electricity-pricing-reform/blind/claude-code/20261102T142249Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 1,029 bytes, from `benchmark/results/artifacts/labandeira-2022-electricity-pricing-reform/blind/claude-code/20261102T142249Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

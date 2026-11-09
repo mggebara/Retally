@@ -63,3 +63,7 @@ Agent notes: attempt-1 was exploratory (variable listing from replication_data.d
 - [`output/script.R`](output/script.R) — 4,278 bytes, from `benchmark/results/artifacts/mokyr-2022-wheels-of-change/independent/claude-code/20261102T151024Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/mokyr-2022-wheels-of-change/independent/claude-code/20261102T151024Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 1,156 bytes, from `benchmark/results/artifacts/mokyr-2022-wheels-of-change/independent/claude-code/20261102T151024Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

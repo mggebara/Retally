@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "entry_id": "arias-2022-changing-tides-climate-migration",
+  "mode": "blind",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "AMCEs estimated by OLS of the forced-choice indicator on dummies for all seven attributes (main effects only), SEs clustered by respondent (fixest), rather than with the cjoint package (not installed). The German design restricts Language=None from co-occurring with an internal origin (enforced in the German data, not in the U.S. data); no language x origin interaction was added, which affects only the language/origin coefficients in principle, not the reason-for-migration AMCEs in expectation.",
+    "Sample: Qualtrics survey-preview responses dropped; every profile with a non-missing forced choice is kept (partial completers included); duplicated psid values (1 US, 6 DE) were not removed. respondents_* = distinct respondents with at least one answered choice; choice_tasks_* = profile rows entering the estimation."
+  ],
+  "notes": "Attempt-1 was an exploratory run (data structure: Qualtrics conjoint export, F-k-j attribute names / F-k-p-j levels for 9 tasks x 2 profiles; task-1 choice in force_choice, tasks 2-9 in Q184..Q198). Final script reshapes both conjoint files to profile level, maps German labels to English, baseline Economic opportunity for reason, and estimates full-model AMCEs. Outcome is the binary forced choice (not the 1-7 rating). Only the conjoint CSVs were used; study-2 and follow-up files and the .dat design files were inspected for structure only (design files read on host to learn levels/restrictions).",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-07T17:41:33Z",
+  "finished_at": "2026-11-07T18:00:00Z"
+}

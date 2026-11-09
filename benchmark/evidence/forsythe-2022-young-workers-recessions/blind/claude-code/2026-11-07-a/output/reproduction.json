@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "entry_id": "forsythe-2022-young-workers-recessions",
+  "mode": "blind",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-3", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-4", "exit_code": 124, "kind": "error"},
+    {"dir": "attempt-5", "exit_code": 124, "kind": ""},
+    {"dir": "attempt-6", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-7", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Hiring regressions (Tables 1 and 2) are estimated on cells (state x month-year x demographic cell x PE<=10 x labour-force status in t-1): the outcome is the CPS-weighted mean of the hired indicator (x100) and the regression weight is the cell's summed weight. All regressors and fixed effects are constant within a cell, so the point estimates equal the person-level weighted regression, and the state-clustered score sums are the same too (only the CR1 small-sample factor uses the cell count). This was needed because reading the 2 GB CSV through the sandbox's file sharing (~8 MB/s) takes ~200 s of the 300 s limit. N is reported as the number of person-level observations.",
+    "Years of schooling from PEEDUCA (used for potential experience = age - schooling - 6): <1st grade 0, 1st-4th 2.5, 5th-6th 5.5, 7th-8th 7.5, 9th 9, 10th 10, 11th 11, 12th no diploma 12, HS 12, some college 13, associate degrees 14, BA 16, MA 18, professional 20, PhD 20. The paper does not give its mapping.",
+    "Industry/occupation crosswalk vintage assigned by survey date (industry: 1990 codes through 2002, 2002 codes 2003-2008, 2007 codes 2009-2013, 2012 codes 2014+; occupation: 1990 through 2002, 2002 codes 2003-2010, 2010 codes 2011+)."
+  ],
+  "notes": "Independent blind reproduction from the redacted paper text and data column names only. Sample: matched consecutive-month CPS pairs in yh_data.csv with month t from Feb 1994 to Sep 2016 (t-1 May-Aug 1995 absent), civilians age 16+ with valid education, employment status in both months and a state code: 17,357,345 person-month observations. Hired (x100) = employed at t, not self-employed (PEIO1COW 6/7) at t, and either not employed at t-1 or employed at t-1 and answering that they no longer work for last month's employer (PUIODP1 = 2). The state unemployment rate is for month t. Weights are the average of the two months' final weights. Demographic FE = sex x white x Hispanic (PEHSPNON, PRHSPNON before 2003) x seven education levels; month-year FE are for month t; SEs are clustered by state. Wage regression: new hires with non-allocated (PRWERNAL = 0), positive weekly earnings at t, deflated with the provided CPI series to 1994 dollars, logged, with state, demographic, month-year, 2002-consistent occupation and industry FE (n = 118,376). Run history: attempt-1 explored the data (no estimates). attempts 2 and 3 crashed in a memory-saving column-subset loop (data.table names shared by reference). attempt-4 hit the 300 s limit during the data read. attempt-5 (chunked-read test) also timed out. attempt-6 measured raw read throughput (~8 MB/s). attempt-7 code-tested the cell-collapsed pipeline on the first 3M rows without printing estimates. The final run took 216 s. Another, unrelated sandbox container was running alongside most of these runs. The ReadMe.pdf in the data directory was not opened, and no author scripts or output files were opened. No hung docker run.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-08T20:30:00Z",
+  "finished_at": "2026-11-08T21:33:00Z"
+}

@@ -1,0 +1,3 @@
+Exploratory run (no RESULT lines) crashed:
+Error in solve.default(S) : Lapack routine dgesv: system is exactly singular: U[12,12] = 0
+Cause: item-level diagnostics passed raw and reversed copies of the same items to the Anderson inverse-covariance step. Fix (attempt-4): standardize items individually for item-level ITTs instead of calling the index builder on the combined item set.

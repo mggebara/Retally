@@ -1,0 +1,313 @@
+You are refining R code that reproduces results from an econometrics paper.
+The code RAN SUCCESSFULLY but the reproduced values do not match the
+paper's claims within the allowed tolerance.  Identify what is causing
+the gap and adjust the code to close it.
+
+## Paper
+Title: American Political Science Review (2022) 116, 1, 161–20
+Methodology: - **Motivating cross-national analysis (Figure 1):** Replicates Chenoweth and Lewis (2013) using NAVCO 2.0 merged with Ethnic Power Relations (EPR) (Thurber 2018). The sample covers 220 groups in violent and nonviolent campaigns in 110 countries, 1946–2006. The outcome is campaign success, defined as achieving all stated goals within a year of the campaign's peak. Campaign tactic (violent vs. nonviolent) is interacted with ethnic group identity, measured in two ways: political status (included/dominant vs. excluded) from EPR (Panel A) and group size (majority vs. minority) (Panel B). Results are plotted as predicted Pr(success). The full specification is in SI Section 2.
+- **Study 1 design (survey experiments):** Respondents read simulated news-article vignettes. US: 2×3 factorial, protester identity (white vs. Black, signalled by the names Charlie/Tyrone and a crowd photo) × tactic (march in streets / shut down traffic / destroy police cars); N = 2,269, three waves, Nov 2018–Jan 2019. Israel: 3×3 factorial, identity (white Jews / Ethiopian Jews / Arab Israelis, named in the headline) × tactic (march / block traffic / destroy garbage cans); N = 3,063, two waves, Feb–Mar 2019. Balance tests are in SI 3.4.
+- **Study 2 design:** June 2020, during the George Floyd protests. All vignettes show non-disruptive marching only. Three randomised factors: identity; protest goal (generic: layoffs vs. minority group-based: racial prejudice/police brutality); and an explicit statement of commitment to nonviolence (yes/no). US: 2×2×2, N = 3,013. Israel: 3×2×2 with two cells dropped (white Jews protesting minority goals), giving 10 conditions, N = 3,465.
+- **Dependent variables (identical in both studies):** (1) perceived degree of violence, on a 0–10 scale (0 = completely nonviolent, 10 = extremely violent); (2) recall violence, a binary coded 1 if the respondent's post-outcome checklist recalls damaging police cars, looting, or throwing rocks, and 0 if they recall only marching or blocking traffic; (3) police action required, on a 0–10 scale.
+- **Estimation (Tables 1 and 2):** Separate OLS regression of each DV on treatment dummies only, run separately by country, with no covariates and no fixed effects. Headline coefficients are in raw DV units (scale points, or probability for recall); they are not standardised.
+  - Table 1: DV ~ minority-identity dummies (Black; or Ethiopian and Arab) + tactic dummies (Shut down traffic; Destroy police cars / garbage cans). Baseline is white protesters marching in the streets. Example US estimates: Black = 0.235 (SE 0.117) on perceived violence, 0.039 (0.018) on recall, 0.268 (0.127) on police action; intercepts 2.774, 0.052 and 3.837.
+  - Table 2: DV ~ identity + Minority group goal + Commitment to nonviolence. Baseline is white protesters, generic goal, no commitment. Example US estimate: Black = 0.347 (0.115) on perceived violence.
+  - Effect sizes are reported as percentage changes relative to the intercept (e.g., 0.235/2.774 = 8.5%).
+- **Heterogeneity and interactions:** Identity × tactic (Fig. 3), identity × goal (Fig. 6, US only) and identity × commitment (Fig. 7) conditional effects are plotted in standard-deviation units. Subgroup analysis by respondent ethnicity (Fig. 4) uses the "march in streets" condition only and compares white vs. Black respondents in the US and Jewish vs. Arab respondents in Israel (too few Ethiopian respondents to include them).
+- **Inference and robustness:** Conventional OLS standard errors are reported in parentheses; the paper mentions no clustering or robust correction. Significance stars: * p<0.10, ** p<0.05, *** p<0.01. Adding pretreatment covariates does not change the results (SI 3.5). Observations: all respondents per sample, except that US Study 2 police action has N = 3,008.
+- **Mechanism analysis:** Open-ended explanations of approval or disapproval, restricted to nonviolent-protest conditions and pooled across both studies, are analysed qualitatively and with a Structural Topic Model (STM). The STM uses K = 10 topics, with protester identity (minority vs. majority) as the topic-prevalence covariate. Reported coefficients are the change in topic proportion from white to minority protesters.
+
+
+## Current Code
+```r
+suppressPackageStartupMessages({
+  library(stats)
+})
+set.seed(42)
+
+base <- "<repo>/.cache/datasets/manekin_2022_effective_for_whom.script-free/Replication/Data"
+load(file.path(base, "us_survey_wave1.rdata"))
+load(file.path(base, "isr_survey_wave1.rdata"))
+load(file.path(base, "us_survey_wave2.rdata"))
+load(file.path(base, "isr_survey_wave2.rdata"))
+
+us1 <- as.data.frame(us_survey_wave1)
+is1 <- as.data.frame(isr_survey_wave1)
+us2 <- as.data.frame(us_survey_wave2)
+is2 <- as.data.frame(isr_survey_wave2)
+
+strip <- function(x) {
+  if (inherits(x, "haven_labelled")) {
+    labs <- attr(x, "labels")
+    if (!is.null(labs)) {
+      out <- names(labs)[match(as.numeric(x), as.numeric(labs))]
+      return(out)
+    }
+    return(as.numeric(x))
+  }
+  x
+}
+
+num <- function(x) {
+  x <- strip(x)
+  if (is.factor(x) || is.character(x)) {
+    v <- suppressWarnings(as.numeric(as.character(x)))
+    if (sum(!is.na(v)) >= 0.5 * sum(!is.na(x))) return(v)
+    return(as.numeric(as.factor(x)) - 1)
+  }
+  as.numeric(x)
+}
+
+describe <- function(nm, x) {
+  x <- strip(x)
+  cat("# ", nm, " class=", paste(class(x), collapse = ","), "\n", sep = "")
+  print(table(x, useNA = "ifany"))
+}
+
+# match a category variable to a regex; for numeric codes use fallback code values
+cat_dummy <- function(x, pattern, numeric_code = NULL) {
+  x <- strip(x)
+  if (is.factor(x) || is.character(x)) {
+    s <- tolower(as.character(x))
+    d <- as.numeric(grepl(pattern, s))
+    d[is.na(s)] <- NA
+    return(d)
+  }
+  v <- as.numeric(x)
+  d <- as.numeric(v %in% numeric_code)
+  d[is.na(v)] <- NA
+  d
+}
+
+# binary treatment indicator (yes/1 = treated)
+bin_dummy <- function(x, pattern) {
+  x <- strip(x)
+  if (is.logical(x)) return(as.numeric(x))
+  if (is.factor(x) || is.character(x)) {
+    s <- tolower(as.character(x))
+    v <- suppressWarnings(as.numeric(s))
+    if (all(is.na(v) == is.na(s))) {
+      return(as.numeric(v == max(v, na.rm = TRUE)))
+    }
+    d <- as.numeric(grepl(pattern, s) & !grepl("^no|^not|non-?commit|no commit|generic|general|layoff", s))
+    if (length(unique(d[!is.na(s)])) < 2) {
+      lv <- if (is.factor(x)) levels(droplevels(x)) else sort(unique(s))
+      d <- as.numeric(as.character(x) == lv[length(lv)])
+    }
+    d[is.na(s)] <- NA
+    return(d)
+  }
+  v <- as.numeric(x)
+  as.numeric(v == max(v, na.rm = TRUE))
+}
+
+get_w <- function(df) {
+  if ("weight" %in% names(df)) {
+    w <- as.numeric(strip(df$weight))
+    if (sum(!is.na(w)) > 0) {
+      w[is.na(w)] <- NA
+      return(w)
+    }
+  }
+  rep(1, nrow(df))
+}
+
+fit <- function(df, dv, rhs, w) {
+  d <- df
+  d$.y <- num(df[[dv]])
+  d$.w <- w
+  f <- as.formula(paste(".y ~", paste(rhs, collapse = " + ")))
+  m <- lm(f, data = d, weights = .w)
+  cat("## ", dv, " N=", nobs(m), "\n", sep = "")
+  print(round(summary(m)$coefficients, 4))
+  m
+}
+
+# ---------------- Study 1 US ----------------
+describe("us1 identity", us1$identity_protesters)
+describe("us1 tactic", us1$tactic)
+us1$black <- cat_dummy(us1$identity_protesters, "black|african|tyrone", numeric_code = 1)
+us1$traffic <- cat_dummy(us1$tactic, "traffic|shut|block", numeric_code = 2)
+us1$destroy <- cat_dummy(us1$tactic, "destroy|police car|damage|violent", numeric_code = 3)
+if (is.numeric(strip(us1$tactic)) && min(as.numeric(strip(us1$tactic)), na.rm = TRUE) == 0) {
+  v <- as.numeric(strip(us1$tactic)); us1$traffic <- as.numeric(v == 1); us1$destroy <- as.numeric(v == 2)
+}
+w_us1 <- get_w(us1)
+rhs1us <- c("black", "traffic", "destroy")
+m_us1_v <- fit(us1, "degree_violence", rhs1us, w_us1)
+m_us1_p <- fit(us1, "police_action_required", rhs1us, w_us1)
+
+# ---------------- Study 1 Israel ----------------
+describe("is1 identity", is1$identity_protesters)
+describe("is1 tactic", is1$tactic)
+is1$ethiopian <- cat_dummy(is1$identity_protesters, "ethiop", numeric_code = 2)
+is1$arab <- cat_dummy(is1$identity_protesters, "arab", numeric_code = 3)
+is1$traffic <- cat_dummy(is1$tactic, "traffic|shut|block", numeric_code = 2)
+is1$destroy <- cat_dummy(is1$tactic, "destroy|garbage|damage|violent", numeric_code = 3)
+if (is.numeric(strip(is1$identity_protesters)) && min(as.numeric(strip(is1$identity_protesters)), na.rm = TRUE) == 0) {
+  v <- as.numeric(strip(is1$identity_protesters)); is1$ethiopian <- as.numeric(v == 1); is1$arab <- as.numeric(v == 2)
+}
+if (is.numeric(strip(is1$tactic)) && min(as.numeric(strip(is1$tactic)), na.rm = TRUE) == 0) {
+  v <- as.numeric(strip(is1$tactic)); is1$traffic <- as.numeric(v == 1); is1$destroy <- as.numeric(v == 2)
+}
+w_is1 <- get_w(is1)
+rhs1is <- c("ethiopian", "arab", "traffic", "destroy")
+m_is1_v <- fit(is1, "degree_violence", rhs1is, w_is1)
+m_is1_p <- fit(is1, "police_action_required", rhs1is, w_is1)
+
+# ---------------- Study 2 US ----------------
+if ("black" %in% names(us2)) {
+  describe("us2 black", us2$black)
+  us2$black_d <- bin_dummy(us2$black, "black|1|yes")
+} else {
+  us2$black_d <- cat_dummy(us2$identity_protesters_fac, "black", numeric_code = 1)
+}
+describe("us2 commitment", us2$commitment)
+describe("us2 group_goal", us2$group_goal)
+us2$commit_d <- bin_dummy(us2$commitment, "commit|yes|nonviol")
+us2$goal_d <- bin_dummy(us2$group_goal, "minority|group|racial|police|prejudice|yes")
+w_us2 <- get_w(us2)
+rhs2us <- c("black_d", "goal_d", "commit_d")
+m_us2_v <- fit(us2, "degree_violence", rhs2us, w_us2)
+m_us2_p <- fit(us2, "police_action_required", rhs2us, w_us2)
+
+# ---------------- Study 2 Israel (counts only) ----------------
+n_is2 <- nrow(is2)
+
+g <- function(m, v) unname(coef(m)[v])
+
+cat(sprintf("RESULT:study1_us_black_perceived_violence=%.6f\n", g(m_us1_v, "black")))
+cat(sprintf("RESULT:study1_us_black_police_action=%.6f\n", g(m_us1_p, "black")))
+cat(sprintf("RESULT:study1_israel_ethiopian_perceived_violence=%.6f\n", g(m_is1_v, "ethiopian")))
+cat(sprintf("RESULT:study1_israel_ethiopian_police_action=%.6f\n", g(m_is1_p, "ethiopian")))
+cat(sprintf("RESULT:study1_israel_arab_perceived_violence=%.6f\n", g(m_is1_v, "arab")))
+cat(sprintf("RESULT:study1_israel_arab_police_action=%.6f\n", g(m_is1_p, "arab")))
+cat(sprintf("RESULT:study2_us_black_perceived_violence=%.6f\n", g(m_us2_v, "black_d")))
+cat(sprintf("RESULT:study2_us_black_police_action=%.6f\n", g(m_us2_p, "black_d")))
+cat(sprintf("RESULT:respondents_study1_us=%d\n", nrow(us1)))
+cat(sprintf("RESULT:respondents_study1_israel=%d\n", nrow(is1)))
+cat(sprintf("RESULT:respondents_study2_us=%d\n", nrow(us2)))
+cat(sprintf("RESULT:respondents_study2_israel=%d\n", n_is2))
+```
+
+## What the code produced
+  study2_us_black_perceived_violence = 0.346652
+  study2_us_black_police_action = 0.42873
+  respondents_study1_us = 2269.0
+  respondents_study1_israel = 3063.0
+  respondents_study2_us = 3013.0
+  respondents_study2_israel = 3465.0
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+# us1 identity class=factor
+x
+   0    1 
+1134 1135 
+# us1 tactic class=factor
+x
+  0   1   2 
+752 758 759 
+## degree_violence N=2269
+            Estimate Std. Error t value Pr(>|t|)
+(Intercept)    4.107     0.0667 61.5873        0
+## police_action_required N=2269
+            Estimate Std. Error t value Pr(>|t|)
+(Intercept)   5.1025     0.0691 73.8056        0
+# is1 identity class=factor
+x
+   0    1    2 
+1013 1043 1007 
+# is1 tactic class=factor
+x
+   0    1    2 
+1016  999 1048 
+## degree_violence N=3063
+            Estimate Std. Error  t value Pr(>|t|)
+(Intercept)    5.219     0.0486 107.3122        0
+## police_action_required N=3063
+            Estimate Std. Error t value Pr(>|t|)
+(Intercept)    5.925     0.0519 114.213        0
+# us2 black class=numeric
+x
+   0    1 
+1562 1451 
+# us2 commitment class=numeric
+x
+   0    1 
+1516 1497 
+# us2 group_goal class=numeric
+x
+   0    1 
+1444 1569 
+## degree_violence N=3013
+            Estimate Std. Error t value Pr(>|t|)
+(Intercept)   3.3256     0.1139 29.1897   0.0000
+black_d       0.3467     0.1151  3.0109   0.0026
+goal_d        0.6280     0.1151  5.4542   0.0000
+commit_d     -0.2434     0.1150 -2.1167   0.0344
+## police_action_required N=3008
+            Estimate Std. Error t value Pr(>|t|)
+(Intercept)   4.1304     0.1131 36.5064   0.0000
+black_d       0.4287     0.1143  3.7503   0.0002
+goal_d        0.5474     0.1143  4.7874   0.0000
+commit_d     -0.2121     0.1142 -1.8577   0.0633
+RESULT:study1_us_black_perceived_violence=NA
+RESULT:study1_us_black_police_action=NA
+RESULT:study1_israel_ethiopian_perceived_violence=NA
+RESULT:study1_israel_ethiopian_police_action=NA
+RESULT:study1_israel_arab_perceived_violence=NA
+RESULT:study1_israel_arab_police_action=NA
+RESULT:study2_us_black_perceived_violence=0.346652
+RESULT:study2_us_black_police_action=0.428730
+RESULT:respondents_study1_us=2269
+RESULT:respondents_study1_israel=3063
+RESULT:respondents_study2_us=3013
+RESULT:respondents_study2_israel=3465
+```
+
+## Claims still failing
+1. study1_us_black_perceived_violence: paper claims 0.235 points on a 0-10 scale (coefficient), your code produced N/A, tolerance 0.4979
+2. study1_us_black_police_action: paper claims 0.268 points on a 0-10 scale (coefficient), your code produced N/A, tolerance 0.4739
+3. study1_israel_ethiopian_perceived_violence: paper claims 0.425 points on a 0-10 scale (coefficient), your code produced N/A, tolerance 0.2518
+4. study1_israel_ethiopian_police_action: paper claims 0.181 points on a 0-10 scale (coefficient), your code produced N/A, tolerance 0.6519
+5. study1_israel_arab_perceived_violence: paper claims 0.623 points on a 0-10 scale (coefficient), your code produced N/A, tolerance 0.1734
+6. study1_israel_arab_police_action: paper claims 0.964 points on a 0-10 scale (coefficient), your code produced N/A, tolerance 0.1234
+
+## Previous attempts (oldest first)
+  Attempt 1: study2_us_black_perceived_violence=0.346652, study2_us_black_police_action=0.42873, respondents_study1_us=2269.0, respondents_study1_israel=3063.0, respondents_study2_us=3013.0, respondents_study2_israel=3465.0
+
+These attempts have already been tried.  Do not repeat a strategy
+that has already produced the same values.
+
+## Task
+Adjust the code minimally to close the gap on the failing claims.
+Prefer changes that align more closely with the paper's stated methodology:
+re-read the methodology summary above and check the model specification,
+covariate selection, fixed effects, clustering, and seed against what the
+paper actually specifies.  In econometrics papers, common gap-closers are:
+  - getting the cluster-robust SE right (vcovCL / cluster_var argument)
+  - matching the paper's exact fixed-effects structure
+  - using the same sample-restriction filters the paper applied
+  - matching the paper's weighting scheme (weights= argument)
+
+## Deviation reporting
+If you must change something the paper did NOT specify in order to close
+the gap, emit a ``DEVIATION:`` line via cat() describing the change:
+
+    cat('DEVIATION: Used HC1 robust SE because the paper does not specify but the default did not converge\n')
+
+## When to give up
+If after re-reading the methodology and the previous attempts you judge
+the gap cannot be closed without unreasonable deviation, return the SAME
+R CODE you were given, BYTE-FOR-BYTE unchanged.  The pipeline will record
+the claim as unreproducible.
+
+## Output convention (unchanged)
+Emit every metric as ``cat('RESULT:<name>=<value>\n')``.
+The dataset is a directory tree at '<repo>/.cache/datasets/manekin_2022_effective_for_whom.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+No network, no system().  set.seed(42).
+
+Output ONLY the R code — no explanation, no markdown fences.

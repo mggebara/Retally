@@ -59,6 +59,10 @@ Per-claim ground truth, tolerance rule and errors: [`scoring.json`](scoring.json
 - [`output/stdout.txt`](output/stdout.txt) — 1,483 bytes, from `benchmark/results/artifacts/arias-2022-changing-tides-climate-migration/independent/pipeline/20261103T062157Z/stdout.txt`
 - [`output/answer-1.md`](output/answer-1.md) — 8,982 bytes, from `benchmark/.cache/llm-oracle/desktop-opus-postfix/answers/a32693d062b1b5d3f61223f3.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM oracle store desktop-opus-postfix (request a32693d062b1b5d3f61223f3: model claude-opus-5-5, max_tokens 16384, effort high)

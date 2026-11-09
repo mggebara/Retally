@@ -55,6 +55,10 @@ _None declared._
 - [`output/stdout.txt`](output/stdout.txt) — 758 bytes, from `benchmark/results/artifacts/hollyer-2022-parties-as-disciplinarians/seeded/pipeline/20261102T141403Z/stdout.txt`
 - [`output/answer-1.md`](output/answer-1.md) — 4,540 bytes, from `benchmark/.cache/llm-oracle/desktop-opus/answers/07c7c6d269f1eb0e5976d449.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM oracle store desktop-opus (request 07c7c6d269f1eb0e5976d449: model claude-opus-5-5, max_tokens 16384, effort high)

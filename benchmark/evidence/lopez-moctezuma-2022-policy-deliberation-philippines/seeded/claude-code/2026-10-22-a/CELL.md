@@ -64,3 +64,7 @@ Agent notes: Followed tables_figures_agg.R (Table 1), survey_clean.R + tables_fi
 - [`output/script.R`](output/script.R) — 5,646 bytes, from `benchmark/results/artifacts/lopez-moctezuma-2022-policy-deliberation-philippines/seeded/claude-code/20261022T032229Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/lopez-moctezuma-2022-policy-deliberation-philippines/seeded/claude-code/20261022T032229Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 2,144 bytes, from `benchmark/results/artifacts/lopez-moctezuma-2022-policy-deliberation-philippines/seeded/claude-code/20261022T032229Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

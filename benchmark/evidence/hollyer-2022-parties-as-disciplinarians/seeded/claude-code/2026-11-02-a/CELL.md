@@ -59,3 +59,7 @@ Agent notes: Single run. Table 1: OLS (fixest::feols, country-clustered SEs) of 
 - [`output/script.R`](output/script.R) — 3,755 bytes, from `benchmark/results/artifacts/hollyer-2022-parties-as-disciplinarians/seeded/claude-code/20261102T142251Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 372 bytes, from `benchmark/results/artifacts/hollyer-2022-parties-as-disciplinarians/seeded/claude-code/20261102T142251Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 1,896 bytes, from `benchmark/results/artifacts/hollyer-2022-parties-as-disciplinarians/seeded/claude-code/20261102T142251Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

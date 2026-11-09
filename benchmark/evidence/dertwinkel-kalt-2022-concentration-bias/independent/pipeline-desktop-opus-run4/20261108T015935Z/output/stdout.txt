@@ -1,0 +1,62 @@
+nrow: 7254 
+columns: tn, dispersed, age, study, mathgrade, disposable_income, raven_correct_answers, math_answers_correct, crt_answers_correct, session, treatment, average_ip, decision_number, utility_point, corner, chose_corner, indifference_point, pizza, control, main, id_stage2_upper, pap_sample, id_stage2, avg_id_stage2, qe_ard, qe_ard_lower, qe_ard_upper, qe_rad, qe_rad_lower, qe_rad_upper, RT_avg_stage_2, d_a0_main_tr, d_a1_main_tr, d_a2_main_tr, d_g0_main_tr, d_g1_main_tr, d_g2_main_tr, d_d1_main_tr, d_d2_main_tr, d_d3_main_tr, d_d4_main_tr, d_d5_main_tr, d_t1_main_tr, d_t2_main_tr, d_t3_main_tr, d_t4_main_tr, std_rt_2_main_tr, std_math_main_tr, std_crt_main_tr, std_raven_main_tr, std_start_row_main_tr, id_stage2_sign, cb_effect 
+--- treatment ---
+
+   0    1 
+3663 3591 
+--- decision_number ---
+
+  1   2   3   4   5   6   7   8   9 
+806 806 806 806 806 806 806 806 806 
+--- corner ---
+
+  -1    0    1 
+ 130 6223  901 
+--- chose_corner ---
+
+   0    1 <NA> 
+ 607  199 6448 
+--- pizza ---
+
+   0    1 
+2358 4896 
+--- control ---
+
+   0    1 
+3591 3663 
+--- main ---
+
+   0    1 <NA> 
+2322 2574 2358 
+--- dispersed ---
+
+   0    1 <NA> 
+2574 2322 2358 
+workday candidates:  
+balanced decisions: 1 2 3 4 5 6 7 8  unbalanced decision: 9 
+upper-bound candidates: id_stage2_upper, qe_ard_upper, qe_rad_upper 
+
+  DonCtrl  DonTreat  MainCtrl MainTreat  MechCtrl MechTreat 
+      134       128       143       143       130       128 
+d range: -63 300 
+upper-corner subjects (d > 62): 112 
+exclusion ip -> Main-Treatment N = 98 
+exclusion corner -> Main-Treatment N = 117 
+exclusion chose_corner -> Main-Treatment N = 100 
+using exclusion: chose_corner 
+
+  DonCtrl  DonTreat  MainCtrl MainTreat  MechCtrl MechTreat 
+      101       100       103       100       101       102 
+RESULT:abs_concentration_bias_midpoint_table2_col2=37.475000
+RESULT:abs_concentration_bias_tobit_table2_col4=36.777463
+RESULT:rel_concentration_bias_lower_table2_col1=0.188603
+RESULT:rel_concentration_bias_midpoint_table2_col2=0.223874
+RESULT:rel_concentration_bias_upper_table2_col3=0.259145
+RESULT:n_obs_table2=100.000000
+RESULT:rel_cb_mechanism_treatment_table3_col1=0.073716
+RESULT:diff_main_minus_mechanism_table3_col1=0.150158
+RESULT:rel_cb_donation_treatment_table3_col2=0.134129
+RESULT:diff_donation_treatment_minus_control_table3_col2=0.162486
+RESULT:diff_main_treatment_minus_control_table3_col3=0.250652
+RESULT:diff_mechanism_treatment_minus_control_table3_col4=0.090925
+RESULT:n_obs_table3=202.000000

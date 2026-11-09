@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "entry_id": "altmann-2022-cognitive-spillovers",
+  "mode": "independent",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Control set built from the dataset's prepared variables: q_age, female (q_gender), field of study (subject_cat factor), high-school GPA as quartile factor with a missing category (q_abitur_grade_cat) to keep all 12,160 observations, last math grade quartile factor (q_math_grade_cat), ability_load, ability_task, perceived multitasking as the 1-5 Likert item (perc_multitasking_1), payoff-scheme factor (Treatment_Incentives) and wave factor (original_lab). The exact coding the authors used is not stated in the paper text provided.",
+    "Online experiment controls: age, gender factor (female/male/other), and screen size entered as window_height1 and window_width1 linearly."
+  ],
+  "notes": "attempt-1 was exploratory (variable listing, no RESULT lines). Lab sample = Treatment_Incentives != Ample (scarce resources; Baseline, Directed Attention, Forced Choice; all payoff schemes and both waves): 12,160 subject-rounds, 608 subjects. All regressions OLS via fixest::feols with SEs clustered by subject_id. Outcomes: summation_correct (choice quality), default_followed (default adherence), load_correct (background task), payoff_share (Table 4), memory (online). The final run is the first scored run; RESULT values were compared with the claims after the run, all agree to the reported rounding, and the script was not changed, so there are no claim attempts. The paper.txt supplied is an earlier working-paper version without the regression tables, so the specifications come from the claim descriptions. The README.md in the package (documentation, not a script) was read.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-07T17:26:48Z",
+  "finished_at": "2026-11-07T17:38:31Z"
+}

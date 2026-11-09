@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "entry_id": "hanushek-2022-patience-risk-human-capital",
+  "mode": "independent",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 124, "kind": "error"},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 124, "kind": "error"},
+    {"dir": "attempt-4", "exit_code": 124, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 124, "kind": ""}
+  ],
+  "deviations": [
+    "Data are read with a small hand-written chunked reader for Stata .dta format 118 (large readBin blocks, vectorised column decoding, Stata missing codes to NA) instead of haven::read_dta / data.table::fread: both of those exceeded the 300 s sandbox limit on the 2.3 GB / 2.8 GB files because of slow per-row I/O through the Docker file share. The final script checks the reader against haven on the first 2,000 rows (max abs diff 0, country strings identical).",
+    "Table 1 migration-status controls are migra1 and migra2 (first/second generation, mean-imputed where missing in the working file) plus imputation dummies imfemale, image, immigra0, immigra1 and immigra2; natives in column 5 are all students not coded migra1==1 or migra2==1.",
+    "Table 2 controls are female, age, coo_oecd, imfemale and image, with residence-country-by-wave FE (countrywave), weights wgt, and SEs clustered by origin country; fixest drops 1 singleton FE observation, so N is 80,397 rather than 80,398."
+  ],
+  "notes": "Independent reproduction from the paper text. Table 1 (eq. 1): pv1math (PISA math/100) on the country-level GPS patience and/or risk-taking from pisa_full_gps_final.dta, with gender, age, migration status, imputation dummies and wave FE, weighted by wgtc (sampling weights giving each country equal weight), SEs clustered by country; N = 1,992,276 students, 49 countries, 263 country-waves, all as in the paper. Table 2 (eq. 2): migrant sample from pisa_full_gps_final_imcoo.dta, waves 2003-2018, 80,398 students, 58 origins, 180 residence-country-by-wave cells (as in the paper), regressed on origin-country GPS measures. The Table 1 coefficients are within about 0.01 of the paper. In Table 2, patience is close (0.912 vs 0.931; 1.027 vs 1.032) but risk-taking is smaller in magnitude (-0.194 vs -0.294; -0.382 vs -0.449). No claim-driven refinement was made; the final run is the first run that printed RESULT lines. Attempts 1 and 3 timed out while reading the large file (fread on the CSV, then haven on the .dta). Attempt 2 was an exploratory timing run. Attempt 4 (exploratory) showed that even a bare haven read of the full .dta exceeds 300 s. Attempt 5 (exploratory) validated the chunked reader: full file in about 43 s of CPU, 1,992,276 rows; it timed out afterwards in an extra haven read. The host was asleep for most of each hour, so each run took 40-100 min of wall-clock time; no run hung. Earlier scratch files from a previous session (an exploratory CSV script and its partial output) were reused for variable names and the Table 2 specification only.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-08T09:43:00Z",
+  "finished_at": "2026-11-08T19:25:00Z"
+}

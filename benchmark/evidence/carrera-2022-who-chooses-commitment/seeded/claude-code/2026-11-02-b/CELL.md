@@ -57,3 +57,7 @@ Agent notes: Translated Tables.do (regs_avg_delta_ex1_all and regs_commit_pooled
 - [`output/script.R`](output/script.R) — 4,212 bytes, from `benchmark/results/artifacts/carrera-2022-who-chooses-commitment/seeded/claude-code/20261102T194315Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 256 bytes, from `benchmark/results/artifacts/carrera-2022-who-chooses-commitment/seeded/claude-code/20261102T194315Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 5,328 bytes, from `benchmark/results/artifacts/carrera-2022-who-chooses-commitment/seeded/claude-code/20261102T194315Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

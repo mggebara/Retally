@@ -74,3 +74,7 @@ Agent notes: Translated Table5.do into R (haven + fixest). Columns: (1) OLS with
 - [`output/script.R`](output/script.R) — 12,353 bytes, from `benchmark/results/artifacts/gagliarducci-2022-gender-cooperation-congress/seeded/claude-code/20261102T194315Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 558 bytes, from `benchmark/results/artifacts/gagliarducci-2022-gender-cooperation-congress/seeded/claude-code/20261102T194315Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 1,584 bytes, from `benchmark/results/artifacts/gagliarducci-2022-gender-cooperation-congress/seeded/claude-code/20261102T194315Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

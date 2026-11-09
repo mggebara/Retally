@@ -64,3 +64,7 @@ Agent notes: Attempt 1 was exploratory (inspected data_agg and survey_raw barang
 - [`output/script.R`](output/script.R) — 6,332 bytes, from `benchmark/results/artifacts/lopez-moctezuma-2022-policy-deliberation-philippines/seeded/claude-code/20261102T194315Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 0 bytes, from `benchmark/results/artifacts/lopez-moctezuma-2022-policy-deliberation-philippines/seeded/claude-code/20261102T194315Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 1,938 bytes, from `benchmark/results/artifacts/lopez-moctezuma-2022-policy-deliberation-philippines/seeded/claude-code/20261102T194315Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

@@ -66,3 +66,7 @@ Agent notes: Followed 3_ Results TABLES.do Table 2: sample1 = complete cases of 
 - [`output/script.R`](output/script.R) — 4,628 bytes, from `benchmark/results/artifacts/labandeira-2022-electricity-pricing-reform/seeded/claude-code/20261102T142251Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 380 bytes, from `benchmark/results/artifacts/labandeira-2022-electricity-pricing-reform/seeded/claude-code/20261102T142251Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 888 bytes, from `benchmark/results/artifacts/labandeira-2022-electricity-pricing-reform/seeded/claude-code/20261102T142251Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

@@ -58,3 +58,7 @@ Agent notes: Translated the Table 2 block of Data_analysis_202208.do: four OLS L
 - [`output/script.R`](output/script.R) — 1,680 bytes, from `benchmark/results/artifacts/brouwer-2022-teaching-norms/seeded/claude-code/20261102T061959Z/script.R`
 - [`output/stderr.txt`](output/stderr.txt) — 118 bytes, from `benchmark/results/artifacts/brouwer-2022-teaching-norms/seeded/claude-code/20261102T061959Z/stderr.txt`
 - [`output/stdout.txt`](output/stdout.txt) — 3,530 bytes, from `benchmark/results/artifacts/brouwer-2022-teaching-norms/seeded/claude-code/20261102T061959Z/stdout.txt`
+
+## Executions
+
+Execution metadata not recorded (the agent harness does not write `execution.json`).

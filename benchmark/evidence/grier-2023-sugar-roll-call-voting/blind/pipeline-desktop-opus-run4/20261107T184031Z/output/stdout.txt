@@ -1,0 +1,115 @@
+Main data: 862 rows
+            
+             113 115
+  Aye        206 137
+  No         221 278
+  No Vote      0   1
+  Not Voting   7  12
+District key used: id 
+
+--- District FE (Table 1 col 1) ---
+Call:
+coxph(formula = Surv(1 + 0 * aye, aye) ~ sugcont + ncu + tenure + 
+    poverty + bach + medincome + over65 + agcom + strata(g), 
+    data = dd, method = "exact")
+
+  n= 186, number of events= 93 
+
+                coef  exp(coef)   se(coef)      z Pr(>|z|)   
+sugcont   -1.969e-04  9.998e-01  5.997e-05 -3.283  0.00103 **
+ncu        7.125e-02  1.074e+00  2.776e-02  2.567  0.01026 * 
+tenure    -1.221e-01  8.850e-01  4.627e-02 -2.640  0.00830 **
+poverty    6.244e-01  1.867e+00  3.482e-01  1.793  0.07295 . 
+bach       4.923e-01  1.636e+00  3.932e-01  1.252  0.21052   
+medincome -4.008e-05  1.000e+00  1.425e-04 -0.281  0.77848   
+over65    -4.786e-01  6.196e-01  5.074e-01 -0.943  0.34549   
+agcom     -1.967e+01  2.854e-09  1.329e+04 -0.001  0.99882   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+          exp(coef) exp(-coef) lower .95 upper .95
+sugcont   9.998e-01  1.000e+00    0.9997    0.9999
+ncu       1.074e+00  9.312e-01    1.0170    1.1339
+tenure    8.850e-01  1.130e+00    0.8083    0.9690
+poverty   1.867e+00  5.356e-01    0.9436    3.6950
+bach      1.636e+00  6.112e-01    0.7571    3.5357
+medincome 1.000e+00  1.000e+00    0.9997    1.0002
+over65    6.196e-01  1.614e+00    0.2292    1.6750
+agcom     2.854e-09  3.504e+08    0.0000       Inf
+
+Concordance= 0.925  (se = 0.039 )
+Likelihood ratio test= 87.86  on 8 df,   p=1e-15
+Wald test            = 13.93  on 8 df,   p=0.08
+Score (logrank) test = 61.16  on 8 df,   p=3e-10
+
+Obs: 186  groups: 93 
+
+--- Incumbent FE (Table 1 col 2) ---
+Call:
+coxph(formula = Surv(1 + 0 * aye, aye) ~ sugcont + ncu + tenure + 
+    poverty + bach + medincome + over65 + agcom + strata(g), 
+    data = dd, method = "exact")
+
+  n= 104, number of events= 52 
+
+                coef  exp(coef)   se(coef)      z Pr(>|z|)
+sugcont   -1.158e-03  9.988e-01  7.636e-04 -1.517    0.129
+ncu       -1.505e-01  8.603e-01  1.654e-01 -0.910    0.363
+tenure    -1.843e+00  1.584e-01  1.401e+00 -1.315    0.189
+poverty    5.207e+00  1.825e+02  3.390e+00  1.536    0.125
+bach       2.827e-01  1.327e+00  8.082e-01  0.350    0.726
+medincome  1.619e-03  1.002e+00  1.165e-03  1.390    0.165
+over65    -3.860e+00  2.107e-02  3.349e+00 -1.153    0.249
+agcom     -2.533e+01  9.941e-12  2.438e+04 -0.001    0.999
+
+          exp(coef) exp(-coef) lower .95 upper .95
+sugcont   9.988e-01  1.001e+00 9.973e-01 1.000e+00
+ncu       8.603e-01  1.162e+00 6.221e-01 1.190e+00
+tenure    1.584e-01  6.315e+00 1.015e-02 2.469e+00
+poverty   1.825e+02  5.480e-03 2.374e-01 1.403e+05
+bach      1.327e+00  7.537e-01 2.722e-01 6.468e+00
+medincome 1.002e+00  9.984e-01 9.993e-01 1.004e+00
+over65    2.107e-02  4.747e+01 2.973e-05 1.493e+01
+agcom     9.941e-12  1.006e+11 0.000e+00       Inf
+
+Concordance= 0.962  (se = 0.038 )
+Likelihood ratio test= 61.23  on 8 df,   p=3e-10
+Wald test            = 4.17  on 8 df,   p=0.8
+Score (logrank) test = 38.23  on 8 df,   p=7e-06
+
+Obs: 104  groups: 52 
+District key used: id 
+District key used: id 
+
+--- iter1 window ---
+      sugcont           ncu        tenure       poverty          bach 
+-1.968713e-04  7.125124e-02 -1.221483e-01  6.244370e-01  4.923134e-01 
+    medincome        over65         agcom 
+-4.008220e-05 -4.786280e-01 -1.967451e+01 
+      sugcont           ncu        tenure       poverty          bach 
+ -0.001158383  -0.150520107  -1.842937347   5.206729708   0.282720357 
+    medincome        over65         agcom 
+  0.001618661  -3.860037607 -25.334342945 
+Obs: 186 104 
+
+--- iter2 window ---
+      sugcont           ncu        tenure       poverty          bach 
+-1.968713e-04  7.125124e-02 -1.221483e-01  6.244370e-01  4.923134e-01 
+    medincome        over65         agcom 
+-4.008220e-05 -4.786280e-01 -1.967451e+01 
+      sugcont           ncu        tenure       poverty          bach 
+ -0.001158383  -0.150520107  -1.842937347   5.206729708   0.282720357 
+    medincome        over65         agcom 
+  0.001618661  -3.860037607 -25.334342945 
+Obs: 186 104 
+RESULT:sugar_contributions_district_fe=-0.0001968713395
+RESULT:sugar_contributions_incumbent_fe=-0.001158383425
+RESULT:acu_ideology_district_fe=0.07125123607
+RESULT:tenure_district_fe=-0.1221483082
+RESULT:tenure_incumbent_fe=-1.842937347
+RESULT:sugar_contributions_calendar_year_district_fe=-0.0001968713395
+RESULT:sugar_contributions_calendar_year_incumbent_fe=-0.001158383425
+RESULT:sugar_contributions_12_months_district_fe=-0.0001968713395
+RESULT:sugar_contributions_12_months_incumbent_fe=-0.001158383425
+RESULT:observations_district_fe=186
+RESULT:observations_incumbent_fe=104

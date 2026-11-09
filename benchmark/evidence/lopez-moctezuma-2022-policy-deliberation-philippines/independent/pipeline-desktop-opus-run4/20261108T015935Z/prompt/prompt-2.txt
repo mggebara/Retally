@@ -1,0 +1,280 @@
+You are refining R code that reproduces results from an econometrics paper.
+The code RAN SUCCESSFULLY but the reproduced values do not match the
+paper's claims within the allowed tolerance.  Identify what is causing
+the gap and adjust the code to close it.
+
+## Paper
+Title: Policy Deliberation and Voter Persuasion:
+Methodology: - **Design / sample**: Field experiment in the May 13, 2013 Philippine party-list election with two party lists, Akbayan (feminist platform) and Umalab Ka (pro-urban-poor platform). Two-stage cluster sampling picked 7 of 17 municipalities in NCR and 6 of 90 in Calabarzon (13 municipalities). Within each municipality, 3 barangays were drawn: 1 assigned to treatment (two or three town-hall meetings of about 40 people each, held April 21 to May 9) and 2 to control ("business-as-usual" one-way campaigning). A barangay was resampled whenever two picks were less than 1.5 km apart. Municipalities were then randomly assigned to a party list. This gives 39 barangays: 18 Akbayan and 21 Umalab Ka. There was non-compliance in 3 assigned-treatment barangays: Concepcion Dos (Marikina) and Isla (Valenzuela) were swapped with control units, and San Roque (Umalab Ka) was replaced by San Diego and San Antonio.
+- **Barangay-level estimating equation (Eq. 1, ITT)**: Y_jk = δ_k + β·Z_jk + ε_jk, estimated by OLS. Z_jk is the original random-assignment dummy and δ_k are municipality (city) fixed effects. There are no other controls. Outcomes come from official COMELEC precinct returns aggregated to the barangay, in percentage points (levels, not logs, not standardised):
+  - party-list turnout as a % of registered voters;
+  - party's vote share as a % of total party-list votes, pooled ("Vote (overall)") and separately for Akbayan and Umalab Ka.
+- **CACE (Eq. 2)**: IV/2SLS of Y_jk on the implemented-treatment dummy T_jk, with municipality FE and T instrumented by Z. Compliers exclude Concepcion Dos, Isla and San Roque.
+- **Barangay-level inference**: nonparametric permutation (randomization-inference) test that re-permutes treatment within municipality and gives p-values for the ITT. Table 1 reports ITT, CACE, control mean, City FE, N and R². Headline results:
+  - turnout: ITT −4.544 (p = .404), CACE −5.908;
+  - pooled vote share: ITT 1.096 (p = .048), CACE 1.425; control mean 2.397; N = 39; R² = .776;
+  - Akbayan: ITT 1.955 (p = .087), CACE 2.606; N = 18;
+  - Umalab Ka: ITT 0.360 (p = .141), CACE 0.459; N = 21.
+- **Barangay-level heterogeneity (Figure 2)**: (a) a linear interaction of assignment × number of registered voters, with municipality FE (marginal ITT on vote share); (b) vote share regressed on the proportion of meeting attendees (from attendance sheets), with municipality FE and town-hall assignment as the instrument for attendance.
+- **Individual-level data and preprocessing**:
+  - Post-election survey by CPE, run two weeks after the election using a random walk (every 5th household, starting at the town hall or meeting site) with a quota of 40 per barangay. 1,314 respondents.
+  - Municipalities without both treatment and control samples (Imus, Pateros, Santa Maria) are dropped. Respondents without a valid turnout response are dropped, leaving an effective N = 1,082.
+  - Inverse-probability weights correct for oversampling of meeting attendees. In treatment barangays the weight uses the ratio of self-reported attendees in the survey to actual attendees on the sign-in sheets.
+  - Robustness checks: multiple imputation (SI App. E), unweighted results with permutation p-values (SI App. F), and added pretreatment covariates (SI App. D).
+- **Individual-level specifications**: linear probability models with municipality (city) FE and standard errors clustered at the barangay level (the level of assignment).
+  - Eq. 3 (ITT): Y_ijk = δ_k + β·Z_jk + ε.
+  - Eq. 4 (CACE): IV with T_jk instrumented by Z_jk.
+  - Outcomes are binary turnout and a binary vote for the campaigning party (pooled, Akbayan, Umalab Ka), shown in Figure 3 and SI Table C.2.
+  - Eq. 5 (heterogeneity): Y = γ_k + β1·Z + β2·X + β3·(Z×X) + ξ. X is income (cut at 10,000 pesos), education (primary or less vs high school or more) or female gender. A matching IV version gives the differential CACE (Figure 4).
+- **Mechanisms (Figure 5, SI Table D.3)**:
+  - Attitude outcomes are oriented so that positive means more agreement, then standardised by the control-group mean and s.d.
+  - They are combined into Anderson (2008) inverse-covariance-weighted summary indices. The gender index uses 6 items (Female Rep., Female Pol., Equality, Discrimination, Harassment). The poverty index uses 4 items (Poverty, GAP, CCT, Corruption).
+  - Indices are estimated separately for Akbayan and Umalab Ka municipalities, by ITT and by CACE, with city FE, barangay-clustered SEs and 95% CIs.
+  - Results are in s.d. units: Akbayan gender index ITT ≈ 0.45 and CACE ≈ 0.67; Umalab Ka poverty index ITT ≈ 0.13.
+
+
+## Current Code
+```r
+suppressPackageStartupMessages({
+  library(fixest)
+  library(dplyr)
+})
+set.seed(42)
+
+base <- "<repo>/.cache/datasets/lopez_moctezuma_2022_policy_deliberation_philippines.script-free"
+load(file.path(base, "data_agg.RData"))
+load(file.path(base, "survey_raw.RData"))
+
+num <- function(x) {
+  if (inherits(x, "haven_labelled")) return(as.numeric(unclass(x)))
+  if (is.factor(x)) {
+    v <- suppressWarnings(as.numeric(as.character(x)))
+    if (all(is.na(v[!is.na(x)]))) v <- as.numeric(x)
+    return(v)
+  }
+  if (is.character(x)) {
+    v <- suppressWarnings(as.numeric(x))
+    if (all(is.na(v[!is.na(x)]))) {
+      lx <- tolower(trimws(x))
+      v <- ifelse(is.na(x), NA,
+                  ifelse(grepl("^(yes|treat|assigned|true|y)", lx), 1,
+                         ifelse(grepl("^(no|control|false|n)", lx), 0, NA)))
+    }
+    return(v)
+  }
+  as.numeric(x)
+}
+to01 <- function(x) {
+  v <- num(x)
+  u <- sort(unique(v[!is.na(v)]))
+  if (length(u) == 2 && !all(u == c(0, 1))) v <- as.numeric(v == max(u))
+  v
+}
+norm <- function(x) tolower(trimws(as.character(x)))
+emit <- function(name, val) cat(sprintf("RESULT:%s=%.6f\n", name, as.numeric(val)))
+safe <- function(expr) tryCatch(expr, error = function(e) { message("ERR: ", conditionMessage(e)); NA })
+
+# ---------------- Identify Akbayan municipalities ----------------
+sv <- as.data.frame(survey_raw)
+sv$city_n <- norm(sv$city)
+akb_cities <- character(0)
+if ("assign.akbayan" %in% names(sv)) {
+  aa <- to01(sv$assign.akbayan)
+  akb_cities <- unique(sv$city_n[!is.na(aa) & aa == 1])
+}
+if (length(akb_cities) == 0 && "partytreat" %in% names(sv)) {
+  pt <- sv$partytreat
+  if (is.character(pt) || is.factor(pt)) akb_cities <- unique(sv$city_n[grepl("akb", norm(pt))])
+}
+
+da <- as.data.frame(data.all)
+da$city_n <- norm(da$city)
+da$Z <- to01(da$assignment)
+da$is_akb <- NA
+pt <- da$partytreat
+if (is.character(pt) || is.factor(pt) || inherits(pt, "haven_labelled")) {
+  lab <- if (inherits(pt, "haven_labelled")) as.character(haven::as_factor(pt)) else norm(pt)
+  if (any(grepl("akb", tolower(lab)))) da$is_akb <- grepl("akb", tolower(lab))
+}
+if (all(is.na(da$is_akb)) && length(akb_cities) > 0) da$is_akb <- da$city_n %in% akb_cities
+if (all(is.na(da$is_akb))) da$is_akb <- num(da$partytreat) == 1
+if (sum(da$is_akb) != 18 && length(akb_cities) > 0 && sum(da$city_n %in% akb_cities) == 18)
+  da$is_akb <- da$city_n %in% akb_cities
+
+pct <- function(x) { x <- num(x); if (max(x, na.rm = TRUE) <= 1.0001) x * 100 else x }
+da$turnout <- pct(da$turnout.party)
+da$sh_akb <- pct(da$share.akbayan)
+da$sh_uma <- pct(da$share.umalabka)
+da$vote_overall <- ifelse(da$is_akb, da$sh_akb, da$sh_uma)
+
+m1 <- feols(turnout ~ Z | city, data = da)
+m2 <- feols(vote_overall ~ Z | city, data = da)
+m3 <- feols(sh_akb ~ Z | city, data = da[da$is_akb, ])
+m4 <- feols(sh_uma ~ Z | city, data = da[!da$is_akb, ])
+
+emit("itt_turnout_barangay_table1_col1", coef(m1)["Z"])
+emit("itt_vote_overall_barangay_table1_col2", coef(m2)["Z"])
+emit("itt_vote_akbayan_barangay_table1_col3", coef(m3)["Z"])
+emit("itt_vote_umalabka_barangay_table1_col4", coef(m4)["Z"])
+emit("n_obs_barangay_table1_cols1_2", nobs(m2))
+emit("n_obs_barangay_akbayan_table1_col3", nobs(m3))
+emit("n_obs_barangay_umalabka_table1_col4", nobs(m4))
+
+# ---------------- Individual level ----------------
+sv <- sv[!grepl("imus|pateros|santa maria|sta\\.? maria", sv$city_n), ]
+sv$Z <- to01(sv$assignment)
+sv$turn <- to01(sv$turnout_pl)
+sv <- sv[!is.na(sv$turn), ]
+sv$is_akb <- sv$city_n %in% akb_cities
+sv$brgy_n <- norm(sv$barangay)
+sv$att <- to01(sv$attendance)
+
+# attendance weights: match survey attendee share to actual attendee share (sign-in sheets)
+da$brgy_n <- norm(da$barangay)
+ap <- num(da$att.prop)
+if (max(ap, na.rm = TRUE) > 1) ap <- ap / 100
+actual <- setNames(ap, da$brgy_n)
+sv$w <- 1
+for (b in unique(sv$brgy_n[sv$Z == 1])) {
+  idx <- which(sv$brgy_n == b)
+  a <- sv$att[idx]
+  ps <- mean(a == 1, na.rm = TRUE)
+  pa <- if (b %in% names(actual)) actual[[b]] else NA
+  if (!is.na(pa) && !is.na(ps) && ps > 0 && ps < 1) {
+    sv$w[idx] <- ifelse(!is.na(a) & a == 1, pa / ps, (1 - pa) / (1 - ps))
+  }
+}
+
+# unweighted vote ITT (SI Table F.1)
+vt <- sv[sv$turn == 1, ]
+vt$vote_party <- ifelse(vt$is_akb, to01(vt$vote.akbayan), to01(vt$vote.umalabka))
+if ("vote" %in% names(vt)) {
+  vv <- to01(vt$vote)
+  if (sum(!is.na(vv)) > 0) vt$vote_party <- ifelse(is.na(vv), vt$vote_party, vv)
+}
+vt$vote_party <- 100 * vt$vote_party
+vt$vote_akb <- 100 * to01(vt$vote.akbayan)
+f1 <- safe(coef(feols(vote_party ~ Z | city, data = vt, cluster = ~barangay))["Z"])
+f3 <- safe(coef(feols(vote_akb ~ Z | city, data = vt[vt$is_akb, ], cluster = ~barangay))["Z"])
+
+# Anderson summary index
+anderson <- function(d, items) {
+  Zm <- sapply(items, function(v) {
+    x <- num(d[[v]])
+    ctl <- d$Z == 0
+    (x - mean(x[ctl], na.rm = TRUE)) / sd(x[ctl], na.rm = TRUE)
+  })
+  S <- cov(Zm, use = "pairwise.complete.obs")
+  wts <- rowSums(solve(S))
+  idx <- apply(Zm, 1, function(r) {
+    ok <- !is.na(r)
+    if (!any(ok)) return(NA)
+    sum(wts[ok] * r[ok]) / sum(wts[ok])
+  })
+  ctl <- d$Z == 0
+  (idx - mean(idx[ctl], na.rm = TRUE)) / sd(idx[ctl], na.rm = TRUE)
+}
+pov_items <- intersect(c("poverty", "gap", "cct", "corruption"), names(sv))
+gen_items <- intersect(c("femhouse", "fempol", "equality", "discrimination", "harassment"), names(sv))
+itt_index <- function(d, items) {
+  d$idx <- anderson(d, items)
+  coef(feols(idx ~ Z | city, data = d, weights = ~w, cluster = ~barangay))["Z"]
+}
+sa <- sv[sv$is_akb, ]; su <- sv[!sv$is_akb, ]
+p_a <- safe(itt_index(sa, pov_items))
+p_u <- safe(itt_index(su, pov_items))
+g_a <- safe(itt_index(sa, gen_items))
+g_u <- safe(itt_index(su, gen_items))
+
+emit("itt_poverty_index_akbayan_tableC3", p_a)
+emit("itt_poverty_index_umalabka_tableC3", p_u)
+emit("itt_gender_index_akbayan_tableC4", g_a)
+emit("itt_gender_index_umalabka_tableC4", g_u)
+emit("itt_vote_overall_unweighted_tableF1_col2", f1)
+emit("itt_vote_akbayan_unweighted_tableF1_col3", f3)
+```
+
+## What the code produced
+  itt_turnout_barangay_table1_col1 = -4.544482
+  itt_vote_overall_barangay_table1_col2 = 1.096264
+  itt_vote_akbayan_barangay_table1_col3 = 1.954857
+  itt_vote_umalabka_barangay_table1_col4 = 0.360326
+  n_obs_barangay_table1_cols1_2 = 39.0
+  n_obs_barangay_akbayan_table1_col3 = 18.0
+  n_obs_barangay_umalabka_table1_col4 = 21.0
+  itt_poverty_index_akbayan_tableC3 = 0.102363
+  itt_poverty_index_umalabka_tableC3 = 0.224722
+  itt_gender_index_akbayan_tableC4 = 0.599185
+  itt_gender_index_umalabka_tableC4 = -0.116781
+  itt_vote_overall_unweighted_tableF1_col2 = 23.509924
+  itt_vote_akbayan_unweighted_tableF1_col3 = 32.009665
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+RESULT:itt_turnout_barangay_table1_col1=-4.544482
+RESULT:itt_vote_overall_barangay_table1_col2=1.096264
+RESULT:itt_vote_akbayan_barangay_table1_col3=1.954857
+RESULT:itt_vote_umalabka_barangay_table1_col4=0.360326
+RESULT:n_obs_barangay_table1_cols1_2=39.000000
+RESULT:n_obs_barangay_akbayan_table1_col3=18.000000
+RESULT:n_obs_barangay_umalabka_table1_col4=21.000000
+RESULT:itt_poverty_index_akbayan_tableC3=0.102363
+RESULT:itt_poverty_index_umalabka_tableC3=0.224722
+RESULT:itt_gender_index_akbayan_tableC4=0.599185
+RESULT:itt_gender_index_umalabka_tableC4=-0.116781
+RESULT:itt_vote_overall_unweighted_tableF1_col2=23.509924
+RESULT:itt_vote_akbayan_unweighted_tableF1_col3=32.009665
+```
+
+## Last run's stderr (excerpt: first/last 3000 characters)
+```
+NOTE: 1 observation removed because of NA values (RHS: 1, Fixed-effects: 1, vcov: 1).
+NOTE: 9 observations removed because of NA values (LHS: 9).
+NOTE: 14 observations removed because of NA values (LHS: 13, RHS: 1, Fixed-effects: 1, vcov: 1).
+NOTE: 6 observations removed because of NA values (LHS: 6).
+NOTE: 12 observations removed because of NA values (LHS: 11, RHS: 1, Fixed-effects: 1, vcov: 1).
+```
+
+## Claims still failing
+1. itt_poverty_index_akbayan_tableC3: paper claims 0.496 standard deviations (summary index, control-group s.d.) (coefficient), your code produced 0.102363, tolerance 0.02, gap 79.36% relative
+2. itt_poverty_index_umalabka_tableC3: paper claims 0.126 standard deviations (summary index, control-group s.d.) (coefficient), your code produced 0.224722, tolerance 0.02, gap 78.35% relative
+3. itt_gender_index_akbayan_tableC4: paper claims 0.45 standard deviations (summary index, control-group s.d.) (coefficient), your code produced 0.599185, tolerance 0.02, gap 33.15% relative
+4. itt_gender_index_umalabka_tableC4: paper claims 0.095 standard deviations (summary index, control-group s.d.) (coefficient), your code produced -0.116781, tolerance 0.02, gap 222.93% relative
+
+## Previous attempts (oldest first)
+  Attempt 1: itt_turnout_barangay_table1_col1=-4.544482, itt_vote_overall_barangay_table1_col2=1.096264, itt_vote_akbayan_barangay_table1_col3=1.954857, itt_vote_umalabka_barangay_table1_col4=0.360326, n_obs_barangay_table1_cols1_2=39.0, n_obs_barangay_akbayan_table1_col3=18.0, n_obs_barangay_umalabka_table1_col4=21.0, itt_poverty_index_akbayan_tableC3=0.102363, itt_poverty_index_umalabka_tableC3=0.224722, itt_gender_index_akbayan_tableC4=0.599185, itt_gender_index_umalabka_tableC4=-0.116781, itt_vote_overall_unweighted_tableF1_col2=23.509924, itt_vote_akbayan_unweighted_tableF1_col3=32.009665
+
+These attempts have already been tried.  Do not repeat a strategy
+that has already produced the same values.
+
+## Task
+Adjust the code minimally to close the gap on the failing claims.
+Prefer changes that align more closely with the paper's stated methodology:
+re-read the methodology summary above and check the model specification,
+covariate selection, fixed effects, clustering, and seed against what the
+paper actually specifies.  In econometrics papers, common gap-closers are:
+  - getting the cluster-robust SE right (vcovCL / cluster_var argument)
+  - matching the paper's exact fixed-effects structure
+  - using the same sample-restriction filters the paper applied
+  - matching the paper's weighting scheme (weights= argument)
+
+## Deviation reporting
+If you must change something the paper did NOT specify in order to close
+the gap, emit a ``DEVIATION:`` line via cat() describing the change:
+
+    cat('DEVIATION: Used HC1 robust SE because the paper does not specify but the default did not converge\n')
+
+## When to give up
+If after re-reading the methodology and the previous attempts you judge
+the gap cannot be closed without unreasonable deviation, return the SAME
+R CODE you were given, BYTE-FOR-BYTE unchanged.  The pipeline will record
+the claim as unreproducible.
+
+## Output convention (unchanged)
+Emit every metric as ``cat('RESULT:<name>=<value>\n')``.
+The dataset is a directory tree at '<repo>/.cache/datasets/lopez_moctezuma_2022_policy_deliberation_philippines.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+No network, no system().  set.seed(42).
+
+Output ONLY the R code — no explanation, no markdown fences.

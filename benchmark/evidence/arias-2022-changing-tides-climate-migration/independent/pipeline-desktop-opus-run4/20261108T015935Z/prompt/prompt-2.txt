@@ -1,0 +1,403 @@
+You are refining R code that reproduces results from an econometrics paper.
+The code RAN SUCCESSFULLY but the reproduced values do not match the
+paper's claims within the allowed tolerance.  Identify what is causing
+the gap and adjust the code to close it.
+
+## Paper
+Title: Changing Tides: Public Attitudes on Climate Migration∗
+Methodology: - **Design / data (Study 1):** Choice-based (forced-choice, paired-profile) conjoint experiment fielded via Dynata on nationally representative online samples: 1,086 U.S. and 1,074 German respondents (2,160 total), 18,966 (U.S.) and 18,862 (Germany) profile observations ("unique choice tasks"). Each respondent saw 9 pairs of randomized migrant profiles; after each pair they rated each profile and chose which migrant to admit for settlement in their state. Pre-registered at EGAP (Design ID 20190905AA). U.S. and Germany are analysed separately (no pooling).
+- **Attributes and baselines (Table 1):** Seven fully randomized attributes; baseline levels in parentheses: Reason for Migration (Economic Opportunity; vs Drought, Flooding, Wildfires, Political/Religious/Ethnic Persecution), Language Fluency (None; vs Broken, Fluent), Gender (Female; vs Male), Occupation (Unemployed; vs Cleaner, Teacher, Doctor), Religion (Atheist/Agnostic; vs Christian, Muslim; "agnostic" replaced by "atheist" in Germany), Origin (Another region in your country; vs Afghanistan, Ethiopia, Myanmar, Ukraine), Vulnerability (None; vs PTSD, Food insecurity, No surviving family members, Physically handicapped).
+- **Estimator / specification:** Average Marginal Component Effects (AMCEs; Hainmueller, Hopkins & Yamamoto 2014), i.e. a linear probability model (OLS) of the binary choice outcome (profile chosen = 1) on dummy indicators for all non-baseline levels of the seven attributes, estimated separately by country. Outcome is a probability; coefficients are unstandardised changes in the probability a profile is preferred relative to the baseline level (e.g., U.S. drought 0.035, flooding 0.037, wildfires 0.040, persecution 0.076; Germany 0.081, 0.086, 0.060, 0.162). No fixed effects or respondent covariates in the main model.
+- **Standard errors / inference:** Robust standard errors clustered by respondent; Figure 1 shows 90% confidence intervals; Table 2 significance stars at *** p<0.01, ** p<0.05, * p<0.1.
+- **Samples / subsets:** Headline (Table 2, Figure 1 left panel) uses all profile pairs ("full model"). Figure 1 middle panel restricts to internal-migrant (within-country origin) profile pairs; right panel to international-migrant (foreign origin) profile pairs. Robustness also excludes internal migrant profiles that may seem implausible.
+- **Supplementary analyses:** Marginal means (P(preferred) for economic migrant 0.45-0.48, climate migrant 0.48-0.53, refugee 0.53-0.60), conjoint diagnostic tests, heterogeneous effects by subgroup (Leeper, Hobolt & Tilley 2020; e.g., employed / college-educated respondents), and origin x reason-for-migration interactions; Wald-type comparisons among climatic drivers (no significant within-sample differences between drought, flooding, wildfires).
+- **Study 2:** Between-subjects factorial survey experiment on representative U.S. and German samples; after the same sociodemographic pre-test (age, gender, education, religiosity, trust, political interest, ideology, partisanship, foreign policy orientation, empathy), respondents read a mock article priming migration, climate change, or climate migration (domestic or worldwide), with a soccer article as control. DVs are multiple-item importance indices of support for policies to address each issue (mitigation, aiding climate migrants); treatment effects estimated relative to control, with empathy as a correlate and subgroup analyses (details in appendix). Finding: null effects of primes; empathy robustly correlated with support.
+
+
+## Current Code
+```r
+suppressPackageStartupMessages({
+  library(readr)
+  library(dplyr)
+  library(tidyr)
+  library(stringr)
+  library(fixest)
+})
+set.seed(42)
+
+base_dir <- "<repo>/.cache/datasets/arias_2022_changing_tides_climate_migration.script-free"
+files <- list(
+  us = file.path(base_dir, "Climate Migration 2_ Conjoint- USA_September 10, 2019_08.56.csv"),
+  germany = file.path(base_dir, "Climate Migration 2_ Conjoint- Germany_September 11, 2019_02.58.csv")
+)
+
+# patterns for reason-for-migration levels (English + German)
+pat_econ <- "(?i)econom|wirtschaft|ökonom|oekonom|arbeitsm|job|employment"
+pat_drought <- "(?i)drought|dürre|duerre|trockenheit"
+pat_flood <- "(?i)flood|überschwemm|ueberschwemm|hochwasser|flut"
+pat_fire <- "(?i)wildfire|fire|waldbr|brand|feuer"
+pat_pers <- "(?i)persecut|verfolg"
+
+choice_text_pat <- "(?i)which|welche|welchen|prefer|bevorzug|admit|aufnehm|aufgenommen|choose|wähl|waehl|entscheid|settle|ansiedl|niederlass|lieber|eher"
+
+read_qualtrics <- function(path) {
+  raw <- suppressWarnings(readr::read_csv(path, col_types = readr::cols(.default = readr::col_character()),
+                                          progress = FALSE, name_repair = "minimal"))
+  nm <- names(raw)
+  nm <- sub("^﻿", "", nm)
+  names(raw) <- nm
+  qtext <- rep(NA_character_, length(nm))
+  drop <- integer(0)
+  for (r in 1:min(3, nrow(raw))) {
+    v <- raw[[ifelse("StartDate" %in% nm, "StartDate", nm[1])]][r]
+    v2 <- paste(unlist(raw[r, ]), collapse = " ")
+    if (!is.na(v) && (grepl("Start", v) || grepl("ImportId", v) || grepl("ImportId", v2))) {
+      if (!grepl("ImportId", v2) && all(is.na(qtext))) qtext <- as.character(unlist(raw[r, ]))
+      drop <- c(drop, r)
+    }
+  }
+  if (length(drop) > 0) raw <- raw[-drop, , drop = FALSE]
+  if (all(is.na(qtext))) qtext <- nm
+  list(data = raw, qtext = qtext)
+}
+
+build_long <- function(path) {
+  q <- read_qualtrics(path)
+  d <- q$data
+  qtext <- q$qtext
+  nm <- names(d)
+  id_col <- if ("ResponseId" %in% nm) "ResponseId" else nm[grepl("(?i)responseid", nm)][1]
+  d$.rid <- d[[id_col]]
+  if (any(is.na(d$.rid) | d$.rid == "")) d$.rid[is.na(d$.rid) | d$.rid == ""] <- paste0("row", which(is.na(d$.rid) | d$.rid == ""))
+
+  re_name <- "^F[-_.](\\d+)[-_.](\\d+)$"
+  re_lev <- "^F[-_.](\\d+)[-_.](\\d+)[-_.](\\d+)$"
+  name_cols <- nm[grepl(re_name, nm)]
+  lev_cols <- nm[grepl(re_lev, nm)]
+  if (length(lev_cols) == 0) stop("No conjoint attribute columns (F-t-k-j) found in ", path)
+  nm_m <- str_match(name_cols, re_name)
+  lv_m <- str_match(lev_cols, re_lev)
+  tasks <- sort(unique(as.integer(lv_m[, 2])))
+  n_tasks <- length(tasks)
+  profiles <- sort(unique(as.integer(lv_m[, 3])))
+
+  # ---- identify choice columns ----
+  meta <- c("StartDate","EndDate","Status","IPAddress","Progress","Duration (in seconds)","Finished",
+            "RecordedDate","ResponseId","RecipientLastName","RecipientFirstName","RecipientEmail",
+            "ExternalReference","LocationLatitude","LocationLongitude","DistributionChannel","UserLanguage", ".rid")
+  cand <- setdiff(nm, c(meta, name_cols, lev_cols))
+  info <- lapply(cand, function(cn) {
+    v <- d[[cn]]
+    v <- str_trim(v)
+    u <- sort(unique(v[!is.na(v) & v != ""]))
+    list(col = cn, u = u, nn = sum(!is.na(v) & v != ""), pos = match(cn, nm))
+  })
+  two <- Filter(function(x) length(x$u) == 2 && x$nn >= 0.3 * nrow(d), info)
+  choice_cols <- NULL
+  if (length(two) > 0) {
+    keys <- sapply(two, function(x) paste(x$u, collapse = "||"))
+    txt <- sapply(two, function(x) qtext[x$pos])
+    txtmatch <- grepl(choice_text_pat, txt) | grepl("(?i)migrant|profil|person", keys)
+    grp <- split(seq_along(two), keys)
+    best <- NULL; best_score <- -Inf
+    for (g in names(grp)) {
+      idx <- grp[[g]]
+      cnt <- length(idx)
+      score <- -abs(cnt - n_tasks) * 10 + sum(txtmatch[idx]) +
+        5 * grepl("1|2|A|B", g) + 3 * grepl("(?i)migrant|profil|person", g) -
+        20 * grepl("(?i)^(female\\|\\|male|männlich|weiblich|yes\\|\\|no|ja\\|\\|nein|no\\|\\|yes|nein\\|\\|ja)", g)
+      if (cnt >= n_tasks) score <- score + 2
+      if (score > best_score) { best_score <- score; best <- idx }
+    }
+    sel <- two[best]
+    sel <- sel[order(sapply(sel, `[[`, "pos"))]
+    if (length(sel) > n_tasks) {
+      tm <- grepl(choice_text_pat, sapply(sel, function(x) qtext[x$pos]))
+      if (sum(tm) >= n_tasks) sel <- sel[tm]
+      sel <- sel[seq_len(n_tasks)]
+    }
+    choice_cols <- sapply(sel, `[[`, "col")
+  }
+  if (is.null(choice_cols) || length(choice_cols) < n_tasks) stop("Could not identify choice columns in ", path)
+  message("Choice columns (", basename(path), "): ", paste(choice_cols, collapse = ", "))
+
+  # map choice values to profile number
+  map_choice <- function(v) {
+    v <- str_trim(v)
+    out <- rep(NA_integer_, length(v))
+    u <- sort(unique(v[!is.na(v) & v != ""]))
+    dig <- suppressWarnings(as.integer(str_extract(u, "\\d+")))
+    if (length(u) == 2 && all(!is.na(dig)) && length(unique(dig)) == 2) {
+      lab <- rank(dig)
+    } else {
+      lab <- seq_along(u)
+    }
+    for (i in seq_along(u)) out[!is.na(v) & v == u[i]] <- as.integer(lab[i])
+    out
+  }
+
+  long_list <- list()
+  for (ti in seq_along(tasks)) {
+    t <- tasks[ti]
+    ch <- map_choice(d[[choice_cols[ti]]])
+    for (k in profiles) {
+      jj <- sort(unique(as.integer(lv_m[lv_m[, 2] == t & lv_m[, 3] == k, 4])))
+      for (j in jj) {
+        ncol_ <- name_cols[nm_m[, 2] == t & nm_m[, 3] == j]
+        lcol_ <- lev_cols[lv_m[, 2] == t & lv_m[, 3] == k & lv_m[, 4] == j]
+        if (length(ncol_) == 0 || length(lcol_) == 0) next
+        long_list[[length(long_list) + 1]] <- tibble(
+          rid = d$.rid, task = t, profile = k, choice = ch,
+          attr = str_trim(d[[ncol_[1]]]), level = str_trim(d[[lcol_[1]]])
+        )
+      }
+    }
+  }
+  ll <- bind_rows(long_list) %>% filter(!is.na(attr), attr != "", !is.na(level), level != "")
+  wide <- ll %>%
+    distinct(rid, task, profile, attr, .keep_all = TRUE) %>%
+    pivot_wider(id_cols = c(rid, task, profile, choice), names_from = attr, values_from = level)
+  wide <- wide %>% filter(!is.na(choice))
+  attrs <- setdiff(names(wide), c("rid", "task", "profile", "choice"))
+  wide <- wide[complete.cases(wide[, attrs]), ]
+  wide$chosen <- as.integer(wide$choice == wide$profile)
+  list(df = wide, attrs = attrs)
+}
+
+estimate <- function(path) {
+  b <- build_long(path)
+  df <- b$df
+  attrs <- b$attrs
+  # identify reason attribute
+  reason_attr <- NULL
+  for (a in attrs) {
+    lv <- unique(df[[a]])
+    if (any(grepl(pat_drought, lv)) && any(grepl(pat_pers, lv))) { reason_attr <- a; break }
+  }
+  if (is.null(reason_attr)) {
+    for (a in attrs) if (any(grepl(pat_drought, unique(df[[a]])))) { reason_attr <- a; break }
+  }
+  if (is.null(reason_attr)) stop("Reason attribute not found")
+  rhs <- c()
+  reason_levels <- NULL
+  for (ai in seq_along(attrs)) {
+    a <- attrs[ai]
+    lv <- sort(unique(df[[a]]))
+    base <- lv[1]
+    if (a == reason_attr) {
+      eb <- lv[grepl(pat_econ, lv)]
+      if (length(eb) > 0) base <- eb[1]
+    } else {
+      cand <- lv[grepl("(?i)^none$|^keine?$|unemployed|arbeitslos|^female$|weiblich|^frau$|atheist|agnostic|konfessionslos|another region|anderen region|andere region|region in", lv)]
+      if (length(cand) > 0) base <- cand[1]
+    }
+    ord <- c(base, setdiff(lv, base))
+    vname <- paste0("A", ai)
+    df[[vname]] <- factor(match(df[[a]], ord), levels = seq_along(ord), labels = paste0("L", seq_along(ord)))
+    rhs <- c(rhs, vname)
+    if (a == reason_attr) { reason_levels <- ord; reason_var <- vname }
+  }
+  fml <- as.formula(paste("chosen ~", paste(rhs, collapse = " + ")))
+  m <- feols(fml, data = df, cluster = ~rid)
+  cf <- coef(m)
+  se <- sqrt(diag(vcov(m)))
+  get_lv <- function(pat) {
+    i <- which(grepl(pat, reason_levels))
+    i <- setdiff(i, 1)
+    if (length(i) == 0) return(c(NA, NA))
+    cn <- paste0(reason_var, "L", i[1])
+    c(unname(cf[cn]), unname(se[cn]))
+  }
+  # wildfire pattern should not hit other levels; check order of matching
+  out <- list(
+    drought = get_lv(pat_drought),
+    flooding = get_lv(pat_flood),
+    wildfires = get_lv(pat_fire),
+    persecution = get_lv(pat_pers),
+    n_resp = length(unique(df$rid)),
+    n_obs = nobs(m)
+  )
+  print(summary(m))
+  message("Reason levels: ", paste(reason_levels, collapse = " | "))
+  out
+}
+
+fmt <- function(x) ifelse(is.na(x), "NA", formatC(x, digits = 6, format = "f"))
+
+res_us <- tryCatch(estimate(files$us), error = function(e) { message("US error: ", conditionMessage(e)); NULL })
+res_de <- tryCatch(estimate(files$germany), error = function(e) { message("DE error: ", conditionMessage(e)); NULL })
+
+emit <- function(name, val) cat(sprintf("RESULT:%s=%s\n", name, fmt(val)))
+
+if (!is.null(res_us)) {
+  emit("amce_drought_us", res_us$drought[1]); emit("amce_drought_us_se", res_us$drought[2])
+  emit("amce_flooding_us", res_us$flooding[1]); emit("amce_flooding_us_se", res_us$flooding[2])
+  emit("amce_wildfires_us", res_us$wildfires[1]); emit("amce_wildfires_us_se", res_us$wildfires[2])
+  emit("amce_persecution_us", res_us$persecution[1]); emit("amce_persecution_us_se", res_us$persecution[2])
+  cat(sprintf("RESULT:respondents_us=%d\n", as.integer(res_us$n_resp)))
+  cat(sprintf("RESULT:choice_tasks_us=%d\n", as.integer(res_us$n_obs)))
+}
+if (!is.null(res_de)) {
+  emit("amce_drought_germany", res_de$drought[1]); emit("amce_drought_germany_se", res_de$drought[2])
+  emit("amce_flooding_germany", res_de$flooding[1]); emit("amce_flooding_germany_se", res_de$flooding[2])
+  emit("amce_wildfires_germany", res_de$wildfires[1]); emit("amce_wildfires_germany_se", res_de$wildfires[2])
+  emit("amce_persecution_germany", res_de$persecution[1]); emit("amce_persecution_germany_se", res_de$persecution[2])
+  cat(sprintf("RESULT:respondents_germany=%d\n", as.integer(res_de$n_resp)))
+  cat(sprintf("RESULT:choice_tasks_germany=%d\n", as.integer(res_de$n_obs)))
+}
+```
+
+## What the code produced
+  amce_drought_us = 0.035062
+  amce_drought_us_se = 0.011716
+  amce_flooding_us = 0.036883
+  amce_flooding_us_se = 0.011916
+  amce_wildfires_us = 0.040181
+  amce_wildfires_us_se = 0.011351
+  amce_persecution_us = 0.075684
+  amce_persecution_us_se = 0.012465
+  respondents_us = 1086.0
+  choice_tasks_us = 18970.0
+  amce_drought_germany = 0.00768
+  amce_drought_germany_se = 0.011241
+  amce_flooding_germany = 0.012112
+  amce_flooding_germany_se = 0.011331
+  amce_wildfires_germany = 0.021283
+  amce_wildfires_germany_se = 0.011992
+  amce_persecution_germany = 0.024706
+  amce_persecution_germany_se = 0.011594
+  respondents_germany = 1143.0
+  choice_tasks_germany = 19078.0
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+OLS estimation, Dep. Var.: chosen
+Observations: 18,970
+Standard-errors: Clustered (rid) 
+             Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)  0.349155   0.015760 22.155008  < 2.2e-16 ***
+A1L2         0.012635   0.011248  1.123324 2.6155e-01    
+A1L3         0.037945   0.010993  3.451700 5.7852e-04 ***
+A1L4        -0.002870   0.011522 -0.249078 8.0335e-01    
+A1L5        -0.046087   0.011810 -3.902443 1.0109e-04 ***
+A2L2         0.043115   0.008908  4.840311 1.4840e-06 ***
+A2L3         0.104377   0.009308 11.213238  < 2.2e-16 ***
+A3L2         0.035062   0.011716  2.992642 2.8283e-03 ** 
+A3L3         0.036883   0.011916  3.095263 2.0168e-03 ** 
+A3L4         0.075684   0.012465  6.071832 1.7463e-09 ***
+A3L5         0.040181   0.011351  3.539818 4.1737e-04 ***
+A4L2        -0.044535   0.007387 -6.028995 2.2586e-09 ***
+A5L2        -0.025844   0.011700 -2.208963 2.7386e-02 *  
+A5L3        -0.026022   0.011255 -2.311981 2.0965e-02 *  
+A5L4        -0.021437   0.011556 -1.855085 6.3855e-02 .  
+A5L5        -0.010877   0.011738 -0.926638 3.5432e-01    
+A6L2         0.060059   0.009375  6.406466 2.2151e-10 ***
+A6L3        -0.046835   0.009288 -5.042628 5.3783e-07 ***
+A7L2         0.071547   0.010828  6.607707 6.1052e-11 ***
+A7L3         0.186879   0.011542 16.191075  < 2.2e-16 ***
+A7L4         0.139817   0.010873 12.858740  < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.489208   Adj. R2: 0.041693
+OLS estimation, Dep. Var.: chosen
+Observations: 19,078
+Standard-errors: Clustered (rid) 
+             Estimate Std. Error   t value  Pr(>|t|)    
+(Intercept)  0.506757   0.016271 31.144743 < 2.2e-16 ***
+A1L2         0.007680   0.011241  0.683213 0.4946111    
+A1L3         0.024706   0.011594  2.130812 0.0333178 *  
+A1L4         0.012112   0.011331  1.068925 0.2853294    
+A1L5         0.021283   0.011992  1.774780 0.0762006 .  
+A2L2        -0.007125   0.011582 -0.615153 0.5385765    
+A2L3        -0.010070   0.010990 -0.916238 0.3597354    
+A2L4        -0.013828   0.011035 -1.253125 0.2104166    
+A2L5        -0.018960   0.011154 -1.699838 0.0894336 .  
+A3L2        -0.001104   0.010321 -0.106927 0.9148658    
+A3L3         0.000906   0.010326  0.087791 0.9300585    
+A3L4        -0.006430   0.010664 -0.602935 0.5466718    
+A4L2        -0.015781   0.007025 -2.246480 0.0248638 *  
+A5L2        -0.000333   0.008977 -0.037050 0.9704514    
+A5L3        -0.023748   0.008862 -2.679605 0.0074769 ** 
+A6L2         0.015869   0.009881  1.606052 0.1085390    
+A6L3         0.004916   0.009282  0.529623 0.5964762    
+A7L2        -0.004160   0.011284 -0.368646 0.7124600    
+A7L3        -0.004046   0.012586 -0.321456 0.7479234    
+A7L4         0.009702   0.011093  0.874584 0.3819841    
+A7L5        -0.001063   0.011513 -0.092327 0.9264540    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.499615   Adj. R2: 4.909e-4
+RESULT:amce_drought_us=0.035062
+RESULT:amce_drought_us_se=0.011716
+RESULT:amce_flooding_us=0.036883
+RESULT:amce_flooding_us_se=0.011916
+RESULT:amce_wildfires_us=0.040181
+RESULT:amce_wildfires_us_se=0.011351
+RESULT:amce_persecution_us=0.075684
+RESULT:amce_persecution_us_se=0.012465
+RESULT:respondents_us=1086
+RESULT:choice_tasks_us=18970
+RESULT:amce_drought_germany=0.007680
+RESULT:amce_drought_germany_se=0.011241
+RESULT:amce_flooding_germany=0.012112
+RESULT:amce_flooding_germany_se=0.011331
+RESULT:amce_wildfires_germany=0.021283
+RESULT:amce_wildfires_germany_se=0.011992
+RESULT:amce_persecution_germany=0.024706
+RESULT:amce_persecution_germany_se=0.011594
+RESULT:respondents_germany=1143
+RESULT:choice_tasks_germany=19078
+```
+
+## Last run's stderr (excerpt: first/last 3000 characters)
+```
+Choice columns (Climate Migration 2_ Conjoint- USA_September 10, 2019_08.56.csv): force_choice, Q184, Q186, Q188, Q190, Q192, Q194, Q196, Q198
+Reason levels: Economic opportunity | Drought | Flooding | Political/religious/ethnic persecution | Wildfires
+Choice columns (Climate Migration 2_ Conjoint- Germany_September 11, 2019_02.58.csv): NATIVE_BORN, force_choice, Q184, Q186, Q188, Q190, Q192, Q194, Q196
+Reason levels: Wirtschaftliche Perspektive | Dürre | Politische/religiöse/ethnische Verfolgung | Überflutung | Waldbrände
+```
+
+## Claims still failing
+1. amce_drought_germany: paper claims 0.081 change in probability profile is preferred (coefficient), your code produced 0.00768, tolerance 0.1481, gap 90.52% relative
+2. amce_flooding_germany: paper claims 0.086 change in probability profile is preferred (coefficient), your code produced 0.012112, tolerance 0.1395, gap 85.92% relative
+3. amce_wildfires_germany: paper claims 0.06 change in probability profile is preferred (coefficient), your code produced 0.021283, tolerance 0.2, gap 64.53% relative
+4. amce_persecution_germany: paper claims 0.162 change in probability profile is preferred (coefficient), your code produced 0.024706, tolerance 0.08025, gap 84.75% relative
+5. respondents_germany: paper claims 1074.0 respondents (count), your code produced 1143, tolerance 0.05, gap 6.42% relative
+
+## Previous attempts (oldest first)
+  Attempt 1: amce_drought_us=0.035062, amce_drought_us_se=0.011716, amce_flooding_us=0.036883, amce_flooding_us_se=0.011916, amce_wildfires_us=0.040181, amce_wildfires_us_se=0.011351, amce_persecution_us=0.075684, amce_persecution_us_se=0.012465, respondents_us=1086.0, choice_tasks_us=18970.0, amce_drought_germany=0.00768, amce_drought_germany_se=0.011241, amce_flooding_germany=0.012112, amce_flooding_germany_se=0.011331, amce_wildfires_germany=0.021283, amce_wildfires_germany_se=0.011992, amce_persecution_germany=0.024706, amce_persecution_germany_se=0.011594, respondents_germany=1143.0, choice_tasks_germany=19078.0
+
+These attempts have already been tried.  Do not repeat a strategy
+that has already produced the same values.
+
+## Task
+Adjust the code minimally to close the gap on the failing claims.
+Prefer changes that align more closely with the paper's stated methodology:
+re-read the methodology summary above and check the model specification,
+covariate selection, fixed effects, clustering, and seed against what the
+paper actually specifies.  In econometrics papers, common gap-closers are:
+  - getting the cluster-robust SE right (vcovCL / cluster_var argument)
+  - matching the paper's exact fixed-effects structure
+  - using the same sample-restriction filters the paper applied
+  - matching the paper's weighting scheme (weights= argument)
+
+## Deviation reporting
+If you must change something the paper did NOT specify in order to close
+the gap, emit a ``DEVIATION:`` line via cat() describing the change:
+
+    cat('DEVIATION: Used HC1 robust SE because the paper does not specify but the default did not converge\n')
+
+## When to give up
+If after re-reading the methodology and the previous attempts you judge
+the gap cannot be closed without unreasonable deviation, return the SAME
+R CODE you were given, BYTE-FOR-BYTE unchanged.  The pipeline will record
+the claim as unreproducible.
+
+## Output convention (unchanged)
+Emit every metric as ``cat('RESULT:<name>=<value>\n')``.
+The dataset is a directory tree at '<repo>/.cache/datasets/arias_2022_changing_tides_climate_migration.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+No network, no system().  set.seed(42).
+
+Output ONLY the R code — no explanation, no markdown fences.

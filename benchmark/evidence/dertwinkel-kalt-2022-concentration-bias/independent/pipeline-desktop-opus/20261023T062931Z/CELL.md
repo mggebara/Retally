@@ -56,6 +56,10 @@ _None declared._
 - [`output/stdout.txt`](output/stdout.txt) — 9,496 bytes, from `benchmark/results/artifacts/dertwinkel-kalt-2022-concentration-bias/independent/pipeline/20261023T062931Z/stdout.txt`
 - [`output/answer-1.md`](output/answer-1.md) — 16,768 bytes, from `benchmark/.cache/llm-oracle/desktop-opus/answers/cb9c039e3e7cf5b13752332d.json`
 
+## Executions
+
+Execution metadata not recorded (cell built before #133).
+
 ## Notes
 
 - answer-1.md: reply to prompt-1.txt from the LLM oracle store desktop-opus (request cb9c039e3e7cf5b13752332d: model claude-opus-5-5, max_tokens 16384, effort high)

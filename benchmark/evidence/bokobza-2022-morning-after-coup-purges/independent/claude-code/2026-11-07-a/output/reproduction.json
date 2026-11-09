@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "entry_id": "bokobza-2022-morning-after-coup-purges",
+  "mode": "independent",
+  "run_id": "2026-11-07-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [
+    "Country level: coupattempt_whogov used as delivered (taken to be the July-aligned WhoGov coup indicator); autocracy filter = one-year lag of democracy1 (BMR) == 0, years 1967-2016; country-FE sample N=3743 (paper 3,715), 93 failed coups (paper 95).",
+    "Leader-FE models (Table A2): one-year lags of democracy and controls taken within each leader spell (leader_cab_id), as if the panel were set on the leader id, so each spell's first year drops; N=3277 (paper 3,332). With country-panel lags (attempt-4) N was 3626 and the coefficients 0.062/0.064. Monarchy is (near-)collinear with leader FE, as the paper notes.",
+    "Individual level: experience model (H2a) does not drop junior ministers despite footnote 16; the sample is minister-years with non-missing importance tier, which reproduces the paper's coup-year count (1,926). Importance model drops the 6 tier-0 rows (coup-year count 1,925 as in the paper). Affiliation model drops party_group unknown/NA. N are ~380 below the paper's in each individual model.",
+    "Individual models: fixest drops pop_pwt_ln_lag (as supplied in the .rds) as collinear with country+year FE, even with collin.tol=1e-14; the paper reports a population coefficient. Lagged population was not reconstructed."
+  ],
+  "notes": "Independent reconstruction from the paper text with fixest: OLS of replacement_rateadj_minister on failed coup indicator + lagged log GDPpc and population (+ lagged monarchy/military/party dummies in Main), country or leader FE plus year FE, country-clustered SEs, singletons dropped. Individual LPMs of purged_y1 with fca x characteristic interactions, lagged GDPpc/pop, cubic in experience (not in the experience model), country+year FE, clustered by country; non-leader minister-years with lagged BMR democracy == 0, 1967-2016. Attempts 1-3 were exploratory (variable inspection and sample counts). Attempt 4 was the first estimating run; check_attempt reported all claims within tolerance, but the leader-FE sample size was well above the paper's, so the final run changes how lags are taken for the leader-FE models (and sets a tighter collinearity tolerance, which had no effect). No authors' scripts were opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-07T17:41:00Z",
+  "finished_at": "2026-11-07T19:15:00Z"
+}
