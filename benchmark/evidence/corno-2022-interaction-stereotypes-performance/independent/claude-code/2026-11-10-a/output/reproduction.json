@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "entry_id": "corno-2022-interaction-stereotypes-performance",
+  "mode": "independent",
+  "run_id": "2026-11-10-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [],
+  "notes": "Attempt-1 was exploratory: it printed variable names, labels and summaries of uctdata_balanced.dta and uctdata_clean.dta, with no RESULT lines. Working sample: uctdata_balanced.dta, follow-up round (round==2), 499 students (117 white, 332 black). The controls are the data's mean-imputed variables with missing dummies. Own controls: Female, Falseuct2012/missfalse, durpcabas_nomiss/miss, consbas_nomiss/miss, Foreign/foreign_missing, privateschool_nomiss/miss. Roommate controls: the same set without female. Table 3 regresses follow-up Race IAT on mixracebas plus baseline Race IAT and the controls, with residence FE. Table 4 uses GPA, examspassed, continue and PCAperf. The subsample regressions use residence FE plus regprogram FE. The full-sample regressions add white, coloured and Else dummies, with race group (Black/White/Other) x residence FE and regprogram FE. OLS via fixest, SEs clustered by room (Res_base x roomnum_base). Attempt-2 matched every claimed coefficient, but Table 4 N was 493 because fixest drops singleton FE cells. check_attempt reported all claims within tolerance; I still switched to fixef.rm='none' (keeping singletons, as dummy-variable OLS does). The final run gives N=499/498, and its SEs match the paper's Table 3 and Table 4 values to 3 decimals.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T14:34:12Z",
+  "finished_at": "2026-11-10T14:36:30Z"
+}

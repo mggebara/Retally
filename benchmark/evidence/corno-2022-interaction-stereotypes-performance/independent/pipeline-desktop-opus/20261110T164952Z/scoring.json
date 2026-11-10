@@ -1,0 +1,670 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "race_iat_mixed_room_whites_table3_col1",
+      "ground_truth": {
+        "value": 0.316,
+        "standard_error": 0.14,
+        "unit": "change in the Race IAT D-score (higher = less prejudice against black people)",
+        "claim_type": "coefficient",
+        "location": "Table 3, Race IAT, Whites, column (1), Mixed Room",
+        "context": "Table 3 (\"Stereotypes and exposure to a roommate of different race\"), column (1).  OLS of the follow-up (end of first year) Race IAT score on Mixed Room, a dummy for having been assigned at baseline a roommate of a different race, controlling for the respondent's baseline Race IAT score, own baseline controls (female, UCT admission score, household wealth index, monthly consumption, foreign, private high school), the same controls for the roommate except female (rooms are single-sex), and residence fixed effects; missing values of controls other than the baseline IAT are replaced by means with missing-value dummies.  Sample: white first-year students in double rooms interviewed at baseline and follow-up with both IAT scores. Standard errors clustered at the room level.  The entry is the Mixed Room coefficient.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.316,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict (team 44, perfect reproduction); the 20 rows are robustness variants, 0.071 to 0.493.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.44303797468354433,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "race_iat_mixed_room_whites_table3_col1",
+        "claim_type": "coefficient",
+        "claimed": 0.316,
+        "reproduced": 0.314907,
+        "tolerance": 0.44303797468354433,
+        "rel_err": 0.0034588607594937047,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "race_iat_mixed_room_whites_table3_col1",
+        "reproduced": 0.314907,
+        "band_source": "se_band",
+        "band_relative": 0.44303797468354433,
+        "band_absolute": 0.14,
+        "abs_err": 0.0010930000000000106,
+        "rel_err": 0.0034588607594937047,
+        "margin": 0.007807142857142933,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "race_iat_mixed_room_blacks_table3_col2",
+      "ground_truth": {
+        "value": -0.094,
+        "standard_error": 0.069,
+        "unit": "change in the Race IAT D-score (higher = less prejudice against black people)",
+        "claim_type": "coefficient",
+        "location": "Table 3, Race IAT, Blacks, column (2), Mixed Room",
+        "context": "Table 3, column (2): the column (1) regression (follow-up Race IAT on Mixed Room, baseline Race IAT, own and roommate baseline controls, residence fixed effects) for black students.  Standard errors clustered at the room level.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.7340425531914894,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "race_iat_mixed_room_blacks_table3_col2",
+        "claim_type": "coefficient",
+        "claimed": -0.094,
+        "reproduced": -0.087824,
+        "tolerance": 0.7340425531914894,
+        "rel_err": 0.06570212765957448,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "race_iat_mixed_room_blacks_table3_col2",
+        "reproduced": -0.087824,
+        "band_source": "se_band",
+        "band_relative": 0.7340425531914894,
+        "band_absolute": 0.069,
+        "abs_err": 0.006176000000000001,
+        "rel_err": 0.06570212765957448,
+        "margin": 0.0895072463768116,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_table3_whites",
+      "ground_truth": {
+        "value": 117.0,
+        "standard_error": null,
+        "unit": "students",
+        "claim_type": "count",
+        "location": "Table 3, No. Obs., columns (1) and (3) (Whites)",
+        "context": "Number of observations in Table 3 for the white subsample: white students in the working sample (interviewed at baseline and follow-up with non-missing values for both IATs).\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table3_whites",
+        "claim_type": "count",
+        "claimed": 117.0,
+        "reproduced": 117.0,
+        "tolerance": 0.05,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_table3_whites",
+        "reproduced": 117.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 5.8500000000000005,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_table3_blacks",
+      "ground_truth": {
+        "value": 332.0,
+        "standard_error": null,
+        "unit": "students",
+        "claim_type": "count",
+        "location": "Table 3, No. Obs., columns (2) and (4) (Blacks)",
+        "context": "Number of observations in Table 3 for the black subsample: black students in the working sample.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table3_blacks",
+        "claim_type": "count",
+        "claimed": 332.0,
+        "reproduced": 332.0,
+        "tolerance": 0.05,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_table3_blacks",
+        "reproduced": 332.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 16.6,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "gpa_mixed_room_blacks_table4_panelB_col1",
+      "ground_truth": {
+        "value": 0.257,
+        "standard_error": 0.125,
+        "unit": "standard deviations of first-year GPA",
+        "claim_type": "coefficient",
+        "location": "Table 4, Panel B: Blacks, column (1) GPA, Mixed Room",
+        "context": "Table 4 (\"Impact on academic performance\"), Panel B, column (1). OLS of the student's first-year average GPA (standardized to mean 0 and SD 1 over the full sample) on Mixed Room, own baseline controls (female, UCT admission score, wealth index, consumption, foreign, private high school, with mean imputation and missing-value dummies), the roommate's baseline controls (all but female), residence fixed effects and academic program fixed effects.  Sample: black students in the working sample.  Standard errors clustered at the room level.  The entry is the Mixed Room coefficient.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.257,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict (team 44, perfect reproduction); the 20 rows are robustness variants, 0.140 to 0.473.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.48638132295719844,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "gpa_mixed_room_blacks_table4_panelB_col1",
+        "claim_type": "coefficient",
+        "claimed": 0.257,
+        "reproduced": 0.22108,
+        "tolerance": 0.48638132295719844,
+        "rel_err": 0.13976653696498056,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "gpa_mixed_room_blacks_table4_panelB_col1",
+        "reproduced": 0.22108,
+        "band_source": "se_band",
+        "band_relative": 0.48638132295719844,
+        "band_absolute": 0.125,
+        "abs_err": 0.03592000000000001,
+        "rel_err": 0.13976653696498056,
+        "margin": 0.28736000000000006,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "exams_passed_mixed_room_blacks_table4_panelB_col2",
+      "ground_truth": {
+        "value": 0.645,
+        "standard_error": 0.245,
+        "unit": "number of exams passed in the first year",
+        "claim_type": "coefficient",
+        "location": "Table 4, Panel B: Blacks, column (2) Number of exams passed, Mixed Room",
+        "context": "Table 4, Panel B, column (2): the same specification with the number of exams passed during the first year as the outcome; black students. Standard errors clustered at the room level.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.3798449612403101,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "exams_passed_mixed_room_blacks_table4_panelB_col2",
+        "claim_type": "coefficient",
+        "claimed": 0.645,
+        "reproduced": 0.707265,
+        "tolerance": 0.3798449612403101,
+        "rel_err": 0.09653488372093025,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "exams_passed_mixed_room_blacks_table4_panelB_col2",
+        "reproduced": 0.707265,
+        "band_source": "se_band",
+        "band_relative": 0.3798449612403101,
+        "band_absolute": 0.24500000000000002,
+        "abs_err": 0.062265000000000015,
+        "rel_err": 0.09653488372093025,
+        "margin": 0.25414285714285717,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "eligible_mixed_room_blacks_table4_panelB_col3",
+      "ground_truth": {
+        "value": 0.152,
+        "standard_error": 0.04,
+        "unit": "change in the probability of being eligible to continue",
+        "claim_type": "coefficient",
+        "location": "Table 4, Panel B: Blacks, column (3) Eligible to continue, Mixed Room",
+        "context": "Table 4, Panel B, column (3): the same specification with a dummy for being in good standing and eligible to continue to the next academic year (Faculty Examination Committee assessment, possibly subject to make-up exams) as the outcome; black students.  Standard errors clustered at the room level.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.2631578947368421,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "eligible_mixed_room_blacks_table4_panelB_col3",
+        "claim_type": "coefficient",
+        "claimed": 0.152,
+        "reproduced": 0.096106,
+        "tolerance": 0.2631578947368421,
+        "rel_err": 0.3677236842105263,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "eligible_mixed_room_blacks_table4_panelB_col3",
+        "reproduced": 0.096106,
+        "band_source": "se_band",
+        "band_relative": 0.2631578947368421,
+        "band_absolute": 0.039999999999999994,
+        "abs_err": 0.055894,
+        "rel_err": 0.3677236842105263,
+        "margin": 1.39735,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=0.096106 vs claimed=0.152 (relative error 36.77%, tolerance 26.32%, the ±1·SE band with SE=0.04)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "performance_index_mixed_room_blacks_table4_panelB_col4",
+      "ground_truth": {
+        "value": 0.443,
+        "standard_error": 0.141,
+        "unit": "units of the academic performance index (first principal component)",
+        "claim_type": "coefficient",
+        "location": "Table 4, Panel B: Blacks, column (4) Index of Academic Performance, Mixed Room",
+        "context": "Table 4, Panel B, column (4): the same specification with the index of academic performance, the first principal component of GPA, number of exams passed and eligible to continue, as the outcome; black students.  Standard errors clustered at the room level.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.3182844243792325,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "performance_index_mixed_room_blacks_table4_panelB_col4",
+        "claim_type": "coefficient",
+        "claimed": 0.443,
+        "reproduced": 0.369864,
+        "tolerance": 0.3182844243792325,
+        "rel_err": 0.16509255079006768,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "performance_index_mixed_room_blacks_table4_panelB_col4",
+        "reproduced": 0.369864,
+        "band_source": "se_band",
+        "band_relative": 0.3182844243792325,
+        "band_absolute": 0.141,
+        "abs_err": 0.07313599999999998,
+        "rel_err": 0.16509255079006768,
+        "margin": 0.5186950354609928,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "gpa_mixed_room_whites_table4_panelA_col1",
+      "ground_truth": {
+        "value": -0.028,
+        "standard_error": 0.243,
+        "unit": "standard deviations of first-year GPA",
+        "claim_type": "coefficient",
+        "location": "Table 4, Panel A: Whites, column (1) GPA, Mixed Room",
+        "context": "Table 4, Panel A, column (1): the Panel B column (1) specification (standardized first-year GPA on Mixed Room, own and roommate baseline controls, residence and academic program fixed effects) for white students.  Standard errors clustered at the room level.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 8.678571428571429,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "gpa_mixed_room_whites_table4_panelA_col1",
+        "claim_type": "coefficient",
+        "claimed": -0.028,
+        "reproduced": -0.167313,
+        "tolerance": 8.678571428571429,
+        "rel_err": 4.975464285714286,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "gpa_mixed_room_whites_table4_panelA_col1",
+        "reproduced": -0.167313,
+        "band_source": "se_band",
+        "band_relative": 8.678571428571429,
+        "band_absolute": 0.24300000000000002,
+        "abs_err": 0.139313,
+        "rel_err": 4.975464285714286,
+        "margin": 0.5733045267489711,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "gpa_mixed_room_full_table4_panelC_col1",
+      "ground_truth": {
+        "value": 0.147,
+        "standard_error": 0.102,
+        "unit": "standard deviations of first-year GPA",
+        "claim_type": "coefficient",
+        "location": "Table 4, Panel C: Full Sample, column (1) GPA, Mixed Room",
+        "context": "Table 4, Panel C, column (1): standardized first-year GPA on Mixed Room in the full working sample (all races), with own and roommate baseline controls, race dummies (White, Coloured, Indian/Other; Black omitted), race group x residence fixed effects (race groups: Black, White, and a residual group) and academic program fixed effects. Standard errors clustered at the room level.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.6938775510204082,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "gpa_mixed_room_full_table4_panelC_col1",
+        "claim_type": "coefficient",
+        "claimed": 0.147,
+        "reproduced": 0.076579,
+        "tolerance": 0.6938775510204082,
+        "rel_err": 0.4790544217687075,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "gpa_mixed_room_full_table4_panelC_col1",
+        "reproduced": 0.076579,
+        "band_source": "se_band",
+        "band_relative": 0.6938775510204082,
+        "band_absolute": 0.102,
+        "abs_err": 0.070421,
+        "rel_err": 0.4790544217687075,
+        "margin": 0.6904019607843137,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "exams_passed_mixed_room_full_table4_panelC_col2",
+      "ground_truth": {
+        "value": 0.447,
+        "standard_error": 0.204,
+        "unit": "number of exams passed in the first year",
+        "claim_type": "coefficient",
+        "location": "Table 4, Panel C: Full Sample, column (2) Number of exams passed, Mixed Room",
+        "context": "Table 4, Panel C, column (2): the Panel C specification (race dummies, race group x residence and academic program fixed effects, own and roommate controls) with the number of exams passed in the first year as the outcome; full sample.  Standard errors clustered at the room level.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.45637583892617445,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "exams_passed_mixed_room_full_table4_panelC_col2",
+        "claim_type": "coefficient",
+        "claimed": 0.447,
+        "reproduced": 0.560913,
+        "tolerance": 0.45637583892617445,
+        "rel_err": 0.2548389261744966,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "exams_passed_mixed_room_full_table4_panelC_col2",
+        "reproduced": 0.560913,
+        "band_source": "se_band",
+        "band_relative": 0.45637583892617445,
+        "band_absolute": 0.204,
+        "abs_err": 0.11391299999999999,
+        "rel_err": 0.2548389261744966,
+        "margin": 0.5583970588235294,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "performance_index_mixed_room_full_table4_panelC_col4",
+      "ground_truth": {
+        "value": 0.289,
+        "standard_error": 0.113,
+        "unit": "units of the academic performance index (first principal component)",
+        "claim_type": "coefficient",
+        "location": "Table 4, Panel C: Full Sample, column (4) Index of Academic Performance, Mixed Room",
+        "context": "Table 4, Panel C, column (4): the Panel C specification with the index of academic performance (first principal component of GPA, exams passed and eligible to continue) as the outcome; full sample with the index non-missing.  Standard errors clustered at the room level.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.3910034602076125,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "performance_index_mixed_room_full_table4_panelC_col4",
+        "claim_type": "coefficient",
+        "claimed": 0.289,
+        "reproduced": 0.188587,
+        "tolerance": 0.3910034602076125,
+        "rel_err": 0.3474498269896193,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "performance_index_mixed_room_full_table4_panelC_col4",
+        "reproduced": 0.188587,
+        "band_source": "se_band",
+        "band_relative": 0.3910034602076125,
+        "band_absolute": 0.113,
+        "abs_err": 0.10041299999999997,
+        "rel_err": 0.3474498269896193,
+        "margin": 0.8886106194690263,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_table4_panelC_cols1_2",
+      "ground_truth": {
+        "value": 499.0,
+        "standard_error": null,
+        "unit": "students",
+        "claim_type": "count",
+        "location": "Table 4, Panel C: Full Sample, No. Obs., columns (1)-(2)",
+        "context": "Number of observations in Table 4 Panel C, columns (1) and (2): the full working sample of first-year students in double rooms interviewed at baseline and follow-up with both IAT scores.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table4_panelC_cols1_2",
+        "claim_type": "count",
+        "claimed": 499.0,
+        "reproduced": 499.0,
+        "tolerance": 0.05,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_table4_panelC_cols1_2",
+        "reproduced": 499.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 24.950000000000003,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 13,
+    "row_passed": 12,
+    "recomputed_passed": 12,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "corno-2022-interaction-stereotypes-performance",
+    "mode": "independent",
+    "reproducer": "pipeline",
+    "label": "pipeline-desktop-opus",
+    "model": "desktop-opus",
+    "oracle": true,
+    "run": "20261110T164952Z",
+    "results_file": "pipeline-oracle-desktop-opus-1paper-corno-all-modes-2026-11-10.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/corno-2022-interaction-stereotypes-performance/independent/pipeline/20261110T164952Z",
+    "run_dir": null,
+    "date": "2026-11-10T16:49:52Z",
+    "data_access": "manual",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 13,
+    "final": 12,
+    "first_scored": 12,
+    "first_scored_index": 0,
+    "first_attempt": 12,
+    "n_refinements": 1,
+    "n_error_refinements": 0,
+    "n_claim_refinements": 1,
+    "n_executions": 2,
+    "n_files_stripped": 20,
+    "agrees_with_i4r": true,
+    "deviations_manifest": [],
+    "deviations_stdout": [
+      "Coded missing eligibility as 0 for students with exam records"
+    ],
+    "notes": null,
+    "files_read_outside_mount": null,
+    "paper_text": null,
+    "complete": true,
+    "missing": []
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "corno-2022-interaction-stereotypes-performance",
+  "mode": "seeded",
+  "run_id": "2026-11-10-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 1, "kind": "error"}
+  ],
+  "deviations": [],
+  "notes": "Translated 1_main_tables.do Tables 3 and 4 to fixest::feols on uctdata_balanced.dta (round 2). Table 3: Race IAT on mixracebas, lagged (round-1) Race IAT, own subsample controls, roommate controls, Res_base dummies, white/black subsamples. Table 4: GPA/examspassed/continue/PCAperf on mixracebas, controls, roommate controls, Res_base and regprogram dummies; full sample adds race dummies and blackRes/whiteRes dummies. Fixed effects entered as factor regressors (as in Stata xi/i.), SEs clustered by roomnum_base. Attempt 1 crashed because roconsbas_miss is a Stata varabbrev abbreviation of roconsbas_missing; the final script resolves abbreviations to the unique matching variable. No claim-feedback iterations were needed; all 13 reproduced values agree with the claimed values to the reported precision.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T14:34:16Z",
+  "finished_at": "2026-11-10T14:40:00Z"
+}

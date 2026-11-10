@@ -1,0 +1,729 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "public_recognition_points_prolific_table5_col1",
+      "ground_truth": {
+        "value": 105.01,
+        "standard_error": 12.25,
+        "unit": "points scored in the round",
+        "claim_type": "coefficient",
+        "location": "Table 5, Public recognition, column (1) Prolific",
+        "context": "Table 5 (\"The effect of public recognition and financial incentives on performance in the charitable contribution experiments\"), column (1).  OLS of points scored in a round of the button-pressing task on indicators for the Publicly-Shared Effort Round (public recognition) and the round with performance-based pay for the participant (financial incentives), the Anonymous Effort Round being the omitted round, with dummies for the order in which the round appeared to the participant (first, second, third).  One observation per participant and round.  Sample: the Prolific experiment after the paper's two preregistered exclusions (participants failing the attention check, and participants with \"incoherent\" preferences for public recognition).  Standard errors clustered at the participant level. The entry is the public recognition coefficient.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 105.0,
+        "outcome": "matches",
+        "notes": "DP64 Table 1 col (1) Original 105.0 (12.25); corrected order dummies 104.0 (12.27).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.11665555661365584,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "public_recognition_points_prolific_table5_col1",
+        "claim_type": "coefficient",
+        "claimed": 105.01,
+        "reproduced": 104.0381,
+        "tolerance": 0.11665555661365584,
+        "rel_err": 0.009255309018188792,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "public_recognition_points_prolific_table5_col1",
+        "reproduced": 104.0381,
+        "band_source": "se_band",
+        "band_relative": 0.11665555661365584,
+        "band_absolute": 12.25,
+        "abs_err": 0.9719000000000051,
+        "rel_err": 0.009255309018188792,
+        "margin": 0.0793387755102045,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "financial_incentives_points_prolific_table5_col1",
+      "ground_truth": {
+        "value": 185.74,
+        "standard_error": 12.56,
+        "unit": "points scored in the round",
+        "claim_type": "coefficient",
+        "location": "Table 5, Financial incentives, column (1) Prolific",
+        "context": "Table 5, column (1): the same regression of points scored on the public recognition and financial incentive round indicators with round-order dummies in the Prolific sample; the entry is the financial incentives coefficient (Prolific incentive: two cents for every ten points, paid to the participant).  Participant-clustered standard errors.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 185.7,
+        "outcome": "matches",
+        "notes": "DP64 Table 1 col (1) Original 185.7 (12.56); corrected order dummies 186.4 (12.65).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.0676214062668246,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "financial_incentives_points_prolific_table5_col1",
+        "claim_type": "coefficient",
+        "claimed": 185.74,
+        "reproduced": 186.4424,
+        "tolerance": 0.0676214062668246,
+        "rel_err": 0.003781630235813411,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "financial_incentives_points_prolific_table5_col1",
+        "reproduced": 186.4424,
+        "band_source": "se_band",
+        "band_relative": 0.0676214062668246,
+        "band_absolute": 12.560000000000002,
+        "abs_err": 0.702399999999983,
+        "rel_err": 0.003781630235813411,
+        "margin": 0.05592356687897953,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "public_recognition_points_berkeley_table5_col2",
+      "ground_truth": {
+        "value": 134.41,
+        "standard_error": 22.56,
+        "unit": "points scored in the round",
+        "claim_type": "coefficient",
+        "location": "Table 5, Public recognition, column (2) Berkeley",
+        "context": "Table 5, column (2): the column (1) regression (points on the public recognition and financial incentive round indicators, round-order dummies) in the Berkeley experiment, after the attention-check and incoherent-preference exclusions.  Participant-clustered standard errors.  The entry is the public recognition coefficient.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 134.4,
+        "outcome": "matches",
+        "notes": "DP64 Table 1 col (2) Original 134.4 (22.56); corrected order dummies 134.7 (22.53).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.16784465441559407,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "public_recognition_points_berkeley_table5_col2",
+        "claim_type": "coefficient",
+        "claimed": 134.41,
+        "reproduced": 134.7423,
+        "tolerance": 0.16784465441559407,
+        "rel_err": 0.002472286288222629,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "public_recognition_points_berkeley_table5_col2",
+        "reproduced": 134.7423,
+        "band_source": "se_band",
+        "band_relative": 0.16784465441559407,
+        "band_absolute": 22.56,
+        "abs_err": 0.3323000000000036,
+        "rel_err": 0.002472286288222629,
+        "margin": 0.014729609929078175,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "financial_incentives_points_berkeley_table5_col2",
+      "ground_truth": {
+        "value": 177.76,
+        "standard_error": 22.04,
+        "unit": "points scored in the round",
+        "claim_type": "coefficient",
+        "location": "Table 5, Financial incentives, column (2) Berkeley",
+        "context": "Table 5, column (2), Berkeley sample: the financial incentives coefficient (incentive five cents for every ten points).  Same regression, exclusions and participant-clustered standard errors.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 177.8,
+        "outcome": "matches",
+        "notes": "DP64 Table 1 col (2) Original 177.8 (22.04); corrected order dummies 177.1 (22.02).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.123987398739874,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "financial_incentives_points_berkeley_table5_col2",
+        "claim_type": "coefficient",
+        "claimed": 177.76,
+        "reproduced": 177.1164,
+        "tolerance": 0.123987398739874,
+        "rel_err": 0.0036206120612060767,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "financial_incentives_points_berkeley_table5_col2",
+        "reproduced": 177.1164,
+        "band_source": "se_band",
+        "band_relative": 0.123987398739874,
+        "band_absolute": 22.04,
+        "abs_err": 0.6435999999999922,
+        "rel_err": 0.0036206120612060767,
+        "margin": 0.02920145190562578,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "public_recognition_points_bu_table5_col3",
+      "ground_truth": {
+        "value": 103.61,
+        "standard_error": 45.25,
+        "unit": "points scored in the round",
+        "claim_type": "coefficient",
+        "location": "Table 5, Public recognition, column (3) BU",
+        "context": "Table 5, column (3): the column (1) regression in the BU (Boston University classroom) experiment, after the attention-check and incoherent-preference exclusions.  Participant-clustered standard errors.  The entry is the public recognition coefficient.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 103.6,
+        "outcome": "matches",
+        "notes": "DP64 Table 1 col (3) Original 103.6 (45.25); corrected order dummies 115.8 (43.93).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.43673390599362993,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "public_recognition_points_bu_table5_col3",
+        "claim_type": "coefficient",
+        "claimed": 103.61,
+        "reproduced": 115.7881,
+        "tolerance": 0.43673390599362993,
+        "rel_err": 0.11753788244377956,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "public_recognition_points_bu_table5_col3",
+        "reproduced": 115.7881,
+        "band_source": "se_band",
+        "band_relative": 0.43673390599362993,
+        "band_absolute": 45.25,
+        "abs_err": 12.1781,
+        "rel_err": 0.11753788244377956,
+        "margin": 0.2691292817679558,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "financial_incentives_points_bu_table5_col3",
+      "ground_truth": {
+        "value": 118.33,
+        "standard_error": 39.62,
+        "unit": "points scored in the round",
+        "claim_type": "coefficient",
+        "location": "Table 5, Financial incentives, column (3) BU",
+        "context": "Table 5, column (3), BU sample: the financial incentives coefficient (incentive five cents for every ten points).  Same regression, exclusions and participant-clustered standard errors.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 118.3,
+        "outcome": "matches",
+        "notes": "DP64 Table 1 col (3) Original 118.3 (39.62); corrected order dummies 132.3 (39.15).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.3348263331361447,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "financial_incentives_points_bu_table5_col3",
+        "claim_type": "coefficient",
+        "claimed": 118.33,
+        "reproduced": 132.2573,
+        "tolerance": 0.3348263331361447,
+        "rel_err": 0.11769880841713841,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "financial_incentives_points_bu_table5_col3",
+        "reproduced": 132.2573,
+        "band_source": "se_band",
+        "band_relative": 0.3348263331361447,
+        "band_absolute": 39.62,
+        "abs_err": 13.927299999999988,
+        "rel_err": 0.11769880841713841,
+        "margin": 0.351521958606764,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_prolific_table5_col1",
+      "ground_truth": {
+        "value": 2904.0,
+        "standard_error": null,
+        "unit": "participant-rounds",
+        "claim_type": "count",
+        "location": "Table 5, Observations, column (1) Prolific",
+        "context": "Number of observations in Table 5, column (1): participant-round observations (three rounds per participant) of the Prolific experiment's final sample.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 2904.0,
+        "outcome": "matches",
+        "notes": "DP64 Table 1 col (1) Observations, Original and Corrected.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_prolific_table5_col1",
+        "claim_type": "count",
+        "claimed": 2904.0,
+        "reproduced": 2904.0,
+        "tolerance": 0.05,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_prolific_table5_col1",
+        "reproduced": 2904.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 145.20000000000002,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_berkeley_table5_col2",
+      "ground_truth": {
+        "value": 1152.0,
+        "standard_error": null,
+        "unit": "participant-rounds",
+        "claim_type": "count",
+        "location": "Table 5, Observations, column (2) Berkeley",
+        "context": "Number of observations in Table 5, column (2): participant-round observations of the Berkeley experiment's final sample.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 1152.0,
+        "outcome": "matches",
+        "notes": "DP64 Table 1 col (2) Observations, Original and Corrected.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_berkeley_table5_col2",
+        "claim_type": "count",
+        "claimed": 1152.0,
+        "reproduced": 1152.0,
+        "tolerance": 0.05,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_berkeley_table5_col2",
+        "reproduced": 1152.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 57.6,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_bu_table5_col3",
+      "ground_truth": {
+        "value": 354.0,
+        "standard_error": null,
+        "unit": "participant-rounds",
+        "claim_type": "count",
+        "location": "Table 5, Observations, column (3) BU",
+        "context": "Number of observations in Table 5, column (3): participant-round observations of the BU experiment's final sample.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 354.0,
+        "outcome": "matches",
+        "notes": "DP64 Table 1 col (3) Observations, Original and Corrected.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_bu_table5_col3",
+        "claim_type": "count",
+        "claimed": 354.0,
+        "reproduced": 354.0,
+        "tolerance": 0.05,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_bu_table5_col3",
+        "reproduced": 354.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 17.7,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "action_signaling_gamma1_berkeley_table7_panelA",
+      "ground_truth": {
+        "value": 0.3,
+        "standard_error": null,
+        "unit": "WTP in dollars per hundred points (structural PRU, linear term)",
+        "claim_type": "coefficient",
+        "location": "Table 7, panel (a) Action-signaling model parameter estimates, Berkeley, gamma_1^a",
+        "context": "Table 7 (\"Structural estimates and tests of consistency\"), panel (a), Berkeley row, first column: the linear coefficient of the quadratic structural public recognition utility of the action-signaling model, gamma_1 (a - rho abar) + gamma_2 (a - rho abar)^2 (Section 7.1, equation 5), with effort a in hundreds of points.  The structural parameters are functions of the reduced-form quadratic PRU r0 + r1 a + r2 a^2 estimated in Table 6, column (4) (OLS of stated WTP on the interval midpoint in hundreds of points and its square, the 1700+ interval excluded, Berkeley final sample), with the comparison population being the experimental sample's performance under public recognition (Section 7.1, Appendix F).  The table prints the full-sample point estimate with a bootstrapped percentile confidence interval (1,000 replications clustered by participant).\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.3,
+        "outcome": "matches",
+        "notes": "DP64 Sec. 2 blanket verdict; corrected order dummies (DB row, DP64 Table 4) also 0.30.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "action_signaling_gamma1_berkeley_table7_panelA",
+        "claim_type": "coefficient",
+        "claimed": 0.3,
+        "reproduced": 0.2999,
+        "tolerance": 0.02,
+        "rel_err": 0.0003333333333332966,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "action_signaling_gamma1_berkeley_table7_panelA",
+        "reproduced": 0.2999,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.006,
+        "abs_err": 9.999999999998899e-05,
+        "rel_err": 0.0003333333333332966,
+        "margin": 0.01666666666666483,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "action_signaling_rho_berkeley_table7_panelA",
+      "ground_truth": {
+        "value": 0.87,
+        "standard_error": null,
+        "unit": "multiple of average performance (reference standard rho)",
+        "claim_type": "coefficient",
+        "location": "Table 7, panel (a) Action-signaling model parameter estimates, Berkeley, rho^a",
+        "context": "Table 7, panel (a), Berkeley row: the action-signaling model's reference-standard parameter rho (image payoffs turn from negative to positive at rho times average performance), recovered from the Table 6 column (4) reduced-form quadratic PRU and the average points (in hundreds) scored with public recognition in the Berkeley sample (anonymous-round mean plus the Table 5 column (2) public recognition effect).  Full-sample point estimate; bootstrapped percentile confidence interval in the table.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.87,
+        "outcome": "matches",
+        "notes": "DP64 Sec. 2 blanket verdict; corrected order dummies (DB row, DP64 Table 4) also 0.87.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "action_signaling_rho_berkeley_table7_panelA",
+        "claim_type": "coefficient",
+        "claimed": 0.87,
+        "reproduced": 0.871,
+        "tolerance": 0.02,
+        "rel_err": 0.001149425287356323,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "action_signaling_rho_berkeley_table7_panelA",
+        "reproduced": 0.871,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 0.0174,
+        "abs_err": 0.0010000000000000009,
+        "rel_err": 0.001149425287356323,
+        "margin": 0.05747126436781615,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "cost_parameter_c_berkeley_table7_panelA",
+      "ground_truth": {
+        "value": 0.21,
+        "standard_error": null,
+        "unit": "dollars per hundred points squared (effort cost curvature c)",
+        "claim_type": "coefficient",
+        "location": "Table 7, panel (a) Action-signaling model parameter estimates, Berkeley, c",
+        "context": "Table 7, panel (a), Berkeley row, last column: the cost-of-effort parameter c of the quadratic material utility theta a - c a^2 / 2, identified by equating the model's predicted effect of public recognition (equations 7-8, from the Table 6 column (4) reduced-form PRU) with the public recognition treatment effect estimated in Table 5, column (2), effort in hundreds of points.  Full-sample point estimate; bootstrapped percentile confidence interval in the table.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.21,
+        "outcome": "matches",
+        "notes": "DP64 Sec. 2 blanket verdict; corrected order dummies (DB row, DP64 Table 4) also 0.21.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "cost_parameter_c_berkeley_table7_panelA",
+        "claim_type": "coefficient",
+        "claimed": 0.21,
+        "reproduced": 0.2139,
+        "tolerance": 0.02380952380952381,
+        "rel_err": 0.01857142857142864,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "printed_precision"
+      },
+      "recomputed": {
+        "result_name": "cost_parameter_c_berkeley_table7_panelA",
+        "reproduced": 0.2139,
+        "band_source": "printed_precision",
+        "band_relative": 0.02380952380952381,
+        "band_absolute": 0.005,
+        "abs_err": 0.0039000000000000146,
+        "rel_err": 0.01857142857142864,
+        "margin": 0.7800000000000029,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "predicted_financial_incentive_effect_berkeley_table7_panelC",
+      "ground_truth": {
+        "value": 2.33,
+        "standard_error": null,
+        "unit": "hundreds of points",
+        "claim_type": "other",
+        "location": "Table 7, panel (c) Predicted and actual effects of financial incentives, Berkeley, Model prediction",
+        "context": "Table 7, panel (c), Berkeley row, \"Model prediction\": the structural model's predicted effect of the financial incentive on points scored (in hundreds of points), p / c, where p is the incentive of 5 cents for every ten points expressed per hundred points and c is the panel (a) cost parameter (Section 7.1, \"Consistency with financial incentive effects\").  Compared in the table with the directly estimated effect from Table 5.  Full-sample point estimate; bootstrapped percentile confidence interval in the table.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 2.33,
+        "outcome": "matches",
+        "notes": "DP64 Sec. 2 blanket verdict; corrected order dummies (DB row, DP64 Table 4) 2.34.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.01,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "predicted_financial_incentive_effect_berkeley_table7_panelC",
+        "claim_type": "other",
+        "claimed": 2.33,
+        "reproduced": 2.3379,
+        "tolerance": 0.01,
+        "rel_err": 0.0033905579399140756,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "predicted_financial_incentive_effect_berkeley_table7_panelC",
+        "reproduced": 2.3379,
+        "band_source": "relative",
+        "band_relative": 0.01,
+        "band_absolute": 0.0233,
+        "abs_err": 0.007899999999999796,
+        "rel_err": 0.0033905579399140756,
+        "margin": 0.33905579399140756,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 13,
+    "row_passed": 13,
+    "recomputed_passed": 13,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "butera-2022-welfare-effects-shame-pride",
+    "mode": "independent",
+    "reproducer": "claude-code",
+    "label": "claude-code",
+    "model": null,
+    "oracle": false,
+    "run": "2026-11-10-d",
+    "results_file": "claude-code-run4-1paper-butera-indep-blind-2026-11-10.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/butera-2022-welfare-effects-shame-pride/independent/claude-code/20261110T143623Z",
+    "run_dir": "benchmark/reproductions/butera-2022-welfare-effects-shame-pride/independent/2026-11-10-d",
+    "date": "2026-11-10T14:35:30Z",
+    "data_access": "manual",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 13,
+    "final": 13,
+    "first_scored": 12,
+    "first_scored_index": 4,
+    "first_attempt": 0,
+    "n_refinements": 1,
+    "n_error_refinements": 0,
+    "n_claim_refinements": 1,
+    "n_executions": 9,
+    "n_files_stripped": 16,
+    "agrees_with_i4r": true,
+    "deviations_manifest": [
+      "The paper does not define 'incoherent' preferences for the charity experiments beyond 'analogous to the YMCA analysis'. Final rule, applied to the yes/no recognition choices over the 18 intervals: coherent = weakly increasing (0...01...1, incl. constant) or single-peaked with an interior peak (0..01..10..0); everything else (multiple switches, or recognition wanted only at low scores, 1..10..0) is incoherent. This reproduces the paper's incoherent counts (40 among attention-passers in Prolific, 11 Berkeley, 2 BU), the ~1.0/1.8/1.7% non-monotone shares, and the Table 5 control means (807.9, 989.8, 815.9).",
+      "Prolific: two participants with a round score above 3000 points (3493/3501 and 3202; every other score in all samples is at most 2521) are dropped as implausible. The paper does not mention this; it was inferred because it yields the paper's final N (968) and control mean (807.9) exactly.",
+      "Attention check: a participant passes when attention_check is missing (data dictionary).",
+      "Signed WTP = pref_rec_X_1 if preference_X == 1, else -pref_anom_X_1 (budget-capped answers; the hypothetical _10 columns are not used). Table 6 col (4): OLS of WTP on interval midpoint (hundreds of points) and its square, intervals 0-1699 only, clustered by participant.",
+      "Table 7 Berkeley: gamma1 = sqrt(r1^2 - 4 r0 r2); rho = (gamma1 - r1)/(2 r2 abar) with abar = anonymous-round mean + Table 5 PR effect (hundreds of points); c = (r1 + 2 r2 (a0 + tau))/tau; predicted financial-incentive effect = 0.50/c ($0.50 per 100 points). The bootstrap in the script (200 participant-block reps) is informational only; the paper uses 1000."
+    ],
+    "deviations_stdout": [],
+    "notes": "Attempts 1-4 and 6-8 were exploratory (looking at the data and at candidate exclusion rules; no RESULT lines). Attempt 5 was the first full estimate. Its exclusion rule was based on WTP shape and left Prolific at N=966. I compared it with the claims using check_attempt; only the panel (c) prediction was off target (2.363 vs 2.33). I then revised the exclusion rule using paper-text statistics that are not claims (incoherent counts, non-monotone shares, Table 5 control means). The final run reproduces Ns of 2904/1152/354, the Table 5 control means exactly, and the Table 6 column (4) coefficients (0.379, -0.004, -3.325). The BU public-recognition coefficient is 115.8 vs 103.6 in the paper, even though the BU sample mean matches; the cause is unknown. Only the task mount, paper.txt and my scratch directory were used. Mount files read: the CSV data, README.pdf and the data dictionary xlsx (documentation only). No scripts were opened. No sandbox run hung.",
+    "files_read_outside_mount": [],
+    "paper_text": "paper.txt",
+    "complete": true,
+    "missing": []
+  }
+}

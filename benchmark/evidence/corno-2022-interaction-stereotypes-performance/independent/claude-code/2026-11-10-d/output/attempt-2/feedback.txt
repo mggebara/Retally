@@ -1,0 +1,2 @@
+Error: evaluation nested too deeply: infinite recursion / options(expressions=)?
+Cause: helper function `se <- function(m) se(m)[...]` shadowed fixest::se and called itself. Fix: renamed helper to `sef` calling fixest::se.

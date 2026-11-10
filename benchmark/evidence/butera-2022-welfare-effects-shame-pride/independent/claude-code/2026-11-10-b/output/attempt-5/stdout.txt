@@ -1,0 +1,60 @@
+prolific: completed 1017, failed attention 7, incoherent 44, final 966
+
+--- prolific Table 5 ---
+               Estimate Std. Error     t value      Pr(>|t|)
+(Intercept) 812.4908142   16.81024 48.33308000 5.846918e-260
+pr          105.3760099   12.43057  8.47716946  8.557040e-17
+fi          181.9002623   13.11306 13.87168952  4.969399e-40
+order::2      0.6517193   12.46346  0.05229041  9.583081e-01
+order::3     -7.5650302   14.36211 -0.52673521  5.984985e-01
+attr(,"vcov_type")
+[1] "Clustered (id)"
+control mean (anonymous): 810.1667 
+berkeley: completed 407, failed attention 12, incoherent 11, final 384
+
+--- berkeley Table 5 ---
+             Estimate Std. Error   t value      Pr(>|t|)
+(Intercept) 951.69886   28.08799 33.882769 2.689859e-117
+pr          138.42826   22.41629  6.175342  1.685938e-09
+fi          180.38778   22.07623  8.171132  4.501834e-15
+order::2     35.44064   21.25728  1.667224  9.628738e-02
+order::3     67.38371   23.67272  2.846471  4.658547e-03
+attr(,"vcov_type")
+[1] "Clustered (id)"
+control mean (anonymous): 985.7891 
+bu: completed 121, failed attention 1, incoherent 2, final 118
+
+--- bu Table 5 ---
+             Estimate Std. Error   t value     Pr(>|t|)
+(Intercept) 777.44072   55.48997 14.010473 8.750281e-27
+pr          115.11824   44.03590  2.614191 1.011992e-02
+fi          130.77468   39.26844  3.330274 1.161097e-03
+order::2     96.61553   42.64443  2.265607 2.531478e-02
+order::3     53.44905   44.44254  1.202655 2.315380e-01
+attr(,"vcov_type")
+[1] "Clustered (id)"
+control mean (anonymous): 830.9407 
+
+--- Berkeley Table 6 col 4 ---
+              Estimate  Std. Error   t value     Pr(>|t|)
+(Intercept) -3.2867295 0.420448329 -7.817202 5.276231e-14
+a            0.3763172 0.070026670  5.373913 1.341179e-07
+I(I(a^2))   -0.0037104 0.003545665 -1.046461 2.960083e-01
+attr(,"vcov_type")
+[1] "Clustered (id)"
+N obs: 6528 
+
+Berkeley structural: r0=-3.2867 r1=0.3763 r2=-0.00371 a0=9.8579 tau=1.3843 gamma1=0.3047 gamma2=-0.00371 rho=0.8586 c=0.2116 pred=2.3631
+RESULT:public_recognition_points_prolific_table5_col1=105.3760
+RESULT:financial_incentives_points_prolific_table5_col1=181.9003
+RESULT:public_recognition_points_berkeley_table5_col2=138.4283
+RESULT:financial_incentives_points_berkeley_table5_col2=180.3878
+RESULT:public_recognition_points_bu_table5_col3=115.1182
+RESULT:financial_incentives_points_bu_table5_col3=130.7747
+RESULT:n_obs_prolific_table5_col1=2898
+RESULT:n_obs_berkeley_table5_col2=1152
+RESULT:n_obs_bu_table5_col3=354
+RESULT:action_signaling_gamma1_berkeley_table7_panelA=0.3047
+RESULT:action_signaling_rho_berkeley_table7_panelA=0.8586
+RESULT:cost_parameter_c_berkeley_table7_panelA=0.2116
+RESULT:predicted_financial_incentive_effect_berkeley_table7_panelC=2.3631

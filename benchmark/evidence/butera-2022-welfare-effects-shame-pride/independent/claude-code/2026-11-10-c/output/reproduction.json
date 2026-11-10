@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "entry_id": "butera-2022-welfare-effects-shame-pride",
+  "mode": "independent",
+  "run_id": "2026-11-10-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": "error"}
+  ],
+  "deviations": [
+    "Prolific sample: after the attention-check and incoherence exclusions 970 participants remain; 2 more (one with missing recog_group_assign, one with missing PracticePts) are dropped to match the paper's stated N=968 and its group-size breakdown (17 groups of 13-15, 6 of 71-79, 1 of 278). The paper does not describe this step.",
+    "Incoherent preferences are defined on the binary yes/no public-recognition choices over all 18 intervals. Coherent means never switching, a single no->yes switch (monotone increasing), or no->yes->no (single-peaked); every other pattern, including yes->no (decreasing), is incoherent. This reproduces the paper's exclusion counts exactly (40 Prolific, 11 Berkeley, 2 BU) and its non-monotonic shares (1.0/1.8/1.7%).",
+    "BU sample = bu_qm222_survey_data.csv (121 completers, matching the paper); QM221 (Appendix Table A16) is not used."
+  ],
+  "notes": "Attempts 1-3 were exploratory (attention check, preference patterns, sample sizes; no estimates). Attempt 4 printed NA for the structural parameters because of named-vector indexing (fixed with unname). Final run: Table 5 cols 1-3 by OLS of points on public-recognition and financial-incentive round indicators plus round-position dummies (2nd, 3rd), SEs clustered by participant (fixest). Table 6 col 4 (Berkeley): OLS of signed WTP (pref_rec if the participant wants PR, minus pref_anom otherwise; dollars) on the interval midpoint in hundreds of points and its square, 1700+ interval excluded (N=6528). Table 7 Berkeley structural parameters use the Appendix F mapping: gamma1=sqrt(r1^2-4 r0 r2), rho=(gamma1-r1)/(2 abar r2) with abar = anonymous mean + PR effect (hundreds), c=(r1+2 r2 (a0+tau))/tau, prediction p/c with p=$0.50 per 100 points. A 1000-rep participant-blocked percentile bootstrap is printed (not scored); its intervals are close to the paper's. Round-order F-test p-values differ from the paper's (e.g. Berkeley 0.018 vs 0.497), so the authors' order dummies may be coded differently. check_attempt on the final run reported all claims within tolerance; no claim-driven changes were made. No run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T14:26:34Z",
+  "finished_at": "2026-11-10T14:31:00Z"
+}

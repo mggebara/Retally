@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "entry_id": "corno-2022-interaction-stereotypes-performance",
+  "mode": "independent",
+  "run_id": "2026-11-10-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [],
+  "notes": "Data: ForJournals_a/Data/Clean/uctdata_balanced.dta (499 students x 2 rounds = the working sample with both IATs at baseline and follow-up); the follow-up row (round==2) is used, with DscoreraceIATbas as the baseline Race IAT. Treatment mixracebas. Own controls: Female, Falseuct2012 (UCT score/1000), durpcabas_nomiss (wealth PCA), consbas_nomiss, Foreign, privateschool_nomiss, each with its missing-value dummy (already mean-imputed in the data); roommate controls: the same five without female, each with its missing dummy. Table 3: OLS of follow-up DscoreraceIAT on mixracebas + baseline IAT + controls with residence FE, by race (white/black). Table 4: GPA (standardized cumcareergpa), examspassed, continue (eligible), PCAperf (the dataset's performance PCA index) on mixracebas + controls with residence FE and academic program (regprogram) FE for whites/blacks; full sample adds white/coloured/Else dummies and race-group (Black/White/other) x residence FE. SEs clustered by baseline room (Res_base x roomnum_base, 340 rooms). fixest feols. attempt-1 was an exploratory variable listing. attempt-2 matched every coefficient but fixest's default dropped 6 program-FE singletons (N=493 in Panel C); the final run keeps them (fixef.rm='none'), which gives N=499/498, and the R-squared and SEs now also match the paper. No hangs.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T14:34:11Z",
+  "finished_at": "2026-11-10T14:36:30Z"
+}

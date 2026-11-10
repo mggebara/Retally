@@ -1,0 +1,122 @@
+
+========== Prolific ==========
+N rows: 1017 
+COLUMNS: id,attention_check,preference_0,preference_100,preference_200,preference_300,preference_400,preference_500,preference_600,preference_700,preference_800,preference_900,preference_1000,preference_1100,preference_1200,preference_1300,preference_1400,preference_1500,preference_1600,preference_1700,pref_anom_1700_1,pref_anom_1600_1,pref_anom_1500_1,pref_anom_1400_1,pref_anom_1300_1,pref_anom_1200_1,pref_anom_1100_1,pref_anom_1000_1,pref_anom_900_1,pref_anom_800_1,pref_anom_700_1,pref_anom_600_1,pref_anom_500_1,pref_anom_400_1,pref_anom_300_1,pref_anom_200_1,pref_anom_100_1,pref_anom_0_1,pref_anom_1700_10,pref_anom_1600_10,pref_anom_1500_10,pref_anom_1400_10,pref_anom_1300_10,pref_anom_1200_10,pref_anom_1100_10,pref_anom_1000_10,pref_anom_900_10,pref_anom_800_10,pref_anom_700_10,pref_anom_600_10,pref_anom_500_10,pref_anom_400_10,pref_anom_300_10,pref_anom_200_10,pref_anom_100_10,pref_anom_0_10,pref_rec_0_1,pref_rec_100_1,pref_rec_200_1,pref_rec_300_1,pref_rec_400_1,pref_rec_500_1,pref_rec_600_1,pref_rec_700_1,pref_rec_800_1,pref_rec_900_1,pref_rec_1000_1,pref_rec_1100_1,pref_rec_1200_1,pref_rec_1300_1,pref_rec_1400_1,pref_rec_1500_1,pref_rec_1600_1,pref_rec_1700_1,pref_rec_0_10,pref_rec_100_10,pref_rec_200_10,pref_rec_300_10,pref_rec_400_10,pref_rec_500_10,pref_rec_600_10,pref_rec_700_10,pref_rec_800_10,pref_rec_900_10,pref_rec_1000_10,pref_rec_1100_10,pref_rec_1200_10,pref_rec_1300_10,pref_rec_1400_10,pref_rec_1500_10,pref_rec_1600_10,pref_rec_1700_10,anom_aer_timer_PageSubmit,earn_aer_timer_PageSubmit,rec_aer_timer_PageSubmit,earn_ear_timer_PageSubmit,anom_ear_timer_PageSubmit,rec_ear_timer_PageSubmit,anom_are_timer_PageSubmit,rec_are_timer_PageSubmit,earn_are_timer_PageSubmit,earn_era_timer_PageSubmit,rec_era_timer_PageSubmit,anom_era_timer_PageSubmit,rec_rea_timer_PageSubmit,earn_rea_timer_PageSubmit,anom_rea_timer_PageSubmit,rec_rae_timer_PageSubmit,anom_rae_timer_PageSubmit,earn_rae_timer_PageSubmit,age,gender,edu,race,prolific_experience,Sample,PracticePts,Clicked,BadgeGroupSize,BadgeGroupShared,EarnPts,EarnDon,EarnOwn,AnomPts,AnomDon,RecogPts,RecogDon,Condition,Result,CountRound,Publicize,FinalPoints,FinalDonation,FinalEarned,recog_group_assign 
+attention_check table:
+ac
+<NA>    5    4    3   34 
+1010    3    2    1    1 
+attention_check mostly missing: treating missing as pass
+WTP candidate keys: pref_anom_#_1 | pref_anom_#_10 | pref_rec_#_1 | pref_rec_#_10 
+Using WTP amount key: pref_anom_#_1 
+Sign switches distribution among attention-pass:
+
+   0 
+1010 
+Points columns (direct): AnomPts EarnPts RecogPts 
+Order codes from timers:
+ord
+aer are ear era rae rea 
+167 174 150 166 184 176 
+attention pass: 1010  coherent among pass: 732  complete points: 1017  final: 732 
+OLS estimation, Dep. Var.: points
+Observations: 2,196
+Standard-errors: Clustered (id) 
+             Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept) 813.13950    19.1494 42.462842  < 2.2e-16 ***
+public       85.40536    13.9989  6.100867 1.7097e-09 ***
+paid        186.13379    15.1727 12.267692  < 2.2e-16 ***
+pos2          6.34301    14.7411  0.430295 6.6711e-01    
+pos3        -14.30885    16.5848 -0.862770 3.8855e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 502.7   Adj. R2: 0.020802
+
+========== Berkeley ==========
+N rows: 407 
+COLUMNS: id,attention_check,preference_0,preference_100,preference_200,preference_300,preference_400,preference_500,preference_600,preference_700,preference_800,preference_900,preference_1000,preference_1100,preference_1200,preference_1300,preference_1400,preference_1500,preference_1600,preference_1700,pref_anom_1700_1,pref_anom_1600_1,pref_anom_1500_1,pref_anom_1400_1,pref_anom_1300_1,pref_anom_1200_1,pref_anom_1100_1,pref_anom_1000_1,pref_anom_900_1,pref_anom_800_1,pref_anom_700_1,pref_anom_600_1,pref_anom_500_1,pref_anom_400_1,pref_anom_300_1,pref_anom_200_1,pref_anom_100_1,pref_anom_0_1,pref_anom_1700_10,pref_anom_1600_10,pref_anom_1500_10,pref_anom_1400_10,pref_anom_1300_10,pref_anom_1200_10,pref_anom_1100_10,pref_anom_1000_10,pref_anom_900_10,pref_anom_800_10,pref_anom_700_10,pref_anom_600_10,pref_anom_500_10,pref_anom_400_10,pref_anom_300_10,pref_anom_200_10,pref_anom_100_10,pref_anom_0_10,pref_rec_0_1,pref_rec_100_1,pref_rec_200_1,pref_rec_300_1,pref_rec_400_1,pref_rec_500_1,pref_rec_600_1,pref_rec_700_1,pref_rec_800_1,pref_rec_900_1,pref_rec_1000_1,pref_rec_1100_1,pref_rec_1200_1,pref_rec_1300_1,pref_rec_1400_1,pref_rec_1500_1,pref_rec_1600_1,pref_rec_1700_1,pref_rec_0_10,pref_rec_100_10,pref_rec_200_10,pref_rec_300_10,pref_rec_400_10,pref_rec_500_10,pref_rec_600_10,pref_rec_700_10,pref_rec_800_10,pref_rec_900_10,pref_rec_1000_10,pref_rec_1100_10,pref_rec_1200_10,pref_rec_1300_10,pref_rec_1400_10,pref_rec_1500_10,pref_rec_1600_10,pref_rec_1700_10,anom_aer_timer_PageSubmit,earn_aer_timer_PageSubmit,rec_aer_timer_PageSubmit,earn_ear_timer_PageSubmit,anom_ear_timer_PageSubmit,rec_ear_timer_PageSubmit,anom_are_timer_PageSubmit,rec_are_timer_PageSubmit,earn_are_timer_PageSubmit,earn_era_timer_PageSubmit,rec_era_timer_PageSubmit,anom_era_timer_PageSubmit,rec_rea_timer_PageSubmit,earn_rea_timer_PageSubmit,anom_rea_timer_PageSubmit,rec_rae_timer_PageSubmit,anom_rae_timer_PageSubmit,earn_rae_timer_PageSubmit,age,gender,race,affiliation,Sample,PracticePts,Clicked,EarnPts,EarnDon,EarnOwn,AnomPts,AnomDon,RecogPts,RecogDon,Condition,Result,CountRound,Publicize,FinalPoints,FinalDonation,FinalEarned,recog_group_assign 
+attention_check table:
+ac
+<NA>    5    4    3 
+ 395    7    3    2 
+attention_check mostly missing: treating missing as pass
+WTP candidate keys: pref_anom_#_1 | pref_anom_#_10 | pref_rec_#_1 | pref_rec_#_10 
+Using WTP amount key: pref_anom_#_1 
+Sign switches distribution among attention-pass:
+
+  0 
+395 
+Points columns (direct): AnomPts EarnPts RecogPts 
+Order codes from timers:
+ord
+aer are ear era rae rea 
+ 67  72  63  71  67  67 
+attention pass: 395  coherent among pass: 319  complete points: 407  final: 319 
+OLS estimation, Dep. Var.: points
+Observations: 957
+Standard-errors: Clustered (id) 
+            Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept) 954.1890    31.7311 30.07110  < 2.2e-16 ***
+public      134.5399    25.2989  5.31801 1.9812e-07 ***
+paid        188.7205    25.4015  7.42950 1.0129e-12 ***
+pos2         39.8077    23.6463  1.68346 9.3267e-02 .  
+pos3         63.1140    26.5399  2.37808 1.7993e-02 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 476.8   Adj. R2: 0.025823
+OLS estimation, Dep. Var.: wtp
+Observations: 3,969
+Standard-errors: Clustered (id) 
+             Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept) -4.830171   0.410339 -11.77118  < 2.2e-16 ***
+mid          0.192842   0.059766   3.22662 1.3835e-03 ** 
+mid2        -0.014621   0.003282  -4.45426 1.1685e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 6.78842   Adj. R2: 0.00257
+r0,r1,r2: -4.830171 0.1928423 -0.01462081  abar_anon: 9.882853  abar_public: 11.22825  tau: 1.345399 
+
+========== BU ==========
+N rows: 178 
+COLUMNS: id,attention_check,preference_0,preference_100,preference_200,preference_300,preference_400,preference_500,preference_600,preference_700,preference_800,preference_900,preference_1000,preference_1100,preference_1200,preference_1300,preference_1400,preference_1500,preference_1600,preference_1700,pref_anom_1700_1,pref_anom_1600_1,pref_anom_1500_1,pref_anom_1400_1,pref_anom_1300_1,pref_anom_1200_1,pref_anom_1100_1,pref_anom_1000_1,pref_anom_900_1,pref_anom_800_1,pref_anom_700_1,pref_anom_600_1,pref_anom_500_1,pref_anom_400_1,pref_anom_300_1,pref_anom_200_1,pref_anom_100_1,pref_anom_0_1,pref_anom_1700_10,pref_anom_1600_10,pref_anom_1500_10,pref_anom_1400_10,pref_anom_1300_10,pref_anom_1200_10,pref_anom_1100_10,pref_anom_1000_10,pref_anom_900_10,pref_anom_800_10,pref_anom_700_10,pref_anom_600_10,pref_anom_500_10,pref_anom_400_10,pref_anom_300_10,pref_anom_200_10,pref_anom_100_10,pref_anom_0_10,pref_rec_0_1,pref_rec_100_1,pref_rec_200_1,pref_rec_300_1,pref_rec_400_1,pref_rec_500_1,pref_rec_600_1,pref_rec_700_1,pref_rec_800_1,pref_rec_900_1,pref_rec_1000_1,pref_rec_1100_1,pref_rec_1200_1,pref_rec_1300_1,pref_rec_1400_1,pref_rec_1500_1,pref_rec_1600_1,pref_rec_1700_1,pref_rec_0_10,pref_rec_100_10,pref_rec_200_10,pref_rec_300_10,pref_rec_400_10,pref_rec_500_10,pref_rec_600_10,pref_rec_700_10,pref_rec_800_10,pref_rec_900_10,pref_rec_1000_10,pref_rec_1100_10,pref_rec_1200_10,pref_rec_1300_10,pref_rec_1400_10,pref_rec_1500_10,pref_rec_1600_10,pref_rec_1700_10,anom_aer_timer_PageSubmit,earn_aer_timer_PageSubmit,rec_aer_timer_PageSubmit,earn_ear_timer_PageSubmit,anom_ear_timer_PageSubmit,rec_ear_timer_PageSubmit,anom_are_timer_PageSubmit,rec_are_timer_PageSubmit,earn_are_timer_PageSubmit,earn_era_timer_PageSubmit,rec_era_timer_PageSubmit,anom_era_timer_PageSubmit,rec_rea_timer_PageSubmit,earn_rea_timer_PageSubmit,anom_rea_timer_PageSubmit,rec_rae_timer_PageSubmit,anom_rae_timer_PageSubmit,earn_rae_timer_PageSubmit,age,gender,race,Sample,PracticePts,Clicked,EarnPts,EarnDon,EarnOwn,AnomPts,AnomDon,RecogPts,RecogDon,Condition,Result,CountRound,Publicize,FinalPoints,FinalDonation,FinalEarned,recog_group_assign 
+attention_check table:
+ac
+<NA>    5    1    4 
+ 174    2    1    1 
+attention_check mostly missing: treating missing as pass
+WTP candidate keys: pref_anom_#_1 | pref_anom_#_10 | pref_rec_#_1 | pref_rec_#_10 
+Using WTP amount key: pref_anom_#_1 
+Sign switches distribution among attention-pass:
+
+  0 
+174 
+Points columns (direct): AnomPts EarnPts RecogPts 
+Order codes from timers:
+ord
+aer are ear era rae rea 
+ 26  29  22  35  34  32 
+attention pass: 174  coherent among pass: 144  complete points: 178  final: 144 
+OLS estimation, Dep. Var.: points
+Observations: 432
+Standard-errors: Clustered (id) 
+            Estimate Std. Error  t value  Pr(>|t|)    
+(Intercept) 765.7771    54.7011 13.99931 < 2.2e-16 ***
+public      117.1088    42.6646  2.74487 0.0068305 ** 
+paid        128.5084    38.3543  3.35056 0.0010316 ** 
+pos2         79.1639    41.6887  1.89893 0.0595880 .  
+pos3         62.6932    42.0683  1.49027 0.1383554    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 595.6   Adj. R2: 0.002552
+
+RESULT:public_recognition_points_prolific_table5_col1=85.405365
+RESULT:financial_incentives_points_prolific_table5_col1=186.133793
+RESULT:n_obs_prolific_table5_col1=2196.000000
+RESULT:public_recognition_points_berkeley_table5_col2=134.539864
+RESULT:financial_incentives_points_berkeley_table5_col2=188.720542
+RESULT:n_obs_berkeley_table5_col2=957.000000
+RESULT:cost_parameter_c_berkeley_table7_panelA=-0.100706
+RESULT:predicted_financial_incentive_effect_berkeley_table7_panelC=-4.964934
+RESULT:public_recognition_points_bu_table5_col3=117.108796
+RESULT:financial_incentives_points_bu_table5_col3=128.508373
+RESULT:n_obs_bu_table5_col3=432.000000

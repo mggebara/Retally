@@ -1,0 +1,109 @@
+BU file sizes: qm221 = 57  qm222 = 121 
+DEVIATION: BU sample uses only the QM222 class file (the paper describes a single BU statistics class); QM221 file not pooled
+DEVIATION: Online samples restricted to attention-check passers with a complete WTP profile; the ad-hoc sign-change incoherence filter (not specified for the online experiments) is no longer applied
+
+===== Prolific ===== N raw: 1017 
+attention_check values:
+v
+   3    4    5   34 <NA> 
+   1    2    3    1 1010 
+attention_check mostly missing: treating missing as pass
+WTP columns for interval 0 : yes = pref_rec_0_1 pref_rec_0_10  no = pref_anom_0_1 pref_anom_0_10 
+pass attention: 1010  heuristic incoherent (diagnostic only): 162  complete WTP: 1017  attention & complete: 1010 
+
+===== Berkeley ===== N raw: 407 
+attention_check values:
+v
+   3    4    5 <NA> 
+   2    3    7  395 
+attention_check mostly missing: treating missing as pass
+WTP columns for interval 0 : yes = pref_rec_0_1 pref_rec_0_10  no = pref_anom_0_1 pref_anom_0_10 
+pass attention: 395  heuristic incoherent (diagnostic only): 40  complete WTP: 407  attention & complete: 395 
+
+===== BU ===== N raw: 121 
+attention_check values:
+v
+   4 <NA> 
+   1  120 
+attention_check mostly missing: treating missing as pass
+WTP columns for interval 0 : yes = pref_rec_0_1 pref_rec_0_10  no = pref_anom_0_1 pref_anom_0_10 
+pass attention: 120  heuristic incoherent (diagnostic only): 18  complete WTP: 121  attention & complete: 120 
+Points columns used: AnomPts EarnPts RecogPts 
+Round orders:
+ord
+aer are ear era rae rea 
+167 172 150 164 182 175 
+OLS estimation, Dep. Var.: points
+Observations: 3,030
+Standard-errors: Clustered (id) 
+             Estimate Std. Error   t value  Pr(>|t|)    
+(Intercept) 808.19849    16.4716 49.066229 < 2.2e-16 ***
+public      102.16988    12.1159  8.432685 < 2.2e-16 ***
+paid        178.67797    12.7545 14.009064 < 2.2e-16 ***
+position2     4.77088    12.1536  0.392548   0.69474    
+position3    -4.69735    14.0090 -0.335309   0.73746    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 506.6   Adj. R2: 0.019208
+Points columns used: AnomPts EarnPts RecogPts 
+Round orders:
+ord
+aer are ear era rae rea 
+ 64  70  62  68  65  66 
+OLS estimation, Dep. Var.: points
+Observations: 1,185
+Standard-errors: Clustered (id) 
+            Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept) 953.2963    28.0256 34.01518  < 2.2e-16 ***
+public      137.4611    22.1847  6.19621 1.4581e-09 ***
+paid        184.4196    22.0335  8.36995 1.0160e-15 ***
+position2    38.7969    21.2440  1.82625 6.8569e-02 .  
+position3    68.8638    23.2850  2.95743 3.2890e-03 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 476.6   Adj. R2: 0.026346
+Points columns used: AnomPts EarnPts RecogPts 
+Round orders:
+ord
+aer are ear era rae rea 
+ 16  17  19  21  23  24 
+OLS estimation, Dep. Var.: points
+Observations: 360
+Standard-errors: Clustered (id) 
+            Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept) 772.7643    55.0985 14.02515  < 2.2e-16 ***
+public      120.4221    43.5736  2.76365 0.00662554 ** 
+paid        131.1110    38.5155  3.40411 0.00090527 ***
+position2    97.9317    41.8926  2.33768 0.02107382 *  
+position3    57.6922    44.0211  1.31056 0.19253092    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 585.3   Adj. R2: 0.002779
+OLS estimation, Dep. Var.: wtp
+Observations: 6,715
+Standard-errors: Clustered (id) 
+             Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept) -3.142554   0.425894 -7.37872 9.5529e-13 ***
+a            0.359157   0.072679  4.94167 1.1475e-06 ***
+a2          -0.003947   0.003579 -1.10298 2.7071e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 8.21245   Adj. R2: 0.029269
+WTP bounds: -25 25  share at lower: 0.03008191  share at upper: 0.01265823 
+Tobit coefficients: -3.21265 0.3620526 -0.003939119  sigma: 8.555834 
+DEVIATION: Structural PRU for Berkeley estimated by two-limit Tobit (censoring at the WTP bounds observed in the data), per the paper's use of Tobit parametric assumptions for censoring
+roots of PRU: 9.950738 81.96132  abar_pub: 11.26593 
+
+RESULT:public_recognition_points_prolific_table5_col1=102.169876
+RESULT:financial_incentives_points_prolific_table5_col1=178.677972
+RESULT:n_obs_prolific_table5_col1=3030.000000
+RESULT:public_recognition_points_berkeley_table5_col2=137.461126
+RESULT:financial_incentives_points_berkeley_table5_col2=184.419609
+RESULT:n_obs_berkeley_table5_col2=1185.000000
+RESULT:public_recognition_points_bu_table5_col3=120.422072
+RESULT:financial_incentives_points_bu_table5_col3=131.111036
+RESULT:n_obs_bu_table5_col3=360.000000
+RESULT:action_signaling_gamma1_berkeley_table7_panelA=0.283658
+RESULT:action_signaling_rho_berkeley_table7_panelA=0.883260
+RESULT:cost_parameter_c_berkeley_table7_panelA=0.198818
+RESULT:predicted_financial_incentive_effect_berkeley_table7_panelC=2.514868

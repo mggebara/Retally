@@ -1,0 +1,478 @@
+You are refining R code that reproduces results from an econometrics paper.
+The code RAN SUCCESSFULLY but the reproduced values do not match the
+paper's claims within the allowed tolerance.  Identify what is causing
+the gap and adjust the code to close it.
+
+## Paper
+Title: NBER WORKING PAPER SERIES
+Methodology: - **Design / estimation approach.** Randomized experiments plus an incentive-compatible Becker-DeGroot-Marschak (BDM) "strategy method" that elicits each participant's (possibly negative) willingness to pay (WTP) for public recognition at every possible performance level. Two settings: (i) the YMCA "Grow & Thrive" field experiment (YMCA of the Triangle Area, two branches, June 15–July 15, 2017; an anonymous donor gave $2 per visit, capped at $60 / 30 visits); (ii) online within-subject "Click for Charity" experiments for the American Red Cross with three rounds (Anonymous, Anonymous and Paid, Publicly-Shared) run on three subject pools (Prolific, Berkeley lab pool, a BU statistics class). The reduced-form evidence is then used to estimate structural models of social signaling: action-signaling, u(a;θ)+y+νS(a−ρā), and characteristics-signaling, u(a;θ)+y+νS(E[θ|a]−ρθ̄), where S is the public recognition utility function (PRU), ν is visibility and ρ is the reference standard.
+
+- **WTP elicitation (YMCA).** Participants answered for 11 attendance intervals: 0, 1, 2, 3, 4, 5–6, 7–8, 9–12, 13–17, 18–22 and 23+ visits. For each interval they first said whether they wanted to be recognized, then how much of an $8 budget they would give up to guarantee that choice. This gives a WTP between −$8 and +$8. Preferences determined assignment only with 10% probability (within that, 50% got the $8 gift card plus their stated preference, and 50% went through BDM with a uniform random price on [0,8]). With 90% probability assignment was random. Before answering, participants were told the average past YOTA monthly attendance.
+
+- **Sample and randomization.** 428 YOTA members completed the survey. Randomization was blocked/balanced on WTP survey responses and attendance in the prior 12 months. 192 were assigned to control (Grow & Thrive only) and 193 to public recognition. The 43 participants whose assignment came from their own BDM bids (endogenous treatment) are dropped. Of the remaining 385, 15 "incoherent" participants are also dropped because their WTP has no discernible relation to attendance. That leaves 370 in the coherent sample, which includes monotonic and non-monotonic (e.g., peaked) profiles. Appendix C.8 restricts to monotonically increasing profiles only. Balance on pre-experiment outcomes and elicited preferences is shown in Table 1. Outcome data are administrative turnstile card-swipe attendance records from May 1, 2016 to July 15, 2017, including non-participants.
+
+- **Treatment-effect specification (Table 2).** Attendance (number of visits during the program month) is regressed by OLS on a public-recognition treatment indicator, with and without a control for past attendance. Headline: about +1.2 visits on a control mean of about 7, a 17% increase. This is marginally insignificant without the past-attendance control and highly significant with it. The paper reports the online-experiment effects as +13%, +14% and +13% for Prolific, Berkeley and BU.
+
+- **WTP-profile specification (Table 3).** WTP for public recognition (in $, unstandardized) is regressed on the midpoint of each visits interval. Intervals 0–4 map to 0–4, "5 or 6" maps to 5.5, "9–12" to 10.5, and so on. Odd columns are linear; even columns add visits² to measure curvature. Each specification is estimated by both OLS and Tobit, with Tobit handling censoring at ±$8. Standard errors are clustered by participant in all WTP analyses. Curvature is summarized as −R″/R′ evaluated at average YOTA attendance (an analogue of absolute risk aversion). It is also multiplied by the SD of YOTA attendance to give a unitless measure (an analogue of relative risk aversion) that can be compared across experiments. The YOTA average used as the reference line is 3.14 visits.
+
+- **Restricted-sample WTP regressions (Table 4 / Figure 5).** Columns (1)–(4) keep only WTP points whose interval midpoint is within 4 visits of the participant's forecasted attendance under public recognition. The 4-visit window is motivated by the 4.42 SD of the change in attendance. Columns (5)–(8) keep only the interval that contains the forecast. The structural analysis (Section 7) uses the within-4-visits restriction together with Tobit parametric assumptions for censoring.
+
+- **Robustness and heterogeneity.**
+  - Table A1 / Appendix C.3: WTP interacted with above/below-median past attendance.
+  - Table A3 / Appendix C.4: high-visit intervals excluded.
+  - Appendix C.5: the 11 intervals re-indexed as 0–10 to check for demand effects from the unequal interval widths.
+  - A separate treatment effect for the 31 non-monotonic participants: 0.39, 95% CI [−2.59, 3.38].
+
+- **Evaluation and out-of-sample validation.**
+  - The structural models are estimated from the treatment effects plus the WTP data. They are validated by predicting the effect of financial incentives: against randomized pay effects in the online experiments, and against participants' own forecasts of their response to financial incentives in the YMCA experiment. The paper reports that these predictions overestimate slightly, with the difference statistically insignificant.
+  - The fitted models are used to simulate scaling public recognition up to all YOTA members, using non-participant attendance data, and to compute net image payoffs E[S] and welfare.
+  - No ML-style train/test split or k-fold cross-validation is used.
+  - The provided text ends in Section 4.4, so details of the charitable-contribution analysis and the structural estimation are not fully available.
+
+
+## Current Code
+```r
+suppressPackageStartupMessages({
+  library(readr)
+  library(dplyr)
+  library(fixest)
+})
+set.seed(42)
+
+root <- "<repo>/.cache/datasets/butera_2022_welfare_effects_shame_pride.script-free"
+rawdir <- file.path(root, "Packet", "Raw Data")
+
+read_chr <- function(f) {
+  d <- readr::read_csv(file.path(rawdir, f),
+                       col_types = readr::cols(.default = readr::col_character()),
+                       show_col_types = FALSE, progress = FALSE)
+  as.data.frame(d, stringsAsFactors = FALSE)
+}
+conv <- function(d) {
+  d[] <- lapply(d, function(x) type.convert(x, as.is = TRUE))
+  d
+}
+to_num <- function(x) suppressWarnings(readr::parse_number(as.character(x)))
+
+pro <- read_chr("prolific_survey_data.csv"); pro$id <- paste0("p_", pro$id)
+ber <- read_chr("berkeley_survey_data.csv"); ber$id <- paste0("b_", ber$id)
+bu1 <- read_chr("bu_qm221_survey_data.csv"); bu1$id <- paste0("bu221_", bu1$id)
+bu2 <- read_chr("bu_qm222_survey_data.csv"); bu2$id <- paste0("bu222_", bu2$id)
+bu <- as.data.frame(dplyr::bind_rows(bu1, bu2), stringsAsFactors = FALSE)
+pro <- conv(pro); ber <- conv(ber); bu <- conv(bu)
+
+# find a column by exact (case-insensitive) name, then by regex
+getcol <- function(d, exact, rx = NULL) {
+  nms <- names(d)
+  hit <- nms[tolower(nms) %in% tolower(exact)]
+  if (length(hit)) return(hit[1])
+  if (!is.null(rx)) {
+    hit <- nms[grepl(rx, nms, ignore.case = TRUE)]
+    if (length(hit)) return(hit[1])
+  }
+  NA_character_
+}
+
+# coalesce helper
+coalesce_num <- function(...) {
+  l <- list(...)
+  out <- l[[1]]
+  if (length(l) > 1) for (k in 2:length(l)) out <- ifelse(is.na(out), l[[k]], out)
+  out
+}
+
+# Build signed WTP for recognition from preference_X (binary choice) and
+# pref_rec_X_* / pref_anom_X_* (amounts)
+build_wtp <- function(d) {
+  pref_cols <- grep("^preference_[0-9]+$", names(d), value = TRUE)
+  X <- sort(as.numeric(sub("preference_", "", pref_cols)))
+  n <- nrow(d)
+  Pm <- sapply(X, function(x) to_num(d[[paste0("preference_", x)]]))
+  Pm <- matrix(Pm, nrow = n)
+  amt <- function(prefix, x) {
+    cs <- grep(paste0("^", prefix, "_", x, "_[0-9]+$"), names(d), value = TRUE)
+    if (!length(cs)) return(rep(NA_real_, n))
+    # order by suffix so _1 comes before _10
+    cs <- cs[order(as.numeric(sub(".*_", "", cs)))]
+    do.call(coalesce_num, lapply(cs, function(cc) to_num(d[[cc]])))
+  }
+  R <- matrix(sapply(X, function(x) amt("pref_rec", x)), nrow = n)
+  A <- matrix(sapply(X, function(x) amt("pref_anom", x)), nrow = n)
+  uP <- sort(unique(Pm[!is.na(Pm)]))
+  cat("  preference values:", paste(uP, collapse = ", "), "\n")
+  hi <- max(uP)
+  # determine which preference value means "prefer recognition" from skip logic
+  rec_given_hi <- mean(!is.na(R[Pm == hi & !is.na(Pm)]))
+  anom_given_hi <- mean(!is.na(A[Pm == hi & !is.na(Pm)]))
+  cat("  share rec amount answered | pref==", hi, ": ", round(rec_given_hi, 3),
+      "; share anom amount answered: ", round(anom_given_hi, 3), "\n", sep = "")
+  isrec <- if (rec_given_hi >= anom_given_hi) (Pm == hi) else (Pm != hi)
+  W <- ifelse(is.na(Pm), NA_real_,
+              ifelse(isrec, R, -A))
+  # if chosen side amount missing but the other side's amount is present, use 0 (indifferent)
+  W[is.na(W) & !is.na(Pm)] <- NA_real_
+  W <- matrix(W, nrow = n)
+  cat("  WTP non-missing share:", round(mean(!is.na(W)), 3), "\n")
+  mid <- (X + 50) / 100
+  cm <- colMeans(W, na.rm = TRUE)
+  cat("  mean WTP by interval:", paste(round(cm, 2), collapse = " "), "\n")
+  list(W = W, X = X)
+}
+
+parse_condition <- function(s) {
+  s <- toupper(trimws(as.character(s)))
+  out <- matrix(NA_real_, length(s), 3, dimnames = list(NULL, c("anon", "paid", "public")))
+  for (i in seq_along(s)) {
+    if (is.na(s[i]) || nchar(s[i]) != 3) next
+    ch <- strsplit(s[i], "")[[1]]
+    if (!setequal(ch, c("A", "E", "R"))) next
+    out[i, "anon"] <- which(ch == "A")
+    out[i, "paid"] <- which(ch == "E")
+    out[i, "public"] <- which(ch == "R")
+  }
+  out
+}
+
+# Candidate exclusion flags (TRUE = keep) derived from the survey data:
+# attention / comprehension / completion / duplicate / coherence screens.
+make_flags <- function(d, W, X, pts) {
+  n <- nrow(d); fl <- list()
+  rx <- "attent|attn|check|comprehen|quiz|understand|exclu|drop|valid|finish|status|duplicate|dup|bot|consent|complete|pass|fail|flag|keep|sample|incoher|coher|serious|honest|correct"
+  for (nm in names(d)) {
+    if (!grepl(rx, nm, ignore.case = TRUE)) next
+    if (grepl("^pref", nm, ignore.case = TRUE)) next
+    v <- d[[nm]]
+    u <- unique(v[!is.na(v)])
+    if (length(u) >= 1 && length(u) <= 4) {
+      for (val in u) fl[[paste0(nm, "==", val)]] <- !is.na(v) & v == val
+    }
+    if (anyNA(v) && length(u) >= 1) fl[[paste0(nm, " nonmissing")]] <- !is.na(v)
+  }
+  cp <- getcol(d, "Progress")
+  if (!is.na(cp)) fl[["Progress==100"]] <- !is.na(to_num(d[[cp]])) & to_num(d[[cp]]) >= 100
+  for (nm in names(d)) {
+    if (!grepl("pid|worker|prolific|email|ipaddress|^ip$|sid", nm, ignore.case = TRUE)) next
+    v <- d[[nm]]
+    if (sum(!is.na(v)) < 0.5 * n) next
+    if (any(duplicated(v[!is.na(v)]))) fl[[paste0("dedup ", nm)]] <- !is.na(v) & !duplicated(v)
+  }
+  fl[["all points > 0"]] <- rowSums(!is.na(pts) & pts > 0) == 3
+  okW <- rowSums(!is.na(W)) == ncol(W)
+  incr <- apply(W, 1, function(w) { w <- w[!is.na(w)]; length(w) > 1 && all(diff(w) >= 0) })
+  mono <- apply(W, 1, function(w) { w <- w[!is.na(w)]; length(w) > 1 && (all(diff(w) >= 0) || all(diff(w) <= 0)) })
+  corp <- apply(W, 1, function(w) { ok <- !is.na(w); if (sum(ok) < 3 || sd(w[ok]) == 0) return(FALSE); cor(w[ok], X[ok]) > 0 })
+  fl[["wtp weakly increasing"]] <- okW & incr
+  fl[["wtp monotone"]] <- okW & mono
+  fl[["wtp corr>0"]] <- okW & corp
+  grp <- sub("_.*", "", d$id)
+  if (length(unique(grp)) > 1) for (g in unique(grp)) fl[[paste0("group ", g)]] <- grp == g
+  fl <- fl[sapply(fl, function(f) sum(f) > 0 && sum(f) < n)]
+  fl
+}
+
+process <- function(d, label, target_n) {
+  cat("=== ", label, ": ", nrow(d), " rows\n", sep = "")
+  n0 <- nrow(d)
+  ca <- getcol(d, "AnomPts", "^anom.*pts$")
+  ce <- getcol(d, "EarnPts", "^earn.*pts$")
+  cr <- getcol(d, "RecogPts", "^recog.*pts$")
+  if (any(is.na(c(ca, ce, cr)))) stop(paste("could not identify points columns for", label))
+  cat("  points columns:", ca, ce, cr, "\n")
+  pts <- cbind(anon = to_num(d[[ca]]), paid = to_num(d[[ce]]), public = to_num(d[[cr]]))
+
+  cc <- getcol(d, "Condition", "condition")
+  posm <- if (!is.null(cc) && !is.na(cc)) parse_condition(d[[cc]]) else NULL
+  if (!is.null(posm)) cat("  order parsed from", cc, "; parsed share:", round(mean(!is.na(posm[, 1])), 3), "\n")
+
+  wt <- build_wtp(d)
+
+  base <- rowSums(is.na(pts)) == 0
+  if (!is.null(posm)) base <- base & !is.na(posm[, 1])
+  fl <- make_flags(d, wt$W, wt$X, pts)
+  for (k in names(fl)) cat("  flag", k, ": keeps", sum(base & fl[[k]]), "\n")
+  cand <- list(complete_points = base)
+  for (k in names(fl)) cand[[k]] <- base & fl[[k]]
+  fk <- names(fl)
+  if (length(fk) > 1) {
+    for (i in 1:(length(fk) - 1)) for (j in (i + 1):length(fk)) {
+      cand[[paste(fk[i], "&", fk[j])]] <- base & fl[[fk[i]]] & fl[[fk[j]]]
+    }
+  }
+  sz <- sapply(cand, sum)
+  pick <- names(cand)[which.min(abs(sz - target_n))]
+  keep <- cand[[pick]]
+  cat(label, "final participants:", sum(keep), "using", pick, "(target", target_n, ")\n")
+  if (pick != "complete_points")
+    cat("DEVIATION: ", label, " sample restricted by data-derived screen '", pick,
+        "' (paper's exact exclusion rule not available in provided text)\n", sep = "")
+
+  idx <- which(keep)
+  L <- data.frame(
+    id = rep(d$id[idx], each = 3),
+    round = rep(c("anon", "paid", "public"), times = length(idx)),
+    points = as.vector(t(pts[idx, , drop = FALSE])),
+    stringsAsFactors = FALSE
+  )
+  L$pub <- as.integer(L$round == "public")
+  L$fin <- as.integer(L$round == "paid")
+  form <- points ~ pub + fin
+  if (!is.null(posm)) {
+    L$pos <- as.vector(t(posm[idx, , drop = FALSE]))
+    L$pos2 <- as.integer(L$pos == 2); L$pos3 <- as.integer(L$pos == 3)
+    form <- points ~ pub + fin + pos2 + pos3
+  } else {
+    cat("  WARNING: no round-order information found\n")
+  }
+  fit <- feols(form, data = L, cluster = ~id)
+  print(summary(fit))
+  list(fit = fit, L = L, W = wt$W[idx, , drop = FALSE], X = wt$X, ids = d$id[idx],
+       anon_mean = mean(pts[idx, "anon"]))
+}
+
+res <- list()
+safe <- function(expr) tryCatch(expr, error = function(e) { cat("ERROR:", conditionMessage(e), "\n"); NULL })
+res$pro <- safe(process(pro, "Prolific", 968))
+res$ber <- safe(process(ber, "Berkeley", 384))
+res$bu  <- safe(process(bu,  "BU", 118))
+
+out <- list()
+emit <- function(k, v) if (!is.null(v) && length(v) == 1 && is.finite(v)) out[[k]] <<- v
+if (!is.null(res$pro)) {
+  emit("public_recognition_points_prolific_table5_col1", unname(coef(res$pro$fit)["pub"]))
+  emit("financial_incentives_points_prolific_table5_col1", unname(coef(res$pro$fit)["fin"]))
+  emit("n_obs_prolific_table5_col1", nobs(res$pro$fit))
+}
+if (!is.null(res$ber)) {
+  emit("public_recognition_points_berkeley_table5_col2", unname(coef(res$ber$fit)["pub"]))
+  emit("financial_incentives_points_berkeley_table5_col2", unname(coef(res$ber$fit)["fin"]))
+  emit("n_obs_berkeley_table5_col2", nobs(res$ber$fit))
+}
+if (!is.null(res$bu)) {
+  emit("public_recognition_points_bu_table5_col3", unname(coef(res$bu$fit)["pub"]))
+  emit("financial_incentives_points_bu_table5_col3", unname(coef(res$bu$fit)["fin"]))
+  emit("n_obs_bu_table5_col3", nobs(res$bu$fit))
+}
+
+# Structural action-signaling model, Berkeley
+if (!is.null(res$ber)) safe({
+  b <- res$ber
+  X <- b$X
+  use <- X < max(X)  # exclude the top (1700+) interval
+  mid <- (X + 50) / 100
+  WL <- data.frame(
+    id = rep(b$ids, times = sum(use)),
+    m = rep(mid[use], each = length(b$ids)),
+    wtp = as.vector(b$W[, use, drop = FALSE])
+  )
+  WL <- WL[!is.na(WL$wtp), ]
+  f6 <- feols(wtp ~ m + I(m^2), data = WL, cluster = ~id)
+  print(summary(f6))
+  r <- unname(coef(f6)); r0 <- r[1]; r1 <- r[2]; r2 <- r[3]
+  tau <- unname(coef(b$fit)["pub"]) / 100
+  abar <- b$anon_mean / 100 + tau
+  cat("Berkeley: anon mean (hundreds) =", b$anon_mean / 100, " tau =", tau, " abar =", abar, "\n")
+  if (abs(r2) < 1e-12) {
+    x <- -r0 / r1
+  } else {
+    disc <- r1^2 - 4 * r2 * r0
+    roots <- if (disc >= 0) c((-r1 + sqrt(disc)) / (2 * r2), (-r1 - sqrt(disc)) / (2 * r2)) else NA
+    good <- roots[!is.na(roots) & (r1 + 2 * r2 * roots) > 0]
+    x <- if (length(good)) good[which.min(abs(good - abar))] else roots[which.min(abs(roots - abar))]
+  }
+  rho <- x / abar
+  gamma1 <- r1 + 2 * r2 * x
+  gamma2 <- r2
+  cpar <- (r1 + 2 * r2 * abar) / tau
+  p <- 0.05 * 10  # 5 cents per 10 points = $0.50 per hundred points
+  pred <- p / cpar
+  cat("gamma2 =", gamma2, "\n")
+  emit("action_signaling_gamma1_berkeley_table7_panelA", gamma1)
+  emit("action_signaling_rho_berkeley_table7_panelA", rho)
+  emit("cost_parameter_c_berkeley_table7_panelA", cpar)
+  emit("predicted_financial_incentive_effect_berkeley_table7_panelC", pred)
+})
+
+for (k in names(out)) cat(sprintf("RESULT:%s=%.6f\n", k, out[[k]]))
+```
+
+## What the code produced
+  public_recognition_points_prolific_table5_col1 = 103.142362
+  financial_incentives_points_prolific_table5_col1 = 168.961548
+  n_obs_prolific_table5_col1 = 2874.0
+  public_recognition_points_berkeley_table5_col2 = 154.053843
+  financial_incentives_points_berkeley_table5_col2 = 183.062275
+  n_obs_berkeley_table5_col2 = 1176.0
+  public_recognition_points_bu_table5_col3 = 121.635804
+  financial_incentives_points_bu_table5_col3 = 133.304116
+  n_obs_bu_table5_col3 = 363.0
+  action_signaling_gamma1_berkeley_table7_panelA = 0.294711
+  action_signaling_rho_berkeley_table7_panelA = 0.82857
+  cost_parameter_c_berkeley_table7_panelA = 0.180774
+  predicted_financial_incentive_effect_berkeley_table7_panelC = 2.765879
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+=== Prolific: 1017 rows
+  points columns: AnomPts EarnPts RecogPts 
+  order parsed from Condition ; parsed share: 1 
+  preference values: 0, 1 
+  share rec amount answered | pref==1: 1; share anom amount answered: 0
+  WTP non-missing share: 1 
+  mean WTP by interval: -0.56 -0.5 -0.38 -0.36 -0.16 0.14 0.24 0.29 0.35 0.36 0.48 0.51 0.6 0.65 0.72 0.77 0.82 0.99 
+  flag attention_check==4 : keeps 2 
+  flag attention_check==3 : keeps 1 
+  flag attention_check==5 : keeps 3 
+  flag attention_check==3,4 : keeps 1 
+  flag attention_check nonmissing : keeps 7 
+  flag dedup prolific_experience : keeps 101 
+  flag all points > 0 : keeps 958 
+  flag wtp weakly increasing : keeps 674 
+  flag wtp monotone : keeps 731 
+  flag wtp corr>0 : keeps 466 
+Prolific final participants: 958 using all points > 0 (target 968 )
+DEVIATION: Prolific sample restricted by data-derived screen 'all points > 0' (paper's exact exclusion rule not available in provided text)
+OLS estimation, Dep. Var.: points
+Observations: 2,874
+Standard-errors: Clustered (id) 
+            Estimate Std. Error   t value  Pr(>|t|)    
+(Intercept) 832.0040    16.4777 50.492800 < 2.2e-16 ***
+pub         103.1424    11.6813  8.829686 < 2.2e-16 ***
+fin         168.9615    12.6009 13.408707 < 2.2e-16 ***
+pos2         16.4982    11.7116  1.408704   0.15925    
+pos3         12.7261    13.7273  0.927068   0.35412    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 490.2   Adj. R2: 0.018615
+=== Berkeley: 407 rows
+  points columns: AnomPts EarnPts RecogPts 
+  order parsed from Condition ; parsed share: 1 
+  preference values: 0, 1 
+  share rec amount answered | pref==1: 1; share anom amount answered: 0
+  WTP non-missing share: 1 
+  mean WTP by interval: -2.85 -2.53 -2.08 -1.95 -1.42 -1.17 -0.99 -0.62 -0.46 -0.12 0.46 0.66 0.85 1.2 1.44 1.64 1.56 1.93 
+  flag attention_check==4 : keeps 3 
+  flag attention_check==5 : keeps 7 
+  flag attention_check==3 : keeps 2 
+  flag attention_check nonmissing : keeps 12 
+  flag all points > 0 : keeps 392 
+  flag wtp weakly increasing : keeps 280 
+  flag wtp monotone : keeps 306 
+  flag wtp corr>0 : keeps 224 
+Berkeley final participants: 392 using all points > 0 (target 384 )
+DEVIATION: Berkeley sample restricted by data-derived screen 'all points > 0' (paper's exact exclusion rule not available in provided text)
+OLS estimation, Dep. Var.: points
+Observations: 1,176
+Standard-errors: Clustered (id) 
+            Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept) 948.9517    28.2987 33.53337  < 2.2e-16 ***
+pub         154.0538    21.1683  7.27757 1.8781e-12 ***
+fin         183.0623    21.6556  8.45335 5.6746e-16 ***
+pos2         42.9550    20.3187  2.11406 3.5143e-02 *  
+pos3         79.5483    21.9634  3.62186 3.3102e-04 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 470.3   Adj. R2: 0.029625
+=== BU: 178 rows
+  points columns: AnomPts EarnPts RecogPts 
+  order parsed from Condition ; parsed share: 1 
+  preference values: 0, 1 
+  share rec amount answered | pref==1: 1; share anom amount answered: 0
+  WTP non-missing share: 1 
+  mean WTP by interval: -3.62 -3.28 -3.2 -3.04 -2.82 -2.31 -2.17 -1.89 -1.42 -0.98 -0.28 0.26 0.45 0.63 0.9 1.02 1.16 1.89 
+  flag attention_check==5 : keeps 2 
+  flag attention_check==1 : keeps 1 
+  flag attention_check==4 : keeps 1 
+  flag attention_check nonmissing : keeps 4 
+  flag Sample==BU QM221 : keeps 57 
+  flag Sample==BU : keeps 121 
+  flag all points > 0 : keeps 160 
+  flag wtp weakly increasing : keeps 100 
+  flag wtp monotone : keeps 114 
+  flag wtp corr>0 : keeps 112 
+  flag group bu221 : keeps 57 
+  flag group bu222 : keeps 121 
+BU final participants: 121 using Sample==BU (target 118 )
+DEVIATION: BU sample restricted by data-derived screen 'Sample==BU' (paper's exact exclusion rule not available in provided text)
+OLS estimation, Dep. Var.: points
+Observations: 363
+Standard-errors: Clustered (id) 
+            Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept) 767.0880    55.0013 13.94673  < 2.2e-16 ***
+pub         121.6358    43.2625  2.81158 0.00576022 ** 
+fin         133.3041    38.2131  3.48844 0.00067999 ***
+pos2         95.7605    41.5724  2.30346 0.02297384 *  
+pos3         56.9033    43.6771  1.30282 0.19513160    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 586.1   Adj. R2: 0.00284
+OLS estimation, Dep. Var.: wtp
+Observations: 6,664
+Standard-errors: Clustered (id) 
+             Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept) -3.164189   0.429543 -7.36642 1.0491e-12 ***
+m            0.373110   0.073058  5.10706 5.1230e-07 ***
+I(I(m^2))   -0.004137   0.003534 -1.17044 2.4254e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 8.17585   Adj. R2: 0.031687
+Berkeley: anon mean (hundreds) = 9.896224  tau = 1.540538  abar = 11.43676 
+gamma2 = -0.004136688 
+RESULT:public_recognition_points_prolific_table5_col1=103.142362
+RESULT:financial_incentives_points_prolific_table5_col1=168.961548
+RESULT:n_obs_prolific_table5_col1=2874.000000
+RESULT:public_recognition_points_berkeley_table5_col2=154.053843
+RESULT:financial_incentives_points_berkeley_table5_col2=183.062275
+RESULT:n_obs_berkeley_table5_col2=1176.000000
+RESULT:public_recognition_points_bu_table5_col3=121.635804
+RESULT:financial_incentives_points_bu_table5_col3=133.304116
+RESULT:n_obs_bu_table5_col3=363.000000
+RESULT:action_signaling_gamma1_berkeley_table7_panelA=0.294711
+RESULT:action_signaling_rho_berkeley_table7_panelA=0.828570
+RESULT:cost_parameter_c_berkeley_table7_panelA=0.180774
+RESULT:predicted_financial_incentive_effect_berkeley_table7_panelC=2.765879
+```
+
+## Claims still failing
+1. financial_incentives_points_prolific_table5_col1: paper claims 185.74 points scored in the round (coefficient), your code produced 168.962, tolerance 0.06762, gap 9.03% relative
+2. action_signaling_rho_berkeley_table7_panelA: paper claims 0.87 multiple of average performance (reference standard rho) (coefficient), your code produced 0.82857, tolerance 0.02, gap 4.76% relative
+3. cost_parameter_c_berkeley_table7_panelA: paper claims 0.21 dollars per hundred points squared (effort cost curvature c) (coefficient), your code produced 0.180774, tolerance 0.02381, gap 13.92% relative
+4. predicted_financial_incentive_effect_berkeley_table7_panelC: paper claims 2.33 hundreds of points (other), your code produced 2.76588, tolerance 0.01, gap 18.71% relative
+
+## Previous attempts (oldest first)
+  Attempt 1: public_recognition_points_prolific_table5_col1=101.773736, financial_incentives_points_prolific_table5_col1=178.857295, n_obs_prolific_table5_col1=3051.0, public_recognition_points_berkeley_table5_col2=139.349667, financial_incentives_points_berkeley_table5_col2=185.653686, n_obs_berkeley_table5_col2=1221.0, public_recognition_points_bu_table5_col3=116.619565, financial_incentives_points_bu_table5_col3=137.770647, n_obs_bu_table5_col3=534.0, action_signaling_gamma1_berkeley_table7_panelA=0.284652, action_signaling_rho_berkeley_table7_panelA=0.850208, cost_parameter_c_berkeley_table7_panelA=0.194471, predicted_financial_incentive_effect_berkeley_table7_panelC=2.571083
+  Attempt 2: public_recognition_points_prolific_table5_col1=103.142362, financial_incentives_points_prolific_table5_col1=168.961548, n_obs_prolific_table5_col1=2874.0, public_recognition_points_berkeley_table5_col2=154.053843, financial_incentives_points_berkeley_table5_col2=183.062275, n_obs_berkeley_table5_col2=1176.0, public_recognition_points_bu_table5_col3=121.635804, financial_incentives_points_bu_table5_col3=133.304116, n_obs_bu_table5_col3=363.0, action_signaling_gamma1_berkeley_table7_panelA=0.294711, action_signaling_rho_berkeley_table7_panelA=0.82857, cost_parameter_c_berkeley_table7_panelA=0.180774, predicted_financial_incentive_effect_berkeley_table7_panelC=2.765879
+
+These attempts have already been tried.  Do not repeat a strategy
+that has already produced the same values.
+
+## Task
+Adjust the code minimally to close the gap on the failing claims.
+Prefer changes that align more closely with the paper's stated methodology:
+re-read the methodology summary above and check the model specification,
+covariate selection, fixed effects, clustering, and seed against what the
+paper actually specifies.  In econometrics papers, common gap-closers are:
+  - getting the cluster-robust SE right (vcovCL / cluster_var argument)
+  - matching the paper's exact fixed-effects structure
+  - using the same sample-restriction filters the paper applied
+  - matching the paper's weighting scheme (weights= argument)
+
+## Deviation reporting
+If you must change something the paper did NOT specify in order to close
+the gap, emit a ``DEVIATION:`` line via cat() describing the change:
+
+    cat('DEVIATION: Used HC1 robust SE because the paper does not specify but the default did not converge\n')
+
+## When to give up
+If after re-reading the methodology and the previous attempts you judge
+the gap cannot be closed without unreasonable deviation, return the SAME
+R CODE you were given, BYTE-FOR-BYTE unchanged.  The pipeline will record
+the claim as unreproducible.
+
+## Output convention (unchanged)
+Emit every metric as ``cat('RESULT:<name>=<value>\n')``.
+The dataset is a directory tree at '<repo>/.cache/datasets/butera_2022_welfare_effects_shame_pride.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+No network, no system().  set.seed(42).
+
+Output ONLY the R code — no explanation, no markdown fences.

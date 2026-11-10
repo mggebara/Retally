@@ -1,0 +1,71 @@
+prolific: completed 1017, fail attention 7, incoherent among passers 40, final 970
+berkeley: completed 407, fail attention 12, incoherent among passers 11, final 384
+bu: completed 121, fail attention 1, incoherent among passers 2, final 118
+
+---- Table 5, prolific ----
+              Estimate Std. Error    t value      Pr(>|t|)
+(Intercept) 813.451106   16.77137 48.5023556 1.871413e-261
+public      106.143881   12.44011  8.5323903  5.466844e-17
+financial   182.486830   13.11030 13.9193503  2.764526e-40
+position::2   1.524606   12.41167  0.1228364  9.022621e-01
+position::3  -8.774616   14.31523 -0.6129565  5.400489e-01
+attr(,"vcov_type")
+[1] "Clustered (id)"
+order dummies joint Wald p: 0.6989297 
+control mean (anonymous round): 810.9866 
+
+---- Table 5, berkeley ----
+             Estimate Std. Error   t value      Pr(>|t|)
+(Intercept) 956.93478   28.08284 34.075423 5.259610e-118
+public      134.74226   22.52820  5.981050  5.088485e-09
+financial   177.11636   22.01620  8.044821  1.092913e-14
+position::2  31.48254   21.29849  1.478158  1.401873e-01
+position::3  66.91700   23.65992  2.828285  4.925754e-03
+attr(,"vcov_type")
+[1] "Clustered (id)"
+order dummies joint Wald p: 0.01790456 
+control mean (anonymous round): 989.7552 
+
+---- Table 5, bu ----
+             Estimate Std. Error   t value     Pr(>|t|)
+(Intercept) 762.73666   55.33032 13.785149 2.868451e-26
+public      115.78811   43.92633  2.635961 9.527625e-03
+financial   132.25726   39.14965  3.378249 9.913683e-04
+position::2  96.25503   42.58002  2.260568 2.563511e-02
+position::3  51.76929   44.33016  1.167812 2.452570e-01
+attr(,"vcov_type")
+[1] "Clustered (id)"
+order dummies joint Wald p: 0.08063103 
+control mean (anonymous round): 815.9237 
+
+---- Table 6 col (4), Berkeley quadratic ----
+                Estimate  Std. Error   t value     Pr(>|t|)
+(Intercept) -3.324569634 0.420285705 -7.910261 2.782407e-14
+mid          0.378981163 0.070187652  5.399542 1.174770e-07
+mid2        -0.004037936 0.003556728 -1.135295 2.569615e-01
+attr(,"vcov_type")
+[1] "Clustered (id)"
+
+Berkeley inputs: r = -3.32457 0.3789812 -0.004037936  tau(hundreds) = 1.347423  a0(hundreds) = 9.897552 
+      gamma1       gamma2          rho            c      pred_fi 
+ 0.299881841 -0.004037936  0.871013337  0.213866218  2.337910140 
+Directly estimated financial incentive effect (hundreds): 1.771164 
+
+Bootstrap 95% percentile CIs (Berkeley):
+         gamma1       gamma2      rho         c  pred_fi
+2.5%  0.2274259 -0.010959642 0.658797 0.1434396 1.519839
+97.5% 0.3715130  0.002821109 1.121704 0.3289823 3.485788
+
+RESULT:public_recognition_points_prolific_table5_col1=106.144
+RESULT:financial_incentives_points_prolific_table5_col1=182.487
+RESULT:public_recognition_points_berkeley_table5_col2=134.742
+RESULT:financial_incentives_points_berkeley_table5_col2=177.116
+RESULT:public_recognition_points_bu_table5_col3=115.788
+RESULT:financial_incentives_points_bu_table5_col3=132.257
+RESULT:n_obs_prolific_table5_col1=2910
+RESULT:n_obs_berkeley_table5_col2=1152
+RESULT:n_obs_bu_table5_col3=354
+RESULT:action_signaling_gamma1_berkeley_table7_panelA=0.299882
+RESULT:action_signaling_rho_berkeley_table7_panelA=0.871013
+RESULT:cost_parameter_c_berkeley_table7_panelA=0.213866
+RESULT:predicted_financial_incentive_effect_berkeley_table7_panelC=2.33791

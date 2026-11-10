@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "entry_id": "corno-2022-interaction-stereotypes-performance",
+  "mode": "independent",
+  "run_id": "2026-11-10-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [],
+  "notes": "Data: ForJournals_a/Data/Clean/uctdata_balanced.dta (499 students x 2 rounds = working sample); estimation on the follow-up round. attempt-1 was an exploratory variable listing (no RESULT lines). Table 3: OLS of follow-up Race IAT (DscoreraceIAT) on mixracebas, baseline Race IAT (DscoreraceIATbas), own controls (Female, Falseuct2012, durpcabas_nomiss, consbas_nomiss, Foreign, privateschool_nomiss plus their missing dummies), roommate controls (roFalseuct2012, rodurpcabas_nomiss, roconsbas_nomiss, roForeign_bas, roprivschool_nomiss plus missing dummies), residence FE, SEs clustered by baseline room, separately for whites/blacks. Table 4: same controls without lagged outcome, residence + academic program (regprogram) FE in subsamples; full sample adds White/Coloured/Indian-Other dummies with race-group (Black/White/other) x residence FE and program FE. Performance index uses the dataset's PCAperf variable (labelled 'Performance index 2012, PCA'). attempt-2 (kind claim) gave identical coefficients but fixest dropped singleton FE groups (N 493 in Panel C); check_attempt reported all claims within tolerance, but since the paper's working sample is 499 the final run keeps singletons (fixef.rm='none'), which yields N=117/332/499 and standard errors matching the paper (e.g. 0.243, 0.125). Coefficients unchanged across attempt-2 and final. No run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T14:34:11Z",
+  "finished_at": "2026-11-10T14:36:30Z"
+}

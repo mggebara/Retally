@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "butera-2022-welfare-effects-shame-pride",
+  "mode": "blind",
+  "run_id": "2026-11-10-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Prolific final sample is 970 participants (2910 participant-rounds), not the 968 stated in Section 6.1: applying the attention-check exclusion (7 failures) and the incoherent-preference exclusion (40, matching the paper's notes) leaves 970; no documented rule identifies the 2 further exclusions, so none were made.",
+    "The 'incoherent' rule is not spelled out for the charity experiments; it was operationalised on the yes/no preference-for-recognition pattern across the 18 intervals: coherent = weakly increasing (incl. constant) or single-peaked; decreasing, U-shaped and multi-switch patterns excluded. This reproduces the stated exclusion counts (40/11/2) and the 1.0/1.8/1.7% non-monotone shares.",
+    "Table 7 rho uses as reference average the anonymous-round mean plus the Table 5 col (2) public recognition effect (as described in the task), in hundreds of points; bootstrap CIs were not computed (point estimates only)."
+  ],
+  "notes": "Exploratory attempts 1-2 inspected attention-check coding (non-missing = fail), round orders, and candidate coherence rules (no RESULT lines). Final: Table 5 = OLS of points on public-recognition and financial-incentive round dummies plus round-position dummies (first omitted), one obs per participant-round, SEs clustered by participant (fixest). BU = QM222 classroom file (121 completers); QM221 file not used. Signed WTP = pref_rec_X_1 if preference yes, minus pref_anom_X_1 if no (budget-constrained answers). Table 6 col (4) Berkeley: OLS of WTP on interval midpoint in hundreds of points and its square, 1700+ interval excluded (r0=-3.3246, r1=0.3790, r2=-0.00404). Structural (Appendix F.1): gamma1=sqrt(r1^2-4 r0 r2); rho=(sqrt(r1^2-4 r2 r0)-r1)/(2 abar r2); c=(r1+2 r2 (a0+tau))/tau; prediction=p/c with p=$0.50 per hundred points. While reading the paper text for methods, the extraction briefly displayed some BU rows of Table 7 (lines ~2780-2789); these were not used. Docker runs completed in under 2 s each; no hangs.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T14:26:37Z",
+  "finished_at": "2026-11-10T14:30:30Z"
+}

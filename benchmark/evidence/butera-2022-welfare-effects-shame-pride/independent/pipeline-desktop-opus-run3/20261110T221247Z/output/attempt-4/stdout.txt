@@ -1,0 +1,191 @@
+DEVIATION: WTP rebuilt by combining pref_rec (positive) and pref_anom (negative) slider amounts across both slider scales; only participants with no WTP responses or >2 sign switches are treated as incoherent
+DEVIATION: Berkeley structural PRU (Table 7) uses a Tobit fit of WTP on midpoint and midpoint^2 (censored at the slider bounds) instead of OLS, following the paper's use of Tobit censoring assumptions in the structural analysis
+DEVIATION: BU sample restricted to the single statistics class file (QM221) rather than pooling QM221 and QM222, as the paper describes one BU statistics class
+
+========== Prolific ==========
+N rows: 1017 
+attention_check table:
+ac
+<NA>    5    4    3   34 
+1010    3    2    1    1 
+attention_check mostly missing: treating missing as pass
+Preference orientation agreement: 1 
+Anon amounts summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+  0.000   0.000   0.500   1.838   2.750  10.000    8742 
+Recog amounts summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+  0.000   0.000   1.000   2.587   4.250  10.000    9564 
+WTP built from pref_anom/pref_rec amounts
+Sign switches distribution among attention-pass:
+
+  0   1   2   3   4   5   6   7   9  12 
+754 228   7   4   3   3   3   3   2   3 
+All-missing WTP among attention-pass: 0 
+Points columns (direct): AnomPts EarnPts RecogPts 
+Order codes from timers:
+ord
+aer are ear era rae rea 
+167 174 150 166 184 176 
+attention pass: 1010  coherent among pass: 989  complete points: 1017  final: 989 
+OLS estimation, Dep. Var.: points
+Observations: 2,967
+Standard-errors: Clustered (id) 
+             Estimate Std. Error   t value  Pr(>|t|)    
+(Intercept) 810.87053    16.6348 48.745323 < 2.2e-16 ***
+public      102.93247    12.3175  8.356623 < 2.2e-16 ***
+paid        180.06670    12.9267 13.929841 < 2.2e-16 ***
+pos2          3.54801    12.3318  0.287712   0.77363    
+pos3         -5.78568    14.2002 -0.407436   0.68378    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 504.5   Adj. R2: 0.019666
+
+========== Berkeley ==========
+N rows: 407 
+attention_check table:
+ac
+<NA>    5    4    3 
+ 395    7    3    2 
+attention_check mostly missing: treating missing as pass
+Preference orientation agreement: 1 
+Anon amounts summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+  0.000   0.000   1.000   4.513   6.000  25.000    3077 
+Recog amounts summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+  0.000   0.000   2.500   5.642   9.500  25.000    4249 
+WTP built from pref_anom/pref_rec amounts
+Sign switches distribution among attention-pass:
+
+  0   1   2   3  17 
+267 121   4   1   2 
+All-missing WTP among attention-pass: 0 
+Points columns (direct): AnomPts EarnPts RecogPts 
+Order codes from timers:
+ord
+aer are ear era rae rea 
+ 67  72  63  71  67  67 
+attention pass: 395  coherent among pass: 392  complete points: 407  final: 392 
+OLS estimation, Dep. Var.: points
+Observations: 1,176
+Standard-errors: Clustered (id) 
+            Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept) 956.2429    27.8220 34.37000  < 2.2e-16 ***
+public      135.0043    22.0874  6.11228 2.3786e-09 ***
+paid        181.5565    21.9645  8.26590 2.1842e-15 ***
+pos2         35.5507    21.1418  1.68153 9.3458e-02 .  
+pos3         65.6497    23.2163  2.82774 4.9288e-03 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 477.0   Adj. R2: 0.025148
+OLS estimation, Dep. Var.: wtp
+Observations: 6,664
+Standard-errors: Clustered (id) 
+             Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept) -3.144643   0.429085 -7.328716 1.3440e-12 ***
+mid          0.354589   0.073085  4.851748 1.7707e-06 ***
+mid2        -0.003516   0.003582 -0.981459 3.2697e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 8.19481   Adj. R2: 0.029916
+Tobit censoring bounds: -25 25 
+
+Call:
+survreg(formula = y ~ mid + mid2, data = wl, dist = "gaussian")
+               Value Std. Error      z       p
+(Intercept) -3.21458    0.31630 -10.16 < 2e-16
+mid          0.35717    0.08609   4.15 3.3e-05
+mid2        -0.00347    0.00491  -0.71    0.48
+Log(scale)   2.14435    0.00900 238.26 < 2e-16
+
+Scale= 8.54 
+
+Gaussian distribution
+Loglik(model)= -23203.4   Loglik(intercept only)= -23299.4
+	Chisq= 192 on 2 degrees of freedom, p= 2e-42 
+Number of Newton-Raphson Iterations: 3 
+n= 6664 
+
+r0,r1,r2: -3.214576 0.3571696 -0.00347213  abar_anon: 9.899439  abar_public: 11.24948  tau: 1.350043 
+
+========== BU (QM221) ==========
+N rows: 57 
+attention_check table:
+ac
+<NA>    5    1 
+  54    2    1 
+attention_check mostly missing: treating missing as pass
+Preference orientation agreement: 1 
+Anon amounts summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+  0.000   0.000   1.500   4.235   6.000  25.000     524 
+Recog amounts summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+  0.000   1.000   5.000   6.176  11.000  25.000     502 
+WTP built from pref_anom/pref_rec amounts
+Sign switches distribution among attention-pass:
+
+ 0  1  2  9 
+36 16  1  1 
+All-missing WTP among attention-pass: 0 
+Points columns (direct): AnomPts EarnPts RecogPts 
+Order codes from timers:
+ord
+aer are ear era rae rea 
+ 10  12   2  14  11   8 
+attention pass: 54  coherent among pass: 53  complete points: 57  final: 53 
+OLS estimation, Dep. Var.: points
+Observations: 159
+Standard-errors: Clustered (id) 
+            Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept) 881.0665    91.6743 9.610832 4.0201e-13 ***
+public      115.5083    72.9033 1.584405 1.1917e-01    
+paid        157.0215    68.7631 2.283514 2.6516e-02 *  
+pos2         53.4416    69.0090 0.774415 4.4219e-01    
+pos3         63.7915    70.8899 0.899866 3.7234e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 549.2   Adj. R2: -0.007723
+
+========== BU (QM222, diagnostic only) ==========
+N rows: 121 
+attention_check table:
+ac
+<NA>    4 
+ 120    1 
+attention_check mostly missing: treating missing as pass
+Preference orientation agreement: 1 
+Anon amounts summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+  0.000   0.500   3.250   6.144   9.000  25.000     804 
+Recog amounts summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+  0.000   0.000   2.500   4.981   7.125  25.000    1374 
+WTP built from pref_anom/pref_rec amounts
+Sign switches distribution among attention-pass:
+
+ 0  1  2  3 
+73 45  1  1 
+All-missing WTP among attention-pass: 0 
+Points columns (direct): AnomPts EarnPts RecogPts 
+Order codes from timers:
+ord
+aer are ear era rae rea 
+ 16  17  20  21  23  24 
+attention pass: 120  coherent among pass: 119  complete points: 121  final: 119 
+QM222 final participant-rounds (not used): 357 
+
+RESULT:public_recognition_points_prolific_table5_col1=102.932469
+RESULT:financial_incentives_points_prolific_table5_col1=180.066704
+RESULT:n_obs_prolific_table5_col1=2967.000000
+RESULT:public_recognition_points_berkeley_table5_col2=135.004314
+RESULT:financial_incentives_points_berkeley_table5_col2=181.556499
+RESULT:n_obs_berkeley_table5_col2=1176.000000
+RESULT:action_signaling_gamma1_berkeley_table7_panelA=0.287966
+RESULT:action_signaling_rho_berkeley_table7_panelA=0.885870
+RESULT:cost_parameter_c_berkeley_table7_panelA=0.206697
+RESULT:predicted_financial_incentive_effect_berkeley_table7_panelC=2.418996
+RESULT:public_recognition_points_bu_table5_col3=115.508321
+RESULT:financial_incentives_points_bu_table5_col3=157.021547
+RESULT:n_obs_bu_table5_col3=159.000000

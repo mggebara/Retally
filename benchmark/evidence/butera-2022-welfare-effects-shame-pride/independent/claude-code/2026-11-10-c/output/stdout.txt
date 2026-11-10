@@ -1,0 +1,32 @@
+prolific_survey_data.csv: raw 1017, fail attention 7, incoherent 40, remaining 970
+Prolific: dropped 2 with missing group assignment / practice score -> 968
+DEVIATION: Prolific sample additionally drops 2 participants with missing recog_group_assign or PracticePts (to reach the paper's N=968)
+berkeley_survey_data.csv: raw 407, fail attention 12, incoherent 11, remaining 384
+bu_qm222_survey_data.csv: raw 121, fail attention 1, incoherent 2, remaining 118
+Table5 Prolific: PR 109.26 (12.27)  FI 182.96 (13.13)  N=2904  control mean 809.7  order F p=0.648
+Table5 Berkeley: PR 134.74 (22.53)  FI 177.12 (22.02)  N=1152  control mean 989.8  order F p=0.018
+Table5 BU: PR 115.79 (43.93)  FI 132.26 (39.15)  N=354  control mean 815.9  order F p=0.081
+                Estimate  Std. Error   t value     Pr(>|t|)
+(Intercept) -3.324569634 0.420285705 -7.910261 2.782407e-14
+x            0.378981163 0.070187652  5.399542 1.174770e-07
+x2          -0.004037936 0.003556728 -1.135295 2.569615e-01
+attr(,"vcov_type")
+[1] "Clustered (id)"
+Table6 col4 N = 6528 
+Structural Berkeley: g1=0.300 g2=-0.0040 rho=0.871 c=0.214 pred=2.338 actual FI=1.771
+         g1     g2   rho     c  pred
+2.5%  0.227 -0.011 0.659 0.143 1.520
+97.5% 0.372  0.003 1.122 0.329 3.486
+RESULT:public_recognition_points_prolific_table5_col1=109.2643
+RESULT:financial_incentives_points_prolific_table5_col1=182.9592
+RESULT:public_recognition_points_berkeley_table5_col2=134.7423
+RESULT:financial_incentives_points_berkeley_table5_col2=177.1164
+RESULT:public_recognition_points_bu_table5_col3=115.7881
+RESULT:financial_incentives_points_bu_table5_col3=132.2573
+RESULT:n_obs_prolific_table5_col1=2904
+RESULT:n_obs_berkeley_table5_col2=1152
+RESULT:n_obs_bu_table5_col3=354
+RESULT:action_signaling_gamma1_berkeley_table7_panelA=0.2999
+RESULT:action_signaling_rho_berkeley_table7_panelA=0.8710
+RESULT:cost_parameter_c_berkeley_table7_panelA=0.2139
+RESULT:predicted_financial_incentive_effect_berkeley_table7_panelC=2.3379

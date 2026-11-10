@@ -1,0 +1,103 @@
+
+===== Prolific ===== N raw: 1017 
+attention_check values:
+v
+   3    4    5   34 <NA> 
+   1    2    3    1 1010 
+attention_check mostly missing: treating missing as pass
+WTP columns for interval 0 : yes = pref_rec_0_1 pref_rec_0_10  no = pref_anom_0_1 pref_anom_0_10 
+pass attention: 1010  incoherent: 162  both ok: 852 
+
+===== Berkeley ===== N raw: 407 
+attention_check values:
+v
+   3    4    5 <NA> 
+   2    3    7  395 
+attention_check mostly missing: treating missing as pass
+WTP columns for interval 0 : yes = pref_rec_0_1 pref_rec_0_10  no = pref_anom_0_1 pref_anom_0_10 
+pass attention: 395  incoherent: 40  both ok: 355 
+
+===== BU ===== N raw: 178 
+attention_check values:
+v
+   1    4    5 <NA> 
+   1    1    2  174 
+attention_check mostly missing: treating missing as pass
+WTP columns for interval 0 : yes = pref_rec_0_1 pref_rec_0_10  no = pref_anom_0_1 pref_anom_0_10 
+pass attention: 174  incoherent: 26  both ok: 148 
+Points columns used: AnomPts EarnPts RecogPts 
+Round orders:
+ord
+aer are ear era rae rea 
+130 142 132 145 150 153 
+OLS estimation, Dep. Var.: points
+Observations: 2,556
+Standard-errors: Clustered (id) 
+             Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept) 834.81044    17.7908 46.923645  < 2.2e-16 ***
+public       99.93765    13.1877  7.578070 9.1575e-14 ***
+paid        182.56823    13.4881 13.535541  < 2.2e-16 ***
+position2     5.06877    12.7484  0.397601 6.9102e-01    
+position3    -3.96606    14.8277 -0.267477 7.8917e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 490.0   Adj. R2: 0.021217
+Points columns used: AnomPts EarnPts RecogPts 
+Round orders:
+ord
+aer are ear era rae rea 
+ 59  60  52  64  59  61 
+OLS estimation, Dep. Var.: points
+Observations: 1,065
+Standard-errors: Clustered (id) 
+            Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept) 992.3935    27.8302 35.65887  < 2.2e-16 ***
+public      129.1515    23.1482  5.57934 4.8052e-08 ***
+paid        176.8805    22.8212  7.75070 9.7794e-14 ***
+position2    26.6363    22.1595  1.20202 2.3016e-01    
+position3    51.7175    23.8232  2.17089 3.0603e-02 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 460.2   Adj. R2: 0.023878
+Points columns used: AnomPts EarnPts RecogPts 
+Round orders:
+ord
+aer are ear era rae rea 
+ 23  25  16  30  29  25 
+OLS estimation, Dep. Var.: points
+Observations: 444
+Standard-errors: Clustered (id) 
+            Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept) 859.2319    49.0038 17.53397  < 2.2e-16 ***
+public      109.2747    41.0240  2.66368 8.5915e-03 ** 
+paid        139.6271    33.5810  4.15792 5.4351e-05 ***
+position2    73.4897    39.0793  1.88053 6.2015e-02 .  
+position3    63.2845    38.2992  1.65237 1.0059e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 561.3   Adj. R2: 0.005592
+OLS estimation, Dep. Var.: wtp
+Observations: 6,035
+Standard-errors: Clustered (id) 
+             Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept) -3.305234   0.456076 -7.24711 2.6891e-12 ***
+a            0.387517   0.072968  5.31076 1.9331e-07 ***
+a2          -0.006186   0.003387 -1.82638 6.8635e-02 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 8.09375   Adj. R2: 0.028307
+roots of PRU: 10.1855 52.45356  abar_pub: 11.48084 
+
+RESULT:public_recognition_points_prolific_table5_col1=99.937650
+RESULT:financial_incentives_points_prolific_table5_col1=182.568233
+RESULT:n_obs_prolific_table5_col1=2556.000000
+RESULT:public_recognition_points_berkeley_table5_col2=129.151476
+RESULT:financial_incentives_points_berkeley_table5_col2=176.880504
+RESULT:n_obs_berkeley_table5_col2=1065.000000
+RESULT:public_recognition_points_bu_table5_col3=109.274696
+RESULT:financial_incentives_points_bu_table5_col3=139.627132
+RESULT:n_obs_bu_table5_col3=444.000000
+RESULT:action_signaling_gamma1_berkeley_table7_panelA=0.261491
+RESULT:action_signaling_rho_berkeley_table7_panelA=0.887173
+RESULT:cost_parameter_c_berkeley_table7_panelA=0.190059
+RESULT:predicted_financial_incentive_effect_berkeley_table7_panelC=2.630761

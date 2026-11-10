@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "corno-2022-interaction-stereotypes-performance",
+  "mode": "blind",
+  "run_id": "2026-11-10-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Academic performance index computed by us as the first principal component (correlation-matrix PCA, prcomp with scaling, sign set to correlate positively with GPA) of GPA, exams passed and eligible to continue over the 498 working-sample students with all three non-missing. The dataset's own PCAperf variable correlates 0.995 with it but has a smaller SD (1.15 vs 1.36), so it was apparently computed on a different sample or normalisation; we did not use it.",
+    "GPA used as provided (variable GPA, already standardized in the data file; SD 1.005 in the working sample); not re-standardized."
+  ],
+  "notes": "Working sample = round-2 rows of uctdata_balanced.dta (499 students with baseline and follow-up and both IATs; 117 white, 332 black, 157 in mixed rooms). Mixed Room = mixracebas. Own controls: Female, Falseuct2012 (UCT score/1000, mean-imputed) + missfalse, durpcabas_nomiss (wealth index) + durpcabas_miss, consbas_nomiss + consbas_miss, Foreign, privateschool_nomiss (foreign_missing and privateschool_miss are all zero and dropped). Roommate controls: roFalseuct2012, missrofalse, rodurpcabas_nomiss, rodurpcabas_miss, roconsbas_nomiss, roconsbas_missing, roForeign_bas, roforeign_missingbas, roprivschool_nomiss, roprivschool_miss. Table 3: follow-up DscoreraceIAT on mixracebas + DscoreraceIATbas + controls, residence (Res_base) FE, by race. Table 4: GPA / examspassed / continue / PCA index on mixracebas + controls with Res_base and regprogram FE (Panels A/B); Panel C adds white, coloured, Else dummies and race-group (black/white/other) x residence FE (white and Else are absorbed/collinear and dropped by fixest). OLS via fixest, SEs clustered by roomnum_base (room ids are unique across residences). attempt-1 and attempt-2 were exploratory (variable inspection, no RESULT lines). attempt-3 was the first estimating run; it used fixest's default removal of fixed-effect singletons (academic programs with one student), which dropped observations (N 493 in Panel C) relative to the paper's dummy-variable OLS; the final run sets fixef.rm='none' so all working-sample observations are kept (coefficients unchanged, N = 499; SEs slightly different). This change was made for sample definition only, not by comparison with any reported value. The paper's FWER p-values were not computed (not requested). No run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T14:34:22Z",
+  "finished_at": "2026-11-10T14:37:30Z"
+}

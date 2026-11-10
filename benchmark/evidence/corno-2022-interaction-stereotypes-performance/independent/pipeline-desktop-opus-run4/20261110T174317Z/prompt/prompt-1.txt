@@ -1,0 +1,110 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: Interaction, Stereotypes and Performance.
+Abstract (first 500 chars): We exploit a policy designed to randomly allocate roommates in a large South
+African university to investigate whether inter-racial interaction a¤ects stereo-
+types, attitudes and performance. Using Implicit Association Tests, we …nd that
+living with a roommate of a di¤erent race reduces white students’negative stereo-
+types towards black ones and increases inter-racial friendships. Interaction also
+a¤ects academic outcomes: black students improve their GPA, pass more exams
+and have lower dropou
+Methodology Summary: - **Design / identification**: Natural experiment using the University of Cape Town policy of random allocation of first-year students to residences and (in 8 residences with double rooms where wardens stated they randomized) to same-gender roommates. Treatment `MixRoom` = 1 if at baseline the student was assigned a roommate of a different race; the initial assignment is always used, so estimates are intention-to-treat (19% changed roommate, but only 2 moved from mixed to non-mixed, none the reverse; no LATE reported). Randomization checked via balance tests (Table 1), regressions of MixRoom on baseline characteristics (Table 2, panels A–B), an undirected dyadic sorting regression SameRoom_ij = α + β|X_i − X_j| + γ(X_i + X_j) + ε_ij (Table 2, panel C), 10,000-replication simulated random pairings (Table A5), and placebo regressions on lagged outcomes (Table A6).
+
+- **Data and sample**: One cohort of 2012 freshmen; baseline survey February 2012 (first week of the year) and follow-up September 2012 (before final exams). Of 621 baseline respondents with non-missing IAT scores, 499 were traced at follow-up (80%); working sample = students with baseline and follow-up data and non-missing Race and Academic IAT (499: 157 mixed, 342 same-race; 332 black, 117 white, 18 coloured, 32 Indian/Asian/other). Two residences (9 obs) with very few double rooms and no white students in doubles were dropped. Attrition checked in Table A1 (no differential attrition by MixRoom or IAT).
+
+- **Outcomes and preprocessing**: (i) Race IAT and Academic IAT scores (coded so lower = more negative stereotypes towards black relative to white; IATs administered first in each session); (ii) administrative academic outcomes for year 1 (and year 2 in Table A10): GPA standardized to mean 0, SD 1 within each year; number of exams passed (0–9); "Eligible to continue" dummy; and a summary performance index = first principal component of the three; (iii) 15 attitudinal/behavioral outcomes aggregated into three indices (friendship, explicit attitudes, prosocial behaviour, incl. a prisoner's dilemma game). UCT admission score (APS, out of 600) rescaled by dividing by 1000. Household wealth = PCA index of durable-goods ownership per capita; consumption = last-month spending. Missing values of controls (other than the baseline IAT) are replaced with the mean, and missing-value indicator dummies are added.
+
+- **Estimating equation (eq. 2), OLS, levels (no logs)**: Y_ijkt = α·Y_ijk0 + β·MixRoom_ik0 + Race_i + X_ik0 + X_jk0 + RaceGrp_i × δ_k + ε_ijkt, where Y_ijk0 is the baseline value of the outcome (lagged dependent variable; omitted when not available, e.g. GPA and lab games). Race_i = dummies for White, Coloured, Indian/Asian/Other (Black omitted). X_ik0 (own) and X_jk0 (roommate) controls: gender, UCT admission score, household wealth index, monthly consumption expenditure, non-South-African dummy. Fixed effects: race-group (Black, White, residual) × residence dummies in the full sample; residence dummies only in race subsamples. Academic-performance regressions add academic-program fixed effects; prisoner's dilemma regressions add a dummy for knowing the matched player. Coefficient of interest β.
+
+- **Samples estimated**: IAT outcomes (Table 3) estimated separately for white and black subsamples (simplified eq. 2 without race dummies, residence FE only), since prejudice reduction implies opposite signs by group. Academic, attitudinal and behavioural outcomes (Tables 4, 6) estimated for full sample and white and black subsamples. Headline coefficients are in the raw units of the outcome (IAT score points; GPA in SD units because GPA itself is standardized; number of exams; percentage-point eligibility); the paper converts them to SD effects in the text (e.g. Race IAT effect for whites 0.316 = 0.63 SD; black GPA effect 0.257 ≈ 0.27 SD; exams passed +0.65 ≈ 0.23 SD; eligibility +15.2 pp; performance index +0.44 for blacks, +0.29 SD full sample).
+
+- **Inference**: Standard errors clustered at the room level. Westfall–Young (1993) free step-down resampling p-values for family-wise error rate with 10,000 replications (re-randomizing mixed/non-mixed status and assigning roommates within residence and gender); families = Race and Academic IAT per subsample (Table 3), GPA/exams passed/eligible to continue (Table 4), friendship/attitudes/prosocial indices (Table 6). Anderson FDR q-values reported as similar. SUR test of equal MixRoom effects on Race vs Academic IAT (p = 0.03). Ordered logit used for categorical ordered attitudinal variables.
+
+- **Robustness / mechanisms**: Table A7 / A9 drop roommate controls; Table A8 splits treatment by roommate's race; Table A10 second-year academic outcomes; Table A11 interacts MixRoom with same-faculty and shared-course indicators and examines studying together; interaction of MixRoom with roommate's admission score tested for IAT outcome. No train/test split, cross-validation or ML hyperparameters (not applicable).
+
+
+## Claims to Reproduce
+1. race_iat_mixed_room_whites_table3_col1: 0.316 (change in the Race IAT D-score (higher = less prejudice against black people)) [type: coefficient]
+   Location: Table 3, Race IAT, Whites, column (1), Mixed Room
+   Context: Table 3 ("Stereotypes and exposure to a roommate of different race"), column (1). OLS of the follow-up (end of first year) Race IAT score on Mixed Room, a dummy for having been assigned at baseline a roommate of a different race, controlling for the respondent's baseline Race IAT score, own baseline controls (female, UCT admission score, household wealth index, monthly consumption, foreign, private high school), the same controls for the roommate except female (rooms are single-sex), and residence fixed effects; missing values of controls other than the baseline IAT are replaced by means with …
+2. race_iat_mixed_room_blacks_table3_col2: -0.094 (change in the Race IAT D-score (higher = less prejudice against black people)) [type: coefficient]
+   Location: Table 3, Race IAT, Blacks, column (2), Mixed Room
+   Context: Table 3, column (2): the column (1) regression (follow-up Race IAT on Mixed Room, baseline Race IAT, own and roommate baseline controls, residence fixed effects) for black students. Standard errors clustered at the room level.
+3. n_obs_table3_whites: 117.0 (students) [type: count]
+   Location: Table 3, No. Obs., columns (1) and (3) (Whites)
+   Context: Number of observations in Table 3 for the white subsample: white students in the working sample (interviewed at baseline and follow-up with non-missing values for both IATs).
+4. n_obs_table3_blacks: 332.0 (students) [type: count]
+   Location: Table 3, No. Obs., columns (2) and (4) (Blacks)
+   Context: Number of observations in Table 3 for the black subsample: black students in the working sample.
+5. gpa_mixed_room_blacks_table4_panelB_col1: 0.257 (standard deviations of first-year GPA) [type: coefficient]
+   Location: Table 4, Panel B: Blacks, column (1) GPA, Mixed Room
+   Context: Table 4 ("Impact on academic performance"), Panel B, column (1). OLS of the student's first-year average GPA (standardized to mean 0 and SD 1 over the full sample) on Mixed Room, own baseline controls (female, UCT admission score, wealth index, consumption, foreign, private high school, with mean imputation and missing-value dummies), the roommate's baseline controls (all but female), residence fixed effects and academic program fixed effects. Sample: black students in the working sample. Standard errors clustered at the room level. The entry is the Mixed Room coefficient.
+6. exams_passed_mixed_room_blacks_table4_panelB_col2: 0.645 (number of exams passed in the first year) [type: coefficient]
+   Location: Table 4, Panel B: Blacks, column (2) Number of exams passed, Mixed Room
+   Context: Table 4, Panel B, column (2): the same specification with the number of exams passed during the first year as the outcome; black students. Standard errors clustered at the room level.
+7. eligible_mixed_room_blacks_table4_panelB_col3: 0.152 (change in the probability of being eligible to continue) [type: coefficient]
+   Location: Table 4, Panel B: Blacks, column (3) Eligible to continue, Mixed Room
+   Context: Table 4, Panel B, column (3): the same specification with a dummy for being in good standing and eligible to continue to the next academic year (Faculty Examination Committee assessment, possibly subject to make-up exams) as the outcome; black students. Standard errors clustered at the room level.
+8. performance_index_mixed_room_blacks_table4_panelB_col4: 0.443 (units of the academic performance index (first principal component)) [type: coefficient]
+   Location: Table 4, Panel B: Blacks, column (4) Index of Academic Performance, Mixed Room
+   Context: Table 4, Panel B, column (4): the same specification with the index of academic performance, the first principal component of GPA, number of exams passed and eligible to continue, as the outcome; black students. Standard errors clustered at the room level.
+9. gpa_mixed_room_whites_table4_panelA_col1: -0.028 (standard deviations of first-year GPA) [type: coefficient]
+   Location: Table 4, Panel A: Whites, column (1) GPA, Mixed Room
+   Context: Table 4, Panel A, column (1): the Panel B column (1) specification (standardized first-year GPA on Mixed Room, own and roommate baseline controls, residence and academic program fixed effects) for white students. Standard errors clustered at the room level.
+10. gpa_mixed_room_full_table4_panelC_col1: 0.147 (standard deviations of first-year GPA) [type: coefficient]
+   Location: Table 4, Panel C: Full Sample, column (1) GPA, Mixed Room
+   Context: Table 4, Panel C, column (1): standardized first-year GPA on Mixed Room in the full working sample (all races), with own and roommate baseline controls, race dummies (White, Coloured, Indian/Other; Black omitted), race group x residence fixed effects (race groups: Black, White, and a residual group) and academic program fixed effects. Standard errors clustered at the room level.
+11. exams_passed_mixed_room_full_table4_panelC_col2: 0.447 (number of exams passed in the first year) [type: coefficient]
+   Location: Table 4, Panel C: Full Sample, column (2) Number of exams passed, Mixed Room
+   Context: Table 4, Panel C, column (2): the Panel C specification (race dummies, race group x residence and academic program fixed effects, own and roommate controls) with the number of exams passed in the first year as the outcome; full sample. Standard errors clustered at the room level.
+12. performance_index_mixed_room_full_table4_panelC_col4: 0.289 (units of the academic performance index (first principal component)) [type: coefficient]
+   Location: Table 4, Panel C: Full Sample, column (4) Index of Academic Performance, Mixed Room
+   Context: Table 4, Panel C, column (4): the Panel C specification with the index of academic performance (first principal component of GPA, exams passed and eligible to continue) as the outcome; full sample with the index non-missing. Standard errors clustered at the room level.
+13. n_obs_table4_panelC_cols1_2: 499.0 (students) [type: count]
+   Location: Table 4, Panel C: Full Sample, No. Obs., columns (1)-(2)
+   Context: Number of observations in Table 4 Panel C, columns (1) and (2): the full working sample of first-year students in double rooms interviewed at baseline and follow-up with both IAT scores.
+
+## Dataset Information
+Name: corno-2022-interaction-stereotypes-performance
+Local path: <repo>/.cache/datasets/corno_2022_interaction_stereotypes_performance.script-free
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- ForJournals_a/Data/Clean/uctdata_balanced.dta (552.4 KB) — 998 rows, 89 columns: gender, continue, Female, Race, coloured, white, black, Foreign, foreign_missing, roFalseuct2012, rodurpcabas_nomiss, Falseuct2012, durpcabas_nomiss, roconsbas_nomiss, consbas_nomiss, roprivschool_nomiss, roother, DscoreacaIATbas, DscoreraceIATbas, mixracebas, PCAperf, DscoreacaIAT, DscoreraceIAT, falseuct2012, PCAattitude, PCAfriend, examspassed, Same_ro_yr2, samefaculty, Res_base, rowhite, roblack, roElse, blackRes, whiteRes, Else, roommate_study, continue2013, examspassed2…
+- ForJournals_a/Data/Clean/uctdata_clean.dta (573.8 KB) — 1139 rows, 83 columns: Faculty, continue, Female, Race, coloured, white, black, Foreign, foreign_missing, roFalseuct2012, rodurpcabas_nomiss, Falseuct2012, durpcabas_nomiss, roconsbas_nomiss, consbas_nomiss, roprivschool_nomiss, roother, roDscoreacaIAT, roDscoreraceIAT, mixracebas, DscoreacaIAT, DscoreraceIAT, whi_raceIAT, col_raceIAT, PCAattitude, PCAfriend, examspassed, else_raceIAT, Res_base, roFaculty, blackRes, whiteRes, Else, continue2013, examspassed2013, rocoloured, balanced, order, regprog…
+- ForJournals_a/Data/Clean/nstudents_fwer.dta (336.6 KB) — 758 rows, 63 columns: Female, Race, Falseuct2012_fwer, durpcabas_nomiss_fwer, consbas_nomiss_fwer, examspassed2013_fu_fwer, GPA2013_fu_fwer, DscoreacaIAT_fwer, DscoreraceIAT_fwer, DscoreacaIAT_fu_fwer, DscoreraceIAT_fu_fwer, PCAfriend_nomiss1_fu_fwer, PCAatt_nomiss1_fu_fwer, continue_fu_fwer, foreign_missing_fwer, Res_base, blackRes_fwer, whiteRes_fwer, PCAfriend_fu_fwer, Faculty_fwer, coloured_fwer, white_fwer, black_fwer, Else_fwer, Foreign_fwer, examspassed_fu_fwer, continue2013_fu_fwer, order,…
+- ForJournals_a/Data/Clean/uctdata_tabA2.dta (3.2 MB) — 31675 rows, 19 columns: gender, Female, Race, Foreign, falseuct2012, foreign_comp, studentinsample, populationgroup, studentinres_double, all_students, studentinres, studentinourres, nstudent, round, acadyear, english_home_comp, zulu_home_comp, xhosa_home_comp, af…
+- ForJournals_a/Data/Clean/ronstudent_sim.dta (268.9 KB) — 3815 rows, 11 columns: roFalseuct2012_sim, rodurpcabas_nomiss_sim, roconsbas_nomiss_sim, roforeign_missing_sim, roForeign_sim, ronstudent, roprivateschool_nomiss_sim, roprivateschool_miss_sim, romissfalse_sim, roconsbas_miss_sim, rodurpcabas_miss_sim
+- ForJournals_a/Data/Clean/tabA5.dta (92.4 KB) — 2292 rows, 9 columns: Race, female, sample, n_order, nstudent, round, odd, roomnum_base, buildings_name
+- ForJournals_a/Data/Clean/uctdata_dyadic.dta (26.9 MB) — 370272 rows, 25 columns: sameroom, id, sameresidence, S_balanced, nstudent, A_Foreign, S_Foreign, A_privateschool_nomiss, S_privateschool_nomiss, A_DscoreraceIAT, S_DscoreraceIAT, A_DscoreacaIAT, S_DscoreacaIAT, id_d, Res_base, samesex, samerace, A_zFalseuct2012, S…
+- ForJournals_a/Data/Clean/new_accommodation_2012.dta (117.2 KB) — 3787 rows, 2 columns: nstudent, buildings_name
+- ForJournals_a/Questionnaires/Questionnaire_R1_final.pdf (262.9 KB)
+- ForJournals_a/Questionnaires/Questionnaire_R2_final.pdf (263.8 KB)
+- ForJournals_a/README_a.pdf (235.6 KB)
+- ForJournals_a/programs/ado/ngreg.hlp (1.3 KB)
+- metadata.json (241 B)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/corno_2022_interaction_stereotypes_performance.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Independent Reproduction
+This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's description alone.  The authors' own analysis code is deliberately withheld.  Do NOT open, read, source, or execute any script files that may appear in the dataset directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, and similar) — load data files only.  Derive the estimating equation, sample restrictions, fixed effects, and standard-error clustering from the paper information and claims above.
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

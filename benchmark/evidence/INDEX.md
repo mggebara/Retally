@@ -251,6 +251,30 @@ Built by `python -m benchmark.evidence`; see `benchmark/README.md` ("Evidence bu
 - [blind · pipeline-desktop-opus-run3 · 20261103T004800Z](brouwer-2022-teaching-norms/blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) — 12/12
 - [blind · pipeline-desktop-opus-run4 · 20261108T013503Z](brouwer-2022-teaching-norms/blind/pipeline-desktop-opus-run4/20261108T013503Z/CELL.md) — 12/12
 
+## [butera-2022-welfare-effects-shame-pride](butera-2022-welfare-effects-shame-pride/REPORT.md)
+
+- [seeded · claude-code · 2026-11-10-a](butera-2022-welfare-effects-shame-pride/seeded/claude-code/2026-11-10-a/CELL.md) — 13/13
+- [seeded · claude-code · 2026-11-10-b](butera-2022-welfare-effects-shame-pride/seeded/claude-code/2026-11-10-b/CELL.md) — 13/13
+- [seeded · pipeline-desktop-opus · 20261110T164936Z](butera-2022-welfare-effects-shame-pride/seeded/pipeline-desktop-opus/20261110T164936Z/CELL.md) — 13/13
+- [seeded · pipeline-desktop-opus-run2 · 20261110T174216Z](butera-2022-welfare-effects-shame-pride/seeded/pipeline-desktop-opus-run2/20261110T174216Z/CELL.md) — 13/13
+- [seeded · pipeline-desktop-opus-run3 · 20261110T174232Z](butera-2022-welfare-effects-shame-pride/seeded/pipeline-desktop-opus-run3/20261110T174232Z/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-10-a](butera-2022-welfare-effects-shame-pride/independent/claude-code/2026-11-10-a/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-10-b](butera-2022-welfare-effects-shame-pride/independent/claude-code/2026-11-10-b/CELL.md) — 12/13
+- [independent · claude-code · 2026-11-10-c](butera-2022-welfare-effects-shame-pride/independent/claude-code/2026-11-10-c/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-10-d](butera-2022-welfare-effects-shame-pride/independent/claude-code/2026-11-10-d/CELL.md) — 13/13
+- [independent · pipeline-desktop-opus · 20261110T171753Z](butera-2022-welfare-effects-shame-pride/independent/pipeline-desktop-opus/20261110T171753Z/CELL.md) — 8/13
+- [independent · pipeline-desktop-opus-run2 · 20261110T221231Z](butera-2022-welfare-effects-shame-pride/independent/pipeline-desktop-opus-run2/20261110T221231Z/CELL.md) — 10/13
+- [independent · pipeline-desktop-opus-run3 · 20261110T221247Z](butera-2022-welfare-effects-shame-pride/independent/pipeline-desktop-opus-run3/20261110T221247Z/CELL.md) — 9/13
+- [independent · pipeline-desktop-opus-run4 · 20261110T221303Z](butera-2022-welfare-effects-shame-pride/independent/pipeline-desktop-opus-run4/20261110T221303Z/CELL.md) — 9/13
+- [blind · claude-code · 2026-11-10-a](butera-2022-welfare-effects-shame-pride/blind/claude-code/2026-11-10-a/CELL.md) — 11/13
+- [blind · claude-code · 2026-11-10-b](butera-2022-welfare-effects-shame-pride/blind/claude-code/2026-11-10-b/CELL.md) — 13/13
+- [blind · claude-code · 2026-11-10-c](butera-2022-welfare-effects-shame-pride/blind/claude-code/2026-11-10-c/CELL.md) — 13/13
+- [blind · claude-code · 2026-11-10-d](butera-2022-welfare-effects-shame-pride/blind/claude-code/2026-11-10-d/CELL.md) — 13/13
+- [blind · pipeline-desktop-opus · 20261110T164936Z](butera-2022-welfare-effects-shame-pride/blind/pipeline-desktop-opus/20261110T164936Z/CELL.md) — 8/13
+- [blind · pipeline-desktop-opus-run2 · 20261110T174216Z](butera-2022-welfare-effects-shame-pride/blind/pipeline-desktop-opus-run2/20261110T174216Z/CELL.md) — 7/13
+- [blind · pipeline-desktop-opus-run3 · 20261110T174232Z](butera-2022-welfare-effects-shame-pride/blind/pipeline-desktop-opus-run3/20261110T174232Z/CELL.md) — 8/13
+- [blind · pipeline-desktop-opus-run4 · 20261110T174255Z](butera-2022-welfare-effects-shame-pride/blind/pipeline-desktop-opus-run4/20261110T174255Z/CELL.md) — 8/13
+
 ## [carrera-2022-who-chooses-commitment](carrera-2022-who-chooses-commitment/REPORT.md)
 
 - [seeded · claude-code · 2026-11-02-a](carrera-2022-who-chooses-commitment/seeded/claude-code/2026-11-02-a/CELL.md) — 11/11
@@ -278,6 +302,30 @@ Built by `python -m benchmark.evidence`; see `benchmark/README.md` ("Evidence bu
 - [blind · pipeline-desktop-opus-run2 · 20261102T091036Z](carrera-2022-who-chooses-commitment/blind/pipeline-desktop-opus-run2/20261102T091036Z/CELL.md) — 7/11
 - [blind · pipeline-desktop-opus-run3 · 20261103T010557Z](carrera-2022-who-chooses-commitment/blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — 4/11
 - [blind · pipeline-desktop-opus-run4 · 20261108T060639Z](carrera-2022-who-chooses-commitment/blind/pipeline-desktop-opus-run4/20261108T060639Z/CELL.md) — 4/11
+
+## [corno-2022-interaction-stereotypes-performance](corno-2022-interaction-stereotypes-performance/REPORT.md)
+
+- [seeded · claude-code · 2026-11-10-a](corno-2022-interaction-stereotypes-performance/seeded/claude-code/2026-11-10-a/CELL.md) — 13/13
+- [seeded · claude-code · 2026-11-10-b](corno-2022-interaction-stereotypes-performance/seeded/claude-code/2026-11-10-b/CELL.md) — 13/13
+- [seeded · pipeline-desktop-opus · 20261110T165716Z](corno-2022-interaction-stereotypes-performance/seeded/pipeline-desktop-opus/20261110T165716Z/CELL.md) — 13/13
+- [seeded · pipeline-desktop-opus-run2 · 20261110T221318Z](corno-2022-interaction-stereotypes-performance/seeded/pipeline-desktop-opus-run2/20261110T221318Z/CELL.md) — 7/13
+- [seeded · pipeline-desktop-opus-run3 · 20261110T212811Z](corno-2022-interaction-stereotypes-performance/seeded/pipeline-desktop-opus-run3/20261110T212811Z/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-10-a](corno-2022-interaction-stereotypes-performance/independent/claude-code/2026-11-10-a/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-10-b](corno-2022-interaction-stereotypes-performance/independent/claude-code/2026-11-10-b/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-10-c](corno-2022-interaction-stereotypes-performance/independent/claude-code/2026-11-10-c/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-10-d](corno-2022-interaction-stereotypes-performance/independent/claude-code/2026-11-10-d/CELL.md) — 13/13
+- [independent · pipeline-desktop-opus · 20261110T164952Z](corno-2022-interaction-stereotypes-performance/independent/pipeline-desktop-opus/20261110T164952Z/CELL.md) — 12/13
+- [independent · pipeline-desktop-opus-run2 · 20261110T172213Z](corno-2022-interaction-stereotypes-performance/independent/pipeline-desktop-opus-run2/20261110T172213Z/CELL.md) — 13/13
+- [independent · pipeline-desktop-opus-run3 · 20261110T174309Z](corno-2022-interaction-stereotypes-performance/independent/pipeline-desktop-opus-run3/20261110T174309Z/CELL.md) — 13/13
+- [independent · pipeline-desktop-opus-run4 · 20261110T174317Z](corno-2022-interaction-stereotypes-performance/independent/pipeline-desktop-opus-run4/20261110T174317Z/CELL.md) — 13/13
+- [blind · claude-code · 2026-11-10-a](corno-2022-interaction-stereotypes-performance/blind/claude-code/2026-11-10-a/CELL.md) — 13/13
+- [blind · claude-code · 2026-11-10-b](corno-2022-interaction-stereotypes-performance/blind/claude-code/2026-11-10-b/CELL.md) — 13/13
+- [blind · claude-code · 2026-11-10-c](corno-2022-interaction-stereotypes-performance/blind/claude-code/2026-11-10-c/CELL.md) — 13/13
+- [blind · claude-code · 2026-11-10-d](corno-2022-interaction-stereotypes-performance/blind/claude-code/2026-11-10-d/CELL.md) — 13/13
+- [blind · pipeline-desktop-opus · 20261110T164114Z](corno-2022-interaction-stereotypes-performance/blind/pipeline-desktop-opus/20261110T164114Z/CELL.md) — 8/13
+- [blind · pipeline-desktop-opus-run2 · 20261110T172213Z](corno-2022-interaction-stereotypes-performance/blind/pipeline-desktop-opus-run2/20261110T172213Z/CELL.md) — 10/13
+- [blind · pipeline-desktop-opus-run3 · 20261110T172220Z](corno-2022-interaction-stereotypes-performance/blind/pipeline-desktop-opus-run3/20261110T172220Z/CELL.md) — 10/13
+- [blind · pipeline-desktop-opus-run4 · 20261110T171229Z](corno-2022-interaction-stereotypes-performance/blind/pipeline-desktop-opus-run4/20261110T171229Z/CELL.md) — 13/13
 
 ## [dancygier-2022-hate-crimes-gender-imbalances](dancygier-2022-hate-crimes-gender-imbalances/REPORT.md)
 

@@ -1,0 +1,41 @@
+Columns: round DscoreacaIAT DscoreraceIAT charity_amount talk hangdiff hanglast community gender roommate_study falseuct2012 examspassed continue continue2013 examspassed2013 GPA2013 individual Res_base Female Race coloured white black Cooperate Pris_coopbelief StudyOth LeisuOth roRace same_course Else rocoloured rowhite roother roblack roElse mixracebas stillinres roomnum_base Falseuct2012 missfalse roFalseuct2012 missrofalse Foreign foreign_missing roForeign_bas roforeign_missingbas privateschool_nomiss privateschool_miss consbas_nomiss consbas_miss DscoreacaIATbas DscoreraceIATbas excomfort Abolishaffirm_dis dancinganotherrace boyfriendanotherrace GPA pctFriendsdiff_net pctStudydiffer_net roprivschool_nomiss roprivschool_miss durpcabas_nomiss durpcabas_miss PCAattitude LPCAattitude rodurpcabas_nomiss rodurpcabas_miss roconsbas_nomiss roconsbas_missing knowP PCAperf PCAperf2013 PCAfriend PCAcomm PCAsocial PCAatt_nomiss1 PCAfriend_nomiss1 PCAcomm_nomiss1 PCAsocial_nomiss1 blackRes whiteRes Inresmix_yr2 Same_ro_yr2 mixsamecourse samefaculty mixsamefaculty order nstudent regprogram
+Rows: 998
+id=nstudent round=round treat=mixracebas res=Res_base
+Round values: 1,2
+Working sample size: 499
+Controls: Female Falseuct2012 durpcabas_nomiss consbas_nomiss Foreign foreign_missing privateschool_nomiss missfalse missrofalse privateschool_miss consbas_miss durpcabas_miss roFalseuct2012 rodurpcabas_nomiss roconsbas_nomiss roForeign_bas roprivschool_nomiss roprivschool_miss rodurpcabas_miss roconsbas_missing
+Program FE variable: regprogram
+Room variable: roomnum_base; clusters: 340
+GPA variable: GPA
+The variables 'foreign_missing' and 'privateschool_miss' have been removed
+because of collinearity (see $collin.var).
+The variables 'foreign_missing' and 'privateschool_miss' have been removed
+because of collinearity (see $collin.var).
+Error in gpa_std: in feols(as.formula(fml), data = data, cluster = ~cl...: 
+Argument `fml` could not be evaluated: attempt to use zero-length variable
+name
+Error in examspassed: in feols(as.formula(fml), data = data, cluster = ~cl...: 
+Argument `fml` could not be evaluated: attempt to use zero-length variable
+name
+Error in continue: in feols(as.formula(fml), data = data, cluster = ~cl...: 
+Argument `fml` could not be evaluated: attempt to use zero-length variable
+name
+Error in PCAperf: in feols(as.formula(fml), data = data, cluster = ~cl...: 
+Argument `fml` could not be evaluated: attempt to use zero-length variable
+name
+Error in gpa_std: in feols(as.formula(fml), data = data, cluster = ~cl...: 
+Argument `fml` could not be evaluated: attempt to use zero-length variable
+name
+NOTE: 0/6 fixed-effect singletons were removed (6 observations).
+The variables 'is_white' and 'is_else' have been removed because of collinearity
+(see $collin.var).
+NOTE: 0/6 fixed-effect singletons were removed (6 observations).
+The variables 'is_white' and 'is_else' have been removed because of collinearity
+(see $collin.var).
+NOTES: 1 observation removed because of NA values (LHS: 1).
+       0/6 fixed-effect singletons were removed (6 observations).
+The variables 'is_white' and 'is_else' have been removed because of collinearity
+(see $collin.var).
+coef=0.3156 se=0.1381 n=117
+coef=-0.0912 se=0.0687 n=332
+coef=0.1469 se=0.1014 n=493
