@@ -1,0 +1,427 @@
+# Original paper: Altindag, O., Erten, B., & Keskin, P. (2022). "Mental
+#   Health Costs of Lockdowns: Evidence from Age-Specific Curfews in
+#   Turkey." American Economic Journal: Applied Economics, 14(2),
+#   320-343.  doi:10.1257/app.20200811 (April 2022 issue; Crossref
+#   created 2022-03-30, issued 2022-04-01).
+#
+# Reproduction report: Bonander, C., Chauca Strand, G., & Jakobsson, N.
+#   (2023). "Direct Replication and Additional Sensitivity Analyses for
+#   Altindag et al. (2022): A Replication Report from the Oslo
+#   Replication Games." I4R Discussion Paper No. 16 (February 2023;
+#   EconStor hdl:10419/268496; I4R First Meta Database, 29 rows under the
+#   paper title, one of them empty).  Verdict: reproducible — "We
+#   successfully reproduced the main tables (3 and 4) in Altindag et al.
+#   (2022) using their codes and data" (DP Sec. 1); the only issue found
+#   is one SRQ-20 item missing from the questionnaire appendix, which the
+#   authors confirmed was used in the index (DP Sec. 2).  The DB agrees
+#   (best_describe_compreprod "Analysis and cleaning code produce the
+#   same output as presented in the paper"); result_same is blank and
+#   coding_correction is "Not done by replicators" on every row.  The DP
+#   prints its reproduction of the preferred +/-45-month column of Tables
+#   3 and 4 as column (1) "Original Study" of its Tables 1-6.  All 28
+#   non-empty DB rows are ROBUSTNESS variants of those seven estimates
+#   (Eicker-Huber-White instead of clustered SEs, no covariates, rdrobust
+#   bandwidths with uniform / triangular kernels), not recomputations;
+#   their o_coeff / o_std_err are the DP's column (1).  Found from the
+#   candidates file (corpus/candidates-2026-11-07.md, row T54) and the
+#   DB's replication_link.
+#
+# Why this paper:
+#   1. A sharp regression discontinuity in month-year of birth (local
+#      linear, separate slopes, uniform kernel, fixed bandwidth) with
+#      month-of-birth, province and surveyor fixed effects and SEs
+#      clustered on the running variable: the catalog's first RD entry
+#      built on a phone survey.
+#   2. Anderson (2008) inverse-covariance-weighted summary indices built
+#      from 20 binary SRQ-20 items, without the authors' index program
+#      in the package, so the index must be coded from the paper's
+#      description.
+#   3. A manually placed openICPSR package (data_access: manual), small
+#      (0.26 MB zipped), that is a third-party re-deposit: see
+#      dataset.access_notes.
+#
+# What original_claims pins: the preferred +/-45-month column (3) of
+#   Table 3 (first stage on three mobility outcomes) and Table 4 (reduced
+#   form on the three mental distress indices and the SRQ-20 sum), each
+#   coefficient with its SE, plus three sample sizes (Table 3 days
+#   outside, Table 3 under curfew, Table 4 mental distress index).  10
+#   claims, 3 of them counts.
+#
+# Paper text: the published article is labelled "Complimentary" on the
+#   AEA page, but its PDF (pubs.aeaweb.org) answers a Cloudflare
+#   challenge to scripts, and docs.iza.org answers 403; neither was
+#   bypassed.  The source is IZA DP 14281 (April 2021) as deposited with
+#   the Bonn university library's legal-deposit server (68 pp., PDF
+#   CreationDate 2021-04-09).  Its Table 3 and Table 4 column (3) print
+#   the published value in every cell the I4R rows cover (all 7
+#   coefficient / SE pairs), checked cell by cell (see notes).  The three
+#   N claims are not covered by I4R rows; they are pinned because the
+#   WP is a late revision: the AEA online appendix is dated April 6,
+#   2021, the DP quotes the published pp. 334-335 text and footnote 30
+#   (p. 329), and both read word for word as the WP's, and the package
+#   data reproduce the WP's three N exactly (see notes).
+
+id: altindag-2022-mental-health-costs-lockdowns
+i4r_report_url: https://www.econstor.eu/bitstream/10419/268496/1/I4R-DP016.pdf
+# Target language for regeneration (the original is Stata with estout,
+# fsum and the Asher-Novosad _gweightave2.ado index program, plus R for
+# appendix figures; Retally generates R and reads the .dta with haven).
+language: r
+outcome_label: reproducible
+# Pipeline tuning is frozen; this is an evaluation paper.
+split: holdout
+# Contamination bookkeeping.  publication_date is the FIRST public
+# version found: IZA DP 14281 (April 2021; PDF CreationDate
+# 2021-04-09).  The paper was presented at the NBER Health Economics
+# Meeting Fall 2020 (WP acknowledgements), but no 2020 public version
+# was found (web search 2026-11-09: IZA, EconPapers, SSRN, NBER).  The
+# journal version: Crossref issued 2022-04-01 (created 2022-03-30).
+# package_release_date is the DataCite registration of the authors'
+# own package, doi:10.3886/E131981V1 (registered 2022-03-21T19:25:18Z,
+# DataCite API 2026-11-09), the first public release of the analysis
+# data.  The re-deposit placed here, doi:10.3886/E183165V1, was
+# registered 2022-12-18T21:24:17Z (V1.1 has no DataCite record of its
+# own); its do-files say "Last Updated: 26/11/2022".
+publication_date: "2021-04"
+package_release_date: "2022-03-21"
+
+paper:
+  # IZA Discussion Paper No. 14281 (April 2021), open PDF from the
+  # University and State Library Bonn legal-deposit server
+  # (epflicht.ulb.uni-bonn.de, the deposit of IZA's series); checked
+  # 2026-11-09: 200 application/pdf, 1,020,671 bytes, 68 pp., PDF
+  # subject "IZA DP No. 14281", CreationDate 2021-04-09.  Main tables
+  # pp. 32-38 (Table 3 p. 34, Table 4 p. 35), Appendix B variable
+  # definitions pp. 43-45.  A working-paper version, not the published
+  # article (see the header and notes).
+  source: https://epflicht.ulb.uni-bonn.de/download/pdf/661207
+  title: "Mental Health Costs of Lockdowns: Evidence from Age-Specific Curfews in Turkey"
+  authors:
+    - Onur Altindag
+    - Bilge Erten
+    - Pinar Keskin
+
+dataset:
+  source: benchmark/manual-packages/T54/ICPSR_183165-V1.1.zip
+  data_access: manual
+  access_notes: >
+    openICPSR project 183165, version V1.1 (doi:10.3886/E183165V1 is the
+    V1 registration; "Revised Reproduction Package for 'Mental Health
+    Costs of Lockdowns ...' - Hennigan et al. (2022)", deposited by Cian
+    Hennigan, William Spain and Ronan Hegarty of Trinity College Dublin);
+    login and terms-of-use click-through required, so the zip was
+    downloaded by hand (2026-11-09) and placed unchanged at
+    benchmark/manual-packages/T54/ICPSR_183165-V1.1.zip (260,813 bytes,
+    md5 91cf314544261e3e3ad9cabfc39f737f; SOURCE.txt beside it).  This
+    is NOT the authors' own AEA deposit (openICPSR 131981 V1,
+    doi:10.3886/E131981V1, which I4R DP 16 used) but a student
+    reproduction package that re-ships the authors' analysis file and
+    revised copies of their code; its analysis file reproduces the
+    published Table 3 column (3) and the Table 4 SRQ-20 sum exactly,
+    with the same N (an independent least-squares check, 2026-11-09; see
+    notes).  19 entries, 1,590,185 bytes uncompressed, all deflate, no
+    nested archives, all under ICPSR_183165-V1.1/: konda_data_for_analysis.dta
+    (1.2 MB, 2,175 respondents of the KONDA phone survey, 146 variables:
+    SRQ-20 items, mobility, channels, covariates, the running variable,
+    treatment dummy, birth month-year, and month and province dummies);
+    "read me .pdf" (3 pp., written by the Trinity College team, December
+    2022: folder layout, run order, software, no estimates); the
+    authors' code as revised by that team — 1 Tables.do (Tables 1-6, A2-A8),
+    2 Figures.do, 3 Adjustment q main.do, 4 Adjustment q appendix.do,
+    fdr_sharpened_qvalues_v02.do (Anderson 2008), rd_an.do (Asher and
+    Novosad 2020), rdprog_cols1_se2_connected.do (Meyersson 2014), and
+    three R scripts for appendix Table A1 / Figures A1, A2, A4 (A1 needs
+    the TurkStat Household Labour Force Survey, not shipped); and seven
+    files named "Replication Analysis - ..." (.do: Table 4, Table 5,
+    Tables 1-3 and 6, Figures, and three q-value adjustments, dated
+    December 2021 to December 2022, outputs prefixed "REP"), which are
+    the Trinity College team's own replication scripts, not the
+    authors'.  The _gweightave2.ado index program the README names is
+    not in the zip.  No log, table, manuscript or results file is
+    shipped.  The script-free copy (independent / blind) withholds 17
+    files (benchmark.strip_rule.classify_tree on the extracted package,
+    2026-11-09), all by suffix: the 14 .do (the seven "Replication
+    Analysis" files among them) and the 3 .R.  Kept: the .dta and the
+    README PDF, which prints no pinned value.  Project page:
+    https://www.openicpsr.org/openicpsr/project/183165/version/V1.1/view
+
+original_claims:
+  # ---- Table 3: first stage, mobility outcomes, column (3) +/-45 ----
+  - description: days_outside_last_week_table3_col3
+    value: -1.090
+    claim_type: coefficient
+    standard_error: 0.180
+    unit: days per week
+    location: "Table 3, Days outside last week, Born before 1955, column (3) +/-45"
+    context: >
+      Table 3 ("Effects of Curfew on Mobility Outcomes"), column (3).
+      Regression discontinuity estimate of the effect of being born
+      before December 1955 (the cohorts subject to Turkey's 65+ curfew)
+      on the number of days the respondent went outside last week.  OLS
+      of the outcome on the treatment indicator and a linear function of
+      the running variable (months between the respondent's month-year
+      of birth and the December 1955 threshold) fit separately on each
+      side of the threshold, uniform kernel, sample restricted to
+      respondents born within 45 months of the threshold (the Imbens-
+      Kalyanaraman optimal bandwidth for this outcome).  Controls: month
+      of birth fixed effects, province fixed effects, surveyor fixed
+      effects, and indicators for education level, ethnicity and gender.
+      Sample: respondents of the authors' phone survey of 59- to
+      70-year-olds in urban Turkey (late May to early July 2020).
+      Standard errors clustered at the month-year of birth cohort.  The
+      entry is the "Born before 1955" coefficient.
+  - description: under_curfew_table3_col3
+    value: 0.708
+    claim_type: coefficient
+    standard_error: 0.045
+    unit: change in the probability of reporting being under curfew
+    location: "Table 3, Under curfew, Born before 1955, column (3) +/-45"
+    context: >
+      Table 3, column (3): the same RD specification (linear in the
+      running variable on each side, uniform kernel, 45-month bandwidth,
+      month of birth, province and surveyor fixed effects, education,
+      ethnicity and gender indicators, SEs clustered by month-year of
+      birth) for a dummy equal to one if the respondent reported being
+      subject to the curfew within the last month.  The entry is the
+      "Born before 1955" coefficient.
+  - description: never_goes_out_table3_col3
+    value: 0.297
+    claim_type: coefficient
+    standard_error: 0.036
+    unit: change in the probability of never going outside
+    location: "Table 3, Never goes out, Born before 1955, column (3) +/-45"
+    context: >
+      Table 3, column (3): the same RD specification for a dummy equal to
+      one if the respondent reported his or her current frequency of
+      going outside as "never going outside".  The entry is the "Born
+      before 1955" coefficient; SEs clustered by month-year of birth.
+  - description: n_obs_days_outside_table3_col3
+    value: 1214
+    claim_type: count
+    unit: respondents
+    location: "Table 3, Days outside last week, Observations, column (3)"
+    context: >
+      Number of observations in Table 3, column (3), for days outside
+      last week: survey respondents born within 45 months of the
+      threshold with the outcome and all controls observed (survey
+      non-respondents excluded).
+  - description: n_obs_under_curfew_table3_col3
+    value: 1222
+    claim_type: count
+    unit: respondents
+    location: "Table 3, Under curfew, Observations, column (3)"
+    context: >
+      Number of observations in Table 3, column (3), for the under-curfew
+      outcome: respondents born within 45 months of the threshold with
+      the outcome and all controls observed.
+
+  # ---- Table 4: reduced form, mental health outcomes, column (3) ----
+  - description: mental_distress_index_table4_col3
+    value: 0.205
+    claim_type: coefficient
+    standard_error: 0.094
+    unit: standard deviations of the mental distress index
+    location: "Table 4, Mental distress index, Born before 1955, column (3) +/-45"
+    context: >
+      Table 4 ("Effects of Curfew on Mental Health Outcomes"), column (3).
+      Reduced-form RD estimate of the effect of being born before
+      December 1955 on the mental distress index, with the Table 3
+      specification (linear in the running variable on each side,
+      uniform kernel, 45-month bandwidth, month of birth, province and
+      surveyor fixed effects, education, ethnicity and gender indicators,
+      SEs clustered by month-year of birth).  The index follows Anderson
+      (2008) over all 20 SRQ-20 items (binary symptoms within the last
+      four weeks): each item is demeaned and divided by the control
+      group's (born after the threshold) standard deviation, the items
+      are combined with weights from the inverse of their covariance
+      matrix, and the index is scaled to mean 0 and standard deviation 1
+      in the control group; higher values mean more distress.  The entry
+      is the "Born before 1955" coefficient.
+  - description: somatic_symptoms_index_table4_col3
+    value: 0.175
+    claim_type: coefficient
+    standard_error: 0.085
+    unit: standard deviations of the somatic symptoms index
+    location: "Table 4, Somatic symptoms of distress index, Born before 1955, column (3) +/-45"
+    context: >
+      Table 4, column (3): the same RD specification for the somatic
+      symptoms of distress index, the Anderson (2008) index over the four
+      somatic SRQ-20 items (frequent headaches, shaking hands, poor
+      digestion, uncomfortable feelings in the stomach).  The entry is
+      the "Born before 1955" coefficient.
+  - description: nonsomatic_symptoms_index_table4_col3
+    value: 0.158
+    claim_type: coefficient
+    standard_error: 0.092
+    unit: standard deviations of the nonsomatic symptoms index
+    location: "Table 4, Nonsomatic symptoms of distress index, Born before 1955, column (3) +/-45"
+    context: >
+      Table 4, column (3): the same RD specification for the nonsomatic
+      symptoms of distress index, the Anderson (2008) index over the other
+      16 SRQ-20 items (poor appetite, sleeping badly, easily frightened,
+      nervous or worried, trouble thinking clearly, unhappy, crying more,
+      difficulty enjoying daily activities, difficulty making decisions,
+      daily work suffered, unable to play a useful part in life, lost
+      interest, feeling worthless, thoughts of suicide, tired all the
+      time, tired easily).  The entry is the "Born before 1955"
+      coefficient.
+  - description: sum_srq20_yes_answers_table4_col3
+    value: 0.734
+    claim_type: coefficient
+    standard_error: 0.440
+    unit: number of "yes" answers (0-20)
+    location: "Table 4, Sum of \"yes\" answers in SRQ-20, Born before 1955, column (3) +/-45"
+    context: >
+      Table 4, column (3): the same RD specification for the sum of "yes"
+      answers to the 20 SRQ-20 questions (respondents with every item
+      answered).  The entry is the "Born before 1955" coefficient.
+  - description: n_obs_mental_distress_index_table4_col3
+    value: 1133
+    claim_type: count
+    unit: respondents
+    location: "Table 4, Mental distress index, Observations, column (3)"
+    context: >
+      Number of observations in Table 4, column (3), for the mental
+      distress index (the same sample as the SRQ-20 sum): respondents
+      born within 45 months of the threshold who answered all 20 SRQ-20
+      items and have all controls observed.
+
+# DP16's column (1) "Original Study" in its Tables 1-6 is the team's own
+# run of the authors' code and data ("is a reproduction of the results
+# presented in Table 3 [4], Column 3"), so it is a same-specification
+# recomputation and is recorded as the reproduced value.  The 28 meta-
+# database rows themselves are all robustness variants (no clustering,
+# no covariates, rdrobust bandwidths); as in lopez-2022 their values are
+# quoted in the notes, never as reproductions.  The three N claims have
+# no DP or DB value and carry no finding.
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: -1.090
+    outcome: matches
+    notes: DP16 Tables 1-2 col 1 -1.090 (0.180); DP Table 3 col 1 prints -1.089 (0.179). Robustness rows -1.090 (0.189) no clustering, -0.963 (0.190) no covariates.
+  - claim_id: 1
+    reproduced_value: 0.708
+    outcome: matches
+    notes: DP16 Tables 1-2 col 1 0.708 (0.045); DP Table 3 col 1 prints SE 0.044. Robustness rows 0.708 (0.039) no clustering, 0.696 (0.040) no covariates.
+  - claim_id: 2
+    reproduced_value: 0.297
+    outcome: matches
+    notes: DP16 Tables 1-3 col 1 0.297 (0.036). Robustness rows 0.297 (0.051) no clustering, 0.281 (0.037) no covariates.
+  - claim_id: 5
+    reproduced_value: 0.205
+    outcome: matches
+    notes: DP16 Tables 4-6 col 1 0.205 (0.094). Robustness rows 0.205 (0.119) no clustering, 0.169 (0.135) no covariates.
+  - claim_id: 6
+    reproduced_value: 0.175
+    outcome: matches
+    notes: DP16 Tables 4-6 col 1 0.175 (0.085). Robustness rows 0.175 (0.120) no clustering, 0.221 (0.113) no covariates.
+  - claim_id: 7
+    reproduced_value: 0.158
+    outcome: matches
+    notes: DP16 Tables 4-6 col 1 0.158 (0.092). Robustness rows 0.158 (0.114) no clustering, 0.100 (0.100) no covariates (DB SE 0.100; DP prints 0.125).
+  - claim_id: 8
+    reproduced_value: 0.734
+    outcome: matches
+    notes: DP16 Tables 4-6 col 1 0.734 (0.440). Robustness rows 0.734 (0.563) no clustering, 0.560 (0.589) no covariates.
+notes: >
+  Headline findings (+/-45-month column (3), N 1214 / 1222 / 1203 in
+  Table 3 and 1133 / 1203 / 1137 / 1133 in Table 4): crossing the age
+  threshold cuts days outside last week by -1.090 (0.180), raises being
+  under curfew by 0.708 (0.045) and never going out by 0.297 (0.036);
+  the mental distress index rises 0.205 (0.094) SD, the somatic index
+  0.175 (0.085), the nonsomatic index 0.158 (0.092), and the SRQ-20 sum
+  0.734 (0.440) "yes" answers.
+
+  Paper text and how it was verified.  The published article was not
+  read: the AEA page labels it "Complimentary", but pubs.aeaweb.org
+  answers scripts with a Cloudflare challenge, and docs.iza.org (the
+  candidates file's link) answers 403; neither was bypassed.  The source
+  is IZA DP 14281 (April 2021) from the Bonn legal-deposit server.  Its
+  Table 3 and Table 4 were read cell by cell and compared with the 28
+  meta-database rows as the same table, row and column (3) (+/-45):
+  every row's o_coeff_dbl / o_std_err_dbl names one of the seven column
+  (3) cells, and all seven equal the WP cell: Table 3 days outside
+  -1.09 (0.180), under curfew 0.708 (0.045), never goes out 0.297
+  (0.036); Table 4 mental distress index 0.205 (0.094), somatic 0.175
+  (0.085), nonsomatic 0.158 (0.092), SRQ-20 sum 0.734 (0.440).  The WP
+  prints the days-outside estimate as "-1.09"; DP16 Tables 1-2 print
+  -1.090, and the authors' table code formats coefficients to three
+  decimals, so the value is pinned as -1.090 (numerically the same).
+  Two DB variants are DP16 transcription slips, not different
+  published values: rows coded -1.089 (0.179) and 0.708 (0.044) come
+  from DP16 Table 3 column (1) (the rdrobust table), whereas DP16
+  Tables 1 and 2 column (1), described identically as "a reproduction of
+  the results presented in Table 3, Column 3", print -1.090 (0.180) and
+  0.708 (0.045) as the WP does.  One more DB slip: the no-covariates row for
+  the nonsomatic index codes r_std_err 0.100 where DP16 Table 5 prints
+  0.125 (r_coeff 0.100 is right).
+  The three N claims have no I4R row.  They are pinned because the WP is
+  a late revision of the published paper: the published online appendix
+  is dated April 6, 2021 (web search result for the AEA materials page,
+  not opened), the WP was created April 9, 2021; DP16 quotes the
+  published pp. 334-335 mental-health paragraph and cites footnote 30
+  (p. 329) on the uniform kernel, and the WP's own paragraph and footnote
+  30 read the same; and the package data reproduce exactly the WP's N for
+  all seven column (3) outcomes.
+
+  Independent check of the data (2026-11-09, numpy least squares with
+  Stata's CR1 cluster correction, no Stata here).  With survey
+  non-respondents dropped and listwise deletion on the controls, the
+  column (3) regressions give days outside -1.090 (0.180) N 1214, under
+  curfew 0.708 (0.045) N 1222, never out 0.297 (0.036) N 1203, SRQ-20
+  sum 0.734 (0.440) N 1133, 91 birth-cohort clusters: the published
+  values exactly.  The three indices came out at 0.214 (0.097), 0.173
+  (0.085) and 0.147 (0.093) with an inverse-covariance index computed on
+  the control group and re-standardised (N 1133 / 1203 / 1137 exact);
+  other weightings gave 0.08-0.16, so the index claims depend on
+  matching the Anderson construction, which the package's missing
+  _gweightave2.ado would have fixed.
+
+  Curation pass (2026-11-09).  10 claims.  Left out: the +/-17, +/-30
+  and +/-60 columns (bandwidth robustness inside the main tables), the
+  p-values and sharpened q-values, the control group means, Table 3/4
+  remaining N rows, Tables 1-2 (summary statistics), Table 5 (channels;
+  the abstract calls labor market and conflict effects not robust) and
+  Table 6 (policy support), and the appendix.
+
+  Package-only facts (never in contexts).  1 Tables.do: keep if
+  non_response==0; global contr "month_* province_n_* i.ethnicity
+  i.education female i.survey_taker_id"; vce(cluster modate); xi: reg y
+  before1955 di1* $contr if inrange(dif,-45,45) (di1, di1_i the linear
+  running-variable terms on each side; dif the running variable in
+  months); indices egen z_depression / z_somatic / z_nonsomatic =
+  weightave2(list), normby(controldummy) with controldummy = before1955==0,
+  then set missing if any component item is missing; sum_srq =
+  rowtotal(list1), missing if any item missing.  Outcomes outside_week,
+  under_curfew, never_out.  estout cells b(fmt(%9.3f)) se(par).
+
+  Blind-mode exposure (step 6, 2026-11-09).  Both modes reach
+  llm_answer_pending with the manual package mounted (17 files
+  stripped).  The blind generation prompt (reached by answering the
+  methodology and hyperparameter prompts with results-free text) states
+  no pinned value or SE at printed precision or rounded to 2-3
+  significant figures and carries no script text; its only numeric
+  near-hit is the abstract's "approximately 0.2 standard deviation".
+  The dataset listing shows the .dta column names and Stata variable
+  labels (e.g. the treatment dummy's label "born before December
+  1955"), no estimates.  The paper text given to the methodology
+  summariser carries the WP's rounded in-text results (1-1.1 days, 71
+  and 30 percentage points, 0.21 / 0.18 / 0.16 SD, 0.7); the summariser
+  is told to leave results out, and the README's blind-mode caveat
+  covers this.  The parser takes the IZA cover line ("DISCUSSION PAPER
+  SERIES") as the title.
+
+  What was read.  IZA DP 14281 pp. 1-17, Tables 3-4 and Appendix B; DP16
+  in full; the 29 meta-database rows; the package README and the Tables
+  3-4 block of 1 Tables.do, the headers of every other script; the
+  DataCite records of E131981V1 and E183165V1; the strip-rule
+  classification of the extracted package.
+
+  What could not be verified.  The published article and its online
+  appendix were not read (Cloudflare challenge).  That the re-deposit's
+  analysis file is byte-identical to the authors' own package (openICPSR
+  131981, login) was not checked; it reproduces the published numbers.
+  The authors' Stata code was not run (no Stata here).
+
+  Original analysis in Stata 17 (estout, fsum, _gweightave2.ado) with R
+  for appendix figures; language: r is the reproduction target.
