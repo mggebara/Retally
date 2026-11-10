@@ -1,0 +1,451 @@
+# Original paper: Samek, A., & Longfield, C. (2023). "Do Thank-You Calls
+#   Increase Charitable Giving? Expert Forecasts and Field Experimental
+#   Evidence." American Economic Journal: Applied Economics, 15(2),
+#   103-124.  doi:10.1257/app.20210068 (April 2023 issue; Crossref issued
+#   2023-04-01, DOI created 2023-03-29).
+#
+# Reproduction report: I4R First Meta Database replication team 20 (16
+#   rows under the paper title, one of them empty; entered 2023-11-09).
+#   No I4R discussion paper was found for this report (EconStor / web
+#   search for the title with "I4R", 2026-11-09).  The team's own report
+#   is public on OSF: Borowsky, Gibson, Langlois, Montambeault & Sogaolu,
+#   "Do Thank-You Calls Increase Charitable Giving? ..." (June 21, 2023;
+#   https://osf.io/fe2tr, file "Do Thank You Calls Increase Charitable
+#   Giving (002).pdf", 8 pp.; found through OpenAlex 2026-11-09; the
+#   affiliations match the meta-database's replicator fields).  Verdict:
+#   reproducible — the OSF abstract: "We were able to reproduce the
+#   papers findings completely", the only difference being the constant
+#   of appendix Table A2; the meta database's best_describe_compreprod
+#   agrees ("Analysis and cleaning code produce the same output as
+#   presented in the paper"; under an hour in Stata, rated 10 of 10).
+#   computational_reproduction / perfect_reproduction are blank,
+#   coding_correction is "Not done by replicators" on every row and
+#   result_same is blank on all but one.  All 15 non-empty rows are
+#   ROBUSTNESS / EXTENSION rows on Experiment 1 (OSF report Tables 4-6:
+#   station fixed effects, Poisson, below / above median and top-decile
+#   samples), not recomputations of printed numbers — and their
+#   "original" values (0.045 (0.426), -0.001 (0.002), -0.012 (0.010),
+#   0.572 (1.207), -0.002 (0.004)) are NOT printed in the paper: they are
+#   the team's own OLS treatment-control differences, which the OSF
+#   report calls "meant to proxy the difference in the means as presented
+#   in the original paper".  The paper's Table 2 prints group means.
+#
+# Why this paper:
+#   1. A large randomized field experiment (about half a million donors,
+#      90/10 treatment-control split) whose main table is plain group
+#      means — but every number needs the full donor-level construction
+#      from a 243 MB transaction log: one record per donor per day,
+#      giving in the year before and after the randomization date, the
+#      returning-donor and station exclusions, the conditional-on-giving
+#      and retention-ratio outcomes.
+#   2. Three experiments from two sources in one table (public television
+#      Experiments 1 and 3 from the same transaction / call logs, the
+#      national non-profit Experiment 2 from its own gift file).
+#   3. A manually placed openICPSR package (data_access: manual), 56 MB
+#      zipped / 303 MB unpacked, Stata only, with no shipped result files.
+#
+# What original_claims pins: Table 2 Panel A (Experiment 1) treatment and
+#   control means of the percent donating, the unconditional amount
+#   donated, the amount conditional on donating and the retention rate,
+#   and the two group Ns; Table 2 Panel C (Experiment 3) percent donating
+#   with the new and the original script and the new-script N.  13
+#   claims (3 counts), values exactly as printed (2 decimals; Ns as
+#   integers).  No standard errors are pinned: the open copy prints SEs
+#   under the dollar outcomes, but no source available here shows the
+#   published SEs (see Paper text).
+#
+# Paper text: the published article is paywalled and no open copy of it
+#   was found (AEA, author CV and pages, Science of Philanthropy
+#   Initiative, RePEc, OpenAlex, Bowdoin "ungated" index; SSRN skipped,
+#   login-gated).  The source is the authors' AEA 2020 ASSA conference
+#   draft ("This version: October 29, 2019").  It is NOT the accepted
+#   manuscript: the published article moved the OLS regressions (the
+#   draft's Table 3) to the appendix.  The meta-database rows cover no
+#   printed cell (see above), so the check is against the I4R team's OSF
+#   report, which reprints the published Table 2 Panel A (all
+#   treatment / control means and Ns) and Panel C (new- and
+#   original-script columns, means and Ns) as "the original paper"
+#   values beside its own recoded-sample values: every one of those 24
+#   cells equals the conference draft's Table 2 cell for cell.  Only
+#   those cells are pinned.  The earlier SSRN draft (April 12, 2019,
+#   open copy via the Bowdoin ungated index) prints a different Panel A
+#   (28.31 / 28.44 percent donating, N 445,641 / 55,434) and was not
+#   used.  See notes.
+
+id: samek-2023-thank-you-calls-charitable-giving
+i4r_report_url: https://github.com/I4Replication/I4R-First-Meta-Paper
+# Target language for regeneration (the original is Stata 16.1 with
+# estout; Retally generates R and reads the .dta files with haven and
+# the .xlsx / .csv survey files with readxl / readr).
+language: r
+outcome_label: reproducible
+# Pipeline tuning is frozen; this is an evaluation paper.
+split: holdout
+# Contamination bookkeeping.  publication_date is the FIRST public
+# version: SSRN 3371327 (draft dated "April 2019 / This version: April
+# 12, 2019"; Crossref posted-content record created 2019-05-13; the
+# SSRN page itself was not opened).  The October 2019 conference draft
+# (the catalog source, PDF CreationDate 2019-10-29) followed; press
+# coverage of the result dates from June 2019.  The journal version:
+# Crossref issued 2023-04-01 (DOI created 2023-03-29).  The AEA RCT
+# registry entry (AEARCTR-0008263) was registered retrospectively in
+# 2021.  package_release_date is the DataCite registration of
+# doi:10.3886/E149481V1 (registered 2023-03-09T17:41:58Z, DataCite API
+# 2026-11-09); openICPSR itself needs a login.  The package README says
+# the do-files were last run on August 6, 2021.
+publication_date: "2019-04"
+package_release_date: "2023-03-09"
+
+paper:
+  # AEA 2020 ASSA annual meeting preliminary-programme paper, open PDF;
+  # checked 2026-11-09: 200 application/pdf, 61 pp., 6,985,235 bytes, md5
+  # 5a59a866f043df229434928a06910934, PDF CreationDate 2019-10-29.  Title
+  # page "April 2019 / This version: October 29, 2019".  Main text,
+  # Tables 1-3 (Table 2 on p. 35), Appendix A (call scripts) and
+  # Appendix B (survey materials); the online appendix C that the text
+  # cites (sample-exclusion flow, Tables A.1-A.9) is not in this copy.
+  # A working-paper version, not the published article: its Table 2
+  # Panels A and C equal the published cells the I4R team's report
+  # reprints (see notes).
+  source: https://www.aeaweb.org/conference/2020/preliminary/paper/45yhKA34
+  title: "Do Thank-You Calls Increase Charitable Giving? Expert Forecasts and Field Experimental Evidence"
+  authors:
+    - Anya Samek
+    - Chuck Longfield
+
+dataset:
+  source: benchmark/manual-packages/T20/149481-V1.zip
+  data_access: manual
+  access_notes: >
+    AEA Data and Code Repository on openICPSR, project 149481, version V1
+    (doi:10.3886/E149481V1); login and terms-of-use click-through required,
+    so the zip was downloaded by hand (2026-11-09) and placed unchanged at
+    benchmark/manual-packages/T20/149481-V1.zip (55,970,066 bytes, md5
+    3b8b22f01b707b04bab8556481c56003; SOURCE.txt beside it).  V1 is the
+    only version (DataCite lists no later one).  51 zip entries (43
+    files), 302,810,065 bytes uncompressed, no nested archives.  Contents:
+    ReadMe.pdf (10 pp.; data sources, availability statement, Stata 16.1
+    and estout, run order, file-to-table map, no estimates);
+    thank_you_replication/data/ with five Stata .dta files —
+    transactions.dta (243 MB, the public television stations' gift
+    transaction log), callog.dta (42 MB, the call log with the random
+    assignment and call outcomes), demographics.dta (10.6 MB, donor
+    gender / age / income / residence-length codes), gift.dta (4.6 MB,
+    the national non-profit's gift file for Experiment 2) and
+    treatments.dta (0.6 MB, the call-script assignment) — plus the
+    survey and forecast inputs charity.xlsx, experiment_data.xlsx (the
+    prior field-experiment effects behind Figure 3),
+    spi2019_practitioner.xlsx, charity_more_questions.csv and
+    spi_mailing_list.csv; dofiles/ with 27 Stata do-files (master.do,
+    the package installer, 01_dataprep step1-step6, 02_analysis Tables
+    1-2 and Figures 1-3, 03_appendix Tables A1-A6 and Figures A2-A6); an
+    empty latex/ folder (no generated tables are shipped); and
+    questionnaires/ with five survey-instrument PDFs
+    (SPI2019_practitioner_survey, charity_survey,
+    charity_more_questions_survey, and the relevant pages of UAS
+    surveys 24 and 166), which print questions only.  The Understanding
+    America Study files behind Figure 2 are not shipped (UAS account
+    needed); no pinned claim uses them.  The six PDFs are the README and
+    the five questionnaires; none prints a result.  The script-free copy
+    (independent / blind) withholds the 27 .do files by suffix and
+    nothing else (benchmark.strip_rule.classify_tree on the extracted
+    package, 2026-11-10); every kept file is data, the README or a
+    questionnaire.  Project page:
+    https://www.openicpsr.org/openicpsr/project/149481/version/V1/view
+
+original_claims:
+  # ---- Table 2 Panel A: Experiment 1, public television stations ----
+  - description: pct_donating_treatment_table2_panelA
+    value: 27.97
+    claim_type: other
+    unit: percent of new donors
+    location: "Table 2, Panel A (Experiment 1: Public Television Stations), Percent Donating, Treatment"
+    context: >
+      Table 2 ("Treatment Effects"), Panel A, Experiment 1: the
+      public-television field experiment in which new members of the
+      partner stations with a phone number on file were randomized, 90
+      percent to a personal thank-you call made 5-7 months after their
+      first gift and the rest to no call.  The entry is the percentage of
+      the analysis sample in the thank-you call (treatment) group who made
+      at least one gift in the year after the randomization date.  The
+      analysis sample keeps new donors only (returning donors identified
+      after randomization are dropped).  Group mean; no controls.
+  - description: pct_donating_control_table2_panelA
+    value: 28.06
+    claim_type: other
+    unit: percent of new donors
+    location: "Table 2, Panel A (Experiment 1: Public Television Stations), Percent Donating, Control"
+    context: >
+      Table 2, Panel A, Experiment 1: the percentage of the no-call
+      (control) group who made at least one gift in the year after the
+      randomization date.  Same analysis sample as the treatment column;
+      group mean.
+  - description: amount_donated_treatment_table2_panelA
+    value: 35.52
+    claim_type: other
+    unit: US dollars per donor
+    location: "Table 2, Panel A (Experiment 1: Public Television Stations), Amount Donated, Treatment"
+    context: >
+      Table 2, Panel A, Experiment 1: the average total amount given in
+      the year after the randomization date by donors in the thank-you
+      call group, unconditional (donors who did not give count as zero).
+      Group mean; the standard error of the mean is printed beneath it.
+  - description: amount_donated_control_table2_panelA
+    value: 35.49
+    claim_type: other
+    unit: US dollars per donor
+    location: "Table 2, Panel A (Experiment 1: Public Television Stations), Amount Donated, Control"
+    context: >
+      Table 2, Panel A, Experiment 1: the average total amount given in
+      the year after the randomization date by the control group,
+      unconditional (non-givers count as zero).  Group mean.
+  - description: amount_given_donated_treatment_table2_panelA
+    value: 127.00
+    claim_type: other
+    unit: US dollars per donating donor
+    location: "Table 2, Panel A (Experiment 1: Public Television Stations), Amount | Donated, Treatment"
+    context: >
+      Table 2, Panel A, Experiment 1: the average total amount given in
+      the year after the randomization date by thank-you call group
+      donors who gave at least once in that year (conditional on
+      donating).  Group mean.
+  - description: amount_given_donated_control_table2_panelA
+    value: 126.46
+    claim_type: other
+    unit: US dollars per donating donor
+    location: "Table 2, Panel A (Experiment 1: Public Television Stations), Amount | Donated, Control"
+    context: >
+      Table 2, Panel A, Experiment 1: the average amount given in the
+      year after the randomization date by control-group donors who gave
+      at least once in that year.  Group mean.
+  - description: retention_rate_treatment_table2_panelA
+    value: 32.68
+    claim_type: other
+    unit: percent (amount given in the following year relative to the prior year)
+    location: "Table 2, Panel A (Experiment 1: Public Television Stations), Retention rate, Treatment"
+    context: >
+      Table 2, Panel A, Experiment 1: the retention rate of the thank-you
+      call group, the industry measure the paper defines as the
+      percentage of a donor's giving retained in the year following the
+      randomization date relative to the giving in the year prior to it
+      (each donor's ratio of the two annual totals, averaged over the
+      group and expressed in percent).
+  - description: retention_rate_control_table2_panelA
+    value: 32.91
+    claim_type: other
+    unit: percent (amount given in the following year relative to the prior year)
+    location: "Table 2, Panel A (Experiment 1: Public Television Stations), Retention rate, Control"
+    context: >
+      Table 2, Panel A, Experiment 1: the retention rate of the control
+      group, defined as for the treatment column (the average per-donor
+      ratio of giving in the year after the randomization date to giving
+      in the year before it, in percent).
+  - description: n_treatment_table2_panelA
+    value: 439510
+    claim_type: count
+    unit: donors
+    location: "Table 2, Panel A (Experiment 1: Public Television Stations), N, Treatment"
+    context: >
+      Number of donors in the thank-you call group of the Experiment 1
+      analysis sample (Table 2, Panel A, N row, Treatment column).
+  - description: n_control_table2_panelA
+    value: 54606
+    claim_type: count
+    unit: donors
+    location: "Table 2, Panel A (Experiment 1: Public Television Stations), N, Control"
+    context: >
+      Number of donors in the control group of the Experiment 1 analysis
+      sample (Table 2, Panel A, N row, Control column).
+
+  # ---- Table 2 Panel C: Experiment 3, public television, new script ----
+  - description: pct_donating_new_script_table2_panelC
+    value: 28.32
+    claim_type: other
+    unit: percent of new donors
+    location: "Table 2, Panel C (Experiment 3: Public Television, New Script), Percent Donating, New Script"
+    context: >
+      Table 2, Panel C, Experiment 3: all new members of the partner
+      television stations in the fourth quarter of 2016 were randomized to
+      a thank-you call with the original script (45 percent), a call with
+      a new script that also asked which programs the donor had recently
+      enjoyed (45 percent), or no call (10 percent).  The entry is the
+      percentage of the new-script group who made at least one gift in
+      the year after the randomization date.  Group mean; no controls.
+  - description: pct_donating_original_script_table2_panelC
+    value: 29.15
+    claim_type: other
+    unit: percent of new donors
+    location: "Table 2, Panel C (Experiment 3: Public Television, New Script), Percent Donating, Original Script"
+    context: >
+      Table 2, Panel C, Experiment 3: the percentage of the
+      original-script thank-you call group who made at least one gift in
+      the year after the randomization date.  Group mean.
+  - description: n_new_script_table2_panelC
+    value: 10780
+    claim_type: count
+    unit: donors
+    location: "Table 2, Panel C (Experiment 3: Public Television, New Script), N, New Script"
+    context: >
+      Number of donors in the new-script group of the Experiment 3
+      analysis sample (Table 2, Panel C, N row, New Script column).
+
+# No meta-database row is a recomputation of a printed number: all 15 rows
+# are the team's Experiment 1 extensions (OSF report Tables 4-6) against
+# OLS treatment-control differences that the paper does not print.  As in
+# lopez-2022 and molina-garzon-2022, each finding records the paper's own
+# value under the team's verdict; here the verdict is the team's OSF report,
+# which states the authors' code reproduced the paper's findings and
+# reprints these Table 2 cells as the article's values.  The note quotes
+# the report's recoded-sample value (its fix for donors with several gifts
+# on one day, a different sample, not a failed reproduction).
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: 27.97
+    outcome: matches
+    notes: OSF report (team 20) abstract and Table 2 article column; recoded sample 27.98.
+  - claim_id: 1
+    reproduced_value: 28.06
+    outcome: matches
+    notes: OSF report Table 2 article column; recoded sample 28.07.
+  - claim_id: 2
+    reproduced_value: 35.52
+    outcome: matches
+    notes: OSF report Table 2 article column; recoded sample 35.55.
+  - claim_id: 3
+    reproduced_value: 35.49
+    outcome: matches
+    notes: OSF report Table 2 article column; recoded sample 35.51.
+  - claim_id: 4
+    reproduced_value: 127.00
+    outcome: matches
+    notes: OSF report Table 2 article column; recoded sample 127.05.
+  - claim_id: 5
+    reproduced_value: 126.46
+    outcome: matches
+    notes: OSF report Table 2 article column; recoded sample 126.48.
+  - claim_id: 6
+    reproduced_value: 32.68
+    outcome: matches
+    notes: OSF report Table 2 article column; recoded sample 32.70.
+  - claim_id: 7
+    reproduced_value: 32.91
+    outcome: matches
+    notes: OSF report Table 2 article column; recoded sample 32.92.
+  - claim_id: 8
+    reproduced_value: 439510
+    outcome: matches
+    notes: OSF report Table 2 article column; recoded sample 439,605.
+  - claim_id: 9
+    reproduced_value: 54606
+    outcome: matches
+    notes: OSF report Table 2 article column; recoded sample 54,613.
+  - claim_id: 10
+    reproduced_value: 28.32
+    outcome: matches
+    notes: OSF report Table 3 article column; recoded sample 28.32.
+  - claim_id: 11
+    reproduced_value: 29.15
+    outcome: matches
+    notes: OSF report Table 3 article column (recoded value not printed for this column).
+  - claim_id: 12
+    reproduced_value: 10780
+    outcome: matches
+    notes: OSF report Table 3 article column; recoded sample 10,782.
+notes: >
+  Headline findings (Table 2): in Experiment 1 (public television) 27.97
+  percent of the call group and 28.06 percent of the control group gave
+  again within a year; the unconditional amount was $35.52 vs $35.49,
+  the amount conditional on giving $127.00 vs $126.46, and the retention
+  rate 32.68 vs 32.91 percent (N 439,510 call, 54,606 control).  In
+  Experiment 3, 28.32 percent of the new-script group (N 10,780) and
+  29.15 percent of the original-script group gave again.  The abstract's
+  number is the experts' forecast ("would increase donor retention by 80
+  percent"), which needs the Understanding America Study data not in the
+  package, so it is not pinned.
+
+  Paper text and how it was verified.  No open copy of the published
+  article was found.  The catalog source is the October 29, 2019 AEA
+  conference draft.  The I4R meta database cannot verify it: its 15
+  rows record as "original" the team's own OLS differences (0.045
+  (0.426) amount donated, -0.001 (0.002) percent donating as a share,
+  -0.012 (0.010) number of gifts, 0.572 (1.207) amount given donating,
+  -0.002 (0.004) retention), none of which the paper prints (none occurs
+  in the draft either).  The rows' table labels are also loose: the
+  "table 2, panel c" rows are Experiment 1 extensions (the OSF report
+  says its extensions focus exclusively on Experiment 1), and row 890
+  pairs the amount-donated original 0.045 (0.426) with the below-median
+  Poisson incidence-rate ratio for the number of gifts, 0.998 (0.006)
+  (OSF Table 6, printed there as "998").  The verification instead uses
+  the team's OSF report (https://osf.io/fe2tr), whose Tables 2 and 3
+  reprint the published Table 2 Panel A (Percent donating, Amount
+  donated, Number of gifts, Amount|Donated, Retention rate,
+  Observations; treatment and control) and Panel C (new-script and
+  original-script columns) as "the original paper" values: all 24 cells
+  equal the draft's Table 2.  The report says Panel B (Experiment 2) is
+  unchanged by its recode but does not print it, so Panel B is not
+  pinned; nor is the Panel C control column (not reprinted), nor any SE
+  (the report prints none).  The draft's SEs (amount donated 0.14 /
+  0.38, amount | donated 0.41 / 1.05 in Panel A) are therefore
+  unverified against the published article.  The April 2019 SSRN draft
+  prints a different Panel A (e.g. 28.31 / 28.44 percent donating, N
+  445,641 / 55,434; retention already 32.68 / 32.91) and Panel B as in
+  the October draft.
+
+  Curation pass (2026-11-09/10).  13 claims (3 counts).  Left out: the
+  number-of-gifts rows (printed at two decimals, 0.79 / 0.80, too coarse
+  to separate groups), the p-values (Mann-Whitney / chi-squared /
+  one-way ANOVA F-test), Panel B, Panel C's control column and its other
+  rows, Table 1 (baseline balance), Figures 1-3 (forecasts; Figure 2
+  needs UAS data) and the appendix.
+
+  Package-only facts (never in contexts).  01_dataprep/step1: from
+  transactions.dta, split gift_date, collapse to one record per
+  account_id x date x station (sum payment_amount); callog.dta: drop
+  accounts appearing twice, treat = 1 for segment "Active Calls", 0 for
+  "Control"; drop exec_date 1704, 1707, 1710, 1801 (outcomes observed
+  only through 2018Q1); merge demographics and treatments; reshape to
+  periods relative to the exec date (payment_amount2 / var12 = year
+  before, payment_amount3 / var13 = year after).  step2: drop if
+  payment_amount2 == 0; Experiment 1 keeps exec_date not 1610 / 1701 and
+  drops stations 24, 55, 61, 64 ("no control observations"); Experiment
+  3 keeps edate == 01oct2016, exp3_treat 0 control, 1 old script
+  (script2 == 0 & treat == 1), 2 new script (script2 == 1); Experiment
+  2 from gift.dta: collapse by timeline account_id treat, drop donors
+  with a payment in the earliest period (existing donors), missing
+  amounts to 0.  Outcomes: renewing = var13 != 0 (Percent Donating, x
+  100), payment_amount3 (Amount Donated; conditional on renewing == 1
+  for Amount | Donated), retention = payment_amount3 / payment_amount2 (x
+  100).  02_analysis/Table2_treatment_effects.do: summarize by treat
+  (or exp3_treat), SE = sd / sqrt(N); p-values from tabulate chi2
+  (Percent Donating), ranksum (others) or oneway (Experiment 3).
+
+  Blind-mode exposure (step 6, 2026-11-10).  The blind generation prompt
+  (reached with a placeholder methodology summary that states no
+  result) states no pinned value at printed precision or rounded to 1-3
+  significant figures (the only rounded hits are listing sizes such as
+  "30 columns" and "40.1 MB") and carries no do-file text; the .do
+  files are absent from the listing.  The paper text reaches the
+  methodology summariser truncated after Figure 2, so the draft's Table
+  2 (p. 35) is not in it, but its prose does state several pinned
+  values (27.9 / 28.1 percent donating, $127.00 and $126.46 conditional
+  amounts, 32.68 and 32.91 percent retention, 28.3 / 29.2 percent in
+  Experiment 3); the summariser is told to leave results out, and the
+  README's blind-mode caveat covers this, as for lopez-2022.  The
+  abstract states no pinned value.
+
+  Mount cost.  transactions.dta is 243 MB; at the host's bind-mount read
+  speed (about 8 MB/s, settele-2022) reading it takes about 30 s of the
+  R sandbox's 300 s.
+
+  What was read.  The October 2019 draft pp. 1-15 and Tables 1-2; the
+  April 2019 draft's Table 2; the OSF report in full; the 16
+  meta-database rows; ReadMe.pdf; the five questionnaire PDFs' text
+  (questions only); step1 and step2 of 01_dataprep and
+  Table2_treatment_effects.do.
+
+  What could not be verified.  The published article itself was not
+  read, nor its SEs, Panel B or Panel C control column.  The authors'
+  Stata code was not run (no Stata here) and no independent R
+  cross-check was made.
+
+  Original analysis in Stata 16.1; language: r is the reproduction target.
